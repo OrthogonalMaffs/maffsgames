@@ -222,8 +222,8 @@ core:[
    tableX:[0,10,20,30,40,50,60],given:{0:0,10:0.5,60:6.0},
    answers:{20:1.2,30:2.1,40:3.2,50:4.5},
    iqs:[
-     {type:'read',prompt:'Estimate the wind speed when wave height is 3 m.',answer:40.8,tol:2},
-     {type:'extrap',prompt:'Estimate h when s = 70. Is this reliable?',answer:8.7,tol:0.5,reliable:false,reason:'Beyond the data range'},
+     {type:'read',prompt:'Estimate the wind speed when wave height is 3 m.',answer:38.3,tol:2},
+     {type:'extrap',prompt:'Estimate h when s = 70. Is this reliable?',answer:7.7,tol:0.5,reliable:false,reason:'Beyond the data range'},
      {type:'mcq',prompt:'What property indicates wind speed has more effect at higher speeds?',correct:'The graph is steeper at higher wind speeds',wrong:['The graph is linear','The graph flattens off','The gradient is constant']},
      {type:'mcq',prompt:'Describe one limitation of this model.',correct:'No upper limit — predicts unrealistically large wave heights',wrong:['The model is too accurate','It only works for hurricanes','Wave heights cannot be positive']}
    ]},
@@ -232,7 +232,7 @@ core:[
    tableX:[0,1,2,3,4,5],given:{0:0,3:0,5:20},
    answers:{1:4,2:2,4:4},
    iqs:[
-     {type:'read',prompt:'Estimate P when x = 2.5.',answer:1.56,tol:0.3},
+     {type:'read',prompt:'Estimate P when x = 2.5.',answer:0.625,tol:0.3},
      {type:'mcq',prompt:'At what value of x does profit reach its local minimum?',correct:'x = 3',wrong:['x = 0','x = 1','x = 5']},
      {type:'mcq',prompt:'Describe one limitation of this model.',correct:'Model allows negative profit but real businesses would stop trading',wrong:['Profit is always positive','The model is linear','x cannot be a whole number']}
    ]},
@@ -241,7 +241,7 @@ core:[
    tableX:[0,5,10,15,20],given:{0:100,20:265.3},
    answers:{5:127.6,10:162.9,15:207.9},
    iqs:[
-     {type:'read',prompt:'Estimate the year when the population reaches 200,000.',answer:14.2,tol:0.8},
+     {type:'read',prompt:'Estimate the year when the population reaches 200,000.',answer:2024.2,tol:0.8},
      {type:'extrap',prompt:'Estimate P when t = 25. Is this reliable?',answer:338.6,tol:17,reliable:false,reason:'Assumes growth rate stays constant'},
      {type:'mcq',prompt:'What does the increasing steepness tell you?',correct:'The population is growing at an increasing rate',wrong:['Population is decreasing','Growth rate is constant','Population will reach a maximum']}
    ]},
@@ -266,7 +266,7 @@ core:[
   {id:'CM6',eqLatex:'V = 4x^3 - 36x^2 + 80x',context:'Volume V (cm³) of an open box with corner cut x (cm).',
    fn:x=>4*x*x*x-36*x*x+80*x,xRange:[0,4],yRange:[0,60],xLabel:'x (cm)',yLabel:'V (cm³)',
    tableX:[0,0.5,1,1.5,2,2.5,3,3.5,4],given:{0:0,2:48,4:0},
-   answers:{0.5:35.5,1:48,1.5:52.5,2.5:37.5,3:24,3.5:10.5},
+   answers:{0.5:31.5,1:48,1.5:52.5,2.5:37.5,3:24,3.5:10.5},
    iqs:[
      {type:'read',prompt:'Estimate the maximum volume.',answer:52.5,tol:3},
      {type:'mcq',prompt:'What do the roots of the graph represent in context?',correct:'The corner sizes that give zero volume',wrong:['Maximum volume points','The box dimensions','Points where cost is zero']}
@@ -274,7 +274,7 @@ core:[
   {id:'CM7',eqLatex:'M = 80 \\times 0.85^t',context:'Mass M (g) of a decaying substance, t = days.',
    fn:t=>80*Math.pow(0.85,t),xRange:[0,10],yRange:[0,85],xLabel:'t (days)',yLabel:'M (g)',
    tableX:[0,2,4,6,8,10],given:{0:80,10:15.7},
-   answers:{2:57.8,4:41.7,6:30.1,8:21.7},
+   answers:{2:57.8,4:41.8,6:30.2,8:21.8},
    iqs:[
      {type:'read',prompt:'Estimate the number of days for mass to halve (reach 40 g).',answer:4.3,tol:0.4},
      {type:'mcq',prompt:'What does the decreasing steepness tell you?',correct:'The substance decays more slowly as time increases',wrong:['Decay rate is constant','The mass increases','Decay accelerates over time']},
@@ -311,8 +311,8 @@ core:[
    tableX:[0,5,10,15,20,25],given:{0:500,25:1332.9},
    answers:{5:608.3,10:740.1,15:900.5,20:1095.6},
    iqs:[
-     {type:'read',prompt:'Estimate A when n = 18.',answer:1013.5,tol:50},
-     {type:'extrap',prompt:'Estimate A when n = 30. Is this reliable?',answer:1621.5,tol:80,reliable:false,reason:'Assumes interest rate stays constant for 30 years'}
+     {type:'read',prompt:'Estimate A when n = 18.',answer:1012.9,tol:50},
+     {type:'extrap',prompt:'Estimate A when n = 30. Is this reliable?',answer:1621.7,tol:80,reliable:false,reason:'Assumes interest rate stays constant for 30 years'}
    ]},
   {id:'CM12',eqLatex:'F = -0.003v^2 + 0.3v',context:'Fuel efficiency F (km/L) vs speed v (km/h).',
    fn:v=>-0.003*v*v+0.3*v,xRange:[0,100],yRange:[0,8],xLabel:'v (km/h)',yLabel:'F (km/L)',
@@ -451,7 +451,7 @@ alevel:[
    ]},
   {id:'AL14',eqLatex:'y = 2x^3 - 3x^2 - 12x + 4',context:'',
    fn:x=>2*x*x*x-3*x*x-12*x+4,xRange:[-3,4],yRange:[-25,20],xLabel:'x',yLabel:'y',
-   tableX:[-3,-2,-1,0,1,2,3,4],given:{'-3':-59,0:4,4:36},answers:{'-2':-16,'-1':11,1:-9,2:-16,3:-5},
+   tableX:[-3,-2,-1,0,1,2,3,4],given:{'-3':-41,0:4,4:36},answers:{'-2':0,'-1':11,1:-9,2:-16,3:-5},
    iqs:[
      {type:'tp',prompt:'Write down the coordinates of the local maximum.',answer:{x:-1,y:11},tol:0.2},
      {type:'tp',prompt:'Write down the coordinates of the local minimum.',answer:{x:2,y:-16},tol:0.2}
@@ -496,7 +496,7 @@ level4:[
    ]},
   {id:'L4_5',eqLatex:'y = x^3 - 6x^2 + 9x',context:'Beam deflection y (mm) at position x (m).',
    fn:x=>x*x*x-6*x*x+9*x,xRange:[0,4],yRange:[-2,6],xLabel:'x (m)',yLabel:'y (mm)',
-   tableX:[0,0.5,1,1.5,2,2.5,3,3.5,4],given:{0:0,3:0,4:4},answers:{0.5:3.625,1:4,1.5:2.625,2:2,2.5:1.875,3.5:3.625},
+   tableX:[0,0.5,1,1.5,2,2.5,3,3.5,4],given:{0:0,3:0,4:4},answers:{0.5:3.125,1:4,1.5:3.375,2:2,2.5:0.625,3.5:0.875},
    iqs:[
      {type:'roots',prompt:'Write down the x-values where deflection is zero.',answers:[0,3],tol:0.1},
      {type:'tp',prompt:'Write down the coordinates of maximum deflection.',answer:{x:1,y:4},tol:0.15}
@@ -539,8 +539,8 @@ level4:[
    ]},
   {id:'L4_11',eqLatex:'\\varepsilon = 0.001 + 0.005(1 - e^{-t/200})',context:'Creep strain ε vs time t (hours).',
    fn:t=>0.001+0.005*(1-Math.exp(-t/200)),xRange:[0,1000],yRange:[0,0.007],xLabel:'t (hours)',yLabel:'ε',
-   tableX:[0,50,100,200,400,600,1000],given:{0:0.001,200:0.00418,1000:0.00599},
-   answers:{50:0.00222,100:0.00339,400:0.00532,600:0.00575},
+   tableX:[0,50,100,200,400,600,1000],given:{0:0.001,200:0.00416,1000:0.00597},
+   answers:{50:0.00211,100:0.00297,400:0.00532,600:0.00575},
    iqs:[
      {type:'mcq',prompt:'What is the maximum strain this material will experience?',correct:'0.006',wrong:['0.005','0.001','Infinity']},
      {type:'read',prompt:'Estimate the time when ε = 0.004.',answer:183,tol:15}
@@ -561,7 +561,7 @@ level4:[
    ]},
   {id:'L4_14',eqLatex:'V = 12\\sin(\\omega t + \\pi/3)',context:'AC signal with phase shift. ω = 100π.',
    fn:t=>12*Math.sin(100*Math.PI*t+Math.PI/3),xRange:[0,0.02],yRange:[-14,14],xLabel:'t (s)',yLabel:'V (V)',
-   tableX:[0,0.005,0.01,0.015,0.02],given:{0:10.39,0.01:-10.39,0.02:10.39},answers:{0.005:-10.39,0.015:10.39},
+   tableX:[0,0.005,0.01,0.015,0.02],given:{0:10.39,0.01:-10.39,0.02:10.39},answers:{0.005:6,0.015:-6},
    iqs:[
      {type:'mcq',prompt:'What is the phase shift of this signal?',correct:'60° (π/3 radians)',wrong:['90° (π/2 radians)','0°','180° (π radians)']},
      {type:'read',prompt:'At what time is the first maximum reached?',answer:0.00167,tol:0.0005}
