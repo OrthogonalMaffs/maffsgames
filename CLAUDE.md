@@ -14,6 +14,16 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
 
+## Handover — 2026-10-02 (cutover): this repository started fresh
+
+- **Started fresh on 2 Oct 2026**, public, from one commit (`ab701b4`, then `6c478cb` for `CNAME`).
+  **Commit hashes and PR numbers in older notes, in this file, `docs/todo.md` and anywhere else, refer
+  to `OrthogonalMaffs/maffsgames-archive`** (the old private repository, archived read-only).
+- maffsgames.co.uk is served from this repository (Pages, legacy Jekyll build from `main` at `/`;
+  `_config.yml` keeps INTERNAL files unpublished, canon §7.7). Cutover measured no downtime.
+- The repository is public, so Actions minutes are no longer metered; the per-run cost notes below
+  are history, not a constraint.
+
 ## Handover — 2026-10-02 (night)
 
 - **Pages publish scope (canon §7.7).** `_config.yml` now excludes every INTERNAL path (`CLAUDE.md`,
