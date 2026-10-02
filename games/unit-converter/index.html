@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Convert between length, area, and volume units. GCSE, A-Level, and Level 4 measurement practice.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/unit-converter/">
+<meta property="og:title" content="Unit Converter — MaffsGames">
+<meta property="og:description" content="Convert between length, area, and volume units. GCSE, A-Level, and Level 4 measurement practice.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/unit-converter/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Unit Converter — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#060a10;--surface:#0c1220;--border:#192038;--primary:#06b6d4;--accent:#f59e0b;--wrong:#f43f5e;--correct:#22c55e;--text:#e4eaf2;--muted:#607590}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+.level-row{display:flex;gap:.5rem;justify-content:center;margin:.8rem 0;flex-wrap:wrap}
+.level-btn{padding:.4rem 1rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:540px}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:50px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+.section-label{text-align:center;font-size:.7rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.6rem;text-align:center}
+.q-card .prompt{font-size:1rem;font-weight:600}
+.q-card .context{font-size:.82rem;color:var(--muted);margin-top:.3rem}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
+.opt-btn{padding:.65rem .4rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.82rem;cursor:pointer;transition:all .12s;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.08)}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1rem;margin-bottom:.6rem;text-align:left;font-size:.85rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.85rem;margin-bottom:.4rem}
+.solution .step{margin-bottom:.4rem;padding-left:.7rem;border-left:2px solid var(--border)}
+.solution .misconception{margin-top:.5rem;padding:.5rem .7rem;background:rgba(245,158,11,.08);border-radius:8px;border-left:3px solid var(--accent);font-size:.78rem;color:var(--accent)}
+.solution .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+<div id="menu" class="screen active">
+<div class="header"><h1>Unit Converter</h1><div class="sub">Length. Area. Volume. Get the conversion factor right.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+<div class="level-row">
+<button class="level-btn active" data-level="gcse" onclick="setLevel('gcse')">GCSE</button>
+<button class="level-btn" data-level="alevel" onclick="setLevel('alevel')">A-Level</button>
+<button class="level-btn" data-level="level4" onclick="setLevel('level4')">Level 4</button>
+</div>
+<div class="menu-info">
+1 m = 100 cm. So 1 m² = <strong>10,000</strong> cm². And 1 m³ = <strong>1,000,000</strong> cm³.<br>
+If you thought it was 100 cm² or 1000 cm³ — this game is for you.
+</div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+<button class="start-btn" onclick="startGame()">Start</button>
+</div>
+<div id="game" class="screen">
+<div class="hud"><div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div><div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div><div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div><div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div></div>
+<div class="section-label" id="sectionLabel"></div>
+<div class="q-card"><div class="prompt" id="prompt"></div><div class="context" id="context"></div></div>
+<div class="options" id="options"></div>
+<div class="solution" id="solution"></div>
+</div>
+<div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+<script>
+let level='gcse',pool=[],qIdx=0,score=0,correctN=0,total=0,currentQ=null,qStart=0;
+const BASE=100,T_K=0.15,MAX_Q=20;
+function setLevel(l){level=l;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===l))}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const pa=new URLSearchParams(location.search);if(pa.get('level')){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+
+// LENGTH
+const L=[
+{sec:'Length',p:'Convert 2500 mm to m',c:'2.5 m',d:['25 m','0.25 m','250 m'],s:['1 m = 1000 mm','2500 ÷ 1000 = 2.5 m']},
+{sec:'Length',p:'Convert 3.5 km to m',c:'3500 m',d:['350 m','35000 m','35 m'],s:['1 km = 1000 m','3.5 × 1000 = 3500 m']},
+{sec:'Length',p:'Convert 450 cm to m',c:'4.5 m',d:['45 m','0.45 m','0.045 m'],s:['1 m = 100 cm','450 ÷ 100 = 4.5 m']},
+{sec:'Length',p:'Convert 0.75 m to mm',c:'750 mm',d:['75 mm','7.5 mm','7500 mm'],s:['1 m = 1000 mm','0.75 × 1000 = 750 mm']},
+{sec:'Length',p:'Convert 8200 m to km',c:'8.2 km',d:['82 km','0.82 km','820 km'],s:['÷ 1000']},
+{sec:'Length',p:'Convert 15 cm to mm',c:'150 mm',d:['1.5 mm','1500 mm','15 mm'],s:['1 cm = 10 mm','15 × 10 = 150 mm']},
+{sec:'Length',p:'Convert 0.006 km to cm',c:'600 cm',d:['60 cm','6000 cm','6 cm'],s:['0.006 km = 6 m = 600 cm']},
+{sec:'Length',p:'Convert 48 inches to cm (1 inch ≈ 2.54 cm)',c:'121.92 cm',d:['48 cm','96 cm','12.19 cm'],s:['48 × 2.54 = 121.92 cm']},
+{sec:'Length',p:'Convert 5 feet to metres (1 foot = 0.3048 m)',c:'1.524 m',d:['5.0 m','0.5 m','15.24 m'],s:['5 × 0.3048 = 1.524 m']},
+{sec:'Length',p:'Convert 3.2 m to cm',c:'320 cm',d:['32 cm','3200 cm','0.32 cm'],s:['3.2 × 100 = 320 cm']},
+];
+
+// AREA — the tricky ones
+const A=[
+{sec:'Area',p:'Convert 50000 cm² to m²',c:'5 m²',d:['500 m²','50 m²','0.5 m²'],s:['1 m = 100 cm','1 m² = 100² = 10,000 cm²','50000 ÷ 10000 = 5 m²'],mc:'1 m² = 10,000 cm², NOT 100 cm². You must square the conversion factor.'},
+{sec:'Area',p:'Convert 3 m² to cm²',c:'30,000 cm²',d:['300 cm²','3000 cm²','300,000 cm²'],s:['1 m² = 10,000 cm²','3 × 10,000 = 30,000 cm²']},
+{sec:'Area',p:'Convert 250 cm² to m²',c:'0.025 m²',d:['2.5 m²','0.25 m²','0.0025 m²'],s:['250 ÷ 10,000 = 0.025 m²']},
+{sec:'Area',p:'Convert 4.5 m² to cm²',c:'45,000 cm²',d:['450 cm²','4500 cm²','450,000 cm²'],s:['4.5 × 10,000 = 45,000 cm²']},
+{sec:'Area',p:'Convert 800 mm² to cm²',c:'8 cm²',d:['80 cm²','0.8 cm²','0.08 cm²'],s:['1 cm = 10 mm','1 cm² = 100 mm²','800 ÷ 100 = 8 cm²'],mc:'1 cm² = 100 mm² (10²), NOT 10 mm².'},
+{sec:'Area',p:'Convert 2 cm² to mm²',c:'200 mm²',d:['20 mm²','2000 mm²','0.2 mm²'],s:['1 cm² = 100 mm²','2 × 100 = 200 mm²']},
+{sec:'Area',p:'Convert 0.5 m² to cm²',c:'5000 cm²',d:['50 cm²','500 cm²','50,000 cm²'],s:['0.5 × 10,000 = 5000 cm²']},
+{sec:'Area',p:'Convert 7.2 km² to m²',c:'7,200,000 m²',d:['7200 m²','72,000 m²','720,000 m²'],s:['1 km = 1000 m','1 km² = 1,000,000 m²','7.2 × 1,000,000 = 7,200,000 m²']},
+{sec:'Area',p:'Convert 150,000 cm² to m²',c:'15 m²',d:['150 m²','1.5 m²','1500 m²'],s:['150,000 ÷ 10,000 = 15 m²']},
+{sec:'Area',p:'Convert 6000 mm² to cm²',c:'60 cm²',d:['600 cm²','6 cm²','0.6 cm²'],s:['6000 ÷ 100 = 60 cm²']},
+{sec:'Area',p:'A rectangle is 2 m by 50 cm. Area in m²?',c:'1 m²',d:['100 m²','10 m²','0.1 m²'],s:['Convert: 50 cm = 0.5 m','Area = 2 × 0.5 = 1 m²'],mc:'Convert to the SAME unit before multiplying.'},
+{sec:'Area',p:'A square has side 300 mm. Area in cm²?',c:'900 cm²',d:['90 cm²','9000 cm²','9 cm²'],s:['300 mm = 30 cm','Area = 30² = 900 cm²']},
+{sec:'Area',p:'Convert 1 hectare to m²',c:'10,000 m²',d:['1000 m²','100 m²','100,000 m²'],s:['1 hectare = 100 m × 100 m = 10,000 m²']},
+{sec:'Area',p:'A floor is 4.5 m by 3.2 m. Area in cm²?',c:'144,000 cm²',d:['14,400 cm²','1,440 cm²','14.4 cm²'],s:['Area = 4.5 × 3.2 = 14.4 m²','14.4 × 10,000 = 144,000 cm²']},
+{sec:'Area',p:'Convert 0.08 m² to mm²',c:'80,000 mm²',d:['800 mm²','8000 mm²','800,000 mm²'],s:['1 m² = 1,000,000 mm² (1000²)','0.08 × 1,000,000 = 80,000 mm²']},
+];
+
+// VOLUME — the nightmare
+const V=[
+{sec:'Volume',p:'Convert 2,000,000 cm³ to m³',c:'2 m³',d:['200 m³','20 m³','2000 m³'],s:['1 m = 100 cm','1 m³ = 100³ = 1,000,000 cm³','2,000,000 ÷ 1,000,000 = 2 m³'],mc:'1 m³ = 1,000,000 cm³, NOT 100 cm³ or 1000 cm³. You must CUBE the conversion factor.'},
+{sec:'Volume',p:'Convert 0.5 m³ to cm³',c:'500,000 cm³',d:['50 cm³','5000 cm³','50,000 cm³'],s:['0.5 × 1,000,000 = 500,000 cm³']},
+{sec:'Volume',p:'Convert 3500 cm³ to m³',c:'0.0035 m³',d:['3.5 m³','0.35 m³','0.035 m³'],s:['3500 ÷ 1,000,000 = 0.0035 m³']},
+{sec:'Volume',p:'Convert 5000 mm³ to cm³',c:'5 cm³',d:['50 cm³','500 cm³','0.5 cm³'],s:['1 cm = 10 mm','1 cm³ = 10³ = 1000 mm³','5000 ÷ 1000 = 5 cm³'],mc:'1 cm³ = 1000 mm³ (10³), NOT 10 mm³.'},
+{sec:'Volume',p:'Convert 8 cm³ to mm³',c:'8000 mm³',d:['80 mm³','800 mm³','8 mm³'],s:['8 × 1000 = 8000 mm³']},
+{sec:'Volume',p:'Convert 1.5 litres to cm³',c:'1500 cm³',d:['150 cm³','15 cm³','15,000 cm³'],s:['1 litre = 1000 cm³','1.5 × 1000 = 1500 cm³'],mc:'1 litre = 1000 cm³ = 1 dm³. This is a key conversion to memorise.'},
+{sec:'Volume',p:'Convert 750 ml to cm³',c:'750 cm³',d:['75 cm³','7500 cm³','7.5 cm³'],s:['1 ml = 1 cm³','750 ml = 750 cm³']},
+{sec:'Volume',p:'Convert 2.5 litres to m³',c:'0.0025 m³',d:['2.5 m³','0.025 m³','0.25 m³'],s:['2.5 litres = 2500 cm³','2500 ÷ 1,000,000 = 0.0025 m³'],mc:'1 m³ = 1,000,000 cm³ = 1000 litres. So 1 litre = 0.001 m³.'},
+{sec:'Volume',p:'Convert 0.1 m³ to litres',c:'100 litres',d:['10 litres','1000 litres','1 litre'],s:['1 m³ = 1000 litres','0.1 × 1000 = 100 litres']},
+{sec:'Volume',p:'Convert 45,000 cm³ to m³',c:'0.045 m³',d:['45 m³','4.5 m³','0.45 m³'],s:['45,000 ÷ 1,000,000 = 0.045 m³']},
+{sec:'Volume',p:'Convert 3 m³ to litres',c:'3000 litres',d:['300 litres','30 litres','30,000 litres'],s:['1 m³ = 1000 litres','3 × 1000 = 3000 litres']},
+{sec:'Volume',p:'A box is 50 cm × 30 cm × 20 cm. Volume in m³?',c:'0.03 m³',d:['30 m³','3 m³','0.3 m³'],s:['Volume = 50 × 30 × 20 = 30,000 cm³','30,000 ÷ 1,000,000 = 0.03 m³'],mc:'Calculate in cm³ first, THEN convert to m³.'},
+{sec:'Volume',p:'A cube has side 0.2 m. Volume in cm³?',c:'8000 cm³',d:['800 cm³','80 cm³','8 cm³'],s:['0.2 m = 20 cm','Volume = 20³ = 8000 cm³']},
+{sec:'Volume',p:'Convert 250,000 mm³ to cm³',c:'250 cm³',d:['25 cm³','2500 cm³','2.5 cm³'],s:['250,000 ÷ 1000 = 250 cm³']},
+{sec:'Volume',p:'A tank holds 0.5 m³. How many litres?',c:'500 litres',d:['50 litres','5000 litres','5 litres'],s:['0.5 × 1000 = 500 litres']},
+];
+
+// TWO-STAGE PROBLEMS
+const T=[
+{sec:'Mixed Units',p:'Rectangle: 2.5 m by 80 cm. Area in m²?',c:'2 m²',d:['200 m²','0.2 m²','20 m²'],s:['Convert: 80 cm = 0.8 m','Area = 2.5 × 0.8 = 2 m²'],mc:'Always convert to the same unit BEFORE calculating.'},
+{sec:'Mixed Units',p:'Box: 1.5 m × 60 cm × 400 mm. Volume in m³?',s:['60 cm = 0.6 m','400 mm = 0.4 m','1.5 × 0.6 = 0.9','V = 0.9 × 0.4 = 0.36 m³'],c:'0.36 m³',d:['0.036 m³','3.6 m³','36 m³']},
+{sec:'Mixed Units',p:'Circle: radius 50 cm. Area in m²? (use π ≈ 3.14)',c:'0.785 m²',d:['7.85 m²','78.5 m²','0.0785 m²'],s:['50 cm = 0.5 m','A = π × 0.5² = 3.14 × 0.25 = 0.785 m²']},
+{sec:'Mixed Units',p:'Cylinder: radius 10 cm, height 0.5 m. Volume in cm³?',c:'15,700 cm³',d:['1570 cm³','157,000 cm³','157 cm³'],s:['0.5 m = 50 cm','V = π × 10² × 50 = 3.14 × 100 × 50 = 15,700 cm³']},
+{sec:'Mixed Units',p:'Room: 5 m × 4 m × 2.8 m. Volume in litres?',c:'56,000 litres',d:['5600 litres','560 litres','560,000 litres'],s:['V = 5 × 4 × 2.8 = 56 m³','56 × 1000 = 56,000 litres']},
+{sec:'Mixed Units',p:'Pipe: diameter 20 mm, length 3 m. Volume in cm³? (π ≈ 3.14)',c:'942 cm³',d:['94.2 cm³','9420 cm³','9.42 cm³'],s:['Radius = 10 mm = 1 cm, length = 300 cm','V = π × 1² × 300 = 942 cm³']},
+{sec:'Mixed Units',p:'Sheet metal: 1.2 m × 800 mm. Area in cm²?',c:'9600 cm²',d:['960 cm²','96,000 cm²','96 cm²'],s:['1.2 m = 120 cm, 800 mm = 80 cm','A = 120 × 80 = 9600 cm²']},
+{sec:'Mixed Units',p:'A swimming pool is 25 m × 10 m × 1.5 m. Volume in litres?',c:'375,000 litres',d:['37,500 litres','3,750 litres','3,750,000 litres'],s:['V = 375 m³','375 × 1000 = 375,000 litres']},
+];
+
+// LEVEL 4 ENGINEERING
+const E=[
+{sec:'Engineering',p:'Convert 500 kPa to Pa',c:'500,000 Pa',d:['50 Pa','5000 Pa','5,000,000 Pa'],s:['1 kPa = 1000 Pa','500 × 1000 = 500,000 Pa']},
+{sec:'Engineering',p:'Convert 2.5 MN to N',c:'2,500,000 N',d:['2500 N','25,000 N','250,000 N'],s:['1 MN = 1,000,000 N']},
+{sec:'Engineering',p:'Convert 3500 N to kN',c:'3.5 kN',d:['35 kN','0.35 kN','350 kN'],s:['÷ 1000']},
+{sec:'Engineering',p:'Convert 60 mph to m/s (1 mile = 1609 m)',c:'26.8 m/s',d:['60 m/s','16.1 m/s','96.5 m/s'],s:['60 × 1609 = 96,540 m/hour','96,540 ÷ 3600 = 26.8 m/s']},
+{sec:'Engineering',p:'Convert 5 bar to Pa',c:'500,000 Pa',d:['5000 Pa','50,000 Pa','5,000,000 Pa'],s:['1 bar = 100,000 Pa','5 × 100,000 = 500,000 Pa']},
+{sec:'Engineering',p:'Convert 2 GPa to MPa',c:'2000 MPa',d:['200 MPa','20 MPa','20,000 MPa'],s:['1 GPa = 1000 MPa']},
+{sec:'Engineering',p:'Stress = 50 N/mm². Convert to MPa.',c:'50 MPa',d:['0.05 MPa','5000 MPa','500 MPa'],s:['1 N/mm² = 1 MPa','They are identical units!'],mc:'N/mm² and MPa are the same thing. This catches many engineering students.'},
+{sec:'Engineering',p:'Convert 200 cm³/s to m³/s',c:'0.0002 m³/s',d:['0.2 m³/s','0.02 m³/s','0.002 m³/s'],s:['200 ÷ 1,000,000 = 0.0002 m³/s']},
+{sec:'Engineering',p:'A shaft has diameter 25 mm. Cross-sectional area in m²?',c:'0.000491 m²',d:['0.491 m²','0.00491 m²','4.91 m²'],s:['r = 12.5 mm = 0.0125 m','A = π × 0.0125² = 0.000491 m²']},
+{sec:'Engineering',p:'Convert 72 km/h to m/s',c:'20 m/s',d:['72 m/s','7.2 m/s','200 m/s'],s:['÷ 3.6 (or × 1000 ÷ 3600)','72 ÷ 3.6 = 20 m/s'],mc:'Quick conversion: divide km/h by 3.6 to get m/s.'},
+];
+
+function startGame(){mfg('game_started',{game_slug:'unit-converter',level:level});window._ggAbandoned=true;if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'unit-converter',level:level,questions_answered:total})});}
+  let bank;
+  if(level==='gcse'){bank=[...L,...A,...V,...T]}
+  else if(level==='alevel'){bank=[...A,...V,...T]}
+  else{bank=[...L.slice(0,4),...A.slice(0,5),...V,...T,...E]}
+  pool=shuffle(bank).slice(0,MAX_Q);
+  qIdx=0;score=0;correctN=0;total=0;
+  document.getElementById('score').textContent='0';document.getElementById('correctCount').textContent='0';
+  show('game');nextQ();
+}
+
+function nextQ(){
+  if(qIdx>=pool.length){endGame();return}currentQ=pool[qIdx];qIdx++;total++;
+  document.getElementById('qNum').textContent=total;document.getElementById('solution').className='solution';
+  qStart=Date.now();updateTimer();
+  document.getElementById('sectionLabel').textContent=currentQ.sec||'';
+  document.getElementById('prompt').textContent=currentQ.p;
+  document.getElementById('context').textContent=currentQ.ctx||'';
+  const opts=shuffle([currentQ.c,...currentQ.d]);
+  const oEl=document.getElementById('options');oEl.innerHTML='';
+  opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b)});
+}
+function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
+function handleAnswer(btn){const q=currentQ,s=(Date.now()-qStart)/1000,ok=btn.dataset.val===q.c;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.c)b.classList.add('correct')});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++;updateHUD();setTimeout(nextQ,1000)}else{btn.classList.add('wrong');updateHUD();showExplain(q)}mfg('question_answered',{game_slug:'unit-converter',level:level,correct:ok,question_index:total});}
+function showExplain(q){const sol=document.getElementById('solution');let html='<h3>Worked solution</h3>';(q.s||[]).forEach(st=>{html+='<div class="step">'+st+'</div>'});if(q.mc)html+='<div class="misconception">⚠ '+q.mc+'</div>';html+='<button class="next-btn" onclick="closeSol()">Got it — next</button>';sol.innerHTML=html;sol.className='solution show'}
+function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
+function endGame(){const pct=total>0?Math.round(correctN/total*100):0;let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;const lvl={gcse:'GCSE',alevel:'A-Level',level4:'Level 4'};document.getElementById('statsLine').innerHTML='Unit Converter — '+lvl[level]+'<br>'+correctN+'/'+total+' correct ('+pct+'%)';window._ggAbandoned=false;mfg('game_completed',{game_slug:'unit-converter',level:level,score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('unit-converter',level,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('unit-converter',level,score);}}var _ucKey='unit-converter_best_'+level;var _ucOld=parseInt(localStorage.getItem(_ucKey)||'0');if(score>_ucOld){mfg('personal_best_set',{game_slug:'unit-converter',level:level,score:score,previous_best:_ucOld});localStorage.setItem(_ucKey,score);}show('results')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

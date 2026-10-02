@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Higher Power — Mathematical Constants Game — MaffsGames</title>
+<meta name="description" content="How well do you know your mathematical constants? Compare famous numbers in Higher or Lower mode, or match expressions to values in Pairs. Free, KS3 to A-Level.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/higher-power/">
+<meta property="og:title" content="Higher Power — Mathematical Constants Game — MaffsGames">
+<meta property="og:description" content="How well do you know your mathematical constants? Compare famous numbers in Higher or Lower mode, or match expressions to values in Pairs. Free, KS3 to A-Level.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/higher-power/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Higher Power — Mathematical Constants Game — MaffsGames">
+<meta name="twitter:description" content="How well do you know your mathematical constants? Compare famous numbers in Higher or Lower mode, or match expressions to values in Pairs. Free, KS3 to A-Level.">
+<meta name="twitter:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a12;--surface:#14142a;--border:#252550;--primary:#2563eb;--accent:#60a5fa;--correct:#22c55e;--wrong:#f43f5e;--text:#e0e7ff;--muted:#8b95b0;--card-back:#1e3a5f}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem;position:relative}
+.header h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header .sub{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.a11y-toggle{position:absolute;top:1.5rem;right:0;background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.mode-select,.level-select{display:flex;gap:.5rem;justify-content:center;margin:.8rem 0;flex-wrap:wrap}
+.mode-btn,.level-btn{padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.mode-btn:hover,.level-btn:hover{border-color:var(--primary)}
+.mode-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.level-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.level-btn[data-level="ks3"].active{background:#22c55e;border-color:#22c55e}
+.level-btn[data-level="gcse"].active{background:#3b82f6;border-color:#3b82f6}
+.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316}
+.start-area{text-align:center;margin-top:1.5rem}
+.play-btn{padding:.8rem 2.5rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;cursor:pointer;transition:transform .15s}
+.play-btn:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
+
+/* HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}.hud-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
+
+/* === HIGHER OR LOWER === */
+.hol-area{display:flex;gap:1.2rem;justify-content:center;align-items:stretch;margin:1rem 0;min-height:280px}
+.hol-card{flex:1;max-width:320px;min-height:250px;perspective:800px;position:relative}
+.hol-card-inner{width:100%;height:100%;position:relative;transition:transform 0.6s;transform-style:preserve-3d}
+.hol-card-inner.flipped{transform:rotateY(180deg)}
+.hol-card-face{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;border-radius:14px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:1.2rem;gap:.6rem;text-align:center}
+.hol-card-front{background:var(--surface);border:2px solid var(--border)}
+.hol-card-back{background:var(--card-back);border:2px solid var(--primary);transform:rotateY(180deg)}
+.hol-card-back .card-pattern{font-size:3rem;color:rgba(96,165,250,.25);font-weight:700;user-select:none}
+.card-expr{font-size:1.1rem;min-height:2em;display:flex;align-items:center;justify-content:center}
+.card-val{font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;color:var(--accent);min-height:1.5em}
+.card-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hol-buttons{display:flex;gap:1rem;justify-content:center;margin:1rem 0}
+.hol-btn{padding:.7rem 2rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .15s;min-width:120px}
+.hol-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(37,99,235,.3)}
+.hol-btn:disabled{opacity:.4;cursor:default;box-shadow:none}
+.hol-btn.btn-higher{border-color:#22c55e;color:#22c55e}
+.hol-btn.btn-higher:hover{background:rgba(34,197,94,.1)}
+.hol-btn.btn-lower{border-color:#f43f5e;color:#f43f5e}
+.hol-btn.btn-lower:hover{background:rgba(244,63,94,.1)}
+.fact-text{text-align:center;font-size:.82rem;color:var(--muted);min-height:2.5em;margin:.5rem 0;line-height:1.5;max-width:600px;margin-left:auto;margin-right:auto}
+.streak-flash{animation:streakPop .4s}
+@keyframes streakPop{0%{transform:scale(1)}50%{transform:scale(1.3);color:var(--accent)}100%{transform:scale(1)}}
+
+/* Slide animation */
+.hol-card.slide-left{animation:slideLeft .5s forwards}
+@keyframes slideLeft{0%{transform:translateX(0);opacity:1}100%{transform:translateX(-120%);opacity:0}}
+.hol-card.slide-in{animation:slideIn .5s forwards}
+@keyframes slideIn{0%{transform:translateX(120%);opacity:0}100%{transform:translateX(0);opacity:1}}
+
+/* === PAIRS MODE === */
+.pairs-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;margin:1rem auto;max-width:600px}
+.pair-card{aspect-ratio:3/4;perspective:600px;cursor:pointer}
+.pair-card-inner{width:100%;height:100%;position:relative;transition:transform 0.5s;transform-style:preserve-3d}
+.pair-card-inner.flipped{transform:rotateY(180deg)}
+.pair-card-face{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:.4rem;text-align:center;font-size:.75rem;overflow:hidden}
+.pair-card-front{background:var(--card-back);border:2px solid var(--primary)}
+.pair-card-front .card-q{font-size:2rem;color:rgba(96,165,250,.3);font-weight:700;user-select:none}
+.pair-card-back{background:var(--surface);border:2px solid var(--border);transform:rotateY(180deg)}
+.pair-card.matched .pair-card-back{border-color:var(--correct);box-shadow:0 0 12px rgba(34,197,94,.4)}
+.pair-card.matched::after{content:"\2713";position:absolute;top:4px;right:6px;color:var(--correct);font-size:.7rem;font-weight:700;z-index:2}
+.pair-card.disabled{pointer-events:none}
+.pair-card-back .katex{font-size:.7em!important}
+
+/* Results */
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:.5rem}
+.final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:1rem 0}
+.stats{color:var(--muted);margin-bottom:1.5rem;line-height:1.8}
+.pb-badge{display:inline-block;background:var(--primary);color:#fff;padding:.3rem .8rem;border-radius:6px;font-size:.85rem;font-weight:600;margin:.5rem 0}
+
+/* Accessibility */
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}
+body.accessible p,body.accessible .card-expr,body.accessible .card-val{line-height:2}
+body.accessible{background-color:#12141f!important}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+  .hol-card-inner,.pair-card-inner{transition:none!important}
+  .hol-card.slide-left,.hol-card.slide-in{animation:none!important}
+  .streak-flash{animation:none!important}
+  @keyframes streakPop{0%,100%{transform:none}}
+}
+
+/* KaTeX sizing */
+.katex{font-size:1em!important}
+.card-expr .katex{font-size:1.1em!important}
+
+/* Responsive */
+@media(max-width:600px){
+  .hol-area{flex-direction:column;align-items:center;gap:.8rem}
+  .hol-card{max-width:100%;min-height:200px;width:100%}
+  .pairs-grid{grid-template-columns:repeat(4,1fr);max-width:400px}
+  .header h1{font-size:1.5rem}
+}
+
+.leaderboard-note{text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">&larr; Back to Games</a>
+
+  <!-- MENU SCREEN -->
+  <div id="menu" class="screen active">
+    <div class="header">
+      <h1>Higher Power</h1>
+      <div class="sub">Mathematical constants &amp; famous numbers</div>
+      <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    </div>
+    <div class="mode-select">
+      <button class="mode-btn active" data-mode="hol">Higher or Lower</button>
+      <button class="mode-btn" data-mode="pairs">Pairs</button>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:.5rem 0;line-height:1.5" id="modeDesc">
+      Two cards — one revealed, one hidden. Is the hidden value higher or lower? Build your streak!
+    </p>
+    <div class="level-select">
+      <button class="level-btn active" data-level="ks3">KS3</button>
+      <button class="level-btn" data-level="gcse">GCSE</button>
+      <button class="level-btn" data-level="alevel">A-Level</button>
+    </div>
+    <div class="leaderboard-note"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <div class="start-area"><button class="play-btn" onclick="startGame()">Play</button></div>
+  </div>
+
+  <!-- HIGHER OR LOWER SCREEN -->
+  <div id="holGame" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="holStreak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Best</div><div class="hud-val" id="holBest">0</div></div>
+      <div class="hud-item"><div class="hud-label">Level</div><div class="hud-val" id="holLevel">KS3</div></div>
+    </div>
+    <div class="hol-area">
+      <div class="hol-card" id="leftCard">
+        <div class="hol-card-inner">
+          <div class="hol-card-face hol-card-front">
+            <div class="card-label">Known</div>
+            <div class="card-expr" id="leftExpr"></div>
+            <div class="card-val" id="leftVal"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hol-card" id="rightCard">
+        <div class="hol-card-inner" id="rightInner">
+          <div class="hol-card-face hol-card-back">
+            <div class="card-q">?</div>
+          </div>
+          <div class="hol-card-face hol-card-front">
+            <div class="card-label">Hidden</div>
+            <div class="card-expr" id="rightExpr"></div>
+            <div class="card-val" id="rightVal"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hol-buttons">
+      <button class="hol-btn btn-higher" id="btnHigher" onclick="holAnswer('higher')">Higher</button>
+      <button class="hol-btn btn-lower" id="btnLower" onclick="holAnswer('lower')">Lower</button>
+    </div>
+    <div class="fact-text" id="factText"></div>
+  </div>
+
+  <!-- PAIRS SCREEN -->
+  <div id="pairsGame" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Attempts</div><div class="hud-val" id="pairsAttempts">0</div></div>
+      <div class="hud-item"><div class="hud-label">Matched</div><div class="hud-val" id="pairsMatched">0/10</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="pairsTimer">0s</div></div>
+    </div>
+    <div class="pairs-grid" id="pairsGrid"></div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resultTitle"></h2>
+      <div class="final-score" id="finalScore"></div>
+      <div class="stats" id="statsLine"></div>
+      <div id="pbBadge"></div>
+      <button class="play-btn" onclick="showMenu()" style="margin-top:1rem">Play Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== CARD BANKS ===== */
+const KS3_CARDS = [
+{id:"ks3_01",display:"2^5",displayType:"expression",valueDisplay:"32",value:32,difficulty:1,fact:"2 to the power 5 = 32. There are 32 teams in the NFL."},
+{id:"ks3_02",display:"2^8",displayType:"expression",valueDisplay:"256",value:256,difficulty:1,fact:"2 to the power 8 = 256. This is why colours in computing often go from 0 to 255."},
+{id:"ks3_03",display:"2^{10}",displayType:"expression",valueDisplay:"1{,}024",value:1024,difficulty:1,fact:"2 to the power 10 = 1,024 -- the basis of a kilobyte."},
+{id:"ks3_04",display:"2^{20}",displayType:"expression",valueDisplay:"1{,}048{,}576",value:1048576,difficulty:2,fact:"2 to the power 20 is approximately 1 million. A megabyte is 2 to the power 20 bytes."},
+{id:"ks3_05",display:"3^4",displayType:"expression",valueDisplay:"81",value:81,difficulty:1,fact:"3 to the power 4 = 81. Also 9 squared -- a perfect square and a perfect power."},
+{id:"ks3_06",display:"5^3",displayType:"expression",valueDisplay:"125",value:125,difficulty:1,fact:"5 cubed = 125. A cube of a prime number."},
+{id:"ks3_07",display:"7^2",displayType:"expression",valueDisplay:"49",value:49,difficulty:1,fact:"7 squared = 49. The square of a prime."},
+{id:"ks3_08",display:"10^3",displayType:"expression",valueDisplay:"1{,}000",value:1000,difficulty:1,fact:"10 cubed = 1,000. The prefix 'kilo' means a thousand."},
+{id:"ks3_09",display:"10^6",displayType:"expression",valueDisplay:"1{,}000{,}000",value:1000000,difficulty:1,fact:"One million. About the number of words in 10 novels."},
+{id:"ks3_10",display:"10^9",displayType:"expression",valueDisplay:"1{,}000{,}000{,}000",value:1000000000,difficulty:1,fact:"One billion. About the number of seconds in 31.7 years."},
+{id:"ks3_11",display:"5!",displayType:"expression",valueDisplay:"120",value:120,difficulty:2,fact:"5! = 120. The number of ways to arrange 5 books on a shelf."},
+{id:"ks3_12",display:"6!",displayType:"expression",valueDisplay:"720",value:720,difficulty:2,fact:"6! = 720. The number of ways 6 runners can finish a race."},
+{id:"ks3_13",display:"7!",displayType:"expression",valueDisplay:"5{,}040",value:5040,difficulty:2,fact:"7! = 5,040. Plato called this the ideal number of citizens in a city."},
+{id:"ks3_14",display:"8!",displayType:"expression",valueDisplay:"40{,}320",value:40320,difficulty:2,fact:"8! = 40,320. More than the capacity of most football stadiums."},
+{id:"ks3_15",display:"10!",displayType:"expression",valueDisplay:"3{,}628{,}800",value:3628800,difficulty:2,fact:"10! = 3,628,800. Over 3 million ways to arrange 10 objects."},
+{id:"ks3_16",display:"\\text{Pi } (\\pi)",displayType:"name",valueDisplay:"3.14159...",value:3.14159,difficulty:1,fact:"Pi is the ratio of a circle's circumference to its diameter."},
+{id:"ks3_17",display:"\\sqrt{2}",displayType:"expression",valueDisplay:"1.41421...",value:1.41421,difficulty:2,fact:"The square root of 2 is the diagonal of a unit square."},
+{id:"ks3_18",display:"\\sqrt{3}",displayType:"expression",valueDisplay:"1.73205...",value:1.73205,difficulty:2,fact:"The square root of 3 appears in equilateral triangles."},
+{id:"ks3_19",display:"\\sqrt{5}",displayType:"expression",valueDisplay:"2.23607...",value:2.23607,difficulty:2,fact:"The square root of 5 appears in the golden ratio formula."},
+{id:"ks3_20",display:"\\sqrt{10}",displayType:"expression",valueDisplay:"3.16228...",value:3.16228,difficulty:3,fact:"The square root of 10 is approximately 3.162. Slightly bigger than pi -- a tricky comparison!"},
+{id:"ks3_21",display:"\\text{Seconds in a day}",displayType:"description",valueDisplay:"86{,}400",value:86400,difficulty:2,fact:"24 x 60 x 60 = 86,400 seconds in every day."},
+{id:"ks3_22",display:"\\text{Days in a year}",displayType:"description",valueDisplay:"365",value:365,difficulty:1,fact:"Actually 365.2422 days -- which is why we need leap years."},
+{id:"ks3_23",display:"\\text{Hours in a year}",displayType:"description",valueDisplay:"8{,}760",value:8760,difficulty:2,fact:"365 x 24 = 8,760 hours."},
+{id:"ks3_24",display:"\\text{Minutes in a week}",displayType:"description",valueDisplay:"10{,}080",value:10080,difficulty:2,fact:"7 x 24 x 60 = 10,080 minutes per week."},
+{id:"ks3_25",display:"\\text{Seconds in a week}",displayType:"description",valueDisplay:"604{,}800",value:604800,difficulty:2,fact:"Over 600,000 seconds."},
+{id:"ks3_26",display:"2^7",displayType:"expression",valueDisplay:"128",value:128,difficulty:1,fact:"2 to the power 7 = 128. The number of characters in the original ASCII set."},
+{id:"ks3_27",display:"3^5",displayType:"expression",valueDisplay:"243",value:243,difficulty:2,fact:"3 to the power 5 = 243."},
+{id:"ks3_28",display:"4^4",displayType:"expression",valueDisplay:"256",value:256,difficulty:3,fact:"4 to the power 4 = 256 = 2 to the power 8."},
+{id:"ks3_29",display:"11^2",displayType:"expression",valueDisplay:"121",value:121,difficulty:1,fact:"11 squared = 121. A palindrome number."},
+{id:"ks3_30",display:"13^2",displayType:"expression",valueDisplay:"169",value:169,difficulty:2,fact:"13 squared = 169. Part of the 5-12-13 Pythagorean triple."},
+{id:"ks3_31",display:"\\text{Grains on chessboard (first half)}",displayType:"description",valueDisplay:"2^{32} - 1 \\approx 4.3 \\text{ billion}",value:4294967295,difficulty:3,fact:"The first 32 squares hold about 4.3 billion grains."},
+{id:"ks3_32",display:"\\text{Speed of light (m/s)}",displayType:"description",valueDisplay:"299{,}792{,}458",value:299792458,difficulty:2,fact:"Light travels 300 million metres every second."},
+{id:"ks3_33",display:"\\text{Distance to Moon (km)}",displayType:"description",valueDisplay:"384{,}400",value:384400,difficulty:2,fact:"About 384,400 km."},
+{id:"ks3_34",display:"\\text{Distance to Sun (km)}",displayType:"description",valueDisplay:"149{,}600{,}000",value:149600000,difficulty:2,fact:"About 150 million km. Light takes 8 minutes 20 seconds."},
+{id:"ks3_35",display:"\\text{Smallest perfect number}",displayType:"description",valueDisplay:"6",value:6,difficulty:1,fact:"6 = 1 + 2 + 3. Its factors add up to itself."},
+{id:"ks3_36",display:"\\text{Second perfect number}",displayType:"description",valueDisplay:"28",value:28,difficulty:2,fact:"28 = 1 + 2 + 4 + 7 + 14."},
+{id:"ks3_37",display:"12^2",displayType:"expression",valueDisplay:"144",value:144,difficulty:1,fact:"12 squared = 144 = 12 dozen. A 'gross'."},
+{id:"ks3_38",display:"15^2",displayType:"expression",valueDisplay:"225",value:225,difficulty:2,fact:"15 squared = 225."},
+{id:"ks3_39",display:"\\text{Primes under 100}",displayType:"description",valueDisplay:"25",value:25,difficulty:3,fact:"There are 25 primes below 100."},
+{id:"ks3_40",display:"\\pi^2",displayType:"expression",valueDisplay:"9.8696...",value:9.8696,difficulty:3,fact:"Pi squared is approximately 9.87. Remarkably close to g, which is approximately 9.81 m/s squared."}
+];
+
+const GCSE_CARDS = [
+{id:"gcse_01",display:"12!",displayType:"expression",valueDisplay:"479{,}001{,}600",value:479001600,difficulty:2,fact:"12! is approximately 479 million."},
+{id:"gcse_02",display:"15!",displayType:"expression",valueDisplay:"1.31 \\times 10^{12}",value:1307674368000,difficulty:3,fact:"15! is approximately 1.3 trillion."},
+{id:"gcse_03",display:"\\binom{10}{5}",displayType:"expression",valueDisplay:"252",value:252,difficulty:3,fact:"C(10,5) = 252."},
+{id:"gcse_04",display:"\\binom{52}{5}",displayType:"expression",valueDisplay:"2{,}598{,}960",value:2598960,difficulty:3,fact:"The number of possible 5-card poker hands."},
+{id:"gcse_05",display:"\\text{Ways to arrange MISSISSIPPI}",displayType:"description",valueDisplay:"34{,}650",value:34650,difficulty:4,fact:"11!/(4!4!2!) = 34,650."},
+{id:"gcse_06",display:"2^{16}",displayType:"expression",valueDisplay:"65{,}536",value:65536,difficulty:2,fact:"2 to the power 16 = 65,536. A 16-bit system."},
+{id:"gcse_07",display:"2^{32}",displayType:"expression",valueDisplay:"4{,}294{,}967{,}296",value:4294967296,difficulty:2,fact:"2 to the power 32 is approximately 4.3 billion. The max 32-bit value."},
+{id:"gcse_08",display:"3^{10}",displayType:"expression",valueDisplay:"59{,}049",value:59049,difficulty:3,fact:"3 to the power 10 = 59,049."},
+{id:"gcse_09",display:"\\sqrt[3]{1000}",displayType:"expression",valueDisplay:"10",value:10,difficulty:1,fact:"The cube root of 1,000 is exactly 10."},
+{id:"gcse_10",display:"\\sqrt{200}",displayType:"expression",valueDisplay:"14.142...",value:14.142,difficulty:3,fact:"The square root of 200 = 10 times the square root of 2, which is approximately 14.142."},
+{id:"gcse_11",display:"\\text{Euler's number } (e)",displayType:"name",valueDisplay:"2.71828...",value:2.71828,difficulty:2,fact:"e is the base of natural logarithms."},
+{id:"gcse_12",display:"\\text{Golden ratio } (\\varphi)",displayType:"name",valueDisplay:"1.61803...",value:1.61803,difficulty:2,fact:"The golden ratio = (1 + the square root of 5) / 2. Found in the Fibonacci sequence."},
+{id:"gcse_13",display:"\\dfrac{1+\\sqrt{5}}{2}",displayType:"expression",valueDisplay:"1.61803...",value:1.61803,difficulty:3,fact:"The golden ratio. It satisfies the equation: phi squared = phi + 1."},
+{id:"gcse_14",display:"\\ln(2)",displayType:"expression",valueDisplay:"0.6931...",value:0.6931,difficulty:3,fact:"The natural log of 2. Doubling time = 0.693 / rate."},
+{id:"gcse_15",display:"\\ln(10)",displayType:"expression",valueDisplay:"2.3026...",value:2.3026,difficulty:3,fact:"ln(10) is approximately 2.303."},
+{id:"gcse_16",display:"1.05^{10}",displayType:"expression",valueDisplay:"1.6289...",value:1.6289,difficulty:3,fact:"5% compound for 10 years: 1 pound becomes 1.63 pounds."},
+{id:"gcse_17",display:"1.1^{10}",displayType:"expression",valueDisplay:"2.5937...",value:2.5937,difficulty:3,fact:"10% compound for 10 years more than doubles."},
+{id:"gcse_18",display:"0.95^{20}",displayType:"expression",valueDisplay:"0.3585...",value:0.3585,difficulty:4,fact:"5% annual decline over 20 years: only 35.8% left."},
+{id:"gcse_19",display:"1.02^{35}",displayType:"expression",valueDisplay:"2.0000...",value:1.9999,difficulty:5,fact:"At 2% growth, 35 years to double. Rule of 70: 70 / rate."},
+{id:"gcse_20",display:"\\pi^2",displayType:"expression",valueDisplay:"9.8696...",value:9.8696,difficulty:3,fact:"Pi squared is approximately 9.87. Close to g = 9.81 m/s squared."},
+{id:"gcse_21",display:"e^2",displayType:"expression",valueDisplay:"7.389...",value:7.389,difficulty:3,fact:"e squared is approximately 7.389. Between 7 and 8."},
+{id:"gcse_22",display:"3\\pi",displayType:"expression",valueDisplay:"9.4248...",value:9.4248,difficulty:3,fact:"3 times pi is approximately 9.425. Slightly less than pi squared."},
+{id:"gcse_23",display:"\\varphi^2",displayType:"expression",valueDisplay:"2.618...",value:2.618,difficulty:4,fact:"The golden ratio squared = the golden ratio + 1 = 2.618."},
+{id:"gcse_24",display:"e + 1",displayType:"expression",valueDisplay:"3.71828...",value:3.71828,difficulty:4,fact:"e + 1 is approximately 3.718. Bigger than pi."},
+{id:"gcse_25",display:"\\sqrt{2} + \\sqrt{3}",displayType:"expression",valueDisplay:"3.1463...",value:3.1463,difficulty:5,fact:"The square root of 2 + the square root of 3 is approximately 3.146. Astonishingly close to pi!"},
+{id:"gcse_26",display:"\\sqrt{7}",displayType:"expression",valueDisplay:"2.6458...",value:2.6458,difficulty:3,fact:"The square root of 7 is approximately 2.646."},
+{id:"gcse_27",display:"3\\sqrt{2}",displayType:"expression",valueDisplay:"4.2426...",value:4.2426,difficulty:3,fact:"3 times the square root of 2 is approximately 4.243. The diagonal of a 3x3 square."},
+{id:"gcse_28",display:"\\sqrt{50}",displayType:"expression",valueDisplay:"7.0711...",value:7.0711,difficulty:3,fact:"The square root of 50 = 5 times the square root of 2, which is approximately 7.071. Very close to 7."},
+{id:"gcse_29",display:"\\text{Speed of sound (m/s)}",displayType:"description",valueDisplay:"343",value:343,difficulty:2,fact:"343 m/s. Also 7 cubed = 343."},
+{id:"gcse_30",display:"\\text{Absolute zero (°C)}",displayType:"description",valueDisplay:"-273.15",value:-273.15,difficulty:2,fact:"0 Kelvin = -273.15 degrees Celsius."},
+{id:"gcse_31",display:"\\text{Earth's radius (km)}",displayType:"description",valueDisplay:"6{,}371",value:6371,difficulty:2,fact:"About 6,371 km on average."},
+{id:"gcse_32",display:"\\text{Population of Earth}",displayType:"description",valueDisplay:"\\approx 8 \\times 10^9",value:8000000000,difficulty:2,fact:"About 8 billion people."},
+{id:"gcse_33",display:"\\text{100th prime}",displayType:"description",valueDisplay:"541",value:541,difficulty:4,fact:"The 100th prime is 541."},
+{id:"gcse_34",display:"\\text{Largest Mersenne prime exponent}",displayType:"description",valueDisplay:"136{,}279{,}841",value:136279841,difficulty:3,fact:"2 to the power 136,279,841 minus 1 is prime."},
+{id:"gcse_35",display:"\\text{Third perfect number}",displayType:"description",valueDisplay:"496",value:496,difficulty:3,fact:"496 = 1+2+4+8+16+31+62+124+248."},
+{id:"gcse_36",display:"\\left(\\tfrac{3}{2}\\right)^{12}",displayType:"expression",valueDisplay:"129.746...",value:129.746,difficulty:4,fact:"Twelve perfect fifths almost equals seven octaves (128)."},
+{id:"gcse_37",display:"2^{2^3}",displayType:"expression",valueDisplay:"256",value:256,difficulty:3,fact:"2 to the power (2 cubed) = 2 to the power 8 = 256."},
+{id:"gcse_38",display:"\\text{Fibonacci: } F_{20}",displayType:"description",valueDisplay:"6{,}765",value:6765,difficulty:3,fact:"The 20th Fibonacci number."},
+{id:"gcse_39",display:"100!",displayType:"expression",valueDisplay:"9.33 \\times 10^{157}",value:9.33e157,magnitude:157,difficulty:3,fact:"100! has 158 digits."},
+{id:"gcse_40",display:"52!",displayType:"expression",valueDisplay:"8.07 \\times 10^{67}",value:8.07e67,magnitude:67,difficulty:3,fact:"The number of ways to shuffle a deck of cards."}
+];
+
+const ALEVEL_CARDS = [
+{id:"al_01",display:"e^\\pi",displayType:"expression",valueDisplay:"23.1407...",value:23.1407,difficulty:4,fact:"e to the power pi is approximately 23.14. Gelfond's constant."},
+{id:"al_02",display:"\\pi^e",displayType:"expression",valueDisplay:"22.4592...",value:22.4592,difficulty:4,fact:"Pi to the power e is approximately 22.46. Less than e to the power pi."},
+{id:"al_03",display:"e^e",displayType:"expression",valueDisplay:"15.1543...",value:15.1543,difficulty:3,fact:"e to the power e is approximately 15.15."},
+{id:"al_04",display:"\\pi^\\pi",displayType:"expression",valueDisplay:"36.4622...",value:36.4622,difficulty:3,fact:"Pi to the power pi is approximately 36.46."},
+{id:"al_05",display:"\\ln(\\pi)",displayType:"expression",valueDisplay:"1.1447...",value:1.1447,difficulty:4,fact:"ln(pi) is approximately 1.145."},
+{id:"al_06",display:"\\sum_{n=1}^{\\infty} \\dfrac{1}{n^2}",displayType:"expression",valueDisplay:"\\dfrac{\\pi^2}{6} \\approx 1.6449",value:1.6449,difficulty:4,fact:"The Basel problem -- solved by Euler in 1735."},
+{id:"al_07",display:"\\sum_{n=0}^{\\infty} \\dfrac{1}{n!}",displayType:"expression",valueDisplay:"e \\approx 2.71828",value:2.71828,difficulty:3,fact:"This infinite series defines e."},
+{id:"al_08",display:"\\sum_{n=1}^{100} n",displayType:"expression",valueDisplay:"5{,}050",value:5050,difficulty:2,fact:"Gauss found this as a child: n(n+1)/2."},
+{id:"al_09",display:"\\sum_{n=1}^{100} n^2",displayType:"expression",valueDisplay:"338{,}350",value:338350,difficulty:3,fact:"Sum of first 100 squares."},
+{id:"al_10",display:"\\sum_{n=1}^{\\infty} \\dfrac{1}{2^n}",displayType:"expression",valueDisplay:"1",value:1,difficulty:2,fact:"1/2 + 1/4 + 1/8 + ... = 1 exactly."},
+{id:"al_11",display:"\\log_{10}(2)",displayType:"expression",valueDisplay:"0.30103...",value:0.30103,difficulty:3,fact:"log base 10 of 2 is approximately 0.301. Why 2 to the power 10 is approximately 10 cubed."},
+{id:"al_12",display:"\\log_2(10)",displayType:"expression",valueDisplay:"3.32193...",value:3.32193,difficulty:3,fact:"log base 2 of 10 is approximately 3.322. Bits per decimal digit."},
+{id:"al_13",display:"\\log_{10}(7)",displayType:"expression",valueDisplay:"0.8451...",value:0.8451,difficulty:4,fact:"log base 10 of 7 is approximately 0.845."},
+{id:"al_14",display:"\\text{Euler-Mascheroni } (\\gamma)",displayType:"name",valueDisplay:"0.57722...",value:0.57722,difficulty:4,fact:"Nobody knows if the Euler-Mascheroni constant is rational or irrational."},
+{id:"al_15",display:"\\text{Catalan's constant } (G)",displayType:"name",valueDisplay:"0.91597...",value:0.91597,difficulty:5,fact:"G = 1 - 1/9 + 1/25 - 1/49 + ..."},
+{id:"al_16",display:"\\text{Ap\\'{e}ry's constant } \\zeta(3)",displayType:"name",valueDisplay:"1.20206...",value:1.20206,difficulty:5,fact:"Zeta(3) = 1 + 1/8 + 1/27 + ... Proved irrational in 1978."},
+{id:"al_17",display:"\\pi^3",displayType:"expression",valueDisplay:"31.006...",value:31.006,difficulty:5,fact:"Pi cubed is approximately 31.006. Just barely above 31."},
+{id:"al_18",display:"e^3",displayType:"expression",valueDisplay:"20.086...",value:20.086,difficulty:4,fact:"e cubed is approximately 20.086. Just above 20."},
+{id:"al_19",display:"\\sqrt[3]{12}",displayType:"expression",valueDisplay:"2.2894...",value:2.2894,difficulty:5,fact:"The cube root of 12 is approximately 2.289."},
+{id:"al_20",display:"\\sqrt{e}",displayType:"expression",valueDisplay:"1.6487...",value:1.6487,difficulty:5,fact:"The square root of e is approximately 1.649. Very close to the golden ratio, which is approximately 1.618."},
+{id:"al_21",display:"e^{i\\pi} + 1",displayType:"expression",valueDisplay:"0",value:0,difficulty:2,fact:"Euler's identity. The most beautiful equation."},
+{id:"al_22",display:"\\sin(1) \\text{ (radians)}",displayType:"expression",valueDisplay:"0.8415...",value:0.8415,difficulty:4,fact:"sin(1 radian) is approximately 0.841."},
+{id:"al_23",display:"\\cos(1) \\text{ (radians)}",displayType:"expression",valueDisplay:"0.5403...",value:0.5403,difficulty:4,fact:"cos(1 radian) is approximately 0.540."},
+{id:"al_24",display:"\\tan(\\tfrac{\\pi}{3})",displayType:"expression",valueDisplay:"\\sqrt{3} \\approx 1.7321",value:1.7321,difficulty:3,fact:"tan(60 degrees) = the square root of 3."},
+{id:"al_25",display:"\\text{Primes under 1{,}000}",displayType:"description",valueDisplay:"168",value:168,difficulty:4,fact:"168 primes under 1,000."},
+{id:"al_26",display:"\\text{Digits in } 2^{1000}",displayType:"description",valueDisplay:"302",value:302,difficulty:4,fact:"Use: floor(1000 times log base 10 of 2) + 1 = 302."},
+{id:"al_27",display:"\\text{Digits in } 52!",displayType:"description",valueDisplay:"68",value:68,difficulty:3,fact:"52! has 68 digits."},
+{id:"al_28",display:"\\binom{52}{13}",displayType:"expression",valueDisplay:"635{,}013{,}559{,}600",value:635013559600,difficulty:3,fact:"The number of possible bridge hands."},
+{id:"al_29",display:"\\dfrac{52!}{(13!)^4}",displayType:"expression",valueDisplay:"\\approx 5.36 \\times 10^{28}",value:5.36e28,magnitude:28,difficulty:3,fact:"Ways to deal four bridge hands."},
+{id:"al_30",display:"2^{64}",displayType:"expression",valueDisplay:"1.84 \\times 10^{19}",value:1.84e19,magnitude:19,difficulty:2,fact:"2 to the power 64 is approximately 1.84 times 10 to the power 19. Total chessboard grains."},
+{id:"al_31",display:"\\text{Googol } (10^{100})",displayType:"name",valueDisplay:"10^{100}",value:1e100,magnitude:100,difficulty:3,fact:"Larger than atoms in the observable universe."},
+{id:"al_32",display:"\\text{Googolplex } (10^{10^{100}})",displayType:"name",valueDisplay:"10^{10^{100}}",value:Infinity,magnitude:1e100,difficulty:3,fact:"Can't be written out -- not enough particles in the universe for digits."},
+{id:"al_33",display:"\\text{Atoms in the universe}",displayType:"description",valueDisplay:"\\approx 10^{80}",value:1e80,magnitude:80,difficulty:2,fact:"About 10 to the power 80 atoms."},
+{id:"al_34",display:"\\int_0^1 x^x \\, dx",displayType:"expression",valueDisplay:"0.7834...",value:0.7834,difficulty:5,fact:"The 'sophomore's dream' -- no closed form."},
+{id:"al_35",display:"\\int_0^{\\infty} e^{-x^2} dx",displayType:"expression",valueDisplay:"\\dfrac{\\sqrt{\\pi}}{2} \\approx 0.8862",value:0.8862,difficulty:4,fact:"The Gaussian integral."},
+{id:"al_36",display:"1 - \\dfrac{1}{e}",displayType:"expression",valueDisplay:"0.6321...",value:0.6321,difficulty:4,fact:"P(at least one fixed point in random permutation)."},
+{id:"al_37",display:"\\dfrac{1}{e}",displayType:"expression",valueDisplay:"0.3679...",value:0.3679,difficulty:3,fact:"P(no fixed point) for large n."},
+{id:"al_38",display:"\\sum_{n=1}^{\\infty} \\dfrac{1}{n}",displayType:"expression",valueDisplay:"\\infty",value:Infinity,difficulty:3,fact:"The harmonic series diverges -- extremely slowly."},
+{id:"al_39",display:"\\prod_{p \\text{ prime}} \\dfrac{1}{1-p^{-2}}",displayType:"expression",valueDisplay:"\\dfrac{\\pi^2}{6}",value:1.6449,difficulty:5,fact:"Euler's product formula connects primes to pi."},
+{id:"al_40",display:"e^{i \\cdot 0} + e^{i\\pi/2} + e^{i\\pi} + e^{i3\\pi/2}",displayType:"expression",valueDisplay:"0",value:0,difficulty:4,fact:"The four roots of unity sum to zero."}
+];
+
+const RAZOR_PAIRS = [
+{left:"al_17",right:{id:"razor_01",display:"31",displayType:"expression",valueDisplay:"31",value:31,difficulty:5,fact:"31 is prime."},answer:"left"},
+{left:"al_01",right:"al_02",answer:"left"},
+{left:"al_20",right:"gcse_12",answer:"left"},
+{left:"gcse_25",right:"ks3_16",answer:"left"},
+{left:"ks3_40",right:{id:"razor_02",display:"g \\approx 9.81",displayType:"expression",valueDisplay:"9.81",value:9.81,difficulty:5,fact:"g is approximately 9.81 m/s squared."},answer:"left"},
+{left:"al_18",right:{id:"razor_03",display:"20",displayType:"expression",valueDisplay:"20",value:20,difficulty:5,fact:"20 is a round number."},answer:"left"},
+{left:"al_22",right:{id:"razor_04",display:"\\dfrac{\\sqrt{3}}{2}",displayType:"expression",valueDisplay:"0.8660...",value:0.8660,difficulty:5,fact:"The square root of 3 over 2 = sin(60 degrees)."},answer:"right"},
+{left:"gcse_24",right:{id:"razor_05",display:"\\dfrac{23}{6}",displayType:"expression",valueDisplay:"3.8333...",value:3.8333,difficulty:5,fact:"23/6 is approximately 3.833."},answer:"right"},
+{left:"gcse_22",right:"gcse_20",answer:"right"}
+];
+
+/* ===== ALL CARD BANKS BY LEVEL ===== */
+const ALL_BANKS = { ks3: KS3_CARDS, gcse: GCSE_CARDS, alevel: ALEVEL_CARDS };
+
+/* ===== UTILITY ===== */
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function renderKatex(el,tex){if(typeof katex!=='undefined'){katex.render(tex,el,{throwOnError:false,displayMode:false});}else{el.textContent=tex;}}
+function katexStr(tex){if(typeof katex!=='undefined')return katex.renderToString(tex,{throwOnError:false,displayMode:false});return tex;}
+
+/* ===== STATE ===== */
+let currentLevel='ks3', currentMode='hol';
+let holStreak=0, holBest=0, holLeft=null, holRight=null, holAnswered=false, holQuestionIndex=0;
+let pairsAttempts=0, pairsMatched=0, pairsFirst=null, pairsLocked=false, pairsTimerStart=0, pairsTimerInterval=null;
+
+/* ===== MODE / LEVEL SELECTORS ===== */
+document.querySelectorAll('.mode-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.mode-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentMode=b.dataset.mode;
+    document.getElementById('modeDesc').textContent=currentMode==='hol'
+      ? 'Two cards -- one revealed, one hidden. Is the hidden value higher or lower? Build your streak!'
+      : 'A grid of face-down cards. Match each expression to its value. Fewest attempts wins!';
+  });
+});
+document.querySelectorAll('.level-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    currentLevel=b.dataset.level;
+  });
+});
+
+/* URL param level */
+const urlParams=new URLSearchParams(location.search);
+if(urlParams.get('level')&&ALL_BANKS[urlParams.get('level')]){
+  currentLevel=urlParams.get('level');
+  document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===currentLevel));
+}
+
+/* ===== CARD LOOKUP ===== */
+function findCard(id){
+  for(const bank of [KS3_CARDS,GCSE_CARDS,ALEVEL_CARDS]){
+    const c=bank.find(x=>x.id===id);
+    if(c)return c;
+  }
+  return null;
+}
+
+/* ===== COMPARISON ===== */
+function getMagnitude(card){
+  if(card.magnitude!==undefined) return card.magnitude;
+  if(card.value===Infinity) return Infinity;
+  if(card.value===-Infinity) return -Infinity;
+  return card.value;
+}
+
+function compareCards(a,b){
+  const aInf=(a.value===Infinity||a.value===-Infinity||a.magnitude!==undefined);
+  const bInf=(b.value===Infinity||b.value===-Infinity||b.magnitude!==undefined);
+  if(aInf&&bInf){
+    const am=getMagnitude(a), bm=getMagnitude(b);
+    if(am>bm) return 1;
+    if(am<bm) return -1;
+    return 0;
+  }
+  if(aInf&&!bInf){
+    if(a.value===Infinity||(a.magnitude!==undefined&&a.magnitude>0)) return 1;
+    return -1;
+  }
+  if(!aInf&&bInf){
+    if(b.value===Infinity||(b.magnitude!==undefined&&b.magnitude>0)) return -1;
+    return 1;
+  }
+  if(a.value>b.value) return 1;
+  if(a.value<b.value) return -1;
+  return 0;
+}
+
+/* ===== START GAME ===== */
+function startGame(){
+  if(currentMode==='hol') startHOL();
+  else startPairs();
+}
+
+/* ============================================================
+   HIGHER OR LOWER MODE
+   ============================================================ */
+function getCardPool(){
+  return ALL_BANKS[currentLevel];
+}
+
+function pickCardByDifficulty(exclude,minDiff,maxDiff){
+  const pool=getCardPool().filter(c=>c.difficulty>=minDiff&&c.difficulty<=maxDiff&&(!exclude||c.id!==exclude.id));
+  if(pool.length===0) return getCardPool().filter(c=>!exclude||c.id!==exclude.id)[Math.floor(Math.random()*getCardPool().length)];
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+function pickRazorPair(){
+  const applicable=RAZOR_PAIRS.filter(rp=>{
+    const leftId=typeof rp.left==='string'?rp.left:rp.left.id;
+    const rightId=typeof rp.right==='string'?rp.right:(rp.right.id||'');
+    const leftCard=typeof rp.left==='string'?findCard(rp.left):rp.left;
+    const rightCard=typeof rp.right==='string'?findCard(rp.right):rp.right;
+    return leftCard&&rightCard;
+  });
+  if(applicable.length===0) return null;
+  const rp=applicable[Math.floor(Math.random()*applicable.length)];
+  const leftCard=typeof rp.left==='string'?findCard(rp.left):rp.left;
+  const rightCard=typeof rp.right==='string'?findCard(rp.right):rp.right;
+  return {left:leftCard,right:rightCard,answer:rp.answer};
+}
+
+function startHOL(){
+  holStreak=0;holBest=0;holQuestionIndex=0;holAnswered=false;
+  const pbKey='mfg_higher_power_streak_'+currentLevel;
+  const stored=parseInt(localStorage.getItem(pbKey))||0;
+  holBest=stored;
+  document.getElementById('holStreak').textContent='0';
+  document.getElementById('holBest').textContent=String(stored);
+  document.getElementById('holLevel').textContent=currentLevel.toUpperCase();
+  document.getElementById('factText').textContent='';
+  show('holGame');
+  mfg('game_started',{game_slug:'higher-power',level:currentLevel,mode:'higher-or-lower'});
+  holLeft=pickCardByDifficulty(null,1,2);
+  holRight=pickNextRight();
+  renderHOLCards();
+}
+
+function pickNextRight(){
+  let minD=1,maxD=2;
+  if(holStreak>=6&&holStreak<=10){minD=2;maxD=4;}
+  else if(holStreak>=11){
+    // Try razor pair
+    if(Math.random()<0.5){
+      const rp=pickRazorPair();
+      if(rp){
+        holLeft=rp.left;
+        renderLeftCard();
+        return rp.right;
+      }
+    }
+    minD=4;maxD=5;
+  }
+  return pickCardByDifficulty(holLeft,minD,maxD);
+}
+
+function renderLeftCard(){
+  const el=document.getElementById('leftExpr');
+  el.innerHTML='';
+  renderKatex(el,holLeft.display);
+  const valEl=document.getElementById('leftVal');
+  valEl.innerHTML='';
+  renderKatex(valEl,holLeft.valueDisplay);
+}
+
+function renderHOLCards(){
+  holAnswered=false;
+  document.getElementById('btnHigher').disabled=false;
+  document.getElementById('btnLower').disabled=false;
+  document.getElementById('factText').textContent='';
+
+  // Left card (revealed)
+  renderLeftCard();
+
+  // Right card (hidden - show expression only)
+  const rightInner=document.getElementById('rightInner');
+  rightInner.classList.remove('flipped');
+  const rightExpr=document.getElementById('rightExpr');
+  rightExpr.innerHTML='';
+  renderKatex(rightExpr,holRight.display);
+  const rightVal=document.getElementById('rightVal');
+  rightVal.innerHTML='';
+  rightVal.textContent='???';
+
+  // Set front label
+  const frontLabel=document.querySelector('#rightCard .hol-card-front .card-label');
+  if(frontLabel) frontLabel.textContent='';
+}
+
+function holAnswer(choice){
+  if(holAnswered) return;
+  holAnswered=true;
+  holQuestionIndex++;
+
+  document.getElementById('btnHigher').disabled=true;
+  document.getElementById('btnLower').disabled=true;
+
+  // Reveal right card
+  const rightInner=document.getElementById('rightInner');
+  const rightVal=document.getElementById('rightVal');
+  rightVal.innerHTML='';
+  renderKatex(rightVal,holRight.valueDisplay);
+  rightInner.classList.add('flipped');
+
+  // Determine correct answer
+  const cmp=compareCards(holRight,holLeft);
+  let correctAnswer;
+  if(cmp>0) correctAnswer='higher';
+  else if(cmp<0) correctAnswer='lower';
+  else correctAnswer=choice; // equal = always correct
+
+  const correct=(choice===correctAnswer);
+
+  mfg('question_answered',{game_slug:'higher-power',level:currentLevel,mode:'higher-or-lower',question_index:holQuestionIndex,correct:correct});
+
+  // Show fact
+  document.getElementById('factText').textContent=holRight.fact||'';
+
+  if(correct){
+    holStreak++;
+    const streakEl=document.getElementById('holStreak');
+    streakEl.textContent=String(holStreak);
+    streakEl.classList.remove('streak-flash');
+    void streakEl.offsetWidth;
+    streakEl.classList.add('streak-flash');
+
+    if(holStreak>holBest){
+      holBest=holStreak;
+      document.getElementById('holBest').textContent=String(holBest);
+    }
+
+    // After delay, slide cards
+    setTimeout(()=>{
+      holLeft=holRight;
+      holRight=pickNextRight();
+      renderHOLCards();
+    },1800);
+  } else {
+    // Game over
+    setTimeout(()=>{
+      endHOL();
+    },2000);
+  }
+}
+
+function endHOL(){
+  const pbKey='mfg_higher_power_streak_'+currentLevel;
+  const oldPB=parseInt(localStorage.getItem(pbKey))||0;
+  const newPB=holStreak>oldPB;
+
+  mfg('game_completed',{game_slug:'higher-power',level:currentLevel,mode:'higher-or-lower',score:holStreak});
+
+  if(newPB&&holStreak>0){
+    localStorage.setItem(pbKey,String(holStreak));
+    mfg('personal_best_set',{game_slug:'higher-power',level:currentLevel,mode:'higher-or-lower',score:holStreak,previous_best:oldPB});
+  }
+
+  document.getElementById('resultTitle').textContent=holStreak>=15?'Incredible!':holStreak>=10?'Outstanding!':holStreak>=5?'Well Done!':'Keep Practising!';
+  document.getElementById('finalScore').textContent=String(holStreak);
+  let statsHTML='Streak: '+holStreak;
+  if(newPB&&holStreak>0) statsHTML+='<br>New Personal Best!';
+  else statsHTML+='<br>Personal Best: '+Math.max(oldPB,holStreak);
+  document.getElementById('statsLine').innerHTML=statsHTML;
+  document.getElementById('pbBadge').innerHTML=newPB&&holStreak>0?'<div class="pb-badge">New PB!</div>':'';
+
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('higher-power',currentLevel,holStreak,holQuestionIndex).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('higher-power',currentLevel,holStreak);}}
+  show('results');
+}
+
+/* ============================================================
+   PAIRS MODE
+   ============================================================ */
+let pairsCards=[];
+let pairsState=[];
+
+function startPairs(){
+  pairsAttempts=0;pairsMatched=0;pairsFirst=null;pairsLocked=false;
+  document.getElementById('pairsAttempts').textContent='0';
+  document.getElementById('pairsMatched').textContent='0/10';
+  document.getElementById('pairsTimer').textContent='0s';
+
+  const pool=shuffle(getCardPool()).slice(0,10);
+  pairsCards=[];
+  pool.forEach((card,i)=>{
+    // Expression card
+    pairsCards.push({pairId:i,type:'expr',card:card,content:card.display});
+    // Value card
+    pairsCards.push({pairId:i,type:'val',card:card,content:card.valueDisplay});
+  });
+  pairsCards=shuffle(pairsCards);
+  pairsState=pairsCards.map(()=>({flipped:false,matched:false}));
+
+  show('pairsGame');
+  mfg('game_started',{game_slug:'higher-power',level:currentLevel,mode:'pairs'});
+  renderPairsGrid();
+
+  pairsTimerStart=Date.now();
+  clearInterval(pairsTimerInterval);
+  pairsTimerInterval=setInterval(()=>{
+    const s=Math.floor((Date.now()-pairsTimerStart)/1000);
+    document.getElementById('pairsTimer').textContent=s+'s';
+  },250);
+}
+
+function renderPairsGrid(){
+  const grid=document.getElementById('pairsGrid');
+  grid.innerHTML='';
+  // Use 4x5 layout (20 cards)
+  pairsCards.forEach((pc,i)=>{
+    const card=document.createElement('div');
+    card.className='pair-card'+(pairsState[i].matched?' matched disabled':'');
+    card.dataset.index=i;
+
+    const inner=document.createElement('div');
+    inner.className='pair-card-inner'+(pairsState[i].flipped||pairsState[i].matched?' flipped':'');
+
+    const front=document.createElement('div');
+    front.className='pair-card-face pair-card-front';
+    front.innerHTML='<div class="card-q">?</div>';
+
+    const back=document.createElement('div');
+    back.className='pair-card-face pair-card-back';
+    const contentSpan=document.createElement('span');
+    back.appendChild(contentSpan);
+
+    inner.appendChild(front);
+    inner.appendChild(back);
+    card.appendChild(inner);
+
+    if(!pairsState[i].matched){
+      card.addEventListener('click',()=>pairsFlip(i));
+    }
+
+    grid.appendChild(card);
+
+    // Render KaTeX after DOM
+    waitForKatex(()=>{renderKatex(contentSpan,pc.content);});
+  });
+}
+
+function waitForKatex(fn){
+  if(typeof katex!=='undefined') fn();
+  else setTimeout(()=>waitForKatex(fn),100);
+}
+
+function pairsFlip(idx){
+  if(pairsLocked) return;
+  if(pairsState[idx].flipped||pairsState[idx].matched) return;
+
+  pairsState[idx].flipped=true;
+  const cards=document.querySelectorAll('.pair-card');
+  cards[idx].querySelector('.pair-card-inner').classList.add('flipped');
+
+  if(pairsFirst===null){
+    pairsFirst=idx;
+  } else {
+    pairsAttempts++;
+    document.getElementById('pairsAttempts').textContent=String(pairsAttempts);
+    pairsLocked=true;
+
+    const first=pairsFirst;
+    const second=idx;
+    pairsFirst=null;
+
+    if(pairsCards[first].pairId===pairsCards[second].pairId&&first!==second){
+      // Match
+      pairsState[first].matched=true;
+      pairsState[second].matched=true;
+      pairsMatched++;
+      document.getElementById('pairsMatched').textContent=pairsMatched+'/10';
+      setTimeout(()=>{
+        cards[first].classList.add('matched','disabled');
+        cards[second].classList.add('matched','disabled');
+        pairsLocked=false;
+        if(pairsMatched===10) endPairs();
+      },500);
+    } else {
+      // No match
+      setTimeout(()=>{
+        pairsState[first].flipped=false;
+        pairsState[second].flipped=false;
+        cards[first].querySelector('.pair-card-inner').classList.remove('flipped');
+        cards[second].querySelector('.pair-card-inner').classList.remove('flipped');
+        pairsLocked=false;
+      },1200);
+    }
+  }
+}
+
+function endPairs(){
+  clearInterval(pairsTimerInterval);
+  const elapsed=Math.floor((Date.now()-pairsTimerStart)/1000);
+  const pbKey='mfg_higher_power_pairs_'+currentLevel;
+  const oldPB=parseInt(localStorage.getItem(pbKey))||0;
+  const newPB=(oldPB===0||pairsAttempts<oldPB);
+
+  mfg('game_completed',{game_slug:'higher-power',level:currentLevel,mode:'pairs',score:pairsAttempts,questions_answered:10,questions_correct:10});
+
+  if(newPB){
+    localStorage.setItem(pbKey,String(pairsAttempts));
+    mfg('personal_best_set',{game_slug:'higher-power',level:currentLevel,mode:'pairs',score:pairsAttempts,previous_best:oldPB});
+  }
+
+  let title='Well Done!';
+  if(pairsAttempts===10) title='Perfect Memory!';
+  else if(pairsAttempts<=13) title='Outstanding!';
+  else if(pairsAttempts<=16) title='Great Job!';
+
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('finalScore').textContent=pairsAttempts+' attempts';
+  let statsHTML='Time: '+elapsed+'s | Perfect = 10 attempts';
+  if(newPB) statsHTML+='<br>New Personal Best!';
+  else statsHTML+='<br>Personal Best: '+oldPB+' attempts';
+  document.getElementById('statsLine').innerHTML=statsHTML;
+  document.getElementById('pbBadge').innerHTML=newPB?'<div class="pb-badge">New PB!</div>':'';
+
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('higher-power',currentLevel,pairsAttempts,10).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('higher-power',currentLevel,pairsAttempts);}}
+
+  setTimeout(()=>show('results'),800);
+}
+
+/* ===== MENU ===== */
+function showMenu(){
+  clearInterval(pairsTimerInterval);
+  show('menu');
+}
+
+/* ===== ACCESSIBILITY TOGGLE ===== */
+(function(){
+  var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');
+  if(!btn)return;
+  function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}
+  apply(localStorage.getItem(KEY)==='true');
+  btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});
+})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

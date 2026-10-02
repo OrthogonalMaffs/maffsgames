@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="36 exam-style questions for AQA Core Maths Paper 1. Covers §3.1 Analysis of Data and §3.2 Personal Finance. Free, no sign-up required.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/core-maths-paper1/">
+<meta property="og:title" content="Core Maths Paper 1 Practice — MaffsGames">
+<meta property="og:description" content="36 exam-style questions for AQA Core Maths Paper 1. Covers §3.1 Analysis of Data and §3.2 Personal Finance.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://maffsgames.co.uk/games/core-maths-paper1/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Core Maths Paper 1 Practice — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--surface2:#162032;--border:#334155;
+  --accent:#0ea5e9;--accent-dim:rgba(14,165,233,.12);--accent-glow:rgba(14,165,233,.25);
+  --correct:#0d9488;--correct-dim:rgba(13,148,136,.12);
+  --wrong:#ef4444;--wrong-dim:rgba(239,68,68,.12);
+  --text:#e2e8f0;--muted:#94a3b8;--text-dark:#1e293b;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:720px;width:100%;padding:1rem;flex:1;display:flex;flex-direction:column}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+
+/* Header */
+.header{text-align:center;padding:1.2rem 0 .5rem;position:relative}
+.header h1{font-size:1.6rem;font-weight:800;color:var(--accent)}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+
+/* Accessibility */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .q-stem,body.accessible .option-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{position:absolute;top:1.2rem;right:0;background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--correct)}
+
+/* Screens */
+.screen{display:none;flex-direction:column;gap:16px}.screen.active{display:flex}
+
+/* Start screen */
+.start-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.start-icon{font-size:48px;margin-bottom:12px}
+.start-desc{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:20px;max-width:520px;margin-left:auto;margin-right:auto}
+.start-btn{padding:14px 40px;border-radius:12px;border:none;background:var(--accent);color:#000;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .15s}
+.start-btn:hover{transform:scale(1.04)}
+
+/* Progress bar */
+.progress-bar{width:100%;height:4px;background:var(--surface);border-radius:2px;overflow:hidden;margin-bottom:4px}
+.progress-fill{height:100%;background:var(--accent);transition:width .3s ease;width:0%}
+
+/* Section banner */
+.section-banner{background:#1a2744;border-left:4px solid var(--accent);border-radius:8px;padding:16px 20px;text-align:center;animation:fadeIn .4s}
+.section-banner h2{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px}
+.section-banner .section-range{font-size:.8rem;color:var(--muted)}
+
+/* Question card */
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;animation:fadeIn .3s}
+.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.q-counter{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent)}
+.q-tag{font-size:12px;color:var(--muted)}
+.q-stem{font-size:16px;line-height:1.7;color:var(--text);margin-bottom:20px}
+
+/* Data tables in stems */
+.data-table{border-collapse:collapse;margin:12px 0 16px;max-width:480px}
+.data-table th{background:#1a2744;color:#fff;padding:8px 12px;font-size:13px;font-weight:600;text-align:left;border:1px solid var(--border)}
+.data-table td{padding:8px 12px;font-size:13px;border:1px solid var(--border);color:var(--text)}
+.data-table tr:nth-child(even) td{background:rgba(248,250,252,.04)}
+.data-table tr:nth-child(odd) td{background:transparent}
+
+/* Stem-and-leaf table */
+.stem-leaf-table{border-collapse:collapse;margin:12px auto 16px;font-family:'JetBrains Mono',monospace;font-size:14px}
+.stem-leaf-table th{background:#1a2744;color:#fff;padding:6px 14px;font-size:12px;font-weight:600;text-align:center;border:1px solid var(--border)}
+.stem-leaf-table td{padding:6px 14px;border:1px solid var(--border);color:var(--text)}
+.stem-leaf-table .stem-col{text-align:center;font-weight:700;background:rgba(14,165,233,.08)}
+.stem-leaf-table .left-col{text-align:right}
+.stem-leaf-table .right-col{text-align:left}
+
+/* SVG containers */
+.svg-container{margin:12px 0 16px;display:flex;justify-content:center}
+.svg-container svg{max-width:100%;height:auto}
+
+/* Options */
+.options{display:flex;flex-direction:column;gap:10px}
+.option-btn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;cursor:pointer;transition:all .15s;text-align:left}
+.option-btn:hover:not(.locked){border-color:var(--accent);background:var(--accent-dim)}
+.option-letter{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.option-text{flex:1;line-height:1.5}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-dim)}
+.option-btn.correct .option-letter{background:var(--correct);color:#fff}
+.option-btn.incorrect{border-color:var(--wrong);background:var(--wrong-dim)}
+.option-btn.incorrect .option-letter{background:var(--wrong);color:#fff}
+.option-btn.reveal{border-color:var(--correct);background:var(--correct-dim)}
+.option-btn.reveal .option-letter{background:var(--correct);color:#fff}
+
+/* Feedback */
+.working-note{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(14,165,233,.06);border-radius:8px;border-left:3px solid var(--accent);margin-top:12px;display:none}
+.working-note.visible{display:block}
+.next-btn{padding:12px 32px;border-radius:10px;border:none;background:var(--accent);color:#000;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;display:none;align-self:flex-end;transition:transform .15s}
+.next-btn.visible{display:block}
+.next-btn:hover{transform:scale(1.04)}
+
+/* Fermi signpost */
+.fermi-signpost{font-size:12px;color:var(--muted);text-align:center;padding:8px;margin-top:4px}
+.fermi-signpost a{color:var(--accent);text-decoration:none;font-weight:600}
+.fermi-signpost a:hover{text-decoration:underline}
+
+/* Results screen */
+.results-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.results-title{font-size:1.4rem;font-weight:800;color:var(--accent);margin-bottom:8px}
+.results-score{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;margin:16px 0}
+.section-scores{display:flex;flex-direction:column;gap:8px;margin:20px auto;max-width:400px}
+.section-score-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)}
+.section-score-label{font-size:14px;color:var(--muted)}
+.section-score-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700}
+.dot-grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:360px;margin:16px auto}
+.dot-grid-section{display:flex;flex-direction:column;gap:4px;width:100%}
+.dot-grid-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.dot-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.dot{width:16px;height:16px;border-radius:50%;cursor:default;position:relative}
+.dot.correct-dot{background:var(--correct)}
+.dot.incorrect-dot{background:var(--wrong)}
+.dot:hover::after{content:attr(data-q);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);font-size:10px;background:#000;color:#fff;padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none}
+.results-actions{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.results-btn{padding:12px 28px;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;text-decoration:none}
+.results-btn:hover{background:var(--accent);color:#000}
+.results-btn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+.results-btn.primary:hover{background:#38bdf8}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:500px){
+  .q-card{padding:16px}
+  .option-btn{padding:12px}
+  .results-card{padding:20px}
+}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">MaffsGames</a>
+
+  <!-- START SCREEN -->
+  <div id="startScreen" class="screen active">
+    <div class="header" style="position:relative">
+      <h1>Core Maths Paper 1 Practice</h1>
+      <div class="sub">AQA Level 3 Mathematical Studies — §3.1 & §3.2</div>
+      <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    </div>
+    <div class="start-card">
+      <div class="start-icon">&#128203;</div>
+      <p class="start-desc">
+        36 exam-style questions covering <strong>§3.1 Analysis of Data</strong> (Q1–18) and <strong>§3.2 Maths for Personal Finance</strong> (Q19–36). Written in AQA Core Maths style. No timer — work at your own pace.
+      </p>
+      <button class="start-btn" onclick="startGame()">Begin Practice</button>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="gameScreen" class="screen">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+    <div id="sectionBanner" class="section-banner" style="display:none">
+      <h2 id="sectionTitle"></h2>
+      <div class="section-range" id="sectionRange"></div>
+    </div>
+
+    <div id="questionArea" style="display:none">
+      <div class="q-card">
+        <div class="q-header">
+          <span class="q-counter" id="qCounter"></span>
+          <span class="q-tag" id="qTag"></span>
+        </div>
+        <div class="q-stem" id="qStem"></div>
+        <div class="options" id="optionsContainer"></div>
+        <div class="working-note" id="workingNote"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      </div>
+      <div class="fermi-signpost">For §3.3 Estimation & Fermi problems &#8594; <a href="../fermi-lab/?level=core">Play Fermi Lab</a></div>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="resultsScreen" class="screen">
+    <div class="results-card">
+      <div class="results-title">Core Maths Paper 1 Practice — Complete</div>
+      <div class="results-score" id="finalScore"></div>
+      <div class="section-scores">
+        <div class="section-score-row">
+          <span class="section-score-label">§3.1 Analysis of Data</span>
+          <span class="section-score-val" id="s1Score"></span>
+        </div>
+        <div class="section-score-row">
+          <span class="section-score-label">§3.2 Personal Finance</span>
+          <span class="section-score-val" id="s2Score"></span>
+        </div>
+      </div>
+      <div class="dot-grid">
+        <div class="dot-grid-section">
+          <div class="dot-grid-label">§3.1 Analysis of Data</div>
+          <div class="dot-row" id="s1Dots"></div>
+        </div>
+        <div class="dot-grid-section" style="margin-top:8px">
+          <div class="dot-grid-label">§3.2 Personal Finance</div>
+          <div class="dot-row" id="s2Dots"></div>
+        </div>
+      </div>
+      <div class="results-actions">
+        <button class="results-btn primary" onclick="restartGame()">Play Again</button>
+        <a href="../../" class="results-btn">Back to Portal</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── QUESTION BANK ──
+const QUESTIONS = [
+  // ═══ §3.1 Analysis of Data — Q1 to Q18 ═══
+  {
+    section: '3.1', ao: 'AO1',
+    stem: 'The times (in minutes) taken by 9 students to complete a puzzle are: 12, 15, 15, 18, 21, 24, 27, 31, 44. What is the interquartile range?',
+    options: ['9', '12', '15', '32'],
+    correct: 1,
+    working: 'Order the values. LQ = 15 (3rd value), UQ = 27 (7th value). IQR = 27 \u2212 15 = 12.'
+  },
+  {
+    section: '3.1', ao: 'AO1',
+    stem: 'The table shows the number of hours per week 40 adults spend exercising. What is the estimated mean?',
+    table: { headers: ['Hours', 'Frequency'], rows: [['0\u20132', '6'], ['2\u20134', '16'], ['4\u20136', '12'], ['6\u20138', '6']] },
+    options: ['3.5', '3.7', '3.9', '4.2'],
+    correct: 2,
+    working: 'Midpoints: 1, 3, 5, 7. Mean = (6\u00d71 + 16\u00d73 + 12\u00d75 + 6\u00d77) \u00f7 40 = 156 \u00f7 40 = 3.9.'
+  },
+  {
+    section: '3.1', ao: 'AO1',
+    stem: 'Two batches of components are tested for diameter. Batch A: mean 50.2 mm, SD 0.4 mm. Batch B: mean 50.1 mm, SD 1.8 mm. A manufacturer needs components as close to 50 mm as possible with minimal variation. Which batch should they use?',
+    options: ['Batch A, because it has a higher mean', 'Batch A, because it has a smaller standard deviation', 'Batch B, because it has a mean closer to 50 mm', 'Batch B, because the standard deviation shows it varies more'],
+    correct: 1,
+    working: 'Both means are close to 50 mm. The standard deviation is the key measure of consistency \u2014 Batch A is far more reliable.'
+  },
+  {
+    section: '3.1', ao: 'AO1',
+    stem: 'A histogram shows the distribution of waiting times at a clinic. How many patients waited between 10 and 40 minutes?',
+    svg: 'histogram_q4',
+    options: ['48', '60', '72', '84'],
+    correct: 1,
+    working: 'Frequency = density \u00d7 class width. 10\u201320: 3.6\u00d710 = 36. 20\u201340: 1.2\u00d720 = 24. Total = 60.'
+  },
+  {
+    section: '3.1', ao: 'AO1',
+    stem: 'A factory employs 240 workers: 80 morning shift, 120 afternoon shift, 40 night shift. A stratified sample of 30 is taken. How many should come from the afternoon shift?',
+    options: ['10', '12', '15', '18'],
+    correct: 2,
+    working: '120 \u00f7 240 \u00d7 30 = 15.'
+  },
+  {
+    section: '3.1', ao: 'AO1',
+    stem: 'A cumulative frequency table for the weights of 100 parcels shows: 20 below 1 kg, 55 below 2 kg, 80 below 3 kg, 100 below 4 kg. What is the best estimate for the median weight?',
+    options: ['Between 1 kg and 2 kg', 'Exactly 2 kg', 'Between 2 kg and 3 kg', 'Between 3 kg and 4 kg'],
+    correct: 0,
+    working: 'Median = 50th value. 20 parcels below 1 kg, 55 below 2 kg \u2014 the 50th parcel falls in the 1\u20132 kg class.'
+  },
+  {
+    section: '3.1', ao: 'AO2',
+    stem: 'A researcher collects: shoe size, favourite colour, time to complete a task (seconds), number of siblings. Which correctly classifies all four?',
+    options: ['Quantitative discrete, qualitative, quantitative continuous, quantitative discrete', 'Quantitative, qualitative, quantitative discrete, quantitative continuous', 'Discrete, qualitative, continuous, discrete', 'All four are quantitative'],
+    correct: 0,
+    working: 'Shoe size = discrete. Favourite colour = qualitative. Time = continuous. Siblings = discrete.'
+  },
+  {
+    section: '3.1', ao: 'AO2',
+    stem: 'A journalist surveys the first 40 people outside a cinema on a Saturday afternoon to find out how much TV people watch. What is the most significant reason this sample may be biased?',
+    options: ['40 people is not enough for any valid conclusion', 'The sample is taken on a Saturday, so workers are underrepresented', 'People visiting a cinema on a Saturday afternoon may watch less TV than average', 'She should have used a larger sample from multiple locations'],
+    correct: 2,
+    working: 'The location creates systematic bias \u2014 cinema-goers may self-select as people who prefer going out over watching TV.'
+  },
+  {
+    section: '3.1', ao: 'AO2',
+    stem: 'A box plot shows scores in a class test. Min: 18, LQ: 34, Median: 51, UQ: 63, Max: 79. A student says "more than half the class scored above 51." Is this correct?',
+    svg: 'boxplot_q9',
+    options: ['Yes \u2014 by definition, 50% of values lie at or above the median', 'No \u2014 the median means most students scored below 51', 'Yes \u2014 the upper quartile is above 51 so most students scored above it', 'Cannot be determined from a box plot'],
+    correct: 0,
+    working: 'The median splits data 50/50. The student\'s statement is broadly correct \u2014 "more than half" is slightly imprecise, but A is the best answer.'
+  },
+  {
+    section: '3.1', ao: 'AO2',
+    stem: 'The annual salaries of 5 employees are: \u00a322,000, \u00a324,000, \u00a326,000, \u00a328,000, \u00a385,000. A recruitment advert states "Average salary \u00a337,000." Which measure is being used, and is it a fair representation?',
+    options: ['Mean \u2014 fair, because it uses all data values', 'Mean \u2014 potentially misleading, because it is heavily influenced by the outlier', 'Median \u2014 fair, because it is not affected by the outlier', 'Mode \u2014 misleading, because there is no modal salary'],
+    correct: 1,
+    working: 'Mean = (22+24+26+28+85)\u00f75 = \u00a337,000. Correct but distorted by the \u00a385k outlier. Median = \u00a326,000 \u2014 far more representative.'
+  },
+  {
+    section: '3.1', ao: 'AO2',
+    stem: 'Class X: mean 62, median 65, SD 8. Class Y: mean 62, median 54, SD 14. Which statement is most accurate?',
+    options: ['The classes performed equally well because they have the same mean', 'Class X performed better on average because their median is higher', 'Class Y performed better because their scores were more spread out', 'No comparison can be made without seeing the raw data'],
+    correct: 1,
+    working: 'Same mean, but Class Y\'s lower median (54 vs 65) suggests outliers pulling the mean up. Class X also has lower SD \u2014 more consistent performance.'
+  },
+  {
+    section: '3.1', ao: 'AO2',
+    stem: 'A histogram shows the ages of visitors to a museum one Saturday. Which age group had the most visitors?',
+    svg: 'histogram_q12',
+    options: ['10\u201320', '20\u201340', '40\u201360', '60\u201380'],
+    correct: 1,
+    working: 'Frequency = density \u00d7 width. 0\u201310: 18, 10\u201320: 24, 20\u201340: 62, 40\u201360: 56, 60\u201380: 30. Most visitors: 20\u201340.'
+  },
+  {
+    section: '3.1', ao: 'AO3',
+    stem: 'A school wants to survey students about a new homework policy. The head teacher proposes asking students who visit the library during lunchtime. Which response best explains why this may not be representative?',
+    options: ['Library visitors may be more academically engaged and have different views on homework \u2014 a stratified random sample would be better', 'The sample size will be too small \u2014 a census would be better', 'Questionnaires are always biased \u2014 interviews would be better', 'Lunchtime is a bad time \u2014 use the same method at a different time'],
+    correct: 0,
+    working: 'Self-selection bias: library visitors are not representative. A stratified random sample across year groups reduces this.'
+  },
+  {
+    section: '3.1', ao: 'AO3',
+    stem: 'A sports drink company states: "In our study, athletes who used our product improved their 5 km time by an average of 47 seconds." Which is the most important question to ask?',
+    options: ['What was the standard deviation of the improvement?', 'Was there a control group that did not use the product?', 'How many athletes were in the study?', 'What was the median improvement?'],
+    correct: 1,
+    working: 'Without a control group you cannot separate the product\'s effect from natural training improvement. This is the most fundamental flaw.'
+  },
+  {
+    section: '3.1', ao: 'AO3',
+    stem: 'A back-to-back stem-and-leaf diagram shows scores for two groups (11 values each). What is the difference between the medians?',
+    svg: 'stemleaf_q15',
+    options: ['2', '4', '6', '8'],
+    correct: 0,
+    working: 'Group A ordered: 45,48,49,52,54,56,57,61,65,68,73 \u2192 median (6th value) = 56. Group B: 42,46,47,51,53,58,59,60,64,66,72 \u2192 median = 58. Difference = 2.'
+  },
+  {
+    section: '3.1', ao: 'AO3',
+    stem: 'Heights of 200 students: 25th percentile = 158 cm, 90th percentile = 181 cm. A clothing company says "Size M fits the 25th to 90th percentile." How many of the 200 students fit size M?',
+    options: ['104', '115', '130', '158'],
+    correct: 2,
+    working: '90th \u2212 25th = 65% of students. 0.65 \u00d7 200 = 130.'
+  },
+  {
+    section: '3.1', ao: 'AO3',
+    stem: 'Reaction times (ms) for 8 people: 210, 215, 218, 222, 225, 229, 234, 614. Mean = 270.9 ms. A researcher considers removing 614 ms. What would be the effect on the mean and median?',
+    options: ['Both would decrease significantly', 'The mean would decrease significantly; the median would change very little', 'The mean would increase; the median would decrease', 'Neither would change significantly'],
+    correct: 1,
+    working: 'Mean without 614: 1553\u00f77 = 221.9 ms \u2014 large decrease. Median of 8: (222+225)\u00f72 = 223.5. Median of 7: 222. Barely changes.'
+  },
+  {
+    section: '3.1', ao: 'AO3',
+    stem: 'A survey of 500 people finds that those who eat breakfast earn on average \u00a34,200 more per year. A blogger concludes "Eating breakfast causes higher earnings." What is the most appropriate criticism?',
+    options: ['The sample size of 500 is too small', 'Correlation between breakfast habits and earnings does not imply causation', 'The mean is not the right measure for earnings data', 'The survey should have asked about other meals too'],
+    correct: 1,
+    working: 'A confounding variable \u2014 such as lifestyle habits or socioeconomic background \u2014 could explain both. Classic correlation \u2260 causation.'
+  },
+  // ═══ §3.2 Maths for Personal Finance — Q19 to Q36 ═══
+  {
+    section: '3.2', ao: 'AO1',
+    stem: '\u00a32,500 is invested at 3% simple interest per year. What is the total interest earned after 4 years?',
+    options: ['\u00a375', '\u00a3150', '\u00a3300', '\u00a3318.55'],
+    correct: 2,
+    working: '2500 \u00d7 0.03 \u00d7 4 = \u00a3300.'
+  },
+  {
+    section: '3.2', ao: 'AO1',
+    stem: '\u00a36,000 is invested for 2 years at 4% compound interest per annum. What is the value at the end of 2 years?',
+    options: ['\u00a36,480.00', '\u00a36,489.60', '\u00a36,504.00', '\u00a36,720.00'],
+    correct: 1,
+    working: '6000 \u00d7 1.04\u00b2 = 6000 \u00d7 1.0816 = \u00a36,489.60.'
+  },
+  {
+    section: '3.2', ao: 'AO1',
+    stem: 'Personal allowance \u00a312,570. Income tax 20% on earnings above this up to \u00a350,270. A worker earns \u00a331,070. How much income tax do they pay?',
+    options: ['\u00a33,700.00', '\u00a34,628.00', '\u00a36,214.00', '\u00a32,514.00'],
+    correct: 0,
+    working: 'Taxable = \u00a331,070 \u2212 \u00a312,570 = \u00a318,500. Tax = 20% \u00d7 \u00a318,500 = \u00a33,700.'
+  },
+  {
+    section: '3.2', ao: 'AO1',
+    stem: 'A plumber charges \u00a3340 for labour plus \u00a385 for parts. VAT is charged at 20% on the total. What is the total bill including VAT?',
+    options: ['\u00a3408.00', '\u00a3425.00', '\u00a3510.00', '\u00a3493.00'],
+    correct: 2,
+    working: '(340 + 85) \u00d7 1.20 = \u00a3425 \u00d7 1.20 = \u00a3510.'
+  },
+  {
+    section: '3.2', ao: 'AO1',
+    stem: 'Exchange rate: \u00a31 = $1.28. Bank charges 1.5% commission. How many dollars does a traveller receive when exchanging \u00a3400?',
+    options: ['$512.00', '$504.32', '$519.68', '$498.56'],
+    correct: 1,
+    working: '\u00a3400 \u00d7 0.985 = \u00a3394 after commission. \u00a3394 \u00d7 1.28 = $504.32.'
+  },
+  {
+    section: '3.2', ao: 'AO1',
+    stem: 'After a 12% increase, a train season ticket costs \u00a32,464. What was the price before the increase?',
+    options: ['\u00a32,168.32', '\u00a32,171.00', '\u00a32,200.00', '\u00a32,352.00'],
+    correct: 2,
+    working: '\u00a32,464 \u00f7 1.12 = \u00a32,200.'
+  },
+  {
+    section: '3.2', ao: 'AO2',
+    stem: 'A savings account offers a nominal rate of 6% per year, compounded monthly. Using r = (1 + i/n)\u207f \u2212 1, what is the AER to 2 decimal places?',
+    options: ['6.00%', '6.14%', '6.17%', '6.24%'],
+    correct: 2,
+    working: '(1 + 0.06/12)\u00b9\u00b2 \u2212 1 = (1.005)\u00b9\u00b2 \u2212 1 = 0.06168 = 6.17%.'
+  },
+  {
+    section: '3.2', ao: 'AO2',
+    stem: 'Priya\'s monthly take-home pay is \u00a31,840. She wants to save 10% of her take-home pay. Can she afford to?',
+    table: { headers: ['Item', 'Monthly cost'], rows: [['Rent', '\u00a3720'], ['Food', '\u00a3210'], ['Transport', '\u00a395'], ['Phone', '\u00a335'], ['Utilities', '\u00a388']] },
+    options: ['Yes \u2014 she has \u00a3692 remaining; saving \u00a3184 is easily achievable', 'No \u2014 outgoings exceed income once savings are included', 'Yes \u2014 but only if she cuts her food budget', 'No \u2014 utilities and transport together exceed her savings target'],
+    correct: 0,
+    working: 'Total outgoings = \u00a31,148. Remaining = \u00a3692. Savings target = \u00a3184. Comfortably achievable.'
+  },
+  {
+    section: '3.2', ao: 'AO2',
+    stem: 'A weekly food shop costs \u00a395 in January 2022. CPI inflation: 8.7% in 2022, 6.3% in 2023. What is the estimated cost in January 2024?',
+    options: ['\u00a3104.27', '\u00a3109.77', '\u00a3112.40', '\u00a3115.63'],
+    correct: 1,
+    working: '95 \u00d7 1.087 = \u00a3103.265. \u00a3103.265 \u00d7 1.063 = \u00a3109.77.'
+  },
+  {
+    section: '3.2', ao: 'AO2',
+    stem: 'A length is measured as 8.4 cm, rounded to 1 decimal place. What is the error interval for the true length l?',
+    options: ['8.35 \u2264 l < 8.45', '8.3 \u2264 l < 8.5', '8.35 < l \u2264 8.45', '8.39 \u2264 l \u2264 8.41'],
+    correct: 0,
+    working: 'Rounded to 1 d.p.: lower bound = 8.35, upper bound = 8.45. Standard notation: 8.35 \u2264 l < 8.45.'
+  },
+  {
+    section: '3.2', ao: 'AO2',
+    stem: 'Hasan invests \u00a38,500 at 4.5% compound interest per year. How many complete years will it take for his investment to exceed \u00a310,000?',
+    options: ['3', '4', '5', '6'],
+    correct: 1,
+    working: 'Year 1: \u00a38,882.50. Year 2: \u00a39,282.21. Year 3: \u00a39,699.91. Year 4: \u00a310,136.41. Exceeds \u00a310,000 after 4 years.'
+  },
+  {
+    section: '3.2', ao: 'AO2',
+    stem: 'NI is charged at 12% on earnings between \u00a312,570 and \u00a350,270. A worker earns \u00a322,000. How much NI do they pay annually?',
+    options: ['\u00a31,131.60', '\u00a31,244.40', '\u00a32,640.00', '\u00a3884.40'],
+    correct: 0,
+    working: 'NI = 12% \u00d7 (\u00a322,000 \u2212 \u00a312,570) = 12% \u00d7 \u00a39,430 = \u00a31,131.60.'
+  },
+  {
+    section: '3.2', ao: 'AO2',
+    stem: 'Student loan repayments are 9% of earnings above \u00a327,295. A graduate earns \u00a328,000. How much do they repay in the first year?',
+    options: ['\u00a32,520.00', '\u00a363.45', '\u00a3127.80', '\u00a30 \u2014 earnings below threshold'],
+    correct: 1,
+    working: '9% \u00d7 (\u00a328,000 \u2212 \u00a327,295) = 9% \u00d7 \u00a3705 = \u00a363.45.'
+  },
+  {
+    section: '3.2', ao: 'AO3',
+    stem: 'Account A: 3.5% simple interest per year. Account B: 3.6% compound interest per year. Lena invests \u00a35,000 for 3 years. Which gives more interest, and by how much?',
+    options: ['Account A by \u00a35.30', 'Account B by \u00a344.70', 'Account A by \u00a324.70', 'Both give the same total interest'],
+    correct: 1,
+    working: 'A: 5000 \u00d7 0.035 \u00d7 3 = \u00a3525.00. B: 5000 \u00d7 1.036\u00b3 \u2212 5000 = \u00a3569.70. Account B wins by \u00a344.70.'
+  },
+  {
+    section: '3.2', ao: 'AO3',
+    stem: 'A couple borrow \u00a3180,000 on a 25-year repayment mortgage. Monthly repayment: \u00a3975. How much do they repay in total, and how much is interest?',
+    options: ['Total: \u00a3292,500 \u00b7 Interest: \u00a3112,500', 'Total: \u00a3275,400 \u00b7 Interest: \u00a395,400', 'Total: \u00a3302,400 \u00b7 Interest: \u00a3122,400', 'Total: \u00a3265,000 \u00b7 Interest: \u00a385,000'],
+    correct: 0,
+    working: 'Total = \u00a3975 \u00d7 12 \u00d7 25 = \u00a3292,500. Interest = \u00a3292,500 \u2212 \u00a3180,000 = \u00a3112,500.'
+  },
+  {
+    section: '3.2', ao: 'AO3',
+    stem: 'A worker\'s salary increases by 2.1%. RPI inflation the same year is 3.4%. Which statement best describes the effect on their standard of living?',
+    options: ['Improved \u2014 they earn more money', 'Unchanged \u2014 both pay and prices have risen', 'Fallen in real terms \u2014 the pay rise is below inflation', 'Impossible to say without knowing their salary'],
+    correct: 2,
+    working: 'Real-terms change \u2248 2.1% \u2212 3.4% = \u22121.3%. Purchasing power has decreased.'
+  },
+  {
+    section: '3.2', ao: 'AO3',
+    stem: 'A tourist returns with 340 euros. Rate: \u00a31 = \u20ac1.14. Bureau de change charges \u00a33.50 flat fee plus 1.8% commission on the sterling value before fees. How many pounds does the tourist receive?',
+    options: ['\u00a3292.40', '\u00a3287.15', '\u00a3289.38', '\u00a3290.54'],
+    correct: 2,
+    working: '340 \u00f7 1.14 = \u00a3298.25. Commission = 1.8% \u00d7 \u00a3298.25 = \u00a35.37. Fee = \u00a33.50. Received = \u00a3298.25 \u2212 \u00a38.87 = \u00a3289.38.'
+  },
+  {
+    section: '3.2', ao: 'AO3',
+    stem: 'Marcus earns \u00a319,770 per year. After income tax (20% on earnings above \u00a312,570) and NI (12% on earnings above \u00a312,570), he plans this monthly budget. Is his plan achievable?',
+    table: { headers: ['Item', 'Monthly'], rows: [['Rent', '\u00a3650'], ['Food', '\u00a3180'], ['Transport', '\u00a3110'], ['Entertainment', '\u00a3200'], ['Savings', '\u00a3300']] },
+    options: ['Yes \u2014 take-home pay comfortably covers the budget', 'No \u2014 take-home pay is less than planned monthly outgoings', 'Yes \u2014 but only if he reduces entertainment spending', 'Cannot be determined without knowing his tax code'],
+    correct: 1,
+    working: 'Taxable = \u00a319,770 \u2212 \u00a312,570 = \u00a37,200. Income tax = \u00a31,440. NI = 12% \u00d7 \u00a37,200 = \u00a3864. Total deductions = \u00a32,304. Take-home = \u00a317,466/year = \u00a31,455.50/month. Budget total = \u00a31,440. Only \u00a315.50/month spare \u2014 not a sustainable plan.'
+  }
+];
+
+// ── SVG RENDERERS ──
+function renderSVG(type) {
+  if (type === 'histogram_q4') return renderHistogram([
+    { x0: 0, x1: 10, fd: 2.4 },
+    { x0: 10, x1: 20, fd: 3.6 },
+    { x0: 20, x1: 40, fd: 1.2 }
+  ], 'Waiting time (minutes)', 'Frequency density');
+
+  if (type === 'histogram_q12') return renderHistogram([
+    { x0: 0, x1: 10, fd: 1.8 },
+    { x0: 10, x1: 20, fd: 2.4 },
+    { x0: 20, x1: 40, fd: 3.1 },
+    { x0: 40, x1: 60, fd: 2.8 },
+    { x0: 60, x1: 80, fd: 1.5 }
+  ], 'Age (years)', 'Frequency density');
+
+  if (type === 'boxplot_q9') return renderBoxPlot(18, 34, 51, 63, 79);
+
+  if (type === 'stemleaf_q15') return renderStemLeaf();
+
+  return '';
+}
+
+function renderHistogram(bars, xLabel, yLabel) {
+  var W = 500, H = 220, pad = { l: 55, r: 15, t: 15, b: 45 };
+  var plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+  var maxX = Math.max(...bars.map(b => b.x1));
+  var maxFD = Math.max(...bars.map(b => b.fd));
+  var scaleX = plotW / maxX;
+  var scaleY = plotH / (maxFD * 1.15);
+
+  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="font-family:Outfit,sans-serif">';
+  // Bars
+  bars.forEach(function(b) {
+    var x = pad.l + b.x0 * scaleX;
+    var w = (b.x1 - b.x0) * scaleX;
+    var h = b.fd * scaleY;
+    var y = pad.t + plotH - h;
+    svg += '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="#0d9488" stroke="#0f172a" stroke-width="1" opacity="0.85"/>';
+  });
+  // X axis
+  svg += '<line x1="' + pad.l + '" y1="' + (pad.t + plotH) + '" x2="' + (pad.l + plotW) + '" y2="' + (pad.t + plotH) + '" stroke="#94a3b8" stroke-width="1"/>';
+  // X ticks
+  var xTicks = [...new Set(bars.flatMap(b => [b.x0, b.x1]))].sort((a, b) => a - b);
+  xTicks.forEach(function(v) {
+    var x = pad.l + v * scaleX;
+    svg += '<line x1="' + x + '" y1="' + (pad.t + plotH) + '" x2="' + x + '" y2="' + (pad.t + plotH + 5) + '" stroke="#94a3b8" stroke-width="1"/>';
+    svg += '<text x="' + x + '" y="' + (pad.t + plotH + 18) + '" fill="#94a3b8" font-size="11" text-anchor="middle">' + v + '</text>';
+  });
+  // X label
+  svg += '<text x="' + (pad.l + plotW / 2) + '" y="' + (H - 4) + '" fill="#94a3b8" font-size="11" text-anchor="middle">' + xLabel + '</text>';
+  // Y axis
+  svg += '<line x1="' + pad.l + '" y1="' + pad.t + '" x2="' + pad.l + '" y2="' + (pad.t + plotH) + '" stroke="#94a3b8" stroke-width="1"/>';
+  // Y ticks
+  var yStep = maxFD <= 2 ? 0.5 : maxFD <= 4 ? 1 : 1;
+  for (var v = 0; v <= maxFD * 1.1; v += yStep) {
+    var y = pad.t + plotH - v * scaleY;
+    if (y < pad.t - 5) break;
+    svg += '<line x1="' + (pad.l - 5) + '" y1="' + y + '" x2="' + pad.l + '" y2="' + y + '" stroke="#94a3b8" stroke-width="1"/>';
+    svg += '<text x="' + (pad.l - 8) + '" y="' + (y + 4) + '" fill="#94a3b8" font-size="10" text-anchor="end">' + v.toFixed(1) + '</text>';
+  }
+  // Y label
+  svg += '<text x="12" y="' + (pad.t + plotH / 2) + '" fill="#94a3b8" font-size="11" text-anchor="middle" transform="rotate(-90,12,' + (pad.t + plotH / 2) + ')">' + yLabel + '</text>';
+  svg += '</svg>';
+  return svg;
+}
+
+function renderBoxPlot(min, lq, med, uq, max) {
+  var W = 500, H = 80, pad = { l: 30, r: 30, t: 15, b: 30 };
+  var plotW = W - pad.l - pad.r;
+  var range = max - min + 10;
+  var origin = min - 5;
+  function sx(v) { return pad.l + ((v - origin) / range) * plotW; }
+  var midY = pad.t + 15;
+  var boxH = 24;
+
+  var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="font-family:Outfit,sans-serif">';
+  // Whiskers
+  svg += '<line x1="' + sx(min) + '" y1="' + midY + '" x2="' + sx(lq) + '" y2="' + midY + '" stroke="#1e293b" stroke-width="2"/>';
+  svg += '<line x1="' + sx(uq) + '" y1="' + midY + '" x2="' + sx(max) + '" y2="' + midY + '" stroke="#1e293b" stroke-width="2"/>';
+  // Min/max caps
+  svg += '<line x1="' + sx(min) + '" y1="' + (midY - 8) + '" x2="' + sx(min) + '" y2="' + (midY + 8) + '" stroke="#1e293b" stroke-width="2"/>';
+  svg += '<line x1="' + sx(max) + '" y1="' + (midY - 8) + '" x2="' + sx(max) + '" y2="' + (midY + 8) + '" stroke="#1e293b" stroke-width="2"/>';
+  // Box
+  svg += '<rect x="' + sx(lq) + '" y="' + (midY - boxH / 2) + '" width="' + (sx(uq) - sx(lq)) + '" height="' + boxH + '" fill="#0d9488" stroke="#1e293b" stroke-width="2" opacity="0.8" rx="2"/>';
+  // Median line
+  svg += '<line x1="' + sx(med) + '" y1="' + (midY - boxH / 2) + '" x2="' + sx(med) + '" y2="' + (midY + boxH / 2) + '" stroke="#1e293b" stroke-width="2.5"/>';
+  // Labels
+  [min, lq, med, uq, max].forEach(function(v) {
+    svg += '<text x="' + sx(v) + '" y="' + (midY + boxH / 2 + 16) + '" fill="#94a3b8" font-size="11" text-anchor="middle">' + v + '</text>';
+  });
+  svg += '</svg>';
+  return svg;
+}
+
+function renderStemLeaf() {
+  return '<table class="stem-leaf-table">' +
+    '<tr><th>Group A</th><th>Stem</th><th>Group B</th></tr>' +
+    '<tr><td class="left-col">9 &nbsp;8 &nbsp;5</td><td class="stem-col">4</td><td class="right-col">2 &nbsp;6 &nbsp;7</td></tr>' +
+    '<tr><td class="left-col">7 &nbsp;6 &nbsp;4 &nbsp;2</td><td class="stem-col">5</td><td class="right-col">1 &nbsp;3 &nbsp;8 &nbsp;9</td></tr>' +
+    '<tr><td class="left-col">8 &nbsp;5 &nbsp;1</td><td class="stem-col">6</td><td class="right-col">0 &nbsp;4 &nbsp;6</td></tr>' +
+    '<tr><td class="left-col">3</td><td class="stem-col">7</td><td class="right-col">2</td></tr>' +
+    '</table>';
+}
+
+// ── GAME STATE ──
+var currentQ = 0;
+var score = 0;
+var answers = []; // true/false per question
+var answered = false;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+  currentQ = 0;
+  score = 0;
+  answers = [];
+  answered = false;
+  mfg('game_started', { game_slug: 'core-maths-paper1', level: 'core' });
+  showScreen('gameScreen');
+  showSectionBanner(0);
+}
+
+function showSectionBanner(qIndex) {
+  var banner = document.getElementById('sectionBanner');
+  var qArea = document.getElementById('questionArea');
+  qArea.style.display = 'none';
+  banner.style.display = 'block';
+
+  if (qIndex === 0) {
+    document.getElementById('sectionTitle').textContent = 'Section A \u2014 \u00a73.1 Analysis of Data';
+    document.getElementById('sectionRange').textContent = 'Q1\u2013Q18';
+  } else {
+    document.getElementById('sectionTitle').textContent = 'Section B \u2014 \u00a73.2 Maths for Personal Finance';
+    document.getElementById('sectionRange').textContent = 'Q19\u2013Q36';
+  }
+
+  setTimeout(function() {
+    banner.style.display = 'none';
+    qArea.style.display = 'block';
+    showQuestion();
+  }, 2000);
+}
+
+function showQuestion() {
+  var q = QUESTIONS[currentQ];
+  answered = false;
+
+  // Progress bar
+  document.getElementById('progressFill').style.width = (currentQ / 36 * 100) + '%';
+
+  // Header
+  document.getElementById('qCounter').textContent = 'Q' + (currentQ + 1) + ' of 36';
+  document.getElementById('qTag').textContent = '\u00a7' + q.section + ' \u00b7 ' + q.ao;
+
+  // Stem
+  var stemHTML = q.stem;
+  // Add table if present
+  if (q.table) {
+    stemHTML += '<table class="data-table"><tr>';
+    q.table.headers.forEach(function(h) { stemHTML += '<th>' + h + '</th>'; });
+    stemHTML += '</tr>';
+    q.table.rows.forEach(function(row) {
+      stemHTML += '<tr>';
+      row.forEach(function(cell) { stemHTML += '<td>' + cell + '</td>'; });
+      stemHTML += '</tr>';
+    });
+    stemHTML += '</table>';
+  }
+  // Add SVG if present
+  if (q.svg) {
+    stemHTML += '<div class="svg-container">' + renderSVG(q.svg) + '</div>';
+  }
+  document.getElementById('qStem').innerHTML = stemHTML;
+
+  // Options
+  var letters = ['A', 'B', 'C', 'D'];
+  var container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  q.options.forEach(function(opt, i) {
+    var btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.dataset.val = String(i);
+    btn.innerHTML = '<span class="option-letter">' + letters[i] + '</span><span class="option-text">' + opt + '</span>';
+    btn.addEventListener('click', function() { selectAnswer(i); });
+    container.appendChild(btn);
+  });
+
+  // Hide feedback
+  document.getElementById('workingNote').classList.remove('visible');
+  document.getElementById('nextBtn').classList.remove('visible');
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+
+  var q = QUESTIONS[currentQ];
+  var isCorrect = idx === q.correct;
+  answers.push(isCorrect);
+  if (isCorrect) score++;
+
+  var buttons = document.querySelectorAll('.option-btn');
+  buttons.forEach(function(btn) {
+    btn.classList.add('locked');
+    var val = parseInt(btn.dataset.val);
+    if (val === q.correct) {
+      btn.classList.add(val === idx ? 'correct' : 'reveal');
+      btn.querySelector('.option-letter').textContent = '\u2713';
+    }
+    if (val === idx && !isCorrect) {
+      btn.classList.add('incorrect');
+      btn.querySelector('.option-letter').textContent = '\u2717';
+    }
+  });
+
+  // Show working note
+  var note = document.getElementById('workingNote');
+  note.textContent = q.working;
+  note.classList.add('visible');
+
+  // Analytics
+  mfg('question_answered', {
+    game_slug: 'core-maths-paper1',
+    level: 'core',
+    question_index: currentQ + 1,
+    correct: isCorrect,
+    section: q.section
+  });
+
+  // Show next button after 1.5s
+  setTimeout(function() {
+    document.getElementById('nextBtn').classList.add('visible');
+  }, 1500);
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= 36) {
+    showResults();
+    return;
+  }
+  // Section banner at Q19 (index 18)
+  if (currentQ === 18) {
+    showSectionBanner(18);
+  } else {
+    showQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('progressFill').style.width = '100%';
+
+  var s1Correct = answers.slice(0, 18).filter(Boolean).length;
+  var s2Correct = answers.slice(18).filter(Boolean).length;
+
+  document.getElementById('finalScore').textContent = score + ' / 36';
+  document.getElementById('s1Score').textContent = s1Correct + ' / 18';
+  document.getElementById('s2Score').textContent = s2Correct + ' / 18';
+
+  // Dots
+  var s1Dots = document.getElementById('s1Dots');
+  var s2Dots = document.getElementById('s2Dots');
+  s1Dots.innerHTML = '';
+  s2Dots.innerHTML = '';
+  for (var i = 0; i < 18; i++) {
+    var d1 = document.createElement('span');
+    d1.className = 'dot ' + (answers[i] ? 'correct-dot' : 'incorrect-dot');
+    d1.dataset.q = 'Q' + (i + 1);
+    s1Dots.appendChild(d1);
+  }
+  for (var j = 0; j < 18; j++) {
+    var d2 = document.createElement('span');
+    d2.className = 'dot ' + (answers[18 + j] ? 'correct-dot' : 'incorrect-dot');
+    d2.dataset.q = 'Q' + (19 + j);
+    s2Dots.appendChild(d2);
+  }
+
+  mfg('game_completed', {
+    game_slug: 'core-maths-paper1',
+    level: 'core',
+    score: score,
+    questions_answered: 36,
+    questions_correct: score
+  });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('core-maths-paper1','core',score,36).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('core-maths-paper1','core',score);}}
+
+  showScreen('resultsScreen');
+}
+
+function restartGame() {
+  startGame();
+}
+
+// ── ACCESSIBILITY TOGGLE ──
+(function() {
+  var K = 'mfg_accessible', b = document.getElementById('a11yToggle');
+  if (!b) return;
+  function a(o) { document.body.classList.toggle('accessible', o); b.classList.toggle('active', o); b.setAttribute('aria-pressed', String(o)); }
+  a(localStorage.getItem(K) === 'true');
+  b.addEventListener('click', function() { var o = !document.body.classList.contains('accessible'); localStorage.setItem(K, String(o)); a(o); });
+})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

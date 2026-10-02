@@ -1,0 +1,1835 @@
+{
+  "_comment": [
+    "Loops that scripts/check-site.py tier 2 flags as rejection sampling but which",
+    "have been read and found safe. Keyed on file + enclosing function name rather",
+    "than line number, so ordinary edits above the loop do not silently un-allow it.",
+    "",
+    "Every entry needs a reason that says WHY this loop terminates. 'Looks fine' is",
+    "not a reason. If you cannot write the terminating argument down, the loop is not",
+    "safe -- rewrite it as build-pool / dedupe / shuffle / slice instead.",
+    "",
+    "Adding an entry here is a claim you have checked the worst case, including the",
+    "smallest bank or modulus the game can reach. That is the exact step missed when",
+    "modular-battle shipped 'while (choices.size < 4)' with a modulus that could be 2."
+  ],
+  "_roster_exceptions_comment": [
+    "Games in games/ deliberately absent from .claude/rules/game-roster.md.",
+    "",
+    "The roster is where tier 1 reads each game's levels from, so a game missing from it",
+    "is loaded bare and at no ?level= at all. For the entries below that is full coverage,",
+    "not a gap -- which is the distinction this list exists to record. If a game you just",
+    "added appears here unexpectedly, the fix is the roster, not this file."
+  ],
+  "roster_exceptions": [
+    {
+      "path": "games/the-perfect-prank",
+      "reason": "Unlisted on purpose: the escape-room prototype, never on the portal, with no level tiers to test. A bare load is full coverage. Confirmed by Jon 2026-09-21; canon section 1 records the same 95-directories-to-94-rows gap."
+    },
+    {
+      "path": "games/regression-rumble",
+      "reason": "Withdrawn 30 Sep 2026 pending a data rebuild (todo 1.26): index.html is a noindex holding page with no levels to test, the full game is kept as _withdrawn.html. Off the roster until it is rebuilt; a bare load of the holding page is full coverage."
+    }
+  ],
+  "allow": [
+    {
+      "file": "games/complex-converter/index.html",
+      "function": "nextTriplesRound",
+      "reason": "Pads the round to 5 after a deterministic first pass over a shuffled bank. The bank holds far more than 5 distinct re,im keys at every level, so an unused key always remains and the draw cannot starve. Reviewed 2026-09-21."
+    },
+    {
+      "file": "games/gradient-hunter/index.html",
+      "function": "startGame",
+      "reason": "Cycles a reshuffled pool when the session is longer than the bank. Each pass appends a whole non-empty slice of pool, so questions.length grows by at least one every iteration regardless of what the shuffle returns. Progress is unconditional; only the ordering is random. Reviewed 2026-09-21."
+    },
+    {
+      "file": "games/maths-court/index.html",
+      "function": "startGame",
+      "reason": "Same cycle-the-bank shape as gradient-hunter. Each pass pushes min(remaining, bank.length) items and bank is non-empty (guarded on the line above), so the loop advances by at least one per pass and cannot spin. Reviewed 2026-09-21."
+    },
+    {
+      "file": "games/negative-number-line/index.html",
+      "function": "showCalculate",
+      "reason": "Pads the option list to 4 by drawing integers from -10..10. That is 21 candidates for 4 distinct slots, so the draw can never exhaust its space and terminates with probability 1 in a handful of passes. Reviewed 2026-09-21."
+    }
+  ],
+  "_tier3_exceptions_comment": [
+    "Games tier 3 reports as UNSUPPORTED, that have been READ and whose",
+    "classification is correct. Tier 3 drives pick-one options and typed answers;",
+    "anything else it cannot play, and an unplayable shape is not a defect.",
+    "",
+    "The point of recording them is the diff. Once a game is listed here, a game",
+    "NEWLY appearing on the UNSUPPORTED list is a change worth looking at -- it may",
+    "mean a game that used to be drivable has stopped taking answers. The run",
+    "prints every unrecorded entry for exactly that reason.",
+    "",
+    "As with the loop allowlist above, an entry is a claim you have read the game",
+    "and can say what shape it is. Do not bulk-add the list the checker prints:",
+    "an unread entry here converts a real signal into a silent one."
+  ],
+  "tier3_exceptions": [
+    {
+      "slug": "suvat",
+      "reason": "Two-phase by design: phase 1 picks the equation from a choice group, phase 2 wants the value TYPED, and some questions add a phase 0 that resolves components first. question_answered does not fire until the typed phase is marked, so a click-only pass never completes a question. Read 2026-09-23."
+    },
+    {
+      "slug": "prime-factorisation",
+      "reason": "The answer is BUILT, not picked: #primeBtns offers 2,3,5,7,11,13 and the student presses several to compose a factorisation before submitting. One press is an unfinished answer, not a wrong one, so nothing is marked. Read 2026-09-23."
+    },
+    {
+      "slug": "expectation-station",
+      "reason": "Stage 1 fills a probability table from a tile bank and is marked by 'Check Table' (checkStage1) only once every blank is filled -- several placements per question. Also the reason its repeated tiles are legitimate: es_gcse_001 ships ['0.25','0.25','0.50','0.10'] because two cells of its table are both 0.25. Read 2026-09-23."
+    },
+    {
+      "slug": "quadratic-factoriser",
+      "reason": "Answer is built, not picked: the student taps each bracket number to open the shared numeric grid, selects a value for it, then presses 'Check Factorisation' -- a click on a grid button is not itself a submitted answer, so question_answered never fires from a single click. Confirmed against the rebuilt game (docs/next-contract-quadratic-factoriser.md, Phase 1, 27 Sep 2026) with a scripted stub-server playthrough driving startEditing/selectNum/checkAnswer directly: every offered session length (8, 16, 24, 174) plays cleanly to game_completed with 100% of clicks marked, so the UNSUPPORTED classification is the driver's generic click-one-option assumption not matching this game's two-step picker, not a defect in the game."
+    },
+    {
+      "slug": "seven-bridges",
+      "reason": "Builds its options as SVG nodes. The driver now dispatches a MouseEvent rather than calling .click() (which SVGElement lacks in Chromium), but the game is a graph-traversal puzzle rather than a question with options, so there is still nothing for a pick-one driver to answer. Read 2026-09-23."
+    },
+    {
+      "slug": "the-perfect-prank",
+      "reason": "The unlisted escape-room prototype, already a declared roster_exception above. Built to the old 40-minute spec and never on the portal, so it is not a quiz game and has no option group to drive. Read 2026-09-23."
+    },
+    {
+      "slug": "spot-the-muppet",
+      "reason": "Answers question 1 cleanly and then presents a second phase of the same question that the driver has no move for. The game is fine -- this is the driver's limit. Traced 2026-09-23."
+    },
+    {
+      "slug": "better-value",
+      "reason": "Same shape as spot-the-muppet: #conclusionsGrid is answered and marked, the question advances, and the next stage is not a pick-one group. Traced 2026-09-23."
+    },
+    {
+      "slug": "graph-transformer",
+      "reason": "Not a pick-one/typed-answer game: the student applies a sequence of transform buttons (shift/reflect/stretch) to move a curve, and question_answered fires from checkMatch() comparing the resulting curve to the target, not from any single click being marked. Driven and verified instead by a scripted Playwright pass (curvesMatch, merged-move-counting, and a BFS par check all exercised directly against the shipped page functions) during the 1.25-class fix for defects (a)-(c), 29 Sep 2026."
+    },
+    {
+      "slug": "six-sevens-bruv",
+      "reason": "Cannot start without a named grid: with storage available the student types three initials before Start is enabled, and answers are typed on a keypad (no pick-one group, no <input> to fill). Driven and verified instead by scripts/verify-six-sevens.py (in CI), which creates a grid, plays a full 20-question session through the keyboard against the shipped page, checks every cell, the wrong-answer screen and the returns, and simulates 1,200 sessions against window.SSB. Read 30 Sep 2026."
+    }
+  ],
+  "_b11_form_questions_comment": [
+    "check-banks.py B11 (options equal in value) skips these. Each is a question whose ask names",
+    "the form it tests (\"Write in standard form\", \"Simplify\", \"Rationalise\" ...), so an option",
+    "equal in value to another, in a different form, is the point of the question, not a defect.",
+    "Keyed on the B11 finding id: the question's content_id (SHA-1 of the whole question) plus the",
+    "sorted pair, so moving a question keeps its entry, and editing it orphans the entry, which",
+    "fails --ci until someone re-reads the question. 'where' is for a human reader only.",
+    "Every entry was read question by question on 2 Oct 2026 (group C of",
+    "docs/scan-value-equivalent-options.md, less the 12 questions Jon moved to A or B that day).",
+    "Add an entry only with a reason quoting the ask that names the form."
+  ],
+  "b11_form_questions": [
+    {
+      "id": "decimal-detective::146b4888413a#1::B11::[\"7.9\", \"7.90\"]",
+      "where": "decimal-detective ROUNDUP_QUESTIONS[10]",
+      "pair": [
+        "7.9",
+        "7.90"
+      ],
+      "reason": "The ask is \"Round to 2 decimal places\". The marked answer 7.90 is written to 2 d.p.; 7.9 is the same value written to 1 d.p."
+    },
+    {
+      "id": "index-laws::2eb91c467ee9#1::B11::[\"25^3\", \"5^6\"]",
+      "where": "index-laws QUESTIONS[22]",
+      "pair": [
+        "25^3",
+        "5^6"
+      ],
+      "reason": "The ask is \"Write (5²)³ as a single power of 5\". 25^3 is the same value but not a power of 5 (Jon's ruling, 1 Oct 2026: reclassified from B to C once the ask named the form)."
+    },
+    {
+      "id": "surd-simplifier::c9941f7b40f9#1::B11::[\"2\\\\sqrt{3}\", \"\\\\sqrt{12}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[0]",
+      "pair": [
+        "2\\sqrt{3}",
+        "\\sqrt{12}"
+      ],
+      "reason": "The ask is \"Simplify\". \\sqrt{12} equals the marked answer 2\\sqrt{3} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::521c60d9bf49#1::B11::[\"2\\\\sqrt{12}\", \"4\\\\sqrt{3}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[4]",
+      "pair": [
+        "2\\sqrt{12}",
+        "4\\sqrt{3}"
+      ],
+      "reason": "The ask is \"Simplify\". 2\\sqrt{12} equals the marked answer 4\\sqrt{3} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::399926edc3cd#1::B11::[\"3\\\\sqrt{8}\", \"6\\\\sqrt{2}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[6]",
+      "pair": [
+        "3\\sqrt{8}",
+        "6\\sqrt{2}"
+      ],
+      "reason": "The ask is \"Simplify\". 3\\sqrt{8} equals the marked answer 6\\sqrt{2} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::195ae3508a96#1::B11::[\"2\\\\sqrt{8}\", \"4\\\\sqrt{2}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[9]",
+      "pair": [
+        "2\\sqrt{8}",
+        "4\\sqrt{2}"
+      ],
+      "reason": "The ask is \"Simplify\". 2\\sqrt{8} equals the marked answer 4\\sqrt{2} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::4e2e87cb9799#1::B11::[\"2\\\\sqrt{8}\", \"4\\\\sqrt{2}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[14]",
+      "pair": [
+        "2\\sqrt{8}",
+        "4\\sqrt{2}"
+      ],
+      "reason": "The ask is \"Simplify\". 2\\sqrt{8} equals the marked answer 4\\sqrt{2} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::30153cc0090f#1::B11::[\"3\\\\sqrt{12}\", \"6\\\\sqrt{3}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[15]",
+      "pair": [
+        "3\\sqrt{12}",
+        "6\\sqrt{3}"
+      ],
+      "reason": "The ask is \"Simplify\". 3\\sqrt{12} equals the marked answer 6\\sqrt{3} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::9a56e4428d34#1::B11::[\"18\", \"6\\\\sqrt{9}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[19]",
+      "pair": [
+        "18",
+        "6\\sqrt{9}"
+      ],
+      "reason": "The ask is \"Simplify\". 6\\sqrt{9} equals the marked answer 18 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::1b2af2916e02#1::B11::[\"\\\\dfrac{2}{\\\\sqrt{2}}\", \"\\\\sqrt{2}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[20]",
+      "pair": [
+        "\\dfrac{2}{\\sqrt{2}}",
+        "\\sqrt{2}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". Neither is the marked answer \\dfrac{\\sqrt{2}}{2}: \\dfrac{2}{\\sqrt{2}} and \\sqrt{2} are one wrong value, written once with a surd in the denominator and once without; rationalising is the form the ask names."
+    },
+    {
+      "id": "surd-simplifier::479f2bb6638c#1::B11::[\"\\\\dfrac{3}{\\\\sqrt{3}}\", \"\\\\sqrt{3}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[21]",
+      "pair": [
+        "\\dfrac{3}{\\sqrt{3}}",
+        "\\sqrt{3}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". Neither is the marked answer \\dfrac{\\sqrt{3}}{3}: \\dfrac{3}{\\sqrt{3}} and \\sqrt{3} are one wrong value, written once with a surd in the denominator and once without; rationalising is the form the ask names."
+    },
+    {
+      "id": "surd-simplifier::f0a7294bc9c9#1::B11::[\"\\\\dfrac{5}{\\\\sqrt{5}}\", \"\\\\sqrt{5}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[22]",
+      "pair": [
+        "\\dfrac{5}{\\sqrt{5}}",
+        "\\sqrt{5}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". Neither is the marked answer \\dfrac{\\sqrt{5}}{5}: \\dfrac{5}{\\sqrt{5}} and \\sqrt{5} are one wrong value, written once with a surd in the denominator and once without; rationalising is the form the ask names."
+    },
+    {
+      "id": "surd-simplifier::dd8a24ca2172#1::B11::[\"\\\\dfrac{4\\\\sqrt{8}}{8}\", \"\\\\sqrt{2}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[25]",
+      "pair": [
+        "\\dfrac{4\\sqrt{8}}{8}",
+        "\\sqrt{2}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". \\dfrac{4\\sqrt{8}}{8} equals the marked answer \\sqrt{2} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::dd8a24ca2172#1::B11::[\"\\\\dfrac{\\\\sqrt{8}}{2}\", \"\\\\sqrt{2}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[25]",
+      "pair": [
+        "\\dfrac{\\sqrt{8}}{2}",
+        "\\sqrt{2}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". \\dfrac{\\sqrt{8}}{2} equals the marked answer \\sqrt{2} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::dd8a24ca2172#1::B11::[\"\\\\dfrac{4\\\\sqrt{8}}{8}\", \"\\\\dfrac{\\\\sqrt{8}}{2}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[25]",
+      "pair": [
+        "\\dfrac{4\\sqrt{8}}{8}",
+        "\\dfrac{\\sqrt{8}}{2}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". Neither is the marked answer \\sqrt{2}: \\dfrac{4\\sqrt{8}}{8} and \\dfrac{\\sqrt{8}}{2} are both its value left unsimplified, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::1e5597a1802b#1::B11::[\"\\\\dfrac{6\\\\sqrt{12}}{12}\", \"\\\\sqrt{3}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[26]",
+      "pair": [
+        "\\dfrac{6\\sqrt{12}}{12}",
+        "\\sqrt{3}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". \\dfrac{6\\sqrt{12}}{12} equals the marked answer \\sqrt{3} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::0f41f0032690#1::B11::[\"\\\\dfrac{\\\\sqrt{50}}{5}\", \"\\\\sqrt{2}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[27]",
+      "pair": [
+        "\\dfrac{\\sqrt{50}}{5}",
+        "\\sqrt{2}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". \\dfrac{\\sqrt{50}}{5} equals the marked answer \\sqrt{2} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::49a738cb9747#1::B11::[\"\\\\dfrac{1}{2}\", \"\\\\dfrac{\\\\sqrt{36}}{12}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[32]",
+      "pair": [
+        "\\dfrac{1}{2}",
+        "\\dfrac{\\sqrt{36}}{12}"
+      ],
+      "reason": "The ask is \"Simplify\". \\dfrac{\\sqrt{36}}{12} equals the marked answer \\dfrac{1}{2} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::c9941f7b40f9#2::B11::[\"2\\\\sqrt{3}\", \"\\\\sqrt{12}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[0]",
+      "pair": [
+        "2\\sqrt{3}",
+        "\\sqrt{12}"
+      ],
+      "reason": "The ask is \"Simplify\". \\sqrt{12} equals the marked answer 2\\sqrt{3} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::2843a69ceea4#1::B11::[\"3\\\\sqrt{20}\", \"6\\\\sqrt{5}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[1]",
+      "pair": [
+        "3\\sqrt{20}",
+        "6\\sqrt{5}"
+      ],
+      "reason": "The ask is \"Simplify\". 3\\sqrt{20} equals the marked answer 6\\sqrt{5} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::4748d8a131bb#1::B11::[\"11\\\\sqrt{2}\", \"\\\\sqrt{242}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[2]",
+      "pair": [
+        "11\\sqrt{2}",
+        "\\sqrt{242}"
+      ],
+      "reason": "The ask is \"Simplify\". \\sqrt{242} equals the marked answer 11\\sqrt{2} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::75d610916f40#1::B11::[\"2\\\\sqrt{9}\", \"6\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[5]",
+      "pair": [
+        "2\\sqrt{9}",
+        "6"
+      ],
+      "reason": "The ask is \"Simplify\". Neither is the marked answer 12: 2\\sqrt{9} and 6 are one wrong value (a misconception), written once simplified and once not; the ask names the simplified form that tells them apart."
+    },
+    {
+      "id": "surd-simplifier::cc6d54e5634e#1::B11::[\"4\", \"\\\\sqrt{16}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[6]",
+      "pair": [
+        "4",
+        "\\sqrt{16}"
+      ],
+      "reason": "The ask is \"Simplify\". \\sqrt{16} equals the marked answer 4 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::cc6d54e5634e#1::B11::[\"2\\\\sqrt{4}\", \"4\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[6]",
+      "pair": [
+        "2\\sqrt{4}",
+        "4"
+      ],
+      "reason": "The ask is \"Simplify\". 2\\sqrt{4} equals the marked answer 4 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::cc6d54e5634e#1::B11::[\"2\\\\sqrt{4}\", \"\\\\sqrt{16}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[6]",
+      "pair": [
+        "2\\sqrt{4}",
+        "\\sqrt{16}"
+      ],
+      "reason": "The ask is \"Simplify\". Neither is the marked answer 4: 2\\sqrt{4} and \\sqrt{16} are both its value left unsimplified, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::2439f956100a#1::B11::[\"12\", \"\\\\sqrt{144}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[7]",
+      "pair": [
+        "12",
+        "\\sqrt{144}"
+      ],
+      "reason": "The ask is \"Simplify\". \\sqrt{144} equals the marked answer 12 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::2439f956100a#1::B11::[\"12\", \"6\\\\sqrt{4}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[7]",
+      "pair": [
+        "12",
+        "6\\sqrt{4}"
+      ],
+      "reason": "The ask is \"Simplify\". 6\\sqrt{4} equals the marked answer 12 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::2439f956100a#1::B11::[\"6\\\\sqrt{4}\", \"\\\\sqrt{144}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[7]",
+      "pair": [
+        "6\\sqrt{4}",
+        "\\sqrt{144}"
+      ],
+      "reason": "The ask is \"Simplify\". Neither is the marked answer 12: 6\\sqrt{4} and \\sqrt{144} are both its value left unsimplified, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::19042fd65242#1::B11::[\"4\", \"\\\\sqrt{16}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[8]",
+      "pair": [
+        "4",
+        "\\sqrt{16}"
+      ],
+      "reason": "The ask is \"Simplify\". \\sqrt{16} equals the marked answer 4 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::1b5094e4205e#1::B11::[\"15\", \"5+\\\\sqrt{100}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[9]",
+      "pair": [
+        "15",
+        "5+\\sqrt{100}"
+      ],
+      "reason": "The ask is \"Expand and simplify\". 5+\\sqrt{100} equals the marked answer 15 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::8bd19c75a6b2#1::B11::[\"\\\\dfrac{1}{\\\\sqrt{3}+1}\", \"\\\\dfrac{\\\\sqrt{3}-1}{2}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[10]",
+      "pair": [
+        "\\dfrac{1}{\\sqrt{3}+1}",
+        "\\dfrac{\\sqrt{3}-1}{2}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". Neither is the marked answer \\dfrac{\\sqrt{3}+1}{2}: \\dfrac{1}{\\sqrt{3}+1} and \\dfrac{\\sqrt{3}-1}{2} are one wrong value, written once with a surd in the denominator and once without; rationalising is the form the ask names."
+    },
+    {
+      "id": "surd-simplifier::051a7af73bb2#1::B11::[\"\\\\dfrac{1}{\\\\sqrt{5}-2}\", \"\\\\dfrac{\\\\sqrt{5}+2}{1}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[11]",
+      "pair": [
+        "\\dfrac{1}{\\sqrt{5}-2}",
+        "\\dfrac{\\sqrt{5}+2}{1}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". Neither is the marked answer \\sqrt{5}-2: \\dfrac{1}{\\sqrt{5}-2} and \\dfrac{\\sqrt{5}+2}{1} are one wrong value, written once with a surd in the denominator and once without; rationalising is the form the ask names."
+    },
+    {
+      "id": "surd-simplifier::b34a05d99e75#1::B11::[\"5+2\", \"7\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[29]",
+      "pair": [
+        "5+2",
+        "7"
+      ],
+      "reason": "The ask is \"Expand and simplify\". Neither is the marked answer 7+2\\sqrt{10}: 5+2 and 7 are one wrong value (a misconception), written once simplified and once not; the ask names the simplified form that tells them apart."
+    },
+    {
+      "id": "surd-simplifier::5fe7347a3390#1::B11::[\"2+\\\\sqrt{3}\", \"\\\\dfrac{4+2\\\\sqrt{3}}{2}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[40]",
+      "pair": [
+        "2+\\sqrt{3}",
+        "\\dfrac{4+2\\sqrt{3}}{2}"
+      ],
+      "reason": "The ask is \"Rationalise fully\". \\dfrac{4+2\\sqrt{3}}{2} equals the marked answer 2+\\sqrt{3} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::05d3c661e41b#1::B11::[\"2\\\\sqrt{3}+3\\\\sqrt{3}\", \"5\\\\sqrt{3}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[43]",
+      "pair": [
+        "2\\sqrt{3}+3\\sqrt{3}",
+        "5\\sqrt{3}"
+      ],
+      "reason": "The ask is \"Simplify fully\". 2\\sqrt{3}+3\\sqrt{3} equals the marked answer 5\\sqrt{3} but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::3f1f61befc0e#1::B11::[\"5+2\", \"7\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[44]",
+      "pair": [
+        "5+2",
+        "7"
+      ],
+      "reason": "The ask is \"Simplify fully\". 5+2 equals the marked answer 7 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::3f1f61befc0e#1::B11::[\"7\", \"\\\\dfrac{7\\\\sqrt{2}}{\\\\sqrt{2}}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[44]",
+      "pair": [
+        "7",
+        "\\dfrac{7\\sqrt{2}}{\\sqrt{2}}"
+      ],
+      "reason": "The ask is \"Simplify fully\". \\dfrac{7\\sqrt{2}}{\\sqrt{2}} equals the marked answer 7 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::3f1f61befc0e#1::B11::[\"5+2\", \"\\\\dfrac{7\\\\sqrt{2}}{\\\\sqrt{2}}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[44]",
+      "pair": [
+        "5+2",
+        "\\dfrac{7\\sqrt{2}}{\\sqrt{2}}"
+      ],
+      "reason": "The ask is \"Simplify fully\". Neither is the marked answer 7: 5+2 and \\dfrac{7\\sqrt{2}}{\\sqrt{2}} are both its value left unsimplified, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::6fd99499e13d#1::B11::[\"2\", \"6-4\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[46]",
+      "pair": [
+        "2",
+        "6-4"
+      ],
+      "reason": "The ask is \"Simplify fully\". 6-4 equals the marked answer 2 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::6fd99499e13d#1::B11::[\"2\", \"3\\\\sqrt{4}-\\\\sqrt{16}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[46]",
+      "pair": [
+        "2",
+        "3\\sqrt{4}-\\sqrt{16}"
+      ],
+      "reason": "The ask is \"Simplify fully\". 3\\sqrt{4}-\\sqrt{16} equals the marked answer 2 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::6fd99499e13d#1::B11::[\"3\\\\sqrt{4}-\\\\sqrt{16}\", \"6-4\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[46]",
+      "pair": [
+        "3\\sqrt{4}-\\sqrt{16}",
+        "6-4"
+      ],
+      "reason": "The ask is \"Simplify fully\". Neither is the marked answer 2: 3\\sqrt{4}-\\sqrt{16} and 6-4 are both its value left unsimplified, which is what this question tests."
+    },
+    {
+      "id": "surd-simplifier::8d03fcfde5db#1::B11::[\"4\", \"\\\\dfrac{8}{2}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[49]",
+      "pair": [
+        "4",
+        "\\dfrac{8}{2}"
+      ],
+      "reason": "The ask is \"Simplify\". \\dfrac{8}{2} equals the marked answer 4 but is not in its simplest form, which is what this question tests."
+    },
+    {
+      "id": "standard-form-blitz::9b822a241bb1#1::B11::[\"4.5 \\\\times 10^4\", \"45 \\\\times 10^3\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[0]",
+      "pair": [
+        "4.5 \\times 10^4",
+        "45 \\times 10^3"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 4.5 \\times 10^4 has 1 <= A < 10; 45 \\times 10^3 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::9b822a241bb1#1::B11::[\"0.45 \\\\times 10^5\", \"4.5 \\\\times 10^4\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[0]",
+      "pair": [
+        "0.45 \\times 10^5",
+        "4.5 \\times 10^4"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 4.5 \\times 10^4 has 1 <= A < 10; 0.45 \\times 10^5 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::9b822a241bb1#1::B11::[\"0.45 \\\\times 10^5\", \"45 \\\\times 10^3\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[0]",
+      "pair": [
+        "0.45 \\times 10^5",
+        "45 \\times 10^3"
+      ],
+      "reason": "The ask is \"Write in standard form\". Neither is the marked answer 4.5 \\times 10^4: 0.45 \\times 10^5 and 45 \\times 10^3 are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::b200a99fd8ab#1::B11::[\"3.2 \\\\times 10^3\", \"32 \\\\times 10^2\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[1]",
+      "pair": [
+        "3.2 \\times 10^3",
+        "32 \\times 10^2"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 3.2 \\times 10^3 has 1 <= A < 10; 32 \\times 10^2 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::b200a99fd8ab#1::B11::[\"0.32 \\\\times 10^4\", \"3.2 \\\\times 10^3\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[1]",
+      "pair": [
+        "0.32 \\times 10^4",
+        "3.2 \\times 10^3"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 3.2 \\times 10^3 has 1 <= A < 10; 0.32 \\times 10^4 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::b200a99fd8ab#1::B11::[\"0.32 \\\\times 10^4\", \"32 \\\\times 10^2\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[1]",
+      "pair": [
+        "0.32 \\times 10^4",
+        "32 \\times 10^2"
+      ],
+      "reason": "The ask is \"Write in standard form\". Neither is the marked answer 3.2 \\times 10^3: 0.32 \\times 10^4 and 32 \\times 10^2 are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::884e4de927f6#1::B11::[\"6.7 \\\\times 10^5\", \"67 \\\\times 10^4\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[2]",
+      "pair": [
+        "6.7 \\times 10^5",
+        "67 \\times 10^4"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 6.7 \\times 10^5 has 1 <= A < 10; 67 \\times 10^4 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::884e4de927f6#1::B11::[\"0.67 \\\\times 10^6\", \"6.7 \\\\times 10^5\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[2]",
+      "pair": [
+        "0.67 \\times 10^6",
+        "6.7 \\times 10^5"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 6.7 \\times 10^5 has 1 <= A < 10; 0.67 \\times 10^6 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::884e4de927f6#1::B11::[\"0.67 \\\\times 10^6\", \"67 \\\\times 10^4\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[2]",
+      "pair": [
+        "0.67 \\times 10^6",
+        "67 \\times 10^4"
+      ],
+      "reason": "The ask is \"Write in standard form\". Neither is the marked answer 6.7 \\times 10^5: 0.67 \\times 10^6 and 67 \\times 10^4 are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::604f8f863b09#1::B11::[\"9.1 \\\\times 10^7\", \"91 \\\\times 10^6\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[3]",
+      "pair": [
+        "9.1 \\times 10^7",
+        "91 \\times 10^6"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 9.1 \\times 10^7 has 1 <= A < 10; 91 \\times 10^6 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::604f8f863b09#1::B11::[\"0.91 \\\\times 10^8\", \"9.1 \\\\times 10^7\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[3]",
+      "pair": [
+        "0.91 \\times 10^8",
+        "9.1 \\times 10^7"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 9.1 \\times 10^7 has 1 <= A < 10; 0.91 \\times 10^8 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::604f8f863b09#1::B11::[\"0.91 \\\\times 10^8\", \"91 \\\\times 10^6\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[3]",
+      "pair": [
+        "0.91 \\times 10^8",
+        "91 \\times 10^6"
+      ],
+      "reason": "The ask is \"Write in standard form\". Neither is the marked answer 9.1 \\times 10^7: 0.91 \\times 10^8 and 91 \\times 10^6 are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::a19bb745dfe2#1::B11::[\"5.04 \\\\times 10^2\", \"50.4 \\\\times 10^1\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[4]",
+      "pair": [
+        "5.04 \\times 10^2",
+        "50.4 \\times 10^1"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 5.04 \\times 10^2 has 1 <= A < 10; 50.4 \\times 10^1 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::a19bb745dfe2#1::B11::[\"5.04 \\\\times 10^2\", \"504 \\\\times 10^0\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[4]",
+      "pair": [
+        "5.04 \\times 10^2",
+        "504 \\times 10^0"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 5.04 \\times 10^2 has 1 <= A < 10; 504 \\times 10^0 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::a19bb745dfe2#1::B11::[\"50.4 \\\\times 10^1\", \"504 \\\\times 10^0\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[4]",
+      "pair": [
+        "50.4 \\times 10^1",
+        "504 \\times 10^0"
+      ],
+      "reason": "The ask is \"Write in standard form\". Neither is the marked answer 5.04 \\times 10^2: 50.4 \\times 10^1 and 504 \\times 10^0 are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::b30bc8288c2d#1::B11::[\"0.3 \\\\times 10^{-2}\", \"3 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[5]",
+      "pair": [
+        "0.3 \\times 10^{-2}",
+        "3 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 3 \\times 10^{-3} has 1 <= A < 10; 0.3 \\times 10^{-2} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::b30bc8288c2d#1::B11::[\"3 \\\\times 10^{-3}\", \"30 \\\\times 10^{-4}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[5]",
+      "pair": [
+        "3 \\times 10^{-3}",
+        "30 \\times 10^{-4}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 3 \\times 10^{-3} has 1 <= A < 10; 30 \\times 10^{-4} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::b30bc8288c2d#1::B11::[\"0.3 \\\\times 10^{-2}\", \"30 \\\\times 10^{-4}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[5]",
+      "pair": [
+        "0.3 \\times 10^{-2}",
+        "30 \\times 10^{-4}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Neither is the marked answer 3 \\times 10^{-3}: 0.3 \\times 10^{-2} and 30 \\times 10^{-4} are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::f3069c10d673#1::B11::[\"5.6 \\\\times 10^{-4}\", \"56 \\\\times 10^{-5}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[6]",
+      "pair": [
+        "5.6 \\times 10^{-4}",
+        "56 \\times 10^{-5}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 5.6 \\times 10^{-4} has 1 <= A < 10; 56 \\times 10^{-5} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::f3069c10d673#1::B11::[\"0.56 \\\\times 10^{-3}\", \"5.6 \\\\times 10^{-4}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[6]",
+      "pair": [
+        "0.56 \\times 10^{-3}",
+        "5.6 \\times 10^{-4}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 5.6 \\times 10^{-4} has 1 <= A < 10; 0.56 \\times 10^{-3} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::f3069c10d673#1::B11::[\"0.56 \\\\times 10^{-3}\", \"56 \\\\times 10^{-5}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[6]",
+      "pair": [
+        "0.56 \\times 10^{-3}",
+        "56 \\times 10^{-5}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Neither is the marked answer 5.6 \\times 10^{-4}: 0.56 \\times 10^{-3} and 56 \\times 10^{-5} are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::f037c70810da#1::B11::[\"7.2 \\\\times 10^{-2}\", \"72 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[7]",
+      "pair": [
+        "7.2 \\times 10^{-2}",
+        "72 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 7.2 \\times 10^{-2} has 1 <= A < 10; 72 \\times 10^{-3} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::f037c70810da#1::B11::[\"0.72 \\\\times 10^{-1}\", \"7.2 \\\\times 10^{-2}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[7]",
+      "pair": [
+        "0.72 \\times 10^{-1}",
+        "7.2 \\times 10^{-2}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 7.2 \\times 10^{-2} has 1 <= A < 10; 0.72 \\times 10^{-1} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::f037c70810da#1::B11::[\"0.72 \\\\times 10^{-1}\", \"72 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[7]",
+      "pair": [
+        "0.72 \\times 10^{-1}",
+        "72 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Neither is the marked answer 7.2 \\times 10^{-2}: 0.72 \\times 10^{-1} and 72 \\times 10^{-3} are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::18439f1c1c6a#1::B11::[\"9.1 \\\\times 10^{-6}\", \"91 \\\\times 10^{-7}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[8]",
+      "pair": [
+        "9.1 \\times 10^{-6}",
+        "91 \\times 10^{-7}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 9.1 \\times 10^{-6} has 1 <= A < 10; 91 \\times 10^{-7} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::e5769f37fe9a#1::B11::[\"1.08 \\\\times 10^{-1}\", \"10.8 \\\\times 10^{-2}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[9]",
+      "pair": [
+        "1.08 \\times 10^{-1}",
+        "10.8 \\times 10^{-2}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 1.08 \\times 10^{-1} has 1 <= A < 10; 10.8 \\times 10^{-2} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::e5769f37fe9a#1::B11::[\"1.08 \\\\times 10^{-1}\", \"108 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[9]",
+      "pair": [
+        "1.08 \\times 10^{-1}",
+        "108 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Only the marked answer 1.08 \\times 10^{-1} has 1 <= A < 10; 108 \\times 10^{-3} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::e5769f37fe9a#1::B11::[\"10.8 \\\\times 10^{-2}\", \"108 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[9]",
+      "pair": [
+        "10.8 \\times 10^{-2}",
+        "108 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Write in standard form\". Neither is the marked answer 1.08 \\times 10^{-1}: 10.8 \\times 10^{-2} and 108 \\times 10^{-3} are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::277ab5b59591#1::B11::[\"3.4 \\\\times 10^6\", \"34 \\\\times 10^5\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[44]",
+      "pair": [
+        "3.4 \\times 10^6",
+        "34 \\times 10^5"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 3.4 \\times 10^6 has 1 <= A < 10; 34 \\times 10^5 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::277ab5b59591#1::B11::[\"0.34 \\\\times 10^7\", \"3.4 \\\\times 10^6\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[44]",
+      "pair": [
+        "0.34 \\times 10^7",
+        "3.4 \\times 10^6"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 3.4 \\times 10^6 has 1 <= A < 10; 0.34 \\times 10^7 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::277ab5b59591#1::B11::[\"0.34 \\\\times 10^7\", \"34 \\\\times 10^5\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[44]",
+      "pair": [
+        "0.34 \\times 10^7",
+        "34 \\times 10^5"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Neither is the marked answer 3.4 \\times 10^6: 0.34 \\times 10^7 and 34 \\times 10^5 are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::ee4f512ed800#1::B11::[\"0.5 \\\\times 10^4\", \"5 \\\\times 10^3\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[45]",
+      "pair": [
+        "0.5 \\times 10^4",
+        "5 \\times 10^3"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 5 \\times 10^3 has 1 <= A < 10; 0.5 \\times 10^4 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::ee4f512ed800#1::B11::[\"5 \\\\times 10^3\", \"50 \\\\times 10^2\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[45]",
+      "pair": [
+        "5 \\times 10^3",
+        "50 \\times 10^2"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 5 \\times 10^3 has 1 <= A < 10; 50 \\times 10^2 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::ee4f512ed800#1::B11::[\"0.5 \\\\times 10^4\", \"50 \\\\times 10^2\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[45]",
+      "pair": [
+        "0.5 \\times 10^4",
+        "50 \\times 10^2"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Neither is the marked answer 5 \\times 10^3: 0.5 \\times 10^4 and 50 \\times 10^2 are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::b6933418a0b8#1::B11::[\"7.2 \\\\times 10^{-2}\", \"72 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[46]",
+      "pair": [
+        "7.2 \\times 10^{-2}",
+        "72 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 7.2 \\times 10^{-2} has 1 <= A < 10; 72 \\times 10^{-3} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::b6933418a0b8#1::B11::[\"0.72 \\\\times 10^{-1}\", \"7.2 \\\\times 10^{-2}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[46]",
+      "pair": [
+        "0.72 \\times 10^{-1}",
+        "7.2 \\times 10^{-2}"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 7.2 \\times 10^{-2} has 1 <= A < 10; 0.72 \\times 10^{-1} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::b6933418a0b8#1::B11::[\"0.72 \\\\times 10^{-1}\", \"72 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[46]",
+      "pair": [
+        "0.72 \\times 10^{-1}",
+        "72 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Neither is the marked answer 7.2 \\times 10^{-2}: 0.72 \\times 10^{-1} and 72 \\times 10^{-3} are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::d1b9529a8207#1::B11::[\"0.09 \\\\times 10^{-2}\", \"9 \\\\times 10^{-4}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[47]",
+      "pair": [
+        "0.09 \\times 10^{-2}",
+        "9 \\times 10^{-4}"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 9 \\times 10^{-4} has 1 <= A < 10; 0.09 \\times 10^{-2} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::d1b9529a8207#1::B11::[\"0.9 \\\\times 10^{-3}\", \"9 \\\\times 10^{-4}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[47]",
+      "pair": [
+        "0.9 \\times 10^{-3}",
+        "9 \\times 10^{-4}"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 9 \\times 10^{-4} has 1 <= A < 10; 0.9 \\times 10^{-3} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::d1b9529a8207#1::B11::[\"0.09 \\\\times 10^{-2}\", \"0.9 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[47]",
+      "pair": [
+        "0.09 \\times 10^{-2}",
+        "0.9 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Neither is the marked answer 9 \\times 10^{-4}: 0.09 \\times 10^{-2} and 0.9 \\times 10^{-3} are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::9ab592c350e4#1::B11::[\"1.5 \\\\times 10^9\", \"15 \\\\times 10^8\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[48]",
+      "pair": [
+        "1.5 \\times 10^9",
+        "15 \\times 10^8"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 1.5 \\times 10^9 has 1 <= A < 10; 15 \\times 10^8 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::9ab592c350e4#1::B11::[\"1.5 \\\\times 10^9\", \"150 \\\\times 10^7\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[48]",
+      "pair": [
+        "1.5 \\times 10^9",
+        "150 \\times 10^7"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 1.5 \\times 10^9 has 1 <= A < 10; 150 \\times 10^7 is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::9ab592c350e4#1::B11::[\"15 \\\\times 10^8\", \"150 \\\\times 10^7\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[48]",
+      "pair": [
+        "15 \\times 10^8",
+        "150 \\times 10^7"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Neither is the marked answer 1.5 \\times 10^9: 15 \\times 10^8 and 150 \\times 10^7 are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::d2f7afd636a2#1::B11::[\"0.25 \\\\times 10^{-1}\", \"2.5 \\\\times 10^{-2}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[49]",
+      "pair": [
+        "0.25 \\times 10^{-1}",
+        "2.5 \\times 10^{-2}"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 2.5 \\times 10^{-2} has 1 <= A < 10; 0.25 \\times 10^{-1} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::d2f7afd636a2#1::B11::[\"2.5 \\\\times 10^{-2}\", \"25 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[49]",
+      "pair": [
+        "2.5 \\times 10^{-2}",
+        "25 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Only the marked answer 2.5 \\times 10^{-2} has 1 <= A < 10; 25 \\times 10^{-3} is the same value written outside standard form, the misconception this question tests."
+    },
+    {
+      "id": "standard-form-blitz::d2f7afd636a2#1::B11::[\"0.25 \\\\times 10^{-1}\", \"25 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[49]",
+      "pair": [
+        "0.25 \\times 10^{-1}",
+        "25 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Write in correct standard form\". Neither is the marked answer 2.5 \\times 10^{-2}: 0.25 \\times 10^{-1} and 25 \\times 10^{-3} are both its value written outside standard form, the misconceptions this question tests."
+    },
+    {
+      "id": "standard-form-blitz::c1035df18e7d#1::B11::[\"3 \\\\times 10^7\", \"30 \\\\times 10^6\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[20]",
+      "pair": [
+        "3 \\times 10^7",
+        "30 \\times 10^6"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 30 \\times 10^6 equals the marked answer 3 \\times 10^7 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::deb5ed7e7bc0#1::B11::[\"1.2 \\\\times 10^4\", \"12 \\\\times 10^3\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[21]",
+      "pair": [
+        "1.2 \\times 10^4",
+        "12 \\times 10^3"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 12 \\times 10^3 equals the marked answer 1.2 \\times 10^4 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::28504621bbc9#1::B11::[\"4 \\\\times 10^2\", \"40 \\\\times 10^1\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[22]",
+      "pair": [
+        "4 \\times 10^2",
+        "40 \\times 10^1"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 40 \\times 10^1 equals the marked answer 4 \\times 10^2 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::6d99c12c27e2#1::B11::[\"1.4 \\\\times 10^{-6}\", \"14 \\\\times 10^{-7}\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[23]",
+      "pair": [
+        "1.4 \\times 10^{-6}",
+        "14 \\times 10^{-7}"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 14 \\times 10^{-7} equals the marked answer 1.4 \\times 10^{-6} but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::4143e706483c#1::B11::[\"1 \\\\times 10^7\", \"10 \\\\times 10^6\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[24]",
+      "pair": [
+        "1 \\times 10^7",
+        "10 \\times 10^6"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 10 \\times 10^6 equals the marked answer 1 \\times 10^7 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::bde630a893fe#1::B11::[\"3.6 \\\\times 10^5\", \"36 \\\\times 10^4\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[25]",
+      "pair": [
+        "3.6 \\times 10^5",
+        "36 \\times 10^4"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 36 \\times 10^4 equals the marked answer 3.6 \\times 10^5 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::0b3b9cc24fdc#1::B11::[\"3 \\\\times 10^2\", \"30 \\\\times 10^1\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[26]",
+      "pair": [
+        "3 \\times 10^2",
+        "30 \\times 10^1"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 30 \\times 10^1 equals the marked answer 3 \\times 10^2 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::079cfc748221#1::B11::[\"2.7 \\\\times 10^4\", \"27 \\\\times 10^3\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[27]",
+      "pair": [
+        "2.7 \\times 10^4",
+        "27 \\times 10^3"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 27 \\times 10^3 equals the marked answer 2.7 \\times 10^4 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::e738348a460a#1::B11::[\"0.5 \\\\times 10^3\", \"5 \\\\times 10^2\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[31]",
+      "pair": [
+        "0.5 \\times 10^3",
+        "5 \\times 10^2"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 0.5 \\times 10^3 equals the marked answer 5 \\times 10^2 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::3e8fafd293e9#1::B11::[\"0.8 \\\\times 10^3\", \"8 \\\\times 10^2\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[36]",
+      "pair": [
+        "0.8 \\times 10^3",
+        "8 \\times 10^2"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 0.8 \\times 10^3 equals the marked answer 8 \\times 10^2 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::90873ebc782d#1::B11::[\"0.3 \\\\times 10^5\", \"3 \\\\times 10^4\"]",
+      "where": "standard-form-blitz QUESTIONS.gcse[37]",
+      "pair": [
+        "0.3 \\times 10^5",
+        "3 \\times 10^4"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 0.3 \\times 10^5 equals the marked answer 3 \\times 10^4 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::25b3b0942908#1::B11::[\"1.44 \\\\times 10^3\", \"14.4 \\\\times 10^2\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[0]",
+      "pair": [
+        "1.44 \\times 10^3",
+        "14.4 \\times 10^2"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 14.4 \\times 10^2 equals the marked answer 1.44 \\times 10^3 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::d0fcd4d6e007#1::B11::[\"2.52 \\\\times 10^{-6}\", \"25.2 \\\\times 10^{-7}\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[1]",
+      "pair": [
+        "2.52 \\times 10^{-6}",
+        "25.2 \\times 10^{-7}"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 25.2 \\times 10^{-7} equals the marked answer 2.52 \\times 10^{-6} but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::5eccbd265f0f#1::B11::[\"3.90625 \\\\times 10^9\", \"39.0625 \\\\times 10^8\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[2]",
+      "pair": [
+        "3.90625 \\times 10^9",
+        "39.0625 \\times 10^8"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 39.0625 \\times 10^8 equals the marked answer 3.90625 \\times 10^9 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::7255012000f8#1::B11::[\"6.4 \\\\times 10^{10}\", \"64 \\\\times 10^9\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[5]",
+      "pair": [
+        "6.4 \\times 10^{10}",
+        "64 \\times 10^9"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 64 \\times 10^9 equals the marked answer 6.4 \\times 10^{10} but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::0516cc710274#1::B11::[\"0.4 \\\\times 10^8\", \"4 \\\\times 10^7\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[7]",
+      "pair": [
+        "0.4 \\times 10^8",
+        "4 \\times 10^7"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 0.4 \\times 10^8 equals the marked answer 4 \\times 10^7 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::ec5663414f40#1::B11::[\"8 \\\\times 10^5\", \"80 \\\\times 10^4\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[11]",
+      "pair": [
+        "8 \\times 10^5",
+        "80 \\times 10^4"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 80 \\times 10^4 equals the marked answer 8 \\times 10^5 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::e1edcb9edc10#1::B11::[\"6.8 \\\\times 10^5\", \"68 \\\\times 10^4\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[13]",
+      "pair": [
+        "6.8 \\times 10^5",
+        "68 \\times 10^4"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 68 \\times 10^4 equals the marked answer 6.8 \\times 10^5 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::bde744ffa080#1::B11::[\"3.5 \\\\times 10^6\", \"35 \\\\times 10^5\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[15]",
+      "pair": [
+        "3.5 \\times 10^6",
+        "35 \\times 10^5"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 35 \\times 10^5 equals the marked answer 3.5 \\times 10^6 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::b50500c8b0df#1::B11::[\"2.5 \\\\times 10^4\", \"25 \\\\times 10^3\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[16]",
+      "pair": [
+        "2.5 \\times 10^4",
+        "25 \\times 10^3"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 25 \\times 10^3 equals the marked answer 2.5 \\times 10^4 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::140d7a4d4fc1#1::B11::[\"1.3 \\\\times 10^{-2}\", \"13 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[17]",
+      "pair": [
+        "1.3 \\times 10^{-2}",
+        "13 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 13 \\times 10^{-3} equals the marked answer 1.3 \\times 10^{-2} but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::5e218bdb50a8#1::B11::[\"4.8 \\\\times 10^{-4}\", \"48 \\\\times 10^{-5}\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[18]",
+      "pair": [
+        "4.8 \\times 10^{-4}",
+        "48 \\times 10^{-5}"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 48 \\times 10^{-5} equals the marked answer 4.8 \\times 10^{-4} but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::ec96cc76617e#1::B11::[\"3.25 \\\\times 10^7\", \"32.5 \\\\times 10^6\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[19]",
+      "pair": [
+        "3.25 \\times 10^7",
+        "32.5 \\times 10^6"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 32.5 \\times 10^6 equals the marked answer 3.25 \\times 10^7 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::89f262122f62#1::B11::[\"9.9 \\\\times 10^7\", \"99 \\\\times 10^6\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[20]",
+      "pair": [
+        "9.9 \\times 10^7",
+        "99 \\times 10^6"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 99 \\times 10^6 equals the marked answer 9.9 \\times 10^7 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::6bb8adcc160c#1::B11::[\"1 \\\\times 10^6\", \"10 \\\\times 10^5\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[21]",
+      "pair": [
+        "1 \\times 10^6",
+        "10 \\times 10^5"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 10 \\times 10^5 equals the marked answer 1 \\times 10^6 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::95741a1f0b90#1::B11::[\"1 \\\\times 10^4\", \"10 \\\\times 10^3\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[22]",
+      "pair": [
+        "1 \\times 10^4",
+        "10 \\times 10^3"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 10 \\times 10^3 equals the marked answer 1 \\times 10^4 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::7ef0414c8841#1::B11::[\"1 \\\\times 10^{-2}\", \"10 \\\\times 10^{-3}\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[23]",
+      "pair": [
+        "1 \\times 10^{-2}",
+        "10 \\times 10^{-3}"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 10 \\times 10^{-3} equals the marked answer 1 \\times 10^{-2} but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::cc092b5d272f#1::B11::[\"0.01 \\\\times 10^9\", \"1 \\\\times 10^7\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[24]",
+      "pair": [
+        "0.01 \\times 10^9",
+        "1 \\times 10^7"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 0.01 \\times 10^9 equals the marked answer 1 \\times 10^7 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::986eb636e9bf#1::B11::[\"0.5 \\\\times 10^{-3}\", \"5 \\\\times 10^{-4}\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[34]",
+      "pair": [
+        "0.5 \\times 10^{-3}",
+        "5 \\times 10^{-4}"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 0.5 \\times 10^{-3} equals the marked answer 5 \\times 10^{-4} but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::0ef76a274ec7#1::B11::[\"2 \\\\times 10^3\", \"20 \\\\times 10^2\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[36]",
+      "pair": [
+        "2 \\times 10^3",
+        "20 \\times 10^2"
+      ],
+      "reason": "The ask is \"Calculate. Give your answer in standard form.\". 20 \\times 10^2 equals the marked answer 2 \\times 10^3 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "standard-form-blitz::e8ab4069da75#1::B11::[\"1 \\\\times 10^9\", \"10 \\\\times 10^8\"]",
+      "where": "standard-form-blitz QUESTIONS.alevel[47]",
+      "pair": [
+        "1 \\times 10^9",
+        "10 \\times 10^8"
+      ],
+      "reason": "The ask is \"Estimate to 1 s.f., in standard form.\". 10 \\times 10^8 equals the marked answer 1 \\times 10^9 but is not in standard form (its leading number is not at least 1 and less than 10), which is the form the ask names."
+    },
+    {
+      "id": "surd-simplifier::14d740dafcda#1::B11::[\"\\\\dfrac{5\\\\sqrt{5}}{5}\", \"\\\\sqrt{5}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[28]",
+      "pair": [
+        "\\dfrac{5\\sqrt{5}}{5}",
+        "\\sqrt{5}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". \\dfrac{5\\sqrt{5}}{5} equals the marked answer \\sqrt{5} and has a rational denominator, but is not simplified, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::c7b81521dc7f#1::B11::[\"\\\\dfrac{1}{\\\\sqrt{3}}\", \"\\\\dfrac{\\\\sqrt{3}}{3}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[31]",
+      "pair": [
+        "\\dfrac{1}{\\sqrt{3}}",
+        "\\dfrac{\\sqrt{3}}{3}"
+      ],
+      "reason": "The ask is \"Simplify, rationalising the denominator\". \\dfrac{1}{\\sqrt{3}} equals the marked answer \\dfrac{\\sqrt{3}}{3} but its denominator is not rationalised, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::c7b81521dc7f#1::B11::[\"\\\\dfrac{\\\\sqrt{12}}{6}\", \"\\\\dfrac{\\\\sqrt{3}}{3}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[31]",
+      "pair": [
+        "\\dfrac{\\sqrt{12}}{6}",
+        "\\dfrac{\\sqrt{3}}{3}"
+      ],
+      "reason": "The ask is \"Simplify, rationalising the denominator\". \\dfrac{\\sqrt{12}}{6} equals the marked answer \\dfrac{\\sqrt{3}}{3} and has a rational denominator, but is not simplified, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::c7b81521dc7f#1::B11::[\"\\\\dfrac{1}{\\\\sqrt{3}}\", \"\\\\dfrac{\\\\sqrt{12}}{6}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[31]",
+      "pair": [
+        "\\dfrac{1}{\\sqrt{3}}",
+        "\\dfrac{\\sqrt{12}}{6}"
+      ],
+      "reason": "The ask is \"Simplify, rationalising the denominator\". \\dfrac{1}{\\sqrt{3}} and \\dfrac{\\sqrt{12}}{6} both equal the marked answer \\dfrac{\\sqrt{3}}{3}: the first has a surd in the denominator and the second is not simplified, and the ask names a simplified answer with a rational denominator."
+    },
+    {
+      "id": "surd-simplifier::f417cbbafb13#1::B11::[\"\\\\dfrac{1}{3}\", \"\\\\dfrac{3}{9}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[35]",
+      "pair": [
+        "\\dfrac{1}{3}",
+        "\\dfrac{3}{9}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{3}{9} equals the marked answer \\dfrac{1}{3} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::c07fecbc0673#1::B11::[\"\\\\dfrac{2}{3}\", \"\\\\dfrac{6}{9}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[36]",
+      "pair": [
+        "\\dfrac{2}{3}",
+        "\\dfrac{6}{9}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{6}{9} equals the marked answer \\dfrac{2}{3} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::539bbdfa25fd#1::B11::[\"\\\\dfrac{1}{11}\", \"\\\\dfrac{9}{99}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[40]",
+      "pair": [
+        "\\dfrac{1}{11}",
+        "\\dfrac{9}{99}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{9}{99} equals the marked answer \\dfrac{1}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::512729784b74#1::B11::[\"\\\\dfrac{12}{99}\", \"\\\\dfrac{4}{33}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[41]",
+      "pair": [
+        "\\dfrac{12}{99}",
+        "\\dfrac{4}{33}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{12}{99} equals the marked answer \\dfrac{4}{33} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::34e8d99391ca#1::B11::[\"\\\\dfrac{27}{99}\", \"\\\\dfrac{3}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[42]",
+      "pair": [
+        "\\dfrac{27}{99}",
+        "\\dfrac{3}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{27}{99} equals the marked answer \\dfrac{3}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::34e8d99391ca#1::B11::[\"\\\\dfrac{3}{11}\", \"\\\\dfrac{9}{33}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[42]",
+      "pair": [
+        "\\dfrac{3}{11}",
+        "\\dfrac{9}{33}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{9}{33} equals the marked answer \\dfrac{3}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::735bf93c496a#1::B11::[\"\\\\dfrac{45}{99}\", \"\\\\dfrac{5}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[43]",
+      "pair": [
+        "\\dfrac{45}{99}",
+        "\\dfrac{5}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{45}{99} equals the marked answer \\dfrac{5}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::9c6ee865ce87#1::B11::[\"\\\\dfrac{81}{99}\", \"\\\\dfrac{9}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[44]",
+      "pair": [
+        "\\dfrac{81}{99}",
+        "\\dfrac{9}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{81}{99} equals the marked answer \\dfrac{9}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::9c6ee865ce87#1::B11::[\"\\\\dfrac{27}{33}\", \"\\\\dfrac{9}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[44]",
+      "pair": [
+        "\\dfrac{27}{33}",
+        "\\dfrac{9}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{27}{33} equals the marked answer \\dfrac{9}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::829ef097eb30#1::B11::[\"\\\\dfrac{142857}{999999}\", \"\\\\dfrac{1}{7}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[47]",
+      "pair": [
+        "\\dfrac{142857}{999999}",
+        "\\dfrac{1}{7}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{142857}{999999} equals the marked answer \\dfrac{1}{7} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::b3fcae9ca95e#1::B11::[\"1\", \"\\\\dfrac{9}{9}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[48]",
+      "pair": [
+        "1",
+        "\\dfrac{9}{9}"
+      ],
+      "reason": "The ask is \"Write in its simplest form\". \\dfrac{9}{9} equals the marked answer 1 but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::f0059950fe13#1::B11::[\"\\\\dfrac{36}{99}\", \"\\\\dfrac{4}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[49]",
+      "pair": [
+        "\\dfrac{36}{99}",
+        "\\dfrac{4}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{36}{99} equals the marked answer \\dfrac{4}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::f0059950fe13#1::B11::[\"\\\\dfrac{12}{33}\", \"\\\\dfrac{4}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[49]",
+      "pair": [
+        "\\dfrac{12}{33}",
+        "\\dfrac{4}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{12}{33} equals the marked answer \\dfrac{4}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::d9a2cd3c5c80#1::B11::[\"\\\\dfrac{\\\\sqrt{2}-1}{1}\", \"\\\\sqrt{2}-1\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[12]",
+      "pair": [
+        "\\dfrac{\\sqrt{2}-1}{1}",
+        "\\sqrt{2}-1"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". \\dfrac{\\sqrt{2}-1}{1} equals the marked answer \\sqrt{2}-1 and has a rational denominator, but is not simplified, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::d9a2cd3c5c80#1::B11::[\"\\\\dfrac{1}{\\\\sqrt{2}-1}\", \"\\\\sqrt{2}+1\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[12]",
+      "pair": [
+        "\\dfrac{1}{\\sqrt{2}-1}",
+        "\\sqrt{2}+1"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". Neither is the marked answer \\sqrt{2}-1: \\dfrac{1}{\\sqrt{2}-1} and \\sqrt{2}+1 are one wrong value (the reciprocal of the answer), written once with a surd in the denominator and once rationalised; the ask names the rationalised, simplified form."
+    },
+    {
+      "id": "surd-simplifier::a442b6d73671#1::B11::[\"\\\\dfrac{2(\\\\sqrt{3}-1)}{2}\", \"\\\\sqrt{3}-1\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[14]",
+      "pair": [
+        "\\dfrac{2(\\sqrt{3}-1)}{2}",
+        "\\sqrt{3}-1"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". \\dfrac{2(\\sqrt{3}-1)}{2} equals the marked answer \\sqrt{3}-1 and has a rational denominator, but is not simplified, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::06c641f25759#1::B11::[\"4(2-\\\\sqrt{3})\", \"8-4\\\\sqrt{3}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[16]",
+      "pair": [
+        "4(2-\\sqrt{3})",
+        "8-4\\sqrt{3}"
+      ],
+      "reason": "The ask is \"Rationalise, giving your answer in the form a + b√3\". 4(2-\\sqrt{3}) equals the marked answer 8-4\\sqrt{3} but is not in the form a + b√3, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::06c641f25759#1::B11::[\"\\\\dfrac{4(2+\\\\sqrt{3})}{1}\", \"\\\\dfrac{4}{2-\\\\sqrt{3}}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[16]",
+      "pair": [
+        "\\dfrac{4(2+\\sqrt{3})}{1}",
+        "\\dfrac{4}{2-\\sqrt{3}}"
+      ],
+      "reason": "The ask is \"Rationalise, giving your answer in the form a + b√3\". Neither is the marked answer 8-4\\sqrt{3}: \\dfrac{4}{2-\\sqrt{3}} and \\dfrac{4(2+\\sqrt{3})}{1} are one wrong value, 8+4\\sqrt{3}, from a sign slip on the conjugate; the first still has a surd in the denominator, and neither is written in the form a + b√3 that the ask names."
+    },
+    {
+      "id": "surd-simplifier::593830e3801f#1::B11::[\"2+\\\\sqrt{2}\", \"\\\\dfrac{2+\\\\sqrt{2}}{1}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[17]",
+      "pair": [
+        "2+\\sqrt{2}",
+        "\\dfrac{2+\\sqrt{2}}{1}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". \\dfrac{2+\\sqrt{2}}{1} equals the marked answer 2+\\sqrt{2} and has a rational denominator, but is not simplified, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::f5f0ef96de4e#1::B11::[\"\\\\dfrac{5(\\\\sqrt{6}-1)}{5}\", \"\\\\sqrt{6}-1\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[18]",
+      "pair": [
+        "\\dfrac{5(\\sqrt{6}-1)}{5}",
+        "\\sqrt{6}-1"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". \\dfrac{5(\\sqrt{6}-1)}{5} equals the marked answer \\sqrt{6}-1 and has a rational denominator, but is not simplified, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::f417cbbafb13#2::B11::[\"\\\\dfrac{1}{3}\", \"\\\\dfrac{3}{9}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[30]",
+      "pair": [
+        "\\dfrac{1}{3}",
+        "\\dfrac{3}{9}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{3}{9} equals the marked answer \\dfrac{1}{3} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::4b91e7bd1c6c#1::B11::[\"\\\\dfrac{18}{99}\", \"\\\\dfrac{2}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[31]",
+      "pair": [
+        "\\dfrac{18}{99}",
+        "\\dfrac{2}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{18}{99} equals the marked answer \\dfrac{2}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::4b91e7bd1c6c#1::B11::[\"\\\\dfrac{2}{11}\", \"\\\\dfrac{6}{33}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[31]",
+      "pair": [
+        "\\dfrac{2}{11}",
+        "\\dfrac{6}{33}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{6}{33} equals the marked answer \\dfrac{2}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::7b9eaeb2e222#1::B11::[\"\\\\dfrac{54}{99}\", \"\\\\dfrac{6}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[32]",
+      "pair": [
+        "\\dfrac{54}{99}",
+        "\\dfrac{6}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{54}{99} equals the marked answer \\dfrac{6}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::7b9eaeb2e222#1::B11::[\"\\\\dfrac{18}{33}\", \"\\\\dfrac{6}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[32]",
+      "pair": [
+        "\\dfrac{18}{33}",
+        "\\dfrac{6}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{18}{33} equals the marked answer \\dfrac{6}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::b3fcae9ca95e#2::B11::[\"1\", \"\\\\dfrac{9}{9}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[36]",
+      "pair": [
+        "1",
+        "\\dfrac{9}{9}"
+      ],
+      "reason": "The ask is \"Write in its simplest form\". \\dfrac{9}{9} equals the marked answer 1 but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::829ef097eb30#2::B11::[\"\\\\dfrac{142857}{999999}\", \"\\\\dfrac{1}{7}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[38]",
+      "pair": [
+        "\\dfrac{142857}{999999}",
+        "\\dfrac{1}{7}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{142857}{999999} equals the marked answer \\dfrac{1}{7} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::53c2f73ecc5e#1::B11::[\"\\\\dfrac{72}{99}\", \"\\\\dfrac{8}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[39]",
+      "pair": [
+        "\\dfrac{72}{99}",
+        "\\dfrac{8}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{72}{99} equals the marked answer \\dfrac{8}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::53c2f73ecc5e#1::B11::[\"\\\\dfrac{24}{33}\", \"\\\\dfrac{8}{11}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[39]",
+      "pair": [
+        "\\dfrac{24}{33}",
+        "\\dfrac{8}{11}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{24}{33} equals the marked answer \\dfrac{8}{11} but is not in its simplest form, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::c7e5b1cd561a#1::B11::[\"\\\\dfrac{\\\\sqrt{3}-\\\\sqrt{2}}{1}\", \"\\\\sqrt{3}-\\\\sqrt{2}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[42]",
+      "pair": [
+        "\\dfrac{\\sqrt{3}-\\sqrt{2}}{1}",
+        "\\sqrt{3}-\\sqrt{2}"
+      ],
+      "reason": "The ask is \"Rationalise and simplify\". \\dfrac{\\sqrt{3}-\\sqrt{2}}{1} equals the marked answer \\sqrt{3}-\\sqrt{2} and has a rational denominator, but is not simplified, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::802c889394f4#1::B11::[\"4\", \"9-5\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[45]",
+      "pair": [
+        "4",
+        "9-5"
+      ],
+      "reason": "The ask is \"Expand and simplify\". 9-5 equals the marked answer 4 but is not simplified, which the ask names."
+    }
+  ],
+  "_tier1_phone_overflow_comment": [
+    "Pages and game starts known to scroll sideways at 320x568 (scripts/check-site.py,",
+    "'Tier 1, phone width'). One entry per path and 'at': 'load' is the page as it opens,",
+    "'start' is a game after its first level control or Start button. 'width' is the",
+    "document width measured when the entry was recorded (web fonts blocked, so in the",
+    "fallback font: DejaVu in CI), 'where' the outermost elements past the edge, and",
+    "'todo' the docs/todo.md item that owns the fix.",
+    "",
+    "A known overflow passes; an entry that no longer overflows FAILs as stale, so the PR",
+    "that fixes a page removes its entry. A game that starts at desktop size but not on a",
+    "phone is recorded with \"reason\": \"unreachable\" instead of a width.",
+    "",
+    "Recorded 2 Oct 2026: 44 entries, Jon's ruling (the contract's limit was 40)."
+  ],
+  "tier1_phone_overflow": [
+    {
+      "path": "escape-rooms/canteen-hack/teacher.html",
+      "at": "load",
+      "width": 617,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
+      "path": "escape-rooms/comic-caper/teacher.html",
+      "at": "load",
+      "width": 528,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
+      "path": "escape-rooms/hamster-heist/teacher.html",
+      "at": "load",
+      "width": 591,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
+      "path": "escape-rooms/heatwave-mutiny/teacher.html",
+      "at": "load",
+      "width": 583,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
+      "path": "escape-rooms/kiln-disaster/teacher.html",
+      "at": "load",
+      "width": 575,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
+      "path": "escape-rooms/pe-shed-rebellion/teacher.html",
+      "at": "load",
+      "width": 590,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
+      "path": "escape-rooms/prom-budget/teacher.html",
+      "at": "load",
+      "width": 589,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
+      "path": "escape-rooms/rugby-mud/teacher.html",
+      "at": "load",
+      "width": 603,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
+      "path": "games/better-value/index.html",
+      "at": "load",
+      "width": 339,
+      "todo": "§3.9 batch 1 follow-up: its start screen's session-length buttons",
+      "where": "button.session-btn"
+    },
+    {
+      "path": "games/chart-interrogator/index.html",
+      "at": "start",
+      "width": 392,
+      "todo": "§3.9 batch 4",
+      "where": "div.diagram-panel; div#questionPanel.question-panel"
+    },
+    {
+      "path": "games/component-crusher/index.html",
+      "at": "start",
+      "width": 334,
+      "todo": "§3.9, in no batch yet",
+      "where": "div.canvas-panel; div.right-panel"
+    },
+    {
+      "path": "games/decimal-detective/index.html",
+      "at": "start",
+      "width": 340,
+      "todo": "§1.39; §3.9 batch 3",
+      "where": "div.header-right"
+    },
+    {
+      "path": "games/differentiation-duel/index.html",
+      "at": "load",
+      "width": 321,
+      "todo": "§3.9 batch 8",
+      "where": "button#a11yToggle.a11y-toggle"
+    },
+    {
+      "path": "games/differentiation-duel/index.html",
+      "at": "start",
+      "width": 321,
+      "todo": "§3.9 batch 8",
+      "where": "button#a11yToggle.a11y-toggle"
+    },
+    {
+      "path": "games/equation-builder/index.html",
+      "at": "start",
+      "width": 329,
+      "todo": "§1.39; §3.9, in no batch yet",
+      "where": "div.header-right"
+    },
+    {
+      "path": "games/equatle/index.html",
+      "at": "load",
+      "width": 348,
+      "todo": "§3.9 batch 12",
+      "where": "div.nav-r; button.key"
+    },
+    {
+      "path": "games/equatle/index.html",
+      "at": "start",
+      "width": 348,
+      "todo": "§3.9 batch 12",
+      "where": "div.nav-r; button.key"
+    },
+    {
+      "path": "games/estimation-engine/index.html",
+      "at": "load",
+      "width": 378,
+      "todo": "§3.9 batch 7",
+      "where": "button#submit-btn.btn"
+    },
+    {
+      "path": "games/estimation-engine/index.html",
+      "at": "start",
+      "width": 378,
+      "todo": "§3.9 batch 7",
+      "where": "button#submit-btn.btn"
+    },
+    {
+      "path": "games/estimation-golf/index.html",
+      "at": "load",
+      "width": 797,
+      "todo": "§3.9 batch 2",
+      "where": "div.play-area"
+    },
+    {
+      "path": "games/estimation-golf/index.html",
+      "at": "start",
+      "width": 797,
+      "todo": "§3.9 batch 2",
+      "where": "div.play-area"
+    },
+    {
+      "path": "games/four-quadrant-explorer/index.html",
+      "at": "start",
+      "width": 332,
+      "todo": "§1.39; §3.9, in no batch yet",
+      "where": "div.header-right"
+    },
+    {
+      "path": "games/glorious-gantt/index.html",
+      "at": "start",
+      "width": 354,
+      "todo": "§3.9, in no batch yet",
+      "where": "div; div.right-panel"
+    },
+    {
+      "path": "games/gradient-hunter/index.html",
+      "at": "start",
+      "width": 327,
+      "todo": "§3.9, in no batch yet",
+      "where": "canvas#graphCanvas"
+    },
+    {
+      "path": "games/graph-sketcher/index.html",
+      "at": "start",
+      "width": 463,
+      "todo": "§3.9, in no batch yet",
+      "where": "div.canvas-panel; div.right-panel",
+      "note": "width varies with the scenario drawn (361 to 567px across 8 runs); overflows on every one"
+    },
+    {
+      "path": "games/like-terms-collector/index.html",
+      "at": "start",
+      "width": 336,
+      "todo": "§1.39; §3.9 batch 7",
+      "where": "div.header-right"
+    },
+    {
+      "path": "games/maths-court/index.html",
+      "at": "start",
+      "width": 328,
+      "todo": "§1.39; §3.9 batch 10",
+      "where": "div.header-right"
+    },
+    {
+      "path": "games/negative-number-line/index.html",
+      "at": "start",
+      "width": 345,
+      "todo": "§1.39; §3.9, in no batch yet",
+      "where": "div.header-right"
+    },
+    {
+      "path": "games/probability-pioneer/index.html",
+      "at": "start",
+      "width": 355,
+      "todo": "§1.39; §3.9 batch 7",
+      "where": "div.header-right"
+    },
+    {
+      "path": "games/shape-shifter/index.html",
+      "at": "start",
+      "width": 375,
+      "todo": "§1.39; §3.9, in no batch yet",
+      "where": "div.header-right"
+    },
+    {
+      "path": "games/tax-theft/index.html",
+      "at": "start",
+      "width": 484,
+      "todo": "§3.9 batch 10",
+      "where": "div.input-panel; div.payslip-panel"
+    },
+    {
+      "path": "games/trig-wars/index.html",
+      "at": "load",
+      "width": 711,
+      "todo": "§3.9 batch 19",
+      "where": "div.top-bar; canvas#battlefield; div.game-ui"
+    },
+    {
+      "path": "games/trig-wars/index.html",
+      "at": "start",
+      "width": 711,
+      "todo": "§3.9 batch 19",
+      "where": "div.top-bar; canvas#battlefield; div.game-ui"
+    },
+    {
+      "path": "games/word-problem-decoder/index.html",
+      "at": "start",
+      "width": 324,
+      "todo": "§1.39; §3.9 batch 13",
+      "where": "div.header-right"
+    },
+    {
+      "path": "games/wrong-on-the-internet/index.html",
+      "at": "start",
+      "width": 338,
+      "todo": "§1.39; §3.9 batch 11",
+      "where": "div.header-right"
+    },
+    {
+      "path": "parents/coordinates/index.html",
+      "at": "load",
+      "width": 324,
+      "todo": "§1.34",
+      "where": "table.quadrant-table"
+    },
+    {
+      "path": "parents/fractions/index.html",
+      "at": "load",
+      "width": 347,
+      "todo": "§1.34",
+      "where": "table.equiv-table"
+    },
+    {
+      "path": "parents/graphs-transformations/index.html",
+      "at": "load",
+      "width": 339,
+      "todo": "§1.34",
+      "where": "table.transform-table"
+    },
+    {
+      "path": "parents/indices-surds/index.html",
+      "at": "load",
+      "width": 364,
+      "todo": "§1.38 (listed in §1.34)",
+      "where": "span.base; span.base"
+    },
+    {
+      "path": "parents/probability-trees/index.html",
+      "at": "load",
+      "width": 397,
+      "todo": "§1.38 (listed in §1.34)",
+      "where": "span.base; span.base; span.base"
+    },
+    {
+      "path": "parents/pythagoras/index.html",
+      "at": "load",
+      "width": 325,
+      "todo": "§1.38 (listed in §1.34)",
+      "where": "span.base; span.base"
+    },
+    {
+      "path": "parents/standard-form/index.html",
+      "at": "load",
+      "width": 338,
+      "todo": "§1.34",
+      "where": "table.example-table"
+    },
+    {
+      "path": "parents/statistics-data/index.html",
+      "at": "load",
+      "width": 325,
+      "todo": "§1.38 (listed in §1.34)",
+      "where": "span.base"
+    },
+    {
+      "path": "spec-map/index.html",
+      "at": "load",
+      "width": 540,
+      "todo": "§1.34",
+      "where": "span.spec-board; table; span.spec-board"
+    }
+  ]
+}

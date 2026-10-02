@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Z-scores, shaded regions, and CDF probabilities. 50 questions for A-Level statistics, Level 4, and Core Maths.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/normal-navigator/">
+<meta property="og:title" content="Normal Navigator — MaffsGames">
+<meta property="og:description" content="Z-scores, shaded regions, and CDF probabilities. 50 questions for A-Level statistics, Level 4, and Core Maths.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/normal-navigator/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Normal Navigator — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#070b14;--surface:#0e1424;--border:#1a2440;--primary:#6366f1;--accent:#06b6d4;--wrong:#f43f5e;--correct:#22c55e;--text:#e4e8f0;--muted:#687890;--shade:rgba(99,102,241,.25);--curve:#6366f1}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.5rem 0 .8rem}
+.header h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.screen{display:none}.screen.active{display:block}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.6;margin:1rem 0;max-width:560px;margin-left:auto;margin-right:auto}
+.start-btn{display:block;margin:1.5rem auto;padding:.8rem 2.5rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.start-btn:hover{transform:scale(1.05)}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.8rem;flex-wrap:wrap;gap:.3rem}
+.hud-item{text-align:center;min-width:55px}.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700}
+
+/* Bell curve */
+.bell-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.8rem;text-align:center}
+.bell-wrap svg{display:block;margin:0 auto;max-width:100%}
+.bell-info{display:flex;justify-content:center;gap:1.5rem;margin-top:.5rem;font-size:.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem;margin-bottom:.8rem;text-align:center}
+.q-card .context{font-size:.88rem;color:var(--muted);line-height:1.5;margin-bottom:.4rem}
+.q-card .prompt{font-size:.95rem;font-weight:600;color:var(--accent)}
+.q-card .katex{font-size:1.1em!important}
+
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.6rem}
+.opt-btn{padding:.75rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.88rem;cursor:pointer;transition:all .15s;text-align:center;min-height:48px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 14px rgba(99,102,241,.15)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.1);animation:pop .3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.1);animation:shake .3s}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1.2rem;margin-bottom:1rem;text-align:left;font-size:.88rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.9rem;margin-bottom:.6rem;font-weight:600}
+.solution .step{margin-bottom:.5rem;padding-left:.8rem;border-left:2px solid var(--border)}
+.solution .misconception{margin-top:.8rem;padding:.6rem .8rem;background:rgba(99,102,241,.08);border-radius:8px;border-left:3px solid var(--primary);font-size:.82rem;color:var(--primary)}
+.solution .next-btn{display:inline-block;margin-top:.8rem;padding:.5rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem;line-height:1.8}
+.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.play-again:hover{transform:scale(1.05)}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Normal Navigator</h1><div class="sub">Standardise. Look up. Shade the curve. Master the normal distribution.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="menu-info">
+      <strong>You will need your calculator</strong> for Φ(z) values and inverse normal lookups.<br><br>
+      50 questions covering standardisation, probability calculations, inverse normal problems, and contextual applications. The bell curve shades the region you're calculating — building the geometric intuition behind the numbers.
+    </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="start-btn" onclick="startGame()">Start</button>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
+    </div>
+    <div class="bell-wrap">
+      <svg id="bellSvg" viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="bell-info" id="bellInfo"></div>
+    </div>
+    <div class="q-card"><div class="context" id="context"></div><div class="prompt" id="prompt"></div></div>
+    <div class="options" id="options"></div>
+    <div class="solution" id="solution"></div>
+  </div>
+
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+
+<script>
+// ============================================================
+//  NORMAL DISTRIBUTION HELPERS
+// ============================================================
+// Approximation of Φ(z) — standard normal CDF
+function phi(z){
+  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  const sign=z<0?-1:1;z=Math.abs(z)/Math.sqrt(2);
+  const t=1/(1+p*z);const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-z*z);
+  return 0.5*(1+sign*y);
+}
+
+// ============================================================
+//  BELL CURVE DRAWING
+// ============================================================
+// regions: [[L,R], ...] -- one entry per shaded region (two-tail questions have two)
+// hideTicks: leave out the μ±kσ tick marks and labels (see boundaryAnswer)
+function drawBell(mu,sigma,regions,hideTicks){
+  const svg=document.getElementById('bellSvg');
+  const W=500,H=200,PAD=30,PH=H-PAD*2;
+  const xMin=mu-3.5*sigma,xMax=mu+3.5*sigma;
+  function xToSvg(x){return PAD+(x-xMin)/(xMax-xMin)*(W-2*PAD)}
+  function yToSvg(y){return H-PAD-y*PH}
+  function normalPdf(x){const z=(x-mu)/sigma;return Math.exp(-z*z/2)/(sigma*Math.sqrt(2*Math.PI))}
+  const maxY=normalPdf(mu);
+  function yNorm(x){return normalPdf(x)/maxY}
+
+  // Build curve path
+  let curvePath='';const N=200;
+  for(let i=0;i<=N;i++){
+    const x=xMin+(xMax-xMin)*i/N;
+    const sx=xToSvg(x),sy=yToSvg(yNorm(x));
+    curvePath+=(i===0?'M':'L')+sx.toFixed(1)+','+sy.toFixed(1);
+  }
+
+  // Build one shade path per region
+  let shadeSvg='';
+  regions.forEach(([shadeL,shadeR])=>{
+    const sL=Math.max(shadeL,xMin),sR=Math.min(shadeR,xMax);
+    let shadePath='M'+xToSvg(sL).toFixed(1)+','+yToSvg(0).toFixed(1);
+    for(let i=0;i<=100;i++){
+      const x=sL+(sR-sL)*i/100;
+      shadePath+='L'+xToSvg(x).toFixed(1)+','+yToSvg(yNorm(x)).toFixed(1);
+    }
+    shadePath+='L'+xToSvg(sR).toFixed(1)+','+yToSvg(0).toFixed(1)+'Z';
+    shadeSvg+=`<path class="shade" d="${shadePath}" fill="rgba(99,102,241,0.25)" stroke="none"/>`;
+  });
+
+  // Axis labels
+  const ticks=[-3,-2,-1,0,1,2,3].map(z=>mu+z*sigma);
+  let ticksSvg='';
+  if(!hideTicks)ticks.forEach(t=>{
+    const sx=xToSvg(t);
+    ticksSvg+=`<line x1="${sx}" y1="${H-PAD}" x2="${sx}" y2="${H-PAD+5}" stroke="#3a4560" stroke-width="1"/>`;
+    const label=t===mu?'μ':(t<mu?'μ−'+(Math.round((mu-t)/sigma))+'σ':'μ+'+(Math.round((t-mu)/sigma))+'σ');
+    ticksSvg+=`<text x="${sx}" y="${H-PAD+16}" text-anchor="middle" fill="#687890" font-size="9" font-family="JetBrains Mono">${label}</text>`;
+  });
+
+  svg.innerHTML=`
+    <line x1="${PAD}" y1="${H-PAD}" x2="${W-PAD}" y2="${H-PAD}" stroke="#1a2440" stroke-width="1"/>
+    ${ticksSvg}
+    ${shadeSvg}
+    <path d="${curvePath}" fill="none" stroke="#6366f1" stroke-width="2.5"/>
+  `;
+
+  showParams(mu,sigma,false);
+}
+
+// Is the answer a shading boundary (find z, find k)? Then the μ±kσ ticks would let
+// the student read it off the picture: hide them all until answered (hiding only
+// the one at the boundary still leaves it readable between its neighbours).
+// Decided from the key and the shade, so no question needs a flag.
+function boundaryAnswer(q){
+  const nums=String(q.correct).replace(/−/g,'-').match(/-?\d+(\.\d+)?/g);
+  if(!nums)return false;
+  const t=nums[nums.length-1],v=parseFloat(t),tol=0.5*Math.pow(10,-((t.split('.')[1]||'').length))+0.03;
+  const regions=Array.isArray(q.shade[0])?q.shade:[q.shade];
+  return regions.some(r=>r.some(b=>b!==-999&&b!==999&&(Math.abs(b-v)<=tol||Math.abs((b-q.mu)/q.sigma-v)<=tol)));
+}
+
+// A question about two distributions (noCurve) has no single curve to draw:
+// drawing one of them would be half the picture, so it draws none and names both.
+function drawNoCurve(note){
+  document.getElementById('bellSvg').innerHTML='<text x="250" y="105" text-anchor="middle" fill="#687890" font-size="13" font-family="JetBrains Mono">Two distributions: compare them below</text>';
+  document.getElementById('bellInfo').innerHTML=note.split(' · ').map(s=>'<span>'+s+'</span>').join('');
+}
+
+// On a question whose answer is μ or σ (hideParams), the labels would give it
+// away, so they read "?" until the student has answered.
+function showParams(mu,sigma,hide){
+  document.getElementById('bellInfo').innerHTML=hide?'<span>μ = ?</span><span>σ = ?</span>':`<span>μ = ${mu}</span><span>σ = ${sigma}</span>`;
+}
+
+// ============================================================
+//  QUESTION BANK (50 questions)
+// ============================================================
+const QUESTIONS=[
+// --- STANDARDISATION (Z-score) ---
+{ctx:"X ~ N(50, 8²). Find the z-score for x = 66.",q:"z = ?",mu:50,sigma:8,shade:[66,999],opts:["2","1.5","2.5","1"],correct:"2",steps:["z = (x − μ) / σ","= (66 − 50) / 8","= 16 / 8 = 2"]},
+{ctx:"X ~ N(100, 15²). Find the z-score for x = 130.",q:"z = ?",mu:100,sigma:15,shade:[130,999],opts:["2","1.5","3","2.5"],correct:"2",steps:["z = (130 − 100) / 15 = 30/15 = 2"]},
+{ctx:"X ~ N(20, 4²). Find the z-score for x = 14.",q:"z = ?",mu:20,sigma:4,shade:[-999,14],opts:["−1.5","−2","−1","−2.5"],correct:"−1.5",steps:["z = (14 − 20) / 4 = −6/4 = −1.5"]},
+{ctx:"X ~ N(0, 1). This IS the standard normal.",q:"What is P(Z < 0)?",mu:0,sigma:1,shade:[-999,0],opts:["0.5","0","0.68","1"],correct:"0.5",steps:["The standard normal is symmetric about 0","P(Z < 0) = 0.5"]},
+{ctx:"X ~ N(75, 10²). Standardise x = 75.",q:"z = ?",mu:75,sigma:10,shade:[74,76],opts:["0","1","−1","0.5"],correct:"0",steps:["z = (75 − 75) / 10 = 0","The mean always standardises to z = 0"]},
+
+// --- P(X < k) ---
+{ctx:"X ~ N(50, 8²). Find P(X < 66).",q:"Use your calculator: Φ(2) = ?",mu:50,sigma:8,shade:[-999,66],opts:["0.9772","0.8413","0.9987","0.9332"],correct:"0.9772",steps:["z = (66−50)/8 = 2","P(X < 66) = Φ(2) = 0.9772"]},
+{ctx:"X ~ N(100, 15²). Find P(X < 85).",q:"P(X < 85) = ?",mu:100,sigma:15,shade:[-999,85],opts:["0.1587","0.3085","0.2525","0.8413"],correct:"0.1587",steps:["z = (85−100)/15 = −1","P(X < 85) = Φ(−1) = 1 − Φ(1) = 1 − 0.8413 = 0.1587"]},
+{ctx:"X ~ N(40, 5²). Find P(X < 47.5).",q:"P(X < 47.5) = ?",mu:40,sigma:5,shade:[-999,47.5],opts:["0.9332","0.8413","0.9772","0.8849"],correct:"0.9332",steps:["z = (47.5−40)/5 = 1.5","P(X < 47.5) = Φ(1.5) = 0.9332"]},
+{ctx:"X ~ N(200, 25²). Find P(X < 150).",q:"P(X < 150) = ?",mu:200,sigma:25,shade:[-999,150],opts:["0.0228","0.0668","0.1587","0.0013"],correct:"0.0228",steps:["z = (150−200)/25 = −2","P(X < 150) = Φ(−2) = 0.0228"]},
+{ctx:"X ~ N(60, 12²). Find P(X < 60).",q:"P(X < 60) = ?",mu:60,sigma:12,shade:[-999,60],opts:["0.5","0.6","0.4","0.68"],correct:"0.5",steps:["x = μ, so z = 0","P(X < μ) = 0.5 by symmetry"]},
+
+// --- P(X > k) ---
+{ctx:"X ~ N(50, 8²). Find P(X > 58).",q:"P(X > 58) = ?",mu:50,sigma:8,shade:[58,999],opts:["0.1587","0.3085","0.8413","0.2420"],correct:"0.1587",steps:["z = (58−50)/8 = 1","P(X > 58) = 1 − Φ(1) = 1 − 0.8413 = 0.1587"]},
+{ctx:"X ~ N(170, 10²). Heights of adults. P(height > 190)?",q:"P(X > 190) = ?",mu:170,sigma:10,shade:[190,999],opts:["0.0228","0.0668","0.1587","0.0013"],correct:"0.0228",steps:["z = (190−170)/10 = 2","P(X > 190) = 1 − Φ(2) = 1 − 0.9772 = 0.0228"]},
+{ctx:"X ~ N(500, 100²). Exam marks. P(score > 650)?",q:"P(X > 650) = ?",mu:500,sigma:100,shade:[650,999],opts:["0.0668","0.1587","0.0228","0.0013"],correct:"0.0668",steps:["z = (650−500)/100 = 1.5","P(X > 650) = 1 − Φ(1.5) = 1 − 0.9332 = 0.0668"]},
+{ctx:"X ~ N(30, 6²). P(X > 18)?",q:"P(X > 18) = ?",mu:30,sigma:6,shade:[18,999],opts:["0.9772","0.8413","0.9332","0.9987"],correct:"0.9772",steps:["z = (18−30)/6 = −2","P(X > 18) = 1 − Φ(−2) = 1 − 0.0228 = 0.9772"]},
+
+// --- P(a < X < b) ---
+{ctx:"X ~ N(50, 8²). Find P(42 < X < 58).",q:"P(42 < X < 58) = ?",mu:50,sigma:8,shade:[42,58],opts:["0.6827","0.9545","0.3413","0.5"],correct:"0.6827",steps:["z₁ = (42−50)/8 = −1, z₂ = (58−50)/8 = 1","P(−1 < Z < 1) = Φ(1) − Φ(−1)","= 0.84134 − 0.15866 = 0.68268 ≈ 0.6827"],misconception:"This is the famous '68% rule' — about 68% of data falls within ±1σ of the mean."},
+{ctx:"X ~ N(100, 15²). P(70 < X < 130)?",q:"P(70 < X < 130) = ?",mu:100,sigma:15,shade:[70,130],opts:["0.9545","0.6827","0.9973","0.8664"],correct:"0.9545",steps:["z₁ = (70−100)/15 = −2, z₂ = (130−100)/15 = 2","P(−2 < Z < 2) = Φ(2) − Φ(−2) = 0.97725 − 0.02275 = 0.95450 ≈ 0.9545"],misconception:"The '95% rule' — about 95% within ±2σ."},
+{ctx:"X ~ N(80, 10²). P(65 < X < 95)?",q:"P(65 < X < 95) = ?",mu:80,sigma:10,shade:[65,95],opts:["0.8664","0.6827","0.9332","0.7745"],correct:"0.8664",steps:["z₁ = (65−80)/10 = −1.5, z₂ = (95−80)/10 = 1.5","P = Φ(1.5) − Φ(−1.5) = 0.93319 − 0.06681 = 0.86638 ≈ 0.8664"]},
+{ctx:"X ~ N(0, 1). P(−1.96 < Z < 1.96)?",q:"P(−1.96 < Z < 1.96) = ?",mu:0,sigma:1,shade:[-1.96,1.96],opts:["0.9500","0.9545","0.9750","0.9000"],correct:"0.9500",steps:["Φ(1.96) = 0.97500","P = Φ(1.96) − Φ(−1.96) = 0.97500 − 0.02500 = 0.95000 ≈ 0.9500"],misconception:"z = ±1.96 gives exactly 95% — this is why 1.96 appears in confidence intervals."},
+
+// --- INVERSE NORMAL ---
+{ctx:"X ~ N(50, 8²). Find k such that P(X < k) = 0.9.",q:"k = ?",mu:50,sigma:8,shade:[-999,60.25],opts:["60.3","58.0","62.4","56.5"],correct:"60.3",steps:["P(Z < z) = 0.9 → z = 1.2816","k = μ + zσ = 50 + 1.2816 × 8 = 60.2528 ≈ 60.3"]},
+{ctx:"X ~ N(100, 15²). Find k such that P(X > k) = 0.05.",q:"k = ?",mu:100,sigma:15,shade:[124.7,999],opts:["124.7","120.0","130.0","119.2"],correct:"124.7",steps:["P(X > k) = 0.05 → P(X < k) = 0.95","z = 1.6449","k = 100 + 1.6449 × 15 ≈ 124.7"]},
+{ctx:"X ~ N(200, 25²). The top 10% get an A. Find the minimum mark.",q:"Minimum for A = ?",mu:200,sigma:25,shade:[232,999],opts:["232","225","240","228"],correct:"232",steps:["P(X > k) = 0.10 → P(X < k) = 0.90","z = 1.2816","k = 200 + 1.2816 × 25 ≈ 232"]},
+{ctx:"X ~ N(170, 10²). Find the height exceeded by 2.5% of people.",q:"k = ?",mu:170,sigma:10,shade:[189.6,999],opts:["189.6","185.0","195.0","192.0"],correct:"189.6",steps:["P(X > k) = 0.025 → z = 1.96","k = 170 + 1.96 × 10 = 189.6"]},
+{ctx:"X ~ N(500, 80²). Find the interquartile range.",q:"IQR = ?",mu:500,sigma:80,shade:[446,554],opts:["108","80","160","120"],correct:"108",steps:["Q1: z = −0.6745 → x = 500 − 0.6745×80 = 446.0","Q3: z = 0.6745 → x = 500 + 0.6745×80 = 554.0","IQR = 554.0 − 446.0 = 108.0"],misconception:"For a normal distribution, IQR = 2 × 0.6745 × σ ≈ 1.349σ"},
+
+// --- CONTEXT PROBLEMS ---
+{ctx:"Bolts have length X ~ N(50, 0.5²) mm. A bolt is rejected if outside 49–51mm.",q:"P(rejected) = ?",mu:50,sigma:0.5,shade:[[-999,49],[51,999]],opts:["0.0455","0.3174","0.0228","0.1587"],correct:"0.0455",steps:["P(rejected) = P(X<49) + P(X>51)","z = ±2, and P(X < 49) = Φ(−2) = 0.02275","P = 2 × 0.02275 = 0.04550 ≈ 0.0455"],misconception:"Reject from BOTH tails, so double the one-tail probability."},
+{ctx:"IQ scores: X ~ N(100, 15²). Mensa requires top 2%.",q:"Minimum IQ for Mensa = ?",mu:100,sigma:15,shade:[130.8,999],opts:["131","125","135","128"],correct:"131",steps:["P(X > k) = 0.02 → z = 2.054","k = 100 + 2.054 × 15 ≈ 131"]},
+{ctx:"A machine fills bottles with X ~ N(500, 8²) ml. A bottle is underfilled if < 490ml.",q:"P(underfilled) = ?",mu:500,sigma:8,shade:[-999,490],opts:["0.1056","0.2119","0.0668","0.1587"],correct:"0.1056",steps:["z = (490−500)/8 = −1.25","P(X < 490) = Φ(−1.25) ≈ 0.1056"]},
+{ctx:"Delivery times: X ~ N(30, 5²) minutes. A pizza is free if > 45 min.",q:"P(free pizza) = ?",mu:30,sigma:5,shade:[45,999],opts:["0.0013","0.0228","0.0062","0.0668"],correct:"0.0013",steps:["z = (45−30)/5 = 3","P(X > 45) = 1 − Φ(3) = 1 − 0.9987 = 0.0013"],misconception:"z = 3 is three standard deviations out — only 0.13% of data. The '99.7% rule'."},
+{ctx:"Exam marks: X ~ N(65, 12²). The pass mark is set so 80% pass.",q:"What is the pass mark?",mu:65,sigma:12,shade:[54.9,999],opts:["55","50","58","52"],correct:"55",steps:["P(X > k) = 0.80 → P(X < k) = 0.20","z = −0.8416","k = 65 + (−0.8416)(12) ≈ 54.9 ≈ 55"]},
+{ctx:"Battery life: X ~ N(48, 4²) hours. A battery is 'premium' if it lasts > 54 hours.",q:"What percentage are premium?",mu:48,sigma:4,shade:[54,999],opts:["6.68%","2.28%","15.87%","1.34%"],correct:"6.68%",steps:["z = (54−48)/4 = 1.5","P(X > 54) = 1 − 0.9332 = 0.0668 = 6.68%"]},
+
+// --- COMBINED / HARDER ---
+{ctx:"X ~ N(μ, σ²). P(X < 20) = 0.1587 and P(X > 35) = 0.0228.",q:"Find μ and σ.",mu:25,sigma:5,hideParams:true,shade:[[-999,20],[35,999]],opts:["μ = 22, σ = 2","μ = 25, σ = 5","μ = 22, σ = 4","μ = 24, σ = 4"],steps:["P(X<20) = 0.1587 → z₁ = −1, so 20 = μ − σ","P(X>35) = 0.0228 → z₂ = 2, so 35 = μ + 2σ","Subtract the first from the second: 15 = 3σ → σ = 5","From equation 1: μ = 20 + σ = 25","Check: (20−25)/5 = −1 ✓ and (35−25)/5 = 2 ✓"],correct:"μ = 25, σ = 5"},
+
+{ctx:"X ~ N(50, σ²). P(X < 44) = 0.0668.",q:"Find σ.",mu:50,sigma:4,hideParams:true,shade:[-999,44],opts:["4","6","3","5"],correct:"4",steps:["P(X < 44) = 0.0668 → z = −1.5","−1.5 = (44 − 50) / σ","−1.5σ = −6","σ = 4"]},
+{ctx:"X ~ N(μ, 6²). P(X > 70) = 0.0228.",q:"Find μ.",mu:58,sigma:6,hideParams:true,shade:[70,999],opts:["58","60","56","62"],correct:"58",steps:["P(X > 70) = 0.0228 → z = 2","2 = (70 − μ) / 6","12 = 70 − μ","μ = 58"]},
+
+// --- EMPIRICAL RULES ---
+{ctx:"X ~ N(μ, σ²). Approximately what percentage of data falls within 1 standard deviation of the mean?",q:"P(μ − σ < X < μ + σ) ≈ ?",mu:0,sigma:1,shade:[-1,1],opts:["68%","95%","99.7%","50%"],correct:"68%",steps:["The 68-95-99.7 rule (empirical rule):","≈ 68% within ±1σ","≈ 95% within ±2σ","≈ 99.7% within ±3σ"]},
+{ctx:"X ~ N(μ, σ²). What percentage of data is more than 2 standard deviations from the mean?",q:"P(|X − μ| > 2σ) ≈ ?",mu:0,sigma:1,shade:[[-999,-2],[2,999]],opts:["5%","2.5%","0.3%","10%"],correct:"5%",steps:["P within ±2σ ≈ 95%","P outside ±2σ ≈ 5%","(2.5% in each tail)"]},
+
+// --- APPROXIMATION TO BINOMIAL ---
+{ctx:"X ~ B(100, 0.3). Use a normal approximation.",q:"What are μ and σ for the approximation?",mu:30,sigma:4.58,hideParams:true,shade:[25,35],opts:["μ=30, σ=√21≈4.58","μ=30, σ=30","μ=0.3, σ=0.21","μ=30, σ=21"],correct:"μ=30, σ=√21≈4.58",steps:["For X ~ B(n,p): μ = np = 100×0.3 = 30","σ = √(npq) = √(100×0.3×0.7) = √21 ≈ 4.58"]},
+{ctx:"X ~ B(200, 0.45). Using normal approx, find P(X ≥ 100).",q:"With continuity correction, standardise:",mu:90,sigma:7.04,shade:[99.5,999],opts:["z = (99.5−90)/7.04 = 1.35","z = (100−90)/7.04 = 1.42","z = (100.5−90)/7.04 = 1.49","z = (99−90)/7.04 = 1.28"],correct:"z = (99.5−90)/7.04 = 1.35",steps:["μ = 200×0.45 = 90, σ = √(200×0.45×0.55) ≈ 7.04","P(X ≥ 100) → with continuity correction: P(Y > 99.5)","z = (99.5 − 90)/7.04 = 1.35"],misconception:"Continuity correction: for P(X ≥ 100), use 99.5. For P(X > 100), use 100.5. The correction accounts for approximating a discrete distribution with a continuous one."},
+
+// --- QUALITY CONTROL CONTEXT ---
+{ctx:"A process produces items with mass X ~ N(250, 3²)g. Items outside 244–256g are rejected.",q:"P(item accepted) = ?",mu:250,sigma:3,shade:[244,256],opts:["0.9545","0.9772","0.9332","0.9974"],correct:"0.9545",steps:["z₁ = (244−250)/3 = −2, z₂ = (256−250)/3 = 2","P(accepted) = Φ(2) − Φ(−2) = 0.97725 − 0.02275 = 0.95450 ≈ 0.9545"]},
+{ctx:"Items have mass X ~ N(250, 3²)g and are rejected if outside 244–256g. 1000 items are produced.",q:"Expected number of rejects, to the nearest whole number = ?",mu:250,sigma:3,shade:[[-999,244],[256,999]],opts:["46","45","23","100"],correct:"46",steps:["z = ±2, so P(reject) = 2 × Φ(−2) = 2 × 0.02275013 = 0.04550026","Expected rejects = 1000 × 0.04550026 = 45.50026 ≈ 46"],misconception:"45.50026 rounds to 46. Chopping the decimal off (truncating) gives 45, which is wrong."},
+
+// --- HARDER CONTEXT ---
+{ctx:"Heights of men: X ~ N(175, 7²)cm. Heights of women: Y ~ N(162, 6²)cm. A randomly chosen person is 168cm. Assume equal numbers of men and women.",q:"Is this more likely to be a man or a woman?",mu:175,sigma:7,noCurve:"Men: μ = 175, σ = 7 · Women: μ = 162, σ = 6",shade:[167,169],opts:["Woman (higher probability density)","Man (taller average)","Equal probability","Cannot determine"],correct:"Woman (higher probability density)",steps:["For men: z = (168−175)/7 = −1","For women: z = (168−162)/6 = 1","Both are 1 standard deviation from their mean, so the standard normal height φ(1) is the same for both","But the pdf is φ(z)/σ, and σ_women = 6 is smaller than σ_men = 7, so the women’s curve is taller at 168","f_women(168) = φ(1)/6 ≈ 0.0403, f_men(168) = φ(1)/7 ≈ 0.0346","With equal numbers of men and women, the higher density makes a woman more likely"]},
+{ctx:"A Normal distribution has P(X < 10) = 0.1 and P(X < 20) = 0.75.",q:"Find the mean μ (to nearest integer).",mu:17,sigma:5,hideParams:true,shade:[10,20],opts:["14","15","17","16"],steps:["P(X<10) = 0.1 → z₁ = −1.282: 10 = μ − 1.282σ","P(X<20) = 0.75 → z₂ = 0.6745: 20 = μ + 0.6745σ","Subtract: 10 = (0.6745 + 1.282)σ = 1.9565σ → σ ≈ 5.11","μ = 20 − 0.6745(5.11) = 20 − 3.45 = 16.55","To the nearest integer, μ = 17"],correct:"17"},
+
+// More straightforward ones
+{ctx:"Z ~ N(0,1). Find P(Z > 1.64).",q:"P(Z > 1.64) = ?",mu:0,sigma:1,shade:[1.64,999],opts:["0.0505","0.0228","0.1003","0.0100"],correct:"0.0505",steps:["P(Z > 1.64) = 1 − Φ(1.64) ≈ 1 − 0.9495 = 0.0505"]},
+{ctx:"Z ~ N(0,1). Find the value z such that P(Z < z) = 0.975.",q:"z = ?",mu:0,sigma:1,shade:[-999,1.96],opts:["1.96","1.64","2.33","2.58"],correct:"1.96",steps:["This is the critical value for 95% two-tailed tests","Φ(1.96) = 0.975"]},
+{ctx:"Z ~ N(0,1). Find z such that P(Z > z) = 0.01.",q:"z = ?",mu:0,sigma:1,shade:[2.33,999],opts:["2.33","1.96","2.58","3.09"],correct:"2.33",steps:["P(Z > z) = 0.01 → P(Z < z) = 0.99","z = 2.326 ≈ 2.33"],misconception:"Common critical values: 1.645 (5%), 1.96 (2.5%), 2.326 (1%), 2.576 (0.5%)."},
+{ctx:"X ~ N(120, 20²). In a sample of 400, how many would you expect below 100?",q:"Expected count = ?",mu:120,sigma:20,shade:[-999,100],opts:["63","40","80","100"],correct:"63",steps:["z = (100−120)/20 = −1","P(X < 100) = Φ(−1) = 0.1587","Expected = 400 × 0.1587 ≈ 63"]},
+{ctx:"Weights: X ~ N(70, 8²)kg. What weight is at the 90th percentile?",q:"P₉₀ = ?",mu:70,sigma:8,shade:[-999,80.25],opts:["80.3","78.0","82.5","76.4"],correct:"80.3",steps:["P(X < k) = 0.90 → z = 1.2816","k = 70 + 1.2816 × 8 ≈ 80.3"]},
+{ctx:"X ~ N(60, σ²). P(X > 72) = 0.0668.",q:"Find σ.",mu:60,sigma:8,hideParams:true,shade:[72,999],opts:["8","6","10","12"],correct:"8",steps:["P(X > 72) = 0.0668 → z = 1.5","1.5 = (72 − 60) / σ","σ = 12 / 1.5 = 8"]},
+{ctx:"Two events: P(A) = P(Z > 1.5) and P(B) = P(Z < −2). Which is more likely?",q:"Compare P(A) and P(B):",mu:0,sigma:1,shade:[[1.5,999],[-999,-2]],opts:["P(A) > P(B)","P(A) < P(B)","P(A) = P(B)","Cannot compare"],correct:"P(A) > P(B)",steps:["P(A) = 1 − Φ(1.5) = 0.0668","P(B) = Φ(−2) = 0.0228","0.0668 > 0.0228, so A is more likely"]},
+];
+
+
+// ============================================================
+//  GAME ENGINE
+// ============================================================
+let qIdx=0,score=0,correctN=0,total=0,pool=[],currentQ=null,qStart=0;
+const BASE=100,T_K=0.15,MAX_Q=20;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+
+function startGame(){
+  qIdx=0;score=0;correctN=0;total=0;
+  pool=shuffle([...QUESTIONS]).slice(0,MAX_Q);
+  document.getElementById('score').textContent='0';
+  document.getElementById('correctCount').textContent='0';
+
+  window._ggAbandoned=true;
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'normal-navigator',level:'alevel',questions_answered:total});});}
+  mfg('game_started',{game_slug:'normal-navigator',level:'alevel'});
+
+  show('game');nextQ();
+}
+
+function nextQ(){
+  if(qIdx>=pool.length){endGame();return}
+  currentQ=pool[qIdx];qIdx++;total++;
+  document.getElementById('qNum').textContent=total;
+  document.getElementById('solution').className='solution';
+  qStart=Date.now();updateTimer();
+
+  // Draw bell curve: shade is [L,R], or [[L,R],[L,R]] for a two-region question
+  if(currentQ.noCurve)drawNoCurve(currentQ.noCurve);
+  else{
+    drawCurrentBell(boundaryAnswer(currentQ));
+    if(currentQ.hideParams)showParams(currentQ.mu,currentQ.sigma,true);
+  }
+
+  document.getElementById('context').textContent=currentQ.ctx;
+  document.getElementById('prompt').textContent=currentQ.q;
+
+  const opts=shuffle([...currentQ.opts]);
+  const oEl=document.getElementById('options');oEl.innerHTML='';
+  opts.forEach(v=>{
+    const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;
+    b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b);
+  });
+}
+
+function drawCurrentBell(hideTicks){
+  const regions=Array.isArray(currentQ.shade[0])?currentQ.shade:[currentQ.shade];
+  drawBell(currentQ.mu,currentQ.sigma,regions.map(([L,R])=>[
+    L===-999?currentQ.mu-4*currentQ.sigma:L,
+    R===999?currentQ.mu+4*currentQ.sigma:R]),hideTicks);
+}
+
+function updateTimer(){
+  const el=document.getElementById('timer');
+  const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};
+  requestAnimationFrame(tick);
+}
+
+function handleAnswer(btn){
+  const q=currentQ,s=(Date.now()-qStart)/1000;
+  const correctVal=q.correct_override||q.correct;
+  const ok=btn.dataset.val===correctVal;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===correctVal)b.classList.add('correct')});
+  mfg('question_answered',{game_slug:'normal-navigator',level:'alevel',correct:ok,question_index:total});
+  if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++}
+  else{btn.classList.add('wrong')}
+  updateHUD();
+  showExplain(q);
+}
+
+function showExplain(q){
+  if(q.hideParams)showParams(q.mu,q.sigma,false);
+  if(!q.noCurve&&boundaryAnswer(q))drawCurrentBell(false);
+  const sol=document.getElementById('solution');
+  let html='<h3>Worked solution</h3>';
+  (q.steps||[]).forEach(st=>{html+='<div class="step">'+st+'</div>'});
+  if(q.misconception)html+='<div class="misconception">⚠ '+q.misconception+'</div>';
+  html+='<button class="next-btn" onclick="closeSol()">Got it — next question</button>';
+  sol.innerHTML=html;sol.className='solution show';
+}
+
+function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
+
+function endGame(){
+  window._ggAbandoned=false;
+  const pct=total>0?Math.round(correctN/total*100):0;
+  mfg('game_completed',{game_slug:'normal-navigator',level:'alevel',score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('normal-navigator','alevel',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('normal-navigator','alevel',score);}}
+  let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
+  document.getElementById('resultTitle').textContent=t;
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('statsLine').innerHTML='Normal Navigator<br>'+correctN+'/'+total+' correct ('+pct+'%)';
+  show('results');
+}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

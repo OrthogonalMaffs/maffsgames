@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Teacher page for The Comic Caper escape room: answers, hint ladder, misconceptions and timings.">
+<title>The Comic Caper — teacher page — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/engine.css">
+</head>
+<body>
+<button class="a11y-toggle" onclick="toggleAa()" aria-label="Toggle easier-reading text">Aa</button>
+<div class="wrap">
+  <a class="back-link" href="../">&larr; All escape rooms</a>
+  <div id="app"></div>
+</div>
+<script src="room.js"></script>
+<!-- clueMap labels carry NO figures on purpose: teacher.js does not pass them
+     through fill(), so a number here would disagree with the drawn variant
+     (see docs/escape-room-voice-rewrite.md §8). Keys are room.js object ids.
+     The four blanks are left out of clueMap; teacher.js labels them as blanks.
+     `misconception` in lockMeta is a record only — teacher.js shows the drawn
+     misconception and missSays from room.js. Minutes are the bank's TIME. -->
+<script>
+window.TEACH = {
+  "lockMeta": [
+    {
+      "topic": "Factors",
+      "minutes": 2,
+      "misconception": "misses a factor pair"
+    },
+    {
+      "topic": "Primes",
+      "minutes": 3,
+      "misconception": "counts 1 as prime"
+    },
+    {
+      "topic": "HCF",
+      "minutes": 3,
+      "misconception": "gives the LCM"
+    }
+  ],
+  "clueMap": {
+    "asset-plate": "Dial on the hinge side",
+    "series-label": "Dial on the lock plate",
+    "delivery-docket": "Slider across the handle",
+    "stock-card": "Slider across the handle"
+  },
+  "notes": "<p class='lede'>Built for grade 3/4 resit students: whole numbers, nothing above 100. The factors lock is the easy one on purpose. Calculators are the teacher&rsquo;s call; nothing needs one. Paper helps with the sieve.</p><p class='lede'>At time-out the end screen shows every lock&rsquo;s solution. For a second attempt, press Play again for fresh numbers.</p><p class='lede'>This room was built from feedback from a site user, specifically for a GCSE maths resit class. If you want a topic covered or a game built, <a href='/feedback/'>let us know</a>, and we&rsquo;ll do our best to build it.</p>"
+};
+</script>
+<script src="../assets/teacher.js"></script>
+</body>
+</html>

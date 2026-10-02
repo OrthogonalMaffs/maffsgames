@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Exponential modelling — substitute, interpret parameters, find constants, and rearrange using natural logarithms. 45 real-world scenarios.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/growth-and-decay/">
+<meta property="og:title" content="Growth and Decay — MaffsGames">
+<meta property="og:description" content="Exponential modelling — substitute, interpret parameters, find constants, and rearrange using natural logarithms. 45 real-world scenarios.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/growth-and-decay/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Growth and Decay — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070b14;--surface:#0e1424;--surface2:#131b2e;--border:#1a2440;
+  --primary:#0ea5e9;--primary-dim:rgba(14,165,233,.15);--primary-glow:rgba(14,165,233,.25);
+  --accent:#38bdf8;--correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
+  --wrong:#f43f5e;--wrong-dim:rgba(244,63,94,.12);
+  --text:#e4e8f0;--muted:#687890;--hint:#94a3b8;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:1100px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+.screen{display:none}.screen.active{display:block}
+
+/* Menu */
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:560px}
+.level-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;max-width:500px;margin:1.2rem auto}
+.level-btn{padding:.9rem;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.level-btn:hover{border-color:var(--primary);box-shadow:0 0 20px var(--primary-glow)}
+.level-btn.selected{border-color:var(--primary);background:var(--primary-dim)}
+.level-btn .lsub{font-size:.66rem;color:var(--muted);font-weight:400;margin-top:.2rem;display:block}
+.start-btn{display:block;margin:1.5rem auto;padding:.8rem 2.5rem;border-radius:12px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;opacity:.4;pointer-events:none;transition:transform .15s}
+.start-btn.ready{opacity:1;pointer-events:auto}.start-btn.ready:hover{transform:scale(1.04)}
+
+/* HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.6rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.6rem;flex-wrap:wrap;gap:.3rem}
+.hud-item{text-align:center;min-width:50px}
+.hud-label{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:'JetBrains Mono',monospace;font-size:.92rem;font-weight:700}
+
+/* Layout */
+.game-layout{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;align-items:start}
+@media(max-width:720px){.game-layout{grid-template-columns:1fr}}
+
+/* Scenario panel */
+.sc-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;position:sticky;top:1rem}
+.sc-panel h3{font-size:.78rem;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;font-weight:700}
+.sc-text{font-size:.86rem;line-height:1.7;color:var(--text);margin-bottom:.7rem}
+.sc-model{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.7rem;text-align:center;margin-bottom:.7rem}
+.sc-model .katex{font-size:1.15em!important}
+.sc-graph{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.4rem;margin-bottom:.6rem;text-align:center}
+.sc-graph canvas{display:block;margin:0 auto;max-width:100%}
+.sc-given{font-size:.8rem;color:var(--hint);line-height:1.6}
+.sc-given strong{color:var(--accent)}
+
+/* Question panel */
+.q-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem}
+.sq-label{font-size:.7rem;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem;font-weight:700}
+.sq-prompt{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:.7rem;line-height:1.5}
+.sq-prompt .katex{font-size:.92em!important}
+
+.num-input{width:150px;padding:.55rem .8rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:500}
+.num-input:focus{outline:none;border-color:var(--primary)}
+.num-input::placeholder{color:var(--muted);font-weight:400}
+.check-btn{padding:.5rem 1.4rem;border-radius:8px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;margin-top:.4rem;transition:transform .12s}
+.check-btn:hover{transform:scale(1.03)}
+
+.mcq-grid{display:grid;gap:.4rem;margin-bottom:.5rem}
+.mcq-btn{padding:.6rem .8rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;cursor:pointer;text-align:left;transition:all .12s;line-height:1.4}
+.mcq-btn:hover{border-color:var(--primary)}
+.mcq-btn.correct{border-color:var(--correct);background:var(--correct-dim)}
+.mcq-btn.wrong{border-color:var(--wrong);background:var(--wrong-dim)}
+.mcq-btn.disabled{pointer-events:none;opacity:.5}
+
+.feedback{margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.82rem;line-height:1.5;animation:fadeIn .25s}
+.feedback.correct{background:var(--correct-dim);border:1px solid var(--correct);color:var(--correct)}
+.feedback.wrong{background:var(--wrong-dim);border:1px solid var(--wrong);color:var(--wrong)}
+.dismiss-btn{display:block;margin:8px auto 0;padding:5px 16px;border:1.5px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;opacity:0;animation:fadeBtn .3s ease forwards}.dismiss-btn:hover{background:rgba(255,255,255,.08)}@keyframes fadeBtn{to{opacity:1}}
+.feedback.hint{background:rgba(148,163,184,.08);border:1px solid var(--hint);color:var(--hint)}
+
+.next-btn{display:block;margin:.8rem auto 0;padding:.6rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:transform .12s}
+.next-btn:hover{transform:scale(1.03)}
+
+/* Results */
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.3rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1rem;line-height:1.9;font-size:.85rem}
+.results .pb-line{color:var(--correct);font-weight:600;font-size:.9rem;margin-bottom:1rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+.method-btn{display:block;margin:.8rem auto;padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s}.method-btn:hover{border-color:var(--primary);color:var(--text)}
+.method-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}.method-overlay.show{display:flex}
+.method-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;max-width:560px;width:92%;max-height:80vh;overflow-y:auto}
+.method-box h2{font-size:1.1rem;font-weight:700;color:var(--accent);margin-bottom:1rem}
+.method-section{margin-bottom:1rem;padding:.8rem;background:var(--bg);border-radius:8px;font-size:.85rem;line-height:1.8}
+.method-section strong{color:var(--accent);display:block;margin-bottom:.3rem}
+.method-close{display:block;margin:1rem auto 0;padding:.4rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer}
+
+/* Hint button */
+.hint-btn{padding:.35rem 1rem;border-radius:8px;border:1.5px solid var(--hint);background:transparent;color:var(--hint);font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;margin-top:.4rem;margin-left:.5rem;transition:all .15s;display:none}
+.hint-btn:hover{background:rgba(148,163,184,.1);border-color:var(--accent);color:var(--accent)}
+.hint-btn.visible{display:inline-block;animation:fadeIn .3s}
+.hint-reveal{margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.82rem;line-height:1.5;background:rgba(148,163,184,.08);border:1px solid var(--hint);color:var(--hint);animation:fadeIn .25s}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+
+<!-- MENU -->
+<div id="menuScreen" class="screen active">
+  <div class="header">
+    <h1>Growth and Decay</h1>
+    <div class="sub">What does the model tell you — and what can you find from it?</div>
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+  <div class="menu-info">
+    Exponential modelling — substitute and evaluate, interpret parameters in context, find unknown constants, and (at A-Level/Level 4) rearrange using natural logarithms.<br><br>
+    Each scenario presents a real-world exponential model and asks you to work through it step by step.
+  </div>
+  <div class="level-grid">
+    <button class="level-btn" data-level="core" onclick="selLevel(this)">Core Maths<span class="lsub">3 sub-questions per scenario</span></button>
+    <button class="level-btn" data-level="alevel" onclick="selLevel(this)">A-Level<span class="lsub">Adds ln rearrangement</span></button>
+    <button class="level-btn" data-level="level4" onclick="selLevel(this)">Level 4<span class="lsub">Engineering contexts</span></button>
+  </div>
+  <button class="method-btn" onclick="document.getElementById('methodOverlay').classList.add('show')">Worked Example</button>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="start-btn" id="startBtn" onclick="startGame()">Start</button>
+</div>
+
+<div class="method-overlay" id="methodOverlay">
+  <div class="method-box">
+    <h2>Worked Example — Exponential Models</h2>
+    <div class="method-section" id="methodSub"></div>
+    <div class="method-section" id="methodInterpret"></div>
+    <div class="method-section" id="methodConstant"></div>
+    <button class="method-close" onclick="document.getElementById('methodOverlay').classList.remove('show')">Got it</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="gameScreen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><div class="hud-label">Scenario</div><div class="hud-val" id="hudQ">1/6</div></div>
+    <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    <div class="hud-item"><div class="hud-label">Level</div><div class="hud-val" id="hudLevel">—</div></div>
+    <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val mono" id="hudTimer">0s</div></div>
+  </div>
+  <div class="game-layout">
+    <div class="sc-panel" id="scPanel"></div>
+    <div class="q-panel" id="qPanel"></div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="resultsScreen" class="screen">
+  <div class="results">
+    <h2 id="resultTitle"></h2>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="stats" id="statsLine"></div>
+    <div class="pb-line" id="pbLine" style="display:none"></div>
+    <button class="play-again" onclick="showMenu()">Play Again</button>
+  </div>
+</div>
+</div>
+
+<script>
+function _addDismiss(fb,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
+// ============================================================
+//  QUESTION BANK — 45 scenarios
+// ============================================================
+const Q = {
+core: [
+  {id:'CM1',modelLatex:'C = 500 \\times 1.08^t',context:'An online retailer\'s customer base grows exponentially. C = number of customers, t = years since 2015.',
+   growth:true,graphFn:(x)=>500*Math.pow(1.08,x),graphXMax:30,graphYLabel:'C',graphXLabel:'t',
+   sq_order:[1,2,3],
+   sq1:{prompt:'Estimate the number of customers when t = 5. Give your answer to 3 significant figures.',answer:735,sf:3,unit:'customers'},
+   sq2:{prompt:'Interpret the value 1.08 in this model.',
+     correct:'The number of customers increases by 8% each year',
+     wrong:['The number of customers increases by 1.08 each year','The number of customers decreases by 8% each year','The number of customers multiplies by 0.08 each year']},
+   sq3:{prompt:'Given that C = 500 when t = 0, confirm the value of the initial constant.',answer:500,unit:''},
+   sq4:null},
+  {id:'CM2',modelLatex:'L = k \\times 0.98^T',context:'Ability to learn (%) decreases with temperature (°C). Based on AQA June 2024 Q8. Valid for 24 ≤ T ≤ 40.',
+   growth:false,graphFn:(x)=>161.2*Math.pow(0.98,x),graphXMin:24,graphXMax:40,graphYLabel:'L%',graphXLabel:'T',
+   sq_order:[3,1,2],
+   sq1:{prompt:'Estimate L when T = 30. Give your answer to 3 significant figures.',answer:87.9,sf:3,unit:'%'},
+   sq2:{prompt:'Interpret the value 0.98 in this model.',
+     correct:'The ability to learn decreases by 2% for each additional degree of temperature',
+     wrong:['The ability to learn decreases by 0.98% per °C','The ability to learn increases by 2% per °C','The ability to learn decreases by 98% per °C']},
+   sq3:{prompt:'Given that L = 100 when T = 24, find the value of k. Give your answer to 1 decimal place.',answer:161.2,unit:''},
+   sq4:null},
+  {id:'CM3',modelLatex:'C = e^y',context:'Daily customers at a café, where y = years since opening. Valid for 5 < y < 8. Based on AQA June 2024 Q6.',
+   growth:true,graphFn:(x)=>Math.exp(x),graphXMin:5,graphXMax:8,graphYLabel:'C',graphXLabel:'y',
+   sq_order:[1,2,3],
+   sq1:{prompt:'Estimate the number of daily customers on 1 July 2021, when y = 7.5. Give your answer to 2 significant figures.',answer:1808,sf:2,unit:'customers'},
+   sq2:{prompt:'Interpret what the model C = eʸ tells us about the rate of increase.',
+     correct:'The rate of increase in customers equals the current number of customers',
+     wrong:['The number of customers doubles each year','Customers increase by e per year','The rate of increase is constant']},
+   sq3:{prompt:'Find C when y = 6. Give your answer to 3 significant figures.',answer:403,sf:3,unit:'customers'},
+   sq4:null},
+  {id:'CM4',modelLatex:'V = 18000 \\times 0.82^t',context:'A car depreciates in value. V = value (£), t = years since purchase.',
+   growth:false,graphFn:(x)=>18000*Math.pow(0.82,x),graphXMax:15,graphYLabel:'V (£)',graphXLabel:'t',
+   sq_order:[1,2,3],
+   sq1:{prompt:'Estimate the car\'s value when t = 4. Give your answer to 3 significant figures.',answer:8140,sf:3,unit:'£'},
+   sq2:{prompt:'Interpret the value 0.82 in this model.',
+     correct:'The car loses 18% of its value each year',
+     wrong:['The car loses 82% of its value each year','The car gains 18% in value each year','The car loses £0.82 per year']},
+   sq3:{prompt:'Confirm the initial value of the car when t = 0.',answer:18000,unit:'£'},
+   sq4:null},
+  {id:'CM5',modelLatex:'P = 3200 \\times e^{0.025t}',context:'A town\'s population grows exponentially. P = population, t = years since 2000.',
+   growth:true,graphFn:(x)=>3200*Math.exp(0.025*x),graphXMax:50,graphYLabel:'P',graphXLabel:'t',
+   sq_order:[1,2,3],
+   sq1:{prompt:'Estimate the population when t = 10. Give your answer to 3 significant figures.',answer:4110,sf:3,unit:''},
+   sq2:{prompt:'Interpret the value 0.025 in this model.',
+     correct:'The population grows at approximately 2.5% per year continuously',
+     wrong:['The population grows by 2500 per year','The population grows by 25% per year','The population doubles every 0.025 years']},
+   sq3:{prompt:'Confirm the initial population when t = 0.',answer:3200,unit:''},
+   sq4:null},
+  {id:'CM6',modelLatex:'B = k \\times 1.15^n',context:'A bacterial culture grows in a laboratory. B = bacteria count, n = hours.',
+   growth:true,graphFn:(x)=>200*Math.pow(1.15,x),graphXMax:20,graphYLabel:'B',graphXLabel:'n',
+   sq_order:[3,1,2],
+   sq1:{prompt:'Estimate B when n = 6. Give your answer to 3 significant figures.',answer:463,sf:3,unit:'bacteria'},
+   sq2:{prompt:'Interpret the value 1.15 in this model.',
+     correct:'The number of bacteria increases by 15% every hour',
+     wrong:['The bacteria increase by 1.15 each hour','The bacteria decrease by 15% each hour','The bacteria multiply by 0.15 each hour']},
+   sq3:{prompt:'Given that B = 200 when n = 0, find the value of k.',answer:200,unit:''},
+   sq4:null},
+  {id:'CM7',modelLatex:'T = 20 + 60e^{-0.05t}',context:'A hot drink cools towards room temperature (20°C). T = temperature (°C), t = minutes.',
+   growth:false,graphFn:(x)=>20+60*Math.exp(-0.05*x),graphXMax:80,graphYLabel:'T (°C)',graphXLabel:'t',
+   sq_order:[1,2,3],
+   sq1:{prompt:'Estimate the temperature when t = 10. Give your answer to 3 significant figures.',answer:56.4,sf:3,unit:'°C'},
+   sq2:{prompt:'Interpret the term e^(−0.05t) in this model.',
+     correct:'The temperature excess above room temperature decays at a continuous rate of 5% per minute',
+     wrong:['The temperature decreases by 5°C per minute','The drink warms up by 5% per minute','The temperature is constant at 0.05°C']},
+   sq3:{prompt:'Confirm the initial temperature when t = 0.',answer:80,unit:'°C'},
+   sq4:null},
+  {id:'CM8',modelLatex:'S = 1200 \\times 1.06^t',context:'Savings in an account with 6% annual interest. S = amount (£), t = years.',
+   growth:true,graphFn:(x)=>1200*Math.pow(1.06,x),graphXMax:25,graphYLabel:'S (£)',graphXLabel:'t',
+   sq_order:[1,2,3],
+   sq1:{prompt:'Estimate the savings when t = 8. Give your answer to 3 significant figures.',answer:1910,sf:3,unit:'£'},
+   sq2:{prompt:'Interpret the value 1.06 in this model.',
+     correct:'The savings increase by 6% each year',
+     wrong:['The savings increase by £1.06 each year','The savings decrease by 6% each year','The savings multiply by 0.06 each year']},
+   sq3:{prompt:'Confirm the initial deposit when t = 0.',answer:1200,unit:'£'},
+   sq4:null},
+  {id:'CM9',modelLatex:'N = k \\times e^{-0.693t}',context:'Radioactive decay — N = mass (g), t = days. Half-life is 1 day since e^(−0.693) ≈ 0.5.',
+   growth:false,graphFn:(x)=>80*Math.exp(-0.693*x),graphXMax:8,graphYLabel:'N (g)',graphXLabel:'t',
+   sq_order:[3,1,2],
+   sq1:{prompt:'Estimate the mass when t = 3 and k = 80. Give your answer to 3 significant figures.',answer:10,sf:3,unit:'g'},
+   sq2:{prompt:'Interpret the term e^(−0.693t) in context.',
+     correct:'The mass halves every day',
+     wrong:['The mass decreases by 0.693g per day','The mass increases by 69.3% per day','The mass remains constant']},
+   sq3:{prompt:'Given that N = 80 when t = 0, find the value of k.',answer:80,unit:'g'},
+   sq4:null},
+  {id:'CM10',modelLatex:'R = 50 \\times e^{0.1n}',context:'A new app\'s daily revenue (£) grows after launch. R = revenue, n = weeks since launch.',
+   growth:true,graphFn:(x)=>50*Math.exp(0.1*x),graphXMax:30,graphYLabel:'R (£)',graphXLabel:'n',
+   sq_order:[1,2,3],
+   sq1:{prompt:'Estimate the revenue when n = 8. Give your answer to 3 significant figures.',answer:111,sf:3,unit:'£'},
+   sq2:{prompt:'Interpret the value 0.1 in this model.',
+     correct:'Revenue grows at approximately 10% per week continuously',
+     wrong:['Revenue increases by £0.10 per week','Revenue grows by 100% per week','Revenue doubles every 0.1 weeks']},
+   sq3:{prompt:'Confirm the launch revenue when n = 0.',answer:50,unit:'£'},
+   sq4:null},
+  {id:'CM11',modelLatex:'M = 500 \\times 0.75^t',context:'Drug concentration in the bloodstream decreases over time. M = concentration (mg), t = hours.',
+   growth:false,graphFn:(x)=>500*Math.pow(0.75,x),graphXMax:12,graphYLabel:'M (mg)',graphXLabel:'t',
+   sq_order:[1,2,3],
+   sq1:{prompt:'Estimate the concentration when t = 3. Give your answer to 3 significant figures.',answer:211,sf:3,unit:'mg'},
+   sq2:{prompt:'Interpret the value 0.75 in this model.',
+     correct:'The concentration decreases by 25% each hour',
+     wrong:['The concentration decreases by 75% each hour','The concentration increases by 25% each hour','The concentration decreases by 0.75mg each hour']},
+   sq3:{prompt:'Confirm the initial dose when t = 0.',answer:500,unit:'mg'},
+   sq4:null},
+  {id:'CM12',modelLatex:'W = k \\times 1.12^y',context:'A website\'s daily visits grow year on year. W = visits, y = years since launch.',
+   growth:true,graphFn:(x)=>800*Math.pow(1.12,x),graphXMax:15,graphYLabel:'W',graphXLabel:'y',
+   sq_order:[3,1,2],
+   sq1:{prompt:'Estimate W when y = 5 and k = 800. Give your answer to 3 significant figures.',answer:1410,sf:3,unit:'visits'},
+   sq2:{prompt:'Interpret the value 1.12 in this model.',
+     correct:'Website visits increase by 12% each year',
+     wrong:['Website visits increase by 1.12 each year','Website visits decrease by 12% each year','Website visits multiply by 0.12 each year']},
+   sq3:{prompt:'Given that W = 800 when y = 0, find the value of k.',answer:800,unit:''},
+   sq4:null},
+  {id:'CM13',modelLatex:'A = 1000 \\times e^{-0.02t}',context:'Real value of a fixed £1000 erodes due to inflation. A = adjusted amount (£), t = years.',
+   growth:false,graphFn:(x)=>1000*Math.exp(-0.02*x),graphXMax:50,graphYLabel:'A (£)',graphXLabel:'t',
+   sq_order:[1,2,3],
+   sq1:{prompt:'Estimate the real value after t = 15 years. Give your answer to 3 significant figures.',answer:741,sf:3,unit:'£'},
+   sq2:{prompt:'Interpret the value −0.02 in this model.',
+     correct:'The real value decreases at approximately 2% per year continuously',
+     wrong:['The value drops by £0.02 per year','The value increases by 2% per year','The value halves every 0.02 years']},
+   sq3:{prompt:'Confirm the initial amount when t = 0.',answer:1000,unit:'£'},
+   sq4:null},
+  {id:'CM14',modelLatex:'F = 2 \\times 3^n',context:'A file is shared and each person shares it with 3 others. F = number of copies, n = rounds of sharing.',
+   growth:true,graphFn:(x)=>2*Math.pow(3,x),graphXMax:6,graphYLabel:'F',graphXLabel:'n',
+   sq_order:[1,2,3],
+   sq1:{prompt:'Estimate F when n = 4.',answer:162,sf:3,unit:'copies'},
+   sq2:{prompt:'Interpret the value 3 in this model.',
+     correct:'The number of copies triples each time it is shared',
+     wrong:['The number increases by 3 each round','The number decreases by a factor of 3','There are always 3 copies']},
+   sq3:{prompt:'Confirm the initial number when n = 0.',answer:2,unit:'copies'},
+   sq4:null},
+  {id:'CM15',modelLatex:'P = k \\times 0.96^d',context:'Atmospheric pressure decreases with altitude. P = pressure (kPa), d = altitude (km).',
+   growth:false,graphFn:(x)=>101.3*Math.pow(0.96,x),graphXMax:30,graphYLabel:'P (kPa)',graphXLabel:'d',
+   sq_order:[3,1,2],
+   sq1:{prompt:'Estimate P when d = 5 and k = 101.3. Give your answer to 3 significant figures.',answer:82.6,sf:3,unit:'kPa'},
+   sq2:{prompt:'Interpret the value 0.96 in this model.',
+     correct:'Air pressure decreases by 4% per kilometre of altitude',
+     wrong:['Air pressure decreases by 96% per km','Air pressure increases by 4% per km','Air pressure decreases by 0.96 kPa per km']},
+   sq3:{prompt:'Given that P = 101.3 when d = 0, find the value of k.',answer:101.3,unit:'kPa'},
+   sq4:null}
+],
+alevel: [
+  {id:'AL1',modelLatex:'P = 5000e^{0.03t}',context:'Population P grows exponentially. t = years.',
+   growth:true,graphFn:(x)=>5000*Math.exp(0.03*x),graphXMax:50,graphYLabel:'P',graphXLabel:'t',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate P when t = 20. Give your answer to 3 significant figures.',answer:9110,sf:3,unit:''},
+   sq2:{prompt:'Interpret the value 0.03 in this model.',correct:'Population grows continuously at approximately 3% per year',
+     wrong:['Population grows by 3000 per year','Population grows by 30% per year','Population doubles every 0.03 years']},
+   sq3:{prompt:'Find P₀ when t = 0.',answer:5000,unit:''},
+   sq4:{prompt:'Find t when P = 10,000. Give your answer to 3 significant figures.',answer:23.1,hint:'10000 = 5000e^{0.03t} \\Rightarrow 2 = e^{0.03t} \\Rightarrow t = \\frac{\\ln 2}{0.03}'}},
+  {id:'AL2',modelLatex:'N = 800 \\times 0.88^t',context:'Subscribers N decrease monthly. t = months.',
+   growth:false,graphFn:(x)=>800*Math.pow(0.88,x),graphXMax:30,graphYLabel:'N',graphXLabel:'t',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate N when t = 12. Give your answer to 3 significant figures.',answer:173,sf:3,unit:''},
+   sq2:{prompt:'Interpret the value 0.88 in this model.',correct:'Subscribers decrease by 12% each month',
+     wrong:['Subscribers decrease by 88% each month','Subscribers increase by 12% each month','Subscribers decrease by 0.88 each month']},
+   sq3:{prompt:'Find N₀ when t = 0.',answer:800,unit:''},
+   sq4:{prompt:'Find t when N = 400. Give your answer to 3 significant figures.',answer:5.42,hint:'0.5 = 0.88^t \\Rightarrow t = \\frac{\\ln 0.5}{\\ln 0.88}'}},
+  {id:'AL3',modelLatex:'L = 180e^{-0.035T}',context:'Ability to learn (%) vs temperature (°C). 24 ≤ T ≤ 40. AQA June 2024 style.',
+   growth:false,graphFn:(x)=>180*Math.exp(-0.035*x),graphXMin:24,graphXMax:40,graphYLabel:'L%',graphXLabel:'T',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate L when T = 30. Give your answer to 3 significant figures.',answer:63.0,sf:3,unit:'%'},
+   sq2:{prompt:'Interpret the value −0.035 in this model.',correct:'Ability to learn decreases continuously at approximately 3.5% per °C',
+     wrong:['Ability decreases by 35% per °C','Ability increases by 3.5% per °C','Ability is always 0.035%']},
+   sq3:{prompt:'Find L when T = 24. Give your answer to 3 significant figures.',answer:77.7,unit:'%'},
+   sq4:{prompt:'Find T when L = 75. Give your answer to 3 significant figures.',answer:25.2,hint:'75 = 180e^{-0.035T} \\Rightarrow \\frac{75}{180} = e^{-0.035T} \\Rightarrow T = \\frac{-\\ln(75/180)}{0.035}'}},
+  {id:'AL4',modelLatex:'Q = 250e^{0.045t}',context:'Quantity of substance (g) grows. t = minutes.',
+   growth:true,graphFn:(x)=>250*Math.exp(0.045*x),graphXMax:40,graphYLabel:'Q (g)',graphXLabel:'t',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate Q when t = 30. Give your answer to 3 significant figures.',answer:964,sf:3,unit:'g'},
+   sq2:{prompt:'Interpret the value 0.045 in this model.',correct:'Quantity grows continuously at 4.5% per minute',
+     wrong:['Quantity increases by 45g per minute','Quantity grows by 45% per minute','Quantity doubles every 0.045 minutes']},
+   sq3:{prompt:'Find Q₀ when t = 0.',answer:250,unit:'g'},
+   sq4:{prompt:'Find t when Q = 1000. Give your answer to 3 significant figures.',answer:30.8,hint:'1000 = 250e^{0.045t} \\Rightarrow 4 = e^{0.045t} \\Rightarrow t = \\frac{\\ln 4}{0.045}'}},
+  {id:'AL5',modelLatex:'V = 10000 \\times 1.045^n',context:'Investment value (£) grows. n = years.',
+   growth:true,graphFn:(x)=>10000*Math.pow(1.045,x),graphXMax:30,graphYLabel:'V (£)',graphXLabel:'n',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate V when n = 10. Give your answer to 3 significant figures.',answer:15530,sf:3,unit:'£'},
+   sq2:{prompt:'Interpret the value 1.045 in this model.',correct:'Investment grows by 4.5% per year',
+     wrong:['Investment grows by £1.045 per year','Investment decreases by 4.5% per year','Investment grows by 45% per year']},
+   sq3:{prompt:'Find initial investment when n = 0.',answer:10000,unit:'£'},
+   sq4:{prompt:'Find n when V = 20,000. Give your answer to 3 significant figures.',answer:15.7,hint:'2 = 1.045^n \\Rightarrow n = \\frac{\\ln 2}{\\ln 1.045}'}},
+  {id:'AL6',modelLatex:'C = ke^{-0.12t}',context:'Drug concentration (mg/L) decays. t = hours.',
+   growth:false,graphFn:(x)=>8.5*Math.exp(-0.12*x),graphXMax:30,graphYLabel:'C',graphXLabel:'t',
+   sq_order:[3,1,2,4],
+   sq1:{prompt:'Estimate C when t = 6. Give your answer to 3 significant figures.',answer:4.14,sf:3,unit:'mg/L'},
+   sq2:{prompt:'Interpret the value −0.12 in this model.',correct:'Concentration decreases continuously at 12% per hour',
+     wrong:['Concentration drops by 0.12 mg/L per hour','Concentration increases by 12% per hour','Concentration halves every 0.12 hours']},
+   sq3:{prompt:'Given that C = 8.5 when t = 0, find the value of k.',answer:8.5,unit:'mg/L'},
+   sq4:{prompt:'Find t when C = 2. Give your answer to 3 significant figures.',answer:12.1,hint:'2 = 8.5e^{-0.12t} \\Rightarrow \\frac{2}{8.5} = e^{-0.12t} \\Rightarrow t = \\frac{-\\ln(2/8.5)}{0.12}'}},
+  {id:'AL7',modelLatex:'I = 300e^{0.08t}',context:'Monthly income (£) grows. t = years.',
+   growth:true,graphFn:(x)=>300*Math.exp(0.08*x),graphXMax:20,graphYLabel:'I (£)',graphXLabel:'t',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate I when t = 5. Give your answer to 3 significant figures.',answer:448,sf:3,unit:'£'},
+   sq2:{prompt:'Interpret the value 0.08 in this model.',correct:'Income grows continuously at 8% per year',
+     wrong:['Income increases by £0.08 per year','Income grows by 80% per year','Income doubles every 0.08 years']},
+   sq3:{prompt:'Find I₀ when t = 0.',answer:300,unit:'£'},
+   sq4:{prompt:'Find t when I = 600. Give your answer to 3 significant figures.',answer:8.66,hint:'600 = 300e^{0.08t} \\Rightarrow 2 = e^{0.08t} \\Rightarrow t = \\frac{\\ln 2}{0.08}'}},
+  {id:'AL8',modelLatex:'A = 5000 \\times 0.92^t',context:'Forest area (hectares) decreases. t = years.',
+   growth:false,graphFn:(x)=>5000*Math.pow(0.92,x),graphXMax:30,graphYLabel:'A (ha)',graphXLabel:'t',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate A when t = 10. Give your answer to 3 significant figures.',answer:2172,sf:3,unit:'hectares'},
+   sq2:{prompt:'Interpret the value 0.92 in this model.',correct:'Forest area decreases by 8% per year',
+     wrong:['Forest area decreases by 92% per year','Forest area increases by 8% per year','Forest area decreases by 0.92 hectares per year']},
+   sq3:{prompt:'Find A₀ when t = 0.',answer:5000,unit:'hectares'},
+   sq4:{prompt:'Find t when A = 2500. Give your answer to 3 significant figures.',answer:8.31,hint:'0.5 = 0.92^t \\Rightarrow t = \\frac{\\ln 0.5}{\\ln 0.92}'}},
+  {id:'AL9',modelLatex:'T = ke^{0.055n}',context:'Social media followers grow. n = weeks.',
+   growth:true,graphFn:(x)=>1200*Math.exp(0.055*x),graphXMax:40,graphYLabel:'T',graphXLabel:'n',
+   sq_order:[3,1,2,4],
+   sq1:{prompt:'Estimate T when n = 12. Give your answer to 3 significant figures.',answer:2320,sf:3,unit:'followers'},
+   sq2:{prompt:'Interpret the value 0.055 in this model.',correct:'Followers grow continuously at 5.5% per week',
+     wrong:['Followers increase by 55 per week','Followers grow by 55% per week','Followers double every 0.055 weeks']},
+   sq3:{prompt:'Given that T = 1200 when n = 0, find the value of k.',answer:1200,unit:''},
+   sq4:{prompt:'Find n when T = 5000. Give your answer to 3 significant figures.',answer:25.9,hint:'\\frac{5000}{1200} = e^{0.055n} \\Rightarrow n = \\frac{\\ln(5000/1200)}{0.055}'}},
+  {id:'AL10',modelLatex:'R = 80e^{-0.025t}',context:'Radiation remaining (%). t = years.',
+   growth:false,graphFn:(x)=>80*Math.exp(-0.025*x),graphXMax:80,graphYLabel:'R%',graphXLabel:'t',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate R when t = 40. Give your answer to 3 significant figures.',answer:29.4,sf:3,unit:'%'},
+   sq2:{prompt:'Interpret the value −0.025 in this model.',correct:'Radiation decreases continuously at 2.5% per year',
+     wrong:['Radiation drops by 2.5 units per year','Radiation increases at 2.5% per year','Radiation halves every 0.025 years']},
+   sq3:{prompt:'Find R when t = 0.',answer:80,unit:'%'},
+   sq4:{prompt:'Find the half-life — when R = 40. Give your answer to 3 significant figures.',answer:27.7,hint:'40 = 80e^{-0.025t} \\Rightarrow 0.5 = e^{-0.025t} \\Rightarrow t = \\frac{\\ln 2}{0.025}'}},
+  {id:'AL11',modelLatex:'E = 4 \\times 2^n',context:'Energy usage (units) doubles per device added. n = devices.',
+   growth:true,graphFn:(x)=>4*Math.pow(2,x),graphXMax:8,graphYLabel:'E',graphXLabel:'n',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate E when n = 5.',answer:128,sf:3,unit:'units'},
+   sq2:{prompt:'Interpret the value 2 in this model.',correct:'Energy usage doubles for each additional device',
+     wrong:['Energy increases by 2 units per device','Energy decreases by half per device','There are always 2 units of energy']},
+   sq3:{prompt:'Find E when n = 0.',answer:4,unit:'units'},
+   sq4:{prompt:'Find n when E = 100. Give your answer to 3 significant figures.',answer:4.64,hint:'100 = 4 \\times 2^n \\Rightarrow 25 = 2^n \\Rightarrow n = \\frac{\\ln 25}{\\ln 2}'}},
+  {id:'AL12',modelLatex:'P = ke^{-0.046t}',context:'Pressure (atm) decreases with depth (m).',
+   growth:false,graphFn:(x)=>Math.exp(-0.046*x),graphXMax:60,graphYLabel:'P (atm)',graphXLabel:'t (m)',
+   sq_order:[3,1,2,4],
+   sq1:{prompt:'Estimate P when t = 30. Give your answer to 3 significant figures.',answer:0.252,sf:3,unit:'atm'},
+   sq2:{prompt:'Interpret the value −0.046 in this model.',correct:'Pressure decreases continuously at 4.6% per metre depth',
+     wrong:['Pressure drops by 0.046 atm per metre','Pressure increases by 4.6% per metre','Pressure halves every 0.046 metres']},
+   sq3:{prompt:'Given P = 1 when t = 0, find k.',answer:1,unit:'atm'},
+   sq4:{prompt:'Find t when P = 0.1. Give your answer to 3 significant figures.',answer:50.1,hint:'0.1 = e^{-0.046t} \\Rightarrow \\ln 0.1 = -0.046t \\Rightarrow t = \\frac{-\\ln 0.1}{0.046}'}},
+  {id:'AL13',modelLatex:'W = 2.5e^{0.35t}',context:'Width of a crack (mm) grows. t = days.',
+   growth:true,graphFn:(x)=>2.5*Math.exp(0.35*x),graphXMax:8,graphYLabel:'W (mm)',graphXLabel:'t',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate W when t = 4. Give your answer to 3 significant figures.',answer:10.1,sf:3,unit:'mm'},
+   sq2:{prompt:'Interpret the value 0.35 in this model.',correct:'Width grows continuously at 35% per day',
+     wrong:['Width increases by 0.35mm per day','Width grows by 3.5% per day','Width doubles every 0.35 days']},
+   sq3:{prompt:'Find W₀ when t = 0.',answer:2.5,unit:'mm'},
+   sq4:{prompt:'Find t when W = 10. Give your answer to 3 significant figures.',answer:3.96,hint:'10 = 2.5e^{0.35t} \\Rightarrow 4 = e^{0.35t} \\Rightarrow t = \\frac{\\ln 4}{0.35}'}},
+  {id:'AL14',modelLatex:'H = 100 \\times 0.97^d',context:'Humidity retained (%) decreases. d = days.',
+   growth:false,graphFn:(x)=>100*Math.pow(0.97,x),graphXMax:50,graphYLabel:'H%',graphXLabel:'d',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate H when d = 20. Give your answer to 3 significant figures.',answer:54.4,sf:3,unit:'%'},
+   sq2:{prompt:'Interpret the value 0.97 in this model.',correct:'Humidity retained decreases by 3% each day',
+     wrong:['Humidity decreases by 97% each day','Humidity increases by 3% each day','Humidity decreases by 0.97% each day']},
+   sq3:{prompt:'Find H when d = 0.',answer:100,unit:'%'},
+   sq4:{prompt:'Find d when H = 50. Give your answer to 3 significant figures.',answer:22.8,hint:'0.5 = 0.97^d \\Rightarrow d = \\frac{\\ln 0.5}{\\ln 0.97}'}},
+  {id:'AL15',modelLatex:'N = ke^{0.15h}',context:'Bacteria count grows. h = hours.',
+   growth:true,graphFn:(x)=>500*Math.exp(0.15*x),graphXMax:20,graphYLabel:'N',graphXLabel:'h',
+   sq_order:[3,1,2,4],
+   sq1:{prompt:'Estimate N when h = 8. Give your answer to 3 significant figures.',answer:1660,sf:3,unit:''},
+   sq2:{prompt:'Interpret the value 0.15 in this model.',correct:'Bacteria grow continuously at 15% per hour',
+     wrong:['Bacteria increase by 15 per hour','Bacteria grow by 150% per hour','Bacteria double every 0.15 hours']},
+   sq3:{prompt:'Given N = 500 when h = 0, find k.',answer:500,unit:''},
+   sq4:{prompt:'Find h when N = 2000. Give your answer to 3 significant figures.',answer:9.24,hint:'\\frac{2000}{500} = e^{0.15h} \\Rightarrow h = \\frac{\\ln 4}{0.15}'}}
+],
+level4: [
+  {id:'L4_1',modelLatex:'V = 12e^{-20t}',context:'Capacitor discharge. V = voltage (V), t = time (s). Time constant RC = 0.05s.',
+   growth:false,graphFn:(x)=>12*Math.exp(-20*x),graphXMax:0.25,graphYLabel:'V',graphXLabel:'t (s)',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate V when t = 0.1s. Give your answer to 3 significant figures.',answer:1.62,sf:3,unit:'V'},
+   sq2:{prompt:'Interpret the value −20 in this model.',correct:'Voltage decays rapidly — the time constant is 0.05 seconds',
+     wrong:['Voltage decreases by 20V per second','Voltage increases at 20% per second','Voltage halves every 20 seconds']},
+   sq3:{prompt:'Find V₀ when t = 0.',answer:12,unit:'V'},
+   sq4:{prompt:'Find t when V = 6. Give your answer to 4 significant figures.',answer:0.0347,hint:'6 = 12e^{-20t} \\Rightarrow 0.5 = e^{-20t} \\Rightarrow t = \\frac{\\ln 2}{20}'}},
+  {id:'L4_2',modelLatex:'T = 20 + 160e^{-0.08t}',context:'Cooling component. T = temperature (°C), t = minutes. Ambient = 20°C.',
+   growth:false,graphFn:(x)=>20+160*Math.exp(-0.08*x),graphXMax:50,graphYLabel:'T (°C)',graphXLabel:'t',
+   sq_order:[3,1,2,4],
+   sq1:{prompt:'Estimate T when t = 10. Give your answer to 3 significant figures.',answer:91.9,sf:3,unit:'°C'},
+   sq2:{prompt:'Interpret the value −0.08 in this model.',correct:'The temperature difference from ambient decreases at 8% per minute continuously',
+     wrong:['Temperature drops by 0.08°C per minute','Temperature increases by 8% per minute','The ambient temperature is 0.08°C']},
+   sq3:{prompt:'Given T = 180 when t = 0, find k (where model is T = 20 + ke^(−0.08t)).',answer:160,unit:''},
+   sq4:{prompt:'Find t when T = 50. Give your answer to 3 significant figures.',answer:21.2,hint:'30 = 160e^{-0.08t} \\Rightarrow \\frac{30}{160} = e^{-0.08t} \\Rightarrow t = \\frac{-\\ln(30/160)}{0.08}'}},
+  {id:'L4_3',modelLatex:'R = 1000 \\times 0.85^n',context:'Resistance (Ω) decreases with load cycles (thousands). n = thousands of cycles.',
+   growth:false,graphFn:(x)=>1000*Math.pow(0.85,x),graphXMax:15,graphYLabel:'R (Ω)',graphXLabel:'n',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate R when n = 5. Give your answer to 3 significant figures.',answer:444,sf:3,unit:'Ω'},
+   sq2:{prompt:'Interpret the value 0.85 in this model.',correct:'Resistance decreases by 15% for every thousand load cycles',
+     wrong:['Resistance decreases by 85% per thousand cycles','Resistance increases by 15% per thousand cycles','Resistance is always 0.85Ω']},
+   sq3:{prompt:'Find R₀ when n = 0.',answer:1000,unit:'Ω'},
+   sq4:{prompt:'Find n when R = 200. Give your answer to 3 significant figures.',answer:9.90,hint:'0.2 = 0.85^n \\Rightarrow n = \\frac{\\ln 0.2}{\\ln 0.85}'}},
+  {id:'L4_4',modelLatex:'P = 50e^{0.07t}',context:'Power output (W) grows with operating hours. t = hours.',
+   growth:true,graphFn:(x)=>50*Math.exp(0.07*x),graphXMax:30,graphYLabel:'P (W)',graphXLabel:'t',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate P when t = 20. Give your answer to 3 significant figures.',answer:203,sf:3,unit:'W'},
+   sq2:{prompt:'Interpret the value 0.07 in this model.',correct:'Power output grows continuously at 7% per operating hour',
+     wrong:['Power increases by 7W per hour','Power grows by 70% per hour','Power doubles every 0.07 hours']},
+   sq3:{prompt:'Find P₀ when t = 0.',answer:50,unit:'W'},
+   sq4:{prompt:'Find t when P = 200. Give your answer to 3 significant figures.',answer:19.8,hint:'200 = 50e^{0.07t} \\Rightarrow 4 = e^{0.07t} \\Rightarrow t = \\frac{\\ln 4}{0.07}'}},
+  {id:'L4_5',modelLatex:'I = ke^{-50t}',context:'Current (A) decays in an RL circuit. t = time (s). Time constant = 0.02s.',
+   growth:false,graphFn:(x)=>0.8*Math.exp(-50*x),graphXMax:0.1,graphYLabel:'I (A)',graphXLabel:'t (s)',
+   sq_order:[3,1,2,4],
+   sq1:{prompt:'Estimate I when t = 0.04. Give your answer to 3 significant figures.',answer:0.108,sf:3,unit:'A'},
+   sq2:{prompt:'Interpret the value −50 in this model.',correct:'Current decays with a time constant of 0.02 seconds',
+     wrong:['Current decreases by 50A per second','Current increases at 50% per second','Current halves every 50 seconds']},
+   sq3:{prompt:'Given I = 0.8 when t = 0, find k.',answer:0.8,unit:'A'},
+   sq4:{prompt:'Find t when I = 0.1. Give your answer to 4 significant figures.',answer:0.0416,hint:'0.1 = 0.8e^{-50t} \\Rightarrow \\frac{0.1}{0.8} = e^{-50t} \\Rightarrow t = \\frac{\\ln 8}{50}'}},
+  {id:'L4_6',modelLatex:'S = 0.5 \\times 1.25^n',context:'Signal strength (mW) increases per amplifier. n = number of amplifiers.',
+   growth:true,graphFn:(x)=>0.5*Math.pow(1.25,x),graphXMax:12,graphYLabel:'S (mW)',graphXLabel:'n',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate S when n = 6. Give your answer to 3 significant figures.',answer:1.91,sf:3,unit:'mW'},
+   sq2:{prompt:'Interpret the value 1.25 in this model.',correct:'Signal strength increases by 25% for each amplifier added',
+     wrong:['Signal increases by 1.25 mW per amplifier','Signal decreases by 25% per amplifier','There are 1.25 amplifiers']},
+   sq3:{prompt:'Find S₀ when n = 0.',answer:0.5,unit:'mW'},
+   sq4:{prompt:'Find n when S = 3. Give your answer to 3 significant figures.',answer:8.03,hint:'\\frac{3}{0.5} = 1.25^n \\Rightarrow n = \\frac{\\ln 6}{\\ln 1.25}'}},
+  {id:'L4_7',modelLatex:'N = N_0 \\times e^{-0.0231t}',context:'Radioactive nuclei decay. Half-life ≈ 30 years. N₀ = 5×10⁶, t = years.',
+   growth:false,graphFn:(x)=>5e6*Math.exp(-0.0231*x),graphXMax:100,graphYLabel:'N',graphXLabel:'t',
+   sq_order:[3,1,2,4],
+   sq1:{prompt:'Estimate N when t = 30. Give your answer to 2 significant figures.',answer:2500000,sf:2,unit:''},
+   sq2:{prompt:'Interpret the value −0.0231 in this model.',correct:'The number of nuclei decreases continuously at 2.31% per year',
+     wrong:['Nuclei decrease by 0.0231 per year','Nuclei increase at 2.31% per year','Half-life is 0.0231 years']},
+   sq3:{prompt:'Given N = 5×10⁶ when t = 0, confirm N₀.',answer:5000000,unit:''},
+   sq4:{prompt:'Find t when N = 1×10⁶. Give your answer to 3 significant figures.',answer:69.7,hint:'\\frac{10^6}{5 \\times 10^6} = e^{-0.0231t} \\Rightarrow t = \\frac{\\ln 5}{0.0231}'}},
+  {id:'L4_8',modelLatex:'F = ke^{0.12d}',context:'Fatigue stress (MPa) increases with crack depth (mm). d = depth.',
+   growth:true,graphFn:(x)=>50*Math.exp(0.12*x),graphXMax:15,graphYLabel:'F (MPa)',graphXLabel:'d (mm)',
+   sq_order:[3,1,2,4],
+   sq1:{prompt:'Estimate F when d = 8. Give your answer to 3 significant figures.',answer:131,sf:3,unit:'MPa'},
+   sq2:{prompt:'Interpret the value 0.12 in this model.',correct:'Fatigue stress grows continuously at 12% per mm of crack depth',
+     wrong:['Stress increases by 0.12 MPa per mm','Stress decreases by 12% per mm','Stress doubles every 0.12 mm']},
+   sq3:{prompt:'Given F = 50 when d = 0, find k.',answer:50,unit:'MPa'},
+   sq4:{prompt:'Find d when F = 200. Give your answer to 3 significant figures.',answer:11.6,hint:'\\frac{200}{50} = e^{0.12d} \\Rightarrow d = \\frac{\\ln 4}{0.12}'}},
+  {id:'L4_9',modelLatex:'E = 240 \\times 0.78^c',context:'Battery efficiency (%) decreases with charge cycles (hundreds). c = hundreds of cycles.',
+   growth:false,graphFn:(x)=>240*Math.pow(0.78,x),graphXMax:10,graphYLabel:'E%',graphXLabel:'c',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate E when c = 3. Give your answer to 3 significant figures.',answer:114,sf:3,unit:'%'},
+   sq2:{prompt:'Interpret the value 0.78 in this model.',correct:'Efficiency decreases by 22% per hundred charge cycles',
+     wrong:['Efficiency decreases by 78% per hundred cycles','Efficiency increases by 22% per hundred cycles','Efficiency is always 0.78%']},
+   sq3:{prompt:'Find E when c = 0.',answer:240,unit:'%'},
+   sq4:{prompt:'Find c when E = 80. Give your answer to 3 significant figures.',answer:4.43,hint:'\\frac{80}{240} = 0.78^c \\Rightarrow c = \\frac{\\ln(1/3)}{\\ln 0.78}'}},
+  {id:'L4_10',modelLatex:'G = 0.1e^{0.4f}',context:'Gain (dB) increases with frequency (kHz). f = frequency.',
+   growth:true,graphFn:(x)=>0.1*Math.exp(0.4*x),graphXMax:8,graphYLabel:'G (dB)',graphXLabel:'f (kHz)',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate G when f = 5. Give your answer to 3 significant figures.',answer:0.739,sf:3,unit:'dB'},
+   sq2:{prompt:'Interpret the value 0.4 in this model.',correct:'Gain increases continuously at 40% per kHz',
+     wrong:['Gain increases by 0.4 dB per kHz','Gain decreases by 40% per kHz','Gain doubles every 0.4 kHz']},
+   sq3:{prompt:'Find G₀ when f = 0.',answer:0.1,unit:'dB'},
+   sq4:{prompt:'Find f when G = 1. Give your answer to 3 significant figures.',answer:5.76,hint:'1 = 0.1e^{0.4f} \\Rightarrow 10 = e^{0.4f} \\Rightarrow f = \\frac{\\ln 10}{0.4}'}},
+  {id:'L4_11',modelLatex:'A = ke^{-0.35t}',context:'Damped oscillation amplitude (mm). t = seconds.',
+   growth:false,graphFn:(x)=>25*Math.exp(-0.35*x),graphXMax:10,graphYLabel:'A (mm)',graphXLabel:'t',
+   sq_order:[3,1,2,4],
+   sq1:{prompt:'Estimate A when t = 4. Give your answer to 3 significant figures.',answer:6.17,sf:3,unit:'mm'},
+   sq2:{prompt:'Interpret the value −0.35 in this model.',correct:'Amplitude decreases continuously at 35% per second — heavily damped',
+     wrong:['Amplitude drops by 0.35mm per second','Amplitude increases by 35% per second','Amplitude halves every 0.35 seconds']},
+   sq3:{prompt:'Given A = 25 when t = 0, find k.',answer:25,unit:'mm'},
+   sq4:{prompt:'Find t when A = 5. Give your answer to 3 significant figures.',answer:4.60,hint:'\\frac{5}{25} = e^{-0.35t} \\Rightarrow t = \\frac{\\ln 5}{0.35}'}},
+  {id:'L4_12',modelLatex:'C = 1.5 \\times 2.3^n',context:'Computation time (ms) increases with problem size (thousands of nodes). n = thousands.',
+   growth:true,graphFn:(x)=>1.5*Math.pow(2.3,x),graphXMax:6,graphYLabel:'C (ms)',graphXLabel:'n',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate C when n = 3. Give your answer to 3 significant figures.',answer:18.3,sf:3,unit:'ms'},
+   sq2:{prompt:'Interpret the value 2.3 in this model.',correct:'Computation time multiplies by 2.3 for each thousand additional nodes',
+     wrong:['Time increases by 2.3ms per thousand nodes','Time decreases by a factor of 2.3','There are always 2.3 nodes']},
+   sq3:{prompt:'Find C₀ when n = 0.',answer:1.5,unit:'ms'},
+   sq4:{prompt:'Find n when C = 100. Give your answer to 3 significant figures.',answer:5.04,hint:'\\frac{100}{1.5} = 2.3^n \\Rightarrow n = \\frac{\\ln(100/1.5)}{\\ln 2.3}'}},
+  {id:'L4_13',modelLatex:'P = 5000e^{-0.015d}',context:'Signal power (mW) decreases with cable length (m). d = metres.',
+   growth:false,graphFn:(x)=>5000*Math.exp(-0.015*x),graphXMax:200,graphYLabel:'P (mW)',graphXLabel:'d (m)',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate P when d = 100. Give your answer to 3 significant figures.',answer:1120,sf:3,unit:'mW'},
+   sq2:{prompt:'Interpret the value −0.015 in this model.',correct:'Signal power decreases continuously at 1.5% per metre of cable',
+     wrong:['Power drops by 0.015 mW per metre','Power increases by 1.5% per metre','Power halves every 0.015 metres']},
+   sq3:{prompt:'Find P₀ when d = 0.',answer:5000,unit:'mW'},
+   sq4:{prompt:'Find d when P = 1000. Give your answer to 3 significant figures.',answer:107,hint:'\\frac{1000}{5000} = e^{-0.015d} \\Rightarrow d = \\frac{\\ln 5}{0.015}'}},
+  {id:'L4_14',modelLatex:'H = ke^{0.022T}',context:'Hardness (HV) increases with tempering temperature (°C). Model valid for early tempering.',
+   growth:true,graphFn:(x)=>4.911*Math.exp(0.022*x),graphXMin:200,graphXMax:350,graphYLabel:'H (HV)',graphXLabel:'T (°C)',
+   sq_order:[3,1,2,4],
+   sq1:{prompt:'Estimate H when T = 300 and k = 4.911. Give your answer to 3 significant figures.',answer:3610,sf:3,unit:'HV'},
+   sq2:{prompt:'Interpret the value 0.022 in this model.',correct:'Hardness increases continuously at 2.2% per °C of tempering temperature',
+     wrong:['Hardness increases by 0.022 HV per °C','Hardness decreases by 2.2% per °C','Hardness doubles every 0.022°C']},
+   sq3:{prompt:'Given H = 400 when T = 200, find k. Give your answer to 3 significant figures.',answer:4.91,unit:''},
+   sq4:{prompt:'Find T when H = 500. Give your answer to 3 significant figures.',answer:211,hint:'\\frac{500}{4.911} = e^{0.022T} \\Rightarrow T = \\frac{\\ln(500/4.911)}{0.022}'}},
+  {id:'L4_15',modelLatex:'Q = 100 \\times 0.9^f',context:'Quality factor decreases with fatigue cycles (millions). f = millions of cycles.',
+   growth:false,graphFn:(x)=>100*Math.pow(0.9,x),graphXMax:15,graphYLabel:'Q',graphXLabel:'f',
+   sq_order:[1,2,3,4],
+   sq1:{prompt:'Estimate Q when f = 5. Give your answer to 3 significant figures.',answer:59.0,sf:3,unit:''},
+   sq2:{prompt:'Interpret the value 0.9 in this model.',correct:'Quality factor decreases by 10% for each million fatigue cycles',
+     wrong:['Quality decreases by 90% per million cycles','Quality increases by 10% per million cycles','Quality is always 0.9']},
+   sq3:{prompt:'Find Q when f = 0.',answer:100,unit:''},
+   sq4:{prompt:'Find f when Q = 50. Give your answer to 3 significant figures.',answer:6.58,hint:'0.5 = 0.9^f \\Rightarrow f = \\frac{\\ln 0.5}{\\ln 0.9}'}}
+]
+};
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let G={level:null,questions:[],qIdx:0,sqIdx:0,score:0,penalties:0,qPenalties:0,
+  correctSQs:0,totalSQs:0,timerStart:0,timerElapsed:0,timerInterval:null,sq4Attempts:0,
+  sqWrongAttempts:0,hintUsed:false,hintsUsed:0,hintPenalty:25};
+
+function $(id){return document.getElementById(id)}
+function K(l,d){try{return katex.renderToString(l,{throwOnError:false,displayMode:!!d})}catch(e){return l}}
+
+// ============================================================
+//  MENU
+// ============================================================
+function selLevel(btn){
+  document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');G.level=btn.dataset.level;$('startBtn').classList.add('ready');
+}
+function parseURL(){
+  const p=new URLSearchParams(location.search),l=p.get('level');
+  if(l){const b=document.querySelector(`.level-btn[data-level="${l}"]`);if(b)selLevel(b);}
+}
+
+// ============================================================
+//  START
+// ============================================================
+function startGame(){
+  if(!G.level)return;
+  const pool=[...Q[G.level]];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  G.questions=pool.slice(0,6);G.qIdx=0;G.score=0;G.correctSQs=0;G.totalSQs=0;
+  G.timerStart=Date.now();G.timerInterval=setInterval(updateTimer,1000);
+  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');
+  const labels={core:'Core Maths',alevel:'A-Level',level4:'Level 4'};
+  $('hudLevel').textContent=labels[G.level];
+  mfg('game_started',{game_slug:'growth-and-decay',level:G.level});
+  window._ggAbandoned=true;
+  window.addEventListener('beforeunload',function(){
+    if(window._ggAbandoned) mfg('game_abandoned',{game_slug:'growth-and-decay',level:G.level,questions_answered:G.qIdx});
+  });
+  loadScenario();
+}
+
+function updateTimer(){
+  G.timerElapsed=Math.floor((Date.now()-G.timerStart)/1000);
+  const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
+  $('hudTimer').textContent=m>0?`${m}m${s.toString().padStart(2,'0')}s`:`${s}s`;
+}
+
+// ============================================================
+//  LOAD SCENARIO
+// ============================================================
+function loadScenario(){
+  const q=G.questions[G.qIdx];G.sqIdx=0;G.qPenalties=0;G.sq4Attempts=0;
+  $('hudQ').textContent=`${G.qIdx+1}/${G.questions.length}`;$('hudScore').textContent=G.score;
+  buildScenarioPanel(q);loadSQ(q);
+}
+
+function buildScenarioPanel(q){
+  const xMin=q.graphXMin||0,xMax=q.graphXMax||10;
+  let html=`<h3>Scenario</h3><div class="sc-text">${q.context}</div>`;
+  html+=`<div class="sc-model">${K(q.modelLatex,true)}</div>`;
+  html+=`<div class="sc-graph"><canvas id="graphCanvas" width="280" height="150"></canvas></div>`;
+  $('scPanel').innerHTML=html;
+  // Draw graph after render
+  setTimeout(()=>drawGraph(q),50);
+}
+
+function drawGraph(q){
+  const c=document.getElementById('graphCanvas');if(!c)return;
+  const ctx=c.getContext('2d'),W=c.width,H=c.height;
+  const xMin=q.graphXMin||0,xMax=q.graphXMax||10;
+  const pad={l:40,r:15,t:10,b:28};
+  const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+
+  // Sample points
+  const pts=[];let yMin=Infinity,yMax=-Infinity;
+  for(let i=0;i<=100;i++){
+    const x=xMin+(xMax-xMin)*i/100;
+    const y=q.graphFn(x);pts.push({x,y});
+    if(y<yMin)yMin=y;if(y>yMax)yMax=y;
+  }
+  const yPad=(yMax-yMin)*0.1||1;yMin-=yPad;yMax+=yPad;
+  if(yMin<0&&!q.growth)yMin=0;
+
+  ctx.clearRect(0,0,W,H);
+  // Axes
+  ctx.strokeStyle='#1a2440';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,H-pad.b);ctx.lineTo(W-pad.r,H-pad.b);ctx.stroke();
+  // Labels
+  ctx.fillStyle='#687890';ctx.font='10px JetBrains Mono';ctx.textAlign='center';
+  ctx.fillText(q.graphXLabel||'x',W/2,H-4);
+  ctx.save();ctx.translate(12,H/2);ctx.rotate(-Math.PI/2);ctx.fillText(q.graphYLabel||'y',0,0);ctx.restore();
+  // Curve
+  ctx.strokeStyle='#0ea5e9';ctx.lineWidth=2;ctx.beginPath();
+  pts.forEach((p,i)=>{
+    const sx=pad.l+(p.x-xMin)/(xMax-xMin)*pw;
+    const sy=pad.t+(1-(p.y-yMin)/(yMax-yMin))*ph;
+    i===0?ctx.moveTo(sx,sy):ctx.lineTo(sx,sy);
+  });
+  ctx.stroke();
+}
+
+// ============================================================
+//  LOAD SUB-QUESTION
+// ============================================================
+function loadSQ(q){
+  const order=q.sq_order.filter(n=> n<=3 || (n===4 && G.level!=='core'));
+  if(G.sqIdx>=order.length){finishScenario(q);return;}
+  const sqNum=order[G.sqIdx];
+  const sq=q['sq'+sqNum];
+  const panel=$('qPanel');
+  const sqLabel=`Sub-question ${G.sqIdx+1} of ${order.length}`;
+  G.sqWrongAttempts=0;G.hintUsed=false;
+
+  if(sqNum===2){
+    // MCQ
+    const opts=[{text:sq.correct,correct:true},...sq.wrong.map(w=>({text:w,correct:false}))];
+    for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
+    let html=`<div class="sq-label">${sqLabel}</div><div class="sq-prompt">${sq.prompt}</div><div class="mcq-grid">`;
+    opts.forEach((o,i)=>{html+=`<button class="mcq-btn" id="mcq${i}" onclick="checkMCQ(${i},${o.correct})">${o.text}</button>`;});
+    html+=`</div><div id="sqFb"></div>`;
+    panel.innerHTML=html;
+    // Store for highlighting
+    panel._opts=opts;
+  } else if(sqNum===4){
+    let html=`<div class="sq-label">${sqLabel}</div><div class="sq-prompt">${sq.prompt}</div>`;
+    html+=`<input type="number" class="num-input" id="sqInput" placeholder="Answer" step="any">`;
+    html+=`<button class="check-btn" onclick="checkSQ4()">Check</button>`;
+    html+=`<button class="hint-btn" id="hintBtn" onclick="useHint(4)">Hint (−${G.hintPenalty} pts)</button>`;
+    html+=`<div id="sqFb"></div><div id="hintBox"></div>`;
+    panel.innerHTML=html;
+  } else {
+    let html=`<div class="sq-label">${sqLabel}</div><div class="sq-prompt">${sq.prompt}</div>`;
+    html+=`<input type="number" class="num-input" id="sqInput" placeholder="Answer" step="any">`;
+    html+=`<button class="check-btn" onclick="checkNumSQ(${sqNum})">Check</button>`;
+    html+=`<button class="hint-btn" id="hintBtn" onclick="useHint(${sqNum})">Hint (−${G.hintPenalty} pts)</button>`;
+    html+=`<div id="sqFb"></div><div id="hintBox"></div>`;
+    panel.innerHTML=html;
+  }
+}
+
+function useHint(sqNum){
+  if(G.hintUsed)return;
+  G.hintUsed=true;G.hintsUsed++;
+  G.score=Math.max(0,G.score-G.hintPenalty);
+  $('hudScore').textContent=G.score;
+  const q=G.questions[G.qIdx],sq=q['sq'+sqNum];
+  $('hintBox').innerHTML=`<div class="hint-reveal">The answer is <strong class="mono">${sq.answer}</strong></div>`;
+  var btn=$('hintBtn');if(btn)btn.style.display='none';
+}
+
+function showHintBtn(){
+  var btn=$('hintBtn');
+  if(btn&&!G.hintUsed)btn.classList.add('visible');
+}
+
+// ============================================================
+//  CHECK ANSWERS
+// ============================================================
+function checkNumSQ(sqNum){
+  const q=G.questions[G.qIdx],sq=q['sq'+sqNum];
+  const val=parseFloat($('sqInput').value);if(isNaN(val))return;
+  const fb=$('sqFb');G.totalSQs++;
+
+  const tol=sqNum===3?Math.max(0.005*Math.abs(sq.answer),0.05):0.02*Math.abs(sq.answer)+0.01;
+  if(Math.abs(val-sq.answer)<=tol){
+    G.correctSQs++;
+    fb.innerHTML=`<div class="feedback correct">Correct! ${sq.unit?sq.unit+' ':''}${sq.answer}</div>`;
+    mfg('question_answered',{game_slug:'growth-and-decay',level:G.level,correct:true,question_index:G.totalSQs});
+    setTimeout(()=>{G.sqIdx++;loadSQ(q);},1000);
+  } else {
+    G.qPenalties++;G.penalties++;G.sqWrongAttempts++;
+    let hint='Check your substitution and arithmetic.';
+    if(sqNum===3) hint='Substitute the given values and solve for the unknown constant.';
+    fb.innerHTML=`<div class="feedback wrong">Incorrect. ${hint}</div>`;
+    mfg('question_answered',{game_slug:'growth-and-decay',level:G.level,correct:false,question_index:G.totalSQs});
+    if(G.sqWrongAttempts>=1)showHintBtn();
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+function checkMCQ(idx,correct){
+  const q=G.questions[G.qIdx];const fb=$('sqFb');G.totalSQs++;
+  document.querySelectorAll('.mcq-btn').forEach(b=>b.classList.add('disabled'));
+  if(correct){
+    G.correctSQs++;$('mcq'+idx).classList.add('correct');
+    fb.innerHTML='<div class="feedback correct">Correct interpretation!</div>';
+    mfg('question_answered',{game_slug:'growth-and-decay',level:G.level,correct:true,question_index:G.totalSQs});
+  } else {
+    G.qPenalties++;G.penalties++;$('mcq'+idx).classList.add('wrong');
+    const opts=$('qPanel')._opts;
+    opts.forEach((o,i)=>{if(o.correct)$('mcq'+i).classList.add('correct');});
+    fb.innerHTML='<div class="feedback wrong">Remember: state direction, magnitude, and context.</div>';
+    mfg('question_answered',{game_slug:'growth-and-decay',level:G.level,correct:false,question_index:G.totalSQs});
+  }
+  setTimeout(()=>{G.sqIdx++;loadSQ(q);},1500);
+}
+
+function checkSQ4(){
+  const q=G.questions[G.qIdx],sq=q.sq4;
+  const val=parseFloat($('sqInput').value);if(isNaN(val))return;
+  const fb=$('sqFb');G.totalSQs++;G.sq4Attempts++;
+
+  if(Math.abs(val-sq.answer)<=0.15){
+    G.correctSQs++;
+    fb.innerHTML=`<div class="feedback correct">Correct! Answer: ${sq.answer}</div>`;
+    setTimeout(()=>{G.sqIdx++;loadSQ(q);},1000);
+  } else {
+    G.qPenalties++;G.penalties++;G.totalSQs--;G.sqWrongAttempts++; // Don't double-count retries
+    let msg='Incorrect.';
+    if(G.sq4Attempts>=2&&sq.hint){
+      msg+=` Hint: ${K(sq.hint)}`;
+    } else {
+      msg+=' Take ln of both sides. Remember ln(eˣ) = x.';
+    }
+    fb.innerHTML=`<div class="feedback wrong">${msg}</div>`;
+    if(G.sqWrongAttempts>=1)showHintBtn();
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// ============================================================
+//  FINISH SCENARIO
+// ============================================================
+function finishScenario(q){
+  const BASE=100,G_COST=10,T_K=0.3;
+  const penalty=G.qPenalties*G_COST;
+  const seconds=G.timerElapsed;
+  const mult=1/(1+T_K*Math.log(1+seconds));
+  const qScore=Math.max(1,Math.round((BASE-penalty)*mult));
+  G.score+=qScore;$('hudScore').textContent=G.score;
+
+  const panel=$('qPanel');
+  panel.innerHTML=`
+    <div style="background:var(--surface2);border:1px solid var(--correct);border-radius:10px;padding:1rem;animation:fadeIn .4s">
+      <h3 style="font-size:.8rem;color:var(--correct);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem">Scenario Complete</h3>
+      <div style="font-size:.85rem;line-height:1.7;color:var(--text)">
+        Model: ${K(q.modelLatex)}<br>
+        Score for this scenario: <strong class="mono">${qScore}</strong>
+      </div>
+    </div>
+    <button class="next-btn" onclick="nextScenario()">${G.qIdx<G.questions.length-1?'Next Scenario →':'See Results'}</button>
+  `;
+}
+
+function nextScenario(){G.qIdx++;if(G.qIdx>=G.questions.length)endGame();else loadScenario();}
+
+// ============================================================
+//  END GAME
+// ============================================================
+function endGame(){
+  clearInterval(G.timerInterval);
+  $('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
+  const pct=G.totalSQs>0?Math.round(100*G.correctSQs/G.totalSQs):0;
+  let title='Well done!';
+  if(pct>=90)title='Outstanding!';else if(pct>=70)title='Great work!';
+  else if(pct>=50)title='Good effort!';else title='Keep practising!';
+  $('resultTitle').textContent=title;$('finalScore').textContent=G.score;
+  const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
+  const labels={core:'Core Maths',alevel:'A-Level',level4:'Level 4'};
+  $('statsLine').innerHTML=`Sub-questions correct: <strong>${G.correctSQs}/${G.totalSQs}</strong> (${pct}%)<br>Time: <strong>${m>0?m+'m '+s+'s':s+'s'}</strong><br>Level: <strong>${labels[G.level]}</strong>`;
+  const key=`gd_pb_${G.level}`;const prev=parseInt(localStorage.getItem(key)||'0');
+  if(G.score>prev){localStorage.setItem(key,G.score);
+    mfg('personal_best_set',{game_slug:'growth-and-decay',level:G.level,score:G.score,previous_best:prev});
+    if(prev>0){$('pbLine').textContent=`New personal best! (Previous: ${prev})`;$('pbLine').style.display='block';}}
+  else if(prev>0){$('pbLine').textContent=`Personal best: ${prev}`;$('pbLine').style.display='block';}
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'growth-and-decay',level:G.level,score:G.score,questions_answered:G.totalSQs,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('growth-and-decay',G.level,G.score,G.totalSQs).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('growth-and-decay',G.level,G.score);}}
+}
+
+function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active');}
+
+window.addEventListener('DOMContentLoaded',()=>{parseURL();});
+
+
+(function renderMethodRef(){
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
+  var k=function(t){return katex.renderToString(t,{throwOnError:false});};
+
+  document.getElementById('methodSub').innerHTML=
+    '<strong>(a) Substitution into an exponential model</strong>'+
+    'A population of bacteria is modelled by:'+
+    K('P = 200 \\times 1.15^t')+
+    'where '+k('P')+' is the population and '+k('t')+' is time in hours.<br><br>'+
+    'Find the population after 6 hours:'+
+    K('P = 200 \\times 1.15^6 = 200 \\times 2.313 \\ldots = 462.7')+
+    'So the population is approximately <b>463</b> bacteria.';
+
+  document.getElementById('methodInterpret').innerHTML=
+    '<strong>(b) Interpreting the base / rate parameter</strong>'+
+    'In the model '+k('P = 200 \\times 1.15^t')+':'+
+    '<ul style="margin:.4rem 0 0 1.2rem;list-style:disc"><li>The <b>200</b> is the initial population when '+k('t = 0')+'.</li>'+
+    '<li>The base <b>1.15</b> means the population increases by <b>15%</b> each hour.</li>'+
+    '<li>Because 1.15 > 1, this is <b>growth</b>. If the base were e.g. 0.85, it would be <b>decay</b> (losing 15% per hour).</li></ul>';
+
+  document.getElementById('methodConstant').innerHTML=
+    '<strong>(c) Finding an unknown constant</strong>'+
+    'Suppose '+k('P = A \\times 1.15^t')+' and we know that when '+k('t = 0')+', '+k('P = 500')+'.'+
+    K('500 = A \\times 1.15^0 = A \\times 1 = A')+
+    'So '+k('A = 500')+'.<br><br>'+
+    'If instead we know '+k('P = 200 \\times b^t')+' and '+k('P = 350')+' when '+k('t = 4')+':'+
+    K('350 = 200 \\times b^4 \\quad\\Rightarrow\\quad b^4 = 1.75 \\quad\\Rightarrow\\quad b = 1.75^{0.25} \\approx 1.150')+
+    'So the base is approximately <b>1.150</b> — a 15% growth rate per unit time.';
+})();
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

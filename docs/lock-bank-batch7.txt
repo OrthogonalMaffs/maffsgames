@@ -1,0 +1,61 @@
+Batch 7 - Jon and Project Claude, 2026-09-17. One room, three locks. Hints are not
+held here; like batches 3-6 they live in the room's room.js.
+Two notes on format, neither touching the mathematics:
+  * kiln-sensor-limit and kiln-fan-restart each have their clue on two separate
+    objects. CLUE is one field in this format (a second CLUE line silently
+    replaces the first), so both objects share the one line, as batch 6 did.
+  * kiln-cancel-check's VERIFY computes its answer from the clue, which
+    check-lock-bank.py cannot tell from a restated literal. It is written as
+    "<expression> - n == 0", the batch 6 form.
+
+
+Room 12 - Kiln Disaster (GCSE resit)
+====================================
+
+ID:          kiln-sensor-limit
+LEVEL:       GCSE
+TOPIC:       Number / Multiples
+INSTRUMENT:  Keypad, 0 to 99, whole numbers.
+CONTEXT:     The kiln controller was fitted by the school's IT department, who
+             left their install paperwork behind.
+CLUE:        Asset tag: "AUXILIARY SENSOR IDs ARE MULTIPLES OF 9". Network cable label: "MAXIMUM ID 85".
+ANSWER:      81
+AHA:         The highest ID is the largest multiple that still fits under the
+             limit, not the first one past it.
+MISCONCEPTION: 90 (the first multiple over the limit).
+SOLVE:       Multiples of 9: 72, 81, 90.
+             The highest under 85 is 81.
+TIME:        2
+VERIFY_MAX:  [n for n in range(100) if n < 85 and n % 9 == 0]
+
+ID:          kiln-fan-restart
+LEVEL:       GCSE
+TOPIC:       Number / Lowest common multiple
+INSTRUMENT:  Dial, 0 to 120, whole numbers.
+CONTEXT:     Two extraction fans run on their own timed cycles.
+CLUE:        Installation sheet: "INTAKE FAN CYCLE 6 MIN". Calibration log: "EXTRACTOR FAN CYCLE 14 MIN".
+ANSWER:      42
+AHA:         Both restart together at the first time both cycles fit into
+             exactly - not at the two multiplied together.
+MISCONCEPTION: 84 (multiplies the two cycle lengths).
+SOLVE:       6, 12, 18, 24, 30, 36, 42.
+             14, 28, 42.
+             LCM = 42.
+TIME:        3
+VERIFY_MIN:  [n for n in range(121) if n > 0 and n % 6 == 0 and n % 14 == 0]
+
+ID:          kiln-cancel-check
+LEVEL:       GCSE
+TOPIC:       Number / Order of operations
+INSTRUMENT:  Slider, 0 to 60, whole numbers.
+CONTEXT:     A laminated card from the installers gives the check value the
+             controller expects before it will cancel.
+CLUE:        Instruction card: "CHECK VALUE = 21 + 45 ÷ 3"
+ANSWER:      36
+AHA:         Division happens before addition, whatever order the calculation
+             is written in.
+MISCONCEPTION: 22 (works strictly left to right).
+SOLVE:       45 ÷ 3 = 15.
+             21 + 15 = 36.
+TIME:        2
+VERIFY:      [n for n in range(61) if (21 + 45 // 3) - n == 0]

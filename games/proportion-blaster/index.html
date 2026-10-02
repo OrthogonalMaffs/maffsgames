@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Direct and inverse proportion plus ratio sharing. 100 questions for GCSE and A-Level number and algebra.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/proportion-blaster/">
+<meta property="og:title" content="Proportion Blaster — MaffsGames">
+<meta property="og:description" content="Direct and inverse proportion plus ratio sharing. 100 questions for GCSE and A-Level number and algebra.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/proportion-blaster/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Proportion Blaster — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<!-- Google Analytics (cookieless) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {send_page_view:true,storage:'none',anonymize_ip:true});
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0b1120;--surface:#141d30;--border:#1f2d47;
+  --primary:#f59e0b;--accent:#10b981;--wrong:#ef4444;
+  --text:#f1f5f9;--muted:#7c8db0;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:0.85rem;color:var(--muted);margin-top:0.3rem}
+.level-select{display:flex;gap:0.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap}
+.level-btn{padding:0.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.level-btn[data-level="gcse"].active{background:#3b82f6;border-color:#3b82f6}
+.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:0.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}.hud-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:130px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0.6rem}
+.q-card .context{font-size:0.95rem;color:var(--text);line-height:1.6;max-width:600px}
+.q-card .prompt{font-size:0.85rem;color:var(--accent);font-weight:600;margin-top:0.3rem}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1rem}
+.opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1rem;cursor:pointer;transition:all 0.15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(245,158,11,0.2)}
+.opt-btn.correct{border-color:var(--accent);background:rgba(16,185,129,0.12);animation:pop 0.3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(239,68,68,0.12);animation:shake 0.3s}
+.opt-btn.reveal{border-color:var(--accent);opacity:0.7}
+.opt-btn.disabled{pointer-events:none;opacity:0.5}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background 0.3s}
+.pip.done{background:var(--accent)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:0.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem}
+.play-again{padding:0.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform 0.15s}
+.play-again:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+.katex{font-size:1.1em!important}.q-card .katex{font-size:1.3em!important}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:0.85rem}.back-link:hover{color:var(--text)}
+/* === Accessibility === */
+body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
+body.accessible p, body.accessible .question-text, body.accessible .step-text, body.accessible .option-label, body.accessible .card-text { line-height: 2.0; max-width: 65ch; }
+body.accessible { background-color: #12141f !important; }
+body.accessible.light-theme { background-color: #fdf6e3 !important; color: #2d2d2d !important; }
+body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em; }
+.a11y-toggle { background: #1a2744; color: #ffffff; border: 1px solid #2a3a5c; border-radius: 6px; width: 36px; height: 36px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: background 0.15s; }
+.a11y-toggle.active, .a11y-toggle:hover { background: #0d9488; }
+.correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
+.incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">&larr; Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header">
+      <h1>Proportion Blaster</h1>
+      <div class="sub">Direct. Inverse. Algebraic. Can you find the constant?</div>
+      <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    </div>
+    <div class="level-select">
+      <button class="level-btn active" data-level="gcse">GCSE</button>
+      <button class="level-btn" data-level="alevel">A-Level</button>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:0.82rem;margin:0.8rem 0;line-height:1.5">
+      <strong>GCSE:</strong> y &prop; x, y &prop; x&sup2;, y &prop; 1/x &mdash; find k, find missing values, ratio sharing<br>
+      <strong>A-Level:</strong> + y &prop; &radic;x, y &prop; x&sup3;, combined proportion, forming equations
+    </p>
+    <div style="text-align:center;margin-top:1.5rem">
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+      <button class="play-again" onclick="startGame()">Start</button>
+    </div>
+  </div>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="q-card">
+      <div class="context" id="context"></div>
+      <div id="question"></div>
+      <div class="prompt" id="prompt"></div>
+    </div>
+    <div class="options" id="options"></div>
+  </div>
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resultTitle">Well Done!</h2>
+      <div class="final-score" id="finalScore">0</div>
+      <div class="stats" id="statsLine"></div>
+      <button class="play-again" onclick="showMenu()">Play Again</button>
+    </div>
+  </div>
+</div>
+<script>
+const QUESTIONS={
+gcse:[
+  {ctx:'y is directly proportional to x. When x = 3, y = 12.',q:'y = kx',ask:'Find k',correct:'4',d:['3','12','36']},
+  {ctx:'y is directly proportional to x. When x = 5, y = 20.',q:'y = kx',ask:'Find y when x = 8',correct:'32',d:['25','40','28']},
+  {ctx:'y is directly proportional to x. When x = 4, y = 10.',q:'y = kx',ask:'Find x when y = 25',correct:'10',d:['8','12.5','15']},
+  {ctx:'y is directly proportional to x. When x = 2, y = 14.',q:'y = kx',ask:'Find k',correct:'7',d:['2','14','28']},
+  {ctx:'y is directly proportional to x. When x = 6, y = 18.',q:'y = kx',ask:'Find y when x = 10',correct:'30',d:['18','60','24']},
+  {ctx:'The cost C is proportional to the weight w. 3 kg costs \u00a312.',q:'C = kw',ask:'Find the cost of 7 kg',correct:'\u00a328',d:['\u00a321','\u00a336','\u00a324']},
+  {ctx:'y \u221d x. When x = 8, y = 24.',q:'y = kx',ask:'Find y when x = 5',correct:'15',d:['12','20','40']},
+  {ctx:'The distance d is proportional to time t. In 4 seconds, d = 20 m.',q:'d = kt',ask:'Find d when t = 7',correct:'35',d:['28','40','25']},
+  {ctx:'y \u221d x. When x = 10, y = 4.',q:'y = kx',ask:'Find k',correct:'0.4',d:['2.5','40','4']},
+  {ctx:'y \u221d x. When x = 10, y = 4.',q:'y = kx',ask:'Find x when y = 6',correct:'15',d:['10','24','2.4']},
+  {ctx:'P is proportional to Q. When Q = 5, P = 35.',q:'P = kQ',ask:'Find P when Q = 12',correct:'84',d:['60','72','96']},
+  {ctx:'y \u221d x. When x = 3, y = 15.',q:'y = kx',ask:'Find y when x = 0.5',correct:'2.5',d:['5','7.5','1']},
+  {ctx:'y is directly proportional to x\u00b2. When x = 2, y = 12.',q:'y = kx^2',ask:'Find k',correct:'3',d:['6','12','24']},
+  {ctx:'y is directly proportional to x\u00b2. When x = 3, y = 45.',q:'y = kx^2',ask:'Find k',correct:'5',d:['15','9','45']},
+  {ctx:'y \u221d x\u00b2. When x = 2, y = 20.',q:'y = kx^2',ask:'Find y when x = 5',correct:'125',d:['50','100','250']},
+  {ctx:'y \u221d x\u00b2. When x = 4, y = 48.',q:'y = kx^2',ask:'Find y when x = 6',correct:'108',d:['72','96','144']},
+  {ctx:'y \u221d x\u00b2. When x = 3, y = 36.',q:'y = kx^2',ask:'Find x when y = 100',correct:'5',d:['10','\\dfrac{100}{36}','\\sqrt{100}']},
+  {ctx:'The energy E is proportional to v\u00b2. When v = 3, E = 27.',q:'E = kv^2',ask:'Find E when v = 5',correct:'75',d:['45','125','135']},
+  {ctx:'y \u221d x\u00b2. When x = 5, y = 50.',q:'y = kx^2',ask:'Find k',correct:'2',d:['10','25','50']},
+  {ctx:'y \u221d x\u00b2. When x = 1, y = 7.',q:'y = kx^2',ask:'Find y when x = 4',correct:'112',d:['28','56','448']},
+  {ctx:'A \u221d r\u00b2. When r = 3, A = 18.',q:'A = kr^2',ask:'Find A when r = 10',correct:'200',d:['180','60','600']},
+  {ctx:'y \u221d x\u00b2. When x = 2, y = 8.',q:'y = kx^2',ask:'Find x when y = 50',correct:'5',d:['25','10','\\sqrt{50}']},
+  {ctx:'y is inversely proportional to x. When x = 2, y = 10.',q:'y = \\dfrac{k}{x}',ask:'Find k',correct:'20',d:['5','12','8']},
+  {ctx:'y is inversely proportional to x. When x = 4, y = 5.',q:'y = \\dfrac{k}{x}',ask:'Find y when x = 10',correct:'2',d:['12.5','0.5','50']},
+  {ctx:'y \u221d 1/x. When x = 3, y = 6.',q:'y = \\dfrac{k}{x}',ask:'Find k',correct:'18',d:['2','9','0.5']},
+  {ctx:'y \u221d 1/x. When x = 3, y = 6.',q:'y = \\dfrac{k}{x}',ask:'Find y when x = 9',correct:'2',d:['3','18','54']},
+  {ctx:'y \u221d 1/x. When x = 5, y = 8.',q:'y = \\dfrac{k}{x}',ask:'Find x when y = 4',correct:'10',d:['2','20','40']},
+  {ctx:'The speed s is inversely proportional to time t. When t = 2, s = 30.',q:'s = \\dfrac{k}{t}',ask:'Find s when t = 6',correct:'10',d:['5','15','90']},
+  {ctx:'y \u221d 1/x. When x = 6, y = 4.',q:'y = \\dfrac{k}{x}',ask:'Find y when x = 8',correct:'3',d:['2','4.8','32']},
+  {ctx:'y \u221d 1/x. When x = 10, y = 3.',q:'y = \\dfrac{k}{x}',ask:'Find x when y = 6',correct:'5',d:['20','2','15']},
+  {ctx:'P is inversely proportional to V. When V = 4, P = 25.',q:'P = \\dfrac{k}{V}',ask:'Find P when V = 10',correct:'10',d:['62.5','2.5','250']},
+  {ctx:'y \u221d 1/x\u00b2. When x = 2, y = 5.',q:'y = \\dfrac{k}{x^2}',ask:'Find k',correct:'20',d:['10','2.5','40']},
+  {ctx:'y \u221d 1/x\u00b2. When x = 2, y = 5.',q:'y = \\dfrac{k}{x^2}',ask:'Find y when x = 4',correct:'1.25',d:['2.5','5','0.625']},
+  {ctx:'y \u221d 1/x\u00b2. When x = 1, y = 12.',q:'y = \\dfrac{k}{x^2}',ask:'Find y when x = 3',correct:'\\dfrac{4}{3}',d:['4','36','2']},
+  {ctx:'Share \u00a360 in the ratio 2 : 3.',q:'',ask:'Find the larger share',correct:'\u00a336',d:['\u00a324','\u00a330','\u00a340']},
+  {ctx:'Share \u00a3150 in the ratio 3 : 2.',q:'',ask:'Find the smaller share',correct:'\u00a360',d:['\u00a350','\u00a375','\u00a390']},
+  {ctx:'Share 48 sweets in the ratio 5 : 3.',q:'',ask:'How many does the larger share get?',correct:'30',d:['24','20','28']},
+  {ctx:'The ratio of boys to girls is 3 : 5. There are 120 students.',q:'',ask:'How many girls?',correct:'75',d:['45','80','72']},
+  {ctx:'A and B share money in ratio 4 : 7. B gets \u00a335.',q:'',ask:'How much does A get?',correct:'\u00a320',d:['\u00a328','\u00a315','\u00a312']},
+  {ctx:'x : y = 2 : 5. x + y = 42.',q:'',ask:'Find x',correct:'12',d:['14','6','30']},
+  {ctx:'Share \u00a3200 in the ratio 1 : 3 : 4.',q:'',ask:'Find the largest share',correct:'\u00a3100',d:['\u00a375','\u00a380','\u00a350']},
+  {ctx:'Share \u00a3200 in the ratio 1 : 3 : 4.',q:'',ask:'Find the smallest share',correct:'\u00a325',d:['\u00a350','\u00a340','\u00a320']},
+  {ctx:'Concrete is mixed in the ratio cement : sand : gravel = 1 : 2 : 3. You need 180 kg total.',q:'',ask:'How much sand?',correct:'60',d:['30','90','36']},
+  {ctx:'A recipe uses flour and sugar in ratio 5 : 2. You have 350 g of flour.',q:'',ask:'How much sugar?',correct:'140',d:['100','175','70']},
+  {ctx:'The ratio a : b = 3 : 4. The ratio b : c = 2 : 5.',q:'',ask:'Find a : b : c',correct:'3 : 4 : 10',d:['3 : 4 : 5','6 : 8 : 10','3 : 2 : 5']},
+  {ctx:'x : y = 5 : 8. y : z = 4 : 3.',q:'',ask:'Find x : y : z',correct:'5 : 8 : 6',d:['5 : 4 : 3','5 : 8 : 3','10 : 8 : 6']},
+  {ctx:'After a 20% increase, the new price is \u00a360.',q:'',ask:'What was the original price?',correct:'\u00a350',d:['\u00a348','\u00a352','\u00a345']},
+  {ctx:'After a 15% decrease, the value is \u00a3170.',q:'',ask:'What was the original value?',correct:'\u00a3200',d:['\u00a3195.50','\u00a3185','\u00a3188']},
+  {ctx:'A car depreciates by 10% each year. It cost \u00a320,000.',q:'',ask:'Value after 2 years?',correct:'\u00a316,200',d:['\u00a316,000','\u00a318,000','\u00a314,400']},
+  {ctx:'A population increases by 5% per year from 8000.',q:'',ask:'Population after 3 years (nearest whole)',correct:'9261',d:['9200','9000','8400']},
+],
+alevel:[
+  {ctx:'y \u221d x\u00b3. When x = 2, y = 24.',q:'y = kx^3',ask:'Find k',correct:'3',d:['12','8','6']},
+  {ctx:'y \u221d x\u00b3. When x = 2, y = 24.',q:'y = kx^3',ask:'Find y when x = 3',correct:'81',d:['72','108','54']},
+  {ctx:'y \u221d \u221ax. When x = 9, y = 6.',q:'y = k\\sqrt{x}',ask:'Find k',correct:'2',d:['\\dfrac{2}{3}','3','18']},
+  {ctx:'y \u221d \u221ax. When x = 9, y = 6.',q:'y = k\\sqrt{x}',ask:'Find y when x = 25',correct:'10',d:['50','\\dfrac{25}{3}','12']},
+  {ctx:'y \u221d \u221ax. When x = 4, y = 10.',q:'y = k\\sqrt{x}',ask:'Find x when y = 25',correct:'25',d:['\\dfrac{625}{4}','12.5','100']},
+  {ctx:'T \u221d \u221al. When l = 4, T = 6.',q:'T = k\\sqrt{l}',ask:'Find T when l = 16',correct:'12',d:['24','48','8']},
+  {ctx:'y \u221d x^{3/2}. When x = 4, y = 16.',q:'y = kx^{3/2}',ask:'Find k',correct:'2',d:['4','8','1']},
+  {ctx:'F \u221d 1/d\u00b2. When d = 2, F = 10.',q:'F = \\dfrac{k}{d^2}',ask:'Find F when d = 5',correct:'1.6',d:['4','2','0.8']},
+  {ctx:'y \u221d 1/x\u00b3. When x = 2, y = 5.',q:'y = \\dfrac{k}{x^3}',ask:'Find k',correct:'40',d:['10','2.5','80']},
+  {ctx:'y \u221d 1/x\u00b3. When x = 2, y = 5.',q:'y = \\dfrac{k}{x^3}',ask:'Find y when x = 4',correct:'0.625',d:['1.25','2.5','0.3125']},
+  {ctx:'V \u221d r\u00b3. When r = 3, V = 108.',q:'V = kr^3',ask:'Find V when r = 5',correct:'500',d:['300','180','540']},
+  {ctx:'y \u221d x\u00b2. When x = a, y = b.',q:'y = kx^2',ask:'Find y when x = 3a',correct:'9b',d:['3b','6b','27b']},
+  {ctx:'y \u221d 1/x. When x = a, y = b.',q:'y = \\dfrac{k}{x}',ask:'Find y when x = 2a',correct:'\\dfrac{b}{2}',d:['2b','\\dfrac{b}{4}','\\dfrac{a}{2b}']},
+  {ctx:'P \u221d \u221aQ. When Q = 16, P = 20.',q:'P = k\\sqrt{Q}',ask:'Find Q when P = 30',correct:'36',d:['\\dfrac{900}{16}','24','\\dfrac{36}{4}']},
+  {ctx:'y \u221d x^n. When x doubles, y multiplies by 8.',q:'y = kx^n',ask:'Find n',correct:'3',d:['2','4','8']},
+  {ctx:'y is proportional to (x + 1)\u00b2. When x = 2, y = 18.',q:'y = k(x+1)^2',ask:'Find k',correct:'2',d:['9','6','3']},
+  {ctx:'y is proportional to (x + 1)\u00b2. When x = 2, y = 18.',q:'y = k(x+1)^2',ask:'Find y when x = 4',correct:'50',d:['32','72','25']},
+  {ctx:'y is inversely proportional to (x \u2212 1). When x = 3, y = 5.',q:'y = \\dfrac{k}{x-1}',ask:'Find k',correct:'10',d:['5','15','\\dfrac{5}{2}']},
+  {ctx:'y is inversely proportional to (x \u2212 1). When x = 3, y = 5.',q:'y = \\dfrac{k}{x-1}',ask:'Find y when x = 6',correct:'2',d:['3','\\dfrac{5}{3}','1']},
+  {ctx:'R \u221d 1/A. When A = 0.5, R = 4.',q:'R = \\dfrac{k}{A}',ask:'Find R when A = 0.25',correct:'8',d:['2','16','1']},
+  {ctx:'y varies as x\u00b2 and inversely as z. When x = 3, z = 2, y = 9.',q:'y = \\dfrac{kx^2}{z}',ask:'Find k',correct:'2',d:['1','3','\\dfrac{9}{2}']},
+  {ctx:'y varies as x\u00b2 and inversely as z. k = 2.',q:'y = \\dfrac{2x^2}{z}',ask:'Find y when x = 4, z = 8',correct:'4',d:['8','2','16']},
+  {ctx:'F varies directly as m and inversely as r\u00b2. F = 10 when m = 5, r = 2.',q:'F = \\dfrac{km}{r^2}',ask:'Find k',correct:'8',d:['2','4','10']},
+  {ctx:'If y \u221d x^n and (2, 12) and (4, 48) lie on the curve.',q:'y = kx^n',ask:'Find n',correct:'2',d:['3','1','4']},
+  {ctx:'If y \u221d x^n and (1, 5) and (2, 40) lie on the curve.',q:'y = kx^n',ask:'Find n',correct:'3',d:['2','4','8']},
+  {ctx:'y = ax + b. When x = 1, y = 5. When x = 3, y = 11.',q:'y = ax + b',ask:'Find a',correct:'3',d:['2','4','5']},
+  {ctx:'y = ax + b. When x = 1, y = 5. When x = 3, y = 11.',q:'y = ax + b',ask:'Find b',correct:'2',d:['3','1','5']},
+  {ctx:'y = ax\u00b2 + b. When x = 0, y = 3. When x = 2, y = 11.',q:'y = ax^2 + b',ask:'Find a',correct:'2',d:['4','1','3']},
+  {ctx:'When x triples, y is multiplied by 9. y \u221d x^n.',q:'',ask:'State the value of n',correct:'2',d:['3','9','\\dfrac{1}{2}']},
+  {ctx:'When x is halved, y is multiplied by 4. y \u221d x^n.',q:'',ask:'State the value of n',correct:'-2',d:['2','-1','4']},
+  {ctx:'a : b = 2 : 5 and b : c = 3 : 7.',q:'',ask:'Find a : b : c',correct:'6 : 15 : 35',d:['2 : 5 : 7','2 : 3 : 7','6 : 15 : 21']},
+  {ctx:'x : y = 4 : 3 and x + y = 35.',q:'',ask:'Find x',correct:'20',d:['15','12','28']},
+  {ctx:'After a 25% increase, a value becomes 200.',q:'',ask:'Original value',correct:'160',d:['150','175','180']},
+  {ctx:'A quantity decreases by 20% then increases by 20%.',q:'',ask:'Net percentage change',correct:'-4\\%',d:['0\\%','+4\\%','-2\\%']},
+  {ctx:'\u00a35000 is invested at 3% compound interest per year.',q:'',ask:'Value after 4 years (2 d.p.)',correct:'\u00a35627.54',d:['\u00a35600','\u00a35612','\u00a35636.36']},
+  {ctx:'y \u221d x. If x increases by 50%, what happens to y?',q:'',ask:'Percentage change in y',correct:'+50\\%',d:['+25\\%','+100\\%','+75\\%']},
+  {ctx:'y \u221d x\u00b2. If x increases by 50%, what happens to y?',q:'',ask:'Percentage change in y',correct:'+125\\%',d:['+50\\%','+100\\%','+225\\%']},
+  {ctx:'y \u221d 1/x. If x doubles, what happens to y?',q:'',ask:'y is multiplied by',correct:'\\dfrac{1}{2}',d:['2','\\dfrac{1}{4}','4']},
+  {ctx:'y \u221d 1/x\u00b2. If x triples, what happens to y?',q:'',ask:'y is multiplied by',correct:'\\dfrac{1}{9}',d:['\\dfrac{1}{3}','9','3']},
+  {ctx:'y \u221d \u221ax. If x quadruples, what happens to y?',q:'',ask:'y is multiplied by',correct:'2',d:['4','\\dfrac{1}{2}','16']},
+  {ctx:'If y = kx^n, and doubling x quadruples y.',q:'',ask:'n = ?',correct:'2',d:['4','\\dfrac{1}{2}','1']},
+  {ctx:'If y = kx^n, and tripling x multiplies y by 27.',q:'',ask:'n = ?',correct:'3',d:['9','\\dfrac{1}{3}','27']},
+  {ctx:'\u00a38000 depreciates 15% per year.',q:'',ask:'Value after 3 years (nearest \u00a3)',correct:'\u00a34913',d:['\u00a34800','\u00a35100','\u00a34600']},
+  {ctx:'A bacteria colony doubles every 20 minutes. Start: 500.',q:'',ask:'Count after 1 hour',correct:'4000',d:['1500','3000','8000']},
+  {ctx:'y \u221d x^2. When x = a, y = b. Find y when x = a/2.',q:'',ask:'y = ?',correct:'\\dfrac{b}{4}',d:['\\dfrac{b}{2}','2b','4b']},
+  {ctx:'y \u221d 1/x. When x = a, y = b. Find y when x = a/3.',q:'',ask:'y = ?',correct:'3b',d:['\\dfrac{b}{3}','9b','\\dfrac{3b}{a}']},
+  {ctx:'Share \u00a3x in ratio 2 : 3. The difference between shares is \u00a340.',q:'',ask:'Find x',correct:'200',d:['100','120','160']},
+  {ctx:'a : b = 1 : 4. b : c = 2 : 3. a + b + c = 150.',q:'',ask:'Find c',correct:'\\dfrac{450}{11}',d:['50','60','\\dfrac{150}{3}']},
+  {ctx:'y is proportional to x\u00b2. x is proportional to z\u00b3. y = k when z = 1.',q:'y \\propto z^6',ask:'When z doubles, y is multiplied by',correct:'64',d:['8','32','16']},
+  {ctx:'P \u221d Q^a. When Q = 2, P = 12. When Q = 4, P = 48.',q:'P = kQ^a',ask:'Find a',correct:'2',d:['3','1','4']},
+]
+};
+
+let level='gcse',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,timerInterval=null,qStartTime=0;
+const BASE=100,T_K=0.15;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
+const p=new URLSearchParams(location.search);if(p.get('level')&&QUESTIONS[p.get('level')]){level=p.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+
+function startGame(){
+  questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;
+  document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';
+  const pr=document.getElementById('progress');pr.innerHTML='';
+  for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}
+  mfg('game_started',{game_slug:'proportion-blaster',level:level});
+  window._ggAbandoned=true;
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'proportion-blaster',level:level,questions_answered:qIdx})});}
+  show('game');showQ()
+}
+function showQ(){
+  const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;
+  document.getElementById('context').textContent=q.ctx;
+  const qEl=document.getElementById('question');qEl.innerHTML='';
+  if(q.q)rk(qEl,q.q);
+  document.getElementById('prompt').textContent=q.ask;
+  const opts=shuffle([q.correct,...q.d]);
+  const oEl=document.getElementById('options');oEl.innerHTML='';
+  opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
+    if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}
+    b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});
+  qStartTime=Date.now();
+  document.getElementById('timer').textContent='0s';
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    const s=Math.floor((Date.now()-qStartTime)/1000);
+    document.getElementById('timer').textContent=s+'s';
+  },200);
+}
+function handle(btn,q){
+  clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});
+  if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}
+  else{btn.classList.add('wrong');streak=0;pip('fail')}
+  mfg('question_answered',{game_slug:'proportion-blaster',level:level,correct:ok,question_index:qIdx+1});
+  document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)
+}
+function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
+function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
+function end(){clearInterval(timerInterval);const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) \u00b7 Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'proportion-blaster',level:level,score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('proportion-blaster',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('proportion-blaster',level,score);}}var _pbKey='proportion-blaster_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'proportion-blaster',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}show('results')}
+function showMenu(){show('menu')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

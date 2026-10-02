@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A maths escape room. Your teacher is out for 40 minutes. Pull off the perfect harmless prank — every step needs real maths.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/the-perfect-prank/">
+<meta property="og:title" content="The Perfect Prank — MaffsGames">
+<meta property="og:description" content="A maths escape room. Your teacher is out for 40 minutes. Pull off the perfect harmless prank — every step needs real maths.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/the-perfect-prank/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>The Perfect Prank — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#11131a;--surface:#191c26;--surface-alt:#212533;--border:#2e3446;
+--text:#e8ecf5;--muted:#8b94ab;
+--accent:#f5a524;--accent-dim:rgba(245,165,36,0.14);
+--green:#3fb950;--green-dim:rgba(63,185,80,0.14);
+--red:#f04b4b;--red-dim:rgba(240,75,75,0.14);
+--blue:#5b9bf5;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+body.accessible{font-family:'Outfit',Verdana,sans-serif;letter-spacing:.02em;line-height:1.85}
+.wrap{max-width:900px;margin:0 auto;padding:14px 16px 40px}
+.back-link{display:inline-block;color:var(--muted);text-decoration:none;font-size:13px;margin-bottom:10px}
+.back-link:hover{color:var(--text)}
+.a11y-toggle{position:fixed;top:10px;right:10px;z-index:120;background:var(--surface-alt);color:var(--muted);border:1px solid var(--border);border-radius:8px;width:34px;height:34px;font-weight:700;cursor:pointer;font-family:inherit}
+.a11y-toggle.active{background:var(--accent);color:#11131a;border-color:var(--accent)}
+
+/* ---- HUD ---- */
+.hud{display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 14px;margin-bottom:14px;position:sticky;top:8px;z-index:60;flex-wrap:wrap}
+.clock-box{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:var(--accent);min-width:104px;letter-spacing:.02em}
+.clock-box.low{color:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.45}}
+.hud-meta{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.acts{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.act-pip{width:26px;height:26px;border-radius:7px;background:var(--surface-alt);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted)}
+.act-pip.done{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+.act-pip.now{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+
+/* ---- screens ---- */
+.screen{display:none}
+.screen.active{display:block}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px}
+h1{font-size:32px;font-weight:800;line-height:1.15;margin-bottom:4px}
+h1 .sub{display:block;font-size:13px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.lede{color:var(--muted);line-height:1.75;margin-bottom:14px}
+.story{background:var(--surface-alt);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:16px;line-height:1.75}
+.story em{color:var(--accent);font-style:normal;font-weight:600}
+.note{background:#f7f1d8;color:#33302a;border-radius:4px;padding:14px 16px;font-family:'Outfit',sans-serif;box-shadow:0 3px 10px rgba(0,0,0,.35);transform:rotate(-.7deg);margin:14px auto;max-width:420px;line-height:1.6}
+.note .hand{font-weight:600}
+.note .scrawl{font-size:12px;color:#6b6558;margin-top:8px;font-style:italic}
+
+.btn{display:inline-block;padding:13px 26px;border-radius:10px;border:none;background:var(--accent);color:#11131a;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;transition:filter .15s}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn.ghost:hover{color:var(--text);border-color:var(--muted)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+
+/* ---- scene ---- */
+.scene{background:var(--surface-alt);border:1px solid var(--border);border-radius:12px;padding:10px;margin-bottom:14px}
+.scene svg{width:100%;height:auto;display:block;border-radius:8px}
+.hot{cursor:pointer}
+.hot:hover .hot-hit{stroke:var(--accent);stroke-width:2.5;opacity:1}
+.hot-hit{fill:transparent;stroke:var(--accent);stroke-width:1.5;opacity:0;stroke-dasharray:5 4;transition:opacity .15s}
+.hot.found .hot-hit{opacity:1;stroke:var(--green);stroke-dasharray:none}
+
+.notches{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.notch{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;line-height:1.15}
+.notch small{display:block;font-size:9.5px;color:var(--muted);font-weight:500}
+.notch:hover{border-color:var(--accent);color:var(--accent)}
+.notch.sel{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+.room-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;gap:10px;flex-wrap:wrap}
+.objects{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.obj{background:var(--surface-alt);border:1px solid var(--border);border-radius:10px;padding:11px 10px;cursor:pointer;text-align:left;font-family:inherit;color:var(--text);transition:all .12s}
+.obj:hover{border-color:var(--accent)}
+.obj.done{border-color:var(--green);background:var(--green-dim)}
+.obj.done.empty{border-color:var(--border);background:var(--surface-alt);opacity:.5}
+.obj-n{display:block;font-weight:700;font-size:13.5px}
+.obj-w{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+.search-out{display:none;margin-top:12px;border-radius:10px;padding:12px 15px;font-size:14px;line-height:1.6}
+.search-out.show{display:block}
+.search-out.got{background:var(--green-dim);border:1px solid var(--green)}
+.search-out.nowt{background:var(--surface-alt);border:1px solid var(--border);color:var(--muted)}
+.search-out b{display:block;margin-bottom:3px;color:var(--text)}
+.notebook{display:flex;flex-direction:column;gap:8px}
+.clue{background:var(--surface-alt);border-left:3px solid var(--accent);border-radius:0 9px 9px 0;padding:10px 14px;font-size:14px;line-height:1.6}
+.clue-src{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.locks{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.lockbtn{background:var(--surface-alt);border:1px solid var(--border);border-radius:10px;padding:10px 16px;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;color:var(--text)}
+.lockbtn:hover{border-color:var(--accent)}
+.lockbtn.sel{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.lockbtn.open{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+.lock-brief{background:var(--surface-alt);border-radius:10px;padding:12px 15px;margin-bottom:12px;font-size:14px;line-height:1.65;color:var(--muted)}
+.pick-prompt{color:var(--muted);font-style:italic;padding:14px 0;text-align:center}
+.clue-head{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;margin-bottom:8px}
+.clue-head span{color:var(--accent)}
+.cands{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cand{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;padding:12px 18px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all .15s}
+.cand:hover{border-color:var(--accent);color:var(--accent)}
+.cand.out{opacity:.35;text-decoration:line-through;color:var(--muted);border-color:var(--border)}
+.findings{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;min-height:34px}
+.finding{background:var(--green-dim);border:1px solid var(--green);color:var(--green);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600}
+.finding .v{font-family:'JetBrains Mono',monospace;font-weight:700}
+.hint-empty{color:var(--muted);font-size:13px;font-style:italic;padding:6px 0}
+
+/* ---- instruments ---- */
+.instrument{background:var(--surface-alt);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:12px;text-align:center}
+.instrument-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;margin-bottom:12px}
+.keypad{display:inline-grid;grid-template-columns:repeat(3,58px);gap:8px}
+.keypad button{height:52px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;cursor:pointer}
+.keypad button:hover{border-color:var(--accent);color:var(--accent)}
+.code-display{font-family:'JetBrains Mono',monospace;font-size:34px;font-weight:700;letter-spacing:.22em;color:var(--accent);margin-bottom:14px;min-height:44px}
+.code-display.err{color:var(--red);animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+.slider-rig{display:flex;align-items:center;justify-content:center;gap:22px;margin:6px 0 4px}
+input[type=range]{-webkit-appearance:none;appearance:none;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;background:var(--border);border-radius:3px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);margin-top:-8px}
+input[type=range]::-moz-range-track{height:6px;background:var(--border);border-radius:3px}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border:none;border-radius:50%;background:var(--accent)}
+.readout{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:var(--accent)}
+.readout small{font-size:14px;color:var(--muted);font-weight:600}
+
+.dials{display:flex;gap:10px;justify-content:center;margin-bottom:14px}
+.dial{display:flex;flex-direction:column;align-items:center;gap:4px}
+.dial button{width:44px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;font-size:13px;font-family:inherit}
+.dial button:hover{color:var(--accent);border-color:var(--accent)}
+.dial .v{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;width:44px;height:52px;line-height:52px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--accent)}
+
+/* ---- hints ---- */
+.hints{margin-top:12px}
+.hint-btn{background:transparent;border:1px dashed var(--border);color:var(--muted);border-radius:9px;padding:9px 16px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.hint-btn:hover{border-color:var(--accent);color:var(--accent)}
+.hint-out{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.hint{background:var(--accent-dim);border:1px solid rgba(245,165,36,.35);border-left:3px solid var(--accent);border-radius:0 9px 9px 0;padding:11px 14px;font-size:14px;line-height:1.65;text-align:left}
+.hint b{color:var(--accent)}
+
+.feedback{border-radius:10px;padding:13px 16px;margin-top:12px;font-size:14.5px;line-height:1.65;display:none;text-align:left}
+.feedback.show{display:block}
+.feedback.good{background:var(--green-dim);border:1px solid var(--green)}
+.feedback.bad{background:var(--red-dim);border:1px solid var(--red)}
+.feedback b{display:block;margin-bottom:3px}
+
+/* ---- finale ---- */
+.aftermath{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:16px 0}
+.after-item{background:var(--surface-alt);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.after-item .ico{font-size:28px;display:block;margin-bottom:6px}
+.after-item .t{font-weight:700;font-size:14px;margin-bottom:2px}
+.after-item .d{font-size:12.5px;color:var(--muted);line-height:1.5}
+.teacher-turn{background:linear-gradient(135deg,var(--accent-dim),transparent);border:1px solid var(--accent);border-radius:12px;padding:20px;text-align:center;margin-top:16px}
+.teacher-turn .eq{font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:var(--accent);margin:12px 0;letter-spacing:.04em}
+
+.teacher-notes{margin-top:20px}
+.teacher-notes summary{cursor:pointer;color:var(--muted);font-size:13.5px;font-weight:600;padding:10px 0}
+.teacher-notes summary:hover{color:var(--text)}
+.teacher-notes table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13.5px}
+.teacher-notes th,.teacher-notes td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+.teacher-notes th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em}
+.teacher-notes code{font-family:'JetBrains Mono',monospace;color:var(--accent)}
+
+@media(max-width:640px){
+  h1{font-size:25px}
+  .wrap{padding:10px 12px 40px}
+  .card{padding:16px}
+  .clock-box{font-size:22px;min-width:88px}
+  .keypad{grid-template-columns:repeat(3,52px)}
+}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+<div class="wrap">
+<a href="../../" class="back-link">&larr; Back to Games</a>
+
+<!-- ============ BRIEFING ============ -->
+<div class="screen active" id="scrBrief">
+  <div class="card">
+    <h1><span class="sub">A MaffsGames Escape Room</span>The Perfect Prank</h1>
+    <p class="lede">Your teacher has gone to a staff briefing. Staff briefings last <strong>forty minutes</strong>. They have never, in the history of this school, finished early.</p>
+    <div class="story">
+      Forty minutes is enough time to pull off <em>the perfect prank</em>.<br><br>
+      There are rules. Nothing broken. Nothing that costs money. Nothing anyone would actually be upset about. The goal is a teacher who walks in, works out what has happened, and has to admit it was <em>quite good, actually</em>.<br><br>
+      Everything you need is in this room. Nothing in here will help you unless you can do the maths.
+    </div>
+    <div class="note">
+      <div class="hand">Four locks. No particular order.</div>
+      <div class="hand" style="margin-top:8px">The drawer. The chair. The clock. And one of your own to leave behind.</div>
+      <div class="scrawl">Search everything first. None of the notes say which lock they belong to &mdash; that is for you to work out. Wrong answers cost a minute.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="beginRoom()">Start the clock</button>
+      <button class="btn ghost" id="resumeBtn" style="display:none" onclick="resumeRoom()">Resume</button>
+    </div>
+  </div>
+  <details class="teacher-notes">
+    <summary>&#128218; Teacher notes &mdash; answers, hints, curriculum</summary>
+    <div class="card" style="margin-top:8px">
+      <p class="lede" style="margin-bottom:6px">Roughly 35&ndash;40 minutes. Designed for one device per group of three or four. Every wrong code costs 60 seconds, so guessing is punished &mdash; that is deliberate.</p>
+      <table>
+        <tr><th>Lock</th><th>What it needs</th><th>Answer</th><th>Where the difficulty is</th></tr>
+        <tr><td>The drawer</td><td>Five constraints across three notes; construct a 3-digit number</td><td><code>432</code></td><td>There is no candidate list. They must reason from "first digit is double the last" and parity to fix the units digit, then use the digit sum</td></tr>
+        <tr><td>The chair</td><td>Two bounds over a discrete set. &frac34; of 52 fixes the floor, &frac34; of 60 fixes the ceiling, and the lift locks at only five heights</td><td><code>42 cm</code></td><td>Four notes, none sufficient alone, and the upper bound is itself a two-step chain. One bound alone leaves three candidate notches and no way to choose</td></tr>
+        <tr><td>The clock</td><td>Angles on a straight line to get x, then a clock-angle</td><td><code>2:30</code></td><td>Two-stage: derive x = 105&deg; from the whiteboard, then realise the hour hand moves. 120&deg; is the near-miss</td></tr>
+        <tr><td>Your padlock</td><td>Find both missing constants, then solve the equation</td><td><code>1729</code></td><td>The equation is unusable until the bookshelf and the trophy have both been searched</td></tr>
+      </table>
+      <p class="lede" style="margin-top:14px;margin-bottom:0">Each act has three hints: a nudge, then the method, then the answer. Taking hints costs nothing &mdash; only wrong codes cost time. <strong>1729</strong> is the taxicab number, the smallest number expressible as the sum of two cubes in two different ways (1&sup3;+12&sup3; and 9&sup3;+10&sup3;). There is a good five-minute Ramanujan story in it if you want one for the debrief.</p>
+    </div>
+  </details>
+</div>
+
+<!-- ============ PLAY ============ -->
+<div class="screen" id="scrPlay">
+  <div class="hud">
+    <div class="clock-box" id="timer">40:00</div>
+    <div class="hud-meta" id="actLabel">Act 1</div>
+    <div class="hud-meta" style="color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0">Room 12 &middot; Monday, period 3</div>
+    <div class="acts">
+      <div class="act-pip now" id="pip0">1</div>
+      <div class="act-pip" id="pip1">2</div>
+      <div class="act-pip" id="pip2">3</div>
+      <div class="act-pip" id="pip3">4</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="room-head">
+      <h2 style="margin:0">The room</h2>
+      <span class="hud-meta" id="searchCount"></span>
+    </div>
+    <div class="objects" id="objects"></div>
+    <div class="search-out" id="searchOut"></div>
+  </div>
+
+  <div class="card">
+    <h2>What you have written down</h2>
+    <div class="notebook" id="notebook"></div>
+  </div>
+
+  <div class="card">
+    <h2>The locks</h2>
+    <p class="lede" style="margin-bottom:12px">Nothing tells you which note belongs to which lock. That is the job.</p>
+    <div class="locks" id="locks"></div>
+    <div id="lockPanel"></div>
+    <div class="feedback" id="feedback"></div>
+    <div class="hints" id="hintWrap" style="display:none">
+      <button class="hint-btn" id="hintBtn" onclick="takeHint()">Stuck? Take a hint</button>
+      <div class="hint-out" id="hintOut"></div>
+    </div>
+  </div>
+
+<!-- ============ FINALE ============ -->
+<div class="screen" id="scrEnd">
+  <div class="card">
+    <h1><span class="sub" id="endSub">Prank complete</span><span id="endTitle">They're coming back.</span></h1>
+    <div class="story" id="endStory"></div>
+    <div class="aftermath">
+      <div class="after-item"><span class="ico">&#128274;</span><div class="t">The drawer</div><div class="d">Locked. Their emergency chocolate is inside.</div></div>
+      <div class="after-item"><span class="ico">&#129681;</span><div class="t">The chair</div><div class="d">15% lower. Just enough to be unsettling.</div></div>
+      <div class="after-item"><span class="ico">&#128337;</span><div class="t">The clock</div><div class="d">Reading half past two. It is not half past two.</div></div>
+      <div class="after-item"><span class="ico">&#128221;</span><div class="t">The note</div><div class="d">On the board, in the middle, in big letters.</div></div>
+    </div>
+    <div class="teacher-turn">
+      <div class="hud-meta">The note on the board</div>
+      <p style="margin-top:10px">Sir / Miss &mdash; your chocolate is in the drawer.<br>The padlock code is the value of <em>x</em>.</p>
+      <div class="eq">4x &minus; 3000 = 3x &minus; 1271</div>
+      <p style="color:var(--muted);font-size:14px">Take your time. We'll wait.</p>
+    </div>
+    <div id="endStats" class="lede" style="margin-top:18px;text-align:center"></div>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn" onclick="restart()">Play again</button>
+      <a class="btn ghost" href="../../" style="text-decoration:none;line-height:1.4">More games</a>
+    </div>
+  </div>
+</div>
+
+</div>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+
+<script>
+// ============================================================
+//  THE PERFECT PRANK — a narrative maths escape room
+//
+//  Design rule this is built to: the maths is the ACTION, not a
+//  toll gate. There is no "a question appears, you answer it".
+//  Every act is an instrument that has to be SET correctly, and
+//  knowing where to set it is the maths.
+// ============================================================
+const SLUG='the-perfect-prank', LEVEL='ks3';
+const TOTAL=40*60, PENALTY=60, SAVE_KEY='mfg_prank_save';
+
+
+// ---------- the room ----------
+// One pool of clues. Nothing says which lock a clue belongs to - working that
+// out is the puzzle. Three objects hold nothing, because a search where
+// everything is a clue is not a search.
+const OBJECTS=[
+ {id:'timetable', name:'Timetable',      where:'pinned by the door',    clue:null, flavour:'Monday, period 3. You are in <b>Room 12</b> until the bell. The rest of the week is somebody else&rsquo;s problem.'},
+ {id:'board',     name:'Whiteboard',     where:'not fully rubbed off',  clue:'Left over from period 2: three angles on a straight line, marked 40&deg;, 35&deg; and <b>x</b>.'},
+ {id:'monitor',   name:'Monitor',        where:'sticky note',           clue:'"Three different digits. They add up to nine."'},
+ {id:'register',  name:'Register',       where:'inside the cover',      clue:'"It is even, and the first digit is double the last."'},
+ {id:'mug',       name:'Mug',            where:'written on the base',   clue:'"Under five hundred."'},
+ {id:'cabinet',   name:'Filing cabinet', where:'taped to the side',    clue:'"Get it lower than the staffroom chair, or they will spot it the moment they sit down."'},
+ {id:'seat',      name:'Under the seat',  where:'moulded into the plastic', clue:'GAS LIFT &mdash; NOTCHED. Locks at 28, 35, 42, 49 and 56 cm only.'},
+ {id:'tidy',      name:'Desk tidy',       where:'folded under a stapler', clue:'"Do not take it below three quarters of where it is now, or it looks obviously wrong."'},
+ {id:'notice',    name:'Noticeboard',    where:'furniture audit',       clue:'Staffroom chairs sit at three quarters the height of the lab stools.'},
+ {id:'stools',    name:'Equipment list', where:'clipboard by the sink', clue:'Lab stools &mdash; fixed height, 60 cm.'},
+ {id:'bin',       name:'Bin',            where:'crumpled near the top', clue:'"Set the hands <b>x</b> apart. You worked x out in period 2."'},
+ {id:'shelf',     name:'Bookshelf',      where:'order slip',            clue:'Exercise books ordered this year: <b>3000</b>.'},
+ {id:'trophy',    name:'Reading trophy', where:'engraved plate',        clue:'Books read by this form last term: <b>1271</b>.'},
+ {id:'plant',     name:'Spider plant',   where:'on the windowsill',     clue:null, flavour:'Half dead. Someone has been watering it with the dregs of a coffee.'},
+ {id:'coats',     name:'Coat hooks',     where:'back wall',             clue:null, flavour:'Three coats, one of which has been there since October and belongs to nobody.'},
+ {id:'radiator',  name:'Radiator',       where:'under the window',      clue:null, flavour:'Clanking. Always clanking. Nothing behind it but dust.'}
+];
+
+const LOCKS=[
+ {id:'drawer', name:'The drawer',  kind:'code',   digits:3, answer:'432',
+  brief:"A three-digit combination lock. Nothing on it says what it wants \u2014 that is somewhere in the room.",
+  hints:[
+    "Several notes describe a number without ever naming it. Gather all of them before you try anything \u2014 there are more than you think.",
+    "Three different digits, adding to 9, even, under 500, and the first digit is double the last. Work from the strongest constraint: which digit can the last one be, if the first is double it and the number is even?",
+    "Last digit even and first is double it: if the last is 2 the first is 4, and the digits must total 9, so the middle is 3. Check the rest: 432 is even, under 500, all digits different. <b>432</b>."
+  ]},
+  {id:'chair', name:'The chair',   kind:'notch', answer:42,
+  brief:"A gas-lift chair, currently at 52 cm. It only locks at certain heights, and two separate notes fence in where it can end up.",
+  hints:[
+    "The lift will not stop just anywhere. Find what heights it actually locks at, then find what fences that list in from above and below.",
+    "Below: not under three quarters of 52. Above: lower than the staffroom chair &mdash; and the staffroom chair is three quarters of the 60 cm lab stool.",
+    "Three quarters of 52 is 39, so no lower than 39. The staffroom chair is three quarters of 60, which is 45, so it must be under 45. The only notch between them is <b>42 cm</b>."
+  ]},
+ {id:'clock', name:'The clock',   kind:'clock',  answer:105,
+  brief:"An analogue clock nobody has checked in years. Currently reading 2:00.",
+  hints:[
+    "The bin tells you what to set. The whiteboard tells you what that is.",
+    "Angles on a straight line add to 180&deg;. So x = 180 &minus; 40 &minus; 35 = 105&deg;. Now find a time where the hands sit 105&deg; apart.",
+    "Careful: at half past, the hour hand is <i>halfway</i> between the 2 and the 3, not still on the 2. That makes the hands three and a half hours apart on the face \u2014 3.5 &times; 30 = 105&deg;. <b>Set it to 2:30.</b>"
+  ]},
+ {id:'padlock', name:'Your padlock', kind:'code', digits:4, answer:'1729',
+  brief:"Your own padlock, and the equation you will leave on the board. Two numbers in it are blank until you find them.",
+  hints:[
+    "The equation is 4x &minus; \u25a1 = 3x &minus; \u25b3. Both blanks are numbers written somewhere in this room.",
+    "The bookshelf order slip and the reading trophy. Once you have both, take 3x from each side.",
+    "4x &minus; 3000 = 3x &minus; 1271 gives x &minus; 3000 = &minus;1271, so x = 3000 &minus; 1271 = <b>1729</b>."
+  ]}
+];
+
+const TOTAL_LOCKS=LOCKS.length;
+let openLocks={}, foundIds={}, activeLock=null, hintsUsed={}, struck={};
+
+// ---------- room rendering ----------
+function renderRoom(){
+  const searched=OBJECTS.filter(o=>foundIds[o.id]).length;
+  document.getElementById('searchCount').textContent=searched+' of '+OBJECTS.length+' searched';
+  document.getElementById('objects').innerHTML=OBJECTS.map(o=>
+    `<button class="obj${foundIds[o.id]?' done':''}${foundIds[o.id]&&!o.clue?' empty':''}"
+      onclick="searchObj('${o.id}')">
+      <span class="obj-n">${o.name}</span><span class="obj-w">${o.where}</span>
+    </button>`).join('');
+  const clues=OBJECTS.filter(o=>foundIds[o.id]&&o.clue);
+  document.getElementById('notebook').innerHTML = clues.length
+    ? clues.map(o=>`<div class="clue"><span class="clue-src">${o.name}</span>${o.clue}</div>`).join('')
+    : '<div class="hint-empty">Nothing written down yet. Search the room.</div>';
+  document.getElementById('locks').innerHTML=LOCKS.map((l,i)=>
+    `<button class="lockbtn${openLocks[l.id]?' open':''}${activeLock===i?' sel':''}"
+      onclick="pickLock(${i})">${openLocks[l.id]?'&#128275;':'&#128274;'} ${l.name}</button>`).join('');
+  const n=Object.keys(openLocks).length;
+  document.getElementById('actLabel').textContent=n+' of '+TOTAL_LOCKS+' open';
+  for(let i=0;i<4;i++){
+    const p=document.getElementById('pip'+i);
+    p.className='act-pip'+(openLocks[LOCKS[i].id]?' done':'');
+    p.textContent=openLocks[LOCKS[i].id]?'\u2713':(i+1);
+  }
+}
+function searchObj(id){
+  const o=OBJECTS.find(x=>x.id===id);
+  if(!foundIds[id]){ foundIds[id]=true; save(); }
+  renderRoom();
+  const box=document.getElementById('searchOut');
+  box.className='search-out show '+(o.clue?'got':'nowt');
+  box.innerHTML='<b>'+o.name+'</b>'+(o.clue||o.flavour||'Nothing useful here.');
+}
+
+// ---------- locks ----------
+function pickLock(i){
+  activeLock=i;
+  renderRoom();
+  const l=LOCKS[i];
+  const panel=document.getElementById('lockPanel');
+  if(openLocks[l.id]){
+    panel.innerHTML=`<div class="instrument"><div class="instrument-label">${l.name}</div>
+      <p style="color:var(--green);font-weight:600">Already done.</p></div>`;
+    document.getElementById('hintWrap').style.display='none';
+    return;
+  }
+  document.getElementById('hintWrap').style.display='';
+  document.getElementById('hintOut').innerHTML='';
+  const used=hintsUsed[l.id]||0;
+  for(let k=0;k<used;k++) paintHint(l,k);
+  document.getElementById('hintBtn').style.display = used>=l.hints.length?'none':'';
+  document.getElementById('hintBtn').textContent = used?'Still stuck? Another hint':'Stuck? Take a hint';
+  panel.innerHTML=`<div class="lock-brief">${l.brief}</div>`+lockBody(l);
+  if(l.kind==='clock') wireClock();
+  hideFeedback();
+}
+function lockBody(l){
+  if(l.kind==='code') return `<div class="instrument">
+    <div class="instrument-label">${l.name} &mdash; ${l.digits} digits</div>
+    <div class="code-display" id="codeDisp">${'&mdash;'.repeat(l.digits)}</div>
+    <div class="keypad">
+      ${[1,2,3,4,5,6,7,8,9].map(n=>`<button onclick="key(${n})">${n}</button>`).join('')}
+      <button onclick="clearCode()" style="font-size:13px">CLR</button>
+      <button onclick="key(0)">0</button>
+      <button onclick="submitCode()" style="color:var(--green);font-size:13px">OK</button>
+    </div></div>`;
+  if(l.kind==='notch') return `<div class="instrument">
+    <div class="instrument-label">Chair height &mdash; the lift only locks at notches</div>
+    <div class="notches">
+      ${NOTCHES.map(n=>`<button class="notch" id="n${n}" onclick="setNotch(${n})">${n}<small>cm</small></button>`).join('')}
+    </div>
+    <div class="readout" style="margin-top:12px">Set to <span id="chairV">52</span> <small>cm</small></div>
+    <div class="btn-row" style="justify-content:center"><button class="btn" onclick="submitChair()">Let the chair down</button></div></div>`;
+  return `<div class="instrument">
+    <div class="instrument-label">Clock &mdash; drag the minute hand</div>
+    <svg viewBox="0 0 240 240" width="220" height="220" id="clockSvg" style="touch-action:none;cursor:grab">
+      <circle cx="120" cy="120" r="108" fill="var(--surface)" stroke="var(--border)" stroke-width="3"/>
+      <g id="ticks"></g>
+      <line id="hourHand" x1="120" y1="120" x2="120" y2="66" stroke="var(--text)" stroke-width="7" stroke-linecap="round"/>
+      <line id="minHand" x1="120" y1="120" x2="120" y2="42" stroke="var(--accent)" stroke-width="4.5" stroke-linecap="round"/>
+      <circle cx="120" cy="120" r="7" fill="var(--accent)"/>
+    </svg>
+    <div class="readout" style="margin-top:6px"><span id="clockV">2:00</span></div>
+    <div class="btn-row" style="justify-content:center"><button class="btn" onclick="submitClock()">Wind it to here</button></div></div>`;
+}
+
+// ---------- code locks ----------
+let code='';
+function key(n){ const l=LOCKS[activeLock]; if(code.length<l.digits){ code+=n; drawCode(); } }
+function clearCode(){ code=''; drawCode(); }
+function drawCode(){
+  const l=LOCKS[activeLock], d=document.getElementById('codeDisp'); if(!d)return;
+  d.classList.remove('err');
+  d.textContent=code.padEnd(l.digits,'\u2014').split('').join(' ');
+}
+function submitCode(){
+  const l=LOCKS[activeLock];
+  if(code.length<l.digits) return;
+  if(code===l.answer){ code=''; return solved(l); }
+  const d=document.getElementById('codeDisp');
+  d.classList.add('err'); setTimeout(()=>d.classList.remove('err'),400);
+  wrong(l.id==='drawer'?drawerWhy(code):padWhy(code));
+  code=''; drawCode();
+}
+function drawerWhy(c){
+  const ds=c.split('').map(Number), sum=ds.reduce((a,b)=>a+b,0);
+  if(new Set(ds).size<3) return "Two of those digits are the same. The monitor says all three are different.";
+  if(sum!==9) return "Those digits add to "+sum+". The monitor says nine.";
+  if(ds[2]%2) return "That is odd. The register says it is even.";
+  if(ds[0]!==ds[2]*2) return "The register says the first digit is double the last. "+ds[0]+" is not double "+ds[2]+".";
+  if(+c>=500) return "The mug says under five hundred.";
+  return "Not it. Check it against every note, not just the one you are looking at.";
+}
+function padWhy(c){
+  if(c==='4271') return "Check your signs \u2014 something got added where it should have been taken away.";
+  if(c==='1279') return "Right digits, wrong order. Recheck 3000 &minus; 1271.";
+  if(c==='3000'||c==='1271') return "That is one of the numbers <i>in</i> the equation, not the solution to it.";
+  return "That is not x. Get all the x terms on one side and the numbers on the other.";
+}
+
+// ---------- chair ----------
+const NOTCHES=[28,35,42,49,56];
+let notch=null;
+function setNotch(n){
+  notch=n;
+  NOTCHES.forEach(x=>{ const e=document.getElementById('n'+x); if(e)e.classList.toggle('sel',x===n); });
+  const v=document.getElementById('chairV'); if(v) v.textContent=n;
+}
+function submitChair(){
+  if(notch===null) return;
+  if(notch===42) return solved(LOCKS[activeLock]);
+  const why = notch<39
+    ? notch+" cm is below three quarters of 52. The desk tidy note rules that out."
+    : notch+" cm is not under the staffroom chair. Work out what the staffroom chair actually is first.";
+  wrong(why);
+}
+
+// ---------- clock ----------
+let clockMin=0;
+function wireClock(){
+  const g=document.getElementById('ticks');
+  let t='';
+  for(let i=0;i<12;i++){
+    const a=i*30*Math.PI/180;
+    const x1=120+Math.sin(a)*94, y1=120-Math.cos(a)*94;
+    t+=`<text x="${x1.toFixed(1)}" y="${(y1+5).toFixed(1)}" text-anchor="middle" font-size="15" font-weight="600" fill="var(--muted)" font-family="Outfit">${i===0?12:i}</text>`;
+  }
+  g.innerHTML=t; clockMin=0; drawClock();
+  const svg=document.getElementById('clockSvg');
+  let dragging=false;
+  const setFrom=e=>{
+    const r=svg.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+    const pt=e.touches?e.touches[0]:e;
+    let ang=Math.atan2(pt.clientX-cx,cy-pt.clientY)*180/Math.PI;
+    if(ang<0)ang+=360;
+    clockMin=Math.round(ang/6)%60; drawClock();
+  };
+  svg.addEventListener('mousedown',e=>{dragging=true;setFrom(e);});
+  window.addEventListener('mousemove',e=>{if(dragging)setFrom(e);});
+  window.addEventListener('mouseup',()=>{dragging=false;});
+  svg.addEventListener('touchstart',e=>{dragging=true;setFrom(e);e.preventDefault();},{passive:false});
+  svg.addEventListener('touchmove',e=>{if(dragging){setFrom(e);e.preventDefault();}},{passive:false});
+  svg.addEventListener('touchend',()=>{dragging=false;});
+}
+function drawClock(){
+  const mAng=clockMin*6, hAng=60+clockMin*0.5;
+  const set=(id,ang,len)=>{
+    const a=ang*Math.PI/180, el=document.getElementById(id); if(!el)return;
+    el.setAttribute('x2',(120+Math.sin(a)*len).toFixed(1));
+    el.setAttribute('y2',(120-Math.cos(a)*len).toFixed(1));
+  };
+  set('minHand',mAng,78); set('hourHand',hAng,54);
+  const el=document.getElementById('clockV');
+  if(el) el.textContent='2:'+String(clockMin).padStart(2,'0');
+}
+function clockAngle(){
+  let d=Math.abs((clockMin*6)-(60+clockMin*0.5));
+  return d>180?360-d:d;
+}
+function submitClock(){
+  const d=clockAngle();
+  if(Math.abs(d-105)<0.6) return solved(LOCKS[activeLock]);
+  let why="The hands are "+d.toFixed(1)+"&deg; apart. That is not what the note asks for.";
+  if(Math.abs(d-120)<3) why="120&deg; is what you get if the hour hand still sits on the 2. By half past it has crept halfway to the 3 \u2014 that is the whole trap.";
+  wrong(why);
+}
+
+// ---------- shared ----------
+const SOLVE_TEXT={
+ drawer:"The drawer slides open. Chocolate: located. Also a spare padlock, which gives somebody an idea.",
+ chair:"Down it goes, 7 cm lower than it was. It looks completely normal. It is completely not normal.",
+ clock:"You wind the hands round to half past two. It is twenty to twelve in the morning.",
+ padlock:"The padlock snaps shut on the drawer. Someone writes the equation on the board in letters visible from the back row."
+};
+function solved(l){
+  openLocks[l.id]=true; save(); renderRoom();
+  const done=Object.keys(openLocks).length;
+  const more=done<TOTAL_LOCKS;
+  showFeedback('good','Open.',SOLVE_TEXT[l.id]+
+    '<div class="btn-row" style="margin-top:12px">'+
+    (more?'<button class="btn" onclick="closePanel()">Back to the room</button>'
+         :'<button class="btn" onclick="finish(true)">Sit down and look innocent \u2192</button>')+'</div>');
+  mfg('question_answered',{game_slug:SLUG,level:LEVEL,correct:true,question_index:done});
+  document.getElementById('hintWrap').style.display='none';
+}
+function closePanel(){
+  activeLock=null;
+  document.getElementById('lockPanel').innerHTML='<div class="pick-prompt">Pick a lock to work on.</div>';
+  document.getElementById('hintWrap').style.display='none';
+  hideFeedback(); renderRoom();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function wrong(why){
+  wrongs++; timeLeft=Math.max(0,timeLeft-PENALTY); paintTimer();
+  showFeedback('bad','Wrong \u2014 one minute gone.',why);
+  mfg('question_answered',{game_slug:SLUG,level:LEVEL,correct:false,question_index:Object.keys(openLocks).length});
+  save();
+  if(timeLeft<=0) finish(false);
+}
+function showFeedback(kind,head,body){
+  const f=document.getElementById('feedback');
+  f.className='feedback show '+kind;
+  f.innerHTML='<b>'+head+'</b>'+body;
+  requestAnimationFrame(()=>f.scrollIntoView({behavior:'smooth',block:'center'}));
+}
+function hideFeedback(){ document.getElementById('feedback').className='feedback'; }
+function paintHint(l,k){
+  const d=document.createElement('div');
+  d.className='hint'; d.innerHTML='<b>Hint '+(k+1)+'.</b> '+l.hints[k];
+  document.getElementById('hintOut').appendChild(d);
+}
+function takeHint(){
+  if(activeLock===null) return;
+  const l=LOCKS[activeLock], used=hintsUsed[l.id]||0;
+  if(used>=l.hints.length) return;
+  paintHint(l,used);
+  hintsUsed[l.id]=used+1;
+  const btn=document.getElementById('hintBtn');
+  if(used+1>=l.hints.length) btn.style.display='none'; else btn.textContent='Still stuck? Another hint';
+  save();
+}
+
+// ---------- timer / lifecycle ----------
+let timeLeft=TOTAL, timerId=null, wrongs=0;
+function paintTimer(){
+  const t=document.getElementById('timer'), m=Math.floor(timeLeft/60), s=timeLeft%60;
+  t.textContent=m+':'+String(s).padStart(2,'0');
+  t.classList.toggle('low',timeLeft<=300);
+}
+function tick(){ timeLeft--; paintTimer(); if(timeLeft%15===0)save(); if(timeLeft<=0)finish(false); }
+function show(id){ ['scrBrief','scrPlay','scrEnd'].forEach(s=>document.getElementById(s).classList.toggle('active',s===id)); }
+function beginRoom(){
+  timeLeft=TOTAL; openLocks={}; foundIds={}; activeLock=null; hintsUsed={}; wrongs=0; code='';
+  show('scrPlay'); renderRoom(); paintTimer(); closePanel();
+  clearInterval(timerId); timerId=setInterval(tick,1000);
+  mfg('game_started',{game_slug:SLUG,level:LEVEL});
+  window._ggAbandoned=true;
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:SLUG,level:LEVEL,questions_answered:Object.keys(openLocks).length});});}
+  save();
+}
+function finish(win){
+  clearInterval(timerId); window._ggAbandoned=false;
+  const used=TOTAL-timeLeft, hints=Object.values(hintsUsed).reduce((a,b)=>a+b,0);
+  const opened=Object.keys(openLocks).length;
+  document.getElementById('endSub').textContent=win?'Prank complete':'Out of time';
+  document.getElementById('endTitle').textContent=win?"They're coming back.":"Footsteps in the corridor.";
+  document.getElementById('endStory').innerHTML=win
+    ? "Forty minutes, four locks, one chair, and a clock nobody will trust again for a fortnight. The door handle turns.<br><br>Nothing is broken. Nothing cost anything. Nobody could reasonably be cross.<br><br>This is, by any measure, <em>the perfect prank</em>."
+    : "The briefing finished early. The briefing has <i>never</i> finished early.<br><br>You got "+opened+" of 4 locks open. Everything is half-done and the chair is at a height nobody can explain.";
+  const mm=Math.floor(used/60), ss=used%60;
+  document.getElementById('endStats').innerHTML='Time taken <b>'+mm+':'+String(ss).padStart(2,'0')+
+    '</b> &middot; wrong codes <b>'+wrongs+'</b> &middot; hints used <b>'+hints+'</b>';
+  document.querySelectorAll('.after-item').forEach((el,i)=>{ el.style.opacity=openLocks[LOCKS[i]?LOCKS[i].id:'']?1:.3; });
+  show('scrEnd');
+  localStorage.removeItem(SAVE_KEY);
+  if(win){
+    const score=Math.max(0,timeLeft);
+    mfg('game_completed',{game_slug:SLUG,level:LEVEL,score:score,questions_answered:4,questions_correct:4});
+    if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore(SLUG,LEVEL,score,4).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(SLUG,LEVEL,score);}}
+  }
+}
+function restart(){ localStorage.removeItem(SAVE_KEY); show('scrBrief'); document.getElementById('resumeBtn').style.display='none'; }
+
+// ---------- save / resume ----------
+function save(){
+  try{ localStorage.setItem(SAVE_KEY,JSON.stringify({timeLeft,openLocks,foundIds,hintsUsed,wrongs})); }catch(e){}
+}
+function resumeRoom(){
+  let s=null;
+  try{ s=JSON.parse(localStorage.getItem(SAVE_KEY)); }catch(e){}
+  if(!s) return beginRoom();
+  timeLeft=s.timeLeft; openLocks=s.openLocks||{}; foundIds=s.foundIds||{};
+  hintsUsed=s.hintsUsed||{}; wrongs=s.wrongs||0; activeLock=null; code='';
+  show('scrPlay'); renderRoom(); paintTimer(); closePanel();
+  clearInterval(timerId); timerId=setInterval(tick,1000);
+  mfg('game_started',{game_slug:SLUG,level:LEVEL});
+  window._ggAbandoned=true;
+}
+(function(){
+  let s=null;
+  try{ s=JSON.parse(localStorage.getItem(SAVE_KEY)); }catch(e){}
+  if(s&&s.timeLeft>0&&Object.keys(s.openLocks||{}).length<4){
+    const b=document.getElementById('resumeBtn');
+    b.style.display=''; b.textContent='Resume \u2014 '+Math.floor(s.timeLeft/60)+' min left';
+  }
+})();
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+Batch 4 - Gemini, 2026-08-26. One room, three locks, all sound as sent.
+Only the VERIFY lines were touched, both to enumerate the instrument's own range.
+What was changed and why: docs/escape-puzzle-bank.md, "Batch 4".
+
+Room 8 - The Heatwave Mutiny (KS3 / GCSE)
+=========================================
+
+ID:          patrol-lcm-timer
+LEVEL:       KS3 / GCSE
+TOPIC:       Number / Lowest common multiple
+INSTRUMENT:  Digital countdown timer, 1 to 200 minutes, whole minutes.
+CONTEXT:     Three head prefects patrol the corridors around the control room at different speeds. The only safe moment is the one where all three are back in the staffroom at once.
+CLUE:        "Patrol rota, from 12:00. A: a lap every 12 minutes. B: every 15. C: every 18. Set the timer to the first minute after 12:00 when the corridor is empty."
+ANSWER:      180
+AHA:         All three are back together only at a time that is a whole number of laps for each of them - the lowest common multiple, not the sum and not the product.
+MISCONCEPTION: 45 (adding 12, 15 and 18 as though the laps stack).
+SOLVE:       12 = 2^2 x 3, 15 = 3 x 5, 18 = 2 x 3^2.
+             LCM = 2^2 x 3^2 x 5.
+             = 180 minutes.
+TIME:        4
+VERIFY:      [m for m in range(1, 201) if m % 12 == 0 and m % 15 == 0 and m % 18 == 0]
+
+ID:          cube-surface-volume
+LEVEL:       KS3 / GCSE
+TOPIC:       Geometry / Surface area and volume
+INSTRUMENT:  Four-digit mechanical door keypad, 0000-9999.
+CONTEXT:     The control room door is locked, and the Head of Estates has left a note on the keypad for whoever keeps resetting it.
+CLUE:        "The code is the coolant tank's capacity in cubic centimetres. I am not telling you that. The tank is a perfect cube and its total surface area is 1350 square centimetres. Work."
+ANSWER:      3375
+AHA:         Surface area goes back to a length through a square root and forward to a volume through a cube - six faces first, then one face, then one edge, then the cube of it.
+MISCONCEPTION: 225 (dividing 1350 by 6 and entering the area of one face).
+SOLVE:       One face = 1350 / 6 = 225 square centimetres.
+             Edge = root 225 = 15 cm.
+             Volume = 15^3 = 3375 cubic centimetres.
+TIME:        3
+VERIFY:      [v for v in range(10000) for x in range(1, 50) if x**3 == v and 6 * x**2 == 1350]
+
+ID:          canteen-freezer-inequality
+LEVEL:       GCSE
+TOPIC:       Algebra / Inequalities, with a prime constraint
+INSTRUMENT:  Wire frequency tuner, 0 to 50 Hz, whole Hz.
+CONTEXT:     The override panel is a nest of coloured wires, each humming at its own frequency. The manual is specific, and the failsafe reroutes the canteen freezers.
+CLUE:        "Isolate the wire whose frequency f is prime and satisfies 20 < 3f - 5 < 32. Any other wire cuts the freezers."
+ANSWER:      11
+AHA:         Solving the double inequality leaves four whole frequencies, so the inequality alone does not identify a wire - the prime condition is doing the second half of the work.
+MISCONCEPTION: 12 (solving to f < 12.33 and taking the largest whole number in range, ignoring "prime").
+SOLVE:       20 < 3f - 5 < 32.
+             25 < 3f < 37.
+             8.33 < f < 12.33, so f is 9, 10, 11 or 12.
+             Only 11 is prime.
+TIME:        4
+VERIFY:      [f for f in range(51) if 20 < 3*f - 5 < 32 and f > 1 and all(f % d for d in range(2, f))]

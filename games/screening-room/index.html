@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Screening Room — False Positives and Base Rates — MaffsGames</title>
+<meta name="description" content="Why does a 99% accurate test give wrong results? Discover the base-rate effect with visual icon arrays. Free, curriculum-aligned for GCSE, A-Level, Core Maths and Level 4.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/screening-room/">
+<meta property="og:title" content="Screening Room — False Positives and Base Rates — MaffsGames">
+<meta property="og:description" content="Why does a 99% accurate test give wrong results? Discover the base-rate effect with visual icon arrays. Free, curriculum-aligned for GCSE, A-Level, Core Maths and Level 4.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/screening-room/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Screening Room — False Positives and Base Rates — MaffsGames">
+<meta name="twitter:description" content="Why does a 99% accurate test give wrong results? Discover the base-rate effect with visual icon arrays.">
+<meta name="twitter:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --border: #334155;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --accent: #14b8a6;
+  --accent-glow: rgba(20,184,166,0.15);
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.12);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.12);
+  --blue: #3b82f6;
+  --icon-grey: #4b5563;
+  --icon-condition: #3b82f6;
+  --icon-tp: #22c55e;
+  --icon-fp: #ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+
+/* Header */
+.header{width:100%;background:#0b1120;border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px}
+.back-link{color:var(--accent);text-decoration:none;font-size:13px;font-weight:600}
+.back-link:hover{text-decoration:underline}
+.game-title{font-weight:700;font-size:clamp(14px,3vw,18px);color:var(--text);letter-spacing:0.02em;flex:1}
+.game-title span{color:var(--accent)}
+
+/* Container */
+.container{width:100%;max-width:760px;padding:20px;flex:1;display:flex;flex-direction:column;gap:16px}
+
+/* Screens */
+.screen{display:none;flex-direction:column;gap:16px}
+.screen.active{display:flex}
+
+/* Start card */
+.start-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.start-icon{font-size:56px;margin-bottom:16px}
+.start-title{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;margin-bottom:12px}
+.start-desc{color:var(--text-dim);font-size:15px;line-height:1.7;margin-bottom:24px}
+.how-to{background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.15);border-radius:12px;padding:16px 20px;text-align:left;margin-bottom:24px}
+.how-to p{font-size:13px;color:var(--text-dim);margin-bottom:6px;line-height:1.5}
+.how-to p:last-child{margin-bottom:0}
+.how-to p::before{content:'-> ';color:var(--accent);font-weight:700}
+
+/* Level select */
+.tier-label{font-size:11px;color:var(--text-dim);font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;text-align:center}
+.level-select{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.level-btn{font-family:'Outfit',sans-serif;font-weight:600;font-size:13px;padding:10px 20px;border:2px solid var(--border);background:transparent;color:var(--text-dim);border-radius:10px;cursor:pointer;transition:all 0.2s}
+.level-btn:hover{border-color:var(--accent);color:var(--text)}
+.level-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.start-btn{font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;padding:14px 32px;border:none;border-radius:12px;background:var(--accent);color:#fff;cursor:pointer;transition:all 0.2s}
+.start-btn:hover{opacity:0.9;transform:scale(1.02)}
+
+/* Scorebar */
+.scorebar{display:flex;justify-content:space-between;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px}
+.score-item{text-align:center}
+.score-label{font-size:10px;color:var(--text-dim);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.score-val{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--text);margin-top:2px}
+
+/* Question card */
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
+.q-context{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.q-scenario{font-size:clamp(14px,3.5vw,16px);line-height:1.7;color:var(--text)}
+.q-prompt{font-size:14px;font-weight:700;color:var(--accent);margin-top:16px}
+
+/* Gut check */
+.gut-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gut-btn{font-family:'Outfit',sans-serif;font-weight:600;font-size:14px;padding:16px 12px;border:2px solid var(--border);background:var(--surface);color:var(--text);border-radius:12px;cursor:pointer;transition:all 0.2s;text-align:center}
+.gut-btn:hover{border-color:var(--accent);background:var(--accent-glow)}
+.gut-btn.correct{border-color:var(--green);background:var(--green-bg);color:var(--green)}
+.gut-btn.incorrect{border-color:var(--red);background:var(--red-bg);color:var(--red)}
+.gut-btn.reveal{border-color:var(--green);opacity:0.6}
+.gut-btn.disabled{pointer-events:none;opacity:0.5}
+.gut-btn .gut-range{font-size:11px;color:var(--text-dim);margin-top:4px;display:block}
+.gut-btn.correct .gut-range,.gut-btn.incorrect .gut-range{color:inherit;opacity:0.7}
+.gut-result{text-align:center;font-size:14px;margin-top:8px;font-weight:600}
+.gut-result.right{color:var(--green)}
+.gut-result.wrong{color:var(--red)}
+
+/* Icon array */
+.icon-array-container{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center}
+.icon-array-title{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px}
+.icon-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:1px;margin:0 auto 16px}
+.icon-grid.grid-10{width:calc(10 * 22px + 9px);gap:1px}
+.icon-grid.grid-25{width:calc(25 * 14px + 24px);gap:1px}
+.icon-grid.grid-100{width:calc(100 * 6px + 99px);gap:0px}
+.person-icon{position:relative;display:flex;align-items:center;justify-content:center;transition:background 0.3s,color 0.3s}
+.person-icon.size-large{width:20px;height:20px;font-size:14px}
+.person-icon.size-medium{width:12px;height:12px;font-size:8px;border-radius:2px}
+.person-icon.size-small{width:5px;height:5px;border-radius:50%}
+.person-icon.size-tiny{width:3px;height:3px;border-radius:50%}
+.person-icon{background:var(--icon-grey)}
+.person-icon.condition{background:var(--icon-condition)}
+.person-icon.true-positive{background:var(--icon-tp)}
+.person-icon.false-positive{background:var(--icon-fp)}
+.person-icon .mark{position:absolute;font-size:inherit;font-weight:700;color:#fff;line-height:1;opacity:0;transition:opacity 0.3s}
+.person-icon.true-positive .mark,.person-icon.false-positive .mark{opacity:1}
+.icon-legend{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:12px;font-size:12px;color:var(--text-dim)}
+.icon-legend-item{display:flex;align-items:center;gap:6px}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.icon-summary{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);margin-top:16px;padding-top:12px;border-top:1px solid var(--border);opacity:0;transition:opacity 0.5s}
+.icon-summary.visible{opacity:1}
+.continue-btn{font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;padding:12px 28px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;margin-top:12px;transition:all 0.2s;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.continue-btn.visible{opacity:1;pointer-events:auto}
+.continue-btn:hover{opacity:0.9}
+
+/* Calculate phase */
+.calc-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px}
+.calc-prompt{font-size:15px;font-weight:600;color:var(--text);margin-bottom:16px;line-height:1.6}
+.calc-input-row{display:flex;gap:10px;align-items:center;margin-bottom:16px}
+.calc-input{font-family:'JetBrains Mono',monospace;font-size:16px;padding:12px 16px;border:2px solid var(--border);border-radius:10px;background:#0f172a;color:var(--text);flex:1;outline:none;transition:border-color 0.2s}
+.calc-input:focus{border-color:var(--accent)}
+.calc-submit{font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;padding:12px 24px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;transition:all 0.2s}
+.calc-submit:hover{opacity:0.9}
+.calc-submit:disabled{opacity:0.4;cursor:not-allowed}
+.calc-hint{font-size:12px;color:var(--text-dim);margin-bottom:12px}
+.calc-result{margin-top:16px;padding:16px;border-radius:12px;display:none}
+.calc-result.correct{display:block;background:var(--green-bg);border:1px solid rgba(34,197,94,0.3)}
+.calc-result.incorrect{display:block;background:var(--red-bg);border:1px solid rgba(239,68,68,0.3)}
+.calc-result-title{font-weight:700;font-size:15px;margin-bottom:8px}
+.calc-result.correct .calc-result-title{color:var(--green)}
+.calc-result.incorrect .calc-result-title{color:var(--red)}
+.calc-explanation{font-size:13px;color:var(--text-dim);line-height:1.7}
+.calc-explanation .katex{font-size:0.95em!important}
+.bayes-box{margin-top:12px;padding:12px;background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.15);border-radius:8px}
+.bayes-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.bayes-formula{text-align:center;margin:8px 0}
+.next-phase-btn{font-family:'Outfit',sans-serif;font-weight:700;font-size:15px;padding:14px 32px;border:none;border-radius:12px;background:var(--accent);color:#fff;cursor:pointer;align-self:center;transition:all 0.2s;margin-top:8px}
+.next-phase-btn:hover{opacity:0.9}
+
+/* End screen */
+.end-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.end-title{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;margin-bottom:8px}
+.end-score{font-family:'JetBrains Mono',monospace;font-size:clamp(32px,8vw,48px);color:var(--accent);margin:16px 0}
+.end-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;text-align:center}
+.end-stat{background:rgba(20,184,166,0.06);border-radius:10px;padding:12px}
+.end-stat-label{font-size:11px;color:var(--text-dim);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.end-stat-val{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--text);margin-top:4px}
+.end-insight{background:rgba(20,184,166,0.06);border:1px solid rgba(20,184,166,0.15);border-radius:12px;padding:16px;text-align:left;margin-bottom:20px;font-size:13px;color:var(--text-dim);line-height:1.7}
+.end-insight strong{color:var(--accent)}
+.play-again-btn{font-family:'Outfit',sans-serif;font-weight:700;font-size:16px;padding:14px 32px;border:none;border-radius:12px;background:var(--accent);color:#fff;cursor:pointer;transition:all 0.2s}
+.play-again-btn:hover{opacity:0.9;transform:scale(1.02)}
+
+/* Leaderboard */
+.leaderboard{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}
+.lb-title{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);margin-bottom:12px;text-align:center;text-transform:uppercase;letter-spacing:1.5px}
+.lb-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(51,65,85,0.4);font-size:13px;color:var(--text-dim)}
+.lb-row:last-child{border-bottom:none}
+.lb-score{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:700}
+.lb-empty{text-align:center;color:#475569;font-size:13px;padding:12px}
+
+/* Progress pips */
+.progress{display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background 0.3s}
+.pip.done{background:var(--green)}.pip.partial{background:#f59e0b}.pip.fail{background:var(--red)}.pip.current{background:var(--accent);box-shadow:0 0 6px var(--accent)}
+
+/* Responsive */
+@media(max-width:500px){
+  .container{padding:12px}
+  .gut-options{grid-template-columns:1fr}
+  .end-stats{grid-template-columns:1fr}
+  .calc-input-row{flex-direction:column}
+  .calc-submit{width:100%}
+  .icon-grid.grid-100{width:100%}
+}
+
+/* Accessibility */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .q-scenario,body.accessible .calc-prompt,body.accessible .calc-explanation{line-height:2.0;max-width:65ch}
+body.accessible{background-color:#12141f !important}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct-mark::after{content:' \2713';font-size:0.85em;opacity:0.8}
+.incorrect-mark::after{content:' \2717';font-size:0.85em;opacity:0.8}
+
+/* KaTeX sizing */
+.katex{font-size:1em !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="header">
+  <a href="../../" class="back-link">&larr; Back to Games</a>
+  <div class="game-title"><span>SCREENING</span> ROOM</div>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+<div class="container">
+
+  <!-- START SCREEN -->
+  <div class="screen active" id="startScreen">
+    <div class="start-card">
+      <div class="start-icon">&#x1F9EA;</div>
+      <div class="start-title">SCREENING ROOM</div>
+      <div class="start-desc">Can you trust a positive test?<br>Explore the base-rate effect — why accurate tests can still give misleading results.</div>
+      <div class="how-to">
+        <p>Read a screening scenario and estimate how likely a positive result is real</p>
+        <p>Watch an icon array animation showing the natural frequencies</p>
+        <p>Calculate the exact probability — enter as a fraction, decimal or percentage</p>
+      </div>
+      <div class="tier-label">Level</div>
+      <div class="level-select">
+        <button class="level-btn active" data-level="gcse">GCSE</button>
+        <button class="level-btn" data-level="alevel">A-Level</button>
+        <button class="level-btn" data-level="core">Core Maths</button>
+        <button class="level-btn" data-level="level4">Level 4</button>
+      </div>
+      <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+      <div style="text-align:center;margin-top:16px">
+        <button class="start-btn" onclick="startGame()">Start &mdash; 8 Questions</button>
+      </div>
+    </div>
+    <div class="leaderboard">
+      <div class="lb-title">Top Scores</div>
+      <div id="lbList"><div class="lb-empty">No scores yet</div></div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div class="screen" id="gameScreen">
+    <div class="scorebar">
+      <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="scoreDisplay">0</div></div>
+      <div class="score-item"><div class="score-label">Question</div><div class="score-val" id="qDisplay">1/8</div></div>
+      <div class="score-item"><div class="score-label">Max</div><div class="score-val" id="maxDisplay">32</div></div>
+    </div>
+    <div class="progress" id="progress"></div>
+
+    <!-- Phase 1: Gut Check -->
+    <div id="phase1" style="display:none">
+      <div class="question-card">
+        <div class="q-context" id="qContext"></div>
+        <div class="q-scenario" id="qScenario"></div>
+        <div class="q-prompt">If someone tests positive, how likely is it they actually have the condition?</div>
+      </div>
+      <div class="gut-options" id="gutOptions">
+        <button class="gut-btn" data-gut="very_likely" onclick="handleGut(this)">Very likely<span class="gut-range">Over 75%</span></button>
+        <button class="gut-btn" data-gut="likely" onclick="handleGut(this)">Likely<span class="gut-range">25 &ndash; 75%</span></button>
+        <button class="gut-btn" data-gut="unlikely" onclick="handleGut(this)">Unlikely<span class="gut-range">5 &ndash; 25%</span></button>
+        <button class="gut-btn" data-gut="very_unlikely" onclick="handleGut(this)">Very unlikely<span class="gut-range">Under 5%</span></button>
+      </div>
+      <div class="gut-result" id="gutResult"></div>
+    </div>
+
+    <!-- Phase 2: Icon Array -->
+    <div id="phase2" style="display:none">
+      <div class="question-card">
+        <div class="q-context" id="qContext2"></div>
+        <div class="q-scenario" id="qScenario2"></div>
+      </div>
+      <div class="icon-array-container">
+        <div class="icon-array-title">Natural Frequency Visualisation</div>
+        <div class="icon-grid" id="iconGrid"></div>
+        <div class="icon-legend" id="iconLegend">
+          <div class="icon-legend-item"><div class="legend-dot" style="background:var(--icon-grey)"></div>No condition, not flagged</div>
+          <div class="icon-legend-item"><div class="legend-dot" style="background:var(--icon-condition)"></div><span id="legendCondLabel">Has condition</span></div>
+          <div class="icon-legend-item"><div class="legend-dot" style="background:var(--icon-tp)"></div>True positive &#x2713;</div>
+          <div class="icon-legend-item"><div class="legend-dot" style="background:var(--icon-fp)"></div>False positive &#x2717;</div>
+        </div>
+        <div class="icon-summary" id="iconSummary"></div>
+        <button class="continue-btn" id="continueBtn" onclick="showPhase3()">Continue</button>
+      </div>
+    </div>
+
+    <!-- Phase 3: Calculate -->
+    <div id="phase3" style="display:none">
+      <div class="calc-card">
+        <div class="calc-prompt" id="calcPrompt"></div>
+        <div class="calc-hint">Enter as a fraction (e.g. 27/105), decimal (e.g. 0.257) or percentage (e.g. 25.7%)</div>
+        <div class="calc-input-row">
+          <input type="text" class="calc-input" id="calcInput" placeholder="Your answer..." autocomplete="off">
+          <button class="calc-submit" id="calcSubmit" onclick="handleCalc()">Submit</button>
+        </div>
+        <div class="calc-result" id="calcResult">
+          <div class="calc-result-title" id="calcResultTitle"></div>
+          <div class="calc-explanation" id="calcExplanation"></div>
+          <div class="bayes-box" id="bayesBox" style="display:none">
+            <div class="bayes-label">Bayes' Theorem</div>
+            <div class="bayes-formula" id="bayesFormula"></div>
+          </div>
+        </div>
+      </div>
+      <button class="next-phase-btn" id="nextQuestionBtn" onclick="nextQuestion()" style="display:none">Next Question</button>
+    </div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div class="screen" id="endScreen">
+    <div class="end-card">
+      <div class="end-title">SESSION COMPLETE</div>
+      <div class="end-score" id="endScore">0</div>
+      <div class="end-stats" id="endStats"></div>
+      <div class="end-insight" id="endInsight"></div>
+      <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+      <button class="play-again-btn" onclick="backToStart()">Play Again</button>
+      <a href="../../" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">&larr; Back to Games</a>
+    </div>
+    <div class="leaderboard">
+      <div class="lb-title">Top Scores</div>
+      <div id="lbList2"><div class="lb-empty">No scores yet</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── QUESTION BANK ───
+var QUESTIONS = {
+gcse: [
+{id:"gcse_01",context:"School hearing test",scenario:"A school screens 1,000 students for hearing problems. About 30 students (3%) actually have a hearing issue. The test correctly identifies 90% of students with hearing problems, but incorrectly flags 8% of students with normal hearing.",population:1000,condition:{label:"Has hearing problem",count:30,baseRate:0.03},testPositive:{truePositive:27,falsePositive:78,total:105},testNegative:{falseNegative:3,trueNegative:892,total:895},sensitivity:0.90,specificity:0.92,gutCheckCorrect:"unlikely",answer:0.2571,answerFraction:"\\tfrac{27}{105}",answerSimplified:"\\tfrac{9}{35}",explanation:"105 students test positive. Only 27 actually have hearing problems. P = 27/105 \u2248 25.7%.",bayesWorking:null},
+{id:"gcse_02",context:"Nut allergy screening",scenario:"A primary school tests 500 children for nut allergies. About 10 children (2%) actually have a nut allergy. The blood test correctly detects 95% of children with allergies, but gives a false positive for 6% of children without allergies.",population:500,condition:{label:"Has nut allergy",count:10,baseRate:0.02},testPositive:{truePositive:9,falsePositive:29,total:38},testNegative:{falseNegative:1,trueNegative:461,total:462},sensitivity:0.95,specificity:0.94,gutCheckCorrect:"unlikely",answer:0.2368,answerFraction:"\\tfrac{9}{38}",answerSimplified:"\\tfrac{9}{38}",explanation:"38 children test positive. Only 9 actually have nut allergies. P = 9/38 \u2248 23.7%.",bayesWorking:null},
+{id:"gcse_03",context:"Colour blindness screening",scenario:"200 students take an online colour vision test. 16 of them (8%) actually have some form of colour blindness. The test correctly identifies 94% of colour-blind students, but incorrectly flags 5% of students with normal vision.",population:200,condition:{label:"Is colour blind",count:16,baseRate:0.08},testPositive:{truePositive:15,falsePositive:9,total:24},testNegative:{falseNegative:1,trueNegative:175,total:176},sensitivity:0.94,specificity:0.95,gutCheckCorrect:"likely",answer:0.625,answerFraction:"\\tfrac{15}{24}",answerSimplified:"\\tfrac{5}{8}",explanation:"24 students test positive. 15 are actually colour blind. P = 15/24 = 5/8 = 62.5%.",bayesWorking:null},
+{id:"gcse_04",context:"Sports drug test",scenario:"At a school athletics competition, 500 athletes are tested for banned substances. 5 athletes (1%) have actually used banned substances. The test correctly detects 98% of users, but gives a false positive for 4% of clean athletes.",population:500,condition:{label:"Used banned substance",count:5,baseRate:0.01},testPositive:{truePositive:5,falsePositive:20,total:25},testNegative:{falseNegative:0,trueNegative:475,total:475},sensitivity:0.98,specificity:0.96,gutCheckCorrect:"unlikely",answer:0.2,answerFraction:"\\tfrac{5}{25}",answerSimplified:"\\tfrac{1}{5}",explanation:"25 athletes test positive. Only 5 actually used banned substances. P = 5/25 = 1/5 = 20%.",bayesWorking:null},
+{id:"gcse_05",context:"Year 7 eyesight screening",scenario:"A school nurse screens 200 Year 7 students for vision problems. 20 students (10%) actually need glasses. The screening correctly identifies 85% of students who need glasses, but incorrectly flags 10% of students with normal vision.",population:200,condition:{label:"Needs glasses",count:20,baseRate:0.10},testPositive:{truePositive:17,falsePositive:18,total:35},testNegative:{falseNegative:3,trueNegative:162,total:165},sensitivity:0.85,specificity:0.90,gutCheckCorrect:"likely",answer:0.4857,answerFraction:"\\tfrac{17}{35}",answerSimplified:"\\tfrac{17}{35}",explanation:"35 students are flagged. 17 actually need glasses. P = 17/35 \u2248 48.6%.",bayesWorking:null},
+{id:"gcse_06",context:"Rapid strep throat test",scenario:"A GP sees 200 patients with sore throats in a week. About 50 of them (25%) actually have strep throat. The rapid test correctly detects 86% of strep cases, but gives a false positive for 5% of patients without strep.",population:200,condition:{label:"Has strep throat",count:50,baseRate:0.25},testPositive:{truePositive:43,falsePositive:8,total:51},testNegative:{falseNegative:7,trueNegative:142,total:149},sensitivity:0.86,specificity:0.95,gutCheckCorrect:"very_likely",answer:0.8431,answerFraction:"\\tfrac{43}{51}",answerSimplified:"\\tfrac{43}{51}",explanation:"51 patients test positive. 43 actually have strep. P = 43/51 \u2248 84.3%.",bayesWorking:null},
+{id:"gcse_07",context:"Shop security gate",scenario:"A shop's security gates check 1,000 customers leaving the store. 5 customers (0.5%) are actually carrying stolen items. The gates correctly detect 80% of stolen items, but trigger a false alarm for 3% of honest customers.",population:1000,condition:{label:"Carrying stolen item",count:5,baseRate:0.005},testPositive:{truePositive:4,falsePositive:30,total:34},testNegative:{falseNegative:1,trueNegative:965,total:966},sensitivity:0.80,specificity:0.97,gutCheckCorrect:"unlikely",answer:0.1176,answerFraction:"\\tfrac{4}{34}",answerSimplified:"\\tfrac{2}{17}",explanation:"34 customers trigger the alarm. Only 4 are actually shoplifting. P = 4/34 \u2248 11.8%.",bayesWorking:null},
+{id:"gcse_08",context:"Dyslexia screening questionnaire",scenario:"300 students complete a dyslexia screening questionnaire. About 30 students (10%) have dyslexia. The questionnaire correctly identifies 80% of dyslexic students, but also flags 15% of non-dyslexic students.",population:300,condition:{label:"Has dyslexia",count:30,baseRate:0.10},testPositive:{truePositive:24,falsePositive:41,total:65},testNegative:{falseNegative:6,trueNegative:229,total:235},sensitivity:0.80,specificity:0.85,gutCheckCorrect:"unlikely",answer:0.3692,answerFraction:"\\tfrac{24}{65}",answerSimplified:"\\tfrac{24}{65}",explanation:"65 students are flagged. 24 actually have dyslexia. P = 24/65 \u2248 36.9%.",bayesWorking:null},
+{id:"gcse_09",context:"Concert security metal detector",scenario:"At a music festival, 1,000 people pass through a metal detector. 2 people (0.2%) are carrying prohibited metal items. The detector catches 100% of prohibited items, but also triggers for 7% of people carrying harmless metal.",population:1000,condition:{label:"Carrying prohibited item",count:2,baseRate:0.002},testPositive:{truePositive:2,falsePositive:70,total:72},testNegative:{falseNegative:0,trueNegative:928,total:928},sensitivity:1.00,specificity:0.93,gutCheckCorrect:"very_unlikely",answer:0.0278,answerFraction:"\\tfrac{2}{72}",answerSimplified:"\\tfrac{1}{36}",explanation:"72 people trigger the detector. Only 2 have prohibited items. P = 2/72 \u2248 2.8%.",bayesWorking:null},
+{id:"gcse_10",context:"Primary school head lice check",scenario:"A school nurse checks 200 children for head lice. 30 children (15%) actually have lice. The visual check correctly spots 80% of cases, but mistakenly identifies 5% of lice-free children as having nits.",population:200,condition:{label:"Has head lice",count:30,baseRate:0.15},testPositive:{truePositive:24,falsePositive:9,total:33},testNegative:{falseNegative:6,trueNegative:161,total:167},sensitivity:0.80,specificity:0.95,gutCheckCorrect:"likely",answer:0.7273,answerFraction:"\\tfrac{24}{33}",answerSimplified:"\\tfrac{8}{11}",explanation:"33 children are flagged. 24 actually have lice. P = 24/33 \u2248 72.7%.",bayesWorking:null},
+{id:"gcse_11",context:"COVID rapid test during outbreak",scenario:"During a school outbreak, 500 students are tested with lateral flow tests. 100 students (20%) actually have COVID. The test correctly detects 80% of positive cases, but gives a false positive for 1% of students without COVID.",population:500,condition:{label:"Has COVID",count:100,baseRate:0.20},testPositive:{truePositive:80,falsePositive:4,total:84},testNegative:{falseNegative:20,trueNegative:396,total:416},sensitivity:0.80,specificity:0.99,gutCheckCorrect:"very_likely",answer:0.9524,answerFraction:"\\tfrac{80}{84}",answerSimplified:"\\tfrac{20}{21}",explanation:"84 students test positive. 80 actually have COVID. P = 80/84 \u2248 95.2%.",bayesWorking:null},
+{id:"gcse_12",context:"Home pregnancy test",scenario:"Of 1,000 women who take a home pregnancy test, 80 (8%) are actually pregnant. The test correctly detects 99% of pregnancies, but gives a false positive for 2% of non-pregnant women.",population:1000,condition:{label:"Pregnant",count:80,baseRate:0.08},testPositive:{truePositive:79,falsePositive:18,total:97},testNegative:{falseNegative:1,trueNegative:902,total:903},sensitivity:0.99,specificity:0.98,gutCheckCorrect:"very_likely",answer:0.8144,answerFraction:"\\tfrac{79}{97}",answerSimplified:"\\tfrac{79}{97}",explanation:"97 women test positive. 79 are actually pregnant. P = 79/97 \u2248 81.4%.",bayesWorking:null},
+{id:"gcse_13",context:"Spelling test screening for learning difficulty",scenario:"400 students take a standardised spelling test used to screen for specific learning difficulties. 20 students (5%) actually have a learning difficulty. The test correctly flags 90% of students with difficulties, but also flags 12% of students without difficulties.",population:400,condition:{label:"Has learning difficulty",count:20,baseRate:0.05},testPositive:{truePositive:18,falsePositive:46,total:64},testNegative:{falseNegative:2,trueNegative:334,total:336},sensitivity:0.90,specificity:0.88,gutCheckCorrect:"unlikely",answer:0.2813,answerFraction:"\\tfrac{18}{64}",answerSimplified:"\\tfrac{9}{32}",explanation:"64 students are flagged. Only 18 actually have a learning difficulty. P = 18/64 \u2248 28.1%.",bayesWorking:null},
+{id:"gcse_14",context:"Swimming pool water contamination test",scenario:"A leisure centre tests water samples from 200 swimming sessions. In 10 sessions (5%), the water quality actually falls below safe levels. The testing kit correctly detects 90% of unsafe samples, but falsely flags 8% of safe samples.",population:200,condition:{label:"Water unsafe",count:10,baseRate:0.05},testPositive:{truePositive:9,falsePositive:15,total:24},testNegative:{falseNegative:1,trueNegative:175,total:176},sensitivity:0.90,specificity:0.92,gutCheckCorrect:"unlikely",answer:0.375,answerFraction:"\\tfrac{9}{24}",answerSimplified:"\\tfrac{3}{8}",explanation:"24 tests flag unsafe water. Only 9 are genuinely unsafe. P = 9/24 = 3/8 = 37.5%.",bayesWorking:null},
+{id:"gcse_15",context:"Dog breed DNA test",scenario:"A kennel club DNA-tests 1,000 dogs claimed to be purebred Labradors. 900 dogs (90%) are genuinely purebred. The test correctly confirms 95% of purebreds, but also incorrectly confirms 20% of non-purebred dogs as purebred.",population:1000,condition:{label:"Genuinely purebred",count:900,baseRate:0.90},testPositive:{truePositive:855,falsePositive:20,total:875},testNegative:{falseNegative:45,trueNegative:80,total:125},sensitivity:0.95,specificity:0.80,gutCheckCorrect:"very_likely",answer:0.9771,answerFraction:"\\tfrac{855}{875}",answerSimplified:"\\tfrac{171}{175}",explanation:"875 dogs test as purebred. 855 genuinely are. P = 855/875 \u2248 97.7%.",bayesWorking:null},
+{id:"gcse_16",context:"Smoke detector \u2014 real fires vs false alarms",scenario:"Over the course of a year, a school's smoke detectors activate 100 times. Only 2 of these (2%) are caused by actual fires. The detectors catch 100% of real fires, but also trigger from burnt toast, steam, and dust.",population:100,condition:{label:"Real fire",count:2,baseRate:0.02},testPositive:{truePositive:2,falsePositive:98,total:100},testNegative:{falseNegative:0,trueNegative:0,total:0},sensitivity:1.00,specificity:0.00,gutCheckCorrect:"very_unlikely",answer:0.02,answerFraction:"\\tfrac{2}{100}",answerSimplified:"\\tfrac{1}{50}",explanation:"Every alarm activation is a 'positive test.' Only 2 out of 100 are real fires. P = 2/100 = 2%.",bayesWorking:null},
+{id:"gcse_17",context:"School scoliosis screening",scenario:"500 students are screened for scoliosis. 15 students (3%) actually have scoliosis requiring monitoring. The forward bend test correctly identifies 87% of cases, but flags 10% of students without scoliosis.",population:500,condition:{label:"Has scoliosis",count:15,baseRate:0.03},testPositive:{truePositive:13,falsePositive:49,total:62},testNegative:{falseNegative:2,trueNegative:436,total:438},sensitivity:0.87,specificity:0.90,gutCheckCorrect:"unlikely",answer:0.2097,answerFraction:"\\tfrac{13}{62}",answerSimplified:"\\tfrac{13}{62}",explanation:"62 students are flagged. Only 13 actually have scoliosis. P = 13/62 \u2248 21.0%.",bayesWorking:null},
+{id:"gcse_18",context:"Email spam filter",scenario:"Your email receives 1,000 messages. 400 of them (40%) are actually spam. The spam filter correctly catches 92% of spam, but accidentally sends 3% of real emails to the spam folder.",population:1000,condition:{label:"Is spam",count:400,baseRate:0.40},testPositive:{truePositive:368,falsePositive:18,total:386},testNegative:{falseNegative:32,trueNegative:582,total:614},sensitivity:0.92,specificity:0.97,gutCheckCorrect:"very_likely",answer:0.9534,answerFraction:"\\tfrac{368}{386}",answerSimplified:"\\tfrac{184}{193}",explanation:"386 emails are flagged as spam. 368 actually are spam. P = 368/386 \u2248 95.3%.",bayesWorking:null},
+{id:"gcse_19",context:"Random breathalyser checkpoint",scenario:"Police breathalyse 1,000 drivers at a random checkpoint. 20 drivers (2%) are actually over the alcohol limit. The breathalyser correctly identifies 95% of over-limit drivers, but gives a false reading for 3% of sober drivers.",population:1000,condition:{label:"Over alcohol limit",count:20,baseRate:0.02},testPositive:{truePositive:19,falsePositive:29,total:48},testNegative:{falseNegative:1,trueNegative:951,total:952},sensitivity:0.95,specificity:0.97,gutCheckCorrect:"unlikely",answer:0.3958,answerFraction:"\\tfrac{19}{48}",answerSimplified:"\\tfrac{19}{48}",explanation:"48 drivers fail the roadside test. Only 19 are actually over the limit. P = 19/48 \u2248 39.6%.",bayesWorking:null},
+{id:"gcse_20",context:"Restaurant food hygiene swab test",scenario:"Health inspectors swab-test 200 surfaces in restaurants. 30 surfaces (15%) are actually contaminated above safe levels. The ATP swab test correctly identifies 93% of contaminated surfaces, but gives a false positive on 7% of clean surfaces.",population:200,condition:{label:"Contaminated",count:30,baseRate:0.15},testPositive:{truePositive:28,falsePositive:12,total:40},testNegative:{falseNegative:2,trueNegative:158,total:160},sensitivity:0.93,specificity:0.93,gutCheckCorrect:"likely",answer:0.7,answerFraction:"\\tfrac{28}{40}",answerSimplified:"\\tfrac{7}{10}",explanation:"40 surfaces fail the test. 28 are genuinely contaminated. P = 28/40 = 7/10 = 70%.",bayesWorking:null}
+],
+alevel: [
+{id:"alevel_01",context:"Rare genetic condition screening",scenario:"A blood test screens for a rare genetic condition that affects 1 in 10,000 people. The test has 99% sensitivity and 99% specificity. Consider 100,000 people screened.",population:100000,condition:{label:"Has condition",count:10,baseRate:0.0001},testPositive:{truePositive:10,falsePositive:999,total:1009},testNegative:{falseNegative:0,trueNegative:98991,total:98991},sensitivity:0.99,specificity:0.99,gutCheckCorrect:"very_unlikely",answer:0.0099,answerFraction:"\\tfrac{10}{1009}",answerSimplified:"\\tfrac{10}{1009}",explanation:"1,009 people test positive. Only 10 actually have the condition. P = 10/1009 \u2248 0.99%.",bayesWorking:"P(D|+) = \\dfrac{0.99 \\times 0.0001}{0.99 \\times 0.0001 + 0.01 \\times 0.9999} = \\dfrac{0.000099}{0.010098} \\approx 0.0098"},
+{id:"alevel_02",context:"Breast cancer mammogram screening",scenario:"In the NHS breast screening programme, about 0.8% of women aged 50-70 have breast cancer at any given time. Mammography has a sensitivity of 87% and a specificity of 91%. Consider 10,000 women screened.",population:10000,condition:{label:"Has breast cancer",count:80,baseRate:0.008},testPositive:{truePositive:70,falsePositive:893,total:963},testNegative:{falseNegative:10,trueNegative:9027,total:9037},sensitivity:0.87,specificity:0.91,gutCheckCorrect:"unlikely",answer:0.0727,answerFraction:"\\tfrac{70}{963}",answerSimplified:"\\tfrac{70}{963}",explanation:"963 women get positive mammograms. Only 70 actually have breast cancer. P = 70/963 \u2248 7.3%.",bayesWorking:"P(C|+) = \\dfrac{0.87 \\times 0.008}{0.87 \\times 0.008 + 0.09 \\times 0.992} = \\dfrac{0.00696}{0.09624} \\approx 0.0723"},
+{id:"alevel_03",context:"HIV testing",scenario:"In the general UK population, about 0.16% of people are HIV positive. The standard ELISA test has a sensitivity of 99.7% and specificity of 98.5%. Consider 100,000 people tested.",population:100000,condition:{label:"HIV positive",count:160,baseRate:0.0016},testPositive:{truePositive:159,falsePositive:1497,total:1656},testNegative:{falseNegative:1,trueNegative:98343,total:98344},sensitivity:0.997,specificity:0.985,gutCheckCorrect:"unlikely",answer:0.0960,answerFraction:"\\tfrac{159}{1656}",answerSimplified:"\\tfrac{53}{552}",explanation:"1,656 people test positive. Only 159 are truly HIV positive. P \u2248 9.6%.",bayesWorking:"P(H|+) = \\dfrac{0.997 \\times 0.0016}{0.997 \\times 0.0016 + 0.015 \\times 0.9984} = \\dfrac{0.001595}{0.016571} \\approx 0.0962"},
+{id:"alevel_04",context:"Forensic DNA database search",scenario:"Police search a DNA database of 1,000,000 profiles for a match to crime scene DNA. One person in the database is the actual perpetrator. The test has a false positive rate of 1 in 100,000.",population:1000000,condition:{label:"Is the perpetrator",count:1,baseRate:0.000001},testPositive:{truePositive:1,falsePositive:10,total:11},testNegative:{falseNegative:0,trueNegative:999989,total:999989},sensitivity:1.00,specificity:0.99999,gutCheckCorrect:"unlikely",answer:0.0909,answerFraction:"\\tfrac{1}{11}",answerSimplified:"\\tfrac{1}{11}",explanation:"11 profiles match. Only 1 is the real perpetrator. P = 1/11 \u2248 9.1%. This is the 'prosecutor's fallacy.'",bayesWorking:"P(G|M) = \\dfrac{1 \\times 0.000001}{1 \\times 0.000001 + 0.00001 \\times 0.999999} = \\dfrac{0.000001}{0.000011} \\approx 0.0909"},
+{id:"alevel_05",context:"NHS bowel cancer screening (FIT test)",scenario:"The NHS sends FIT kits to adults aged 60-74. About 0.3% of this age group have bowel cancer. The FIT test has a sensitivity of 74% and specificity of 95%. Consider 10,000 people screened.",population:10000,condition:{label:"Has bowel cancer",count:30,baseRate:0.003},testPositive:{truePositive:22,falsePositive:499,total:521},testNegative:{falseNegative:8,trueNegative:9471,total:9479},sensitivity:0.74,specificity:0.95,gutCheckCorrect:"very_unlikely",answer:0.0422,answerFraction:"\\tfrac{22}{521}",answerSimplified:"\\tfrac{22}{521}",explanation:"521 people get a positive FIT result. Only 22 have bowel cancer. P \u2248 4.2%.",bayesWorking:"P(C|+) = \\dfrac{0.74 \\times 0.003}{0.74 \\times 0.003 + 0.05 \\times 0.997} = \\dfrac{0.00222}{0.05207} \\approx 0.0427"},
+{id:"alevel_06",context:"Statistical hypothesis testing \u2014 false discovery rate",scenario:"A research team tests 200 potential drug compounds. Only 10 (5%) actually work. Their statistical test uses a 5% significance level with 80% power. Consider all 200 tests.",population:200,condition:{label:"Drug actually works",count:10,baseRate:0.05},testPositive:{truePositive:8,falsePositive:10,total:18},testNegative:{falseNegative:2,trueNegative:180,total:182},sensitivity:0.80,specificity:0.95,gutCheckCorrect:"unlikely",answer:0.4444,answerFraction:"\\tfrac{8}{18}",answerSimplified:"\\tfrac{4}{9}",explanation:"18 drugs show 'significant' results. Only 8 actually work. P = 8/18 \u2248 44.4%. This is the replication crisis.",bayesWorking:"P(W|S) = \\dfrac{0.80 \\times 0.05}{0.80 \\times 0.05 + 0.05 \\times 0.95} = \\dfrac{0.04}{0.0875} \\approx 0.457"},
+{id:"alevel_07",context:"Prostate cancer PSA blood test",scenario:"The PSA blood test screens men over 50 for prostate cancer. About 4% have prostate cancer. The PSA test has sensitivity 80% and specificity 70%. Consider 5,000 men screened.",population:5000,condition:{label:"Has prostate cancer",count:200,baseRate:0.04},testPositive:{truePositive:160,falsePositive:1440,total:1600},testNegative:{falseNegative:40,trueNegative:3360,total:3400},sensitivity:0.80,specificity:0.70,gutCheckCorrect:"unlikely",answer:0.1,answerFraction:"\\tfrac{160}{1600}",answerSimplified:"\\tfrac{1}{10}",explanation:"1,600 men get elevated PSA results. Only 160 have cancer. P = 1/10 = 10%.",bayesWorking:"P(C|+) = \\dfrac{0.80 \\times 0.04}{0.80 \\times 0.04 + 0.30 \\times 0.96} = \\dfrac{0.032}{0.320} = 0.10"},
+{id:"alevel_08",context:"Two-stage testing",scenario:"A disease affects 0.5% of the population. Test 1 has 95% sensitivity and 90% specificity. All positives are retested with Test 2 (98% sensitivity, 97% specificity). Consider 10,000 people.",population:10000,condition:{label:"Has disease",count:50,baseRate:0.005},testPositive:{truePositive:47,falsePositive:29,total:76},testNegative:{falseNegative:3,trueNegative:9921,total:9924},sensitivity:0.931,specificity:0.997,gutCheckCorrect:"likely",answer:0.6184,answerFraction:"\\tfrac{47}{76}",answerSimplified:"\\tfrac{47}{76}",explanation:"After two-stage testing, 76 people test positive on both. 47 actually have the disease. P \u2248 61.8%.",bayesWorking:"After Test 1: ~1043 positives (48 true, 995 false). Test 2: 48\u00d70.98\u224847 true + 995\u00d70.03\u224830 false = 77. P \u2248 47/77 \u2248 0.61"},
+{id:"alevel_09",context:"Polygraph lie detector",scenario:"A company polygraphs 500 employees suspected of misconduct. 25 (5%) are actually guilty. The polygraph correctly identifies 88% of guilty people, but falsely accuses 12% of innocent people.",population:500,condition:{label:"Guilty",count:25,baseRate:0.05},testPositive:{truePositive:22,falsePositive:57,total:79},testNegative:{falseNegative:3,trueNegative:418,total:421},sensitivity:0.88,specificity:0.88,gutCheckCorrect:"unlikely",answer:0.2785,answerFraction:"\\tfrac{22}{79}",answerSimplified:"\\tfrac{22}{79}",explanation:"79 people 'fail' the polygraph. Only 22 are guilty. P = 22/79 \u2248 27.9%.",bayesWorking:"P(G|+) = \\dfrac{0.88 \\times 0.05}{0.88 \\times 0.05 + 0.12 \\times 0.95} = \\dfrac{0.044}{0.158} \\approx 0.278"},
+{id:"alevel_10",context:"COVID PCR test \u2014 low prevalence",scenario:"During a low-prevalence period, 0.2% of the UK population has active COVID. PCR tests have 98% sensitivity and 99.5% specificity. Consider 100,000 people tested.",population:100000,condition:{label:"Has COVID",count:200,baseRate:0.002},testPositive:{truePositive:196,falsePositive:499,total:695},testNegative:{falseNegative:4,trueNegative:99301,total:99305},sensitivity:0.98,specificity:0.995,gutCheckCorrect:"unlikely",answer:0.2820,answerFraction:"\\tfrac{196}{695}",answerSimplified:"\\tfrac{28}{99}",explanation:"695 people test positive. 196 actually have COVID. P \u2248 28.2%.",bayesWorking:"P(C|+) = \\dfrac{0.98 \\times 0.002}{0.98 \\times 0.002 + 0.005 \\times 0.998} = \\dfrac{0.00196}{0.00695} \\approx 0.282"},
+{id:"alevel_11",context:"Alzheimer's blood biomarker test",scenario:"A new blood test detects early Alzheimer's biomarkers. In the over-65 population, about 5% have early-stage Alzheimer's. The test has 90% sensitivity and 85% specificity. Consider 10,000 people.",population:10000,condition:{label:"Has early Alzheimer's",count:500,baseRate:0.05},testPositive:{truePositive:450,falsePositive:1425,total:1875},testNegative:{falseNegative:50,trueNegative:8075,total:8125},sensitivity:0.90,specificity:0.85,gutCheckCorrect:"unlikely",answer:0.24,answerFraction:"\\tfrac{450}{1875}",answerSimplified:"\\tfrac{6}{25}",explanation:"1,875 people test positive. 450 have early Alzheimer's. P = 6/25 = 24%.",bayesWorking:"P(A|+) = \\dfrac{0.90 \\times 0.05}{0.90 \\times 0.05 + 0.15 \\times 0.95} = \\dfrac{0.045}{0.1875} = 0.24"},
+{id:"alevel_12",context:"Airport behavioural screening",scenario:"An airport screens 1,000,000 passengers per year using behavioural detection. About 5 passengers per year are genuine security threats. The system correctly flags 90% of threats, but flags 1% of innocent passengers.",population:1000000,condition:{label:"Genuine threat",count:5,baseRate:0.000005},testPositive:{truePositive:5,falsePositive:10000,total:10005},testNegative:{falseNegative:0,trueNegative:989995,total:989995},sensitivity:0.90,specificity:0.99,gutCheckCorrect:"very_unlikely",answer:0.0005,answerFraction:"\\tfrac{5}{10005}",answerSimplified:"\\tfrac{1}{2001}",explanation:"10,005 passengers are flagged. Only 5 are genuine threats. P \u2248 0.05%.",bayesWorking:"P(T|+) = \\dfrac{0.90 \\times 0.000005}{0.90 \\times 0.000005 + 0.01 \\times 0.999995} = \\dfrac{0.0000045}{0.01000445} \\approx 0.00045"},
+{id:"alevel_13",context:"NHS cervical screening",scenario:"In the NHS cervical screening programme, about 0.6% of women have cervical abnormalities requiring treatment. The Pap smear has sensitivity 70% and specificity 95%. Consider 10,000 women.",population:10000,condition:{label:"Has cervical abnormality",count:60,baseRate:0.006},testPositive:{truePositive:42,falsePositive:497,total:539},testNegative:{falseNegative:18,trueNegative:9443,total:9461},sensitivity:0.70,specificity:0.95,gutCheckCorrect:"unlikely",answer:0.0779,answerFraction:"\\tfrac{42}{539}",answerSimplified:"\\tfrac{42}{539}",explanation:"539 women have abnormal results. Only 42 have treatable abnormalities. P \u2248 7.8%.",bayesWorking:"P(A|+) = \\dfrac{0.70 \\times 0.006}{0.70 \\times 0.006 + 0.05 \\times 0.994} = \\dfrac{0.0042}{0.0539} \\approx 0.0779"},
+{id:"alevel_14",context:"Same test, different base rates",scenario:"A flu test has 90% sensitivity and 85% specificity. Among GP patients with symptoms, 30% have flu. Consider 1,000 symptomatic GP patients.",population:1000,condition:{label:"Has flu (GP patients)",count:300,baseRate:0.30},testPositive:{truePositive:270,falsePositive:105,total:375},testNegative:{falseNegative:30,trueNegative:595,total:625},sensitivity:0.90,specificity:0.85,gutCheckCorrect:"likely",answer:0.72,answerFraction:"\\tfrac{270}{375}",answerSimplified:"\\tfrac{18}{25}",explanation:"Among GP patients: P = 72%. Among general population (2% base rate): same test gives P \u2248 13.8%. SAME TEST, hugely different reliability.",bayesWorking:"GP: P(F|+) = \\dfrac{0.9 \\times 0.3}{0.9 \\times 0.3 + 0.15 \\times 0.7} = \\dfrac{0.27}{0.375} = 0.72"},
+{id:"alevel_15",context:"Abdominal aortic aneurysm screening",scenario:"The NHS screens men aged 65 for AAA. About 1.5% have an aneurysm. Ultrasound has 95% sensitivity and 99% specificity. Consider 10,000 men.",population:10000,condition:{label:"Has AAA",count:150,baseRate:0.015},testPositive:{truePositive:143,falsePositive:99,total:242},testNegative:{falseNegative:7,trueNegative:9751,total:9758},sensitivity:0.95,specificity:0.99,gutCheckCorrect:"likely",answer:0.5909,answerFraction:"\\tfrac{143}{242}",answerSimplified:"\\tfrac{143}{242}",explanation:"242 men have positive scans. 143 actually have AAA. P \u2248 59.1%.",bayesWorking:"P(A|+) = \\dfrac{0.95 \\times 0.015}{0.95 \\times 0.015 + 0.01 \\times 0.985} = \\dfrac{0.01425}{0.02410} \\approx 0.591"},
+{id:"alevel_16",context:"Sequential evidence \u2014 medical diagnosis",scenario:"A patient has a 2% prior probability of a condition. Test A is positive (sensitivity 90%, specificity 85%). Test B is also positive (sensitivity 95%, specificity 90%). Consider 10,000 patients.",population:10000,condition:{label:"Has condition (after two tests)",count:200,baseRate:0.02},testPositive:{truePositive:171,falsePositive:130,total:301},testNegative:{falseNegative:29,trueNegative:9670,total:9699},sensitivity:0.855,specificity:0.987,gutCheckCorrect:"likely",answer:0.568,answerFraction:"\\tfrac{171}{301}",answerSimplified:"\\tfrac{171}{301}",explanation:"After two positive tests: P \u2248 56.8%. Two moderately accurate tests combined raise posterior from 2% to over 50%.",bayesWorking:"After A+: P_1 = \\dfrac{0.9 \\times 0.02}{0.9 \\times 0.02 + 0.15 \\times 0.98} = 0.109. After B+: P_2 = \\dfrac{0.95 \\times 0.109}{0.95 \\times 0.109 + 0.10 \\times 0.891} \\approx 0.537"},
+{id:"alevel_17",context:"Meningitis rapid test",scenario:"A rapid test for bacterial meningitis in A&E has 95% sensitivity and 80% specificity. Among symptomatic patients, 15% have bacterial meningitis. Consider 1,000 patients.",population:1000,condition:{label:"Has bacterial meningitis",count:150,baseRate:0.15},testPositive:{truePositive:143,falsePositive:170,total:313},testNegative:{falseNegative:7,trueNegative:680,total:687},sensitivity:0.95,specificity:0.80,gutCheckCorrect:"unlikely",answer:0.4569,answerFraction:"\\tfrac{143}{313}",answerSimplified:"\\tfrac{143}{313}",explanation:"313 patients test positive. 143 have meningitis. P \u2248 45.7%. But the 7 missed cases are why doctors treat all symptomatic patients with antibiotics while awaiting confirmation.",bayesWorking:"P(M|+) = \\dfrac{0.95 \\times 0.15}{0.95 \\times 0.15 + 0.20 \\times 0.85} = \\dfrac{0.1425}{0.3125} = 0.456"},
+{id:"alevel_18",context:"Sensitivity/specificity trade-off \u2014 diabetes",scenario:"A diabetes blood glucose test. Lower threshold: sensitivity 95%, specificity 75%. Diabetes prevalence 8%. Consider 10,000 people.",population:10000,condition:{label:"Has diabetes (lower threshold)",count:800,baseRate:0.08},testPositive:{truePositive:760,falsePositive:2300,total:3060},testNegative:{falseNegative:40,trueNegative:6900,total:6940},sensitivity:0.95,specificity:0.75,gutCheckCorrect:"unlikely",answer:0.2484,answerFraction:"\\tfrac{760}{3060}",answerSimplified:"\\tfrac{76}{306}",explanation:"Lower threshold: P = 24.8%. Standard threshold: P \u2248 37.2%. Lowering the threshold catches more cases but creates more false positives.",bayesWorking:"P = \\dfrac{0.95 \\times 0.08}{0.95 \\times 0.08 + 0.25 \\times 0.92} = \\dfrac{0.076}{0.306} = 0.248"},
+{id:"alevel_19",context:"Vaccine side effect monitoring",scenario:"A vaccine has a true serious side effect rate of 1 in 50,000. The monitoring system identifies 70% of genuine side effects. But 0.5% of people report coincidental symptoms. Consider 1,000,000 vaccinated people.",population:1000000,condition:{label:"Genuine side effect",count:20,baseRate:0.00002},testPositive:{truePositive:14,falsePositive:5000,total:5014},testNegative:{falseNegative:6,trueNegative:994980,total:994986},sensitivity:0.70,specificity:0.995,gutCheckCorrect:"very_unlikely",answer:0.0028,answerFraction:"\\tfrac{14}{5014}",answerSimplified:"\\tfrac{1}{358}",explanation:"5,014 reports received. Only 14 are genuine vaccine side effects. P \u2248 0.28%.",bayesWorking:"P(S|R) = \\dfrac{0.70 \\times 0.00002}{0.70 \\times 0.00002 + 0.005 \\times 0.99998} = \\dfrac{0.000014}{0.005014} \\approx 0.0028"},
+{id:"alevel_20",context:"Cystic fibrosis carrier testing",scenario:"About 1 in 25 people (4%) of European descent are CF carriers. A carrier test has 90% sensitivity and 99% specificity. Consider 10,000 people.",population:10000,condition:{label:"Is CF carrier",count:400,baseRate:0.04},testPositive:{truePositive:360,falsePositive:96,total:456},testNegative:{falseNegative:40,trueNegative:9504,total:9544},sensitivity:0.90,specificity:0.99,gutCheckCorrect:"very_likely",answer:0.7895,answerFraction:"\\tfrac{360}{456}",answerSimplified:"\\tfrac{15}{19}",explanation:"456 people test as carriers. 360 genuinely are. P \u2248 78.9%.",bayesWorking:"P(C|+) = \\dfrac{0.90 \\times 0.04}{0.90 \\times 0.04 + 0.01 \\times 0.96} = \\dfrac{0.036}{0.0456} \\approx 0.789"}
+],
+core: [
+{id:"core_01",context:"NHS diabetes screening",scenario:"The NHS Health Check programme tests adults aged 40-74 for Type 2 diabetes risk. About 3% have undiagnosed diabetes. The HbA1c blood test correctly identifies 85% of diabetics, but flags 7% of non-diabetics. Consider 10,000 people.",population:10000,condition:{label:"Has undiagnosed diabetes",count:300,baseRate:0.03},testPositive:{truePositive:255,falsePositive:679,total:934},testNegative:{falseNegative:45,trueNegative:9021,total:9066},sensitivity:0.85,specificity:0.93,gutCheckCorrect:"unlikely",answer:0.2731,answerFraction:"\\tfrac{255}{934}",answerSimplified:"\\tfrac{255}{934}",explanation:"934 people are flagged. 255 have diabetes. P \u2248 27.3%.",bayesWorking:null},
+{id:"core_02",context:"Pre-employment drug screening",scenario:"A company drug-tests 2,000 job applicants. About 8% have recently used drugs. The urine test correctly detects 96% of drug users, but gives a false positive for 5% of non-users.",population:2000,condition:{label:"Used drugs recently",count:160,baseRate:0.08},testPositive:{truePositive:154,falsePositive:92,total:246},testNegative:{falseNegative:6,trueNegative:1748,total:1754},sensitivity:0.96,specificity:0.95,gutCheckCorrect:"likely",answer:0.6260,answerFraction:"\\tfrac{154}{246}",answerSimplified:"\\tfrac{77}{123}",explanation:"246 applicants test positive. 154 are genuine users. P \u2248 62.6%.",bayesWorking:null},
+{id:"core_03",context:"MOT emissions test",scenario:"During MOT testing, about 12% of cars genuinely fail emissions. The equipment correctly fails 88% of polluting cars, but also incorrectly fails 4% of clean cars. Consider 5,000 cars.",population:5000,condition:{label:"Genuinely fails emissions",count:600,baseRate:0.12},testPositive:{truePositive:528,falsePositive:176,total:704},testNegative:{falseNegative:72,trueNegative:4224,total:4296},sensitivity:0.88,specificity:0.96,gutCheckCorrect:"likely",answer:0.75,answerFraction:"\\tfrac{528}{704}",answerSimplified:"\\tfrac{3}{4}",explanation:"704 cars fail. 528 genuinely exceed limits. P = 3/4 = 75%.",bayesWorking:null},
+{id:"core_04",context:"Benefits fraud detection",scenario:"The DWP screens 100,000 Universal Credit claims for fraud. About 2% involve genuine fraud. The system correctly flags 75% of fraudulent claims, but also flags 5% of legitimate claims.",population:100000,condition:{label:"Fraudulent claim",count:2000,baseRate:0.02},testPositive:{truePositive:1500,falsePositive:4900,total:6400},testNegative:{falseNegative:500,trueNegative:93100,total:93600},sensitivity:0.75,specificity:0.95,gutCheckCorrect:"unlikely",answer:0.2344,answerFraction:"\\tfrac{1500}{6400}",answerSimplified:"\\tfrac{15}{64}",explanation:"6,400 claims are flagged. 1,500 are genuinely fraudulent. P \u2248 23.4%.",bayesWorking:null},
+{id:"core_05",context:"Building asbestos survey",scenario:"A surveyor takes 500 material samples from buildings. About 6% actually contain asbestos. The lab analysis correctly identifies 93% of asbestos-containing samples, but gives a false positive on 3% of non-asbestos samples.",population:500,condition:{label:"Contains asbestos",count:30,baseRate:0.06},testPositive:{truePositive:28,falsePositive:14,total:42},testNegative:{falseNegative:2,trueNegative:456,total:458},sensitivity:0.93,specificity:0.97,gutCheckCorrect:"likely",answer:0.6667,answerFraction:"\\tfrac{28}{42}",answerSimplified:"\\tfrac{2}{3}",explanation:"42 samples test positive. 28 contain asbestos. P = 2/3 \u2248 66.7%.",bayesWorking:null},
+{id:"core_06",context:"Speed camera accuracy",scenario:"A speed camera photographs 10,000 vehicles. 500 (5%) are genuinely speeding. The camera correctly identifies 99% of speeders, but has a 0.5% false reading rate on vehicles within the limit.",population:10000,condition:{label:"Genuinely speeding",count:500,baseRate:0.05},testPositive:{truePositive:495,falsePositive:48,total:543},testNegative:{falseNegative:5,trueNegative:9452,total:9457},sensitivity:0.99,specificity:0.995,gutCheckCorrect:"very_likely",answer:0.9116,answerFraction:"\\tfrac{495}{543}",answerSimplified:"\\tfrac{55}{60}",explanation:"543 vehicles are flagged. 495 were genuinely speeding. P \u2248 91.2%.",bayesWorking:null},
+{id:"core_07",context:"Household radon testing",scenario:"In certain parts of the UK, 7% of homes have dangerous radon levels. A passive detector correctly identifies 85% of high-radon homes, but gives a false alarm for 10% of safe homes. 1,000 homes tested.",population:1000,condition:{label:"Dangerous radon level",count:70,baseRate:0.07},testPositive:{truePositive:60,falsePositive:93,total:153},testNegative:{falseNegative:10,trueNegative:837,total:847},sensitivity:0.85,specificity:0.90,gutCheckCorrect:"unlikely",answer:0.3922,answerFraction:"\\tfrac{60}{153}",answerSimplified:"\\tfrac{20}{51}",explanation:"153 homes test high. 60 actually have dangerous levels. P \u2248 39.2%.",bayesWorking:null},
+{id:"core_08",context:"Food allergy IgE blood test",scenario:"A GP orders IgE blood tests for 200 patients who suspect food allergy. About 20% actually have a clinically significant allergy. The IgE test detects 85% of allergies, but shows elevated levels in 15% of non-allergic patients.",population:200,condition:{label:"Has food allergy",count:40,baseRate:0.20},testPositive:{truePositive:34,falsePositive:24,total:58},testNegative:{falseNegative:6,trueNegative:136,total:142},sensitivity:0.85,specificity:0.85,gutCheckCorrect:"likely",answer:0.5862,answerFraction:"\\tfrac{34}{58}",answerSimplified:"\\tfrac{17}{29}",explanation:"58 patients test positive. 34 have genuine allergies. P \u2248 58.6%.",bayesWorking:null},
+{id:"core_09",context:"University plagiarism detection",scenario:"A university runs 5,000 essays through Turnitin. About 3% contain genuine plagiarism. The software flags 90% of plagiarised work, but also flags 8% of original work.",population:5000,condition:{label:"Contains plagiarism",count:150,baseRate:0.03},testPositive:{truePositive:135,falsePositive:388,total:523},testNegative:{falseNegative:15,trueNegative:4462,total:4477},sensitivity:0.90,specificity:0.92,gutCheckCorrect:"unlikely",answer:0.2582,answerFraction:"\\tfrac{135}{523}",answerSimplified:"\\tfrac{135}{523}",explanation:"523 essays are flagged. Only 135 contain genuine plagiarism. P \u2248 25.8%.",bayesWorking:null},
+{id:"core_10",context:"In-car alcohol interlock device",scenario:"500 drink-drive offenders use an alcohol interlock device. On any given morning, 5% attempt to drive over the limit. The device correctly blocks 97% of over-limit attempts, but also blocks 2% of sober attempts.",population:500,condition:{label:"Over limit",count:25,baseRate:0.05},testPositive:{truePositive:24,falsePositive:10,total:34},testNegative:{falseNegative:1,trueNegative:465,total:466},sensitivity:0.97,specificity:0.98,gutCheckCorrect:"likely",answer:0.7059,answerFraction:"\\tfrac{24}{34}",answerSimplified:"\\tfrac{12}{17}",explanation:"34 lock-outs. 24 are genuine over-limit attempts. P \u2248 70.6%.",bayesWorking:null},
+{id:"core_11",context:"Earthquake early warning system",scenario:"An earthquake early warning system monitors 10,000 seismic events per year. Only 50 (0.5%) are genuine damaging earthquakes. The system correctly alerts for 96%, but triggers false alarms for 2% of non-damaging events.",population:10000,condition:{label:"Damaging earthquake",count:50,baseRate:0.005},testPositive:{truePositive:48,falsePositive:199,total:247},testNegative:{falseNegative:2,trueNegative:9751,total:9753},sensitivity:0.96,specificity:0.98,gutCheckCorrect:"unlikely",answer:0.1943,answerFraction:"\\tfrac{48}{247}",answerSimplified:"\\tfrac{48}{247}",explanation:"247 alerts per year. Only 48 are for real earthquakes. P \u2248 19.4%.",bayesWorking:null},
+{id:"core_12",context:"Counterfeit banknote detector",scenario:"A UV banknote checker processes 20,000 notes per week. About 10 notes (0.05%) are counterfeit. The checker correctly identifies 90% of fakes, but falsely rejects 0.5% of genuine notes.",population:20000,condition:{label:"Counterfeit",count:10,baseRate:0.0005},testPositive:{truePositive:9,falsePositive:100,total:109},testNegative:{falseNegative:1,trueNegative:19890,total:19891},sensitivity:0.90,specificity:0.995,gutCheckCorrect:"unlikely",answer:0.0826,answerFraction:"\\tfrac{9}{109}",answerSimplified:"\\tfrac{9}{109}",explanation:"109 notes are rejected. Only 9 are actually fake. P \u2248 8.3%.",bayesWorking:null},
+{id:"core_13",context:"Home carbon monoxide alarm",scenario:"Over a 5-year period, a CO alarm activates 20 times. Only 1 event is a genuine CO leak (5%). The alarm detects 100% of real CO events but triggers false alarms from steam, cooking, and battery issues.",population:20,condition:{label:"Genuine CO leak",count:1,baseRate:0.05},testPositive:{truePositive:1,falsePositive:19,total:20},testNegative:{falseNegative:0,trueNegative:0,total:0},sensitivity:1.00,specificity:0.00,gutCheckCorrect:"very_unlikely",answer:0.05,answerFraction:"\\tfrac{1}{20}",answerSimplified:"\\tfrac{1}{20}",explanation:"Every activation is a positive. Only 1 in 20 is real. P = 5%.",bayesWorking:null},
+{id:"core_14",context:"Clearing admission \u2014 predicted grades as a 'test'",scenario:"2,000 students enter university through Clearing. Predicted grades suggested 70% would struggle. In reality, 25% actually fail. The prediction correctly identified 80% who would fail, but wrongly predicted failure for 65% who actually passed.",population:2000,condition:{label:"Actually fails first year",count:500,baseRate:0.25},testPositive:{truePositive:400,falsePositive:975,total:1375},testNegative:{falseNegative:100,trueNegative:525,total:625},sensitivity:0.80,specificity:0.35,gutCheckCorrect:"unlikely",answer:0.2909,answerFraction:"\\tfrac{400}{1375}",answerSimplified:"\\tfrac{16}{55}",explanation:"1,375 students were predicted to struggle. Only 400 actually failed. P \u2248 29.1%.",bayesWorking:null},
+{id:"core_15",context:"Smoke detector low-battery warning",scenario:"A smoke detector chirps 50 times over 2 years. On 5 occasions (10%), the battery was genuinely low. The other 45 times were caused by temperature changes, humidity, or insects.",population:50,condition:{label:"Battery genuinely low",count:5,baseRate:0.10},testPositive:{truePositive:5,falsePositive:45,total:50},testNegative:{falseNegative:0,trueNegative:0,total:0},sensitivity:1.00,specificity:0.00,gutCheckCorrect:"unlikely",answer:0.10,answerFraction:"\\tfrac{5}{50}",answerSimplified:"\\tfrac{1}{10}",explanation:"Every chirp is a 'positive.' Only 1 in 10 means a low battery. P = 10%.",bayesWorking:null}
+],
+level4: [
+{id:"l4_01",context:"Ultrasonic testing of pressure vessel welds",scenario:"A pressure vessel fabricator ultrasonically tests 5,000 welds. About 3% contain flaws exceeding acceptance criteria. The UT correctly detects 92% of flawed welds, but gives a false indication on 4% of acceptable welds.",population:5000,condition:{label:"Weld flaw exceeds criteria",count:150,baseRate:0.03},testPositive:{truePositive:138,falsePositive:194,total:332},testNegative:{falseNegative:12,trueNegative:4656,total:4668},sensitivity:0.92,specificity:0.96,gutCheckCorrect:"unlikely",answer:0.4157,answerFraction:"\\tfrac{138}{332}",answerSimplified:"\\tfrac{69}{166}",explanation:"332 welds are flagged. 138 have genuine flaws. P \u2248 41.6%.",bayesWorking:null},
+{id:"l4_02",context:"AQL sampling plan \u2014 incoming goods inspection",scenario:"A manufacturer inspects incoming batches of bolts using AQL Level II sampling. Of 1,000 batches, 80 (8%) have a defect rate above AQL. The sampling plan correctly rejects 85% of bad batches, but also rejects 3% of good batches.",population:1000,condition:{label:"Batch above AQL",count:80,baseRate:0.08},testPositive:{truePositive:68,falsePositive:28,total:96},testNegative:{falseNegative:12,trueNegative:892,total:904},sensitivity:0.85,specificity:0.97,gutCheckCorrect:"likely",answer:0.7083,answerFraction:"\\tfrac{68}{96}",answerSimplified:"\\tfrac{17}{24}",explanation:"96 batches rejected. 68 were genuinely above AQL. P \u2248 70.8%.",bayesWorking:null},
+{id:"l4_03",context:"Predictive maintenance \u2014 vibration analysis",scenario:"A vibration analyst monitors 2,000 bearings. At any time, 4% are developing faults. Vibration analysis correctly identifies 88% of developing faults, but flags 6% of healthy bearings.",population:2000,condition:{label:"Developing bearing fault",count:80,baseRate:0.04},testPositive:{truePositive:70,falsePositive:115,total:185},testNegative:{falseNegative:10,trueNegative:1805,total:1815},sensitivity:0.88,specificity:0.94,gutCheckCorrect:"unlikely",answer:0.3784,answerFraction:"\\tfrac{70}{185}",answerSimplified:"\\tfrac{14}{37}",explanation:"185 bearings flagged. 70 have developing faults. P \u2248 37.8%.",bayesWorking:null},
+{id:"l4_04",context:"Thermal imaging \u2014 insulation defects",scenario:"A thermal imaging survey checks 1,000 wall panels. 50 (5%) have insulation defects. Thermal imaging correctly identifies 80% of defects, but flags 10% of properly insulated panels.",population:1000,condition:{label:"Insulation defect",count:50,baseRate:0.05},testPositive:{truePositive:40,falsePositive:95,total:135},testNegative:{falseNegative:10,trueNegative:855,total:865},sensitivity:0.80,specificity:0.90,gutCheckCorrect:"unlikely",answer:0.2963,answerFraction:"\\tfrac{40}{135}",answerSimplified:"\\tfrac{8}{27}",explanation:"135 panels flagged. 40 have genuine defects. P \u2248 29.6%.",bayesWorking:null},
+{id:"l4_05",context:"Electrical continuity testing",scenario:"An electrician tests 800 circuits for continuity. 40 (5%) have genuine faults. The test correctly identifies 95% of faults, but gives a false fail on 3% of good circuits.",population:800,condition:{label:"Genuine circuit fault",count:40,baseRate:0.05},testPositive:{truePositive:38,falsePositive:23,total:61},testNegative:{falseNegative:2,trueNegative:737,total:739},sensitivity:0.95,specificity:0.97,gutCheckCorrect:"likely",answer:0.6230,answerFraction:"\\tfrac{38}{61}",answerSimplified:"\\tfrac{38}{61}",explanation:"61 circuits fail. 38 have genuine faults. P \u2248 62.3%.",bayesWorking:null},
+{id:"l4_06",context:"Gas detector bump test",scenario:"A safety team bump-tests 500 portable gas detectors. 15 (3%) are genuinely out of calibration. The bump test correctly identifies 93% of faulty detectors, but incorrectly fails 5% of working detectors.",population:500,condition:{label:"Out of calibration",count:15,baseRate:0.03},testPositive:{truePositive:14,falsePositive:24,total:38},testNegative:{falseNegative:1,trueNegative:461,total:462},sensitivity:0.93,specificity:0.95,gutCheckCorrect:"unlikely",answer:0.3684,answerFraction:"\\tfrac{14}{38}",answerSimplified:"\\tfrac{7}{19}",explanation:"38 detectors fail. 14 are genuinely faulty. P \u2248 36.8%.",bayesWorking:null},
+{id:"l4_07",context:"Radiographic weld inspection \u2014 pipeline",scenario:"A pipeline contractor radiographs 2,000 girth welds. 120 (6%) contain defects exceeding the standard. The radiographic interpretation correctly identifies 90% of defective welds, but reports false defects in 3% of acceptable welds.",population:2000,condition:{label:"Weld defect exceeds standard",count:120,baseRate:0.06},testPositive:{truePositive:108,falsePositive:56,total:164},testNegative:{falseNegative:12,trueNegative:1824,total:1836},sensitivity:0.90,specificity:0.97,gutCheckCorrect:"likely",answer:0.6585,answerFraction:"\\tfrac{108}{164}",answerSimplified:"\\tfrac{27}{41}",explanation:"164 welds flagged. 108 have genuine defects. P \u2248 65.9%.",bayesWorking:null},
+{id:"l4_08",context:"Shaft alignment \u2014 laser measurement",scenario:"A maintenance team laser-aligns 300 pump-motor sets. 45 (15%) are genuinely misaligned. The laser system correctly identifies 93%, but reports 7% of properly aligned sets as out of tolerance.",population:300,condition:{label:"Genuinely misaligned",count:45,baseRate:0.15},testPositive:{truePositive:42,falsePositive:18,total:60},testNegative:{falseNegative:3,trueNegative:237,total:240},sensitivity:0.93,specificity:0.93,gutCheckCorrect:"likely",answer:0.70,answerFraction:"\\tfrac{42}{60}",answerSimplified:"\\tfrac{7}{10}",explanation:"60 sets flagged. 42 genuinely misaligned. P = 7/10 = 70%.",bayesWorking:null},
+{id:"l4_09",context:"Rockwell hardness testing",scenario:"A heat treatment shop tests 1,000 parts for hardness. 70 (7%) are genuinely outside the specified range. The Rockwell tester correctly identifies 90% of out-of-spec parts, but gives false readings on 4% of good parts.",population:1000,condition:{label:"Outside hardness spec",count:70,baseRate:0.07},testPositive:{truePositive:63,falsePositive:37,total:100},testNegative:{falseNegative:7,trueNegative:893,total:900},sensitivity:0.90,specificity:0.96,gutCheckCorrect:"likely",answer:0.63,answerFraction:"\\tfrac{63}{100}",answerSimplified:"\\tfrac{63}{100}",explanation:"100 parts fail. 63 are genuinely out of spec. P = 63%.",bayesWorking:null},
+{id:"l4_10",context:"Dye penetrant inspection \u2014 surface crack detection",scenario:"A foundry inspects 3,000 castings using DPI. 180 (6%) have surface cracks exceeding criteria. DPI correctly reveals 88% of cracked castings, but shows false indications on 5% of crack-free castings.",population:3000,condition:{label:"Surface crack exceeds criteria",count:180,baseRate:0.06},testPositive:{truePositive:158,falsePositive:141,total:299},testNegative:{falseNegative:22,trueNegative:2679,total:2701},sensitivity:0.88,specificity:0.95,gutCheckCorrect:"likely",answer:0.5285,answerFraction:"\\tfrac{158}{299}",answerSimplified:"\\tfrac{158}{299}",explanation:"299 castings flagged. 158 have genuine cracks. P \u2248 52.9%.",bayesWorking:null},
+{id:"l4_11",context:"Critical bolt torque verification",scenario:"An inspector verifies 2,000 critical flange bolts. 60 (3%) are genuinely undertorqued. The verification wrench correctly identifies 95% of undertorqued bolts, but gives a false low reading on 2% of properly torqued bolts.",population:2000,condition:{label:"Undertorqued",count:60,baseRate:0.03},testPositive:{truePositive:57,falsePositive:39,total:96},testNegative:{falseNegative:3,trueNegative:1901,total:1904},sensitivity:0.95,specificity:0.98,gutCheckCorrect:"likely",answer:0.5938,answerFraction:"\\tfrac{57}{96}",answerSimplified:"\\tfrac{19}{32}",explanation:"96 bolts flagged. 57 genuinely undertorqued. P \u2248 59.4%.",bayesWorking:null},
+{id:"l4_12",context:"Oil analysis \u2014 wear metal detection",scenario:"A condition monitoring programme analyses 1,500 oil samples from gearboxes. 75 (5%) have abnormal wear. Oil analysis correctly identifies 85%, but flags 8% of healthy gearboxes.",population:1500,condition:{label:"Abnormal wear developing",count:75,baseRate:0.05},testPositive:{truePositive:64,falsePositive:114,total:178},testNegative:{falseNegative:11,trueNegative:1311,total:1322},sensitivity:0.85,specificity:0.92,gutCheckCorrect:"unlikely",answer:0.3596,answerFraction:"\\tfrac{64}{178}",answerSimplified:"\\tfrac{32}{89}",explanation:"178 gearboxes flagged. 64 have genuine wear. P \u2248 36.0%.",bayesWorking:null},
+{id:"l4_13",context:"Hydrostatic pressure test",scenario:"A manufacturer pressure-tests 500 vessels at 1.5\u00d7 design pressure. 10 (2%) have genuine structural weaknesses. The test correctly fails 100% of weak vessels, but also fails 1% of sound vessels.",population:500,condition:{label:"Structural weakness",count:10,baseRate:0.02},testPositive:{truePositive:10,falsePositive:5,total:15},testNegative:{falseNegative:0,trueNegative:485,total:485},sensitivity:1.00,specificity:0.99,gutCheckCorrect:"likely",answer:0.6667,answerFraction:"\\tfrac{10}{15}",answerSimplified:"\\tfrac{2}{3}",explanation:"15 vessels fail. 10 have genuine weaknesses. P = 2/3 \u2248 66.7%. 100% sensitivity = no weak vessel passes.",bayesWorking:null},
+{id:"l4_14",context:"Magnetic particle inspection \u2014 crankshaft",scenario:"A remanufacturer inspects 800 used crankshafts using MPI. 120 (15%) have fatigue cracks. MPI correctly detects 92% of cracked shafts, but gives false crack indications on 6% of sound shafts.",population:800,condition:{label:"Has fatigue crack",count:120,baseRate:0.15},testPositive:{truePositive:110,falsePositive:41,total:151},testNegative:{falseNegative:10,trueNegative:639,total:649},sensitivity:0.92,specificity:0.94,gutCheckCorrect:"likely",answer:0.7285,answerFraction:"\\tfrac{110}{151}",answerSimplified:"\\tfrac{110}{151}",explanation:"151 shafts flagged. 110 have cracks. P \u2248 72.8%.",bayesWorking:null},
+{id:"l4_15",context:"Automated optical inspection \u2014 PCB assembly",scenario:"An AOI system checks 10,000 solder joints per hour. 200 (2%) have genuine defects. The AOI correctly identifies 94%, but falsely rejects 3% of good joints.",population:10000,condition:{label:"Solder joint defect",count:200,baseRate:0.02},testPositive:{truePositive:188,falsePositive:294,total:482},testNegative:{falseNegative:12,trueNegative:9506,total:9518},sensitivity:0.94,specificity:0.97,gutCheckCorrect:"unlikely",answer:0.3900,answerFraction:"\\tfrac{188}{482}",answerSimplified:"\\tfrac{94}{241}",explanation:"482 joints flagged per hour. 188 have genuine defects. P \u2248 39.0%.",bayesWorking:null}
+]
+};
+
+// ─── GAME STATE ───
+var currentLevel = 'gcse';
+var sessionQuestions = [];
+var qIdx = 0;
+var totalScore = 0;
+var phase1Scores = [];
+var phase3Scores = [];
+var gutEstimates = []; // track gut check vs actual for insight
+var currentQ = null;
+var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ─── LEVEL SELECT ───
+var pa = new URLSearchParams(location.search);
+if (pa.get('level') && QUESTIONS[pa.get('level')]) {
+  currentLevel = pa.get('level');
+}
+document.querySelectorAll('.level-btn').forEach(function(b) {
+  b.classList.toggle('active', b.dataset.level === currentLevel);
+  b.addEventListener('click', function() {
+    document.querySelectorAll('.level-btn').forEach(function(x) { x.classList.remove('active'); });
+    b.classList.add('active');
+    currentLevel = b.dataset.level;
+  });
+});
+
+// ─── HELPERS ───
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+function showPhase(n) {
+  document.getElementById('phase1').style.display = 'none';
+  document.getElementById('phase2').style.display = 'none';
+  document.getElementById('phase3').style.display = 'none';
+  document.getElementById('phase' + n).style.display = 'flex';
+}
+
+function kRender(tex) {
+  if (typeof katex === 'undefined') return tex;
+  return katex.renderToString(tex, { throwOnError: false, displayMode: false });
+}
+function kRenderBlock(tex) {
+  if (typeof katex === 'undefined') return tex;
+  return katex.renderToString(tex, { throwOnError: false, displayMode: true });
+}
+
+function numFmt(n) {
+  return n.toLocaleString('en-GB');
+}
+
+// ─── START GAME ───
+function startGame() {
+  var bank = QUESTIONS[currentLevel];
+  sessionQuestions = shuffle(bank).slice(0, 8);
+  qIdx = 0;
+  totalScore = 0;
+  phase1Scores = [];
+  phase3Scores = [];
+  gutEstimates = [];
+  document.getElementById('scoreDisplay').textContent = '0';
+  document.getElementById('qDisplay').textContent = '1/8';
+  // Build progress pips
+  var pr = document.getElementById('progress');
+  pr.innerHTML = '';
+  for (var i = 0; i < 8; i++) {
+    var d = document.createElement('div');
+    d.className = 'pip' + (i === 0 ? ' current' : '');
+    pr.appendChild(d);
+  }
+  show('gameScreen');
+  showQuestion();
+  mfg('game_started', { game_slug: 'screening-room', level: currentLevel });
+}
+
+// ─── SHOW QUESTION (Phase 1) ───
+function showQuestion() {
+  currentQ = sessionQuestions[qIdx];
+  document.getElementById('qDisplay').textContent = (qIdx + 1) + '/8';
+  document.getElementById('scoreDisplay').textContent = totalScore;
+
+  // Phase 1 setup
+  document.getElementById('qContext').textContent = currentQ.context;
+  document.getElementById('qScenario').textContent = currentQ.scenario;
+  document.getElementById('gutResult').textContent = '';
+  document.getElementById('gutResult').className = 'gut-result';
+  var opts = document.querySelectorAll('.gut-btn');
+  opts.forEach(function(b) {
+    b.className = 'gut-btn';
+    b.disabled = false;
+  });
+  showPhase(1);
+}
+
+// ─── PHASE 1: GUT CHECK ───
+function handleGut(btn) {
+  var selected = btn.dataset.gut;
+  var correct = currentQ.gutCheckCorrect;
+  var isCorrect = (selected === correct);
+
+  // Determine what range the actual answer maps to for display
+  var gutMidpoint;
+  if (selected === 'very_likely') gutMidpoint = 87.5;
+  else if (selected === 'likely') gutMidpoint = 50;
+  else if (selected === 'unlikely') gutMidpoint = 15;
+  else gutMidpoint = 2.5;
+
+  gutEstimates.push({ estimated: gutMidpoint, actual: currentQ.answer * 100 });
+
+  document.querySelectorAll('.gut-btn').forEach(function(b) {
+    b.disabled = true;
+    b.classList.add('disabled');
+    if (b.dataset.gut === correct && !isCorrect) {
+      b.classList.add('reveal');
+    }
+  });
+
+  if (isCorrect) {
+    btn.classList.remove('disabled');
+    btn.classList.add('correct');
+    btn.classList.add('correct-mark');
+    totalScore += 1;
+    phase1Scores.push(1);
+    document.getElementById('gutResult').textContent = 'Correct range! +1 point';
+    document.getElementById('gutResult').className = 'gut-result right';
+  } else {
+    btn.classList.remove('disabled');
+    btn.classList.add('incorrect');
+    btn.classList.add('incorrect-mark');
+    phase1Scores.push(0);
+    document.getElementById('gutResult').textContent = 'Not quite \u2014 the answer falls in a different range.';
+    document.getElementById('gutResult').className = 'gut-result wrong';
+  }
+
+  document.getElementById('scoreDisplay').textContent = totalScore;
+  mfg('question_answered', { game_slug: 'screening-room', level: currentLevel, question_index: qIdx + 1, correct: isCorrect, phase: 1 });
+
+  // Move to phase 2 after a brief pause
+  setTimeout(function() { showPhase2(); }, 1200);
+}
+
+// ─── PHASE 2: ICON ARRAY ───
+function showPhase2() {
+  var q = currentQ;
+  document.getElementById('qContext2').textContent = q.context;
+  document.getElementById('qScenario2').textContent = q.scenario;
+  document.getElementById('legendCondLabel').textContent = q.condition.label;
+
+  var grid = document.getElementById('iconGrid');
+  grid.innerHTML = '';
+  var summary = document.getElementById('iconSummary');
+  summary.className = 'icon-summary';
+  summary.innerHTML = '';
+  var contBtn = document.getElementById('continueBtn');
+  contBtn.className = 'continue-btn';
+
+  var pop = q.population;
+  var condCount = q.condition.count;
+  var tp = q.testPositive.truePositive;
+  var fp = q.testPositive.falsePositive;
+
+  // Determine grid layout
+  var gridWidth, sizeClass;
+  if (pop <= 200) {
+    gridWidth = 10; sizeClass = 'size-large';
+    grid.className = 'icon-grid grid-10';
+  } else if (pop <= 1000) {
+    gridWidth = 25; sizeClass = 'size-medium';
+    grid.className = 'icon-grid grid-25';
+  } else if (pop <= 10000) {
+    gridWidth = 100; sizeClass = 'size-small';
+    grid.className = 'icon-grid grid-100';
+  } else {
+    gridWidth = 100; sizeClass = 'size-tiny';
+    grid.className = 'icon-grid grid-100';
+  }
+
+  // For very large populations, show a representative sample
+  var displayPop = pop;
+  var scale = 1;
+  if (pop > 10000) {
+    // Scale down to 10000 icons max
+    scale = 10000 / pop;
+    displayPop = 10000;
+  }
+
+  var scaledCond = Math.round(condCount * scale);
+  var scaledTp = Math.round(tp * scale);
+  var scaledFp = Math.round(fp * scale);
+  // Ensure scaledTp <= scaledCond
+  if (scaledTp > scaledCond) scaledTp = scaledCond;
+
+  // Build icon indices
+  var conditionIndices = [];
+  var fpIndices = [];
+  // Place condition cases at start for clarity
+  for (var i = 0; i < scaledCond; i++) conditionIndices.push(i);
+  // FP are among the non-condition group
+  var nonCondStart = scaledCond;
+  for (var i = 0; i < scaledFp; i++) fpIndices.push(nonCondStart + i);
+
+  // Create icons
+  var icons = [];
+  for (var i = 0; i < displayPop; i++) {
+    var el = document.createElement('div');
+    el.className = 'person-icon ' + sizeClass;
+    el.dataset.idx = i;
+    if (sizeClass === 'size-large') {
+      // Show mark space for large icons
+      var mark = document.createElement('span');
+      mark.className = 'mark';
+      el.appendChild(mark);
+    }
+    grid.appendChild(el);
+    icons.push(el);
+  }
+
+  showPhase(2);
+
+  if (reducedMotion) {
+    // Show final state instantly
+    conditionIndices.forEach(function(idx) {
+      if (idx < scaledTp) {
+        icons[idx].classList.add('true-positive');
+        var m = icons[idx].querySelector('.mark');
+        if (m) m.textContent = '\u2713';
+      } else {
+        icons[idx].classList.add('condition');
+      }
+    });
+    fpIndices.forEach(function(idx) {
+      icons[idx].classList.add('false-positive');
+      var m = icons[idx].querySelector('.mark');
+      if (m) m.textContent = '\u2717';
+    });
+    summary.innerHTML = '<strong>' + numFmt(tp) + '</strong> true positives + <strong>' + numFmt(fp) + '</strong> false positives = <strong>' + numFmt(q.testPositive.total) + '</strong> total positive results';
+    summary.classList.add('visible');
+    contBtn.classList.add('visible');
+    return;
+  }
+
+  // Animated sequence
+  // Step 1: All grey (already done)
+  // Step 2: Highlight condition in blue
+  setTimeout(function() {
+    conditionIndices.forEach(function(idx) {
+      icons[idx].classList.add('condition');
+    });
+  }, 500);
+
+  // Step 3: True positives turn green with checkmark
+  setTimeout(function() {
+    for (var i = 0; i < scaledTp; i++) {
+      var idx = conditionIndices[i];
+      icons[idx].classList.remove('condition');
+      icons[idx].classList.add('true-positive');
+      var m = icons[idx].querySelector('.mark');
+      if (m) m.textContent = '\u2713';
+    }
+  }, 1500);
+
+  // Step 4: False positives turn red with X
+  setTimeout(function() {
+    fpIndices.forEach(function(idx) {
+      icons[idx].classList.add('false-positive');
+      var m = icons[idx].querySelector('.mark');
+      if (m) m.textContent = '\u2717';
+    });
+  }, 2300);
+
+  // Step 5: Summary label
+  setTimeout(function() {
+    summary.innerHTML = '<strong>' + numFmt(tp) + '</strong> true positives + <strong>' + numFmt(fp) + '</strong> false positives = <strong>' + numFmt(q.testPositive.total) + '</strong> total positive results';
+    summary.classList.add('visible');
+  }, 3100);
+
+  // Step 6: Continue button
+  setTimeout(function() {
+    contBtn.classList.add('visible');
+  }, 3800);
+}
+
+// ─── PHASE 3: CALCULATE ───
+function showPhase3() {
+  var q = currentQ;
+  document.getElementById('calcPrompt').innerHTML = 'Out of <strong>' + numFmt(q.testPositive.total) + '</strong> people who tested positive, how many actually have the condition?<br>Calculate ' + kRender('P(\\text{condition} \\mid \\text{positive})');
+  document.getElementById('calcInput').value = '';
+  document.getElementById('calcInput').disabled = false;
+  document.getElementById('calcSubmit').disabled = false;
+  document.getElementById('calcResult').className = 'calc-result';
+  document.getElementById('calcResult').style.display = 'none';
+  document.getElementById('nextQuestionBtn').style.display = 'none';
+  document.getElementById('bayesBox').style.display = 'none';
+  showPhase(3);
+  document.getElementById('calcInput').focus();
+}
+
+// Handle Enter key on input
+document.getElementById('calcInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleCalc();
+});
+
+function parseAnswer(input) {
+  var s = input.trim();
+  if (!s) return NaN;
+
+  // Remove percentage sign and treat as percentage
+  if (s.endsWith('%')) {
+    var pct = parseFloat(s.replace('%', ''));
+    if (isNaN(pct)) return NaN;
+    return pct / 100;
+  }
+
+  // Fraction: a/b
+  if (s.indexOf('/') !== -1) {
+    var parts = s.split('/');
+    if (parts.length !== 2) return NaN;
+    var num = parseFloat(parts[0].trim());
+    var den = parseFloat(parts[1].trim());
+    if (isNaN(num) || isNaN(den) || den === 0) return NaN;
+    return num / den;
+  }
+
+  // Decimal
+  var val = parseFloat(s);
+  if (isNaN(val)) return NaN;
+
+  // If > 1, assume percentage
+  if (val > 1) return val / 100;
+  return val;
+}
+
+function handleCalc() {
+  var input = document.getElementById('calcInput').value;
+  var parsed = parseAnswer(input);
+  var q = currentQ;
+  var correct = q.answer;
+
+  document.getElementById('calcInput').disabled = true;
+  document.getElementById('calcSubmit').disabled = true;
+
+  if (isNaN(parsed)) {
+    // Invalid input — treat as incorrect
+    showCalcResult(false, q);
+    return;
+  }
+
+  // Check tolerance
+  var diff = Math.abs(parsed - correct);
+  var isCorrect = diff <= 0.005 || (diff / Math.max(correct, 0.0001)) <= 0.015;
+
+  // Also accept if percentage form was close
+  if (!isCorrect) {
+    var pctDiff = Math.abs(parsed * 100 - correct * 100);
+    if (pctDiff <= 0.5) isCorrect = true;
+  }
+
+  showCalcResult(isCorrect, q);
+}
+
+function showCalcResult(isCorrect, q) {
+  var result = document.getElementById('calcResult');
+  var title = document.getElementById('calcResultTitle');
+  var expl = document.getElementById('calcExplanation');
+
+  if (isCorrect) {
+    result.className = 'calc-result correct';
+    title.textContent = 'Correct! +3 points \u2713';
+    totalScore += 3;
+    phase3Scores.push(3);
+  } else {
+    result.className = 'calc-result incorrect';
+    title.textContent = 'Not quite \u2717';
+    phase3Scores.push(0);
+  }
+
+  // Build explanation
+  var explHTML = '<p>' + q.explanation + '</p>';
+  explHTML += '<p style="margin-top:8px">' + kRender('P = ' + q.answerFraction);
+  if (q.answerSimplified !== q.answerFraction) {
+    explHTML += ' = ' + kRender(q.answerSimplified);
+  }
+  explHTML += ' \\approx ' + (q.answer * 100).toFixed(1) + '%</p>';
+  expl.innerHTML = explHTML;
+
+  // Bayes working for A-Level
+  if (q.bayesWorking && currentLevel === 'alevel') {
+    document.getElementById('bayesBox').style.display = 'block';
+    document.getElementById('bayesFormula').innerHTML = kRenderBlock(q.bayesWorking);
+  }
+
+  result.style.display = 'block';
+  document.getElementById('scoreDisplay').textContent = totalScore;
+  document.getElementById('nextQuestionBtn').style.display = 'block';
+
+  mfg('question_answered', { game_slug: 'screening-room', level: currentLevel, question_index: qIdx + 1, correct: isCorrect, phase: 3 });
+}
+
+// ─── NEXT QUESTION ───
+function nextQuestion() {
+  // Update pip
+  var pips = document.querySelectorAll('.pip');
+  var qScore = (phase1Scores[qIdx] || 0) + (phase3Scores[qIdx] || 0);
+  if (pips[qIdx]) {
+    pips[qIdx].classList.remove('current');
+    if (qScore === 4) pips[qIdx].classList.add('done');
+    else if (qScore > 0) pips[qIdx].classList.add('partial');
+    else pips[qIdx].classList.add('fail');
+  }
+
+  qIdx++;
+  if (qIdx >= 8) {
+    endGame();
+    return;
+  }
+  if (pips[qIdx]) pips[qIdx].classList.add('current');
+  showQuestion();
+}
+
+// ─── END GAME ───
+function endGame() {
+  var totalCorrectPhase1 = phase1Scores.filter(function(s) { return s > 0; }).length;
+  var totalCorrectPhase3 = phase3Scores.filter(function(s) { return s > 0; }).length;
+  var pct = Math.round((totalCorrectPhase1 + totalCorrectPhase3) / 16 * 100);
+
+  var title = 'Keep Practising!';
+  if (totalScore >= 28) title = 'Outstanding!';
+  else if (totalScore >= 20) title = 'Well Done!';
+  else if (totalScore >= 12) title = 'Good Effort!';
+
+  document.getElementById('endScore').textContent = totalScore + ' / 32';
+
+  var stats = document.getElementById('endStats');
+  stats.innerHTML =
+    '<div class="end-stat"><div class="end-stat-label">Gut Check</div><div class="end-stat-val">' + totalCorrectPhase1 + '/8</div></div>' +
+    '<div class="end-stat"><div class="end-stat-label">Calculations</div><div class="end-stat-val">' + totalCorrectPhase3 + '/8</div></div>' +
+    '<div class="end-stat"><div class="end-stat-label">Score</div><div class="end-stat-val">' + totalScore + '</div></div>' +
+    '<div class="end-stat"><div class="end-stat-label">Accuracy</div><div class="end-stat-val">' + pct + '%</div></div>';
+
+  // Insight summary
+  var avgEstimated = 0, avgActual = 0;
+  gutEstimates.forEach(function(g) {
+    avgEstimated += g.estimated;
+    avgActual += g.actual;
+  });
+  avgEstimated = (avgEstimated / gutEstimates.length).toFixed(1);
+  avgActual = (avgActual / gutEstimates.length).toFixed(1);
+
+  var insight = document.getElementById('endInsight');
+  insight.innerHTML = 'In this session, you saw <strong>8</strong> screening scenarios. ' +
+    'On average, you estimated the true positive rate at <strong>' + avgEstimated + '%</strong> ' +
+    'but the actual average was <strong>' + avgActual + '%</strong>. ' +
+    '<strong>The base rate matters more than test accuracy.</strong>';
+
+  // Personal best check
+  var pbKey = 'mfg_pb_screening-room_' + currentLevel;
+  var oldPB = parseInt(localStorage.getItem(pbKey)) || 0;
+  if (totalScore > oldPB) {
+    localStorage.setItem(pbKey, totalScore);
+    if (oldPB > 0) {
+      mfg('personal_best_set', { game_slug: 'screening-room', level: currentLevel, score: totalScore, previous_best: oldPB });
+    }
+  }
+
+  mfg('game_completed', { game_slug: 'screening-room', level: currentLevel, score: totalScore, questions_answered: 8, questions_correct: totalCorrectPhase1 + totalCorrectPhase3 });
+
+  if (window.MaffsLeaderboard) {
+    MaffsLeaderboard.submitScore('screening-room', currentLevel, totalScore, 8).catch(function() {});if(window.MaffsScoreHistory){MaffsScoreHistory.record('screening-room',currentLevel,totalScore);}
+  }
+
+  show('endScreen');
+}
+
+function backToStart() {
+  show('startScreen');
+}
+
+// ─── ACCESSIBILITY TOGGLE ───
+(function() {
+  var KEY = 'mfg_accessible';
+  var btn = document.getElementById('a11yToggle');
+  if (!btn) return;
+  function apply(on) {
+    document.body.classList.toggle('accessible', on);
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', String(on));
+  }
+  apply(localStorage.getItem(KEY) === 'true');
+  btn.addEventListener('click', function() {
+    var on = !document.body.classList.contains('accessible');
+    localStorage.setItem(KEY, String(on));
+    apply(on);
+  });
+})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

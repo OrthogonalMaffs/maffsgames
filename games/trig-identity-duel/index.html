@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Exact trig values, sine rule, and cosine rule. 99 questions for GCSE, A-Level, and Level 4 geometry.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/trig-identity-duel/">
+<meta property="og:title" content="Trig Identity Duel — MaffsGames">
+<meta property="og:description" content="Exact trig values, sine rule, and cosine rule. 99 questions for GCSE, A-Level, and Level 4 geometry.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/trig-identity-duel/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Trig Identity Duel — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<!-- Google Analytics (cookieless) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {send_page_view:true,storage:'none',anonymize_ip:true});
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0c0a15;--surface:#161226;--border:#2a2244;
+  --primary:#e11d48;--accent:#06b6d4;--wrong:#f97316;
+  --text:#f0eef5;--muted:#8a82a6;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:0.85rem;color:var(--muted);margin-top:0.3rem}
+.level-select{display:flex;gap:0.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap}
+.level-btn{padding:0.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.level-btn[data-level="gcse"].active{background:#3b82f6;border-color:#3b82f6}
+.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:0.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}.hud-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:130px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0.6rem}
+.q-card .context{font-size:0.92rem;color:var(--text);line-height:1.6;max-width:620px}
+.q-card .prompt{font-size:0.85rem;color:var(--accent);font-weight:600;margin-top:0.3rem}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1rem}
+.opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.95rem;cursor:pointer;transition:all 0.15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(225,29,72,0.2)}
+.opt-btn.correct{border-color:var(--accent);background:rgba(6,182,212,0.12);animation:pop 0.3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(249,115,22,0.12);animation:shake 0.3s}
+.opt-btn.reveal{border-color:var(--accent);opacity:0.7}
+.opt-btn.disabled{pointer-events:none;opacity:0.5}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background 0.3s}
+.pip.done{background:var(--accent)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:0.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem}
+.play-again{padding:0.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform 0.15s}
+.play-again:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+.katex{font-size:1.05em!important}.q-card .katex{font-size:1.25em!important}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:0.85rem}.back-link:hover{color:var(--text)}
+/* === Accessibility === */
+body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
+body.accessible p, body.accessible .question-text, body.accessible .step-text, body.accessible .option-label, body.accessible .card-text { line-height: 2.0; max-width: 65ch; }
+body.accessible { background-color: #12141f !important; }
+body.accessible.light-theme { background-color: #fdf6e3 !important; color: #2d2d2d !important; }
+body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em; }
+.a11y-toggle { background: #1a2744; color: #ffffff; border: 1px solid #2a3a5c; border-radius: 6px; width: 36px; height: 36px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: background 0.15s; }
+.a11y-toggle.active, .a11y-toggle:hover { background: #0d9488; }
+.correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
+.incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">&larr; Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header">
+      <h1>Trig Identity Duel</h1>
+      <div class="sub">Sine rule. Cosine rule. Identities. Prove yourself.</div>
+      <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    </div>
+    <div class="level-select">
+      <button class="level-btn active" data-level="gcse">GCSE</button>
+      <button class="level-btn" data-level="alevel">A-Level</button>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:0.82rem;margin:0.8rem 0;line-height:1.5">
+      <strong>GCSE:</strong> Sine rule, cosine rule, area = &frac12;ab sin C, exact trig values<br>
+      <strong>A-Level:</strong> + double angle formulae, addition formulae, trig identities, proving identities
+    </p>
+    <div style="text-align:center;margin-top:1.5rem">
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+      <button class="play-again" onclick="startGame()">Start</button>
+    </div>
+  </div>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="q-card">
+      <div class="context" id="context"></div>
+      <div id="question"></div>
+      <div class="prompt" id="prompt"></div>
+    </div>
+    <div class="options" id="options"></div>
+  </div>
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resultTitle">Well Done!</h2>
+      <div class="final-score" id="finalScore">0</div>
+      <div class="stats" id="statsLine"></div>
+      <button class="play-again" onclick="showMenu()">Play Again</button>
+    </div>
+  </div>
+</div>
+<script>
+const QUESTIONS={
+gcse:[
+  {ctx:'',q:'\\sin 30\u00b0',ask:'Exact value',correct:'\\dfrac{1}{2}',d:['\\dfrac{\\sqrt{3}}{2}','\\dfrac{1}{\\sqrt{2}}','1']},
+  {ctx:'',q:'\\cos 30\u00b0',ask:'Exact value',correct:'\\dfrac{\\sqrt{3}}{2}',d:['\\dfrac{1}{2}','\\dfrac{1}{\\sqrt{2}}','\\sqrt{3}']},
+  {ctx:'',q:'\\tan 30\u00b0',ask:'Exact value',correct:'\\dfrac{1}{\\sqrt{3}}',d:['\\sqrt{3}','\\dfrac{1}{2}','1']},
+  {ctx:'',q:'\\sin 45\u00b0',ask:'Exact value',correct:'\\dfrac{1}{\\sqrt{2}}',d:['\\dfrac{1}{2}','\\dfrac{\\sqrt{3}}{2}','1']},
+  {ctx:'',q:'\\cos 45\u00b0',ask:'Exact value',correct:'\\dfrac{1}{\\sqrt{2}}',d:['\\dfrac{1}{2}','\\dfrac{\\sqrt{3}}{2}','0']},
+  {ctx:'',q:'\\tan 45\u00b0',ask:'Exact value',correct:'1',d:['\\dfrac{1}{\\sqrt{2}}','\\sqrt{3}','0']},
+  {ctx:'',q:'\\sin 60\u00b0',ask:'Exact value',correct:'\\dfrac{\\sqrt{3}}{2}',d:['\\dfrac{1}{2}','\\dfrac{1}{\\sqrt{2}}','\\sqrt{3}']},
+  {ctx:'',q:'\\cos 60\u00b0',ask:'Exact value',correct:'\\dfrac{1}{2}',d:['\\dfrac{\\sqrt{3}}{2}','\\dfrac{1}{\\sqrt{2}}','0']},
+  {ctx:'',q:'\\tan 60\u00b0',ask:'Exact value',correct:'\\sqrt{3}',d:['\\dfrac{1}{\\sqrt{3}}','1','\\dfrac{\\sqrt{3}}{2}']},
+  {ctx:'',q:'\\sin 0\u00b0',ask:'Exact value',correct:'0',d:['1','\\dfrac{1}{2}','-1']},
+  {ctx:'',q:'\\cos 90\u00b0',ask:'Exact value',correct:'0',d:['1','\\dfrac{1}{2}','-1']},
+  {ctx:'',q:'\\sin 90\u00b0',ask:'Exact value',correct:'1',d:['0','\\dfrac{1}{2}','-1']},
+  {ctx:'Triangle: A = 30\u00b0, a = 5 cm, B = 45\u00b0.',q:'\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B}',ask:'Find b (to 1 d.p.)',correct:'7.1',d:['5.0','3.5','10.0']},
+  {ctx:'Triangle: A = 40\u00b0, a = 8 cm, B = 60\u00b0.',q:'\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B}',ask:'Find b (to 1 d.p.)',correct:'10.8',d:['6.9','12.4','9.2']},
+  {ctx:'Triangle: a = 10, sin A = 0.5, sin B = 0.8.',q:'\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B}',ask:'Find b',correct:'16',d:['12.5','8','20']},
+  {ctx:'Triangle: A = 30\u00b0, B = 90\u00b0, a = 6.',q:'\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B}',ask:'Find b',correct:'12',d:['6','3','6\\sqrt{3}']},
+  {ctx:'Triangle: A = 45\u00b0, a = 10, B = 30\u00b0.',q:'\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B}',ask:'Find b (to 1 d.p.)',correct:'7.1',d:['5.0','14.1','8.7']},
+  {ctx:'Triangle: a = 12, b = 8, A = 50\u00b0.',q:'\\dfrac{\\sin B}{b} = \\dfrac{\\sin A}{a}',ask:'Find angle B (to 1 d.p.)',correct:'30.7\u00b0',d:['40.0\u00b0','25.3\u00b0','60.0\u00b0']},
+  {ctx:'Triangle: A = 60\u00b0, a = 7, B = 80\u00b0.',q:'',ask:'Find b (to 1 d.p.)',correct:'8.0',d:['6.1','9.2','7.5']},
+  {ctx:'Triangle: B = 35\u00b0, b = 9, C = 70\u00b0.',q:'',ask:'Find c (to 1 d.p.)',correct:'14.7',d:['11.3','18.0','12.5']},
+  {ctx:'Triangle: a = 15, A = 40\u00b0, B = 55\u00b0.',q:'',ask:'Find b (to 1 d.p.)',correct:'19.1',d:['12.4','22.3','16.8']},
+  {ctx:'Triangle: b = 20, B = 65\u00b0, C = 45\u00b0.',q:'',ask:'Find c (to 1 d.p.)',correct:'15.6',d:['14.1','18.2','20.0']},
+  {ctx:'Triangle: a = 6, b = 6, A = 40\u00b0.',q:'',ask:'Find angle B',correct:'40\u00b0',d:['50\u00b0','60\u00b0','80\u00b0']},
+  {ctx:'Triangle: a = 10, A = 30\u00b0, b = 10.',q:'',ask:'Find angle B',correct:'30\u00b0',d:['60\u00b0','90\u00b0','150\u00b0']},
+  {ctx:'Triangle: a = 5, b = 7, C = 60\u00b0.',q:'c^2 = a^2 + b^2 - 2ab\\cos C',ask:'Find c (to 1 d.p.)',correct:'6.2',d:['8.6','5.0','7.4']},
+  {ctx:'Triangle: a = 8, b = 6, C = 90\u00b0.',q:'c^2 = a^2 + b^2 - 2ab\\cos C',ask:'Find c',correct:'10',d:['14','100','48']},
+  {ctx:'Triangle: a = 3, b = 4, C = 120\u00b0.',q:'',ask:'Find c (to 1 d.p.)',correct:'6.1',d:['5.0','7.0','4.6']},
+  {ctx:'Triangle: a = 10, b = 12, c = 15.',q:'\\cos C = \\dfrac{a^2+b^2-c^2}{2ab}',ask:'Find angle C (to 1 d.p.)',correct:'85.5\u00b0',d:['90.0\u00b0','75.3\u00b0','95.0\u00b0']},
+  {ctx:'Triangle: a = 7, b = 9, c = 11.',q:'',ask:'Find the largest angle (to 1 d.p.)',correct:'86.2\u00b0',d:['90.0\u00b0','78.5\u00b0','95.0\u00b0']},
+  {ctx:'Triangle: a = 5, b = 5, C = 60\u00b0.',q:'',ask:'Find c',correct:'5',d:['5\\sqrt{3}','10','\\sqrt{50}']},
+  {ctx:'Triangle: a = 4, b = 6, C = 45\u00b0.',q:'',ask:'Find c\u00b2 (exact)',correct:'52 - 24\\sqrt{2}',d:['52','28','52 + 24\\sqrt{2}']},
+  {ctx:'Triangle: a = 8, b = 8, C = 120\u00b0.',q:'',ask:'Find c (to 1 d.p.)',correct:'13.9',d:['16.0','11.3','8.0']},
+  {ctx:'Triangle: a = 6, b = 10, c = 8.',q:'',ask:'Find angle A (to 1 d.p.)',correct:'36.9\u00b0',d:['30.0\u00b0','45.0\u00b0','53.1\u00b0']},
+  {ctx:'Triangle: a = 3, b = 5, c = 7.',q:'',ask:'Find angle C (to 1 d.p.)',correct:'120.0\u00b0',d:['90.0\u00b0','135.0\u00b0','150.0\u00b0']},
+  {ctx:'Triangle: sides 12, 13, 5.',q:'',ask:'Is this a right-angled triangle?',correct:'Yes',d:['No','Cannot tell','Only if C = 90\u00b0']},
+  {ctx:'Triangle: sides 7, 8, 12.',q:'',ask:'Is the largest angle obtuse?',correct:'Yes',d:['No','Exactly 90\u00b0','Cannot tell']},
+  {ctx:'Triangle: a = 6, b = 8, C = 30\u00b0.',q:'\\text{Area} = \\tfrac{1}{2}ab\\sin C',ask:'Find the area',correct:'12',d:['24','6\\sqrt{3}','48']},
+  {ctx:'Triangle: a = 10, b = 7, C = 90\u00b0.',q:'',ask:'Find the area',correct:'35',d:['70','17','\\dfrac{70}{\\sqrt{2}}']},
+  {ctx:'Triangle: a = 5, b = 12, C = 60\u00b0.',q:'',ask:'Find the area (exact)',correct:'15\\sqrt{3}',d:['30\\sqrt{3}','30','60']},
+  {ctx:'Triangle: a = 8, b = 8, C = 45\u00b0.',q:'',ask:'Find the area (exact)',correct:'16\\sqrt{2}',d:['32','32\\sqrt{2}','64']},
+  {ctx:'Triangle: a = 4, b = 9, C = 150\u00b0.',q:'',ask:'Find the area',correct:'9',d:['18','36','4.5']},
+  {ctx:'Triangle: a = 10, b = 10, C = 120\u00b0.',q:'',ask:'Find the area (exact)',correct:'25\\sqrt{3}',d:['50\\sqrt{3}','50','100']},
+  {ctx:'Parallelogram: sides 6 and 10, included angle 30\u00b0.',q:'',ask:'Find the area',correct:'30',d:['60','15','30\\sqrt{3}']},
+  {ctx:'Triangle: area = 20, a = 8, b = 10.',q:'20 = \\tfrac{1}{2}(8)(10)\\sin C',ask:'Find sin C',correct:'0.5',d:['0.25','1','\\dfrac{1}{\\sqrt{2}}']},
+  {ctx:'Triangle: area = 20, a = 8, b = 10.',q:'',ask:'Find angle C',correct:'30\u00b0',d:['45\u00b0','60\u00b0','90\u00b0']},
+  {ctx:'Triangle: a = 14, b = 9, C = 60\u00b0.',q:'',ask:'Find the area (to 1 d.p.)',correct:'54.6',d:['63.0','31.5','109.1']},
+  {ctx:'Equilateral triangle side 6.',q:'',ask:'Find the area (exact)',correct:'9\\sqrt{3}',d:['18\\sqrt{3}','36','18']},
+  {ctx:'Triangle: a = 5, b = 5, C = 90\u00b0.',q:'',ask:'Find the area',correct:'12.5',d:['25','10','5\\sqrt{2}']},
+  {ctx:'Triangle: a = 3, b = 4, C = 90\u00b0.',q:'',ask:'Find the area',correct:'6',d:['12','5','7']},
+  {ctx:'Kite: two sides of 8, angle between = 60\u00b0.',q:'',ask:'Area of kite (two triangles)',correct:'32\\sqrt{3}',d:['64','64\\sqrt{3}','16\\sqrt{3}']},
+],
+alevel:[
+  {ctx:'',q:'\\sin\\dfrac{\\pi}{6}',ask:'Exact value',correct:'\\dfrac{1}{2}',d:['\\dfrac{\\sqrt{3}}{2}','\\dfrac{1}{\\sqrt{2}}','1']},
+  {ctx:'',q:'\\cos\\dfrac{\\pi}{3}',ask:'Exact value',correct:'\\dfrac{1}{2}',d:['\\dfrac{\\sqrt{3}}{2}','\\dfrac{1}{\\sqrt{2}}','0']},
+  {ctx:'',q:'\\tan\\dfrac{\\pi}{4}',ask:'Exact value',correct:'1',d:['0','\\dfrac{1}{\\sqrt{2}}','\\sqrt{3}']},
+  {ctx:'',q:'\\sin\\dfrac{\\pi}{4}',ask:'Exact value',correct:'\\dfrac{\\sqrt{2}}{2}',d:['\\dfrac{1}{2}','\\dfrac{\\sqrt{3}}{2}','1']},
+  {ctx:'',q:'\\cos\\dfrac{\\pi}{6}',ask:'Exact value',correct:'\\dfrac{\\sqrt{3}}{2}',d:['\\dfrac{1}{2}','\\dfrac{\\sqrt{2}}{2}','1']},
+  {ctx:'',q:'\\tan\\dfrac{\\pi}{3}',ask:'Exact value',correct:'\\sqrt{3}',d:['\\dfrac{1}{\\sqrt{3}}','1','\\dfrac{\\sqrt{3}}{2}']},
+  {ctx:'',q:'\\sin\\dfrac{2\\pi}{3}',ask:'Exact value',correct:'\\dfrac{\\sqrt{3}}{2}',d:['-\\dfrac{\\sqrt{3}}{2}','\\dfrac{1}{2}','-\\dfrac{1}{2}']},
+  {ctx:'',q:'\\cos\\dfrac{5\\pi}{6}',ask:'Exact value',correct:'-\\dfrac{\\sqrt{3}}{2}',d:['\\dfrac{\\sqrt{3}}{2}','-\\dfrac{1}{2}','\\dfrac{1}{2}']},
+  {ctx:'',q:'\\sin 2\\theta',ask:'Which identity?',correct:'2\\sin\\theta\\cos\\theta',d:['\\sin^2\\theta + \\cos^2\\theta','2\\cos^2\\theta - 1','1 - 2\\sin^2\\theta']},
+  {ctx:'',q:'\\cos 2\\theta',ask:'Which is NOT equivalent?',correct:'2\\sin\\theta\\cos\\theta',d:['\\cos^2\\theta - \\sin^2\\theta','2\\cos^2\\theta - 1','1 - 2\\sin^2\\theta']},
+  {ctx:'',q:'\\cos 2\\theta = 1 - 2\\sin^2\\theta',ask:'Rearrange for sin\u00b2\u03b8',correct:'\\dfrac{1-\\cos 2\\theta}{2}',d:['\\dfrac{1+\\cos 2\\theta}{2}','1-\\cos 2\\theta','\\dfrac{\\cos 2\\theta - 1}{2}']},
+  {ctx:'',q:'\\cos 2\\theta = 2\\cos^2\\theta - 1',ask:'Rearrange for cos\u00b2\u03b8',correct:'\\dfrac{1+\\cos 2\\theta}{2}',d:['\\dfrac{1-\\cos 2\\theta}{2}','1+\\cos 2\\theta','\\dfrac{\\cos 2\\theta + 1}{4}']},
+  {ctx:'Given sin \u03b8 = 3/5 (\u03b8 acute).',q:'',ask:'Find sin 2\u03b8',correct:'\\dfrac{24}{25}',d:['\\dfrac{6}{5}','\\dfrac{9}{25}','\\dfrac{12}{25}']},
+  {ctx:'Given cos \u03b8 = 4/5 (\u03b8 acute).',q:'',ask:'Find cos 2\u03b8',correct:'\\dfrac{7}{25}',d:['\\dfrac{8}{5}','\\dfrac{16}{25}','-\\dfrac{7}{25}']},
+  {ctx:'Given tan \u03b8 = 1 (\u03b8 acute).',q:'',ask:'Find sin 2\u03b8',correct:'1',d:['\\dfrac{1}{2}','\\dfrac{\\sqrt{2}}{2}','2']},
+  {ctx:'',q:'\\tan 2\\theta',ask:'Express in terms of tan \u03b8',correct:'\\dfrac{2\\tan\\theta}{1-\\tan^2\\theta}',d:['2\\tan\\theta','\\dfrac{\\tan^2\\theta}{1-\\tan\\theta}','\\dfrac{2\\tan\\theta}{1+\\tan^2\\theta}']},
+  {ctx:'Given sin \u03b8 = 5/13 (\u03b8 acute).',q:'',ask:'Find cos 2\u03b8',correct:'\\dfrac{119}{169}',d:['\\dfrac{25}{169}','\\dfrac{-119}{169}','\\dfrac{144}{169}']},
+  {ctx:'',q:'2\\cos^2 3x - 1',ask:'Simplify',correct:'\\cos 6x',d:['\\cos 3x','2\\cos 6x','\\cos^2 3x']},
+  {ctx:'',q:'4\\sin x \\cos x',ask:'Simplify',correct:'2\\sin 2x',d:['\\sin 4x','4\\sin 2x','2\\cos 2x']},
+  {ctx:'',q:'1 - 2\\sin^2 \\dfrac{\\theta}{2}',ask:'Simplify',correct:'\\cos\\theta',d:['\\sin\\theta','\\cos\\dfrac{\\theta}{2}','1-\\cos\\theta']},
+  {ctx:'',q:'\\sin^2 x + \\cos^2 x',ask:'Simplify',correct:'1',d:['\\sin 2x','2','\\cos 2x']},
+  {ctx:'',q:'\\sin(A+B)',ask:'Expand',correct:'\\sin A\\cos B + \\cos A\\sin B',d:['\\sin A\\sin B + \\cos A\\cos B','\\sin A\\cos B - \\cos A\\sin B','\\cos A\\cos B - \\sin A\\sin B']},
+  {ctx:'',q:'\\cos(A+B)',ask:'Expand',correct:'\\cos A\\cos B - \\sin A\\sin B',d:['\\cos A\\cos B + \\sin A\\sin B','\\sin A\\cos B + \\cos A\\sin B','\\sin A\\cos B - \\cos A\\sin B']},
+  {ctx:'',q:'\\sin(A-B)',ask:'Expand',correct:'\\sin A\\cos B - \\cos A\\sin B',d:['\\sin A\\cos B + \\cos A\\sin B','\\cos A\\cos B - \\sin A\\sin B','\\cos A\\cos B + \\sin A\\sin B']},
+  {ctx:'',q:'\\cos(A-B)',ask:'Expand',correct:'\\cos A\\cos B + \\sin A\\sin B',d:['\\cos A\\cos B - \\sin A\\sin B','\\sin A\\cos B + \\cos A\\sin B','\\sin A\\cos B - \\cos A\\sin B']},
+  {ctx:'',q:'\\sin 75\u00b0',ask:'Exact value',correct:'\\dfrac{\\sqrt{6}+\\sqrt{2}}{4}',d:['\\dfrac{\\sqrt{6}-\\sqrt{2}}{4}','\\dfrac{\\sqrt{3}+1}{2}','\\dfrac{1+\\sqrt{3}}{4}']},
+  {ctx:'',q:'\\cos 75\u00b0',ask:'Exact value',correct:'\\dfrac{\\sqrt{6}-\\sqrt{2}}{4}',d:['\\dfrac{\\sqrt{6}+\\sqrt{2}}{4}','\\dfrac{\\sqrt{3}-1}{2}','\\dfrac{1-\\sqrt{3}}{4}']},
+  {ctx:'',q:'\\cos 15\u00b0',ask:'Exact value',correct:'\\dfrac{\\sqrt{6}+\\sqrt{2}}{4}',d:['\\dfrac{\\sqrt{6}-\\sqrt{2}}{4}','\\dfrac{\\sqrt{3}+1}{4}','\\dfrac{1}{4}']},
+  {ctx:'',q:'\\sin 15\u00b0',ask:'Exact value',correct:'\\dfrac{\\sqrt{6}-\\sqrt{2}}{4}',d:['\\dfrac{\\sqrt{6}+\\sqrt{2}}{4}','\\dfrac{\\sqrt{3}-1}{2}','\\dfrac{1-\\sqrt{3}}{4}']},
+  {ctx:'',q:'\\tan(A+B)',ask:'Formula',correct:'\\dfrac{\\tan A+\\tan B}{1-\\tan A\\tan B}',d:['\\tan A+\\tan B','\\dfrac{\\tan A-\\tan B}{1+\\tan A\\tan B}','\\dfrac{1+\\tan A\\tan B}{\\tan A+\\tan B}']},
+  {ctx:'',q:'\\tan(A-B)',ask:'Formula',correct:'\\dfrac{\\tan A-\\tan B}{1+\\tan A\\tan B}',d:['\\tan A-\\tan B','\\dfrac{\\tan A+\\tan B}{1-\\tan A\\tan B}','\\dfrac{1-\\tan A\\tan B}{\\tan A-\\tan B}']},
+  {ctx:'Given sin A = 3/5, cos B = 5/13 (both acute).',q:'',ask:'Find sin(A+B)',correct:'\\dfrac{56}{65}',d:['\\dfrac{33}{65}','\\dfrac{63}{65}','\\dfrac{16}{65}']},
+  {ctx:'Given sin A = 3/5, cos B = 5/13 (both acute).',q:'',ask:'Find cos(A+B)',correct:'\\dfrac{-33}{65}',d:['\\dfrac{33}{65}','\\dfrac{56}{65}','\\dfrac{-16}{65}']},
+  {ctx:'Given sin A = 3/5, cos B = 5/13 (both acute).',q:'',ask:'Find cos(A\u2212B)',correct:'\\dfrac{63}{65}',d:['\\dfrac{56}{65}','\\dfrac{33}{65}','\\dfrac{-33}{65}']},
+  {ctx:'',q:'\\dfrac{\\sin\\theta}{\\cos\\theta}',ask:'Simplify',correct:'\\tan\\theta',d:['\\cot\\theta','\\sec\\theta','\\csc\\theta']},
+  {ctx:'',q:'1 + \\tan^2\\theta',ask:'Simplify',correct:'\\sec^2\\theta',d:['\\csc^2\\theta','\\cos^2\\theta','1']},
+  {ctx:'',q:'1 + \\cot^2\\theta',ask:'Simplify',correct:'\\csc^2\\theta',d:['\\sec^2\\theta','\\sin^2\\theta','\\tan^2\\theta']},
+  {ctx:'',q:'\\dfrac{1}{\\cos\\theta}',ask:'Name this function',correct:'\\sec\\theta',d:['\\csc\\theta','\\cot\\theta','\\cos^{-1}\\theta']},
+  {ctx:'',q:'\\dfrac{1}{\\sin\\theta}',ask:'Name this function',correct:'\\csc\\theta',d:['\\sec\\theta','\\cot\\theta','\\sin^{-1}\\theta']},
+  {ctx:'',q:'\\sin^2 x \\cdot \\sec^2 x',ask:'Simplify',correct:'\\tan^2 x',d:['1','\\sin^2 x','\\sec^2 x']},
+  {ctx:'',q:'\\cos 2x + 2\\sin^2 x',ask:'Simplify',correct:'1',d:['\\cos 2x','2\\cos^2 x','\\sin 2x']},
+  {ctx:'',q:'\\dfrac{1-\\cos^2\\theta}{\\sin\\theta}',ask:'Simplify',correct:'\\sin\\theta',d:['\\cos\\theta','\\tan\\theta','1']},
+  {ctx:'',q:'\\dfrac{\\sin 2\\theta}{2\\cos\\theta}',ask:'Simplify',correct:'\\sin\\theta',d:['\\cos\\theta','\\tan\\theta','2\\sin\\theta']},
+  {ctx:'',q:'\\dfrac{1-\\cos 2\\theta}{\\sin 2\\theta}',ask:'Simplify',correct:'\\tan\\theta',d:['\\cot\\theta','\\sin\\theta','\\cos\\theta']},
+  {ctx:'Solve in [0\u00b0, 360\u00b0]: sin 2\u03b8 = 0.',q:'',ask:'How many solutions?',correct:'5',d:['2','4','3']},
+  {ctx:'Solve in [0, 2\u03c0]: cos 2x = 1.',q:'',ask:'How many solutions?',correct:'3',d:['1','2','4']},
+  {ctx:'',q:'2\\sin\\theta\\cos\\theta + \\cos 2\\theta',ask:'Which double angle identity helps?',correct:'\\sin 2\\theta + \\cos 2\\theta',d:['2\\cos 2\\theta','\\sin 4\\theta','1']},
+  {ctx:'',q:'(\\sin x + \\cos x)^2',ask:'Expand and simplify',correct:'1 + \\sin 2x',d:['\\sin^2 x + \\cos^2 x','2 + \\sin 2x','1 + 2\\sin x\\cos x']},
+  {ctx:'',q:'(\\sin x - \\cos x)^2',ask:'Expand and simplify',correct:'1 - \\sin 2x',d:['1 + \\sin 2x','\\sin^2 x - \\cos^2 x','1 - 2\\sin x\\cos x']},
+]
+};
+
+let level='gcse',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,timerInterval=null,qStartTime=0;
+const BASE=100,T_K=0.15;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
+const p=new URLSearchParams(location.search);if(p.get('level')&&QUESTIONS[p.get('level')]){level=p.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+
+function startGame(){
+  questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;
+  document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';
+  const pr=document.getElementById('progress');pr.innerHTML='';
+  for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}
+  mfg('game_started',{game_slug:'trig-identity-duel',level:level});
+  window._ggAbandoned=true;
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'trig-identity-duel',level:level,questions_answered:qIdx})});}
+  show('game');showQ()
+}
+function showQ(){
+  const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;
+  document.getElementById('context').textContent=q.ctx||'';
+  const qEl=document.getElementById('question');qEl.innerHTML='';
+  if(q.q)rk(qEl,q.q);
+  document.getElementById('prompt').textContent=q.ask;
+  const opts=shuffle([q.correct,...q.d]);
+  const oEl=document.getElementById('options');oEl.innerHTML='';
+  opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
+    if(v.includes('\\')||v.includes('^')||v.includes('{')||v.includes('\u221a')){rk(b,v)}else{b.textContent=v}
+    b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});
+  qStartTime=Date.now();
+  document.getElementById('timer').textContent='0s';
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    const s=Math.floor((Date.now()-qStartTime)/1000);
+    document.getElementById('timer').textContent=s+'s';
+  },200);
+}
+function handle(btn,q){
+  clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});
+  if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}
+  else{btn.classList.add('wrong');streak=0;pip('fail')}
+  mfg('question_answered',{game_slug:'trig-identity-duel',level:level,correct:ok,question_index:qIdx+1});
+  document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)
+}
+function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
+function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
+function end(){clearInterval(timerInterval);const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) \u00b7 Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'trig-identity-duel',level:level,score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('trig-identity-duel',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('trig-identity-duel',level,score);}}var _pbKey='trig-identity-duel_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'trig-identity-duel',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}show('results')}
+function showMenu(){show('menu')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -1,0 +1,111 @@
+Batch 5 - Jon, 2026-08-31. Two rooms, three locks each, all sound as sent.
+Five changes were made here, none of them to the mathematics:
+  * canteen-mean-calories: the slider was 100 to 1000, which put the answer on the
+    bottom end stop. Widened to 0 to 1000. gen-escape-variants.py refuses an answer
+    within 4% of either end of the travel - a dial already at the answer is not a lock.
+  * visitor-space-bounds: the dial reads to 2 dp but now moves in 0.25-litre steps.
+    Both bounds end in .5, so every product lands on a quarter; 2000 draggable
+    positions bought nothing.
+  * boom-gate-sector: 5-degree steps, same reasoning.
+  * two locks were sent with a second misconception (108 kcal, 14.25 litres). The
+    engine names one misconception per lock, so the first of each was kept.
+  * VERIFY lines rewritten to enumerate the instrument's own grid and to compare
+    exactly - Fraction rather than float where pi is involved.
+What was changed and why: docs/escape-puzzle-bank.md, "Batch 5".
+
+
+Room 9 - The Canteen Menu Hack (KS3 / GCSE)
+===========================================
+
+ID:          canteen-mean-calories
+LEVEL:       KS3 / GCSE
+TOPIC:       Statistics / Mean averages
+INSTRUMENT:  Calorie slider for the mystery meal, 0 to 1000 kcal, whole kcal.
+CONTEXT:     The menu system accepts a day's specials only if their mean calorie count comes to exactly 450. Four pizzas are already entered under false names, and the fifth slot is a dummy item whose value you choose.
+CLUE:        "Specials entered: 520, 480, 550 and 600 kcal. Set the fifth item so the mean of all five is exactly 450 kcal."
+ANSWER:      100
+AHA:         The mean is the total shared out, so the target fixes the total: five items at 450 is 2250 kcal, and four of them are already spent.
+MISCONCEPTION: 450 (entering the target mean itself, as though the fifth item had to be average).
+SOLVE:       Total needed = 450 x 5 = 2250 kcal.
+             Already entered = 520 + 480 + 550 + 600 = 2150 kcal.
+             Fifth item = 2250 - 2150 = 100 kcal.
+TIME:        3
+VERIFY:      [c for c in range(1001) if 520 + 480 + 550 + 600 + c == 450 * 5]
+
+ID:          cookie-price-simultaneous
+LEVEL:       GCSE
+TOPIC:       Algebra / Simultaneous equations
+INSTRUMENT:  Two price tags, cookie and pizza, 0 to 10 pounds each, whole pounds.
+CONTEXT:     The till will roll the prices back only to the baseline it was set up with, and the one record of that baseline is a crumpled receipt from last term with the item prices torn off.
+CLUE:        "Receipt, last term. 3 cookies and 2 pizzas: 12 pounds. 1 cookie and 4 pizzas: 14 pounds. Set both price tags to restore the old menu."
+ANSWER:      Cookie = 2, Pizza = 3
+AHA:         Neither line gives a price on its own, but scaling one until a variable matches the other lets it be subtracted out.
+MISCONCEPTION: Cookie = 3, Pizza = 2 (the right pair of numbers, put on the wrong tags).
+SOLVE:       3C + 2P = 12 and C + 4P = 14, so C = 14 - 4P.
+             3(14 - 4P) + 2P = 12, so 42 - 10P = 12.
+             P = 3, and C = 14 - 12 = 2.
+TIME:        4
+VERIFY:      [(c, p) for c in range(11) for p in range(11) if 3*c + 2*p == 12 and c + 4*p == 14]
+
+ID:          kale-fraction-drain
+LEVEL:       KS3 / GCSE
+TOPIC:       Number / Fractions of an amount
+INSTRUMENT:  Disposal chute dial, 0 to 200 portions, whole portions.
+CONTEXT:     The pizza delivery needs shelf space, and the chute empties whatever it is set to. Empty the shelf completely and the health inspection fails on the spot.
+CLUE:        "Stock: 180 portions of kale. The inspector requires exactly 2/9 of the original stock still on the shelf. Set the chute to the number of portions to dispose of."
+ANSWER:      140
+AHA:         The fraction names what stays, and the dial wants what goes - the two are what makes the whole.
+MISCONCEPTION: 40 (working out 2/9 of 180 and disposing of that, which is the amount that was supposed to remain).
+SOLVE:       Kept = 2/9 of 180 = 40 portions.
+             Disposed = 180 - 40 = 140 portions.
+TIME:        3
+VERIFY:      [d for d in range(201) if 9 * (180 - d) == 2 * 180]
+
+
+Room 10 - The Headteacher's Car Trap (GCSE / Core Maths)
+========================================================
+
+ID:          visitor-space-bounds
+LEVEL:       GCSE
+TOPIC:       Number / Upper and lower bounds
+INSTRUMENT:  Paint-volume dial, 0.00 to 20.00 litres, 0.25-litre steps.
+CONTEXT:     The line-painting bot takes a paint volume and lays out a bay of exactly that many square metres, one litre to the square metre. Ask it for less than the specification allows and it refuses; ask it for the least the specification allows and it complies.
+CLUE:        "VIP bay specification: length 6 m, width 3 m, each measured to the nearest metre. One litre covers one square metre. Set the dial to the smallest area the specification still permits."
+ANSWER:      13.75
+AHA:         Each measurement is a range, not a number, and the smallest area comes from the smallest length with the smallest width - bounds multiply, they do not add.
+MISCONCEPTION: 18 (multiplying 6 by 3 and never opening the bounds at all).
+SOLVE:       Lower bound of the length = 5.5 m.
+             Lower bound of the width = 2.5 m.
+             Smallest area = 5.5 x 2.5 = 13.75 square metres.
+TIME:        3
+VERIFY:      [a/4 for a in range(81) if abs(a/4 - 5.5 * 2.5) < 1e-9]
+
+ID:          boom-gate-sector
+LEVEL:       GCSE
+TOPIC:       Geometry / Arc length
+INSTRUMENT:  Boom-gate angle dial, 0 to 180 degrees, 5-degree steps.
+CONTEXT:     The barrier's collision sensor watches how far the tip of the arm travels, not how high it lifts. One particular swing puts the tip through the space the car is about to occupy.
+CLUE:        "Barrier arm: 3 m from pivot to tip. The collision code triggers when the tip travels an arc of exactly 0.75pi metres. Set the opening angle."
+ANSWER:      45
+AHA:         The tip runs along part of a circle whose radius is the arm, so the angle is the fraction of a full turn the arc takes out of the whole circumference.
+MISCONCEPTION: 90 (using the radius where the circumference needs the diameter, halving the circle and doubling the angle).
+SOLVE:       Full circumference = 2 x pi x 3 = 6pi metres.
+             0.75pi / 6pi = 1/8 of a full turn.
+             Angle = 360 / 8 = 45 degrees.
+TIME:        3
+VERIFY:      [deg for deg in range(0, 181, 5) if Fraction(deg, 360) * 6 == Fraction(3, 4)]
+
+ID:          ev-charger-quadratic
+LEVEL:       GCSE Higher
+TOPIC:       Algebra / Quadratics with a constraint
+INSTRUMENT:  Charging current dial, 0 to 15 amps, whole amps.
+CONTEXT:     The VIP charging bay unlocks at a current that balances its load limiter, and the same panel is wired to a network alarm that watches the upper end of the range.
+CLUE:        "Load limiter: L(x) = x^2 - 12x + 35, for a charging current x amps. Set the current that brings the load to exactly zero. Anything above 6 A trips the alarm."
+ANSWER:      5
+AHA:         The equation has two roots and only one of them is legal - the constraint is doing the second half of the work, exactly as the prime condition does in canteen-freezer-inequality.
+MISCONCEPTION: 7 (the other root, taken without reading the alarm limit).
+SOLVE:       x^2 - 12x + 35 = 0.
+             (x - 5)(x - 7) = 0, so x = 5 or x = 7.
+             x < 6 leaves x = 5 amps.
+TIME:        3
+VERIFY:      [x for x in range(16) if x**2 - 12*x + 35 == 0 and x < 6]

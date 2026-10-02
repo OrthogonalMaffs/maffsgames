@@ -1,0 +1,24 @@
+# What GitHub Pages publishes (canon §7.7). Pages builds `main` with Jekyll, which publishes
+# every file except dot-paths, _-prefixed paths and the list below. Jekyll has no
+# allow-list, so this is a deny-list, and scripts/check-publish-scope.py (in CI) makes it safe:
+# every tracked file must be either under a SITE path listed in that script or excluded here,
+# and no SITE file may link to or fetch an excluded one. A new top-level folder therefore
+# fails CI until it is classified in both places.
+#
+# Format: one plain "  - path" per line (the CI check reads it without a YAML library).
+# A path excludes itself and everything under it; * matches across folders.
+exclude:
+  - CLAUDE.md
+  - package.json
+  - package-lock.json
+  - requirements-ci.txt
+  - node_modules
+  - scripts
+  - data
+  - firebase
+  - docs/*.md
+  - docs/*.txt
+  - docs/*.js
+  - docs/screens
+  - docs/screenshots
+  - docs/sources

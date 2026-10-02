@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Interactive coordinate geometry with plotted points, lines, and circles. Practice midpoints, gradients, and equations for GCSE and A-Level.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/coordinate-geometry-dash/">
+<meta property="og:title" content="Coordinate Geometry Dash — MaffsGames">
+<meta property="og:description" content="Interactive coordinate geometry with plotted points, lines, and circles. Practice midpoints, gradients, and equations for GCSE and A-Level.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/coordinate-geometry-dash/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Coordinate Geometry Dash — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080a10;--surface:#0e1220;--border:#192038;--primary:#f97316;--accent:#06b6d4;--wrong:#f43f5e;--correct:#22c55e;--text:#e6eaf2;--muted:#6a7a92;--grid:#121a2a;--point:#fbbf24}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.8rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .6rem}
+.header h1{font-size:1.9rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.3rem}
+.screen{display:none}.screen.active{display:block}
+
+.level-row{display:flex;gap:.5rem;justify-content:center;margin:.8rem 0}
+.level-btn{padding:.45rem 1.1rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.6;margin:.8rem auto;max-width:540px}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.6rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:50px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700}
+
+/* Canvas */
+.graph-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:.5rem}
+canvas{display:block;width:100%;height:auto}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.6rem;text-align:center}
+.q-card .context{font-size:.88rem;color:var(--muted);line-height:1.5;margin-bottom:.4rem}
+.q-card .prompt{font-size:.95rem;font-weight:600;color:var(--accent)}
+.q-card .katex{font-size:1.1em!important}
+
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
+.opt-btn{padding:.7rem .4rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.82rem;cursor:pointer;transition:all .15s;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 12px rgba(249,115,22,.15)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.08)}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+.opt-btn .katex{font-size:.9em!important}
+
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1.1rem;margin-bottom:.8rem;text-align:left;font-size:.85rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.88rem;margin-bottom:.5rem;font-weight:600}
+.solution .step{margin-bottom:.4rem;padding-left:.7rem;border-left:2px solid var(--border)}
+.solution .misconception{margin-top:.6rem;padding:.5rem .7rem;background:rgba(249,115,22,.08);border-radius:8px;border-left:3px solid var(--primary);font-size:.8rem;color:var(--primary)}
+.solution .next-btn{display:inline-block;margin-top:.6rem;padding:.45rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.88rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Coordinate Geometry Dash</h1><div class="sub">Midpoints. Gradients. Circles. Parametrics. See the geometry.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="level-row">
+      <button class="level-btn active" data-level="gcse" onclick="setLevel('gcse')">GCSE</button>
+      <button class="level-btn" data-level="alevel" onclick="setLevel('alevel')">A-Level</button>
+    </div>
+    <div class="menu-info">
+      <strong>GCSE:</strong> Midpoints, gradients, y = mx + c, parallel/perpendicular lines, distance between points.<br>
+      <strong>A-Level:</strong> Adds circles (equation, centre, radius, tangent/normal), parametric equations, and intersection problems.
+    </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="start-btn" onclick="startGame()">Start</button>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
+    </div>
+    <div class="graph-wrap"><canvas id="gCanvas" width="600" height="400"></canvas></div>
+    <div class="q-card"><div class="context" id="context"></div><div class="prompt" id="prompt"></div></div>
+    <div class="options" id="options"></div>
+    <div class="solution" id="solution"></div>
+  </div>
+
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+
+<script>
+const canvas=document.getElementById('gCanvas'),ctx=canvas.getContext('2d');
+const W=600,H=400;
+let level='gcse',pool=[],qIdx=0,score=0,correctN=0,total=0,currentQ=null,qStart=0;
+const BASE=100,T_K=0.15,MAX_Q=20;
+
+function setLevel(l){level=l;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===l))}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const pa=new URLSearchParams(location.search);
+if(pa.get('level')==='alevel'){level='alevel';document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level==='alevel'))}
+
+// ============================================================
+//  GRAPH DRAWING
+// ============================================================
+let GX1=-8,GX2=8,GY1=-6,GY2=6;
+function setView(x1,x2,y1,y2){GX1=x1;GX2=x2;GY1=y1;GY2=y2}
+function tx(x){return(x-GX1)/(GX2-GX1)*W}
+function ty(y){return H-(y-GY1)/(GY2-GY1)*H}
+
+function drawGrid(){
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='#121a2a';ctx.lineWidth=0.5;
+  for(let x=Math.ceil(GX1);x<=GX2;x++){ctx.beginPath();ctx.moveTo(tx(x),0);ctx.lineTo(tx(x),H);ctx.stroke()}
+  for(let y=Math.ceil(GY1);y<=GY2;y++){ctx.beginPath();ctx.moveTo(0,ty(y));ctx.lineTo(W,ty(y));ctx.stroke()}
+  ctx.strokeStyle='#2a3a50';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(tx(GX1),ty(0));ctx.lineTo(tx(GX2),ty(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(tx(0),ty(GY1));ctx.lineTo(tx(0),ty(GY2));ctx.stroke();
+  ctx.fillStyle='#4a5a70';ctx.font='9px JetBrains Mono';ctx.textAlign='center';
+  for(let x=Math.ceil(GX1);x<=GX2;x++){if(x!==0)ctx.fillText(x,tx(x),ty(0)+12)}
+  ctx.textAlign='right';
+  for(let y=Math.ceil(GY1);y<=GY2;y++){if(y!==0)ctx.fillText(y,tx(0)-5,ty(y)+3)}
+}
+
+function drawPoint(x,y,color='#fbbf24',r=5){
+  ctx.fillStyle=color;ctx.beginPath();ctx.arc(tx(x),ty(y),r,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fbbf24';ctx.font='bold 10px JetBrains Mono';ctx.textAlign='left';
+  ctx.fillText('('+x+','+y+')',tx(x)+8,ty(y)-8);
+}
+
+function drawLine(m,c,color='#3b82f6',w=2){
+  ctx.strokeStyle=color;ctx.lineWidth=w;ctx.beginPath();
+  const y1=m*GX1+c,y2=m*GX2+c;
+  ctx.moveTo(tx(GX1),ty(y1));ctx.lineTo(tx(GX2),ty(y2));ctx.stroke();
+}
+
+function drawVertLine(x,color='#3b82f6',w=2){
+  ctx.strokeStyle=color;ctx.lineWidth=w;ctx.beginPath();
+  ctx.moveTo(tx(x),ty(GY1));ctx.lineTo(tx(x),ty(GY2));ctx.stroke();
+}
+
+function drawCircle(cx,cy,r,color='#3b82f6',w=2){
+  ctx.strokeStyle=color;ctx.lineWidth=w;ctx.beginPath();
+  ctx.arc(tx(cx),ty(cy),r/(GX2-GX1)*W,0,Math.PI*2);ctx.stroke();
+}
+
+function drawSegment(x1,y1,x2,y2,color='#06b6d4',w=2,dash=[]){
+  ctx.strokeStyle=color;ctx.lineWidth=w;ctx.setLineDash(dash);ctx.beginPath();
+  ctx.moveTo(tx(x1),ty(y1));ctx.lineTo(tx(x2),ty(y2));ctx.stroke();ctx.setLineDash([]);
+}
+
+function drawParaCurve(xfn,yfn,tMin,tMax,color='#3b82f6',w=2){
+  ctx.strokeStyle=color;ctx.lineWidth=w;ctx.beginPath();let started=false;
+  for(let i=0;i<=200;i++){
+    const t=tMin+(tMax-tMin)*i/200;
+    const x=xfn(t),y=yfn(t);
+    if(x<GX1-1||x>GX2+1||y<GY1-1||y>GY2+1){started=false;continue}
+    if(!started){ctx.moveTo(tx(x),ty(y));started=true}else ctx.lineTo(tx(x),ty(y));
+  }ctx.stroke();
+}
+
+// ============================================================
+//  QUESTION BANKS
+// ============================================================
+const Q_GCSE=[
+// MIDPOINTS
+{draw:q=>{setView(-6,8,-4,8);drawGrid();drawPoint(2,3);drawPoint(6,7)},
+ctx:"A = (2, 3) and B = (6, 7)",q:"Find the midpoint of AB",opts:["(4, 5)","(4, 10)","(8, 10)","(3, 5)"],correct:"(4, 5)",steps:["Midpoint = ((x₁+x₂)/2, (y₁+y₂)/2)","= ((2+6)/2, (3+7)/2)","= (4, 5)"]},
+{draw:q=>{setView(-6,6,-6,6);drawGrid();drawPoint(-3,4);drawPoint(5,-2)},
+ctx:"A = (−3, 4) and B = (5, −2)",q:"Find the midpoint",opts:["(1, 1)","(2, 2)","(1, 3)","(4, −3)"],correct:"(1, 1)",steps:["((−3+5)/2, (4+(−2))/2)","= (1, 1)"]},
+{draw:q=>{setView(-2,10,-2,10);drawGrid();drawPoint(0,0);drawPoint(8,6)},
+ctx:"A = (0, 0) and B = (8, 6)",q:"Find the midpoint",opts:["(4, 3)","(4, 6)","(8, 3)","(3, 4)"],correct:"(4, 3)",steps:["((0+8)/2, (0+6)/2) = (4, 3)"]},
+// GRADIENTS
+{draw:q=>{setView(-4,8,-2,8);drawGrid();drawPoint(1,2);drawPoint(5,6)},
+ctx:"A = (1, 2) and B = (5, 6)",q:"Find the gradient of AB",opts:["1","2","½","4"],correct:"1",steps:["m = (y₂−y₁)/(x₂−x₁)","= (6−2)/(5−1) = 4/4 = 1"]},
+{draw:q=>{setView(-4,8,-4,8);drawGrid();drawPoint(2,1);drawPoint(6,7)},
+ctx:"A = (2, 1) and B = (6, 7)",q:"Gradient of AB?",opts:["3/2","2/3","2","3"],correct:"3/2",steps:["m = (7−1)/(6−2) = 6/4 = 3/2"]},
+{draw:q=>{setView(-6,6,-6,6);drawGrid();drawPoint(-2,4);drawPoint(4,1)},
+ctx:"A = (−2, 4) and B = (4, 1)",q:"Gradient of AB?",opts:["−1/2","1/2","−2","2"],correct:"−1/2",steps:["m = (1−4)/(4−(−2)) = −3/6 = −1/2"]},
+{draw:q=>{setView(-4,8,-4,6);drawGrid();drawPoint(1,3);drawPoint(1,7)},
+ctx:"A = (1, 3) and B = (1, 7)",q:"Gradient of AB?",opts:["Undefined (vertical)","0","4","∞"],correct:"Undefined (vertical)",steps:["x₁ = x₂ = 1","Division by zero → gradient is undefined","The line is vertical: x = 1"]},
+{draw:q=>{setView(-4,8,-2,6);drawGrid();drawPoint(1,3);drawPoint(5,3)},
+ctx:"A = (1, 3) and B = (5, 3)",q:"Gradient of AB?",opts:["0","Undefined","1","3"],correct:"0",steps:["m = (3−3)/(5−1) = 0/4 = 0","Horizontal line → gradient = 0"]},
+// EQUATION OF A LINE
+{draw:q=>{setView(-4,8,-2,8);drawGrid();drawLine(2,-1);drawPoint(1,1)},
+ctx:"Line through (1, 1) with gradient 2",q:"Find the equation",opts:["y = 2x − 1","y = 2x + 1","y = x + 1","y = 2x − 3"],correct:"y = 2x − 1",steps:["y − y₁ = m(x − x₁)","y − 1 = 2(x − 1)","y = 2x − 2 + 1 = 2x − 1"]},
+{draw:q=>{setView(-6,8,-4,8);drawGrid();drawLine(-1,5);drawPoint(2,3)},
+ctx:"Line through (2, 3) with gradient −1",q:"Find the equation",opts:["y = −x + 5","y = −x + 3","y = x + 5","y = −x − 1"],correct:"y = −x + 5",steps:["y − 3 = −1(x − 2)","y = −x + 2 + 3 = −x + 5"]},
+{draw:q=>{setView(-4,8,-2,10);drawGrid();drawPoint(1,2);drawPoint(3,8);drawSegment(1,2,3,8,'#3b82f6',2)},
+ctx:"Find the equation of the line through (1, 2) and (3, 8)",q:"y = ?",opts:["y = 3x − 1","y = 3x + 2","y = 5x − 3","y = 3x + 5"],correct:"y = 3x − 1",steps:["m = (8−2)/(3−1) = 6/2 = 3","y − 2 = 3(x − 1)","y = 3x − 1"]},
+// PARALLEL AND PERPENDICULAR
+{draw:q=>{setView(-6,8,-4,8);drawGrid();drawLine(2,1,'#3b82f6');drawLine(2,-3,'#06b6d4',1.5)},
+ctx:"Line A: y = 2x + 1. Line B: y = 2x − 3",q:"What is the relationship?",opts:["Parallel","Perpendicular","Neither","Same line"],correct:"Parallel",steps:["Both have gradient 2","Equal gradients → parallel"],misconception:"Parallel lines have the same gradient. They never meet."},
+{draw:q=>{setView(-6,8,-6,8);drawGrid();drawLine(2,0,'#3b82f6');drawLine(-0.5,3,'#06b6d4',1.5)},
+ctx:"Line A has gradient 2. Line B has gradient −½.",q:"What is the relationship?",opts:["Perpendicular","Parallel","Neither","Need more info"],correct:"Perpendicular",steps:["m₁ × m₂ = 2 × (−½) = −1","Product of gradients = −1 → perpendicular"],misconception:"Perpendicular gradients multiply to give −1. The negative reciprocal of 2 is −½."},
+{draw:q=>{setView(-4,8,-4,8);drawGrid();drawLine(3,1,'#3b82f6');drawPoint(2,5)},
+ctx:"Line L: y = 3x + 1. Find the line perpendicular to L through (2, 5).",q:"Equation?",opts:["y = −⅓x + 17/3","y = −⅓x + 5","y = 3x − 1","y = −3x + 11"],correct:"y = −⅓x + 17/3",steps:["Perpendicular gradient = −1/3","y − 5 = −⅓(x − 2)","y = −⅓x + 2/3 + 5 = −⅓x + 17/3"]},
+// DISTANCE
+{draw:q=>{setView(-2,8,-2,8);drawGrid();drawPoint(1,2);drawPoint(4,6);drawSegment(1,2,4,6,'#06b6d4',1.5,[4,4])},
+ctx:"A = (1, 2) and B = (4, 6)",q:"Find the distance AB",opts:["5","7","√7","25"],correct:"5",steps:["d = √((4−1)² + (6−2)²)","= √(9 + 16) = √25 = 5"]},
+{draw:q=>{setView(-6,6,-6,6);drawGrid();drawPoint(-3,1);drawPoint(1,4);drawSegment(-3,1,1,4,'#06b6d4',1.5,[4,4])},
+ctx:"A = (−3, 1) and B = (1, 4)",q:"Distance AB?",opts:["5","7","√5","25"],correct:"5",steps:["d = √((1−(−3))² + (4−1)²)","= √(16 + 9) = √25 = 5"]},
+{draw:q=>{setView(-2,10,-2,8);drawGrid();drawPoint(0,0);drawPoint(5,5);drawSegment(0,0,5,5,'#06b6d4',1.5,[4,4])},
+ctx:"A = (0, 0) and B = (5, 5)",q:"Distance AB?",opts:["5√2","10","5","50"],correct:"5√2",steps:["d = √(25 + 25) = √50 = 5√2","Note: 5√2 and √50 are the same — 5√2 is the simplified form"]},
+// MORE EQUATIONS
+{draw:q=>{setView(-6,8,-4,8);drawGrid();drawLine(0.5,2,'#3b82f6')},
+ctx:"Which line is shown?",q:"The line passes through (0, 2) and (4, 4)",opts:["y = ½x + 2","y = 2x + 2","y = ½x + 4","y = x + 2"],correct:"y = ½x + 2",steps:["m = (4−2)/(4−0) = 2/4 = ½","y-intercept = 2","y = ½x + 2"]},
+{draw:q=>{setView(-4,8,-8,4);drawGrid();drawLine(-2,3,'#3b82f6')},
+ctx:"A line has equation y = −2x + 3",q:"Find the x-intercept",opts:["(3/2, 0)","(3, 0)","(−3/2, 0)","(0, 3)"],correct:"(3/2, 0)",steps:["Set y = 0: 0 = −2x + 3","2x = 3","x = 3/2","x-intercept is (3/2, 0)"]},
+// COLLINEAR
+{draw:q=>{setView(-2,10,-2,8);drawGrid();drawPoint(1,2);drawPoint(3,4);drawPoint(5,6)},
+ctx:"A = (1, 2), B = (3, 4), C = (5, 6)",q:"Are A, B, C collinear?",opts:["Yes — all on y = x + 1","No — different gradients","Only A and B","Cannot determine"],correct:"Yes — all on y = x + 1",steps:["m(AB) = (4−2)/(3−1) = 1","m(BC) = (6−4)/(5−3) = 1","Same gradient AND share point B → collinear","All satisfy y = x + 1"]},
+// INTERSECTIONS
+{draw:q=>{setView(-4,8,-4,8);drawGrid();drawLine(1,1,'#3b82f6');drawLine(-1,5,'#f97316')},
+ctx:"Line 1: y = x + 1. Line 2: y = −x + 5",q:"Find the intersection point",opts:["(2, 3)","(3, 2)","(1, 2)","(4, 5)"],correct:"(2, 3)",steps:["x + 1 = −x + 5","2x = 4 → x = 2","y = 2 + 1 = 3","Intersection: (2, 3)"]},
+{draw:q=>{setView(-4,8,-2,10);drawGrid();drawLine(2,-1,'#3b82f6');drawLine(0.5,2,'#f97316')},
+ctx:"Line 1: y = 2x − 1. Line 2: y = ½x + 2",q:"Intersection?",opts:["(2, 3)","(3, 5)","(1, 1)","(4, 7)"],correct:"(2, 3)",steps:["2x − 1 = ½x + 2","3/2 x = 3 → x = 2","y = 2(2) − 1 = 3"]},
+// HARDER GCSE
+{draw:q=>{setView(-6,8,-6,8);drawGrid();drawPoint(4,2);drawLine(2,0,'#3b82f6',1.5)},
+ctx:"Line L has gradient 2. Find the perpendicular from (4, 2) to L through the origin.",q:"Perpendicular gradient?",opts:["−½","½","−2","2"],correct:"−½",steps:["Negative reciprocal of 2","= −1/2"]},
+{draw:q=>{setView(-2,8,-2,8);drawGrid();drawPoint(1,1);drawPoint(5,1);drawPoint(5,4);drawSegment(1,1,5,1,'#3b82f6');drawSegment(5,1,5,4,'#3b82f6');drawSegment(1,1,5,4,'#06b6d4',1.5,[4,4])},
+ctx:"Right triangle with vertices (1,1), (5,1), (5,4)",q:"Find the length of the hypotenuse",opts:["5","√7","7","25"],correct:"5",steps:["Horizontal: 5−1 = 4","Vertical: 4−1 = 3","Hypotenuse = √(16+9) = √25 = 5","This is a 3-4-5 triangle"]},
+];
+
+const Q_ALEVEL=[
+// CIRCLES
+{draw:q=>{setView(-4,10,-4,10);drawGrid();drawCircle(3,4,3);drawPoint(3,4)},
+ctx:"Circle with centre (3, 4) and radius 3",q:"Write the equation",opts:["(x−3)² + (y−4)² = 9","(x+3)² + (y+4)² = 9","(x−3)² + (y−4)² = 3","x² + y² = 9"],correct:"(x−3)² + (y−4)² = 9",steps:["(x−a)² + (y−b)² = r²","Centre (3,4), radius 3","(x−3)² + (y−4)² = 9"]},
+{draw:q=>{setView(-6,8,-6,8);drawGrid();drawCircle(0,0,5)},
+ctx:"x² + y² = 25",q:"Centre and radius?",opts:["(0,0), r = 5","(0,0), r = 25","(5,5), r = 5","(0,0), r = √5"],correct:"(0,0), r = 5",steps:["Standard form: x² + y² = r²","Centre = (0,0)","r² = 25 → r = 5"]},
+{draw:q=>{setView(-2,10,-2,10);drawGrid();drawCircle(2,3,4);drawPoint(2,3)},
+ctx:"(x−2)² + (y−3)² = 16",q:"Does the point (6, 3) lie on, inside, or outside the circle?",opts:["On the circle","Inside","Outside","At the centre"],correct:"On the circle",steps:["Substitute: (6−2)² + (3−3)² = 16 + 0 = 16","16 = 16 → point is ON the circle"]},
+{draw:q=>{setView(-4,10,-4,10);drawGrid();drawCircle(3,2,Math.sqrt(13))},
+ctx:"x² + y² − 6x − 4y = 0",q:"Find the centre and radius",opts:["(3, 2), r = √13","(−3, −2), r = √13","(6, 4), r = √52","(3, 2), r = 13"],correct:"(3, 2), r = √13",steps:["Complete the square:","(x²−6x) + (y²−4y) = 0","(x−3)² − 9 + (y−2)² − 4 = 0","(x−3)² + (y−2)² = 13","Centre (3,2), r = √13"],misconception:"Completing the square is essential for circles. Half the coefficient, square it, add to both sides."},
+{draw:q=>{setView(-6,10,-6,10);drawGrid();drawCircle(1,-2,5);drawPoint(1,-2)},
+ctx:"x² + y² − 2x + 4y − 20 = 0",q:"Centre and radius?",opts:["(1, −2), r = 5","(−1, 2), r = 5","(2, −4), r = √20","(1, −2), r = 25"],correct:"(1, −2), r = 5",steps:["(x²−2x) + (y²+4y) = 20","(x−1)² + (y+2)² = 20 + 1 + 4 = 25","Centre (1, −2), r = 5"]},
+// TANGENT TO CIRCLE
+{draw:q=>{setView(-4,10,-4,10);drawGrid();drawCircle(3,4,3);drawPoint(6,4);drawSegment(3,4,6,4,'#06b6d4',1.5,[4,4])},
+ctx:"Circle centre (3, 4). Point P = (6, 4) is on the circle.",q:"Find the gradient of the tangent at P",opts:["Undefined (vertical)","0","−1","1"],correct:"Undefined (vertical)",steps:["Radius gradient = (4−4)/(6−3) = 0 (horizontal)","Tangent ⊥ radius → tangent is vertical","Tangent: x = 6"],misconception:"The tangent to a circle is always perpendicular to the radius at the point of contact."},
+{draw:q=>{setView(-4,10,-4,10);drawGrid();drawCircle(2,3,Math.sqrt(10));drawPoint(5,4)},
+ctx:"Circle centre (2, 3). Point P = (5, 4) on the circle.",q:"Gradient of the tangent at P?",opts:["−3","1/3","3","−1/3"],correct:"−3",steps:["Radius gradient = (4−3)/(5−2) = 1/3","Tangent ⊥ radius: m_tangent = −3"]},
+{draw:q=>{setView(-6,8,-6,8);drawGrid();drawCircle(0,0,5);drawPoint(3,4)},
+ctx:"x² + y² = 25. Find the tangent at (3, 4).",q:"Equation of the tangent?",opts:["3x + 4y = 25","4x + 3y = 25","3x − 4y = 25","y − 4 = ¾(x − 3)"],correct:"3x + 4y = 25",steps:["Radius gradient = 4/3","Tangent gradient = −3/4","y − 4 = −¾(x − 3)","4y − 16 = −3x + 9","3x + 4y = 25"]},
+// LINE MEETS CIRCLE
+{draw:q=>{setView(-4,10,-4,8);drawGrid();drawCircle(2,2,Math.sqrt(8));drawLine(1,0,'#f97316',1.5)},
+ctx:"Circle: (x−2)² + (y−2)² = 8. Line: y = x",q:"How many intersection points?",opts:["2","1 (tangent)","0","Cannot determine"],correct:"2",steps:["Substitute y = x: (x−2)² + (x−2)² = 8","2(x−2)² = 8 → (x−2)² = 4","x − 2 = ±2 → x = 0 or x = 4","Two intersections: (0,0) and (4,4)"]},
+{draw:q=>{setView(-4,10,-4,10);drawGrid();drawCircle(3,3,3);drawLine(0,9,'#f97316',1.5)},
+ctx:"Circle: (x−3)² + (y−3)² = 9. Line: y = 9",q:"Does the line intersect the circle?",opts:["No — line is above the circle","Yes — 2 points","Yes — tangent","Passes through centre"],correct:"No — line is above the circle",steps:["Centre (3,3), radius 3","Highest point of circle: y = 3 + 3 = 6","Line y = 9 is above the circle","No intersection"]},
+// PARAMETRIC
+{draw:q=>{setView(-4,8,-2,10);drawGrid();drawParaCurve(t=>t,t=>t*t,-3,3)},
+ctx:"A curve is defined parametrically: x = t, y = t²",q:"What is the Cartesian equation?",opts:["y = x²","y = 2x","x = y²","y = √x"],correct:"y = x²",steps:["x = t → t = x","Substitute into y = t²:","y = x²"]},
+{draw:q=>{setView(-6,6,-6,6);drawGrid();drawParaCurve(t=>2*Math.cos(t),t=>2*Math.sin(t),0,2*Math.PI)},
+ctx:"x = 2cos t, y = 2sin t",q:"Cartesian equation?",opts:["x² + y² = 4","y = 2x","x + y = 2","x² − y² = 4"],correct:"x² + y² = 4",steps:["cos t = x/2, sin t = y/2","cos²t + sin²t = 1","x²/4 + y²/4 = 1 → x² + y² = 4","Circle, centre origin, radius 2"]},
+{draw:q=>{setView(-2,8,-2,12);drawGrid();drawParaCurve(t=>t+1,t=>t*t-2,-3,4)},
+ctx:"x = t + 1, y = t² − 2",q:"Express y in terms of x",opts:["y = (x−1)² − 2","y = x² − 2","y = (x+1)² − 2","y = x² − 3"],correct:"y = (x−1)² − 2",steps:["x = t + 1 → t = x − 1","y = t² − 2 = (x−1)² − 2"]},
+{draw:q=>{setView(-2,12,-2,10);drawGrid();drawParaCurve(t=>3*t,t=>4/t,0.3,6,'#3b82f6')},
+ctx:"x = 3t, y = 4/t, t > 0",q:"Cartesian equation?",opts:["xy = 12","y = 12/x","x = 12/y","All equivalent"],correct:"All equivalent",steps:["x = 3t → t = x/3","y = 4/t = 4/(x/3) = 12/x","So xy = 12, or equivalently y = 12/x"]},
+// dy/dx for parametric
+{draw:q=>{setView(-4,8,-2,20);drawGrid();drawParaCurve(t=>t,t=>t*t*t,-2,3)},
+ctx:"x = t, y = t³",q:"Find dy/dx at t = 2",opts:["12","6","8","3"],correct:"12",steps:["dx/dt = 1, dy/dt = 3t²","dy/dx = (dy/dt)/(dx/dt) = 3t²","At t = 2: dy/dx = 3(4) = 12"]},
+{draw:q=>{setView(-4,8,-4,8);drawGrid();drawParaCurve(t=>2*t+1,t=>t*t-3,-3,4)},
+ctx:"x = 2t + 1, y = t² − 3",q:"Find dy/dx at t = 1",opts:["1","2","½","1/2"],correct:"1",steps:["dx/dt = 2, dy/dt = 2t","dy/dx = 2t/2 = t","At t = 1: dy/dx = 1"]},
+// MORE CIRCLES
+{draw:q=>{setView(-6,10,-6,10);drawGrid();drawCircle(1,2,Math.sqrt(25));drawPoint(1,2);drawPoint(4,6)},
+ctx:"Centre (1, 2), point (4, 6) on the circle",q:"Find the equation",opts:["(x−1)²+(y−2)²=25","(x−1)²+(y−2)²=5","(x−4)²+(y−6)²=25","x²+y²=25"],correct:"(x−1)²+(y−2)²=25",steps:["r² = (4−1)² + (6−2)² = 9 + 16 = 25","(x−1)² + (y−2)² = 25"]},
+{draw:q=>{setView(-2,8,-4,6);drawGrid();drawPoint(1,0);drawPoint(5,4)},
+ctx:"A and B are ends of a diameter. A = (1, 0), B = (5, 4)",q:"Find the equation of the circle",opts:["(x−3)²+(y−2)²=8","(x−3)²+(y−2)²=4","(x−2)²+(y−3)²=8","x²+y²=8"],correct:"(x−3)²+(y−2)²=8",steps:["Centre = midpoint = (3, 2)","r² = (5−3)² + (4−2)² = 4+4 = 8","(x−3)² + (y−2)² = 8"]},
+// HARDER COORD GEOM
+{draw:q=>{setView(-4,8,-4,8);drawGrid();drawLine(2,-1,'#3b82f6');drawCircle(2,3,Math.sqrt(5),'#f97316')},
+ctx:"Line: y = 2x − 1. Circle: (x−2)² + (y−3)² = 5",q:"What does the discriminant tell you about where the line meets the circle?",opts:["0 (tangent)","Positive (2 points)","Negative (no intersection)","Cannot determine"],correct:"Positive (2 points)",steps:["Substitute y = 2x − 1: (x − 2)² + (2x − 4)² = 5","x² − 4x + 4 + 4x² − 16x + 16 = 5","5x² − 20x + 15 = 0, so x² − 4x + 3 = 0","Discriminant = (−4)² − 4(1)(3) = 4 > 0","Positive discriminant: the line meets the circle at 2 points (x = 1 and x = 3)"]},
+{draw:q=>{setView(-6,8,-6,8);drawGrid();drawPoint(-2,3);drawPoint(4,-1)},
+ctx:"Find the equation of the perpendicular bisector of AB where A = (−2, 3) and B = (4, −1)",q:"Equation?",opts:["y = 3/2 x − ½","y = −2/3 x + 1","y = 3/2 x + 1","y = −3/2 x + ½"],correct:"y = 3/2 x − ½",steps:["Midpoint = (1, 1)","Gradient AB = (−1−3)/(4−(−2)) = −4/6 = −2/3","Perpendicular gradient = 3/2","y − 1 = 3/2(x − 1)","y = 3/2 x − 3/2 + 1 = 3/2 x − 1/2"]},
+// Area
+{draw:q=>{setView(-2,8,-2,8);drawGrid();drawPoint(0,0);drawPoint(6,0);drawPoint(3,5);drawSegment(0,0,6,0,'#3b82f6');drawSegment(6,0,3,5,'#3b82f6');drawSegment(3,5,0,0,'#3b82f6')},
+ctx:"Triangle with vertices (0,0), (6,0), (3,5)",q:"Area?",opts:["15","30","12","18"],correct:"15",steps:["Base = 6 (along x-axis)","Height = 5 (perpendicular from (3,5) to x-axis)","Area = ½ × 6 × 5 = 15"]},
+];
+
+// ============================================================
+//  GAME ENGINE
+// ============================================================
+function startGame(){
+  const bank=level==='gcse'?Q_GCSE:Q_ALEVEL;
+  pool=shuffle([...bank]).slice(0,MAX_Q);
+  qIdx=0;score=0;correctN=0;total=0;
+  document.getElementById('score').textContent='0';
+  document.getElementById('correctCount').textContent='0';
+  show('game');nextQ();
+  window._ggAbandoned=true;
+  mfg('game_started',{game_slug:'coordinate-geometry-dash',level:level});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'coordinate-geometry-dash',level:level,questions_answered:total})});}
+}
+
+function nextQ(){
+  if(qIdx>=pool.length){endGame();return}
+  currentQ=pool[qIdx];qIdx++;total++;
+  document.getElementById('qNum').textContent=total;
+  document.getElementById('solution').className='solution';
+  qStart=Date.now();updateTimer();
+  // Draw
+  if(currentQ.draw)currentQ.draw(currentQ);
+  else{setView(-8,8,-6,6);drawGrid()}
+  // Text
+  document.getElementById('context').textContent=currentQ.ctx;
+  document.getElementById('prompt').textContent=currentQ.q;
+  // Options
+  const opts=shuffle([...currentQ.opts]);
+  const oEl=document.getElementById('options');oEl.innerHTML='';
+  opts.forEach(v=>{
+    const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;
+    b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b);
+  });
+}
+
+function updateTimer(){
+  const el=document.getElementById('timer');
+  const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};
+  requestAnimationFrame(tick);
+}
+
+function handleAnswer(btn){
+  const q=currentQ,s=(Date.now()-qStart)/1000;
+  const correctVal=q.correct_override||q.correct;
+  const ok=btn.dataset.val===correctVal;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===correctVal)b.classList.add('correct')});
+  mfg('question_answered',{game_slug:'coordinate-geometry-dash',level:level,correct:ok,question_index:total});
+  if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++}
+  else{btn.classList.add('wrong')}
+  updateHUD();showExplain(q);
+}
+
+function showExplain(q){
+  const sol=document.getElementById('solution');
+  let html='<h3>Worked solution</h3>';
+  (q.steps||[]).forEach(st=>{html+='<div class="step">'+st+'</div>'});
+  if(q.misconception)html+='<div class="misconception">⚠ '+q.misconception+'</div>';
+  html+='<button class="next-btn" onclick="closeSol()">Got it — next question</button>';
+  sol.innerHTML=html;sol.className='solution show';
+}
+
+function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
+
+function endGame(){
+  const pct=total>0?Math.round(correctN/total*100):0;
+  let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
+  document.getElementById('resultTitle').textContent=t;
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('statsLine').innerHTML='Coordinate Geometry Dash<br>'+correctN+'/'+total+' correct ('+pct+'%)<br>'+(level==='gcse'?'GCSE':'A-Level');
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'coordinate-geometry-dash',level:level,score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('coordinate-geometry-dash',level,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('coordinate-geometry-dash',level,score);}}
+  show('results');
+}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boolean Blitz — MaffsGames</title>
+<meta name="description" content="Practise simplifying Boolean algebra expressions with AND, OR, NOT, XOR and NAND gates. 42 questions with full step-by-step walkthroughs. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/boolean-blitz/">
+<meta property="og:title" content="Boolean Blitz — MaffsGames">
+<meta property="og:description" content="Practise simplifying Boolean algebra expressions with AND, OR, NOT, XOR and NAND gates. 42 questions with full step-by-step walkthroughs. Free, no sign-up.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://maffsgames.co.uk/games/boolean-blitz/">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/schools/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="/schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="/schools/assets/firebase-leaderboard.js"></script>
+<script src="/schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #0f1117;
+  --surface: #1a1d27;
+  --card: #22263a;
+  --border: #2e3348;
+  --text: #e2e4ed;
+  --muted: #8b90a5;
+  --accent: #ef4444;
+  --accent-dim: rgba(239,68,68,0.15);
+  --correct: #22c55e;
+  --correct-dim: rgba(34,197,94,0.15);
+  --incorrect: #ef4444;
+  --incorrect-dim: rgba(239,68,68,0.15);
+  --gold: #f59e0b;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  padding-bottom: 40px; /* the fixed site footer */
+}
+
+.accessible-mode {
+  font-family: 'OpenDyslexic', 'Outfit', sans-serif !important;
+  letter-spacing: 0.05em;
+  word-spacing: 0.1em;
+}
+.accessible-mode * { font-family: inherit !important; }
+.accessible-mode .surface, .accessible-mode .card { background: #1e2235 !important; }
+
+/* ── Header ──────────────────────────────────────── */
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.header h1 {
+  font-size: 1.3rem; font-weight: 700; color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+}
+.header-right { display: flex; gap: 0.5rem; align-items: center; }
+.aa-btn, .home-btn {
+  background: var(--card); border: 1px solid var(--border); color: var(--muted);
+  padding: 0.4rem 0.7rem; border-radius: 6px; cursor: pointer;
+  font-size: 0.8rem; font-family: 'Outfit', sans-serif; transition: all 0.2s;
+}
+.aa-btn:hover, .home-btn:hover { border-color: var(--accent); color: var(--text); }
+.aa-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+.home-btn { text-decoration: none; }
+
+/* ── Layout ──────────────────────────────────────── */
+.game-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  min-height: calc(100vh - 60px);
+}
+
+/* ── Start Screen ────────────────────────────────── */
+.start-screen {
+  grid-column: 1 / -1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 3rem 1rem;
+}
+.start-screen h2 {
+  font-size: 2.5rem; color: var(--accent);
+  font-family: 'JetBrains Mono', monospace; margin-bottom: 0.5rem;
+}
+.start-screen p { color: var(--muted); font-size: 1.05rem; max-width: 500px; margin-bottom: 2rem; }
+.start-btn {
+  background: var(--accent); color: white; border: none;
+  padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600;
+  border-radius: 8px; cursor: pointer; font-family: 'Outfit', sans-serif;
+  transition: all 0.2s;
+}
+.start-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(239,68,68,0.4); }
+
+/* ── Question Area ───────────────────────────────── */
+.question-area {
+  display: none; flex-direction: column; gap: 1rem;
+}
+.progress-bar {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; color: var(--muted);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.progress-fill {
+  height: 4px; background: var(--border); border-radius: 2px; flex: 1; margin: 0 1rem;
+}
+.progress-fill-inner { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+
+.question-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 2rem; text-align: center;
+}
+.question-card .instruction { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.1em; }
+.question-card .expression { font-size: 1.5rem; margin: 1rem 0; min-height: 3rem; display: flex; align-items: center; justify-content: center; }
+
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.opt-btn {
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: 8px; padding: 1rem; cursor: pointer;
+  font-size: 1.1rem; color: var(--text); transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 60px; position: relative;
+}
+.opt-btn:hover:not(.answered) { border-color: var(--accent); background: var(--accent-dim); }
+.opt-btn.correct { border-color: var(--correct); background: var(--correct-dim); }
+.opt-btn.incorrect { border-color: var(--incorrect); background: var(--incorrect-dim); }
+.opt-btn .tick, .opt-btn .cross { position: absolute; top: 6px; right: 8px; font-size: 0.8rem; font-weight: 700; }
+.opt-btn .tick { color: var(--correct); }
+.opt-btn .cross { color: var(--incorrect); }
+.opt-btn.answered { pointer-events: none; }
+
+/* ── Walkthrough ─────────────────────────────────── */
+.walkthrough {
+  display: none; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.5rem; margin-top: 0.5rem;
+}
+.walkthrough.show { display: block; animation: slideIn 0.3s ease; }
+@keyframes slideIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+.walkthrough-header {
+  font-size: 0.8rem; color: var(--muted); font-style: italic; margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;
+}
+.step {
+  display: grid; grid-template-columns: auto 1fr auto;
+  gap: 0.5rem; align-items: center; padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(46,51,72,0.5);
+}
+.step:last-child { border-bottom: none; }
+.step-num { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent); min-width: 2rem; }
+.step-expr { font-size: 0.95rem; }
+.step-law { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--gold); text-align: right; font-weight: 600; }
+
+.next-btn {
+  display: block; margin: 1.5rem auto 0; background: var(--accent); color: white;
+  border: none; padding: 0.75rem 2rem; font-size: 1rem; font-weight: 600;
+  border-radius: 8px; cursor: pointer; font-family: 'Outfit', sans-serif;
+  transition: all 0.2s;
+}
+.next-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
+
+/* ── Cheat Sheet ─────────────────────────────────── */
+.cheat-sheet {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem; height: fit-content;
+  max-height: calc(100vh - 80px); overflow-y: auto;
+  position: sticky; top: 1rem;
+}
+.cheat-sheet h3 {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+  color: var(--accent); margin-bottom: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.law-group { margin-bottom: 0.75rem; }
+.law-name {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+  color: var(--gold); font-weight: 600; margin-bottom: 0.25rem;
+}
+.law-eqs { font-size: 0.8rem; color: var(--muted); padding-left: 0.5rem; }
+.law-eqs .katex { font-size: 0.85rem !important; }
+.law-divider { border-top: 1px solid var(--border); margin: 0.75rem 0; }
+
+/* ── Results ─────────────────────────────────────── */
+.results-screen {
+  display: none; grid-column: 1 / -1;
+  flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 3rem 1rem;
+}
+.results-screen h2 { font-size: 2rem; color: var(--accent); margin-bottom: 1.5rem; }
+.results-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  max-width: 500px; width: 100%; margin-bottom: 2rem;
+}
+.result-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 1.25rem;
+}
+.result-card .val { font-size: 2rem; font-weight: 700; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+.result-card .lbl { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.25rem; }
+
+/* ── Mobile toggle ───────────────────────────────── */
+.cheat-toggle {
+  display: none; position: fixed; bottom: calc(40px + 1rem); right: 1rem; /* above the site footer */
+  background: var(--accent); color: white; border: none;
+  width: 48px; height: 48px; border-radius: 50%; font-size: 1.2rem;
+  cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 100;
+}
+
+/* ── Mobile ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .game-layout { grid-template-columns: 1fr; }
+  .cheat-sheet {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    max-height: 60vh; border-radius: 12px 12px 0 0; z-index: 99;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+  }
+  .cheat-sheet.mobile-open { display: block; }
+  .cheat-toggle { display: block; }
+  .options { grid-template-columns: 1fr; }
+  .question-card .expression { font-size: 1.2rem; }
+  .start-screen h2 { font-size: 1.8rem; }
+}
+
+/* ── Reduced motion ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<header class="header">
+  <h1>Boolean Blitz</h1>
+  <div class="header-right">
+    <button class="aa-btn" id="aaBtn" onclick="toggleAccessible()" title="Toggle accessible font">Aa</button>
+    <a href="/" class="home-btn">← Games</a>
+  </div>
+</header>
+
+<div class="game-layout">
+  <!-- Start Screen -->
+  <div class="start-screen" id="startScreen">
+    <h2>Boolean Blitz</h2>
+    <p>Simplify Boolean expressions. Full walkthroughs on every question.</p>
+    <button class="start-btn" onclick="startGame()">Start</button>
+  </div>
+
+  <!-- Question Area -->
+  <div class="question-area" id="questionArea">
+    <div class="progress-bar">
+      <span id="qNum">1 / 42</span>
+      <div class="progress-fill"><div class="progress-fill-inner" id="progressBar" style="width:2.4%"></div></div>
+      <span id="scoreDisplay">0 pts</span>
+    </div>
+
+    <div class="question-card">
+      <div class="instruction">Simplify fully.</div>
+      <div class="expression" id="questionExpr"></div>
+    </div>
+
+    <div class="options" id="optionsGrid"></div>
+
+    <div class="walkthrough" id="walkthrough">
+      <div class="walkthrough-header">One valid simplification path (other routes may reach the same answer):</div>
+      <div id="walkthroughSteps"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+    </div>
+  </div>
+
+  <!-- Cheat Sheet -->
+  <div class="cheat-sheet" id="cheatSheet"></div>
+
+  <!-- Results -->
+  <div class="results-screen" id="resultsScreen">
+    <h2>Round Complete</h2>
+    <div class="results-grid">
+      <div class="result-card"><div class="val" id="resScore">0</div><div class="lbl">Correct</div></div>
+      <div class="result-card"><div class="val" id="resPct">0%</div><div class="lbl">Accuracy</div></div>
+      <div class="result-card"><div class="val" id="resTime">0:00</div><div class="lbl">Time</div></div>
+    </div>
+    <div class="results-grid" style="grid-template-columns:1fr 1fr;max-width:340px">
+      <div class="result-card"><div class="val" id="resPts">0</div><div class="lbl">Points</div></div>
+      <div class="result-card"><div class="val" id="resMax">126</div><div class="lbl">Maximum</div></div>
+    </div>
+    <button class="start-btn" onclick="startGame()" style="margin-top:1.5rem">Play Again</button>
+  </div>
+</div>
+
+<button class="cheat-toggle" id="cheatToggle" onclick="toggleCheatSheet()">📋</button>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+
+<script>
+// ── KaTeX HELPER ──────────────────────────────────────────────────────────────
+const K = (tex) => katex.renderToString(tex, {throwOnError:false, displayMode:false});
+
+// ── ACCESSIBILITY ─────────────────────────────────────────────────────────────
+function toggleAccessible() {
+  document.body.classList.toggle('accessible-mode');
+  const on = document.body.classList.contains('accessible-mode');
+  localStorage.setItem('mfg_accessible', on ? '1' : '0');
+  document.getElementById('aaBtn').classList.toggle('active', on);
+}
+if (localStorage.getItem('mfg_accessible') === '1') {
+  document.body.classList.add('accessible-mode');
+  document.getElementById('aaBtn').classList.add('active');
+}
+
+// ── CHEAT SHEET ───────────────────────────────────────────────────────────────
+const LAWS = [
+  { name: 'Law 1 — Identity', eqs: [`A \\cdot 1 = A`, `A + 0 = A`] },
+  { name: 'Law 2 — Null', eqs: [`A \\cdot 0 = 0`, `A + 1 = 1`] },
+  { name: 'Law 3 — Idempotent', eqs: [`A \\cdot A = A`, `A + A = A`] },
+  { name: 'Law 4 — Complement', eqs: [`A \\cdot \\overline{A} = 0`, `A + \\overline{A} = 1`] },
+  { name: 'Law 5 — Double Negation', eqs: [`\\overline{\\overline{A}} = A`] },
+  { name: 'Law 6 — Commutative', eqs: [`A \\cdot B = B \\cdot A`, `A + B = B + A`] },
+  { name: 'Law 7 — Associative', eqs: [`A(BC) = (AB)C`, `A+(B+C) = (A+B)+C`] },
+  { name: 'Law 8 — Distributive', eqs: [`A(B+C) = AB + AC`, `A+BC = (A+B)(A+C)`] },
+  { name: 'Law 9 — Absorption', eqs: [`A + AB = A`, `A(A+B) = A`] },
+  { name: `Law 10 — De Morgan's`, eqs: [`\\overline{A \\cdot B} = \\overline{A} + \\overline{B}`, `\\overline{A+B} = \\overline{A} \\cdot \\overline{B}`] },
+  { name: 'Law 11 — Consensus', eqs: [`AB + \\overline{A}C + BC = AB + \\overline{A}C`] },
+  { divider: true },
+  { name: 'Law 12 — XOR Definition', eqs: [`A \\oplus B = A\\overline{B} + \\overline{A}B`] },
+  { name: 'Law 13 — NAND', eqs: [`\\overline{A \\cdot B} = \\overline{A} + \\overline{B}`] },
+];
+
+function buildCheatSheet() {
+  const el = document.getElementById('cheatSheet');
+  let html = '<h3>Boolean Laws</h3>';
+  for (const law of LAWS) {
+    if (law.divider) { html += '<div class="law-divider"></div>'; continue; }
+    html += `<div class="law-group"><div class="law-name">${law.name}</div>`;
+    html += `<div class="law-eqs">${law.eqs.map(e => K(e)).join('&nbsp;&nbsp;&nbsp;')}</div></div>`;
+  }
+  el.innerHTML = html;
+}
+buildCheatSheet();
+
+function toggleCheatSheet() {
+  document.getElementById('cheatSheet').classList.toggle('mobile-open');
+}
+
+// ── QUESTION BANK ─────────────────────────────────────────────────────────────
+const QUESTIONS = [
+  // Core (Q1-Q30)
+  {
+    expr: `A \\cdot B + A \\cdot \\overline{B}`,
+    answer: `A`,
+    distractors: [`B`, `A + B`, `\\overline{A}`],
+    steps: [
+      [`A \\cdot B + A \\cdot \\overline{B}`, `A(B + \\overline{B})`, 'Distributive'],
+      [`A(B + \\overline{B})`, `A \\cdot 1`, 'Complement'],
+      [`A \\cdot 1`, `A`, 'Identity'],
+    ]
+  },
+  {
+    expr: `A + A \\cdot B`,
+    answer: `A`,
+    distractors: [`AB`, `A + B`, `B`],
+    steps: [[`A + A \\cdot B`, `A`, 'Absorption']]
+  },
+  {
+    expr: `A \\cdot (A + B)`,
+    answer: `A`,
+    distractors: [`A + B`, `AB`, `A \\cdot B + A`],
+    steps: [[`A \\cdot (A + B)`, `A`, 'Absorption']]
+  },
+  {
+    expr: `A \\cdot B + A \\cdot B`,
+    answer: `AB`,
+    distractors: [`A + B`, `A`, `2AB`],
+    steps: [[`AB + AB`, `AB`, 'Idempotent']]
+  },
+  {
+    expr: `\\overline{\\overline{A} + \\overline{B}}`,
+    answer: `AB`,
+    distractors: [`\\overline{A} + \\overline{B}`, `A + B`, `\\overline{AB}`],
+    steps: [
+      [`\\overline{\\overline{A} + \\overline{B}}`, `\\overline{\\overline{A}} \\cdot \\overline{\\overline{B}}`, `De Morgan's`],
+      [`\\overline{\\overline{A}} \\cdot \\overline{\\overline{B}}`, `A \\cdot B`, 'Double Negation'],
+    ]
+  },
+  {
+    expr: `A \\cdot B + \\overline{A} \\cdot B + B \\cdot C`,
+    answer: `B`,
+    distractors: [`B + C`, `AB + C`, `B \\cdot C`],
+    steps: [
+      [`AB + \\overline{A}B + BC`, `B(A + \\overline{A}) + BC`, 'Distributive'],
+      [`B(A + \\overline{A}) + BC`, `B + BC`, 'Complement + Identity'],
+      [`B + BC`, `B`, 'Absorption'],
+    ]
+  },
+  {
+    expr: `(A + B) \\cdot (A + \\overline{B})`,
+    answer: `A`,
+    distractors: [`A + B`, `AB`, `A \\cdot \\overline{B}`],
+    steps: [
+      [`(A+B)(A+\\overline{B})`, `AA + A\\overline{B} + AB + B\\overline{B}`, 'Distributive'],
+      [`AA + A\\overline{B} + AB + B\\overline{B}`, `A + A\\overline{B} + AB + 0`, 'Idempotent + Complement'],
+      [`A + A\\overline{B} + AB`, `A`, 'Absorption'],
+    ]
+  },
+  {
+    expr: `\\overline{A} \\cdot B + A \\cdot B`,
+    answer: `B`,
+    distractors: [`A`, `A + B`, `\\overline{A} + B`],
+    steps: [
+      [`\\overline{A}B + AB`, `B(\\overline{A} + A)`, 'Distributive'],
+      [`B(\\overline{A} + A)`, `B \\cdot 1`, 'Complement'],
+      [`B \\cdot 1`, `B`, 'Identity'],
+    ]
+  },
+  {
+    expr: `A \\cdot (B + C) + A \\cdot \\overline{B} \\cdot \\overline{C}`,
+    answer: `A`,
+    distractors: [`A(B+C)`, `A + BC`, `AB + C`],
+    steps: [
+      [`A(B+C) + A\\overline{B}\\overline{C}`, `A[(B+C) + \\overline{B}\\overline{C}]`, 'Distributive'],
+      [`\\overline{B}\\overline{C} = \\overline{B+C}`, `A[(B+C) + \\overline{(B+C)}]`, `De Morgan's`],
+      [`A[(B+C) + \\overline{(B+C)}]`, `A \\cdot 1`, 'Complement'],
+      [`A \\cdot 1`, `A`, 'Identity'],
+    ]
+  },
+  {
+    expr: `\\overline{\\overline{A} \\cdot \\overline{B}}`,
+    answer: `A + B`,
+    distractors: [`AB`, `\\overline{A} + \\overline{B}`, `\\overline{A + B}`],
+    steps: [
+      [`\\overline{\\overline{A} \\cdot \\overline{B}}`, `\\overline{\\overline{A}} + \\overline{\\overline{B}}`, `De Morgan's`],
+      [`\\overline{\\overline{A}} + \\overline{\\overline{B}}`, `A + B`, 'Double Negation'],
+    ]
+  },
+  {
+    expr: `A \\cdot B \\cdot C + A \\cdot B \\cdot \\overline{C} + A \\cdot \\overline{B}`,
+    answer: `A`,
+    distractors: [`AB`, `A + B`, `AB + A\\overline{B}`],
+    steps: [
+      [`ABC + AB\\overline{C} + A\\overline{B}`, `AB(C+\\overline{C}) + A\\overline{B}`, 'Distributive'],
+      [`AB + A\\overline{B}`, `A(B+\\overline{B})`, 'Complement + Identity + Distributive'],
+      [`A(B+\\overline{B})`, `A`, 'Complement + Identity'],
+    ]
+  },
+  {
+    expr: `(A + B) \\cdot (\\overline{A} + B)`,
+    answer: `B`,
+    distractors: [`A + B`, `AB`, `\\overline{A}B`],
+    steps: [
+      [`(A+B)(\\overline{A}+B)`, `A\\overline{A} + AB + \\overline{A}B + BB`, 'Distributive'],
+      [`0 + AB + \\overline{A}B + B`, `B`, 'Complement + Idempotent + Absorption'],
+    ]
+  },
+  {
+    expr: `\\overline{A} \\cdot (A + B) + A \\cdot B`,
+    answer: `B`,
+    distractors: [`A + B`, `\\overline{A}B + AB`, `AB`],
+    steps: [
+      [`\\overline{A}(A+B) + AB`, `\\overline{A}A + \\overline{A}B + AB`, 'Distributive'],
+      [`0 + \\overline{A}B + AB`, `B(\\overline{A}+A)`, 'Complement + Distributive'],
+      [`B \\cdot 1`, `B`, 'Complement + Identity'],
+    ]
+  },
+  {
+    expr: `A + \\overline{A} \\cdot B`,
+    answer: `A + B`,
+    distractors: [`A`, `\\overline{A}B`, `AB`],
+    steps: [
+      [`A + \\overline{A}B`, `(A+\\overline{A})(A+B)`, 'Distributive (OR form)'],
+      [`1 \\cdot (A+B)`, `A + B`, 'Complement + Identity'],
+    ]
+  },
+  {
+    expr: `A \\cdot B + A \\cdot \\overline{B} + \\overline{A} \\cdot B`,
+    answer: `A + B`,
+    distractors: [`A`, `B`, `AB`],
+    steps: [
+      [`AB + A\\overline{B} + \\overline{A}B`, `A(B+\\overline{B}) + \\overline{A}B`, 'Distributive'],
+      [`A + \\overline{A}B`, `A + B`, 'Complement + Identity + Absorption variant'],
+    ]
+  },
+  {
+    expr: `\\overline{A + B} + A`,
+    answer: `\\overline{B} + A`,
+    distractors: [`A + B`, `\\overline{A} + A`, `1`],
+    steps: [
+      [`\\overline{A+B} + A`, `\\overline{A}\\overline{B} + A`, `De Morgan's`],
+      [`\\overline{A}\\overline{B} + A`, `A + \\overline{B}`, 'Absorption variant'],
+    ]
+  },
+  {
+    expr: `A \\cdot (B + \\overline{B} \\cdot C)`,
+    answer: `A(B + C)`,
+    distractors: [`AB + C`, `ABC`, `A`],
+    steps: [
+      [`A(B + \\overline{B}C)`, `A[(B+\\overline{B})(B+C)]`, 'Distributive (OR form)'],
+      [`A[1 \\cdot (B+C)]`, `A(B+C)`, 'Complement + Identity'],
+    ]
+  },
+  {
+    expr: `A \\cdot B \\cdot C + \\overline{A} \\cdot B \\cdot C`,
+    answer: `BC`,
+    distractors: [`ABC`, `B + C`, `A \\cdot BC`],
+    steps: [
+      [`ABC + \\overline{A}BC`, `BC(A+\\overline{A})`, 'Distributive'],
+      [`BC \\cdot 1`, `BC`, 'Complement + Identity'],
+    ]
+  },
+  {
+    expr: `(A + C) \\cdot (\\overline{A} + C)`,
+    answer: `C`,
+    distractors: [`A + C`, `AC`, `\\overline{A}C`],
+    steps: [
+      [`(A+C)(\\overline{A}+C)`, `A\\overline{A} + AC + \\overline{A}C + CC`, 'Distributive'],
+      [`0 + AC + \\overline{A}C + C`, `C`, 'Complement + Idempotent + Absorption'],
+    ]
+  },
+  {
+    expr: `\\overline{\\overline{A} + B} + A \\cdot B`,
+    answer: `A`,
+    distractors: [`AB`, `A + B`, `A\\overline{B} + AB`],
+    steps: [
+      [`\\overline{\\overline{A}+B} + AB`, `A\\overline{B} + AB`, `De Morgan's + Double Negation`],
+      [`A\\overline{B} + AB`, `A(\\overline{B}+B)`, 'Distributive'],
+      [`A \\cdot 1`, `A`, 'Complement + Identity'],
+    ]
+  },
+  {
+    expr: `A \\cdot B + \\overline{A} \\cdot B + A \\cdot \\overline{B} + \\overline{A} \\cdot \\overline{B}`,
+    answer: `1`,
+    distractors: [`A + B`, `A`, `0`],
+    steps: [
+      [`AB + \\overline{A}B + A\\overline{B} + \\overline{A}\\overline{B}`, `B(A+\\overline{A}) + \\overline{B}(A+\\overline{A})`, 'Distributive'],
+      [`B + \\overline{B}`, `1`, 'Complement (×3)'],
+    ]
+  },
+  {
+    expr: `A \\cdot (A + B + C)`,
+    answer: `A`,
+    distractors: [`A + B + C`, `AB + AC`, `ABC`],
+    steps: [[`A(A+B+C)`, `A`, 'Absorption']]
+  },
+  {
+    expr: `\\overline{A \\cdot B} \\cdot A`,
+    answer: `A\\overline{B}`,
+    distractors: [`\\overline{B}`, `A + \\overline{B}`, `\\overline{A}B`],
+    steps: [
+      [`\\overline{AB} \\cdot A`, `(\\overline{A}+\\overline{B}) \\cdot A`, `De Morgan's`],
+      [`A\\overline{A} + A\\overline{B}`, `0 + A\\overline{B}`, 'Distributive + Complement'],
+      [`A\\overline{B}`, `A\\overline{B}`, 'Identity'],
+    ]
+  },
+  {
+    expr: `B + A \\cdot \\overline{B} + \\overline{A} \\cdot \\overline{B}`,
+    answer: `1`,
+    distractors: [`A + B`, `B`, `\\overline{B}`],
+    steps: [
+      [`B + A\\overline{B} + \\overline{A}\\overline{B}`, `B + \\overline{B}(A+\\overline{A})`, 'Distributive'],
+      [`B + \\overline{B}`, `1`, 'Complement (×2)'],
+    ]
+  },
+  {
+    expr: `\\overline{A} \\cdot B \\cdot C + A \\cdot B \\cdot C + A \\cdot B \\cdot \\overline{C}`,
+    answer: `B(A + C)`,
+    distractors: [`AB + BC`, `BC`, `ABC`],
+    steps: [
+      [`\\overline{A}BC + ABC + AB\\overline{C}`, `BC(\\overline{A}+A) + AB\\overline{C}`, 'Distributive'],
+      [`BC + AB\\overline{C}`, `B(C + A\\overline{C})`, 'Complement + Identity + Distributive'],
+      [`B(C + A)`, `B(A + C)`, 'Absorption variant + Commutative'],
+    ]
+  },
+  {
+    expr: `A \\cdot \\overline{B} + A \\cdot B \\cdot C + \\overline{A} \\cdot C`,
+    answer: `A\\overline{B} + C`,
+    distractors: [`A + C`, `\\overline{B} + C`, `A\\overline{B} + AC`],
+    steps: [
+      [`A\\overline{B} + ABC + \\overline{A}C`, `A(\\overline{B}+BC) + \\overline{A}C`, 'Distributive'],
+      [`A(\\overline{B}+C) + \\overline{A}C`, `A\\overline{B} + AC + \\overline{A}C`, 'Absorption variant + Expand'],
+      [`A\\overline{B} + C(A+\\overline{A})`, `A\\overline{B} + C`, 'Distributive + Complement + Identity'],
+    ]
+  },
+  {
+    expr: `\\overline{A + B + C} + A`,
+    answer: `A + \\overline{B}\\,\\overline{C}`,
+    distractors: [`A`, `\\overline{A}\\overline{B}\\overline{C}`, `A + B + C`],
+    steps: [
+      [`\\overline{A+B+C} + A`, `\\overline{A}\\overline{B}\\overline{C} + A`, `De Morgan's`],
+      [`A + \\overline{A}\\overline{B}\\overline{C}`, `A + \\overline{B}\\overline{C}`, 'Absorption variant'],
+    ]
+  },
+  {
+    expr: `(A + B) \\cdot \\overline{A + B}`,
+    answer: `0`,
+    distractors: [`A + B`, `1`, `\\overline{A}\\overline{B}`],
+    steps: [[`(A+B) \\cdot \\overline{(A+B)}`, `0`, 'Complement']]
+  },
+  {
+    expr: `\\overline{A} \\cdot (B + C) + A \\cdot (B + C)`,
+    answer: `B + C`,
+    distractors: [`A + B + C`, `ABC`, `1`],
+    steps: [
+      [`\\overline{A}(B+C) + A(B+C)`, `(B+C)(\\overline{A}+A)`, 'Distributive'],
+      [`(B+C) \\cdot 1`, `B + C`, 'Complement + Identity'],
+    ]
+  },
+  {
+    expr: `A \\cdot B + A \\cdot \\overline{B} + \\overline{A} \\cdot B + A \\cdot C`,
+    answer: `A + B`,
+    distractors: [`A + B + C`, `AB + C`, `1`],
+    steps: [
+      [`AB + A\\overline{B} + \\overline{A}B + AC`, `A(B+\\overline{B}) + \\overline{A}B + AC`, 'Distributive'],
+      [`A + \\overline{A}B + AC`, `(A+B) + AC`, 'Complement + Identity + Absorption variant'],
+      [`A + B`, `A + B`, 'Absorption'],
+    ]
+  },
+  // Advanced (Q31-Q42)
+  {
+    expr: `A \\oplus A`,
+    answer: `0`,
+    distractors: [`A`, `1`, `\\overline{A}`],
+    steps: [
+      [`A \\oplus A`, `A\\overline{A} + \\overline{A}A`, 'XOR Definition'],
+      [`0 + 0`, `0`, 'Complement'],
+    ]
+  },
+  {
+    expr: `A \\oplus \\overline{A}`,
+    answer: `1`,
+    distractors: [`0`, `A`, `\\overline{A}`],
+    steps: [
+      [`A \\oplus \\overline{A}`, `A\\overline{\\overline{A}} + \\overline{A}\\overline{A}`, 'XOR Definition'],
+      [`AA + \\overline{A}\\overline{A}`, `A + \\overline{A}`, 'Double Negation + Idempotent'],
+      [`A + \\overline{A}`, `1`, 'Complement'],
+    ]
+  },
+  {
+    expr: `A \\oplus 0`,
+    answer: `A`,
+    distractors: [`0`, `\\overline{A}`, `1`],
+    steps: [
+      [`A \\oplus 0`, `A\\overline{0} + \\overline{A} \\cdot 0`, 'XOR Definition'],
+      [`A \\cdot 1 + 0`, `A`, 'Complement + Null + Identity'],
+    ]
+  },
+  {
+    expr: `\\overline{A \\cdot B} \\cdot \\overline{A \\cdot C}`,
+    answer: `\\overline{A} + \\overline{B}\\,\\overline{C}`,
+    distractors: [`\\overline{ABC}`, `\\overline{A}`, `\\overline{A}\\overline{B} + \\overline{A}\\overline{C}`],
+    steps: [
+      [`\\overline{AB} \\cdot \\overline{AC}`, `(\\overline{A}+\\overline{B})(\\overline{A}+\\overline{C})`, `De Morgan's`],
+      [`\\overline{A} + \\overline{A}\\overline{C} + \\overline{A}\\overline{B} + \\overline{B}\\overline{C}`, `\\overline{A} + \\overline{B}\\overline{C}`, 'Distributive + Idempotent + Absorption'],
+    ]
+  },
+  {
+    expr: `(A \\oplus B) + A \\cdot B`,
+    answer: `A + B`,
+    distractors: [`A \\oplus B`, `1`, `AB`],
+    steps: [
+      [`(A \\oplus B) + AB`, `A\\overline{B} + \\overline{A}B + AB`, 'XOR Definition'],
+      [`A\\overline{B} + B(\\overline{A}+A)`, `A\\overline{B} + B`, 'Distributive + Complement + Identity'],
+      [`B + A\\overline{B}`, `A + B`, 'Absorption variant'],
+    ]
+  },
+  {
+    expr: `\\overline{\\overline{A \\cdot B} \\cdot \\overline{C}}`,
+    answer: `AB + C`,
+    distractors: [`\\overline{A}\\overline{B} + C`, `A + B + C`, `ABC`],
+    steps: [
+      [`\\overline{\\overline{AB} \\cdot \\overline{C}}`, `\\overline{\\overline{AB}} + \\overline{\\overline{C}}`, `De Morgan's`],
+      [`AB + C`, `AB + C`, 'Double Negation'],
+    ]
+  },
+  {
+    expr: `A \\cdot B \\cdot C + A \\cdot B \\cdot \\overline{C} + A \\cdot \\overline{B} \\cdot C + A \\cdot \\overline{B} \\cdot \\overline{C} + \\overline{A} \\cdot B \\cdot C`,
+    answer: `A + BC`,
+    distractors: [`A`, `A + B + C`, `AB + AC + BC`],
+    steps: [
+      [`ABC + AB\\overline{C} + A\\overline{B}C + A\\overline{B}\\overline{C} + \\overline{A}BC`, `AB(C+\\overline{C}) + A\\overline{B}(C+\\overline{C}) + \\overline{A}BC`, 'Distributive'],
+      [`AB + A\\overline{B} + \\overline{A}BC`, `A(B+\\overline{B}) + \\overline{A}BC`, 'Complement + Identity + Distributive'],
+      [`A + \\overline{A}BC`, `A + BC`, 'Complement + Identity + Absorption variant'],
+    ]
+  },
+  {
+    expr: `A \\cdot B \\cdot C \\cdot D + A \\cdot B \\cdot C \\cdot \\overline{D}`,
+    answer: `ABC`,
+    distractors: [`ABCD`, `AB + CD`, `AB(C+D)`],
+    steps: [
+      [`ABCD + ABC\\overline{D}`, `ABC(D+\\overline{D})`, 'Distributive'],
+      [`ABC \\cdot 1`, `ABC`, 'Complement + Identity'],
+    ]
+  },
+  {
+    expr: `(A + B) \\cdot (C + D) \\cdot (A + B) \\cdot (\\overline{C} + D)`,
+    answer: `D(A + B)`,
+    distractors: [`(A+B)(C+D)`, `ABCD`, `D`],
+    steps: [
+      [`(A+B)(C+D)(A+B)(\\overline{C}+D)`, `(A+B)(C+D)(\\overline{C}+D)`, 'Idempotent'],
+      [`(C+D)(\\overline{C}+D) = C\\overline{C}+CD+\\overline{C}D+DD`, `0+CD+\\overline{C}D+D`, 'Distributive + Complement + Idempotent'],
+      [`D`, `D(A+B)`, 'Absorption + result'],
+    ]
+  },
+  {
+    expr: `\\overline{A} \\cdot B + A \\cdot \\overline{B} + C \\cdot D + \\overline{C} \\cdot D`,
+    answer: `(A \\oplus B) + D`,
+    distractors: [`A + B + D`, `\\overline{A}B + D`, `(A+B)(C+D)`],
+    steps: [
+      [`\\overline{A}B + A\\overline{B}`, `A \\oplus B`, 'XOR Definition'],
+      [`CD + \\overline{C}D`, `D(C+\\overline{C}) = D`, 'Distributive + Complement + Identity'],
+      [`(A \\oplus B) + D`, `(A \\oplus B) + D`, 'Combine'],
+    ]
+  },
+  {
+    expr: `A \\cdot B \\cdot C + A \\cdot B \\cdot D + A \\cdot B \\cdot \\overline{C} \\cdot \\overline{D}`,
+    answer: `AB`,
+    distractors: [`AB(C+D)`, `ABC + ABD`, `A + B`],
+    steps: [
+      [`ABC + ABD + AB\\overline{C}\\overline{D}`, `AB(C + D + \\overline{C}\\overline{D})`, 'Distributive'],
+      [`\\overline{C}\\overline{D} = \\overline{C+D}`, `AB[(C+D) + \\overline{(C+D)}]`, `De Morgan's`],
+      [`AB \\cdot 1`, `AB`, 'Complement + Identity'],
+    ]
+  },
+  {
+    expr: `\\overline{\\overline{A \\cdot B} \\cdot \\overline{A \\cdot C}}`,
+    answer: `A(B + C)`,
+    distractors: [`AB + AC`, `\\overline{A} + BC`, `ABC`],
+    steps: [
+      [`\\overline{\\overline{AB} \\cdot \\overline{AC}}`, `\\overline{\\overline{AB}} + \\overline{\\overline{AC}}`, `De Morgan's`],
+      [`AB + AC`, `A(B+C)`, 'Double Negation + Distributive'],
+    ]
+  },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let qIndex = 0;
+let score = 0;
+let points = 0;
+let order = [];
+let startTime = 0;
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+// ── GAME FLOW ─────────────────────────────────────────────────────────────────
+function startGame() {
+  qIndex = 0; score = 0; points = 0;
+  order = shuffle([...Array(QUESTIONS.length).keys()]);
+  startTime = Date.now();
+
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('questionArea').style.display = 'flex';
+  document.getElementById('cheatSheet').style.display = '';
+
+  mfg('game_started', {game_slug:'boolean-blitz', level:'level4'});
+  window._ggAbandoned = true;
+  if (!window._ggBeforeUnload) {
+    window._ggBeforeUnload = true;
+    window.addEventListener('beforeunload', function() {
+      if (window._ggAbandoned) mfg('game_abandoned', {game_slug:'boolean-blitz', level:'level4', questions_answered: qIndex});
+    });
+  }
+
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q = QUESTIONS[order[qIndex]];
+  document.getElementById('qNum').textContent = `${qIndex + 1} / ${QUESTIONS.length}`;
+  document.getElementById('progressBar').style.width = `${((qIndex + 1) / QUESTIONS.length) * 100}%`;
+  document.getElementById('scoreDisplay').textContent = `${points} pts`;
+  document.getElementById('questionExpr').innerHTML = K(q.expr);
+
+  // Build options: answer + 3 distractors, shuffled
+  const opts = shuffle([q.answer, ...q.distractors]);
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = K(opt);
+    btn.dataset.val = opt;
+    btn.addEventListener('click', () => handleAnswer(btn, opt, q));
+    grid.appendChild(btn);
+  });
+
+  document.getElementById('walkthrough').classList.remove('show');
+  document.getElementById('nextBtn').textContent = qIndex < QUESTIONS.length - 1 ? 'Next Question →' : 'See Results →';
+}
+
+function handleAnswer(btn, selected, q) {
+  const correct = selected === q.answer;
+  const allBtns = document.querySelectorAll('.opt-btn');
+
+  allBtns.forEach(b => {
+    b.classList.add('answered');
+    if (b.dataset.val === q.answer) {
+      b.classList.add('correct');
+      b.innerHTML += '<span class="tick">✓</span>';
+    }
+    if (b === btn && !correct) {
+      b.classList.add('incorrect');
+      b.innerHTML += '<span class="cross">✗</span>';
+    }
+  });
+
+  if (correct) { score++; points += 3; }
+
+  document.getElementById('scoreDisplay').textContent = `${points} pts`;
+
+  mfg('question_answered', {game_slug:'boolean-blitz', level:'level4', question_index: qIndex + 1, correct: correct});
+
+  // Build walkthrough
+  const stepsEl = document.getElementById('walkthroughSteps');
+  stepsEl.innerHTML = '';
+  q.steps.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.className = 'step';
+    div.innerHTML = `
+      <span class="step-num">Step ${i + 1}</span>
+      <span class="step-expr">${K(step[0])} → ${K(step[1])}</span>
+      <span class="step-law">${step[2]}</span>
+    `;
+    stepsEl.appendChild(div);
+  });
+
+  document.getElementById('walkthrough').classList.add('show');
+}
+
+function nextQuestion() {
+  qIndex++;
+  if (qIndex >= QUESTIONS.length) {
+    showResults();
+  } else {
+    loadQuestion();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+}
+
+function showResults() {
+  window._ggAbandoned = false;
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const mins = Math.floor(elapsed / 60);
+  const secs = elapsed % 60;
+
+  document.getElementById('questionArea').style.display = 'none';
+  document.getElementById('cheatSheet').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'flex';
+
+  document.getElementById('resScore').textContent = `${score} / ${QUESTIONS.length}`;
+  document.getElementById('resPct').textContent = `${Math.round(score / QUESTIONS.length * 100)}%`;
+  document.getElementById('resTime').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+  document.getElementById('resPts').textContent = points;
+  document.getElementById('resMax').textContent = QUESTIONS.length * 3;
+
+  mfg('game_completed', {
+    game_slug: 'boolean-blitz', level: 'level4',
+    score: points, questions_answered: QUESTIONS.length, questions_correct: score
+  });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('boolean-blitz','level4',points,QUESTIONS.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('boolean-blitz','level4',points);}}
+}
+</script>
+</body>
+</html>

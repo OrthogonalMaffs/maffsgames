@@ -1,0 +1,78 @@
+/* The game theme: one adult register for every game (canon §7.5, Jon's ruling of 2 Oct 2026).
+
+   Until October 2026 every game styled itself from scratch, and canon licensed a light,
+   playful row (Nunito + Press Start 2P) for any game a Year 6 or KS3 student might play.
+   The register drifted game by game: pixel fonts in six games, twelve games rendering a
+   different row from the one canon gave them, colour names that differ between games.
+   This file is the one source, on the footer's pattern (canon §7.5.2): the tokens and the
+   fonts live here, scripts/check-theme.py holds each migrated game to it in CI.
+
+   - The palette is set by data-theme on <html>, "light" or "dark". It is never chosen per
+     game: check-theme.py derives it from the game's roster levels (canon §7.5).
+   - Base tokens, which a game must never redefine: --bg --surface --surface-alt --text
+     --muted --border --correct --wrong --hint --font-text --font-num. A game sets its own
+     --accent and --accent-dim, and any non-base tokens it needs (its own data colours).
+   - Fonts: Outfit for text, JetBrains Mono for numbers and code. Nothing else, except
+     OpenDyslexic in Aa mode, which wins: body.accessible switches both font tokens, so
+     every rule written with var(--font-text) or var(--font-num) follows it.
+   - Contrast (WCAG AA, 4.5:1 for text) is measured and recorded in canon §7.5. Change a
+     colour here only with the ratios re-measured.
+
+   It coexists with opendyslexic.css (font faces only) and site-footer.css (its own
+   colours, no font) without touching either. */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+:root {
+  --font-text: 'Outfit', system-ui, sans-serif;
+  --font-num: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Light: sits beside the portal (white surfaces, navy text). */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-alt: #f1f5f9;
+  --text: #1a2744;
+  --muted: #526077;
+  --border: #e2e8f0;
+  --correct: #166534;
+  --wrong: #b91c1c;
+  --hint: #a14a05;
+}
+
+/* Dark. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1420;
+  --surface: #182033;
+  --surface-alt: #212b42;
+  --text: #e8ecf4;
+  --muted: #a3adc2;
+  --border: #2e3850;
+  --correct: #4ade80;
+  --wrong: #fb7185;
+  --hint: #fbbf24;
+}
+
+/* Aa mode: OpenDyslexic for everything written with the font tokens, and the reduced-glare
+   page backgrounds the per-game Aa snippet has always used (cream on light, deep navy on dark). */
+body.accessible {
+  --font-text: 'OpenDyslexic', sans-serif;
+  --font-num: 'OpenDyslexic', monospace;
+}
+:root[data-theme="light"] body.accessible { --bg: #fdf6e3; }
+:root[data-theme="dark"] body.accessible { --bg: #12141f; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-text);
+}
+h1, h2, h3, h4, button, input, select, textarea {
+  font-family: var(--font-text);
+}
+code, kbd, samp, pre {
+  font-family: var(--font-num);
+}

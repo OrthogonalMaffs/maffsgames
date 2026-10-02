@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Find missing angles then name the geometric reason. Two-phase questions covering all angle rules for GCSE maths.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/angle-ace/">
+<meta property="og:title" content="Angle Ace — MaffsGames">
+<meta property="og:description" content="Find missing angles then name the geometric reason. Two-phase questions covering all angle rules for GCSE maths.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/angle-ace/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Angle Ace — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#070a10;--surface:#0d1118;--border:#1a2235;--primary:#22c55e;--accent:#f59e0b;--wrong:#f43f5e;--correct:#22c55e;--text:#e4eaf0;--muted:#6880a0;--angle1:#3b82f6;--angle2:#f97316;--unknown:#f43f5e;--line:#4a6080;--parallel:#06b6d4}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:520px}
+.menu-reasons{display:grid;grid-template-columns:1fr 1fr;gap:.3rem .8rem;text-align:left;font-size:.78rem;color:var(--muted);margin:1rem auto;max-width:520px;line-height:1.5}
+.menu-reasons span{color:var(--accent)}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:50px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+
+.diagram-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:.5rem}
+canvas{display:block;width:100%;height:auto}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:.5rem;text-align:center}
+.q-card .prompt{font-size:.95rem;font-weight:600}
+.q-card .phase-label{font-size:.7rem;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.3rem}
+
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
+.options.reasons{grid-template-columns:1fr}
+.opt-btn{padding:.65rem .5rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.85rem;cursor:pointer;transition:all .12s;text-align:center;display:flex;align-items:center;justify-content:center;min-height:44px}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 10px rgba(34,197,94,.12)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.08)}
+.opt-btn.partial{border-color:var(--accent);background:rgba(245,158,11,.08)}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:10px;padding:1rem;margin-bottom:.6rem;text-align:left;font-size:.85rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.85rem;margin-bottom:.4rem;font-weight:600}
+.solution .step{margin-bottom:.4rem;padding-left:.7rem;border-left:2px solid var(--border)}
+.solution .misconception{margin-top:.5rem;padding:.5rem .7rem;background:rgba(245,158,11,.08);border-radius:8px;border-left:3px solid var(--accent);font-size:.78rem;color:var(--accent)}
+.solution .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+.level-select{display:flex;flex-direction:column;gap:.5rem;margin:1rem auto;max-width:400px}
+.level-btn{display:flex;flex-direction:column;align-items:flex-start;padding:.7rem 1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;cursor:pointer;transition:all .15s;text-align:left}
+.level-btn:hover{border-color:var(--primary);box-shadow:0 0 12px rgba(34,197,94,.12)}
+.level-btn.selected{border-color:var(--primary);background:rgba(34,197,94,.08)}
+.level-btn .level-name{font-weight:700;font-size:.95rem}
+.level-btn .level-arrow{font-size:.78rem;color:var(--muted);margin-top:.15rem}
+.level-btn .level-star{font-size:.72rem;color:var(--accent);margin-top:.1rem}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Angle Ace</h1><div class="sub">Find the angle. Name the reason. Both required — just like the exam.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="menu-info">
+      Every GCSE angle question requires <strong>two things</strong>: the angle AND the geometric reason.<br>
+      Get the angle right but the reason wrong? Half marks at best. This game trains both.
+    </div>
+    <div class="menu-reasons">
+      <div><span>Z</span> — Alternate angles are equal</div>
+      <div><span>F</span> — Corresponding angles are equal</div>
+      <div><span>C</span> — Co-interior angles sum to 180°</div>
+      <div><span>—</span> — Angles on a straight line = 180°</div>
+      <div><span>○</span> — Angles at a point = 360°</div>
+      <div><span>X</span> — Vertically opposite angles are equal</div>
+      <div><span>△</span> — Angles in a triangle = 180°</div>
+      <div><span>⚡</span> — Exterior angle = sum of interior opposites</div>
+    </div>
+    <div class="level-select" id="levelSelect">
+      <div style="font-size:.85rem;font-weight:600;margin-bottom:.5rem;text-align:center">Choose your level:</div>
+      <button class="level-btn" data-level="year6" onclick="selectLevel('year6')"><span class="level-name">Year 6</span> <span class="level-arrow">Year 6 &rarr; Year 7</span> <span class="level-star">This is real KS3 maths</span></button>
+      <button class="level-btn" data-level="gcse" onclick="selectLevel('gcse')"><span class="level-name">GCSE</span> <span class="level-arrow">Full exam practice</span></button>
+    </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="start-btn" id="startBtn" onclick="startGame()">Start</button>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Full marks</div><div class="hud-val" id="fullCount">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
+    </div>
+    <div class="diagram-wrap"><canvas id="dCanvas" width="600" height="360"></canvas></div>
+    <div class="q-card"><div class="phase-label" id="phaseLabel">Phase 1: Find the angle</div><div class="prompt" id="prompt">Find angle x</div></div>
+    <div class="options" id="options"></div>
+    <div class="solution" id="solution"></div>
+  </div>
+
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+
+<script>
+const canvas=document.getElementById('dCanvas'),ctx=canvas.getContext('2d');
+const W=600,H=360;
+let pool=[],qIdx=0,score=0,fullMarks=0,total=0,currentQ=null,qStart=0,phase=1,angleCorrect=false;
+const BASE=100,T_K=0.15,MAX_Q=20;
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+// ============================================================
+//  DRAWING HELPERS
+// ============================================================
+function clear(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#0d1118';ctx.fillRect(0,0,W,H)}
+
+function drawParallelLines(y1,y2){
+  ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(40,y1);ctx.lineTo(W-40,y1);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(40,y2);ctx.lineTo(W-40,y2);ctx.stroke();
+  // Arrow marks for parallel
+  ctx.fillStyle='#06b6d4';ctx.font='bold 14px Outfit';
+  ctx.fillText('▸▸',W-70,y1-6);ctx.fillText('▸▸',W-70,y2-6);
+}
+
+function drawTransversal(x1,y1,x2,y2){
+  ctx.strokeStyle='#8090a8';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+}
+
+function drawAngleArc(cx,cy,startAngle,endAngle,r,color,label){
+  ctx.strokeStyle=color;ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(cx,cy,r,(-endAngle)*Math.PI/180,(-startAngle)*Math.PI/180);ctx.stroke();
+  // Label
+  const midAngle=(startAngle+endAngle)/2;
+  const lx=cx+(r+14)*Math.cos(midAngle*Math.PI/180);
+  const ly=cy-(r+14)*Math.sin(midAngle*Math.PI/180);
+  ctx.fillStyle=color;ctx.font='bold 16px JetBrains Mono';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(label,lx,ly);
+}
+
+function drawAngleValue(cx,cy,startAngle,endAngle,r,color,value){
+  const midAngle=(startAngle+endAngle)/2;
+  const lx=cx+(r+16)*Math.cos(midAngle*Math.PI/180);
+  const ly=cy-(r+16)*Math.sin(midAngle*Math.PI/180);
+  ctx.fillStyle=color;ctx.font='bold 15px JetBrains Mono';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(value+'°',lx,ly);
+}
+
+// ============================================================
+//  QUESTION BANK — 55 questions
+// ============================================================
+const REASONS={
+  ALT:'Alternate angles are equal',
+  CORR:'Corresponding angles are equal',
+  COINT:'Co-interior angles sum to 180°',
+  STRAIGHT:'Angles on a straight line sum to 180°',
+  POINT:'Angles at a point sum to 360°',
+  VERTOP:'Vertically opposite angles are equal',
+  TRIANGLE:'Angles in a triangle sum to 180°',
+  ISOSC:'Base angles of an isosceles triangle are equal',
+  EXTERIOR:'Exterior angle equals sum of interior opposite angles',
+};
+
+const ALL_REASONS=Object.values(REASONS);
+
+const QUESTIONS_BY_LEVEL={};
+
+// ============================================================
+//  YEAR 6 QUESTION BANK — 40 questions
+// ============================================================
+QUESTIONS_BY_LEVEL.year6=[
+// === ANGLES ON A STRAIGHT LINE (10) ===
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(400,60);ctx.stroke();
+drawAngleValue(300,180,0,40,35,'#3b82f6',40);drawAngleArc(300,180,40,180,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:140,reason:REASONS.STRAIGHT,
+angleOpts:[140,40,120,160],steps:['x and 40° are on a straight line','Angles on a straight line sum to 180°','x = 180° − 40° = 140°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(220,50);ctx.stroke();
+drawAngleValue(300,180,105,180,35,'#3b82f6',75);drawAngleArc(300,180,0,105,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:105,reason:REASONS.STRAIGHT,
+angleOpts:[105,75,115,85],steps:['Angles on a straight line sum to 180°','x = 180° − 75° = 105°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(180,50);ctx.stroke();
+drawAngleValue(300,180,120,180,35,'#3b82f6',120);drawAngleArc(300,180,0,120,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:60,reason:REASONS.STRAIGHT,
+angleOpts:[60,120,80,40],steps:['Angles on a straight line sum to 180°','x = 180° − 120° = 60°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(380,50);ctx.stroke();
+drawAngleValue(300,180,0,55,35,'#3b82f6',55);drawAngleArc(300,180,55,180,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:125,reason:REASONS.STRAIGHT,
+angleOpts:[125,55,135,145],steps:['Angles on a straight line sum to 180°','x = 180° − 55° = 125°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(300,40);ctx.stroke();
+drawAngleValue(300,180,0,90,35,'#3b82f6',90);drawAngleArc(300,180,90,180,35,'#f43f5e','x');
+ctx.beginPath();ctx.moveTo(280,160);ctx.lineTo(280,180);ctx.lineTo(300,180);ctx.stroke()},
+prompt:'Find angle x',answer:90,reason:REASONS.STRAIGHT,
+angleOpts:[90,180,45,270],steps:['Angles on a straight line sum to 180°','x = 180° − 90° = 90°'],misconception:'A right angle is exactly 90°. Two right angles make a straight line (180°).'},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(420,50);ctx.stroke();
+drawAngleValue(300,180,0,30,35,'#3b82f6',30);drawAngleArc(300,180,30,180,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:150,reason:REASONS.STRAIGHT,
+angleOpts:[150,30,160,130],steps:['Angles on a straight line sum to 180°','x = 180° − 30° = 150°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(190,50);ctx.stroke();
+drawAngleValue(300,180,115,180,35,'#3b82f6',115);drawAngleArc(300,180,0,115,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:65,reason:REASONS.STRAIGHT,
+angleOpts:[65,115,75,55],steps:['Angles on a straight line sum to 180°','x = 180° − 115° = 65°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(370,50);ctx.stroke();
+drawAngleValue(300,180,0,45,35,'#3b82f6',45);drawAngleArc(300,180,45,180,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:135,reason:REASONS.STRAIGHT,
+angleOpts:[135,45,125,155],steps:['Angles on a straight line sum to 180°','x = 180° − 45° = 135°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(380,60);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(220,50);ctx.stroke();
+drawAngleValue(300,180,0,60,35,'#3b82f6',60);drawAngleArc(300,180,60,180,35,'#f43f5e','x')},
+prompt:'Two angles on a straight line: one is 60°. Find x.',answer:120,reason:REASONS.STRAIGHT,
+angleOpts:[120,60,100,140],steps:['60° + x = 180°','x = 180° − 60° = 120°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(350,50);ctx.stroke();
+drawAngleValue(300,180,0,85,35,'#3b82f6',85);drawAngleArc(300,180,85,180,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:95,reason:REASONS.STRAIGHT,
+angleOpts:[95,85,105,75],steps:['Angles on a straight line sum to 180°','x = 180° − 85° = 95°']},
+
+// === ANGLES AROUND A POINT (10) ===
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,90,210].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,90,40,'#3b82f6',90);drawAngleValue(cx,cy,90,210,40,'#f97316',120);drawAngleArc(cx,cy,210,360,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:150,reason:REASONS.POINT,
+angleOpts:[150,120,90,180],steps:['Angles at a point sum to 360°','90° + 120° + x = 360°','x = 360° − 210° = 150°']},
+
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,100,180].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,100,40,'#3b82f6',100);drawAngleValue(cx,cy,100,180,40,'#f97316',80);drawAngleArc(cx,cy,180,360,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:180,reason:REASONS.POINT,
+angleOpts:[180,160,200,100],steps:['Angles at a point sum to 360°','100° + 80° + x = 360°','x = 360° − 180° = 180°']},
+
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,120,210].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,120,40,'#3b82f6',120);drawAngleValue(cx,cy,120,210,40,'#f97316',90);drawAngleArc(cx,cy,210,360,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:150,reason:REASONS.POINT,
+angleOpts:[150,130,170,90],steps:['Angles at a point sum to 360°','120° + 90° + x = 360°','x = 360° − 210° = 150°']},
+
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,270].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,270,360,50,'#3b82f6',270);drawAngleArc(cx,cy,0,270,38,'#f43f5e','x');
+ctx.fillStyle='#3b82f6';ctx.font='bold 13px Outfit';ctx.textAlign='center';ctx.fillText('270°',cx+60,cy+70)},
+prompt:'One angle is 270°. Find angle x.',answer:90,reason:REASONS.POINT,
+angleOpts:[90,180,270,45],steps:['Angles at a point sum to 360°','270° + x = 360°','x = 360° − 270° = 90°']},
+
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,60,120].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,60,40,'#3b82f6',60);drawAngleValue(cx,cy,60,120,40,'#f97316',60);drawAngleArc(cx,cy,120,360,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:240,reason:REASONS.POINT,
+angleOpts:[240,120,180,300],steps:['Angles at a point sum to 360°','60° + 60° + x = 360°','x = 360° − 120° = 240°']},
+
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,150,280].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,150,40,'#3b82f6',150);drawAngleValue(cx,cy,150,280,40,'#f97316',130);drawAngleArc(cx,cy,280,360,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:80,reason:REASONS.POINT,
+angleOpts:[80,100,60,130],steps:['Angles at a point sum to 360°','150° + 130° + x = 360°','x = 360° − 280° = 80°']},
+
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,200].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,200,50,'#3b82f6',200);drawAngleArc(cx,cy,200,360,38,'#f43f5e','x');
+ctx.fillStyle='#3b82f6';ctx.font='bold 13px Outfit';ctx.textAlign='center';ctx.fillText('200°',cx-50,cy+50)},
+prompt:'One angle is 200°. Find angle x.',answer:160,reason:REASONS.POINT,
+angleOpts:[160,200,140,180],steps:['Angles at a point sum to 360°','200° + x = 360°','x = 360° − 200° = 160°']},
+
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,45,135].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,45,40,'#3b82f6',45);drawAngleValue(cx,cy,45,135,40,'#f97316',90);drawAngleArc(cx,cy,135,360,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:225,reason:REASONS.POINT,
+angleOpts:[225,135,180,270],steps:['Angles at a point sum to 360°','45° + 90° + x = 360°','x = 360° − 135° = 225°']},
+
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,110,210].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,110,40,'#3b82f6',110);drawAngleValue(cx,cy,110,210,40,'#f97316',100);drawAngleArc(cx,cy,210,360,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:150,reason:REASONS.POINT,
+angleOpts:[150,130,170,110],steps:['Angles at a point sum to 360°','110° + 100° + x = 360°','x = 360° − 210° = 150°']},
+
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,90,180,270].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,90,40,'#3b82f6',90);drawAngleValue(cx,cy,90,180,40,'#f97316',90);drawAngleValue(cx,cy,180,270,40,'#22c55e',90);drawAngleArc(cx,cy,270,360,38,'#f43f5e','x')},
+prompt:'Four angles around a point. Three are 90°. Find x.',answer:90,reason:REASONS.POINT,
+angleOpts:[90,180,270,45],steps:['Angles at a point sum to 360°','90° + 90° + 90° + x = 360°','x = 360° − 270° = 90°']},
+
+// === VERTICALLY OPPOSITE ANGLES (10) ===
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,110);ctx.lineTo(500,250);ctx.stroke();
+ctx.beginPath();ctx.moveTo(100,250);ctx.lineTo(500,110);ctx.stroke();
+drawAngleValue(300,180,15,60,40,'#3b82f6',50);drawAngleArc(300,180,195,240,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:50,reason:REASONS.VERTOP,
+angleOpts:[50,130,40,140],steps:['x and 50° are vertically opposite','Vertically opposite angles are equal','x = 50°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,100);ctx.lineTo(500,260);ctx.stroke();
+ctx.beginPath();ctx.moveTo(100,260);ctx.lineTo(500,100);ctx.stroke();
+drawAngleValue(300,180,15,55,40,'#3b82f6',73);drawAngleArc(300,180,195,235,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:73,reason:REASONS.VERTOP,
+angleOpts:[73,107,63,117],steps:['Vertically opposite angles are equal','x = 73°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,80);ctx.lineTo(500,280);ctx.stroke();
+ctx.beginPath();ctx.moveTo(80,250);ctx.lineTo(520,110);ctx.stroke();
+drawAngleValue(300,180,20,70,40,'#3b82f6',118);drawAngleArc(300,180,200,250,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:118,reason:REASONS.VERTOP,
+angleOpts:[118,62,108,72],steps:['Vertically opposite angles are equal','x = 118°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,110);ctx.lineTo(500,250);ctx.stroke();
+ctx.beginPath();ctx.moveTo(100,250);ctx.lineTo(500,110);ctx.stroke();
+drawAngleValue(300,180,20,60,40,'#3b82f6',45);drawAngleArc(300,180,200,240,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:45,reason:REASONS.VERTOP,
+angleOpts:[45,135,55,125],steps:['Vertically opposite angles are equal','x = 45°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,95);ctx.lineTo(500,265);ctx.stroke();
+ctx.beginPath();ctx.moveTo(100,265);ctx.lineTo(500,95);ctx.stroke();
+drawAngleValue(300,180,15,55,40,'#3b82f6',92);drawAngleArc(300,180,195,235,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:92,reason:REASONS.VERTOP,
+angleOpts:[92,88,82,98],steps:['Vertically opposite angles are equal','x = 92°'],misconception:'92° is close to a right angle but it is NOT 90°. The vertically opposite angle must be exactly the same.'},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,80);ctx.lineTo(500,280);ctx.stroke();
+ctx.beginPath();ctx.moveTo(80,260);ctx.lineTo(520,100);ctx.stroke();
+drawAngleValue(300,180,20,65,40,'#3b82f6',135);drawAngleArc(300,180,200,245,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:135,reason:REASONS.VERTOP,
+angleOpts:[135,45,125,55],steps:['Vertically opposite angles are equal','x = 135°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,105);ctx.lineTo(500,255);ctx.stroke();
+ctx.beginPath();ctx.moveTo(100,255);ctx.lineTo(500,105);ctx.stroke();
+drawAngleValue(300,180,18,55,40,'#3b82f6',67);drawAngleArc(300,180,198,235,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:67,reason:REASONS.VERTOP,
+angleOpts:[67,113,57,123],steps:['Vertically opposite angles are equal','x = 67°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,75);ctx.lineTo(500,285);ctx.stroke();
+ctx.beginPath();ctx.moveTo(80,265);ctx.lineTo(520,95);ctx.stroke();
+drawAngleValue(300,180,20,70,40,'#3b82f6',154);drawAngleArc(300,180,200,250,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:154,reason:REASONS.VERTOP,
+angleOpts:[154,26,144,36],steps:['Vertically opposite angles are equal','x = 154°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,120);ctx.lineTo(500,240);ctx.stroke();
+ctx.beginPath();ctx.moveTo(100,240);ctx.lineTo(500,120);ctx.stroke();
+drawAngleValue(300,180,18,50,40,'#3b82f6',28);drawAngleArc(300,180,198,230,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:28,reason:REASONS.VERTOP,
+angleOpts:[28,152,38,142],steps:['Vertically opposite angles are equal','x = 28°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,70);ctx.lineTo(500,290);ctx.stroke();
+ctx.beginPath();ctx.moveTo(80,270);ctx.lineTo(520,90);ctx.stroke();
+drawAngleValue(300,180,20,75,40,'#3b82f6',171);drawAngleArc(300,180,200,255,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:171,reason:REASONS.VERTOP,
+angleOpts:[171,9,161,19],steps:['Vertically opposite angles are equal','x = 171°']},
+
+// === PARALLEL LINES — RECOGNITION (10) ===
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
+drawAngleValue(275,100,0,50,30,'#3b82f6',50);drawAngleArc(345,240,0,50,28,'#22c55e','50°');
+ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('F-shape',300,320)},
+prompt:'These angles form an F-shape. What type of angle pair is this?',answer:'Corresponding angles (equal)',reason:REASONS.CORR,
+isRecognition:true,recognitionOpts:['Corresponding angles (equal)','Alternate angles (equal)','Co-interior angles (sum to 180°)'],
+angleOpts:null,steps:['Same position at each intersection','F-shape = corresponding angles','Corresponding angles are equal']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(180,40,400,300);
+drawAngleValue(265,100,0,55,30,'#3b82f6',55);drawAngleArc(340,240,180,235,28,'#22c55e','55°');
+ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('Z-shape',300,320)},
+prompt:'These angles form a Z-shape. What type of angle pair is this?',answer:'Alternate angles (equal)',reason:REASONS.ALT,
+isRecognition:true,recognitionOpts:['Alternate angles (equal)','Corresponding angles (equal)','Co-interior angles (sum to 180°)'],
+angleOpts:null,steps:['Opposite sides of the transversal, between the parallel lines','Z-shape = alternate angles','Alternate angles are equal']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
+drawAngleValue(275,100,0,60,30,'#3b82f6',60);drawAngleArc(340,240,140,180,28,'#22c55e','120°');
+ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('C-shape',300,320)},
+prompt:'These angles form a C-shape. What type of angle pair is this?',answer:'Co-interior angles (sum to 180°)',reason:REASONS.COINT,
+isRecognition:true,recognitionOpts:['Co-interior angles (sum to 180°)','Alternate angles (equal)','Corresponding angles (equal)'],
+angleOpts:null,steps:['Same side of the transversal, between the parallel lines','C-shape (or U-shape) = co-interior angles','Co-interior angles sum to 180°']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(400,40,200,300);
+drawAngleValue(325,100,130,180,30,'#3b82f6',65);drawAngleArc(255,240,130,180,28,'#22c55e','65°');
+ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('Reverse F-shape',300,320)},
+prompt:'These angles form a reverse F-shape. What type of angle pair is this?',answer:'Corresponding angles (equal)',reason:REASONS.CORR,
+isRecognition:true,recognitionOpts:['Corresponding angles (equal)','Alternate angles (equal)','Co-interior angles (sum to 180°)'],
+angleOpts:null,steps:['Same position at each intersection','Reverse F is still corresponding','Corresponding angles are equal']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(400,40,200,300);
+drawAngleValue(325,100,130,180,30,'#3b82f6',48);drawAngleArc(255,240,0,48,28,'#22c55e','48°');
+ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('Reverse Z-shape',300,320)},
+prompt:'These angles form a reverse Z-shape. What type of angle pair is this?',answer:'Alternate angles (equal)',reason:REASONS.ALT,
+isRecognition:true,recognitionOpts:['Alternate angles (equal)','Corresponding angles (equal)','Co-interior angles (sum to 180°)'],
+angleOpts:null,steps:['Opposite sides of the transversal, between the parallel lines','Reverse Z is still alternate','Alternate angles are equal']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
+drawAngleValue(275,100,0,70,30,'#3b82f6',70);drawAngleArc(340,240,110,180,28,'#22c55e','110°');
+ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('U-shape',300,320)},
+prompt:'These angles form a U-shape. What type of angle pair is this?',answer:'Co-interior angles (sum to 180°)',reason:REASONS.COINT,
+isRecognition:true,recognitionOpts:['Co-interior angles (sum to 180°)','Alternate angles (equal)','Corresponding angles (equal)'],
+angleOpts:null,steps:['Same side of the transversal, between the parallel lines','U-shape = co-interior (same as C-shape)','Co-interior angles sum to 180°']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(180,40,380,300);
+drawAngleValue(253,100,0,45,30,'#3b82f6',45);drawAngleArc(327,240,0,45,28,'#22c55e','45°');
+ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('F-shape',300,320)},
+prompt:'What type of angle pair is this?',answer:'Corresponding angles (equal)',reason:REASONS.CORR,
+isRecognition:true,recognitionOpts:['Corresponding angles (equal)','Alternate angles (equal)','Co-interior angles (sum to 180°)'],
+angleOpts:null,steps:['Same position at each intersection → F-shape','Corresponding angles are equal']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(180,40,420,300);
+drawAngleValue(262,100,0,52,30,'#3b82f6',52);drawAngleArc(362,240,180,232,28,'#22c55e','52°');
+ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('Z-shape',300,320)},
+prompt:'What type of angle pair is this?',answer:'Alternate angles (equal)',reason:REASONS.ALT,
+isRecognition:true,recognitionOpts:['Alternate angles (equal)','Corresponding angles (equal)','Co-interior angles (sum to 180°)'],
+angleOpts:null,steps:['Opposite sides, between the lines → Z-shape','Alternate angles are equal']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
+drawAngleValue(275,100,0,80,30,'#3b82f6',80);drawAngleArc(340,240,100,180,28,'#22c55e','100°');
+ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('C-shape',300,320)},
+prompt:'What type of angle pair is this?',answer:'Co-interior angles (sum to 180°)',reason:REASONS.COINT,
+isRecognition:true,recognitionOpts:['Co-interior angles (sum to 180°)','Alternate angles (equal)','Corresponding angles (equal)'],
+angleOpts:null,steps:['Same side of the transversal → C-shape','Co-interior angles sum to 180°']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,380,300);
+drawAngleValue(260,100,0,55,30,'#3b82f6',55);drawAngleArc(330,240,0,55,28,'#22c55e','55°');
+ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('F-shape',300,320)},
+prompt:'What type of angle pair is this?',answer:'Corresponding angles (equal)',reason:REASONS.CORR,
+isRecognition:true,recognitionOpts:['Corresponding angles (equal)','Alternate angles (equal)','Co-interior angles (sum to 180°)'],
+angleOpts:null,steps:['Same position at each intersection','Corresponding angles are equal']},
+];
+
+// ============================================================
+//  GCSE QUESTION BANK — 55 questions (original)
+// ============================================================
+QUESTIONS_BY_LEVEL.gcse=[
+// === ALTERNATE ANGLES ===
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(180,40,400,300);
+drawAngleValue(267,100,0,55,30,'#3b82f6',55);drawAngleArc(333,240,180,235,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:55,reason:REASONS.ALT,
+angleOpts:[55,125,65,35],steps:['The transversal crosses two parallel lines','x and 55° are alternate angles (Z-shape)','Alternate angles are equal','x = 55°'],misconception:'Alternate angles are on OPPOSITE sides of the transversal, between the parallel lines. Look for the Z shape (or backwards Z).'},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,380,300);
+drawAngleValue(262,100,125,180,30,'#3b82f6',70);drawAngleArc(338,240,180,250,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:70,reason:REASONS.ALT,
+angleOpts:[70,110,180,60],steps:['70° and x are alternate angles','Alternate angles are equal','x = 70°']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(160,40,420,300);
+drawAngleValue(250,100,0,40,30,'#3b82f6',40);drawAngleArc(350,240,180,220,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:40,reason:REASONS.ALT,
+angleOpts:[40,140,50,130],steps:['x and 40° are alternate angles (Z-shape)','x = 40°']},
+
+// === CORRESPONDING ANGLES ===
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
+drawAngleValue(273,100,0,50,30,'#3b82f6',50);drawAngleArc(347,240,0,50,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:50,reason:REASONS.CORR,
+angleOpts:[50,130,40,90],steps:['x and 50° are in the same position at each intersection','These are corresponding angles (F-shape)','Corresponding angles are equal','x = 50°'],misconception:'Corresponding angles are on the SAME side of the transversal, one at each intersection. Look for the F shape.'},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(180,40,380,300);
+drawAngleValue(253,100,130,180,30,'#3b82f6',65);drawAngleArc(327,240,130,180,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:65,reason:REASONS.CORR,
+angleOpts:[65,115,75,105],steps:['Same position at each intersection → corresponding angles','x = 65°']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(220,40,380,300);
+drawAngleValue(273,100,0,35,30,'#3b82f6',35);drawAngleArc(340,240,0,35,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:35,reason:REASONS.CORR,
+angleOpts:[35,145,55,125],steps:['Corresponding angles are equal','x = 35°']},
+
+// === CO-INTERIOR ANGLES ===
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
+drawAngleValue(275,100,0,60,30,'#3b82f6',60);drawAngleArc(340,240,140,180,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:120,reason:REASONS.COINT,
+angleOpts:[120,60,180,140],steps:['60° and x are co-interior angles (same side of transversal, between parallel lines)','Co-interior angles sum to 180°','x = 180° − 60° = 120°'],misconception:'Co-interior angles are on the SAME side of the transversal, between the parallel lines. They add up to 180°, NOT equal. Look for the C or U shape.'},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(180,40,380,300);
+drawAngleValue(255,100,0,75,30,'#3b82f6',75);drawAngleArc(325,240,110,180,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:105,reason:REASONS.COINT,
+angleOpts:[105,75,85,115],steps:['Co-interior angles sum to 180°','x = 180° − 75° = 105°']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
+drawAngleValue(275,100,0,48,30,'#3b82f6',48);drawAngleArc(340,240,130,180,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:132,reason:REASONS.COINT,
+angleOpts:[132,48,138,42],steps:['Co-interior (allied) angles: x + 48° = 180°','x = 132°']},
+
+// === ANGLES ON A STRAIGHT LINE ===
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(400,60);ctx.stroke();
+drawAngleValue(300,180,0,65,35,'#3b82f6',65);drawAngleArc(300,180,65,180,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:115,reason:REASONS.STRAIGHT,
+angleOpts:[115,65,125,95],steps:['x and 65° are on a straight line','Angles on a straight line sum to 180°','x = 180° − 65° = 115°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,200);ctx.lineTo(520,200);ctx.stroke();
+ctx.beginPath();ctx.moveTo(280,200);ctx.lineTo(200,60);ctx.stroke();
+ctx.beginPath();ctx.moveTo(280,200);ctx.lineTo(400,70);ctx.stroke();
+drawAngleValue(280,200,0,50,38,'#3b82f6',50);drawAngleValue(280,200,50,130,38,'#f97316',80);drawAngleArc(280,200,130,180,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:50,reason:REASONS.STRAIGHT,
+angleOpts:[50,130,100,30],steps:['Three angles on a straight line: 50° + 80° + x = 180°','x = 180° − 130° = 50°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(350,40);ctx.stroke();
+drawAngleValue(300,180,0,72,35,'#3b82f6',72);drawAngleArc(300,180,72,180,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:108,reason:REASONS.STRAIGHT,
+angleOpts:[108,72,118,62],steps:['Angles on a straight line = 180°','x = 180° − 72° = 108°']},
+
+// === VERTICALLY OPPOSITE ===
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,100);ctx.lineTo(500,260);ctx.stroke();
+ctx.beginPath();ctx.moveTo(100,260);ctx.lineTo(500,100);ctx.stroke();
+drawAngleValue(300,180,20,70,38,'#3b82f6',48);drawAngleArc(300,180,200,250,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:48,reason:REASONS.VERTOP,
+angleOpts:[48,132,42,138],steps:['x and 48° are vertically opposite','Vertically opposite angles are equal','x = 48°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,80);ctx.lineTo(500,280);ctx.stroke();
+ctx.beginPath();ctx.moveTo(80,250);ctx.lineTo(520,110);ctx.stroke();
+drawAngleValue(300,180,25,55,40,'#3b82f6',115);drawAngleArc(300,180,55,155,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:65,reason:REASONS.STRAIGHT,
+angleOpts:[65,115,75,105],steps:['115° and x are on a straight line (supplementary)','x = 180° − 115° = 65°'],misconception:'These are NOT vertically opposite — they are adjacent angles on a straight line.'},
+
+// === ANGLES AT A POINT ===
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,90,200,300].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+150*Math.cos(r),cy-150*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,90,40,'#3b82f6',90);drawAngleValue(cx,cy,90,200,40,'#f97316',110);drawAngleValue(cx,cy,200,300,40,'#22c55e',100);drawAngleArc(cx,cy,300,360,40,'#f43f5e','x')},
+prompt:'Find angle x',answer:60,reason:REASONS.POINT,
+angleOpts:[60,160,70,260],steps:['Angles at a point sum to 360°','90° + 110° + 100° + x = 360°','x = 360° − 300° = 60°']},
+
+{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+[0,120,250].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
+drawAngleValue(cx,cy,0,120,40,'#3b82f6',120);drawAngleValue(cx,cy,120,250,40,'#f97316',130);drawAngleArc(cx,cy,250,360,40,'#f43f5e','x')},
+prompt:'Find angle x',answer:110,reason:REASONS.POINT,
+angleOpts:[110,250,130,100],steps:['120° + 130° + x = 360°','x = 360° − 250° = 110°']},
+
+// === ANGLES IN A TRIANGLE ===
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(150,280);ctx.lineTo(450,280);ctx.lineTo(300,80);ctx.closePath();ctx.stroke();
+drawAngleValue(150,280,0,50,35,'#3b82f6',50);drawAngleValue(450,280,130,180,35,'#f97316',70);drawAngleArc(300,80,245,295,30,'#f43f5e','x')},
+prompt:'Find angle x',answer:60,reason:REASONS.TRIANGLE,
+angleOpts:[60,120,70,50],steps:['Angles in a triangle sum to 180°','50° + 70° + x = 180°','x = 60°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(120,280);ctx.lineTo(480,280);ctx.lineTo(200,80);ctx.closePath();ctx.stroke();
+drawAngleValue(120,280,0,38,35,'#3b82f6',38);drawAngleValue(480,280,150,180,35,'#f97316',90);drawAngleArc(200,80,280,320,30,'#f43f5e','x')},
+prompt:'Find angle x',answer:52,reason:REASONS.TRIANGLE,
+angleOpts:[52,38,90,128],steps:['38° + 90° + x = 180°','x = 180° − 128° = 52°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,300);ctx.lineTo(500,300);ctx.lineTo(300,60);ctx.closePath();ctx.stroke();
+drawAngleValue(100,300,0,35,35,'#3b82f6',35);drawAngleArc(500,300,145,180,30,'#f43f5e','x');
+// Mark equal sides
+ctx.strokeStyle='#22c55e';ctx.lineWidth=1;
+const mx1=(100+300)/2,my1=(300+60)/2,mx2=(500+300)/2,my2=(300+60)/2;
+ctx.beginPath();ctx.moveTo(mx1-5,my1-5);ctx.lineTo(mx1+5,my1+5);ctx.stroke();
+ctx.beginPath();ctx.moveTo(mx2-5,my2-5);ctx.lineTo(mx2+5,my2+5);ctx.stroke()},
+prompt:'The triangle is isosceles (marked sides equal). Find x.',answer:35,reason:REASONS.ISOSC,
+angleOpts:[35,110,70,145],steps:['Isosceles triangle: base angles are equal','The two base angles are both 35°','35° + 35° + apex = 180°','But x IS one of the base angles','x = 35°'],misconception:'Base angles of an isosceles triangle are EQUAL. The base angles are opposite the equal sides.'},
+
+// === EXTERIOR ANGLE ===
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(120,260);ctx.lineTo(400,260);ctx.lineTo(260,80);ctx.closePath();ctx.stroke();
+ctx.beginPath();ctx.moveTo(400,260);ctx.lineTo(540,260);ctx.stroke();// extended line
+drawAngleValue(120,260,0,40,35,'#3b82f6',40);drawAngleValue(260,80,255,300,30,'#f97316',65);
+drawAngleArc(400,260,0,25,35,'#f43f5e','x')},
+prompt:'Find exterior angle x',answer:105,reason:REASONS.EXTERIOR,
+angleOpts:[105,75,115,65],steps:['The exterior angle of a triangle equals the sum of the two interior opposite angles','x = 40° + 65° = 105°'],misconception:'This is quicker than finding the third interior angle and then using angles on a straight line — though both methods give the same answer.'},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,260);ctx.lineTo(420,260);ctx.lineTo(300,80);ctx.closePath();ctx.stroke();
+ctx.beginPath();ctx.moveTo(420,260);ctx.lineTo(560,260);ctx.stroke();
+drawAngleValue(100,260,0,55,35,'#3b82f6',55);drawAngleValue(300,80,255,305,30,'#f97316',80);
+drawAngleArc(420,260,0,30,35,'#f43f5e','x')},
+prompt:'Find exterior angle x',answer:135,reason:REASONS.EXTERIOR,
+angleOpts:[135,45,125,55],steps:['Exterior angle = 55° + 80° = 135°']},
+
+// === MULTI-STEP (2 reasons needed) ===
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(180,40,420,300);
+drawAngleValue(270,100,0,62,30,'#3b82f6',62);drawAngleArc(370,240,0,62,28,'#f97316','y');drawAngleArc(370,240,62,180,28,'#f43f5e','x')},
+prompt:'Find angle x (two steps needed)',answer:118,reason:REASONS.STRAIGHT,
+angleOpts:[118,62,128,52],steps:['First: y and 62° are corresponding angles → y = 62°','Then: x + y = 180° (angles on a straight line)','x = 180° − 62° = 118°'],multiReason:[REASONS.CORR,REASONS.STRAIGHT]},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,380,300);
+drawAngleValue(260,100,120,180,30,'#3b82f6',73);
+// Add a third line
+ctx.strokeStyle='#4a6080';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(320,240);ctx.lineTo(240,100);ctx.stroke();
+drawAngleArc(320,240,145,180,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:73,reason:REASONS.ALT,
+angleOpts:[73,107,83,97],steps:['73° and x are alternate angles','x = 73°']},
+
+{draw:q=>{clear();drawParallelLines(100,260);drawTransversal(180,30,400,310);
+drawAngleValue(260,100,0,45,30,'#3b82f6',45);
+// Triangle between the parallel lines
+ctx.strokeStyle='#4a6080';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(350,260);ctx.lineTo(260,100);ctx.stroke();
+drawAngleArc(350,260,150,180,28,'#f97316','30°');drawAngleArc(310,180,200,250,25,'#f43f5e','x')},
+prompt:'Find angle x in the triangle',answer:105,reason:REASONS.TRIANGLE,
+angleOpts:[105,75,115,85],steps:['The 45° angle and the angle at the top of the triangle are alternate angles → top angle = 45°','The triangle has angles: 45° + 30° + x = 180°','x = 180° − 75° = 105°'],multiReason:[REASONS.ALT,REASONS.TRIANGLE]},
+
+// === MORE SINGLE-REASON ===
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(220,40,400,300);
+drawAngleValue(285,100,0,58,30,'#3b82f6',58);drawAngleArc(355,240,180,238,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:58,reason:REASONS.ALT,angleOpts:[58,122,68,112],steps:['Alternate angles → x = 58°']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,380,300);
+drawAngleValue(260,100,0,42,30,'#3b82f6',42);drawAngleArc(330,240,0,42,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:42,reason:REASONS.CORR,angleOpts:[42,138,48,132],steps:['Corresponding angles → x = 42°']},
+
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
+drawAngleValue(275,100,0,110,30,'#3b82f6',110);drawAngleArc(340,240,140,180,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:70,reason:REASONS.COINT,angleOpts:[70,110,80,100],steps:['Co-interior angles sum to 180°','x = 180° − 110° = 70°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(380,40);ctx.stroke();
+drawAngleValue(300,180,0,78,35,'#3b82f6',78);drawAngleArc(300,180,78,180,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:102,reason:REASONS.STRAIGHT,angleOpts:[102,78,112,88],steps:['Angles on a straight line: x + 78° = 180°','x = 102°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,120);ctx.lineTo(500,240);ctx.stroke();
+ctx.beginPath();ctx.moveTo(100,240);ctx.lineTo(500,120);ctx.stroke();
+drawAngleValue(300,180,10,55,40,'#3b82f6',137);drawAngleArc(300,180,55,170,35,'#f43f5e','x')},
+prompt:'Find angle x',answer:43,reason:REASONS.STRAIGHT,angleOpts:[43,137,47,133],steps:['137° + x = 180° (straight line)','x = 43°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(100,80);ctx.lineTo(500,280);ctx.stroke();
+ctx.beginPath();ctx.moveTo(100,280);ctx.lineTo(500,80);ctx.stroke();
+drawAngleValue(300,180,15,65,40,'#3b82f6',63);drawAngleArc(300,180,195,245,38,'#f43f5e','x')},
+prompt:'Find angle x',answer:63,reason:REASONS.VERTOP,angleOpts:[63,117,53,127],steps:['Vertically opposite angles are equal','x = 63°']},
+
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(140,280);ctx.lineTo(460,280);ctx.lineTo(300,60);ctx.closePath();ctx.stroke();
+drawAngleValue(140,280,0,60,35,'#3b82f6',60);drawAngleValue(460,280,120,180,35,'#f97316',45);drawAngleArc(300,60,250,305,30,'#f43f5e','x')},
+prompt:'Find angle x',answer:75,reason:REASONS.TRIANGLE,angleOpts:[75,105,65,85],steps:['60° + 45° + x = 180°','x = 75°']},
+
+// More alternate with different angles
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(160,40,440,300);
+drawAngleValue(255,100,0,68,30,'#3b82f6',68);drawAngleArc(375,240,180,248,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:68,reason:REASONS.ALT,angleOpts:[68,112,78,102],steps:['Alternate angles are equal','x = 68°']},
+
+// Co-interior with bigger given angle
+{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
+drawAngleValue(275,100,0,125,30,'#3b82f6',125);drawAngleArc(340,240,120,180,28,'#f43f5e','x')},
+prompt:'Find angle x',answer:55,reason:REASONS.COINT,angleOpts:[55,125,65,115],steps:['Co-interior: x + 125° = 180°','x = 55°']},
+
+// Right angle triangle
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(150,280);ctx.lineTo(450,280);ctx.lineTo(450,80);ctx.closePath();ctx.stroke();
+// Right angle mark
+ctx.beginPath();ctx.moveTo(430,280);ctx.lineTo(430,260);ctx.lineTo(450,260);ctx.stroke();
+drawAngleValue(150,280,0,34,35,'#3b82f6',34);drawAngleArc(450,80,250,270,30,'#f43f5e','x')},
+prompt:'Find angle x in the right-angled triangle',answer:56,reason:REASONS.TRIANGLE,angleOpts:[56,34,66,44],steps:['34° + 90° + x = 180°','x = 56°']},
+
+// Straight line with three angles
+{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(60,200);ctx.lineTo(540,200);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,200);ctx.lineTo(133,60);ctx.stroke();
+ctx.beginPath();ctx.moveTo(300,200);ctx.lineTo(418,60);ctx.stroke();
+drawAngleValue(300,200,140,180,35,'#3b82f6',40);drawAngleArc(300,200,50,140,35,'#f43f5e','x');drawAngleValue(300,200,0,50,35,'#f97316',50)},
+prompt:'Three angles on a straight line. Find x.',answer:90,reason:REASONS.STRAIGHT,angleOpts:[90,100,80,110],
+steps:['Angles on a straight line add up to 180°','40° + x + 50° = 180°','x = 90°']},
+];
+
+// Legacy alias
+const QUESTIONS=QUESTIONS_BY_LEVEL.gcse;
+
+// ============================================================
+//  LEVEL SELECTION
+// ============================================================
+let currentLevel='gcse';
+
+function selectLevel(lvl){
+  currentLevel=lvl;
+  document.querySelectorAll('.level-btn').forEach(b=>{b.classList.toggle('selected',b.dataset.level===lvl)});
+}
+
+// URL param routing
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  const lvl=params.get('level');
+  if(lvl && QUESTIONS_BY_LEVEL[lvl]){selectLevel(lvl)}
+  else{selectLevel('gcse')}
+})();
+
+// ============================================================
+//  GAME ENGINE
+// ============================================================
+function startGame(){
+  const bank=QUESTIONS_BY_LEVEL[currentLevel]||QUESTIONS_BY_LEVEL.gcse;
+  pool=shuffle([...bank]).slice(0,MAX_Q);
+  qIdx=0;score=0;fullMarks=0;total=0;
+  document.getElementById('score').textContent='0';
+  document.getElementById('fullCount').textContent='0';
+  show('game');nextQ();
+  window._ggAbandoned=true;
+  mfg('game_started',{game_slug:'angle-ace',level:currentLevel});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'angle-ace',level:currentLevel,questions_answered:total})});}
+}
+
+function nextQ(){
+  if(qIdx>=pool.length){endGame();return}
+  currentQ=pool[qIdx];qIdx++;total++;phase=1;angleCorrect=false;
+  document.getElementById('qNum').textContent=total;
+  document.getElementById('solution').className='solution';
+  qStart=Date.now();updateTimer();
+  // Draw diagram
+  currentQ.draw(currentQ);
+  document.getElementById('prompt').textContent=currentQ.prompt;
+  showPhase1();
+}
+
+function showPhase1(){
+  // Recognition questions skip angle phase entirely
+  if(currentQ.isRecognition){
+    document.getElementById('phaseLabel').textContent='Identify the angle pair';
+    const opts=shuffle([...currentQ.recognitionOpts]);
+    const oEl=document.getElementById('options');oEl.innerHTML='';oEl.className='options reasons';
+    opts.forEach(v=>{
+      const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;
+      b.addEventListener('click',()=>handleRecognition(b));oEl.appendChild(b);
+    });
+    return;
+  }
+  document.getElementById('phaseLabel').textContent='Phase 1: Find the angle';
+  const opts=shuffle([...currentQ.angleOpts]);
+  const oEl=document.getElementById('options');oEl.innerHTML='';oEl.className='options';
+  opts.forEach(v=>{
+    const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v+'°';
+    b.addEventListener('click',()=>handlePhase1(b));oEl.appendChild(b);
+  });
+}
+
+function handleRecognition(btn){
+  const correct=btn.dataset.val===currentQ.answer;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===currentQ.answer)b.classList.add('correct')});
+  mfg('question_answered',{game_slug:'angle-ace',level:currentLevel,correct:correct,question_index:total});
+  if(correct){
+    btn.classList.add('correct');
+    const s=(Date.now()-qStart)/1000;const m=1/(1+T_K*Math.log(1+s));
+    score+=Math.max(1,Math.round(BASE*m));fullMarks++;
+    updateHUD();setTimeout(nextQ,1000);
+  } else {
+    btn.classList.add('wrong');
+    showExplain(2);
+  }
+}
+
+function handlePhase1(btn){
+  const correct=parseInt(btn.dataset.val)===currentQ.answer;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(parseInt(b.dataset.val)===currentQ.answer)b.classList.add('correct')});
+  if(correct){btn.classList.add('correct');angleCorrect=true;setTimeout(showPhase2,800)}
+  else{btn.classList.add('wrong');angleCorrect=false;mfg('question_answered',{game_slug:'angle-ace',level:currentLevel,correct:false,question_index:total});showExplain(0)}
+}
+
+function showPhase2(){
+  phase=2;
+  document.getElementById('phaseLabel').textContent='Phase 2: Give the reason';
+  document.getElementById('prompt').textContent='Why is the angle '+currentQ.answer+'°?';
+  // Build reason options: correct + 3 distractors
+  const correctR=currentQ.reason;
+  let distractors=ALL_REASONS.filter(r=>r!==correctR);
+  distractors=shuffle(distractors).slice(0,3);
+  const opts=shuffle([correctR,...distractors]);
+  const oEl=document.getElementById('options');oEl.innerHTML='';oEl.className='options reasons';
+  opts.forEach(v=>{
+    const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;
+    b.addEventListener('click',()=>handlePhase2(b));oEl.appendChild(b);
+  });
+}
+
+function handlePhase2(btn){
+  const correct=btn.dataset.val===currentQ.reason;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===currentQ.reason)b.classList.add('correct')});
+  mfg('question_answered',{game_slug:'angle-ace',level:currentLevel,correct:correct,question_index:total});
+  if(correct){
+    btn.classList.add('correct');
+    const s=(Date.now()-qStart)/1000;const m=1/(1+T_K*Math.log(1+s));
+    score+=Math.max(1,Math.round(BASE*m));fullMarks++;
+    updateHUD();setTimeout(nextQ,1000);
+  } else {
+    btn.classList.add('wrong');
+    // Partial credit for angle only
+    score+=Math.max(1,Math.round(BASE*0.4));
+    updateHUD();showExplain(1);
+  }
+}
+
+function showExplain(type){
+  // type 0 = wrong angle, type 1 = right angle wrong reason, type 2 = wrong recognition
+  const sol=document.getElementById('solution');
+  let html='';
+  if(type===2)html+='<h3>Not quite — here\'s how to spot it</h3>';
+  else if(type===1)html+='<h3>Angle correct — but wrong reason!</h3><div class="step" style="border-left-color:var(--accent)">In the exam, you would lose marks for an incorrect or missing reason.</div>';
+  else html+='<h3>Worked solution</h3>';
+  (currentQ.steps||[]).forEach(st=>{html+='<div class="step">'+st+'</div>'});
+  html+='<div class="step" style="border-left-color:var(--correct)"><strong>Reason:</strong> '+currentQ.reason+'</div>';
+  if(currentQ.misconception)html+='<div class="misconception">⚠ '+currentQ.misconception+'</div>';
+  html+='<button class="next-btn" onclick="closeSol()">Got it — next question</button>';
+  sol.innerHTML=html;sol.className='solution show';
+}
+
+function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('fullCount').textContent=fullMarks}
+
+function updateTimer(){
+  const el=document.getElementById('timer');
+  const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};
+  requestAnimationFrame(tick);
+}
+
+function endGame(){
+  const pct=total>0?Math.round(fullMarks/total*100):0;
+  let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
+  document.getElementById('resultTitle').textContent=t;
+  document.getElementById('finalScore').textContent=score;
+  let statsHTML='Full marks (angle + reason): '+fullMarks+'/'+total+' ('+pct+'%)<br>';
+  if(currentLevel==='year6'){
+    statsHTML+='You just completed a KS3 maths topic. In September, when your teacher introduces angles, you\'ll be the student who already knows this.';
+  } else {
+    statsHTML+='In the exam, every angle question requires the reason for full marks.';
+  }
+  document.getElementById('statsLine').innerHTML=statsHTML;
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'angle-ace',level:currentLevel,score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('angle-ace',currentLevel,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('angle-ace',currentLevel,score);}}
+  show('results');
+}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -1,0 +1,61 @@
+Batch 6 - Jon, 2026-09-17. One room, three locks. Hints are not held here; like
+batches 3-5 they live in the room's room.js.
+Two notes on format, neither touching the mathematics:
+  * chokey-hcf-bundles has its clue on two separate objects. CLUE is one field in
+    this format (a second CLUE line silently replaces the first), so both
+    objects share the one line, the way every earlier multi-figure clue does.
+  * chokey-factor-count and chokey-prime-volumes are counting locks, a first for
+    the bank. check-lock-bank.py flags "n == <expression without n>" as a VERIFY
+    that only restates its answer, and it cannot tell a literal from a count
+    computed off the clue. So those two VERIFY lines are written as
+    "<count> - n == 0". They still fail if ANSWER is wrong - tested by setting
+    ANSWER to the misconception, which the checker rejects.
+
+
+Room 11 - Comic Caper (GCSE resit)
+==================================
+
+ID:          chokey-factor-count
+LEVEL:       GCSE
+TOPIC:       Number / Factors
+INSTRUMENT:  Dial, 0 to 20, whole numbers.
+CONTEXT:     The cupboard carries an old metal asset plate.
+CLUE:        Asset plate: "ASSET No. 24"
+ANSWER:      8
+AHA:         Factors come in pairs; find every pair and none is missed.
+MISCONCEPTION: 6 (misses a factor pair).
+SOLVE:       1 x 24, 2 x 12, 3 x 8, 4 x 6.
+             Factors: 1, 2, 3, 4, 6, 8, 12, 24.
+             8 factors.
+TIME:        2
+VERIFY:      [n for n in range(21) if len([d for d in range(1, 25) if 24 % d == 0]) - n == 0]
+
+ID:          chokey-prime-volumes
+LEVEL:       GCSE
+TOPIC:       Number / Primes
+INSTRUMENT:  Dial, 0 to 30, whole numbers.
+CONTEXT:     An old label lists a textbook series by volume number.
+CLUE:        Series label: "VOLUMES 1-30"
+ANSWER:      10
+AHA:         1 is not prime; a sieve removes every number that isn't.
+MISCONCEPTION: 11 (counts 1 as prime).
+SOLVE:       Primes from 1 to 30: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29.
+             10 primes.
+TIME:        3
+VERIFY:      [n for n in range(31) if len([p for p in range(2, 31) if all(p % q for q in range(2, p))]) - n == 0]
+
+ID:          chokey-hcf-bundles
+LEVEL:       GCSE
+TOPIC:       Number / Highest common factor
+INSTRUMENT:  Slider, 0 to 120, whole numbers.
+CONTEXT:     An old delivery record shows the department's textbook order.
+CLUE:        Delivery docket: "GRAMMAR BOOKS 18". Stock card: "DICTIONARIES 45".
+ANSWER:      9
+AHA:         Identical bundles using every book means a number that divides both
+             counts; the most bundles means the largest.
+MISCONCEPTION: 90 (gives the LCM).
+SOLVE:       Factors of 18: 1, 2, 3, 6, 9, 18.
+             Factors of 45: 1, 3, 5, 9, 15, 45.
+             HCF = 9.
+TIME:        3
+VERIFY_MAX:  [n for n in range(1, 121) if 18 % n == 0 and 45 % n == 0]

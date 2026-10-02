@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Solve for eigenvalues from the characteristic equation. Part 2 of the eigenvectors trilogy for Further Maths and Level 4.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/eigenvalue-extractor/">
+<meta property="og:title" content="Eigenvalue Extractor — MaffsGames">
+<meta property="og:description" content="Solve for eigenvalues from the characteristic equation. Part 2 of the eigenvectors trilogy for Further Maths and Level 4.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/eigenvalue-extractor/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Eigenvalue Extractor — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#08060e;--surface:#12101a;--border:#221e30;--primary:#8b5cf6;--accent:#c084fc;--wrong:#f43f5e;--correct:#22c55e;--text:#e8e4f0;--muted:#7a7094;--gold:#fbbf24}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.header .series{font-size:.7rem;color:var(--primary);text-transform:uppercase;letter-spacing:.1em;margin-top:.4rem}
+.screen{display:none}.screen.active{display:block}
+.example{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin:1rem 0;text-align:left;line-height:1.8}
+.example h2{color:var(--accent);font-size:1rem;margin-bottom:.8rem}
+.example .ex-step{margin-bottom:.6rem;padding-left:.8rem;border-left:3px solid var(--primary);font-size:.88rem}
+.example .ex-note{font-size:.8rem;color:var(--gold);margin-top:.5rem;padding:.5rem;background:rgba(251,191,36,.06);border-radius:8px}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.6rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:50px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:.8rem;text-align:center}
+.q-card .prompt{font-size:.9rem;color:var(--accent);font-weight:600;margin-top:.5rem}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.6rem}
+.opt-btn{padding:.7rem .4rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-size:.82rem;cursor:pointer;transition:all .12s;text-align:center;min-height:50px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.08)}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1rem;margin-bottom:.6rem;text-align:left;font-size:.85rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.85rem;margin-bottom:.4rem}
+.solution .step{margin-bottom:.4rem;padding-left:.7rem;border-left:2px solid var(--border)}
+.solution .misconception{margin-top:.5rem;padding:.5rem .7rem;background:rgba(251,191,36,.08);border-radius:8px;border-left:3px solid var(--gold);font-size:.78rem;color:var(--gold)}
+.solution .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+<div id="menu" class="screen active">
+<div class="header"><h1>Eigenvalue Extractor</h1><div class="sub">Solve the characteristic equation to find the eigenvalues</div><div class="series">Igands Gonna Get You — Part 2 of 3</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+<div class="example" id="workedExample"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+<button class="start-btn" onclick="startGame()">I've got it — let's go</button>
+</div>
+<div id="game" class="screen">
+<div class="hud"><div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div><div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div><div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div><div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div></div>
+<div class="q-card"><div id="eqDisplay"></div><div class="prompt">Find the eigenvalues</div></div>
+<div class="options" id="options"></div>
+<div class="solution" id="solution"></div>
+</div>
+<div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+<script>
+function rkI(tex){if(typeof katex==='undefined')return tex;const s=document.createElement('span');katex.render(tex,s,{throwOnError:false,displayMode:false});return s.innerHTML}
+function rk(el,tex){if(typeof katex!=='undefined')katex.render(tex,el,{throwOnError:false,displayMode:true})}
+
+function buildExample(){
+const ex=document.getElementById('workedExample');
+ex.innerHTML=`<h2>Worked Example</h2>
+<div class="ex-step"><strong>Given:</strong> Solve the characteristic equation ${rkI('\\lambda^2 - 7\\lambda + 10 = 0')}</div>
+<div class="ex-step"><strong>Step 1:</strong> Factorise the quadratic<br>${rkI('(\\lambda - 2)(\\lambda - 5) = 0')}</div>
+<div class="ex-step"><strong>Step 2:</strong> Solve each factor<br>${rkI('\\lambda - 2 = 0 \\Rightarrow \\lambda = 2')}<br>${rkI('\\lambda - 5 = 0 \\Rightarrow \\lambda = 5')}</div>
+<div class="ex-step"><strong>Result:</strong> The eigenvalues are ${rkI('\\lambda_1 = 2')} and ${rkI('\\lambda_2 = 5')}</div>
+<div class="ex-note"><strong>Check:</strong> Sum of eigenvalues = trace (2 + 5 = 7 ✓). Product of eigenvalues = determinant (2 × 5 = 10 ✓). Always verify your answer this way.</div>`;
+}
+window.addEventListener('DOMContentLoaded',()=>{setTimeout(buildExample,300)});
+
+const QS=[
+{eq:'\\lambda^2 - 5\\lambda + 6 = 0',c:'\\lambda = 2, \\lambda = 3',d:['\\lambda = 1, \\lambda = 6','\\lambda = -2, \\lambda = -3','\\lambda = 2, \\lambda = -3'],s:['(\\lambda - 2)(\\lambda - 3) = 0','\\lambda = 2 \\text{ or } \\lambda = 3','Check: 2 + 3 = 5 ✓, 2 × 3 = 6 ✓']},
+{eq:'\\lambda^2 - 7\\lambda + 10 = 0',c:'\\lambda = 2, \\lambda = 5',d:['\\lambda = 1, \\lambda = 10','\\lambda = -2, \\lambda = -5','\\lambda = 7, \\lambda = 10'],s:['(\\lambda - 2)(\\lambda - 5) = 0']},
+{eq:'\\lambda^2 - 4\\lambda + 3 = 0',c:'\\lambda = 1, \\lambda = 3',d:['\\lambda = 2, \\lambda = 2','\\lambda = -1, \\lambda = -3','\\lambda = 4, \\lambda = 3'],s:['(\\lambda - 1)(\\lambda - 3) = 0']},
+{eq:'\\lambda^2 - 6\\lambda + 9 = 0',c:'\\lambda = 3 \\text{ (repeated)}',d:['\\lambda = 3, \\lambda = 6','\\lambda = 9, \\lambda = 1','\\lambda = -3 \\text{ (repeated)}'],s:['(\\lambda - 3)^2 = 0','Repeated eigenvalue: \\lambda = 3'],mc:'A repeated eigenvalue is still a valid eigenvalue. It means the matrix has a special geometric property — it scales in one direction only.'},
+{eq:'\\lambda^2 - 1 = 0',c:'\\lambda = 1, \\lambda = -1',d:['\\lambda = 0, \\lambda = 1','\\lambda = 1 \\text{ (repeated)}','\\lambda = -1 \\text{ (repeated)}'],s:['\\lambda^2 = 1','\\lambda = \\pm 1']},
+{eq:'\\lambda^2 - 2\\lambda - 3 = 0',c:'\\lambda = 3, \\lambda = -1',d:['\\lambda = 2, \\lambda = -3','\\lambda = 1, \\lambda = 3','\\lambda = -3, \\lambda = 1'],s:['(\\lambda - 3)(\\lambda + 1) = 0']},
+{eq:'\\lambda^2 + 4\\lambda + 3 = 0',c:'\\lambda = -1, \\lambda = -3',d:['\\lambda = 1, \\lambda = 3','\\lambda = -1, \\lambda = 3','\\lambda = -4, \\lambda = -3'],s:['(\\lambda + 1)(\\lambda + 3) = 0','Both eigenvalues are negative']},
+{eq:'\\lambda^2 - 9\\lambda + 18 = 0',c:'\\lambda = 3, \\lambda = 6',d:['\\lambda = 9, \\lambda = 2','\\lambda = -3, \\lambda = -6','\\lambda = 3, \\lambda = -6'],s:['(\\lambda - 3)(\\lambda - 6) = 0']},
+{eq:'\\lambda^2 - 8\\lambda + 7 = 0',c:'\\lambda = 1, \\lambda = 7',d:['\\lambda = 4, \\lambda = 4','\\lambda = -1, \\lambda = -7','\\lambda = 8, \\lambda = 7'],s:['(\\lambda - 1)(\\lambda - 7) = 0']},
+{eq:'\\lambda^2 - 5\\lambda = 0',c:'\\lambda = 0, \\lambda = 5',d:['\\lambda = 5 \\text{ (repeated)}','\\lambda = -5, \\lambda = 0','\\lambda = 1, \\lambda = 5'],s:['\\lambda(\\lambda - 5) = 0','\\lambda = 0 \\text{ or } \\lambda = 5'],mc:'λ = 0 is a valid eigenvalue. It means the matrix is singular (det = 0).'},
+{eq:'\\lambda^2 - 4 = 0',c:'\\lambda = 2, \\lambda = -2',d:['\\lambda = 4, \\lambda = 0','\\lambda = 2 \\text{ (repeated)}','\\lambda = -4, \\lambda = 4'],s:['(\\lambda - 2)(\\lambda + 2) = 0','Difference of two squares']},
+{eq:'\\lambda^2 + 1 = 0',c:'\\lambda = i, \\lambda = -i',d:['\\lambda = 1, \\lambda = -1','No eigenvalues exist','\\lambda = 0 \\text{ (repeated)}'],s:['\\lambda^2 = -1','\\lambda = \\pm i','Complex eigenvalues — the matrix represents a rotation'],mc:'Complex eigenvalues come in conjugate pairs and indicate the matrix involves rotation.'},
+{eq:'\\lambda^2 - 2\\lambda - 8 = 0',c:'\\lambda = 4, \\lambda = -2',d:['\\lambda = 2, \\lambda = -8','\\lambda = -4, \\lambda = 2','\\lambda = 8, \\lambda = -2'],s:['(\\lambda - 4)(\\lambda + 2) = 0']},
+{eq:'\\lambda^2 + 5\\lambda - 2 = 0',c:'\\lambda = \\dfrac{-5 \\pm \\sqrt{33}}{2}',d:['\\lambda = \\dfrac{5 \\pm \\sqrt{33}}{2}','\\lambda = \\dfrac{-5 \\pm \\sqrt{17}}{2}','\\lambda = -5, \\lambda = 2'],s:['Cannot factorise — use the quadratic formula','\\lambda = \\dfrac{-5 \\pm \\sqrt{25 + 8}}{2} = \\dfrac{-5 \\pm \\sqrt{33}}{2}'],mc:'Not every characteristic equation factorises neatly. Use the quadratic formula when needed.'},
+{eq:'\\lambda^2 - 5\\lambda - 2 = 0',c:'\\lambda = \\dfrac{5 \\pm \\sqrt{33}}{2}',d:['\\lambda = \\dfrac{-5 \\pm \\sqrt{33}}{2}','\\lambda = \\dfrac{5 \\pm \\sqrt{17}}{2}','\\lambda = 5, \\lambda = 2'],s:['\\lambda = \\dfrac{5 \\pm \\sqrt{25 + 8}}{2} = \\dfrac{5 \\pm \\sqrt{33}}{2}']},
+{eq:'\\lambda^2 + \\lambda - 6 = 0',c:'\\lambda = 2, \\lambda = -3',d:['\\lambda = -2, \\lambda = 3','\\lambda = 6, \\lambda = -1','\\lambda = 1, \\lambda = -6'],s:['(\\lambda + 3)(\\lambda - 2) = 0','\\lambda = 2 \\text{ or } \\lambda = -3']},
+{eq:'\\lambda^2 - 3\\lambda + 2 = 0',c:'\\lambda = 1, \\lambda = 2',d:['\\lambda = 3, \\lambda = 2','\\lambda = -1, \\lambda = -2','\\lambda = 1, \\lambda = -2'],s:['(\\lambda - 1)(\\lambda - 2) = 0']},
+{eq:'\\lambda^2 - 8\\lambda + 16 = 0',c:'\\lambda = 4 \\text{ (repeated)}',d:['\\lambda = 4, \\lambda = 8','\\lambda = 2, \\lambda = 8','\\lambda = -4 \\text{ (repeated)}'],s:['(\\lambda - 4)^2 = 0','Repeated eigenvalue \\lambda = 4']},
+{eq:'\\lambda^2 - 9\\lambda + 16 = 0',c:'\\lambda = \\dfrac{9 \\pm \\sqrt{17}}{2}',d:['\\lambda = \\dfrac{9 \\pm \\sqrt{81}}{2}','\\lambda = \\dfrac{-9 \\pm \\sqrt{17}}{2}','\\lambda = 4, \\lambda = 5'],s:['Discriminant = 81 - 64 = 17','\\lambda = \\dfrac{9 \\pm \\sqrt{17}}{2}']},
+{eq:'\\lambda^2 - 10\\lambda + 25 = 0',c:'\\lambda = 5 \\text{ (repeated)}',d:['\\lambda = 5, \\lambda = 10','\\lambda = -5 \\text{ (repeated)}','\\lambda = 25, \\lambda = 1'],s:['(\\lambda - 5)^2 = 0']},
+{eq:'\\lambda^2 - 4\\lambda + 4 = 0',c:'\\lambda = 2 \\text{ (repeated)}',d:['\\lambda = 2, \\lambda = 4','\\lambda = -2 \\text{ (repeated)}','\\lambda = 1, \\lambda = 4'],s:['(\\lambda - 2)^2 = 0']},
+{eq:'\\lambda^2 + 2\\lambda - 15 = 0',c:'\\lambda = 3, \\lambda = -5',d:['\\lambda = -3, \\lambda = 5','\\lambda = 15, \\lambda = -1','\\lambda = 5, \\lambda = 3'],s:['(\\lambda - 3)(\\lambda + 5) = 0']},
+{eq:'\\lambda^2 - 12\\lambda + 35 = 0',c:'\\lambda = 5, \\lambda = 7',d:['\\lambda = 6, \\lambda = 6','\\lambda = -5, \\lambda = -7','\\lambda = 12, \\lambda = 35'],s:['(\\lambda - 5)(\\lambda - 7) = 0']},
+{eq:'\\lambda^2 + 4\\lambda + 4 = 0',c:'\\lambda = -2 \\text{ (repeated)}',d:['\\lambda = 2 \\text{ (repeated)}','\\lambda = -4, \\lambda = -1','\\lambda = -2, \\lambda = 2'],s:['(\\lambda + 2)^2 = 0']},
+{eq:'\\lambda^2 - \\lambda - 12 = 0',c:'\\lambda = 4, \\lambda = -3',d:['\\lambda = -4, \\lambda = 3','\\lambda = 12, \\lambda = 1','\\lambda = 6, \\lambda = -2'],s:['(\\lambda - 4)(\\lambda + 3) = 0']},
+];
+
+let pool=[],qIdx=0,score=0,correctN=0,total=0,currentQ=null,qStart=0;
+const BASE=100,T_K=0.15,MAX_Q=15;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+function startGame(){pool=shuffle([...QS]).slice(0,MAX_Q);qIdx=0;score=0;correctN=0;total=0;document.getElementById('score').textContent='0';document.getElementById('correctCount').textContent='0';show('game');nextQ();mfg('game_started',{game_slug:'eigenvalue-extractor',level:'further'});window._ggAbandoned=true;if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'eigenvalue-extractor',level:'further',questions_answered:total})})}}
+function nextQ(){if(qIdx>=pool.length){endGame();return}currentQ=pool[qIdx];qIdx++;total++;document.getElementById('qNum').textContent=total;document.getElementById('solution').className='solution';qStart=Date.now();updateTimer();rk(document.getElementById('eqDisplay'),currentQ.eq);const opts=shuffle([currentQ.c,...currentQ.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.innerHTML=rkI(v);b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b)})}
+function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
+function handleAnswer(btn){const q=currentQ,s=(Date.now()-qStart)/1000,ok=btn.dataset.val===q.c;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.c)b.classList.add('correct')});mfg('question_answered',{game_slug:'eigenvalue-extractor',level:'further',correct:ok,question_index:total});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++;updateHUD();setTimeout(nextQ,1000)}else{btn.classList.add('wrong');updateHUD();showExplain(q)}}
+function showExplain(q){const sol=document.getElementById('solution');let html='<h3>Worked solution</h3>';(q.s||[]).forEach(st=>{html+='<div class="step">'+rkI(st)+'</div>'});if(q.mc)html+='<div class="misconception">⚠ '+q.mc+'</div>';html+='<button class="next-btn" onclick="closeSol()">Got it — next</button>';sol.innerHTML=html;sol.className='solution show'}
+function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
+function endGame(){const pct=total>0?Math.round(correctN/total*100):0;let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').innerHTML='Eigenvalue Extractor<br>Igands Gonna Get You — Part 2<br>'+correctN+'/'+total+' correct ('+pct+'%)';window._ggAbandoned=false;mfg('game_completed',{game_slug:'eigenvalue-extractor',level:'further',score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('eigenvalue-extractor','further',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('eigenvalue-extractor','further',score);}}var _pbKey='ee_best';var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'eigenvalue-extractor',level:'further',score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score)}show('results')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

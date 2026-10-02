@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Is it always true? Test your mathematical intuition — then discover why even 'obvious' facts sometimes break down. From GCSE to university mathematics.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/truth-buster/">
+<meta property="og:title" content="Truth Buster — MaffsGames">
+<meta property="og:description" content="Is it always true? Test your mathematical intuition — then discover why even 'obvious' facts sometimes break down. From GCSE to university mathematics.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/truth-buster/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Truth Buster — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;--purple:#8b5cf6;--orange:#f97316;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--teal)}
+
+.tier-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em}
+.tier-pill.t1{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3)}
+.tier-pill.t2{background:rgba(249,115,22,0.15);color:var(--orange);border:1px solid rgba(249,115,22,0.3)}
+.tier-pill.t3{background:rgba(139,92,246,0.15);color:var(--purple);border:1px solid rgba(139,92,246,0.3)}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.tier-preview{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:16px}
+.tier-preview h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.tier-preview p{font-size:13px;color:var(--muted);line-height:1.5}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+
+/* Game screen */
+.statement-card{background:var(--surface);border-radius:16px;padding:40px 32px;margin:24px 0;min-height:140px;display:flex;align-items:center;justify-content:center}
+.statement-text{font-size:1.35rem;line-height:1.8;text-align:center;font-weight:500;color:var(--text)}
+
+.btn-row{display:flex;gap:16px;margin-bottom:24px}
+.answer-btn{flex:1;padding:18px 16px;border-radius:12px;border:3px solid transparent;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.answer-btn:disabled{opacity:0.5;cursor:default}
+.btn-true{background:rgba(34,197,94,0.12);color:var(--green);border-color:rgba(34,197,94,0.3)}
+.btn-true:hover:not(:disabled){background:rgba(34,197,94,0.2);border-color:var(--green)}
+.btn-false{background:rgba(239,68,68,0.12);color:var(--red);border-color:rgba(239,68,68,0.3)}
+.btn-false:hover:not(:disabled){background:rgba(239,68,68,0.2);border-color:var(--red)}
+.btn-true.selected{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-false.selected{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* Reveal panel */
+.reveal-panel{background:var(--surface-alt);border-top:3px solid var(--border);border-radius:12px;padding:28px 24px;margin-bottom:20px;opacity:0;transform:translateY(20px);transition:opacity 0.2s,transform 0.2s}
+.reveal-panel.show{opacity:1;transform:translateY(0)}
+.reveal-panel.flash-green{border-top-color:var(--green)}
+.reveal-panel.flash-red{border-top-color:var(--red)}
+.reveal-indicator{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.reveal-indicator.correct{color:var(--green)}
+.reveal-indicator.incorrect{color:var(--red)}
+.reveal-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.5}
+.reveal-text{font-size:14px;color:#cbd5e1;line-height:1.7;margin-bottom:14px}
+.counterexample-box{background:#141620;border-left:3px solid var(--amber);border-radius:4px;padding:12px 16px;margin-bottom:14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--amber);line-height:1.6}
+.learn-more-btn{display:inline-block;padding:10px 20px;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;border-radius:8px;text-decoration:none;margin-bottom:14px;transition:opacity 0.15s;animation:pulse-learn 2s ease-in-out infinite}
+.learn-more-btn:hover{opacity:0.85}
+@keyframes pulse-learn{0%,100%{box-shadow:0 0 0 0 rgba(13,148,136,0.4)}50%{box-shadow:0 0 0 8px rgba(13,148,136,0)}}
+
+.next-btn{display:none;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s}
+.next-btn:hover{border-color:var(--teal)}
+.next-btn.visible{display:block}
+
+/* Tier transition */
+.tier-transition{display:none;max-width:680px;margin:0 auto;padding:80px 20px;text-align:center}
+.tier-transition.active{display:block}
+.tier-transition .tier-label{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.tier-transition .tier-name{font-size:28px;font-weight:800;color:var(--teal)}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--teal)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.tier-row{display:flex;justify-content:center;gap:16px;margin-bottom:24px}
+.tier-result{background:var(--surface);border-radius:10px;padding:14px 20px;text-align:center;flex:1;max-width:180px}
+.tier-result h5{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.tier-result .tier-score{font-size:22px;font-weight:800}
+.pb-badge{background:var(--teal-dim);color:var(--teal);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+@media(prefers-reduced-motion:reduce){
+.reveal-panel{transition:none}
+.statement-card{transition:none}
+.learn-more-btn{animation:none}
+}
+@media(max-width:480px){
+.statement-text{font-size:1.15rem}
+.btn-row{flex-direction:column;gap:10px}
+.tier-row{flex-direction:column;align-items:center}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Truth Buster</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <span class="tier-pill t1" id="tierPill">Tier 1</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreTotal">0</span></span>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Truth Buster</div>
+  <div class="start-sub">A mathematical statement is shown. You decide: always true, or not always true?<br>Then the reveal — confirming why, or showing where it breaks down.</div>
+  <div class="tier-preview" style="border-left:3px solid var(--green)">
+    <h3 style="color:var(--green)">Tier 1 — Seems Obvious</h3>
+    <p>KS3 and GCSE level. Calibrates your confidence. 7 questions.</p>
+  </div>
+  <div class="tier-preview" style="border-left:3px solid var(--orange)">
+    <h3 style="color:var(--orange)">Tier 2 — Think Carefully</h3>
+    <p>A-Level level. Tests depth. 7 questions.</p>
+  </div>
+  <div class="tier-preview" style="border-left:3px solid var(--purple)">
+    <h3 style="color:var(--purple)">Tier 3 — Beyond the Curriculum</h3>
+    <p>University level and beyond. Pure wonder. 6 questions.</p>
+  </div>
+  <button class="start-btn" onclick="startGame()">Start</button>
+</div>
+
+<!-- TIER TRANSITION -->
+<div class="tier-transition" id="tierTransition">
+  <div class="tier-label" id="transLabel">Moving on to</div>
+  <div class="tier-name" id="transName">Tier 2: Think Carefully</div>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="statement-card">
+    <div class="statement-text" id="statementText"></div>
+  </div>
+  <div class="btn-row">
+    <button class="answer-btn btn-true" id="btnTrue" onclick="answer(true)">Always True</button>
+    <button class="answer-btn btn-false" id="btnFalse" onclick="answer(false)">Not Always True</button>
+  </div>
+  <div class="reveal-panel" id="revealPanel">
+    <div class="reveal-indicator" id="revealIndicator"></div>
+    <div class="reveal-title" id="revealTitle"></div>
+    <div class="reveal-text" id="revealText"></div>
+    <div class="counterexample-box" id="counterBox" style="display:none"></div>
+    <div id="learnMoreWrap" style="display:none"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Overall</h4>
+      <div class="score" id="finalScore">0/20</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="tier-row">
+    <div class="tier-result"><h5 style="color:var(--green)">Tier 1</h5><div class="tier-score" id="t1Score" style="color:var(--green)">0/7</div></div>
+    <div class="tier-result"><h5 style="color:var(--orange)">Tier 2</h5><div class="tier-score" id="t2Score" style="color:var(--orange)">0/7</div></div>
+    <div class="tier-result"><h5 style="color:var(--purple)">Tier 3</h5><div class="tier-score" id="t3Score" style="color:var(--purple)">0/6</div></div>
+  </div>
+  <div class="sub" id="pbLine" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="startGame()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANK — 60 questions across 3 tiers
+// ============================================================
+const QUESTIONS = {
+tier1: [
+{id:'tb_t1_001',statement:'A shape with four equal sides is a square.',answer:false,revealTitle:'Not quite \u2014 meet the rhombus',revealText:'A rhombus has four equal sides but its angles don\u2019t have to be 90\u00b0. A square is a special case of rhombus where all angles are right angles. Equal sides are necessary but not sufficient for a square.',counterexample:'A rhombus with sides 5cm and angles 60\u00b0 and 120\u00b0'},
+{id:'tb_t1_002',statement:'Multiplying two numbers always makes them bigger.',answer:false,revealTitle:'Not when you multiply by something less than 1',revealText:'Multiply 10 \u00d7 0.5 = 5. Multiply 10 \u00d7 \u22122 = \u221220. Multiplication only makes numbers bigger when both numbers are greater than 1. This is a surprisingly common misconception that causes errors in algebra.',counterexample:'10 \u00d7 0.3 = 3, which is smaller than 10'},
+{id:'tb_t1_003',statement:'The longest side of a triangle is always opposite the largest angle.',answer:true,revealTitle:'Always true \u2014 and it has a proof',revealText:'This is genuinely always true in Euclidean geometry. If one side is longer, the angle opposite it must be larger. The formal proof uses the properties of isosceles triangles and the exterior angle theorem. It seems obvious but requires real work to prove rigorously.'},
+{id:'tb_t1_004',statement:'A negative number multiplied by a negative number gives a negative number.',answer:false,revealTitle:'Two negatives make a positive',revealText:'(\u22123) \u00d7 (\u22124) = +12. This is one of the most commonly confused rules in school mathematics. A negative times a negative is always positive. The deep reason is that multiplication must preserve the distributive law \u2014 if it didn\u2019t, algebra would fall apart.',counterexample:'(\u22123) \u00d7 (\u22124) = +12'},
+{id:'tb_t1_005',statement:'Every rectangle is a parallelogram.',answer:true,revealTitle:'Always true \u2014 rectangles are a special type of parallelogram',revealText:'A parallelogram has two pairs of parallel sides. A rectangle has two pairs of parallel sides AND all angles are 90\u00b0. So every rectangle is a parallelogram, but not every parallelogram is a rectangle. Geometry has a hierarchy of shapes within shapes.'},
+{id:'tb_t1_006',statement:'The square root of a number is always smaller than the number itself.',answer:false,revealTitle:'Not for numbers between 0 and 1',revealText:'\u221a0.25 = 0.5, which is bigger than 0.25. For any number between 0 and 1, the square root is larger than the original number. Also \u221a1 = 1 (equal, not smaller). The rule only holds reliably for numbers greater than 1.',counterexample:'\u221a0.09 = 0.3, and 0.3 > 0.09'},
+{id:'tb_t1_007',statement:'You can always find a fraction between any two different fractions.',answer:true,revealTitle:'Always true \u2014 the rationals are dense',revealText:'Given any two different fractions, their average is a fraction between them: (a/b + c/d) \u00f7 2. You can repeat this infinitely. This property is called density \u2014 the rational numbers are dense in the real numbers. There are infinitely many fractions between any two fractions, no matter how close they are.'},
+{id:'tb_t1_008',statement:'A triangle can have two right angles.',answer:false,revealTitle:'Impossible on a flat surface \u2014 angles must sum to 180\u00b0',revealText:'Two right angles would already sum to 180\u00b0, leaving 0\u00b0 for the third angle \u2014 which isn\u2019t an angle at all. On a flat (Euclidean) plane, the angles of a triangle always sum to exactly 180\u00b0, making two right angles impossible. (On a curved surface, different rules apply \u2014 but that\u2019s Tier 3.)',counterexample:'Two 90\u00b0 angles sum to 180\u00b0, leaving nothing for the third'},
+{id:'tb_t1_009',statement:'If you double the radius of a circle, the area doubles.',answer:false,revealTitle:'The area quadruples \u2014 radius and area don\u2019t scale the same way',revealText:'Area = \u03c0r\u00b2. If r doubles to 2r, area = \u03c0(2r)\u00b2 = 4\u03c0r\u00b2. The area quadruples, not doubles. This is because area scales with the square of the radius. This is why a pizza with double the radius is four times the size \u2014 a fact that pizza places rely on you not knowing.',counterexample:'Radius 3: area = 9\u03c0. Radius 6: area = 36\u03c0. That\u2019s 4\u00d7 bigger, not 2\u00d7.'},
+{id:'tb_t1_010',statement:'Every prime number is odd.',answer:false,revealTitle:'Except 2 \u2014 the only even prime',revealText:'2 is prime (divisible only by 1 and itself) and 2 is even. It\u2019s the only even prime because every other even number is divisible by 2, giving it a factor other than 1 and itself. 2 is the odd one out \u2014 or rather, the even one out.',counterexample:'2 is prime and even'},
+{id:'tb_t1_011',statement:'If you add an even number and an odd number, the result is always odd.',answer:true,revealTitle:'Always true \u2014 and algebra can prove it',revealText:'Any even number can be written as 2n and any odd number as 2m + 1. Their sum: 2n + 2m + 1 = 2(n+m) + 1, which is always odd. This is a simple but genuine algebraic proof \u2014 the kind mathematicians write every day.'},
+{id:'tb_t1_012',statement:'A quadratic equation always has two different solutions.',answer:false,revealTitle:'It can have one, two, or no real solutions',revealText:'x\u00b2 \u2212 2x + 1 = 0 factorises as (x\u22121)\u00b2 = 0, giving only one solution: x = 1 (a repeated root). And x\u00b2 + 1 = 0 has no real solutions at all (you\u2019d need imaginary numbers). The discriminant b\u00b2 \u2212 4ac tells you which case you\u2019re in: positive = two solutions, zero = one, negative = none in the reals.',counterexample:'x\u00b2 \u2212 2x + 1 = 0 has exactly one solution: x = 1'},
+{id:'tb_t1_013',statement:'The perimeter of a shape always increases when its area increases.',answer:false,revealTitle:'You can increase area while keeping perimeter the same',revealText:'A circle has the largest area for a given perimeter of any shape. Conversely, you can have two shapes with the same perimeter but very different areas. A thin rectangle and a square can have the same perimeter but the square has a larger area. Perimeter and area are independent properties.',counterexample:'A 1\u00d79 rectangle (perimeter 20, area 9) vs a 5\u00d75 square (perimeter 20, area 25)'},
+{id:'tb_t1_014',statement:'If two fractions have the same numerator, the one with the larger denominator is bigger.',answer:false,revealTitle:'Larger denominator means smaller fraction',revealText:'1/8 is smaller than 1/3 even though 8 > 3. The denominator tells you how many pieces the whole is cut into \u2014 more pieces means each piece is smaller. This is consistently one of the most common fraction errors in KS3.',counterexample:'1/10 < 1/2, despite 10 > 2'},
+{id:'tb_t1_015',statement:'Squaring a number always makes it bigger.',answer:false,revealTitle:'Not for numbers between \u22121 and 1',revealText:'0.5\u00b2 = 0.25, which is smaller than 0.5. 0\u00b2 = 0 (equal). (\u22120.3)\u00b2 = 0.09, smaller than 0.3. Squaring only reliably makes numbers bigger when the absolute value is greater than 1. This trips up students working with decimals and probabilities constantly.',counterexample:'0.4\u00b2 = 0.16, and 0.16 < 0.4'},
+{id:'tb_t1_016',statement:'All squares are rectangles.',answer:true,revealTitle:'True \u2014 a square is a rectangle with equal sides',revealText:'A rectangle is defined as a quadrilateral with four right angles. A square has four right angles AND four equal sides. So a square satisfies the definition of rectangle. The relationship only goes one way: all squares are rectangles, but not all rectangles are squares.'},
+{id:'tb_t1_017',statement:'A number is always bigger than its reciprocal.',answer:false,revealTitle:'Only for numbers greater than 1',revealText:'The reciprocal of 5 is 1/5, and 5 > 1/5. But the reciprocal of 1/3 is 3, and 1/3 < 3. And the reciprocal of 1 is 1 (equal). For any number greater than 1, the number beats its reciprocal. For numbers between 0 and 1, the reciprocal wins. At exactly 1, they tie.',counterexample:'Reciprocal of 0.2 is 5, and 5 > 0.2'},
+{id:'tb_t1_018',statement:'If you reverse the digits of a multiple of 9, the result is also a multiple of 9.',answer:true,revealTitle:'Always true \u2014 and the digit sum rule explains why',revealText:'A number is divisible by 9 if and only if the sum of its digits is divisible by 9. Reversing the digits doesn\u2019t change their sum. So the reversed number has the same digit sum, and is therefore also divisible by 9. 81 reversed is 18, and 18 = 2\u00d79. 729 reversed is 927 = 103\u00d79.'},
+{id:'tb_t1_019',statement:'The sum of two irrational numbers is always irrational.',answer:false,revealTitle:'Two irrationals can cancel each other out',revealText:'\u221a2 is irrational. \u2212\u221a2 is also irrational. But \u221a2 + (\u2212\u221a2) = 0, which is rational. Similarly, (1 + \u221a2) + (1 \u2212 \u221a2) = 2, rational. You can construct infinitely many pairs of irrationals that sum to a rational number.',counterexample:'\u221a2 + (\u2212\u221a2) = 0, which is rational'},
+{id:'tb_t1_020',statement:'A graph that passes through the origin must represent a proportional relationship.',answer:false,revealTitle:'It also needs to be a straight line',revealText:'y = x\u00b2 passes through the origin but is not proportional \u2014 doubling x quadruples y. Proportional relationships must be linear AND pass through the origin: y = kx. Passing through (0,0) is necessary but not sufficient for proportionality.',counterexample:'y = x\u00b3 passes through the origin but 1\u00b3:2\u00b3 = 1:8, not proportional'}
+],
+
+tier2: [
+{id:'tb_t2_001',statement:'The square root of x\u00b2 is always x.',answer:false,revealTitle:'It\u2019s |x|, not x',revealText:'If x = \u22123, then x\u00b2 = 9, and \u221a9 = 3, not \u22123. The square root function always returns a non-negative value. So \u221a(x\u00b2) = |x|. This matters enormously in algebra \u2014 writing \u221a(x\u00b2) = x is a common source of errors when solving equations.',counterexample:'x = \u22125: x\u00b2 = 25, \u221a25 = 5 \u2260 \u22125'},
+{id:'tb_t2_002',statement:'If f(a) = f(b), then a = b.',answer:false,revealTitle:'Only true for one-to-one (injective) functions',revealText:'f(x) = x\u00b2 gives f(3) = f(\u22123) = 9, but 3 \u2260 \u22123. Functions that give the same output for different inputs are called many-to-one. Only injective (one-to-one) functions guarantee that equal outputs imply equal inputs. This is fundamental to understanding inverse functions.',counterexample:'f(x) = x\u00b2: f(4) = f(\u22124) = 16'},
+{id:'tb_t2_003',statement:'A function that is differentiable at a point must be continuous there.',answer:true,revealTitle:'Differentiability implies continuity \u2014 but not vice versa',revealText:'If a function has a well-defined gradient at a point, it cannot have a jump or break there. The formal proof shows that if the derivative exists at x = a, the limit of f(x) as x \u2192 a must equal f(a). The converse fails: |x| is continuous at x = 0 but not differentiable there (the gradient jumps from \u22121 to +1).'},
+{id:'tb_t2_004',statement:'If a series has terms that approach zero, the series converges.',answer:false,revealTitle:'The harmonic series is the famous counterexample',revealText:'The harmonic series 1 + 1/2 + 1/3 + 1/4 + ... has terms approaching zero, but the sum grows without bound (it diverges). This surprises nearly everyone the first time they see it. The proof groups terms to show the sum exceeds 1 + 1/2 + 1/2 + 1/2 + ... forever.',counterexample:'1 + 1/2 + 1/3 + 1/4 + ... \u2192 \u221e despite terms \u2192 0',field:'Real Analysis',link:'https://www.youtube.com/watch?v=4yyLfrsSXQQ',linkLabel:'Numberphile: The Harmonic Series'},
+{id:'tb_t2_005',statement:'e\u02e3 is always greater than x for all real x.',answer:true,revealTitle:'Always true \u2014 e\u02e3 grows faster than any polynomial',revealText:'e\u02e3 > x for all real x. In fact, e\u02e3 \u2265 1 + x for all x (the tangent line at x=0 lies entirely below the curve), which immediately gives e\u02e3 > x for all x. More strongly, e\u02e3 eventually overtakes any polynomial \u2014 x\u207f, no matter how large n is. This is why exponential growth is so powerful.'},
+{id:'tb_t2_006',statement:'Two lines in 3D space that don\u2019t intersect must be parallel.',answer:false,revealTitle:'Skew lines \u2014 parallel but in different planes',revealText:'In 3D space, two lines can be non-intersecting and non-parallel \u2014 they\u2019re called skew lines. Think of the bottom front edge of a room and the top right edge. They don\u2019t meet and they\u2019re not parallel. This is impossible in 2D but routine in 3D. Skew lines have no common plane.',counterexample:'The x-axis (y=0, z=0) and the line x=0, z=1, y=t are skew'},
+{id:'tb_t2_007',statement:'If P(A) = 0, then event A is impossible.',answer:false,revealTitle:'Probability zero doesn\u2019t mean impossible',revealText:'Pick a random real number between 0 and 1. The probability of picking exactly 0.5 is zero \u2014 yet it\u2019s possible. In continuous probability distributions, individual outcomes have probability zero but can still occur. Probability zero means \u2018happens with measure zero\u2019 \u2014 essentially negligible but not literally impossible.',counterexample:'A dart hitting exactly the centre of a board: P = 0 but not impossible'},
+{id:'tb_t2_008',statement:'The product of two irrational numbers is always irrational.',answer:false,revealTitle:'\u221a2 \u00d7 \u221a2 = 2, which is rational',revealText:'\u221a2 \u00d7 \u221a2 = 2. Two irrationals multiplied can give a rational number. This is why rationalising the denominator works \u2014 multiplying by \u221a2/\u221a2 gives a rational result. You can construct infinitely many such pairs.',counterexample:'\u221a3 \u00d7 \u221a3 = 3'},
+{id:'tb_t2_009',statement:'A continuous function on a closed interval always achieves its maximum value.',answer:true,revealTitle:'The Extreme Value Theorem \u2014 one of analysis\u2019s great results',revealText:'The Extreme Value Theorem guarantees that any function continuous on a closed interval [a,b] achieves both its maximum and minimum somewhere in that interval. Both conditions matter: remove \u2018closed\u2019 (try the open interval) or remove \u2018continuous\u2019 and the theorem fails. This result underpins optimisation in calculus.'},
+{id:'tb_t2_010',statement:'If two triangles have the same angles, they are congruent.',answer:false,revealTitle:'Same angles means similar, not necessarily congruent',revealText:'Two triangles with identical angles are similar \u2014 they have the same shape \u2014 but not necessarily the same size. A 3-4-5 right triangle and a 6-8-10 right triangle have identical angles but different side lengths. Congruence requires matching angles AND matching sides (or the right combination of each).',counterexample:'A 30-60-90 triangle with hypotenuse 2 vs one with hypotenuse 4'},
+{id:'tb_t2_011',statement:'ln(x) is defined for all real numbers.',answer:false,revealTitle:'Only for positive real numbers',revealText:'ln(x) is only defined for x > 0. ln(0) is undefined (approaches \u2212\u221e), and ln of a negative number requires complex numbers. This trips up calculus students constantly \u2014 the domain restriction on ln means you can\u2019t casually substitute negative values into logarithmic expressions.',counterexample:'ln(\u22121) is undefined in the real numbers'},
+{id:'tb_t2_012',statement:'Correlation of 1 between two variables means one causes the other.',answer:false,revealTitle:'Perfect correlation still doesn\u2019t imply causation',revealText:'Two variables can have correlation 1 (move perfectly together) without either causing the other. Both could be caused by a third variable, or the correlation could be coincidental. This is the correlation-causation distinction, but taken to its extreme: even perfect correlation proves nothing about causation.',counterexample:'Nicolas Cage film releases correlate r\u22481 with swimming pool drownings over certain years'},
+{id:'tb_t2_013',statement:'The derivative of a function gives its exact rate of change at a point.',answer:true,revealTitle:'True \u2014 and the definition of derivative is built exactly for this',revealText:'The derivative is defined as the limit of (f(x+h) \u2212 f(x))/h as h\u21920. This limiting process makes the gradient exact, not approximate. Before calculus, the best you could do was approximate. Newton and Leibniz\u2019s insight was that taking the limit gave an exact answer. This is genuinely one of humanity\u2019s greatest mathematical achievements.'},
+{id:'tb_t2_014',statement:'Every polynomial of odd degree has at least one real root.',answer:true,revealTitle:'Guaranteed by the Intermediate Value Theorem',revealText:'An odd-degree polynomial goes to +\u221e in one direction and \u2212\u221e in the other. By the Intermediate Value Theorem, it must cross zero somewhere \u2014 giving at least one real root. This is why x\u00b3 + x + 1 = 0 always has a solution even though you might struggle to find it. Even-degree polynomials don\u2019t have this guarantee.'},
+{id:'tb_t2_015',statement:'If a sequence is bounded and increasing, it must converge.',answer:true,revealTitle:'The Monotone Convergence Theorem',revealText:'A sequence that never decreases and never exceeds some maximum value must settle towards a limit \u2014 it has nowhere else to go. This result is called the Monotone Convergence Theorem and is one of the foundational results of real analysis. It\u2019s used to prove that many important limits exist before you can calculate what they are.'},
+{id:'tb_t2_016',statement:'The graph of y = sin(x) has infinitely many x-intercepts.',answer:true,revealTitle:'One at every multiple of \u03c0 \u2014 infinitely many',revealText:'sin(x) = 0 whenever x = n\u03c0 for any integer n. Since there are infinitely many integers, there are infinitely many x-intercepts: ..., \u22122\u03c0, \u2212\u03c0, 0, \u03c0, 2\u03c0, ... This seems obvious once stated, but it\u2019s worth pausing on \u2014 a continuous function can cross the x-axis infinitely many times.'},
+{id:'tb_t2_017',statement:'You cannot divide by zero because it gives infinity.',answer:false,revealTitle:'Division by zero is undefined \u2014 not infinity',revealText:'10/0 is not infinity \u2014 it is undefined. The reason: if 10/0 = k, then 0 \u00d7 k = 10, which has no solution (anything times 0 is 0). The limit of 10/x as x\u21920 does approach infinity, but the value at x=0 doesn\u2019t exist. This distinction matters in calculus, computing, and anywhere division appears.',counterexample:'If 1/0 = \u221e, then 2/0 = \u221e, suggesting 1/0 = 2/0, so 1 = 2. Contradiction.'},
+{id:'tb_t2_018',statement:'The number \u03c0 contains every possible finite sequence of digits.',answer:false,revealTitle:'We don\u2019t know \u2014 and that\u2019s genuinely interesting',revealText:'It is widely believed that \u03c0 is \u2018normal\u2019 \u2014 meaning every finite digit sequence appears infinitely often. But this has never been proven. Nobody has proved that the sequence \u2018123456789\u2019 appears in \u03c0 (though it does, starting at position 523,551,502). The question of whether \u03c0 is normal is one of the great unsolved problems in mathematics.',field:'Normal Numbers',link:'https://www.youtube.com/watch?v=5TkIe60y2GI',linkLabel:'Numberphile: Is \u03c0 Normal?'},
+{id:'tb_t2_019',statement:'If two functions have the same derivative, they are the same function.',answer:false,revealTitle:'They differ by a constant \u2014 the +c in integration',revealText:'If f\u2019(x) = g\u2019(x), then f(x) = g(x) + c for some constant c. The functions x\u00b2 and x\u00b2 + 7 have identical derivatives (2x) but are different functions. This is exactly why the constant of integration appears when you integrate \u2014 you\u2019re recovering a family of functions, not one specific function.',counterexample:'f(x) = x\u00b2 and g(x) = x\u00b2 + 5 both have derivative 2x'},
+{id:'tb_t2_020',statement:'A set can have more elements than the set of all natural numbers.',answer:true,revealTitle:'Cantor proved there are different sizes of infinity',revealText:'Georg Cantor showed in 1874 that the real numbers cannot be put in one-to-one correspondence with the natural numbers \u2014 there are \u2018more\u2019 real numbers than natural numbers, even though both sets are infinite. His diagonal argument is one of the most beautiful proofs in mathematics. There are, in fact, infinitely many different sizes of infinity.',field:'Set Theory / Cantor\u2019s Theorem',link:'https://www.youtube.com/watch?v=elvOZm0d4H0',linkLabel:'Numberphile: Cantor\u2019s Infinity Paradox'}
+],
+
+tier3: [
+{id:'tb_t3_001',statement:'The angles of a triangle always add up to 180\u00b0.',answer:false,revealTitle:'Only on a flat surface \u2014 not on a sphere',revealText:'Draw a triangle on the surface of the Earth: start at the North Pole, go down to the equator, travel a quarter of the way around, then return to the North Pole. All three angles are 90\u00b0, summing to 270\u00b0. On a sphere, triangle angles always exceed 180\u00b0. On a saddle-shaped surface (hyperbolic geometry), they sum to less. The 180\u00b0 rule is a feature of flat space only.',counterexample:'Spherical triangle with three 90\u00b0 angles: sum = 270\u00b0',field:'Non-Euclidean Geometry',link:'https://www.youtube.com/watch?v=lFlu60qs7_4',linkLabel:'Numberphile: Non-Euclidean Geometry'},
+{id:'tb_t3_002',statement:'Parallel lines never meet.',answer:false,revealTitle:'In projective geometry, all parallel lines meet \u2014 at infinity',revealText:'In projective geometry, every pair of lines meets at exactly one point. Parallel lines meet at a \u2018point at infinity.\u2019 This isn\u2019t a trick \u2014 projective geometry is a consistent, rigorous mathematical system used in computer graphics, perspective drawing, and algebraic geometry. The parallel postulate that Euclid assumed is not a universal truth; it\u2019s a choice.',counterexample:'Train tracks appear to meet at the horizon \u2014 projective geometry makes this precise',field:'Projective Geometry',link:'https://www.youtube.com/watch?v=NYK0GBQVngs',linkLabel:'Numberphile: Projective Geometry'},
+{id:'tb_t3_003',statement:'A line that divides a closed curve must create an inside and an outside.',answer:true,revealTitle:'True \u2014 but incredibly hard to prove: the Jordan Curve Theorem',revealText:'Any simple closed curve (a loop that doesn\u2019t cross itself) divides the plane into exactly two regions \u2014 an inside and an outside. This seems utterly obvious. Yet proving it rigorously took mathematicians decades. The Jordan Curve Theorem\u2019s proof runs to many pages and requires deep topology. \u2018Obvious\u2019 and \u2018easy to prove\u2019 are very different things in mathematics.',field:'Topology',link:'https://www.youtube.com/watch?v=AmgkSdhK4K8',linkLabel:'Numberphile: The Jordan Curve Theorem'},
+{id:'tb_t3_004',statement:'You can turn a sphere inside out without tearing or creasing it.',answer:true,revealTitle:'Sphere eversion \u2014 one of topology\u2019s most surprising results',revealText:'In 1957, Stephen Smale proved you can turn a sphere inside out if you allow it to pass through itself (but no tearing or pinching). The result shocked mathematicians \u2014 it\u2019s completely counterintuitive. A visualisation called \u2018Outside In\u2019 by Bill Thurston shows how it works. The proof required entirely new mathematical ideas about surfaces and homotopy.',field:'Differential Topology',link:'https://www.youtube.com/watch?v=wO61D9x6lNY',linkLabel:'YouTube: Outside In (Sphere Eversion)'},
+{id:'tb_t3_005',statement:'There are as many even numbers as there are whole numbers.',answer:true,revealTitle:'Cantor\u2019s insight: infinite sets can be the same size as their subsets',revealText:'Pair every whole number n with the even number 2n: 1\u21942, 2\u21944, 3\u21946, ... Every whole number gets a unique even number and every even number gets a unique whole number. This perfect pairing (bijection) means the sets are the same size \u2014 both infinite, both the same infinity. This contradicts our intuition completely and is why infinite set theory needed to be invented.',field:'Set Theory',link:'https://www.youtube.com/watch?v=elvOZm0d4H0',linkLabel:'Numberphile: Cantor\u2019s Infinity Paradox'},
+{id:'tb_t3_006',statement:'The sum 1 + 2 + 3 + 4 + ... (all positive integers) equals \u22121/12.',answer:false,revealTitle:'It diverges \u2014 but there\u2019s a deeper story',revealText:'In standard mathematics, 1+2+3+... diverges to infinity. However, a technique called Ramanujan summation and the Riemann zeta function assign this series the value \u22121/12 in a specific, rigorous sense. This isn\u2019t \u2018the answer\u2019 \u2014 it\u2019s a different question. But the value \u22121/12 appears genuinely in string theory and quantum mechanics. Mathematics has multiple consistent ways to assign values to divergent series.',counterexample:'Partial sums: 1, 3, 6, 10, 15... clearly growing without bound',field:'Analytic Continuation / Divergent Series',link:'https://www.youtube.com/watch?v=w-I6XTVZXww',linkLabel:'Numberphile: ASTOUNDING: 1+2+3+4+5+...= \u22121/12'},
+{id:'tb_t3_007',statement:'Every continuous function from a disc to itself has a fixed point.',answer:true,revealTitle:'Brouwer\u2019s Fixed Point Theorem \u2014 with a beautiful physical intuition',revealText:'Brouwer\u2019s theorem states that any continuous function mapping a closed disc to itself must have at least one fixed point (a point that maps to itself). Physical intuition: stir a cup of coffee. No matter how you stir, at least one point of liquid must end up exactly where it started. The theorem extends to higher dimensions and has applications in economics, game theory, and differential equations.',field:'Topology / Fixed Point Theory',link:'https://www.youtube.com/watch?v=7s-YM-kcKME',linkLabel:'Numberphile: Brouwer\u2019s Fixed Point Theorem'},
+{id:'tb_t3_008',statement:'Euler\u2019s formula F + V \u2212 E = 2 works for all 3D shapes.',answer:false,revealTitle:'Only for polyhedra \u2014 not for shapes with holes',revealText:'Euler\u2019s formula holds for convex polyhedra (and many non-convex ones). A cube: 6+8\u221212=2. A tetrahedron: 4+4\u22126=2. But a torus (doughnut shape) gives F+V\u2212E=0. A shape with two holes gives \u22122. The general formula is F+V\u2212E = 2\u22122g where g is the number of holes (genus). This is the Euler characteristic, the foundation of topology.',counterexample:'A torus: F+V\u2212E = 0, not 2',field:'Algebraic Topology',link:'https://www.youtube.com/watch?v=ksWgEMGOlF8',linkLabel:'Numberphile: Euler\u2019s Formula and Topology'},
+{id:'tb_t3_009',statement:'A coastline has a definite, measurable length.',answer:false,revealTitle:'The coastline paradox \u2014 length depends on measurement scale',revealText:'The length of a coastline depends on the length of the ruler you use. With a 100km ruler, you get one answer. With a 1km ruler, you measure every bay and headland and get a longer answer. With a 1m ruler, longer still. As your measuring unit shrinks, the measured length grows without bound. Coastlines are fractals \u2014 they have detail at every scale. Britain\u2019s coastline has no definite length.',counterexample:'Britain\u2019s coast: ~2,800km at 100km scale, ~17,820km at 50m scale',field:'Fractal Geometry',link:'https://www.youtube.com/watch?v=kFjq8PX6F7I',linkLabel:'Numberphile: How Long is the Coastline of Britain?'},
+{id:'tb_t3_010',statement:'In any map, four colours are always sufficient to colour regions so no two adjacent regions share a colour.',answer:true,revealTitle:'The Four Colour Theorem \u2014 proved by computer in 1976',revealText:'Every map drawn on a flat plane can be coloured with at most four colours such that no two regions sharing a border have the same colour. This was conjectured in 1852 and proved in 1976 \u2014 making it the first major theorem proved with significant computer assistance. The proof checked 1,936 special cases computationally. Many mathematicians were uncomfortable with a proof that couldn\u2019t be checked by hand.',field:'Graph Theory',link:'https://www.youtube.com/watch?v=NgbK43jB4rQ',linkLabel:'Numberphile: The Four Colour Map Theorem'},
+{id:'tb_t3_011',statement:'There is no largest prime number.',answer:true,revealTitle:'Euclid proved this over 2,000 years ago \u2014 and the proof is beautiful',revealText:'Assume there is a largest prime p. Multiply all primes together and add 1: (2\u00d73\u00d75\u00d77\u00d7...\u00d7p)+1. This number is not divisible by any known prime (it always leaves remainder 1). So either it\u2019s prime itself, or it has a prime factor not on our list. Either way, we have a prime not on our list \u2014 contradiction. This proof is over 2,300 years old and still perfect.',field:'Number Theory',link:'https://www.youtube.com/watch?v=ctC33JAV4FI',linkLabel:'Numberphile: Infinite Primes \u2014 Euclid\u2019s Proof'},
+{id:'tb_t3_012',statement:'The square root of \u22121 doesn\u2019t exist.',answer:false,revealTitle:'It exists \u2014 we just had to invent a new kind of number',revealText:'The number i is defined as \u221a(\u22121). It doesn\u2019t exist on the real number line \u2014 but mathematicians extended the number system to create the complex numbers: a + bi where a and b are real. Complex numbers are not \u2018imaginary\u2019 in the pejorative sense \u2014 they\u2019re used to design electrical circuits, model quantum mechanics, analyse signals, and prove results about real numbers that can\u2019t be proved without them.',field:'Complex Numbers',link:'https://www.youtube.com/watch?v=T647CGsuOVU',linkLabel:'Numberphile: Imaginary Numbers are Real'},
+{id:'tb_t3_013',statement:'You cannot comb a hairy ball flat without creating a cowlick.',answer:true,revealTitle:'The Hairy Ball Theorem \u2014 yes, this is its actual name',revealText:'The Hairy Ball Theorem states that any continuous tangent vector field on a sphere must have at least one point where the vector is zero \u2014 a \u2018cowlick\u2019 where the hair sticks straight up or lies flat. Applied to Earth\u2019s atmosphere: there must always be at least one point on Earth with zero horizontal wind speed. The theorem extends to all even-dimensional spheres.',field:'Algebraic Topology',link:'https://www.youtube.com/watch?v=AhSRnlFHBCY',linkLabel:'Numberphile: The Hairy Ball Theorem'},
+{id:'tb_t3_014',statement:'The probability of two people in a group of 23 sharing a birthday is less than 50%.',answer:false,revealTitle:'The Birthday Problem \u2014 23 people gives >50% chance',revealText:'It seems like you\u2019d need far more than 23 people for a >50% chance of a shared birthday (there are 365 days, after all). But the probability is calculated on all possible pairs, and 23 people give 253 pairs. The probability that NO pair shares a birthday is (365/365)\u00d7(364/365)\u00d7...\u00d7(343/365) \u2248 0.493, so P(shared birthday) \u2248 50.7%.',field:'Probability Theory',link:'https://www.youtube.com/watch?v=KtT_cgMzHx8',linkLabel:'Numberphile: The Birthday Problem'},
+{id:'tb_t3_015',statement:'A M\u00f6bius strip has two sides.',answer:false,revealTitle:'A M\u00f6bius strip has only one side and one edge',revealText:'Take a strip of paper, give it a half-twist, and join the ends. The resulting surface has only one side \u2014 run your finger along the surface and you\u2019ll visit both \u2018sides\u2019 without lifting it. It also has only one edge. Cut a M\u00f6bius strip along its centre line and instead of two loops, you get one longer loop. Cut it one-third of the way in and you get two interlocked loops. It behaves unlike any normal surface.',field:'Topology',link:'https://www.youtube.com/watch?v=4mdEsouIXGM',linkLabel:'Numberphile: M\u00f6bius Strip'},
+{id:'tb_t3_016',statement:'Every even number greater than 2 can be written as the sum of two primes.',answer:false,revealTitle:'Goldbach\u2019s Conjecture \u2014 unsolved for 280 years',revealText:'Goldbach\u2019s Conjecture states that every even integer greater than 2 is the sum of two primes: 4=2+2, 6=3+3, 8=3+5, 10=3+7 or 5+5... It has been verified for every even number up to 4\u00d710\u00b9\u2078. But it has never been proved for all even numbers. First proposed in 1742, it remains one of the most famous unsolved problems in mathematics. We answer FALSE only because it hasn\u2019t been proved \u2014 it might be true.',field:'Number Theory',link:'https://www.youtube.com/watch?v=MX0D4oZwCsA',linkLabel:'Numberphile: Goldbach\u2019s Conjecture'},
+{id:'tb_t3_017',statement:'There exists a set of all sets.',answer:false,revealTitle:'Russell\u2019s Paradox \u2014 a set of all sets destroys itself',revealText:'Suppose there\u2019s a set S containing all sets. Then S contains itself. Now consider the set R of all sets that do NOT contain themselves. Does R contain itself? If it does, it shouldn\u2019t (it only contains sets that don\u2019t contain themselves). If it doesn\u2019t, it should (it qualifies). Contradiction. This is Russell\u2019s Paradox, which destroyed naive set theory in 1901 and led to the rigorous axiomatic foundations of modern mathematics.',counterexample:'The set of all sets that don\u2019t contain themselves \u2014 Russell\u2019s R',field:'Set Theory / Mathematical Logic',link:'https://www.youtube.com/watch?v=ymGt7I4Yn3k',linkLabel:'Numberphile: Russell\u2019s Paradox'},
+{id:'tb_t3_018',statement:'If a mathematical statement is true, it can be proved.',answer:false,revealTitle:'G\u00f6del\u2019s Incompleteness Theorems \u2014 one of the most profound results in mathematics',revealText:'In 1931, Kurt G\u00f6del proved that any sufficiently powerful, consistent mathematical system contains true statements that cannot be proved within that system. Mathematics cannot prove its own consistency. This shattered Hilbert\u2019s dream of a complete, provable foundation for all mathematics. G\u00f6del\u2019s theorems are considered among the most significant intellectual achievements of the 20th century.',field:'Mathematical Logic / Foundations',link:'https://www.youtube.com/watch?v=O4ndIDcDSGc',linkLabel:'Numberphile: G\u00f6del\u2019s Incompleteness Theorem'},
+{id:'tb_t3_019',statement:'In higher dimensions, the volume of a sphere relative to the box it fits in approaches zero.',answer:true,revealTitle:'The curse of dimensionality \u2014 spheres become vanishingly small',revealText:'In 2D, a circle takes up \u03c0/4 \u2248 78.5% of its surrounding square. In 3D, a sphere takes up \u03c0/6 \u2248 52.4% of its cube. In 10 dimensions: less than 0.25%. As dimensions increase, the sphere\u2019s volume as a fraction of the bounding hypercube approaches zero. Almost all of the \u2018space\u2019 in high dimensions is in the corners, not the centre. This has profound implications for machine learning and statistics.',field:'High-Dimensional Geometry',link:'https://www.youtube.com/watch?v=mceaM2_zAoI',linkLabel:'3Blue1Brown: Sphere Volumes and High Dimensions'},
+{id:'tb_t3_020',statement:'The number e is just a convenient approximation used in calculus.',answer:false,revealTitle:'e is exactly defined \u2014 and it appears everywhere without being invited',revealText:'e = 2.71828... is precisely defined as the limit of (1 + 1/n)\u207f as n\u2192\u221e, or equivalently as 1 + 1 + 1/2! + 1/3! + 1/4! + ... It\u2019s the unique number where the function e\u02e3 equals its own derivative. It appears in compound interest, population growth, radioactive decay, the normal distribution, the prime number theorem, Fourier analysis, and complex numbers. e is not convenient \u2014 it\u2019s fundamental. The universe seems to run on it.',field:'Analysis / Transcendental Numbers',link:'https://www.youtube.com/watch?v=AuA2EAgAegE',linkLabel:'Numberphile: e (Euler\u2019s Number)'}
+]
+};
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+const S = {
+  session: [],       // 20 selected questions
+  qIdx: 0,
+  correct: 0,
+  tierScores: [0,0,0],
+  tierCounts: [7,7,6],
+  answered: false,
+  revealTime: 0
+};
+
+const PB_KEY = 'mfg_tb_pb';
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function tierOf(idx) {
+  if (idx < 7) return 1;
+  if (idx < 14) return 2;
+  return 3;
+}
+
+function tierClass(t) { return t === 1 ? 't1' : t === 2 ? 't2' : 't3'; }
+function tierName(t) { return t === 1 ? 'Tier 1: Seems Obvious' : t === 2 ? 'Tier 2: Think Carefully' : 'Tier 3: Beyond the Curriculum'; }
+
+// ============================================================
+//  GAME FLOW
+// ============================================================
+function startGame() {
+  // Pick 7 from tier1, 7 from tier2, 6 from tier3
+  const t1 = shuffle([...QUESTIONS.tier1]).slice(0, 7);
+  const t2 = shuffle([...QUESTIONS.tier2]).slice(0, 7);
+  const t3 = shuffle([...QUESTIONS.tier3]).slice(0, 6);
+  S.session = [...t1, ...t2, ...t3];
+  S.qIdx = 0;
+  S.correct = 0;
+  S.tierScores = [0, 0, 0];
+  S.answered = false;
+
+  document.getElementById('startScreen').classList.remove('active');
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('gameHeader').style.display = 'flex';
+
+  mfg('game_started', { game_slug: 'truth-buster', level: 'all' });
+
+  showQuestion();
+}
+
+function showQuestion() {
+  const tier = tierOf(S.qIdx);
+  const prevTier = S.qIdx > 0 ? tierOf(S.qIdx - 1) : tier;
+
+  // Tier transition
+  if (S.qIdx > 0 && tier !== prevTier) {
+    document.getElementById('gameScreen').classList.remove('active');
+    const trans = document.getElementById('tierTransition');
+    document.getElementById('transName').textContent = tierName(tier);
+    trans.classList.add('active');
+    setTimeout(() => {
+      trans.classList.remove('active');
+      renderQuestion();
+    }, 1000);
+  } else {
+    renderQuestion();
+  }
+}
+
+function renderQuestion() {
+  const q = S.session[S.qIdx];
+  const tier = tierOf(S.qIdx);
+
+  // Update header
+  const pill = document.getElementById('tierPill');
+  pill.textContent = 'Tier ' + tier;
+  pill.className = 'tier-pill ' + tierClass(tier);
+  document.getElementById('scoreNum').textContent = S.correct;
+  document.getElementById('scoreTotal').textContent = S.qIdx;
+
+  // Statement
+  document.getElementById('statementText').textContent = q.statement;
+
+  // Reset buttons
+  const btnT = document.getElementById('btnTrue');
+  const btnF = document.getElementById('btnFalse');
+  btnT.disabled = false;
+  btnF.disabled = false;
+  btnT.classList.remove('selected');
+  btnF.classList.remove('selected');
+
+  // Reset reveal
+  const panel = document.getElementById('revealPanel');
+  panel.classList.remove('show', 'flash-green', 'flash-red');
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('counterBox').style.display = 'none';
+  document.getElementById('learnMoreWrap').style.display = 'none';
+
+  S.answered = false;
+
+  // Show game screen
+  document.getElementById('gameScreen').classList.add('active');
+}
+
+function answer(playerSaidTrue) {
+  if (S.answered) return;
+  S.answered = true;
+
+  const q = S.session[S.qIdx];
+  const tier = tierOf(S.qIdx);
+  const isCorrect = playerSaidTrue === q.answer;
+
+  if (isCorrect) {
+    S.correct++;
+    S.tierScores[tier - 1]++;
+  }
+
+  // Highlight selected button
+  const btnT = document.getElementById('btnTrue');
+  const btnF = document.getElementById('btnFalse');
+  btnT.disabled = true;
+  btnF.disabled = true;
+  if (playerSaidTrue) btnT.classList.add('selected');
+  else btnF.classList.add('selected');
+
+  // Update score
+  document.getElementById('scoreNum').textContent = S.correct;
+  document.getElementById('scoreTotal').textContent = S.qIdx + 1;
+
+  // Build reveal
+  const panel = document.getElementById('revealPanel');
+  const indicator = document.getElementById('revealIndicator');
+  indicator.className = 'reveal-indicator ' + (isCorrect ? 'correct' : 'incorrect');
+  indicator.textContent = isCorrect ? '\u2713 Correct' : '\u2717 Incorrect';
+
+  document.getElementById('revealTitle').textContent = q.revealTitle;
+  document.getElementById('revealText').textContent = q.revealText;
+
+  if (q.counterexample) {
+    const cb = document.getElementById('counterBox');
+    cb.textContent = q.counterexample;
+    cb.style.display = 'block';
+  }
+
+  // Learn more (Tier 3, or Tier 2 questions with links)
+  if (q.link && q.linkLabel) {
+    const wrap = document.getElementById('learnMoreWrap');
+    wrap.innerHTML = '<a href="' + q.link + '" target="_blank" rel="noopener noreferrer" class="learn-more-btn">\ud83d\udd17 ' + q.linkLabel + '</a>';
+    wrap.style.display = 'block';
+  }
+
+  // Show reveal with animation
+  panel.classList.add('show', isCorrect ? 'flash-green' : 'flash-red');
+
+  // Analytics
+  mfg('question_answered', {
+    game_slug: 'truth-buster',
+    level: 'all',
+    question_index: S.qIdx + 1,
+    correct: isCorrect,
+    mode: 'tier' + tier
+  });
+
+  // Show Next button after 3 seconds
+  S.revealTime = Date.now();
+  setTimeout(() => {
+    document.getElementById('nextBtn').classList.add('visible');
+  }, 3000);
+}
+
+function nextQuestion() {
+  // Enforce minimum reveal time
+  if (Date.now() - S.revealTime < 3000) return;
+
+  S.qIdx++;
+  if (S.qIdx >= 20) {
+    finishGame();
+  } else {
+    showQuestion();
+  }
+}
+
+function finishGame() {
+  document.getElementById('gameScreen').classList.remove('active');
+  document.getElementById('gameHeader').style.display = 'none';
+  document.getElementById('resultsScreen').classList.add('active');
+
+  const pct = Math.round((S.correct / 20) * 100);
+  document.getElementById('finalScore').textContent = S.correct + '/20';
+  document.getElementById('finalPct').textContent = pct + '%';
+  document.getElementById('t1Score').textContent = S.tierScores[0] + '/7';
+  document.getElementById('t2Score').textContent = S.tierScores[1] + '/7';
+  document.getElementById('t3Score').textContent = S.tierScores[2] + '/6';
+
+  // Personal best
+  const prevBest = parseInt(localStorage.getItem(PB_KEY) || '0');
+  const pbBadge = document.getElementById('pbBadge');
+  const pbLine = document.getElementById('pbLine');
+  if (pct > prevBest) {
+    localStorage.setItem(PB_KEY, pct);
+    pbBadge.style.display = 'block';
+    pbLine.textContent = 'Previous best: ' + (prevBest > 0 ? prevBest + '%' : 'none');
+    mfg('personal_best_set', {
+      game_slug: 'truth-buster',
+      level: 'all',
+      score: pct,
+      previous_best: prevBest
+    });
+  } else {
+    pbBadge.style.display = 'none';
+    pbLine.textContent = 'Personal best: ' + prevBest + '%';
+  }
+
+  mfg('game_completed', {
+    game_slug: 'truth-buster',
+    level: 'all',
+    score: S.correct,
+    questions_answered: 20,
+    questions_correct: S.correct
+  });
+
+  if (window.MaffsLeaderboard) {
+    MaffsLeaderboard.submitScore('truth-buster', 'all', S.correct, 20).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('truth-buster','all',S.correct);}
+  }
+}
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

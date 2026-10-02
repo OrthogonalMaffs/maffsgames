@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Decompose into partial fractions — distinct linear, repeated, and improper. 50 A-Level and Level 4 questions.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/partial-fractions-duel/">
+<meta property="og:title" content="Partial Fractions Duel — MaffsGames">
+<meta property="og:description" content="Decompose into partial fractions — distinct linear, repeated, and improper. 50 A-Level and Level 4 questions.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/partial-fractions-duel/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Partial Fractions Duel — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f0f17;--surface:#1a1a2e;--border:#2d2d4a;--primary:#06d6a0;--accent:#ffd166;--wrong:#ef476f;--text:#edf2f4;--muted:#8d99ae}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}.hud-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.6rem}
+.q-card .prompt{font-size:.85rem;color:var(--accent);font-weight:600}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+@media(max-width:500px){.options{grid-template-columns:1fr}}
+.opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.88rem;cursor:pointer;transition:all .15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(6,214,160,.2)}
+.opt-btn.correct{border-color:var(--primary);background:rgba(6,214,160,.1);animation:pop .3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(239,71,111,.1);animation:shake .3s}
+.opt-btn.reveal{border-color:var(--primary);opacity:.7}.opt-btn.disabled{pointer-events:none;opacity:.5}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.timer-text{text-align:center;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:1rem}
+.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s}
+.pip.done{background:var(--primary)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--accent);box-shadow:0 0 6px var(--accent)}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem}
+.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.play-again:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+.katex{font-size:1em!important}.q-card .katex{font-size:1.25em!important}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Partial Fractions Duel</h1><div class="sub">Decompose. Separate. Simplify.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:1rem 0;line-height:1.5">
+      A-Level Pure — distinct linear factors, repeated factors, improper fractions.<br>
+      Essential for integration by partial fractions and binomial expansion.
+    </p>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <div style="text-align:center;margin-top:1.5rem"><button class="play-again" onclick="startGame()">Start</button></div>
+  </div>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div>
+    </div>
+    <div class="timer-text" id="timerDisplay">0s</div>
+    <div class="progress" id="progress"></div>
+    <div class="q-card"><div id="question"></div><div class="prompt" id="prompt"></div></div>
+    <div class="options" id="options"></div>
+  </div>
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+<script>
+const QUESTIONS={
+alevel:[
+  {q:'\\dfrac{5}{(x+1)(x+2)} = \\dfrac{A}{x+1} + \\dfrac{B}{x+2}',ask:'Find A',correct:'5',d:['-5','1','2']},
+  {q:'\\dfrac{5}{(x+1)(x+2)} = \\dfrac{A}{x+1} + \\dfrac{B}{x+2}',ask:'Find B',correct:'-5',d:['5','-1','2']},
+  {q:'\\dfrac{3}{(x-1)(x+2)} = \\dfrac{A}{x-1} + \\dfrac{B}{x+2}',ask:'Find A',correct:'1',d:['3','-1','2']},
+  {q:'\\dfrac{3}{(x-1)(x+2)} = \\dfrac{A}{x-1} + \\dfrac{B}{x+2}',ask:'Find B',correct:'-1',d:['1','3','-3']},
+  {q:'\\dfrac{7x+1}{(x+1)(x-2)} = \\dfrac{A}{x+1} + \\dfrac{B}{x-2}',ask:'Find A',correct:'2',d:['-2','5','1']},
+  {q:'\\dfrac{7x+1}{(x+1)(x-2)} = \\dfrac{A}{x+1} + \\dfrac{B}{x-2}',ask:'Find B',correct:'5',d:['2','-5','7']},
+  {q:'\\dfrac{4x-1}{(x-1)(x+3)} = \\dfrac{A}{x-1} + \\dfrac{B}{x+3}',ask:'Find A',correct:'\\dfrac{3}{4}',d:['3','1','\\dfrac{1}{4}']},
+  {q:'\\dfrac{4x-1}{(x-1)(x+3)} = \\dfrac{A}{x-1} + \\dfrac{B}{x+3}',ask:'Find B',correct:'\\dfrac{13}{4}',d:['4','3','\\dfrac{3}{4}']},
+  {q:'\\dfrac{2x+3}{(x+1)(x-1)} = \\dfrac{A}{x+1} + \\dfrac{B}{x-1}',ask:'Find A',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','\\dfrac{5}{2}']},
+  {q:'\\dfrac{2x+3}{(x+1)(x-1)} = \\dfrac{A}{x+1} + \\dfrac{B}{x-1}',ask:'Find B',correct:'\\dfrac{5}{2}',d:['\\dfrac{1}{2}','3','-\\dfrac{5}{2}']},
+  {q:'\\dfrac{1}{x(x+1)} = \\dfrac{A}{x} + \\dfrac{B}{x+1}',ask:'Find A',correct:'1',d:['-1','0','\\dfrac{1}{2}']},
+  {q:'\\dfrac{1}{x(x+1)} = \\dfrac{A}{x} + \\dfrac{B}{x+1}',ask:'Find B',correct:'-1',d:['1','0','\\dfrac{1}{2}']},
+  {q:'\\dfrac{3x-1}{(2x+1)(x-3)} = \\dfrac{A}{2x+1} + \\dfrac{B}{x-3}',ask:'Find A',correct:'1',d:['-1','\\dfrac{1}{2}','3']},
+  {q:'\\dfrac{3x-1}{(2x+1)(x-3)} = \\dfrac{A}{2x+1} + \\dfrac{B}{x-3}',ask:'Find B',correct:'\\dfrac{8}{7}',d:['1','8','\\dfrac{1}{7}']},
+  {q:'\\dfrac{6}{(3x-1)(x+2)} = \\dfrac{A}{3x-1} + \\dfrac{B}{x+2}',ask:'Find A',correct:'\\dfrac{18}{7}',d:['6','\\dfrac{6}{7}','3']},
+  {q:'\\dfrac{x+5}{(x+1)(x+3)} = \\dfrac{A}{x+1} + \\dfrac{B}{x+3}',ask:'Find A',correct:'2',d:['-2','3','1']},
+  {q:'\\dfrac{x+5}{(x+1)(x+3)} = \\dfrac{A}{x+1} + \\dfrac{B}{x+3}',ask:'Find B',correct:'-1',d:['1','-2','3']},
+  {q:'\\dfrac{11-3x}{(x-1)(x+4)} = \\dfrac{A}{x-1} + \\dfrac{B}{x+4}',ask:'Find A',correct:'\\dfrac{8}{5}',d:['8','\\dfrac{3}{5}','2']},
+  {q:'\\dfrac{2}{(x+3)(x-5)} = \\dfrac{A}{x+3} + \\dfrac{B}{x-5}',ask:'Find A',correct:'-\\dfrac{1}{4}',d:['\\dfrac{1}{4}','2','-2']},
+  {q:'\\dfrac{2}{(x+3)(x-5)} = \\dfrac{A}{x+3} + \\dfrac{B}{x-5}',ask:'Find B',correct:'\\dfrac{1}{4}',d:['-\\dfrac{1}{4}','2','-2']},
+  {q:'\\dfrac{1}{x(x+1)(x-1)} = \\dfrac{A}{x} + \\dfrac{B}{x+1} + \\dfrac{C}{x-1}',ask:'Find A',correct:'-1',d:['1','0','\\dfrac{1}{2}']},
+  {q:'\\dfrac{1}{x(x+1)(x-1)}',ask:'Find B',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','-1']},
+  {q:'\\dfrac{1}{x(x+1)(x-1)}',ask:'Find C',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','-1']},
+  {q:'\\dfrac{2x+1}{(x-1)(x+1)(x+2)} = \\dfrac{A}{x-1}+\\dfrac{B}{x+1}+\\dfrac{C}{x+2}',ask:'Find A',correct:'\\dfrac{1}{2}',d:['1','-\\dfrac{1}{2}','\\dfrac{3}{2}']},
+  {q:'\\dfrac{x^2}{(x+1)(x-1)(x+2)}',ask:'Form of decomposition',correct:'\\dfrac{A}{x+1}+\\dfrac{B}{x-1}+\\dfrac{C}{x+2}',d:['\\dfrac{Ax+B}{x+1}+\\dfrac{C}{x-1}','\\dfrac{A}{x+1}+\\dfrac{B}{x-1}','Ax+B+\\dfrac{C}{x+2}']},
+  {q:'\\dfrac{5x-1}{(x)(x-1)(x+2)} = \\dfrac{A}{x}+\\dfrac{B}{x-1}+\\dfrac{C}{x+2}',ask:'Find A (set x = 0)',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','5']},
+  {q:'\\dfrac{5x-1}{(x)(x-1)(x+2)}',ask:'Find B (set x = 1)',correct:'\\dfrac{4}{3}',d:['4','\\dfrac{1}{3}','\\dfrac{5}{3}']},
+  {q:'\\dfrac{5x-1}{(x)(x-1)(x+2)}',ask:'Find C (set x = −2)',correct:'\\dfrac{11}{6}',d:['-\\dfrac{11}{6}','\\dfrac{5}{6}','2']},
+  {q:'\\dfrac{6x^2+5x+1}{(x+1)(2x+1)(x-1)}',ask:'What method to find A, B, C?',correct:'Substitution or comparing coefficients',d:['Long division','Differentiation','Integration']},
+  {q:'\\dfrac{1}{(x-1)(x-2)(x-3)}',ask:'Find A (coefficient of 1/(x−1))',correct:'\\dfrac{1}{2}',d:['1','-\\dfrac{1}{2}','\\dfrac{1}{3}']},
+  {q:'\\dfrac{3x+5}{(x+1)^2} = \\dfrac{A}{x+1} + \\dfrac{B}{(x+1)^2}',ask:'Find A',correct:'3',d:['5','1','-3']},
+  {q:'\\dfrac{3x+5}{(x+1)^2} = \\dfrac{A}{x+1} + \\dfrac{B}{(x+1)^2}',ask:'Find B',correct:'2',d:['5','8','-2']},
+  {q:'\\dfrac{x+3}{(x-2)^2} = \\dfrac{A}{x-2} + \\dfrac{B}{(x-2)^2}',ask:'Find A',correct:'1',d:['3','-1','2']},
+  {q:'\\dfrac{x+3}{(x-2)^2}',ask:'Find B',correct:'5',d:['3','1','-5']},
+  {q:'\\dfrac{4x}{(x+1)^2(x-1)} = \\dfrac{A}{x+1}+\\dfrac{B}{(x+1)^2}+\\dfrac{C}{x-1}',ask:'Find C (set x = 1)',correct:'1',d:['4','2','-1']},
+  {q:'\\dfrac{4x}{(x+1)^2(x-1)}',ask:'Find B (set x = −1)',correct:'2',d:['-2','4','-4']},
+  {q:'\\dfrac{2x+1}{x^2(x+1)} = \\dfrac{A}{x}+\\dfrac{B}{x^2}+\\dfrac{C}{x+1}',ask:'Find B (set x = 0)',correct:'1',d:['2','0','-1']},
+  {q:'\\dfrac{2x+1}{x^2(x+1)}',ask:'Find C (set x = −1)',correct:'-1',d:['1','3','-3']},
+  {q:'\\dfrac{5}{(x-1)^2(x+2)}',ask:'Form of decomposition',correct:'\\dfrac{A}{x-1}+\\dfrac{B}{(x-1)^2}+\\dfrac{C}{x+2}',d:['\\dfrac{A}{x-1}+\\dfrac{B}{x+2}','\\dfrac{Ax+B}{(x-1)^2}+\\dfrac{C}{x+2}','\\dfrac{A}{(x-1)^2}+\\dfrac{B}{x+2}']},
+  {q:'\\dfrac{x^2+1}{(x+1)^2(x-1)}',ask:'Form of decomposition',correct:'\\dfrac{A}{x+1}+\\dfrac{B}{(x+1)^2}+\\dfrac{C}{x-1}',d:['\\dfrac{Ax+B}{(x+1)^2}+\\dfrac{C}{x-1}','\\dfrac{A}{x+1}+\\dfrac{B}{x-1}','1+\\dfrac{A}{x+1}+\\dfrac{B}{x-1}']},
+  {q:'\\dfrac{x^2+1}{(x+1)(x-1)}',ask:'Is this proper or improper?',correct:'Improper',d:['Proper','Neither','Undefined']},
+  {q:'\\dfrac{x^2+1}{x^2-1}',ask:'Perform long division first. Quotient?',correct:'1',d:['x','x+1','0']},
+  {q:'\\dfrac{x^2+1}{x^2-1} = 1 + \\dfrac{?}{x^2-1}',ask:'Find the remainder',correct:'2',d:['1','-2','0']},
+  {q:'\\dfrac{x^2+1}{(x+1)(x-1)} = 1 + \\dfrac{A}{x+1} + \\dfrac{B}{x-1}',ask:'Find A',correct:'-1',d:['1','\\dfrac{1}{2}','-\\dfrac{1}{2}']},
+  {q:'\\dfrac{x^2+1}{(x+1)(x-1)} = 1 + \\dfrac{A}{x+1} + \\dfrac{B}{x-1}',ask:'Find B',correct:'1',d:['-1','\\dfrac{1}{2}','2']},
+  {q:'\\dfrac{x^2+3x+5}{(x+1)(x+2)}',ask:'Quotient from long division',correct:'1',d:['x','x+1','0']},
+  {q:'\\dfrac{x^2+3x+5}{(x+1)(x+2)} = 1 + \\dfrac{?}{(x+1)(x+2)}',ask:'Find the remainder (numerator)',correct:'2',d:['3','5','0']},
+  {q:'\\dfrac{2x^2+x+1}{(x-1)(x+2)}',ask:'Is this proper or improper?',correct:'Improper',d:['Proper','Cannot tell','Undefined']},
+  {q:'\\dfrac{3x+2}{x+1}',ask:'Perform long division',correct:'3 - \\dfrac{1}{x+1}',d:['3 + \\dfrac{1}{x+1}','3 + \\dfrac{2}{x+1}','3x + \\dfrac{2}{x+1}']},
+  {q:'\\dfrac{x^2}{(x+1)(x-2)}',ask:'After long division, the integer part is',correct:'1',d:['0','x','2']},
+]
+};
+
+let level='alevel',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,timerInterval=null,qStartTime=0;
+const BASE=100,T_K=0.15;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function startGame(){questions=shuffle([...QUESTIONS.alevel]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}window._ggAbandoned=true;if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'partial-fractions-duel',level:'alevel',questions_answered:qIdx});});}mfg('game_started',{game_slug:'partial-fractions-duel',level:'alevel'});show('game');showQ()}
+function showQ(){const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;const qEl=document.getElementById('question');qEl.innerHTML='';rk(qEl,q.q);document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
+function tick(){const e=Math.floor((Date.now()-qStartTime)/1000);document.getElementById('timer').textContent=e+'s'}
+function handle(btn,q){clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});mfg('question_answered',{game_slug:'partial-fractions-duel',level:'alevel',correct:ok,question_index:qIdx+1});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)}
+function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
+function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
+function end(){clearInterval(timerInterval);window._ggAbandoned=false;const pct=Math.round(correctCount/totalQ*100);mfg('game_completed',{game_slug:'partial-fractions-duel',level:'alevel',score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('partial-fractions-duel','alevel',score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('partial-fractions-duel','alevel',score);}}let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;show('results')}
+function showMenu(){show('menu')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

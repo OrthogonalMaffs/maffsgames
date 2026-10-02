@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="36 exam-style questions for AQA Core Maths Paper 2A. Covers §3.4 Critical Analysis, §3.5 Normal Distribution, §3.6 Confidence Intervals, §3.7 Correlation and Regression.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/core-maths-paper2a/">
+<meta property="og:title" content="Core Maths Paper 2A Practice — MaffsGames">
+<meta property="og:description" content="36 exam-style questions for AQA Core Maths Paper 2A. Covers §3.4 Critical Analysis, §3.5 Normal Distribution, §3.6 Confidence Intervals, §3.7 Correlation and Regression.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://maffsgames.co.uk/games/core-maths-paper2a/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Core Maths Paper 2A Practice — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--surface2:#162032;--border:#334155;
+  --accent:#0ea5e9;--accent-dim:rgba(14,165,233,.12);--accent-glow:rgba(14,165,233,.25);
+  --correct:#0d9488;--correct-dim:rgba(13,148,136,.12);
+  --wrong:#ef4444;--wrong-dim:rgba(239,68,68,.12);
+  --text:#e2e8f0;--muted:#94a3b8;--text-dark:#1e293b;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:720px;width:100%;padding:1rem;flex:1;display:flex;flex-direction:column}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem;position:relative}
+.header h1{font-size:1.6rem;font-weight:800;color:var(--accent)}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .q-stem,body.accessible .option-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{position:absolute;top:1.2rem;right:0;background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--correct)}
+.screen{display:none;flex-direction:column;gap:16px}.screen.active{display:flex}
+.start-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.start-icon{font-size:48px;margin-bottom:12px}
+.start-desc{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:20px;max-width:520px;margin-left:auto;margin-right:auto}
+.start-btn{padding:14px 40px;border-radius:12px;border:none;background:var(--accent);color:#000;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .15s}
+.start-btn:hover{transform:scale(1.04)}
+.progress-bar{width:100%;height:4px;background:var(--surface);border-radius:2px;overflow:hidden;margin-bottom:4px}
+.progress-fill{height:100%;background:var(--accent);transition:width .3s ease;width:0%}
+.section-banner{background:#1a2744;border-left:4px solid var(--accent);border-radius:8px;padding:16px 20px;text-align:center;animation:fadeIn .4s}
+.section-banner h2{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px}
+.section-banner .section-range{font-size:.8rem;color:var(--muted)}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;animation:fadeIn .3s}
+.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.q-counter{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent)}
+.q-tag{font-size:12px;color:var(--muted)}
+.q-stem{font-size:16px;line-height:1.7;color:var(--text);margin-bottom:20px}
+.data-table{border-collapse:collapse;margin:12px 0 16px;max-width:480px}
+.data-table th{background:#1a2744;color:#fff;padding:8px 12px;font-size:13px;font-weight:600;text-align:left;border:1px solid var(--border)}
+.data-table td{padding:8px 12px;font-size:13px;border:1px solid var(--border);color:var(--text)}
+.data-table tr:nth-child(even) td{background:rgba(248,250,252,.04)}
+.data-table tr:nth-child(odd) td{background:transparent}
+.svg-container{margin:12px 0 16px;display:flex;justify-content:center}
+.svg-container svg{max-width:100%;height:auto}
+.options{display:flex;flex-direction:column;gap:10px}
+.option-btn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;cursor:pointer;transition:all .15s;text-align:left}
+.option-btn:hover:not(.locked){border-color:var(--accent);background:var(--accent-dim)}
+.option-letter{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.option-text{flex:1;line-height:1.5}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-dim)}
+.option-btn.correct .option-letter{background:var(--correct);color:#fff}
+.option-btn.incorrect{border-color:var(--wrong);background:var(--wrong-dim)}
+.option-btn.incorrect .option-letter{background:var(--wrong);color:#fff}
+.option-btn.reveal{border-color:var(--correct);background:var(--correct-dim)}
+.option-btn.reveal .option-letter{background:var(--correct);color:#fff}
+.working-note{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(14,165,233,.06);border-radius:8px;border-left:3px solid var(--accent);margin-top:12px;display:none}
+.working-note.visible{display:block}
+.next-btn{padding:12px 32px;border-radius:10px;border:none;background:var(--accent);color:#000;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;display:none;align-self:flex-end;transition:transform .15s}
+.next-btn.visible{display:block}
+.next-btn:hover{transform:scale(1.04)}
+.fermi-signpost{font-size:12px;color:var(--muted);text-align:center;padding:8px;margin-top:4px}
+.fermi-signpost a{color:var(--accent);text-decoration:none;font-weight:600}
+.fermi-signpost a:hover{text-decoration:underline}
+.results-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.results-title{font-size:1.4rem;font-weight:800;color:var(--accent);margin-bottom:8px}
+.results-score{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;margin:16px 0}
+.section-scores{display:flex;flex-direction:column;gap:8px;margin:20px auto;max-width:400px}
+.section-score-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)}
+.section-score-label{font-size:13px;color:var(--muted)}
+.section-score-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700}
+.dot-grid{display:flex;flex-direction:column;gap:8px;max-width:360px;margin:16px auto}
+.dot-grid-section{display:flex;flex-direction:column;gap:4px;width:100%}
+.dot-grid-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.dot-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.dot{width:16px;height:16px;border-radius:50%;cursor:default;position:relative}
+.dot.correct-dot{background:var(--correct)}
+.dot.incorrect-dot{background:var(--wrong)}
+.dot:hover::after{content:attr(data-q);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);font-size:10px;background:#000;color:#fff;padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none}
+.results-actions{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.results-btn{padding:12px 28px;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;text-decoration:none}
+.results-btn:hover{background:var(--accent);color:#000}
+.results-btn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+.results-btn.primary:hover{background:#38bdf8}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:500px){.q-card{padding:16px}.option-btn{padding:12px}.results-card{padding:20px}}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">MaffsGames</a>
+  <div id="startScreen" class="screen active">
+    <div class="header" style="position:relative">
+      <h1>Core Maths Paper 2A Practice</h1>
+      <div class="sub">AQA Level 3 Mathematical Studies — Statistical Techniques</div>
+      <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    </div>
+    <div class="start-card">
+      <div class="start-icon">&#128202;</div>
+      <p class="start-desc">
+        36 exam-style questions covering <strong>§3.4 Critical Analysis</strong> (Q1–9), <strong>§3.5 Normal Distribution</strong> (Q10–18), <strong>§3.6 Confidence Intervals</strong> (Q19–27), and <strong>§3.7 Correlation & Regression</strong> (Q28–36). No timer — work at your own pace.
+      </p>
+      <button class="start-btn" onclick="startGame()">Begin Practice</button>
+    </div>
+  </div>
+  <div id="gameScreen" class="screen">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div id="sectionBanner" class="section-banner" style="display:none">
+      <h2 id="sectionTitle"></h2>
+      <div class="section-range" id="sectionRange"></div>
+    </div>
+    <div id="questionArea" style="display:none">
+      <div class="q-card">
+        <div class="q-header">
+          <span class="q-counter" id="qCounter"></span>
+          <span class="q-tag" id="qTag"></span>
+        </div>
+        <div class="q-stem" id="qStem"></div>
+        <div class="options" id="optionsContainer"></div>
+        <div class="working-note" id="workingNote"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      </div>
+      <div class="fermi-signpost">For §3.3 Estimation & Fermi problems &#8594; <a href="../fermi-lab/?level=core">Play Fermi Lab</a></div>
+    </div>
+  </div>
+  <div id="resultsScreen" class="screen">
+    <div class="results-card">
+      <div class="results-title">Core Maths Paper 2A Practice — Complete</div>
+      <div class="results-score" id="finalScore"></div>
+      <div class="section-scores">
+        <div class="section-score-row"><span class="section-score-label">§3.4 Critical Analysis</span><span class="section-score-val" id="s1Score"></span></div>
+        <div class="section-score-row"><span class="section-score-label">§3.5 Normal Distribution</span><span class="section-score-val" id="s2Score"></span></div>
+        <div class="section-score-row"><span class="section-score-label">§3.6 Confidence Intervals</span><span class="section-score-val" id="s3Score"></span></div>
+        <div class="section-score-row"><span class="section-score-label">§3.7 Correlation & Regression</span><span class="section-score-val" id="s4Score"></span></div>
+      </div>
+      <div class="dot-grid">
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.4 Critical Analysis</div><div class="dot-row" id="s1Dots"></div></div>
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.5 Normal Distribution</div><div class="dot-row" id="s2Dots"></div></div>
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.6 Confidence Intervals</div><div class="dot-row" id="s3Dots"></div></div>
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.7 Correlation & Regression</div><div class="dot-row" id="s4Dots"></div></div>
+      </div>
+      <div class="results-actions">
+        <button class="results-btn primary" onclick="restartGame()">Play Again</button>
+        <a href="../../" class="results-btn">Back to Portal</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var SECTIONS = [
+  { title:'Section A \u2014 \u00a73.4 Critical Analysis', range:'Q1\u2013Q9', count:9 },
+  { title:'Section B \u2014 \u00a73.5 Normal Distribution', range:'Q10\u2013Q18', count:9 },
+  { title:'Section C \u2014 \u00a73.6 Confidence Intervals', range:'Q19\u2013Q27', count:9 },
+  { title:'Section D \u2014 \u00a73.7 Correlation & Regression', range:'Q28\u2013Q36', count:9 }
+];
+var SECTION_STARTS = [0, 9, 18, 27];
+
+var QUESTIONS = [
+  // ═══ §3.4 Critical Analysis — Q1 to Q9 ═══
+  {
+    section:'3.4',ao:'AO2',
+    stem:'A bar chart shows the percentage of students achieving grade C or above in four schools. School A: 72%, School B: 68%, School C: 74%, School D: 71%. The y-axis starts at 60%.\n\nA governor says: "School C is more than twice as good as School B."\n\nWhat is the most appropriate criticism of this statement?',
+    svg:'barchart_q1',
+    options:['The chart should use a pie chart instead','The y-axis is truncated, making differences appear larger than they are','Percentages are the wrong measure for school performance','School C only has a 6 percentage point lead, not double'],
+    correct:1,
+    working:'The truncated y-axis is the structural flaw. The visual gap between 68% and 74% looks enormous but represents only 6 percentage points.'
+  },
+  {
+    section:'3.4',ao:'AO2',
+    stem:'A spreadsheet tracks monthly sales. Column A holds the month number (1\u201312), column B holds sales figures. A manager wants a formula to calculate total sales for the year.\n\nWhich formula is correct?',
+    options:['=A1+A12','=SUM(B1:B12)','=B1\u00d712','=AVERAGE(B1:B12)'],
+    correct:1,
+    working:'SUM across the sales column (B) is the correct approach.'
+  },
+  {
+    section:'3.4',ao:'AO2',
+    stem:'A researcher claims: "In our survey, 4 out of 5 dentists recommended our toothpaste."\n\nWhich of the following is the most important piece of information missing from this claim?',
+    options:['The brand of toothpaste being recommended','How many dentists were surveyed in total','Whether the dentists were paid for their recommendation','The country in which the survey was conducted'],
+    correct:1,
+    working:'"4 out of 5" from a sample of 5 is meaningless. From 500 it would be meaningful. Sample size is the critical missing information.'
+  },
+  {
+    section:'3.4',ao:'AO3',
+    stem:'A newspaper headline states: "House prices have risen 200% in 20 years."\n\nA homeowner paid \u00a380,000 for a house 20 years ago. The house is now worth \u00a3240,000. Is the headline correct?',
+    options:['Yes \u2014 \u00a3240,000 is three times \u00a380,000, which is a 200% increase','No \u2014 the increase is \u00a3160,000, which is only 100% of the original price','Yes \u2014 the house has tripled in value, so prices have risen 300%','No \u2014 a 200% rise would mean the house is worth \u00a3280,000'],
+    correct:0,
+    working:'Percentage increase = (160,000 \u00f7 80,000) \u00d7 100 = 200%. The headline is correct. A common error is confusing "risen by 200%" with "risen to 200%".'
+  },
+  {
+    section:'3.4',ao:'AO3',
+    stem:'A company presents this data about employee satisfaction:',
+    table:{headers:['Year','Satisfied (%)'],rows:[['2020','61'],['2021','64'],['2022','68'],['2023','71']]},
+    stemAfterTable:'The CEO says: "Satisfaction has increased by nearly 20% since 2020."\n\nWhat error has the CEO made?',
+    options:['The data shows a decrease, not an increase','The CEO has confused percentage point increase with percentage increase','The sample size is too small to draw conclusions','The CEO should be using the median, not mean'],
+    correct:1,
+    working:'Satisfaction rose by 10 percentage points (61 to 71). As a percentage increase: (10 \u00f7 61) \u00d7 100 = 16.4%, not nearly 20%. The CEO has confused percentage points with percentage change.'
+  },
+  {
+    section:'3.4',ao:'AO2',
+    stem:'A spreadsheet cell B3 contains the value 450. Cell C3 contains the formula =B3*1.2.\n\nWhat does C3 calculate?',
+    options:['20% of 450','450 increased by 20%','450 decreased by 20%','120% less than 450'],
+    correct:1,
+    working:'B3 \u00d7 1.2 = 450 \u00d7 1.2 = 540. This represents a 20% increase on 450.'
+  },
+  {
+    section:'3.4',ao:'AO3',
+    stem:'A social media company reports: "Our users spend an average of 47 minutes per day on our platform. This shows our content is highly engaging."\n\nWhich is the strongest criticism of this conclusion?',
+    options:['The mean may be distorted by a small number of very heavy users','47 minutes is not a long time to spend on social media','The company should have reported median time instead','The data does not tell us whether users enjoyed the content'],
+    correct:0,
+    working:'A small proportion of extremely heavy users could inflate the mean substantially, making the "average" unrepresentative of typical usage. The company also has a vested interest in presenting engagement positively.'
+  },
+  {
+    section:'3.4',ao:'AO3',
+    stem:'A school reports that its GCSE pass rate improved from 78% to 81% over two years, while the national average stayed at 79%.\n\nA parent says: "The school improved by nearly 4% while the national average didn\'t change \u2014 the school must be getting much better."\n\nGive the most precise criticism of this statement.',
+    options:['The improvement of 3 percentage points is not statistically significant without knowing sample sizes','78% to 81% is only a 3 percentage point improvement, not 4%','The national average of 79% is between the two figures, so the school is average','Pass rates are not a reliable measure of school quality'],
+    correct:0,
+    working:'Two issues: the stated "4%" is imprecise (it\'s 3 percentage points), and without knowing cohort sizes and variability, we cannot determine if the change is meaningful or within normal variation.'
+  },
+  {
+    section:'3.4',ao:'AO2',
+    stem:'The table below shows data about three products:',
+    table:{headers:['Product','Units sold','Revenue (\u00a3)'],rows:[['A','1,200','36,000'],['B','800','28,000'],['C','500','22,500']]},
+    stemAfterTable:'A manager calculates the mean revenue per unit across all three products as:\n(30 + 35 + 45) \u00f7 3 = \u00a336.67\n\nWhat error has the manager made?',
+    options:['They have added the revenues incorrectly','They have calculated a simple average of unit prices instead of a weighted average','They should have used the median price instead','The formula should divide by 2, not 3'],
+    correct:1,
+    working:'Correct mean = (36,000 + 28,000 + 22,500) \u00f7 (1,200 + 800 + 500) = \u00a386,500 \u00f7 2,500 = \u00a334.60. The unweighted average ignores the different sales volumes.'
+  },
+  // ═══ §3.5 Normal Distribution — Q10 to Q18 ═══
+  {
+    section:'3.5',ao:'AO1',
+    stem:'The heights of adult women in a country are normally distributed with mean 163 cm and standard deviation 7 cm.\n\nWhat is the approximate probability that a randomly selected woman is between 156 cm and 170 cm tall?',
+    options:['50%','68%','95%','99.7%'],
+    correct:1,
+    working:'156 = 163 \u2212 7 = \u03bc \u2212 \u03c3. 170 = 163 + 7 = \u03bc + \u03c3. Within 1 SD of the mean \u2248 68%.'
+  },
+  {
+    section:'3.5',ao:'AO1',
+    stem:'X ~ N(50, 16). What is the standard deviation of X?',
+    options:['4','8','16','50'],
+    correct:0,
+    working:'N(\u03bc, \u03c3\u00b2) notation. Variance = 16, so SD = \u221a16 = 4.'
+  },
+  {
+    section:'3.5',ao:'AO1',
+    stem:'The weights of apples from an orchard are normally distributed: X ~ N(180, 100).\n\nUsing z = (x \u2212 \u03bc) \u00f7 \u03c3, what is the z-score for an apple weighing 195 g?',
+    options:['0.15','1.08','1.5','2.25'],
+    correct:2,
+    working:'z = (195 \u2212 180) \u00f7 10 = 15 \u00f7 10 = 1.5.'
+  },
+  {
+    section:'3.5',ao:'AO1',
+    stem:'X ~ N(120, 25). Using the normal distribution table, P(Z \u2264 1.2) = 0.8849.\n\nWhat is P(X \u2264 126)?',
+    options:['0.1151','0.7257','0.8849','0.9772'],
+    correct:2,
+    working:'z = (126 \u2212 120) \u00f7 5 = 1.2. P(X \u2264 126) = P(Z \u2264 1.2) = 0.8849.'
+  },
+  {
+    section:'3.5',ao:'AO2',
+    stem:'The times taken by runners to complete a 10 km race are normally distributed with mean 58 minutes and standard deviation 8 minutes.\n\nUsing the 68–95–99.7 rule, approximately what percentage of runners finish in under 42 minutes?',
+    options:['0.15%','2.5%','5%','16%'],
+    correct:1,
+    working:'42 = 58 \u2212 2\u00d78 = \u03bc \u2212 2\u03c3. P(X < \u03bc \u2212 2\u03c3) \u2248 2.5%.'
+  },
+  {
+    section:'3.5',ao:'AO2',
+    stem:'The masses of bags of flour produced by a machine are normally distributed with mean 1000 g and standard deviation 12 g. A bag is rejected if it weighs less than 985 g.\n\nUsing P(Z \u2264 \u22121.25) = 0.1056, what percentage of bags are rejected?',
+    options:['8.94%','10.56%','12.50%','89.44%'],
+    correct:1,
+    working:'z = (985 \u2212 1000) \u00f7 12 = \u22121.25. P(X < 985) = P(Z < \u22121.25) = 0.1056 = 10.56%.'
+  },
+  {
+    section:'3.5',ao:'AO2',
+    stem:'Test scores in an exam are modelled as X ~ N(65, 144). SD = 12.\n\nA grade B is awarded for scores between 53 and 77 (within 1 standard deviation of the mean). Approximately what proportion of students receive a grade B?',
+    options:['32%','50%','68%','95%'],
+    correct:2,
+    working:'53 = 65 \u2212 12 = \u03bc \u2212 \u03c3. 77 = 65 + 12 = \u03bc + \u03c3. Within 1 SD of the mean \u2248 68%.'
+  },
+  {
+    section:'3.5',ao:'AO3',
+    stem:'A machine fills bottles with a mean of 500 ml and standard deviation 4 ml. The distribution is normal. Bottles containing less than 491 ml fail a quality check.\n\nUsing P(Z \u2264 \u22122.25) = 0.0122, approximately how many bottles in a batch of 5,000 would be expected to fail?',
+    options:['12','61','122','244'],
+    correct:1,
+    working:'P(fail) = P(X < 491) = P(Z < \u22122.25) = 0.0122. Expected failures = 0.0122 \u00d7 5000 = 61.'
+  },
+  {
+    section:'3.5',ao:'AO3',
+    stem:'Two factories produce components. Factory A: lengths ~ N(50, 9). Factory B: lengths ~ N(50, 1).\n\nA component is acceptable if its length is between 47 mm and 53 mm. Which factory produces a higher proportion of acceptable components, and why?',
+    options:['Factory A \u2014 because it has a larger variance, more components fall near the mean','Factory B \u2014 because its smaller variance means more components fall close to the mean','Both factories produce the same proportion \u2014 they have the same mean','Cannot be determined without using normal distribution tables'],
+    correct:1,
+    working:'Same mean, but Factory B\'s SD = 1 means 47\u201353 covers 3 SDs either side \u2014 virtually all components. Factory A\'s SD = 3 means 47\u201353 covers only 1 SD either side \u2014 approximately 68%. Factory B wins clearly.'
+  },
+  // ═══ §3.6 Confidence Intervals — Q19 to Q27 ═══
+  {
+    section:'3.6',ao:'AO1',
+    stem:'A random sample of 25 items is taken from a normally distributed population with known variance \u03c3\u00b2 = 100. The sample mean is 48.\n\nWhat is the standard error of the mean?',
+    options:['2','4','10','20'],
+    correct:0,
+    working:'SE = \u03c3 \u00f7 \u221an = 10 \u00f7 \u221a25 = 10 \u00f7 5 = 2.'
+  },
+  {
+    section:'3.6',ao:'AO1',
+    stem:'A 95% confidence interval for a population mean is constructed. The critical value is z = 1.96. The standard error is 3.\n\nWhat is the margin of error?',
+    options:['1.96','3.00','5.88','9.80'],
+    correct:2,
+    working:'Margin of error = 1.96 \u00d7 3 = 5.88.'
+  },
+  {
+    section:'3.6',ao:'AO1',
+    stem:'A sample of 100 observations is taken from a population with known standard deviation \u03c3 = 20. The sample mean is 135.\n\nWhat is the 95% confidence interval for the population mean? (Use z = 1.96)',
+    options:['(131.08, 138.92)','(115, 155)','(133.04, 136.96)','(125.08, 144.92)'],
+    correct:0,
+    working:'SE = 20 \u00f7 \u221a100 = 2. Margin = 1.96 \u00d7 2 = 3.92. CI: (135 \u2212 3.92, 135 + 3.92) = (131.08, 138.92).'
+  },
+  {
+    section:'3.6',ao:'AO1',
+    stem:'A researcher constructs a 90% confidence interval for a population mean. The interval is (42.1, 47.9).\n\nWhat is the sample mean?',
+    options:['42.1','44.5','45.0','47.9'],
+    correct:2,
+    working:'CI is symmetric about the sample mean. Mean = (42.1 + 47.9) \u00f7 2 = 90 \u00f7 2 = 45.0.'
+  },
+  {
+    section:'3.6',ao:'AO2',
+    stem:'A sample of 64 observations gives a sample mean of 200. The population has known standard deviation 16. A 95% confidence interval is (196.08, 203.92).\n\nA researcher claims: "There is a 95% chance that the population mean lies between 196.08 and 203.92."\n\nIs this interpretation correct?',
+    options:['Yes \u2014 that is the definition of a confidence interval','No \u2014 the population mean is fixed; the interval either contains it or it doesn\'t','Yes \u2014 because the sample size is large enough','No \u2014 the probability should be 5%, not 95%'],
+    correct:1,
+    working:'The frequentist interpretation: 95% of confidence intervals constructed this way will contain the true mean. This specific interval either contains it or doesn\'t \u2014 there is no probability attached to a fixed interval containing a fixed (unknown) parameter.'
+  },
+  {
+    section:'3.6',ao:'AO2',
+    stem:'A confidence interval for a population mean is calculated as (55.53, 60.47) using a sample of n = 100. The population standard deviation is 15.\n\nWhat confidence level was used? (Use the table: z = 1.645 for 90%, z = 1.96 for 95%, z = 2.576 for 99%)',
+    options:['90%','95%','99%','Cannot be determined'],
+    correct:0,
+    working:'Half-width = (60.47 \u2212 55.53) \u00f7 2 = 2.47. SE = 15 \u00f7 \u221a100 = 1.5. z = 2.47 \u00f7 1.5 = 1.647 \u2248 1.645. Confidence level = 90%.'
+  },
+  {
+    section:'3.6',ao:'AO2',
+    stem:'Two confidence intervals are constructed for the same population mean from two different samples:\n\nInterval P: (102, 118) \u2014 sample size 25\nInterval Q: (106, 114) \u2014 sample size 100\n\nBoth use the same confidence level. Which statement is correct?',
+    options:['Interval P is more reliable because it is wider','Interval Q gives a more precise estimate because it is narrower','The intervals cannot be compared because they use different sample sizes','Interval P is better because smaller samples are more representative'],
+    correct:1,
+    working:'Larger sample \u2192 smaller SE \u2192 narrower CI \u2192 more precise estimate. Both are equally reliable (same confidence level) but Q is more precise.'
+  },
+  {
+    section:'3.6',ao:'AO3',
+    stem:'A manufacturer claims the mean lifetime of their light bulbs is at least 1,000 hours. A sample of 49 bulbs gives a mean lifetime of 987 hours. The population standard deviation is known to be 35 hours. A 95% CI is constructed.\n\nDoes the confidence interval support or challenge the manufacturer\'s claim?',
+    options:['Supports \u2014 987 is close to 1,000','Challenges \u2014 the CI is (977.2, 996.8), which does not include 1,000','Supports \u2014 the CI overlaps with values above 1,000','Cannot be determined without more information'],
+    correct:1,
+    working:'SE = 35 \u00f7 \u221a49 = 5. Margin = 1.96 \u00d7 5 = 9.8. CI = (977.2, 996.8). The entire interval is below 1,000 \u2014 the claim is not supported.'
+  },
+  {
+    section:'3.6',ao:'AO3',
+    stem:'A researcher increases their sample size from 25 to 100 while keeping the confidence level and population SD the same.\n\nBy what factor does the width of the confidence interval change?',
+    options:['It halves','It quarters','It doubles','It stays the same'],
+    correct:0,
+    working:'Width \u221d 1/\u221an. \u221a100 \u00f7 \u221a25 = 10 \u00f7 5 = 2. The new SE is half the original, so the CI width halves.'
+  },
+  // ═══ §3.7 Correlation and Regression — Q28 to Q36 ═══
+  {
+    section:'3.7',ao:'AO1',
+    stem:'The PMCC for a dataset is calculated as r = \u22120.87.\n\nWhich statement best describes this value?',
+    options:['Strong positive correlation','Weak negative correlation','Strong negative correlation','No correlation'],
+    correct:2,
+    working:'r = \u22120.87 is close to \u22121 \u2014 strong negative correlation.'
+  },
+  {
+    section:'3.7',ao:'AO1',
+    stem:'A regression line is calculated as \u0177 = 3.2x + 14.5, where x is hours of revision and y is exam score.\n\nWhat does the gradient 3.2 represent?',
+    options:['The exam score when no revision is done','The predicted increase in exam score for each additional hour of revision','The correlation between revision hours and exam score','The minimum possible exam score'],
+    correct:1,
+    working:'The gradient represents the rate of change \u2014 for each additional hour of revision, the predicted score increases by 3.2 marks.'
+  },
+  {
+    section:'3.7',ao:'AO1',
+    stem:'A dataset has mean x\u0304 = 12 and y\u0304 = 85. The regression line is \u0177 = 4.5x + c.\n\nWhat is the value of c?',
+    options:['31','54','85','139'],
+    correct:0,
+    working:'The regression line passes through (x\u0304, y\u0304). 85 = 4.5(12) + c \u2192 c = 85 \u2212 54 = 31.'
+  },
+  {
+    section:'3.7',ao:'AO1',
+    stem:'A regression line \u0177 = 2.8x + 5.3 is fitted to data where x ranges from 10 to 50.\n\nEstimate the value of y when x = 25.',
+    options:['33.1','70.0','75.3','145.3'],
+    correct:2,
+    working:'\u0177 = 2.8(25) + 5.3 = 70 + 5.3 = 75.3. x = 25 is within the range so this is interpolation \u2014 valid.'
+  },
+  {
+    section:'3.7',ao:'AO2',
+    stem:'A student calculates r = 0.93 between the number of ice creams sold and the number of drownings per month.\n\nWhich conclusion is most appropriate?',
+    options:['Eating ice cream increases the risk of drowning','Drowning causes people to buy more ice cream','There is a strong correlation but it does not imply causation \u2014 a third variable (hot weather) likely explains both','The PMCC value of 0.93 is too high to be meaningful'],
+    correct:2,
+    working:'Classic confounding variable: hot weather increases both ice cream sales and swimming (and hence drownings). The correlation is real but the causal claim is false.'
+  },
+  {
+    section:'3.7',ao:'AO2',
+    stem:'A scatter diagram shows 8 data points. One point is clearly separated from the others. A line of best fit is drawn through the mean point (x\u0304, y\u0304) ignoring the outlier.\n\nA student says: "You should always include all data points when drawing a line of best fit."\n\nWhich response is most appropriate?',
+    options:['The student is correct \u2014 removing data is always dishonest','The student is incorrect \u2014 outliers should always be removed before analysis','Outliers should be investigated; if there is a valid reason for exclusion they may be removed, but the decision must be justified','The mean point changes when an outlier is removed, so the line of best fit would be the same anyway'],
+    correct:2,
+    working:'Good statistical practice is to investigate outliers rather than automatically include or exclude them.'
+  },
+  {
+    section:'3.7',ao:'AO2',
+    stem:'A regression line \u0177 = 1.4x \u2212 2.8 is fitted to data on advertising spend (\u00a3thousands) vs sales revenue (\u00a3thousands), where x ranges from 5 to 30.\n\nA manager uses the equation to predict sales when x = 150. What is the main problem with this prediction?',
+    options:['The calculation will give a negative answer','This is extrapolation \u2014 the model may not hold outside the data range','The gradient is too small to give a reliable prediction','The y-intercept is negative so the model is invalid'],
+    correct:1,
+    working:'x = 150 is far outside the data range of 5\u201330. The relationship may not remain linear at higher advertising spend.'
+  },
+  {
+    section:'3.7',ao:'AO3',
+    stem:'A researcher collects data on 12 students, recording their hours of sleep (x) and their test score (y). The regression line is \u0177 = 8.2x + 21.4 and r = 0.71.\n\nA student who sleeps 7 hours scores 78. What is their residual?',
+    options:['\u22121.8','\u22120.8','0.8','1.8'],
+    correct:1,
+    working:'Predicted = 8.2 \u00d7 7 + 21.4 = 57.4 + 21.4 = 78.8. Residual = actual \u2212 predicted = 78 \u2212 78.8 = \u22120.8.'
+  },
+  {
+    section:'3.7',ao:'AO3',
+    stem:'Two datasets are analysed:\n\nDataset P: r = 0.62, n = 8\nDataset Q: r = 0.62, n = 80\n\nWhich dataset provides stronger evidence of a genuine linear relationship in the population?',
+    options:['Dataset P \u2014 same r value so equally strong evidence','Dataset Q \u2014 a larger sample means the same r value provides stronger evidence of a genuine relationship','Dataset P \u2014 smaller samples give more reliable correlations','Cannot be compared because sample sizes differ'],
+    correct:1,
+    working:'With n = 8, r = 0.62 could occur by chance. With n = 80, the same r value is far more likely to reflect a genuine population relationship. This is the concept of significance.'
+  }
+];
+
+// ── SVG RENDERERS ──
+function renderSVG(type) {
+  if (type === 'barchart_q1') return renderBarChart();
+  return '';
+}
+
+function renderBarChart() {
+  var W = 420, H = 200, pad = {l:50,r:15,t:15,b:40};
+  var plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+  var data = [{label:'A',val:72},{label:'B',val:68},{label:'C',val:74},{label:'D',val:71}];
+  var minY = 60, maxY = 78;
+  var rangeY = maxY - minY;
+  var barW = plotW / 5;
+  var gap = barW / 4;
+
+  var svg = '<svg viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg" style="font-family:Outfit,sans-serif">';
+  // Y axis
+  svg += '<line x1="'+pad.l+'" y1="'+pad.t+'" x2="'+pad.l+'" y2="'+(pad.t+plotH)+'" stroke="#94a3b8" stroke-width="1"/>';
+  // X axis
+  svg += '<line x1="'+pad.l+'" y1="'+(pad.t+plotH)+'" x2="'+(pad.l+plotW)+'" y2="'+(pad.t+plotH)+'" stroke="#94a3b8" stroke-width="1"/>';
+  // Y ticks
+  for (var v = minY; v <= maxY; v += 2) {
+    var y = pad.t + plotH - ((v - minY) / rangeY) * plotH;
+    svg += '<line x1="'+(pad.l-4)+'" y1="'+y+'" x2="'+pad.l+'" y2="'+y+'" stroke="#94a3b8" stroke-width="1"/>';
+    svg += '<text x="'+(pad.l-8)+'" y="'+(y+4)+'" fill="#94a3b8" font-size="10" text-anchor="end">'+v+'%</text>';
+    if (v > minY) svg += '<line x1="'+pad.l+'" y1="'+y+'" x2="'+(pad.l+plotW)+'" y2="'+y+'" stroke="#1e293b" stroke-width="0.5"/>';
+  }
+  // Zigzag break on y-axis
+  var breakY = pad.t + plotH + 2;
+  svg += '<path d="M'+(pad.l-6)+' '+breakY+' l4,-4 l4,4 l4,-4 l4,4" stroke="#94a3b8" stroke-width="1" fill="none"/>';
+  // Bars
+  data.forEach(function(d, i) {
+    var x = pad.l + gap + i * (barW + gap);
+    var h = ((d.val - minY) / rangeY) * plotH;
+    var y = pad.t + plotH - h;
+    svg += '<rect x="'+x+'" y="'+y+'" width="'+barW+'" height="'+h+'" fill="#0d9488" rx="2" opacity="0.85"/>';
+    svg += '<text x="'+(x+barW/2)+'" y="'+(y-4)+'" fill="#94a3b8" font-size="10" text-anchor="middle">'+d.val+'%</text>';
+    svg += '<text x="'+(x+barW/2)+'" y="'+(pad.t+plotH+16)+'" fill="#94a3b8" font-size="11" text-anchor="middle">'+d.label+'</text>';
+  });
+  svg += '<text x="'+(pad.l+plotW/2)+'" y="'+(H-4)+'" fill="#94a3b8" font-size="11" text-anchor="middle">School</text>';
+  svg += '</svg>';
+  return svg;
+}
+
+// ── GAME STATE ──
+var currentQ = 0, score = 0, answers = [], answered = false;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+  currentQ = 0; score = 0; answers = []; answered = false;
+  mfg('game_started',{game_slug:'core-maths-paper2a',level:'core'});
+  showScreen('gameScreen');
+  showSectionBanner(0);
+}
+
+function showSectionBanner(qIndex) {
+  var banner = document.getElementById('sectionBanner');
+  var qArea = document.getElementById('questionArea');
+  qArea.style.display = 'none';
+  banner.style.display = 'block';
+  var sIdx = SECTION_STARTS.indexOf(qIndex);
+  document.getElementById('sectionTitle').textContent = SECTIONS[sIdx].title;
+  document.getElementById('sectionRange').textContent = SECTIONS[sIdx].range;
+  setTimeout(function(){banner.style.display='none';qArea.style.display='block';showQuestion();},2000);
+}
+
+function showQuestion() {
+  var q = QUESTIONS[currentQ];
+  answered = false;
+  document.getElementById('progressFill').style.width = (currentQ/36*100)+'%';
+  document.getElementById('qCounter').textContent = 'Q'+(currentQ+1)+' of 36';
+  document.getElementById('qTag').textContent = '\u00a7'+q.section+' \u00b7 '+q.ao;
+
+  var stemHTML = q.stem.replace(/\n/g,'<br>');
+  if (q.table) {
+    stemHTML += '<table class="data-table"><tr>';
+    q.table.headers.forEach(function(h){stemHTML+='<th>'+h+'</th>';});
+    stemHTML += '</tr>';
+    q.table.rows.forEach(function(row){stemHTML+='<tr>';row.forEach(function(cell){stemHTML+='<td>'+cell+'</td>';});stemHTML+='</tr>';});
+    stemHTML += '</table>';
+    if (q.stemAfterTable) stemHTML += q.stemAfterTable.replace(/\n/g,'<br>');
+  }
+  if (q.svg) stemHTML += '<div class="svg-container">'+renderSVG(q.svg)+'</div>';
+  document.getElementById('qStem').innerHTML = stemHTML;
+
+  var letters = ['A','B','C','D'];
+  var container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  q.options.forEach(function(opt,i){
+    var btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.dataset.val = String(i);
+    btn.innerHTML = '<span class="option-letter">'+letters[i]+'</span><span class="option-text">'+opt+'</span>';
+    btn.addEventListener('click',function(){selectAnswer(i);});
+    container.appendChild(btn);
+  });
+  document.getElementById('workingNote').classList.remove('visible');
+  document.getElementById('nextBtn').classList.remove('visible');
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  var q = QUESTIONS[currentQ];
+  var isCorrect = idx === q.correct;
+  answers.push(isCorrect);
+  if (isCorrect) score++;
+  var buttons = document.querySelectorAll('.option-btn');
+  buttons.forEach(function(btn){
+    btn.classList.add('locked');
+    var val = parseInt(btn.dataset.val);
+    if (val === q.correct) { btn.classList.add(val===idx?'correct':'reveal'); btn.querySelector('.option-letter').textContent='\u2713'; }
+    if (val === idx && !isCorrect) { btn.classList.add('incorrect'); btn.querySelector('.option-letter').textContent='\u2717'; }
+  });
+  var note = document.getElementById('workingNote');
+  note.textContent = q.working;
+  note.classList.add('visible');
+  mfg('question_answered',{game_slug:'core-maths-paper2a',level:'core',question_index:currentQ+1,correct:isCorrect,section:q.section});
+  setTimeout(function(){document.getElementById('nextBtn').classList.add('visible');},1500);
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= 36) { showResults(); return; }
+  if (SECTION_STARTS.indexOf(currentQ) !== -1) { showSectionBanner(currentQ); }
+  else { showQuestion(); }
+}
+
+function showResults() {
+  document.getElementById('progressFill').style.width = '100%';
+  var counts = [0,0,0,0];
+  SECTIONS.forEach(function(sec,si){
+    var start = SECTION_STARTS[si];
+    for (var i=0;i<sec.count;i++) if (answers[start+i]) counts[si]++;
+  });
+  document.getElementById('finalScore').textContent = score+' / 36';
+  document.getElementById('s1Score').textContent = counts[0]+' / 9';
+  document.getElementById('s2Score').textContent = counts[1]+' / 9';
+  document.getElementById('s3Score').textContent = counts[2]+' / 9';
+  document.getElementById('s4Score').textContent = counts[3]+' / 9';
+  ['s1Dots','s2Dots','s3Dots','s4Dots'].forEach(function(id,si){
+    var el = document.getElementById(id);
+    el.innerHTML = '';
+    var start = SECTION_STARTS[si];
+    for (var i=0;i<SECTIONS[si].count;i++){
+      var d = document.createElement('span');
+      d.className = 'dot '+(answers[start+i]?'correct-dot':'incorrect-dot');
+      d.dataset.q = 'Q'+(start+i+1);
+      el.appendChild(d);
+    }
+  });
+  mfg('game_completed',{game_slug:'core-maths-paper2a',level:'core',score:score,questions_answered:36,questions_correct:score});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('core-maths-paper2a','core',score,36).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('core-maths-paper2a','core',score);}}
+  showScreen('resultsScreen');
+}
+
+function restartGame(){startGame();}
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o));}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="See exactly which MaffsGames games cover each AQA, Edexcel, BTEC, and Core Maths specification reference.">
+<link rel="canonical" href="https://maffsgames.co.uk/spec-map/">
+<meta property="og:title" content="Specification Map — MaffsGames">
+<meta property="og:description" content="See exactly which games cover each AQA, Edexcel, BTEC, and Core Maths specification reference.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/spec-map/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../schools/assets/favicon.svg">
+<title>Specification Map — MaffsGames</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8fafc;--white:#fff;--navy:#1a2744;--navy-light:#2d3a5a;
+  --teal:#0d9488;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;
+  --ks3:#22c55e;--gcse:#3b82f6;--alevel:#f97316;--further:#8b5cf6;--l4:#ef4444;--core:#0ea5e9;
+  --shadow:0 1px 3px rgba(0,0,0,0.05),0 1px 2px rgba(0,0,0,0.03);
+  --gap-bg:#fef2f2;--gap-border:#fecaca;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:14px;line-height:1.5;}
+.header{background:var(--navy);padding:28px 32px;}
+.header-inner{max-width:1100px;margin:0 auto;}
+.header-title{font-size:22px;font-weight:700;color:#fff;}
+.header-sub{font-size:14px;color:rgba(255,255,255,.7);margin-top:4px;}
+.nav-bar{background:var(--white);border-bottom:1px solid var(--border);padding:12px 32px;position:sticky;top:0;z-index:100;}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.nav-btn{font-family:inherit;font-size:12px;font-weight:600;padding:6px 14px;border-radius:16px;border:1.5px solid;cursor:pointer;background:transparent;transition:all .15s;white-space:nowrap;}
+.nav-btn.all{border-color:var(--border);color:var(--muted);}
+.nav-btn.all.active,.nav-btn.all:hover{background:var(--navy);border-color:var(--navy);color:#fff;}
+.nav-btn.gcse-b{border-color:var(--gcse);color:var(--gcse);}
+.nav-btn.gcse-b.active,.nav-btn.gcse-b:hover{background:var(--gcse);color:#fff;}
+.nav-btn.alevel-b{border-color:var(--alevel);color:var(--alevel);}
+.nav-btn.alevel-b.active,.nav-btn.alevel-b:hover{background:var(--alevel);color:#fff;}
+.nav-btn.further-b{border-color:var(--further);color:var(--further);}
+.nav-btn.further-b.active,.nav-btn.further-b:hover{background:var(--further);color:#fff;}
+.nav-btn.l4-b{border-color:var(--l4);color:var(--l4);}
+.nav-btn.l4-b.active,.nav-btn.l4-b:hover{background:var(--l4);color:#fff;}
+.nav-btn.core-b{border-color:var(--core);color:var(--core);}
+.nav-btn.core-b.active,.nav-btn.core-b:hover{background:var(--core);color:#fff;}
+.nav-btn.gap-b{border-color:#f87171;color:#f87171;}
+.nav-btn.gap-b.active,.nav-btn.gap-b:hover{background:#f87171;color:#fff;}
+.content{max-width:1100px;margin:0 auto;padding:32px 32px 64px;}
+.intro{font-size:14px;color:var(--muted);margin-bottom:32px;max-width:700px;line-height:1.7;}
+.intro strong{color:var(--text);}
+.spec-section{margin-bottom:40px;}
+.spec-heading{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.spec-label{font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;}
+.spec-rule{flex:1;height:1px;background:var(--border);}
+.spec-board{font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap;}
+table{width:100%;border-collapse:collapse;background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:8px;}
+th{background:#f1f5f9;text-align:left;padding:10px 14px;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);}
+td{padding:10px 14px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+td.ref{font-weight:600;color:var(--navy);white-space:nowrap;width:100px;}
+td.topic{width:200px;}
+td.games{color:var(--teal);font-weight:600;}
+td.gap{background:var(--gap-bg);color:#b91c1c;font-style:italic;font-weight:500;}
+.game-link{color:var(--teal);text-decoration:none;font-weight:600;}
+.game-link:hover{text-decoration:underline;}
+.level-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle;}
+.gap-legend{display:flex;align-items:center;gap:8px;margin:16px 0;padding:12px 16px;background:var(--gap-bg);border:1px solid var(--gap-border);border-radius:8px;font-size:13px;color:#b91c1c;}
+.gap-legend .dot{width:10px;height:10px;background:#f87171;border-radius:50%;flex-shrink:0;}
+.stat-bar{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:32px;}
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;box-shadow:var(--shadow);min-width:140px;}
+.stat-card .num{font-size:28px;font-weight:700;color:var(--teal);}
+.stat-card .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
+.back-link{display:inline-block;margin-bottom:24px;color:var(--teal);text-decoration:none;font-weight:600;font-size:13px;}
+.back-link:hover{text-decoration:underline;}
+@media(max-width:768px){
+  .header{padding:24px 20px;}
+  .content{padding:24px 20px 48px;}
+  table{font-size:12px;}
+  th,td{padding:8px 10px;}
+  .stat-bar{gap:12px;}
+  .stat-card{min-width:100px;padding:12px 14px;}
+}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <a href="../" style="color:rgba(255,255,255,.6);text-decoration:none;font-size:13px;font-weight:500;display:inline-flex;align-items:center;gap:4px;margin-bottom:8px;">&larr; Back to Games</a>
+    <div class="header-title">Specification Map</div>
+    <div class="header-sub">Which games cover which spec references — AQA, Edexcel, and BTEC</div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <button class="nav-btn all active" onclick="filterSpec('all')">All</button>
+    <button class="nav-btn gcse-b" onclick="filterSpec('gcse')">GCSE</button>
+    <button class="nav-btn alevel-b" onclick="filterSpec('alevel')">A-Level</button>
+    <button class="nav-btn further-b" onclick="filterSpec('further')">Further Maths</button>
+    <button class="nav-btn l4-b" onclick="filterSpec('l4')">Level 4 (BTEC)</button>
+    <button class="nav-btn core-b" onclick="filterSpec('core')">Core Maths</button>
+    <button class="nav-btn gap-b" onclick="filterSpec('gap')">Gaps Only</button>
+  </div>
+</div>
+
+<div class="content">
+  <a href="../" class="back-link">&larr; Back to Games</a>
+
+  <p class="intro">
+    Specification mapping for MaffsGames games. This map is being rebuilt to cover every game and to add OCR.
+  </p>
+
+  <div class="gap-legend" style="display:none">
+    <span class="dot"></span>
+    Red rows = curriculum topics with no Maffs Games coverage yet
+  </div>
+
+  <!-- GCSE SECTION -->
+  <div class="spec-section" data-spec="gcse">
+    <div class="spec-heading">
+      <span class="spec-label">GCSE Mathematics</span>
+      <span class="spec-rule"></span>
+      <span class="spec-board">AQA 8300 / Edexcel 1MA1</span>
+    </div>
+    <table>
+      <tr><th>Ref</th><th>Topic</th><th>Maffs Games</th></tr>
+      <tr><td class="ref">N4</td><td class="topic">Prime numbers, factors, HCF, LCM, prime factorisation</td><td class="games"><a class="game-link" href="../games/factor-race/?level=ks3">Factor Race</a>, <a class="game-link" href="../games/prime-factorisation/?level=ks3">Prime Sprint</a>, <a class="game-link" href="../games/prime-or-composite/?level=ks3">Prime or Composite</a></td></tr>
+      <tr><td class="ref">N2</td><td class="topic">Four operations: integers, decimals, fractions, mixed numbers</td><td class="games"><a class="game-link" href="../games/fraction-equivalence/?level=ks3">Fraction Snap</a></td></tr>
+      <tr><td class="ref">N6–N7</td><td class="topic">Laws of indices, integer and fractional exponents, roots</td><td class="games"><a class="game-link" href="../games/index-laws/?level=gcse">Index Laws</a></td></tr>
+      <tr><td class="ref">N8</td><td class="topic">Surds: simplify, rationalise denominators, recurring decimals</td><td class="games"><a class="game-link" href="../games/surd-simplifier/?level=gcse">Surd Simplifier</a></td></tr>
+      <tr><td class="ref">N10–N11</td><td class="topic">Fractions, decimals, percentages interconversion</td><td class="games"><a class="game-link" href="../games/percentage-flip/?level=ks3">Percentage Flip</a>, <a class="game-link" href="../games/fraction-equivalence/?level=ks3">Fraction Snap</a></td></tr>
+      <tr><td class="ref">N12</td><td class="topic">Percentages as operators, percentage change</td><td class="games"><a class="game-link" href="../games/percentage-flip/?level=ks3">Percentage Flip</a></td></tr>
+      <tr><td class="ref">N14–N16</td><td class="topic">Estimation, approximation, rounding, error intervals</td><td class="games"><a class="game-link" href="../games/estimation-engine/?level=ks3">Estimation Engine</a>, <a class="game-link" href="../games/estimation-golf/?level=ks3">Estimation Golf</a></td></tr>
+      <tr><td class="ref">R9</td><td class="topic">Ratio and proportion, percentage increase/decrease</td><td class="games"><a class="game-link" href="../games/proportion-blaster/?level=gcse">Proportion Blaster</a>, <a class="game-link" href="../games/split-it/?level=gcse">Split It</a></td></tr>
+      <tr><td class="ref">A4</td><td class="topic">Algebraic manipulation, laws of indices in algebra</td><td class="games"><a class="game-link" href="../games/index-laws/?level=gcse">Index Laws</a></td></tr>
+      <tr><td class="ref">A18</td><td class="topic">Solve quadratics by factorising</td><td class="games"><a class="game-link" href="../games/quadratic-factoriser/?level=gcse">Quadratic Factoriser</a></td></tr>
+      <tr><td class="ref">A21</td><td class="topic">Solve simultaneous equations (linear)</td><td class="games"><a class="game-link" href="../games/simultaneous-solver/?level=gcse">Simultaneous Solver</a></td></tr>
+      <tr><td class="ref">A23–A25</td><td class="topic">Sequences: term-to-term, position-to-term, nth term</td><td class="games"><a class="game-link" href="../games/sequence-solver/?level=ks3">Sequence Solver</a></td></tr>
+      <tr><td class="ref">A14</td><td class="topic">Graphs in real contexts, graph transformations</td><td class="games"><a class="game-link" href="../games/graph-transformer/?level=gcse">Graph Transformer</a>, <a class="game-link" href="../games/graph-sketcher/?level=core">Graph Sketcher</a></td></tr>
+      <tr><td class="ref">G20–G21</td><td class="topic">Pythagoras, trigonometric ratios, exact values</td><td class="games"><a class="game-link" href="../games/trig-worms/?level=gcse">Trig Worms</a>, <a class="game-link" href="../games/trig-wars/?level=gcse">Trig Wars</a></td></tr>
+      <tr><td class="ref">G22–G23</td><td class="topic">Sine rule, cosine rule, area = ½ab sin C (Higher)</td><td class="games"><a class="game-link" href="../games/trig-identity-duel/?level=gcse">Trig Identity Duel</a></td></tr>
+      <tr><td class="ref">A7</td><td class="topic">Linear equations, rearranging formulae</td><td class="games"><a class="game-link" href="../games/formula-unlocked/?level=gcse">Formula Unlocked</a></td></tr>
+      <tr><td class="ref">G1–G3</td><td class="topic">Properties of shapes, angles, parallel lines</td><td class="games"><a class="game-link" href="../games/angle-ace/">Angle Ace</a></td></tr>
+      <tr><td class="ref">S1–S4</td><td class="topic">Averages, probability, data representation<br><span style="font-weight:400;font-size:.85em">S4.3: Distinctly Average covers mean, median, mode and range, including outliers. Modal class is not covered there; grouped data is in Stat Attack.</span></td><td class="games"><a class="game-link" href="../games/probability-paradox/">Probability Paradox</a>, <a class="game-link" href="../games/stat-attack/?level=gcse">Stat Attack</a>, <a class="game-link" href="../games/chart-interrogator/?level=gcse">Chart Interrogator</a>, <a class="game-link" href="../games/distinctly-average/?level=gcse">Distinctly Average</a></td></tr>
+      <tr><td class="ref">P6, P9</td><td class="topic">Conditional probability, tree diagrams</td><td class="games"><a class="game-link" href="../games/given-that/?level=gcse">Given That</a>, <a class="game-link" href="../games/screening-room/?level=gcse">Screening Room</a></td></tr>
+      <tr><td class="ref">N9</td><td class="topic">Standard form</td><td class="games"><a class="game-link" href="../games/standard-form-blitz/?level=gcse">Standard Form Blitz</a></td></tr>
+      <tr><td class="ref">N5</td><td class="topic">Modular arithmetic, remainders</td><td class="games"><a class="game-link" href="../games/modular-battle/">Modular Battle</a></td></tr>
+      <tr><td class="ref">G9</td><td class="topic">Constructions, loci, bearings</td><td class="games"><a class="game-link" href="../games/constructions-lab/">Constructions Lab</a>, <a class="game-link" href="../games/bearing-blitz/">Bearing Blitz</a></td></tr>
+      <tr><td class="ref">G17</td><td class="topic">Circle theorems</td><td class="games"><a class="game-link" href="../games/circle-theorem-spotter/">Circle Theorem Spotter</a></td></tr>
+      <tr><td class="ref">R6</td><td class="topic">Scale factors: length, area, volume</td><td class="games"><a class="game-link" href="../games/scale-factor-scaling/?level=gcse">Scale Factor Scaling</a></td></tr>
+      <tr><td class="ref">N13</td><td class="topic">Unit conversions: length, area, volume</td><td class="games"><a class="game-link" href="../games/unit-converter/?level=gcse">Unit Converter</a></td></tr>
+      <tr><td class="ref">A5</td><td class="topic">Rearranging formulae (higher)</td><td class="games"><a class="game-link" href="../games/formula-forge/?level=gcse">Formula Forge</a></td></tr>
+      <tr><td class="ref">N1</td><td class="topic">Number reasoning, mathematical puzzles</td><td class="games"><a class="game-link" href="../games/equatle/">Equatle</a>, <a class="game-link" href="../games/52dle/">52-dle</a></td></tr>
+    </table>
+  </div>
+
+  <!-- A-LEVEL PURE SECTION -->
+  <div class="spec-section" data-spec="alevel">
+    <div class="spec-heading">
+      <span class="spec-label">A-Level Pure Mathematics</span>
+      <span class="spec-rule"></span>
+      <span class="spec-board">AQA 7357 / Edexcel 9MA0</span>
+    </div>
+    <table>
+      <tr><th>AQA Ref</th><th>Topic</th><th>Maffs Games</th></tr>
+      <tr><td class="ref">B1</td><td class="topic">Laws of indices for all rational exponents</td><td class="games"><a class="game-link" href="../games/index-laws/?level=gcse">Index Laws</a></td></tr>
+      <tr><td class="ref">B3</td><td class="topic">Quadratic functions, discriminant, completing the square</td><td class="games"><a class="game-link" href="../games/quadratic-factoriser/?level=gcse">Quadratic Factoriser</a></td></tr>
+      <tr><td class="ref">D1–D6</td><td class="topic">Sequences, series, sigma notation, AP, GP, convergence</td><td class="games"><a class="game-link" href="../games/sequence-solver/?level=ks3">Sequence Solver</a></td></tr>
+      <tr><td class="ref">E1–E7</td><td class="topic">Trigonometry: radians, identities, compound angles, equations</td><td class="games"><a class="game-link" href="../games/trig-worms/?level=gcse">Trig Worms</a>, <a class="game-link" href="../games/trig-wars/?level=gcse">Trig Wars</a>, <a class="game-link" href="../games/trig-identity-duel/?level=alevel">Trig Identity Duel</a></td></tr>
+      <tr><td class="ref">F1–F7</td><td class="topic">Exponentials and logarithms: laws, equations, modelling</td><td class="games"><a class="game-link" href="../games/log-laws/?level=alevel">Log Laws</a>, <a class="game-link" href="../games/growth-and-decay/?level=alevel">Growth and Decay</a></td></tr>
+      <tr><td class="ref">G1–G4</td><td class="topic">Differentiation: power, chain, product, quotient rules</td><td class="games"><a class="game-link" href="../games/differentiation-duel/?level=alevel">Differentiation Duel</a></td></tr>
+      <tr><td class="ref">G5–G6</td><td class="topic">Implicit/parametric differentiation, differential equations</td><td class="games"><a class="game-link" href="../games/differentiation-duel/?level=level4">Differentiation Duel (L4)</a></td></tr>
+      <tr><td class="ref">H1–H8</td><td class="topic">Integration: by parts, by substitution, partial fractions</td><td class="games"><a class="game-link" href="../games/integration-duel/?level=alevel">Integration Duel</a>, <a class="game-link" href="../games/partial-fractions-duel/">Partial Fractions Duel</a></td></tr>
+      <tr><td class="ref">B4–B5</td><td class="topic">Binomial expansion</td><td class="games"><a class="game-link" href="../games/binomial-blaster/?level=alevel">Binomial Blaster</a></td></tr>
+      <tr><td class="ref">B6</td><td class="topic">Factor theorem, algebraic division</td><td class="games"><a class="game-link" href="../games/factor-theorem/">Factor Theorem</a></td></tr>
+      <tr><td class="ref">C1–C3</td><td class="topic">Coordinate geometry: straight lines, circles</td><td class="games"><a class="game-link" href="../games/coordinate-geometry-dash/?level=alevel">Coordinate Geometry Dash</a></td></tr>
+      <tr><td class="ref">A1–A5</td><td class="topic">Proof: by deduction, exhaustion, contradiction</td><td class="games"><a class="game-link" href="../games/proof-builder/?level=alevel">Proof Builder</a></td></tr>
+      <tr><td class="ref">I1–I2</td><td class="topic">Vectors in 2D and 3D</td><td class="games"><a class="game-link" href="../games/component-crusher/?level=alevel">Component Crusher</a></td></tr>
+    </table>
+  </div>
+
+  <!-- A-LEVEL MECHANICS SECTION -->
+  <div class="spec-section" data-spec="alevel">
+    <div class="spec-heading">
+      <span class="spec-label">A-Level Mechanics</span>
+      <span class="spec-rule"></span>
+      <span class="spec-board">AQA 7357 / Edexcel 9MA0</span>
+    </div>
+    <table>
+      <tr><th>AQA Ref</th><th>Topic</th><th>Maffs Games</th></tr>
+      <tr><td class="ref">Q1–Q3</td><td class="topic">Kinematics: displacement, velocity, acceleration, SUVAT</td><td class="games"><a class="game-link" href="../games/suvat/?level=alevel">SUVAT Selector</a></td></tr>
+      <tr><td class="ref">Q4</td><td class="topic">Calculus in kinematics: v = dr/dt, a = dv/dt</td><td class="games"><a class="game-link" href="../games/suvat/?level=alevel">SUVAT Selector</a>, <a class="game-link" href="../games/differentiation-duel/?level=alevel">Differentiation Duel</a></td></tr>
+      <tr><td class="ref">Q5</td><td class="topic">Projectile motion under gravity</td><td class="games"><a class="game-link" href="../games/trig-wars/?level=gcse">Trig Wars</a>, <a class="game-link" href="../games/suvat/?level=alevel">SUVAT Selector</a></td></tr>
+      <tr><td class="ref">R1–R5</td><td class="topic">Forces: Newton's laws, connected particles, friction</td><td class="games"><a class="game-link" href="../games/force-resolver/?level=alevel">Force Resolver</a>, <a class="game-link" href="../games/curling-friction/?level=alevel">Curling Friction</a></td></tr>
+      <tr><td class="ref">S1–S3</td><td class="topic">Moments, equilibrium of rigid bodies</td><td class="games"><a class="game-link" href="../games/moments-master/?level=alevel">Moments Master</a></td></tr>
+    </table>
+  </div>
+
+  <!-- A-LEVEL STATISTICS SECTION -->
+  <div class="spec-section" data-spec="alevel">
+    <div class="spec-heading">
+      <span class="spec-label">A-Level Statistics</span>
+      <span class="spec-rule"></span>
+      <span class="spec-board">AQA 7357 / Edexcel 9MA0</span>
+    </div>
+    <table>
+      <tr><th>AQA Ref</th><th>Topic</th><th>Maffs Games</th></tr>
+      <tr><td class="ref">I1–I3</td><td class="topic">Statistical sampling, data presentation, measures of location/spread</td><td class="games"><a class="game-link" href="../games/probability-paradox/">Probability Paradox</a>, <a class="game-link" href="../games/stat-attack/?level=gcse">Stat Attack</a></td></tr>
+      <tr><td class="ref">J1–J3</td><td class="topic">Probability: Venn diagrams, tree diagrams, conditional probability</td><td class="games"><a class="game-link" href="../games/probability-paradox/">Probability Paradox</a>, <a class="game-link" href="../games/given-that/?level=alevel">Given That</a>, <a class="game-link" href="../games/screening-room/?level=alevel">Screening Room</a></td></tr>
+      <tr><td class="ref">K1–K4</td><td class="topic">Statistical distributions: binomial, normal</td><td class="games"><a class="game-link" href="../games/normal-navigator/">Normal Navigator</a></td></tr>
+      <tr><td class="ref">L1–L3</td><td class="topic">Statistical hypothesis testing</td><td class="games"><a class="game-link" href="../games/normal-navigator/">Normal Navigator</a>, <a class="game-link" href="../games/test-the-claim/?mode=binomial">Test the Claim</a></td></tr>
+      <tr><td class="ref">M1–M3</td><td class="topic">Correlation, regression, PMCC</td><td class="games"><a class="game-link" href="../games/regression-rumble/">Regression Rumble</a> (being rebuilt), <a class="game-link" href="../games/correlation-or-coincidence/">Correlation or Coincidence</a></td></tr>
+    </table>
+  </div>
+
+  <!-- FURTHER MATHS SECTION -->
+  <div class="spec-section" data-spec="further">
+    <div class="spec-heading">
+      <span class="spec-label">Further Mathematics</span>
+      <span class="spec-rule"></span>
+      <span class="spec-board">AQA 7367 / Edexcel 9FM0</span>
+    </div>
+    <table>
+      <tr><th>AQA Ref</th><th>Topic</th><th>Maffs Games</th></tr>
+      <tr><td class="ref">B1–B3</td><td class="topic">Complex numbers: Cartesian form, conjugates, arithmetic</td><td class="games"><a class="game-link" href="../games/complex-converter/?level=further">Complex Converter</a></td></tr>
+      <tr><td class="ref">B4–B7</td><td class="topic">Argand diagrams, modulus-argument form, loci</td><td class="games"><a class="game-link" href="../games/complex-converter/?level=further">Complex Converter</a></td></tr>
+      <tr><td class="ref">B8–B11</td><td class="topic">De Moivre's theorem, Euler's form, nth roots of unity</td><td class="games"><a class="game-link" href="../games/complex-converter/?level=further">Complex Converter</a></td></tr>
+      <tr><td class="ref">C1–C4</td><td class="topic">Matrices: arithmetic, transformations, invariant points</td><td class="games"><a class="game-link" href="../games/matrix-crunch/?level=further">Matrix Crunch</a></td></tr>
+      <tr><td class="ref">C5–C6</td><td class="topic">Determinants 2×2 and 3×3, matrix inverses</td><td class="games"><a class="game-link" href="../games/matrix-crunch/?level=further">Matrix Crunch</a></td></tr>
+      <tr><td class="ref">C7–C8</td><td class="topic">Solving systems with matrices, geometric interpretation</td><td class="games"><a class="game-link" href="../games/matrix-crunch/?level=further">Matrix Crunch</a></td></tr>
+      <tr><td class="ref">C10–C11</td><td class="topic">Eigenvalues, eigenvectors, diagonalisation</td><td class="games"><a class="game-link" href="../games/characteristic-quest/?level=further">Characteristic Quest</a>, <a class="game-link" href="../games/eigenvalue-extractor/?level=further">Eigenvalue Extractor</a>, <a class="game-link" href="../games/eigenvector-engine/?level=further">Eigenvector Engine</a></td></tr>
+      <tr><td class="ref">A1</td><td class="topic">Proof by mathematical induction</td><td class="games"><a class="game-link" href="../games/proof-builder/?level=further">Proof Builder</a></td></tr>
+    </table>
+  </div>
+
+  <!-- BTEC LEVEL 4 SECTION -->
+  <div class="spec-section" data-spec="l4">
+    <div class="spec-heading">
+      <span class="spec-label">BTEC Level 4 HNC Engineering Mathematics</span>
+      <span class="spec-rule"></span>
+      <span class="spec-board">Pearson Unit 4 (F/615/1527)</span>
+    </div>
+    <table>
+      <tr><th>LO</th><th>Topic</th><th>Maffs Games</th></tr>
+      <tr><td class="ref">LO1</td><td class="topic">Laws of indices, logarithms, algebraic manipulation</td><td class="games"><a class="game-link" href="../games/index-laws/?level=gcse">Index Laws</a>, <a class="game-link" href="../games/log-laws/?level=alevel">Log Laws</a></td></tr>
+      <tr><td class="ref">LO1</td><td class="topic">Arithmetic and geometric progressions, series</td><td class="games"><a class="game-link" href="../games/sequence-solver/?level=ks3">Sequence Solver</a></td></tr>
+      <tr><td class="ref">LO1</td><td class="topic">Number theory, fractions, estimation</td><td class="games"><a class="game-link" href="../games/estimation-engine/?level=ks3">Estimation Engine</a>, <a class="game-link" href="../games/estimation-golf/?level=ks3">Estimation Golf</a></td></tr>
+      <tr><td class="ref">LO2</td><td class="topic">Trigonometry: SOH CAH TOA, sine/cosine rules, radians</td><td class="games"><a class="game-link" href="../games/trig-worms/?level=gcse">Trig Worms</a>, <a class="game-link" href="../games/trig-wars/?level=gcse">Trig Wars</a></td></tr>
+      <tr><td class="ref">LO2</td><td class="topic">Differentiation: power, chain, product, quotient rules</td><td class="games"><a class="game-link" href="../games/differentiation-duel/?level=alevel">Differentiation Duel</a></td></tr>
+      <tr><td class="ref">LO2</td><td class="topic">Integration: polynomials, definite integrals, areas</td><td class="games"><a class="game-link" href="../games/integration-duel/?level=alevel">Integration Duel</a></td></tr>
+      <tr><td class="ref">LO2</td><td class="topic">SUVAT equations, kinematics, calculus in mechanics</td><td class="games"><a class="game-link" href="../games/suvat/?level=alevel">SUVAT Selector</a></td></tr>
+      <tr><td class="ref">LO3</td><td class="topic">Complex numbers: Cartesian (a + jb), polar, exponential</td><td class="games"><a class="game-link" href="../games/complex-converter/?level=further">Complex Converter</a></td></tr>
+      <tr><td class="ref">LO3</td><td class="topic">Matrices: determinants, inverses, Cramer's rule</td><td class="games"><a class="game-link" href="../games/matrix-crunch/?level=level4">Matrix Crunch</a></td></tr>
+      <tr><td class="ref">LO1</td><td class="topic">Exponential functions, growth and decay modelling</td><td class="games"><a class="game-link" href="../games/growth-and-decay/?level=level4">Growth and Decay</a></td></tr>
+      <tr><td class="ref">LO4</td><td class="topic">Statistics: probability, distributions, hypothesis testing</td><td class="games"><a class="game-link" href="../games/probability-paradox/">Probability Paradox</a>, <a class="game-link" href="../games/normal-navigator/">Normal Navigator</a>, <a class="game-link" href="../games/test-the-claim/?mode=binomial">Test the Claim</a>, <a class="game-link" href="../games/stat-attack/?level=level4">Stat Attack</a></td></tr>
+      <tr><td class="ref">LO2</td><td class="topic">Graph sketching, table of values, interpretation</td><td class="games"><a class="game-link" href="../games/graph-sketcher/?level=level4">Graph Sketcher</a></td></tr>
+      <tr><td class="ref">LO2</td><td class="topic">Dimensional analysis, MLT consistency</td><td class="games"><a class="game-link" href="../games/dimension-checker/?level=level4">Dimension Checker</a></td></tr>
+      <tr><td class="ref">LO2</td><td class="topic">Critical path analysis, Gantt charts</td><td class="games"><a class="game-link" href="../games/glorious-gantt/?mode=a&level=level4">Glorious Gantt Game</a></td></tr>
+    </table>
+  </div>
+
+  <!-- CORE MATHS SECTION -->
+  <div class="spec-section" data-spec="core">
+    <div class="spec-heading">
+      <span class="spec-label">Core Maths (Level 3 Mathematical Studies)</span>
+      <span class="spec-rule"></span>
+      <span class="spec-board">AQA 1350 Papers 2B/2C</span>
+    </div>
+    <table>
+      <tr><th>AQA Ref</th><th>Topic</th><th>Maffs Games</th></tr>
+      <tr><td class="ref">§3.1</td><td class="topic">Analysis of data: tabulation, diagrams, averages, spread</td><td class="games"><a class="game-link" href="../games/stat-attack/?level=core">Stat Attack</a>, <a class="game-link" href="../games/chart-interrogator/?level=core">Chart Interrogator</a></td></tr>
+      <tr><td class="ref">§3.2</td><td class="topic">Personal finance: tax, NI, budgeting, interest, APR</td><td class="games"><a class="game-link" href="../games/tax-theft/">Tax Theft</a></td></tr>
+      <tr><td class="ref">§3.3</td><td class="topic">Estimation: modelling cycle, Fermi estimation</td><td class="games"><a class="game-link" href="../games/estimation-engine/?level=ks3">Estimation Engine</a>, <a class="game-link" href="../games/estimation-golf/?level=ks3">Estimation Golf</a>, <a class="game-link" href="../games/fermi-lab/">Fermi Lab</a></td></tr>
+      <tr><td class="ref">§3.4</td><td class="topic">Graph sketching, tables of values, interpretation</td><td class="games"><a class="game-link" href="../games/graph-sketcher/?level=core">Graph Sketcher</a></td></tr>
+      <tr><td class="ref">§3.5</td><td class="topic">The normal distribution, exponential growth and decay</td><td class="games"><a class="game-link" href="../games/normal-navigator/">Normal Navigator</a>, <a class="game-link" href="../games/growth-and-decay/?level=core">Growth and Decay</a></td></tr>
+      <tr><td class="ref">§3.6</td><td class="topic">Hypothesis testing (correlation, normal)</td><td class="games"><a class="game-link" href="../games/test-the-claim/?mode=correlation">Test the Claim</a></td></tr>
+      <tr><td class="ref">§3.7</td><td class="topic">Correlation and regression: PMCC, regression lines</td><td class="games"><a class="game-link" href="../games/correlation-or-coincidence/">Correlation or Coincidence</a>, <a class="game-link" href="../games/regression-rumble/">Regression Rumble</a> (being rebuilt)</td></tr>
+      <tr><td class="ref">§3.8</td><td class="topic">Critical path analysis, activity networks, Gantt charts</td><td class="games"><a class="game-link" href="../games/glorious-gantt/?mode=a&level=core">Glorious Gantt Game</a></td></tr>
+      <tr><td class="ref">§3.9</td><td class="topic">Expectation</td><td class="games"><a class="game-link" href="../games/expectation-station/?level=core">Expectation Station</a>, <a class="game-link" href="../games/expected-damage/?level=core">Expected Damage</a></td></tr>
+      <tr><td class="ref">§3.10</td><td class="topic">Cost-benefit analysis</td><td class="games"><a class="game-link" href="../games/better-value/?level=core">Better Value</a>, <a class="game-link" href="../games/prisoners-dilemma/?level=core">Prisoner's Dilemma</a></td></tr>
+      <tr><td class="ref">§3.11</td><td class="topic">Rates of change, gradients</td><td class="games"><a class="game-link" href="../games/gradient-hunter/?level=core">Gradient Hunter</a></td></tr>
+      <tr><td class="ref">§3.12</td><td class="topic">Probability, conditional probability, risk</td><td class="games"><a class="game-link" href="../games/given-that/?level=core">Given That</a>, <a class="game-link" href="../games/screening-room/?level=core">Screening Room</a>, <a class="game-link" href="../games/probability-paradox/?level=core">Probability Paradox</a></td></tr>
+      <tr><td class="ref">§3.13</td><td class="topic">Exponential modelling</td><td class="games"><a class="game-link" href="../games/growth-and-decay/?level=core">Growth and Decay</a></td></tr>
+    </table>
+  </div>
+
+  <!-- GAP ANALYSIS SUMMARY -->
+  <div class="spec-section" data-spec="gap">
+    <div class="spec-heading">
+      <span class="spec-label">Coverage Status</span>
+      <span class="spec-rule"></span>
+    </div>
+    <table>
+      <tr><th>Topic</th><th>Specs</th><th>Status</th></tr>
+      <tr><td>Factor theorem, algebraic division</td><td>A-Level B6</td><td class="games"><a class="game-link" href="../games/factor-theorem/">Factor Theorem</a> — live (2026-03-23)</td></tr>
+      <tr><td>Vectors in 2D and 3D</td><td>A-Level I1–I2, GCSE</td><td class="games"><a class="game-link" href="../games/component-crusher/?level=gcse">Component Crusher</a> — live</td></tr>
+      <tr><td>Conditional probability, Bayes' theorem</td><td>A-Level §4.3, Core §3.12</td><td class="games"><a class="game-link" href="../games/given-that/?level=alevel">Given That</a>, <a class="game-link" href="../games/screening-room/?level=alevel">Screening Room</a> — live</td></tr>
+      <tr><td>Expectation</td><td>Core §3.9</td><td class="games"><a class="game-link" href="../games/expectation-station/?level=core">Expectation Station</a>, <a class="game-link" href="../games/expected-damage/?level=core">Expected Damage</a> — live</td></tr>
+      <tr><td>Cost-benefit analysis</td><td>Core §3.10</td><td class="games"><a class="game-link" href="../games/better-value/?level=core">Better Value</a>, <a class="game-link" href="../games/prisoners-dilemma/?level=core">Prisoner's Dilemma</a> — live</td></tr>
+      <tr><td>Rates of change, gradients</td><td>Core §3.11</td><td class="games"><a class="game-link" href="../games/gradient-hunter/?level=core">Gradient Hunter</a> — live</td></tr>
+      <tr><td>Graph theory, Eulerian paths</td><td>A-Level D1 (Further)</td><td class="games"><a class="game-link" href="../games/seven-bridges/">Seven Bridges</a> — live</td></tr>
+      <tr><td>Game theory, decision mathematics</td><td>A-Level D1 (Further), Core §3.10</td><td class="games"><a class="game-link" href="../games/prisoners-dilemma/">Prisoner's Dilemma</a> — live</td></tr>
+    </table>
+  </div>
+
+</div>
+
+
+<script>
+function filterSpec(f) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  document.querySelectorAll('.spec-section').forEach(s => {
+    if (f === 'all') { s.style.display = ''; return; }
+    if (f === 'gap') {
+      // show all sections but only gap rows
+      s.style.display = '';
+      s.querySelectorAll('tr').forEach(r => {
+        if (r.querySelector('th')) { r.style.display = ''; return; }
+        r.style.display = r.querySelector('.gap') ? '' : 'none';
+      });
+      return;
+    }
+    const match = s.dataset.spec === f;
+    s.style.display = match ? '' : 'none';
+    // reset row visibility
+    s.querySelectorAll('tr').forEach(r => r.style.display = '');
+  });
+
+  // if not gap filter, reset row visibility
+  if (f !== 'gap') {
+    document.querySelectorAll('.spec-section tr').forEach(r => r.style.display = '');
+  }
+}
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

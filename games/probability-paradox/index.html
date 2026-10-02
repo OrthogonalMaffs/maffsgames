@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Explore probability paradoxes, conditional probability, and common fallacies. Three game modes for GCSE and Core Maths.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/probability-paradox/">
+<meta property="og:title" content="Probability Paradox — MaffsGames">
+<meta property="og:description" content="Explore probability paradoxes, conditional probability, and common fallacies. Three game modes for GCSE and Core Maths.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/probability-paradox/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Probability Paradox — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080c14;--surface:#0f1520;--border:#1a2438;--primary:#3b82f6;--accent:#f59e0b;--wrong:#f43f5e;--correct:#22c55e;--text:#e8ecf4;--muted:#6b7a94;--sim:#06b6d4;--sim2:#f97316}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.5rem 0 .8rem}
+.header h1{font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.screen{display:none}.screen.active{display:block}
+.mode-grid{display:flex;flex-direction:column;gap:.8rem;margin:1.2rem 0}
+.mode-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem;cursor:pointer;transition:all .2s;position:relative}
+.mode-card:hover{border-color:var(--primary);transform:translateY(-2px)}
+.mode-card h3{font-size:1rem;font-weight:700;margin-bottom:.3rem}
+.mode-card p{font-size:.82rem;color:var(--muted);line-height:1.5}
+.mode-card .badge{position:absolute;top:1rem;right:1rem;padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:rgba(59,130,246,.15);color:var(--primary)}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.8rem;flex-wrap:wrap;gap:.3rem}
+.hud-item{text-align:center;min-width:55px}.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:left;min-height:80px}
+.q-card .scenario{font-size:.95rem;line-height:1.7;margin-bottom:.6rem}
+.q-card .scenario strong{color:var(--accent)}
+.q-card .question{font-size:.92rem;color:var(--primary);font-weight:600}
+.q-card .katex{font-size:1em!important}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.8rem}
+.opt-btn{padding:.75rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.88rem;cursor:pointer;transition:all .15s;text-align:center;min-height:48px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 14px rgba(59,130,246,.15)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.1);animation:pop .3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.1);animation:shake .3s}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* Simulation panel */
+.sim-panel{display:none;background:var(--surface);border:1px solid var(--sim);border-radius:12px;padding:1.2rem;margin-bottom:1rem;text-align:center}
+.sim-panel.show{display:block;animation:fadeIn .3s}
+.sim-panel h3{color:var(--sim);font-size:.85rem;font-weight:600;margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.05em}
+.sim-bars{display:flex;gap:1rem;justify-content:center;align-items:flex-end;height:140px;margin-bottom:.8rem}
+.sim-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:.3rem;flex:1;max-width:120px}
+.sim-bar-outer{width:100%;height:120px;background:var(--border);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
+.sim-bar-inner{width:100%;border-radius:6px 6px 0 0;transition:height .1s}
+.sim-bar-inner.a{background:var(--sim)}
+.sim-bar-inner.b{background:var(--sim2)}
+.sim-bar-label{font-size:.7rem;color:var(--muted)}
+.sim-bar-val{font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:700}
+.sim-count{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--muted);margin-bottom:.5rem}
+
+/* Solution */
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1.2rem;margin-bottom:1rem;text-align:left;font-size:.88rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.9rem;margin-bottom:.6rem;font-weight:600}
+.solution .step{margin-bottom:.5rem;padding-left:.8rem;border-left:2px solid var(--border)}
+.solution .step .katex{font-size:1.05em!important}
+.solution .misconception{margin-top:.8rem;padding:.6rem .8rem;background:rgba(245,158,11,.08);border-radius:8px;border-left:3px solid var(--accent);font-size:.82rem;color:var(--accent)}
+.solution .next-btn{display:inline-block;margin-top:.8rem;padding:.5rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Venn diagram */
+.venn-svg{display:block;margin:0 auto .8rem;max-width:280px}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem;line-height:1.8}
+.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.play-again:hover{transform:scale(1.05)}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Probability Paradox</h1><div class="sub">Your intuition is wrong. Let the simulation prove it.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="mode-grid">
+      <div class="mode-card" onclick="startMode('paradox')"><span class="badge">Paradoxes</span><h3>Paradox Predictor</h3><p>A famous probability scenario. Make your prediction. Then watch a live simulation of 1,000 trials reveal the truth. Inspired by Martin Gardner.</p></div>
+      <div class="mode-card" onclick="startMode('conditional')"><span class="badge">A-Level</span><h3>Conditional Calculator</h3><p>P(A|B), tree diagrams, Venn diagrams, independence tests. The bread and butter of A-Level probability — with worked solutions when you get it wrong.</p></div>
+      <div class="mode-card" onclick="startMode('fallacy')"><span class="badge">Reasoning</span><h3>Fallacy Spotter</h3><p>Someone's made a probability argument. Is it valid? Or have they fallen for the gambler's fallacy, base rate neglect, or the confusion of the inverse?</p></div>
+    </div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
+    </div>
+    <div class="q-card"><div class="scenario" id="scenario"></div><div class="question" id="question"></div></div>
+    <div class="options" id="options"></div>
+    <div class="sim-panel" id="simPanel">
+      <h3>Running 1,000 simulations...</h3>
+      <div class="sim-count" id="simCount">0 / 1,000</div>
+      <div class="sim-bars" id="simBars"></div>
+    </div>
+    <div class="solution" id="solution"></div>
+  </div>
+
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANKS
+// ============================================================
+
+const PARADOX_QUESTIONS = [
+{scenario:"<strong>The Monty Hall Problem.</strong> You're on a game show. There are 3 doors — behind one is a car, behind the other two are goats. You pick Door 1. The host (who knows what's behind the doors) opens Door 3, revealing a goat. He offers you the chance to switch to Door 2.",
+q:"Should you switch? What's the probability of winning if you do?",
+opts:["2/3 — always switch","1/2 — doesn't matter","1/3 — stick with Door 1","Can't determine"],
+correct:"2/3 — always switch",
+sim:{type:'monty',labels:['Switch wins','Stick wins'],expected:[0.667,0.333]},
+steps:["When you first picked, P(car behind Door 1) = 1/3","So P(car behind Door 2 or 3) = 2/3","The host always reveals a goat — he doesn't change where the car is","After he opens Door 3, that entire 2/3 probability transfers to Door 2","Switching wins 2/3 of the time. Sticking wins 1/3."],
+misconception:"The key insight: the host's action is NOT random. He always reveals a goat. This gives you information."},
+
+{scenario:"<strong>The Birthday Problem.</strong> In a room of 23 people chosen at random, what is the probability that at least two share a birthday? (Assume 365 days, ignore leap years.)",
+q:"What's the probability?",
+opts:["About 50%","About 6%","About 25%","About 75%"],
+correct:"About 50%",
+sim:{type:'birthday',labels:['Match found','No match'],expected:[0.507,0.493]},
+steps:["It's easier to calculate P(no match) first","P(all different) = 365/365 × 364/365 × 363/365 × ... × 343/365","= 365!/(342! × 365²³) ≈ 0.493","P(at least one match) = 1 − 0.493 ≈ 0.507","With just 23 people, there's a better than even chance of a shared birthday"],
+misconception:"People confuse 'someone shares MY birthday' (needs ~253 people for 50%) with 'any two people share A birthday' (only needs 23)."},
+
+{scenario:"<strong>The Gambler's Fallacy.</strong> A fair coin has landed Heads 9 times in a row. You're about to flip it again.",
+q:"What is the probability of Tails on the next flip?",
+opts:["1/2 — each flip is independent","Greater than 1/2 — Tails is 'due'","Less than 1/2 — the coin is 'hot'","9/10 — it must balance out"],
+correct:"1/2 — each flip is independent",
+sim:{type:'coin',labels:['Heads','Tails'],expected:[0.5,0.5]},
+steps:["Each coin flip is independent of all previous flips","The coin has no memory — it doesn't 'know' it landed Heads 9 times","P(Tails) = 1/2 regardless of history","The law of large numbers says proportions converge over MANY trials — it doesn't 'correct' short-term streaks"],
+misconception:"The gambler's fallacy: believing past random events affect future independent events. Casinos profit from this error."},
+
+{scenario:"<strong>The Two-Child Problem.</strong> A family has two children. You learn that at least one of them is a boy.",
+q:"What is the probability that both children are boys?",
+opts:["1/3","1/2","1/4","2/3"],
+correct:"1/3",
+sim:{type:'twochild',labels:['Both boys','Boy + Girl'],expected:[0.333,0.667]},
+steps:["The sample space for two children is: {BB, BG, GB, GG}","'At least one boy' eliminates GG, leaving {BB, BG, GB}","Of these three equally likely outcomes, only one is BB","P(both boys | at least one boy) = 1/3"],
+misconception:"Many people answer 1/2 because they think 'one is a boy, so the other is either boy or girl'. But this ignores that BG and GB are separate outcomes."},
+
+{scenario:"<strong>Bertrand's Box Paradox.</strong> There are three boxes. One contains two gold coins, one contains two silver coins, and one contains one gold and one silver. You pick a box at random and draw one coin — it's gold.",
+q:"What is the probability the other coin in the same box is also gold?",
+opts:["2/3","1/2","1/3","3/4"],
+correct:"2/3",
+sim:{type:'bertrand',labels:['Other coin gold','Other coin silver'],expected:[0.667,0.333]},
+steps:["There are 6 coins total: 3 gold and 3 silver","You drew a gold coin. Which gold coin could it be?","Gold coin 1 from the GG box → other coin is Gold","Gold coin 2 from the GG box → other coin is Gold","Gold coin from the GS box → other coin is Silver","2 out of 3 scenarios give a gold partner. P = 2/3."],
+misconception:"People answer 1/2 thinking 'I'm in either the GG or GS box, 50/50'. But you're twice as likely to have drawn from GG because it has two gold coins."},
+
+{scenario:"<strong>The False Positive Paradox.</strong> A disease affects 1 in 1,000 people. A test for the disease is 99% accurate (99% true positive rate, 99% true negative rate). You test positive.",
+q:"What is the approximate probability you actually have the disease?",
+opts:["About 9%","About 99%","About 50%","About 1%"],
+correct:"About 9%",
+sim:{type:'falsepos',labels:['True positive','False positive'],expected:[0.09,0.91]},
+steps:["In 100,000 people: 100 have the disease, 99,900 don't","Of the 100 with disease: 99 test positive (true positive)","Of the 99,900 without: 999 test positive (false positive)","Total positives: 99 + 999 = 1,098","P(disease | positive) = 99/1,098 ≈ 9%"],
+misconception:"Base rate neglect: people anchor on '99% accurate' and ignore how rare the disease is. When the condition is rare, most positives are false positives."},
+
+{scenario:"<strong>The Boy or Girl Paradox (Tuesday variant).</strong> A family has two children. One of them is a boy born on a Tuesday.",
+q:"What is the probability both children are boys?",
+opts:["13/27","1/3","1/2","1/4"],
+correct:"13/27",
+sim:{type:'tuesday',labels:['Both boys','Boy + Girl'],expected:[0.481,0.519]},
+steps:["There are 14 × 14 = 196 equally likely (child, day) combinations for two children","Cases with 'at least one boy born on Tuesday':","Boy-Tues + any child: 14 combinations","Any child + Boy-Tues: 14 combinations","Minus the double-count (Boy-Tues + Boy-Tues): 1","Total = 14 + 14 − 1 = 27","Of these, both-boys cases: Boy-Tues + Boy-any (7) + Boy-any + Boy-Tues (7) − Boy-Tues + Boy-Tues (1) = 13","P = 13/27 ≈ 0.481"],
+misconception:"The specific day matters! Without 'Tuesday', the answer is 1/3. Adding the day changes the sample space. This is one of Gardner's most discussed paradoxes."},
+
+{scenario:"<strong>The Envelope Problem.</strong> Two envelopes each contain money. One has twice as much as the other. You pick one and find £20 inside. You're offered the chance to switch.",
+q:"What's the expected value if you switch?",
+opts:["£20 — switching doesn't help","£25 — you should always switch","£15 — you should never switch","Cannot determine — the problem is a paradox"],
+correct:"£20 — switching doesn't help",
+sim:{type:'envelope',labels:['Switch wins more','Switch wins less'],expected:[0.5,0.5]},
+steps:["The other envelope contains either £10 or £40, each with probability 1/2","E(switch) = 0.5 × £10 + 0.5 × £40 = £25... but this logic is flawed!","The paradox: this argument seems to say you should always switch — but then you'd switch forever","The error is in assuming the two cases are equally likely given what you see","If the amounts are (X, 2X), seeing £20 means X = 10 or X = 20, but these have different prior probabilities","With no prior information, switching has expected value = £20. No advantage."],
+misconception:"This is a genuine paradox that confused mathematicians for decades. The resolution depends on the prior distribution of amounts."},
+
+{scenario:"<strong>Simpson's Paradox.</strong> Hospital A has a higher recovery rate than Hospital B for mild cases AND for severe cases. But Hospital B has a higher overall recovery rate.",
+q:"Is this possible?",
+opts:["Yes — it's Simpson's Paradox","No — A must be better overall","Only if sample sizes are equal","Only for binary outcomes"],
+correct:"Yes — it's Simpson's Paradox",
+sim:{type:'simpson',labels:['Paradox occurs','No paradox'],expected:[1.0,0.0]},
+steps:["Hospital A: mild 19/20 = 95%, severe 60/200 = 30%","Hospital B: mild 180/200 = 90%, severe 5/20 = 25%","A is better in BOTH groups","Overall: A 79/220 = 36%, B 185/220 = 84% — B is better overall","A treats mostly severe cases (low recovery); B treats mostly mild ones. The mix, not the quality of care, drives the overall rate"],
+misconception:"Aggregated data can reverse trends visible in subgroups. Always check for lurking variables when comparing rates."},
+
+{scenario:"<strong>The Inspection Paradox.</strong> Buses arrive every 10 minutes on average. You arrive at the bus stop at a random time.",
+q:"What's the average time you'll wait?",
+opts:["10 minutes, not 5","5 minutes","7.5 minutes","Depends on the schedule"],
+correct:"10 minutes, not 5",
+sim:{type:'bus',labels:['Wait < 10 min','Wait ≥ 10 min'],expected:[0.63,0.37]},
+steps:["If buses arrived exactly every 10 minutes, you'd wait 5 on average","But 'every 10 minutes on average' means random (Poisson) arrivals","With random arrivals, gaps between buses follow an exponential distribution","You're more likely to arrive during a LONG gap than a short one","This is the inspection paradox: the average gap you land in is larger than the average gap","For exponential arrivals, E(wait) = E(gap) = 10 minutes"],
+misconception:"The 'renewal paradox' or 'bus waiting time paradox'. Random ≠ uniform spacing. This is why buses feel like they're never on time."},
+
+{scenario:"<strong>Non-transitive Dice.</strong> Die A beats Die B more than half the time. Die B beats Die C more than half the time.",
+q:"Does Die A necessarily beat Die C?",
+opts:["No — dice can be non-transitive","Yes — A beats C by transitivity","Only if all dice are fair","Cannot determine"],
+correct:"No — dice can be non-transitive",
+sim:{type:'dice',labels:['A beats C','C beats A'],expected:[0.44,0.56]},
+steps:["Example: A = {2,2,4,4,9,9}, B = {1,1,6,6,8,8}, C = {3,3,5,5,7,7}","A beats B (5/9 of the time)","B beats C (5/9 of the time)","But C beats A (5/9 of the time)!","A > B > C > A — a rock-paper-scissors cycle","Transitivity does NOT hold for probabilistic comparisons"],
+misconception:"We assume 'better than' is transitive because it is for numbers. But probability matchups don't work this way. Warren Buffett uses this to win bar bets."},
+
+{scenario:"<strong>The Sleeping Beauty Problem.</strong> Sleeping Beauty is put to sleep on Sunday. A fair coin is flipped. If Heads, she's woken on Monday only. If Tails, she's woken on Monday AND Tuesday (with memory erased between). Each time she's woken, she's asked: what's your credence the coin landed Heads?",
+q:"What should Sleeping Beauty answer?",
+opts:["1/3 — she's woken more often on Tails","1/2 — the coin is fair","2/3 — she should bet on Tails","Cannot determine"],
+correct:"1/3 — she's woken more often on Tails",
+sim:{type:'beauty',labels:['Heads waking','Tails waking'],expected:[0.333,0.667]},
+steps:["There are three possible waking events:","Monday-Heads (1 waking), Monday-Tails (1 waking), Tuesday-Tails (1 waking)","Each waking is equally likely from Beauty's perspective","Only 1 out of 3 wakings corresponds to Heads","P(Heads | I am awake) = 1/3"],
+misconception:"This is genuinely debated in philosophy! 'Halfers' say 1/2 (the coin is fair), 'Thirders' say 1/3 (there are more Tails-wakings). Most probability theorists are Thirders."},
+];
+
+const CONDITIONAL_QUESTIONS = [
+{scenario:"A bag contains 5 red and 3 blue balls. Two balls are drawn without replacement.",
+q:"P(second ball is red | first ball was red)?",
+opts:["4/7","5/8","5/7","4/8"],correct:"4/7",
+steps:["After removing one red ball: 4 red, 3 blue remain (7 total)","P(2nd red | 1st red) = 4/7"],
+misconception:"Without replacement means the probabilities change after each draw."},
+
+{scenario:"P(A) = 0.4, P(B) = 0.5, P(A ∩ B) = 0.2",
+q:"Find P(A | B)",
+opts:["0.4","0.5","0.25","0.8"],correct:"0.4",
+steps:["P(A|B) = P(A ∩ B) / P(B)","= 0.2 / 0.5 = 0.4"]},
+
+{scenario:"P(A) = 0.4, P(B) = 0.5, P(A ∩ B) = 0.2",
+q:"Are A and B independent?",
+opts:["Yes — P(A∩B) = P(A)P(B)","No — P(A∩B) ≠ P(A)P(B)","Cannot determine","Only if mutually exclusive"],correct:"Yes — P(A∩B) = P(A)P(B)",
+steps:["P(A) × P(B) = 0.4 × 0.5 = 0.2","P(A ∩ B) = 0.2","Since P(A∩B) = P(A)P(B), they are independent"],
+misconception:"Independent ≠ mutually exclusive. Independent means knowing one happened doesn't change the probability of the other."},
+
+{scenario:"In a class, 60% study Maths, 40% study Physics, and 25% study both.",
+q:"Find P(Physics | Maths)",
+opts:["5/12","2/5","3/8","1/4"],correct:"5/12",
+steps:["P(Physics | Maths) = P(both) / P(Maths)","= 0.25 / 0.60 = 5/12 ≈ 0.417"]},
+
+{scenario:"A and B are mutually exclusive events with P(A) = 0.3 and P(B) = 0.4.",
+q:"Find P(A ∪ B)",
+opts:["0.7","0.12","0.58","1.0"],correct:"0.7",
+steps:["Mutually exclusive means P(A ∩ B) = 0","P(A ∪ B) = P(A) + P(B) − P(A ∩ B)","= 0.3 + 0.4 − 0 = 0.7"]},
+
+{scenario:"P(Rain) = 0.3, P(Traffic | Rain) = 0.8, P(Traffic | No Rain) = 0.2",
+q:"Find P(Traffic) using the law of total probability",
+opts:["0.38","0.80","0.50","0.24"],correct:"0.38",
+steps:["P(T) = P(T|R)P(R) + P(T|R')P(R')","= 0.8 × 0.3 + 0.2 × 0.7","= 0.24 + 0.14 = 0.38"]},
+
+{scenario:"A test is 95% accurate. The disease affects 2% of the population. You test positive.",
+q:"Find P(Disease | Positive) to 2 decimal places",
+opts:["0.28","0.95","0.02","0.50"],correct:"0.28",
+steps:["P(+|D) = 0.95, P(+|D') = 0.05, P(D) = 0.02","P(+) = 0.95×0.02 + 0.05×0.98 = 0.019 + 0.049 = 0.068","P(D|+) = 0.019/0.068 ≈ 0.28"],
+misconception:"Bayes' theorem in action. The base rate (2%) dramatically reduces the posterior probability despite 95% accuracy."},
+
+{scenario:"Three coins are flipped. Let A = 'at least two heads' and B = 'first coin is heads'.",
+q:"Find P(A | B)",
+opts:["3/4","1/2","3/8","1/4"],correct:"3/4",
+steps:["Given B (first = H), outcomes: HHH, HHT, HTH, HTT","P(A|B) = cases with ≥2 heads: HHH, HHT, HTH = 3 out of 4","P(A|B) = 3/4"]},
+
+{scenario:"Events A and B are independent. P(A) = 0.6, P(B) = 0.3.",
+q:"Find P(A' ∩ B')",
+opts:["0.28","0.10","0.42","0.70"],correct:"0.28",
+steps:["If A, B independent, then A', B' are also independent","P(A') = 0.4, P(B') = 0.7","P(A' ∩ B') = 0.4 × 0.7 = 0.28"]},
+
+{scenario:"In a Venn diagram: P(A only) = 0.15, P(B only) = 0.25, P(A ∩ B) = 0.10, P(neither) = 0.50.",
+q:"Find P(A)",
+opts:["0.25","0.15","0.10","0.50"],correct:"0.25",
+steps:["P(A) = P(A only) + P(A ∩ B)","= 0.15 + 0.10 = 0.25"]},
+
+{scenario:"A factory has machines X and Y. X produces 60% of items, Y produces 40%. X has a 3% defect rate, Y has 5%.",
+q:"An item is defective. P(made by X)?",
+opts:["9/19","3/20","0.018","0.60"],correct:"9/19",
+steps:["P(D) = 0.03×0.6 + 0.05×0.4 = 0.018 + 0.02 = 0.038","P(X|D) = 0.018/0.038 = 18/38 = 9/19 ≈ 0.474"],
+misconception:"Even though X produces most items, its lower defect rate means a defective item is almost equally likely to come from either machine."},
+
+{scenario:"P(A) = 0.5, P(B|A) = 0.6, P(B|A') = 0.2",
+q:"Find P(A | B)",
+opts:["3/4","3/5","1/2","2/5"],correct:"3/4",
+steps:["P(B) = P(B|A)P(A) + P(B|A')P(A')","= 0.6×0.5 + 0.2×0.5 = 0.3 + 0.1 = 0.4","P(A|B) = P(B|A)P(A)/P(B) = 0.3/0.4 = 3/4"]},
+
+{scenario:"A card is drawn from a standard 52-card deck.",
+q:"P(King | Face card)?",
+opts:["1/3","1/12","1/13","1"],correct:"1/3",
+steps:["Face cards: J, Q, K in each suit = 12 cards","Kings = 4","P(King | Face) = 4/12 = 1/3"]},
+
+{scenario:"A box has 4 red, 3 green, 2 blue balls. Two are drawn without replacement.",
+q:"P(both same colour)?",
+opts:["5/18","1/3","1/4","7/18"],correct:"5/18",
+steps:["P(RR) = 4/9 × 3/8 = 12/72","P(GG) = 3/9 × 2/8 = 6/72","P(BB) = 2/9 × 1/8 = 2/72","P(same) = 20/72 = 5/18"]},
+];
+
+const FALLACY_QUESTIONS = [
+{scenario:"A lottery number hasn't come up in 50 draws. A player buys that number because it's 'due to come up'.",
+q:"What fallacy is this?",
+opts:["Gambler's fallacy","Base rate neglect","Confusion of inverse","Anchoring"],correct:"Gambler's fallacy",
+explain:"Each draw is independent. Past draws don't affect future probabilities. The number is no more 'due' than any other."},
+
+{scenario:"A medical test is 99% accurate. A patient tests positive. The doctor says 'You almost certainly have the disease.'",
+q:"What has the doctor neglected?",
+opts:["The base rate (prevalence)","The sample size","The confidence interval","The test specificity"],correct:"The base rate (prevalence)",
+explain:"If the disease is rare (say 1 in 10,000), most positive results are false positives. The doctor has committed base rate neglect.",
+misconception:"P(Disease|Positive) depends on BOTH the test accuracy AND how common the disease is."},
+
+{scenario:"John says: 'I flipped 10 coins and got 7 heads. The coin must be biased.'",
+q:"Is John's reasoning valid?",
+opts:["No — 7/10 is within normal variation","Yes — 7/10 proves bias","Only with more data","Depends on the coin"],correct:"No — 7/10 is within normal variation",
+explain:"P(7+ heads in 10 flips of fair coin) ≈ 0.17. That's not unusual enough to conclude bias. We'd need a significance test with more data."},
+
+{scenario:"'I survived a plane crash. Therefore plane crashes are survivable.'",
+q:"What bias is this?",
+opts:["Survivorship bias","Confirmation bias","Availability heuristic","Anchoring"],correct:"Survivorship bias",
+explain:"We only hear from survivors. The people who didn't survive can't tell us their experience. The sample is biased."},
+
+{scenario:"A basketball player has made 8 shots in a row. The commentator says 'He's got the hot hand! He's more likely to make the next one.'",
+q:"Is the 'hot hand' a fallacy?",
+opts:["It's debated — recent research suggests a small effect may exist","Definitely a fallacy — each shot is independent","Definitely real — momentum is everything","Only applies to free throws"],correct:"It's debated — recent research suggests a small effect may exist",
+explain:"The 'hot hand fallacy' was declared a fallacy in 1985 by Gilovich, Vallone, and Tversky. But a 2015 paper by Miller and Sanjurjo showed the original study had a statistical bias. The current consensus is a small hot hand effect may exist, but it's much smaller than people perceive."},
+
+{scenario:"'90% of entrepreneurs who succeeded worked more than 60 hours a week. Therefore working 60+ hours increases your chance of success.'",
+q:"What's wrong with this reasoning?",
+opts:["Confusion of inverse — P(A|B) ≠ P(B|A)","Nothing — it's valid","Gambler's fallacy","Anchoring"],correct:"Confusion of inverse — P(A|B) ≠ P(B|A)",
+explain:"P(60+ hours | success) = 0.9 does NOT mean P(success | 60+ hours) is high. Maybe 90% of FAILED entrepreneurs also worked 60+ hours. We need P(success | hours) not P(hours | success).",
+misconception:"This is the prosecutor's fallacy / confusion of the inverse. P(A|B) ≠ P(B|A). Extremely common in media and business advice."},
+
+{scenario:"A news article reports: 'People who eat chocolate daily are 30% less likely to develop heart disease.'",
+q:"Can we conclude chocolate prevents heart disease?",
+opts:["No — correlation ≠ causation","Yes — 30% is significant","Only if it's dark chocolate","Depends on sample size"],correct:"No — correlation ≠ causation",
+explain:"Confounding variables: people who eat chocolate daily may be wealthier, less stressed, or have other lifestyle differences. An observational study cannot establish causation."},
+
+{scenario:"'My horoscope said I'd have a good day, and I did! Astrology works.'",
+q:"What fallacy applies?",
+opts:["Confirmation bias","Gambler's fallacy","Base rate neglect","Regression to mean"],correct:"Confirmation bias",
+explain:"You remember the hits and forget the misses. If you checked every day, you'd find the horoscope is wrong just as often. Confirmation bias: seeking evidence that confirms what you already believe."},
+
+{scenario:"A student scores 95% on a test after scoring 60%. The teacher implements a new method and claims credit.",
+q:"What alternative explanation should be considered?",
+opts:["Regression to the mean","The method definitely worked","The test was easier","Random chance only"],correct:"Regression to the mean",
+explain:"Extreme scores tend to be followed by more typical ones, even without any intervention. A student scoring 60% was probably having a bad day — their next score would likely be higher regardless of the teaching method."},
+
+{scenario:"'I know someone who smoked all their life and lived to 95. So smoking can't be that dangerous.'",
+q:"What's wrong with this reasoning?",
+opts:["Anecdotal evidence — one case doesn't override statistics","Nothing — it disproves the health claims","It depends on the type of cigarettes","Survivorship bias only"],correct:"Anecdotal evidence — one case doesn't override statistics",
+explain:"One person's experience doesn't negate population-level statistics. Smoking increases risk — it doesn't guarantee harm to every individual. P(long life | smoker) > 0 doesn't mean P(long life | smoker) ≈ P(long life | non-smoker)."},
+
+{scenario:"In a drug trial, 3 out of 10 patients improved on the drug vs 1 out of 10 on placebo. A headline reads: 'Drug triples recovery rate!'",
+q:"What's misleading about this?",
+opts:["Small sample — could easily be chance","The drug is 3× better, that's accurate","The placebo effect is irrelevant","Nothing — relative risk is correct"],correct:"Small sample — could easily be chance",
+explain:"With only 10 per group, the difference of 3/10 vs 1/10 is not statistically significant (p ≈ 0.29 by Fisher's exact test). The relative risk of 3× is technically correct but deeply misleading without considering sample size and statistical significance."},
+
+{scenario:"A school finds that students who eat breakfast score higher on tests. They mandate breakfast for all students.",
+q:"What assumption are they making?",
+opts:["That breakfast CAUSES better scores (causation from correlation)","That breakfast is nutritious","That all students are the same","That tests are fair"],correct:"That breakfast CAUSES better scores (causation from correlation)",
+explain:"Students who eat breakfast may come from more stable homes, sleep better, or have other advantages. The breakfast may be a marker of other factors, not the cause of better scores."},
+];
+
+// ============================================================
+//  SIMULATION ENGINE
+// ============================================================
+function runSim(simDef, callback){
+  const N=1000;let counts=[0,0],i=0;
+  const panel=document.getElementById('simPanel');
+  panel.className='sim-panel show';
+  const barsEl=document.getElementById('simBars');
+  barsEl.innerHTML='';
+  simDef.labels.forEach((lbl,idx)=>{
+    const w=document.createElement('div');w.className='sim-bar-wrap';
+    w.innerHTML=`<div class="sim-bar-val" id="sv${idx}">0%</div><div class="sim-bar-outer"><div class="sim-bar-inner ${idx===0?'a':'b'}" id="sb${idx}" style="height:0%"></div></div><div class="sim-bar-label">${lbl}</div>`;
+    barsEl.appendChild(w);
+  });
+
+  function step(){
+    const batch=Math.min(20,N-i);
+    for(let j=0;j<batch;j++){
+      const result=simulate(simDef.type);
+      counts[result]++;i++;
+    }
+    document.getElementById('simCount').textContent=i+' / '+N;
+    const pcts=counts.map(c=>((c/i)*100));
+    pcts.forEach((p,idx)=>{
+      document.getElementById('sb'+idx).style.height=p+'%';
+      document.getElementById('sv'+idx).textContent=Math.round(p)+'%';
+    });
+    if(i<N)requestAnimationFrame(step);
+    else setTimeout(callback,600);
+  }
+  requestAnimationFrame(step);
+}
+
+function simulate(type){
+  const r=Math.random;
+  switch(type){
+    case 'monty':{
+      const car=Math.floor(r()*3),pick=Math.floor(r()*3);
+      // Host opens a door that isn't the car and isn't the pick
+      let host;do{host=Math.floor(r()*3)}while(host===car||host===pick);
+      const switchDoor=3-pick-host;// the remaining door
+      return switchDoor===car?0:1;// 0=switch wins, 1=stick wins
+    }
+    case 'birthday':{
+      const days=new Set();
+      for(let i=0;i<23;i++){const d=Math.floor(r()*365);if(days.has(d))return 0;days.add(d)}
+      return 1;// no match
+    }
+    case 'coin':return r()<0.5?0:1;
+    case 'twochild':{
+      const c1=r()<0.5?'B':'G',c2=r()<0.5?'B':'G';
+      if(c1!=='B'&&c2!=='B')return simulate('twochild');// reject, need at least one boy
+      return(c1==='B'&&c2==='B')?0:1;
+    }
+    case 'bertrand':{
+      const box=Math.floor(r()*3);// 0=GG, 1=SS, 2=GS
+      if(box===1)return simulate('bertrand');// drew silver, reject
+      if(box===2){const coin=r()<0.5;if(!coin)return simulate('bertrand');}// GS box, drew silver
+      return box===0?0:1;// GG->other is gold(0), GS->other is silver(1)
+    }
+    case 'falsepos':{
+      const hasDisease=r()<0.001;
+      const positive=hasDisease?(r()<0.99):(r()<0.01);
+      if(!positive)return simulate('falsepos');// reject negatives
+      return hasDisease?0:1;
+    }
+    case 'tuesday':{
+      const g1=r()<0.5?'B':'G',d1=Math.floor(r()*7);
+      const g2=r()<0.5?'B':'G',d2=Math.floor(r()*7);
+      const hasBoyTue=(g1==='B'&&d1===0)||(g2==='B'&&d2===0);
+      if(!hasBoyTue)return simulate('tuesday');
+      return(g1==='B'&&g2==='B')?0:1;
+    }
+    case 'envelope':{
+      const x=Math.floor(r()*100)+1;
+      const pair=r()<0.5?[x,2*x]:[2*x,x];
+      const picked=r()<0.5?0:1;
+      return pair[1-picked]>pair[picked]?0:1;
+    }
+    case 'simpson':return 0;// always occurs when constructed
+    case 'bus':{
+      const gap=-10*Math.log(1-r());// exponential, mean 10
+      const arrival=r()*gap;
+      return(gap-arrival)<10?0:1;
+    }
+    case 'dice':{
+      const A=[2,2,4,4,9,9],C=[3,3,5,5,7,7];
+      const a=A[Math.floor(r()*6)],c=C[Math.floor(r()*6)];
+      return a>c?0:1;
+    }
+    case 'beauty':{
+      const heads=r()<0.5;
+      if(heads)return 0;// 1 waking
+      return r()<0.5?1:1;// 2 wakings, both tails
+      // Actually: simulate a random waking. P(heads waking) = 1/3
+      // Better: pick from 3 equal wakings
+    }
+    default:return r()<0.5?0:1;
+  }
+}
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let mode='',qIdx=0,score=0,correctN=0,total=0,pool=[],currentQ=null,qStart=0;
+const BASE=100,T_K=0.15;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+
+function startMode(m){
+  mode=m;qIdx=0;score=0;correctN=0;total=0;
+  document.getElementById('score').textContent='0';
+  document.getElementById('correctCount').textContent='0';
+  if(mode==='paradox')pool=shuffle([...PARADOX_QUESTIONS]).slice(0,10);
+  else if(mode==='conditional')pool=shuffle([...CONDITIONAL_QUESTIONS]).slice(0,15);
+  else if(mode==='fallacy')pool=shuffle([...FALLACY_QUESTIONS]).slice(0,12);
+
+  window._ggAbandoned=true;
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'probability-paradox',level:'gcse',questions_answered:total});});}
+  mfg('game_started',{game_slug:'probability-paradox',level:'gcse'});
+
+  show('game');nextQ();
+}
+
+function nextQ(){
+  if(qIdx>=pool.length){endGame();return}
+  currentQ=pool[qIdx];qIdx++;total++;
+  document.getElementById('qNum').textContent=total;
+  document.getElementById('solution').className='solution';
+  document.getElementById('simPanel').className='sim-panel';
+  qStart=Date.now();updateTimer();
+  document.getElementById('scenario').innerHTML=currentQ.scenario;
+  document.getElementById('question').textContent=currentQ.q;
+  const opts=shuffle([...currentQ.opts]);
+  const oEl=document.getElementById('options');oEl.innerHTML='';oEl.style.display='grid';
+  opts.forEach(v=>{
+    const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;
+    b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b);
+  });
+}
+
+function updateTimer(){
+  const el=document.getElementById('timer');
+  const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};
+  requestAnimationFrame(tick);
+}
+
+function handleAnswer(btn){
+  const q=currentQ,s=(Date.now()-qStart)/1000;
+  const correctVal=q.correct_override||q.correct;
+  const ok=btn.dataset.val===correctVal;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===correctVal)b.classList.add('correct')});
+  mfg('question_answered',{game_slug:'probability-paradox',level:'gcse',correct:ok,question_index:total});
+
+  if(ok){
+    btn.classList.add('correct');
+    const m=1/(1+T_K*Math.log(1+s));
+    score+=Math.max(1,Math.round(BASE*m));
+    correctN++;
+  } else {
+    btn.classList.add('wrong');
+  }
+  updateHUD();
+
+  // If paradox mode, run simulation before showing explanation
+  if(mode==='paradox'&&q.sim){
+    document.getElementById('options').style.display='none';
+    runSim(q.sim,()=>showExplain(q));
+  } else {
+    setTimeout(()=>showExplain(q),600);
+  }
+}
+
+function showExplain(q){
+  const sol=document.getElementById('solution');
+  let html='<h3>Explanation</h3>';
+  const steps=q.steps||[];
+  if(steps.length){steps.forEach(st=>{html+='<div class="step">'+st+'</div>'})}
+  if(q.explain){html+='<div class="step">'+q.explain+'</div>'}
+  if(q.misconception){html+='<div class="misconception">⚠ '+q.misconception+'</div>'}
+  html+='<button class="next-btn" onclick="closeSol()">Got it — next question</button>';
+  sol.innerHTML=html;sol.className='solution show';
+}
+
+function closeSol(){
+  document.getElementById('solution').className='solution';
+  document.getElementById('simPanel').className='sim-panel';
+  document.getElementById('options').style.display='grid';
+  nextQ();
+}
+
+function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
+
+function endGame(){
+  window._ggAbandoned=false;
+  const pct=total>0?Math.round(correctN/total*100):0;
+  mfg('game_completed',{game_slug:'probability-paradox',level:'gcse',score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('probability-paradox','gcse',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('probability-paradox','gcse',score);}}
+  let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
+  const names={paradox:'Paradox Predictor',conditional:'Conditional Calculator',fallacy:'Fallacy Spotter'};
+  document.getElementById('resultTitle').textContent=t;
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('statsLine').innerHTML=names[mode]+'<br>'+correctN+'/'+total+' correct ('+pct+'%)';
+  show('results');
+}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Place, order and calculate with negative numbers on an interactive number line. A Year 6 transition game for UK schools.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/negative-number-line/">
+<meta property="og:title" content="Negative Number Line — MaffsGames">
+<meta property="og:description" content="Place, order and calculate with negative numbers on an interactive number line. A Year 6 transition game for UK schools.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/negative-number-line/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Negative Number Line — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--accent:#6366f1;--accent-dim:rgba(99,102,241,0.25);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;-webkit-user-select:none;user-select:none}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--accent)}
+.type-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(99,102,241,0.3)}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.type-preview{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:16px;border-left:3px solid var(--accent)}
+.type-preview h3{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
+.type-preview p{font-size:13px;color:var(--muted);line-height:1.5}
+.session-picker{display:flex;gap:12px;margin-bottom:16px}
+.session-btn{flex:1;padding:14px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.session-btn:hover,.session-btn.selected{border-color:var(--accent);color:var(--accent)}
+.session-btn.selected{background:var(--accent-dim)}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+.pb-line{text-align:center;color:var(--muted);font-size:13px;margin-top:12px}
+
+/* Number line */
+.number-line-wrap{background:var(--surface);border-radius:16px;padding:28px 24px 36px;margin:20px 0;position:relative;touch-action:none}
+.number-line-label{font-size:14px;font-weight:600;color:var(--muted);text-align:center;margin-bottom:16px}
+.number-line-svg{width:100%;height:80px;display:block}
+.nl-negative-bg{fill:rgba(99,102,241,0.06)}
+.nl-line{stroke:#4a4f65;stroke-width:2}
+.nl-tick{stroke:#4a4f65;stroke-width:1.5}
+.nl-tick-label{fill:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;text-anchor:middle}
+.nl-zero-label{fill:#fff;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;text-anchor:middle}
+.nl-marker{fill:var(--accent);cursor:pointer;transition:fill 0.15s}
+.nl-marker:hover{fill:#818cf8}
+.nl-marker-line{stroke:var(--accent);stroke-width:2;stroke-dasharray:4 3}
+.nl-ghost{fill:rgba(99,102,241,0.3);pointer-events:none}
+.nl-answer-marker{fill:var(--green)}
+.nl-answer-line{stroke:var(--green);stroke-width:2;stroke-dasharray:4 3}
+.nl-arrow{fill:none;stroke:var(--accent);stroke-width:2.5;marker-end:url(#arrowhead)}
+
+/* Place It */
+.place-prompt{font-size:1.4rem;font-weight:700;text-align:center;color:var(--text);margin-bottom:8px}
+.place-prompt .target-num{color:var(--accent);font-family:'JetBrains Mono',monospace}
+.place-instruction{font-size:13px;color:var(--muted);text-align:center;margin-bottom:4px}
+.confirm-btn{display:block;width:100%;max-width:300px;margin:0 auto;padding:14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+.confirm-btn:hover{opacity:0.9}
+.confirm-btn:disabled{opacity:0.4;cursor:default}
+
+/* Order Them */
+.order-prompt{font-size:1.2rem;font-weight:700;text-align:center;color:var(--text);margin-bottom:20px}
+.order-zone{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;min-height:70px;padding:12px;border-radius:12px;margin-bottom:16px}
+.order-zone.source{background:var(--surface);border:2px dashed var(--border)}
+.order-zone.target{background:var(--surface-alt);border:2px solid var(--accent-dim);position:relative}
+.order-zone.target::before{content:'Smallest \u2192 Largest';position:absolute;top:-22px;left:0;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.04em}
+.order-tile{width:70px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;cursor:grab;transition:transform 0.1s,box-shadow 0.1s;background:var(--surface-alt);border:2px solid var(--border);color:var(--text);touch-action:none}
+.order-tile:active{cursor:grabbing;transform:scale(1.08);box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+.order-tile.dragging{opacity:0.5}
+.order-tile.correct-tile{border-color:var(--green);color:var(--green)}
+.order-tile.incorrect-tile{border-color:var(--red);color:var(--red)}
+.order-tile.in-target{background:var(--accent-dim);border-color:rgba(99,102,241,0.4);color:var(--accent)}
+.order-arrow{font-size:18px;color:var(--muted);display:flex;align-items:center}
+.check-row{display:flex;gap:12px;justify-content:center;margin-top:8px}
+.check-btn{padding:14px 32px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+.check-btn:hover{opacity:0.9}
+.check-btn:disabled{opacity:0.4;cursor:default}
+.reset-order-btn{padding:14px 24px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s}
+.reset-order-btn:hover{border-color:var(--accent);color:var(--text)}
+
+/* Calculate */
+.calc-prompt{font-size:1.2rem;font-weight:700;text-align:center;color:var(--text);margin-bottom:8px;line-height:1.6}
+.calc-prompt .calc-num{color:var(--accent);font-family:'JetBrains Mono',monospace}
+.calc-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.calc-option{padding:16px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all 0.15s;text-align:center}
+.calc-option:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.calc-option.selected-correct{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+.calc-option.selected-wrong{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+.calc-option.show-correct{border-color:var(--green);color:var(--green)}
+.calc-option:disabled{cursor:default;opacity:0.6}
+
+/* Feedback */
+.feedback-bar{text-align:center;padding:12px;border-radius:10px;margin:16px 0 8px;font-weight:700;font-size:15px;opacity:0;transition:opacity 0.2s}
+.feedback-bar.show{opacity:1}
+.feedback-bar.correct{background:var(--green-dim);color:var(--green)}
+.feedback-bar.incorrect{background:var(--red-dim);color:var(--red)}
+
+.next-btn{display:none;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s;margin-top:8px}
+.next-btn:hover{border-color:var(--accent)}
+.next-btn.visible{display:block}
+
+/* Reveal screen */
+.reveal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;justify-content:center;align-items:center;padding:24px}
+.reveal-overlay.active{display:flex}
+.reveal-card{background:var(--surface);border-radius:16px;padding:40px 32px;max-width:600px;width:100%;text-align:center;border:2px solid var(--accent)}
+.reveal-card h2{font-size:24px;font-weight:800;margin-bottom:20px;color:var(--accent)}
+.reveal-card p{font-size:15px;color:#cbd5e1;line-height:1.8;margin-bottom:24px}
+.reveal-dismiss{padding:14px 32px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.15s;opacity:0;pointer-events:none}
+.reveal-dismiss.ready{opacity:1;pointer-events:auto}
+.reveal-dismiss:hover{opacity:0.9}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--accent)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.pb-badge{background:var(--accent-dim);color:var(--accent);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+/* Drag placeholder for mobile */
+.drag-ghost{position:fixed;z-index:200;pointer-events:none;width:70px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700;background:var(--accent);color:#fff;border:2px solid rgba(99,102,241,0.6);box-shadow:0 8px 24px rgba(0,0,0,0.5);opacity:0.95}
+
+@media(prefers-reduced-motion:reduce){
+.feedback-bar{transition:none}
+}
+@media(max-width:480px){
+.place-prompt{font-size:1.15rem}
+.order-tile{width:60px;height:48px;font-size:1rem}
+.calc-options{gap:8px}
+.calc-option{padding:12px;font-size:1rem}
+.number-line-wrap{padding:20px 12px 28px}
+.nl-tick-label,.nl-zero-label{font-size:9px}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Negative Number Line</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <span class="type-pill" id="typePill">Place It</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreTotal">0</span></span>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Negative Number Line</div>
+  <div class="start-sub">Three question types test your understanding of negative numbers: place them, order them, and calculate with them.</div>
+  <div class="type-preview">
+    <h3>Place It</h3>
+    <p>Tap the correct position on the number line for a given number.</p>
+  </div>
+  <div class="type-preview">
+    <h3>Order Them</h3>
+    <p>Drag four number tiles into order from smallest to largest.</p>
+  </div>
+  <div class="type-preview">
+    <h3>Calculate</h3>
+    <p>Start at a number, add or subtract, and find where you end up.</p>
+  </div>
+  <div class="session-picker">
+    <button class="session-btn selected" data-count="10" onclick="pickSession(10,this)">10 Qs</button>
+    <button class="session-btn" data-count="20" onclick="pickSession(20,this)">20 Qs</button>
+    <button class="session-btn" data-count="30" onclick="pickSession(30,this)">30 Qs</button>
+  </div>
+  <button class="start-btn" onclick="startGame()">Start</button>
+  <div class="pb-line" id="pbLine"></div>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <!-- Place It content -->
+  <div id="placeItArea" style="display:none">
+    <div class="place-prompt">Place <span class="target-num" id="placeTarget"></span> on the number line</div>
+    <div class="place-instruction">Tap or drag on the number line below</div>
+    <div class="number-line-wrap" id="placeNLWrap">
+      <svg class="number-line-svg" id="placeNL" viewBox="0 0 680 80"></svg>
+    </div>
+    <button class="confirm-btn" id="placeConfirm" onclick="confirmPlace()" disabled>Confirm</button>
+  </div>
+
+  <!-- Order Them content -->
+  <div id="orderArea" style="display:none">
+    <div class="order-prompt">Order these from smallest to largest</div>
+    <div class="order-zone source" id="sourceZone"></div>
+    <div class="order-zone target" id="targetZone" style="margin-top:28px"></div>
+    <div class="check-row">
+      <button class="reset-order-btn" onclick="resetOrder()">Reset</button>
+      <button class="check-btn" id="orderCheck" onclick="checkOrder()" disabled>Check</button>
+    </div>
+  </div>
+
+  <!-- Calculate content -->
+  <div id="calcArea" style="display:none">
+    <div class="calc-prompt" id="calcPrompt"></div>
+    <div class="number-line-wrap" id="calcNLWrap">
+      <svg class="number-line-svg" id="calcNL" viewBox="0 0 680 80"></svg>
+    </div>
+    <div class="calc-options" id="calcOptions"></div>
+  </div>
+
+  <div class="feedback-bar" id="feedbackBar"></div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- REVEAL OVERLAY -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-card">
+    <h2>Why Negative Numbers Matter</h2>
+    <p>Negative numbers are used everywhere — bank accounts, temperatures, sea depths, golf scores, and the coordinate system you'll use in every maths lesson from Year 7 onwards.</p>
+    <button class="reveal-dismiss" id="revealDismiss" onclick="dismissReveal()">Continue</button>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Score</h4>
+      <div class="score" id="finalScore">0/10</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="sub" id="resultsPB" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="startGame()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANKS
+// ============================================================
+const PLACE_QUESTIONS = [
+  -1, -5, -9, -3, -7, 0.5, -0.5, -2, 8, -6, 3, -4, -8, 6, -10
+];
+
+const ORDER_QUESTIONS = [
+  {nums:[-3,7,-8,2], answer:[-8,-3,2,7]},
+  {nums:[0,-5,3,-1], answer:[-5,-1,0,3]},
+  {nums:[-9,-2,-6,1], answer:[-9,-6,-2,1]},
+  {nums:[4,-4,-3,3], answer:[-4,-3,3,4]},
+  {nums:[-7,5,-1,0], answer:[-7,-1,0,5]},
+  {nums:[2,-2,-8,8], answer:[-8,-2,2,8]},
+  {nums:[-10,10,-5,5], answer:[-10,-5,5,10]},
+  {nums:[1,-1,0,-3], answer:[-3,-1,0,1]},
+  {nums:[-4,6,-6,4], answer:[-6,-4,4,6]},
+  {nums:[3,-7,-3,7], answer:[-7,-3,3,7]},
+  {nums:[-2,9,-9,2], answer:[-9,-2,2,9]},
+  {nums:[0,-4,-8,4], answer:[-8,-4,0,4]},
+  {nums:[-1,-5,-9,-3], answer:[-9,-5,-3,-1]},
+  {nums:[1,5,9,3], answer:[1,3,5,9]},
+  {nums:[-6,2,-2,6], answer:[-6,-2,2,6]}
+];
+
+const CALC_QUESTIONS = [
+  {start:-3, op:'add', val:5, answer:2},
+  {start:4, op:'subtract', val:7, answer:-3},
+  {start:-6, op:'add', val:6, answer:0},
+  {start:0, op:'subtract', val:4, answer:-4},
+  {start:-2, op:'add', val:9, answer:7},
+  {start:5, op:'subtract', val:8, answer:-3},
+  {start:-8, op:'add', val:3, answer:-5},
+  {start:1, op:'subtract', val:6, answer:-5},
+  {start:-4, op:'add', val:4, answer:0},
+  {start:7, op:'subtract', val:10, answer:-3},
+  {start:-5, op:'add', val:8, answer:3},
+  {start:3, op:'subtract', val:9, answer:-6},
+  {start:-1, op:'add', val:1, answer:0},
+  {start:-7, op:'add', val:10, answer:3},
+  {start:2, op:'subtract', val:5, answer:-3}
+];
+
+// ============================================================
+//  STATE
+// ============================================================
+const GAME_SLUG = 'negative-number-line';
+const LEVEL = 'year6';
+let sessionLength = 10;
+let questions = [];
+let qIndex = 0;
+let score = 0;
+let totalAnswered = 0;
+let totalCorrect = 0;
+let placedValue = null;
+let currentType = ''; // 'place','order','calc'
+let answered = false;
+let orderedTiles = [];
+let dragState = null;
+
+// ============================================================
+//  HELPERS
+// ============================================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function formatNum(n) {
+  return Number.isInteger(n) ? String(n) : n.toFixed(1);
+}
+
+function lsKey(len) { return `mfg_nnl_pb_${len}`; }
+function getPB(len) { return parseInt(localStorage.getItem(lsKey(len)) || '0', 10); }
+function setPB(len, val) { localStorage.setItem(lsKey(len), val); }
+
+// ============================================================
+//  BUILD QUESTION LIST
+// ============================================================
+function buildQuestions(count) {
+  // Cycle: place, order, calc
+  const pq = shuffle(PLACE_QUESTIONS);
+  const oq = shuffle(ORDER_QUESTIONS);
+  const cq = shuffle(CALC_QUESTIONS);
+  const qs = [];
+  let pi = 0, oi = 0, ci = 0;
+  for (let i = 0; i < count; i++) {
+    const type = i % 3;
+    if (type === 0) {
+      qs.push({ type: 'place', data: pq[pi % pq.length] });
+      pi++;
+    } else if (type === 1) {
+      qs.push({ type: 'order', data: oq[oi % oq.length] });
+      oi++;
+    } else {
+      qs.push({ type: 'calc', data: cq[ci % cq.length] });
+      ci++;
+    }
+  }
+  return qs;
+}
+
+// ============================================================
+//  SESSION PICKER
+// ============================================================
+function pickSession(count, btn) {
+  sessionLength = count;
+  document.querySelectorAll('.session-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  showPB();
+}
+
+function showPB() {
+  const pb = getPB(sessionLength);
+  const el = document.getElementById('pbLine');
+  el.textContent = pb > 0 ? `Personal best (${sessionLength} Qs): ${pb}/${sessionLength}` : '';
+}
+
+// ============================================================
+//  NUMBER LINE DRAWING
+// ============================================================
+function drawNumberLine(svgId, options = {}) {
+  const svg = document.getElementById(svgId);
+  const w = 680, h = 80;
+  const padL = 30, padR = 30;
+  const lineW = w - padL - padR;
+  const y = 40;
+
+  let html = '<defs><marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="var(--accent)"/></marker></defs>';
+
+  // Negative region shading
+  const zeroX = padL + (10 / 20) * lineW;
+  html += `<rect class="nl-negative-bg" x="${padL}" y="${y - 25}" width="${zeroX - padL}" height="50" rx="4"/>`;
+
+  // Main line
+  html += `<line class="nl-line" x1="${padL}" y1="${y}" x2="${padL + lineW}" y2="${y}"/>`;
+
+  // Ticks and labels
+  for (let n = -10; n <= 10; n++) {
+    const x = padL + ((n + 10) / 20) * lineW;
+    const tickH = n === 0 ? 14 : (n % 5 === 0 ? 12 : 8);
+    html += `<line class="nl-tick" x1="${x}" y1="${y - tickH}" x2="${x}" y2="${y + tickH}"/>`;
+    if (n === 0) {
+      html += `<text class="nl-zero-label" x="${x}" y="${y + tickH + 14}">${n}</text>`;
+    } else {
+      html += `<text class="nl-tick-label" x="${x}" y="${y + tickH + 13}">${n}</text>`;
+    }
+  }
+
+  // Optional markers
+  if (options.startMarker !== undefined) {
+    const sx = padL + ((options.startMarker + 10) / 20) * lineW;
+    html += `<circle cx="${sx}" cy="${y}" r="6" fill="var(--accent)" opacity="0.8"/>`;
+    html += `<text x="${sx}" y="${y - 14}" text-anchor="middle" fill="var(--accent)" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">Start</text>`;
+  }
+
+  if (options.arrow) {
+    const sx = padL + ((options.arrow.from + 10) / 20) * lineW;
+    const ex = padL + ((options.arrow.to + 10) / 20) * lineW;
+    const ay = y - 22;
+    const midX = (sx + ex) / 2;
+    // Curved arrow above the line
+    const curveY = ay - 14;
+    html += `<path class="nl-arrow" d="M ${sx} ${ay} Q ${midX} ${curveY} ${ex} ${ay}"/>`;
+  }
+
+  if (options.answerMarker !== undefined) {
+    const ax = padL + ((options.answerMarker + 10) / 20) * lineW;
+    html += `<circle class="nl-answer-marker" cx="${ax}" cy="${y}" r="6"/>`;
+    html += `<line class="nl-answer-line" x1="${ax}" y1="${y - 20}" x2="${ax}" y2="${y + 20}"/>`;
+  }
+
+  svg.innerHTML = html;
+  return { padL, lineW, y, w };
+}
+
+function xToValue(clientX, svgEl) {
+  const rect = svgEl.getBoundingClientRect();
+  const svgW = 680;
+  const padL = 30, padR = 30;
+  const lineW = svgW - padL - padR;
+  const relX = ((clientX - rect.left) / rect.width) * svgW;
+  const val = ((relX - padL) / lineW) * 20 - 10;
+  return Math.max(-10, Math.min(10, val));
+}
+
+function valueToX(val) {
+  const padL = 30, lineW = 620;
+  return padL + ((val + 10) / 20) * lineW;
+}
+
+// ============================================================
+//  GAME START
+// ============================================================
+function startGame() {
+  questions = buildQuestions(sessionLength);
+  qIndex = 0;
+  score = 0;
+  totalAnswered = 0;
+  totalCorrect = 0;
+  answered = false;
+
+  document.getElementById('startScreen').classList.remove('active');
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('revealOverlay').classList.remove('active');
+  document.getElementById('gameScreen').classList.add('active');
+  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('scoreTotal').textContent = sessionLength;
+  document.getElementById('scoreNum').textContent = '0';
+
+  if (typeof mfg === 'function') {
+    mfg('game_started', { game_slug: GAME_SLUG, level: LEVEL });
+  }
+
+  showQuestion();
+}
+
+// ============================================================
+//  SHOW QUESTION
+// ============================================================
+function showQuestion() {
+  answered = false;
+  placedValue = null;
+  orderedTiles = [];
+  const q = questions[qIndex];
+  currentType = q.type;
+
+  const fb = document.getElementById('feedbackBar');
+  fb.className = 'feedback-bar';
+  fb.textContent = '';
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('nextBtn').style.display = 'none';
+
+  document.getElementById('placeItArea').style.display = 'none';
+  document.getElementById('orderArea').style.display = 'none';
+  document.getElementById('calcArea').style.display = 'none';
+
+  const pill = document.getElementById('typePill');
+  if (q.type === 'place') {
+    pill.textContent = 'Place It';
+    showPlaceIt(q.data);
+  } else if (q.type === 'order') {
+    pill.textContent = 'Order Them';
+    showOrderThem(q.data);
+  } else {
+    pill.textContent = 'Calculate';
+    showCalculate(q.data);
+  }
+}
+
+// ============================================================
+//  PLACE IT
+// ============================================================
+function showPlaceIt(target) {
+  document.getElementById('placeItArea').style.display = 'block';
+  document.getElementById('placeTarget').textContent = formatNum(target);
+  document.getElementById('placeConfirm').disabled = true;
+  placedValue = null;
+
+  drawNumberLine('placeNL');
+  setupPlaceInteraction(target);
+}
+
+function setupPlaceInteraction(target) {
+  const svg = document.getElementById('placeNL');
+  const wrap = document.getElementById('placeNLWrap');
+
+  function updateMarker(val) {
+    placedValue = Math.round(val * 2) / 2; // snap to 0.5
+    const x = valueToX(placedValue);
+    // Redraw base + marker
+    drawNumberLine('placeNL');
+    const svgEl = document.getElementById('placeNL');
+    const y = 40;
+    svgEl.innerHTML += `<line class="nl-marker-line" x1="${x}" y1="${y - 20}" x2="${x}" y2="${y + 20}"/>`;
+    svgEl.innerHTML += `<circle class="nl-marker" cx="${x}" cy="${y}" r="7"/>`;
+    svgEl.innerHTML += `<text x="${x}" y="${y - 24}" text-anchor="middle" fill="var(--accent)" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">${formatNum(placedValue)}</text>`;
+    document.getElementById('placeConfirm').disabled = false;
+  }
+
+  function handlePointer(e) {
+    if (answered) return;
+    e.preventDefault();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const val = xToValue(clientX, svg);
+    updateMarker(val);
+  }
+
+  wrap.onmousedown = (e) => { handlePointer(e); wrap.onmousemove = handlePointer; };
+  wrap.onmouseup = () => { wrap.onmousemove = null; };
+  wrap.onmouseleave = () => { wrap.onmousemove = null; };
+  wrap.ontouchstart = (e) => { handlePointer(e); };
+  wrap.ontouchmove = (e) => { handlePointer(e); };
+  wrap.ontouchend = () => {};
+}
+
+function confirmPlace() {
+  if (placedValue === null || answered) return;
+  answered = true;
+  const q = questions[qIndex];
+  const target = q.data;
+  const correct = Math.abs(placedValue - target) <= 0.5;
+
+  totalAnswered++;
+  if (correct) { score++; totalCorrect++; }
+
+  // Show answer marker
+  const svg = document.getElementById('placeNL');
+  const y = 40;
+  const ax = valueToX(target);
+  svg.innerHTML += `<line class="nl-answer-line" x1="${ax}" y1="${y - 20}" x2="${ax}" y2="${y + 20}"/>`;
+  svg.innerHTML += `<circle class="nl-answer-marker" cx="${ax}" cy="${y}" r="7"/>`;
+  svg.innerHTML += `<text x="${ax}" y="${y + 36}" text-anchor="middle" fill="var(--green)" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700">${formatNum(target)}</text>`;
+
+  showFeedback(correct, correct ? 'Correct!' : `The correct position was ${formatNum(target)}`);
+  document.getElementById('placeConfirm').disabled = true;
+
+  const wrap = document.getElementById('placeNLWrap');
+  wrap.onmousedown = null; wrap.onmousemove = null; wrap.ontouchstart = null; wrap.ontouchmove = null;
+
+  fireAnswerEvent(correct);
+  updateScore();
+}
+
+// ============================================================
+//  ORDER THEM
+// ============================================================
+function showOrderThem(data) {
+  document.getElementById('orderArea').style.display = 'block';
+  const sourceZone = document.getElementById('sourceZone');
+  const targetZone = document.getElementById('targetZone');
+  sourceZone.innerHTML = '';
+  targetZone.innerHTML = '';
+  document.getElementById('orderCheck').disabled = true;
+  orderedTiles = [];
+
+  const shuffled = shuffle(data.nums);
+  shuffled.forEach(n => {
+    const tile = createTile(n);
+    sourceZone.appendChild(tile);
+  });
+}
+
+function createTile(n) {
+  const tile = document.createElement('div');
+  tile.className = 'order-tile';
+  tile.textContent = formatNum(n);
+  tile.dataset.value = n;
+
+  // Click to move between zones
+  tile.addEventListener('click', () => {
+    if (answered) return;
+    const inTarget = tile.classList.contains('in-target');
+    if (inTarget) {
+      // Move back to source
+      tile.classList.remove('in-target');
+      document.getElementById('sourceZone').appendChild(tile);
+    } else {
+      // Move to target
+      tile.classList.add('in-target');
+      document.getElementById('targetZone').appendChild(tile);
+    }
+    updateOrderCheckBtn();
+  });
+
+  // Touch drag support
+  tile.addEventListener('touchstart', handleTileTouchStart, { passive: false });
+
+  return tile;
+}
+
+function updateOrderCheckBtn() {
+  const targetTiles = document.getElementById('targetZone').querySelectorAll('.order-tile');
+  document.getElementById('orderCheck').disabled = targetTiles.length !== 4;
+}
+
+// ---- Touch drag for mobile ----
+let ghostEl = null;
+let dragTile = null;
+let dragStartZone = null;
+let touchMoved = false;
+
+function handleTileTouchStart(e) {
+  if (answered) return;
+  touchMoved = false;
+  dragTile = e.currentTarget;
+  dragStartZone = dragTile.parentElement.id;
+
+  const touch = e.touches[0];
+  const startX = touch.clientX;
+  const startY = touch.clientY;
+
+  function onMove(ev) {
+    ev.preventDefault();
+    const t = ev.touches[0];
+    const dx = Math.abs(t.clientX - startX);
+    const dy = Math.abs(t.clientY - startY);
+    if (!touchMoved && (dx > 8 || dy > 8)) {
+      touchMoved = true;
+      // Create ghost
+      ghostEl = document.createElement('div');
+      ghostEl.className = 'drag-ghost';
+      ghostEl.textContent = dragTile.textContent;
+      document.body.appendChild(ghostEl);
+      dragTile.classList.add('dragging');
+    }
+    if (touchMoved && ghostEl) {
+      ghostEl.style.left = (t.clientX - 35) + 'px';
+      ghostEl.style.top = (t.clientY - 28) + 'px';
+    }
+  }
+
+  function onEnd(ev) {
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('touchend', onEnd);
+
+    if (ghostEl) {
+      ghostEl.remove();
+      ghostEl = null;
+    }
+    dragTile.classList.remove('dragging');
+
+    if (touchMoved) {
+      // Determine drop target
+      const t = ev.changedTouches[0];
+      const targetEl = document.elementFromPoint(t.clientX, t.clientY);
+      const sourceZone = document.getElementById('sourceZone');
+      const targetZone = document.getElementById('targetZone');
+
+      let dropZone = null;
+      if (targetEl) {
+        if (targetEl.id === 'targetZone' || targetEl.closest('#targetZone')) dropZone = targetZone;
+        else if (targetEl.id === 'sourceZone' || targetEl.closest('#sourceZone')) dropZone = sourceZone;
+      }
+
+      if (dropZone && dropZone.id !== dragStartZone) {
+        if (dropZone.id === 'targetZone') {
+          dragTile.classList.add('in-target');
+          // Insert at position based on drop point
+          const existing = [...dropZone.querySelectorAll('.order-tile')];
+          let inserted = false;
+          for (const ex of existing) {
+            const rect = ex.getBoundingClientRect();
+            if (t.clientX < rect.left + rect.width / 2) {
+              dropZone.insertBefore(dragTile, ex);
+              inserted = true;
+              break;
+            }
+          }
+          if (!inserted) dropZone.appendChild(dragTile);
+        } else {
+          dragTile.classList.remove('in-target');
+          dropZone.appendChild(dragTile);
+        }
+      } else if (dropZone && dropZone.id === 'targetZone' && dragStartZone === 'targetZone') {
+        // Reorder within target zone
+        const existing = [...dropZone.querySelectorAll('.order-tile')].filter(t2 => t2 !== dragTile);
+        let inserted = false;
+        for (const ex of existing) {
+          const rect = ex.getBoundingClientRect();
+          if (t.clientX < rect.left + rect.width / 2) {
+            dropZone.insertBefore(dragTile, ex);
+            inserted = true;
+            break;
+          }
+        }
+        if (!inserted) dropZone.appendChild(dragTile);
+      }
+
+      updateOrderCheckBtn();
+      touchMoved = false;
+      dragTile = null;
+    }
+    // If !touchMoved, the click handler fires naturally
+  }
+
+  document.addEventListener('touchmove', onMove, { passive: false });
+  document.addEventListener('touchend', onEnd);
+}
+
+function resetOrder() {
+  if (answered) return;
+  const sourceZone = document.getElementById('sourceZone');
+  const targetZone = document.getElementById('targetZone');
+  const tiles = [...targetZone.querySelectorAll('.order-tile')];
+  tiles.forEach(t => {
+    t.classList.remove('in-target', 'correct-tile', 'incorrect-tile');
+    sourceZone.appendChild(t);
+  });
+  document.getElementById('orderCheck').disabled = true;
+}
+
+function checkOrder() {
+  if (answered) return;
+  answered = true;
+  const q = questions[qIndex];
+  const targetZone = document.getElementById('targetZone');
+  const tiles = [...targetZone.querySelectorAll('.order-tile')];
+  const userOrder = tiles.map(t => parseFloat(t.dataset.value));
+  const correctOrder = q.data.answer;
+
+  let allCorrect = true;
+  tiles.forEach((t, i) => {
+    if (parseFloat(t.dataset.value) === correctOrder[i]) {
+      t.classList.add('correct-tile');
+    } else {
+      t.classList.add('incorrect-tile');
+      allCorrect = false;
+    }
+  });
+
+  totalAnswered++;
+  if (allCorrect) { score++; totalCorrect++; }
+
+  showFeedback(allCorrect, allCorrect ? 'Correct!' : `Correct order: ${correctOrder.map(formatNum).join(', ')}`);
+  document.getElementById('orderCheck').disabled = true;
+
+  fireAnswerEvent(allCorrect);
+  updateScore();
+}
+
+// ============================================================
+//  CALCULATE
+// ============================================================
+function showCalculate(data) {
+  document.getElementById('calcArea').style.display = 'block';
+  const prompt = document.getElementById('calcPrompt');
+  const opText = data.op === 'add' ? 'Add' : 'Subtract';
+  prompt.innerHTML = `Start at <span class="calc-num">${formatNum(data.start)}</span>. ${opText} <span class="calc-num">${data.val}</span>. Where do you end up?`;
+
+  drawNumberLine('calcNL', { startMarker: data.start });
+
+  // Generate 4 options including the correct answer
+  const correct = data.answer;
+  const wrongSet = new Set();
+  wrongSet.add(correct);
+  // Generate plausible wrong answers
+  const wrongs = [
+    data.start + data.val, // common mistake: always add
+    data.start - data.val, // common mistake: always subtract
+    -data.answer,          // sign error
+    correct + 1,
+    correct - 1,
+    correct + 2,
+    correct - 2
+  ].filter(w => w !== correct && w >= -12 && w <= 12);
+
+  // Pick 3 unique wrongs
+  const shuffledWrongs = shuffle([...new Set(wrongs)]);
+  const options = [correct];
+  for (const w of shuffledWrongs) {
+    if (options.length >= 4) break;
+    if (!options.includes(w)) options.push(w);
+  }
+  // Pad if needed
+  while (options.length < 4) {
+    const r = Math.floor(Math.random() * 21) - 10;
+    if (!options.includes(r)) options.push(r);
+  }
+
+  const shuffledOptions = shuffle(options);
+  const optionsDiv = document.getElementById('calcOptions');
+  optionsDiv.innerHTML = '';
+  shuffledOptions.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'calc-option';
+    btn.textContent = formatNum(opt);
+    btn.dataset.value = opt;
+    btn.addEventListener('click', () => selectCalcOption(btn, opt, data));
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function selectCalcOption(btn, selected, data) {
+  if (answered) return;
+  answered = true;
+  const correct = data.answer;
+  const isCorrect = selected === correct;
+
+  totalAnswered++;
+  if (isCorrect) { score++; totalCorrect++; }
+
+  // Highlight
+  document.querySelectorAll('.calc-option').forEach(b => {
+    b.disabled = true;
+    const v = parseFloat(b.dataset.value);
+    if (v === correct) b.classList.add('show-correct');
+  });
+  btn.classList.add(isCorrect ? 'selected-correct' : 'selected-wrong');
+
+  // Show arrow on number line
+  const endVal = data.answer;
+  drawNumberLine('calcNL', {
+    startMarker: data.start,
+    arrow: { from: data.start, to: endVal },
+    answerMarker: endVal
+  });
+
+  showFeedback(isCorrect, isCorrect ? 'Correct!' : `${formatNum(data.start)} ${data.op === 'add' ? '+' : '\u2212'} ${data.val} = ${formatNum(correct)}`);
+
+  fireAnswerEvent(isCorrect);
+  updateScore();
+}
+
+// ============================================================
+//  FEEDBACK & NAVIGATION
+// ============================================================
+function showFeedback(correct, msg) {
+  const fb = document.getElementById('feedbackBar');
+  fb.className = 'feedback-bar show ' + (correct ? 'correct' : 'incorrect');
+  fb.textContent = msg;
+  const btn = document.getElementById('nextBtn');
+  btn.classList.add('visible');
+  btn.style.display = 'block';
+}
+
+function updateScore() {
+  document.getElementById('scoreNum').textContent = score;
+}
+
+function fireAnswerEvent(correct) {
+  if (typeof mfg === 'function') {
+    mfg('question_answered', {
+      game_slug: GAME_SLUG,
+      level: LEVEL,
+      question_index: qIndex + 1,
+      correct: correct
+    });
+  }
+}
+
+function nextQuestion() {
+  qIndex++;
+  if (qIndex >= questions.length) {
+    endGame();
+    return;
+  }
+  showQuestion();
+}
+
+// ============================================================
+//  END GAME
+// ============================================================
+function endGame() {
+  document.getElementById('gameScreen').classList.remove('active');
+
+  // Fire completed event
+  if (typeof mfg === 'function') {
+    mfg('game_completed', {
+      game_slug: GAME_SLUG,
+      level: LEVEL,
+      score: score,
+      questions_answered: totalAnswered,
+      questions_correct: totalCorrect
+    });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('negative-number-line',LEVEL,score,totalAnswered).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('negative-number-line',LEVEL,score);}}
+  }
+
+  // Show reveal overlay
+  const overlay = document.getElementById('revealOverlay');
+  overlay.classList.add('active');
+  const dismissBtn = document.getElementById('revealDismiss');
+  dismissBtn.classList.remove('ready');
+  setTimeout(() => {
+    dismissBtn.classList.add('ready');
+  }, 5000);
+}
+
+function dismissReveal() {
+  document.getElementById('revealOverlay').classList.remove('active');
+  showResults();
+}
+
+function showResults() {
+  document.getElementById('gameHeader').style.display = 'none';
+  document.getElementById('resultsScreen').classList.add('active');
+
+  const pct = Math.round((score / sessionLength) * 100);
+  document.getElementById('finalScore').textContent = `${score}/${sessionLength}`;
+  document.getElementById('finalPct').textContent = `${pct}%`;
+
+  // PB check
+  const oldPB = getPB(sessionLength);
+  const pbBadge = document.getElementById('pbBadge');
+  const pbLine = document.getElementById('resultsPB');
+
+  if (score > oldPB) {
+    setPB(sessionLength, score);
+    pbBadge.style.display = 'block';
+    pbLine.textContent = oldPB > 0 ? `Previous best: ${oldPB}/${sessionLength}` : '';
+    if (typeof mfg === 'function') {
+      mfg('personal_best_set', {
+        game_slug: GAME_SLUG,
+        level: LEVEL,
+        score: score,
+        previous_best: oldPB
+      });
+    }
+  } else {
+    pbBadge.style.display = 'none';
+    pbLine.textContent = `Personal best: ${oldPB}/${sessionLength}`;
+  }
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+showPB();
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

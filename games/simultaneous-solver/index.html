@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Solve linear and non-linear simultaneous equations. 100 questions for GCSE and A-Level algebra.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/simultaneous-solver/">
+<meta property="og:title" content="Simultaneous Solver — MaffsGames">
+<meta property="og:description" content="Solve linear and non-linear simultaneous equations. 100 questions for GCSE and A-Level algebra.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/simultaneous-solver/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Simultaneous Solver — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0e1a;--surface:#131929;--border:#1e2a42;
+  --primary:#4f8cff;--accent:#00e5a0;--wrong:#ff4d6a;
+  --text:#e8ecf4;--muted:#7a8ba8;
+  --glow:0 0 20px rgba(79,140,255,0.3);
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:0.85rem;color:var(--muted);margin-top:0.3rem}
+.level-select{display:flex;gap:0.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap}
+.level-btn{padding:0.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.level-btn[data-level="gcse"]{--lc:#3b82f6}.level-btn[data-level="gcse"].active{background:#3b82f6;border-color:#3b82f6}
+.level-btn[data-level="alevel"]{--lc:#f97316}.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:0.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}
+.hud-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
+.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:140px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0.8rem}
+.q-card .system{font-size:1.3rem;line-height:1.8}
+.q-card .prompt{font-size:0.9rem;color:var(--accent);font-weight:600;margin-top:0.5rem}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1rem}
+.opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1rem;cursor:pointer;transition:all 0.15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:var(--glow)}
+.opt-btn.correct{border-color:var(--accent);background:rgba(0,229,160,0.15);animation:pulse-correct 0.4s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(255,77,106,0.15);animation:shake 0.3s}
+.opt-btn.reveal{border-color:var(--accent);opacity:0.7}
+.opt-btn.disabled{pointer-events:none;opacity:0.5}
+@keyframes pulse-correct{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.timer-text{text-align:center;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:1rem}
+.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background 0.3s}
+.pip.done{background:var(--accent)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:0.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem}
+.play-again{padding:0.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform 0.15s}
+.play-again:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+.katex{font-size:1.1em!important}
+.q-card .katex{font-size:1.3em!important}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:0.85rem}
+.back-link:hover{color:var(--text)}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header">
+      <h1>Simultaneous Solver</h1>
+      <div class="sub">Solve the system. Find the unknowns.</div>
+      <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    </div>
+    <div class="level-select">
+      <button class="level-btn active" data-level="gcse">GCSE</button>
+      <button class="level-btn" data-level="alevel">A-Level</button>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:0.85rem;margin:1rem 0">
+      <strong>GCSE:</strong> Linear simultaneous equations<br>
+      <strong>A-Level:</strong> Linear + non-linear (quadratic, circle)
+    </p>
+    <div style="text-align:center;margin-top:1.5rem">
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+      <button class="play-again" onclick="startGame()">Start</button>
+    </div>
+  </div>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div>
+    </div>
+    <div class="timer-text" id="timerDisplay">0s</div>
+    <div class="progress" id="progress"></div>
+    <div class="q-card" id="qCard">
+      <div class="system" id="system"></div>
+      <div class="prompt" id="prompt"></div>
+    </div>
+    <div class="options" id="options"></div>
+  </div>
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resultTitle">Well Done!</h2>
+      <div class="final-score" id="finalScore">0</div>
+      <div class="stats" id="statsLine"></div>
+      <button class="play-again" onclick="showMenu()">Play Again</button>
+    </div>
+  </div>
+</div>
+<script>
+const QUESTIONS = {
+gcse: [
+  {sys:['2x + y = 7','x - y = 2'],ask:'Find x',correct:'3',distractors:['2','4','5']},
+  {sys:['2x + y = 7','x - y = 2'],ask:'Find y',correct:'1',distractors:['2','3','-1']},
+  {sys:['x + y = 10','x - y = 4'],ask:'Find x',correct:'7',distractors:['6','3','8']},
+  {sys:['x + y = 10','x - y = 4'],ask:'Find y',correct:'3',distractors:['4','7','6']},
+  {sys:['3x + 2y = 12','x + 2y = 8'],ask:'Find x',correct:'2',distractors:['3','4','1']},
+  {sys:['3x + 2y = 12','x + 2y = 8'],ask:'Find y',correct:'3',distractors:['2','4','1']},
+  {sys:['2x + 3y = 13','x + y = 5'],ask:'Find x',correct:'2',distractors:['3','1','4']},
+  {sys:['2x + 3y = 13','x + y = 5'],ask:'Find y',correct:'3',distractors:['2','4','1']},
+  {sys:['5x + y = 17','3x + y = 11'],ask:'Find x',correct:'3',distractors:['2','4','1']},
+  {sys:['5x + y = 17','3x + y = 11'],ask:'Find y',correct:'2',distractors:['3','1','4']},
+  {sys:['x + 3y = 11','x + y = 5'],ask:'Find y',correct:'3',distractors:['2','4','5']},
+  {sys:['4x + y = 14','2x + y = 8'],ask:'Find x',correct:'3',distractors:['2','4','1']},
+  {sys:['3x + 4y = 18','x + 4y = 10'],ask:'Find x',correct:'4',distractors:['3','2','5']},
+  {sys:['x + 2y = 8','3x + 2y = 14'],ask:'Find x',correct:'3',distractors:['2','4','5']},
+  {sys:['2x + 5y = 16','2x + 3y = 10'],ask:'Find y',correct:'3',distractors:['2','1','4']},
+  {sys:['3x + 2y = 16','x + y = 6'],ask:'Find x',correct:'4',distractors:['2','3','5']},
+  {sys:['2x + 3y = 19','x + 2y = 12'],ask:'Find x',correct:'2',distractors:['3','5','1']},
+  {sys:['2x + 3y = 19','x + 2y = 12'],ask:'Find y',correct:'5',distractors:['3','4','2']},
+  {sys:['4x + 3y = 23','2x + y = 9'],ask:'Find x',correct:'2',distractors:['3','4','1']},
+  {sys:['4x + 3y = 23','2x + y = 9'],ask:'Find y',correct:'5',distractors:['3','4','2']},
+  {sys:['3x + y = 10','x + 4y = 18'],ask:'Find x',correct:'2',distractors:['3','1','4']},
+  {sys:['3x + y = 10','x + 4y = 18'],ask:'Find y',correct:'4',distractors:['3','2','5']},
+  {sys:['5x + 2y = 24','x + 3y = 15'],ask:'Find x',correct:'2',distractors:['3','4','1']},
+  {sys:['5x + 3y = 21','2x + y = 8'],ask:'Find x',correct:'3',distractors:['2','4','1']},
+  {sys:['5x + 3y = 21','2x + y = 8'],ask:'Find y',correct:'2',distractors:['3','1','4']},
+  {sys:['x + 5y = 22','2x + 3y = 16'],ask:'Find x',correct:'2',distractors:['3','4','1']},
+  {sys:['x + 5y = 22','2x + 3y = 16'],ask:'Find y',correct:'4',distractors:['3','5','2']},
+  {sys:['4x + y = 17','x + 2y = 13'],ask:'Find x',correct:'3',distractors:['2','4','1']},
+  {sys:['4x + y = 17','x + 2y = 13'],ask:'Find y',correct:'5',distractors:['3','4','2']},
+  {sys:['3x + 5y = 31','x + 2y = 12'],ask:'Find x',correct:'2',distractors:['3','4','1']},
+  {sys:['2x - y = 5','x + y = 4'],ask:'Find x',correct:'3',distractors:['2','4','1']},
+  {sys:['2x - y = 5','x + y = 4'],ask:'Find y',correct:'1',distractors:['2','-1','3']},
+  {sys:['x - 2y = -1','x + y = 5'],ask:'Find y',correct:'2',distractors:['3','1','4']},
+  {sys:['3x - y = 7','x + 2y = 7'],ask:'Find x',correct:'3',distractors:['2','4','1']},
+  {sys:['3x - y = 7','x + 2y = 7'],ask:'Find y',correct:'2',distractors:['1','3','-1']},
+  {sys:['x - 3y = -5','2x + y = 9'],ask:'Find x',correct:'4',distractors:['2','3','5']},
+  {sys:['x - 3y = -5','2x + y = 9'],ask:'Find y',correct:'3',distractors:['1','2','4']},
+  {sys:['5x - 2y = 1','3x + y = 10'],ask:'Find x',correct:'1',distractors:['2','3','-1']},
+  {sys:['5x - 2y = -1','x + y = 5'],ask:'Find y',correct:'\\tfrac{26}{7}',distractors:['4','3','\\tfrac{9}{7}']},
+  {sys:['2x + y = 1','x - y = 5'],ask:'Find x',correct:'2',distractors:['3','1','-1']},
+  {sys:['2x + y = 1','x - y = 5'],ask:'Find y',correct:'-3',distractors:['-1','3','-2']},
+  {sys:['3x + 2y = 4','x - y = 3'],ask:'Find x',correct:'2',distractors:['1','3','4']},
+  {sys:['3x + 2y = 4','x - y = 3'],ask:'Find y',correct:'-1',distractors:['1','-2','2']},
+  {sys:['4x - 3y = 11','2x + y = 5'],ask:'Find x',correct:'\\tfrac{13}{5}',distractors:['3','2','\\tfrac{11}{4}']},
+  {sys:['x + y = 1','2x - 3y = 12'],ask:'Find x',correct:'3',distractors:['2','4','5']},
+  {sys:['x + y = 1','2x - 3y = 12'],ask:'Find y',correct:'-2',distractors:['-1','-3','2']},
+  {sys:['2x - y = 0','x + 3y = 14'],ask:'Find x',correct:'2',distractors:['4','3','1']},
+  {sys:['2x - y = 0','x + 3y = 14'],ask:'Find y',correct:'4',distractors:['2','3','6']},
+  {sys:['5x + 2y = 3','x - y = 3'],ask:'Find x',correct:'\\tfrac{9}{7}',distractors:['1','2','\\tfrac{3}{5}']},
+  {sys:['7x + 2y = 20','3x - y = 5'],ask:'Find x',correct:'\\tfrac{30}{13}',distractors:['2','3','\\tfrac{20}{7}']},
+],
+alevel: [
+  {sys:['2x + 3y = 7','5x - y = 9'],ask:'Find x',correct:'2',distractors:['1','3','\\tfrac{20}{13}']},
+  {sys:['2x + 3y = 7','5x - y = 9'],ask:'Find y',correct:'1',distractors:['2','-1','\\tfrac{7}{3}']},
+  {sys:['3x - 4y = -1','2x + y = 3'],ask:'Find x',correct:'1',distractors:['2','\\tfrac{3}{2}','-1']},
+  {sys:['3x - 4y = -1','2x + y = 3'],ask:'Find y',correct:'1',distractors:['2','-1','\\tfrac{1}{4}']},
+  {sys:['x + 2y = 0','3x - y = 7'],ask:'Find x',correct:'2',distractors:['1','-2','3']},
+  {sys:['x + 2y = 0','3x - y = 7'],ask:'Find y',correct:'-1',distractors:['1','-2','0']},
+  {sys:['4x + y = 3','x - 2y = 5'],ask:'Find x',correct:'\\tfrac{11}{9}',distractors:['1','2','\\tfrac{3}{4}']},
+  {sys:['7x + 3y = 1','2x - y = 5'],ask:'Find x',correct:'\\tfrac{16}{13}',distractors:['1','2','\\tfrac{1}{7}']},
+  {sys:['x + y = 4','3x + 5y = 14'],ask:'Find x',correct:'3',distractors:['2','1','4']},
+  {sys:['x + y = 4','3x + 5y = 14'],ask:'Find y',correct:'1',distractors:['2','3','0']},
+  {sys:['2x - 3y = -8','4x + y = 2'],ask:'Find x',correct:'-\\tfrac{1}{7}',distractors:['0','1','-1']},
+  {sys:['6x + y = 5','2x + 3y = 7'],ask:'Find x',correct:'\\tfrac{1}{2}',distractors:['1','0','\\tfrac{5}{6}']},
+  {sys:['6x + y = 5','2x + 3y = 7'],ask:'Find y',correct:'2',distractors:['1','3','\\tfrac{7}{3}']},
+  {sys:['x - 5y = -7','2x + y = 8'],ask:'Find x',correct:'3',distractors:['2','4','1']},
+  {sys:['x - 5y = -7','2x + y = 8'],ask:'Find y',correct:'2',distractors:['1','3','-1']},
+  {sys:['y = x + 1','y = x^2 - x - 2'],ask:'Find the positive x value',correct:'3',distractors:['2','4','1']},
+  {sys:['y = x + 1','y = x^2 - x - 2'],ask:'How many solutions?',correct:'2',distractors:['0','1','3']},
+  {sys:['y = 2x','y = x^2 - 3'],ask:'Find the positive x value',correct:'3',distractors:['1','2','4']},
+  {sys:['y = 2x','y = x^2 - 3'],ask:'Find the negative x value',correct:'-1',distractors:['-2','-3','0']},
+  {sys:['y = 3x + 2','y = x^2 + 2'],ask:'Find the non-zero x value',correct:'3',distractors:['1','2','-1']},
+  {sys:['y = x + 3','y = x^2 + 1'],ask:'Find the positive x value',correct:'2',distractors:['3','1','4']},
+  {sys:['y = x + 3','y = x^2 + 1'],ask:'Find the negative x value',correct:'-1',distractors:['-2','-3','0']},
+  {sys:['y = 4 - x','y = x^2 - 2x'],ask:'Find the positive x value',correct:'2',distractors:['1','4','3']},
+  {sys:['y = 5 - x','y = x^2 - x - 1'],ask:'Find the positive x value',correct:'\\sqrt{6}',distractors:['3','2','\\sqrt{5}']},
+  {sys:['y = 2x + 1','y = x^2 - 2x + 1'],ask:'Find the values of x (sum)',correct:'4',distractors:['2','3','5']},
+  {sys:['y = x','y = x^2 - 6'],ask:'Find the positive x value',correct:'3',distractors:['2','6','1']},
+  {sys:['y = x','y = x^2 - 6'],ask:'Find the negative x value',correct:'-2',distractors:['-3','-1','-6']},
+  {sys:['y = 2x - 1','y = x^2 - 4'],ask:'Find the positive x value',correct:'3',distractors:['1','2','4']},
+  {sys:['y = 2x - 1','y = x^2 - 4'],ask:'Find the negative x value',correct:'-1',distractors:['-2','-3','0']},
+  {sys:['y = 3 - x','y = x^2 - 3x + 3'],ask:'How many solutions?',correct:'2',distractors:['0','1','3']},
+  {sys:['y = 5 - 2x','y = x^2 - 3'],ask:'Find the positive x value',correct:'2',distractors:['1','4','3']},
+  {sys:['y = 5 - 2x','y = x^2 - 3'],ask:'Find the negative x value',correct:'-4',distractors:['-2','-3','-1']},
+  {sys:['y = 3x','y = 2x^2 + x'],ask:'Find the non-zero x value',correct:'1',distractors:['2','3','\\tfrac{1}{2}']},
+  {sys:['y = 4x - 3','y = x^2'],ask:'Find the larger x value',correct:'3',distractors:['4','2','1']},
+  {sys:['y = 4x - 3','y = x^2'],ask:'Find the smaller x value',correct:'1',distractors:['0','-1','2']},
+  {sys:['x^2 + y^2 = 25','y = 0'],ask:'Find the positive x value',correct:'5',distractors:['4','3','25']},
+  {sys:['x^2 + y^2 = 25','x = 0'],ask:'Find the positive y value',correct:'5',distractors:['4','3','25']},
+  {sys:['x^2 + y^2 = 10','y = x'],ask:'Find the positive x value',correct:'\\sqrt{5}',distractors:['\\sqrt{10}','5','\\sqrt{2}']},
+  {sys:['x^2 + y^2 = 20','y = 2x'],ask:'Find the positive x value',correct:'2',distractors:['4','\\sqrt{20}','\\sqrt{5}']},
+  {sys:['x^2 + y^2 = 13','y = x + 1'],ask:'Find the positive x value',correct:'2',distractors:['3','1','\\sqrt{13}']},
+  {sys:['x^2 + y^2 = 13','y = x + 1'],ask:'Find the negative x value',correct:'-3',distractors:['-2','-1','-\\sqrt{13}']},
+  {sys:['x^2 + y^2 = 5','y = 2x - 1'],ask:'Find the larger x value',correct:'\\tfrac{2+\\sqrt{19}}{5}',distractors:['2','1','\\sqrt{5}']},
+  {sys:['x^2 + y^2 = 50','y = x'],ask:'Find the positive x value',correct:'5',distractors:['\\sqrt{50}','25','\\dfrac{\\sqrt{50}}{2}']},
+  {sys:['x^2 + y^2 = 8','y = x + 2'],ask:'How many solutions?',correct:'2',distractors:['0','1','4']},
+  {sys:['x^2 + y^2 = 9','y = x + 5'],ask:'How many solutions?',correct:'0',distractors:['1','2','3']},
+  {sys:['x^2 + y^2 = 45','x = 2y'],ask:'Find the positive y value',correct:'3',distractors:['\\sqrt{45}','9','\\sqrt{15}']},
+  {sys:['x^2 + y^2 = 25','y = x - 1'],ask:'Find the larger x value',correct:'4',distractors:['5','3','\\sqrt{25}']},
+  {sys:['x^2 + y^2 = 25','y = x - 1'],ask:'Find the smaller x value',correct:'-3',distractors:['-4','-5','-2']},
+  {sys:['x^2 + y^2 = 4','y = x'],ask:'Find the positive x value',correct:'\\sqrt{2}',distractors:['2','1','\\sqrt{4}']},
+  {sys:['x^2 + y^2 = 2','y = -x'],ask:'Find the positive x value',correct:'1',distractors:['\\sqrt{2}','2','\\tfrac{1}{2}']},
+]
+};
+
+let level = 'gcse';
+let questions = [];
+let qIdx = 0;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let correctCount = 0;
+let totalQ = 20;
+let timerInterval = null;
+let qStartTime = 0;
+const BASE = 100;
+const T_K = 0.15;
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function renderKaTeX(el, tex) {
+  katex.render(tex, el, { throwOnError: false, displayMode: false });
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+document.querySelectorAll('.level-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    level = btn.dataset.level;
+  });
+});
+
+const params = new URLSearchParams(window.location.search);
+if (params.get('level') && QUESTIONS[params.get('level')]) {
+  level = params.get('level');
+  document.querySelectorAll('.level-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.level === level);
+  });
+}
+
+function startGame() {
+  const bank = [...QUESTIONS[level]];
+  questions = shuffle(bank).slice(0, totalQ);
+  qIdx = 0; score = 0; streak = 0; bestStreak = 0; correctCount = 0;
+  document.getElementById('score').textContent = '0';
+  document.getElementById('streak').textContent = '0';
+  buildProgress();
+  mfg('game_started',{game_slug:'simultaneous-solver',level:level});
+  window._ggAbandoned=true;
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'simultaneous-solver',level:level,questions_answered:qIdx})});}
+  showScreen('game');
+  showQuestion();
+}
+
+function buildProgress() {
+  const el = document.getElementById('progress');
+  el.innerHTML = '';
+  for (let i = 0; i < totalQ; i++) {
+    const pip = document.createElement('div');
+    pip.className = 'pip' + (i === 0 ? ' current' : '');
+    el.appendChild(pip);
+  }
+}
+
+function showQuestion() {
+  const q = questions[qIdx];
+  document.getElementById('qNum').textContent = `${qIdx + 1}/${totalQ}`;
+  const sysEl = document.getElementById('system');
+  sysEl.innerHTML = '';
+  q.sys.forEach(eq => {
+    const line = document.createElement('div');
+    renderKaTeX(line, eq);
+    sysEl.appendChild(line);
+  });
+  const promptEl = document.getElementById('prompt');
+  promptEl.textContent = q.ask;
+  const opts = shuffle([q.correct, ...q.distractors]);
+  const optEl = document.getElementById('options');
+  optEl.innerHTML = '';
+  opts.forEach(val => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.dataset.val = val;
+    renderKaTeX(btn, val);
+    btn.addEventListener('click', () => handleAnswer(btn, q));
+    optEl.appendChild(btn);
+  });
+  qStartTime = Date.now();
+  document.getElementById('timer').textContent = '0s';
+  clearInterval(timerInterval);
+  timerInterval = setInterval(tick, 250);
+}
+
+function tick() {
+  const e = Math.floor((Date.now() - qStartTime) / 1000);
+  document.getElementById('timer').textContent = e + 's';
+}
+
+function handleAnswer(btn, q) {
+  clearInterval(timerInterval);
+  const seconds = (Date.now() - qStartTime) / 1000;
+  const isCorrect = btn.dataset.val === q.correct;
+  document.querySelectorAll('.opt-btn').forEach(b => {
+    b.classList.add('disabled');
+    if (b.dataset.val === q.correct) b.classList.add('correct');
+  });
+  if (isCorrect) {
+    btn.classList.add('correct');
+    // multiplier removed — time no longer affects score
+const multiplier = 1;
+    const pts = Math.max(1, Math.round(BASE * multiplier));
+    score += pts;
+    streak++;
+    correctCount++;
+    if (streak > bestStreak) bestStreak = streak;
+    updatePip('done');
+  } else {
+    btn.classList.add('wrong');
+    streak = 0;
+    updatePip('fail');
+  }
+  mfg('question_answered',{game_slug:'simultaneous-solver',level:level,correct:isCorrect,question_index:qIdx+1});
+  document.getElementById('score').textContent = score;
+  document.getElementById('streak').textContent = streak;
+  setTimeout(advance, 1000);
+}
+
+function updatePip(cls) {
+  const pips = document.querySelectorAll('.pip');
+  if (pips[qIdx]) {
+    pips[qIdx].classList.remove('current');
+    pips[qIdx].classList.add(cls);
+  }
+}
+
+function advance() {
+  qIdx++;
+  if (qIdx >= totalQ) {
+    endGame();
+    return;
+  }
+  const pips = document.querySelectorAll('.pip');
+  if (pips[qIdx]) pips[qIdx].classList.add('current');
+  showQuestion();
+}
+
+function endGame() {
+  clearInterval(timerInterval);
+  const pct = Math.round((correctCount / totalQ) * 100);
+  let title = 'Keep Practising!';
+  if (pct >= 90) title = 'Outstanding!';
+  else if (pct >= 70) title = 'Well Done!';
+  else if (pct >= 50) title = 'Good Effort!';
+  document.getElementById('resultTitle').textContent = title;
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('statsLine').textContent =
+    `${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'simultaneous-solver',level:level,score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('simultaneous-solver',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('simultaneous-solver',level,score);}}
+  var _pbKey='simultaneous-solver_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');
+  if(score>_pbOld){mfg('personal_best_set',{game_slug:'simultaneous-solver',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}
+  showScreen('results');
+}
+
+function showMenu() {
+  showScreen('menu');
+}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

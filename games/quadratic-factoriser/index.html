@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Three levels: GCSE factorising (a=1), GCSE Higher factorising (a&gt;1) with a fading AC-method tutorial, and the quadratic formula. Enumerated questions with KaTeX display.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/quadratic-factoriser/">
+<meta property="og:title" content="Quadratic Factoriser — MaffsGames">
+<meta property="og:description" content="Three levels: GCSE factorising (a=1), GCSE Higher factorising (a&gt;1) with a fading AC-method tutorial, and the quadratic formula. Enumerated questions with KaTeX display.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/quadratic-factoriser/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Quadratic Factoriser — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+  /* canon 7.5.1 GCSE+ row: dark theme, Outfit + JetBrains Mono, unique accent per game.
+     Every level this game serves (gcse, higher, formula) is GCSE-and-above, so the whole
+     game is on the dark row from Phase 1 even though only 'gcse' has content yet. */
+  :root {
+    --bg:        #14111f;
+    --white:     #1e1b2e;
+    --navy:      #f1f0f6;
+    --navy-mid:  #2a2540;
+    --teal:      #22d3b8;
+    --accent:    #a78bfa;
+    --accent-lt: rgba(167,139,250,0.14);
+    --green:     #4ade80;
+    --green-lt:  rgba(74,222,128,0.14);
+    --red:       #f87171;
+    --red-lt:    rgba(248,113,113,0.14);
+    --text:      #f1f0f6;
+    --muted:     #9a94b3;
+    --border:    #342d52;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.2);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Outfit', system-ui, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 44px;
+  }
+
+  /* ── Header ── */
+  .header {
+    width: 100%;
+    background: #100e1a;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .back {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s;
+  }
+  .back:hover { color: var(--text); }
+
+  .header-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--border);
+  }
+
+  .header-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .header-level {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-lt);
+    border: 1px solid rgba(167,139,250,0.35);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ── Game area ── */
+  .game-area {
+    width: 100%;
+    max-width: 760px;
+    padding: 24px 20px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* ── Score bar ── */
+  .scorebar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 14px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .score-item { text-align: center; }
+
+  .score-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .score-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-top: 2px;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Question card ── */
+  .question-box {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px 24px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .q-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .quadratic {
+    font-size: clamp(20px, 5vw, 28px);
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  /* KaTeX overrides */
+  .quadratic .katex { font-size: 1em; color: var(--navy); }
+
+  /* ── Bracket builder ── */
+  .bracket-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .bracket {
+    font-size: clamp(16px, 4vw, 22px);
+    font-weight: 700;
+    color: var(--navy);
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 0.14s;
+  }
+
+  .bracket-var { color: var(--accent); font-weight: 800; }
+  .bracket-sign { color: var(--muted); }
+
+  .bracket-num {
+    color: var(--navy);
+    min-width: 24px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 2px solid var(--accent);
+    font-weight: 800;
+    padding-bottom: 2px;
+    transition: all 0.14s;
+  }
+  .bracket-num.selected { color: var(--accent); border-bottom-color: var(--accent); }
+  .bracket-num.correct { color: var(--green); }
+  .bracket-num.wrong { color: var(--red); }
+
+  .times-symbol { font-size: 20px; color: var(--muted); font-weight: 600; }
+
+  /* ── Hint chips ── */
+  .hint-chips {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .hint-chip {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    background: var(--accent-lt);
+    color: var(--accent);
+    border: 1px solid rgba(167,139,250,0.3);
+  }
+  .hint-chip .katex { font-size: 1em; }
+
+  /* ── Feedback ── */
+  .feedback {
+    font-size: 13px;
+    font-weight: 700;
+    min-height: 22px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong { color: var(--red); }
+
+  .hint-text {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 6px;
+    min-height: 18px;
+    line-height: 1.5;
+  }
+  .hint-text .katex { font-size: 1em; }
+
+  .next-mount { width: 100%; min-height: 4px; }
+
+  /* ── Number picker ── */
+  .picker {
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .picker-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .picker-editing {
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+    min-height: 20px;
+  }
+
+  .num-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .num-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    width: 44px;
+    height: 44px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--navy);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .num-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: var(--accent-lt);
+    transform: translateY(-1px);
+  }
+  .num-btn:active:not(:disabled) { transform: scale(0.95); }
+  .num-btn:disabled { opacity: 0.4; cursor: default; }
+  .num-btn.neg { color: var(--muted); }
+  .num-btn.neg:hover:not(:disabled) { color: var(--navy); }
+
+  /* ── Check button ── */
+  .check-btn {
+    width: 100%;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: var(--accent);
+    color: #1a1530;
+    transition: all 0.14s ease;
+  }
+  .check-btn:hover:not(:disabled) {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+  .check-btn:disabled { opacity: 0.45; cursor: default; }
+
+  /* ── Start screen ── */
+  .start-screen {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .start-glyph {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--navy);
+    opacity: 0.1;
+    line-height: 1;
+    margin-bottom: -8px;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.05em;
+  }
+
+  .start-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .start-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .picker-label.section { margin-top: 4px; }
+
+  .level-select, .session-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .level-btn, .session-btn {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 18px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--muted);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .level-btn:hover, .session-btn:hover { border-color: var(--accent); color: var(--navy); }
+  .level-btn.selected, .session-btn.selected {
+    border-color: var(--accent);
+    background: var(--accent-lt);
+    color: var(--accent);
+  }
+
+  .how-to {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .how-to p {
+    font-size: 14px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+  }
+  .how-to p .katex { font-size: 1em; }
+
+  .how-to p::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+
+  /* ── Game over ── */
+  .game-over {
+    display: none;
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+  .game-over.visible { display: block; }
+
+  .go-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .go-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 8px 0 6px;
+  }
+
+  .go-detail {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  /* ── Main game ── */
+  .main-game { display: none; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
+  .main-game.visible { display: flex; }
+
+  /* ── Button ── */
+  .btn {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #1a1530;
+  }
+  .btn-primary:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+
+  /* ── Leaderboard ── */
+  .leaderboard {
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .lb-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lb-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .lb-row:last-child { border-bottom: none; }
+
+  .lb-rank { color: var(--muted); font-weight: 600; width: 28px; }
+  .lb-date { color: var(--muted); flex: 1; text-align: center; }
+  .lb-score { font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--navy); font-size: 15px; }
+
+  /* ── 'higher' tutorial / guided / independent flow ── */
+  .hf-box {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+  .hf-mode-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+    background: var(--accent-lt);
+    color: var(--accent);
+    border: 1px solid rgba(167,139,250,0.35);
+  }
+  .hf-quadratic { font-size: clamp(20px, 5vw, 26px); font-weight: 700; color: var(--navy); margin-bottom: 16px; }
+  .hf-quadratic .katex { font-size: 1em; }
+  .hf-step-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .hf-step-prompt { font-size: 15px; color: var(--navy); margin-bottom: 14px; line-height: 1.6; }
+  .hf-step-prompt .katex { font-size: 1em; }
+  .hf-note { font-size: 13px; color: var(--muted); margin-bottom: 12px; line-height: 1.6; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; text-align: left; }
+  .hf-note .katex { font-size: 1em; }
+  .hf-choice-row { display: flex; flex-direction: column; gap: 8px; max-width: 420px; margin: 0 auto; }
+  .hf-choice-btn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--navy);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .hf-choice-btn .katex { font-size: 1em; }
+  .hf-choice-btn:hover:not(:disabled) { border-color: var(--accent); }
+  .hf-choice-btn:disabled { opacity: 0.5; cursor: default; }
+  .hf-choice-btn.correct { border-color: var(--green); background: var(--green-lt); color: var(--green); }
+  .hf-choice-btn.wrong { border-color: var(--red); background: var(--red-lt); color: var(--red); }
+  .hf-feedback { font-size: 13px; font-weight: 700; min-height: 20px; margin-top: 14px; }
+  .hf-feedback.correct { color: var(--green); }
+  .hf-feedback.wrong { color: var(--red); }
+  .hf-misconception { font-size: 13px; color: var(--red); margin-top: 8px; line-height: 1.6; text-align: left; background: var(--red-lt); border: 1px solid rgba(248,113,113,0.35); border-radius: 10px; padding: 12px 14px; }
+  .hf-misconception .katex { font-size: 1em; }
+  .hf-continue-btn { margin-top: 14px; }
+  .hf-picker-row { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .hf-slot { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: var(--navy); background: var(--bg); border: 2px solid var(--border); border-radius: 10px; padding: 8px 10px; min-width: 34px; cursor: pointer; }
+  .hf-slot.active { border-color: var(--accent); color: var(--accent); }
+  .hf-show-method { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 8px 16px; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+  .hf-show-method:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── 'formula' inputs ── */
+  .formula-inputs { display: flex; gap: 12px; justify-content: center; margin: 18px 0; flex-wrap: wrap; }
+  .formula-input {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    width: 110px;
+    padding: 10px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    color: var(--navy);
+    background: var(--bg);
+    outline: none;
+  }
+  .formula-input:focus { border-color: var(--accent); }
+  .formula-input:disabled { opacity: 0.6; }
+  .no-real-btn {
+    display: block;
+    margin: 0 auto 4px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 18px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--muted);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .no-real-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--navy); }
+  .no-real-btn:disabled { opacity: 0.5; cursor: default; }
+
+  @media (max-width: 500px) {
+    .game-area { padding: 16px 14px 40px; }
+    .num-grid { gap: 6px; }
+    .num-btn { width: 40px; height: 40px; font-size: 12px; }
+  }
+/* === Accessibility === */
+body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
+body.accessible p, body.accessible .question-text, body.accessible .step-text, body.accessible .option-label, body.accessible .card-text { line-height: 2.0; max-width: 65ch; }
+body.accessible { background-color: #12141f !important; }
+body.accessible.light-theme { background-color: #fdf6e3 !important; color: #2d2d2d !important; }
+body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em; }
+.a11y-toggle { background: #1a2744; color: #ffffff; border: 1px solid #2a3a5c; border-radius: 6px; width: 36px; height: 36px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: background 0.15s; }
+.a11y-toggle.active, .a11y-toggle:hover { background: #0d9488; }
+.correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
+.incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <a href="../../" class="back">&larr; Back</a>
+  <div class="header-divider"></div>
+  <div class="header-title">Quadratic Factoriser</div>
+  <span class="header-level" id="headerLevel">GCSE</span>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+
+<div class="game-area">
+  <div class="scorebar">
+    <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
+    <div class="score-item"><div class="score-label">Q</div><div class="score-val" id="qcount">0/0</div></div>
+    <div class="score-item"><div class="score-label">Best</div><div class="score-val" id="best">0</div></div>
+  </div>
+
+  <div class="start-screen" id="startScreen">
+    <div class="start-glyph">x&sup2;</div>
+    <div class="start-title">Quadratic Factoriser</div>
+    <div class="start-desc" id="startDesc">Factorise the quadratic by finding two numbers that multiply to c and add to b.</div>
+
+    <div class="picker-label section">Level</div>
+    <div class="level-select" id="levelSelect"></div>
+
+    <div class="picker-label section">Questions per session</div>
+    <div class="session-row" id="sessionRow"></div>
+
+    <div class="how-to" id="howTo"></div>
+    <button class="btn btn-primary" onclick="startGame()">Start Game</button>
+  </div>
+
+  <div class="main-game" id="mainGame">
+    <div id="gcsePanel">
+      <div class="question-box">
+        <div class="q-label">Factorise</div>
+        <div class="quadratic" id="quadratic">x&sup2; + 5x + 6</div>
+        <div class="bracket-display">
+          <div class="bracket">
+            <span class="bracket-var">x</span>
+            <span class="bracket-sign" id="sign1">+</span>
+            <span class="bracket-num" id="num1" onclick="startEditing(1)">?</span>
+          </div>
+          <div class="times-symbol">&times;</div>
+          <div class="bracket">
+            <span class="bracket-var">x</span>
+            <span class="bracket-sign" id="sign2">+</span>
+            <span class="bracket-num" id="num2" onclick="startEditing(2)">?</span>
+          </div>
+        </div>
+        <div class="hint-chips" id="hintChips"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="hint-text" id="hintText"></div>
+        <div class="next-mount" id="nextMount"></div>
+      </div>
+
+      <div class="picker">
+        <div class="picker-label">Select a Number</div>
+        <div class="picker-editing" id="pickerEditing">Tap a bracket number above to start</div>
+        <div class="num-grid" id="numGrid"></div>
+      </div>
+
+      <button class="check-btn" id="checkBtn" onclick="checkAnswer()">Check Factorisation</button>
+    </div>
+
+    <div id="higherPanel" style="display:none;width:100%;flex-direction:column;align-items:center;gap:16px;"></div>
+    <div id="formulaPanel" style="display:none;width:100%;flex-direction:column;align-items:center;gap:16px;"></div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="go-label">Game Over</div>
+    <div class="go-score" id="finalScore">0</div>
+    <div class="go-detail" id="goDetail"></div>
+  <div style="text-align:center;color:#22d3b8;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="btn btn-primary" onclick="startGame()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#9a94b3;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-title">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Top Scores
+    </div>
+    <div id="lbList"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================================
+   Quadratic Factoriser — rebuild per docs/quadratic-factoriser-spec.md.
+   Phase 1: items 0, 1 (three-level structure, shared helpers) and the 'gcse'
+   (a=1) level. 'higher' and 'formula' are added in Phases 2 and 3 — see
+   IMPLEMENTED_LEVELS below, which is the only line that needs to grow.
+   ============================================================================ */
+const SLUG = 'quadratic-factoriser';
+const IMPLEMENTED_LEVELS = ['gcse', 'higher', 'formula'];
+const LEVEL_LABEL = { gcse: 'GCSE', higher: 'GCSE Higher', formula: 'Quadratic formula' };
+const LEVEL_DESC = {
+  gcse: 'Factorise the quadratic by finding two numbers that multiply to c and add to b.',
+  higher: 'Factorise a > 1 quadratics with the AC method — a fading tutorial walks you through it, then you try it yourself.',
+  formula: 'Solve ax²+bx+c=0 with the quadratic formula. Round each root to 2 d.p. — or spot when there are no real solutions.'
+};
+
+function tex(latex) {
+  return katex.renderToString(latex, {throwOnError: false, displayMode: false});
+}
+/* A string authored with \( \) (MaffsText's own convention) is mixed
+   prose+maths and goes through MaffsText.html(); a string with none is a pure
+   expression and goes to KaTeX whole (see schools/assets/mathtext.js). */
+function mx(str) {
+  return (window.MaffsText && MaffsText.hasMaths(str)) ? MaffsText.html(str) : tex(str);
+}
+function bracketLatex(p, q) {
+  const s1 = p >= 0 ? '+' : '-', s2 = q >= 0 ? '+' : '-';
+  return `(x ${s1} ${Math.abs(p)})(x ${s2} ${Math.abs(q)})`;
+}
+
+/* ----------------------------------------------------------------------------
+   Pools — 'gcse' (a=1). Enumerated once at load, deduplicated, shuffled at
+   session start, sliced to the chosen length. No draw-and-retry loop (CLAUDE.md
+   "No rejection sampling"). Stages are a categorisation for the spec and the
+   verifier, not a per-stage sampling quota — the level's pool is one combined,
+   deduplicated array, sampled the same way `better-value` samples its own
+   QUESTIONS[level] pool (shuffle, then slice). See docs/quadratic-factoriser-spec.md
+   section 2.2 for why that design is what makes the 12-item DOTS stage safe.
+   ---------------------------------------------------------------------------- */
+function bcKey(b, c) { return b + '_' + c; }
+
+function buildGcseStages() {
+  const bothPos = [], oneNeg = [], bothNeg = [], dots = [];
+  for (let p = 1; p <= 9; p++) {
+    for (let q = p; q <= 9; q++) {
+      bothPos.push({ p, q, b: p + q, c: p * q, stage: 'bothPos' });
+    }
+  }
+  for (let p = -9; p <= -1; p++) {
+    for (let q = p; q <= -1; q++) {
+      bothNeg.push({ p, q, b: p + q, c: p * q, stage: 'bothNeg' });
+    }
+  }
+  for (let p = 1; p <= 9; p++) {
+    for (let q = -9; q <= -1; q++) {
+      const b = p + q;
+      if (b === 0) continue; // reserved for the DOTS stage
+      oneNeg.push({ p, q, b, c: p * q, stage: 'oneNeg' });
+    }
+  }
+  for (let k = 1; k <= 12; k++) {
+    dots.push({ p: k, q: -k, b: 0, c: -(k * k), stage: 'dots' });
+  }
+  return { bothPos, oneNeg, bothNeg, dots };
+}
+
+function combinePool(stages, order) {
+  const seen = new Set(), out = [];
+  order.forEach(name => {
+    stages[name].forEach(item => {
+      const k = bcKey(item.b, item.c);
+      if (seen.has(k)) return; // defensive dedupe; stages are disjoint by construction
+      seen.add(k);
+      out.push(item);
+    });
+  });
+  return out;
+}
+
+// Lowercase (not SCREAMING_CASE): these are computed/runtime pools, not an
+// authored bank, and scripts/extract-banks.py's live-bank heuristic keys on
+// ALL-CAPS top-level names (see its own comment on estimation-golf's
+// roundQuestions false positive) -- naming these like a real bank would wrongly
+// pull the whole enumerated pool into checker tier 4 layer A's bank lint,
+// which is not what it's for. This game's real verification is
+// scripts/verify-quadratic-factoriser.py (spec item 5).
+const gcseStageOrder = ['bothPos', 'oneNeg', 'bothNeg', 'dots'];
+const gcseStages = buildGcseStages();
+const gcsePool = combinePool(gcseStages, gcseStageOrder);
+
+/* Exported as a JSON-able config so scripts/verify-quadratic-factoriser.py reads
+   the SAME pool the game itself built, rather than re-implementing the
+   enumeration by hand (spec item 5). Grows with each phase. */
+window.QF_POOLS = window.QF_POOLS || {};
+window.QF_POOLS.gcse = { stageOrder: gcseStageOrder, stages: gcseStages, pool: gcsePool };
+
+function levelPool(level) {
+  const lv = window.QF_POOLS[level];
+  return lv ? lv.pool : [];
+}
+
+function formatQuadratic(b, c, a) {
+  let s;
+  if (a === undefined || a === 1) s = 'x^2';
+  else s = a + 'x^2';
+  if (b === 1) s += ' + x';
+  else if (b === -1) s += ' - x';
+  else if (b > 0) s += ` + ${b}x`;
+  else if (b < 0) s += ` - ${Math.abs(b)}x`;
+  if (c > 0) s += ` + ${c}`;
+  else if (c < 0) s += ` - ${Math.abs(c)}`;
+  return s;
+}
+
+/* ----------------------------------------------------------------------------
+   Pools — 'higher' (a>1). Same "one combined, deduplicated, shuffled pool per
+   level" design as 'gcse' (spec section 2.2). (px+q)(rx+s), p,r in 1..6 with
+   2 <= pr <= 12, q,s in +-1..+-9, gcd(p,q)=gcd(r,s)=1 (no hidden common
+   factor), b != 0, |ac| <= 72. A later HCF stage multiplies the same base
+   pairs by an outer k in 2..5. Every item is additionally required to have
+   EXACTLY ONE unordered {m,n} split with mn=ac, m+n=b — the AC-method step 3
+   the tutorial teaches has to have one right answer, not several.
+   ---------------------------------------------------------------------------- */
+function gcdAbs(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) { const t = b; b = a % b; a = t; }
+  return a;
+}
+
+/* Every unordered {m,n} with m*n = ac and m+n = b, as a Set of 'm,n' keys
+   (m<=n). Used both to build the pool (exactly one split required) and, in
+   Phase 2's tutorial, to name the one correct split and to build the "picks
+   a pair that multiplies to c instead of ac" misconception distractor. */
+function acSplits(a, b, c) {
+  const ac = a * c;
+  const out = new Set();
+  const bound = Math.max(1, Math.abs(ac));
+  for (let m = -bound; m <= bound; m++) {
+    if (m === 0) continue;
+    if (ac % m !== 0) continue;
+    const n = ac / m;
+    if (m + n === b) out.add(m <= n ? (m + ',' + n) : (n + ',' + m));
+  }
+  return out;
+}
+
+function buildHigherBase() {
+  const seen = new Set();
+  const out = [];
+  for (let p = 1; p <= 6; p++) {
+    for (let r = 1; r <= 6; r++) {
+      const pr = p * r;
+      if (pr < 2 || pr > 12) continue;
+      for (let q = -9; q <= 9; q++) {
+        if (q === 0 || gcdAbs(p, q) !== 1) continue;
+        for (let s = -9; s <= 9; s++) {
+          if (s === 0 || gcdAbs(r, s) !== 1) continue;
+          const a = pr, b = p * s + q * r, c = q * s;
+          if (b === 0) continue;
+          if (Math.abs(a * c) > 72) continue;
+          if (acSplits(a, b, c).size !== 1) continue;
+          const left = p + ',' + q, right = r + ',' + s;
+          const key = left <= right ? left + '|' + right : right + '|' + left;
+          if (seen.has(key)) continue;
+          seen.add(key);
+          out.push({ p, q, r, s, a, b, c, stage: 'base' });
+        }
+      }
+    }
+  }
+  return out;
+}
+
+function buildHigherHcf(basePairs) {
+  const out = [];
+  for (let k = 2; k <= 5; k++) {
+    basePairs.forEach(item => {
+      out.push({ p: item.p, q: item.q, r: item.r, s: item.s, k,
+                 a: k * item.a, b: k * item.b, c: k * item.c, stage: 'hcf' });
+    });
+  }
+  return out;
+}
+
+function combineHigherPool(stages, order) {
+  const seen = new Set(), out = [];
+  order.forEach(name => {
+    stages[name].forEach(item => {
+      const key = item.stage + '_' + item.a + '_' + item.b + '_' + item.c + '_' +
+                  item.p + '_' + item.q + '_' + item.r + '_' + item.s;
+      if (seen.has(key)) return;
+      seen.add(key);
+      out.push(item);
+    });
+  });
+  return out;
+}
+
+const higherStageOrder = ['base', 'hcf'];
+const higherBase = buildHigherBase();
+const higherStages = { base: higherBase, hcf: buildHigherHcf(higherBase) };
+const higherPool = combineHigherPool(higherStages, higherStageOrder);
+window.QF_POOLS.higher = { stageOrder: higherStageOrder, stages: higherStages, pool: higherPool };
+
+/* Fixed worked example for the one-off Tutorial walkthrough: 6x^2+5x-4 =
+   (2x-1)(3x+4). Picked because its AC split (8,-3) is unique and its second
+   bracket's sign is the exact shape the named misconception is about. */
+const higherTutorialExample = { p: 2, q: -1, r: 3, s: 4, a: 6, b: 5, c: -4, stage: 'base' };
+
+/* ----------------------------------------------------------------------------
+   Pools — 'formula'. ax^2+bx+c=0, a in 1..5, b,c in +-1..+-9. Two stages:
+   nonNeg (real roots, ~85% of the pool) and neg (no real solutions, ~15%).
+   Unlike gcse/higher, the natural parameter space already gives "mostly
+   non-square discriminants" (measured: ~20% of real-root items have a
+   perfect-square discriminant, so ~80% genuinely need the formula) -- no
+   extra filtering needed for that part of spec item 2. The negative-
+   discriminant proportion is NOT natural, though: raw enumeration gives 34%
+   negative, and the spec wants ~15%. That is curated by keeping every 3rd
+   negative item in a fixed canonical (a,b,c) enumeration order (550 -> 184,
+   14.7% of the final 1254-item pool) -- a deterministic thinning, not a
+   random sample or a retry loop, so it stays reproducible and auditable by
+   the verifier. Items whose root sits within 1e-6 of a 2 d.p. rounding
+   boundary are filtered out at build time (spec item 2); none occur in this
+   parameter range, but the check runs regardless of whether it currently
+   removes anything.
+   ---------------------------------------------------------------------------- */
+function discriminant(a, b, c) { return b * b - 4 * a * c; }
+
+function nearRoundingBoundary(root) {
+  // True if `root` sits within 1e-6 of an exact 2 d.p. rounding boundary
+  // (a value ending .xx5 at the 3rd decimal place), where standard rounding
+  // is ambiguous/fragile to floating-point representation.
+  const k = Math.round(root * 100 - 0.5);
+  const boundary = (k + 0.5) / 100;
+  return Math.abs(root - boundary) < 1e-6;
+}
+
+function buildFormulaPools() {
+  const nonNeg = [];
+  const negAll = [];
+  for (let a = 1; a <= 5; a++) {
+    for (let b = -9; b <= 9; b++) {
+      if (b === 0) continue;
+      for (let c = -9; c <= 9; c++) {
+        if (c === 0) continue;
+        const d = discriminant(a, b, c);
+        if (d < 0) {
+          negAll.push({ a, b, c, d, noReal: true, root1: null, root2: null, stage: 'neg' });
+          continue;
+        }
+        const sq = Math.sqrt(d);
+        const root1 = (-b + sq) / (2 * a), root2 = (-b - sq) / (2 * a);
+        if (nearRoundingBoundary(root1) || nearRoundingBoundary(root2)) continue;
+        nonNeg.push({ a, b, c, d, noReal: false, root1, root2, stage: 'nonNeg' });
+      }
+    }
+  }
+  const negCurated = negAll.filter((_, i) => i % 3 === 0);
+  return { nonNeg, negCurated };
+}
+
+const { nonNeg: formulaNonNeg, negCurated: formulaNeg } = buildFormulaPools();
+const formulaStageOrder = ['nonNeg', 'neg'];
+const formulaStages = { nonNeg: formulaNonNeg, neg: formulaNeg };
+const formulaPool = formulaNonNeg.concat(formulaNeg);
+window.QF_POOLS.formula = { stageOrder: formulaStageOrder, stages: formulaStages, pool: formulaPool };
+
+function round2(x) { return Math.round(x * 100) / 100; }
+
+function rootsMatch(n1, n2, root1, root2) {
+  const r1 = round2(root1), r2 = round2(root2);
+  const a1 = round2(n1), a2 = round2(n2);
+  return (a1 === r1 && a2 === r2) || (a1 === r2 && a2 === r1);
+}
+
+/* The four named misconceptions (spec item 4). Each is checked as a PAIR --
+   both entered values must match that mistake's own root pair -- so a
+   coincidental single-value match never falsely names a method the student
+   did not actually use. */
+function formulaMistakeMessage(a, b, c, n1, n2) {
+  const d = discriminant(a, b, c);
+  const candidates = [];
+  if (d >= 0) {
+    const sq = Math.sqrt(d);
+    candidates.push({ roots: [(b + sq) / (2 * a), (b - sq) / (2 * a)],
+      msg: 'You used \\(+b\\) instead of \\(-b\\) in the formula.' });
+    candidates.push({ roots: [-b + sq / (2 * a), -b - sq / (2 * a)],
+      msg: 'You divided only the square root by \\(2a\\) — the \\(-b\\) term needs dividing by \\(2a\\) too.' });
+    candidates.push({ roots: [(-b + sq) / a, (-b - sq) / a],
+      msg: 'You divided by \\(a\\) instead of \\(2a\\).' });
+  }
+  if (b < 0) {
+    const dWrong = -(b * b) - 4 * a * c;
+    if (dWrong >= 0) {
+      const sqw = Math.sqrt(dWrong);
+      candidates.push({ roots: [(-b + sqw) / (2 * a), (-b - sqw) / (2 * a)],
+        msg: 'You took \\(b^2\\) as negative because \\(b\\) is negative — squaring a negative number always gives a positive result.' });
+    }
+  }
+  const entered = [round2(n1), round2(n2)].sort((x, y) => x - y);
+  for (const cand of candidates) {
+    const cr = cand.roots.map(round2).sort((x, y) => x - y);
+    if (Math.abs(cr[0] - entered[0]) < 1e-9 && Math.abs(cr[1] - entered[1]) < 1e-9) return cand.msg;
+  }
+  return null;
+}
+
+function formulaSubstitutionMsg(a, b, c, root1, root2) {
+  const d = discriminant(a, b, c);
+  const r1 = round2(root1).toFixed(2), r2 = round2(root2).toFixed(2);
+  return `The full substitution: \\(x = \\dfrac{-(${b}) \\pm \\sqrt{(${b})^2 - 4(${a})(${c})}}{2(${a})} = ` +
+    `\\dfrac{${-b} \\pm \\sqrt{${d}}}{${2 * a}}\\), giving \\(x = ${r1}\\) or \\(x = ${r2}\\).`;
+}
+
+/* ----------------------------------------------------------------------------
+   Level select / session length (start screen)
+   ---------------------------------------------------------------------------- */
+const params = new URLSearchParams(window.location.search);
+let currentLevel = params.get('level');
+if (!IMPLEMENTED_LEVELS.includes(currentLevel)) currentLevel = IMPLEMENTED_LEVELS[0];
+let sessionLength = 8;
+
+function renderLevelButtons() {
+  const mount = document.getElementById('levelSelect');
+  mount.innerHTML = '';
+  IMPLEMENTED_LEVELS.forEach(lv => {
+    const btn = document.createElement('button');
+    btn.className = 'level-btn' + (lv === currentLevel ? ' selected' : '');
+    btn.textContent = LEVEL_LABEL[lv];
+    btn.addEventListener('click', () => {
+      currentLevel = lv;
+      renderLevelButtons();
+      renderStartContent();
+      renderSessionButtons();
+    });
+    mount.appendChild(btn);
+  });
+}
+
+function renderSessionButtons() {
+  MaffsSession.render({
+    mount: document.getElementById('sessionRow'),
+    poolSize: levelPool(currentLevel).length,
+    selected: sessionLength,
+    onChange: count => { sessionLength = count; }
+  });
+}
+
+function renderHowTo() {
+  const mount = document.getElementById('howTo');
+  if (currentLevel === 'higher') {
+    mount.innerHTML = [
+      mx('When \\(a > 1\\) you cannot just find two numbers that add to \\(b\\) and multiply to \\(c\\) — use the AC method instead.'),
+      mx('Multiply \\(a \\times c\\), split the middle term into two, then factorise in pairs.'),
+      'A short worked example walks you through every step before your first real question.'
+    ].map(s => `<p>${s}</p>`).join('');
+    return;
+  }
+  if (currentLevel === 'formula') {
+    mount.innerHTML = [
+      tex('x = \\dfrac{-b \\pm \\sqrt{b^2-4ac}}{2a}'),
+      mx('Round each root to 2 decimal places — \\(1.2378\\) is entered as \\(1.24\\).'),
+      mx('If \\(b^2-4ac\\) is negative, press "No real solutions" instead.')
+    ].map(s => `<p>${s}</p>`).join('');
+    return;
+  }
+  mount.innerHTML = [
+    tex('x^2 + 5x + 6 = (x+2)(x+3)'),
+    mx('Because \\(2 \\times 3 = 6\\) is the constant term \\(c\\).'),
+    mx('And \\(2 + 3 = 5\\) is the coefficient \\(b\\).'),
+    'Watch out for negative numbers!'
+  ].map(s => `<p>${s}</p>`).join('');
+}
+
+function renderStartContent() {
+  document.getElementById('startDesc').textContent = LEVEL_DESC[currentLevel] || '';
+  document.getElementById('headerLevel').textContent = LEVEL_LABEL[currentLevel];
+  renderHowTo();
+}
+
+renderLevelButtons();
+renderStartContent();
+renderSessionButtons();
+
+/* ----------------------------------------------------------------------------
+   Game state / flow
+   ---------------------------------------------------------------------------- */
+let score = 0, correctCount = 0, qIndex = 0, sessionQuestions = [];
+let val1 = null, val2 = null, editingSlot = null, currentQ = null, locked = false;
+
+function buildNumGrid() {
+  const grid = document.getElementById('numGrid');
+  grid.innerHTML = '';
+  const nums = [];
+  for (let n = -12; n <= 12; n++) if (n !== 0) nums.push(n);
+  nums.forEach(n => {
+    const btn = document.createElement('button');
+    btn.className = 'num-btn' + (n < 0 ? ' neg' : '');
+    btn.textContent = n;
+    btn.onclick = () => selectNum(n);
+    grid.appendChild(btn);
+  });
+}
+
+function setGridEnabled(on) {
+  document.querySelectorAll('.num-btn').forEach(b => b.disabled = !on);
+  document.getElementById('checkBtn').disabled = !on;
+}
+
+function startEditing(slot) {
+  if (locked) return;
+  editingSlot = slot;
+  document.getElementById('pickerEditing').textContent = `Selecting number for bracket ${slot}...`;
+}
+
+function selectNum(n) {
+  if (locked || !editingSlot) return;
+  if (editingSlot === 1) {
+    val1 = n;
+    document.getElementById('sign1').textContent = n >= 0 ? '+' : '−';
+    document.getElementById('num1').textContent = Math.abs(n);
+  } else {
+    val2 = n;
+    document.getElementById('sign2').textContent = n >= 0 ? '+' : '−';
+    document.getElementById('num2').textContent = Math.abs(n);
+  }
+  document.getElementById('pickerEditing').textContent = `Selected ${n} for bracket ${editingSlot}. Tap the other bracket or check.`;
+  editingSlot = null;
+}
+
+function startGame() {
+  score = 0; correctCount = 0; qIndex = 0;
+  const pool = levelPool(currentLevel);
+  sessionQuestions = MaffsOptions.shuffle(pool.slice()).slice(0, Math.min(sessionLength, pool.length));
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameOver').classList.remove('visible');
+  document.getElementById('mainGame').classList.add('visible');
+  mfg('game_started', { game_slug: SLUG, level: currentLevel });
+  window._qfAbandoned = true;
+  if (!window._qfBeforeUnloadSet) {
+    window._qfBeforeUnloadSet = true;
+    window.addEventListener('beforeunload', function () {
+      if (window._qfAbandoned) mfg('game_abandoned', { game_slug: SLUG, level: currentLevel, questions_answered: qIndex });
+    });
+  }
+  if (currentLevel === 'higher') {
+    document.getElementById('gcsePanel').style.display = 'none';
+    document.getElementById('higherPanel').style.display = 'flex';
+    document.getElementById('formulaPanel').style.display = 'none';
+    hfMode = 'guided'; hfConsecCorrect = 0; hfConsecWrong = 0; hfViaShowMethod = false;
+    hfStartTutorial();
+  } else if (currentLevel === 'formula') {
+    document.getElementById('gcsePanel').style.display = 'none';
+    document.getElementById('higherPanel').style.display = 'none';
+    document.getElementById('formulaPanel').style.display = 'flex';
+    loadFormulaQ();
+  } else {
+    document.getElementById('gcsePanel').style.display = 'block';
+    document.getElementById('higherPanel').style.display = 'none';
+    document.getElementById('formulaPanel').style.display = 'none';
+    buildNumGrid();
+    loadQ();
+  }
+}
+
+function loadQ() {
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('nextMount'));
+  if (qIndex >= sessionQuestions.length) { endGame(); return; }
+  currentQ = sessionQuestions[qIndex];
+  qIndex++;
+  val1 = null; val2 = null; editingSlot = null; locked = false;
+  document.getElementById('quadratic').innerHTML = tex(formatQuadratic(currentQ.b, currentQ.c));
+  document.getElementById('qcount').textContent = `${qIndex}/${sessionQuestions.length}`;
+  document.getElementById('num1').textContent = '?';
+  document.getElementById('num2').textContent = '?';
+  document.getElementById('sign1').textContent = '+';
+  document.getElementById('sign2').textContent = '+';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('hintText').innerHTML = '';
+  document.getElementById('pickerEditing').textContent = 'Tap a bracket number above to start';
+  const chips = document.getElementById('hintChips');
+  chips.innerHTML = `<span class="hint-chip">${tex('p + q = ' + currentQ.b)}</span><span class="hint-chip">${tex('p \\times q = ' + currentQ.c)}</span>`;
+  setGridEnabled(true);
+}
+
+function checkAnswer() {
+  if (locked) return;
+  if (val1 === null || val2 === null) {
+    document.getElementById('feedback').textContent = 'Select both numbers first!';
+    document.getElementById('feedback').className = 'feedback wrong';
+    return;
+  }
+  locked = true;
+  setGridEnabled(false);
+  const correct = (val1 === currentQ.p && val2 === currentQ.q) || (val1 === currentQ.q && val2 === currentQ.p);
+  const fb = document.getElementById('feedback');
+  mfg('question_answered', { game_slug: SLUG, level: currentLevel, correct: correct, question_index: qIndex });
+  if (correct) {
+    score += 10; correctCount++;
+    document.getElementById('score').textContent = score;
+    fb.textContent = 'CORRECT! 🎉';
+    fb.className = 'feedback correct';
+    document.getElementById('hintText').innerHTML = tex(bracketLatex(currentQ.p, currentQ.q));
+    setTimeout(loadQ, 1400); // correct answers advance briskly (canon 7.6)
+  } else {
+    fb.textContent = 'WRONG';
+    fb.className = 'feedback wrong';
+    // Worked solution shown BEFORE the student can advance (canon 7.6 / MaffsNext).
+    document.getElementById('hintText').innerHTML = mx(
+      `The correct factorisation is \\(${bracketLatex(currentQ.p, currentQ.q)}\\). ` +
+      `Check: \\(${currentQ.p} \\times ${currentQ.q} = ${currentQ.c}\\) and \\(${currentQ.p} + ${currentQ.q} = ${currentQ.b}\\).`
+    );
+    MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: loadQ });
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   'higher' (a>1) — Tutorial -> Guided -> Independent, fading per CLAUDE.md
+   "Scaffolds fade" (spec item 3). Tutorial is a single fixed worked example
+   shown once at the start of every 'higher' session (not scored, not counted
+   toward the session length). Real questions then start in Guided mode:
+   every one of them is completed via the same six interactive steps (a wrong
+   sub-step shows feedback — a named misconception where the spec calls for
+   one — and lets the student retry that step; it never fails the question
+   outright, which is what makes it a scaffold). Two Guided questions
+   completed in a row promotes to Independent, where the student answers with
+   the final coefficient picker in one attempt, marked by EXPANDING their
+   brackets and comparing a, b, c (never by string — spec item 2). Two wrong
+   Independent attempts in a row demotes back to Guided. "Show me the method"
+   in Independent re-runs the six-step walkthrough for that exact question
+   without counting as a fail (spec item 3).
+   ---------------------------------------------------------------------------- */
+let hfMode = 'guided';
+let hfConsecCorrect = 0, hfConsecWrong = 0, hfViaShowMethod = false;
+let hfStep = 1;
+let hfEditingSlot = null;
+let hfIndependentPicks = { p: null, q: null, r: null, s: null, k: null };
+
+function hfPanel() { return document.getElementById('higherPanel'); }
+
+function hfBracketLatex(p, q, r, s, k) {
+  const sq = q >= 0 ? '+' : '-', ss = s >= 0 ? '+' : '-';
+  const inner = `(${p}x ${sq} ${Math.abs(q)})(${r}x ${ss} ${Math.abs(s)})`;
+  return (k && k !== 1) ? `${k}${inner}` : inner;
+}
+function hfCorrectSplit(item) { return { m: item.p * item.s, n: item.q * item.r }; }
+function pairsEqual(pair1, pair2) {
+  return (pair1[0] === pair2[0] && pair1[1] === pair2[1]) || (pair1[0] === pair2[1] && pair1[1] === pair2[0]);
+}
+
+function hfStartTutorial() {
+  hfMode = 'tutorial';
+  currentQ = higherTutorialExample;
+  document.getElementById('qcount').textContent = 'Tutorial';
+  hfStep = 1;
+  hfRenderStep();
+}
+
+function hfBeginRealQuestion() {
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('hfNextMount') || document.createElement('div'));
+  if (qIndex >= sessionQuestions.length) { endGame(); return; }
+  currentQ = sessionQuestions[qIndex];
+  qIndex++;
+  document.getElementById('qcount').textContent = `${qIndex}/${sessionQuestions.length}`;
+  if (hfMode === 'independent') hfRenderIndependent();
+  else { hfStep = 1; hfRenderStep(); }
+}
+
+function hfModeLabel() { return hfMode === 'tutorial' ? 'Tutorial' : hfMode === 'guided' ? 'Guided' : 'Independent'; }
+
+function hfDisableChoices() {
+  hfPanel().querySelectorAll('.hf-choice-btn').forEach(b => { b.disabled = true; });
+}
+function hfWrongRetry(msg) {
+  const fb = document.getElementById('hfFeedback');
+  if (fb) { fb.textContent = msg || 'Not quite — try again.'; fb.className = 'hf-feedback wrong'; }
+  setTimeout(hfRenderStep, 900);
+}
+function hfShowMisconception(name, mixedMsg) {
+  const body = document.getElementById('hfStepBody');
+  body.insertAdjacentHTML('beforeend',
+    `<div class="hf-misconception" data-misconception="${name}">${mx(mixedMsg)}</div>` +
+    `<button class="hf-choice-btn hf-continue-btn" onclick="hfRenderStep()">Try again</button>`);
+}
+
+function hfRenderStep() {
+  const split = hfCorrectSplit(currentQ);
+  const narrate = hfMode === 'tutorial';
+  let stepHtml;
+  if (hfStep === 1) stepHtml = hfStep1Html(narrate);
+  else if (hfStep === 2) stepHtml = hfStep2Html(narrate);
+  else if (hfStep === 3) stepHtml = hfStep3Html(narrate, split);
+  else if (hfStep === 4) stepHtml = hfStep4Html(narrate, split);
+  else if (hfStep === 5) stepHtml = hfStep5Html(narrate);
+  else stepHtml = hfStep6Html(narrate);
+
+  hfPanel().innerHTML = `
+    <div class="hf-box">
+      <div class="hf-mode-badge">${hfModeLabel()}</div>
+      <div class="q-label">Factorise</div>
+      <div class="hf-quadratic">${tex(formatQuadratic(currentQ.b, currentQ.c, currentQ.a))}</div>
+      <div class="hf-step-label">Step ${hfStep} of 6</div>
+      <div id="hfStepBody">${stepHtml}</div>
+      <div class="hf-feedback" id="hfFeedback"></div>
+      <div class="next-mount" id="hfNextMount"></div>
+    </div>`;
+}
+
+function hfDistinctTriples(correct, candidates, want) {
+  const seen = new Set([correct.a + ',' + correct.b + ',' + correct.c]);
+  const out = [];
+  for (const cand of candidates) {
+    const k = cand.a + ',' + cand.b + ',' + cand.c;
+    if (seen.has(k)) continue;
+    seen.add(k); out.push(cand);
+    if (out.length === want) break;
+  }
+  return out;
+}
+
+function hfStep1Html(narrate) {
+  const { a, b, c } = currentQ;
+  const distractors = hfDistinctTriples({ a, b, c },
+    [{ a, b: c, c: b }, { a, b: -b, c }, { a, b: c, c: -b }, { a, b: -c, c: -b }], 2);
+  const opts = MaffsOptions.shuffle([{ a, b, c }, ...distractors]);
+  const rows = opts.map(o =>
+    `<button class="hf-choice-btn" onclick="hfStep1Pick(${o.a},${o.b},${o.c})">${tex(`a=${o.a},\\ b=${o.b},\\ c=${o.c}`)}</button>`
+  ).join('');
+  const lead = narrate
+    ? mx('Read the coefficients straight off the quadratic: the number in front of \\(x^2\\) is \\(a\\), the number in front of \\(x\\) is \\(b\\), and the number on its own is \\(c\\).')
+    : mx('Identify \\(a\\), \\(b\\) and \\(c\\).');
+  return `<div class="${narrate ? 'hf-note' : 'hf-step-prompt'}">${lead}</div><div class="hf-choice-row">${rows}</div>`;
+}
+
+function hfStep2Html(narrate) {
+  const { a, b, c } = currentQ;
+  const correct = a * c;
+  const distractors = hfDistinctTriples({ a: 0, b: 0, c: correct },
+    [a * b, b * c, a + c, a - c].map(v => ({ a: 0, b: 0, c: v })), 2).map(o => o.c);
+  const opts = MaffsOptions.shuffle([correct, ...distractors]);
+  const rows = opts.map(v => `<button class="hf-choice-btn" onclick="hfStep2Pick(${v})">${tex(String(v))}</button>`).join('');
+  const lead = narrate
+    ? mx('Multiply \\(a\\) and \\(c\\) together — not \\(b\\). This product is the target for the next step.')
+    : mx('Work out \\(a \\times c\\).');
+  return `<div class="${narrate ? 'hf-note' : 'hf-step-prompt'}">${lead}</div><div class="hf-choice-row">${rows}</div>`;
+}
+
+function hfStep3Html(narrate, split) {
+  const { a, b, c } = currentQ;
+  const correctPair = [split.m, split.n];
+  let cPair = pairsEqual([1, c], correctPair) ? [-1, -c] : [1, c];
+  let negPair = pairsEqual([-split.m, -split.n], correctPair) || pairsEqual([-split.m, -split.n], cPair)
+    ? [split.n, -split.m] : [-split.m, -split.n];
+  const seen = new Set(); const rows = [];
+  [correctPair, cPair, negPair].forEach(pr => {
+    const k = [...pr].sort((x, y) => x - y).join(',');
+    if (seen.has(k)) return;
+    seen.add(k); rows.push(pr);
+  });
+  const shuffled = MaffsOptions.shuffle(rows);
+  const html = shuffled.map(([m, n]) =>
+    `<button class="hf-choice-btn" onclick="hfStep3Pick(${m},${n})">${tex(`${m} \\times ${n} = ${m * n},\\ \\ ${m} + ${n} = ${m + n}`)}</button>`
+  ).join('');
+  const lead = narrate
+    ? mx(`Find two numbers that multiply to \\(ac = ${a * c}\\) and add to \\(b = ${b}\\).`)
+    : mx('Pick the pair that multiplies to \\(ac\\) and adds to \\(b\\).');
+  return `<div class="${narrate ? 'hf-note' : 'hf-step-prompt'}">${lead}</div><div class="hf-choice-row">${html}</div>`;
+}
+
+function hfStep4Html(narrate, split) {
+  const { a, c } = currentQ;
+  const line = `${a === 1 ? '' : a}x^2 + ${split.m}x + ${split.n}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)}`;
+  const note = narrate
+    ? `<div class="hf-note">${mx(`Either order is fine — \\(${split.m}x\\) then \\(${split.n}x\\), or the other way round.`)}</div>`
+    : `<div class="hf-step-prompt">Split the middle term.</div>`;
+  return note + `<div class="hf-step-prompt">${tex(line)}</div>` +
+    `<button class="hf-choice-btn hf-continue-btn" onclick="hfStep4Continue()">Continue</button>`;
+}
+
+function hfStep5Html(narrate) {
+  const { p, q, r, s } = currentQ;
+  const bracket = `${r === 1 ? '' : r}x ${s >= 0 ? '+' : '-'} ${Math.abs(s)}`;
+  const factor = `${p === 1 ? '' : p}x`;
+  const opts = MaffsOptions.shuffle([q, -q]);
+  const rows = opts.map(v => `<button class="hf-choice-btn" onclick="hfStep5Pick(${v})">${tex(String(v))}</button>`).join('');
+  const lead = narrate
+    ? mx(`The first pair factorises to \\(${factor}(${bracket})\\). Now factorise the second pair — its bracket must come out IDENTICAL to the first.`)
+    : mx(`The first pair factorises to \\(${factor}(${bracket})\\). What do you take out of the second pair?`);
+  return `<div class="${narrate ? 'hf-note' : 'hf-step-prompt'}">${lead}</div><div class="hf-choice-row">${rows}</div>`;
+}
+
+function hfStep6Html(narrate) {
+  const { p, q, r, s, k } = currentQ;
+  const correctLatex = hfBracketLatex(p, q, r, s, k);
+  const wrongLatex = hfBracketLatex(-p, q, r, s, k);
+  const opts = MaffsOptions.shuffle([correctLatex, wrongLatex]);
+  const rows = opts.map(latex => `<button class="hf-choice-btn" onclick="hfStep6Pick('${latex.replace(/'/g, "\\'")}')">${tex(latex)}</button>`).join('');
+  const lead = narrate
+    ? 'The common bracket comes out the front, next to the two leftover factors.'
+    : 'Which is the correct factorisation?';
+  return `<div class="${narrate ? 'hf-note' : 'hf-step-prompt'}">${lead}</div><div class="hf-choice-row">${rows}</div>`;
+}
+
+function hfStepCorrectAdvance(nextStep) {
+  const fb = document.getElementById('hfFeedback');
+  fb.textContent = 'Correct!'; fb.className = 'hf-feedback correct';
+  hfDisableChoices();
+  setTimeout(() => { hfStep = nextStep; hfRenderStep(); }, 700);
+}
+
+function hfStep1Pick(a, b, c) {
+  hfDisableChoices();
+  if (a === currentQ.a && b === currentQ.b && c === currentQ.c) hfStepCorrectAdvance(2);
+  else hfWrongRetry();
+}
+function hfStep2Pick(v) {
+  hfDisableChoices();
+  if (v === currentQ.a * currentQ.c) hfStepCorrectAdvance(3);
+  else hfWrongRetry();
+}
+function hfStep3Pick(m, n) {
+  hfDisableChoices();
+  const split = hfCorrectSplit(currentQ);
+  if (pairsEqual([m, n], [split.m, split.n])) { hfStepCorrectAdvance(4); return; }
+  if (m * n === currentQ.c) {
+    hfShowMisconception('mult-c',
+      `That pair multiplies to \\(c = ${currentQ.c}\\), not \\(a \\times c = ${currentQ.a * currentQ.c}\\). ` +
+      `Find two numbers that multiply to \\(ac\\) and add to \\(b = ${currentQ.b}\\).`);
+    return;
+  }
+  hfWrongRetry();
+}
+function hfStep4Continue() { hfStep = 5; hfRenderStep(); }
+function hfStep5Pick(v) {
+  hfDisableChoices();
+  const { q, r, s } = currentQ;
+  if (v === q) { hfStepCorrectAdvance(6); return; }
+  const wrongR = -r, wrongS = -s;
+  hfShowMisconception('bracket-mismatch',
+    `Taking out \\(${v}\\) leaves \\(${wrongR}x ${wrongS >= 0 ? '+' : '-'} ${Math.abs(wrongS)}\\), which does not match the ` +
+    `first bracket \\(${r}x ${s >= 0 ? '+' : '-'} ${Math.abs(s)}\\). The two brackets must be identical — check the ` +
+    `sign of the number you took out.`);
+}
+function hfStep6Pick(chosenLatex) {
+  hfDisableChoices();
+  const correctLatex = hfBracketLatex(currentQ.p, currentQ.q, currentQ.r, currentQ.s, currentQ.k);
+  if (chosenLatex === correctLatex) {
+    const fb = document.getElementById('hfFeedback');
+    fb.textContent = 'Correct!'; fb.className = 'hf-feedback correct';
+    setTimeout(hfCompleteStepFlow, 700);
+  } else {
+    hfWrongRetry();
+  }
+}
+
+function hfCompleteStepFlow() {
+  if (hfMode === 'tutorial') {
+    hfMode = 'guided'; hfConsecCorrect = 0; hfConsecWrong = 0;
+    hfBeginRealQuestion();
+    return;
+  }
+  if (hfViaShowMethod) {
+    hfViaShowMethod = false;
+    mfg('question_answered', { game_slug: SLUG, level: 'higher', correct: true, question_index: qIndex });
+    score += 15; correctCount++; document.getElementById('score').textContent = score;
+    setTimeout(hfBeginRealQuestion, 1200);
+    return;
+  }
+  mfg('question_answered', { game_slug: SLUG, level: 'higher', correct: true, question_index: qIndex });
+  score += 15; correctCount++; document.getElementById('score').textContent = score;
+  hfConsecCorrect++;
+  if (hfConsecCorrect >= 2) { hfMode = 'independent'; hfConsecCorrect = 0; hfConsecWrong = 0; }
+  setTimeout(hfBeginRealQuestion, 1200);
+}
+
+function hfRenderIndependent() {
+  hfIndependentPicks = { p: null, q: null, r: null, s: null, k: null };
+  const isHcf = currentQ.stage === 'hcf';
+  hfPanel().innerHTML = `
+    <div class="hf-box">
+      <div class="hf-mode-badge">Independent</div>
+      <div class="q-label">Factorise</div>
+      <div class="hf-quadratic">${tex(formatQuadratic(currentQ.b, currentQ.c, currentQ.a))}</div>
+      <div class="hf-picker-row" id="hfIndepRow">
+        ${isHcf ? `<span class="hf-slot" data-slot="k" onclick="hfIndepEdit('k')">k=?</span>` : ''}
+        <span>(</span><span class="hf-slot" data-slot="p" onclick="hfIndepEdit('p')">?</span><span>x</span>
+        <span class="hf-slot" data-slot="q" onclick="hfIndepEdit('q')">?</span><span>)(</span>
+        <span class="hf-slot" data-slot="r" onclick="hfIndepEdit('r')">?</span><span>x</span>
+        <span class="hf-slot" data-slot="s" onclick="hfIndepEdit('s')">?</span><span>)</span>
+      </div>
+      <div class="picker-editing" id="hfIndepEditing">Tap a slot, then a number below.</div>
+      <div class="num-grid" id="hfIndepGrid"></div>
+      <button class="check-btn" id="hfIndepCheckBtn" onclick="hfIndepCheck()">Check Factorisation</button>
+      <button class="hf-show-method" onclick="hfShowMethod()">Show me the method</button>
+      <div class="hf-feedback" id="hfFeedback"></div>
+      <div class="next-mount" id="hfNextMount"></div>
+    </div>`;
+  hfBuildIndepGrid();
+}
+
+function hfBuildIndepGrid() {
+  const grid = document.getElementById('hfIndepGrid');
+  grid.innerHTML = '';
+  const nums = [];
+  for (let n = -9; n <= 9; n++) if (n !== 0) nums.push(n);
+  nums.sort((a, b) => a - b);
+  nums.forEach(n => {
+    const btn = document.createElement('button');
+    btn.className = 'num-btn' + (n < 0 ? ' neg' : '');
+    btn.textContent = n;
+    btn.onclick = () => hfIndepSelect(n);
+    grid.appendChild(btn);
+  });
+}
+function hfIndepEdit(slot) {
+  hfEditingSlot = slot;
+  document.getElementById('hfIndepEditing').textContent = `Selecting a value for ${slot}...`;
+}
+function hfIndepSelect(n) {
+  if (!hfEditingSlot) return;
+  hfIndependentPicks[hfEditingSlot] = n;
+  const el = document.querySelector(`.hf-slot[data-slot="${hfEditingSlot}"]`);
+  if (el) el.textContent = (hfEditingSlot === 'p' || hfEditingSlot === 'r' || hfEditingSlot === 'k') ? n : (n >= 0 ? `+${n}` : n);
+  document.getElementById('hfIndepEditing').textContent = `Set ${hfEditingSlot} = ${n}. Tap another slot or check.`;
+  hfEditingSlot = null;
+}
+function hfIndepCheck() {
+  const picks = hfIndependentPicks;
+  const isHcf = currentQ.stage === 'hcf';
+  const needed = isHcf ? ['p', 'q', 'r', 's', 'k'] : ['p', 'q', 'r', 's'];
+  if (needed.some(slot => picks[slot] === null)) {
+    const fb = document.getElementById('hfFeedback');
+    fb.textContent = 'Fill in every slot first.'; fb.className = 'hf-feedback wrong';
+    return;
+  }
+  const k = isHcf ? picks.k : 1;
+  const sa = k * picks.p * picks.r, sb = k * (picks.p * picks.s + picks.q * picks.r), sc = k * picks.q * picks.s;
+  const correct = (sa === currentQ.a && sb === currentQ.b && sc === currentQ.c);
+  mfg('question_answered', { game_slug: SLUG, level: 'higher', correct: correct, question_index: qIndex });
+  document.getElementById('hfIndepCheckBtn').disabled = true;
+  const fb = document.getElementById('hfFeedback');
+  if (correct) {
+    hfConsecWrong = 0;
+    score += 15; correctCount++; document.getElementById('score').textContent = score;
+    fb.textContent = 'CORRECT! 🎉'; fb.className = 'hf-feedback correct';
+    setTimeout(hfBeginRealQuestion, 1400);
+  } else {
+    hfConsecWrong++;
+    fb.textContent = 'WRONG'; fb.className = 'hf-feedback wrong';
+    const worked = hfBracketLatex(currentQ.p, currentQ.q, currentQ.r, currentQ.s, currentQ.k);
+    fb.insertAdjacentHTML('afterend', `<div class="hint-text">${mx(`The correct factorisation is \\(${worked}\\).`)}</div>`);
+    if (hfConsecWrong >= 2) { hfMode = 'guided'; hfConsecWrong = 0; hfConsecCorrect = 0; }
+    MaffsNext.wrong({ mount: document.getElementById('hfNextMount'), onAdvance: hfBeginRealQuestion });
+  }
+}
+function hfShowMethod() {
+  hfViaShowMethod = true;
+  hfStep = 1;
+  hfRenderStep();
+}
+
+/* ----------------------------------------------------------------------------
+   'formula' — ax^2+bx+c=0, solved with the quadratic formula. Answer: two
+   inputs (any order) plus a separate "No real solutions" button (spec item 2).
+   Marked by comparing each input, rounded to 2 d.p., against the true roots
+   rounded the same way -- never by string. Wrong-answer feedback names one of
+   the four methodology mistakes (spec item 4) before the full substitution,
+   when the entered pair matches that mistake exactly.
+   ---------------------------------------------------------------------------- */
+function formulaPanel() { return document.getElementById('formulaPanel'); }
+
+function renderFormulaQuestion() {
+  const { a, b, c } = currentQ;
+  formulaPanel().innerHTML = `
+    <div class="question-box">
+      <div class="q-label">Solve</div>
+      <div class="quadratic" id="formulaQuadratic">${tex(formatQuadratic(b, c, a) + ' = 0')}</div>
+      <div class="formula-inputs">
+        <input type="text" inputmode="decimal" class="formula-input" id="fRoot1" placeholder="x₁" autocomplete="off">
+        <input type="text" inputmode="decimal" class="formula-input" id="fRoot2" placeholder="x₂" autocomplete="off">
+      </div>
+      <button type="button" class="no-real-btn" id="noRealBtn" onclick="submitNoReal()">No real solutions</button>
+      <div class="feedback" id="fFeedback"></div>
+      <div class="hint-text" id="fHintText"></div>
+      <div class="next-mount" id="fNextMount"></div>
+    </div>
+    <button class="check-btn" id="fCheckBtn" onclick="checkFormulaAnswer()">Check Answer</button>
+  `;
+}
+
+function loadFormulaQ() {
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('fNextMount') || document.createElement('div'));
+  if (qIndex >= sessionQuestions.length) { endGame(); return; }
+  currentQ = sessionQuestions[qIndex];
+  qIndex++;
+  document.getElementById('qcount').textContent = `${qIndex}/${sessionQuestions.length}`;
+  renderFormulaQuestion();
+}
+
+function formulaDisable() {
+  ['fRoot1', 'fRoot2', 'noRealBtn', 'fCheckBtn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = true;
+  });
+}
+
+function checkFormulaAnswer() {
+  const v1 = document.getElementById('fRoot1').value.trim();
+  const v2 = document.getElementById('fRoot2').value.trim();
+  if (v1 === '' || v2 === '') {
+    const fb = document.getElementById('fFeedback');
+    fb.textContent = 'Enter both roots, or press "No real solutions".';
+    fb.className = 'feedback wrong';
+    return;
+  }
+  const n1 = parseFloat(v1), n2 = parseFloat(v2);
+  if (isNaN(n1) || isNaN(n2)) {
+    const fb = document.getElementById('fFeedback');
+    fb.textContent = 'Enter numbers.';
+    fb.className = 'feedback wrong';
+    return;
+  }
+  submitFormulaAnswer(n1, n2, false);
+}
+
+function submitNoReal() {
+  submitFormulaAnswer(null, null, true);
+}
+
+function submitFormulaAnswer(n1, n2, saidNoReal) {
+  const { a, b, c, noReal, root1, root2 } = currentQ;
+  let correct;
+  if (noReal) correct = saidNoReal === true;
+  else if (saidNoReal) correct = false;
+  else correct = rootsMatch(n1, n2, root1, root2);
+
+  formulaDisable();
+  mfg('question_answered', { game_slug: SLUG, level: 'formula', correct: correct, question_index: qIndex });
+  const fb = document.getElementById('fFeedback');
+  const hint = document.getElementById('fHintText');
+  if (correct) {
+    score += 15; correctCount++;
+    document.getElementById('score').textContent = score;
+    fb.textContent = 'CORRECT! 🎉';
+    fb.className = 'feedback correct';
+    setTimeout(loadFormulaQ, 1400); // correct answers advance briskly (canon 7.6)
+  } else {
+    fb.textContent = 'WRONG';
+    fb.className = 'feedback wrong';
+    if (noReal) {
+      hint.innerHTML = mx(`This quadratic has no real solutions — the discriminant \\(b^2-4ac = ${b * b - 4 * a * c}\\) is negative.`);
+    } else if (saidNoReal) {
+      hint.innerHTML = mx('This quadratic DOES have real solutions. ' + formulaSubstitutionMsg(a, b, c, root1, root2));
+    } else {
+      const mistake = formulaMistakeMessage(a, b, c, n1, n2);
+      hint.innerHTML = mistake
+        ? mx(mistake + ' ' + formulaSubstitutionMsg(a, b, c, root1, root2))
+        : mx(formulaSubstitutionMsg(a, b, c, root1, root2));
+    }
+    // Worked solution/misconception shown BEFORE the student can advance (canon 7.6 / MaffsNext).
+    MaffsNext.wrong({ mount: document.getElementById('fNextMount'), onAdvance: loadFormulaQ });
+  }
+}
+
+function endGame() {
+  document.getElementById('mainGame').classList.remove('visible');
+  document.getElementById('gameOver').classList.add('visible');
+  document.getElementById('finalScore').textContent = score;
+  const total = sessionQuestions.length;
+  document.getElementById('goDetail').textContent = `${total} quadratics attempted`;
+  window._qfAbandoned = false;
+  // correctCount, not score/pointsPerQuestion -- 'gcse' scores 10/correct, 'higher'
+  // scores 15/correct, and inferring the count back from score/10 silently broke for
+  // 'higher' (gave e.g. 150% on an all-correct run). Track the real count instead.
+  const pct = total > 0 ? Math.round(correctCount / total * 100) : 0;
+  mfg('game_completed', { game_slug: SLUG, level: currentLevel, score: score, questions_answered: total, accuracy: pct });
+  if (window.MaffsLeaderboard) {
+    MaffsLeaderboard.submitScore(SLUG, currentLevel, score, total).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, currentLevel, score);
+  }
+  const oldBest = getBest(currentLevel);
+  saveBest(currentLevel, score);
+  if (score > oldBest) mfg('personal_best_set', { game_slug: SLUG, level: currentLevel, score: score, previous_best: oldBest });
+  renderLB();
+}
+
+/* Local best/history is now kept per level (qf_best_<level>) so 'gcse',
+   'higher' and 'formula' don't overwrite each other's device-local box. A
+   returning player's existing flat qf_best/qf_scores (single, gcse-only,
+   pre-rebuild) is migrated once so their 'gcse' history is not silently lost —
+   this is IN ADDITION TO the required leaderboard/PB key continuity above,
+   which never changed: MaffsLeaderboard.submitScore always used, and still
+   uses, the literal string 'gcse' for this level. */
+(function migrateLegacyLocalBest() {
+  try {
+    if (localStorage.getItem('qf_best_gcse') === null && localStorage.getItem('qf_best') !== null) {
+      localStorage.setItem('qf_best_gcse', localStorage.getItem('qf_best'));
+    }
+    if (localStorage.getItem('qf_scores_gcse') === null && localStorage.getItem('qf_scores') !== null) {
+      localStorage.setItem('qf_scores_gcse', localStorage.getItem('qf_scores'));
+    }
+  } catch (e) { /* localStorage unavailable */ }
+})();
+
+function getBest(level) { return parseInt(localStorage.getItem('qf_best_' + level) || '0'); }
+function saveBest(level, s) {
+  if (s > getBest(level)) localStorage.setItem('qf_best_' + level, s);
+  document.getElementById('best').textContent = getBest(level);
+}
+function renderLB() {
+  const key = 'qf_scores_' + currentLevel;
+  const scores = JSON.parse(localStorage.getItem(key) || '[]');
+  const ns = [...scores, { score, date: new Date().toLocaleDateString() }].sort((a, b) => b.score - a.score).slice(0, 5);
+  localStorage.setItem(key, JSON.stringify(ns));
+  document.getElementById('lbList').innerHTML = ns.map((s, i) =>
+    `<div class="lb-row"><span class="lb-rank">#${i + 1}</span><span class="lb-date">${s.date}</span><span class="lb-score">${s.score}</span></div>`
+  ).join('') || '<div style="text-align:center;color:var(--muted);font-size:13px;padding:12px">No scores yet</div>';
+}
+document.getElementById('best').textContent = getBest(currentLevel);
+renderLB();
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

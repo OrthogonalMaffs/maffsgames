@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Order in court! Three arguments, one correct answer. Rule on the maths disputes and sentence the wrong ones. Free GCSE maths reasoning game.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/maths-court/">
+<meta property="og:title" content="Maths Court — MaffsGames">
+<meta property="og:description" content="Order in court! Three arguments, one correct answer. Rule on the maths disputes and sentence the wrong ones. Free GCSE maths reasoning game.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/maths-court/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Maths Court — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);--green-tint:#14532d;
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);--red-tint:#450a0a;
+--amber:#f59e0b;--navy:#1a2744;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+/* Header with wood-grain texture */
+.header{
+  background:var(--navy);
+  background-image:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,0.02) 40px,rgba(255,255,255,0.02) 42px);
+  border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px
+}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--amber)}
+
+/* Gavel icon */
+.gavel-wrap{display:flex;align-items:center;cursor:pointer;user-select:none}
+.gavel-icon{font-size:24px;transition:transform 0.3s ease;display:inline-block;color:var(--amber)}
+.gavel-icon.strike{transform:rotate(-45deg)}
+@media(prefers-reduced-motion:reduce){
+  .gavel-icon{transition:none}
+}
+
+/* Level pill */
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:rgba(245,158,11,0.15);color:var(--amber);border:1px solid rgba(245,158,11,0.3)}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.level-card{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:16px;cursor:pointer;border:2px solid var(--border);transition:border-color 0.15s}
+.level-card:hover{border-color:var(--amber)}
+.level-card.selected{border-color:var(--amber);background:rgba(245,158,11,0.08)}
+.level-card h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.level-card p{font-size:13px;color:var(--muted);line-height:1.5}
+
+.session-label{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:10px;margin-top:24px}
+.session-row{display:flex;gap:10px;margin-bottom:24px}
+.session-btn{flex:1;padding:12px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s}
+.session-btn:hover{border-color:var(--amber)}
+.session-btn.selected{border-color:var(--amber);background:rgba(245,158,11,0.08)}
+
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--amber);color:#000;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+.start-btn:disabled{opacity:0.4;cursor:default}
+
+/* Problem statement */
+.problem-card{background:var(--surface-alt);border-radius:16px;padding:28px 24px;margin:20px 0;text-align:center}
+.problem-label{font-size:12px;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
+.problem-text{font-size:1.25rem;line-height:1.7;font-weight:500;color:var(--text)}
+.problem-topic{font-size:12px;color:var(--muted);margin-top:8px}
+
+/* Argument cards */
+.arguments-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px}
+.argument-card{
+  background:var(--surface);border-radius:14px;padding:20px 16px;
+  border:2px solid var(--border);cursor:pointer;transition:border-color 0.15s,background 0.15s;
+  display:flex;flex-direction:column;position:relative
+}
+.argument-card:hover:not(.disabled){border-color:rgba(255,255,255,0.2)}
+.argument-card.disabled{cursor:default;pointer-events:none}
+.argument-card.correct-reveal{border-color:var(--green);background:var(--green-tint)}
+.argument-card.incorrect-reveal{border-color:var(--red);background:var(--red-tint)}
+
+/* Correct/incorrect flash animation */
+.argument-card.flash-green{animation:pulseGreen 0.6s ease}
+.argument-card.flash-red{animation:pulseRed 0.6s ease}
+@keyframes pulseGreen{
+  0%{box-shadow:0 0 0 0 rgba(34,197,94,0.5)}
+  50%{box-shadow:0 0 20px 4px rgba(34,197,94,0.3)}
+  100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+}
+@keyframes pulseRed{
+  0%{box-shadow:0 0 0 0 rgba(239,68,68,0.5)}
+  50%{box-shadow:0 0 20px 4px rgba(239,68,68,0.3)}
+  100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
+}
+@media(prefers-reduced-motion:reduce){
+  .argument-card.flash-green,.argument-card.flash-red{animation:none}
+}
+
+.char-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.char-info{min-width:0}
+.char-name{font-size:14px;font-weight:700;line-height:1.3}
+.char-occupation{font-size:11px;font-style:italic;color:var(--muted);line-height:1.3}
+.working-lines{font-family:'JetBrains Mono',monospace;font-size:12px;color:#cbd5e1;line-height:1.7;margin-bottom:12px;flex:1}
+.working-line{margin-bottom:2px}
+.char-conclusion{font-size:13px;font-weight:700;border-top:1px solid var(--border);padding-top:10px;margin-top:auto}
+
+/* Judge's Summary */
+.judges-summary{
+  background:var(--surface-alt);border-radius:12px;padding:24px 20px;
+  border:2px solid var(--amber);margin-bottom:20px;
+  opacity:0;transform:translateY(30px);transition:opacity 0.35s ease,transform 0.35s ease
+}
+.judges-summary.show{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){
+  .judges-summary{transition:none}
+}
+.judges-label{font-size:12px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.judges-text{font-size:14px;color:#cbd5e1;line-height:1.7}
+
+.next-btn{display:none;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s;margin-top:16px}
+.next-btn:hover{border-color:var(--amber)}
+.next-btn.visible{display:block}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--amber)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.pb-badge{background:rgba(245,158,11,0.15);color:var(--amber);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--amber);color:#000;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+.pb-line{text-align:center;margin-bottom:16px;color:var(--muted);font-size:14px}
+
+@media(max-width:700px){
+  .arguments-row{grid-template-columns:1fr;gap:12px}
+  .problem-text{font-size:1.1rem}
+  .header{padding:12px 16px}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Maths Court</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <span class="level-pill" id="levelPill">GCSE</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreTotal">0</span></span>
+    <div class="gavel-wrap" id="gavelWrap">
+      <span class="gavel-icon" id="gavelIcon">&#9878;</span>
+    </div>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Maths Court</div>
+  <div class="start-sub">Three arguments. One correct answer. You're the judge.<br>Read the working, find the truth, deliver the verdict.</div>
+
+  <div class="level-card selected" data-level="ks3" onclick="selectLevel('ks3')">
+    <h3>KS3</h3>
+    <p>Year 7-9. BIDMAS, fractions, percentages, angles, sequences.</p>
+  </div>
+  <div class="level-card" data-level="gcse" onclick="selectLevel('gcse')">
+    <h3>GCSE</h3>
+    <p>Year 10-11. Algebra, Pythagoras, probability, circle theorems, indices.</p>
+  </div>
+  <div class="level-card" data-level="core" onclick="selectLevel('core')">
+    <h3>Core Maths</h3>
+    <p>AQA 1350. Expected value, normal distribution, cost-benefit, regression.</p>
+  </div>
+
+  <div class="session-label">Session length</div>
+  <div class="session-row">
+    <button class="session-btn selected" data-len="10" onclick="selectSession(10)">10 Qs</button>
+    <button class="session-btn" data-len="20" onclick="selectSession(20)">20 Qs</button>
+    <button class="session-btn" data-len="30" onclick="selectSession(30)">30 Qs</button>
+  </div>
+
+  <button class="start-btn" onclick="startGame()">Enter the Courtroom</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="problem-card">
+    <div class="problem-label">The Dispute</div>
+    <div class="problem-text" id="problemText"></div>
+    <div class="problem-topic" id="problemTopic"></div>
+  </div>
+  <div class="arguments-row" id="argumentsRow"></div>
+  <div class="judges-summary" id="judgesSummary">
+    <div class="judges-label">&#9878; Judge's Summary</div>
+    <div class="judges-text" id="judgesText"></div>
+  </div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Case</button>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Court Adjourned</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Verdict</h4>
+      <div class="score" id="finalScore">0/10</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="pb-line" id="pbLine"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  <button class="play-again-btn" onclick="resetToStart()">New Session</button>
+</div>
+
+<script>
+// ============================================================
+//  AVATAR COLOURS
+// ============================================================
+const AVATAR_COLOURS = [
+  '#e74c3c','#3498db','#2ecc71','#9b59b6','#e67e22',
+  '#1abc9c','#e84393','#0984e3','#6c5ce7','#00b894',
+  '#fd79a8','#fdcb6e','#74b9ff','#a29bfe','#55efc4'
+];
+function getInitials(name){return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}
+function getAvatarColour(name){let h=0;for(let i=0;i<name.length;i++)h=name.charCodeAt(i)+((h<<5)-h);return AVATAR_COLOURS[Math.abs(h)%AVATAR_COLOURS.length]}
+
+// ============================================================
+//  QUESTION BANK — 45 questions: 15 KS3, 20 GCSE, 10 Core
+// ============================================================
+const QUESTIONS = {
+ks3: [
+{id:'mc_ks3_001',level:'ks3',topic:'BIDMAS',problem:'Calculate 3 + 4 \u00d7 2',
+arguments:[
+{name:'Tracey Numbers',occupation:'Retired Calculator',working:['3 + 4 = 7','7 \u00d7 2 = 14','Left to right. That\'s how reading works.'],conclusion:'Answer: 14',correct:false},
+{name:'Professor Order',occupation:'Head of BIDMAS Studies',working:['Multiplication first: 4 \u00d7 2 = 8','Then addition: 3 + 8 = 11'],conclusion:'Answer: 11',correct:true},
+{name:'Dave Left-to-Right',occupation:'Self-Taught Mathematician',working:['3 + 4 = 7','\u00d7 2 = 14','I learned maths from a calculator','and it agreed with me.'],conclusion:'Answer: 14',correct:false}
+],judgesSummary:'Professor Order is correct. Multiplication is performed before addition under BIDMAS. The answer is 11, not 14.'},
+
+{id:'mc_ks3_002',level:'ks3',topic:'Fractions',problem:'Which is larger: 3/5 or 5/8?',
+arguments:[
+{name:'Numerica Strong',occupation:'Fraction Influencer',working:['5/8 is bigger','8 is a bigger number than 5','so eighths are better.'],conclusion:'5/8 is larger',correct:false},
+{name:'Demi Nominator',occupation:'Common Denominator Coach',working:['Common denominator 40:','3/5 = 24/40','5/8 = 25/40','5/8 is larger by 1/40.'],conclusion:'5/8 is larger',correct:true},
+{name:'Chuck Approximate',occupation:'Rounding Guru',working:['3/5 = 0.6','5/8 = 0.5 (just over half)','So 3/5 is larger.'],conclusion:'3/5 is larger',correct:false}
+],judgesSummary:'Demi is correct. 5/8 = 0.625, 3/5 = 0.6. Chuck approximated 5/8 as 0.5, which is wrong.'},
+
+{id:'mc_ks3_003',level:'ks3',topic:'Percentages',problem:'Find 35% of 60',
+arguments:[
+{name:'Polly Cent',occupation:'Percentage Life Coach',working:['35 \u00f7 60 \u00d7 100 = 58.3%','That\'s the percentage.'],conclusion:'Answer: 58.3%',correct:false},
+{name:'Sid Multiplier',occupation:'Mental Maths Specialist',working:['35% = 0.35','0.35 \u00d7 60 = 21'],conclusion:'Answer: 21',correct:true},
+{name:'Karen Shortcut',occupation:'10% Method Evangelist',working:['10% of 60 = 6','35% = 3 \u00d7 10% + 5%','= 18 + 6 = 24'],conclusion:'Answer: 24',correct:false}
+],judgesSummary:'Sid is correct. 35% of 60 = 21. Karen\'s 10% method is right in theory but she calculated 5% incorrectly \u2014 5% of 60 = 3, not 6.'},
+
+{id:'mc_ks3_004',level:'ks3',topic:'Ratio',problem:'Share 84 in the ratio 3:4',
+arguments:[
+{name:'Randy Ratio',occupation:'Professional Sharer',working:['3 + 4 = 7 parts','84 \u00f7 7 = 12','Shares: 3 \u00d7 12 = 36','and 4 \u00d7 12 = 48'],conclusion:'36 and 48',correct:true},
+{name:'Twyla Parts',occupation:'Ratio Reducer',working:['Simplify 84 by 3 and 4:','84 \u00f7 3 = 28','84 \u00f7 4 = 21'],conclusion:'28 and 21',correct:false},
+{name:'Gary Halves',occupation:'Approximate Mathematician',working:['3:4 is nearly 1:1','so each gets about 42.','Near enough.'],conclusion:'~42 each',correct:false}
+],judgesSummary:'Randy is correct: 36 + 48 = 84. Twyla divided by each part separately rather than finding the value of one part.'},
+
+{id:'mc_ks3_005',level:'ks3',topic:'Area',problem:'Find the area of a right-angled triangle with legs 6cm and 8cm',
+arguments:[
+{name:'Hypatia Square',occupation:'Area Specialist',working:['Area = base \u00d7 height','= 6 \u00d7 8 = 48cm\u00b2'],conclusion:'Area = 48cm\u00b2',correct:false},
+{name:'Brian Half',occupation:'Triangle Theorist',working:['Area = \u00bd \u00d7 base \u00d7 height','= \u00bd \u00d7 6 \u00d7 8 = 24cm\u00b2'],conclusion:'Area = 24cm\u00b2',correct:true},
+{name:'Carol Hypotenuse',occupation:'Pythagoras Fan',working:['Hypotenuse = \u221a(36+64) = 10','Area = \u00bd \u00d7 10 \u00d7 6 = 30cm\u00b2'],conclusion:'Area = 30cm\u00b2',correct:false}
+],judgesSummary:'Brian is correct. Area = \u00bdbh = 24cm\u00b2. Hypatia forgot the \u00bd. Carol found the hypotenuse correctly but you need the perpendicular height (8cm), not the hypotenuse.'},
+
+{id:'mc_ks3_006',level:'ks3',topic:'Sequences',problem:'What is the nth term of: 5, 8, 11, 14...?',
+arguments:[
+{name:'Ned Term',occupation:'Sequence Spotter',working:['Goes up by 3 each time.','Starts at 5.','nth term = 3n + 5'],conclusion:'nth term = 3n + 5',correct:false},
+{name:'Arty Metic',occupation:'Arithmetic Sequence Expert',working:['Common difference = 3','When n=1, term=5','nth term = 3n + 2','Check: 3(1)+2=5 \u2713, 3(2)+2=8 \u2713'],conclusion:'nth term = 3n + 2',correct:true},
+{name:'Grace Ful',occupation:'Pattern Poet',working:['Multiply position by 3: 3, 6, 9, 12...','Add 2 more each time.','nth term = 3n + 2n = 5n'],conclusion:'nth term = 5n',correct:false}
+],judgesSummary:'Arty is correct: 3n+2. Ned confused the first term with the constant \u2014 when n=1, 3(1)+5=8\u22605. Grace\'s reasoning is confused.'},
+
+{id:'mc_ks3_007',level:'ks3',topic:'Angles',problem:'Find the missing angle in a triangle where two angles are 47\u00b0 and 63\u00b0',
+arguments:[
+{name:'Angus Lure',occupation:'Angle Enthusiast',working:['360\u00b0 in a triangle.','360 \u2212 47 \u2212 63 = 250\u00b0'],conclusion:'Missing angle = 250\u00b0',correct:false},
+{name:'Tara Gon',occupation:'Triangle Expert',working:['Angles in a triangle sum to 180\u00b0','180 \u2212 47 \u2212 63 = 70\u00b0'],conclusion:'Missing angle = 70\u00b0',correct:true},
+{name:'Issy Sceles',occupation:'Shape Lover',working:['All triangles are equilateral,','so all angles are 60\u00b0.'],conclusion:'Missing angle = 60\u00b0',correct:false}
+],judgesSummary:'Tara is correct. Angles in a triangle always sum to 180\u00b0, not 360\u00b0. Issy confused equilateral triangles with all triangles.'},
+
+{id:'mc_ks3_008',level:'ks3',topic:'Probability',problem:'A bag has 3 red and 5 blue balls. What is P(red)?',
+arguments:[
+{name:'Lucky Pete',occupation:'Probability Enthusiast',working:['There are 3 red ones.','P(red) = 3. Simple.'],conclusion:'P(red) = 3',correct:false},
+{name:'Freda Ction',occupation:'Fraction Fan',working:['Total balls = 8','P(red) = 3/8'],conclusion:'P(red) = 3/8',correct:true},
+{name:'Minus Blue',occupation:'Probability Reducer',working:['P(red) = red \u2212 blue','= 3 \u2212 5 = \u22122','Negative probability means unlikely.'],conclusion:'P(red) = \u22122',correct:false}
+],judgesSummary:'Freda is correct. Probability = favourable \u00f7 total = 3/8. Probability is always between 0 and 1 \u2014 negative probability is impossible.'},
+
+{id:'mc_ks3_009',level:'ks3',topic:'Mean',problem:'Find the mean of: 4, 7, 3, 9, 2',
+arguments:[
+{name:'Mo Dian',occupation:'Average Advisor',working:['Sort them: 2, 3, 4, 7, 9','Middle value = 4','Mean = 4'],conclusion:'Mean = 4',correct:false},
+{name:'Ava Rage',occupation:'Mean Team Leader',working:['Sum = 4+7+3+9+2 = 25','Mean = 25 \u00f7 5 = 5'],conclusion:'Mean = 5',correct:true},
+{name:'Max Imum',occupation:'Extreme Values Coach',working:['Largest is 9, smallest is 2','Mean = (9+2) \u00f7 2 = 5.5'],conclusion:'Mean = 5.5',correct:false}
+],judgesSummary:'Ava is correct. Mean = sum \u00f7 count = 25 \u00f7 5 = 5. Mo found the median (4). Max found the midrange, not the mean.'},
+
+{id:'mc_ks3_010',level:'ks3',topic:'Negative Numbers',problem:'Calculate \u22123 \u00d7 \u22124',
+arguments:[
+{name:'Minus Mike',occupation:'Negative Number Negativist',working:['Both negative so answer is negative:','\u22123 \u00d7 \u22124 = \u221212'],conclusion:'Answer: \u221212',correct:false},
+{name:'Polly Positive',occupation:'Sign Rule Champion',working:['Negative \u00d7 negative = positive:','\u22123 \u00d7 \u22124 = +12'],conclusion:'Answer: +12',correct:true},
+{name:'Zero Zara',occupation:'Neutral Mathematician',working:['Negatives cancel each other out','leaving nothing:','\u22123 \u00d7 \u22124 = 0'],conclusion:'Answer: 0',correct:false}
+],judgesSummary:'Polly is correct. Two negatives multiplied always give a positive result. \u22123 \u00d7 \u22124 = +12.'},
+
+{id:'mc_ks3_011',level:'ks3',topic:'Perimeter vs Area',problem:'A rectangle is 7cm by 4cm. Find the perimeter.',
+arguments:[
+{name:'Perry Meter',occupation:'Perimeter Professional',working:['Perimeter = 2 \u00d7 (7 + 4)','= 2 \u00d7 11 = 22cm'],conclusion:'Perimeter = 22cm',correct:true},
+{name:'Aaron Yah',occupation:'Area Advocate',working:['7 \u00d7 4 = 28','The perimeter is 28cm.'],conclusion:'Perimeter = 28cm',correct:false},
+{name:'Sid Sum',occupation:'Addition Addict',working:['Just add them:','7 + 4 = 11cm'],conclusion:'Perimeter = 11cm',correct:false}
+],judgesSummary:'Perry is correct. Perimeter = sum of all sides = 7+4+7+4 = 22cm. Aaron calculated the area. Sid only added two of the four sides.'},
+
+{id:'mc_ks3_012',level:'ks3',topic:'LCM',problem:'Find the LCM of 4 and 6',
+arguments:[
+{name:'Hector Factor',occupation:'Highest Common Advocate',working:['4 and 6 both divide by 2.','LCM = 2.'],conclusion:'LCM = 2',correct:false},
+{name:'Lucy Multiple',occupation:'Lowest Common Champion',working:['Multiples of 4: 4, 8, 12...','Multiples of 6: 6, 12...','First common: 12.'],conclusion:'LCM = 12',correct:true},
+{name:'Tim Multiply',occupation:'Product Man',working:['LCM = 4 \u00d7 6 = 24','That\'s definitely a common multiple.'],conclusion:'LCM = 24',correct:false}
+],judgesSummary:'Lucy is correct. The LCM is the lowest common multiple: 12. Hector found the HCF. Tim found a common multiple (24) but not the lowest.'},
+
+{id:'mc_ks3_013',level:'ks3',topic:'Substitution',problem:'If a = 3 and b = \u22122, find 2a \u2212 b\u00b2',
+arguments:[
+{name:'Sue Stitution',occupation:'Algebra Coach',working:['2(3) \u2212 (\u22122)\u00b2','= 6 \u2212 4 = 2'],conclusion:'Answer: 2',correct:true},
+{name:'Negative Neil',occupation:'Sign Specialist',working:['2(3) \u2212 (\u22122)\u00b2','= 6 \u2212 (\u22124) = 6 + 4 = 10','Two negatives make a positive!'],conclusion:'Answer: 10',correct:false},
+{name:'Bev Squared',occupation:'Power Enthusiast',working:['2(3) \u2212 (\u22122\u00b2)','= 6 \u2212 (\u22124) = 10','Square applies to 2 but not the minus.'],conclusion:'Answer: 10',correct:false}
+],judgesSummary:'Sue is correct. (\u22122)\u00b2 = +4 (squaring makes positive). 2a \u2212 b\u00b2 = 6 \u2212 4 = 2. Both Neil and Bev misapplied the negative sign.'},
+
+{id:'mc_ks3_014',level:'ks3',topic:'Rounding',problem:'Round 3.456 to 2 decimal places',
+arguments:[
+{name:'Ron Ding',occupation:'Rounding Expert',working:['Look at the 3rd decimal place: 6 \u2265 5','so round up.','3.456 \u2192 3.46'],conclusion:'Answer: 3.46',correct:true},
+{name:'Trish Unc',occupation:'Truncation Advocate',working:['2 decimal places means keep 2 decimals:','3.45. Just chop it off.'],conclusion:'Answer: 3.45',correct:false},
+{name:'Sig Fig',occupation:'Significant Figure Fan',working:['2 decimal places = 2 significant figures:','3.5'],conclusion:'Answer: 3.5',correct:false}
+],judgesSummary:'Ron is correct. Look at the third decimal (6), which rounds up the second decimal. 3.456 \u2192 3.46. Trish truncated instead of rounding. Sig confused decimal places with significant figures.'},
+
+{id:'mc_ks3_015',level:'ks3',topic:'Factors',problem:'List all the factors of 24',
+arguments:[
+{name:'Phil Actor',occupation:'Factor Fan',working:['1, 2, 3, 4, 6, 8, 12, 24','All numbers that divide','exactly into 24.'],conclusion:'8 factors listed',correct:true},
+{name:'Molly Multiple',occupation:'Multiple Enthusiast',working:['24, 48, 72, 96...','Those are the factors.'],conclusion:'24, 48, 72, 96...',correct:false},
+{name:'Prime Pete',occupation:'Prime Number Fan',working:['2 and 3 \u2014','the prime factors of 24.'],conclusion:'Factors: 2 and 3',correct:false}
+],judgesSummary:'Phil is correct with 8 factors. Molly listed multiples of 24, not factors. Pete listed only prime factors \u2014 all factors include composites too.'}
+],
+
+gcse: [
+{id:'mc_gcse_001',level:'gcse',topic:'BIDMAS',problem:'Calculate 18 \u00f7 (2 + 1) \u00d7 3\u00b2',
+arguments:[
+{name:'Bryan Bracket',occupation:'Order Operative',working:['Brackets first: 2+1=3','Powers: 3\u00b2=9','Then left to right: 18\u00f73=6, 6\u00d79=54'],conclusion:'Answer: 54',correct:true},
+{name:'Lesley Left',occupation:'Sequential Thinker',working:['18\u00f72=9, 9+1=10','10\u00d73=30, 30\u00b2=900'],conclusion:'Answer: 900',correct:false},
+{name:'Brenda Mnemonic',occupation:'BIDMAS Believer',working:['Brackets: 2+1=3','Division before multiplication:','18\u00f73\u00d73\u00b2 = 18\u00f73\u00d79','= 6\u00d79 = 54'],conclusion:'Answer: 54',correct:true}
+],judgesSummary:'Bryan is correct with clear reasoning. Brenda also gets 54 but her understanding of the order within DM is muddled \u2014 division and multiplication have equal priority and go left to right. Lesley ignored all precedence rules.'},
+
+{id:'mc_gcse_002',level:'gcse',topic:'Algebra \u2014 Expanding',problem:'Expand and simplify (2x + 3)(x \u2212 4)',
+arguments:[
+{name:'Penelope Bracket',occupation:'Expansion Specialist',working:['(2x)(x) + (2x)(\u22124) + (3)(x) + (3)(\u22124)','= 2x\u00b2 \u2212 8x + 3x \u2212 12','= 2x\u00b2 \u2212 5x \u2212 12'],conclusion:'2x\u00b2 \u2212 5x \u2212 12',correct:true},
+{name:'Terry FOIL',occupation:'First Only Inner Last',working:['(2x)(x) + (3)(\u22124)','= 2x\u00b2 \u2212 12','FOIL means First and Last.'],conclusion:'2x\u00b2 \u2212 12',correct:false},
+{name:'Monty Binomial',occupation:'Bracket Basher',working:['2x \u00d7 x = 2x\u00b2, 3 \u00d7 \u22124 = \u221212','Middle terms cancel.','Answer: 2x\u00b2 \u2212 12'],conclusion:'2x\u00b2 \u2212 12',correct:false}
+],judgesSummary:'Penelope is correct: 2x\u00b2 \u2212 5x \u2212 12. FOIL means First, Outer, Inner, Last \u2014 all four products. Terry and Monty both missed the outer and inner cross terms.'},
+
+{id:'mc_gcse_003',level:'gcse',topic:'Reverse Percentage',problem:'A coat costs \u00a368 after a 15% reduction. Find the original price.',
+arguments:[
+{name:'Derek Plunkett',occupation:'Returns Specialist',working:['Add 15% back:','\u00a368 \u00d7 1.15 = \u00a378.20'],conclusion:'Original: \u00a378.20',correct:false},
+{name:'Ruth Multiplier',occupation:'Decimal Whisperer',working:['After 15% off, you paid 85%.','So \u00a368 = 0.85 \u00d7 original.','Original = \u00a368 \u00f7 0.85 = \u00a380.'],conclusion:'Original: \u00a380',correct:true},
+{name:'Ken Percentage',occupation:'Old School',working:['15% of 68 = 10.20','Original = 68 + 10.20 = \u00a378.20'],conclusion:'Original: \u00a378.20',correct:false}
+],judgesSummary:'Ruth is correct. After a 15% reduction you paid 85%, so divide the sale price by 0.85. Both Derek and Ken incorrectly took 15% of the sale price rather than reversing the original reduction.'},
+
+{id:'mc_gcse_004',level:'gcse',topic:'Simultaneous Equations',problem:'Solve: 3x + 2y = 16 and x \u2212 y = 2',
+arguments:[
+{name:'Sol Ving',occupation:'Equation Expert',working:['From eq2: x = y + 2','Sub into eq1: 3(y+2) + 2y = 16','3y+6+2y=16 \u2192 5y=10 \u2192 y=2, x=4'],conclusion:'x = 4, y = 2',correct:true},
+{name:'Ellie Minator',occupation:'Elimination Fan',working:['Multiply eq2 by 2: 2x \u2212 2y = 4','Add to eq1: 5x = 20, x = 4','Sub: 4 \u2212 y = 2, y = 2'],conclusion:'x = 4, y = 2',correct:true},
+{name:'Gus Simultaneous',occupation:'Guessing Champion',working:['Try x=5, y=3: 3(5)+2(3)=21\u226016','Try x=4, y=2: 3(4)+2(2)=16\u2713','and 4\u22122=2\u2713. Done by trial.'],conclusion:'x = 4, y = 2',correct:true}
+],judgesSummary:'All three reached x=4, y=2, which is correct. Sol used substitution (clear and reliable), Ellie used elimination (equally valid), Gus used trial and error (risky in an exam \u2014 works here by luck). Substitution and elimination are the expected methods.'},
+
+{id:'mc_gcse_005',level:'gcse',topic:'Pythagoras',problem:'A right triangle has legs 5cm and 12cm. Find the hypotenuse.',
+arguments:[
+{name:'Hippa Tenuse',occupation:'Hypotenuse Hunter',working:['c\u00b2 = 5\u00b2 + 12\u00b2 = 25 + 144 = 169','c = \u221a169 = 13'],conclusion:'Hypotenuse = 13cm',correct:true},
+{name:'Alan Pythagor',occupation:'Theorem Enthusiast',working:['c = 5 + 12 = 17cm','The hypotenuse is the longest side','so I add them.'],conclusion:'Hypotenuse = 17cm',correct:false},
+{name:'Shirley Square',occupation:'Square Root Avoider',working:['5\u00b2 + 12\u00b2 = 169','Hypotenuse = 169cm.'],conclusion:'Hypotenuse = 169cm',correct:false}
+],judgesSummary:'Hippa is correct: c = 13cm. Alan added instead of using Pythagoras. Shirley forgot to take the square root of 169.'},
+
+{id:'mc_gcse_006',level:'gcse',topic:'Probability \u2014 Combined',problem:'P(A) = 0.4, P(B) = 0.3, A and B are independent. Find P(A and B).',
+arguments:[
+{name:'Andy Both',occupation:'Joint Probability Journalist',working:['Independent events:','P(A and B) = P(A) \u00d7 P(B)','= 0.4 \u00d7 0.3 = 0.12'],conclusion:'P(A and B) = 0.12',correct:true},
+{name:'Anna Addition',occupation:'Addition Rule Fan',working:['P(A and B) = P(A) + P(B)','= 0.4 + 0.3 = 0.7'],conclusion:'P(A and B) = 0.7',correct:false},
+{name:'Mitch Exclusive',occupation:'Mutually Exclusive Mixer',working:['They\'re independent so','they can\'t both happen:','P(A and B) = 0'],conclusion:'P(A and B) = 0',correct:false}
+],judgesSummary:'Andy is correct. For independent events, AND means multiply. Anna used the addition rule (for OR). Mitch confused \'independent\' with \'mutually exclusive\' \u2014 independent events CAN both occur.'},
+
+{id:'mc_gcse_007',level:'gcse',topic:'Circle Theorem',problem:'O is the centre. Angle AOB = 110\u00b0. Find angle ACB where C is on the major arc.',
+arguments:[
+{name:'Theo Rem',occupation:'Circle Theorem Textbook',working:['Angle at centre = 2 \u00d7 angle','at circumference.','Angle ACB = 110 \u00f7 2 = 55\u00b0'],conclusion:'Angle ACB = 55\u00b0',correct:true},
+{name:'Archie Arc',occupation:'Minor/Major Confuser',working:['C is on major arc so use reflex:','360 \u2212 110 = 250','ACB = 250 \u00f7 2 = 125\u00b0'],conclusion:'Angle ACB = 125\u00b0',correct:false},
+{name:'Cyclic Cilla',occupation:'Opposite Angles Fan',working:['Opposite angles in a cyclic quad','sum to 180.','ACB = 180 \u2212 110 = 70\u00b0'],conclusion:'Angle ACB = 70\u00b0',correct:false}
+],judgesSummary:'Theo is correct. The inscribed angle theorem: angle at centre = 2 \u00d7 angle at circumference for the same arc. Since C is on the major arc, the relevant arc is the minor one subtended by 110\u00b0. ACB = 55\u00b0.'},
+
+{id:'mc_gcse_008',level:'gcse',topic:'Indices',problem:'Simplify (x\u00b3)\u2074 \u00f7 x\u2075',
+arguments:[
+{name:'Indy Ces',occupation:'Index Law Professor',working:['(x\u00b3)\u2074 = x\u00b9\u00b2','x\u00b9\u00b2 \u00f7 x\u2075 = x\u2077'],conclusion:'Answer: x\u2077',correct:true},
+{name:'Maddy Multiply',occupation:'Multiplication Fan',working:['(x\u00b3)\u2074 = x\u00b3\u02e3\u2074 = x\u00b9\u00b2','Then x\u00b9\u00b2 \u00f7 x\u2075 = x\u00b9\u00b2\u207b\u2075 = x\u2077'],conclusion:'Answer: x\u2077',correct:true},
+{name:'Terry Times',occupation:'All-Purpose Multiplier',working:['(x\u00b3)\u2074 = x\u00b3 \u00d7 x\u2074 = x\u2077','Then x\u2077 \u00f7 x\u2075 = x\u00b2'],conclusion:'Answer: x\u00b2',correct:false}
+],judgesSummary:'Both Indy and Maddy are correct (x\u2077). Terry confused (x\u00b3)\u2074 = x\u00b9\u00b2 with x\u00b3 \u00d7 x\u2074 = x\u2077 \u2014 a power to a power means multiply indices.'},
+
+{id:'mc_gcse_009',level:'gcse',topic:'Completing the Square',problem:'Write x\u00b2 + 6x + 2 in the form (x + a)\u00b2 + b',
+arguments:[
+{name:'Francesca Form',occupation:'Completing the Square Coach',working:['Half the coefficient of x: 6\u00f72 = 3','(x + 3)\u00b2 = x\u00b2 + 6x + 9','x\u00b2 + 6x + 2 = (x+3)\u00b2 \u2212 9 + 2','= (x + 3)\u00b2 \u2212 7'],conclusion:'(x + 3)\u00b2 \u2212 7',correct:true},
+{name:'Harvey Half',occupation:'Algebra Apprentice',working:['Half the coefficient of x: 6\u00f72 = 3','(x + 3)\u00b2 + 2','Just put the +2 on the end.'],conclusion:'(x + 3)\u00b2 + 2',correct:false},
+{name:'Daphne Direct',occupation:'Factorisation Fan',working:['x\u00b2 + 6x + 2','= (x + 2)(x + 1)','Check: x\u00b2 + 3x + 2... close enough.'],conclusion:'(x + 2)(x + 1)',correct:false}
+],judgesSummary:'Francesca is correct. (x+3)\u00b2 expands to x\u00b2+6x+9, which is 7 more than we want, so subtract 7. Harvey forgot to subtract the 9 that the square introduces. Daphne factorised a completely different expression.'},
+
+{id:'mc_gcse_010',level:'gcse',topic:'Sine Rule',problem:'In triangle ABC, angle A = 40\u00b0, angle B = 75\u00b0, a = 8cm. Find side b.',
+arguments:[
+{name:'Sinead Rule',occupation:'Sine Rule Specialist',working:['a/sin A = b/sin B','8/sin 40\u00b0 = b/sin 75\u00b0','b = 8 \u00d7 sin 75\u00b0 / sin 40\u00b0','b = 8 \u00d7 0.9659 / 0.6428 = 12.02cm'],conclusion:'b = 12.0cm',correct:true},
+{name:'Colin Cosine',occupation:'Wrong Rule Selector',working:['b\u00b2 = a\u00b2 + c\u00b2 \u2212 2ac cos B','But I don\'t know c...','b \u2248 8 \u00d7 cos 75\u00b0 = 2.07cm'],conclusion:'b = 2.07cm',correct:false},
+{name:'Ratio Rita',occupation:'Simple Proportion Person',working:['Angles: 40 and 75','Sides in same ratio: b = 8 \u00d7 75/40','= 15cm'],conclusion:'b = 15cm',correct:false}
+],judgesSummary:'Sinead is correct using the sine rule. Colin tried the cosine rule but didn\'t have enough information and then misapplied it. Rita assumed sides are proportional to angles directly \u2014 they\'re proportional to the sines of their opposite angles, not the angles themselves.'},
+
+{id:'mc_gcse_011',level:'gcse',topic:'Cumulative Frequency',problem:'From a cumulative frequency diagram of 60 students\' test scores, find the interquartile range if Q1 = 42 and Q3 = 67.',
+arguments:[
+{name:'Quentin Quartile',occupation:'Quartile Calculator',working:['IQR = Q3 \u2212 Q1','= 67 \u2212 42 = 25'],conclusion:'IQR = 25',correct:true},
+{name:'Rangi Range',occupation:'Range Enthusiast',working:['Range = highest \u2212 lowest','IQR = 67 + 42 = 109... no wait.','IQR = (67 + 42) \u00f7 2 = 54.5'],conclusion:'IQR = 54.5',correct:false},
+{name:'Median Mel',occupation:'Middle Ground Finder',working:['The median is at the 30th value.','Q1 is at 15th, Q3 at 45th.','IQR = 45 \u2212 15 = 30'],conclusion:'IQR = 30',correct:false}
+],judgesSummary:'Quentin is correct. IQR = Q3 \u2212 Q1 = 67 \u2212 42 = 25. Rangi confused IQR with a mean of quartiles. Mel subtracted the positions (15th and 45th) instead of the actual data values at those positions.'},
+
+{id:'mc_gcse_012',level:'gcse',topic:'Quadratic nth Term',problem:'Find the nth term of: 3, 8, 15, 24, 35...',
+arguments:[
+{name:'Delta Squared',occupation:'Second Difference Detective',working:['1st differences: 5, 7, 9, 11','2nd differences: 2, 2, 2','So coefficient of n\u00b2 = 2/2 = 1','n\u00b2: 1, 4, 9, 16, 25','Sequence \u2212 n\u00b2: 2, 4, 6, 8, 10 = 2n','nth term = n\u00b2 + 2n'],conclusion:'nth term = n\u00b2 + 2n',correct:true},
+{name:'Linear Larry',occupation:'Straight Line Thinker',working:['Differences: 5, 7, 9, 11','Average difference = 8','nth term = 8n \u2212 5','Check: 8(1)\u22125 = 3 \u2713... good enough.'],conclusion:'nth term = 8n \u2212 5',correct:false},
+{name:'Pattern Patsy',occupation:'Trial and Error Expert',working:['3 = 1 \u00d7 3','8 = 2 \u00d7 4','15 = 3 \u00d7 5','nth term = n(n+2)'],conclusion:'nth term = n(n+2)',correct:true}
+],judgesSummary:'Both Delta and Patsy are correct! n\u00b2 + 2n = n(n+2). Delta used the second differences method, Patsy spotted the factored pattern. Larry used a linear formula which only works for the first term and diverges after that.'},
+
+{id:'mc_gcse_013',level:'gcse',topic:'Vector Addition',problem:'If a = (3, \u22121) and b = (\u22122, 5), find 2a + b.',
+arguments:[
+{name:'Vic Vector',occupation:'Vector Operations Expert',working:['2a = 2(3, \u22121) = (6, \u22122)','2a + b = (6, \u22122) + (\u22122, 5)','= (6+(\u22122), \u22122+5) = (4, 3)'],conclusion:'2a + b = (4, 3)',correct:true},
+{name:'Maggie Magnitude',occupation:'Size Over Direction',working:['|a| = \u221a(9+1) = \u221a10','|b| = \u221a(4+25) = \u221a29','2\u221a10 + \u221a29 = 11.7'],conclusion:'2a + b = 11.7',correct:false},
+{name:'Scalar Steve',occupation:'Component Confuser',working:['2a + b = 2(3) + (\u22122) + 2(\u22121) + 5','= 6 \u2212 2 \u2212 2 + 5 = 7'],conclusion:'2a + b = 7',correct:false}
+],judgesSummary:'Vic is correct: (4, 3). Vectors are added component by component. Maggie added magnitudes, which isn\'t how vector addition works. Steve mixed all the components together into a single number.'},
+
+{id:'mc_gcse_014',level:'gcse',topic:'Bounds',problem:'A length is 4.7cm to 1 decimal place. Find the upper and lower bounds.',
+arguments:[
+{name:'Benny Bounds',occupation:'Bounds Specialist',working:['Rounded to 1dp: \u00b1 0.05','Lower bound = 4.7 \u2212 0.05 = 4.65','Upper bound = 4.7 + 0.05 = 4.75'],conclusion:'4.65 \u2264 x < 4.75',correct:true},
+{name:'Roxy Round',occupation:'Rounding Ranger',working:['One decimal place means \u00b1 0.1','Lower = 4.6','Upper = 4.8'],conclusion:'4.6 \u2264 x \u2264 4.8',correct:false},
+{name:'Digit Dan',occupation:'Decimal Place Counter',working:['It\'s already precise to 1dp.','Bounds are 4.7 and 4.7.','It is what it is.'],conclusion:'Bounds: both 4.7',correct:false}
+],judgesSummary:'Benny is correct. When rounded to 1dp, the error is \u00b1 half the precision (\u00b10.05). The upper bound is strict (< not \u2264) because 4.75 would round up to 4.8. Roxy used the full unit instead of half. Dan doesn\'t understand bounds at all.'},
+
+{id:'mc_gcse_015',level:'gcse',topic:'Factorising Quadratics',problem:'Factorise x\u00b2 \u2212 5x + 6',
+arguments:[
+{name:'Faye Factor',occupation:'Quadratic Factoriser',working:['Need two numbers that multiply to +6','and add to \u22125','Those are \u22122 and \u22123','x\u00b2 \u2212 5x + 6 = (x \u2212 2)(x \u2212 3)'],conclusion:'(x \u2212 2)(x \u2212 3)',correct:true},
+{name:'Positive Pete',occupation:'Sign Ignorer',working:['Factors of 6: 2 and 3','x\u00b2 \u2212 5x + 6 = (x + 2)(x + 3)','Check: x\u00b2 + 5x + 6... close enough.'],conclusion:'(x + 2)(x + 3)',correct:false},
+{name:'Mix Max',occupation:'Confused Calculator',working:['Factors of 6: 1 and 6','x\u00b2 \u2212 5x + 6 = (x \u2212 1)(x \u2212 6)','Check: x\u00b2 \u2212 7x + 6... that\'s the same.'],conclusion:'(x \u2212 1)(x \u2212 6)',correct:false}
+],judgesSummary:'Faye is correct. We need two numbers that multiply to +6 AND add to \u22125. Only \u22122 and \u22123 work. Pete got the signs wrong (his expand gives +5x not \u22125x). Mix Max chose 1 and 6 which multiply to 6 but add to 7, not 5.'},
+
+{id:'mc_gcse_016',level:'gcse',topic:'Perpendicular Gradient',problem:'A line has gradient 3. What is the gradient of a line perpendicular to it?',
+arguments:[
+{name:'Perpa Dicular',occupation:'Perpendicular Gradient Expert',working:['Perpendicular gradients multiply to \u22121','3 \u00d7 m = \u22121','m = \u22121/3'],conclusion:'Gradient = \u22121/3',correct:true},
+{name:'Neggy Negative',occupation:'Sign Flipper',working:['Perpendicular means opposite sign:','gradient = \u22123'],conclusion:'Gradient = \u22123',correct:false},
+{name:'Reciprocal Rex',occupation:'Fraction Former',working:['Perpendicular means reciprocal:','gradient = 1/3'],conclusion:'Gradient = 1/3',correct:false}
+],judgesSummary:'Perpa is correct. Perpendicular gradients are the negative reciprocal of each other: m\u2081 \u00d7 m\u2082 = \u22121. Neggy only negated without taking the reciprocal. Rex only took the reciprocal without negating. You need to do both.'},
+
+{id:'mc_gcse_017',level:'gcse',topic:'Arc Length',problem:'Find the arc length of a sector with radius 10cm and angle 72\u00b0.',
+arguments:[
+{name:'Archie Length',occupation:'Arc Length Specialist',working:['Arc length = (\u03b8/360) \u00d7 2\u03c0r','= (72/360) \u00d7 2\u03c0(10)','= 0.2 \u00d7 20\u03c0 = 4\u03c0','= 12.57cm'],conclusion:'Arc length = 4\u03c0 \u2248 12.6cm',correct:true},
+{name:'Aaron Area',occupation:'Sector Area Specialist',working:['Sector = (\u03b8/360) \u00d7 \u03c0r\u00b2','= (72/360) \u00d7 \u03c0(100)','= 20\u03c0 = 62.8cm'],conclusion:'Arc length = 62.8cm',correct:false},
+{name:'Fraction Fred',occupation:'Simplifier Supreme',working:['72/360 = 1/5','Arc = 10 \u00f7 5 = 2cm'],conclusion:'Arc length = 2cm',correct:false}
+],judgesSummary:'Archie is correct. Arc length uses the circumference formula (2\u03c0r) scaled by the fraction of the circle. Aaron calculated the sector area instead. Fred took 1/5 of the radius rather than 1/5 of the circumference.'},
+
+{id:'mc_gcse_018',level:'gcse',topic:'Probability Tree',problem:'P(rain) = 0.3 on each of two independent days. Find P(rain on exactly one day).',
+arguments:[
+{name:'Treesha Branch',occupation:'Probability Tree Expert',working:['Rain then dry: 0.3 \u00d7 0.7 = 0.21','Dry then rain: 0.7 \u00d7 0.3 = 0.21','P(exactly one) = 0.21 + 0.21 = 0.42'],conclusion:'P(exactly 1) = 0.42',correct:true},
+{name:'Simple Simon',occupation:'One-Step Thinker',working:['P(rain on one day) = 0.3','It asks for one day, so 0.3.'],conclusion:'P(exactly 1) = 0.3',correct:false},
+{name:'Multiplying Mo',occupation:'AND Rule Applier',working:['Exactly one = rain AND not rain','P = 0.3 \u00d7 0.7 = 0.21'],conclusion:'P(exactly 1) = 0.21',correct:false}
+],judgesSummary:'Treesha is correct. There are two ways to get exactly one rainy day (rain-dry or dry-rain), each with probability 0.21. Mo correctly calculated one branch but forgot the other.'},
+
+{id:'mc_gcse_019',level:'gcse',topic:'Standard Form Arithmetic',problem:'Calculate (3 \u00d7 10\u2074) \u00d7 (2 \u00d7 10\u00b3)',
+arguments:[
+{name:'Stan Dard',occupation:'Standard Form Expert',working:['Multiply the numbers: 3 \u00d7 2 = 6','Add the powers: 10\u2074 \u00d7 10\u00b3 = 10\u2077','Answer: 6 \u00d7 10\u2077'],conclusion:'6 \u00d7 10\u2077',correct:true},
+{name:'Power Pete',occupation:'Exponent Enthusiast',working:['3 \u00d7 2 = 6','10\u2074 \u00d7 10\u00b3 = 10\u00b9\u00b2','Answer: 6 \u00d7 10\u00b9\u00b2'],conclusion:'6 \u00d7 10\u00b9\u00b2',correct:false},
+{name:'Literal Lily',occupation:'Long Multiplication Fan',working:['30000 \u00d7 2000 = 60000000','That\'s 6 followed by 7 zeros','= 60,000,000'],conclusion:'60,000,000',correct:true}
+],judgesSummary:'Stan and Lily are both correct \u2014 6 \u00d7 10\u2077 = 60,000,000. Stan used standard form rules efficiently. Lily did the long way and got the same answer. Pete multiplied the powers instead of adding them: when multiplying, indices add.'},
+
+{id:'mc_gcse_020',level:'gcse',topic:'Proportion',problem:'y is directly proportional to x\u00b2. When x = 3, y = 36. Find y when x = 5.',
+arguments:[
+{name:'Proportia Direct',occupation:'Proportionality Expert',working:['y = kx\u00b2','36 = k(3)\u00b2 = 9k','k = 4','When x = 5: y = 4(25) = 100'],conclusion:'y = 100',correct:true},
+{name:'Linear Linda',occupation:'Straight Line Thinker',working:['y/x = 36/3 = 12','When x = 5: y = 12 \u00d7 5 = 60'],conclusion:'y = 60',correct:false},
+{name:'Scale Sam',occupation:'Scale Factor Fan',working:['x goes from 3 to 5','Scale factor = 5/3','y = 36 \u00d7 5/3 = 60'],conclusion:'y = 60',correct:false}
+],judgesSummary:'Proportia is correct. y is proportional to x\u00b2, not x. First find k from y = kx\u00b2, then substitute. Both Linda and Sam treated it as direct proportion to x (linear), ignoring the squared relationship.'}
+],
+
+core: [
+{id:'mc_core_001',level:'core',topic:'Expected Value',problem:'A game: P(win \u00a35) = 0.3, P(win \u00a30) = 0.7. Game costs \u00a32. Is it worth playing?',
+arguments:[
+{name:'Monte Expect',occupation:'Expected Value Expert',working:['E(X) = 5\u00d70.3 + 0\u00d70.7 = \u00a31.50','Cost = \u00a32','Expected loss = \u00a30.50 per game.'],conclusion:'Not worth playing',correct:true},
+{name:'Optimist Owen',occupation:'Glass Half Full Investor',working:['30% chance of \u00a35 is great odds.','E(winnings) = \u00a35 \u00d7 0.3 = \u00a31.50','Since \u00a31.50 < \u00a32, wait...','it\'s worth it if you\'re lucky.'],conclusion:'Worth playing',correct:false},
+{name:'Gavin Gambler',occupation:'Risk Ignorer',working:['You could win \u00a35.','That\'s more than the \u00a32 you pay.','Worth it.'],conclusion:'Worth playing',correct:false}
+],judgesSummary:'Monte is correct. E(X) = \u00a31.50 < \u00a32 cost, so on average you lose \u00a30.50 per game. In the long run this game loses money. Gavin ignored probability and Owen got confused mid-calculation.'},
+
+{id:'mc_core_002',level:'core',topic:'Normal Distribution',problem:'Exam scores are normally distributed, mean 65, SD 12. What % of students score between 53 and 77?',
+arguments:[
+{name:'Norma Bell',occupation:'Normal Distribution Navigator',working:['53 = 65 \u2212 12 = one SD below','77 = 65 + 12 = one SD above','68% of data within one SD.'],conclusion:'Approximately 68%',correct:true},
+{name:'Bella Curve',occupation:'Bell Curve Believer',working:['53 to 77 is a range of 24 marks.','24 \u00f7 100 = 24%.'],conclusion:'Approximately 24%',correct:false},
+{name:'Stan Deviation',occupation:'Standard Fan',working:['95% falls within two SDs:','65\u00b124 = 41 to 89.','So 53 to 77 must be 95%.'],conclusion:'Approximately 95%',correct:false}
+],judgesSummary:'Norma is correct. 53 and 77 are both exactly one SD from the mean. The 68-95-99.7 rule states ~68% of data falls within one SD. Stan used the two-SD rule incorrectly.'},
+
+{id:'mc_core_003',level:'core',topic:'Cost-Benefit',problem:'Solar panels cost \u00a35,000 and save \u00a3380/year on energy. When do they pay for themselves?',
+arguments:[
+{name:'Sol Arpanel',occupation:'Renewable Finance Expert',working:['Payback = \u00a35,000 \u00f7 \u00a3380','= 13.16 years','Paid off in year 14.'],conclusion:'About 13 years',correct:true},
+{name:'Sunny Optimist',occupation:'Green Energy Enthusiast',working:['\u00a35,000 \u00f7 12 months = \u00a3416/month','Saves \u00a3380/month.','Paid off in about a year!'],conclusion:'About 1 year',correct:false},
+{name:'Percy Pessimist',occupation:'Anti-Solar Campaigner',working:['They never pay for themselves.','The planet will end before 13 years.'],conclusion:'Never',correct:false}
+],judgesSummary:'Sol is correct. Payback = initial cost \u00f7 annual saving = \u00a35,000 \u00f7 \u00a3380 = 13.2 years. Sunny confused monthly with annual savings.'},
+
+{id:'mc_core_004',level:'core',topic:'Gradient Interpretation',problem:'A distance-time graph shows a straight line from (0, 0) to (4, 100). Interpret the gradient.',
+arguments:[
+{name:'Grace Gradient',occupation:'Rate of Change Analyst',working:['Gradient = \u0394y / \u0394x','= (100 \u2212 0) / (4 \u2212 0)','= 100 / 4 = 25','Units: distance/time = speed.'],conclusion:'Constant speed of 25 units per hour',correct:true},
+{name:'Acceleration Al',occupation:'Physics Enthusiast',working:['Gradient of distance-time = acceleration.','100 / 4 = 25','Acceleration = 25 m/s\u00b2.'],conclusion:'Acceleration of 25 m/s\u00b2',correct:false},
+{name:'Distance Di',occupation:'Total Thinker',working:['Gradient = 100.','Because distance = 100.','The gradient IS the distance.'],conclusion:'Gradient = 100',correct:false}
+],judgesSummary:'Grace is correct. The gradient of a distance-time graph gives speed (rate of change of distance with time). Al confused it with a speed-time graph, where the gradient gives acceleration. Di confused the y-value with the gradient.'},
+
+{id:'mc_core_005',level:'core',topic:'Correlation vs Causation',problem:'Ice cream sales and drowning rates both increase in summer. Does ice cream cause drowning?',
+arguments:[
+{name:'Clara Confound',occupation:'Confounding Variable Detective',working:['Both increase because of hot weather.','Hot weather is the confounding variable.','Correlation does not imply causation.'],conclusion:'No \u2014 confounding variable',correct:true},
+{name:'Causal Kevin',occupation:'If-Then Thinker',working:['The data shows a positive correlation.','As ice cream goes up, drownings go up.','Therefore ice cream causes drowning.'],conclusion:'Yes \u2014 correlation proves it',correct:false},
+{name:'Reverse Rachel',occupation:'Backwards Logic Expert',working:['Drownings cause ice cream sales.','People see drownings on the news','and stress-eat ice cream.'],conclusion:'Reverse causation',correct:false}
+],judgesSummary:'Clara is correct. Hot weather is the lurking/confounding variable that drives both ice cream sales and swimming (and therefore drowning rates) up. Kevin commits the classic correlation-causation fallacy. Rachel\'s reverse causation is creative but unsupported.'},
+
+{id:'mc_core_006',level:'core',topic:'Expectation vs Outcome',problem:'A fair die is rolled 60 times. The expected number of sixes is 10. You get 8 sixes. Is the die unfair?',
+arguments:[
+{name:'Eva Expected',occupation:'Probability Realist',working:['Expected value = 60 \u00d7 1/6 = 10','8 sixes is close to expected.','Natural variation is normal.','Not enough evidence to claim unfair.'],conclusion:'Not necessarily unfair',correct:true},
+{name:'Exact Eric',occupation:'Precision Perfectionist',working:['Expected 10, got 8.','That\'s 2 fewer than expected.','The die must be biased against 6.'],conclusion:'The die is unfair',correct:false},
+{name:'Frequent Fiona',occupation:'Frequency Theorist',working:['8/60 = 0.133','1/6 = 0.167','0.133 \u2260 0.167','Therefore unfair die confirmed.'],conclusion:'The die is unfair',correct:false}
+],judgesSummary:'Eva is correct. Expected value is a long-run average, not a guarantee. Getting 8 instead of 10 sixes in 60 rolls is well within normal random variation. Eric and Fiona both expect exact results from probability, which misunderstands how randomness works.'},
+
+{id:'mc_core_007',level:'core',topic:'Compound Interest Comparison',problem:'Bank A: 5% simple interest. Bank B: 4.8% compound interest. Which is better after 10 years on \u00a31,000?',
+arguments:[
+{name:'Connie Compound',occupation:'Compound Interest Advocate',working:['Bank A: 1000 + (1000 \u00d7 0.05 \u00d7 10)','= 1000 + 500 = \u00a31,500','Bank B: 1000 \u00d7 1.048\u00b9\u2070','= 1000 \u00d7 1.5963 = \u00a31,596.30','Bank B wins by \u00a396.30.'],conclusion:'Bank B (compound) is better',correct:true},
+{name:'Simple Simon',occupation:'Simple Interest Supporter',working:['5% > 4.8%','Higher percentage = more money.','Bank A is obviously better.'],conclusion:'Bank A (simple) is better',correct:false},
+{name:'First Year Faye',occupation:'Short-Term Thinker',working:['Bank A year 1: \u00a350 interest','Bank B year 1: \u00a348 interest','Bank A gives more every year.','Bank A is better.'],conclusion:'Bank A (simple) is better',correct:false}
+],judgesSummary:'Connie is correct. Although Bank A has a higher rate, compound interest grows exponentially while simple interest grows linearly. After 10 years, Bank B overtakes. Faye correctly notes Bank A is better in year 1, but compound interest accelerates over time.'},
+
+{id:'mc_core_008',level:'core',topic:'Index Numbers',problem:'A price index was 100 in 2015 and 118.5 in 2020. Interpret this.',
+arguments:[
+{name:'Indie Index',occupation:'Index Number Interpreter',working:['Index went from 100 to 118.5','Increase = 18.5 index points','Prices rose by 18.5% since 2015.'],conclusion:'Prices rose 18.5% from 2015 to 2020',correct:true},
+{name:'Absolute Andy',occupation:'Number Cruncher',working:['118.5 \u2212 100 = 18.5','Prices increased by \u00a318.50','per item on average.'],conclusion:'Average price increase: \u00a318.50',correct:false},
+{name:'Percentage Pat',occupation:'Confused Calculator',working:['118.5 / 100 = 1.185','That\'s 118.5% more expensive.','Prices nearly doubled!'],conclusion:'Prices increased by 118.5%',correct:false}
+],judgesSummary:'Indie is correct. An index of 118.5 (base 100) means an 18.5% increase from the base year. Andy incorrectly treated index points as pounds. Pat confused the index value (118.5) with the percentage change (18.5%).'},
+
+{id:'mc_core_009',level:'core',topic:'Hypothesis Testing',problem:'A coin is flipped 20 times, getting 15 heads. Is the coin biased towards heads? (5% significance level)',
+arguments:[
+{name:'Hypo Tester',occupation:'Hypothesis Testing Specialist',working:['H\u2080: p = 0.5, H\u2081: p > 0.5','Under H\u2080: X ~ B(20, 0.5)','P(X \u2265 15) = 0.0207','0.0207 < 0.05','Reject H\u2080 at 5% level.'],conclusion:'Significant evidence the coin is biased',correct:true},
+{name:'Fifty-Fifty Fran',occupation:'Fairness Presumptionist',working:['A fair coin can land on heads.','15/20 is pretty close to 50%.','20 flips is not enough data.','The coin is fair.'],conclusion:'Not enough evidence \u2014 coin is fair',correct:false},
+{name:'Certainty Carl',occupation:'Proof Demander',working:['15 heads doesn\'t prove anything.','You\'d need 20/20 heads','to prove it\'s biased.','15/20 is inconclusive.'],conclusion:'Only 100% heads would prove bias',correct:false}
+],judgesSummary:'Hypo is correct. P(X\u226515) = 0.0207 < 0.05, so we reject H\u2080 at the 5% significance level. Fran didn\'t do the formal test. Carl demands certainty, but hypothesis testing is about probability, not proof \u2014 we never "prove" bias, we find sufficient evidence.'},
+
+{id:'mc_core_010',level:'core',topic:'Regression Interpretation',problem:'A regression equation for house prices is: Price = 15,000 + 2,500 \u00d7 (number of bedrooms). Interpret the 2,500.',
+arguments:[
+{name:'Reggie Regression',occupation:'Regression Interpreter',working:['The coefficient 2,500 means:','For each additional bedroom,','the predicted price increases','by \u00a32,500 on average.'],conclusion:'Each extra bedroom adds \u00a32,500 to predicted price',correct:true},
+{name:'Total Tina',occupation:'Sum Specialist',working:['2,500 means a house costs \u00a32,500.','The bedrooms are separate.','A 3-bed house = 3 \u00d7 \u00a32,500 = \u00a37,500.'],conclusion:'A house costs \u00a32,500',correct:false},
+{name:'Correlation Chris',occupation:'r-Value Ranger',working:['2,500 is the correlation coefficient.','It means price and bedrooms are','strongly positively correlated.'],conclusion:'2,500 is the correlation',correct:false}
+],judgesSummary:'Reggie is correct. In y = a + bx, the coefficient b (2,500) represents the change in y for each unit increase in x. Tina ignored the intercept (15,000). Chris confused the regression coefficient with the correlation coefficient \u2014 correlation (r) is always between \u22121 and 1.'}
+]
+};
+
+// ============================================================
+//  STATE
+// ============================================================
+let currentLevel = 'ks3';
+let sessionLength = 10;
+let sessionQuestions = [];
+let qIndex = 0;
+let score = 0;
+let attempts = 0;
+let answered = false;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ============================================================
+//  START SCREEN
+// ============================================================
+function selectLevel(lvl){
+  currentLevel = lvl;
+  document.querySelectorAll('.level-card').forEach(c=>{
+    c.classList.toggle('selected',c.dataset.level===lvl);
+  });
+}
+function selectSession(len){
+  sessionLength = len;
+  document.querySelectorAll('.session-btn').forEach(b=>{
+    b.classList.toggle('selected',parseInt(b.dataset.len)===len);
+  });
+}
+
+// Read level from URL param
+(function(){
+  const p = new URLSearchParams(window.location.search);
+  const lvl = p.get('level');
+  if(lvl && QUESTIONS[lvl]) selectLevel(lvl);
+  else selectLevel('ks3');
+})();
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  return a;
+}
+
+function startGame(){
+  const bank = QUESTIONS[currentLevel];
+  if(!bank||!bank.length) return;
+  const shuffled = shuffle(bank);
+  // If session length exceeds bank, cycle with reshuffle
+  sessionQuestions = [];
+  while(sessionQuestions.length < sessionLength){
+    const remaining = sessionLength - sessionQuestions.length;
+    const batch = shuffle(bank).slice(0, Math.min(remaining, bank.length));
+    sessionQuestions.push(...batch);
+  }
+  qIndex = 0;
+  score = 0;
+  showScreen('gameScreen');
+  document.getElementById('gameHeader').style.display='flex';
+  document.getElementById('levelPill').textContent = currentLevel.toUpperCase();
+  mfg('game_started',{game_slug:'maths-court',level:currentLevel});
+  loadQuestion();
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ============================================================
+//  GAME LOGIC
+// ============================================================
+function loadQuestion(){
+  if(qIndex >= sessionLength){
+    endGame();
+    return;
+  }
+  const q = sessionQuestions[qIndex];
+  answered = false;
+  attempts = 0;
+
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreTotal').textContent = qIndex;
+  document.getElementById('problemText').textContent = q.problem;
+  document.getElementById('problemTopic').textContent = q.topic;
+
+  // Reset judges summary
+  const js = document.getElementById('judgesSummary');
+  js.classList.remove('show');
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('nextBtn').style.display='none';
+
+  // Render argument cards
+  const row = document.getElementById('argumentsRow');
+  row.innerHTML = '';
+  // Shuffle argument order — ensure correct answer doesn't cluster in same position
+  function shuffleIndices(){
+    const a=[0,1,2];
+    for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+    return a;
+  }
+  let indices = shuffleIndices();
+  // Find which original index has the first correct answer
+  const correctIdx = q.arguments.findIndex(a=>a.correct);
+  // If correct answer landed in same display position as last question, reshuffle once
+  if(typeof loadQuestion._lastCorrectPos!=='undefined' && indices.indexOf(correctIdx)===loadQuestion._lastCorrectPos){
+    indices = shuffleIndices();
+  }
+  loadQuestion._lastCorrectPos = indices.indexOf(correctIdx);
+
+  indices.forEach((argIdx,displayIdx)=>{
+    const arg = q.arguments[argIdx];
+    const card = document.createElement('div');
+    card.className = 'argument-card';
+    card.dataset.idx = argIdx;
+
+    const colour = getAvatarColour(arg.name);
+    const initials = getInitials(arg.name);
+
+    card.innerHTML = `
+      <div class="char-header">
+        <div class="avatar" style="background:${colour}">${initials}</div>
+        <div class="char-info">
+          <div class="char-name">${arg.name}</div>
+          <div class="char-occupation">${arg.occupation}</div>
+        </div>
+      </div>
+      <div class="working-lines">
+        ${arg.working.map(w=>`<div class="working-line">${w}</div>`).join('')}
+      </div>
+      <div class="char-conclusion">${arg.conclusion}</div>
+    `;
+
+    card.addEventListener('click',()=>handleTap(card,argIdx));
+    row.appendChild(card);
+  });
+}
+
+function handleTap(card, argIdx){
+  if(answered) return;
+  const q = sessionQuestions[qIndex];
+  const arg = q.arguments[argIdx];
+
+  // Gavel animation
+  const gavel = document.getElementById('gavelIcon');
+  if(!reducedMotion){
+    gavel.classList.add('strike');
+    setTimeout(()=>gavel.classList.remove('strike'),300);
+  }
+
+  if(arg.correct){
+    // Correct
+    answered = true;
+    attempts++;
+    if(attempts === 1) score++;
+
+    card.classList.add('correct-reveal');
+    if(!reducedMotion) card.classList.add('flash-green');
+
+    // Mark all correct cards
+    document.querySelectorAll('.argument-card').forEach(c=>{
+      const idx = parseInt(c.dataset.idx);
+      if(q.arguments[idx].correct){
+        c.classList.add('correct-reveal');
+      } else {
+        c.classList.add('disabled');
+        c.style.opacity = '0.5';
+      }
+    });
+
+    // Disable all cards
+    document.querySelectorAll('.argument-card').forEach(c=>c.classList.add('disabled'));
+
+    // Show judge's summary
+    document.getElementById('judgesText').textContent = q.judgesSummary;
+    setTimeout(()=>{
+      document.getElementById('judgesSummary').classList.add('show');
+      const nb = document.getElementById('nextBtn');
+      nb.classList.add('visible');
+      nb.style.display='block';
+    },400);
+
+    // Update score
+    document.getElementById('scoreNum').textContent = score;
+    document.getElementById('scoreTotal').textContent = qIndex + 1;
+
+    // Analytics
+    mfg('question_answered',{game_slug:'maths-court',level:currentLevel,question_index:qIndex+1,correct:true,attempts:attempts});
+
+  } else {
+    // Incorrect
+    attempts++;
+    card.classList.add('incorrect-reveal');
+    if(!reducedMotion) card.classList.add('flash-red');
+    card.classList.add('disabled');
+
+    // Analytics
+    mfg('question_answered',{game_slug:'maths-court',level:currentLevel,question_index:qIndex+1,correct:false,attempts:attempts});
+
+    if(attempts >= 2){
+      // No more retries
+      answered = true;
+      // Reveal correct card(s)
+      document.querySelectorAll('.argument-card').forEach(c=>{
+        const idx = parseInt(c.dataset.idx);
+        if(q.arguments[idx].correct){
+          c.classList.add('correct-reveal');
+          if(!reducedMotion) c.classList.add('flash-green');
+        }
+        c.classList.add('disabled');
+      });
+
+      document.getElementById('judgesText').textContent = q.judgesSummary;
+      document.getElementById('scoreTotal').textContent = qIndex + 1;
+      setTimeout(()=>{
+        document.getElementById('judgesSummary').classList.add('show');
+        const nb = document.getElementById('nextBtn');
+        nb.classList.add('visible');
+        nb.style.display='block';
+      },400);
+    }
+  }
+}
+
+function nextQuestion(){
+  qIndex++;
+  loadQuestion();
+}
+
+// ============================================================
+//  END GAME
+// ============================================================
+function endGame(){
+  document.getElementById('gameHeader').style.display='none';
+  showScreen('resultsScreen');
+
+  const pct = Math.round((score/sessionLength)*100);
+  document.getElementById('finalScore').textContent = score + '/' + sessionLength;
+  document.getElementById('finalPct').textContent = pct + '%';
+
+  // PB logic (only for sessions of 10+)
+  const pbKey = 'mfg_mc_pb_' + currentLevel;
+  const prevPB = parseInt(localStorage.getItem(pbKey)||'0');
+  const isPB = sessionLength >= 10 && pct > prevPB;
+
+  if(isPB){
+    localStorage.setItem(pbKey, pct);
+    document.getElementById('pbBadge').style.display='block';
+    document.getElementById('pbLine').textContent = 'Previous best: ' + prevPB + '%';
+    mfg('personal_best_set',{game_slug:'maths-court',level:currentLevel,score:pct,previous_best:prevPB});
+  } else {
+    document.getElementById('pbBadge').style.display='none';
+    document.getElementById('pbLine').textContent = 'Personal best: ' + (prevPB||pct) + '%';
+  }
+
+  mfg('game_completed',{game_slug:'maths-court',level:currentLevel,score:score,questions_answered:sessionLength,questions_correct:score});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('maths-court',currentLevel,score,sessionLength).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('maths-court',currentLevel,score);}}
+}
+
+function resetToStart(){
+  document.getElementById('gameHeader').style.display='none';
+  showScreen('startScreen');
+}
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

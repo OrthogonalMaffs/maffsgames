@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Determinants, inverses, and Cramer's rule in a 3-stage progression. Further Maths and Level 4 matrix algebra.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/matrix-crunch/">
+<meta property="og:title" content="Matrix Crunch — MaffsGames">
+<meta property="og:description" content="Determinants, inverses, and Cramer's rule in a 3-stage progression. Further Maths and Level 4 matrix algebra.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/matrix-crunch/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Matrix Crunch — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a14;--surface:#141420;--border:#252540;--primary:#8b5cf6;--accent:#06b6d4;--wrong:#f43f5e;--singular:#fbbf24;--text:#ede9fe;--muted:#8888a8;--life:#ef4444;--lifeon:#22c55e}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.level-select{display:flex;gap:.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap}
+.level-btn{padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.level-btn[data-level="further"].active{background:#8b5cf6;border-color:#8b5cf6}
+.level-btn[data-level="level4"].active{background:#ef4444;border-color:#ef4444}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.3rem}
+.hud-item{text-align:center;min-width:60px}.hud-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700}
+.lives{display:flex;gap:4px;justify-content:center;margin-bottom:1rem}
+.life{width:20px;height:20px;border-radius:50%;background:var(--life);transition:background .3s}
+.life.alive{background:var(--lifeon)}
+.stage-bar{display:flex;gap:4px;justify-content:center;margin-bottom:1rem;font-size:.75rem;color:var(--muted)}
+.stage-pill{padding:2px 10px;border-radius:10px;background:var(--border);font-weight:600}
+.stage-pill.active{background:var(--primary);color:#fff}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:140px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.6rem}
+.q-card .context{font-size:.88rem;color:var(--muted);line-height:1.5;max-width:640px}
+.q-card .prompt{font-size:.85rem;color:var(--accent);font-weight:600;margin-top:.3rem}
+.q-card .katex{font-size:1.4em!important}
+
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.5rem}
+.opt-btn{padding:.8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.88rem;cursor:pointer;transition:all .15s;text-align:center;min-height:52px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(139,92,246,.2)}
+.opt-btn.correct{border-color:var(--accent);background:rgba(6,182,212,.1);animation:pop .3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.1);animation:shake .3s}
+.opt-btn.reveal{border-color:var(--accent);opacity:.7}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+.opt-btn.singular{border-color:var(--singular);color:var(--singular);font-family:'Outfit',sans-serif;font-weight:600}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+.flag-btn{display:block;width:100%;padding:.7rem;border-radius:10px;border:2px dashed var(--singular);background:transparent;color:var(--singular);font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .15s;margin-bottom:1rem;text-align:center}
+.flag-btn:hover{background:rgba(251,191,36,.08)}
+.flag-btn.disabled{pointer-events:none;opacity:.4}
+
+/* Worked solution panel */
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1.2rem;margin-bottom:1rem;text-align:left;font-size:.88rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.9rem;margin-bottom:.6rem;font-weight:600}
+.solution .step{margin-bottom:.5rem;padding-left:.8rem;border-left:2px solid var(--border)}
+.solution .step .katex{font-size:1.1em!important}
+.solution .misconception{margin-top:.8rem;padding:.6rem .8rem;background:rgba(251,191,36,.08);border-radius:8px;border-left:3px solid var(--singular);font-size:.82rem;color:var(--singular)}
+.solution .next-btn{display:inline-block;margin-top:.8rem;padding:.5rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s}
+.pip.done{background:var(--accent)}.pip.fail{background:var(--wrong)}.pip.flag{background:var(--singular)}.pip.current{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem;line-height:1.6}
+.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.play-again:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+.katex{font-size:1em!important}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">&larr; Back to Games</a>
+
+  <!-- MENU -->
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Matrix Crunch</h1><div class="sub">Determinants. Inverses. Cramer's rule. Can you spot the singular?</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="level-select">
+      <button class="level-btn active" data-level="further">Further Maths</button>
+      <button class="level-btn" data-level="level4">Level 4</button>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:.8rem 0;line-height:1.6">
+      <strong>Stage 1:</strong> Determinants only<br>
+      <strong>Stage 2:</strong> + Inverses + singular detection<br>
+      <strong>Stage 3:</strong> + Cramer's rule<br>
+      Streak of 5 unlocks next stage. Three lives — lose one for a wrong singular flag.
+    </p>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+    <div style="text-align:center;margin-top:1.5rem"><button class="play-again" onclick="startGame()">Start</button></div>
+  </div>
+
+  <!-- GAME -->
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="stageNum">1</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
+    </div>
+    <div class="lives" id="lives"></div>
+    <div class="stage-bar">
+      <span class="stage-pill active" id="sp1">DET</span>
+      <span class="stage-pill" id="sp2">INV</span>
+      <span class="stage-pill" id="sp3">CRAMER</span>
+    </div>
+    <div class="q-card">
+      <div class="context" id="context"></div>
+      <div id="matrix"></div>
+      <div class="prompt" id="prompt"></div>
+    </div>
+    <div class="options" id="options"></div>
+    <button class="flag-btn" id="flagBtn" onclick="flagSingular()" style="display:none">&#9888; Flag as Singular (det = 0)</button>
+    <div class="solution" id="solution"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANKS
+// ============================================================
+const QUESTIONS={
+further:{
+det:[
+  {m:[[3,1],[2,4]],ask:'Find the determinant',correct:'10',d:['14','11','8'],steps:['\\det = ad - bc','= (3)(4) - (1)(2)','= 12 - 2 = 10']},
+  {m:[[5,2],[3,1]],ask:'Find the determinant',correct:'-1',d:['1','11','-11'],steps:['\\det = (5)(1) - (2)(3)','= 5 - 6 = -1']},
+  {m:[[4,3],[2,5]],ask:'Find the determinant',correct:'14',d:['23','17','26'],steps:['\\det = (4)(5) - (3)(2)','= 20 - 6 = 14']},
+  {m:[[1,2],[3,4]],ask:'Find the determinant',correct:'-2',d:['2','10','-10'],steps:['\\det = (1)(4) - (2)(3)','= 4 - 6 = -2']},
+  {m:[[2,-1],[4,3]],ask:'Find the determinant',correct:'10',d:['-10','2','-2'],steps:['\\det = (2)(3) - (-1)(4)','= 6 - (-4) = 6 + 4 = 10'],misconception:'Common error: forgetting that subtracting a negative becomes addition'},
+  {m:[[3,-2],[-1,4]],ask:'Find the determinant',correct:'10',d:['-10','14','-14'],steps:['\\det = (3)(4) - (-2)(-1)','= 12 - 2 = 10'],misconception:'(-2)(-1) = +2, not -2'},
+  {m:[[-2,3],[4,-1]],ask:'Find the determinant',correct:'-10',d:['10','-14','14'],steps:['\\det = (-2)(-1) - (3)(4)','= 2 - 12 = -10']},
+  {m:[[5,0],[0,3]],ask:'Find the determinant',correct:'15',d:['8','0','35'],steps:['\\det = (5)(3) - (0)(0)','= 15 - 0 = 15']},
+  {m:[[1,0],[0,1]],ask:'Find the determinant',correct:'1',d:['0','2','-1'],steps:['This is the identity matrix I','\\det(I) = 1 always']},
+  {m:[[2,4],[1,2]],ask:'Find the determinant',correct:'0',d:['8','4','-4'],steps:['\\det = (2)(2) - (4)(1)','= 4 - 4 = 0','This matrix is singular — it has no inverse'],singular:true},
+  {m:[[3,6],[1,2]],ask:'Find the determinant',correct:'0',d:['12','-12','6'],steps:['\\det = (3)(2) - (6)(1)','= 6 - 6 = 0','Row 1 = 3 × Row 2, so the matrix is singular'],singular:true},
+  {m:[[-3,5],[2,-4]],ask:'Find the determinant',correct:'2',d:['-2','22','-22'],steps:['\\det = (-3)(-4) - (5)(2)','= 12 - 10 = 2']},
+  {m:[[4,1],[3,2]],ask:'Find the determinant',correct:'5',d:['11','3','-5'],steps:['\\det = (4)(2) - (1)(3)','= 8 - 3 = 5']},
+  {m:[[6,2],[3,1]],ask:'Find the determinant',correct:'0',d:['12','0','6'],steps:['\\det = (6)(1) - (2)(3) = 0','Singular — row 1 = 2 × row 2'],singular:true},
+  {m:[[7,3],[2,1]],ask:'Find the determinant',correct:'1',d:['13','-1','7'],steps:['\\det = (7)(1) - (3)(2)','= 7 - 6 = 1']},
+],
+inv:[
+  {m:[[2,1],[1,3]],ask:'Find the inverse',correct:'\\dfrac{1}{5}\\begin{pmatrix}3&-1\\\\-1&2\\end{pmatrix}',d:['\\dfrac{1}{5}\\begin{pmatrix}2&-1\\\\-1&3\\end{pmatrix}','\\dfrac{1}{5}\\begin{pmatrix}3&1\\\\1&2\\end{pmatrix}','\\begin{pmatrix}3&-1\\\\-1&2\\end{pmatrix}'],steps:['\\det = (2)(3) - (1)(1) = 5','Swap a and d: \\begin{pmatrix}3&\\cdot\\\\\\cdot&2\\end{pmatrix}','Negate b and c: \\begin{pmatrix}3&-1\\\\-1&2\\end{pmatrix}','Multiply by \\dfrac{1}{\\det} = \\dfrac{1}{5}'],misconception:'Common error: forgetting to swap a and d, or forgetting the 1/det'},
+  {m:[[4,3],[1,1]],ask:'Find the inverse',correct:'\\begin{pmatrix}1&-3\\\\-1&4\\end{pmatrix}',d:['\\dfrac{1}{7}\\begin{pmatrix}1&-3\\\\-1&4\\end{pmatrix}','\\begin{pmatrix}4&-3\\\\-1&1\\end{pmatrix}','\\begin{pmatrix}-1&3\\\\1&-4\\end{pmatrix}'],steps:['\\det = 4 - 3 = 1','\\text{Since det} = 1, \\text{inverse} = \\begin{pmatrix}1&-3\\\\-1&4\\end{pmatrix}']},
+  {m:[[3,2],[5,4]],ask:'Find the inverse',correct:'\\dfrac{1}{2}\\begin{pmatrix}4&-2\\\\-5&3\\end{pmatrix}',d:['\\begin{pmatrix}4&-2\\\\-5&3\\end{pmatrix}','\\dfrac{1}{2}\\begin{pmatrix}3&-2\\\\-5&4\\end{pmatrix}','\\dfrac{1}{2}\\begin{pmatrix}4&2\\\\5&3\\end{pmatrix}'],steps:['\\det = 12 - 10 = 2','Swap diag: \\begin{pmatrix}4&\\cdot\\\\\\cdot&3\\end{pmatrix}','Negate off-diag: \\begin{pmatrix}4&-2\\\\-5&3\\end{pmatrix}','Multiply by \\dfrac{1}{2}']},
+  {m:[[1,2],[3,7]],ask:'Find the inverse',correct:'\\begin{pmatrix}7&-2\\\\-3&1\\end{pmatrix}',d:['\\dfrac{1}{13}\\begin{pmatrix}7&-2\\\\-3&1\\end{pmatrix}','\\begin{pmatrix}1&-2\\\\-3&7\\end{pmatrix}','\\begin{pmatrix}-7&2\\\\3&-1\\end{pmatrix}'],steps:['\\det = 7 - 6 = 1','\\text{Since det} = 1: \\begin{pmatrix}7&-2\\\\-3&1\\end{pmatrix}']},
+  {m:[[5,3],[2,2]],ask:'Find the inverse',correct:'\\dfrac{1}{4}\\begin{pmatrix}2&-3\\\\-2&5\\end{pmatrix}',d:['\\begin{pmatrix}2&-3\\\\-2&5\\end{pmatrix}','\\dfrac{1}{4}\\begin{pmatrix}5&-3\\\\-2&2\\end{pmatrix}','\\dfrac{1}{4}\\begin{pmatrix}2&3\\\\2&5\\end{pmatrix}'],steps:['\\det = 10 - 6 = 4','Adjugate: \\begin{pmatrix}2&-3\\\\-2&5\\end{pmatrix}','\\text{Inverse} = \\dfrac{1}{4} \\times \\text{adjugate}']},
+  {m:[[2,5],[1,3]],ask:'Find the inverse',correct:'\\begin{pmatrix}3&-5\\\\-1&2\\end{pmatrix}',d:['\\dfrac{1}{11}\\begin{pmatrix}3&-5\\\\-1&2\\end{pmatrix}','\\begin{pmatrix}2&-5\\\\-1&3\\end{pmatrix}','\\begin{pmatrix}-3&5\\\\1&-2\\end{pmatrix}'],steps:['\\det = 6 - 5 = 1','\\text{Inverse} = \\begin{pmatrix}3&-5\\\\-1&2\\end{pmatrix}']},
+  {m:[[4,2],[6,3]],ask:'Find the inverse',correct:'Singular — no inverse exists',d:['\\dfrac{1}{0}\\begin{pmatrix}3&-2\\\\-6&4\\end{pmatrix}','\\begin{pmatrix}3&-2\\\\-6&4\\end{pmatrix}','\\begin{pmatrix}\\dfrac{3}{0}&\\cdot\\\\\\cdot&\\cdot\\end{pmatrix}'],steps:['\\det = 12 - 12 = 0','Cannot divide by zero','This matrix is singular — no inverse exists'],singular:true},
+  {m:[[1,0],[0,1]],ask:'Find the inverse',correct:'\\begin{pmatrix}1&0\\\\0&1\\end{pmatrix}',d:['\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}','\\begin{pmatrix}-1&0\\\\0&-1\\end{pmatrix}','Singular'],steps:['The identity matrix is its own inverse','I \\times I = I']},
+  {m:[[2,0],[0,3]],ask:'Find the inverse',correct:'\\begin{pmatrix}\\frac{1}{2}&0\\\\0&\\frac{1}{3}\\end{pmatrix}',d:['\\begin{pmatrix}3&0\\\\0&2\\end{pmatrix}','\\begin{pmatrix}\\frac{1}{3}&0\\\\0&\\frac{1}{2}\\end{pmatrix}','Singular'],steps:['\\det = 6','For diagonal matrices, invert each diagonal entry']},
+  {m:[[3,4],[6,8]],ask:'Find the inverse',correct:'Singular — no inverse exists',d:['\\begin{pmatrix}8&-4\\\\-6&3\\end{pmatrix}','\\dfrac{1}{0}\\begin{pmatrix}8&-4\\\\-6&3\\end{pmatrix}','\\begin{pmatrix}-8&4\\\\6&-3\\end{pmatrix}'],steps:['\\det = 24 - 24 = 0','Row 2 = 2 × Row 1','Singular — no inverse'],singular:true},
+],
+cramer:[
+  {sys:['2x + y = 5','x + 3y = 10'],ask:'Find x using Cramer\'s rule',correct:'1',d:['2','3','5'],steps:['D = \\det\\begin{pmatrix}2&1\\\\1&3\\end{pmatrix} = 5','D_x = \\det\\begin{pmatrix}5&1\\\\10&3\\end{pmatrix} = 15 - 10 = 5','x = \\dfrac{D_x}{D} = \\dfrac{5}{5} = 1']},
+  {sys:['2x + y = 5','x + 3y = 10'],ask:'Find y using Cramer\'s rule',correct:'3',d:['1','5','2'],steps:['D = 5 (from above)','D_y = \\det\\begin{pmatrix}2&5\\\\1&10\\end{pmatrix} = 20 - 5 = 15','y = \\dfrac{D_y}{D} = \\dfrac{15}{5} = 3']},
+  {sys:['3x + 2y = 7','x - y = 1'],ask:'Find x',correct:'\\dfrac{9}{5}',d:['\\dfrac{7}{5}','3','1'],steps:['D = \\det\\begin{pmatrix}3&2\\\\1&-1\\end{pmatrix} = -3 - 2 = -5','D_x = \\det\\begin{pmatrix}7&2\\\\1&-1\\end{pmatrix} = -7 - 2 = -9','x = \\dfrac{-9}{-5} = \\dfrac{9}{5}']},
+  {sys:['4x + y = 11','2x + 3y = 13'],ask:'Find x',correct:'2',d:['3','1','4'],steps:['D = 12 - 2 = 10','D_x = 33 - 13 = 20','x = 20/10 = 2']},
+  {sys:['4x + y = 11','2x + 3y = 13'],ask:'Find y',correct:'3',d:['1','5','2'],steps:['D = 10','D_y = 52 - 22 = 30','y = 30/10 = 3']},
+  {sys:['x + 2y = 8','3x + y = 9'],ask:'Find x',correct:'2',d:['3','4','1'],steps:['D = 1 - 6 = -5','D_x = 8 - 18 = -10','x = -10/-5 = 2']},
+  {sys:['5x + 3y = 1','2x + y = 0'],ask:'Find x',correct:'-1',d:['1','0','3'],steps:['D = 5 - 6 = -1','D_x = 1 - 0 = 1','x = 1/-1 = -1']},
+  {sys:['x + y = 3','2x + 2y = 6'],ask:'What happens?',correct:'Infinite solutions (D = 0, consistent)',d:['No solution','x = 3, y = 0','x = 0, y = 3'],steps:['D = 2 - 2 = 0','The equations are multiples of each other','Infinitely many solutions'],singular:true},
+  {sys:['x + y = 3','x + y = 5'],ask:'What happens?',correct:'No solution (D = 0, inconsistent)',d:['Infinite solutions','x = 4, y = 1','x = 3, y = 0'],steps:['D = 1 - 1 = 0','But 3 \\neq 5 — the lines are parallel','No solution exists'],singular:true},
+  {sys:['3x - 2y = 4','x + 4y = 10'],ask:'Find x',correct:'\\dfrac{36}{14} = \\dfrac{18}{7}',d:['2','3','\\dfrac{26}{14}'],steps:['D = 12 - (-2) = 14','D_x = 16 - (-20) = 36','x = 36/14 = 18/7']},
+]
+},
+level4:{
+det:[
+  {m:[[3,1],[2,4]],ctx:'This matrix represents a 2D transformation.',ask:'Find the determinant (area scale factor)',correct:'10',d:['14','11','8'],steps:['\\det = ad - bc = (3)(4) - (1)(2) = 10','The area is scaled by a factor of 10']},
+  {m:[[2,0.5],[1.5,3]],ctx:'Impedance matrix for a two-port network.',ask:'Find the determinant',correct:'5.25',d:['6.75','4.5','5'],steps:['\\det = (2)(3) - (0.5)(1.5)','= 6 - 0.75 = 5.25']},
+  {m:[[4,2],[2,1]],ctx:'Stiffness matrix for a beam element.',ask:'Find the determinant',correct:'0',d:['8','2','-4'],steps:['\\det = 4 - 4 = 0','This matrix is singular — the system is unstable'],singular:true},
+  {m:[[1.5,0.5],[0.5,1.5]],ctx:'Material compliance matrix.',ask:'Find the determinant',correct:'2',d:['2.25','1.5','3'],steps:['\\det = (1.5)(1.5) - (0.5)(0.5)','= 2.25 - 0.25 = 2']},
+  {m:[[5,-2],[3,1]],ctx:'Circuit mesh equations matrix.',ask:'Find the determinant',correct:'11',d:['-1','7','-11'],steps:['\\det = (5)(1) - (-2)(3)','= 5 + 6 = 11']},
+  // This m array is never drawn: isTheory sends the render down the branch that uses the hardcoded
+  // pmatrix (with the thetas) instead, so the entries below only have to parse. Kept correct anyway.
+  {m:[['\\cos','-\\sin'],['\\sin','\\cos']],ctx:'Rotation matrix for angle \u03b8.',ask:'What is det(R) for any rotation?',correct:'1',d:['0','\\cos^2\\theta','\\sin^2\\theta'],steps:['\\det = \\cos^2\\theta + \\sin^2\\theta = 1','All rotation matrices have determinant 1'],isTheory:true},
+  {m:[[3,6],[1,2]],ctx:'Load distribution matrix.',ask:'Find the determinant',correct:'0',d:['12','6','-12'],steps:['\\det = 6 - 6 = 0','Singular — the loads are linearly dependent'],singular:true},
+  {m:[[2,3],[1,4]],ctx:'Transfer function coefficients.',ask:'Find the determinant',correct:'5',d:['11','8','-5'],steps:['\\det = 8 - 3 = 5']},
+],
+inv:[
+  {m:[[2,1],[1,3]],ctx:'To reverse this transformation, find the inverse.',ask:'Find the inverse',correct:'\\dfrac{1}{5}\\begin{pmatrix}3&-1\\\\-1&2\\end{pmatrix}',d:['\\begin{pmatrix}3&-1\\\\-1&2\\end{pmatrix}','\\dfrac{1}{5}\\begin{pmatrix}2&-1\\\\-1&3\\end{pmatrix}','\\dfrac{1}{5}\\begin{pmatrix}3&1\\\\1&2\\end{pmatrix}'],steps:['\\det = 5','Swap diagonal: \\begin{pmatrix}3&\\cdot\\\\\\cdot&2\\end{pmatrix}','Negate off-diagonal: \\begin{pmatrix}3&-1\\\\-1&2\\end{pmatrix}','Multiply by 1/5']},
+  {m:[[4,1],[2,3]],ctx:'Find the inverse to decode the signal.',ask:'Find the inverse',correct:'\\dfrac{1}{10}\\begin{pmatrix}3&-1\\\\-2&4\\end{pmatrix}',d:['\\begin{pmatrix}3&-1\\\\-2&4\\end{pmatrix}','\\dfrac{1}{10}\\begin{pmatrix}4&-1\\\\-2&3\\end{pmatrix}','\\dfrac{1}{8}\\begin{pmatrix}3&-1\\\\-2&4\\end{pmatrix}'],steps:['\\det = 12 - 2 = 10','Adjugate: \\begin{pmatrix}3&-1\\\\-2&4\\end{pmatrix}','Inverse = \\dfrac{1}{10} × adjugate']},
+  {m:[[1,0.5],[0.5,1]],ctx:'Compliance matrix. Invert to find stiffness.',ask:'Find the inverse',correct:'\\dfrac{1}{0.75}\\begin{pmatrix}1&-0.5\\\\-0.5&1\\end{pmatrix}',d:['\\begin{pmatrix}1&-0.5\\\\-0.5&1\\end{pmatrix}','\\dfrac{4}{3}\\begin{pmatrix}1&0.5\\\\0.5&1\\end{pmatrix}','Singular'],steps:['\\det = 1 - 0.25 = 0.75','Inverse = \\dfrac{1}{0.75}\\begin{pmatrix}1&-0.5\\\\-0.5&1\\end{pmatrix}','= \\dfrac{4}{3}\\begin{pmatrix}1&-0.5\\\\-0.5&1\\end{pmatrix}']},
+  {m:[[6,3],[4,2]],ctx:'Heat transfer coefficient matrix.',ask:'Find the inverse',correct:'Singular — no inverse exists',d:['\\dfrac{1}{0}\\begin{pmatrix}2&-3\\\\-4&6\\end{pmatrix}','\\begin{pmatrix}2&-3\\\\-4&6\\end{pmatrix}','\\begin{pmatrix}\\frac{1}{6}&\\frac{-1}{4}\\\\\\frac{-1}{3}&\\frac{1}{2}\\end{pmatrix}'],steps:['\\det = 12 - 12 = 0','Singular — system has no unique solution'],singular:true},
+],
+cramer:[
+  {sys:['3I_1 + 2I_2 = 10','I_1 + 4I_2 = 12'],ctx:'Kirchhoff\'s voltage law gives these mesh equations. Solve for the currents.',ask:'Find I\u2081 (amps)',correct:'1.6',d:['2','3.2','0.8'],steps:['D = 12 - 2 = 10','D_{I_1} = 40 - 24 = 16','I_1 = 16/10 = 1.6 \\text{ A}']},
+  {sys:['3I_1 + 2I_2 = 10','I_1 + 4I_2 = 12'],ctx:'Same circuit.',ask:'Find I\u2082 (amps)',correct:'2.6',d:['3','1.2','3.6'],steps:['D = 10','D_{I_2} = 36 - 10 = 26','I_2 = 26/10 = 2.6 \\text{ A}']},
+  {sys:['2F_1 + F_2 = 50','F_1 + 3F_2 = 70'],ctx:'Equilibrium equations for a structural joint.',ask:'Find F\u2081 (kN)',correct:'16',d:['20','10','14'],steps:['D = 6 - 1 = 5','D_{F_1} = 150 - 70 = 80','F_1 = 80/5 = 16 \\text{ kN}']},
+  {sys:['5R_1 + 2R_2 = 24','R_1 + R_2 = 7'],ctx:'Resistance network equations.',ask:'Find R\u2081 (\u03a9)',correct:'\\dfrac{10}{3}',d:['4','2','5'],steps:['D = 5 - 2 = 3','D_{R_1} = 24 - 14 = 10','R_1 = 10/3 \\approx 3.33 \\text{ \u03a9}']},
+  {sys:['4T_1 + T_2 = 100','T_1 + 4T_2 = 100'],ctx:'Heat transfer between two nodes.',ask:'Find T\u2081 (\u00b0C)',correct:'20',d:['25','16.7','80'],steps:['D = 16 - 1 = 15','D_{T_1} = 400 - 100 = 300','T_1 = 300/15 = 20\u00b0C']},
+  {sys:['2x + 2y = 10','x + y = 5'],ctx:'These equations describe a redundant system.',ask:'What happens?',correct:'Infinite solutions (D = 0)',d:['x = 5, y = 0','No solution','x = 0, y = 5'],steps:['D = 2 - 2 = 0','The equations are identical when simplified','Infinitely many solutions'],singular:true},
+]
+}
+};
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let level='further',stage=1,qIdx=0,score=0,streak=0,bestStreak=0,lives=3,correctCount=0,flagCount=0,qStartTime=0;
+let currentQ=null,pool=[],totalAnswered=0;
+const BASE=100,T_K=0.15,SINGULAR_BONUS=25,MAX_QUESTIONS=20;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
+function rkStr(tex){const span=document.createElement('span');katex.render(tex,span,{throwOnError:false,displayMode:false});return span.innerHTML}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
+const pa=new URLSearchParams(location.search);if(pa.get('level')&&QUESTIONS[pa.get('level')]){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+
+function buildPool(){
+  const bank=QUESTIONS[level];
+  pool=[];
+  if(stage>=1)pool.push(...shuffle([...bank.det]));
+  if(stage>=2)pool.push(...shuffle([...bank.inv]));
+  if(stage>=3)pool.push(...shuffle([...bank.cramer]));
+  shuffle(pool);
+}
+
+function startGame(){
+  stage=1;qIdx=0;score=0;streak=0;bestStreak=0;lives=3;correctCount=0;flagCount=0;totalAnswered=0;
+  document.getElementById('score').textContent='0';
+  document.getElementById('streak').textContent='0';
+  updateStage();updateLives();
+  buildPool();
+
+  window._ggAbandoned=true;
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'matrix-crunch',level:level,questions_answered:totalAnswered});});}
+  mfg('game_started',{game_slug:'matrix-crunch',level:level});
+
+  show('game');
+  nextQ();
+}
+
+function updateStage(){
+  document.getElementById('stageNum').textContent=stage;
+  document.getElementById('sp1').classList.toggle('active',stage>=1);
+  document.getElementById('sp2').classList.toggle('active',stage>=2);
+  document.getElementById('sp3').classList.toggle('active',stage>=3);
+  document.getElementById('flagBtn').style.display=stage>=2?'block':'none';
+}
+
+function updateLives(){
+  const el=document.getElementById('lives');el.innerHTML='';
+  for(let i=0;i<3;i++){const d=document.createElement('div');d.className='life'+(i<lives?' alive':'');el.appendChild(d)}
+}
+
+function nextQ(){
+  if(totalAnswered>=MAX_QUESTIONS||lives<=0){endGame();return}
+  if(pool.length===0)buildPool();
+  currentQ=pool.shift();
+  totalAnswered++;
+  document.getElementById('qNum').textContent=totalAnswered;
+  document.getElementById('solution').className='solution';
+
+  // Render context
+  document.getElementById('context').textContent=currentQ.ctx||'';
+
+  // Render matrix or system
+  const mEl=document.getElementById('matrix');mEl.innerHTML='';
+  if(currentQ.m&&!currentQ.isTheory){
+    const a=currentQ.m;
+    rk(mEl,`\\begin{pmatrix}${a[0][0]}&${a[0][1]}\\\\${a[1][0]}&${a[1][1]}\\end{pmatrix}`);
+  } else if(currentQ.sys){
+    currentQ.sys.forEach(eq=>{const d=document.createElement('div');rk(d,eq);mEl.appendChild(d)});
+  } else if(currentQ.isTheory){
+    rk(mEl,'\\begin{pmatrix}\\cos\\theta&-\\sin\\theta\\\\\\sin\\theta&\\cos\\theta\\end{pmatrix}');
+  }
+
+  document.getElementById('prompt').textContent=currentQ.ask;
+
+  // Options
+  const opts=MaffsOptions.build(currentQ.correct,currentQ.d);
+  const oEl=document.getElementById('options');oEl.innerHTML='';
+  opts.forEach(v=>{
+    const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
+    if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}
+    b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b)
+  });
+
+  // Flag button
+  const fb=document.getElementById('flagBtn');fb.classList.remove('disabled');
+
+  qStartTime=Date.now();updateTimer();
+}
+
+function updateTimer(){
+  const el=document.getElementById('timer');
+  const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStartTime)/1000);requestAnimationFrame(tick)}};
+  requestAnimationFrame(tick);
+}
+
+function handleAnswer(btn){
+  const s=(Date.now()-qStartTime)/1000;
+  const ok=btn.dataset.val===currentQ.correct;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===currentQ.correct)b.classList.add('correct')});
+  document.getElementById('flagBtn').classList.add('disabled');
+
+  if(ok){
+    btn.classList.add('correct');
+    const m=1/(1+T_K*Math.log(1+s));
+    score+=Math.max(1,Math.round(BASE*m));
+    streak++;correctCount++;
+    if(streak>bestStreak)bestStreak=streak;
+    mfg('question_answered',{game_slug:'matrix-crunch',level:level,correct:true,question_index:totalAnswered});
+    checkStageUp();
+    updateHUD();
+    setTimeout(nextQ,1000);
+  } else {
+    btn.classList.add('wrong');
+    streak=0;
+    mfg('question_answered',{game_slug:'matrix-crunch',level:level,correct:false,question_index:totalAnswered});
+    updateHUD();
+    showSolution();
+  }
+}
+
+function flagSingular(){
+  document.querySelectorAll('.opt-btn').forEach(b=>b.classList.add('disabled'));
+  document.getElementById('flagBtn').classList.add('disabled');
+
+  if(currentQ.singular){
+    score+=SINGULAR_BONUS;
+    streak++;correctCount++;flagCount++;
+    mfg('question_answered',{game_slug:'matrix-crunch',level:level,correct:true,question_index:totalAnswered});
+    if(streak>bestStreak)bestStreak=streak;
+    checkStageUp();
+    updateHUD();
+    // Brief success indication then move on
+    document.getElementById('flagBtn').style.borderColor='var(--accent)';
+    document.getElementById('flagBtn').textContent='\u2713 Correct — singular matrix!';
+    setTimeout(()=>{document.getElementById('flagBtn').style.borderColor='';document.getElementById('flagBtn').textContent='\u26a0 Flag as Singular (det = 0)';nextQ()},1200);
+  } else {
+    lives--;
+    streak=0;
+    mfg('question_answered',{game_slug:'matrix-crunch',level:level,correct:false,question_index:totalAnswered});
+    updateLives();updateHUD();
+    document.getElementById('flagBtn').style.borderColor='var(--wrong)';
+    document.getElementById('flagBtn').textContent='\u2717 Not singular — lost a life!';
+    // Show the correct answer
+    document.querySelectorAll('.opt-btn').forEach(b=>{if(b.dataset.val===currentQ.correct)b.classList.add('reveal')});
+    showSolution('wrongFlag');
+  }
+}
+
+function showSolution(type){
+  const sol=document.getElementById('solution');
+  let html='<h3>Worked solution</h3>';
+  if(currentQ.steps){
+    currentQ.steps.forEach(step=>{html+=`<div class="step">${rkStr(step)}</div>`});
+  }
+  if(currentQ.misconception){
+    html+=`<div class="misconception">\u26a0 ${currentQ.misconception}</div>`;
+  }
+  if(type==='wrongFlag'){
+    html+=`<div class="misconception">\u26a0 This matrix is not singular — its determinant is not zero. Check your calculation before flagging.</div>`;
+  }
+  html+=`<button class="next-btn" onclick="closeSolution()">Got it — next question</button>`;
+  sol.innerHTML=html;
+  sol.className='solution show';
+}
+
+function closeSolution(){
+  document.getElementById('solution').className='solution';
+  document.getElementById('flagBtn').style.borderColor='';
+  document.getElementById('flagBtn').textContent='\u26a0 Flag as Singular (det = 0)';
+  nextQ();
+}
+
+function checkStageUp(){
+  if(streak>=5&&stage<3){
+    stage++;
+    buildPool();
+    updateStage();
+  }
+}
+
+function updateHUD(){
+  document.getElementById('score').textContent=score;
+  document.getElementById('streak').textContent=streak;
+}
+
+function endGame(){
+  window._ggAbandoned=false;
+  const pct=totalAnswered>0?Math.round(correctCount/totalAnswered*100):0;
+  mfg('game_completed',{game_slug:'matrix-crunch',level:level,score:score,questions_answered:totalAnswered,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('matrix-crunch',level,score,totalAnswered).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('matrix-crunch',level,score);}}
+  let t='Keep Practising!';
+  if(lives<=0)t='Out of Lives!';
+  else if(pct>=90)t='Outstanding!';
+  else if(pct>=70)t='Well Done!';
+  else if(pct>=50)t='Good Effort!';
+
+  document.getElementById('resultTitle').textContent=t;
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('statsLine').innerHTML=
+    `${correctCount}/${totalAnswered} correct (${pct}%)<br>Best streak: ${bestStreak} \u00b7 Highest stage: ${stage}<br>Singular matrices flagged: ${flagCount}`;
+  show('results');
+}
+
+function showMenu(){show('menu')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

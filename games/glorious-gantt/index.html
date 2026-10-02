@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Critical path analysis — calculate early and late times, identify the critical path, calculate floats, and interpret Gantt charts. 15 scenarios.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/glorious-gantt/">
+<meta property="og:title" content="Glorious Gantt Game — MaffsGames">
+<meta property="og:description" content="Critical path analysis — calculate early and late times, identify the critical path, calculate floats, and interpret Gantt charts. 15 scenarios.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/glorious-gantt/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Glorious Gantt Game — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070b14;--surface:#0e1424;--surface2:#131b2e;--border:#1a2440;
+  --primary:#f97316;--primary-dim:rgba(249,115,22,.15);--primary-glow:rgba(249,115,22,.25);
+  --accent:#fb923c;--teal:#14b8a6;--correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
+  --wrong:#f43f5e;--wrong-dim:rgba(244,63,94,.12);
+  --text:#e4e8f0;--muted:#687890;--hint:#94a3b8;
+  --node-bg:#1a2440;--node-border:#2a3654;--critical:#f97316;--noncrit:#0d9488;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:1100px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1rem 0 .4rem}
+.header h1{font-size:1.7rem;font-weight:800;background:linear-gradient(135deg,var(--primary),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.6rem auto;max-width:560px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;max-width:420px;margin:1rem auto}
+.mode-btn{padding:.8rem;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.mode-btn:hover{border-color:var(--primary)}.mode-btn.selected{border-color:var(--primary);background:var(--primary-dim)}
+.mode-btn .msub{font-size:.64rem;color:var(--muted);font-weight:400;margin-top:.15rem;display:block}
+.level-row{display:flex;gap:.4rem;justify-content:center;margin:.8rem auto}
+.pill{padding:.4rem 1rem;border-radius:100px;border:1.5px solid var(--border);background:var(--surface);color:var(--hint);font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer;transition:all .12s}
+.pill:hover{border-color:var(--primary)}.pill.selected{border-color:var(--primary);background:var(--primary-dim);color:var(--primary)}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2.2rem;border-radius:12px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;opacity:.4;pointer-events:none}
+.start-btn.ready{opacity:1;pointer-events:auto}.start-btn.ready:hover{transform:scale(1.04)}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:'JetBrains Mono',monospace;font-size:.88rem;font-weight:700}
+
+/* Layout */
+.game-layout{display:grid;grid-template-columns:3fr 2fr;gap:.7rem;align-items:start}
+@media(max-width:780px){.game-layout{grid-template-columns:1fr}}
+
+/* Network canvas */
+.net-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.5rem}
+.net-panel canvas{display:block;width:100%;border-radius:8px}
+
+/* Right panel */
+.right-panel{display:flex;flex-direction:column;gap:.5rem}
+.info-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.6rem;font-size:.8rem}
+.info-box h3{font-size:.72rem;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem;font-weight:700}
+
+/* Activity table */
+.act-table{width:100%;border-collapse:collapse;font-size:.76rem}
+.act-table th,.act-table td{padding:.3rem .4rem;border:1px solid var(--border);text-align:center}
+.act-table th{background:var(--surface2);color:var(--muted);font-size:.65rem;text-transform:uppercase;font-weight:600}
+.act-table td.act-id{font-weight:700;color:var(--accent)}
+
+/* Step instruction */
+.step-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem}
+.step-label{font-size:.68rem;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.2rem;font-weight:700}
+.step-prompt{font-size:.82rem;font-weight:600;margin-bottom:.5rem;line-height:1.5}
+.step-hint{font-size:.72rem;color:var(--muted);line-height:1.5;margin-bottom:.5rem;padding:.4rem;background:var(--surface2);border-radius:6px}
+.check-btn{padding:.45rem 1.2rem;border-radius:8px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;margin-top:.3rem}
+.check-btn:hover{transform:scale(1.03)}
+.num-input{width:80px;padding:.4rem .5rem;border-radius:6px;border:1.5px solid var(--border);background:var(--surface2);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:500}
+.num-input:focus{outline:none;border-color:var(--primary)}
+.feedback{margin-top:.4rem;padding:.4rem .6rem;border-radius:8px;font-size:.76rem;line-height:1.4;animation:fadeIn .25s}
+.feedback.correct{background:var(--correct-dim);border:1px solid var(--correct);color:var(--correct)}
+.feedback.wrong{background:var(--wrong-dim);border:1px solid var(--wrong);color:var(--wrong)}
+.dismiss-btn{display:block;margin:8px auto 0;padding:5px 16px;border:1.5px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;opacity:0;animation:fadeBtn .3s ease forwards}.dismiss-btn:hover{background:rgba(255,255,255,.08)}@keyframes fadeBtn{to{opacity:1}}
+.mcq-grid{display:grid;gap:.3rem;margin-bottom:.4rem}
+.mcq-btn{padding:.45rem .6rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.76rem;cursor:pointer;text-align:left;transition:all .12s;line-height:1.3}
+.mcq-btn:hover{border-color:var(--primary)}
+.mcq-btn.correct{border-color:var(--correct);background:var(--correct-dim)}
+.mcq-btn.wrong{border-color:var(--wrong);background:var(--wrong-dim)}
+.mcq-btn.disabled{pointer-events:none;opacity:.5}
+.next-btn{display:block;margin:.6rem auto 0;padding:.5rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer}
+
+/* Gantt */
+.gantt-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.5rem;margin-top:.5rem}
+.gantt-panel canvas{display:block;width:100%;border-radius:8px}
+
+/* Results */
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.4rem;margin-bottom:.3rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.6rem;font-weight:700;background:linear-gradient(135deg,var(--primary),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.7rem 0}
+.results .stats{color:var(--muted);margin-bottom:1rem;line-height:1.9;font-size:.83rem}
+.results .pb-line{color:var(--correct);font-weight:600;font-size:.88rem;margin-bottom:1rem}
+.play-again{padding:.6rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+.method-btn{display:block;margin:.8rem auto;padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s}.method-btn:hover{border-color:var(--primary);color:var(--text)}
+.method-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}.method-overlay.show{display:flex}
+.method-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;max-width:600px;width:92%;max-height:80vh;overflow-y:auto}
+.method-box h2{font-size:1.1rem;font-weight:700;color:var(--accent);margin-bottom:1rem}
+.method-section{margin-bottom:1rem;padding:.8rem;background:var(--bg);border-radius:8px;font-size:.85rem;line-height:1.8}
+.method-section strong{color:var(--accent);display:block;margin-bottom:.3rem}
+.method-close{display:block;margin:1rem auto 0;padding:.4rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+
+<!-- MENU -->
+<div id="menuScreen" class="screen active">
+  <div class="header"><h1>Glorious Gantt Game</h1><div class="sub">What's on the critical path — and what can slip?</div>  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+  <div class="menu-info">Critical path analysis — calculate early and late times, identify the critical path, calculate floats, and interpret Gantt charts.</div>
+  <div class="mode-grid">
+    <button class="mode-btn" data-mode="a" onclick="selMode(this)">Mode A<span class="msub">Network given — calculate</span></button>
+    <button class="mode-btn" data-mode="b" onclick="selMode(this)">Mode B<span class="msub">Build the network first</span></button>
+  </div>
+  <div class="level-row">
+    <button class="pill" data-level="core" onclick="selLvl(this)">Core Maths</button>
+    <button class="pill" data-level="level4" onclick="selLvl(this)">Level 4</button>
+  </div>
+  <button class="method-btn" onclick="document.getElementById('methodOverlay').classList.add('show')">Worked Example</button>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="start-btn" id="startBtn" onclick="startGame()">Start</button>
+</div>
+
+<div class="method-overlay" id="methodOverlay">
+  <div class="method-box">
+    <h2>Worked Example — Critical Path Analysis</h2>
+    <div class="method-section" id="methodForward"></div>
+    <div class="method-section" id="methodBackward"></div>
+    <div class="method-section" id="methodCritical"></div>
+    <div class="method-section" id="methodFloat"></div>
+    <button class="method-close" onclick="document.getElementById('methodOverlay').classList.remove('show')">Got it</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="gameScreen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><div class="hud-label">Scenario</div><div class="hud-val" id="hudQ">1/4</div></div>
+    <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    <div class="hud-item"><div class="hud-label">Step</div><div class="hud-val" id="hudStep">—</div></div>
+    <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val mono" id="hudTimer">0s</div></div>
+  </div>
+  <div class="game-layout">
+    <div>
+      <div class="net-panel"><canvas id="netCanvas" width="700" height="350"></canvas></div>
+      <div class="gantt-panel" id="ganttPanel" style="display:none"><canvas id="ganttCanvas" width="700" height="260"></canvas></div>
+    </div>
+    <div class="right-panel">
+      <div class="info-box" id="infoBox"></div>
+      <div class="step-box" id="stepBox"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="resultsScreen" class="screen">
+  <div class="results">
+    <h2 id="resultTitle"></h2>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="stats" id="statsLine"></div>
+    <div class="pb-line" id="pbLine" style="display:none"></div>
+    <button class="play-again" onclick="showMenu()">Play Again</button>
+  </div>
+</div>
+</div>
+
+<script>
+function _addDismiss(fb,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
+// ============================================================
+//  SCENARIO BANK
+// ============================================================
+// Each scenario: title, activities[], nodes[], arcs[], criticalPath[], floats{}, ganttQs[]
+// nodes: [{id,x,y,early,late}] — x,y are layout positions (0-1 normalised)
+// arcs: [{id,from,to,activity,duration}]
+
+const SCENARIOS={
+core_a:[
+  {id:'CM_A1',title:'Organising a school play',
+   activities:[
+     {id:'A',desc:'Write script',dur:5,depends:[]},
+     {id:'B',desc:'Book venue',dur:2,depends:[]},
+     {id:'C',desc:'Cast auditions',dur:4,depends:['A']},
+     {id:'D',desc:'Build set',dur:6,depends:['A']},
+     {id:'E',desc:'Rehearsals',dur:8,depends:['C']},
+     {id:'F',desc:'Costume making',dur:5,depends:['C']},
+     {id:'G',desc:'Technical rehearsal',dur:3,depends:['D','E','F']},
+     {id:'H',desc:'Performances',dur:3,depends:['B','G']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.25,y:.3,early:5,late:5},
+     {id:3,x:.45,y:.3,early:9,late:9},
+     {id:4,x:.65,y:.4,early:17,late:17},
+     {id:5,x:.8,y:.5,early:20,late:20},
+     {id:6,x:.95,y:.5,early:23,late:23}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:5},
+     {id:'a2',from:1,to:6,activity:'B',dur:2,directTo:5},
+     {id:'a3',from:2,to:3,activity:'C',dur:4},
+     {id:'a4',from:2,to:4,activity:'D',dur:6},
+     {id:'a5',from:3,to:4,activity:'E',dur:8},
+     {id:'a6',from:3,to:4,activity:'F',dur:5,altTo:4},
+     {id:'a7',from:4,to:5,activity:'G',dur:3},
+     {id:'a8',from:5,to:6,activity:'H',dur:3}
+   ],
+   criticalPath:['A','C','E','G','H'],
+   floats:{B:18,D:6,F:3},
+   projectDur:23,
+   ganttQs:[
+     {type:'mcq',prompt:'Which activities can run simultaneously during days 5–9?',correct:'C, D, and B',wrong:['Only C','E and F','G and H']},
+     {type:'mcq',prompt:'Activity D has a float of 6 days. What does this mean?',correct:'Activity D can be delayed by up to 6 days without delaying the project',wrong:['Activity D takes 6 days','Activity D must start on day 6','Activity D is on the critical path']},
+     {type:'read',prompt:'What is the minimum project duration?',answer:23},
+     {type:'mcq',prompt:'If activity F is delayed by 2 days, what happens to project completion?',correct:'No change — F has 3 days of float',wrong:['Project delayed by 2 days','Project delayed by 5 days','Project completes earlier']}
+   ]},
+  {id:'CM_A2',title:'Launching a school magazine',
+   activities:[
+     {id:'A',desc:'Plan content',dur:3,depends:[]},
+     {id:'B',desc:'Write articles',dur:8,depends:['A']},
+     {id:'C',desc:'Take photographs',dur:5,depends:['A']},
+     {id:'D',desc:'Design layout',dur:6,depends:['B','C']},
+     {id:'E',desc:'Proofreading',dur:2,depends:['D']},
+     {id:'F',desc:'Print and distribute',dur:4,depends:['E']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.2,y:.5,early:3,late:3},
+     {id:3,x:.45,y:.5,early:11,late:11},
+     {id:4,x:.6,y:.5,early:17,late:17},
+     {id:5,x:.75,y:.5,early:19,late:19},
+     {id:6,x:.95,y:.5,early:23,late:23}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:3},
+     {id:'a2',from:2,to:3,activity:'B',dur:8},
+     {id:'a3',from:2,to:3,activity:'C',dur:5},
+     {id:'a4',from:3,to:4,activity:'D',dur:6},
+     {id:'a5',from:4,to:5,activity:'E',dur:2},
+     {id:'a6',from:5,to:6,activity:'F',dur:4}
+   ],
+   criticalPath:['A','B','D','E','F'],
+   floats:{C:3},
+   projectDur:23,
+   ganttQs:[
+     {type:'mcq',prompt:'Which activity has float?',correct:'C — Take photographs (3 days float)',wrong:['B — Write articles','D — Design layout','A — Plan content']},
+     {type:'read',prompt:'What is the minimum project duration?',answer:23},
+     {type:'mcq',prompt:'If article writing takes 10 days instead of 8, what happens?',correct:'Project delayed by 2 days to 25 days',wrong:['No change','Project delayed by 10 days','Only photography is affected']}
+   ]},
+  {id:'CM_A3',title:'Catering for a wedding',
+   activities:[
+     {id:'A',desc:'Plan menu',dur:2,depends:[]},
+     {id:'B',desc:'Order ingredients',dur:3,depends:['A']},
+     {id:'C',desc:'Book staff',dur:4,depends:[]},
+     {id:'D',desc:'Prepare cold dishes',dur:5,depends:['B']},
+     {id:'E',desc:'Prepare hot dishes',dur:6,depends:['B']},
+     {id:'F',desc:'Set up venue',dur:3,depends:['C']},
+     {id:'G',desc:'Serve food',dur:2,depends:['D','E','F']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.25,y:.35,early:2,late:2},
+     {id:3,x:.45,y:.35,early:5,late:5},
+     {id:4,x:.7,y:.5,early:11,late:11},
+     {id:5,x:.95,y:.5,early:13,late:13}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:2},
+     {id:'a2',from:2,to:3,activity:'B',dur:3},
+     {id:'a3',from:1,to:4,activity:'C',dur:4},
+     {id:'a4',from:3,to:4,activity:'D',dur:5},
+     {id:'a5',from:3,to:4,activity:'E',dur:6},
+     {id:'a6',from:4,to:4,activity:'F',dur:3},
+     {id:'a7',from:4,to:5,activity:'G',dur:2}
+   ],
+   criticalPath:['A','B','E','G'],
+   floats:{C:7,D:1,F:4},
+   projectDur:13,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:13},
+     {type:'mcq',prompt:'If cold dish preparation is delayed by 1 day, what happens?',correct:'No change — activity D has 1 day of float',wrong:['Project delayed 1 day','Project delayed 5 days','Hot dishes are affected']}
+   ]},
+  {id:'CM_A4',title:'Building a garden',
+   activities:[
+     {id:'A',desc:'Clear site',dur:3,depends:[]},
+     {id:'B',desc:'Lay foundations',dur:5,depends:['A']},
+     {id:'C',desc:'Order plants',dur:4,depends:[]},
+     {id:'D',desc:'Build fence',dur:6,depends:['B']},
+     {id:'E',desc:'Lay lawn',dur:4,depends:['B']},
+     {id:'F',desc:'Plant borders',dur:3,depends:['C','E']},
+     {id:'G',desc:'Install lighting',dur:2,depends:['D']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.25,y:.35,early:3,late:3},
+     {id:3,x:.5,y:.35,early:8,late:8},
+     {id:4,x:.75,y:.35,early:14,late:14},
+     {id:5,x:.5,y:.7,early:12,late:13},
+     {id:6,x:.95,y:.5,early:16,late:16}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:3},
+     {id:'a2',from:2,to:3,activity:'B',dur:5},
+     {id:'a3',from:1,to:5,activity:'C',dur:4},
+     {id:'a4',from:3,to:4,activity:'D',dur:6},
+     {id:'a5',from:3,to:5,activity:'E',dur:4},
+     {id:'a6',from:5,to:6,activity:'F',dur:3},
+     {id:'a7',from:4,to:6,activity:'G',dur:2}
+   ],
+   criticalPath:['A','B','D','G'],
+   floats:{C:9,E:1,F:1},
+   projectDur:16,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:16},
+     {type:'mcq',prompt:'Which activities are on the critical path?',correct:'A → B → D → G',wrong:['A → B → E → F','A → C → F','B → E → G']}
+   ]}
+],
+level4_a:[
+  {id:'L4_A1',title:'Engine component manufacturing',
+   activities:[
+     {id:'A',desc:'Design review',dur:3,depends:[]},
+     {id:'B',desc:'Procurement',dur:7,depends:['A']},
+     {id:'C',desc:'Machine setup',dur:4,depends:['A']},
+     {id:'D',desc:'Machining',dur:8,depends:['B','C']},
+     {id:'E',desc:'Heat treatment',dur:4,depends:['D']},
+     {id:'F',desc:'Inspection',dur:2,depends:['E']},
+     {id:'G',desc:'Finishing',dur:3,depends:['E']},
+     {id:'H',desc:'Assembly',dur:3,depends:['F','G']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.2,y:.5,early:3,late:3},
+     {id:3,x:.4,y:.5,early:10,late:10},
+     {id:4,x:.55,y:.5,early:18,late:18},
+     {id:5,x:.7,y:.5,early:22,late:22},
+     {id:6,x:.95,y:.5,early:28,late:28}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:3},
+     {id:'a2',from:2,to:3,activity:'B',dur:7},
+     {id:'a3',from:2,to:3,activity:'C',dur:4},
+     {id:'a4',from:3,to:4,activity:'D',dur:8},
+     {id:'a5',from:4,to:5,activity:'E',dur:4},
+     {id:'a6',from:5,to:6,activity:'F',dur:2},
+     {id:'a7',from:5,to:6,activity:'G',dur:3},
+     {id:'a8',from:6,to:6,activity:'H',dur:3}
+   ],
+   criticalPath:['A','B','D','E','G','H'],
+   floats:{C:3,F:1},
+   projectDur:28,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:28},
+     {type:'mcq',prompt:'If procurement takes 9 days instead of 7, what happens?',correct:'Project delayed by 2 days',wrong:['No change','Project delayed by 9 days','Only machining is delayed']},
+     {type:'mcq',prompt:'What is the float on machine setup (C)?',correct:'3 days',wrong:['0 days','7 days','4 days']}
+   ]},
+  {id:'L4_A2',title:'PCB assembly process',
+   activities:[
+     {id:'A',desc:'Solder paste',dur:1,depends:[]},
+     {id:'B',desc:'Component placement',dur:2,depends:['A']},
+     {id:'C',desc:'Reflow soldering',dur:2,depends:['B']},
+     {id:'D',desc:'Visual inspection',dur:1,depends:['C']},
+     {id:'E',desc:'Through-hole insertion',dur:3,depends:['A']},
+     {id:'F',desc:'Wave soldering',dur:2,depends:['E']},
+     {id:'G',desc:'Board cleaning',dur:1,depends:['D','F']},
+     {id:'H',desc:'Functional test',dur:2,depends:['G']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.2,y:.3,early:1,late:1},
+     {id:3,x:.4,y:.3,early:3,late:3},
+     {id:4,x:.55,y:.3,early:5,late:5},
+     {id:5,x:.35,y:.7,early:4,late:4},
+     {id:6,x:.55,y:.7,early:6,late:6},
+     {id:7,x:.7,y:.5,early:6,late:6},
+     {id:8,x:.95,y:.5,early:9,late:9}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:1},
+     {id:'a2',from:2,to:3,activity:'B',dur:2},
+     {id:'a3',from:3,to:4,activity:'C',dur:2},
+     {id:'a4',from:4,to:7,activity:'D',dur:1},
+     {id:'a5',from:1,to:5,activity:'E',dur:3},
+     {id:'a6',from:5,to:6,activity:'F',dur:2},
+     {id:'a7',from:7,to:8,activity:'G',dur:1},
+     {id:'a8',from:8,to:8,activity:'H',dur:2}
+   ],
+   criticalPath:['A','B','C','D','G','H'],
+   floats:{E:0,F:0},
+   projectDur:9,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:9},
+     {type:'mcq',prompt:'Are there dual critical paths in this network?',correct:'Yes — both the SMT and through-hole paths take 9 days',wrong:['No, only one path','Only the SMT path is critical','Only through-hole is critical']}
+   ]},
+  {id:'L4_A3',title:'Product launch preparation',
+   activities:[
+     {id:'A',desc:'Market research',dur:5,depends:[]},
+     {id:'B',desc:'Product design',dur:8,depends:['A']},
+     {id:'C',desc:'Prototype build',dur:6,depends:['B']},
+     {id:'D',desc:'Testing',dur:4,depends:['C']},
+     {id:'E',desc:'Marketing campaign',dur:5,depends:['A']},
+     {id:'F',desc:'Sales training',dur:3,depends:['E']},
+     {id:'G',desc:'Distribution setup',dur:4,depends:['D','F']},
+     {id:'H',desc:'Launch',dur:1,depends:['G']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.2,y:.35,early:5,late:5},
+     {id:3,x:.4,y:.35,early:13,late:13},
+     {id:4,x:.55,y:.35,early:19,late:19},
+     {id:5,x:.7,y:.35,early:23,late:23},
+     {id:6,x:.4,y:.7,early:10,late:20},
+     {id:7,x:.85,y:.5,early:27,late:27},
+     {id:8,x:.95,y:.5,early:28,late:28}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:5},
+     {id:'a2',from:2,to:3,activity:'B',dur:8},
+     {id:'a3',from:3,to:4,activity:'C',dur:6},
+     {id:'a4',from:4,to:5,activity:'D',dur:4},
+     {id:'a5',from:2,to:6,activity:'E',dur:5},
+     {id:'a6',from:6,to:7,activity:'F',dur:3},
+     {id:'a7',from:5,to:7,activity:'G',dur:4},
+     {id:'a8',from:7,to:8,activity:'H',dur:1}
+   ],
+   criticalPath:['A','B','C','D','G','H'],
+   floats:{E:15,F:10},
+   projectDur:28,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:28},
+     {type:'mcq',prompt:'Activity E (Marketing) has how many days of float?',correct:'15 days',wrong:['0 days','5 days','10 days']},
+     {type:'mcq',prompt:'If testing takes 6 days instead of 4, what happens?',correct:'Project delayed by 2 days to 30 days',wrong:['No change','Marketing must be cut','Only distribution is delayed']}
+   ]},
+  {id:'L4_A4',title:'Turbine installation',
+   activities:[
+     {id:'A',desc:'Site survey',dur:4,depends:[]},
+     {id:'B',desc:'Foundation design',dur:5,depends:['A']},
+     {id:'C',desc:'Procurement',dur:10,depends:['A']},
+     {id:'D',desc:'Foundation pour',dur:6,depends:['B']},
+     {id:'E',desc:'Equipment delivery',dur:2,depends:['C']},
+     {id:'F',desc:'Installation',dur:8,depends:['D','E']},
+     {id:'G',desc:'Commissioning',dur:5,depends:['F']},
+     {id:'H',desc:'Handover',dur:3,depends:['G']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.2,y:.5,early:4,late:4},
+     {id:3,x:.35,y:.3,early:9,late:10},
+     {id:4,x:.35,y:.7,early:14,late:14},
+     {id:5,x:.5,y:.5,early:16,late:16},
+     {id:6,x:.65,y:.5,early:24,late:24},
+     {id:7,x:.8,y:.5,early:29,late:29},
+     {id:8,x:.95,y:.5,early:32,late:32}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:4},
+     {id:'a2',from:2,to:3,activity:'B',dur:5},
+     {id:'a3',from:2,to:4,activity:'C',dur:10},
+     {id:'a4',from:3,to:5,activity:'D',dur:6},
+     {id:'a5',from:4,to:5,activity:'E',dur:2},
+     {id:'a6',from:5,to:6,activity:'F',dur:8},
+     {id:'a7',from:6,to:7,activity:'G',dur:5},
+     {id:'a8',from:7,to:8,activity:'H',dur:3}
+   ],
+   criticalPath:['A','C','E','F','G','H'],
+   floats:{B:1,D:1},
+   projectDur:32,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:32},
+     {type:'mcq',prompt:'Which activities are on the critical path?',correct:'A → C → E → F → G → H',wrong:['A → B → D → F → G → H','All activities','A → B → C → F']}
+   ]}
+],
+core_b:[
+  {id:'CM_B1',title:'Organising a charity event',
+   activities:[
+     {id:'A',desc:'Choose charity',dur:1,depends:[]},
+     {id:'B',desc:'Book venue',dur:4,depends:['A']},
+     {id:'C',desc:'Create publicity',dur:3,depends:['A']},
+     {id:'D',desc:'Sell tickets',dur:5,depends:['B','C']},
+     {id:'E',desc:'Organise entertainment',dur:6,depends:['A']},
+     {id:'F',desc:'Rehearse entertainment',dur:3,depends:['E']},
+     {id:'G',desc:'Run event',dur:1,depends:['D','F']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.25,y:.5,early:1,late:1},
+     {id:3,x:.5,y:.3,early:5,late:5},
+     {id:4,x:.5,y:.7,early:7,late:7},
+     {id:5,x:.75,y:.4,early:10,late:10},
+     {id:6,x:.95,y:.5,early:11,late:11}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:1},
+     {id:'a2',from:2,to:3,activity:'B',dur:4},
+     {id:'a3',from:2,to:3,activity:'C',dur:3},
+     {id:'a4',from:3,to:5,activity:'D',dur:5},
+     {id:'a5',from:2,to:4,activity:'E',dur:6},
+     {id:'a6',from:4,to:5,activity:'F',dur:3},
+     {id:'a7',from:5,to:6,activity:'G',dur:1}
+   ],
+   criticalPath:['A','B','D','G'],
+   floats:{C:1,E:0,F:0},
+   projectDur:11,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:11},
+     {type:'mcq',prompt:'Is there a dual critical path?',correct:'Yes — A→E→F→G also takes 11 days',wrong:['No, only one path exists','The critical path goes through C','There are three critical paths']}
+   ]},
+  {id:'CM_B2',title:'Planning a school trip',
+   activities:[
+     {id:'A',desc:'Get approval',dur:2,depends:[]},
+     {id:'B',desc:'Book transport',dur:3,depends:['A']},
+     {id:'C',desc:'Send permission slips',dur:2,depends:['A']},
+     {id:'D',desc:'Collect payment',dur:4,depends:['C']},
+     {id:'E',desc:'Arrange lunches',dur:1,depends:['D']},
+     {id:'F',desc:'Brief students',dur:1,depends:['B','E']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.25,y:.5,early:2,late:2},
+     {id:3,x:.45,y:.3,early:5,late:6},
+     {id:4,x:.45,y:.7,early:4,late:4},
+     {id:5,x:.65,y:.7,early:8,late:8},
+     {id:6,x:.8,y:.7,early:9,late:9},
+     {id:7,x:.95,y:.5,early:10,late:10}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:2},
+     {id:'a2',from:2,to:3,activity:'B',dur:3},
+     {id:'a3',from:2,to:4,activity:'C',dur:2},
+     {id:'a4',from:4,to:5,activity:'D',dur:4},
+     {id:'a5',from:5,to:6,activity:'E',dur:1},
+     {id:'a6',from:6,to:7,activity:'F',dur:1}
+   ],
+   criticalPath:['A','C','D','E','F'],
+   floats:{B:4},
+   projectDur:10,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:10},
+     {type:'mcq',prompt:'How many days of float does booking transport have?',correct:'4 days',wrong:['0 days','3 days','2 days']}
+   ]},
+  {id:'CM_B3',title:'Renovating a room',
+   activities:[
+     {id:'A',desc:'Strip wallpaper',dur:2,depends:[]},
+     {id:'B',desc:'Fix plastering',dur:3,depends:['A']},
+     {id:'C',desc:'Paint walls',dur:4,depends:['B']},
+     {id:'D',desc:'Fit new floor',dur:3,depends:['B']},
+     {id:'E',desc:'Install furniture',dur:2,depends:['C','D']},
+     {id:'F',desc:'Fit lighting',dur:1,depends:['C']},
+     {id:'G',desc:'Final inspection',dur:1,depends:['E','F']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.2,y:.5,early:2,late:2},
+     {id:3,x:.4,y:.5,early:5,late:5},
+     {id:4,x:.6,y:.4,early:9,late:9},
+     {id:5,x:.6,y:.7,early:8,late:9},
+     {id:6,x:.8,y:.5,early:11,late:11},
+     {id:7,x:.95,y:.5,early:12,late:12}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:2},
+     {id:'a2',from:2,to:3,activity:'B',dur:3},
+     {id:'a3',from:3,to:4,activity:'C',dur:4},
+     {id:'a4',from:3,to:5,activity:'D',dur:3},
+     {id:'a5',from:4,to:6,activity:'E',dur:2},
+     {id:'a6',from:4,to:6,activity:'F',dur:1},
+     {id:'a7',from:6,to:7,activity:'G',dur:1}
+   ],
+   criticalPath:['A','B','C','E','G'],
+   floats:{D:1,F:1},
+   projectDur:12,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:12},
+     {type:'mcq',prompt:'If flooring takes 4 days instead of 3, what happens?',correct:'No change if painting is also on schedule — but float is consumed',wrong:['Project delayed 1 day','Project delayed 4 days','Only lighting is affected']}
+   ]}
+],
+level4_b:[
+  {id:'L4_B1',title:'Hydraulic system installation',
+   activities:[
+     {id:'A',desc:'System design',dur:5,depends:[]},
+     {id:'B',desc:'Component sourcing',dur:8,depends:['A']},
+     {id:'C',desc:'Pipe fabrication',dur:6,depends:['A']},
+     {id:'D',desc:'Pump installation',dur:4,depends:['B']},
+     {id:'E',desc:'Pipe installation',dur:5,depends:['B','C']},
+     {id:'F',desc:'Valve fitting',dur:3,depends:['D','E']},
+     {id:'G',desc:'System testing',dur:4,depends:['F']},
+     {id:'H',desc:'Commissioning',dur:2,depends:['G']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.2,y:.5,early:5,late:5},
+     {id:3,x:.4,y:.4,early:13,late:13},
+     {id:4,x:.4,y:.7,early:11,late:13},
+     {id:5,x:.55,y:.5,early:18,late:18},
+     {id:6,x:.7,y:.5,early:21,late:21},
+     {id:7,x:.85,y:.5,early:25,late:25},
+     {id:8,x:.95,y:.5,early:27,late:27}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:5},
+     {id:'a2',from:2,to:3,activity:'B',dur:8},
+     {id:'a3',from:2,to:4,activity:'C',dur:6},
+     {id:'a4',from:3,to:5,activity:'D',dur:4},
+     {id:'a5',from:3,to:5,activity:'E',dur:5},
+     {id:'a6',from:5,to:6,activity:'F',dur:3},
+     {id:'a7',from:6,to:7,activity:'G',dur:4},
+     {id:'a8',from:7,to:8,activity:'H',dur:2}
+   ],
+   criticalPath:['A','B','E','F','G','H'],
+   floats:{C:2,D:1},
+   projectDur:27,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:27},
+     {type:'mcq',prompt:'What is the float on pipe fabrication (C)?',correct:'2 days',wrong:['0 days','6 days','5 days']}
+   ]},
+  {id:'L4_B2',title:'CNC machining cell setup',
+   activities:[
+     {id:'A',desc:'Facility preparation',dur:3,depends:[]},
+     {id:'B',desc:'Machine delivery',dur:6,depends:['A']},
+     {id:'C',desc:'Electrical installation',dur:4,depends:['A']},
+     {id:'D',desc:'Machine installation',dur:5,depends:['B']},
+     {id:'E',desc:'Electrical connection',dur:2,depends:['C','D']},
+     {id:'F',desc:'Software setup',dur:3,depends:['D']},
+     {id:'G',desc:'Calibration',dur:4,depends:['E','F']},
+     {id:'H',desc:'Trial runs',dur:3,depends:['G']},
+     {id:'I',desc:'Sign-off',dur:1,depends:['H']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.18,y:.5,early:3,late:3},
+     {id:3,x:.35,y:.35,early:9,late:9},
+     {id:4,x:.35,y:.7,early:7,late:12},
+     {id:5,x:.5,y:.4,early:14,late:14},
+     {id:6,x:.5,y:.65,early:17,late:17},
+     {id:7,x:.65,y:.5,early:21,late:21},
+     {id:8,x:.8,y:.5,early:24,late:24},
+     {id:9,x:.95,y:.5,early:25,late:25}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:3},
+     {id:'a2',from:2,to:3,activity:'B',dur:6},
+     {id:'a3',from:2,to:4,activity:'C',dur:4},
+     {id:'a4',from:3,to:5,activity:'D',dur:5},
+     {id:'a5',from:5,to:7,activity:'E',dur:2},
+     {id:'a6',from:5,to:6,activity:'F',dur:3},
+     {id:'a7',from:6,to:7,activity:'G',dur:4},
+     {id:'a8',from:7,to:8,activity:'H',dur:3},
+     {id:'a9',from:8,to:9,activity:'I',dur:1}
+   ],
+   criticalPath:['A','B','D','F','G','H','I'],
+   floats:{C:5,E:4},
+   projectDur:25,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:25},
+     {type:'mcq',prompt:'Which activities are on the critical path?',correct:'A → B → D → F → G → H → I',wrong:['A → C → E → G → H → I','All activities','A → B → D → E → G']}
+   ]},
+  {id:'L4_B3',title:'Structural welding project',
+   activities:[
+     {id:'A',desc:'Material inspection',dur:2,depends:[]},
+     {id:'B',desc:'Cutting operations',dur:4,depends:['A']},
+     {id:'C',desc:'Jig preparation',dur:3,depends:['A']},
+     {id:'D',desc:'Primary welding',dur:6,depends:['B','C']},
+     {id:'E',desc:'Stress relief',dur:4,depends:['D']},
+     {id:'F',desc:'NDT inspection',dur:3,depends:['E']},
+     {id:'G',desc:'Secondary welding',dur:5,depends:['F']},
+     {id:'H',desc:'Final inspection',dur:2,depends:['G']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.18,y:.5,early:2,late:2},
+     {id:3,x:.32,y:.4,early:6,late:6},
+     {id:4,x:.32,y:.7,early:5,late:6},
+     {id:5,x:.48,y:.5,early:12,late:12},
+     {id:6,x:.6,y:.5,early:16,late:16},
+     {id:7,x:.72,y:.5,early:19,late:19},
+     {id:8,x:.85,y:.5,early:24,late:24},
+     {id:9,x:.95,y:.5,early:26,late:26}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:2},
+     {id:'a2',from:2,to:3,activity:'B',dur:4},
+     {id:'a3',from:2,to:4,activity:'C',dur:3},
+     {id:'a4',from:3,to:5,activity:'D',dur:6},
+     {id:'a5',from:5,to:6,activity:'E',dur:4},
+     {id:'a6',from:6,to:7,activity:'F',dur:3},
+     {id:'a7',from:7,to:8,activity:'G',dur:5},
+     {id:'a8',from:8,to:9,activity:'H',dur:2}
+   ],
+   criticalPath:['A','B','D','E','F','G','H'],
+   floats:{C:1},
+   projectDur:26,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:26},
+     {type:'mcq',prompt:'What is the float on jig preparation (C)?',correct:'1 day',wrong:['0 days','3 days','2 days']}
+   ]},
+  {id:'L4_B4',title:'Aerospace component inspection',
+   activities:[
+     {id:'A',desc:'Documentation review',dur:2,depends:[]},
+     {id:'B',desc:'Dimensional inspection',dur:4,depends:['A']},
+     {id:'C',desc:'Surface inspection',dur:3,depends:['A']},
+     {id:'D',desc:'Material testing',dur:5,depends:['A']},
+     {id:'E',desc:'NDT scanning',dur:4,depends:['B','C']},
+     {id:'F',desc:'Test analysis',dur:3,depends:['D','E']},
+     {id:'G',desc:'Report writing',dur:2,depends:['F']},
+     {id:'H',desc:'Client sign-off',dur:1,depends:['G']}
+   ],
+   nodes:[
+     {id:1,x:.05,y:.5,early:0,late:0},
+     {id:2,x:.2,y:.5,early:2,late:2},
+     {id:3,x:.38,y:.3,early:6,late:6},
+     {id:4,x:.38,y:.55,early:5,late:6},
+     {id:5,x:.38,y:.8,early:7,late:10},
+     {id:6,x:.55,y:.4,early:10,late:10},
+     {id:7,x:.7,y:.5,early:13,late:13},
+     {id:8,x:.82,y:.5,early:15,late:15},
+     {id:9,x:.95,y:.5,early:16,late:16}
+   ],
+   arcs:[
+     {id:'a1',from:1,to:2,activity:'A',dur:2},
+     {id:'a2',from:2,to:3,activity:'B',dur:4},
+     {id:'a3',from:2,to:4,activity:'C',dur:3},
+     {id:'a4',from:2,to:5,activity:'D',dur:5},
+     {id:'a5',from:3,to:6,activity:'E',dur:4},
+     {id:'a6',from:6,to:7,activity:'F',dur:3},
+     {id:'a7',from:7,to:8,activity:'G',dur:2},
+     {id:'a8',from:8,to:9,activity:'H',dur:1}
+   ],
+   criticalPath:['A','B','E','F','G','H'],
+   floats:{C:1,D:3},
+   projectDur:16,
+   ganttQs:[
+     {type:'read',prompt:'What is the minimum project duration?',answer:16},
+     {type:'mcq',prompt:'If material testing takes 7 days, what happens?',correct:'No change — D has 3 days of float',wrong:['Project delayed by 2 days','NDT must be delayed','Inspection fails']}
+   ]}
+]
+};
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let G={mode:null,level:null,questions:[],qIdx:0,step:0,score:0,penalties:0,
+  timerStart:0,timerElapsed:0,timerInterval:null,
+  earlyDone:{},lateDone:{},cpSelected:new Set(),
+  floatIdx:0,gqIdx:0,_qaIdx:0};
+const $=id=>document.getElementById(id);
+
+function selMode(btn){document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');G.mode=btn.dataset.mode;checkReady();}
+function selLvl(btn){document.querySelectorAll('.pill').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');G.level=btn.dataset.level;checkReady();}
+function checkReady(){$('startBtn').classList.toggle('ready',!!(G.mode&&G.level));}
+function parseURL(){
+  const p=new URLSearchParams(location.search);
+  if(p.get('mode')){const b=document.querySelector(`.mode-btn[data-mode="${p.get('mode')}"]`);if(b)selMode(b);}
+  if(p.get('level')){const b=document.querySelector(`.pill[data-level="${p.get('level')}"]`);if(b)selLvl(b);}
+}
+
+function startGame(){
+  if(!G.mode||!G.level)return;
+  const key=G.level+'_'+G.mode;
+  const pool=[...SCENARIOS[key]];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  G.questions=pool.slice(0,Math.min(4,pool.length));G.qIdx=0;G.score=0;G.penalties=0;G._qaIdx=0;
+  G.timerStart=Date.now();G.timerInterval=setInterval(updateTimer,1000);
+  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');
+  mfg('game_started',{game_slug:'glorious-gantt',level:G.level});
+  mfg('mode_selected',{game_slug:'glorious-gantt',mode:G.mode==='a'?'calculate':'build'});
+  window._ggAbandoned=true;
+  window.addEventListener('beforeunload',function(){
+    if(window._ggAbandoned) mfg('game_abandoned',{game_slug:'glorious-gantt',level:G.level,questions_answered:G.qIdx});
+  });
+  loadScenario();
+}
+function updateTimer(){
+  G.timerElapsed=Math.floor((Date.now()-G.timerStart)/1000);
+  const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
+  $('hudTimer').textContent=m>0?`${m}m${s.toString().padStart(2,'0')}s`:`${s}s`;
+}
+
+// ============================================================
+//  LOAD SCENARIO
+// ============================================================
+function loadScenario(){
+  const q=G.questions[G.qIdx];
+  G.step=1;G.earlyDone={};G.lateDone={};G.cpSelected=new Set();G.floatIdx=0;G.gqIdx=0;
+  $('hudQ').textContent=`${G.qIdx+1}/${G.questions.length}`;$('hudScore').textContent=G.score;
+  $('ganttPanel').style.display='none';
+
+  // Info box — activity table
+  let tbl=`<h3>${q.title}</h3><table class="act-table"><tr><th>Act</th><th>Description</th><th>Duration</th><th>Depends on</th></tr>`;
+  q.activities.forEach(a=>{
+    tbl+=`<tr><td class="act-id">${a.id}</td><td>${a.desc}</td><td class="mono">${a.dur}</td><td class="mono">${a.depends.length?a.depends.join(', '):'—'}</td></tr>`;
+  });
+  tbl+='</table>';
+  $('infoBox').innerHTML=tbl;
+
+  drawNetwork(q);
+  loadStep(q);
+}
+
+// ============================================================
+//  DRAW NETWORK
+// ============================================================
+function drawNetwork(q,highlightCP,showEarly,showLate){
+  const c=$('netCanvas');
+  const rect=c.parentElement.getBoundingClientRect();
+  const w=Math.max(320,rect.width-12),h=Math.round(w*0.5);
+  c.width=w*2;c.height=h*2;c.style.width=w+'px';c.style.height=h+'px';
+  const ctx=c.getContext('2d');ctx.scale(2,2);
+
+  ctx.clearRect(0,0,w,h);
+  const R=22; // node radius
+  const pad=30;
+
+  function nx(n){return pad+n.x*(w-2*pad);}
+  function ny(n){return pad+n.y*(h-2*pad);}
+
+  // Draw arcs
+  q.arcs.forEach(arc=>{
+    const from=q.nodes.find(n=>n.id===arc.from);
+    const to=q.nodes.find(n=>n.id===arc.to);
+    if(!from||!to)return;
+    const x1=nx(from),y1=ny(from),x2=nx(to),y2=ny(to);
+    const isCrit=highlightCP&&q.criticalPath.includes(arc.activity);
+    const isSelected=G.cpSelected.has(arc.activity);
+
+    ctx.strokeStyle=isCrit?'#f97316':isSelected?'#fb923c':'#2a3654';
+    ctx.lineWidth=isCrit?2.5:isSelected?2:1.5;
+    ctx.beginPath();
+    // Shorten line to node edge
+    const angle=Math.atan2(y2-y1,x2-x1);
+    const sx=x1+Math.cos(angle)*R,sy=y1+Math.sin(angle)*R;
+    const ex=x2-Math.cos(angle)*R,ey=y2-Math.sin(angle)*R;
+    ctx.moveTo(sx,sy);ctx.lineTo(ex,ey);ctx.stroke();
+
+    // Arrow
+    const aLen=8,aAng=0.4;
+    ctx.beginPath();
+    ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-aLen*Math.cos(angle-aAng),ey-aLen*Math.sin(angle-aAng));
+    ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-aLen*Math.cos(angle+aAng),ey-aLen*Math.sin(angle+aAng));
+    ctx.stroke();
+
+    // Label
+    const mx=(sx+ex)/2,my=(sy+ey)/2;
+    const offX=-Math.sin(angle)*14,offY=Math.cos(angle)*14;
+    ctx.fillStyle=isCrit?'#fb923c':'#94a3b8';
+    ctx.font='600 11px Outfit';ctx.textAlign='center';
+    ctx.fillText(`${arc.activity} (${arc.dur})`,mx+offX,my+offY);
+  });
+
+  // Draw nodes
+  q.nodes.forEach(n=>{
+    const x=nx(n),y=ny(n);
+
+    // Circle
+    ctx.beginPath();ctx.arc(x,y,R,0,Math.PI*2);
+    ctx.fillStyle='#0e1424';ctx.fill();
+    ctx.strokeStyle='#2a3654';ctx.lineWidth=1.5;ctx.stroke();
+
+    // Event number
+    ctx.fillStyle='#e4e8f0';ctx.font='700 12px JetBrains Mono';ctx.textAlign='center';
+    ctx.fillText(n.id,x,y-5);
+
+    // Divider line
+    ctx.strokeStyle='#1a2440';ctx.lineWidth=0.8;
+    ctx.beginPath();ctx.moveTo(x-R+4,y+3);ctx.lineTo(x+R-4,y+3);ctx.stroke();
+    // Vertical divider
+    ctx.beginPath();ctx.moveTo(x,y+3);ctx.lineTo(x,y+R-2);ctx.stroke();
+
+    // Early time (bottom left)
+    if(showEarly||G.earlyDone[n.id]){
+      ctx.fillStyle='#14b8a6';ctx.font='600 9px JetBrains Mono';ctx.textAlign='center';
+      ctx.fillText(n.early,x-R/2,y+R-5);
+    }
+    // Late time (bottom right)
+    if(showLate||G.lateDone[n.id]){
+      ctx.fillStyle='#f97316';ctx.font='600 9px JetBrains Mono';ctx.textAlign='center';
+      ctx.fillText(n.late,x+R/2,y+R-5);
+    }
+  });
+}
+
+// ============================================================
+//  STEP MANAGEMENT
+// ============================================================
+function loadStep(q){
+  const box=$('stepBox');
+  if(G.step===1){
+    // Mode A: study network. Mode B: in this simplified version, we show network and proceed.
+    $('hudStep').textContent='Study';
+    box.innerHTML=`<div class="step-label">Step 1 — Study the network</div>
+      <div class="step-prompt">Review the activity table and network diagram.</div>
+      <button class="check-btn" onclick="G.step=2;loadStep(G.questions[G.qIdx])">Ready — Start Forward Pass →</button>`;
+  } else if(G.step===2){
+    $('hudStep').textContent='Forward';
+    renderForwardPass(q);
+  } else if(G.step===3){
+    $('hudStep').textContent='Backward';
+    renderBackwardPass(q);
+  } else if(G.step===4){
+    $('hudStep').textContent='Critical';
+    renderCriticalPath(q);
+  } else if(G.step===5){
+    $('hudStep').textContent='Floats';
+    renderFloats(q);
+  } else if(G.step===6){
+    $('hudStep').textContent='Gantt';
+    renderGantt(q);
+    renderGanttQs(q);
+  }
+}
+
+// ============================================================
+//  STEP 2 — FORWARD PASS
+// ============================================================
+function renderForwardPass(q){
+  const box=$('stepBox');
+  // Find next node without early time entered
+  const next=q.nodes.find(n=>!G.earlyDone[n.id]);
+  if(!next){G.step=3;drawNetwork(q,false,true,false);loadStep(q);return;}
+
+  box.innerHTML=`<div class="step-label">Step 2 — Forward Pass</div>
+    <div class="step-prompt">Enter the early time for Node ${next.id}.</div>
+    <div class="step-hint">Early time = maximum of (predecessor early time + arc duration) for all incoming arcs. Start node = 0.</div>
+    <input type="number" class="num-input" id="earlyInput" placeholder="Early time" step="1">
+    <button class="check-btn" onclick="checkEarly(${next.id})">Check</button>
+    <div id="stepFb"></div>`;
+}
+
+function _trackGG(ok){G._qaIdx++;mfg('question_answered',{game_slug:'glorious-gantt',level:G.level,correct:ok,question_index:G._qaIdx});}
+
+function checkEarly(nodeId){
+  const q=G.questions[G.qIdx];
+  const node=q.nodes.find(n=>n.id===nodeId);
+  const val=parseInt($('earlyInput').value);
+  if(isNaN(val))return;
+  const fb=$('stepFb');
+  if(val===node.early){
+    G.earlyDone[nodeId]=true;G.score+=5;$('hudScore').textContent=G.score;_trackGG(true);
+    drawNetwork(q,false,true,false);
+    fb.innerHTML=`<div class="feedback correct">Correct! Early time for Node ${nodeId} = ${node.early}</div>`;
+    setTimeout(()=>renderForwardPass(q),800);
+  } else {
+    G.penalties++;_trackGG(false);
+    fb.innerHTML='<div class="feedback wrong">Incorrect. Check all incoming arcs and take the maximum.</div>';
+    _addDismiss(fb,()=>{fb.innerHTML='';$('earlyInput').value='';$('earlyInput').focus();});
+  }
+}
+
+// ============================================================
+//  STEP 3 — BACKWARD PASS
+// ============================================================
+function renderBackwardPass(q){
+  const box=$('stepBox');
+  const reversed=[...q.nodes].reverse();
+  const next=reversed.find(n=>!G.lateDone[n.id]);
+  if(!next){G.step=4;drawNetwork(q,false,true,true);loadStep(q);return;}
+
+  box.innerHTML=`<div class="step-label">Step 3 — Backward Pass</div>
+    <div class="step-prompt">Enter the late time for Node ${next.id}.</div>
+    <div class="step-hint">Late time = minimum of (successor late time − arc duration) for all outgoing arcs. End node: late = early.</div>
+    <input type="number" class="num-input" id="lateInput" placeholder="Late time" step="1">
+    <button class="check-btn" onclick="checkLate(${next.id})">Check</button>
+    <div id="stepFb"></div>`;
+}
+
+function checkLate(nodeId){
+  const q=G.questions[G.qIdx];
+  const node=q.nodes.find(n=>n.id===nodeId);
+  const val=parseInt($('lateInput').value);
+  if(isNaN(val))return;
+  const fb=$('stepFb');
+  if(val===node.late){
+    G.lateDone[nodeId]=true;G.score+=5;$('hudScore').textContent=G.score;_trackGG(true);
+    drawNetwork(q,false,true,true);
+    fb.innerHTML=`<div class="feedback correct">Correct! Late time for Node ${nodeId} = ${node.late}</div>`;
+    setTimeout(()=>renderBackwardPass(q),800);
+  } else {
+    G.penalties++;_trackGG(false);
+    fb.innerHTML='<div class="feedback wrong">Incorrect. Check all outgoing arcs and take the minimum.</div>';
+    _addDismiss(fb,()=>{fb.innerHTML='';$('lateInput').value='';$('lateInput').focus();});
+  }
+}
+
+// ============================================================
+//  STEP 4 — CRITICAL PATH
+// ============================================================
+function renderCriticalPath(q){
+  const box=$('stepBox');
+  // Let user click activity names to select
+  let html=`<div class="step-label">Step 4 — Identify the Critical Path</div>
+    <div class="step-prompt">Click the activities that form the critical path.</div>
+    <div class="step-hint">An activity is critical if: early time at start + duration = late time at end (zero float).</div>
+    <div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.5rem">`;
+  q.activities.forEach(a=>{
+    const sel=G.cpSelected.has(a.id);
+    html+=`<button class="mcq-btn" style="padding:.3rem .6rem;min-width:auto;${sel?'border-color:var(--primary);background:var(--primary-dim)':''}" onclick="toggleCP('${a.id}')">${a.id}</button>`;
+  });
+  html+=`</div><button class="check-btn" onclick="checkCP()">Check Critical Path</button><div id="stepFb"></div>`;
+  box.innerHTML=html;
+}
+
+function toggleCP(actId){
+  if(G.cpSelected.has(actId))G.cpSelected.delete(actId);else G.cpSelected.add(actId);
+  const q=G.questions[G.qIdx];
+  drawNetwork(q,false,true,true);
+  renderCriticalPath(q);
+}
+
+function checkCP(){
+  const q=G.questions[G.qIdx];
+  const fb=$('stepFb');
+  const selected=[...G.cpSelected];
+  const correct=q.criticalPath;
+  const isCorrect=selected.length===correct.length&&correct.every(a=>selected.includes(a));
+
+  if(isCorrect){
+    G.score+=20;$('hudScore').textContent=G.score;
+    drawNetwork(q,true,true,true);
+    fb.innerHTML=`<div class="feedback correct">Critical path identified! ${correct.join(' → ')} (${q.projectDur} days)</div>`;
+    setTimeout(()=>{G.step=5;loadStep(q);},1500);
+  } else {
+    G.penalties++;
+    const missing=correct.filter(a=>!selected.includes(a));
+    const extra=selected.filter(a=>!correct.includes(a));
+    let msg='';
+    if(missing.length)msg+=`Missing: ${missing.join(', ')}. `;
+    if(extra.length)msg+=`${extra.join(', ')} have float — not critical. `;
+    if(!msg)msg='Check your selection. There may be a dual critical path.';
+    fb.innerHTML=`<div class="feedback wrong">${msg}</div>`;
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// ============================================================
+//  STEP 5 — FLOATS
+// ============================================================
+function renderFloats(q){
+  const box=$('stepBox');
+  const nonCrit=q.activities.filter(a=>!q.criticalPath.includes(a.id));
+  if(G.floatIdx>=nonCrit.length){G.step=6;loadStep(q);return;}
+
+  const act=nonCrit[G.floatIdx];
+  const expected=q.floats[act.id];
+
+  box.innerHTML=`<div class="step-label">Step 5 — Calculate Floats</div>
+    <div class="step-prompt">Calculate the float for activity ${act.id} (${act.desc}).</div>
+    <div class="step-hint">Float = Late time at end node − Early time at start node − Duration</div>
+    <input type="number" class="num-input" id="floatInput" placeholder="Float" step="1">
+    <button class="check-btn" onclick="checkFloat('${act.id}',${expected})">Check</button>
+    <div id="stepFb"></div>`;
+}
+
+function checkFloat(actId,expected){
+  const q=G.questions[G.qIdx];
+  const val=parseInt($('floatInput').value);
+  if(isNaN(val))return;
+  const fb=$('stepFb');
+  if(val===expected){
+    G.score+=8;$('hudScore').textContent=G.score;
+    fb.innerHTML=`<div class="feedback correct">Correct! Float for ${actId} = ${expected} days</div>`;
+    G.floatIdx++;
+    setTimeout(()=>renderFloats(q),800);
+  } else {
+    G.penalties++;
+    fb.innerHTML='<div class="feedback wrong">Incorrect. Float = Late(end) − Early(start) − Duration.</div>';
+    _addDismiss(fb,()=>{fb.innerHTML='';$('floatInput').value='';$('floatInput').focus();});
+  }
+}
+
+// ============================================================
+//  STEP 6 — GANTT CHART
+// ============================================================
+function renderGantt(q){
+  $('ganttPanel').style.display='block';
+  const c=$('ganttCanvas');
+  const rect=c.parentElement.getBoundingClientRect();
+  const w=Math.max(320,rect.width-12),h=Math.max(200,q.activities.length*30+50);
+  c.width=w*2;c.height=h*2;c.style.width=w+'px';c.style.height=h+'px';
+  const ctx=c.getContext('2d');ctx.scale(2,2);
+  ctx.clearRect(0,0,w,h);
+
+  const labelW=80,pad=10;
+  const chartW=w-labelW-pad*2;
+  const dayW=chartW/q.projectDur;
+  const rowH=26;
+
+  // Day markers
+  ctx.fillStyle='#687890';ctx.font='9px JetBrains Mono';ctx.textAlign='center';
+  for(let d=0;d<=q.projectDur;d++){
+    const x=labelW+d*dayW;
+    ctx.fillText(d,x,h-5);
+    ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=0.5;
+    ctx.beginPath();ctx.moveTo(x,10);ctx.lineTo(x,h-18);ctx.stroke();
+  }
+
+  // Activities — compute earliest start from nodes
+  q.activities.forEach((act,i)=>{
+    const y=10+i*rowH;
+    // Find earliest start: max of early times of start nodes of incoming arcs to this activity
+    let es=0;
+    const arc=q.arcs.find(a=>a.activity===act.id);
+    if(arc){const fromNode=q.nodes.find(n=>n.id===arc.from);if(fromNode)es=fromNode.early;}
+
+    const barX=labelW+es*dayW;
+    const barW=act.dur*dayW;
+    const isCrit=q.criticalPath.includes(act.id);
+    const float=q.floats[act.id]||0;
+
+    // Bar
+    ctx.fillStyle=isCrit?'#f97316':'#0d9488';
+    ctx.fillRect(barX,y,barW,rowH-4);
+
+    // Float extension
+    if(float>0){
+      ctx.setLineDash([3,3]);
+      ctx.strokeStyle='#555';ctx.lineWidth=1;
+      ctx.strokeRect(barX+barW,y,float*dayW,rowH-4);
+      ctx.setLineDash([]);
+    }
+
+    // Label
+    ctx.fillStyle='#e4e8f0';ctx.font='600 10px Outfit';ctx.textAlign='right';
+    ctx.fillText(`${act.id} (${act.dur})`,labelW-6,y+15);
+
+    // Duration text on bar
+    if(barW>20){
+      ctx.fillStyle='#000';ctx.font='600 9px JetBrains Mono';ctx.textAlign='center';
+      ctx.fillText(act.dur,barX+barW/2,y+14);
+    }
+  });
+}
+
+function renderGanttQs(q){
+  const box=$('stepBox');
+  if(G.gqIdx>=q.ganttQs.length){finishScenario(q);return;}
+  const gq=q.ganttQs[G.gqIdx];
+
+  if(gq.type==='read'){
+    box.innerHTML=`<div class="step-label">Gantt Q${G.gqIdx+1}</div><div class="step-prompt">${gq.prompt}</div>
+      <input type="number" class="num-input" id="gqInput" step="1">
+      <button class="check-btn" onclick="checkGQ_read()">Check</button><div id="stepFb"></div>`;
+  } else {
+    const opts=[{text:gq.correct,c:true},...gq.wrong.map(w=>({text:w,c:false}))];
+    for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
+    let html=`<div class="step-label">Gantt Q${G.gqIdx+1}</div><div class="step-prompt">${gq.prompt}</div><div class="mcq-grid">`;
+    opts.forEach((o,i)=>{html+=`<button class="mcq-btn" id="gq${i}" onclick="checkGQ_mcq(${i},${o.c})">${o.text}</button>`;});
+    html+=`</div><div id="stepFb"></div>`;
+    box.innerHTML=html;box._opts=opts;
+  }
+}
+
+function checkGQ_read(){
+  const q=G.questions[G.qIdx],gq=q.ganttQs[G.gqIdx];
+  const val=parseInt($('gqInput').value);if(isNaN(val))return;
+  const fb=$('stepFb');
+  if(val===gq.answer){
+    G.score+=10;$('hudScore').textContent=G.score;
+    fb.innerHTML=`<div class="feedback correct">Correct! ${gq.answer}</div>`;
+  } else {
+    G.penalties++;fb.innerHTML=`<div class="feedback wrong">Answer: ${gq.answer}</div>`;
+  }
+  G.gqIdx++;setTimeout(()=>renderGanttQs(q),1200);
+}
+
+function checkGQ_mcq(idx,correct){
+  const q=G.questions[G.qIdx];const fb=$('stepFb');
+  document.querySelectorAll('.mcq-btn').forEach(b=>b.classList.add('disabled'));
+  if(correct){G.score+=10;$('hudScore').textContent=G.score;$('gq'+idx).classList.add('correct');
+    fb.innerHTML='<div class="feedback correct">Correct!</div>';}
+  else{G.penalties++;$('gq'+idx).classList.add('wrong');
+    const opts=$('stepBox')._opts;opts.forEach((o,i)=>{if(o.c)$('gq'+i).classList.add('correct');});
+    fb.innerHTML='<div class="feedback wrong">Incorrect.</div>';}
+  G.gqIdx++;setTimeout(()=>renderGanttQs(q),1200);
+}
+
+// ============================================================
+//  FINISH
+// ============================================================
+function finishScenario(q){
+  $('stepBox').innerHTML=`<div style="text-align:center;padding:.5rem">
+    <div style="font-size:.78rem;color:var(--correct);font-weight:700;text-transform:uppercase;margin-bottom:.3rem">Scenario Complete</div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:.5rem">Critical path: ${q.criticalPath.join(' → ')} — ${q.projectDur} days</div>
+    <button class="next-btn" onclick="nextScenario()">${G.qIdx<G.questions.length-1?'Next Scenario →':'See Results'}</button></div>`;
+}
+function nextScenario(){G.qIdx++;if(G.qIdx>=G.questions.length)endGame();else loadScenario();}
+
+function endGame(){
+  clearInterval(G.timerInterval);$('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
+  const title=G.penalties===0?'Outstanding!':G.penalties<=5?'Great work!':'Good effort!';
+  $('resultTitle').textContent=title;$('finalScore').textContent=G.score;
+  const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
+  const labels={core:'Core Maths',level4:'Level 4'};
+  $('statsLine').innerHTML=`Wrong answers: <strong>${G.penalties}</strong><br>Time: <strong>${m>0?m+'m '+s+'s':s+'s'}</strong><br>Mode: <strong>${G.mode==='a'?'A — Calculate':'B — Build'}</strong><br>Level: <strong>${labels[G.level]}</strong>`;
+  const key=`gg_pb_${G.mode}_${G.level}`;const prev=parseInt(localStorage.getItem(key)||'0');
+  if(G.score>prev){localStorage.setItem(key,G.score);
+    mfg('personal_best_set',{game_slug:'glorious-gantt',level:G.level,score:G.score,previous_best:prev});
+    if(prev>0){$('pbLine').textContent=`New personal best! (Previous: ${prev})`;$('pbLine').style.display='block';}}
+  else if(prev>0){$('pbLine').textContent=`Personal best: ${prev}`;$('pbLine').style.display='block';}
+  window._ggAbandoned=false;
+  const accuracy=G.questions.length>0?Math.round(100*(1-G.penalties/Math.max(1,G.score/5))):0;
+  mfg('game_completed',{game_slug:'glorious-gantt',level:G.level,score:G.score,questions_answered:G.questions.length,accuracy:Math.max(0,Math.min(100,accuracy))});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('glorious-gantt',G.level,G.score,G.questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('glorious-gantt',G.level,G.score);}}
+}
+function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active');}
+window.addEventListener('DOMContentLoaded',()=>{parseURL();});
+
+
+(function renderMethodRef(){
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  var k=function(t){return katex.renderToString(t,{throwOnError:false});};
+
+  document.getElementById('methodForward').innerHTML=
+    '<strong>(a) Forward pass — Early Start (ES) and Early Finish (EF)</strong>'+
+    'Consider a small project:<br>'+
+    '<table style="width:100%;border-collapse:collapse;font-size:.78rem;margin:.5rem 0;font-family:JetBrains Mono,monospace">'+
+    '<tr style="background:var(--surface2);color:var(--muted);font-size:.65rem"><th style="padding:.3rem;border:1px solid var(--border)">Activity</th><th style="padding:.3rem;border:1px solid var(--border)">Duration</th><th style="padding:.3rem;border:1px solid var(--border)">Depends on</th></tr>'+
+    '<tr><td style="padding:.3rem;border:1px solid var(--border);font-weight:700;color:var(--accent)">A</td><td style="padding:.3rem;border:1px solid var(--border)">3</td><td style="padding:.3rem;border:1px solid var(--border)">\u2014</td></tr>'+
+    '<tr><td style="padding:.3rem;border:1px solid var(--border);font-weight:700;color:var(--accent)">B</td><td style="padding:.3rem;border:1px solid var(--border)">5</td><td style="padding:.3rem;border:1px solid var(--border)">\u2014</td></tr>'+
+    '<tr><td style="padding:.3rem;border:1px solid var(--border);font-weight:700;color:var(--accent)">C</td><td style="padding:.3rem;border:1px solid var(--border)">4</td><td style="padding:.3rem;border:1px solid var(--border)">A</td></tr>'+
+    '<tr><td style="padding:.3rem;border:1px solid var(--border);font-weight:700;color:var(--accent)">D</td><td style="padding:.3rem;border:1px solid var(--border)">2</td><td style="padding:.3rem;border:1px solid var(--border)">B, C</td></tr>'+
+    '</table>'+
+    'Start at time 0. Work <b>left to right</b>:<br>'+
+    'A: ES=0, EF=0+3=<b>3</b><br>'+
+    'B: ES=0, EF=0+5=<b>5</b><br>'+
+    'C: ES=3 (after A), EF=3+4=<b>7</b><br>'+
+    'D depends on B and C, so ES = max(5, 7) = <b>7</b>, EF=7+2=<b>9</b><br>'+
+    'Project duration = <b>9</b>';
+
+  document.getElementById('methodBackward').innerHTML=
+    '<strong>(b) Backward pass — Late Finish (LF) and Late Start (LS)</strong>'+
+    'Start from the end (9) and work <b>right to left</b>:<br>'+
+    'D: LF=9, LS=9\u22122=<b>7</b><br>'+
+    'C: LF=7 (D needs it by 7), LS=7\u22124=<b>3</b><br>'+
+    'B: LF=7 (D needs it by 7), LS=7\u22125=<b>2</b><br>'+
+    'A: LF=3 (C needs it by 3), LS=3\u22123=<b>0</b>';
+
+  document.getElementById('methodCritical').innerHTML=
+    '<strong>(c) Identifying the critical path</strong>'+
+    'An activity is <b>critical</b> when ES = LS (no slack):<br>'+
+    'A: ES=0, LS=0 \u2714 critical<br>'+
+    'B: ES=0, LS=2 \u2718 not critical<br>'+
+    'C: ES=3, LS=3 \u2714 critical<br>'+
+    'D: ES=7, LS=7 \u2714 critical<br><br>'+
+    'Critical path: <b>A \u2192 C \u2192 D</b> (total = 3 + 4 + 2 = 9)';
+
+  document.getElementById('methodFloat').innerHTML=
+    '<strong>(d) Float calculation</strong>'+
+    'Float = LS \u2212 ES (or equivalently LF \u2212 EF).<br><br>'+
+    'B: Float = 2 \u2212 0 = <b>2 days</b><br>'+
+    'This means activity B can be delayed by up to 2 days without delaying the whole project.<br>'+
+    'All critical activities have float = <b>0</b>.';
+})();
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

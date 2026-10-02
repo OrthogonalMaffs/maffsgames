@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factor Theorem — Learn + Practice — MaffsGames</title>
+<meta name="description" content="Learn the Factor Theorem, Remainder Theorem and algebraic long division step by step. Worked examples, scaffolded practice and exam questions. Free A-Level maths resource.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/factor-theorem/">
+<meta property="og:title" content="Factor Theorem — Learn + Practice — MaffsGames">
+<meta property="og:description" content="Learn the Factor Theorem, Remainder Theorem and algebraic long division step by step. Worked examples, scaffolded practice and exam questions.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/factor-theorem/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/exam-vocab.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#1e2235;
+  --border:#2a2f45;--border-active:#0d9488;
+  --primary:#0d9488;--primary-dim:rgba(13,148,136,.15);
+  --accent:#f59e0b;--accent-dim:rgba(245,158,11,.15);
+  --correct:#22c55e;--wrong:#ef4444;
+  --text:#edf2f4;--body:#94a3b8;--muted:#64748b;
+  --step-future:#141620;--step-future-text:#374151;
+  --tooltip-bg:#1a2744
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* ── Top bar ── */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1.2rem;background:var(--surface);border-bottom:1px solid var(--border)}
+.topbar-left{display:flex;align-items:center;gap:.8rem}
+.back-link{color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
+.topbar h1{font-size:1.1rem;font-weight:700}
+.topbar h1 span{color:var(--primary)}
+.badge-lp{font-size:.7rem;padding:3px 8px;border-radius:4px;background:var(--primary-dim);color:var(--primary);font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:.5rem}
+
+/* ── Section tabs ── */
+.section-tabs{display:flex;justify-content:center;gap:4px;padding:.6rem 1rem;background:var(--surface);border-bottom:1px solid var(--border)}
+.section-tab{padding:.5rem 1.2rem;border-radius:6px;border:none;background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.section-tab:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.section-tab.active{color:var(--primary);background:var(--primary-dim)}
+
+/* ── Learn section — Desktop split ── */
+.learn-container{display:flex;height:calc(100vh - 110px);overflow:hidden}
+.learn-left{width:45%;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:1.5rem}
+.learn-right{width:55%;overflow-y:auto;padding:1.5rem}
+
+/* ── Learn section — Mobile ── */
+.mobile-layout .learn-container{display:block;height:auto}
+.mobile-layout .learn-left,.mobile-layout .learn-right{width:100%;border:none}
+.mobile-tabs{display:none;justify-content:center;gap:4px;padding:.5rem;background:var(--surface);border-bottom:1px solid var(--border)}
+.mobile-layout .mobile-tabs{display:flex}
+.mobile-tab{padding:.4rem 1rem;border-radius:6px;border:none;background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+.mobile-tab.active{color:var(--primary);background:var(--primary-dim)}
+.mobile-layout .learn-left,.mobile-layout .learn-right{display:none}
+.mobile-layout .learn-left.visible,.mobile-layout .learn-right.visible{display:block}
+
+/* ── Step cards ── */
+.example-setup{color:var(--body);font-size:.88rem;line-height:1.6;padding:1rem;border-left:3px solid var(--primary);background:var(--primary-dim);border-radius:0 8px 8px 0;margin-bottom:1rem}
+.step-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem;margin-bottom:.6rem;transition:all .3s}
+.step-card.current{border-left:3px solid var(--primary)}
+.step-card.future{background:var(--step-future);color:var(--step-future-text);border-color:transparent}
+.step-card.future .step-working,.step-card.future .step-explain{opacity:.2}
+.step-number{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--primary);font-weight:700;margin-bottom:.4rem}
+.step-working{margin-bottom:.4rem;font-size:1.05rem}
+.step-explain{color:var(--body);font-size:.82rem;line-height:1.5}
+.why-btn{display:inline-block;margin-top:.4rem;padding:2px 8px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--accent);font-size:.72rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif}
+.why-btn:hover{background:var(--accent-dim)}
+.why-tooltip{display:none;margin-top:.5rem;padding:.8rem;background:var(--tooltip-bg);border-radius:6px;font-size:.78rem;color:var(--body);line-height:1.5}
+.why-tooltip.visible{display:block}
+
+/* ── Step controls ── */
+.step-controls{display:flex;gap:.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+.step-btn{padding:.5rem 1.2rem;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s}
+.step-btn:hover{border-color:var(--primary)}
+.step-btn.primary-btn{background:var(--primary);color:#0f1117;border-color:var(--primary)}
+.step-btn:disabled{opacity:.3;pointer-events:none}
+
+/* ── Example progress ── */
+.example-nav{display:flex;gap:.5rem;justify-content:center;margin-bottom:1rem;align-items:center}
+.example-dot{width:10px;height:10px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .2s}
+.example-dot.active{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+.example-dot.done{background:var(--primary);opacity:.5}
+.step-dots{display:flex;gap:3px;justify-content:center;margin-bottom:.8rem}
+.step-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:background .2s}
+.step-dot.active{background:var(--primary)}
+.step-dot.done{background:var(--primary);opacity:.5}
+
+/* ── Practice section ── */
+.practice-container,.test-container{max-width:760px;margin:0 auto;padding:1.5rem}
+.practice-hud{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}
+.hud-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+.q-prompt{font-size:.82rem;color:var(--body);margin-bottom:1rem;line-height:1.5}
+.scaffold-step{margin-bottom:.8rem}
+.scaffold-label{font-size:.78rem;color:var(--body);margin-bottom:.3rem}
+.scaffold-input{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.scaffold-input .katex-prefix{font-size:.95rem}
+.answer-input{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.5rem .8rem;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.95rem;width:120px;outline:none;transition:border-color .2s}
+.answer-input:focus{border-color:var(--primary)}
+.answer-input.correct-input{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.answer-input.wrong-input{border-color:var(--wrong);background:rgba(239,68,68,.08)}
+.hint-bar{display:flex;gap:.5rem;align-items:center;margin-top:.8rem}
+.hint-btn{padding:.4rem .8rem;border-radius:6px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:.78rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif}
+.hint-btn:hover{background:var(--accent-dim)}
+.hint-btn:disabled{opacity:.3;pointer-events:none}
+.hint-text{font-size:.8rem;color:var(--accent);margin-top:.4rem;padding:.5rem;background:var(--accent-dim);border-radius:6px}
+.submit-btn{display:block;margin:1rem auto 0;padding:.6rem 2rem;border-radius:8px;border:none;background:var(--primary);color:#0f1117;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.submit-btn:hover{transform:scale(1.03)}
+.submit-btn:disabled{opacity:.3;pointer-events:none}
+.feedback-msg{text-align:center;margin-top:.6rem;font-size:.88rem;font-weight:600}
+.feedback-msg.correct-msg{color:var(--correct)}.feedback-msg.correct-msg::after{content:' \2713'}
+.feedback-msg.wrong-msg{color:var(--wrong)}.feedback-msg.wrong-msg::after{content:' \2717'}
+.next-q-btn{display:block;margin:.8rem auto 0;padding:.5rem 1.5rem;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+.next-q-btn:hover{border-color:var(--primary)}
+.progress-pips{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .3s}
+.pip.done{background:var(--correct)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--accent);box-shadow:0 0 5px var(--accent)}
+
+/* ── Results ── */
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.final-score{font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem;font-size:.88rem}
+.play-again{padding:.7rem 2rem;border-radius:8px;border:none;background:var(--primary);color:#0f1117;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.play-again:hover{transform:scale(1.03)}
+.review-link{display:inline-block;margin-top:.8rem;color:var(--accent);font-size:.82rem;cursor:pointer;text-decoration:underline}
+
+/* ── Sections ── */
+.section{display:none}.section.active{display:block}
+
+/* ── Accessibility ── */
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}
+body.accessible .step-explain,body.accessible .q-prompt,body.accessible .example-setup{line-height:2;max-width:65ch}
+body.accessible{background-color:#12141f!important}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+
+/* ── Responsive ── */
+@media(max-width:767px){
+  .learn-container{flex-direction:column;height:auto}
+  .learn-left,.learn-right{width:100%}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <a href="../../" class="back-link">← Back to Games</a>
+    <h1><span>Factor Theorem</span></h1>
+    <span class="badge-lp">📖 Learn + Practice</span>
+  </div>
+  <div class="topbar-right">
+    <span class="badge-lp" style="background:rgba(249,115,22,.15);color:#f97316">A-Level</span>
+    <button class="a11y-toggle" id="a11yBtn" title="Toggle accessibility mode">Aa</button>
+  </div>
+</div>
+
+<!-- Section tabs -->
+<div class="section-tabs">
+  <button class="section-tab active" data-section="learn">Learn</button>
+  <button class="section-tab" data-section="practice">Practice</button>
+  <button class="section-tab" data-section="test">Test Yourself</button>
+</div>
+
+<!-- ══════════════════════════════════════ LEARN ══════════════════════════════════════ -->
+<div class="section active" id="sec-learn">
+  <div class="mobile-tabs">
+    <button class="mobile-tab active" data-panel="left">Example</button>
+    <button class="mobile-tab" data-panel="right">Your Turn</button>
+  </div>
+  <div class="learn-container">
+    <div class="learn-left visible" id="learn-left">
+      <div class="example-nav" id="example-nav"></div>
+      <div class="step-dots" id="step-dots"></div>
+      <div id="example-setup"></div>
+      <div id="step-list"></div>
+      <div class="step-controls">
+        <button class="step-btn" id="prevStepBtn" disabled>← Previous</button>
+        <button class="step-btn primary-btn" id="nextStepBtn">Next Step →</button>
+        <button class="step-btn" id="showAllBtn">See Full Example</button>
+        <button class="step-btn primary-btn" id="nextExampleBtn" style="display:none">Next Example →</button>
+      </div>
+    </div>
+    <div class="learn-right" id="learn-right">
+      <div id="learn-interactive" style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:.9rem;text-align:center;padding:2rem">
+        <p>Work through the example on the left, then try the practice section when you're ready.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ PRACTICE ══════════════════════════════════════ -->
+<div class="section" id="sec-practice">
+  <div class="practice-container">
+    <div class="practice-hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="p-qnum">1 / 5</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="p-score">0 / 0</div></div>
+      <div class="hud-item"><div class="hud-label">Hints</div><div class="hud-val" id="p-hints">0</div></div>
+    </div>
+    <div class="progress-pips" id="p-pips"></div>
+    <div id="practice-area"></div>
+    <div id="practice-results" class="results" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ TEST ══════════════════════════════════════ -->
+<div class="section" id="sec-test">
+  <div class="test-container">
+    <div class="practice-hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="t-qnum">1 / 1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="t-score">0 / 0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="t-time">0:00</div></div>
+    </div>
+    <div id="test-area"></div>
+    <div id="test-results" class="results" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+// Wait for KaTeX to load
+document.addEventListener('DOMContentLoaded', () => {
+  const waitForKatex = setInterval(() => {
+    if (window.katex) { clearInterval(waitForKatex); init(); }
+  }, 50);
+});
+
+function K(tex, display = false) {
+  try { return katex.renderToString(tex, { throwOnError: false, displayMode: display }); }
+  catch { return tex; }
+}
+// PQ (Prompt render): q.prompt is prose with maths embedded ('f(x) = ...
+// Fully factorise.'), not a whole expression -- a LaTeX command with no
+// \( \) delimiter is the old, unmigrated "pass the whole thing to K()"
+// shape and still needs K(); a prompt with \( \) delimiters, or with no
+// LaTeX command at all (pure prose), goes through MaffsText.html, which
+// renders each \( \) segment and leaves the rest as plain escaped text.
+function PQ(s) { return (/\\[A-Za-z]/.test(s) && !MaffsText.hasMaths(s)) ? K(s) : MaffsText.html(s); }
+
+// ── CONTENT ──────────────────────────────────────────────────────────
+const CONTENT = {
+  slug: 'factor-theorem',
+  learn: {
+    examples: [
+      {
+        title: 'The Remainder Theorem',
+        setup: 'When you divide a polynomial f(x) by (x \u2212 a), you don\'t always get zero remainder. The Remainder Theorem tells you exactly what that remainder will be \u2014 without doing the full division.',
+        steps: [
+          { working: 'f(x) = 2x^3 - 3x^2 + x - 5', explain: 'Here\'s our polynomial. We want to find the remainder when we divide by (x \u2212 2). The Remainder Theorem says the remainder equals f(2) \u2014 whatever you get when you substitute x = 2.' },
+          { working: 'f(2) = 2(2)^3 - 3(2)^2 + (2) - 5', explain: 'Substitute x = 2 into every term. Replace every x with 2.' },
+          { working: '= 2(8) - 3(4) + 2 - 5', explain: 'Work out each power first: 2\u00B3 = 8, 2\u00B2 = 4.' },
+          { working: '= 16 - 12 + 2 - 5', explain: 'Now multiply each term out.' },
+          { working: '= 1', explain: 'The remainder when f(x) is divided by (x \u2212 2) is 1. We didn\'t need to do any long division to find this.',
+            why: 'The Remainder Theorem is provable by writing f(x) = (x \u2212 a)q(x) + r, where q(x) is the quotient and r is the remainder. Substituting x = a gives f(a) = 0 + r, so r = f(a).' }
+        ]
+      },
+      {
+        title: 'The Factor Theorem',
+        setup: 'The Factor Theorem is a special case of the Remainder Theorem. If the remainder is zero, then (x \u2212 a) divides exactly \u2014 making it a factor.',
+        steps: [
+          { working: 'f(x) = x^3 - 7x - 6', explain: 'We want to find a factor of this cubic. The Factor Theorem says: try substituting values. If f(a) = 0, then (x \u2212 a) is a factor.' },
+          { working: '\\text{Try } x = 3: \\quad f(3) = (3)^3 - 7(3) - 6', explain: 'Which values should we try? Always start with the factors of the constant term (\u22126): try \u00B11, \u00B12, \u00B13, \u00B16. Start with small positive values.' },
+          { working: '= 27 - 21 - 6 = 0 \\checkmark', explain: 'f(3) = 0, so by the Factor Theorem, (x \u2212 3) is a factor of f(x).' },
+          { working: '\\therefore (x - 3) \\text{ is a factor of } f(x)', explain: 'We\'ve found one factor. Now we need to find the others \u2014 that\'s where algebraic long division comes in.',
+            why: 'The values to try are always \u00B1(factors of the constant term) \u00F7 (factors of the leading coefficient). For a monic cubic (leading coefficient 1), it\'s simply \u00B1(factors of the constant).' }
+        ]
+      },
+      {
+        title: 'Algebraic Long Division',
+        setup: 'We know (x \u2212 3) is a factor of x\u00B3 \u2212 7x \u2212 6. Now we divide to find what\'s left. This is exactly like numerical long division \u2014 same process, just with algebra.',
+        steps: [
+          { working: 'x^3 - 7x - 6 \\div (x - 3)', explain: 'Set up the division. Important: our cubic has no x\u00B2 term. Write it as x\u00B3 + 0x\u00B2 \u2212 7x \u2212 6. The zero placeholder keeps your columns aligned.' },
+          { working: 'x^3 \\div x = x^2', explain: 'Divide the leading term of the dividend (x\u00B3) by the leading term of the divisor (x). This gives the first term of the quotient: x\u00B2.' },
+          { working: 'x^2 \\times (x - 3) = x^3 - 3x^2', explain: 'Multiply x\u00B2 by the whole divisor (x \u2212 3). Write the result below.' },
+          { working: '(x^3 + 0x^2) - (x^3 - 3x^2) = 3x^2', explain: 'Subtract. Be careful \u2014 signs flip: \u2212(x\u00B3 \u2212 3x\u00B2) becomes \u2212x\u00B3 + 3x\u00B2. The x\u00B3 terms cancel, leaving 3x\u00B2.' },
+          { working: '3x^2 \\div x = 3x', explain: 'Bring down and repeat. Divide the new leading term (3x\u00B2) by x to get 3x.' },
+          { working: '3x \\times (x - 3) = 3x^2 - 9x', explain: 'Multiply 3x by the divisor.' },
+          { working: '(3x^2 - 7x) - (3x^2 - 9x) = 2x', explain: 'Subtract again. \u22123x\u00B2 + 9x. The 3x\u00B2 cancels, \u22127x + 9x = 2x.' },
+          { working: '2x \\div x = 2', explain: 'One more time. 2x \u00F7 x = 2.' },
+          { working: '2 \\times (x - 3) = 2x - 6', explain: 'Multiply 2 by the divisor.' },
+          { working: '(2x - 6) - (2x - 6) = 0', explain: 'Subtract. Zero remainder \u2014 exactly what we expected since (x \u2212 3) is a factor.' },
+          { working: 'x^3 - 7x - 6 = (x - 3)(x^2 + 3x + 2)', explain: 'The quotient was x\u00B2 + 3x + 2. So the cubic factorises as (x \u2212 3)(x\u00B2 + 3x + 2).' },
+          { working: 'x^2 + 3x + 2 = (x + 1)(x + 2)', explain: 'The quadratic factorises easily. Final answer: (x \u2212 3)(x + 1)(x + 2).',
+            why: 'The zero placeholder in step 1 is the single most common source of errors in algebraic long division. A missing term doesn\'t mean skip the column \u2014 write 0x\u00B2 explicitly.' }
+        ]
+      },
+      {
+        title: 'Putting It All Together',
+        setup: 'Here\'s the full process from start to finish \u2014 find a factor, divide, factorise the quadratic.',
+        steps: [
+          { working: 'f(x) = 2x^3 + x^2 - 13x + 6', explain: 'A cubic with leading coefficient 2. Values to try: \u00B11, \u00B12, \u00B13, \u00B16, \u00B1\u00BD, \u00B1\u2153.' },
+          { working: 'f(2) = 2(8) + (4) - 13(2) + 6 = 16 + 4 - 26 + 6 = 0 \\checkmark', explain: 'x = 2 gives zero, so (x \u2212 2) is a factor.' },
+          { working: '2x^3 + x^2 - 13x + 6 \\div (x - 2)', explain: 'Perform algebraic long division. All terms present, no zero placeholder needed this time.' },
+          { working: '2x^3 \\div x = 2x^2', explain: 'First term of quotient: 2x\u00B2.' },
+          { working: '2x^2(x-2) = 2x^3 - 4x^2', explain: 'Multiply and subtract.' },
+          { working: '(2x^3 + x^2) - (2x^3 - 4x^2) = 5x^2', explain: '5x\u00B2 is the new leading term.' },
+          { working: '5x^2 \\div x = 5x', explain: 'Next term: 5x.' },
+          { working: '(5x^2 - 13x) - (5x^2 - 10x) = -3x', explain: 'Subtract: \u221213x + 10x = \u22123x.' },
+          { working: '-3x \\div x = -3', explain: 'Last term: \u22123.' },
+          { working: '(-3x + 6) - (-3x + 6) = 0 \\checkmark', explain: 'Zero remainder. Division complete.' },
+          { working: '2x^3 + x^2 - 13x + 6 = (x-2)(2x^2 + 5x - 3)', explain: 'Quotient is 2x\u00B2 + 5x \u2212 3.' },
+          { working: '2x^2 + 5x - 3 = (2x - 1)(x + 3)', explain: 'Factorise the quadratic. Check: (2x \u2212 1)(x + 3) = 2x\u00B2 + 6x \u2212 x \u2212 3 = 2x\u00B2 + 5x \u2212 3 \u2713' },
+          { working: '\\therefore\\; 2x^3 + x^2 - 13x + 6 = (x-2)(2x-1)(x+3)', explain: 'Fully factorised. Three linear factors, three roots: x = 2, x = \u00BD, x = \u22123.' }
+        ]
+      }
+    ]
+  },
+  practice: {
+    questions: [
+      // ── Tier 1: Every step prompted (Q1–Q5) ──
+      { id:1, tier:1, prompt:'f(x) = \\(x^3 + 2x^2 - 5x + 1\\). Find the remainder when f(x) is divided by \\((x - 2)\\).',
+        scaffoldSteps:[
+          {label:'The remainder = f(___)',answer:'2'},{label:'f(2) = (2)\u00B3 + 2(2)\u00B2 \u2212 5(2) + 1',answer:'',display:true},
+          {label:'= ___ + 8 \u2212 10 + 1',answer:'8'},{label:'= ___',answer:'7'}],
+        finalAnswer:'7',hints:['Remainder Theorem: remainder = f(a) where divisor is (x \u2212 a)','Substitute x = 2 into f(x)','f(2) = 8 + 8 \u2212 10 + 1'] },
+      { id:2, tier:1, prompt:'f(x) = \\(2x^3 - x^2 + 3x - 4\\). Find the remainder when divided by \\((x + 1)\\).',
+        scaffoldSteps:[
+          {label:'(x + 1) means substitute x = ___',answer:'-1'},
+          {label:'f(\u22121) = 2(\u22121)\u00B3 \u2212 (\u22121)\u00B2 + 3(\u22121) \u2212 4',answer:'',display:true},
+          {label:'= 2(___) \u2212 1 \u2212 3 \u2212 4',answer:'-1'},{label:'= ___ \u2212 1 \u2212 3 \u2212 4',answer:'-2'},
+          {label:'= ___',answer:'-10'}],
+        finalAnswer:'-10',hints:['(x + 1) = (x \u2212 (\u22121)), so substitute x = \u22121','(−1)³ = −1','f(\u22121) = \u22122 \u2212 1 \u2212 3 \u2212 4'] },
+      { id:3, tier:1, prompt:'Show that \\((x - 1)\\) is a factor of f(x) = \\(x^3 - 6x^2 + 11x - 6\\).',
+        scaffoldSteps:[
+          {label:'To show (x \u2212 1) is a factor, calculate f(___)',answer:'1'},
+          {label:'f(1) = (1)\u00B3 \u2212 6(1)\u00B2 + 11(1) \u2212 6',answer:'',display:true},
+          {label:'= 1 \u2212 ___ + 11 \u2212 6',answer:'6'},{label:'= ___',answer:'0'}],
+        finalAnswer:'0',hints:['Factor Theorem: if f(a) = 0 then (x \u2212 a) is a factor','Substitute x = 1','f(1) = 1 \u2212 6 + 11 \u2212 6'] },
+      { id:4, tier:1, prompt:'f(x) = \\(x^3 + x^2 - 4x - 4\\). Show that \\((x + 2)\\) is a factor and find all three factors.',
+        scaffoldSteps:[
+          {label:'(x + 2) means test x = ___',answer:'-2'},
+          {label:'f(\u22122) = (\u22122)\u00B3 + (\u22122)\u00B2 \u2212 4(\u22122) \u2212 4',answer:'',display:true},
+          {label:'= \u22128 + ___ + 8 \u2212 4',answer:'4'},{label:'= ___',answer:'0'},
+          {label:'Since f(\u22122) = 0, (x + 2) is a ___',answer:'factor'},
+          {label:'Divide: first term x\u00B3 \u00F7 x = ___',answer:'x\u00B2'},
+          {label:'x\u00B2(x + 2) = x\u00B3 + ___',answer:'2x\u00B2'},
+          {label:'Subtract: (x\u00B3 + x\u00B2) \u2212 (x\u00B3 + 2x\u00B2) = ___x\u00B2',answer:'-1'},
+          {label:'Next: \u2212x\u00B2 \u00F7 x = ___',answer:'-x'},
+          {label:'\u2212x(x + 2) = \u2212x\u00B2 ___',answer:'- 2x'},
+          {label:'Subtract: (\u2212x\u00B2 \u2212 4x) \u2212 (\u2212x\u00B2 \u2212 2x) = ___x',answer:'-2'},
+          {label:'Last: \u22122x \u00F7 x = ___',answer:'-2'},
+          {label:'Quotient x\u00B2 \u2212 x \u2212 2 = (x \u2212 ___)(x + ___)',answer:'2, 1'}],
+        finalAnswer:'(x+2)(x-2)(x+1)',hints:['Substitute x = \u22122','Divide using algebraic long division','Factorise x\u00B2 \u2212 x \u2212 2'] },
+      { id:5, tier:1, prompt:'f(x) = \\(x^3 + ax^2 - 3x + 2\\). When divided by \\((x - 1)\\), the remainder is 5. Find a.',
+        scaffoldSteps:[
+          {label:'Remainder when dividing by (x \u2212 1) = f(___)',answer:'1'},
+          {label:'f(1) = 1 + a \u2212 3 + 2 = a + ___',answer:'0'},
+          {label:'So f(1) = a. We\'re told f(1) = ___',answer:'5'},
+          {label:'Therefore a = ___',answer:'5'}],
+        finalAnswer:'5',hints:['Use the Remainder Theorem: f(1) = remainder','Simplify: 1 + a \u2212 3 + 2 = a','Set a equal to the given remainder'] },
+
+      // ── Tier 2: Key steps prompted (Q6–Q10) ──
+      { id:6, tier:2, prompt:'f(x) = \\(x^3 - 2x^2 - 5x + 6\\). Find a linear factor and fully factorise.',
+        scaffoldSteps:[
+          {label:'Try x = 1: f(1) = 1 \u2212 2 \u2212 5 + 6 = ___',answer:'0'},
+          {label:'So (x \u2212 ___) is a factor',answer:'1'},
+          {label:'Divide by (x \u2212 1). First term: x\u00B3 \u00F7 x = ___',answer:'x\u00B2'},
+          {label:'Complete the division. Quotient = x\u00B2 \u2212 x \u2212 ___',answer:'6'},
+          {label:'Factorise: x\u00B2 \u2212 x \u2212 6 = (x \u2212 ___)(x + ___)',answer:'3, 2'}],
+        finalAnswer:'(x-1)(x-3)(x+2)',hints:['Try factors of 6: \u00B11, \u00B12, \u00B13, \u00B16','f(1) = 0, so (x \u2212 1) is a factor','Quotient is x\u00B2 \u2212 x \u2212 6'] },
+      { id:7, tier:2, prompt:'f(x) = \\(2x^3 + 7x^2 + 2x - 3\\). Show \\((x + 3)\\) is a factor and find the other factors.',
+        scaffoldSteps:[
+          {label:'f(\u22123) = 2(\u22123)\u00B3 + 7(\u22123)\u00B2 + 2(\u22123) \u2212 3 = ___',answer:'0'},
+          {label:'Divide by (x + 3). First term: 2x\u00B3 \u00F7 x = ___',answer:'2x\u00B2'},
+          {label:'Complete division. Quotient = 2x\u00B2 + x \u2212 ___',answer:'1'},
+          {label:'Factorise: 2x\u00B2 + x \u2212 1 = (2x \u2212 ___)(x + ___)',answer:'1, 1'}],
+        finalAnswer:'(x+3)(2x-1)(x+1)',hints:['f(\u22123) = \u221254 + 63 \u2212 6 \u2212 3 = 0','Divide by (x + 3)','Factorise 2x\u00B2 + x \u2212 1'] },
+      { id:8, tier:2, prompt:'f(x) = \\(x^3 + bx + 4\\). When f(x) is divided by \\((x - 2)\\), the remainder is 12. Find b.',
+        scaffoldSteps:[
+          {label:'f(2) = (2)\u00B3 + 2b + 4 = ___',answer:'12'},
+          {label:'8 + 2b + 4 = 12, so 2b = ___',answer:'0'},
+          {label:'Therefore b = ___',answer:'0'}],
+        finalAnswer:'0',hints:['f(2) = 8 + 2b + 4','Set this equal to the remainder 12','Solve for b'] },
+      { id:9, tier:2, prompt:'f(x) = \\(x^3 - 19x - 30\\). Fully factorise.',
+        scaffoldSteps:[
+          {label:'Try x = \u22122: f(\u22122) = \u22128 + 38 \u2212 30 = ___',answer:'0'},
+          {label:'So (x + ___) is a factor',answer:'2'},
+          {label:'Divide. Quotient = x\u00B2 \u2212 2x \u2212 ___',answer:'15'},
+          {label:'Factorise: x\u00B2 \u2212 2x \u2212 15 = (x \u2212 ___)(x + ___)',answer:'5, 3'}],
+        finalAnswer:'(x+2)(x-5)(x+3)',hints:['Try \u00B11, \u00B12, \u00B13, \u00B15, \u00B16, \u00B110, \u00B115, \u00B130','f(\u22122) = 0','Quotient is x\u00B2 \u2212 2x \u2212 15'] },
+      { id:10, tier:2, prompt:'A beam deflection is modelled by d(x) = \\(x^3 - 6x^2 + 11x - 6\\). Verify that \\(x = 1\\), \\(x = 2\\) and \\(x = 3\\) are all roots.',
+        scaffoldSteps:[
+          {label:'d(1) = 1 \u2212 6 + 11 \u2212 6 = ___',answer:'0'},
+          {label:'d(2) = 8 \u2212 24 + 22 \u2212 6 = ___',answer:'0'},
+          {label:'d(3) = 27 \u2212 54 + 33 \u2212 6 = ___',answer:'0'},
+          {label:'So d(x) = (x \u2212 1)(x \u2212 ___)(x \u2212 ___)',answer:'2, 3'}],
+        finalAnswer:'(x-1)(x-2)(x-3)',hints:['Substitute each value into d(x)','If d(a) = 0, then x = a is a root','All three give zero'] },
+
+      // ── Tier 3: Structure shown, student fills working (Q11–Q20) ──
+      { id:11, tier:3, prompt:'f(x) = \\(x^3 + 3x^2 - 4\\). Find all factors.',
+        scaffoldSteps:[
+          {label:'f(1) = 1 + 3 \u2212 4 = ___',answer:'0'},
+          {label:'Quotient after dividing by (x \u2212 1) is x\u00B2 + ___ x + ___',answer:'4, 4'},
+          {label:'x\u00B2 + 4x + 4 = (x + ___)\u00B2',answer:'2'}],
+        finalAnswer:'(x-1)(x+2)^2',hints:['Try x = 1','Divide by (x \u2212 1)','The quadratic is a perfect square'] },
+      { id:12, tier:3, prompt:'f(x) = \\(3x^3 - 2x^2 - 7x - 2\\). Fully factorise.',
+        scaffoldSteps:[
+          {label:'f(2) = 24 \u2212 8 \u2212 14 \u2212 2 = ___',answer:'0'},
+          {label:'Quotient = 3x\u00B2 + ___x + ___',answer:'4, 1'},
+          {label:'3x\u00B2 + 4x + 1 = (3x + ___)(x + ___)',answer:'1, 1'}],
+        finalAnswer:'(x-2)(3x+1)(x+1)',hints:['Try x = 2','Divide by (x \u2212 2)','Factorise 3x\u00B2 + 4x + 1'] },
+      { id:13, tier:3, prompt:'f(x) = \\(x^3 + cx^2 + 3x - 4\\). \\(f(2) = 14\\). Find c and hence find the remainder when f(x) is divided by \\((x + 1)\\).',
+        scaffoldSteps:[
+          {label:'f(2) = 8 + 4c + 6 \u2212 4 = 14, so c = ___',answer:'1'},
+          {label:'f(x) = x\u00B3 + x\u00B2 + 3x \u2212 4. Remainder = f(\u22121) = ___',answer:'-7'}],
+        finalAnswer:'-7',hints:['Substitute x = 2 and set equal to 14','Solve for c','Then substitute x = \u22121 for the remainder'] },
+      { id:14, tier:3, prompt:'A signal filter has transfer function H(s) = \\(s^3 + 2s^2 - s - 2\\). Find all values of s where \\(H(s) = 0\\).',
+        scaffoldSteps:[
+          {label:'H(1) = 1 + 2 \u2212 1 \u2212 2 = ___',answer:'0'},
+          {label:'Quotient = s\u00B2 + ___s + ___',answer:'3, 2'},
+          {label:'s\u00B2 + 3s + 2 = (s + ___)(s + ___)',answer:'1, 2'}],
+        finalAnswer:'s=1, s=-1, s=-2',hints:['Try s = 1','Divide by (s \u2212 1)','Factorise the quadratic'] },
+      { id:15, tier:3, prompt:'f(x) = \\(2x^3 - 3x^2 - 11x + 6\\). Fully factorise and solve \\(f(x) = 0\\).',
+        scaffoldSteps:[
+          {label:'f(3) = 54 \u2212 27 \u2212 33 + 6 = ___',answer:'0'},
+          {label:'Quotient = 2x\u00B2 + ___x \u2212 ___',answer:'3, 2'},
+          {label:'2x\u00B2 + 3x \u2212 2 = (2x \u2212 ___)(x + ___)',answer:'1, 2'}],
+        finalAnswer:'(x-3)(2x-1)(x+2)',hints:['Try x = 3','Divide by (x \u2212 3)','Factorise 2x\u00B2 + 3x \u2212 2'] },
+      { id:16, tier:3, prompt:'f(x) = \\(x^3 + ax^2 + bx - 6\\). \\((x - 1)\\) and \\((x + 2)\\) are both factors. Find a and b.',
+        scaffoldSteps:[
+          {label:'f(1) = 0: 1 + a + b \u2212 6 = 0, so a + b = ___',answer:'5'},
+          {label:'f(\u22122) = 0: \u22128 + 4a \u2212 2b \u2212 6 = 0, so 4a \u2212 2b = ___',answer:'14'},
+          {label:'Solving: a = ___, b = ___',answer:'4, 1'}],
+        finalAnswer:'a=4, b=1',hints:['f(1) = 0 gives one equation','f(\u22122) = 0 gives another','Solve simultaneously'] },
+      { id:17, tier:3, prompt:'f(x) = \\(x^3 - 4x^2 - 7x + 10\\). Fully factorise.',
+        scaffoldSteps:[
+          {label:'f(1) = 1 \u2212 4 \u2212 7 + 10 = ___',answer:'0'},
+          {label:'Quotient = x\u00B2 \u2212 ___x \u2212 ___',answer:'3, 10'},
+          {label:'x\u00B2 \u2212 3x \u2212 10 = (x \u2212 ___)(x + ___)',answer:'5, 2'}],
+        finalAnswer:'(x-1)(x-5)(x+2)',hints:['Try x = 1','Divide by (x \u2212 1)','Factorise x\u00B2 \u2212 3x \u2212 10'] },
+      { id:18, tier:3, prompt:'f(x) = \\(x^3 + 2x^2 - 5x - 6\\). Fully factorise.',
+        scaffoldSteps:[
+          {label:'f(\u22121) = \u22121 + 2 + 5 \u2212 6 = ___',answer:'0'},
+          {label:'Quotient = x\u00B2 + ___x \u2212 ___',answer:'1, 6'},
+          {label:'Factorise the quotient: (x + ___)(x \u2212 ___)',answer:'3, 2'}],
+        finalAnswer:'(x+1)(x+3)(x-2)',hints:['Try x = \u22121','Divide by (x + 1)','Factorise x\u00B2 + x \u2212 6'] },
+      { id:19, tier:3, prompt:'f(x) = \\(x^3 - 5x^2 + 8x - 4\\). Fully factorise. (One root is repeated.)',
+        scaffoldSteps:[
+          {label:'f(1) = 1 \u2212 5 + 8 \u2212 4 = ___',answer:'0'},
+          {label:'Quotient = x\u00B2 \u2212 ___x + ___',answer:'4, 4'},
+          {label:'x\u00B2 \u2212 4x + 4 = (x \u2212 ___)\u00B2',answer:'2'}],
+        finalAnswer:'(x-1)(x-2)^2',hints:['Try x = 1','Divide by (x \u2212 1)','The quadratic is a perfect square'] },
+      { id:20, tier:3, prompt:'f(x) = \\(x^3 + 4x^2 + x - 6\\). \\((x + 2)\\) is a factor. Find k and fully factorise.',
+        scaffoldSteps:[
+          {label:'f(\u22122) = \u22128 + 16 \u2212 2 \u2212 6 = ___',answer:'0'},
+          {label:'Quotient = x\u00B2 + ___x \u2212 ___',answer:'2, 3'},
+          {label:'x\u00B2 + 2x \u2212 3 = (x + ___)(x \u2212 ___)',answer:'3, 1'}],
+        finalAnswer:'(x+2)(x+3)(x-1)',hints:['Confirm f(\u22122) = 0','Divide by (x + 2)','Factorise x\u00B2 + 2x \u2212 3'] },
+
+      // ── Tier 4: Answer only, hints available (Q21–Q30) ──
+      { id:21, tier:4, prompt:'Fully factorise f(x) = \\(x^3 - x^2 - 14x + 24\\).',
+        scaffoldSteps:[], finalAnswer:'(x-2)(x+4)(x-3)',
+        hints:['Try x = 2','After dividing by (x \u2212 2), you get x\u00B2 + x \u2212 12','x\u00B2 + x \u2212 12 = (x + 4)(x \u2212 3)'] },
+      { id:22, tier:4, prompt:'Fully factorise f(x) = \\(6x^3 + x^2 - 5x - 2\\).',
+        scaffoldSteps:[], finalAnswer:'(2x+1)(3x+2)(x-1)',
+        hints:['The leading coefficient is 6, so try x = \u00BD','f(\u2212\u00BD) = 0, so (2x + 1) is a factor','Quotient is 3x\u00B2 \u2212 x \u2212 2 = (3x + 2)(x \u2212 1)'] },
+      { id:23, tier:4, prompt:'The impedance of a circuit is Z(\u03C9) = \\(\\omega^3 - 6\\omega^2 + 11\\omega - 6\\). Find all values of \u03C9 where \\(Z = 0\\).',
+        scaffoldSteps:[], finalAnswer:'\u03C9=1, \u03C9=2, \u03C9=3',
+        hints:['Try \u03C9 = 1','Divide by (\u03C9 \u2212 1) to get \u03C9\u00B2 \u2212 5\u03C9 + 6','Factorise: (\u03C9 \u2212 2)(\u03C9 \u2212 3)'] },
+      { id:24, tier:4, prompt:'Factorise f(x) = \\(x^3 + 2x^2 - x - 2\\) and state all roots.',
+        scaffoldSteps:[], finalAnswer:'(x-1)(x+1)(x+2)',
+        hints:['Try x = 1','Quotient is x\u00B2 + 3x + 2','= (x + 1)(x + 2)'] },
+      { id:25, tier:4, prompt:'f(x) = \\(x^3 - x^2 - 8x + 12\\). Fully factorise. (This has a repeated root.)',
+        scaffoldSteps:[], finalAnswer:'(x-2)^2(x+3)',
+        hints:['Try x = 2','Quotient is x\u00B2 + x \u2212 6','= (x + 3)(x \u2212 2) \u2014 repeated factor!'] },
+      { id:26, tier:4, prompt:'f(x) = \\(x^3 - 3x^2 - 10x + 24\\). Fully factorise.',
+        scaffoldSteps:[], finalAnswer:'(x-2)(x+3)(x-4)',
+        hints:['Try x = 2','Quotient is x\u00B2 \u2212 x \u2212 12','= (x + 3)(x \u2212 4)'] },
+      { id:27, tier:4, prompt:'f(x) = \\(2x^3 - 5x^2 - 4x + 3\\). Fully factorise.',
+        scaffoldSteps:[], finalAnswer:'(x-3)(2x-1)(x+1)',
+        hints:['Try x = 3','Quotient is 2x\u00B2 + x \u2212 1','= (2x \u2212 1)(x + 1)'] },
+      { id:28, tier:4, prompt:'f(x) = \\(x^3 + 6x^2 + 11x + 6\\). Fully factorise. (All roots are negative.)',
+        scaffoldSteps:[], finalAnswer:'(x+1)(x+2)(x+3)',
+        hints:['Try x = \u22121','Quotient is x\u00B2 + 5x + 6','= (x + 2)(x + 3)'] },
+      { id:29, tier:4, prompt:'The torque on a shaft is T(x) = \\(x^3 - 7x + 6\\). Find all values of x where \\(T = 0\\).',
+        scaffoldSteps:[], finalAnswer:'x=1, x=2, x=-3',
+        hints:['Try x = 1','Quotient is x\u00B2 + x \u2212 6','= (x + 3)(x \u2212 2)'] },
+      { id:30, tier:4, prompt:'Given f(x) = x\u00B3 + ax\u00B2 + bx \u2212 12, f(2) = 0 and f(\u22121) = \u221218. Find a and b.',
+        scaffoldSteps:[], finalAnswer:'a=-1, b=4',
+        hints:['f(2) = 0 gives 8 + 4a + 2b \u2212 12 = 0, so 2a + b = 2','f(\u22121) = \u221218 gives \u22121 + a \u2212 b \u2212 12 = \u221218, so a \u2212 b = \u22125','Solve simultaneously: a = \u22121, b = 4'] },
+
+      // ── Tier 5: No hints (Q31–Q40) ──
+      { id:31, tier:5, prompt:'Fully factorise \\(2x^3 - x^2 - 18x + 9\\).',
+        scaffoldSteps:[], finalAnswer:'(x-3)(x+3)(2x-1)', hints:[] },
+      { id:32, tier:5, prompt:'f(x) = \\(x^3 + 2x^2 - 9x - 18\\). Fully factorise.',
+        scaffoldSteps:[], finalAnswer:'(x-3)(x+2)(x+3)', hints:[] },
+      { id:33, tier:5, prompt:'Prove that \\((x - 2)\\) is a factor of \\(x^n - 2^n\\) for all positive integers n.',
+        scaffoldSteps:[], finalAnswer:'f(2) = 2^n - 2^n = 0', hints:[] },
+      { id:34, tier:5, prompt:'Torque: T(\u03B8) = \\(4\\theta^3 - 8\\theta^2 - \\theta + 2\\). Find all values of \u03B8 where torque is zero.',
+        scaffoldSteps:[], finalAnswer:'\u03B8=2, \u03B8=1/2, \u03B8=-1/2', hints:[] },
+      { id:35, tier:5, prompt:'f(x) = \\(x^3 - 2x^2 - 4x + 8\\). Fully factorise.',
+        scaffoldSteps:[], finalAnswer:'(x-2)^2(x+2)', hints:[] },
+      { id:36, tier:5, prompt:'f(x) = \\(3x^3 + 10x^2 + 9x + 2\\). Fully factorise.',
+        scaffoldSteps:[], finalAnswer:'(x+1)(3x+1)(x+2)', hints:[] },
+      { id:37, tier:5, prompt:'f(x) = \\(x^3 + px^2 + qx - 6\\). \\(f(1) = 0\\) and \\(f(-3) = 0\\). Find p and q, and fully factorise.',
+        scaffoldSteps:[], finalAnswer:'p=4, q=1, (x-1)(x+2)(x+3)', hints:[] },
+      { id:38, tier:5, prompt:'f(x) = \\(x^3 - 13x + 12\\). Fully factorise and solve \\(f(x) = 0\\).',
+        scaffoldSteps:[], finalAnswer:'(x-1)(x-3)(x+4)', hints:[] },
+      { id:39, tier:5, prompt:'f(x) = \\(2x^3 + 3x^2 - 8x + 3\\). Fully factorise.',
+        scaffoldSteps:[], finalAnswer:'(x-1)(2x-1)(x+3)', hints:[] },
+      { id:40, tier:5, prompt:'f(x) = \\(x^3 + ax^2 + bx + c\\). The roots are 1, \u22122, and 5. Find a, b, and c.',
+        scaffoldSteps:[], finalAnswer:'a=-4, b=-7, c=10', hints:[] }
+    ]
+  },
+  test: {
+    questions: [
+      { id:'T1', marks:4, prompt:'f(x) = x^3 - 3x - 2',
+        parts:[
+          {label:'(a) Show that (x + 1) is a factor of f(x).',marks:1,answer:'0',answerLabel:'f(\u22121) ='},
+          {label:'(b) Hence fully factorise f(x).',marks:2,answer:'(x+1)^2(x-2)',answerLabel:'f(x) ='},
+          {label:'(c) Solve f(x) = 0.',marks:1,answer:'x=-1, x=2',answerLabel:'x ='}],
+        learnRef:0 },
+      { id:'T2', marks:3, prompt:'f(x) = 2x^3 + ax^2 - 5x + 3',
+        parts:[
+          {label:'(a) Given that (x \u2212 1) is a factor, find a.',marks:2,answer:'0',answerLabel:'a ='},
+          {label:'(b) Find the remainder when f(x) is divided by (x + 2).',marks:1,answer:'-3',answerLabel:'Remainder ='}],
+        learnRef:0 },
+      { id:'T3', marks:5, prompt:'f(x) = 6x^3 + 5x^2 - 3x - 2',
+        parts:[
+          {label:'(a) Show that f(1) \u2260 0.',marks:1,answer:'6',answerLabel:'f(1) ='},
+          {label:'(b) Show that (2x + 1) is a factor.',marks:1,answer:'0',answerLabel:'f(\u2212\u00BD) ='},
+          {label:'(c) Fully factorise f(x).',marks:2,answer:'(2x+1)(3x-2)(x+1)',answerLabel:'f(x) ='},
+          {label:'(d) Solve f(x) = 0.',marks:1,answer:'x=-1/2, x=2/3, x=-1',answerLabel:'x ='}],
+        learnRef:2 },
+      { id:'T4', marks:4, prompt:'p(x) = x^3 + ax + b',
+        parts:[
+          {label:'(a) p(x) has a factor (x \u2212 3) and leaves remainder 20 when divided by (x \u2212 1). Find a and b.',marks:3,answer:'a=-23, b=42',answerLabel:'a, b ='},
+          {label:'(b) Fully factorise p(x).',marks:1,answer:'(x-3)(x+7)(x-2)',answerLabel:'p(x) ='}],
+        learnRef:3 },
+      { id:'T5', marks:3, prompt:'\\text{The characteristic equation of a matrix is } \\lambda^3 - 6\\lambda^2 + 11\\lambda - 6 = 0',
+        parts:[
+          {label:'Find all eigenvalues.',marks:3,answer:'\u03BB=1, \u03BB=2, \u03BB=3',answerLabel:'\u03BB ='}],
+        learnRef:1 },
+      { id:'T6', marks:3, prompt:'f(x) = x^3 - 7x + 6',
+        parts:[
+          {label:'(a) Find the remainder when f(x) is divided by (x \u2212 3).',marks:1,answer:'12',answerLabel:'Remainder ='},
+          {label:'(b) Fully factorise f(x).',marks:2,answer:'(x-1)(x-2)(x+3)',answerLabel:'f(x) ='}],
+        learnRef:0 },
+      { id:'T7', marks:4, prompt:'f(x) = 2x^3 - x^2 - 18x + 9',
+        parts:[
+          {label:'(a) Show that (x \u2212 3) is a factor.',marks:1,answer:'0',answerLabel:'f(3) ='},
+          {label:'(b) Fully factorise f(x).',marks:2,answer:'(x-3)(x+3)(2x-1)',answerLabel:'f(x) ='},
+          {label:'(c) Solve f(x) = 0.',marks:1,answer:'x=3, x=-3, x=1/2',answerLabel:'x ='}],
+        learnRef:2 },
+      { id:'T8', marks:5, prompt:'f(x) = x^3 + kx^2 - 4x - 12',
+        parts:[
+          {label:'(a) Given that (x + 2) is a factor, find k.',marks:2,answer:'3',answerLabel:'k ='},
+          {label:'(b) Hence fully factorise f(x).',marks:2,answer:'(x+2)(x+3)(x-2)',answerLabel:'f(x) ='},
+          {label:'(c) Write down the roots of f(x) = 0.',marks:1,answer:'x=-2, x=-3, x=2',answerLabel:'x ='}],
+        learnRef:3 },
+      { id:'T9', marks:4, prompt:'\\text{A displacement is modelled by } s(t) = t^3 - 9t^2 + 26t - 24',
+        parts:[
+          {label:'(a) Find s(2).',marks:1,answer:'0',answerLabel:'s(2) ='},
+          {label:'(b) Find all values of t where displacement is zero.',marks:2,answer:'t=2, t=3, t=4',answerLabel:'t ='},
+          {label:'(c) Interpret what these values mean physically.',marks:1,answer:'object crosses origin at t=2, 3, 4',answerLabel:'Interpretation:'}],
+        learnRef:1 },
+      { id:'T10', marks:6, prompt:'f(x) = 2x^3 + x^2 - 13x + 6',
+        parts:[
+          {label:'(a) Show that (x \u2212 2) is a factor of f(x).',marks:1,answer:'0',answerLabel:'f(2) ='},
+          {label:'(b) Hence fully factorise f(x).',marks:2,answer:'(x-2)(2x-1)(x+3)',answerLabel:'f(x) ='},
+          {label:'(c) Solve f(x) = 0.',marks:1,answer:'x=2, x=1/2, x=-3',answerLabel:'x ='},
+          {label:'(d) Find the remainder when f(x) is divided by (x + 1).',marks:2,answer:'18',answerLabel:'Remainder ='}],
+        learnRef:3 }
+    ]
+  }
+};
+
+// ── STATE ──────────────────────────────────────────────────────────
+let currentSection = 'learn';
+let learnState = { exampleIdx: 0, stepIdx: 0 };
+let practiceState = { qIdx: 0, score: 0, maxScore: 0, hintsTotal: 0, answers: [], started: false };
+let testState = { qIdx: 0, score: 0, maxScore: 0, startTime: null, answers: [], started: false };
+
+// ── INIT ──────────────────────────────────────────────────────────
+function init() {
+  setupA11y();
+  setupSectionTabs();
+  setupMobileTabs();
+  setupLayout();
+  renderLearn();
+  renderPractice();
+  renderTest();
+}
+
+// ── RUN START ─────────────────────────────────────────────────────
+// init() renders question 1 of Practice and Test while both are hidden, so
+// rendering is not starting. A run starts when the student is shown it with
+// fresh state: the tab click, or Try Again. Called for a run already under
+// way (flicking back from Learn), it does nothing.
+function beginRun(mode) {
+  const state = mode === 'test' ? testState : practiceState;
+  if (state.started) return;
+  state.started = true;
+  if (mode === 'test') {
+    testState.startTime = Date.now();
+    testState.timerInterval = setInterval(() => {
+      const elapsed = Math.round((Date.now() - testState.startTime) / 1000);
+      document.getElementById('t-time').textContent = `${Math.floor(elapsed/60)}:${(elapsed%60).toString().padStart(2,'0')}`;
+    }, 1000);
+  }
+  if (typeof mfg === 'function') {
+    mfg('game_started', { game_slug: CONTENT.slug, level: 'alevel', mode: mode });
+  }
+}
+
+function setupA11y() {
+  const btn = document.getElementById('a11yBtn');
+  if (localStorage.getItem('mfg_accessible') === 'true') {
+    document.body.classList.add('accessible');
+    btn.classList.add('active');
+  }
+  btn.addEventListener('click', () => {
+    document.body.classList.toggle('accessible');
+    btn.classList.toggle('active');
+    localStorage.setItem('mfg_accessible', document.body.classList.contains('accessible'));
+  });
+}
+
+function setupSectionTabs() {
+  document.querySelectorAll('.section-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const sec = tab.dataset.section;
+      currentSection = sec;
+      document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.getElementById('sec-' + sec).classList.add('active');
+      if (typeof mfg === 'function') mfg('mode_selected', { game_slug: CONTENT.slug, mode: sec });
+      if (sec === 'practice' || sec === 'test') beginRun(sec);
+    });
+  });
+}
+
+function setupMobileTabs() {
+  document.querySelectorAll('.mobile-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const panel = tab.dataset.panel;
+      document.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('learn-left').classList.toggle('visible', panel === 'left');
+      document.getElementById('learn-right').classList.toggle('visible', panel === 'right');
+    });
+  });
+}
+
+function setupLayout() {
+  const check = () => {
+    if (window.innerWidth < 768) {
+      document.body.classList.add('mobile-layout');
+      document.body.classList.remove('desktop-layout');
+    } else {
+      document.body.classList.add('desktop-layout');
+      document.body.classList.remove('mobile-layout');
+      document.getElementById('learn-left').classList.add('visible');
+      document.getElementById('learn-right').classList.add('visible');
+    }
+  };
+  check();
+  let resizeTimer;
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(check, 300); });
+}
+
+// ── LEARN ──────────────────────────────────────────────────────────
+function renderLearn() {
+  const examples = CONTENT.learn.examples;
+  const navEl = document.getElementById('example-nav');
+  navEl.innerHTML = examples.map((_, i) =>
+    `<div class="example-dot ${i === learnState.exampleIdx ? 'active' : i < learnState.exampleIdx ? 'done' : ''}" data-idx="${i}"></div>`
+  ).join('');
+  navEl.querySelectorAll('.example-dot').forEach(d => {
+    d.addEventListener('click', () => { learnState.exampleIdx = parseInt(d.dataset.idx); learnState.stepIdx = 0; renderLearn(); });
+  });
+
+  const ex = examples[learnState.exampleIdx];
+  const steps = ex.steps;
+
+  // Step dots
+  const dotsEl = document.getElementById('step-dots');
+  dotsEl.innerHTML = steps.map((_, i) =>
+    `<div class="step-dot ${i < learnState.stepIdx ? 'done' : i === learnState.stepIdx ? 'active' : ''}"></div>`
+  ).join('');
+
+  // Setup text
+  document.getElementById('example-setup').innerHTML = `<div class="example-setup">${ex.setup}</div>`;
+
+  // Steps
+  const listEl = document.getElementById('step-list');
+  listEl.innerHTML = steps.map((s, i) => {
+    let cls = 'step-card';
+    if (i === learnState.stepIdx) cls += ' current';
+    else if (i > learnState.stepIdx) cls += ' future';
+
+    let html = `<div class="${cls}">
+      <div class="step-number">Step ${i + 1}</div>
+      <div class="step-working">${K(s.working, true)}</div>
+      <div class="step-explain">${s.explain}</div>`;
+    if (s.why && i <= learnState.stepIdx) {
+      const whyId = 'why-' + i;
+      html += `<button class="why-btn" onclick="document.getElementById('${whyId}').classList.toggle('visible')">Why?</button>
+        <div class="why-tooltip" id="${whyId}">${s.why}</div>`;
+    }
+    html += '</div>';
+    return html;
+  }).join('');
+
+  // Controls
+  const atLastStep = learnState.stepIdx >= steps.length - 1;
+  const hasMoreExamples = learnState.exampleIdx < examples.length - 1;
+
+  document.getElementById('prevStepBtn').disabled = learnState.stepIdx === 0;
+  document.getElementById('nextStepBtn').disabled = atLastStep;
+  document.getElementById('nextStepBtn').style.display = atLastStep ? 'none' : '';
+  document.getElementById('showAllBtn').style.display = atLastStep ? 'none' : '';
+  document.getElementById('nextExampleBtn').style.display = atLastStep ? '' : 'none';
+  document.getElementById('nextExampleBtn').textContent = hasMoreExamples ? 'Next Example →' : 'Start Practising →';
+
+  document.getElementById('prevStepBtn').onclick = () => { if (learnState.stepIdx > 0) { learnState.stepIdx--; renderLearn(); } };
+  document.getElementById('nextStepBtn').onclick = () => { if (learnState.stepIdx < steps.length - 1) { learnState.stepIdx++; renderLearn(); scrollToStep(); } };
+  document.getElementById('showAllBtn').onclick = () => { learnState.stepIdx = steps.length - 1; renderLearn(); };
+  document.getElementById('nextExampleBtn').onclick = () => {
+    if (hasMoreExamples) {
+      learnState.exampleIdx++;
+      learnState.stepIdx = 0;
+      renderLearn();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Switch to practice tab
+      document.querySelector('[data-section="practice"]').click();
+    }
+  };
+}
+
+function scrollToStep() {
+  const cards = document.querySelectorAll('.step-card.current');
+  if (cards.length) cards[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ── PRACTICE ──────────────────────────────────────────────────────
+function renderPractice() {
+  const questions = CONTENT.practice.questions;
+  const area = document.getElementById('practice-area');
+  const resultsEl = document.getElementById('practice-results');
+
+  if (practiceState.qIdx >= questions.length) {
+    area.style.display = 'none';
+    resultsEl.style.display = 'block';
+    const pct = practiceState.maxScore > 0 ? Math.round((practiceState.score / practiceState.maxScore) * 100) : 0;
+    resultsEl.innerHTML = `
+      <h2>Practice Complete</h2>
+      <div class="final-score">${pct}%</div>
+      <div class="stats">${practiceState.score} / ${practiceState.maxScore} marks &middot; ${practiceState.hintsTotal} hints used</div>
+      <button class="play-again" onclick="resetPractice()">Try Again</button>`;
+    if (typeof mfg === 'function') {
+      mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: practiceState.score, questions_answered: questions.length, questions_correct: practiceState.answers.filter(a => a).length, mode: 'practice' });
+    }
+    if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', practiceState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',practiceState.score);} }
+    return;
+  }
+
+  area.style.display = 'block';
+  resultsEl.style.display = 'none';
+
+  const q = questions[practiceState.qIdx];
+  document.getElementById('p-qnum').textContent = `${practiceState.qIdx + 1} / ${questions.length}`;
+  document.getElementById('p-score').textContent = `${practiceState.score} / ${practiceState.maxScore}`;
+  document.getElementById('p-hints').textContent = practiceState.hintsTotal;
+
+  // Pips
+  const pipsEl = document.getElementById('p-pips');
+  pipsEl.innerHTML = questions.map((_, i) => {
+    let cls = 'pip';
+    if (i < practiceState.qIdx) cls += practiceState.answers[i] ? ' done' : ' fail';
+    else if (i === practiceState.qIdx) cls += ' current';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+
+  let hintsUsed = 0;
+  let currentScaffold = 0;
+  let answered = false;
+
+  // Build scaffold steps
+  const scaffoldSteps = q.scaffoldSteps || [];
+  const hasScaffold = scaffoldSteps.length > 0;
+
+  if (hasScaffold) {
+    let html = `<div class="q-card"><div class="q-prompt">${PQ(q.prompt)}</div>`;
+    scaffoldSteps.forEach((s, i) => {
+      if (s.display) {
+        html += `<div class="scaffold-step" id="scaffold-${i}"><div class="scaffold-label">${s.label}</div></div>`;
+      } else {
+        // Replace ___ with an inline input box so students see exactly where their answer goes
+        const parts = s.label.split('___');
+        let labelHtml;
+        if (parts.length === 2) {
+          labelHtml = `<span>${parts[0]}</span><input type="text" class="answer-input" id="sinput-${i}" data-answer="${s.answer}" data-idx="${i}" autocomplete="off" spellcheck="false" placeholder="?" style="width:80px;display:inline-block;text-align:center;margin:0 2px"><span>${parts[1]}</span>`;
+        } else {
+          labelHtml = `<span>${s.label}</span> <input type="text" class="answer-input" id="sinput-${i}" data-answer="${s.answer}" data-idx="${i}" autocomplete="off" spellcheck="false" placeholder="?" style="width:80px;display:inline-block;text-align:center;margin:0 2px">`;
+        }
+        html += `<div class="scaffold-step" id="scaffold-${i}">
+          <div class="scaffold-input">${labelHtml}</div>
+        </div>`;
+      }
+    });
+    html += `<div class="hint-bar">
+      <button class="hint-btn" id="hintBtn">Hint (${q.hints.length} available)</button>
+    </div>
+    <div id="hint-area"></div>
+    <div id="feedback" class="feedback-msg"></div>
+    <button class="submit-btn" id="checkBtn">Check</button>
+    <button class="next-q-btn" id="nextQBtn" style="display:none">Next Question →</button>
+    </div>`;
+
+    area.innerHTML = html;
+
+    // Apply exam vocabulary tooltips to question prompt
+    if (window.MaffsVocab) {
+      MaffsVocab.resetVocabProcessing('.q-prompt');
+      MaffsVocab.applyExamVocabTooltips('.q-prompt');
+    }
+
+    // Hint button
+    const hintBtn = document.getElementById('hintBtn');
+    const hintArea = document.getElementById('hint-area');
+    hintBtn.addEventListener('click', () => {
+      if (hintsUsed < q.hints.length) {
+        hintArea.innerHTML += `<div class="hint-text">${q.hints[hintsUsed]}</div>`;
+        hintsUsed++;
+        practiceState.hintsTotal++;
+        document.getElementById('p-hints').textContent = practiceState.hintsTotal;
+        hintBtn.textContent = hintsUsed >= q.hints.length ? 'No more hints' : `Hint (${q.hints.length - hintsUsed} left)`;
+        if (hintsUsed >= q.hints.length) hintBtn.disabled = true;
+      }
+    });
+
+    // Check button
+    let attempts = 0;
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      if (answered) return;
+      attempts++;
+      let allCorrect = true;
+
+      scaffoldSteps.forEach((s, i) => {
+        if (s.display) return;
+        const input = document.getElementById('sinput-' + i);
+        if (!input) return;
+        // Clear previous styling
+        input.classList.remove('correct-input', 'wrong-input');
+
+        const userVal = input.value.trim().toLowerCase().replace(/\s/g, '');
+        const expected = s.answer.toLowerCase().replace(/\s/g, '');
+        // Handle comma-separated answers
+        const expectedParts = expected.split(',').map(p => p.trim());
+        const userParts = userVal.split(',').map(p => p.trim());
+        let match = false;
+        if (expectedParts.length > 1) {
+          match = expectedParts.length === userParts.length && expectedParts.every(p => userParts.includes(p));
+        } else {
+          match = userVal === expected;
+        }
+        if (match) {
+          input.classList.add('correct-input');
+          input.disabled = true;
+        } else {
+          input.classList.add('wrong-input');
+          allCorrect = false;
+        }
+      });
+
+      const feedback = document.getElementById('feedback');
+
+      if (allCorrect) {
+        answered = true;
+        let qScore = 0;
+        if (hintsUsed === 0 && attempts === 1) qScore = 3;
+        else if (hintsUsed <= 1 && attempts <= 2) qScore = 2;
+        else qScore = 1;
+        feedback.className = 'feedback-msg correct-msg';
+        feedback.textContent = attempts === 1 && hintsUsed === 0 ? 'Correct — full marks' : `Correct — ${qScore}/3`;
+
+        practiceState.score += qScore;
+        practiceState.maxScore += 3;
+        practiceState.answers.push(true);
+        document.getElementById('p-score').textContent = `${practiceState.score} / ${practiceState.maxScore}`;
+        document.getElementById('checkBtn').style.display = 'none';
+        document.getElementById('nextQBtn').style.display = 'block';
+
+        if (typeof mfg === 'function') {
+          mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: practiceState.qIdx, correct: true, attempts, hints_used: hintsUsed, mode: 'practice' });
+        }
+      } else if (attempts >= 3) {
+        // After 3 attempts, show answers and move on
+        answered = true;
+        scaffoldSteps.forEach((s, i) => {
+          if (s.display) return;
+          const input = document.getElementById('sinput-' + i);
+          if (!input || input.disabled) return;
+          input.value = s.answer;
+          input.classList.remove('wrong-input');
+          input.classList.add('correct-input');
+          input.disabled = true;
+        });
+        feedback.className = 'feedback-msg wrong-msg';
+        feedback.textContent = `Answers shown above — study these before moving on`;
+
+        practiceState.maxScore += 3;
+        practiceState.answers.push(false);
+        document.getElementById('p-score').textContent = `${practiceState.score} / ${practiceState.maxScore}`;
+        document.getElementById('checkBtn').style.display = 'none';
+        document.getElementById('nextQBtn').style.display = 'block';
+
+        if (typeof mfg === 'function') {
+          mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: practiceState.qIdx, correct: false, attempts, hints_used: hintsUsed, mode: 'practice' });
+        }
+      } else {
+        feedback.className = 'feedback-msg wrong-msg';
+        feedback.textContent = `Not quite — correct your highlighted answers and try again (attempt ${attempts}/3)`;
+      }
+    });
+
+    document.getElementById('nextQBtn').addEventListener('click', () => {
+      practiceState.qIdx++;
+      renderPractice();
+    });
+
+  } else {
+    // Non-scaffolded — simple answer input
+    area.innerHTML = `<div class="q-card">
+      <div class="q-prompt">${PQ(q.prompt)}</div>
+      <div class="scaffold-input" style="justify-content:center;margin-top:1rem">
+        <span style="color:var(--body);font-size:.88rem">Answer:</span>
+        <input type="text" class="answer-input" id="final-answer" autocomplete="off" spellcheck="false" style="width:200px">
+      </div>
+      <div class="hint-bar"><button class="hint-btn" id="hintBtn">Hint (${q.hints.length} available)</button></div>
+      <div id="hint-area"></div>
+      <div id="feedback" class="feedback-msg"></div>
+      <button class="submit-btn" id="checkBtn">Check</button>
+      <button class="next-q-btn" id="nextQBtn" style="display:none">Next Question →</button>
+    </div>`;
+
+    const hintBtn = document.getElementById('hintBtn');
+    const hintArea = document.getElementById('hint-area');
+    hintBtn.addEventListener('click', () => {
+      if (hintsUsed < q.hints.length) {
+        hintArea.innerHTML += `<div class="hint-text">${q.hints[hintsUsed]}</div>`;
+        hintsUsed++;
+        practiceState.hintsTotal++;
+        document.getElementById('p-hints').textContent = practiceState.hintsTotal;
+        if (hintsUsed >= q.hints.length) hintBtn.disabled = true;
+        else hintBtn.textContent = `Hint (${q.hints.length - hintsUsed} left)`;
+      }
+    });
+
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      if (answered) return;
+      const input = document.getElementById('final-answer');
+      const userVal = input.value.trim().toLowerCase().replace(/\s/g, '');
+      const expected = q.finalAnswer.toLowerCase().replace(/\s/g, '');
+      const correct = userVal === expected;
+      answered = true;
+
+      input.classList.add(correct ? 'correct-input' : 'wrong-input');
+      input.disabled = true;
+
+      const feedback = document.getElementById('feedback');
+      let qScore = 0;
+      if (correct) {
+        if (hintsUsed === 0) qScore = 3;
+        else if (hintsUsed === 1) qScore = 2;
+        else qScore = 1;
+        feedback.className = 'feedback-msg correct-msg';
+        feedback.textContent = `Correct — ${qScore}/3`;
+      } else {
+        feedback.className = 'feedback-msg wrong-msg';
+        feedback.textContent = `Answer: ${q.finalAnswer}`;
+      }
+
+      practiceState.score += qScore;
+      practiceState.maxScore += 3;
+      practiceState.answers.push(correct);
+      document.getElementById('p-score').textContent = `${practiceState.score} / ${practiceState.maxScore}`;
+      document.getElementById('checkBtn').style.display = 'none';
+      document.getElementById('nextQBtn').style.display = 'block';
+
+      if (typeof mfg === 'function') {
+        mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: practiceState.qIdx, correct, attempts: 1, hints_used: hintsUsed, mode: 'practice' });
+      }
+    });
+
+    document.getElementById('nextQBtn').addEventListener('click', () => { practiceState.qIdx++; renderPractice(); });
+  }
+}
+
+function resetPractice() {
+  practiceState = { qIdx: 0, score: 0, maxScore: 0, hintsTotal: 0, answers: [], started: false };
+  renderPractice();
+  if (currentSection === 'practice') beginRun('practice');
+}
+
+// ── TEST ──────────────────────────────────────────────────────────
+function renderTest() {
+  const questions = CONTENT.test.questions;
+  const area = document.getElementById('test-area');
+  const resultsEl = document.getElementById('test-results');
+
+  if (testState.qIdx >= questions.length) {
+    area.style.display = 'none';
+    resultsEl.style.display = 'block';
+    const elapsed = testState.startTime ? Math.round((Date.now() - testState.startTime) / 1000) : 0;
+    const mins = Math.floor(elapsed / 60);
+    const secs = elapsed % 60;
+    const pct = testState.maxScore > 0 ? Math.round((testState.score / testState.maxScore) * 100) : 0;
+    resultsEl.innerHTML = `
+      <h2>Test Complete</h2>
+      <div class="final-score">${testState.score} / ${testState.maxScore}</div>
+      <div class="stats">${pct}% &middot; ${mins}:${secs.toString().padStart(2,'0')}</div>
+      ${testState.answers.some(a => !a.correct) ? '<div class="review-link" onclick="switchToLearn()">Review the worked examples for topics you found tricky</div>' : ''}
+      <br><button class="play-again" onclick="resetTest()">Try Again</button>`;
+    if (typeof mfg === 'function') {
+      mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: testState.score, questions_answered: questions.length, questions_correct: testState.answers.filter(a => a.correct).length, mode: 'test' });
+    }
+    if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', testState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',testState.score);} }
+    return;
+  }
+
+  area.style.display = 'block';
+  resultsEl.style.display = 'none';
+
+  const q = questions[testState.qIdx];
+  document.getElementById('t-qnum').textContent = `${testState.qIdx + 1} / ${questions.length}`;
+  document.getElementById('t-score').textContent = `${testState.score} / ${testState.maxScore}`;
+
+  let html = `<div class="q-card">
+    <div class="q-prompt" style="font-size:.95rem;font-weight:600;margin-bottom:.8rem">${PQ(q.prompt)}</div>`;
+
+  q.parts.forEach((p, i) => {
+    html += `<div class="scaffold-step">
+      <div class="scaffold-label vocab-target" style="font-weight:600;color:var(--text)">${p.label} <span style="color:var(--muted);font-weight:400">[${p.marks}]</span></div>
+      <div class="scaffold-input" style="margin-top:.3rem">
+        <span style="color:var(--body);font-size:.85rem">${p.answerLabel}</span>
+        <input type="text" class="answer-input" id="tpart-${i}" autocomplete="off" spellcheck="false" style="width:200px">
+      </div>
+    </div>`;
+  });
+
+  html += `<div id="t-feedback" class="feedback-msg"></div>
+    <button class="submit-btn" id="tCheckBtn">Submit Answer</button>
+    <button class="next-q-btn" id="tNextBtn" style="display:none">Next Question →</button>
+  </div>`;
+
+  area.innerHTML = html;
+
+  // Apply exam vocabulary tooltips to question labels
+  if (window.MaffsVocab) {
+    MaffsVocab.resetVocabProcessing('.vocab-target');
+    MaffsVocab.applyExamVocabTooltips('.vocab-target');
+  }
+
+  let testAnswered = false;
+  document.getElementById('tCheckBtn').addEventListener('click', () => {
+    if (testAnswered) return;
+    testAnswered = true;
+    let qScore = 0;
+    let allCorrect = true;
+
+    q.parts.forEach((p, i) => {
+      const input = document.getElementById('tpart-' + i);
+      const userVal = input.value.trim().toLowerCase().replace(/\s/g, '');
+      const expected = p.answer.toLowerCase().replace(/\s/g, '');
+      const correct = userVal === expected;
+      input.classList.add(correct ? 'correct-input' : 'wrong-input');
+      input.disabled = true;
+      if (correct) {
+        qScore += p.marks;
+      } else {
+        allCorrect = false;
+        // Show the correct answer below the wrong input
+        const correction = document.createElement('div');
+        correction.style.cssText = 'font-size:.82rem;color:var(--correct);margin-top:.3rem;font-family:"JetBrains Mono",monospace';
+        correction.textContent = `${p.answerLabel} ${p.answer}`;
+        input.parentElement.appendChild(correction);
+      }
+    });
+
+    testState.score += qScore;
+    testState.maxScore += q.marks;
+    testState.answers.push({ correct: allCorrect, learnRef: q.learnRef });
+    document.getElementById('t-score').textContent = `${testState.score} / ${testState.maxScore}`;
+
+    const feedback = document.getElementById('t-feedback');
+    feedback.className = 'feedback-msg ' + (allCorrect ? 'correct-msg' : 'wrong-msg');
+    feedback.textContent = `${qScore} / ${q.marks} marks`;
+
+    document.getElementById('tCheckBtn').style.display = 'none';
+    document.getElementById('tNextBtn').style.display = 'block';
+
+    if (typeof mfg === 'function') {
+      mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: testState.qIdx, correct: allCorrect, attempts: 1, hints_used: 0, mode: 'test' });
+    }
+  });
+
+  document.getElementById('tNextBtn').addEventListener('click', () => { testState.qIdx++; renderTest(); });
+}
+
+function resetTest() {
+  if (testState.timerInterval) clearInterval(testState.timerInterval);
+  testState = { qIdx: 0, score: 0, maxScore: 0, startTime: null, timerInterval: null, answers: [], started: false };
+  renderTest();
+  if (currentSection === 'test') beginRun('test');
+}
+
+function switchToLearn() {
+  document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('[data-section="learn"]').classList.add('active');
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-learn').classList.add('active');
+  currentSection = 'learn';
+}
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

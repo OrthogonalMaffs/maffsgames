@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://maffsgames.co.uk/sitemap.xml

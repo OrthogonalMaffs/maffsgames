@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Collect like terms — from fruit to algebra. A Year 6 transition game that builds real algebra skills step by step.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/like-terms-collector/">
+<meta property="og:title" content="Like Terms Collector — MaffsGames">
+<meta property="og:description" content="Collect like terms — from fruit to algebra. A Year 6 transition game that builds real algebra skills step by step.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/like-terms-collector/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Like Terms Collector — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#f8fafc;--surface:#ffffff;--surface-alt:#f1f5f9;--border:#e2e8f0;
+--text:#1e293b;--muted:#64748b;
+--indigo:#6366f1;--indigo-dim:rgba(99,102,241,0.15);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(0,0,0,0.12)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--indigo)}
+.stage-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:var(--indigo-dim);color:var(--indigo);border:1px solid rgba(99,102,241,0.3)}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px;color:var(--text)}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.stage-preview{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+.stage-preview h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.stage-preview p{font-size:13px;color:var(--muted);line-height:1.5}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--indigo);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+
+/* Question card */
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 28px;margin:24px 0;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.question-text{font-size:1.3rem;line-height:1.8;text-align:center;font-weight:500;color:var(--text)}
+.question-text .fruit{font-size:1.4rem}
+
+/* Input row for stages 1 & 2 */
+.input-row{display:flex;align-items:center;justify-content:center;gap:12px;margin:20px 0;flex-wrap:wrap}
+.input-group{display:flex;align-items:center;gap:6px}
+.input-group input{width:64px;padding:12px 8px;border-radius:10px;border:2px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;text-align:center;background:var(--surface);color:var(--text);transition:border-color 0.15s}
+.input-group input:focus{outline:none;border-color:var(--indigo)}
+.input-group input.correct-input{border-color:var(--green);background:rgba(34,197,94,0.06)}
+.input-group input.incorrect-input{border-color:var(--red);background:rgba(239,68,68,0.06)}
+.input-label{font-size:15px;font-weight:600;color:var(--muted)}
+
+.check-btn{display:block;width:100%;max-width:320px;margin:0 auto;padding:14px;border-radius:10px;border:none;background:var(--indigo);color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+.check-btn:hover{opacity:0.9}
+.check-btn:disabled{opacity:0.4;cursor:default}
+
+/* MCQ cards for stage 3 */
+.mcq-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.mcq-btn{padding:16px 12px;border-radius:12px;border:2px solid var(--border);background:var(--surface);font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--text);text-align:center}
+.mcq-btn:hover:not(:disabled){border-color:var(--indigo);background:var(--indigo-dim)}
+.mcq-btn:disabled{cursor:default}
+.mcq-btn.selected-correct{background:rgba(34,197,94,0.12);border-color:var(--green);color:var(--green)}
+.mcq-btn.selected-wrong{background:rgba(239,68,68,0.12);border-color:var(--red);color:var(--red)}
+.mcq-btn.show-correct{background:rgba(34,197,94,0.12);border-color:var(--green);color:var(--green)}
+
+/* Feedback */
+.feedback-panel{border-radius:12px;padding:20px 24px;margin:16px 0;opacity:0;transform:translateY(12px);transition:opacity 0.2s,transform 0.2s}
+.feedback-panel.show{opacity:1;transform:translateY(0)}
+.feedback-panel.correct-fb{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25)}
+.feedback-panel.incorrect-fb{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25)}
+.feedback-icon{font-size:14px;font-weight:700;margin-bottom:6px}
+.feedback-icon.correct{color:var(--green)}
+.feedback-icon.incorrect{color:var(--red)}
+.feedback-detail{font-size:14px;color:var(--muted);line-height:1.6}
+
+.next-btn{display:none;width:100%;padding:14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s;margin-top:12px}
+.next-btn:hover{border-color:var(--indigo)}
+.next-btn.visible{display:block}
+
+/* Stage transition */
+.stage-transition{display:none;max-width:680px;margin:0 auto;padding:60px 20px;text-align:center}
+.stage-transition.active{display:block}
+.stage-transition .stage-label{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.stage-transition .stage-name{font-size:26px;font-weight:800;color:var(--indigo);margin-bottom:16px}
+.stage-transition .stage-msg{font-size:15px;color:var(--muted);line-height:1.7;max-width:520px;margin:0 auto 24px}
+.stage-transition .continue-btn{display:inline-block;padding:14px 40px;border-radius:10px;border:none;background:var(--indigo);color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+.stage-transition .continue-btn:hover{opacity:0.9}
+
+/* Results */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:8px}
+.results-sub{font-size:15px;color:var(--muted);text-align:center;line-height:1.7;margin-bottom:24px;max-width:540px;margin-left:auto;margin-right:auto}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--indigo)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.stage-row{display:flex;justify-content:center;gap:16px;margin-bottom:24px}
+.stage-result{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center;flex:1;max-width:180px}
+.stage-result h5{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.stage-result .stage-score{font-size:22px;font-weight:800;color:var(--indigo)}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--indigo);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+/* Reveal card */
+.reveal-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 28px;margin:24px 0;text-align:center}
+.reveal-card .reveal-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.5}
+.reveal-card .reveal-text{font-size:15px;color:var(--muted);line-height:1.7}
+
+@media(prefers-reduced-motion:reduce){
+.feedback-panel{transition:none}
+.question-card{transition:none}
+.reveal-card{transition:none !important}
+}
+@media(max-width:480px){
+.question-text{font-size:1.1rem}
+.mcq-grid{grid-template-columns:1fr}
+.stage-row{flex-direction:column;align-items:center}
+.input-row{flex-direction:column;gap:10px}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .feedback-detail,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Like Terms Collector</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    <span class="stage-pill" id="stagePill">Stage 1</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreTotal">0</span></span>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Like Terms Collector</div>
+  <div class="start-sub">Collecting like terms is the first thing Year 7 students learn in algebra. By the end of this game, you'll be doing real secondary school maths. Let's go.</div>
+  <div class="stage-preview" style="border-left:3px solid var(--indigo)">
+    <h3 style="color:var(--indigo)">Stage 1 &mdash; The Fruit Stall</h3>
+    <p>Add up fruit. 3 apples + 5 apples = ? It starts concrete. 5 questions.</p>
+  </div>
+  <div class="stage-preview" style="border-left:3px solid var(--indigo)">
+    <h3 style="color:var(--indigo)">Stage 2 &mdash; Letters</h3>
+    <p>Same idea, but fruit becomes letters. 3x + 2x = ? 10 questions.</p>
+  </div>
+  <div class="stage-preview" style="border-left:3px solid var(--indigo)">
+    <h3 style="color:var(--indigo)">Stage 3 &mdash; Full Simplification</h3>
+    <p>Adding, subtracting, picking the correct simplified form. Three rounds of 10 &mdash; stop after any round and your score still counts.</p>
+  </div>
+  <button class="start-btn" onclick="startGame()">Start</button>
+</div>
+
+<!-- STAGE TRANSITION -->
+<div class="stage-transition" id="stageTransition">
+  <div class="stage-label" id="transLabel"></div>
+  <div class="stage-name" id="transName"></div>
+  <div class="stage-msg" id="transMsg"></div>
+  <button class="continue-btn" onclick="continueToNextStage()">Continue</button>
+</div>
+
+<!-- STAGE 3 CHECKPOINT -->
+<div class="stage-transition" id="checkpointScreen">
+  <div class="stage-label" id="cpLabel"></div>
+  <div class="stage-name" id="cpName"></div>
+  <div class="stage-msg" id="cpMsg"></div>
+  <button class="continue-btn" onclick="continueStage3()">Keep going</button>
+  <button class="continue-btn" id="cpFinishBtn" onclick="finishEarly()"
+    style="background:transparent;border:1px solid var(--border);color:var(--muted);margin-left:10px">Finish here</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="question-card" id="questionCard">
+    <div class="question-text" id="questionText"></div>
+  </div>
+  <!-- Stage 1 & 2 inputs -->
+  <div id="inputArea" style="display:none">
+    <div class="input-row" id="inputRow"></div>
+    <button class="check-btn" id="checkBtn" onclick="checkInputAnswer()">Check</button>
+  </div>
+  <!-- Stage 3 MCQ -->
+  <div class="mcq-grid" id="mcqGrid" style="display:none"></div>
+  <!-- Feedback -->
+  <div class="feedback-panel" id="feedbackPanel">
+    <div class="feedback-icon" id="feedbackIcon"></div>
+    <div class="feedback-detail" id="feedbackDetail"></div>
+  </div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Overall</h4>
+      <div class="score" id="finalScore">0/45</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="stage-row">
+    <div class="stage-result"><h5>Stage 1</h5><div class="stage-score" id="s1Score">0/5</div></div>
+    <div class="stage-result"><h5>Stage 2</h5><div class="stage-score" id="s2Score">0/10</div></div>
+    <div class="stage-result"><h5>Stage 3</h5><div class="stage-score" id="s3Score">0/30</div></div>
+  </div>
+  <div class="reveal-card" id="revealCard" style="opacity:0;transform:translateY(16px);transition:opacity 0.4s,transform 0.4s">
+    <div class="reveal-title" id="revealTitle"></div>
+    <div class="reveal-text" id="revealText"></div>
+  </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" id="playAgainBtn" onclick="startGame()" style="display:none">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANKS
+// ============================================================
+
+const STAGE1 = [
+  {prompt:'3 \ud83c\udf4e + 5 \ud83c\udf4e + 2 \ud83c\udf4a + 4 \ud83c\udf4a', labels:['apples','oranges'], answers:[8,6]},
+  {prompt:'6 \ud83c\udf4c + 2 \ud83c\udf4c + 3 \ud83c\udf47 + 7 \ud83c\udf47', labels:['bananas','grapes'], answers:[8,10]},
+  {prompt:'4 \ud83c\udf4b + 3 \ud83c\udf4b + 5 \ud83e\udd5d + 2 \ud83e\udd5d', labels:['lemons','limes'], answers:[7,7]},
+  {prompt:'8 \ud83c\udf52 + 1 \ud83c\udf52 + 6 \ud83e\udea3 + 4 \ud83e\udea3', labels:['cherries','plums'], answers:[9,10]},
+  {prompt:'2 \ud83c\udf50 + 9 \ud83c\udf50 + 3 \ud83e\udd6d + 3 \ud83e\udd6d', labels:['pears','mangoes'], answers:[11,6]}
+];
+
+const STAGE2 = [
+  {prompt:'3x + 2x + 4y + y', labels:['x','y'], answers:[5,5]},
+  {prompt:'6a + 3a + 2b + 5b', labels:['a','b'], answers:[9,7]},
+  {prompt:'4p + 7p + 3q + 2q', labels:['p','q'], answers:[11,5]},
+  {prompt:'5m + m + 8n + 3n', labels:['m','n'], answers:[6,11]},
+  {prompt:'2c + 6c + 4d + 4d', labels:['c','d'], answers:[8,8]},
+  {prompt:'7x + 3x + y + 5y', labels:['x','y'], answers:[10,6]},
+  {prompt:'4a + 4a + 3b + 7b', labels:['a','b'], answers:[8,10]},
+  {prompt:'9p + 2p + 6q + q', labels:['p','q'], answers:[11,7]},
+  {prompt:'3g + 5g + 2h + 8h', labels:['g','h'], answers:[8,10]},
+  {prompt:'6t + 4t + 3u + 2u', labels:['t','u'], answers:[10,5]}
+];
+
+const STAGE3 = [
+  {expr:'5a + 3b \u2212 2a + 4b', answer:'3a + 7b', distractors:['7a + 7b','3a + b','5a + 4b']},
+  {expr:'4x + 2y + 3x \u2212 y', answer:'7x + y', distractors:['7x + 3y','7x \u2212 y','4x + y']},
+  {expr:'6m \u2212 2m + 5n + 3n', answer:'4m + 8n', distractors:['8m + 8n','4m + 2n','8m + 2n']},
+  {expr:'8p + 2q \u2212 3p \u2212 q', answer:'5p + q', distractors:['5p + 3q','11p + q','5p \u2212 q']},
+  {expr:'3a + 4b + 2a \u2212 b', answer:'5a + 3b', distractors:['5a + 5b','a + 3b','5a \u2212 3b']},
+  {expr:'7x \u2212 3x + 2y + 5y', answer:'4x + 7y', distractors:['10x + 7y','4x + 3y','4x \u2212 7y']},
+  {expr:'5c + 3d \u2212 c + 4d', answer:'4c + 7d', distractors:['6c + 7d','4c \u2212 d','5c + 7d']},
+  {expr:'9t \u2212 4t + 6u \u2212 2u', answer:'5t + 4u', distractors:['5t + 8u','13t + 4u','5t \u2212 4u']},
+  {expr:'2a + 7b \u2212 a + 3b', answer:'a + 10b', distractors:['3a + 10b','a + 4b','2a + 10b']},
+  {expr:'6x + y \u2212 2x + 4y', answer:'4x + 5y', distractors:['8x + 5y','4x + 3y','4x \u2212 5y']},
+  {expr:'4m + 3n + 2m \u2212 n', answer:'6m + 2n', distractors:['6m + 4n','2m + 2n','6m \u2212 2n']},
+  {expr:'8p \u2212 3p + 4q \u2212 2q', answer:'5p + 2q', distractors:['5p + 6q','11p + 2q','5p \u2212 2q']},
+  {expr:'3x + 2x + 4y \u2212 3y', answer:'5x + y', distractors:['5x + 7y','x + y','5x \u2212 y']},
+  {expr:'7a \u2212 2a + 5b + b', answer:'5a + 6b', distractors:['9a + 6b','5a + 4b','5a \u2212 6b']},
+  {expr:'6c + 4c \u2212 3d + 7d', answer:'10c + 4d', distractors:['2c + 4d','10c + 10d','10c \u2212 4d']},
+  {expr:'2t + 8u + 3t \u2212 5u', answer:'5t + 3u', distractors:['5t + 13u','t + 3u','5t \u2212 3u']},
+  {expr:'9x \u2212 5x + 2y \u2212 y', answer:'4x + y', distractors:['14x + y','4x + 3y','4x \u2212 y']},
+  {expr:'4a + 6b \u2212 3a + 2b', answer:'a + 8b', distractors:['7a + 8b','a + 4b','a \u2212 8b']},
+  {expr:'7p + 3q + 2p \u2212 4q', answer:'9p \u2212 q', distractors:['9p + 7q','5p \u2212 q','9p + q']},
+  {expr:'5m \u2212 m + 6n \u2212 3n', answer:'4m + 3n', distractors:['6m + 3n','4m + 9n','4m \u2212 3n']},
+  {expr:'3x + 4y + x + 2y', answer:'4x + 6y', distractors:['3x + 6y','4x + 2y','10xy']},
+  {expr:'8a \u2212 3b + 2a + 5b', answer:'10a + 2b', distractors:['6a + 2b','10a + 8b','10a \u2212 2b']},
+  {expr:'6c \u2212 2c + 4d \u2212 d', answer:'4c + 3d', distractors:['4c + 5d','8c + 3d','4c \u2212 3d']},
+  {expr:'5t + 2u \u2212 3t + 4u', answer:'2t + 6u', distractors:['8t + 6u','2t + 2u','2t \u2212 6u']},
+  {expr:'7x + 3x \u2212 2y + y', answer:'10x \u2212 y', distractors:['10x + y','4x \u2212 y','10x \u2212 3y']},
+  {expr:'4a + 5b \u2212 2a \u2212 3b', answer:'2a + 2b', distractors:['6a + 8b','2a + 8b','2a \u2212 2b']},
+  {expr:'9m \u2212 4m + 2n \u2212 2n', answer:'5m', distractors:['5m + 4n','13m','5m \u2212 4n']},
+  {expr:'6p + 2q + p \u2212 5q', answer:'7p \u2212 3q', distractors:['7p + 3q','5p \u2212 3q','7p \u2212 7q']},
+  {expr:'3x \u2212 x + 8y \u2212 3y', answer:'2x + 5y', distractors:['4x + 5y','2x + 11y','2x \u2212 5y']},
+  {expr:'5a + 3a + 4b \u2212 4b', answer:'8a', distractors:['8a + 8b','2a','8a \u2212 8b']}
+];
+
+// ============================================================
+//  STATE
+// ============================================================
+let currentStage=0, currentQ=0, totalCorrect=0, stageCorrect=[0,0,0];
+let stage3Round=0;              // 0,1,2 - Stage 3 runs as 3 rounds of 10
+const STAGE3_ROUND_LEN=10;
+let questionIndex=0; // 1-based across all stages
+let answered=false;
+
+// ============================================================
+//  A11Y
+// ============================================================
+const a11yBtn=document.getElementById('a11yToggle');
+if(localStorage.getItem('mfg_dyslexia')==='true'){document.body.classList.add('accessible');a11yBtn.classList.add('active')}
+a11yBtn.addEventListener('click',()=>{
+  document.body.classList.toggle('accessible');
+  const on=document.body.classList.contains('accessible');
+  a11yBtn.classList.toggle('active',on);
+  localStorage.setItem('mfg_dyslexia',on);
+});
+
+// ============================================================
+//  SCREENS
+// ============================================================
+function showScreen(id){
+  document.querySelectorAll('.screen,.stage-transition').forEach(s=>{s.classList.remove('active');s.style.display='none'});
+  const el=document.getElementById(id);
+  el.style.display='block';
+  el.classList.add('active');
+}
+
+function startGame(){
+  currentStage=0;currentQ=0;totalCorrect=0;stageCorrect=[0,0,0];questionIndex=0;answered=false;stage3Round=0;
+  document.getElementById('gameHeader').style.display='flex';
+  document.getElementById('scoreNum').textContent='0';
+  document.getElementById('scoreTotal').textContent='0';
+  updateStagePill();
+  showScreen('gameScreen');
+  loadQuestion();
+  window._mfgSlug='like-terms-collector';
+  window._mfgLevel='year6';
+  if(typeof mfg==='function') mfg('game_started',{game_slug:'like-terms-collector',level:'year6'});
+}
+
+function updateStagePill(){
+  const pill=document.getElementById('stagePill');
+  const names=['Stage 1','Stage 2','Stage 3'];
+  pill.textContent=names[currentStage]||'Stage 3';
+}
+
+// ============================================================
+//  LOAD QUESTION
+// ============================================================
+function loadQuestion(){
+  answered=false;
+  const fp=document.getElementById('feedbackPanel');
+  fp.classList.remove('show','correct-fb','incorrect-fb');
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('nextBtn').style.display='none';
+
+  if(currentStage===0) loadInputQuestion(STAGE1[currentQ]);
+  else if(currentStage===1) loadInputQuestion(STAGE2[currentQ]);
+  else loadMCQ(STAGE3[currentQ]);
+}
+
+function loadInputQuestion(q){
+  document.getElementById('mcqGrid').style.display='none';
+  document.getElementById('inputArea').style.display='block';
+  document.getElementById('questionText').innerHTML=q.prompt;
+  document.getElementById('checkBtn').disabled=false;
+
+  const row=document.getElementById('inputRow');
+  row.innerHTML='';
+  q.labels.forEach((label,i)=>{
+    const g=document.createElement('div');g.className='input-group';
+    const inp=document.createElement('input');inp.type='number';inp.id='ans'+i;inp.setAttribute('aria-label',label);inp.autocomplete='off';
+    const lbl=document.createElement('span');lbl.className='input-label';lbl.textContent=label;
+    g.appendChild(inp);g.appendChild(lbl);
+    row.appendChild(g);
+    if(i===0) setTimeout(()=>inp.focus(),50);
+  });
+  // Enter key support
+  row.querySelectorAll('input').forEach(inp=>{
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter') checkInputAnswer()});
+  });
+}
+
+function loadMCQ(q){
+  document.getElementById('inputArea').style.display='none';
+  document.getElementById('mcqGrid').style.display='grid';
+  document.getElementById('questionText').textContent=q.expr;
+
+  const grid=document.getElementById('mcqGrid');
+  grid.innerHTML='';
+  const options=shuffle([q.answer,...q.distractors]);
+  options.forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='mcq-btn';
+    btn.textContent=opt;
+    btn.onclick=()=>checkMCQ(btn,opt,q.answer);
+    grid.appendChild(btn);
+  });
+}
+
+// ============================================================
+//  CHECK ANSWERS
+// ============================================================
+function checkInputAnswer(){
+  if(answered) return;
+  const bank=currentStage===0?STAGE1:STAGE2;
+  const q=bank[currentQ];
+  const inputs=[document.getElementById('ans0'),document.getElementById('ans1')];
+  const vals=inputs.map(i=>parseInt(i.value,10));
+
+  if(isNaN(vals[0])||isNaN(vals[1])) return;
+
+  answered=true;
+  questionIndex++;
+  document.getElementById('checkBtn').disabled=true;
+  inputs.forEach(i=>i.disabled=true);
+
+  const correct=vals[0]===q.answers[0]&&vals[1]===q.answers[1];
+  inputs[0].classList.add(vals[0]===q.answers[0]?'correct-input':'incorrect-input');
+  inputs[1].classList.add(vals[1]===q.answers[1]?'correct-input':'incorrect-input');
+
+  if(correct){
+    totalCorrect++;stageCorrect[currentStage]++;
+  }
+  updateScore();
+  showFeedback(correct, correct?null:`The answer is ${q.answers[0]} ${q.labels[0]} and ${q.answers[1]} ${q.labels[1]}.`);
+
+  if(typeof mfg==='function') mfg('question_answered',{game_slug:'like-terms-collector',level:'year6',question_index:questionIndex,correct:correct});
+}
+
+function checkMCQ(btn,chosen,answer){
+  if(answered) return;
+  answered=true;
+  questionIndex++;
+
+  const correct=chosen===answer;
+  document.querySelectorAll('.mcq-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===answer) b.classList.add('show-correct');
+  });
+  btn.classList.add(correct?'selected-correct':'selected-wrong');
+
+  if(correct){totalCorrect++;stageCorrect[currentStage]++;}
+  updateScore();
+  showFeedback(correct, correct?null:`The correct answer is ${answer}.`);
+
+  if(typeof mfg==='function') mfg('question_answered',{game_slug:'like-terms-collector',level:'year6',question_index:questionIndex,correct:correct});
+}
+
+function showFeedback(correct,detail){
+  const fp=document.getElementById('feedbackPanel');
+  const icon=document.getElementById('feedbackIcon');
+  const det=document.getElementById('feedbackDetail');
+
+  fp.className='feedback-panel '+(correct?'correct-fb':'incorrect-fb');
+  icon.className='feedback-icon '+(correct?'correct':'incorrect');
+  icon.textContent=correct?'\u2713 Correct':'\u2717 Not quite';
+  det.textContent=detail||'';
+  det.style.display=detail?'block':'none';
+
+  requestAnimationFrame(()=>{fp.classList.add('show')});
+
+  const nb=document.getElementById('nextBtn');
+  nb.classList.add('visible');
+  nb.style.display='block';
+}
+
+function updateScore(){
+  document.getElementById('scoreNum').textContent=totalCorrect;
+  document.getElementById('scoreTotal').textContent=questionIndex;
+}
+
+// ============================================================
+//  NEXT / TRANSITIONS
+// ============================================================
+function nextQuestion(){
+  currentQ++;
+  const bankLen=currentStage===0?STAGE1.length:currentStage===1?STAGE2.length:STAGE3.length;
+
+  if(currentStage===2 && currentQ<bankLen && currentQ>0 && currentQ%STAGE3_ROUND_LEN===0){
+    // End of a Stage 3 round, but not the end of the bank
+    showCheckpoint();
+    return;
+  }
+
+  if(currentQ>=bankLen){
+    // End of stage
+    if(currentStage<2){
+      showStageTransition();
+    } else {
+      showResults();
+    }
+    return;
+  }
+  loadQuestion();
+}
+
+function showStageTransition(){
+  const msgs=[
+    "That was the idea. 3 apples + 2 apples = 5 apples. Now watch what happens when we replace 'apples' with a letter...",
+    "You just did algebra. Actual algebra. Stage 3 is the full thing \u2014 three rounds of 10, and you can stop after any of them."
+  ];
+  document.getElementById('transLabel').textContent=currentStage===0?'Stage 1 Complete':'Stage 2 Complete';
+  document.getElementById('transName').textContent=currentStage===0?'Stage 2: Letters':'Stage 3: Full Simplification';
+  document.getElementById('transMsg').textContent=msgs[currentStage];
+
+  showScreen('stageTransition');
+}
+
+function showCheckpoint(){
+  stage3Round++;
+  const done=15+currentQ;                 // 5 + 10 from stages 1-2
+  const left=STAGE3.length-currentQ;
+  document.getElementById('cpLabel').textContent='Round '+stage3Round+' of 3 complete';
+  document.getElementById('cpName').textContent=totalCorrect+' / '+done+' correct';
+  document.getElementById('cpMsg').textContent=
+    left+' questions left in Stage 3. Keep going, or finish here and bank the score you have '+
+    '\u2014 it still counts and still goes on the leaderboard.';
+  showScreen('checkpointScreen');
+}
+
+function continueStage3(){
+  showScreen('gameScreen');
+  loadQuestion();
+}
+
+function finishEarly(){
+  showResults(true);
+}
+
+function continueToNextStage(){
+  currentStage++;
+  currentQ=0;
+  updateStagePill();
+  showScreen('gameScreen');
+  loadQuestion();
+}
+
+// ============================================================
+//  RESULTS
+// ============================================================
+function showResults(early){
+  // questionIndex is the real number answered - 45 on a full run, or 25/35 if
+  // the player banked out at a Stage 3 checkpoint.
+  const answeredTotal=questionIndex;
+  const s3Answered=Math.max(0,answeredTotal-15);
+  document.getElementById('gameHeader').style.display='none';
+  document.getElementById('finalScore').textContent=totalCorrect+'/'+answeredTotal;
+  document.getElementById('finalPct').textContent=
+    answeredTotal?Math.round(totalCorrect/answeredTotal*100)+'%':'0%';
+  document.getElementById('s1Score').textContent=stageCorrect[0]+'/'+Math.min(5,answeredTotal);
+  document.getElementById('s2Score').textContent=stageCorrect[1]+'/'+Math.min(10,Math.max(0,answeredTotal-5));
+  document.getElementById('s3Score').textContent=stageCorrect[2]+'/'+s3Answered;
+  document.querySelector('.results-title').textContent=
+    early?'Round Complete':'Session Complete';
+
+  const rc=document.getElementById('revealCard');
+  rc.style.opacity='0';rc.style.transform='translateY(16px)';
+  document.getElementById('revealTitle').textContent=
+    early?"That still counts.":"You just did real algebra.";
+  document.getElementById('revealText').textContent="Collecting like terms is used in every algebra topic from Year 7 to A-Level. You've already got it. When your teacher introduces this in September, you'll be the one who already knows.";
+  const pab=document.getElementById('playAgainBtn');
+  pab.style.display='none';
+
+  showScreen('resultsScreen');
+
+  // Fade in reveal card after a beat
+  setTimeout(()=>{rc.style.opacity='1';rc.style.transform='translateY(0)'},400);
+  // Show play again after 5s minimum
+  setTimeout(()=>{pab.style.display='block'},5000);
+
+  window._mfgCompleted=true;
+  if(typeof mfg==='function') mfg('game_completed',{game_slug:'like-terms-collector',level:'year6',score:totalCorrect,questions_answered:answeredTotal,questions_correct:totalCorrect});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('like-terms-collector','year6',totalCorrect,answeredTotal).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('like-terms-collector','year6',totalCorrect);}}
+}
+
+// ============================================================
+//  UTILS
+// ============================================================
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

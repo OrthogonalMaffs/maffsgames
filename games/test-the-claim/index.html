@@ -1,0 +1,2157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Guided six-step hypothesis testing. Binomial, Poisson, Normal, and Correlation modes. 48 questions across four distribution types.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/test-the-claim/">
+<meta property="og:title" content="Test the Claim — MaffsGames">
+<meta property="og:description" content="Guided six-step hypothesis testing. Binomial, Poisson, Normal, and Correlation modes. 48 questions across four distribution types.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/test-the-claim/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Test the Claim — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070b14;--surface:#0e1424;--surface2:#131b2e;--border:#1a2440;
+  --primary:#f97316;--primary-dim:rgba(249,115,22,.15);--primary-glow:rgba(249,115,22,.25);
+  --accent:#fb923c;--correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
+  --wrong:#f43f5e;--wrong-dim:rgba(244,63,94,.12);
+  --text:#e4e8f0;--muted:#687890;--hint:#94a3b8;
+  --step-done:#22c55e;--step-active:#f97316;--step-pending:#2a3654;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:1100px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+
+/* Header */
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--primary),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+
+/* Screens */
+.screen{display:none}.screen.active{display:block}
+
+/* Menu */
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:560px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;max-width:420px;margin:1.2rem auto}
+.mode-btn{padding:.9rem;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.mode-btn:hover{border-color:var(--primary);box-shadow:0 0 20px var(--primary-glow)}
+.mode-btn.selected{border-color:var(--primary);background:var(--primary-dim)}
+.mode-btn .mode-icon{font-size:1.4rem;display:block;margin-bottom:.3rem}
+.mode-btn .mode-sub{font-size:.7rem;color:var(--muted);font-weight:400;margin-top:.2rem}
+
+.setup-section{max-width:420px;margin:.8rem auto;text-align:center}
+.setup-label{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.4rem}
+.pill-row{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap}
+.pill{padding:.45rem 1rem;border-radius:100px;border:1.5px solid var(--border);background:var(--surface);color:var(--hint);font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;transition:all .12s}
+.pill:hover{border-color:var(--primary)}
+.pill.selected{border-color:var(--primary);background:var(--primary-dim);color:var(--primary)}
+
+.start-btn{display:block;margin:1.5rem auto;padding:.8rem 2.5rem;border-radius:12px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .15s;opacity:.4;pointer-events:none}
+.start-btn.ready{opacity:1;pointer-events:auto}
+.start-btn.ready:hover{transform:scale(1.04)}
+
+/* HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.6rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.6rem;flex-wrap:wrap;gap:.3rem}
+.hud-item{text-align:center;min-width:55px}
+.hud-label{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700}
+
+/* Progress bar */
+.progress-bar{display:flex;gap:4px;margin-bottom:.8rem}
+.progress-step{flex:1;height:6px;border-radius:3px;background:var(--step-pending);transition:background .3s}
+.progress-step.done{background:var(--step-done)}
+.progress-step.active{background:var(--step-active);box-shadow:0 0 8px var(--primary-glow)}
+
+/* Main layout */
+.game-layout{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;align-items:start}
+@media(max-width:720px){.game-layout{grid-template-columns:1fr}}
+
+/* Scenario panel */
+.scenario-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.1rem;position:sticky;top:1rem}
+.scenario-panel h3{font-size:.82rem;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.6rem;font-weight:700}
+.scenario-text{font-size:.88rem;line-height:1.7;color:var(--text);margin-bottom:.8rem}
+.given-info{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem}
+.given-info .gi-title{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.given-info .gi-row{font-size:.84rem;line-height:1.8;color:var(--hint)}
+.given-info .gi-row .katex{font-size:.92em!important}
+.given-info .mono-val{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:500}
+
+/* Step panel */
+.step-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.1rem}
+.step-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#000;font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-num.completed{background:var(--correct)}
+.step-title{font-size:.9rem;font-weight:700;color:var(--text)}
+.step-instruction{font-size:.82rem;color:var(--muted);line-height:1.5;margin-bottom:.8rem}
+
+/* Dropdowns and inputs */
+.step-input-group{margin-bottom:.6rem}
+.step-input-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem;font-weight:600}
+.step-select{width:100%;padding:.6rem .8rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.84rem;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23687890' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center;padding-right:2rem}
+.step-select:focus{outline:none;border-color:var(--primary)}
+.step-select option{background:var(--surface);color:var(--text)}
+.num-input{width:140px;padding:.55rem .8rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:500}
+.num-input:focus{outline:none;border-color:var(--primary)}
+.num-input::placeholder{color:var(--muted);font-weight:400}
+
+.check-btn{padding:.5rem 1.4rem;border-radius:8px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;margin-top:.4rem;transition:transform .12s}
+.check-btn:hover{transform:scale(1.03)}
+.check-btn:disabled{opacity:.4;pointer-events:none}
+
+/* Feedback */
+.feedback{margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.82rem;line-height:1.5;animation:fadeIn .25s}
+.feedback.correct{background:var(--correct-dim);border:1px solid var(--correct);color:var(--correct)}
+.feedback.wrong{background:var(--wrong-dim);border:1px solid var(--wrong);color:var(--wrong)}
+.dismiss-btn{display:block;margin:8px auto 0;padding:5px 16px;border:1.5px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;opacity:0;animation:fadeBtn .3s ease forwards}.dismiss-btn:hover{background:rgba(255,255,255,.08)}@keyframes fadeBtn{to{opacity:1}}
+.feedback.hint{background:rgba(148,163,184,.08);border:1px solid var(--hint);color:var(--hint)}
+
+/* Model answer */
+.model-answer{margin-top:.8rem;background:var(--surface2);border:1px solid var(--correct);border-radius:10px;padding:1rem;animation:fadeIn .4s}
+.model-answer h3{font-size:.8rem;color:var(--correct);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;font-weight:700}
+.model-answer .ma-text{font-size:.84rem;line-height:1.8;color:var(--text)}
+.model-answer .ma-text .katex{font-size:.9em!important}
+
+.next-q-btn{display:block;margin:1rem auto 0;padding:.6rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:transform .12s}
+.next-q-btn:hover{transform:scale(1.03)}
+
+/* Results */
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.3rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1rem;line-height:1.9;font-size:.85rem}
+.results .pb-line{color:var(--correct);font-weight:600;font-size:.9rem;margin-bottom:1rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer}
+
+/* Locked overlay */
+.step-locked{opacity:.35;pointer-events:none;filter:blur(1px)}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* KaTeX in selects - render as spans */
+.katex-option{display:flex;align-items:center;gap:.3rem}
+.rendered-select{position:relative;width:100%}
+.rendered-select .display-box{width:100%;padding:.6rem .8rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-size:.84rem;cursor:pointer;min-height:40px;display:flex;align-items:center;padding-right:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23687890' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center;user-select:none}
+.rendered-select .display-box:hover{border-color:var(--primary)}
+.rendered-select .display-box.placeholder{color:var(--muted)}
+.rendered-select .dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;z-index:100;max-height:260px;overflow-y:auto;display:none;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.rendered-select .dropdown.open{display:block}
+.rendered-select .dropdown .option{padding:.55rem .8rem;cursor:pointer;font-size:.84rem;border-bottom:1px solid var(--border);display:flex;align-items:center;transition:background .1s}
+.rendered-select .dropdown .option:last-child{border-bottom:none}
+.rendered-select .dropdown .option:hover{background:var(--primary-dim)}
+.rendered-select .dropdown .option .katex{font-size:.88em!important}
+.rendered-select.disabled{pointer-events:none;opacity:.5}
+.rendered-select.correct-border .display-box{border-color:var(--correct)}
+.rendered-select.wrong-border .display-box{border-color:var(--wrong)}
+
+/* Method toggle */
+.method-toggle{display:flex;gap:.3rem;margin-bottom:.6rem}
+.method-pill{padding:.35rem .8rem;border-radius:100px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);font-size:.72rem;font-weight:600;cursor:pointer;transition:all .12s}
+.method-pill.active{border-color:var(--primary);background:var(--primary-dim);color:var(--primary)}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+
+<!-- MENU SCREEN -->
+<div id="menuScreen" class="screen active">
+  <div class="header">
+    <h1>Test the Claim</h1>
+    <div class="sub">State your hypotheses. Show your working. Draw your conclusion.</div>
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+  <div class="menu-info">
+    Guided six-step hypothesis testing. Each question presents a real-world claim and data.
+    Work through each step — hypotheses, distribution, critical region, comparison, decision, conclusion.
+    Every step is checked before the next unlocks.
+  </div>
+  <div class="setup-label" style="margin-top:1.2rem">Choose distribution mode</div>
+  <div class="mode-grid">
+    <button class="mode-btn" data-mode="binomial" onclick="selectMode(this)">
+      <span class="mode-icon">B</span>Binomial
+      <span class="mode-sub">Proportion tests</span>
+    </button>
+    <button class="mode-btn" data-mode="poisson" onclick="selectMode(this)">
+      <span class="mode-icon">Po</span>Poisson
+      <span class="mode-sub">Rate tests</span>
+    </button>
+    <button class="mode-btn" data-mode="normal" onclick="selectMode(this)">
+      <span class="mode-icon">Z</span>Normal (z-test)
+      <span class="mode-sub">Mean tests</span>
+    </button>
+    <button class="mode-btn" data-mode="correlation" onclick="selectMode(this)">
+      <span class="mode-icon">r</span>Correlation
+      <span class="mode-sub">PMCC tests</span>
+    </button>
+  </div>
+  <div class="setup-section">
+    <div class="setup-label">Tail type</div>
+    <div class="pill-row" id="tailPills">
+      <button class="pill" data-tail="one" onclick="selectPill(this,'tail')">One-tailed</button>
+      <button class="pill" data-tail="two" onclick="selectPill(this,'tail')">Two-tailed</button>
+    </div>
+  </div>
+  <div class="setup-section">
+    <div class="setup-label">Significance level</div>
+    <div class="pill-row" id="sigPills">
+      <button class="pill" data-sig="1" onclick="selectPill(this,'sig')">1%</button>
+      <button class="pill" data-sig="5" onclick="selectPill(this,'sig')">5%</button>
+      <button class="pill" data-sig="10" onclick="selectPill(this,'sig')">10%</button>
+    </div>
+  </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="start-btn" id="startBtn" onclick="startGame()">Begin Test</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="gameScreen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/6</div></div>
+    <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    <div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="hudCorrect">0/0</div></div>
+    <div class="hud-item"><div class="hud-label">Mode</div><div class="hud-val" id="hudMode">—</div></div>
+    <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val mono" id="hudTimer">0s</div></div>
+  </div>
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="game-layout">
+    <div class="scenario-panel" id="scenarioPanel"></div>
+    <div class="step-panel" id="stepPanel"></div>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="resultsScreen" class="screen">
+  <div class="results">
+    <h2 id="resultTitle"></h2>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="stats" id="statsLine"></div>
+    <div class="pb-line" id="pbLine" style="display:none"></div>
+    <button class="play-again" onclick="showMenu()">Play Again</button>
+  </div>
+</div>
+</div>
+
+<script>
+function _addDismiss(fb,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
+// ============================================================
+//  QUESTION BANK — 48 questions (12 per mode)
+// ============================================================
+const QUESTIONS = {
+binomial: [
+  {
+    id:'B1',tail:'one',tailDir:'lower',sig:5,
+    scenario:'A manufacturer claims 20% of components are defective. A sample of 15 is tested and 1 defect is found. Test at 5% whether the defect rate has decreased.',
+    n:15,p0:0.20,x:1,
+    h0:'p = 0.20',h1:'p < 0.20',
+    h0Latex:'p = 0.20',h1Latex:'p < 0.20',
+    h0Distractors:['p = 0.20','p > 0.20','p \\neq 0.20','p < 0.20'],
+    h1Distractors:['p < 0.20','p > 0.20','p \\neq 0.20','p = 0.20'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(15,\\, 0.20)',
+    distDistractors:['X \\sim B(15,\\, 0.20)','X \\sim B(15,\\, 0.80)','X \\sim \\text{Po}(3)','X \\sim N(3,\\, 2.4)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 0)',val:'0.0352'},{label:'P(X \\leq 1)',val:'0.1671'},{label:'P(X \\leq 2)',val:'0.3980'}],
+    crBoundary:0,crDirection:'leq',crTailAlpha:0.05,
+    crExplanation:'P(X \\leq 0) = 0.0352 < 0.05 and P(X \\leq 1) = 0.1671 > 0.05',
+    pValue:0.1671,pValueExpr:'P(X \\leq 1) = 0.1671',
+    inCR:false,reject:false,
+    conclusionContext:'the defect rate has decreased below 20%'
+  },
+  {
+    id:'B2',tail:'one',tailDir:'upper',sig:5,
+    scenario:'A coin is suspected to be biased towards heads. In 20 flips, 15 heads are observed. Test at 5% whether the probability of heads exceeds 0.5.',
+    n:20,p0:0.5,x:15,
+    h0Latex:'p = 0.5',h1Latex:'p > 0.5',
+    h0Distractors:['p = 0.5','p \\leq 0.5','\\mu = 0.5','p \\neq 0.5'],
+    h1Distractors:['p > 0.5','p < 0.5','p \\neq 0.5','p = 0.5'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(20,\\, 0.5)',
+    distDistractors:['X \\sim B(20,\\, 0.5)','X \\sim B(20,\\, 0.75)','X \\sim \\text{Po}(10)','X \\sim N(10,\\, 5)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 14)',val:'0.0577'},{label:'P(X \\geq 15)',val:'0.0207'},{label:'P(X \\geq 16)',val:'0.0059'}],
+    crBoundary:15,crDirection:'geq',crTailAlpha:0.05,
+    crExplanation:'P(X \\geq 15) = 0.0207 < 0.05 and P(X \\geq 14) = 0.0577 > 0.05',
+    pValue:0.0207,pValueExpr:'P(X \\geq 15) = 0.0207',
+    inCR:true,reject:true,
+    conclusionContext:'the coin is biased towards heads'
+  },
+  {
+    id:'B3',tail:'two',tailDir:'two',sig:5,
+    scenario:'A seed company claims 75% germination rate. A gardener plants 20 seeds and 11 germinate. Test at 5% whether the germination rate differs from the claim. Any probability not listed can be found with your calculator\'s binomial distribution functions.',
+    n:20,p0:0.75,x:11,
+    h0Latex:'p = 0.75',h1Latex:'p \\neq 0.75',
+    h0Distractors:['p = 0.75','p < 0.75','p > 0.75','\\mu = 0.75'],
+    h1Distractors:['p \\neq 0.75','p < 0.75','p > 0.75','p = 0.75'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(20,\\, 0.75)',
+    distDistractors:['X \\sim B(20,\\, 0.75)','X \\sim B(20,\\, 0.25)','X \\sim \\text{Po}(15)','X \\sim N(15,\\, 3.75)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 10)',val:'0.0139'},{label:'P(X \\leq 11)',val:'0.0409'},{label:'P(X \\geq 19)',val:'0.0243'},{label:'P(X \\geq 20)',val:'0.0032'}],
+    crBoundary:'10 or 19',crBoundaryLower:10,crBoundaryUpper:19,crDirection:'two',crTailAlpha:0.025,
+    crExplanation:'Lower: P(X \\leq 10) = 0.0139 < 0.025. Upper: P(X \\geq 19) = 0.0243 < 0.025',
+    pValue:0.0409,pValueExpr:'P(X \\leq 11) = 0.0409',
+    inCR:false,reject:false,
+    conclusionContext:'the germination rate differs from 75%'
+  },
+  {
+    id:'B4',tail:'one',tailDir:'lower',sig:1,
+    scenario:'A politician claims 40% support. A poll of 25 people finds 5 supporters. Test at 1% whether support has fallen.',
+    n:25,p0:0.40,x:5,
+    h0Latex:'p = 0.40',h1Latex:'p < 0.40',
+    h0Distractors:['p = 0.40','p > 0.40','p \\neq 0.40','\\mu = 0.40'],
+    h1Distractors:['p < 0.40','p > 0.40','p \\neq 0.40','p = 0.40'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(25,\\, 0.40)',
+    distDistractors:['X \\sim B(25,\\, 0.40)','X \\sim B(25,\\, 0.60)','X \\sim \\text{Po}(10)','X \\sim N(10,\\, 6)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 4)',val:'0.0095'},{label:'P(X \\leq 5)',val:'0.0294'},{label:'P(X \\leq 6)',val:'0.0736'}],
+    crBoundary:4,crDirection:'leq',crTailAlpha:0.01,
+    crExplanation:'P(X \\leq 4) = 0.0095 < 0.01 and P(X \\leq 5) = 0.0294 > 0.01',
+    pValue:0.0294,pValueExpr:'P(X \\leq 5) = 0.0294',
+    inCR:false,reject:false,
+    conclusionContext:'support has fallen below 40%'
+  },
+  {
+    id:'B5',tail:'one',tailDir:'upper',sig:10,
+    scenario:'A student claims to identify music genres better than chance (1 in 4). In 20 trials, they identify 8 correctly. Test at 10%.',
+    n:20,p0:0.25,x:8,
+    h0Latex:'p = 0.25',h1Latex:'p > 0.25',
+    h0Distractors:['p = 0.25','p \\geq 0.25','\\mu = 0.25','p \\neq 0.25'],
+    h1Distractors:['p > 0.25','p < 0.25','p \\neq 0.25','p = 0.25'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(20,\\, 0.25)',
+    distDistractors:['X \\sim B(20,\\, 0.25)','X \\sim B(20,\\, 0.4)','X \\sim \\text{Po}(5)','X \\sim N(5,\\, 3.75)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 8)',val:'0.1018'},{label:'P(X \\geq 9)',val:'0.0409'},{label:'P(X \\geq 7)',val:'0.2142'}],
+    crBoundary:9,crDirection:'geq',crTailAlpha:0.10,
+    crExplanation:'P(X \\geq 9) = 0.0409 < 0.10 and P(X \\geq 8) = 0.1018 > 0.10',
+    pValue:0.1018,pValueExpr:'P(X \\geq 8) = 0.1018',
+    inCR:false,reject:false,
+    conclusionContext:'the identification rate exceeds chance'
+  },
+  {
+    id:'B6',tail:'two',tailDir:'two',sig:10,
+    scenario:'A drug is claimed to be effective in 60% of patients. A trial of 18 patients finds 8 respond. Test at 10%. Any probability not listed can be found with your calculator\'s binomial distribution functions.',
+    n:18,p0:0.60,x:8,
+    h0Latex:'p = 0.60',h1Latex:'p \\neq 0.60',
+    h0Distractors:['p = 0.60','p < 0.60','p > 0.60','\\mu = 0.60'],
+    h1Distractors:['p \\neq 0.60','p < 0.60','p > 0.60','p = 0.60'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(18,\\, 0.60)',
+    distDistractors:['X \\sim B(18,\\, 0.60)','X \\sim B(18,\\, 0.40)','X \\sim \\text{Po}(10.8)','X \\sim N(10.8,\\, 4.32)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 7)',val:'0.0576'},{label:'P(X \\leq 8)',val:'0.1347'},{label:'P(X \\geq 15)',val:'0.0328'},{label:'P(X \\geq 14)',val:'0.0942'}],
+    crBoundary:'6 or 15',crBoundaryLower:6,crBoundaryUpper:15,crDirection:'two',crTailAlpha:0.05,
+    crExplanation:'\\text{Lower: } P(X \\leq 6) = 0.0203 < 0.05 \\text{ and } P(X \\leq 7) = 0.0576 > 0.05 \\text{. Upper: } P(X \\geq 15) = 0.0328 < 0.05 \\text{ and } P(X \\geq 14) = 0.0942 > 0.05',
+    pValue:0.1347,pValueExpr:'P(X \\leq 8) = 0.1347',
+    inCR:false,reject:false,
+    conclusionContext:'the effectiveness rate differs from 60%'
+  },
+  {
+    id:'B7',tail:'one',tailDir:'lower',sig:5,
+    scenario:'A website claims a 30% conversion rate. In 20 visits, 3 conversions occur. Test at 5% whether the rate has fallen.',
+    n:20,p0:0.30,x:3,
+    h0Latex:'p = 0.30',h1Latex:'p < 0.30',
+    h0Distractors:['p = 0.30','p \\leq 0.30','\\mu = 0.30','p \\neq 0.30'],
+    h1Distractors:['p < 0.30','p > 0.30','p \\neq 0.30','p = 0.30'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(20,\\, 0.30)',
+    distDistractors:['X \\sim B(20,\\, 0.30)','X \\sim B(20,\\, 0.70)','X \\sim \\text{Po}(6)','X \\sim N(6,\\, 4.2)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 2)',val:'0.0355'},{label:'P(X \\leq 3)',val:'0.1071'},{label:'P(X \\leq 4)',val:'0.2375'}],
+    crBoundary:2,crDirection:'leq',crTailAlpha:0.05,
+    crExplanation:'P(X \\leq 2) = 0.0355 < 0.05 and P(X \\leq 3) = 0.1071 > 0.05',
+    pValue:0.1071,pValueExpr:'P(X \\leq 3) = 0.1071',
+    inCR:false,reject:false,
+    conclusionContext:'the conversion rate has fallen below 30%'
+  },
+  {
+    id:'B8',tail:'one',tailDir:'upper',sig:1,
+    scenario:'A new fertiliser is claimed to improve crop yield. Historically 35% of plots exceed target yield. With fertiliser, 12 out of 25 plots exceed target. Test at 1%. Any probability not listed can be found with your calculator\'s binomial distribution functions.',
+    n:25,p0:0.35,x:12,
+    h0Latex:'p = 0.35',h1Latex:'p > 0.35',
+    h0Distractors:['p = 0.35','p \\leq 0.35','\\mu = 0.35','p \\neq 0.35'],
+    h1Distractors:['p > 0.35','p < 0.35','p \\neq 0.35','p = 0.35'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(25,\\, 0.35)',
+    distDistractors:['X \\sim B(25,\\, 0.35)','X \\sim B(25,\\, 0.65)','X \\sim \\text{Po}(8.75)','X \\sim N(8.75,\\, 5.69)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 12)',val:'0.1254'},{label:'P(X \\geq 13)',val:'0.0604'},{label:'P(X \\geq 14)',val:'0.0255'}],
+    crBoundary:15,crDirection:'geq',crTailAlpha:0.01,
+    crExplanation:'P(X \\geq 15) = 0.0093 < 0.01 \\text{ and } P(X \\geq 14) = 0.0255 > 0.01',
+    pValue:0.1254,pValueExpr:'P(X \\geq 12) = 0.1254',
+    inCR:false,reject:false,
+    conclusionContext:'the fertiliser increases the proportion exceeding target yield'
+  },
+  {
+    id:'B9',tail:'two',tailDir:'two',sig:5,
+    scenario:'A call centre claims 45% of calls are resolved first time. A sample of 20 calls finds 14 resolved first time. Test at 5%.',
+    n:20,p0:0.45,x:14,
+    h0Latex:'p = 0.45',h1Latex:'p \\neq 0.45',
+    h0Distractors:['p = 0.45','p > 0.45','p < 0.45','\\mu = 0.45'],
+    h1Distractors:['p \\neq 0.45','p > 0.45','p < 0.45','p = 0.45'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(20,\\, 0.45)',
+    distDistractors:['X \\sim B(20,\\, 0.45)','X \\sim B(20,\\, 0.55)','X \\sim \\text{Po}(9)','X \\sim N(9,\\, 4.95)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 14)',val:'0.0214'},{label:'P(X \\geq 13)',val:'0.0580'},{label:'P(X \\leq 4)',val:'0.0189'},{label:'P(X \\leq 5)',val:'0.0553'}],
+    crBoundary:'4 or 14',crBoundaryLower:4,crBoundaryUpper:14,crDirection:'two',crTailAlpha:0.025,
+    crExplanation:'\\text{Lower: } P(X \\leq 4) = 0.0189 < 0.025 \\text{ and } P(X \\leq 5) = 0.0553 > 0.025 \\text{. Upper: } P(X \\geq 14) = 0.0214 < 0.025 \\text{ and } P(X \\geq 13) = 0.0580 > 0.025',
+    pValue:0.0214,pValueExpr:'P(X \\geq 14) = 0.0214',
+    inCR:true,reject:true,
+    conclusionContext:'the first-call resolution rate differs from 45%'
+  },
+  {
+    id:'B10',tail:'one',tailDir:'upper',sig:5,
+    scenario:'A teacher believes more than half her class will pass a test. 14 out of 22 students pass. Test at 5%.',
+    n:22,p0:0.5,x:14,
+    h0Latex:'p = 0.5',h1Latex:'p > 0.5',
+    h0Distractors:['p = 0.5','p \\leq 0.5','\\mu = 0.5','p \\neq 0.5'],
+    h1Distractors:['p > 0.5','p < 0.5','p \\neq 0.5','p = 0.5'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(22,\\, 0.5)',
+    distDistractors:['X \\sim B(22,\\, 0.5)','X \\sim B(22,\\, 0.64)','X \\sim \\text{Po}(11)','X \\sim N(11,\\, 5.5)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 14)',val:'0.1431'},{label:'P(X \\geq 15)',val:'0.0669'},{label:'P(X \\geq 16)',val:'0.0262'}],
+    crBoundary:16,crDirection:'geq',crTailAlpha:0.05,
+    crExplanation:'P(X \\geq 16) = 0.0262 < 0.05 and P(X \\geq 15) = 0.0669 > 0.05',
+    pValue:0.1431,pValueExpr:'P(X \\geq 14) = 0.1431',
+    inCR:false,reject:false,
+    conclusionContext:'more than half the class will pass'
+  },
+  {
+    id:'B11',tail:'two',tailDir:'two',sig:1,
+    scenario:'A quality control process claims 5% failure rate. In 30 items tested, 0 fail. Test at 1%.',
+    n:30,p0:0.05,x:0,
+    h0Latex:'p = 0.05',h1Latex:'p \\neq 0.05',
+    h0Distractors:['p = 0.05','p < 0.05','p > 0.05','\\mu = 0.05'],
+    h1Distractors:['p \\neq 0.05','p < 0.05','p > 0.05','p = 0.05'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(30,\\, 0.05)',
+    distDistractors:['X \\sim B(30,\\, 0.05)','X \\sim B(30,\\, 0.95)','X \\sim \\text{Po}(1.5)','X \\sim N(1.5,\\, 1.425)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 0)',val:'0.2146'},{label:'P(X \\geq 5)',val:'0.0156'},{label:'P(X \\geq 6)',val:'0.0033'}],
+    crBoundary:'none feasible at lower; 6 at upper',crBoundaryLower:-1,crBoundaryUpper:6,crDirection:'two',crTailAlpha:0.005,
+    crExplanation:'\\text{Lower: } P(X \\leq 0) = 0.2146 > 0.005 \\text{, so there is no lower critical region. Upper: } P(X \\geq 6) = 0.0033 < 0.005 \\text{ and } P(X \\geq 5) = 0.0156 > 0.005',
+    pValue:0.2146,pValueExpr:'P(X \\leq 0) = 0.2146',
+    inCR:false,reject:false,
+    conclusionContext:'the failure rate differs from 5%'
+  },
+  {
+    id:'B12',tail:'one',tailDir:'lower',sig:10,
+    scenario:'An exam board claims 70% pass rate. A school has 10 students and 5 pass. Test at 10% whether the school\'s pass rate is below the national claim.',
+    n:10,p0:0.70,x:5,
+    h0Latex:'p = 0.70',h1Latex:'p < 0.70',
+    h0Distractors:['p = 0.70','p \\leq 0.70','\\mu = 0.70','p \\neq 0.70'],
+    h1Distractors:['p < 0.70','p > 0.70','p \\neq 0.70','p = 0.70'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim B(10,\\, 0.70)',
+    distDistractors:['X \\sim B(10,\\, 0.70)','X \\sim B(10,\\, 0.30)','X \\sim \\text{Po}(7)','X \\sim N(7,\\, 2.1)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 4)',val:'0.0473'},{label:'P(X \\leq 5)',val:'0.1503'},{label:'P(X \\leq 6)',val:'0.3504'}],
+    crBoundary:4,crDirection:'leq',crTailAlpha:0.10,
+    crExplanation:'P(X \\leq 4) = 0.0473 < 0.10 and P(X \\leq 5) = 0.1503 > 0.10',
+    pValue:0.1503,pValueExpr:'P(X \\leq 5) = 0.1503',
+    inCR:false,reject:false,
+    conclusionContext:'the school pass rate is below 70%'
+  }
+],
+poisson: [
+  {
+    id:'P1',tail:'one',tailDir:'lower',sig:5,
+    scenario:'A hospital records an average of 8 emergency admissions per day. Following a new triage system, only 3 admissions are recorded on one day. Test at 5% whether admissions have decreased.',
+    lambda0:8,x:3,requiresScaling:false,
+    h0Latex:'\\lambda = 8',h1Latex:'\\lambda < 8',
+    h0Distractors:['\\lambda = 8','\\lambda > 8','\\lambda \\neq 8','\\mu = 8'],
+    h1Distractors:['\\lambda < 8','\\lambda > 8','\\lambda \\neq 8','\\lambda = 8'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(8)',
+    distDistractors:['X \\sim \\text{Po}(8)','X \\sim \\text{Po}(3)','X \\sim B(8,\\, 0.5)','X \\sim N(8,\\, 8)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 3)',val:'0.0424'},{label:'P(X \\leq 4)',val:'0.0996'},{label:'P(X \\leq 2)',val:'0.0138'}],
+    crBoundary:3,crDirection:'leq',crTailAlpha:0.05,
+    crExplanation:'P(X \\leq 3) = 0.0424 < 0.05 and P(X \\leq 4) = 0.0996 > 0.05',
+    pValue:0.0424,pValueExpr:'P(X \\leq 3) = 0.0424',
+    inCR:true,reject:true,
+    conclusionContext:'emergency admissions have decreased'
+  },
+  {
+    id:'P2',tail:'one',tailDir:'upper',sig:5,
+    scenario:'A call centre receives an average of 5 complaints per hour. In one hour, 10 complaints are received. Test at 5% whether complaints have increased.',
+    lambda0:5,x:10,requiresScaling:false,
+    h0Latex:'\\lambda = 5',h1Latex:'\\lambda > 5',
+    h0Distractors:['\\lambda = 5','\\lambda < 5','\\lambda \\neq 5','\\mu = 5'],
+    h1Distractors:['\\lambda > 5','\\lambda < 5','\\lambda \\neq 5','\\lambda = 5'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(5)',
+    distDistractors:['X \\sim \\text{Po}(5)','X \\sim \\text{Po}(10)','X \\sim B(10,\\, 0.5)','X \\sim N(5,\\, 5)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 9)',val:'0.0681'},{label:'P(X \\geq 10)',val:'0.0318'},{label:'P(X \\geq 11)',val:'0.0137'}],
+    crBoundary:10,crDirection:'geq',crTailAlpha:0.05,
+    crExplanation:'P(X \\geq 10) = 0.0318 < 0.05 and P(X \\geq 9) = 0.0681 > 0.05',
+    pValue:0.0318,pValueExpr:'P(X \\geq 10) = 0.0318',
+    inCR:true,reject:true,
+    conclusionContext:'complaints have increased above 5 per hour'
+  },
+  {
+    id:'P3',tail:'two',tailDir:'two',sig:5,
+    scenario:'A factory machine produces an average of 3 faults per week. In a sample week, 7 faults are recorded. Test at 5% whether the fault rate has changed.',
+    lambda0:3,x:7,requiresScaling:false,
+    h0Latex:'\\lambda = 3',h1Latex:'\\lambda \\neq 3',
+    h0Distractors:['\\lambda = 3','\\lambda > 3','\\lambda < 3','\\mu = 3'],
+    h1Distractors:['\\lambda \\neq 3','\\lambda > 3','\\lambda < 3','\\lambda = 3'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(3)',
+    distDistractors:['X \\sim \\text{Po}(3)','X \\sim \\text{Po}(7)','X \\sim B(7,\\, 0.5)','X \\sim N(3,\\, 3)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 7)',val:'0.0335'},{label:'P(X \\geq 8)',val:'0.0119'},{label:'P(X \\leq 0)',val:'0.0498'}],
+    crBoundary:'none feasible lower; 8 upper',crBoundaryLower:-1,crBoundaryUpper:8,crDirection:'two',crTailAlpha:0.025,
+    crExplanation:'\\text{Lower: } P(X \\leq 0) = 0.0498 > 0.025 \\text{, so there is no lower critical region. Upper: } P(X \\geq 8) = 0.0119 < 0.025 \\text{ and } P(X \\geq 7) = 0.0335 > 0.025',
+    pValue:0.0335,pValueExpr:'P(X \\geq 7) = 0.0335',
+    inCR:false,reject:false,
+    conclusionContext:'the fault rate has changed from 3 per week'
+  },
+  {
+    id:'P4',tail:'one',tailDir:'lower',sig:1,
+    scenario:'A road has an average of 6 accidents per month. After new speed cameras, 1 accident occurs in a month. Test at 1%.',
+    lambda0:6,x:1,requiresScaling:false,
+    h0Latex:'\\lambda = 6',h1Latex:'\\lambda < 6',
+    h0Distractors:['\\lambda = 6','\\lambda > 6','\\lambda \\neq 6','\\mu = 6'],
+    h1Distractors:['\\lambda < 6','\\lambda > 6','\\lambda \\neq 6','\\lambda = 6'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(6)',
+    distDistractors:['X \\sim \\text{Po}(6)','X \\sim \\text{Po}(1)','X \\sim B(6,\\, 0.5)','X \\sim N(6,\\, 6)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 0)',val:'0.0025'},{label:'P(X \\leq 1)',val:'0.0174'},{label:'P(X \\leq 2)',val:'0.0620'}],
+    crBoundary:0,crDirection:'leq',crTailAlpha:0.01,
+    crExplanation:'P(X \\leq 0) = 0.0025 < 0.01 and P(X \\leq 1) = 0.0174 > 0.01',
+    pValue:0.0174,pValueExpr:'P(X \\leq 1) = 0.0174',
+    inCR:false,reject:false,
+    conclusionContext:'accidents have decreased'
+  },
+  {
+    id:'P5',tail:'one',tailDir:'upper',sig:1,requiresScaling:true,
+    scenario:'A radioactive source emits an average of 4 particles per minute. In 3 minutes, 20 particles are emitted. Test at 1% whether the emission rate has increased. Any probability not listed can be found with your calculator\'s Poisson distribution functions.',
+    lambda0:4,scaleFactor:3,scaledLambda:12,x:20,
+    scalingPrompt:'The claim is 4 per minute but the observation is over 3 minutes. State the value of \\(\\lambda\\) for the observation period.',
+    scalingAnswer:12,
+    h0Latex:'\\lambda = 12',h1Latex:'\\lambda > 12',
+    h0Distractors:['\\lambda = 12','\\lambda = 4','\\lambda \\neq 12','\\mu = 12'],
+    h1Distractors:['\\lambda > 12','\\lambda < 12','\\lambda \\neq 12','\\lambda = 12'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(12)',
+    distDistractors:['X \\sim \\text{Po}(12)','X \\sim \\text{Po}(4)','X \\sim B(20,\\, 0.6)','X \\sim N(12,\\, 12)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 20)',val:'0.0213'},{label:'P(X \\geq 21)',val:'0.0116'},{label:'P(X \\geq 19)',val:'0.0374'}],
+    crBoundary:22,crDirection:'geq',crTailAlpha:0.01,
+    crExplanation:'P(X \\geq 22) = 0.0061 < 0.01 \\text{ and } P(X \\geq 21) = 0.0116 > 0.01',
+    pValue:0.0213,pValueExpr:'P(X \\geq 20) = 0.0213',
+    inCR:false,reject:false,
+    conclusionContext:'the emission rate has increased'
+  },
+  {
+    id:'P6',tail:'two',tailDir:'two',sig:10,
+    scenario:'A website receives an average of 10 visits per hour. In one hour, 4 visits are recorded. Test at 10% whether the visit rate has changed. Any probability not listed can be found with your calculator\'s Poisson distribution functions.',
+    lambda0:10,x:4,requiresScaling:false,
+    h0Latex:'\\lambda = 10',h1Latex:'\\lambda \\neq 10',
+    h0Distractors:['\\lambda = 10','\\lambda > 10','\\lambda < 10','\\mu = 10'],
+    h1Distractors:['\\lambda \\neq 10','\\lambda > 10','\\lambda < 10','\\lambda = 10'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(10)',
+    distDistractors:['X \\sim \\text{Po}(10)','X \\sim \\text{Po}(4)','X \\sim B(10,\\, 0.4)','X \\sim N(10,\\, 10)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 4)',val:'0.0293'},{label:'P(X \\leq 5)',val:'0.0671'},{label:'P(X \\geq 16)',val:'0.0487'},{label:'P(X \\geq 17)',val:'0.0270'}],
+    crBoundary:'4 or 16',crBoundaryLower:4,crBoundaryUpper:16,crDirection:'two',crTailAlpha:0.05,
+    crExplanation:'\\text{Lower: } P(X \\leq 4) = 0.0293 < 0.05 \\text{ and } P(X \\leq 5) = 0.0671 > 0.05 \\text{. Upper: } P(X \\geq 16) = 0.0487 < 0.05 \\text{ and } P(X \\geq 15) = 0.0835 > 0.05',
+    pValue:0.0293,pValueExpr:'P(X \\leq 4) = 0.0293',
+    inCR:true,reject:true,
+    conclusionContext:'the visit rate has changed from 10 per hour'
+  },
+  {
+    id:'P7',tail:'one',tailDir:'lower',sig:5,requiresScaling:true,
+    scenario:'A machine produces an average of 2 defects per hour. Over an 8-hour shift, 9 defects are recorded. Test at 5% whether defect rate has decreased.',
+    lambda0:2,scaleFactor:8,scaledLambda:16,x:9,
+    scalingPrompt:'The claim is 2 per hour but the observation is over 8 hours. State the value of \\(\\lambda\\) for the observation period.',
+    scalingAnswer:16,
+    h0Latex:'\\lambda = 16',h1Latex:'\\lambda < 16',
+    h0Distractors:['\\lambda = 16','\\lambda = 2','\\lambda \\neq 16','\\mu = 16'],
+    h1Distractors:['\\lambda < 16','\\lambda > 16','\\lambda \\neq 16','\\lambda = 16'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(16)',
+    distDistractors:['X \\sim \\text{Po}(16)','X \\sim \\text{Po}(2)','X \\sim B(16,\\, 0.5)','X \\sim N(16,\\, 16)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 8)',val:'0.0220'},{label:'P(X \\leq 9)',val:'0.0433'},{label:'P(X \\leq 10)',val:'0.0774'}],
+    crBoundary:9,crDirection:'leq',crTailAlpha:0.05,
+    crExplanation:'P(X \\leq 9) = 0.0433 < 0.05 \\text{ and } P(X \\leq 10) = 0.0774 > 0.05',
+    pValue:0.0433,pValueExpr:'P(X \\leq 9) = 0.0433',
+    inCR:true,reject:true,
+    conclusionContext:'the defect rate has decreased'
+  },
+  {
+    id:'P8',tail:'one',tailDir:'upper',sig:10,
+    scenario:'A forest records an average of 2 lightning strikes per square kilometre per year. An exposed ridge records 5 strikes in one year. Test at 10%.',
+    lambda0:2,x:5,requiresScaling:false,
+    h0Latex:'\\lambda = 2',h1Latex:'\\lambda > 2',
+    h0Distractors:['\\lambda = 2','\\lambda < 2','\\lambda \\neq 2','\\mu = 2'],
+    h1Distractors:['\\lambda > 2','\\lambda < 2','\\lambda \\neq 2','\\lambda = 2'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(2)',
+    distDistractors:['X \\sim \\text{Po}(2)','X \\sim \\text{Po}(5)','X \\sim B(5,\\, 0.4)','X \\sim N(2,\\, 2)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 4)',val:'0.1429'},{label:'P(X \\geq 5)',val:'0.0527'},{label:'P(X \\geq 6)',val:'0.0166'}],
+    crBoundary:5,crDirection:'geq',crTailAlpha:0.10,
+    crExplanation:'P(X \\geq 5) = 0.0527 < 0.10 and P(X \\geq 4) = 0.1429 > 0.10',
+    pValue:0.0527,pValueExpr:'P(X \\geq 5) = 0.0527',
+    inCR:true,reject:true,
+    conclusionContext:'the lightning strike rate exceeds average on this ridge'
+  },
+  {
+    id:'P9',tail:'two',tailDir:'two',sig:1,
+    scenario:'A bakery produces an average of 4 mis-shapen loaves per batch. A new oven produces 9 mis-shapen loaves in one batch. Test at 1%. Any probability not listed can be found with your calculator\'s Poisson distribution functions.',
+    lambda0:4,x:9,requiresScaling:false,
+    h0Latex:'\\lambda = 4',h1Latex:'\\lambda \\neq 4',
+    h0Distractors:['\\lambda = 4','\\lambda > 4','\\lambda < 4','\\mu = 4'],
+    h1Distractors:['\\lambda \\neq 4','\\lambda > 4','\\lambda < 4','\\lambda = 4'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(4)',
+    distDistractors:['X \\sim \\text{Po}(4)','X \\sim \\text{Po}(9)','X \\sim B(9,\\, 0.5)','X \\sim N(4,\\, 4)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 10)',val:'0.0081'},{label:'P(X \\geq 11)',val:'0.0028'},{label:'P(X \\leq 0)',val:'0.0183'}],
+    crBoundary:'none feasible lower; 11 upper',crBoundaryLower:-1,crBoundaryUpper:11,crDirection:'two',crTailAlpha:0.005,
+    crExplanation:'Upper: P(X \\geq 11) = 0.0028 < 0.005. x = 9 does not reach CR.',
+    pValue:0.0214,pValueExpr:'P(X \\geq 9) = 0.0214',
+    inCR:false,reject:false,
+    conclusionContext:'the mis-shapen loaf rate has changed'
+  },
+  {
+    id:'P10',tail:'one',tailDir:'upper',sig:5,
+    scenario:'A GP surgery records an average of 3 no-shows per day. On one day, 8 no-shows occur. Test at 5%.',
+    lambda0:3,x:8,requiresScaling:false,
+    h0Latex:'\\lambda = 3',h1Latex:'\\lambda > 3',
+    h0Distractors:['\\lambda = 3','\\lambda < 3','\\lambda \\neq 3','\\mu = 3'],
+    h1Distractors:['\\lambda > 3','\\lambda < 3','\\lambda \\neq 3','\\lambda = 3'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(3)',
+    distDistractors:['X \\sim \\text{Po}(3)','X \\sim \\text{Po}(8)','X \\sim B(8,\\, 0.375)','X \\sim N(3,\\, 3)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 7)',val:'0.0335'},{label:'P(X \\geq 8)',val:'0.0119'},{label:'P(X \\geq 6)',val:'0.0839'}],
+    crBoundary:7,crDirection:'geq',crTailAlpha:0.05,
+    crExplanation:'P(X \\geq 7) = 0.0335 < 0.05 and P(X \\geq 6) = 0.0839 > 0.05',
+    pValue:0.0119,pValueExpr:'P(X \\geq 8) = 0.0119',
+    inCR:true,reject:true,
+    conclusionContext:'the no-show rate has increased above 3 per day'
+  },
+  {
+    id:'P11',tail:'two',tailDir:'two',sig:5,requiresScaling:true,
+    scenario:'Emails arrive at an average rate of 6 per hour. In a 2-hour period, 18 emails arrive. Test at 5%. Any probability not listed can be found with your calculator\'s Poisson distribution functions.',
+    lambda0:6,scaleFactor:2,scaledLambda:12,x:18,
+    scalingPrompt:'The claim is 6 per hour but the observation is over 2 hours. State the value of \\(\\lambda\\) for the observation period.',
+    scalingAnswer:12,
+    h0Latex:'\\lambda = 12',h1Latex:'\\lambda \\neq 12',
+    h0Distractors:['\\lambda = 12','\\lambda = 6','\\lambda \\neq 6','\\mu = 12'],
+    h1Distractors:['\\lambda \\neq 12','\\lambda > 12','\\lambda < 12','\\lambda = 12'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(12)',
+    distDistractors:['X \\sim \\text{Po}(12)','X \\sim \\text{Po}(6)','X \\sim B(18,\\, 0.67)','X \\sim N(12,\\, 12)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\geq 19)',val:'0.0374'},{label:'P(X \\geq 20)',val:'0.0213'},{label:'P(X \\leq 5)',val:'0.0203'},{label:'P(X \\leq 6)',val:'0.0458'}],
+    crBoundary:'5 or 20',crBoundaryLower:5,crBoundaryUpper:20,crDirection:'two',crTailAlpha:0.025,
+    crExplanation:'\\text{Lower: } P(X \\leq 5) = 0.0203 < 0.025 \\text{ and } P(X \\leq 6) = 0.0458 > 0.025 \\text{. Upper: } P(X \\geq 20) = 0.0213 < 0.025 \\text{ and } P(X \\geq 19) = 0.0374 > 0.025',
+    pValue:0.0630,pValueExpr:'P(X \\geq 18) = 0.0630',
+    inCR:false,reject:false,
+    conclusionContext:'the email arrival rate has changed'
+  },
+  {
+    id:'P12',tail:'one',tailDir:'lower',sig:10,
+    scenario:'A security system triggers an average of 5 false alarms per week. After recalibration, 2 false alarms occur in one week. Test at 10%.',
+    lambda0:5,x:2,requiresScaling:false,
+    h0Latex:'\\lambda = 5',h1Latex:'\\lambda < 5',
+    h0Distractors:['\\lambda = 5','\\lambda > 5','\\lambda \\neq 5','\\mu = 5'],
+    h1Distractors:['\\lambda < 5','\\lambda > 5','\\lambda \\neq 5','\\lambda = 5'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'X \\sim \\text{Po}(5)',
+    distDistractors:['X \\sim \\text{Po}(5)','X \\sim \\text{Po}(2)','X \\sim B(5,\\, 0.4)','X \\sim N(5,\\, 5)'],
+    distCorrect:0,
+    givenCDF:[{label:'P(X \\leq 1)',val:'0.0404'},{label:'P(X \\leq 2)',val:'0.1247'},{label:'P(X \\leq 3)',val:'0.2650'}],
+    crBoundary:1,crDirection:'leq',crTailAlpha:0.10,
+    crExplanation:'P(X \\leq 1) = 0.0404 < 0.10 and P(X \\leq 2) = 0.1247 > 0.10',
+    pValue:0.1247,pValueExpr:'P(X \\leq 2) = 0.1247',
+    inCR:false,reject:false,
+    conclusionContext:'the false alarm rate has decreased'
+  }
+],
+normal: [
+  {
+    id:'N1',tail:'one',tailDir:'lower',sig:5,
+    scenario:'A machine fills bags with a mean of 500g, σ = 12g. A sample of 36 bags has mean 496g. Test at 5% whether the mean has decreased.',
+    mu0:500,sigma:12,n:36,xbar:496,
+    h0Latex:'\\mu = 500',h1Latex:'\\mu < 500',
+    h0Distractors:['\\mu = 500','\\mu > 500','\\mu \\neq 500','p = 500'],
+    h1Distractors:['\\mu < 500','\\mu > 500','\\mu \\neq 500','\\mu = 500'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(500,\\, \\frac{12^2}{36}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(500,\\, \\frac{12^2}{36}\\right)','\\bar{X} \\sim N(500,\\, 12^2)','X \\sim \\text{Po}(500)','X \\sim B(36,\\, 0.5)'],
+    distCorrect:0,
+    zStat:-2.00,zStatExact:'-2.00',
+    zFormula:'z = \\frac{496 - 500}{12/\\sqrt{36}} = \\frac{-4}{2} = -2.00',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'Z \\leq -1.6449',
+    pValue:0.0228,pValueExpr:'P(\\bar{X} \\leq 496) = 0.0228',
+    crExplanation:'P(Z \\leq -1.6449) = 0.05 \\text{, so the critical region is } Z \\leq -1.6449',
+    inCR:true,reject:true,
+    conclusionContext:'the mean fill weight has decreased below 500g'
+  },
+  {
+    id:'N2',tail:'one',tailDir:'upper',sig:5,
+    scenario:'A class has historically achieved a mean score of 62, σ = 8. After intervention, a sample of 25 students scores mean 65.5. Test at 5% whether mean has increased.',
+    mu0:62,sigma:8,n:25,xbar:65.5,
+    h0Latex:'\\mu = 62',h1Latex:'\\mu > 62',
+    h0Distractors:['\\mu = 62','\\mu < 62','\\mu \\neq 62','p = 62'],
+    h1Distractors:['\\mu > 62','\\mu < 62','\\mu \\neq 62','\\mu = 62'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(62,\\, \\frac{8^2}{25}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(62,\\, \\frac{8^2}{25}\\right)','\\bar{X} \\sim N(62,\\, 8^2)','X \\sim \\text{Po}(62)','X \\sim B(25,\\, 0.62)'],
+    distCorrect:0,
+    zStat:2.1875,zStatExact:'2.19',
+    zFormula:'z = \\frac{65.5 - 62}{8/\\sqrt{25}} = \\frac{3.5}{1.6} = 2.19',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'Z \\geq 1.6449',
+    pValue:0.0144,pValueExpr:'P(\\bar{X} \\geq 65.5) = 0.0144',
+    crExplanation:'P(Z \\geq 1.6449) = 0.05 \\text{, so the critical region is } Z \\geq 1.6449',
+    inCR:true,reject:true,
+    conclusionContext:'the mean score has increased'
+  },
+  {
+    id:'N3',tail:'two',tailDir:'two',sig:5,
+    scenario:'A bottling plant claims mean volume 330ml, σ = 5ml. A sample of 20 bottles has mean 332.1ml. Test at 5%.',
+    mu0:330,sigma:5,n:20,xbar:332.1,
+    h0Latex:'\\mu = 330',h1Latex:'\\mu \\neq 330',
+    h0Distractors:['\\mu = 330','\\mu > 330','\\mu < 330','p = 330'],
+    h1Distractors:['\\mu \\neq 330','\\mu > 330','\\mu < 330','\\mu = 330'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(330,\\, \\frac{5^2}{20}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(330,\\, \\frac{5^2}{20}\\right)','\\bar{X} \\sim N(330,\\, 5^2)','X \\sim \\text{Po}(330)','X \\sim B(20,\\, 0.33)'],
+    distCorrect:0,
+    zStat:1.8783,zStatExact:'1.88',
+    zFormula:'z = \\frac{332.1 - 330}{5/\\sqrt{20}} = \\frac{2.1}{1.118} = 1.88',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'|Z| \\geq 1.9600',
+    pValue:0.0302,pValueExpr:'P(\\bar{X} \\geq 332.1) = 0.0302',
+    crExplanation:'P(Z \\geq 1.9600) = 0.025 \\text{ in each tail, so the critical region is } |Z| \\geq 1.9600',
+    inCR:false,reject:false,
+    conclusionContext:'the mean volume differs from 330ml'
+  },
+  {
+    id:'N4',tail:'one',tailDir:'lower',sig:1,
+    scenario:'A production line produces components with mean diameter 50mm, σ = 0.8mm. A sample of 16 components has mean 49.4mm. Test at 1%.',
+    mu0:50,sigma:0.8,n:16,xbar:49.4,
+    h0Latex:'\\mu = 50',h1Latex:'\\mu < 50',
+    h0Distractors:['\\mu = 50','\\mu > 50','\\mu \\neq 50','p = 50'],
+    h1Distractors:['\\mu < 50','\\mu > 50','\\mu \\neq 50','\\mu = 50'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(50,\\, \\frac{0.8^2}{16}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(50,\\, \\frac{0.8^2}{16}\\right)','\\bar{X} \\sim N(50,\\, 0.8^2)','X \\sim \\text{Po}(50)','X \\sim B(16,\\, 0.5)'],
+    distCorrect:0,
+    zStat:-3.00,zStatExact:'-3.00',
+    zFormula:'z = \\frac{49.4 - 50}{0.8/\\sqrt{16}} = \\frac{-0.6}{0.2} = -3.00',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'Z \\leq -2.3263',
+    pValue:0.0013,pValueExpr:'P(\\bar{X} \\leq 49.4) = 0.0013',
+    crExplanation:'P(Z \\leq -2.3263) = 0.01 \\text{, so the critical region is } Z \\leq -2.3263',
+    inCR:true,reject:true,
+    conclusionContext:'the mean diameter has decreased below 50mm'
+  },
+  {
+    id:'N5',tail:'two',tailDir:'two',sig:1,
+    scenario:'A courier claims mean delivery time 3.2 days, σ = 0.6 days. A sample of 30 deliveries has mean 3.45 days. Test at 1%.',
+    mu0:3.2,sigma:0.6,n:30,xbar:3.45,
+    h0Latex:'\\mu = 3.2',h1Latex:'\\mu \\neq 3.2',
+    h0Distractors:['\\mu = 3.2','\\mu > 3.2','\\mu < 3.2','p = 3.2'],
+    h1Distractors:['\\mu \\neq 3.2','\\mu > 3.2','\\mu < 3.2','\\mu = 3.2'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(3.2,\\, \\frac{0.6^2}{30}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(3.2,\\, \\frac{0.6^2}{30}\\right)','\\bar{X} \\sim N(3.2,\\, 0.6^2)','X \\sim \\text{Po}(3.2)','X \\sim B(30,\\, 0.32)'],
+    distCorrect:0,
+    zStat:2.2822,zStatExact:'2.28',
+    zFormula:'z = \\frac{3.45 - 3.2}{0.6/\\sqrt{30}} = \\frac{0.25}{0.1095} = 2.28',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'|Z| \\geq 2.5758',
+    pValue:0.0112,pValueExpr:'P(\\bar{X} \\geq 3.45) = 0.0112',
+    crExplanation:'P(Z \\geq 2.5758) = 0.005 \\text{ in each tail, so the critical region is } |Z| \\geq 2.5758',
+    inCR:false,reject:false,
+    conclusionContext:'the mean delivery time differs from 3.2 days'
+  },
+  {
+    id:'N6',tail:'one',tailDir:'upper',sig:1,
+    scenario:'A battery manufacturer claims mean life 200 hours, σ = 15 hours. A new formula gives sample of 25 batteries mean life 207 hours. Test at 1% whether mean has increased.',
+    mu0:200,sigma:15,n:25,xbar:207,
+    h0Latex:'\\mu = 200',h1Latex:'\\mu > 200',
+    h0Distractors:['\\mu = 200','\\mu < 200','\\mu \\neq 200','p = 200'],
+    h1Distractors:['\\mu > 200','\\mu < 200','\\mu \\neq 200','\\mu = 200'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(200,\\, \\frac{15^2}{25}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(200,\\, \\frac{15^2}{25}\\right)','\\bar{X} \\sim N(200,\\, 15^2)','X \\sim \\text{Po}(200)','X \\sim B(25,\\, 0.2)'],
+    distCorrect:0,
+    zStat:2.3333,zStatExact:'2.33',
+    zFormula:'z = \\frac{207 - 200}{15/\\sqrt{25}} = \\frac{7}{3} = 2.33',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'Z \\geq 2.3263',
+    pValue:0.0098,pValueExpr:'P(\\bar{X} \\geq 207) = 0.0098',
+    crExplanation:'P(Z \\geq 2.3263) = 0.01 \\text{, so the critical region is } Z \\geq 2.3263',
+    inCR:true,reject:true,
+    conclusionContext:'the mean battery life has increased'
+  },
+  {
+    id:'N7',tail:'one',tailDir:'lower',sig:10,
+    scenario:'A cereal box states mean weight 750g, σ = 10g. A consumer group samples 40 boxes and finds mean 747.5g. Test at 10%.',
+    mu0:750,sigma:10,n:40,xbar:747.5,
+    h0Latex:'\\mu = 750',h1Latex:'\\mu < 750',
+    h0Distractors:['\\mu = 750','\\mu > 750','\\mu \\neq 750','p = 750'],
+    h1Distractors:['\\mu < 750','\\mu > 750','\\mu \\neq 750','\\mu = 750'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(750,\\, \\frac{10^2}{40}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(750,\\, \\frac{10^2}{40}\\right)','\\bar{X} \\sim N(750,\\, 10^2)','X \\sim \\text{Po}(750)','X \\sim B(40,\\, 0.75)'],
+    distCorrect:0,
+    zStat:-1.5811,zStatExact:'-1.58',
+    zFormula:'z = \\frac{747.5 - 750}{10/\\sqrt{40}} = \\frac{-2.5}{1.581} = -1.58',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'Z \\leq -1.2816',
+    pValue:0.0569,pValueExpr:'P(\\bar{X} \\leq 747.5) = 0.0569',
+    crExplanation:'P(Z \\leq -1.2816) = 0.10 \\text{, so the critical region is } Z \\leq -1.2816',
+    inCR:true,reject:true,
+    conclusionContext:'the mean weight is below the stated 750g'
+  },
+  {
+    id:'N8',tail:'two',tailDir:'two',sig:10,
+    scenario:'A hospital claims mean waiting time 45 minutes, σ = 12 minutes. A sample of 36 patients has mean wait 48.5 minutes. Test at 10%.',
+    mu0:45,sigma:12,n:36,xbar:48.5,
+    h0Latex:'\\mu = 45',h1Latex:'\\mu \\neq 45',
+    h0Distractors:['\\mu = 45','\\mu > 45','\\mu < 45','p = 45'],
+    h1Distractors:['\\mu \\neq 45','\\mu > 45','\\mu < 45','\\mu = 45'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(45,\\, \\frac{12^2}{36}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(45,\\, \\frac{12^2}{36}\\right)','\\bar{X} \\sim N(45,\\, 12^2)','X \\sim \\text{Po}(45)','X \\sim B(36,\\, 0.45)'],
+    distCorrect:0,
+    zStat:1.75,zStatExact:'1.75',
+    zFormula:'z = \\frac{48.5 - 45}{12/\\sqrt{36}} = \\frac{3.5}{2} = 1.75',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'|Z| \\geq 1.6449',
+    pValue:0.0401,pValueExpr:'P(\\bar{X} \\geq 48.5) = 0.0401',
+    crExplanation:'P(Z \\geq 1.6449) = 0.05 \\text{ in each tail, so the critical region is } |Z| \\geq 1.6449',
+    inCR:true,reject:true,
+    conclusionContext:'the mean waiting time differs from 45 minutes'
+  },
+  {
+    id:'N9',tail:'one',tailDir:'lower',sig:5,
+    scenario:'A training programme claims to improve reaction times. Before training, mean reaction time is 280ms, σ = 20ms. After training, 16 participants have mean 271ms. Test at 5% whether mean has decreased.',
+    mu0:280,sigma:20,n:16,xbar:271,
+    h0Latex:'\\mu = 280',h1Latex:'\\mu < 280',
+    h0Distractors:['\\mu = 280','\\mu > 280','\\mu \\neq 280','p = 280'],
+    h1Distractors:['\\mu < 280','\\mu > 280','\\mu \\neq 280','\\mu = 280'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(280,\\, \\frac{20^2}{16}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(280,\\, \\frac{20^2}{16}\\right)','\\bar{X} \\sim N(280,\\, 20^2)','X \\sim \\text{Po}(280)','X \\sim B(16,\\, 0.28)'],
+    distCorrect:0,
+    zStat:-1.80,zStatExact:'-1.80',
+    zFormula:'z = \\frac{271 - 280}{20/\\sqrt{16}} = \\frac{-9}{5} = -1.80',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'Z \\leq -1.6449',
+    pValue:0.0359,pValueExpr:'P(\\bar{X} \\leq 271) = 0.0359',
+    crExplanation:'P(Z \\leq -1.6449) = 0.05 \\text{, so the critical region is } Z \\leq -1.6449',
+    inCR:true,reject:true,
+    conclusionContext:'the mean reaction time has decreased after training'
+  },
+  {
+    id:'N10',tail:'two',tailDir:'two',sig:5,
+    scenario:'A factory produces steel rods with mean length 100cm, σ = 0.5cm. A sample of 25 rods has mean 100.2cm. Test at 5%.',
+    mu0:100,sigma:0.5,n:25,xbar:100.2,
+    h0Latex:'\\mu = 100',h1Latex:'\\mu \\neq 100',
+    h0Distractors:['\\mu = 100','\\mu > 100','\\mu < 100','p = 100'],
+    h1Distractors:['\\mu \\neq 100','\\mu > 100','\\mu < 100','\\mu = 100'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(100,\\, \\frac{0.5^2}{25}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(100,\\, \\frac{0.5^2}{25}\\right)','\\bar{X} \\sim N(100,\\, 0.5^2)','X \\sim \\text{Po}(100)','X \\sim B(25,\\, 0.5)'],
+    distCorrect:0,
+    zStat:2.00,zStatExact:'2.00',
+    zFormula:'z = \\frac{100.2 - 100}{0.5/\\sqrt{25}} = \\frac{0.2}{0.1} = 2.00',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'|Z| \\geq 1.9600',
+    pValue:0.0228,pValueExpr:'P(\\bar{X} \\geq 100.2) = 0.0228',
+    crExplanation:'P(Z \\geq 1.9600) = 0.025 \\text{ in each tail, so the critical region is } |Z| \\geq 1.9600',
+    inCR:true,reject:true,
+    conclusionContext:'the mean rod length differs from 100cm'
+  },
+  {
+    id:'N11',tail:'one',tailDir:'lower',sig:5,
+    scenario:'A fuel efficiency claim states mean 45mpg, σ = 4mpg. A sample of 20 journeys gives mean 43.2mpg. Test at 5%.',
+    mu0:45,sigma:4,n:20,xbar:43.2,
+    h0Latex:'\\mu = 45',h1Latex:'\\mu < 45',
+    h0Distractors:['\\mu = 45','\\mu > 45','\\mu \\neq 45','p = 45'],
+    h1Distractors:['\\mu < 45','\\mu > 45','\\mu \\neq 45','\\mu = 45'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(45,\\, \\frac{4^2}{20}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(45,\\, \\frac{4^2}{20}\\right)','\\bar{X} \\sim N(45,\\, 4^2)','X \\sim \\text{Po}(45)','X \\sim B(20,\\, 0.45)'],
+    distCorrect:0,
+    zStat:-2.0125,zStatExact:'-2.01',
+    zFormula:'z = \\frac{43.2 - 45}{4/\\sqrt{20}} = \\frac{-1.8}{0.894} = -2.01',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'Z \\leq -1.6449',
+    pValue:0.0221,pValueExpr:'P(\\bar{X} \\leq 43.2) = 0.0221',
+    crExplanation:'P(Z \\leq -1.6449) = 0.05 \\text{, so the critical region is } Z \\leq -1.6449',
+    inCR:true,reject:true,
+    conclusionContext:'the mean fuel efficiency is below the claimed 45mpg'
+  },
+  {
+    id:'N12',tail:'two',tailDir:'two',sig:1,
+    scenario:'A university claims mean graduate salary £28,000, σ = £3,500. A survey of 49 graduates gives mean £26,800. Test at 1%.',
+    mu0:28000,sigma:3500,n:49,xbar:26800,
+    h0Latex:'\\mu = 28000',h1Latex:'\\mu \\neq 28000',
+    h0Distractors:['\\mu = 28{,}000','\\mu > 28{,}000','\\mu < 28{,}000','p = 28{,}000'],
+    h1Distractors:['\\mu \\neq 28{,}000','\\mu > 28{,}000','\\mu < 28{,}000','\\mu = 28{,}000'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'\\bar{X} \\sim N\\!\\left(28000,\\, \\frac{3500^2}{49}\\right)',
+    distDistractors:['\\bar{X} \\sim N\\!\\left(28000,\\, \\frac{3500^2}{49}\\right)','\\bar{X} \\sim N(28000,\\, 3500^2)','X \\sim \\text{Po}(28000)','X \\sim B(49,\\, 0.28)'],
+    distCorrect:0,
+    zStat:-2.40,zStatExact:'-2.40',
+    zFormula:'z = \\frac{26800 - 28000}{3500/\\sqrt{49}} = \\frac{-1200}{500} = -2.40',
+    cvOneTail:{1:2.3263,5:1.6449,10:1.2816},cvTwoTail:{1:2.5758,5:1.9600,10:1.6449},
+    crStatement:'|Z| \\geq 2.5758',
+    pValue:0.0082,pValueExpr:'P(\\bar{X} \\leq 26800) = 0.0082',
+    crExplanation:'P(Z \\geq 2.5758) = 0.005 \\text{ in each tail, so the critical region is } |Z| \\geq 2.5758',
+    inCR:false,reject:false,
+    conclusionContext:'the mean graduate salary differs from £28,000'
+  }
+],
+correlation: [
+  {
+    id:'C1',tail:'two',tailDir:'two',sig:5,
+    scenario:'A researcher investigates the correlation between daily temperature and ice cream sales using data from 15 days.',
+    nSample:15,r:0.58,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho \\neq 0',
+    h0Distractors:['\\rho = 0','\\rho > 0','\\rho \\neq 0','r = 0'],
+    h1Distractors:['\\rho \\neq 0','\\rho > 0','\\rho < 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{13}','\\rho \\sim B(15,\\, 0.5)'],
+    distCorrect:0,
+    criticalValue:0.5140,
+    pValue:0.0234,pValueExpr:'P(|R| \\geq 0.58) = 0.0234',
+    crExplanation:'n = 15,\\ 5\\% \\text{ two-tailed: critical value } 0.5140 \\text{, so the critical region is } |r| \\geq 0.5140',
+    inCR:true,reject:true,
+    conclusionContext:'a correlation between temperature and ice cream sales'
+  },
+  {
+    id:'C2',tail:'one',tailDir:'upper',sig:5,
+    scenario:'A farmer investigates whether more hours of sunlight correlates with higher crop yield, using data from 20 plots.',
+    nSample:20,r:0.41,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho > 0',
+    h0Distractors:['\\rho = 0','\\rho > 0','\\rho \\neq 0','r = 0'],
+    h1Distractors:['\\rho > 0','\\rho < 0','\\rho \\neq 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{18}','\\rho \\sim \\text{Po}(0.5)'],
+    distCorrect:0,
+    criticalValue:0.3783,
+    pValue:0.0363,pValueExpr:'P(R \\geq 0.41) = 0.0363',
+    crExplanation:'n = 20,\\ 5\\% \\text{ one-tailed: critical value } 0.3783 \\text{, so the critical region is } r \\geq 0.3783',
+    inCR:true,reject:true,
+    conclusionContext:'a positive correlation between sunlight hours and crop yield'
+  },
+  {
+    id:'C3',tail:'two',tailDir:'two',sig:5,
+    scenario:'A study investigates the correlation between noise level and productivity using data from 12 offices.',
+    nSample:12,r:0.52,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho \\neq 0',
+    h0Distractors:['\\rho = 0','\\rho > 0','\\rho \\neq 0','r = 0'],
+    h1Distractors:['\\rho \\neq 0','\\rho > 0','\\rho < 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{10}','\\rho \\sim B(12,\\, 0.5)'],
+    distCorrect:0,
+    criticalValue:0.5760,
+    pValue:0.0831,pValueExpr:'P(|R| \\geq 0.52) = 0.0831',
+    crExplanation:'n = 12,\\ 5\\% \\text{ two-tailed: critical value } 0.5760 \\text{, so the critical region is } |r| \\geq 0.5760',
+    inCR:false,reject:false,
+    conclusionContext:'a correlation between noise level and productivity'
+  },
+  {
+    id:'C4',tail:'one',tailDir:'lower',sig:5,
+    scenario:'An education researcher investigates whether higher class sizes correlate with lower test scores, using data from 18 schools.',
+    nSample:18,r:-0.50,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho < 0',
+    h0Distractors:['\\rho = 0','\\rho < 0','\\rho \\neq 0','r = 0'],
+    h1Distractors:['\\rho < 0','\\rho > 0','\\rho \\neq 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{16}','\\rho \\sim \\text{Po}(0.5)'],
+    distCorrect:0,
+    criticalValue:0.4000,
+    pValue:0.0173,pValueExpr:'P(R \\leq -0.5) = 0.0173',
+    crExplanation:'n = 18,\\ 5\\% \\text{ one-tailed: critical value } 0.4000 \\text{, so the critical region is } r \\leq -0.4000',
+    inCR:true,reject:true,
+    conclusionContext:'a negative correlation between class size and test scores'
+  },
+  {
+    id:'C5',tail:'two',tailDir:'two',sig:1,
+    scenario:'A marketing team investigates the correlation between advertising spend and sales revenue using data from 25 months.',
+    nSample:25,r:0.48,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho \\neq 0',
+    h0Distractors:['\\rho = 0','\\rho > 0','\\rho \\neq 0','r = 0'],
+    h1Distractors:['\\rho \\neq 0','\\rho > 0','\\rho < 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{23}','\\rho \\sim B(25,\\, 0.5)'],
+    distCorrect:0,
+    criticalValue:0.5052,
+    pValue:0.0152,pValueExpr:'P(|R| \\geq 0.48) = 0.0152',
+    crExplanation:'n = 25,\\ 1\\% \\text{ two-tailed: critical value } 0.5052 \\text{, so the critical region is } |r| \\geq 0.5052',
+    inCR:false,reject:false,
+    conclusionContext:'a correlation between advertising spend and sales'
+  },
+  {
+    id:'C6',tail:'one',tailDir:'upper',sig:1,
+    scenario:'A recruitment firm investigates whether more years of experience correlates with higher salary, using data from 30 employees.',
+    nSample:30,r:0.46,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho > 0',
+    h0Distractors:['\\rho = 0','\\rho > 0','\\rho \\neq 0','r = 0'],
+    h1Distractors:['\\rho > 0','\\rho < 0','\\rho \\neq 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{28}','\\rho \\sim \\text{Po}(0.46)'],
+    distCorrect:0,
+    criticalValue:0.4226,
+    pValue:0.0053,pValueExpr:'P(R \\geq 0.46) = 0.0053',
+    crExplanation:'n = 30,\\ 1\\% \\text{ one-tailed: critical value } 0.4226 \\text{, so the critical region is } r \\geq 0.4226',
+    inCR:true,reject:true,
+    conclusionContext:'a positive correlation between experience and salary'
+  },
+  {
+    id:'C7',tail:'two',tailDir:'two',sig:10,
+    scenario:'An economist investigates the correlation between interest rates and house purchases using data from 10 years.',
+    nSample:10,r:-0.60,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho \\neq 0',
+    h0Distractors:['\\rho = 0','\\rho \\neq 0','\\rho < 0','r = 0'],
+    h1Distractors:['\\rho \\neq 0','\\rho > 0','\\rho < 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_8','\\rho \\sim B(10,\\, 0.5)'],
+    distCorrect:0,
+    criticalValue:0.5494,
+    pValue:0.0667,pValueExpr:'P(|R| \\geq 0.6) = 0.0667',
+    crExplanation:'n = 10,\\ 10\\% \\text{ two-tailed: critical value } 0.5494 \\text{, so the critical region is } |r| \\geq 0.5494',
+    inCR:true,reject:true,
+    conclusionContext:'a correlation between interest rates and house purchases'
+  },
+  {
+    id:'C8',tail:'one',tailDir:'lower',sig:5,
+    scenario:'A heating company investigates whether higher temperatures correlate with lower heating costs, using data from 15 months.',
+    nSample:15,r:-0.39,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho < 0',
+    h0Distractors:['\\rho = 0','\\rho < 0','\\rho \\neq 0','r = 0'],
+    h1Distractors:['\\rho < 0','\\rho > 0','\\rho \\neq 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{13}','\\rho \\sim \\text{Po}(0.39)'],
+    distCorrect:0,
+    criticalValue:0.4409,
+    pValue:0.0753,pValueExpr:'P(R \\leq -0.39) = 0.0753',
+    crExplanation:'n = 15,\\ 5\\% \\text{ one-tailed: critical value } 0.4409 \\text{, so the critical region is } r \\leq -0.4409',
+    inCR:false,reject:false,
+    conclusionContext:'a negative correlation between temperature and heating costs'
+  },
+  {
+    id:'C9',tail:'two',tailDir:'two',sig:5,
+    scenario:'A psychologist investigates the correlation between social media use and sleep quality using data from 20 participants.',
+    nSample:20,r:0.46,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho \\neq 0',
+    h0Distractors:['\\rho = 0','\\rho > 0','\\rho \\neq 0','r = 0'],
+    h1Distractors:['\\rho \\neq 0','\\rho > 0','\\rho < 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{18}','\\rho \\sim B(20,\\, 0.5)'],
+    distCorrect:0,
+    criticalValue:0.4438,
+    pValue:0.0413,pValueExpr:'P(|R| \\geq 0.46) = 0.0413',
+    crExplanation:'n = 20,\\ 5\\% \\text{ two-tailed: critical value } 0.4438 \\text{, so the critical region is } |r| \\geq 0.4438',
+    inCR:true,reject:true,
+    conclusionContext:'a correlation between social media use and sleep quality'
+  },
+  {
+    id:'C10',tail:'one',tailDir:'upper',sig:5,
+    scenario:'A teacher investigates whether revision time correlates positively with exam score, using data from 12 students.',
+    nSample:12,r:0.55,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho > 0',
+    h0Distractors:['\\rho = 0','\\rho > 0','\\rho \\neq 0','r = 0'],
+    h1Distractors:['\\rho > 0','\\rho < 0','\\rho \\neq 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{10}','\\rho \\sim \\text{Po}(0.55)'],
+    distCorrect:0,
+    criticalValue:0.4973,
+    pValue:0.0320,pValueExpr:'P(R \\geq 0.55) = 0.0320',
+    crExplanation:'n = 12,\\ 5\\% \\text{ one-tailed: critical value } 0.4973 \\text{, so the critical region is } r \\geq 0.4973',
+    inCR:true,reject:true,
+    conclusionContext:'a positive correlation between revision time and exam score'
+  },
+  {
+    id:'C11',tail:'two',tailDir:'two',sig:1,
+    scenario:'An economist investigates the correlation between unemployment rate and consumer confidence using data from 18 regions.',
+    nSample:18,r:-0.62,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho \\neq 0',
+    h0Distractors:['\\rho = 0','\\rho \\neq 0','\\rho < 0','r = 0'],
+    h1Distractors:['\\rho \\neq 0','\\rho > 0','\\rho < 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{16}','\\rho \\sim B(18,\\, 0.5)'],
+    distCorrect:0,
+    criticalValue:0.5897,
+    pValue:0.0061,pValueExpr:'P(|R| \\geq 0.62) = 0.0061',
+    crExplanation:'n = 18,\\ 1\\% \\text{ two-tailed: critical value } 0.5897 \\text{, so the critical region is } |r| \\geq 0.5897',
+    inCR:true,reject:true,
+    conclusionContext:'a correlation between unemployment and consumer confidence'
+  },
+  {
+    id:'C12',tail:'one',tailDir:'lower',sig:1,
+    scenario:'An environmental scientist investigates whether higher pollution levels correlate with lower life expectancy, using data from 25 cities.',
+    nSample:25,r:-0.43,
+    h0Latex:'\\rho = 0',h1Latex:'\\rho < 0',
+    h0Distractors:['\\rho = 0','\\rho < 0','\\rho \\neq 0','r = 0'],
+    h1Distractors:['\\rho < 0','\\rho > 0','\\rho \\neq 0','\\rho = 0'],
+    h0Correct:0,h1Correct:0,
+    distStatement:'r \\text{ compared to critical value from PMCC table}',
+    distDistractors:['r \\text{ compared to critical value from PMCC table}','r \\sim N(0,\\, 1)','r \\sim t_{23}','\\rho \\sim \\text{Po}(0.43)'],
+    distCorrect:0,
+    criticalValue:0.4622,
+    pValue:0.0160,pValueExpr:'P(R \\leq -0.43) = 0.0160',
+    crExplanation:'n = 25,\\ 1\\% \\text{ one-tailed: critical value } 0.4622 \\text{, so the critical region is } r \\leq -0.4622',
+    inCR:false,reject:false,
+    conclusionContext:'a negative correlation between pollution and life expectancy'
+  }
+]
+};
+
+// ============================================================
+//  CRITICAL VALUE TABLE (correlation)
+// ============================================================
+const CORR_CV = {
+  10:{5:{two:0.6319,one:0.5494},1:{two:0.7646,one:0.7155}},
+  12:{5:{two:0.5760,one:0.4973},1:{two:0.7079,one:0.6581}},
+  15:{5:{two:0.5140,one:0.4409},1:{two:0.6411,one:0.5923}},
+  18:{5:{two:0.4683,one:0.4000},1:{two:0.5897,one:0.5425}},
+  20:{5:{two:0.4438,one:0.3783},1:{two:0.5614,one:0.5155}},
+  25:{5:{two:0.3961,one:0.3365},1:{two:0.5052,one:0.4622}},
+  30:{5:{two:0.3610,one:0.3061},1:{two:0.4629,one:0.4226}}
+};
+// Add 10% lookup: 10% two-tailed = 5% one-tailed values
+Object.keys(CORR_CV).forEach(n => {
+  CORR_CV[n][10] = { two: CORR_CV[n][5].one, one: null };
+});
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let state = {
+  mode:null, tail:null, sig:null,
+  questions:[], qIdx:0, currentStep:1,
+  score:0, correctSteps:0, totalSteps:0,
+  questionsCorrect:0, questionsTotal:0,
+  penalties:0, timerStart:0, timerElapsed:0, timerInterval:null,
+  method:'cr' // 'cr' or 'pvalue'
+};
+
+// ============================================================
+//  HELPERS
+// ============================================================
+function K(latex, display=false) {
+  try { return katex.renderToString(latex, {throwOnError:false, displayMode:display}); }
+  catch(e) { return latex; }
+}
+// PQ (Prompt render): scalingPrompt is prose with one embedded symbol
+// ('The claim is ... State the value of \lambda ...'), not a whole
+// expression -- a LaTeX command with no \( \) delimiter is the old,
+// unmigrated "pass the whole thing to K()" shape and still needs K();
+// a prompt with \( \) delimiters, or no LaTeX command at all, goes
+// through MaffsText.html.
+function PQ(s) { return (/\\[A-Za-z]/.test(s) && !MaffsText.hasMaths(s)) ? K(s) : MaffsText.html(s); }
+
+function $(id) { return document.getElementById(id); }
+
+function shuffleWithCorrect(options, correctIdx) {
+  const correct = options[correctIdx];
+  const others = options.filter((_,i) => i !== correctIdx);
+  for (let i = others.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [others[i], others[j]] = [others[j], others[i]];
+  }
+  const shuffled = [...others];
+  const insertPos = Math.floor(Math.random() * (shuffled.length + 1));
+  shuffled.splice(insertPos, 0, correct);
+  return { options: shuffled, correctIdx: insertPos };
+}
+
+// ============================================================
+//  MENU
+// ============================================================
+function selectMode(btn) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  state.mode = btn.dataset.mode;
+  checkReady();
+}
+
+function selectPill(btn, type) {
+  btn.parentElement.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+  btn.classList.add('selected');
+  if (type === 'tail') state.tail = btn.dataset.tail;
+  if (type === 'sig') state.sig = parseInt(btn.dataset.sig);
+  checkReady();
+}
+
+function checkReady() {
+  const ready = state.mode && state.tail && state.sig;
+  $('startBtn').classList.toggle('ready', !!ready);
+}
+
+// Parse URL params
+function parseURL() {
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('mode')) {
+    const mBtn = document.querySelector(`.mode-btn[data-mode="${p.get('mode')}"]`);
+    if (mBtn) selectMode(mBtn);
+  }
+  if (p.get('tail')) {
+    const tBtn = document.querySelector(`[data-tail="${p.get('tail')}"]`);
+    if (tBtn) selectPill(tBtn, 'tail');
+  }
+  if (p.get('sig')) {
+    const sBtn = document.querySelector(`[data-sig="${p.get('sig')}"]`);
+    if (sBtn) selectPill(sBtn, 'sig');
+  }
+}
+
+// ============================================================
+//  GAME START
+// ============================================================
+function startGame() {
+  if (!state.mode || !state.tail || !state.sig) return;
+  const tailType = state.tail === 'one' ? 'one' : 'two';
+  const pool = QUESTIONS[state.mode].filter(q => q.tail === tailType && q.sig === state.sig);
+  if (pool.length === 0) {
+    // Fallback: use all questions for this mode matching tail type
+    state.questions = QUESTIONS[state.mode].filter(q => q.tail === tailType);
+    if (state.questions.length === 0) {
+      // Final fallback: all questions for this mode
+      state.questions = [...QUESTIONS[state.mode]];
+    }
+  } else {
+    state.questions = pool;
+  }
+  // If we still have fewer than 3, pad with other questions from mode
+  if (state.questions.length < 3) {
+    const extras = QUESTIONS[state.mode].filter(q => !state.questions.includes(q));
+    state.questions = state.questions.concat(extras.slice(0, 6 - state.questions.length));
+  }
+  // Shuffle
+  for (let i = state.questions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [state.questions[i], state.questions[j]] = [state.questions[j], state.questions[i]];
+  }
+  // Limit to 6 questions per session
+  state.questions = state.questions.slice(0, 6);
+
+  state.qIdx = 0;
+  state.score = 0;
+  state.correctSteps = 0;
+  state.totalSteps = 0;
+  state.questionsCorrect = 0;
+  state.questionsTotal = state.questions.length;
+  state.timerStart = Date.now();
+  state.timerInterval = setInterval(updateTimer, 1000);
+  state.method = 'cr';
+
+  $('menuScreen').classList.remove('active');
+  $('gameScreen').classList.add('active');
+
+  const modeLabels = {binomial:'Binomial',poisson:'Poisson',normal:'Z-test',correlation:'Correlation'};
+  $('hudMode').textContent = modeLabels[state.mode];
+
+  mfg('game_started',{game_slug:'test-the-claim',level:'alevel'});
+  mfg('mode_selected',{game_slug:'test-the-claim',mode:state.mode});
+
+  // Abandon tracking
+  window._ggAbandoned=true;
+  window.addEventListener('beforeunload',function(){
+    if(window._ggAbandoned) mfg('game_abandoned',{game_slug:'test-the-claim',level:'alevel',questions_answered:state.qIdx});
+  });
+
+  loadQuestion();
+}
+
+function updateTimer() {
+  state.timerElapsed = Math.floor((Date.now() - state.timerStart) / 1000);
+  const m = Math.floor(state.timerElapsed / 60);
+  const s = state.timerElapsed % 60;
+  $('hudTimer').textContent = m > 0 ? `${m}m${s.toString().padStart(2,'0')}s` : `${s}s`;
+}
+
+// ============================================================
+//  LOAD QUESTION
+// ============================================================
+function loadQuestion() {
+  const q = state.questions[state.qIdx];
+  state.currentStep = 1;
+  state.penalties = 0;
+
+  $('hudQ').textContent = `${state.qIdx + 1}/${state.questionsTotal}`;
+  $('hudScore').textContent = state.score;
+  $('hudCorrect').textContent = `${state.questionsCorrect}/${state.qIdx}`;
+
+  // Progress bar
+  let pb = '';
+  for (let i = 1; i <= 6; i++) pb += `<div class="progress-step" id="pStep${i}"></div>`;
+  $('progressBar').innerHTML = pb;
+  $('pStep1').classList.add('active');
+
+  // Scenario panel
+  buildScenario(q);
+  // Step panel
+  buildStep(q, 1);
+}
+
+// What the p-value route calls its number, and what Step 4 compares it with (Jon, 30 Sep
+// 2026). A "p-value" is always two-sided on a two-tailed test and is compared with the
+// significance level; a "probability in the tail" is one tail and is compared with HALF of it.
+// Correlation items give the exam's p-value; the other modes ask for one tail.
+function pRoute(q) {
+  const tailOnly = q.tail === 'two' && state.mode !== 'correlation';
+  return { name: tailOnly ? 'probability in the tail' : 'p-value', half: tailOnly };
+}
+
+function buildScenario(q) {
+  // A PMCC p-value cannot be found from the booklet or a scientific calculator, so, as in
+  // the exam, the question gives it.
+  const givenP = state.mode === 'correlation'
+    ? ` The p-value for this test is ${q.pValue.toFixed(4)}.`
+    : '';
+  let html = `<h3>Scenario</h3><div class="scenario-text">${q.scenario}${givenP}</div>`;
+  html += '<div class="given-info"><div class="gi-title">Given Information</div>';
+
+  if (state.mode === 'binomial') {
+    html += `<div class="gi-row">${K('n = ' + q.n)} &nbsp; ${K('p_0 = ' + q.p0)} &nbsp; ${K('x = ' + q.x)}</div>`;
+  } else if (state.mode === 'poisson') {
+    if (q.requiresScaling) {
+      html += `<div class="gi-row">Claimed rate: ${K('\\lambda_0 = ' + q.lambda0)} per unit</div>`;
+      html += `<div class="gi-row">Observation period: <span class="mono-val">${q.scaleFactor}</span> units</div>`;
+    } else {
+      html += `<div class="gi-row">${K('\\lambda_0 = ' + q.lambda0)}</div>`;
+    }
+    html += `<div class="gi-row">Observed: ${K('x = ' + q.x)}</div>`;
+  } else if (state.mode === 'normal') {
+    html += `<div class="gi-row">${K('\\mu_0 = ' + q.mu0)} &nbsp; ${K('\\sigma = ' + q.sigma)} &nbsp; ${K('n = ' + q.n)} &nbsp; ${K('\\bar{x} = ' + q.xbar)}</div>`;
+  } else if (state.mode === 'correlation') {
+    html += `<div class="gi-row">${K('n = ' + q.nSample)} &nbsp; ${K('r = ' + q.r)}</div>`;
+  }
+
+  // Show significance level and tail
+  const tailLabel = q.tail === 'two' ? 'two-tailed' : 'one-tailed';
+  html += `<div class="gi-row" style="margin-top:.4rem">Significance: <span class="mono-val">${q.sig}%</span> (${tailLabel})</div>`;
+
+  // Show CDF values if provided
+  if (q.givenCDF) {
+    html += '<div class="gi-row" style="margin-top:.4rem"><strong>Probability values:</strong></div>';
+    q.givenCDF.forEach(c => {
+      html += `<div class="gi-row">${K(c.label + ' = ' + c.val)}</div>`;
+    });
+  }
+
+  // Show critical value table for correlation
+  if (state.mode === 'correlation') {
+    html += '<div class="gi-row" style="margin-top:.4rem"><strong>PMCC Critical Values (n = ' + q.nSample + '):</strong></div>';
+    const cv = CORR_CV[q.nSample];
+    if (cv) {
+      html += '<div class="gi-row" style="font-size:.78rem">';
+      if (cv[5]) html += `5% two-tail: <span class="mono-val">${cv[5].two}</span> &nbsp; 5% one-tail: <span class="mono-val">${cv[5].one}</span><br>`;
+      if (cv[1]) html += `1% two-tail: <span class="mono-val">${cv[1].two}</span> &nbsp; 1% one-tail: <span class="mono-val">${cv[1].one}</span>`;
+      if (cv[10]) html += `<br>10% two-tail: <span class="mono-val">${cv[10].two}</span>`;
+      html += '</div>';
+    }
+  }
+
+  html += '</div>';
+  $('scenarioPanel').innerHTML = html;
+}
+
+// ============================================================
+//  BUILD STEP
+// ============================================================
+function buildStep(q, step) {
+  const panel = $('stepPanel');
+  let html = '';
+
+  if (step === 1) {
+    html = buildStep1(q);
+  } else if (step === 2) {
+    html = buildStep2(q);
+  } else if (step === 3) {
+    html = buildStep3(q);
+  } else if (step === 4) {
+    html = buildStep4(q);
+  } else if (step === 5) {
+    html = buildStep5(q);
+  } else if (step === 6) {
+    html = buildStep6(q);
+  }
+
+  panel.innerHTML = html;
+  // Bind custom select dropdowns
+  bindRenderedSelects();
+}
+
+function stepHeader(num, title) {
+  return `<div class="step-header"><div class="step-num" id="stepNum${num}">${num}</div><div class="step-title">${title}</div></div>`;
+}
+
+// ── STEP 1: Hypotheses ──
+function buildStep1(q) {
+  const s1 = shuffleWithCorrect(q.h0Distractors, q.h0Correct);
+  const s2 = shuffleWithCorrect(q.h1Distractors, q.h1Correct);
+  // Store shuffled data
+  q._s1 = s1; q._s2 = s2;
+
+  let html = stepHeader(1, 'State the hypotheses');
+  html += '<div class="step-instruction">Select the correct null and alternative hypotheses.</div>';
+
+  // H0 dropdown
+  html += '<div class="step-input-group"><div class="step-input-label">Null hypothesis H₀</div>';
+  html += buildRenderedSelect('h0Select', s1.options.map(o => K('H_0:\\; ' + o)), 'Select H₀...');
+  html += '</div>';
+
+  // H1 dropdown
+  html += '<div class="step-input-group"><div class="step-input-label">Alternative hypothesis H₁</div>';
+  html += buildRenderedSelect('h1Select', s2.options.map(o => K('H_1:\\; ' + o)), 'Select H₁...');
+  html += '</div>';
+
+  html += '<button class="check-btn" onclick="checkStep1()">Check</button>';
+  html += '<div id="step1Feedback"></div>';
+  return html;
+}
+
+function checkStep1() {
+  const q = state.questions[state.qIdx];
+  const h0Val = getRenderedSelectValue('h0Select');
+  const h1Val = getRenderedSelectValue('h1Select');
+  if (h0Val === -1 || h1Val === -1) return;
+
+  const h0Correct = h0Val === q._s1.correctIdx;
+  const h1Correct = h1Val === q._s2.correctIdx;
+  state.totalSteps += 2;
+
+  const fb = $('step1Feedback');
+  if (h0Correct && h1Correct) {
+    state.correctSteps += 2;
+    fb.innerHTML = '<div class="feedback correct">Both hypotheses correct.</div>';
+    setRenderedSelectState('h0Select', 'correct');
+    setRenderedSelectState('h1Select', 'correct');
+    advanceStep(2);
+  } else {
+    state.penalties++;
+    let msg = '';
+    if (!h0Correct) { msg += 'H₀ is incorrect. '; setRenderedSelectState('h0Select', 'wrong'); }
+    else { state.correctSteps++; setRenderedSelectState('h0Select', 'correct'); }
+    if (!h1Correct) { msg += 'H₁ is incorrect. '; setRenderedSelectState('h1Select', 'wrong'); }
+    else { state.correctSteps++; setRenderedSelectState('h1Select', 'correct'); }
+    msg += 'Common errors: reversing H₀/H₁, wrong direction for the alternative, or including an inequality in H₀.';
+    fb.innerHTML = `<div class="feedback wrong">${msg}</div>`;
+    // Allow retry after short delay
+    setTimeout(() => {
+      resetRenderedSelectState('h0Select');
+      resetRenderedSelectState('h1Select');
+      fb.innerHTML = '';
+    }, 2500);
+  }
+}
+
+// ── STEP 2: Distribution ──
+function buildStep2(q) {
+  // Handle Poisson scaling sub-step
+  if (state.mode === 'poisson' && q.requiresScaling && !q._scalingDone) {
+    let html = stepHeader(2, 'Scale the parameter');
+    html += `<div class="step-instruction">${PQ(q.scalingPrompt)}</div>`;
+    html += '<div class="step-input-group"><div class="step-input-label">Scaled λ</div>';
+    html += '<input type="number" class="num-input" id="scalingInput" placeholder="e.g. 12" step="any">';
+    html += '</div>';
+    html += '<button class="check-btn" onclick="checkScaling()">Check</button>';
+    html += '<div id="step2Feedback"></div>';
+    return html;
+  }
+
+  const s = shuffleWithCorrect(q.distDistractors, q.distCorrect);
+  q._distShuffle = s;
+
+  let html = stepHeader(2, 'State the test statistic and distribution');
+  html += '<div class="step-instruction">Under H₀, identify the test statistic and its distribution.</div>';
+  html += '<div class="step-input-group"><div class="step-input-label">Distribution under H₀</div>';
+  html += buildRenderedSelect('distSelect', s.options.map(o => K(o)), 'Select distribution...');
+  html += '</div>';
+  html += '<button class="check-btn" onclick="checkStep2()">Check</button>';
+  html += '<div id="step2Feedback"></div>';
+  return html;
+}
+
+function checkScaling() {
+  const q = state.questions[state.qIdx];
+  const val = parseFloat($('scalingInput').value);
+  const fb = $('step2Feedback');
+  if (isNaN(val)) return;
+  if (Math.abs(val - q.scalingAnswer) < 0.01) {
+    q._scalingDone = true;
+    fb.innerHTML = `<div class="feedback correct">Correct! ${K('\\lambda = ' + q.scalingAnswer)} for the observation period.</div>`;
+    setTimeout(() => buildStep(q, 2), 1200);
+  } else {
+    state.penalties++;
+    fb.innerHTML = `<div class="feedback wrong">Incorrect. Multiply the rate by the time period.</div>`;
+  }
+}
+
+function checkStep2() {
+  const q = state.questions[state.qIdx];
+  const val = getRenderedSelectValue('distSelect');
+  if (val === -1) return;
+  state.totalSteps++;
+  const fb = $('step2Feedback');
+  if (val === q._distShuffle.correctIdx) {
+    state.correctSteps++;
+    fb.innerHTML = '<div class="feedback correct">Correct distribution identified.</div>';
+    setRenderedSelectState('distSelect', 'correct');
+    advanceStep(3);
+  } else {
+    state.penalties++;
+    fb.innerHTML = '<div class="feedback wrong">Incorrect. Check the distribution family and parameters carefully.</div>';
+    setRenderedSelectState('distSelect', 'wrong');
+    _addDismiss(fb, () => { resetRenderedSelectState('distSelect'); fb.innerHTML = ''; });
+  }
+}
+
+// ── STEP 3: Critical Region / p-value ──
+function buildStep3(q) {
+  let html = stepHeader(3, 'Calculate the critical region or p-value');
+
+  // Method toggle
+  html += '<div class="method-toggle">';
+  html += `<button class="method-pill ${state.method === 'cr' ? 'active' : ''}" onclick="switchMethod('cr')">Critical Region</button>`;
+  html += `<button class="method-pill ${state.method === 'pvalue' ? 'active' : ''}" onclick="switchMethod('pvalue')">p-value</button>`;
+  html += '</div>';
+
+  // For Normal: need z-stat calculation first
+  if (state.mode === 'normal' && !q._zCalcDone) {
+    html += '<div class="step-instruction">First, calculate the test statistic z.</div>';
+    html += `<div class="step-input-group" style="margin-bottom:.3rem;font-size:.82rem;color:var(--muted)">${K(
+      'z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}'
+    )}</div>`;
+    html += '<div class="step-input-group"><div class="step-input-label">z-statistic (2 d.p.)</div>';
+    html += '<input type="number" class="num-input" id="zInput" placeholder="e.g. -2.00" step="any">';
+    html += '</div>';
+    html += '<button class="check-btn" onclick="checkZStat()">Check z</button>';
+    html += '<div id="step3Feedback"></div>';
+    return html;
+  }
+
+  if (state.method === 'cr') {
+    html += '<div class="step-instruction">State the critical region boundary value.</div>';
+    if (state.mode === 'correlation') {
+      html += '<div class="step-input-group"><div class="step-input-label">Critical value from table</div>';
+      html += '<input type="number" class="num-input" id="crInput" placeholder="e.g. 0.5140" step="any">';
+    } else if (q.crDirection === 'two') {
+      // A discrete two-tailed test can have no lower critical region (B11, P3, P9).
+      // The label says so on every discrete item, so it never hints at the answer.
+      html += `<div class="step-input-group"><div class="step-input-label">Lower boundary${state.mode==='normal'?'':' (leave blank if there is none)'}</div>`;
+      html += `<input type="number" class="num-input" id="crLowerInput" placeholder="e.g. ${state.mode==='normal'?'-1.96':'3'}" step="any">`;
+      html += '</div><div class="step-input-group"><div class="step-input-label">Upper boundary</div>';
+      html += `<input type="number" class="num-input" id="crUpperInput" placeholder="e.g. ${state.mode==='normal'?'1.96':'15'}" step="any">`;
+    } else if (state.mode === 'normal') {
+      html += '<div class="step-input-group"><div class="step-input-label">Critical value (2 d.p.)</div>';
+      html += '<input type="number" class="num-input" id="crInput" placeholder="e.g. 1.6449" step="any">';
+    } else {
+      html += '<div class="step-input-group"><div class="step-input-label">Boundary value (integer)</div>';
+      html += '<input type="number" class="num-input" id="crInput" placeholder="e.g. 3" step="1">';
+    }
+    html += '</div>';
+  } else {
+    // Two-tailed binomial, Poisson and Normal items ask for the probability in ONE tail,
+    // which Step 4 compares with half the significance level -- see pRoute().
+    const pvName = pRoute(q).name;
+    if (state.mode === 'correlation') {
+      // Given in the scenario (see buildScenario): nothing to calculate, and Step 4 is
+      // the comparison with the significance level.
+      html += `<div class="step-instruction">The ${pvName} is given in the question: <span class="mono-val">${q.pValue.toFixed(4)}</span>. Compare it with the significance level in the next step.</div>`;
+      html += '<button class="check-btn" onclick="advanceStep(4)">Continue</button>';
+      return html;
+    }
+    html += `<div class="step-instruction">State the ${pvName}.</div>`;
+    html += `<div class="step-input-group"><div class="step-input-label">${pvName[0].toUpperCase() + pvName.slice(1)} (4 d.p.)</div>`;
+    html += '<input type="number" class="num-input" id="pvInput" placeholder="e.g. 0.0424" step="any">';
+    html += '</div>';
+  }
+
+  html += '<button class="check-btn" onclick="checkStep3()">Check</button>';
+  html += '<div id="step3Feedback"></div>';
+
+  // Show z-stat if already computed for normal
+  if (state.mode === 'normal' && q._zCalcDone) {
+    html += `<div class="feedback hint" style="margin-top:.4rem">Your z-statistic: <span class="mono">${q.zStatExact}</span></div>`;
+  }
+
+  return html;
+}
+
+function switchMethod(m) {
+  state.method = m;
+  buildStep(state.questions[state.qIdx], 3);
+}
+
+function checkZStat() {
+  const q = state.questions[state.qIdx];
+  const val = parseFloat($('zInput').value);
+  const fb = $('step3Feedback');
+  if (isNaN(val)) return;
+  const expected = parseFloat(q.zStatExact);
+  if (Math.abs(val - expected) <= 0.02) {
+    q._zCalcDone = true;
+    fb.innerHTML = `<div class="feedback correct">Correct! ${K(q.zFormula)}</div>`;
+    setTimeout(() => buildStep(q, 3), 1500);
+  } else {
+    state.penalties++;
+    fb.innerHTML = `<div class="feedback wrong">Incorrect. Use ${K('z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}')} and round to 2 d.p.</div>`;
+  }
+}
+
+function checkStep3() {
+  const q = state.questions[state.qIdx];
+  const fb = $('step3Feedback');
+  state.totalSteps++;
+  let correct = false;
+
+  if (state.method === 'cr') {
+    if (state.mode === 'correlation') {
+      const val = parseFloat($('crInput').value);
+      if (isNaN(val)) return;
+      correct = Math.abs(val - q.criticalValue) < 0.001;
+    } else if (state.mode === 'normal') {
+      if (q.crDirection === 'two' || q.tailDir === 'two') {
+        const lo = parseFloat($('crLowerInput')?.value);
+        const hi = parseFloat($('crUpperInput')?.value);
+        if (isNaN(lo) || isNaN(hi)) {
+          // Single input for normal
+          const val = parseFloat($('crInput')?.value);
+          if (isNaN(val)) return;
+          const cv = q.tail === 'two' ? q.cvTwoTail[q.sig] : q.cvOneTail[q.sig];
+          correct = Math.abs(val - cv) < 0.002;
+        } else {
+          const cv = q.cvTwoTail[q.sig];
+          correct = Math.abs(lo - (-cv)) < 0.002 && Math.abs(hi - cv) < 0.002;
+        }
+      } else {
+        const val = parseFloat($('crInput').value);
+        if (isNaN(val)) return;
+        const cv = q.cvOneTail[q.sig];
+        if (q.tailDir === 'lower') correct = Math.abs(val - (-cv)) < 0.002 || Math.abs(val - cv) < 0.002;
+        else correct = Math.abs(val - cv) < 0.002;
+      }
+    } else {
+      // Discrete distributions
+      if (q.crDirection === 'two') {
+        const lo = parseFloat($('crLowerInput')?.value);
+        const hi = parseFloat($('crUpperInput')?.value);
+        if (isNaN(hi)) return;
+        // A blank Lower box means "no lower critical region", which the bank stores as -1.
+        correct = ((isNaN(lo) ? -1 : lo) === q.crBoundaryLower && hi === q.crBoundaryUpper);
+      } else {
+        const val = parseFloat($('crInput').value);
+        if (isNaN(val)) return;
+        correct = val === q.crBoundary;
+      }
+    }
+  } else {
+    // p-value method
+    const val = parseFloat($('pvInput').value);
+    if (isNaN(val)) return;
+    correct = Math.abs(val - q.pValue) < 0.006;
+  }
+
+  if (correct) {
+    state.correctSteps++;
+    fb.innerHTML = '<div class="feedback correct">Correct!</div>';
+    advanceStep(4);
+  } else {
+    state.penalties++;
+    let hint = state.method === 'cr' ? q.crExplanation : ('Expected: ' + q.pValueExpr);
+    fb.innerHTML = `<div class="feedback wrong">Incorrect. ${K(hint)}</div>`;
+    _addDismiss(fb, () => { fb.innerHTML = ''; });
+  }
+}
+
+// ── STEP 4: Compare ──
+function buildStep4(q) {
+  let html = stepHeader(4, 'Compare test statistic with critical region');
+  const isCR = state.method === 'cr';
+  let opt1, opt2;
+  if (isCR) {
+    opt1 = 'The test statistic lies in the critical region';
+    opt2 = 'The test statistic does not lie in the critical region';
+  } else if (pRoute(q).half) {
+    // Step 3 found the probability in the tail on the observed side, and alpha is split
+    // between the two tails, so it is compared with HALF the level.
+    opt1 = `The probability in the tail is less than half the significance level (${q.sig / 2}%)`;
+    opt2 = `The probability in the tail is not less than half the significance level (${q.sig / 2}%)`;
+  } else {
+    opt1 = `The p-value is less than the significance level (${q.sig}%)`;
+    opt2 = `The p-value is not less than the significance level (${q.sig}%)`;
+  }
+  const correctOpt = q.inCR ? 0 : 1;
+  const options = [opt1, opt2];
+
+  html += '<div class="step-instruction">Based on your calculation, select the correct comparison.</div>';
+  html += buildRenderedSelect('step4Select', options, 'Select...');
+  html += '<button class="check-btn" onclick="checkStep4()">Check</button>';
+  html += '<div id="step4Feedback"></div>';
+  q._step4Correct = correctOpt;
+  return html;
+}
+
+function checkStep4() {
+  const q = state.questions[state.qIdx];
+  const val = getRenderedSelectValue('step4Select');
+  if (val === -1) return;
+  state.totalSteps++;
+  const fb = $('step4Feedback');
+
+  if (val === q._step4Correct) {
+    state.correctSteps++;
+    fb.innerHTML = '<div class="feedback correct">Correct comparison.</div>';
+    setRenderedSelectState('step4Select', 'correct');
+    advanceStep(5);
+  } else {
+    state.penalties++;
+    const hint = q.inCR
+      ? 'The observed value does fall in the critical region — check your boundary.'
+      : 'The observed value does not fall in the critical region — check your boundary.';
+    fb.innerHTML = `<div class="feedback wrong">${hint}</div>`;
+    setRenderedSelectState('step4Select', 'wrong');
+    _addDismiss(fb, () => { resetRenderedSelectState('step4Select'); fb.innerHTML = ''; });
+  }
+}
+
+// ── STEP 5: Decision ──
+function buildStep5(q) {
+  let html = stepHeader(5, 'Decision');
+  html += '<div class="step-instruction">Based on your comparison, what is the decision?</div>';
+  const options = ['Reject H₀', 'Do not reject H₀'];
+  html += buildRenderedSelect('step5Select', options.map(o => o), 'Select decision...');
+  html += '<button class="check-btn" onclick="checkStep5()">Check</button>';
+  html += '<div id="step5Feedback"></div>';
+  q._step5Correct = q.reject ? 0 : 1;
+  return html;
+}
+
+function checkStep5() {
+  const q = state.questions[state.qIdx];
+  const val = getRenderedSelectValue('step5Select');
+  if (val === -1) return;
+  state.totalSteps++;
+  const fb = $('step5Feedback');
+
+  if (val === q._step5Correct) {
+    state.correctSteps++;
+    fb.innerHTML = '<div class="feedback correct">Correct decision.</div>';
+    setRenderedSelectState('step5Select', 'correct');
+    advanceStep(6);
+  } else {
+    state.penalties++;
+    const reason = q.reject
+      ? 'The test statistic lies in the critical region, so we reject H₀.'
+      : 'The test statistic does not lie in the critical region, so we do not reject H₀.';
+    fb.innerHTML = `<div class="feedback wrong">Inconsistent with Step 4. ${reason}</div>`;
+    setRenderedSelectState('step5Select', 'wrong');
+    _addDismiss(fb, () => { resetRenderedSelectState('step5Select'); fb.innerHTML = ''; });
+  }
+}
+
+// ── STEP 6: Conclusion in context ──
+function buildStep6(q) {
+  let html = stepHeader(6, 'Conclusion in context');
+  html += '<div class="step-instruction">Construct the conclusion by selecting each component.</div>';
+
+  // All three components go through MaffsOptions.build: the correct option appears
+  // exactly once, in a shuffled position. Fixed arrays put the correct Action second on
+  // every item, so the question gave its own answer away.
+
+  // Component A: evidence strength
+  const sufficient = `There is sufficient evidence at the ${q.sig}% significance level to...`;
+  const insufficient = `There is insufficient evidence at the ${q.sig}% significance level to...`;
+  const aCorrect = q.reject ? sufficient : insufficient;
+  const compA = MaffsOptions.build(aCorrect, [q.reject ? insufficient : sufficient]);
+  q._compACorrect = compA.indexOf(aCorrect);
+
+  // Component B: decision
+  // The context in Component C is always H1's claim, so the action is "support" whether
+  // or not H0 is rejected: "(in)sufficient evidence ... to support the claim that <H1>".
+  // "Reject the claim that <H1>" is the distractor for reading "reject H0" as "reject
+  // the claim".
+  const bCorrect = '...support the claim that...';
+  const compB = MaffsOptions.build(bCorrect, ['...reject the claim that...']);
+  q._compBCorrect = compB.indexOf(bCorrect);
+
+  // Component C: context. MaffsOptions.build guarantees the correct conclusion appears
+  // exactly once, whatever generateWrongContexts returns.
+  const correctContext = q.conclusionContext;
+  const cOptions = MaffsOptions.build(correctContext, generateWrongContexts(q));
+  const cShuffle = { options: cOptions, correctIdx: cOptions.indexOf(correctContext) };
+  q._compCShuffle = cShuffle;
+
+  html += '<div class="step-input-group"><div class="step-input-label">Evidence strength</div>';
+  html += buildRenderedSelect('compASelect', compA, 'Select...');
+  html += '</div>';
+
+  html += '<div class="step-input-group"><div class="step-input-label">Action</div>';
+  html += buildRenderedSelect('compBSelect', compB, 'Select...');
+  html += '</div>';
+
+  html += '<div class="step-input-group"><div class="step-input-label">Conclusion in context</div>';
+  html += buildRenderedSelect('compCSelect', cShuffle.options, 'Select context...');
+  html += '</div>';
+
+  html += '<button class="check-btn" onclick="checkStep6()">Check</button>';
+  html += '<div id="step6Feedback"></div>';
+  return html;
+}
+
+function generateWrongContexts(q) {
+  const ctx = q.conclusionContext;
+  // Generate 3 plausible wrong conclusions.
+  // The first swaps the context's direction word. When the context has no word the
+  // pattern knows, replace() returns it unchanged -- which offered the correct
+  // conclusion twice (B8, B10, B12, P8) -- so fall back to the misconception that
+  // failing to reject H0 proves the claim.
+  const swapped = (pattern, word, fallback) => {
+    const s = ctx.replace(pattern, word);
+    return s !== ctx ? s : fallback;
+  };
+  const wrongs = [];
+  if (state.mode === 'binomial') {
+    wrongs.push(swapped(/decreased|increased|differs|fallen|exceeds|biased/, 'changed significantly', 'the claimed proportion has been proved correct'));
+    wrongs.push('the sample proportion equals the claimed value');
+    wrongs.push('the population parameter cannot be determined from this sample');
+  } else if (state.mode === 'poisson') {
+    wrongs.push(swapped(/decreased|increased|changed/, 'remained constant', 'the claimed rate has been proved correct'));
+    wrongs.push('the observed count is a typical value for this distribution');
+    wrongs.push('the rate parameter equals the observed value');
+  } else if (state.mode === 'normal') {
+    wrongs.push(swapped(/decreased|increased|differs|below/, 'equals the claimed value', 'the claimed mean has been proved correct'));
+    wrongs.push('the sample mean is not significantly different from zero');
+    wrongs.push('the population standard deviation has changed');
+  } else {
+    wrongs.push('there is no linear relationship between the variables');
+    wrongs.push('the correlation coefficient equals the critical value');
+    wrongs.push('a causal relationship exists between the variables');
+  }
+  return wrongs.slice(0, 3);
+}
+
+function checkStep6() {
+  const q = state.questions[state.qIdx];
+  const aVal = getRenderedSelectValue('compASelect');
+  const bVal = getRenderedSelectValue('compBSelect');
+  const cVal = getRenderedSelectValue('compCSelect');
+  if (aVal === -1 || bVal === -1 || cVal === -1) return;
+
+  state.totalSteps += 3;
+  const fb = $('step6Feedback');
+  const aOk = aVal === q._compACorrect;
+  const bOk = bVal === q._compBCorrect;
+  const cOk = cVal === q._compCShuffle.correctIdx;
+
+  if (aOk) { state.correctSteps++; setRenderedSelectState('compASelect', 'correct'); }
+  else setRenderedSelectState('compASelect', 'wrong');
+  if (bOk) { state.correctSteps++; setRenderedSelectState('compBSelect', 'correct'); }
+  else setRenderedSelectState('compBSelect', 'wrong');
+  if (cOk) { state.correctSteps++; setRenderedSelectState('compCSelect', 'correct'); }
+  else setRenderedSelectState('compCSelect', 'wrong');
+
+  if (aOk && bOk && cOk) {
+    state.questionsCorrect++;
+    fb.innerHTML = '<div class="feedback correct">Perfect conclusion!</div>';
+    mfg('question_answered',{game_slug:'test-the-claim',level:'alevel',correct:true,question_index:state.qIdx+1});
+  } else {
+    state.penalties++;
+    fb.innerHTML = '<div class="feedback wrong">Not quite — check the model answer below.</div>';
+    mfg('question_answered',{game_slug:'test-the-claim',level:'alevel',correct:false,question_index:state.qIdx+1});
+  }
+
+  // Calculate score for this question
+  const G_COST = 15;
+  const T_K = 0.3;
+  const BASE = 100;
+  const penalty = state.penalties * G_COST;
+  const seconds = state.timerElapsed;
+  // multiplier removed — time no longer affects score
+const multiplier = 1;
+  const qScore = Math.max(1, Math.round((BASE - penalty) * multiplier));
+  state.score += qScore;
+  $('hudScore').textContent = state.score;
+
+  // Show model answer
+  showModelAnswer(q);
+
+  // Update progress
+  for (let i = 1; i <= 6; i++) {
+    $('pStep' + i).classList.remove('active');
+    $('pStep' + i).classList.add('done');
+  }
+}
+
+function showModelAnswer(q) {
+  const fb = $('step6Feedback');
+  const tail = q.tail === 'two' ? 'two-tailed' : 'one-tailed';
+  const sOrI = q.reject ? 'sufficient' : 'insufficient';
+  const rejText = q.reject ? 'reject' : 'do not reject';
+
+  let param, h0Str, h1Str, distStr, compStr;
+
+  if (state.mode === 'binomial') {
+    h0Str = `H_0: ${q.h0Latex}`;
+    h1Str = `H_1: ${q.h1Latex}`;
+    distStr = `\\text{Under } H_0,\\; ${q.distStatement}`;
+    compStr = q.inCR
+      ? `x = ${q.x} \\text{ lies in the critical region}`
+      : `x = ${q.x} \\text{ does not lie in the critical region}`;
+  } else if (state.mode === 'poisson') {
+    h0Str = `H_0: ${q.h0Latex}`;
+    h1Str = `H_1: ${q.h1Latex}`;
+    distStr = `\\text{Under } H_0,\\; ${q.distStatement}`;
+    compStr = q.inCR
+      ? `x = ${q.x} \\text{ lies in the critical region}`
+      : `x = ${q.x} \\text{ does not lie in the critical region}`;
+  } else if (state.mode === 'normal') {
+    h0Str = `H_0: ${q.h0Latex}`;
+    h1Str = `H_1: ${q.h1Latex}`;
+    distStr = `\\text{Under } H_0,\\; ${q.distStatement}`;
+    compStr = q.inCR
+      ? `z = ${q.zStatExact} \\text{ lies in the critical region}`
+      : `z = ${q.zStatExact} \\text{ does not lie in the critical region}`;
+  } else {
+    h0Str = `H_0: ${q.h0Latex}`;
+    h1Str = `H_1: ${q.h1Latex}`;
+    distStr = `${q.distStatement}`;
+    compStr = q.inCR
+      ? `|r| = ${Math.abs(q.r).toFixed(2)} > ${q.criticalValue} \\text{ (critical value)}`
+      : `|r| = ${Math.abs(q.r).toFixed(2)} < ${q.criticalValue} \\text{ (critical value)}`;
+  }
+
+  const ma = `
+    <div class="model-answer">
+      <h3>Model Answer</h3>
+      <div class="ma-text">
+        ${K(h0Str)}. ${K(h1Str)} (${tail} test).<br><br>
+        ${K(distStr)}.<br><br>
+        ${K(compStr)}.<br><br>
+        We <strong>${rejText}</strong> ${K('H_0')}.<br><br>
+        There is <strong>${sOrI}</strong> evidence at the ${q.sig}% significance level to suggest that ${q.conclusionContext}.
+      </div>
+    </div>
+    <button class="next-q-btn" onclick="nextQuestion()">
+      ${state.qIdx < state.questionsTotal - 1 ? 'Next Question →' : 'See Results'}
+    </button>
+  `;
+  fb.innerHTML += ma;
+}
+
+// ============================================================
+//  STEP PROGRESSION
+// ============================================================
+function advanceStep(nextStep) {
+  setTimeout(() => {
+    // Mark current step done in progress bar
+    for (let i = 1; i < nextStep; i++) {
+      const el = $('pStep' + i);
+      if (el) { el.classList.remove('active'); el.classList.add('done'); }
+    }
+    const nextEl = $('pStep' + nextStep);
+    if (nextEl) nextEl.classList.add('active');
+
+    state.currentStep = nextStep;
+    buildStep(state.questions[state.qIdx], nextStep);
+  }, 800);
+}
+
+function nextQuestion() {
+  state.qIdx++;
+  if (state.qIdx >= state.questionsTotal) {
+    endGame();
+  } else {
+    // Reset per-question state
+    const q = state.questions[state.qIdx];
+    q._scalingDone = false;
+    q._zCalcDone = false;
+    state.penalties = 0;
+    state.method = 'cr';
+    loadQuestion();
+  }
+}
+
+// ============================================================
+//  END GAME
+// ============================================================
+function endGame() {
+  clearInterval(state.timerInterval);
+  $('gameScreen').classList.remove('active');
+  $('resultsScreen').classList.add('active');
+
+  const pct = state.totalSteps > 0 ? Math.round(100 * state.correctSteps / state.totalSteps) : 0;
+  let title = 'Well done!';
+  if (pct >= 90) title = 'Outstanding!';
+  else if (pct >= 70) title = 'Great work!';
+  else if (pct >= 50) title = 'Good effort!';
+  else title = 'Keep practising!';
+
+  $('resultTitle').textContent = title;
+  $('finalScore').textContent = state.score;
+
+  const m = Math.floor(state.timerElapsed / 60);
+  const s = state.timerElapsed % 60;
+  const timeStr = m > 0 ? `${m}m ${s}s` : `${s}s`;
+
+  $('statsLine').innerHTML = `
+    Steps correct: <strong>${state.correctSteps}/${state.totalSteps}</strong> (${pct}%)<br>
+    Questions fully correct: <strong>${state.questionsCorrect}/${state.questionsTotal}</strong><br>
+    Time: <strong>${timeStr}</strong><br>
+    Mode: <strong>${state.mode}</strong> · ${state.tail === 'two' ? 'Two' : 'One'}-tailed · ${state.sig}%
+  `;
+
+  // Personal best
+  const key = `ttc_pb_${state.mode}_${state.tail}_${state.sig}`;
+  const prev = parseInt(localStorage.getItem(key) || '0');
+  if (state.score > prev) {
+    localStorage.setItem(key, state.score);
+    mfg('personal_best_set',{game_slug:'test-the-claim',level:'alevel',score:state.score,previous_best:prev});
+    if (prev > 0) {
+      $('pbLine').textContent = `New personal best! (Previous: ${prev})`;
+      $('pbLine').style.display = 'block';
+    }
+  } else if (prev > 0) {
+    $('pbLine').textContent = `Personal best: ${prev}`;
+    $('pbLine').style.display = 'block';
+  }
+
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'test-the-claim',level:'alevel',score:state.score,questions_answered:state.questionsTotal,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('test-the-claim','alevel',state.score,state.questionsTotal).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('test-the-claim','alevel',state.score);}}
+}
+
+function showMenu() {
+  $('resultsScreen').classList.remove('active');
+  $('gameScreen').classList.remove('active');
+  $('menuScreen').classList.add('active');
+}
+
+// ============================================================
+//  CUSTOM RENDERED SELECT (for KaTeX in dropdowns)
+// ============================================================
+function buildRenderedSelect(id, options, placeholder) {
+  let html = `<div class="rendered-select" id="${id}" data-value="-1">`;
+  html += `<div class="display-box placeholder" onclick="toggleDropdown('${id}')">${placeholder}</div>`;
+  html += '<div class="dropdown">';
+  options.forEach((opt, i) => {
+    html += `<div class="option" data-idx="${i}" onclick="selectOption('${id}', ${i})">${opt}</div>`;
+  });
+  html += '</div></div>';
+  return html;
+}
+
+function toggleDropdown(id) {
+  const el = $(id);
+  if (el.classList.contains('disabled')) return;
+  const dd = el.querySelector('.dropdown');
+  const isOpen = dd.classList.contains('open');
+  // Close all others
+  document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+  if (!isOpen) dd.classList.add('open');
+}
+
+function selectOption(id, idx) {
+  const el = $(id);
+  el.dataset.value = idx;
+  const display = el.querySelector('.display-box');
+  const option = el.querySelector(`.option[data-idx="${idx}"]`);
+  display.innerHTML = option.innerHTML;
+  display.classList.remove('placeholder');
+  el.querySelector('.dropdown').classList.remove('open');
+}
+
+function getRenderedSelectValue(id) {
+  return parseInt($(id).dataset.value);
+}
+
+function setRenderedSelectState(id, cls) {
+  $(id).classList.add(cls + '-border');
+  $(id).classList.add('disabled');
+}
+
+function resetRenderedSelectState(id) {
+  const el = $(id);
+  el.classList.remove('correct-border', 'wrong-border', 'disabled');
+}
+
+function bindRenderedSelects() {
+  // Close dropdowns on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.rendered-select')) {
+      document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+    }
+  });
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  parseURL();
+});
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

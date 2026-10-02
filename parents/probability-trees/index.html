@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Understand probability tree diagrams the way schools teach them now: multiply along branches, add between paths, and avoid the big mistakes.">
+<link rel="canonical" href="https://maffsgames.co.uk/parents/probability-trees/">
+<meta property="og:title" content="Probability Trees — A Parent's Guide &mdash; MaffsGames">
+<meta property="og:description" content="Understand probability tree diagrams the way schools teach them now: multiply along branches, add between paths, and avoid the big mistakes.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/parents/probability-trees/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Probability Trees — A Parent's Guide | MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});"></script>
+<link rel="stylesheet" href="../guide.css">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<script defer src="../guide.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../../">MaffsGames</a>
+  <span class="nav-right">
+    <a href="../" class="back">&larr; All parent guides</a>
+    <button class="a11y-btn" id="a11yBtn" type="button" aria-pressed="false" title="Dyslexia-friendly mode">Aa</button>
+  </span>
+</nav>
+
+<div class="container">
+
+<div class="hero">
+  <span class="badge">GCSE</span>
+  <h1>Probability Trees</h1>
+  <p class="subtitle">Diagrams that map out every possible outcome &mdash; and the two rules that make them work.</p>
+</div>
+<div class="section">
+  <h2>What Your Child Is Learning</h2>
+  <p>A <strong>probability tree</strong> is a diagram that shows sequences of events. Each "branch" represents one possible outcome, and the number on each branch is the probability of that outcome happening.</p>
+  <p>Trees are used when events happen <em>one after another</em> &mdash; flipping a coin twice, picking two sweets from a bag, or checking whether it rains on two consecutive days. They make it possible to calculate combined probabilities without getting lost in the logic. With sweets taken out of a bag and not replaced, the second-branch probabilities change.</p>
+  <div class="rule-box">
+    <strong>The two golden rules:</strong><br>
+    Along a branch (AND) = <strong>multiply</strong>.<br>
+    Between branches (OR) = <strong>add</strong>.
+  </div>
+</div>
+<div class="section">
+  <h2>How Schools Teach It Now</h2>
+  <p>The method is systematic:</p>
+  <ul>
+    <li><strong>Draw the tree:</strong> first event on the left, branches splitting for each outcome. Second event branches off each first-event outcome.</li>
+    <li><strong>Label every branch</strong> with its probability. At each split, the probabilities must add up to 1.</li>
+    <li><strong>Multiply along a path</strong> to get the probability of that specific combination.</li>
+    <li><strong>Add paths together</strong> when the question asks for "at least one" or "either...or".</li>
+  </ul>
+  <div class="example-box">
+    <div class="label">Key Check</div>
+    <p>When you add up <em>all</em> the end probabilities (every possible path through the tree), they must total exactly 1. If they don't, there's an error somewhere.</p>
+  </div>
+</div>
+<div class="section">
+  <h2>Common Mistakes to Watch For</h2>
+  <ul>
+    <li><span class="mistake">Adding when they should multiply:</span> going along a branch means AND, which means <em>multiply</em>. Students often add the probabilities along a path. If P(rain) = 0.3 and P(rain again) = 0.3, the probability of rain on both days is \(0.3 \times 0.3 = 0.09\), not \(0.3 + 0.3 = 0.6\).</li>
+    <li><span class="mistake">Branches not summing to 1:</span> if P(rain) = 0.3, then P(no rain) must be 0.7. If the branches at any split don't add to 1, every calculation downstream will be wrong.</li>
+    <li><span class="mistake">Missing paths for "at least one" questions:</span> "at least one head in two flips" means HH, HT, or TH &mdash; three paths, not one. Students often forget to include all the relevant combinations. The shortcut: \(P(\text{at least one}) = 1 - P(\text{none})\).</li>
+  </ul>
+</div>
+<div class="section">
+  <h2>Try It Together</h2>
+  <div class="example-box">
+    <div class="label">Worked Example &mdash; Rain Over Two Days</div>
+    <p><strong>Given:</strong> the probability of rain on any day is 0.3, assuming the two days are independent (the question will tell you to).</p>
+    <p><strong>Question 1:</strong> What is the probability it rains on both days?</p>
+    <p>Follow the "rain" branch twice &mdash; multiply along the path:</p>
+    $$P(\text{rain both days}) = 0.3 \times 0.3 = 0.09$$
+    <p><strong>Question 2:</strong> What is the probability it rains on at least one of the two days?</p>
+    <p>Use the shortcut: find the probability of <em>no</em> rain on either day, then subtract from 1:</p>
+    $$P(\text{no rain either day}) = 0.7 \times 0.7 = 0.49$$
+    $$P(\text{rain at least once}) = 1 - 0.49 = 0.51$$
+    <p><strong>Check:</strong> the chance of rain at least once must be more than 0.3 (one day alone gives that) and less than 0.6 (adding double-counts the both-days case). 0.51 fits.</p>
+  </div>
+</div>
+<div class="section">
+  <h2>Let Them Practise</h2>
+  <p>Free game on MaffsGames:</p>
+  <a href="../../games/probability-paradox/" class="practice-link">Probability Paradox Game &rarr;</a>
+  <p class="practice-note">MaffsGames needs no account and no sign-up; what it records while your child plays is set out on the <a href="../../privacy/">privacy page</a>.</p>
+</div>
+
+<div class="guide-foot">
+  <p><a href="../">All parent guides</a> &middot; <a href="../../">MaffsGames home</a></p>
+</div>
+
+</div>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

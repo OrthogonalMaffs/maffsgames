@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Compare phone contracts, energy tariffs and loan deals. Identify which option gives better value — Core Maths §3.10 cost-benefit analysis, free and curriculum-aligned.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/better-value/">
+<meta property="og:title" content="Better Value — MaffsGames">
+<meta property="og:description" content="Compare phone contracts, energy tariffs and loan deals. Identify which option gives better value — Core Maths §3.10 cost-benefit analysis, free and curriculum-aligned.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/better-value/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Better Value — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--blue:#3b82f6;--orange:#f97316;
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;--teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+/* Header */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--teal)}
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em}
+.level-pill.core{background:rgba(14,165,233,0.15);color:#0ea5e9;border:1px solid rgba(14,165,233,0.3)}
+.level-pill.gcse{background:rgba(59,130,246,0.15);color:var(--blue);border:1px solid rgba(59,130,246,0.3)}
+
+/* Progress bar */
+.progress-wrap{width:100%;height:4px;background:var(--border);position:relative}
+.progress-bar{height:100%;background:var(--teal);transition:width 0.3s ease;width:0}
+
+/* Screens */
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:28px;line-height:1.7;font-size:15px}
+.session-label{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px;text-align:center}
+.session-row{display:flex;gap:12px;justify-content:center;margin-bottom:28px}
+.session-btn{padding:12px 28px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.session-btn:hover,.session-btn.selected{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+.level-select{display:flex;gap:12px;margin-bottom:20px;justify-content:center;flex-wrap:wrap}
+.level-btn{padding:12px 24px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.level-btn:hover{border-color:var(--teal)}
+.level-btn.selected{border-color:var(--teal);background:var(--teal-dim)}
+.level-info{background:var(--surface);border-radius:12px;padding:18px 20px;margin-bottom:12px;border-left:3px solid var(--teal)}
+.level-info h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.level-info p{font-size:13px;color:var(--muted);line-height:1.5}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+
+/* Game screen */
+.scenario-card{background:var(--surface);border-radius:14px;padding:28px 24px;margin-bottom:20px}
+.scenario-text{font-size:1.1rem;line-height:1.75;color:var(--text);font-weight:500}
+
+/* Option cards */
+.options-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.option-card{background:var(--surface-alt);border-radius:12px;padding:20px;border:1px solid var(--border)}
+.option-card.option-a{border-left:4px solid var(--blue)}
+.option-card.option-b{border-left:4px solid var(--orange)}
+.option-label{font-size:14px;font-weight:700;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.03em}
+.option-a .option-label{color:var(--blue)}
+.option-b .option-label{color:var(--orange)}
+.detail-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.detail-row:last-child{border-bottom:none}
+.detail-key{font-size:13px;color:var(--muted);font-weight:500}
+.detail-value{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--text)}
+
+/* Conclusion cards */
+.conclusions-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.conclusion-card{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:16px 18px;font-size:14px;font-weight:500;line-height:1.55;cursor:pointer;transition:all 0.15s;color:var(--text)}
+.conclusion-card:hover:not(.locked){border-color:var(--teal);background:var(--surface-alt)}
+.conclusion-card.locked{cursor:default}
+.conclusion-card.correct-pick{background:var(--green-dim);border-color:var(--green);color:var(--green)}
+.conclusion-card.incorrect-pick{background:var(--red-dim);border-color:var(--red);color:var(--red)}
+.conclusion-card.correct-reveal{border-color:var(--green);opacity:0.7}
+.conclusion-card .feedback-icon{font-weight:700;margin-right:6px}
+
+/* Explanation panel */
+.explanation-panel{background:var(--surface-alt);border-left:4px solid var(--amber);border-radius:8px;padding:20px 22px;margin-bottom:20px;opacity:0;transform:translateY(16px);transition:opacity 0.25s,transform 0.25s}
+.explanation-panel.show{opacity:1;transform:translateY(0)}
+.explanation-label{font-size:12px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px}
+.explanation-text{font-size:14px;color:#cbd5e1;line-height:1.7}
+
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--teal)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.pb-badge{background:var(--teal-dim);color:var(--teal);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+.pb-line{text-align:center;margin-bottom:16px;color:var(--muted);font-size:14px}
+
+@media(prefers-reduced-motion:reduce){
+.explanation-panel{transition:none}
+}
+@media(max-width:600px){
+.options-row{grid-template-columns:1fr}
+.conclusions-grid{grid-template-columns:1fr}
+.scenario-text{font-size:1rem}
+.header-title{font-size:15px;white-space:nowrap}
+/* canon §7.6.1: header on one line during play */
+.header{padding:6px 12px;gap:8px}
+.back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
+.back-text,.header-div,.level-pill{display:none}
+.header-right{gap:10px}
+.a11y-toggle{width:44px;height:44px}
+.screen{padding:16px 14px}
+.scenario-card{padding:16px;margin-bottom:12px}
+.options-row{gap:10px;margin-bottom:12px}
+.option-card{padding:12px 14px}
+.conclusions-grid{gap:8px;margin-bottom:12px}
+.conclusion-card{padding:12px 14px;min-height:44px}
+.explanation-panel{padding:14px 16px;margin-bottom:4px}
+/* On a wrong answer the question and the two deals fold away, so the student's pick, the
+   right answer, the working and Next sit together above the fold. Reading the deals is the
+   task, so the asking screen may scroll on a small phone (Jon, 1 Oct 2026); this screen may not.
+   !important because renderQuestion() sets the options row's display inline. */
+#gameScreen.show-working .scenario-card,
+#gameScreen.show-working .options-row,
+#gameScreen.show-working .conclusion-card.locked:not(.incorrect-pick):not(.correct-reveal){display:none !important}
+#gameScreen.show-working{padding-top:10px}
+#gameScreen.show-working .conclusions-grid{gap:6px;margin-bottom:8px}
+#gameScreen.show-working .conclusion-card{padding:10px 12px;line-height:1.45}
+#gameScreen.show-working .explanation-panel{padding:10px 14px}
+#gameScreen.show-working .explanation-label{margin-bottom:4px}
+#gameScreen.show-working .explanation-text{line-height:1.5}
+}
+
+/* Method modal */
+.method-btn{display:block;margin:1rem auto;padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s}.method-btn:hover{border-color:var(--teal);color:var(--text)}
+.method-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}.method-overlay.show{display:flex}
+.method-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;max-width:560px;width:92%;max-height:80vh;overflow-y:auto}
+.method-box h2{font-size:1.1rem;font-weight:700;color:var(--teal);margin-bottom:1rem}
+.method-section{margin-bottom:1rem;padding:.8rem;background:var(--bg);border-radius:8px;font-size:.85rem;line-height:1.8}
+.method-section strong{color:var(--teal);display:block;margin-bottom:.3rem}
+.method-close{display:block;margin:1rem auto 0;padding:.4rem 1.5rem;border:none;border-radius:8px;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link" aria-label="Back to Games">←<span class="back-text"> Back to Games</span></a>
+  <div class="header-div"></div>
+  <span class="header-title">Better Value</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <span class="level-pill" id="levelPill">Core</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreTotal">0</span></span>
+  </div>
+</div>
+<div class="progress-wrap" id="progressWrap" style="display:none"><div class="progress-bar" id="progressBar"></div></div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Better Value</div>
+  <div class="start-sub">Phone contracts, energy tariffs, loan deals — compare the numbers and identify which option gives better value.<br>Real maths for real decisions.</div>
+  <div class="session-label">Level</div>
+  <div class="level-select" id="levelSelect">
+    <button class="level-btn" data-level="gcse">GCSE</button>
+    <button class="level-btn selected" data-level="core">Core Maths</button>
+  </div>
+  <div class="session-label">Questions per session</div>
+  <div class="session-row" id="sessionRow"></div>
+  <div class="level-info">
+    <h3 id="levelInfoTitle">Core Maths</h3>
+    <p id="levelInfoDesc">AQA 1350 §3.10 — cost-benefit analysis. Real-world comparisons: contracts, tariffs, loans, break-even calculations.</p>
+  </div>
+  <button class="method-btn" onclick="document.getElementById('methodOverlay').classList.add('show')">Worked Example</button>
+  <button class="start-btn" onclick="startGame()">Start</button>
+</div>
+
+<div class="method-overlay" id="methodOverlay">
+  <div class="method-box">
+    <h2>Worked Example — Comparing Value</h2>
+    <div class="method-section" id="methodValue"></div>
+    <button class="method-close" onclick="document.getElementById('methodOverlay').classList.remove('show')">Got it</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="scenario-card">
+    <div class="scenario-text" id="scenarioText"></div>
+  </div>
+  <div class="options-row" id="optionsRow"></div>
+  <div class="conclusions-grid" id="conclusionsGrid"></div>
+  <div class="explanation-panel" id="explanationPanel">
+    <div class="explanation-label">Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <div id="nextMount"></div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Score</h4>
+      <div class="score" id="finalScore">0/10</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="pb-line" id="pbLine"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="resetToStart()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANK
+// ============================================================
+const QUESTIONS = {
+core: [
+// === Direct Comparison (8) ===
+{id:'bv_core_001',level:'core',type:'direct',
+scenario:'Aisha is choosing between two gym memberships for a year.',
+optionA:{label:'Gym A',details:[{key:'Monthly fee',value:'\u00a335'},{key:'Joining fee',value:'\u00a30'},{key:'Contract',value:'12 months'}]},
+optionB:{label:'Gym B',details:[{key:'Monthly fee',value:'\u00a328'},{key:'Joining fee',value:'\u00a360'},{key:'Contract',value:'12 months'}]},
+conclusions:[
+{text:'Gym A is better value \u2014 total cost \u00a3420 vs \u00a3396 for Gym B',correct:false},
+{text:'Gym B is better value \u2014 total cost \u00a3396 vs \u00a3420 for Gym A',correct:true},
+{text:'They cost the same \u2014 both \u00a335 per month',correct:false},
+{text:'Gym A is better value because it has no joining fee',correct:false}
+],
+explanation:'Gym A: 12 \u00d7 \u00a335 = \u00a3420. Gym B: \u00a360 + (12 \u00d7 \u00a328) = \u00a360 + \u00a3336 = \u00a3396. Gym B is cheaper over 12 months despite the joining fee.'},
+
+{id:'bv_core_002',level:'core',type:'direct',
+scenario:'A family is choosing a broadband provider for 18 months.',
+optionA:{label:'Provider A',details:[{key:'Monthly fee',value:'\u00a329'},{key:'Setup fee',value:'\u00a30'},{key:'Router',value:'Free'}]},
+optionB:{label:'Provider B',details:[{key:'Monthly fee',value:'\u00a324'},{key:'Setup fee',value:'\u00a349'},{key:'Router',value:'Free'}]},
+conclusions:[
+{text:'Provider A is better value \u2014 total cost \u00a3522 vs \u00a3481',correct:false},
+{text:'Provider B is better value \u2014 total cost \u00a3481 vs \u00a3522 for Provider A',correct:true},
+{text:'Provider A is better because there is no setup fee',correct:false},
+{text:'They cost the same over 18 months',correct:false}
+],
+explanation:'Provider A: 18 \u00d7 \u00a329 = \u00a3522. Provider B: \u00a349 + (18 \u00d7 \u00a324) = \u00a349 + \u00a3432 = \u00a3481.'},
+
+{id:'bv_core_003',level:'core',type:'direct',
+scenario:'Marcus is buying coffee. He drinks one cup per working day (260 days/year).',
+optionA:{label:'Coffee Shop',details:[{key:'Price per cup',value:'\u00a33.20'},{key:'Annual cost',value:'?'}]},
+optionB:{label:'Subscription Machine',details:[{key:'Annual fee',value:'\u00a3180'},{key:'Cost per cup',value:'\u00a30.40'}]},
+conclusions:[
+{text:'The coffee shop is cheaper \u2014 \u00a3832 vs \u00a3284',correct:false},
+{text:'The subscription machine is better value \u2014 annual cost \u00a3284 vs \u00a3832 for the coffee shop',correct:true},
+{text:'The subscription machine is only worth it if he drinks more than 300 cups',correct:false},
+{text:'They cost about the same \u2014 both around \u00a3500 per year',correct:false}
+],
+explanation:'Coffee shop: 260 \u00d7 \u00a33.20 = \u00a3832. Machine: \u00a3180 + (260 \u00d7 \u00a30.40) = \u00a3180 + \u00a3104 = \u00a3284.'},
+
+{id:'bv_core_004',level:'core',type:'direct',
+scenario:'A student needs car insurance. She gets two quotes for annual cover.',
+optionA:{label:'Insurer A',details:[{key:'Payment',value:'Annual'},{key:'Total cost',value:'\u00a3820'}]},
+optionB:{label:'Insurer B',details:[{key:'Payment',value:'Monthly'},{key:'Monthly cost',value:'\u00a374'},{key:'Admin fee',value:'\u00a30'}]},
+conclusions:[
+{text:'Insurer A is better value \u2014 total cost \u00a3820 vs \u00a3888 per year for Insurer B',correct:true},
+{text:'Insurer B is better value \u2014 \u00a374 per month is less than \u00a3820',correct:false},
+{text:'They cost the same \u2014 \u00a3820 is roughly 12 \u00d7 \u00a374',correct:false},
+{text:'Insurer B is better because you can cancel monthly',correct:false}
+],
+explanation:'Insurer A: \u00a3820. Insurer B: 12 \u00d7 \u00a374 = \u00a3888. Paying monthly costs \u00a368 more.'},
+
+{id:'bv_core_005',level:'core',type:'direct',
+scenario:'A school is buying exercise books in bulk. They need 500 books.',
+optionA:{label:'Supplier A',details:[{key:'Price per book',value:'\u00a30.45'},{key:'Delivery',value:'Free'}]},
+optionB:{label:'Supplier B',details:[{key:'Price per box',value:'\u00a338 (100 books)'},{key:'Delivery',value:'Free'}]},
+conclusions:[
+{text:'Supplier A is better value \u2014 total cost \u00a3225 vs \u00a3190',correct:false},
+{text:'Supplier B is better value \u2014 total cost \u00a3190 vs \u00a3225 for Supplier A',correct:true},
+{text:'They cost the same per book',correct:false},
+{text:'Supplier A is cheaper because individual pricing is always better',correct:false}
+],
+explanation:'Supplier A: 500 \u00d7 \u00a30.45 = \u00a3225. Supplier B: 5 \u00d7 \u00a338 = \u00a3190. Supplier B is cheaper.'},
+
+{id:'bv_core_006',level:'core',type:'direct',
+scenario:'A couple wants to visit a theme park. They plan to go twice this year.',
+optionA:{label:'Day Tickets',details:[{key:'Price',value:'\u00a345 per person per visit'}]},
+optionB:{label:'Annual Pass',details:[{key:'Price',value:'\u00a375 per person'}]},
+conclusions:[
+{text:'Day tickets are cheaper for two visits \u2014 \u00a390 vs \u00a375',correct:false},
+{text:'The annual pass is better value for two visits \u2014 \u00a375 vs \u00a390 for two day tickets',correct:true},
+{text:'The annual pass is only worth it for 3+ visits',correct:false},
+{text:'They cost the same for two visits',correct:false}
+],
+explanation:'Two day tickets: 2 \u00d7 \u00a345 = \u00a390. Annual pass: \u00a375. The pass saves \u00a315 per person.'},
+
+{id:'bv_core_007',level:'core',type:'direct',
+scenario:'A business is choosing between two photocopier lease options over 3 years. The business makes 2,000 copies per month.',
+optionA:{label:'Lease A',details:[{key:'Monthly cost',value:'\u00a3120'},{key:'Copies included',value:'All inclusive'}]},
+optionB:{label:'Lease B',details:[{key:'Monthly cost',value:'\u00a385'},{key:'Per copy charge',value:'\u00a30.02'}]},
+conclusions:[
+{text:'Lease A is better value \u2014 3-year cost \u00a34,320 vs \u00a34,500 for Lease B',correct:true},
+{text:'Lease B is better value \u2014 \u00a385/month is much cheaper than \u00a3120/month',correct:false},
+{text:'They cost the same over 3 years',correct:false},
+{text:'Lease B is better if the business makes fewer than 1,000 copies',correct:false}
+],
+explanation:'Lease A: 36 \u00d7 \u00a3120 = \u00a34,320. Lease B: 36 \u00d7 (\u00a385 + 2000 \u00d7 \u00a30.02) = 36 \u00d7 \u00a3125 = \u00a34,500. Over 3 years, Lease A saves \u00a3180.'},
+
+{id:'bv_core_008',level:'core',type:'direct',
+scenario:'A family is choosing an energy tariff. Their average monthly usage is 350 kWh.',
+optionA:{label:'Tariff A',details:[{key:'Rate',value:'28p per kWh'},{key:'Standing charge',value:'None'}]},
+optionB:{label:'Tariff B',details:[{key:'Rate',value:'24p per kWh'},{key:'Standing charge',value:'\u00a312/month'}]},
+conclusions:[
+{text:'Tariff A is cheaper \u2014 no standing charge makes it better value',correct:false},
+{text:'Tariff B is better value \u2014 monthly cost \u00a396 vs \u00a398 for Tariff A',correct:true},
+{text:'They cost the same each month',correct:false},
+{text:'Tariff A is better value \u2014 monthly cost \u00a398 vs \u00a3108 for Tariff B',correct:false}
+],
+explanation:'Tariff A: 350 \u00d7 \u00a30.28 = \u00a398/month. Tariff B: (350 \u00d7 \u00a30.24) + \u00a312 = \u00a384 + \u00a312 = \u00a396/month.'},
+
+// === Hidden Cost (8) ===
+{id:'bv_core_009',level:'core',type:'hidden',
+scenario:'Tom wants to borrow \u00a32,000 for 2 years. He compares two loan options.',
+optionA:{label:'Bank Loan',details:[{key:'Amount',value:'\u00a32,000'},{key:'APR',value:'8%'},{key:'Term',value:'2 years'}]},
+optionB:{label:'Credit Union',details:[{key:'Repayment',value:'\u00a395/month'},{key:'Term',value:'24 months'}]},
+conclusions:[
+{text:'The bank loan is cheaper \u2014 8% APR sounds low',correct:false},
+{text:'The credit union is cheaper \u2014 total repayment \u00a32,280 vs approximately \u00a32,332 for the bank loan',correct:true},
+{text:'They cost the same \u2014 both around \u00a32,300',correct:false},
+{text:'The bank loan is better because it has a fixed rate',correct:false}
+],
+explanation:'Credit union: 24 \u00d7 \u00a395 = \u00a32,280. Bank loan at 8% APR over 2 years: approximately \u00a32,332 total repayment. Always calculate total repayment, not just the rate.'},
+
+{id:'bv_core_010',level:'core',type:'hidden',
+scenario:'A phone contract advertises \u201c\u00a325/month \u2014 the cheapest on the market!\u201d The contract runs for 24 months and has a \u00a330 upfront cost. A SIM-only deal costs \u00a312/month with a handset purchased outright for \u00a3280.',
+optionA:{label:'Phone Contract',details:[{key:'Monthly',value:'\u00a325'},{key:'Upfront',value:'\u00a330'},{key:'Term',value:'24 months'}]},
+optionB:{label:'SIM-Only + Handset',details:[{key:'Monthly',value:'\u00a312'},{key:'Handset',value:'\u00a3280'},{key:'Term',value:'24 months'}]},
+conclusions:[
+{text:'The contract is cheaper \u2014 \u00a325/month vs \u00a312 plus \u00a3280 for a phone',correct:false},
+{text:'The SIM-only deal is better value \u2014 total cost \u00a3568 vs \u00a3630 for the contract',correct:true},
+{text:'They cost the same over 24 months',correct:false},
+{text:'The contract is better because you get the phone included',correct:false}
+],
+explanation:'Contract: \u00a330 + (24 \u00d7 \u00a325) = \u00a330 + \u00a3600 = \u00a3630. SIM-only: \u00a3280 + (24 \u00d7 \u00a312) = \u00a3280 + \u00a3288 = \u00a3568.'},
+
+{id:'bv_core_011',level:'core',type:'hidden',
+scenario:'A \u201csale\u201d sofa is advertised at \u00a3599. Buy now pay later: nothing for 12 months, then \u00a3599 if not paid. A rival store sells the same sofa for \u00a3549 cash.',
+optionA:{label:'BNPL Store',details:[{key:'Price',value:'\u00a3599'},{key:'Payment',value:'Nothing for 12 months'}]},
+optionB:{label:'Rival Store',details:[{key:'Price',value:'\u00a3549'},{key:'Payment',value:'Cash'}]},
+conclusions:[
+{text:'The BNPL store is free for 12 months so it is better value',correct:false},
+{text:'The rival store is better value if you can pay cash \u2014 \u00a3549 vs \u00a3599',correct:true},
+{text:'The BNPL store is better because you keep your money longer',correct:false},
+{text:'They cost the same \u2014 both are around \u00a3600',correct:false}
+],
+explanation:'Buy now pay later often seems free but the full price is still \u00a3599. The rival store saves \u00a350. The danger of BNPL is forgetting to pay within the interest-free period.'},
+
+{id:'bv_core_012',level:'core',type:'hidden',
+scenario:'An energy company offers a \u201csmart meter discount\u201d of \u00a350 off annual bills. However, the tariff rate is 31p/kWh vs 27p/kWh on the standard tariff. A household uses 3,200 kWh per year.',
+optionA:{label:'Smart Meter Tariff',details:[{key:'Rate',value:'31p per kWh'},{key:'Discount',value:'\u00a350 off/year'}]},
+optionB:{label:'Standard Tariff',details:[{key:'Rate',value:'27p per kWh'},{key:'Discount',value:'None'}]},
+conclusions:[
+{text:'The smart meter tariff is cheaper thanks to the \u00a350 discount',correct:false},
+{text:'The standard tariff is better value \u2014 annual cost \u00a3864 vs \u00a3942 for the smart meter tariff',correct:true},
+{text:'They cost about the same once the discount is applied',correct:false},
+{text:'The smart meter tariff is better for high-usage households',correct:false}
+],
+explanation:'Smart meter: (3200 \u00d7 \u00a30.31) \u2212 \u00a350 = \u00a3992 \u2212 \u00a350 = \u00a3942. Standard: 3200 \u00d7 \u00a30.27 = \u00a3864. The discount does not offset the higher rate.'},
+
+{id:'bv_core_013',level:'core',type:'hidden',
+scenario:'A gym offers a \u201cfree month\u201d promotion. Standard price: \u00a340/month for 12 months. Free month deal: pay for 11 months upfront at \u00a342/month, get the 12th free.',
+optionA:{label:'Standard Monthly',details:[{key:'Monthly',value:'\u00a340'},{key:'Term',value:'12 months'}]},
+optionB:{label:'Free Month Deal',details:[{key:'Monthly',value:'\u00a342'},{key:'Months paid',value:'11'},{key:'Free month',value:'Yes (12th)'}]},
+conclusions:[
+{text:'The standard monthly price is better value \u2014 total \u00a3480 vs \u00a3462 for the upfront deal',correct:false},
+{text:'The free month deal is better value \u2014 total \u00a3462 vs \u00a3480 for standard',correct:true},
+{text:'They cost the same over 12 months',correct:false},
+{text:'The free month deal is a scam \u2014 it costs more overall',correct:false}
+],
+explanation:'Standard: 12 \u00d7 \u00a340 = \u00a3480. Free month deal: 11 \u00d7 \u00a342 = \u00a3462. Despite the higher monthly rate, paying for 11 months at \u00a342 costs less than 12 months at \u00a340.'},
+
+{id:'bv_core_014',level:'core',type:'hidden',
+scenario:'Two supermarkets sell the same brand of orange juice. Supermarket A: 2 for \u00a32.50. Supermarket B: buy 3 get 1 free at \u00a31.40 each.',
+optionA:{label:'Supermarket A',details:[{key:'Offer',value:'2 for \u00a32.50'},{key:'Price per bottle',value:'\u00a31.25'}]},
+optionB:{label:'Supermarket B',details:[{key:'Offer',value:'Buy 3 get 1 free'},{key:'Single price',value:'\u00a31.40 each'}]},
+conclusions:[
+{text:'Supermarket A is better value per bottle if you only need 2 \u2014 \u00a31.25 each vs \u00a31.40 each',correct:true},
+{text:'Supermarket B is always better value because you get a free bottle',correct:false},
+{text:'They cost the same per bottle',correct:false},
+{text:'Supermarket B is cheaper if you buy exactly 2 bottles',correct:false}
+],
+explanation:'For 2 bottles: A = \u00a32.50, B = \u00a32.80. For 4 bottles: A = \u00a35.00, B = \u00a34.20 (3 \u00d7 \u00a31.40 for 4 bottles). The best value depends on how many you need.'},
+
+{id:'bv_core_015',level:'core',type:'hidden',
+scenario:'A student is choosing between two textbooks. Option A: new book \u00a348. Option B: second-hand book \u00a328, but it needs a \u00a36 revision guide that the new book includes.',
+optionA:{label:'New Book',details:[{key:'Price',value:'\u00a348'},{key:'Revision guide',value:'Included'}]},
+optionB:{label:'Second-Hand',details:[{key:'Book price',value:'\u00a328'},{key:'Revision guide',value:'\u00a36 extra'}]},
+conclusions:[
+{text:'The new book is better value because it includes everything',correct:false},
+{text:'The second-hand book is better value \u2014 total cost \u00a334 vs \u00a348 for the new book',correct:true},
+{text:'They cost the same when you add the revision guide',correct:false},
+{text:'The second-hand book is worse because it might be outdated',correct:false}
+],
+explanation:'New book: \u00a348. Second-hand with guide: \u00a328 + \u00a36 = \u00a334. Always add the cost of necessary accessories.'},
+
+{id:'bv_core_016',level:'core',type:'hidden',
+scenario:'A landlord gets two quotes to repaint a flat. Decorator A: \u00a3800 all-inclusive. Decorator B: \u00a3600 labour, materials at cost. Materials end up costing \u00a3280.',
+optionA:{label:'Decorator A',details:[{key:'Quote',value:'\u00a3800'},{key:'Includes',value:'All materials'}]},
+optionB:{label:'Decorator B',details:[{key:'Labour',value:'\u00a3600'},{key:'Materials',value:'\u00a3280 (at cost)'}]},
+conclusions:[
+{text:'Decorator B is cheaper \u2014 \u00a3600 vs \u00a3800',correct:false},
+{text:'Decorator A was better value \u2014 \u00a3800 vs \u00a3880 for Decorator B including materials',correct:true},
+{text:'They cost the same once materials are added',correct:false},
+{text:'Decorator B is always better because labour is cheaper',correct:false}
+],
+explanation:'Decorator B total: \u00a3600 + \u00a3280 = \u00a3880. Decorator A: \u00a3800. All-inclusive quotes avoid cost overruns.'},
+
+// === Rate Comparison (7) ===
+{id:'bv_core_017',level:'core',type:'rate',
+scenario:'A supermarket sells washing powder in two sizes. Small: 1.2 kg for \u00a33.60. Large: 2.5 kg for \u00a36.75.',
+optionA:{label:'Small Box',details:[{key:'Weight',value:'1.2 kg'},{key:'Price',value:'\u00a33.60'}]},
+optionB:{label:'Large Box',details:[{key:'Weight',value:'2.5 kg'},{key:'Price',value:'\u00a36.75'}]},
+conclusions:[
+{text:'The small box is better value \u2014 \u00a33.00/kg vs \u00a32.70/kg',correct:false},
+{text:'The large box is better value \u2014 \u00a32.70/kg vs \u00a33.00/kg for the small box',correct:true},
+{text:'They cost the same per kg',correct:false},
+{text:'The small box is better because you waste less',correct:false}
+],
+explanation:'Small: \u00a33.60 \u00f7 1.2 = \u00a33.00/kg. Large: \u00a36.75 \u00f7 2.5 = \u00a32.70/kg. Always calculate price per unit.'},
+
+{id:'bv_core_018',level:'core',type:'rate',
+scenario:'Petrol costs \u00a31.52 per litre at Garage A. Garage B sells petrol at \u00a36.84 per gallon. (1 gallon = 4.55 litres)',
+optionA:{label:'Garage A',details:[{key:'Price',value:'\u00a31.52 per litre'}]},
+optionB:{label:'Garage B',details:[{key:'Price',value:'\u00a36.84 per gallon'},{key:'Conversion',value:'1 gal = 4.55 L'}]},
+conclusions:[
+{text:'Garage A is cheaper at \u00a31.52/litre',correct:false},
+{text:'Garage B is cheaper \u2014 \u00a31.50/litre vs \u00a31.52/litre at Garage A',correct:true},
+{text:'They cost the same per litre',correct:false},
+{text:'Garage A is cheaper because litres are the standard unit',correct:false}
+],
+explanation:'Garage B: \u00a36.84 \u00f7 4.55 = \u00a31.503/litre. Garage A: \u00a31.52/litre. Garage B is marginally cheaper by about 1.7p per litre.'},
+
+{id:'bv_core_019',level:'core',type:'rate',
+scenario:'A freelancer is offered two contracts. Contract A: \u00a3320 per day, 3 days per week. Contract B: \u00a318,000 for a 12-week full-time project (5 days/week).',
+optionA:{label:'Contract A',details:[{key:'Day rate',value:'\u00a3320'},{key:'Days/week',value:'3'}]},
+optionB:{label:'Contract B',details:[{key:'Total fee',value:'\u00a318,000'},{key:'Duration',value:'12 weeks \u00d7 5 days'}]},
+conclusions:[
+{text:'Contract B pays more in total \u2014 \u00a318,000 vs \u00a311,520',correct:false},
+{text:'Contract A pays better \u2014 \u00a3320/day vs \u00a3300/day for Contract B',correct:true},
+{text:'They pay the same daily rate',correct:false},
+{text:'Contract B is better because it guarantees full-time work',correct:false}
+],
+explanation:'Contract A: \u00a3320/day. Contract B: \u00a318,000 \u00f7 (12 \u00d7 5) = \u00a318,000 \u00f7 60 = \u00a3300/day. Contract A pays \u00a320/day more.'},
+
+{id:'bv_core_020',level:'core',type:'rate',
+scenario:'Two juice cartons: Brand A is 750ml for \u00a31.89. Brand B is 1.25 litres for \u00a32.99.',
+optionA:{label:'Brand A',details:[{key:'Volume',value:'750 ml'},{key:'Price',value:'\u00a31.89'}]},
+optionB:{label:'Brand B',details:[{key:'Volume',value:'1.25 litres'},{key:'Price',value:'\u00a32.99'}]},
+conclusions:[
+{text:'Brand A is better value \u2014 \u00a32.52/litre vs \u00a32.39/litre',correct:false},
+{text:'Brand B is better value \u2014 \u00a32.39/litre vs \u00a32.52/litre for Brand A',correct:true},
+{text:'They cost the same per litre',correct:false},
+{text:'Brand A is cheaper because the carton costs less',correct:false}
+],
+explanation:'Brand A: \u00a31.89 \u00f7 0.75 = \u00a32.52/litre. Brand B: \u00a32.99 \u00f7 1.25 = \u00a32.392/litre. Brand B is slightly cheaper per litre.'},
+
+{id:'bv_core_021',level:'core',type:'rate',
+scenario:'A charity collects donations. In January they received \u00a34,200 from 350 donors. In February they received \u00a35,100 from 510 donors. A trustee wants to know which month had better average giving.',
+optionA:{label:'January',details:[{key:'Total donations',value:'\u00a34,200'},{key:'Number of donors',value:'350'}]},
+optionB:{label:'February',details:[{key:'Total donations',value:'\u00a35,100'},{key:'Number of donors',value:'510'}]},
+conclusions:[
+{text:'January had better average giving \u2014 \u00a312 per donor vs \u00a310 per donor in February',correct:true},
+{text:'February was better \u2014 \u00a35,100 is more than \u00a34,200',correct:false},
+{text:'February had better average giving \u2014 more donors means more per person',correct:false},
+{text:'They had the same average donation',correct:false}
+],
+explanation:'January: \u00a34,200 \u00f7 350 = \u00a312 per donor. February: \u00a35,100 \u00f7 510 = \u00a310 per donor.'},
+
+{id:'bv_core_022',level:'core',type:'rate',
+scenario:'A driver records fuel economy. Car A: travels 420 miles on 50 litres. Car B: travels 350 miles on 40 litres.',
+optionA:{label:'Car A',details:[{key:'Distance',value:'420 miles'},{key:'Fuel used',value:'50 litres'}]},
+optionB:{label:'Car B',details:[{key:'Distance',value:'350 miles'},{key:'Fuel used',value:'40 litres'}]},
+conclusions:[
+{text:'Car A is more fuel efficient \u2014 420 miles is further than 350 miles',correct:false},
+{text:'Car B is more fuel efficient \u2014 8.75 miles per litre vs 8.4 miles per litre for Car A',correct:true},
+{text:'They have the same fuel efficiency',correct:false},
+{text:'Car A is more efficient \u2014 8.4 mpL vs 8.75 mpL',correct:false}
+],
+explanation:'Car A: 420 \u00f7 50 = 8.4 miles/litre. Car B: 350 \u00f7 40 = 8.75 miles/litre. Car B is more efficient \u2014 the question tests whether students calculate correctly rather than assume the larger number wins.'},
+
+{id:'bv_core_023',level:'core',type:'rate',
+scenario:'Two builders quote for a job. Builder A: \u00a3240 for 8 hours work. Builder B: \u00a3175 for 6 hours work.',
+optionA:{label:'Builder A',details:[{key:'Quote',value:'\u00a3240'},{key:'Hours',value:'8'}]},
+optionB:{label:'Builder B',details:[{key:'Quote',value:'\u00a3175'},{key:'Hours',value:'6'}]},
+conclusions:[
+{text:'Builder A is cheaper per hour \u2014 \u00a330/hour vs \u00a329.17/hour',correct:false},
+{text:'Builder B charges more per hour \u2014 \u00a329.17/hour vs \u00a330/hour for Builder A',correct:false},
+{text:'Builder A charges more per hour \u2014 \u00a330/hour vs \u00a329.17/hour for Builder B',correct:true},
+{text:'They charge the same hourly rate',correct:false}
+],
+explanation:'Builder A: \u00a3240 \u00f7 8 = \u00a330/hour. Builder B: \u00a3175 \u00f7 6 = \u00a329.17/hour. Builder A is marginally more expensive per hour.'},
+
+// === Break-Even (7) ===
+{id:'bv_core_024',level:'core',type:'breakeven',
+scenario:'Option A: Buy a coffee machine for \u00a385, pods cost \u00a30.30 each. Option B: Buy coffee from a caf\u00e9 for \u00a32.80 each. After how many coffees does the machine become better value?',
+optionA:{label:'Coffee Machine',details:[{key:'Upfront cost',value:'\u00a385'},{key:'Per coffee',value:'\u00a30.30'}]},
+optionB:{label:'Caf\u00e9',details:[{key:'Per coffee',value:'\u00a32.80'}]},
+conclusions:[
+{text:'After 34 coffees the machine becomes better value \u2014 break-even at 34 cups',correct:true},
+{text:'After 50 coffees the machine becomes better value',correct:false},
+{text:'The caf\u00e9 is always cheaper',correct:false},
+{text:'After 25 coffees the machine becomes better value',correct:false}
+],
+explanation:'Cost of machine option: \u00a385 + 0.30n. Cost of caf\u00e9: 2.80n. Set equal: 85 + 0.30n = 2.80n \u2192 85 = 2.50n \u2192 n = 34.'},
+
+{id:'bv_core_025',level:'core',type:'breakeven',
+scenario:'A National Rail card costs \u00a330/year and gives 1/3 off all fares. Maya\u2019s standard commute costs \u00a39.60 per return journey. How many return journeys must she make for the railcard to be worth buying?',
+optionA:{label:'Without Railcard',details:[{key:'Return fare',value:'\u00a39.60'}]},
+optionB:{label:'With Railcard',details:[{key:'Card cost',value:'\u00a330/year'},{key:'Discount',value:'1/3 off fares'}]},
+conclusions:[
+{text:'Maya needs to make at least 10 return journeys for the railcard to be worth it',correct:true},
+{text:'Maya needs to make at least 5 return journeys',correct:false},
+{text:'Maya needs to make at least 15 return journeys',correct:false},
+{text:'The railcard is always worth buying',correct:false}
+],
+explanation:'Saving per journey: \u00a39.60 \u00d7 1/3 = \u00a33.20. Break-even: \u00a330 \u00f7 \u00a33.20 = 9.375, so 10 journeys needed.'},
+
+{id:'bv_core_026',level:'core',type:'breakeven',
+scenario:'Solar panels cost \u00a34,500 to install and save \u00a3380 per year on energy bills. A homeowner wants to know how long before the panels pay for themselves.',
+optionA:{label:'Solar Panels',details:[{key:'Installation',value:'\u00a34,500'},{key:'Annual saving',value:'\u00a3380'}]},
+optionB:{label:'No Panels',details:[{key:'Annual saving',value:'\u00a30'}]},
+conclusions:[
+{text:'The panels pay for themselves after approximately 11.8 years \u2014 around year 12',correct:true},
+{text:'The panels pay for themselves after about 8 years',correct:false},
+{text:'The panels never pay for themselves',correct:false},
+{text:'The panels pay for themselves after about 15 years',correct:false}
+],
+explanation:'Payback period: \u00a34,500 \u00f7 \u00a3380 = 11.84 years. The homeowner should stay in the property for at least 12 years to break even.'},
+
+{id:'bv_core_027',level:'core',type:'breakeven',
+scenario:'Tariff A charges 15p/min for calls with no monthly fee. Tariff B charges \u00a38/month but only 5p/min. At what call duration per month does Tariff B become better value?',
+optionA:{label:'Tariff A',details:[{key:'Monthly fee',value:'\u00a30'},{key:'Call rate',value:'15p/min'}]},
+optionB:{label:'Tariff B',details:[{key:'Monthly fee',value:'\u00a38'},{key:'Call rate',value:'5p/min'}]},
+conclusions:[
+{text:'Tariff B becomes better value above 80 minutes of calls per month',correct:true},
+{text:'Tariff B becomes better value above 50 minutes of calls per month',correct:false},
+{text:'Tariff A is always cheaper',correct:false},
+{text:'Tariff B becomes better value above 160 minutes of calls per month',correct:false}
+],
+explanation:'Set equal: 0.15m = 8 + 0.05m \u2192 0.10m = 8 \u2192 m = 80 minutes. Below 80 mins: Tariff A cheaper. Above 80 mins: Tariff B cheaper.'},
+
+{id:'bv_core_028',level:'core',type:'breakeven',
+scenario:'A streaming service costs \u00a39.99/month. Cinema tickets cost \u00a312.50 each. At what point per month does the streaming service represent better value than cinema visits?',
+optionA:{label:'Streaming',details:[{key:'Monthly cost',value:'\u00a39.99'},{key:'Films',value:'Unlimited'}]},
+optionB:{label:'Cinema',details:[{key:'Per film',value:'\u00a312.50'}]},
+conclusions:[
+{text:'The streaming service is better value if you watch at least 1 film per month',correct:true},
+{text:'The streaming service is better value if you watch at least 3 films per month',correct:false},
+{text:'Cinema is always better value',correct:false},
+{text:'They cost the same for 2 films per month',correct:false}
+],
+explanation:'Streaming: \u00a39.99 for unlimited films. Cinema: \u00a312.50 per film. Break-even: \u00a39.99 \u00f7 \u00a312.50 = 0.8 films/month. Watch at least 1 film per month and streaming wins.'},
+
+{id:'bv_core_029',level:'core',type:'breakeven',
+scenario:'An electric car costs \u00a35,000 more than a petrol equivalent. The electric car saves \u00a31,200/year on fuel. How many years before the electric car becomes better value overall?',
+optionA:{label:'Electric Car',details:[{key:'Premium',value:'\u00a35,000 extra'},{key:'Annual fuel saving',value:'\u00a31,200'}]},
+optionB:{label:'Petrol Car',details:[{key:'Premium',value:'\u00a30'},{key:'Annual fuel saving',value:'\u00a30'}]},
+conclusions:[
+{text:'The electric car becomes better value after approximately 4.2 years \u2014 in year 5',correct:true},
+{text:'The electric car becomes better value after about 2 years',correct:false},
+{text:'The electric car never pays for itself',correct:false},
+{text:'The electric car becomes better value after about 8 years',correct:false}
+],
+explanation:'Payback: \u00a35,000 \u00f7 \u00a31,200 = 4.17 years. After 5 years, the electric car has saved \u00a36,000 \u2014 \u00a31,000 more than the price premium.'},
+
+{id:'bv_core_030',level:'core',type:'breakeven',
+scenario:'A printer costs \u00a3120 and uses ink cartridges at \u00a318 per 200 pages. A print shop charges \u00a30.12 per page. How many pages must you print for the home printer to become better value?',
+optionA:{label:'Home Printer',details:[{key:'Upfront cost',value:'\u00a3120'},{key:'Ink cost',value:'\u00a318 per 200 pages'}]},
+optionB:{label:'Print Shop',details:[{key:'Per page',value:'\u00a30.12'}]},
+conclusions:[
+{text:'The home printer becomes better value after printing more than 4,000 pages',correct:true},
+{text:'The home printer becomes better value after printing more than 1,500 pages',correct:false},
+{text:'The print shop is always cheaper',correct:false},
+{text:'The home printer becomes better value after printing more than 2,000 pages',correct:false}
+],
+explanation:'Home printer cost per page: \u00a318 \u00f7 200 = \u00a30.09. Saving per page vs print shop: \u00a30.12 \u2212 \u00a30.09 = \u00a30.03. Break-even: \u00a3120 \u00f7 \u00a30.03 = 4,000 pages.'},
+
+// === Complex Multi-Step / Hidden Costs / Opportunity Cost / Quality Reasoning (20) ===
+
+{id:'bv_core_031',level:'core',type:'hidden',
+scenario:'A broadband provider advertises \u201c\u00a318/month broadband \u2014 cheapest in the UK!\u201d The small print shows a \u00a310/month line rental, a \u00a360 installation fee, and an 18-month minimum contract. A rival offers \u00a332/month all-inclusive with no installation fee on a 12-month contract.',
+optionA:{label:'Advertised Deal',details:[{key:'Broadband',value:'\u00a318/month'},{key:'Line rental',value:'\u00a310/month'},{key:'Installation',value:'\u00a360'},{key:'Contract',value:'18 months'}]},
+optionB:{label:'Rival Deal',details:[{key:'Monthly cost',value:'\u00a332 (all-in)'},{key:'Installation',value:'\u00a30'},{key:'Contract',value:'12 months'}]},
+conclusions:[
+{text:'The advertised deal is cheaper \u2014 \u00a318/month beats \u00a332/month',correct:false},
+{text:'The rival deal is better value over its contract \u2014 \u00a3384 for 12 months vs \u00a3564 for 18 months on the advertised deal',correct:false},
+{text:'The advertised deal costs \u00a3564 over 18 months; the rival costs \u00a3384 over 12 months. Per month, the rival is cheaper at \u00a332 vs \u00a331.33 \u2014 but the advertised deal locks you in for 6 extra months',correct:true},
+{text:'They cost the same per month once you add line rental',correct:false}
+],
+explanation:'Advertised: (18 \u00d7 \u00a328) + \u00a360 = \u00a3504 + \u00a360 = \u00a3564, i.e. \u00a331.33/month. Rival: 12 \u00d7 \u00a332 = \u00a3384, i.e. \u00a332/month. Per month the advertised deal is marginally cheaper, but it commits you for 18 months. The headline \u00a318 is misleading \u2014 the true cost is \u00a331.33/month.'},
+
+{id:'bv_core_032',level:'core',type:'hidden',
+scenario:'A furniture store advertises a \u00a31,200 sofa with \u201c0% interest over 3 years!\u201d The small print includes a \u00a3145 admin fee and compulsory \u00a35.99/month furniture protection. A competitor sells the same sofa for \u00a31,050 cash.',
+optionA:{label:'0% Finance Deal',details:[{key:'Sofa price',value:'\u00a31,200'},{key:'Admin fee',value:'\u00a3145'},{key:'Protection',value:'\u00a35.99/month \u00d7 36'}]},
+optionB:{label:'Cash Purchase',details:[{key:'Sofa price',value:'\u00a31,050'},{key:'Other costs',value:'\u00a30'}]},
+conclusions:[
+{text:'The 0% deal is genuinely interest-free so it must be the better deal',correct:false},
+{text:'The cash purchase is better value \u2014 \u00a31,050 vs \u00a31,560.64 for the finance deal',correct:true},
+{text:'The 0% deal costs \u00a31,345 \u2014 only \u00a3295 more than cash',correct:false},
+{text:'They cost the same because 0% means no extra charges',correct:false}
+],
+explanation:'Finance deal: \u00a31,200 + \u00a3145 + (36 \u00d7 \u00a35.99) = \u00a31,200 + \u00a3145 + \u00a3215.64 = \u00a31,560.64. Cash: \u00a31,050. The \u201c0% interest\u201d hides \u00a3510.64 in extra costs.'},
+
+{id:'bv_core_033',level:'core',type:'breakeven',
+scenario:'A household is considering switching energy tariff. Their current tariff charges 28p/kWh with a 25p/day standing charge. A new tariff charges 24p/kWh with a 42p/day standing charge. The household uses an average of 12 kWh per day. At what daily usage does the new tariff become better value?',
+optionA:{label:'Current Tariff',details:[{key:'Rate',value:'28p/kWh'},{key:'Standing charge',value:'25p/day'}]},
+optionB:{label:'New Tariff',details:[{key:'Rate',value:'24p/kWh'},{key:'Standing charge',value:'42p/day'}]},
+conclusions:[
+{text:'The new tariff is better value above 4.25 kWh per day \u2014 the household uses 12 kWh so they should switch',correct:true},
+{text:'The current tariff is always cheaper because of the lower standing charge',correct:false},
+{text:'The new tariff is better value above 10 kWh per day',correct:false},
+{text:'They cost the same at 12 kWh per day',correct:false}
+],
+explanation:'Set equal: 0.28d + 25 = 0.24d + 42 \u2192 0.04d = 17 \u2192 d = 4.25 kWh. Above 4.25 kWh/day the new tariff is cheaper. At 12 kWh: current = 336p + 25p = 361p/day. New = 288p + 42p = 330p/day. Saving: 31p/day \u2248 \u00a3113/year.'},
+
+{id:'bv_core_034',level:'core',type:'hidden',
+scenario:'An online retailer offers \u201cfree next-day delivery\u201d on a \u00a389.99 laptop bag. The same bag on a rival site costs \u00a374.99 with \u00a34.99 standard delivery (3\u20135 days) or \u00a39.99 next-day delivery.',
+optionA:{label:'\u201cFree Delivery\u201d Site',details:[{key:'Bag price',value:'\u00a389.99'},{key:'Delivery',value:'Free next-day'}]},
+optionB:{label:'Rival Site',details:[{key:'Bag price',value:'\u00a374.99'},{key:'Standard delivery',value:'\u00a34.99'},{key:'Next-day delivery',value:'\u00a39.99'}]},
+conclusions:[
+{text:'The rival site is better value even with next-day delivery \u2014 \u00a384.98 vs \u00a389.99',correct:true},
+{text:'The free delivery site is better value because delivery is free',correct:false},
+{text:'They cost the same with next-day delivery',correct:false},
+{text:'The rival site is only cheaper with standard delivery',correct:false}
+],
+explanation:'Free delivery site: \u00a389.99. Rival with next-day: \u00a374.99 + \u00a39.99 = \u00a384.98. Rival with standard: \u00a374.99 + \u00a34.99 = \u00a379.98. The \u201cfree delivery\u201d cost is baked into the higher item price.'},
+
+{id:'bv_core_035',level:'core',type:'direct',
+scenario:'A landlord needs boiler insurance. Policy A costs \u00a312/month with a \u00a360 excess per claim and covers parts and labour. Policy B costs \u00a38/month with a \u00a3150 excess per claim and covers parts only (labour charged at \u00a380/hour). An average boiler repair takes 2 hours and happens once per year.',
+optionA:{label:'Policy A',details:[{key:'Monthly',value:'\u00a312'},{key:'Excess',value:'\u00a360'},{key:'Cover',value:'Parts + labour'}]},
+optionB:{label:'Policy B',details:[{key:'Monthly',value:'\u00a38'},{key:'Excess',value:'\u00a3150'},{key:'Cover',value:'Parts only'},{key:'Labour',value:'\u00a380/hour'}]},
+conclusions:[
+{text:'Policy B is cheaper \u2014 \u00a38/month vs \u00a312/month',correct:false},
+{text:'Policy A is better value with one repair per year \u2014 annual cost \u00a3204 vs \u00a3406 for Policy B',correct:true},
+{text:'They cost the same over a year with one repair',correct:false},
+{text:'Policy B is better because the monthly cost is lower',correct:false}
+],
+explanation:'Policy A: (12 \u00d7 \u00a312) + \u00a360 = \u00a3144 + \u00a360 = \u00a3204. Policy B: (12 \u00d7 \u00a38) + \u00a3150 + (2 \u00d7 \u00a380) = \u00a396 + \u00a3150 + \u00a3160 = \u00a3406. Policy A saves \u00a3202 per repair.'},
+
+{id:'bv_core_036',level:'core',type:'direct',
+scenario:'A student is choosing between two train ticket options for a 40-week university year. She travels home every other weekend (20 return trips). An Anytime Return costs \u00a348. An Advance Return costs \u00a322 but is non-refundable and train-specific (she estimates she will miss 3 trains per year and have to buy replacements).',
+optionA:{label:'Anytime Returns',details:[{key:'Price',value:'\u00a348 per return'},{key:'Flexibility',value:'Any train'}]},
+optionB:{label:'Advance Returns',details:[{key:'Price',value:'\u00a322 per return'},{key:'Missed trains',value:'3 per year'},{key:'Replacement cost',value:'\u00a348 each'}]},
+conclusions:[
+{text:'Advance tickets are better value \u2014 total \u00a3518 vs \u00a3960 for Anytime, even with 3 missed trains',correct:true},
+{text:'Anytime tickets are better value because you never waste money on missed trains',correct:false},
+{text:'They cost about the same once missed trains are factored in',correct:false},
+{text:'Advance tickets are only cheaper if she never misses a train',correct:false}
+],
+explanation:'Anytime: 20 \u00d7 \u00a348 = \u00a3960. Advance: (20 \u00d7 \u00a322) + (3 \u00d7 \u00a322 wasted) + (3 \u00d7 \u00a348 replacements) = \u00a3440 + \u00a366 + \u00a3144 = \u00a3518. Risk-adjusted, Advance still saves \u00a3442.'},
+
+{id:'bv_core_037',level:'core',type:'direct',
+scenario:'A small business needs 10,000 flyers printed. Printer A charges \u00a3180 for 10,000 on standard 130gsm paper. Printer B charges \u00a3260 for 10,000 on premium 250gsm card with a gloss finish. The business owner estimates that premium flyers get a 40% higher response rate. Standard flyers typically generate \u00a3800 in sales from 10,000.',
+optionA:{label:'Standard Flyers',details:[{key:'Cost',value:'\u00a3180'},{key:'Expected sales',value:'\u00a3800'}]},
+optionB:{label:'Premium Flyers',details:[{key:'Cost',value:'\u00a3260'},{key:'Expected sales',value:'\u00a31,120 (40% more)'}]},
+conclusions:[
+{text:'Standard flyers are better value \u2014 they cost \u00a380 less',correct:false},
+{text:'Premium flyers give better return on investment \u2014 net profit \u00a3860 vs \u00a3620 for standard',correct:true},
+{text:'Standard flyers have the same ROI as premium',correct:false},
+{text:'Premium flyers are only worth it if response rate doubles',correct:false}
+],
+explanation:'Standard: profit = \u00a3800 \u2212 \u00a3180 = \u00a3620, ROI = 344%. Premium: profit = \u00a31,120 \u2212 \u00a3260 = \u00a3860, ROI = 331%. Although premium has slightly lower ROI, the absolute profit is \u00a3240 higher. The cheaper option is not the better value here.'},
+
+{id:'bv_core_038',level:'core',type:'breakeven',
+scenario:'A household can install loft insulation for \u00a3450. This reduces heating bills by \u00a368 per year. Alternatively, they can install cavity wall insulation for \u00a31,200 which saves \u00a3195 per year. Both last 25+ years. Which has the shorter payback period?',
+optionA:{label:'Loft Insulation',details:[{key:'Cost',value:'\u00a3450'},{key:'Annual saving',value:'\u00a368'}]},
+optionB:{label:'Cavity Wall',details:[{key:'Cost',value:'\u00a31,200'},{key:'Annual saving',value:'\u00a3195'}]},
+conclusions:[
+{text:'Cavity wall insulation has the shorter payback \u2014 6.15 years vs 6.62 years for loft insulation',correct:true},
+{text:'Loft insulation pays back faster because it costs less',correct:false},
+{text:'They have the same payback period',correct:false},
+{text:'Loft insulation pays back in about 4 years',correct:false}
+],
+explanation:'Loft: \u00a3450 \u00f7 \u00a368 = 6.62 years. Cavity wall: \u00a31,200 \u00f7 \u00a3195 = 6.15 years. Despite costing more, cavity wall pays back slightly faster and saves far more over 25 years (\u00a34,875 vs \u00a31,700 total savings).'},
+
+{id:'bv_core_039',level:'core',type:'hidden',
+scenario:'A gym advertises \u201cNo joining fee this January!\u201d at \u00a345/month on a 12-month contract. Another gym charges a \u00a375 joining fee but only \u00a335/month on a rolling contract (cancel anytime).',
+optionA:{label:'No Joining Fee Gym',details:[{key:'Monthly',value:'\u00a345'},{key:'Joining fee',value:'\u00a30'},{key:'Contract',value:'12 months'}]},
+optionB:{label:'Rolling Gym',details:[{key:'Monthly',value:'\u00a335'},{key:'Joining fee',value:'\u00a375'},{key:'Contract',value:'Rolling'}]},
+conclusions:[
+{text:'The no-joining-fee gym is cheaper because there is no upfront cost',correct:false},
+{text:'The rolling gym is better value from month 8 onwards \u2014 and you can cancel anytime',correct:true},
+{text:'They cost the same over 12 months',correct:false},
+{text:'The no-joining-fee gym is always cheaper',correct:false}
+],
+explanation:'No-fee gym: 12 \u00d7 \u00a345 = \u00a3540 (locked in). Rolling gym: \u00a375 + (12 \u00d7 \u00a335) = \u00a3495 (and you can leave). Break-even: \u00a375 \u00f7 (\u00a345 \u2212 \u00a335) = 7.5, so from month 8 the rolling gym is cheaper. The \u201cfree\u201d joining fee promotion hides \u00a3120/year in higher monthly costs.'},
+
+{id:'bv_core_040',level:'core',type:'direct',
+scenario:'A parent is choosing between two nurseries for childcare, 5 days per week, 50 weeks per year. Nursery A costs \u00a355/day but includes all meals and nappies. Nursery B costs \u00a348/day but meals are \u00a35/day extra and parents must supply nappies (approximately \u00a320/week).',
+optionA:{label:'Nursery A',details:[{key:'Daily rate',value:'\u00a355'},{key:'Meals',value:'Included'},{key:'Nappies',value:'Included'}]},
+optionB:{label:'Nursery B',details:[{key:'Daily rate',value:'\u00a348'},{key:'Meals',value:'\u00a35/day extra'},{key:'Nappies',value:'\u00a320/week (parent supplies)'}]},
+conclusions:[
+{text:'Nursery B is cheaper because the daily rate is \u00a37 less',correct:false},
+{text:'Nursery A is better value \u2014 annual cost \u00a313,750 vs \u00a314,250 for Nursery B',correct:true},
+{text:'They cost the same over a year',correct:false},
+{text:'Nursery B is \u00a31,000 cheaper per year',correct:false}
+],
+explanation:'Nursery A: 250 \u00d7 \u00a355 = \u00a313,750. Nursery B: (250 \u00d7 \u00a348) + (250 \u00d7 \u00a35) + (50 \u00d7 \u00a320) = \u00a312,000 + \u00a31,250 + \u00a31,000 = \u00a314,250. The \u201ccheaper\u201d daily rate hides \u00a3500/year in extra costs.'},
+
+{id:'bv_core_041',level:'core',type:'direct',
+scenario:'A tradesperson needs a van. Option A: buy a 3-year-old van for \u00a312,000 cash. Expected repairs: \u00a3800/year. Insurance: \u00a31,200/year. Option B: lease a new van for \u00a3350/month including maintenance. Insurance: \u00a3900/year. Compare over 3 years.',
+optionA:{label:'Buy Used Van',details:[{key:'Purchase',value:'\u00a312,000'},{key:'Repairs',value:'\u00a3800/year'},{key:'Insurance',value:'\u00a31,200/year'}]},
+optionB:{label:'Lease New Van',details:[{key:'Monthly lease',value:'\u00a3350 (inc. maintenance)'},{key:'Insurance',value:'\u00a3900/year'}]},
+conclusions:[
+{text:'Buying is cheaper \u2014 3-year cost \u00a318,000 vs \u00a315,300 for leasing',correct:false},
+{text:'Leasing is better value over 3 years \u2014 total cost \u00a315,300 vs \u00a318,000 for buying, plus you always have a reliable van',correct:true},
+{text:'Buying is better because you own the van afterwards',correct:false},
+{text:'They cost the same over 3 years',correct:false}
+],
+explanation:'Buy: \u00a312,000 + (3 \u00d7 \u00a3800) + (3 \u00d7 \u00a31,200) = \u00a312,000 + \u00a32,400 + \u00a33,600 = \u00a318,000. Lease: (36 \u00d7 \u00a3350) + (3 \u00d7 \u00a3900) = \u00a312,600 + \u00a32,700 = \u00a315,300. Leasing saves \u00a32,700 over 3 years (though you don\u2019t own the van).'},
+
+{id:'bv_core_042',level:'core',type:'direct',
+scenario:'A student has \u00a3500 in savings earning 3% AER. She wants to buy a \u00a3500 laptop. Option A: pay cash now. Option B: take a 12-month 0% credit card and keep the \u00a3500 in savings for the year.',
+optionA:{label:'Pay Cash Now',details:[{key:'Cost',value:'\u00a3500'},{key:'Interest earned',value:'\u00a30'}]},
+optionB:{label:'0% Credit Card',details:[{key:'Cost',value:'\u00a3500 (paid month 12)'},{key:'Interest earned',value:'\u00a315 on savings'}]},
+conclusions:[
+{text:'Paying cash is simpler so it is better value',correct:false},
+{text:'The 0% credit card is better value \u2014 she earns \u00a315 interest while the laptop costs the same',correct:true},
+{text:'The credit card will cost more due to hidden charges',correct:false},
+{text:'They cost exactly the same either way',correct:false}
+],
+explanation:'Cash: laptop costs \u00a3500, savings drop to \u00a30. Credit card: laptop costs \u00a3500 paid in month 12, meanwhile \u00a3500 \u00d7 3% = \u00a315 interest earned. Net cost with credit card: \u00a3500 \u2212 \u00a315 = \u00a3485. This is opportunity cost reasoning \u2014 what your money could earn elsewhere.'},
+
+{id:'bv_core_043',level:'core',type:'direct',
+scenario:'A commuter can drive to work (8 miles each way) or take the bus. Driving: 30 mpg, petrol at \u00a31.55/litre (1 gallon = 4.55 litres), plus \u00a35/day parking. Bus: \u00a34.20 return ticket, or a monthly pass for \u00a375 (22 working days/month).',
+optionA:{label:'Driving',details:[{key:'Distance',value:'16 miles/day'},{key:'Fuel economy',value:'30 mpg'},{key:'Petrol',value:'\u00a31.55/litre'},{key:'Parking',value:'\u00a35/day'}]},
+optionB:{label:'Bus Monthly Pass',details:[{key:'Monthly pass',value:'\u00a375'},{key:'Working days',value:'22/month'}]},
+conclusions:[
+{text:'Driving is cheaper because you control the costs',correct:false},
+{text:'The bus pass is better value \u2014 monthly cost \u00a375 vs approximately \u00a3193 for driving',correct:true},
+{text:'Driving costs about \u00a375 per month \u2014 the same as the bus pass',correct:false},
+{text:'The bus is only cheaper if petrol prices rise above \u00a32/litre',correct:false}
+],
+explanation:'Daily fuel: 16 miles at 30 mpg = 0.533 gallons = 2.43 litres \u00d7 \u00a31.55 = \u00a33.76/day. Driving: 22 \u00d7 (\u00a33.76 + \u00a35) = 22 \u00d7 \u00a38.76 = \u00a3192.72. Note: this excludes wear and tear. Bus pass: \u00a375/month. Bus saves over \u00a3100/month.'},
+
+{id:'bv_core_044',level:'core',type:'hidden',
+scenario:'A subscription box advertises \u201c\u00a3250 of products for just \u00a329.99/month!\u201d The 12-month contract costs \u00a3359.88 per year. The subscriber estimates she would actually buy about \u00a380 of the products each box \u2014 the rest she doesn\u2019t use.',
+optionA:{label:'Subscription Box',details:[{key:'Monthly',value:'\u00a329.99'},{key:'Advertised value',value:'\u00a3250/box'},{key:'Usable value',value:'\u00a380/box'}]},
+optionB:{label:'Buy What You Need',details:[{key:'Monthly spend',value:'\u00a380 (only items you want)'}]},
+conclusions:[
+{text:'The subscription box is amazing value \u2014 \u00a3250 of products for \u00a329.99',correct:false},
+{text:'Buying what you need is better value \u2014 you spend \u00a380 on things you actually use vs paying \u00a329.99 for \u00a380 of usable products plus \u00a3170 of waste',correct:false},
+{text:'The subscription box gives \u00a380 of usable value for \u00a329.99, which is good value per-item \u2014 but only if you wouldn\u2019t spend that \u00a329.99 on something you want more',correct:true},
+{text:'The subscription is worthless because you don\u2019t use most of the products',correct:false}
+],
+explanation:'The headline \u00a3250 value is based on RRP, not what you\u2019d actually buy. Usable value: \u00a380 for \u00a329.99 is still good per-item value. But the opportunity cost of \u00a3360/year should be weighed against what else that money could buy. Critical thinking: advertised value \u2260 personal value.'},
+
+{id:'bv_core_045',level:'core',type:'breakeven',
+scenario:'A household is comparing two electricity tariffs for a year. Tariff A: variable rate, currently 29p/kWh, no exit fee. Tariff B: fixed rate at 26p/kWh for 12 months with a \u00a375 exit fee if you leave early. The household uses 3,600 kWh per year. If variable rates rise by 4p/kWh after 6 months, which is better value?',
+optionA:{label:'Variable Tariff',details:[{key:'Rate (months 1\u20136)',value:'29p/kWh'},{key:'Rate (months 7\u201312)',value:'33p/kWh'},{key:'Exit fee',value:'None'}]},
+optionB:{label:'Fixed Tariff',details:[{key:'Rate',value:'26p/kWh all year'},{key:'Exit fee',value:'\u00a375 if leaving early'}]},
+conclusions:[
+{text:'The fixed tariff saves money \u2014 annual cost \u00a3936 vs \u00a31,116 for variable',correct:true},
+{text:'The variable tariff is cheaper because there is no exit fee',correct:false},
+{text:'They cost the same over the year',correct:false},
+{text:'The fixed tariff is only better if rates rise by more than 10p',correct:false}
+],
+explanation:'Variable: (1,800 \u00d7 \u00a30.29) + (1,800 \u00d7 \u00a30.33) = \u00a3522 + \u00a3594 = \u00a31,116. Fixed: 3,600 \u00d7 \u00a30.26 = \u00a3936. The fixed tariff saves \u00a3180. This demonstrates why fixed tariffs protect against price rises.'},
+
+{id:'bv_core_046',level:'core',type:'direct',
+scenario:'Two job offers for a graduate. Job A: \u00a328,000 salary in Manchester (average rent \u00a3650/month). Job B: \u00a334,000 salary in London (average rent \u00a31,200/month). Tax and NI are approximately 25% of gross salary in both cases. Compare monthly disposable income after rent.',
+optionA:{label:'Manchester Job',details:[{key:'Salary',value:'\u00a328,000'},{key:'Tax/NI',value:'25%'},{key:'Rent',value:'\u00a3650/month'}]},
+optionB:{label:'London Job',details:[{key:'Salary',value:'\u00a334,000'},{key:'Tax/NI',value:'25%'},{key:'Rent',value:'\u00a31,200/month'}]},
+conclusions:[
+{text:'The London job is better because the salary is \u00a36,000 higher',correct:false},
+{text:'The Manchester job gives more disposable income \u2014 \u00a31,100/month vs \u00a3925/month after tax and rent',correct:true},
+{text:'They give the same disposable income after rent',correct:false},
+{text:'The London job gives more disposable income because the salary is higher',correct:false}
+],
+explanation:'Manchester: \u00a328,000 \u00d7 0.75 = \u00a321,000 net \u00f7 12 = \u00a31,750/month \u2212 \u00a3650 rent = \u00a31,100 disposable. London: \u00a334,000 \u00d7 0.75 = \u00a325,500 net \u00f7 12 = \u00a32,125/month \u2212 \u00a31,200 rent = \u00a3925 disposable. A higher salary does not always mean more money in your pocket.'},
+
+{id:'bv_core_047',level:'core',type:'direct',
+scenario:'A homeowner is choosing between two window cleaners. Cleaner A: \u00a310 per clean, visits every 4 weeks (13 times/year). Cleaner B: \u00a315 per clean, visits every 6 weeks and uses a pure-water system that keeps windows cleaner for longer (roughly 9 times/year). The homeowner values the longer-lasting clean.',
+optionA:{label:'Cleaner A',details:[{key:'Per clean',value:'\u00a310'},{key:'Frequency',value:'Every 4 weeks'},{key:'Cleans/year',value:'13'}]},
+optionB:{label:'Cleaner B',details:[{key:'Per clean',value:'\u00a315'},{key:'Frequency',value:'Every 6 weeks'},{key:'Cleans/year',value:'9'}]},
+conclusions:[
+{text:'Cleaner A is better value because each clean costs less',correct:false},
+{text:'Cleaner B is better value overall \u2014 \u00a3135/year vs \u00a3130/year, but windows stay cleaner for longer and the difference is only \u00a35',correct:true},
+{text:'Cleaner A saves \u00a350 per year',correct:false},
+{text:'They cost the same per year',correct:false}
+],
+explanation:'Cleaner A: 13 \u00d7 \u00a310 = \u00a3130/year. Cleaner B: 9 \u00d7 \u00a315 = \u00a3135/year. Cleaner B costs just \u00a35 more per year but provides a superior result. Sometimes the slightly more expensive option gives better overall value when quality factors are considered.'},
+
+{id:'bv_core_048',level:'core',type:'hidden',
+scenario:'A car insurance comparison site shows: Insurer A at \u00a3480/year (comprehensive, \u00a3250 excess, courtesy car included). Insurer B at \u00a3340/year (third party fire and theft, \u00a3500 excess, no courtesy car). The car is worth \u00a34,500.',
+optionA:{label:'Insurer A',details:[{key:'Premium',value:'\u00a3480/year'},{key:'Cover',value:'Comprehensive'},{key:'Excess',value:'\u00a3250'},{key:'Courtesy car',value:'Yes'}]},
+optionB:{label:'Insurer B',details:[{key:'Premium',value:'\u00a3340/year'},{key:'Cover',value:'TPFT'},{key:'Excess',value:'\u00a3500'},{key:'Courtesy car',value:'No'}]},
+conclusions:[
+{text:'Insurer B is better value \u2014 \u00a3140 cheaper per year',correct:false},
+{text:'Insurer A is better value \u2014 the \u00a3140 extra buys comprehensive cover on a \u00a34,500 car, a lower excess, and a courtesy car',correct:true},
+{text:'They offer the same level of protection',correct:false},
+{text:'Insurer B is better because you save money every month',correct:false}
+],
+explanation:'Insurer B saves \u00a3140/year but: no cover if your car is damaged (only TPFT), \u00a3250 higher excess per claim, and no courtesy car if yours is off the road. On a \u00a34,500 car, one own-fault accident would cost far more than the \u00a3140 saving. The cheapest policy is not the best value when risk is considered.'},
+
+{id:'bv_core_049',level:'core',type:'breakeven',
+scenario:'A small business is choosing between hiring a part-time employee or outsourcing work. Employee: \u00a315/hour for 20 hours/week, plus \u00a3180/month employer NI and pension. Outsourcing: \u00a340/hour, estimated 8 hours/week needed. At what weekly outsourcing hours does hiring become cheaper?',
+optionA:{label:'Hire Employee',details:[{key:'Hourly rate',value:'\u00a315/hour'},{key:'Hours/week',value:'20'},{key:'Employer costs',value:'\u00a3180/month'}]},
+optionB:{label:'Outsource',details:[{key:'Hourly rate',value:'\u00a340/hour'},{key:'Hours/week',value:'Variable'}]},
+conclusions:[
+{text:'Hiring becomes cheaper above approximately 8.8 hours per week of outsourced work',correct:true},
+{text:'Outsourcing is always cheaper because you only pay for hours needed',correct:false},
+{text:'Hiring is always cheaper because the hourly rate is lower',correct:false},
+{text:'Hiring becomes cheaper above 15 hours per week',correct:false}
+],
+explanation:'Weekly employee cost: (20 \u00d7 \u00a315) + (\u00a3180 \u00f7 4.33) = \u00a3300 + \u00a341.57 = \u00a3341.57. Weekly outsource cost: 40h. Set equal: 40h = 341.57 \u2192 h = 8.54 hours. Above about 8.8 hours/week of outsourced work, hiring a part-time employee is cheaper (and you get 20 hours of capacity).'},
+
+{id:'bv_core_050',level:'core',type:'direct',
+scenario:'A student can buy lunch at university or meal-prep at home. Buying: average \u00a35.50/meal, 5 days/week. Meal prep: \u00a325/week for ingredients (makes 5 lunches), plus a one-off \u00a340 for containers. Compare the cost over a 30-week academic year, and consider the 45 minutes/week spent meal-prepping (the student could work a part-time job at \u00a311.44/hour instead).',
+optionA:{label:'Buy Lunch',details:[{key:'Per meal',value:'\u00a35.50'},{key:'Weekly cost',value:'\u00a327.50'}]},
+optionB:{label:'Meal Prep',details:[{key:'Weekly ingredients',value:'\u00a325'},{key:'Containers',value:'\u00a340 one-off'},{key:'Prep time',value:'45 min/week'},{key:'Opportunity cost',value:'\u00a311.44/hour'}]},
+conclusions:[
+{text:'Meal prep is clearly cheaper \u2014 \u00a3790 vs \u00a3825 for buying',correct:false},
+{text:'Meal prep saves \u00a335 in direct costs, but if the 45 minutes/week could be spent earning \u00a311.44/hour, the true cost of meal prep exceeds buying \u2014 opportunity cost matters',correct:true},
+{text:'Meal prep saves over \u00a3200 per year',correct:false},
+{text:'Buying lunch is always better value because time is money',correct:false}
+],
+explanation:'Buying: 30 \u00d7 \u00a327.50 = \u00a3825. Meal prep: \u00a340 + (30 \u00d7 \u00a325) = \u00a3790 in direct costs. Opportunity cost of prep time: 30 \u00d7 0.75 hours \u00d7 \u00a311.44 = \u00a3257.40. Total meal prep cost including time: \u00a3790 + \u00a3257.40 = \u00a31,047.40. But the question is whether you would actually work those 45 minutes \u2014 if not, the direct saving is \u00a335. Opportunity cost only applies if the alternative use of time has real value.'}
+],
+
+gcse: [
+// === Direct Comparison (8) ===
+{id:'bv_gcse_001',level:'gcse',type:'direct',
+scenario:'Two pizza deals for a school party. Pizza Palace: \u00a38 per pizza. Slice House: 3 pizzas for \u00a321. The school needs 9 pizzas.',
+optionA:{label:'Pizza Palace',details:[{key:'Price',value:'\u00a38 per pizza'}]},
+optionB:{label:'Slice House',details:[{key:'Deal',value:'3 for \u00a321'}]},
+conclusions:[
+{text:'Pizza Palace is cheaper \u2014 \u00a372 vs \u00a363',correct:false},
+{text:'Slice House is cheaper \u2014 \u00a363 vs \u00a372 for Pizza Palace',correct:true},
+{text:'They cost the same for 9 pizzas',correct:false},
+{text:'Pizza Palace is cheaper because individual pricing is better',correct:false}
+],
+explanation:'Pizza Palace: 9 \u00d7 \u00a38 = \u00a372. Slice House: 3 \u00d7 \u00a321 = \u00a363. Slice House saves \u00a39.'},
+
+{id:'bv_gcse_002',level:'gcse',type:'direct',
+scenario:'Sam wants a music streaming subscription for a year.',
+optionA:{label:'Plan A',details:[{key:'Monthly cost',value:'\u00a35.99'}]},
+optionB:{label:'Plan B',details:[{key:'Annual cost',value:'\u00a359.99'}]},
+conclusions:[
+{text:'Plan A is cheaper \u2014 \u00a35.99 per month sounds less',correct:false},
+{text:'Plan B is cheaper \u2014 \u00a359.99 vs \u00a371.88 for Plan A',correct:true},
+{text:'They cost the same over a year',correct:false},
+{text:'Plan A is better because you can cancel anytime',correct:false}
+],
+explanation:'Plan A: 12 \u00d7 \u00a35.99 = \u00a371.88. Plan B: \u00a359.99. The annual plan saves \u00a311.89.'},
+
+{id:'bv_gcse_003',level:'gcse',type:'direct',
+scenario:'Two shops sell the same pack of coloured pencils.',
+optionA:{label:'Shop A',details:[{key:'Pack price',value:'\u00a34.50'},{key:'Delivery',value:'\u00a32.00'}]},
+optionB:{label:'Shop B',details:[{key:'Pack price',value:'\u00a35.80'},{key:'Delivery',value:'Free'}]},
+conclusions:[
+{text:'Shop A is cheaper \u2014 \u00a34.50 vs \u00a35.80',correct:false},
+{text:'Shop A is cheaper overall \u2014 \u00a36.50 vs \u00a35.80',correct:false},
+{text:'Shop B is cheaper overall \u2014 \u00a35.80 vs \u00a36.50 for Shop A',correct:true},
+{text:'They cost the same once delivery is added',correct:false}
+],
+explanation:'Shop A: \u00a34.50 + \u00a32.00 = \u00a36.50. Shop B: \u00a35.80 + \u00a30 = \u00a35.80. Shop B is cheaper.'},
+
+{id:'bv_gcse_004',level:'gcse',type:'direct',
+scenario:'A family is choosing between two holiday parks for a 5-night stay.',
+optionA:{label:'Park A',details:[{key:'Per night',value:'\u00a380'},{key:'Booking fee',value:'\u00a30'}]},
+optionB:{label:'Park B',details:[{key:'Per night',value:'\u00a370'},{key:'Booking fee',value:'\u00a340'}]},
+conclusions:[
+{text:'Park A is cheaper \u2014 \u00a3400 vs \u00a3390',correct:false},
+{text:'Park B is cheaper \u2014 \u00a3390 vs \u00a3400 for Park A',correct:true},
+{text:'They cost the same for 5 nights',correct:false},
+{text:'Park A is better because there is no booking fee',correct:false}
+],
+explanation:'Park A: 5 \u00d7 \u00a380 = \u00a3400. Park B: \u00a340 + (5 \u00d7 \u00a370) = \u00a340 + \u00a3350 = \u00a3390.'},
+
+{id:'bv_gcse_005',level:'gcse',type:'direct',
+scenario:'Ella buys a sandwich every school day (5 days a week). She compares buying from the canteen vs making her own.',
+optionA:{label:'Canteen',details:[{key:'Per sandwich',value:'\u00a32.50'}]},
+optionB:{label:'Homemade',details:[{key:'Weekly ingredients',value:'\u00a36.00'}]},
+conclusions:[
+{text:'The canteen is cheaper \u2014 \u00a32.50 per sandwich is reasonable',correct:false},
+{text:'Homemade is cheaper \u2014 \u00a36 per week vs \u00a312.50 per week for the canteen',correct:true},
+{text:'They cost the same per week',correct:false},
+{text:'The canteen saves \u00a36.50 per week',correct:false}
+],
+explanation:'Canteen: 5 \u00d7 \u00a32.50 = \u00a312.50/week. Homemade: \u00a36.00/week. Homemade saves \u00a36.50 per week.'},
+
+{id:'bv_gcse_006',level:'gcse',type:'direct',
+scenario:'Two taxi companies quote for a trip from school to the train station.',
+optionA:{label:'Quick Cabs',details:[{key:'Fixed fare',value:'\u00a312'}]},
+optionB:{label:'City Taxis',details:[{key:'Base fare',value:'\u00a33'},{key:'Per mile',value:'\u00a32'},{key:'Distance',value:'5 miles'}]},
+conclusions:[
+{text:'Quick Cabs is cheaper \u2014 \u00a312 vs \u00a313 for City Taxis',correct:true},
+{text:'City Taxis is cheaper \u2014 \u00a33 base is lower',correct:false},
+{text:'They cost the same',correct:false},
+{text:'City Taxis is cheaper at \u00a310',correct:false}
+],
+explanation:'Quick Cabs: \u00a312. City Taxis: \u00a33 + (5 \u00d7 \u00a32) = \u00a33 + \u00a310 = \u00a313. Quick Cabs saves \u00a31.'},
+
+{id:'bv_gcse_007',level:'gcse',type:'direct',
+scenario:'A student needs a calculator for GCSE exams. Two shops have the same model.',
+optionA:{label:'Online Store',details:[{key:'Price',value:'\u00a318.50'},{key:'Delivery',value:'\u00a33.99'}]},
+optionB:{label:'High Street Shop',details:[{key:'Price',value:'\u00a323.00'},{key:'Delivery',value:'N/A (collect)'}]},
+conclusions:[
+{text:'The online store is cheaper \u2014 \u00a322.49 vs \u00a323.00',correct:true},
+{text:'The high street shop is cheaper because there is no delivery',correct:false},
+{text:'They cost the same',correct:false},
+{text:'The online store costs \u00a318.50 so it is much cheaper',correct:false}
+],
+explanation:'Online: \u00a318.50 + \u00a33.99 = \u00a322.49. High street: \u00a323.00. The online store is 51p cheaper.'},
+
+{id:'bv_gcse_008',level:'gcse',type:'direct',
+scenario:'Two cinemas show the same film. A group of 4 friends want to go.',
+optionA:{label:'Cineworld',details:[{key:'Adult ticket',value:'\u00a311 each'}]},
+optionB:{label:'Vue',details:[{key:'Group deal',value:'\u00a340 for up to 4'}]},
+conclusions:[
+{text:'Cineworld is cheaper \u2014 \u00a344 vs \u00a340',correct:false},
+{text:'Vue is cheaper \u2014 \u00a340 vs \u00a344 for Cineworld',correct:true},
+{text:'They cost the same for 4 people',correct:false},
+{text:'Cineworld is cheaper per person',correct:false}
+],
+explanation:'Cineworld: 4 \u00d7 \u00a311 = \u00a344. Vue group deal: \u00a340. Vue saves \u00a34.'},
+
+// === Hidden Cost (5) ===
+{id:'bv_gcse_009',level:'gcse',type:'hidden',
+scenario:'A new game costs \u00a345 from the shop. An online marketplace has it for \u00a338 but charges \u00a34.99 delivery plus \u00a33 for a protective case that the shop includes free.',
+optionA:{label:'Shop',details:[{key:'Game price',value:'\u00a345'},{key:'Includes',value:'Protective case'}]},
+optionB:{label:'Online',details:[{key:'Game price',value:'\u00a338'},{key:'Delivery',value:'\u00a34.99'},{key:'Case',value:'\u00a33'}]},
+conclusions:[
+{text:'The online deal is cheaper at \u00a338',correct:false},
+{text:'The shop is cheaper overall \u2014 \u00a345 vs \u00a345.99 for online',correct:true},
+{text:'They cost the same',correct:false},
+{text:'Online saves \u00a37',correct:false}
+],
+explanation:'Shop: \u00a345 (case included). Online: \u00a338 + \u00a34.99 + \u00a33 = \u00a345.99. The shop is 99p cheaper.'},
+
+{id:'bv_gcse_010',level:'gcse',type:'hidden',
+scenario:'A mobile top-up deal offers 500 minutes for \u00a310. But calls to non-network numbers cost 20p/min extra. Jake makes 100 of his 500 minutes to non-network numbers. A rival offers unlimited calls for \u00a315.',
+optionA:{label:'Top-Up Deal',details:[{key:'Cost',value:'\u00a310'},{key:'Minutes',value:'500'},{key:'Non-network',value:'20p/min extra'}]},
+optionB:{label:'Unlimited Plan',details:[{key:'Cost',value:'\u00a315'},{key:'Minutes',value:'Unlimited'}]},
+conclusions:[
+{text:'The top-up deal is cheaper at \u00a310',correct:false},
+{text:'The unlimited plan is cheaper \u2014 \u00a315 vs \u00a330 for the top-up deal',correct:true},
+{text:'They cost the same',correct:false},
+{text:'The top-up deal costs \u00a312 in total',correct:false}
+],
+explanation:'Top-up: \u00a310 + (100 \u00d7 \u00a30.20) = \u00a310 + \u00a320 = \u00a330. Unlimited: \u00a315. The hidden charges make the cheap deal much more expensive.'},
+
+{id:'bv_gcse_011',level:'gcse',type:'hidden',
+scenario:'A \u201cfree delivery\u201d website sells a hoodie for \u00a325 but charges a \u00a33.50 \u201cservice fee\u201d. A shop sells the same hoodie for \u00a327 with nothing extra to pay.',
+optionA:{label:'Website',details:[{key:'Hoodie',value:'\u00a325'},{key:'Service fee',value:'\u00a33.50'},{key:'Delivery',value:'Free'}]},
+optionB:{label:'Shop',details:[{key:'Hoodie',value:'\u00a327'},{key:'Extra fees',value:'None'}]},
+conclusions:[
+{text:'The website is cheaper at \u00a325',correct:false},
+{text:'The shop is cheaper \u2014 \u00a327 vs \u00a328.50 for the website',correct:true},
+{text:'They cost the same',correct:false},
+{text:'The website saves \u00a32',correct:false}
+],
+explanation:'Website: \u00a325 + \u00a33.50 = \u00a328.50. Shop: \u00a327. The service fee makes the website \u00a31.50 more expensive.'},
+
+{id:'bv_gcse_012',level:'gcse',type:'hidden',
+scenario:'School trip option A: coach hire \u00a3200 shared between 40 students. Option B: parents drive \u2014 petrol costs \u00a35 per car, 4 students per car, but parking is \u00a38 per car.',
+optionA:{label:'Coach',details:[{key:'Hire cost',value:'\u00a3200'},{key:'Students',value:'40'}]},
+optionB:{label:'Cars',details:[{key:'Petrol per car',value:'\u00a35'},{key:'Students per car',value:'4'},{key:'Parking per car',value:'\u00a38'}]},
+conclusions:[
+{text:'Cars are cheaper \u2014 \u00a35 per car vs \u00a3200 for a coach',correct:false},
+{text:'The coach is cheaper \u2014 \u00a35 per student vs \u00a33.25 per student for cars',correct:false},
+{text:'Cars are cheaper \u2014 \u00a33.25 per student vs \u00a35 per student for the coach',correct:true},
+{text:'They cost the same per student',correct:false}
+],
+explanation:'Coach: \u00a3200 \u00f7 40 = \u00a35 per student. Cars: 40 \u00f7 4 = 10 cars needed. Total: 10 \u00d7 (\u00a35 + \u00a38) = 10 \u00d7 \u00a313 = \u00a3130. Per student: \u00a3130 \u00f7 40 = \u00a33.25.'},
+
+{id:'bv_gcse_013',level:'gcse',type:'hidden',
+scenario:'A \u201cheadphones deal\u201d offers \u00a320 headphones with a \u201cfree\u201d 2-year warranty that costs \u00a34.99. The same headphones cost \u00a326 elsewhere with a free 2-year warranty included.',
+optionA:{label:'Deal Store',details:[{key:'Headphones',value:'\u00a320'},{key:'Warranty',value:'\u00a34.99'}]},
+optionB:{label:'Other Store',details:[{key:'Headphones',value:'\u00a326'},{key:'Warranty',value:'Included'}]},
+conclusions:[
+{text:'The deal store is cheaper at \u00a320',correct:false},
+{text:'The deal store is cheaper overall \u2014 \u00a324.99 vs \u00a326',correct:true},
+{text:'The other store is cheaper at \u00a326',correct:false},
+{text:'They cost the same',correct:false}
+],
+explanation:'Deal store: \u00a320 + \u00a34.99 = \u00a324.99. Other store: \u00a326. Despite the hidden warranty cost, the deal store is still \u00a31.01 cheaper.'},
+
+// === Rate Comparison (5) ===
+{id:'bv_gcse_014',level:'gcse',type:'rate',
+scenario:'Two bags of rice at the supermarket. Bag A: 2 kg for \u00a33.00. Bag B: 5 kg for \u00a36.50.',
+optionA:{label:'Bag A',details:[{key:'Weight',value:'2 kg'},{key:'Price',value:'\u00a33.00'}]},
+optionB:{label:'Bag B',details:[{key:'Weight',value:'5 kg'},{key:'Price',value:'\u00a36.50'}]},
+conclusions:[
+{text:'Bag A is better value \u2014 \u00a31.50/kg vs \u00a31.30/kg',correct:false},
+{text:'Bag B is better value \u2014 \u00a31.30/kg vs \u00a31.50/kg for Bag A',correct:true},
+{text:'They cost the same per kg',correct:false},
+{text:'Bag A is better because it costs less overall',correct:false}
+],
+explanation:'Bag A: \u00a33.00 \u00f7 2 = \u00a31.50/kg. Bag B: \u00a36.50 \u00f7 5 = \u00a31.30/kg.'},
+
+{id:'bv_gcse_015',level:'gcse',type:'rate',
+scenario:'Two packs of felt-tip pens. Pack A: 12 pens for \u00a33.60. Pack B: 20 pens for \u00a35.00.',
+optionA:{label:'Pack A',details:[{key:'Pens',value:'12'},{key:'Price',value:'\u00a33.60'}]},
+optionB:{label:'Pack B',details:[{key:'Pens',value:'20'},{key:'Price',value:'\u00a35.00'}]},
+conclusions:[
+{text:'Pack A is better value \u2014 30p per pen vs 25p per pen',correct:false},
+{text:'Pack B is better value \u2014 25p per pen vs 30p per pen for Pack A',correct:true},
+{text:'They cost the same per pen',correct:false},
+{text:'Pack A is better because it costs less',correct:false}
+],
+explanation:'Pack A: \u00a33.60 \u00f7 12 = 30p per pen. Pack B: \u00a35.00 \u00f7 20 = 25p per pen.'},
+
+{id:'bv_gcse_016',level:'gcse',type:'rate',
+scenario:'Two part-time jobs for a student. Job A pays \u00a354 for a 6-hour shift. Job B pays \u00a380 for a 9-hour shift.',
+optionA:{label:'Job A',details:[{key:'Pay',value:'\u00a354'},{key:'Hours',value:'6'}]},
+optionB:{label:'Job B',details:[{key:'Pay',value:'\u00a380'},{key:'Hours',value:'9'}]},
+conclusions:[
+{text:'Job A pays better per hour \u2014 \u00a39/hour vs \u00a38.89/hour for Job B',correct:true},
+{text:'Job B pays better \u2014 \u00a380 is more than \u00a354',correct:false},
+{text:'They pay the same hourly rate',correct:false},
+{text:'Job B pays \u00a310/hour',correct:false}
+],
+explanation:'Job A: \u00a354 \u00f7 6 = \u00a39.00/hour. Job B: \u00a380 \u00f7 9 = \u00a38.89/hour.'},
+
+{id:'bv_gcse_017',level:'gcse',type:'rate',
+scenario:'Two bottles of shampoo. Bottle A: 300 ml for \u00a32.40. Bottle B: 500 ml for \u00a33.50.',
+optionA:{label:'Bottle A',details:[{key:'Volume',value:'300 ml'},{key:'Price',value:'\u00a32.40'}]},
+optionB:{label:'Bottle B',details:[{key:'Volume',value:'500 ml'},{key:'Price',value:'\u00a33.50'}]},
+conclusions:[
+{text:'Bottle A is cheaper per ml \u2014 0.8p/ml vs 0.7p/ml',correct:false},
+{text:'Bottle B is better value \u2014 0.7p/ml vs 0.8p/ml for Bottle A',correct:true},
+{text:'They cost the same per ml',correct:false},
+{text:'Bottle A is better because it costs less in total',correct:false}
+],
+explanation:'Bottle A: \u00a32.40 \u00f7 300 = 0.8p per ml. Bottle B: \u00a33.50 \u00f7 500 = 0.7p per ml.'},
+
+{id:'bv_gcse_018',level:'gcse',type:'rate',
+scenario:'Two car parks near school. Car Park A charges \u00a36 for 4 hours. Car Park B charges \u00a38 for 6 hours.',
+optionA:{label:'Car Park A',details:[{key:'Cost',value:'\u00a36'},{key:'Hours',value:'4'}]},
+optionB:{label:'Car Park B',details:[{key:'Cost',value:'\u00a38'},{key:'Hours',value:'6'}]},
+conclusions:[
+{text:'Car Park A is cheaper per hour \u2014 \u00a31.50/hour vs \u00a31.33/hour',correct:false},
+{text:'Car Park B is cheaper per hour \u2014 \u00a31.33/hour vs \u00a31.50/hour for Car Park A',correct:true},
+{text:'They cost the same per hour',correct:false},
+{text:'Car Park A is better because it costs less overall',correct:false}
+],
+explanation:'Car Park A: \u00a36 \u00f7 4 = \u00a31.50/hour. Car Park B: \u00a38 \u00f7 6 = \u00a31.33/hour.'},
+
+// === Break-Even (2) ===
+{id:'bv_gcse_019',level:'gcse',type:'breakeven',
+scenario:'A school lunch pass costs \u00a330 per month for unlimited lunches. Individual lunches cost \u00a32.50 each. How many lunches per month make the pass worth it?',
+optionA:{label:'Lunch Pass',details:[{key:'Monthly cost',value:'\u00a330'},{key:'Lunches',value:'Unlimited'}]},
+optionB:{label:'Pay Per Lunch',details:[{key:'Per lunch',value:'\u00a32.50'}]},
+conclusions:[
+{text:'The pass is worth it if you eat 12 or more lunches per month',correct:true},
+{text:'The pass is worth it if you eat 8 or more lunches per month',correct:false},
+{text:'Individual lunches are always cheaper',correct:false},
+{text:'The pass is worth it if you eat 15 or more lunches per month',correct:false}
+],
+explanation:'\u00a330 \u00f7 \u00a32.50 = 12. If you eat 12 or more school lunches in a month, the pass is better value.'},
+
+{id:'bv_gcse_020',level:'gcse',type:'breakeven',
+scenario:'A reusable water bottle costs \u00a315. Buying bottled water costs \u00a31 per bottle. How many bottles of water must you drink for the reusable bottle to save money?',
+optionA:{label:'Reusable Bottle',details:[{key:'Upfront cost',value:'\u00a315'},{key:'Refill cost',value:'\u00a30'}]},
+optionB:{label:'Bottled Water',details:[{key:'Per bottle',value:'\u00a31'}]},
+conclusions:[
+{text:'The reusable bottle saves money after 15 bottles',correct:false},
+{text:'The reusable bottle saves money after more than 15 bottles \u2014 from bottle 16 onwards',correct:true},
+{text:'Bottled water is always cheaper',correct:false},
+{text:'The reusable bottle saves money after 10 bottles',correct:false}
+],
+explanation:'Reusable: \u00a315 upfront then free. Bottled: \u00a31 each. After 15 bottles they cost the same (\u00a315 each). From bottle 16 onwards, the reusable bottle is cheaper.'}
+]
+};
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+const params = new URLSearchParams(window.location.search);
+let currentLevel = params.get('level') || 'core';
+if (!QUESTIONS[currentLevel]) currentLevel = 'core';
+
+let sessionLength = 10;
+let currentQuestions = [];
+let qIndex = 0;
+let score = 0;
+let answered = false;
+
+// ============================================================
+//  INIT
+// ============================================================
+function updateLevelInfo() {
+  const pill = document.getElementById('levelPill');
+  pill.textContent = currentLevel === 'core' ? 'Core' : 'GCSE';
+  pill.className = 'level-pill ' + currentLevel;
+
+  const title = document.getElementById('levelInfoTitle');
+  const desc = document.getElementById('levelInfoDesc');
+  if (currentLevel === 'gcse') {
+    title.textContent = 'GCSE';
+    desc.textContent = 'Year 10\u201311 — everyday value comparisons. Simpler scenarios with cleaner arithmetic.';
+  } else {
+    title.textContent = 'Core Maths';
+    desc.textContent = 'AQA 1350 §3.10 — cost-benefit analysis. Real-world comparisons: contracts, tariffs, loans, break-even calculations, hidden costs, opportunity cost.';
+  }
+}
+
+function renderSessionButtons() {
+  MaffsSession.render({
+    mount: document.getElementById('sessionRow'),
+    poolSize: QUESTIONS[currentLevel].length,
+    preferred: [10, 20, 30],
+    selected: sessionLength,
+    onChange: count => { sessionLength = count; }
+  });
+}
+
+function init() {
+  updateLevelInfo();
+
+  // Wire up level buttons
+  document.querySelectorAll('.level-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.level === currentLevel);
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.level-btn').forEach(x => x.classList.remove('selected'));
+      b.classList.add('selected');
+      currentLevel = b.dataset.level;
+      updateLevelInfo();
+      renderSessionButtons();
+    });
+  });
+  renderSessionButtons();
+}
+init();
+
+// ============================================================
+//  SHUFFLE
+// ============================================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ============================================================
+//  START GAME
+// ============================================================
+function startGame() {
+  const pool = QUESTIONS[currentLevel];
+  currentQuestions = shuffle(pool).slice(0, Math.min(sessionLength, pool.length));
+  qIndex = 0;
+  score = 0;
+  answered = false;
+
+  showScreen('gameScreen');
+  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('progressWrap').style.display = 'block';
+  updateScore();
+
+  mfg('game_started', { game_slug: 'better-value', level: currentLevel });
+
+  renderQuestion();
+}
+
+// ============================================================
+//  RENDER QUESTION
+// ============================================================
+function renderQuestion() {
+  const q = currentQuestions[qIndex];
+  answered = false;
+
+  // Scenario
+  document.getElementById('scenarioText').textContent = q.scenario;
+
+  // Option cards
+  const optionsRow = document.getElementById('optionsRow');
+  optionsRow.innerHTML = '';
+  if (q.optionA && q.optionA.details && q.optionA.details.length > 0) {
+    optionsRow.innerHTML = buildOptionCard(q.optionA, 'option-a') + buildOptionCard(q.optionB, 'option-b');
+    optionsRow.style.display = 'grid';
+  } else {
+    optionsRow.style.display = 'none';
+  }
+
+  // Conclusions — shuffle order
+  const grid = document.getElementById('conclusionsGrid');
+  const shuffledConclusions = shuffle(q.conclusions.map((c, i) => ({ ...c, origIndex: i })));
+  grid.innerHTML = shuffledConclusions.map((c, i) =>
+    `<div class="conclusion-card" data-idx="${i}" data-correct="${c.correct}" onclick="pickConclusion(this)">${c.text}</div>`
+  ).join('');
+
+  // Hide explanation
+  const panel = document.getElementById('explanationPanel');
+  panel.classList.remove('show');
+  document.getElementById('gameScreen').classList.remove('show-working');
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('nextMount'));
+  window.scrollTo(0, 0);
+
+  // Progress
+  updateProgress();
+}
+
+function buildOptionCard(opt, cls) {
+  let rows = opt.details.map(d =>
+    `<div class="detail-row"><span class="detail-key">${d.key}</span><span class="detail-value">${d.value}</span></div>`
+  ).join('');
+  return `<div class="option-card ${cls}"><div class="option-label">${opt.label}</div>${rows}</div>`;
+}
+
+// ============================================================
+//  PICK CONCLUSION
+// ============================================================
+function pickConclusion(el) {
+  if (answered) return;
+  answered = true;
+
+  const isCorrect = el.dataset.correct === 'true';
+  const q = currentQuestions[qIndex];
+
+  // Mark all cards
+  document.querySelectorAll('.conclusion-card').forEach(card => {
+    card.classList.add('locked');
+    if (card.dataset.correct === 'true' && card !== el) {
+      card.classList.add('correct-reveal');
+    }
+  });
+
+  if (isCorrect) {
+    el.classList.add('correct-pick');
+    el.innerHTML = '<span class="feedback-icon">\u2713</span> ' + el.textContent;
+    score++;
+  } else {
+    el.classList.add('incorrect-pick');
+    el.innerHTML = '<span class="feedback-icon">\u2717</span> ' + el.textContent;
+    // Highlight correct one
+    document.querySelectorAll('.conclusion-card').forEach(card => {
+      if (card.dataset.correct === 'true') {
+        card.classList.add('correct-reveal');
+        card.innerHTML = '<span class="feedback-icon">\u2713</span> ' + card.textContent;
+      }
+    });
+  }
+
+  updateScore();
+
+  // Analytics
+  mfg('question_answered', {
+    game_slug: 'better-value',
+    level: currentLevel,
+    question_index: qIndex + 1,
+    correct: isCorrect,
+    mode: q.type
+  });
+
+  // canon §7.6: a right answer moves on briskly; a wrong one shows the working and waits.
+  if (isCorrect) {
+    setTimeout(nextQuestion, 1200);
+    return;
+  }
+  document.getElementById('gameScreen').classList.add('show-working');
+  window.scrollTo(0, 0);
+  const panel = document.getElementById('explanationPanel');
+  document.getElementById('explanationText').textContent = q.explanation;
+  setTimeout(() => panel.classList.add('show'), 100);
+  MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextQuestion });
+}
+
+// ============================================================
+//  NEXT QUESTION
+// ============================================================
+function nextQuestion() {
+  qIndex++;
+  if (qIndex >= currentQuestions.length) {
+    endGame();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ============================================================
+//  END GAME
+// ============================================================
+function endGame() {
+  const total = currentQuestions.length;
+  const pct = Math.round((score / total) * 100);
+
+  // PB logic
+  const pbKey = 'bv_pb_' + currentLevel;
+  const oldPB = parseInt(localStorage.getItem(pbKey) || '0');
+  const isNewPB = pct > oldPB && total >= 10;
+
+  if (isNewPB) {
+    localStorage.setItem(pbKey, pct);
+    mfg('personal_best_set', {
+      game_slug: 'better-value',
+      level: currentLevel,
+      score: pct,
+      previous_best: oldPB
+    });
+  }
+
+  document.getElementById('finalScore').textContent = score + '/' + total;
+  document.getElementById('finalPct').textContent = pct + '%';
+  document.getElementById('pbBadge').style.display = isNewPB ? 'block' : 'none';
+
+  const currentPB = isNewPB ? pct : oldPB;
+  document.getElementById('pbLine').textContent = currentPB > 0 ? 'Personal best: ' + currentPB + '%' : '';
+
+  mfg('game_completed', {
+    game_slug: 'better-value',
+    level: currentLevel,
+    score: score,
+    questions_answered: total,
+    questions_correct: score
+  });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('better-value',currentLevel,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('better-value',currentLevel,score);}}
+
+  showScreen('resultsScreen');
+  document.getElementById('gameHeader').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+}
+
+// ============================================================
+//  UI HELPERS
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function updateScore() {
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreTotal').textContent = Math.min(qIndex + 1, currentQuestions.length);
+}
+
+function updateProgress() {
+  const pct = ((qIndex) / currentQuestions.length) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function resetToStart() {
+  showScreen('startScreen');
+  document.getElementById('gameHeader').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+}
+
+
+(function renderMethodRef(){
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
+  var k=function(t){return katex.renderToString(t,{throwOnError:false});};
+
+  document.getElementById('methodValue').innerHTML=
+    '<strong>Comparing two deals by unit cost</strong>'+
+    'A gym offers two membership options:<br><br>'+
+    '<b style="color:#3b82f6">Option A:</b> \u00A312 per month, 12-month contract = '+k('12 \\times 12 = \\pounds144')+' total<br>'+
+    '<b style="color:#f97316">Option B:</b> Pay-as-you-go at \u00A34.50 per visit<br><br>'+
+    'You plan to visit <b>3 times per week</b> for the full year.<br>'+
+    'Total visits: '+k('3 \\times 52 = 156')+' visits.<br><br>'+
+    '<b style="color:#3b82f6">Option A cost per visit:</b>'+
+    K('\\frac{\\pounds144}{156} = \\pounds0.92 \\text{ per visit}')+
+    '<b style="color:#f97316">Option B total cost:</b>'+
+    K('156 \\times \\pounds4.50 = \\pounds702')+
+    '<b>Recommendation:</b> Option A is significantly better value \u2014 you save \u00A3558 over the year. The monthly contract gives a unit cost of 92p per visit versus \u00A34.50 per visit.<br><br>'+
+    '<em style="color:var(--muted)">Tip: always convert to the same unit (per item, per month, per litre, etc.) to make a fair comparison.</em>';
+})();
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

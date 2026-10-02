@@ -1,0 +1,23 @@
+{
+ "_comment": [
+  "THE ONE TABLE: the roster's Levels-column label (lower-cased) -> the level key the game itself uses.",
+  "Read by scripts/bank_common.py (roster_levels(), used by check-site.py and extract-banks.py) and by",
+  "scripts/check-leaderboard-coverage.js. Nothing else may keep a copy of it.",
+  "It lives in JSON, not in bank_common.py, because the coverage check is JavaScript and cannot import Python.",
+  "The keys are NOT derivable from the roster: 'L4' is 'level4' and 'L3' is 'level3', and nothing in the label says so.",
+  "A label in .claude/rules/game-roster.md that is not listed here is an ERROR in both readers, never silently dropped:",
+  "a dropped label is a level no checker loads, and 'A-Level Year 2' went unchecked that way until 30 Sep 2026.",
+  "This maps roster labels to keys. Display names for keys are a different table: MaffsLeaderboard.levelLabel()."
+ ],
+ "labels": {
+  "year 6": "year6",
+  "ks3": "ks3",
+  "gcse": "gcse",
+  "a-level": "alevel",
+  "a-level year 2": "alevel2",
+  "core": "core",
+  "l3": "level3",
+  "l4": "level4",
+  "further": "further"
+ }
+}

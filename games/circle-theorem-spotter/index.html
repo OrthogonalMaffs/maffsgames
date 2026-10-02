@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Identify and apply all 7 circle theorems. 55 GCSE questions, every one with its own diagram, and instant marking.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/circle-theorem-spotter/">
+<meta property="og:title" content="Circle Theorem Spotter — MaffsGames">
+<meta property="og:description" content="Identify and apply all 7 circle theorems. 55 GCSE questions, every one with its own diagram, and instant marking.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/circle-theorem-spotter/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Circle Theorem Spotter — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--primary:#58a6ff;--accent:#3fb950;--wrong:#f85149;--text:#e6edf3;--muted:#8b949e}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}.hud-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:140px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.6rem}
+.q-card .figure{width:100%;max-width:340px;margin:0 auto .2rem}
+.q-card .figure svg{overflow:visible}
+.q-card .context{font-size:.92rem;color:var(--text);line-height:1.6;max-width:640px}
+.q-card .prompt{font-size:.85rem;color:var(--accent);font-weight:600;margin-top:.3rem}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;cursor:pointer;transition:all .15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center;line-height:1.3}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(88,166,255,.2)}
+.opt-btn.correct{border-color:var(--accent);background:rgba(63,185,80,.1);animation:pop .3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(248,81,73,.1);animation:shake .3s}
+.opt-btn.reveal{border-color:var(--accent);opacity:.7}.opt-btn.disabled{pointer-events:none;opacity:.5}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.timer-text{text-align:center;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:1rem}
+.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s}
+.pip.done{background:var(--accent)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem}
+.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.play-again:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+.katex{font-size:1.05em!important}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Circle Theorem Spotter</h1><div class="sub">Name the theorem. Find the angle. State the reason.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:1rem 0;line-height:1.5">
+      GCSE Higher — all seven circle theorems.<br>
+      Identify theorems, calculate missing angles, and state geometric reasons.
+    </p>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <div style="text-align:center;margin-top:1.5rem"><button class="play-again" onclick="startGame()">Start</button></div>
+  </div>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div>
+    </div>
+    <div class="timer-text" id="timerDisplay">0s</div>
+    <div class="progress" id="progress"></div>
+    <div class="q-card">
+      <div class="figure" id="figure"></div>
+      <div class="context" id="context"></div>
+      <div class="prompt" id="prompt"></div>
+    </div>
+    <div class="options" id="options"></div>
+  </div>
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+<script>
+// ============================================================
+//  FIGURES
+//  Circle theorems are a spatial topic and every exam question
+//  ships with a figure. This game had none: 23KB of plain text
+//  asking students to hold constructions in their heads. Each
+//  question now carries a `fig` spec rendered to inline SVG.
+// ============================================================
+const FIG = (function () {
+  const W = 300, H = 244, CX = 150, CY = 118, R = 84;
+  const C_CIRC = '#6e7681',   // the circle itself
+        C_LINE = '#58a6ff',   // chords, radii
+        C_TAN  = '#3fb950',   // tangents
+        C_ANG  = '#d29922',   // angle arcs + their labels
+        C_TXT  = '#e6edf3',
+        C_CEN  = '#f85149';   // the centre O
+
+  const rad = d => d * Math.PI / 180;
+  const P = d => [CX + R * Math.cos(rad(d)), CY - R * Math.sin(rad(d))];
+  const O = [CX, CY];
+  const n = v => Math.round(v * 10) / 10;
+
+  // --- primitives ---------------------------------------------------------
+  function circle() {
+    return '<circle cx="' + CX + '" cy="' + CY + '" r="' + R +
+           '" fill="none" stroke="' + C_CIRC + '" stroke-width="1.6"/>';
+  }
+  function seg(a, b, col, dash) {
+    return '<line x1="' + n(a[0]) + '" y1="' + n(a[1]) + '" x2="' + n(b[0]) +
+           '" y2="' + n(b[1]) + '" stroke="' + (col || C_LINE) +
+           '" stroke-width="1.8"' + (dash ? ' stroke-dasharray="4 3"' : '') + '/>';
+  }
+  // Label offset radially outwards from the circle centre.
+  function dot(p, label, col, awayFrom) {
+    let s = '<circle cx="' + n(p[0]) + '" cy="' + n(p[1]) + '" r="3.2" fill="' +
+            (col || C_TXT) + '"/>';
+    if (label) {
+      const from = awayFrom || O;
+      let dx = p[0] - from[0], dy = p[1] - from[1];
+      const m = Math.hypot(dx, dy) || 1;
+      dx = dx / m * 15; dy = dy / m * 15;
+      s += '<text x="' + n(p[0] + dx) + '" y="' + n(p[1] + dy + 4) +
+           '" fill="' + (col || C_TXT) + '" font-size="13" font-weight="600" ' +
+           'text-anchor="middle" font-family="Outfit,sans-serif">' + label + '</text>';
+    }
+    return s;
+  }
+  const ang = (v, p) => Math.atan2(p[1] - v[1], p[0] - v[0]);
+  // Radial offset goes unstable when the reference point is close to O, and O
+  // is the centre so it always is. Nothing is drawn directly above O.
+  function centreDot() {
+    return '<circle cx="' + CX + '" cy="' + CY + '" r="3.2" fill="' + C_CEN + '"/>' +
+           '<text x="' + CX + '" y="' + (CY - 9) + '" fill="' + C_CEN +
+           '" font-size="13" font-weight="600" text-anchor="middle" ' +
+           'font-family="Outfit,sans-serif">O</text>';
+  }
+  // Several questions use P/Q/R/S or X/Y/Z/W rather than A/B/C/D.
+  const nm = (o, i, def) => (o.names && o.names[i]) || def;
+
+  // Arc marking the angle at v between the rays to p1 and p2.
+  function arc(v, p1, p2, label, rr, reflex, skew) {
+    rr = rr || 22;
+    let a1 = ang(v, p1), a2 = ang(v, p2), d = a2 - a1;
+    while (d <= -Math.PI) d += 2 * Math.PI;
+    while (d > Math.PI) d -= 2 * Math.PI;
+    if (reflex) d = d > 0 ? d - 2 * Math.PI : d + 2 * Math.PI;
+    const large = Math.abs(d) > Math.PI ? 1 : 0, sweep = d > 0 ? 1 : 0;
+    const s = [v[0] + rr * Math.cos(a1), v[1] + rr * Math.sin(a1)];
+    const e = [v[0] + rr * Math.cos(a2), v[1] + rr * Math.sin(a2)];
+    let out = '<path d="M' + n(s[0]) + ' ' + n(s[1]) + ' A' + rr + ' ' + rr +
+              ' 0 ' + large + ' ' + sweep + ' ' + n(e[0]) + ' ' + n(e[1]) +
+              '" fill="none" stroke="' + C_ANG + '" stroke-width="1.7"/>';
+    if (label) {
+      const lm = rr + 15, am = a1 + d / 2 + (skew || 0) * Math.PI / 180;
+      out += '<text x="' + n(v[0] + lm * Math.cos(am)) + '" y="' +
+             n(v[1] + lm * Math.sin(am) + 4) + '" fill="' + C_ANG +
+             '" font-size="12.5" font-weight="700" text-anchor="middle" ' +
+             'font-family="Outfit,sans-serif">' + label + '</text>';
+    }
+    return out;
+  }
+  // Square marker for a right angle at v.
+  function sq(v, p1, p2, label) {
+    const s = 11, a1 = ang(v, p1), a2 = ang(v, p2);
+    const u = [Math.cos(a1) * s, Math.sin(a1) * s];
+    const w = [Math.cos(a2) * s, Math.sin(a2) * s];
+    const pts = [[v[0] + u[0], v[1] + u[1]],
+                 [v[0] + u[0] + w[0], v[1] + u[1] + w[1]],
+                 [v[0] + w[0], v[1] + w[1]]];
+    let out = '<polyline points="' + pts.map(q => n(q[0]) + ',' + n(q[1])).join(' ') +
+              '" fill="none" stroke="' + C_ANG + '" stroke-width="1.6"/>';
+    if (label) {
+      const am = a1 + (a2 - a1) / 2, lm = 30;
+      out += '<text x="' + n(v[0] + lm * Math.cos(am)) + '" y="' +
+             n(v[1] + lm * Math.sin(am) + 4) + '" fill="' + C_ANG +
+             '" font-size="12.5" font-weight="700" text-anchor="middle" ' +
+             'font-family="Outfit,sans-serif">' + label + '</text>';
+    }
+    return out;
+  }
+  // Tick marks across the middle of a segment, to show equal lengths.
+  function tick(a, b, count) {
+    const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    const th = Math.atan2(b[1] - a[1], b[0] - a[0]);
+    const px = -Math.sin(th) * 5, py = Math.cos(th) * 5;
+    let out = '';
+    for (let i = 0; i < (count || 1); i++) {
+      const off = (i - ((count || 1) - 1) / 2) * 4.5;
+      const ox = Math.cos(th) * off, oy = Math.sin(th) * off;
+      out += '<line x1="' + n(mx + ox - px) + '" y1="' + n(my + oy - py) +
+             '" x2="' + n(mx + ox + px) + '" y2="' + n(my + oy + py) +
+             '" stroke="' + C_TAN + '" stroke-width="1.7"/>';
+    }
+    return out;
+  }
+  // Tangent at the point on the circle at angle `deg`, drawn `len` each way.
+  function tangentAt(deg, len) {
+    const p = P(deg), t = rad(deg + 90), L = len || 74;
+    return { p: p,
+             a: [p[0] + L * Math.cos(t), p[1] - L * Math.sin(t)],
+             b: [p[0] - L * Math.cos(t), p[1] + L * Math.sin(t)] };
+  }
+
+  // --- archetypes ---------------------------------------------------------
+  const T = {
+    // Angle at centre vs angle at circumference, same arc AB.
+    // Positions are DERIVED from `deg`, the angle actually marked at the centre,
+    // so the picture matches the number. `inside` puts C within the marked
+    // region, which is the case where the angle at C is half the reflex.
+    centreCirc: function (o) {
+      const deg = o.deg, dir = o.dir === undefined ? 270 : o.dir;
+      const aDeg = dir - deg / 2, bDeg = dir + deg / 2;
+      const A = P(aDeg), B = P(bDeg);
+      // C sits at the midpoint of whichever arc it belongs on.
+      const C = P(o.inside ? dir : dir + 180);
+      let s = circle() + seg(O, A) + seg(O, B) + seg(C, A) + seg(C, B);
+      // Sweep the marked region the correct way round: reflex when deg > 180.
+      s += arc(O, A, B, o.centreLab, 24, deg > 180, -32);
+      if (o.circLab) s += arc(C, A, B, o.circLab, o.inside ? 26 : 20, false, 32);
+      s += dot(A, nm(o,0,'A')) + dot(B, nm(o,1,'B')) + dot(C, nm(o,2,'C')) + centreDot();
+      return s;
+    },
+    // Angle in a semicircle: AB a diameter, C on the circle.
+    semicircle: function (o) {
+      const A = P(180), B = P(0), C = P(o.C);
+      let s = circle() + seg(A, B) + seg(A, C) + seg(B, C);
+      s += sq(C, A, B, o.cLab || null);
+      if (o.aLab) s += arc(A, B, C, o.aLab, 22);
+      if (o.bLab) s += arc(B, C, A, o.bLab, 22);
+      s += dot(A, nm(o,0,'A')) + dot(B, nm(o,1,'B')) + dot(C, nm(o,2,'C')) + centreDot();
+      return s;
+    },
+    // Angles subtended by chord AB at two points on the same arc.
+    sameSegment: function (o) {
+      const A = P(o.A), B = P(o.B), C = P(o.C), D = P(o.D);
+      let s = circle() + seg(A, B, C_CIRC, true) +
+              seg(C, A) + seg(C, B) + seg(D, A) + seg(D, B);
+      s += arc(C, A, B, o.cLab, 20) + arc(D, A, B, o.dLab, 20);
+      s += dot(A, nm(o,0,'A')) + dot(B, nm(o,1,'B')) + dot(C, nm(o,2,'C')) + dot(D, nm(o,3,'D'));
+      return s;
+    },
+    // Cyclic quadrilateral. labs = {A:..,B:..,C:..,D:..}
+    cyclicQuad: function (o) {
+      const ptsDeg = [o.A, o.B, o.C, o.D], names = o.names || ['A', 'B', 'C', 'D'];
+      const p = ptsDeg.map(P);
+      let s = circle();
+      for (let i = 0; i < 4; i++) s += seg(p[i], p[(i + 1) % 4]);
+      const labs = o.labs || {};
+      for (let i = 0; i < 4; i++) {
+        const l = labs[names[i]];
+        if (l) s += arc(p[i], p[(i + 3) % 4], p[(i + 1) % 4], l, 20);
+      }
+      for (let i = 0; i < 4; i++) s += dot(p[i], names[i]);
+      return s;
+    },
+    // Tangent meeting a radius at the point of contact.
+    tangentRadius: function (o) {
+      const t = tangentAt(o.A === undefined ? 270 : o.A);
+      let s = circle() + seg(t.a, t.b, C_TAN) + seg(O, t.p);
+      s += sq(t.p, O, t.a, o.rightLab || null);
+      if (o.B !== undefined) {
+        const B = P(o.B);
+        s += seg(t.p, B);
+        if (o.oabLab) s += arc(t.p, O, B, o.oabLab, 22, false, -14);
+        if (o.batLab) s += arc(t.p, B, t.a, o.batLab, 38, false, 10);
+        s += dot(B, nm(o,1,'B'));
+      }
+      // Q42 needs the right-angled triangle OAP, not just the tangent.
+      if (o.showP) {
+        const L = o.pLen || 62, th = rad((o.A === undefined ? 270 : o.A) + 90);
+        const Pp = [t.p[0] + L * Math.cos(th), t.p[1] - L * Math.sin(th)];
+        s += seg(t.p, Pp, C_TAN) + seg(O, Pp, C_LINE, true);
+        if (o.paLab) s += '<text x="' + n((t.p[0] + Pp[0]) / 2) + '" y="' +
+          n((t.p[1] + Pp[1]) / 2 + 16) + '" fill="' + C_TAN +
+          '" font-size="11.5" text-anchor="middle" font-family="Outfit,sans-serif">' + o.paLab + '</text>';
+        if (o.oaLab) s += '<text x="' + n(O[0] - 13) + '" y="' + n((O[1] + t.p[1]) / 2 + 4) +
+          '" fill="' + C_LINE + '" font-size="11.5" text-anchor="middle" font-family="Outfit,sans-serif">' +
+          o.oaLab + '</text>';
+        if (o.opLab) s += '<text x="' + n((O[0] + Pp[0]) / 2 + 4) + '" y="' +
+          n((O[1] + Pp[1]) / 2 - 8) + '" fill="' + C_ANG +
+          '" font-size="12" font-weight="700" text-anchor="middle" font-family="Outfit,sans-serif">' +
+          o.opLab + '</text>';
+        s += dot(Pp, 'P', C_TXT, O);
+      }
+      s += dot(t.p, nm(o,0,'A'), C_TXT, O) + centreDot();
+      s += '<text x="' + n(t.a[0]) + '" y="' + n(t.a[1] - 8) + '" fill="' + C_TAN +
+           '" font-size="12" text-anchor="middle" font-family="Outfit,sans-serif">T</text>';
+      return s;
+    },
+    // Alternate segment: tangent at A, chord AB, angle at C on the far arc.
+    altSegment: function (o) {
+      const t = tangentAt(o.A === undefined ? 270 : o.A);
+      const B = P(o.B), C = P(o.C);
+      let s = circle() + seg(t.a, t.b, C_TAN) + seg(t.p, B) + seg(C, t.p) + seg(C, B);
+      if (o.tanLab) s += arc(t.p, B, t.a, o.tanLab, 24);
+      if (o.altLab) s += arc(C, t.p, B, o.altLab, 20);
+      if (o.showO) { s += seg(O, t.p, C_LINE, true) + seg(O, B, C_LINE, true) +
+                          arc(O, t.p, B, o.oLab, 26, false, -30) + centreDot(); }
+      s += dot(t.p, nm(o,0,'A'), C_TXT, O) + dot(B, nm(o,1,'B')) + dot(C, nm(o,2,'C'));
+      s += '<text x="' + n(t.a[0]) + '" y="' + n(t.a[1] - 8) + '" fill="' + C_TAN +
+           '" font-size="12" text-anchor="middle" font-family="Outfit,sans-serif">T</text>';
+      return s;
+    },
+    // Two tangents from an external point P.
+    twoTangents: function (o) {
+      const aDeg = o.A === undefined ? 215 : o.A, bDeg = o.B === undefined ? 325 : o.B;
+      const mid = rad((aDeg + bDeg) / 2 + (Math.abs(bDeg - aDeg) > 180 ? 180 : 0));
+      let half = rad(Math.abs(bDeg - aDeg) / 2);
+      if (half > Math.PI / 2) half = Math.PI - half;
+      // Keep P on the canvas: cap its distance from O and scale the circle to suit.
+      const MAXD = 104, Rt = Math.min(R, MAXD * Math.cos(half));
+      const Pr = d => [CX + Rt * Math.cos(rad(d)), CY - Rt * Math.sin(rad(d))];
+      const A = Pr(aDeg), B = Pr(bDeg);
+      const d = Rt / Math.cos(half);
+      const Pp = [CX + d * Math.cos(mid), CY - d * Math.sin(mid)];
+      let s = '<circle cx="' + CX + '" cy="' + CY + '" r="' + n(Rt) +
+              '" fill="none" stroke="' + C_CIRC + '" stroke-width="1.6"/>' +
+              seg(Pp, A, C_TAN) + seg(Pp, B, C_TAN) + seg(O, A) + seg(O, B);
+      s += sq(A, O, Pp) + sq(B, O, Pp);
+      if (o.showPO) s += seg(Pp, O, C_LINE, true);
+      if (o.poaLab) s += arc(Pp, O, A, o.poaLab, 44, false, -18);
+      if (o.pLab) s += arc(Pp, A, B, o.pLab, 24);
+      if (o.oLab) s += arc(O, A, B, o.oLab, 24);
+      if (o.equal) s += tick(Pp, A, 1) + tick(Pp, B, 1);
+      s += dot(A, nm(o,0,'A')) + dot(B, nm(o,1,'B')) + dot(Pp, nm(o,2,'P'), C_TXT, O) + centreDot();
+      return s;
+    },
+    // Perpendicular from the centre bisects a chord.
+    chordBisect: function (o) {
+      const A = P(o.A === undefined ? 205 : o.A), B = P(o.B === undefined ? 335 : o.B);
+      const M = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2];
+      let s = circle() + seg(A, B) + seg(O, M) + seg(O, A, C_LINE, true) + seg(O, B, C_LINE, true);
+      s += sq(M, O, A) + tick(A, M, 1) + tick(M, B, 1);
+      if (o.chordLab) s += '<text x="' + n((A[0] + M[0]) / 2) + '" y="' + n(M[1] + 20) +
+        '" fill="' + C_TAN + '" font-size="11.5" text-anchor="middle" font-family="Outfit,sans-serif">' +
+        o.chordLab + '</text>';
+      if (o.radLab) s += '<text x="' + n((O[0] + B[0]) / 2 + 12) + '" y="' + n((O[1] + B[1]) / 2 - 5) +
+        '" fill="' + C_LINE + '" font-size="11.5" text-anchor="middle" font-family="Outfit,sans-serif">' +
+        o.radLab + '</text>';
+      if (o.distLab) s += '<text x="' + n(O[0] - 14) + '" y="' + n((O[1] + M[1]) / 2 + 4) +
+        '" fill="' + C_ANG + '" font-size="11.5" text-anchor="middle" font-family="Outfit,sans-serif">' +
+        o.distLab + '</text>';
+      s += dot(A, nm(o,0,'A')) + dot(B, nm(o,1,'B')) + dot(M, nm(o,2,'M'), C_TXT, O) + centreDot();
+      return s;
+    }
+  };
+
+  function render(spec) {
+    if (!spec || !T[spec.t]) return '';
+    return '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" ' +
+           'style="max-width:340px;height:auto;display:block;margin:0 auto" ' +
+           'role="img" aria-label="' + (spec.alt || 'Circle theorem diagram') + '">' +
+           T[spec.t](spec) + '</svg>';
+  }
+  return { render: render };
+})();
+
+const QUESTIONS={
+gcse:[
+  {fig:{t:'centreCirc',deg:110,centreLab:'2x',circLab:'x'},ctx:'O is the centre. Both marked angles stand on the same arc AB.',ask:'Which theorem does this diagram show?',correct:'Angle at centre = 2 × angle at circumference',d:['Angles in same segment','Angle in semicircle','Cyclic quadrilateral']},
+  {fig:{t:'semicircle',C:65},ctx:'AB is a straight line through the centre O, and C is on the circle.',ask:'Which theorem does this diagram show?',correct:'Angle in a semicircle = 90°',d:['Angle at centre theorem','Alternate segment theorem','Tangent-radius']},
+  {fig:{t:'sameSegment',A:200,B:340,C:110,D:50,cLab:'x',dLab:'x'},ctx:'C and D both lie on the major arc, on the same side of chord AB.',ask:'Which theorem does this diagram show?',correct:'Angles in the same segment are equal',d:['Angle at centre theorem','Cyclic quadrilateral','Alternate segment theorem']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'a',C:'c'}},ctx:'All four vertices of ABCD lie on the circle.',ask:'Which theorem does this diagram show?',correct:'Opposite angles in a cyclic quad sum to 180°',d:['Angles in same segment','Angle at centre theorem','Tangent-radius']},
+  {fig:{t:'tangentRadius'},ctx:'The green line touches the circle at exactly one point, A. OA is a radius.',ask:'Which theorem does this diagram show?',correct:'Tangent is perpendicular to the radius',d:['Alternate segment theorem','Angle in semicircle','Angle at centre theorem']},
+  {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'x',altLab:'x'},ctx:'The green line is a tangent touching at A. AB is a chord, and C lies on the far arc.',ask:'Which theorem does this diagram show?',correct:'Alternate segment theorem',d:['Tangent-radius','Angles in same segment','Angle at centre theorem']},
+  {fig:{t:'twoTangents',equal:true},ctx:'Both green lines are drawn from the external point P and each touches the circle once.',ask:'Which theorem does this diagram show?',correct:'Two tangents from a point are equal',d:['Tangent-radius','Alternate segment theorem','Angle in semicircle']},
+  {fig:{t:'chordBisect'},ctx:'OM is drawn from the centre to meet chord AB, and the two halves are marked equal.',ask:'Which property does this diagram show?',correct:'Perpendicular from centre bisects chord',d:['Tangent-radius','Angle at centre theorem','Alternate segment theorem']},
+  {fig:{t:'centreCirc',deg:100,centreLab:'100&deg;',circLab:'?'},ctx:'The angle subtended at the centre by arc AB is 100°. What is the angle subtended at the circumference by the same arc?',ask:'Which theorem?',correct:'Angle at centre = 2 × angle at circumference',d:['Angles in same segment','Cyclic quadrilateral','Alternate segment theorem']},
+  {fig:{t:'semicircle',C:65,cLab:'?'},ctx:'AB is a diameter. C is a point on the circumference.',ask:'What is angle ACB?',correct:'90°',d:['45°','180°','60°']},
+  {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'55&deg;',altLab:'?'},ctx:'A chord is drawn. The angle between the chord and the tangent at one end is 55°.',ask:'Which theorem gives the angle in the alternate segment?',correct:'Alternate segment theorem',d:['Angle at centre theorem','Tangent-radius','Cyclic quadrilateral']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'72&deg;',C:'?'}},ctx:'ABCD is a cyclic quadrilateral. Angle A = 72°.',ask:'What is angle C?',correct:'108°',d:['72°','90°','144°']},
+  {fig:{t:'tangentRadius',rightLab:'?'},ctx:'O is the centre. OA is a radius. AT is a tangent at A.',ask:'What is angle OAT?',correct:'90°',d:['45°','180°','60°']},
+  {fig:{t:'twoTangents',equal:true},ctx:'Two tangents PA and PB are drawn from point P. PA = 8 cm.',ask:'What is PB?',correct:'8 cm',d:['4 cm','16 cm','Cannot tell']},
+  {fig:{t:'centreCirc',deg:120,centreLab:'120&deg;',circLab:'?'},ctx:'The angle at the centre is 120°. Find the angle at the circumference subtended by the same arc.',ask:'Find the angle',correct:'60°',d:['120°','240°','30°']},
+  {fig:{t:'centreCirc',deg:70,centreLab:'?',circLab:'35&deg;'},ctx:'The angle at the circumference is 35°. Find the angle at the centre subtended by the same arc.',ask:'Find the angle',correct:'70°',d:['35°','17.5°','145°']},
+  {fig:{t:'centreCirc',deg:98,centreLab:'98&deg;',circLab:'?'},ctx:'The angle at the centre is 98°. Find the angle at the circumference.',ask:'Find the angle',correct:'49°',d:['98°','196°','82°']},
+  {fig:{t:'centreCirc',deg:128,centreLab:'?',circLab:'64&deg;'},ctx:'The angle at the circumference is 64°. Find the angle at the centre.',ask:'Find the angle',correct:'128°',d:['64°','32°','116°']},
+  {fig:{t:'centreCirc',deg:140,centreLab:'140&deg;',circLab:'?',inside:true},ctx:'The angle at the centre is 140°. Find the angle at the circumference on the MAJOR arc side.',ask:'Find the angle',correct:'110°',d:['70°','140°','220°']},
+  {fig:{t:'centreCirc',deg:260,centreLab:'260&deg;',circLab:'?'},ctx:'The reflex angle at the centre is 260°. Find the angle at the circumference subtended by the major arc.',ask:'Find the angle',correct:'130°',d:['50°','260°','100°']},
+  {fig:{t:'centreCirc',deg:180,centreLab:'?',circLab:'90&deg;'},ctx:'The angle at the circumference is 90°. What is the angle at the centre?',ask:'Find the angle',correct:'180°',d:['90°','45°','360°']},
+  {fig:{t:'centreCirc',deg:180,centreLab:'180&deg;'},ctx:'If the angle at the centre is 180°, what shape is formed?',ask:'What does this tell us?',correct:'The chord is a diameter',d:['The angle at circumference is 180°','The triangle is equilateral','The chord is a tangent']},
+  {fig:{t:'sameSegment',A:200,B:340,C:110,D:50,cLab:'42&deg;',dLab:'?'},ctx:'Angle ACB = 42° where A, B, C lie on the circle. D is another point on the same arc as C.',ask:'Find angle ADB',correct:'42°',d:['84°','21°','138°']},
+  {fig:{t:'sameSegment',A:200,B:340,C:110,D:50,cLab:'58&deg;',dLab:'?',names:['P','Q','R','S']},ctx:'Angle PRQ = 58° in a circle. S is on the same arc as R.',ask:'Find angle PSQ',correct:'58°',d:['116°','29°','122°']},
+  {fig:{t:'sameSegment',A:200,B:340,C:110,D:50,cLab:'x',dLab:'3x &minus; 80'},ctx:'Two angles in the same segment are marked x and 3x − 80.',ask:'Find x',correct:'40°',d:['20°','80°','60°']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'75&deg;',C:'?'}},ctx:'Angle in one segment is 75°. What is the angle in the opposite segment (subtended by the same chord)?',ask:'Find the angle',correct:'105°',d:['75°','150°','85°']},
+  {fig:{t:'sameSegment',A:200,B:340,C:110,D:50,cLab:'50&deg;',dLab:'?',names:['X','Z','Y','W']},ctx:'Angle XYZ = 50° at circumference. Angle XWZ is in the same segment.',ask:'Find angle XWZ',correct:'50°',d:['100°','25°','130°']},
+  {fig:{t:'sameSegment',A:200,B:340,C:110,D:50,cLab:'2x + 10',dLab:'3x &minus; 20'},ctx:'Angles ACB and ADB are in the same segment. ACB = 2x + 10, ADB = 3x − 20.',ask:'Find x',correct:'30',d:['10','20','40']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'85&deg;',B:'100&deg;',C:'?'}},ctx:'ABCD is a cyclic quadrilateral. Angle A = 85°, angle B = 100°.',ask:'Find angle C',correct:'95°',d:['85°','100°','80°']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'85&deg;',B:'100&deg;',D:'?'}},ctx:'ABCD is a cyclic quadrilateral. Angle A = 85°, angle B = 100°.',ask:'Find angle D',correct:'80°',d:['100°','85°','95°']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'x',C:'2x &minus; 30'}},ctx:'ABCD cyclic. Angle A = x, angle C = 2x − 30.',ask:'Find x',correct:'70',d:['30','60','90']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{B:'3x + 10',D:'2x + 20'}},ctx:'ABCD cyclic. Angle B = 3x + 10, angle D = 2x + 20.',ask:'Find x',correct:'30',d:['20','40','35']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{P:'110&deg;',R:'?'},names:['P','Q','R','S']},ctx:'PQRS is a cyclic quadrilateral. Angle P = 110°.',ask:'Find angle R',correct:'70°',d:['110°','90°','80°']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'94&deg;',B:'87&deg;'}},ctx:'ABCD cyclic. Angle A = 94°, angle B = 87°.',ask:'Find angle C + angle D',correct:'179°',d:['180°','181°','360°']},
+  {fig:{t:'tangentRadius',B:200,oabLab:'25&deg;',batLab:'?'},ctx:'OA is a radius, AT is a tangent. Angle OAB = 25° (B on circle).',ask:'Find angle BAT',correct:'65°',d:['25°','90°','155°']},
+  {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'40&deg;',altLab:'?'},ctx:'Tangent at A. Chord AB makes 40° with the tangent.',ask:'Angle in the alternate segment (angle ACB where C is on the major arc)',correct:'40°',d:['80°','140°','50°']},
+  {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'55&deg;',altLab:'?'},ctx:'Tangent at A. Chord AB makes 55° with the tangent.',ask:'Angle ACB in the alternate segment',correct:'55°',d:['110°','35°','125°']},
+  {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'?',altLab:'62&deg;'},ctx:'Angle in the alternate segment is 62°.',ask:'Angle between tangent and chord',correct:'62°',d:['124°','31°','118°']},
+  {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'48&deg;',showO:true,oLab:'?',names:['P','Q','R']},ctx:'Tangent at P. Angle QPT = 48° (Q on circle). O is centre.',ask:'Find angle QOP (angle at centre)',correct:'96°',d:['48°','42°','132°']},
+  {fig:{t:'twoTangents',A:205,B:335,pLab:'50&deg;',oLab:'?'},ctx:'Two tangents from point P. Angle between them is 50°.',ask:'Find the angle subtended at the centre by the minor arc',correct:'130°',d:['50°','100°','310°']},
+  {fig:{t:'twoTangents',A:210,B:330,pLab:'60&deg;',showPO:true,poaLab:'?'},ctx:'Two tangents from P make angle 60°. OA is radius to point of tangency.',ask:'Find angle OPA',correct:'30°',d:['60°','90°','120°']},
+  {fig:{t:'tangentRadius',showP:true,oaLab:'5 cm',paLab:'12 cm',opLab:'?'},ctx:'Tangent at A. OA = radius = 5 cm. PA = tangent = 12 cm.',ask:'Find OP',correct:'13 cm',d:['17 cm','7 cm','\\sqrt{119} cm']},
+  {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'70&deg;',showO:true,oLab:'?',names:['B','A','C']},ctx:'Tangent at B. Angle ABT = 70°. AB is a chord.',ask:'Find the angle subtended by AB at the centre',correct:'140°',d:['70°','110°','40°']},
+  {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'35&deg;',altLab:'?',names:['C','D','E']},ctx:'Tangent at C. Chord CD. Angle TCD = 35°. E is on major arc.',ask:'Find angle CED',correct:'35°',d:['70°','145°','55°']},
+  {fig:{t:'semicircle',C:65,aLab:'32&deg;',bLab:'?'},ctx:'AB is a diameter. Angle BAC = 32°.',ask:'Find angle ABC',correct:'58°',d:['32°','90°','148°']},
+  {fig:{t:'semicircle',C:65,bLab:'28&deg;',cLab:'?',names:['A','B','D']},ctx:'AB is a diameter. Angle ABD = 28° (D on circle).',ask:'Find angle ADB',correct:'90°',d:['28°','62°','152°']},
+  {fig:{t:'semicircle',C:65,bLab:'28&deg;',aLab:'?',names:['A','B','D']},ctx:'AB is a diameter. Angle ABD = 28°.',ask:'Find angle DAB',correct:'62°',d:['28°','90°','118°']},
+  {fig:{t:'centreCirc',deg:120,centreLab:'2x',circLab:'x + 15'},ctx:'Angle at centre = 2x. Angle at circumference = x + 15.',ask:'Find x',correct:'15',d:['30','7.5','45']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{A:'x + 20',B:'3y',C:'2x + 10',D:'2y + 30'}},ctx:'Cyclic quad ABCD. Angle A = x + 20, C = 2x + 10. B = 3y, D = 2y + 30.',ask:'Find x',correct:'50',d:['30','70','60']},
+  {fig:{t:'cyclicQuad',A:125,B:35,C:305,D:215,labs:{B:'3y',D:'2y + 30'}},ctx:'Cyclic quad ABCD. B = 3y, D = 2y + 30.',ask:'Find y',correct:'30',d:['36','24','50']},
+  {fig:{t:'centreCirc',deg:130,centreLab:'130&deg;',circLab:'?'},ctx:'O is centre. Angle AOB = 130°. C is on major arc.',ask:'Find angle ACB',correct:'65°',d:['130°','115°','50°']},
+  {fig:{t:'centreCirc',deg:130,centreLab:'130&deg;',circLab:'?',inside:true,names:['A','B','D']},ctx:'O is centre. Angle AOB = 130°. D is on minor arc.',ask:'Find angle ADB',correct:'115°',d:['65°','130°','230°']},
+  {fig:{t:'altSegment',A:270,B:195,C:65,tanLab:'40&deg;',altLab:'?'},ctx:'Tangent at A. Angle BAT = 40°. B and C on circle.',ask:'Find angle BCA (C on major arc, same segment as alternate)',correct:'40°',d:['80°','140°','50°']},
+  {fig:{t:'semicircle',C:65,cLab:'90&deg;',names:['A','C','B']},ctx:'In a circle, angle ABC = 90°. BC = 6, AC = 10.',ask:'Find AB',correct:'8',d:['4','64','\\sqrt{136}']},
+  {fig:{t:'chordBisect',chordLab:'8 cm',radLab:'5 cm',distLab:'?'},ctx:'A chord is 8 cm long. The radius is 5 cm.',ask:'Distance from centre to chord',correct:'3 cm',d:['4 cm','\\sqrt{39} cm','2 cm']},
+]
+};
+
+let questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,timerInterval=null,qStartTime=0;
+const BASE=100,T_K=0.15;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function startGame(){questions=shuffle([...QUESTIONS.gcse]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}show('game');showQ();window._ggAbandoned=true;mfg('game_started',{game_slug:'circle-theorem-spotter',level:'gcse'});if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'circle-theorem-spotter',level:'gcse',questions_answered:qIdx})})}}
+function showQ(){const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;document.getElementById('figure').innerHTML=FIG.render(q.fig);document.getElementById('context').textContent=q.ctx;document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
+function tick(){const e=Math.floor((Date.now()-qStartTime)/1000);document.getElementById('timer').textContent=e+'s'}
+function handle(btn,q){clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});mfg('question_answered',{game_slug:'circle-theorem-spotter',level:'gcse',correct:ok,question_index:qIdx+1});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)}
+function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
+function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
+function end(){clearInterval(timerInterval);const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'circle-theorem-spotter',level:'gcse',score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('circle-theorem-spotter','gcse',score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('circle-theorem-spotter','gcse',score);}}show('results')}
+function showMenu(){show('menu')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

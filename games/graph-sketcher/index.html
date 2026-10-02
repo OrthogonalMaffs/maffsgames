@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Complete tables of values, sketch curves, and interpret graphs. Quadratic, cubic, exponential, reciprocal, and trig functions. 45 scenarios.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/graph-sketcher/">
+<meta property="og:title" content="Graph Sketcher — MaffsGames">
+<meta property="og:description" content="Complete tables of values, sketch curves, and interpret graphs. Quadratic, cubic, exponential, reciprocal, and trig functions. 45 scenarios.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/graph-sketcher/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Graph Sketcher — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070b14;--surface:#0e1424;--surface2:#131b2e;--border:#1a2440;
+  --primary:#0ea5e9;--primary-dim:rgba(14,165,233,.15);--primary-glow:rgba(14,165,233,.25);
+  --accent:#38bdf8;--teal:#14b8a6;--correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
+  --wrong:#f43f5e;--wrong-dim:rgba(244,63,94,.12);
+  --text:#e4e8f0;--muted:#687890;--hint:#94a3b8;
+  --grid-major:rgba(255,255,255,.12);--grid-minor:rgba(255,255,255,.05);
+  --axis:#ffffff;--curve:#22d3ee;--point:#14b8a6;--drawn:#67e8f9;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:1100px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1rem 0 .4rem}
+.header h1{font-size:1.7rem;font-weight:800;background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+
+/* Menu */
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.6rem auto;max-width:540px}
+.level-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;max-width:500px;margin:1rem auto}
+.level-btn{padding:.8rem;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.selected{border-color:var(--primary);background:var(--primary-dim)}
+.level-btn .lsub{font-size:.64rem;color:var(--muted);font-weight:400;margin-top:.15rem;display:block}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2.2rem;border-radius:12px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;opacity:.4;pointer-events:none;transition:transform .15s}
+.start-btn.ready{opacity:1;pointer-events:auto}.start-btn.ready:hover{transform:scale(1.04)}
+
+/* HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:'JetBrains Mono',monospace;font-size:.88rem;font-weight:700}
+
+/* Game layout */
+.game-layout{display:grid;grid-template-columns:3fr 2fr;gap:.7rem;align-items:start}
+@media(max-width:780px){.game-layout{grid-template-columns:1fr}}
+
+/* Canvas panel */
+.canvas-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.6rem;position:relative}
+.canvas-panel canvas{display:block;width:100%;border-radius:8px;cursor:crosshair}
+
+/* Right panel */
+.right-panel{display:flex;flex-direction:column;gap:.6rem}
+.eq-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem;text-align:center}
+.eq-box .katex{font-size:1.1em!important}
+.eq-context{font-size:.78rem;color:var(--muted);margin-top:.3rem;line-height:1.4}
+
+/* Table */
+.table-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.6rem;overflow-x:auto}
+.val-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:.8rem}
+.val-table th,.val-table td{padding:.35rem .45rem;text-align:center;border:1px solid var(--border);min-width:52px}
+.val-table th{background:var(--surface2);color:var(--muted);font-size:.65rem;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.val-table td{background:var(--surface)}
+.val-table .given{color:var(--accent);font-weight:600}
+.val-table input{width:100%;background:transparent;border:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.8rem;text-align:center;outline:none;padding:2px 0}
+.val-table input::placeholder{color:var(--muted);font-weight:400}
+.val-table td.correct-cell{background:var(--correct-dim);color:var(--correct)}
+.val-table td.wrong-cell{background:var(--wrong-dim);color:var(--wrong)}
+.val-table td.correct-cell input{color:var(--correct)}
+
+/* Q area */
+.q-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem}
+.q-label{font-size:.65rem;color:var(--primary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;font-weight:700}
+.q-prompt{font-size:.84rem;font-weight:600;color:var(--text);margin-bottom:.6rem;line-height:1.5}
+.q-prompt .katex{font-size:.9em!important}
+.num-input{width:120px;padding:.45rem .6rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:500}
+.num-input:focus{outline:none;border-color:var(--primary)}
+.num-input::placeholder{color:var(--muted);font-weight:400}
+.check-btn{padding:.45rem 1.2rem;border-radius:8px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;margin-top:.3rem;transition:transform .12s}
+.check-btn:hover{transform:scale(1.03)}
+.mcq-grid{display:grid;gap:.35rem;margin-bottom:.4rem}
+.mcq-btn{padding:.5rem .7rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.78rem;cursor:pointer;text-align:left;transition:all .12s;line-height:1.4}
+.mcq-btn:hover{border-color:var(--primary)}
+.mcq-btn.correct{border-color:var(--correct);background:var(--correct-dim)}
+.mcq-btn.wrong{border-color:var(--wrong);background:var(--wrong-dim)}
+.mcq-btn.disabled{pointer-events:none;opacity:.5}
+.feedback{margin-top:.4rem;padding:.4rem .6rem;border-radius:8px;font-size:.78rem;line-height:1.4;animation:fadeIn .25s}
+.feedback.correct{background:var(--correct-dim);border:1px solid var(--correct);color:var(--correct)}
+.feedback.wrong{background:var(--wrong-dim);border:1px solid var(--wrong);color:var(--wrong)}
+.next-btn{display:block;margin:.6rem auto 0;padding:.5rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer}
+.next-btn:hover{transform:scale(1.03)}
+
+/* Draw tools */
+.draw-tools{display:flex;gap:.4rem;margin-top:.4rem;justify-content:center}
+.draw-tools button{padding:.35rem .8rem;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer}
+.draw-tools button:hover{border-color:var(--primary);color:var(--text)}
+.draw-tools button.accent{background:var(--primary);color:#000;border-color:var(--primary)}
+
+/* Results */
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.4rem;margin-bottom:.3rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.6rem;font-weight:700;background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.7rem 0}
+.results .stats{color:var(--muted);margin-bottom:1rem;line-height:1.9;font-size:.83rem}
+.results .pb-line{color:var(--correct);font-weight:600;font-size:.88rem;margin-bottom:1rem}
+.play-again{padding:.6rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+.method-btn{display:block;margin:.8rem auto;padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s}.method-btn:hover{border-color:var(--primary);color:var(--text)}
+.method-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}.method-overlay.show{display:flex}
+.method-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;max-width:560px;width:92%;max-height:80vh;overflow-y:auto}
+.method-box h2{font-size:1.1rem;font-weight:700;color:var(--accent);margin-bottom:1rem}
+.method-section{margin-bottom:1rem;padding:.8rem;background:var(--bg);border-radius:8px;font-size:.85rem;line-height:1.8}
+.method-section strong{color:var(--accent);display:block;margin-bottom:.3rem}
+.method-close{display:block;margin:1rem auto 0;padding:.4rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+
+<!-- MENU -->
+<div id="menuScreen" class="screen active">
+  <div class="header"><h1>Graph Sketcher</h1><div class="sub">Can you complete the table — and draw what it means?</div>  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+  <div class="menu-info">Complete tables of values, sketch curves, and interpret graphs. Quadratic, cubic, exponential, reciprocal, and trig functions in real-world contexts.</div>
+  <div class="level-grid">
+    <button class="level-btn" data-level="core" onclick="selLevel(this)">Core Maths<span class="lsub">Table + draw + interpret</span></button>
+    <button class="level-btn" data-level="alevel" onclick="selLevel(this)">A-Level<span class="lsub">Table + features + reading</span></button>
+    <button class="level-btn" data-level="level4" onclick="selLevel(this)">Level 4<span class="lsub">Engineering contexts</span></button>
+  </div>
+  <button class="method-btn" onclick="document.getElementById('methodOverlay').classList.add('show')">Worked Example</button>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="start-btn" id="startBtn" onclick="startGame()">Start</button>
+</div>
+
+<div class="method-overlay" id="methodOverlay">
+  <div class="method-box">
+    <h2>Worked Example — Graph Skills</h2>
+    <div class="method-section" id="methodTableVals"></div>
+    <div class="method-section" id="methodReadY"></div>
+    <div class="method-section" id="methodReadX"></div>
+    <button class="method-close" onclick="document.getElementById('methodOverlay').classList.remove('show')">Got it</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="gameScreen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><div class="hud-label">Scenario</div><div class="hud-val" id="hudQ">1/6</div></div>
+    <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    <div class="hud-item"><div class="hud-label">Phase</div><div class="hud-val" id="hudPhase">Table</div></div>
+    <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val mono" id="hudTimer">0s</div></div>
+  </div>
+  <div class="game-layout">
+    <div class="canvas-panel">
+      <canvas id="graphCanvas" width="600" height="400"></canvas>
+      <div class="draw-tools" id="drawTools" style="display:none">
+        <button onclick="undoCP()">Undo</button>
+        <button onclick="resetCP()">Reset</button>
+        <button class="accent" onclick="checkCurve()">Check Curve</button>
+      </div>
+    </div>
+    <div class="right-panel">
+      <div class="eq-box" id="eqBox"></div>
+      <div class="table-box" id="tableBox"></div>
+      <div class="q-box" id="qBox" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="resultsScreen" class="screen">
+  <div class="results">
+    <h2 id="resultTitle"></h2>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="stats" id="statsLine"></div>
+    <div class="pb-line" id="pbLine" style="display:none"></div>
+    <button class="play-again" onclick="showMenu()">Play Again</button>
+  </div>
+</div>
+</div>
+
+<script>
+// ============================================================
+//  SCENARIO BANK
+// ============================================================
+const SCENARIOS={
+core:[
+  {id:'CM1',eqLatex:'h = 0.001s^2 + 0.04s',context:'Wave height h (m) vs wind speed s (mph).',
+   fn:s=>0.001*s*s+0.04*s,xRange:[0,60],yRange:[0,7],xLabel:'s (mph)',yLabel:'h (m)',
+   tableX:[0,10,20,30,40,50,60],given:{0:0,10:0.5,60:6.0},
+   answers:{20:1.2,30:2.1,40:3.2,50:4.5},
+   iqs:[
+     {type:'read',prompt:'Estimate the wind speed when wave height is 3 m.',answer:40.8,tol:2},
+     {type:'extrap',prompt:'Estimate h when s = 70. Is this reliable?',answer:8.7,tol:0.5,reliable:false,reason:'Beyond the data range'},
+     {type:'mcq',prompt:'What property indicates wind speed has more effect at higher speeds?',correct:'The graph is steeper at higher wind speeds',wrong:['The graph is linear','The graph flattens off','The gradient is constant']},
+     {type:'mcq',prompt:'Describe one limitation of this model.',correct:'No upper limit — predicts unrealistically large wave heights',wrong:['The model is too accurate','It only works for hurricanes','Wave heights cannot be positive']}
+   ]},
+  {id:'CM2',eqLatex:'P = x^3 - 6x^2 + 9x',context:'Profit P (£thousands) from selling x hundred items.',
+   fn:x=>x*x*x-6*x*x+9*x,xRange:[0,5],yRange:[-2,22],xLabel:'x (hundreds)',yLabel:'P (£k)',
+   tableX:[0,1,2,3,4,5],given:{0:0,3:0,5:20},
+   answers:{1:4,2:2,4:4},
+   iqs:[
+     {type:'read',prompt:'Estimate P when x = 2.5.',answer:1.56,tol:0.3},
+     {type:'mcq',prompt:'At what value of x does profit reach its local minimum?',correct:'x = 3',wrong:['x = 0','x = 1','x = 5']},
+     {type:'mcq',prompt:'Describe one limitation of this model.',correct:'Model allows negative profit but real businesses would stop trading',wrong:['Profit is always positive','The model is linear','x cannot be a whole number']}
+   ]},
+  {id:'CM3',eqLatex:'P = 100 \\times 1.05^t',context:'Population P (thousands), t = years since 2010.',
+   fn:t=>100*Math.pow(1.05,t),xRange:[0,20],yRange:[90,280],xLabel:'t (years)',yLabel:'P (thousands)',
+   tableX:[0,5,10,15,20],given:{0:100,20:265.3},
+   answers:{5:127.6,10:162.9,15:207.9},
+   iqs:[
+     {type:'read',prompt:'Estimate the year when the population reaches 200,000.',answer:14.2,tol:0.8},
+     {type:'extrap',prompt:'Estimate P when t = 25. Is this reliable?',answer:338.6,tol:17,reliable:false,reason:'Assumes growth rate stays constant'},
+     {type:'mcq',prompt:'What does the increasing steepness tell you?',correct:'The population is growing at an increasing rate',wrong:['Population is decreasing','Growth rate is constant','Population will reach a maximum']}
+   ]},
+  {id:'CM4',eqLatex:'d = 0.006v^2',context:'Braking distance d (m) vs speed v (mph).',
+   fn:v=>0.006*v*v,xRange:[0,70],yRange:[0,32],xLabel:'v (mph)',yLabel:'d (m)',
+   tableX:[0,10,20,30,40,50,60,70],given:{0:0,30:5.4,60:21.6},
+   answers:{10:0.6,20:2.4,40:9.6,50:15.0,70:29.4},
+   iqs:[
+     {type:'read',prompt:'Estimate the speed at which braking distance reaches 20 m.',answer:57.7,tol:3},
+     {type:'mcq',prompt:'What does the shape tell you about speed and braking distance?',correct:'Braking distance increases more rapidly as speed increases',wrong:['Braking distance is proportional to speed','The relationship is linear','Braking distance decreases at high speeds']},
+     {type:'mcq',prompt:'Describe one limitation.',correct:'Model gives d = 0 at v = 0 but real braking includes reaction time',wrong:['The model is exact','Speed cannot be measured','Braking distance is always negative']}
+   ]},
+  {id:'CM5',eqLatex:'C = \\frac{2000}{n} + 5',context:'Average cost C (£) per item when producing n items.',
+   fn:n=>2000/n+5,xRange:[10,500],yRange:[0,220],xLabel:'n (items)',yLabel:'C (£)',
+   tableX:[10,20,50,100,200,500],given:{10:205,100:25,500:9},
+   answers:{20:105,50:45,200:15},
+   iqs:[
+     {type:'read',prompt:'Estimate how many items must be produced for the average cost to fall to £30.',answer:80,tol:8},
+     {type:'mcq',prompt:'What value does C approach as n gets very large?',correct:'£5',wrong:['£0','£2000','£200']},
+     {type:'mcq',prompt:'Describe one limitation.',correct:'Model allows fractional items and n cannot be zero',wrong:['Cost is always £5','n must be negative','The model is linear']}
+   ]},
+  {id:'CM6',eqLatex:'V = 4x^3 - 36x^2 + 80x',context:'Volume V (cm³) of an open box with corner cut x (cm).',
+   fn:x=>4*x*x*x-36*x*x+80*x,xRange:[0,4],yRange:[0,60],xLabel:'x (cm)',yLabel:'V (cm³)',
+   tableX:[0,0.5,1,1.5,2,2.5,3,3.5,4],given:{0:0,2:48,4:0},
+   answers:{0.5:35.5,1:48,1.5:52.5,2.5:37.5,3:24,3.5:10.5},
+   iqs:[
+     {type:'read',prompt:'Estimate the maximum volume.',answer:52.5,tol:3},
+     {type:'mcq',prompt:'What do the roots of the graph represent in context?',correct:'The corner sizes that give zero volume',wrong:['Maximum volume points','The box dimensions','Points where cost is zero']}
+   ]},
+  {id:'CM7',eqLatex:'M = 80 \\times 0.85^t',context:'Mass M (g) of a decaying substance, t = days.',
+   fn:t=>80*Math.pow(0.85,t),xRange:[0,10],yRange:[0,85],xLabel:'t (days)',yLabel:'M (g)',
+   tableX:[0,2,4,6,8,10],given:{0:80,10:15.7},
+   answers:{2:57.8,4:41.7,6:30.1,8:21.7},
+   iqs:[
+     {type:'read',prompt:'Estimate the number of days for mass to halve (reach 40 g).',answer:4.3,tol:0.4},
+     {type:'mcq',prompt:'What does the decreasing steepness tell you?',correct:'The substance decays more slowly as time increases',wrong:['Decay rate is constant','The mass increases','Decay accelerates over time']},
+     {type:'mcq',prompt:'Describe one limitation.',correct:'Model predicts mass never reaches zero',wrong:['Mass becomes negative','The model is linear','Decay stops after 10 days']}
+   ]},
+  {id:'CM8',eqLatex:'h = 15t - 5t^2',context:'Height h (m) of a projectile, t = time (s).',
+   fn:t=>15*t-5*t*t,xRange:[0,3],yRange:[0,13],xLabel:'t (s)',yLabel:'h (m)',
+   tableX:[0,0.5,1,1.5,2,2.5,3],given:{0:0,1.5:11.25,3:0},
+   answers:{0.5:6.25,1:10,2:10,2.5:6.25},
+   iqs:[
+     {type:'read',prompt:'Estimate the maximum height.',answer:11.25,tol:0.6},
+     {type:'mcq',prompt:'What do the roots represent in context?',correct:'The times when the object is at ground level',wrong:['Maximum height points','Points of zero velocity','Times of maximum speed']},
+     {type:'mcq',prompt:'Describe one limitation.',correct:'Model gives negative heights for t > 3 — not physically meaningful',wrong:['The model is exact','Height is always positive','Air resistance is included']}
+   ]},
+  {id:'CM9',eqLatex:'t = \\frac{120}{s}',context:'Journey time t (minutes) at average speed s (mph).',
+   fn:s=>120/s,xRange:[20,120],yRange:[0,7],xLabel:'s (mph)',yLabel:'t (min)',
+   tableX:[20,30,40,60,80,120],given:{20:6,60:2,120:1},
+   answers:{30:4,40:3,80:1.5},
+   iqs:[
+     {type:'read',prompt:'Estimate t when s = 50.',answer:2.4,tol:0.2},
+     {type:'mcq',prompt:'What value does t approach as s gets very large?',correct:'0 minutes',wrong:['120 minutes','1 minute','Infinity']},
+     {type:'mcq',prompt:'Describe one limitation.',correct:'Speed cannot be zero or negative in reality',wrong:['Time is always 120 minutes','The relationship is linear','Speed has no effect on time']}
+   ]},
+  {id:'CM10',eqLatex:'h = 0.001s^2 + 0.04s - 0.00002s^3',context:'Extended wave height model with cubic term.',
+   fn:s=>0.001*s*s+0.04*s-0.00002*s*s*s,xRange:[0,70],yRange:[0,2.5],xLabel:'s (mph)',yLabel:'h (m)',
+   tableX:[0,10,20,30,40,50,60,70],given:{0:0,30:1.56,70:0.84},
+   answers:{10:0.48,20:1.04,40:1.92,50:2,60:1.68},
+   iqs:[
+     {type:'read',prompt:'Estimate h when s = 55.',answer:1.9,tol:0.3},
+     {type:'mcq',prompt:'How does this differ from a simpler quadratic at high speeds?',correct:'The cubic term causes the curve to flatten and eventually turn',wrong:['There is no difference','The quadratic is always larger','The cubic grows faster']}
+   ]},
+  {id:'CM11',eqLatex:'A = 500 \\times 1.04^n',context:'Account balance A (£) after n years at 4% interest.',
+   fn:n=>500*Math.pow(1.04,n),xRange:[0,25],yRange:[400,1400],xLabel:'n (years)',yLabel:'A (£)',
+   tableX:[0,5,10,15,20,25],given:{0:500,25:1332.9},
+   answers:{5:608.3,10:740.1,15:900.5,20:1095.6},
+   iqs:[
+     {type:'read',prompt:'Estimate A when n = 18.',answer:1013.5,tol:50},
+     {type:'extrap',prompt:'Estimate A when n = 30. Is this reliable?',answer:1621.5,tol:80,reliable:false,reason:'Assumes interest rate stays constant for 30 years'}
+   ]},
+  {id:'CM12',eqLatex:'F = -0.003v^2 + 0.3v',context:'Fuel efficiency F (km/L) vs speed v (km/h).',
+   fn:v=>-0.003*v*v+0.3*v,xRange:[0,100],yRange:[0,8],xLabel:'v (km/h)',yLabel:'F (km/L)',
+   tableX:[0,20,40,60,80,100],given:{0:0,60:7.2,100:0},
+   answers:{20:4.8,40:7.2,80:4.8},
+   iqs:[
+     {type:'read',prompt:'Estimate the maximum fuel efficiency.',answer:7.5,tol:0.5},
+     {type:'mcq',prompt:'What do the roots represent?',correct:'Speeds at which fuel efficiency is zero',wrong:['Maximum efficiency points','Speed limits','Points of maximum acceleration']}
+   ]},
+  {id:'CM13',eqLatex:'P = 0.5x^3 - 4x^2 + 8x',context:'Profit P (£000) vs price x (£).',
+   fn:x=>0.5*x*x*x-4*x*x+8*x,xRange:[0,6],yRange:[-2,14],xLabel:'x (£)',yLabel:'P (£k)',
+   tableX:[0,1,2,3,4,5,6],given:{0:0,6:12},
+   answers:{1:4.5,2:4,3:1.5,4:0,5:2.5},
+   iqs:[
+     {type:'read',prompt:'Estimate P when x = 5.5.',answer:6.2,tol:1},
+     {type:'mcq',prompt:'What does x = 4 represent in context?',correct:'The price at which profit is zero (break-even)',wrong:['Maximum profit','Minimum cost','The optimal price']}
+   ]},
+  {id:'CM14',eqLatex:'P = \\frac{100}{V}',context:'Pressure P (kPa) vs volume V (litres). Boyle\'s Law.',
+   fn:V=>100/V,xRange:[1,20],yRange:[0,110],xLabel:'V (litres)',yLabel:'P (kPa)',
+   tableX:[1,2,4,5,10,20],given:{1:100,10:10,20:5},
+   answers:{2:50,4:25,5:20},
+   iqs:[
+     {type:'read',prompt:'Estimate P when V = 8.',answer:12.5,tol:1},
+     {type:'mcq',prompt:'What type of relationship does this graph represent?',correct:'Inverse proportion',wrong:['Direct proportion','Linear','Exponential']},
+     {type:'mcq',prompt:'Describe one limitation.',correct:'Model is valid only at fixed temperature',wrong:['Pressure is always 100 kPa','Volume cannot change','The model is linear']}
+   ]},
+  {id:'CM15',eqLatex:'h = 5 + 3\\sin(30t)°',context:'Height h (m) above ground on a Ferris wheel, t = seconds.',
+   fn:t=>5+3*Math.sin(30*t*Math.PI/180),xRange:[0,12],yRange:[0,10],xLabel:'t (s)',yLabel:'h (m)',
+   tableX:[0,3,6,9,12],given:{0:5,3:8,6:5,9:2,12:5},
+   answers:{},
+   iqs:[
+     {type:'read',prompt:'What is the maximum height?',answer:8,tol:0.3},
+     {type:'read',prompt:'At what time is maximum height first reached?',answer:3,tol:0.2},
+     {type:'mcq',prompt:'What does the value 5 represent in the model?',correct:'The mean height / centre of oscillation',wrong:['The amplitude','The period','The maximum height']}
+   ]}
+],
+alevel:[
+  {id:'AL1',eqLatex:'y = x^2 - 5x + 6',context:'',
+   fn:x=>x*x-5*x+6,xRange:[-1,5],yRange:[-1,12],xLabel:'x',yLabel:'y',
+   tableX:[-1,0,1,2,3,4,5],given:{'-1':12,2:0,5:6},answers:{0:6,1:2,3:0,4:2},
+   iqs:[
+     {type:'roots',prompt:'Write down the x-values where the graph crosses the x-axis.',answers:[2,3],tol:0.1},
+     {type:'tp',prompt:'Write down the coordinates of the turning point.',answer:{x:2.5,y:-0.25},tol:0.15},
+     {type:'mcq',prompt:'Which equation could produce this graph shape?',correct:'y = x² - 5x + 6',wrong:['y = x³ - 5x','y = 6 - 5x','y = e^x - 5']}
+   ]},
+  {id:'AL2',eqLatex:'y = x^3 - 3x',context:'',
+   fn:x=>x*x*x-3*x,xRange:[-3,3],yRange:[-20,20],xLabel:'x',yLabel:'y',
+   tableX:[-3,-2,-1,0,1,2,3],given:{'-3':-18,0:0,3:18},answers:{'-2':-2,'-1':2,1:-2,2:2},
+   iqs:[
+     {type:'roots',prompt:'Write down the approximate x-values where y = 0.',answers:[-1.73,0,1.73],tol:0.15},
+     {type:'tp',prompt:'Write down the coordinates of the local minimum.',answer:{x:1,y:-2},tol:0.15},
+     {type:'mcq',prompt:'At which x-value is |gradient| greatest?',correct:'x = 3',wrong:['x = 0','x = 1','x = -1']}
+   ]},
+  {id:'AL3',eqLatex:'y = 3 \\times 2^x - 6',context:'',
+   fn:x=>3*Math.pow(2,x)-6,xRange:[-2,4],yRange:[-6,44],xLabel:'x',yLabel:'y',
+   tableX:[-2,-1,0,1,2,3],given:{'-2':-5.25,0:-3,3:18},answers:{'-1':-4.5,1:0,2:6},
+   iqs:[
+     {type:'roots',prompt:'Write down the x-value where the graph crosses the x-axis.',answers:[1],tol:0.1},
+     {type:'mcq',prompt:'What value does y approach as x → −∞?',correct:'y = −6',wrong:['y = 0','y = 3','y = −3']},
+     {type:'mcq',prompt:'Which equation matches this shape?',correct:'y = 3 × 2^x − 6',wrong:['y = 3x − 6','y = −6e^x','y = log₂(x) − 6']}
+   ]},
+  {id:'AL4',eqLatex:'y = \\frac{4}{x} + 2',context:'',
+   fn:x=>4/x+2,xRange:[-5,5],yRange:[-8,12],xLabel:'x',yLabel:'y',skipZero:true,
+   tableX:[-4,-2,-1,1,2,4],given:{'-4':1,'-1':-2,4:3},answers:{'-2':0,1:6,2:4},
+   iqs:[
+     {type:'mcq',prompt:'What are the equations of the asymptotes?',correct:'x = 0 and y = 2',wrong:['x = 2 and y = 0','x = 4 and y = 2','x = 0 and y = 4']},
+     {type:'mcq',prompt:'Where is the gradient steepest?',correct:'x = ±1 (closest to the asymptote)',wrong:['x = ±4','x = 0','x = ±2']},
+     {type:'mcq',prompt:'Which equation matches this shape?',correct:'y = 4/x + 2 (shifted reciprocal)',wrong:['y = 4x + 2','y = 2/x²','y = ln(x) + 2']}
+   ]},
+  {id:'AL5',eqLatex:'y = 2\\sin(x) + 1',context:'For 0° ≤ x ≤ 360°.',
+   fn:x=>2*Math.sin(x*Math.PI/180)+1,xRange:[0,360],yRange:[-2,4],xLabel:'x (°)',yLabel:'y',
+   tableX:[0,90,180,270,360],given:{0:1,180:1,360:1},answers:{90:3,270:-1},
+   iqs:[
+     {type:'tp',prompt:'Write down the coordinates of the maximum.',answer:{x:90,y:3},tol:1},
+     {type:'tp',prompt:'Write down the coordinates of the minimum.',answer:{x:270,y:-1},tol:1},
+     {type:'mcq',prompt:'What is the amplitude of this function?',correct:'2',wrong:['1','3','0.5']}
+   ]},
+  {id:'AL6',eqLatex:'y = x^4 - 5x^2 + 4',context:'',
+   fn:x=>Math.pow(x,4)-5*x*x+4,xRange:[-3,3],yRange:[-3,40],xLabel:'x',yLabel:'y',
+   tableX:[-3,-2,-1,0,1,2,3],given:{'-3':40,0:4,3:40},answers:{'-2':0,'-1':0,1:0,2:0},
+   iqs:[
+     {type:'roots',prompt:'Write down all x-values where y = 0.',answers:[-2,-1,1,2],tol:0.1},
+     {type:'read',prompt:'Estimate the y-coordinate of the local minimum.',answer:-2.25,tol:0.3}
+   ]},
+  {id:'AL7',eqLatex:'y = x^3 - 6x^2 + 11x - 6',context:'',
+   fn:x=>x*x*x-6*x*x+11*x-6,xRange:[-1,4],yRange:[-8,8],xLabel:'x',yLabel:'y',
+   tableX:[-1,0,1,2,3,4],given:{'-1':-24,1:0,4:6},answers:{0:-6,2:0,3:0},
+   iqs:[
+     {type:'roots',prompt:'Write down all roots.',answers:[1,2,3],tol:0.1},
+     {type:'read',prompt:'Calculate the gradient between x = 0 and x = 4.',answer:3,tol:0.3}
+   ]},
+  {id:'AL8',eqLatex:'y = 10e^{-0.5x}',context:'For x ≥ 0.',
+   fn:x=>10*Math.exp(-0.5*x),xRange:[0,8],yRange:[0,11],xLabel:'x',yLabel:'y',
+   tableX:[0,1,2,3,4,6],given:{0:10,4:1.35},answers:{1:6.07,2:3.68,3:2.23,6:0.50},
+   iqs:[
+     {type:'mcq',prompt:'What is the equation of the horizontal asymptote?',correct:'y = 0',wrong:['y = 10','y = −0.5','x = 0']},
+     {type:'mcq',prompt:'At which x-value is the rate of decrease greatest?',correct:'x = 0',wrong:['x = 4','x = 6','x = 2']},
+     {type:'mcq',prompt:'Which equation matches this shape?',correct:'y = 10e^(−0.5x) — exponential decay',wrong:['y = 10 − 0.5x','y = 10/x','y = 10 × 0.5x']}
+   ]},
+  {id:'AL9',eqLatex:'y = \\cos(2x)',context:'For 0° ≤ x ≤ 360°.',
+   fn:x=>Math.cos(2*x*Math.PI/180),xRange:[0,360],yRange:[-1.5,1.5],xLabel:'x (°)',yLabel:'y',
+   tableX:[0,45,90,135,180,225,270,315,360],given:{0:1,90:-1,180:1,270:-1,360:1},answers:{45:0,135:0,225:0,315:0},
+   iqs:[
+     {type:'roots',prompt:'Write down the first two positive roots.',answers:[45,135],tol:1},
+     {type:'tp',prompt:'Write down the coordinates of the first maximum.',answer:{x:0,y:1},tol:1},
+     {type:'mcq',prompt:'What is the period of this function?',correct:'180°',wrong:['360°','90°','720°']}
+   ]},
+  {id:'AL10',eqLatex:'y = \\frac{1}{x-2} + 3',context:'',
+   fn:x=>1/(x-2)+3,xRange:[-2,6],yRange:[-5,10],xLabel:'x',yLabel:'y',skipX:2,
+   tableX:[-2,-1,0,1,3,4,6],given:{'-2':2.75,1:2,6:3.25},answers:{'-1':2.67,0:2.5,3:4,4:3.5},
+   iqs:[
+     {type:'mcq',prompt:'What are the equations of the asymptotes?',correct:'x = 2 and y = 3',wrong:['x = 0 and y = 3','x = 3 and y = 2','x = 2 and y = 0']},
+     {type:'mcq',prompt:'Which equation matches this shape?',correct:'Shifted reciprocal: y = 1/(x−2) + 3',wrong:['y = 3x − 2','y = e^(x−2) + 3','y = (x−2)² + 3']}
+   ]},
+  {id:'AL11',eqLatex:'y = x^2(x-3)',context:'',
+   fn:x=>x*x*(x-3),xRange:[-2,4],yRange:[-8,20],xLabel:'x',yLabel:'y',
+   tableX:[-2,-1,0,1,2,3,4],given:{'-2':-20,0:0,4:16},answers:{'-1':-4,1:-2,2:-4,3:0},
+   iqs:[
+     {type:'roots',prompt:'Write down all roots.',answers:[0,3],tol:0.1},
+     {type:'tp',prompt:'Write down the coordinates of the local minimum.',answer:{x:2,y:-4},tol:0.15},
+     {type:'mcq',prompt:'What does the double root at x = 0 tell you?',correct:'The graph touches but does not cross the x-axis at x = 0',wrong:['The graph crosses the x-axis twice at x = 0','There is a vertical asymptote','The gradient is zero everywhere']}
+   ]},
+  {id:'AL12',eqLatex:'y = -2x^2 + 8x - 3',context:'',
+   fn:x=>-2*x*x+8*x-3,xRange:[-1,5],yRange:[-12,7],xLabel:'x',yLabel:'y',
+   tableX:[-1,0,1,2,3,4,5],given:{'-1':-13,2:5,5:-13},answers:{0:-3,1:3,3:3,4:-3},
+   iqs:[
+     {type:'tp',prompt:'Write down the coordinates of the maximum.',answer:{x:2,y:5},tol:0.15},
+     {type:'roots',prompt:'Write down the approximate roots.',answers:[0.42,3.58],tol:0.15}
+   ]},
+  {id:'AL13',eqLatex:'y = \\sin(x) + \\cos(x)',context:'For 0° ≤ x ≤ 360°.',
+   fn:x=>Math.sin(x*Math.PI/180)+Math.cos(x*Math.PI/180),xRange:[0,360],yRange:[-2,2],xLabel:'x (°)',yLabel:'y',
+   tableX:[0,45,90,135,180,225,270,315,360],given:{0:1,90:1,180:-1,270:-1,360:1},answers:{45:1.41,135:0,225:-1.41,315:0},
+   iqs:[
+     {type:'tp',prompt:'Write down the coordinates of the maximum.',answer:{x:45,y:1.41},tol:1.5},
+     {type:'mcq',prompt:'What is the period of this function?',correct:'360°',wrong:['180°','90°','720°']}
+   ]},
+  {id:'AL14',eqLatex:'y = 2x^3 - 3x^2 - 12x + 4',context:'',
+   fn:x=>2*x*x*x-3*x*x-12*x+4,xRange:[-3,4],yRange:[-25,20],xLabel:'x',yLabel:'y',
+   tableX:[-3,-2,-1,0,1,2,3,4],given:{'-3':-59,0:4,4:36},answers:{'-2':-16,'-1':11,1:-9,2:-16,3:-5},
+   iqs:[
+     {type:'tp',prompt:'Write down the coordinates of the local maximum.',answer:{x:-1,y:11},tol:0.2},
+     {type:'tp',prompt:'Write down the coordinates of the local minimum.',answer:{x:2,y:-16},tol:0.2}
+   ]},
+  {id:'AL15',eqLatex:'y = 2^x - 3',context:'For −2 ≤ x ≤ 5.',
+   fn:x=>Math.pow(2,x)-3,xRange:[-2,5],yRange:[-4,30],xLabel:'x',yLabel:'y',
+   tableX:[-2,-1,0,1,2,3,4,5],given:{'-2':-2.75,0:-2,5:29},answers:{'-1':-2.5,1:-1,2:1,3:5,4:13},
+   iqs:[
+     {type:'roots',prompt:'Write down the x-value where the graph crosses the x-axis.',answers:[1.58],tol:0.1},
+     {type:'mcq',prompt:'What is the equation of the horizontal asymptote?',correct:'y = −3',wrong:['y = 0','y = 2','y = −2']}
+   ]}
+],
+level4:[
+  {id:'L4_1',eqLatex:'\\sigma = 200\\varepsilon - 500\\varepsilon^2',context:'Stress σ (MPa) vs strain ε.',
+   fn:e=>200*e-500*e*e,xRange:[0,0.4],yRange:[0,22],xLabel:'ε (strain)',yLabel:'σ (MPa)',
+   tableX:[0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4],given:{0:0,0.2:20,0.4:0},
+   answers:{0.05:8.75,0.1:15,0.15:18.75,0.25:18.75,0.3:15,0.35:8.75},
+   iqs:[
+     {type:'tp',prompt:'Write down the coordinates of the maximum stress.',answer:{x:0.2,y:20},tol:0.01},
+     {type:'mcq',prompt:'What does the root at ε = 0.4 represent?',correct:'Fracture point — the material fails',wrong:['Maximum strength','Elastic limit','Zero strain']}
+   ]},
+  {id:'L4_2',eqLatex:'V = 12e^{-20t}',context:'Capacitor discharge. V = voltage (V), t = time (s). RC = 0.05s.',
+   fn:t=>12*Math.exp(-20*t),xRange:[0,0.25],yRange:[0,13],xLabel:'t (s)',yLabel:'V (V)',
+   tableX:[0,0.025,0.05,0.1,0.15,0.2],given:{0:12,0.1:1.62},answers:{0.025:7.28,0.05:4.41,0.15:0.60,0.2:0.22},
+   iqs:[
+     {type:'read',prompt:'At what time does V reach 6V?',answer:0.0347,tol:0.003},
+     {type:'mcq',prompt:'What is the time constant of this circuit?',correct:'0.05 seconds',wrong:['20 seconds','12 seconds','0.1 seconds']}
+   ]},
+  {id:'L4_3',eqLatex:'V = 240\\sin(100\\pi t)',context:'AC mains voltage. V (volts), t (seconds). Frequency 50 Hz.',
+   fn:t=>240*Math.sin(100*Math.PI*t),xRange:[0,0.02],yRange:[-260,260],xLabel:'t (s)',yLabel:'V (V)',
+   tableX:[0,0.005,0.01,0.015,0.02],given:{0:0,0.01:0,0.02:0},answers:{0.005:240,0.015:-240},
+   iqs:[
+     {type:'tp',prompt:'Write down the coordinates of the first maximum.',answer:{x:0.005,y:240},tol:0.0005},
+     {type:'mcq',prompt:'What is the frequency of this signal?',correct:'50 Hz',wrong:['100 Hz','240 Hz','100π Hz']}
+   ]},
+  {id:'L4_4',eqLatex:'R = \\frac{12}{I}',context:'Resistance R (Ω) vs current I (A) at constant voltage.',
+   fn:I=>12/I,xRange:[0.1,4],yRange:[0,130],xLabel:'I (A)',yLabel:'R (Ω)',
+   tableX:[0.1,0.2,0.5,1,2,4],given:{0.1:120,1:12,4:3},answers:{0.2:60,0.5:24,2:6},
+   iqs:[
+     {type:'read',prompt:'Estimate the current when resistance is 50 Ω.',answer:0.24,tol:0.03},
+     {type:'mcq',prompt:'What happens to R as I approaches 0?',correct:'R approaches infinity',wrong:['R approaches 0','R approaches 12','R stays constant']}
+   ]},
+  {id:'L4_5',eqLatex:'y = x^3 - 6x^2 + 9x',context:'Beam deflection y (mm) at position x (m).',
+   fn:x=>x*x*x-6*x*x+9*x,xRange:[0,4],yRange:[-2,6],xLabel:'x (m)',yLabel:'y (mm)',
+   tableX:[0,0.5,1,1.5,2,2.5,3,3.5,4],given:{0:0,3:0,4:4},answers:{0.5:3.625,1:4,1.5:2.625,2:2,2.5:1.875,3.5:3.625},
+   iqs:[
+     {type:'roots',prompt:'Write down the x-values where deflection is zero.',answers:[0,3],tol:0.1},
+     {type:'tp',prompt:'Write down the coordinates of maximum deflection.',answer:{x:1,y:4},tol:0.15}
+   ]},
+  {id:'L4_6',eqLatex:'A = 5e^{-0.3t}',context:'Damped oscillation amplitude envelope (mm). t = seconds.',
+   fn:t=>5*Math.exp(-0.3*t),xRange:[0,10],yRange:[0,6],xLabel:'t (s)',yLabel:'A (mm)',
+   tableX:[0,1,2,3,4,6,8,10],given:{0:5,4:1.51,10:0.25},answers:{1:3.70,2:2.74,3:2.03,6:0.83,8:0.45},
+   iqs:[
+     {type:'mcq',prompt:'What does the exponential term represent?',correct:'The decaying amplitude envelope',wrong:['The frequency','The phase shift','The equilibrium position']},
+     {type:'read',prompt:'Estimate A when t = 5.',answer:1.12,tol:0.1}
+   ]},
+  {id:'L4_7',eqLatex:'h = 30t - 4.9t^2',context:'Projectile height h (m), t = time (s).',
+   fn:t=>30*t-4.9*t*t,xRange:[0,6.5],yRange:[0,48],xLabel:'t (s)',yLabel:'h (m)',
+   tableX:[0,1,2,3,4,5,6],given:{0:0,3:45.9,6:3.6},answers:{1:25.1,2:40.4,4:41.6,5:27.5},
+   iqs:[
+     {type:'tp',prompt:'Write down the approximate coordinates of the maximum height.',answer:{x:3.06,y:45.9},tol:0.2},
+     {type:'read',prompt:'Estimate the time of flight (when h returns to 0).',answer:6.12,tol:0.15}
+   ]},
+  {id:'L4_8',eqLatex:'x = 3\\sin(50t) + 1',context:'Vibration displacement x (mm), t = time (s).',
+   fn:t=>3*Math.sin(50*t)+1,xRange:[0,0.3],yRange:[-3,5],xLabel:'t (s)',yLabel:'x (mm)',
+   tableX:[0,0.031,0.063,0.094,0.126,0.157],given:{0:1,0.063:1,0.126:1},
+   answers:{0.031:4,0.094:-2,0.157:4},
+   iqs:[
+     {type:'read',prompt:'What is the maximum displacement?',answer:4,tol:0.2},
+     {type:'mcq',prompt:'What does the value 1 represent?',correct:'The equilibrium position offset',wrong:['The amplitude','The frequency','The phase shift']}
+   ]},
+  {id:'L4_9',eqLatex:'P = \\frac{1000}{R}',context:'Power P (W) vs resistance R (Ω).',
+   fn:R=>1000/R,xRange:[5,100],yRange:[0,210],xLabel:'R (Ω)',yLabel:'P (W)',
+   tableX:[5,10,20,25,50,100],given:{5:200,25:40,100:10},answers:{10:100,20:50,50:20},
+   iqs:[
+     {type:'read',prompt:'Estimate P when R = 15.',answer:66.7,tol:5},
+     {type:'mcq',prompt:'What happens to P as R approaches zero?',correct:'P approaches infinity — circuit would overheat',wrong:['P approaches 0','P approaches 1000','P stays constant']}
+   ]},
+  {id:'L4_10',eqLatex:'G = \\frac{x^2}{x^2 + 2x + 1}',context:'Transfer function gain G vs frequency parameter x.',
+   fn:x=>x*x/(x*x+2*x+1),xRange:[0,10],yRange:[0,1.1],xLabel:'x',yLabel:'G',
+   tableX:[0,0.5,1,2,5,10],given:{0:0,1:0.25,10:0.826},answers:{0.5:0.111,2:0.444,5:0.694},
+   iqs:[
+     {type:'mcq',prompt:'What value does G approach at high frequencies?',correct:'1',wrong:['0','Infinity','0.5']},
+     {type:'read',prompt:'Estimate x when G = 0.5.',answer:2.41,tol:0.2}
+   ]},
+  {id:'L4_11',eqLatex:'\\varepsilon = 0.001 + 0.005(1 - e^{-t/200})',context:'Creep strain ε vs time t (hours).',
+   fn:t=>0.001+0.005*(1-Math.exp(-t/200)),xRange:[0,1000],yRange:[0,0.007],xLabel:'t (hours)',yLabel:'ε',
+   tableX:[0,50,100,200,400,600,1000],given:{0:0.001,200:0.00418,1000:0.00599},
+   answers:{50:0.00222,100:0.00339,400:0.00532,600:0.00575},
+   iqs:[
+     {type:'mcq',prompt:'What is the maximum strain this material will experience?',correct:'0.006',wrong:['0.005','0.001','Infinity']},
+     {type:'read',prompt:'Estimate the time when ε = 0.004.',answer:183,tol:15}
+   ]},
+  {id:'L4_12',eqLatex:'Q = 0.1h^3 - 0.5h^2 + 0.8h',context:'Flow rate Q (L/s) vs head pressure h (m).',
+   fn:h=>0.1*h*h*h-0.5*h*h+0.8*h,xRange:[0,5],yRange:[-0.5,5],xLabel:'h (m)',yLabel:'Q (L/s)',
+   tableX:[0,1,2,3,4,5],given:{0:0,3:0.6,5:4},answers:{1:0.4,2:0.4,4:1.6},
+   iqs:[
+     {type:'read',prompt:'Estimate Q when h = 4.5.',answer:2.6,tol:0.4},
+     {type:'mcq',prompt:'What happens to the flow rate as head pressure increases beyond h = 2?',correct:'It increases at an accelerating rate due to the cubic term',wrong:['It decreases','It stays constant','It oscillates']}
+   ]},
+  {id:'L4_13',eqLatex:'F = 0.18v^2',context:'Aerodynamic drag force F (N) vs velocity v (m/s).',
+   fn:v=>0.18*v*v,xRange:[0,30],yRange:[0,170],xLabel:'v (m/s)',yLabel:'F (N)',
+   tableX:[0,5,10,15,20,25,30],given:{0:0,15:40.5,30:162},answers:{5:4.5,10:18,20:72,25:112.5},
+   iqs:[
+     {type:'read',prompt:'Estimate the velocity when drag force reaches 50 N.',answer:16.7,tol:1.5},
+     {type:'mcq',prompt:'What type of relationship exists between drag and velocity?',correct:'Quadratic — drag is proportional to v²',wrong:['Linear — drag is proportional to v','Inverse — drag decreases with v','Exponential']}
+   ]},
+  {id:'L4_14',eqLatex:'V = 12\\sin(\\omega t + \\pi/3)',context:'AC signal with phase shift. ω = 100π.',
+   fn:t=>12*Math.sin(100*Math.PI*t+Math.PI/3),xRange:[0,0.02],yRange:[-14,14],xLabel:'t (s)',yLabel:'V (V)',
+   tableX:[0,0.005,0.01,0.015,0.02],given:{0:10.39,0.01:-10.39,0.02:10.39},answers:{0.005:-10.39,0.015:10.39},
+   iqs:[
+     {type:'mcq',prompt:'What is the phase shift of this signal?',correct:'60° (π/3 radians)',wrong:['90° (π/2 radians)','0°','180° (π radians)']},
+     {type:'read',prompt:'At what time is the first maximum reached?',answer:0.00167,tol:0.0005}
+   ]},
+  {id:'L4_15',eqLatex:'N = \\frac{10^{12}}{\\sigma^3}',context:'Fatigue life N (cycles) vs stress σ (MPa).',
+   fn:s=>1e12/(s*s*s),xRange:[100,500],yRange:[0,1.1e7],xLabel:'σ (MPa)',yLabel:'N (cycles)',
+   tableX:[100,150,200,300,400,500],given:{100:1e6,300:37037,500:8000},
+   answers:{150:296296,200:125000,400:15625},
+   iqs:[
+     {type:'read',prompt:'Estimate the stress level that gives a fatigue life of 100,000 cycles.',answer:215,tol:15},
+     {type:'mcq',prompt:'What happens to fatigue life as stress doubles?',correct:'Fatigue life reduces by a factor of 8',wrong:['Halves','Reduces by factor of 4','Stays the same']}
+   ]}
+]
+};
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let G={level:null,questions:[],qIdx:0,phase:'table',score:0,penalties:0,qPenalties:0,
+  correctIQs:0,totalIQs:0,iqIdx:0,_qaIdx:0,timerStart:0,timerElapsed:0,timerInterval:null,
+  controlPoints:[],drawAttempts:0,tableDone:false};
+const $=id=>document.getElementById(id);
+function K(l,d){try{return katex.renderToString(l,{throwOnError:false,displayMode:!!d})}catch(e){return l}}
+
+// ============================================================
+//  MENU
+// ============================================================
+function selLevel(btn){
+  document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');G.level=btn.dataset.level;$('startBtn').classList.add('ready');
+}
+function parseURL(){const p=new URLSearchParams(location.search),l=p.get('level');if(l){const b=document.querySelector(`.level-btn[data-level="${l}"]`);if(b)selLevel(b);}}
+
+// ============================================================
+//  START
+// ============================================================
+function startGame(){
+  if(!G.level)return;
+  const pool=[...SCENARIOS[G.level]];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  G.questions=pool.slice(0,6);G.qIdx=0;G.score=0;G.correctIQs=0;G.totalIQs=0;G._qaIdx=0;
+  G.timerStart=Date.now();G.timerInterval=setInterval(updateTimer,1000);
+  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');
+  mfg('game_started',{game_slug:'graph-sketcher',level:G.level});
+  window._ggAbandoned=true;
+  window.addEventListener('beforeunload',function(){
+    if(window._ggAbandoned) mfg('game_abandoned',{game_slug:'graph-sketcher',level:G.level,questions_answered:G.qIdx});
+  });
+  loadScenario();
+}
+function updateTimer(){
+  G.timerElapsed=Math.floor((Date.now()-G.timerStart)/1000);
+  const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
+  $('hudTimer').textContent=m>0?`${m}m${s.toString().padStart(2,'0')}s`:`${s}s`;
+}
+
+// ============================================================
+//  LOAD SCENARIO
+// ============================================================
+function loadScenario(){
+  const q=G.questions[G.qIdx];
+  G.phase='table';G.qPenalties=0;G.iqIdx=0;G.tableDone=false;G.controlPoints=[];G.drawAttempts=0;
+  $('hudQ').textContent=`${G.qIdx+1}/${G.questions.length}`;$('hudScore').textContent=G.score;
+  $('hudPhase').textContent='Table';
+  $('drawTools').style.display='none';$('qBox').style.display='none';
+
+  // Equation
+  $('eqBox').innerHTML=K(q.eqLatex,true)+(q.context?`<div class="eq-context">${q.context}</div>`:'');
+
+  // Table
+  buildTable(q);
+
+  // Canvas — blank grid
+  drawGrid(q);
+}
+
+// ============================================================
+//  TABLE
+// ============================================================
+function buildTable(q){
+  const xVals=q.tableX;
+  let html='<table class="val-table"><tr><th>'+q.xLabel.split(' ')[0]+'</th>';
+  xVals.forEach(x=>{html+=`<th class="mono">${fmtX(x)}</th>`;});
+  html+='</tr><tr><td style="font-weight:600;color:var(--muted)">'+q.yLabel.split(' ')[0]+'</td>';
+  xVals.forEach(x=>{
+    const key=String(x);
+    if(q.given[key]!==undefined){
+      html+=`<td class="given mono">${fmtV(q.given[key])}</td>`;
+    } else {
+      html+=`<td id="cell_${key}"><input class="mono" type="number" step="any" placeholder="?" data-x="${key}" onchange="checkCell(this)"></td>`;
+    }
+  });
+  html+='</tr></table>';
+  $('tableBox').innerHTML=html;
+}
+
+function fmtX(v){return Number.isInteger(v)?v:parseFloat(v.toPrecision(4));}
+function fmtV(v){
+  if(v>=1e5)return v.toExponential(2);
+  if(Number.isInteger(v))return v;
+  return parseFloat(v.toPrecision(4));
+}
+
+function checkCell(input){
+  const q=G.questions[G.qIdx];
+  const key=input.dataset.x;
+  const expected=q.answers[key];
+  if(expected===undefined)return;
+  const val=parseFloat(input.value);
+  if(isNaN(val))return;
+  const tol=Math.abs(expected)<=10?Math.max(0.15,Math.abs(expected)*0.02):Math.max(0.5,Math.abs(expected)*0.01);
+  const cell=input.parentElement;
+  if(Math.abs(val-expected)<=tol){
+    cell.classList.add('correct-cell');cell.classList.remove('wrong-cell');
+    input.value=fmtV(expected);input.disabled=true;
+    checkTableComplete(q);
+  } else {
+    cell.classList.add('wrong-cell');cell.classList.remove('correct-cell');
+    G.qPenalties++;
+    setTimeout(()=>{cell.classList.remove('wrong-cell');input.value='';input.focus();},800);
+  }
+}
+
+function checkTableComplete(q){
+  const keys=Object.keys(q.answers);
+  const done=keys.every(k=>{
+    const cell=$('cell_'+k);
+    return cell&&cell.classList.contains('correct-cell');
+  });
+  if(!done)return;
+  G.tableDone=true;
+  // Score table
+  G.score+=keys.length*5;$('hudScore').textContent=G.score;
+
+  if(G.level==='core'){
+    // Plot points, enable drawing
+    drawGrid(q);plotPoints(q);
+    $('hudPhase').textContent='Draw';
+    G.phase='draw';
+    $('drawTools').style.display='flex';
+    enableDrawing(q);
+  } else {
+    // Show curve directly, go to IQs
+    drawGrid(q);plotPoints(q);drawTrueCurve(q);
+    startIQs(q);
+  }
+}
+
+// ============================================================
+//  CANVAS — GRID, POINTS, CURVES
+// ============================================================
+function getCanvasCtx(){
+  const c=$('graphCanvas');
+  // Resize for retina
+  const rect=c.parentElement.getBoundingClientRect();
+  const w=Math.max(320,rect.width-12);
+  const h=Math.round(w*0.67);
+  c.width=w*2;c.height=h*2;c.style.width=w+'px';c.style.height=h+'px';
+  const ctx=c.getContext('2d');ctx.scale(2,2);
+  return{c,ctx,w,h};
+}
+
+function getPad(){return{l:48,r:16,t:16,b:36};}
+
+function worldToCanvas(x,y,q,w,h){
+  const p=getPad(),pw=w-p.l-p.r,ph=h-p.t-p.b;
+  const cx=p.l+(x-q.xRange[0])/(q.xRange[1]-q.xRange[0])*pw;
+  const cy=p.t+(1-(y-q.yRange[0])/(q.yRange[1]-q.yRange[0]))*ph;
+  return{cx,cy};
+}
+function canvasToWorld(cx,cy,q,w,h){
+  const p=getPad(),pw=w-p.l-p.r,ph=h-p.t-p.b;
+  const x=q.xRange[0]+(cx-p.l)/pw*(q.xRange[1]-q.xRange[0]);
+  const y=q.yRange[0]+(1-(cy-p.t)/ph)*(q.yRange[1]-q.yRange[0]);
+  return{x,y};
+}
+
+function drawGrid(q){
+  const{ctx,w,h}=getCanvasCtx();
+  const p=getPad(),pw=w-p.l-p.r,ph=h-p.t-p.b;
+  ctx.clearRect(0,0,w,h);
+
+  // Compute nice grid intervals
+  const xSpan=q.xRange[1]-q.xRange[0],ySpan=q.yRange[1]-q.yRange[0];
+  const xStep=niceStep(xSpan,8),yStep=niceStep(ySpan,6);
+
+  // Minor gridlines
+  ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=0.5;
+  const xMinor=xStep/2,yMinor=yStep/2;
+  for(let x=Math.ceil(q.xRange[0]/xMinor)*xMinor;x<=q.xRange[1];x+=xMinor){
+    const{cx}=worldToCanvas(x,0,q,w,h);ctx.beginPath();ctx.moveTo(cx,p.t);ctx.lineTo(cx,p.t+ph);ctx.stroke();
+  }
+  for(let y=Math.ceil(q.yRange[0]/yMinor)*yMinor;y<=q.yRange[1];y+=yMinor){
+    const{cy}=worldToCanvas(0,y,q,w,h);ctx.beginPath();ctx.moveTo(p.l,cy);ctx.lineTo(p.l+pw,cy);ctx.stroke();
+  }
+
+  // Major gridlines
+  ctx.strokeStyle='rgba(255,255,255,0.12)';ctx.lineWidth=0.5;
+  for(let x=Math.ceil(q.xRange[0]/xStep)*xStep;x<=q.xRange[1];x+=xStep){
+    const{cx}=worldToCanvas(x,0,q,w,h);
+    ctx.beginPath();ctx.moveTo(cx,p.t);ctx.lineTo(cx,p.t+ph);ctx.stroke();
+    ctx.fillStyle='#687890';ctx.font='10px JetBrains Mono';ctx.textAlign='center';
+    ctx.fillText(fmtAxis(x),cx,h-p.b+14);
+  }
+  for(let y=Math.ceil(q.yRange[0]/yStep)*yStep;y<=q.yRange[1];y+=yStep){
+    const{cy}=worldToCanvas(0,y,q,w,h);
+    ctx.beginPath();ctx.moveTo(p.l,cy);ctx.lineTo(p.l+pw,cy);ctx.stroke();
+    ctx.fillStyle='#687890';ctx.font='10px JetBrains Mono';ctx.textAlign='right';
+    ctx.fillText(fmtAxis(y),p.l-6,cy+3);
+  }
+
+  // Axes
+  ctx.strokeStyle='#fff';ctx.lineWidth=1;
+  // x-axis if in range
+  if(q.yRange[0]<=0&&q.yRange[1]>=0){
+    const{cy}=worldToCanvas(0,0,q,w,h);
+    ctx.beginPath();ctx.moveTo(p.l,cy);ctx.lineTo(p.l+pw,cy);ctx.stroke();
+  }
+  // y-axis if in range
+  if(q.xRange[0]<=0&&q.xRange[1]>=0){
+    const{cx}=worldToCanvas(0,0,q,w,h);
+    ctx.beginPath();ctx.moveTo(cx,p.t);ctx.lineTo(cx,p.t+ph);ctx.stroke();
+  }
+
+  // Axis labels
+  ctx.fillStyle='#687890';ctx.font='11px Outfit';ctx.textAlign='center';
+  ctx.fillText(q.xLabel||'x',p.l+pw/2,h-2);
+  ctx.save();ctx.translate(10,p.t+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText(q.yLabel||'y',0,0);ctx.restore();
+}
+
+function niceStep(span,targetTicks){
+  const raw=span/targetTicks;const mag=Math.pow(10,Math.floor(Math.log10(raw)));
+  const norm=raw/mag;
+  if(norm<=1.5)return mag;if(norm<=3.5)return 2*mag;if(norm<=7.5)return 5*mag;return 10*mag;
+}
+function fmtAxis(v){
+  if(Math.abs(v)<1e-10)return'0';
+  if(Math.abs(v)>=1e5)return v.toExponential(1);
+  if(Number.isInteger(v))return String(v);
+  return parseFloat(v.toPrecision(3)).toString();
+}
+
+function plotPoints(q){
+  const c=$('graphCanvas');const ctx=c.getContext('2d');ctx.scale(0.5,0.5);// undo for raw
+  const w=c.width/2,h=c.height/2;
+  ctx.setTransform(2,0,0,2,0,0);// keep retina
+
+  const allX=q.tableX;
+  allX.forEach(x=>{
+    const key=String(x);
+    const y=q.given[key]!==undefined?q.given[key]:q.answers[key];
+    if(y===undefined)return;
+    const{cx,cy}=worldToCanvas(x,y,q,w,h);
+    ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);ctx.fillStyle='#14b8a6';ctx.fill();
+    ctx.strokeStyle='#0d9488';ctx.lineWidth=1.5;ctx.stroke();
+  });
+}
+
+function drawTrueCurve(q){
+  const c=$('graphCanvas');const ctx=c.getContext('2d');
+  const w=c.width/2,h=c.height/2;
+  const p=getPad();
+  ctx.strokeStyle='#22d3ee';ctx.lineWidth=1.5;ctx.beginPath();
+  const steps=200;
+  let started=false;
+  for(let i=0;i<=steps;i++){
+    const x=q.xRange[0]+(q.xRange[1]-q.xRange[0])*i/steps;
+    if(q.skipZero&&Math.abs(x)<0.01)continue;
+    if(q.skipX!==undefined&&Math.abs(x-q.skipX)<0.05)continue;
+    try{
+      const y=q.fn(x);
+      if(!isFinite(y)||y<q.yRange[0]-50||y>q.yRange[1]+50){started=false;continue;}
+      const{cx,cy}=worldToCanvas(x,y,q,w,h);
+      if(!started){ctx.moveTo(cx,cy);started=true;}else ctx.lineTo(cx,cy);
+    }catch(e){started=false;}
+  }
+  ctx.stroke();
+}
+
+// ============================================================
+//  DRAWING (Core Maths only)
+// ============================================================
+function enableDrawing(q){
+  const c=$('graphCanvas');
+  const w=c.width/2,h=c.height/2;
+  c.onclick=function(e){
+    if(G.phase!=='draw')return;
+    const rect=c.getBoundingClientRect();
+    const cx=(e.clientX-rect.left)*(c.width/2)/rect.width;
+    const cy=(e.clientY-rect.top)*(c.height/2)/rect.height;
+    const{x,y}=canvasToWorld(cx,cy,q,w,h);
+    G.controlPoints.push({x,y});
+    G.controlPoints.sort((a,b)=>a.x-b.x);
+    redrawWithCurve(q);
+  };
+  // Touch
+  c.ontouchstart=function(e){
+    if(G.phase!=='draw')return;e.preventDefault();
+    const t=e.touches[0];const rect=c.getBoundingClientRect();
+    const cx=(t.clientX-rect.left)*(c.width/2)/rect.width;
+    const cy=(t.clientY-rect.top)*(c.height/2)/rect.height;
+    const{x,y}=canvasToWorld(cx,cy,q,w,h);
+    G.controlPoints.push({x,y});
+    G.controlPoints.sort((a,b)=>a.x-b.x);
+    redrawWithCurve(q);
+  };
+}
+
+function getDataPoints(q){
+  const pts=[];
+  q.tableX.forEach(x=>{
+    const key=String(x);
+    const y=q.given[key]!==undefined?q.given[key]:q.answers[key];
+    if(y!==undefined)pts.push({x,y});
+  });
+  return pts;
+}
+
+function redrawWithCurve(q){
+  drawGrid(q);plotPoints(q);
+  // Draw spline through data + control points
+  const all=[...getDataPoints(q),...G.controlPoints].sort((a,b)=>a.x-b.x);
+  if(all.length<2)return;
+  const c=$('graphCanvas');const ctx=c.getContext('2d');
+  const w=c.width/2,h=c.height/2;
+
+  // Catmull-Rom spline
+  ctx.strokeStyle='#67e8f9';ctx.lineWidth=1.5;ctx.beginPath();
+  const canvasPts=all.map(p=>worldToCanvas(p.x,p.y,q,w,h));
+  catmullRom(ctx,canvasPts);
+  ctx.stroke();
+
+  // Draw control points
+  G.controlPoints.forEach(p=>{
+    const{cx,cy}=worldToCanvas(p.x,p.y,q,w,h);
+    ctx.beginPath();ctx.arc(cx,cy,3,0,Math.PI*2);ctx.fillStyle='#f59e0b';ctx.fill();
+  });
+}
+
+function catmullRom(ctx,pts){
+  if(pts.length<2)return;
+  ctx.moveTo(pts[0].cx,pts[0].cy);
+  if(pts.length===2){ctx.lineTo(pts[1].cx,pts[1].cy);return;}
+  for(let i=0;i<pts.length-1;i++){
+    const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(pts.length-1,i+2)];
+    const cp1x=p1.cx+(p2.cx-p0.cx)/6,cp1y=p1.cy+(p2.cy-p0.cy)/6;
+    const cp2x=p2.cx-(p3.cx-p1.cx)/6,cp2y=p2.cy-(p3.cy-p1.cy)/6;
+    ctx.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,p2.cx,p2.cy);
+  }
+}
+
+function undoCP(){G.controlPoints.pop();redrawWithCurve(G.questions[G.qIdx]);}
+function resetCP(){G.controlPoints=[];redrawWithCurve(G.questions[G.qIdx]);}
+
+function checkCurve(){
+  const q=G.questions[G.qIdx];
+  const all=[...getDataPoints(q),...G.controlPoints].sort((a,b)=>a.x-b.x);
+  if(all.length<3){alert('Add more control points to shape your curve.');return;}
+
+  // Sample 20 points, interpolate drawn curve via simple linear between sorted points
+  const samples=20;let passes=0;
+  const xStep=(q.xRange[1]-q.xRange[0])/samples;
+  const yTol=(q.yRange[1]-q.yRange[0])*0.10;
+
+  for(let i=0;i<=samples;i++){
+    const x=q.xRange[0]+i*xStep;
+    const trueY=q.fn(x);
+    const drawnY=interpolatePoints(all,x);
+    if(drawnY!==null&&Math.abs(drawnY-trueY)<=yTol)passes++;
+  }
+
+  G.drawAttempts++;
+  if(passes>=16){
+    // Pass
+    G.score+=G.drawAttempts===1?20:10;$('hudScore').textContent=G.score;
+    drawGrid(q);plotPoints(q);drawTrueCurve(q);
+    $('drawTools').style.display='none';
+    $('graphCanvas').onclick=null;$('graphCanvas').ontouchstart=null;
+    startIQs(q);
+  } else {
+    // Fail — find worst region
+    let worstX=q.xRange[0];let worstErr=0;
+    for(let i=0;i<=samples;i++){
+      const x=q.xRange[0]+i*xStep;
+      const err=Math.abs((q.fn(x))-(interpolatePoints(all,x)||0));
+      if(err>worstErr){worstErr=err;worstX=x;}
+    }
+    const fb=document.createElement('div');fb.className='feedback wrong';
+    fb.textContent=`Curve doesn't match — check around ${q.xLabel.split(' ')[0]} = ${fmtAxis(worstX)}. ${passes}/20 points passed.`;
+    $('qBox').style.display='block';$('qBox').innerHTML='';$('qBox').appendChild(fb);
+    setTimeout(()=>{$('qBox').style.display='none';},3000);
+  }
+}
+
+function interpolatePoints(pts,x){
+  if(x<=pts[0].x)return pts[0].y;
+  if(x>=pts[pts.length-1].x)return pts[pts.length-1].y;
+  for(let i=0;i<pts.length-1;i++){
+    if(x>=pts[i].x&&x<=pts[i+1].x){
+      const t=(x-pts[i].x)/(pts[i+1].x-pts[i].x);
+      return pts[i].y+t*(pts[i+1].y-pts[i].y);
+    }
+  }
+  return null;
+}
+
+// ============================================================
+//  INTERPRETATION QUESTIONS
+// ============================================================
+function startIQs(q){
+  G.phase='iqs';G.iqIdx=0;
+  $('hudPhase').textContent='Questions';
+  $('drawTools').style.display='none';
+  $('qBox').style.display='block';
+  loadIQ(q);
+}
+
+function loadIQ(q){
+  if(G.iqIdx>=q.iqs.length){finishScenario(q);return;}
+  const iq=q.iqs[G.iqIdx];
+  const box=$('qBox');
+  const label=`Question ${G.iqIdx+1} of ${q.iqs.length}`;
+
+  if(iq.type==='read'){
+    box.innerHTML=`<div class="q-label">${label}</div><div class="q-prompt">${iq.prompt}</div>
+      <input type="number" class="num-input" id="iqInput" placeholder="Answer" step="any">
+      <button class="check-btn" onclick="checkReadIQ()">Check</button><div id="iqFb"></div>`;
+  } else if(iq.type==='extrap'){
+    box.innerHTML=`<div class="q-label">${label}</div><div class="q-prompt">${iq.prompt}</div>
+      <div style="margin-bottom:.4rem"><input type="number" class="num-input" id="iqInput" placeholder="Value" step="any"></div>
+      <div style="margin-bottom:.4rem"><select id="iqReliable" style="padding:.4rem .6rem;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:Outfit;font-size:.78rem">
+        <option value="">Reliable?</option><option value="yes">Reliable</option><option value="no">Unreliable</option></select></div>
+      <button class="check-btn" onclick="checkExtrapIQ()">Check</button><div id="iqFb"></div>`;
+  } else if(iq.type==='mcq'){
+    const opts=[{text:iq.correct,correct:true},...iq.wrong.map(w=>({text:w,correct:false}))];
+    for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
+    let html=`<div class="q-label">${label}</div><div class="q-prompt">${iq.prompt}</div><div class="mcq-grid">`;
+    opts.forEach((o,i)=>{html+=`<button class="mcq-btn" id="iqm${i}" onclick="checkMCQIQ(${i},${o.correct})">${o.text}</button>`;});
+    html+=`</div><div id="iqFb"></div>`;
+    box.innerHTML=html;box._opts=opts;
+  } else if(iq.type==='roots'){
+    box.innerHTML=`<div class="q-label">${label}</div><div class="q-prompt">${iq.prompt}</div>
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:.3rem">Separate multiple values with commas</div>
+      <input type="text" class="num-input" id="iqInput" placeholder="e.g. 2, 3" style="width:180px">
+      <button class="check-btn" onclick="checkRootsIQ()">Check</button><div id="iqFb"></div>`;
+  } else if(iq.type==='tp'){
+    box.innerHTML=`<div class="q-label">${label}</div><div class="q-prompt">${iq.prompt}</div>
+      <div style="display:flex;gap:.4rem;align-items:center;margin-bottom:.3rem">
+        <span style="font-size:.75rem;color:var(--muted)">x =</span><input type="number" class="num-input" id="iqTpX" placeholder="x" step="any" style="width:80px">
+        <span style="font-size:.75rem;color:var(--muted)">y =</span><input type="number" class="num-input" id="iqTpY" placeholder="y" step="any" style="width:80px">
+      </div>
+      <button class="check-btn" onclick="checkTPIQ()">Check</button><div id="iqFb"></div>`;
+  }
+}
+
+function _trackIQ(ok){G._qaIdx++;mfg('question_answered',{game_slug:'graph-sketcher',level:G.level,correct:ok,question_index:G._qaIdx});}
+
+function checkReadIQ(){
+  const q=G.questions[G.qIdx],iq=q.iqs[G.iqIdx];
+  const val=parseFloat($('iqInput').value);if(isNaN(val))return;
+  G.totalIQs++;const fb=$('iqFb');
+  const tol=iq.tol||Math.abs(iq.answer)*0.05;
+  if(Math.abs(val-iq.answer)<=tol){
+    G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
+    fb.innerHTML=`<div class="feedback correct">Correct! ${iq.answer}</div>`;_trackIQ(true);
+    setTimeout(()=>{G.iqIdx++;loadIQ(q);},1000);
+  } else {
+    G.qPenalties++;
+    fb.innerHTML=`<div class="feedback wrong">Incorrect. Answer: ${iq.answer}</div>`;_trackIQ(false);
+    setTimeout(()=>{G.iqIdx++;loadIQ(q);},2000);
+  }
+}
+
+function checkExtrapIQ(){
+  const q=G.questions[G.qIdx],iq=q.iqs[G.iqIdx];
+  const val=parseFloat($('iqInput').value);const rel=$('iqReliable').value;
+  if(isNaN(val)||!rel)return;
+  G.totalIQs++;const fb=$('iqFb');
+  const tol=iq.tol||Math.abs(iq.answer)*0.05;
+  const valOk=Math.abs(val-iq.answer)<=tol;
+  const relOk=(rel==='no')===(!iq.reliable);
+  if(valOk&&relOk){
+    G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
+    fb.innerHTML=`<div class="feedback correct">Correct! ${iq.answer} — ${iq.reliable?'reliable':'unreliable: '+iq.reason}</div>`;_trackIQ(true);
+  } else {
+    G.qPenalties++;
+    fb.innerHTML=`<div class="feedback wrong">Answer: ${iq.answer}. ${iq.reliable?'Reliable':'Unreliable — '+iq.reason}</div>`;_trackIQ(false);
+  }
+  setTimeout(()=>{G.iqIdx++;loadIQ(q);},2000);
+}
+
+function checkMCQIQ(idx,correct){
+  const q=G.questions[G.qIdx];G.totalIQs++;const fb=$('iqFb');
+  document.querySelectorAll('.mcq-btn').forEach(b=>b.classList.add('disabled'));
+  if(correct){G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;$('iqm'+idx).classList.add('correct');
+    fb.innerHTML='<div class="feedback correct">Correct!</div>';_trackIQ(true);}
+  else{G.qPenalties++;$('iqm'+idx).classList.add('wrong');
+    const opts=$('qBox')._opts;opts.forEach((o,i)=>{if(o.correct)$('iqm'+i).classList.add('correct');});
+    fb.innerHTML='<div class="feedback wrong">Incorrect.</div>';_trackIQ(false);}
+  setTimeout(()=>{G.iqIdx++;loadIQ(q);},1500);
+}
+
+function checkRootsIQ(){
+  const q=G.questions[G.qIdx],iq=q.iqs[G.iqIdx];
+  const raw=$('iqInput').value;if(!raw.trim())return;
+  const vals=raw.split(',').map(s=>parseFloat(s.trim())).filter(v=>!isNaN(v));
+  G.totalIQs++;const fb=$('iqFb');
+  const tol=iq.tol||0.15;
+  let allFound=true;
+  iq.answers.forEach(a=>{if(!vals.some(v=>Math.abs(v-a)<=tol))allFound=false;});
+  if(allFound&&vals.length<=iq.answers.length+1){
+    G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
+    fb.innerHTML=`<div class="feedback correct">Correct! Roots: ${iq.answers.join(', ')}</div>`;_trackIQ(true);
+  } else {
+    G.qPenalties++;
+    fb.innerHTML=`<div class="feedback wrong">Expected: ${iq.answers.join(', ')}</div>`;_trackIQ(false);
+  }
+  setTimeout(()=>{G.iqIdx++;loadIQ(q);},2000);
+}
+
+function checkTPIQ(){
+  const q=G.questions[G.qIdx],iq=q.iqs[G.iqIdx];
+  const vx=parseFloat($('iqTpX').value),vy=parseFloat($('iqTpY').value);
+  if(isNaN(vx)||isNaN(vy))return;
+  G.totalIQs++;const fb=$('iqFb');
+  const tol=iq.tol||0.15;
+  if(Math.abs(vx-iq.answer.x)<=tol&&Math.abs(vy-iq.answer.y)<=Math.max(tol,Math.abs(iq.answer.y)*0.05)){
+    G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
+    fb.innerHTML=`<div class="feedback correct">Correct! (${iq.answer.x}, ${iq.answer.y})</div>`;_trackIQ(true);
+  } else {
+    G.qPenalties++;
+    fb.innerHTML=`<div class="feedback wrong">Expected: (${iq.answer.x}, ${iq.answer.y})</div>`;_trackIQ(false);
+  }
+  setTimeout(()=>{G.iqIdx++;loadIQ(q);},2000);
+}
+
+// ============================================================
+//  FINISH & RESULTS
+// ============================================================
+function finishScenario(q){
+  const box=$('qBox');
+  box.innerHTML=`<div style="text-align:center;padding:.5rem"><div style="font-size:.8rem;color:var(--correct);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem">Scenario Complete</div>
+    <button class="next-btn" onclick="nextScenario()">${G.qIdx<G.questions.length-1?'Next Scenario →':'See Results'}</button></div>`;
+}
+
+function nextScenario(){G.qIdx++;if(G.qIdx>=G.questions.length)endGame();else loadScenario();}
+
+function endGame(){
+  clearInterval(G.timerInterval);$('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
+  const pct=G.totalIQs>0?Math.round(100*G.correctIQs/G.totalIQs):0;
+  let title='Well done!';if(pct>=90)title='Outstanding!';else if(pct>=70)title='Great work!';
+  else if(pct>=50)title='Good effort!';else title='Keep practising!';
+  $('resultTitle').textContent=title;$('finalScore').textContent=G.score;
+  const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
+  const labels={core:'Core Maths',alevel:'A-Level',level4:'Level 4'};
+  $('statsLine').innerHTML=`Interpretation correct: <strong>${G.correctIQs}/${G.totalIQs}</strong> (${pct}%)<br>Time: <strong>${m>0?m+'m '+s+'s':s+'s'}</strong><br>Level: <strong>${labels[G.level]}</strong>`;
+  const key=`gs_pb_${G.level}`;const prev=parseInt(localStorage.getItem(key)||'0');
+  if(G.score>prev){localStorage.setItem(key,G.score);
+    mfg('personal_best_set',{game_slug:'graph-sketcher',level:G.level,score:G.score,previous_best:prev});
+    if(prev>0){$('pbLine').textContent=`New personal best! (Previous: ${prev})`;$('pbLine').style.display='block';}}
+  else if(prev>0){$('pbLine').textContent=`Personal best: ${prev}`;$('pbLine').style.display='block';}
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'graph-sketcher',level:G.level,score:G.score,questions_answered:G.totalIQs,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('graph-sketcher',G.level,G.score,G.totalIQs).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('graph-sketcher',G.level,G.score);}}
+}
+function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active');}
+window.addEventListener('DOMContentLoaded',()=>{parseURL();});
+
+
+(function renderMethodRef(){
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
+  var k=function(t){return katex.renderToString(t,{throwOnError:false});};
+
+  document.getElementById('methodTableVals').innerHTML=
+    '<strong>(a) Completing a table of values</strong>'+
+    'Given '+k('y = x^2 - 3x + 1')+', complete the table:<br><br>'+
+    'When '+k('x = 2')+':'+
+    K('y = (2)^2 - 3(2) + 1 = 4 - 6 + 1 = -1')+
+    'When '+k('x = 4')+':'+
+    K('y = (4)^2 - 3(4) + 1 = 16 - 12 + 1 = 5')+
+    'Substitute each '+k('x')+' value carefully — watch out for negative signs and powers.';
+
+  document.getElementById('methodReadY').innerHTML=
+    '<strong>(b) Reading y from a graph given x</strong>'+
+    'To find '+k('y')+' when '+k('x = 3')+', go to '+k('x = 3')+' on the horizontal axis, draw a vertical line up to the curve, then read across to the '+k('y')+'-axis.<br><br>'+
+    'For our example: when '+k('x = 3')+', '+k('y = 9 - 9 + 1 = 1')+'.';
+
+  document.getElementById('methodReadX').innerHTML=
+    '<strong>(c) Reading x from a graph given y</strong>'+
+    'To find '+k('x')+' when '+k('y = 5')+', draw a horizontal line from '+k('y = 5')+' across to the curve. Where it meets, read down to the '+k('x')+'-axis.<br><br>'+
+    'There may be <b>more than one</b> intersection — a quadratic can cross a horizontal line twice, so check for two answers.';
+})();
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

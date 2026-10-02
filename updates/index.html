@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Launched 1 Oct 2026. Newest month first; every internal link here is checked by
+     scripts/check-canonical-links.py (RESOLVE_PAGES). -->
+<meta name="description" content="What's changed on MaffsGames: a monthly, plain-English record of new games, fixes and corrections.">
+<link rel="canonical" href="https://maffsgames.co.uk/updates/">
+<meta property="og:title" content="What's changed &mdash; MaffsGames">
+<meta property="og:description" content="What's changed on MaffsGames: a monthly, plain-English record of new games, fixes and corrections.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/updates/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<title>What's changed | MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="/schools/assets/analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Canon 7.5's portal row, as /parents/ uses it: Outfit, white, navy, teal, adult register.
+     Self-contained so this page doesn't borrow the parents section's stylesheet. */
+  :root {
+    --navy: #1a2744;
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 1rem;
+    overflow-wrap: anywhere;   /* "Whatisthereversetranslation?" must not push a 320px screen sideways */
+  }
+  .nav {
+    background: var(--navy);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .nav a { color: #fff; text-decoration: none; font-weight: 600; }
+  .nav .back { opacity: 0.8; font-size: 0.85rem; font-weight: 400; }
+  .nav .back:hover { opacity: 1; }
+  .container { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+  h1 { color: var(--navy); font-size: 2rem; line-height: 1.2; margin-bottom: 1.5rem; }
+  .month {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem 1.5rem 0.5rem;
+    margin-bottom: 2rem;
+  }
+  .month > h2 {
+    color: var(--navy);
+    font-size: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid var(--teal);
+    margin-bottom: 1rem;
+  }
+  h3 { color: var(--navy); font-size: 1.15rem; margin: 1.75rem 0 0.5rem; }
+  p { margin-bottom: 0.75rem; }
+  p.sub { font-weight: 600; color: var(--muted); margin: 1rem 0 0.4rem; }
+  .note {
+    background: #f0fdfa;
+    border-left: 4px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: 0.75rem 1rem;
+  }
+  ul { padding-left: 1.25rem; margin-bottom: 1rem; }
+  li { margin-bottom: 0.6rem; }
+  a { color: var(--teal-dark); }
+  a:hover { color: var(--navy); }
+  strong a { font-weight: 700; }
+  .tagline { margin: -0.5rem 0 2rem; padding-left: 1rem; border-left: 3px solid var(--teal); }
+  .tagline blockquote { font-size: 1.15rem; font-style: italic; color: var(--navy); line-height: 1.5; }
+  .tagline figcaption { font-size: 0.9rem; color: var(--muted); margin-top: 0.25rem; }
+  @media (max-width: 480px) {
+    .nav { padding: 0.85rem 1rem; }
+    .container { padding: 1.5rem 0.75rem 2.5rem; }
+    .month { padding: 1.1rem 1rem 0.25rem; }
+    h1 { font-size: 1.6rem; }
+  }
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/">MaffsGames</a>
+  <a href="/" class="back">&larr; Back to games</a>
+</nav>
+
+<main class="container">
+
+<h1>What's changed</h1>
+
+<figure class="tagline">
+  <blockquote>To get better, one must fail.</blockquote>
+  <figcaption>— Jon, MaffsGames</figcaption>
+</figure>
+
+<section class="month" id="2026-10">
+<h2>October 2026</h2>
+
+<h3>Corrected</h3>
+<ul>
+  <li><strong>Answers offered twice.</strong> In 39 questions across 12 games, the right answer was also offered in a second form, for example 3 and √9, or n² + n and n(n + 1), so a student who chose the second form was marked wrong. Each now offers a genuine wrong answer instead, based on a common mistake. We searched every question bank on the site for this fault and fixed every case where the question doesn't ask for a particular form. Games: <a href="/games/binomial-blaster/">Binomial Blaster</a>, <a href="/games/circle-theorem-spotter/">Circle Theorem Spotter</a>, <a href="/games/curling-friction/">Curling Friction</a>, <a href="/games/differentiation-duel/">Differentiation Duel</a>, <a href="/games/force-resolver/">Force Resolver</a>, <a href="/games/index-laws/">Index Laws</a>, <a href="/games/probability-paradox/">Probability Paradox</a>, <a href="/games/probability-pioneer/">Probability Pioneer</a>, <a href="/games/proportion-blaster/">Proportion Blaster</a>, <a href="/games/sequence-solver/">Sequence Solver</a>, <a href="/games/simultaneous-solver/">Simultaneous Solver</a> and <a href="/games/trig-identity-duel/">Trig Identity Duel</a>.</li>
+</ul>
+
+<h3>Improved</h3>
+<ul>
+  <li><strong>Next button.</strong> In 15 games, pressing Next twice quickly could skip a question. That's fixed. After a wrong answer, Next now waits three seconds so there's time to read the working, and the button is bigger and easier to tap on a phone.</li>
+  <li><strong>Phones.</strong> <a href="/games/new-shapes/">New Shapes</a>, <a href="/games/better-value/">Better Value</a>, <a href="/games/formula-plug-in/">Formula Plug-In</a>, <a href="/games/expected-damage/">Expected Damage</a> and the home page now fit a phone screen far better (a few long explanations still need a scroll).</li>
+</ul>
+</section>
+
+<section class="month" id="2026-09">
+<h2>September 2026</h2>
+
+<p class="note"><strong>About "checked automatically":</strong> every time we change the site, a program works out each answer from scratch and blocks the change if any don't match. Where a game says this, its answers are re-checked on every update, not just once.</p>
+
+<h3>New</h3>
+<ul>
+  <li><strong><a href="/games/six-sevens-bruv/">Six Sevens, Bruv</a></strong> — times-tables recall, built for GCSE resit students.</li>
+  <li><strong><a href="/games/free-daily-pizza/">Free Daily Pizza</a></strong> — fractions, decimals and percentages, with a fresh set of ten every day.</li>
+  <li><strong><a href="/games/distinctly-average/">Distinctly Average</a></strong> — mean, median, mode and range, KS3 and GCSE.</li>
+  <li><strong><a href="/games/linear-equation-solver/">Linear Equation Solver</a></strong> — solve equations by choosing the inverse operation. 141 questions.</li>
+  <li><strong><a href="/games/quadratic-factoriser/">Quadratic Factoriser</a></strong> — rebuilt, with two new levels: Higher (where the x² term has a coefficient, using the AC method, with a tutorial that fades as you improve) and the quadratic formula.</li>
+  <li><strong><a href="/games/log-laws/">Log Laws</a></strong> — new Solve mode: apply the laws step by step.</li>
+  <li><strong><a href="/parents/">Parent guides</a></strong> — 20 guides explaining what your child is learning and how to help at home.</li>
+</ul>
+
+<h3>Escape rooms</h3>
+<ul>
+  <li><strong><a href="/escape-rooms/">Escape rooms</a></strong> went live on 1 September: short maths escape rooms for groups of three or four, built to finish a lesson in under 15 minutes.</li>
+  <li>A teacher told us the room stories read as machine-written. They were right. We took the rooms down and are rewriting them one at a time, each around its own character. Six are rewritten and back: <a href="/escape-rooms/hamster-heist/">The Great Hamster Heist</a>, <a href="/escape-rooms/pe-shed-rebellion/">The P.E. Store Rebellion</a>, <a href="/escape-rooms/prom-budget/">The Prom Budget Embezzlement</a>, <a href="/escape-rooms/canteen-hack/">The Canteen Menu Hack</a>, <a href="/escape-rooms/heatwave-mutiny/">The Heatwave Mutiny</a> and <a href="/escape-rooms/rugby-mud/">The Rugby Mud Bath</a>.</li>
+  <li>Two new rooms for GCSE resit classes: <strong><a href="/escape-rooms/comic-caper/">The Comic Caper</a></strong> (factors, primes and HCF) and <strong><a href="/escape-rooms/kiln-disaster/">The Kiln Disaster</a></strong> (multiples, LCM and order of operations).</li>
+  <li>The Headteacher's Car Trap and The IT Teacher's Vengeance are offline until their rewrites are done.</li>
+</ul>
+
+<h3>Corrected</h3>
+
+<p class="sub">Games that didn't work:</p>
+<ul>
+  <li><strong><a href="/games/modular-battle/">Modular Battle</a></strong> had never been playable: it froze on about a quarter of questions. Fixed. Its dot picture also showed the wrong remainder on some questions; it now shows the right one, and fades out once you no longer need it.</li>
+  <li><strong><a href="/games/chart-interrogator/">Chart Interrogator</a></strong>'s score bar didn't work from March to September. Fixed. We then re-checked the marking on all 40 charts: at least 14 were marked wrongly — some rejected an accurate reading, some accepted almost anything, and one histogram marked a true answer wrong. Every chart now marks against what's actually drawn, with a tolerance that suits its scale. Checked automatically.</li>
+  <li><strong><a href="/games/differentiation-duel/">Differentiation Duel</a></strong> wouldn't load at any level. Fixed.</li>
+  <li><strong><a href="/games/expectation-station/">Expectation Station</a></strong> couldn't be completed, and one scenario could never be won. Both fixed, and the game now works in exact fractions so rounding can't trip it up.</li>
+  <li><strong><a href="/games/matrix-crunch/">Matrix Crunch</a></strong>'s rotation questions had never worked since they were added in March. Fixed, along with a question that showed the same option twice.</li>
+</ul>
+
+<p class="sub">Questions with wrong answers:</p>
+<ul>
+  <li><strong><a href="/games/test-the-claim/">Test the Claim</a></strong> — we recomputed every answer. 16 of 48 questions had an error, two of them reaching the wrong accept/reject decision. The correct action was also always the second option, so it could be guessed; options are now shuffled. Checked automatically.</li>
+  <li><strong><a href="/games/normal-navigator/">Normal Navigator</a></strong> — we recomputed every answer and corrected 9 of 47, most in the final decimal place. Earlier in the month we also fixed one question with no correct option, one that accepted the wrong value, and a fault that could show the same question twice in a game. The diagram no longer gives the answer away before you respond. Checked automatically.</li>
+  <li><strong><a href="/games/trig-worms/">Trig Worms</a></strong> — about 12% of questions described a triangle that can't exist. The question generator is fixed, and options can no longer repeat.</li>
+  <li><strong><a href="/games/graph-transformer/">Graph Transformer</a></strong> marked the route you took, not the graph you ended with, so some correct answers were rejected. It now marks the graph. Three puzzles were also fixed: two couldn't be completed and one had the wrong target. Checked automatically.</li>
+  <li><strong><a href="/games/spot-the-error/">Spot the Error</a></strong> — 2 of 110 fixed: one couldn't be completed and one showed a wrong figure.</li>
+  <li><strong><a href="/games/distinctly-average/">Distinctly Average</a></strong> — on launch day, the right answer to bimodal questions was the only option written "x and y", which gave it away. Fixed within the day. Checked automatically.</li>
+  <li><strong>The Great Hamster Heist</strong> (escape room) — one lock asked for the greatest volume a rounded measurement could give, a value that can never actually be reached. It now asks for the smallest, and every room follows that rule.</li>
+  <li><strong>Single-question fixes:</strong> <a href="/games/angle-ace/">Angle Ace</a> (angles on a straight line drawn incorrectly), <a href="/games/proof-builder/">Proof Builder</a> (an unfinished note showing as an option, and two wrong answers that were actually right), <a href="/games/probability-paradox/">Probability Paradox</a> (an example that didn't show the paradox), <a href="/games/formula-unlocked/">Formula Unlocked</a> (an option shown twice, and an unfinished hint), and <a href="/games/coordinate-geometry-dash/">Coordinate Geometry Dash</a> (two questions, including one that marked √50 wrong when the answer was 5√2).</li>
+</ul>
+
+<p class="sub">Display:</p>
+<ul>
+  <li>In <a href="/games/component-crusher/">Component Crusher</a>, <a href="/games/factor-theorem/">Factor Theorem</a> and <a href="/games/test-the-claim/">Test the Claim</a>, question text lost its spaces when shown ("Whatisthereversetranslation?"). Fixed.</li>
+  <li><a href="/games/scale-factor-scaling/">Scale Factor Scaling</a> and <a href="/games/unit-converter/">Unit Converter</a>: worked solutions corrected.</li>
+  <li><a href="/games/suvat/">SUVAT</a>: equations now properly typeset, and two hard-to-read colours fixed.</li>
+</ul>
+
+<h3>Clarified</h3>
+<ul>
+  <li><a href="/games/maths-court/">Maths Court</a> and <a href="/games/core-maths-paper2a/">Core Maths Paper 2A</a>: one question each reworded. No answers changed.</li>
+</ul>
+
+<h3>Withdrawn</h3>
+<ul>
+  <li><strong>Regression Rumble</strong> is offline while we rebuild it. Most of its scenarios didn't hold together mathematically.</li>
+</ul>
+
+<h3>Improved</h3>
+<ul>
+  <li><strong>Dyslexia-friendly mode (Aa)</strong> now actually shows the OpenDyslexic font. Until 28 September it never did, for anyone: the font was loaded from an address that didn't exist, so Aa mode only added spacing. The font is now served from MaffsGames itself, so if your network lets you open a game, the font loads too. 94 games.</li>
+  <li><strong>Wrong answers wait for you.</strong> In 25 games, a wrong answer used to move on after a fixed delay, often before you'd read why. Now the working stays on screen until you press Next.</li>
+  <li><strong>Leaderboards:</strong> 13 games that could never reach the leaderboards now can — any finished game counts. Two games where a lower score is better are held off until the boards can rank them the right way round. The score ticker on the home page now shows live standings instead of out-of-date badges.</li>
+  <li><strong>Session length:</strong> five games offered more questions than they had, then stopped short. They now only offer what they can fill.</li>
+  <li><strong>New and Updated badges</strong> on the home page mark games with real new work, and expire after half a term.</li>
+  <li><strong>Newsletter:</strong> the sign-up form never worked — everyone who tried got an error. We've removed it. There is no newsletter yet.</li>
+</ul>
+</section>
+
+</main>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

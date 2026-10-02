@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Moments, beams, reactions, and tilting problems. 70 questions for A-Level mechanics and Level 4.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/moments-master/">
+<meta property="og:title" content="Moments Master — MaffsGames">
+<meta property="og:description" content="Moments, beams, reactions, and tilting problems. 70 questions for A-Level mechanics and Level 4.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/moments-master/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Moments Master — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0d0d14;--surface:#171724;--border:#282840;--primary:#a78bfa;--accent:#34d399;--wrong:#f43f5e;--text:#e8e8f0;--muted:#8888a8}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.level-select{display:flex;gap:.5rem;justify-content:center;margin:1rem 0}
+.level-btn{padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316}
+.level-btn[data-level="level4"].active{background:#ef4444;border-color:#ef4444}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}.hud-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:140px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.6rem}
+.q-card .context{font-size:.9rem;color:var(--text);line-height:1.6;max-width:660px}
+.q-card .prompt{font-size:.85rem;color:var(--accent);font-weight:600;margin-top:.3rem}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.9rem;cursor:pointer;transition:all .15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(167,139,250,.2)}
+.opt-btn.correct{border-color:var(--accent);background:rgba(52,211,153,.1);animation:pop .3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.1);animation:shake .3s}
+.opt-btn.reveal{border-color:var(--accent);opacity:.7}.opt-btn.disabled{pointer-events:none;opacity:.5}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s}
+.pip.done{background:var(--accent)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem}
+.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.play-again:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+.katex{font-size:1em!important}.q-card .katex{font-size:1.15em!important}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Moments Master</h1><div class="sub">Turning forces. Beams. Equilibrium.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="level-select">
+      <button class="level-btn active" data-level="alevel">A-Level</button>
+      <button class="level-btn" data-level="level4">Level 4</button>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:.8rem 0;line-height:1.6">
+      Calculate moments about a point, find unknown forces for equilibrium,<br>
+      and solve beam problems with uniform and non-uniform rods.
+    </p>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <div style="text-align:center;margin-top:1.5rem"><button class="play-again" onclick="startGame()">Start</button></div>
+  </div>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="q-card">
+      <div class="context" id="context"></div>
+      <div id="question"></div>
+      <div class="prompt" id="prompt"></div>
+    </div>
+    <div class="options" id="options"></div>
+  </div>
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+<script>
+const QUESTIONS={
+alevel:[
+  // Basic moment calculations (Q1-12)
+  {ctx:'A force of 10 N acts at a perpendicular distance of 3 m from a pivot.',q:'M = F \\times d',ask:'Calculate the moment',correct:'30 \\text{ Nm}',d:['3.33 \\text{ Nm}','13 \\text{ Nm}','0.3 \\text{ Nm}']},
+  {ctx:'A force of 25 N acts 2 m from a pivot.',q:'',ask:'Calculate the moment',correct:'50 \\text{ Nm}',d:['12.5 \\text{ Nm}','27 \\text{ Nm}','100 \\text{ Nm}']},
+  {ctx:'A force of 8 N acts at 4.5 m from a pivot.',q:'',ask:'Calculate the moment',correct:'36 \\text{ Nm}',d:['1.78 \\text{ Nm}','12.5 \\text{ Nm}','32 \\text{ Nm}']},
+  {ctx:'A moment of 60 Nm is produced by a force at 4 m from the pivot.',q:'',ask:'Find the force',correct:'15 \\text{ N}',d:['240 \\text{ N}','56 \\text{ N}','64 \\text{ N}']},
+  {ctx:'A 20 N force produces a moment of 100 Nm.',q:'',ask:'Find the perpendicular distance',correct:'5 \\text{ m}',d:['2000 \\text{ m}','80 \\text{ m}','120 \\text{ m}']},
+  {ctx:'A force of 50 N acts at 30° to a spanner of length 0.4 m.',q:'M = F d \\sin\\theta',ask:'Calculate the moment',correct:'10 \\text{ Nm}',d:['20 \\text{ Nm}','17.3 \\text{ Nm}','5 \\text{ Nm}']},
+  {ctx:'A force of 40 N acts at 60° to a bar of length 0.5 m.',q:'M = Fd\\sin\\theta',ask:'Calculate the moment',correct:'10\\sqrt{3} \\approx 17.3 \\text{ Nm}',d:['20 \\text{ Nm}','10 \\text{ Nm}','40 \\text{ Nm}']},
+  {ctx:'A force acts along the line through the pivot.',q:'',ask:'What is the moment?',correct:'0 \\text{ Nm}',d:['F \\text{ Nm}','Fd \\text{ Nm}','Cannot tell']},
+  {ctx:'The SI unit of moment is...',q:'',ask:'',correct:'Newton-metre (Nm)',d:['Newton (N)','Joule (J)','Pascal (Pa)']},
+  {ctx:'A moment is a...',q:'',ask:'Complete the definition',correct:'Turning effect of a force about a point',d:['Force acting at a distance','Couple of forces','Product of mass and acceleration']},
+  {ctx:'Clockwise moments are taken as positive. A 5 N force acts 3 m to the right of pivot (downward). An 8 N force acts 2 m to the left (downward).',q:'',ask:'Net moment about the pivot',correct:'1 \\text{ Nm anticlockwise}',d:['1 \\text{ Nm clockwise}','31 \\text{ Nm}','0 \\text{ Nm}']},
+  {ctx:'For an object to be in rotational equilibrium...',q:'',ask:'What condition must hold?',correct:'Sum of clockwise moments = sum of anticlockwise moments',d:['All forces are zero','All moments are clockwise','The object is stationary']},
+  // Beams — uniform rod (Q13-24)
+  {ctx:'A uniform beam AB of length 6 m and weight 120 N is supported at both ends.',q:'',ask:'Reaction at each support',correct:'60 \\text{ N each}',d:['120 \\text{ N each}','30 \\text{ N each}','0 \\text{ N and } 120 \\text{ N}']},
+  {ctx:'A uniform beam AB, 4 m long, weight 80 N. Supported at A and B. A 50 N load placed 1 m from A.',q:'\\text{Moments about A: } R_B \\times 4 = 80 \\times 2 + 50 \\times 1',ask:'Find R_B',correct:'52.5 \\text{ N}',d:['65 \\text{ N}','40 \\text{ N}','77.5 \\text{ N}']},
+  {ctx:'Same beam. R_B = 52.5 N. Total weight = 130 N.',q:'R_A + R_B = 130',ask:'Find R_A',correct:'77.5 \\text{ N}',d:['52.5 \\text{ N}','130 \\text{ N}','65 \\text{ N}']},
+  {ctx:'A uniform beam AB, 8 m, weight 200 N. Supported at A and B. A 100 N load at 6 m from A.',q:'',ask:'R_B (take moments about A)',correct:'175 \\text{ N}',d:['150 \\text{ N}','125 \\text{ N}','200 \\text{ N}']},
+  {ctx:'A uniform plank, 5 m, weight 60 N. Support at 1 m from left end. Load W at right end. Plank is in equilibrium.',q:'\\text{Moments about support}',ask:'Find W if plank is on the point of tilting right',correct:'\\dfrac{60 \\times 1.5}{4} = 22.5 \\text{ N}',d:['30 \\text{ N}','60 \\text{ N}','15 \\text{ N}']},
+  {ctx:'A seesaw is 4 m long, pivoted at the centre. Child A (30 kg) sits 2 m from pivot. Child B sits 1.5 m from pivot. g = 10.',q:'',ask:'Mass of B for equilibrium',correct:'40 \\text{ kg}',d:['30 \\text{ kg}','45 \\text{ kg}','22.5 \\text{ kg}']},
+  {ctx:'A uniform beam, 6 m, 150 N, resting on two supports at 1 m and 5 m from left end.',q:'\\text{Moments about left support}',ask:'Reaction at right support',correct:'75 \\text{ N}',d:['150 \\text{ N}','37.5 \\text{ N}','100 \\text{ N}']},
+  {ctx:'A light beam (weightless) of 3 m. 40 N at left end, 60 N at right end. Supported at midpoint.',q:'',ask:'Is it in equilibrium?',correct:'No — net moment about midpoint \\neq 0',d:['Yes','Only if the beam has weight','Cannot tell']},
+  {ctx:'A light beam, 3 m. 40 N at left end, 60 N at right end.',q:'',ask:'Where should the support be for equilibrium?',correct:'1.8 \\text{ m from the left end}',d:['1.5 \\text{ m}','1.2 \\text{ m}','2 \\text{ m}']},
+  {ctx:'A uniform ruler, 1 m, weight 1 N. Balanced on a pivot at 40 cm from left end. A 2 N weight hangs from the left end.',q:'',ask:'Where must a 3 N weight be placed for balance?',correct:'\\dfrac{2 \\times 0.4 - 1 \\times 0.1}{3} \\approx 0.233 \\text{ m right of pivot}',d:['0.1 \\text{ m right}','0.3 \\text{ m right}','0.5 \\text{ m right}']},
+  {ctx:'A uniform beam AB is 10 m long. Support at C, 3 m from A. Weight 500 N. Load P at B. Just about to tilt about C.',q:'',ask:'Find P',correct:'\\dfrac{500 \\times 2}{7} \\approx 142.9 \\text{ N}',d:['250 \\text{ N}','100 \\text{ N}','500 \\text{ N}']},
+  // Non-uniform rods (Q25-34)
+  {ctx:'A non-uniform rod AB, 4 m, weight 80 N. Centre of mass 1.5 m from A. Supported at A and B.',q:'\\text{Moments about A}',ask:'Find R_B',correct:'30 \\text{ N}',d:['40 \\text{ N}','50 \\text{ N}','80 \\text{ N}']},
+  {ctx:'Same rod. R_B = 30 N.',q:'R_A + R_B = 80',ask:'Find R_A',correct:'50 \\text{ N}',d:['30 \\text{ N}','80 \\text{ N}','40 \\text{ N}']},
+  {ctx:'A non-uniform rod AB, 6 m, weight 120 N. R_A = 80 N, R_B = 40 N.',q:'\\text{Moments about A}',ask:'Distance of centre of mass from A',correct:'2 \\text{ m}',d:['3 \\text{ m}','4 \\text{ m}','1 \\text{ m}']},
+  {ctx:'A non-uniform rod, 5 m. When balanced on a pivot at 2 m from A, it is in equilibrium.',q:'',ask:'Where is the centre of mass?',correct:'2 \\text{ m from A}',d:['2.5 \\text{ m from A}','3 \\text{ m from A}','At the pivot']},
+  {ctx:'A non-uniform rod AB, 8 m, weight W. R_A = 3W/4.',q:'',ask:'Distance of centre of mass from B',correct:'6 \\text{ m}',d:['2 \\text{ m}','4 \\text{ m}','3 \\text{ m}']},
+  {ctx:'A non-uniform rod AB, 4 m, weight 100 N. Centre of mass at 1 m from A. A load of 50 N at B. Support at A and B.',q:'\\text{Moments about A}',ask:'Find R_B',correct:'50 \\text{ N}',d:['75 \\text{ N}','100 \\text{ N}','25 \\text{ N}']},
+  {ctx:'A non-uniform beam, 10 m. Weight 200 N, centre of mass 3 m from left. Support at left end and at 8 m.',q:'\\text{Moments about left support}',ask:'Reaction at 8 m support',correct:'75 \\text{ N}',d:['125 \\text{ N}','100 \\text{ N}','200 \\text{ N}']},
+  {ctx:'A rod AB hangs horizontally from two vertical strings at A and B. AB = 3 m, weight = 60 N. Tension at A is twice tension at B.',q:'T_A = 2T_B, \\; T_A + T_B = 60',ask:'Find T_A',correct:'40 \\text{ N}',d:['20 \\text{ N}','30 \\text{ N}','60 \\text{ N}']},
+  {ctx:'Same rod. T_A = 40 N, T_B = 20 N.',q:'\\text{Moments about A}',ask:'Distance of centre of mass from A',correct:'1 \\text{ m}',d:['1.5 \\text{ m}','2 \\text{ m}','0.5 \\text{ m}']},
+  {ctx:'A non-uniform plank AB, 5 m, weight 80 N. It just balances on a single support at 1.8 m from A.',q:'',ask:'Where is the centre of mass?',correct:'1.8 \\text{ m from A}',d:['2.5 \\text{ m from A}','3.2 \\text{ m from A}','1 \\text{ m from A}']},
+  // Tilting and limiting equilibrium (Q35-42)
+  {ctx:'A uniform plank AB, 6 m, 90 N. Support at C (2 m from A). Person (60 N) walks from A towards B.',q:'',ask:'How far from A can the person walk before the plank tilts about C?',correct:'4 \\text{ m}',d:['3 \\text{ m}','5 \\text{ m}','2 \\text{ m}']},
+  {ctx:'A uniform beam, 4 m, 100 N. Supported at A. A rope at B keeps it horizontal. A 200 N load at 3 m from A.',q:'\\text{Moments about A}',ask:'Tension in the rope at B',correct:'200 \\text{ N}',d:['150 \\text{ N}','250 \\text{ N}','100 \\text{ N}']},
+  {ctx:'A uniform ladder (5 m, 200 N) rests against a smooth wall at 60° to the ground. Friction at the ground only.',q:'',ask:'Friction force at the ground',correct:'\\dfrac{200 \\times 2.5 \\cos 60°}{5 \\sin 60°} \\approx 57.7 \\text{ N}',d:['100 \\text{ N}','200 \\text{ N}','28.9 \\text{ N}']},
+  {ctx:'A uniform sign (30 N) hangs from a horizontal rod (2 m, 10 N) attached to a wall. The sign hangs from the end.',q:'\\text{Moments about wall}',ask:'Moment that the wall bracket must provide',correct:'70 \\text{ Nm}',d:['40 \\text{ Nm}','80 \\text{ Nm}','60 \\text{ Nm}']},
+  {ctx:'A couple consists of two equal and opposite forces, each 15 N, separated by 0.8 m.',q:'\\text{Couple} = F \\times d',ask:'Calculate the moment of the couple',correct:'12 \\text{ Nm}',d:['30 \\text{ Nm}','7.5 \\text{ Nm}','24 \\text{ Nm}']},
+  {ctx:'A couple is special because...',q:'',ask:'What property?',correct:'It produces rotation without translation',d:['It has zero moment','It only acts at one point','It requires three forces']},
+  {ctx:'A trapdoor (1.2 m wide, 80 N) is hinged along one edge. A force F is applied at the other edge perpendicular to the door (door horizontal).',q:'',ask:'Minimum F to hold it open',correct:'40 \\text{ N}',d:['80 \\text{ N}','96 \\text{ N}','20 \\text{ N}']},
+  {ctx:'A gate (2 m wide, 150 N) is supported by two hinges. The weight acts at the centre.',q:'',ask:'If only the top hinge provides horizontal force, what horizontal force does it provide? (vertical forces shared equally)',correct:'\\text{Cannot determine without more info}',d:['75 \\text{ N}','150 \\text{ N}','0 \\text{ N}']},
+  // Theory (Q43-50)
+  {ctx:'The principle of moments states...',q:'',ask:'',correct:'For equilibrium: Σ clockwise moments = Σ anticlockwise moments',d:['All moments are equal','Total force = 0','Moment = force × mass']},
+  {ctx:'For a body in complete equilibrium, two conditions must hold:',q:'',ask:'What are they?',correct:'Resultant force = 0 AND resultant moment = 0',d:['Resultant force = 0 only','No friction','All forces are vertical']},
+  {ctx:'The moment of a force depends on...',q:'',ask:'What two things?',correct:'The magnitude of the force AND perpendicular distance from the pivot',d:['Mass and acceleration','Force and speed','Mass and distance']},
+  {ctx:'Increasing the distance from the pivot...',q:'',ask:'What effect on the moment?',correct:'Increases the moment (for the same force)',d:['Decreases the moment','No effect','Depends on direction']},
+  {ctx:'A force acts through the pivot point.',q:'',ask:'What is its moment about the pivot?',correct:'Zero',d:['Maximum','F × d','Cannot be calculated']},
+  {ctx:'A uniform rod has its centre of mass at...',q:'',ask:'Where?',correct:'Its geometric centre (midpoint)',d:['One third from the heavier end','The pivot point','It depends on the supports']},
+  {ctx:'A non-uniform rod has its centre of mass...',q:'',ask:'Where?',correct:'Closer to the heavier end',d:['Always at the midpoint','At the pivot','At the lighter end']},
+  {ctx:'On a beam diagram, R_A and R_B represent...',q:'',ask:'What?',correct:'The upward reaction forces at the supports',d:['The weight of the beam at A and B','Friction forces','Applied forces']},
+],
+level4:[
+  {ctx:'A spanner 0.3 m long. A force of 80 N is applied perpendicular to the end.',q:'',ask:'Moment applied to the bolt',correct:'24 \\text{ Nm}',d:['0.00375 \\text{ Nm}','266.7 \\text{ Nm}','80.3 \\text{ Nm}']},
+  {ctx:'A torque of 50 Nm is required to turn a bolt. Spanner length 0.25 m.',q:'',ask:'Minimum force required',correct:'200 \\text{ N}',d:['12.5 \\text{ N}','50.25 \\text{ N}','2 \\text{ N}']},
+  {ctx:'A beam supports a 5 kN load at its centre. The beam is 4 m long, supported at both ends.',q:'',ask:'Reaction at each support (ignore beam weight)',correct:'2.5 \\text{ kN}',d:['5 \\text{ kN}','1.25 \\text{ kN}','10 \\text{ kN}']},
+  {ctx:'A simply supported beam, 6 m. A 10 kN load at 2 m from the left support.',q:'\\text{Moments about left support}',ask:'Reaction at the right support',correct:'3.33 \\text{ kN}',d:['6.67 \\text{ kN}','5 \\text{ kN}','10 \\text{ kN}']},
+  {ctx:'Same beam. R_R = 3.33 kN, total load = 10 kN.',q:'',ask:'Reaction at left support',correct:'6.67 \\text{ kN}',d:['3.33 \\text{ kN}','10 \\text{ kN}','5 \\text{ kN}']},
+  {ctx:'A cantilever beam, 3 m long, fixed at the wall. A 2 kN load at the free end.',q:'',ask:'Moment at the wall',correct:'6 \\text{ kNm}',d:['0.67 \\text{ kNm}','2 \\text{ kNm}','3 \\text{ kNm}']},
+  {ctx:'A beam, 8 m, supports 3 loads: 2 kN at 1 m, 5 kN at 4 m, 3 kN at 7 m from the left end. Supported at both ends.',q:'\\text{Moments about A}',ask:'Find R_B',correct:'\\dfrac{2(1)+5(4)+3(7)}{8} = 6.5 \\text{ kN}',d:['5 \\text{ kN}','3.5 \\text{ kN}','10 \\text{ kN}']},
+  {ctx:'Same beam. R_B = 6.5 kN. Total load = 10 kN.',q:'',ask:'R_A',correct:'3.5 \\text{ kN}',d:['6.5 \\text{ kN}','10 \\text{ kN}','5 \\text{ kN}']},
+  {ctx:'A gear wheel of radius 0.15 m. A tangential force of 200 N is applied.',q:'',ask:'Torque produced',correct:'30 \\text{ Nm}',d:['1333 \\text{ Nm}','0.00075 \\text{ Nm}','200.15 \\text{ Nm}']},
+  {ctx:'A lever arm is 0.4 m. The applied force is at 50° to the lever.',q:'M = Fd\\sin\\theta',ask:'If F = 100 N, find the moment',correct:'30.6 \\text{ Nm}',d:['40 \\text{ Nm}','25.7 \\text{ Nm}','20 \\text{ Nm}']},
+  {ctx:'A crane jib: 12 m horizontal. A 20 kN load at the end. Self-weight 8 kN acting at midpoint.',q:'',ask:'Total moment about the base pivot',correct:'288 \\text{ kNm}',d:['240 \\text{ kNm}','336 \\text{ kNm}','48 \\text{ kNm}']},
+  {ctx:'A simply supported beam carries a uniformly distributed load (UDL) of 2 kN/m over its 6 m span.',q:'\\text{Total load} = w \\times L',ask:'Total load',correct:'12 \\text{ kN}',d:['8 \\text{ kN}','2 \\text{ kN}','36 \\text{ kN}']},
+  {ctx:'Same beam. UDL = 2 kN/m, span 6 m. Total load = 12 kN acting at midpoint.',q:'',ask:'Reaction at each support',correct:'6 \\text{ kN}',d:['12 \\text{ kN}','3 \\text{ kN}','24 \\text{ kN}']},
+  {ctx:'A beam 5 m. UDL of 4 kN/m. Supported at left end and at 4 m.',q:'\\text{Total load = 20 kN at 2.5 m}',ask:'Reaction at left support',correct:'7.5 \\text{ kN}',d:['10 \\text{ kN}','12.5 \\text{ kN}','20 \\text{ kN}']},
+  {ctx:'Power transmitted by a rotating shaft: P = Tω where T = torque, ω = angular velocity.',q:'T = 50 \\text{ Nm}, \\; \\omega = 100 \\text{ rad/s}',ask:'Find the power',correct:'5000 \\text{ W}',d:['0.5 \\text{ W}','150 \\text{ W}','5 \\text{ kW}']},
+  {ctx:'A motor produces 2 kW at 1500 rpm.',q:'\\omega = \\dfrac{2\\pi \\times 1500}{60} = 50\\pi \\text{ rad/s}',ask:'Find the torque',correct:'\\dfrac{2000}{50\\pi} \\approx 12.7 \\text{ Nm}',d:['40 \\text{ Nm}','1.33 \\text{ Nm}','4 \\text{ Nm}']},
+  {ctx:'A brake disc (radius 0.15 m) has a friction force of 500 N applied tangentially.',q:'',ask:'Braking torque',correct:'75 \\text{ Nm}',d:['3333 \\text{ Nm}','0.0003 \\text{ Nm}','500.15 \\text{ Nm}']},
+  {ctx:'A bench vice clamp applies 600 N through a handle 0.2 m long.',q:'',ask:'Maximum clamping moment',correct:'120 \\text{ Nm}',d:['3000 \\text{ Nm}','0.00033 \\text{ Nm}','600.2 \\text{ Nm}']},
+  {ctx:'A 3 m beam is supported at the left end. A 4 kN load at 1 m, a 6 kN load at 2.5 m. Held horizontal by a cable at the right end.',q:'',ask:'Tension in the cable',correct:'\\dfrac{4(1)+6(2.5)}{3} = 6.33 \\text{ kN}',d:['10 \\text{ kN}','3.33 \\text{ kN}','5 \\text{ kN}']},
+  {ctx:'An engineer needs to apply 80 Nm to a bolt but can only push with 100 N.',q:'d = M/F',ask:'Minimum spanner length needed',correct:'0.8 \\text{ m}',d:['0.08 \\text{ m}','8 \\text{ m}','1.25 \\text{ m}']},
+]
+};
+
+let level='alevel',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,qStartTime=0;
+const BASE=100,T_K=0.15;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
+const pa=new URLSearchParams(location.search);if(pa.get('level')&&QUESTIONS[pa.get('level')]){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+function startGame(){questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}window._ggAbandoned=true;if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'moments-master',level:level,questions_answered:qIdx});});}mfg('game_started',{game_slug:'moments-master',level:level});show('game');showQ()}
+function showQ(){const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;document.getElementById('context').textContent=q.ctx||'';const qEl=document.getElementById('question');qEl.innerHTML='';if(q.q)rk(qEl,q.q);document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});qStartTime=Date.now();updateTimer()}
+function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStartTime)/1000);requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
+function handle(btn,q){const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});mfg('question_answered',{game_slug:'moments-master',level:level,correct:ok,question_index:qIdx+1});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)}
+function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
+function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
+function end(){window._ggAbandoned=false;const pct=Math.round(correctCount/totalQ*100);mfg('game_completed',{game_slug:'moments-master',level:level,score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('moments-master',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('moments-master',level,score);}}let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;show('results')}
+function showMenu(){show('menu')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

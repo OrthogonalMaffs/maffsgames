@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Given That — Conditional Probability — MaffsGames</title>
+<meta name="description" content="Master conditional probability with visual two-way tables, Venn diagrams and frequency trees. Free, no sign-up, curriculum-aligned for GCSE, A-Level, Core Maths and Level 4.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/given-that/">
+<meta property="og:title" content="Given That — Conditional Probability — MaffsGames">
+<meta property="og:description" content="Master conditional probability with visual two-way tables, Venn diagrams and frequency trees. Free, no sign-up, curriculum-aligned for GCSE, A-Level, Core Maths and Level 4.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/given-that/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--accent:#f59e0b;--accent-dim:rgba(245,158,11,0.15);--accent-border:rgba(245,158,11,0.35);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--navy:#1a2744;--cell-bg:#1e2235;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+/* Header */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--accent)}
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em}
+.level-pill.gcse{background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3)}
+.level-pill.alevel{background:rgba(249,115,22,0.15);color:#f97316;border:1px solid rgba(249,115,22,0.3)}
+.level-pill.core{background:rgba(14,165,233,0.15);color:#0ea5e9;border:1px solid rgba(14,165,233,0.3)}
+.level-pill.level4{background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3)}
+.phase-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-border)}
+.progress-bar-wrap{width:100%;height:4px;background:var(--border);border-radius:2px;margin-top:4px}
+.progress-bar-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s}
+
+/* Screens */
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:28px;line-height:1.7;font-size:15px}
+.level-select{display:flex;gap:12px;margin-bottom:24px;justify-content:center;flex-wrap:wrap}
+.level-btn{padding:12px 24px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.level-btn:hover{border-color:var(--accent)}
+.level-btn.selected{border-color:var(--accent);background:var(--accent-dim)}
+.start-label{text-align:center;font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+.start-btn:disabled{opacity:0.4;cursor:default}
+.pb-display{text-align:center;font-size:13px;color:var(--muted);margin-top:12px}
+.pb-display span{color:var(--accent);font-weight:600}
+.how-section{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:20px}
+.how-section h3{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--accent)}
+.how-section p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:6px}
+
+/* Game area */
+.question-header{text-align:center;margin-bottom:20px}
+.question-header h2{font-size:16px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.question-header .q-context{font-size:13px;color:var(--muted)}
+
+.data-container{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:20px;overflow-x:auto}
+.data-title{font-size:14px;font-weight:700;text-align:center;margin-bottom:16px;color:var(--text)}
+
+/* Two-way table */
+.tw-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:14px}
+.tw-table th{background:var(--navy);color:#fff;padding:10px 14px;text-align:center;font-weight:600;border:1px solid rgba(255,255,255,0.1)}
+.tw-table td{background:var(--cell-bg);padding:10px 14px;text-align:center;border:1px solid var(--border);color:var(--text);transition:opacity 0.6s ease-out,border-color 0.6s ease-out,background 0.6s ease-out}
+.tw-table th.total-col,.tw-table td.total-col{background:rgba(245,158,11,0.08)}
+.tw-table th.total-row,.tw-table td.total-row{background:rgba(245,158,11,0.08)}
+.tw-table td.greyed{opacity:0.2}
+.tw-table th.greyed{opacity:0.2}
+.tw-table td.highlighted{border:2px solid var(--accent);background:rgba(245,158,11,0.1)}
+
+/* Venn diagram */
+.venn-svg{width:100%;max-width:480px;margin:0 auto;display:block}
+.venn-circle{fill:none;stroke-width:2.5}
+.venn-circle-a{stroke:#3b82f6}
+.venn-circle-b{stroke:#ef4444}
+.venn-label{font-family:'JetBrains Mono',monospace;font-size:18px;fill:var(--text);text-anchor:middle;dominant-baseline:central;transition:opacity 0.6s ease-out}
+.venn-set-label{font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;text-anchor:middle;dominant-baseline:central;transition:opacity 0.6s ease-out}
+.venn-region{transition:opacity 0.6s ease-out}
+.venn-region.greyed{opacity:0.2}
+.venn-region.highlighted .venn-label{fill:var(--accent)}
+
+/* Frequency tree */
+.tree-svg{width:100%;max-width:600px;margin:0 auto;display:block}
+.tree-branch{stroke:var(--muted);stroke-width:2;fill:none;transition:opacity 0.6s ease-out}
+.tree-node{transition:opacity 0.6s ease-out}
+.tree-node-rect{fill:var(--surface-alt);stroke:var(--border);stroke-width:1.5;rx:6}
+.tree-node-text{font-family:'JetBrains Mono',monospace;font-size:13px;fill:var(--text);text-anchor:middle;dominant-baseline:central}
+.tree-branch-label{font-family:'Outfit',sans-serif;font-size:12px;fill:var(--muted);text-anchor:middle;dominant-baseline:central;transition:opacity 0.6s ease-out}
+.tree-node.greyed,.tree-branch.greyed,.tree-branch-label.greyed{opacity:0.2}
+.tree-node.highlighted .tree-node-rect{stroke:var(--accent);stroke-width:2.5}
+
+/* Question area */
+.question-box{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:16px;border-left:3px solid var(--accent)}
+.question-text{font-size:15px;line-height:1.7}
+.question-text .katex{font-size:16px}
+.condition-banner{background:var(--accent-dim);border:1.5px solid var(--accent-border);border-radius:10px;padding:14px 20px;margin-bottom:16px;text-align:center;font-size:15px;font-weight:700;color:var(--accent);animation:conditionPulse 0.6s ease-out}
+@keyframes conditionPulse{0%{transform:scale(0.95);opacity:0}100%{transform:scale(1);opacity:1}}
+
+/* MCQ buttons */
+.mcq-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.mcq-btn{font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-alt);color:var(--text);cursor:pointer;text-align:center;transition:all 0.15s;line-height:1.5}
+.mcq-btn:hover{border-color:var(--accent)}
+.mcq-btn.correct{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+.mcq-btn.wrong{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+.mcq-btn.disabled{pointer-events:none;opacity:0.5}
+.mcq-btn.reveal-correct{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+
+/* Free entry */
+.free-entry{display:flex;gap:10px;align-items:center;margin-bottom:16px}
+.free-input{flex:1;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s}
+.free-input:focus{border-color:var(--accent)}
+.submit-btn{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;padding:12px 20px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;transition:opacity 0.15s}
+.submit-btn:hover{opacity:0.9}
+
+/* Feedback */
+.feedback{padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;margin-bottom:16px;display:none}
+.feedback.show{display:block}
+.feedback.correct-fb{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,0.3)}
+.feedback.wrong-fb{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,0.3)}
+
+/* Explanation */
+.explanation{background:var(--surface-alt);border-top:3px solid var(--accent);border-radius:12px;padding:20px;margin-bottom:16px;display:none}
+.explanation.show{display:block}
+.explanation h4{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px}
+.explanation p{font-size:14px;color:#cbd5e1;line-height:1.7}
+
+.next-btn{display:block;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s;margin-bottom:16px}
+.next-btn:hover{border-color:var(--accent)}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-score{font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:700;color:var(--accent);text-align:center;margin-bottom:8px}
+.results-sub{text-align:center;font-size:14px;color:var(--muted);margin-bottom:24px}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:16px;text-align:center}
+.result-card h4{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px}
+.result-card .val{font-size:24px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace}
+.result-card .sub{font-size:12px;color:var(--muted);margin-top:4px}
+.breakdown-section{background:var(--surface);border-radius:12px;padding:16px 20px;margin-bottom:24px}
+.breakdown-section h4{font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:12px}
+.breakdown-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,47,69,0.5);font-size:14px}
+.breakdown-row:last-child{border-bottom:none}
+.breakdown-val{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--accent)}
+.pb-banner{text-align:center;padding:12px;background:var(--accent-dim);border:1px solid var(--accent-border);border-radius:10px;margin-bottom:16px;font-size:14px;font-weight:600;color:var(--accent)}
+.results-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.results-btns button{font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;transition:all 0.15s}
+.play-again-btn{border:none;background:var(--accent);color:#fff}
+.play-again-btn:hover{opacity:0.9}
+.change-level-btn{border:1.5px solid var(--border);background:var(--surface);color:var(--text)}
+.change-level-btn:hover{border-color:var(--accent)}
+
+/* Leaderboard placeholder */
+.leaderboard-section{margin-top:24px}
+
+/* Accessibility */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .condition-banner{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' \2713';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' \2717';font-size:0.85em;opacity:0.8}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+.tw-table td,.venn-region,.venn-label,.venn-set-label,.tree-node,.tree-branch,.tree-branch-label{transition:none !important}
+.condition-banner{animation:none !important}
+}
+
+@media(max-width:600px){
+.mcq-grid{grid-template-columns:1fr}
+.results-grid{grid-template-columns:1fr}
+.header{padding:12px 16px}
+.screen{padding:24px 16px}
+}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Given That</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    <span class="level-pill" id="levelPill">GCSE</span>
+    <span class="phase-pill" id="phasePill">Phase 1</span>
+    <span class="score-display"><span id="scoreNum">0</span>/40</span>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <h1 class="start-title">Given That</h1>
+  <p class="start-sub">Conditional probability trainer. See the full picture, then zoom in on a condition and find the new probability from the reduced sample space.</p>
+
+  <div class="how-section">
+    <h3>How it works</h3>
+    <p><strong>Phase 1:</strong> A dataset is shown as a table, Venn diagram, or frequency tree. Answer a standard probability question.</p>
+    <p><strong>Phase 2:</strong> "GIVEN THAT..." — the data outside the condition fades away. Find the conditional probability from the reduced sample space.</p>
+    <p>10 questions per session. Max score: 40 points.</p>
+  </div>
+
+  <p class="start-label">Choose your level</p>
+  <div class="level-select" id="levelSelect">
+    <button class="level-btn" data-level="gcse">GCSE</button>
+    <button class="level-btn" data-level="alevel">A-Level</button>
+    <button class="level-btn" data-level="core">Core Maths</button>
+    <button class="level-btn" data-level="level4">Level 4</button>
+  </div>
+  <div class="pb-display" id="pbDisplay"></div>
+  <button class="start-btn" id="startBtn" disabled>Start Game</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="question-header">
+    <h2 id="questionCounter">Question 1 of 10</h2>
+  </div>
+
+  <div class="data-container" id="dataContainer">
+    <div class="data-title" id="dataTitle"></div>
+    <div id="dataVis"></div>
+  </div>
+
+  <div class="condition-banner" id="conditionBanner" style="display:none"></div>
+
+  <div class="question-box">
+    <p class="question-text" id="questionText"></p>
+  </div>
+
+  <div id="answerArea"></div>
+
+  <div class="feedback" id="feedback"></div>
+  <div class="explanation" id="explanation"></div>
+  <button class="next-btn" id="nextBtn" style="display:none">Next</button>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <h2 class="results-title">Session Complete</h2>
+  <div class="results-score" id="finalScore">0/40</div>
+  <div class="results-sub" id="finalSub"></div>
+  <div id="pbBanner"></div>
+
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Phase 1 Accuracy</h4>
+      <div class="val" id="p1Accuracy">0%</div>
+    </div>
+    <div class="result-card">
+      <h4>Phase 2 Accuracy</h4>
+      <div class="val" id="p2Accuracy">0%</div>
+    </div>
+  </div>
+
+  <div class="breakdown-section">
+    <h4>By Representation</h4>
+    <div class="breakdown-row"><span>Tables</span><span class="breakdown-val" id="breakTable">-</span></div>
+    <div class="breakdown-row"><span>Venn Diagrams</span><span class="breakdown-val" id="breakVenn">-</span></div>
+    <div class="breakdown-row"><span>Frequency Trees</span><span class="breakdown-val" id="breakTree">-</span></div>
+  </div>
+
+  <div class="leaderboard-section" id="leaderboardSection"></div>
+
+  <div class="results-btns">
+    <button class="play-again-btn" id="playAgainBtn">Play Again</button>
+    <button class="change-level-btn" id="changeLevelBtn">Change Level</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   GIVEN THAT — Conditional Probability Trainer
+   All 90 questions inline. Single-file HTML game.
+   ============================================================ */
+
+(function(){
+'use strict';
+
+/* ---------- QUESTION BANK ---------- */
+const QUESTIONS = {
+gcse: [
+{id:"gcse_01",representation:"table",context:"Students, revision class, maths pass/fail",data:{type:"table",title:"100 students \u2014 Revision class and Maths result",rowHeader:"Maths result",colHeader:"Took revision class?",rows:["Pass","Fail"],cols:["Yes","No"],values:[[30,30],[10,30]],rowTotals:[60,40],colTotals:[40,60],grandTotal:100},phase1:{question:"What is the probability a randomly chosen student passed maths?",answer:0.6,answerDisplay:"\\tfrac{60}{100}",options:["\\tfrac{60}{100}","\\tfrac{40}{100}","\\tfrac{30}{100}","\\tfrac{30}{40}"]},phase2:{condition:"the student took the revision class",question:"What is P(passed maths | took revision class)?",answer:0.75,answerDisplay:"\\tfrac{30}{40}",explanation:"40 students took the revision class. Of those 40, 30 passed maths. P = 30/40 = 3/4.",greyOut:"col_No",options:["\\tfrac{30}{40}","\\tfrac{30}{100}","\\tfrac{30}{60}","\\tfrac{40}{100}"]}},
+{id:"gcse_02",representation:"table",context:"Athletes, sport type, injury",data:{type:"table",title:"120 athletes \u2014 Sport and Injury record",rowHeader:"Injured this season?",colHeader:"Sport",rows:["Yes","No"],cols:["Contact","Non-contact"],values:[[25,10],[30,55]],rowTotals:[35,85],colTotals:[55,65],grandTotal:120},phase1:{question:"What is P(injured this season)?",answer:0.2917,answerDisplay:"\\tfrac{35}{120}",options:["\\tfrac{35}{120}","\\tfrac{25}{120}","\\tfrac{25}{55}","\\tfrac{85}{120}"]},phase2:{condition:"the athlete plays a contact sport",question:"What is P(injured | contact sport)?",answer:0.4545,answerDisplay:"\\tfrac{25}{55}",explanation:"55 athletes play contact sport. Of those, 25 were injured. P = 25/55 = 5/11.",greyOut:"col_Non-contact",options:["\\tfrac{25}{55}","\\tfrac{25}{120}","\\tfrac{25}{35}","\\tfrac{55}{120}"]}},
+{id:"gcse_03",representation:"table",context:"Employees, transport mode, lateness",data:{type:"table",title:"80 employees \u2014 Transport and Punctuality",rowHeader:"Late to work?",colHeader:"Transport",rows:["Late","On time"],cols:["Car","Bus","Cycle"],values:[[8,12,2],[22,18,18]],rowTotals:[22,58],colTotals:[30,30,20],grandTotal:80},phase1:{question:"What is P(late to work)?",answer:0.275,answerDisplay:"\\tfrac{22}{80}",options:["\\tfrac{22}{80}","\\tfrac{58}{80}","\\tfrac{12}{80}","\\tfrac{12}{30}"]},phase2:{condition:"the employee travels by bus",question:"What is P(late | travels by bus)?",answer:0.4,answerDisplay:"\\tfrac{12}{30}",explanation:"30 employees take the bus. Of those, 12 were late. P = 12/30 = 2/5.",greyOut:"col_Car,col_Cycle",options:["\\tfrac{12}{30}","\\tfrac{12}{80}","\\tfrac{12}{22}","\\tfrac{30}{80}"]}},
+{id:"gcse_04",representation:"table",context:"Students, gender, pet ownership",data:{type:"table",title:"150 students \u2014 Gender and Pet ownership",rowHeader:"Owns a pet?",colHeader:"Gender",rows:["Yes","No"],cols:["Male","Female"],values:[[40,50],[30,30]],rowTotals:[90,60],colTotals:[70,80],grandTotal:150},phase1:{question:"What is P(owns a pet)?",answer:0.6,answerDisplay:"\\tfrac{90}{150}",options:["\\tfrac{90}{150}","\\tfrac{60}{150}","\\tfrac{40}{150}","\\tfrac{50}{80}"]},phase2:{condition:"the student is female",question:"What is P(owns a pet | female)?",answer:0.625,answerDisplay:"\\tfrac{50}{80}",explanation:"80 students are female. Of those, 50 own a pet. P = 50/80 = 5/8.",greyOut:"col_Male",options:["\\tfrac{50}{80}","\\tfrac{50}{150}","\\tfrac{50}{90}","\\tfrac{80}{150}"]}},
+{id:"gcse_05",representation:"table",context:"Students, homework completion, test grade",data:{type:"table",title:"90 students \u2014 Homework and Test grade",rowHeader:"Test grade",colHeader:"Completed all homework?",rows:["A/B","C/D","E/U"],cols:["Yes","No"],values:[[25,5],[15,20],[5,20]],rowTotals:[30,35,25],colTotals:[45,45],grandTotal:90},phase1:{question:"What is P(grade A or B)?",answer:0.3333,answerDisplay:"\\tfrac{30}{90}",options:["\\tfrac{30}{90}","\\tfrac{25}{90}","\\tfrac{25}{45}","\\tfrac{45}{90}"]},phase2:{condition:"the student completed all homework",question:"What is P(grade A or B | completed all homework)?",answer:0.5556,answerDisplay:"\\tfrac{25}{45}",explanation:"45 students completed all homework. Of those, 25 got grade A or B. P = 25/45 = 5/9.",greyOut:"col_No",options:["\\tfrac{25}{45}","\\tfrac{25}{90}","\\tfrac{25}{30}","\\tfrac{45}{90}"]}},
+{id:"gcse_06",representation:"venn",context:"Students, likes pop, likes rock",data:{type:"venn",title:"60 students \u2014 Music preferences",setA:{label:"Pop",total:35},setB:{label:"Rock",total:25},onlyA:20,onlyB:10,intersection:15,neither:15,total:60},phase1:{question:"What is P(likes rock)?",answer:0.4167,answerDisplay:"\\tfrac{25}{60}",options:["\\tfrac{25}{60}","\\tfrac{10}{60}","\\tfrac{15}{60}","\\tfrac{35}{60}"]},phase2:{condition:"the student likes pop",question:"What is P(likes rock | likes pop)?",answer:0.4286,answerDisplay:"\\tfrac{15}{35}",explanation:"35 students like pop. Of those, 15 also like rock (the intersection). P = 15/35 = 3/7.",greyOut:"onlyB,neither",options:["\\tfrac{15}{35}","\\tfrac{15}{60}","\\tfrac{15}{25}","\\tfrac{25}{60}"]}},
+{id:"gcse_07",representation:"venn",context:"Students, studies French, studies Spanish",data:{type:"venn",title:"80 students \u2014 Language choices",setA:{label:"French",total:45},setB:{label:"Spanish",total:30},onlyA:25,onlyB:10,intersection:20,neither:25,total:80},phase1:{question:"What is P(studies French)?",answer:0.5625,answerDisplay:"\\tfrac{45}{80}",options:["\\tfrac{45}{80}","\\tfrac{25}{80}","\\tfrac{20}{80}","\\tfrac{30}{80}"]},phase2:{condition:"the student studies Spanish",question:"What is P(studies French | studies Spanish)?",answer:0.6667,answerDisplay:"\\tfrac{20}{30}",explanation:"30 students study Spanish. Of those, 20 also study French. P = 20/30 = 2/3.",greyOut:"onlyA,neither",options:["\\tfrac{20}{30}","\\tfrac{20}{80}","\\tfrac{20}{45}","\\tfrac{30}{80}"]}},
+{id:"gcse_08",representation:"venn",context:"Students, chess club, debate club",data:{type:"venn",title:"50 students \u2014 After-school clubs",setA:{label:"Chess",total:22},setB:{label:"Debate",total:18},onlyA:14,onlyB:10,intersection:8,neither:18,total:50},phase1:{question:"What is P(in chess club)?",answer:0.44,answerDisplay:"\\tfrac{22}{50}",options:["\\tfrac{22}{50}","\\tfrac{14}{50}","\\tfrac{8}{50}","\\tfrac{18}{50}"]},phase2:{condition:"the student is in debate club",question:"What is P(in chess club | in debate club)?",answer:0.4444,answerDisplay:"\\tfrac{8}{18}",explanation:"18 students are in debate club. Of those, 8 are also in chess club. P = 8/18 = 4/9.",greyOut:"onlyA,neither",options:["\\tfrac{8}{18}","\\tfrac{8}{50}","\\tfrac{8}{22}","\\tfrac{18}{50}"]}},
+{id:"gcse_09",representation:"venn",context:"People, eats cereal, eats toast",data:{type:"venn",title:"100 people surveyed \u2014 Breakfast habits",setA:{label:"Cereal",total:55},setB:{label:"Toast",total:40},onlyA:35,onlyB:20,intersection:20,neither:25,total:100},phase1:{question:"What is P(eats toast)?",answer:0.4,answerDisplay:"\\tfrac{40}{100}",options:["\\tfrac{40}{100}","\\tfrac{20}{100}","\\tfrac{55}{100}","\\tfrac{20}{40}"]},phase2:{condition:"the person eats cereal",question:"What is P(eats toast | eats cereal)?",answer:0.3636,answerDisplay:"\\tfrac{20}{55}",explanation:"55 people eat cereal. Of those, 20 also eat toast. P = 20/55 = 4/11.",greyOut:"onlyB,neither",options:["\\tfrac{20}{55}","\\tfrac{20}{100}","\\tfrac{20}{40}","\\tfrac{55}{100}"]}},
+{id:"gcse_10",representation:"venn",context:"Learners, passed theory, passed practical",data:{type:"venn",title:"70 learner drivers \u2014 Test results",setA:{label:"Theory pass",total:50},setB:{label:"Practical pass",total:30},onlyA:25,onlyB:5,intersection:25,neither:15,total:70},phase1:{question:"What is P(passed practical)?",answer:0.4286,answerDisplay:"\\tfrac{30}{70}",options:["\\tfrac{30}{70}","\\tfrac{25}{70}","\\tfrac{5}{70}","\\tfrac{50}{70}"]},phase2:{condition:"the learner passed their theory test",question:"What is P(passed practical | passed theory)?",answer:0.5,answerDisplay:"\\tfrac{25}{50}",explanation:"50 learners passed theory. Of those, 25 also passed practical. P = 25/50 = 1/2.",greyOut:"onlyB,neither",options:["\\tfrac{25}{50}","\\tfrac{25}{70}","\\tfrac{25}{30}","\\tfrac{50}{70}"]}},
+{id:"gcse_11",representation:"table",context:"Days, weather, ice cream sales",data:{type:"table",title:"60 summer days \u2014 Weather and Ice cream sales",rowHeader:"Ice cream sales",colHeader:"Weather",rows:["High","Low"],cols:["Sunny","Cloudy","Rainy"],values:[[18,5,2],[7,15,13]],rowTotals:[25,35],colTotals:[25,20,15],grandTotal:60},phase1:{question:"What is P(high ice cream sales)?",answer:0.4167,answerDisplay:"\\tfrac{25}{60}",options:["\\tfrac{25}{60}","\\tfrac{18}{60}","\\tfrac{35}{60}","\\tfrac{18}{25}"]},phase2:{condition:"it is a sunny day",question:"What is P(high sales | sunny)?",answer:0.72,answerDisplay:"\\tfrac{18}{25}",explanation:"25 days were sunny. Of those, 18 had high sales. P = 18/25.",greyOut:"col_Cloudy,col_Rainy",options:["\\tfrac{18}{25}","\\tfrac{18}{60}","\\tfrac{25}{60}","\\tfrac{7}{25}"]}},
+{id:"gcse_12",representation:"table",context:"People, phone brand, screen protector use",data:{type:"table",title:"110 people \u2014 Phone brand and Screen protector",rowHeader:"Uses screen protector?",colHeader:"Phone brand",rows:["Yes","No"],cols:["Apple","Samsung","Other"],values:[[30,20,10],[15,20,15]],rowTotals:[60,50],colTotals:[45,40,25],grandTotal:110},phase1:{question:"What is P(uses a screen protector)?",answer:0.5455,answerDisplay:"\\tfrac{60}{110}",options:["\\tfrac{60}{110}","\\tfrac{50}{110}","\\tfrac{30}{110}","\\tfrac{30}{45}"]},phase2:{condition:"the person uses a Samsung phone",question:"What is P(uses screen protector | Samsung)?",answer:0.5,answerDisplay:"\\tfrac{20}{40}",explanation:"40 people use Samsung. Of those, 20 use a screen protector. P = 20/40 = 1/2.",greyOut:"col_Apple,col_Other",options:["\\tfrac{20}{40}","\\tfrac{20}{110}","\\tfrac{20}{60}","\\tfrac{40}{110}"]}},
+{id:"gcse_13",representation:"tree",context:"200 coin flips, heads/tails, then win/lose game",data:{type:"tree",title:"200 games \u2014 Coin flip then game outcome",total:200,branches:[{label:"Heads",value:120,children:[{label:"Win",value:90},{label:"Lose",value:30}]},{label:"Tails",value:80,children:[{label:"Win",value:20},{label:"Lose",value:60}]}]},phase1:{question:"What is P(win the game)?",answer:0.55,answerDisplay:"\\tfrac{110}{200}",options:["\\tfrac{110}{200}","\\tfrac{90}{200}","\\tfrac{90}{120}","\\tfrac{120}{200}"]},phase2:{condition:"the coin landed heads",question:"What is P(win | heads)?",answer:0.75,answerDisplay:"\\tfrac{90}{120}",explanation:"120 games started with heads. Of those, 90 were wins. P = 90/120 = 3/4.",greyOut:"branch_Tails",options:["\\tfrac{90}{120}","\\tfrac{90}{200}","\\tfrac{90}{110}","\\tfrac{120}{200}"]}},
+{id:"gcse_14",representation:"tree",context:"180 trials, even/odd dice, then red/blue spinner",data:{type:"tree",title:"180 trials \u2014 Dice then Spinner",total:180,branches:[{label:"Even",value:90,children:[{label:"Red",value:60},{label:"Blue",value:30}]},{label:"Odd",value:90,children:[{label:"Red",value:30},{label:"Blue",value:60}]}]},phase1:{question:"What is P(spinner lands red)?",answer:0.5,answerDisplay:"\\tfrac{90}{180}",options:["\\tfrac{90}{180}","\\tfrac{60}{180}","\\tfrac{60}{90}","\\tfrac{30}{180}"]},phase2:{condition:"the dice shows an even number",question:"What is P(red | even)?",answer:0.6667,answerDisplay:"\\tfrac{60}{90}",explanation:"90 trials had an even dice. Of those, 60 landed red. P = 60/90 = 2/3.",greyOut:"branch_Odd",options:["\\tfrac{60}{90}","\\tfrac{60}{180}","\\tfrac{30}{90}","\\tfrac{90}{180}"]}},
+{id:"gcse_15",representation:"table",context:"Students, year group, hot/cold lunch",data:{type:"table",title:"200 students \u2014 Year group and Lunch choice",rowHeader:"Lunch",colHeader:"Year group",rows:["Hot","Cold","Packed"],cols:["Year 10","Year 11"],values:[[40,30],[25,35],[35,35]],rowTotals:[70,60,70],colTotals:[100,100],grandTotal:200},phase1:{question:"What is P(chooses hot lunch)?",answer:0.35,answerDisplay:"\\tfrac{70}{200}",options:["\\tfrac{70}{200}","\\tfrac{40}{200}","\\tfrac{40}{100}","\\tfrac{100}{200}"]},phase2:{condition:"the student is in Year 10",question:"What is P(hot lunch | Year 10)?",answer:0.4,answerDisplay:"\\tfrac{40}{100}",explanation:"100 students are in Year 10. Of those, 40 chose hot lunch. P = 40/100 = 2/5.",greyOut:"col_Year 11",options:["\\tfrac{40}{100}","\\tfrac{40}{200}","\\tfrac{40}{70}","\\tfrac{100}{200}"]}},
+{id:"gcse_16",representation:"venn",context:"Friends, went to cinema, went bowling",data:{type:"venn",title:"40 friends \u2014 Weekend activities",setA:{label:"Cinema",total:24},setB:{label:"Bowling",total:15},onlyA:16,onlyB:7,intersection:8,neither:9,total:40},phase1:{question:"What is P(went bowling)?",answer:0.375,answerDisplay:"\\tfrac{15}{40}",options:["\\tfrac{15}{40}","\\tfrac{7}{40}","\\tfrac{8}{40}","\\tfrac{24}{40}"]},phase2:{condition:"the person went to the cinema",question:"What is P(went bowling | went to cinema)?",answer:0.3333,answerDisplay:"\\tfrac{8}{24}",explanation:"24 people went to the cinema. Of those, 8 also went bowling. P = 8/24 = 1/3.",greyOut:"onlyB,neither",options:["\\tfrac{8}{24}","\\tfrac{8}{40}","\\tfrac{8}{15}","\\tfrac{24}{40}"]}},
+{id:"gcse_17",representation:"table",context:"Students, handedness, wears glasses",data:{type:"table",title:"160 students \u2014 Handedness and Glasses",rowHeader:"Wears glasses?",colHeader:"Hand",rows:["Yes","No"],cols:["Right","Left"],values:[[35,15],[85,25]],rowTotals:[50,110],colTotals:[120,40],grandTotal:160},phase1:{question:"What is P(wears glasses)?",answer:0.3125,answerDisplay:"\\tfrac{50}{160}",options:["\\tfrac{50}{160}","\\tfrac{35}{160}","\\tfrac{35}{120}","\\tfrac{110}{160}"]},phase2:{condition:"the student is left-handed",question:"What is P(wears glasses | left-handed)?",answer:0.375,answerDisplay:"\\tfrac{15}{40}",explanation:"40 students are left-handed. Of those, 15 wear glasses. P = 15/40 = 3/8.",greyOut:"col_Right",options:["\\tfrac{15}{40}","\\tfrac{15}{160}","\\tfrac{15}{50}","\\tfrac{40}{160}"]}},
+{id:"gcse_18",representation:"tree",context:"150 picks from bag, red/blue sweet, then sour/not sour",data:{type:"tree",title:"150 sweet picks \u2014 Colour then Flavour",total:150,branches:[{label:"Red",value:60,children:[{label:"Sour",value:45},{label:"Not sour",value:15}]},{label:"Blue",value:90,children:[{label:"Sour",value:30},{label:"Not sour",value:60}]}]},phase1:{question:"What is P(sour sweet)?",answer:0.5,answerDisplay:"\\tfrac{75}{150}",options:["\\tfrac{75}{150}","\\tfrac{45}{150}","\\tfrac{45}{60}","\\tfrac{60}{150}"]},phase2:{condition:"the sweet is red",question:"What is P(sour | red)?",answer:0.75,answerDisplay:"\\tfrac{45}{60}",explanation:"60 sweets were red. Of those, 45 were sour. P = 45/60 = 3/4.",greyOut:"branch_Blue",options:["\\tfrac{45}{60}","\\tfrac{45}{150}","\\tfrac{45}{75}","\\tfrac{60}{150}"]}},
+{id:"gcse_19",representation:"table",context:"Workers, had flu jab, caught flu",data:{type:"table",title:"140 office workers \u2014 Flu jab and Flu cases",rowHeader:"Caught flu?",colHeader:"Had flu jab?",rows:["Yes","No"],cols:["Yes","No"],values:[[5,30],[55,50]],rowTotals:[35,105],colTotals:[60,80],grandTotal:140},phase1:{question:"What is P(caught flu)?",answer:0.25,answerDisplay:"\\tfrac{35}{140}",options:["\\tfrac{35}{140}","\\tfrac{30}{140}","\\tfrac{5}{60}","\\tfrac{105}{140}"]},phase2:{condition:"the worker had the flu jab",question:"What is P(caught flu | had flu jab)?",answer:0.0833,answerDisplay:"\\tfrac{5}{60}",explanation:"60 workers had the flu jab. Of those, only 5 caught flu. P = 5/60 = 1/12.",greyOut:"col_No",options:["\\tfrac{5}{60}","\\tfrac{5}{140}","\\tfrac{5}{35}","\\tfrac{60}{140}"]}},
+{id:"gcse_20",representation:"venn",context:"Students, takes geography, takes history",data:{type:"venn",title:"90 Year 9 students \u2014 Subject choices",setA:{label:"Geography",total:55},setB:{label:"History",total:50},onlyA:20,onlyB:15,intersection:35,neither:20,total:90},phase1:{question:"What is P(takes geography)?",answer:0.6111,answerDisplay:"\\tfrac{55}{90}",options:["\\tfrac{55}{90}","\\tfrac{20}{90}","\\tfrac{35}{90}","\\tfrac{50}{90}"]},phase2:{condition:"the student takes history",question:"What is P(takes geography | takes history)?",answer:0.7,answerDisplay:"\\tfrac{35}{50}",explanation:"50 students take history. Of those, 35 also take geography. P = 35/50 = 7/10.",greyOut:"onlyA,neither",options:["\\tfrac{35}{50}","\\tfrac{35}{90}","\\tfrac{35}{55}","\\tfrac{50}{90}"]}},
+{id:"gcse_21",representation:"tree",context:"240 journeys, peak/off-peak, on time/late",data:{type:"tree",title:"240 bus journeys \u2014 Time of day and Punctuality",total:240,branches:[{label:"Peak",value:100,children:[{label:"On time",value:60},{label:"Late",value:40}]},{label:"Off-peak",value:140,children:[{label:"On time",value:120},{label:"Late",value:20}]}]},phase1:{question:"What is P(bus is late)?",answer:0.25,answerDisplay:"\\tfrac{60}{240}",options:["\\tfrac{60}{240}","\\tfrac{40}{240}","\\tfrac{40}{100}","\\tfrac{180}{240}"]},phase2:{condition:"it is a peak-time journey",question:"What is P(late | peak)?",answer:0.4,answerDisplay:"\\tfrac{40}{100}",explanation:"100 journeys were at peak time. Of those, 40 were late. P = 40/100 = 2/5.",greyOut:"branch_Off-peak",options:["\\tfrac{40}{100}","\\tfrac{40}{240}","\\tfrac{40}{60}","\\tfrac{100}{240}"]}},
+{id:"gcse_22",representation:"table",context:"Students, revision method, exam pass",data:{type:"table",title:"180 students \u2014 Revision method and Exam result",rowHeader:"Passed exam?",colHeader:"Main revision method",rows:["Yes","No"],cols:["Flashcards","Past papers","Notes"],values:[[25,45,20],[15,15,60]],rowTotals:[90,90],colTotals:[40,60,80],grandTotal:180},phase1:{question:"What is P(passed the exam)?",answer:0.5,answerDisplay:"\\tfrac{90}{180}",options:["\\tfrac{90}{180}","\\tfrac{45}{180}","\\tfrac{45}{60}","\\tfrac{80}{180}"]},phase2:{condition:"the student mainly used past papers",question:"What is P(passed | past papers)?",answer:0.75,answerDisplay:"\\tfrac{45}{60}",explanation:"60 students mainly used past papers. Of those, 45 passed. P = 45/60 = 3/4.",greyOut:"col_Flashcards,col_Notes",options:["\\tfrac{45}{60}","\\tfrac{45}{180}","\\tfrac{45}{90}","\\tfrac{60}{180}"]}},
+{id:"gcse_23",representation:"venn",context:"Households, Netflix, Disney+",data:{type:"venn",title:"75 households \u2014 Streaming subscriptions",setA:{label:"Netflix",total:50},setB:{label:"Disney+",total:30},onlyA:30,onlyB:10,intersection:20,neither:15,total:75},phase1:{question:"What is P(has Disney+)?",answer:0.4,answerDisplay:"\\tfrac{30}{75}",options:["\\tfrac{30}{75}","\\tfrac{10}{75}","\\tfrac{20}{75}","\\tfrac{50}{75}"]},phase2:{condition:"the household has Netflix",question:"What is P(has Disney+ | has Netflix)?",answer:0.4,answerDisplay:"\\tfrac{20}{50}",explanation:"50 households have Netflix. Of those, 20 also have Disney+. P = 20/50 = 2/5.",greyOut:"onlyB,neither",options:["\\tfrac{20}{50}","\\tfrac{20}{75}","\\tfrac{20}{30}","\\tfrac{50}{75}"]}},
+{id:"gcse_24",representation:"tree",context:"300 raffle tickets, gold/silver, prize/no prize",data:{type:"tree",title:"300 raffle tickets \u2014 Ticket type and Prize",total:300,branches:[{label:"Gold ticket",value:50,children:[{label:"Wins prize",value:20},{label:"No prize",value:30}]},{label:"Silver ticket",value:250,children:[{label:"Wins prize",value:25},{label:"No prize",value:225}]}]},phase1:{question:"What is P(wins a prize)?",answer:0.15,answerDisplay:"\\tfrac{45}{300}",options:["\\tfrac{45}{300}","\\tfrac{20}{300}","\\tfrac{20}{50}","\\tfrac{250}{300}"]},phase2:{condition:"the person has a gold ticket",question:"What is P(wins prize | gold ticket)?",answer:0.4,answerDisplay:"\\tfrac{20}{50}",explanation:"50 people have gold tickets. Of those, 20 win a prize. P = 20/50 = 2/5.",greyOut:"branch_Silver ticket",options:["\\tfrac{20}{50}","\\tfrac{20}{300}","\\tfrac{20}{45}","\\tfrac{50}{300}"]}},
+{id:"gcse_25",representation:"table",context:"Students, year group, satisfaction",data:{type:"table",title:"250 students \u2014 Year group and Canteen satisfaction",rowHeader:"Rating",colHeader:"Year group",rows:["Good","OK","Poor"],cols:["Year 7","Year 8","Year 9"],values:[[35,20,15],[30,30,25],[15,30,50]],rowTotals:[70,85,95],colTotals:[80,80,90],grandTotal:250},phase1:{question:"What is P(rated canteen 'Poor')?",answer:0.38,answerDisplay:"\\tfrac{95}{250}",options:["\\tfrac{95}{250}","\\tfrac{50}{250}","\\tfrac{50}{90}","\\tfrac{70}{250}"]},phase2:{condition:"the student is in Year 9",question:"What is P(rated 'Poor' | Year 9)?",answer:0.5556,answerDisplay:"\\tfrac{50}{90}",explanation:"90 students are in Year 9. Of those, 50 rated the canteen 'Poor'. P = 50/90 = 5/9.",greyOut:"col_Year 7,col_Year 8",options:["\\tfrac{50}{90}","\\tfrac{50}{250}","\\tfrac{50}{95}","\\tfrac{90}{250}"]}}
+],
+alevel: [
+{id:"alevel_01",representation:"table",data:{type:"table",title:"200 patients \u2014 Treatment trial results",rowHeader:"Outcome",colHeader:"Group",rows:["Recovered","Not recovered"],cols:["Treatment","Placebo"],values:[[72,40],[28,60]],rowTotals:[112,88],colTotals:[100,100],grandTotal:200},phase1:{question:"Find P(recovered).",answer:0.56,answerDisplay:"\\tfrac{112}{200}"},phase2:{condition:"the patient received the treatment",question:"Find P(recovered | treatment).",answer:0.72,answerDisplay:"\\tfrac{72}{100}",explanation:"100 patients received treatment. Of those, 72 recovered. P(R|T) = 72/100 = 18/25."}},
+{id:"alevel_02",representation:"venn",data:{type:"venn",title:"200 students \u2014 Events A and B",setA:{label:"A",total:80},setB:{label:"B",total:100},onlyA:40,onlyB:60,intersection:40,neither:60,total:200},phase1:{question:"Find P(A).",answer:0.4,answerDisplay:"\\tfrac{80}{200}"},phase2:{condition:"event B has occurred",question:"Find P(A|B). Are A and B independent?",answer:0.4,answerDisplay:"\\tfrac{40}{100}",explanation:"P(A) = 80/200 = 0.4. P(A|B) = 40/100 = 0.4. Since P(A|B) = P(A), events A and B are independent."}},
+{id:"alevel_03",representation:"tree",data:{type:"tree",title:"500 items produced",total:500,branches:[{label:"Machine A (60%)",value:300,children:[{label:"Defective",value:12},{label:"Good",value:288}]},{label:"Machine B (40%)",value:200,children:[{label:"Defective",value:18},{label:"Good",value:182}]}]},phase1:{question:"Find P(defective).",answer:0.06,answerDisplay:"\\tfrac{30}{500}"},phase2:{condition:"the item is defective",question:"Find P(came from Machine A | defective).",answer:0.4,answerDisplay:"\\tfrac{12}{30}",explanation:"30 items are defective total. Of those, 12 came from Machine A. P(A|def) = 12/30 = 2/5. Note: Machine A makes more items but has a lower defect rate."}},
+{id:"alevel_04",representation:"table",data:{type:"table",title:"300 A-Level students \u2014 Gender and Subject",rowHeader:"Subject",colHeader:"Gender",rows:["STEM","Humanities","Arts"],cols:["Male","Female"],values:[[80,40],[30,70],[40,40]],rowTotals:[120,100,80],colTotals:[150,150],grandTotal:300},phase1:{question:"Find P(chooses STEM).",answer:0.4,answerDisplay:"\\tfrac{120}{300}"},phase2:{condition:"the student is male",question:"Find P(STEM | male). Is choosing STEM independent of gender?",answer:0.5333,answerDisplay:"\\tfrac{80}{150}",explanation:"P(STEM) = 120/300 = 0.4. P(STEM|male) = 80/150 \u2248 0.533. Since P(STEM|male) \u2260 P(STEM), subject choice and gender are not independent."}},
+{id:"alevel_05",representation:"tree",data:{type:"tree",title:"365 days \u2014 Weather forecast accuracy",total:365,branches:[{label:"Actually rains",value:73,children:[{label:"Forecast rain",value:66},{label:"Forecast dry",value:7}]},{label:"Actually dry",value:292,children:[{label:"Forecast rain",value:29},{label:"Forecast dry",value:263}]}]},phase1:{question:"Find P(forecast says rain).",answer:0.2603,answerDisplay:"\\tfrac{95}{365}"},phase2:{condition:"the forecast says rain",question:"Find P(actually rains | forecast rain).",answer:0.6947,answerDisplay:"\\tfrac{66}{95}",explanation:"95 days had a rain forecast. Of those, 66 actually rained. P(rain|forecast rain) = 66/95 \u2248 0.695."}},
+{id:"alevel_06",representation:"venn",data:{type:"venn",title:"Events A and B \u2014 given P(A) = 0.5, P(B) = 0.4, P(A\u2229B) = 0.2",setA:{label:"A",total:50},setB:{label:"B",total:40},onlyA:30,onlyB:20,intersection:20,neither:30,total:100},phase1:{question:"Find P(A \u222a B).",answer:0.7,answerDisplay:"\\tfrac{70}{100}"},phase2:{condition:"event A occurs",question:"Find P(B|A) using the formula P(B|A) = P(A\u2229B)/P(A).",answer:0.4,answerDisplay:"\\tfrac{20}{50}",explanation:"P(B|A) = P(A\u2229B)/P(A) = 0.2/0.5 = 0.4. Since P(B|A) = P(B) = 0.4, events A and B are independent."}},
+{id:"alevel_07",representation:"table",data:{type:"table",title:"250 working days \u2014 Lateness and Deadlines",rowHeader:"Missed a deadline?",colHeader:"Arrived late?",rows:["Yes","No"],cols:["Late","On time"],values:[[15,10],[35,190]],rowTotals:[25,225],colTotals:[50,200],grandTotal:250},phase1:{question:"Find P(missed a deadline).",answer:0.1,answerDisplay:"\\tfrac{25}{250}"},phase2:{condition:"the employee arrived late",question:"Find P(missed deadline | arrived late).",answer:0.3,answerDisplay:"\\tfrac{15}{50}",explanation:"50 days had a late arrival. Of those, 15 had a missed deadline. P = 15/50 = 3/10. Compare with P(missed deadline) = 1/10 \u2014 arriving late triples the risk."}},
+{id:"alevel_08",representation:"tree",data:{type:"tree",title:"10,000 people tested",total:10000,branches:[{label:"Has disease (2%)",value:200,children:[{label:"Tests positive",value:190},{label:"Tests negative",value:10}]},{label:"No disease (98%)",value:9800,children:[{label:"Tests positive",value:980},{label:"Tests negative",value:8820}]}]},phase1:{question:"Find P(tests positive).",answer:0.117,answerDisplay:"\\tfrac{1170}{10000}"},phase2:{condition:"the person tests positive",question:"Find P(actually has disease | tests positive).",answer:0.1624,answerDisplay:"\\tfrac{190}{1170}",explanation:"1,170 people test positive. Of those, only 190 actually have the disease. P \u2248 0.162 or about 16%. Despite a 95% sensitive test, most positive results are false positives because the disease is rare."}},
+{id:"alevel_09",representation:"venn",data:{type:"venn",title:"120 items \u2014 Category A and Category B",setA:{label:"A",total:45},setB:{label:"B",total:35},onlyA:45,onlyB:35,intersection:0,neither:40,total:120},phase1:{question:"Find P(A \u222a B).",answer:0.6667,answerDisplay:"\\tfrac{80}{120}"},phase2:{condition:"the item is in category A",question:"Find P(B|A).",answer:0,answerDisplay:"0",explanation:"P(A\u2229B) = 0 (no items in both categories). So P(B|A) = P(A\u2229B)/P(A) = 0/45 = 0. A and B are mutually exclusive."}},
+{id:"alevel_10",representation:"tree",data:{type:"tree",title:"1,000 exam scripts checked",total:1000,branches:[{label:"Cheated (5%)",value:50,children:[{label:"Flagged",value:45},{label:"Not flagged",value:5}]},{label:"Honest (95%)",value:950,children:[{label:"Flagged",value:47},{label:"Not flagged",value:903}]}]},phase1:{question:"Find P(script is flagged).",answer:0.092,answerDisplay:"\\tfrac{92}{1000}"},phase2:{condition:"the script is flagged",question:"Find P(actually cheated | flagged).",answer:0.4891,answerDisplay:"\\tfrac{45}{92}",explanation:"92 scripts are flagged. Of those, 45 actually cheated. P \u2248 0.489. Nearly half the flagged scripts are false positives."}},
+{id:"alevel_11",representation:"table",data:{type:"table",title:"Joint probability table \u2014 Events X and Y",rowHeader:"Y",colHeader:"X",rows:["Y","Y'"],cols:["X","X'"],values:[[0.12,0.28],[0.18,0.42]],rowTotals:[0.40,0.60],colTotals:[0.30,0.70],grandTotal:1},phase1:{question:"Find P(X).",answer:0.3,answerDisplay:"0.30"},phase2:{condition:"Y has occurred",question:"Find P(X|Y).",answer:0.3,answerDisplay:"\\tfrac{0.12}{0.40} = 0.3",explanation:"P(X|Y) = P(X\u2229Y)/P(Y) = 0.12/0.40 = 0.3. Since P(X|Y) = P(X) = 0.3, X and Y are independent."}},
+{id:"alevel_12",representation:"tree",data:{type:"tree",title:"400 blood donors",total:400,branches:[{label:"Type O (44%)",value:176,children:[{label:"Eligible",value:158},{label:"Deferred",value:18}]},{label:"Type A (42%)",value:168,children:[{label:"Eligible",value:143},{label:"Deferred",value:25}]},{label:"Type B/AB (14%)",value:56,children:[{label:"Eligible",value:45},{label:"Deferred",value:11}]}]},phase1:{question:"Find P(eligible to donate).",answer:0.865,answerDisplay:"\\tfrac{346}{400}"},phase2:{condition:"the donor was deferred",question:"Find P(Type A | deferred).",answer:0.4630,answerDisplay:"\\tfrac{25}{54}",explanation:"54 donors were deferred total. Of those, 25 were Type A. P = 25/54 \u2248 0.463."}},
+{id:"alevel_13",representation:"venn",data:{type:"venn",title:"180 observations \u2014 Events A and B",setA:{label:"A",total:75},setB:{label:"B",total:90},onlyA:30,onlyB:45,intersection:45,neither:60,total:180},phase1:{question:"Find P(A \u2229 B).",answer:0.25,answerDisplay:"\\tfrac{45}{180}"},phase2:{condition:"event B occurs",question:"Find P(A'|B) \u2014 the probability A does NOT occur given B.",answer:0.5,answerDisplay:"\\tfrac{45}{90}",explanation:"90 observations have B. Of those, 45 are in B only (not in A). P(A'|B) = 45/90 = 1/2."}},
+{id:"alevel_14",representation:"table",data:{type:"table",title:"500 customers \u2014 Product A and Product B purchases",rowHeader:"Bought B?",colHeader:"Bought A?",rows:["Yes","No"],cols:["Yes","No"],values:[[60,90],[140,210]],rowTotals:[150,350],colTotals:[200,300],grandTotal:500},phase1:{question:"Find P(bought B | bought A).",answer:0.3,answerDisplay:"\\tfrac{60}{200}"},phase2:{condition:"the customer bought B",question:"Find P(bought A | bought B). Compare with your Phase 1 answer.",answer:0.4,answerDisplay:"\\tfrac{60}{150}",explanation:"P(B|A) = 60/200 = 0.3 but P(A|B) = 60/150 = 0.4. These are different! The direction of the condition matters."}},
+{id:"alevel_15",representation:"tree",data:{type:"tree",title:"2,000 university applicants",total:2000,branches:[{label:"State school (85%)",value:1700,children:[{label:"Offered place",value:340},{label:"Rejected",value:1360}]},{label:"Private school (15%)",value:300,children:[{label:"Offered place",value:120},{label:"Rejected",value:180}]}]},phase1:{question:"Find P(offered a place).",answer:0.23,answerDisplay:"\\tfrac{460}{2000}"},phase2:{condition:"the applicant was offered a place",question:"Find P(private school | offered place).",answer:0.2609,answerDisplay:"\\tfrac{120}{460}",explanation:"460 applicants got offers. Of those, 120 were from private schools. P = 120/460 \u2248 0.261. Private school students are 15% of applicants but 26% of offers."}},
+{id:"alevel_16",representation:"table",data:{type:"table",title:"Joint probability distribution \u2014 X and Y",rowHeader:"Y",colHeader:"X",rows:["Y = 1","Y = 2"],cols:["X = 1","X = 2","X = 3"],values:[[0.10,0.15,0.05],[0.20,0.30,0.20]],rowTotals:[0.30,0.70],colTotals:[0.30,0.45,0.25],grandTotal:1},phase1:{question:"Find P(X = 2).",answer:0.45,answerDisplay:"0.45"},phase2:{condition:"Y = 2",question:"Find P(X = 2 | Y = 2).",answer:0.4286,answerDisplay:"\\tfrac{0.30}{0.70} \\approx 0.429",explanation:"P(X=2 \u2229 Y=2) = 0.30, P(Y=2) = 0.70. P(X=2|Y=2) = 0.30/0.70 = 3/7 \u2248 0.429."}},
+{id:"alevel_17",representation:"tree",data:{type:"tree",title:"400 trials \u2014 Two cards drawn with replacement",total:400,branches:[{label:"1st card Red",value:200,children:[{label:"2nd Red",value:100},{label:"2nd Black",value:100}]},{label:"1st card Black",value:200,children:[{label:"2nd Red",value:100},{label:"2nd Black",value:100}]}]},phase1:{question:"Find P(both cards red).",answer:0.25,answerDisplay:"\\tfrac{100}{400}"},phase2:{condition:"the second card is red",question:"Find P(first card was red | second card red).",answer:0.5,answerDisplay:"\\tfrac{100}{200}",explanation:"200 trials have a red second card. Of those, 100 also had a red first card. P = 100/200 = 1/2. With replacement, the draws are independent."}},
+{id:"alevel_18",representation:"venn",data:{type:"venn",title:"150 students \u2014 Takes Maths (M), Physics (P)",setA:{label:"M",total:80},setB:{label:"P",total:60},onlyA:35,onlyB:20,intersection:45,neither:50,total:150},phase1:{question:"Find P(takes both Maths and Physics).",answer:0.3,answerDisplay:"\\tfrac{45}{150}"},phase2:{condition:"the student takes Physics",question:"Find P(takes Maths | takes Physics).",answer:0.75,answerDisplay:"\\tfrac{45}{60}",explanation:"60 students take Physics. Of those, 45 also take Maths. P(M|P) = 45/60 = 3/4."}},
+{id:"alevel_19",representation:"table",data:{type:"table",title:"400 survey responses \u2014 Age group and Preference",rowHeader:"Prefers online?",colHeader:"Age group",rows:["Yes","No"],cols:["Under 30","30 and over"],values:[[100,80],[60,160]],rowTotals:[180,220],colTotals:[160,240],grandTotal:400},phase1:{question:"Find P(prefers online).",answer:0.45,answerDisplay:"\\tfrac{180}{400}"},phase2:{condition:"the person is under 30",question:"Find P(prefers online | under 30). Is preference independent of age?",answer:0.625,answerDisplay:"\\tfrac{100}{160}",explanation:"P(online) = 0.45 but P(online|under 30) = 100/160 = 0.625. Since 0.625 \u2260 0.45, preference is not independent of age group."}},
+{id:"alevel_20",representation:"tree",data:{type:"tree",title:"1,000 components from three suppliers",total:1000,branches:[{label:"Supplier A (50%)",value:500,children:[{label:"Defective",value:10},{label:"Good",value:490}]},{label:"Supplier B (30%)",value:300,children:[{label:"Defective",value:15},{label:"Good",value:285}]},{label:"Supplier C (20%)",value:200,children:[{label:"Defective",value:20},{label:"Good",value:180}]}]},phase1:{question:"Find P(defective).",answer:0.045,answerDisplay:"\\tfrac{45}{1000}"},phase2:{condition:"the component is defective",question:"Find P(from Supplier C | defective).",answer:0.4444,answerDisplay:"\\tfrac{20}{45}",explanation:"45 components are defective. Of those, 20 came from Supplier C. P = 20/45 = 4/9 \u2248 0.444."}},
+{id:"alevel_21",representation:"table",data:{type:"table",title:"360 employees \u2014 Department and Training completion",rowHeader:"Completed training?",colHeader:"Department",rows:["Yes","No"],cols:["Sales","Engineering","Admin"],values:[[50,80,30],[30,40,130]],rowTotals:[160,200],colTotals:[80,120,160],grandTotal:360},phase1:{question:"Find P(Engineering AND completed training). That is, find P(E \u2229 T).",answer:0.2222,answerDisplay:"\\tfrac{80}{360}"},phase2:{condition:"the employee is in Engineering",question:"Find P(completed training | Engineering).",answer:0.6667,answerDisplay:"\\tfrac{80}{120}",explanation:"P(E \u2229 T) = 80/360 \u2248 0.222 uses all 360 as denominator. P(T|E) = 80/120 \u2248 0.667 uses only the 120 engineers."}},
+{id:"alevel_22",representation:"venn",data:{type:"venn",title:"Events A and B \u2014 P(B) = 0.5, P(A|B) = 0.6",setA:{label:"A",total:55},setB:{label:"B",total:50},onlyA:25,onlyB:20,intersection:30,neither:25,total:100},phase1:{question:"If P(A|B) = 0.6 and P(B) = 0.5, find P(A \u2229 B).",answer:0.3,answerDisplay:"0.3"},phase2:{condition:"event A occurs",question:"Using P(A \u2229 B) = 0.3 and P(A) = 0.55, find P(B|A).",answer:0.5455,answerDisplay:"\\tfrac{0.3}{0.55} \\approx 0.545",explanation:"P(B|A) = P(A\u2229B)/P(A) = 0.3/0.55 = 6/11 \u2248 0.545. Note P(A|B) = 0.6 but P(B|A) \u2248 0.545 \u2014 the direction matters."}},
+{id:"alevel_23",representation:"tree",data:{type:"tree",title:"5,000 emails processed",total:5000,branches:[{label:"Spam (40%)",value:2000,children:[{label:"Flagged",value:1900},{label:"Not flagged",value:100}]},{label:"Legitimate (60%)",value:3000,children:[{label:"Flagged",value:150},{label:"Not flagged",value:2850}]}]},phase1:{question:"Find P(email is flagged).",answer:0.41,answerDisplay:"\\tfrac{2050}{5000}"},phase2:{condition:"the email is flagged",question:"Find P(actually spam | flagged).",answer:0.9268,answerDisplay:"\\tfrac{1900}{2050}",explanation:"2,050 emails are flagged. Of those, 1,900 are spam. P \u2248 0.927. High base rate means most flagged emails really are spam."}},
+{id:"alevel_24",representation:"table",data:{type:"table",title:"P(A) = 0.35, P(B) = 0.60, P(A \u2229 B) = 0.15",rowHeader:"B",colHeader:"A",rows:["B","B'"],cols:["A","A'"],values:[[0.15,0.45],[0.20,0.20]],rowTotals:[0.60,0.40],colTotals:[0.35,0.65],grandTotal:1},phase1:{question:"Find P(A' \u2229 B).",answer:0.45,answerDisplay:"0.45"},phase2:{condition:"B occurs",question:"Find P(A|B).",answer:0.25,answerDisplay:"\\tfrac{0.15}{0.60} = 0.25",explanation:"P(A|B) = P(A\u2229B)/P(B) = 0.15/0.60 = 1/4. Since P(A) = 0.35 \u2260 0.25 = P(A|B), A and B are not independent."}},
+{id:"alevel_25",representation:"tree",data:{type:"tree",title:"10,000 athletes tested for banned substance",total:10000,branches:[{label:"Uses substance (1%)",value:100,children:[{label:"Tests positive",value:99},{label:"Tests negative",value:1}]},{label:"Clean (99%)",value:9900,children:[{label:"Tests positive",value:198},{label:"Tests negative",value:9702}]}]},phase1:{question:"Find P(tests positive).",answer:0.0297,answerDisplay:"\\tfrac{297}{10000}"},phase2:{condition:"the athlete tests positive",question:"Find P(actually uses substance | positive test).",answer:0.3333,answerDisplay:"\\tfrac{99}{297}",explanation:"297 athletes test positive. Of those, only 99 actually use the substance. P = 99/297 = 1/3."}}
+],
+core: [
+{id:"core_01",representation:"table",data:{type:"table",title:"500 road traffic accident casualties",rowHeader:"Injury",colHeader:"Seatbelt worn?",rows:["Minor","Serious","Fatal"],cols:["Yes","No"],values:[[200,50],[80,70],[20,80]],rowTotals:[250,150,100],colTotals:[300,200],grandTotal:500},phase1:{question:"What proportion of casualties had fatal injuries?",answer:0.2,answerDisplay:"\\tfrac{100}{500}"},phase2:{condition:"the casualty was NOT wearing a seatbelt",question:"What is the probability of a fatal injury given no seatbelt?",answer:0.4,answerDisplay:"\\tfrac{80}{200}",explanation:"200 casualties were not wearing seatbelts. Of those, 80 had fatal injuries. P = 80/200 = 2/5."}},
+{id:"core_02",representation:"tree",data:{type:"tree",title:"1,000 women take a home pregnancy test",total:1000,branches:[{label:"Pregnant (10%)",value:100,children:[{label:"Positive result",value:97},{label:"Negative result",value:3}]},{label:"Not pregnant (90%)",value:900,children:[{label:"Positive result",value:9},{label:"Negative result",value:891}]}]},phase1:{question:"What is the overall probability of getting a positive result?",answer:0.106,answerDisplay:"\\tfrac{106}{1000}"},phase2:{condition:"the result is positive",question:"What is the probability of actually being pregnant given a positive result?",answer:0.9151,answerDisplay:"\\tfrac{97}{106}",explanation:"106 women get positive results. Of those, 97 are actually pregnant. P \u2248 0.915."}},
+{id:"core_03",representation:"table",data:{type:"table",title:"800 online orders \u2014 Delivery speed and Satisfaction",rowHeader:"Satisfaction",colHeader:"Delivery",rows:["Satisfied","Neutral","Dissatisfied"],cols:["Next day","3-5 days","5+ days"],values:[[180,120,20],[30,100,50],[10,80,210]],rowTotals:[320,180,300],colTotals:[220,300,280],grandTotal:800},phase1:{question:"What proportion of customers were dissatisfied?",answer:0.375,answerDisplay:"\\tfrac{300}{800}"},phase2:{condition:"delivery took 5+ days",question:"What is P(dissatisfied | delivery 5+ days)?",answer:0.75,answerDisplay:"\\tfrac{210}{280}",explanation:"280 orders took 5+ days. Of those, 210 were dissatisfied. P = 210/280 = 3/4."}},
+{id:"core_04",representation:"tree",data:{type:"tree",title:"10,000 people take a lateral flow test (5% prevalence)",total:10000,branches:[{label:"Has COVID (5%)",value:500,children:[{label:"Tests positive",value:400},{label:"Tests negative",value:100}]},{label:"No COVID (95%)",value:9500,children:[{label:"Tests positive",value:48},{label:"Tests negative",value:9452}]}]},phase1:{question:"What proportion of people test positive?",answer:0.0448,answerDisplay:"\\tfrac{448}{10000}"},phase2:{condition:"the person tests positive",question:"What is P(actually has COVID | positive test)?",answer:0.8929,answerDisplay:"\\tfrac{400}{448}",explanation:"448 people test positive. 400 of them actually have COVID. P \u2248 0.893."}},
+{id:"core_05",representation:"table",data:{type:"table",title:"600 adults \u2014 Diet and Cholesterol level",rowHeader:"Cholesterol",colHeader:"Diet",rows:["Normal","Borderline","High"],cols:["Balanced","High-fat","Vegetarian"],values:[[120,40,80],[60,60,30],[20,100,90]],rowTotals:[240,150,210],colTotals:[200,200,200],grandTotal:600},phase1:{question:"What is the probability of having high cholesterol?",answer:0.35,answerDisplay:"\\tfrac{210}{600}"},phase2:{condition:"the person eats a high-fat diet",question:"What is P(high cholesterol | high-fat diet)?",answer:0.5,answerDisplay:"\\tfrac{100}{200}",explanation:"200 people eat a high-fat diet. Of those, 100 have high cholesterol. P = 100/200 = 1/2."}},
+{id:"core_06",representation:"tree",data:{type:"tree",title:"50,000 bags scanned at airport security",total:50000,branches:[{label:"Contains prohibited item (0.2%)",value:100,children:[{label:"Scanner alerts",value:95},{label:"Missed",value:5}]},{label:"Clean (99.8%)",value:49900,children:[{label:"Scanner alerts",value:2495},{label:"No alert",value:47405}]}]},phase1:{question:"What proportion of bags trigger an alert?",answer:0.0518,answerDisplay:"\\tfrac{2590}{50000}"},phase2:{condition:"the scanner alerts",question:"What is P(actually contains prohibited item | alert)?",answer:0.0367,answerDisplay:"\\tfrac{95}{2590}",explanation:"2,590 bags trigger alerts. Only 95 actually contain prohibited items. P \u2248 0.037 or about 1 in 27."}},
+{id:"core_07",representation:"table",data:{type:"table",title:"1,200 car insurance policies \u2014 Age and Claims",rowHeader:"Made a claim?",colHeader:"Age group",rows:["Yes","No"],cols:["17-25","26-50","51+"],values:[[60,48,12],[140,552,388]],rowTotals:[120,1080],colTotals:[200,600,400],grandTotal:1200},phase1:{question:"What is the overall probability of making a claim?",answer:0.1,answerDisplay:"\\tfrac{120}{1200}"},phase2:{condition:"the policyholder is aged 17-25",question:"What is P(claim | aged 17-25)?",answer:0.3,answerDisplay:"\\tfrac{60}{200}",explanation:"200 policyholders are 17-25. Of those, 60 made claims. P = 60/200 = 3/10. Three times the overall claim rate."}},
+{id:"core_08",representation:"tree",data:{type:"tree",title:"200 days \u2014 Met Office forecast accuracy",total:200,branches:[{label:"Actually rains (30%)",value:60,children:[{label:"Forecast rain",value:51},{label:"Forecast dry",value:9}]},{label:"Stays dry (70%)",value:140,children:[{label:"Forecast rain",value:14},{label:"Forecast dry",value:126}]}]},phase1:{question:"On what proportion of days does the forecast predict rain?",answer:0.325,answerDisplay:"\\tfrac{65}{200}"},phase2:{condition:"the forecast says rain",question:"What is P(it actually rains | forecast rain)?",answer:0.7846,answerDisplay:"\\tfrac{51}{65}",explanation:"65 days had a rain forecast. On 51 of those, it actually rained. P \u2248 0.785."}},
+{id:"core_09",representation:"table",data:{type:"table",title:"400 teenagers \u2014 Screen time and Sleep quality",rowHeader:"Sleep quality",colHeader:"Daily screen time",rows:["Good","Fair","Poor"],cols:["< 2 hours","2-4 hours","> 4 hours"],values:[[80,40,10],[30,50,30],[10,30,120]],rowTotals:[130,110,160],colTotals:[120,120,160],grandTotal:400},phase1:{question:"What is the probability of poor sleep?",answer:0.4,answerDisplay:"\\tfrac{160}{400}"},phase2:{condition:"the teenager uses screens for more than 4 hours daily",question:"What is P(poor sleep | > 4 hours screen time)?",answer:0.75,answerDisplay:"\\tfrac{120}{160}",explanation:"160 teenagers use screens > 4 hours. Of those, 120 report poor sleep. P = 120/160 = 3/4."}},
+{id:"core_10",representation:"tree",data:{type:"tree",title:"10,000 women aged 50+ screened by mammogram",total:10000,branches:[{label:"Has breast cancer (1%)",value:100,children:[{label:"Mammogram positive",value:90},{label:"Mammogram negative",value:10}]},{label:"No breast cancer (99%)",value:9900,children:[{label:"Mammogram positive",value:891},{label:"Mammogram negative",value:9009}]}]},phase1:{question:"What is P(mammogram is positive)?",answer:0.0981,answerDisplay:"\\tfrac{981}{10000}"},phase2:{condition:"the mammogram result is positive",question:"What is P(has breast cancer | positive mammogram)?",answer:0.0917,answerDisplay:"\\tfrac{90}{981}",explanation:"981 women get positive mammograms. Only 90 actually have cancer. P \u2248 0.092 or about 9%."}},
+{id:"core_11",representation:"table",data:{type:"table",title:"750 apprentices \u2014 Sector and Completion",rowHeader:"Completed?",colHeader:"Sector",rows:["Yes","No"],cols:["Engineering","Health","Business","Construction"],values:[[80,90,60,40],[20,60,40,360]],rowTotals:[270,480],colTotals:[100,150,100,400],grandTotal:750},phase1:{question:"What is the overall completion rate?",answer:0.36,answerDisplay:"\\tfrac{270}{750}"},phase2:{condition:"the apprentice is in engineering",question:"What is P(completed | engineering)?",answer:0.8,answerDisplay:"\\tfrac{80}{100}",explanation:"100 engineering apprentices. 80 completed. P = 80/100 = 4/5."}},
+{id:"core_12",representation:"tree",data:{type:"tree",title:"20,000 alarm events in office buildings (1 year)",total:20000,branches:[{label:"Real fire (0.5%)",value:100,children:[{label:"Alarm sounds",value:98},{label:"No alarm",value:2}]},{label:"No fire (99.5%)",value:19900,children:[{label:"Alarm sounds",value:1990},{label:"No alarm",value:17910}]}]},phase1:{question:"What proportion of the time does the alarm go off?",answer:0.1044,answerDisplay:"\\tfrac{2088}{20000}"},phase2:{condition:"the alarm sounds",question:"What is P(real fire | alarm sounds)?",answer:0.0469,answerDisplay:"\\tfrac{98}{2088}",explanation:"2,088 alarm events occur. Only 98 are real fires. P \u2248 0.047 or about 1 in 21."}},
+{id:"core_13",representation:"table",data:{type:"table",title:"500 responses \u2014 Survey method and Result",rowHeader:"Support policy?",colHeader:"Survey method",rows:["Yes","No","Unsure"],cols:["Online","In person"],values:[[140,40],[30,80],[30,180]],rowTotals:[180,110,210],colTotals:[200,300],grandTotal:500},phase1:{question:"What proportion support the policy overall?",answer:0.36,answerDisplay:"\\tfrac{180}{500}"},phase2:{condition:"the response came from an online survey",question:"What is P(supports policy | online survey)?",answer:0.7,answerDisplay:"\\tfrac{140}{200}",explanation:"200 online responses. 140 support the policy. P = 140/200 = 7/10 = 70%. Compare with P(support|in-person) = 40/300 \u2248 13%."}},
+{id:"core_14",representation:"tree",data:{type:"tree",title:"10,000 drivers randomly breathalysed",total:10000,branches:[{label:"Over limit (3%)",value:300,children:[{label:"Fails test",value:291},{label:"Passes test",value:9}]},{label:"Under limit (97%)",value:9700,children:[{label:"Fails test",value:97},{label:"Passes test",value:9603}]}]},phase1:{question:"What proportion of drivers fail the breathalyser?",answer:0.0388,answerDisplay:"\\tfrac{388}{10000}"},phase2:{condition:"the driver fails the test",question:"What is P(actually over limit | fails test)?",answer:0.75,answerDisplay:"\\tfrac{291}{388}",explanation:"388 drivers fail. 291 are genuinely over the limit. P = 291/388 = 3/4."}},
+{id:"core_15",representation:"table",data:{type:"table",title:"300 students \u2014 Energy drink before exam",rowHeader:"Exam result",colHeader:"Had energy drink?",rows:["Pass","Fail"],cols:["Yes","No"],values:[[50,150],[30,70]],rowTotals:[200,100],colTotals:[80,220],grandTotal:300},phase1:{question:"What is the overall pass rate?",answer:0.6667,answerDisplay:"\\tfrac{200}{300}"},phase2:{condition:"the student had an energy drink before the exam",question:"What is P(pass | energy drink)?",answer:0.625,answerDisplay:"\\tfrac{50}{80}",explanation:"80 students had energy drinks. 50 passed. P = 50/80 = 5/8. Slightly LOWER than the overall pass rate of 2/3."}},
+{id:"core_16",representation:"tree",data:{type:"tree",title:"200 job applications \u2014 Source and Outcome",total:200,branches:[{label:"Internal (25%)",value:50,children:[{label:"Hired",value:20},{label:"Rejected",value:30}]},{label:"External (75%)",value:150,children:[{label:"Hired",value:15},{label:"Rejected",value:135}]}]},phase1:{question:"What is the overall probability of being hired?",answer:0.175,answerDisplay:"\\tfrac{35}{200}"},phase2:{condition:"the candidate was hired",question:"What is P(internal candidate | hired)?",answer:0.5714,answerDisplay:"\\tfrac{20}{35}",explanation:"35 people were hired. 20 were internal. P = 20/35 = 4/7 \u2248 0.571."}},
+{id:"core_17",representation:"table",data:{type:"table",title:"500 students \u2014 Phone usage in lessons and Grades",rowHeader:"Grade",colHeader:"Phone in lessons?",rows:["A/B","C/D","E/U"],cols:["Uses phone","No phone"],values:[[20,130],[40,110],[140,60]],rowTotals:[150,150,200],colTotals:[200,300],grandTotal:500},phase1:{question:"What is P(grade E or U)?",answer:0.4,answerDisplay:"\\tfrac{200}{500}"},phase2:{condition:"the student uses their phone in lessons",question:"What is P(grade E or U | uses phone)?",answer:0.7,answerDisplay:"\\tfrac{140}{200}",explanation:"200 students use phones. 140 got grade E or U. P = 140/200 = 7/10 = 70%."}},
+{id:"core_18",representation:"tree",data:{type:"tree",title:"2,000 university students \u2014 Background and Completion",total:2000,branches:[{label:"First generation (35%)",value:700,children:[{label:"Completes degree",value:490},{label:"Drops out",value:210}]},{label:"Continuing generation (65%)",value:1300,children:[{label:"Completes degree",value:1105},{label:"Drops out",value:195}]}]},phase1:{question:"What is the overall dropout rate?",answer:0.2025,answerDisplay:"\\tfrac{405}{2000}"},phase2:{condition:"the student dropped out",question:"What is P(first generation | dropped out)?",answer:0.5185,answerDisplay:"\\tfrac{210}{405}",explanation:"405 students dropped out. 210 were first generation. P = 210/405 \u2248 0.519."}},
+{id:"core_19",representation:"table",data:{type:"table",title:"400 households \u2014 Type and Recycling",rowHeader:"Recycles regularly?",colHeader:"Household type",rows:["Yes","No"],cols:["House","Flat"],values:[[180,40],[60,120]],rowTotals:[220,180],colTotals:[240,160],grandTotal:400},phase1:{question:"What proportion of households recycle regularly?",answer:0.55,answerDisplay:"\\tfrac{220}{400}"},phase2:{condition:"the household is a flat",question:"What is P(recycles | flat)?",answer:0.25,answerDisplay:"\\tfrac{40}{160}",explanation:"160 households are flats. 40 recycle regularly. P = 40/160 = 1/4."}},
+{id:"core_20",representation:"tree",data:{type:"tree",title:"500 GCSE Maths students \u2014 First attempt and Re-sit",total:500,branches:[{label:"Pass first time (60%)",value:300,children:[{label:"No re-sit needed",value:300},{label:"(n/a)",value:0}]},{label:"Fail first time (40%)",value:200,children:[{label:"Pass re-sit",value:120},{label:"Fail re-sit",value:80}]}]},phase1:{question:"What is P(eventually passes maths)?",answer:0.84,answerDisplay:"\\tfrac{420}{500}"},phase2:{condition:"the student failed first time and took the re-sit",question:"What is P(passes | re-sits)?",answer:0.6,answerDisplay:"\\tfrac{120}{200}",explanation:"200 students re-sat. 120 passed. P = 120/200 = 3/5."}}
+],
+level4: [
+{id:"l4_01",representation:"tree",data:{type:"tree",title:"2,000 resistors from two production lines",total:2000,branches:[{label:"Line A (70%)",value:1400,children:[{label:"Within tolerance",value:1344},{label:"Out of tolerance",value:56}]},{label:"Line B (30%)",value:600,children:[{label:"Within tolerance",value:552},{label:"Out of tolerance",value:48}]}]},phase1:{question:"Find P(out of tolerance).",answer:0.052,answerDisplay:"\\tfrac{104}{2000}"},phase2:{condition:"the resistor is out of tolerance",question:"Find P(from Line B | out of tolerance).",answer:0.4615,answerDisplay:"\\tfrac{48}{104}",explanation:"104 resistors are out of tolerance. 48 came from Line B. P = 48/104 \u2248 0.462."}},
+{id:"l4_02",representation:"table",data:{type:"table",title:"500 welds \u2014 Inspection method and Defect detection",rowHeader:"Defect found?",colHeader:"Inspection method",rows:["Yes","No"],cols:["Visual","X-ray","Ultrasonic"],values:[[15,35,30],[85,165,170]],rowTotals:[80,420],colTotals:[100,200,200],grandTotal:500},phase1:{question:"Find P(defect found).",answer:0.16,answerDisplay:"\\tfrac{80}{500}"},phase2:{condition:"X-ray inspection was used",question:"Find P(defect found | X-ray inspection).",answer:0.175,answerDisplay:"\\tfrac{35}{200}",explanation:"200 welds inspected by X-ray. 35 defects found. P = 35/200 = 7/40."}},
+{id:"l4_03",representation:"tree",data:{type:"tree",title:"1,000 system tests \u2014 Component A then Component B",total:1000,branches:[{label:"A fails (5%)",value:50,children:[{label:"System fails",value:50},{label:"(system already failed)",value:0}]},{label:"A works (95%)",value:950,children:[{label:"B fails \u2192 system fails",value:38},{label:"B works \u2192 system works",value:912}]}]},phase1:{question:"Find P(system fails).",answer:0.088,answerDisplay:"\\tfrac{88}{1000}"},phase2:{condition:"the system has failed",question:"Find P(caused by component A | system failure).",answer:0.5682,answerDisplay:"\\tfrac{50}{88}",explanation:"88 system failures total. 50 caused by A, 38 by B. P(A caused it|failure) = 50/88 \u2248 0.568."}},
+{id:"l4_04",representation:"table",data:{type:"table",title:"3,000 items produced \u2014 Shift and Quality",rowHeader:"Quality",colHeader:"Shift",rows:["Pass","Minor defect","Major defect"],cols:["Day","Evening","Night"],values:[[900,750,600],[70,100,200],[30,50,300]],rowTotals:[2250,370,380],colTotals:[1000,900,1100],grandTotal:3000},phase1:{question:"Find P(major defect).",answer:0.1267,answerDisplay:"\\tfrac{380}{3000}"},phase2:{condition:"the item was produced on the night shift",question:"Find P(major defect | night shift).",answer:0.2727,answerDisplay:"\\tfrac{300}{1100}",explanation:"1,100 items on night shift. 300 have major defects. P = 300/1100 = 3/11 \u2248 0.273."}},
+{id:"l4_05",representation:"tree",data:{type:"tree",title:"800 sensor readings \u2014 Calibration and Accuracy",total:800,branches:[{label:"Calibrated (60%)",value:480,children:[{label:"Accurate (\u00b10.5\u00b0C)",value:456},{label:"Inaccurate",value:24}]},{label:"Uncalibrated (40%)",value:320,children:[{label:"Accurate (\u00b10.5\u00b0C)",value:224},{label:"Inaccurate",value:96}]}]},phase1:{question:"Find P(inaccurate reading).",answer:0.15,answerDisplay:"\\tfrac{120}{800}"},phase2:{condition:"the reading is inaccurate",question:"Find P(uncalibrated | inaccurate reading).",answer:0.8,answerDisplay:"\\tfrac{96}{120}",explanation:"120 inaccurate readings. 96 from uncalibrated sensors. P = 96/120 = 4/5."}},
+{id:"l4_06",representation:"table",data:{type:"table",title:"600 steel samples \u2014 Grade and Tensile test",rowHeader:"Tensile test",colHeader:"Steel grade",rows:["Pass","Fail"],cols:["S275","S355","S460"],values:[[180,150,80],[20,50,120]],rowTotals:[410,190],colTotals:[200,200,200],grandTotal:600},phase1:{question:"Find P(fails tensile test).",answer:0.3167,answerDisplay:"\\tfrac{190}{600}"},phase2:{condition:"the sample is grade S460",question:"Find P(fails tensile test | S460).",answer:0.6,answerDisplay:"\\tfrac{120}{200}",explanation:"200 S460 samples. 120 failed. P = 120/200 = 3/5."}},
+{id:"l4_07",representation:"tree",data:{type:"tree",title:"500 bearing replacements \u2014 Cause analysis",total:500,branches:[{label:"Fatigue (40%)",value:200,children:[{label:"Detected by vibration",value:170},{label:"Sudden failure",value:30}]},{label:"Contamination (35%)",value:175,children:[{label:"Detected by vibration",value:105},{label:"Sudden failure",value:70}]},{label:"Overload (25%)",value:125,children:[{label:"Detected by vibration",value:25},{label:"Sudden failure",value:100}]}]},phase1:{question:"Find P(sudden failure).",answer:0.4,answerDisplay:"\\tfrac{200}{500}"},phase2:{condition:"the bearing failed suddenly",question:"Find P(overload | sudden failure).",answer:0.5,answerDisplay:"\\tfrac{100}{200}",explanation:"200 sudden failures. 100 were from overload. P = 100/200 = 1/2."}},
+{id:"l4_08",representation:"table",data:{type:"table",title:"1,000 CNC-machined parts \u2014 Machine and Tolerance",rowHeader:"Within tolerance?",colHeader:"CNC machine",rows:["Yes","No"],cols:["M1","M2","M3","M4"],values:[[230,220,200,180],[20,30,50,70]],rowTotals:[830,170],colTotals:[250,250,250,250],grandTotal:1000},phase1:{question:"Find P(out of tolerance).",answer:0.17,answerDisplay:"\\tfrac{170}{1000}"},phase2:{condition:"the part was machined on M4",question:"Find P(out of tolerance | machined on M4).",answer:0.28,answerDisplay:"\\tfrac{70}{250}",explanation:"250 parts from M4. 70 out of tolerance. P = 70/250 = 7/25 = 0.28."}},
+{id:"l4_09",representation:"tree",data:{type:"tree",title:"400 concrete cube tests",total:400,branches:[{label:"7-day cure",value:160,children:[{label:"Passes 28-day strength",value:40},{label:"Fails 28-day strength",value:120}]},{label:"28-day cure",value:240,children:[{label:"Passes 28-day strength",value:216},{label:"Fails 28-day strength",value:24}]}]},phase1:{question:"Find P(passes 28-day strength requirement).",answer:0.64,answerDisplay:"\\tfrac{256}{400}"},phase2:{condition:"the cube was only cured for 7 days",question:"Find P(passes 28-day strength | 7-day cure).",answer:0.25,answerDisplay:"\\tfrac{40}{160}",explanation:"160 cubes had 7-day cure. Only 40 pass the 28-day strength requirement. P = 40/160 = 1/4."}},
+{id:"l4_10",representation:"table",data:{type:"table",title:"300 maintenance events \u2014 Strategy and Outcome",rowHeader:"Extended downtime (>4hrs)?",colHeader:"Maintenance type",rows:["Yes","No"],cols:["Reactive","Planned","Predictive"],values:[[50,15,5],[30,85,115]],rowTotals:[70,230],colTotals:[80,100,120],grandTotal:300},phase1:{question:"Find P(extended downtime).",answer:0.2333,answerDisplay:"\\tfrac{70}{300}"},phase2:{condition:"the maintenance was reactive",question:"Find P(extended downtime | reactive maintenance).",answer:0.625,answerDisplay:"\\tfrac{50}{80}",explanation:"80 reactive events. 50 caused extended downtime. P = 50/80 = 5/8 = 62.5%."}},
+{id:"l4_11",representation:"tree",data:{type:"tree",title:"5,000 NDT inspections \u2014 Crack detection",total:5000,branches:[{label:"Crack present (2%)",value:100,children:[{label:"NDT detects",value:92},{label:"NDT misses",value:8}]},{label:"No crack (98%)",value:4900,children:[{label:"NDT false positive",value:245},{label:"NDT negative",value:4655}]}]},phase1:{question:"Find P(NDT gives a positive result).",answer:0.0674,answerDisplay:"\\tfrac{337}{5000}"},phase2:{condition:"the NDT result is positive",question:"Find P(crack actually present | positive NDT).",answer:0.2730,answerDisplay:"\\tfrac{92}{337}",explanation:"337 positive results. 92 have real cracks. P = 92/337 \u2248 0.273."}},
+{id:"l4_12",representation:"table",data:{type:"table",title:"450 power supply failures \u2014 Type and Failure mode",rowHeader:"Failure mode",colHeader:"PSU type",rows:["Overvoltage","Undervoltage","Thermal"],cols:["Linear","Switching"],values:[[30,80],[60,40],[60,180]],rowTotals:[110,100,240],colTotals:[150,300],grandTotal:450},phase1:{question:"Find P(thermal failure).",answer:0.5333,answerDisplay:"\\tfrac{240}{450}"},phase2:{condition:"the PSU is a switching type",question:"Find P(thermal failure | switching PSU).",answer:0.6,answerDisplay:"\\tfrac{180}{300}",explanation:"300 switching PSU failures. 180 were thermal. P = 180/300 = 3/5."}},
+{id:"l4_13",representation:"tree",data:{type:"tree",title:"1,000 batches \u2014 Quality level and Acceptance",total:1000,branches:[{label:"Good batch (\u22642% defective)",value:800,children:[{label:"Accepted",value:776},{label:"Rejected",value:24}]},{label:"Bad batch (>2% defective)",value:200,children:[{label:"Accepted",value:40},{label:"Rejected",value:160}]}]},phase1:{question:"Find P(batch is accepted).",answer:0.816,answerDisplay:"\\tfrac{816}{1000}"},phase2:{condition:"the batch was accepted",question:"Find P(bad batch | accepted).",answer:0.049,answerDisplay:"\\tfrac{40}{816}",explanation:"816 batches accepted. 40 are actually bad. P = 40/816 \u2248 0.049 or about 5%."}},
+{id:"l4_14",representation:"table",data:{type:"table",title:"360 measurements \u2014 Operator and Agreement with reference",rowHeader:"Agrees with reference?",colHeader:"Operator",rows:["Yes","No"],cols:["Op A","Op B","Op C"],values:[[110,95,75],[10,25,45]],rowTotals:[280,80],colTotals:[120,120,120],grandTotal:360},phase1:{question:"Find P(measurement agrees with reference).",answer:0.7778,answerDisplay:"\\tfrac{280}{360}"},phase2:{condition:"the measurement was taken by Operator C",question:"Find P(agrees with reference | Operator C).",answer:0.625,answerDisplay:"\\tfrac{75}{120}",explanation:"120 measurements by Op C. 75 agree with reference. P = 75/120 = 5/8."}},
+{id:"l4_15",representation:"tree",data:{type:"tree",title:"2,000 motor operation periods",total:2000,branches:[{label:"Motor will fail (8%)",value:160,children:[{label:"Vibration alarm triggered",value:136},{label:"No alarm",value:24}]},{label:"Motor OK (92%)",value:1840,children:[{label:"Vibration alarm triggered",value:92},{label:"No alarm",value:1748}]}]},phase1:{question:"Find P(vibration alarm triggers).",answer:0.114,answerDisplay:"\\tfrac{228}{2000}"},phase2:{condition:"the vibration alarm triggers",question:"Find P(motor will actually fail | alarm).",answer:0.5965,answerDisplay:"\\tfrac{136}{228}",explanation:"228 alarms. 136 precede actual failures. P \u2248 0.597."}},
+{id:"l4_16",representation:"table",data:{type:"table",title:"500 steel parts \u2014 Heat treatment and Hardness",rowHeader:"Meets hardness spec?",colHeader:"Treatment",rows:["Yes","No"],cols:["Quench & temper","Normalise","As-rolled"],values:[[160,90,40],[40,60,110]],rowTotals:[290,210],colTotals:[200,150,150],grandTotal:500},phase1:{question:"Find P(meets hardness specification).",answer:0.58,answerDisplay:"\\tfrac{290}{500}"},phase2:{condition:"the part was quenched and tempered",question:"Find P(meets hardness spec | quench & temper).",answer:0.8,answerDisplay:"\\tfrac{160}{200}",explanation:"200 parts were quench & tempered. 160 meet spec. P = 160/200 = 4/5."}},
+{id:"l4_17",representation:"tree",data:{type:"tree",title:"10,000 PLC communication events",total:10000,branches:[{label:"Error occurs (3%)",value:300,children:[{label:"EMI interference",value:180},{label:"Cable fault",value:75},{label:"Software bug",value:45}]},{label:"No error (97%)",value:9700,children:[{label:"Normal operation",value:9700},{label:"(n/a)",value:0}]}]},phase1:{question:"Find P(communication error).",answer:0.03,answerDisplay:"\\tfrac{300}{10000}"},phase2:{condition:"a communication error has occurred",question:"Find P(EMI interference | error).",answer:0.6,answerDisplay:"\\tfrac{180}{300}",explanation:"300 errors. 180 caused by EMI. P = 180/300 = 3/5."}},
+{id:"l4_18",representation:"table",data:{type:"table",title:"240 torque wrench calibration checks",rowHeader:"Within \u00b14% accuracy?",colHeader:"Brand",rows:["Yes","No"],cols:["Brand X","Brand Y","Brand Z"],values:[[70,55,40],[10,25,40]],rowTotals:[165,75],colTotals:[80,80,80],grandTotal:240},phase1:{question:"Find P(wrench is out of calibration).",answer:0.3125,answerDisplay:"\\tfrac{75}{240}"},phase2:{condition:"the wrench is Brand Z",question:"Find P(out of calibration | Brand Z).",answer:0.5,answerDisplay:"\\tfrac{40}{80}",explanation:"80 Brand Z wrenches. 40 out of calibration. P = 40/80 = 1/2."}},
+{id:"l4_19",representation:"tree",data:{type:"tree",title:"5,000 products sold \u2014 Line and Warranty claims",total:5000,branches:[{label:"Standard (60%)",value:3000,children:[{label:"Warranty claim",value:150},{label:"No claim",value:2850}]},{label:"Premium (25%)",value:1250,children:[{label:"Warranty claim",value:25},{label:"No claim",value:1225}]},{label:"Budget (15%)",value:750,children:[{label:"Warranty claim",value:75},{label:"No claim",value:675}]}]},phase1:{question:"Find P(warranty claim).",answer:0.05,answerDisplay:"\\tfrac{250}{5000}"},phase2:{condition:"a warranty claim is made",question:"Find P(budget line | warranty claim).",answer:0.3,answerDisplay:"\\tfrac{75}{250}",explanation:"250 warranty claims. 75 from budget line. P = 75/250 = 3/10."}},
+{id:"l4_20",representation:"table",data:{type:"table",title:"800 PCB assemblies \u2014 Solder type and Thermal cycling result",rowHeader:"Survives 1000 cycles?",colHeader:"Solder type",rows:["Yes","No"],cols:["SAC305 (lead-free)","SnPb (leaded)","SAC405 (lead-free)"],values:[[200,180,220],[100,20,80]],rowTotals:[600,200],colTotals:[300,200,300],grandTotal:800},phase1:{question:"Find P(fails to survive 1000 thermal cycles).",answer:0.25,answerDisplay:"\\tfrac{200}{800}"},phase2:{condition:"the board uses SAC305 lead-free solder",question:"Find P(fails 1000 cycles | SAC305).",answer:0.3333,answerDisplay:"\\tfrac{100}{300}",explanation:"300 SAC305 boards. 100 failed. P = 100/300 = 1/3."}}
+]
+};
+
+/* ---------- STATE ---------- */
+let currentLevel = null;
+let sessionQuestions = [];
+let currentQIndex = 0;
+let currentPhase = 1;
+let totalScore = 0;
+let phase1Correct = 0;
+let phase2Correct = 0;
+let phase1Total = 0;
+let phase2Total = 0;
+let phase2Attempt = 0;
+let repStats = {table:{score:0,max:0},venn:{score:0,max:0},tree:{score:0,max:0}};
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- DOM refs ---------- */
+const $=id=>document.getElementById(id);
+const startScreen=$('startScreen'),gameScreen=$('gameScreen'),resultsScreen=$('resultsScreen');
+const gameHeader=$('gameHeader'),levelPill=$('levelPill'),phasePill=$('phasePill');
+const scoreNum=$('scoreNum'),progressBar=$('progressBar');
+const questionCounter=$('questionCounter'),dataTitle=$('dataTitle'),dataVis=$('dataVis');
+const conditionBanner=$('conditionBanner'),questionText=$('questionText'),answerArea=$('answerArea');
+const feedbackEl=$('feedback'),explanationEl=$('explanation'),nextBtn=$('nextBtn');
+
+/* ---------- HELPERS ---------- */
+function kx(latex){return katex.renderToString(latex,{throwOnError:false,displayMode:false})}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+function fmtCell(v){if(typeof v==='number'){if(v===Math.floor(v))return String(v);return v.toFixed(2)}return String(v)}
+
+/* ---------- LEVEL SELECTION ---------- */
+const levelBtns=document.querySelectorAll('#levelSelect .level-btn');
+levelBtns.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    levelBtns.forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    currentLevel=btn.dataset.level;
+    $('startBtn').disabled=false;
+    const pbKey='mfg_given_that_pb_'+currentLevel;
+    const pb=localStorage.getItem(pbKey);
+    $('pbDisplay').innerHTML=pb?'Personal best: <span>'+pb+'/40</span>':'';
+  });
+});
+
+/* URL param level */
+const urlLevel=new URLSearchParams(window.location.search).get('level');
+if(urlLevel&&QUESTIONS[urlLevel]){
+  const btn=document.querySelector('.level-btn[data-level="'+urlLevel+'"]');
+  if(btn)btn.click();
+}
+
+/* ---------- START GAME ---------- */
+$('startBtn').addEventListener('click',startGame);
+function startGame(){
+  const pool=QUESTIONS[currentLevel];
+  sessionQuestions=shuffle([...pool]).slice(0,10);
+  currentQIndex=0;currentPhase=1;totalScore=0;
+  phase1Correct=0;phase2Correct=0;phase1Total=0;phase2Total=0;phase2Attempt=0;
+  repStats={table:{score:0,max:0},venn:{score:0,max:0},tree:{score:0,max:0}};
+  startScreen.classList.remove('active');
+  gameScreen.classList.add('active');
+  gameHeader.style.display='';
+  const pillClass=currentLevel==='alevel'?'alevel':currentLevel==='level4'?'level4':currentLevel;
+  levelPill.className='level-pill '+pillClass;
+  levelPill.textContent={gcse:'GCSE',alevel:'A-Level',core:'Core Maths',level4:'Level 4'}[currentLevel];
+  scoreNum.textContent='0';
+  mfg('game_started',{game_slug:'given-that',level:currentLevel});
+  showQuestion();
+}
+
+/* ---------- SHOW QUESTION ---------- */
+function showQuestion(){
+  const q=sessionQuestions[currentQIndex];
+  currentPhase=1;phase2Attempt=0;
+  questionCounter.textContent='Question '+(currentQIndex+1)+' of 10';
+  progressBar.style.width=((currentQIndex)/10*100)+'%';
+  phasePill.textContent='Phase 1';
+  conditionBanner.style.display='none';
+  feedbackEl.className='feedback';feedbackEl.style.display='none';
+  explanationEl.className='explanation';explanationEl.style.display='none';
+  nextBtn.style.display='none';
+  dataTitle.textContent=q.data.title;
+  renderData(q);
+  questionText.textContent=q.phase1.question;
+  renderAnswerArea(q,1);
+}
+
+
+/* ---------- RENDER DATA VISUALISATIONS ---------- */
+function renderData(q){
+  dataVis.innerHTML='';
+  if(q.data.type==='table')renderTable(q);
+  else if(q.data.type==='venn')renderVenn(q);
+  else if(q.data.type==='tree')renderTree(q);
+}
+
+/* --- TABLE --- */
+function renderTable(q){
+  const d=q.data;
+  const t=document.createElement('table');
+  t.className='tw-table';t.id='twTable';
+  t.setAttribute('role','table');
+  // header row
+  let html='<thead><tr><th scope="col">'+d.rowHeader+' \\ '+d.colHeader+'</th>';
+  d.cols.forEach(c=>{html+='<th scope="col" data-col="'+c+'">'+c+'</th>'});
+  html+='<th scope="col" class="total-col">Total</th></tr></thead><tbody>';
+  d.rows.forEach((r,ri)=>{
+    html+='<tr><th scope="row">'+r+'</th>';
+    d.cols.forEach((c,ci)=>{html+='<td data-col="'+c+'">'+fmtCell(d.values[ri][ci])+'</td>'});
+    html+='<td class="total-col">'+fmtCell(d.rowTotals[ri])+'</td></tr>';
+  });
+  html+='<tr class="total-row"><th scope="row" class="total-row">Total</th>';
+  d.cols.forEach((c,ci)=>{html+='<td class="total-row" data-col="'+c+'">'+fmtCell(d.colTotals[ci])+'</td>'});
+  html+='<td class="total-col total-row">'+fmtCell(d.grandTotal)+'</td></tr></tbody>';
+  t.innerHTML=html;
+  dataVis.appendChild(t);
+}
+
+function greyOutTable(q){
+  const greyStr=q.phase2.greyOut;
+  if(!greyStr)return;
+  const parts=greyStr.split(',').map(s=>s.trim());
+  const colsToGrey=parts.filter(p=>p.startsWith('col_')).map(p=>p.slice(4));
+  const table=document.getElementById('twTable');
+  if(!table)return;
+  const cells=table.querySelectorAll('th[data-col], td[data-col]');
+  cells.forEach(cell=>{
+    const col=cell.getAttribute('data-col');
+    if(colsToGrey.includes(col)){
+      cell.classList.add('greyed');
+    } else {
+      cell.classList.add('highlighted');
+    }
+  });
+}
+
+/* --- VENN --- */
+function renderVenn(q){
+  const d=q.data;
+  const w=480,h=300;
+  const cx1=175,cx2=305,cy=150,r=110;
+  let svg=`<svg class="venn-svg" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" role="img">`;
+  svg+=`<title>${d.title}</title>`;
+  svg+=`<desc>Venn diagram showing ${d.setA.label} and ${d.setB.label} with their intersection</desc>`;
+  // circles
+  svg+=`<circle class="venn-circle venn-circle-a" cx="${cx1}" cy="${cy}" r="${r}"/>`;
+  svg+=`<circle class="venn-circle venn-circle-b" cx="${cx2}" cy="${cy}" r="${r}"/>`;
+  // labels for sets
+  svg+=`<text class="venn-set-label" x="${cx1-50}" y="30" data-region="setA">${d.setA.label}</text>`;
+  svg+=`<text class="venn-set-label" x="${cx2+50}" y="30" data-region="setB">${d.setB.label}</text>`;
+  // value labels
+  svg+=`<text class="venn-label" x="${cx1-55}" y="${cy}" data-region="onlyA">${d.onlyA}</text>`;
+  svg+=`<text class="venn-label" x="${(cx1+cx2)/2}" y="${cy}" data-region="intersection">${d.intersection}</text>`;
+  svg+=`<text class="venn-label" x="${cx2+55}" y="${cy}" data-region="onlyB">${d.onlyB}</text>`;
+  svg+=`<text class="venn-label" x="${w-30}" y="${h-20}" data-region="neither">${d.neither}</text>`;
+  // total label
+  svg+=`<text class="venn-set-label" x="${w-30}" y="${h-40}" data-region="total" style="font-size:11px;fill:var(--muted)">Total: ${d.total}</text>`;
+  svg+=`</svg>`;
+  dataVis.innerHTML=svg;
+}
+
+function greyOutVenn(q){
+  const greyStr=q.phase2.greyOut;
+  if(!greyStr)return;
+  const parts=greyStr.split(',').map(s=>s.trim());
+  const svgEl=dataVis.querySelector('svg');
+  if(!svgEl)return;
+  const allRegions=['onlyA','onlyB','intersection','neither'];
+  allRegions.forEach(region=>{
+    const els=svgEl.querySelectorAll('[data-region="'+region+'"]');
+    els.forEach(el=>{
+      if(parts.includes(region)){
+        el.classList.add('greyed');
+        if(reducedMotion)el.style.opacity='0.2';
+      } else {
+        el.style.fill=region==='neither'?'var(--text)':'var(--accent)';
+        el.style.fontWeight='700';
+      }
+    });
+  });
+  // Also grey set labels appropriately
+  if(parts.includes('onlyA')&&parts.includes('intersection')){
+    svgEl.querySelectorAll('[data-region="setA"]').forEach(el=>{el.classList.add('greyed');if(reducedMotion)el.style.opacity='0.2'});
+  }
+  if(parts.includes('onlyB')&&parts.includes('intersection')){
+    svgEl.querySelectorAll('[data-region="setB"]').forEach(el=>{el.classList.add('greyed');if(reducedMotion)el.style.opacity='0.2'});
+  }
+}
+
+/* --- TREE --- */
+function renderTree(q){
+  const d=q.data;
+  const branches=d.branches.filter(b=>b.value>0);
+  const numBranches=branches.length;
+  // Calculate heights
+  let totalLeaves=0;
+  branches.forEach(b=>{
+    const kids=(b.children||[]).filter(c=>c.value>0);
+    totalLeaves+=Math.max(kids.length,1);
+  });
+  const leafH=55;
+  const svgH=Math.max(totalLeaves*leafH+40,200);
+  const svgW=600;
+  const rootX=30,rootY=svgH/2;
+  const midX=200,leafX=420;
+
+  let svg=`<svg class="tree-svg" viewBox="0 0 ${svgW} ${svgH}" xmlns="http://www.w3.org/2000/svg" role="img">`;
+  svg+=`<title>${d.title}</title>`;
+  svg+=`<desc>Frequency tree showing ${d.title}</desc>`;
+
+  // Root node
+  svg+=`<g class="tree-node" data-branch="root">`;
+  svg+=`<rect class="tree-node-rect" x="${rootX-25}" y="${rootY-15}" width="50" height="30"/>`;
+  svg+=`<text class="tree-node-text" x="${rootX}" y="${rootY}">${fmtCell(d.total)}</text>`;
+  svg+=`</g>`;
+
+  let leafIndex=0;
+  branches.forEach((br,bi)=>{
+    const kids=(br.children||[]).filter(c=>c.value>0);
+    const numKids=Math.max(kids.length,1);
+    const branchCenterLeaf=leafIndex+numKids/2;
+    const midY=30+(branchCenterLeaf)*leafH;
+
+    // Branch line root->mid
+    svg+=`<line class="tree-branch" data-branch="${br.label}" x1="${rootX+25}" y1="${rootY}" x2="${midX-35}" y2="${midY}"/>`;
+    // Branch label
+    const labelX=(rootX+25+midX-35)/2;
+    const labelY=(rootY+midY)/2-8;
+    svg+=`<text class="tree-branch-label" data-branch="${br.label}" x="${labelX}" y="${labelY}">${br.label}</text>`;
+    // Mid node
+    svg+=`<g class="tree-node" data-branch="${br.label}">`;
+    svg+=`<rect class="tree-node-rect" x="${midX-30}" y="${midY-15}" width="60" height="30"/>`;
+    svg+=`<text class="tree-node-text" x="${midX}" y="${midY}">${fmtCell(br.value)}</text>`;
+    svg+=`</g>`;
+
+    kids.forEach((kid,ki)=>{
+      const kidY=30+(leafIndex+ki+0.5)*leafH;
+      svg+=`<line class="tree-branch" data-branch="${br.label}" x1="${midX+30}" y1="${midY}" x2="${leafX-40}" y2="${kidY}"/>`;
+      const klX=(midX+30+leafX-40)/2;
+      const klY=(midY+kidY)/2-8;
+      svg+=`<text class="tree-branch-label" data-branch="${br.label}" x="${klX}" y="${klY}">${kid.label}</text>`;
+      svg+=`<g class="tree-node" data-branch="${br.label}">`;
+      svg+=`<rect class="tree-node-rect" x="${leafX-35}" y="${kidY-15}" width="70" height="30"/>`;
+      svg+=`<text class="tree-node-text" x="${leafX}" y="${kidY}">${fmtCell(kid.value)}</text>`;
+      svg+=`</g>`;
+    });
+    leafIndex+=numKids;
+  });
+  svg+=`</svg>`;
+  dataVis.innerHTML=svg;
+}
+
+function greyOutTree(q){
+  const greyStr=q.phase2.greyOut;
+  if(!greyStr)return;
+  const parts=greyStr.split(',').map(s=>s.trim());
+  const branchNames=parts.filter(p=>p.startsWith('branch_')).map(p=>p.slice(7));
+  const svgEl=dataVis.querySelector('svg');
+  if(!svgEl)return;
+  const allBranchEls=svgEl.querySelectorAll('[data-branch]');
+  allBranchEls.forEach(el=>{
+    const bn=el.getAttribute('data-branch');
+    if(bn==='root')return;
+    if(branchNames.includes(bn)){
+      el.classList.add('greyed');
+      if(reducedMotion)el.style.opacity='0.2';
+    } else {
+      el.classList.add('highlighted');
+    }
+  });
+}
+
+/* ---------- INFER GREY-OUT for non-GCSE questions ---------- */
+function inferGreyOut(q){
+  if(q.phase2.greyOut)return; // already set
+  const d=q.data;
+  const cond=q.phase2.condition.toLowerCase();
+  if(d.type==='table'){
+    // Try to match condition to a column name using word-boundary-aware matching
+    const matchedCols=[];
+    d.cols.forEach(c=>{
+      const cl=c.toLowerCase();
+      // Use word boundary regex to avoid "male" matching inside "female"
+      const re=new RegExp('\\b'+cl.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b');
+      if(re.test(cond))matchedCols.push(c);
+    });
+    if(matchedCols.length===1){
+      const others=d.cols.filter(c=>c!==matchedCols[0]);
+      q.phase2.greyOut=others.map(c=>'col_'+c).join(',');
+    } else if(matchedCols.length>1){
+      // Multiple matches — try exact match (longest match wins)
+      const sorted=[...matchedCols].sort((a,b)=>b.length-a.length);
+      const best=sorted[0];
+      const others=d.cols.filter(c=>c!==best);
+      q.phase2.greyOut=others.map(c=>'col_'+c).join(',');
+    }
+  } else if(d.type==='venn'){
+    // For Venn, condition typically references set A or set B
+    const labelA=d.setA.label.toLowerCase();
+    const labelB=d.setB.label.toLowerCase();
+    if(cond.includes(labelA)&&!cond.includes(labelB)){
+      q.phase2.greyOut='onlyB,neither';
+    } else if(cond.includes(labelB)&&!cond.includes(labelA)){
+      q.phase2.greyOut='onlyA,neither';
+    } else if(cond.includes('a ')||cond.includes('a)')||cond==='event a occurs'||cond.includes(' a ')){
+      q.phase2.greyOut='onlyB,neither';
+    } else if(cond.includes('b ')||cond.includes('b)')||cond.includes(' b ')){
+      q.phase2.greyOut='onlyA,neither';
+    }
+  } else if(d.type==='tree'){
+    // For trees, check if the condition matches exactly ONE main branch
+    const branches=d.branches.filter(b=>b.value>0);
+    // Use word-boundary matching on the branch label (strip parenthetical percentages)
+    const matchedBranches=branches.filter(b=>{
+      const bl=b.label.toLowerCase().split('(')[0].trim();
+      if(bl.length<2)return false; // skip very short labels
+      const re=new RegExp('\\b'+bl.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b');
+      return re.test(cond);
+    });
+    if(matchedBranches.length===1){
+      // Condition IS this branch — grey others
+      const others=branches.filter(b=>b!==matchedBranches[0]);
+      q.phase2.greyOut=others.map(b=>'branch_'+b.label).join(',');
+    } else {
+      // Condition might be a leaf outcome (e.g. "tests positive", "defective")
+      // Find which leaf label matches, then we need to keep all branches that lead to that outcome
+      // In this case we don't grey branches — all branches are relevant for Bayes' theorem
+      // No grey-out needed (all branches contribute to the condition)
+    }
+  }
+}
+
+/* ---------- RENDER ANSWER AREA ---------- */
+function renderAnswerArea(q,phase){
+  answerArea.innerHTML='';
+  const phaseData=phase===1?q.phase1:q.phase2;
+  const isMCQ=currentLevel==='gcse'&&phaseData.options;
+
+  if(isMCQ){
+    const div=document.createElement('div');
+    div.className='mcq-grid';
+    const correctOpt=phaseData.options[0];
+    const shuffled=shuffle([...phaseData.options]);
+    shuffled.forEach((opt,i)=>{
+      const btn=document.createElement('button');
+      btn.className='mcq-btn';
+      btn.dataset.latex=opt;
+      btn.innerHTML=kx(opt);
+      btn.addEventListener('click',()=>handleMCQ(btn,opt,correctOpt,phaseData,q,phase,div));
+      div.appendChild(btn);
+    });
+    answerArea.appendChild(div);
+  } else {
+    const div=document.createElement('div');
+    div.className='free-entry';
+    const input=document.createElement('input');
+    input.type='text';input.className='free-input';
+    input.placeholder='e.g. 3/7 or 0.429 or 42.9%';
+    input.setAttribute('aria-label','Your answer');
+    input.id='freeInput';
+    const btn=document.createElement('button');
+    btn.className='submit-btn';btn.textContent='Submit';
+    btn.addEventListener('click',()=>handleFreeEntry(input,phaseData,q,phase));
+    input.addEventListener('keydown',e=>{if(e.key==='Enter')btn.click()});
+    div.appendChild(input);div.appendChild(btn);
+    answerArea.appendChild(div);
+    input.focus();
+  }
+}
+
+/* ---------- HANDLE ANSWERS ---------- */
+function handleMCQ(btn,chosen,correctLatex,phaseData,q,phase,grid){
+  const isCorrect=(chosen===correctLatex);
+  const btns=grid.querySelectorAll('.mcq-btn');
+
+  function revealCorrect(){
+    btns.forEach(b=>{if(b.dataset.latex===correctLatex)b.classList.add('reveal-correct')});
+  }
+
+  if(phase===1){
+    phase1Total++;
+    btns.forEach(b=>b.classList.add('disabled'));
+    if(isCorrect){
+      btn.classList.add('correct');
+      totalScore+=1;phase1Correct++;
+      showFeedback(true,'\u2713 Correct! '+kx(phaseData.answerDisplay));
+    } else {
+      btn.classList.add('wrong');
+      revealCorrect();
+      showFeedback(false,'\u2717 The answer was '+kx(phaseData.answerDisplay));
+    }
+    repStats[q.representation].max+=1;
+    if(isCorrect)repStats[q.representation].score+=1;
+    mfg('question_answered',{game_slug:'given-that',level:currentLevel,question_index:currentQIndex+1,correct:isCorrect,phase:1,representation:q.representation});
+    setTimeout(()=>transitionToPhase2(q),1200);
+  } else {
+    phase2Attempt++;
+    if(isCorrect){
+      btns.forEach(b=>b.classList.add('disabled'));
+      btn.classList.add('correct');
+      phase2Correct++;phase2Total++;
+      const pts=phase2Attempt===1?3:1;
+      totalScore+=pts;
+      repStats[q.representation].max+=3;
+      repStats[q.representation].score+=pts;
+      showFeedback(true,'\u2713 Correct! '+kx(phaseData.answerDisplay)+(phase2Attempt===1?' (+3)':' (+1)'));
+      mfg('question_answered',{game_slug:'given-that',level:currentLevel,question_index:currentQIndex+1,correct:true,phase:2,representation:q.representation});
+      showExplanation(phaseData.explanation);
+      showNextBtn();
+    } else {
+      btn.classList.add('wrong');
+      btn.classList.add('disabled');
+      if(phase2Attempt>=2){
+        revealCorrect();
+        btns.forEach(b=>b.classList.add('disabled'));
+        phase2Total++;
+        repStats[q.representation].max+=3;
+        showFeedback(false,'\u2717 The answer was '+kx(phaseData.answerDisplay));
+        mfg('question_answered',{game_slug:'given-that',level:currentLevel,question_index:currentQIndex+1,correct:false,phase:2,representation:q.representation});
+        showExplanation(phaseData.explanation);
+        showNextBtn();
+      }
+    }
+  }
+  scoreNum.textContent=totalScore;
+}
+
+function handleFreeEntry(input,phaseData,q,phase){
+  const raw=input.value.trim();
+  if(!raw)return;
+  const userVal=parseAnswer(raw);
+  if(userVal===null){showFeedback(false,'Could not parse your answer. Try a fraction (3/7), decimal (0.429), or percentage (42.9%).');return}
+  const isCorrect=Math.abs(userVal-phaseData.answer)<=0.005;
+
+  input.disabled=true;
+  const submitBtn=answerArea.querySelector('.submit-btn');
+  if(submitBtn)submitBtn.disabled=true;
+
+  if(phase===1){
+    phase1Total++;
+    if(isCorrect){
+      totalScore+=1;phase1Correct++;
+      showFeedback(true,'\u2713 Correct! '+kx(phaseData.answerDisplay));
+    } else {
+      showFeedback(false,'\u2717 The answer was '+kx(phaseData.answerDisplay));
+    }
+    repStats[q.representation].max+=1;
+    if(isCorrect)repStats[q.representation].score+=1;
+    mfg('question_answered',{game_slug:'given-that',level:currentLevel,question_index:currentQIndex+1,correct:isCorrect,phase:1,representation:q.representation});
+    setTimeout(()=>transitionToPhase2(q),1200);
+  } else {
+    phase2Total++;phase2Attempt++;
+    repStats[q.representation].max+=3;
+    if(isCorrect){
+      phase2Correct++;
+      const pts=3;
+      totalScore+=pts;
+      repStats[q.representation].score+=pts;
+      showFeedback(true,'\u2713 Correct! '+kx(phaseData.answerDisplay)+' (+3)');
+    } else {
+      showFeedback(false,'\u2717 The answer was '+kx(phaseData.answerDisplay));
+    }
+    mfg('question_answered',{game_slug:'given-that',level:currentLevel,question_index:currentQIndex+1,correct:isCorrect,phase:2,representation:q.representation});
+    showExplanation(phaseData.explanation);
+    showNextBtn();
+  }
+  scoreNum.textContent=totalScore;
+}
+
+function parseAnswer(raw){
+  // percentage
+  if(raw.endsWith('%')){
+    const n=parseFloat(raw.slice(0,-1));
+    return isNaN(n)?null:n/100;
+  }
+  // fraction
+  if(raw.includes('/')){
+    const parts=raw.split('/');
+    if(parts.length!==2)return null;
+    const num=parseFloat(parts[0]),den=parseFloat(parts[1]);
+    if(isNaN(num)||isNaN(den)||den===0)return null;
+    return num/den;
+  }
+  // decimal
+  const n=parseFloat(raw);
+  return isNaN(n)?null:n;
+}
+
+/* ---------- PHASE TRANSITION ---------- */
+function transitionToPhase2(q){
+  currentPhase=2;
+  phasePill.textContent='Phase 2';
+  feedbackEl.className='feedback';feedbackEl.style.display='none';
+
+  // Infer grey-out if not explicitly set
+  inferGreyOut(q);
+
+  // Grey-out animation
+  if(q.data.type==='table')greyOutTable(q);
+  else if(q.data.type==='venn')greyOutVenn(q);
+  else if(q.data.type==='tree')greyOutTree(q);
+
+  // Show condition banner
+  conditionBanner.textContent='GIVEN THAT '+q.phase2.condition+'...';
+  conditionBanner.style.display='';
+  if(reducedMotion)conditionBanner.style.animation='none';
+
+  // Update question
+  questionText.textContent=q.phase2.question;
+  renderAnswerArea(q,2);
+}
+
+/* ---------- FEEDBACK & NEXT ---------- */
+function showFeedback(correct,html){
+  feedbackEl.innerHTML=html;
+  feedbackEl.className='feedback show '+(correct?'correct-fb':'wrong-fb');
+  feedbackEl.style.display='';
+}
+
+function showExplanation(text){
+  explanationEl.innerHTML='<h4>Worked Answer</h4><p>'+text+'</p>';
+  explanationEl.className='explanation show';
+  explanationEl.style.display='';
+}
+
+function showNextBtn(){
+  nextBtn.style.display='';
+  nextBtn.textContent=currentQIndex<9?'Next Question':'See Results';
+  nextBtn.onclick=()=>{
+    if(currentQIndex<9){
+      currentQIndex++;
+      showQuestion();
+    } else {
+      showResults();
+    }
+  };
+}
+
+/* ---------- RESULTS ---------- */
+function showResults(){
+  gameScreen.classList.remove('active');
+  resultsScreen.classList.add('active');
+  gameHeader.style.display='none';
+  progressBar.style.width='100%';
+
+  $('finalScore').textContent=totalScore+'/40';
+  const pct=Math.round(totalScore/40*100);
+  $('finalSub').textContent=pct+'% — '+(pct>=80?'Outstanding!':pct>=60?'Well done!':pct>=40?'Good effort!':'Keep practising!');
+
+  $('p1Accuracy').textContent=phase1Total?Math.round(phase1Correct/phase1Total*100)+'%':'--';
+  $('p2Accuracy').textContent=phase2Total?Math.round(phase2Correct/phase2Total*100)+'%':'--';
+
+  function repLabel(r){return r.max>0?(r.score+'/'+r.max):'-'}
+  $('breakTable').textContent=repLabel(repStats.table);
+  $('breakVenn').textContent=repLabel(repStats.venn);
+  $('breakTree').textContent=repLabel(repStats.tree);
+
+  // Personal best
+  const pbKey='mfg_given_that_pb_'+currentLevel;
+  const oldPB=parseInt(localStorage.getItem(pbKey))||0;
+  if(totalScore>oldPB){
+    localStorage.setItem(pbKey,String(totalScore));
+    $('pbBanner').innerHTML='<div class="pb-banner">New personal best! '+totalScore+'/40'+(oldPB?' (previous: '+oldPB+')':'')+'</div>';
+    mfg('personal_best_set',{game_slug:'given-that',level:currentLevel,score:totalScore,previous_best:oldPB});
+  } else {
+    $('pbBanner').innerHTML='';
+  }
+
+  mfg('game_completed',{game_slug:'given-that',level:currentLevel,score:totalScore,questions_answered:10,questions_correct:phase1Correct+phase2Correct});
+}
+
+$('playAgainBtn').addEventListener('click',()=>{
+  resultsScreen.classList.remove('active');
+  gameScreen.classList.add('active');
+  gameHeader.style.display='';
+  startGame();
+});
+
+$('changeLevelBtn').addEventListener('click',()=>{
+  resultsScreen.classList.remove('active');
+  startScreen.classList.add('active');
+  gameHeader.style.display='none';
+});
+
+/* ---------- ACCESSIBILITY TOGGLE ---------- */
+(function(){
+  var K='mfg_accessible',b=$('a11yToggle');
+  if(!b)return;
+  function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}
+  a(localStorage.getItem(K)==='true');
+  b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)});
+})();
+
+})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

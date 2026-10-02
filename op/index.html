@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OP for Secondary — MaffsGames</title>
+<meta name="description" content="Get ahead of Year 7 maths before you arrive. Free games covering negative numbers, algebra, decimals and more — no sign-up needed.">
+<link rel="canonical" href="https://maffsgames.co.uk/op/">
+<link rel="icon" type="image/svg+xml" href="../schools/assets/favicon.svg">
+<meta property="og:title" content="OP for Secondary — MaffsGames">
+<meta property="og:description" content="Get ahead of Year 7 maths before you arrive. Free games covering negative numbers, algebra, decimals and more — no sign-up needed.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://maffsgames.co.uk/op/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OP for Secondary — MaffsGames">
+<meta name="twitter:description" content="Get ahead of Year 7 maths before you arrive. Free games covering negative numbers, algebra, decimals and more — no sign-up needed.">
+<meta name="twitter:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../schools/assets/analytics.js" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8fafc;
+    --white: #ffffff;
+    --navy: #1a2744;
+    --teal: #0d9488;
+    --indigo: #6366f1;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --text-light: #475569;
+    --text-faint: #94a3b8;
+    --border: #e2e8f0;
+    --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    --amber: #f59e0b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Outfit', system-ui, sans-serif;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding-bottom: 44px;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 64px 24px 48px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .hero-title .op { color: var(--navy); }
+  .hero-title .secondary { color: var(--teal); }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    margin-bottom: 28px;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    background: var(--navy);
+    color: #fff;
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .hero-cta:hover { background: #2d3a5a; }
+
+  .hero-note {
+    font-size: 0.85rem;
+    color: var(--text-faint);
+    margin-top: 14px;
+  }
+
+  .hero-explain {
+    font-size: 0.85rem;
+    color: var(--teal);
+    font-style: italic;
+    margin-top: 8px;
+  }
+
+  /* TOPICS STRIP */
+  .topics-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .topics-section h2 {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 24px;
+  }
+
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .topic-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 18px 20px;
+    border-left: 4px solid var(--indigo);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .topic-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+
+  .topic-card h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+
+  .topic-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  /* SUMMER BANNER */
+  .summer-banner {
+    display: none;
+    background: var(--amber);
+    color: var(--navy);
+    text-align: center;
+    padding: 20px 24px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .summer-banner strong {
+    display: block;
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+  }
+
+  /* GAMES GRID */
+  .games-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .games-section .section-head {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .games-section .section-head h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .games-section .section-head p {
+    font-size: 1rem;
+    color: var(--text-muted);
+  }
+
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .game-card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 20px 22px;
+    border-top: 4px solid var(--indigo);
+    box-shadow: var(--shadow);
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .game-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  }
+
+  .game-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .game-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+  }
+
+  .game-card .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 4px;
+    width: fit-content;
+  }
+
+  .badge-new {
+    background: #ecfdf5;
+    color: #059669;
+  }
+
+  .badge-existing {
+    background: #eef2ff;
+    color: var(--indigo);
+  }
+
+  /* TEACHERS / PARENTS SECTION */
+  .info-section {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+
+  .info-card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 36px 32px;
+    box-shadow: var(--shadow);
+  }
+
+  .info-card h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+
+  .info-card p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .info-card p:last-child { margin-bottom: 0; }
+
+  .info-card .share-link {
+    font-weight: 600;
+    color: var(--teal);
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 32px 24px 48px;
+  }
+
+  .footer a {
+    color: var(--teal);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+
+  .footer a:hover { text-decoration: underline; }
+
+  /* MOBILE */
+  @media (max-width: 700px) {
+    .hero-title { font-size: 2.8rem; }
+    .hero { padding: 48px 20px 36px; }
+
+    .topics-grid {
+      display: flex;
+      overflow-x: auto;
+      gap: 12px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+    }
+
+    .topic-card {
+      min-width: 220px;
+      flex-shrink: 0;
+      scroll-snap-align: start;
+    }
+
+    .games-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .info-card {
+      padding: 28px 22px;
+    }
+  }
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <h1 class="hero-title">
+    <span class="op">OP</span> <span class="secondary">for Secondary</span>
+  </h1>
+  <p class="hero-sub">Get ahead of Year 7 maths before you arrive.</p>
+  <a href="#games" class="hero-cta">See the games</a>
+  <p class="hero-note">No sign-up. No cost. Works on any device.</p>
+  <p class="hero-explain">(OP = Overpowered. Your child will explain.)</p>
+</section>
+
+<!-- SUMMER BANNER -->
+<div class="summer-banner" id="summerBanner">
+  <strong>&#128197; Starting secondary in September?</strong>
+  30 minutes a week on these games between now and then will make a genuine difference on day one.
+</div>
+
+<!-- TOPICS -->
+<section class="topics-section">
+  <h2>What you'll cover</h2>
+  <div class="topics-grid">
+    <div class="topic-card" onclick="document.getElementById('game-negative-number-line').scrollIntoView({behavior:'smooth',block:'center'})">
+      <h3>Negative Numbers</h3>
+      <p>Numbers below zero &mdash; Year 7 starts here</p>
+    </div>
+    <div class="topic-card" onclick="document.getElementById('game-think-of-a-number').scrollIntoView({behavior:'smooth',block:'center'})">
+      <h3>Algebra Foundations</h3>
+      <p>From &lsquo;I think of a number&rsquo; to actual algebra</p>
+    </div>
+    <div class="topic-card" onclick="document.getElementById('game-formula-plug-in').scrollIntoView({behavior:'smooth',block:'center'})">
+      <h3>Using Formulae</h3>
+      <p>Plug values in, get answers out</p>
+    </div>
+    <div class="topic-card" onclick="document.getElementById('game-decimal-detective').scrollIntoView({behavior:'smooth',block:'center'})">
+      <h3>Decimals &amp; Rounding</h3>
+      <p>Place value, ordering, and getting precise</p>
+    </div>
+    <div class="topic-card" onclick="document.getElementById('game-fraction-equivalence').scrollIntoView({behavior:'smooth',block:'center'})">
+      <h3>Fractions</h3>
+      <p>The one topic that never goes away</p>
+    </div>
+    <div class="topic-card" onclick="document.getElementById('game-factor-race').scrollIntoView({behavior:'smooth',block:'center'})">
+      <h3>Times Tables &amp; Factors</h3>
+      <p>The foundation everything else is built on</p>
+    </div>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section class="games-section" id="games">
+  <div class="section-head">
+    <h2>The Games</h2>
+    <p>Built for students making the jump from Year 6 to Year 7.</p>
+  </div>
+  <div class="games-grid">
+    <!-- NEW GAMES -->
+    <a href="../games/negative-number-line/?level=year6" class="game-card" id="game-negative-number-line">
+      <h3>Negative Number Line</h3>
+      <p>Place, order and calculate with numbers below zero.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+    <a href="../games/think-of-a-number/?level=year6" class="game-card" id="game-think-of-a-number">
+      <h3>Think of a Number</h3>
+      <p>Reverse the steps to find the mystery number &mdash; the start of algebra.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+    <a href="../games/formula-plug-in/?level=year6" class="game-card" id="game-formula-plug-in">
+      <h3>Formula Plug-In</h3>
+      <p>Substitute values into formulae and calculate the result.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+    <a href="../games/decimal-detective/?level=year6" class="game-card" id="game-decimal-detective">
+      <h3>Decimal Detective</h3>
+      <p>Order decimals, round to decimal places, and spot place-value traps.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+    <a href="../games/four-quadrant-explorer/?level=year6" class="game-card" id="game-four-quadrant-explorer">
+      <h3>Four Quadrant Explorer</h3>
+      <p>Plot and read coordinates in all four quadrants &mdash; positive and negative.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+    <a href="../games/like-terms-collector/?level=year6" class="game-card" id="game-like-terms-collector">
+      <h3>Like Terms Collector</h3>
+      <p>From apples to algebra &mdash; collect like terms and simplify expressions.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+    <a href="../games/probability-pioneer/?level=year6" class="game-card" id="game-probability-pioneer">
+      <h3>Probability Pioneer</h3>
+      <p>The 0 to 1 scale, simple calculations, and busting probability myths.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+    <a href="../games/shape-shifter/?level=year6" class="game-card" id="game-shape-shifter">
+      <h3>Shape Shifter</h3>
+      <p>Translate, reflect and rotate shapes on a coordinate grid.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+    <a href="../games/new-shapes/?level=year6" class="game-card" id="game-new-shapes">
+      <h3>New Shapes</h3>
+      <p>Parallelograms, trapezia and prisms &mdash; the new formulae Year 7 introduces.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+    <a href="../games/angle-ace/?level=year6" class="game-card" id="game-angle-ace">
+      <h3>Angle Ace</h3>
+      <p>Angles on lines, at a point, and your first look at parallel lines.</p>
+      <span class="badge badge-existing">Fan favourite</span>
+    </a>
+    <a href="../games/six-sevens-bruv/" class="game-card" id="game-six-sevens-bruv">
+      <h3>Six Sevens, Bruv</h3>
+      <p>Times tables, 1 to 12. Every fact you get right turns gold on your own grid.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+    <a href="../games/free-daily-pizza/" class="game-card" id="game-free-daily-pizza">
+      <h3>Free Daily Pizza</h3>
+      <p>Fractions, decimals and percentages. Ten questions a day, the same pizza for everyone.</p>
+      <span class="badge badge-new">New</span>
+    </a>
+
+    <!-- EXISTING GAMES -->
+    <a href="../games/fraction-equivalence/?level=year6" class="game-card" id="game-fraction-equivalence">
+      <h3>Fraction Snap</h3>
+      <p>Spot equivalent fractions under time pressure.</p>
+      <span class="badge badge-existing">Fan favourite</span>
+    </a>
+    <a href="../games/factor-race/?level=year6" class="game-card" id="game-factor-race">
+      <h3>Factor Race</h3>
+      <p>Which number has more factors? Tap fast, think faster.</p>
+      <span class="badge badge-existing">Fan favourite</span>
+    </a>
+    <a href="../games/prime-factorisation/?level=year6" class="game-card" id="game-prime-factorisation">
+      <h3>Prime Sprint</h3>
+      <p>Build numbers from their prime factors before time runs out.</p>
+      <span class="badge badge-existing">Fan favourite</span>
+    </a>
+    <a href="../games/percentage-flip/?level=year6" class="game-card" id="game-percentage-flip">
+      <h3>Percentage Flip</h3>
+      <p>Flip the card &mdash; estimate the percentage shaded.</p>
+      <span class="badge badge-existing">Fan favourite</span>
+    </a>
+    <a href="../games/estimation-golf/?level=year6" class="game-card" id="game-estimation-golf">
+      <h3>Estimation Golf</h3>
+      <p>Estimate answers to earn birdies. Accuracy is everything.</p>
+      <span class="badge badge-existing">Fan favourite</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOR TEACHERS AND PARENTS -->
+<section class="info-section">
+  <div class="info-card">
+    <h2>Why OP for Secondary?</h2>
+    <p>The biggest predictor of a student struggling in Year 7 maths isn't which primary school they attended &mdash; it's a small number of specific gaps arriving from Year 6.</p>
+    <p>These games target exactly those gaps: negative numbers, algebraic thinking, formula substitution, and decimal fluency. Every game is free, requires no sign-up, and is safe for school networks.</p>
+    <p>Share this page: <span class="share-link">maffsgames.co.uk/op</span></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<script>
+  // Summer banner: show 1 July – 31 August only
+  const now = new Date();
+  const m = now.getMonth(); // 0-indexed: 6=July, 7=August
+  if (m === 6 || m === 7) document.getElementById('summerBanner').style.display = 'block';
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

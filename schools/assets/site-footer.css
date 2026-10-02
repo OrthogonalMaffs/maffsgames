@@ -1,0 +1,62 @@
+/* The site footer: the only footer CSS on the site (to-do §1.28, Oct 2026).
+
+   Every page links this file and carries the same markup, written by
+   scripts/apply-footer.py and held to it in CI by scripts/check-footer.py, which
+   also holds the canonical markup. Never copy these rules into a page: the
+   footer used to be hand-copied into 125 pages, the copies drifted (four link
+   sets), and every copy shared one defect, below.
+
+   The defect: a centred, non-wrapping flex row with no overflow, so on a phone
+   the links ran off BOTH edges and could not be reached. Now (Jon, 2 Oct 2026):
+   - one line, exactly 40px. Every game's phone-fit fold assumes a 40px bar
+     (scripts/measure-phone-fit.py reads its height), so the height must not move;
+   - `safe center`: centred when the links fit, start-aligned when they do not,
+     so nothing is ever lost off the left edge; the rest scrolls sideways;
+   - a scroll-shadow cue on whichever edge has more links (CSS only: opaque
+     covers that move with the content, `local`, over shadows fixed to the bar,
+     `scroll`; a cover hides its shadow only when that edge is fully scrolled);
+   - every link a tap target the full 40px high;
+   - below 480px the Support link drops "MaffsGames" (.sf-long). If this file
+     ever fails to load, the link still reads in full. */
+
+.site-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  margin: 0;
+  padding: 0 12px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  justify-content: safe center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  background:
+    linear-gradient(to right, #1a2744 40%, rgba(26, 39, 68, 0)) left center / 32px 100% no-repeat local,
+    linear-gradient(to left, #1a2744 40%, rgba(26, 39, 68, 0)) right center / 32px 100% no-repeat local,
+    linear-gradient(to right, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0)) left center / 16px 100% no-repeat scroll,
+    linear-gradient(to left, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0)) right center / 16px 100% no-repeat scroll,
+    #1a2744;
+}
+.site-footer::-webkit-scrollbar { display: none; }
+.site-footer a,
+.site-footer .sep { display: flex; align-items: center; flex: none; }
+.site-footer a { color: rgba(255, 255, 255, 0.85); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+.site-footer a:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
+.site-footer .sep { opacity: 0.4; }
+@media (max-width: 479.98px) {
+  .site-footer .sf-long { display: none; }
+}

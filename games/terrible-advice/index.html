@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Spot the maths mistakes made by the world's worst financial advisors. Percentages, ratios and interest rates — free GCSE maths game.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/terrible-advice/">
+<meta property="og:title" content="Terrible Advice — MaffsGames">
+<meta property="og:description" content="Spot the maths mistakes made by the world's worst financial advisors. Percentages, ratios and interest rates — free GCSE maths game.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/terrible-advice/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Terrible Advice — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#f8fafc;--surface:#ffffff;--border:#e2e8f0;--border-hover:#cbd5e1;
+--text:#1e293b;--muted:#64748b;--navy:#1e3a5f;
+--teal:#0d9488;--teal-dim:rgba(13,148,136,0.15);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;--cream:#fff9e6;--huffy-bg:#fef3c7;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+/* Header */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:var(--border)}
+.header-title{font-size:17px;font-weight:700;color:var(--navy)}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--teal)}
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:var(--teal-dim);color:var(--teal);border:1px solid rgba(13,148,136,0.3)}
+
+/* Screens */
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px;color:var(--navy)}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.level-select{margin-bottom:24px}
+.level-select h3{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:12px;text-align:center}
+.level-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.level-btn{padding:10px 20px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.level-btn:hover{border-color:var(--teal);color:var(--teal)}
+.level-btn.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.session-select{margin-bottom:24px}
+.session-select h3{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:12px;text-align:center}
+.session-btns{display:flex;gap:10px;justify-content:center}
+.session-btn{padding:10px 20px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.session-btn:hover{border-color:var(--teal);color:var(--teal)}
+.session-btn.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.how-it-works{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px}
+.how-it-works h3{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:12px;text-align:center}
+.hiw-step{display:flex;gap:12px;margin-bottom:11px;align-items:flex-start}
+.hiw-step:last-of-type{margin-bottom:0}
+.hiw-n{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--teal);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.hiw-step p{font-size:13.5px;line-height:1.6;color:var(--text)}
+.hiw-note{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:12.5px;line-height:1.6;color:var(--muted);font-style:italic}
+.hiw-topics{margin-top:12px;font-size:12.5px;line-height:1.7;color:var(--muted)}
+.hiw-topics strong{color:var(--text);font-weight:600}
+.session-btn:disabled{opacity:0.3;cursor:not-allowed;border-color:var(--border);color:var(--muted)}
+.session-btn:disabled:hover{border-color:var(--border);color:var(--muted)}
+.pb-display{text-align:center;margin-bottom:20px;font-size:13px;color:var(--muted)}
+.pb-display span{color:var(--teal);font-weight:600}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s;box-shadow:0 2px 8px rgba(13,148,136,0.3)}
+.start-btn:hover{opacity:0.9}
+
+/* Character card */
+.character-card{background:var(--surface);border-radius:16px;padding:24px;margin-bottom:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:1px solid var(--border)}
+.character-header{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;flex-shrink:0}
+.character-info{flex:1}
+.character-name{font-size:17px;font-weight:700;color:var(--navy)}
+.character-title{font-size:13px;font-style:italic;color:var(--teal);line-height:1.4;margin-top:2px}
+
+/* Speech bubble */
+.speech-bubble{background:var(--cream);border:2px solid var(--amber);border-radius:12px;padding:20px;position:relative;font-size:15px;line-height:1.7;color:var(--text);animation:bounceIn 0.2s ease-out}
+.speech-bubble::before{content:'';position:absolute;top:-10px;left:40px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:10px solid var(--amber)}
+.speech-bubble::after{content:'';position:absolute;top:-7px;left:42px;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:8px solid var(--cream)}
+
+@keyframes bounceIn{0%{opacity:0;transform:translateY(12px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}15%{transform:translateX(-6px)}30%{transform:translateX(6px)}45%{transform:translateX(-4px)}60%{transform:translateX(4px)}75%{transform:translateX(-2px)}90%{transform:translateX(2px)}}
+.character-card.shake{animation:shake 0.3s ease-in-out}
+
+/* Huffy response */
+.huffy-bubble{background:var(--huffy-bg);border-radius:10px;padding:14px 18px;margin-top:12px;font-size:13px;font-style:italic;color:#92400e;line-height:1.5;opacity:0;transition:opacity 0.3s ease-in}
+.huffy-bubble.show{opacity:1}
+.next-btn{margin-top:12px;padding:10px 28px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:transform .15s;align-self:flex-end}
+.next-btn:hover{transform:scale(1.04)}
+
+/* Options grid */
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.option-card{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:16px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;transition:all 0.15s;line-height:1.5;text-align:left}
+.option-card:hover:not(.disabled){border-color:var(--teal);background:#f0fdfa;transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.option-card.correct{border-color:var(--green);background:var(--green-dim);color:#166534}
+.option-card.correct::before{content:'\2713 ';font-weight:700;color:var(--green)}
+.option-card.incorrect{border-color:var(--red);background:var(--red-dim);color:#991b1b}
+.option-card.incorrect::before{content:'\2717 ';font-weight:700;color:var(--red)}
+.option-card.disabled{cursor:default;opacity:0.7}
+.option-card.disabled:hover{transform:none;box-shadow:none}
+.option-card.reveal-correct{border-color:var(--green);background:var(--green-dim)}
+
+/* Progress bar */
+.progress-wrap{margin-bottom:20px}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--teal);border-radius:2px;transition:width 0.3s ease}
+.progress-label{font-size:12px;color:var(--muted);margin-top:4px;text-align:right}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px;color:var(--navy)}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:24px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid var(--border)}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:36px;font-weight:800;color:var(--teal)}
+.result-card .sub{font-size:14px;color:var(--muted);margin-top:4px}
+.pb-badge{background:var(--teal-dim);color:var(--teal);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s;box-shadow:0 2px 8px rgba(13,148,136,0.3)}
+.play-again-btn:hover{opacity:0.9}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+.speech-bubble{animation:none}
+.character-card.shake{animation:none}
+.huffy-bubble{transition:none}
+.option-card{transition:none}
+.progress-fill{transition:none}
+}
+
+/* Mobile */
+@media(max-width:600px){
+.options-grid{grid-template-columns:1fr}
+.header{padding:12px 16px}
+.screen{padding:24px 16px}
+.character-card{padding:18px}
+.speech-bubble{padding:16px;font-size:14px}
+.start-title{font-size:26px}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Terrible Advice</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <span class="level-pill" id="levelPill">GCSE</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreDen">0</span></span>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Terrible Advice</div>
+  <div class="start-sub">The world's worst financial advisors, life coaches and self-proclaimed maths experts are giving spectacularly wrong advice.<br>Spot the error. Choose the correct answer. Watch them get huffy about it.</div>
+  <div class="how-it-works" id="how-it-works">
+    <h3>How it works</h3>
+    <div class="hiw-step">
+      <span class="hiw-n">1</span>
+      <p>An "expert" gives you their working. It is confident, it is detailed, and it is usually wrong.</p>
+    </div>
+    <div class="hiw-step">
+      <span class="hiw-n">2</span>
+      <p>Pick the option that correctly describes what is going on. Every wrong option is a real
+      misconception &mdash; the mistakes people actually make &mdash; so read all four.</p>
+    </div>
+    <div class="hiw-step">
+      <span class="hiw-n">3</span>
+      <p>You are marking the <strong>method</strong>, not just the answer. An advisor can reach the
+      right conclusion by completely the wrong route, and sometimes one does.</p>
+    </div>
+    <div class="hiw-note">There is no time limit. Read the working properly &mdash; that is the whole skill.</div>
+    <div class="hiw-topics" id="hiwTopics"></div>
+  </div>
+
+  <div class="level-select">
+    <h3>Choose Level</h3>
+    <div class="level-btns">
+      <button class="level-btn" data-level="ks3" onclick="selectLevel('ks3')">KS3</button>
+      <button class="level-btn active" data-level="gcse" onclick="selectLevel('gcse')">GCSE</button>
+      <button class="level-btn" data-level="core" onclick="selectLevel('core')">Core Maths</button>
+    </div>
+  </div>
+  <div class="session-select">
+    <h3>Questions</h3>
+    <div class="session-btns">
+      <button class="session-btn" data-len="10" onclick="selectSession(10)">10</button>
+      <button class="session-btn active" data-len="20" onclick="selectSession(20)">20</button>
+      <button class="session-btn" data-len="30" onclick="selectSession(30)">30</button>
+    </div>
+  </div>
+  <div class="pb-display" id="pbDisplay"></div>
+  <button class="start-btn" onclick="startGame()">Start</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label" id="progressLabel">1 / 10</div>
+  </div>
+  <div class="character-card" id="characterCard">
+    <div class="character-header">
+      <div class="avatar" id="avatar"></div>
+      <div class="character-info">
+        <div class="character-name" id="charName"></div>
+        <div class="character-title" id="charTitle"></div>
+      </div>
+    </div>
+    <div class="speech-bubble" id="speechBubble"></div>
+    <div class="huffy-bubble" id="huffyBubble"></div>
+    <button class="next-btn" id="nextBtn" onclick="advanceQuestion()" style="display:none">Next Question</button>
+  </div>
+  <div class="options-grid" id="optionsGrid"></div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Score</h4>
+      <div class="score" id="finalScore">0/10</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="sub" id="pbLine" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="resetGame()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+/* ── Question Bank ── */
+const QUESTIONS = {
+ks3: [
+{id:'ta_ks3_001',level:'ks3',topic:'Percentages',character:{name:'Beverley Mossgrove',title:'Lead Numbers Coach, The Bev Method\u2122',huffyResponse:'I\'ve been doing percentages since before you were born.'},advice:'You need to find 30% of 80. Easy \u2014 just divide by 30. So 80 \u00f7 30 = 2.67. That\'s your answer. I do this kind of thing all day.',options:[{text:'Beverley is correct \u2014 80 \u00f7 30 = 2.67',correct:false},{text:'Beverley is wrong \u2014 to find 30% of 80, multiply by 0.30: 0.30 \u00d7 80 = 24',correct:true},{text:'Beverley is wrong \u2014 you should do 80 \u00f7 100 \u00d7 3 = 2.4',correct:false},{text:'Beverley is wrong \u2014 the answer is 30 \u00d7 80 = 2,400',correct:false}]},
+{id:'ta_ks3_002',level:'ks3',topic:'Ratio',character:{name:'Gerald Fitch',title:'Ratio Specialist and Part-Time Life Coach',huffyResponse:'The ratio is right there in the name. Two to three. Two people.'},advice:'Share 60 sweets in the ratio 2:3. Straightforward \u2014 2 + 3 = 5, so each person gets 60 \u00f7 2 = 30 and 60 \u00f7 3 = 20. One person gets 30, the other gets 20. Spot on.',options:[{text:'Gerald is correct \u2014 one person gets 30 and the other gets 20',correct:false},{text:'Gerald is wrong \u2014 each part = 60 \u00f7 5 = 12. Shares are 2 \u00d7 12 = 24 and 3 \u00d7 12 = 36',correct:true},{text:'Gerald is wrong \u2014 one person gets 2 sweets and the other gets 3',correct:false},{text:'Gerald is wrong \u2014 both people get 60 \u00f7 5 = 12 sweets each',correct:false}]},
+{id:'ta_ks3_003',level:'ks3',topic:'Fractions',character:{name:'Tamsin Hogg',title:'Founder, FractionFit Lifestyle Academy',huffyResponse:'My method is intuitive. That\'s what matters.'},advice:'To add \u00bd and \u2153, you just add the tops and add the bottoms. 1+1=2, 2+3=5. So \u00bd + \u2153 = \u2156. It\'s literally that simple. I don\'t know why schools make it complicated.',options:[{text:'Tamsin is correct \u2014 \u00bd + \u2153 = \u2156',correct:false},{text:'Tamsin is wrong \u2014 you need a common denominator: \u00bd = 3/6, \u2153 = 2/6, so the answer is 5/6',correct:true},{text:'Tamsin is wrong \u2014 \u00bd + \u2153 = 2/6 = \u2153',correct:false},{text:'Tamsin is wrong \u2014 you multiply the fractions: \u00bd \u00d7 \u2153 = \u2159',correct:false}]},
+{id:'ta_ks3_004',level:'ks3',topic:'Percentages',character:{name:'Rod Blundell',title:'Chief Discount Analyst, Rod\'s Deals & Steals',huffyResponse:'Symmetry. It\'s a universal law.'},advice:'A TV costs \u00a3400. It goes up by 10% then comes down by 10%. So you\'re back to \u00a3400. What goes up must come down, as they say in finance.',options:[{text:'Rod is correct \u2014 you end up back at \u00a3400',correct:false},{text:'Rod is wrong \u2014 up 10%: \u00a3400 \u00d7 1.1 = \u00a3440. Down 10%: \u00a3440 \u00d7 0.9 = \u00a3396. The 10% decrease is taken from a larger number',correct:true},{text:'Rod is wrong \u2014 you end up at \u00a3420',correct:false},{text:'Rod is wrong \u2014 you end up at \u00a3380',correct:false}]},
+{id:'ta_ks3_005',level:'ks3',topic:'Mean',character:{name:'Dr Patricia Venn',title:'Statistical Wellness Practitioner (Honorary Doctorate, Unaccredited)',huffyResponse:'Mean, median \u2014 they\'re basically the same thing. I have a doctorate.'},advice:'To find the mean of 3, 7, 8, 2 and 10 \u2014 just find the middle number when they\'re in order. 2, 3, 7, 8, 10 \u2014 the middle one is 7. Mean = 7. Done.',options:[{text:'Dr Venn is correct \u2014 the mean is 7',correct:false},{text:'Dr Venn is wrong \u2014 she has found the median, not the mean. Mean = (3+7+8+2+10) \u00f7 5 = 30 \u00f7 5 = 6',correct:true},{text:'Dr Venn is wrong \u2014 the mean is 10 (the largest value)',correct:false},{text:'Dr Venn is wrong \u2014 the mean is 2 (the smallest value)',correct:false}]},
+{id:'ta_ks3_006',level:'ks3',topic:'Proportion',character:{name:'Clive Natter',title:'Scale and Proportion Evangelist',huffyResponse:'It\'s an approximation. Close enough.'},advice:'A recipe for 4 serves uses 300g of flour. To make it for 7 people, add 3 extra portions: 300 + 3 = 303g. Cooking is basically maths.',options:[{text:'Clive is correct \u2014 303g of flour',correct:false},{text:'Clive is wrong \u2014 scale proportionally: 300 \u00f7 4 \u00d7 7 = 525g of flour',correct:true},{text:'Clive is wrong \u2014 double the recipe to 600g and have some left over',correct:false},{text:'Clive is wrong \u2014 300 + 7 = 307g of flour',correct:false}]},
+{id:'ta_ks3_007',level:'ks3',topic:'Area',character:{name:'Neville Stamp',title:'Space Optimisation Guru, Neville Knows Shapes',huffyResponse:'It\'s the same formula as a rectangle, basically.'},advice:'Your garden is a triangle with base 8m and height 5m. Area = base \u00d7 height = 8 \u00d7 5 = 40 m\u00b2. That\'s how much turf you need. Get ordering.',options:[{text:'Neville is correct \u2014 the area is 40 m\u00b2',correct:false},{text:'Neville is wrong \u2014 area of a triangle = \u00bd \u00d7 base \u00d7 height = \u00bd \u00d7 8 \u00d7 5 = 20 m\u00b2',correct:true},{text:'Neville is wrong \u2014 area = base + height = 8 + 5 = 13 m\u00b2',correct:false},{text:'Neville is wrong \u2014 area = base\u00b2 = 64 m\u00b2',correct:false}]},
+{id:'ta_ks3_008',level:'ks3',topic:'Percentages',character:{name:'Maureen Tuck',title:'Savings Psychologist and Voucher Strategist',huffyResponse:'I\'ve saved thousands with this method. Thousands.'},advice:'You\'ve got a 20% off voucher and a 30% off voucher for the same shop. Use them both together for 50% off. That\'s just addition, dear.',options:[{text:'Maureen is correct \u2014 20% + 30% = 50% off',correct:false},{text:'Maureen is wrong \u2014 applying 20% off then 30% off: \u00a3100 \u2192 \u00a380 \u2192 \u00a356. That\'s 44% off, not 50%',correct:true},{text:'Maureen is wrong \u2014 you can only use one voucher at a time',correct:false},{text:'Maureen is wrong \u2014 20% \u00d7 30% = 6% off',correct:false}]},
+{id:'ta_ks3_009',level:'ks3',topic:'Sequences',character:{name:'Sanjay Bright',title:'Pattern Recognition Life Coach',huffyResponse:'I see patterns everywhere. It\'s a gift.'},advice:'The sequence 2, 4, 8, 16... is obviously going up by 4 each time. So the next term is 16 + 4 = 20. Patterns are my passion.',options:[{text:'Sanjay is correct \u2014 the next term is 20',correct:false},{text:'Sanjay is wrong \u2014 this is a geometric sequence, each term doubles. 2, 4, 8, 16, 32 \u2014 next term is 32',correct:true},{text:'Sanjay is wrong \u2014 the next term is 16 \u00d7 4 = 64',correct:false},{text:'Sanjay is wrong \u2014 the sequence alternates, so next term is 2',correct:false}]},
+{id:'ta_ks3_010',level:'ks3',topic:'Fractions',character:{name:'Wendy Cope-Smythe',title:'Head of Intuitive Numeracy, The Cope-Smythe Institute',huffyResponse:'Less is more. That\'s my philosophy.'},advice:'To find \u00be of 48 \u2014 divide by 4 and you get 12. Simple. No need to multiply by 3, that would just make it bigger than you started with.',options:[{text:'Wendy is correct \u2014 \u00be of 48 is 12',correct:false},{text:'Wendy is wrong \u2014 \u00be of 48 means divide by 4 then multiply by 3: 48 \u00f7 4 = 12, then 12 \u00d7 3 = 36',correct:true},{text:'Wendy is wrong \u2014 \u00be of 48 = 48 \u2212 4 = 44',correct:false},{text:'Wendy is wrong \u2014 \u00be of 48 = 48 \u00d7 4 \u00f7 3 = 64',correct:false}]},
+{id:'ta_ks3_011',level:'ks3',topic:'Scale',character:{name:'Barry Plinth',title:'Map Enthusiast and Amateur Cartographer',huffyResponse:'I\'ve read three books about maps. Three.'},advice:'The map scale is 1:25,000. A distance of 3cm on the map is 3 \u00d7 25,000 = 75,000cm in real life. But that\'s obviously way too far \u2014 a map can\'t show that much. So divide by 1000: answer is 75 metres.',options:[{text:'Barry is correct \u2014 75 metres',correct:false},{text:'Barry is wrong \u2014 3 \u00d7 25,000 = 75,000 cm = 750 metres = 0.75 km. The original calculation was right; the arbitrary \u00f71000 was not',correct:true},{text:'Barry is wrong \u2014 you divide the map distance by the scale: 3 \u00f7 25,000',correct:false},{text:'Barry is wrong \u2014 3cm on a 1:25,000 map = 3 kilometres',correct:false}]},
+{id:'ta_ks3_012',level:'ks3',topic:'Angles',character:{name:'Humphrey Glass',title:'Geometric Consultant and Former Protractor Salesman',huffyResponse:'I may have confused it with something. But 220 is still a valid angle.'},advice:'There are 360\u00b0 in a triangle. Well known fact. So if two angles are 80\u00b0 and 60\u00b0, the third is 360 \u2212 80 \u2212 60 = 220\u00b0. Bit of a big angle but maths is full of surprises.',options:[{text:'Humphrey is correct \u2014 the third angle is 220\u00b0',correct:false},{text:'Humphrey is wrong \u2014 angles in a triangle sum to 180\u00b0. Third angle = 180 \u2212 80 \u2212 60 = 40\u00b0',correct:true},{text:'Humphrey is wrong \u2014 angles in a triangle sum to 270\u00b0. Third angle = 130\u00b0',correct:false},{text:'Humphrey is wrong \u2014 the angles must all be equal so the triangle is equilateral',correct:false}]},
+{id:'ta_ks3_013',level:'ks3',topic:'Number',character:{name:'Fiona Quill',title:'Mental Arithmetic Coach, QuillMath\u2122',huffyResponse:'Breaking it down is correct. I stand by the method.'},advice:'To multiply 24 by 15, just multiply 24 by 10 and add 5. That\'s 240 + 5 = 245. Always break it down, that\'s my motto.',options:[{text:'Fiona is correct \u2014 24 \u00d7 15 = 245',correct:false},{text:'Fiona is wrong \u2014 24 \u00d7 15 = 24 \u00d7 10 + 24 \u00d7 5 = 240 + 120 = 360. You multiply 24 by 5, not just add 5',correct:true},{text:'Fiona is wrong \u2014 24 \u00d7 15 = 24 + 15 = 39',correct:false},{text:'Fiona is wrong \u2014 24 \u00d7 15 = 24 \u00d7 10 + 10 = 250',correct:false}]},
+{id:'ta_ks3_014',level:'ks3',topic:'Probability',character:{name:'Desmond Luck',title:'Professional Lucky Charm Vendor and Probability Advisor',huffyResponse:'I\'ve lost a lot of money on this logic but I still believe in it.'},advice:'You\'ve flipped heads 5 times in a row. The next flip is definitely tails \u2014 the coin is \'due\' a tails. That\'s just how probability works. I\'d bet on it.',options:[{text:'Desmond is correct \u2014 tails is more likely after 5 heads',correct:false},{text:'Desmond is wrong \u2014 each coin flip is independent. P(tails) is always 0.5 regardless of previous flips. This is the gambler\'s fallacy',correct:true},{text:'Desmond is wrong \u2014 after 5 heads, heads is even more likely due to streaks',correct:false},{text:'Desmond is wrong \u2014 you need to know the total number of flips to calculate the probability',correct:false}]},
+{id:'ta_ks3_015',level:'ks3',topic:'Perimeter',character:{name:'Norma Hedge',title:'Garden Planning Specialist, Norma\'s Outdoor Solutions',huffyResponse:'I\'ve landscaped over 12 gardens. Twelve.'},advice:'Your rectangular lawn is 9m by 4m. You need edging strip for the perimeter. Perimeter = length \u00d7 width = 9 \u00d7 4 = 36m. Order 36 metres.',options:[{text:'Norma is correct \u2014 order 36 metres',correct:false},{text:'Norma is wrong \u2014 she calculated the area, not the perimeter. Perimeter = 2(9 + 4) = 2 \u00d7 13 = 26 metres',correct:true},{text:'Norma is wrong \u2014 perimeter = 9 + 4 = 13 metres',correct:false},{text:'Norma is wrong \u2014 perimeter = 9\u00b2 + 4\u00b2 = 97 metres',correct:false}]},
+{id:'ta_ks3_016',level:'ks3',topic:'Ratio',character:{name:'Archie Moon',title:'Mixologist and Drinks Ratio Expert',huffyResponse:'The ratio is approximate anyway. Cocktails are an art.'},advice:'This cocktail uses juice and lemonade in the ratio 2:5. I need 350ml total. Juice = 350 \u00f7 2 = 175ml, lemonade = 350 \u00f7 5 = 70ml. That\'s 245ml total. I\'ll just top up with more lemonade.',options:[{text:'Archie is correct \u2014 175ml juice and 70ml lemonade',correct:false},{text:'Archie is wrong \u2014 total parts = 2 + 5 = 7. Each part = 350 \u00f7 7 = 50ml. Juice = 100ml, lemonade = 250ml',correct:true},{text:'Archie is wrong \u2014 juice = 2ml, lemonade = 5ml',correct:false},{text:'Archie is wrong \u2014 juice = 350 \u00d7 2 = 700ml, lemonade = 350 \u00d7 5 = 1750ml',correct:false}]},
+{id:'ta_ks3_017',level:'ks3',topic:'Standard Form',character:{name:'Professor Dotty Wren',title:'Self-Appointed Professor of Big Numbers',huffyResponse:'Aesthetics matter in mathematics.'},advice:'The number 3,400,000 in standard form is 34 \u00d7 10\u2075. I like to keep the first number as a whole number \u2014 much cleaner.',options:[{text:'Professor Wren is correct \u2014 34 \u00d7 10\u2075',correct:false},{text:'Professor Wren is wrong \u2014 standard form requires the first number to be between 1 and 10. 3,400,000 = 3.4 \u00d7 10\u2076',correct:true},{text:'Professor Wren is wrong \u2014 3,400,000 = 3.4 \u00d7 10\u2075',correct:false},{text:'Professor Wren is wrong \u2014 3,400,000 = 0.34 \u00d7 10\u2077',correct:false}]},
+{id:'ta_ks3_018',level:'ks3',topic:'Averages',character:{name:'Keith Middling',title:'Data Feelings Coach',huffyResponse:'I may have the wrong average. But I had good vibes about 5.'},advice:'The mode of 3, 3, 5, 7, 7, 9 is 5 \u2014 right in the middle. Mode means the middlemost value, everyone knows that.',options:[{text:'Keith is correct \u2014 the mode is 5',correct:false},{text:'Keith is wrong \u2014 the mode is the most frequently occurring value. Both 3 and 7 appear twice, so there are two modes: 3 and 7. Keith described the median (which is also not 5 \u2014 it\'s 6)',correct:true},{text:'Keith is wrong \u2014 the mode is 9 (the largest value)',correct:false},{text:'Keith is wrong \u2014 there is no mode as all values are different',correct:false}]}
+],
+gcse: [
+{id:'ta_gcse_001',level:'gcse',topic:'Reverse Percentage',character:{name:'Derek Plunkett',title:'Senior Wealth Optimisation Consultant, Derek\'s Financial Solutions (Est. 2023)',huffyResponse:'I have a certificate in this, you know.'},advice:'Your jacket was \u00a385 in the sale after a 15% discount. To find the original price, add 15% of \u00a385: \u00a385 + \u00a312.75 = \u00a397.75. You\'re welcome.',options:[{text:'Derek is correct \u2014 \u00a397.75',correct:false},{text:'Derek is wrong \u2014 the 15% was taken off the original price, not \u00a385. Original price = \u00a385 \u00f7 0.85 = \u00a3100',correct:true},{text:'Derek is wrong \u2014 subtract 15%: \u00a385 \u2212 \u00a312.75 = \u00a372.25',correct:false},{text:'Derek is wrong \u2014 multiply by 1.85: \u00a385 \u00d7 1.85 = \u00a3157.25',correct:false}]},
+{id:'ta_gcse_002',level:'gcse',topic:'Compound Interest',character:{name:'Felicity Compound',title:'Interest Rate Whisperer and Savings Architect',huffyResponse:'I named myself Compound for a reason.'},advice:'You invest \u00a3500 at 4% compound interest for 3 years. That\'s \u00a3500 \u00d7 0.04 \u00d7 3 = \u00a360 interest. Total: \u00a3560. Compounding is just a fancy word for multiplying.',options:[{text:'Felicity is correct \u2014 \u00a3560',correct:false},{text:'Felicity is wrong \u2014 she calculated simple interest. Compound: \u00a3500 \u00d7 1.04\u00b3 = \u00a3500 \u00d7 1.1249 = \u00a3562.43',correct:true},{text:'Felicity is wrong \u2014 compound interest means double the interest: \u00a3620',correct:false},{text:'Felicity is wrong \u2014 4% for 3 years means 4\u00b3 = 64% interest, giving \u00a3820',correct:false}]},
+{id:'ta_gcse_003',level:'gcse',topic:'Simultaneous Equations',character:{name:'Maxwell Tangle',title:'Equation Untangler, Maxwell\'s Maths Massage',huffyResponse:'I was right. I deserve an apology.'},advice:'2x + y = 10 and x + y = 7. To solve, subtract the second from the first: x = 3. Then substitute: 3 + y = 7, so y = 4. Wait, let me check: 2(3) + 4 = 10 \u2713 and 3 + 4 = 7 \u2713. Both check out \u2014 but I\'ll still charge you for the consultation.',options:[{text:'Maxwell is actually correct this time \u2014 x = 3 and y = 4. Both equations check out',correct:true},{text:'Maxwell is wrong \u2014 x = 3 but y = 3',correct:false},{text:'Maxwell is wrong \u2014 you cannot subtract simultaneous equations',correct:false},{text:'Maxwell is wrong \u2014 x = 4 and y = 3',correct:false}]},
+{id:'ta_gcse_004',level:'gcse',topic:'Percentage Change',character:{name:'Cynthia Rise',title:'Growth Mindset and Percentage Change Consultant',huffyResponse:'I have a 50% success rate on stock tips. That\'s basically a coin flip but in finance that\'s considered good.'},advice:'A share price rises from \u00a32.00 to \u00a32.50. Percentage increase = (2.50 \u2212 2.00) \u00f7 2.50 \u00d7 100 = 20%. Strong growth. Buy, buy, buy.',options:[{text:'Cynthia is correct \u2014 20% increase',correct:false},{text:'Cynthia is wrong \u2014 percentage change uses the original value as denominator: (0.50 \u00f7 2.00) \u00d7 100 = 25%',correct:true},{text:'Cynthia is wrong \u2014 percentage increase = 2.50 \u00f7 2.00 \u00d7 100 = 125%',correct:false},{text:'Cynthia is wrong \u2014 percentage increase = 0.50 \u00d7 100 = 50%',correct:false}]},
+{id:'ta_gcse_005',level:'gcse',topic:'Probability',character:{name:'Lucky Larry Dobbs',title:'Professional Gambler and Probability Coach (Currently Bankrupt)',huffyResponse:'This is why I went bankrupt. But theoretically I\'m right.'},advice:'The probability of rolling a 6 on a fair die is \u2159. I roll it 6 times \u2014 so I\'m guaranteed to get exactly one 6. That\'s just how averages work.',options:[{text:'Larry is correct \u2014 rolling 6 times guarantees exactly one 6',correct:false},{text:'Larry is wrong \u2014 expected value of 1 six does not mean it is guaranteed. P(at least one 6 in 6 rolls) = 1 \u2212 (5/6)\u2076 \u2248 0.665, not 1',correct:true},{text:'Larry is wrong \u2014 the probability of getting a 6 increases with each failed roll',correct:false},{text:'Larry is wrong \u2014 rolling 6 times means you definitely get no sixes',correct:false}]},
+{id:'ta_gcse_006',level:'gcse',topic:'Bounds',character:{name:'Prudence Vague',title:'Measurement Acceptance Coach',huffyResponse:'5 is half of 10. I stand by this.'},advice:'A plank is measured as 2.4m to the nearest 10cm. The upper bound is 2.45m \u2014 just add 5 to the last digit. Easy.',options:[{text:'Prudence is correct \u2014 upper bound is 2.45m',correct:false},{text:'Prudence is correct this time \u2014 upper bound is 2.40 + 0.05 = 2.45m. Adding half the degree of accuracy is the right method',correct:true},{text:'Prudence is wrong \u2014 upper bound is 2.50m',correct:false},{text:'Prudence is wrong \u2014 upper bound is 2.44m',correct:false}]},
+{id:'ta_gcse_007',level:'gcse',topic:'Quadratics',character:{name:'Victor Squared',title:'Quadratic Equation Life Coach',huffyResponse:'I prefer positive numbers. They\'re more optimistic.'},advice:'To solve x\u00b2 = 25, take the square root: x = 5. One answer. Clean. Elegant. Done.',options:[{text:'Victor is correct \u2014 x = 5',correct:false},{text:'Victor is wrong \u2014 x\u00b2 = 25 has two solutions: x = 5 and x = \u22125. Square roots always have a positive and negative solution',correct:true},{text:'Victor is wrong \u2014 x = \u221a25 = 12.5',correct:false},{text:'Victor is wrong \u2014 x = 25 \u00f7 2 = 12.5',correct:false}]},
+{id:'ta_gcse_008',level:'gcse',topic:'Ratio Best Value',character:{name:'Sharon Bulk',title:'Bulk Buying Strategist and Warehouse Club Evangelist',huffyResponse:'The big one is ALWAYS better value. This is not up for debate.'},advice:'400g of coffee costs \u00a34.80 or 650g costs \u00a37.15. The big one is better value \u2014 it\'s always the big one. I\'ve built my entire life philosophy on this.',options:[{text:'Sharon is correct \u2014 the 650g is better value',correct:false},{text:'Sharon is wrong this time \u2014 400g: \u00a34.80\u00f7400 = 1.2p/g. 650g: \u00a37.15\u00f7650 = 1.1p/g. The 650g is actually better value, so Sharon got lucky but her reasoning is wrong',correct:true},{text:'Sharon is wrong \u2014 the 400g is better value at 1.2p/g vs 1.1p/g',correct:false},{text:'Sharon is wrong \u2014 they are identical value',correct:false}]},
+{id:'ta_gcse_009',level:'gcse',topic:'Indices',character:{name:'Professor Xavier Cubed',title:'Index Law Expert (Self-Certified)',huffyResponse:'It felt right. Powers are multiplicative by nature.'},advice:'x\u00b3 \u00d7 x\u2074 = x\u00b9\u00b2. Everyone knows you multiply the powers when you multiply the same base. Multiplication all the way down.',options:[{text:'Professor Cubed is correct \u2014 x\u00b3 \u00d7 x\u2074 = x\u00b9\u00b2',correct:false},{text:'Professor Cubed is wrong \u2014 when multiplying same base, add the powers: x\u00b3 \u00d7 x\u2074 = x\u2077. Multiplying powers applies to (x\u00b3)\u2074 = x\u00b9\u00b2',correct:true},{text:'Professor Cubed is wrong \u2014 x\u00b3 \u00d7 x\u2074 = x\u00b3\u2074',correct:false},{text:'Professor Cubed is wrong \u2014 x\u00b3 \u00d7 x\u2074 = 2x\u2077',correct:false}]},
+{id:'ta_gcse_010',level:'gcse',topic:'Vectors',character:{name:'Veronica Arrow',title:'Vector Navigator and Directional Wellness Guide',huffyResponse:'Pythagoras is overcomplicating it.'},advice:'Vector a = (3, 4). The magnitude is 3 + 4 = 7. It\'s a vector \u2014 you just add the components. Vectors are just fancy arrows.',options:[{text:'Veronica is correct \u2014 magnitude = 7',correct:false},{text:'Veronica is wrong \u2014 magnitude = \u221a(3\u00b2 + 4\u00b2) = \u221a(9+16) = \u221a25 = 5. You use Pythagoras, not addition',correct:true},{text:'Veronica is wrong \u2014 magnitude = 3 \u00d7 4 = 12',correct:false},{text:'Veronica is wrong \u2014 magnitude = (3+4)\u00b2 = 49',correct:false}]},
+{id:'ta_gcse_011',level:'gcse',topic:'Circle Area',character:{name:'Terry Pi',title:'Circle Expert and Amateur Baker',huffyResponse:'Bigger number, bigger area. That\'s intuition.'},advice:'A circle has diameter 10cm. Area = \u03c0 \u00d7 10\u00b2 = 314.16cm\u00b2. I always use the diameter \u2014 it\'s the bigger number so the formula looks more impressive.',options:[{text:'Terry is correct \u2014 area = 314.16cm\u00b2',correct:false},{text:'Terry is wrong \u2014 area uses radius, not diameter. Radius = 5cm. Area = \u03c0 \u00d7 5\u00b2 = 78.54cm\u00b2',correct:true},{text:'Terry is wrong \u2014 area = \u03c0 \u00d7 10 = 31.42cm\u00b2',correct:false},{text:'Terry is wrong \u2014 area = \u03c0 \u00d7 d = 10\u03c0 = 31.42cm\u00b2',correct:false}]},
+{id:'ta_gcse_012',level:'gcse',topic:'Straight Line Graphs',character:{name:'Graeme Gradient',title:'Line Consultant and Slope Enthusiast',huffyResponse:'I got the right answer. The method is irrelevant.'},advice:'The gradient of a line through (2,3) and (6,7) is rise over run = (6\u22122)\u00f7(7\u22123) = 4\u00f74 = 1. Nice round number \u2014 you can always trust a nice round number.',options:[{text:'Graeme got the right answer (gradient = 1) but the wrong method \u2014 gradient = (y\u2082\u2212y\u2081)\u00f7(x\u2082\u2212x\u2081) = (7\u22123)\u00f7(6\u22122) = 4\u00f74 = 1. He divided run by rise, which gave the same answer only because the rise and run were equal',correct:true},{text:'Graeme is correct in both method and answer',correct:false},{text:'Graeme is wrong \u2014 gradient = (7\u22123)\u00f7(6\u22122) = 2',correct:false},{text:'Graeme is wrong \u2014 gradient = (7+3)\u00f7(6+2) = 1.25',correct:false}]},
+{id:'ta_gcse_013',level:'gcse',topic:'Factorising',character:{name:'Faye Torr',title:'Bracket Specialist, Torr Algebra Solutions',huffyResponse:'Adding to 6 seemed more natural. 6 is right there in the question.'},advice:'To factorise x\u00b2 + 5x + 6, find two numbers that add to 6 and multiply to 5. That\'s 1 and 5 \u2014 so the answer is (x+1)(x+5). Brackets closed.',options:[{text:'Faye is correct \u2014 (x+1)(x+5)',correct:false},{text:'Faye is wrong \u2014 find two numbers that multiply to 6 and add to 5: that\'s 2 and 3. Answer is (x+2)(x+3). She mixed up which condition applies to which number',correct:true},{text:'Faye is wrong \u2014 answer is (x+6)(x+1)',correct:false},{text:'Faye is wrong \u2014 x\u00b2 + 5x + 6 cannot be factorised',correct:false}]},
+{id:'ta_gcse_014',level:'gcse',topic:'Trigonometry',character:{name:'Sinbad Tanley',title:'Triangle Whisperer and Trig Life Coach',huffyResponse:'I know sin, cos and tan. I just sometimes get them mixed up.'},advice:'In a right-angled triangle, the opposite side is 6cm and the hypotenuse is 10cm. To find the angle, use cos \u03b8 = opposite \u00f7 hypotenuse = 6 \u00f7 10 = 0.6. \u03b8 = cos\u207b\u00b9(0.6) = 53.1\u00b0.',options:[{text:'Sinbad is correct \u2014 \u03b8 = 53.1\u00b0',correct:false},{text:'Sinbad is wrong \u2014 opposite \u00f7 hypotenuse is sin, not cos. sin \u03b8 = 6\u00f710 = 0.6, \u03b8 = sin\u207b\u00b9(0.6) = 36.87\u00b0',correct:true},{text:'Sinbad is wrong \u2014 use tan: tan \u03b8 = 6\u00f710, \u03b8 = 30.96\u00b0',correct:false},{text:'Sinbad is correct in method but wrong calculation \u2014 \u03b8 = 60\u00b0',correct:false}]},
+{id:'ta_gcse_015',level:'gcse',topic:'Expanding Brackets',character:{name:'Brackett O\'Brien',title:'Algebraic Expansion Coach',huffyResponse:'Squaring distributes. That\'s just logic.'},advice:'(x+3)\u00b2 = x\u00b2 + 9. You just square both parts separately. Quick, clean, no mess.',options:[{text:'Brackett is correct \u2014 (x+3)\u00b2 = x\u00b2 + 9',correct:false},{text:'Brackett is wrong \u2014 (x+3)\u00b2 = (x+3)(x+3) = x\u00b2 + 3x + 3x + 9 = x\u00b2 + 6x + 9. The middle term 6x is missing',correct:true},{text:'Brackett is wrong \u2014 (x+3)\u00b2 = x\u00b2 + 3x + 9',correct:false},{text:'Brackett is wrong \u2014 (x+3)\u00b2 = 2x + 6',correct:false}]},
+{id:'ta_gcse_016',level:'gcse',topic:'nth Term',character:{name:'Nigel Sequence',title:'Linear Sequence Consultant and Spreadsheet Enthusiast',huffyResponse:'Arithmetic, geometric \u2014 they\'re all just numbers going up.'},advice:'The sequence 5, 8, 11, 14... has a common difference of 3. So the nth term is 3n. When n = 1: 3(1) = 3. Hmm, that\'s 5 in the sequence. Close enough \u2014 rounding error.',options:[{text:'Nigel is correct \u2014 the nth term is 3n',correct:false},{text:'Nigel is wrong \u2014 nth term = 3n + 2. The common difference gives the coefficient of n, but you must also find the zero term: 5 \u2212 3 = 2, so nth term = 3n + 2',correct:true},{text:'Nigel is wrong \u2014 nth term = 5n + 3',correct:false},{text:'Nigel is wrong \u2014 nth term = n + 3',correct:false}]},
+{id:'ta_gcse_017',level:'gcse',topic:'Pythagoras',character:{name:'Hypatia Wrongley',title:'Pythagorean Theorem Ambassador and Yoga Instructor',huffyResponse:'I always forget the last step. It\'s the thought that counts.'},advice:'A right-angled triangle has sides 6cm and 8cm. The hypotenuse = 6\u00b2 + 8\u00b2 = 36 + 64 = 100cm. Nice round number. Love it when that happens.',options:[{text:'Hypatia is correct \u2014 the hypotenuse is 100cm',correct:false},{text:'Hypatia is wrong \u2014 she forgot to square root at the end. Hypotenuse = \u221a(6\u00b2 + 8\u00b2) = \u221a100 = 10cm',correct:true},{text:'Hypatia is wrong \u2014 hypotenuse = 6 + 8 = 14cm',correct:false},{text:'Hypatia is wrong \u2014 hypotenuse = (6 + 8)\u00b2 = 196cm',correct:false}]},
+{id:'ta_gcse_018',level:'gcse',topic:'Probability',character:{name:'Combo Carl',title:'Combined Events Specialist and Part-Time Magician',huffyResponse:'Adding probabilities is simpler. Simplicity is elegance.'},advice:'The probability of flipping heads is 0.5 and rolling a 6 is 1/6. The probability of getting both (heads AND a 6) is 0.5 + 1/6 = 0.667. Two good events \u2014 add them up.',options:[{text:'Carl is correct \u2014 P(heads AND 6) = 0.667',correct:false},{text:'Carl is wrong \u2014 for independent events, P(A AND B) = P(A) \u00d7 P(B) = 0.5 \u00d7 1/6 = 1/12 \u2248 0.083. You multiply for AND, add for OR',correct:true},{text:'Carl is wrong \u2014 P(heads AND 6) = 0.5 \u2212 1/6 = 0.333',correct:false},{text:'Carl is wrong \u2014 you cannot calculate the probability of two different events together',correct:false}]},
+{id:'ta_gcse_019',level:'gcse',topic:'Standard Form',character:{name:'Stella Powers',title:'Standard Form Stylist and Exponent Coach',huffyResponse:'I was only one power out. That\'s basically correct in my book.'},advice:'Convert 0.00057 to standard form. Move the decimal until you get 5.7. I moved it 3 places, so it\'s 5.7 \u00d7 10\u207b\u00b3. Easy.',options:[{text:'Stella is correct \u2014 0.00057 = 5.7 \u00d7 10\u207b\u00b3',correct:false},{text:'Stella is wrong \u2014 the decimal moves 4 places to get 5.7, so 0.00057 = 5.7 \u00d7 10\u207b\u2074. She miscounted the number of places',correct:true},{text:'Stella is wrong \u2014 0.00057 = 57 \u00d7 10\u207b\u2075',correct:false},{text:'Stella is wrong \u2014 0.00057 = 5.7 \u00d7 10\u00b3 (positive power for small numbers)',correct:false}]},
+{id:'ta_gcse_020',level:'gcse',topic:'Simultaneous Equations',character:{name:'Elaine Minus',title:'Equation Balancer and Subtraction Specialist',huffyResponse:'Signs are just a suggestion in algebra. Everyone knows that.'},advice:'Solve 3x + 2y = 16 and x + 2y = 10. Subtract: 3x + 2y \u2212 x + 2y = 16 \u2212 10. That gives 2x + 4y = 6. Hmm, still two unknowns. This needs more equations.',options:[{text:'Elaine is correct \u2014 you need more equations',correct:false},{text:'Elaine is wrong \u2014 when subtracting, the second equation needs brackets: (3x + 2y) \u2212 (x + 2y) = 16 \u2212 10, giving 2x = 6, so x = 3. Then y = 3.5. The sign error on 2y was the problem',correct:true},{text:'Elaine is wrong \u2014 you should add the equations, not subtract',correct:false},{text:'Elaine is wrong \u2014 3x \u2212 x = 3, not 2x',correct:false}]}
+],
+core: [
+{id:'ta_core_001',level:'core',topic:'Expected Value',character:{name:'Monte Carlo',title:'Casino Mathematician and Expectation Specialist (Formerly of Las Vegas)',huffyResponse:'I used to run a casino. This is correct. The casino always wins, which proves my point.'},advice:'A game costs \u00a32 to play. You win \u00a310 with probability 0.1 and nothing otherwise. Expected profit = \u00a310 \u00d7 0.1 = \u00a31. You expect to win \u00a31 each game. Play forever \u2014 you\'ll make a fortune.',options:[{text:'Monte is correct \u2014 expected profit is \u00a31 per game',correct:false},{text:'Monte is wrong \u2014 expected winnings = \u00a310 \u00d7 0.1 + \u00a30 \u00d7 0.9 = \u00a31. But the game costs \u00a32. Expected profit = \u00a31 \u2212 \u00a32 = \u2212\u00a31. You lose \u00a31 per game on average',correct:true},{text:'Monte is wrong \u2014 expected profit = \u00a310 \u2212 \u00a32 = \u00a38',correct:false},{text:'Monte is wrong \u2014 you cannot calculate expected profit without knowing how many times you play',correct:false}]},
+{id:'ta_core_002',level:'core',topic:'Best Value',character:{name:'Bulk Buy Barry',title:'Unit Price Philosopher',huffyResponse:'Big bottle. Always. This is non-negotiable.'},advice:'500ml of shampoo costs \u00a33.50 and 750ml costs \u00a34.80. The difference in price is \u00a31.30 for 250ml extra. That\'s better than paying \u00a33.50 for 500ml so obviously the big bottle is better value. Obvious.',options:[{text:'Barry is correct \u2014 750ml is better value',correct:false},{text:'Barry is correct in conclusion but wrong in method. 500ml: \u00a33.50\u00f7500 = 0.70p/ml. 750ml: \u00a34.80\u00f7750 = 0.64p/ml. The 750ml is better value but you must calculate price per ml, not compare price differences',correct:true},{text:'Barry is wrong \u2014 the 500ml is better value',correct:false},{text:'Barry is wrong \u2014 they are equal value',correct:false}]},
+{id:'ta_core_003',level:'core',topic:'Correlation',character:{name:'Dr Corrie Lation',title:'Correlation Scientist and Causation Denier',huffyResponse:'The data supports me. Correlation is basically causation with extra steps.'},advice:'I found that countries with more TVs per household have longer life expectancy. Therefore, buying a TV increases your lifespan. I\'m prescribing televisions to all my patients.',options:[{text:'Dr Lation is correct \u2014 more TVs cause longer life expectancy',correct:false},{text:'Dr Lation is wrong \u2014 correlation does not imply causation. Both TVs and life expectancy are linked to wealth, which is the confounding variable. Buying a TV will not make you live longer',correct:true},{text:'Dr Lation is wrong \u2014 the correlation is probably negative',correct:false},{text:'Dr Lation is wrong \u2014 you need at least 30 data points before drawing any conclusion',correct:false}]},
+{id:'ta_core_004',level:'core',topic:'Compound Interest',character:{name:'Penny Wise',title:'Savings Maximisation Guru, PennyWise Financial (No Relation to the Clown)',huffyResponse:'I meant multiply 1.05 by 20. That\'s still a lot of money.'},advice:'Invest \u00a31,000 at 5% for 20 years. Using compound interest: \u00a31,000 \u00d7 1.05 \u00d7 20 = \u00a31,000 \u00d7 21.05 = \u00a321,050. Retirement sorted.',options:[{text:'Penny is correct \u2014 \u00a321,050',correct:false},{text:'Penny is wrong \u2014 compound interest raises 1.05 to the power of 20, not multiplied by 20: \u00a31,000 \u00d7 1.05\u00b2\u2070 = \u00a31,000 \u00d7 2.653 = \u00a32,653',correct:true},{text:'Penny is wrong \u2014 \u00a31,000 \u00d7 5% \u00d7 20 = \u00a31,000 (simple interest, the original amount doubles)',correct:false},{text:'Penny is wrong \u2014 \u00a31,000 \u00d7 1.05\u00b2\u2070 = \u00a310,000',correct:false}]},
+{id:'ta_core_005',level:'core',topic:'Normal Distribution',character:{name:'Norman Bell',title:'Normal Distribution Enthusiast',huffyResponse:'I was close. 68 is right. The direction is a detail.'},advice:'In a normal distribution, 68% of data falls within one standard deviation of the mean. So if the mean is 50 and SD is 10, then 68% of data is between 40 and 50. One side.',options:[{text:'Norman is correct \u2014 68% falls between 40 and 50',correct:false},{text:'Norman is wrong \u2014 68% falls within one SD on both sides: between 40 and 60. The normal distribution is symmetric about the mean',correct:true},{text:'Norman is wrong \u2014 68% falls between 45 and 55',correct:false},{text:'Norman is wrong \u2014 95% falls within one standard deviation',correct:false}]},
+{id:'ta_core_006',level:'core',topic:'Index Numbers',character:{name:'Basil Year',title:'Index Number Historian and Economics Podcaster',huffyResponse:'The base year is whichever year I choose. That\'s the beauty of indices.'},advice:'In 2020, a basket of goods cost \u00a3120. In 2023 it costs \u00a3150. The index number for 2023 is (150 \u2212 120) \u00f7 120 \u00d7 100 = 25. So inflation is 25 index points. Simple.',options:[{text:'Basil is correct \u2014 the index number is 25',correct:false},{text:'Basil is wrong \u2014 the index number = (current \u00f7 base) \u00d7 100 = (150 \u00f7 120) \u00d7 100 = 125. He calculated percentage change (25%) but an index number uses 100 as the base year value',correct:true},{text:'Basil is wrong \u2014 the index number = 150 \u2212 120 = 30',correct:false},{text:'Basil is wrong \u2014 you cannot calculate an index number from just two years',correct:false}]},
+{id:'ta_core_007',level:'core',topic:'Weighted Averages',character:{name:'Wendy Weight',title:'Average Enthusiast and Fairness Advocate',huffyResponse:'All groups deserve equal representation. That\'s just democracy.'},advice:'Three classes scored averages of 60%, 70%, and 80%. The overall average is (60 + 70 + 80) \u00f7 3 = 70%. Fair and balanced. The classes had 10, 30, and 10 students but that doesn\'t matter \u2014 an average is an average.',options:[{text:'Wendy is correct \u2014 the overall average is 70%',correct:false},{text:'Wendy is wrong \u2014 you must weight by class size: (60\u00d710 + 70\u00d730 + 80\u00d710) \u00f7 50 = (600 + 2100 + 800) \u00f7 50 = 3500 \u00f7 50 = 70%. She got lucky \u2014 but her method is wrong because it ignores class sizes, and usually gives the wrong answer',correct:true},{text:'Wendy is wrong \u2014 you should use the median of the three averages',correct:false},{text:'Wendy is wrong \u2014 you cannot combine averages from different groups',correct:false}]},
+{id:'ta_core_008',level:'core',topic:'Reverse Percentage',character:{name:'Rex Backwards',title:'Reverse Calculation Specialist and Tax Return Expert',huffyResponse:'VAT is already confusing enough without making the maths harder.'},advice:'A TV costs \u00a3360 including 20% VAT. To find the pre-VAT price, just subtract 20%: \u00a3360 \u2212 \u00a372 = \u00a3288. That\'s \u00a372 of tax. Outrageous, but mathematically sound.',options:[{text:'Rex is correct \u2014 pre-VAT price is \u00a3288',correct:false},{text:'Rex is wrong \u2014 the 20% VAT was added to the original price, so \u00a3360 = 1.20 \u00d7 original. Original = \u00a3360 \u00f7 1.20 = \u00a3300. Taking 20% off the final price gives the wrong answer',correct:true},{text:'Rex is wrong \u2014 pre-VAT price = \u00a3360 \u00d7 0.20 = \u00a372',correct:false},{text:'Rex is wrong \u2014 pre-VAT price = \u00a3360 \u00d7 1.20 = \u00a3432',correct:false}]},
+{id:'ta_core_009',level:'core',topic:'Break-Even',character:{name:'Brenda Breakeven',title:'Business Viability Coach and Former Dragon (Self-Appointed)',huffyResponse:'Revenue equals profit in my world. Costs are a mindset.'},advice:'Fixed costs are \u00a32,000. Each unit costs \u00a35 to make and sells for \u00a315. Break-even = fixed costs \u00f7 selling price = \u00a32,000 \u00f7 \u00a315 = 133.3 units. Round up to 134.',options:[{text:'Brenda is correct \u2014 break-even at 134 units',correct:false},{text:'Brenda is wrong \u2014 break-even = fixed costs \u00f7 contribution per unit = \u00a32,000 \u00f7 (\u00a315 \u2212 \u00a35) = \u00a32,000 \u00f7 \u00a310 = 200 units. She divided by selling price instead of profit per unit',correct:true},{text:'Brenda is wrong \u2014 break-even = \u00a32,000 \u00f7 \u00a35 = 400 units',correct:false},{text:'Brenda is wrong \u2014 break-even = (\u00a315 \u2212 \u00a35) \u00d7 \u00a32,000 = \u00a320,000 units',correct:false}]},
+{id:'ta_core_010',level:'core',topic:'Scatter Graphs',character:{name:'Trendline Trevor',title:'Line of Best Fit Artist and Data Visualisation Poet',huffyResponse:'Through the origin is more elegant. Science starts at zero.'},advice:'I\'ve plotted height against shoe size for 30 adults. The line of best fit should always pass through the origin (0,0) \u2014 because a person with zero height would have zero shoe size. Logic.',options:[{text:'Trevor is correct \u2014 the line of best fit must pass through the origin',correct:false},{text:'Trevor is wrong \u2014 the line of best fit passes through the mean point (\u0078\u0304, \u0079\u0304), not the origin. It only goes through the origin if the data genuinely supports it. A height of 0 is nonsensical for adults \u2014 the model only applies within the data range',correct:true},{text:'Trevor is wrong \u2014 the line of best fit must pass through every data point',correct:false},{text:'Trevor is wrong \u2014 you cannot draw a line of best fit with only 30 data points',correct:false}]},
+{id:'ta_core_011',level:'core',topic:'Hypothesis Testing',character:{name:'Hilda Hypothesis',title:'Significance Level Whisperer and p-Value Collector',huffyResponse:'Tails, shmails. The important thing is the p-value is small.'},advice:'I\'m testing if a coin is biased toward heads. My null hypothesis is p = 0.5. I got 8 heads out of 10 flips. I\'ll do a two-tailed test at the 5% level. That\'s the standard approach for bias in one direction.',options:[{text:'Hilda is correct \u2014 always use a two-tailed test',correct:false},{text:'Hilda is wrong \u2014 if testing specifically for bias toward heads (one direction), use a one-tailed test. A two-tailed test checks for bias in either direction and splits the significance level, making it harder to detect the specific bias she\'s looking for',correct:true},{text:'Hilda is wrong \u2014 10 flips is not enough to test any hypothesis',correct:false},{text:'Hilda is wrong \u2014 you should use a 1% significance level, not 5%',correct:false}]},
+{id:'ta_core_012',level:'core',topic:'Loan Repayment',character:{name:'Lenny Loanshark',title:'Friendly Neighbourhood Lending Advisor (Unregulated)',huffyResponse:'Interest is just a small detail. The monthly payment is what matters.'},advice:'Borrow \u00a312,000 over 3 years at 6% per year. Total to repay = \u00a312,000 spread over 36 months = \u00a3333.33 per month. The 6% is just the arrangement fee \u2014 already included in the \u00a312,000.',options:[{text:'Lenny is correct \u2014 \u00a3333.33 per month',correct:false},{text:'Lenny is wrong \u2014 the 6% annual interest is charged on the balance, not an arrangement fee. Simple interest: \u00a312,000 \u00d7 0.06 \u00d7 3 = \u00a32,160. Total = \u00a314,160. Monthly \u2248 \u00a3393.33. Ignoring interest significantly underestimates the cost',correct:true},{text:'Lenny is wrong \u2014 total interest = 6% of \u00a312,000 = \u00a3720, so total = \u00a312,720',correct:false},{text:'Lenny is wrong \u2014 you only pay interest if you miss a payment',correct:false}]}
+]
+};
+
+/* ── Avatar colours ── */
+const AVATAR_COLOURS = ['#1e3a5f','#0d9488','#f97316','#7c3aed','#dc2626','#16a34a'];
+
+/* ── State ── */
+let currentLevel = 'gcse';
+let sessionLength = 20;
+let sessionQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let attempts = 0;
+let colourMap = {};
+let colourIdx = 0;
+
+/* ── Helpers ── */
+function getInitials(name) {
+  return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+}
+
+function getAvatarColour(name) {
+  if (!colourMap[name]) {
+    colourMap[name] = AVATAR_COLOURS[colourIdx % AVATAR_COLOURS.length];
+    colourIdx++;
+  }
+  return colourMap[name];
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getPB(level) {
+  try { return parseFloat(localStorage.getItem('ta_pb_' + level)) || 0; } catch { return 0; }
+}
+
+function setPB(level, val) {
+  try { localStorage.setItem('ta_pb_' + level, val); } catch {}
+}
+
+/* ── Level from URL ── */
+function initLevel() {
+  const params = new URLSearchParams(window.location.search);
+  const lvl = params.get('level');
+  if (lvl && QUESTIONS[lvl]) currentLevel = lvl;
+  document.querySelectorAll('.level-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.level === currentLevel);
+  });
+  updatePBDisplay();
+}
+
+const LEVEL_TOPICS = {
+  ks3:  'Percentages, ratio, fractions, averages, proportion, area and perimeter, sequences, scale, angles, probability, standard form.',
+  gcse: 'Reverse percentages, compound interest, simultaneous equations, bounds, quadratics, indices, vectors, trigonometry, Pythagoras, nth term, straight-line graphs.',
+  core: 'Expected value, correlation and scatter graphs, normal distribution, index numbers, weighted averages, break-even, hypothesis testing, loan repayment.'
+};
+
+function selectLevel(lvl) {
+  currentLevel = lvl;
+  document.querySelectorAll('.level-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.level === lvl);
+  });
+  updatePBDisplay();
+  updateTopicList();
+  updateSessionButtons();
+}
+
+function updateTopicList() {
+  const el = document.getElementById('hiwTopics');
+  if (el) el.innerHTML = '<strong>This level covers:</strong> ' + (LEVEL_TOPICS[currentLevel] || '');
+}
+
+// The banks are uneven (KS3 18, GCSE 20, Core 12) but the picker was hardcoded
+// to 10/20/30. startGame() clamps with Math.min, so picking 30 on Core quietly
+// gave 12. Build the row from the bank instead: the round numbers that actually
+// fit, plus an explicit "All" so the whole bank stays reachable.
+function updateSessionButtons() {
+  const available = (QUESTIONS[currentLevel] || []).length;
+  const lens = [10, 20, 30].filter(n => n < available);
+  lens.push(available);
+
+  const row = document.querySelector('.session-btns');
+  if (!row) return;
+  row.innerHTML = lens.map(n =>
+    '<button class="session-btn" data-len="' + n + '" onclick="selectSession(' + n + ')">' +
+    (n === available ? 'All ' + n : n) + '</button>'
+  ).join('');
+
+  // Keep the previous choice if it survived; otherwise fall back to the largest.
+  if (lens.indexOf(sessionLength) === -1) sessionLength = lens[lens.length - 1];
+  row.querySelectorAll('.session-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.len, 10) === sessionLength);
+  });
+}
+
+
+function selectSession(len) {
+  sessionLength = len;
+  document.querySelectorAll('.session-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.len) === len);
+  });
+}
+
+function updatePBDisplay() {
+  const pb = getPB(currentLevel);
+  const el = document.getElementById('pbDisplay');
+  if (pb > 0) {
+    el.innerHTML = 'Personal best (' + currentLevel.toUpperCase() + '): <span>' + pb + '%</span>';
+  } else {
+    el.textContent = '';
+  }
+}
+
+/* ── Start game ── */
+function startGame() {
+  const bank = QUESTIONS[currentLevel];
+  const shuffled = shuffle(bank);
+  const count = Math.min(sessionLength, shuffled.length);
+  sessionQuestions = shuffled.slice(0, count);
+  currentIndex = 0;
+  score = 0;
+  attempts = 0;
+  colourMap = {};
+  colourIdx = 0;
+
+  document.getElementById('startScreen').classList.remove('active');
+  document.getElementById('gameScreen').classList.add('active');
+  document.getElementById('gameHeader').style.display = 'flex';
+
+  const pillLabels = { ks3: 'KS3', gcse: 'GCSE', core: 'Core' };
+  document.getElementById('levelPill').textContent = pillLabels[currentLevel] || currentLevel.toUpperCase();
+  document.getElementById('scoreNum').textContent = '0';
+  document.getElementById('scoreDen').textContent = '0';
+
+  if (typeof mfg === 'function') {
+    mfg('game_started', { game_slug: 'terrible-advice', level: currentLevel });
+  }
+
+  showQuestion();
+}
+
+/* ── Show question ── */
+function showQuestion() {
+  const q = sessionQuestions[currentIndex];
+  attempts = 0;
+
+  // Progress
+  document.getElementById('progressFill').style.width = ((currentIndex / sessionQuestions.length) * 100) + '%';
+  document.getElementById('progressLabel').textContent = (currentIndex + 1) + ' / ' + sessionQuestions.length;
+
+  // Character
+  const card = document.getElementById('characterCard');
+  card.classList.remove('shake');
+  const avatar = document.getElementById('avatar');
+  avatar.textContent = getInitials(q.character.name);
+  avatar.style.background = getAvatarColour(q.character.name);
+  document.getElementById('charName').textContent = q.character.name;
+  document.getElementById('charTitle').textContent = q.character.title;
+
+  // Speech bubble
+  const bubble = document.getElementById('speechBubble');
+  bubble.textContent = q.advice;
+  // Reset animation
+  bubble.style.animation = 'none';
+  bubble.offsetHeight; // trigger reflow
+  bubble.style.animation = '';
+
+  // Hide huffy and next button
+  const huffy = document.getElementById('huffyBubble');
+  huffy.classList.remove('show');
+  huffy.textContent = '';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  // Options (shuffled)
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  const shuffledOpts = shuffle(q.options);
+  shuffledOpts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-card';
+    btn.textContent = opt.text;
+    btn.onclick = () => handleAnswer(btn, opt.correct, q, shuffledOpts);
+    grid.appendChild(btn);
+  });
+}
+
+/* ── Handle answer ── */
+function handleAnswer(btn, isCorrect, q, shuffledOpts) {
+  if (btn.classList.contains('disabled')) return;
+  attempts++;
+
+  const allBtns = document.querySelectorAll('.option-card');
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    allBtns.forEach(b => b.classList.add('disabled'));
+
+    // Reveal correct
+    allBtns.forEach(b => {
+      // Find if this button's text matches the correct option
+      const opt = shuffledOpts.find(o => o.text === b.textContent);
+      if (opt && opt.correct && b !== btn) b.classList.add('reveal-correct');
+    });
+
+    if (attempts === 1) score++;
+    document.getElementById('scoreNum').textContent = score;
+    document.getElementById('scoreDen').textContent = currentIndex + 1;
+
+    // Shake character card
+    const card = document.getElementById('characterCard');
+    card.classList.add('shake');
+
+    // Huffy response
+    const huffy = document.getElementById('huffyBubble');
+    huffy.textContent = '"' + q.character.huffyResponse + '"';
+    setTimeout(() => huffy.classList.add('show'), 100);
+
+    // Analytics
+    if (typeof mfg === 'function') {
+      mfg('question_answered', {
+        game_slug: 'terrible-advice',
+        level: currentLevel,
+        question_index: currentIndex + 1,
+        correct: true,
+        attempts: attempts
+      });
+    }
+
+    // Show next button after huffy response appears
+    setTimeout(() => { document.getElementById('nextBtn').style.display = 'block'; }, 800);
+
+  } else {
+    btn.classList.add('incorrect');
+
+    if (typeof mfg === 'function') {
+      mfg('question_answered', {
+        game_slug: 'terrible-advice',
+        level: currentLevel,
+        question_index: currentIndex + 1,
+        correct: false,
+        attempts: attempts
+      });
+    }
+
+    if (attempts >= 2) {
+      // Show correct answer, move on
+      allBtns.forEach(b => {
+        b.classList.add('disabled');
+        const opt = shuffledOpts.find(o => o.text === b.textContent);
+        if (opt && opt.correct) b.classList.add('reveal-correct');
+      });
+
+      document.getElementById('scoreDen').textContent = currentIndex + 1;
+
+      // Still show huffy
+      const card = document.getElementById('characterCard');
+      card.classList.add('shake');
+      const huffy = document.getElementById('huffyBubble');
+      huffy.textContent = '"' + q.character.huffyResponse + '"';
+      setTimeout(() => huffy.classList.add('show'), 100);
+
+      setTimeout(() => { document.getElementById('nextBtn').style.display = 'block'; }, 800);
+    } else {
+      // One retry — disable this wrong option
+      btn.classList.add('disabled');
+    }
+  }
+}
+
+function advanceQuestion() {
+  document.getElementById('nextBtn').style.display = 'none';
+  currentIndex++;
+  if (currentIndex < sessionQuestions.length) {
+    showQuestion();
+  } else {
+    showResults();
+  }
+}
+
+/* ── Results ── */
+function showResults() {
+  document.getElementById('gameScreen').classList.remove('active');
+  document.getElementById('resultsScreen').classList.add('active');
+
+  const total = sessionQuestions.length;
+  const pct = Math.round((score / total) * 100);
+
+  document.getElementById('finalScore').textContent = score + '/' + total;
+  document.getElementById('finalPct').textContent = pct + '%';
+
+  // PB check (only for sessions >= 10)
+  const pbBadge = document.getElementById('pbBadge');
+  const pbLine = document.getElementById('pbLine');
+  const oldPB = getPB(currentLevel);
+
+  if (total >= 10 && pct > oldPB) {
+    setPB(currentLevel, pct);
+    pbBadge.style.display = 'block';
+    pbLine.textContent = 'Previous best: ' + (oldPB > 0 ? oldPB + '%' : 'none');
+
+    if (typeof mfg === 'function') {
+      mfg('personal_best_set', {
+        game_slug: 'terrible-advice',
+        level: currentLevel,
+        score: pct,
+        previous_best: oldPB
+      });
+    }
+  } else {
+    pbBadge.style.display = 'none';
+    if (oldPB > 0) {
+      pbLine.textContent = 'Personal best: ' + oldPB + '%';
+    } else {
+      pbLine.textContent = '';
+    }
+  }
+
+  // Analytics
+  if (typeof mfg === 'function') {
+    mfg('game_completed', {
+      game_slug: 'terrible-advice',
+      level: currentLevel,
+      score: score,
+      questions_answered: total,
+      questions_correct: score
+    });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('terrible-advice',currentLevel,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('terrible-advice',currentLevel,score);}}
+  }
+}
+
+/* ── Reset ── */
+function resetGame() {
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('gameHeader').style.display = 'none';
+  document.getElementById('startScreen').classList.add('active');
+  document.getElementById('pbBadge').style.display = 'none';
+  updatePBDisplay();
+}
+
+/* ── Init ── */
+initLevel();
+updateTopicList();
+updateSessionButtons();
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

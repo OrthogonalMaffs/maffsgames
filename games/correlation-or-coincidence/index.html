@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Spot the difference between real correlations and spurious coincidences. Inspired by Tyler Vigen. GCSE, A-Level, and Core Maths.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/correlation-or-coincidence/">
+<meta property="og:title" content="Correlation or Coincidence — MaffsGames">
+<meta property="og:description" content="Spot the difference between real correlations and spurious coincidences. Inspired by Tyler Vigen. GCSE, A-Level, and Core Maths.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/correlation-or-coincidence/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Correlation or Coincidence — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080a10;--surface:#0f1520;--border:#1a2438;--primary:#f59e0b;--accent:#3b82f6;--wrong:#f43f5e;--correct:#22c55e;--text:#e8ecf4;--muted:#6b7a94;--tinfoil:#a855f7}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--wrong));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:540px}
+.credit{text-align:center;font-size:.72rem;color:var(--muted);margin-top:1rem}
+.credit a{color:var(--primary)}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:50px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+
+/* Charts */
+.charts{display:flex;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap}
+.chart-box{flex:1;min-width:280px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem;text-align:center}
+.chart-box canvas{display:block;width:100%;height:auto;margin:0 auto}
+.chart-box .chart-label{font-size:.7rem;color:var(--muted);margin-top:.3rem;font-style:italic}
+.chart-label.hidden{color:transparent}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:.5rem;text-align:center}
+.q-card .prompt{font-size:.95rem;font-weight:600}
+.q-card .reveal{font-size:.85rem;color:var(--primary);margin-top:.4rem;line-height:1.5}
+.q-card .r-value{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--accent);margin-top:.3rem}
+
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
+.options.single{grid-template-columns:1fr}
+.opt-btn{padding:.65rem .5rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;cursor:pointer;transition:all .12s;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;line-height:1.4}
+.opt-btn:hover{border-color:var(--primary)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.08)}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+.opt-btn.tinfoil{border-color:var(--tinfoil);color:var(--tinfoil);font-style:italic}
+
+/* Tinfoil hat phase */
+.tinfoil-card{display:none;background:var(--surface);border:1px solid var(--tinfoil);border-radius:10px;padding:1rem;margin-bottom:.5rem;text-align:center}
+.tinfoil-card.show{display:block;animation:fadeIn .3s}
+.tinfoil-card h3{color:var(--tinfoil);font-size:.9rem;margin-bottom:.5rem}
+.tinfoil-card .conspiracy{font-size:.85rem;line-height:1.6;color:var(--muted);margin-bottom:.5rem}
+.tinfoil-card .next-btn{padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+
+.solution{display:none;background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:1rem;margin-bottom:.5rem;text-align:left;font-size:.85rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.85rem;margin-bottom:.4rem}
+.solution .step{margin-bottom:.4rem;padding-left:.7rem;border-left:2px solid var(--border)}
+.solution .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--wrong));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+<div id="menu" class="screen active">
+<div class="header"><h1>Correlation or Coincidence?</h1><div class="sub">Two datasets. One question. Is it real — or just a coincidence?</div>  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+<div class="menu-info">
+You'll see two line charts side by side. They might be genuinely related... or they might be completely spurious.<br><br>
+<strong>Phase 1:</strong> Is there a real causal relationship, or is this just a coincidence?<br>
+<strong>Phase 2:</strong> If it's spurious... how COULD they be connected? 🧐🪄
+</div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+<button class="start-btn" onclick="startGame()">Start Investigating</button>
+<div class="credit">Inspired by <a href="https://tylervigen.com/spurious-correlations" target="_blank">Spurious Correlations by Tyler Vigen</a>. Check out his site — it's brilliant.</div>
+</div>
+
+<div id="game" class="screen">
+<div class="hud"><div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div><div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div><div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div></div>
+<div class="charts"><div class="chart-box"><canvas id="chart1" width="320" height="180"></canvas><div class="chart-label hidden" id="label1">Dataset A</div></div><div class="chart-box"><canvas id="chart2" width="320" height="180"></canvas><div class="chart-label hidden" id="label2">Dataset B</div></div></div>
+<div class="q-card"><div class="prompt" id="prompt">Are these datasets genuinely related?</div><div class="reveal" id="reveal" style="display:none"></div><div class="r-value" id="rValue"></div></div>
+<div class="options" id="options"></div>
+<div class="tinfoil-card" id="tinfoilCard"><h3>🪄 But what if...</h3><div class="conspiracy" id="conspiracy"></div><button class="next-btn" onclick="nextQ()">Next question →</button></div>
+<div class="solution" id="solution"></div>
+</div>
+
+<div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANK
+// ============================================================
+const QUESTIONS=[
+// SPURIOUS CORRELATIONS
+{type:'spurious',
+ data1:[12,14,13,15,16,14,17,15,18,16],data2:[2500,2700,2600,2900,3100,2800,3300,3000,3500,3100],
+ label1:'Nicolas Cage films released per year',label2:'Swimming pool drownings per year',
+ r:0.87,explain:'Both happened to trend upward over the same decade. There is no causal mechanism connecting Nicolas Cage\'s filmography to pool safety.',
+ conspiracies:['Nicolas Cage films cause a nationwide swimming frenzy that inevitably leads to drownings','Each Cage film release triggers a secret government pool-party mandate that goes catastrophically wrong','Nicolas Cage is actually a pool-drowning vampire who feeds on the psychic energy released during his own film premieres','Cage\'s on-screen intensity is so powerful it causes viewers to spontaneously leap into the nearest body of water']},
+
+{type:'spurious',
+ data1:[7.5,7.8,8.0,8.2,8.5,8.3,8.7,8.9,9.1,9.0],data2:[45,48,50,52,55,53,57,59,62,60],
+ label1:'US spending on science (billions $)',label2:'Suicides by hanging per year',
+ r:0.92,explain:'Both increased over the same period due to independent trends. Science funding grew with inflation and policy. Suicide rates are driven by mental health factors.',
+ conspiracies:['Scientists are accidentally discovering increasingly depressing truths about the universe','Each new research paper adds exactly 0.3 units of existential dread to the national psyche','The peer review process is so brutal it drives people to desperate measures','Government science labs are secretly powered by the souls of the despondent']},
+
+{type:'spurious',
+ data1:[30,32,33,35,34,36,38,37,40,39],data2:[8,9,8.5,10,9.5,11,12,11.5,13,12.5],
+ label1:'Cheese consumption per capita (lbs)',label2:'People who died tangled in bedsheets',
+ r:0.95,explain:'Cheese consumption rose gradually. Bedsheet deaths are a tiny, noisy number. With enough datasets, you\'ll always find spurious correlations.',
+ conspiracies:['Late-night cheese binges cause such vivid nightmares that people thrash around until the sheets win','Big Cheese has been secretly weakening bedsheet thread counts to create dependency on their products','Cheese dreams are actually interdimensional travel, and the bedsheets are trying to keep us in this reality','The calcium in cheese makes bones more brittle, reducing the ability to escape aggressive bedding']},
+
+{type:'spurious',
+ data1:[5,6,7,8,9,10,11,12,11,10],data2:[120,130,140,150,160,170,180,190,185,175],
+ label1:'Number of films featuring robots',label2:'Total revenue of ski resorts ($M)',
+ r:0.91,explain:'Both grew with the economy and entertainment spending. Robot films didn\'t cause skiing.',
+ conspiracies:['Watching robots ski in films inspires humans to prove they can do it better','Robot films emit a specific frequency that makes people crave cold weather activities','Ski resorts secretly fund robot films to make humans feel inadequate and seek outdoor thrills','Robots are actually running the ski resorts and producing propaganda films to attract customers']},
+
+{type:'spurious',
+ data1:[3.2,3.5,3.8,4.0,4.2,4.5,4.3,4.6,4.8,5.0],data2:[55,60,58,65,63,70,68,75,73,80],
+ label1:'Organic food sales (£ billions)',label2:'Autism diagnosis rates per 10,000',
+ r:0.88,explain:'This is one of the most harmful spurious correlations in history. Autism diagnoses rose because of better awareness and broader diagnostic criteria. Organic food sales rose because of consumer trends. There is zero causal connection.',
+ conspiracies:['None — this specific correlation has been weaponised to spread dangerous misinformation. The rise in autism diagnoses is due to better diagnostic criteria and increased awareness, not any food or vaccine.'],
+ serious:true},
+
+// REAL CORRELATIONS
+{type:'real',
+ data1:[160,165,170,175,180,185,190,195,170,175],data2:[55,60,65,72,78,85,90,95,68,73],
+ label1:'Height (cm)',label2:'Weight (kg)',
+ r:0.94,explain:'Taller people tend to weigh more. Height is a genuine predictor of weight, though with significant variation. This is a real positive correlation with a causal mechanism (larger frame = more mass).'},
+
+{type:'real',
+ data1:[0,1,2,3,4,5,6,7,8,9],data2:[15,18,22,28,35,42,48,55,60,65],
+ label1:'Hours of study per week',label2:'Exam score (%)',
+ r:0.97,explain:'More study time genuinely leads to better exam performance. This is a real correlation with a clear causal mechanism, though there are diminishing returns at the extreme.'},
+
+{type:'real',
+ data1:[0,5,10,15,20,25,30,35,40,45],data2:[0,8,15,20,24,27,29,30,30,30],
+ label1:'Temperature (°C)',label2:'Ice cream sales (thousands)',
+ r:0.92,explain:'Hot weather causes people to buy more ice cream. This is a real correlation with a direct causal mechanism. Note the plateau at high temperatures — there\'s a ceiling effect.'},
+
+{type:'real',
+ data1:[1,2,3,5,8,10,15,20,30,40],data2:[200,190,175,160,140,120,100,80,55,30],
+ label1:'Distance from city centre (miles)',label2:'House price per sq ft (£)',
+ r:-0.96,explain:'Genuine negative correlation. Properties closer to the city centre command higher prices per square foot. The causal mechanism is demand, transport links, and amenities.'},
+
+{type:'real',
+ data1:[0,2,5,10,15,20,25,30,35,40],data2:[100,95,88,78,65,50,35,22,12,5],
+ label1:'Cigarettes smoked per day',label2:'Lung capacity (% of normal)',
+ r:-0.98,explain:'Smoking directly damages lung tissue. This is one of the strongest causal relationships in medicine, established by decades of research.'},
+
+// MORE SPURIOUS
+{type:'spurious',
+ data1:[25,28,30,27,32,35,33,38,36,40],data2:[15,17,19,16,21,23,22,25,24,27],
+ label1:'Number of maths teachers hired in Devon',label2:'Shark attacks in Australia',
+ r:0.89,explain:'Both numbers happened to increase over the same period. Devon maths teachers have no influence on Australian marine predators.',
+ conspiracies:['Devon maths teachers are secretly training sharks to attack using complex equations beamed via submarine cable','The Pythagorean theorem, when read aloud underwater, attracts great whites','Sharks can sense when someone is being taught trigonometry and it enrages them','Devon County Council is running a covert shark-breeding programme disguised as a maths department']},
+
+{type:'spurious',
+ data1:[100,105,110,115,120,125,130,135,140,145],data2:[8,9,10,11,12,13,14,15,16,17],
+ label1:'UK butter sales (tonnes)',label2:'Divorce rate in Maine, USA',
+ r:0.99,explain:'Two independent upward trends. British butter consumption has no mechanism to affect American marriages.',
+ conspiracies:['Butter makes British people so happy that their joy radiates across the Atlantic and makes Maine residents realise how unhappy their own marriages are','There\'s a secret transatlantic butter pipeline and the delivery drivers are having affairs with Maine residents','Butter causes such intense satisfaction that it sets unrealistic standards for what marriage should feel like','The molecular structure of butter when exposed to Atlantic winds creates a divorce-inducing pheromone']},
+
+{type:'spurious',
+ data1:[40,42,45,43,47,50,48,52,55,53],data2:[3,4,3.5,5,4.5,6,5.5,7,6.5,8],
+ label1:'Renewable energy capacity (GW)',label2:'Number of pirates globally (thousands)',
+ r:0.85,explain:'Both happen to be increasing. Wind turbines do not create pirates.',
+ conspiracies:['Wind turbines generate a specific hum that awakens the dormant pirate gene in nearby populations','Solar panels, when viewed from space, form a treasure map that attracts pirates','Pirates are investing their plunder in renewable energy startups','Renewable energy has made the seas calmer, making piracy a more viable career option']},
+];
+
+// ============================================================
+//  CHART DRAWING
+// ============================================================
+function drawChart(canvasId,data,color){
+  const c=document.getElementById(canvasId);
+  const ctx=c.getContext('2d');
+  const W=320,H=180,PAD=25;
+  ctx.clearRect(0,0,W,H);
+
+  // Background
+  ctx.fillStyle='#0f1520';ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='#1a2438';ctx.lineWidth=0.5;
+  for(let i=1;i<5;i++){const y=PAD+(H-2*PAD)*i/5;ctx.beginPath();ctx.moveTo(PAD,y);ctx.lineTo(W-PAD,y);ctx.stroke()}
+
+  // Axes
+  ctx.strokeStyle='#2a3a50';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(PAD,PAD);ctx.lineTo(PAD,H-PAD);ctx.lineTo(W-PAD,H-PAD);ctx.stroke();
+
+  // Data
+  const min=Math.min(...data),max=Math.max(...data);
+  const range=max-min||1;
+  const xStep=(W-2*PAD)/(data.length-1);
+
+  // Line
+  ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.beginPath();
+  data.forEach((v,i)=>{
+    const x=PAD+i*xStep;
+    const y=H-PAD-(v-min)/range*(H-2*PAD);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+
+  // Dots
+  ctx.fillStyle=color;
+  data.forEach((v,i)=>{
+    const x=PAD+i*xStep;
+    const y=H-PAD-(v-min)/range*(H-2*PAD);
+    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+  });
+}
+
+// ============================================================
+//  GAME ENGINE
+// ============================================================
+let pool=[],qIdx=0,score=0,correctN=0,total=0,currentQ=null,phase=1;
+const BASE=100,MAX_Q=12;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function showS(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){showS('menu')}
+
+function startGame(){
+  pool=shuffle([...QUESTIONS]).slice(0,MAX_Q);
+  qIdx=0;score=0;correctN=0;total=0;phase=1;
+  document.getElementById('score').textContent='0';
+  document.getElementById('correctCount').textContent='0';
+  showS('game');nextQ();
+  window._ggAbandoned=true;
+  mfg('game_started',{game_slug:'correlation-or-coincidence',level:'gcse'});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'correlation-or-coincidence',level:'gcse',questions_answered:total})});}
+}
+
+function nextQ(){
+  if(qIdx>=pool.length){endGame();return}
+  currentQ=pool[qIdx];qIdx++;total++;phase=1;
+  document.getElementById('qNum').textContent=total;
+  document.getElementById('tinfoilCard').className='tinfoil-card';
+  document.getElementById('solution').className='solution';
+  document.getElementById('reveal').style.display='none';
+  document.getElementById('rValue').textContent='';
+
+  // Hide labels initially
+  document.getElementById('label1').className='chart-label hidden';
+  document.getElementById('label2').className='chart-label hidden';
+
+  // Draw charts
+  drawChart('chart1',currentQ.data1,'#3b82f6');
+  drawChart('chart2',currentQ.data2,'#f97316');
+
+  document.getElementById('prompt').textContent='These two datasets appear to correlate. Is there a real causal relationship?';
+
+  // Phase 1 options
+  const oEl=document.getElementById('options');oEl.innerHTML='';oEl.className='options';
+  ['Yes — real causal relationship','No — just a coincidence'].forEach(v=>{
+    const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;
+    b.addEventListener('click',()=>handlePhase1(b));oEl.appendChild(b);
+  });
+}
+
+function handlePhase1(btn){
+  const q=currentQ;
+  const correctAnswer=q.type==='real'?'Yes — real causal relationship':'No — just a coincidence';
+  const ok=btn.dataset.val===correctAnswer;
+
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===correctAnswer)b.classList.add('correct')});
+  if(!ok)btn.classList.add('wrong');
+
+  // Reveal labels
+  document.getElementById('label1').textContent=q.label1;
+  document.getElementById('label1').className='chart-label';
+  document.getElementById('label2').textContent=q.label2;
+  document.getElementById('label2').className='chart-label';
+
+  // Show r value
+  document.getElementById('rValue').textContent='Correlation coefficient: r = '+q.r;
+
+  mfg('question_answered',{game_slug:'correlation-or-coincidence',level:'gcse',correct:ok,question_index:total});
+  if(ok){
+    score+=BASE;correctN++;
+    document.getElementById('score').textContent=score;
+    document.getElementById('correctCount').textContent=correctN;
+  }
+
+  // Reveal
+  document.getElementById('reveal').textContent=q.label1+' vs '+q.label2;
+  document.getElementById('reveal').style.display='block';
+
+  // If spurious and not the serious one, go to Phase 2 (tinfoil hat)
+  if(q.type==='spurious'&&!q.serious&&q.conspiracies){
+    setTimeout(()=>showPhase2(q),1500);
+  } else {
+    // Show explanation
+    setTimeout(()=>{
+      const sol=document.getElementById('solution');
+      let html='<h3>'+(q.type==='real'?'Real correlation ✓':'Spurious correlation ✗')+'</h3>';
+      html+='<div class="step">'+q.explain+'</div>';
+      html+='<button class="next-btn" onclick="closeSol()">Next question →</button>';
+      sol.innerHTML=html;sol.className='solution show';
+    },1500);
+  }
+}
+
+function showPhase2(q){
+  document.getElementById('options').innerHTML='';
+  const card=document.getElementById('tinfoilCard');
+  card.className='tinfoil-card show';
+  document.getElementById('prompt').textContent='No causal link. But... unless...';
+
+  // Pick a random conspiracy
+  const c=q.conspiracies[Math.floor(Math.random()*q.conspiracies.length)];
+  document.getElementById('conspiracy').textContent='🪄 "'+c+'"';
+}
+
+function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+
+function endGame(){
+  const pct=total>0?Math.round(correctN/total*100):0;
+  let t='Keep Practising!';if(pct>=90)t='Statistical Genius!';else if(pct>=70)t='Good Instincts!';else if(pct>=50)t='Getting There!';
+  document.getElementById('resultTitle').textContent=t;
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('statsLine').innerHTML=
+    'Correlation or Coincidence<br>'+correctN+'/'+total+' correct ('+pct+'%)<br><br>'+
+    'Remember: correlation ≠ causation.<br>Always ask: <em>what is the causal mechanism?</em>';
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'correlation-or-coincidence',level:'gcse',score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('correlation-or-coincidence','gcse',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('correlation-or-coincidence','gcse',score);}}
+  showS('results');
+}
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

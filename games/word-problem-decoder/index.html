@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Read the word problem, identify the maths topic. Build the reading comprehension skills GCSE students need. Free, curriculum-aligned, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/word-problem-decoder/">
+<meta property="og:title" content="Word Problem Decoder — MaffsGames">
+<meta property="og:description" content="Read the word problem, identify the maths topic. Build the reading comprehension skills GCSE students need. Free, curriculum-aligned, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/word-problem-decoder/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Word Problem Decoder — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;--purple:#8b5cf6;
+--ks3:#22c55e;--gcse:#3b82f6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+/* Header */
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;color:#fff;text-transform:uppercase;letter-spacing:0.04em}
+.level-pill.ks3{background:rgba(34,197,94,0.15);color:var(--ks3);border:1px solid rgba(34,197,94,0.3)}
+.level-pill.gcse{background:rgba(59,130,246,0.15);color:var(--gcse);border:1px solid rgba(59,130,246,0.3)}
+
+/* HUD bar */
+.hud{display:none;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;align-items:center;justify-content:space-between;gap:16px}
+.hud.visible{display:flex}
+.hud-score{font-size:14px;font-weight:600}
+.hud-score span{color:var(--teal)}
+.progress-wrap{flex:1;max-width:300px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-bar{height:100%;background:var(--teal);border-radius:3px;transition:width 0.3s}
+.hud-count{font-size:13px;color:var(--muted);font-weight:500}
+.settings-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:12px;font-family:'Outfit',sans-serif;font-weight:500;transition:all 0.15s}
+.settings-btn:hover{border-color:var(--teal);color:var(--text)}
+
+/* Screens */
+.screen{display:none;max-width:640px;margin:0 auto;padding:32px 24px;width:100%}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:28px;font-weight:800;margin-bottom:8px;text-align:center}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.5}
+.section-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px}
+.level-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px}
+.level-btn{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;padding:16px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all 0.15s;text-align:left}
+.level-btn:hover{border-color:var(--teal)}
+.level-btn.active.ks3{border-color:var(--ks3);background:rgba(34,197,94,0.08);color:var(--ks3)}
+.level-btn.active.gcse{border-color:var(--gcse);background:rgba(59,130,246,0.08);color:var(--gcse)}
+.level-btn .btn-sub{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;display:block}
+
+/* Topic filter */
+.topic-section{margin-bottom:28px}
+.topic-grid{display:flex;flex-wrap:wrap;gap:8px}
+.topic-chip{font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;padding:7px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all 0.15s}
+.topic-chip:hover{border-color:var(--teal)}
+.topic-chip.active{border-color:var(--teal);background:rgba(13,148,136,0.1);color:var(--teal)}
+.topic-toggle{font-family:'Outfit',sans-serif;font-size:12px;color:var(--teal);background:none;border:none;cursor:pointer;margin-top:8px;font-weight:500}
+
+/* Session length */
+.session-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px}
+.session-btn{font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;padding:14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all 0.15s;text-align:center}
+.session-btn:hover{border-color:var(--teal)}
+.session-btn.active{border-color:var(--teal);background:rgba(13,148,136,0.1);color:var(--teal)}
+.session-btn .btn-sub{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;display:block}
+
+.start-go{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer;transition:opacity 0.15s;width:100%}
+.start-go:hover{opacity:0.9}
+.start-go:disabled{opacity:0.4;cursor:default}
+
+/* Game screen */
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px 24px;margin-bottom:20px;line-height:1.7;font-size:17px}
+.question-card .highlight{background:var(--teal-dim);text-decoration:underline;text-decoration-color:var(--teal);text-underline-offset:3px;font-weight:600;padding:1px 3px;border-radius:3px}
+.multi-badge{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;margin-right:4px;vertical-align:middle}
+.multi-badge.b1{background:rgba(13,148,136,0.2);color:var(--teal)}
+.multi-badge.b2{background:rgba(245,158,11,0.2);color:var(--amber)}
+.multi-badge.b3{background:rgba(139,92,246,0.2);color:var(--purple)}
+.highlight.h1{text-decoration-color:var(--teal);background:var(--teal-dim)}
+.highlight.h2{text-decoration-color:var(--amber);background:rgba(245,158,11,0.15)}
+.highlight.h3{text-decoration-color:var(--purple);background:rgba(139,92,246,0.15)}
+
+.stage-pill{display:inline-block;font-size:12px;font-weight:600;color:var(--teal);background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.2);padding:4px 12px;border-radius:8px;margin-bottom:16px}
+
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:480px){.options-grid{grid-template-columns:1fr}}
+.option-btn{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;padding:16px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;transition:all 0.15s;text-align:center;min-height:52px;display:flex;align-items:center;justify-content:center}
+.option-btn:hover{border-color:var(--teal);background:rgba(13,148,136,0.06)}
+.option-btn.correct{border-color:var(--green);background:var(--green-dim);color:var(--green);transform:scale(1.02)}
+.option-btn.correct::before{content:'\2713 ';font-weight:800}
+.option-btn.incorrect{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+.option-btn.incorrect::before{content:'\2717 ';font-weight:800}
+.option-btn.reveal{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+.option-btn.reveal::before{content:'\2713 ';font-weight:800}
+.option-btn.disabled{pointer-events:none;opacity:0.6}
+
+/* Results screen */
+.results-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px 24px;text-align:center}
+.results-pct{font-size:56px;font-weight:800;color:var(--teal);margin-bottom:4px}
+.results-label{color:var(--muted);font-size:14px;margin-bottom:24px}
+.results-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.stat-box{background:var(--surface-alt);border-radius:10px;padding:16px}
+.stat-val{font-size:24px;font-weight:700}
+.stat-label{font-size:12px;color:var(--muted);margin-top:2px}
+.pb-banner{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--amber);border-radius:10px;padding:12px;font-weight:600;margin-bottom:16px;font-size:14px}
+.play-again{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer;width:100%;transition:opacity 0.15s}
+.play-again:hover{opacity:0.9}
+
+/* Accessibility toggle */
+.a11y-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 8px;cursor:pointer;font-size:14px;line-height:1;transition:all 0.15s}
+.a11y-btn:hover{border-color:var(--teal);color:var(--text)}
+.a11y-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(13,148,136,0.1)}
+
+/* Dyslexia-friendly overrides */
+body.dyslexia{background:#fdf6e3;color:#2d2006;--bg:#fdf6e3;--surface:#fff8ec;--surface-alt:#fef3d8;--border:#9a8654;--text:#2d2006;--muted:#6b5c3e;--teal:#087568;--teal-dim:rgba(8,117,104,0.18);--green:#15803d;--green-dim:rgba(21,128,61,0.12);--red:#b91c1c;--red-dim:rgba(185,28,28,0.1);--amber:#b45309;--ks3:#15803d;--gcse:#1d4ed8}
+body.dyslexia .screen{font-size:18px;line-height:1.8;letter-spacing:0.12em;word-spacing:0.16em}
+body.dyslexia .question-card{font-size:18px;line-height:1.8;letter-spacing:0.05em;word-spacing:0.12em}
+body.dyslexia .option-btn{font-size:16px;letter-spacing:0.05em}
+body.dyslexia .start-title,body.dyslexia .results-pct{color:var(--teal)}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+*{animation:none!important;transition:none!important}
+}
+
+/* Fade transition */
+.fade-out{opacity:0;transition:opacity 0.2s}
+.fade-in{opacity:1;transition:opacity 0.2s}
+
+/* Topic filter modal (mid-game) */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.visible{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:480px;width:90%;max-height:80vh;overflow-y:auto}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:16px}
+.modal-close{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;padding:10px 24px;border:none;border-radius:8px;background:var(--teal);color:#fff;cursor:pointer;margin-top:16px;width:100%}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <div class="header-title">Word Problem Decoder</div>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <button class="a11y-btn" id="a11yBtn" title="Accessibility: dyslexia-friendly mode">Aa</button>
+    <span class="level-pill" id="levelPill"></span>
+  </div>
+</div>
+
+<div class="hud" id="hud">
+  <div class="hud-score">Score: <span id="hudScore">0 / 0</span></div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  <div class="hud-count" id="hudCount">0 / 0</div>
+  <button class="settings-btn" id="settingsBtn">Topics</button>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <h1 class="start-title">Word Problem Decoder</h1>
+  <p class="start-sub">Read the word problem. Spot the highlighted phrase. Identify the maths topic it belongs to.</p>
+
+  <div class="section-label">Level</div>
+  <div class="level-grid" id="levelGrid">
+    <button class="level-btn ks3" data-level="ks3">KS3<span class="btn-sub">Year 7-9</span></button>
+    <button class="level-btn gcse" data-level="gcse">GCSE<span class="btn-sub">Year 10-11</span></button>
+  </div>
+
+  <div class="topic-section">
+    <div class="section-label">Topics</div>
+    <div class="topic-grid" id="topicGrid"></div>
+    <button class="topic-toggle" id="topicToggle">Deselect all</button>
+  </div>
+
+  <div class="section-label">Session Length</div>
+  <div class="session-grid">
+    <button class="session-btn" data-len="10">10<span class="btn-sub">phrases</span></button>
+    <button class="session-btn active" data-len="20">20<span class="btn-sub">phrases</span></button>
+    <button class="session-btn" data-len="30">30<span class="btn-sub">phrases</span></button>
+  </div>
+
+  <button class="start-go" id="startBtn">Start</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div id="stagePill" class="stage-pill"></div>
+  <div class="question-card" id="questionCard"></div>
+  <div class="options-grid" id="optionsGrid"></div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-card">
+    <div class="results-pct" id="resultsPct">0%</div>
+    <div class="results-label">Accuracy</div>
+    <div id="pbBanner" class="pb-banner" style="display:none"></div>
+    <div class="results-stats">
+      <div class="stat-box"><div class="stat-val" id="resCorrect">0</div><div class="stat-label">Correct</div></div>
+      <div class="stat-box"><div class="stat-val" id="resTotal">0</div><div class="stat-label">Total</div></div>
+    </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="play-again" id="playAgain">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+</div>
+
+<!-- TOPIC FILTER MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3>Filter Topics</h3>
+    <div class="topic-grid" id="modalTopicGrid"></div>
+    <button class="topic-toggle" id="modalTopicToggle">Deselect all</button>
+    <button class="modal-close" id="modalClose">Done</button>
+  </div>
+</div>
+
+<script>
+/* ===== QUESTION BANK v2 — Exam-style word problems ===== */
+const QUESTIONS = [
+// ─── KS3: Ratio & Proportion (8) ───
+{id:'wpd_ks3_001',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'A school is organising a trip to a science museum. For every 6 students who want to visit the dinosaur exhibit, 4 want to visit the space exhibit. There are 120 students on the trip altogether. How many students visit the dinosaur exhibit?',highlights:[{phrase:'For every 6 students who want to visit the dinosaur exhibit, 4 want to visit the space exhibit',topic:'Ratio & Proportion',distractorGroup:'number'}]},
+{id:'wpd_ks3_002',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'Mia is making a smoothie using strawberries, banana and yoghurt. She uses strawberries and banana in the ratio 3:1 by weight. The total weight of fruit in each smoothie is 200g. She wants to make enough smoothies for 5 friends. How much strawberry does she need altogether?',highlights:[{phrase:'in the ratio 3:1 by weight',topic:'Ratio & Proportion',distractorGroup:'number'}]},
+{id:'wpd_ks3_003',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'A map of a national park uses a scale of 1:50,000. On the map, the distance between the visitor centre and the waterfall is 6.4 cm. A hiker wants to know the real distance between the two locations. What is the actual distance in kilometres?',highlights:[{phrase:'a scale of 1:50,000',topic:'Ratio & Proportion',distractorGroup:'number'}]},
+{id:'wpd_ks3_004',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'A builder mixes sand and cement to make mortar. He uses sand and cement in the ratio 5:1. He has a 30 kg bag of cement. He wants to use all of the cement. How much sand does he need?',highlights:[{phrase:'sand and cement in the ratio 5:1',topic:'Ratio & Proportion',distractorGroup:'number'}]},
+{id:'wpd_ks3_005',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'Three friends win a prize on a scratch card. They agree to share the winnings in the ratio of the number of cards they each bought. Amy bought 2 cards, Ben bought 3 and Chloe bought 5. The total prize is £180. How much does Amy receive?',highlights:[{phrase:'share the winnings in the ratio',topic:'Ratio & Proportion',distractorGroup:'number'}]},
+{id:'wpd_ks3_006',level:'ks3',topic:'mixed',distractorGroup:'number',multi:true,text:'A recipe for flapjacks uses oats and butter in the ratio 4:1 by mass. A chef wants to make a large batch using 600g of oats. How much butter does she need? If butter costs £2.50 per 100g, what will the butter cost?',highlights:[{phrase:'oats and butter in the ratio 4:1',topic:'Ratio & Proportion',distractorGroup:'number'},{phrase:'butter costs £2.50 per 100g',topic:'Number & Place Value',distractorGroup:'number'}]},
+{id:'wpd_ks3_007',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'A car uses petrol at a constant rate. It travels 240 miles on a full tank of 30 litres. The driver is planning a journey of 180 miles. How many litres of petrol will she need for the journey?',highlights:[{phrase:'travels 240 miles on a full tank of 30 litres',topic:'Ratio & Proportion',distractorGroup:'number'}]},
+{id:'wpd_ks3_008',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'In a jar of mixed sweets, the ratio of red to green to yellow sweets is 2:3:5. There are 40 yellow sweets in the jar. A child picks a sweet at random without looking. How many sweets are in the jar altogether?',highlights:[{phrase:'ratio of red to green to yellow sweets is 2:3:5',topic:'Ratio & Proportion',distractorGroup:'number'}]},
+
+// ─── KS3: Percentages (8) ───
+{id:'wpd_ks3_009',level:'ks3',topic:'Percentages',distractorGroup:'number',multi:false,text:'A sports shop is having a sale. All trainers are reduced by 20%. Jayden sees a pair of trainers with an original price of £65. He has saved £55. Does he have enough money to buy the trainers in the sale? Show how you decide.',highlights:[{phrase:'reduced by 20%',topic:'Percentages',distractorGroup:'number'}]},
+{id:'wpd_ks3_010',level:'ks3',topic:'Percentages',distractorGroup:'number',multi:false,text:'In a Year 9 class of 30 students, 18 students said they walk to school. The teacher says that more than 60% of the class walk to school. Is the teacher correct?',highlights:[{phrase:'more than 60% of the class',topic:'Percentages',distractorGroup:'number'}]},
+{id:'wpd_ks3_011',level:'ks3',topic:'Percentages',distractorGroup:'number',multi:false,text:'A mobile phone originally costs £320. The shop offers two deals: Deal A gives 15% off the original price. Deal B takes £40 off and then gives a further 5% off. Which deal is cheaper, and by how much?',highlights:[{phrase:'15% off the original price',topic:'Percentages',distractorGroup:'number'}]},
+{id:'wpd_ks3_012',level:'ks3',topic:'Percentages',distractorGroup:'number',multi:false,text:'A football club had 4,500 fans at last season\'s home games on average. This season, the average attendance has risen to 5,040. What is the percentage increase in average attendance?',highlights:[{phrase:'percentage increase in average attendance',topic:'Percentages',distractorGroup:'number'}]},
+{id:'wpd_ks3_013',level:'ks3',topic:'Percentages',distractorGroup:'number',multi:false,text:'A laptop is on sale for £391 after a 15% reduction. Priya wants to know the original price before the reduction. Her friend says: \'Just add 15% to £391.\' Is her friend\'s method correct? What is the actual original price?',highlights:[{phrase:'after a 15% reduction',topic:'Percentages',distractorGroup:'number'}]},
+{id:'wpd_ks3_014',level:'ks3',topic:'Percentages',distractorGroup:'number',multi:false,text:'In a survey of 250 people, 34% said they preferred tea to coffee. The rest preferred coffee or said they had no preference. How many people preferred tea?',highlights:[{phrase:'34% said they preferred tea',topic:'Percentages',distractorGroup:'number'}]},
+{id:'wpd_ks3_015',level:'ks3',topic:'Percentages',distractorGroup:'number',multi:false,text:'A coat costs £84 in a sale after a 30% reduction. Dan wants to find the original price of the coat. He says the original price was £84 + 30% of £84 = £109.20. Explain the mistake Dan has made and find the correct original price.',highlights:[{phrase:'after a 30% reduction',topic:'Percentages',distractorGroup:'number'}]},
+{id:'wpd_ks3_016',level:'ks3',topic:'Percentages',distractorGroup:'number',multi:false,text:'A savings account pays 4% simple interest per year. Sophie puts £250 in the account. After 3 years, how much interest has she earned in total?',highlights:[{phrase:'4% simple interest per year',topic:'Percentages',distractorGroup:'number'}]},
+
+// ─── KS3: Fractions (6) ───
+{id:'wpd_ks3_017',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'A baker makes 48 muffins. She sells three-quarters of them before lunch and one-third of the remainder in the afternoon. How many muffins does she have left at the end of the day?',highlights:[{phrase:'three-quarters of them before lunch and one-third of the remainder',topic:'Fractions',distractorGroup:'number'}]},
+{id:'wpd_ks3_018',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'A plank of wood is 3\u00bd metres long. A carpenter cuts off a piece that is 1\u00bc metres long. He needs the remaining piece to be at least 2 metres long for his project. Will he have enough wood left?',highlights:[{phrase:'3\u00bd metres long',topic:'Fractions',distractorGroup:'number'}]},
+{id:'wpd_ks3_019',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'In a school, two-fifths of the students study French and one-quarter study Spanish. The rest study German. What fraction of students study German? If there are 400 students in the school, how many study German?',highlights:[{phrase:'two-fifths of the students study French and one-quarter study Spanish',topic:'Fractions',distractorGroup:'number'}]},
+{id:'wpd_ks3_020',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'A water tank is three-eighths full. It contains 360 litres of water. The tank springs a leak and loses 45 litres. What fraction of the full tank capacity remains?',highlights:[{phrase:'three-eighths full',topic:'Fractions',distractorGroup:'number'}]},
+{id:'wpd_ks3_021',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'Freya is training for a sponsored walk. On Monday she walks 2\u2153 miles. On Wednesday she walks 1\u00be miles. On Friday she walks 3\u2159 miles. What is the total distance she walks across the three days?',highlights:[{phrase:'2\u2153 miles',topic:'Fractions',distractorGroup:'number'}]},
+{id:'wpd_ks3_022',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'A recipe for 12 biscuits requires \u00be of a cup of sugar. Leo wants to make 20 biscuits. How many cups of sugar does he need? Give your answer as a fraction.',highlights:[{phrase:'\u00be of a cup of sugar',topic:'Fractions',distractorGroup:'number'}]},
+
+// ─── KS3: Number & Place Value (4) ───
+{id:'wpd_ks3_023',level:'ks3',topic:'Number & Place Value',distractorGroup:'number',multi:false,text:'A scientist measures a bacterial cell under a microscope. The cell is 0.000043 metres long. She wants to write this measurement in a form that is easier to communicate in a scientific paper. Write the length in standard form.',highlights:[{phrase:'standard form',topic:'Number & Place Value',distractorGroup:'number'}]},
+{id:'wpd_ks3_024',level:'ks3',topic:'Number & Place Value',distractorGroup:'number',multi:false,text:'A supermarket is ordering stock. The manager estimates that the store sells approximately 347 cartons of orange juice per week. She rounds this to the nearest 50 to place her order. A delivery lorry can carry 300 cartons. How many lorry loads does she need to order?',highlights:[{phrase:'rounds this to the nearest 50',topic:'Number & Place Value',distractorGroup:'number'}]},
+{id:'wpd_ks3_025',level:'ks3',topic:'Number & Place Value',distractorGroup:'number',multi:false,text:'A builder orders 683 bricks to build a garden wall. Each pack contains 25 bricks. The builder estimates how many packs to order by rounding the number of bricks to 1 significant figure. How many packs does his estimate suggest he needs?',highlights:[{phrase:'rounding the number of bricks to 1 significant figure',topic:'Number & Place Value',distractorGroup:'number'}]},
+{id:'wpd_ks3_026',level:'ks3',topic:'Number & Place Value',distractorGroup:'number',multi:false,text:'Two planets are orbiting a distant star. Planet A takes 420 Earth days to complete one orbit. Planet B takes 315 Earth days. Both planets start at the same position. After how many Earth days will they next both be back at the starting position at the same time?',highlights:[{phrase:'how many Earth days will they next both be back',topic:'Number & Place Value',distractorGroup:'number'}]},
+
+// ─── KS3: Algebra — Forming Expressions (6) ───
+{id:'wpd_ks3_027',level:'ks3',topic:'Algebra — Forming Expressions',distractorGroup:'algebra',multi:false,text:'A taxi company charges a fixed booking fee of £3 plus £2.50 for every mile of the journey. A customer wants to know the cost of a journey before they book. Write a formula for the total cost, C pounds, of a journey of m miles.',highlights:[{phrase:'Write a formula for the total cost',topic:'Algebra — Forming Expressions',distractorGroup:'algebra'}]},
+{id:'wpd_ks3_028',level:'ks3',topic:'Algebra — Forming Expressions',distractorGroup:'algebra',multi:false,text:'A theme park charges £a for an adult ticket and £c for a child ticket. A family of 2 adults and 3 children visit the park. Write an expression for the total cost of their tickets. If adult tickets cost £18 and child tickets cost £12, find the total cost.',highlights:[{phrase:'Write an expression for the total cost',topic:'Algebra — Forming Expressions',distractorGroup:'algebra'}]},
+{id:'wpd_ks3_029',level:'ks3',topic:'Algebra — Forming Expressions',distractorGroup:'algebra',multi:false,text:'Ellie is e years old. Her brother is 4 years younger than her. Their mum is three times Ellie\'s age. Write an expression for the sum of all three ages. If Ellie is 13, find the total of all three ages.',highlights:[{phrase:'Write an expression for the sum of all three ages',topic:'Algebra — Forming Expressions',distractorGroup:'algebra'}]},
+{id:'wpd_ks3_030',level:'ks3',topic:'Algebra — Forming Expressions',distractorGroup:'algebra',multi:false,text:'A rectangular sports pitch has a length that is 15 metres more than twice its width. Let the width be w metres. Write an expression for the perimeter of the pitch in terms of w. If the perimeter is 96 metres, find the dimensions of the pitch.',highlights:[{phrase:'Write an expression for the perimeter',topic:'Algebra — Forming Expressions',distractorGroup:'algebra'}]},
+{id:'wpd_ks3_031',level:'ks3',topic:'Algebra — Forming Expressions',distractorGroup:'algebra',multi:false,text:'A plumber charges £45 for each hour he works, plus a fixed call-out charge of £60. Write a formula for the total charge, T pounds, when the plumber works for h hours. How much would he charge for a job that takes 3\u00bd hours?',highlights:[{phrase:'Write a formula for the total charge',topic:'Algebra — Forming Expressions',distractorGroup:'algebra'}]},
+{id:'wpd_ks3_032',level:'ks3',topic:'Algebra — Forming Expressions',distractorGroup:'algebra',multi:false,text:'Packets of crisps come in boxes of 24. A school canteen orders x boxes. Six packets are kept aside as samples. Write an expression for the number of packets available to sell. If x = 5, how many packets are available?',highlights:[{phrase:'Write an expression for the number of packets available',topic:'Algebra — Forming Expressions',distractorGroup:'algebra'}]},
+
+// ─── KS3: Algebra — Sequences (4) ───
+{id:'wpd_ks3_033',level:'ks3',topic:'Algebra — Sequences',distractorGroup:'algebra',multi:false,text:'A florist arranges flowers in a pattern on a display shelf. The first arrangement has 5 flowers. Each arrangement has 3 more flowers than the one before. The florist wants to know how many flowers are in the 10th arrangement. Find the number of flowers in the 10th arrangement.',highlights:[{phrase:'Each arrangement has 3 more flowers than the one before',topic:'Algebra — Sequences',distractorGroup:'algebra'}]},
+{id:'wpd_ks3_034',level:'ks3',topic:'Algebra — Sequences',distractorGroup:'algebra',multi:false,text:'A ball is dropped from a height of 160 cm. After each bounce it reaches half the height of the previous bounce. A student wants to predict how high the ball will reach after the 4th bounce. Find the height after the 4th bounce.',highlights:[{phrase:'After each bounce it reaches half the height',topic:'Algebra — Sequences',distractorGroup:'algebra'}]},
+{id:'wpd_ks3_035',level:'ks3',topic:'Algebra — Sequences',distractorGroup:'algebra',multi:false,text:'Square tiles are being laid in a pattern. The first pattern uses 1 tile. The second uses 5 tiles. The third uses 9 tiles. A tiler wants to know whether the nth term of this sequence is 4n \u2212 3. Is 61 a term in this sequence? Explain how you know.',highlights:[{phrase:'whether the nth term of this sequence is 4n \u2212 3',topic:'Algebra — Sequences',distractorGroup:'algebra'}]},
+{id:'wpd_ks3_036',level:'ks3',topic:'Algebra — Sequences',distractorGroup:'algebra',multi:false,text:'A theatre has 20 seats in the front row. Each row behind has 2 more seats than the row in front. The theatre has 15 rows. A show producer wants to know the total seating capacity. Find the number of seats in the back row.',highlights:[{phrase:'Each row behind has 2 more seats than the row in front',topic:'Algebra — Sequences',distractorGroup:'algebra'}]},
+
+// ─── KS3: Geometry — Area & Perimeter (7) ───
+{id:'wpd_ks3_037',level:'ks3',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry',multi:false,text:'A farmer wants to fence a rectangular field. The field is 85 metres long and 62 metres wide. Fencing costs £4.50 per metre. Posts are needed every 5 metres and cost £8 each. What is the total cost of the fencing, not including posts?',highlights:[{phrase:'total cost of the fencing',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry'}]},
+{id:'wpd_ks3_038',level:'ks3',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry',multi:false,text:'A circular pond in a garden has a diameter of 4.2 metres. The owner wants to put a decorative border of tiles around the edge of the pond. Each tile covers 30 cm of the border. How many tiles does she need? Use \u03c0 = 3.14.',highlights:[{phrase:'decorative border of tiles around the edge of the pond',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry'}]},
+{id:'wpd_ks3_039',level:'ks3',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry',multi:false,text:'A school wants to re-turf its football pitch. The pitch is rectangular with a length of 95 m and a width of 60 m. There is a semicircular penalty area at each end, with a diameter of 18 m. Turf costs £3.20 per square metre. Estimate the cost of re-turfing just the rectangular section.',highlights:[{phrase:'cost of re-turfing just the rectangular section',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry'}]},
+{id:'wpd_ks3_040',level:'ks3',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry',multi:false,text:'A kitchen floor is made up of square tiles. Each tile has a side length of 25 cm. The floor is 3.5 m long and 2.75 m wide. Tiles are sold in packs of 10. How many packs of tiles are needed to cover the floor, assuming no tiles are cut?',highlights:[{phrase:'square tiles. Each tile has a side length of 25 cm',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry'}]},
+{id:'wpd_ks3_041',level:'ks3',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry',multi:false,text:'An L-shaped garden is shown below. The outer dimensions are 12 m by 10 m. A rectangular section 4 m by 6 m has been removed from one corner for a shed. The owner wants to lay grass in the remaining L-shaped area. What area of grass is needed?',highlights:[{phrase:'area of grass is needed',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry'}]},
+{id:'wpd_ks3_042',level:'ks3',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry',multi:false,text:'A cylindrical tin of soup has a circular base with a radius of 4 cm and a height of 11 cm. The manufacturer wants to know the curved surface area of the tin so they can design a label. Find the curved surface area. Use \u03c0 = 3.14.',highlights:[{phrase:'curved surface area of the tin',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry'}]},
+{id:'wpd_ks3_043',level:'ks3',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry',multi:false,text:'A triangular warning sign has a base of 40 cm and a perpendicular height of 35 cm. A company is printing 500 of these signs. They need to know the total area of reflective material required. Find the area of one sign and the total area for 500 signs.',highlights:[{phrase:'total area of reflective material',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry'}]},
+
+// ─── KS3: Geometry — Angles (4) ───
+{id:'wpd_ks3_044',level:'ks3',topic:'Geometry — Angles',distractorGroup:'geometry',multi:false,text:'Two roads meet at a junction. The angle between them on one side is 47\u00b0. A surveyor needs to know the angle on the other side of the junction where the roads meet. What is the size of the other angle, and what geometric reason justifies your answer?',highlights:[{phrase:'angle on the other side of the junction',topic:'Geometry — Angles',distractorGroup:'geometry'}]},
+{id:'wpd_ks3_045',level:'ks3',topic:'Geometry — Angles',distractorGroup:'geometry',multi:false,text:'A regular hexagonal tile is used to design a mosaic floor. An interior designer wants to know the interior angle of the tile to ensure the tiles fit together without gaps. Find the interior angle of a regular hexagon.',highlights:[{phrase:'interior angle of a regular hexagon',topic:'Geometry — Angles',distractorGroup:'geometry'}]},
+{id:'wpd_ks3_046',level:'ks3',topic:'Geometry — Angles',distractorGroup:'geometry',multi:false,text:'In a triangle, one angle is twice the size of the smallest angle. The third angle is 30\u00b0 more than the smallest angle. An architect is checking the angles in a triangular roof truss. Find the size of each angle in the triangle.',highlights:[{phrase:'one angle is twice the size of the smallest angle',topic:'Geometry — Angles',distractorGroup:'geometry'}]},
+{id:'wpd_ks3_047',level:'ks3',topic:'Geometry — Angles',distractorGroup:'geometry',multi:false,text:'A straight road crosses a pair of parallel railway lines. At the first crossing, the angle between the road and the track is 68\u00b0. A rail engineer wants to know all the angles formed at both crossings. Find the co-interior angle at the second crossing.',highlights:[{phrase:'co-interior angle at the second crossing',topic:'Geometry — Angles',distractorGroup:'geometry'}]},
+
+// ─── KS3: Statistics & Averages (3) ───
+{id:'wpd_ks3_048',level:'ks3',topic:'Statistics & Averages',distractorGroup:'statistics',multi:false,text:'A teacher records the scores of 9 students in a spelling test: 14, 18, 9, 14, 20, 11, 14, 17, 15. The teacher wants to use a single value to represent a typical score to report to parents. Find the mode, median and mean. Which average best represents the class?',highlights:[{phrase:'Find the mode, median and mean',topic:'Statistics & Averages',distractorGroup:'statistics'}]},
+{id:'wpd_ks3_049',level:'ks3',topic:'Statistics & Averages',distractorGroup:'statistics',multi:false,text:'The mean age of 6 players in a basketball team is 17 years. A seventh player joins the team. The new mean age of all 7 players is 17.5 years. A coach wants to know the age of the new player. How old is the seventh player?',highlights:[{phrase:'new mean age of all 7 players',topic:'Statistics & Averages',distractorGroup:'statistics'}]},
+{id:'wpd_ks3_050',level:'ks3',topic:'Statistics & Averages',distractorGroup:'statistics',multi:false,text:'A bag contains red, blue and yellow counters. Maria carries out an experiment, pulling out a counter and replacing it 80 times. She gets red 24 times, blue 36 times, and yellow 20 times. She also picks out a counter that fell on the floor 4 times and couldn\u0027t identify its colour. Estimate the probability of picking a red counter.',highlights:[{phrase:'Estimate the probability of picking a red counter',topic:'Statistics & Averages',distractorGroup:'statistics'}]},
+
+// ─── GCSE: Reverse Percentage (5) ───
+{id:'wpd_gcse_001',level:'gcse',topic:'Reverse Percentage',distractorGroup:'number',multi:false,text:'A coat is on sale in a shop window. The sale tag shows £76.50 and says \'10% off\'. Yasmin wants to know the original price of the coat before the sale. Her friend suggests adding 10% to £76.50. Explain why this method is incorrect and find the actual original price.',highlights:[{phrase:'10% off',topic:'Reverse Percentage',distractorGroup:'number'}]},
+{id:'wpd_gcse_002',level:'gcse',topic:'Reverse Percentage',distractorGroup:'number',multi:false,text:'After a pay rise of 4%, a nurse earns £33,280 per year. The nurse\'s union wants to check the salary was calculated correctly from the previous year\'s wage. What was the nurse\'s salary before the pay rise?',highlights:[{phrase:'After a pay rise of 4%',topic:'Reverse Percentage',distractorGroup:'number'}]},
+{id:'wpd_gcse_003',level:'gcse',topic:'Reverse Percentage',distractorGroup:'number',multi:false,text:'A second-hand car dealership is selling a car for £8,262. The dealer says this price already includes a 6% profit on what he paid for it. A buyer wants to know what the dealer originally paid. Find the price the dealer paid for the car.',highlights:[{phrase:'already includes a 6% profit',topic:'Reverse Percentage',distractorGroup:'number'}]},
+{id:'wpd_gcse_004',level:'gcse',topic:'Reverse Percentage',distractorGroup:'number',multi:false,text:'A house is valued at £292,500 after its value increased by 17% over 5 years. An estate agent wants to know the value of the house 5 years ago. Find the value of the house 5 years ago.',highlights:[{phrase:'after its value increased by 17%',topic:'Reverse Percentage',distractorGroup:'number'}]},
+{id:'wpd_gcse_005',level:'gcse',topic:'Reverse Percentage',distractorGroup:'number',multi:false,text:'A restaurant bill comes to £62.10. This total already includes a service charge of 15%. A diner wants to know the cost of the food before the service charge was added. Find the cost of the food before the service charge.',highlights:[{phrase:'already includes a service charge of 15%',topic:'Reverse Percentage',distractorGroup:'number'}]},
+
+// ─── GCSE: Standard Form (4) ───
+{id:'wpd_gcse_006',level:'gcse',topic:'Standard Form',distractorGroup:'number',multi:false,text:'The diameter of a human hair is approximately 0.00007 metres. A scientist wants to compare this with the diameter of a strand of spider silk, which is 3 \u00d7 10\u207b\u2076 metres. Write the diameter of the human hair in standard form and determine which is thicker.',highlights:[{phrase:'Write the diameter of the human hair in standard form',topic:'Standard Form',distractorGroup:'number'}]},
+{id:'wpd_gcse_007',level:'gcse',topic:'Standard Form',distractorGroup:'number',multi:false,text:'The speed of light is approximately 3 \u00d7 10\u2078 metres per second. The distance from the Earth to the nearest star, Proxima Centauri, is approximately 4.013 \u00d7 10\u00b9\u2076 metres. An astronomer wants to know how many years it would take a light beam to travel this distance. Given that 1 year \u2248 3.15 \u00d7 10\u2077 seconds, find the time in years.',highlights:[{phrase:'3 \u00d7 10\u2078 metres per second',topic:'Standard Form',distractorGroup:'number'}]},
+{id:'wpd_gcse_008',level:'gcse',topic:'Standard Form',distractorGroup:'number',multi:false,text:'A computer processor can carry out 2.4 \u00d7 10\u2079 operations per second. A video game requires 1.44 \u00d7 10\u00b9\u00b2 operations to load. A games developer wants to know how long the game takes to load on this processor. Give your answer in seconds and in standard form.',highlights:[{phrase:'2.4 \u00d7 10\u2079 operations per second',topic:'Standard Form',distractorGroup:'number'}]},
+{id:'wpd_gcse_009',level:'gcse',topic:'Standard Form',distractorGroup:'number',multi:false,text:'The mass of the Earth is 5.97 \u00d7 10\u00b2\u2074 kg. The mass of the Moon is 7.34 \u00d7 10\u00b2\u00b2 kg. A physics student is asked to find the combined mass of the Earth and Moon, and also to calculate how many times heavier the Earth is than the Moon. Give both answers in standard form.',highlights:[{phrase:'5.97 \u00d7 10\u00b2\u2074 kg',topic:'Standard Form',distractorGroup:'number'}]},
+
+// ─── GCSE: Surds & Bounds (4) ───
+{id:'wpd_gcse_010',level:'gcse',topic:'Surds & Bounds',distractorGroup:'number',multi:false,text:'A square patio has an area of 45 m\u00b2. A landscape gardener wants to order edging strip to go around the perimeter of the patio. Find the exact length of one side of the patio in simplified surd form, and hence find the exact perimeter.',highlights:[{phrase:'exact length of one side of the patio in simplified surd form',topic:'Surds & Bounds',distractorGroup:'number'}]},
+{id:'wpd_gcse_011',level:'gcse',topic:'Surds & Bounds',distractorGroup:'number',multi:false,text:'A rectangular room measures 4.8 m by 3.6 m, each measurement given to the nearest 10 cm. A flooring company is ordering tiles for the room. They want to use the upper bound of the room\'s area to make sure they order enough tiles. Find the upper bound of the area of the room.',highlights:[{phrase:'upper bound of the area',topic:'Surds & Bounds',distractorGroup:'number'}]},
+{id:'wpd_gcse_012',level:'gcse',topic:'Surds & Bounds',distractorGroup:'number',multi:false,text:'A cylindrical pipe has a diameter of 5.4 cm, measured to the nearest millimetre. An engineer needs to calculate the upper and lower bounds for the cross-sectional area of the pipe. Find both bounds, giving your answers to 3 significant figures.',highlights:[{phrase:'upper and lower bounds for the cross-sectional area',topic:'Surds & Bounds',distractorGroup:'number'}]},
+{id:'wpd_gcse_013',level:'gcse',topic:'Surds & Bounds',distractorGroup:'number',multi:false,text:'A triangle has two shorter sides of length \u221a7 cm and \u221a28 cm and a right angle between them. A student claims the hypotenuse is exactly \u221a35 cm. Without using a calculator, show whether the student is correct and find the exact length of the hypotenuse in simplified surd form.',highlights:[{phrase:'exact length of the hypotenuse in simplified surd form',topic:'Surds & Bounds',distractorGroup:'number'}]},
+
+// ─── GCSE: Algebra — Equations & Inequalities (6) ───
+{id:'wpd_gcse_014',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'Two friends are comparing their ages. Kira is 3 years older than twice Marcus\'s age. The sum of their ages is 39. Set up and solve an equation to find both their ages.',highlights:[{phrase:'Set up and solve an equation',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_015',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'A parking metre charges 80p for the first hour and 50p for each additional hour. Tom has £4.30 in his pocket. He wants to know the maximum number of whole hours he can park. Form and solve an inequality to find the answer.',highlights:[{phrase:'Form and solve an inequality',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_016',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'A rectangle has a length of (3x + 4) cm and a width of (x \u2212 1) cm. The perimeter of the rectangle is 46 cm. A student needs to find the value of x and hence find the area of the rectangle. Form an equation and solve it.',highlights:[{phrase:'Form an equation and solve it',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_017',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'Tickets for a concert cost £12 for adults and £7 for children. A group of adults and children buy tickets. There are 5 more adults than children in the group. The total cost of the tickets is £131. How many of each type of ticket were bought?',highlights:[{phrase:'total cost of the tickets is £131',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_018',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'A delivery driver is paid £9.50 per hour for a standard shift. Overtime hours are paid at 1.5 times the standard rate. In one week she works h hours of overtime on top of her standard 35-hour week. She wants to earn at least £400 in total. Find the minimum number of overtime hours she needs to work.',highlights:[{phrase:'earn at least £400 in total',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_019',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'A number is chosen. When you double it and subtract 7, the result is greater than when you add 11 to the number. Find the set of values the number could take. Represent your answer on a number line.',highlights:[{phrase:'Find the set of values the number could take',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
+
+// ─── GCSE: Algebra — Simultaneous Equations (4) ───
+{id:'wpd_gcse_020',level:'gcse',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra',multi:false,text:'Mr Jones buys 5 tins of paint and 4 rolls of decorating tape. The total cost is £167. The next day he returns 1 tin and 1 roll of tape and receives a refund of £33.75. Find the cost of one tin of paint and one roll of tape.',highlights:[{phrase:'5 tins of paint and 4 rolls',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_021',level:'gcse',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra',multi:false,text:'A cinema sells adult tickets and child tickets. On Monday, 3 adult tickets and 5 child tickets are sold for a total of £45. On Tuesday, 5 adult tickets and 2 child tickets are sold for a total of £52. Find the price of each type of ticket.',highlights:[{phrase:'3 adult tickets and 5 child tickets',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_022',level:'gcse',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra',multi:false,text:'Two friends run laps around a track. Isla runs at a constant speed and completes one lap in x minutes. Jacob runs at a constant speed and completes one lap in y minutes. Together they complete 7 laps in 28 minutes if they alternate. If Isla runs twice as fast as Jacob, find each of their lap times.',highlights:[{phrase:'Together they complete 7 laps',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_023',level:'gcse',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra',multi:false,text:'The sum of two numbers is 41 and their difference is 13. A student sets up two equations and solves them to find both numbers. Set up and solve the simultaneous equations.',highlights:[{phrase:'sum of two numbers is 41 and their difference is 13',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra'}]},
+
+// ─── GCSE: Algebra — Quadratics (5) ───
+{id:'wpd_gcse_024',level:'gcse',topic:'Algebra — Quadratics',distractorGroup:'algebra',multi:false,text:'A rectangular field has a length that is 7 metres more than its width. The area of the field is 198 m\u00b2. A farmer needs to know the dimensions of the field in order to order fencing. Find the length and width of the field.',highlights:[{phrase:'area of the field is 198 m\u00b2',topic:'Algebra — Quadratics',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_025',level:'gcse',topic:'Algebra — Quadratics',distractorGroup:'algebra',multi:false,text:'A ball is thrown vertically upward from the top of a building. Its height above the ground, h metres, after t seconds is given by h = 40 + 12t \u2212 5t\u00b2. Find the times at which the ball is at a height of 47 metres above the ground.',highlights:[{phrase:'h = 40 + 12t \u2212 5t\u00b2',topic:'Algebra — Quadratics',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_026',level:'gcse',topic:'Algebra — Quadratics',distractorGroup:'algebra',multi:false,text:'Two positive numbers differ by 3. The sum of their squares is 89. A student wants to find both numbers. Form a quadratic equation and solve it to find the two numbers.',highlights:[{phrase:'Form a quadratic equation',topic:'Algebra — Quadratics',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_027',level:'gcse',topic:'mixed',distractorGroup:'geometry',multi:true,text:'The square has an area of 81 cm\u00b2. The rectangle has the same perimeter as the square. Its length and width are in the ratio 2:1. Find the area of the rectangle.',highlights:[{phrase:'area of 81 cm\u00b2',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry'},{phrase:'length and width are in the ratio 2:1',topic:'Ratio & Proportion',distractorGroup:'number'}]},
+{id:'wpd_gcse_028',level:'gcse',topic:'Algebra — Quadratics',distractorGroup:'algebra',multi:false,text:'A path of uniform width is built around a rectangular garden. The garden is 14 m long and 10 m wide. The total area of the garden and path combined is 255 m\u00b2. A landscaper needs to find the width of the path. Form and solve a quadratic equation to find the width.',highlights:[{phrase:'Form and solve a quadratic equation',topic:'Algebra — Quadratics',distractorGroup:'algebra'}]},
+
+// ─── GCSE: Algebra — Functions (3) ───
+{id:'wpd_gcse_029',level:'gcse',topic:'Algebra — Functions',distractorGroup:'algebra',multi:false,text:'A function machine is defined by f(x) = 2x\u00b2 \u2212 3. A student wants to find the value of f(4) and also to find the values of x for which f(x) = 15. Find f(4) and solve f(x) = 15.',highlights:[{phrase:'f(x) = 2x\u00b2 \u2212 3',topic:'Algebra — Functions',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_030',level:'gcse',topic:'Algebra — Functions',distractorGroup:'algebra',multi:false,text:'Two functions are defined as f(x) = 3x + 1 and g(x) = x\u00b2 \u2212 4. A teacher asks students to find the composite function fg(x) and to evaluate fg(3). Find fg(x) and evaluate fg(3).',highlights:[{phrase:'composite function fg(x)',topic:'Algebra — Functions',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_031',level:'gcse',topic:'Algebra — Functions',distractorGroup:'algebra',multi:false,text:'A function is defined as h(x) = 5x \u2212 3. A student needs to find the inverse function h\u207b\u00b9(x) and use it to solve h(x) = 22. Find h\u207b\u00b9(x) and verify your answer.',highlights:[{phrase:'inverse function h\u207b\u00b9(x)',topic:'Algebra — Functions',distractorGroup:'algebra'}]},
+
+// ─── GCSE: Geometry — Pythagoras & Trigonometry (6) ───
+{id:'wpd_gcse_032',level:'gcse',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry',multi:false,text:'A 6 m ladder leans against a vertical wall. The foot of the ladder is 1.8 m from the base of the wall on horizontal ground. A safety inspector wants to know how far up the wall the ladder reaches, and whether this meets the safety regulation that the ladder must reach at least 5.5 m. Does it meet the regulation?',highlights:[{phrase:'how far up the wall the ladder reaches',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_033',level:'gcse',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry',multi:false,text:'A ship leaves port and sails 15 km due north, then turns and sails 22 km due east. The captain wants to know the straight-line distance from the port back to the ship\'s current position, and the bearing they would need to sail to return directly to port.',highlights:[{phrase:'straight-line distance from the port',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_034',level:'gcse',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry',multi:false,text:'From the top of a cliff that is 80 m high, the angle of depression to a boat at sea is 34\u00b0. A coastguard wants to find the horizontal distance from the base of the cliff to the boat, so they can send a rescue vessel. Find this distance to the nearest metre.',highlights:[{phrase:'angle of depression to a boat',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_035',level:'gcse',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry',multi:false,text:'A ramp for wheelchair access rises 0.9 m over a horizontal distance of 6 m. Building regulations state the angle of incline must be less than 10\u00b0. An architect needs to check whether the ramp meets this requirement. Find the angle of incline and state whether it is within regulations.',highlights:[{phrase:'angle of incline',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_036',level:'gcse',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry',multi:false,text:'A triangular plot of land has sides of 40 m, 55 m and 70 m. A surveyor wants to find the largest angle in the triangle to determine which way a gateway should face. Find the largest angle in the triangle, giving your answer to the nearest degree.',highlights:[{phrase:'largest angle in the triangle',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_037',level:'gcse',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry',multi:false,text:'Two ships leave from the same port at the same time. Ship A travels on a bearing of 040\u00b0 for 30 km. Ship B travels on a bearing of 160\u00b0 for 45 km. A port controller wants to know the distance between the two ships. Find the distance between the two ships to the nearest kilometre.',highlights:[{phrase:'distance between the two ships',topic:'Geometry — Pythagoras & Trigonometry',distractorGroup:'geometry'}]},
+
+// ─── GCSE: Geometry — Similarity & Congruence (3) ───
+{id:'wpd_gcse_038',level:'gcse',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry',multi:false,text:'Two similar triangles are used in a design. The smaller triangle has sides of 6 cm, 8 cm and 10 cm. The longest side of the larger triangle is 25 cm. An engineer needs to find the lengths of the other two sides of the larger triangle and also the ratio of their areas.',highlights:[{phrase:'Two similar triangles',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_039',level:'gcse',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry',multi:false,text:'A model of a building is made to a scale of 1:200. The model has a floor area of 18 cm\u00b2. An architect wants to know the actual floor area of the building in square metres. Find the actual floor area.',highlights:[{phrase:'scale of 1:200',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_040',level:'gcse',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry',multi:false,text:'Two bottles of perfume are similar in shape. The smaller bottle is 8 cm tall and holds 50 ml. The larger bottle is 12 cm tall. A student wants to know how much perfume the larger bottle holds. Find the capacity of the larger bottle.',highlights:[{phrase:'similar in shape',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry'}]},
+
+// ─── GCSE: Geometry — Circle Theorems (4) ───
+{id:'wpd_gcse_041',level:'gcse',topic:'Geometry — Circle Theorems',distractorGroup:'geometry',multi:false,text:'Points A, B and C lie on a circle with centre O. The angle AOB at the centre is 136\u00b0. A student is asked to find angle ACB where C is any point on the major arc. The student writes: \'angle ACB = 136\u00b0 \u00f7 2 = 68\u00b0.\' Is the student correct? Find angle ACB and give the theorem used.',highlights:[{phrase:'angle ACB where C is any point on the major arc',topic:'Geometry — Circle Theorems',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_042',level:'gcse',topic:'Geometry — Circle Theorems',distractorGroup:'geometry',multi:false,text:'ABCD is a cyclic quadrilateral. Angle DAB = 3x + 10\u00b0 and angle BCD = 5x \u2212 18\u00b0. A geometry student wants to find the value of x and hence find both angles. Find x and both angles, giving the theorem used.',highlights:[{phrase:'cyclic quadrilateral',topic:'Geometry — Circle Theorems',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_043',level:'gcse',topic:'Geometry — Circle Theorems',distractorGroup:'geometry',multi:false,text:'A tangent PT touches a circle at point T. O is the centre of the circle. The angle OPT = 28\u00b0. An exam question asks a student to find angle POT without a calculator. Find angle POT, giving the reason at each stage of working.',highlights:[{phrase:'tangent PT touches a circle',topic:'Geometry — Circle Theorems',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_044',level:'gcse',topic:'Geometry — Circle Theorems',distractorGroup:'geometry',multi:false,text:'A, B and C are three points on a circle. The angle ABC in the minor segment is 115\u00b0. A student wants to find angle ADC where D is a point on the major arc. They also want to find the angle in the alternate segment. Find angle ADC and explain your reasoning.',highlights:[{phrase:'points on a circle',topic:'Geometry — Circle Theorems',distractorGroup:'geometry'}]},
+
+// ─── GCSE: Geometry — Vectors (3) ───
+{id:'wpd_gcse_045',level:'gcse',topic:'Geometry — Vectors',distractorGroup:'geometry',multi:false,text:'OABC is a parallelogram where OA = a and OC = c. M is the midpoint of BC. A student is asked to find the vector OM in terms of a and c. Find OM, showing all steps.',highlights:[{phrase:'vector OM in terms of a and c',topic:'Geometry — Vectors',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_046',level:'gcse',topic:'Geometry — Vectors',distractorGroup:'geometry',multi:false,text:'In triangle OAB, OA = 2a and OB = 3b. Point P divides AB in the ratio 1:2. A student needs to find the vector OP in terms of a and b. Find the vector OP.',highlights:[{phrase:'vector OP in terms of a and b',topic:'Geometry — Vectors',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_047',level:'gcse',topic:'Geometry — Vectors',distractorGroup:'geometry',multi:false,text:'In a diagram, OP = 2a + b and OQ = 6a + 3b. A student wants to prove that P, O and Q are not collinear, or show that they are. Determine whether P, O and Q are collinear, giving a full reason.',highlights:[{phrase:'prove that P, O and Q are not collinear',topic:'Geometry — Vectors',distractorGroup:'geometry'}]},
+
+// ─── GCSE: Probability (4) ───
+{id:'wpd_gcse_048',level:'gcse',topic:'Probability',distractorGroup:'statistics',multi:false,text:'A bag contains 5 red counters, 3 blue counters and 2 green counters. Two counters are drawn from the bag one at a time without replacement. A student wants to find the probability that both counters are the same colour. Find this probability.',highlights:[{phrase:'drawn from the bag one at a time without replacement',topic:'Probability',distractorGroup:'statistics'}]},
+{id:'wpd_gcse_049',level:'gcse',topic:'Probability',distractorGroup:'statistics',multi:false,text:'In a class, the probability that a student studies History is 0.45. The probability that a student studies Geography is 0.38. The probability that a student studies both History and Geography is 0.12. A teacher wants to find the probability that a student studies neither subject. Find this probability.',highlights:[{phrase:'probability that a student studies neither subject',topic:'Probability',distractorGroup:'statistics'}]},
+{id:'wpd_gcse_050',level:'gcse',topic:'Probability',distractorGroup:'statistics',multi:false,text:'A biased coin is tossed. The probability of getting heads is 0.6. The coin is tossed three times. A student wants to find the probability of getting at least two heads. Find this probability.',highlights:[{phrase:'probability of getting at least two heads',topic:'Probability',distractorGroup:'statistics'}]},
+{id:'wpd_gcse_051',level:'gcse',topic:'Probability',distractorGroup:'statistics',multi:false,text:'A game at a f\u00eate uses a spinner with 4 equal sectors numbered 1, 2, 3 and 4. To win, a player must spin an even number and then pick a red card from a pack of 10 cards, of which 4 are red. A teacher wants to use this as a probability example. Find the probability of winning the game.',highlights:[{phrase:'probability of winning the game',topic:'Probability',distractorGroup:'statistics'}]},
+
+// ─── GCSE: Statistics — Scatter Graphs & Correlation (3) ───
+{id:'wpd_gcse_052',level:'gcse',topic:'Statistics — Scatter Graphs & Correlation',distractorGroup:'statistics',multi:false,text:'A scientist records the outdoor temperature (\u00b0C) and the number of hot drinks sold in a caf\u00e9 over 10 days. As the temperature increases, the number of hot drinks sold decreases. The line of best fit passes through (5, 85) and (20, 40). A caf\u00e9 manager wants to predict sales on a day when the temperature is 12\u00b0C. Use the line of best fit to make this prediction.',highlights:[{phrase:'line of best fit',topic:'Statistics — Scatter Graphs & Correlation',distractorGroup:'statistics'}]},
+{id:'wpd_gcse_053',level:'gcse',topic:'Statistics — Scatter Graphs & Correlation',distractorGroup:'statistics',multi:false,text:'A researcher finds a strong positive correlation between the number of fire engines called to a fire and the amount of damage caused. A newspaper reports this as evidence that fire engines cause more damage. A statistics teacher wants to use this as an example for students. Explain why the newspaper\'s conclusion is incorrect.',highlights:[{phrase:'strong positive correlation',topic:'Statistics — Scatter Graphs & Correlation',distractorGroup:'statistics'}]},
+{id:'wpd_gcse_054',level:'gcse',topic:'Statistics — Scatter Graphs & Correlation',distractorGroup:'statistics',multi:false,text:'Data is collected on the number of hours students revise and their exam scores. The correlation coefficient is calculated as 0.87. A school wants to use this to claim that revising more causes higher exam scores. A statistician advises caution. Explain what the correlation coefficient tells us and what it does not tell us.',highlights:[{phrase:'correlation coefficient is calculated as 0.87',topic:'Statistics — Scatter Graphs & Correlation',distractorGroup:'statistics'}]},
+
+// ─── GCSE: Statistics — Cumulative Frequency & Box Plots (4) ───
+{id:'wpd_gcse_055',level:'gcse',topic:'Statistics — Cumulative Frequency & Box Plots',distractorGroup:'statistics',multi:false,text:'A school runs a sponsored walk. The distances walked by 80 students are recorded. A cumulative frequency graph is drawn. The median distance is 7.2 km and the lower quartile is 4.8 km. The upper quartile is 9.1 km. The PE teacher wants to know the interquartile range and the number of students who walked more than 9.1 km.',highlights:[{phrase:'interquartile range',topic:'Statistics — Cumulative Frequency & Box Plots',distractorGroup:'statistics'}]},
+{id:'wpd_gcse_056',level:'gcse',topic:'Statistics — Cumulative Frequency & Box Plots',distractorGroup:'statistics',multi:false,text:'The box plots show the scores of boys and girls in the same maths test. The median score for boys is 62 and for girls is 71. The interquartile range for boys is 24 and for girls is 16. A head of department wants to write a report comparing the two groups. Write two comparisons, using the data to support each point.',highlights:[{phrase:'comparing the two groups',topic:'Statistics — Cumulative Frequency & Box Plots',distractorGroup:'statistics'}]},
+{id:'wpd_gcse_057',level:'gcse',topic:'Statistics — Cumulative Frequency & Box Plots',distractorGroup:'statistics',multi:false,text:'120 people are timed completing an escape room. The shortest time is 18 minutes and the longest is 74 minutes. The median is 42 minutes, the lower quartile is 31 minutes and the upper quartile is 56 minutes. An event organiser wants to draw a box plot and identify any outliers. Draw the box plot and state any outliers using the rule: outlier is more than 1.5 \u00d7 IQR beyond the quartiles.',highlights:[{phrase:'identify any outliers',topic:'Statistics — Cumulative Frequency & Box Plots',distractorGroup:'statistics'}]},
+{id:'wpd_gcse_058',level:'gcse',topic:'Statistics — Cumulative Frequency & Box Plots',distractorGroup:'statistics',multi:false,text:'A cumulative frequency graph shows the waiting times for 100 patients in a hospital A&E department. From the graph, 35 patients waited less than 20 minutes and 78 patients waited less than 40 minutes. The hospital\'s target is for 80% of patients to be seen within 40 minutes. A manager wants to know if the target is being met.',highlights:[{phrase:'cumulative frequency graph shows the waiting times',topic:'Statistics — Cumulative Frequency & Box Plots',distractorGroup:'statistics'}]},
+
+// ─── GCSE: Multi-topic (2) ───
+{id:'wpd_gcse_059',level:'gcse',topic:'mixed',distractorGroup:'geometry',multi:true,text:'A storage box is a cuboid with length 60 cm, width 40 cm and height 30 cm. A shopkeeper wants to fill the box with cylindrical tins, each with a diameter of 10 cm and a height of 15 cm. He estimates he can fit 48 tins in the box by dividing the volume of the box by the volume of a tin. Explain why his estimate is likely to be too high.',highlights:[{phrase:'volume of the box by the volume of a tin',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry'},{phrase:'He estimates he can fit 48 tins',topic:'Number & Place Value',distractorGroup:'number'}]},
+{id:'wpd_gcse_060',level:'gcse',topic:'mixed',distractorGroup:'number',multi:true,text:'Jodie is competing in a triathlon. The course consists of a 1.5 km swim, a 40 km cycle and a 10 km run. She swims at 2 km/h and cycles at 32 km/h. She has 3 hours and 45 minutes to complete the whole course. What speed must she average on the run to finish exactly on time?',highlights:[{phrase:'She swims at 2 km/h and cycles at 32 km/h',topic:'Ratio & Proportion',distractorGroup:'number'},{phrase:'speed must she average on the run',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]}
+];
+
+/* ===== TOPIC DEFINITIONS ===== */
+const KS3_TOPICS = ['Ratio & Proportion','Percentages','Fractions','Number & Place Value','Algebra — Forming Expressions','Algebra — Sequences','Geometry — Area & Perimeter','Geometry — Angles','Statistics & Averages'];
+const GCSE_EXTRA_TOPICS = ['Reverse Percentage','Standard Form','Surds & Bounds','Algebra — Equations & Inequalities','Algebra — Simultaneous Equations','Algebra — Quadratics','Algebra — Functions','Geometry — Pythagoras & Trigonometry','Geometry — Similarity & Congruence','Geometry — Circle Theorems','Geometry — Vectors','Probability','Statistics — Scatter Graphs & Correlation','Statistics — Cumulative Frequency & Box Plots'];
+
+const DISTRACTOR_MAP = {
+'Ratio & Proportion':'number','Percentages':'number','Reverse Percentage':'number','Fractions':'number','Number & Place Value':'number','Standard Form':'number','Surds & Bounds':'number',
+'Algebra — Forming Expressions':'algebra','Algebra — Sequences':'algebra','Algebra — Equations & Inequalities':'algebra','Algebra — Simultaneous Equations':'algebra','Algebra — Quadratics':'algebra','Algebra — Functions':'algebra',
+'Geometry — Area & Perimeter':'geometry','Geometry — Angles':'geometry','Geometry — Pythagoras & Trigonometry':'geometry','Geometry — Similarity & Congruence':'geometry','Geometry — Circle Theorems':'geometry','Geometry — Vectors':'geometry',
+'Statistics & Averages':'statistics','Probability':'statistics','Statistics — Scatter Graphs & Correlation':'statistics','Statistics — Cumulative Frequency & Box Plots':'statistics'
+};
+
+/* ===== STATE ===== */
+let currentLevel = null;
+let sessionLength = 20;
+let activeTopics = new Set();
+let questionQueue = [];
+let phraseQueue = [];
+let phraseIndex = 0;
+let totalPhrases = 0;
+let correctCount = 0;
+
+/* ===== DOM ===== */
+const $ = id => document.getElementById(id);
+const startScreen = $('startScreen');
+const gameScreen = $('gameScreen');
+const resultsScreen = $('resultsScreen');
+const hud = $('hud');
+const levelPill = $('levelPill');
+const hudScore = $('hudScore');
+const progressBar = $('progressBar');
+const hudCount = $('hudCount');
+const questionCard = $('questionCard');
+const optionsGrid = $('optionsGrid');
+const stagePill = $('stagePill');
+const startBtn = $('startBtn');
+const topicGrid = $('topicGrid');
+const topicToggle = $('topicToggle');
+const modalOverlay = $('modalOverlay');
+const modalTopicGrid = $('modalTopicGrid');
+const modalTopicToggle = $('modalTopicToggle');
+
+/* ===== INIT ===== */
+function init() {
+  // Level buttons
+  document.querySelectorAll('.level-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentLevel = btn.dataset.level;
+      buildTopicChips();
+      updateStartBtn();
+    });
+  });
+
+  // Session buttons
+  document.querySelectorAll('.session-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.session-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      sessionLength = parseInt(btn.dataset.len);
+    });
+  });
+
+  // Start
+  startBtn.addEventListener('click', startGame);
+
+  // Play again
+  $('playAgain').addEventListener('click', () => showScreen('start'));
+
+  // Settings mid-game
+  $('settingsBtn').addEventListener('click', openTopicModal);
+  $('modalClose').addEventListener('click', closeTopicModal);
+  modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeTopicModal(); });
+
+  // Accessibility toggle
+  const a11yBtn = $('a11yBtn');
+  if (localStorage.getItem('mfg_dyslexia') === '1') { document.body.classList.add('dyslexia'); a11yBtn.classList.add('active'); }
+  a11yBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dyslexia');
+    const on = document.body.classList.contains('dyslexia');
+    localStorage.setItem('mfg_dyslexia', on ? '1' : '0');
+    a11yBtn.classList.toggle('active', on);
+  });
+
+  // Default level from URL param or gcse
+  const urlLevel = new URLSearchParams(window.location.search).get('level');
+  const initLevel = (urlLevel === 'ks3' || urlLevel === 'gcse') ? urlLevel : 'gcse';
+  document.querySelector('.level-btn.' + initLevel).click();
+}
+
+function getTopicsForLevel() {
+  if (currentLevel === 'ks3') return [...KS3_TOPICS];
+  return [...KS3_TOPICS, ...GCSE_EXTRA_TOPICS];
+}
+
+function buildTopicChips() {
+  const topics = getTopicsForLevel();
+  const saved = loadTopicFilter();
+  activeTopics = saved || new Set(topics);
+
+  renderChips(topicGrid, topicToggle);
+}
+
+function renderChips(container, toggle) {
+  const topics = getTopicsForLevel();
+  container.innerHTML = '';
+  topics.forEach(t => {
+    const chip = document.createElement('button');
+    chip.className = 'topic-chip' + (activeTopics.has(t) ? ' active' : '');
+    chip.textContent = t;
+    chip.addEventListener('click', () => {
+      if (activeTopics.has(t)) activeTopics.delete(t);
+      else activeTopics.add(t);
+      saveTopicFilter();
+      refreshAllChips();
+      updateStartBtn();
+    });
+    container.appendChild(chip);
+  });
+  updateToggleText(toggle);
+}
+
+function refreshAllChips() {
+  [topicGrid, modalTopicGrid].forEach(container => {
+    container.querySelectorAll('.topic-chip').forEach(chip => {
+      chip.classList.toggle('active', activeTopics.has(chip.textContent));
+    });
+  });
+  [topicToggle, modalTopicToggle].forEach(updateToggleText);
+}
+
+function updateToggleText(toggle) {
+  const all = getTopicsForLevel().length;
+  toggle.textContent = activeTopics.size === all ? 'Deselect all' : 'Select all';
+  toggle.onclick = () => {
+    const topics = getTopicsForLevel();
+    if (activeTopics.size === topics.length) activeTopics.clear();
+    else topics.forEach(t => activeTopics.add(t));
+    saveTopicFilter();
+    refreshAllChips();
+    updateStartBtn();
+  };
+}
+
+function saveTopicFilter() {
+  localStorage.setItem('wpd_topics_' + currentLevel, JSON.stringify([...activeTopics]));
+}
+
+function loadTopicFilter() {
+  const raw = localStorage.getItem('wpd_topics_' + currentLevel);
+  if (!raw) return null;
+  try {
+    const arr = JSON.parse(raw);
+    const valid = getTopicsForLevel();
+    const filtered = arr.filter(t => valid.includes(t));
+    return filtered.length > 0 ? new Set(filtered) : null;
+  } catch { return null; }
+}
+
+function updateStartBtn() {
+  startBtn.disabled = !currentLevel || activeTopics.size === 0;
+}
+
+function openTopicModal() {
+  renderChips(modalTopicGrid, modalTopicToggle);
+  modalOverlay.classList.add('visible');
+}
+
+function closeTopicModal() {
+  modalOverlay.classList.remove('visible');
+}
+
+/* ===== SCREENS ===== */
+function showScreen(name) {
+  [startScreen, gameScreen, resultsScreen].forEach(s => s.classList.remove('active'));
+  hud.classList.remove('visible');
+  levelPill.textContent = '';
+
+  if (name === 'start') {
+    startScreen.classList.add('active');
+  } else if (name === 'game') {
+    gameScreen.classList.add('active');
+    hud.classList.add('visible');
+    levelPill.textContent = currentLevel.toUpperCase();
+    levelPill.className = 'level-pill ' + currentLevel;
+  } else if (name === 'results') {
+    resultsScreen.classList.add('active');
+  }
+}
+
+/* ===== GAME LOGIC ===== */
+function startGame() {
+  // Filter questions by level and active topics
+  let pool = QUESTIONS.filter(q => {
+    if (q.level !== currentLevel) return false;
+    if (q.multi) {
+      return q.highlights.some(h => activeTopics.has(h.topic));
+    }
+    return activeTopics.has(q.topic);
+  });
+
+  // Shuffle
+  pool = shuffle(pool);
+
+  // Build phrase queue
+  phraseQueue = [];
+  for (const q of pool) {
+    if (q.multi) {
+      const validHighlights = q.highlights.filter(h => activeTopics.has(h.topic));
+      validHighlights.forEach((h, i) => {
+        phraseQueue.push({ question: q, highlightIndex: q.highlights.indexOf(h), phraseNum: i + 1, totalInQ: validHighlights.length });
+      });
+    } else {
+      phraseQueue.push({ question: q, highlightIndex: 0, phraseNum: 1, totalInQ: 1 });
+    }
+    if (phraseQueue.length >= sessionLength) break;
+  }
+
+  phraseQueue = phraseQueue.slice(0, sessionLength);
+  totalPhrases = phraseQueue.length;
+  phraseIndex = 0;
+  correctCount = 0;
+
+  if (totalPhrases === 0) return;
+
+  // Fire analytics
+  const topicsStr = activeTopics.size === getTopicsForLevel().length ? 'all' : [...activeTopics].join(',');
+  if (typeof mfg === 'function') {
+    mfg('game_started', { game_slug: 'word-problem-decoder', level: currentLevel, mode: topicsStr });
+  }
+  window._mfgSlug = 'word-problem-decoder';
+  window._mfgLevel = currentLevel;
+  window._mfgCompleted = false;
+
+  showScreen('game');
+  updateHUD();
+  showPhrase();
+}
+
+function updateHUD() {
+  hudScore.innerHTML = '<span>' + correctCount + '</span> / ' + (phraseIndex);
+  const pct = totalPhrases > 0 ? (phraseIndex / totalPhrases * 100) : 0;
+  progressBar.style.width = pct + '%';
+  hudCount.textContent = phraseIndex + ' / ' + totalPhrases;
+}
+
+function showPhrase() {
+  if (phraseIndex >= totalPhrases) {
+    endGame();
+    return;
+  }
+
+  const item = phraseQueue[phraseIndex];
+  const q = item.question;
+  const hl = q.highlights[item.highlightIndex];
+
+  // Stage pill
+  if (q.multi) {
+    const badges = ['①','②','③'];
+    stagePill.textContent = 'Phrase ' + badges[item.highlightIndex] + ' of ' + q.highlights.length;
+    stagePill.style.display = '';
+  } else {
+    stagePill.style.display = 'none';
+  }
+
+  // Render question text with highlight
+  let html = escapeHtml(q.text);
+  if (q.multi) {
+    // Highlight all phrases with numbered badges
+    const colors = ['h1','h2','h3'];
+    const badges = ['①','②','③'];
+    const badgeClasses = ['b1','b2','b3'];
+    // Sort highlights by position in text (longest first to avoid overlap)
+    const sorted = q.highlights.map((h, i) => ({ h, i })).sort((a, b) => {
+      const posA = q.text.indexOf(a.h.phrase);
+      const posB = q.text.indexOf(b.h.phrase);
+      return posB - posA; // reverse order so we can replace from end
+    });
+    for (const { h, i } of sorted) {
+      const escapedPhrase = escapeHtml(h.phrase);
+      const cls = i === item.highlightIndex ? colors[i] + ' active-hl' : colors[i];
+      const badge = '<span class="multi-badge ' + badgeClasses[i] + '">' + badges[i] + '</span>';
+      html = html.replace(escapedPhrase, badge + '<span class="highlight ' + cls + '">' + escapedPhrase + '</span>');
+    }
+  } else {
+    const escapedPhrase = escapeHtml(hl.phrase);
+    html = html.replace(escapedPhrase, '<span class="highlight">' + escapedPhrase + '</span>');
+  }
+  questionCard.innerHTML = html;
+
+  // Build options
+  const correctTopic = hl.topic;
+  const distractors = getDistractors(correctTopic, hl.distractorGroup);
+  const options = shuffle([correctTopic, ...distractors]);
+
+  optionsGrid.innerHTML = '';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleAnswer(btn, opt, correctTopic));
+    optionsGrid.appendChild(btn);
+  });
+
+  // Fade in
+  questionCard.classList.remove('fade-in');
+  optionsGrid.classList.remove('fade-in');
+  void questionCard.offsetWidth;
+  questionCard.classList.add('fade-in');
+  optionsGrid.classList.add('fade-in');
+}
+
+function getDistractors(correctTopic, group) {
+  const allTopics = getTopicsForLevel();
+
+  // If only one topic selected, draw from outside
+  if (activeTopics.size === 1) {
+    const others = allTopics.filter(t => t !== correctTopic);
+    return shuffle(others).slice(0, 3);
+  }
+
+  // Same group first
+  const sameGroup = allTopics.filter(t => t !== correctTopic && DISTRACTOR_MAP[t] === group && activeTopics.has(t));
+  const otherGroup = allTopics.filter(t => t !== correctTopic && DISTRACTOR_MAP[t] !== group && activeTopics.has(t));
+
+  let pool = shuffle(sameGroup);
+  if (pool.length < 3) pool = pool.concat(shuffle(otherGroup));
+  // If still not enough, pull from inactive topics in same group
+  if (pool.length < 3) {
+    const inactive = allTopics.filter(t => t !== correctTopic && !activeTopics.has(t) && DISTRACTOR_MAP[t] === group);
+    pool = pool.concat(shuffle(inactive));
+  }
+  if (pool.length < 3) {
+    const remaining = allTopics.filter(t => t !== correctTopic && !pool.includes(t));
+    pool = pool.concat(shuffle(remaining));
+  }
+
+  return pool.slice(0, 3);
+}
+
+function handleAnswer(btn, chosen, correct) {
+  // Disable all
+  optionsGrid.querySelectorAll('.option-btn').forEach(b => b.classList.add('disabled'));
+
+  const isCorrect = chosen === correct;
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    correctCount++;
+  } else {
+    btn.classList.add('incorrect');
+    // Reveal correct
+    optionsGrid.querySelectorAll('.option-btn').forEach(b => {
+      if (b.textContent === correct) b.classList.add('reveal');
+    });
+  }
+
+  phraseIndex++;
+
+  // Analytics
+  if (typeof mfg === 'function') {
+    mfg('question_answered', {
+      game_slug: 'word-problem-decoder',
+      level: currentLevel,
+      question_index: phraseIndex,
+      correct: isCorrect
+    });
+  }
+
+  updateHUD();
+
+  setTimeout(() => {
+    questionCard.classList.add('fade-out');
+    optionsGrid.classList.add('fade-out');
+    setTimeout(() => {
+      questionCard.classList.remove('fade-out');
+      optionsGrid.classList.remove('fade-out');
+      showPhrase();
+    }, 200);
+  }, 800);
+}
+
+function endGame() {
+  const pct = totalPhrases > 0 ? Math.round(correctCount / totalPhrases * 100) : 0;
+
+  // PB check
+  const pbKey = 'wpd_pb_' + currentLevel;
+  const oldPB = parseInt(localStorage.getItem(pbKey) || '0');
+  let isNewPB = false;
+  if (totalPhrases >= 10 && pct > oldPB) {
+    localStorage.setItem(pbKey, pct);
+    isNewPB = true;
+    if (typeof mfg === 'function') {
+      mfg('personal_best_set', {
+        game_slug: 'word-problem-decoder',
+        level: currentLevel,
+        score: pct,
+        previous_best: oldPB
+      });
+    }
+  }
+
+  // Analytics
+  if (typeof mfg === 'function') {
+    mfg('game_completed', {
+      game_slug: 'word-problem-decoder',
+      level: currentLevel,
+      score: pct,
+      questions_answered: totalPhrases,
+      questions_correct: correctCount
+    });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('word-problem-decoder',currentLevel,pct,totalPhrases).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('word-problem-decoder',currentLevel,pct);}}
+  }
+  window._mfgCompleted = true;
+
+  // Display
+  $('resultsPct').textContent = pct + '%';
+  $('resCorrect').textContent = correctCount;
+  $('resTotal').textContent = totalPhrases;
+
+  const pbBanner = $('pbBanner');
+  if (isNewPB) {
+    pbBanner.textContent = 'New personal best! Previous: ' + oldPB + '%';
+    pbBanner.style.display = '';
+  } else {
+    pbBanner.style.display = 'none';
+  }
+
+  showScreen('results');
+}
+
+/* ===== UTILS ===== */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+init();
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

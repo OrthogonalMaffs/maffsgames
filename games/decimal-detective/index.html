@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Order decimals, round them, and place them on a number line. A detective-themed Year 6 transition game to build confidence with decimals before secondary school.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/decimal-detective/">
+<meta property="og:title" content="Decimal Detective — MaffsGames">
+<meta property="og:description" content="Order decimals, round them, and place them on a number line. A detective-themed Year 6 transition game.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/decimal-detective/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Decimal Detective — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--accent:#6366f1;--accent-dim:rgba(99,102,241,0.25);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;-webkit-user-select:none;user-select:none}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--accent)}
+.type-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(99,102,241,0.3)}
+.progress-bar{width:100%;height:4px;background:var(--border);border-radius:2px;margin-top:2px}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.3s}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.type-preview{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:16px;border-left:3px solid var(--accent)}
+.type-preview h3{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
+.type-preview p{font-size:13px;color:var(--muted);line-height:1.5}
+.session-label{font-size:13px;font-weight:600;color:var(--muted);text-align:center;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em}
+.session-row{display:flex;gap:12px;margin-bottom:24px}
+.session-btn{flex:1;padding:14px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.session-btn:hover,.session-btn.selected{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+.pb-line{text-align:center;font-size:13px;color:var(--muted);margin-bottom:16px}
+
+/* Game screen */
+.question-prompt{background:var(--surface);border-radius:16px;padding:28px 24px;margin:20px 0;text-align:center}
+.question-prompt h2{font-size:1.2rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.question-prompt p{font-size:14px;color:var(--muted)}
+
+/* Type 1: Line-Up (ordering) */
+.lineup-zone{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:20px 0;min-height:70px;padding:16px;border-radius:12px;border:2px dashed var(--border);position:relative}
+.lineup-zone.drag-over{border-color:var(--accent);background:rgba(99,102,241,0.05)}
+.suspect-card{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:14px 22px;font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:600;cursor:grab;touch-action:none;transition:transform 0.15s,border-color 0.15s,box-shadow 0.15s;position:relative;z-index:1}
+.suspect-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.suspect-card.dragging{opacity:0.5;transform:scale(1.05);z-index:100;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+.suspect-card.correct{border-color:var(--green);background:var(--green-dim)}
+.suspect-card.incorrect{border-color:var(--red);background:var(--red-dim)}
+.drop-label{position:absolute;bottom:-20px;left:0;right:0;text-align:center;font-size:11px;color:var(--muted);font-weight:600}
+.zone-label{font-size:12px;font-weight:600;color:var(--muted);text-align:center;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em}
+.arrow-hint{color:var(--muted);font-size:20px;display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0}
+
+/* Drag ghost for mobile */
+.drag-ghost{position:fixed;pointer-events:none;z-index:1000;background:var(--accent);color:#fff;border:2px solid var(--accent);border-radius:10px;padding:14px 22px;font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:600;box-shadow:0 8px 32px rgba(0,0,0,0.5);transform:translate(-50%,-50%)}
+
+/* Type 2: Round Up (multiple choice) */
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.option-btn{padding:18px 16px;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:600;cursor:pointer;transition:all 0.15s}
+.option-btn:hover:not(:disabled){border-color:var(--accent);background:var(--accent-dim)}
+.option-btn:disabled{cursor:default;opacity:0.7}
+.option-btn.selected{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+.option-btn.correct{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+.option-btn.incorrect{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+
+/* Type 3: Place It (number line) */
+.number-line-container{margin:24px 0;padding:20px 0}
+.number-line-wrap{position:relative;margin:40px 24px 30px}
+.number-line{width:100%;height:6px;background:var(--border);border-radius:3px;position:relative;cursor:pointer}
+.number-line-fill{position:absolute;left:0;top:0;height:100%;background:var(--accent-dim);border-radius:3px}
+.tick-mark{position:absolute;top:-8px;width:2px;height:22px;background:var(--muted);transform:translateX(-50%)}
+.tick-label{position:absolute;top:20px;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);font-weight:600}
+.line-marker{position:absolute;top:-18px;width:32px;height:32px;background:var(--accent);border-radius:50%;transform:translateX(-50%);cursor:pointer;touch-action:none;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(99,102,241,0.4);transition:background 0.2s}
+.line-marker::after{content:'';width:8px;height:8px;background:#fff;border-radius:50%}
+.line-marker.correct{background:var(--green);box-shadow:0 4px 12px rgba(34,197,94,0.4)}
+.line-marker.incorrect{background:var(--red);box-shadow:0 4px 12px rgba(239,68,68,0.4)}
+.marker-value{position:absolute;top:-36px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent);background:var(--surface);padding:2px 8px;border-radius:6px;border:1px solid var(--accent);white-space:nowrap}
+.target-marker{position:absolute;top:-18px;width:32px;height:32px;border:3px dashed var(--green);border-radius:50%;transform:translateX(-50%);display:none}
+.tolerance-zone{position:absolute;top:-2px;height:10px;background:rgba(34,197,94,0.15);border-radius:4px;display:none}
+
+/* Check / Next buttons */
+.check-btn{display:block;width:100%;padding:14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s;margin:16px 0}
+.check-btn:hover{opacity:0.9}
+.check-btn:disabled{opacity:0.4;cursor:default}
+.next-btn{display:none;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s}
+.next-btn:hover{border-color:var(--accent)}
+.next-btn.visible{display:block}
+
+/* Feedback */
+.feedback{text-align:center;padding:12px;border-radius:10px;margin:12px 0;font-weight:600;font-size:15px}
+.feedback.correct{background:var(--green-dim);color:var(--green)}
+.feedback.incorrect{background:var(--red-dim);color:var(--red)}
+
+/* Reveal screen */
+.reveal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:900;align-items:center;justify-content:center;padding:24px}
+.reveal-overlay.active{display:flex}
+.reveal-card{background:var(--surface);border-radius:16px;padding:40px 32px;max-width:600px;width:100%;text-align:center;border:2px solid var(--accent)}
+.reveal-card h2{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:16px}
+.reveal-card p{font-size:15px;color:var(--muted);line-height:1.8}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--accent)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.type-row{display:flex;justify-content:center;gap:16px;margin-bottom:24px}
+.type-result{background:var(--surface);border-radius:10px;padding:14px 20px;text-align:center;flex:1;max-width:180px}
+.type-result h5{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.type-result .type-score{font-size:22px;font-weight:800;color:var(--accent)}
+.pb-badge{background:var(--accent-dim);color:var(--accent);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+@media(prefers-reduced-motion:reduce){
+.suspect-card,.line-marker,.progress-fill{transition:none}
+}
+@media(max-width:480px){
+.question-prompt h2{font-size:1.05rem}
+.suspect-card{padding:10px 16px;font-size:1rem}
+.options-grid{grid-template-columns:1fr 1fr;gap:8px}
+.option-btn{padding:14px 12px;font-size:0.95rem}
+.type-row{flex-direction:column;align-items:center}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Decimal Detective</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <span class="type-pill" id="typePill">Line-Up</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreTotal">0</span></span>
+  </div>
+</div>
+<div class="progress-bar" id="progressBar" style="display:none"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Decimal Detective</div>
+  <div class="start-sub">Three types of decimal challenge. Can you crack every case?</div>
+  <div class="type-preview">
+    <h3>The Line-Up</h3>
+    <p>Five decimal suspects. Drag them into order, smallest to largest.</p>
+  </div>
+  <div class="type-preview">
+    <h3>Round Up</h3>
+    <p>A decimal is shown. Pick the correct rounded value.</p>
+  </div>
+  <div class="type-preview">
+    <h3>Place It</h3>
+    <p>Tap the number line to place a decimal in the right position.</p>
+  </div>
+  <div class="session-label">Session length</div>
+  <div class="session-row">
+    <button class="session-btn" data-len="10" onclick="selectSession(10)">10</button>
+    <button class="session-btn selected" data-len="20" onclick="selectSession(20)">20</button>
+    <button class="session-btn" data-len="30" onclick="selectSession(30)">30</button>
+  </div>
+  <div class="pb-line" id="pbLine"></div>
+  <button class="start-btn" onclick="startGame()">Start Investigation</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="question-prompt" id="questionPrompt">
+    <h2 id="promptTitle"></h2>
+    <p id="promptSub"></p>
+  </div>
+  <div id="gameArea"></div>
+  <div class="feedback" id="feedback" style="display:none"></div>
+  <button class="check-btn" id="checkBtn" onclick="checkAnswer()" style="display:none">Check</button>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Case</button>
+</div>
+
+<!-- REVEAL SCREEN -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-card">
+    <h2>Case Closed</h2>
+    <p>Decimals turn up everywhere in secondary maths — measurements, probabilities, coordinates, graphs. Students who are confident with decimals find Year 7 much easier. You just proved you're one of them.</p>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Investigation Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Overall</h4>
+      <div class="score" id="finalScore">0/0</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="type-row">
+    <div class="type-result"><h5>Line-Up</h5><div class="type-score" id="lineupScore">0/0</div></div>
+    <div class="type-result"><h5>Round Up</h5><div class="type-score" id="roundupScore">0/0</div></div>
+    <div class="type-result"><h5>Place It</h5><div class="type-score" id="placeitScore">0/0</div></div>
+  </div>
+  <div class="sub" id="pbResult" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="startGame()">Investigate Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANKS
+// ============================================================
+const LINEUP_QUESTIONS = [
+  {suspects:['0.3','0.03','3.0','0.33','0.303'],sorted:['0.03','0.3','0.303','0.33','3.0']},
+  {suspects:['1.9','1.09','1.99','1.9','1.099'],sorted:['1.09','1.099','1.9','1.9','1.99']},
+  {suspects:['0.5','0.45','0.54','0.505','0.455'],sorted:['0.45','0.455','0.5','0.505','0.54']},
+  {suspects:['2.1','2.01','2.11','2.101','2.011'],sorted:['2.01','2.011','2.1','2.101','2.11']},
+  {suspects:['0.8','0.08','0.88','0.808','0.088'],sorted:['0.08','0.088','0.8','0.808','0.88']},
+  {suspects:['3.4','3.04','3.44','3.404','3.044'],sorted:['3.04','3.044','3.4','3.404','3.44']},
+  {suspects:['0.6','0.66','0.606','0.066','0.6'],sorted:['0.066','0.6','0.6','0.606','0.66']},
+  {suspects:['5.2','5.02','5.22','5.202','5.022'],sorted:['5.02','5.022','5.2','5.202','5.22']},
+  {suspects:['0.1','0.11','0.101','0.011','0.11'],sorted:['0.011','0.1','0.101','0.11','0.11']},
+  {suspects:['7.5','7.05','7.55','7.505','7.055'],sorted:['7.05','7.055','7.5','7.505','7.55']},
+  {suspects:['0.9','0.09','0.99','0.909','0.099'],sorted:['0.09','0.099','0.9','0.909','0.99']},
+  {suspects:['4.3','4.03','4.33','4.303','4.033'],sorted:['4.03','4.033','4.3','4.303','4.33']},
+  {suspects:['0.7','0.77','0.707','0.077','0.770'],sorted:['0.077','0.7','0.707','0.77','0.770']},
+  {suspects:['6.1','6.01','6.11','6.101','6.011'],sorted:['6.01','6.011','6.1','6.101','6.11']},
+  {suspects:['0.4','0.44','0.404','0.044','0.440'],sorted:['0.044','0.4','0.404','0.44','0.440']}
+];
+
+const ROUNDUP_QUESTIONS = [
+  {value:'3.74',instruction:'Round to the nearest tenth',answer:'3.7',options:['3.7','3.8','3.74','4.0']},
+  {value:'2.56',instruction:'Round to the nearest tenth',answer:'2.6',options:['2.5','2.6','2.56','3.0']},
+  {value:'0.83',instruction:'Round to the nearest tenth',answer:'0.8',options:['0.8','0.9','0.83','1.0']},
+  {value:'4.95',instruction:'Round to the nearest tenth',answer:'5.0',options:['4.9','5.0','4.95','4.0']},
+  {value:'1.23',instruction:'Round to the nearest whole number',answer:'1',options:['1','2','1.2','0']},
+  {value:'6.78',instruction:'Round to the nearest whole number',answer:'7',options:['6','7','6.8','6.78']},
+  {value:'3.45',instruction:'Round to the nearest whole number',answer:'3',options:['3','4','3.5','3.45']},
+  {value:'9.50',instruction:'Round to the nearest whole number',answer:'10',options:['9','10','9.5','9.50']},
+  {value:'0.456',instruction:'Round to 2 decimal places',answer:'0.46',options:['0.45','0.46','0.456','0.5']},
+  {value:'1.234',instruction:'Round to 2 decimal places',answer:'1.23',options:['1.23','1.24','1.234','1.2']},
+  {value:'7.895',instruction:'Round to 2 decimal places',answer:'7.90',options:['7.89','7.90','7.895','7.9']},
+  {value:'3.145',instruction:'Round to 2 decimal places',answer:'3.15',options:['3.14','3.15','3.145','3.1']},
+  {value:'0.67',instruction:'Round to 1 significant figure',answer:'0.7',options:['0.6','0.7','1','0.67']},
+  {value:'4.32',instruction:'Round to 1 significant figure',answer:'4',options:['4','5','4.3','4.32']},
+  {value:'12.8',instruction:'Round to 1 significant figure',answer:'10',options:['10','13','12','12.8']}
+];
+
+const PLACEIT_QUESTIONS = [
+  {value:0.3,min:0,max:1},
+  {value:0.7,min:0,max:1},
+  {value:0.25,min:0,max:1},
+  {value:0.75,min:0,max:1},
+  {value:1.5,min:0,max:2},
+  {value:2.3,min:2,max:3},
+  {value:0.6,min:0,max:1},
+  {value:3.8,min:3,max:4},
+  {value:0.15,min:0,max:0.5},
+  {value:0.45,min:0,max:0.5},
+  {value:4.5,min:4,max:5},
+  {value:1.25,min:1,max:2},
+  {value:2.75,min:2,max:3},
+  {value:0.9,min:0,max:1},
+  {value:5.5,min:5,max:6}
+];
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let sessionLength = 20;
+let questions = [];
+let currentQ = 0;
+let correctCount = 0;
+let typeCorrect = {lineup:0,roundup:0,placeit:0};
+let typeTotal = {lineup:0,roundup:0,placeit:0};
+let answered = false;
+let markerPos = 0.5; // for Place It
+let revealShown = false;
+
+const GAME_SLUG = 'decimal-detective';
+const LEVEL = 'year6';
+
+// ============================================================
+//  SESSION SETUP
+// ============================================================
+function selectSession(n) {
+  sessionLength = n;
+  document.querySelectorAll('.session-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.len) === n);
+  });
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildSession() {
+  // Cycle through types: lineup, roundup, placeit
+  const types = ['lineup', 'roundup', 'placeit'];
+  const pools = {
+    lineup: shuffle(LINEUP_QUESTIONS),
+    roundup: shuffle(ROUNDUP_QUESTIONS),
+    placeit: shuffle(PLACEIT_QUESTIONS)
+  };
+  const idx = {lineup: 0, roundup: 0, placeit: 0};
+  const result = [];
+  for (let i = 0; i < sessionLength; i++) {
+    const type = types[i % 3];
+    if (idx[type] < pools[type].length) {
+      result.push({type, data: pools[type][idx[type]]});
+      idx[type]++;
+    } else {
+      // wrap around if needed
+      idx[type] = 0;
+      result.push({type, data: pools[type][idx[type]]});
+      idx[type]++;
+    }
+  }
+  return result;
+}
+
+function showPB() {
+  const key = `pb_${GAME_SLUG}_${LEVEL}_${sessionLength}`;
+  const pb = localStorage.getItem(key);
+  const el = document.getElementById('pbLine');
+  if (pb !== null) {
+    el.textContent = `Personal best (${sessionLength} Qs): ${pb}/${sessionLength}`;
+  } else {
+    el.textContent = '';
+  }
+}
+
+// ============================================================
+//  START / NAVIGATION
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+  questions = buildSession();
+  currentQ = 0;
+  correctCount = 0;
+  typeCorrect = {lineup:0,roundup:0,placeit:0};
+  typeTotal = {lineup:0,roundup:0,placeit:0};
+  answered = false;
+  revealShown = false;
+
+  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('progressBar').style.display = 'block';
+  document.getElementById('scoreNum').textContent = '0';
+  document.getElementById('scoreTotal').textContent = sessionLength;
+  document.getElementById('revealOverlay').classList.remove('active');
+
+  if (typeof mfg === 'function') {
+    mfg('game_started', {game_slug: GAME_SLUG, level: LEVEL});
+  }
+
+  showScreen('gameScreen');
+  loadQuestion();
+}
+
+function loadQuestion() {
+  if (currentQ >= questions.length) {
+    showReveal();
+    return;
+  }
+  answered = false;
+  const q = questions[currentQ];
+  const progress = ((currentQ) / questions.length) * 100;
+  document.getElementById('progressFill').style.width = progress + '%';
+
+  const typeNames = {lineup:'Line-Up',roundup:'Round Up',placeit:'Place It'};
+  document.getElementById('typePill').textContent = typeNames[q.type];
+
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('checkBtn').style.display = 'block';
+  document.getElementById('checkBtn').disabled = false;
+  document.getElementById('nextBtn').classList.remove('visible');
+
+  if (q.type === 'lineup') renderLineup(q.data);
+  else if (q.type === 'roundup') renderRoundup(q.data);
+  else if (q.type === 'placeit') renderPlaceit(q.data);
+}
+
+// ============================================================
+//  TYPE 1: LINE-UP (ORDERING)
+// ============================================================
+let dragState = null;
+
+function renderLineup(data) {
+  const area = document.getElementById('gameArea');
+  document.getElementById('promptTitle').textContent = 'The Line-Up';
+  document.getElementById('promptSub').textContent = 'Drag the suspects into order — smallest to largest.';
+
+  const shuffled = shuffle(data.suspects.map((v, i) => ({display: v, numeric: parseFloat(v), origIdx: i})));
+
+  area.innerHTML = `
+    <div class="arrow-hint"><span>Smallest</span> <span style="font-size:24px">&#8594;</span> <span>Largest</span></div>
+    <div class="lineup-zone" id="lineupZone">
+      ${shuffled.map((s, i) => `<div class="suspect-card" data-display="${s.display}" data-value="${s.numeric}" data-idx="${i}" draggable="true">${s.display}</div>`).join('')}
+    </div>
+  `;
+
+  setupDragHandlers();
+}
+
+function setupDragHandlers() {
+  const zone = document.getElementById('lineupZone');
+  if (!zone) return;
+  const cards = zone.querySelectorAll('.suspect-card');
+
+  // Desktop drag and drop
+  cards.forEach(card => {
+    card.addEventListener('dragstart', onDragStart);
+    card.addEventListener('dragend', onDragEnd);
+    card.addEventListener('dragover', onDragOver);
+    card.addEventListener('drop', onDrop);
+
+    // Touch events for mobile
+    card.addEventListener('touchstart', onTouchStart, {passive: false});
+    card.addEventListener('touchmove', onTouchMove, {passive: false});
+    card.addEventListener('touchend', onTouchEnd, {passive: false});
+  });
+}
+
+function onDragStart(e) {
+  if (answered) return;
+  dragState = e.target;
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function onDragEnd(e) {
+  e.target.classList.remove('dragging');
+  dragState = null;
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  if (answered) return;
+  if (!dragState || e.target === dragState) return;
+  const target = e.target.closest('.suspect-card');
+  if (!target || target === dragState) return;
+
+  const zone = document.getElementById('lineupZone');
+  const cards = [...zone.querySelectorAll('.suspect-card')];
+  const dragIdx = cards.indexOf(dragState);
+  const targetIdx = cards.indexOf(target);
+
+  if (dragIdx < targetIdx) {
+    zone.insertBefore(dragState, target.nextSibling);
+  } else {
+    zone.insertBefore(dragState, target);
+  }
+}
+
+function onDrop(e) {
+  e.preventDefault();
+}
+
+// Touch drag for mobile
+let touchGhost = null;
+let touchCard = null;
+let touchStartX, touchStartY;
+
+function onTouchStart(e) {
+  if (answered) return;
+  const card = e.target.closest('.suspect-card');
+  if (!card) return;
+  e.preventDefault();
+
+  touchCard = card;
+  const touch = e.touches[0];
+  touchStartX = touch.clientX;
+  touchStartY = touch.clientY;
+
+  // Create ghost
+  touchGhost = document.createElement('div');
+  touchGhost.className = 'drag-ghost';
+  touchGhost.textContent = card.textContent;
+  touchGhost.style.left = touch.clientX + 'px';
+  touchGhost.style.top = touch.clientY + 'px';
+  document.body.appendChild(touchGhost);
+
+  card.classList.add('dragging');
+}
+
+function onTouchMove(e) {
+  if (!touchCard) return;
+  e.preventDefault();
+  const touch = e.touches[0];
+
+  if (touchGhost) {
+    touchGhost.style.left = touch.clientX + 'px';
+    touchGhost.style.top = touch.clientY + 'px';
+  }
+
+  // Find which card we're over
+  if (touchGhost) touchGhost.style.display = 'none';
+  const el = document.elementFromPoint(touch.clientX, touch.clientY);
+  if (touchGhost) touchGhost.style.display = '';
+
+  const target = el ? el.closest('.suspect-card') : null;
+  if (target && target !== touchCard) {
+    const zone = document.getElementById('lineupZone');
+    const cards = [...zone.querySelectorAll('.suspect-card')];
+    const dragIdx = cards.indexOf(touchCard);
+    const targetIdx = cards.indexOf(target);
+    if (dragIdx < targetIdx) {
+      zone.insertBefore(touchCard, target.nextSibling);
+    } else {
+      zone.insertBefore(touchCard, target);
+    }
+  }
+}
+
+function onTouchEnd(e) {
+  if (!touchCard) return;
+  e.preventDefault();
+  touchCard.classList.remove('dragging');
+  if (touchGhost) {
+    touchGhost.remove();
+    touchGhost = null;
+  }
+  touchCard = null;
+}
+
+// ============================================================
+//  TYPE 2: ROUND UP (ROUNDING)
+// ============================================================
+let selectedOption = null;
+
+function renderRoundup(data) {
+  const area = document.getElementById('gameArea');
+  document.getElementById('promptTitle').textContent = data.value;
+  document.getElementById('promptSub').textContent = data.instruction;
+
+  const shuffledOptions = shuffle(data.options);
+
+  area.innerHTML = `
+    <div class="options-grid">
+      ${shuffledOptions.map((opt, i) => `<button class="option-btn" data-option="${opt}" onclick="selectOption(this)">${opt}</button>`).join('')}
+    </div>
+  `;
+  selectedOption = null;
+  document.getElementById('checkBtn').disabled = true;
+}
+
+function selectOption(btn) {
+  if (answered) return;
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedOption = btn.dataset.option;
+  document.getElementById('checkBtn').disabled = false;
+}
+
+// ============================================================
+//  TYPE 3: PLACE IT (NUMBER LINE)
+// ============================================================
+let placeItData = null;
+let markerDragging = false;
+
+function renderPlaceit(data) {
+  placeItData = data;
+  const area = document.getElementById('gameArea');
+  document.getElementById('promptTitle').textContent = `Place ${formatPlaceit(data.value)}`;
+  document.getElementById('promptSub').textContent = `on the number line from ${formatPlaceit(data.min)} to ${formatPlaceit(data.max)}`;
+
+  const range = data.max - data.min;
+  const numTicks = 11; // 0 to 10 intervals
+  let ticksHTML = '';
+  for (let i = 0; i <= 10; i++) {
+    const pct = (i / 10) * 100;
+    const val = data.min + (i / 10) * range;
+    const showLabel = i % 5 === 0 || i === 0;
+    ticksHTML += `<div class="tick-mark" style="left:${pct}%"></div>`;
+    if (showLabel) {
+      ticksHTML += `<div class="tick-label" style="left:${pct}%">${formatPlaceit(val)}</div>`;
+    }
+  }
+
+  // Start marker at 50%
+  markerPos = 0.5;
+
+  area.innerHTML = `
+    <div class="number-line-container">
+      <div class="number-line-wrap">
+        <div class="number-line" id="numberLine">
+          ${ticksHTML}
+          <div class="tolerance-zone" id="toleranceZone"></div>
+          <div class="target-marker" id="targetMarker"></div>
+          <div class="line-marker" id="lineMarker" style="left:50%">
+            <div class="marker-value" id="markerValue">${formatPlaceit(data.min + 0.5 * range)}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  setupNumberLine();
+}
+
+function formatPlaceit(v) {
+  // Show clean decimal
+  const s = parseFloat(v.toFixed(4));
+  return String(s);
+}
+
+// Document-level listeners for marker drag (set once)
+let numberLineListenersAdded = false;
+function setupNumberLine() {
+  const line = document.getElementById('numberLine');
+  const marker = document.getElementById('lineMarker');
+  if (!line || !marker) return;
+
+  // Click on line
+  line.addEventListener('click', onLineClick);
+  line.addEventListener('touchstart', (e) => { e.preventDefault(); }, {passive: false});
+  line.addEventListener('touchend', onLineTouchEnd, {passive: false});
+
+  // Drag marker
+  marker.addEventListener('mousedown', onMarkerDown);
+  marker.addEventListener('touchstart', onMarkerTouchStart, {passive: false});
+
+  if (!numberLineListenersAdded) {
+    document.addEventListener('mousemove', onMarkerMove);
+    document.addEventListener('mouseup', onMarkerUp);
+    document.addEventListener('touchmove', onMarkerTouchMove, {passive: false});
+    document.addEventListener('touchend', onMarkerTouchEnd, {passive: false});
+    numberLineListenersAdded = true;
+  }
+}
+
+function onLineClick(e) {
+  if (answered) return;
+  const line = document.getElementById('numberLine');
+  const rect = line.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width;
+  setMarkerPosition(Math.max(0, Math.min(1, x)));
+}
+
+function onLineTouchEnd(e) {
+  if (answered || markerDragging) return;
+  const line = document.getElementById('numberLine');
+  const rect = line.getBoundingClientRect();
+  const touch = e.changedTouches[0];
+  const x = (touch.clientX - rect.left) / rect.width;
+  setMarkerPosition(Math.max(0, Math.min(1, x)));
+}
+
+function onMarkerDown(e) {
+  if (answered) return;
+  e.preventDefault();
+  markerDragging = true;
+}
+
+function onMarkerTouchStart(e) {
+  if (answered) return;
+  e.preventDefault();
+  e.stopPropagation();
+  markerDragging = true;
+}
+
+function onMarkerMove(e) {
+  if (!markerDragging || answered) return;
+  const line = document.getElementById('numberLine');
+  const rect = line.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width;
+  setMarkerPosition(Math.max(0, Math.min(1, x)));
+}
+
+function onMarkerUp() {
+  markerDragging = false;
+}
+
+function onMarkerTouchMove(e) {
+  if (!markerDragging || answered) return;
+  e.preventDefault();
+  const line = document.getElementById('numberLine');
+  const rect = line.getBoundingClientRect();
+  const touch = e.touches[0];
+  const x = (touch.clientX - rect.left) / rect.width;
+  setMarkerPosition(Math.max(0, Math.min(1, x)));
+}
+
+function onMarkerTouchEnd() {
+  markerDragging = false;
+}
+
+function setMarkerPosition(pct) {
+  markerPos = pct;
+  const marker = document.getElementById('lineMarker');
+  const label = document.getElementById('markerValue');
+  if (!marker) return;
+  marker.style.left = (pct * 100) + '%';
+  const range = placeItData.max - placeItData.min;
+  const val = placeItData.min + pct * range;
+  label.textContent = val.toFixed(2);
+  document.getElementById('checkBtn').disabled = false;
+}
+
+// ============================================================
+//  CHECK ANSWER
+// ============================================================
+function checkAnswer() {
+  if (answered) return;
+  const q = questions[currentQ];
+
+  if (q.type === 'lineup') checkLineup(q.data);
+  else if (q.type === 'roundup') checkRoundup(q.data);
+  else if (q.type === 'placeit') checkPlaceit(q.data);
+}
+
+function checkLineup(data) {
+  const zone = document.getElementById('lineupZone');
+  const cards = [...zone.querySelectorAll('.suspect-card')];
+  const userValues = cards.map(c => parseFloat(c.dataset.value));
+  const sortedValues = data.sorted.map(s => parseFloat(s));
+
+  // Compare numerically (handles duplicates and trailing zeros)
+  let allCorrect = true;
+  cards.forEach((card, i) => {
+    if (Math.abs(userValues[i] - sortedValues[i]) < 1e-9) {
+      card.classList.add('correct');
+    } else {
+      card.classList.add('incorrect');
+      allCorrect = false;
+    }
+  });
+
+  recordAnswer('lineup', allCorrect);
+}
+
+function checkRoundup(data) {
+  if (!selectedOption) return;
+  const buttons = document.querySelectorAll('.option-btn');
+  const isCorrect = selectedOption === data.answer;
+
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.option === data.answer) {
+      btn.classList.add('correct');
+    } else if (btn.classList.contains('selected') && !isCorrect) {
+      btn.classList.add('incorrect');
+    }
+  });
+
+  recordAnswer('roundup', isCorrect);
+}
+
+function checkPlaceit(data) {
+  const range = data.max - data.min;
+  const userValue = data.min + markerPos * range;
+  const targetPct = (data.value - data.min) / range;
+  const tolerance = 0.05; // +/- 0.05 absolute
+
+  const isCorrect = Math.abs(userValue - data.value) <= tolerance;
+
+  // Show target position
+  const targetMarker = document.getElementById('targetMarker');
+  const toleranceZone = document.getElementById('toleranceZone');
+  const marker = document.getElementById('lineMarker');
+
+  targetMarker.style.left = (targetPct * 100) + '%';
+  targetMarker.style.display = '';
+
+  const tolPct = (0.05 / range) * 100;
+  toleranceZone.style.left = ((targetPct * 100) - tolPct) + '%';
+  toleranceZone.style.width = (tolPct * 2) + '%';
+  toleranceZone.style.display = '';
+
+  if (isCorrect) {
+    marker.classList.add('correct');
+  } else {
+    marker.classList.add('incorrect');
+  }
+
+  recordAnswer('placeit', isCorrect);
+}
+
+function recordAnswer(type, isCorrect) {
+  answered = true;
+
+  typeTotal[type]++;
+  if (isCorrect) {
+    correctCount++;
+    typeCorrect[type]++;
+  }
+
+  document.getElementById('scoreNum').textContent = correctCount;
+
+  const fb = document.getElementById('feedback');
+  fb.style.display = 'block';
+  fb.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
+  fb.textContent = isCorrect ? 'Correct! Case solved.' : 'Not quite. Check the evidence.';
+
+  document.getElementById('checkBtn').style.display = 'none';
+  document.getElementById('nextBtn').classList.add('visible');
+
+  if (typeof mfg === 'function') {
+    mfg('question_answered', {
+      game_slug: GAME_SLUG,
+      level: LEVEL,
+      question_index: currentQ + 1,
+      correct: isCorrect
+    });
+  }
+}
+
+// ============================================================
+//  NEXT / REVEAL / RESULTS
+// ============================================================
+function nextQuestion() {
+  markerDragging = false;
+  currentQ++;
+  if (currentQ >= questions.length) {
+    showReveal();
+  } else {
+    loadQuestion();
+  }
+}
+
+function showReveal() {
+  if (revealShown) return;
+  revealShown = true;
+
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('revealOverlay').classList.add('active');
+
+  setTimeout(() => {
+    document.getElementById('revealOverlay').addEventListener('click', dismissReveal, {once: true});
+  }, 5000);
+}
+
+function dismissReveal() {
+  document.getElementById('revealOverlay').classList.remove('active');
+  showResults();
+}
+
+function showResults() {
+  document.getElementById('gameHeader').style.display = 'none';
+  document.getElementById('progressBar').style.display = 'none';
+
+  const total = questions.length;
+  const pct = Math.round((correctCount / total) * 100);
+  document.getElementById('finalScore').textContent = `${correctCount}/${total}`;
+  document.getElementById('finalPct').textContent = `${pct}%`;
+
+  document.getElementById('lineupScore').textContent = `${typeCorrect.lineup}/${typeTotal.lineup}`;
+  document.getElementById('roundupScore').textContent = `${typeCorrect.roundup}/${typeTotal.roundup}`;
+  document.getElementById('placeitScore').textContent = `${typeCorrect.placeit}/${typeTotal.placeit}`;
+
+  // PB check
+  const key = `pb_${GAME_SLUG}_${LEVEL}_${sessionLength}`;
+  const oldPB = localStorage.getItem(key);
+  const oldPBNum = oldPB !== null ? parseInt(oldPB) : -1;
+  const isNewPB = correctCount > oldPBNum;
+
+  if (isNewPB) {
+    localStorage.setItem(key, correctCount);
+    document.getElementById('pbBadge').style.display = 'block';
+    document.getElementById('pbResult').textContent = oldPBNum >= 0
+      ? `Previous best: ${oldPBNum}/${total}`
+      : 'First session completed!';
+
+    if (typeof mfg === 'function') {
+      mfg('personal_best_set', {
+        game_slug: GAME_SLUG,
+        level: LEVEL,
+        score: correctCount,
+        previous_best: oldPBNum >= 0 ? oldPBNum : 0
+      });
+    }
+  } else {
+    document.getElementById('pbBadge').style.display = 'none';
+    document.getElementById('pbResult').textContent = `Personal best: ${oldPBNum}/${total}`;
+  }
+
+  if (typeof mfg === 'function') {
+    mfg('game_completed', {
+      game_slug: GAME_SLUG,
+      level: LEVEL,
+      score: correctCount,
+      questions_answered: total,
+      questions_correct: correctCount
+    });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('decimal-detective',LEVEL,correctCount,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('decimal-detective',LEVEL,correctCount);}}
+  }
+
+  showScreen('resultsScreen');
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+showPB();
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

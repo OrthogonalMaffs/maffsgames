@@ -1,0 +1,8 @@
+# Python packages for .github/workflows/check-site.yml. Pinned 1 Oct 2026, when CI moved into
+# Microsoft's Playwright image: playwright MUST equal the image tag in the workflow
+# (mcr.microsoft.com/playwright/python:v<version>-noble), because the image's baked-in browsers
+# are built for exactly that version. Bump both together, after a green run.
+playwright==1.63.0
+esprima==4.0.1
+sympy==1.14.0
+mpmath==1.3.0

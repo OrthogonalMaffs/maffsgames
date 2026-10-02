@@ -1,0 +1,11 @@
+# gitleaks config for this repo: the default rules, plus one exact-value allowance.
+# The Firebase web config apiKey identifies the project to Google; it is not a secret and is
+# served to every visitor (Firebase's own docs say so). Database access is governed by the
+# security rules in firebase/database.rules.json, not by this key. Only this exact value is
+# allowed: any other Google API key still fails the scan.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Firebase web config apiKey (public by design, served live)"
+regexes = ['''AIzaSyCvLgIk8hdHaX7nL0aZ3p_Q8zNlRuKX18g''']

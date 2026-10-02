@@ -1,0 +1,16 @@
+{
+  "name": "maffsgames-firebase-rules",
+  "private": true,
+  "description": "Emulator tests for database.rules.json. Not part of the site. See docs/firebase-rules-deploy.md.",
+  "type": "module",
+  "scripts": {
+    "test": "firebase emulators:exec --only database --project demo-maffsgames \"node rules.test.mjs\"",
+    "prune": "node prune-recent-scores.mjs"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "5.0.2",
+    "firebase": "12.19.0",
+    "firebase-admin": "13.10.0",
+    "firebase-tools": "15.32.0"
+  }
+}

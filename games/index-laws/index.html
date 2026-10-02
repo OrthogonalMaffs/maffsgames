@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Master all 6 index law rules with 45 KaTeX-rendered questions. GCSE and A-Level algebra practice.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/index-laws/">
+<meta property="og:title" content="Index Laws — MaffsGames">
+<meta property="og:description" content="Master all 6 index law rules with 45 KaTeX-rendered questions. GCSE and A-Level algebra practice.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/index-laws/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Index Laws — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+  :root {
+    --bg:        #f8fafc;
+    --white:     #ffffff;
+    --navy:      #1a2744;
+    --navy-mid:  #253563;
+    --teal:      #0d9488;
+    --accent:    #6c63ff;
+    --accent-lt: #f0eeff;
+    --green:     #15803d;
+    --green-lt:  #dcfce7;
+    --red:       #dc2626;
+    --red-lt:    #fee2e2;
+    --text:      #1e293b;
+    --muted:     #64748b;
+    --border:    #e2e8f0;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.09), 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Outfit', system-ui, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Header ── */
+  .header {
+    width: 100%;
+    background: var(--navy);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .back {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s;
+  }
+  .back:hover { color: #fff; }
+
+  .header-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .header-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .header-level {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(108,99,255,0.15);
+    border: 1px solid rgba(108,99,255,0.3);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ── Game area ── */
+  .game-area {
+    width: 100%;
+    max-width: 760px;
+    padding: 24px 20px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* ── Score bar ── */
+  .scorebar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 14px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .score-item { text-align: center; }
+
+  .score-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .score-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-top: 2px;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Law reference panel ── */
+  .law-ref {
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .law-ref-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .laws-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .law-chip {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--navy);
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  /* ── Question card ── */
+  .question-box {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px 24px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .q-rule-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-lt);
+    border: 1px solid rgba(108,99,255,0.2);
+    padding: 3px 12px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 20px;
+  }
+
+  .q-text {
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 24px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.8;
+  }
+
+  .q-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  /* KaTeX overrides */
+  .q-text .katex { font-size: 1em; }
+  .choice .katex { font-size: 0.9em; }
+  .law-chip .katex { font-size: 0.85em; }
+  .explanation .katex { font-size: 0.9em; }
+
+  /* ── Answer choices ── */
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .choice {
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-size: clamp(13px, 2.5vw, 15px);
+    font-weight: 600;
+    padding: 16px 10px;
+    border: 2px solid var(--border);
+    background: var(--white);
+    color: var(--navy);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+  }
+
+  .choice:hover {
+    border-color: var(--accent);
+    background: var(--accent-lt);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(108,99,255,0.12);
+  }
+
+  .choice.correct {
+    background: var(--green-lt);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .choice.wrong {
+    background: var(--red-lt);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .choice.reveal {
+    background: var(--bg);
+    border-color: var(--border);
+    color: #94a3b8;
+    cursor: default;
+  }
+
+  .choice:disabled { pointer-events: none; }
+
+  /* ── Feedback ── */
+  .feedback {
+    font-size: 13px;
+    font-weight: 700;
+    min-height: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: center;
+    margin-top: 12px;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong   { color: var(--red); }
+
+  .explanation {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    min-height: 18px;
+    line-height: 1.5;
+  }
+
+  /* ── Start screen ── */
+  .start-screen {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .start-glyph {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--navy);
+    opacity: 0.08;
+    line-height: 1;
+    margin-bottom: -8px;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.05em;
+  }
+
+  .start-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .start-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .law-list {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .law-list-item {
+    font-size: 14px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .law-list-item .law-note {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .law-list-item::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+
+  /* ── Game over ── */
+  .game-over {
+    display: none;
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+  .game-over.visible { display: block; }
+
+  .go-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .go-score {
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 8px 0 6px;
+  }
+
+  .go-detail {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  /* ── Main game ── */
+  .main-game { display: none; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
+  .main-game.visible { display: flex; }
+
+  /* ── Button ── */
+  .btn {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .btn-primary {
+    background: var(--navy);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--navy-mid);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26,39,68,0.2);
+  }
+
+  /* ── Leaderboard ── */
+  .leaderboard {
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .lb-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lb-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .lb-row:last-child { border-bottom: none; }
+
+  .lb-rank { color: var(--muted); font-weight: 600; width: 28px; }
+  .lb-date { color: var(--muted); flex: 1; text-align: center; }
+  .lb-score { font-weight: 800; color: var(--navy); font-size: 15px; }
+
+  @media (max-width: 500px) {
+    .choices { grid-template-columns: 1fr; }
+    .laws-grid { grid-template-columns: 1fr; }
+    .game-area { padding: 16px 14px 40px; }
+  }
+/* === Accessibility === */
+body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
+body.accessible p, body.accessible .question-text, body.accessible .step-text, body.accessible .option-label, body.accessible .card-text { line-height: 2.0; max-width: 65ch; }
+body.accessible { background-color: #12141f !important; }
+body.accessible.light-theme { background-color: #fdf6e3 !important; color: #2d2d2d !important; }
+body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em; }
+.a11y-toggle { background: #1a2744; color: #ffffff; border: 1px solid #2a3a5c; border-radius: 6px; width: 36px; height: 36px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: background 0.15s; }
+.a11y-toggle.active, .a11y-toggle:hover { background: #0d9488; }
+.correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
+.incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <a href="../../" class="back">&larr; Back</a>
+  <div class="header-divider"></div>
+  <div class="header-title">Index Laws</div>
+  <span class="header-level">GCSE / A-Level</span>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+
+<div class="game-area">
+
+  <div class="scorebar">
+    <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
+    <div class="score-item"><div class="score-label">Streak</div><div class="score-val" id="streak">0</div></div>
+    <div class="score-item"><div class="score-label">Best</div><div class="score-val" id="best">0</div></div>
+  </div>
+
+  <!-- Start screen -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-glyph">x^n</div>
+    <div class="start-title">Index Laws</div>
+    <div class="start-desc">Six rules. All tested. Can you apply them under pressure?</div>
+    <div class="law-list" id="howTo"></div>
+    <button class="btn btn-primary" onclick="startGame()">Start Game</button>
+  </div>
+
+  <!-- Main game -->
+  <div class="main-game" id="mainGame">
+
+    <div class="law-ref">
+      <div class="law-ref-title">Quick Reference</div>
+      <div class="laws-grid" id="lawsGrid"></div>
+    </div>
+
+    <div class="question-box">
+      <div class="q-rule-label" id="ruleLabel">Multiply Rule</div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-sub" id="qSub">Select the correct simplified form</div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+  </div>
+
+  <!-- Game over -->
+  <div class="game-over" id="gameOver">
+    <div class="go-label">Game Over</div>
+    <div class="go-score" id="finalScore">0</div>
+    <div class="go-detail" id="goDetail"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="btn btn-primary" onclick="startGame()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-title">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Top Scores
+    </div>
+    <div id="lbList"></div>
+  </div>
+
+</div>
+
+<script>
+// ─── KaTeX helper ───────────────────────────────────────────────────
+function tex(latex) {
+  return katex.renderToString(latex, {throwOnError: false, displayMode: false});
+}
+
+// ─── Render reference cards and how-to with KaTeX ───────────────────
+const LAWS = [
+  {latex: 'a^m \\times a^n = a^{m+n}', note: 'multiply → add powers'},
+  {latex: 'a^m \\div a^n = a^{m-n}', note: 'divide → subtract powers'},
+  {latex: '(a^m)^n = a^{mn}', note: 'power of power → multiply'},
+  {latex: 'a^0 = 1', note: 'anything to the zero = 1'},
+  {latex: 'a^{-n} = \\dfrac{1}{a^n}', note: 'negative power = reciprocal'},
+  {latex: 'a^{\\frac{1}{n}} = \\sqrt[n]{a}', note: 'fraction power = root'},
+];
+
+// Render how-to section
+document.getElementById('howTo').innerHTML = LAWS.map(l =>
+  `<div class="law-list-item">${tex(l.latex)} <span class="law-note">(${l.note})</span></div>`
+).join('');
+
+// Render quick reference grid
+document.getElementById('lawsGrid').innerHTML = LAWS.map(l =>
+  `<div class="law-chip">${tex(l.latex)}</div>`
+).join('');
+
+// ─── QUESTIONS ──────────────────────────────────────────────────────
+const TOTAL = 12;
+
+const QUESTIONS = [
+  // ─── Multiply Rule (8) ────────────────────────────────────────────
+  {rule:'Multiply Rule', q:'x^3 \\times x^4', correct:'x^7',
+    wrong:['x^{12}','2x^7','x^{34}'], exp:'Add the powers: 3+4=7'},
+  {rule:'Multiply Rule', q:'2x^2 \\times 3x^5', correct:'6x^7',
+    wrong:['5x^7','6x^{10}','6x^3'], exp:'Multiply coefficients, add powers: 2×3=6, 2+5=7'},
+  {rule:'Multiply Rule', q:'a^{-2} \\times a^5', correct:'a^3',
+    wrong:['a^{-10}','a^7','a^{-3}'], exp:'Add the powers: -2+5=3'},
+  {rule:'Multiply Rule', q:'x^{\\frac{1}{2}} \\times x^{\\frac{1}{2}}', correct:'x',
+    wrong:['x^2','x^{\\frac{1}{4}}','\\sqrt{x}'], exp:'Add powers: 1/2+1/2=1, so x¹=x'},
+  {rule:'Multiply Rule', q:'a^6 \\times a^{-1}', correct:'a^5',
+    wrong:['a^{-6}','a^7','a^{-5}'], exp:'Add the powers: 6+(-1)=5'},
+  {rule:'Multiply Rule', q:'5x^3 \\times 2x^{-1}', correct:'10x^2',
+    wrong:['10x^{-3}','7x^2','10x^4'], exp:'Multiply coefficients: 5×2=10, add powers: 3+(-1)=2'},
+  {rule:'Multiply Rule', q:'3^4 \\times 3^2', correct:'3^6',
+    wrong:['3^8','9^6','3^{12}'], exp:'Same base, add powers: 4+2=6'},
+  {rule:'Multiply Rule', q:'x^{\\frac{1}{3}} \\times x^{\\frac{2}{3}}', correct:'x^1',
+    wrong:['x^{\\frac{2}{9}}','x^{\\frac{1}{3}}','x^2'], exp:'Add powers: 1/3+2/3=1, so x¹'},
+
+  // ─── Divide Rule (8) ──────────────────────────────────────────────
+  {rule:'Divide Rule', q:'x^8 \\div x^3', correct:'x^5',
+    wrong:['x^{11}','x^{24}','x^{-5}'], exp:'Subtract the powers: 8-3=5'},
+  {rule:'Divide Rule', q:'6x^7 \\div 2x^2', correct:'3x^5',
+    wrong:['4x^5','3x^9','12x^5'], exp:'Divide coefficients, subtract powers: 6÷2=3, 7-2=5'},
+  {rule:'Divide Rule', q:'x^3 \\div x^7', correct:'x^{-4}',
+    wrong:['x^4','x^{10}','x^{-10}'], exp:'Subtract the powers: 3-7=-4'},
+  {rule:'Divide Rule', q:'a^{10} \\div a^{10}', correct:'1',
+    wrong:['a','a^{20}','0'], exp:'Subtract powers: 10-10=0, and a⁰=1'},
+  {rule:'Divide Rule', q:'12x^9 \\div 4x^3', correct:'3x^6',
+    wrong:['3x^{12}','8x^6','3x^3'], exp:'Divide coefficients: 12÷4=3, subtract powers: 9-3=6'},
+  {rule:'Divide Rule', q:'\\dfrac{2^7}{2^3}', correct:'2^4',
+    wrong:['2^{10}','1^4','2^{21}'], exp:'Same base, subtract powers: 7-3=4'},
+  {rule:'Divide Rule', q:'x^6 \\div x^{-3}', correct:'x^9',
+    wrong:['x^3','x^{-18}','x^{-9}'], exp:'Subtract powers: 6-(-3)=9'},
+  {rule:'Divide Rule', q:'20a^4 \\div 5a', correct:'4a^3',
+    wrong:['4a^4','15a^3','4a^5'], exp:'Divide coefficients: 20÷5=4, subtract powers: 4-1=3'},
+
+  // ─── Power of a Power (7) ─────────────────────────────────────────
+  {rule:'Power of a Power', q:'(x^3)^4', correct:'x^{12}',
+    wrong:['x^7','x^{43}','x^{34}'], exp:'Multiply the powers: 3×4=12'},
+  {rule:'Power of a Power', q:'(2x^2)^3', correct:'8x^6',
+    wrong:['6x^6','2x^6','8x^5'], exp:'Cube the coefficient: 2³=8, multiply powers: 2×3=6'},
+  {rule:'Power of a Power', q:'(a^5)^2', correct:'a^{10}',
+    wrong:['a^7','a^{25}','a^{52}'], exp:'Multiply the powers: 5×2=10'},
+  {rule:'Power of a Power', q:'(x^{-2})^3', correct:'x^{-6}',
+    wrong:['x^{-5}','x^6','x^{-8}'], exp:'Multiply the powers: -2×3=-6'},
+  {rule:'Power of a Power', q:'(3a^4)^2', correct:'9a^8',
+    wrong:['6a^8','9a^6','3a^8'], exp:'Square the coefficient: 3²=9, multiply powers: 4×2=8'},
+  {rule:'Power of a Power', q:'(x^{\\frac{1}{2}})^4', correct:'x^2',
+    wrong:['x^{\\frac{1}{8}}','x^{4\\frac{1}{2}}','x^{\\frac{4}{8}}'], exp:'Multiply powers: (1/2)×4=2'},
+  {rule:'Power of a Power', q:'(5^2)^3', correct:'5^6', ask:'Write (5²)³ as a single power of 5',
+    wrong:['5^5','5^8','25^3'], exp:'Multiply the powers: 2×3=6'},
+
+  // ─── Zero Power (4) ───────────────────────────────────────────────
+  {rule:'Zero Power', q:'7x^0', correct:'7',
+    wrong:['0','7x','1'], exp:'x⁰=1, so 7×1=7'},
+  {rule:'Zero Power', q:'(3x^2)^0', correct:'1',
+    wrong:['0','3','3x^2'], exp:'Anything (non-zero) to the power 0 equals 1'},
+  {rule:'Zero Power', q:'6 \\times (2x)^0', correct:'6',
+    wrong:['12','0','12x'], exp:'(2x)⁰=1, so 6×1=6'},
+  {rule:'Zero Power', q:'10a^3 \\times a^0', correct:'10a^3',
+    wrong:['0','10a','10'], exp:'a⁰=1, so multiplying by a⁰ changes nothing'},
+
+  // ─── Negative Power (8) ───────────────────────────────────────────
+  {rule:'Negative Power', q:'x^{-3}', correct:'\\dfrac{1}{x^3}',
+    wrong:['-x^3','x^3','\\dfrac{1}{x^{-3}}'], exp:'Negative power = reciprocal'},
+  {rule:'Negative Power', q:'2^{-4}', correct:'\\dfrac{1}{16}',
+    wrong:['-16','\\dfrac{1}{8}','16'], exp:'2⁴=16, so 2⁻⁴=1/16'},
+  {rule:'Negative Power', q:'5^{-2}', correct:'\\dfrac{1}{25}',
+    wrong:['-25','\\dfrac{1}{10}','-10'], exp:'5²=25, so 5⁻²=1/25'},
+  {rule:'Negative Power', q:'\\dfrac{1}{x^5}', correct:'x^{-5}',
+    wrong:['-x^5','x^5','x^{\\frac{1}{5}}'], exp:'1/xⁿ = x⁻ⁿ'},
+  {rule:'Negative Power', q:'3^{-1}', correct:'\\dfrac{1}{3}',
+    wrong:['-3','-1','\\dfrac{1}{-3}'], exp:'3⁻¹ = 1/3'},
+  {rule:'Negative Power', q:'(2x)^{-2}', correct:'\\dfrac{1}{4x^2}',
+    wrong:['\\dfrac{1}{2x^2}','-4x^2','\\dfrac{-1}{4x^2}'], exp:'(2x)²=4x², so (2x)⁻²=1/(4x²)'},
+  {rule:'Negative Power', q:'10^{-3}', correct:'\\dfrac{1}{1000}',
+    wrong:['\\dfrac{1}{30}','-1000','\\dfrac{1}{100}'], exp:'10³=1000, so 10⁻³=1/1000'},
+  {rule:'Negative Power', q:'4x^{-1}', correct:'\\dfrac{4}{x}',
+    wrong:['-4x','\\dfrac{1}{4x}','\\dfrac{x}{4}'], exp:'x⁻¹=1/x, and the 4 stays as coefficient'},
+
+  // ─── Fractional Power (10) ────────────────────────────────────────
+  {rule:'Fractional Power', q:'x^{\\frac{1}{2}}', correct:'\\sqrt{x}',
+    wrong:['\\dfrac{x}{2}','x^2','2x'], exp:'Power 1/2 means square root'},
+  {rule:'Fractional Power', q:'8^{\\frac{1}{3}}', correct:'2',
+    wrong:['4','24','\\dfrac{8}{3}'], exp:'Power 1/3 means cube root: ∛8=2'},
+  {rule:'Fractional Power', q:'x^{\\frac{3}{2}}', correct:'(\\sqrt{x})^3',
+    wrong:['x^{\\frac{2}{3}}','3\\sqrt{x}','\\dfrac{x^3}{2}'], exp:'x^(m/n) = (ⁿ√x)ᵐ'},
+  {rule:'Fractional Power', q:'27^{\\frac{1}{3}}', correct:'3',
+    wrong:['9','27','\\dfrac{27}{3}'], exp:'Cube root of 27 is 3 (3³=27)'},
+  {rule:'Fractional Power', q:'100^{\\frac{1}{2}}', correct:'10',
+    wrong:['50','\\dfrac{100}{2}','200'], exp:'Square root of 100 is 10'},
+  {rule:'Fractional Power', q:'25^{\\frac{1}{2}}', correct:'5',
+    wrong:['12.5','\\dfrac{25}{2}','625'], exp:'Square root of 25 is 5'},
+  {rule:'Fractional Power', q:'8^{\\frac{2}{3}}', correct:'4',
+    wrong:['16','\\dfrac{16}{3}','6'], exp:'Cube root of 8 is 2, then 2²=4'},
+  {rule:'Fractional Power', q:'27^{\\frac{2}{3}}', correct:'9',
+    wrong:['18','3','243'], exp:'Cube root of 27 is 3, then 3²=9'},
+  {rule:'Fractional Power', q:'x^{\\frac{1}{3}}', correct:'\\sqrt[3]{x}',
+    wrong:['\\dfrac{x}{3}','3x','x^3'], exp:'Power 1/3 means cube root'},
+  {rule:'Fractional Power', q:'16^{\\frac{3}{4}}', correct:'8',
+    wrong:['12','64','4'], exp:'Fourth root of 16 is 2, then 2³=8'},
+];
+
+let score=0,streak=0,qNum=0,answered=false,questions=[],_ggCorrectCount=0;
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+
+function makeChoices(correct,wrong){
+  const w=wrong.filter(x=>x!==correct);
+  return shuffle([correct,...shuffle(w).slice(0,3)]);
+}
+
+function startGame(){
+  score=0;streak=0;qNum=0;_ggCorrectCount=0;
+  questions=shuffle(QUESTIONS).slice(0,TOTAL);
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('gameOver').classList.remove('visible');
+  document.getElementById('mainGame').classList.add('visible');
+
+  window._ggAbandoned=true;
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'index-laws',level:'gcse',questions_answered:qNum});});}
+  mfg('game_started',{game_slug:'index-laws',level:'gcse'});
+
+  nextQ();
+}
+
+function nextQ(){
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('explanation').parentNode);
+  if(qNum>=TOTAL){endGame();return;}
+  answered=false;
+  const q=questions[qNum]; qNum++;
+  document.getElementById('ruleLabel').textContent=q.rule;
+  document.getElementById('qText').innerHTML=tex(q.q + ' = \\; ?');
+  // A question whose answer is a FORM says so (ruled 1 Oct 2026: (5^2)^3 keeps 25^3 as an option).
+  document.getElementById('qSub').textContent=q.ask||'Select the correct simplified form';
+  document.getElementById('feedback').textContent='';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('explanation').textContent='';
+
+  const choices=makeChoices(q.correct,q.wrong);
+  const div=document.getElementById('choices');
+  div.innerHTML='';
+  choices.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='choice';
+    btn.dataset.val=c;
+    btn.innerHTML=tex(c);
+    btn.onclick=()=>guess(c,q,btn,div);
+    div.appendChild(btn);
+  });
+
+  // No timer. Jon, 22 Sep 2026: students are using this in class and do not need
+  // the time pressure. It used to run a 7s countdown bar that failed the question
+  // outright ("TOO SLOW!"), zeroed the streak and logged correct:false -- which also
+  // means historic accuracy for this game counts questions nobody actually answered.
+  // timer-policy.md had it listed as Hidden Count-Up, which it never was.
+}
+
+function guess(val,q,btn,div){
+  if(answered)return;
+  answered=true;
+  const correct=val===q.correct;
+  const fb=document.getElementById('feedback');
+  document.getElementById('explanation').textContent=q.exp;
+  mfg('question_answered',{game_slug:'index-laws',level:'gcse',correct:correct,question_index:qNum});
+  if(correct){
+    _ggCorrectCount++;
+    score+=10+streak*3;streak++;
+    btn.classList.add('correct');
+    fb.textContent=streak>2?`CORRECT! 🔥 ${streak} streak!`:'CORRECT!';
+    fb.className='feedback correct';
+  } else {
+    streak=0;
+    btn.classList.add('wrong');
+    [...div.children].forEach(b=>{if(b.dataset.val===q.correct)b.classList.add('correct');});
+    fb.textContent='WRONG!';
+    fb.className='feedback wrong';
+  }
+  document.getElementById('score').textContent=score;
+  document.getElementById('streak').textContent=streak;
+  // canon 7.6: correct advances briskly, wrong waits for the student.
+  if(correct){ setTimeout(nextQ,1800); }
+  else { MaffsNext.wrong({mount:document.getElementById('explanation').parentNode, onAdvance:nextQ}); }
+}
+
+function endGame(){
+  window._ggAbandoned=false;
+  document.getElementById('mainGame').classList.remove('visible');
+  document.getElementById('gameOver').classList.add('visible');
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('goDetail').textContent=`${TOTAL} questions completed`;
+  const _acc=TOTAL>0?Math.round(_ggCorrectCount/TOTAL*100):0;
+  mfg('game_completed',{game_slug:'index-laws',level:'gcse',score:score,questions_answered:TOTAL,accuracy:_acc});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('index-laws','gcse',score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('index-laws','gcse',score);}}
+  saveBest(score);renderLB();
+}
+
+function getBest(){return parseInt(localStorage.getItem('il_best')||'0');}
+function saveBest(s){const prev=getBest();if(s>prev){localStorage.setItem('il_best',s);mfg('personal_best_set',{game_slug:'index-laws',level:'gcse',score:s,previous_best:prev});}document.getElementById('best').textContent=getBest();}
+function renderLB(){
+  const scores=JSON.parse(localStorage.getItem('il_scores')||'[]');
+  const ns=[...scores,{score,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,5);
+  localStorage.setItem('il_scores',JSON.stringify(ns));
+  document.getElementById('lbList').innerHTML=ns.map((s,i)=>`<div class="lb-row"><span class="lb-rank">#${i+1}</span><span class="lb-date">${s.date}</span><span class="lb-score">${s.score}</span></div>`).join('')||'<div style="text-align:center;color:#94a3b8;font-size:13px;padding:12px">No scores yet</div>';
+}
+document.getElementById('best').textContent=getBest();
+renderLB();
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

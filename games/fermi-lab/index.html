@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Chain estimation puzzles inspired by Fermi problems. Break big questions into smaller steps. 50 questions, no timer.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/fermi-lab/">
+<meta property="og:title" content="Fermi Lab — MaffsGames">
+<meta property="og:description" content="Chain estimation puzzles inspired by Fermi problems. Break big questions into smaller steps. 50 questions, no timer.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/fermi-lab/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Fermi Lab — MaffsGames</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --card: #ffffff;
+  --card-border: #e2e8f0;
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --text-dark: #1e293b;
+  --accent: #3b82f6;
+  --accent-glow: rgba(59,130,246,0.15);
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.12);
+  --amber: #f59e0b;
+  --amber-bg: rgba(245,158,11,0.12);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.12);
+  --gold: #eab308;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); font-family:'Outfit',sans-serif; color:var(--text); min-height:100vh; display:flex; flex-direction:column; align-items:center; }
+
+/* Header */
+.header { width:100%; background:#0b1120; border-bottom:1px solid #1e293b; padding:14px 24px; display:flex; align-items:center; gap:16px; }
+.back-link { color:var(--accent); text-decoration:none; font-size:13px; font-weight:600; }
+.back-link:hover { text-decoration:underline; }
+.game-title { font-weight:700; font-size:clamp(14px,3vw,18px); color:var(--text); letter-spacing:0.02em; }
+.game-title span { color:var(--accent); }
+
+/* Container */
+.container { width:100%; max-width:760px; padding:20px; flex:1; display:flex; flex-direction:column; gap:16px; }
+
+/* Screens */
+.screen { display:none; flex-direction:column; gap:16px; }
+.screen.active { display:flex; }
+
+/* Start screen */
+.start-card { background:var(--surface); border:1px solid #334155; border-radius:16px; padding:32px; text-align:center; }
+.start-icon { font-size:56px; margin-bottom:16px; }
+.start-title { font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:700; margin-bottom:12px; }
+.start-desc { color:var(--text-dim); font-size:15px; line-height:1.7; margin-bottom:24px; }
+.how-to { background:rgba(59,130,246,0.06); border:1px solid rgba(59,130,246,0.15); border-radius:12px; padding:16px 20px; text-align:left; margin-bottom:24px; }
+.how-to p { font-size:13px; color:var(--text-dim); margin-bottom:6px; line-height:1.5; }
+.how-to p:last-child { margin-bottom:0; }
+.how-to p::before { content:'→ '; color:var(--accent); font-weight:700; }
+
+/* Tier & session selection */
+.tier-label { font-size:11px; color:var(--text-dim); font-weight:700; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
+.tier-display { font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--accent); margin-bottom:20px; }
+.session-options { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+.session-btn { font-family:'Outfit',sans-serif; font-weight:700; font-size:14px; padding:12px 24px; border:2px solid var(--accent); background:transparent; color:var(--accent); border-radius:10px; cursor:pointer; transition:all 0.2s; }
+.session-btn:hover { background:var(--accent); color:white; }
+.session-btn .sub { display:block; font-size:11px; font-weight:400; color:var(--text-dim); margin-top:2px; }
+.session-btn:hover .sub { color:rgba(255,255,255,0.7); }
+
+/* Scorebar */
+.scorebar { display:flex; justify-content:space-between; background:var(--surface); border:1px solid #334155; border-radius:12px; padding:14px 20px; }
+.score-item { text-align:center; }
+.score-label { font-size:10px; color:var(--text-dim); font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+.score-val { font-family:'JetBrains Mono',monospace; font-size:16px; color:var(--text); margin-top:2px; }
+
+/* Question card */
+.question-card { background:var(--surface); border:1px solid #334155; border-radius:16px; padding:24px; }
+.question-text { font-size:clamp(16px,4vw,20px); font-weight:700; line-height:1.5; color:var(--text); }
+
+/* Chain steps */
+.chain-container { display:flex; flex-direction:column; gap:0; }
+.chain-step { background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:16px; position:relative; }
+.chain-connector { display:flex; align-items:center; justify-content:center; padding:4px 0; }
+.chain-connector span { font-family:'JetBrains Mono',monospace; font-size:16px; color:var(--text-dim); }
+.step-header { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px; }
+.step-label { font-size:14px; font-weight:600; color:var(--text-dark); flex:1; }
+.step-light { width:22px; height:22px; border-radius:50%; border:2px solid #e2e8f0; background:#f8fafc; flex-shrink:0; transition:all 0.3s; display:flex; align-items:center; justify-content:center; font-size:10px; }
+.step-light.green { background:var(--green); border-color:var(--green); }
+.step-light.amber { background:var(--amber); border-color:var(--amber); }
+.step-light.red { background:var(--red); border-color:var(--red); }
+.step-light.skipped { background:#94a3b8; border-color:#94a3b8; }
+.step-hint-toggle { font-size:12px; color:var(--accent); cursor:pointer; background:none; border:none; font-family:'Outfit',sans-serif; font-weight:600; padding:0; margin-bottom:6px; }
+.step-hint-toggle:hover { text-decoration:underline; }
+.step-hint { font-size:12px; color:#64748b; line-height:1.5; margin-bottom:8px; display:none; }
+.step-hint.visible { display:block; }
+.step-input-row { display:flex; gap:8px; align-items:center; }
+.step-input { font-family:'JetBrains Mono',monospace; font-size:15px; padding:8px 12px; border:2px solid #e2e8f0; border-radius:8px; background:white; color:var(--text-dark); width:100%; outline:none; transition:border-color 0.2s; }
+.step-input:focus { border-color:var(--accent); }
+.step-input:disabled { background:#f1f5f9; color:#94a3b8; }
+.step-unit { font-family:'JetBrains Mono',monospace; font-size:12px; color:#94a3b8; white-space:nowrap; flex-shrink:0; }
+.step-submit-btn { font-family:'Outfit',sans-serif; font-weight:700; font-size:12px; padding:8px 14px; border:none; border-radius:8px; background:var(--accent); color:white; cursor:pointer; flex-shrink:0; transition:opacity 0.2s; }
+.step-submit-btn:hover { opacity:0.85; }
+.step-submit-btn:disabled { opacity:0.4; cursor:not-allowed; }
+.step-skip-btn { font-family:'Outfit',sans-serif; font-size:11px; color:#94a3b8; background:none; border:none; cursor:pointer; padding:4px 0; margin-top:4px; }
+.step-skip-btn:hover { color:var(--text-dark); }
+
+/* Submit chain button */
+.chain-submit-row { display:flex; justify-content:center; padding-top:8px; }
+.chain-submit-btn { font-family:'Outfit',sans-serif; font-weight:700; font-size:15px; padding:14px 32px; border:none; border-radius:12px; background:var(--accent); color:white; cursor:pointer; transition:all 0.2s; }
+.chain-submit-btn:hover { opacity:0.9; transform:scale(1.02); }
+.chain-submit-btn:disabled { opacity:0.3; cursor:not-allowed; transform:none; }
+
+/* Cascade animation */
+.cascade-container { background:var(--surface); border:1px solid #334155; border-radius:16px; padding:24px; }
+.cascade-title { font-size:12px; color:var(--text-dim); font-weight:700; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:16px; }
+.cascade-steps { display:flex; flex-direction:column; gap:6px; }
+.cascade-row { display:flex; justify-content:space-between; align-items:center; font-family:'JetBrains Mono',monospace; font-size:13px; padding:6px 0; opacity:0; transform:translateY(8px); transition:all 0.4s ease; }
+.cascade-row.visible { opacity:1; transform:translateY(0); }
+.cascade-row .c-label { color:var(--text-dim); flex:1; }
+.cascade-row .c-val { color:var(--text); font-weight:600; }
+.cascade-row .c-op { color:var(--accent); margin:0 8px; font-size:11px; }
+.cascade-row .c-running { color:var(--accent); font-weight:700; font-size:14px; }
+.cascade-final { margin-top:16px; padding-top:16px; border-top:1px solid #334155; text-align:center; opacity:0; transition:opacity 0.5s; }
+.cascade-final.visible { opacity:1; }
+.cascade-estimate { font-family:'JetBrains Mono',monospace; font-size:clamp(20px,5vw,28px); font-weight:700; color:var(--text); }
+.cascade-accepted { font-size:13px; color:var(--text-dim); margin-top:8px; }
+.cascade-rating { font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:700; margin-top:8px; padding:6px 16px; border-radius:8px; display:inline-block; }
+.cascade-rating.brilliant { background:var(--green-bg); color:var(--green); }
+.cascade-rating.good { background:var(--green-bg); color:var(--green); }
+.cascade-rating.reasonable { background:var(--amber-bg); color:var(--amber); }
+.cascade-rating.poor { background:var(--red-bg); color:var(--red); }
+
+/* Results comparison */
+.results-card { background:var(--surface); border:1px solid #334155; border-radius:16px; padding:20px; }
+.results-title { font-size:12px; color:var(--text-dim); font-weight:700; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; }
+.results-table { width:100%; border-collapse:collapse; }
+.results-table th { font-size:11px; color:var(--text-dim); font-weight:700; text-transform:uppercase; letter-spacing:1px; padding:6px 8px; text-align:left; border-bottom:1px solid #334155; }
+.results-table td { font-size:13px; padding:8px; border-bottom:1px solid rgba(51,65,85,0.5); vertical-align:middle; }
+.results-table .r-label { color:var(--text-dim); }
+.results-table .r-yours { font-family:'JetBrains Mono',monospace; color:var(--text); font-weight:600; }
+.results-table .r-model { font-family:'JetBrains Mono',monospace; color:var(--text-dim); }
+.results-table .r-light { text-align:center; }
+.light-dot { display:inline-block; width:12px; height:12px; border-radius:50%; }
+.light-dot.green { background:var(--green); }
+.light-dot.amber { background:var(--amber); }
+.light-dot.red { background:var(--red); }
+.light-dot.skipped { background:#64748b; }
+.results-note { font-size:12px; color:var(--text-dim); line-height:1.5; margin-top:12px; font-style:italic; }
+.score-breakdown { font-family:'JetBrains Mono',monospace; font-size:13px; color:var(--text-dim); margin-top:12px; padding-top:12px; border-top:1px solid #334155; }
+.score-breakdown .sb-total { color:var(--accent); font-weight:700; }
+
+.next-btn { font-family:'Outfit',sans-serif; font-weight:700; font-size:15px; padding:14px 32px; border:none; border-radius:12px; background:var(--accent); color:white; cursor:pointer; align-self:center; transition:all 0.2s; }
+.next-btn:hover { opacity:0.9; }
+
+/* End screen */
+.end-card { background:var(--surface); border:1px solid #334155; border-radius:16px; padding:32px; text-align:center; }
+.end-title { font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:700; margin-bottom:8px; }
+.end-score { font-family:'JetBrains Mono',monospace; font-size:clamp(32px,8vw,48px); color:var(--accent); margin:16px 0; }
+.end-stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; text-align:center; }
+.end-stat { background:rgba(59,130,246,0.06); border-radius:10px; padding:12px; }
+.end-stat-label { font-size:11px; color:var(--text-dim); font-weight:700; text-transform:uppercase; letter-spacing:1px; }
+.end-stat-val { font-family:'JetBrains Mono',monospace; font-size:18px; color:var(--text); margin-top:4px; }
+.play-again-btn { font-family:'Outfit',sans-serif; font-weight:700; font-size:16px; padding:14px 32px; border:none; border-radius:12px; background:var(--accent); color:white; cursor:pointer; transition:all 0.2s; }
+.play-again-btn:hover { opacity:0.9; }
+
+/* Leaderboard */
+.leaderboard { background:var(--surface); border:1px solid #334155; border-radius:16px; padding:20px; }
+.lb-title { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text-dim); margin-bottom:12px; text-align:center; text-transform:uppercase; letter-spacing:1.5px; }
+.lb-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(51,65,85,0.4); font-size:13px; color:var(--text-dim); }
+.lb-row:last-child { border-bottom:none; }
+.lb-score { font-family:'JetBrains Mono',monospace; color:var(--accent); font-weight:700; }
+.lb-empty { text-align:center; color:#475569; font-size:13px; padding:12px; }
+
+/* Responsive */
+@media (max-width:500px) {
+  .container { padding:12px; }
+  .step-input-row { flex-wrap:wrap; }
+  .step-submit-btn { width:100%; }
+  .end-stats { grid-template-columns:1fr; }
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-992JLHLP2D', { send_page_view:true, storage:'none', anonymize_ip:true });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="header">
+  <a href="/" class="back-link">← Back to Games</a>
+  <div class="game-title"><span>FERMI</span> LAB</div>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+<div class="container">
+
+  <!-- START SCREEN -->
+  <div class="screen active" id="startScreen">
+    <div class="start-card">
+      <div class="start-icon">🔬</div>
+      <div class="start-title">FERMI LAB</div>
+      <div class="start-desc">Build chains of reasoning to estimate impossible-sounding quantities.<br>Break the impossible into the possible — one assumption at a time.</div>
+      <div class="how-to">
+        <p>A big question appears — seemingly impossible to answer</p>
+        <p>Break it down into a chain of smaller estimates</p>
+        <p>Each step gets traffic-light feedback: green, amber, or red</p>
+        <p>Your chain multiplies out to a final estimate</p>
+        <p>Scoring rewards your reasoning process, not just the answer</p>
+      </div>
+      <div class="tier-label">Level</div>
+      <div class="tier-display" id="tierDisplay">GCSE</div>
+      <div class="tier-label" style="margin-top:16px">Session Length</div>
+      <div class="session-options" style="margin-top:8px">
+        <button class="session-btn" onclick="startGame(5)">Quick<span class="sub">5 questions</span></button>
+        <button class="session-btn" onclick="startGame(10)">Standard<span class="sub">10 questions</span></button>
+        <button class="session-btn" onclick="startGame(0)">Marathon<span class="sub">All in tier</span></button>
+      </div>
+    </div>
+    <div class="leaderboard">
+      <div class="lb-title">Top Scores</div>
+      <div id="lbList"></div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div class="screen" id="gameScreen">
+    <div class="scorebar">
+      <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="scoreDisplay">0</div></div>
+      <div class="score-item"><div class="score-label">Question</div><div class="score-val" id="qDisplay">1/5</div></div>
+      <div class="score-item"><div class="score-label">Greens</div><div class="score-val" id="greenDisplay">0</div></div>
+    </div>
+    <div class="question-card">
+      <div class="question-text" id="questionText"></div>
+    </div>
+    <div class="chain-container" id="chainContainer"></div>
+    <div class="chain-submit-row">
+      <button class="chain-submit-btn" id="chainSubmitBtn" onclick="submitChain()" disabled>Calculate Estimate</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN (per question) -->
+  <div class="screen" id="resultsScreen">
+    <div class="scorebar">
+      <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="scoreDisplay2">0</div></div>
+      <div class="score-item"><div class="score-label">Question</div><div class="score-val" id="qDisplay2">1/5</div></div>
+      <div class="score-item"><div class="score-label">Greens</div><div class="score-val" id="greenDisplay2">0</div></div>
+    </div>
+    <div class="cascade-container" id="cascadeContainer">
+      <div class="cascade-title">Chain Calculation</div>
+      <div class="cascade-steps" id="cascadeSteps"></div>
+      <div class="cascade-final" id="cascadeFinal">
+        <div class="cascade-estimate" id="cascadeEstimate"></div>
+        <div class="cascade-accepted" id="cascadeAccepted"></div>
+        <div class="cascade-rating" id="cascadeRating"></div>
+      </div>
+    </div>
+    <div class="results-card" id="resultsCard">
+      <div class="results-title">Your Chain vs Model Chain</div>
+      <table class="results-table"><thead><tr><th>Step</th><th>Yours</th><th></th><th>Model</th></tr></thead><tbody id="resultsBody"></tbody></table>
+      <div class="results-note" id="resultsNote"></div>
+      <div class="score-breakdown" id="scoreBreakdown"></div>
+    </div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+  </div>
+
+  <!-- END SCREEN -->
+  <div class="screen" id="endScreen">
+    <div class="end-card">
+      <div class="end-title">SESSION COMPLETE</div>
+      <div class="end-score" id="endScore">0</div>
+      <div class="end-stats" id="endStats"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+      <button class="play-again-btn" onclick="backToStart()">Play Again</button>
+      <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+    </div>
+    <div class="leaderboard">
+      <div class="lb-title">Top Scores</div>
+      <div id="lbList2"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── QUESTION BANK ───
+var QUESTIONS = {
+ks3: [
+{id:"uk-classrooms",question:"How many classrooms are there in UK schools?",chain:[{label:"Number of schools in the UK",hint:"Think about primary and secondary schools combined.",unit:"schools",reference:32000,tolerance:{green:2,amber:5}},{label:"Average classrooms per school",hint:"Think about a typical school — how many teaching rooms?",unit:"classrooms",reference:20,tolerance:{green:2,amber:5}}],acceptedAnswer:640000,answerNote:"~32,000 schools (DfE 2024/25) \u00d7 ~20 classrooms each \u2248 640,000."},
+{id:"hp-words",question:"How many words are in all seven Harry Potter books combined?",chain:[{label:"Number of books in the series",hint:"How many Harry Potter novels did J.K. Rowling write?",unit:"books",reference:7,tolerance:{green:1.5,amber:2}},{label:"Average words per book",hint:"A typical novel is around 80,000 words. Harry Potter books got longer as the series progressed.",unit:"words",reference:155000,tolerance:{green:2,amber:5}}],acceptedAnswer:1084170,answerNote:"The seven books total 1,084,170 words (WordCounter, multiple sources agree)."},
+{id:"tennis-balls-classroom",question:"How many tennis balls would fit in a typical classroom?",chain:[{label:"Volume of a classroom (m\u00b3)",hint:"A classroom is roughly 10m \u00d7 8m \u00d7 3m high.",unit:"m\u00b3",reference:240,tolerance:{green:2,amber:5}},{label:"Volume of a tennis ball (cm\u00b3)",hint:"A tennis ball is about 6.7cm in diameter.",unit:"cm\u00b3",reference:157,tolerance:{green:2,amber:5}},{label:"Packing efficiency",hint:"Spheres don't pack perfectly. About 64% of the space is filled.",unit:"",reference:0.64,tolerance:{green:2,amber:3}}],acceptedAnswer:978000,answerNote:"240m\u00b3 = 240,000,000 cm\u00b3. \u00f7 157 cm\u00b3 \u00d7 0.64 packing \u2248 978,000 tennis balls."},
+{id:"uk-bread-slices",question:"How many slices of bread does the UK eat in a year?",chain:[{label:"UK population",hint:"How many people live in the UK?",unit:"people",reference:67000000,tolerance:{green:1.5,amber:3}},{label:"Slices per person per day",hint:"Think about sandwiches, toast, etc. across all ages.",unit:"slices",reference:3,tolerance:{green:2,amber:5}},{label:"Days in a year",hint:"This one should be exact!",unit:"days",reference:365,tolerance:{green:1.1,amber:1.5}}],acceptedAnswer:73000000000,answerNote:"Federation of Bakers: the UK consumes ~11 million loaves per day. At ~20 slices per loaf, that\u2019s ~220 million slices/day or ~80 billion/year."},
+{id:"lifetime-heartbeats",question:"How many times does your heart beat in a lifetime?",chain:[{label:"Heart rate (beats per minute)",hint:"A resting heart rate for an adult is typically 60\u201380 bpm.",unit:"bpm",reference:72,tolerance:{green:2,amber:3}},{label:"Minutes in a year",hint:"365 days \u00d7 24 hours \u00d7 60 minutes.",unit:"minutes",reference:525600,tolerance:{green:1.5,amber:3}},{label:"Average lifespan (years)",hint:"UK life expectancy is around 80 years.",unit:"years",reference:80,tolerance:{green:1.5,amber:2}}],acceptedAnswer:3000000000,answerNote:"72 \u00d7 525,600 \u00d7 80 \u2248 3 billion. Widely cited estimate: 2.5\u20133 billion heartbeats in a lifetime."},
+{id:"uk-school-meals",question:"How many school meals are served in the UK each school day?",chain:[{label:"Number of school pupils in the UK",hint:"Primary + secondary combined.",unit:"pupils",reference:10000000,tolerance:{green:2,amber:5}},{label:"Fraction who have a school meal",hint:"Not everyone eats school dinners \u2014 some bring packed lunches.",unit:"",reference:0.5,tolerance:{green:2,amber:5}}],acceptedAnswer:5000000,answerNote:"~10.6 million pupils (DfE 2024). Approx 40\u201360% take school meals. Estimate: ~5 million meals/day."},
+{id:"walking-year",question:"How far could you walk in one year if you walked 8 hours every single day?",chain:[{label:"Walking speed (km/h)",hint:"A typical walking pace is about 5 km/h.",unit:"km/h",reference:5,tolerance:{green:2,amber:3}},{label:"Hours walking per day",hint:"The question says 8 hours.",unit:"hours",reference:8,tolerance:{green:1.2,amber:1.5}},{label:"Days in a year",hint:"365 (or 366 in a leap year).",unit:"days",reference:365,tolerance:{green:1.1,amber:1.5}}],acceptedAnswer:14600,answerNote:"5 \u00d7 8 \u00d7 365 = 14,600 km. That\u2019s roughly London to Sydney."},
+{id:"footballs-on-pitch",question:"How many footballs would it take to completely cover a football pitch?",chain:[{label:"Area of a football pitch (m\u00b2)",hint:"A standard pitch is roughly 100m \u00d7 70m.",unit:"m\u00b2",reference:7000,tolerance:{green:2,amber:3}},{label:"Diameter of a football (m)",hint:"A size 5 football is about 22cm across.",unit:"m",reference:0.22,tolerance:{green:2,amber:3}}],acceptedAnswer:145000,answerNote:"Area per ball \u2248 0.22\u00b2 \u2248 0.048 m\u00b2. 7000 \u00f7 0.048 \u2248 145,000."},
+{id:"school-water-year",question:"How many litres of water does a typical secondary school use in a year?",chain:[{label:"Number of people in the school",hint:"Students plus staff. A typical secondary has 1000\u20131500 students.",unit:"people",reference:1200,tolerance:{green:2,amber:5}},{label:"Litres per person per school day",hint:"Drinking, toilets, washing hands, science labs, kitchens.",unit:"litres",reference:25,tolerance:{green:2,amber:5}},{label:"School days per year",hint:"The UK school year is 190 days.",unit:"days",reference:190,tolerance:{green:1.5,amber:2}}],acceptedAnswer:5700000,answerNote:"Waterwise estimates UK schools use 4\u20138 m\u00b3 per pupil per year. Our chain: 1200 \u00d7 25 \u00d7 190 = 5.7 million litres."},
+{id:"lego-bricks-year",question:"How many Lego bricks does the Lego Group manufacture in a year?",chain:[{label:"Number of children worldwide (approx)",hint:"There are about 8 billion people. Roughly a quarter are under 15.",unit:"children",reference:2000000000,tolerance:{green:2,amber:5}},{label:"Fraction in countries where Lego is popular",hint:"Lego is mainly popular in Europe, North America, East Asia.",unit:"",reference:0.3,tolerance:{green:2,amber:5}},{label:"Average Lego bricks bought per child per year",hint:"Not every child gets Lego. Those who do might get a few sets.",unit:"bricks",reference:100,tolerance:{green:3,amber:10}}],acceptedAnswer:60000000000,answerNote:"Lego Group reports producing approximately 60 billion bricks per year."},
+{id:"hairs-on-head",question:"How many hairs are on a typical person's head?",chain:[{label:"Area of your scalp (cm\u00b2)",hint:"Your scalp covers roughly 600\u2013700 cm\u00b2.",unit:"cm\u00b2",reference:650,tolerance:{green:2,amber:5}},{label:"Hairs per cm\u00b2",hint:"Hair is quite densely packed. Think about how many hairs in a 1cm \u00d7 1cm patch.",unit:"hairs/cm\u00b2",reference:150,tolerance:{green:2,amber:5}}],acceptedAnswer:100000,answerNote:"Trichologists estimate 80,000\u2013120,000 hairs on a typical head. 650 \u00d7 150 \u2248 97,500."},
+{id:"pencils-london-edinburgh",question:"How many pencils would you need to draw a continuous line from London to Edinburgh?",chain:[{label:"Distance London to Edinburgh (km)",hint:"It\u2019s roughly 650 km by road.",unit:"km",reference:650,tolerance:{green:2,amber:3}},{label:"Line length from one pencil (km)",hint:"A typical pencil can draw a line about 50\u201360 km long.",unit:"km",reference:56,tolerance:{green:2,amber:5},operation:"divide"}],acceptedAnswer:12,answerNote:"650 \u00f7 56 \u2248 12 pencils. A standard HB pencil draws approximately 56 km of line."}
+],
+gcse: [
+{id:"uk-tea-daily",question:"How many cups of tea are drunk in the UK each day?",chain:[{label:"UK population",hint:"How many people live in the UK?",unit:"people",reference:67000000,tolerance:{green:1.5,amber:3}},{label:"Fraction who drink tea",hint:"Tea is popular, but not everyone drinks it.",unit:"",reference:0.75,tolerance:{green:2,amber:3}},{label:"Cups per tea-drinker per day",hint:"Some people have one, some have five. What\u2019s the average?",unit:"cups",reference:2,tolerance:{green:2,amber:5}}],acceptedAnswer:100000000,answerNote:"UK Tea & Infusions Association: approximately 100 million cups per day."},
+{id:"piano-tuners-london",question:"How many piano tuners are there in London?",chain:[{label:"Population of London",hint:"Greater London \u2014 how many people?",unit:"people",reference:9000000,tolerance:{green:1.5,amber:3}},{label:"People per household",hint:"Average UK household size.",unit:"people",reference:2.4,tolerance:{green:2,amber:3},operation:"divide"},{label:"Fraction of households with a piano",hint:"Pianos are expensive and take up space.",unit:"",reference:0.02,tolerance:{green:3,amber:10}},{label:"Pianos one tuner can service per year",hint:"A tuner does about 4 per day, 230 working days. Each piano tuned once a year.",unit:"pianos/tuner",reference:920,tolerance:{green:2,amber:5},operation:"divide"}],acceptedAnswer:140,answerNote:"Classic Fermi problem. 9M \u00f7 2.4 \u00d7 0.02 \u00f7 920 \u2248 82. Published estimates: 94\u2013140."},
+{id:"london-bus-annual-km",question:"How many kilometres does a single London bus travel in a year?",chain:[{label:"Hours a bus operates per day",hint:"London buses run from early morning to late at night.",unit:"hours",reference:18,tolerance:{green:2,amber:3}},{label:"Average speed including stops (km/h)",hint:"London traffic is slow. Buses stop frequently.",unit:"km/h",reference:15,tolerance:{green:2,amber:5}},{label:"Operating days per year",hint:"London buses run every day of the year.",unit:"days",reference:365,tolerance:{green:1.2,amber:1.5}}],acceptedAnswer:90000,answerNote:"Per bus: ~34,000 miles \u2248 55,000 km. Our chain gives 98,550 km \u2014 within a factor of 2."},
+{id:"uk-texts-per-day",question:"How many text messages (SMS) are sent in the UK per day?",chain:[{label:"UK population with a mobile phone",hint:"Almost everyone over 10 has a phone now.",unit:"people",reference:60000000,tolerance:{green:1.5,amber:3}},{label:"Texts sent per person per day",hint:"Think about your own usage \u2014 but remember many people use WhatsApp instead now.",unit:"texts",reference:2,tolerance:{green:3,amber:10}}],acceptedAnswer:120000000,answerNote:"Ofcom: roughly 100\u2013150 million SMS/day in recent years."},
+{id:"uk-cars",question:"How many cars are registered in the UK?",chain:[{label:"UK population",hint:"Total UK population.",unit:"people",reference:67000000,tolerance:{green:1.5,amber:3}},{label:"People per household",hint:"Average UK household size.",unit:"",reference:2.4,tolerance:{green:2,amber:3},operation:"divide"},{label:"Cars per household",hint:"Some households have none, some have two or three.",unit:"cars",reference:1.2,tolerance:{green:2,amber:3}}],acceptedAnswer:33000000,answerNote:"DVLA: approximately 33 million licensed cars in the UK (2024)."},
+{id:"uk-trees",question:"How many trees are there in the UK?",chain:[{label:"Area of the UK (km\u00b2)",hint:"The UK is roughly 250,000 km\u00b2.",unit:"km\u00b2",reference:243000,tolerance:{green:2,amber:3}},{label:"Fraction that is woodland",hint:"The UK is not heavily forested compared to Scandinavia.",unit:"",reference:0.13,tolerance:{green:2,amber:5}},{label:"Trees per km\u00b2 of woodland",hint:"A typical broadleaf wood has 200\u2013400 trees per hectare.",unit:"trees/km\u00b2",reference:30000,tolerance:{green:2,amber:5}}],acceptedAnswer:3000000000,answerNote:"Forestry Commission: approximately 3.2 billion trees in the UK."},
+{id:"paint-uk-houses",question:"How many litres of paint would you need to paint the outside of every house in the UK?",chain:[{label:"Number of houses in the UK",hint:"Not flats \u2014 houses with external walls to paint.",unit:"houses",reference:20000000,tolerance:{green:2,amber:5}},{label:"External wall area per house (m\u00b2)",hint:"Think about a typical semi-detached: front, back, sides, minus windows.",unit:"m\u00b2",reference:100,tolerance:{green:2,amber:5}},{label:"Coverage per litre (m\u00b2/litre)",hint:"Exterior paint covers about 10\u201312 m\u00b2 per litre.",unit:"m\u00b2/litre",reference:10,tolerance:{green:2,amber:3},operation:"divide"}],acceptedAnswer:200000000,answerNote:"~20M houses \u00d7 100m\u00b2 \u00f7 10 m\u00b2/L = 200 million litres."},
+{id:"words-spoken-day",question:"How many words does an average person speak in a day?",chain:[{label:"Waking hours per day",hint:"If you sleep 8 hours, you're awake for\u2026",unit:"hours",reference:16,tolerance:{green:1.5,amber:2}},{label:"Fraction of waking time spent talking",hint:"You're not talking constantly. Maybe a quarter of the time?",unit:"",reference:0.25,tolerance:{green:3,amber:5}},{label:"Words spoken per minute when talking",hint:"Normal conversation pace is about 130\u2013150 words per minute.",unit:"words/min",reference:140,tolerance:{green:2,amber:3}}],acceptedAnswer:16000,answerNote:"Studies estimate 16,000\u201320,000 words per day for an average adult."},
+{id:"food-lifetime-kg",question:"How many kilograms of food does a person eat in their entire lifetime?",chain:[{label:"Food eaten per day (kg)",hint:"Three meals a day. How heavy is each meal?",unit:"kg",reference:2,tolerance:{green:2,amber:3}},{label:"Days in a year",hint:"365.",unit:"days",reference:365,tolerance:{green:1.1,amber:1.5}},{label:"Lifespan (years)",hint:"UK average life expectancy.",unit:"years",reference:80,tolerance:{green:1.5,amber:2}}],acceptedAnswer:58000,answerNote:"2 \u00d7 365 \u00d7 80 = 58,400 kg. Commonly cited figure: ~35 tonnes."},
+{id:"football-pitches-m25",question:"How many football pitches could fit inside the area enclosed by the M25?",chain:[{label:"Area enclosed by the M25 (km\u00b2)",hint:"The M25 is a rough circle about 30\u201340 km across.",unit:"km\u00b2",reference:2500,tolerance:{green:2,amber:5}},{label:"Area of a football pitch (m\u00b2)",hint:"A standard pitch is about 100m \u00d7 70m = 7,000 m\u00b2.",unit:"m\u00b2",reference:7000,tolerance:{green:2,amber:3}}],acceptedAnswer:357000,answerNote:"The area inside the M25 is approximately 2,500 km\u00b2 (2.5 billion m\u00b2). Divided by 7,000 m\u00b2 per pitch \u2248 357,000 pitches."},
+{id:"grains-sand-beach",question:"How many grains of sand are on a typical 1 km stretch of beach?",chain:[{label:"Beach length (m)",hint:"The question specifies 1 km.",unit:"m",reference:1000,tolerance:{green:1.2,amber:1.5}},{label:"Beach width (m)",hint:"How wide is a typical beach from water to dunes?",unit:"m",reference:50,tolerance:{green:2,amber:5}},{label:"Depth of sand (m)",hint:"Sand goes down a few metres before hitting rock/clay.",unit:"m",reference:2,tolerance:{green:3,amber:5}},{label:"Grains per cubic metre",hint:"A grain of sand is about 0.5mm across. How many fit in a cubic metre?",unit:"grains/m\u00b3",reference:8000000000,tolerance:{green:5,amber:10}}],acceptedAnswer:800000000000000,answerNote:"1000 \u00d7 50 \u00d7 2 \u00d7 8\u00d710\u2079 = 8\u00d710\u00b9\u2074 (800 trillion)."},
+{id:"lessons-yr7-yr11",question:"How many lessons does a typical student attend from Year 7 to Year 11?",chain:[{label:"Lessons per day",hint:"A typical school day has 5 or 6 lessons.",unit:"lessons",reference:5,tolerance:{green:1.5,amber:2}},{label:"School days per year",hint:"The UK academic year is 190 days.",unit:"days",reference:190,tolerance:{green:1.5,amber:2}},{label:"Number of school years (Year 7 to 11)",hint:"Year 7, 8, 9, 10, 11 \u2014 how many is that?",unit:"years",reference:5,tolerance:{green:1.2,amber:1.5}}],acceptedAnswer:4750,answerNote:"5 \u00d7 190 \u00d7 5 = 4,750 lessons across Key Stages 3 and 4."},
+{id:"household-electricity-kwh",question:"How many kilowatt-hours (kWh) of electricity does a typical UK household use per year?",chain:[{label:"Average power consumption (watts)",hint:"Think about what\u2019s running: fridge, lights, TV, washing machine. Average over 24 hours.",unit:"watts",reference:400,tolerance:{green:2,amber:5}},{label:"Hours in a year",hint:"365 \u00d7 24.",unit:"hours",reference:8760,tolerance:{green:1.2,amber:1.5}}],acceptedAnswer:3500,answerNote:"Ofgem: average UK household uses about 2,700\u20133,500 kWh/year."},
+{id:"uk-milkmen-pints",question:"How many pints of milk do UK milkmen deliver in a year?",chain:[{label:"UK households",hint:"About 28 million households in the UK.",unit:"households",reference:28000000,tolerance:{green:2,amber:3}},{label:"Fraction using a milkman",hint:"Milkman delivery has declined hugely. Maybe 3\u20135% of households?",unit:"",reference:0.04,tolerance:{green:3,amber:10}},{label:"Pints per delivery",hint:"A typical delivery is 2\u20134 pints.",unit:"pints",reference:3,tolerance:{green:2,amber:5}},{label:"Deliveries per year",hint:"Most milkmen deliver 3 times per week.",unit:"deliveries",reference:156,tolerance:{green:2,amber:3}}],acceptedAnswer:524000000,answerNote:"Milk & More delivers to ~500,000 households. Total market ~1M households."},
+{id:"uk-photos-daily",question:"How many photos are taken in the UK each day?",chain:[{label:"UK smartphone users",hint:"Most adults and many teenagers have smartphones.",unit:"users",reference:55000000,tolerance:{green:1.5,amber:3}},{label:"Photos per user per day",hint:"Some people take none on a typical day. Some take 20. What\u2019s the average?",unit:"photos",reference:3,tolerance:{green:3,amber:5}}],acceptedAnswer:165000000,answerNote:"True figure likely 100\u2013200M/day."}
+],
+alevel: [
+{id:"molecules-swimming-pool",question:"How many molecules of water are in an Olympic swimming pool?",chain:[{label:"Volume of an Olympic pool (m\u00b3)",hint:"50m \u00d7 25m \u00d7 2m deep.",unit:"m\u00b3",reference:2500,tolerance:{green:2,amber:3}},{label:"Mass of water per m\u00b3 (kg)",hint:"Water has a density of 1000 kg/m\u00b3.",unit:"kg/m\u00b3",reference:1000,tolerance:{green:1.5,amber:2}},{label:"Moles per kg of water",hint:"Water is H\u2082O, molecular mass 18 g/mol. So 1 kg = 1000/18 moles.",unit:"mol/kg",reference:55.5,tolerance:{green:2,amber:3}},{label:"Molecules per mole (Avogadro\u2019s number)",hint:"6 \u00d7 10\u00b2\u00b3.",unit:"molecules/mol",reference:6e23,tolerance:{green:2,amber:3}}],acceptedAnswer:8.35e28,answerNote:"2500 \u00d7 1000 \u00d7 55.5 \u00d7 6\u00d710\u00b2\u00b3 \u2248 8.3 \u00d7 10\u00b2\u2078 molecules."},
+{id:"uk-energy-daily",question:"How much energy does the UK consume per day (in kWh)?",chain:[{label:"UK population",hint:"~67 million.",unit:"people",reference:67000000,tolerance:{green:1.5,amber:3}},{label:"Average power consumption per person (kW)",hint:"This includes electricity, gas, transport fuel \u2014 everything.",unit:"kW",reference:5,tolerance:{green:2,amber:5}},{label:"Hours in a day",hint:"24.",unit:"hours",reference:24,tolerance:{green:1.1,amber:1.5}}],acceptedAnswer:8000000000,answerNote:"BEIS: UK total energy consumption ~1600 TWh/year \u00f7 365 \u2248 4.4 TWh/day."},
+{id:"atoms-thick-paper",question:"How many atoms thick is a sheet of paper?",chain:[{label:"Thickness of paper (m)",hint:"A sheet of printer paper is about 0.1 mm thick.",unit:"m",reference:0.0001,tolerance:{green:2,amber:5}},{label:"Diameter of an atom (m)",hint:"A typical atom is about 1\u20133 \u00d7 10\u207b\u00b9\u2070 m.",unit:"m",reference:2e-10,tolerance:{green:2,amber:5},operation:"divide"}],acceptedAnswer:500000,answerNote:"0.0001 \u00f7 2\u00d710\u207b\u00b9\u2070 = 500,000 atoms."},
+{id:"count-to-billion",question:"If you counted one number per second, how many years would it take to count to one billion?",chain:[{label:"Target number",hint:"One billion = 10\u2079.",unit:"seconds",reference:1000000000,tolerance:{green:1.2,amber:2}},{label:"Seconds in a year",hint:"365 \u00d7 24 \u00d7 60 \u00d7 60.",unit:"seconds/year",reference:31536000,tolerance:{green:1.5,amber:3},operation:"divide"}],acceptedAnswer:31.7,answerNote:"10\u2079 \u00f7 3.15\u00d710\u2077 \u2248 31.7 years."},
+{id:"co2-transatlantic",question:"How many kg of CO\u2082 does a single London to New York flight produce?",chain:[{label:"Distance London to New York (km)",hint:"About 5,500 km.",unit:"km",reference:5500,tolerance:{green:1.5,amber:3}},{label:"Fuel consumption (litres per km)",hint:"A 747/A380 uses about 12 litres per km.",unit:"L/km",reference:12,tolerance:{green:2,amber:5}},{label:"CO\u2082 per litre of jet fuel (kg)",hint:"Burning 1 litre of kerosene produces about 2.5 kg of CO\u2082.",unit:"kg/L",reference:2.5,tolerance:{green:2,amber:3}}],acceptedAnswer:165000,answerNote:"5500 \u00d7 12 \u00d7 2.5 = 165,000 kg (165 tonnes)."},
+{id:"books-ever-published",question:"How many distinct book titles have been published in all of human history?",chain:[{label:"Years since the printing press (~1450)",hint:"From Gutenberg to now.",unit:"years",reference:575,tolerance:{green:1.5,amber:2}},{label:"Average books published per year (worldwide)",hint:"Very few in the 1400s, millions now. Think about the geometric average.",unit:"books/year",reference:500000,tolerance:{green:5,amber:10}}],acceptedAnswer:130000000,answerNote:"Google estimated ~130 million unique titles as of 2010."},
+{id:"grass-blades-pitch",question:"How many blades of grass are on a football pitch?",chain:[{label:"Area of a football pitch (m\u00b2)",hint:"About 100m \u00d7 70m.",unit:"m\u00b2",reference:7000,tolerance:{green:2,amber:3}},{label:"Blades of grass per m\u00b2",hint:"Well-maintained turf has about 60,000\u201380,000 blades per m\u00b2.",unit:"blades/m\u00b2",reference:70000,tolerance:{green:2,amber:5}}],acceptedAnswer:490000000,answerNote:"7,000 \u00d7 70,000 = 490 million."},
+{id:"blood-pumped-lifetime",question:"How many litres of blood does your heart pump in a lifetime?",chain:[{label:"Blood pumped per heartbeat (mL)",hint:"Each beat pumps about 70 mL (the stroke volume).",unit:"mL",reference:70,tolerance:{green:2,amber:3}},{label:"Heart rate (beats per minute)",hint:"Average resting heart rate.",unit:"bpm",reference:72,tolerance:{green:2,amber:3}},{label:"Minutes in a year",hint:"365 \u00d7 24 \u00d7 60.",unit:"min/year",reference:525600,tolerance:{green:1.5,amber:2}},{label:"Lifespan (years)",hint:"UK life expectancy ~80 years.",unit:"years",reference:80,tolerance:{green:1.5,amber:2}}],acceptedAnswer:200000000,answerNote:"70 mL \u00d7 72 \u00d7 525,600 \u00d7 80 = 212 million litres."},
+{id:"visible-stars",question:"How many stars can you see with the naked eye on a perfectly clear night?",chain:[{label:"Stars visible in the whole sky",hint:"Astronomers have catalogued this. It\u2019s a few thousand.",unit:"stars",reference:9000,tolerance:{green:2,amber:5}},{label:"Fraction of sky visible from one location",hint:"You can only see one hemisphere \u2014 above the horizon.",unit:"",reference:0.5,tolerance:{green:1.5,amber:2}}],acceptedAnswer:4500,answerNote:"Yale Bright Star Catalogue: ~9,096 stars visible to the naked eye. From one location: ~4,500."},
+{id:"brain-neurons",question:"How many neurons are in the human brain?",chain:[{label:"Mass of the brain (g)",hint:"An adult brain weighs about 1.4 kg.",unit:"g",reference:1400,tolerance:{green:2,amber:3}},{label:"Neurons per gram of brain tissue",hint:"Not all brain tissue is neurons. About 60 million neurons per gram on average.",unit:"neurons/g",reference:60000000,tolerance:{green:3,amber:10}}],acceptedAnswer:86000000000,answerNote:"Herculano-Houzel (2009): approximately 86 billion neurons."},
+{id:"drive-to-sun",question:"If you could drive to the Sun at motorway speed, how many years would it take?",chain:[{label:"Distance to the Sun (km)",hint:"About 150 million km (1 AU).",unit:"km",reference:150000000,tolerance:{green:2,amber:3}},{label:"Motorway speed (km/h)",hint:"UK motorway speed limit is 70 mph \u2248 113 km/h.",unit:"km/h",reference:113,tolerance:{green:1.5,amber:2},operation:"divide"},{label:"Hours in a year",hint:"365 \u00d7 24 = 8,760.",unit:"h/year",reference:8760,tolerance:{green:1.2,amber:1.5},operation:"divide"}],acceptedAnswer:152,answerNote:"150,000,000 \u00f7 113 \u00f7 8760 \u2248 152 years."},
+{id:"deck-shuffles",question:"How many different ways can a standard deck of 52 cards be arranged?",chain:[{label:"This is 52 factorial (52!)",hint:"52 \u00d7 51 \u00d7 50 \u00d7 ... \u00d7 2 \u00d7 1. This number is astronomically large.",unit:"",reference:8e67,tolerance:{green:10,amber:100}}],acceptedAnswer:8.07e67,answerNote:"52! = 8.07 \u00d7 10\u2076\u2077. Every shuffle you\u2019ve ever done was almost certainly unique in human history."},
+{id:"internet-data-daily",question:"How many gigabytes of data are transferred across the internet worldwide per day?",chain:[{label:"Internet users worldwide",hint:"About 5 billion people are online.",unit:"users",reference:5000000000,tolerance:{green:1.5,amber:3}},{label:"Average data per user per day (GB)",hint:"Streaming video, social media, email, browsing.",unit:"GB",reference:5,tolerance:{green:3,amber:10}}],acceptedAnswer:25000000000,answerNote:"Cisco/Statista: global internet traffic ~400 exabytes/month \u2248 13 billion GB/day."}
+],
+level4: [
+{id:"aircraft-rivets",question:"How many rivets are used in the construction of a Boeing 747?",chain:[{label:"Surface area of fuselage + wings (m\u00b2)",hint:"A 747 is about 70m long, 6.5m diameter. Plus the wings.",unit:"m\u00b2",reference:1500,tolerance:{green:2,amber:5}},{label:"Rivets per m\u00b2 of aircraft skin",hint:"Aircraft skin panels are heavily riveted. Think about the spacing \u2014 every 2\u20133 cm.",unit:"rivets/m\u00b2",reference:1000,tolerance:{green:3,amber:5}},{label:"Additional rivets for internal structure",hint:"Internal frames, ribs, stringers. Roughly doubles the skin rivets.",unit:"multiplier",reference:2,tolerance:{green:2,amber:3}}],acceptedAnswer:3000000,answerNote:"Boeing states a 747 contains approximately 3 million rivets."},
+{id:"m25-concrete",question:"How many cubic metres of concrete are in the M25 motorway?",chain:[{label:"Length of the M25 (km)",hint:"It\u2019s a ring road around London. About 190 km.",unit:"km",reference:190,tolerance:{green:1.5,amber:3}},{label:"Width of the motorway (m)",hint:"4 lanes each way, plus hard shoulders. Total carriageway about 30m.",unit:"m",reference:30,tolerance:{green:2,amber:3}},{label:"Depth of concrete/asphalt (m)",hint:"Motorway surfacing is typically 0.3\u20130.5m deep.",unit:"m",reference:0.3,tolerance:{green:2,amber:5}}],acceptedAnswer:1710000,answerNote:"190,000m \u00d7 30m \u00d7 0.3m = 1,710,000 m\u00b3."},
+{id:"forth-bridge-steel",question:"How many tonnes of steel are in the Forth Bridge?",chain:[{label:"Length of the bridge (m)",hint:"One of the longest cantilever bridges in the world. About 2.5 km total.",unit:"m",reference:2529,tolerance:{green:1.5,amber:3}},{label:"Average cross-section of steel per metre (m\u00b2)",hint:"The bridge is massive \u2014 think about all the tubes, struts, girders.",unit:"m\u00b2",reference:3,tolerance:{green:3,amber:10}},{label:"Density of steel (kg/m\u00b3)",hint:"Steel density is about 7,850 kg/m\u00b3.",unit:"kg/m\u00b3",reference:7850,tolerance:{green:1.5,amber:2}}],acceptedAnswer:53000,answerNote:"The Forth Bridge contains approximately 53,000 tonnes of steel (Historic Scotland)."},
+{id:"power-station-fuel",question:"How many m\u00b3 of gas does a 2 GW gas power station consume per day?",chain:[{label:"Power output (MW)",hint:"The question says 2 GW = 2000 MW.",unit:"MW",reference:2000,tolerance:{green:1.2,amber:1.5}},{label:"Thermal efficiency",hint:"Modern gas turbines are about 55\u201360% efficient.",unit:"",reference:0.55,tolerance:{green:2,amber:3},operation:"divide"},{label:"Hours in a day",hint:"24.",unit:"hours",reference:24,tolerance:{green:1.1,amber:1.2}},{label:"Energy content of gas per m\u00b3 (MWh/m\u00b3)",hint:"Natural gas has about 10.5 kWh/m\u00b3 = 0.0105 MWh/m\u00b3.",unit:"MWh/m\u00b3",reference:0.0105,tolerance:{green:2,amber:3},operation:"divide"}],acceptedAnswer:8300000,answerNote:"2000/0.55 \u00d7 24 / 0.0105 \u2248 8.3 million m\u00b3 of gas/day."},
+{id:"eiffel-tower-bolts",question:"How many bolts and rivets hold the Eiffel Tower together?",chain:[{label:"Total weight of iron in the tower (tonnes)",hint:"The Eiffel Tower is famously light for its size.",unit:"tonnes",reference:7300,tolerance:{green:2,amber:5}},{label:"Number of structural members",hint:"The tower is made from lattice ironwork. Thousands of individual pieces.",unit:"pieces",reference:18000,tolerance:{green:3,amber:10}},{label:"Rivets/bolts per joint (average)",hint:"Each connection between members requires multiple rivets.",unit:"rivets/joint",reference:20,tolerance:{green:3,amber:5}},{label:"Joints per member (average)",hint:"Each beam connects to others at both ends, often mid-span too.",unit:"joints/member",reference:3,tolerance:{green:2,amber:3}}],acceptedAnswer:2500000,answerNote:"The Eiffel Tower contains 2.5 million rivets."},
+{id:"hydro-dam-flow",question:"How many litres per second flow through a large hydroelectric dam generating 1 GW?",chain:[{label:"Power output (W)",hint:"1 GW = 10\u2079 W.",unit:"W",reference:1e9,tolerance:{green:1.2,amber:2}},{label:"Height of dam (m)",hint:"A large dam might have a head of 100\u2013200m.",unit:"m",reference:150,tolerance:{green:2,amber:5}},{label:"Efficiency of turbines",hint:"Hydro turbines are very efficient: 85\u201395%.",unit:"",reference:0.9,tolerance:{green:1.5,amber:2}}],acceptedAnswer:755000,answerNote:"Q = P/(\u03c1g\u03b7h) = 10\u2079/(1000 \u00d7 9.81 \u00d7 0.9 \u00d7 150) = 755 m\u00b3/s = 755,000 litres/s."},
+{id:"submarine-welds",question:"How many individual welds are in a nuclear-powered submarine?",chain:[{label:"Length of the hull (m)",hint:"An Astute-class submarine is about 97m long.",unit:"m",reference:97,tolerance:{green:2,amber:3}},{label:"Hull sections/plates",hint:"The hull is assembled from welded steel plates, each a few metres across.",unit:"plates",reference:2000,tolerance:{green:3,amber:10}},{label:"Welds per plate",hint:"Each plate has edge welds plus internal pipe/bracket connections.",unit:"welds",reference:50,tolerance:{green:3,amber:10}}],acceptedAnswer:100000,answerNote:"Nuclear submarine construction involves roughly 50,000\u2013150,000 welds."},
+{id:"data-centre-heat",question:"How many kWh of heat does a 50 MW data centre reject per day?",chain:[{label:"Electrical power input (kW)",hint:"50 MW = 50,000 kW.",unit:"kW",reference:50000,tolerance:{green:1.2,amber:1.5}},{label:"Fraction of energy becoming heat",hint:"Almost all electrical energy in a data centre becomes heat eventually.",unit:"",reference:0.95,tolerance:{green:1.5,amber:2}},{label:"Hours per day",hint:"Data centres run 24/7.",unit:"hours",reference:24,tolerance:{green:1.1,amber:1.2}}],acceptedAnswer:1140000,answerNote:"50,000 \u00d7 0.95 \u00d7 24 = 1,140,000 kWh/day."},
+{id:"ball-bearings-global",question:"How many individual ball bearings are manufactured worldwide in a year?",chain:[{label:"Number of machines/vehicles/devices using bearings",hint:"Cars, bicycles, factory machines, wind turbines, hard drives, washing machines...",unit:"devices",reference:5000000000,tolerance:{green:3,amber:10}},{label:"Bearings per device (average)",hint:"A car has 20\u201330 bearings. A bicycle has 6. Average across all devices.",unit:"bearings",reference:10,tolerance:{green:3,amber:10}},{label:"Individual balls per bearing",hint:"A typical bearing contains 8\u201312 balls.",unit:"balls",reference:10,tolerance:{green:2,amber:3}},{label:"Replacement/production ratio",hint:"Annual production serves both new devices and replacements.",unit:"multiplier",reference:0.3,tolerance:{green:3,amber:5}}],acceptedAnswer:150000000000,answerNote:"Global bearing market produces ~150\u2013200 billion individual balls/year."},
+{id:"nuclear-cooling-water",question:"How many litres of cooling water does a 3 GW nuclear power station circulate per day?",chain:[{label:"Thermal power (MW)",hint:"A 3 GW electrical output station at ~33% efficiency produces ~9 GW thermal.",unit:"MW",reference:9000,tolerance:{green:2,amber:3}},{label:"Waste heat to reject (MW)",hint:"If 33% becomes electricity, 67% must be rejected as heat.",unit:"MW",reference:6000,tolerance:{green:2,amber:3}},{label:"Temperature rise of cooling water (\u00b0C)",hint:"Cooling water typically rises by 10\u201315\u00b0C through the condenser.",unit:"\u00b0C",reference:12,tolerance:{green:2,amber:3}},{label:"Seconds in a day",hint:"24 \u00d7 60 \u00d7 60.",unit:"seconds",reference:86400,tolerance:{green:1.2,amber:1.5}}],acceptedAnswer:10000000000,answerNote:"Flow = 6000 MW / (4.186 kJ/kg\u00b0C \u00d7 12\u00b0C) = 119,400 kg/s. Per day: ~10 billion litres."}
+],
+core: [
+{id:"eq_morning_routine",question:"How many hours in total does a Year 10 class of 30 students spend getting ready for school in one week (5 days)?",chain:[{label:"Students in class",hint:"The question states 30 students.",unit:"students",reference:30,tolerance:{green:1.2,amber:1.5}},{label:"Minutes to get ready per day",hint:"Think about shower, getting dressed, breakfast. About 45 minutes is typical.",unit:"minutes",reference:45,tolerance:{green:2,amber:3}},{label:"School days per week",hint:"Monday to Friday.",unit:"days",reference:5,tolerance:{green:1.2,amber:1.5}},{label:"Convert to hours (\u00f760)",hint:"Divide total minutes by 60.",unit:"hours",reference:60,tolerance:{green:1.2,amber:1.5},operation:"divide"}],acceptedAnswer:112.5,answerNote:"30 \u00d7 45 \u00d7 5 = 6,750 minutes \u00f7 60 = 112.5 hours.",eval_question:"If students took 30 minutes instead of 45, what would the total be?",eval_answer:"75 hours \u2014 one third less"},
+{id:"eq_canteen",question:"Estimate the total mass of food served in a secondary school canteen in one term (13 weeks).",chain:[{label:"Students using canteen per day",hint:"School roll ~1,000. About 60% use the canteen.",unit:"students",reference:600,tolerance:{green:2,amber:3}},{label:"Mass per meal (kg)",hint:"A typical school meal weighs about 400g.",unit:"kg",reference:0.4,tolerance:{green:2,amber:5}},{label:"Days per term (13 weeks \u00d7 5)",hint:"13 weeks of 5 school days.",unit:"days",reference:65,tolerance:{green:1.5,amber:2}}],acceptedAnswer:15600,answerNote:"600 \u00d7 0.4 \u00d7 65 = 15,600 kg.",eval_question:"If 80% of students used the canteen instead of 60%, how much more food would be served per day?",eval_answer:"200 extra students \u00d7 0.4 kg = 80 kg more per day"},
+{id:"eq_plastic_bottles",question:"Estimate the number of plastic drinks bottles thrown away by students at a secondary school of 1,000 pupils in one school year.",chain:[{label:"Students",hint:"The question states 1,000 students.",unit:"students",reference:1000,tolerance:{green:1.2,amber:1.5}},{label:"Bottles per student per week",hint:"Estimate how many plastic bottle drinks a student buys per week.",unit:"bottles",reference:3,tolerance:{green:2,amber:5}},{label:"Weeks per school year",hint:"A UK school year is 39 weeks.",unit:"weeks",reference:39,tolerance:{green:1.5,amber:2}}],acceptedAnswer:117000,answerNote:"1,000 \u00d7 3 \u00d7 39 = 117,000 bottles.",eval_question:"If students bought 1 bottle per week instead of 3, by what factor would the estimate change?",eval_answer:"Factor of 3 reduction \u2014 approximately 39,000 bottles"},
+{id:"eq_homework",question:"Estimate the total number of hours spent on homework by all GCSE students in England in one school week.",chain:[{label:"GCSE students in England",hint:"Approximately 600,000 students in Years 10 and 11.",unit:"students",reference:600000,tolerance:{green:2,amber:5}},{label:"Average homework hours per week",hint:"GCSE students typically do about 5 hours of homework per week.",unit:"hours",reference:5,tolerance:{green:2,amber:5}}],acceptedAnswer:3000000,answerNote:"600,000 \u00d7 5 = 3,000,000 hours.",eval_question:"If students actually spend 3 hours per week instead of 5, what is the revised total?",eval_answer:"600,000 \u00d7 3 = 1,800,000 hours"},
+{id:"eq_car_park",question:"A supermarket car park has 400 spaces. Estimate the number of cars that use it on a typical Saturday.",chain:[{label:"Peak turnover per hour (60\u00f745 min stay)",hint:"If average stay is 45 minutes, about 1.33 cars per space per hour.",unit:"per hour",reference:1.33,tolerance:{green:2,amber:3}},{label:"Cars in peak period (400 spaces \u00d7 1.33 \u00d7 6 hours)",hint:"Peak is roughly 10am\u20134pm = 6 hours, car park full.",unit:"cars",reference:3200,tolerance:{green:2,amber:5}},{label:"Cars off-peak (400 \u00d7 0.7 \u00d7 1.33 \u00d7 4 hours)",hint:"Off-peak about 70% full for the remaining 4 hours.",unit:"cars",reference:1490,tolerance:{green:2,amber:5}}],acceptedAnswer:4700,answerNote:"Peak: 3,200 + Off-peak: 1,490 \u2248 4,700 cars.",eval_question:"If the average stay was 30 minutes instead of 45, would more or fewer cars use the car park?",eval_answer:"More \u2014 shorter stays mean more turnovers per hour"},
+{id:"eq_steps",question:"Estimate the total number of steps taken by students walking to school in a town with 5 secondary schools, each with 1,000 students.",chain:[{label:"Total students in town",hint:"5 schools \u00d7 1,000 students each.",unit:"students",reference:5000,tolerance:{green:1.5,amber:2}},{label:"Students who walk (30%)",hint:"About 30% of students walk to school.",unit:"students",reference:1500,tolerance:{green:2,amber:5}},{label:"Steps per one-way journey (15 min \u00d7 100 steps/min)",hint:"Average 15-minute walk at 100 steps per minute.",unit:"steps",reference:1500,tolerance:{green:2,amber:5}},{label:"Return journey factor",hint:"Students walk to school and back.",unit:"",reference:2,tolerance:{green:1.2,amber:1.5}}],acceptedAnswer:4500000,answerNote:"1,500 walkers \u00d7 1,500 steps \u00d7 2 = 4,500,000 steps per day.",eval_question:"How would the estimate change if the average walk was 10 minutes rather than 15?",eval_answer:"Steps per journey: 1,000. Total: 3,000,000 steps \u2014 one third fewer"},
+{id:"eq_coffee_cups",question:"Estimate the number of disposable coffee cups thrown away in a city of 300,000 people in one year.",chain:[{label:"Adults in city (65% of population)",hint:"About 65% of 300,000 are adults.",unit:"people",reference:195000,tolerance:{green:2,amber:3}},{label:"Proportion who buy weekly coffee (40%)",hint:"Not all adults buy takeaway coffee regularly.",unit:"people",reference:78000,tolerance:{green:2,amber:5}},{label:"Cups per year per buyer",hint:"One cup per week \u00d7 52 weeks.",unit:"cups",reference:52,tolerance:{green:1.5,amber:2}}],acceptedAnswer:4000000,answerNote:"78,000 \u00d7 52 \u2248 4,000,000 cups.",eval_question:"If the proportion buying coffee doubled to 80%, what would the new estimate be?",eval_answer:"Approximately 8 million cups \u2014 double the original"},
+{id:"eq_haircuts",question:"Estimate the number of haircuts given in a town of 80,000 people in one month.",chain:[{label:"Population",hint:"The question states 80,000.",unit:"people",reference:80000,tolerance:{green:1.2,amber:1.5}},{label:"Haircuts per person per year",hint:"Average person gets a haircut every 6 weeks \u2014 about 8\u20139 per year.",unit:"haircuts",reference:8.5,tolerance:{green:2,amber:3}},{label:"Convert to per month (\u00f712)",hint:"Divide annual total by 12.",unit:"months",reference:12,tolerance:{green:1.2,amber:1.5},operation:"divide"}],acceptedAnswer:57000,answerNote:"80,000 \u00d7 8.5 = 680,000 per year \u00f7 12 \u2248 57,000 per month.",eval_question:"If men get haircuts every 4 weeks and women every 8 weeks, and the population is 50/50, would your estimate increase or decrease?",eval_answer:"Increase slightly \u2014 men average 13/year vs 6.5/year for women, giving about 65,000/month"},
+{id:"eq_textbooks",question:"Estimate the total mass of textbooks carried by students in a secondary school of 1,000 on a typical school day.",chain:[{label:"Students",hint:"1,000 students.",unit:"students",reference:1000,tolerance:{green:1.2,amber:1.5}},{label:"Books per student per day",hint:"Average 5 subjects per day.",unit:"books",reference:5,tolerance:{green:2,amber:3}},{label:"Compliance rate",hint:"About 60% of students bring the correct books.",unit:"",reference:0.6,tolerance:{green:2,amber:3}},{label:"Mass per book (kg)",hint:"A typical textbook weighs about 500g.",unit:"kg",reference:0.5,tolerance:{green:2,amber:3}}],acceptedAnswer:1500,answerNote:"1,000 \u00d7 5 \u00d7 0.6 \u00d7 0.5 = 1,500 kg.",eval_question:"If each textbook weighed 800g instead of 500g, what would the total mass be?",eval_answer:"1,000 \u00d7 5 \u00d7 0.6 \u00d7 0.8 = 2,400 kg"},
+{id:"eq_packed_lunch",question:"Estimate the total number of food packaging items thrown away from packed lunches in a secondary school of 1,000 students in one school year.",chain:[{label:"Students with packed lunch (50%)",hint:"About half the students bring packed lunches.",unit:"students",reference:500,tolerance:{green:2,amber:3}},{label:"Packaging items per lunch",hint:"Sandwich wrap, crisp packet, drink carton, fruit sticker \u2014 about 4 items.",unit:"items",reference:4,tolerance:{green:2,amber:5}},{label:"School days per year",hint:"190 school days in the UK.",unit:"days",reference:190,tolerance:{green:1.5,amber:2}}],acceptedAnswer:380000,answerNote:"500 \u00d7 4 \u00d7 190 = 380,000 items.",eval_question:"If packaging was reduced to 2 items per lunch, how many items would be saved per year?",eval_answer:"500 \u00d7 2 \u00d7 190 = 190,000 items saved"},
+{id:"eq_sleep_loss",question:"Estimate the total number of hours of sleep lost by GCSE students in England during the 3-week exam period in May and June.",chain:[{label:"GCSE students in England",hint:"Approximately 300,000 students sitting GCSEs.",unit:"students",reference:300000,tolerance:{green:2,amber:5}},{label:"Hours of sleep lost per night",hint:"Students lose about 1 hour of sleep per night during exams.",unit:"hours",reference:1,tolerance:{green:2,amber:5}},{label:"Nights in exam period",hint:"3 weeks = 21 nights.",unit:"nights",reference:21,tolerance:{green:1.5,amber:2}}],acceptedAnswer:6300000,answerNote:"300,000 \u00d7 1 \u00d7 21 = 6,300,000 hours.",eval_question:"If students lost 30 minutes per night instead of 1 hour, what would the revised total be?",eval_answer:"300,000 \u00d7 0.5 \u00d7 21 = 3,150,000 hours"},
+{id:"eq_school_trip",question:"A year group of 120 students goes on a day trip by coach to a destination 80 km away. Estimate the total cost of fuel for the return journey.",chain:[{label:"Total distance per coach (return)",hint:"80 km each way = 160 km return.",unit:"km",reference:160,tolerance:{green:1.5,amber:2}},{label:"Fuel per coach (litres)",hint:"A coach uses about 8 litres per 100 km. 160 \u00d7 0.08 = 12.8 litres.",unit:"litres",reference:12.8,tolerance:{green:2,amber:5}},{label:"Number of coaches",hint:"40 students per coach, 120 students total.",unit:"coaches",reference:3,tolerance:{green:1.5,amber:2}},{label:"Cost per litre (\u00a3)",hint:"Diesel is about \u00a31.60 per litre.",unit:"\u00a3/litre",reference:1.60,tolerance:{green:1.5,amber:2}}],acceptedAnswer:61.44,answerNote:"12.8 litres \u00d7 3 coaches = 38.4 litres \u00d7 \u00a31.60 = \u00a361.44.",eval_question:"If fuel rose to \u00a32.00 per litre, how much more would the trip cost in total?",eval_answer:"38.4 \u00d7 \u00a30.40 = \u00a315.36 more \u2014 approximately \u00a315"},
+{id:"eq_screen_time",question:"Estimate the total number of hours spent looking at phone screens by students in a secondary school of 1,000 pupils in one week.",chain:[{label:"Students",hint:"1,000 students.",unit:"students",reference:1000,tolerance:{green:1.2,amber:1.5}},{label:"Screen time per day",hint:"Average screen time per student per day: about 4 hours.",unit:"hours",reference:4,tolerance:{green:2,amber:5}},{label:"Days per week",hint:"7 days including weekends.",unit:"days",reference:7,tolerance:{green:1.2,amber:1.5}}],acceptedAnswer:28000,answerNote:"1,000 \u00d7 4 \u00d7 7 = 28,000 hours.",eval_question:"If average screen time was 6 hours per day instead of 4, what would the weekly total be?",eval_answer:"1,000 \u00d7 6 \u00d7 7 = 42,000 hours \u2014 50% more"},
+{id:"eq_markers",question:"Estimate the number of whiteboard markers used in a secondary school in one academic year.",chain:[{label:"Classrooms",hint:"A typical secondary school has about 50 classrooms.",unit:"rooms",reference:50,tolerance:{green:2,amber:3}},{label:"Markers per room per week",hint:"Each classroom gets through about 1.5 markers per week.",unit:"markers",reference:1.5,tolerance:{green:2,amber:5}},{label:"Weeks per year",hint:"Academic year is 39 weeks.",unit:"weeks",reference:39,tolerance:{green:1.5,amber:2}}],acceptedAnswer:2925,answerNote:"50 \u00d7 1.5 \u00d7 39 = 2,925 markers.",eval_question:"If 20 classrooms switched to digital boards, how many fewer markers would be needed per year?",eval_answer:"20 \u00d7 1.5 \u00d7 39 = 1,170 fewer markers"},
+{id:"eq_bus_distance",question:"Estimate the total distance travelled by school buses serving a town of 50,000 people in one school year.",chain:[{label:"Students using buses",hint:"20% of 50,000 are school-age (10,000). 40% use buses = 4,000.",unit:"students",reference:4000,tolerance:{green:2,amber:5}},{label:"One-way journey distance (km)",hint:"Average school bus journey is about 5 km.",unit:"km",reference:5,tolerance:{green:2,amber:5}},{label:"Return journey factor",hint:"To school and back.",unit:"",reference:2,tolerance:{green:1.2,amber:1.5}},{label:"School days per year",hint:"190 school days.",unit:"days",reference:190,tolerance:{green:1.5,amber:2}}],acceptedAnswer:7600000,answerNote:"4,000 \u00d7 5 \u00d7 2 \u00d7 190 = 7,600,000 km.",eval_question:"If the average journey was 3 km rather than 5 km, what would the total distance be?",eval_answer:"4,000 \u00d7 3 \u00d7 2 \u00d7 190 = 4,560,000 km \u2014 40% less"}
+]
+};
+
+// ─── GAME STATE ───
+var currentTier = 'gcse';
+var sessionLength = 5;
+var sessionQuestions = [];
+var qIndex = 0;
+var totalScore = 0;
+var totalGreens = 0;
+var totalSteps = 0;
+var bestEstimateFactor = Infinity;
+var currentQ = null;
+var stepValues = [];
+var stepStatuses = [];
+var stepsSubmitted = 0;
+
+// ─── INIT ───
+function init() {
+  var params = new URLSearchParams(window.location.search);
+  var level = params.get('level');
+  if (level === 'ks3') currentTier = 'ks3';
+  else if (level === 'alevel') currentTier = 'alevel';
+  else if (level === 'level4') currentTier = 'level4';
+  else if (level === 'core') currentTier = 'core';
+  else currentTier = 'gcse';
+
+  var tierNames = { ks3:'KS3', gcse:'GCSE', alevel:'A-Level', level4:'Level 4', core:'Core Maths' };
+  document.getElementById('tierDisplay').textContent = tierNames[currentTier] || 'GCSE';
+  renderLB('lbList');
+}
+
+// ─── NUMBER FORMATTING ───
+function formatNum(n) {
+  if (n === 0) return '0';
+  var abs = Math.abs(n);
+  if (abs >= 1e15) return n.toExponential(2);
+  if (abs >= 1e9) return (n/1e9).toFixed(1).replace(/\.0$/,'') + 'B';
+  if (abs >= 1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'') + 'M';
+  if (abs >= 10000) return n.toLocaleString('en-GB',{maximumFractionDigits:0});
+  if (abs >= 1) return n.toLocaleString('en-GB',{maximumFractionDigits:2});
+  if (abs >= 0.01) return n.toFixed(3);
+  return n.toExponential(2);
+}
+
+function parseInput(val) {
+  if (!val) return NaN;
+  val = val.trim().replace(/,/g, '');
+  // Handle scientific notation like 6e23 or 8e67
+  if (/^[\d.]+[eE][+-]?\d+$/.test(val)) return parseFloat(val);
+  // Handle suffixes
+  var match = val.match(/^([\d.]+)\s*([kmbtKMBT]?)$/);
+  if (!match) return parseFloat(val);
+  var num = parseFloat(match[1]);
+  var suffix = match[2].toLowerCase();
+  if (suffix === 'k') return num * 1e3;
+  if (suffix === 'm') return num * 1e6;
+  if (suffix === 'b') return num * 1e9;
+  if (suffix === 't') return num * 1e12;
+  return num;
+}
+
+// ─── FACTOR COMPARISON ───
+function withinFactor(playerVal, refVal, factor) {
+  if (refVal === 0) return Math.abs(playerVal) < 0.01;
+  if (playerVal === 0) return false;
+  var ratio = playerVal / refVal;
+  return ratio >= (1/factor) && ratio <= factor;
+}
+
+function getLight(playerVal, refVal, tol) {
+  if (withinFactor(playerVal, refVal, tol.green)) return 'green';
+  if (withinFactor(playerVal, refVal, tol.amber)) return 'amber';
+  return 'red';
+}
+
+function getFinalRating(estimate, accepted) {
+  var factor = Math.max(estimate/accepted, accepted/estimate);
+  if (factor <= 2) return { label:'Brilliant', cls:'brilliant', points:20, factor:factor };
+  if (factor <= 5) return { label:'Good', cls:'good', points:10, factor:factor };
+  if (factor <= 10) return { label:'Reasonable', cls:'reasonable', points:5, factor:factor };
+  return { label:'Poor', cls:'poor', points:0, factor:factor };
+}
+
+// ─── START GAME ───
+function startGame(count) {
+  var pool = QUESTIONS[currentTier] || [];
+  if (!pool.length) return;
+  var shuffled = pool.slice().sort(function() { return Math.random() - 0.5; });
+  sessionLength = count === 0 ? shuffled.length : Math.min(count, shuffled.length);
+  sessionQuestions = shuffled.slice(0, sessionLength);
+  qIndex = 0;
+  totalScore = 0;
+  totalGreens = 0;
+  totalSteps = 0;
+  bestEstimateFactor = Infinity;
+  showScreen('gameScreen');
+  loadQuestion();
+  mfg('game_started',{game_slug:'fermi-lab',level:currentTier});window._ggAbandoned=true;
+  if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'fermi-lab',level:currentTier,questions_answered:qIndex})});}
+}
+
+// ─── LOAD QUESTION ───
+function loadQuestion() {
+  currentQ = sessionQuestions[qIndex];
+  var chain = currentQ.chain;
+  stepValues = new Array(chain.length).fill(null);
+  stepStatuses = new Array(chain.length).fill(null);
+  stepsSubmitted = 0;
+
+  document.getElementById('scoreDisplay').textContent = totalScore;
+  document.getElementById('qDisplay').textContent = (qIndex+1) + '/' + sessionLength;
+  document.getElementById('greenDisplay').textContent = totalGreens;
+  document.getElementById('questionText').textContent = currentQ.question;
+
+  var container = document.getElementById('chainContainer');
+  var html = '';
+  for (var i = 0; i < chain.length; i++) {
+    var step = chain[i];
+    var op = step.operation || 'multiply';
+    if (i > 0) {
+      var opSymbol = op === 'divide' ? '\u00f7' : '\u00d7';
+      html += '<div class="chain-connector"><span>' + opSymbol + '</span></div>';
+    }
+    html += '<div class="chain-step" id="step-' + i + '">';
+    html += '<div class="step-header"><div class="step-label">' + escapeHtml(step.label) + '</div>';
+    html += '<div class="step-light" id="light-' + i + '"></div></div>';
+    html += '<button class="step-hint-toggle" onclick="toggleHint(' + i + ')" id="hintToggle-' + i + '">Show hint</button>';
+    html += '<div class="step-hint" id="hint-' + i + '">' + escapeHtml(step.hint) + '</div>';
+    html += '<div class="step-input-row">';
+    html += '<input type="text" class="step-input" id="input-' + i + '" placeholder="Your estimate" inputmode="decimal" onkeydown="handleStepKey(event,' + i + ')">';
+    if (step.unit) html += '<span class="step-unit">' + escapeHtml(step.unit) + '</span>';
+    html += '<button class="step-submit-btn" id="submitBtn-' + i + '" onclick="submitStep(' + i + ')">Lock</button>';
+    html += '</div>';
+    html += '<button class="step-skip-btn" id="skipBtn-' + i + '" onclick="skipStep(' + i + ')">Skip (use model value)</button>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+
+  var submitBtn = document.getElementById('chainSubmitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Calculate Estimate';
+}
+
+function handleStepKey(e, idx) {
+  if (e.key === 'Enter') submitStep(idx);
+}
+
+function toggleHint(idx) {
+  var hint = document.getElementById('hint-' + idx);
+  var toggle = document.getElementById('hintToggle-' + idx);
+  if (hint.classList.contains('visible')) {
+    hint.classList.remove('visible');
+    toggle.textContent = 'Show hint';
+  } else {
+    hint.classList.add('visible');
+    toggle.textContent = 'Hide hint';
+  }
+}
+
+function submitStep(idx) {
+  var input = document.getElementById('input-' + idx);
+  var val = parseInput(input.value);
+  if (isNaN(val)) { input.style.borderColor = '#ef4444'; return; }
+
+  var step = currentQ.chain[idx];
+  var light = getLight(val, step.reference, step.tolerance);
+
+  stepValues[idx] = val;
+  stepStatuses[idx] = light;
+  stepsSubmitted++;
+
+  // Update UI
+  var lightEl = document.getElementById('light-' + idx);
+  lightEl.className = 'step-light ' + light;
+  input.disabled = true;
+  input.style.borderColor = light === 'green' ? '#22c55e' : light === 'amber' ? '#f59e0b' : '#ef4444';
+  document.getElementById('submitBtn-' + idx).disabled = true;
+  document.getElementById('skipBtn-' + idx).style.display = 'none';
+
+  checkAllSubmitted();
+}
+
+function skipStep(idx) {
+  var step = currentQ.chain[idx];
+  stepValues[idx] = step.reference;
+  stepStatuses[idx] = 'skipped';
+  stepsSubmitted++;
+
+  var lightEl = document.getElementById('light-' + idx);
+  lightEl.className = 'step-light skipped';
+  var input = document.getElementById('input-' + idx);
+  input.value = formatNum(step.reference);
+  input.disabled = true;
+  input.style.borderColor = '#94a3b8';
+  document.getElementById('submitBtn-' + idx).disabled = true;
+  document.getElementById('skipBtn-' + idx).style.display = 'none';
+
+  checkAllSubmitted();
+}
+
+function checkAllSubmitted() {
+  if (stepsSubmitted >= currentQ.chain.length) {
+    var btn = document.getElementById('chainSubmitBtn');
+    btn.disabled = false;
+    btn.textContent = 'Calculate Estimate \u2192';
+  }
+}
+
+// ─── SUBMIT CHAIN → CASCADE ───
+function submitChain() {
+  // Calculate player's chain product
+  var estimate = stepValues[0];
+  for (var i = 1; i < stepValues.length; i++) {
+    var op = currentQ.chain[i].operation || 'multiply';
+    if (op === 'divide') estimate /= stepValues[i];
+    else estimate *= stepValues[i];
+  }
+
+  // Calculate model chain product
+  var modelEstimate = currentQ.chain[0].reference;
+  for (var i = 1; i < currentQ.chain.length; i++) {
+    var op = currentQ.chain[i].operation || 'multiply';
+    if (op === 'divide') modelEstimate /= currentQ.chain[i].reference;
+    else modelEstimate *= currentQ.chain[i].reference;
+  }
+
+  // Score
+  var stepScore = 0;
+  var scoreTerms = [];
+  for (var i = 0; i < stepStatuses.length; i++) {
+    var pts = 0;
+    if (stepStatuses[i] === 'green') { pts = 15; totalGreens++; }
+    else if (stepStatuses[i] === 'amber') pts = 8;
+    else if (stepStatuses[i] === 'red') pts = 2;
+    stepScore += pts;
+    scoreTerms.push(pts);
+  }
+  totalSteps += stepStatuses.length;
+
+  var rating = getFinalRating(estimate, currentQ.acceptedAnswer);
+  var finalPts = rating.points;
+  var qScore = stepScore + finalPts;
+  totalScore += qScore;
+  mfg('question_answered',{game_slug:'fermi-lab',level:currentTier,correct:rating.factor<=5,question_index:qIndex+1});
+
+  if (rating.factor < bestEstimateFactor) bestEstimateFactor = rating.factor;
+
+  // Build cascade
+  showScreen('resultsScreen');
+  document.getElementById('scoreDisplay2').textContent = totalScore;
+  document.getElementById('qDisplay2').textContent = (qIndex+1) + '/' + sessionLength;
+  document.getElementById('greenDisplay2').textContent = totalGreens;
+
+  var cascadeHtml = '';
+  var running = stepValues[0];
+  cascadeHtml += '<div class="cascade-row" id="cr-0"><span class="c-label">' + escapeHtml(currentQ.chain[0].label) + '</span><span class="c-val">' + formatNum(stepValues[0]) + '</span></div>';
+
+  for (var i = 1; i < stepValues.length; i++) {
+    var op = currentQ.chain[i].operation || 'multiply';
+    var opSym = op === 'divide' ? '\u00f7' : '\u00d7';
+    if (op === 'divide') running /= stepValues[i];
+    else running *= stepValues[i];
+    cascadeHtml += '<div class="cascade-row" id="cr-' + i + '"><span class="c-op">' + opSym + '</span><span class="c-label">' + escapeHtml(currentQ.chain[i].label) + '</span><span class="c-val">' + formatNum(stepValues[i]) + '</span></div>';
+  }
+
+  document.getElementById('cascadeSteps').innerHTML = cascadeHtml;
+  document.getElementById('cascadeEstimate').textContent = 'Your estimate: ' + formatNum(estimate);
+  document.getElementById('cascadeAccepted').textContent = 'Accepted: ~' + formatNum(currentQ.acceptedAnswer);
+  document.getElementById('cascadeAccepted').innerHTML += '<br>' + escapeHtml(currentQ.answerNote);
+  var ratingEl = document.getElementById('cascadeRating');
+  ratingEl.textContent = rating.label + ' (within factor of ' + rating.factor.toFixed(1) + ')';
+  ratingEl.className = 'cascade-rating ' + rating.cls;
+  document.getElementById('cascadeFinal').classList.remove('visible');
+
+  // Animate cascade rows
+  var rows = document.querySelectorAll('.cascade-row');
+  for (var i = 0; i < rows.length; i++) {
+    (function(row, delay) {
+      setTimeout(function() { row.classList.add('visible'); }, delay);
+    })(rows[i], (i + 1) * 350);
+  }
+  setTimeout(function() {
+    document.getElementById('cascadeFinal').classList.add('visible');
+  }, (rows.length + 1) * 350);
+
+  // Build comparison table
+  var tbody = '';
+  for (var i = 0; i < currentQ.chain.length; i++) {
+    var step = currentQ.chain[i];
+    var dotCls = stepStatuses[i];
+    tbody += '<tr>';
+    tbody += '<td class="r-label">' + escapeHtml(step.label) + '</td>';
+    tbody += '<td class="r-yours">' + formatNum(stepValues[i]) + '</td>';
+    tbody += '<td class="r-light"><span class="light-dot ' + dotCls + '"></span></td>';
+    tbody += '<td class="r-model">' + formatNum(step.reference) + '</td>';
+    tbody += '</tr>';
+  }
+  document.getElementById('resultsBody').innerHTML = tbody;
+  document.getElementById('resultsNote').textContent = currentQ.answerNote;
+  document.getElementById('scoreBreakdown').innerHTML = 'Steps: ' + scoreTerms.join(' + ') + ' = ' + stepScore + ' &nbsp;|&nbsp; Final: +' + finalPts + ' &nbsp;|&nbsp; <span class="sb-total">Total: ' + qScore + '</span>';
+
+  // Next button
+  var nextBtn = document.getElementById('nextBtn');
+  if (qIndex >= sessionLength - 1) {
+    nextBtn.textContent = 'See Results';
+  } else {
+    nextBtn.textContent = 'Next Question \u2192';
+  }
+}
+
+function nextQuestion() {
+  qIndex++;
+  if (qIndex >= sessionLength) {
+    endSession();
+  } else {
+    showScreen('gameScreen');
+    loadQuestion();
+  }
+}
+
+// ─── END SESSION ───
+function endSession() {
+  showScreen('endScreen');
+  document.getElementById('endScore').textContent = totalScore;
+
+  var greenPct = totalSteps > 0 ? Math.round((totalGreens / totalSteps) * 100) : 0;
+  var bestFactor = bestEstimateFactor === Infinity ? 'N/A' : ('\u00d7' + bestEstimateFactor.toFixed(1));
+
+  document.getElementById('endStats').innerHTML =
+    '<div class="end-stat"><div class="end-stat-label">Questions</div><div class="end-stat-val">' + sessionLength + '</div></div>' +
+    '<div class="end-stat"><div class="end-stat-label">Process Accuracy</div><div class="end-stat-val">' + greenPct + '%</div></div>' +
+    '<div class="end-stat"><div class="end-stat-label">Green Steps</div><div class="end-stat-val">' + totalGreens + '/' + totalSteps + '</div></div>' +
+    '<div class="end-stat"><div class="end-stat-label">Best Estimate</div><div class="end-stat-val">' + bestFactor + '</div></div>';
+
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'fermi-lab',level:currentTier,score:totalScore,questions_answered:sessionLength,accuracy:greenPct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('fermi-lab',currentTier,totalScore,sessionLength).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('fermi-lab',currentTier,totalScore);}}
+  var _pbScores=JSON.parse(localStorage.getItem(getLBKey())||'[]');var _pbOld=_pbScores.length?_pbScores[0].score:0;if(totalScore>_pbOld){mfg('personal_best_set',{game_slug:'fermi-lab',level:currentTier,score:totalScore,previous_best:_pbOld});}
+  saveBest(totalScore);
+  renderLB('lbList2');
+}
+
+function backToStart() {
+  showScreen('startScreen');
+  renderLB('lbList');
+}
+
+// ─── SCREENS ───
+function showScreen(id) {
+  var screens = document.querySelectorAll('.screen');
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ─── LEADERBOARD ───
+function getLBKey() { return 'fermi_scores_' + currentTier; }
+function saveBest(s) {
+  var scores = JSON.parse(localStorage.getItem(getLBKey()) || '[]');
+  scores.push({ score: s, date: new Date().toLocaleDateString('en-GB'), qs: sessionLength });
+  scores.sort(function(a,b) { return b.score - a.score; });
+  scores = scores.slice(0, 5);
+  localStorage.setItem(getLBKey(), JSON.stringify(scores));
+}
+function renderLB(elId) {
+  var scores = JSON.parse(localStorage.getItem(getLBKey()) || '[]');
+  var el = document.getElementById(elId);
+  if (!scores.length) { el.innerHTML = '<div class="lb-empty">No scores yet</div>'; return; }
+  el.innerHTML = scores.map(function(s, i) {
+    return '<div class="lb-row"><span>#' + (i+1) + '</span><span>' + s.date + ' (' + s.qs + 'Q)</span><span class="lb-score">' + s.score + '</span></div>';
+  }).join('');
+}
+
+// ─── UTIL ───
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+init();
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

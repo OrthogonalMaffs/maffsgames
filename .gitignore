@@ -1,0 +1,11 @@
+node_modules/
+__pycache__/
+*.pyc
+
+# Regenerated fresh by CI and by hand (python scripts/extract-banks.py) --
+# the whole live question bank per game, ~8MB and fully reproducible from
+# games/. Only data/check-ledger.json, the checker's own output, is committed.
+data/banks/
+
+# Local-only session context (personal details, local paths, handover). Never commit it.
+CLAUDE.local.md

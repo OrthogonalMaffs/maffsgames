@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Set up the probability table, calculate E(X), then interpret what it means. The full expectation process — Core Maths §3.9, free and curriculum-aligned.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/expectation-station/">
+<meta property="og:title" content="Expectation Station — MaffsGames">
+<meta property="og:description" content="Set up the probability table, calculate E(X), then interpret what it means. The full expectation process — Core Maths §3.9, free and curriculum-aligned.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/expectation-station/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Expectation Station — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;--purple:#8b5cf6;--orange:#f97316;
+--navy:#1a2744;--cell-bg:#1e2235;--cell-correct:#14532d;--cell-incorrect:#450a0a;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--teal)}
+.stage-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;background:var(--teal-dim);color:var(--teal);border:1px solid rgba(13,148,136,0.3);transition:opacity 0.3s}
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em}
+.level-pill.core{background:rgba(14,165,233,0.15);color:#0ea5e9;border:1px solid rgba(14,165,233,0.3)}
+.level-pill.gcse{background:rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3)}
+.level-pill.alevel{background:rgba(249,115,22,0.15);color:var(--orange);border:1px solid rgba(249,115,22,0.3)}
+
+.progress-bar-wrap{width:100%;height:4px;background:var(--border);border-radius:2px;margin-top:4px}
+.progress-bar-fill{height:100%;background:var(--teal);border-radius:2px;transition:width 0.3s}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.level-select{display:flex;gap:12px;margin-bottom:20px;justify-content:center;flex-wrap:wrap}
+.level-btn{padding:12px 24px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.level-btn:hover{border-color:var(--teal)}
+.level-btn.selected{border-color:var(--teal);background:var(--teal-dim)}
+.session-select{display:flex;gap:12px;margin-bottom:24px;justify-content:center}
+.session-btn{padding:10px 20px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.session-btn:hover{border-color:var(--teal)}
+.session-btn.selected{border-color:var(--teal);background:var(--teal-dim)}
+.start-label{text-align:center;font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:10px}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+.pb-display{text-align:center;font-size:13px;color:var(--muted);margin-top:12px}
+.pb-display span{color:var(--teal);font-weight:600}
+.how-it-works{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:20px}
+.how-it-works h3{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--teal)}
+.how-it-works p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:6px}
+
+/* Game screen */
+.context-card{background:var(--surface);border-radius:12px;padding:20px 24px;margin-bottom:20px;border-left:3px solid var(--teal)}
+.context-text{font-size:14px;line-height:1.7;color:#cbd5e1}
+
+/* Probability table */
+.prob-table-wrap{overflow-x:auto;margin-bottom:20px}
+.prob-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:15px}
+.prob-table th{background:var(--navy);color:#fff;padding:12px 16px;text-align:center;font-weight:600;border:1px solid rgba(255,255,255,0.1)}
+.prob-table td{background:var(--cell-bg);padding:12px 16px;text-align:center;border:1px solid var(--border);color:var(--text);min-width:60px;transition:background 0.3s}
+.prob-table td.missing{border:2px dashed var(--teal);cursor:pointer;color:var(--teal);background:rgba(13,148,136,0.08)}
+.prob-table td.missing:hover{background:rgba(13,148,136,0.15)}
+.prob-table td.missing.selected-cell{background:rgba(13,148,136,0.25);box-shadow:0 0 0 2px var(--teal)}
+.prob-table td.filled{color:var(--teal);font-weight:600}
+.prob-table td.correct-cell{background:var(--cell-correct);color:var(--green)}
+.prob-table td.incorrect-cell{background:var(--cell-incorrect);color:var(--red)}
+
+/* Tile bank */
+.tile-bank{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:20px;min-height:44px}
+.tile{padding:10px 18px;border-radius:8px;background:var(--surface);border:2px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;color:var(--text);cursor:pointer;transition:all 0.15s;user-select:none}
+.tile:hover{border-color:var(--teal);background:var(--teal-dim)}
+.tile.used{opacity:0.3;pointer-events:none}
+.tile.disabled{opacity:0.3;pointer-events:none}
+
+/* Check button */
+.check-btn{display:block;width:100%;padding:14px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s;margin-bottom:20px}
+.check-btn:hover{opacity:0.9}
+.check-btn:disabled{opacity:0.4;cursor:default}
+
+/* E(X) calculation area */
+.ex-calc-wrap{background:var(--surface);border-radius:12px;padding:24px;margin-bottom:20px}
+.ex-formula{font-family:'JetBrains Mono',monospace;font-size:14px;line-height:2.2;color:#cbd5e1;text-align:center;flex-wrap:wrap;display:flex;align-items:center;justify-content:center;gap:4px}
+.ex-slot{display:inline-flex;align-items:center;justify-content:center;min-width:48px;padding:6px 10px;border:2px dashed var(--teal);border-radius:6px;cursor:pointer;background:rgba(13,148,136,0.08);color:var(--teal);font-weight:600;transition:all 0.15s}
+.ex-slot:hover{background:rgba(13,148,136,0.15)}
+.ex-slot.selected-slot{background:rgba(13,148,136,0.25);box-shadow:0 0 0 2px var(--teal)}
+.ex-slot.filled-slot{color:var(--teal);font-weight:600}
+.ex-slot.correct-slot{background:var(--cell-correct);color:var(--green);border-color:var(--green)}
+.ex-slot.incorrect-slot{background:var(--cell-incorrect);color:var(--red);border-color:var(--red)}
+
+/* E(X) result display */
+.ex-result{text-align:center;padding:24px;margin-bottom:20px}
+.ex-result-label{font-size:14px;color:var(--muted);margin-bottom:8px}
+.ex-result-value{font-size:48px;font-weight:800;color:var(--teal);font-family:'JetBrains Mono',monospace}
+
+/* Interpretation cards */
+.interp-cards{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.interp-card{padding:16px 20px;border-radius:10px;border:2px solid var(--border);background:var(--surface);font-size:14px;line-height:1.6;cursor:pointer;transition:all 0.15s;color:var(--text)}
+.interp-card:hover{border-color:var(--teal);background:var(--teal-dim)}
+.interp-card.selected-interp{border-color:var(--teal);background:var(--teal-dim)}
+.interp-card.correct-interp{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+.interp-card.incorrect-interp{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+.interp-card.disabled-interp{pointer-events:none;opacity:0.5}
+.interp-card.reveal-correct{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+
+/* Explanation panel */
+.explanation-panel{background:var(--surface-alt);border-top:3px solid var(--teal);border-radius:12px;padding:24px;margin-bottom:20px;opacity:0;transform:translateY(20px);transition:opacity 0.3s,transform 0.3s}
+.explanation-panel.show{opacity:1;transform:translateY(0)}
+.explanation-title{font-size:15px;font-weight:700;color:var(--teal);margin-bottom:8px}
+.explanation-text{font-size:14px;color:#cbd5e1;line-height:1.7}
+
+.next-btn{display:block;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s;margin-bottom:20px}
+.next-btn:hover{border-color:var(--teal)}
+
+/* Stage feedback */
+.stage-feedback{text-align:center;padding:12px;border-radius:8px;margin-bottom:16px;font-size:14px;font-weight:600;display:none}
+.stage-feedback.show{display:block}
+.stage-feedback.good{background:var(--green-dim);color:var(--green)}
+.stage-feedback.bad{background:var(--red-dim);color:var(--red)}
+.dismiss-btn{display:block;margin:8px auto 0;padding:5px 16px;border:1.5px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;opacity:0;animation:fadeBtn .3s ease forwards}.dismiss-btn:hover{background:rgba(255,255,255,.08)}@keyframes fadeBtn{to{opacity:1}}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--teal)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.pb-badge{background:var(--teal-dim);color:var(--teal);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+/* Warning */
+.sum-warning{text-align:center;font-size:13px;color:var(--amber);margin-bottom:12px;display:none}
+.sum-warning.show{display:block}
+
+@media(prefers-reduced-motion:reduce){
+.explanation-panel{transition:none}
+.stage-pill{transition:none}
+}
+@media(max-width:520px){
+.header{padding:12px 16px;gap:8px}
+.header-title{font-size:15px}
+.prob-table{font-size:13px}
+.prob-table th,.prob-table td{padding:10px 8px;min-width:48px}
+.tile{padding:8px 14px;font-size:13px}
+.ex-formula{font-size:12px}
+.ex-result-value{font-size:36px}
+.start-title{font-size:26px}
+}
+
+/* Method modal */
+.method-btn{display:block;margin:1rem auto;padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s}.method-btn:hover{border-color:var(--teal);color:var(--text)}
+.method-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}.method-overlay.show{display:flex}
+.method-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;max-width:580px;width:92%;max-height:80vh;overflow-y:auto}
+.method-box h2{font-size:1.1rem;font-weight:700;color:var(--teal);margin-bottom:1rem}
+.method-section{margin-bottom:1rem;padding:.8rem;background:var(--bg);border-radius:8px;font-size:.85rem;line-height:1.8}
+.method-section strong{color:var(--teal);display:block;margin-bottom:.3rem}
+.method-close{display:block;margin:1rem auto 0;padding:.4rem 1.5rem;border:none;border-radius:8px;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Expectation Station</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <span class="level-pill" id="levelPill">Core</span>
+    <span class="stage-pill" id="stagePill">Stage 1 of 3</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreMax">0</span></span>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Expectation Station</div>
+  <div class="start-sub">Set up the probability table, calculate E(X), then interpret what it means.<br>The full expectation process in three stages.</div>
+
+  <div class="how-it-works">
+    <h3>How it works</h3>
+    <p><strong>Stage 1:</strong> Complete the probability distribution table from the tile bank.</p>
+    <p><strong>Stage 2:</strong> Calculate E(X) = Sigma xP(x) by filling in the products.</p>
+    <p><strong>Stage 3:</strong> Choose the correct real-world interpretation of E(X).</p>
+  </div>
+  <button class="method-btn" onclick="document.getElementById('methodOverlay').classList.add('show')">Worked Example</button>
+
+  <div class="start-label">Level</div>
+  <div class="level-select" id="levelSelect">
+    <button class="level-btn selected" data-level="core">Core Maths</button>
+    <button class="level-btn" data-level="gcse">GCSE</button>
+    <button class="level-btn" data-level="alevel">A-Level</button>
+  </div>
+
+  <div class="start-label">Questions</div>
+  <div class="session-select" id="sessionSelect"></div>
+
+  <div class="pb-display" id="pbDisplay"></div>
+
+  <button class="start-btn" onclick="startGame()">Start</button>
+</div>
+
+<div class="method-overlay" id="methodOverlay">
+  <div class="method-box">
+    <h2>Worked Example — Expected Value</h2>
+    <div class="method-section" id="methodProbTable"></div>
+    <div class="method-section" id="methodCalcEX"></div>
+    <div class="method-section" id="methodInterpretEX"></div>
+    <button class="method-close" onclick="document.getElementById('methodOverlay').classList.remove('show')">Got it</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="context-card">
+    <div class="context-text" id="contextText"></div>
+  </div>
+
+  <!-- Stage 1: Table -->
+  <div id="stage1Wrap">
+    <div class="prob-table-wrap">
+      <table class="prob-table" id="probTable"></table>
+    </div>
+    <div class="sum-warning" id="sumWarning">The probabilities do not sum to 1. Check your values.</div>
+    <div class="tile-bank" id="stage1Tiles"></div>
+    <button class="check-btn" id="checkStage1" onclick="checkStage1()" disabled>Check Table</button>
+  </div>
+
+  <!-- Stage 2: E(X) calculation -->
+  <div id="stage2Wrap" style="display:none">
+    <div class="prob-table-wrap">
+      <table class="prob-table" id="probTableFinal"></table>
+    </div>
+    <div class="ex-calc-wrap">
+      <div class="ex-formula" id="exFormula"></div>
+    </div>
+    <div class="tile-bank" id="stage2Tiles"></div>
+    <button class="check-btn" id="checkStage2" onclick="checkStage2()" disabled>Check Calculation</button>
+  </div>
+
+  <!-- Stage 3: Interpretation -->
+  <div id="stage3Wrap" style="display:none">
+    <div class="ex-result">
+      <div class="ex-result-label">Expected Value</div>
+      <div class="ex-result-value" id="exResultValue"></div>
+    </div>
+    <div class="interp-cards" id="interpCards"></div>
+    <button class="check-btn" id="checkStage3" onclick="checkStage3()" disabled>Check Interpretation</button>
+  </div>
+
+  <div class="stage-feedback" id="stageFeedback"></div>
+  <div class="explanation-panel" id="explanationPanel">
+    <div class="explanation-title">Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()" style="display:none">Next Question</button>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Points</h4>
+      <div class="score" id="finalScore">0 / 0</div>
+    </div>
+    <div class="result-card">
+      <h4>Accuracy</h4>
+      <div class="score" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="sub" id="pbLine" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="resetToStart()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+function _addDismiss(el,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;el.appendChild(b);},2000);}
+// ============================================================
+//  QUESTION BANK
+// ============================================================
+const QUESTIONS = {
+core: [
+{id:'es_core_001',level:'core',context:'A street food stall records the number of portions sold per customer visit.',xLabel:'Portions sold (x)',table:[{x:1,p:0.10,given:true},{x:2,p:0.30,given:false},{x:3,p:0.35,given:true},{x:4,p:0.25,given:false}],stage1Tiles:['0.30','0.25','0.20','0.45'],answer:2.75,interpretations:[{text:'On average, a customer buys 2.75 portions per visit',correct:true},{text:'Most customers buy exactly 2.75 portions',correct:false},{text:'The probability of buying 2.75 portions is highest',correct:false},{text:'The stall will always sell 2.75 portions per customer',correct:false}],explanation:'E(X) = 2.75 means that over many customer visits, the average number of portions sold per visit is 2.75. No single customer buys 2.75 — it is a long-run average.'},
+{id:'es_core_002',level:'core',context:'A game at a school fete costs \u00a31 to play. Players spin a wheel showing prizes of \u00a30, \u00a31, \u00a32 or \u00a35.',xLabel:'Prize (\u00a3x)',table:[{x:0,p:0.50,given:true},{x:1,p:0.25,given:false},{x:2,p:0.15,given:true},{x:5,p:0.10,given:false}],stage1Tiles:['0.25','0.10','0.35','0.20'],answer:1.05,interpretations:[{text:'On average, a player wins \u00a31.05 per game — slightly more than the \u00a31 entry fee, so the game is slightly in the player\'s favour',correct:true},{text:'Every player wins exactly \u00a31.05',correct:false},{text:'The most common prize is \u00a31.05',correct:false},{text:'Players always make a profit',correct:false}],explanation:'Since E(X) = \u00a31.05 > \u00a31 cost, on average a player makes a small profit. In practice the stall would adjust probabilities to ensure profit.'},
+{id:'es_core_003',level:'core',context:'A GP surgery records the number of patients who fail to attend their appointment per hour.',xLabel:'No-shows per hour (x)',table:[{x:0,p:0.40,given:false},{x:1,p:0.30,given:true},{x:2,p:0.20,given:true},{x:3,p:0.10,given:false}],stage1Tiles:['0.40','0.10','0.25','0.15'],answer:1.00,interpretations:[{text:'On average, 1 patient per hour fails to attend their appointment',correct:true},{text:'Exactly 1 patient misses every hour',correct:false},{text:'The most common number of no-shows is 1',correct:false},{text:'There is a 100% chance of a no-show each hour',correct:false}],explanation:'An expected value of 1 means the surgery can plan for approximately 1 no-show per hour on average.'},
+{id:'es_core_004',level:'core',context:'An insurance company models the number of claims a customer makes per year.',xLabel:'Claims per year (x)',table:[{x:0,p:0.65,given:true},{x:1,p:0.20,given:false},{x:2,p:0.10,given:true},{x:3,p:0.05,given:false}],stage1Tiles:['0.20','0.05','0.15','0.10'],answer:0.55,interpretations:[{text:'On average, a customer makes 0.55 claims per year — the company uses this to set premium prices',correct:true},{text:'Every customer makes 0.55 claims',correct:false},{text:'More than half of customers make a claim',correct:false},{text:'The company will receive exactly 55 claims per 100 customers',correct:false}],explanation:'Insurance companies use E(X) to ensure premiums cover expected payouts. 0.55 claims per year means on average just over 1 claim every 2 years.'},
+{id:'es_core_005',level:'core',context:'A supermarket self-checkout records the number of assistance calls per transaction.',xLabel:'Assistance calls (x)',table:[{x:0,p:0.72,given:false},{x:1,p:0.18,given:true},{x:2,p:0.07,given:true},{x:3,p:0.03,given:false}],stage1Tiles:['0.72','0.03','0.55','0.08'],answer:0.41,interpretations:[{text:'On average, 0.41 assistance calls are made per transaction',correct:true},{text:'41% of transactions require assistance',correct:false},{text:'Most transactions need no assistance at all',correct:false},{text:'The checkout calls for help 0.41 times every minute',correct:false}],explanation:'E(X) = 0.41 means the supermarket expects approximately 41 assistance calls per 100 transactions — useful for staffing decisions.'},
+{id:'es_core_006',level:'core',context:'A cinema records the number of empty seats per screening in a particular screen.',xLabel:'Empty seats (x)',table:[{x:0,p:0.15,given:true},{x:5,p:0.35,given:false},{x:10,p:0.30,given:true},{x:15,p:0.20,given:false}],stage1Tiles:['0.35','0.20','0.25','0.40'],answer:7.75,interpretations:[{text:'On average, 7.75 seats are empty per screening',correct:true},{text:'The cinema always has between 7 and 8 empty seats',correct:false},{text:'7.75 is the most likely number of empty seats',correct:false},{text:'The cinema loses exactly 7.75 tickets of revenue per show',correct:false}],explanation:'E(X) = 7.75 seats empty per screening helps the cinema estimate lost revenue and consider pricing or overbooking strategies.'},
+{id:'es_core_007',level:'core',context:'A delivery company records the number of delivery attempts needed per parcel.',xLabel:'Delivery attempts (x)',table:[{x:1,p:0.60,given:true},{x:2,p:0.25,given:false},{x:3,p:0.10,given:true},{x:4,p:0.05,given:false}],stage1Tiles:['0.25','0.05','0.15','0.30'],answer:1.60,interpretations:[{text:'On average, 1.6 delivery attempts are needed per parcel',correct:true},{text:'Most parcels are delivered on the second attempt',correct:false},{text:'60% of parcels need 1.6 attempts',correct:false},{text:'The company always delivers within 2 attempts',correct:false}],explanation:'E(X) = 1.6 means the company needs to budget for 60% more delivery attempts than parcels — important for driver scheduling.'},
+{id:'es_core_008',level:'core',context:'A call centre records the number of times a customer is put on hold during a single call.',xLabel:'Times on hold (x)',table:[{x:0,p:0.45,given:false},{x:1,p:0.30,given:true},{x:2,p:0.15,given:false},{x:3,p:0.10,given:true}],stage1Tiles:['0.45','0.15','0.35','0.20'],answer:0.90,interpretations:[{text:'On average, a customer is put on hold 0.9 times per call',correct:true},{text:'90% of customers are put on hold',correct:false},{text:'The most likely outcome is being put on hold once',correct:false},{text:'No customer is ever put on hold more than once',correct:false}],explanation:'E(X) = 0.9 means the average call involves nearly one hold. The call centre could use this to set a target of reducing E(X) below 0.5.'},
+{id:'es_core_009',level:'core',context:'A coffee machine in an office records the number of errors it produces per day.',xLabel:'Errors per day (x)',table:[{x:0,p:0.50,given:true},{x:1,p:0.30,given:false},{x:2,p:0.15,given:true},{x:3,p:0.05,given:false}],stage1Tiles:['0.30','0.05','0.20','0.10'],answer:0.75,interpretations:[{text:'On average, the machine produces 0.75 errors per day — roughly 3 errors every 4 days',correct:true},{text:'The machine makes an error 75% of the time',correct:false},{text:'Most days the machine makes exactly 1 error',correct:false},{text:'The machine will always make fewer than 1 error per day',correct:false}],explanation:'E(X) = 0.75 allows the office manager to plan maintenance. 0.75 errors per day means approximately 1 error every 1.3 days.'},
+{id:'es_core_010',level:'core',context:'A teacher records the number of homework submissions that need to be chased per class per week.',xLabel:'Submissions chased (x)',table:[{x:0,p:0.20,given:false},{x:1,p:0.35,given:true},{x:2,p:0.30,given:true},{x:3,p:0.15,given:false}],stage1Tiles:['0.20','0.15','0.25','0.10'],answer:1.40,interpretations:[{text:'On average, the teacher needs to chase 1.4 homework submissions per class per week',correct:true},{text:'The teacher always chases at least 1 student',correct:false},{text:'1.4 students never do their homework',correct:false},{text:'40% of students need chasing',correct:false}],explanation:'E(X) = 1.4 gives a useful baseline. If the teacher introduces a new policy and E(X) drops below 1, the policy is working.'},
+{id:'es_core_011',level:'core',context:'A bus company records the number of minutes a bus arrives late at a stop. Only late arrivals (0, 1, 2, 3 minutes) are modelled.',xLabel:'Minutes late (x)',table:[{x:0,p:0.30,given:true},{x:1,p:0.40,given:false},{x:2,p:0.20,given:true},{x:3,p:0.10,given:false}],stage1Tiles:['0.40','0.10','0.30','0.15'],answer:1.10,interpretations:[{text:'On average, the bus arrives 1.1 minutes late at this stop',correct:true},{text:'The bus is always between 1 and 2 minutes late',correct:false},{text:'1.1 minutes is the most frequent delay',correct:false},{text:'The bus is late 110% of the time',correct:false}],explanation:'E(X) = 1.1 minutes late is the average lateness. A target of E(X) < 1 would mean the average delay is under 1 minute.'},
+{id:'es_core_012',level:'core',context:'A garden centre records the number of plants returned per customer purchase.',xLabel:'Plants returned (x)',table:[{x:0,p:0.80,given:false},{x:1,p:0.12,given:true},{x:2,p:0.05,given:true},{x:3,p:0.03,given:false}],stage1Tiles:['0.80','0.03','0.70','0.07'],answer:0.31,interpretations:[{text:'On average, 0.31 plants are returned per customer — roughly 31 returns per 100 purchases',correct:true},{text:'31% of customers return a plant',correct:false},{text:'Most customers return at least one plant',correct:false},{text:'The garden centre loses 0.31 plants every day',correct:false}],explanation:'E(X) = 0.31 means the garden centre can expect about 31 returns for every 100 sales — useful for stock planning and refund budgeting.'},
+{id:'es_core_013',level:'core',context:'A fundraising raffle sells 100 tickets at \u00a32 each. Prizes are: 1st prize \u00a350, 2nd prize \u00a330, 3rd prize \u00a320, remaining tickets win nothing.',xLabel:'Prize won (\u00a3x)',table:[{x:0,p:0.97,given:true},{x:20,p:0.01,given:false},{x:30,p:0.01,given:true},{x:50,p:0.01,given:false}],stage1Tiles:['0.01','0.01','0.02','0.03'],answer:1.00,interpretations:[{text:'On average, a ticket wins \u00a31.00 — but costs \u00a32.00 to buy, so on average a ticket loses \u00a31.00',correct:true},{text:'Every ticket wins \u00a31.00',correct:false},{text:'The raffle makes \u00a31.00 profit per ticket',correct:false},{text:'There is a 1% chance of winning exactly \u00a31.00',correct:false}],explanation:'E(X) = \u00a31.00 in prizes vs \u00a32.00 cost means the expected loss per ticket is \u00a31.00. Fundraising raffles are designed this way — buyers accept negative expected value to support the cause.'},
+{id:'es_core_014',level:'core',context:'A road survey counts the number of pedestrians crossing at a junction per minute during rush hour.',xLabel:'Pedestrians per minute (x)',table:[{x:1,p:0.10,given:false},{x:2,p:0.25,given:true},{x:3,p:0.35,given:true},{x:4,p:0.20,given:false},{x:5,p:0.10,given:true}],stage1Tiles:['0.10','0.20','0.15','0.30'],answer:2.95,interpretations:[{text:'On average, approximately 3 pedestrians cross per minute during rush hour — the council uses this to set traffic light timing',correct:true},{text:'Exactly 3 pedestrians cross every minute',correct:false},{text:'The most common number of pedestrians is 2.95',correct:false},{text:'There is a 29.5% chance of a pedestrian crossing',correct:false}],explanation:'E(X) = 2.95 crossings per minute gives the council a basis for traffic signal timing. The exact value 2.95 rounds to approximately 3 for practical planning.'},
+{id:'es_core_015',level:'core',context:'A supermarket records the number of items in a customer\'s basket at the express checkout (1 to 4 items).',xLabel:'Items in basket (x)',table:[{x:1,p:0.15,given:true},{x:2,p:0.30,given:false},{x:3,p:0.35,given:true},{x:4,p:0.20,given:false}],stage1Tiles:['0.30','0.20','0.25','0.40'],answer:2.60,interpretations:[{text:'On average, a customer has 2.6 items in their basket at the express checkout',correct:true},{text:'Most customers buy exactly 3 items',correct:false},{text:'2.6 is the most popular basket size',correct:false},{text:'The checkout processes 2.6 customers per minute',correct:false}],explanation:'E(X) = 2.6 means the average basket contains about 2 to 3 items. This helps the supermarket estimate scanning times for express lanes.'},
+{id:'es_core_016',level:'core',context:'A utility company records the number of customer complaints received per day.',xLabel:'Complaints per day (x)',table:[{x:0,p:0.25,given:false},{x:1,p:0.35,given:true},{x:2,p:0.25,given:true},{x:3,p:0.15,given:false}],stage1Tiles:['0.25','0.15','0.20','0.30'],answer:1.30,interpretations:[{text:'On average, the company receives 1.3 complaints per day',correct:true},{text:'The company receives exactly 1 or 2 complaints every day',correct:false},{text:'30% of customers complain',correct:false},{text:'1.3 complaints is the maximum expected',correct:false}],explanation:'E(X) = 1.3 complaints per day helps the company allocate staff to handle complaint resolution. Over a 5-day week, they expect about 6 to 7 complaints.'},
+{id:'es_core_017',level:'core',context:'A penalty shootout analyst records the number of goals scored from 5 penalties by a particular team.',xLabel:'Goals from 5 penalties (x)',table:[{x:2,p:0.10,given:true},{x:3,p:0.30,given:false},{x:4,p:0.40,given:true},{x:5,p:0.20,given:false}],stage1Tiles:['0.30','0.20','0.25','0.35'],answer:3.70,interpretations:[{text:'On average, the team scores 3.7 goals from 5 penalties',correct:true},{text:'The team always scores at least 3 goals',correct:false},{text:'The team has a 74% conversion rate',correct:false},{text:'3.7 is the median number of goals scored',correct:false}],explanation:'E(X) = 3.7 from 5 penalties gives an average conversion. This is consistent with roughly a 74% conversion rate per penalty (3.7/5), which is close to professional averages.'},
+{id:'es_core_018',level:'core',context:'A company\'s HR department records the number of sick days taken per employee per month.',xLabel:'Sick days per month (x)',table:[{x:0,p:0.55,given:true},{x:1,p:0.25,given:false},{x:2,p:0.15,given:true},{x:3,p:0.05,given:false}],stage1Tiles:['0.25','0.05','0.20','0.10'],answer:0.70,interpretations:[{text:'On average, an employee takes 0.7 sick days per month — roughly 8.4 sick days per year',correct:true},{text:'70% of employees take a sick day each month',correct:false},{text:'Most employees take exactly 1 sick day per month',correct:false},{text:'No employee takes more than 3 sick days',correct:false}],explanation:'E(X) = 0.7 sick days per month translates to about 8.4 per year per employee. HR uses this to budget for cover and track trends over time.'},
+{id:'es_core_019',level:'core',context:'A football analyst records the number of goals scored per match by a particular team in league games.',xLabel:'Goals per match (x)',table:[{x:0,p:0.20,given:false},{x:1,p:0.35,given:true},{x:2,p:0.30,given:true},{x:3,p:0.15,given:false}],stage1Tiles:['0.20','0.15','0.25','0.10'],answer:1.40,interpretations:[{text:'On average, the team scores 1.4 goals per match',correct:true},{text:'The team scores at least 1 goal in every match',correct:false},{text:'1.4 goals is the most common result',correct:false},{text:'The team wins 1.4 matches out of every 10',correct:false}],explanation:'E(X) = 1.4 goals per match is a useful summary statistic. Over a 38-game season, the team would expect to score about 53 goals (38 x 1.4).'},
+{id:'es_core_020',level:'core',context:'An online retailer records the number of items purchased in a single order.',xLabel:'Items per order (x)',table:[{x:1,p:0.40,given:true},{x:2,p:0.30,given:false},{x:3,p:0.20,given:true},{x:4,p:0.10,given:false}],stage1Tiles:['0.30','0.10','0.25','0.15'],answer:2.00,interpretations:[{text:'On average, a customer orders 2.0 items per order',correct:true},{text:'Every customer orders exactly 2 items',correct:false},{text:'The most popular order size is 2 items',correct:false},{text:'50% of orders contain 2 or more items',correct:false}],explanation:'E(X) = 2.0 items per order helps the retailer plan packaging, shipping costs, and warehouse staffing. It means for every 100 orders, they ship about 200 items.'}
+],
+gcse: [
+{id:'es_gcse_001',level:'gcse',context:'A fair spinner has sections numbered 1 to 4.',xLabel:'Score (x)',table:[{x:1,p:0.25,given:true},{x:2,p:0.25,given:false},{x:3,p:0.25,given:true},{x:4,p:0.25,given:false}],stage1Tiles:['0.25','0.25','0.50','0.10'],answer:2.50,interpretations:[{text:'On average, the spinner lands on 2.5 over many spins',correct:true},{text:'The spinner will land on 2 or 3 every time',correct:false},{text:'2.5 is the most likely score',correct:false},{text:'Half the scores are above 2.5',correct:false}],explanation:'E(X) = 2.5 is the long-run average. No single spin gives 2.5, but over many spins the mean converges to this value.'},
+{id:'es_gcse_002',level:'gcse',context:'A bag contains red, blue and green sweets. One sweet is picked at random and the number of letters in the colour name is recorded.',xLabel:'Letters in colour (x)',table:[{x:3,p:0.40,given:true},{x:4,p:0.35,given:false},{x:5,p:0.25,given:false}],stage1Tiles:['0.35','0.25','0.30','0.15'],answer:3.85,interpretations:[{text:'On average, the colour name has 3.85 letters',correct:true},{text:'Most sweets are blue (4 letters)',correct:false},{text:'The average sweet has 4 letters in its name',correct:false},{text:'3.85 letters is the shortest possible colour name',correct:false}],explanation:'E(X) = 3.85 is a weighted average of the colour name lengths. Red (3) is most likely, making the average closer to 3 than to 5.'},
+{id:'es_gcse_003',level:'gcse',context:'A dice game pays out based on the number rolled on a standard die. Scores of 1-2 pay \u00a30, 3-4 pay \u00a31, 5-6 pay \u00a33.',xLabel:'Payout (\u00a3x)',table:[{x:0,p:'1/3',given:true},{x:1,p:'1/3',given:false},{x:3,p:'1/3',given:false}],stage1Tiles:['1/3','1/3','1/6','2/3'],answer:1.33,interpretations:[{text:'On average, a player wins \u00a31.33 per game',correct:true},{text:'Every third game pays exactly \u00a31.33',correct:false},{text:'The most common payout is \u00a31.33',correct:false},{text:'Players always win money',correct:false}],explanation:'E(X) = 0 + 1/3 + 1 = 4/3 = \u00a31.33. If the game costs more than \u00a31.33 to play, the house profits on average.'},
+{id:'es_gcse_004',level:'gcse',context:'Students record how many pets they have at home.',xLabel:'Number of pets (x)',table:[{x:0,p:0.30,given:false},{x:1,p:0.40,given:true},{x:2,p:0.20,given:true},{x:3,p:0.10,given:false}],stage1Tiles:['0.30','0.10','0.25','0.15'],answer:1.10,interpretations:[{text:'On average, a student has 1.1 pets at home',correct:true},{text:'Most students have 1 pet',correct:false},{text:'1.1 is the median number of pets',correct:false},{text:'Every student has at least 1 pet',correct:false}],explanation:'E(X) = 1.1 means students have just over 1 pet on average. Since 30% have no pets, the average is pulled down from those who have 2 or 3.'},
+{id:'es_gcse_005',level:'gcse',context:'A biased coin is flipped 3 times. X records the number of heads.',xLabel:'Heads (x)',table:[{x:0,p:0.125,given:true},{x:1,p:0.375,given:false},{x:2,p:0.375,given:true},{x:3,p:0.125,given:false}],stage1Tiles:['0.375','0.125','0.250','0.500'],answer:1.50,interpretations:[{text:'On average, 1.5 heads are obtained from 3 flips',correct:true},{text:'You always get 1 or 2 heads from 3 flips',correct:false},{text:'The probability of getting heads is 0.5',correct:false},{text:'1.5 heads is the most likely result',correct:false}],explanation:'E(X) = 1.5 heads from 3 flips of a fair coin. This makes sense: if P(H) = 0.5, then E(X) = 3 x 0.5 = 1.5.'},
+{id:'es_gcse_006',level:'gcse',context:'A traffic survey counts the number of cars turning left at a junction per minute.',xLabel:'Cars turning left (x)',table:[{x:0,p:'1/4',given:false},{x:1,p:'1/2',given:true},{x:2,p:'1/4',given:false}],stage1Tiles:['1/4','1/4','1/3','1/6'],answer:1.00,interpretations:[{text:'On average, 1 car turns left per minute at this junction',correct:true},{text:'Exactly 1 car turns left every minute',correct:false},{text:'The junction handles 1 car per minute in total',correct:false},{text:'Half the cars turn left',correct:false}],explanation:'E(X) = 0(1/4) + 1(1/2) + 2(1/4) = 0 + 0.5 + 0.5 = 1. On average, one car per minute turns left.'},
+{id:'es_gcse_007',level:'gcse',context:'A school canteen records the number of portions of chips sold per student at lunch.',xLabel:'Portions of chips (x)',table:[{x:0,p:0.45,given:true},{x:1,p:0.35,given:false},{x:2,p:0.20,given:false}],stage1Tiles:['0.35','0.20','0.30','0.15'],answer:0.75,interpretations:[{text:'On average, a student buys 0.75 portions of chips at lunch',correct:true},{text:'75% of students buy chips',correct:false},{text:'Most students buy 1 portion',correct:false},{text:'The canteen sells 0.75 portions per day',correct:false}],explanation:'E(X) = 0.75 portions per student. For a school with 200 students at lunch, the canteen should prepare about 150 portions (200 x 0.75).'},
+{id:'es_gcse_008',level:'gcse',context:'A board game uses a spinner numbered 1 to 3. The spinner is biased.',xLabel:'Spinner result (x)',table:[{x:1,p:'1/2',given:true},{x:2,p:'1/3',given:false},{x:3,p:'1/6',given:false}],stage1Tiles:['1/3','1/6','1/4','2/3'],answer:1.67,interpretations:[{text:'On average, the spinner scores 1.67 — closer to 1 or 2 than to 3',correct:true},{text:'The spinner always lands on 2',correct:false},{text:'1.67 rounds to 2, so the expected score is 2',correct:false},{text:'The spinner is fair because all numbers are possible',correct:false}],explanation:'E(X) = 1(1/2) + 2(1/3) + 3(1/6) = 1/2 + 2/3 + 1/2 = 5/3 = 1.67. The bias towards 1 pulls the expected value down.'},
+{id:'es_gcse_009',level:'gcse',context:'A shop records the number of returns per day.',xLabel:'Returns per day (x)',table:[{x:0,p:0.50,given:false},{x:1,p:0.30,given:true},{x:2,p:0.15,given:true},{x:3,p:0.05,given:false}],stage1Tiles:['0.50','0.05','0.40','0.10'],answer:0.75,interpretations:[{text:'On average, the shop handles 0.75 returns per day',correct:true},{text:'The shop gets a return 75% of days',correct:false},{text:'Most days have exactly 1 return',correct:false},{text:'The shop never gets more than 3 returns',correct:false}],explanation:'E(X) = 0.75 returns per day. Over a 6-day trading week, the shop expects about 4 to 5 returns (6 x 0.75 = 4.5).'},
+{id:'es_gcse_010',level:'gcse',context:'Year 11 students record how many GCSEs they expect to pass (grades 4-9). Only the range 5 to 8 is modelled.',xLabel:'GCSEs passed (x)',table:[{x:5,p:0.15,given:true},{x:6,p:0.30,given:false},{x:7,p:0.35,given:true},{x:8,p:0.20,given:false}],stage1Tiles:['0.30','0.20','0.25','0.40'],answer:6.60,interpretations:[{text:'On average, a Year 11 student expects to pass 6.6 GCSEs',correct:true},{text:'Most students pass exactly 7 GCSEs',correct:false},{text:'6.6 is the pass mark for GCSEs',correct:false},{text:'66% of students pass their GCSEs',correct:false}],explanation:'E(X) = 6.6 GCSEs is the average expected passes. This is useful for schools to plan support — students expecting fewer than 5 passes may need intervention.'},
+{id:'es_gcse_011',level:'gcse',context:'A fruit machine has 3 reels. X records the number of matching symbols.',xLabel:'Matching symbols (x)',table:[{x:0,p:0.60,given:false},{x:1,p:0.25,given:true},{x:2,p:0.10,given:true},{x:3,p:0.05,given:false}],stage1Tiles:['0.60','0.05','0.50','0.10'],answer:0.60,interpretations:[{text:'On average, 0.6 symbols match per spin',correct:true},{text:'60% of spins result in a match',correct:false},{text:'The machine pays out 60% of the time',correct:false},{text:'Most spins give 1 matching symbol',correct:false}],explanation:'E(X) = 0.6 matching symbols. Since you typically need 2 or 3 matches to win, the low E(X) shows the machine is designed to rarely pay out.'},
+{id:'es_gcse_012',level:'gcse',context:'A weather station records the number of hours of sunshine per day in November.',xLabel:'Hours of sunshine (x)',table:[{x:0,p:0.35,given:true},{x:1,p:0.30,given:false},{x:2,p:0.25,given:true},{x:3,p:0.10,given:false}],stage1Tiles:['0.30','0.10','0.20','0.15'],answer:1.10,interpretations:[{text:'On average, there are 1.1 hours of sunshine per day in November',correct:true},{text:'It is sunny for 1.1 hours every day without fail',correct:false},{text:'November has 1.1 sunny days',correct:false},{text:'110% of days have some sunshine',correct:false}],explanation:'E(X) = 1.1 hours per day. Over 30 days in November, that is about 33 hours of total sunshine — useful for solar panel planning or agriculture.'},
+{id:'es_gcse_013',level:'gcse',context:'A survey records the number of siblings each student in a class has.',xLabel:'Siblings (x)',table:[{x:0,p:0.20,given:false},{x:1,p:0.45,given:true},{x:2,p:0.25,given:true},{x:3,p:0.10,given:false}],stage1Tiles:['0.20','0.10','0.15','0.25'],answer:1.25,interpretations:[{text:'On average, a student has 1.25 siblings',correct:true},{text:'Most students have exactly 1 sibling',correct:false},{text:'25% of students have more than 1 sibling',correct:false},{text:'1.25 siblings means some students have 1.25 brothers or sisters',correct:false}],explanation:'E(X) = 1.25 siblings is the class average. No student has 1.25 siblings — it is a statistical average over the whole group.'},
+{id:'es_gcse_014',level:'gcse',context:'A gym records the number of classes each member attends per week.',xLabel:'Classes per week (x)',table:[{x:0,p:0.10,given:true},{x:1,p:0.25,given:false},{x:2,p:0.40,given:true},{x:3,p:0.25,given:false}],stage1Tiles:['0.25','0.25','0.15','0.35'],answer:1.80,interpretations:[{text:'On average, a member attends 1.8 classes per week',correct:true},{text:'Members attend exactly 2 classes most weeks',correct:false},{text:'80% of members attend at least 1 class',correct:false},{text:'The gym runs 1.8 classes per week',correct:false}],explanation:'E(X) = 1.8 classes per week per member. The gym can use this to forecast attendance — if they have 500 members, they expect about 900 attendances per week.'},
+{id:'es_gcse_015',level:'gcse',context:'A bakery records the number of loaves of bread left unsold at closing time.',xLabel:'Unsold loaves (x)',table:[{x:0,p:0.30,given:false},{x:1,p:0.35,given:true},{x:2,p:0.25,given:true},{x:3,p:0.10,given:false}],stage1Tiles:['0.30','0.10','0.20','0.15'],answer:1.15,interpretations:[{text:'On average, 1.15 loaves are left unsold each day',correct:true},{text:'The bakery wastes exactly 1 loaf per day',correct:false},{text:'15% of bread is wasted',correct:false},{text:'The bakery should bake 1.15 fewer loaves',correct:false}],explanation:'E(X) = 1.15 unsold loaves per day. Over a 6-day week, that is about 7 wasted loaves — the bakery can use this to adjust production.'}
+],
+alevel: [
+{id:'es_alevel_001',level:'alevel',context:'A discrete random variable X has the probability distribution shown, where k is a constant.',xLabel:'x',table:[{x:1,p:'k',given:false},{x:2,p:'2k',given:false},{x:3,p:'3k',given:true},{x:4,p:'4k',given:true}],stage1Tiles:['0.1','0.2','0.3','0.15'],answer:3.00,interpretations:[{text:'E(X) = 3, meaning the long-run average of X is 3',correct:true},{text:'X = 3 is the most likely outcome',correct:false},{text:'The median of X is 3',correct:false},{text:'P(X = 3) is the highest probability',correct:false}],explanation:'Since k + 2k + 3k + 4k = 10k = 1, we get k = 0.1. So P(X=1)=0.1, P(X=2)=0.2, P(X=3)=0.3, P(X=4)=0.4. E(X) = 0.1 + 0.4 + 0.9 + 1.6 = 3.0.',kValue:0.1,kExplanation:'k + 2k + 3k + 4k = 10k = 1, so k = 0.1'},
+{id:'es_alevel_002',level:'alevel',context:'A discrete random variable X has the probability distribution shown, where k is a constant.',xLabel:'x',table:[{x:0,p:'3k',given:false},{x:1,p:'4k',given:true},{x:2,p:'2k',given:true},{x:3,p:'k',given:false}],stage1Tiles:['0.3','0.1','0.2','0.15'],answer:1.10,interpretations:[{text:'E(X) = 1.1, so X takes values close to 1 on average',correct:true},{text:'X = 1 occurs more than any other value',correct:false},{text:'The variance of X is 1.1',correct:false},{text:'1.1 is the probability of the most likely outcome',correct:false}],explanation:'3k + 4k + 2k + k = 10k = 1, so k = 0.1. E(X) = 0(0.3) + 1(0.4) + 2(0.2) + 3(0.1) = 0 + 0.4 + 0.4 + 0.3 = 1.1.',kValue:0.1,kExplanation:'3k + 4k + 2k + k = 10k = 1, so k = 0.1'},
+{id:'es_alevel_003',level:'alevel',context:'A discrete random variable X has the probability distribution shown, where k is a constant.',xLabel:'x',table:[{x:1,p:'k',given:false},{x:2,p:'k',given:true},{x:3,p:'2k',given:true},{x:4,p:'k',given:false}],stage1Tiles:['0.2','0.2','0.1','0.3'],answer:2.60,interpretations:[{text:'E(X) = 2.6, the long-run average value of X',correct:true},{text:'X = 3 is the most probable outcome because P(X=3)=2k is largest',correct:false},{text:'2.6 is the variance of the distribution',correct:false},{text:'60% of outcomes exceed the mean',correct:false}],explanation:'k + k + 2k + k = 5k = 1, so k = 0.2. E(X) = 1(0.2) + 2(0.2) + 3(0.4) + 4(0.2) = 0.2 + 0.4 + 1.2 + 0.8 = 2.6.',kValue:0.2,kExplanation:'k + k + 2k + k = 5k = 1, so k = 0.2'},
+{id:'es_alevel_004',level:'alevel',context:'The number of breakdowns per week for a machine is modelled by the random variable X.',xLabel:'Breakdowns (x)',table:[{x:0,p:0.45,given:true},{x:1,p:0.30,given:false},{x:2,p:0.20,given:true},{x:3,p:0.05,given:false}],stage1Tiles:['0.30','0.05','0.25','0.10'],answer:0.85,interpretations:[{text:'On average, the machine breaks down 0.85 times per week; the maintenance budget should reflect this',correct:true},{text:'The machine is more likely to break down than not in any given week',correct:false},{text:'The machine breaks down in 85% of weeks',correct:false},{text:'The variance of breakdowns is 0.85',correct:false}],explanation:'E(X) = 0(0.45) + 1(0.30) + 2(0.20) + 3(0.05) = 0.85. Less than 1 breakdown per week on average, but P(X >= 1) = 0.55, so breakdowns are more likely than not.'},
+{id:'es_alevel_005',level:'alevel',context:'A game involves rolling a die. You win \u00a3(X-1) where X is the score. The game costs \u00a32.50 to play.',xLabel:'Winnings \u00a3(x-1)',table:[{x:0,p:'1/6',given:true},{x:1,p:'1/6',given:false},{x:2,p:'1/6',given:true},{x:3,p:'1/6',given:true},{x:4,p:'1/6',given:false},{x:5,p:'1/6',given:true}],stage1Tiles:['1/6','1/6','1/3','1/2'],answer:2.50,interpretations:[{text:'E(X) = \u00a32.50, exactly equal to the cost — the game is fair',correct:true},{text:'You always win \u00a32.50',correct:false},{text:'You will make a profit in the long run',correct:false},{text:'The game is unfair because the die is biased',correct:false}],explanation:'E(X) = (0+1+2+3+4+5)/6 = 15/6 = 2.50. Since this equals the cost, the game is fair — neither player nor house has a long-run advantage.'},
+{id:'es_alevel_006',level:'alevel',context:'The random variable X represents the number of defective items in a batch of 4.',xLabel:'Defective items (x)',table:[{x:0,p:0.6561,given:true},{x:1,p:0.2916,given:false},{x:2,p:0.0486,given:true},{x:3,p:0.0036,given:true},{x:4,p:0.0001,given:false}],stage1Tiles:['0.2916','0.0001','0.3000','0.0004'],answer:0.40,interpretations:[{text:'On average, 0.4 items per batch are defective — consistent with a 10% defect rate across 4 items',correct:true},{text:'40% of batches contain a defective item',correct:false},{text:'The probability of a defect is 0.4',correct:false},{text:'Each batch has exactly 0.4 defective items',correct:false}],explanation:'E(X) = 0.4 defects per batch. This is consistent with Bin(4, 0.1) where E(X) = np = 4(0.1) = 0.4. The probabilities follow the binomial distribution.'},
+{id:'es_alevel_007',level:'alevel',context:'A continuous random variable is approximated by the discrete distribution shown, modelling call duration in minutes.',xLabel:'Duration (minutes, x)',table:[{x:1,p:0.10,given:false},{x:3,p:0.25,given:true},{x:5,p:0.35,given:true},{x:7,p:0.20,given:false},{x:10,p:0.10,given:true}],stage1Tiles:['0.10','0.20','0.15','0.30'],answer:5.00,interpretations:[{text:'On average, a call lasts 5 minutes; the company can use this to estimate staffing and line capacity',correct:true},{text:'Most calls last about 5 minutes',correct:false},{text:'5 minutes is the median call length',correct:false},{text:'The standard deviation of call lengths is 5',correct:false}],explanation:'E(X) = 1(0.10) + 3(0.25) + 5(0.35) + 7(0.20) + 10(0.10) = 0.10 + 0.75 + 1.75 + 1.40 + 1.00 = 5.00. The average call lasts exactly 5 minutes.'},
+{id:'es_alevel_008',level:'alevel',context:'In a decision theory problem, a company must choose between two projects. Project A has returns modelled by X.',xLabel:'Return (\u00a3000s, x)',table:[{x:-10,p:0.15,given:true},{x:0,p:0.25,given:false},{x:10,p:0.35,given:true},{x:20,p:0.25,given:false}],stage1Tiles:['0.25','0.25','0.30','0.20'],answer:7.00,interpretations:[{text:'The expected return of Project A is \u00a37,000; a risk-neutral decision maker would choose this over any project with lower E(X)',correct:true},{text:'Project A always makes \u00a37,000 profit',correct:false},{text:'The most likely return is \u00a37,000',correct:false},{text:'There is a 70% chance of making a profit',correct:false}],explanation:'E(X) = -10(0.15) + 0(0.25) + 10(0.35) + 20(0.25) = -1.5 + 0 + 3.5 + 5.0 = 7.0. The expected return is \u00a37,000. A risk-averse decision maker might still reject this due to the 15% chance of a \u00a310,000 loss.'},
+{id:'es_alevel_009',level:'alevel',context:'The discrete random variable X has probability function P(X = x) = x/10 for x = 1, 2, 3, 4.',xLabel:'x',table:[{x:1,p:0.10,given:true},{x:2,p:0.20,given:false},{x:3,p:0.30,given:true},{x:4,p:0.40,given:false}],stage1Tiles:['0.20','0.40','0.25','0.35'],answer:3.00,interpretations:[{text:'E(X) = 3; higher values of X are more likely so the mean is pulled towards the upper end',correct:true},{text:'3 is both the mean and mode of this distribution',correct:false},{text:'The distribution is symmetric about 3',correct:false},{text:'P(X > 3) = P(X < 3)',correct:false}],explanation:'E(X) = 1(0.1) + 2(0.2) + 3(0.3) + 4(0.4) = 0.1 + 0.4 + 0.9 + 1.6 = 3.0. The linearly increasing probabilities create a right-skewed distribution with E(X) = 3.'},
+{id:'es_alevel_010',level:'alevel',context:'A random variable X models the profit (in hundreds of pounds) from a stock trade. Losses are shown as negative values.',xLabel:'Profit (\u00a3100s, x)',table:[{x:-2,p:0.20,given:false},{x:0,p:0.30,given:true},{x:1,p:0.30,given:true},{x:3,p:0.20,given:false}],stage1Tiles:['0.20','0.20','0.15','0.25'],answer:0.50,interpretations:[{text:'The expected profit is \u00a350; on average the trade is profitable but with high variance',correct:true},{text:'The trader always makes \u00a350 profit',correct:false},{text:'There is a 50% chance of making a profit',correct:false},{text:'The median profit is \u00a350',correct:false}],explanation:'E(X) = -2(0.20) + 0(0.30) + 1(0.30) + 3(0.20) = -0.40 + 0 + 0.30 + 0.60 = 0.50. Expected profit is \u00a350 but P(loss) = 0.20, so there is real downside risk despite positive E(X).'}
+]
+};
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let currentLevel = 'core';
+let sessionLength = 8;
+let questionQueue = [];
+let currentQIndex = 0;
+let currentQ = null;
+let totalScore = 0;
+let maxScore = 0;
+let currentStage = 1;
+let stage1Attempts = 0;
+let stage2Attempts = 0;
+let stage3Attempts = 0;
+let stage1Perfect = true;
+let stage2Perfect = true;
+let stage3Correct = false;
+let selectedCell = null;
+let selectedSlot = null;
+let filledCells = {};
+let filledSlots = {};
+let selectedInterp = null;
+let questionPoints = 0;
+let completedTable = [];
+
+// ============================================================
+//  INIT
+// ============================================================
+(function init() {
+  const params = new URLSearchParams(window.location.search);
+  const lvl = params.get('level');
+  if (lvl && QUESTIONS[lvl]) {
+    currentLevel = lvl;
+  }
+  // Set level button
+  document.querySelectorAll('.level-btn').forEach(b => {
+    b.classList.toggle('selected', b.dataset.level === currentLevel);
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.level-btn').forEach(x => x.classList.remove('selected'));
+      b.classList.add('selected');
+      currentLevel = b.dataset.level;
+      renderSessionButtons();
+      updatePBDisplay();
+    });
+  });
+  renderSessionButtons();
+  updatePBDisplay();
+})();
+
+function renderSessionButtons() {
+  MaffsSession.render({
+    mount: document.getElementById('sessionSelect'),
+    poolSize: (QUESTIONS[currentLevel] || []).length,
+    selected: sessionLength,
+    onChange: count => { sessionLength = count; }
+  });
+}
+
+function updatePBDisplay() {
+  const pb = getPB();
+  const el = document.getElementById('pbDisplay');
+  if (pb !== null) {
+    el.innerHTML = 'Personal best: <span>' + pb + '%</span>';
+  } else {
+    el.innerHTML = '';
+  }
+}
+
+function getPB() {
+  const val = localStorage.getItem('mfg_es_pb_' + currentLevel);
+  return val ? parseInt(val) : null;
+}
+
+function setPB(pct) {
+  localStorage.setItem('mfg_es_pb_' + currentLevel, pct);
+}
+
+// ============================================================
+//  START / RESET
+// ============================================================
+function startGame() {
+  const bank = QUESTIONS[currentLevel];
+  if (!bank || bank.length === 0) return;
+  questionQueue = shuffle([...bank]).slice(0, Math.min(sessionLength, bank.length));
+  currentQIndex = 0;
+  totalScore = 0;
+  maxScore = 0;
+  showScreen('gameScreen');
+  document.getElementById('gameHeader').style.display = '';
+  updateLevelPill();
+  updateScoreDisplay();
+  updateProgress();
+  if (typeof mfg === 'function') {
+    mfg('game_started', { game_slug: 'expectation-station', level: currentLevel });
+  }
+  loadQuestion();
+}
+
+function resetToStart() {
+  showScreen('startScreen');
+  document.getElementById('gameHeader').style.display = 'none';
+  updatePBDisplay();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function updateLevelPill() {
+  const pill = document.getElementById('levelPill');
+  pill.className = 'level-pill ' + currentLevel;
+  const labels = { core: 'Core', gcse: 'GCSE', alevel: 'A-Level' };
+  pill.textContent = labels[currentLevel] || currentLevel;
+}
+
+function updateScoreDisplay() {
+  document.getElementById('scoreNum').textContent = totalScore;
+  document.getElementById('scoreMax').textContent = maxScore;
+}
+
+function updateProgress() {
+  const pct = questionQueue.length > 0 ? (currentQIndex / questionQueue.length) * 100 : 0;
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+function updateStagePill(stage) {
+  const pill = document.getElementById('stagePill');
+  pill.textContent = 'Stage ' + stage + ' of 3';
+}
+
+// ============================================================
+//  LOAD QUESTION
+// ============================================================
+function loadQuestion() {
+  if (currentQIndex >= questionQueue.length) {
+    showResults();
+    return;
+  }
+  currentQ = questionQueue[currentQIndex];
+  currentStage = 1;
+  stage1Attempts = 0;
+  stage2Attempts = 0;
+  stage3Attempts = 0;
+  stage1Perfect = true;
+  stage2Perfect = true;
+  stage3Correct = false;
+  selectedCell = null;
+  selectedSlot = null;
+  selectedInterp = null;
+  filledCells = {};
+  filledSlots = {};
+  questionPoints = 0;
+  completedTable = [];
+
+  // For A-Level k questions, resolve k values into actual probabilities
+  resolveKValues();
+
+  document.getElementById('contextText').textContent = currentQ.context;
+  updateStagePill(1);
+  hideFeedback();
+  document.getElementById('explanationPanel').classList.remove('show');
+  document.getElementById('nextBtn').style.display = 'none';
+
+  document.getElementById('stage1Wrap').style.display = '';
+  document.getElementById('stage2Wrap').style.display = 'none';
+  document.getElementById('stage3Wrap').style.display = 'none';
+
+  renderStage1();
+  updateProgress();
+}
+
+function resolveKValues() {
+  // For A-Level questions with k parameters, the table p values may be strings like 'k', '2k' etc.
+  // We need the resolved numeric values for computation
+  if (currentQ.kValue !== undefined) {
+    const k = currentQ.kValue;
+    completedTable = currentQ.table.map(row => {
+      let pNum;
+      if (typeof row.p === 'string' && row.p.includes('k')) {
+        const coeff = row.p.replace('k', '');
+        pNum = (coeff === '' || coeff === '+') ? k : parseFloat(coeff) * k;
+      } else if (typeof row.p === 'string' && row.p.includes('/')) {
+        const parts = row.p.split('/');
+        pNum = parseFloat(parts[0]) / parseFloat(parts[1]);
+      } else {
+        pNum = parseFloat(row.p);
+      }
+      return { x: row.x, p: pNum, given: row.given, xr: ratOfX(row.x), pr: ratOfP(row.p, k) };
+    });
+  } else {
+    completedTable = currentQ.table.map(row => {
+      let pNum;
+      if (typeof row.p === 'string' && row.p.includes('/')) {
+        const parts = row.p.split('/');
+        pNum = parseFloat(parts[0]) / parseFloat(parts[1]);
+      } else {
+        pNum = parseFloat(row.p);
+      }
+      return { x: row.x, p: pNum, given: row.given, xr: ratOfX(row.x), pr: ratOfP(row.p, null) };
+    });
+  }
+  computeDisplayMode();
+}
+
+// The same three shapes the bank uses for p, read exactly: a k-multiple, an
+// "a/b" fraction, or a decimal literal.
+function ratOfP(raw, k) {
+  if (typeof raw === 'string' && raw.includes('k')) {
+    const coeff = raw.replace('k', '').trim();
+    const c = (coeff === '' || coeff === '+') ? { n: 1, d: 1 } : ratFromString(coeff);
+    return ratMul(c, ratFromString(String(k)));
+  }
+  return ratFromString(String(raw));
+}
+
+function ratOfX(x) { return ratFromString(String(x)); }
+
+// ============================================================
+//  STAGE 1: PROBABILITY TABLE
+// ============================================================
+function renderStage1() {
+  const table = document.getElementById('probTable');
+  const headerRow = '<tr><th>' + currentQ.xLabel + '</th>' +
+    currentQ.table.map(r => '<th>' + formatX(r.x) + '</th>').join('') + '</tr>';
+  const dataRow = '<tr><td style="background:var(--navy);color:#fff;font-weight:600">P(X = x)</td>' +
+    currentQ.table.map((r, i) => {
+      if (r.given) {
+        return '<td>' + formatP(r.p) + '</td>';
+      } else {
+        return '<td class="missing" id="cell_' + i + '" onclick="selectCell(' + i + ')">' +
+          (filledCells[i] !== undefined ? filledCells[i] : '?') + '</td>';
+      }
+    }).join('') + '</tr>';
+  table.innerHTML = headerRow + dataRow;
+
+  // Tile bank
+  const tileWrap = document.getElementById('stage1Tiles');
+  tileWrap.innerHTML = '';
+  currentQ.stage1Tiles.forEach((t, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tile';
+    btn.textContent = t;
+    btn.id = 'tile1_' + i;
+    if (Object.values(filledCells).includes(t) && countInObj(filledCells, t) >= countInArr(currentQ.stage1Tiles, t)) {
+      btn.classList.add('used');
+    }
+    btn.addEventListener('click', () => placeTileInCell(t, i));
+    tileWrap.appendChild(btn);
+  });
+
+  document.getElementById('checkStage1').disabled = !allCellsFilled();
+  document.getElementById('checkStage1').style.display = '';
+  document.getElementById('sumWarning').classList.remove('show');
+}
+
+function selectCell(idx) {
+  document.querySelectorAll('.missing').forEach(c => c.classList.remove('selected-cell'));
+  selectedCell = idx;
+  const el = document.getElementById('cell_' + idx);
+  if (el) el.classList.add('selected-cell');
+}
+
+function placeTileInCell(value, tileIdx) {
+  if (selectedCell === null) {
+    // Auto-select first empty cell
+    const missing = currentQ.table.map((r, i) => (!r.given && filledCells[i] === undefined) ? i : -1).filter(i => i >= 0);
+    if (missing.length > 0) selectedCell = missing[0];
+    else return;
+  }
+  filledCells[selectedCell] = value;
+  selectedCell = null;
+  renderStage1();
+  // Auto-select next empty cell
+  const next = currentQ.table.map((r, i) => (!r.given && filledCells[i] === undefined) ? i : -1).filter(i => i >= 0);
+  if (next.length > 0) selectCell(next[0]);
+}
+
+function allCellsFilled() {
+  return currentQ.table.every((r, i) => r.given || filledCells[i] !== undefined);
+}
+
+function checkStage1() {
+  stage1Attempts++;
+  // Check sum to 1
+  let sum = 0;
+  let allCorrect = true;
+  currentQ.table.forEach((r, i) => {
+    const correctP = completedTable[i].p;
+    if (!r.given) {
+      const studentVal = parseFrac(filledCells[i]);
+      const cell = document.getElementById('cell_' + i);
+      if (Math.abs(studentVal - correctP) < 0.001) {
+        cell.classList.remove('missing');
+        cell.classList.add('correct-cell');
+        cell.onclick = null;
+      } else {
+        cell.classList.add('incorrect-cell');
+        allCorrect = false;
+      }
+      sum += studentVal;
+    } else {
+      sum += correctP;
+    }
+  });
+
+  // Check if probabilities sum to 1
+  if (Math.abs(sum - 1.0) > 0.01 && !allCorrect) {
+    document.getElementById('sumWarning').classList.add('show');
+  }
+
+  if (typeof mfg === 'function') {
+    mfg('question_answered', {
+      game_slug: 'expectation-station',
+      level: currentLevel,
+      question_index: currentQIndex + 1,
+      correct: allCorrect,
+      attempts: stage1Attempts,
+      mode: 'stage1'
+    });
+  }
+
+  if (allCorrect) {
+    showStageFeedback('Table complete!', 'good');
+    document.getElementById('sumWarning').classList.remove('show');
+    document.getElementById('stage1Tiles').innerHTML = '';
+    document.getElementById('checkStage1').style.display = 'none';
+    setTimeout(() => transitionToStage2(), 800);
+  } else if (stage1Attempts >= 2) {
+    // Reveal correct answers
+    stage1Perfect = false;
+    currentQ.table.forEach((r, i) => {
+      if (!r.given) {
+        const cell = document.getElementById('cell_' + i);
+        cell.classList.remove('missing', 'incorrect-cell');
+        cell.classList.add('correct-cell');
+        cell.textContent = formatP(completedTable[i].p);
+        cell.onclick = null;
+        cell.style.cursor = 'default';
+      }
+    });
+    showStageFeedback('Correct values revealed', 'bad');
+    document.getElementById('sumWarning').classList.remove('show');
+    document.getElementById('stage1Tiles').innerHTML = '';
+    document.getElementById('checkStage1').style.display = 'none';
+    setTimeout(() => transitionToStage2(), 1200);
+  } else {
+    stage1Perfect = false;
+    showStageFeedback('Some values are incorrect. Try again.', 'bad');
+    // Allow retry: reset incorrect cells
+    setTimeout(() => {
+      currentQ.table.forEach((r, i) => {
+        if (!r.given) {
+          const cell = document.getElementById('cell_' + i);
+          if (cell && cell.classList.contains('incorrect-cell')) {
+            cell.classList.remove('incorrect-cell');
+            cell.classList.add('missing');
+            delete filledCells[i];
+            cell.textContent = '?';
+            cell.onclick = () => selectCell(i);
+          }
+        }
+      });
+      renderStage1();
+      hideFeedback();
+    }, 1000);
+  }
+}
+
+// ============================================================
+//  STAGE 2: E(X) CALCULATION
+// ============================================================
+function transitionToStage2() {
+  currentStage = 2;
+  updateStagePill(2);
+  hideFeedback();
+  document.getElementById('stage1Wrap').style.display = 'none';
+  document.getElementById('stage2Wrap').style.display = '';
+  renderStage2();
+}
+
+function renderStage2() {
+  // Show completed table (read-only)
+  const tableFinal = document.getElementById('probTableFinal');
+  const headerRow = '<tr><th>' + currentQ.xLabel + '</th>' +
+    completedTable.map(r => '<th>' + formatX(r.x) + '</th>').join('') + '</tr>';
+  const dataRow = '<tr><td style="background:var(--navy);color:#fff;font-weight:600">P(X = x)</td>' +
+    completedTable.map(r => '<td>' + pDisplayHTML(r) + '</td>').join('') + '</tr>';
+  tableFinal.innerHTML = headerRow + dataRow;
+
+  // Build E(X) formula with slots for products
+  const formula = document.getElementById('exFormula');
+  formula.innerHTML = '<span>E(X) = </span>';
+
+  // Compute expected products exactly
+  const products = productRats();
+
+  completedTable.forEach((r, i) => {
+    if (i > 0) {
+      const plus = document.createElement('span');
+      plus.textContent = ' + ';
+      formula.appendChild(plus);
+    }
+    const wrap = document.createElement('span');
+    wrap.innerHTML = '(' + formatX(r.x) + ' \u00d7 ' + pDisplayHTML(r) + ') = ';
+    formula.appendChild(wrap);
+
+    const slot = document.createElement('span');
+    slot.className = 'ex-slot';
+    slot.id = 'slot_' + i;
+    if (filledSlots[i] !== undefined) {
+      renderValue(slot, ratFromKey(filledSlots[i]));
+      slot.classList.add('filled-slot');
+    } else {
+      slot.textContent = '?';
+    }
+    slot.addEventListener('click', () => selectSlot(i));
+    formula.appendChild(slot);
+  });
+
+  // Tile bank for stage 2: correct products + distractors, carried as keys
+  const correctKeys = products.map(ratKey);
+  const distractors = generateProductDistractors(products, completedTable);
+  const allTiles = shuffle([...correctKeys, ...distractors]);
+
+  const tileWrap = document.getElementById('stage2Tiles');
+  tileWrap.innerHTML = '';
+  allTiles.forEach((t, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tile';
+    btn.dataset.val = t;
+    renderValue(btn, ratFromKey(t));
+    btn.id = 'tile2_' + i;
+    if (Object.values(filledSlots).includes(t) && countInObj(filledSlots, t) >= countInArr(allTiles, t)) {
+      btn.classList.add('used');
+    }
+    btn.addEventListener('click', () => placeTileInSlot(t, i));
+    tileWrap.appendChild(btn);
+  });
+
+  document.getElementById('checkStage2').disabled = !allSlotsFilled();
+  document.getElementById('checkStage2').style.display = '';
+}
+
+function selectSlot(idx) {
+  document.querySelectorAll('.ex-slot').forEach(s => s.classList.remove('selected-slot'));
+  selectedSlot = idx;
+  const el = document.getElementById('slot_' + idx);
+  if (el) el.classList.add('selected-slot');
+}
+
+function placeTileInSlot(value, tileIdx) {
+  if (selectedSlot === null) {
+    const empty = completedTable.map((_, i) => filledSlots[i] === undefined ? i : -1).filter(i => i >= 0);
+    if (empty.length > 0) selectedSlot = empty[0];
+    else return;
+  }
+  filledSlots[selectedSlot] = value;
+  selectedSlot = null;
+  renderStage2();
+  const next = completedTable.map((_, i) => filledSlots[i] === undefined ? i : -1).filter(i => i >= 0);
+  if (next.length > 0) selectSlot(next[0]);
+}
+
+function allSlotsFilled() {
+  return completedTable.every((_, i) => filledSlots[i] !== undefined);
+}
+
+function checkStage2() {
+  stage2Attempts++;
+  const products = productRats();
+  let allCorrect = true;
+
+  completedTable.forEach((r, i) => {
+    const slot = document.getElementById('slot_' + i);
+    // Canonical keys, so marking never depends on how the tile was drawn or
+    // on a tolerance that a rounded display could fall outside of.
+    if (filledSlots[i] === ratKey(products[i])) {
+      slot.classList.add('correct-slot');
+      slot.classList.remove('ex-slot');
+    } else {
+      slot.classList.add('incorrect-slot');
+      allCorrect = false;
+    }
+  });
+
+  if (typeof mfg === 'function') {
+    mfg('question_answered', {
+      game_slug: 'expectation-station',
+      level: currentLevel,
+      question_index: currentQIndex + 1,
+      correct: allCorrect,
+      attempts: stage2Attempts,
+      mode: 'stage2'
+    });
+  }
+
+  if (allCorrect) {
+    showStageFeedback('E(X) calculated correctly!', 'good');
+    document.getElementById('stage2Tiles').innerHTML = '';
+    document.getElementById('checkStage2').style.display = 'none';
+    setTimeout(() => transitionToStage3(), 800);
+  } else if (stage2Attempts >= 2) {
+    stage2Perfect = false;
+    completedTable.forEach((r, i) => {
+      const slot = document.getElementById('slot_' + i);
+      slot.classList.remove('incorrect-slot');
+      slot.classList.add('correct-slot');
+      renderValue(slot, products[i]);
+    });
+    showStageFeedback('Correct products revealed', 'bad');
+    document.getElementById('stage2Tiles').innerHTML = '';
+    document.getElementById('checkStage2').style.display = 'none';
+    setTimeout(() => transitionToStage3(), 1200);
+  } else {
+    stage2Perfect = false;
+    showStageFeedback('Some products are incorrect. Try again.', 'bad');
+    setTimeout(() => {
+      completedTable.forEach((r, i) => {
+        const slot = document.getElementById('slot_' + i);
+        if (slot && slot.classList.contains('incorrect-slot')) {
+          slot.classList.remove('incorrect-slot');
+          slot.classList.add('ex-slot');
+          delete filledSlots[i];
+          slot.textContent = '?';
+        }
+      });
+      renderStage2();
+      hideFeedback();
+    }, 1000);
+  }
+}
+
+// ============================================================
+//  STAGE 3: INTERPRETATION
+// ============================================================
+function transitionToStage3() {
+  currentStage = 3;
+  updateStagePill(3);
+  hideFeedback();
+  document.getElementById('stage2Wrap').style.display = 'none';
+  document.getElementById('stage3Wrap').style.display = '';
+  renderStage3();
+}
+
+function renderStage3() {
+  // E(X) is the exact sum of the products the student just placed, so the
+  // figures on screen always reconcile. The bank's answer field is not used.
+  renderRat(document.getElementById('exResultValue'), exactEX(), true);
+
+  // Render interpretation cards
+  const wrap = document.getElementById('interpCards');
+  wrap.innerHTML = '';
+  const shuffledInterps = shuffle([...currentQ.interpretations]);
+  currentQ._shuffledInterps = shuffledInterps;
+
+  shuffledInterps.forEach((interp, i) => {
+    const card = document.createElement('div');
+    card.className = 'interp-card';
+    card.textContent = interp.text;
+    card.id = 'interp_' + i;
+    card.addEventListener('click', () => {
+      if (card.classList.contains('disabled-interp')) return;
+      document.querySelectorAll('.interp-card').forEach(c => c.classList.remove('selected-interp'));
+      card.classList.add('selected-interp');
+      selectedInterp = i;
+      document.getElementById('checkStage3').disabled = false;
+    });
+    wrap.appendChild(card);
+  });
+
+  document.getElementById('checkStage3').disabled = true;
+  document.getElementById('checkStage3').style.display = '';
+}
+
+function checkStage3() {
+  stage3Attempts++;
+  const chosen = currentQ._shuffledInterps[selectedInterp];
+  const correct = chosen.correct;
+
+  if (typeof mfg === 'function') {
+    mfg('question_answered', {
+      game_slug: 'expectation-station',
+      level: currentLevel,
+      question_index: currentQIndex + 1,
+      correct: correct,
+      attempts: stage3Attempts,
+      mode: 'stage3'
+    });
+  }
+
+  if (correct) {
+    stage3Correct = true;
+    document.getElementById('interp_' + selectedInterp).classList.add('correct-interp');
+    document.querySelectorAll('.interp-card').forEach(c => c.classList.add('disabled-interp'));
+    showStageFeedback('Correct interpretation!', 'good');
+    document.getElementById('checkStage3').style.display = 'none';
+    finishQuestion();
+  } else if (stage3Attempts >= 2) {
+    stage3Correct = false;
+    document.getElementById('interp_' + selectedInterp).classList.add('incorrect-interp');
+    // Reveal correct
+    currentQ._shuffledInterps.forEach((interp, i) => {
+      if (interp.correct) {
+        document.getElementById('interp_' + i).classList.add('reveal-correct');
+      }
+      document.getElementById('interp_' + i).classList.add('disabled-interp');
+    });
+    showStageFeedback('Incorrect. The correct interpretation is highlighted.', 'bad');
+    document.getElementById('checkStage3').style.display = 'none';
+    finishQuestion();
+  } else {
+    document.getElementById('interp_' + selectedInterp).classList.add('incorrect-interp');
+    document.getElementById('interp_' + selectedInterp).classList.add('disabled-interp');
+    showStageFeedback('Not quite. Try again.', 'bad');
+    selectedInterp = null;
+    document.getElementById('checkStage3').disabled = true;
+    _addDismiss(document.getElementById('stageFeedback'), () => hideFeedback());
+  }
+}
+
+// ============================================================
+//  FINISH QUESTION
+// ============================================================
+function finishQuestion() {
+  // Calculate points
+  if (stage1Attempts > 2) {
+    // Stage 1 was never completed (revealed)
+    questionPoints = 0;
+  } else if (stage1Perfect && stage2Perfect && stage3Correct) {
+    questionPoints = 3;
+  } else if (stage3Correct) {
+    questionPoints = 2;
+  } else {
+    questionPoints = 1;
+  }
+
+  totalScore += questionPoints;
+  maxScore += 3;
+  updateScoreDisplay();
+
+  // Show explanation
+  document.getElementById('explanationText').textContent = currentQ.explanation;
+  setTimeout(() => {
+    document.getElementById('explanationPanel').classList.add('show');
+    document.getElementById('nextBtn').style.display = '';
+  }, 500);
+}
+
+function nextQuestion() {
+  currentQIndex++;
+  updateProgress();
+  if (currentQIndex >= questionQueue.length) {
+    showResults();
+  } else {
+    loadQuestion();
+  }
+}
+
+// ============================================================
+//  RESULTS
+// ============================================================
+function showResults() {
+  document.getElementById('gameHeader').style.display = 'none';
+  showScreen('resultsScreen');
+
+  const pct = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
+  document.getElementById('finalScore').textContent = totalScore + ' / ' + maxScore;
+  document.getElementById('finalPct').textContent = pct + '%';
+
+  // PB
+  const oldPB = getPB();
+  const isNewPB = sessionLength >= 8 && (oldPB === null || pct > oldPB);
+  if (isNewPB) {
+    const prevBest = oldPB || 0;
+    setPB(pct);
+    document.getElementById('pbBadge').style.display = '';
+    document.getElementById('pbLine').textContent = 'Previous best: ' + prevBest + '%';
+    if (typeof mfg === 'function') {
+      mfg('personal_best_set', {
+        game_slug: 'expectation-station',
+        level: currentLevel,
+        score: pct,
+        previous_best: prevBest
+      });
+    }
+  } else {
+    document.getElementById('pbBadge').style.display = 'none';
+    document.getElementById('pbLine').textContent = oldPB !== null ? 'Personal best: ' + oldPB + '%' : '';
+  }
+
+  if (typeof mfg === 'function') {
+    mfg('game_completed', {
+      game_slug: 'expectation-station',
+      level: currentLevel,
+      score: totalScore,
+      questions_answered: questionQueue.length,
+      questions_correct: Math.floor(totalScore / 3)
+    });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('expectation-station',currentLevel,totalScore,questionQueue.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('expectation-station',currentLevel,totalScore);}}
+  }
+}
+
+// ============================================================
+//  HELPERS
+// ============================================================
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ============================================================
+//  EXACT RATIONALS
+//  Products and E(X) are built from the bank's own strings rather than from
+//  floats, so nothing displayed or marked depends on a rounding step. A value
+//  is one reduced {n, d}; its canonical key "n/d" is what tiles carry and what
+//  Stage 2 marks on, so a tile is never identified by the text drawn on it.
+// ============================================================
+function ratGcd(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) { const t = a % b; a = b; b = t; }
+  return a || 1;
+}
+
+function rat(n, d) {
+  if (d < 0) { n = -n; d = -d; }
+  const g = ratGcd(n, d);
+  return { n: n / g, d: d / g };
+}
+
+function ratMul(a, b) { return rat(a.n * b.n, a.d * b.d); }
+function ratAdd(a, b) { return rat(a.n * b.d + b.n * a.d, a.d * b.d); }
+function ratNum(a) { return a.n / a.d; }
+function ratKey(a) { return a.n + '/' + a.d; }
+function ratFromKey(k) { const p = k.split('/'); return { n: +p[0], d: +p[1] }; }
+
+// Exact: a decimal string is read by its digits, never through parseFloat.
+function ratFromString(s) {
+  s = String(s).trim();
+  if (s.includes('/')) {
+    const p = s.split('/');
+    const a = ratFromString(p[0]), b = ratFromString(p[1]);
+    return rat(a.n * b.d, a.d * b.n);
+  }
+  let neg = false;
+  if (s[0] === '-') { neg = true; s = s.slice(1); }
+  const dot = s.indexOf('.');
+  let n, d;
+  if (dot < 0) { n = parseInt(s || '0', 10); d = 1; }
+  else {
+    const frac = s.slice(dot + 1);
+    n = parseInt((s.slice(0, dot) || '0') + frac, 10);
+    d = Math.pow(10, frac.length);
+  }
+  return rat(neg ? -n : n, d);
+}
+
+// A value is showable as an exact decimal exactly when its denominator divides 10^4.
+function ratIsDecimal(a) { return 10000 % a.d === 0; }
+
+function ratDecimalString(a) {
+  const scale = 10000 / a.d;
+  let units = Math.abs(a.n) * scale;
+  let s = String(units).padStart(5, '0');
+  let whole = s.slice(0, s.length - 4);
+  let frac = s.slice(s.length - 4).replace(/0+$/, '');
+  return (a.n < 0 ? '\u2212' : '') + whole + (frac ? '.' + frac : '');
+}
+
+// Half-up to 2dp, taken from the rational itself -- never from the bank.
+function ratApprox2(a) {
+  const neg = a.n < 0;
+  const n = Math.abs(a.n);
+  const hundredths = Math.floor((n * 200 + a.d) / (2 * a.d));
+  const whole = Math.floor(hundredths / 100);
+  const cents = hundredths % 100;
+  return (neg ? '\u2212' : '') + whole + '.' + String(cents).padStart(2, '0');
+}
+
+function ratTex(a) {
+  return (a.n < 0 ? '-' : '') + '\\frac{' + Math.abs(a.n) + '}{' + a.d + '}';
+}
+
+// ---- per-scenario display mode ----------------------------------------
+// Form is a property of the scenario, not of each value: if any product needs
+// a fraction then every non-integer the scenario shows is a fraction, over a
+// common denominator L. That is what stops a lone 0.5 sitting among sixths, or
+// a sixtieth appearing as a distractor beside thirds.
+let displayMode = 'DECIMAL';
+let displayL = 1;
+
+function ratLcm(a, b) { return a / ratGcd(a, b) * b; }
+
+function computeDisplayMode() {
+  const prods = productRats();
+  displayMode = prods.some(p => !ratIsDecimal(p)) ? 'FRACTION' : 'DECIMAL';
+  displayL = prods.reduce((l, p) => ratLcm(l, p.d), 1);
+}
+
+// The one formatter for tiles, slots, distractors and the P(X = x) column.
+// E(X) does not come through here: it keeps its own rule (exact decimal when
+// it terminates, otherwise the fraction with a 2dp reading).
+function renderValue(el, a) {
+  if (displayMode === 'FRACTION' && a.d !== 1) {
+    if (typeof katex !== 'undefined') {
+      el.innerHTML = '';
+      const f = document.createElement('span');
+      katex.render(ratTex(a), f, { throwOnError: false });
+      el.appendChild(f);
+    } else {
+      el.textContent = a.n + '/' + a.d;
+    }
+    return;
+  }
+  renderRat(el, a, false);
+}
+
+// Draws a value into an element. approx:true adds the 2dp reading, and is used
+// for E(X) only -- tiles are exact or nothing, and never show a "~".
+function renderRat(el, a, approx) {
+  if (ratIsDecimal(a)) { el.textContent = ratDecimalString(a); return; }
+  if (typeof katex !== 'undefined') {
+    el.innerHTML = '';
+    const f = document.createElement('span');
+    katex.render(ratTex(a), f, { throwOnError: false });
+    el.appendChild(f);
+    if (approx) {
+      const t = document.createElement('span');
+      t.textContent = ' \u2248 ' + ratApprox2(a);
+      el.appendChild(t);
+    }
+  } else {
+    el.textContent = a.n + '/' + a.d + (approx ? ' \u2248 ' + ratApprox2(a) : '');
+  }
+}
+
+// The products for the current question, and their exact total.
+function productRats() {
+  return completedTable.map(r => ratMul(r.xr, r.pr));
+}
+
+function exactEX() {
+  return productRats().reduce((acc, p) => ratAdd(acc, p), { n: 0, d: 1 });
+}
+
+function formatX(x) {
+  if (x < 0) return '\u2212' + Math.abs(x);
+  return '' + x;
+}
+
+function formatP(p) {
+  if (typeof p === 'string') return p;
+  return '' + p;
+}
+
+// P(X = x) as HTML, under the scenario's mode. In DECIMAL mode this is
+// formatPNum's long-standing output, untouched; only FRACTION-mode scenarios
+// stop going through its independent rounding, which is what produced rows
+// reading "1 x 0.1667 = 1/6".
+function pDisplayHTML(r) {
+  if (displayMode === 'FRACTION' && r.pr.d !== 1) {
+    if (typeof katex !== 'undefined') {
+      return katex.renderToString(ratTex(r.pr), { throwOnError: false });
+    }
+    return r.pr.n + '/' + r.pr.d;
+  }
+  if (displayMode === 'FRACTION') return ratDecimalString(r.pr);
+  return formatPNum(r.p);
+}
+
+function formatPNum(p) {
+  // Format a numeric probability for display
+  if (Number.isInteger(p * 10000) && !Number.isInteger(p * 100)) {
+    return p.toFixed(4).replace(/0+$/, '');
+  }
+  if (Number.isInteger(p * 100)) {
+    return p.toFixed(2);
+  }
+  return parseFloat(p.toFixed(4)).toString();
+}
+
+function formatProduct(p) {
+  const val = roundDP(p, 2);
+  if (val === 0) return '0';
+  if (Number.isInteger(val)) return val.toString();
+  return val.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+}
+
+function formatAnswer(a) {
+  if (Number.isInteger(a)) return a.toFixed(1);
+  return parseFloat(a.toFixed(3)).toString();
+}
+
+function roundDP(val, dp) {
+  const m = Math.pow(10, dp);
+  return Math.round(val * m) / m;
+}
+
+function parseFrac(s) {
+  if (s === undefined || s === null) return NaN;
+  s = String(s).trim();
+  if (s.includes('/')) {
+    const parts = s.split('/');
+    return parseFloat(parts[0]) / parseFloat(parts[1]);
+  }
+  return parseFloat(s);
+}
+
+function countInObj(obj, val) {
+  return Object.values(obj).filter(v => v === val).length;
+}
+
+function countInArr(arr, val) {
+  return arr.filter(v => v === val).length;
+}
+
+// Candidates are enumerated once and then drawn from, rather than sampled
+// until enough stick, so this cannot loop. The old version ended with an
+// unbounded "while (distractors.length < target)" drawing |p +/- 0.15| values:
+// where a scenario's products sit 0.15 apart that pool holds fewer new values
+// than the target (es_core_009 and es_gcse_009, products 0, 0.3, 0.3, 0.15,
+// yield exactly one), and only the first phase happening to cover the
+// shortfall kept it from spinning forever.
+//
+// Candidates are compared as canonical "n/d" keys -- the same identity Stage 2
+// marks on -- so a value that survives the dedupe cannot be accepted in place
+// of a correct product, whatever it happens to look like on screen.
+function generateProductDistractors(products, table) {
+  const target = Math.max(2, Math.ceil(products.length / 2));
+  const used = new Set(products.map(ratKey));
+  // Whether negatives are allowed is a property of the scenario, not a global
+  // rule: where losses are modelled, every negative tile being correct would
+  // let a student place them on sign alone.
+  const allowNegative = products.some(p => p.n < 0);
+  const pool = [];
+  const offer = a => {
+    const k = ratKey(a);
+    if (a.n === 0 || (!allowNegative && a.n < 0) || used.has(k)) return;
+    used.add(k);
+    pool.push(k);
+  };
+
+  // The same three plausible-wrong-product shapes as before -- adjacent
+  // probability, a small offset, and x+1 -- enumerated rather than rolled for.
+  // The offset is taken in the scenario's own form: multiples of 1/L in
+  // FRACTION mode, so a thirds question yields thirds, not sixtieths.
+  const ONE = { n: 1, d: 1 };
+  const offsets = displayMode === 'FRACTION'
+    ? [{ n: 1, d: displayL }, { n: -1, d: displayL }, { n: 2, d: displayL }, { n: -2, d: displayL }]
+    : [{ n: 1, d: 20 }, { n: -1, d: 20 }, { n: 1, d: 10 }, { n: -1, d: 10 }];
+  table.forEach((r, i) => {
+    offer(ratMul(r.xr, table[(i + 1) % table.length].pr));
+    offsets.forEach(o => offer(ratAdd(ratMul(r.xr, r.pr), o)));
+    offer(ratMul(ratAdd(r.xr, ONE), r.pr));
+  });
+
+  // Top up by stepping outward from the extremes, in the scenario's own form:
+  // 1/L in FRACTION mode, 3/20 in DECIMAL mode. Stepping up is unbounded and
+  // always clears every product, so the target is always reachable; the cap is
+  // a backstop, not the reason this terminates.
+  const sorted = products.slice().sort((a, b) => ratNum(a) - ratNum(b));
+  const lo = sorted[0], hi = sorted[sorted.length - 1];
+  const stepOf = a => (displayMode === 'FRACTION' ? { n: 1, d: displayL }
+                                                  : { n: 3, d: 20 });
+  const up = stepOf(hi), down = stepOf(lo);
+  const isNeg = k => ratFromKey(k).n < 0;
+  for (let s = 1; s <= 100; s++) {
+    const short = pool.length < target;
+    // Where losses are modelled, keep stepping until a negative exists too,
+    // so the draw below always has one to reserve.
+    const needNeg = allowNegative && !pool.some(isNeg);
+    if (!short && !needNeg) break;
+    offer(ratAdd(hi, { n: up.n * s, d: up.d }));
+    offer(ratAdd(lo, { n: -down.n * s, d: down.d }));
+  }
+
+  if (!allowNegative) return shuffle(pool).slice(0, target);
+
+  // Reserve one negative, then fill the rest at random. The count is unchanged;
+  // only the guarantee is added, so sign alone never identifies a tile.
+  const negs = shuffle(pool.filter(isNeg));
+  if (!negs.length) return shuffle(pool).slice(0, target);
+  const rest = shuffle(negs.slice(1).concat(pool.filter(k => !isNeg(k))));
+  return shuffle([negs[0]].concat(rest.slice(0, target - 1)));
+}
+
+function showStageFeedback(msg, type) {
+  const el = document.getElementById('stageFeedback');
+  el.textContent = msg;
+  el.className = 'stage-feedback show ' + type;
+}
+
+function hideFeedback() {
+  document.getElementById('stageFeedback').className = 'stage-feedback';
+}
+
+
+(function renderMethodRef(){
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
+  var k=function(t){return katex.renderToString(t,{throwOnError:false});};
+
+  document.getElementById('methodProbTable').innerHTML=
+    '<strong>(a) Completing a probability distribution table</strong>'+
+    'A game costs \u00A32 to play. You spin a wheel with these prizes:<br><br>'+
+    '<table style="width:100%;border-collapse:collapse;font-family:JetBrains Mono,monospace;font-size:.82rem;margin:.5rem 0">'+
+    '<tr style="background:var(--navy);color:#fff;font-size:.7rem"><th style="padding:.4rem;border:1px solid var(--border)">Prize ('+k('x')+')</th><th style="padding:.4rem;border:1px solid var(--border)">\u00A30</th><th style="padding:.4rem;border:1px solid var(--border)">\u00A31</th><th style="padding:.4rem;border:1px solid var(--border)">\u00A35</th><th style="padding:.4rem;border:1px solid var(--border)">\u00A310</th></tr>'+
+    '<tr><td style="padding:.4rem;border:1px solid var(--border);color:var(--teal);font-weight:600">'+k('P(X=x)')+'</td><td style="padding:.4rem;border:1px solid var(--border)">0.50</td><td style="padding:.4rem;border:1px solid var(--border)">0.30</td><td style="padding:.4rem;border:1px solid var(--border)">0.15</td><td style="padding:.4rem;border:1px solid var(--border);color:var(--teal)">?</td></tr>'+
+    '</table>'+
+    'All probabilities must sum to 1:'+
+    K('0.50 + 0.30 + 0.15 + p = 1 \\quad\\Rightarrow\\quad p = 0.05');
+
+  document.getElementById('methodCalcEX').innerHTML=
+    '<strong>(b) Calculating E(X)</strong>'+
+    K('E(X) = \\sum x \\cdot P(X=x)')+
+    K('= (0)(0.50) + (1)(0.30) + (5)(0.15) + (10)(0.05)')+
+    K('= 0 + 0.30 + 0.75 + 0.50 = \\pounds1.55');
+
+  document.getElementById('methodInterpretEX').innerHTML=
+    '<strong>(c) Interpreting E(X) in context</strong>'+
+    'The expected prize is <b>\u00A31.55</b> per spin.<br><br>'+
+    'Since the game costs \u00A32 to play, on average you <b>lose \u00A30.45 per game</b>.<br><br>'+
+    k('E(X)')+' does not mean you win exactly \u00A31.55 every time \u2014 it is the <b>long-run average</b> over many plays. The game is not worth playing if your goal is to make money.';
+})();
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

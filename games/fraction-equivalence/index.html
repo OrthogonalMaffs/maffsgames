@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Are these two fractions equivalent? A speed-based yes/no game for KS3 and GCSE fraction fluency.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/fraction-equivalence/">
+<meta property="og:title" content="Fraction Snap — MaffsGames">
+<meta property="og:description" content="Are these two fractions equivalent? A speed-based yes/no game for KS3 and GCSE fraction fluency.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/fraction-equivalence/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Fraction Snap — MaffsGames</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+  :root{--bg:#f0fff4;--navy:#1a1a4e;--green:#6bcb77;--teal:#4ecdc4;--yellow:#ffd93d;--red:#ff4757;--white:#fff;--text:#2d2d5e;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{padding-bottom:44px;background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+  .header{width:100%;background:var(--navy);padding:16px 24px;display:flex;align-items:center;gap:16px;}
+  .back{color:var(--yellow);text-decoration:none;font-size:12px;font-family:'Press Start 2P',monospace;}
+  .title{font-family:'Press Start 2P',monospace;font-size:clamp(10px,3vw,16px);color:var(--yellow);}
+  .game-area{width:100%;max-width:640px;padding:24px;flex:1;display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .scorebar{display:flex;justify-content:space-between;width:100%;background:var(--white);border-radius:12px;padding:16px 24px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+  .score-item{text-align:center;}
+  .score-label{font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+  .score-val{font-family:'Press Start 2P',monospace;font-size:18px;color:var(--navy);margin-top:4px;}
+
+  .question-box{width:100%;background:var(--white);border-radius:16px;padding:32px 24px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+  .q-label{font-size:14px;color:#888;font-weight:700;margin-bottom:20px;}
+  .fractions-row{display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:24px;flex-wrap:wrap;}
+  .fraction{display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .frac-num{font-family:'Press Start 2P',monospace;font-size:clamp(28px,8vw,48px);color:var(--navy);line-height:1;}
+  .frac-line{width:60px;height:5px;background:var(--navy);border-radius:2px;margin:4px 0;}
+  .frac-den{font-family:'Press Start 2P',monospace;font-size:clamp(28px,8vw,48px);color:var(--navy);line-height:1;}
+  .equals-q{font-family:'Press Start 2P',monospace;font-size:clamp(20px,5vw,32px);color:#aaa;}
+
+  .btn-row{display:flex;gap:16px;justify-content:center;}
+  .yn-btn{
+    font-family:'Press Start 2P',monospace;font-size:14px;
+    padding:16px 32px;border:4px solid;border-radius:16px;
+    cursor:pointer;background:var(--white);
+    transition:transform 0.1s,background 0.15s;
+    min-width:120px;
+  }
+  .yn-btn:active{transform:scale(0.95);}
+  .yn-btn.yes{border-color:var(--green);color:var(--green);}
+  .yn-btn.yes:hover{background:var(--green);color:white;}
+  .yn-btn.no{border-color:var(--red);color:var(--red);}
+  .yn-btn.no:hover{background:var(--red);color:white;}
+  .yn-btn.correct{background:var(--green)!important;border-color:var(--green)!important;color:white!important;}
+  .yn-btn.wrong-ans{background:var(--red)!important;border-color:var(--red)!important;color:white!important;}
+
+  .feedback{font-family:'Press Start 2P',monospace;font-size:10px;min-height:24px;text-align:center;margin-top:12px;}
+  .feedback.correct{color:var(--green);}
+  .feedback.wrong{color:var(--red);}
+  .hint{font-size:12px;color:#aaa;margin-top:8px;}
+
+  .timer-bar{width:100%;height:10px;background:rgba(0,0,0,0.1);border-radius:5px;overflow:hidden;}
+  .timer-fill{height:100%;background:var(--teal);transition:width 0.1s linear;border-radius:5px;}
+  .timer-fill.warn{background:var(--yellow);}
+  .timer-fill.danger{background:var(--red);}
+
+  .start-screen,.game-over{width:100%;background:var(--white);border-radius:16px;padding:32px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+  .game-over{display:none;}
+  .game-over.visible{display:block;}
+  .start-emoji{font-size:64px;margin-bottom:16px;}
+  .start-title{font-family:'Press Start 2P',monospace;font-size:12px;color:var(--navy);margin-bottom:16px;line-height:1.6;}
+  .start-desc{font-size:15px;color:#666;line-height:1.6;margin-bottom:24px;}
+  .how-to{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:24px;text-align:left;}
+  .how-to p{font-size:13px;color:#555;margin-bottom:6px;padding-left:8px;}
+  .how-to p::before{content:'▶ ';}
+  .go-title{font-family:'Press Start 2P',monospace;font-size:14px;color:var(--navy);margin-bottom:8px;}
+  .go-score{font-family:'Press Start 2P',monospace;font-size:32px;color:var(--green);margin:16px 0;}
+  .go-detail{font-size:14px;color:#888;margin-bottom:24px;}
+  .btn{font-family:'Nunito',sans-serif;font-weight:900;font-size:16px;padding:14px 32px;border:none;border-radius:12px;cursor:pointer;}
+  .btn-primary{background:var(--green);color:white;}
+  .main-game{display:none;flex-direction:column;align-items:center;gap:16px;width:100%;}
+  .main-game.visible{display:flex;}
+  .leaderboard{width:100%;background:var(--white);border-radius:16px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+  .lb-title{font-family:'Press Start 2P',monospace;font-size:9px;color:var(--navy);margin-bottom:12px;text-align:center;}
+  .lb-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:13px;font-weight:700;}
+  .lb-row:last-child{border-bottom:none;}
+  .lb-score{font-family:'Press Start 2P',monospace;font-size:10px;color:var(--navy);}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="header">
+  <a href="../../" class="back">← Back</a>
+  <div class="title">½ FRACTION SNAP</div>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+<div class="game-area">
+  <div class="scorebar">
+    <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
+    <div class="score-item"><div class="score-label">Streak</div><div class="score-val" id="streak">0</div></div>
+    <div class="score-item"><div class="score-label">Best</div><div class="score-val" id="best">0</div></div>
+  </div>
+
+  <div class="start-screen" id="startScreen">
+    <div class="start-emoji">½</div>
+    <div class="start-title">FRACTION SNAP</div>
+    <div class="start-desc">Are these two fractions equivalent? YES or NO, fast as you can!</div>
+    <div class="how-to">
+      <p>Equivalent = same value, different form</p>
+      <p>½ and 4/8 ARE equivalent (both = 0.5)</p>
+      <p>½ and 4/9 are NOT equivalent</p>
+      <p>Cross multiply to check: if a×d = b×c, they're equivalent</p>
+    </div>
+    <button class="btn btn-primary" onclick="startGame()">START GAME</button>
+  </div>
+
+  <div class="main-game" id="mainGame">
+    <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+    <div class="question-box">
+      <div class="q-label">Are these fractions EQUIVALENT?</div>
+      <div class="fractions-row">
+        <div class="fraction">
+          <div class="frac-num" id="n1">1</div>
+          <div class="frac-line"></div>
+          <div class="frac-den" id="d1">2</div>
+        </div>
+        <div class="equals-q">=?</div>
+        <div class="fraction">
+          <div class="frac-num" id="n2">3</div>
+          <div class="frac-line"></div>
+          <div class="frac-den" id="d2">6</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="yn-btn yes" id="btnYes" onclick="guess(true)">YES ✓</button>
+        <button class="yn-btn no" id="btnNo" onclick="guess(false)">NO ✗</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <div class="hint" id="hint"></div>
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="go-title">GAME OVER</div>
+    <div class="go-score" id="finalScore">0</div>
+    <div class="go-detail" id="goDetail"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="btn btn-primary" onclick="startGame()">PLAY AGAIN</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-title">🏆 TOP SCORES</div>
+    <div id="lbList"></div>
+  </div>
+</div>
+
+<script>
+const TIME = 30000;
+const QUESTIONS = 15;
+
+// Year 6 pre-defined question bank (denominators 2,3,4,5,6,8,10 only)
+const YEAR6_BANK = [
+  // 10 equivalent pairs (YES)
+  { n1:1, d1:2, n2:2, d2:4, equiv:true },
+  { n1:1, d1:3, n2:2, d2:6, equiv:true },
+  { n1:2, d1:3, n2:4, d2:6, equiv:true },
+  { n1:3, d1:4, n2:6, d2:8, equiv:true },
+  { n1:1, d1:5, n2:2, d2:10, equiv:true },
+  { n1:2, d1:5, n2:4, d2:10, equiv:true },
+  { n1:1, d1:4, n2:2, d2:8, equiv:true },
+  { n1:3, d1:5, n2:6, d2:10, equiv:true },
+  { n1:1, d1:2, n2:3, d2:6, equiv:true },
+  { n1:1, d1:2, n2:5, d2:10, equiv:true },
+  // 10 non-equivalent pairs (NO)
+  { n1:1, d1:2, n2:1, d2:3, equiv:false },
+  { n1:2, d1:3, n2:3, d2:4, equiv:false },
+  { n1:1, d1:4, n2:1, d2:3, equiv:false },
+  { n1:3, d1:5, n2:2, d2:3, equiv:false },
+  { n1:1, d1:6, n2:1, d2:8, equiv:false },
+  { n1:2, d1:5, n2:1, d2:3, equiv:false },
+  { n1:3, d1:4, n2:4, d2:5, equiv:false },
+  { n1:1, d1:3, n2:1, d2:4, equiv:false },
+  { n1:2, d1:6, n2:3, d2:8, equiv:false },
+  { n1:5, d1:10, n2:3, d2:8, equiv:false },
+];
+
+// Detect level from URL param
+const urlLevel = new URLSearchParams(window.location.search).get('level');
+const gameLevel = urlLevel === 'year6' ? 'year6' : 'all';
+
+let score=0, streak=0, qNum=0, answered=false, timerInt=null, timerStart=null;
+let cur={n1:1,d1:2,n2:2,d2:4,equiv:true};
+
+function gcd(a,b){return b===0?a:gcd(b,a%b);}
+function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function shuffle(arr){return [...arr].sort(()=>Math.random()-0.5);}
+
+let year6Questions = [];
+let year6Index = 0;
+
+function generateQ() {
+  if (gameLevel === 'year6') {
+    if (year6Index >= year6Questions.length) {
+      year6Questions = shuffle(YEAR6_BANK);
+      year6Index = 0;
+    }
+    return year6Questions[year6Index++];
+  }
+  // Default: random generation
+  const equiv = Math.random() > 0.4; // 60% equivalent
+  let n1=randInt(1,9), d1=randInt(2,12);
+  if(n1>=d1) d1=n1+randInt(1,6);
+  const g=gcd(n1,d1);
+  n1/=g; d1/=g; // simplify
+
+  let n2,d2;
+  if(equiv) {
+    const mult=randInt(2,6);
+    n2=n1*mult; d2=d1*mult;
+  } else {
+    // Make definitely not equivalent
+    do {
+      const mult=randInt(2,6);
+      n2=n1*mult; d2=d1*mult+randInt(1,3);
+    } while(n1*d2===n2*d1); // ensure not equivalent
+  }
+  return {n1,d1,n2,d2,equiv};
+}
+
+function startGame(){
+  score=0;streak=0;qNum=0;window._feCorrect=0;
+  if(gameLevel==='year6'){year6Questions=shuffle(YEAR6_BANK);year6Index=0;}
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('gameOver').classList.remove('visible');
+  document.getElementById('mainGame').classList.add('visible');
+  nextQ();
+  mfg('game_started',{game_slug:'fraction-equivalence',level:gameLevel});window._ggAbandoned=true;
+  if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'fraction-equivalence',level:gameLevel,questions_answered:qNum})});}
+}
+
+function nextQ(){
+  if(qNum>=QUESTIONS){endGame();return;}
+  qNum++; answered=false;
+  cur=generateQ();
+  document.getElementById('n1').textContent=cur.n1;
+  document.getElementById('d1').textContent=cur.d1;
+  document.getElementById('n2').textContent=cur.n2;
+  document.getElementById('d2').textContent=cur.d2;
+  document.getElementById('btnYes').className='yn-btn yes';
+  document.getElementById('btnNo').className='yn-btn no';
+  document.getElementById('feedback').textContent='';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('hint').textContent='';
+  clearInterval(timerInt);
+  timerStart=Date.now();
+  timerInt=setInterval(tickTimer,50);
+}
+
+function tickTimer(){
+  const pct=Math.max(0,100-(Date.now()-timerStart)/TIME*100);
+  const fill=document.getElementById('timerFill');
+  fill.style.width=pct+'%';
+  fill.className='timer-fill'+(pct<30?' danger':pct<60?' warn':'');
+  if(pct<=0){clearInterval(timerInt);timeOut();}
+}
+
+function timeOut(){
+  if(answered)return;
+  answered=true;streak=0;
+  document.getElementById('feedback').textContent='TOO SLOW!';
+  document.getElementById('feedback').className='feedback wrong';
+  showHint();
+  setTimeout(nextQ,1800);
+}
+
+function guess(val){
+  if(answered)return;
+  answered=true;
+  clearInterval(timerInt);
+  const correct=val===cur.equiv;
+  mfg('question_answered',{game_slug:'fraction-equivalence',level:gameLevel,correct:correct,question_index:qNum});
+  const fb=document.getElementById('feedback');
+  if(correct){window._feCorrect=(window._feCorrect||0)+1;
+    score+=10+streak*2;streak++;
+    fb.textContent=streak>2?`CORRECT! 🔥 ${streak} streak!`:'CORRECT!';
+    fb.className='feedback correct';
+    document.getElementById(val?'btnYes':'btnNo').classList.add('correct');
+  } else {
+    streak=0;
+    fb.textContent=`WRONG — they are ${cur.equiv?'':'NOT '}equivalent`;
+    fb.className='feedback wrong';
+    document.getElementById(val?'btnYes':'btnNo').classList.add('wrong-ans');
+    document.getElementById(cur.equiv?'btnYes':'btnNo').classList.add('correct');
+  }
+  showHint();
+  document.getElementById('score').textContent=score;
+  document.getElementById('streak').textContent=streak;
+  setTimeout(nextQ,1800);
+}
+
+function showHint(){
+  const cross=cur.n1*cur.d2;
+  const cross2=cur.n2*cur.d1;
+  document.getElementById('hint').textContent=`${cur.n1}×${cur.d2}=${cross} vs ${cur.n2}×${cur.d1}=${cross2} → ${cross===cross2?'EQUAL':'NOT EQUAL'}`;
+}
+
+function endGame(){
+  document.getElementById('mainGame').classList.remove('visible');
+  document.getElementById('gameOver').classList.add('visible');
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('goDetail').textContent=`${QUESTIONS} questions, max streak was ${streak}`;
+  window._ggAbandoned=false;
+  var _feAcc=Math.round(((window._feCorrect||0)/QUESTIONS)*100);
+  mfg('game_completed',{game_slug:'fraction-equivalence',level:gameLevel,score:score,questions_answered:QUESTIONS,accuracy:_feAcc});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('fraction-equivalence',gameLevel,score,QUESTIONS).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('fraction-equivalence',gameLevel,score);}}
+  var _pbOld=getBest();if(score>_pbOld){mfg('personal_best_set',{game_slug:'fraction-equivalence',level:gameLevel,score:score,previous_best:_pbOld});}
+  saveBest(score);renderLB();
+}
+
+function getBest(){return parseInt(localStorage.getItem('fs_best')||'0');}
+function saveBest(s){if(s>getBest())localStorage.setItem('fs_best',s);document.getElementById('best').textContent=getBest();}
+function renderLB(){
+  const scores=JSON.parse(localStorage.getItem('fs_scores')||'[]');
+  const ns=[...scores,{score,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,5);
+  localStorage.setItem('fs_scores',JSON.stringify(ns));
+  document.getElementById('lbList').innerHTML=ns.map((s,i)=>`<div class="lb-row"><span>#${i+1}</span><span>${s.date}</span><span class="lb-score">${s.score}</span></div>`).join('')||'<div style="text-align:center;color:#aaa;font-size:13px;padding:12px">No scores yet</div>';
+}
+document.getElementById('best').textContent=getBest();
+renderLB();
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A parent's guide to GCSE trigonometry. SOH CAH TOA explained clearly, with the labelling mistakes that often cost marks and worked examples to try.">
+<link rel="canonical" href="https://maffsgames.co.uk/parents/trigonometry/">
+<meta property="og:title" content="Trigonometry (SOH CAH TOA) — A Parent's Guide &mdash; MaffsGames">
+<meta property="og:description" content="A parent's guide to GCSE trigonometry. SOH CAH TOA explained clearly, with the labelling mistakes that often cost marks and worked examples to try.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/parents/trigonometry/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Trigonometry (SOH CAH TOA) — A Parent's Guide | MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});"></script>
+<link rel="stylesheet" href="../guide.css">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<script defer src="../guide.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../../">MaffsGames</a>
+  <span class="nav-right">
+    <a href="../" class="back">&larr; All parent guides</a>
+    <button class="a11y-btn" id="a11yBtn" type="button" aria-pressed="false" title="Dyslexia-friendly mode">Aa</button>
+  </span>
+</nav>
+
+<div class="container">
+
+<div class="hero">
+  <span class="badge">GCSE</span>
+  <h1>Trigonometry</h1>
+  <p class="subtitle">SOH CAH TOA might sound like a foreign language, but it is genuinely just three simple ratios &mdash; and once the pattern clicks, your child will wonder what the fuss was about.</p>
+</div>
+<div class="section">
+  <h2>What Your Child Is Learning</h2>
+  <p>Trigonometry is about finding missing sides and angles in right-angled triangles. Your child uses three ratios &mdash; sine, cosine, and tangent &mdash; to connect angles to side lengths.</p>
+  <p>Every right-angled triangle has three sides with special names, depending on which angle you are working with:</p>
+  <ul>
+    <li><strong>Hypotenuse</strong> &mdash; always the longest side, opposite the right angle.</li>
+    <li><strong>Opposite</strong> &mdash; the side directly opposite the angle you are looking at.</li>
+    <li><strong>Adjacent</strong> &mdash; the side next to the angle (that is not the hypotenuse).</li>
+  </ul>
+  <p><strong>This is the most important thing to understand:</strong> the hypotenuse never changes — it's always opposite the right angle. But <em>opposite</em> and <em>adjacent</em> swap depending on which angle you're working with.</p>
+
+  <div style="display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;margin:1.5rem 0">
+    <div style="text-align:center">
+      <svg viewBox="0 0 220 180" width="220" height="180" style="display:block;margin:0 auto">
+        <polygon points="20,160 200,160 200,30" fill="none" stroke="#4a5568" stroke-width="2"/>
+        <rect x="185" y="145" width="15" height="15" fill="none" stroke="#4a5568" stroke-width="1.5"/>
+        <path d="M 50,160 A 30,30 0 0,0 38,140" fill="none" stroke="#b45309" stroke-width="2.5"/>
+        <text x="30" y="155" font-family="Outfit,sans-serif" font-size="14" font-weight="700" fill="#b45309">A</text>
+        <text x="110" y="178" font-family="DM Mono,monospace" font-size="11" fill="#64748b" text-anchor="middle">Adjacent</text>
+        <text x="215" y="100" font-family="DM Mono,monospace" font-size="11" fill="#047857" text-anchor="start">Opposite</text>
+        <text x="95" y="85" font-family="DM Mono,monospace" font-size="11" fill="#b91c1c" text-anchor="middle" transform="rotate(-35,95,85)">Hypotenuse</text>
+      </svg>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem">Looking from angle <span style="color:#b45309;font-weight:700">A</span></div>
+    </div>
+    <div style="text-align:center">
+      <svg viewBox="0 0 220 180" width="220" height="180" style="display:block;margin:0 auto">
+        <polygon points="20,160 200,160 200,30" fill="none" stroke="#4a5568" stroke-width="2"/>
+        <rect x="185" y="145" width="15" height="15" fill="none" stroke="#4a5568" stroke-width="1.5"/>
+        <path d="M 200,60 A 30,30 0 0,0 175,40" fill="none" stroke="#0369a1" stroke-width="2.5"/>
+        <text x="195" y="35" font-family="Outfit,sans-serif" font-size="14" font-weight="700" fill="#0369a1">B</text>
+        <text x="110" y="178" font-family="DM Mono,monospace" font-size="11" fill="#047857" text-anchor="middle">Opposite</text>
+        <text x="215" y="100" font-family="DM Mono,monospace" font-size="11" fill="#64748b" text-anchor="start">Adjacent</text>
+        <text x="95" y="85" font-family="DM Mono,monospace" font-size="11" fill="#b91c1c" text-anchor="middle" transform="rotate(-35,95,85)">Hypotenuse</text>
+      </svg>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem">Looking from angle <span style="color:#0369a1;font-weight:700">B</span></div>
+    </div>
+  </div>
+
+  <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:1rem 1.25rem;margin:1rem 0;font-size:0.85rem;line-height:1.7">
+    <strong style="color:var(--navy)">Same triangle. Same sides. Different angle.</strong><br>
+    The <span style="color:#b91c1c;font-weight:600">hypotenuse</span> (red) stays the same — it's always the longest side, always opposite the right angle.<br>
+    But the <span style="color:#047857">opposite</span> and <span style="color:#64748b">adjacent</span> swap depending on which angle you're working from.<br>
+    <em>This is the single most common mistake in trigonometry.</em>
+  </div>
+
+  <p>The three ratios connect these sides to the angle:</p>
+  <div class="math-block">
+    $$\sin(\theta) = \frac{\text{Opposite}}{\text{Hypotenuse}} \qquad \cos(\theta) = \frac{\text{Adjacent}}{\text{Hypotenuse}} \qquad \tan(\theta) = \frac{\text{Opposite}}{\text{Adjacent}}$$
+  </div>
+</div>
+<div class="section">
+  <h2>How Schools Teach It Now</h2>
+  <p>The mnemonic <strong>SOH CAH TOA</strong> is still the standard way to remember the three ratios:</p>
+  <div class="soh-cah-toa">
+    <div><div class="label">SOH</div><div class="desc">Sin = Opp / Hyp</div></div>
+    <div><div class="label">CAH</div><div class="desc">Cos = Adj / Hyp</div></div>
+    <div><div class="label">TOA</div><div class="desc">Tan = Opp / Adj</div></div>
+  </div>
+  <p>The method your child follows is always the same three steps:</p>
+  <ol>
+    <li><strong>Label the sides</strong> &mdash; identify which is opposite, adjacent, and hypotenuse relative to the angle in the question.</li>
+    <li><strong>Choose the right ratio</strong> &mdash; look at which two sides are involved (one known, one unknown) and pick SOH, CAH, or TOA accordingly.</li>
+    <li><strong>Rearrange and solve</strong> &mdash; substitute the values in and use a calculator.</li>
+  </ol>
+  <div class="tip">
+    <div class="tip-label">Parent tip</div>
+    You do not need to remember any trigonometry yourself. The most helpful thing you can do is check that your child has labelled the sides correctly <em>before</em> they start calculating. If the labels are right, the rest usually follows.
+  </div>
+</div>
+<div class="section">
+  <h2>Common Mistakes to Watch For</h2>
+  <div class="warning">
+    <div class="warning-label">Classic mistake</div>
+    <strong>Mixing up opposite and adjacent.</strong> Which side is "opposite" and which is "adjacent" depends on which angle you are working with. If your child picks a different angle, the labels swap. This is the number one source of wrong answers in trig questions.
+  </div>
+  <div class="warning">
+    <div class="warning-label">Calculator trap</div>
+    <strong>Calculator in the wrong mode.</strong> At GCSE, angles are always in degrees. If the calculator is set to radians, every answer will be wrong. On most scientific calculators, look for a small "D" or "DEG" on the display. If it says "R" or "RAD", it needs changing.
+  </div>
+  <div class="warning">
+    <div class="warning-label">Watch out</div>
+    <strong>Using the wrong trig function.</strong> Students sometimes just pick sin because it is the first one they learned. The choice of sin, cos, or tan must match which sides they are working with. If the question involves the opposite and hypotenuse, it is sin. If it involves adjacent and hypotenuse, it is cos. Opposite and adjacent? Tan.
+  </div>
+</div>
+<div class="section">
+  <h2>Try It Together</h2>
+  <p>Here is a worked example:</p>
+  <p><strong>A right-angled triangle has an angle of 30 degrees and a hypotenuse of 10 cm. Find the length of the side opposite the 30-degree angle.</strong></p>
+  <ol>
+    <li>We know the angle (30 degrees) and the hypotenuse (10 cm). We want the opposite side.</li>
+    <li>Opposite and hypotenuse &rarr; that is <strong>SOH</strong>: \(\sin(\theta) = \frac{\text{Opp}}{\text{Hyp}}\)</li>
+    <li>Substitute: \(\sin(30°) = \frac{\text{Opp}}{10}\)</li>
+    <li>We know \(\sin(30°) = 0.5\), so: \(0.5 = \frac{\text{Opp}}{10}\)</li>
+    <li>Multiply both sides by 10: \(\text{Opp} = 10 \times 0.5 = 5 \text{ cm}\)</li>
+  </ol>
+  <div class="math-block">
+    $$\sin(30°) = \frac{\text{Opp}}{10} \implies \text{Opp} = 10 \times 0.5 = 5\text{ cm}$$
+  </div>
+  <div class="tip">
+    <div class="tip-label">Conversation starter</div>
+    Ask your child: "If you are standing 20 metres from a building and you look up at 45 degrees to see the top, how tall is the building?" (Hint: \(\tan(45°) = 1\), so the building is 20 metres tall.) Trigonometry is just measuring things you cannot reach directly.
+  </div>
+</div>
+<div class="section">
+  <h2>Let Them Practise</h2>
+  <p>Trigonometry is one of those topics where practice makes a real difference. Once the labelling becomes automatic, students can tackle these questions quickly and confidently.</p>
+  <p>We have two free games that make trig practice genuinely engaging:</p>
+  <div class="cta-box">
+  <h3>Trig Wars</h3>
+  <p>Battle-style trig practice &mdash; instant feedback.</p>
+  <a href="../../games/trig-wars/" class="cta-btn">Play Trig Wars</a>
+</div>
+
+<div class="cta-box">
+  <h3>Trig Worms</h3>
+  <p>A different spin on trig practice &mdash; fun and surprisingly addictive.</p>
+  <a href="../../games/trig-worms/" class="cta-btn">Play Trig Worms</a>
+</div>
+  <p class="practice-note">MaffsGames needs no account and no sign-up; what it records while your child plays is set out on the <a href="../../privacy/">privacy page</a>.</p>
+</div>
+
+<div class="guide-foot">
+  <p><a href="../">All parent guides</a> &middot; <a href="../../">MaffsGames home</a></p>
+</div>
+
+</div>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

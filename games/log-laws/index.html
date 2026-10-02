@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Practise the logarithm laws, then use them: Solve mode takes you step by step through equations like 3^x = 20 and capacitor discharge. For A-Level, Level 3 Engineering and Level 4.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/log-laws/">
+<meta property="og:title" content="Log Laws — MaffsGames">
+<meta property="og:description" content="Practise the logarithm laws, then use them: Solve mode takes you step by step through equations like 3^x = 20 and capacitor discharge. For A-Level, Level 3 Engineering and Level 4.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/log-laws/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Log Laws — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+  :root {
+    --bg:        #f8fafc;
+    --white:     #ffffff;
+    --navy:      #1a2744;
+    --navy-mid:  #253563;
+    --teal:      #0d9488;
+    --orange:    #ea580c;
+    --orange-lt: #fff7ed;
+    --green:     #15803d;
+    --green-lt:  #dcfce7;
+    --red:       #dc2626;
+    --red-lt:    #fee2e2;
+    --text:      #1e293b;
+    --muted:     #64748b;
+    --border:    #e2e8f0;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.09), 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Outfit', system-ui, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Header ── */
+  .header {
+    width: 100%;
+    background: var(--navy);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .back {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s;
+  }
+  .back:hover { color: #fff; }
+
+  .header-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .header-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .header-level {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--orange);
+    background: rgba(234,88,12,0.15);
+    border: 1px solid rgba(234,88,12,0.3);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ── Game area ── */
+  .game-area {
+    width: 100%;
+    max-width: 760px;
+    padding: 24px 20px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* ── Score bar ── */
+  .scorebar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 14px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .score-item { text-align: center; }
+
+  .score-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .score-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-top: 2px;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Timer display ── */
+  .timer-text {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ── Law reference panel ── */
+  .law-ref {
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .law-ref-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .laws-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .law-chip {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--navy);
+    line-height: 1.4;
+  }
+
+  /* ── Question card ── */
+  .question-box {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px 24px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .q-rule-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--orange);
+    background: var(--orange-lt);
+    border: 1px solid rgba(234,88,12,0.2);
+    padding: 3px 12px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 20px;
+  }
+
+  .q-text {
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 24px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* KaTeX overrides */
+  .q-text .katex { font-size: 1em; }
+  .choice .katex { font-size: 0.9em; }
+  .law-chip .katex { font-size: 0.85em; }
+  .explanation .katex { font-size: 0.9em; }
+
+  /* ── Answer choices ── */
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .choice {
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-size: clamp(13px, 2.5vw, 15px);
+    font-weight: 600;
+    padding: 16px 10px;
+    border: 2px solid var(--border);
+    background: var(--white);
+    color: var(--navy);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+  }
+
+  .choice:hover {
+    border-color: var(--orange);
+    background: var(--orange-lt);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(234,88,12,0.12);
+  }
+
+  .choice.correct {
+    background: var(--green-lt);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .choice.wrong {
+    background: var(--red-lt);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .choice.reveal {
+    background: var(--bg);
+    border-color: var(--border);
+    color: #94a3b8;
+    cursor: default;
+  }
+
+  .choice:disabled { pointer-events: none; }
+
+  /* ── Feedback ── */
+  .feedback {
+    font-size: 13px;
+    font-weight: 700;
+    min-height: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong   { color: var(--red); }
+
+  .explanation {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    min-height: 18px;
+    line-height: 1.5;
+  }
+
+  /* ── Start screen ── */
+  .start-screen {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .start-glyph {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--navy);
+    opacity: 0.08;
+    line-height: 1;
+    margin-bottom: -8px;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.05em;
+  }
+
+  .start-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .start-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .law-list {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .law-list-item {
+    font-size: 14px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .law-list-item::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+
+  /* ── Game over ── */
+  .game-over {
+    display: none;
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+  .game-over.visible { display: block; }
+
+  .go-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .go-score {
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--orange);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 8px 0 6px;
+  }
+
+  .go-detail {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  /* ── Main game ── */
+  .main-game { display: none; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
+  .main-game.visible { display: flex; }
+
+  /* ── Button ── */
+  .btn {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .btn-primary {
+    background: var(--navy);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--navy-mid);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26,39,68,0.2);
+  }
+
+  /* ── Leaderboard ── */
+  .leaderboard {
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .lb-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lb-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .lb-row:last-child { border-bottom: none; }
+
+  .lb-rank { color: var(--muted); font-weight: 600; width: 28px; }
+  .lb-date { color: var(--muted); flex: 1; text-align: center; }
+  .lb-score { font-weight: 800; color: var(--navy); font-size: 15px; }
+
+  @media (max-width: 500px) {
+    .choices { grid-template-columns: 1fr; }
+    .laws-grid { grid-template-columns: 1fr; }
+    .game-area { padding: 16px 14px 40px; }
+  }
+
+  [hidden] { display: none !important; }
+
+  /* ── Mode, stage and length pickers (start screen) ── */
+  .mode-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 20px; }
+  .mode-btn {
+    font-family: 'Outfit', system-ui, sans-serif; text-align: left; padding: 14px 16px;
+    border: 2px solid var(--border); background: var(--white); border-radius: 12px;
+    cursor: pointer; color: var(--navy); transition: all 0.14s ease;
+  }
+  .mode-btn b { display: block; font-size: 16px; font-weight: 800; }
+  .mode-btn span { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .mode-btn:hover, .stage-btn:hover, .session-btn:hover { border-color: var(--orange); }
+  .mode-btn.selected, .stage-btn.selected, .session-btn.selected { border-color: var(--orange); background: var(--orange-lt); }
+  .opt-row { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; color: var(--navy); margin-bottom: 18px; cursor: pointer; }
+  .opt-row input { width: 18px; height: 18px; accent-color: var(--teal); }
+  .opt-row.disabled { color: var(--muted); cursor: default; }
+  .opt-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; text-align: left; }
+  .solve-note { font-size: 13px; color: var(--navy); background: #f0fdfa; border: 1px solid rgba(13,148,136,0.25); border-radius: 8px; padding: 8px 12px; margin-bottom: 16px; text-align: left; line-height: 1.5; }
+  .stage-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 18px; }
+  .stage-btn {
+    font-family: 'Outfit', system-ui, sans-serif; text-align: left; padding: 10px 12px;
+    border: 2px solid var(--border); background: var(--white); border-radius: 10px; cursor: pointer;
+    color: var(--navy); display: flex; gap: 10px; align-items: flex-start; transition: all 0.14s ease;
+  }
+  .stage-n { font-weight: 800; font-size: 18px; color: var(--orange); min-width: 14px; line-height: 1.2; }
+  .stage-t { font-size: 14px; font-weight: 600; line-height: 1.4; }
+  .stage-t small { display: block; color: var(--muted); font-size: 13px; font-weight: 400; margin-top: 2px; }
+  .session-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 20px; }
+  .session-btn {
+    font-family: 'Outfit', system-ui, sans-serif; font-weight: 700; font-size: 15px; min-width: 56px;
+    padding: 9px 14px; border: 2px solid var(--border); background: var(--white); color: var(--navy);
+    border-radius: 10px; cursor: pointer; transition: all 0.14s ease;
+  }
+  .btn-secondary { background: var(--white); color: var(--navy); border: 2px solid var(--border); margin: 6px 4px 0; }
+  .btn-secondary:hover { border-color: var(--navy); }
+  .go-note { font-size: 13px; color: var(--muted); margin: -12px 0 18px; }
+
+  /* ── Solve mode ── */
+  .solve-game { display: none; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
+  .solve-game.visible { display: flex; }
+  .solve-box { text-align: left; }
+  .solve-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .solve-head .q-rule-label { margin-bottom: 0; }
+  .solve-count { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .solve-prompt { font-size: 15px; color: var(--text); line-height: 1.6; margin-bottom: 12px; }
+  .solve-lines { list-style: none; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 6px 14px; margin-bottom: 14px; }
+  .solve-lines li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+  .solve-lines li:last-child { border-bottom: none; }
+  .line-math { font-size: clamp(17px, 3.4vw, 21px); color: var(--navy); overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+  .line-math .katex { font-size: 1em; white-space: nowrap; }
+  .line-tag { font-size: 12px; font-weight: 600; color: var(--teal); white-space: nowrap; text-align: right; }
+  .line-new { animation: lineIn 0.25s ease; }
+  @keyframes lineIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .solve-ask { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .solve-moves { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .move-btn {
+    font-family: 'Outfit', system-ui, sans-serif; font-size: 14px; font-weight: 600; padding: 10px 8px;
+    border: 2px solid var(--border); background: var(--white); color: var(--navy); border-radius: 10px;
+    cursor: pointer; min-height: 50px; line-height: 1.35; transition: all 0.14s ease;
+  }
+  .move-btn:hover { border-color: var(--orange); background: var(--orange-lt); }
+  .move-btn.nope { border-color: var(--red); background: var(--red-lt); }
+  .move-btn.meh { border-color: #d97706; background: #fffbeb; }
+  .move-btn.yes { border-color: var(--green); background: var(--green-lt); }
+  .solve-final-q { font-size: 14px; color: var(--navy); margin-bottom: 10px; line-height: 1.5; }
+  .solve-answer-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .solve-answer-row .katex { font-size: 1.25em; }
+  .solve-answer-row input {
+    font-family: 'Outfit', system-ui, sans-serif; font-size: 18px; padding: 9px 12px; width: 150px;
+    border: 2px solid var(--border); border-radius: 10px; color: var(--navy);
+  }
+  .solve-answer-row input:focus { outline: none; border-color: var(--orange); }
+  .choose-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .choose-btn { font-size: 16px; }
+  .solve-msg { margin-top: 12px; font-size: 14px; line-height: 1.6; border-radius: 10px; }
+  .solve-msg:empty { display: none; }
+  .solve-msg.bad  { background: var(--red-lt); color: #7f1d1d; border: 1px solid rgba(220,38,38,0.3); padding: 10px 14px; }
+  .solve-msg.ok   { background: #fffbeb; color: #78350f; border: 1px solid rgba(217,119,6,0.35); padding: 10px 14px; }
+  .solve-msg.good { background: var(--green-lt); color: #14532d; border: 1px solid rgba(21,128,61,0.3); padding: 10px 14px; }
+  .solve-msg .katex { font-size: 1.02em; }
+  .solve-prompt .katex, .solve-msg .katex { white-space: nowrap; }
+  .move-btn .katex, .stage-t .katex, .choose-btn .katex { font-size: 1em; }
+
+  @media (max-width: 500px) {
+    .mode-pick, .stage-grid, .choose-grid { grid-template-columns: 1fr; }
+    .solve-moves { grid-template-columns: 1fr 1fr; }
+    .solve-lines li { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .line-tag { text-align: left; }
+    .line-math { max-width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .line-new { animation: none; }
+  }
+/* === Accessibility === */
+body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
+body.accessible p, body.accessible .question-text, body.accessible .step-text, body.accessible .option-label, body.accessible .card-text { line-height: 2.0; max-width: 65ch; }
+body.accessible { background-color: #12141f !important; }
+body.accessible.light-theme { background-color: #fdf6e3 !important; color: #2d2d2d !important; }
+body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em; }
+.a11y-toggle { background: #1a2744; color: #ffffff; border: 1px solid #2a3a5c; border-radius: 6px; width: 36px; height: 36px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: background 0.15s; }
+.a11y-toggle.active, .a11y-toggle:hover { background: #0d9488; }
+.correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
+.incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <a href="../../" class="back">← Back</a>
+  <div class="header-divider"></div>
+  <div class="header-title">Log Laws</div>
+  <span class="header-level">A-Level</span>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+
+<div class="game-area">
+
+  <div class="scorebar">
+    <div class="score-item">
+      <div class="score-label">Score</div>
+      <div class="score-val" id="score">0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Streak</div>
+      <div class="score-val" id="streak">0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Best</div>
+      <div class="score-val" id="best">0</div>
+    </div>
+  </div>
+
+  <!-- Start screen -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-glyph">log</div>
+    <div class="start-title">Log Laws</div>
+    <div class="mode-pick" id="modePick">
+      <button type="button" class="mode-btn selected" data-mode="laws" aria-pressed="true"><b>Laws</b><span>Recognise and simplify with the log laws</span></button>
+      <button type="button" class="mode-btn" data-mode="solve" aria-pressed="false"><b>Solve</b><span>Use the laws, one step at a time, to solve equations</span></button>
+    </div>
+    <div id="lawsOpts">
+      <div class="start-desc">The laws students always mix up. 12 questions, take your time. Can you keep them straight?</div>
+    </div>
+    <div id="solveOpts" hidden>
+      <div class="start-desc">Choose each step yourself. A wrong move tells you why, and you try again. Finish on your calculator, to 3 significant figures.</div>
+      <div class="solve-note"><b>log</b> means <b>log&#8321;&#8320;</b>, the log key on your calculator. Every law works the same way for <b>ln</b>.</div>
+      <div class="opt-label">Stage</div>
+      <div class="stage-grid" id="stagePick"></div>
+      <div class="opt-label">Questions</div>
+      <div class="session-row" id="solveLengths"></div>
+    </div>
+    <label class="opt-row" id="skipCobRow"><input type="checkbox" id="skipCob"> Skip change of base</label>
+    <div class="law-list" id="startLaws"></div>
+    <div class="law-list" id="solveLawList" hidden></div>
+    <button class="btn btn-primary" onclick="startGame()">Start Game</button>
+  </div>
+
+  <!-- Main game -->
+  <div class="main-game" id="mainGame">
+    <div class="timer-text" id="timerDisplay">0s</div>
+    <div class="law-ref">
+      <div class="law-ref-title">Quick Reference</div>
+      <div class="laws-grid" id="refGrid"></div>
+    </div>
+    <div class="question-box">
+      <div class="q-rule-label" id="ruleLabel">Product Rule</div>
+      <div class="q-text" id="qText"></div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+  </div>
+
+  <!-- Game over -->
+  <div class="game-over" id="gameOver">
+    <div class="go-label">Game Over</div>
+    <div class="go-score" id="finalScore">0</div>
+    <div class="go-detail" id="goDetail"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="btn btn-primary" onclick="startGame()">Play Again</button>
+    <button type="button" class="btn btn-secondary" onclick="LL_SOLVE.menu()">Change mode</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+
+  <!-- Solve mode -->
+  <div class="solve-game" id="solveGame">
+    <div class="law-ref">
+      <div class="law-ref-title">Quick Reference &middot; log means log&#8321;&#8320;</div>
+      <div class="laws-grid" id="solveRefGrid"></div>
+    </div>
+    <div class="question-box solve-box" id="solveBox">
+      <div class="solve-head">
+        <span class="q-rule-label" id="solveStageLabel"></span>
+        <span class="solve-count" id="solveCount"></span>
+      </div>
+      <div class="solve-prompt" id="solvePrompt"></div>
+      <ol class="solve-lines" id="solveLines" aria-label="Working"></ol>
+      <div class="solve-ask" id="solveAsk">Choose the next step</div>
+      <div class="solve-moves" id="solveMoves"></div>
+      <div id="solveAnswer" hidden>
+        <div class="solve-final-q" id="solveAnswerQ"></div>
+        <div class="solve-answer-row">
+          <label for="solveInput" id="solveAnswerVar"></label>
+          <input id="solveInput" type="text" inputmode="decimal" autocomplete="off" spellcheck="false">
+          <button type="button" class="btn btn-primary" id="solveCheck">Check</button>
+        </div>
+      </div>
+      <div id="solveChoose" hidden>
+        <div class="solve-final-q">Which solution is valid?</div>
+        <div class="choose-grid" id="solveChooseGrid"></div>
+      </div>
+      <div class="solve-msg" id="solveMsg" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="game-over" id="solveOver">
+    <div class="go-label">Stage complete</div>
+    <div class="go-score" id="solveFinal">0</div>
+    <div class="go-detail" id="solveDetail"></div>
+    <div class="go-note">Solve scores are kept on this device for now, not on the global leaderboard.</div>
+    <button type="button" class="btn btn-primary" id="solveNextStage">Next stage &rarr;</button>
+    <button type="button" class="btn btn-secondary" onclick="startGame()">Play again</button>
+    <button type="button" class="btn btn-secondary" onclick="LL_SOLVE.menu()">Change stage or mode</button>
+    <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-title">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Top Scores
+    </div>
+    <div id="lbList"></div>
+  </div>
+
+</div>
+
+<script>
+// ── Level and mode ──────────────────────────────────────────────────────────
+// ?level= reads 'alevel' (the default when absent or unknown), 'level3' or
+// 'level4'. All three offer both modes and the same questions; the level is
+// what every event and score reports. Jon's rulings, 28 Sep 2026:
+// docs/next-contract-log-laws-solve.md.
+const levelNames = { alevel: 'A-Level', level3: 'Level 3 (Engineering)', level4: 'Level 4' };
+const LEVEL = (() => {
+  const p = new URLSearchParams(location.search).get('level');
+  return Object.prototype.hasOwnProperty.call(levelNames, p) ? p : 'alevel';
+})();
+let mode = 'laws';   // 'laws' | 'solve'; Solve mode lives in the second script below
+
+// ── Reference laws (LaTeX) ──────────────────────────────────────────────────
+const LAWS = [
+  '\\log(ab) = \\log a + \\log b',
+  '\\log\\!\\left(\\tfrac{a}{b}\\right) = \\log a - \\log b',
+  '\\log(a^n) = n\\log a',
+  '\\log_a(a) = 1',
+  '\\log_a(1) = 0',
+  '\\log_a b = \\dfrac{\\log b}{\\log a}',
+];
+
+// ── Question bank (45 questions, LaTeX throughout) ────────────────────────
+const QUESTIONS = [
+
+  // ── Product Rule (8) ───────────────────────────────────────────────────
+  { rule:'Product Rule',
+    q:'\\log 6 + \\log 2', correct:'\\log 12',
+    distractors:['\\log 8','\\log 3','\\log 4'],
+    exp:'\\log a + \\log b = \\log(ab),\\text{ so }\\log(6{\\times}2) = \\log 12' },
+  { rule:'Product Rule',
+    q:'\\log 5 + \\log 4', correct:'\\log 20',
+    distractors:['\\log 9','2\\log 5','\\log 1'],
+    exp:'\\log(5{\\times}4) = \\log 20' },
+  { rule:'Product Rule',
+    q:'\\log x + \\log y', correct:'\\log(xy)',
+    distractors:['\\log(x+y)','\\log x \\cdot \\log y','\\log(x-y)'],
+    exp:'\\log a + \\log b = \\log(ab)' },
+  { rule:'Product Rule',
+    q:'\\ln 3 + \\ln 5', correct:'\\ln 15',
+    distractors:['\\ln 8','\\ln 2','3\\ln 5'],
+    exp:'\\ln(3{\\times}5) = \\ln 15' },
+  { rule:'Product Rule',
+    q:'\\log 7 + \\log 3', correct:'\\log 21',
+    distractors:['\\log 10','\\log 4','\\log 73'],
+    exp:'\\log(7{\\times}3) = \\log 21' },
+  { rule:'Product Rule',
+    q:'\\ln x + \\ln x', correct:'\\ln(x^2)',
+    distractors:['2\\ln x^2','\\ln(2x)','(\\ln x)^2'],
+    exp:'\\ln x + \\ln x = 2\\ln x = \\ln(x^2)' },
+  { rule:'Product Rule',
+    q:'\\log_3 2 + \\log_3 4', correct:'\\log_3 8',
+    distractors:['\\log_3 6','\\log_3 16','2\\log_3 3'],
+    exp:'\\log_3(2{\\times}4) = \\log_3 8' },
+  { rule:'Product Rule',
+    q:'\\log 100 + \\log 10', correct:'3',
+    distractors:['\\log 1000','2','\\log 110'],
+    exp:'\\log(100{\\times}10) = \\log 1000 = 3' },
+
+  // ── Quotient Rule (8) ──────────────────────────────────────────────────
+  { rule:'Quotient Rule',
+    q:'\\log 12 - \\log 3', correct:'\\log 4',
+    distractors:['\\log 9','\\log 36','\\log 15'],
+    exp:'\\log\\tfrac{12}{3} = \\log 4' },
+  { rule:'Quotient Rule',
+    q:'\\log\\!\\left(\\tfrac{x}{y}\\right)', correct:'\\log x - \\log y',
+    distractors:['\\log x + \\log y','\\dfrac{\\log x}{\\log y}','\\log(x-y)'],
+    exp:'\\log\\tfrac{a}{b} = \\log a - \\log b' },
+  { rule:'Quotient Rule',
+    q:'\\ln 8 - \\ln 2', correct:'\\ln 4',
+    distractors:['\\ln 6','\\ln 16','\\ln 10'],
+    exp:'\\ln\\tfrac{8}{2} = \\ln 4' },
+  { rule:'Quotient Rule',
+    q:'\\log 100 - \\log 4', correct:'\\log 25',
+    distractors:['\\log 96','\\log 400','\\log 104'],
+    exp:'\\log\\tfrac{100}{4} = \\log 25' },
+  { rule:'Quotient Rule',
+    q:'\\log_2 16 - \\log_2 4', correct:'2',
+    distractors:['1','4','\\log_2 12'],
+    exp:'\\log_2\\tfrac{16}{4} = \\log_2 4 = 2' },
+  { rule:'Quotient Rule',
+    q:'\\ln e^3 - \\ln e', correct:'2',
+    distractors:['3','1','\\ln e^2'],
+    exp:'\\ln e^3 - \\ln e = 3 - 1 = 2' },
+  { rule:'Quotient Rule',
+    q:'\\log x - \\log y - \\log z', correct:'\\log\\!\\left(\\tfrac{x}{yz}\\right)',
+    distractors:['\\log\\!\\left(\\tfrac{xy}{z}\\right)','\\log(x-y-z)','\\log\\!\\left(\\tfrac{xz}{y}\\right)'],
+    exp:'\\log x - \\log y - \\log z = \\log\\tfrac{x}{yz}' },
+  { rule:'Quotient Rule',
+    q:'\\log 1000 - \\log 10', correct:'2',
+    distractors:['\\log 990','100','3'],
+    exp:'\\log\\tfrac{1000}{10} = \\log 100 = 2' },
+
+  // ── Power Rule (9) ─────────────────────────────────────────────────────
+  { rule:'Power Rule',
+    q:'\\log(x^3)', correct:'3\\log x',
+    distractors:['\\log x + 3','\\log(3x)','x\\log 3'],
+    exp:'\\log(a^n) = n\\log a' },
+  { rule:'Power Rule',
+    q:'3\\log 2', correct:'\\log 8',
+    distractors:['\\log 6','\\log 9','\\log 23'],
+    exp:'\\log(2^3) = \\log 8' },
+  { rule:'Power Rule',
+    q:'\\tfrac{1}{2}\\log 9', correct:'\\log 3',
+    distractors:['\\log 4.5','\\log\\tfrac{9}{2}','\\log 81'],
+    exp:'\\log(9^{1/2}) = \\log 3' },
+  { rule:'Power Rule',
+    q:'\\log(x^{1/2})', correct:'\\tfrac{1}{2}\\log x',
+    distractors:['2\\log x','\\log(2x)','\\sqrt{\\log x}'],
+    exp:'\\log(x^{1/2}) = \\tfrac{1}{2}\\log x' },
+  { rule:'Power Rule',
+    q:'4\\log 3', correct:'\\log 81',
+    distractors:['\\log 12','\\log 64','\\log 34'],
+    exp:'\\log(3^4) = \\log 81' },
+  { rule:'Power Rule',
+    q:'\\log(x^{-1})', correct:'-\\log x',
+    distractors:['\\log x','\\tfrac{1}{\\log x}','\\log(-x)'],
+    exp:'\\log(x^{-1}) = -1\\cdot\\log x = -\\log x' },
+  { rule:'Power Rule',
+    q:'\\tfrac{1}{3}\\log 27', correct:'1',
+    distractors:['3','\\log 9','\\log 3'],
+    exp:'\\log(27^{1/3}) = \\log 3\\text{, since }27^{1/3} = 3' },
+  { rule:'Power Rule',
+    q:'\\ln(e^5)', correct:'5',
+    distractors:['e^5','\\ln 5','5e'],
+    exp:'\\ln(e^n) = n,\\text{ so }\\ln(e^5) = 5' },
+  { rule:'Power Rule',
+    q:'-2\\log x', correct:'\\log\\!\\left(\\tfrac{1}{x^2}\\right)',
+    distractors:['\\log(x^2)','\\log(-2x)','2\\log x'],
+    exp:'-2\\log x = \\log(x^{-2}) = \\log\\tfrac{1}{x^2}' },
+
+  // ── Special Values (6) ─────────────────────────────────────────────────
+  { rule:'Special Values',
+    q:'\\log_5(5)', correct:'1',
+    distractors:['0','5','\\tfrac{1}{5}'],
+    exp:'\\log_a(a) = 1\\text{ always}' },
+  { rule:'Special Values',
+    q:'\\log_3(1)', correct:'0',
+    distractors:['1','3','\\tfrac{1}{3}'],
+    exp:'\\log_a(1) = 0\\text{ always}' },
+  { rule:'Special Values',
+    q:'\\log_7(7^4)', correct:'4',
+    distractors:['7','28','\\tfrac{1}{4}'],
+    exp:'\\log_a(a^n) = n' },
+  { rule:'Special Values',
+    q:'\\ln(1)', correct:'0',
+    distractors:['1','e','\\tfrac{1}{e}'],
+    exp:'\\ln(1) = \\log_e(1) = 0\\text{ since }e^0 = 1' },
+  { rule:'Special Values',
+    q:'\\ln(e)', correct:'1',
+    distractors:['e','0','2'],
+    exp:'\\ln(e) = \\log_e(e) = 1' },
+  { rule:'Special Values',
+    q:'\\log_{10}(10^6)', correct:'6',
+    distractors:['60','100000','5'],
+    exp:'\\log_{10}(10^n) = n,\\text{ so }\\log_{10}(10^6) = 6' },
+
+  // ── Change of Base (7) ─────────────────────────────────────────────────
+  { rule:'Change of Base',
+    q:'\\log_2(8)', correct:'3',
+    distractors:['4','2','\\tfrac{1}{3}'],
+    exp:'2^3 = 8' },
+  { rule:'Change of Base',
+    q:'\\log_4(16)', correct:'2',
+    distractors:['4','8','\\tfrac{1}{2}'],
+    exp:'4^2 = 16' },
+  { rule:'Change of Base',
+    q:'\\log_9(3)', correct:'\\tfrac{1}{2}',
+    distractors:['2','3','\\tfrac{1}{3}'],
+    exp:'9^{1/2} = 3' },
+  { rule:'Change of Base',
+    q:'\\log_8(2)', correct:'\\tfrac{1}{3}',
+    distractors:['3','\\tfrac{1}{2}','4'],
+    exp:'8^{1/3} = 2,\\text{ so }\\log_8(2) = \\tfrac{1}{3}' },
+  { rule:'Change of Base',
+    q:'\\log_2(32)', correct:'5',
+    distractors:['4','6','16'],
+    exp:'2^5 = 32' },
+  { rule:'Change of Base',
+    q:'\\log_{25}(5)', correct:'\\tfrac{1}{2}',
+    distractors:['2','5','\\tfrac{1}{5}'],
+    exp:'25^{1/2} = 5' },
+  { rule:'Change of Base',
+    q:'\\log_4(64)', correct:'3',
+    distractors:['4','16','2'],
+    exp:'4^3 = 64' },
+
+  // ── Combined Laws (7) ──────────────────────────────────────────────────
+  { rule:'Combined Laws',
+    q:'2\\log 3 + \\log 2', correct:'\\log 18',
+    distractors:['\\log 8','2\\log 6','\\log 12'],
+    exp:'2\\log 3 = \\log 9,\\text{ then }\\log 9 + \\log 2 = \\log 18' },
+  { rule:'Combined Laws',
+    q:'\\log 50 - \\log 5', correct:'1',
+    distractors:['\\log 45','\\log 10','\\log 250'],
+    exp:'\\log\\tfrac{50}{5} = \\log 10 = 1' },
+  { rule:'Combined Laws',
+    q:'\\log_2(4) + \\log_2(8)', correct:'5',
+    distractors:['3','4','6'],
+    exp:'\\log_2 4 = 2\\text{ and }\\log_2 8 = 3,\\text{ so }2+3=5' },
+  { rule:'Combined Laws',
+    q:'3\\log 2 + \\log 5', correct:'\\log 40',
+    distractors:['\\log 30','\\log 10','\\log 80'],
+    exp:'3\\log 2 = \\log 8,\\text{ then }\\log 8 + \\log 5 = \\log 40' },
+  { rule:'Combined Laws',
+    q:'\\log 4 + \\log 5 - \\log 2', correct:'1',
+    distractors:['\\log 10','\\log 7','2'],
+    exp:'\\log 4 + \\log 5 = \\log 20,\\text{ then }\\log 20 - \\log 2 = \\log 10 = 1' },
+  { rule:'Combined Laws',
+    q:'2\\ln 3 - \\ln 9', correct:'0',
+    distractors:['\\ln 0','\\ln 18','1'],
+    exp:'2\\ln 3 = \\ln 9,\\text{ so }\\ln 9 - \\ln 9 = 0' },
+  { rule:'Combined Laws',
+    q:'\\tfrac{1}{2}\\log 4 + 2\\log 3', correct:'\\log 18',
+    distractors:['\\log 11','\\log 36','\\log 54'],
+    exp:'\\tfrac{1}{2}\\log 4 = \\log 2\\text{ and }2\\log 3 = \\log 9,\\text{ so }\\log 2 + \\log 9 = \\log 18' },
+];
+
+// ── Helpers ──────────────────────────────────────────────────────────────
+const K = (tex) => katex.renderToString(tex, { throwOnError: false, displayMode: false });
+
+function shuffle(a) { return [...a].sort(() => Math.random() - 0.5); }
+
+function waitForKaTeX(cb) {
+  if (typeof katex !== 'undefined') { cb(); return; }
+  const id = setInterval(() => { if (typeof katex !== 'undefined') { clearInterval(id); cb(); } }, 50);
+}
+
+// ── Build static reference panels ─────────────────────────────────────────
+function buildRefPanels() {
+  const startList = document.getElementById('startLaws');
+  LAWS.forEach(law => {
+    const div = document.createElement('div');
+    div.className = 'law-list-item';
+    div.innerHTML = K(law);
+    startList.appendChild(div);
+  });
+
+  const refGrid = document.getElementById('refGrid');
+  LAWS.forEach(law => {
+    const div = document.createElement('div');
+    div.className = 'law-chip';
+    div.innerHTML = K(law);
+    refGrid.appendChild(div);
+  });
+}
+
+// ── Game state ────────────────────────────────────────────────────────────
+const TOTAL = 12, BASE = 10, T_K = 0.3;
+let score = 0, streak = 0, qNum = 0, answered = false, _ggCorrectCount = 0;
+let timerInt = null, timerStart = null, questions = [];
+
+function startGame() {
+  if (mode === 'solve') { startSolve(); return; }
+  score = 0; streak = 0; qNum = 0; _ggCorrectCount = 0;
+  const skipCob = document.getElementById('skipCob').checked;
+  questions = shuffle(skipCob ? QUESTIONS.filter(q => q.rule !== 'Change of Base') : QUESTIONS).slice(0, TOTAL);
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameOver').classList.remove('visible');
+  document.getElementById('mainGame').classList.add('visible');
+
+  window._ggAbandoned=true;
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned&&mode==='laws')mfg('game_abandoned',{game_slug:'log-laws',level:LEVEL,mode:'laws',questions_answered:qNum});});}
+  mfg('game_started',{game_slug:'log-laws',level:LEVEL,mode:'laws'});
+
+  updateScorebar();
+  nextQ();
+}
+
+function updateScorebar() {
+  document.getElementById('score').textContent  = score;
+  document.getElementById('streak').textContent = streak;
+  document.getElementById('best').textContent   = getBest();
+}
+
+function nextQ() {
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('explanation').parentNode);
+  if (qNum >= TOTAL) { endGame(); return; }
+  answered = false;
+
+  const q = questions[qNum++];
+  document.getElementById('ruleLabel').textContent = q.rule;
+  document.getElementById('qText').innerHTML = K(q.q + ' = \\, ?');
+  document.getElementById('feedback').textContent   = '';
+  document.getElementById('feedback').className     = 'feedback';
+  document.getElementById('explanation').innerHTML  = '';
+
+  const choices = shuffle([q.correct, ...q.distractors.slice(0, 3)]);
+  const div = document.getElementById('choices');
+  div.innerHTML = '';
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.dataset.val = c;
+    btn.innerHTML = K(c);
+    btn.addEventListener('click', () => guess(c, q, btn, div));
+    div.appendChild(btn);
+  });
+
+  clearInterval(timerInt);
+  timerStart = Date.now();
+  document.getElementById('timerDisplay').textContent = '0s';
+  timerInt = setInterval(() => {
+    const secs = Math.floor((Date.now() - timerStart) / 1000);
+    document.getElementById('timerDisplay').textContent = secs + 's';
+  }, 250);
+}
+
+function guess(val, q, btn, div) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerInt);
+
+  const correct = val === q.correct;
+  mfg('question_answered',{game_slug:'log-laws',level:LEVEL,mode:'laws',correct:correct,question_index:qNum});
+  const fb = document.getElementById('feedback');
+  document.getElementById('explanation').innerHTML = K(q.exp);
+
+  if (correct) {
+    _ggCorrectCount++;
+    const secs = (Date.now() - timerStart) / 1000;
+    // multiplier removed — time no longer affects score
+const multiplier = 1;
+    const points = Math.max(1, Math.round(BASE * multiplier));
+    streak++;
+    score += points + streak * 3;
+    btn.classList.add('correct');
+    fb.textContent  = streak > 2 ? `Correct! ${streak} streak (+${points + streak * 3})` : `Correct! (+${points + streak * 3})`;
+    fb.className    = 'feedback correct';
+  } else {
+    streak = 0;
+    btn.classList.add('wrong');
+    [...div.children].forEach(b => {
+      if (b.dataset.val === q.correct) b.classList.add('correct');
+      else if (b !== btn) b.classList.add('reveal');
+    });
+    fb.textContent = 'Wrong';
+    fb.className   = 'feedback wrong';
+  }
+
+  updateScorebar();
+  // canon 7.6: correct advances briskly, wrong waits for the student.
+  if(correct){ setTimeout(nextQ,2000); }
+  else { MaffsNext.wrong({mount:document.getElementById('explanation').parentNode, onAdvance:nextQ}); }
+}
+
+function endGame() {
+  window._ggAbandoned=false;
+  document.getElementById('mainGame').classList.remove('visible');
+  document.getElementById('gameOver').classList.add('visible');
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('goDetail').textContent   = TOTAL + ' questions completed';
+  const _acc=TOTAL>0?Math.round(_ggCorrectCount/TOTAL*100):0;
+  mfg('game_completed',{game_slug:'log-laws',level:LEVEL,mode:'laws',score:score,questions_answered:TOTAL,accuracy:_acc});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('log-laws',LEVEL,score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('log-laws',LEVEL,score);}}
+  saveBest(score);
+  renderLB();
+}
+
+// ── Persistence ───────────────────────────────────────────────────────────
+function getBest() { return parseInt(localStorage.getItem('ll_best') || '0'); }
+
+function saveBest(s) {
+  const prev=getBest();
+  if (s > prev){localStorage.setItem('ll_best', s);mfg('personal_best_set',{game_slug:'log-laws',level:LEVEL,mode:'laws',score:s,previous_best:prev});}
+  const arr = JSON.parse(localStorage.getItem('ll_scores') || '[]');
+  arr.push({ score: s, date: new Date().toLocaleDateString('en-GB') });
+  arr.sort((a, b) => b.score - a.score);
+  localStorage.setItem('ll_scores', JSON.stringify(arr.slice(0, 5)));
+}
+
+function renderLB() {
+  const arr = JSON.parse(localStorage.getItem('ll_scores') || '[]');
+  const el  = document.getElementById('lbList');
+  if (!arr.length) {
+    el.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:13px;padding:12px">No scores yet</div>';
+    return;
+  }
+  el.innerHTML = arr.map((s, i) =>
+    `<div class="lb-row">
+       <span class="lb-rank">#${i+1}</span>
+       <span class="lb-date">${s.date}</span>
+       <span class="lb-score">${s.score}</span>
+     </div>`
+  ).join('');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+document.querySelector('.header-level').textContent = levelNames[LEVEL];
+document.getElementById('best').textContent = getBest();
+renderLB();
+waitForKaTeX(buildRefPanels);
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<script>
+/* ── Solve mode ─────────────────────────────────────────────────────────────
+   Use the laws to solve equations, one step at a time. Contract:
+   docs/next-contract-log-laws-solve.md; build notes:
+   docs/log-laws-solve-build-notes.md.
+
+   Every line of working is built ONCE, as a small expression tree. The same
+   tree renders to TeX for the student, to SymPy text for
+   scripts/verify-log-laws.py, and evaluates to the answer key, so what is
+   verified is exactly what is shown. The whole config is exported as
+   window.LL_SOLVE; the verifier reads it back from the live page.
+
+   Each question is a small state graph: `go` names the moves that are right
+   from a state and where each leads; `why` gives a named reason for every
+   other move, so no move is ever met with a bare "wrong". Pools are
+   enumerated (no draw-and-retry), and any item whose answer sits within
+   1e-6 of a 3 s.f. rounding boundary is filtered out, never redrawn. Only ln
+   and log (base 10) appear anywhere in this mode.
+   ───────────────────────────────────────────────────────────────────────── */
+(function () {
+  'use strict';
+
+  // ── Expression trees ───────────────────────────────────────────────────
+  // n: p/q with q a power of ten (so it prints as a decimal) · v: variable ·
+  // e · add · mul · neg · div · pow · log (b: 10 or 'e') · eq
+  const N = (p, q) => ({ t: 'n', p: p, q: q || 1 });
+  const Vr = n => ({ t: 'v', n: n });
+  const E = { t: 'e' };
+  const add = (...a) => ({ t: 'add', a: a });
+  const mul = (...a) => ({ t: 'mul', a: a });
+  const neg = a => ({ t: 'neg', a: a });
+  const div = (a, b) => ({ t: 'div', a: a, b: b });
+  const pw = (a, b) => ({ t: 'pow', a: a, b: b });
+  const L = (base, a) => ({ t: 'log', b: base, a: a });
+  const eq = (a, b) => ({ t: 'eq', a: a, b: b });
+
+  function isPow10(q) { while (q > 1 && q % 10 === 0) q /= 10; return q === 1; }
+  function decimal(p, q) {
+    const sign = p < 0 ? '-' : '';
+    let s = String(Math.abs(p));
+    const d = String(q).length - 1;
+    if (d > 0) {
+      while (s.length <= d) s = '0' + s;
+      s = (s.slice(0, s.length - d) + '.' + s.slice(s.length - d)).replace(/0+$/, '').replace(/\.$/, '');
+    }
+    return sign + s;
+  }
+  function atomic(n) { return (n.t === 'n' && n.p >= 0) || n.t === 'v' || n.t === 'e'; }
+  function hasFrac(n) {
+    if (n.t === 'div') return true;
+    if (n.t === 'pow') return hasFrac(n.a);           // an index prints inline
+    if (n.t === 'add' || n.t === 'mul') return n.a.some(hasFrac);
+    if (n.t === 'neg' || n.t === 'log') return hasFrac(n.a);
+    return false;
+  }
+  function paren(s, big) { return big ? '\\left(' + s + '\\right)' : '(' + s + ')'; }
+  // An operand after a minus sign or inside a product: only a sum needs brackets.
+  function operand(c, inExp) { return c.t === 'add' ? paren(tex(c, inExp), hasFrac(c)) : tex(c, inExp); }
+
+  function tex(n, inExp) {
+    switch (n.t) {
+      case 'n': return decimal(n.p, n.q);
+      case 'v': return n.n;
+      case 'e': return 'e';
+      case 'add': return n.a.map((c, i) => {
+        if (i === 0) return tex(c, inExp);
+        if (c.t === 'neg') return ' - ' + operand(c.a, inExp);
+        if (c.t === 'n' && c.p < 0) return ' - ' + decimal(-c.p, c.q);
+        return ' + ' + tex(c, inExp);
+      }).join('');
+      case 'neg': return '-' + operand(n.a, inExp);
+      case 'mul': return n.a.map((c, i) => {
+        if (c.t === 'log' && i < n.a.length - 1) throw new Error('a log must be the last factor');
+        if (i > 0 && c.t === 'n') throw new Error('a number must be the first factor');
+        if (c.t === 'add' || (i > 0 && c.t === 'neg')) return paren(tex(c, inExp), hasFrac(c));
+        return tex(c, inExp);
+      }).join('');
+      case 'div': return inExp ? operand(n.a, true) + '/' + operand(n.b, true)
+                               : '\\dfrac{' + tex(n.a) + '}{' + tex(n.b) + '}';
+      case 'pow': return (atomic(n.a) ? tex(n.a) : paren(tex(n.a), hasFrac(n.a))) + '^{' + tex(n.b, true) + '}';
+      case 'log': return (n.b === 10 ? '\\log' : '\\ln') + (atomic(n.a) ? ' ' + tex(n.a) : paren(tex(n.a), hasFrac(n.a)));
+      case 'eq': return tex(n.a) + ' = ' + tex(n.b);
+    }
+    throw new Error('unknown node ' + n.t);
+  }
+
+  // SymPy text for the verifier: lg = log base 10, ln = natural log, E = e.
+  function sp(n) {
+    switch (n.t) {
+      case 'n': return n.q === 1 ? '(' + n.p + ')' : '(' + n.p + '/' + n.q + ')';
+      case 'v': return n.n;
+      case 'e': return 'E';
+      case 'add': return '(' + n.a.map(sp).join(' + ') + ')';
+      case 'mul': return '(' + n.a.map(sp).join('*') + ')';
+      case 'neg': return '(-' + sp(n.a) + ')';
+      case 'div': return '(' + sp(n.a) + '/' + sp(n.b) + ')';
+      case 'pow': return '(' + sp(n.a) + '**' + sp(n.b) + ')';
+      case 'log': return (n.b === 10 ? 'lg' : 'ln') + '(' + sp(n.a) + ')';
+    }
+    throw new Error('unknown node ' + n.t);
+  }
+
+  function ev(n) {
+    switch (n.t) {
+      case 'n': return n.p / n.q;
+      case 'e': return Math.E;
+      case 'add': return n.a.reduce((s, c) => s + ev(c), 0);
+      case 'mul': return n.a.reduce((s, c) => s * ev(c), 1);
+      case 'neg': return -ev(n.a);
+      case 'div': return ev(n.a) / ev(n.b);
+      case 'pow': return Math.pow(ev(n.a), ev(n.b));
+      case 'log': return n.b === 10 ? Math.log10(ev(n.a)) : Math.log(ev(n.a));
+    }
+    throw new Error('cannot evaluate ' + n.t);
+  }
+
+  function hasLog10(n) {
+    if (!n || typeof n !== 'object') return false;
+    if (n.t === 'log' && n.b === 10 && n.a.t === 'n' && n.a.p === 10 && n.a.q === 1) return true;
+    return ['a', 'b'].some(k => Array.isArray(n[k]) ? n[k].some(hasLog10) : hasLog10(n[k]));
+  }
+
+  // ── 3 significant figures ──────────────────────────────────────────────
+  const r3 = v => Number(v.toPrecision(3));
+  const r3str = v => { const s = v.toPrecision(3); return s.indexOf('e') === -1 ? s : String(Number(s)); };
+  function nearBoundary(v) {
+    const a = Math.abs(v);
+    let e = Math.floor(Math.log10(a));
+    if (Math.pow(10, e + 1) <= a) e++;
+    if (Math.pow(10, e) > a) e--;
+    const q = Math.pow(10, e - 2);
+    const f = a / q;
+    return Math.abs(f - Math.floor(f) - 0.5) * q < 1e-6;
+  }
+
+  // ── Moves and reasons ──────────────────────────────────────────────────
+  const MOVES = [
+    { id: 'log',       label: 'Take \\(\\log_{10}\\) of both sides' },
+    { id: 'ln',        label: 'Take \\(\\ln\\) of both sides' },
+    { id: 'power',     label: 'Power law' },
+    { id: 'product',   label: 'Product law' },
+    { id: 'quotient',  label: 'Quotient law' },
+    { id: 'sp1',       label: '\\(\\log 10 = 1\\) / \\(\\ln e = 1\\)' },
+    { id: 'sp0',       label: '\\(\\log 1 = 0\\)' },
+    { id: 'undo',      label: 'Undo the log (\\(10^{\\square}\\) or \\(e^{\\square}\\))' },
+    { id: 'rearrange', label: 'Rearrange' },
+  ];
+  // The line tag for a move. Rearrange and sp1 take the target state's own note.
+  const MOVE_TAG = { log: 'Take \\(\\log_{10}\\)', ln: 'Take \\(\\ln\\)', power: 'Power law',
+    product: 'Product law', quotient: 'Quotient law', undo: 'Undo the log' };
+
+  // {v} is the unknown (x, or t in the capacitor questions). ok: true marks a
+  // move that is valid but not this route: amber, and it costs nothing.
+  const REASONS = {
+    L_again:  { t: 'You already have logs. Taking logs again gives a log of a log, which makes things worse. Use a law on the logs you have.' },
+    L_alg:    { t: '\\({v}\\) is not in an index any more, so taking logs will not help. This is algebra now: rearrange.' },
+    L_e10:    { ok: true, t: 'That works, but it leaves \\(\\log e\\) in your answer. With a base of \\(e\\), take ln instead, because \\(\\ln e = 1\\).' },
+    L_div:    { ok: true, t: 'That works, but you would then need the product law to split the right-hand side. Divide both sides by the number in front first, so the \\(e\\) term is on its own.' },
+    P_logs:   { t: 'The power law, \\(\\log(a^n) = n\\log a\\), works on the log of a power. There are no logs here yet, so take logs of both sides first.' },
+    P_index:  { t: 'The power law moves an index to the front — there is no index here.' },
+    P_alg:    { t: 'The power law works on the log of a power, and there are no logs left. This is algebra now: rearrange.' },
+    PR_none:  { t: 'The product law turns \\(\\log a + \\log b\\) into \\(\\log(ab)\\). There are no logs here to combine.' },
+    PR_sum:   { t: 'The product law needs two logs added together, \\(\\log a + \\log b\\). There is no sum of logs here.' },
+    PR_pow:   { t: 'That is the log of a power, not the log of a product, so the law you want is the power law.' },
+    PR_minus: { t: 'Those logs are subtracted, not added, so it is the quotient law you want.' },
+    SPLIT:    { ok: true, t: 'That is true, but it splits up the log you have just combined, which takes you backwards. With a single log on each side, undo the log.' },
+    Q_none:   { t: 'The quotient law turns \\(\\log a - \\log b\\) into \\(\\log\\frac{a}{b}\\). There are no logs here.' },
+    Q_diff:   { t: 'The quotient law needs one log minus another, \\(\\log a - \\log b\\). There is no difference of logs here.' },
+    Q_mult:   { t: 'The quotient law needs one log minus another, \\(\\log a - \\log b\\), with nothing multiplying them. Here the logs have \\({v}\\) and numbers in front, so rearrange first.' },
+    Q_plus:   { t: 'Those logs are added, not subtracted, so it is the product law you want.' },
+    Q_rhs:    { ok: true, t: 'True, \\(\\ln\\frac{a}{b} = \\ln a - \\ln b\\), but splitting the right-hand side does not get you any nearer to \\({v}\\). Leave it as it is.' },
+    Q_factor: { ok: true, t: 'That will work once \\({v}\\) is taken out as a factor, because then you have \\({v}(\\log a - \\log b)\\). Rearrange first.' },
+    S1_nolog: { t: 'There are no logs here yet, so there is no \\(\\log 10\\) or \\(\\ln e\\) to replace with 1.' },
+    S1_noln:  { t: '\\(\\ln e = 1\\) needs an ln, and there is not one yet. Take ln of both sides first.' },
+    S1_none:  { t: 'There is no \\(\\log 10\\) or \\(\\ln e\\) here to replace with 1.' },
+    S1_later: { ok: true, t: 'True, \\(\\log 10 = 1\\), but it does not move \\({v}\\). Leave it until you work out the answer.' },
+    S1_back:  { ok: true, t: 'That just turns \\(\\log 10\\) back into 1. It is true, but it does not move you forward.' },
+    S0:       { t: '\\(\\log 1 = 0\\) only helps when there is a log of 1, and there is not one here.' },
+    U_nolog:  { t: 'There is no log to undo. \\({v}\\) is stuck in the index, and taking logs is how you bring it down.' },
+    U_back:   { ok: true, t: 'That is true, but it takes you back to the equation you started from.' },
+    U_combine:{ t: 'To undo the log you need a single log on each side. Combine the logs into one first.' },
+    U_single: { t: 'To undo the log you need a single log on each side and nothing else. Here \\({v}\\) is outside the logs, so rearrange.' },
+    R_index:  { t: '\\({v}\\) is in the index, and no rearranging will get it out. Take logs of both sides first.' },
+    R_power:  { t: '\\({v}\\) is still inside the log, up in the index. Use the power law to bring it down to the front first.' },
+    R_powerE: { t: '\\({v}\\) is still inside the log, up in the index. Bring it down first: use the power law, or \\(\\ln e = 1\\), which does it in one go.' },
+    R_lne:    { ok: true, t: 'That works, but replace \\(\\ln e\\) with 1 first. It makes the rearranging much cleaner.' },
+    R_inside: { t: '\\({v}\\) is inside the logs, so you cannot rearrange yet. Combine the logs into a single log first.' },
+    R_single: { t: '\\({v}\\) is still inside a log. With a single log on each side, undo the log first; then the insides are equal.' },
+    ALG:      { t: 'There are no logs left. This is algebra now: rearrange.' },
+  };
+
+  // The reason for every move a state does not accept, by kind of state.
+  // null means the builder must supply an edge for that move.
+  const COEF = { log: 'L_again', ln: 'L_again', power: 'P_index', product: 'PR_sum', quotient: 'Q_diff',
+    sp1: 'S1_none', sp0: 'S0', undo: 'U_back', rearrange: null };
+  const SINGLE = { log: 'L_again', ln: 'L_again', power: 'P_index', product: 'PR_sum', quotient: 'Q_diff',
+    sp1: 'S1_none', sp0: 'S0', undo: null, rearrange: 'R_single' };
+  const SUM = { log: 'L_again', ln: 'L_again', power: 'P_index', product: null, quotient: 'Q_plus',
+    sp1: 'S1_none', sp0: 'S0', undo: 'U_combine', rearrange: 'R_inside' };
+  const KIND = {
+    exp:         { log: null, ln: null, power: 'P_logs', product: 'PR_none', quotient: 'Q_none', sp1: 'S1_nolog', sp0: 'S0', undo: 'U_nolog', rearrange: 'R_index' },
+    expE:        { log: 'L_e10', ln: null, power: 'P_logs', product: 'PR_none', quotient: 'Q_none', sp1: 'S1_noln', sp0: 'S0', undo: 'U_nolog', rearrange: 'R_index' },
+    eCoef:       { log: 'L_div', ln: 'L_div', power: 'P_logs', product: 'PR_none', quotient: 'Q_none', sp1: 'S1_nolog', sp0: 'S0', undo: 'U_nolog', rearrange: null },
+    logPow:      { log: 'L_again', ln: 'L_again', power: null, product: 'PR_pow', quotient: 'Q_diff', sp1: 'S1_none', sp0: 'S0', undo: 'U_back', rearrange: 'R_power' },
+    lnE:         { log: 'L_again', ln: 'L_again', power: null, product: 'PR_pow', quotient: 'Q_diff', sp1: null, sp0: 'S0', undo: 'U_back', rearrange: 'R_powerE' },
+    lnE1:        Object.assign({}, COEF, { sp1: null, rearrange: 'R_lne' }),
+    coefLin:     COEF,
+    bracketLin:  COEF,
+    linLog:      Object.assign({}, COEF, { undo: 'U_single' }),
+    diff:        Object.assign({}, SUM, { product: 'PR_minus', quotient: null }),
+    sum:         SUM,
+    sum10:       Object.assign({}, SUM, { sp1: 'S1_back' }),
+    single:      SINGLE,
+    single10:    Object.assign({}, SINGLE, { sp1: 'S1_back' }),
+    singleConst: Object.assign({}, SINGLE, { sp1: null }),
+    alg:         { log: 'L_alg', ln: 'L_alg', power: 'P_alg', product: 'ALG', quotient: 'ALG', sp1: 'ALG', sp0: 'ALG', undo: 'ALG', rearrange: null },
+  };
+
+  // ── Items ──────────────────────────────────────────────────────────────
+  function newItem(fam, id, v, prompt) {
+    return { id: id, fam: fam, v: v, prompt: prompt, states: [], go: {}, why: {}, over: {}, mis: [] };
+  }
+  function S(it, tree, kind, note) { it.states.push({ tree: tree, kind: kind, note: note || null }); return it.states.length - 1; }
+  function go(it, from, move, to) { (it.go[from] = it.go[from] || {})[move] = to; }
+  function over(it, si, move, reason) { (it.over[si] = it.over[si] || {})[move] = reason; }
+
+  // Fill in every reason, render every line, fix the answer. Returns null for
+  // an item whose answer is too close to a 3 s.f. rounding boundary.
+  function finish(it) {
+    it.states.forEach((s, i) => {
+      if (s.kind !== 'choose') { s.tex = tex(s.tree); s.lhs = sp(s.tree.a); s.rhs = sp(s.tree.b); }
+      Object.keys(it.go[i] || {}).forEach(m => {
+        const to = it.states[it.go[i][m]];
+        if ((m === 'rearrange' || m === 'sp1') && !to.note) throw new Error(it.id + ': state ' + it.go[i][m] + ' needs a note');
+      });
+      if (s.kind === 'final' || s.kind === 'choose') return;
+      const row = KIND[s.kind];
+      const g = it.go[i] || {};
+      const w = {};
+      MOVES.forEach(m => {
+        if (g[m.id] !== undefined) return;
+        let r = (it.over[i] && it.over[i][m.id]) || row[m.id];
+        if (m.id === 'sp1' && r === 'S1_none' && hasLog10(s.tree)) r = 'S1_later';
+        if (!r || !REASONS[r]) throw new Error(it.id + ': state ' + i + ' has no reason for ' + m.id);
+        w[m.id] = r;
+      });
+      it.why[i] = w;
+    });
+    const finals = it.states.filter(s => s.kind === 'final').map(s => ev(s.tree.b));
+    if (finals.length) {
+      if (finals.some(v => Math.abs(v - finals[0]) > 1e-9 * Math.max(1, Math.abs(finals[0]))))
+        throw new Error(it.id + ': its final lines disagree');
+      it.answer = finals[0];
+    }
+    it.states.forEach(s => { delete s.tree; });
+    delete it.over;
+    if (!isFinite(it.answer) || nearBoundary(it.answer)) return null;
+    const seen = {};
+    it.mis = it.mis.filter(m => {
+      const key = m.id + ':' + r3(m.v);
+      if (!isFinite(m.v) || r3(m.v) === r3(it.answer) || seen[key]) return false;
+      seen[key] = true;
+      return true;
+    });
+    return it;
+  }
+
+  const x = Vr('x'), t = Vr('t');
+  const BASES = [10, 'e'];
+  const TAKE = { 10: 'log', e: 'ln' };
+  const logb = (b, v) => b === 10 ? Math.log10(v) : Math.log(v);
+  const SOLVE_X = 'Solve for \\(x\\).';
+
+  // Divided the numbers inside the logs: log(num/den) taken for log num / log den.
+  function misDivide(it, B, num, den, k, shift) {
+    it.mis.push({ id: 'misDivide', v: logb(B, num / den) / k - shift,
+      msg: 'You divided the numbers inside the logs. \\(\\dfrac{' + tex(L(B, N(num))) + '}{' + tex(L(B, N(den))) +
+        '}\\) is not \\(' + tex(L(B, div(N(num), N(den)))) + '\\). Work out each log first, then divide.' });
+  }
+  function isPowerOf(b, a) { let p = a; while (p < b) p *= a; return p === b; }
+
+  // F1  a^x = b: take logs, power law, divide.
+  function buildF1() {
+    const items = [];
+    for (let a = 2; a <= 9; a++) [5, 7, 10, 12, 15, 20, 30, 45, 50, 60, 80, 100].forEach(b => {
+      if (isPowerOf(b, a)) return;
+      const it = newItem('F1', 'F1-' + a + '-' + b, 'x', SOLVE_X);
+      const s0 = S(it, eq(pw(N(a), x), N(b)), 'exp');
+      BASES.forEach(B => {
+        const s1 = S(it, eq(L(B, pw(N(a), x)), L(B, N(b))), 'logPow');
+        const s2 = S(it, eq(mul(x, L(B, N(a))), L(B, N(b))), 'coefLin');
+        const s3 = S(it, eq(x, div(L(B, N(b)), L(B, N(a)))), 'final', 'Divide by \\(' + tex(L(B, N(a))) + '\\)');
+        go(it, s0, TAKE[B], s1); go(it, s1, 'power', s2); go(it, s2, 'rearrange', s3);
+        misDivide(it, B, b, a, 1, 0);
+      });
+      items.push(it);
+    });
+    return items;
+  }
+
+  // F2  a^{kx} = b and a^{x+k} = b: power law, then rearrange.
+  function buildF2() {
+    const items = [];
+    [2, 3, 5, 7].forEach(a => [2, 3, 4].forEach(k => [10, 20, 50, 100].forEach(b => {
+      const it = newItem('F2', 'F2-kx-' + a + '-' + k + '-' + b, 'x', SOLVE_X);
+      const ex = mul(N(k), x);
+      const s0 = S(it, eq(pw(N(a), ex), N(b)), 'exp');
+      BASES.forEach(B => {
+        const s1 = S(it, eq(L(B, pw(N(a), ex)), L(B, N(b))), 'logPow');
+        const s2 = S(it, eq(mul(N(k), x, L(B, N(a))), L(B, N(b))), 'coefLin');
+        const s3 = S(it, eq(x, div(L(B, N(b)), mul(N(k), L(B, N(a))))), 'final', 'Divide by \\(' + tex(mul(N(k), L(B, N(a)))) + '\\)');
+        go(it, s0, TAKE[B], s1); go(it, s1, 'power', s2); go(it, s2, 'rearrange', s3);
+        misDivide(it, B, b, a, k, 0);
+      });
+      it.mis.push({ id: 'misK', v: Math.log(b) / Math.log(a),
+        msg: 'You left out the ' + k + '. The power law brings down the whole index, \\(' + k + 'x\\), so divide by ' + k + ' as well.' });
+      items.push(it);
+    })));
+    [2, 3, 4, 5, 6].forEach(a => [1, -1, 2, -2].forEach(k => [10, 30, 100].forEach(b => {
+      const it = newItem('F2', 'F2-shift-' + a + '-' + k + '-' + b, 'x', SOLVE_X);
+      const ex = add(x, N(k));
+      const s0 = S(it, eq(pw(N(a), ex), N(b)), 'exp');
+      BASES.forEach(B => {
+        const ratio = div(L(B, N(b)), L(B, N(a)));
+        const s1 = S(it, eq(L(B, pw(N(a), ex)), L(B, N(b))), 'logPow');
+        const s2 = S(it, eq(mul(ex, L(B, N(a))), L(B, N(b))), 'bracketLin');
+        const s3 = S(it, eq(ex, ratio), 'linLog', 'Divide by \\(' + tex(L(B, N(a))) + '\\)');
+        const s4 = S(it, eq(x, add(ratio, N(-k))), 'final', (k > 0 ? 'Subtract ' : 'Add ') + Math.abs(k));
+        go(it, s0, TAKE[B], s1); go(it, s1, 'power', s2); go(it, s2, 'rearrange', s3); go(it, s3, 'rearrange', s4);
+        misDivide(it, B, b, a, 1, k);
+      });
+      it.mis.push({ id: 'misK', v: Math.log(b) / Math.log(a),
+        msg: 'That is the value of \\(' + tex(ex) + '\\), not \\(x\\). You still need to ' + (k > 0 ? 'subtract ' + k : 'add ' + (-k)) + '.' });
+      items.push(it);
+    })));
+    return items;
+  }
+
+  // F3  e^{kx} = b, and a capacitor discharging, V = V0 e^{-t/RC}: take ln,
+  // ln e = 1, rearrange.
+  function buildF3() {
+    const items = [];
+    const cases = [];
+    [2, 3, 4, 5].forEach(k => [3, 5, 7, 10, 20, 50].forEach(b => cases.push([k, N(b)])));
+    [-1, -2].forEach(k => [N(2, 10), N(5, 10)].forEach(b => cases.push([k, b])));
+    cases.forEach(([k, bN]) => {
+      const it = newItem('F3', 'F3-e-' + k + '-' + tex(bN), 'x', SOLVE_X);
+      const lnE = L('e', E);
+      const ex = k === -1 ? neg(x) : k < 0 ? neg(mul(N(-k), x)) : mul(N(k), x);
+      const exLnE = k === -1 ? neg(mul(x, lnE)) : k < 0 ? neg(mul(N(-k), x, lnE)) : mul(N(k), x, lnE);
+      const fin = k === -1 ? neg(L('e', bN)) : k < 0 ? neg(div(L('e', bN), N(-k))) : div(L('e', bN), N(k));
+      const s0 = S(it, eq(pw(E, ex), bN), 'expE');
+      const s1 = S(it, eq(L('e', pw(E, ex)), L('e', bN)), 'lnE');
+      const s2 = S(it, eq(exLnE, L('e', bN)), 'lnE1');
+      const s3 = S(it, eq(ex, L('e', bN)), 'coefLin', '\\(\\ln e = 1\\)');
+      const s4 = S(it, eq(x, fin), 'final', 'Divide by \\(' + k + '\\)');
+      go(it, s0, 'ln', s1); go(it, s1, 'sp1', s3); go(it, s1, 'power', s2); go(it, s2, 'sp1', s3); go(it, s3, 'rearrange', s4);
+      it.mis.push({ id: 'misK', v: ev(L('e', bN)),
+        msg: 'That is the value of \\(' + tex(ex) + '\\), not \\(x\\). Divide by \\(' + k + '\\) as well.' });
+      items.push(it);
+    });
+    const VV = [[12, N(6)], [12, N(35, 10)], [12, N(2)], [9, N(3)], [9, N(45, 10)], [5, N(15, 10)], [5, N(2)], [24, N(6)]];
+    const RCS = [[N(1), 100], [N(22, 10), 100], [N(47, 10), 100], [N(10), 100], [N(22, 10), 1000], [N(47, 10), 1000]];
+    VV.forEach(([V0, Vn]) => RCS.forEach(([R, C]) => {
+      let p = R.p * C, q = R.q * 1000;                  // R in kΩ times C in μF, in seconds
+      while (p % 10 === 0 && q % 10 === 0) { p /= 10; q /= 10; }
+      const RC = N(p, q), one = p === q;
+      const lnE = L('e', E);
+      const ratio = div(Vn, N(V0));
+      const ex = one ? neg(t) : neg(div(t, RC));
+      const prompt = 'A capacitor discharges through a resistor, so its voltage after \\(t\\) seconds is ' +
+        '\\(V = V_0e^{-t/RC}.\\) Here \\(V_0 = ' + V0 + '\\) V, \\(R = ' + tex(R) + '\\) kΩ and \\(C = ' + C +
+        '\\) μF, so \\(RC = ' + tex(R) + ' \\times 10^{3} \\times ' + C + ' \\times 10^{-6} = ' + tex(RC) +
+        '\\) s. Find \\(t\\) when \\(V = ' + tex(Vn) + '\\) V.';
+      const it = newItem('F3', 'F3-rc-' + V0 + '-' + tex(Vn) + '-' + tex(R) + '-' + C, 't', prompt);
+      const s0 = S(it, eq(Vn, mul(N(V0), pw(E, ex))), 'eCoef');
+      const s1 = S(it, eq(pw(E, ex), ratio), 'expE', 'Divide by \\(' + V0 + '\\)');
+      const s2 = S(it, eq(L('e', pw(E, ex)), L('e', ratio)), 'lnE');
+      const s3 = S(it, eq(mul(ex, lnE), L('e', ratio)), 'lnE1');
+      const s4 = S(it, eq(ex, L('e', ratio)), 'coefLin', '\\(\\ln e = 1\\)');
+      const s5 = S(it, eq(t, one ? neg(L('e', ratio)) : neg(mul(RC, L('e', ratio)))), 'final',
+        'Multiply by \\(-' + tex(RC) + '\\)');
+      go(it, s0, 'rearrange', s1); go(it, s1, 'ln', s2); go(it, s2, 'sp1', s4); go(it, s2, 'power', s3);
+      go(it, s3, 'sp1', s4); go(it, s4, 'rearrange', s5);
+      [s2, s3, s4].forEach(si => over(it, si, 'quotient', 'Q_rhs'));
+      it.mis.push({ id: 'misK', v: -ev(L('e', ratio)),
+        msg: 'You left out the time constant. \\(' + tex(eq(ex, L('e', ratio))) + '\\), so multiply by \\(-' +
+          tex(RC) + '\\), not just by \\(-1\\).' });
+      items.push(it);
+    }));
+    return items;
+  }
+
+  // F4  log(x + a) - log x = log b: quotient law, undo, rearrange.
+  function buildF4() {
+    const items = [];
+    BASES.forEach(B => [1, 2, 3, 4, 5, 6, 8, 10].forEach(a => [2, 3, 4, 5, 6].forEach(b => {
+      const it = newItem('F4', 'F4-' + TAKE[B] + '-' + a + '-' + b, 'x', SOLVE_X);
+      const xa = add(x, N(a));
+      const s0 = S(it, eq(add(L(B, xa), neg(L(B, x))), L(B, N(b))), 'diff');
+      const s1 = S(it, eq(L(B, div(xa, x)), L(B, N(b))), 'single');
+      const s2 = S(it, eq(div(xa, x), N(b)), 'alg');
+      const s3 = S(it, eq(xa, mul(N(b), x)), 'alg', 'Multiply by \\(x\\)');
+      go(it, s0, 'quotient', s1); go(it, s1, 'undo', s2); go(it, s2, 'rearrange', s3);
+      if (b === 2) {
+        const s4 = S(it, eq(x, N(a)), 'final', 'Collect the \\(x\\) terms');
+        go(it, s3, 'rearrange', s4);
+      } else {
+        const s4 = S(it, eq(N(a), mul(N(b - 1), x)), 'alg', 'Collect the \\(x\\) terms');
+        const s5 = S(it, eq(x, div(N(a), N(b - 1))), 'final', 'Divide by \\(' + (b - 1) + '\\)');
+        go(it, s3, 'rearrange', s4); go(it, s4, 'rearrange', s5);
+      }
+      over(it, s1, 'quotient', 'SPLIT');
+      items.push(it);
+    })));
+    return items;
+  }
+
+  // F5  log x + log(x + k) = 1 or = log m: product law, undo, a quadratic,
+  // then which root is valid. The rejected root makes log x the log of a
+  // negative number.
+  function buildF5() {
+    const items = [];
+    const cases = [[1, 9, null], [2, 3, null], [5, -3, null], [10, -9, null]];
+    for (let r = 1; r <= 9; r++) for (let k = -(r - 1); k <= 9; k++) {
+      const m = r * (r + k);
+      if (k !== 0 && m >= 2 && m <= 60 && m !== 10) cases.push([r, k, m]);
+    }
+    cases.forEach(([r, k, m], idx) => {
+      const s = r + k;                                    // the other root is -s
+      const it = newItem('F5', 'F5-' + r + '-' + k + '-' + (m === null ? 'one' : m), 'x', SOLVE_X);
+      const xk = add(x, N(k));
+      const sum = add(L(10, x), L(10, xk));
+      const prod = mul(x, xk);
+      const M = m === null ? 10 : m;
+      let s1, s1b, s2;
+      if (m === null) {
+        const s0 = S(it, eq(sum, N(1)), 'sum');
+        s1 = S(it, eq(L(10, prod), N(1)), 'singleConst');
+        const s0b = S(it, eq(sum, L(10, N(10))), 'sum10', 'Write 1 as \\(\\log 10\\)');
+        s1b = S(it, eq(L(10, prod), L(10, N(10))), 'single10', 'Write 1 as \\(\\log 10\\)');
+        s2 = S(it, eq(prod, N(10)), 'alg');
+        go(it, s0, 'product', s1); go(it, s0, 'sp1', s0b); go(it, s0b, 'product', s1b);
+        go(it, s1, 'sp1', s1b); go(it, s1, 'undo', s2); go(it, s1b, 'undo', s2);
+      } else {
+        const s0 = S(it, eq(sum, L(10, N(m))), 'sum');
+        s1 = S(it, eq(L(10, prod), L(10, N(m))), 'single');
+        s2 = S(it, eq(prod, N(m)), 'alg');
+        go(it, s0, 'product', s1); go(it, s1, 'undo', s2);
+      }
+      [s1, s1b].forEach(si => { if (si !== undefined) over(it, si, 'product', 'SPLIT'); });
+      const kx = k === 1 ? x : k === -1 ? neg(x) : k > 0 ? mul(N(k), x) : neg(mul(N(-k), x));
+      const s3 = S(it, eq(add(pw(x, N(2)), kx, N(-M)), N(0)), 'alg', 'Expand');
+      const f1 = add(x, N(-r)), f2 = add(x, N(s));
+      const flip = idx % 2 === 1;
+      const s4 = S(it, eq(flip ? mul(f2, f1) : mul(f1, f2), N(0)), 'alg', 'Factorise');
+      const roots = flip ? [-s, r] : [r, -s];
+      const s5 = S(it, null, 'choose', 'Solve');
+      it.states[s5].tex = 'x = ' + roots[0] + ' \\quad\\text{or}\\quad x = ' + roots[1];
+      it.states[s5].choose = {
+        roots: roots, keep: r, reject: -s,
+        options: roots.map(v => ({ tex: 'x = ' + v, val: v })).concat([{ tex: '\\text{Both}', val: 'both' }]),
+        okMsg: '\\(x = ' + (-s) + '\\) is rejected, because \\(\\log(' + (-s) + ')\\) is undefined: logs only take positive numbers.',
+      };
+      go(it, s2, 'rearrange', s3); go(it, s3, 'rearrange', s4); go(it, s4, 'rearrange', s5);
+      it.answer = r;
+      it.mis.push({ id: 'misRoot', v: -s,
+        msg: '\\(x = ' + (-s) + '\\) cannot be a solution: it makes \\(\\log x = \\log(' + (-s) +
+          ')\\), and logs are only defined for positive numbers.' });
+      items.push(it);
+    });
+    return items;
+  }
+
+  // F6  a^x = b^{x-k}: take logs, power law on both sides, collect x,
+  // factorise, divide. The quotient law on log a - log b is an accepted route.
+  function buildF6() {
+    const items = [];
+    const V = [2, 3, 5, 6, 7];
+    V.forEach(a => V.forEach(b => { if (a !== b) [1, 2, 3].forEach(k => {
+      const it = newItem('F6', 'F6-' + a + '-' + b + '-' + k, 'x', SOLVE_X);
+      const xk = add(x, N(-k));
+      const s0 = S(it, eq(pw(N(a), x), pw(N(b), xk)), 'exp');
+      BASES.forEach(B => {
+        const La = L(B, N(a)), Lb = L(B, N(b));
+        const kLb = k === 1 ? Lb : mul(N(k), Lb);
+        const s1 = S(it, eq(L(B, pw(N(a), x)), L(B, pw(N(b), xk))), 'logPow');
+        const s2 = S(it, eq(mul(x, La), mul(xk, Lb)), 'bracketLin');
+        const s3 = S(it, eq(mul(x, La), add(mul(x, Lb), neg(kLb))), 'linLog', 'Expand the bracket');
+        const s4 = S(it, eq(add(mul(x, La), neg(mul(x, Lb))), neg(kLb)), 'linLog', 'Collect the \\(x\\) terms');
+        const s5 = S(it, eq(mul(x, add(La, neg(Lb))), neg(kLb)), 'linLog', 'Factorise');
+        const s6 = S(it, eq(x, div(neg(kLb), add(La, neg(Lb)))), 'final', 'Divide');
+        const s5q = S(it, eq(mul(x, L(B, div(N(a), N(b)))), neg(kLb)), 'linLog');
+        const s6q = S(it, eq(x, div(neg(kLb), L(B, div(N(a), N(b))))), 'final', 'Divide');
+        go(it, s0, TAKE[B], s1); go(it, s1, 'power', s2); go(it, s2, 'rearrange', s3); go(it, s3, 'rearrange', s4);
+        go(it, s4, 'rearrange', s5); go(it, s5, 'rearrange', s6); go(it, s5, 'quotient', s5q); go(it, s5q, 'rearrange', s6q);
+        over(it, s3, 'quotient', 'Q_mult');
+        over(it, s4, 'quotient', 'Q_factor');
+      });
+      items.push(it);
+    }); }));
+    return items;
+  }
+
+  const FAMILIES = [
+    { id: 'F1', stage: 1, name: 'Take logs', eg: '3^x = 20', build: buildF1 },
+    { id: 'F2', stage: 2, name: 'Power law, then rearrange', eg: '2^{3x} = 50,\\; 5^{x+1} = 30', build: buildF2 },
+    { id: 'F3', stage: 3, name: 'Base e, and a capacitor', eg: 'e^{2x} = 7,\\; V = V_0e^{-t/RC}', build: buildF3 },
+    { id: 'F4', stage: 4, name: 'Quotient law', eg: '\\log(x + 3) - \\log x = \\log 4', build: buildF4 },
+    { id: 'F5', stage: 5, name: 'Product law', eg: '\\log x + \\log(x + 3) = 1', build: buildF5 },
+    { id: 'F6', stage: 6, name: 'Two bases', eg: '2^x = 5^{x - 1}', build: buildF6 },
+  ].map(f => {
+    const built = f.build();
+    const items = built.map(finish).filter(Boolean);
+    return { id: f.id, stage: f.stage, name: f.name, eg: f.eg, items: items, filtered: built.length - items.length };
+  });
+  const famById = {};
+  FAMILIES.forEach(f => { famById[f.id] = f; });
+
+  const SOLVE_LAWS = [
+    '\\log(ab) = \\log a + \\log b',
+    '\\log\\!\\left(\\tfrac{a}{b}\\right) = \\log a - \\log b',
+    '\\log(a^n) = n\\log a',
+    '\\log 10 = 1 \\qquad \\ln e = 1',
+    '\\log 1 = 0 \\qquad \\ln 1 = 0',
+    '10^{\\log y} = y \\qquad e^{\\ln y} = y',
+  ];
+
+  // ── Session ────────────────────────────────────────────────────────────
+  const LENGTHS = [5, 10, 15];
+  function shuffled(a) {
+    const out = a.slice();
+    for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const tmp = out[i]; out[i] = out[j]; out[j] = tmp; }
+    return out;
+  }
+  // A stage-s session is family s, with every third question taken from an
+  // earlier family in turn. Drawn without replacement from shuffled pools.
+  function buildQueue(stage, n) {
+    const focus = shuffled(FAMILIES[stage - 1].items);
+    const earlier = FAMILIES.slice(0, stage - 1).map(f => shuffled(f.items));
+    const ptr = earlier.map(() => 0);
+    const out = [];
+    let fi = 0, rr = 0;
+    for (let i = 0; i < n; i++) {
+      if (earlier.length && i % 3 === 2) { const j = rr++ % earlier.length; out.push(earlier[j][ptr[j]++]); }
+      else out.push(focus[fi++]);
+    }
+    return out;
+  }
+
+  const $ = id => document.getElementById(id);
+  const MT = s => MaffsText.html(s);
+  let sStage = 1, sLen = 10, sQueue = [], sIdx = 0, sAnswered = 0, sScore = 0, sStreak = 0, sCorrect = 0;
+  let cur = null, curState = 0, wrongMoves = 0, busy = false, lawsSkip = false, unloadBound = false;
+
+  function getSolveBest() { try { return parseInt(localStorage.getItem('ll_best_solve') || '0', 10); } catch (e) { return 0; } }
+  function saveSolveBest(s) {
+    const prev = getSolveBest();
+    try {
+      if (s > prev) { localStorage.setItem('ll_best_solve', s); mfg('personal_best_set', { game_slug: 'log-laws', level: LEVEL, mode: 'solve', score: s, previous_best: prev }); }
+      const arr = JSON.parse(localStorage.getItem('ll_scores_solve') || '[]');
+      arr.push({ score: s, date: new Date().toLocaleDateString('en-GB') });
+      arr.sort((a, b) => b.score - a.score);
+      localStorage.setItem('ll_scores_solve', JSON.stringify(arr.slice(0, 5)));
+    } catch (e) { /* storage blocked: the run still completes */ }
+  }
+  function renderSolveLB() {
+    let arr = [];
+    try { arr = JSON.parse(localStorage.getItem('ll_scores_solve') || '[]'); } catch (e) { arr = []; }
+    const el = $('lbList');
+    if (!arr.length) { el.innerHTML = '<div style="text-align:center;color:#94a3b8;font-size:13px;padding:12px">No scores yet</div>'; return; }
+    el.innerHTML = arr.map((s, i) =>
+      '<div class="lb-row"><span class="lb-rank">#' + (i + 1) + '</span><span class="lb-date">' + s.date +
+      '</span><span class="lb-score">' + s.score + '</span></div>').join('');
+  }
+  function updateBar() {
+    $('score').textContent = sScore; $('streak').textContent = sStreak; $('best').textContent = getSolveBest();
+  }
+
+  // ── Start screen ───────────────────────────────────────────────────────
+  function applySkip() {
+    const i = LAWS.findIndex(l => l.indexOf('\\log_a b') === 0);
+    const hide = mode === 'laws' && $('skipCob').checked;
+    [$('startLaws'), $('refGrid')].forEach(p => { if (p.children[i]) p.children[i].hidden = hide; });
+  }
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll('#modePick .mode-btn').forEach(b => {
+      const on = b.dataset.mode === m;
+      b.classList.toggle('selected', on); b.setAttribute('aria-pressed', String(on));
+    });
+    $('lawsOpts').hidden = m !== 'laws'; $('startLaws').hidden = m !== 'laws';
+    $('solveOpts').hidden = m !== 'solve'; $('solveLawList').hidden = m !== 'solve';
+    const cb = $('skipCob');
+    // Solve mode never uses change of base, so the option shows ticked and fixed.
+    if (m === 'solve') { cb.checked = true; cb.disabled = true; } else { cb.disabled = false; cb.checked = lawsSkip; }
+    $('skipCobRow').classList.toggle('disabled', m === 'solve');
+    applySkip();
+    $('score').textContent = 0; $('streak').textContent = 0;
+    if (m === 'solve') { $('best').textContent = getSolveBest(); renderSolveLB(); }
+    else { $('best').textContent = getBest(); renderLB(); }
+  }
+  function renderLengths() {
+    MaffsSession.render({
+      mount: $('solveLengths'),
+      poolSize: Math.min(LENGTHS[LENGTHS.length - 1], FAMILIES[sStage - 1].items.length),
+      preferred: LENGTHS, selected: sLen,
+      onChange: n => { sLen = n; },
+    });
+  }
+  function renderStages() {
+    const g = $('stagePick');
+    g.innerHTML = '';
+    FAMILIES.forEach(f => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'stage-btn' + (f.stage === sStage ? ' selected' : '');
+      b.setAttribute('aria-pressed', String(f.stage === sStage));
+      b.innerHTML = '<span class="stage-n">' + f.stage + '</span><span class="stage-t">' + f.name +
+        '<small>' + K(f.eg) + '</small></span>';
+      b.addEventListener('click', () => { sStage = f.stage; renderStages(); renderLengths(); });
+      g.appendChild(b);
+    });
+  }
+  function renderStatic() {
+    $('solveLawList').innerHTML = SOLVE_LAWS.map(l => '<div class="law-list-item">' + K(l) + '</div>').join('');
+    $('solveRefGrid').innerHTML = SOLVE_LAWS.map(l => '<div class="law-chip">' + K(l) + '</div>').join('');
+    $('solveMoves').innerHTML = '';
+    MOVES.forEach(m => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'move-btn'; b.dataset.move = m.id;
+      b.innerHTML = MT(m.label);
+      b.addEventListener('click', () => onMove(m.id, b));
+      $('solveMoves').appendChild(b);
+    });
+    renderStages();
+  }
+  function showMenu() {
+    ['solveGame', 'mainGame'].forEach(id => $(id).classList.remove('visible'));
+    ['solveOver', 'gameOver'].forEach(id => $(id).classList.remove('visible'));
+    $('startScreen').style.display = '';
+    setMode(mode);
+    renderStages(); renderLengths();
+  }
+
+  // ── Play ───────────────────────────────────────────────────────────────
+  function setMsg(kind, html, reasonId) {
+    const el = $('solveMsg');
+    el.className = 'solve-msg' + (kind ? ' ' + kind : '');
+    el.dataset.reason = reasonId || '';
+    el.innerHTML = html ? MT(html) : '';
+  }
+  function addLine(tx, tag) {
+    const li = document.createElement('li');
+    li.className = 'line-new';
+    li.innerHTML = '<span class="line-math">' + K(tx) + '</span>' + (tag ? '<span class="line-tag">' + MT(tag) + '</span>' : '');
+    $('solveLines').appendChild(li);
+  }
+  function clearMarks() { document.querySelectorAll('#solveMoves .move-btn').forEach(b => b.classList.remove('nope', 'meh')); }
+
+  function startSolve() {
+    sQueue = buildQueue(sStage, sLen);
+    sIdx = 0; sAnswered = 0; sScore = 0; sStreak = 0; sCorrect = 0;
+    $('startScreen').style.display = 'none';
+    ['mainGame', 'gameOver', 'solveOver'].forEach(id => $(id).classList.remove('visible'));
+    $('solveGame').classList.add('visible');
+    window._ggAbandoned = true;
+    if (!unloadBound) {
+      unloadBound = true;
+      window.addEventListener('beforeunload', () => {
+        if (window._ggAbandoned && mode === 'solve') mfg('game_abandoned', { game_slug: 'log-laws', level: LEVEL, mode: 'solve', questions_answered: sAnswered });
+      });
+    }
+    mfg('game_started', { game_slug: 'log-laws', level: LEVEL, mode: 'solve' });
+    updateBar();
+    nextSolveQ();
+  }
+
+  function nextSolveQ() {
+    MaffsNext.clear($('solveBox'));
+    if (sIdx >= sQueue.length) { endSolve(); return; }
+    cur = sQueue[sIdx++]; curState = 0; wrongMoves = 0; busy = false;
+    const fam = famById[cur.fam];
+    $('solveStageLabel').textContent = 'Stage ' + fam.stage + ' · ' + fam.name + (fam.stage !== sStage ? ' · review' : '');
+    $('solveCount').textContent = 'Question ' + sIdx + ' of ' + sQueue.length;
+    $('solvePrompt').innerHTML = MT(cur.prompt);
+    $('solveLines').innerHTML = '';
+    addLine(cur.states[0].tex, null);
+    setMsg('', '');
+    clearMarks();
+    $('solveAsk').hidden = false; $('solveMoves').hidden = false;
+    $('solveAnswer').hidden = true; $('solveChoose').hidden = true;
+  }
+
+  function onMove(m, btn) {
+    if (!cur || busy) return;
+    const st = cur.states[curState];
+    if (st.kind === 'final' || st.kind === 'choose') return;
+    const to = (cur.go[curState] || {})[m];
+    if (to !== undefined) {
+      curState = to;
+      const nx = cur.states[to];
+      addLine(nx.tex, (m === 'rearrange' || m === 'sp1') ? nx.note : MOVE_TAG[m]);
+      setMsg('', '');
+      clearMarks();
+      if (nx.kind === 'final') showAnswer();
+      else if (nx.kind === 'choose') showChoose();
+      return;
+    }
+    const rid = cur.why[curState][m];
+    const r = REASONS[rid];
+    if (!r.ok) wrongMoves++;
+    btn.classList.add(r.ok ? 'meh' : 'nope');
+    setMsg(r.ok ? 'ok' : 'bad', (r.ok ? '' : '✗ ') + r.t.replace(/\{v\}/g, cur.v), rid);
+  }
+
+  function showAnswer() {
+    $('solveAsk').hidden = true; $('solveMoves').hidden = true;
+    $('solveAnswerQ').innerHTML = MT('Now use your calculator. Give \\(' + cur.v + '\\) to 3 significant figures' +
+      (cur.v === 't' ? ', in seconds' : '') + '.');
+    $('solveAnswerVar').innerHTML = K(cur.v + ' =');
+    $('solveAnswer').hidden = false;
+    const inp = $('solveInput');
+    inp.value = ''; inp.disabled = false; $('solveCheck').disabled = false;
+    try { inp.focus({ preventScroll: true }); } catch (e) { /* older browsers */ }
+  }
+  function showChoose() {
+    $('solveAsk').hidden = true; $('solveMoves').hidden = true;
+    const g = $('solveChooseGrid');
+    g.innerHTML = '';
+    cur.states[curState].choose.options.forEach(o => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'move-btn choose-btn'; b.dataset.val = String(o.val);
+      b.innerHTML = K(o.tex);
+      b.addEventListener('click', () => { if (!busy) finishQ(o.val === cur.states[curState].choose.keep, { choice: o.val }, b); });
+      g.appendChild(b);
+    });
+    $('solveChoose').hidden = false;
+  }
+
+  function checkAnswer() {
+    if (!cur || busy || $('solveAnswer').hidden) return;
+    const raw = $('solveInput').value.trim().replace(/[−–]/g, '-').replace(/\s+/g, '');
+    if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(raw)) { setMsg('ok', 'Type a number, like \\(2.73\\).', 'format'); return; }
+    const v = Number(raw), target = r3(cur.answer);
+    if (Math.abs(v - target) <= 1e-9 * Math.max(1, Math.abs(target))) { finishQ(true, { typed: v }); return; }
+    if (r3(v) === target) { setMsg('ok', 'Nearly: round that to 3 significant figures.', 'sigfig'); return; }
+    finishQ(false, { typed: v });
+  }
+
+  function finishQ(correct, info, btn) {
+    busy = true;
+    sAnswered++;
+    mfg('question_answered', { game_slug: 'log-laws', level: LEVEL, mode: 'solve', question_index: sIdx, correct: correct });
+    $('solveInput').disabled = true; $('solveCheck').disabled = true;
+    const choose = cur.fam === 'F5' ? cur.states[curState].choose : null;
+    if (choose) document.querySelectorAll('#solveChooseGrid .choose-btn').forEach(b => { b.disabled = true; });
+    const ansTex = cur.v + (choose ? ' = ' + cur.answer : ' \\approx ' + r3str(cur.answer));
+    if (correct) {
+      sCorrect++;
+      const pts = Math.max(4, 10 - 2 * wrongMoves);
+      sStreak++;
+      const gain = pts + sStreak * 3;
+      sScore += gain;
+      if (btn) btn.classList.add('yes');
+      if (!choose) addLine(ansTex, '3 s.f.');
+      setMsg('good', '✓ Correct! (+' + gain + ')' + (choose ? ' ' + choose.okMsg : ''), 'correct');
+      updateBar();
+      setTimeout(nextSolveQ, 2000);
+      return;
+    }
+    sStreak = 0;
+    if (btn) btn.classList.add('nope');
+    // The working first: the last line completes the chain, then the named
+    // misconception if the answer matches one, then the Next control.
+    addLine(ansTex, choose ? 'The valid solution' : '3 s.f.');
+    let mis = null;
+    if (choose) mis = cur.mis.find(m => m.id === 'misRoot') || null;
+    else mis = cur.mis.find(m => r3(m.v) === r3(info.typed)) || null;
+    setMsg('bad', '✗ Not quite. ' + (mis ? mis.msg + ' ' : '') + 'The answer is \\(' + ansTex + '\\).', mis ? mis.id : 'wrong');
+    updateBar();
+    MaffsNext.wrong({ mount: $('solveBox'), onAdvance: nextSolveQ });
+  }
+
+  function endSolve() {
+    window._ggAbandoned = false;
+    cur = null;
+    $('solveGame').classList.remove('visible');
+    $('solveOver').classList.add('visible');
+    $('solveFinal').textContent = sScore;
+    $('solveDetail').textContent = sQueue.length + ' questions, ' + sCorrect + ' correct · Stage ' + sStage + ': ' + FAMILIES[sStage - 1].name;
+    const acc = sQueue.length ? Math.round(sCorrect / sQueue.length * 100) : 0;
+    mfg('game_completed', { game_slug: 'log-laws', level: LEVEL, mode: 'solve', score: sScore, questions_answered: sQueue.length, questions_correct: sCorrect, accuracy: acc });
+    // Held off the global leaderboard AND score history until the
+    // leaderboard-modes contract lands (docs/next-contract-leaderboard-modes.md):
+    // today log-laws has one board per level, and Solve scores would mix into
+    // the Laws drill's. Laws still submits; declared HELD in
+    // scripts/check-leaderboard-coverage.js and canon §9.
+    var LEADERBOARD_MODE_READY = false;
+    if (window.MaffsLeaderboard) { if (LEADERBOARD_MODE_READY) { MaffsLeaderboard.submitScore('log-laws', LEVEL, sScore, sQueue.length, 'solve').catch(function () {}); if (window.MaffsScoreHistory) { MaffsScoreHistory.record('log-laws', LEVEL, sScore, 'solve'); } } }
+    saveSolveBest(sScore);
+    updateBar();
+    renderSolveLB();
+    $('solveNextStage').hidden = sStage >= FAMILIES.length;
+  }
+
+  // ── Wiring ─────────────────────────────────────────────────────────────
+  document.querySelectorAll('#modePick .mode-btn').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+  $('skipCob').addEventListener('change', () => { if (mode === 'laws') { lawsSkip = $('skipCob').checked; applySkip(); } });
+  $('solveCheck').addEventListener('click', checkAnswer);
+  $('solveInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); checkAnswer(); } });
+  $('solveNextStage').addEventListener('click', () => { if (sStage < FAMILIES.length) sStage++; renderStages(); renderLengths(); startSolve(); });
+  renderLengths();
+  waitForKaTeX(() => { renderStatic(); applySkip(); });
+
+  window.startSolve = startSolve;
+  window.LL_SOLVE = {
+    version: 1,
+    moves: MOVES, reasons: REASONS, kinds: KIND, laws: SOLVE_LAWS,
+    families: FAMILIES.map(f => ({ id: f.id, stage: f.stage, name: f.name, eg: f.eg, filtered: f.filtered, items: f.items })),
+    lengths: LENGTHS,
+    menu: showMenu,
+    // Read-only view of the question in play, for scripted checks.
+    state: () => ({ item: cur ? cur.id : null, state: curState, stage: sStage, length: sLen,
+      index: sIdx, total: sQueue.length, busy: busy }),
+  };
+})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

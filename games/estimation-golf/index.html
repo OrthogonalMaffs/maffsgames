@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Estimation meets golf — your accuracy determines how far the ball travels. 9-hole rounds with par-based scoring.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/estimation-golf/">
+<meta property="og:title" content="Estimation Golf — MaffsGames">
+<meta property="og:description" content="Estimation meets golf — your accuracy determines how far the ball travels. 9-hole rounds with par-based scoring.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/estimation-golf/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Estimation Golf — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root {
+  --cream:   #f5f0e8;
+  --parch:   #ede5d0;
+  --green:   #2d5a27;
+  --dkgreen: #1a3a16;
+  --fairway: #4a8c3f;
+  --sand:    #c8a96e;
+  --ink:     #1c1208;
+  --red:     #b5303a;
+  --blue:    #1a4a7a;
+  --gold:    #c8922a;
+  --ltgold:  #e8b84b;
+  --border:  #8a7a5a;
+  --shadow:  rgba(28,18,8,0.18);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--green);
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(74,140,63,0.6) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(26,58,22,0.8) 0%, transparent 50%),
+    repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(0,0,0,0.03) 40px, rgba(0,0,0,0.03) 80px);
+  min-height: 100vh;
+  font-family: 'Courier Prime', monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px 48px;
+}
+
+/* ── HEADER ── */
+.header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+.flag-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+.flag {
+  width: 3px; height: 44px;
+  background: var(--ink);
+  position: relative;
+}
+.flag::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 3px;
+  width: 22px; height: 14px;
+  background: var(--red);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--cream);
+  text-shadow: 2px 3px 0 var(--dkgreen), 0 0 40px rgba(200,146,42,0.3);
+  letter-spacing: 0.04em;
+}
+.subtitle {
+  font-family: 'Special Elite', cursive;
+  color: var(--sand);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ── LEVEL SELECTOR ── */
+.level-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  background: rgba(0,0,0,0.25);
+  padding: 8px 12px;
+  border: 1px solid rgba(200,169,110,0.3);
+}
+.lvl-btn {
+  padding: 5px 14px;
+  font-family: 'Special Elite', cursive;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(245,240,232,0.5);
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.lvl-btn:hover { color: var(--cream); border-color: rgba(200,169,110,0.5); }
+.lvl-btn.active { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 700; }
+
+/* ── MAIN LAYOUT ── */
+.game-wrap {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 18px;
+  width: 1100px;
+  max-width: 100%;
+}
+
+/* ── SCORECARD ── */
+.scorecard {
+  background: var(--cream);
+  border: 2px solid var(--border);
+  box-shadow: 4px 6px 0 rgba(0,0,0,0.3), inset 0 0 60px rgba(200,169,110,0.08);
+  padding: 0;
+  overflow: hidden;
+}
+.card-header {
+  background: var(--dkgreen);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title {
+  font-family: 'Playfair Display', serif;
+  color: var(--cream);
+  font-size: 1rem;
+  font-style: italic;
+}
+.card-course {
+  font-family: 'Special Elite', cursive;
+  color: var(--sand);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+table.holes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+}
+table.holes th {
+  background: var(--parch);
+  color: var(--ink);
+  padding: 5px 8px;
+  text-align: center;
+  font-family: 'Special Elite', cursive;
+  letter-spacing: 0.08em;
+  border-bottom: 2px solid var(--border);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+}
+table.holes td {
+  padding: 5px 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(138,122,90,0.25);
+  color: var(--ink);
+  font-size: 0.78rem;
+}
+table.holes tr:nth-child(even) td { background: rgba(200,169,110,0.08); }
+table.holes tr.active-row td { background: rgba(74,140,63,0.15); font-weight: 700; }
+table.holes tr.done-row td { color: #555; }
+
+.score-cell { font-weight: 700; }
+.score-hole-in-one { background: #ffd700 !important; color: var(--ink) !important; border-radius: 50%; box-shadow: 0 0 8px #ffd700; }
+.score-eagle  { background: #ffd700 !important; color: var(--ink) !important; border-radius: 50%; }
+.score-birdie { background: #e8b84b !important; color: var(--ink) !important; }
+.score-par    { background: #c8e6c9 !important; color: var(--dkgreen) !important; }
+.score-bogey  { background: #ffccbc !important; }
+.score-double { background: #ef9a9a !important; }
+.score-triple { background: #e57373 !important; color: white !important; }
+
+.total-row td {
+  background: var(--dkgreen) !important;
+  color: var(--cream) !important;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  border-top: 2px solid var(--border);
+}
+.par-row td {
+  background: var(--parch);
+  font-size: 0.65rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* ── PLAY AREA ── */
+.play-area {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── HOLE CARD ── */
+.hole-card {
+  background: var(--cream);
+  border: 2px solid var(--border);
+  box-shadow: 4px 6px 0 rgba(0,0,0,0.3);
+  padding: 20px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.hole-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: var(--fairway);
+}
+.hole-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+}
+.hole-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  color: var(--green);
+  font-weight: 700;
+  line-height: 1;
+}
+.hole-topic {
+  font-family: 'Special Elite', cursive;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-transform: uppercase;
+}
+.hole-par {
+  font-family: 'Special Elite', cursive;
+  font-size: 0.72rem;
+  color: var(--border);
+  text-transform: uppercase;
+}
+.question-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 18px;
+  font-style: italic;
+  min-height: 3.5rem;
+}
+.hint-text {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.72rem;
+  color: var(--blue);
+  margin-bottom: 14px;
+  padding: 6px 10px;
+  background: rgba(26,74,122,0.07);
+  border-left: 3px solid var(--blue);
+  display: none;
+}
+.hint-text.show { display: block; }
+
+.input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+input[type=number] {
+  flex: 1;
+  padding: 10px 14px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: var(--parch);
+  border: 2px solid var(--border);
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s;
+  -moz-appearance: textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+input[type=number]:focus { border-color: var(--green); }
+.submit-btn {
+  padding: 10px 22px;
+  background: var(--green);
+  color: var(--cream);
+  border: 2px solid var(--dkgreen);
+  font-family: 'Special Elite', cursive;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.15s;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+}
+.submit-btn:hover:not(:disabled) {
+  background: var(--fairway);
+  transform: translate(-1px,-1px);
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+}
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+.hint-btn {
+  padding: 6px 14px;
+  background: transparent;
+  color: var(--blue);
+  border: 1px solid var(--blue);
+  font-family: 'Special Elite', cursive;
+  font-size: 0.7rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+}
+.hint-btn:hover:not(:disabled) { background: rgba(26,74,122,0.08); }
+.hint-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ── RESULT PANEL ── */
+.result-panel {
+  padding: 14px 18px;
+  border: 2px solid var(--border);
+  background: var(--parch);
+  display: none;
+  position: relative;
+}
+.result-panel.show { display: block; }
+.result-grade {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.result-detail {
+  font-size: 0.78rem;
+  color: #444;
+  line-height: 1.6;
+}
+.result-detail strong { color: var(--ink); }
+.next-btn {
+  margin-top: 12px;
+  padding: 9px 24px;
+  background: var(--gold);
+  color: var(--ink);
+  border: 2px solid #a07020;
+  font-family: 'Special Elite', cursive;
+  font-size: 0.85rem;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+.next-btn:hover { background: var(--ltgold); transform: translate(-1px,-1px); box-shadow: 3px 3px 0 rgba(0,0,0,0.2); }
+
+/* ── FAIRWAY VISUAL ── */
+.fairway-wrap {
+  height: 54px;
+  position: relative;
+  margin-bottom: 4px;
+  overflow: hidden;
+}
+.fairway-bg {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, #5aa84e 0%, #3d7a34 100%);
+  border-radius: 4px;
+}
+.rough { position: absolute; top:0; bottom:0; width: 24px; background: #2d5a27; }
+.rough.left { left:0; }
+.rough.right { right:0; }
+.fairway-stripe {
+  position: absolute; top:0; bottom:0; width: 40px;
+  background: rgba(255,255,255,0.04);
+}
+.hole-pin {
+  position: absolute;
+  right: 28px;
+  bottom: 0;
+  width: 3px;
+  height: 40px;
+  background: #222;
+}
+.hole-pin::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 3px;
+  width: 14px; height: 9px;
+  background: var(--red);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.hole-cup {
+  position: absolute;
+  right: 22px;
+  bottom: 0;
+  width: 15px; height: 6px;
+  background: #111;
+  border-radius: 50%;
+}
+.ball {
+  position: absolute;
+  bottom: 6px;
+  width: 14px; height: 14px;
+  background: radial-gradient(circle at 35% 35%, #fff 0%, #ddd 60%, #aaa 100%);
+  border-radius: 50%;
+  border: 1px solid #999;
+  transition: left 0.8s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.4);
+}
+
+/* ── SCORECARD SUMMARY ── */
+.summary-card {
+  background: var(--cream);
+  border: 2px solid var(--border);
+  box-shadow: 4px 6px 0 rgba(0,0,0,0.3);
+  padding: 24px;
+  text-align: center;
+  display: none;
+}
+.summary-card.show { display: block; }
+.summary-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--green);
+  margin-bottom: 8px;
+}
+.summary-score {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+.summary-vs-par {
+  font-family: 'Special Elite', cursive;
+  font-size: 1.1rem;
+  margin: 6px 0 18px;
+}
+.summary-rank {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  color: var(--gold);
+  margin-bottom: 20px;
+}
+.play-again-btn {
+  padding: 12px 32px;
+  background: var(--green);
+  color: var(--cream);
+  border: 2px solid var(--dkgreen);
+  font-family: 'Special Elite', cursive;
+  font-size: 1rem;
+  cursor: pointer;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+  transition: all 0.15s;
+}
+.play-again-btn:hover { background: var(--fairway); transform: translate(-1px,-1px); box-shadow: 4px 4px 0 rgba(0,0,0,0.3); }
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div style="width:100%;padding:8px 20px;"><a href="../../" style="color:var(--sand);text-decoration:none;font-family:'Special Elite',cursive;font-size:13px;">← Back</a></div>
+<div class="header">
+  <div class="flag-row">
+    <div class="flag"></div>
+    <h1>Estimation Golf</h1>
+    <div class="flag"></div>
+  </div>
+  <p class="subtitle">9 holes · par your estimate · lowest score wins</p>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+
+<div class="level-bar">
+  <button class="lvl-btn" onclick="setLevel('year6')">Year 6</button>
+  <button class="lvl-btn active" onclick="setLevel('ks3')">KS3</button>
+  <button class="lvl-btn" onclick="setLevel('gcse')">GCSE</button>
+  <button class="lvl-btn" onclick="setLevel('alevel')">A-Level</button>
+  <button class="lvl-btn" onclick="setLevel('level4')">Level 4</button>
+</div>
+
+<div class="game-wrap">
+
+  <!-- SCORECARD -->
+  <div class="scorecard">
+    <div class="card-header">
+      <span class="card-title">MaffsGames Golf Club</span>
+      <span class="card-course">Est. Course</span>
+    </div>
+    <table class="holes" id="scoretable">
+      <thead>
+        <tr>
+          <th>Hole</th>
+          <th>Topic</th>
+          <th>Par</th>
+          <th>Score</th>
+          <th>+/−</th>
+        </tr>
+      </thead>
+      <tbody id="scorebody"></tbody>
+      <tfoot>
+        <tr class="par-row">
+          <td colspan="2" style="text-align:left;padding-left:10px;font-style:italic">Par total</td>
+          <td>36</td><td></td><td></td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="2" style="text-align:left;padding-left:10px">TOTAL</td>
+          <td id="totalPar">36</td>
+          <td id="totalScore">—</td>
+          <td id="totalVsPar">—</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- PLAY AREA -->
+  <div class="play-area">
+
+    <div class="hole-card" id="holeCard">
+      <div class="hole-meta">
+        <span class="hole-num" id="holeNum">1</span>
+        <span class="hole-topic" id="holeTopic">Rounding</span>
+        <span class="hole-par" id="holePar">Par 4</span>
+      </div>
+      <div class="fairway-wrap" id="fairwayWrap">
+        <div class="fairway-bg"></div>
+        <div class="rough left"></div>
+        <div class="rough right"></div>
+        <div class="fairway-stripe" style="left:60px"></div>
+        <div class="fairway-stripe" style="left:140px"></div>
+        <div class="fairway-stripe" style="left:220px"></div>
+        <div class="fairway-stripe" style="left:300px"></div>
+        <div class="hole-cup"></div>
+        <div class="hole-pin"></div>
+        <div class="ball" id="ball" style="left:28px"></div>
+      </div>
+      <p class="question-text" id="questionText">Loading...</p>
+      <div class="hint-text" id="hintText"></div>
+      <div class="input-row">
+        <input type="number" id="answerInput" placeholder="Your estimate..." autocomplete="off">
+        <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">Swing ⛳</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:4px">
+        <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 Hint (−1 stroke)</button>
+      </div>
+      <div class="result-panel" id="resultPanel">
+        <div class="result-grade" id="resultGrade"></div>
+        <div class="result-detail" id="resultDetail"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextHole()">Next Hole →</button>
+      </div>
+    </div>
+
+    <div class="summary-card" id="summaryCard">
+      <div class="summary-title">Round Complete</div>
+      <div class="summary-score" id="summaryScore"></div>
+      <div class="summary-vs-par" id="summaryVsPar"></div>
+      <div class="summary-rank" id="summaryRank"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+      <button class="play-again-btn" onclick="startGame()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── QUESTION BANKS ─────────────────────────────────────────────────────────────
+// 9 holes, each with a topic. Each level has its own questions per hole.
+// answer: exact value, tolerance: % within which you get eagle/birdie/par
+
+const HOLES_META = [
+  { topic: 'Rounding',         par: 4 },
+  { topic: 'Percentages',      par: 4 },
+  { topic: 'Large Numbers',    par: 4 },
+  { topic: 'Powers & Roots',   par: 4 },
+  { topic: 'Units & Measures', par: 4 },
+  { topic: 'Proportions',      par: 4 },
+  { topic: 'Time & Rates',     par: 4 },
+  { topic: 'Areas & Volumes',  par: 4 },
+  { topic: 'Mixed Estimates',  par: 4 },
+];
+// Par 4 × 9 = 36 total par
+
+const QUESTIONS = {
+  year6: [
+    { q: "How many days are in a year?", answer: 365, hint: "Think about the calendar — 12 months, roughly 30 days each.", unit: "" },
+    { q: "How many minutes are in an hour?", answer: 60, hint: "Count the ticks on a clock face.", unit: "" },
+    { q: "How many centimetres are in a metre?", answer: 100, hint: "A ruler is usually 30 cm — how many rulers make a metre?", unit: "" },
+    { q: "How many players are on a football team?", answer: 11, hint: "Think about how many shirts a squad wears on the pitch.", unit: "" },
+    { q: "How many teeth does an adult have?", answer: 32, hint: "More than 20, fewer than 40.", unit: "" },
+    { q: "How many legs does a spider have?", answer: 8, hint: "More than an insect (6).", unit: "" },
+    { q: "How many hours are in a day?", answer: 24, hint: "Think about a full clock going round twice.", unit: "" },
+    { q: "How many weeks are in a year?", answer: 52, hint: "365 days ÷ 7 days per week.", unit: "" },
+    { q: "How many bones are in the human body?", answer: 206, hint: "More than 200, fewer than 210.", unit: "" },
+    { q: "How many seconds are in a minute?", answer: 60, hint: "Same as the number of minutes in an hour.", unit: "" },
+    { q: "How many sides does a hexagon have?", answer: 6, hint: "'Hex' means six.", unit: "" },
+    { q: "Roughly how tall is a door in centimetres?", answer: 200, hint: "About 2 metres — convert to cm.", unit: "cm" },
+    { q: "How many months have exactly 30 days?", answer: 4, hint: "April, June, September, November.", unit: "" },
+    { q: "How many grams are in a kilogram?", answer: 1000, hint: "'Kilo' means a thousand.", unit: "" },
+    { q: "How many millilitres are in a litre?", answer: 1000, hint: "Same as grams in a kilogram.", unit: "" },
+    { q: "How many slices are in a typical large pizza?", answer: 8, hint: "Usually cut into quarters, then each quarter in half.", unit: "" },
+    { q: "How many letters are in the English alphabet?", answer: 26, hint: "A through Z — count them!", unit: "" },
+    { q: "How many continents are there?", answer: 7, hint: "Europe, Asia, Africa, North America, South America, Oceania, Antarctica.", unit: "" },
+    { q: "Roughly how many pupils are in a typical school class?", answer: 30, hint: "Usually between 25 and 35.", unit: "" },
+    { q: "How many dots are on a standard die (total of all faces)?", answer: 21, hint: "Add up 1 + 2 + 3 + 4 + 5 + 6.", unit: "" },
+  ],
+  ks3: [
+    { q: "Round 3,847 to the nearest hundred.", answer: 3800, hint: "Look at the tens digit — is it 5 or more?", unit: "" },
+    { q: "What is 15% of 200?", answer: 30, hint: "10% of 200 is 20. Half of that is 10.", unit: "" },
+    { q: "Estimate the number of seconds in one day.", answer: 86400, hint: "60 seconds × 60 minutes × 24 hours", unit: "" },
+    { q: "Estimate √50 to 1 decimal place.", answer: 7.1, hint: "√49 = 7, √64 = 8. It's just above 7.", unit: "" },
+    { q: "How many millimetres in 3.5 metres?", answer: 3500, hint: "1 metre = 1000 mm", unit: "" },
+    { q: "If 8 pencils cost 96p, what does 1 pencil cost in pence?", answer: 12, hint: "Divide 96 by 8", unit: "p" },
+    { q: "A car travels at 60 mph. How many miles in 30 minutes?", answer: 30, hint: "30 minutes is half an hour", unit: "" },
+    { q: "Estimate the area of a rectangle 7 cm × 9 cm.", answer: 63, hint: "Area = length × width", unit: "cm²" },
+    { q: "A bag of 12 apples weighs about 1.8 kg. Estimate the weight of one apple in grams.", answer: 150, hint: "Divide 1800g by 12", unit: "g" },
+  ],
+  gcse: [
+    { q: "Round 0.004857 to 2 significant figures.", answer: 0.0049, hint: "The first significant figure is the 4 — count from there.", unit: "" },
+    { q: "Estimate 23% of 840.", answer: 193.2, hint: "20% + 3% — find each separately then add.", unit: "" },
+    { q: "Estimate the number of heartbeats in a year (assume 70 bpm).", answer: 36792000, hint: "70 × 60 × 24 × 365", unit: "" },
+    { q: "Estimate ∛125.", answer: 5, hint: "What number cubed gives 125?", unit: "" },
+    { q: "Convert 75 mph to km/h (1 mile ≈ 1.6 km).", answer: 120, hint: "Multiply by 1.6", unit: "km/h" },
+    { q: "A recipe serves 4 and needs 320g flour. How much flour for 7 people?", answer: 560, hint: "Find the amount per person first.", unit: "g" },
+    { q: "A tap fills a 90-litre bath at 6 litres/minute. How long in minutes?", answer: 15, hint: "Time = volume ÷ rate", unit: "min" },
+    { q: "Estimate the area of a circle with radius 7 cm. (π ≈ 3.14)", answer: 153.86, hint: "A = πr²", unit: "cm²" },
+    { q: "A factory makes 840 items per hour. Estimate output over a 7.5-hour shift.", answer: 6300, hint: "Multiply the rate by the time", unit: "" },
+  ],
+  alevel: [
+    { q: "Give the value of e to 4 significant figures.", answer: 2.718, hint: "e ≈ 2.71828...", unit: "" },
+    { q: "Estimate the gradient of y = x³ at x = 3 using first principles with h = 0.001.", answer: 27, hint: "dy/dx of x³ = 3x². At x=3 that's 27.", unit: "" },
+    { q: "Estimate ∫₀¹ x² dx using the trapezium rule with 2 strips.", answer: 0.375, hint: "Strips at x = 0, 0.5, 1. Values: 0, 0.25, 1.", unit: "" },
+    { q: "Give ln(10) to 2 decimal places.", answer: 2.30, hint: "ln(10) = ln(2) + ln(5). ln(2)≈0.693, ln(5)≈1.609", unit: "" },
+    { q: "Estimate the speed (m/s) of sound in air at 20°C (≈ 343 m/s).", answer: 343, hint: "A standard value worth knowing.", unit: "m/s" },
+    { q: "A geometric series has a = 3, r = 0.5. Estimate the sum to infinity.", answer: 6, hint: "S∞ = a/(1−r)", unit: "" },
+    { q: "Estimate sin(30°) as a decimal.", answer: 0.5, hint: "Exact value — 30-60-90 triangle.", unit: "" },
+    { q: "A sphere has radius 4 cm. Estimate its volume to the nearest whole number. (V = 4/3πr³)", answer: 268, hint: "4/3 × π × 64 ≈ 4.19 × 64", unit: "cm³" },
+    { q: "Estimate the value of 8^(2/3).", answer: 4, hint: "Cube root of 8 is 2, then square it.", unit: "" },
+  ],
+  level4: [
+    { q: "Estimate the RMS value of a sinusoidal wave with peak voltage 325 V.", answer: 229.8, hint: "V_rms = V_peak / √2", unit: "V" },
+    { q: "A steel rod of length 2 m expands by 0.0024 m when heated 100°C. Estimate the coefficient of linear expansion (×10⁻⁶ /°C).", answer: 12, hint: "α = ΔL / (L₀ × ΔT). Express answer ×10⁻⁶", unit: "×10⁻⁶/°C" },
+    { q: "Estimate the frequency (Hz) of a wave with velocity 340 m/s and wavelength 0.5 m.", answer: 680, hint: "f = v / λ", unit: "Hz" },
+    { q: "A beam of length 4 m has a UDL of 5 kN/m. Estimate the maximum bending moment at mid-span (kNm).", answer: 10, hint: "M_max = wL²/8 for a simply supported beam", unit: "kNm" },
+    { q: "Estimate the capacitive reactance (Ω) of a 100μF capacitor at 50 Hz.", answer: 31.8, hint: "Xc = 1 / (2πfC). Use π ≈ 3.14", unit: "Ω" },
+    { q: "An object falls from rest. Estimate the velocity (m/s) after 3 seconds (g = 9.81 m/s²).", answer: 29.43, hint: "v = u + at, u = 0", unit: "m/s" },
+    { q: "Estimate the efficiency (%) of a motor with input power 500 W and output power 375 W.", answer: 75, hint: "η = (P_out / P_in) × 100", unit: "%" },
+    { q: "A cylinder has diameter 60 mm and length 200 mm. Estimate its volume in cm³.", answer: 565.2, hint: "V = π × r² × h. r = 3 cm, h = 20 cm", unit: "cm³" },
+    { q: "Estimate the thermal resistance (K/W) of a 0.1 m thick brick wall, area 2 m², thermal conductivity 0.6 W/mK.", answer: 0.0833, hint: "R = thickness / (k × A)", unit: "K/W" },
+  ]
+};
+
+// ── SCORING ───────────────────────────────────────────────────────────────────
+// Tolerance bands → golf score
+// Within 1%   → Eagle  (−2 from par = 2 strokes)
+// Within 5%   → Birdie (−1 from par = 3 strokes)
+// Within 10%  → Par    (4 strokes)
+// Within 20%  → Bogey  (+1 = 5 strokes)
+// Within 35%  → Double (+2 = 6 strokes)
+// > 35%       → Triple (+3 = 7 strokes)
+
+const BANDS = [
+  { pct: 0,   strokes: 1, label: 'Hole in One!', emoji: '🏆', css: 'score-hole-in-one' },
+  { pct: 1,   strokes: 2, label: 'Eagle',       emoji: '🦅', css: 'score-eagle'  },
+  { pct: 5,   strokes: 3, label: 'Birdie',      emoji: '🐦', css: 'score-birdie' },
+  { pct: 10,  strokes: 4, label: 'Par',         emoji: '⛳', css: 'score-par'    },
+  { pct: 20,  strokes: 5, label: 'Bogey',       emoji: '😬', css: 'score-bogey'  },
+  { pct: 35,  strokes: 6, label: 'Double Bogey',emoji: '😩', css: 'score-double' },
+  { pct: Infinity, strokes: 7, label: 'Triple Bogey', emoji: '🤦', css: 'score-triple' },
+];
+
+const RANK_LABELS = [
+  { threshold: -12, label: 'Legendary — You must be a calculator.' },
+  { threshold: -8,  label: 'Tour Pro — Outstanding estimation.' },
+  { threshold: -4,  label: 'Club Champion — Excellent round.' },
+  { threshold: 0,   label: 'Even Par — Solid, respectable game.' },
+  { threshold: 6,   label: 'Weekend Golfer — Room for improvement.' },
+  { threshold: 14,  label: 'Hacker — Were you guessing?' },
+  { threshold: Infinity, label: 'Triple Bogey Machine — Back to the maths books.' },
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+const _egUrlLevel = new URLSearchParams(window.location.search).get('level');
+let level = _egUrlLevel && QUESTIONS[_egUrlLevel] ? _egUrlLevel : 'ks3';
+let hole  = 0;   // 0-indexed
+let scores = []; // strokes per hole
+let hintUsed = [];
+let currentQ = null;
+let roundQuestions = []; // for banks with >9 questions, holds the shuffled selection
+
+function _shuffleArr(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function setLevel(l) {
+  level = l;
+  document.querySelectorAll('.lvl-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[onclick="setLevel('${l}')"]`).classList.add('active');
+  startGame();
+}
+
+function startGame() {
+  hole = 0; scores = []; hintUsed = Array(9).fill(false);
+  // For banks with more than 9 questions, shuffle and pick 9
+  const bank = QUESTIONS[level];
+  roundQuestions = bank.length > 9 ? _shuffleArr(bank).slice(0, 9) : bank;
+  document.getElementById('summaryCard').classList.remove('show');
+  document.getElementById('holeCard').style.display = '';
+  buildScorecard();
+  loadHole();
+  mfg('game_started',{game_slug:'estimation-golf',level:level});window._ggAbandoned=true;
+  if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'estimation-golf',level:level,questions_answered:scores.length})});}
+}
+
+function buildScorecard() {
+  const tbody = document.getElementById('scorebody');
+  tbody.innerHTML = '';
+  HOLES_META.forEach((h, i) => {
+    const tr = document.createElement('tr');
+    tr.id = `row${i}`;
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td style="text-align:left;font-size:0.68rem">${h.topic}</td>
+      <td>${h.par}</td>
+      <td id="sc${i}">—</td>
+      <td id="vp${i}">—</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  updateTotals();
+}
+
+function loadHole() {
+  currentQ = roundQuestions[hole];
+  const meta = HOLES_META[hole];
+
+  document.getElementById('holeNum').textContent  = hole + 1;
+  document.getElementById('holeTopic').textContent = meta.topic;
+  document.getElementById('holePar').textContent   = `Par ${meta.par}`;
+  document.getElementById('questionText').textContent = currentQ.q;
+  document.getElementById('hintText').textContent  = '💡 ' + currentQ.hint;
+  document.getElementById('hintText').classList.remove('show');
+  document.getElementById('hintBtn').disabled = false;
+  document.getElementById('answerInput').value = '';
+  document.getElementById('answerInput').disabled = false;
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('resultPanel').classList.remove('show');
+  document.getElementById('answerInput').focus();
+
+  // Ball position — leftmost
+  moveBall(0);
+
+  // Highlight active row
+  document.querySelectorAll('.holes tbody tr').forEach((tr, i) => {
+    tr.classList.remove('active-row');
+    if (i === hole) tr.classList.add('active-row');
+  });
+}
+
+function showHint() {
+  hintUsed[hole] = true;
+  document.getElementById('hintText').classList.add('show');
+  document.getElementById('hintBtn').disabled = true;
+}
+
+function submitAnswer() {
+  const raw = document.getElementById('answerInput').value.trim();
+  if (raw === '') return;
+  const guess = parseFloat(raw);
+  if (isNaN(guess)) return;
+
+  document.getElementById('answerInput').disabled = true;
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('hintBtn').disabled = true;
+
+  const answer = currentQ.answer;
+  const pct = Math.abs((guess - answer) / answer) * 100;
+
+  let band = BANDS[BANDS.length - 1];
+  for (const b of BANDS) {
+    if (pct <= b.pct) { band = b; break; }
+  }
+
+  // Hint penalty: +1 stroke
+  let strokes = band.strokes + (hintUsed[hole] ? 1 : 0);
+  strokes = Math.min(strokes, 8); // cap at 8
+  scores[hole] = strokes;
+  mfg('question_answered',{game_slug:'estimation-golf',level:level,correct:band.strokes<=3,question_index:hole+1});
+
+  const vsPar = strokes - HOLES_META[hole].par;
+  const vpStr = vsPar === 0 ? 'E' : (vsPar > 0 ? `+${vsPar}` : `${vsPar}`);
+
+  // Update scorecard
+  const sc = document.getElementById(`sc${hole}`);
+  const vp = document.getElementById(`vp${hole}`);
+  sc.textContent = strokes;
+  vp.textContent = vpStr;
+  sc.className = 'score-cell ' + band.css;
+  document.getElementById(`row${hole}`).classList.remove('active-row');
+  document.getElementById(`row${hole}`).classList.add('done-row');
+
+  updateTotals();
+
+  // Ball animation — position based on accuracy
+  const proximity = Math.max(0, 1 - pct / 40);
+  const ballPct = 0.12 + proximity * 0.82;
+  moveBall(ballPct);
+
+  // Result panel
+  const panel = document.getElementById('resultPanel');
+  const grade = document.getElementById('resultGrade');
+  const detail = document.getElementById('resultDetail');
+
+  grade.textContent = `${band.emoji} ${band.label}`;
+  grade.style.color = band.strokes <= 1 ? '#ffd700' : band.strokes <= 2 ? '#c8922a' : band.strokes <= 3 ? '#4a8c3f' : band.strokes <= 4 ? '#1a4a7a' : '#b5303a';
+
+  const diff = guess - answer;
+  const diffStr = diff >= 0 ? `+${diff.toFixed(diff % 1 === 0 ? 0 : 2)}` : diff.toFixed(diff % 1 === 0 ? 0 : 2);
+  const unitStr = currentQ.unit ? ` ${currentQ.unit}` : '';
+
+  detail.innerHTML = `
+    Your answer: <strong>${guess}${unitStr}</strong><br>
+    Actual answer: <strong>${answer}${unitStr}</strong><br>
+    Error: <strong>${pct.toFixed(1)}%</strong> (${diffStr}${unitStr})<br>
+    Strokes: <strong>${strokes}</strong>${hintUsed[hole] ? ' <em>(+1 hint penalty)</em>' : ''}
+  `;
+
+  document.getElementById('nextBtn').textContent = hole < 8 ? 'Next Hole →' : 'See Scorecard →';
+  panel.classList.add('show');
+}
+
+function moveBall(pct) {
+  const wrap = document.getElementById('fairwayWrap');
+  const w = wrap.offsetWidth || 400;
+  const maxLeft = w - 50;
+  const left = 28 + pct * (maxLeft - 28);
+  document.getElementById('ball').style.left = left + 'px';
+}
+
+function nextHole() {
+  if (hole < 8) {
+    hole++;
+    loadHole();
+  } else {
+    showSummary();
+  }
+}
+
+function updateTotals() {
+  const total = scores.reduce((a, b) => a + b, 0);
+  const totalPar = 36;
+  const vs = total - totalPar;
+  const vsStr = vs === 0 ? 'E' : (vs > 0 ? `+${vs}` : `${vs}`);
+  document.getElementById('totalScore').textContent = scores.length ? total : '—';
+  document.getElementById('totalVsPar').textContent = scores.length ? vsStr : '—';
+}
+
+function showSummary() {
+  document.getElementById('holeCard').style.display = 'none';
+  const total = scores.reduce((a, b) => a + b, 0);
+  const vs = total - 36;
+  const vsStr = vs === 0 ? 'Even Par' : (vs > 0 ? `+${vs} over par` : `${vs} under par`);
+
+  let rank = RANK_LABELS[RANK_LABELS.length - 1].label;
+  for (const r of RANK_LABELS) {
+    if (vs < r.threshold) { rank = r.label; break; }
+  }
+
+  document.getElementById('summaryScore').textContent = total;
+  document.getElementById('summaryVsPar').textContent = vsStr;
+  document.getElementById('summaryRank').textContent  = `"${rank}"`;
+  document.getElementById('summaryCard').classList.add('show');
+  window._ggAbandoned=false;
+  var _egAcc=Math.round((scores.filter(s=>s<=3).length/9)*100);
+  mfg('game_completed',{game_slug:'estimation-golf',level:level,score:total,questions_answered:9,accuracy:_egAcc});
+  // LEADERBOARD HELD - this game is lower-is-better. It submits the stroke total, and the boards
+  // rank high score first, so publishing would put the WORST round on top. Held until scoring
+  // modes exist: docs/next-contract-leaderboard-modes.md, to-do item 0. Flip the flag to true
+  // when they land; nothing else here changes. Device-local score history is unaffected.
+  var LEADERBOARD_MODE_READY=false;
+  if(window.MaffsLeaderboard){if(LEADERBOARD_MODE_READY){MaffsLeaderboard.submitScore('estimation-golf',level,total,9).catch(function(){});}if(window.MaffsScoreHistory){MaffsScoreHistory.record('estimation-golf',level,total);}}
+  var _pbKey='estgolf_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'999');if(total<_pbOld){mfg('personal_best_set',{game_slug:'estimation-golf',level:level,score:total,previous_best:_pbOld});localStorage.setItem(_pbKey,total);}
+}
+
+// Enter key submits
+document.getElementById('answerInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitAnswer();
+});
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+// Set active button to match initial level
+if (level !== 'ks3') {
+  document.querySelectorAll('.lvl-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`[onclick="setLevel('${level}')"]`);
+  if (btn) btn.classList.add('active');
+}
+startGame();
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

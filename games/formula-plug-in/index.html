@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Plug values into formulae and calculate the answer. Year 6 transition game — building the substitution skills used all the way to A-Level.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/formula-plug-in/">
+<meta property="og:title" content="Formula Plug-In — MaffsGames">
+<meta property="og:description" content="Plug values into formulae and calculate the answer. Year 6 transition game — building the substitution skills used all the way to A-Level.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/formula-plug-in/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Formula Plug-In — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--accent:#6366f1;--accent-dim:rgba(99,102,241,0.25);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--accent)}
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(99,102,241,0.3)}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px;color:var(--accent)}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.session-label{font-size:14px;font-weight:600;color:var(--muted);text-align:center;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em}
+.session-btns{display:flex;gap:12px;justify-content:center;margin-bottom:28px}
+.session-btn{padding:14px 28px;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.session-btn:hover,.session-btn.selected{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+.example-card{background:var(--surface);border-radius:12px;padding:24px;margin-bottom:24px;border-left:3px solid var(--accent)}
+.example-card .formula-name{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px}
+.example-card .formula-display{font-size:1.3rem;margin-bottom:12px;text-align:center}
+.example-card .vars-display{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--accent);text-align:center;margin-bottom:8px}
+.example-card .prompt{font-size:14px;color:var(--muted);text-align:center}
+.pb-display{text-align:center;margin-bottom:20px;font-size:14px;color:var(--muted)}
+.pb-display span{color:var(--accent);font-weight:700}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+
+/* Game screen */
+.formula-card{background:var(--surface);border-radius:16px;padding:32px 24px;margin:20px 0;text-align:center}
+.formula-card .formula-name{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:16px;text-transform:uppercase;letter-spacing:0.04em}
+.formula-card .formula-katex{font-size:1.5rem;margin-bottom:20px}
+.formula-card .vars-line{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--accent);margin-bottom:16px;line-height:1.8}
+.formula-card .question-prompt{font-size:16px;font-weight:600;color:var(--text)}
+
+/* Answer input display */
+.answer-display{background:var(--surface-alt);border:2px solid var(--border);border-radius:12px;padding:16px 20px;margin:16px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;min-height:64px;display:flex;align-items:center;justify-content:center;color:var(--text);transition:border-color 0.15s}
+.answer-display.correct{border-color:var(--green);color:var(--green)}
+.answer-display.incorrect{border-color:var(--red);color:var(--red)}
+.answer-display .cursor{display:inline-block;width:2px;height:28px;background:var(--accent);margin-left:2px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Number pad */
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:320px;margin:16px auto}
+.numpad-btn{padding:18px 8px;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;cursor:pointer;transition:all 0.12s;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.numpad-btn:hover{border-color:var(--accent);background:var(--accent-dim)}
+.numpad-btn:active{transform:scale(0.95)}
+.numpad-btn.enter{background:var(--accent);color:#fff;border-color:var(--accent);font-family:'Outfit',sans-serif;font-size:16px;font-weight:700}
+.numpad-btn.enter:hover{opacity:0.9}
+.numpad-btn.backspace{font-size:18px}
+.numpad-btn:disabled{opacity:0.35;cursor:default;transform:none}
+
+/* Feedback */
+.feedback-panel{background:var(--surface-alt);border-top:3px solid var(--border);border-radius:12px;padding:24px 20px;margin:20px 0;opacity:0;transform:translateY(20px);transition:opacity 0.25s,transform 0.25s;display:none}
+.feedback-panel.show{opacity:1;transform:translateY(0);display:block}
+.feedback-panel.flash-green{border-top-color:var(--green)}
+.feedback-panel.flash-red{border-top-color:var(--red)}
+.feedback-indicator{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.feedback-indicator.correct{color:var(--green)}
+.feedback-indicator.incorrect{color:var(--red)}
+.working-steps{background:#141620;border-left:3px solid var(--accent);border-radius:4px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cbd5e1;line-height:2}
+
+/* Reveal screen */
+.reveal-screen{display:none;max-width:680px;margin:0 auto;padding:60px 20px;text-align:center}
+.reveal-screen.active{display:block}
+.reveal-icon{font-size:48px;margin-bottom:20px}
+.reveal-message{font-size:18px;font-weight:500;line-height:1.8;color:#cbd5e1;max-width:540px;margin:0 auto}
+.reveal-message strong{color:var(--accent);font-weight:700}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--accent)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.pb-badge{background:var(--accent-dim);color:var(--accent);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+@media(prefers-reduced-motion:reduce){
+.feedback-panel{transition:none}
+.answer-display .cursor{animation:none;opacity:1}
+}
+@media(max-width:480px){
+.numpad{max-width:100%}
+.numpad-btn{padding:16px 6px;font-size:20px}
+.formula-card .formula-katex{font-size:1.2rem}
+.formula-card{padding:24px 16px}
+.session-btns{flex-direction:column;align-items:center}
+}
+/* canon §7.6.1 on a phone (<= 600px wide), as New Shapes, which shares this layout:
+   1. Header on one line: arrow-only back link (aria-label keeps its name), level pill hidden.
+   2. The formula card tightens; the values line stays, because it is the question's data.
+   3. Keypad in four columns, numpad style (Backspace and Enter on the right), keys 44px tall.
+   4. A wrong answer hides the keypad, which cannot be used then, so the answer, the working
+      and Next take its place. A right answer moves on briskly, so the keypad stays. */
+@media(max-width:600px){
+  .header{padding:2px 6px;gap:4px}
+  .header-right{gap:6px}
+  .back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
+  .back-text,.header-div,.level-pill{display:none}
+  .header-title{font-size:16px;white-space:nowrap}
+  .a11y-toggle{width:44px;height:44px}
+  .screen{padding:8px 12px}
+  .formula-card{padding:10px 12px;margin:0 0 8px;border-radius:12px}
+  .formula-card .formula-name{font-size:12px;margin-bottom:4px}
+  .formula-card .formula-katex{font-size:1.15rem;margin-bottom:4px}
+  .formula-card .formula-katex .katex-display{margin:0}
+  .formula-card .vars-line{font-size:15px;line-height:1.5;margin-bottom:4px}
+  .formula-card .question-prompt{font-size:16px;line-height:1.4}
+  .answer-display{min-height:44px;padding:4px 12px;margin:0 0 8px;font-size:24px}
+  .answer-display .cursor{height:24px}
+  .numpad{grid-template-columns:repeat(4,1fr);grid-auto-rows:44px;gap:6px;max-width:100%;margin:0 auto 8px}
+  .numpad-btn{padding:0;font-size:20px;min-height:44px}
+  .numpad-btn:nth-child(1){grid-area:1/1}.numpad-btn:nth-child(2){grid-area:1/2}.numpad-btn:nth-child(3){grid-area:1/3}
+  .numpad-btn:nth-child(4){grid-area:2/1}.numpad-btn:nth-child(5){grid-area:2/2}.numpad-btn:nth-child(6){grid-area:2/3}
+  .numpad-btn:nth-child(7){grid-area:3/1}.numpad-btn:nth-child(8){grid-area:3/2}.numpad-btn:nth-child(9){grid-area:3/3}
+  .numpad-btn:nth-child(10){grid-area:4/3}.numpad-btn:nth-child(11){grid-area:4/1/5/3}
+  .numpad-btn.backspace{grid-area:1/4/3/5}
+  .numpad-btn.enter{grid-area:3/4/5/5 !important}
+  #gameScreen:has(.feedback-panel.flash-red) .numpad{display:none}
+  .feedback-panel{padding:10px 12px;margin:0 0 8px}
+  .feedback-indicator{margin-bottom:6px;line-height:1.35}
+  .working-steps{padding:6px 12px;line-height:1.75}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link" aria-label="Back to Games">←<span class="back-text"> Back to Games</span></a>
+  <div class="header-div"></div>
+  <span class="header-title">Formula Plug-In</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <span class="level-pill">Year 6</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreTotal">0</span></span>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Formula Plug-In</div>
+  <div class="start-sub">You're given a formula and the values. Plug them in, calculate the answer.<br>This is substitution — and it's the skill that unlocks algebra.</div>
+
+  <div class="example-card">
+    <div class="formula-name">Example</div>
+    <div class="formula-display" id="exampleFormula"></div>
+    <div class="vars-display">l = 6, w = 4</div>
+    <div class="prompt">What is A?</div>
+  </div>
+
+  <div class="session-label">Session Length</div>
+  <div class="session-btns">
+    <button class="session-btn" data-len="10" onclick="selectSession(10)">10</button>
+    <button class="session-btn selected" data-len="20" onclick="selectSession(20)">20</button>
+    <button class="session-btn" data-len="30" onclick="selectSession(30)">30</button>
+  </div>
+
+  <div class="pb-display" id="pbDisplay" style="display:none">Personal Best: <span id="pbValue"></span></div>
+
+  <button class="start-btn" onclick="startGame()">Start</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="formula-card">
+    <div class="formula-name" id="formulaName"></div>
+    <div class="formula-katex" id="formulaKatex"></div>
+    <div class="vars-line" id="varsLine"></div>
+    <div class="question-prompt" id="questionPrompt"></div>
+  </div>
+
+  <div class="answer-display" id="answerDisplay"><span class="cursor"></span></div>
+
+  <div class="numpad" id="numpad">
+    <button class="numpad-btn" onclick="numInput('7')">7</button>
+    <button class="numpad-btn" onclick="numInput('8')">8</button>
+    <button class="numpad-btn" onclick="numInput('9')">9</button>
+    <button class="numpad-btn" onclick="numInput('4')">4</button>
+    <button class="numpad-btn" onclick="numInput('5')">5</button>
+    <button class="numpad-btn" onclick="numInput('6')">6</button>
+    <button class="numpad-btn" onclick="numInput('1')">1</button>
+    <button class="numpad-btn" onclick="numInput('2')">2</button>
+    <button class="numpad-btn" onclick="numInput('3')">3</button>
+    <button class="numpad-btn" onclick="numInput('.')">.</button>
+    <button class="numpad-btn" onclick="numInput('0')">0</button>
+    <button class="numpad-btn backspace" onclick="numBackspace()" aria-label="Backspace">&#9003;</button>
+    <button class="numpad-btn enter" style="grid-column:1/-1" onclick="submitAnswer()">Enter</button>
+  </div>
+
+  <div class="feedback-panel" id="feedbackPanel">
+    <div class="feedback-indicator" id="feedbackIndicator"></div>
+    <div class="working-steps" id="workingSteps" style="display:none"></div>
+    <div id="nextMount"></div>
+  </div>
+</div>
+
+<!-- REVEAL SCREEN -->
+<div class="reveal-screen" id="revealScreen">
+  <div class="reveal-icon">&#9889;</div>
+  <div class="reveal-message">
+    <strong>You just used algebra.</strong><br><br>
+    Every time you put a number where a letter was, that's called <strong>substitution</strong> — and it's one of the most used skills in Year 7, Year 8, Year 9, GCSE and A-Level.<br><br>
+    You already know how to do it.
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Score</h4>
+      <div class="score" id="finalScore">0/10</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="sub" id="pbLine" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="resetToStart()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANK — 50 questions (5 per formula x 10 formulae)
+// ============================================================
+const QUESTIONS = [
+// Area of rectangle — A = l x w
+{id:'fpi_001',formulaName:'Area of a rectangle',formulaKatex:'A = l \\times w',variables:[{name:'l',value:6},{name:'w',value:4}],resultVar:'A',answer:24,workingSteps:['A = l \\times w','A = 6 \\times 4','A = 24']},
+{id:'fpi_002',formulaName:'Area of a rectangle',formulaKatex:'A = l \\times w',variables:[{name:'l',value:8},{name:'w',value:5}],resultVar:'A',answer:40,workingSteps:['A = l \\times w','A = 8 \\times 5','A = 40']},
+{id:'fpi_003',formulaName:'Area of a rectangle',formulaKatex:'A = l \\times w',variables:[{name:'l',value:12},{name:'w',value:3}],resultVar:'A',answer:36,workingSteps:['A = l \\times w','A = 12 \\times 3','A = 36']},
+{id:'fpi_004',formulaName:'Area of a rectangle',formulaKatex:'A = l \\times w',variables:[{name:'l',value:7},{name:'w',value:9}],resultVar:'A',answer:63,workingSteps:['A = l \\times w','A = 7 \\times 9','A = 63']},
+{id:'fpi_005',formulaName:'Area of a rectangle',formulaKatex:'A = l \\times w',variables:[{name:'l',value:11},{name:'w',value:4}],resultVar:'A',answer:44,workingSteps:['A = l \\times w','A = 11 \\times 4','A = 44']},
+
+// Perimeter of rectangle — P = 2(l + w)
+{id:'fpi_006',formulaName:'Perimeter of a rectangle',formulaKatex:'P = 2(l + w)',variables:[{name:'l',value:5},{name:'w',value:3}],resultVar:'P',answer:16,workingSteps:['P = 2(l + w)','P = 2(5 + 3)','P = 2 \\times 8','P = 16']},
+{id:'fpi_007',formulaName:'Perimeter of a rectangle',formulaKatex:'P = 2(l + w)',variables:[{name:'l',value:8},{name:'w',value:6}],resultVar:'P',answer:28,workingSteps:['P = 2(l + w)','P = 2(8 + 6)','P = 2 \\times 14','P = 28']},
+{id:'fpi_008',formulaName:'Perimeter of a rectangle',formulaKatex:'P = 2(l + w)',variables:[{name:'l',value:10},{name:'w',value:4}],resultVar:'P',answer:28,workingSteps:['P = 2(l + w)','P = 2(10 + 4)','P = 2 \\times 14','P = 28']},
+{id:'fpi_009',formulaName:'Perimeter of a rectangle',formulaKatex:'P = 2(l + w)',variables:[{name:'l',value:7},{name:'w',value:7}],resultVar:'P',answer:28,workingSteps:['P = 2(l + w)','P = 2(7 + 7)','P = 2 \\times 14','P = 28']},
+{id:'fpi_010',formulaName:'Perimeter of a rectangle',formulaKatex:'P = 2(l + w)',variables:[{name:'l',value:9},{name:'w',value:5}],resultVar:'P',answer:28,workingSteps:['P = 2(l + w)','P = 2(9 + 5)','P = 2 \\times 14','P = 28']},
+
+// Area of triangle — A = 1/2 x b x h
+{id:'fpi_011',formulaName:'Area of a triangle',formulaKatex:'A = \\tfrac{1}{2} \\times b \\times h',variables:[{name:'b',value:6},{name:'h',value:4}],resultVar:'A',answer:12,workingSteps:['A = \\tfrac{1}{2} \\times b \\times h','A = \\tfrac{1}{2} \\times 6 \\times 4','A = \\tfrac{1}{2} \\times 24','A = 12']},
+{id:'fpi_012',formulaName:'Area of a triangle',formulaKatex:'A = \\tfrac{1}{2} \\times b \\times h',variables:[{name:'b',value:10},{name:'h',value:5}],resultVar:'A',answer:25,workingSteps:['A = \\tfrac{1}{2} \\times b \\times h','A = \\tfrac{1}{2} \\times 10 \\times 5','A = \\tfrac{1}{2} \\times 50','A = 25']},
+{id:'fpi_013',formulaName:'Area of a triangle',formulaKatex:'A = \\tfrac{1}{2} \\times b \\times h',variables:[{name:'b',value:8},{name:'h',value:3}],resultVar:'A',answer:12,workingSteps:['A = \\tfrac{1}{2} \\times b \\times h','A = \\tfrac{1}{2} \\times 8 \\times 3','A = \\tfrac{1}{2} \\times 24','A = 12']},
+{id:'fpi_014',formulaName:'Area of a triangle',formulaKatex:'A = \\tfrac{1}{2} \\times b \\times h',variables:[{name:'b',value:12},{name:'h',value:6}],resultVar:'A',answer:36,workingSteps:['A = \\tfrac{1}{2} \\times b \\times h','A = \\tfrac{1}{2} \\times 12 \\times 6','A = \\tfrac{1}{2} \\times 72','A = 36']},
+{id:'fpi_015',formulaName:'Area of a triangle',formulaKatex:'A = \\tfrac{1}{2} \\times b \\times h',variables:[{name:'b',value:7},{name:'h',value:4}],resultVar:'A',answer:14,workingSteps:['A = \\tfrac{1}{2} \\times b \\times h','A = \\tfrac{1}{2} \\times 7 \\times 4','A = \\tfrac{1}{2} \\times 28','A = 14']},
+
+// Speed — S = D / T
+{id:'fpi_016',formulaName:'Speed',formulaKatex:'S = D \\div T',variables:[{name:'D',value:60},{name:'T',value:3}],resultVar:'S',answer:20,workingSteps:['S = D \\div T','S = 60 \\div 3','S = 20']},
+{id:'fpi_017',formulaName:'Speed',formulaKatex:'S = D \\div T',variables:[{name:'D',value:100},{name:'T',value:5}],resultVar:'S',answer:20,workingSteps:['S = D \\div T','S = 100 \\div 5','S = 20']},
+{id:'fpi_018',formulaName:'Speed',formulaKatex:'S = D \\div T',variables:[{name:'D',value:48},{name:'T',value:6}],resultVar:'S',answer:8,workingSteps:['S = D \\div T','S = 48 \\div 6','S = 8']},
+{id:'fpi_019',formulaName:'Speed',formulaKatex:'S = D \\div T',variables:[{name:'D',value:72},{name:'T',value:8}],resultVar:'S',answer:9,workingSteps:['S = D \\div T','S = 72 \\div 8','S = 9']},
+{id:'fpi_020',formulaName:'Speed',formulaKatex:'S = D \\div T',variables:[{name:'D',value:90},{name:'T',value:10}],resultVar:'S',answer:9,workingSteps:['S = D \\div T','S = 90 \\div 10','S = 9']},
+
+// Distance — D = S x T
+{id:'fpi_021',formulaName:'Distance',formulaKatex:'D = S \\times T',variables:[{name:'S',value:40},{name:'T',value:3}],resultVar:'D',answer:120,workingSteps:['D = S \\times T','D = 40 \\times 3','D = 120']},
+{id:'fpi_022',formulaName:'Distance',formulaKatex:'D = S \\times T',variables:[{name:'S',value:60},{name:'T',value:2}],resultVar:'D',answer:120,workingSteps:['D = S \\times T','D = 60 \\times 2','D = 120']},
+{id:'fpi_023',formulaName:'Distance',formulaKatex:'D = S \\times T',variables:[{name:'S',value:30},{name:'T',value:5}],resultVar:'D',answer:150,workingSteps:['D = S \\times T','D = 30 \\times 5','D = 150']},
+{id:'fpi_024',formulaName:'Distance',formulaKatex:'D = S \\times T',variables:[{name:'S',value:50},{name:'T',value:4}],resultVar:'D',answer:200,workingSteps:['D = S \\times T','D = 50 \\times 4','D = 200']},
+{id:'fpi_025',formulaName:'Distance',formulaKatex:'D = S \\times T',variables:[{name:'S',value:25},{name:'T',value:6}],resultVar:'D',answer:150,workingSteps:['D = S \\times T','D = 25 \\times 6','D = 150']},
+
+// Perimeter of square — P = 4s
+{id:'fpi_026',formulaName:'Perimeter of a square',formulaKatex:'P = 4s',variables:[{name:'s',value:5}],resultVar:'P',answer:20,workingSteps:['P = 4s','P = 4 \\times 5','P = 20']},
+{id:'fpi_027',formulaName:'Perimeter of a square',formulaKatex:'P = 4s',variables:[{name:'s',value:8}],resultVar:'P',answer:32,workingSteps:['P = 4s','P = 4 \\times 8','P = 32']},
+{id:'fpi_028',formulaName:'Perimeter of a square',formulaKatex:'P = 4s',variables:[{name:'s',value:11}],resultVar:'P',answer:44,workingSteps:['P = 4s','P = 4 \\times 11','P = 44']},
+{id:'fpi_029',formulaName:'Perimeter of a square',formulaKatex:'P = 4s',variables:[{name:'s',value:6}],resultVar:'P',answer:24,workingSteps:['P = 4s','P = 4 \\times 6','P = 24']},
+{id:'fpi_030',formulaName:'Perimeter of a square',formulaKatex:'P = 4s',variables:[{name:'s',value:9}],resultVar:'P',answer:36,workingSteps:['P = 4s','P = 4 \\times 9','P = 36']},
+
+// Area of square — A = s^2
+{id:'fpi_031',formulaName:'Area of a square',formulaKatex:'A = s^2',variables:[{name:'s',value:5}],resultVar:'A',answer:25,workingSteps:['A = s^2','A = 5^2','A = 25']},
+{id:'fpi_032',formulaName:'Area of a square',formulaKatex:'A = s^2',variables:[{name:'s',value:7}],resultVar:'A',answer:49,workingSteps:['A = s^2','A = 7^2','A = 49']},
+{id:'fpi_033',formulaName:'Area of a square',formulaKatex:'A = s^2',variables:[{name:'s',value:9}],resultVar:'A',answer:81,workingSteps:['A = s^2','A = 9^2','A = 81']},
+{id:'fpi_034',formulaName:'Area of a square',formulaKatex:'A = s^2',variables:[{name:'s',value:6}],resultVar:'A',answer:36,workingSteps:['A = s^2','A = 6^2','A = 36']},
+{id:'fpi_035',formulaName:'Area of a square',formulaKatex:'A = s^2',variables:[{name:'s',value:8}],resultVar:'A',answer:64,workingSteps:['A = s^2','A = 8^2','A = 64']},
+
+// Volume of cuboid — V = l x w x h
+{id:'fpi_036',formulaName:'Volume of a cuboid',formulaKatex:'V = l \\times w \\times h',variables:[{name:'l',value:4},{name:'w',value:3},{name:'h',value:2}],resultVar:'V',answer:24,workingSteps:['V = l \\times w \\times h','V = 4 \\times 3 \\times 2','V = 24']},
+{id:'fpi_037',formulaName:'Volume of a cuboid',formulaKatex:'V = l \\times w \\times h',variables:[{name:'l',value:5},{name:'w',value:5},{name:'h',value:4}],resultVar:'V',answer:100,workingSteps:['V = l \\times w \\times h','V = 5 \\times 5 \\times 4','V = 100']},
+{id:'fpi_038',formulaName:'Volume of a cuboid',formulaKatex:'V = l \\times w \\times h',variables:[{name:'l',value:6},{name:'w',value:3},{name:'h',value:3}],resultVar:'V',answer:54,workingSteps:['V = l \\times w \\times h','V = 6 \\times 3 \\times 3','V = 54']},
+{id:'fpi_039',formulaName:'Volume of a cuboid',formulaKatex:'V = l \\times w \\times h',variables:[{name:'l',value:8},{name:'w',value:2},{name:'h',value:5}],resultVar:'V',answer:80,workingSteps:['V = l \\times w \\times h','V = 8 \\times 2 \\times 5','V = 80']},
+{id:'fpi_040',formulaName:'Volume of a cuboid',formulaKatex:'V = l \\times w \\times h',variables:[{name:'l',value:7},{name:'w',value:4},{name:'h',value:3}],resultVar:'V',answer:84,workingSteps:['V = l \\times w \\times h','V = 7 \\times 4 \\times 3','V = 84']},
+
+// Cost — C = n x p
+{id:'fpi_041',formulaName:'Cost',formulaKatex:'C = n \\times p',variables:[{name:'n',value:5},{name:'p',value:4}],resultVar:'C',answer:20,workingSteps:['C = n \\times p','C = 5 \\times 4','C = 20']},
+{id:'fpi_042',formulaName:'Cost',formulaKatex:'C = n \\times p',variables:[{name:'n',value:8},{name:'p',value:3}],resultVar:'C',answer:24,workingSteps:['C = n \\times p','C = 8 \\times 3','C = 24']},
+{id:'fpi_043',formulaName:'Cost',formulaKatex:'C = n \\times p',variables:[{name:'n',value:12},{name:'p',value:5}],resultVar:'C',answer:60,workingSteps:['C = n \\times p','C = 12 \\times 5','C = 60']},
+{id:'fpi_044',formulaName:'Cost',formulaKatex:'C = n \\times p',variables:[{name:'n',value:6},{name:'p',value:7}],resultVar:'C',answer:42,workingSteps:['C = n \\times p','C = 6 \\times 7','C = 42']},
+{id:'fpi_045',formulaName:'Cost',formulaKatex:'C = n \\times p',variables:[{name:'n',value:9},{name:'p',value:8}],resultVar:'C',answer:72,workingSteps:['C = n \\times p','C = 9 \\times 8','C = 72']},
+
+// Mean — Mean = Sum / n
+{id:'fpi_046',formulaName:'Mean',formulaKatex:'\\text{Mean} = \\text{Sum} \\div n',variables:[{name:'Sum',value:30},{name:'n',value:6}],resultVar:'Mean',answer:5,workingSteps:['\\text{Mean} = \\text{Sum} \\div n','\\text{Mean} = 30 \\div 6','\\text{Mean} = 5']},
+{id:'fpi_047',formulaName:'Mean',formulaKatex:'\\text{Mean} = \\text{Sum} \\div n',variables:[{name:'Sum',value:48},{name:'n',value:8}],resultVar:'Mean',answer:6,workingSteps:['\\text{Mean} = \\text{Sum} \\div n','\\text{Mean} = 48 \\div 8','\\text{Mean} = 6']},
+{id:'fpi_048',formulaName:'Mean',formulaKatex:'\\text{Mean} = \\text{Sum} \\div n',variables:[{name:'Sum',value:35},{name:'n',value:7}],resultVar:'Mean',answer:5,workingSteps:['\\text{Mean} = \\text{Sum} \\div n','\\text{Mean} = 35 \\div 7','\\text{Mean} = 5']},
+{id:'fpi_049',formulaName:'Mean',formulaKatex:'\\text{Mean} = \\text{Sum} \\div n',variables:[{name:'Sum',value:56},{name:'n',value:8}],resultVar:'Mean',answer:7,workingSteps:['\\text{Mean} = \\text{Sum} \\div n','\\text{Mean} = 56 \\div 8','\\text{Mean} = 7']},
+{id:'fpi_050',formulaName:'Mean',formulaKatex:'\\text{Mean} = \\text{Sum} \\div n',variables:[{name:'Sum',value:45},{name:'n',value:9}],resultVar:'Mean',answer:5,workingSteps:['\\text{Mean} = \\text{Sum} \\div n','\\text{Mean} = 45 \\div 9','\\text{Mean} = 5']}
+];
+
+// ============================================================
+//  STATE
+// ============================================================
+const GAME_SLUG = 'formula-plug-in';
+const LEVEL = 'year6';
+const PB_KEY = 'mfg_pb_formula_plug_in_year6';
+
+let sessionLength = 20;
+let sessionQuestions = [];
+let currentIndex = 0;
+let correctCount = 0;
+let inputValue = '';
+let answered = false;
+let nextCtl = null;   // the wrong-answer Next control, so Enter goes through it (canon §7.6)
+let revealShown = false;
+
+// ============================================================
+//  HELPERS
+// ============================================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderKatex(el, latex, display) {
+  el.innerHTML = katex.renderToString(latex, { throwOnError: false, displayMode: !!display });
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen, .reveal-screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  document.getElementById('gameHeader').style.display = (id === 'gameScreen') ? 'flex' : 'none';
+}
+
+function getPB() {
+  const v = localStorage.getItem(PB_KEY);
+  return v ? parseInt(v, 10) : null;
+}
+
+function setPB(score) {
+  localStorage.setItem(PB_KEY, score.toString());
+}
+
+// ============================================================
+//  START SCREEN
+// ============================================================
+function selectSession(len) {
+  sessionLength = len;
+  document.querySelectorAll('.session-btn').forEach(b => {
+    b.classList.toggle('selected', parseInt(b.dataset.len) === len);
+  });
+}
+
+function initStartScreen() {
+  // Render example formula
+  const exEl = document.getElementById('exampleFormula');
+  renderKatex(exEl, 'A = l \\times w', true);
+
+  // Show PB
+  const pb = getPB();
+  if (pb !== null) {
+    document.getElementById('pbDisplay').style.display = 'block';
+    document.getElementById('pbValue').textContent = pb + '/' + sessionLength;
+  }
+}
+
+// ============================================================
+//  GAME LOGIC
+// ============================================================
+function startGame() {
+  // Pick sessionLength questions, ensuring variety across formulae
+  const shuffled = shuffle(QUESTIONS);
+  sessionQuestions = shuffled.slice(0, Math.min(sessionLength, shuffled.length));
+  currentIndex = 0;
+  correctCount = 0;
+  revealShown = false;
+
+  showScreen('gameScreen');
+  document.getElementById('scoreTotal').textContent = sessionQuestions.length;
+
+  if (typeof mfg === 'function') {
+    mfg('game_started', { game_slug: GAME_SLUG, level: LEVEL });
+  }
+
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const q = sessionQuestions[currentIndex];
+  answered = false;
+  inputValue = '';
+
+  // Update header
+  document.getElementById('scoreNum').textContent = currentIndex;
+
+  // Formula card
+  document.getElementById('formulaName').textContent = q.formulaName;
+  renderKatex(document.getElementById('formulaKatex'), q.formulaKatex, true);
+
+  // Variables line
+  const varsStr = q.variables.map(v => v.name + ' = ' + v.value).join(', ');
+  document.getElementById('varsLine').textContent = varsStr;
+
+  // Question prompt
+  document.getElementById('questionPrompt').textContent = 'What is ' + q.resultVar + '?';
+
+  // Reset answer display
+  updateAnswerDisplay();
+  const ad = document.getElementById('answerDisplay');
+  ad.classList.remove('correct', 'incorrect');
+
+  // Reset feedback
+  const fp = document.getElementById('feedbackPanel');
+  fp.classList.remove('show', 'flash-green', 'flash-red');
+  fp.style.display = 'none';
+  nextCtl = null;
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('nextMount'));
+  window.scrollTo(0, 0);
+
+  // Enable numpad
+  enableNumpad(true);
+}
+
+function updateAnswerDisplay() {
+  const ad = document.getElementById('answerDisplay');
+  if (inputValue === '') {
+    ad.innerHTML = '<span class="cursor"></span>';
+  } else {
+    ad.innerHTML = inputValue + (answered ? '' : '<span class="cursor"></span>');
+  }
+}
+
+function numInput(char) {
+  if (answered) return;
+  // Prevent multiple decimals
+  if (char === '.' && inputValue.includes('.')) return;
+  // Limit length
+  if (inputValue.length >= 8) return;
+  inputValue += char;
+  updateAnswerDisplay();
+}
+
+function numBackspace() {
+  if (answered) return;
+  inputValue = inputValue.slice(0, -1);
+  updateAnswerDisplay();
+}
+
+function enableNumpad(enabled) {
+  document.querySelectorAll('.numpad-btn').forEach(b => b.disabled = !enabled);
+}
+
+function submitAnswer() {
+  if (answered || inputValue === '') return;
+  answered = true;
+
+  const q = sessionQuestions[currentIndex];
+  const userAnswer = parseFloat(inputValue);
+  const isCorrect = userAnswer === q.answer;
+
+  if (isCorrect) correctCount++;
+
+  // Update answer display style
+  const ad = document.getElementById('answerDisplay');
+  ad.classList.add(isCorrect ? 'correct' : 'incorrect');
+  ad.innerHTML = inputValue;
+
+  // Disable numpad
+  enableNumpad(false);
+
+  // Analytics
+  if (typeof mfg === 'function') {
+    mfg('question_answered', {
+      game_slug: GAME_SLUG,
+      level: LEVEL,
+      question_index: currentIndex + 1,
+      correct: isCorrect
+    });
+  }
+
+  // Show feedback
+  const fp = document.getElementById('feedbackPanel');
+  const fi = document.getElementById('feedbackIndicator');
+  const ws = document.getElementById('workingSteps');
+
+  if (isCorrect) {
+    fi.className = 'feedback-indicator correct';
+    fi.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Correct!';
+    ws.style.display = 'none';
+    fp.className = 'feedback-panel flash-green';
+  } else {
+    fi.className = 'feedback-indicator incorrect';
+    fi.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Not quite — the answer is ' + q.answer;
+    // Show working steps
+    ws.style.display = 'block';
+    ws.innerHTML = q.workingSteps.map(step => {
+      return '<div>' + katex.renderToString(step, { throwOnError: false, displayMode: false }) + '</div>';
+    }).join('');
+    fp.className = 'feedback-panel flash-red';
+  }
+
+  // Animate in
+  fp.style.display = 'block';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      fp.classList.add('show');
+    });
+  });
+
+  // canon §7.6: a right answer moves on briskly; a wrong one shows the working and waits.
+  if (isCorrect) {
+    setTimeout(nextQuestion, 1200);
+  } else {
+    nextCtl = MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextQuestion });
+  }
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= sessionQuestions.length) {
+    // Show reveal screen first if not shown yet
+    if (!revealShown) {
+      showRevealScreen();
+    } else {
+      showResults();
+    }
+    return;
+  }
+  loadQuestion();
+}
+
+// ============================================================
+//  REVEAL SCREEN
+// ============================================================
+function showRevealScreen() {
+  revealShown = true;
+  showScreen('revealScreen');
+  // Auto-advance after 5 seconds minimum, but user can also click
+  const revealEl = document.getElementById('revealScreen');
+  revealEl.style.cursor = 'pointer';
+  let canAdvance = false;
+  setTimeout(() => { canAdvance = true; }, 5000);
+  const handler = function() {
+    if (canAdvance) {
+      revealEl.removeEventListener('click', handler);
+      revealEl.style.cursor = '';
+      showResults();
+    }
+  };
+  revealEl.addEventListener('click', handler);
+  // Also auto-advance after 8 seconds
+  setTimeout(() => {
+    revealEl.removeEventListener('click', handler);
+    revealEl.style.cursor = '';
+    showResults();
+  }, 8000);
+}
+
+// ============================================================
+//  RESULTS
+// ============================================================
+function showResults() {
+  showScreen('resultsScreen');
+  const total = sessionQuestions.length;
+  const pct = Math.round((correctCount / total) * 100);
+
+  document.getElementById('finalScore').textContent = correctCount + '/' + total;
+  document.getElementById('finalPct').textContent = pct + '%';
+
+  // Personal best
+  const oldPB = getPB();
+  const isNewPB = (oldPB === null || correctCount > oldPB);
+
+  if (isNewPB) {
+    setPB(correctCount);
+    document.getElementById('pbBadge').style.display = 'block';
+    document.getElementById('pbLine').textContent = '';
+
+    if (typeof mfg === 'function') {
+      mfg('personal_best_set', {
+        game_slug: GAME_SLUG,
+        level: LEVEL,
+        score: correctCount,
+        previous_best: oldPB || 0
+      });
+    }
+  } else {
+    document.getElementById('pbBadge').style.display = 'none';
+    document.getElementById('pbLine').textContent = 'Personal Best: ' + oldPB + '/' + total;
+  }
+
+  // Analytics
+  if (typeof mfg === 'function') {
+    mfg('game_completed', {
+      game_slug: GAME_SLUG,
+      level: LEVEL,
+      score: correctCount,
+      questions_answered: total,
+      questions_correct: correctCount
+    });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('formula-plug-in',LEVEL,correctCount,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('formula-plug-in',LEVEL,correctCount);}}
+  }
+}
+
+function resetToStart() {
+  showScreen('startScreen');
+  initStartScreen();
+}
+
+// ============================================================
+//  KEYBOARD SUPPORT
+// ============================================================
+document.addEventListener('keydown', function(e) {
+  // Only respond during game screen
+  if (!document.getElementById('gameScreen').classList.contains('active')) return;
+
+  if (e.key >= '0' && e.key <= '9') {
+    numInput(e.key);
+  } else if (e.key === '.') {
+    numInput('.');
+  } else if (e.key === 'Backspace') {
+    e.preventDefault();
+    numBackspace();
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (answered) {
+      // A right answer is already moving on; a wrong one advances through its Next control,
+      // which cancels its own fallback timer, so the question can never be skipped twice.
+      if (nextCtl) nextCtl.advance();
+    } else {
+      submitAnswer();
+    }
+  }
+});
+
+// ============================================================
+//  INIT
+// ============================================================
+initStartScreen();
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Set three-figure bearings by eye and fire at submarine targets. A visual GCSE bearings game with instant feedback.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/bearing-blitz/">
+<meta property="og:title" content="Bearing Blitz — MaffsGames">
+<meta property="og:description" content="Set three-figure bearings by eye and fire at submarine targets. A visual GCSE bearings game with instant feedback.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/bearing-blitz/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Bearing Blitz — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#020408;--surface:#0a1018;--border:#142030;--primary:#06b6d4;--accent:#22c55e;--wrong:#f43f5e;--text:#c8dae8;--muted:#4a6080;--torpedo:#fbbf24}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--primary)}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:2px solid var(--primary);background:transparent;color:var(--primary);font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.start-btn:hover{background:var(--primary);color:#fff}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:520px}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:50px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+.lives{display:flex;gap:4px;justify-content:center}
+.life{width:16px;height:16px;border-radius:50%;transition:.3s}
+.life.alive{background:var(--accent)}.life.dead{background:var(--wrong)}
+
+.target-info{text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.8rem;margin-bottom:.5rem}
+.target-info .label{font-size:.7rem;color:var(--muted);text-transform:uppercase}
+.target-info .bearing{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:700;color:var(--torpedo)}
+
+/* Canvas compass — drawn via JS, no HTML labels */
+.compass-wrap{display:flex;justify-content:center;margin-bottom:.8rem}
+canvas{border-radius:50%;cursor:crosshair;touch-action:none}
+
+.fire-btn{display:block;width:100%;padding:.8rem;border-radius:10px;border:none;background:var(--wrong);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:.1em;transition:all .15s}
+.fire-btn:hover{transform:scale(1.02)}
+.fire-btn.disabled{opacity:.4;pointer-events:none}
+
+.message{text-align:center;padding:.6rem;margin-top:.5rem;border-radius:8px;font-size:.85rem;font-weight:600;display:none}
+.message.show{display:block;animation:fadeIn .3s}
+.message.hit{background:rgba(34,197,94,.1);border:1px solid var(--accent);color:var(--accent)}
+.message.miss{background:rgba(244,63,94,.1);border:1px solid var(--wrong);color:var(--wrong)}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}10%{transform:translateX(-10px)}20%{transform:translateX(10px)}30%{transform:translateX(-8px)}40%{transform:translateX(8px)}50%{transform:translateX(-5px)}60%{transform:translateX(5px)}70%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+.shaking{animation:shake .6s}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;color:var(--primary);margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:2px solid var(--primary);background:transparent;color:var(--primary);font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.play-again:hover{background:var(--primary);color:#fff}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container" id="gameContainer">
+<a href="../../" class="back-link">← Back to Games</a>
+<div id="menu" class="screen active">
+<div class="header"><h1>⚓ Bearing Blitz</h1><div class="sub">You are a submarine. Enemy ships are closing in.<br>Set your bearing by eye — no numbers, no labels. Fire or die.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+<div class="menu-info">
+Drag the needle to the target bearing. You have <strong>no readout</strong> — judge it by eye using the tick marks.<br>
+<strong>±5° tolerance</strong> = hit. Outside = miss + depth charge.<br>
+<strong>Three lives.</strong> Lose them all and the surface ships destroy you.<br><br>
+<em>Remember: bearings are measured clockwise from the top (North).</em>
+</div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+<button class="start-btn" onclick="startGame()">Dive! Dive! Dive!</button>
+</div>
+
+<div id="game" class="screen">
+<div class="hud">
+<div class="hud-item"><div class="hud-label">Ships sunk</div><div class="hud-val" id="sunk">0</div></div>
+<div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+<div class="hud-item"><div class="hud-label">Lives</div><div class="lives" id="lives"></div></div>
+</div>
+<div class="target-info"><div class="label">Enemy detected at bearing</div><div class="bearing" id="targetBearing">045°</div></div>
+<div class="compass-wrap"><canvas id="compassCanvas" width="320" height="320"></canvas></div>
+<button class="fire-btn" id="fireBtn" onclick="fire()">🎯 Fire Torpedo</button>
+<div class="message" id="message"></div>
+</div>
+
+<div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+
+<script>
+const canvas=document.getElementById('compassCanvas');
+const ctx=canvas.getContext('2d');
+const CX=160,CY=160,R=145;
+let currentAngle=0,targetBearing=0,livesLeft=3,sunkCount=0,score=0,totalShots=0,gameActive=false;
+let showTarget=false,targetAngleToShow=0;
+const TOLERANCE=5,MAX_TARGETS=20;
+const bearings=[];
+
+function generateBearings(){
+  bearings.length=0;
+  const fixed=[0,30,45,60,90,120,135,150,180,210,225,240,270,300,315,330];
+  fixed.forEach(b=>bearings.push(b));
+  for(let i=0;i<8;i++)bearings.push(Math.floor(Math.random()*360));
+  shuffle(bearings);
+}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+function pad3(n){return String(n).padStart(3,'0')}
+
+function drawCompass(){
+  ctx.clearRect(0,0,320,320);
+
+  ctx.strokeStyle='#1a2a3a';ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(CX,CY,R,0,Math.PI*2);ctx.stroke();
+
+  ctx.strokeStyle='#0a1520';ctx.lineWidth=0.5;
+  for(let r=30;r<R;r+=30){ctx.beginPath();ctx.arc(CX,CY,r,0,Math.PI*2);ctx.stroke()}
+
+  for(let deg=0;deg<360;deg+=10){
+    const rad=(deg-90)*Math.PI/180;
+    let innerR=R-8;
+    if(deg%90===0)innerR=R-18;
+    else if(deg%30===0)innerR=R-14;
+    ctx.strokeStyle=deg%90===0?'#3a5060':'#1a2a3a';
+    ctx.lineWidth=deg%90===0?2:1;
+    ctx.beginPath();
+    ctx.moveTo(CX+innerR*Math.cos(rad),CY+innerR*Math.sin(rad));
+    ctx.lineTo(CX+R*Math.cos(rad),CY+R*Math.sin(rad));
+    ctx.stroke();
+  }
+
+  ctx.fillStyle='#f43f5e';
+  ctx.beginPath();
+  ctx.moveTo(CX,CY-R-8);
+  ctx.lineTo(CX-5,CY-R+2);
+  ctx.lineTo(CX+5,CY-R+2);
+  ctx.closePath();ctx.fill();
+
+  const needleRad=(currentAngle-90)*Math.PI/180;
+  const nx=CX+R*0.85*Math.cos(needleRad);
+  const ny=CY+R*0.85*Math.sin(needleRad);
+
+  ctx.strokeStyle='#06b6d4';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(nx,ny);ctx.stroke();
+
+  const tipLen=10,tipW=5;
+  const angle=needleRad;
+  ctx.fillStyle='#06b6d4';
+  ctx.beginPath();
+  ctx.moveTo(nx+tipLen*Math.cos(angle),ny+tipLen*Math.sin(angle));
+  ctx.lineTo(nx+tipW*Math.cos(angle+Math.PI/2),ny+tipW*Math.sin(angle+Math.PI/2));
+  ctx.lineTo(nx+tipW*Math.cos(angle-Math.PI/2),ny+tipW*Math.sin(angle-Math.PI/2));
+  ctx.closePath();ctx.fill();
+
+  if(showTarget){
+    const tRad=(targetAngleToShow-90)*Math.PI/180;
+    const tx=CX+R*0.75*Math.cos(tRad);
+    const ty=CY+R*0.75*Math.sin(tRad);
+    ctx.strokeStyle='rgba(244,63,94,0.5)';ctx.lineWidth=2;ctx.setLineDash([6,4]);
+    ctx.beginPath();ctx.moveTo(CX,CY);ctx.lineTo(tx,ty);ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  ctx.fillStyle='#06b6d4';
+  ctx.beginPath();ctx.arc(CX,CY,5,0,Math.PI*2);ctx.fill();
+}
+
+let dragging=false;
+
+function getAngleFromEvent(e){
+  const rect=canvas.getBoundingClientRect();
+  const scaleX=320/rect.width,scaleY=320/rect.height;
+  const clientX=e.touches?e.touches[0].clientX:e.clientX;
+  const clientY=e.touches?e.touches[0].clientY:e.clientY;
+  const x=(clientX-rect.left)*scaleX-CX;
+  const y=(clientY-rect.top)*scaleY-CY;
+  let angle=Math.atan2(x,-y)*180/Math.PI;
+  if(angle<0)angle+=360;
+  return Math.round(angle);
+}
+
+canvas.addEventListener('mousedown',e=>{dragging=true;currentAngle=getAngleFromEvent(e);drawCompass()});
+document.addEventListener('mousemove',e=>{if(dragging){currentAngle=getAngleFromEvent(e);drawCompass()}});
+document.addEventListener('mouseup',()=>{dragging=false});
+canvas.addEventListener('touchstart',e=>{e.preventDefault();dragging=true;currentAngle=getAngleFromEvent(e);drawCompass()},{passive:false});
+document.addEventListener('touchmove',e=>{if(dragging){e.preventDefault();currentAngle=getAngleFromEvent(e);drawCompass()}},{passive:false});
+document.addEventListener('touchend',()=>{dragging=false});
+
+function updateLives(){
+  const el=document.getElementById('lives');el.innerHTML='';
+  for(let i=0;i<3;i++){const d=document.createElement('div');d.className='life '+(i<livesLeft?'alive':'dead');el.appendChild(d)}
+}
+
+function startGame(){
+  generateBearings();
+  livesLeft=3;sunkCount=0;score=0;totalShots=0;currentAngle=0;gameActive=true;showTarget=false;
+  document.getElementById('sunk').textContent='0';
+  document.getElementById('score').textContent='0';
+  updateLives();drawCompass();
+  show('game');
+  nextTarget();
+  window._ggAbandoned=true;
+  mfg('game_started',{game_slug:'bearing-blitz',level:'all'});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'bearing-blitz',level:'all',questions_answered:totalShots})});}
+}
+
+function nextTarget(){
+  if(sunkCount>=MAX_TARGETS||!gameActive){endGame();return}
+  targetBearing=bearings[sunkCount%bearings.length];
+  document.getElementById('targetBearing').textContent=pad3(targetBearing)+'°';
+  document.getElementById('fireBtn').classList.remove('disabled');
+  document.getElementById('message').className='message';
+  showTarget=false;
+  drawCompass();
+}
+
+function fire(){
+  if(!gameActive)return;
+  document.getElementById('fireBtn').classList.add('disabled');
+  totalShots++;
+
+  let diff=Math.abs(currentAngle-targetBearing);
+  if(diff>180)diff=360-diff;
+
+  showTarget=true;targetAngleToShow=targetBearing;
+  drawCompass();
+
+  const msg=document.getElementById('message');
+
+  if(diff<=TOLERANCE){
+    let pts=150;
+    if(diff<=1)pts=150;else if(diff<=3)pts=100;else pts=50;
+    score+=pts;sunkCount++;
+    document.getElementById('score').textContent=score;
+    document.getElementById('sunk').textContent=sunkCount;
+    msg.className='message show hit';
+    msg.textContent='💥 HIT! Target was '+pad3(targetBearing)+'° — you were '+diff+'° off. +'+pts+' points';
+    mfg('question_answered',{game_slug:'bearing-blitz',level:'all',correct:true,question_index:totalShots});
+    setTimeout(nextTarget,1800);
+  } else {
+    livesLeft--;
+    updateLives();
+    document.getElementById('gameContainer').classList.add('shaking');
+    setTimeout(()=>document.getElementById('gameContainer').classList.remove('shaking'),600);
+
+    mfg('question_answered',{game_slug:'bearing-blitz',level:'all',correct:false,question_index:totalShots});
+    msg.className='message show miss';
+    if(livesLeft>0){
+      const warnings=['Depth charge dropped nearby!','They\'re getting closer!','Hull integrity compromised!'];
+      msg.textContent='💣 '+warnings[2-livesLeft]+' You were '+diff+'° off. Target was '+pad3(targetBearing)+'°. '+livesLeft+' '+(livesLeft===1?'life':'lives')+' left!';
+      setTimeout(nextTarget,2500);
+    } else {
+      msg.textContent='💀 DESTROYED! Surface ships locked onto your position. You were '+diff+'° off the final bearing.';
+      gameActive=false;
+      setTimeout(endGame,2500);
+    }
+  }
+}
+
+function endGame(){
+  gameActive=false;
+  const accuracy=totalShots>0?Math.round(sunkCount/totalShots*100):0;
+  let title='';
+  if(livesLeft<=0)title='Submarine Destroyed!';
+  else if(sunkCount>=MAX_TARGETS)title='All Ships Sunk!';
+  else title='Mission Complete';
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('statsLine').innerHTML=
+    sunkCount+' ships sunk from '+totalShots+' torpedoes<br>'+
+    'Accuracy: '+accuracy+'%<br>'+
+    (livesLeft>0?'Survived with '+livesLeft+' lives':'Lost all lives — the surface ships found you');
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'bearing-blitz',level:'all',score:score,questions_answered:totalShots,accuracy:accuracy});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('bearing-blitz','all',score,totalShots).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('bearing-blitz','all',score);}}
+  show('results');
+}
+
+drawCompass();
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

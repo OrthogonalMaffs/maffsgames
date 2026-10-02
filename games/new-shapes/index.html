@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Learn area of parallelograms, trapezia and volume of prisms. Year 6 transition game — get ahead before Year 7.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/new-shapes/">
+<meta property="og:title" content="New Shapes — MaffsGames">
+<meta property="og:description" content="Learn area of parallelograms, trapezia and volume of prisms. Year 6 transition game — get ahead before Year 7.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/new-shapes/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>New Shapes — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--accent:#6366f1;--accent-dim:rgba(99,102,241,0.25);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--shape-fill:rgba(99,102,241,0.12);--shape-stroke:#6366f1;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--accent)}
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(99,102,241,0.3)}
+.mode-pill{font-size:11px;font-weight:500;padding:3px 10px;border-radius:12px;background:var(--surface-alt);color:var(--muted);border:1px solid var(--border)}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px;color:var(--accent)}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.session-label{font-size:14px;font-weight:600;color:var(--muted);text-align:center;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em}
+.session-btns{display:flex;gap:12px;justify-content:center;margin-bottom:28px}
+.session-btn{padding:14px 28px;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all 0.15s}
+.session-btn:hover,.session-btn.selected{border-color:var(--accent);background:var(--accent-dim);color:var(--accent)}
+
+.section-cards{display:flex;flex-direction:column;gap:16px;margin-bottom:28px}
+.section-card{background:var(--surface);border-radius:12px;padding:20px 24px;border-left:3px solid var(--accent)}
+.section-card .section-name{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.section-card .section-formula{font-size:1.2rem;margin-bottom:6px;text-align:center}
+.section-card .section-count{font-size:13px;color:var(--muted);text-align:center}
+
+.pb-display{text-align:center;margin-bottom:20px;font-size:14px;color:var(--muted)}
+.pb-display span{color:var(--accent);font-weight:700}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+
+/* Game screen */
+.formula-card{background:var(--surface);border-radius:16px;padding:32px 24px;margin:20px 0;text-align:center}
+.formula-card .formula-name{font-size:14px;font-weight:600;color:var(--muted);margin-bottom:16px;text-transform:uppercase;letter-spacing:0.04em}
+.formula-card .formula-katex{font-size:1.5rem;margin-bottom:20px}
+.formula-card .vars-line{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--accent);margin-bottom:16px;line-height:1.8}
+.formula-card .question-prompt{font-size:16px;font-weight:600;color:var(--text)}
+
+/* Shape diagrams */
+.shape-container{position:relative;width:260px;height:160px;margin:0 auto 20px}
+.shape-label{position:absolute;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent);background:var(--bg);padding:0 4px;white-space:nowrap}
+
+/* Parallelogram */
+.parallelogram-shape{position:absolute;top:20px;left:30px;width:180px;height:100px;background:var(--shape-fill);border:2px solid var(--shape-stroke);transform:skewX(-20deg)}
+.parallelogram-height{position:absolute;top:20px;left:140px;width:0;height:100px;border-left:2px dashed var(--muted)}
+.parallelogram-height::before,.parallelogram-height::after{content:'';position:absolute;left:-4px;width:8px;height:2px;background:var(--muted)}
+.parallelogram-height::before{top:0}
+.parallelogram-height::after{bottom:0}
+
+/* Trapezium */
+.trapezium-shape{position:absolute;top:16px;left:20px;width:220px;height:120px;clip-path:polygon(25% 0, 75% 0, 100% 100%, 0 100%);background:var(--shape-fill);border:2px solid var(--shape-stroke)}
+.trapezium-outline{position:absolute;top:16px;left:20px;width:220px;height:120px}
+.trapezium-outline svg{width:100%;height:100%}
+.trapezium-height{position:absolute;top:16px;right:52px;width:0;height:120px;border-left:2px dashed var(--muted)}
+.trapezium-height::before,.trapezium-height::after{content:'';position:absolute;left:-4px;width:8px;height:2px;background:var(--muted)}
+.trapezium-height::before{top:0}
+.trapezium-height::after{bottom:0}
+
+/* Prism */
+.prism-front{position:absolute;top:40px;left:30px;width:100px;height:80px;background:var(--shape-fill);border:2px solid var(--shape-stroke)}
+.prism-back{position:absolute;top:16px;left:66px;width:100px;height:80px;background:rgba(99,102,241,0.06);border:2px solid rgba(99,102,241,0.4)}
+.prism-edge{position:absolute;stroke:var(--shape-stroke);stroke-width:2}
+.prism-edges{position:absolute;top:0;left:0;width:100%;height:100%}
+.prism-edges svg{width:100%;height:100%}
+.prism-cross{position:absolute;top:40px;left:30px;width:100px;height:80px;background:rgba(99,102,241,0.18);border:2px solid var(--accent)}
+
+/* Answer input display */
+.answer-display{background:var(--surface-alt);border:2px solid var(--border);border-radius:12px;padding:16px 20px;margin:16px 0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;min-height:64px;display:flex;align-items:center;justify-content:center;color:var(--text);transition:border-color 0.15s}
+.answer-display.correct{border-color:var(--green);color:var(--green)}
+.answer-display.incorrect{border-color:var(--red);color:var(--red)}
+.answer-display .cursor{display:inline-block;width:2px;height:28px;background:var(--accent);margin-left:2px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Number pad */
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:320px;margin:16px auto}
+.numpad-btn{padding:18px 8px;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;cursor:pointer;transition:all 0.12s;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.numpad-btn:hover{border-color:var(--accent);background:var(--accent-dim)}
+.numpad-btn:active{transform:scale(0.95)}
+.numpad-btn.enter{background:var(--accent);color:#fff;border-color:var(--accent);font-family:'Outfit',sans-serif;font-size:16px;font-weight:700}
+.numpad-btn.enter:hover{opacity:0.9}
+.numpad-btn.backspace{font-size:18px}
+.numpad-btn:disabled{opacity:0.35;cursor:default;transform:none}
+
+/* Feedback */
+.feedback-panel{background:var(--surface-alt);border-top:3px solid var(--border);border-radius:12px;padding:24px 20px;margin:20px 0;opacity:0;transform:translateY(20px);transition:opacity 0.25s,transform 0.25s;display:none}
+.feedback-panel.show{opacity:1;transform:translateY(0);display:block}
+.feedback-panel.flash-green{border-top-color:var(--green)}
+.feedback-panel.flash-red{border-top-color:var(--red)}
+.feedback-indicator{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.feedback-indicator.correct{color:var(--green)}
+.feedback-indicator.incorrect{color:var(--red)}
+.working-steps{background:#141620;border-left:3px solid var(--accent);border-radius:4px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:14px;color:#cbd5e1;line-height:2}
+
+/* Reveal screen */
+.reveal-screen{display:none;max-width:680px;margin:0 auto;padding:60px 20px;text-align:center}
+.reveal-screen.active{display:block}
+.reveal-icon{font-size:48px;margin-bottom:20px}
+.reveal-message{font-size:18px;font-weight:500;line-height:1.8;color:#cbd5e1;max-width:540px;margin:0 auto}
+.reveal-message strong{color:var(--accent);font-weight:700}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--accent)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.pb-badge{background:var(--accent-dim);color:var(--accent);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+@media(prefers-reduced-motion:reduce){
+.feedback-panel{transition:none}
+.answer-display .cursor{animation:none;opacity:1}
+.numpad-btn{transition:none}
+}
+@media(max-width:480px){
+.numpad{max-width:100%}
+.numpad-btn{padding:16px 6px;font-size:20px}
+.formula-card .formula-katex{font-size:1.2rem}
+.formula-card{padding:24px 16px}
+.session-btns{flex-direction:column;align-items:center}
+}
+
+/* ---- Phone layout (canon §7.6.1, the phone rule; 1 Oct 2026) ----
+   The question, the diagram, the keypad and Enter sit above the fold while asking; the working
+   and Next sit above the fold after an answer. Measured at 320x568, 375x667 and 390x844 on all
+   50 questions, fold = viewport minus the 40px footer.
+   1. Header on one line: the arrow alone links back (named by aria-label), the topic and level
+      pills go (the card names the topic), Aa grows to a 44px target.
+   2. The diagram carries every number needed to answer, so it is never collapsed. It shrinks
+      whole (one transform, so the drawing keeps its proportions; the old per-part resize left
+      the parallelogram's height line longer than the shape) and its labels are re-sized so
+      they still render at 13px or more. The values line repeats the labels, so it goes.
+   3. Keypad in four columns, numpad style (Backspace and Enter on the right), keys 44px tall.
+   4. A wrong answer hides the keypad, which cannot be used then, so the feedback takes its
+      place. A right answer moves on briskly (canon §7.6; Jon, 1 Oct 2026), so the keypad stays.
+   5. Wrong answer, top to bottom on screen: your answer -> the answer and the working -> the
+      diagram -> Next. The feedback panel's children join the screen's flex order to allow that.
+      `order` moves things visually only; a screen reader keeps the page's own order (diagram,
+      your answer, the working, Next), which is the order the question was asked in. */
+@media(max-width:600px){
+  .header{padding:2px 6px;gap:4px}
+  .header-right{gap:6px}
+  .back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
+  .back-text,.header-div,.mode-pill,.level-pill{display:none}
+  .header-title{font-size:16px;white-space:nowrap}
+  .a11y-toggle{width:44px;height:44px}
+  .screen{padding:8px 12px}
+  .formula-card{padding:8px 10px;margin:0 0 8px;border-radius:12px}
+  .formula-card .formula-name{font-size:12px;margin-bottom:2px}
+  .formula-card .formula-katex{font-size:1.15rem;margin-bottom:2px}
+  .formula-card .formula-katex .katex-display{margin:0}
+  .formula-card .vars-line{display:none}
+  .formula-card .question-prompt{font-size:16px;line-height:1.4}
+  .shape-container{--s:.82;transform:scale(var(--s));transform-origin:top center;margin:0 auto calc(160px * (var(--s) - 1))}
+  .shape-label{font-size:calc(13px / var(--s))}
+  #shapeContainer text{font-size:calc(16px / var(--s))}
+  .answer-display{min-height:44px;padding:4px 12px;margin:0 0 8px;font-size:24px}
+  .answer-display .cursor{height:24px}
+  .numpad{grid-template-columns:repeat(4,1fr);grid-auto-rows:44px;gap:6px;max-width:100%;margin:0 auto 8px}
+  .numpad-btn{padding:0;font-size:20px;min-height:44px}
+  .numpad-btn:nth-child(1){grid-area:1/1}.numpad-btn:nth-child(2){grid-area:1/2}.numpad-btn:nth-child(3){grid-area:1/3}
+  .numpad-btn:nth-child(4){grid-area:2/1}.numpad-btn:nth-child(5){grid-area:2/2}.numpad-btn:nth-child(6){grid-area:2/3}
+  .numpad-btn:nth-child(7){grid-area:3/1}.numpad-btn:nth-child(8){grid-area:3/2}.numpad-btn:nth-child(9){grid-area:3/3}
+  .numpad-btn:nth-child(10){grid-area:4/3}.numpad-btn:nth-child(11){grid-area:4/1/5/3}
+  .numpad-btn.backspace{grid-area:1/4/3/5}
+  .numpad-btn.enter{grid-area:3/4/5/5 !important}
+  #gameScreen:has(.feedback-panel.flash-red) .numpad{display:none}
+  .feedback-panel{padding:10px 12px;margin:0 0 8px}
+  .feedback-indicator{margin-bottom:6px;line-height:1.35}
+  .working-steps{padding:6px 12px;line-height:1.75}
+  #gameScreen:has(.feedback-panel.flash-red).active{display:flex;flex-direction:column}
+  #gameScreen:has(.feedback-panel.flash-red) .feedback-panel{display:contents !important}
+  #gameScreen:has(.feedback-panel.flash-red) .answer-display{order:1}
+  #gameScreen:has(.feedback-panel.flash-red) .feedback-indicator{order:2;margin-bottom:6px;padding-top:8px;border-top:3px solid var(--red)}
+  #gameScreen:has(.feedback-panel.flash-red) .working-steps{order:3}
+  #gameScreen:has(.feedback-panel.flash-red) .formula-card{order:4;margin:8px 0 0}
+  #gameScreen:has(.feedback-panel.flash-red) #nextMount{order:5}
+}
+/* A short phone (<= 600px tall, e.g. 320x568): the diagram shrinks a little more, labels still
+   13px. After a wrong answer it moves below Next (a five-line trapezium working leaves no room
+   for both); the working never does. Visually only, as above. */
+@media(max-width:600px) and (max-height:600px){
+  .shape-container{--s:.74}
+  #gameScreen:has(.feedback-panel.flash-red) .formula-card{order:6}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' \2713';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' \2717';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link" aria-label="Back to Games">←<span class="back-text"> Back to Games</span></a>
+  <div class="header-div"></div>
+  <span class="header-title">New Shapes</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    <span class="mode-pill" id="modePill"></span>
+    <span class="level-pill">Year 6</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreTotal">0</span></span>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">New Shapes</div>
+  <div class="start-sub">In primary school you learned area of rectangles and triangles. Year 7 introduces two new shapes &mdash; parallelograms and trapezia &mdash; plus a new 3D formula. You're about to get ahead of the class.</div>
+
+  <div class="section-cards">
+    <div class="section-card">
+      <div class="section-name">Parallelogram (15 questions)</div>
+      <div class="section-formula" id="secFormula1"></div>
+    </div>
+    <div class="section-card">
+      <div class="section-name">Trapezium (20 questions)</div>
+      <div class="section-formula" id="secFormula2"></div>
+    </div>
+    <div class="section-card">
+      <div class="section-name">Volume of a Prism (15 questions)</div>
+      <div class="section-formula" id="secFormula3"></div>
+    </div>
+  </div>
+
+  <div class="session-label">Session Length</div>
+  <div class="session-btns">
+    <button class="session-btn" data-len="10" onclick="selectSession(10)">10</button>
+    <button class="session-btn selected" data-len="20" onclick="selectSession(20)">20</button>
+    <button class="session-btn" data-len="30" onclick="selectSession(30)">30</button>
+  </div>
+
+  <div class="pb-display" id="pbDisplay" style="display:none">Personal Best: <span id="pbValue"></span></div>
+
+  <button class="start-btn" onclick="startGame()">Start</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="formula-card">
+    <div class="formula-name" id="formulaName"></div>
+    <div id="shapeContainer"></div>
+    <div class="formula-katex" id="formulaKatex"></div>
+    <div class="vars-line" id="varsLine"></div>
+    <div class="question-prompt" id="questionPrompt"></div>
+  </div>
+
+  <div class="answer-display" id="answerDisplay"><span class="cursor"></span></div>
+
+  <div class="numpad" id="numpad">
+    <button class="numpad-btn" onclick="numInput('7')">7</button>
+    <button class="numpad-btn" onclick="numInput('8')">8</button>
+    <button class="numpad-btn" onclick="numInput('9')">9</button>
+    <button class="numpad-btn" onclick="numInput('4')">4</button>
+    <button class="numpad-btn" onclick="numInput('5')">5</button>
+    <button class="numpad-btn" onclick="numInput('6')">6</button>
+    <button class="numpad-btn" onclick="numInput('1')">1</button>
+    <button class="numpad-btn" onclick="numInput('2')">2</button>
+    <button class="numpad-btn" onclick="numInput('3')">3</button>
+    <button class="numpad-btn" onclick="numInput('.')">.</button>
+    <button class="numpad-btn" onclick="numInput('0')">0</button>
+    <button class="numpad-btn backspace" onclick="numBackspace()" aria-label="Backspace">&#9003;</button>
+    <button class="numpad-btn enter" style="grid-column:1/-1" onclick="submitAnswer()">Enter</button>
+  </div>
+
+  <div class="feedback-panel" id="feedbackPanel">
+    <div class="feedback-indicator" id="feedbackIndicator"></div>
+    <div class="working-steps" id="workingSteps" style="display:none"></div>
+    <div id="nextMount"></div>
+  </div>
+</div>
+
+<!-- REVEAL SCREEN -->
+<div class="reveal-screen" id="revealScreen">
+  <div class="reveal-icon">&#9889;</div>
+  <div class="reveal-message">
+    <strong>You now know five area formulae and one volume formula.</strong><br><br>
+    Most students don't see trapezia and prisms until they're already in Year 7. You've seen them already. That's a <strong>genuine advantage</strong>.
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Score</h4>
+      <div class="score" id="finalScore">0/10</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="sub" id="pbLine" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="resetToStart()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANKS — 3 sections
+// ============================================================
+
+// Parallelogram: A = b x h (15 questions)
+const PARALLELOGRAM = [
+{id:'ns_p01',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:6},{name:'h',value:4}],resultVar:'A',answer:24,workingSteps:['A = b \\times h','A = 6 \\times 4','A = 24']},
+{id:'ns_p02',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:8},{name:'h',value:5}],resultVar:'A',answer:40,workingSteps:['A = b \\times h','A = 8 \\times 5','A = 40']},
+{id:'ns_p03',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:10},{name:'h',value:3}],resultVar:'A',answer:30,workingSteps:['A = b \\times h','A = 10 \\times 3','A = 30']},
+{id:'ns_p04',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:7},{name:'h',value:6}],resultVar:'A',answer:42,workingSteps:['A = b \\times h','A = 7 \\times 6','A = 42']},
+{id:'ns_p05',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:9},{name:'h',value:4}],resultVar:'A',answer:36,workingSteps:['A = b \\times h','A = 9 \\times 4','A = 36']},
+{id:'ns_p06',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:12},{name:'h',value:5}],resultVar:'A',answer:60,workingSteps:['A = b \\times h','A = 12 \\times 5','A = 60']},
+{id:'ns_p07',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:5},{name:'h',value:8}],resultVar:'A',answer:40,workingSteps:['A = b \\times h','A = 5 \\times 8','A = 40']},
+{id:'ns_p08',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:11},{name:'h',value:3}],resultVar:'A',answer:33,workingSteps:['A = b \\times h','A = 11 \\times 3','A = 33']},
+{id:'ns_p09',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:4},{name:'h',value:9}],resultVar:'A',answer:36,workingSteps:['A = b \\times h','A = 4 \\times 9','A = 36']},
+{id:'ns_p10',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:6},{name:'h',value:7}],resultVar:'A',answer:42,workingSteps:['A = b \\times h','A = 6 \\times 7','A = 42']},
+{id:'ns_p11',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:8},{name:'h',value:8}],resultVar:'A',answer:64,workingSteps:['A = b \\times h','A = 8 \\times 8','A = 64']},
+{id:'ns_p12',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:3},{name:'h',value:10}],resultVar:'A',answer:30,workingSteps:['A = b \\times h','A = 3 \\times 10','A = 30']},
+{id:'ns_p13',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:7},{name:'h',value:7}],resultVar:'A',answer:49,workingSteps:['A = b \\times h','A = 7 \\times 7','A = 49']},
+{id:'ns_p14',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:9},{name:'h',value:6}],resultVar:'A',answer:54,workingSteps:['A = b \\times h','A = 9 \\times 6','A = 54']},
+{id:'ns_p15',section:'parallelogram',formulaName:'Area of a parallelogram',formulaKatex:'A = b \\times h',variables:[{name:'b',value:5},{name:'h',value:5}],resultVar:'A',answer:25,workingSteps:['A = b \\times h','A = 5 \\times 5','A = 25']}
+];
+
+// Trapezium: A = 1/2(a + b) x h (20 questions)
+const TRAPEZIUM = [
+{id:'ns_t01',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:3},{name:'b',value:7},{name:'h',value:4}],resultVar:'A',answer:20,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(3 + 7) \\times 4','A = \\tfrac{1}{2}(10) \\times 4','A = 5 \\times 4','A = 20']},
+{id:'ns_t02',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:5},{name:'b',value:9},{name:'h',value:6}],resultVar:'A',answer:42,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(5 + 9) \\times 6','A = \\tfrac{1}{2}(14) \\times 6','A = 7 \\times 6','A = 42']},
+{id:'ns_t03',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:4},{name:'b',value:8},{name:'h',value:5}],resultVar:'A',answer:30,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(4 + 8) \\times 5','A = \\tfrac{1}{2}(12) \\times 5','A = 6 \\times 5','A = 30']},
+{id:'ns_t04',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:6},{name:'b',value:10},{name:'h',value:4}],resultVar:'A',answer:32,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(6 + 10) \\times 4','A = \\tfrac{1}{2}(16) \\times 4','A = 8 \\times 4','A = 32']},
+{id:'ns_t05',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:2},{name:'b',value:6},{name:'h',value:8}],resultVar:'A',answer:32,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(2 + 6) \\times 8','A = \\tfrac{1}{2}(8) \\times 8','A = 4 \\times 8','A = 32']},
+{id:'ns_t06',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:3},{name:'b',value:5},{name:'h',value:6}],resultVar:'A',answer:24,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(3 + 5) \\times 6','A = \\tfrac{1}{2}(8) \\times 6','A = 4 \\times 6','A = 24']},
+{id:'ns_t07',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:7},{name:'b',value:9},{name:'h',value:4}],resultVar:'A',answer:32,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(7 + 9) \\times 4','A = \\tfrac{1}{2}(16) \\times 4','A = 8 \\times 4','A = 32']},
+{id:'ns_t08',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:4},{name:'b',value:10},{name:'h',value:5}],resultVar:'A',answer:35,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(4 + 10) \\times 5','A = \\tfrac{1}{2}(14) \\times 5','A = 7 \\times 5','A = 35']},
+{id:'ns_t09',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:6},{name:'b',value:8},{name:'h',value:3}],resultVar:'A',answer:21,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(6 + 8) \\times 3','A = \\tfrac{1}{2}(14) \\times 3','A = 7 \\times 3','A = 21']},
+{id:'ns_t10',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:5},{name:'b',value:7},{name:'h',value:8}],resultVar:'A',answer:48,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(5 + 7) \\times 8','A = \\tfrac{1}{2}(12) \\times 8','A = 6 \\times 8','A = 48']},
+{id:'ns_t11',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:2},{name:'b',value:8},{name:'h',value:7}],resultVar:'A',answer:35,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(2 + 8) \\times 7','A = \\tfrac{1}{2}(10) \\times 7','A = 5 \\times 7','A = 35']},
+{id:'ns_t12',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:4},{name:'b',value:6},{name:'h',value:9}],resultVar:'A',answer:45,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(4 + 6) \\times 9','A = \\tfrac{1}{2}(10) \\times 9','A = 5 \\times 9','A = 45']},
+{id:'ns_t13',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:3},{name:'b',value:9},{name:'h',value:6}],resultVar:'A',answer:36,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(3 + 9) \\times 6','A = \\tfrac{1}{2}(12) \\times 6','A = 6 \\times 6','A = 36']},
+{id:'ns_t14',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:5},{name:'b',value:11},{name:'h',value:4}],resultVar:'A',answer:32,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(5 + 11) \\times 4','A = \\tfrac{1}{2}(16) \\times 4','A = 8 \\times 4','A = 32']},
+{id:'ns_t15',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:6},{name:'b',value:12},{name:'h',value:5}],resultVar:'A',answer:45,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(6 + 12) \\times 5','A = \\tfrac{1}{2}(18) \\times 5','A = 9 \\times 5','A = 45']},
+{id:'ns_t16',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:1},{name:'b',value:7},{name:'h',value:6}],resultVar:'A',answer:24,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(1 + 7) \\times 6','A = \\tfrac{1}{2}(8) \\times 6','A = 4 \\times 6','A = 24']},
+{id:'ns_t17',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:4},{name:'b',value:8},{name:'h',value:7}],resultVar:'A',answer:42,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(4 + 8) \\times 7','A = \\tfrac{1}{2}(12) \\times 7','A = 6 \\times 7','A = 42']},
+{id:'ns_t18',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:3},{name:'b',value:7},{name:'h',value:8}],resultVar:'A',answer:40,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(3 + 7) \\times 8','A = \\tfrac{1}{2}(10) \\times 8','A = 5 \\times 8','A = 40']},
+{id:'ns_t19',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:2},{name:'b',value:10},{name:'h',value:5}],resultVar:'A',answer:30,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(2 + 10) \\times 5','A = \\tfrac{1}{2}(12) \\times 5','A = 6 \\times 5','A = 30']},
+{id:'ns_t20',section:'trapezium',formulaName:'Area of a trapezium',formulaKatex:'A = \\tfrac{1}{2}(a + b) \\times h',variables:[{name:'a',value:5},{name:'b',value:9},{name:'h',value:4}],resultVar:'A',answer:28,workingSteps:['A = \\tfrac{1}{2}(a + b) \\times h','A = \\tfrac{1}{2}(5 + 9) \\times 4','A = \\tfrac{1}{2}(14) \\times 4','A = 7 \\times 4','A = 28']}
+];
+
+// Volume of prism: V = A x l (15 questions)
+const PRISM = [
+{id:'ns_v01',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:12},{name:'l',value:5}],resultVar:'V',answer:60,workingSteps:['V = A \\times l','V = 12 \\times 5','V = 60']},
+{id:'ns_v02',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:8},{name:'l',value:7}],resultVar:'V',answer:56,workingSteps:['V = A \\times l','V = 8 \\times 7','V = 56']},
+{id:'ns_v03',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:15},{name:'l',value:4}],resultVar:'V',answer:60,workingSteps:['V = A \\times l','V = 15 \\times 4','V = 60']},
+{id:'ns_v04',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:20},{name:'l',value:3}],resultVar:'V',answer:60,workingSteps:['V = A \\times l','V = 20 \\times 3','V = 60']},
+{id:'ns_v05',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:6},{name:'l',value:9}],resultVar:'V',answer:54,workingSteps:['V = A \\times l','V = 6 \\times 9','V = 54']},
+{id:'ns_v06',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:10},{name:'l',value:8}],resultVar:'V',answer:80,workingSteps:['V = A \\times l','V = 10 \\times 8','V = 80']},
+{id:'ns_v07',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:18},{name:'l',value:5}],resultVar:'V',answer:90,workingSteps:['V = A \\times l','V = 18 \\times 5','V = 90']},
+{id:'ns_v08',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:24},{name:'l',value:3}],resultVar:'V',answer:72,workingSteps:['V = A \\times l','V = 24 \\times 3','V = 72']},
+{id:'ns_v09',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:9},{name:'l',value:6}],resultVar:'V',answer:54,workingSteps:['V = A \\times l','V = 9 \\times 6','V = 54']},
+{id:'ns_v10',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:16},{name:'l',value:4}],resultVar:'V',answer:64,workingSteps:['V = A \\times l','V = 16 \\times 4','V = 64']},
+{id:'ns_v11',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:25},{name:'l',value:3}],resultVar:'V',answer:75,workingSteps:['V = A \\times l','V = 25 \\times 3','V = 75']},
+{id:'ns_v12',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:14},{name:'l',value:5}],resultVar:'V',answer:70,workingSteps:['V = A \\times l','V = 14 \\times 5','V = 70']},
+{id:'ns_v13',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:30},{name:'l',value:2}],resultVar:'V',answer:60,workingSteps:['V = A \\times l','V = 30 \\times 2','V = 60']},
+{id:'ns_v14',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:7},{name:'l',value:8}],resultVar:'V',answer:56,workingSteps:['V = A \\times l','V = 7 \\times 8','V = 56']},
+{id:'ns_v15',section:'prism',formulaName:'Volume of a prism',formulaKatex:'V = A \\times l',variables:[{name:'A',value:21},{name:'l',value:4}],resultVar:'V',answer:84,workingSteps:['V = A \\times l','V = 21 \\times 4','V = 84']}
+];
+
+const ALL_QUESTIONS = [...PARALLELOGRAM, ...TRAPEZIUM, ...PRISM];
+
+// ============================================================
+//  STATE
+// ============================================================
+const GAME_SLUG = 'new-shapes';
+const LEVEL = 'year6';
+const PB_KEY = 'mfg_pb_new_shapes_year6';
+
+let sessionLength = 20;
+let sessionQuestions = [];
+let currentIndex = 0;
+let correctCount = 0;
+let inputValue = '';
+let answered = false;
+let nextCtl = null;   // the wrong-answer Next control, so Enter goes through it (canon §7.6)
+let revealShown = false;
+
+// ============================================================
+//  HELPERS
+// ============================================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderKatex(el, latex, display) {
+  el.innerHTML = katex.renderToString(latex, { throwOnError: false, displayMode: !!display });
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen, .reveal-screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  document.getElementById('gameHeader').style.display = (id === 'gameScreen') ? 'flex' : 'none';
+}
+
+function getPB() {
+  const v = localStorage.getItem(PB_KEY);
+  return v ? parseInt(v, 10) : null;
+}
+
+function setPB(score) {
+  localStorage.setItem(PB_KEY, score.toString());
+}
+
+// ============================================================
+//  SHAPE DIAGRAM RENDERERS
+// ============================================================
+function renderParallelogram(container, b, h) {
+  container.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'shape-container';
+  wrap.setAttribute('role', 'img');
+  wrap.setAttribute('aria-label', 'Parallelogram with base ' + b + ' and height ' + h);
+
+  // Parallelogram shape
+  const shape = document.createElement('div');
+  shape.className = 'parallelogram-shape';
+  wrap.appendChild(shape);
+
+  // Height dotted line
+  const hLine = document.createElement('div');
+  hLine.className = 'parallelogram-height';
+  wrap.appendChild(hLine);
+
+  // Label: b at bottom
+  const bLabel = document.createElement('div');
+  bLabel.className = 'shape-label';
+  bLabel.textContent = 'b = ' + b;
+  bLabel.style.bottom = '0';
+  bLabel.style.left = '50%';
+  bLabel.style.transform = 'translateX(-50%)';
+  wrap.appendChild(bLabel);
+
+  // Label: h on the right of dotted line
+  const hLabel = document.createElement('div');
+  hLabel.className = 'shape-label';
+  hLabel.textContent = 'h = ' + h;
+  hLabel.style.top = '50%';
+  hLabel.style.left = '168px';
+  hLabel.style.transform = 'translateY(-50%)';
+  wrap.appendChild(hLabel);
+
+  container.appendChild(wrap);
+}
+
+function renderTrapezium(container, a, b, h) {
+  container.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'shape-container';
+  wrap.setAttribute('role', 'img');
+  wrap.setAttribute('aria-label', 'Trapezium with parallel sides ' + a + ' and ' + b + ', height ' + h);
+
+  // Use SVG for clean trapezium
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 260 140');
+  svg.setAttribute('width', '260');
+  svg.setAttribute('height', '140');
+  svg.style.position = 'absolute';
+  svg.style.top = '10px';
+  svg.style.left = '0';
+
+  // Trapezium polygon — top shorter, bottom longer
+  const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+  poly.setAttribute('points', '75,10 185,10 240,120 20,120');
+  poly.setAttribute('fill', 'rgba(99,102,241,0.12)');
+  poly.setAttribute('stroke', '#6366f1');
+  poly.setAttribute('stroke-width', '2');
+  svg.appendChild(poly);
+
+  // Height dashed line
+  const hLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  hLine.setAttribute('x1', '185');
+  hLine.setAttribute('y1', '10');
+  hLine.setAttribute('x2', '185');
+  hLine.setAttribute('y2', '120');
+  hLine.setAttribute('stroke', '#7a7f90');
+  hLine.setAttribute('stroke-width', '2');
+  hLine.setAttribute('stroke-dasharray', '6,4');
+  svg.appendChild(hLine);
+
+  // Tick marks on height line
+  [10, 120].forEach(function(y) {
+    var tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    tick.setAttribute('x1', '181');
+    tick.setAttribute('y1', String(y));
+    tick.setAttribute('x2', '189');
+    tick.setAttribute('y2', String(y));
+    tick.setAttribute('stroke', '#7a7f90');
+    tick.setAttribute('stroke-width', '2');
+    svg.appendChild(tick);
+  });
+
+  wrap.appendChild(svg);
+
+  // Label: a (top)
+  const aLabel = document.createElement('div');
+  aLabel.className = 'shape-label';
+  aLabel.textContent = 'a = ' + a;
+  aLabel.style.top = '0';
+  aLabel.style.left = '50%';
+  aLabel.style.transform = 'translateX(-50%)';
+  wrap.appendChild(aLabel);
+
+  // Label: b (bottom)
+  const bLabel = document.createElement('div');
+  bLabel.className = 'shape-label';
+  bLabel.textContent = 'b = ' + b;
+  bLabel.style.bottom = '0';
+  bLabel.style.left = '50%';
+  bLabel.style.transform = 'translateX(-50%)';
+  wrap.appendChild(bLabel);
+
+  // Label: h (right of dashed line)
+  const hLabel = document.createElement('div');
+  hLabel.className = 'shape-label';
+  hLabel.textContent = 'h = ' + h;
+  hLabel.style.top = '50%';
+  hLabel.style.right = '20px';
+  hLabel.style.transform = 'translateY(-50%)';
+  wrap.appendChild(hLabel);
+
+  container.appendChild(wrap);
+}
+
+function renderPrism(container, A, l) {
+  container.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.className = 'shape-container';
+  wrap.setAttribute('role', 'img');
+  wrap.setAttribute('aria-label', 'Prism with cross-section area ' + A + ' and length ' + l);
+
+  // Use SVG for 3D-ish prism
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 260 160');
+  svg.setAttribute('width', '260');
+  svg.setAttribute('height', '160');
+  svg.style.position = 'absolute';
+  svg.style.top = '0';
+  svg.style.left = '0';
+
+  // Front face (cross-section) — highlighted
+  const front = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  front.setAttribute('x', '20');
+  front.setAttribute('y', '40');
+  front.setAttribute('width', '90');
+  front.setAttribute('height', '90');
+  front.setAttribute('fill', 'rgba(99,102,241,0.2)');
+  front.setAttribute('stroke', '#6366f1');
+  front.setAttribute('stroke-width', '2.5');
+  svg.appendChild(front);
+
+  // Back face
+  const back = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  back.setAttribute('x', '60');
+  back.setAttribute('y', '10');
+  back.setAttribute('width', '90');
+  back.setAttribute('height', '90');
+  back.setAttribute('fill', 'rgba(99,102,241,0.05)');
+  back.setAttribute('stroke', 'rgba(99,102,241,0.4)');
+  back.setAttribute('stroke-width', '1.5');
+  svg.appendChild(back);
+
+  // Connecting edges
+  var edges = [
+    [20, 40, 60, 10],
+    [110, 40, 150, 10],
+    [110, 130, 150, 100],
+    [20, 130, 60, 100]
+  ];
+  edges.forEach(function(e) {
+    var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', String(e[0]));
+    line.setAttribute('y1', String(e[1]));
+    line.setAttribute('x2', String(e[2]));
+    line.setAttribute('y2', String(e[3]));
+    line.setAttribute('stroke', '#6366f1');
+    line.setAttribute('stroke-width', '1.5');
+    svg.appendChild(line);
+  });
+
+  // "A" label in centre of front face
+  var aText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  aText.setAttribute('x', '65');
+  aText.setAttribute('y', '92');
+  aText.setAttribute('text-anchor', 'middle');
+  aText.setAttribute('fill', '#6366f1');
+  aText.setAttribute('font-family', 'JetBrains Mono, monospace');
+  aText.setAttribute('font-size', '16');
+  aText.setAttribute('font-weight', '600');
+  aText.textContent = 'A = ' + A;
+  svg.appendChild(aText);
+
+  // Length arrow along bottom edge
+  var lenLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  lenLine.setAttribute('x1', '22');
+  lenLine.setAttribute('y1', '145');
+  lenLine.setAttribute('x2', '148');
+  lenLine.setAttribute('y2', '145');
+  lenLine.setAttribute('stroke', '#7a7f90');
+  lenLine.setAttribute('stroke-width', '1.5');
+  svg.appendChild(lenLine);
+
+  // Arrow heads
+  [{ x: 22, dir: 1 }, { x: 148, dir: -1 }].forEach(function(arr) {
+    var head = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+    head.setAttribute('points', (arr.x + arr.dir * 8) + ',140 ' + arr.x + ',145 ' + (arr.x + arr.dir * 8) + ',150');
+    head.setAttribute('fill', 'none');
+    head.setAttribute('stroke', '#7a7f90');
+    head.setAttribute('stroke-width', '1.5');
+    svg.appendChild(head);
+  });
+
+  wrap.appendChild(svg);
+
+  // Label: l below
+  var lLabel = document.createElement('div');
+  lLabel.className = 'shape-label';
+  lLabel.textContent = 'l = ' + l;
+  lLabel.style.bottom = '-4px';
+  lLabel.style.left = '85px';
+  wrap.appendChild(lLabel);
+
+  container.appendChild(wrap);
+}
+
+// ============================================================
+//  START SCREEN
+// ============================================================
+function selectSession(len) {
+  sessionLength = len;
+  document.querySelectorAll('.session-btn').forEach(function(b) {
+    b.classList.toggle('selected', parseInt(b.dataset.len) === len);
+  });
+}
+
+function initStartScreen() {
+  // Render section formulae
+  renderKatex(document.getElementById('secFormula1'), 'A = b \\times h', true);
+  renderKatex(document.getElementById('secFormula2'), 'A = \\tfrac{1}{2}(a + b) \\times h', true);
+  renderKatex(document.getElementById('secFormula3'), 'V = A \\times l', true);
+
+  // Show PB
+  var pb = getPB();
+  if (pb !== null) {
+    document.getElementById('pbDisplay').style.display = 'block';
+    document.getElementById('pbValue').textContent = pb + '/' + sessionLength;
+  }
+}
+
+// ============================================================
+//  GAME LOGIC
+// ============================================================
+function startGame() {
+  // Build session: proportional sampling from each section
+  var pCount, tCount, vCount;
+  if (sessionLength === 10) {
+    pCount = 3; tCount = 4; vCount = 3;
+  } else if (sessionLength === 20) {
+    pCount = 6; tCount = 8; vCount = 6;
+  } else {
+    pCount = 9; tCount = 12; vCount = 9;
+  }
+
+  var pQ = shuffle(PARALLELOGRAM).slice(0, pCount);
+  var tQ = shuffle(TRAPEZIUM).slice(0, tCount);
+  var vQ = shuffle(PRISM).slice(0, vCount);
+
+  // Order: parallelogram first, then trapezium, then prism (within each section, shuffled)
+  sessionQuestions = [...pQ, ...tQ, ...vQ];
+  currentIndex = 0;
+  correctCount = 0;
+  revealShown = false;
+
+  showScreen('gameScreen');
+  document.getElementById('scoreTotal').textContent = sessionQuestions.length;
+
+  if (typeof mfg === 'function') {
+    mfg('game_started', { game_slug: GAME_SLUG, level: LEVEL, mode: sessionQuestions[0].section });
+  }
+
+  loadQuestion();
+}
+
+function loadQuestion() {
+  var q = sessionQuestions[currentIndex];
+  answered = false;
+  inputValue = '';
+
+  // Update header
+  document.getElementById('scoreNum').textContent = currentIndex;
+
+  // Mode pill
+  var modeNames = { parallelogram: 'Parallelogram', trapezium: 'Trapezium', prism: 'Prism' };
+  document.getElementById('modePill').textContent = modeNames[q.section] || '';
+
+  // Formula card
+  document.getElementById('formulaName').textContent = q.formulaName;
+  renderKatex(document.getElementById('formulaKatex'), q.formulaKatex, true);
+
+  // Shape diagram
+  var shapeContainer = document.getElementById('shapeContainer');
+  if (q.section === 'parallelogram') {
+    var bVal = q.variables.find(function(v) { return v.name === 'b'; }).value;
+    var hVal = q.variables.find(function(v) { return v.name === 'h'; }).value;
+    renderParallelogram(shapeContainer, bVal, hVal);
+  } else if (q.section === 'trapezium') {
+    var aVal = q.variables.find(function(v) { return v.name === 'a'; }).value;
+    var bVal2 = q.variables.find(function(v) { return v.name === 'b'; }).value;
+    var hVal2 = q.variables.find(function(v) { return v.name === 'h'; }).value;
+    renderTrapezium(shapeContainer, aVal, bVal2, hVal2);
+  } else if (q.section === 'prism') {
+    var AVal = q.variables.find(function(v) { return v.name === 'A'; }).value;
+    var lVal = q.variables.find(function(v) { return v.name === 'l'; }).value;
+    renderPrism(shapeContainer, AVal, lVal);
+  }
+
+  // Variables line
+  var varsStr = q.variables.map(function(v) { return v.name + ' = ' + v.value; }).join(', ');
+  document.getElementById('varsLine').textContent = varsStr;
+
+  // Question prompt
+  document.getElementById('questionPrompt').textContent = 'What is ' + q.resultVar + '?';
+
+  // Reset answer display
+  updateAnswerDisplay();
+  var ad = document.getElementById('answerDisplay');
+  ad.classList.remove('correct', 'incorrect');
+
+  // Reset feedback
+  var fp = document.getElementById('feedbackPanel');
+  fp.classList.remove('show', 'flash-green', 'flash-red');
+  fp.style.display = 'none';
+  nextCtl = null;
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('nextMount'));
+
+  // Enable numpad
+  enableNumpad(true);
+}
+
+function updateAnswerDisplay() {
+  var ad = document.getElementById('answerDisplay');
+  if (inputValue === '') {
+    ad.innerHTML = '<span class="cursor"></span>';
+  } else {
+    ad.innerHTML = inputValue + (answered ? '' : '<span class="cursor"></span>');
+  }
+}
+
+function numInput(char) {
+  if (answered) return;
+  if (char === '.' && inputValue.includes('.')) return;
+  if (inputValue.length >= 8) return;
+  inputValue += char;
+  updateAnswerDisplay();
+}
+
+function numBackspace() {
+  if (answered) return;
+  inputValue = inputValue.slice(0, -1);
+  updateAnswerDisplay();
+}
+
+function enableNumpad(enabled) {
+  document.querySelectorAll('.numpad-btn').forEach(function(b) { b.disabled = !enabled; });
+}
+
+function submitAnswer() {
+  if (answered || inputValue === '') return;
+  answered = true;
+
+  var q = sessionQuestions[currentIndex];
+  var userAnswer = parseFloat(inputValue);
+  var isCorrect = userAnswer === q.answer;
+
+  if (isCorrect) correctCount++;
+
+  // Update answer display style
+  var ad = document.getElementById('answerDisplay');
+  ad.classList.add(isCorrect ? 'correct' : 'incorrect');
+  ad.innerHTML = inputValue;
+
+  // Disable numpad
+  enableNumpad(false);
+
+  // Analytics
+  if (typeof mfg === 'function') {
+    mfg('question_answered', {
+      game_slug: GAME_SLUG,
+      level: LEVEL,
+      mode: q.section,
+      question_index: currentIndex + 1,
+      correct: isCorrect
+    });
+  }
+
+  // Show feedback
+  var fp = document.getElementById('feedbackPanel');
+  var fi = document.getElementById('feedbackIndicator');
+  var ws = document.getElementById('workingSteps');
+
+  if (isCorrect) {
+    fi.className = 'feedback-indicator correct';
+    fi.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Correct!';
+    ws.style.display = 'none';
+    fp.className = 'feedback-panel flash-green';
+  } else {
+    fi.className = 'feedback-indicator incorrect';
+    fi.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> Not quite \u2014 the answer is ' + q.answer;
+    ws.style.display = 'block';
+    ws.innerHTML = q.workingSteps.map(function(step) {
+      return '<div>' + katex.renderToString(step, { throwOnError: false, displayMode: false }) + '</div>';
+    }).join('');
+    fp.className = 'feedback-panel flash-red';
+  }
+
+  // Animate in
+  fp.style.display = 'block';
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      fp.classList.add('show');
+    });
+  });
+
+  // canon §7.6: a right answer moves on briskly; a wrong one shows the working and waits.
+  if (isCorrect) {
+    setTimeout(nextQuestion, 1200);
+  } else {
+    nextCtl = MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextQuestion });
+  }
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= sessionQuestions.length) {
+    if (!revealShown) {
+      showRevealScreen();
+    } else {
+      showResults();
+    }
+    return;
+  }
+  loadQuestion();
+}
+
+// ============================================================
+//  REVEAL SCREEN
+// ============================================================
+function showRevealScreen() {
+  revealShown = true;
+  showScreen('revealScreen');
+  var revealEl = document.getElementById('revealScreen');
+  revealEl.style.cursor = 'pointer';
+  var canAdvance = false;
+  setTimeout(function() { canAdvance = true; }, 5000);
+  var handler = function() {
+    if (canAdvance) {
+      revealEl.removeEventListener('click', handler);
+      revealEl.style.cursor = '';
+      showResults();
+    }
+  };
+  revealEl.addEventListener('click', handler);
+  setTimeout(function() {
+    revealEl.removeEventListener('click', handler);
+    revealEl.style.cursor = '';
+    showResults();
+  }, 8000);
+}
+
+// ============================================================
+//  RESULTS
+// ============================================================
+function showResults() {
+  showScreen('resultsScreen');
+  var total = sessionQuestions.length;
+  var pct = Math.round((correctCount / total) * 100);
+
+  document.getElementById('finalScore').textContent = correctCount + '/' + total;
+  document.getElementById('finalPct').textContent = pct + '%';
+
+  // Personal best
+  var oldPB = getPB();
+  var isNewPB = (oldPB === null || correctCount > oldPB);
+
+  if (isNewPB) {
+    setPB(correctCount);
+    document.getElementById('pbBadge').style.display = 'block';
+    document.getElementById('pbLine').textContent = '';
+
+    if (typeof mfg === 'function') {
+      mfg('personal_best_set', {
+        game_slug: GAME_SLUG,
+        level: LEVEL,
+        score: correctCount,
+        previous_best: oldPB || 0
+      });
+    }
+  } else {
+    document.getElementById('pbBadge').style.display = 'none';
+    document.getElementById('pbLine').textContent = 'Personal Best: ' + oldPB + '/' + total;
+  }
+
+  // Analytics
+  if (typeof mfg === 'function') {
+    mfg('game_completed', {
+      game_slug: GAME_SLUG,
+      level: LEVEL,
+      score: correctCount,
+      questions_answered: total,
+      questions_correct: correctCount
+    });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('new-shapes',LEVEL,correctCount,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('new-shapes',LEVEL,correctCount);}}
+  }
+}
+
+function resetToStart() {
+  showScreen('startScreen');
+  initStartScreen();
+}
+
+// ============================================================
+//  KEYBOARD SUPPORT
+// ============================================================
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('gameScreen').classList.contains('active')) return;
+
+  if (e.key >= '0' && e.key <= '9') {
+    numInput(e.key);
+  } else if (e.key === '.') {
+    numInput('.');
+  } else if (e.key === 'Backspace') {
+    e.preventDefault();
+    numBackspace();
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (answered) {
+      // A right answer is already moving on; a wrong one advances through its Next control,
+      // which cancels its own fallback timer, so the question can never be skipped twice.
+      if (nextCtl) nextCtl.advance();
+    } else {
+      submitAnswer();
+    }
+  }
+});
+
+// ============================================================
+//  INIT
+// ============================================================
+initStartScreen();
+
+// Accessibility toggle
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

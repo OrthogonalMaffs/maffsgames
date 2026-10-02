@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Solve one- and two-step linear equations by choosing the inverse operation at each step. 141 questions with integer, negative and fractional answers.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/linear-equation-solver/">
+<meta property="og:title" content="Linear Equation Solver — MaffsGames">
+<meta property="og:description" content="Solve one- and two-step linear equations by choosing the inverse operation at each step. 141 questions with integer, negative and fractional answers.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/linear-equation-solver/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Linear Equation Solver — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#070910;--surface:#0d1118;--border:#182030;--primary:#3b82f6;--accent:#f59e0b;--wrong:#f43f5e;--correct:#22c55e;--text:#e4eaf2;--muted:#607590;--hint:#8b5cf6;--stage1:#22c55e;--stage2:#3b82f6;--stage3:#f97316;--stage4:#f43f5e}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+
+.level-row{display:flex;gap:.5rem;justify-content:center;margin:.8rem 0;flex-wrap:wrap}
+.level-btn{padding:.4rem 1rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:560px}
+
+.stage-legend{display:flex;gap:.6rem;justify-content:center;margin:.6rem 0;flex-wrap:wrap;font-size:.72rem}
+.stage-pill{padding:2px 10px;border-radius:10px;font-weight:600}
+.sp1{background:rgba(34,197,94,.15);color:var(--stage1)}
+.sp2{background:rgba(59,130,246,.15);color:var(--stage2)}
+.sp3{background:rgba(249,115,22,.15);color:var(--stage3)}
+.sp4{background:rgba(244,63,94,.15);color:var(--stage4)}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:48px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+
+.stage-indicator{text-align:center;margin-bottom:.4rem;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* Working trail — the equation as it is solved, line by line */
+.work-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;margin-bottom:.6rem;text-align:center}
+.work-line{padding:.28rem 0}
+.work-line .katex{font-size:1.45em!important}
+.work-line.done{opacity:.45}
+.work-line.done .katex{font-size:1.15em!important}
+.work-op{font-size:.72rem;color:var(--hint);font-family:'JetBrains Mono',monospace;padding:.1rem 0}
+.work-op .katex{font-size:1em!important}
+
+.ask{text-align:center;font-size:.86rem;color:var(--accent);font-weight:600;margin:.5rem 0 .4rem}
+
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
+.opt-btn{padding:.7rem .4rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.82rem;cursor:pointer;transition:all .12s;text-align:center;min-height:52px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 10px rgba(59,130,246,.12)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.08)}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+.opt-btn .katex{font-size:1.15em!important}
+
+/* Hint system */
+.hint-bar{display:flex;gap:.4rem;justify-content:center;margin-bottom:.5rem;align-items:center}
+.hint-btn{padding:.4rem 1rem;border-radius:8px;border:2px solid var(--hint);background:transparent;color:var(--hint);font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .12s}
+.hint-btn:hover{background:rgba(139,92,246,.1)}
+.hint-btn.disabled{opacity:.3;pointer-events:none}
+.hint-count{font-size:.7rem;color:var(--muted)}
+.hint-panel{display:none;background:var(--surface);border:1px solid var(--hint);border-radius:10px;padding:.8rem;margin-bottom:.5rem;text-align:left;font-size:.82rem;line-height:1.6}
+.hint-panel.show{display:block;animation:fadeIn .2s}
+.hint-panel .hint-step{padding:.3rem .6rem;border-left:2px solid var(--hint);color:var(--hint)}
+
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1rem;margin-bottom:.6rem;text-align:left;font-size:.85rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.85rem;margin-bottom:.4rem;font-weight:600}
+.solution .step{margin-bottom:.4rem;padding-left:.7rem;border-left:2px solid var(--border)}
+.solution .step .katex{font-size:1.05em!important}
+.solution .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Linear Equation Solver</h1><div class="sub">Pick the move. Undo it step by step. Say what x is.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="level-row">
+      <button class="level-btn active" data-level="gcse" onclick="setLevel('gcse')">GCSE</button>
+    </div>
+    <div class="stage-legend">
+      <span class="stage-pill sp1">One-step</span>
+      <span class="stage-pill sp2">Two-step</span>
+      <span class="stage-pill sp3">Negatives</span>
+      <span class="stage-pill sp4">Fractions</span>
+    </div>
+    <div class="menu-info">
+      You are not picking the answer — you are picking the <strong>move</strong>. At each stage, choose what to do
+      to both sides, and the equation rewrites itself underneath. When the x is on its own, say what it equals.
+      Use the <span style="color:var(--hint)">hint button</span> if you are stuck; hints cost points but keep you going.
+    </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="start-btn" onclick="startGame()">Start</button>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Clean</div><div class="hud-val" id="correctCount">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streakVal">0</div></div>
+      <div class="hud-item"><div class="hud-label">Hints</div><div class="hud-val" id="hintsUsed">0</div></div>
+    </div>
+    <div class="stage-indicator" id="stageInd"></div>
+    <div class="work-card" id="workCard"></div>
+    <div class="ask" id="askLine"></div>
+    <div class="hint-bar" id="hintBar">
+      <button class="hint-btn" id="hintBtn" onclick="useHint()">💡 Hint for this step</button>
+      <span class="hint-count" id="hintInfo"></span>
+    </div>
+    <div class="hint-panel" id="hintPanel"></div>
+    <div class="options" id="options"></div>
+    <div class="solution" id="solution"></div>
+  </div>
+
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+
+<script>
+/* ── Question bank ──────────────────────────────────────────────────
+   One- and two-step linear equations. Each question carries the moves
+   needed to solve it, the line the equation becomes after each move,
+   and the full worked solution shown when a step is missed.          */
+// >>> GENERATED BANK START — built by scripts/gen-linear-equations.py, do not edit by hand
+const QUESTIONS = {
+  gcse: [
+  {id:"A1", tag:"One-step · integer", eq:"x + 7 = 12", ops:[{correct:"-\\,7", opts:["-\\,7", "+\\,7", "\\div\\,7", "\\times\\,7"], hint:"7 has been added to x. Subtract 7 from both sides."}], ans:{correct:"x = 5",opts:["x = 5", "x = 19", "x = 12", "x = -5"]}, sol:["x + 7 = 12", "\\text{Subtract } 7 \\text{ from both sides}", "x = 5"]},
+  {id:"A2", tag:"One-step · integer", eq:"x + 9 = 4", ops:[{correct:"-\\,9", opts:["-\\,9", "+\\,9", "\\div\\,9", "\\times\\,9"], hint:"9 has been added to x. Subtract 9 from both sides."}], ans:{correct:"x = -5",opts:["x = -5", "x = 13", "x = 4", "x = 5"]}, sol:["x + 9 = 4", "\\text{Subtract } 9 \\text{ from both sides}", "x = -5"]},
+  {id:"A3", tag:"One-step · integer", eq:"x + 15 = 8", ops:[{correct:"-\\,15", opts:["-\\,15", "+\\,15", "\\div\\,15", "\\times\\,15"], hint:"15 has been added to x. Subtract 15 from both sides."}], ans:{correct:"x = -7",opts:["x = -7", "x = 23", "x = 8", "x = 7"]}, sol:["x + 15 = 8", "\\text{Subtract } 15 \\text{ from both sides}", "x = -7"]},
+  {id:"A4", tag:"One-step · integer", eq:"x + 6 = 31", ops:[{correct:"-\\,6", opts:["-\\,6", "+\\,6", "\\div\\,6", "\\times\\,6"], hint:"6 has been added to x. Subtract 6 from both sides."}], ans:{correct:"x = 25",opts:["x = 25", "x = 37", "x = 31", "x = -25"]}, sol:["x + 6 = 31", "\\text{Subtract } 6 \\text{ from both sides}", "x = 25"]},
+  {id:"A5", tag:"One-step · integer", eq:"x + 24 = 11", ops:[{correct:"-\\,24", opts:["-\\,24", "+\\,24", "\\div\\,24", "\\times\\,24"], hint:"24 has been added to x. Subtract 24 from both sides."}], ans:{correct:"x = -13",opts:["x = -13", "x = 35", "x = 11", "x = 13"]}, sol:["x + 24 = 11", "\\text{Subtract } 24 \\text{ from both sides}", "x = -13"]},
+  {id:"A6", tag:"One-step · integer", eq:"x + 13 = 13", ops:[{correct:"-\\,13", opts:["-\\,13", "+\\,13", "\\div\\,13", "\\times\\,13"], hint:"13 has been added to x. Subtract 13 from both sides."}], ans:{correct:"x = 0",opts:["x = 0", "x = 26", "x = 13", "x = 1"]}, sol:["x + 13 = 13", "\\text{Subtract } 13 \\text{ from both sides}", "x = 0"]},
+  {id:"A7", tag:"One-step · integer", eq:"x + 8 = 3", ops:[{correct:"-\\,8", opts:["-\\,8", "+\\,8", "\\div\\,8", "\\times\\,8"], hint:"8 has been added to x. Subtract 8 from both sides."}], ans:{correct:"x = -5",opts:["x = -5", "x = 11", "x = 3", "x = 5"]}, sol:["x + 8 = 3", "\\text{Subtract } 8 \\text{ from both sides}", "x = -5"]},
+  {id:"A8", tag:"One-step · integer", eq:"x + 19 = 40", ops:[{correct:"-\\,19", opts:["-\\,19", "+\\,19", "\\div\\,19", "\\times\\,19"], hint:"19 has been added to x. Subtract 19 from both sides."}], ans:{correct:"x = 21",opts:["x = 21", "x = 59", "x = 40", "x = -21"]}, sol:["x + 19 = 40", "\\text{Subtract } 19 \\text{ from both sides}", "x = 21"]},
+  {id:"B1", tag:"One-step · integer", eq:"x - 9 = 4", ops:[{correct:"+\\,9", opts:["+\\,9", "-\\,9", "\\times\\,9", "\\div\\,9"], hint:"9 has been taken from x. Add 9 to both sides."}], ans:{correct:"x = 13",opts:["x = 13", "x = -5", "x = 4", "x = -13"]}, sol:["x - 9 = 4", "\\text{Add } 9 \\text{ to both sides}", "x = 13"]},
+  {id:"B2", tag:"One-step · integer", eq:"x - 5 = 12", ops:[{correct:"+\\,5", opts:["+\\,5", "-\\,5", "\\times\\,5", "\\div\\,5"], hint:"5 has been taken from x. Add 5 to both sides."}], ans:{correct:"x = 17",opts:["x = 17", "x = 7", "x = 12", "x = -17"]}, sol:["x - 5 = 12", "\\text{Add } 5 \\text{ to both sides}", "x = 17"]},
+  {id:"B3", tag:"One-step · integer", eq:"x - 14 = 6", ops:[{correct:"+\\,14", opts:["+\\,14", "-\\,14", "\\times\\,14", "\\div\\,14"], hint:"14 has been taken from x. Add 14 to both sides."}], ans:{correct:"x = 20",opts:["x = 20", "x = -8", "x = 6", "x = -20"]}, sol:["x - 14 = 6", "\\text{Add } 14 \\text{ to both sides}", "x = 20"]},
+  {id:"B4", tag:"One-step · integer", eq:"x - 3 = 20", ops:[{correct:"+\\,3", opts:["+\\,3", "-\\,3", "\\times\\,3", "\\div\\,3"], hint:"3 has been taken from x. Add 3 to both sides."}], ans:{correct:"x = 23",opts:["x = 23", "x = 17", "x = 20", "x = -23"]}, sol:["x - 3 = 20", "\\text{Add } 3 \\text{ to both sides}", "x = 23"]},
+  {id:"B5", tag:"One-step · integer", eq:"x - 11 = 2", ops:[{correct:"+\\,11", opts:["+\\,11", "-\\,11", "\\times\\,11", "\\div\\,11"], hint:"11 has been taken from x. Add 11 to both sides."}], ans:{correct:"x = 13",opts:["x = 13", "x = -9", "x = 2", "x = -13"]}, sol:["x - 11 = 2", "\\text{Add } 11 \\text{ to both sides}", "x = 13"]},
+  {id:"B6", tag:"One-step · integer", eq:"x - 17 = 17", ops:[{correct:"+\\,17", opts:["+\\,17", "-\\,17", "\\times\\,17", "\\div\\,17"], hint:"17 has been taken from x. Add 17 to both sides."}], ans:{correct:"x = 34",opts:["x = 34", "x = 0", "x = 17", "x = -34"]}, sol:["x - 17 = 17", "\\text{Add } 17 \\text{ to both sides}", "x = 34"]},
+  {id:"B7", tag:"One-step · integer", eq:"x - 6 = 25", ops:[{correct:"+\\,6", opts:["+\\,6", "-\\,6", "\\times\\,6", "\\div\\,6"], hint:"6 has been taken from x. Add 6 to both sides."}], ans:{correct:"x = 31",opts:["x = 31", "x = 19", "x = 25", "x = -31"]}, sol:["x - 6 = 25", "\\text{Add } 6 \\text{ to both sides}", "x = 31"]},
+  {id:"C1", tag:"One-step · integer", eq:"12 + x = 30", ops:[{correct:"-\\,12", opts:["-\\,12", "+\\,12", "\\div\\,12", "\\times\\,12"], hint:"x has 12 added to it, whichever way round it is written. Subtract 12."}], ans:{correct:"x = 18",opts:["x = 18", "x = 42", "x = -18", "x = 30"]}, sol:["12 + x = 30", "\\text{Subtract } 12 \\text{ from both sides}", "x = 18"]},
+  {id:"C2", tag:"One-step · integer", eq:"5 + x = 2", ops:[{correct:"-\\,5", opts:["-\\,5", "+\\,5", "\\div\\,5", "\\times\\,5"], hint:"x has 5 added to it, whichever way round it is written. Subtract 5."}], ans:{correct:"x = -3",opts:["x = -3", "x = 7", "x = 3", "x = 2"]}, sol:["5 + x = 2", "\\text{Subtract } 5 \\text{ from both sides}", "x = -3"]},
+  {id:"C3", tag:"One-step · integer", eq:"21 + x = 9", ops:[{correct:"-\\,21", opts:["-\\,21", "+\\,21", "\\div\\,21", "\\times\\,21"], hint:"x has 21 added to it, whichever way round it is written. Subtract 21."}], ans:{correct:"x = -12",opts:["x = -12", "x = 30", "x = 12", "x = 9"]}, sol:["21 + x = 9", "\\text{Subtract } 21 \\text{ from both sides}", "x = -12"]},
+  {id:"C4", tag:"One-step · integer", eq:"8 + x = 41", ops:[{correct:"-\\,8", opts:["-\\,8", "+\\,8", "\\div\\,8", "\\times\\,8"], hint:"x has 8 added to it, whichever way round it is written. Subtract 8."}], ans:{correct:"x = 33",opts:["x = 33", "x = 49", "x = -33", "x = 41"]}, sol:["8 + x = 41", "\\text{Subtract } 8 \\text{ from both sides}", "x = 33"]},
+  {id:"D1", tag:"One-step · integer", eq:"6x = 42", ops:[{correct:"\\div\\,6", opts:["\\div\\,6", "\\times\\,6", "-\\,6", "+\\,6"], hint:"x is multiplied by 6. Divide both sides by 6."}], ans:{correct:"x = 7",opts:["x = 7", "x = 252", "x = \\frac{1}{7}", "x = 36"]}, sol:["6x = 42", "\\text{Divide both sides by } 6", "x = 7"]},
+  {id:"D2", tag:"One-step · integer", eq:"9x = 54", ops:[{correct:"\\div\\,9", opts:["\\div\\,9", "\\times\\,9", "-\\,9", "+\\,9"], hint:"x is multiplied by 9. Divide both sides by 9."}], ans:{correct:"x = 6",opts:["x = 6", "x = 486", "x = \\frac{1}{6}", "x = 45"]}, sol:["9x = 54", "\\text{Divide both sides by } 9", "x = 6"]},
+  {id:"D3", tag:"One-step · integer", eq:"7x = 91", ops:[{correct:"\\div\\,7", opts:["\\div\\,7", "\\times\\,7", "-\\,7", "+\\,7"], hint:"x is multiplied by 7. Divide both sides by 7."}], ans:{correct:"x = 13",opts:["x = 13", "x = 637", "x = \\frac{1}{13}", "x = 84"]}, sol:["7x = 91", "\\text{Divide both sides by } 7", "x = 13"]},
+  {id:"D4", tag:"One-step · integer", eq:"11x = 88", ops:[{correct:"\\div\\,11", opts:["\\div\\,11", "\\times\\,11", "-\\,11", "+\\,11"], hint:"x is multiplied by 11. Divide both sides by 11."}], ans:{correct:"x = 8",opts:["x = 8", "x = 968", "x = \\frac{1}{8}", "x = 77"]}, sol:["11x = 88", "\\text{Divide both sides by } 11", "x = 8"]},
+  {id:"D5", tag:"One-step · integer", eq:"4x = 100", ops:[{correct:"\\div\\,4", opts:["\\div\\,4", "\\times\\,4", "-\\,4", "+\\,4"], hint:"x is multiplied by 4. Divide both sides by 4."}], ans:{correct:"x = 25",opts:["x = 25", "x = 400", "x = \\frac{1}{25}", "x = 96"]}, sol:["4x = 100", "\\text{Divide both sides by } 4", "x = 25"]},
+  {id:"D6", tag:"One-step · integer", eq:"3x = 51", ops:[{correct:"\\div\\,3", opts:["\\div\\,3", "\\times\\,3", "-\\,3", "+\\,3"], hint:"x is multiplied by 3. Divide both sides by 3."}], ans:{correct:"x = 17",opts:["x = 17", "x = 153", "x = \\frac{1}{17}", "x = 48"]}, sol:["3x = 51", "\\text{Divide both sides by } 3", "x = 17"]},
+  {id:"E1", tag:"One-step · integer", eq:"\\frac{x}{4} = 9", ops:[{correct:"\\times\\,4", opts:["\\times\\,4", "\\div\\,4", "+\\,4", "-\\,4"], hint:"x is divided by 4. Multiply both sides by 4."}], ans:{correct:"x = 36",opts:["x = 36", "x = \\frac{9}{4}", "x = 13", "x = 5"]}, sol:["\\frac{x}{4} = 9", "\\text{Multiply both sides by } 4", "x = 36"]},
+  {id:"E2", tag:"One-step · integer", eq:"\\frac{x}{7} = 3", ops:[{correct:"\\times\\,7", opts:["\\times\\,7", "\\div\\,7", "+\\,7", "-\\,7"], hint:"x is divided by 7. Multiply both sides by 7."}], ans:{correct:"x = 21",opts:["x = 21", "x = \\frac{3}{7}", "x = 10", "x = -4"]}, sol:["\\frac{x}{7} = 3", "\\text{Multiply both sides by } 7", "x = 21"]},
+  {id:"E3", tag:"One-step · integer", eq:"\\frac{x}{5} = 12", ops:[{correct:"\\times\\,5", opts:["\\times\\,5", "\\div\\,5", "+\\,5", "-\\,5"], hint:"x is divided by 5. Multiply both sides by 5."}], ans:{correct:"x = 60",opts:["x = 60", "x = \\frac{12}{5}", "x = 17", "x = 7"]}, sol:["\\frac{x}{5} = 12", "\\text{Multiply both sides by } 5", "x = 60"]},
+  {id:"E4", tag:"One-step · integer", eq:"\\frac{x}{6} = 7", ops:[{correct:"\\times\\,6", opts:["\\times\\,6", "\\div\\,6", "+\\,6", "-\\,6"], hint:"x is divided by 6. Multiply both sides by 6."}], ans:{correct:"x = 42",opts:["x = 42", "x = \\frac{7}{6}", "x = 13", "x = 1"]}, sol:["\\frac{x}{6} = 7", "\\text{Multiply both sides by } 6", "x = 42"]},
+  {id:"E5", tag:"One-step · integer", eq:"\\frac{x}{9} = 4", ops:[{correct:"\\times\\,9", opts:["\\times\\,9", "\\div\\,9", "+\\,9", "-\\,9"], hint:"x is divided by 9. Multiply both sides by 9."}], ans:{correct:"x = 36",opts:["x = 36", "x = \\frac{4}{9}", "x = 13", "x = -5"]}, sol:["\\frac{x}{9} = 4", "\\text{Multiply both sides by } 9", "x = 36"]},
+  {id:"E6", tag:"One-step · integer", eq:"\\frac{x}{2} = 17", ops:[{correct:"\\times\\,2", opts:["\\times\\,2", "\\div\\,2", "+\\,2", "-\\,2"], hint:"x is divided by 2. Multiply both sides by 2."}], ans:{correct:"x = 34",opts:["x = 34", "x = \\frac{17}{2}", "x = 19", "x = 15"]}, sol:["\\frac{x}{2} = 17", "\\text{Multiply both sides by } 2", "x = 34"]},
+  {id:"F1", tag:"One-step · negative", eq:"-4x = 20", ops:[{correct:"\\div\\,(-4)", opts:["\\div\\,(-4)", "\\times\\,(-4)", "-\\,4", "+\\,4"], hint:"x is multiplied by -4. Divide both sides by -4."}], ans:{correct:"x = -5",opts:["x = -5", "x = -80", "x = -\\frac{1}{5}", "x = 24"]}, sol:["-4x = 20", "\\text{Divide both sides by } -4", "x = -5"]},
+  {id:"F2", tag:"One-step · negative", eq:"5x = -35", ops:[{correct:"\\div\\,5", opts:["\\div\\,5", "\\times\\,5", "-\\,5", "+\\,5"], hint:"x is multiplied by 5. Divide both sides by 5."}], ans:{correct:"x = -7",opts:["x = -7", "x = -175", "x = -\\frac{1}{7}", "x = -40"]}, sol:["5x = -35", "\\text{Divide both sides by } 5", "x = -7"]},
+  {id:"F3", tag:"One-step · negative", eq:"-3x = -27", ops:[{correct:"\\div\\,(-3)", opts:["\\div\\,(-3)", "\\times\\,(-3)", "-\\,3", "+\\,3"], hint:"x is multiplied by -3. Divide both sides by -3."}], ans:{correct:"x = 9",opts:["x = 9", "x = 81", "x = \\frac{1}{9}", "x = -24"]}, sol:["-3x = -27", "\\text{Divide both sides by } -3", "x = 9"]},
+  {id:"F4", tag:"One-step · negative", eq:"-7x = 42", ops:[{correct:"\\div\\,(-7)", opts:["\\div\\,(-7)", "\\times\\,(-7)", "-\\,7", "+\\,7"], hint:"x is multiplied by -7. Divide both sides by -7."}], ans:{correct:"x = -6",opts:["x = -6", "x = -294", "x = -\\frac{1}{6}", "x = 49"]}, sol:["-7x = 42", "\\text{Divide both sides by } -7", "x = -6"]},
+  {id:"F5", tag:"One-step · negative", eq:"8x = -56", ops:[{correct:"\\div\\,8", opts:["\\div\\,8", "\\times\\,8", "-\\,8", "+\\,8"], hint:"x is multiplied by 8. Divide both sides by 8."}], ans:{correct:"x = -7",opts:["x = -7", "x = -448", "x = -\\frac{1}{7}", "x = -64"]}, sol:["8x = -56", "\\text{Divide both sides by } 8", "x = -7"]},
+  {id:"G1", tag:"One-step · negative", eq:"\\frac{x}{3} = -6", ops:[{correct:"\\times\\,3", opts:["\\times\\,3", "\\div\\,3", "+\\,3", "-\\,3"], hint:"x is divided by 3. Multiply both sides by 3."}], ans:{correct:"x = -18",opts:["x = -18", "x = -2", "x = -3", "x = -9"]}, sol:["\\frac{x}{3} = -6", "\\text{Multiply both sides by } 3", "x = -18"]},
+  {id:"G2", tag:"One-step · negative", eq:"\\frac{x}{5} = -4", ops:[{correct:"\\times\\,5", opts:["\\times\\,5", "\\div\\,5", "+\\,5", "-\\,5"], hint:"x is divided by 5. Multiply both sides by 5."}], ans:{correct:"x = -20",opts:["x = -20", "x = -\\frac{4}{5}", "x = 1", "x = -9"]}, sol:["\\frac{x}{5} = -4", "\\text{Multiply both sides by } 5", "x = -20"]},
+  {id:"G3", tag:"One-step · negative", eq:"\\frac{x}{2} = -13", ops:[{correct:"\\times\\,2", opts:["\\times\\,2", "\\div\\,2", "+\\,2", "-\\,2"], hint:"x is divided by 2. Multiply both sides by 2."}], ans:{correct:"x = -26",opts:["x = -26", "x = -\\frac{13}{2}", "x = -11", "x = -15"]}, sol:["\\frac{x}{2} = -13", "\\text{Multiply both sides by } 2", "x = -26"]},
+  {id:"H1", tag:"One-step · negative", eq:"-\\frac{x}{3} = 5", ops:[{correct:"\\times\\,(-3)", opts:["\\times\\,(-3)", "\\times\\,3", "\\div\\,(-3)", "\\div\\,3"], hint:"The whole fraction is negative. Multiply both sides by -3."}], ans:{correct:"x = -15",opts:["x = -15", "x = 15", "x = \\frac{5}{3}", "x = -14"]}, sol:["-\\frac{x}{3} = 5", "\\text{Multiply both sides by } -3", "x = -15"]},
+  {id:"H2", tag:"One-step · negative", eq:"-\\frac{x}{4} = -2", ops:[{correct:"\\times\\,(-4)", opts:["\\times\\,(-4)", "\\times\\,4", "\\div\\,(-4)", "\\div\\,4"], hint:"The whole fraction is negative. Multiply both sides by -4."}], ans:{correct:"x = 8",opts:["x = 8", "x = -8", "x = -\\frac{1}{2}", "x = 9"]}, sol:["-\\frac{x}{4} = -2", "\\text{Multiply both sides by } -4", "x = 8"]},
+  {id:"I1", tag:"One-step · fractional", eq:"8x = 12", ops:[{correct:"\\div\\,8", opts:["\\div\\,8", "\\times\\,8", "-\\,8", "+\\,8"], hint:"x is multiplied by 8. Divide both sides by 8."}], ans:{correct:"x = \\frac{3}{2}",opts:["x = \\frac{3}{2}", "x = 96", "x = \\frac{2}{3}", "x = 4"]}, sol:["8x = 12", "\\text{Divide both sides by } 8", "x = \\frac{3}{2}"]},
+  {id:"I2", tag:"One-step · fractional", eq:"10x = -4", ops:[{correct:"\\div\\,10", opts:["\\div\\,10", "\\times\\,10", "-\\,10", "+\\,10"], hint:"x is multiplied by 10. Divide both sides by 10."}], ans:{correct:"x = -\\frac{2}{5}",opts:["x = -\\frac{2}{5}", "x = -40", "x = -\\frac{5}{2}", "x = -14"]}, sol:["10x = -4", "\\text{Divide both sides by } 10", "x = -\\frac{2}{5}"]},
+  {id:"I3", tag:"One-step · fractional", eq:"6x = 15", ops:[{correct:"\\div\\,6", opts:["\\div\\,6", "\\times\\,6", "-\\,6", "+\\,6"], hint:"x is multiplied by 6. Divide both sides by 6."}], ans:{correct:"x = \\frac{5}{2}",opts:["x = \\frac{5}{2}", "x = 90", "x = \\frac{2}{5}", "x = 9"]}, sol:["6x = 15", "\\text{Divide both sides by } 6", "x = \\frac{5}{2}"]},
+  {id:"I4", tag:"One-step · fractional", eq:"4x = 10", ops:[{correct:"\\div\\,4", opts:["\\div\\,4", "\\times\\,4", "-\\,4", "+\\,4"], hint:"x is multiplied by 4. Divide both sides by 4."}], ans:{correct:"x = \\frac{5}{2}",opts:["x = \\frac{5}{2}", "x = 40", "x = \\frac{2}{5}", "x = 6"]}, sol:["4x = 10", "\\text{Divide both sides by } 4", "x = \\frac{5}{2}"]},
+  {id:"I5", tag:"One-step · fractional", eq:"9x = -6", ops:[{correct:"\\div\\,9", opts:["\\div\\,9", "\\times\\,9", "-\\,9", "+\\,9"], hint:"x is multiplied by 9. Divide both sides by 9."}], ans:{correct:"x = -\\frac{2}{3}",opts:["x = -\\frac{2}{3}", "x = -54", "x = -\\frac{3}{2}", "x = -15"]}, sol:["9x = -6", "\\text{Divide both sides by } 9", "x = -\\frac{2}{3}"]},
+  {id:"J1", tag:"One-step · fractional", eq:"\\frac{2}{3}x = 8", ops:[{correct:"\\times\\,\\frac{3}{2}", opts:["\\times\\,\\frac{3}{2}", "\\times\\,\\frac{2}{3}", "\\div\\,\\frac{3}{2}", "+\\,\\frac{2}{3}"], hint:"Multiplying by \\frac{3}{2} undoes multiplying by \\frac{2}{3}."}], ans:{correct:"x = 12",opts:["x = 12", "x = \\frac{16}{3}", "x = 8", "x = \\frac{26}{3}"]}, sol:["\\frac{2}{3}x = 8", "\\text{Multiply both sides by } \\frac{3}{2}", "x = 12"]},
+  {id:"J2", tag:"One-step · fractional", eq:"\\frac{3}{5}x = 9", ops:[{correct:"\\times\\,\\frac{5}{3}", opts:["\\times\\,\\frac{5}{3}", "\\times\\,\\frac{3}{5}", "\\div\\,\\frac{5}{3}", "+\\,\\frac{3}{5}"], hint:"Multiplying by \\frac{5}{3} undoes multiplying by \\frac{3}{5}."}], ans:{correct:"x = 15",opts:["x = 15", "x = \\frac{27}{5}", "x = 9", "x = \\frac{48}{5}"]}, sol:["\\frac{3}{5}x = 9", "\\text{Multiply both sides by } \\frac{5}{3}", "x = 15"]},
+  {id:"J3", tag:"One-step · fractional", eq:"\\frac{4}{7}x = 12", ops:[{correct:"\\times\\,\\frac{7}{4}", opts:["\\times\\,\\frac{7}{4}", "\\times\\,\\frac{4}{7}", "\\div\\,\\frac{7}{4}", "+\\,\\frac{4}{7}"], hint:"Multiplying by \\frac{7}{4} undoes multiplying by \\frac{4}{7}."}], ans:{correct:"x = 21",opts:["x = 21", "x = \\frac{48}{7}", "x = 12", "x = \\frac{88}{7}"]}, sol:["\\frac{4}{7}x = 12", "\\text{Multiply both sides by } \\frac{7}{4}", "x = 21"]},
+  {id:"J4", tag:"One-step · fractional", eq:"\\frac{5}{2}x = 15", ops:[{correct:"\\times\\,\\frac{2}{5}", opts:["\\times\\,\\frac{2}{5}", "\\times\\,\\frac{5}{2}", "\\div\\,\\frac{2}{5}", "+\\,\\frac{5}{2}"], hint:"Multiplying by \\frac{2}{5} undoes multiplying by \\frac{5}{2}."}], ans:{correct:"x = 6",opts:["x = 6", "x = \\frac{75}{2}", "x = 15", "x = \\frac{35}{2}"]}, sol:["\\frac{5}{2}x = 15", "\\text{Multiply both sides by } \\frac{2}{5}", "x = 6"]},
+  {id:"J5", tag:"One-step · fractional", eq:"\\frac{2}{9}x = 6", ops:[{correct:"\\times\\,\\frac{9}{2}", opts:["\\times\\,\\frac{9}{2}", "\\times\\,\\frac{2}{9}", "\\div\\,\\frac{9}{2}", "+\\,\\frac{2}{9}"], hint:"Multiplying by \\frac{9}{2} undoes multiplying by \\frac{2}{9}."}], ans:{correct:"x = 27",opts:["x = 27", "x = \\frac{4}{3}", "x = 6", "x = \\frac{56}{9}"]}, sol:["\\frac{2}{9}x = 6", "\\text{Multiply both sides by } \\frac{9}{2}", "x = 27"]},
+  {id:"K1", tag:"One-step · unknown on the right", eq:"12 = x + 7", ops:[{correct:"-\\,7", opts:["-\\,7", "+\\,7", "\\div\\,7", "\\times\\,7"], hint:"It does not matter which side x is on. Subtract 7 from both sides."}], ans:{correct:"x = 5",opts:["x = 5", "x = 19", "x = 12", "x = -5"]}, sol:["12 = x + 7", "\\text{Subtract } 7 \\text{ from both sides}", "5 = x", "x = 5"]},
+  {id:"K2", tag:"One-step · unknown on the right", eq:"19 = x + 4", ops:[{correct:"-\\,4", opts:["-\\,4", "+\\,4", "\\div\\,4", "\\times\\,4"], hint:"It does not matter which side x is on. Subtract 4 from both sides."}], ans:{correct:"x = 15",opts:["x = 15", "x = 23", "x = 19", "x = -15"]}, sol:["19 = x + 4", "\\text{Subtract } 4 \\text{ from both sides}", "15 = x", "x = 15"]},
+  {id:"K3", tag:"One-step · unknown on the right", eq:"5 = x + 13", ops:[{correct:"-\\,13", opts:["-\\,13", "+\\,13", "\\div\\,13", "\\times\\,13"], hint:"It does not matter which side x is on. Subtract 13 from both sides."}], ans:{correct:"x = -8",opts:["x = -8", "x = 18", "x = 5", "x = 8"]}, sol:["5 = x + 13", "\\text{Subtract } 13 \\text{ from both sides}", "-8 = x", "x = -8"]},
+  {id:"K4", tag:"One-step · unknown on the right", eq:"-2 = x + 9", ops:[{correct:"-\\,9", opts:["-\\,9", "+\\,9", "\\div\\,9", "\\times\\,9"], hint:"It does not matter which side x is on. Subtract 9 from both sides."}], ans:{correct:"x = -11",opts:["x = -11", "x = 7", "x = -2", "x = 11"]}, sol:["-2 = x + 9", "\\text{Subtract } 9 \\text{ from both sides}", "-11 = x", "x = -11"]},
+  {id:"L1", tag:"Two-step · integer", eq:"3x + 7 = 22", ops:[{correct:"-\\,7", opts:["-\\,7", "+\\,7", "\\div\\,3", "\\times\\,3"], hint:"Clear the 7 first: subtract 7 from both sides.", line:"3x = 15"},{correct:"\\div\\,3", opts:["\\div\\,3", "\\times\\,3", "-\\,3", "+\\,3"], hint:"x is multiplied by 3. Divide both sides by 3."}], ans:{correct:"x = 5",opts:["x = 5", "x = 15", "x = \\frac{29}{3}", "x = \\frac{22}{3}"]}, sol:["3x + 7 = 22", "\\text{Subtract } 7 \\text{ from both sides}", "3x = 15", "\\text{Divide both sides by } 3", "x = 5"]},
+  {id:"L2", tag:"Two-step · integer", eq:"5x - 4 = 31", ops:[{correct:"+\\,4", opts:["+\\,4", "-\\,4", "\\div\\,5", "\\times\\,5"], hint:"Clear the - 4 first: add 4 to both sides.", line:"5x = 35"},{correct:"\\div\\,5", opts:["\\div\\,5", "\\times\\,5", "-\\,5", "+\\,5"], hint:"x is multiplied by 5. Divide both sides by 5."}], ans:{correct:"x = 7",opts:["x = 7", "x = 35", "x = \\frac{27}{5}", "x = \\frac{31}{5}"]}, sol:["5x - 4 = 31", "\\text{Add } 4 \\text{ to both sides}", "5x = 35", "\\text{Divide both sides by } 5", "x = 7"]},
+  {id:"L3", tag:"Two-step · integer", eq:"2x + 9 = 25", ops:[{correct:"-\\,9", opts:["-\\,9", "+\\,9", "\\div\\,2", "\\times\\,2"], hint:"Clear the 9 first: subtract 9 from both sides.", line:"2x = 16"},{correct:"\\div\\,2", opts:["\\div\\,2", "\\times\\,2", "-\\,2", "+\\,2"], hint:"x is multiplied by 2. Divide both sides by 2."}], ans:{correct:"x = 8",opts:["x = 8", "x = 16", "x = 17", "x = \\frac{25}{2}"]}, sol:["2x + 9 = 25", "\\text{Subtract } 9 \\text{ from both sides}", "2x = 16", "\\text{Divide both sides by } 2", "x = 8"]},
+  {id:"L4", tag:"Two-step · integer", eq:"7x - 12 = 30", ops:[{correct:"+\\,12", opts:["+\\,12", "-\\,12", "\\div\\,7", "\\times\\,7"], hint:"Clear the - 12 first: add 12 to both sides.", line:"7x = 42"},{correct:"\\div\\,7", opts:["\\div\\,7", "\\times\\,7", "-\\,7", "+\\,7"], hint:"x is multiplied by 7. Divide both sides by 7."}], ans:{correct:"x = 6",opts:["x = 6", "x = 42", "x = \\frac{18}{7}", "x = \\frac{30}{7}"]}, sol:["7x - 12 = 30", "\\text{Add } 12 \\text{ to both sides}", "7x = 42", "\\text{Divide both sides by } 7", "x = 6"]},
+  {id:"L5", tag:"Two-step · integer", eq:"4x + 11 = 39", ops:[{correct:"-\\,11", opts:["-\\,11", "+\\,11", "\\div\\,4", "\\times\\,4"], hint:"Clear the 11 first: subtract 11 from both sides.", line:"4x = 28"},{correct:"\\div\\,4", opts:["\\div\\,4", "\\times\\,4", "-\\,4", "+\\,4"], hint:"x is multiplied by 4. Divide both sides by 4."}], ans:{correct:"x = 7",opts:["x = 7", "x = 28", "x = \\frac{25}{2}", "x = \\frac{39}{4}"]}, sol:["4x + 11 = 39", "\\text{Subtract } 11 \\text{ from both sides}", "4x = 28", "\\text{Divide both sides by } 4", "x = 7"]},
+  {id:"L6", tag:"Two-step · integer", eq:"6x - 5 = 37", ops:[{correct:"+\\,5", opts:["+\\,5", "-\\,5", "\\div\\,6", "\\times\\,6"], hint:"Clear the - 5 first: add 5 to both sides.", line:"6x = 42"},{correct:"\\div\\,6", opts:["\\div\\,6", "\\times\\,6", "-\\,6", "+\\,6"], hint:"x is multiplied by 6. Divide both sides by 6."}], ans:{correct:"x = 7",opts:["x = 7", "x = 42", "x = \\frac{16}{3}", "x = \\frac{37}{6}"]}, sol:["6x - 5 = 37", "\\text{Add } 5 \\text{ to both sides}", "6x = 42", "\\text{Divide both sides by } 6", "x = 7"]},
+  {id:"L7", tag:"Two-step · integer", eq:"8x + 3 = 59", ops:[{correct:"-\\,3", opts:["-\\,3", "+\\,3", "\\div\\,8", "\\times\\,8"], hint:"Clear the 3 first: subtract 3 from both sides.", line:"8x = 56"},{correct:"\\div\\,8", opts:["\\div\\,8", "\\times\\,8", "-\\,8", "+\\,8"], hint:"x is multiplied by 8. Divide both sides by 8."}], ans:{correct:"x = 7",opts:["x = 7", "x = 56", "x = \\frac{31}{4}", "x = \\frac{59}{8}"]}, sol:["8x + 3 = 59", "\\text{Subtract } 3 \\text{ from both sides}", "8x = 56", "\\text{Divide both sides by } 8", "x = 7"]},
+  {id:"L8", tag:"Two-step · integer", eq:"9x - 7 = 65", ops:[{correct:"+\\,7", opts:["+\\,7", "-\\,7", "\\div\\,9", "\\times\\,9"], hint:"Clear the - 7 first: add 7 to both sides.", line:"9x = 72"},{correct:"\\div\\,9", opts:["\\div\\,9", "\\times\\,9", "-\\,9", "+\\,9"], hint:"x is multiplied by 9. Divide both sides by 9."}], ans:{correct:"x = 8",opts:["x = 8", "x = 72", "x = \\frac{58}{9}", "x = \\frac{65}{9}"]}, sol:["9x - 7 = 65", "\\text{Add } 7 \\text{ to both sides}", "9x = 72", "\\text{Divide both sides by } 9", "x = 8"]},
+  {id:"L9", tag:"Two-step · integer", eq:"5x + 13 = 48", ops:[{correct:"-\\,13", opts:["-\\,13", "+\\,13", "\\div\\,5", "\\times\\,5"], hint:"Clear the 13 first: subtract 13 from both sides.", line:"5x = 35"},{correct:"\\div\\,5", opts:["\\div\\,5", "\\times\\,5", "-\\,5", "+\\,5"], hint:"x is multiplied by 5. Divide both sides by 5."}], ans:{correct:"x = 7",opts:["x = 7", "x = 35", "x = \\frac{61}{5}", "x = \\frac{48}{5}"]}, sol:["5x + 13 = 48", "\\text{Subtract } 13 \\text{ from both sides}", "5x = 35", "\\text{Divide both sides by } 5", "x = 7"]},
+  {id:"L10", tag:"Two-step · integer", eq:"3x - 8 = 16", ops:[{correct:"+\\,8", opts:["+\\,8", "-\\,8", "\\div\\,3", "\\times\\,3"], hint:"Clear the - 8 first: add 8 to both sides.", line:"3x = 24"},{correct:"\\div\\,3", opts:["\\div\\,3", "\\times\\,3", "-\\,3", "+\\,3"], hint:"x is multiplied by 3. Divide both sides by 3."}], ans:{correct:"x = 8",opts:["x = 8", "x = 24", "x = \\frac{8}{3}", "x = \\frac{16}{3}"]}, sol:["3x - 8 = 16", "\\text{Add } 8 \\text{ to both sides}", "3x = 24", "\\text{Divide both sides by } 3", "x = 8"]},
+  {id:"L11", tag:"Two-step · integer", eq:"12x + 5 = 41", ops:[{correct:"-\\,5", opts:["-\\,5", "+\\,5", "\\div\\,12", "\\times\\,12"], hint:"Clear the 5 first: subtract 5 from both sides.", line:"12x = 36"},{correct:"\\div\\,12", opts:["\\div\\,12", "\\times\\,12", "-\\,12", "+\\,12"], hint:"x is multiplied by 12. Divide both sides by 12."}], ans:{correct:"x = 3",opts:["x = 3", "x = 36", "x = \\frac{23}{6}", "x = \\frac{41}{12}"]}, sol:["12x + 5 = 41", "\\text{Subtract } 5 \\text{ from both sides}", "12x = 36", "\\text{Divide both sides by } 12", "x = 3"]},
+  {id:"L12", tag:"Two-step · integer", eq:"7x + 6 = 62", ops:[{correct:"-\\,6", opts:["-\\,6", "+\\,6", "\\div\\,7", "\\times\\,7"], hint:"Clear the 6 first: subtract 6 from both sides.", line:"7x = 56"},{correct:"\\div\\,7", opts:["\\div\\,7", "\\times\\,7", "-\\,7", "+\\,7"], hint:"x is multiplied by 7. Divide both sides by 7."}], ans:{correct:"x = 8",opts:["x = 8", "x = 56", "x = \\frac{68}{7}", "x = \\frac{62}{7}"]}, sol:["7x + 6 = 62", "\\text{Subtract } 6 \\text{ from both sides}", "7x = 56", "\\text{Divide both sides by } 7", "x = 8"]},
+  {id:"M1", tag:"Two-step · integer", eq:"\\frac{x}{2} + 5 = 11", ops:[{correct:"-\\,5", opts:["-\\,5", "+\\,5", "\\times\\,2", "\\div\\,2"], hint:"Clear the 5 first: subtract 5 from both sides.", line:"\\frac{x}{2} = 6"},{correct:"\\times\\,2", opts:["\\times\\,2", "\\div\\,2", "+\\,2", "-\\,2"], hint:"x is divided by 2. Multiply both sides by 2."}], ans:{correct:"x = 12",opts:["x = 12", "x = 6", "x = 32", "x = 3"]}, sol:["\\frac{x}{2} + 5 = 11", "\\text{Subtract } 5 \\text{ from both sides}", "\\frac{x}{2} = 6", "\\text{Multiply both sides by } 2", "x = 12"]},
+  {id:"M2", tag:"Two-step · integer", eq:"\\frac{x}{3} - 4 = 2", ops:[{correct:"+\\,4", opts:["+\\,4", "-\\,4", "\\times\\,3", "\\div\\,3"], hint:"Clear the - 4 first: add 4 to both sides.", line:"\\frac{x}{3} = 6"},{correct:"\\times\\,3", opts:["\\times\\,3", "\\div\\,3", "+\\,3", "-\\,3"], hint:"x is divided by 3. Multiply both sides by 3."}], ans:{correct:"x = 18",opts:["x = 18", "x = 6", "x = -6", "x = 2"]}, sol:["\\frac{x}{3} - 4 = 2", "\\text{Add } 4 \\text{ to both sides}", "\\frac{x}{3} = 6", "\\text{Multiply both sides by } 3", "x = 18"]},
+  {id:"M3", tag:"Two-step · integer", eq:"\\frac{x}{5} + 7 = 12", ops:[{correct:"-\\,7", opts:["-\\,7", "+\\,7", "\\times\\,5", "\\div\\,5"], hint:"Clear the 7 first: subtract 7 from both sides.", line:"\\frac{x}{5} = 5"},{correct:"\\times\\,5", opts:["\\times\\,5", "\\div\\,5", "+\\,5", "-\\,5"], hint:"x is divided by 5. Multiply both sides by 5."}], ans:{correct:"x = 25",opts:["x = 25", "x = 5", "x = 95", "x = 1"]}, sol:["\\frac{x}{5} + 7 = 12", "\\text{Subtract } 7 \\text{ from both sides}", "\\frac{x}{5} = 5", "\\text{Multiply both sides by } 5", "x = 25"]},
+  {id:"M4", tag:"Two-step · integer", eq:"\\frac{x}{4} - 9 = 1", ops:[{correct:"+\\,9", opts:["+\\,9", "-\\,9", "\\times\\,4", "\\div\\,4"], hint:"Clear the - 9 first: add 9 to both sides.", line:"\\frac{x}{4} = 10"},{correct:"\\times\\,4", opts:["\\times\\,4", "\\div\\,4", "+\\,4", "-\\,4"], hint:"x is divided by 4. Multiply both sides by 4."}], ans:{correct:"x = 40",opts:["x = 40", "x = 10", "x = -32", "x = \\frac{5}{2}"]}, sol:["\\frac{x}{4} - 9 = 1", "\\text{Add } 9 \\text{ to both sides}", "\\frac{x}{4} = 10", "\\text{Multiply both sides by } 4", "x = 40"]},
+  {id:"M5", tag:"Two-step · integer", eq:"\\frac{x}{6} + 3 = 8", ops:[{correct:"-\\,3", opts:["-\\,3", "+\\,3", "\\times\\,6", "\\div\\,6"], hint:"Clear the 3 first: subtract 3 from both sides.", line:"\\frac{x}{6} = 5"},{correct:"\\times\\,6", opts:["\\times\\,6", "\\div\\,6", "+\\,6", "-\\,6"], hint:"x is divided by 6. Multiply both sides by 6."}], ans:{correct:"x = 30",opts:["x = 30", "x = 5", "x = 66", "x = \\frac{5}{6}"]}, sol:["\\frac{x}{6} + 3 = 8", "\\text{Subtract } 3 \\text{ from both sides}", "\\frac{x}{6} = 5", "\\text{Multiply both sides by } 6", "x = 30"]},
+  {id:"M6", tag:"Two-step · integer", eq:"\\frac{x}{7} - 2 = 5", ops:[{correct:"+\\,2", opts:["+\\,2", "-\\,2", "\\times\\,7", "\\div\\,7"], hint:"Clear the - 2 first: add 2 to both sides.", line:"\\frac{x}{7} = 7"},{correct:"\\times\\,7", opts:["\\times\\,7", "\\div\\,7", "+\\,7", "-\\,7"], hint:"x is divided by 7. Multiply both sides by 7."}], ans:{correct:"x = 49",opts:["x = 49", "x = 7", "x = 21", "x = 1"]}, sol:["\\frac{x}{7} - 2 = 5", "\\text{Add } 2 \\text{ to both sides}", "\\frac{x}{7} = 7", "\\text{Multiply both sides by } 7", "x = 49"]},
+  {id:"N1", tag:"Two-step · brackets", eq:"2(x + 3) = 16", ops:[{correct:"\\div\\,2", opts:["\\div\\,2", "\\times\\,2", "-\\,3", "+\\,3"], hint:"The whole bracket is multiplied by 2. Divide both sides by 2 first.", line:"x + 3 = 8"},{correct:"-\\,3", opts:["-\\,3", "+\\,3", "\\div\\,3", "\\times\\,3"], hint:"Now subtract 3 from both sides."}], ans:{correct:"x = 5",opts:["x = 5", "x = 8", "x = 10", "x = 11"]}, sol:["2(x + 3) = 16", "\\text{Divide both sides by } 2", "x + 3 = 8", "\\text{Subtract } 3 \\text{ from both sides}", "x = 5"]},
+  {id:"N2", tag:"Two-step · brackets", eq:"5(x - 2) = 35", ops:[{correct:"\\div\\,5", opts:["\\div\\,5", "\\times\\,5", "-\\,2", "+\\,2"], hint:"The whole bracket is multiplied by 5. Divide both sides by 5 first.", line:"x - 2 = 7"},{correct:"+\\,2", opts:["+\\,2", "-\\,2", "\\div\\,(-2)", "\\times\\,(-2)"], hint:"Now add 2 to both sides."}], ans:{correct:"x = 9",opts:["x = 9", "x = 7", "x = 45", "x = 5"]}, sol:["5(x - 2) = 35", "\\text{Divide both sides by } 5", "x - 2 = 7", "\\text{Add } 2 \\text{ to both sides}", "x = 9"]},
+  {id:"N3", tag:"Two-step · brackets", eq:"3(x + 4) = 27", ops:[{correct:"\\div\\,3", opts:["\\div\\,3", "\\times\\,3", "-\\,4", "+\\,4"], hint:"The whole bracket is multiplied by 3. Divide both sides by 3 first.", line:"x + 4 = 9"},{correct:"-\\,4", opts:["-\\,4", "+\\,4", "\\div\\,4", "\\times\\,4"], hint:"Now subtract 4 from both sides."}], ans:{correct:"x = 5",opts:["x = 5", "x = 9", "x = 15", "x = 13"]}, sol:["3(x + 4) = 27", "\\text{Divide both sides by } 3", "x + 4 = 9", "\\text{Subtract } 4 \\text{ from both sides}", "x = 5"]},
+  {id:"N4", tag:"Two-step · brackets", eq:"4(x - 5) = 28", ops:[{correct:"\\div\\,4", opts:["\\div\\,4", "\\times\\,4", "-\\,5", "+\\,5"], hint:"The whole bracket is multiplied by 4. Divide both sides by 4 first.", line:"x - 5 = 7"},{correct:"+\\,5", opts:["+\\,5", "-\\,5", "\\div\\,(-5)", "\\times\\,(-5)"], hint:"Now add 5 to both sides."}], ans:{correct:"x = 12",opts:["x = 12", "x = 7", "x = 48", "x = 2"]}, sol:["4(x - 5) = 28", "\\text{Divide both sides by } 4", "x - 5 = 7", "\\text{Add } 5 \\text{ to both sides}", "x = 12"]},
+  {id:"N5", tag:"Two-step · brackets", eq:"6(x + 2) = 42", ops:[{correct:"\\div\\,6", opts:["\\div\\,6", "\\times\\,6", "-\\,2", "+\\,2"], hint:"The whole bracket is multiplied by 6. Divide both sides by 6 first.", line:"x + 2 = 7"},{correct:"-\\,2", opts:["-\\,2", "+\\,2", "\\div\\,2", "\\times\\,2"], hint:"Now subtract 2 from both sides."}], ans:{correct:"x = 5",opts:["x = 5", "x = 7", "x = 30", "x = 9"]}, sol:["6(x + 2) = 42", "\\text{Divide both sides by } 6", "x + 2 = 7", "\\text{Subtract } 2 \\text{ from both sides}", "x = 5"]},
+  {id:"N6", tag:"Two-step · brackets", eq:"7(x - 3) = 49", ops:[{correct:"\\div\\,7", opts:["\\div\\,7", "\\times\\,7", "-\\,3", "+\\,3"], hint:"The whole bracket is multiplied by 7. Divide both sides by 7 first.", line:"x - 3 = 7"},{correct:"+\\,3", opts:["+\\,3", "-\\,3", "\\div\\,(-3)", "\\times\\,(-3)"], hint:"Now add 3 to both sides."}], ans:{correct:"x = 10",opts:["x = 10", "x = 7", "x = 70", "x = 4"]}, sol:["7(x - 3) = 49", "\\text{Divide both sides by } 7", "x - 3 = 7", "\\text{Add } 3 \\text{ to both sides}", "x = 10"]},
+  {id:"N7", tag:"Two-step · brackets", eq:"2(x + 9) = 30", ops:[{correct:"\\div\\,2", opts:["\\div\\,2", "\\times\\,2", "-\\,9", "+\\,9"], hint:"The whole bracket is multiplied by 2. Divide both sides by 2 first.", line:"x + 9 = 15"},{correct:"-\\,9", opts:["-\\,9", "+\\,9", "\\div\\,9", "\\times\\,9"], hint:"Now subtract 9 from both sides."}], ans:{correct:"x = 6",opts:["x = 6", "x = 15", "x = 12", "x = 24"]}, sol:["2(x + 9) = 30", "\\text{Divide both sides by } 2", "x + 9 = 15", "\\text{Subtract } 9 \\text{ from both sides}", "x = 6"]},
+  {id:"N8", tag:"Two-step · brackets", eq:"3(x - 6) = 15", ops:[{correct:"\\div\\,3", opts:["\\div\\,3", "\\times\\,3", "-\\,6", "+\\,6"], hint:"The whole bracket is multiplied by 3. Divide both sides by 3 first.", line:"x - 6 = 5"},{correct:"+\\,6", opts:["+\\,6", "-\\,6", "\\div\\,(-6)", "\\times\\,(-6)"], hint:"Now add 6 to both sides."}], ans:{correct:"x = 11",opts:["x = 11", "x = 5", "x = 33", "x = -1"]}, sol:["3(x - 6) = 15", "\\text{Divide both sides by } 3", "x - 6 = 5", "\\text{Add } 6 \\text{ to both sides}", "x = 11"]},
+  {id:"O1", tag:"Two-step · brackets", eq:"\\frac{x + 4}{3} = 5", ops:[{correct:"\\times\\,3", opts:["\\times\\,3", "\\div\\,3", "-\\,4", "+\\,4"], hint:"The whole of x + 4 is divided by 3. Multiply both sides by 3 first.", line:"x + 4 = 15"},{correct:"-\\,4", opts:["-\\,4", "+\\,4", "\\div\\,4", "\\times\\,4"], hint:"Now subtract 4 from both sides."}], ans:{correct:"x = 11",opts:["x = 11", "x = 15", "x = 1", "x = 19"]}, sol:["\\frac{x + 4}{3} = 5", "\\text{Multiply both sides by } 3", "x + 4 = 15", "\\text{Subtract } 4 \\text{ from both sides}", "x = 11"]},
+  {id:"O2", tag:"Two-step · brackets", eq:"\\frac{x - 6}{2} = 7", ops:[{correct:"\\times\\,2", opts:["\\times\\,2", "\\div\\,2", "-\\,6", "+\\,6"], hint:"The whole of x - 6 is divided by 2. Multiply both sides by 2 first.", line:"x - 6 = 14"},{correct:"+\\,6", opts:["+\\,6", "-\\,6", "\\div\\,(-6)", "\\times\\,(-6)"], hint:"Now add 6 to both sides."}], ans:{correct:"x = 20",opts:["x = 20", "x = 14", "x = 13", "x = 8"]}, sol:["\\frac{x - 6}{2} = 7", "\\text{Multiply both sides by } 2", "x - 6 = 14", "\\text{Add } 6 \\text{ to both sides}", "x = 20"]},
+  {id:"O3", tag:"Two-step · brackets", eq:"\\frac{x + 3}{5} = 4", ops:[{correct:"\\times\\,5", opts:["\\times\\,5", "\\div\\,5", "-\\,3", "+\\,3"], hint:"The whole of x + 3 is divided by 5. Multiply both sides by 5 first.", line:"x + 3 = 20"},{correct:"-\\,3", opts:["-\\,3", "+\\,3", "\\div\\,3", "\\times\\,3"], hint:"Now subtract 3 from both sides."}], ans:{correct:"x = 17",opts:["x = 17", "x = 20", "x = 1", "x = 23"]}, sol:["\\frac{x + 3}{5} = 4", "\\text{Multiply both sides by } 5", "x + 3 = 20", "\\text{Subtract } 3 \\text{ from both sides}", "x = 17"]},
+  {id:"O4", tag:"Two-step · brackets", eq:"\\frac{x - 7}{4} = 2", ops:[{correct:"\\times\\,4", opts:["\\times\\,4", "\\div\\,4", "-\\,7", "+\\,7"], hint:"The whole of x - 7 is divided by 4. Multiply both sides by 4 first.", line:"x - 7 = 8"},{correct:"+\\,7", opts:["+\\,7", "-\\,7", "\\div\\,(-7)", "\\times\\,(-7)"], hint:"Now add 7 to both sides."}], ans:{correct:"x = 15",opts:["x = 15", "x = 8", "x = 9", "x = 1"]}, sol:["\\frac{x - 7}{4} = 2", "\\text{Multiply both sides by } 4", "x - 7 = 8", "\\text{Add } 7 \\text{ to both sides}", "x = 15"]},
+  {id:"O5", tag:"Two-step · brackets", eq:"\\frac{x + 5}{6} = 3", ops:[{correct:"\\times\\,6", opts:["\\times\\,6", "\\div\\,6", "-\\,5", "+\\,5"], hint:"The whole of x + 5 is divided by 6. Multiply both sides by 6 first.", line:"x + 5 = 18"},{correct:"-\\,5", opts:["-\\,5", "+\\,5", "\\div\\,5", "\\times\\,5"], hint:"Now subtract 5 from both sides."}], ans:{correct:"x = 13",opts:["x = 13", "x = 18", "x = -2", "x = 23"]}, sol:["\\frac{x + 5}{6} = 3", "\\text{Multiply both sides by } 6", "x + 5 = 18", "\\text{Subtract } 5 \\text{ from both sides}", "x = 13"]},
+  {id:"O6", tag:"Two-step · brackets", eq:"\\frac{x - 2}{3} = 9", ops:[{correct:"\\times\\,3", opts:["\\times\\,3", "\\div\\,3", "-\\,2", "+\\,2"], hint:"The whole of x - 2 is divided by 3. Multiply both sides by 3 first.", line:"x - 2 = 27"},{correct:"+\\,2", opts:["+\\,2", "-\\,2", "\\div\\,(-2)", "\\times\\,(-2)"], hint:"Now add 2 to both sides."}], ans:{correct:"x = 29",opts:["x = 29", "x = 27", "x = 11", "x = 25"]}, sol:["\\frac{x - 2}{3} = 9", "\\text{Multiply both sides by } 3", "x - 2 = 27", "\\text{Add } 2 \\text{ to both sides}", "x = 29"]},
+  {id:"P1", tag:"Two-step · constant first", eq:"7 + 3x = 22", ops:[{correct:"-\\,7", opts:["-\\,7", "+\\,7", "\\div\\,3", "\\times\\,3"], hint:"The 7 is on its own, so clear it first: subtract 7.", line:"3x = 15"},{correct:"\\div\\,3", opts:["\\div\\,3", "\\times\\,3", "-\\,3", "+\\,3"], hint:"x is multiplied by 3. Divide both sides by 3."}], ans:{correct:"x = 5",opts:["x = 5", "x = 15", "x = \\frac{29}{3}", "x = \\frac{22}{3}"]}, sol:["7 + 3x = 22", "\\text{Subtract } 7 \\text{ from both sides}", "3x = 15", "\\text{Divide both sides by } 3", "x = 5"]},
+  {id:"P2", tag:"Two-step · constant first", eq:"5 + 4x = 29", ops:[{correct:"-\\,5", opts:["-\\,5", "+\\,5", "\\div\\,4", "\\times\\,4"], hint:"The 5 is on its own, so clear it first: subtract 5.", line:"4x = 24"},{correct:"\\div\\,4", opts:["\\div\\,4", "\\times\\,4", "-\\,4", "+\\,4"], hint:"x is multiplied by 4. Divide both sides by 4."}], ans:{correct:"x = 6",opts:["x = 6", "x = 24", "x = \\frac{17}{2}", "x = \\frac{29}{4}"]}, sol:["5 + 4x = 29", "\\text{Subtract } 5 \\text{ from both sides}", "4x = 24", "\\text{Divide both sides by } 4", "x = 6"]},
+  {id:"P3", tag:"Two-step · constant first", eq:"11 + 6x = 47", ops:[{correct:"-\\,11", opts:["-\\,11", "+\\,11", "\\div\\,6", "\\times\\,6"], hint:"The 11 is on its own, so clear it first: subtract 11.", line:"6x = 36"},{correct:"\\div\\,6", opts:["\\div\\,6", "\\times\\,6", "-\\,6", "+\\,6"], hint:"x is multiplied by 6. Divide both sides by 6."}], ans:{correct:"x = 6",opts:["x = 6", "x = 36", "x = \\frac{29}{3}", "x = \\frac{47}{6}"]}, sol:["11 + 6x = 47", "\\text{Subtract } 11 \\text{ from both sides}", "6x = 36", "\\text{Divide both sides by } 6", "x = 6"]},
+  {id:"P4", tag:"Two-step · constant first", eq:"9 + 2x = 25", ops:[{correct:"-\\,9", opts:["-\\,9", "+\\,9", "\\div\\,2", "\\times\\,2"], hint:"The 9 is on its own, so clear it first: subtract 9.", line:"2x = 16"},{correct:"\\div\\,2", opts:["\\div\\,2", "\\times\\,2", "-\\,2", "+\\,2"], hint:"x is multiplied by 2. Divide both sides by 2."}], ans:{correct:"x = 8",opts:["x = 8", "x = 16", "x = 17", "x = \\frac{25}{2}"]}, sol:["9 + 2x = 25", "\\text{Subtract } 9 \\text{ from both sides}", "2x = 16", "\\text{Divide both sides by } 2", "x = 8"]},
+  {id:"P5", tag:"Two-step · constant first", eq:"13 + 5x = 38", ops:[{correct:"-\\,13", opts:["-\\,13", "+\\,13", "\\div\\,5", "\\times\\,5"], hint:"The 13 is on its own, so clear it first: subtract 13.", line:"5x = 25"},{correct:"\\div\\,5", opts:["\\div\\,5", "\\times\\,5", "-\\,5", "+\\,5"], hint:"x is multiplied by 5. Divide both sides by 5."}], ans:{correct:"x = 5",opts:["x = 5", "x = 25", "x = \\frac{51}{5}", "x = \\frac{38}{5}"]}, sol:["13 + 5x = 38", "\\text{Subtract } 13 \\text{ from both sides}", "5x = 25", "\\text{Divide both sides by } 5", "x = 5"]},
+  {id:"P6", tag:"Two-step · constant first", eq:"4 + 8x = 60", ops:[{correct:"-\\,4", opts:["-\\,4", "+\\,4", "\\div\\,8", "\\times\\,8"], hint:"The 4 is on its own, so clear it first: subtract 4.", line:"8x = 56"},{correct:"\\div\\,8", opts:["\\div\\,8", "\\times\\,8", "-\\,8", "+\\,8"], hint:"x is multiplied by 8. Divide both sides by 8."}], ans:{correct:"x = 7",opts:["x = 7", "x = 56", "x = 8", "x = \\frac{15}{2}"]}, sol:["4 + 8x = 60", "\\text{Subtract } 4 \\text{ from both sides}", "8x = 56", "\\text{Divide both sides by } 8", "x = 7"]},
+  {id:"P7", tag:"Two-step · constant first", eq:"6 + 7x = 55", ops:[{correct:"-\\,6", opts:["-\\,6", "+\\,6", "\\div\\,7", "\\times\\,7"], hint:"The 6 is on its own, so clear it first: subtract 6.", line:"7x = 49"},{correct:"\\div\\,7", opts:["\\div\\,7", "\\times\\,7", "-\\,7", "+\\,7"], hint:"x is multiplied by 7. Divide both sides by 7."}], ans:{correct:"x = 7",opts:["x = 7", "x = 49", "x = \\frac{61}{7}", "x = \\frac{55}{7}"]}, sol:["6 + 7x = 55", "\\text{Subtract } 6 \\text{ from both sides}", "7x = 49", "\\text{Divide both sides by } 7", "x = 7"]},
+  {id:"Q1", tag:"Two-step · unknown on the right", eq:"22 = 3x + 7", ops:[{correct:"-\\,7", opts:["-\\,7", "+\\,7", "\\div\\,3", "\\times\\,3"], hint:"Clear the 7 first: subtract 7 from both sides. The x being on the right changes nothing.", line:"15 = 3x"},{correct:"\\div\\,3", opts:["\\div\\,3", "\\times\\,3", "-\\,3", "+\\,3"], hint:"x is multiplied by 3. Divide both sides by 3."}], ans:{correct:"x = 5",opts:["x = 5", "x = 15", "x = \\frac{29}{3}", "x = \\frac{22}{3}"]}, sol:["22 = 3x + 7", "\\text{Subtract } 7 \\text{ from both sides}", "15 = 3x", "\\text{Divide both sides by } 3", "x = 5"]},
+  {id:"Q2", tag:"Two-step · unknown on the right", eq:"31 = 5x - 4", ops:[{correct:"+\\,4", opts:["+\\,4", "-\\,4", "\\div\\,5", "\\times\\,5"], hint:"Clear the - 4 first: add 4 to both sides. The x being on the right changes nothing.", line:"35 = 5x"},{correct:"\\div\\,5", opts:["\\div\\,5", "\\times\\,5", "-\\,5", "+\\,5"], hint:"x is multiplied by 5. Divide both sides by 5."}], ans:{correct:"x = 7",opts:["x = 7", "x = 35", "x = \\frac{27}{5}", "x = \\frac{31}{5}"]}, sol:["31 = 5x - 4", "\\text{Add } 4 \\text{ to both sides}", "35 = 5x", "\\text{Divide both sides by } 5", "x = 7"]},
+  {id:"Q3", tag:"Two-step · unknown on the right", eq:"19 = 2x + 9", ops:[{correct:"-\\,9", opts:["-\\,9", "+\\,9", "\\div\\,2", "\\times\\,2"], hint:"Clear the 9 first: subtract 9 from both sides. The x being on the right changes nothing.", line:"10 = 2x"},{correct:"\\div\\,2", opts:["\\div\\,2", "\\times\\,2", "-\\,2", "+\\,2"], hint:"x is multiplied by 2. Divide both sides by 2."}], ans:{correct:"x = 5",opts:["x = 5", "x = 10", "x = 14", "x = \\frac{19}{2}"]}, sol:["19 = 2x + 9", "\\text{Subtract } 9 \\text{ from both sides}", "10 = 2x", "\\text{Divide both sides by } 2", "x = 5"]},
+  {id:"Q4", tag:"Two-step · unknown on the right", eq:"43 = 6x - 5", ops:[{correct:"+\\,5", opts:["+\\,5", "-\\,5", "\\div\\,6", "\\times\\,6"], hint:"Clear the - 5 first: add 5 to both sides. The x being on the right changes nothing.", line:"48 = 6x"},{correct:"\\div\\,6", opts:["\\div\\,6", "\\times\\,6", "-\\,6", "+\\,6"], hint:"x is multiplied by 6. Divide both sides by 6."}], ans:{correct:"x = 8",opts:["x = 8", "x = 48", "x = \\frac{19}{3}", "x = \\frac{43}{6}"]}, sol:["43 = 6x - 5", "\\text{Add } 5 \\text{ to both sides}", "48 = 6x", "\\text{Divide both sides by } 6", "x = 8"]},
+  {id:"Q5", tag:"Two-step · unknown on the right", eq:"37 = 4x + 13", ops:[{correct:"-\\,13", opts:["-\\,13", "+\\,13", "\\div\\,4", "\\times\\,4"], hint:"Clear the 13 first: subtract 13 from both sides. The x being on the right changes nothing.", line:"24 = 4x"},{correct:"\\div\\,4", opts:["\\div\\,4", "\\times\\,4", "-\\,4", "+\\,4"], hint:"x is multiplied by 4. Divide both sides by 4."}], ans:{correct:"x = 6",opts:["x = 6", "x = 24", "x = \\frac{25}{2}", "x = \\frac{37}{4}"]}, sol:["37 = 4x + 13", "\\text{Subtract } 13 \\text{ from both sides}", "24 = 4x", "\\text{Divide both sides by } 4", "x = 6"]},
+  {id:"Q6", tag:"Two-step · unknown on the right", eq:"58 = 9x + 4", ops:[{correct:"-\\,4", opts:["-\\,4", "+\\,4", "\\div\\,9", "\\times\\,9"], hint:"Clear the 4 first: subtract 4 from both sides. The x being on the right changes nothing.", line:"54 = 9x"},{correct:"\\div\\,9", opts:["\\div\\,9", "\\times\\,9", "-\\,9", "+\\,9"], hint:"x is multiplied by 9. Divide both sides by 9."}], ans:{correct:"x = 6",opts:["x = 6", "x = 54", "x = \\frac{62}{9}", "x = \\frac{58}{9}"]}, sol:["58 = 9x + 4", "\\text{Subtract } 4 \\text{ from both sides}", "54 = 9x", "\\text{Divide both sides by } 9", "x = 6"]},
+  {id:"R1", tag:"Two-step · negative", eq:"3x + 14 = 5", ops:[{correct:"-\\,14", opts:["-\\,14", "+\\,14", "\\div\\,3", "\\times\\,3"], hint:"Clear the 14 first: subtract 14 from both sides.", line:"3x = -9"},{correct:"\\div\\,3", opts:["\\div\\,3", "\\times\\,3", "-\\,3", "+\\,3"], hint:"x is multiplied by 3. Divide both sides by 3."}], ans:{correct:"x = -3",opts:["x = -3", "x = -9", "x = \\frac{19}{3}", "x = \\frac{5}{3}"]}, sol:["3x + 14 = 5", "\\text{Subtract } 14 \\text{ from both sides}", "3x = -9", "\\text{Divide both sides by } 3", "x = -3"]},
+  {id:"R2", tag:"Two-step · negative", eq:"2x - 7 = -19", ops:[{correct:"+\\,7", opts:["+\\,7", "-\\,7", "\\div\\,2", "\\times\\,2"], hint:"Clear the - 7 first: add 7 to both sides.", line:"2x = -12"},{correct:"\\div\\,2", opts:["\\div\\,2", "\\times\\,2", "-\\,2", "+\\,2"], hint:"x is multiplied by 2. Divide both sides by 2."}], ans:{correct:"x = -6",opts:["x = -6", "x = -12", "x = -13", "x = -\\frac{19}{2}"]}, sol:["2x - 7 = -19", "\\text{Add } 7 \\text{ to both sides}", "2x = -12", "\\text{Divide both sides by } 2", "x = -6"]},
+  {id:"R3", tag:"Two-step · negative", eq:"6x + 25 = 7", ops:[{correct:"-\\,25", opts:["-\\,25", "+\\,25", "\\div\\,6", "\\times\\,6"], hint:"Clear the 25 first: subtract 25 from both sides.", line:"6x = -18"},{correct:"\\div\\,6", opts:["\\div\\,6", "\\times\\,6", "-\\,6", "+\\,6"], hint:"x is multiplied by 6. Divide both sides by 6."}], ans:{correct:"x = -3",opts:["x = -3", "x = -18", "x = \\frac{16}{3}", "x = \\frac{7}{6}"]}, sol:["6x + 25 = 7", "\\text{Subtract } 25 \\text{ from both sides}", "6x = -18", "\\text{Divide both sides by } 6", "x = -3"]},
+  {id:"R4", tag:"Two-step · negative", eq:"4x + 9 = -11", ops:[{correct:"-\\,9", opts:["-\\,9", "+\\,9", "\\div\\,4", "\\times\\,4"], hint:"Clear the 9 first: subtract 9 from both sides.", line:"4x = -20"},{correct:"\\div\\,4", opts:["\\div\\,4", "\\times\\,4", "-\\,4", "+\\,4"], hint:"x is multiplied by 4. Divide both sides by 4."}], ans:{correct:"x = -5",opts:["x = -5", "x = -20", "x = -\\frac{1}{2}", "x = -\\frac{11}{4}"]}, sol:["4x + 9 = -11", "\\text{Subtract } 9 \\text{ from both sides}", "4x = -20", "\\text{Divide both sides by } 4", "x = -5"]},
+  {id:"R5", tag:"Two-step · negative", eq:"5x + 18 = 3", ops:[{correct:"-\\,18", opts:["-\\,18", "+\\,18", "\\div\\,5", "\\times\\,5"], hint:"Clear the 18 first: subtract 18 from both sides.", line:"5x = -15"},{correct:"\\div\\,5", opts:["\\div\\,5", "\\times\\,5", "-\\,5", "+\\,5"], hint:"x is multiplied by 5. Divide both sides by 5."}], ans:{correct:"x = -3",opts:["x = -3", "x = -15", "x = \\frac{21}{5}", "x = \\frac{3}{5}"]}, sol:["5x + 18 = 3", "\\text{Subtract } 18 \\text{ from both sides}", "5x = -15", "\\text{Divide both sides by } 5", "x = -3"]},
+  {id:"R6", tag:"Two-step · negative", eq:"8x + 30 = 6", ops:[{correct:"-\\,30", opts:["-\\,30", "+\\,30", "\\div\\,8", "\\times\\,8"], hint:"Clear the 30 first: subtract 30 from both sides.", line:"8x = -24"},{correct:"\\div\\,8", opts:["\\div\\,8", "\\times\\,8", "-\\,8", "+\\,8"], hint:"x is multiplied by 8. Divide both sides by 8."}], ans:{correct:"x = -3",opts:["x = -3", "x = -24", "x = \\frac{9}{2}", "x = \\frac{3}{4}"]}, sol:["8x + 30 = 6", "\\text{Subtract } 30 \\text{ from both sides}", "8x = -24", "\\text{Divide both sides by } 8", "x = -3"]},
+  {id:"S1", tag:"Two-step · negative", eq:"5 - 2x = 13", ops:[{correct:"-\\,5", opts:["-\\,5", "+\\,5", "\\div\\,2", "\\times\\,2"], hint:"Subtract 5 from both sides. The x term is negative, and that is fine.", line:"-2x = 8"},{correct:"\\div\\,(-2)", opts:["\\div\\,(-2)", "\\div\\,2", "\\times\\,(-2)", "\\times\\,2"], hint:"x is multiplied by -2. Divide both sides by -2."}], ans:{correct:"x = -4",opts:["x = -4", "x = 4", "x = 8", "x = 9"]}, sol:["5 - 2x = 13", "\\text{Subtract } 5 \\text{ from both sides}", "-2x = 8", "\\text{Divide both sides by } -2", "x = -4"]},
+  {id:"S2", tag:"Two-step · negative", eq:"10 - 3x = 1", ops:[{correct:"-\\,10", opts:["-\\,10", "+\\,10", "\\div\\,3", "\\times\\,3"], hint:"Subtract 10 from both sides. The x term is negative, and that is fine.", line:"-3x = -9"},{correct:"\\div\\,(-3)", opts:["\\div\\,(-3)", "\\div\\,3", "\\times\\,(-3)", "\\times\\,3"], hint:"x is multiplied by -3. Divide both sides by -3."}], ans:{correct:"x = 3",opts:["x = 3", "x = -3", "x = -9", "x = \\frac{11}{3}"]}, sol:["10 - 3x = 1", "\\text{Subtract } 10 \\text{ from both sides}", "-3x = -9", "\\text{Divide both sides by } -3", "x = 3"]},
+  {id:"S3", tag:"Two-step · negative", eq:"8 - 4x = 24", ops:[{correct:"-\\,8", opts:["-\\,8", "+\\,8", "\\div\\,4", "\\times\\,4"], hint:"Subtract 8 from both sides. The x term is negative, and that is fine.", line:"-4x = 16"},{correct:"\\div\\,(-4)", opts:["\\div\\,(-4)", "\\div\\,4", "\\times\\,(-4)", "\\times\\,4"], hint:"x is multiplied by -4. Divide both sides by -4."}], ans:{correct:"x = -4",opts:["x = -4", "x = 4", "x = 16", "x = 8"]}, sol:["8 - 4x = 24", "\\text{Subtract } 8 \\text{ from both sides}", "-4x = 16", "\\text{Divide both sides by } -4", "x = -4"]},
+  {id:"S4", tag:"Two-step · negative", eq:"7 - 5x = 32", ops:[{correct:"-\\,7", opts:["-\\,7", "+\\,7", "\\div\\,5", "\\times\\,5"], hint:"Subtract 7 from both sides. The x term is negative, and that is fine.", line:"-5x = 25"},{correct:"\\div\\,(-5)", opts:["\\div\\,(-5)", "\\div\\,5", "\\times\\,(-5)", "\\times\\,5"], hint:"x is multiplied by -5. Divide both sides by -5."}], ans:{correct:"x = -5",opts:["x = -5", "x = 5", "x = 25", "x = \\frac{39}{5}"]}, sol:["7 - 5x = 32", "\\text{Subtract } 7 \\text{ from both sides}", "-5x = 25", "\\text{Divide both sides by } -5", "x = -5"]},
+  {id:"S5", tag:"Two-step · negative", eq:"12 - 2x = 20", ops:[{correct:"-\\,12", opts:["-\\,12", "+\\,12", "\\div\\,2", "\\times\\,2"], hint:"Subtract 12 from both sides. The x term is negative, and that is fine.", line:"-2x = 8"},{correct:"\\div\\,(-2)", opts:["\\div\\,(-2)", "\\div\\,2", "\\times\\,(-2)", "\\times\\,2"], hint:"x is multiplied by -2. Divide both sides by -2."}], ans:{correct:"x = -4",opts:["x = -4", "x = 4", "x = 8", "x = 16"]}, sol:["12 - 2x = 20", "\\text{Subtract } 12 \\text{ from both sides}", "-2x = 8", "\\text{Divide both sides by } -2", "x = -4"]},
+  {id:"T1", tag:"Two-step · negative", eq:"-4x + 9 = 33", ops:[{correct:"-\\,9", opts:["-\\,9", "+\\,9", "\\div\\,(-4)", "\\times\\,(-4)"], hint:"Clear the 9 first: subtract 9 from both sides.", line:"-4x = 24"},{correct:"\\div\\,(-4)", opts:["\\div\\,(-4)", "\\div\\,4", "\\times\\,(-4)", "\\times\\,4"], hint:"Divide both sides by -4. Dividing by a negative changes the sign."}], ans:{correct:"x = -6",opts:["x = -6", "x = 6", "x = 24", "x = -5"]}, sol:["-4x + 9 = 33", "\\text{Subtract } 9 \\text{ from both sides}", "-4x = 24", "\\text{Divide both sides by } -4", "x = -6"]},
+  {id:"T2", tag:"Two-step · negative", eq:"-3x + 5 = 20", ops:[{correct:"-\\,5", opts:["-\\,5", "+\\,5", "\\div\\,(-3)", "\\times\\,(-3)"], hint:"Clear the 5 first: subtract 5 from both sides.", line:"-3x = 15"},{correct:"\\div\\,(-3)", opts:["\\div\\,(-3)", "\\div\\,3", "\\times\\,(-3)", "\\times\\,3"], hint:"Divide both sides by -3. Dividing by a negative changes the sign."}], ans:{correct:"x = -5",opts:["x = -5", "x = 5", "x = 15", "x = -4"]}, sol:["-3x + 5 = 20", "\\text{Subtract } 5 \\text{ from both sides}", "-3x = 15", "\\text{Divide both sides by } -3", "x = -5"]},
+  {id:"T3", tag:"Two-step · negative", eq:"-6x + 11 = 47", ops:[{correct:"-\\,11", opts:["-\\,11", "+\\,11", "\\div\\,(-6)", "\\times\\,(-6)"], hint:"Clear the 11 first: subtract 11 from both sides.", line:"-6x = 36"},{correct:"\\div\\,(-6)", opts:["\\div\\,(-6)", "\\div\\,6", "\\times\\,(-6)", "\\times\\,6"], hint:"Divide both sides by -6. Dividing by a negative changes the sign."}], ans:{correct:"x = -6",opts:["x = -6", "x = 6", "x = 36", "x = -5"]}, sol:["-6x + 11 = 47", "\\text{Subtract } 11 \\text{ from both sides}", "-6x = 36", "\\text{Divide both sides by } -6", "x = -6"]},
+  {id:"U1", tag:"Two-step · negative", eq:"-x + 6 = 10", ops:[{correct:"-\\,6", opts:["-\\,6", "+\\,6", "\\times\\,(-1)", "\\div\\,(-1)"], hint:"Subtract 6 from both sides to leave the x term alone.", line:"-x = 4"},{correct:"\\times\\,(-1)", opts:["\\times\\,(-1)", "\\times\\,1", "+\\,4", "-\\,4"], hint:"You have -x, not x. Multiply both sides by -1."}], ans:{correct:"x = -4",opts:["x = -4", "x = 4", "x = 16", "x = -16"]}, sol:["-x + 6 = 10", "\\text{Subtract } 6 \\text{ from both sides}", "-x = 4", "\\text{Multiply both sides by } -1", "x = -4"]},
+  {id:"U2", tag:"Two-step · negative", eq:"-x + 9 = 15", ops:[{correct:"-\\,9", opts:["-\\,9", "+\\,9", "\\times\\,(-1)", "\\div\\,(-1)"], hint:"Subtract 9 from both sides to leave the x term alone.", line:"-x = 6"},{correct:"\\times\\,(-1)", opts:["\\times\\,(-1)", "\\times\\,1", "+\\,6", "-\\,6"], hint:"You have -x, not x. Multiply both sides by -1."}], ans:{correct:"x = -6",opts:["x = -6", "x = 6", "x = 24", "x = -24"]}, sol:["-x + 9 = 15", "\\text{Subtract } 9 \\text{ from both sides}", "-x = 6", "\\text{Multiply both sides by } -1", "x = -6"]},
+  {id:"U3", tag:"Two-step · negative", eq:"-x + 4 = 11", ops:[{correct:"-\\,4", opts:["-\\,4", "+\\,4", "\\times\\,(-1)", "\\div\\,(-1)"], hint:"Subtract 4 from both sides to leave the x term alone.", line:"-x = 7"},{correct:"\\times\\,(-1)", opts:["\\times\\,(-1)", "\\times\\,1", "+\\,7", "-\\,7"], hint:"You have -x, not x. Multiply both sides by -1."}], ans:{correct:"x = -7",opts:["x = -7", "x = 7", "x = 15", "x = -15"]}, sol:["-x + 4 = 11", "\\text{Subtract } 4 \\text{ from both sides}", "-x = 7", "\\text{Multiply both sides by } -1", "x = -7"]},
+  {id:"U4", tag:"Two-step · negative", eq:"-x + 12 = 20", ops:[{correct:"-\\,12", opts:["-\\,12", "+\\,12", "\\times\\,(-1)", "\\div\\,(-1)"], hint:"Subtract 12 from both sides to leave the x term alone.", line:"-x = 8"},{correct:"\\times\\,(-1)", opts:["\\times\\,(-1)", "\\times\\,1", "+\\,8", "-\\,8"], hint:"You have -x, not x. Multiply both sides by -1."}], ans:{correct:"x = -8",opts:["x = -8", "x = 8", "x = 32", "x = -32"]}, sol:["-x + 12 = 20", "\\text{Subtract } 12 \\text{ from both sides}", "-x = 8", "\\text{Multiply both sides by } -1", "x = -8"]},
+  {id:"V1", tag:"Two-step · negative", eq:"\\frac{x}{4} + 9 = 5", ops:[{correct:"-\\,9", opts:["-\\,9", "+\\,9", "\\times\\,4", "\\div\\,4"], hint:"Clear the 9 first: subtract 9 from both sides.", line:"\\frac{x}{4} = -4"},{correct:"\\times\\,4", opts:["\\times\\,4", "\\div\\,4", "+\\,4", "-\\,4"], hint:"x is divided by 4. Multiply both sides by 4."}], ans:{correct:"x = -16",opts:["x = -16", "x = -4", "x = 56", "x = -1"]}, sol:["\\frac{x}{4} + 9 = 5", "\\text{Subtract } 9 \\text{ from both sides}", "\\frac{x}{4} = -4", "\\text{Multiply both sides by } 4", "x = -16"]},
+  {id:"V2", tag:"Two-step · negative", eq:"\\frac{x}{3} + 8 = 2", ops:[{correct:"-\\,8", opts:["-\\,8", "+\\,8", "\\times\\,3", "\\div\\,3"], hint:"Clear the 8 first: subtract 8 from both sides.", line:"\\frac{x}{3} = -6"},{correct:"\\times\\,3", opts:["\\times\\,3", "\\div\\,3", "+\\,3", "-\\,3"], hint:"x is divided by 3. Multiply both sides by 3."}], ans:{correct:"x = -18",opts:["x = -18", "x = -6", "x = 30", "x = -2"]}, sol:["\\frac{x}{3} + 8 = 2", "\\text{Subtract } 8 \\text{ from both sides}", "\\frac{x}{3} = -6", "\\text{Multiply both sides by } 3", "x = -18"]},
+  {id:"V3", tag:"Two-step · negative", eq:"\\frac{x}{5} + 6 = 1", ops:[{correct:"-\\,6", opts:["-\\,6", "+\\,6", "\\times\\,5", "\\div\\,5"], hint:"Clear the 6 first: subtract 6 from both sides.", line:"\\frac{x}{5} = -5"},{correct:"\\times\\,5", opts:["\\times\\,5", "\\div\\,5", "+\\,5", "-\\,5"], hint:"x is divided by 5. Multiply both sides by 5."}], ans:{correct:"x = -25",opts:["x = -25", "x = -5", "x = 35", "x = -1"]}, sol:["\\frac{x}{5} + 6 = 1", "\\text{Subtract } 6 \\text{ from both sides}", "\\frac{x}{5} = -5", "\\text{Multiply both sides by } 5", "x = -25"]},
+  {id:"W1", tag:"Two-step · negative", eq:"3(x + 8) = 9", ops:[{correct:"\\div\\,3", opts:["\\div\\,3", "\\times\\,3", "-\\,8", "+\\,8"], hint:"The whole bracket is multiplied by 3. Divide both sides by 3 first.", line:"x + 8 = 3"},{correct:"-\\,8", opts:["-\\,8", "+\\,8", "\\div\\,8", "\\times\\,8"], hint:"Now subtract 8 from both sides."}], ans:{correct:"x = -5",opts:["x = -5", "x = 3", "x = -15", "x = 11"]}, sol:["3(x + 8) = 9", "\\text{Divide both sides by } 3", "x + 8 = 3", "\\text{Subtract } 8 \\text{ from both sides}", "x = -5"]},
+  {id:"W2", tag:"Two-step · negative", eq:"2(x - 5) = -24", ops:[{correct:"\\div\\,2", opts:["\\div\\,2", "\\times\\,2", "-\\,5", "+\\,5"], hint:"The whole bracket is multiplied by 2. Divide both sides by 2 first.", line:"x - 5 = -12"},{correct:"+\\,5", opts:["+\\,5", "-\\,5", "\\div\\,(-5)", "\\times\\,(-5)"], hint:"Now add 5 to both sides."}], ans:{correct:"x = -7",opts:["x = -7", "x = -12", "x = -14", "x = -17"]}, sol:["2(x - 5) = -24", "\\text{Divide both sides by } 2", "x - 5 = -12", "\\text{Add } 5 \\text{ to both sides}", "x = -7"]},
+  {id:"W3", tag:"Two-step · negative", eq:"4(x + 7) = 12", ops:[{correct:"\\div\\,4", opts:["\\div\\,4", "\\times\\,4", "-\\,7", "+\\,7"], hint:"The whole bracket is multiplied by 4. Divide both sides by 4 first.", line:"x + 7 = 3"},{correct:"-\\,7", opts:["-\\,7", "+\\,7", "\\div\\,7", "\\times\\,7"], hint:"Now subtract 7 from both sides."}], ans:{correct:"x = -4",opts:["x = -4", "x = 3", "x = -16", "x = 10"]}, sol:["4(x + 7) = 12", "\\text{Divide both sides by } 4", "x + 7 = 3", "\\text{Subtract } 7 \\text{ from both sides}", "x = -4"]},
+  {id:"W4", tag:"Two-step · negative", eq:"5(x - 3) = -20", ops:[{correct:"\\div\\,5", opts:["\\div\\,5", "\\times\\,5", "-\\,3", "+\\,3"], hint:"The whole bracket is multiplied by 5. Divide both sides by 5 first.", line:"x - 3 = -4"},{correct:"+\\,3", opts:["+\\,3", "-\\,3", "\\div\\,(-3)", "\\times\\,(-3)"], hint:"Now add 3 to both sides."}], ans:{correct:"x = -1",opts:["x = -1", "x = -4", "x = -5", "x = -7"]}, sol:["5(x - 3) = -20", "\\text{Divide both sides by } 5", "x - 3 = -4", "\\text{Add } 3 \\text{ to both sides}", "x = -1"]},
+  {id:"X1", tag:"Two-step · fractional", eq:"2x + 1 = 8", ops:[{correct:"-\\,1", opts:["-\\,1", "+\\,1", "\\div\\,2", "\\times\\,2"], hint:"Clear the 1 first: subtract 1 from both sides.", line:"2x = 7"},{correct:"\\div\\,2", opts:["\\div\\,2", "\\times\\,2", "-\\,2", "+\\,2"], hint:"x is multiplied by 2. Divide both sides by 2."}], ans:{correct:"x = \\frac{7}{2}",opts:["x = \\frac{7}{2}", "x = 7", "x = \\frac{9}{2}", "x = 4"]}, sol:["2x + 1 = 8", "\\text{Subtract } 1 \\text{ from both sides}", "2x = 7", "\\text{Divide both sides by } 2", "x = \\frac{7}{2}"]},
+  {id:"X2", tag:"Two-step · fractional", eq:"4x - 3 = 7", ops:[{correct:"+\\,3", opts:["+\\,3", "-\\,3", "\\div\\,4", "\\times\\,4"], hint:"Clear the - 3 first: add 3 to both sides.", line:"4x = 10"},{correct:"\\div\\,4", opts:["\\div\\,4", "\\times\\,4", "-\\,4", "+\\,4"], hint:"x is multiplied by 4. Divide both sides by 4."}], ans:{correct:"x = \\frac{5}{2}",opts:["x = \\frac{5}{2}", "x = 10", "x = 1", "x = \\frac{7}{4}"]}, sol:["4x - 3 = 7", "\\text{Add } 3 \\text{ to both sides}", "4x = 10", "\\text{Divide both sides by } 4", "x = \\frac{5}{2}"]},
+  {id:"X3", tag:"Two-step · fractional", eq:"6x + 5 = 12", ops:[{correct:"-\\,5", opts:["-\\,5", "+\\,5", "\\div\\,6", "\\times\\,6"], hint:"Clear the 5 first: subtract 5 from both sides.", line:"6x = 7"},{correct:"\\div\\,6", opts:["\\div\\,6", "\\times\\,6", "-\\,6", "+\\,6"], hint:"x is multiplied by 6. Divide both sides by 6."}], ans:{correct:"x = \\frac{7}{6}",opts:["x = \\frac{7}{6}", "x = 7", "x = \\frac{17}{6}", "x = 2"]}, sol:["6x + 5 = 12", "\\text{Subtract } 5 \\text{ from both sides}", "6x = 7", "\\text{Divide both sides by } 6", "x = \\frac{7}{6}"]},
+  {id:"X4", tag:"Two-step · fractional", eq:"3x + 2 = 6", ops:[{correct:"-\\,2", opts:["-\\,2", "+\\,2", "\\div\\,3", "\\times\\,3"], hint:"Clear the 2 first: subtract 2 from both sides.", line:"3x = 4"},{correct:"\\div\\,3", opts:["\\div\\,3", "\\times\\,3", "-\\,3", "+\\,3"], hint:"x is multiplied by 3. Divide both sides by 3."}], ans:{correct:"x = \\frac{4}{3}",opts:["x = \\frac{4}{3}", "x = 4", "x = \\frac{8}{3}", "x = 2"]}, sol:["3x + 2 = 6", "\\text{Subtract } 2 \\text{ from both sides}", "3x = 4", "\\text{Divide both sides by } 3", "x = \\frac{4}{3}"]},
+  {id:"X5", tag:"Two-step · fractional", eq:"8x - 1 = 3", ops:[{correct:"+\\,1", opts:["+\\,1", "-\\,1", "\\div\\,8", "\\times\\,8"], hint:"Clear the - 1 first: add 1 to both sides.", line:"8x = 4"},{correct:"\\div\\,8", opts:["\\div\\,8", "\\times\\,8", "-\\,8", "+\\,8"], hint:"x is multiplied by 8. Divide both sides by 8."}], ans:{correct:"x = \\frac{1}{2}",opts:["x = \\frac{1}{2}", "x = 4", "x = \\frac{1}{4}", "x = \\frac{3}{8}"]}, sol:["8x - 1 = 3", "\\text{Add } 1 \\text{ to both sides}", "8x = 4", "\\text{Divide both sides by } 8", "x = \\frac{1}{2}"]},
+  {id:"X6", tag:"Two-step · fractional", eq:"10x + 7 = 13", ops:[{correct:"-\\,7", opts:["-\\,7", "+\\,7", "\\div\\,10", "\\times\\,10"], hint:"Clear the 7 first: subtract 7 from both sides.", line:"10x = 6"},{correct:"\\div\\,10", opts:["\\div\\,10", "\\times\\,10", "-\\,10", "+\\,10"], hint:"x is multiplied by 10. Divide both sides by 10."}], ans:{correct:"x = \\frac{3}{5}",opts:["x = \\frac{3}{5}", "x = 6", "x = 2", "x = \\frac{13}{10}"]}, sol:["10x + 7 = 13", "\\text{Subtract } 7 \\text{ from both sides}", "10x = 6", "\\text{Divide both sides by } 10", "x = \\frac{3}{5}"]},
+  {id:"X7", tag:"Two-step · fractional", eq:"9x + 4 = 10", ops:[{correct:"-\\,4", opts:["-\\,4", "+\\,4", "\\div\\,9", "\\times\\,9"], hint:"Clear the 4 first: subtract 4 from both sides.", line:"9x = 6"},{correct:"\\div\\,9", opts:["\\div\\,9", "\\times\\,9", "-\\,9", "+\\,9"], hint:"x is multiplied by 9. Divide both sides by 9."}], ans:{correct:"x = \\frac{2}{3}",opts:["x = \\frac{2}{3}", "x = 6", "x = \\frac{14}{9}", "x = \\frac{10}{9}"]}, sol:["9x + 4 = 10", "\\text{Subtract } 4 \\text{ from both sides}", "9x = 6", "\\text{Divide both sides by } 9", "x = \\frac{2}{3}"]},
+  {id:"X8", tag:"Two-step · fractional", eq:"4x + 5 = 8", ops:[{correct:"-\\,5", opts:["-\\,5", "+\\,5", "\\div\\,4", "\\times\\,4"], hint:"Clear the 5 first: subtract 5 from both sides.", line:"4x = 3"},{correct:"\\div\\,4", opts:["\\div\\,4", "\\times\\,4", "-\\,4", "+\\,4"], hint:"x is multiplied by 4. Divide both sides by 4."}], ans:{correct:"x = \\frac{3}{4}",opts:["x = \\frac{3}{4}", "x = 3", "x = \\frac{13}{4}", "x = 2"]}, sol:["4x + 5 = 8", "\\text{Subtract } 5 \\text{ from both sides}", "4x = 3", "\\text{Divide both sides by } 4", "x = \\frac{3}{4}"]},
+  {id:"X9", tag:"Two-step · fractional", eq:"6x - 7 = 2", ops:[{correct:"+\\,7", opts:["+\\,7", "-\\,7", "\\div\\,6", "\\times\\,6"], hint:"Clear the - 7 first: add 7 to both sides.", line:"6x = 9"},{correct:"\\div\\,6", opts:["\\div\\,6", "\\times\\,6", "-\\,6", "+\\,6"], hint:"x is multiplied by 6. Divide both sides by 6."}], ans:{correct:"x = \\frac{3}{2}",opts:["x = \\frac{3}{2}", "x = 9", "x = -\\frac{5}{6}", "x = \\frac{1}{3}"]}, sol:["6x - 7 = 2", "\\text{Add } 7 \\text{ to both sides}", "6x = 9", "\\text{Divide both sides by } 6", "x = \\frac{3}{2}"]},
+  {id:"X10", tag:"Two-step · fractional", eq:"8x + 3 = 10", ops:[{correct:"-\\,3", opts:["-\\,3", "+\\,3", "\\div\\,8", "\\times\\,8"], hint:"Clear the 3 first: subtract 3 from both sides.", line:"8x = 7"},{correct:"\\div\\,8", opts:["\\div\\,8", "\\times\\,8", "-\\,8", "+\\,8"], hint:"x is multiplied by 8. Divide both sides by 8."}], ans:{correct:"x = \\frac{7}{8}",opts:["x = \\frac{7}{8}", "x = 7", "x = \\frac{13}{8}", "x = \\frac{5}{4}"]}, sol:["8x + 3 = 10", "\\text{Subtract } 3 \\text{ from both sides}", "8x = 7", "\\text{Divide both sides by } 8", "x = \\frac{7}{8}"]},
+  {id:"Y1", tag:"Two-step · fractional", eq:"\\frac{2}{3}x + 4 = 10", ops:[{correct:"-\\,4", opts:["-\\,4", "+\\,4", "\\times\\,\\frac{3}{2}", "\\times\\,\\frac{2}{3}"], hint:"Clear the 4 first: subtract 4 from both sides.", line:"\\frac{2}{3}x = 6"},{correct:"\\times\\,\\frac{3}{2}", opts:["\\times\\,\\frac{3}{2}", "\\times\\,\\frac{2}{3}", "\\div\\,\\frac{3}{2}", "+\\,\\frac{3}{2}"], hint:"Multiplying by \\frac{3}{2} undoes multiplying by \\frac{2}{3}."}], ans:{correct:"x = 9",opts:["x = 9", "x = 6", "x = 4", "x = 21"]}, sol:["\\frac{2}{3}x + 4 = 10", "\\text{Subtract } 4 \\text{ from both sides}", "\\frac{2}{3}x = 6", "\\text{Multiply both sides by } \\frac{3}{2}", "x = 9"]},
+  {id:"Y2", tag:"Two-step · fractional", eq:"\\frac{3}{4}x - 2 = 7", ops:[{correct:"+\\,2", opts:["+\\,2", "-\\,2", "\\times\\,\\frac{4}{3}", "\\times\\,\\frac{3}{4}"], hint:"Clear the - 2 first: add 2 to both sides.", line:"\\frac{3}{4}x = 9"},{correct:"\\times\\,\\frac{4}{3}", opts:["\\times\\,\\frac{4}{3}", "\\times\\,\\frac{3}{4}", "\\div\\,\\frac{4}{3}", "+\\,\\frac{4}{3}"], hint:"Multiplying by \\frac{4}{3} undoes multiplying by \\frac{3}{4}."}], ans:{correct:"x = 12",opts:["x = 12", "x = 9", "x = \\frac{27}{4}", "x = \\frac{20}{3}"]}, sol:["\\frac{3}{4}x - 2 = 7", "\\text{Add } 2 \\text{ to both sides}", "\\frac{3}{4}x = 9", "\\text{Multiply both sides by } \\frac{4}{3}", "x = 12"]},
+  {id:"Y3", tag:"Two-step · fractional", eq:"\\frac{2}{5}x - 3 = 5", ops:[{correct:"+\\,3", opts:["+\\,3", "-\\,3", "\\times\\,\\frac{5}{2}", "\\times\\,\\frac{2}{5}"], hint:"Clear the - 3 first: add 3 to both sides.", line:"\\frac{2}{5}x = 8"},{correct:"\\times\\,\\frac{5}{2}", opts:["\\times\\,\\frac{5}{2}", "\\times\\,\\frac{2}{5}", "\\div\\,\\frac{5}{2}", "+\\,\\frac{5}{2}"], hint:"Multiplying by \\frac{5}{2} undoes multiplying by \\frac{2}{5}."}], ans:{correct:"x = 20",opts:["x = 20", "x = 8", "x = \\frac{16}{5}", "x = 5"]}, sol:["\\frac{2}{5}x - 3 = 5", "\\text{Add } 3 \\text{ to both sides}", "\\frac{2}{5}x = 8", "\\text{Multiply both sides by } \\frac{5}{2}", "x = 20"]},
+  {id:"Y4", tag:"Two-step · fractional", eq:"\\frac{5}{6}x + 4 = 14", ops:[{correct:"-\\,4", opts:["-\\,4", "+\\,4", "\\times\\,\\frac{6}{5}", "\\times\\,\\frac{5}{6}"], hint:"Clear the 4 first: subtract 4 from both sides.", line:"\\frac{5}{6}x = 10"},{correct:"\\times\\,\\frac{6}{5}", opts:["\\times\\,\\frac{6}{5}", "\\times\\,\\frac{5}{6}", "\\div\\,\\frac{6}{5}", "+\\,\\frac{6}{5}"], hint:"Multiplying by \\frac{6}{5} undoes multiplying by \\frac{5}{6}."}], ans:{correct:"x = 12",opts:["x = 12", "x = 10", "x = \\frac{25}{3}", "x = \\frac{108}{5}"]}, sol:["\\frac{5}{6}x + 4 = 14", "\\text{Subtract } 4 \\text{ from both sides}", "\\frac{5}{6}x = 10", "\\text{Multiply both sides by } \\frac{6}{5}", "x = 12"]},
+  {id:"Y5", tag:"Two-step · fractional", eq:"\\frac{3}{8}x - 1 = 5", ops:[{correct:"+\\,1", opts:["+\\,1", "-\\,1", "\\times\\,\\frac{8}{3}", "\\times\\,\\frac{3}{8}"], hint:"Clear the - 1 first: add 1 to both sides.", line:"\\frac{3}{8}x = 6"},{correct:"\\times\\,\\frac{8}{3}", opts:["\\times\\,\\frac{8}{3}", "\\times\\,\\frac{3}{8}", "\\div\\,\\frac{8}{3}", "+\\,\\frac{8}{3}"], hint:"Multiplying by \\frac{8}{3} undoes multiplying by \\frac{3}{8}."}], ans:{correct:"x = 16",opts:["x = 16", "x = 6", "x = \\frac{9}{4}", "x = \\frac{32}{3}"]}, sol:["\\frac{3}{8}x - 1 = 5", "\\text{Add } 1 \\text{ to both sides}", "\\frac{3}{8}x = 6", "\\text{Multiply both sides by } \\frac{8}{3}", "x = 16"]},
+  {id:"Y6", tag:"Two-step · fractional", eq:"\\frac{4}{5}x + 6 = 18", ops:[{correct:"-\\,6", opts:["-\\,6", "+\\,6", "\\times\\,\\frac{5}{4}", "\\times\\,\\frac{4}{5}"], hint:"Clear the 6 first: subtract 6 from both sides.", line:"\\frac{4}{5}x = 12"},{correct:"\\times\\,\\frac{5}{4}", opts:["\\times\\,\\frac{5}{4}", "\\times\\,\\frac{4}{5}", "\\div\\,\\frac{5}{4}", "+\\,\\frac{5}{4}"], hint:"Multiplying by \\frac{5}{4} undoes multiplying by \\frac{4}{5}."}], ans:{correct:"x = 15",opts:["x = 15", "x = 12", "x = \\frac{48}{5}", "x = 30"]}, sol:["\\frac{4}{5}x + 6 = 18", "\\text{Subtract } 6 \\text{ from both sides}", "\\frac{4}{5}x = 12", "\\text{Multiply both sides by } \\frac{5}{4}", "x = 15"]}
+  ]
+};
+// >>> GENERATED BANK END
+
+const SLUG = 'linear-equation-solver';
+const TOTAL = 12, BASE = 100, H_COST = 15, W_COST = 25;
+
+let level = 'gcse', pool = [], qIdx = 0, score = 0, cleanN = 0, streak = 0,
+    hintsTotal = 0, currentQ = null, phases = [], phaseIdx = 0,
+    qPenalty = 0, qMissed = false, hintShownThisPhase = false, locked = false;
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function $(id){return document.getElementById(id);}
+function rk(t){try{return katex.renderToString(t,{throwOnError:false});}catch(e){return t;}}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');}
+function setLevel(l){level=l;}
+
+function startGame(){
+  pool = shuffle([...QUESTIONS[level]]).slice(0, TOTAL);
+  qIdx = 0; score = 0; cleanN = 0; streak = 0; hintsTotal = 0;
+  updateHUD();
+  window._ggAbandoned = true;
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:SLUG,level:level,questions_answered:qIdx});});}
+  mfg('game_started',{game_slug:SLUG,level:level});
+  show('game');
+  loadQuestion();
+}
+
+function loadQuestion(){
+  currentQ = pool[qIdx];
+  qPenalty = 0; qMissed = false; phaseIdx = 0;
+  // One phase per move, then a final phase for the value of x.
+  phases = currentQ.ops.map((o,i)=>({type:'op',i:i})).concat([{type:'ans'}]);
+  $('qNum').textContent = (qIdx+1) + '/' + pool.length;
+  $('stageInd').textContent = currentQ.tag;
+  $('solution').className = 'solution';
+  $('workCard').innerHTML = '<div class="work-line" id="liveLine">' + rk(currentQ.eq) + '</div>';
+  renderPhase();
+}
+
+function renderPhase(){
+  const p = phases[phaseIdx];
+  hintShownThisPhase = false;
+  locked = false;
+  $('hintPanel').className = 'hint-panel';
+  $('hintPanel').innerHTML = '';
+  $('hintBtn').classList.remove('disabled');
+  const isOp = (p.type === 'op');
+  const opts = isOp ? currentQ.ops[p.i].opts : currentQ.ans.opts;
+  $('askLine').textContent = isOp
+    ? 'What do you do to both sides?'
+    : 'The x is on its own — what does it equal?';
+  // There is no hint on the final step: the move is already made and the only
+  // thing left is to work the arithmetic out, so the bar is hidden rather than
+  // left sitting there doing nothing when clicked.
+  $('hintBar').style.display = isOp ? 'flex' : 'none';
+  $('hintInfo').textContent = '';
+  const div = $('options');
+  div.innerHTML = '';
+  shuffle([...opts]).forEach(o=>{
+    const b = document.createElement('button');
+    b.className = 'opt-btn';
+    b.dataset.val = o;
+    b.innerHTML = rk(o);
+    b.onclick = ()=>handleAnswer(b);
+    div.appendChild(b);
+  });
+}
+
+function useHint(){
+  const p = phases[phaseIdx];
+  if(p.type !== 'op' || hintShownThisPhase) return;
+  hintShownThisPhase = true;
+  hintsTotal++; qPenalty += H_COST;
+  $('hintsUsed').textContent = hintsTotal;
+  $('hintBtn').classList.add('disabled');
+  const panel = $('hintPanel');
+  panel.className = 'hint-panel show';
+  panel.innerHTML = '<div class="hint-step">' + currentQ.ops[p.i].hint + '</div>';
+}
+
+function handleAnswer(btn){
+  // One answer per phase. The disabled class stops a second mouse click, but a
+  // scripted or very fast double click would otherwise score the phase twice.
+  if(locked) return;
+  locked = true;
+  const p = phases[phaseIdx];
+  const correctVal = (p.type === 'op') ? currentQ.ops[p.i].correct : currentQ.ans.correct;
+  const ok = btn.dataset.val === correctVal;
+  document.querySelectorAll('.opt-btn').forEach(b=>{
+    b.classList.add('disabled');
+    if(b.dataset.val === correctVal) b.classList.add('correct');
+  });
+  $('hintBtn').classList.add('disabled');
+  if(!ok){ btn.classList.add('wrong'); qPenalty += W_COST; qMissed = true; }
+
+  // Record the move on the working trail, whether or not they got it right,
+  // so the method stays visible all the way down.
+  if(p.type === 'op'){
+    const live = $('liveLine');
+    if(live){ live.classList.add('done'); live.removeAttribute('id'); }
+    const opEl = document.createElement('div');
+    opEl.className = 'work-op';
+    opEl.innerHTML = rk(correctVal);
+    $('workCard').appendChild(opEl);
+    const line = currentQ.ops[p.i].line;
+    if(line){
+      const l = document.createElement('div');
+      l.className = 'work-line'; l.id = 'liveLine';
+      l.innerHTML = rk(line);
+      $('workCard').appendChild(l);
+    }
+  } else {
+    const live = $('liveLine');
+    if(live) live.classList.add('done');
+    const l = document.createElement('div');
+    l.className = 'work-line';
+    l.innerHTML = rk(currentQ.ans.correct);
+    $('workCard').appendChild(l);
+  }
+
+  setTimeout(()=>{
+    phaseIdx++;
+    if(phaseIdx < phases.length){ renderPhase(); }
+    else { finishQuestion(); }
+  }, ok ? 700 : 1100);
+}
+
+function finishQuestion(){
+  // Standard scoring: (BASE - penalty) * multiplier, floored at 1.
+  // The multiplier rewards a run of clean questions, not speed — this is a
+  // method game, and rushing the method is the thing it is trying to stop.
+  const multiplier = 1 + 0.1 * Math.min(streak, 5);
+  const qScore = Math.max(1, Math.round((BASE - qPenalty) * multiplier));
+  score += qScore;
+  if(!qMissed){ cleanN++; streak++; } else { streak = 0; }
+  updateHUD();
+  mfg('question_answered',{game_slug:SLUG,level:level,correct:!qMissed,question_index:qIdx+1});
+  $('askLine').textContent = '';
+  $('options').innerHTML = '';
+  if(qMissed) showSolution(); else setTimeout(nextQuestion, 800);
+}
+
+function showSolution(){
+  let html = '<h3>Worked solution</h3>';
+  currentQ.sol.forEach(s=>{ html += '<div class="step">' + rk(s) + '</div>'; });
+  html += '<button class="next-btn" onclick="nextQuestion()">Got it — next question</button>';
+  const sol = $('solution');
+  sol.innerHTML = html;
+  sol.className = 'solution show';
+}
+
+function nextQuestion(){
+  $('solution').className = 'solution';
+  qIdx++;
+  if(qIdx < pool.length) loadQuestion(); else endGame();
+}
+
+function updateHUD(){
+  $('score').textContent = score;
+  $('correctCount').textContent = cleanN;
+  $('streakVal').textContent = streak;
+  $('hintsUsed').textContent = hintsTotal;
+}
+
+function endGame(){
+  const pct = pool.length ? Math.round(cleanN / pool.length * 100) : 0;
+  let t = 'Keep Practising!';
+  if(pct >= 90) t = 'Outstanding!'; else if(pct >= 70) t = 'Well Done!'; else if(pct >= 50) t = 'Good Effort!';
+  $('resultTitle').textContent = t;
+  $('finalScore').textContent = score;
+  $('statsLine').innerHTML = 'GCSE mode<br>' + cleanN + '/' + pool.length +
+    ' solved with no slips (' + pct + '%)<br>Hints used: ' + hintsTotal;
+  window._ggAbandoned = false;
+  mfg('game_completed',{game_slug:SLUG,level:level,score:score,questions_answered:pool.length,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore(SLUG,level,score,pool.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(SLUG,level,score);}}
+  var _pbKey='leqs_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');
+  if(score>_pbOld){mfg('personal_best_set',{game_slug:SLUG,level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}
+  show('results');
+}
+
+function showMenu(){ show('menu'); }
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

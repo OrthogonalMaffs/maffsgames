@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Differentiate polynomials, trig, exponentials, and chain rule expressions. 98 questions across A-Level and Level 4 tiers.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/differentiation-duel/">
+<meta property="og:title" content="Differentiation Duel — MaffsGames">
+<meta property="og:description" content="Differentiate polynomials, trig, exponentials, and chain rule expressions. 98 questions across A-Level and Level 4 tiers.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/differentiation-duel/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Differentiation Duel — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+  :root {
+    --bg:        #f8fafc;
+    --white:     #ffffff;
+    --navy:      #1a2744;
+    --navy-mid:  #253563;
+    --teal:      #0d9488;
+    --accent:    #8b5cf6;
+    --accent-lt: #f5f0ff;
+    --green:     #15803d;
+    --green-lt:  #dcfce7;
+    --red:       #dc2626;
+    --red-lt:    #fee2e2;
+    --text:      #1e293b;
+    --muted:     #64748b;
+    --border:    #e2e8f0;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.09), 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Outfit', system-ui, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Header ── */
+  .header {
+    width: 100%;
+    background: var(--navy);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .back {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s;
+  }
+  .back:hover { color: #fff; }
+
+  .header-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .header-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .header-level {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(139,92,246,0.15);
+    border: 1px solid rgba(139,92,246,0.3);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ── Game area ── */
+  .game-area {
+    width: 100%;
+    max-width: 760px;
+    padding: 24px 20px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* ── Score bar ── */
+  .scorebar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 14px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .score-item { text-align: center; }
+
+  .score-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .score-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-top: 2px;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Timer display ── */
+  .timer-display {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: center;
+    padding: 4px 0;
+    letter-spacing: 0.02em;
+    display: none;
+  }
+
+  /* ── Rules reference panel ── */
+  .rules-ref {
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .ref-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .rule-chip {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--navy);
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  /* ── Question card ── */
+  .question-box {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px 24px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .rule-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-lt);
+    border: 1px solid rgba(139,92,246,0.2);
+    padding: 3px 12px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .q-label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .q-text {
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 24px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.8;
+  }
+
+  /* KaTeX overrides */
+  .q-text .katex { font-size: 1em; }
+  .choice .katex { font-size: 0.9em; }
+  .rule-chip .katex { font-size: 0.85em; }
+  .explanation .katex { font-size: 0.9em; }
+
+  /* ── Answer choices ── */
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .choice {
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-size: clamp(13px, 2.5vw, 15px);
+    font-weight: 600;
+    padding: 16px 10px;
+    border: 2px solid var(--border);
+    background: var(--white);
+    color: var(--navy);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+  }
+
+  .choice:hover {
+    border-color: var(--accent);
+    background: var(--accent-lt);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139,92,246,0.12);
+  }
+
+  .choice.correct {
+    background: var(--green-lt);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .choice.wrong {
+    background: var(--red-lt);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .choice.reveal {
+    background: var(--bg);
+    border-color: var(--border);
+    color: #94a3b8;
+    cursor: default;
+  }
+
+  .choice:disabled { pointer-events: none; }
+
+  .choice.correct .katex { color: var(--green); }
+  .choice.wrong .katex { color: var(--red); }
+  .choice.reveal .katex { color: #94a3b8; }
+
+  /* ── Feedback ── */
+  .feedback {
+    font-size: 13px;
+    font-weight: 700;
+    min-height: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: center;
+    margin-top: 10px;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong   { color: var(--red); }
+
+  .explanation {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    min-height: 18px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* ── Start screen ── */
+  .start-screen {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .start-glyph {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--navy);
+    opacity: 0.08;
+    line-height: 1;
+    margin-bottom: -8px;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.05em;
+  }
+
+  .start-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .start-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .how-to {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .law-row {
+    font-size: 14px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .law-row::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+
+  .law-row .katex { font-size: 1em; }
+
+  .law-note {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* ── Game over ── */
+  .game-over {
+    display: none;
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+  .game-over.visible { display: block; }
+
+  .go-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .go-score {
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 8px 0 6px;
+  }
+
+  .go-detail {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  /* ── Main game ── */
+  .main-game { display: none; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
+  .main-game.visible { display: flex; }
+
+  /* ── Button ── */
+  .btn {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .btn-primary {
+    background: var(--navy);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--navy-mid);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26,39,68,0.2);
+  }
+
+  /* ── Leaderboard ── */
+  .leaderboard {
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .lb-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lb-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .lb-row:last-child { border-bottom: none; }
+
+  .lb-rank { color: var(--muted); font-weight: 600; width: 28px; }
+  .lb-date { color: var(--muted); flex: 1; text-align: center; }
+  .lb-score { font-weight: 800; color: var(--navy); font-size: 15px; }
+
+  @media (max-width: 500px) {
+    .choices { grid-template-columns: 1fr; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .game-area { padding: 16px 14px 40px; }
+  }
+
+/* === OpenDyslexic font === */
+body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
+body.accessible p, body.accessible .question-text, body.accessible .step-text, body.accessible .option-label, body.accessible .card-text { line-height: 2.0; max-width: 65ch; }
+body.accessible { background-color: #12141f !important; }
+body.accessible.light-theme { background-color: #fdf6e3 !important; color: #2d2d2d !important; }
+body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em; }
+.a11y-toggle { background: #1a2744; color: #ffffff; border: 1px solid #2a3a5c; border-radius: 6px; width: 36px; height: 36px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: background 0.15s; }
+.a11y-toggle.active, .a11y-toggle:hover { background: #0d9488; }
+.correct::after { content: ' ✓'; font-size: 0.85em; opacity: 0.8; }
+.incorrect::after { content: ' ✗'; font-size: 0.85em; opacity: 0.8; }
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <a href="../../" class="back">&larr; Back</a>
+  <div class="header-divider"></div>
+  <div class="header-title">Differentiation Duel</div>
+  <span class="header-level" id="levelBadge">A-Level</span>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+
+<div class="game-area">
+
+  <div class="scorebar">
+    <div class="score-item">
+      <div class="score-label">Score</div>
+      <div class="score-val" id="score">0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Streak</div>
+      <div class="score-val" id="streak">0</div>
+    </div>
+    <div class="score-item">
+      <div class="score-label">Best</div>
+      <div class="score-val" id="best">0</div>
+    </div>
+  </div>
+
+  <!-- Start screen -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-glyph">dy/dx</div>
+    <div class="start-title">Differentiation Duel</div>
+    <div class="start-desc">Power rule, chain rule, product rule. How fast can you differentiate?</div>
+    <div class="how-to" id="howTo"></div>
+    <button class="btn btn-primary" onclick="startGame()">Start Game</button>
+  </div>
+
+  <!-- Main game -->
+  <div class="main-game" id="mainGame">
+    <div class="timer-display" id="timerDisplay">0s</div>
+    <div class="rules-ref">
+      <div class="ref-title">Quick Reference</div>
+      <div class="rules-grid" id="rulesGrid"></div>
+    </div>
+    <div class="question-box">
+      <div><span class="rule-badge" id="ruleBadge">Power Rule</span></div>
+      <div class="q-label" id="qLabel">Find dy/dx when y =</div>
+      <div class="q-text" id="qText"></div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+  </div>
+
+  <!-- Game over -->
+  <div class="game-over" id="gameOver">
+    <div class="go-label">Game Over</div>
+    <div class="go-score" id="finalScore">0</div>
+    <div class="go-detail" id="goDetail"></div>
+    <div class="result-stat" style="margin:12px 0;font-size:14px;color:#64748b;"><span class="stat-label">Time taken: </span><span class="stat-value" id="timeStat">—</span></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="btn btn-primary" onclick="startGame()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-title">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Top Scores
+    </div>
+    <div id="lbList"></div>
+  </div>
+
+</div>
+
+<script>
+// ─── KaTeX helper ───────────────────────────────────────────────────
+function tex(latex) {
+  return katex.renderToString(latex, {throwOnError: false, displayMode: false});
+}
+
+// ─── Reference rules ────────────────────────────────────────────────
+const RULES_BASE = [
+  {latex: '\\frac{d}{dx}\\left(x^n\\right) = nx^{n-1}', note: 'power rule'},
+  {latex: '\\frac{d}{dx}(\\sin x) = \\cos x', note: 'sine'},
+  {latex: '\\frac{d}{dx}(\\cos x) = -\\sin x', note: 'cosine'},
+  {latex: '\\frac{d}{dx}(e^x) = e^x', note: 'exponential'},
+  {latex: '\\frac{d}{dx}(\\ln x) = \\frac{1}{x}', note: 'natural log'},
+  {latex: '\\frac{d}{dx}[f(g(x))] = f\'(g(x))\\cdot g\'(x)', note: 'chain rule'},
+];
+const RULES_L4 = [
+  {latex: '(uv)\' = u\'v + uv\'', note: 'product rule'},
+  {latex: '\\left(\\frac{u}{v}\\right)\' = \\frac{u\'v - uv\'}{v^2}', note: 'quotient rule'},
+  {latex: '\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}', note: 'parametric'},
+];
+const LEVEL = new URLSearchParams(location.search).get('level') || 'alevel';
+const RULES = LEVEL==='level4' ? [...RULES_BASE,...RULES_L4] : RULES_BASE;
+
+// Render how-to section
+document.getElementById('howTo').innerHTML = RULES.map(r =>
+  `<div class="law-row">${tex(r.latex)} <span class="law-note">(${r.note})</span></div>`
+).join('');
+
+// Render quick reference grid
+document.getElementById('rulesGrid').innerHTML = RULES.map(r =>
+  `<div class="rule-chip">${tex(r.latex)}</div>`
+).join('');
+
+// ─── QUESTIONS ──────────────────────────────────────────────────────
+const TOTAL = 14, BASE = 100, T_K = 0.6;
+
+const QUESTIONS = {
+  alevel: [
+    // ─── Power Rule (12) ────────────────────────────────────────────────
+    {rule:'Power Rule', q:'x^5', correct:'5x^4',
+      wrong:['x^4','5x^5','4x^4'], exp:'Multiply by power, reduce power: 5x⁴'},
+    {rule:'Power Rule', q:'3x^4', correct:'12x^3',
+      wrong:['3x^3','4x^3','12x^4'], exp:'3×4=12, power reduces: 12x³'},
+    {rule:'Power Rule', q:'x^{-2}', correct:'-2x^{-3}',
+      wrong:['2x^{-3}','-2x^{-1}','-x^{-2}'], exp:'-2 × x^(-2-1) = -2x⁻³'},
+    {rule:'Power Rule', q:'\\sqrt{x} = x^{\\frac{1}{2}}', correct:'\\dfrac{1}{2\\sqrt{x}}',
+      wrong:['2\\sqrt{x}','\\dfrac{\\sqrt{x}}{2}','\\dfrac{1}{\\sqrt{x}}'], exp:'½x^(-½) = 1/(2√x)'},
+    {rule:'Power Rule', q:'5x^2 - 3x + 7', correct:'10x - 3',
+      wrong:['5x - 3','10x - 3x','10x + 7'], exp:'Differentiate term by term: 10x - 3 + 0'},
+    {rule:'Power Rule', q:'4x^3 + 2x', correct:'12x^2 + 2',
+      wrong:['12x + 2','4x^2 + 2','12x^2 + 2x'], exp:'12x² + 2'},
+    {rule:'Power Rule', q:'7x^6', correct:'42x^5',
+      wrong:['7x^5','6x^5','42x^6'], exp:'7×6=42, power reduces: 42x⁵'},
+    {rule:'Power Rule', q:'x^{-3}', correct:'-3x^{-4}',
+      wrong:['3x^{-4}','-3x^{-2}','-x^{-4}'], exp:'-3 × x^(-3-1) = -3x⁻⁴'},
+    {rule:'Power Rule', q:'x^{\\frac{1}{3}}', correct:'\\dfrac{1}{3}x^{-\\frac{2}{3}}',
+      wrong:['3x^{\\frac{2}{3}}','\\dfrac{1}{3}x^{\\frac{2}{3}}','\\dfrac{2}{3}x^{-\\frac{1}{3}}'], exp:'⅓ × x^(⅓-1) = ⅓x^(-⅔)'},
+    {rule:'Power Rule', q:'2x^5 - x^3 + 4x', correct:'10x^4 - 3x^2 + 4',
+      wrong:['10x^4 - 3x^2','10x^5 - 3x^3 + 4','5x^4 - 3x^2 + 4'], exp:'Differentiate each term: 10x⁴ - 3x² + 4'},
+    {rule:'Power Rule', q:'\\dfrac{6}{x^2} = 6x^{-2}', correct:'-12x^{-3}',
+      wrong:['12x^{-3}','-6x^{-3}','-12x^{-1}'], exp:'6×(-2)=-12, power reduces: -12x⁻³'},
+    {rule:'Power Rule', q:'x^{\\frac{3}{2}}', correct:'\\dfrac{3}{2}x^{\\frac{1}{2}}',
+      wrong:['\\dfrac{3}{2}x^{\\frac{3}{2}}','\\dfrac{1}{2}x^{\\frac{1}{2}}','\\dfrac{3}{2}x^{-\\frac{1}{2}}'], exp:'³⁄₂ × x^(³⁄₂-1) = ³⁄₂ × x^(½)'},
+
+    // ─── Trig (8) ───────────────────────────────────────────────────────
+    {rule:'Trig', q:'\\sin x', correct:'\\cos x',
+      wrong:['-\\cos x','\\sin x','-\\sin x'], exp:'Standard result: d/dx(sin x) = cos x'},
+    {rule:'Trig', q:'\\cos x', correct:'-\\sin x',
+      wrong:['\\sin x','\\cos x','-\\cos x'], exp:'Standard result: d/dx(cos x) = -sin x'},
+    {rule:'Trig', q:'3\\sin x', correct:'3\\cos x',
+      wrong:['-3\\cos x','3\\sin x','\\cos x'], exp:'3 × cos x = 3cos x'},
+    {rule:'Trig', q:'\\tan x', correct:'\\sec^2 x',
+      wrong:['\\cos^2 x','\\tan^2 x','\\dfrac{1}{\\cos x}'], exp:'Standard result: d/dx(tan x) = sec²x'},
+    {rule:'Trig', q:'-2\\cos x', correct:'2\\sin x',
+      wrong:['-2\\sin x','2\\cos x','-\\sin x'], exp:'-2 × (-sin x) = 2sin x'},
+    {rule:'Trig', q:'5\\tan x', correct:'5\\sec^2 x',
+      wrong:['5\\tan^2 x','\\sec^2 x','5\\cos^2 x'], exp:'5 × sec²x = 5sec²x'},
+    {rule:'Trig', q:'4\\sin x + \\cos x', correct:'4\\cos x - \\sin x',
+      wrong:['4\\cos x + \\sin x','-4\\cos x - \\sin x','4\\cos x'], exp:'Differentiate each term: 4cos x + (-sin x)'},
+    {rule:'Trig', q:'-\\sin x + 3\\cos x', correct:'-\\cos x - 3\\sin x',
+      wrong:['\\cos x - 3\\sin x','-\\cos x + 3\\sin x','\\cos x + 3\\sin x'], exp:'d/dx(-sin x) = -cos x, d/dx(3cos x) = -3sin x'},
+
+    // ─── Exponential (6) ────────────────────────────────────────────────
+    {rule:'Exponential', q:'e^x', correct:'e^x',
+      wrong:['xe^x','e^{x-1}','e'], exp:'eˣ differentiates to itself'},
+    {rule:'Exponential', q:'e^{2x}', correct:'2e^{2x}',
+      wrong:['e^{2x}','2xe^{2x}','2e^2'], exp:'Chain rule: multiply by inner derivative (2)'},
+    {rule:'Exponential', q:'e^{5x}', correct:'5e^{5x}',
+      wrong:['e^{5x}','5xe^{5x}','e^{5}'], exp:'Chain rule: multiply by inner derivative (5)'},
+    {rule:'Exponential', q:'3e^{4x}', correct:'12e^{4x}',
+      wrong:['3e^{4x}','4e^{4x}','12e^{4}'], exp:'3 × 4 = 12, so 12e^(4x)'},
+    {rule:'Exponential', q:'-2e^{3x}', correct:'-6e^{3x}',
+      wrong:['6e^{3x}','-2e^{3x}','-3e^{3x}'], exp:'-2 × 3 = -6, so -6e^(3x)'},
+    {rule:'Exponential', q:'e^{-x}', correct:'-e^{-x}',
+      wrong:['e^{-x}','-xe^{-x}','e^{x}'], exp:'Chain rule: e^(-x) × (-1) = -e^(-x)'},
+
+    // ─── Logarithm (4) ─────────────────────────────────────────────────
+    {rule:'Logarithm', q:'\\ln x', correct:'\\dfrac{1}{x}',
+      wrong:['x','\\ln x','\\dfrac{1}{\\ln x}'], exp:'Standard result: d/dx(ln x) = 1/x'},
+    {rule:'Logarithm', q:'4\\ln x', correct:'\\dfrac{4}{x}',
+      wrong:['\\dfrac{1}{4x}','4x','\\dfrac{4}{\\ln x}'], exp:'4 × 1/x = 4/x'},
+    {rule:'Logarithm', q:'\\ln(5x)', correct:'\\dfrac{1}{x}',
+      wrong:['\\dfrac{5}{x}','\\dfrac{1}{5x}','5\\ln x'], exp:'Chain rule: 1/(5x) × 5 = 1/x'},
+    {rule:'Logarithm', q:'-3\\ln x', correct:'\\dfrac{-3}{x}',
+      wrong:['\\dfrac{3}{x}','\\dfrac{-1}{3x}','-3x'], exp:'-3 × 1/x = -3/x'},
+
+    // ─── Chain Rule (10) ────────────────────────────────────────────────
+    {rule:'Chain Rule', q:'(2x+3)^4', correct:'8(2x+3)^3',
+      wrong:['4(2x+3)^3','8(2x+3)^4','4(2x+3)^4'], exp:'4(2x+3)³ × 2 = 8(2x+3)³'},
+    {rule:'Chain Rule', q:'\\sin(3x)', correct:'3\\cos(3x)',
+      wrong:['\\cos(3x)','3\\cos x','-3\\cos(3x)'], exp:'cos(3x) × 3 = 3cos(3x)'},
+    {rule:'Chain Rule', q:'e^{x^2}', correct:'2xe^{x^2}',
+      wrong:['e^{x^2}','2e^{x^2}','x^2 e^{x^2}'], exp:'e^(x²) × 2x = 2xe^(x²)'},
+    {rule:'Chain Rule', q:'\\ln(x^2+1)', correct:'\\dfrac{2x}{x^2+1}',
+      wrong:['\\dfrac{1}{x^2+1}','\\dfrac{2x}{x^2}','\\dfrac{x}{x^2+1}'], exp:'1/(x²+1) × 2x = 2x/(x²+1)'},
+    {rule:'Chain Rule', q:'\\cos(2x)', correct:'-2\\sin(2x)',
+      wrong:['2\\sin(2x)','-\\sin(2x)','2\\cos(2x)'], exp:'-sin(2x) × 2 = -2sin(2x)'},
+    {rule:'Chain Rule', q:'(x^2+1)^{\\frac{1}{2}}', correct:'\\dfrac{x}{\\sqrt{x^2+1}}',
+      wrong:['\\dfrac{1}{2\\sqrt{x^2+1}}','\\dfrac{2x}{\\sqrt{x^2+1}}','\\dfrac{x}{2\\sqrt{x^2+1}}'], exp:'½(x²+1)^(-½) × 2x = x/√(x²+1)'},
+    {rule:'Chain Rule', q:'(3x-1)^5', correct:'15(3x-1)^4',
+      wrong:['5(3x-1)^4','15(3x-1)^5','3(3x-1)^4'], exp:'5(3x-1)⁴ × 3 = 15(3x-1)⁴'},
+    {rule:'Chain Rule', q:'\\sin(x^2)', correct:'2x\\cos(x^2)',
+      wrong:['\\cos(x^2)','x\\cos(x^2)','2x\\sin(x^2)'], exp:'cos(x²) × 2x = 2xcos(x²)'},
+    {rule:'Chain Rule', q:'e^{3x+1}', correct:'3e^{3x+1}',
+      wrong:['e^{3x+1}','(3x+1)e^{3x+1}','3e^{3x}'], exp:'e^(3x+1) × 3 = 3e^(3x+1)'},
+    {rule:'Chain Rule', q:'\\ln(2x+5)', correct:'\\dfrac{2}{2x+5}',
+      wrong:['\\dfrac{1}{2x+5}','\\dfrac{2}{x+5}','\\dfrac{5}{2x+5}'], exp:'1/(2x+5) × 2 = 2/(2x+5)'},
+
+    // ─── Product Rule (5) ───────────────────────────────────────────────
+    {rule:'Product Rule', q:'x\\sin x', correct:'\\sin x + x\\cos x',
+      wrong:['x\\cos x','\\cos x','\\sin x - x\\cos x'], exp:'u=x, v=sin x: 1·sin x + x·cos x'},
+    {rule:'Product Rule', q:'x^2 e^x', correct:'2xe^x + x^2 e^x',
+      wrong:['x^2 e^x','2xe^x','2x e^x - x^2 e^x'], exp:'u=x², v=eˣ: 2xeˣ + x²eˣ'},
+    {rule:'Product Rule', q:'x\\ln x', correct:'\\ln x + 1',
+      wrong:['\\dfrac{1}{x}','\\ln x','\\dfrac{x}{\\ln x}'], exp:'u=x, v=ln x: 1·ln x + x·(1/x) = ln x + 1'},
+    {rule:'Product Rule', q:'x^2 \\sin x', correct:'2x\\sin x + x^2\\cos x',
+      wrong:['x^2\\cos x','2x\\cos x','2x\\sin x - x^2\\cos x'], exp:'u=x², v=sin x: 2x sin x + x² cos x'},
+    {rule:'Product Rule', q:'x e^{2x}', correct:'e^{2x} + 2xe^{2x}',
+      wrong:['2xe^{2x}','e^{2x} - 2xe^{2x}','2e^{2x}'], exp:'u=x, v=e^(2x): 1·e^(2x) + x·2e^(2x)'},
+  ],
+
+  level4: [
+    // ─── Power Rule (12) ────────────────────────────────────────────────
+    {rule:'Power Rule', q:'x^4', correct:'4x^3',
+      wrong:['x^3','4x^4','3x^4'], difficulty:1, exp:'4 × x^(4-1) = 4x³'},
+    {rule:'Power Rule', q:'3x^5', correct:'15x^4',
+      wrong:['5x^4','3x^4','15x^5'], difficulty:1, exp:'3×5=15, power reduces: 15x⁴'},
+    {rule:'Power Rule', q:'x^{-2}', correct:'-2x^{-3}',
+      wrong:['2x^{-3}','-2x^{-1}','\\tfrac{2}{x^3}'], difficulty:1, exp:'-2 × x^(-2-1) = -2x⁻³'},
+    {rule:'Power Rule', q:'x^{1/2}', correct:'\\tfrac{1}{2}x^{-1/2}',
+      wrong:['\\tfrac{1}{2}x^{1/2}','2x^{-1/2}','x^{-1/2}'], difficulty:1, exp:'½ × x^(½-1) = ½x^(-½)'},
+    {rule:'Power Rule', q:'\\dfrac{1}{x^3}', correct:'-3x^{-4}',
+      wrong:['3x^{-4}','-3x^{-2}','\\tfrac{-3}{x^2}'], difficulty:2, exp:'x⁻³ → -3x⁻⁴'},
+    {rule:'Power Rule', q:'\\sqrt{x}', correct:'\\tfrac{1}{2\\sqrt{x}}',
+      wrong:['\\tfrac{1}{\\sqrt{x}}','2\\sqrt{x}','\\tfrac{x}{2}'], difficulty:1, exp:'x^(½) → ½x^(-½) = 1/(2√x)'},
+    {rule:'Power Rule', q:'\\sqrt[3]{x}', correct:'\\tfrac{1}{3}x^{-2/3}',
+      wrong:['\\tfrac{1}{3}x^{2/3}','3x^{-2/3}','\\tfrac{2}{3}x^{-1/3}'], difficulty:2, exp:'x^(⅓) → ⅓x^(-⅔)'},
+    {rule:'Power Rule', q:'x^{-1/2}', correct:'-\\tfrac{1}{2}x^{-3/2}',
+      wrong:['\\tfrac{1}{2}x^{-3/2}','-\\tfrac{1}{2}x^{1/2}','-\\tfrac{3}{2}x^{-1/2}'], difficulty:2, exp:'-½ × x^(-½-1) = -½x^(-³⁄₂)'},
+    {rule:'Power Rule', q:'3x^4 - 2x^2 + 5x', correct:'12x^3 - 4x + 5',
+      wrong:['12x^3 - 4x^2 + 5','12x^3 - 2x + 5','3x^3 - 2x + 5'], difficulty:1, exp:'Term by term: 12x³ - 4x + 5'},
+    {rule:'Power Rule', q:'4x^{3/2}', correct:'6x^{1/2}',
+      wrong:['6x^{3/2}','4x^{1/2}','\\tfrac{3}{2}x^{1/2}'], difficulty:2, exp:'4 × ³⁄₂ = 6, power reduces: 6x^(½)'},
+    {rule:'Power Rule', q:'2x^3 + \\dfrac{1}{x}', correct:'6x^2 - x^{-2}',
+      wrong:['6x^2 + x^{-2}','6x^2 - \\tfrac{1}{x}','2x^2 - x^{-2}'], difficulty:2, exp:'6x² + (-1)x⁻² = 6x² - x⁻²'},
+    {rule:'Power Rule', q:'5x^2 - 7x + 3', correct:'10x - 7',
+      wrong:['10x - 7 + 3','5x - 7','10x + 7'], difficulty:1, exp:'Term by term: 10x - 7'},
+
+    // ─── Chain Rule (10) ────────────────────────────────────────────────
+    {rule:'Chain Rule', q:'(2x + 3)^4', correct:'8(2x + 3)^3',
+      wrong:['4(2x + 3)^3','8(2x + 3)^4','2(2x + 3)^3'], difficulty:1, exp:'4(2x+3)³ × 2 = 8(2x+3)³'},
+    {rule:'Chain Rule', q:'(3x - 1)^5', correct:'15(3x - 1)^4',
+      wrong:['5(3x - 1)^4','15(3x - 1)^5','3(3x - 1)^4'], difficulty:1, exp:'5(3x-1)⁴ × 3 = 15(3x-1)⁴'},
+    {rule:'Chain Rule', q:'\\sqrt{4x + 1}', correct:'\\dfrac{2}{\\sqrt{4x + 1}}',
+      wrong:['\\dfrac{4}{\\sqrt{4x + 1}}','\\dfrac{1}{2\\sqrt{4x + 1}}','\\dfrac{1}{\\sqrt{4x + 1}}'], difficulty:2, exp:'½(4x+1)^(-½) × 4 = 2/√(4x+1)'},
+    {rule:'Chain Rule', q:'(x^2 + 1)^3', correct:'6x(x^2 + 1)^2',
+      wrong:['3(x^2 + 1)^2','6(x^2 + 1)^2','2x(x^2 + 1)^2'], difficulty:2, exp:'3(x²+1)² × 2x = 6x(x²+1)²'},
+    {rule:'Chain Rule', q:'\\sin(3x)', correct:'3\\cos(3x)',
+      wrong:['\\cos(3x)','-3\\cos(3x)','3\\sin(3x)'], difficulty:1, exp:'cos(3x) × 3 = 3cos(3x)'},
+    {rule:'Chain Rule', q:'\\cos(2x + 1)', correct:'-2\\sin(2x + 1)',
+      wrong:['2\\sin(2x + 1)','-\\sin(2x + 1)','-2\\cos(2x + 1)'], difficulty:1, exp:'-sin(2x+1) × 2 = -2sin(2x+1)'},
+    {rule:'Chain Rule', q:'e^{3x}', correct:'3e^{3x}',
+      wrong:['e^{3x}','3xe^{3x}','e^{3x-1}'], difficulty:1, exp:'e^(3x) × 3 = 3e^(3x)'},
+    {rule:'Chain Rule', q:'e^{-2x}', correct:'-2e^{-2x}',
+      wrong:['2e^{-2x}','-e^{-2x}','-2xe^{-2x}'], difficulty:1, exp:'e^(-2x) × (-2) = -2e^(-2x)'},
+    {rule:'Chain Rule', q:'\\ln(5x)', correct:'\\dfrac{1}{x}',
+      wrong:['\\dfrac{5}{x}','\\dfrac{1}{5x}','5\\ln(x)'], difficulty:2, exp:'1/(5x) × 5 = 1/x'},
+    {rule:'Chain Rule', q:'\\ln(x^2 + 3)', correct:'\\dfrac{2x}{x^2 + 3}',
+      wrong:['\\dfrac{1}{x^2 + 3}','\\dfrac{2x}{x^2}','\\dfrac{x}{x^2 + 3}'], difficulty:2, exp:'1/(x²+3) × 2x = 2x/(x²+3)'},
+
+    // ─── Product Rule (8) ───────────────────────────────────────────────
+    {rule:'Product Rule', q:'x^2 \\sin(x)', correct:'2x\\sin(x) + x^2\\cos(x)',
+      wrong:['2x\\cos(x)','x^2\\cos(x) - 2x\\sin(x)','2x\\sin(x) - x^2\\cos(x)'], difficulty:2, exp:'u=x², v=sin x: 2x sin x + x² cos x'},
+    {rule:'Product Rule', q:'x e^x', correct:'e^x + xe^x',
+      wrong:['xe^x','e^x','2xe^x'], difficulty:1, exp:'u=x, v=eˣ: 1·eˣ + x·eˣ'},
+    {rule:'Product Rule', q:'x^3 \\ln(x)', correct:'3x^2 \\ln(x) + x^2',
+      wrong:['3x^2 \\ln(x)','3x^2 \\ln(x) + x^3','x^2 \\ln(x) + x^2'], difficulty:2, exp:'u=x³, v=ln x: 3x²ln x + x³·(1/x) = 3x²ln x + x²'},
+    {rule:'Product Rule', q:'(2x + 1)(x^2 - 3)', correct:'2(x^2 - 3) + 2x(2x + 1)',
+      wrong:['2 \\cdot 2x','4x^2 + 2x - 6','2x^2 + 2x - 3'], difficulty:1, exp:'u=2x+1, v=x²-3: 2(x²-3) + (2x+1)·2x'},
+    {rule:'Product Rule', q:'e^x \\cos(x)', correct:'e^x \\cos(x) - e^x \\sin(x)',
+      wrong:['e^x \\cos(x) + e^x \\sin(x)','-e^x \\sin(x)','e^x(\\cos(x) + \\sin(x))'], difficulty:2, exp:'u=eˣ, v=cos x: eˣcos x + eˣ(-sin x)'},
+    {rule:'Product Rule', q:'x^2 e^{2x}', correct:'2xe^{2x} + 2x^2 e^{2x}',
+      wrong:['2xe^{2x}','4x^2 e^{2x}','2x e^{2x} - 2x^2 e^{2x}'], difficulty:3, exp:'u=x², v=e^(2x): 2xe^(2x) + x²·2e^(2x)'},
+    {rule:'Product Rule', q:'\\sqrt{x} \\, \\sin(x)', correct:'\\dfrac{\\sin(x)}{2\\sqrt{x}} + \\sqrt{x}\\cos(x)',
+      wrong:['\\dfrac{\\cos(x)}{2\\sqrt{x}}','\\sqrt{x}\\cos(x)','\\dfrac{\\sin(x)}{2\\sqrt{x}} - \\sqrt{x}\\cos(x)'], difficulty:3, exp:'u=√x, v=sin x: sin(x)/(2√x) + √x·cos x'},
+    {rule:'Product Rule', q:'3x^2(x + 4)^3', correct:'6x(x + 4)^3 + 9x^2(x + 4)^2',
+      wrong:['6x(x + 4)^3','6x(x + 4)^3 + 3x^2(x + 4)^2','3x^2 \\cdot 3(x + 4)^2'], difficulty:3, exp:'u=3x², v=(x+4)³: 6x(x+4)³ + 3x²·3(x+4)²'},
+
+    // ─── Quotient Rule (8) ──────────────────────────────────────────────
+    {rule:'Quotient Rule', q:'\\dfrac{x^2}{x + 1}', correct:'\\dfrac{2x(x + 1) - x^2}{(x + 1)^2}',
+      wrong:['\\dfrac{2x}{x + 1}','\\dfrac{x^2 - 2x(x+1)}{(x+1)^2}','\\dfrac{2x}{(x + 1)^2}'], difficulty:2, exp:'(2x(x+1) - x²·1) / (x+1)²'},
+    {rule:'Quotient Rule', q:'\\dfrac{\\sin(x)}{x}', correct:'\\dfrac{x\\cos(x) - \\sin(x)}{x^2}',
+      wrong:['\\dfrac{\\cos(x)}{x}','\\dfrac{\\sin(x) - x\\cos(x)}{x^2}','\\dfrac{x\\cos(x)}{x^2}'], difficulty:2, exp:'(x·cos x - sin x·1) / x²'},
+    {rule:'Quotient Rule', q:'\\dfrac{e^x}{x^2}', correct:'\\dfrac{x^2 e^x - 2xe^x}{x^4}',
+      wrong:['\\dfrac{e^x}{x^2}','\\dfrac{2xe^x - x^2 e^x}{x^4}','\\dfrac{e^x(x - 2)}{x^3}'], difficulty:2, exp:'(x²eˣ - eˣ·2x) / x⁴'},
+    {rule:'Quotient Rule', q:'\\dfrac{x}{\\sin(x)}', correct:'\\dfrac{\\sin(x) - x\\cos(x)}{\\sin^2(x)}',
+      wrong:['\\dfrac{x\\cos(x) - \\sin(x)}{\\sin^2(x)}','\\dfrac{1}{\\cos(x)}','\\dfrac{\\cos(x)}{\\sin^2(x)}'], difficulty:3, exp:'(sin x·1 - x·cos x) / sin²x'},
+    {rule:'Quotient Rule', q:'\\dfrac{3x + 2}{x - 1}', correct:'\\dfrac{-5}{(x - 1)^2}',
+      wrong:['\\dfrac{3}{(x-1)^2}','\\dfrac{5}{(x-1)^2}','\\dfrac{3(x-1) - (3x+2)}{(x-1)}'], difficulty:2, exp:'(3(x-1) - (3x+2)·1) / (x-1)² = -5/(x-1)²'},
+    {rule:'Quotient Rule', q:'\\dfrac{x^3}{2x + 1}', correct:'\\dfrac{3x^2(2x+1) - 2x^3}{(2x+1)^2}',
+      wrong:['\\dfrac{3x^2}{2x+1}','\\dfrac{3x^2(2x+1) - 2x^3}{2x+1}','\\dfrac{2x^3 - 3x^2(2x+1)}{(2x+1)^2}'], difficulty:3, exp:'(3x²(2x+1) - x³·2) / (2x+1)²'},
+    {rule:'Quotient Rule', q:'\\dfrac{\\ln(x)}{x}', correct:'\\dfrac{1 - \\ln(x)}{x^2}',
+      wrong:['\\dfrac{\\ln(x) - 1}{x^2}','\\dfrac{1}{x^2}','\\dfrac{1 + \\ln(x)}{x^2}'], difficulty:2, exp:'(x·(1/x) - ln x·1) / x² = (1 - ln x)/x²'},
+    {rule:'Quotient Rule', q:'\\dfrac{e^{2x}}{x + 3}', correct:'\\dfrac{2e^{2x}(x+3) - e^{2x}}{(x+3)^2}',
+      wrong:['\\dfrac{2e^{2x}}{x+3}','\\dfrac{e^{2x} - 2e^{2x}(x+3)}{(x+3)^2}','\\dfrac{2e^{2x}}{(x+3)^2}'], difficulty:3, exp:'(2e^(2x)(x+3) - e^(2x)·1) / (x+3)²'},
+
+    // ─── Implicit Differentiation (8) ───────────────────────────────────
+    {rule:'Implicit', q:'x^2 + y^2 = 25', prompt:'Find \\dfrac{dy}{dx}', correct:'-\\dfrac{x}{y}',
+      wrong:['\\dfrac{x}{y}','-\\dfrac{y}{x}','\\dfrac{2x}{2y}'], difficulty:2, exp:'2x + 2y(dy/dx) = 0 → dy/dx = -x/y'},
+    {rule:'Implicit', q:'3x^2 + 2y^2 = 14', prompt:'Find \\dfrac{dy}{dx}', correct:'-\\dfrac{3x}{2y}',
+      wrong:['\\dfrac{3x}{2y}','-\\dfrac{3x}{y}','-\\dfrac{2y}{3x}'], difficulty:2, exp:'6x + 4y(dy/dx) = 0 → dy/dx = -3x/(2y)'},
+    {rule:'Implicit', q:'xy = 6', prompt:'Find \\dfrac{dy}{dx}', correct:'-\\dfrac{y}{x}',
+      wrong:['\\dfrac{y}{x}','-\\dfrac{x}{y}','\\dfrac{6}{x^2}'], difficulty:2, exp:'y + x(dy/dx) = 0 → dy/dx = -y/x'},
+    {rule:'Implicit', q:'x^2 + xy + y^2 = 7', prompt:'Find \\dfrac{dy}{dx}', correct:'-\\dfrac{2x + y}{x + 2y}',
+      wrong:['\\dfrac{2x + y}{x + 2y}','-\\dfrac{x + 2y}{2x + y}','-\\dfrac{2x}{2y}'], difficulty:3, exp:'2x + y + x(dy/dx) + 2y(dy/dx) = 0'},
+    {rule:'Implicit', q:'x^3 + y^3 = 9', prompt:'Find \\dfrac{dy}{dx}', correct:'-\\dfrac{x^2}{y^2}',
+      wrong:['\\dfrac{x^2}{y^2}','-\\dfrac{3x^2}{y^2}','-\\dfrac{y^2}{x^2}'], difficulty:2, exp:'3x² + 3y²(dy/dx) = 0 → dy/dx = -x²/y²'},
+    {rule:'Implicit', q:'2xy + y^2 = 10', prompt:'Find \\dfrac{dy}{dx}', correct:'-\\dfrac{2y}{2x + 2y}',
+      wrong:['\\dfrac{2y}{2x + 2y}','-\\dfrac{2x}{2y}','-\\dfrac{y}{x + y + 1}'], difficulty:3, exp:'2y + 2x(dy/dx) + 2y(dy/dx) = 0'},
+    {rule:'Implicit', q:'\\sin(y) = x', prompt:'Find \\dfrac{dy}{dx}', correct:'\\dfrac{1}{\\cos(y)}',
+      wrong:['\\cos(y)','-\\dfrac{1}{\\cos(y)}','\\dfrac{\\cos(y)}{1}'], difficulty:3, exp:'cos(y)·(dy/dx) = 1 → dy/dx = 1/cos(y)'},
+    {rule:'Implicit', q:'e^y = x^2 + 1', prompt:'Find \\dfrac{dy}{dx}', correct:'\\dfrac{2x}{e^y}',
+      wrong:['\\dfrac{e^y}{2x}','\\dfrac{2x}{x^2 + 1}','2xe^{-y}'], difficulty:3, exp:'eʸ(dy/dx) = 2x → dy/dx = 2x/eʸ'},
+
+    // ─── Parametric Differentiation (7) ─────────────────────────────────
+    {rule:'Parametric', q:'x = t^2, \\quad y = t^3', prompt:'Find \\dfrac{dy}{dx}', correct:'\\dfrac{3t}{2}',
+      wrong:['\\dfrac{2t}{3}','3t^2','6t'], difficulty:2, exp:'dy/dt = 3t², dx/dt = 2t → (3t²)/(2t) = 3t/2'},
+    {rule:'Parametric', q:'x = 2t + 1, \\quad y = t^2 - 3', prompt:'Find \\dfrac{dy}{dx}', correct:'t',
+      wrong:['2t','\\dfrac{2}{2t}','\\dfrac{t^2}{2}'], difficulty:1, exp:'dy/dt = 2t, dx/dt = 2 → 2t/2 = t'},
+    {rule:'Parametric', q:'x = \\cos(t), \\quad y = \\sin(t)', prompt:'Find \\dfrac{dy}{dx}', correct:'-\\dfrac{\\cos(t)}{\\sin(t)}',
+      wrong:['\\dfrac{\\cos(t)}{\\sin(t)}','-\\dfrac{\\sin(t)}{\\cos(t)}','\\dfrac{\\sin(t)}{\\cos(t)}'], difficulty:2, exp:'dy/dt = cos t, dx/dt = -sin t → cos t/(-sin t)'},
+    {rule:'Parametric', q:'x = e^t, \\quad y = e^{2t}', prompt:'Find \\dfrac{dy}{dx}', correct:'2e^t',
+      wrong:['e^t','\\dfrac{e^{2t}}{e^t}','2t'], difficulty:2, exp:'dy/dt = 2e^(2t), dx/dt = eᵗ → 2e^(2t)/eᵗ = 2eᵗ'},
+    {rule:'Parametric', q:'x = 3t^2, \\quad y = 2t^3 - t', prompt:'Find \\dfrac{dy}{dx}', correct:'\\dfrac{6t^2 - 1}{6t}',
+      wrong:['\\dfrac{6t^2 - 1}{3t^2}','\\dfrac{6t}{6t^2 - 1}','\\dfrac{6t^2}{6t}'], difficulty:3, exp:'dy/dt = 6t²-1, dx/dt = 6t → (6t²-1)/(6t)'},
+    {rule:'Parametric', q:'x = t + \\dfrac{1}{t}, \\quad y = t - \\dfrac{1}{t}', prompt:'Find \\dfrac{dy}{dx}', correct:'\\dfrac{t^2 + 1}{t^2 - 1}',
+      wrong:['\\dfrac{t^2 - 1}{t^2 + 1}','1','\\dfrac{t + 1}{t - 1}'], difficulty:3, exp:'dy/dt = 1+t⁻², dx/dt = 1-t⁻² → (t²+1)/(t²-1)'},
+    {rule:'Parametric', q:'x = 4\\cos(t), \\quad y = 3\\sin(t)', prompt:'Find \\dfrac{dy}{dx}', correct:'-\\dfrac{3\\cos(t)}{4\\sin(t)}',
+      wrong:['\\dfrac{3\\cos(t)}{4\\sin(t)}','-\\dfrac{4\\sin(t)}{3\\cos(t)}','-\\dfrac{3}{4}\\tan(t)'], difficulty:2, exp:'dy/dt = 3cos t, dx/dt = -4sin t → -3cos t/(4sin t)'},
+  ]
+};
+
+let score=0,streak=0,qNum=0,answered=false,timerInt=null,timerStart=null,questions=[],sessionStart=null;
+const pool = QUESTIONS[LEVEL] || QUESTIONS.alevel;
+
+// Set level badge
+const LEVEL_LABELS = {alevel:'A-Level',level4:'Level 4'};
+const LEVEL_COLORS = {alevel:{bg:'rgba(139,92,246,0.15)',border:'rgba(139,92,246,0.3)',text:'#8b5cf6'},level4:{bg:'rgba(239,68,68,0.15)',border:'rgba(239,68,68,0.3)',text:'#ef4444'}};
+(function(){
+  const b=document.getElementById('levelBadge'), c=LEVEL_COLORS[LEVEL]||LEVEL_COLORS.alevel;
+  b.textContent=LEVEL_LABELS[LEVEL]||'A-Level';
+  b.style.color=c.text; b.style.background=c.bg; b.style.borderColor=c.border;
+})();
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+
+function makeChoices(correct,wrong){
+  const w=wrong.filter(x=>x!==correct);
+  return shuffle([correct,...shuffle(w).slice(0,3)]);
+}
+
+// Difficulty-weighted selection for Level 4
+function selectWeighted(bank, count, currentStreak){
+  if(!bank[0]||!bank[0].difficulty) return shuffle(bank).slice(0,count);
+  const weights = currentStreak<5?[0.6,0.3,0.1]:currentStreak<10?[0.3,0.5,0.2]:[0.1,0.4,0.5];
+  const byDiff = {1:[],2:[],3:[]};
+  bank.forEach(q=>(byDiff[q.difficulty]||byDiff[1]).push(q));
+  Object.values(byDiff).forEach(a=>a.sort(()=>Math.random()-0.5));
+  const result=[], used=new Set();
+  for(let i=0;i<count&&used.size<bank.length;i++){
+    const r=Math.random(), d=r<weights[0]?1:r<weights[0]+weights[1]?2:3;
+    const arr=byDiff[d].length?byDiff[d]:byDiff[d===1?2:d===3?2:1].length?byDiff[d===1?2:d===3?2:1]:byDiff[d===1?3:1];
+    const q=arr.find(x=>!used.has(x))||bank.find(x=>!used.has(x));
+    if(q){used.add(q);result.push(q);}
+  }
+  return result;
+}
+
+function startGame(){
+  score=0;streak=0;qNum=0;window._ddCorrect=0;sessionStart=Date.now();
+  questions = LEVEL==='level4' ? selectWeighted(pool,TOTAL,0) : shuffle(pool).slice(0,TOTAL);
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('gameOver').classList.remove('visible');
+  document.getElementById('mainGame').classList.add('visible');
+  nextQ();
+  window._ggAbandoned=true;
+  mfg('game_started',{game_slug:'differentiation-duel',level:LEVEL});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'differentiation-duel',level:LEVEL,questions_answered:qNum})});}
+}
+
+function nextQ(){
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('explanation').parentNode);
+  if(qNum>=TOTAL){endGame();return;}
+  answered=false;
+  const q=questions[qNum]; qNum++;
+  document.getElementById('ruleBadge').textContent=q.rule;
+  // Implicit/parametric: show equation and custom prompt
+  const qLabel = document.getElementById('qLabel');
+  if(q.prompt){
+    qLabel.innerHTML = tex(q.prompt);
+    document.getElementById('qText').innerHTML=tex(q.q);
+  } else {
+    qLabel.innerHTML = 'Find dy/dx when y =';
+    document.getElementById('qText').innerHTML=tex(q.q);
+  }
+  document.getElementById('feedback').textContent='';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('explanation').textContent='';
+
+  const choices=makeChoices(q.correct,q.wrong);
+  const div=document.getElementById('choices');
+  div.innerHTML='';
+  choices.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='choice';
+    btn.dataset.val=c;
+    btn.innerHTML=tex(c);
+    btn.onclick=()=>guess(c,q,btn,div);
+    div.appendChild(btn);
+  });
+
+  clearInterval(timerInt);
+  timerStart=Date.now();
+  document.getElementById('timerDisplay').textContent='0s';
+  timerInt=setInterval(()=>{
+    const secs=Math.floor((Date.now()-timerStart)/1000);
+    document.getElementById('timerDisplay').textContent=secs+'s';
+  },200);
+}
+
+function guess(val,q,btn,div){
+  if(answered)return;
+  answered=true;
+  clearInterval(timerInt);
+  const correct=val===q.correct;
+  const fb=document.getElementById('feedback');
+  document.getElementById('explanation').textContent=q.exp;
+  mfg('question_answered',{game_slug:'differentiation-duel',level:LEVEL,correct:correct,question_index:qNum});
+  if(correct){
+    window._ddCorrect++;
+    const pts=Math.max(1,Math.round(BASE));
+    score+=pts;streak++;
+    btn.classList.add('correct');
+    fb.textContent=streak>2?`CORRECT! ${streak} streak! +${pts}`:`CORRECT! +${pts}`;
+    fb.className='feedback correct';
+  } else {
+    streak=0;
+    btn.classList.add('wrong');
+    [...div.children].forEach(b=>{if(b.dataset.val===q.correct)b.classList.add('correct');});
+    fb.textContent='WRONG!';
+    fb.className='feedback wrong';
+  }
+  document.getElementById('score').textContent=score;
+  document.getElementById('streak').textContent=streak;
+  // canon 7.6: correct advances briskly, wrong waits for the student.
+  if(correct){ setTimeout(nextQ,1800); }
+  else { MaffsNext.wrong({mount:document.getElementById('explanation').parentNode, onAdvance:nextQ}); }
+}
+
+
+function endGame(){
+  document.getElementById('mainGame').classList.remove('visible');
+  document.getElementById('gameOver').classList.add('visible');
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('goDetail').textContent=`${TOTAL} derivatives attempted`;
+  var _elapsed=Math.floor((Date.now()-(sessionStart||Date.now()))/1000),_m=Math.floor(_elapsed/60),_s=_elapsed%60;document.getElementById('timeStat').textContent=(_m>0?_m+'m '+_s+'s':_s+'s');
+  window._ggAbandoned=false;
+  const _ddPrevBest=getBest();
+  saveBest(score);renderLB();
+  mfg('game_completed',{game_slug:'differentiation-duel',level:LEVEL,score:score,questions_answered:TOTAL,accuracy:Math.round((window._ddCorrect||0)/TOTAL*100)});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('differentiation-duel',LEVEL,score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('differentiation-duel',LEVEL,score);}}
+  if(score>_ddPrevBest){mfg('personal_best_set',{game_slug:'differentiation-duel',level:LEVEL,score:score,previous_best:_ddPrevBest});}
+}
+function getBest(){return parseInt(localStorage.getItem('dd_best')||'0');}
+function saveBest(s){if(s>getBest())localStorage.setItem('dd_best',s);document.getElementById('best').textContent=getBest();}
+function renderLB(){
+  const scores=JSON.parse(localStorage.getItem('dd_scores')||'[]');
+  const ns=[...scores,{score,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,5);
+  localStorage.setItem('dd_scores',JSON.stringify(ns));
+  document.getElementById('lbList').innerHTML=ns.map((s,i)=>`<div class="lb-row"><span class="lb-rank">#${i+1}</span><span class="lb-date">${s.date}</span><span class="lb-score">${s.score}</span></div>`).join('')||'<div style="text-align:center;color:#94a3b8;font-size:13px;padding:12px">No scores yet</div>';
+}
+document.getElementById('best').textContent=getBest();
+renderLB();
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

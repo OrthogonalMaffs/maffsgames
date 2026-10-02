@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Translate, reflect and rotate shapes on a coordinate grid. Year 6 transition game — get ready for secondary school transformations.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/shape-shifter/">
+<meta property="og:title" content="Shape Shifter — MaffsGames">
+<meta property="og:description" content="Translate, reflect and rotate shapes on a coordinate grid. Year 6 transition game — get ready for secondary school transformations.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/shape-shifter/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Shape Shifter — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--accent:#6366f1;--accent-dim:rgba(99,102,241,0.25);
+--teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--navy:#1a2744;
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--accent)}
+.mode-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(99,102,241,0.3)}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px;color:var(--accent)}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.mode-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mode-card{background:var(--surface);border-radius:12px;padding:20px;border-left:3px solid var(--accent);cursor:pointer;transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s;border:1px solid var(--border);border-left:3px solid var(--accent)}
+.mode-card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(99,102,241,0.2);border-color:var(--accent)}
+.mode-card:active{transform:translateY(0)}
+.mode-card h3{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--accent)}
+.mode-card .mode-count{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px}
+.mode-card p{font-size:13px;color:var(--muted);line-height:1.5}
+.mode-card.mix{border-left-color:var(--teal)}
+.mode-card.mix h3{color:var(--teal)}
+@media(max-width:480px){.mode-cards{grid-template-columns:1fr}}
+
+/* Game screen */
+.instruction-bar{background:var(--surface);border-radius:12px;padding:16px 20px;margin-bottom:16px;text-align:center;font-size:15px;font-weight:600;line-height:1.5}
+.instruction-bar .highlight{color:var(--accent);font-family:'JetBrains Mono',monospace}
+
+.canvas-wrap{position:relative;width:100%;max-width:560px;margin:0 auto 16px}
+canvas{display:block;width:100%;border-radius:12px;background:#0a0c12;cursor:crosshair;touch-action:none}
+
+.feedback-bar{text-align:center;min-height:36px;font-size:14px;font-weight:600;margin-bottom:12px;line-height:36px;border-radius:8px;transition:opacity 0.2s}
+.feedback-bar.correct{background:var(--green-dim);color:var(--green)}
+.feedback-bar.incorrect{background:var(--red-dim);color:var(--red)}
+.feedback-bar.info{background:var(--accent-dim);color:var(--accent)}
+
+.btn-row{display:flex;gap:12px;justify-content:center;margin-bottom:16px}
+.game-btn{padding:12px 24px;border-radius:10px;border:none;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.game-btn:hover{opacity:0.9}
+.game-btn.primary{background:var(--accent);color:#fff}
+.game-btn.secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.game-btn:disabled{opacity:0.4;cursor:default}
+
+/* Reveal panel */
+.reveal-panel{background:var(--surface-alt);border-top:3px solid var(--accent);border-radius:12px;padding:28px 24px;margin:20px auto;max-width:560px;opacity:0;transform:translateY(20px);transition:opacity 0.3s,transform 0.3s}
+.reveal-panel.show{opacity:1;transform:translateY(0)}
+.reveal-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.5}
+.reveal-text{font-size:14px;color:#cbd5e1;line-height:1.7}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px;color:var(--accent)}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--accent)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.pb-badge{background:var(--accent-dim);color:var(--accent);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+/* Rotation MCQ labels */
+.ghost-label{position:absolute;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;color:rgba(255,255,255,0.5);pointer-events:none}
+
+@keyframes pulse-dot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:0.6}}
+
+@media(prefers-reduced-motion:reduce){
+.reveal-panel{transition:none}
+.feedback-bar{transition:none}
+}
+@media(max-width:480px){
+.instruction-bar{font-size:13px;padding:12px 14px}
+.btn-row{flex-direction:column;gap:8px}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .start-sub{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent)}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Shape Shifter</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    <span class="mode-pill" id="modePill">Translation</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreTotal">10</span></span>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Shape Shifter</div>
+  <div class="start-sub">Transformations — moving, flipping and rotating shapes — is one of the most visual topics in Year 7. Once you've played Shape Shifter, you'll already know what your teacher is talking about from day one.</div>
+  <div class="mode-cards">
+    <div class="mode-card" onclick="startGame('translation')">
+      <h3>Translation</h3>
+      <div class="mode-count">10 questions</div>
+      <p>Move shapes by tapping where each vertex should land</p>
+    </div>
+    <div class="mode-card" onclick="startGame('reflection')">
+      <h3>Reflection</h3>
+      <div class="mode-count">10 questions</div>
+      <p>Reflect shapes in the x-axis or y-axis</p>
+    </div>
+    <div class="mode-card" onclick="startGame('rotation')">
+      <h3>Rotation</h3>
+      <div class="mode-count">10 questions</div>
+      <p>Pick the correctly rotated shape</p>
+    </div>
+    <div class="mode-card mix" onclick="startGame('mix')">
+      <h3>Random Mix</h3>
+      <div class="mode-count">10 questions</div>
+      <p>A mix of all three transformation types</p>
+    </div>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="instruction-bar" id="instructionBar"></div>
+  <div class="canvas-wrap">
+    <canvas id="gridCanvas" width="560" height="560"></canvas>
+  </div>
+  <div class="feedback-bar" id="feedbackBar"></div>
+  <div class="btn-row" id="btnRow">
+    <button class="game-btn secondary" id="undoBtn" onclick="undoVertex()" style="display:none">Undo</button>
+    <button class="game-btn primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Next</button>
+  </div>
+</div>
+
+<!-- REVEAL SCREEN (shown before results) -->
+<div class="screen" id="revealScreen">
+  <div class="reveal-panel show">
+    <div class="reveal-title" id="revealTitle"></div>
+    <div class="reveal-text" id="revealText"></div>
+  </div>
+  <div class="btn-row" style="margin-top:20px">
+    <button class="game-btn primary" id="revealNextBtn" onclick="continueAfterReveal()">Continue</button>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4 id="resultModeLabel">Translation</h4>
+      <div class="score" id="finalScore">0/10</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="sub" id="pbLine" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="backToModeSelect()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+// ============================================================
+//  SHAPE SHIFTER — Year 6 Transition Game
+// ============================================================
+
+const GRID_MIN = -5, GRID_MAX = 5, GRID_SIZE = 10;
+const SNAP_RADIUS = 0.6; // grid units for vertex snapping
+const CANVAS_SIZE = 560;
+const MARGIN = 40;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ── Canvas setup ──
+const canvas = document.getElementById('gridCanvas');
+const ctx = canvas.getContext('2d');
+let canvasRect;
+let dpr = window.devicePixelRatio || 1;
+
+function setupCanvas() {
+  canvasRect = canvas.getBoundingClientRect();
+  const w = canvasRect.width;
+  canvas.width = w * dpr;
+  canvas.height = w * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+// ── Coordinate transforms ──
+function gridToPixel(gx, gy) {
+  const cw = canvasRect.width;
+  const cellW = (cw - 2 * MARGIN) / GRID_SIZE;
+  const px = MARGIN + (gx - GRID_MIN) * cellW;
+  const py = MARGIN + (GRID_MAX - gy) * cellW;
+  return [px, py];
+}
+
+function pixelToGrid(px, py) {
+  const cw = canvasRect.width;
+  const cellW = (cw - 2 * MARGIN) / GRID_SIZE;
+  const gx = GRID_MIN + (px - MARGIN) / cellW;
+  const gy = GRID_MAX - (py - MARGIN) / cellW;
+  return [Math.round(gx), Math.round(gy)];
+}
+
+// ── QUESTION BANKS ──
+
+const TRANSLATION_QUESTIONS = [
+  { shape:[[1,1],[3,1],[2,3]], desc:'Translate 2 right and 1 up', dx:2, dy:1, type:'triangle' },
+  { shape:[[-3,1],[-1,1],[-1,3],[-3,3]], desc:'Translate 4 right', dx:4, dy:0, type:'rectangle' },
+  { shape:[[0,-2],[2,-2],[1,1]], desc:'Translate 1 left and 3 up', dx:-1, dy:3, type:'triangle' },
+  { shape:[[2,2],[4,2],[4,4],[2,4]], desc:'Translate 3 left and 2 down', dx:-3, dy:-2, type:'square' },
+  { shape:[[-2,-3],[0,-3],[-1,-1]], desc:'Translate 2 right and 2 up', dx:2, dy:2, type:'triangle' },
+  // Generated 10 more
+  { shape:[[1,-1],[3,-1],[2,1]], desc:'Translate 2 left and 1 down', dx:-2, dy:-1, type:'triangle' },
+  { shape:[[-4,-1],[-2,-1],[-2,1],[-4,1]], desc:'Translate 3 right and 2 up', dx:3, dy:2, type:'rectangle' },
+  { shape:[[0,0],[2,0],[2,2],[0,2]], desc:'Translate 1 left and 3 down', dx:-1, dy:-3, type:'square' },
+  { shape:[[-1,2],[1,2],[0,4]], desc:'Translate 3 right and 1 down', dx:3, dy:-1, type:'triangle' },
+  { shape:[[1,-3],[3,-3],[3,-1],[1,-1]], desc:'Translate 4 left', dx:-4, dy:0, type:'rectangle' },
+  { shape:[[-3,-2],[-1,-2],[-2,0]], desc:'Translate 1 right and 3 up', dx:1, dy:3, type:'triangle' },
+  { shape:[[0,1],[2,1],[1,3]], desc:'Translate 2 left and 2 down', dx:-2, dy:-2, type:'triangle' },
+  { shape:[[-2,0],[0,0],[0,2],[-2,2]], desc:'Translate 5 right', dx:5, dy:0, type:'square' },
+  { shape:[[2,-2],[4,-2],[3,0]], desc:'Translate 3 left and 1 up', dx:-3, dy:1, type:'triangle' },
+  { shape:[[-1,-4],[1,-4],[1,-2],[-1,-2]], desc:'Translate 2 right and 3 up', dx:2, dy:3, type:'rectangle' },
+];
+
+const REFLECTION_QUESTIONS = [
+  { shape:[[1,1],[3,1],[2,3]], axis:'y', desc:'Reflect in the y-axis', type:'triangle' },
+  { shape:[[2,-1],[4,-1],[3,2]], axis:'x', desc:'Reflect in the x-axis', type:'triangle' },
+  { shape:[[1,1],[3,1],[3,3],[1,3]], axis:'y', desc:'Reflect in the y-axis', type:'rectangle' },
+  { shape:[[-3,2],[-1,2],[-2,4]], axis:'x', desc:'Reflect in the x-axis', type:'triangle' },
+  { shape:[[1,0],[3,0],[1,3]], axis:'y', desc:'Reflect in the y-axis', type:'triangle' },
+  // Generated 10 more
+  { shape:[[1,1],[3,1],[3,3],[1,3]], axis:'x', desc:'Reflect in the x-axis', type:'rectangle' },
+  { shape:[[-2,1],[-4,1],[-3,3]], axis:'y', desc:'Reflect in the y-axis', type:'triangle' },
+  { shape:[[0,1],[2,1],[2,3],[0,3]], axis:'y', desc:'Reflect in the y-axis', type:'rectangle' },
+  { shape:[[1,-2],[3,-2],[2,-4]], axis:'x', desc:'Reflect in the x-axis', type:'triangle' },
+  { shape:[[-1,-1],[-3,-1],[-3,-3],[-1,-3]], axis:'y', desc:'Reflect in the y-axis', type:'rectangle' },
+  { shape:[[2,2],[4,2],[3,4]], axis:'x', desc:'Reflect in the x-axis', type:'triangle' },
+  { shape:[[-2,-2],[0,-2],[-1,-4]], axis:'y', desc:'Reflect in the y-axis', type:'triangle' },
+  { shape:[[1,0],[3,0],[3,2],[1,2]], axis:'x', desc:'Reflect in the x-axis', type:'rectangle' },
+  { shape:[[-1,1],[1,1],[0,3]], axis:'x', desc:'Reflect in the x-axis', type:'triangle' },
+  { shape:[[-4,-1],[-2,-1],[-2,1],[-4,1]], axis:'x', desc:'Reflect in the x-axis', type:'rectangle' },
+];
+
+// Rotation helper
+function rotatePoint(x, y, cx, cy, angleDeg) {
+  const rad = angleDeg * Math.PI / 180;
+  const dx = x - cx, dy = y - cy;
+  const rx = Math.round(dx * Math.cos(rad) - dy * Math.sin(rad) + cx);
+  const ry = Math.round(dx * Math.sin(rad) + dy * Math.cos(rad) + cy);
+  return [rx, ry];
+}
+
+function rotateShape(shape, cx, cy, angleDeg) {
+  return shape.map(([x,y]) => rotatePoint(x, y, cx, cy, angleDeg));
+}
+
+function reflectShape(shape, axis) {
+  if (axis === 'y') return shape.map(([x,y]) => [-x, y]);
+  return shape.map(([x,y]) => [x, -y]);
+}
+
+// Generate wrong rotation options
+function generateWrongRotations(shape, cx, cy, correctAngle) {
+  const wrongs = [];
+  // Wrong direction
+  wrongs.push(rotateShape(shape, cx, cy, -correctAngle));
+  // Reflection instead
+  wrongs.push(reflectShape(shape, correctAngle === 180 ? 'y' : 'x'));
+  // Wrong centre (use (1,1) if centre is (0,0))
+  const wrongCx = cx === 0 ? 1 : 0;
+  const wrongCy = cy === 0 ? 1 : 0;
+  wrongs.push(rotateShape(shape, wrongCx, wrongCy, correctAngle));
+  return wrongs;
+}
+
+function shapesEqual(a, b) {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i][0] !== b[i][0] || a[i][1] !== b[i][1]) return false;
+  }
+  return true;
+}
+
+// Check if shape fits in grid
+function shapeFits(shape) {
+  return shape.every(([x,y]) => x >= GRID_MIN && x <= GRID_MAX && y >= GRID_MIN && y <= GRID_MAX);
+}
+
+const ROTATION_QUESTIONS = [];
+(function buildRotationQuestions() {
+  const bases = [
+    { shape:[[1,1],[3,1],[2,3]], cx:0, cy:0, angles:[90,180,-90], type:'triangle' },
+    { shape:[[1,1],[3,1],[3,3],[1,3]], cx:0, cy:0, angles:[90,180,-90], type:'square' },
+    { shape:[[0,1],[2,1],[0,3]], cx:0, cy:0, angles:[90,180,-90], type:'triangle' },
+    { shape:[[1,0],[3,0],[2,2]], cx:0, cy:0, angles:[90,180], type:'triangle' },
+    { shape:[[-1,1],[1,1],[0,3]], cx:0, cy:0, angles:[90,-90,180], type:'triangle' },
+    { shape:[[1,1],[2,1],[2,3]], cx:0, cy:0, angles:[90,-90,180], type:'triangle' },
+    { shape:[[0,0],[2,0],[2,2],[0,2]], cx:0, cy:0, angles:[90,-90,180], type:'square' },
+    { shape:[[1,0],[3,0],[3,1],[1,1]], cx:0, cy:0, angles:[90,-90], type:'rectangle' },
+    { shape:[[0,1],[2,1],[2,3],[0,3]], cx:0, cy:0, angles:[180], type:'rectangle' },
+    { shape:[[1,2],[3,2],[2,4]], cx:0, cy:0, angles:[90,-90], type:'triangle' },
+    { shape:[[-2,1],[0,1],[-1,3]], cx:0, cy:0, angles:[90,-90,180], type:'triangle' },
+    { shape:[[0,0],[2,0],[1,2]], cx:0, cy:0, angles:[90,-90,180], type:'triangle' },
+  ];
+
+  for (const b of bases) {
+    for (const angle of b.angles) {
+      const correct = rotateShape(b.shape, b.cx, b.cy, angle);
+      if (!shapeFits(correct)) continue;
+
+      const wrongs = generateWrongRotations(b.shape, b.cx, b.cy, angle);
+      // Filter out wrongs that match correct or don't fit
+      const validWrongs = wrongs.filter(w => shapeFits(w) && !shapesEqual(w, correct));
+      if (validWrongs.length < 3) continue;
+
+      const dirLabel = angle === 90 ? '90\u00b0 clockwise' : angle === -90 ? '90\u00b0 anticlockwise' : '180\u00b0';
+      ROTATION_QUESTIONS.push({
+        shape: b.shape,
+        cx: b.cx, cy: b.cy,
+        angle: angle,
+        correct: correct,
+        wrongs: validWrongs.slice(0, 3),
+        desc: `Rotate ${dirLabel} about (${b.cx},${b.cy})`,
+        type: b.type
+      });
+
+      if (ROTATION_QUESTIONS.length >= 15) break;
+    }
+    if (ROTATION_QUESTIONS.length >= 15) break;
+  }
+})();
+
+// ── GAME STATE ──
+let mode = 'translation'; // 'translation' | 'reflection' | 'rotation'
+let questions = [];
+let qIndex = 0;
+let currentQ = null;
+let placedVertices = [];
+let expectedVertices = [];
+let selectedMode = 'translation'; // mode chosen on start screen
+let totalAnswered = 0;
+let totalCorrect = 0;
+let questionIndex = 0; // 1-based across entire session
+let answered = false;
+let rotationOptions = []; // [{shape, label, correct}]
+let hoveredOption = -1;
+let selectedOption = -1;
+let mixModes = []; // for 'mix' mode: tracks which mode each question uses
+
+// ── ACCESSIBILITY ──
+const a11yBtn = document.getElementById('a11yToggle');
+if (localStorage.getItem('mfg_dyslexia') === '1') {
+  document.body.classList.add('accessible');
+  a11yBtn.classList.add('active');
+}
+a11yBtn.addEventListener('click', function() {
+  document.body.classList.toggle('accessible');
+  const on = document.body.classList.contains('accessible');
+  localStorage.setItem('mfg_dyslexia', on ? '1' : '0');
+  a11yBtn.classList.toggle('active', on);
+});
+
+// ── SHUFFLE ──
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ── SCREENS ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('gameHeader').style.display = (id === 'startScreen') ? 'none' : 'flex';
+}
+
+// ── START ──
+function startGame(chosenMode) {
+  selectedMode = chosenMode;
+  totalAnswered = 0;
+  totalCorrect = 0;
+  questionIndex = 0;
+  qIndex = 0;
+  mixModes = [];
+
+  if (chosenMode === 'translation') {
+    mode = 'translation';
+    questions = shuffle([...TRANSLATION_QUESTIONS]).slice(0, 10);
+  } else if (chosenMode === 'reflection') {
+    mode = 'reflection';
+    questions = shuffle([...REFLECTION_QUESTIONS]).slice(0, 10);
+  } else if (chosenMode === 'rotation') {
+    mode = 'rotation';
+    questions = shuffle([...ROTATION_QUESTIONS]).slice(0, 10);
+  } else if (chosenMode === 'mix') {
+    // Build a mixed bank: pick randomly from all three
+    const tQ = shuffle([...TRANSLATION_QUESTIONS]);
+    const rQ = shuffle([...REFLECTION_QUESTIONS]);
+    const oQ = shuffle([...ROTATION_QUESTIONS]);
+    // Take at least 3 from each, fill rest randomly
+    const picks = [
+      ...tQ.slice(0,3).map(q => ({q, m:'translation'})),
+      ...rQ.slice(0,3).map(q => ({q, m:'reflection'})),
+      ...oQ.slice(0,3).map(q => ({q, m:'rotation'}))
+    ];
+    // 1 more randomly
+    const extras = [
+      ...tQ.slice(3).map(q => ({q, m:'translation'})),
+      ...rQ.slice(3).map(q => ({q, m:'reflection'})),
+      ...oQ.slice(3).map(q => ({q, m:'rotation'}))
+    ];
+    shuffle(extras);
+    picks.push(extras[0]);
+    shuffle(picks);
+    questions = picks.map(p => p.q);
+    mixModes = picks.map(p => p.m);
+    mode = mixModes[0];
+  }
+
+  document.getElementById('scoreNum').textContent = '0';
+  document.getElementById('scoreTotal').textContent = '10';
+  updateModePill();
+  showScreen('gameScreen');
+  setupCanvas();
+
+  mfg('game_started', { game_slug: 'shape-shifter', level: 'year6', mode: chosenMode });
+  loadQuestion();
+}
+
+function backToModeSelect() {
+  showScreen('startScreen');
+}
+
+function updateModePill() {
+  const pill = document.getElementById('modePill');
+  const labels = { translation: 'Translation', reflection: 'Reflection', rotation: 'Rotation' };
+  if (selectedMode === 'mix') {
+    pill.textContent = 'Mix: ' + labels[mode];
+  } else {
+    pill.textContent = labels[mode];
+  }
+}
+
+// ── LOAD QUESTION ──
+function loadQuestion() {
+  answered = false;
+  placedVertices = [];
+  selectedOption = -1;
+  hoveredOption = -1;
+  // For mix mode, switch mode per question
+  if (selectedMode === 'mix') {
+    mode = mixModes[qIndex];
+    updateModePill();
+  }
+  currentQ = questions[qIndex];
+  questionIndex++;
+
+  document.getElementById('feedbackBar').textContent = '';
+  document.getElementById('feedbackBar').className = 'feedback-bar';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('undoBtn').style.display = (mode === 'rotation') ? 'none' : 'inline-block';
+
+  const instrBar = document.getElementById('instructionBar');
+
+  if (mode === 'translation') {
+    expectedVertices = currentQ.shape.map(([x,y]) => [x + currentQ.dx, y + currentQ.dy]);
+    instrBar.innerHTML = `<span class="highlight">${currentQ.desc}</span> — tap each vertex position`;
+  } else if (mode === 'reflection') {
+    expectedVertices = reflectShape(currentQ.shape, currentQ.axis);
+    const axisLabel = currentQ.axis === 'x' ? 'x-axis' : 'y-axis';
+    instrBar.innerHTML = `<span class="highlight">${currentQ.desc}</span> — tap each reflected vertex`;
+  } else if (mode === 'rotation') {
+    expectedVertices = [];
+    buildRotationOptions();
+    instrBar.innerHTML = `<span class="highlight">${currentQ.desc}</span> — tap the correct shape (A/B/C/D)`;
+  }
+
+  drawGrid();
+}
+
+// ── ROTATION MCQ OPTIONS ──
+function buildRotationOptions() {
+  const opts = [];
+  opts.push({ shape: currentQ.correct, correct: true });
+  for (const w of currentQ.wrongs) {
+    opts.push({ shape: w, correct: false });
+  }
+  shuffle(opts);
+  const labels = ['A','B','C','D'];
+  rotationOptions = opts.map((o, i) => ({ ...o, label: labels[i] }));
+}
+
+// ── DRAWING ──
+function drawGrid() {
+  const cw = canvasRect.width;
+  ctx.clearRect(0, 0, cw, cw);
+  const cellW = (cw - 2 * MARGIN) / GRID_SIZE;
+
+  // Grid lines
+  ctx.strokeStyle = '#1e2235';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= GRID_SIZE; i++) {
+    const x = MARGIN + i * cellW;
+    const y = MARGIN + i * cellW;
+    ctx.beginPath(); ctx.moveTo(x, MARGIN); ctx.lineTo(x, cw - MARGIN); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(MARGIN, y); ctx.lineTo(cw - MARGIN, y); ctx.stroke();
+  }
+
+  // Axes
+  const [ox, oy] = gridToPixel(0, 0);
+  ctx.strokeStyle = '#3a3f55';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(MARGIN, oy); ctx.lineTo(cw - MARGIN, oy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox, MARGIN); ctx.lineTo(ox, cw - MARGIN); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#7a7f90';
+  ctx.font = '11px JetBrains Mono';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  for (let i = GRID_MIN; i <= GRID_MAX; i++) {
+    if (i === 0) continue;
+    const [lx] = gridToPixel(i, 0);
+    ctx.fillText(i, lx, oy + 4);
+  }
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (let i = GRID_MIN; i <= GRID_MAX; i++) {
+    if (i === 0) continue;
+    const [, ly] = gridToPixel(0, i);
+    ctx.fillText(i, ox - 6, ly);
+  }
+  // Origin
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText('0', ox - 8, oy + 4);
+
+  // Mirror line for reflection
+  if (mode === 'reflection') {
+    ctx.save();
+    ctx.setLineDash([8, 6]);
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2;
+    if (currentQ.axis === 'x') {
+      ctx.beginPath(); ctx.moveTo(MARGIN, oy); ctx.lineTo(cw - MARGIN, oy); ctx.stroke();
+    } else {
+      ctx.beginPath(); ctx.moveTo(ox, MARGIN); ctx.lineTo(ox, cw - MARGIN); ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // Centre of rotation for rotation
+  if (mode === 'rotation') {
+    const [rcx, rcy] = gridToPixel(currentQ.cx, currentQ.cy);
+    ctx.save();
+    if (!reducedMotion) {
+      const t = Date.now() / 500;
+      const scale = 1 + 0.3 * Math.sin(t);
+      ctx.globalAlpha = 0.6 + 0.4 * Math.abs(Math.sin(t));
+      ctx.beginPath();
+      ctx.arc(rcx, rcy, 6 * scale, 0, Math.PI * 2);
+    } else {
+      ctx.beginPath();
+      ctx.arc(rcx, rcy, 6, 0, Math.PI * 2);
+    }
+    ctx.fillStyle = '#f59e0b';
+    ctx.fill();
+    ctx.restore();
+  }
+
+  // Original shape (teal)
+  drawShape(currentQ.shape, '#0d9488', 'rgba(13,148,136,0.3)', 2);
+
+  // Rotation MCQ ghosts
+  if (mode === 'rotation') {
+    for (let i = 0; i < rotationOptions.length; i++) {
+      const opt = rotationOptions[i];
+      if (answered && opt.correct) {
+        drawShape(opt.shape, '#1a2744', 'rgba(26,39,68,0.3)', 2);
+      } else if (answered && selectedOption === i && !opt.correct) {
+        drawShape(opt.shape, '#ef4444', 'rgba(239,68,68,0.2)', 2);
+      } else if (i === hoveredOption && !answered) {
+        drawShape(opt.shape, 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0.15)', 2);
+      } else {
+        drawShape(opt.shape, 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0.05)', 1);
+      }
+      // Label
+      const centroid = shapeCentroid(opt.shape);
+      const [lx, ly] = gridToPixel(centroid[0], centroid[1]);
+      ctx.fillStyle = (i === hoveredOption && !answered) ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.4)';
+      ctx.font = '700 16px Outfit';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(opt.label, lx, ly);
+    }
+  }
+
+  // Placed vertices (translation/reflection)
+  if (mode !== 'rotation') {
+    for (let i = 0; i < placedVertices.length; i++) {
+      const [px, py] = gridToPixel(placedVertices[i][0], placedVertices[i][1]);
+      ctx.beginPath();
+      ctx.arc(px, py, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#6366f1';
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    // Draw partial shape from placed vertices
+    if (placedVertices.length >= 2) {
+      ctx.beginPath();
+      const [sx, sy] = gridToPixel(placedVertices[0][0], placedVertices[0][1]);
+      ctx.moveTo(sx, sy);
+      for (let i = 1; i < placedVertices.length; i++) {
+        const [nx, ny] = gridToPixel(placedVertices[i][0], placedVertices[i][1]);
+        ctx.lineTo(nx, ny);
+      }
+      if (placedVertices.length === expectedVertices.length) {
+        ctx.closePath();
+      }
+      ctx.strokeStyle = '#6366f1';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+  }
+
+  // After answering: show correct shape in navy
+  if (answered && mode !== 'rotation') {
+    const target = expectedVertices;
+    drawShape(target, '#1a2744', 'rgba(26,39,68,0.3)', 2);
+  }
+}
+
+function drawShape(vertices, strokeColor, fillColor, lineW) {
+  if (vertices.length < 2) return;
+  ctx.beginPath();
+  const [sx, sy] = gridToPixel(vertices[0][0], vertices[0][1]);
+  ctx.moveTo(sx, sy);
+  for (let i = 1; i < vertices.length; i++) {
+    const [nx, ny] = gridToPixel(vertices[i][0], vertices[i][1]);
+    ctx.lineTo(nx, ny);
+  }
+  ctx.closePath();
+  ctx.fillStyle = fillColor;
+  ctx.fill();
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = lineW;
+  ctx.stroke();
+
+  // Vertex dots
+  for (const [vx, vy] of vertices) {
+    const [px, py] = gridToPixel(vx, vy);
+    ctx.beginPath();
+    ctx.arc(px, py, 4, 0, Math.PI * 2);
+    ctx.fillStyle = strokeColor;
+    ctx.fill();
+  }
+}
+
+function shapeCentroid(vertices) {
+  let cx = 0, cy = 0;
+  for (const [x,y] of vertices) { cx += x; cy += y; }
+  return [cx / vertices.length, cy / vertices.length];
+}
+
+// ── INPUT HANDLING ──
+function getCanvasCoords(e) {
+  const rect = canvas.getBoundingClientRect();
+  let clientX, clientY;
+  if (e.touches) {
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  } else {
+    clientX = e.clientX;
+    clientY = e.clientY;
+  }
+  const px = clientX - rect.left;
+  const py = clientY - rect.top;
+  return [px, py];
+}
+
+function handleCanvasClick(e) {
+  e.preventDefault();
+  if (answered) return;
+  const [px, py] = getCanvasCoords(e);
+  const [gx, gy] = pixelToGrid(px, py);
+
+  if (gx < GRID_MIN || gx > GRID_MAX || gy < GRID_MIN || gy > GRID_MAX) return;
+
+  if (mode === 'rotation') {
+    // Check which ghost shape was clicked
+    for (let i = 0; i < rotationOptions.length; i++) {
+      if (pointInShape(gx, gy, rotationOptions[i].shape)) {
+        selectRotationOption(i);
+        return;
+      }
+    }
+    return;
+  }
+
+  // Translation / Reflection: place vertex
+  if (placedVertices.length >= expectedVertices.length) return;
+
+  placedVertices.push([gx, gy]);
+  drawGrid();
+
+  if (placedVertices.length === expectedVertices.length) {
+    checkVertexAnswer();
+  }
+}
+
+function handleCanvasMove(e) {
+  if (answered || mode !== 'rotation') return;
+  const [px, py] = getCanvasCoords(e);
+  const [gx, gy] = pixelToGrid(px, py);
+  let newHover = -1;
+  for (let i = 0; i < rotationOptions.length; i++) {
+    if (pointInShape(gx, gy, rotationOptions[i].shape)) {
+      newHover = i;
+      break;
+    }
+  }
+  if (newHover !== hoveredOption) {
+    hoveredOption = newHover;
+    canvas.style.cursor = newHover >= 0 ? 'pointer' : 'crosshair';
+    drawGrid();
+  }
+}
+
+// Point-in-polygon (ray casting)
+function pointInShape(px, py, vertices) {
+  // Use a bounding approach: check if point is within ~1 unit of centroid or edges
+  // For simplicity, use expanded bounding box + ray cast
+  let inside = false;
+  const n = vertices.length;
+  for (let i = 0, j = n - 1; i < n; j = i++) {
+    const [xi, yi] = vertices[i];
+    const [xj, yj] = vertices[j];
+    if (((yi > py) !== (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) {
+      inside = !inside;
+    }
+  }
+  // Also check proximity (within 1 grid unit of any vertex)
+  if (!inside) {
+    for (const [vx, vy] of vertices) {
+      if (Math.abs(vx - px) <= 1 && Math.abs(vy - py) <= 1) return true;
+    }
+  }
+  return inside;
+}
+
+canvas.addEventListener('click', handleCanvasClick);
+canvas.addEventListener('touchstart', handleCanvasClick, { passive: false });
+canvas.addEventListener('mousemove', handleCanvasMove);
+
+// ── UNDO ──
+function undoVertex() {
+  if (answered || placedVertices.length === 0) return;
+  placedVertices.pop();
+  drawGrid();
+}
+
+// ── CHECK ANSWERS ──
+function checkVertexAnswer() {
+  answered = true;
+  // Order-independent check: each placed vertex must match a unique expected vertex
+  const used = new Array(expectedVertices.length).fill(false);
+  let allCorrect = true;
+  for (let i = 0; i < placedVertices.length; i++) {
+    let found = false;
+    for (let j = 0; j < expectedVertices.length; j++) {
+      if (!used[j] && placedVertices[i][0] === expectedVertices[j][0] && placedVertices[i][1] === expectedVertices[j][1]) {
+        used[j] = true;
+        found = true;
+        break;
+      }
+    }
+    if (!found) { allCorrect = false; break; }
+  }
+  if (!used.every(Boolean)) allCorrect = false;
+
+  totalAnswered++;
+  const fb = document.getElementById('feedbackBar');
+  if (allCorrect) {
+    totalCorrect++;
+    fb.textContent = 'Correct!';
+    fb.className = 'feedback-bar correct';
+  } else {
+    fb.textContent = 'Not quite — correct shape shown in navy';
+    fb.className = 'feedback-bar incorrect';
+  }
+
+  document.getElementById('scoreNum').textContent = totalCorrect;
+  document.getElementById('undoBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
+
+  mfg('question_answered', {
+    game_slug: 'shape-shifter', level: 'year6',
+    question_index: questionIndex, correct: allCorrect, mode: mode
+  });
+
+  drawGrid();
+}
+
+function selectRotationOption(i) {
+  if (answered) return;
+  answered = true;
+  selectedOption = i;
+  totalAnswered++;
+
+  const correct = rotationOptions[i].correct;
+  const fb = document.getElementById('feedbackBar');
+  if (correct) {
+    totalCorrect++;
+    fb.textContent = `Correct! (${rotationOptions[i].label})`;
+    fb.className = 'feedback-bar correct';
+  } else {
+    const correctLabel = rotationOptions.find(o => o.correct).label;
+    fb.textContent = `Not quite — correct answer was ${correctLabel}`;
+    fb.className = 'feedback-bar incorrect';
+  }
+
+  document.getElementById('scoreNum').textContent = totalCorrect;
+  document.getElementById('nextBtn').style.display = 'inline-block';
+
+  mfg('question_answered', {
+    game_slug: 'shape-shifter', level: 'year6',
+    question_index: questionIndex, correct: correct, mode: mode
+  });
+
+  drawGrid();
+}
+
+// ── NEXT QUESTION ──
+function nextQuestion() {
+  qIndex++;
+  if (qIndex >= questions.length) {
+    showResults();
+    return;
+  }
+  loadQuestion();
+}
+
+// ── RESULTS ──
+function showResults() {
+  const total = totalCorrect;
+  const maxQ = 10;
+  const pct = Math.round(100 * total / maxQ);
+
+  const modeLabels = { translation: 'Translation', reflection: 'Reflection', rotation: 'Rotation', mix: 'Random Mix' };
+  document.getElementById('resultModeLabel').textContent = modeLabels[selectedMode];
+  document.getElementById('finalScore').textContent = `${total}/${maxQ}`;
+  document.getElementById('finalPct').textContent = `${pct}%`;
+
+  // PB — keyed per mode
+  const pbKey = `mfg_pb_shape-shifter_year6_${selectedMode}`;
+  const prev = parseInt(localStorage.getItem(pbKey) || '0', 10);
+  const pbBadge = document.getElementById('pbBadge');
+  const pbLine = document.getElementById('pbLine');
+  if (total > prev) {
+    localStorage.setItem(pbKey, total);
+    pbBadge.style.display = 'block';
+    pbLine.textContent = prev > 0 ? `Previous best: ${prev}/${maxQ}` : '';
+    mfg('personal_best_set', { game_slug: 'shape-shifter', level: 'year6', score: total, previous_best: prev, mode: selectedMode });
+  } else {
+    pbBadge.style.display = 'none';
+    pbLine.textContent = `Personal best: ${prev}/${maxQ}`;
+  }
+
+  mfg('game_completed', {
+    game_slug: 'shape-shifter', level: 'year6',
+    score: total, questions_answered: totalAnswered, questions_correct: totalCorrect, mode: selectedMode
+  });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('shape-shifter','year6',total,totalAnswered).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('shape-shifter','year6',total);}}
+
+  // Show reveal first
+  showReveal();
+}
+
+function showReveal() {
+  const revealData = {
+    translation: {
+      title: 'You just translated shapes on a coordinate grid.',
+      text: 'Translation means sliding a shape without rotating or flipping it. In secondary school you\'ll describe these using column vectors. You\'ve got the foundation.'
+    },
+    reflection: {
+      title: 'You just reflected shapes across the axes.',
+      text: 'Reflection creates a mirror image of a shape. In secondary school you\'ll reflect in lines like y = x and y = -x too. You\'ve got the foundation.'
+    },
+    rotation: {
+      title: 'You just identified rotated shapes on a coordinate grid.',
+      text: 'Rotation turns a shape around a fixed point. In secondary school you\'ll describe rotations precisely — centre, angle and direction. You\'ve got the foundation.'
+    },
+    mix: {
+      title: 'You just performed translations, reflections and rotations on a coordinate grid.',
+      text: 'These three transformations are the building blocks. In secondary school this extends to describing them precisely and combining them. You\'ve got the foundation.'
+    }
+  };
+  const data = revealData[selectedMode];
+  document.getElementById('revealTitle').textContent = data.title;
+  document.getElementById('revealText').textContent = data.text;
+  document.getElementById('revealNextBtn').disabled = false;
+  document.getElementById('revealNextBtn').textContent = 'Continue';
+  showScreen('revealScreen');
+}
+
+function continueAfterReveal() {
+  showScreen('resultsScreen');
+}
+
+// ── RESIZE ──
+window.addEventListener('resize', () => {
+  if (document.getElementById('gameScreen').classList.contains('active')) {
+    setupCanvas();
+    drawGrid();
+  }
+});
+
+// ── ANIMATION LOOP (for pulsing centre dot) ──
+let animFrame;
+function animate() {
+  if (mode === 'rotation' && !reducedMotion && document.getElementById('gameScreen').classList.contains('active')) {
+    drawGrid();
+  }
+  animFrame = requestAnimationFrame(animate);
+}
+if (!reducedMotion) {
+  animate();
+}
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Six ratio skills in one game — simplify, find equivalents, divide quantities, convert to fractions, scale recipes, and use the unitary method.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/split-it/">
+<meta property="og:title" content="Split It — MaffsGames">
+<meta property="og:description" content="Six ratio skills — simplify, equivalents, divide, fractions, scale, unitary method. 50 questions per mode.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/split-it/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Split It — MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5). The base tokens (--bg, --surface, --text,
+   --muted, --border, --correct, --wrong, --hint, the font stacks) come from there; this
+   game sets only its accent and its own data colours. */
+:root{--accent:#15803d;--accent-dim:#dcfce7;--on-accent:#ffffff;
+  --part-a:#0d9488;--part-b:#22c55e;--part-c:#f97316;
+  --shadow:0 4px 16px rgba(0,0,0,0.08);--shadow-sm:0 2px 8px rgba(0,0,0,0.05)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+
+/* Header */
+.header{width:100%;background:var(--surface);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:16px}
+.back{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap}
+.back:hover{color:var(--text)}
+.hdr-title{font-size:18px;font-weight:700;color:var(--text);letter-spacing:.02em;white-space:nowrap;line-height:1.2}
+
+.game-area{width:100%;max-width:760px;padding:20px;flex:1;display:flex;flex-direction:column;align-items:center;gap:16px}
+.screen{display:none}.screen.active{display:flex;flex-direction:column;align-items:center;width:100%;gap:16px}
+
+/* Menu */
+.menu-title{font-size:clamp(24px,6vw,32px);font-weight:800;color:var(--text);text-align:center;margin-top:8px;letter-spacing:.02em}
+.menu-sub{font-size:15px;color:var(--muted);text-align:center;max-width:400px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:500px}
+@media(max-width:480px){.mode-grid{grid-template-columns:1fr}}
+.mode-card{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .15s;text-align:center;box-shadow:var(--shadow-sm)}
+.mode-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+.mode-card .mc-icon{font-size:24px;margin-bottom:6px}
+.mode-card .mc-name{font-weight:700;font-size:16px;color:var(--text)}
+.mode-card .mc-desc{font-size:13px;color:var(--muted);margin-top:4px}
+
+.level-row{display:flex;gap:10px}
+.level-btn{padding:10px 28px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-size:15px;font-weight:700;cursor:pointer;transition:all .15s}
+.level-btn:hover{border-color:var(--accent);transform:scale(1.03)}
+.level-btn .lbl{font-size:12px;color:var(--muted);display:block;margin-top:2px;font-weight:500}
+
+/* HUD */
+.hud{display:flex;justify-content:space-between;gap:4px;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px 16px;box-shadow:var(--shadow-sm)}
+.hud-item{text-align:center;min-width:0}
+.hud-label{font-size:11px;line-height:1.3;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:16px;line-height:1.2;font-weight:600;color:var(--text);margin-top:2px}
+.hud-val.green{color:var(--accent)}
+
+/* Question card */
+.q-card{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:var(--shadow);text-align:center}
+.q-context{font-size:13px;color:var(--muted);margin-bottom:8px}
+.q-prompt{font-size:20px;font-weight:700;color:var(--text);margin-bottom:16px;line-height:1.4}
+.q-prompt .highlight{color:var(--accent)}
+
+/* Ratio bar */
+.ratio-bar{display:flex;height:32px;border-radius:8px;overflow:hidden;width:100%;margin-bottom:12px;border:2px solid var(--border)}
+.ratio-bar .bar-a{background:var(--part-a);transition:flex .3s}
+.ratio-bar .bar-b{background:var(--part-b);transition:flex .3s}
+.ratio-bar .bar-c{background:var(--part-c);transition:flex .3s}
+.ratio-bar.correct{border-color:var(--correct)}
+
+/* Inputs */
+.input-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.ratio-input{width:70px;padding:10px;border-radius:10px;border:2px solid var(--border);font-family:var(--font-num);font-size:18px;line-height:1.2;font-weight:600;text-align:center;transition:border-color .15s;background:var(--surface);color:var(--text)}
+.ratio-input:focus{outline:none;border-color:var(--accent)}
+.ratio-input.correct{border-color:var(--correct);background:color-mix(in srgb,var(--correct) 10%,var(--surface))}
+.ratio-input.wrong{border-color:var(--wrong);background:color-mix(in srgb,var(--wrong) 10%,var(--surface))}
+.colon{font-size:24px;font-weight:700;color:var(--text)}
+.frac-wrap{display:inline-flex;flex-direction:column;align-items:center;gap:0}
+.frac-wrap .ratio-input{width:55px;font-size:16px;padding:6px}
+.frac-line{width:55px;height:3px;background:var(--text);border-radius:2px}
+.unit-label{font-size:14px;color:var(--muted);font-weight:600}
+.ingredient-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;justify-content:center}
+.ingredient-name{font-size:14px;color:var(--text);font-weight:600;min-width:120px;text-align:right}
+
+.check-btn{padding:10px 32px;border-radius:10px;border:none;background:var(--accent);color:var(--on-accent);font-size:16px;line-height:1.3;font-weight:700;cursor:pointer;transition:transform .12s}
+.check-btn:hover{transform:scale(1.03)}
+.check-btn:active{transform:scale(0.97)}
+
+/* Feedback */
+.feedback{width:100%;padding:12px 16px;border-radius:12px;font-size:15px;font-weight:600;text-align:center;animation:fadeIn .25s}
+.feedback.correct{background:color-mix(in srgb,var(--correct) 10%,var(--surface));color:var(--correct);border:2px solid var(--correct)}
+.feedback.wrong{background:color-mix(in srgb,var(--wrong) 10%,var(--surface));color:var(--wrong);border:2px solid var(--wrong)}
+.dismiss-btn{display:block;margin:8px auto 0;padding:5px 16px;border:1.5px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-size:13px;font-weight:600;cursor:pointer;opacity:0;animation:fadeBtn .3s ease forwards}.dismiss-btn:hover{background:rgba(0,0,0,.05)}@keyframes fadeBtn{to{opacity:1}}
+
+/* MCQ for best value */
+.mcq-row{display:flex;gap:10px;justify-content:center;margin-bottom:12px}
+.mcq-btn{padding:12px 24px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-size:15px;font-weight:700;cursor:pointer;transition:all .12s;min-width:120px}
+.mcq-btn:hover{border-color:var(--accent)}
+.mcq-btn.correct{border-color:var(--correct);background:color-mix(in srgb,var(--correct) 10%,var(--surface))}
+.mcq-btn.wrong{border-color:var(--wrong);background:color-mix(in srgb,var(--wrong) 10%,var(--surface))}
+.mcq-btn.disabled{pointer-events:none;opacity:.5}
+
+/* Results */
+.results{text-align:center;padding:20px 0}
+.results h2{font-size:clamp(20px,5vw,26px);font-weight:700;color:var(--text);margin-bottom:12px}
+.final-score{font-family:var(--font-num);font-size:40px;font-weight:700;color:var(--accent);margin:8px 0}
+.stats-line{font-size:15px;color:var(--muted);line-height:2;margin-bottom:12px}
+.pb-line{font-size:15px;color:var(--accent);font-weight:700;margin-bottom:12px}
+.play-again{padding:12px 32px;border-radius:10px;border:none;background:var(--text);color:var(--surface);font-size:16px;font-weight:700;cursor:pointer}
+.results-link{display:block;text-align:center;font-size:14px;font-weight:500;text-decoration:none;margin:12px 0}
+.results-link.lb{color:var(--accent)}
+.results-link.home{color:var(--muted)}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes correctPop{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-text);transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="header">
+  <a href="../../" class="back">← BACK</a>
+  <h1 class="hdr-title">Split It</h1>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+<div class="game-area">
+
+<!-- MENU -->
+<div id="menuScreen" class="screen active">
+  <div class="menu-title">SPLIT IT</div>
+  <div class="menu-sub">Six ratio skills. Pick your mode and level.</div>
+  <div class="mode-grid">
+    <div class="mode-card" onclick="pickMode('simplify')"><div class="mc-icon">✂️</div><div class="mc-name">Simplify</div><div class="mc-desc">Write the ratio in its simplest form</div></div>
+    <div class="mode-card" onclick="pickMode('equivalent')"><div class="mc-icon">⚖️</div><div class="mc-name">Equivalent</div><div class="mc-desc">Find the missing value</div></div>
+    <div class="mode-card" onclick="pickMode('divide')"><div class="mc-icon">🍕</div><div class="mc-name">Divide</div><div class="mc-desc">Share an amount in a given ratio</div></div>
+    <div class="mode-card" onclick="pickMode('fractions')"><div class="mc-icon">🥧</div><div class="mc-name">Fractions</div><div class="mc-desc">What fraction is each part?</div></div>
+    <div class="mode-card" onclick="pickMode('scale')"><div class="mc-icon">📏</div><div class="mc-name">Scale</div><div class="mc-desc">Scale a recipe up or down</div></div>
+    <div class="mode-card" onclick="pickMode('unitary')"><div class="mc-icon">💰</div><div class="mc-name">Unitary</div><div class="mc-desc">Find one, then find many</div></div>
+  </div>
+  <div id="levelPicker" style="display:none;margin-top:12px">
+    <div style="font-size:13px;color:var(--muted);font-weight:700;text-align:center;margin-bottom:8px">SELECT LEVEL</div>
+    <div class="level-row">
+      <button class="level-btn" onclick="startGame('ks3')">Foundation<span class="lbl">Build the method</span></button>
+      <button class="level-btn" onclick="startGame('gcse')">GCSE<span class="lbl">Exam standard</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="gameScreen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+    <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val green" id="hudScore">0</div></div>
+    <div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="hudCorrect">0</div></div>
+    <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="hudTimer">0s</div></div>
+  </div>
+  <div class="q-card" id="qCard"></div>
+  <div id="fbArea"></div>
+</div>
+
+<!-- RESULTS -->
+<div id="resultsScreen" class="screen">
+  <div class="results">
+    <h2 id="resultTitle">WELL DONE!</h2>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="stats-line" id="statsLine"></div>
+    <div class="pb-line" id="pbLine" style="display:none"></div>
+  <a href="/leaderboards/" class="results-link lb">&#127942; Global leaderboard</a>
+  <a href="/" class="results-link home">← Back to Games</a>
+    <button class="play-again" onclick="showMenu()">Play Again</button>
+  </div>
+</div>
+</div>
+
+<script>
+function _addDismiss(fb,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
+// ============================================================
+//  STATE
+// ============================================================
+let S={mode:null,level:null,qIdx:0,score:0,correct:0,total:10,penalties:0,
+  timerStart:0,timerElapsed:0,timerInterval:null,attempts:0,used:new Set()};
+
+function $(id){return document.getElementById(id)}
+function rInt(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a;}
+
+// ============================================================
+//  MENU
+// ============================================================
+function pickMode(mode){
+  S.mode=mode;
+  $('levelPicker').style.display='block';
+  document.querySelectorAll('.mode-card').forEach(c=>{
+    c.style.borderColor=c.onclick.toString().includes(mode)?'var(--accent)':'var(--border)';
+  });
+}
+
+function parseURL(){
+  const p=new URLSearchParams(location.search);
+  if(p.get('mode'))S.mode=p.get('mode');
+  if(p.get('level')&&S.mode)startGame(p.get('level'));
+}
+
+// ============================================================
+//  START
+// ============================================================
+function startGame(level){
+  S.level=level;S.qIdx=0;S.score=0;S.correct=0;S.penalties=0;S.used=new Set();
+  S.timerStart=Date.now();S.timerInterval=setInterval(updateTimer,1000);S.timerElapsed=0;
+  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');
+
+  mfg('game_started',{game_slug:'split-it',level:S.level,mode:S.mode});
+  mfg('mode_selected',{game_slug:'split-it',mode:S.mode});
+  window._mfgSlug='split-it';window._mfgLevel=S.level;
+
+  loadQuestion();
+}
+
+function updateTimer(){
+  S.timerElapsed=Math.floor((Date.now()-S.timerStart)/1000);
+  const m=Math.floor(S.timerElapsed/60),s=S.timerElapsed%60;
+  $('hudTimer').textContent=m>0?`${m}:${s.toString().padStart(2,'0')}`:`${s}s`;
+}
+
+// ============================================================
+//  QUESTION GENERATION
+// ============================================================
+function loadQuestion(){
+  if(S.qIdx>=S.total){endGame();return;}
+  S.attempts=0;
+  $('hudQ').textContent=`${S.qIdx+1}/${S.total}`;
+  $('hudScore').textContent=S.score;
+  $('hudCorrect').textContent=S.correct;
+  $('fbArea').innerHTML='';
+
+  const q=generateQ();
+  renderQ(q);
+  S._currentQ=q;
+}
+
+function generateQ(){
+  let q,key;
+  let tries=0;
+  do{
+    q=generators[S.mode](S.level);
+    key=JSON.stringify(q.answers);
+    tries++;
+  }while(S.used.has(key)&&tries<50);
+  S.used.add(key);
+  return q;
+}
+
+// ============================================================
+//  GENERATORS
+// ============================================================
+const generators={
+  simplify(level){
+    if(level==='ks3'){
+      const factors=[2,3,4,5,6,10];const h=factors[rInt(0,factors.length-1)];
+      let a=h*rInt(1,8),b=h*rInt(1,8);
+      while(a/h===b/h){b=h*rInt(1,8);}
+      const g2=gcd(a,b);
+      return{prompt:`Write <span class="highlight">${a} : ${b}</span> in its simplest form.`,
+        type:'ratio2',answers:[a/g2,b/g2],working:`HCF = ${g2}. ${a}÷${g2} : ${b}÷${g2} = ${a/g2}:${b/g2}`,
+        hint:`Find the highest common factor of ${a} and ${b}.`};
+    } else {
+      const factors=[2,3,4,5];const h=factors[rInt(0,factors.length-1)];
+      let a=h*rInt(1,6),b=h*rInt(1,6),c=h*rInt(1,6);
+      while(a/h===b/h&&b/h===c/h){c=h*rInt(1,6);}
+      const g3=gcd(gcd(a,b),c);
+      return{prompt:`Write <span class="highlight">${a} : ${b} : ${c}</span> in its simplest form.`,
+        type:'ratio3',answers:[a/g3,b/g3,c/g3],working:`HCF = ${g3}. ${a/g3}:${b/g3}:${c/g3}`,
+        hint:`Find the highest common factor of all three numbers.`};
+    }
+  },
+
+  equivalent(level){
+    const a=rInt(1,9),b=rInt(1,9);
+    if(level==='ks3'){
+      const k=rInt(2,8);
+      if(Math.random()<0.5){
+        return{prompt:`<span class="highlight">${a} : ${b}</span> = <span class="highlight">${a*k}</span> : ?`,
+          type:'single',answers:[b*k],working:`Scale factor = ${a*k}÷${a} = ${k}. ${b}×${k} = ${b*k}`,
+          hint:`What did you multiply ${a} by to get ${a*k}? Do the same to ${b}.`};
+      } else {
+        return{prompt:`<span class="highlight">${a} : ${b}</span> = ? : <span class="highlight">${b*k}</span>`,
+          type:'single',answers:[a*k],working:`Scale factor = ${b*k}÷${b} = ${k}. ${a}×${k} = ${a*k}`,
+          hint:`What did you multiply ${b} by to get ${b*k}? Do the same to ${a}.`};
+      }
+    } else {
+      const k=rInt(3,9);
+      return{prompt:`If <span class="highlight">${a} : ${b} = x : ${b*k}</span>, find x.`,
+        type:'single',answers:[a*k],working:`${b*k}÷${b} = ${k}. x = ${a}×${k} = ${a*k}`,
+        hint:`Find the scale factor: ${b*k} ÷ ${b} = ?`};
+    }
+  },
+
+  divide(level){
+    if(level==='ks3'){
+      const a=rInt(1,6),b=rInt(1,6);const tp=a+b;const k=rInt(2,20);const amt=tp*k;
+      const units=['£','','kg ','ml ','cm '][rInt(0,4)];
+      const prefix=units==='£'?'£':'';const suffix=units==='£'?'':' '+units.trim();
+      return{prompt:`Share <span class="highlight">${prefix}${amt}${suffix}</span> in the ratio <span class="highlight">${a} : ${b}</span>`,
+        type:'divide2',answers:[a*k,b*k],ratio:[a,b],total:amt,
+        working:`Total parts = ${tp}. One part = ${amt}÷${tp} = ${k}. ${a}×${k} = ${a*k}, ${b}×${k} = ${b*k}`,
+        hint:`Total parts = ${a} + ${b} = ${tp}. Divide ${amt} by ${tp} first.`};
+    } else {
+      const a=rInt(1,5),b=rInt(1,5),c=rInt(1,5);const tp=a+b+c;const k=rInt(2,15);const amt=tp*k;
+      return{prompt:`Divide <span class="highlight">${amt}</span> in the ratio <span class="highlight">${a} : ${b} : ${c}</span>`,
+        type:'divide3',answers:[a*k,b*k,c*k],ratio:[a,b,c],total:amt,
+        working:`Total parts = ${tp}. One part = ${amt}÷${tp} = ${k}. ${a*k}, ${b*k}, ${c*k}`,
+        hint:`Total parts = ${a}+${b}+${c} = ${tp}. Divide ${amt} by ${tp} first.`};
+    }
+  },
+
+  fractions(level){
+    if(level==='ks3'){
+      const a=rInt(1,7),b=rInt(1,7);const tp=a+b;
+      const g=gcd(a,tp);const na=a/g,da=tp/g;
+      const ask=Math.random()<0.5?'smaller':'larger';
+      const num=ask==='smaller'?Math.min(a,b):Math.max(a,b);
+      const g2=gcd(num,tp);
+      return{prompt:`In the ratio <span class="highlight">${a} : ${b}</span>, what fraction of the total is the ${ask} part?`,
+        type:'fraction',answers:[num/g2,tp/g2],
+        working:`Total parts = ${tp}. ${ask==='smaller'?'Smaller':'Larger'} = ${num}/${tp} = ${num/g2}/${tp/g2}`,
+        hint:`Total parts = ${a}+${b} = ${tp}. Write as a fraction and simplify.`};
+    } else {
+      const a=rInt(1,5),b=rInt(1,5),c=rInt(1,5);const tp=a+b+c;
+      const parts=[a,b,c];const largest=Math.max(...parts);
+      const g2=gcd(largest,tp);
+      return{prompt:`In the ratio <span class="highlight">${a} : ${b} : ${c}</span>, what fraction of the total is the largest part?`,
+        type:'fraction',answers:[largest/g2,tp/g2],
+        working:`Total = ${tp}. Largest = ${largest}. Fraction = ${largest}/${tp} = ${largest/g2}/${tp/g2}`,
+        hint:`Total parts = ${a}+${b}+${c} = ${tp}. The largest part is ${largest}.`};
+    }
+  },
+
+  scale(level){
+    const recipes=[
+      {name:'Smoothie',items:[{n:'Orange juice',v:300,u:'ml'},{n:'Banana',v:150,u:'g'},{n:'Yoghurt',v:80,u:'ml'}]},
+      {name:'Pancakes',items:[{n:'Flour',v:200,u:'g'},{n:'Milk',v:300,u:'ml'},{n:'Eggs',v:2,u:''}]},
+      {name:'Concrete mix',items:[{n:'Cement',v:12,u:'kg'},{n:'Sand',v:24,u:'kg'},{n:'Gravel',v:8,u:'kg'}]},
+      {name:'Salad dressing',items:[{n:'Oil',v:90,u:'ml'},{n:'Vinegar',v:30,u:'ml'},{n:'Mustard',v:10,u:'g'}]},
+      {name:'Flapjacks',items:[{n:'Oats',v:250,u:'g'},{n:'Butter',v:100,u:'g'},{n:'Syrup',v:60,u:'ml'}]}
+    ];
+    const r=recipes[rInt(0,recipes.length-1)];
+    const bases=[2,3,4,5,6,8];const orig=bases[rInt(0,bases.length-1)];
+    let sf,target;
+    if(level==='ks3'){
+      sf=rInt(2,5);target=orig*sf;
+    } else {
+      const pairs=[[4,6],[4,10],[6,9],[3,5],[6,10]];const p=pairs[rInt(0,pairs.length-1)];
+      sf=p[1]/p[0];target=p[1];
+      // Recalc orig
+      return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${p[0]}</span> people uses the amounts below.<br>How much of each do you need for <span class="highlight">${p[1]}</span> people?`,
+        type:'scale',items:r.items,scaleFactor:sf,origServes:p[0],targetServes:p[1],
+        answers:r.items.map(i=>parseFloat((i.v*sf).toFixed(1))),
+        working:`Scale factor = ${p[1]}/${p[0]} = ${sf}. Multiply each amount by ${sf}.`,
+        hint:`Scale factor = ${p[1]} ÷ ${p[0]} = ${sf}. Multiply each ingredient by this.`};
+    }
+    return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${orig}</span> people uses the amounts below.<br>How much of each do you need for <span class="highlight">${target}</span> people?`,
+      type:'scale',items:r.items,scaleFactor:sf,origServes:orig,targetServes:target,
+      answers:r.items.map(i=>i.v*sf),
+      working:`Scale factor = ${target}/${orig} = ${sf}. Multiply each amount by ${sf}.`,
+      hint:`Scale factor = ${target} ÷ ${orig} = ${sf}. Multiply each ingredient by this.`};
+  },
+
+  unitary(level){
+    if(level==='ks3'){
+      const n=rInt(2,8);const unitP=rInt(1,50)*10;// pence
+      const cost=n*unitP;const m=rInt(2,12);
+      const items=['pens','pencils','rulers','rubbers','notebooks','stickers'][rInt(0,5)];
+      const costStr=(cost/100).toFixed(2);const ansStr=(m*unitP/100).toFixed(2);
+      return{prompt:`<span class="highlight">${n} ${items}</span> cost <span class="highlight">£${costStr}</span>.<br>How much do <span class="highlight">${m} ${items}</span> cost?`,
+        type:'single',answers:[parseFloat(ansStr)],unit:'£',
+        working:`One ${items.slice(0,-1)} = £${costStr} ÷ ${n} = £${(unitP/100).toFixed(2)}. ${m} × £${(unitP/100).toFixed(2)} = £${ansStr}`,
+        hint:`Find the cost of 1 first: £${costStr} ÷ ${n}`};
+    } else {
+      const types=[
+        ()=>{// Currency
+          const rate=rInt(105,150)/100;const amt=rInt(5,20)*5;
+          const ans=parseFloat((amt*rate).toFixed(2));
+          return{prompt:`£1 = <span class="highlight">€${rate.toFixed(2)}</span>. Convert <span class="highlight">£${amt}</span> to euros.`,
+            type:'single',answers:[ans],unit:'€',
+            working:`£${amt} × ${rate} = €${ans}`,hint:`Multiply £${amt} by the exchange rate.`};
+        },
+        ()=>{// Speed
+          const d=rInt(3,8)*rInt(10,30);const t=rInt(2,5);const spd=d/t;const t2=rInt(2,8);
+          const ans=spd*t2;
+          return{prompt:`A car travels <span class="highlight">${d} miles</span> in <span class="highlight">${t} hours</span>.<br>How far in <span class="highlight">${t2} hours</span>?`,
+            type:'single',answers:[ans],unit:'miles',
+            working:`Speed = ${d}÷${t} = ${spd} mph. Distance = ${spd}×${t2} = ${ans} miles`,
+            hint:`Find the speed first: ${d} ÷ ${t}`};
+        },
+        ()=>{// Best value
+          const nA=rInt(4,8);const pA=nA*rInt(20,60);
+          const nB=rInt(nA+2,nA+6);const unitB=rInt(15,55);const pB=nB*unitB;
+          const unitA=Math.round(pA/nA);const better=unitA<unitB?'A':'B';
+          return{prompt:`Pack A: <span class="highlight">${nA} for £${(pA/100).toFixed(2)}</span>.<br>Pack B: <span class="highlight">${nB} for £${(pB/100).toFixed(2)}</span>.<br>Which is better value?`,
+            type:'bestvalue',nA,pA,nB,pB,unitA,unitB,
+            answers:[better],
+            working:`A: ${unitA}p each. B: ${unitB}p each. Pack ${better} is better value.`,
+            hint:`Find the price per item for each pack.`};
+        }
+      ];
+      return types[rInt(0,types.length-1)]();
+    }
+  }
+};
+
+// ============================================================
+//  RENDER
+// ============================================================
+function renderQ(q){
+  const card=$('qCard');
+  let html=`<div class="q-prompt">${q.prompt}</div>`;
+
+  if(q.type==='ratio2'){
+    html+=`<div class="input-row">
+      <input type="number" class="ratio-input" id="in0" placeholder="?" autofocus>
+      <span class="colon">:</span>
+      <input type="number" class="ratio-input" id="in1" placeholder="?">
+    </div>`;
+  } else if(q.type==='ratio3'){
+    html+=`<div class="input-row">
+      <input type="number" class="ratio-input" id="in0" placeholder="?">
+      <span class="colon">:</span>
+      <input type="number" class="ratio-input" id="in1" placeholder="?">
+      <span class="colon">:</span>
+      <input type="number" class="ratio-input" id="in2" placeholder="?">
+    </div>`;
+  } else if(q.type==='divide2'){
+    html+=`<div class="ratio-bar"><div class="bar-a" id="barA" style="flex:${q.ratio[0]}"></div><div class="bar-b" id="barB" style="flex:${q.ratio[1]}"></div></div>`;
+    html+=`<div class="input-row">
+      <input type="number" class="ratio-input" id="in0" placeholder="?" oninput="updateBar()">
+      <span class="colon">and</span>
+      <input type="number" class="ratio-input" id="in1" placeholder="?" oninput="updateBar()">
+    </div>`;
+  } else if(q.type==='divide3'){
+    html+=`<div class="ratio-bar"><div class="bar-a" id="barA" style="flex:${q.ratio[0]}"></div><div class="bar-b" id="barB" style="flex:${q.ratio[1]}"></div><div class="bar-c" id="barC" style="flex:${q.ratio[2]}"></div></div>`;
+    html+=`<div class="input-row">
+      <input type="number" class="ratio-input" id="in0" placeholder="?" oninput="updateBar()">
+      <span class="colon">,</span>
+      <input type="number" class="ratio-input" id="in1" placeholder="?" oninput="updateBar()">
+      <span class="colon">,</span>
+      <input type="number" class="ratio-input" id="in2" placeholder="?" oninput="updateBar()">
+    </div>`;
+  } else if(q.type==='fraction'){
+    html+=`<div class="input-row">
+      <div class="frac-wrap">
+        <input type="number" class="ratio-input" id="in0" placeholder="?">
+        <div class="frac-line"></div>
+        <input type="number" class="ratio-input" id="in1" placeholder="?">
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--muted)">Give your answer in simplest form</div>`;
+  } else if(q.type==='scale'){
+    q.items.forEach((item,i)=>{
+      html+=`<div class="ingredient-row">
+        <span class="ingredient-name">${item.n} (${item.v}${item.u})</span>
+        <input type="number" class="ratio-input" id="in${i}" placeholder="?" step="any">
+        <span class="unit-label">${item.u}</span>
+      </div>`;
+    });
+  } else if(q.type==='single'){
+    html+=`<div class="input-row">
+      ${q.unit?`<span class="unit-label">${q.unit}</span>`:''}
+      <input type="number" class="ratio-input" id="in0" placeholder="?" step="any" style="width:100px">
+      ${q.unit&&q.unit!=='£'&&q.unit!=='€'?`<span class="unit-label">${q.unit}</span>`:''}
+    </div>`;
+  } else if(q.type==='bestvalue'){
+    html+=`<div class="mcq-row">
+      <button class="mcq-btn" id="mcqA" onclick="checkBestValue('A')">Pack A</button>
+      <button class="mcq-btn" id="mcqB" onclick="checkBestValue('B')">Pack B</button>
+    </div>`;
+  }
+
+  if(q.type!=='bestvalue'){
+    html+=`<button class="check-btn" onclick="checkAnswer()">Check</button>`;
+  }
+  card.innerHTML=html;
+
+  // Focus first input
+  const first=card.querySelector('input');
+  if(first)setTimeout(()=>first.focus(),50);
+}
+
+// ============================================================
+//  CHECK
+// ============================================================
+function checkAnswer(){
+  const q=S._currentQ;
+  S.attempts++;
+  let correct=false;
+
+  if(q.type==='ratio2'||q.type==='ratio3'){
+    const n=q.answers.length;
+    const vals=[];
+    for(let i=0;i<n;i++){vals.push(parseFloat($('in'+i).value));}
+    if(vals.some(isNaN))return;
+    correct=vals.every((v,i)=>v===q.answers[i]);
+    vals.forEach((v,i)=>{
+      $('in'+i).classList.add(v===q.answers[i]?'correct':'wrong');
+    });
+  } else if(q.type==='divide2'||q.type==='divide3'){
+    const n=q.answers.length;
+    const vals=[];
+    for(let i=0;i<n;i++){vals.push(parseFloat($('in'+i).value));}
+    if(vals.some(isNaN))return;
+    correct=vals.every((v,i)=>Math.abs(v-q.answers[i])<0.05);
+    vals.forEach((v,i)=>{
+      $('in'+i).classList.add(Math.abs(v-q.answers[i])<0.05?'correct':'wrong');
+    });
+    if(correct)document.querySelector('.ratio-bar').classList.add('correct');
+  } else if(q.type==='fraction'){
+    const num=parseInt($('in0').value),den=parseInt($('in1').value);
+    if(isNaN(num)||isNaN(den)||den===0)return;
+    correct=num===q.answers[0]&&den===q.answers[1];
+    if(!correct&&num/den===q.answers[0]/q.answers[1]){
+      // Correct value but not simplified
+      showFeedback(false,'Correct value, but simplify your fraction! '+q.answers[0]+'/'+q.answers[1]);
+      S.penalties++;
+      mfg('question_answered',{game_slug:'split-it',level:S.level,mode:S.mode,question_index:S.qIdx+1,correct:false});
+      return;
+    }
+    $('in0').classList.add(correct?'correct':'wrong');
+    $('in1').classList.add(correct?'correct':'wrong');
+  } else if(q.type==='scale'){
+    const vals=q.items.map((_,i)=>parseFloat($('in'+i).value));
+    if(vals.some(isNaN))return;
+    correct=vals.every((v,i)=>Math.abs(v-q.answers[i])<0.15);
+    vals.forEach((v,i)=>{
+      $('in'+i).classList.add(Math.abs(v-q.answers[i])<0.15?'correct':'wrong');
+    });
+  } else if(q.type==='single'){
+    const val=parseFloat($('in0').value);
+    if(isNaN(val))return;
+    correct=Math.abs(val-q.answers[0])<0.05;
+    $('in0').classList.add(correct?'correct':'wrong');
+  }
+
+  if(correct){
+    S.correct++;
+    const BASE=100,G_COST=15,T_K=0.3;
+    const penalty=S.penalties*G_COST;
+    const mult=1/(1+T_K*Math.log(1+S.timerElapsed));
+    S.score+=Math.max(1,Math.round((BASE-penalty)*mult));
+    $('hudScore').textContent=S.score;$('hudCorrect').textContent=S.correct;
+    showFeedback(true,q.working);
+    mfg('question_answered',{game_slug:'split-it',level:S.level,mode:S.mode,question_index:S.qIdx+1,correct:true});
+    setTimeout(()=>{S.qIdx++;loadQuestion();},1200);
+  } else {
+    S.penalties++;
+    showFeedback(false,q.hint);
+    mfg('question_answered',{game_slug:'split-it',level:S.level,mode:S.mode,question_index:S.qIdx+1,correct:false});
+    // Allow retry — dismiss button appears after 2s
+    _addDismiss($('fbArea'),()=>{
+      $('fbArea').innerHTML='';
+      document.querySelectorAll('.ratio-input').forEach(inp=>{inp.classList.remove('wrong');});
+    });
+  }
+}
+
+function checkBestValue(choice){
+  const q=S._currentQ;
+  S.attempts++;
+  const correct=choice===q.answers[0];
+  $('mcqA').classList.add('disabled');$('mcqB').classList.add('disabled');
+  $('mcq'+choice).classList.add(correct?'correct':'wrong');
+  if(!correct)$('mcq'+q.answers[0]).classList.add('correct');
+
+  if(correct){
+    S.correct++;S.score+=Math.max(1,Math.round(100/(1+0.3*Math.log(1+S.timerElapsed))));
+    $('hudScore').textContent=S.score;$('hudCorrect').textContent=S.correct;
+  } else {
+    S.penalties++;
+  }
+  showFeedback(correct,q.working);
+  mfg('question_answered',{game_slug:'split-it',level:S.level,mode:S.mode,question_index:S.qIdx+1,correct:correct});
+  setTimeout(()=>{S.qIdx++;loadQuestion();},1800);
+}
+
+// ============================================================
+//  VISUAL
+// ============================================================
+function updateBar(){
+  const q=S._currentQ;
+  if(!q||!q.ratio)return;
+  const vals=q.ratio.map((_,i)=>{const v=parseFloat($('in'+i)?.value);return isNaN(v)?0:Math.max(0,v);});
+  const total=vals.reduce((a,b)=>a+b,0)||1;
+  if($('barA'))$('barA').style.flex=vals[0]/total;
+  if($('barB'))$('barB').style.flex=vals[1]/total;
+  if($('barC'))$('barC').style.flex=(vals[2]||0)/total;
+}
+
+function showFeedback(ok,msg){
+  $('fbArea').innerHTML=`<div class="feedback ${ok?'correct':'wrong'}">${ok?'✓ ':'✗ '}${msg}</div>`;
+}
+
+// ============================================================
+//  END GAME
+// ============================================================
+function endGame(){
+  clearInterval(S.timerInterval);
+  $('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
+
+  const pct=S.total>0?Math.round(100*S.correct/S.total):0;
+  let title='WELL DONE!';
+  if(pct>=90)title='OUTSTANDING!';else if(pct>=70)title='GREAT WORK!';
+  else if(pct<50)title='KEEP PRACTISING!';
+
+  $('resultTitle').textContent=title;$('finalScore').textContent=S.score;
+  const m=Math.floor(S.timerElapsed/60),s=S.timerElapsed%60;
+  $('statsLine').innerHTML=`Correct: <strong>${S.correct}/${S.total}</strong> (${pct}%)<br>
+    Time: <strong>${m>0?m+'m '+s+'s':s+'s'}</strong><br>
+    Mode: <strong>${S.mode}</strong> · Level: <strong>${S.level==='ks3'?'Foundation':'GCSE'}</strong>`;
+
+  const key=`pb_split-it_${S.mode}_${S.level}`;
+  const prev=parseInt(localStorage.getItem(key)||'0');
+  if(S.score>prev){
+    localStorage.setItem(key,S.score);
+    mfg('personal_best_set',{game_slug:'split-it',level:S.level,mode:S.mode,score:S.score,previous_best:prev});
+    if(prev>0){$('pbLine').textContent=`NEW PERSONAL BEST! (Previous: ${prev})`;$('pbLine').style.display='block';}
+  } else if(prev>0){
+    $('pbLine').textContent=`Personal best: ${prev}`;$('pbLine').style.display='block';
+  } else {$('pbLine').style.display='none';}
+
+  window._mfgCompleted=true;
+  mfg('game_completed',{game_slug:'split-it',level:S.level,mode:S.mode,score:S.score,questions_answered:S.total,questions_correct:S.correct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('split-it',S.level,S.score,S.total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('split-it',S.level,S.score);}}
+}
+
+function showMenu(){
+  $('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');
+  $('menuScreen').classList.add('active');$('pbLine').style.display='none';
+}
+
+window.addEventListener('DOMContentLoaded',()=>{parseURL();});
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

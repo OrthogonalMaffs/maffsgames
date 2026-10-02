@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Send feedback about MaffsGames — report bugs, suggest new games, or share how you use the games in your classroom.">
+<link rel="canonical" href="https://maffsgames.co.uk/feedback/">
+<meta property="og:title" content="Feedback — MaffsGames">
+<meta property="og:description" content="Send feedback about MaffsGames — report bugs, suggest new games, or share how you use the games in your classroom.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/feedback/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../schools/assets/favicon.svg">
+<title>Feedback — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Google Analytics (cookieless) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+  gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --navy:#1a2744;--teal:#0d9488;--bg:#f8fafc;--card:#ffffff;
+  --border:#e2e8f0;--text:#1e293b;--muted:#64748b;
+  --success:#16a34a;--error:#dc2626;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+/* Nav */
+.nav{background:var(--navy);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.nav a{color:#fff;text-decoration:none;font-weight:600;font-size:1rem}
+.nav .back{opacity:0.8;font-size:0.85rem;font-weight:400}
+.nav .back:hover{opacity:1}
+
+/* Container */
+.container{max-width:640px;width:100%;margin:0 auto;padding:2rem 1.5rem}
+
+/* Header */
+h1{font-size:1.6rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem}
+.intro{color:var(--muted);font-size:0.92rem;line-height:1.6;margin-bottom:2rem}
+
+/* Form */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+
+.field{margin-bottom:1.5rem}
+.field label{display:block;font-weight:600;font-size:0.88rem;color:var(--navy);margin-bottom:0.4rem}
+.field .hint{font-size:0.78rem;color:var(--muted);margin-bottom:0.4rem}
+
+.field select,
+.field input[type="email"],
+.field textarea{
+  width:100%;padding:0.7rem 0.9rem;border:1.5px solid var(--border);border-radius:8px;
+  font-family:'Outfit',sans-serif;font-size:0.92rem;color:var(--text);
+  background:var(--bg);transition:border-color 0.2s;resize:vertical
+}
+.field select:focus,
+.field input[type="email"]:focus,
+.field textarea:focus{outline:none;border-color:var(--teal)}
+.field textarea{min-height:140px}
+
+/* Honeypot — visually hidden, accessible to bots */
+.hp{position:absolute;left:-9999px;top:-9999px;opacity:0;height:0;width:0;overflow:hidden}
+
+/* Submit */
+.submit-btn{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.75rem 2rem;border:none;border-radius:8px;
+  background:var(--navy);color:#fff;
+  font-family:'Outfit',sans-serif;font-size:0.95rem;font-weight:600;
+  cursor:pointer;transition:all 0.15s
+}
+.submit-btn:hover{background:#243558;transform:translateY(-1px)}
+.submit-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+
+/* Status messages */
+.status{margin-top:1rem;padding:0.8rem 1rem;border-radius:8px;font-size:0.88rem;display:none}
+.status.success{display:block;background:#f0fdf4;border:1px solid #bbf7d0;color:var(--success)}
+.status.error{display:block;background:#fef2f2;border:1px solid #fecaca;color:var(--error)}
+
+/* Privacy note */
+.privacy-note{margin-top:2rem;padding:1rem 1.2rem;background:#f1f5f9;border-radius:8px;font-size:0.82rem;color:var(--muted);line-height:1.6}
+.privacy-note strong{color:var(--navy)}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../">MaffsGames</a>
+  <a href="../" class="back">&larr; Back to Games</a>
+</nav>
+
+<div class="container">
+  <h1>Feedback</h1>
+  <p class="intro">
+    Found a bug? Spotted a wrong answer? Want a game for a topic we don't cover yet?
+    Let us know. No email address or sign-up required.
+  </p>
+
+  <div class="form-card">
+    <form id="feedbackForm" action="https://formspree.io/f/mnjgzlwp" method="POST">
+
+      <!-- Honeypot — bots fill this in, humans don't see it -->
+      <div class="hp" aria-hidden="true">
+        <label for="website">Website</label>
+        <input type="text" id="website" name="_gotcha" tabindex="-1" autocomplete="off">
+      </div>
+
+      <!-- Hidden timestamp for time check -->
+      <input type="hidden" id="loadTime" name="_loadtime" value="">
+
+      <!-- Formspree config: fixed subject line; the optional "email" field below becomes the reply-to -->
+      <input type="hidden" name="_subject" value="MaffsGames Feedback">
+
+      <div class="field">
+        <label for="type">What kind of feedback?</label>
+        <select id="type" name="type" required>
+          <option value="" disabled selected>Choose one&hellip;</option>
+          <option value="bug">Bug report — something isn't working</option>
+          <option value="error">Maths error — a wrong answer or question</option>
+          <option value="request">Feature request — a game or topic you'd like</option>
+          <option value="general">General feedback</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="game">Which game or escape room? (optional)</label>
+        <select id="game" name="game">
+          <option value="" selected>Not specific to a game</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="message">Your feedback</label>
+        <div class="hint">If reporting a maths error, please include the question and what you think the correct answer should be.</div>
+        <textarea id="message" name="message" required placeholder="Describe the issue or suggestion&hellip;"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="email">Email (optional)</label>
+        <div class="hint">Only if you'd like a reply. It's used to answer your message, and nothing else. Students, please leave this blank.</div>
+        <input type="email" id="email" name="email" autocomplete="email">
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">
+        Send Feedback
+      </button>
+
+      <div class="status" id="status"></div>
+    </form>
+  </div>
+
+  <div class="privacy-note">
+    <strong>Privacy:</strong> This form does not ask for your name. Your email address is optional
+    and is used only to reply to your message. Submissions are delivered to us via
+    <a href="https://formspree.io" target="_blank" rel="noopener" style="color:var(--teal)">Formspree</a>.
+    You can also email us at
+    <a href="mailto:contact@maffsgames.co.uk" style="color:var(--teal)">contact@maffsgames.co.uk</a>.
+    See our <a href="../privacy/" style="color:var(--teal)">privacy page</a>.
+  </div>
+</div>
+
+
+<script>
+// ── Game and escape-room menu ──────────────────────────────────────
+// Built from the live portal and escape-rooms hub on every load, so it can
+// never fall behind what the site shows. It used to be a hand-kept list and
+// was missing 56 of 93 games. If either page can't be fetched or parsed, the
+// menu keeps only "Not specific to a game" and the form still sends.
+// scripts/check-feedback-options.py fails if the selectors below stop
+// matching the portal or hub markup.
+async function buildGameMenu() {
+  const select = document.getElementById('game');
+  try {
+    const [portal, hub] = await Promise.all(['/', '/escape-rooms/'].map(async path => {
+      const res = await fetch(path);
+      if (!res.ok) throw new Error(path + ' ' + res.status);
+      return new DOMParser().parseFromString(await res.text(), 'text/html');
+    }));
+
+    const games = new Map();
+    portal.querySelectorAll('.game-card').forEach(card => {
+      const title = card.querySelector('.card-title');
+      const m = new URL(card.getAttribute('href'), location.origin + '/').pathname.match(/^\/games\/([^/]+)\/$/);
+      if (m && title && !games.has(m[1])) games.set(m[1], title.textContent.trim());
+    });
+
+    const rooms = new Map();
+    hub.querySelectorAll('.room-card').forEach(card => {
+      const title = card.querySelector('h3');
+      const m = new URL(card.getAttribute('href'), location.origin + '/escape-rooms/').pathname.match(/^\/escape-rooms\/([^/]+)\/$/);
+      if (m && title && !rooms.has(m[1])) rooms.set(m[1], title.textContent.trim());
+    });
+
+    if (!games.size || !rooms.size) throw new Error('no cards found');
+
+    const group = (label, entries, prefix) => {
+      const g = document.createElement('optgroup');
+      g.label = label;
+      [...entries].sort((a, b) => a[1].localeCompare(b[1])).forEach(([slug, title]) => {
+        g.appendChild(new Option(title, prefix + slug));
+      });
+      return g;
+    };
+    select.appendChild(group('Games', games, ''));
+    select.appendChild(group('Escape rooms', rooms, 'escape-room:'));
+  } catch (err) {
+    return; // leave only the default option
+  }
+
+  // Arrived from a game or escape room? Preselect it.
+  try {
+    const ref = new URL(document.referrer);
+    if (ref.origin !== location.origin) return;
+    const g = ref.pathname.match(/^\/games\/([^/]+)\//);
+    const r = ref.pathname.match(/^\/escape-rooms\/([^/]+)\//);
+    const value = g ? g[1] : r ? 'escape-room:' + r[1] : '';
+    if (value && [...select.options].some(o => o.value === value)) select.value = value;
+  } catch (err) {
+    // no or unreadable referrer: keep the default
+  }
+}
+buildGameMenu();
+
+// Record page load time for time-check anti-spam
+const loaded = Date.now();
+document.getElementById('loadTime').value = loaded.toString();
+
+const form = document.getElementById('feedbackForm');
+const statusEl = document.getElementById('status');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  // Time check — reject if submitted in under 3 seconds (bot speed)
+  const elapsed = (Date.now() - loaded) / 1000;
+  if (elapsed < 3) {
+    statusEl.className = 'status error';
+    statusEl.textContent = 'Submission too fast. Please wait a moment and try again.';
+    return;
+  }
+
+  // Honeypot check — if the hidden field has a value, it's a bot
+  if (document.getElementById('website').value) {
+    // Silently pretend it worked — don't tell the bot it failed
+    statusEl.className = 'status success';
+    statusEl.textContent = 'Thank you! Your feedback has been sent.';
+    form.reset();
+    return;
+  }
+
+  // Basic validation
+  if (!form.type.value || !form.message.value.trim()) {
+    statusEl.className = 'status error';
+    statusEl.textContent = 'Please select a feedback type and write a message.';
+    return;
+  }
+
+  // Submit via fetch to Formspree
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending\u2026';
+
+  try {
+    const data = new FormData(form);
+    // Remove honeypot and timing fields from actual submission
+    data.delete('_gotcha');
+    data.delete('_loadtime');
+    // A blank email is not a reply-to address; send it only when given
+    if (!form.email.value.trim()) data.delete('email');
+
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
+      statusEl.className = 'status success';
+      statusEl.textContent = 'Thank you! Your feedback has been sent. We read every submission.';
+      form.reset();
+    } else {
+      throw new Error('Server error');
+    }
+  } catch (err) {
+    statusEl.className = 'status error';
+    statusEl.textContent = 'Something went wrong. Please try again, or email us directly.';
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Send Feedback';
+});
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

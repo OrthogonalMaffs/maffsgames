@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="36 exam-style questions for AQA Core Maths Paper 2B. Covers probability, expected value, cost-benefit analysis and risk assessment. Free, no sign-up required.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/core-maths-paper2b/">
+<meta property="og:title" content="Core Maths Paper 2B Practice — MaffsGames">
+<meta property="og:description" content="36 exam-style questions for AQA Core Maths Paper 2B. Covers probability, expected value, cost-benefit analysis and risk assessment. Free, no sign-up required.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://maffsgames.co.uk/games/core-maths-paper2b/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Core Maths Paper 2B Practice — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--surface2:#162032;--border:#334155;
+  --accent:#0ea5e9;--accent-dim:rgba(14,165,233,.12);--accent-glow:rgba(14,165,233,.25);
+  --correct:#0d9488;--correct-dim:rgba(13,148,136,.12);
+  --wrong:#ef4444;--wrong-dim:rgba(239,68,68,.12);
+  --text:#e2e8f0;--muted:#94a3b8;--text-dark:#1e293b;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:720px;width:100%;padding:1rem;flex:1;display:flex;flex-direction:column}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem;position:relative}
+.header h1{font-size:1.6rem;font-weight:800;color:var(--accent)}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .q-stem,body.accessible .option-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{position:absolute;top:1.2rem;right:0;background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--correct)}
+.screen{display:none;flex-direction:column;gap:16px}.screen.active{display:flex}
+.start-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.start-icon{font-size:48px;margin-bottom:12px}
+.start-desc{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:20px;max-width:520px;margin-left:auto;margin-right:auto}
+.start-btn{padding:14px 40px;border-radius:12px;border:none;background:var(--accent);color:#000;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .15s}
+.start-btn:hover{transform:scale(1.04)}
+.progress-bar{width:100%;height:4px;background:var(--surface);border-radius:2px;overflow:hidden;margin-bottom:4px}
+.progress-fill{height:100%;background:var(--accent);transition:width .3s ease;width:0%}
+.section-banner{background:#1a2744;border-left:4px solid var(--accent);border-radius:8px;padding:16px 20px;text-align:center;animation:fadeIn .4s}
+.section-banner h2{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px}
+.section-banner .section-range{font-size:.8rem;color:var(--muted)}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;animation:fadeIn .3s}
+.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.q-counter{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent)}
+.q-tag{font-size:12px;color:var(--muted)}
+.q-stem{font-size:16px;line-height:1.7;color:var(--text);margin-bottom:20px}
+.data-table{border-collapse:collapse;margin:12px 0 16px;max-width:480px}
+.data-table th{background:#1a2744;color:#fff;padding:8px 12px;font-size:13px;font-weight:600;text-align:left;border:1px solid var(--border)}
+.data-table td{padding:8px 12px;font-size:13px;border:1px solid var(--border);color:var(--text)}
+.data-table tr:nth-child(even) td{background:rgba(248,250,252,.04)}
+.data-table tr:nth-child(odd) td{background:transparent}
+.svg-container{margin:12px 0 16px;display:flex;justify-content:center}
+.svg-container svg{max-width:100%;height:auto}
+.options{display:flex;flex-direction:column;gap:10px}
+.option-btn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;cursor:pointer;transition:all .15s;text-align:left}
+.option-btn:hover:not(.locked){border-color:var(--accent);background:var(--accent-dim)}
+.option-letter{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.option-text{flex:1;line-height:1.5}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-dim)}
+.option-btn.correct .option-letter{background:var(--correct);color:#fff}
+.option-btn.incorrect{border-color:var(--wrong);background:var(--wrong-dim)}
+.option-btn.incorrect .option-letter{background:var(--wrong);color:#fff}
+.option-btn.reveal{border-color:var(--correct);background:var(--correct-dim)}
+.option-btn.reveal .option-letter{background:var(--correct);color:#fff}
+.working-note{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(14,165,233,.06);border-radius:8px;border-left:3px solid var(--accent);margin-top:12px;display:none}
+.working-note.visible{display:block}
+.next-btn{padding:12px 32px;border-radius:10px;border:none;background:var(--accent);color:#000;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;display:none;align-self:flex-end;transition:transform .15s}
+.next-btn.visible{display:block}
+.next-btn:hover{transform:scale(1.04)}
+.fermi-signpost{font-size:12px;color:var(--muted);text-align:center;padding:8px;margin-top:4px}
+.fermi-signpost a{color:var(--accent);text-decoration:none;font-weight:600}
+.fermi-signpost a:hover{text-decoration:underline}
+.results-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.results-title{font-size:1.4rem;font-weight:800;color:var(--accent);margin-bottom:8px}
+.results-score{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;margin:16px 0}
+.section-scores{display:flex;flex-direction:column;gap:8px;margin:20px auto;max-width:400px}
+.section-score-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)}
+.section-score-label{font-size:13px;color:var(--muted)}
+.section-score-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700}
+.dot-grid{display:flex;flex-direction:column;gap:8px;max-width:360px;margin:16px auto}
+.dot-grid-section{display:flex;flex-direction:column;gap:4px;width:100%}
+.dot-grid-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.dot-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.dot{width:16px;height:16px;border-radius:50%;cursor:default;position:relative}
+.dot.correct-dot{background:var(--correct)}
+.dot.incorrect-dot{background:var(--wrong)}
+.dot:hover::after{content:attr(data-q);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);font-size:10px;background:#000;color:#fff;padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none}
+.results-actions{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.results-btn{padding:12px 28px;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;text-decoration:none}
+.results-btn:hover{background:var(--accent);color:#000}
+.results-btn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+.results-btn.primary:hover{background:#38bdf8}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:500px){.q-card{padding:16px}.option-btn{padding:12px}.results-card{padding:20px}}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">MaffsGames</a>
+  <div id="startScreen" class="screen active">
+    <div class="header" style="position:relative">
+      <h1>Core Maths Paper 2B Practice</h1>
+      <div class="sub">AQA Level 3 Mathematical Studies — Risk and Expectation</div>
+      <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    </div>
+    <div class="start-card">
+      <div class="start-icon">&#127922;</div>
+      <p class="start-desc">
+        36 exam-style questions covering <strong>§3.4 Critical Analysis</strong> (Q1–6), <strong>§3.9 Expectation and Probability</strong> (Q7–24), and <strong>§3.10 Cost-Benefit and Risk</strong> (Q25–36). No timer — work at your own pace.
+      </p>
+      <button class="start-btn" onclick="startGame()">Begin Practice</button>
+    </div>
+  </div>
+  <div id="gameScreen" class="screen">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div id="sectionBanner" class="section-banner" style="display:none">
+      <h2 id="sectionTitle"></h2>
+      <div class="section-range" id="sectionRange"></div>
+    </div>
+    <div id="questionArea" style="display:none">
+      <div class="q-card">
+        <div class="q-header">
+          <span class="q-counter" id="qCounter"></span>
+          <span class="q-tag" id="qTag"></span>
+        </div>
+        <div class="q-stem" id="qStem"></div>
+        <div class="options" id="optionsContainer"></div>
+        <div class="working-note" id="workingNote"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      </div>
+      <div class="fermi-signpost">For critical path analysis and Gantt charts &#8594; <a href="../glorious-gantt/">Play Glorious Gantt Game</a></div>
+    </div>
+  </div>
+  <div id="resultsScreen" class="screen">
+    <div class="results-card">
+      <div class="results-title">Core Maths Paper 2B Practice — Complete</div>
+      <div class="results-score" id="finalScore"></div>
+      <div class="section-scores">
+        <div class="section-score-row"><span class="section-score-label">§3.4 Critical Analysis</span><span class="section-score-val" id="s1Score"></span></div>
+        <div class="section-score-row"><span class="section-score-label">§3.9 Probability</span><span class="section-score-val" id="s2Score"></span></div>
+        <div class="section-score-row"><span class="section-score-label">§3.10 Cost-Benefit</span><span class="section-score-val" id="s3Score"></span></div>
+      </div>
+      <div class="dot-grid">
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.4 Critical Analysis</div><div class="dot-row" id="s1Dots"></div></div>
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.9 Probability</div><div class="dot-row" id="s2Dots"></div></div>
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.10 Cost-Benefit</div><div class="dot-row" id="s3Dots"></div></div>
+      </div>
+      <div class="results-actions">
+        <button class="results-btn primary" onclick="restartGame()">Play Again</button>
+        <a href="../../" class="results-btn">Back to Portal</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var SECTIONS = [
+  { title:'Section A \u2014 \u00a73.4 Critical Analysis', range:'Q1\u2013Q6', count:6 },
+  { title:'Section B \u2014 \u00a73.9 Expectation and Probability', range:'Q7\u2013Q24', count:18 },
+  { title:'Section C \u2014 \u00a73.10 Cost-Benefit and Risk', range:'Q25\u2013Q36', count:12 }
+];
+var SECTION_STARTS = [0, 6, 24];
+
+var QUESTIONS = [
+  // ═══ §3.4 Critical Analysis — Q1 to Q6 ═══
+  {
+    section:'3.4',ao:'AO2',
+    stem:'Days lost to illness for 10 employees: 0, 0, 0, 1, 1, 2, 3, 4, 4, 17.\n\nHR reports: \u201cThe average number of days lost is 3.2.\u201d\n\nWhich is the best criticism?',
+    options:['The mean is the best average to use here','The mean is distorted by the outlier 17; the median of 1.5 is more representative','The mode of 0 is the best average here','The median equals the mean in this dataset'],
+    correct:1,
+    working:'Mean = 32 \u00f7 10 = 3.2, which is technically correct but the outlier 17 distorts it. Median = (1 + 2) \u00f7 2 = 1.5, which better represents typical absence.'
+  },
+  {
+    section:'3.4',ao:'AO2',
+    stem:'A spreadsheet models expected profit:\n\nB2 = P(high demand) = 0.6\nB3 = Profit if high demand = \u00a380,000\nB4 = Profit if low demand = \u00a320,000\n\nWhich formula correctly calculates expected profit?',
+    options:['<span style="font-family:\'JetBrains Mono\',monospace">=B2*B3+B4</span>','<span style="font-family:\'JetBrains Mono\',monospace">=B2*B3+(1-B2)*B4</span>','<span style="font-family:\'JetBrains Mono\',monospace">=(B3+B4)/2</span>','<span style="font-family:\'JetBrains Mono\',monospace">=B2*(B3+B4)</span>'],
+    correct:1,
+    working:'E = P(high) \u00d7 profit(high) + P(low) \u00d7 profit(low) = 0.6 \u00d7 80000 + 0.4 \u00d7 20000 = \u00a356,000.'
+  },
+  {
+    section:'3.4',ao:'AO3',
+    stem:'A train company claims \u201c97% of our trains arrive on time.\u201d However, their definition of \u201con time\u201d is \u201cwithin 15 minutes of the scheduled arrival.\u201d\n\nWhat is the strongest criticism?',
+    options:['97% is not a high enough percentage','The definition of \u201con time\u201d is lenient and misleading','The company should publish the percentage that arrive early','The figures should be independently verified'],
+    correct:1,
+    working:'Most passengers would consider a train 14 minutes late to be late. The lenient definition inflates the on-time figure, making the statistic misleading.'
+  },
+  {
+    section:'3.4',ao:'AO3',
+    stem:'An insurance manager calculates expected annual claims:\n\nP(minor claim) = 0.12, average cost = \u00a3800\nP(major claim) = 0.03, average cost = \u00a38,500\nP(no claim) = 0.85\n\nThe manager writes: 0.12 \u00d7 800 + 0.03 \u00d7 8500 = \u00a3351.\n\nIs this calculation correct?',
+    options:['No \u2014 must include the no-claim term','Yes \u2014 0.85 \u00d7 0 = 0 changes nothing; \u00a3351 is correct','No \u2014 the probabilities don\u2019t sum to 1','No \u2014 should multiply all probabilities together'],
+    correct:1,
+    working:'E = 0.12 \u00d7 800 + 0.03 \u00d7 8500 + 0.85 \u00d7 0 = 96 + 255 + 0 = \u00a3351. The no-claim term adds zero, so the manager\u2019s shortcut is valid.'
+  },
+  {
+    section:'3.4',ao:'AO2',
+    stem:'A business opportunity: 40% chance of \u00a3200,000 profit, 60% chance of \u00a380,000 loss.\n\nThe director says: \u201cThe expected value is positive, so we should definitely enter.\u201d\n\nWhich response is most appropriate?',
+    options:['EV = \u00a332,000 which justifies the decision','EV = \u00a332,000 but risk appetite matters; \u201cdefinitely\u201d is too strong','EV = \u00a360,000 which is correct','EV = \u2212\u00a332,000 so the director is wrong'],
+    correct:1,
+    working:'E = 0.4 \u00d7 200,000 + 0.6 \u00d7 (\u221280,000) = 80,000 \u2212 48,000 = \u00a332,000. Positive EV, but a 60% chance of losing \u00a380k may be unacceptable depending on the company\u2019s risk appetite.'
+  },
+  {
+    section:'3.4',ao:'AO3',
+    stem:'200 people are surveyed: 120 say they would buy a new product at \u00a315.\n\nA researcher concludes: \u201c60% of customers would buy.\u201d\n\nWhat is the strongest criticism?',
+    options:['The sample is too small','Stated intent overstates actual behaviour; the sample may not be representative','60% is calculated correctly so the conclusion is valid','The researcher should have asked about different price points'],
+    correct:1,
+    working:'Survey respondents often overstate willingness to buy (hypothetical bias). The sample may also be unrepresentative of the wider population. The 60% figure is arithmetically correct but the conclusion is unreliable.'
+  },
+  // ═══ §3.9 Expectation and Probability — Q7 to Q24 ═══
+  {
+    section:'3.9',ao:'AO1',
+    stem:'A spinner has 5 equal sections numbered 1 to 5.\n\nWhat is the expected value E(X)?',
+    options:['2.5','3.0','3.5','5.0'],
+    correct:1,
+    working:'E(X) = (1 + 2 + 3 + 4 + 5) \u00f7 5 = 15 \u00f7 5 = 3.'
+  },
+  {
+    section:'3.9',ao:'AO1',
+    stem:'A bag contains 4 red, 3 blue, and 5 green balls.\n\nWhat is the probability of drawing a ball that is not red?',
+    options:['1/3','1/4','2/3','3/4'],
+    correct:2,
+    working:'P(not red) = 1 \u2212 4/12 = 8/12 = 2/3.'
+  },
+  {
+    section:'3.9',ao:'AO1',
+    stem:'Events A and B are independent. P(A) = 0.4 and P(B) = 0.3.\n\nWhat is P(A \u2229 B)?',
+    options:['0.10','0.12','0.58','0.70'],
+    correct:1,
+    working:'For independent events: P(A \u2229 B) = P(A) \u00d7 P(B) = 0.4 \u00d7 0.3 = 0.12.'
+  },
+  {
+    section:'3.9',ao:'AO1',
+    stem:'P(A) = 0.5, P(B) = 0.4, P(A \u2229 B) = 0.2.\n\nWhat is P(A \u222a B)?',
+    options:['0.20','0.60','0.70','0.90'],
+    correct:2,
+    working:'P(A \u222a B) = P(A) + P(B) \u2212 P(A \u2229 B) = 0.5 + 0.4 \u2212 0.2 = 0.7.'
+  },
+  {
+    section:'3.9',ao:'AO1',
+    stem:'A random variable X has the following probability distribution:',
+    table:{headers:['x','1','2','3','4'],rows:[['P(X = x)','0.1','0.3','0.4','0.2']]},
+    stemAfterTable:'What is E(X)?',
+    options:['2.5','2.7','3.0','3.2'],
+    correct:1,
+    working:'E(X) = 1(0.1) + 2(0.3) + 3(0.4) + 4(0.2) = 0.1 + 0.6 + 1.2 + 0.8 = 2.7.'
+  },
+  {
+    section:'3.9',ao:'AO1',
+    stem:'Two fair dice are rolled. What is the probability that the total is 7?',
+    options:['1/6','1/9','1/12','7/36'],
+    correct:0,
+    working:'There are 6 ways to make 7: (1,6), (2,5), (3,4), (4,3), (5,2), (6,1). P = 6/36 = 1/6.'
+  },
+  {
+    section:'3.9',ao:'AO2',
+    stem:'A game costs \u00a31 to play. You roll a fair die: if you roll a 6 you win \u00a34, otherwise you win nothing.\n\nWhat is the expected profit per game?',
+    options:['\u2212\u00a30.33','\u00a30.00','\u00a30.33','\u00a30.67'],
+    correct:0,
+    working:'E(winnings) = (1/6) \u00d7 4 + (5/6) \u00d7 0 = \u00a30.67. Expected profit = 0.67 \u2212 1 = \u2212\u00a30.33.'
+  },
+  {
+    section:'3.9',ao:'AO2',
+    stem:'In a class of 30 students, 18 study French, 12 study Spanish, and 6 study both.\n\nHow many students study neither language?',
+    options:['0','6','12','18'],
+    correct:1,
+    working:'French only = 18 \u2212 6 = 12. Spanish only = 12 \u2212 6 = 6. Both = 6. Total studying a language = 12 + 6 + 6 = 24. Neither = 30 \u2212 24 = 6.'
+  },
+  {
+    section:'3.9',ao:'AO2',
+    stem:'P(A) = 0.6, P(B|A) = 0.3, P(B|A\u2032) = 0.5.\n\nFind P(B).',
+    options:['0.18','0.38','0.50','0.80'],
+    correct:1,
+    working:'P(B) = P(B|A) \u00d7 P(A) + P(B|A\u2032) \u00d7 P(A\u2032) = 0.3(0.6) + 0.5(0.4) = 0.18 + 0.20 = 0.38.'
+  },
+  {
+    section:'3.9',ao:'AO2',
+    stem:'A box contains 100 components, of which 5 are defective. Two components are drawn at random without replacement.\n\nWhat is the probability that both are defective?',
+    options:['0.0025','0.0020','0.0050','0.0500'],
+    correct:1,
+    working:'P(both defective) = 5/100 \u00d7 4/99 = 20/9900 \u2248 0.0020.'
+  },
+  {
+    section:'3.9',ao:'AO2',
+    stem:'A random variable X has the following probability distribution:',
+    table:{headers:['x','0','1','2','3'],rows:[['P(X = x)','0.2','k','0.3','0.1']]},
+    stemAfterTable:'Find the value of k and E(X).',
+    options:['k = 0.3, E(X) = 1.4','k = 0.4, E(X) = 1.3','k = 0.4, E(X) = 1.6','k = 0.3, E(X) = 1.6'],
+    correct:1,
+    working:'Probabilities sum to 1: 0.2 + k + 0.3 + 0.1 = 1, so k = 0.4. E(X) = 0(0.2) + 1(0.4) + 2(0.3) + 3(0.1) = 0 + 0.4 + 0.6 + 0.3 = 1.3.'
+  },
+  {
+    section:'3.9',ao:'AO2',
+    stem:'A bag contains 5 red and 3 blue balls. Two balls are drawn without replacement.\n\nGiven that the first ball drawn is red, what is the probability that the second ball is also red?',
+    options:['4/7','5/8','4/8','5/7'],
+    correct:0,
+    working:'After drawing one red ball, 4 red remain out of 7 total. P(second red | first red) = 4/7.'
+  },
+  {
+    section:'3.9',ao:'AO2',
+    stem:'A lucky dip costs \u00a33 per go. The value of prizes is distributed as follows:',
+    table:{headers:['Prize value','\u00a31','\u00a33','\u00a35','\u00a310'],rows:[['Probability','0.50','0.30','0.15','0.05']]},
+    stemAfterTable:'What is the expected profit or loss per go?',
+    options:['Loss of \u00a30.35','Loss of \u00a30.15','Profit of \u00a30.15','Profit of \u00a30.35'],
+    correct:0,
+    working:'E(prize) = 1(0.50) + 3(0.30) + 5(0.15) + 10(0.05) = 0.50 + 0.90 + 0.75 + 0.50 = \u00a32.65. Expected profit = 2.65 \u2212 3 = \u2212\u00a30.35.'
+  },
+  {
+    section:'3.9',ao:'AO3',
+    stem:'In a class of 25 students, P(pass maths) = 0.8 and P(pass English) = 0.7. The two events are independent.\n\nHow many students are expected to pass both?',
+    options:['11','14','15','19'],
+    correct:1,
+    working:'P(both) = 0.8 \u00d7 0.7 = 0.56. Expected number = 0.56 \u00d7 25 = 14.'
+  },
+  {
+    section:'3.9',ao:'AO3',
+    stem:'A vendor considers selling hot drinks or cold drinks.\n\nHot drinks: cold day (P = 0.4) revenue \u00a380, warm day (P = 0.6) revenue \u00a330.\nCold drinks: cold day revenue \u00a320, warm day revenue \u00a370.\n\nWhich option has the higher expected revenue?',
+    options:['Hot drinks \u2014 E = \u00a350','Cold drinks \u2014 E = \u00a350','Both have E = \u00a350 \u2014 they are equal','Cold drinks \u2014 E = \u00a354'],
+    correct:2,
+    working:'E(hot) = 0.4 \u00d7 80 + 0.6 \u00d7 30 = 32 + 18 = \u00a350. E(cold) = 0.4 \u00d7 20 + 0.6 \u00d7 70 = 8 + 42 = \u00a350. Equal.'
+  },
+  {
+    section:'3.9',ao:'AO3',
+    stem:'A factory has a 2% fault rate. A batch of 200 items is produced.\n\nHow many items are expected to be faulty?',
+    options:['2','4','8','20'],
+    correct:1,
+    working:'Expected faulty = 0.02 \u00d7 200 = 4.'
+  },
+  {
+    section:'3.9',ao:'AO3',
+    stem:'The Monty Hall problem: there are 3 doors. Behind one is a car worth \u00a312,000; behind the others are goats. You pick door 1. The host opens door 3, revealing a goat.\n\nWhat is the expected value of switching to door 2?',
+    options:['\u00a34,000','\u00a36,000','\u00a38,000','\u00a312,000'],
+    correct:2,
+    working:'P(switch wins) = 2/3. E(switch) = (2/3) \u00d7 12,000 = \u00a38,000.'
+  },
+  {
+    section:'3.9',ao:'AO3',
+    stem:'A probability distribution has E(X) = 4.2.\n\nA student says: \u201cThe most likely value is 4 or 5.\u201d\n\nIs the student correct?',
+    options:['Yes \u2014 expected value equals the most likely value','No \u2014 E(X) is a long-run average and need not equal any value that X actually takes','Yes \u2014 E(X) lies between 4 and 5 so one of them must be most likely','No \u2014 the most likely value is the median, not the mean'],
+    correct:1,
+    working:'E(X) is the long-run average (mean) of the distribution. It does not tell us which individual value has the highest probability. The mode (most likely value) could be any value in the distribution.'
+  },
+  // ═══ §3.10 Cost-Benefit and Risk — Q25 to Q36 ═══
+  {
+    section:'3.10',ao:'AO1',
+    stem:'The probability of an event occurring in a given year is 0.04. If it occurs, the cost is \u00a35,000.\n\nWhat is the expected annual cost?',
+    options:['\u00a350','\u00a3200','\u00a3250','\u00a35,000'],
+    correct:1,
+    working:'Expected cost = 0.04 \u00d7 5,000 = \u00a3200.'
+  },
+  {
+    section:'3.10',ao:'AO1',
+    stem:'The expected annual cost of an event is \u00a3200. An insurance policy covering the event costs \u00a3250 per year.\n\nBased purely on expected value, should you buy the insurance?',
+    options:['Yes','No \u2014 the insurance costs more than the expected loss','Yes \u2014 a 4% probability is too high to ignore','Cannot be determined'],
+    correct:1,
+    working:'On expected value alone, the premium (\u00a3250) exceeds the expected loss (\u00a3200), so the insurance is not worth buying.'
+  },
+  {
+    section:'3.10',ao:'AO2',
+    stem:'Despite the expected cost being lower than the premium, why might someone still buy the insurance?',
+    options:['They enjoy paying premiums','The maximum loss of \u00a35,000 might be unaffordable','Insurers always price their products fairly','A 4% probability is very high'],
+    correct:1,
+    working:'Expected value analysis ignores the impact of a single large loss. If \u00a35,000 would cause serious financial hardship, the \u00a3250 premium buys peace of mind and protection against an unaffordable loss.'
+  },
+  {
+    section:'3.10',ao:'AO2',
+    stem:'A business faces two risks:',
+    table:{headers:['Risk','Probability','Cost if it occurs'],rows:[['Equipment failure','0.15','\u00a34,000'],['Data breach','0.05','\u00a320,000']]},
+    stemAfterTable:'The business can only afford one insurance policy: equipment cover at \u00a3700/year or data breach cover at \u00a3900/year.\n\nWhich should they choose?',
+    options:['Equipment \u2014 higher probability','Data breach \u2014 higher expected loss','Equipment \u2014 cheaper premium','Data breach \u2014 larger potential loss'],
+    correct:1,
+    working:'E(equipment) = 0.15 \u00d7 4,000 = \u00a3600. E(data breach) = 0.05 \u00d7 20,000 = \u00a31,000. The data breach has a higher expected loss and the premium (\u00a3900) is less than the expected loss (\u00a31,000), making it better value.'
+  },
+  {
+    section:'3.10',ao:'AO2',
+    stem:'A town considers building flood defences costing \u00a32 million. The probability of a major flood in any year is 0.08, and flood damage is estimated at \u00a318 million.\n\nWhat is the expected annual benefit of the defences?',
+    options:['\u00a3144,000','\u00a31,440,000','\u00a32,000,000','\u00a318,000,000'],
+    correct:1,
+    working:'Expected annual benefit = 0.08 \u00d7 18,000,000 = \u00a31,440,000.'
+  },
+  {
+    section:'3.10',ao:'AO2',
+    stem:'The flood defences cost \u00a32 million and are expected to last 25 years.\n\nWhat is the annual cost?',
+    options:['\u00a350,000','\u00a380,000','\u00a3200,000','\u00a32,000,000'],
+    correct:1,
+    working:'Annual cost = 2,000,000 \u00f7 25 = \u00a380,000.'
+  },
+  {
+    section:'3.10',ao:'AO2',
+    stem:'The expected annual benefit of the flood defences is \u00a31,440,000 and the annual cost is \u00a380,000.\n\nWhat is the benefit-cost ratio (BCR)?',
+    options:['0.056 \u2014 does not support','18 \u2014 strongly supports','1.44 \u2014 marginal','22.5 \u2014 strongly supports'],
+    correct:1,
+    working:'BCR = 1,440,000 \u00f7 80,000 = 18. A BCR well above 1 strongly supports the investment.'
+  },
+  {
+    section:'3.10',ao:'AO2',
+    stem:'A raffle has 1,000 entries at \u00a31 each. Prizes: one prize of \u00a3200 and two prizes of \u00a3100.\n\nWhat is the expected profit per entry for the organiser?',
+    options:['\u00a30.20','\u00a30.40','\u00a30.60','\u00a31.00'],
+    correct:2,
+    working:'Total prizes = 200 + 2 \u00d7 100 = \u00a3400. Revenue = 1,000 \u00d7 \u00a31 = \u00a31,000. Profit = \u00a3600. Per entry = 600 \u00f7 1,000 = \u00a30.60.'
+  },
+  {
+    section:'3.10',ao:'AO3',
+    stem:'Option A: 70% chance of gaining \u00a34,000, 30% chance of losing \u00a32,000.\nOption B: a guaranteed \u00a31,500.\n\nWhich option has the higher expected value?',
+    options:['A \u2014 EV = \u00a32,200','B \u2014 it is safer','Both are equal','A \u2014 EV = \u00a34,000'],
+    correct:0,
+    working:'E(A) = 0.7 \u00d7 4,000 + 0.3 \u00d7 (\u22122,000) = 2,800 \u2212 600 = \u00a32,200. E(B) = \u00a31,500. Option A has the higher EV.'
+  },
+  {
+    section:'3.10',ao:'AO3',
+    stem:'Option A has EV = \u00a32,200 (70% gain \u00a34,000 / 30% lose \u00a32,000). Option B guarantees \u00a31,500.\n\nWhy might a decision-maker prefer B despite its lower expected value?',
+    options:['Less paperwork involved','A 30% probability of a \u00a32,000 loss may be unacceptable','Option B has a higher EV when adjusted for inflation','Expected value is not a useful measure'],
+    correct:1,
+    working:'Risk aversion: the certainty of \u00a31,500 may be preferable to a 30% chance of losing \u00a32,000, especially if the loss would cause financial difficulty. EV is not the only consideration.'
+  },
+  {
+    section:'3.10',ao:'AO3',
+    stem:'Travel insurance costs \u00a345. The policy covers:\n\nTrip cancellation: P = 0.06, cost = \u00a3400\nMedical emergency: P = 0.02, cost = \u00a31,200\n\nIs the insurance good value based on expected cost?',
+    options:['No \u2014 \u00a348 barely exceeds the premium','Yes \u2014 the expected loss of \u00a348 exceeds the \u00a345 premium','No \u2014 expected loss is only \u00a324','Yes \u2014 expected loss of \u00a396 far exceeds the premium'],
+    correct:1,
+    working:'E(loss) = 0.06 \u00d7 400 + 0.02 \u00d7 1,200 = 24 + 24 = \u00a348. Since \u00a348 > \u00a345, the insurance is actuarially good value.'
+  },
+  {
+    section:'3.10',ao:'AO3',
+    stem:'A business considers installing CCTV: \u00a330,000 installation plus \u00a35,000 per year running costs. It is expected to reduce crime-related losses by 60%. Current crime losses average \u00a340,000 per year.\n\nOver 10 years, is the CCTV a worthwhile investment?',
+    options:['No \u2014 total cost (\u00a380,000) exceeds total savings (\u00a340,000)','Yes \u2014 total savings (\u00a3240,000) exceed total cost (\u00a380,000)','No \u2014 crime trends cannot be predicted','Yes \u2014 any crime reduction justifies the cost'],
+    correct:1,
+    working:'Total cost = 30,000 + 10 \u00d7 5,000 = \u00a380,000. Total savings = 10 \u00d7 0.6 \u00d7 40,000 = \u00a3240,000. Net benefit = 240,000 \u2212 80,000 = \u00a3160,000. BCR = 3, strongly supports.'
+  }
+];
+
+// ── GAME STATE ──
+var currentQ = 0, score = 0, answers = [], answered = false;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+  currentQ = 0; score = 0; answers = []; answered = false;
+  mfg('game_started',{game_slug:'core-maths-paper2b',level:'core'});
+  showScreen('gameScreen');
+  showSectionBanner(0);
+}
+
+function showSectionBanner(qIndex) {
+  var banner = document.getElementById('sectionBanner');
+  var qArea = document.getElementById('questionArea');
+  qArea.style.display = 'none';
+  banner.style.display = 'block';
+  var sIdx = SECTION_STARTS.indexOf(qIndex);
+  document.getElementById('sectionTitle').textContent = SECTIONS[sIdx].title;
+  document.getElementById('sectionRange').textContent = SECTIONS[sIdx].range;
+  setTimeout(function(){banner.style.display='none';qArea.style.display='block';showQuestion();},2000);
+}
+
+function showQuestion() {
+  var q = QUESTIONS[currentQ];
+  answered = false;
+  document.getElementById('progressFill').style.width = (currentQ/36*100)+'%';
+  document.getElementById('qCounter').textContent = 'Q'+(currentQ+1)+' of 36';
+  document.getElementById('qTag').textContent = '\u00a7'+q.section+' \u00b7 '+q.ao;
+
+  var stemHTML = q.stem.replace(/\n/g,'<br>');
+  if (q.table) {
+    stemHTML += '<table class="data-table"><tr>';
+    q.table.headers.forEach(function(h){stemHTML+='<th>'+h+'</th>';});
+    stemHTML += '</tr>';
+    q.table.rows.forEach(function(row){stemHTML+='<tr>';row.forEach(function(cell){stemHTML+='<td>'+cell+'</td>';});stemHTML+='</tr>';});
+    stemHTML += '</table>';
+    if (q.stemAfterTable) stemHTML += q.stemAfterTable.replace(/\n/g,'<br>');
+  }
+  document.getElementById('qStem').innerHTML = stemHTML;
+
+  var letters = ['A','B','C','D'];
+  var container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  q.options.forEach(function(opt,i){
+    var btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.dataset.val = String(i);
+    btn.innerHTML = '<span class="option-letter">'+letters[i]+'</span><span class="option-text">'+opt+'</span>';
+    btn.addEventListener('click',function(){selectAnswer(i);});
+    container.appendChild(btn);
+  });
+  document.getElementById('workingNote').classList.remove('visible');
+  document.getElementById('nextBtn').classList.remove('visible');
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  var q = QUESTIONS[currentQ];
+  var isCorrect = idx === q.correct;
+  answers.push(isCorrect);
+  if (isCorrect) score++;
+  var buttons = document.querySelectorAll('.option-btn');
+  buttons.forEach(function(btn){
+    btn.classList.add('locked');
+    var val = parseInt(btn.dataset.val);
+    if (val === q.correct) { btn.classList.add(val===idx?'correct':'reveal'); btn.querySelector('.option-letter').textContent='\u2713'; }
+    if (val === idx && !isCorrect) { btn.classList.add('incorrect'); btn.querySelector('.option-letter').textContent='\u2717'; }
+  });
+  var note = document.getElementById('workingNote');
+  note.textContent = q.working;
+  note.classList.add('visible');
+  mfg('question_answered',{game_slug:'core-maths-paper2b',level:'core',question_index:currentQ+1,correct:isCorrect,section:q.section});
+  setTimeout(function(){document.getElementById('nextBtn').classList.add('visible');},1500);
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= 36) { showResults(); return; }
+  if (SECTION_STARTS.indexOf(currentQ) !== -1) { showSectionBanner(currentQ); }
+  else { showQuestion(); }
+}
+
+function showResults() {
+  document.getElementById('progressFill').style.width = '100%';
+  var counts = [0,0,0];
+  SECTIONS.forEach(function(sec,si){
+    var start = SECTION_STARTS[si];
+    for (var i=0;i<sec.count;i++) if (answers[start+i]) counts[si]++;
+  });
+  document.getElementById('finalScore').textContent = score+' / 36';
+  document.getElementById('s1Score').textContent = counts[0]+' / 6';
+  document.getElementById('s2Score').textContent = counts[1]+' / 18';
+  document.getElementById('s3Score').textContent = counts[2]+' / 12';
+  ['s1Dots','s2Dots','s3Dots'].forEach(function(id,si){
+    var el = document.getElementById(id);
+    el.innerHTML = '';
+    var start = SECTION_STARTS[si];
+    for (var i=0;i<SECTIONS[si].count;i++){
+      var d = document.createElement('span');
+      d.className = 'dot '+(answers[start+i]?'correct-dot':'incorrect-dot');
+      d.dataset.q = 'Q'+(start+i+1);
+      el.appendChild(d);
+    }
+  });
+  mfg('game_completed',{game_slug:'core-maths-paper2b',level:'core',score:score,questions_answered:36,questions_correct:score});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('core-maths-paper2b','core',score,36).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('core-maths-paper2b','core',score);}}
+  showScreen('resultsScreen');
+}
+
+function restartGame(){startGame();}
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o));}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

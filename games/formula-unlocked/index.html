@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Change the subject of a formula with a built-in hint system. Four difficulty stages from GCSE to Level 4.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/formula-unlocked/">
+<meta property="og:title" content="Formula Unlocked — MaffsGames">
+<meta property="og:description" content="Change the subject of a formula with a built-in hint system. Four difficulty stages from GCSE to Level 4.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/formula-unlocked/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Formula Unlocked — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#070910;--surface:#0d1118;--border:#182030;--primary:#3b82f6;--accent:#f59e0b;--wrong:#f43f5e;--correct:#22c55e;--text:#e4eaf2;--muted:#607590;--hint:#8b5cf6;--stage1:#22c55e;--stage2:#3b82f6;--stage3:#f97316;--stage4:#f43f5e}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+
+.level-row{display:flex;gap:.5rem;justify-content:center;margin:.8rem 0;flex-wrap:wrap}
+.level-btn{padding:.4rem 1rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316}
+.level-btn[data-level="level4"].active{background:#ef4444;border-color:#ef4444}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:560px}
+
+.stage-legend{display:flex;gap:.6rem;justify-content:center;margin:.6rem 0;flex-wrap:wrap;font-size:.72rem}
+.stage-pill{padding:2px 10px;border-radius:10px;font-weight:600}
+.sp1{background:rgba(34,197,94,.15);color:var(--stage1)}
+.sp2{background:rgba(59,130,246,.15);color:var(--stage2)}
+.sp3{background:rgba(249,115,22,.15);color:var(--stage3)}
+.sp4{background:rgba(244,63,94,.15);color:var(--stage4)}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:48px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+
+.stage-indicator{text-align:center;margin-bottom:.4rem;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
+/* Formula card */
+.formula-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:.6rem;text-align:center}
+.formula-card .formula{margin-bottom:.6rem}
+.formula-card .formula .katex{font-size:1.6em!important}
+.formula-card .target{font-size:.9rem;color:var(--accent);font-weight:600}
+.formula-card .context{font-size:.78rem;color:var(--muted);margin-top:.3rem;font-style:italic}
+
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
+.opt-btn{padding:.7rem .4rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.82rem;cursor:pointer;transition:all .12s;text-align:center;min-height:52px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 10px rgba(59,130,246,.12)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.08)}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+.opt-btn .katex{font-size:1em!important}
+
+/* Hint system */
+.hint-bar{display:flex;gap:.4rem;justify-content:center;margin-bottom:.5rem;align-items:center}
+.hint-btn{padding:.4rem 1rem;border-radius:8px;border:2px solid var(--hint);background:transparent;color:var(--hint);font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .12s}
+.hint-btn:hover{background:rgba(139,92,246,.1)}
+.hint-btn.disabled{opacity:.3;pointer-events:none}
+.hint-count{font-size:.7rem;color:var(--muted)}
+.hint-panel{display:none;background:var(--surface);border:1px solid var(--hint);border-radius:10px;padding:.8rem;margin-bottom:.5rem;text-align:left;font-size:.82rem;line-height:1.6}
+.hint-panel.show{display:block;animation:fadeIn .2s}
+.hint-panel .hint-step{padding:.3rem .6rem;margin-bottom:.3rem;border-left:2px solid var(--hint);color:var(--hint)}
+.hint-panel .hint-step .katex{font-size:1em!important}
+
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1rem;margin-bottom:.6rem;text-align:left;font-size:.85rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.85rem;margin-bottom:.4rem;font-weight:600}
+.solution .step{margin-bottom:.4rem;padding-left:.7rem;border-left:2px solid var(--border)}
+.solution .step .katex{font-size:1.05em!important}
+.solution .misconception{margin-top:.5rem;padding:.5rem .7rem;background:rgba(245,158,11,.08);border-radius:8px;border-left:3px solid var(--accent);font-size:.78rem;color:var(--accent)}
+.solution .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Formula Unlocked</h1><div class="sub">Make the subject. Show the steps. Use hints if you need them.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="level-row">
+      <button class="level-btn active" data-level="gcse" onclick="setLevel('gcse')">GCSE</button>
+      <button class="level-btn" data-level="alevel" onclick="setLevel('alevel')">A-Level</button>
+      <button class="level-btn" data-level="level4" onclick="setLevel('level4')">Level 4</button>
+    </div>
+    <div class="stage-legend">
+      <span class="stage-pill sp1">Stage 1: One step</span>
+      <span class="stage-pill sp2">Stage 2: Two steps</span>
+      <span class="stage-pill sp3">Stage 3: Powers &amp; roots</span>
+      <span class="stage-pill sp4">Stage 4: Variable appears twice</span>
+    </div>
+    <div class="menu-info">
+      Questions progress through four stages. Use the <span style="color:var(--hint)">hint button</span> to reveal the next step — hints cost points but keep you learning. Every wrong answer shows the full worked solution.
+    </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="start-btn" onclick="startGame()">Start</button>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div>
+      <div class="hud-item"><div class="hud-label">Hints</div><div class="hud-val" id="hintsUsed">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
+    </div>
+    <div class="stage-indicator" id="stageInd"></div>
+    <div class="formula-card">
+      <div class="formula" id="formulaDisplay"></div>
+      <div class="target" id="targetDisplay"></div>
+      <div class="context" id="contextDisplay"></div>
+    </div>
+    <div class="hint-bar">
+      <button class="hint-btn" id="hintBtn" onclick="useHint()">💡 Show next step</button>
+      <span class="hint-count" id="hintInfo"></span>
+    </div>
+    <div class="hint-panel" id="hintPanel"></div>
+    <div class="options" id="options"></div>
+    <div class="solution" id="solution"></div>
+  </div>
+
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+
+<script>
+let level='gcse',pool=[],qIdx=0,score=0,correctN=0,total=0,hintsTotal=0,currentQ=null,qStart=0,hintsRevealed=0;
+const BASE=100,T_K=0.15,H_COST=25,MAX_Q=20;
+
+function setLevel(l){level=l;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===l))}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rk(el,tex){if(typeof katex!=='undefined')katex.render(tex,el,{throwOnError:false,displayMode:true});else el.textContent=tex}
+function rkInline(tex){if(typeof katex==='undefined')return tex;const s=document.createElement('span');katex.render(tex,s,{throwOnError:false,displayMode:false});return s.innerHTML}
+
+const pa=new URLSearchParams(location.search);
+if(pa.get('level')&&['gcse','alevel','level4'].includes(pa.get('level'))){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+
+// ============================================================
+//  QUESTION BANKS
+// ============================================================
+const Q_GCSE=[
+// === STAGE 1: ONE STEP ===
+{stage:1,formula:'v = u + at',target:'u',correct:'u = v - at',d:['u = v + at','u = \\dfrac{v}{at}','u = at - v'],
+hints:['What is being added to u?','Subtract at from both sides'],
+steps:['v = u + at','v - at = u','u = v - at']},
+
+{stage:1,formula:'F = ma',target:'m',correct:'m = \\dfrac{F}{a}',d:['m = Fa','m = F - a','m = \\dfrac{a}{F}'],
+hints:['m is being multiplied by a','Divide both sides by a'],
+steps:['F = ma','\\dfrac{F}{a} = m','m = \\dfrac{F}{a}']},
+
+{stage:1,formula:'P = IV',target:'I',correct:'I = \\dfrac{P}{V}',d:['I = PV','I = P - V','I = \\dfrac{V}{P}'],
+hints:['I is multiplied by V','Divide both sides by V'],
+steps:['P = IV','\\dfrac{P}{V} = I']},
+
+{stage:1,formula:'d = st',target:'s',correct:'s = \\dfrac{d}{t}',d:['s = dt','s = d - t','s = \\dfrac{t}{d}'],
+hints:['s is multiplied by t','Divide both sides by t'],
+steps:['d = st','\\dfrac{d}{t} = s']},
+
+{stage:1,formula:'C = \\pi d',target:'d',correct:'d = \\dfrac{C}{\\pi}',d:['d = C\\pi','d = C - \\pi','d = \\dfrac{\\pi}{C}'],
+hints:['d is multiplied by π','Divide both sides by π'],
+steps:['C = \\pi d','d = \\dfrac{C}{\\pi}']},
+
+{stage:1,formula:'y = mx + c',target:'c',correct:'c = y - mx',d:['c = y + mx','c = \\dfrac{y}{mx}','c = mx - y'],
+hints:['c has mx added to it','Subtract mx from both sides'],
+steps:['y = mx + c','y - mx = c','c = y - mx']},
+
+{stage:1,formula:'V = IR',target:'R',correct:'R = \\dfrac{V}{I}',d:['R = VI','R = V - I','R = \\dfrac{I}{V}'],
+hints:['R is multiplied by I','Divide both sides by I'],
+steps:['V = IR','R = \\dfrac{V}{I}']},
+
+{stage:1,formula:'W = mg',target:'g',correct:'g = \\dfrac{W}{m}',d:['g = Wm','g = W - m','g = \\dfrac{m}{W}'],
+hints:['g is multiplied by m','Divide both sides by m'],
+steps:['W = mg','g = \\dfrac{W}{m}']},
+
+{stage:1,formula:'p = \\dfrac{F}{A}',target:'F',correct:'F = pA',d:['F = \\dfrac{p}{A}','F = p + A','F = \\dfrac{A}{p}'],
+hints:['F is divided by A','Multiply both sides by A'],
+steps:['p = \\dfrac{F}{A}','pA = F','F = pA']},
+
+{stage:1,formula:'\\rho = \\dfrac{m}{V}',target:'m',correct:'m = \\rho V',d:['m = \\dfrac{\\rho}{V}','m = \\rho + V','m = \\dfrac{V}{\\rho}'],
+hints:['m is divided by V','Multiply both sides by V'],
+steps:['\\rho = \\dfrac{m}{V}','m = \\rho V']},
+
+// === STAGE 2: TWO STEPS ===
+{stage:2,formula:'v = u + at',target:'t',correct:'t = \\dfrac{v - u}{a}',d:['t = \\dfrac{v + u}{a}','t = \\dfrac{v}{u + a}','t = a(v - u)'],
+hints:['First isolate the term containing t: subtract u','Then t is multiplied by a: divide by a'],
+steps:['v = u + at','v - u = at','\\dfrac{v - u}{a} = t','t = \\dfrac{v - u}{a}'],misconception:'Common error: dividing before subtracting. Always undo addition/subtraction FIRST, then multiplication/division.'},
+
+{stage:2,formula:'v = u + at',target:'a',correct:'a = \\dfrac{v - u}{t}',d:['a = \\dfrac{v + u}{t}','a = (v - u)t','a = \\dfrac{v}{u + t}'],
+hints:['Subtract u from both sides','Divide both sides by t'],
+steps:['v - u = at','a = \\dfrac{v - u}{t}']},
+
+{stage:2,formula:'y = mx + c',target:'x',correct:'x = \\dfrac{y - c}{m}',d:['x = \\dfrac{y + c}{m}','x = m(y - c)','x = \\dfrac{y}{m} - c'],
+hints:['Subtract c from both sides','Divide both sides by m'],
+steps:['y - c = mx','x = \\dfrac{y - c}{m}'],misconception:'The last distractor is a common error — dividing only the first term by m instead of the whole expression.'},
+
+{stage:2,formula:'P = \\dfrac{E}{t}',target:'t',correct:'t = \\dfrac{E}{P}',d:['t = EP','t = E - P','t = \\dfrac{P}{E}'],
+hints:['Multiply both sides by t to clear the fraction','Then divide both sides by P'],
+steps:['Pt = E','t = \\dfrac{E}{P}']},
+
+{stage:2,formula:'s = \\dfrac{1}{2}at^2',target:'a',correct:'a = \\dfrac{2s}{t^2}',d:['a = \\dfrac{s}{2t^2}','a = 2st^2','a = \\dfrac{s}{t^2}'],
+hints:['Multiply both sides by 2','Divide both sides by t²'],
+steps:['2s = at^2','a = \\dfrac{2s}{t^2}'],misconception:'Don\'t forget to multiply by 2 first. The ½ must be cleared before isolating a.'},
+
+{stage:2,formula:'A = \\dfrac{1}{2}bh',target:'h',correct:'h = \\dfrac{2A}{b}',d:['h = \\dfrac{A}{2b}','h = 2Ab','h = \\dfrac{Ab}{2}'],
+hints:['Multiply both sides by 2','Divide by b'],
+steps:['2A = bh','h = \\dfrac{2A}{b}']},
+
+{stage:2,formula:'Q = mc\\Delta T',target:'\\Delta T',correct:'\\Delta T = \\dfrac{Q}{mc}',d:['\\Delta T = Qmc','\\Delta T = \\dfrac{mc}{Q}','\\Delta T = Q - mc'],
+hints:['ΔT is multiplied by m and by c','Divide both sides by mc'],
+steps:['Q = mc\\Delta T','\\Delta T = \\dfrac{Q}{mc}']},
+
+{stage:2,formula:'v^2 = u^2 + 2as',target:'s',correct:'s = \\dfrac{v^2 - u^2}{2a}',d:['s = \\dfrac{v^2 + u^2}{2a}','s = 2a(v^2 - u^2)','s = \\dfrac{v - u}{2a}'],
+hints:['Subtract u² from both sides','Divide by 2a'],
+steps:['v^2 - u^2 = 2as','s = \\dfrac{v^2 - u^2}{2a}']},
+
+// === STAGE 3: POWERS AND ROOTS ===
+{stage:3,formula:'E = \\dfrac{1}{2}mv^2',target:'v',correct:'v = \\sqrt{\\dfrac{2E}{m}}',d:['v = \\dfrac{2E}{m}','v = \\dfrac{\\sqrt{2E}}{m}','v = \\dfrac{E}{2m}'],
+hints:['Multiply by 2, divide by m to isolate v²','Take the square root of both sides'],
+steps:['2E = mv^2','\\dfrac{2E}{m} = v^2','v = \\sqrt{\\dfrac{2E}{m}}'],misconception:'You must isolate v² completely BEFORE taking the square root. √(2E/m) is correct, not √(2E)/m.'},
+
+{stage:3,formula:'A = \\pi r^2',target:'r',correct:'r = \\sqrt{\\dfrac{A}{\\pi}}',d:['r = \\dfrac{A}{\\pi}','r = \\dfrac{\\sqrt{A}}{\\pi}','r = \\dfrac{A}{2\\pi}'],
+hints:['Divide both sides by π to isolate r²','Take the square root'],
+steps:['\\dfrac{A}{\\pi} = r^2','r = \\sqrt{\\dfrac{A}{\\pi}}']},
+
+{stage:3,formula:'T = 2\\pi\\sqrt{\\dfrac{l}{g}}',target:'l',correct:'l = \\dfrac{gT^2}{4\\pi^2}',d:['l = \\dfrac{T^2}{4\\pi^2 g}','l = \\dfrac{gT}{2\\pi}','l = \\dfrac{T^2 g}{2\\pi}'],
+hints:['Divide by 2π, then square both sides','Multiply by g'],
+steps:['\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{l}{g}}','\\dfrac{T^2}{4\\pi^2} = \\dfrac{l}{g}','l = \\dfrac{gT^2}{4\\pi^2}'],misconception:'When you square 2π, you get 4π², not 2π².'},
+
+{stage:3,formula:'c^2 = a^2 + b^2',target:'a',correct:'a = \\sqrt{c^2 - b^2}',d:['a = c - b','a = \\sqrt{c^2 + b^2}','a = c^2 - b^2'],
+hints:['Subtract b² from both sides','Take the square root'],
+steps:['c^2 - b^2 = a^2','a = \\sqrt{c^2 - b^2}'],misconception:'√(c² − b²) ≠ c − b. You cannot split a square root across subtraction.'},
+
+{stage:3,formula:'V = \\dfrac{4}{3}\\pi r^3',target:'r',correct:'r = \\sqrt[3]{\\dfrac{3V}{4\\pi}}',d:['r = \\dfrac{3V}{4\\pi}','r = \\sqrt{\\dfrac{3V}{4\\pi}}','r = \\dfrac{V}{\\frac{4}{3}\\pi}'],
+hints:['Multiply by 3, divide by 4π to isolate r³','Take the cube root'],
+steps:['\\dfrac{3V}{4\\pi} = r^3','r = \\sqrt[3]{\\dfrac{3V}{4\\pi}}']},
+
+{stage:3,formula:'v^2 = u^2 + 2as',target:'v',correct:'v = \\sqrt{u^2 + 2as}',d:['v = u + \\sqrt{2as}','v = u^2 + 2as','v = \\sqrt{u^2} + \\sqrt{2as}'],
+hints:['v² is already isolated on the left','Take the square root of the entire right side'],
+steps:['v^2 = u^2 + 2as','v = \\sqrt{u^2 + 2as}'],misconception:'√(u² + 2as) ≠ u + √(2as). The square root applies to the WHOLE expression.'},
+
+{stage:3,formula:'P = I^2 R',target:'I',correct:'I = \\sqrt{\\dfrac{P}{R}}',d:['I = \\dfrac{P}{R}','I = \\dfrac{\\sqrt{P}}{R}','I = \\dfrac{P}{R^2}'],
+hints:['Divide by R to isolate I²','Take the square root'],
+steps:['\\dfrac{P}{R} = I^2','I = \\sqrt{\\dfrac{P}{R}}']},
+
+// === STAGE 4: VARIABLE APPEARS TWICE ===
+{stage:4,formula:'ax + b = cx + d',target:'x',correct:'x = \\dfrac{d - b}{a - c}',d:['x = \\dfrac{d + b}{a + c}','x = \\dfrac{b - d}{a - c}','x = (a - c)(d - b)'],
+hints:['Collect all x terms on one side: subtract cx','Factor out x from the left side','Divide by the bracket'],
+steps:['ax - cx = d - b','x(a - c) = d - b','x = \\dfrac{d - b}{a - c}'],misconception:'When the variable appears on both sides, you must COLLECT terms, then FACTORISE.'},
+
+{stage:4,formula:'y = \\dfrac{x + 1}{x - 1}',target:'x',correct:'x = \\dfrac{y + 1}{y - 1}',d:['x = \\dfrac{y - 1}{y + 1}','x = y(x - 1) + 1','x = \\dfrac{1 + y}{1 - y}'],
+hints:['Multiply both sides by (x − 1): y(x − 1) = x + 1','Expand: yx − y = x + 1','Collect the x terms on one side: yx − x = y + 1','Factorise: x(y − 1) = y + 1, then divide by (y − 1)'],
+steps:['y(x - 1) = x + 1','yx - y = x + 1','yx - x = y + 1','x(y - 1) = y + 1','x = \\dfrac{y + 1}{y - 1}']},
+
+{stage:4,formula:'\\dfrac{1}{u} + \\dfrac{1}{v} = \\dfrac{1}{f}',target:'f',correct:'f = \\dfrac{uv}{u + v}',d:['f = u + v','f = \\dfrac{u + v}{uv}','f = \\dfrac{1}{u + v}'],
+hints:['Combine the left side into a single fraction: (u + v)/(uv)','So 1/f = (u + v)/(uv)','Take the reciprocal of both sides'],
+steps:['\\dfrac{1}{f} = \\dfrac{1}{u} + \\dfrac{1}{v} = \\dfrac{u + v}{uv}','f = \\dfrac{uv}{u + v}'],misconception:'1/u + 1/v ≠ 1/(u+v). You must find a common denominator first.'},
+
+{stage:4,formula:'S = \\dfrac{a}{1 - r}',target:'r',correct:'r = 1 - \\dfrac{a}{S}',d:['r = \\dfrac{a - S}{S}','r = \\dfrac{S - a}{a}','r = 1 + \\dfrac{a}{S}'],
+hints:['Multiply both sides by (1 − r)','Divide by S','Rearrange for r'],
+steps:['S(1 - r) = a','1 - r = \\dfrac{a}{S}','r = 1 - \\dfrac{a}{S}']},
+];
+
+const Q_ALEVEL=[
+// Stage 2
+{stage:2,formula:'s = ut + \\dfrac{1}{2}at^2',target:'u',correct:'u = \\dfrac{s - \\frac{1}{2}at^2}{t}',d:['u = \\dfrac{s}{t} - \\dfrac{1}{2}at','u = st - \\dfrac{1}{2}at^2','u = \\dfrac{2s - at^2}{2t}'],correct_note:'Both first and last are equivalent',
+hints:['Subtract ½at² from both sides','Divide by t'],
+steps:['s - \\dfrac{1}{2}at^2 = ut','u = \\dfrac{s - \\frac{1}{2}at^2}{t} = \\dfrac{2s - at^2}{2t}'],correct_override:'u = \\dfrac{2s - at^2}{2t}'},
+
+{stage:2,formula:'\\ln y = \\ln a + bx',target:'y',correct:'y = ae^{bx}',d:['y = a + e^{bx}','y = e^{a + bx}','y = \\dfrac{e^{bx}}{a}'],
+hints:['Use the log law: ln a + bx = ln a + ln(e^{bx}) = ln(ae^{bx})','Exponentiate both sides'],
+steps:['\\ln y = \\ln a + bx','\\ln y = \\ln(ae^{bx})','y = ae^{bx}']},
+
+// Stage 3
+{stage:3,formula:'T = 2\\pi\\sqrt{\\dfrac{m}{k}}',target:'k',correct:'k = \\dfrac{4\\pi^2 m}{T^2}',d:['k = \\dfrac{T^2 m}{4\\pi^2}','k = \\dfrac{2\\pi m}{T}','k = \\dfrac{m}{T^2}'],
+hints:['Divide by 2π, square both sides','Rearrange for k'],
+steps:['\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{m}{k}}','\\dfrac{T^2}{4\\pi^2} = \\dfrac{m}{k}','k = \\dfrac{4\\pi^2 m}{T^2}']},
+
+{stage:3,formula:'E = \\sigma \\epsilon A T^4',target:'T',correct:'T = \\sqrt[4]{\\dfrac{E}{\\sigma \\epsilon A}}',d:['T = \\dfrac{E}{\\sigma \\epsilon A}','T = \\left(\\dfrac{E}{\\sigma \\epsilon A}\\right)^4','T = \\dfrac{\\sqrt{E}}{\\sigma \\epsilon A}'],
+hints:['Divide by σεA','Take the fourth root'],
+steps:['\\dfrac{E}{\\sigma \\epsilon A} = T^4','T = \\sqrt[4]{\\dfrac{E}{\\sigma \\epsilon A}}']},
+
+// Stage 4
+{stage:4,formula:'y = \\dfrac{2x + 3}{x - 1}',target:'x',correct:'x = \\dfrac{y + 3}{y - 2}',d:['x = \\dfrac{y - 3}{y + 2}','x = \\dfrac{3 - y}{2 - y}','x = \\dfrac{y + 3}{2 - y}'],
+hints:['Multiply by (x−1): y(x−1) = 2x + 3','Expand and collect x terms','Factorise x out'],
+steps:['yx - y = 2x + 3','yx - 2x = y + 3','x(y - 2) = y + 3','x = \\dfrac{y + 3}{y - 2}']},
+
+{stage:4,formula:'t = \\dfrac{a + bx}{c + dx}',target:'x',correct:'x = \\dfrac{tc - a}{b - td}',d:['x = \\dfrac{a - tc}{b - td}','x = \\dfrac{tc + a}{b + td}','x = \\dfrac{a + tc}{td - b}'],
+hints:['Multiply by (c + dx)','Expand both sides','Collect x terms, factorise'],
+steps:['t(c + dx) = a + bx','tc + tdx = a + bx','tdx - bx = a - tc','x(td - b) = a - tc','x = \\dfrac{a - tc}{td - b} = \\dfrac{tc - a}{b - td}']},
+];
+
+const Q_LEVEL4=[
+// Stage 1
+{stage:1,formula:'V = IR',target:'R',ctx:'Ohm\'s Law',correct:'R = \\dfrac{V}{I}',d:['R = VI','R = V - I','R = \\dfrac{I}{V}'],
+hints:['R is multiplied by I','Divide both sides by I'],
+steps:['V = IR','R = \\dfrac{V}{I}']},
+
+{stage:1,formula:'\\sigma = \\dfrac{F}{A}',target:'F',ctx:'Direct stress',correct:'F = \\sigma A',d:['F = \\dfrac{\\sigma}{A}','F = \\sigma + A','F = \\dfrac{A}{\\sigma}'],
+hints:['F is divided by A','Multiply both sides by A'],
+steps:['\\sigma A = F']},
+
+{stage:1,formula:'\\epsilon = \\dfrac{\\Delta L}{L}',target:'\\Delta L',ctx:'Strain',correct:'\\Delta L = \\epsilon L',d:['\\Delta L = \\dfrac{\\epsilon}{L}','\\Delta L = \\dfrac{L}{\\epsilon}','\\Delta L = \\epsilon + L'],
+hints:['ΔL is divided by L','Multiply both sides by L'],
+steps:['\\epsilon L = \\Delta L']},
+
+// Stage 2
+{stage:2,formula:'P = I^2 R',target:'R',ctx:'Power dissipated in a resistor',correct:'R = \\dfrac{P}{I^2}',d:['R = \\dfrac{P}{2I}','R = PI^2','R = \\dfrac{P}{I}'],
+hints:['R is multiplied by I²','Divide both sides by I²'],
+steps:['\\dfrac{P}{I^2} = R']},
+
+{stage:2,formula:'\\sigma = E\\epsilon',target:'E',ctx:'Young\'s modulus (Hooke\'s law)',correct:'E = \\dfrac{\\sigma}{\\epsilon}',d:['E = \\sigma\\epsilon','E = \\sigma - \\epsilon','E = \\dfrac{\\epsilon}{\\sigma}'],
+hints:['E is multiplied by ε','Divide both sides by ε'],
+steps:['E = \\dfrac{\\sigma}{\\epsilon}']},
+
+{stage:2,formula:'v = u + at',target:'t',ctx:'SUVAT equation',correct:'t = \\dfrac{v - u}{a}',d:['t = \\dfrac{v + u}{a}','t = a(v - u)','t = \\dfrac{u - v}{a}'],
+hints:['Subtract u from both sides','Divide by a'],
+steps:['v - u = at','t = \\dfrac{v - u}{a}']},
+
+{stage:2,formula:'M = Fd',target:'d',ctx:'Moment of a force',correct:'d = \\dfrac{M}{F}',d:['d = MF','d = M - F','d = \\dfrac{F}{M}'],
+hints:['d is multiplied by F','Divide by F'],
+steps:['d = \\dfrac{M}{F}']},
+
+{stage:2,formula:'P_{total} = P_1 + P_2 + P_3',target:'P_2',ctx:'Series power',correct:'P_2 = P_{total} - P_1 - P_3',d:['P_2 = P_{total} - P_1 + P_3','P_2 = \\dfrac{P_{total}}{P_1 P_3}','P_2 = P_1 + P_3 - P_{total}'],
+hints:['Subtract P₁ and P₃ from both sides'],
+steps:['P_2 = P_{total} - P_1 - P_3']},
+
+// Stage 3
+{stage:3,formula:'E_k = \\dfrac{1}{2}mv^2',target:'v',ctx:'Kinetic energy',correct:'v = \\sqrt{\\dfrac{2E_k}{m}}',d:['v = \\dfrac{2E_k}{m}','v = \\dfrac{\\sqrt{2E_k}}{m}','v = \\dfrac{E_k}{2m}'],
+hints:['Multiply by 2, divide by m','Take the square root'],
+steps:['\\dfrac{2E_k}{m} = v^2','v = \\sqrt{\\dfrac{2E_k}{m}}']},
+
+{stage:3,formula:'P = I^2 R',target:'I',ctx:'Find the current',correct:'I = \\sqrt{\\dfrac{P}{R}}',d:['I = \\dfrac{P}{R}','I = \\dfrac{\\sqrt{P}}{R}','I = \\dfrac{P}{R^2}'],
+hints:['Divide by R to isolate I²','Square root both sides'],
+steps:['\\dfrac{P}{R} = I^2','I = \\sqrt{\\dfrac{P}{R}}']},
+
+{stage:3,formula:'T = 2\\pi\\sqrt{\\dfrac{L}{g}}',target:'L',ctx:'Simple pendulum period',correct:'L = \\dfrac{gT^2}{4\\pi^2}',d:['L = \\dfrac{T^2}{4\\pi^2 g}','L = \\dfrac{gT}{2\\pi}','L = g\\left(\\dfrac{T}{2\\pi}\\right)'],
+hints:['Divide by 2π','Square both sides','Multiply by g'],
+steps:['\\dfrac{T^2}{4\\pi^2} = \\dfrac{L}{g}','L = \\dfrac{gT^2}{4\\pi^2}']},
+
+{stage:3,formula:'A = \\pi r^2',target:'r',ctx:'Cross-sectional area of a shaft',correct:'r = \\sqrt{\\dfrac{A}{\\pi}}',d:['r = \\dfrac{A}{\\pi}','r = \\dfrac{A}{2\\pi}','r = \\dfrac{\\sqrt{A}}{\\pi}'],
+hints:['Divide by π','Square root'],
+steps:['\\dfrac{A}{\\pi} = r^2','r = \\sqrt{\\dfrac{A}{\\pi}}']},
+
+// Stage 4
+{stage:4,formula:'\\dfrac{1}{R_T} = \\dfrac{1}{R_1} + \\dfrac{1}{R_2}',target:'R_1',ctx:'Parallel resistors',
+correct:'R_1 = \\dfrac{R_T R_2}{R_2 - R_T}',d:['R_1 = R_T - R_2','R_1 = \\dfrac{R_T + R_2}{R_T R_2}','R_1 = \\dfrac{R_2 - R_T}{R_T R_2}'],
+hints:['Rearrange: 1/R₁ = 1/R_T − 1/R₂','Find common denominator on the right','Take the reciprocal'],
+steps:['\\dfrac{1}{R_1} = \\dfrac{1}{R_T} - \\dfrac{1}{R_2} = \\dfrac{R_2 - R_T}{R_T R_2}','R_1 = \\dfrac{R_T R_2}{R_2 - R_T}']},
+
+{stage:4,formula:'\\dfrac{1}{f} = \\dfrac{1}{u} + \\dfrac{1}{v}',target:'v',ctx:'Thin lens equation',
+correct:'v = \\dfrac{uf}{u - f}',d:['v = uf - f','v = \\dfrac{f - u}{uf}','v = \\dfrac{u + f}{uf}'],
+hints:['Rearrange: 1/v = 1/f − 1/u','Common denominator: (u − f)/(uf)','Take reciprocal'],
+steps:['\\dfrac{1}{v} = \\dfrac{1}{f} - \\dfrac{1}{u} = \\dfrac{u - f}{uf}','v = \\dfrac{uf}{u - f}']},
+];
+
+// ============================================================
+//  GAME ENGINE
+// ============================================================
+function startGame(){
+  mfg('game_started',{game_slug:'formula-unlocked',level:level});window._ggAbandoned=true;
+  if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'formula-unlocked',level:level,questions_answered:total})});}
+  let bank;
+  if(level==='gcse')bank=[...Q_GCSE];
+  else if(level==='alevel')bank=[...Q_GCSE.filter(q=>q.stage>=2),...Q_ALEVEL];
+  else bank=[...Q_LEVEL4];
+
+  // Sort by stage then shuffle within each stage
+  const s1=shuffle(bank.filter(q=>q.stage===1));
+  const s2=shuffle(bank.filter(q=>q.stage===2));
+  const s3=shuffle(bank.filter(q=>q.stage===3));
+  const s4=shuffle(bank.filter(q=>q.stage===4));
+
+  // Build pool: weighted towards earlier stages
+  if(level==='gcse'){
+    pool=[...s1.slice(0,5),...s2.slice(0,6),...s3.slice(0,5),...s4.slice(0,4)];
+  } else if(level==='alevel'){
+    pool=[...s2.slice(0,5),...s3.slice(0,5),...s4.slice(0,5),...shuffle([...Q_ALEVEL]).slice(0,5)];
+  } else {
+    pool=[...s1.slice(0,4),...s2.slice(0,5),...s3.slice(0,5),...s4.slice(0,4)];
+  }
+  pool=pool.slice(0,MAX_Q);
+
+  qIdx=0;score=0;correctN=0;total=0;hintsTotal=0;
+  document.getElementById('score').textContent='0';
+  document.getElementById('correctCount').textContent='0';
+  document.getElementById('hintsUsed').textContent='0';
+  show('game');nextQ();
+}
+
+function nextQ(){
+  if(qIdx>=pool.length){endGame();return}
+  currentQ=pool[qIdx];qIdx++;total++;hintsRevealed=0;
+  document.getElementById('qNum').textContent=total;
+  document.getElementById('solution').className='solution';
+  document.getElementById('hintPanel').className='hint-panel';
+  document.getElementById('hintPanel').innerHTML='';
+  document.getElementById('hintBtn').classList.remove('disabled');
+  qStart=Date.now();updateTimer();
+
+  // Stage indicator
+  const stageColors=['','var(--stage1)','var(--stage2)','var(--stage3)','var(--stage4)'];
+  const stageNames=['','One Step','Two Steps','Powers & Roots','Variable Appears Twice'];
+  document.getElementById('stageInd').textContent='Stage '+currentQ.stage+': '+stageNames[currentQ.stage];
+  document.getElementById('stageInd').style.color=stageColors[currentQ.stage];
+
+  // Formula
+  const fEl=document.getElementById('formulaDisplay');
+  rk(fEl,currentQ.formula);
+  document.getElementById('targetDisplay').textContent='Make '+currentQ.target+' the subject';
+  document.getElementById('contextDisplay').textContent=currentQ.ctx||'';
+
+  // Hint info
+  document.getElementById('hintInfo').textContent=(currentQ.hints?currentQ.hints.length:0)+' hints available (−'+H_COST+' pts each)';
+
+  // Options
+  const correctVal=currentQ.correct_override||currentQ.correct;
+  const opts=MaffsOptions.build(correctVal,currentQ.d);
+  const oEl=document.getElementById('options');oEl.innerHTML='';
+  opts.forEach(v=>{
+    const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
+    b.innerHTML=rkInline(v);
+    b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b);
+  });
+}
+
+function useHint(){
+  if(!currentQ.hints||hintsRevealed>=currentQ.hints.length)return;
+  const hint=currentQ.hints[hintsRevealed];
+  hintsRevealed++;hintsTotal++;
+  document.getElementById('hintsUsed').textContent=hintsTotal;
+
+  const panel=document.getElementById('hintPanel');
+  panel.className='hint-panel show';
+  const div=document.createElement('div');div.className='hint-step';
+  div.innerHTML='Step '+hintsRevealed+': '+hint;
+  panel.appendChild(div);
+
+  if(hintsRevealed>=currentQ.hints.length)document.getElementById('hintBtn').classList.add('disabled');
+}
+
+function handleAnswer(btn){
+  const q=currentQ,s=(Date.now()-qStart)/1000;
+  const correctVal=q.correct_override||q.correct;
+  const ok=btn.dataset.val===correctVal;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===correctVal)b.classList.add('correct')});
+  document.getElementById('hintBtn').classList.add('disabled');
+
+  mfg('question_answered',{game_slug:'formula-unlocked',level:level,correct:ok,question_index:total});
+  if(ok){
+    btn.classList.add('correct');
+    const penalty=hintsRevealed*H_COST;
+    const m=1/(1+T_K*Math.log(1+s));
+    score+=Math.max(1,Math.round((BASE-penalty)*m));
+    correctN++;
+    updateHUD();setTimeout(nextQ,1000);
+  } else {
+    btn.classList.add('wrong');
+    updateHUD();showExplain(q);
+  }
+}
+
+function showExplain(q){
+  const sol=document.getElementById('solution');
+  let html='<h3>Worked solution</h3>';
+  (q.steps||[]).forEach(st=>{html+='<div class="step">'+rkInline(st)+'</div>'});
+  if(q.misconception)html+='<div class="misconception">⚠ '+q.misconception+'</div>';
+  html+='<button class="next-btn" onclick="closeSol()">Got it — next question</button>';
+  sol.innerHTML=html;sol.className='solution show';
+}
+
+function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
+function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
+
+function endGame(){
+  const pct=total>0?Math.round(correctN/total*100):0;
+  let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
+  const lvlNames={gcse:'GCSE',alevel:'A-Level',level4:'Level 4'};
+  document.getElementById('resultTitle').textContent=t;
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('statsLine').innerHTML=
+    lvlNames[level]+' mode<br>'+correctN+'/'+total+' correct ('+pct+'%)<br>Hints used: '+hintsTotal;
+  window._ggAbandoned=false;mfg('game_completed',{game_slug:'formula-unlocked',level:level,score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('formula-unlocked',level,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('formula-unlocked',level,score);}}
+  var _pbKey='funlock_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'formula-unlocked',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}
+  show('results');
+}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

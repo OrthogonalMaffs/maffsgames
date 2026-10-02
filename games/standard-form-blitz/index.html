@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Convert, multiply, and divide in standard form. 100 questions for GCSE and A-Level number skills.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/standard-form-blitz/">
+<meta property="og:title" content="Standard Form Blitz — MaffsGames">
+<meta property="og:description" content="Convert, multiply, and divide in standard form. 100 questions for GCSE and A-Level number skills.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/standard-form-blitz/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Standard Form Blitz — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<!-- Google Analytics (cookieless) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+  gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#060d1f;--surface:#0e1a32;--border:#1a2a4a;--primary:#38bdf8;--accent:#a3e635;--wrong:#fb7185;--text:#e8f0fe;--muted:#6b82a8}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:0.85rem;color:var(--muted);margin-top:0.3rem}
+.level-select{display:flex;gap:0.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap}
+.level-btn{padding:0.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#000}
+.level-btn[data-level="gcse"].active{background:#3b82f6;border-color:#3b82f6;color:#fff}
+.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316;color:#fff}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:0.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}.hud-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:120px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0.6rem}
+.q-card .prompt{font-size:0.85rem;color:var(--accent);font-weight:600}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1rem}
+.opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:0.95rem;cursor:pointer;transition:all 0.15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(56,189,248,0.2)}
+.opt-btn.correct{border-color:var(--accent);background:rgba(163,230,53,0.1);animation:pop .3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(251,113,133,0.1);animation:shake .3s}
+.opt-btn.reveal{border-color:var(--accent);opacity:.7}.opt-btn.disabled{pointer-events:none;opacity:.5}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.timer-text{text-align:center;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:1rem}
+.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s}
+.pip.done{background:var(--accent)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem}
+.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.play-again:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+.katex{font-size:1.1em!important}.q-card .katex{font-size:1.4em!important}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}
+body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}
+body.accessible{background-color:#12141f!important}
+body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}
+body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after{content:' \2713';font-size:.85em;opacity:.8}
+.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Standard Form Blitz</h1><div class="sub">Powers of ten. Big numbers. Tiny numbers. Fast.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="level-select">
+      <button class="level-btn active" data-level="gcse">GCSE</button>
+      <button class="level-btn" data-level="alevel">A-Level</button>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:.8rem 0;line-height:1.5">
+      <strong>GCSE:</strong> Convert, order, multiply, divide in standard form<br>
+      <strong>A-Level:</strong> + add/subtract, context problems, very large/small magnitudes
+    </p>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <div style="text-align:center;margin-top:1.5rem"><button class="play-again" onclick="startGame()">Start</button></div>
+  </div>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div>
+    </div>
+    <div class="timer-text" id="timerDisplay">0s</div>
+    <div class="progress" id="progress"></div>
+    <div class="q-card"><div id="question"></div><div class="prompt" id="prompt"></div></div>
+    <div class="options" id="options"></div>
+  </div>
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+<script>
+const QUESTIONS={
+gcse:[
+  {q:'45000',ask:'Write in standard form',correct:'4.5 \\times 10^4',d:['45 \\times 10^3','4.5 \\times 10^3','0.45 \\times 10^5']},
+  {q:'3200',ask:'Write in standard form',correct:'3.2 \\times 10^3',d:['32 \\times 10^2','3.2 \\times 10^2','0.32 \\times 10^4']},
+  {q:'670000',ask:'Write in standard form',correct:'6.7 \\times 10^5',d:['67 \\times 10^4','6.7 \\times 10^4','0.67 \\times 10^6']},
+  {q:'91000000',ask:'Write in standard form',correct:'9.1 \\times 10^7',d:['91 \\times 10^6','9.1 \\times 10^6','0.91 \\times 10^8']},
+  {q:'504',ask:'Write in standard form',correct:'5.04 \\times 10^2',d:['50.4 \\times 10^1','5.04 \\times 10^3','504 \\times 10^0']},
+  {q:'0.003',ask:'Write in standard form',correct:'3 \\times 10^{-3}',d:['3 \\times 10^{3}','0.3 \\times 10^{-2}','30 \\times 10^{-4}']},
+  {q:'0.00056',ask:'Write in standard form',correct:'5.6 \\times 10^{-4}',d:['56 \\times 10^{-5}','5.6 \\times 10^{-3}','0.56 \\times 10^{-3}']},
+  {q:'0.072',ask:'Write in standard form',correct:'7.2 \\times 10^{-2}',d:['72 \\times 10^{-3}','7.2 \\times 10^{-1}','0.72 \\times 10^{-1}']},
+  {q:'0.0000091',ask:'Write in standard form',correct:'9.1 \\times 10^{-6}',d:['91 \\times 10^{-7}','9.1 \\times 10^{-5}','9.1 \\times 10^{-7}']},
+  {q:'0.108',ask:'Write in standard form',correct:'1.08 \\times 10^{-1}',d:['10.8 \\times 10^{-2}','1.08 \\times 10^{-2}','108 \\times 10^{-3}']},
+  {q:'3.7 \\times 10^4',ask:'Write as an ordinary number',correct:'37000',d:['3700','370000','370']},
+  {q:'8.1 \\times 10^6',ask:'Write as an ordinary number',correct:'8100000',d:['810000','81000000','81000']},
+  {q:'5 \\times 10^3',ask:'Write as an ordinary number',correct:'5000',d:['500','50000','5003']},
+  {q:'2.04 \\times 10^5',ask:'Write as an ordinary number',correct:'204000',d:['20400','2040000','2040']},
+  {q:'6.3 \\times 10^{-2}',ask:'Write as an ordinary number',correct:'0.063',d:['0.63','0.0063','6.3']},
+  {q:'4 \\times 10^{-5}',ask:'Write as an ordinary number',correct:'0.00004',d:['0.0004','0.000004','0.004']},
+  {q:'1.5 \\times 10^{-3}',ask:'Write as an ordinary number',correct:'0.0015',d:['0.015','0.00015','1.5']},
+  {q:'9.09 \\times 10^{-1}',ask:'Write as an ordinary number',correct:'0.909',d:['9.09','0.0909','90.9']},
+  {q:'(2 \\times 10^3) \\times (3 \\times 10^4)',ask:'Calculate. Give your answer in standard form.',correct:'6 \\times 10^7',d:['6 \\times 10^{12}','5 \\times 10^7','6 \\times 10^8']},
+  {q:'(4 \\times 10^5) \\times (2 \\times 10^3)',ask:'Calculate. Give your answer in standard form.',correct:'8 \\times 10^8',d:['8 \\times 10^{15}','8 \\times 10^7','6 \\times 10^8']},
+  {q:'(5 \\times 10^2) \\times (6 \\times 10^4)',ask:'Calculate. Give your answer in standard form.',correct:'3 \\times 10^7',d:['30 \\times 10^6','3 \\times 10^8','3 \\times 10^6']},
+  {q:'(3 \\times 10^{-2}) \\times (4 \\times 10^5)',ask:'Calculate. Give your answer in standard form.',correct:'1.2 \\times 10^4',d:['12 \\times 10^3','1.2 \\times 10^3','1.2 \\times 10^{-7}']},
+  {q:'(8 \\times 10^3) \\times (5 \\times 10^{-2})',ask:'Calculate. Give your answer in standard form.',correct:'4 \\times 10^2',d:['40 \\times 10^1','4 \\times 10^1','4 \\times 10^5']},
+  {q:'(7 \\times 10^{-3}) \\times (2 \\times 10^{-4})',ask:'Calculate. Give your answer in standard form.',correct:'1.4 \\times 10^{-6}',d:['14 \\times 10^{-7}','1.4 \\times 10^{-7}','1.4 \\times 10^{12}']},
+  {q:'(2.5 \\times 10^4) \\times (4 \\times 10^2)',ask:'Calculate. Give your answer in standard form.',correct:'1 \\times 10^7',d:['10 \\times 10^6','1 \\times 10^6','1 \\times 10^8']},
+  {q:'(6 \\times 10^2) \\times (6 \\times 10^2)',ask:'Calculate. Give your answer in standard form.',correct:'3.6 \\times 10^5',d:['36 \\times 10^4','3.6 \\times 10^4','12 \\times 10^4']},
+  {q:'(1.5 \\times 10^3) \\times (2 \\times 10^{-1})',ask:'Calculate. Give your answer in standard form.',correct:'3 \\times 10^2',d:['3 \\times 10^{-3}','3 \\times 10^3','30 \\times 10^1']},
+  {q:'(9 \\times 10^8) \\times (3 \\times 10^{-5})',ask:'Calculate. Give your answer in standard form.',correct:'2.7 \\times 10^4',d:['27 \\times 10^3','2.7 \\times 10^3','2.7 \\times 10^{-13}']},
+  {q:'(8 \\times 10^6) \\div (2 \\times 10^3)',ask:'Calculate. Give your answer in standard form.',correct:'4 \\times 10^3',d:['4 \\times 10^2','4 \\times 10^9','6 \\times 10^3']},
+  {q:'(9 \\times 10^8) \\div (3 \\times 10^2)',ask:'Calculate. Give your answer in standard form.',correct:'3 \\times 10^6',d:['3 \\times 10^4','3 \\times 10^{10}','6 \\times 10^6']},
+  {q:'(6 \\times 10^5) \\div (4 \\times 10^2)',ask:'Calculate. Give your answer in standard form.',correct:'1.5 \\times 10^3',d:['1.5 \\times 10^7','2.4 \\times 10^3','1.5 \\times 10^2']},
+  {q:'(3 \\times 10^{-2}) \\div (6 \\times 10^{-5})',ask:'Calculate. Give your answer in standard form.',correct:'5 \\times 10^2',d:['5 \\times 10^{-7}','0.5 \\times 10^3','5 \\times 10^3']},
+  {q:'(4.8 \\times 10^7) \\div (1.2 \\times 10^3)',ask:'Calculate. Give your answer in standard form.',correct:'4 \\times 10^4',d:['4 \\times 10^{10}','3.6 \\times 10^4','4 \\times 10^3']},
+  {q:'(1 \\times 10^{-3}) \\div (5 \\times 10^{-7})',ask:'Calculate. Give your answer in standard form.',correct:'2 \\times 10^3',d:['2 \\times 10^{-10}','5 \\times 10^3','2 \\times 10^4']},
+  {q:'(2.4 \\times 10^9) \\div (8 \\times 10^4)',ask:'Calculate. Give your answer in standard form.',correct:'3 \\times 10^4',d:['3 \\times 10^5','1.6 \\times 10^5','3 \\times 10^{13}']},
+  {q:'(5 \\times 10^3) \\div (2 \\times 10^5)',ask:'Calculate. Give your answer in standard form.',correct:'2.5 \\times 10^{-2}',d:['2.5 \\times 10^2','2.5 \\times 10^{-3}','25 \\times 10^{-2}']},
+  {q:'(7.2 \\times 10^{-1}) \\div (9 \\times 10^{-4})',ask:'Calculate. Give your answer in standard form.',correct:'8 \\times 10^2',d:['8 \\times 10^{-3}','8 \\times 10^3','0.8 \\times 10^3']},
+  {q:'(1.8 \\times 10^{12}) \\div (6 \\times 10^7)',ask:'Calculate. Give your answer in standard form.',correct:'3 \\times 10^4',d:['3 \\times 10^5','3 \\times 10^{19}','0.3 \\times 10^5']},
+  {q:'3.1 \\times 10^4, \\quad 2.9 \\times 10^5, \\quad 8 \\times 10^3',ask:'Which is largest?',correct:'2.9 \\times 10^5',d:['3.1 \\times 10^4','8 \\times 10^3','All equal']},
+  {q:'5 \\times 10^{-3}, \\quad 7 \\times 10^{-4}, \\quad 1.2 \\times 10^{-2}',ask:'Which is smallest?',correct:'7 \\times 10^{-4}',d:['5 \\times 10^{-3}','1.2 \\times 10^{-2}','All equal']},
+  {q:'4.5 \\times 10^6, \\quad 4.5 \\times 10^5, \\quad 45 \\times 10^5',ask:'Which two are equal?',correct:'4.5 \\times 10^6 \\text{ and } 45 \\times 10^5',d:['None are equal','4.5 \\times 10^5 \\text{ and } 45 \\times 10^5','All three']},
+  {q:'6 \\times 10^{-2}, \\quad 0.006, \\quad 6 \\times 10^{-3}',ask:'Which two are equal?',correct:'0.006 \\text{ and } 6 \\times 10^{-3}',d:['6 \\times 10^{-2} \\text{ and } 0.006','All three','None']},
+  {q:'1.01 \\times 10^3, \\quad 9.99 \\times 10^2',ask:'Which is larger?',correct:'1.01 \\times 10^3',d:['9.99 \\times 10^2','They are equal','Cannot tell']},
+  {q:'3 \\times 10^0',ask:'What is this as an ordinary number?',correct:'3',d:['30','0.3','1']},
+  {q:'34 \\times 10^5',ask:'Write in correct standard form',correct:'3.4 \\times 10^6',d:['34 \\times 10^5','3.4 \\times 10^5','0.34 \\times 10^7']},
+  {q:'0.5 \\times 10^4',ask:'Write in correct standard form',correct:'5 \\times 10^3',d:['0.5 \\times 10^4','50 \\times 10^2','5 \\times 10^4']},
+  {q:'72 \\times 10^{-3}',ask:'Write in correct standard form',correct:'7.2 \\times 10^{-2}',d:['72 \\times 10^{-3}','7.2 \\times 10^{-3}','0.72 \\times 10^{-1}']},
+  {q:'0.09 \\times 10^{-2}',ask:'Write in correct standard form',correct:'9 \\times 10^{-4}',d:['0.09 \\times 10^{-2}','9 \\times 10^{-3}','0.9 \\times 10^{-3}']},
+  {q:'150 \\times 10^7',ask:'Write in correct standard form',correct:'1.5 \\times 10^9',d:['15 \\times 10^8','1.5 \\times 10^8','150 \\times 10^7']},
+  {q:'0.25 \\times 10^{-1}',ask:'Write in correct standard form',correct:'2.5 \\times 10^{-2}',d:['0.25 \\times 10^{-1}','25 \\times 10^{-3}','2.5 \\times 10^{-1}']},
+],
+alevel:[
+  {q:'(3.2 \\times 10^5) \\times (4.5 \\times 10^{-3})',ask:'Calculate. Give your answer in standard form.',correct:'1.44 \\times 10^3',d:['14.4 \\times 10^2','1.44 \\times 10^{-8}','1.44 \\times 10^2']},
+  {q:'(8.4 \\times 10^{-2}) \\times (3 \\times 10^{-5})',ask:'Calculate. Give your answer in standard form.',correct:'2.52 \\times 10^{-6}',d:['25.2 \\times 10^{-7}','2.52 \\times 10^{-7}','2.52 \\times 10^{10}']},
+  {q:'(6.25 \\times 10^4)^2',ask:'Calculate. Give your answer in standard form.',correct:'3.90625 \\times 10^9',d:['3.90625 \\times 10^8','39.0625 \\times 10^8','6.25 \\times 10^8']},
+  {q:'\\sqrt{9 \\times 10^8}',ask:'Calculate. Give your answer in standard form.',correct:'3 \\times 10^4',d:['9 \\times 10^4','3 \\times 10^{16}','9.5 \\times 10^3']},
+  {q:'\\sqrt{2.5 \\times 10^{-3}}',ask:'Calculate. Give your answer in standard form to 3 s.f.',correct:'5.00 \\times 10^{-2}',d:['1.58 \\times 10^{-1}','5.00 \\times 10^{-1}','1.58 \\times 10^{-2}']},
+  {q:'(4 \\times 10^3)^3',ask:'Calculate. Give your answer in standard form.',correct:'6.4 \\times 10^{10}',d:['64 \\times 10^9','6.4 \\times 10^9','4 \\times 10^9']},
+  {q:'\\dfrac{(3 \\times 10^4)^2}{9 \\times 10^5}',ask:'Calculate. Give your answer in standard form.',correct:'1 \\times 10^3',d:['1 \\times 10^{-3}','9 \\times 10^3','3 \\times 10^3']},
+  {q:'\\dfrac{2 \\times 10^6}{5 \\times 10^{-2}}',ask:'Calculate. Give your answer in standard form.',correct:'4 \\times 10^7',d:['4 \\times 10^{-8}','4 \\times 10^8','0.4 \\times 10^8']},
+  {q:'(1.6 \\times 10^{-19}) \\times (3 \\times 10^8)',ask:'Calculate. Give your answer in standard form.',correct:'4.8 \\times 10^{-11}',d:['4.8 \\times 10^{-27}','4.8 \\times 10^{-12}','4.8 \\times 10^{11}']},
+  {q:'\\dfrac{6.63 \\times 10^{-34}}{1.6 \\times 10^{-19}}',ask:'Calculate. Give your answer in standard form to 3 s.f.',correct:'4.14 \\times 10^{-15}',d:['4.14 \\times 10^{-53}','4.14 \\times 10^{-14}','4.14 \\times 10^{15}']},
+  {q:'(3 \\times 10^4) + (5 \\times 10^4)',ask:'Calculate. Give your answer in standard form.',correct:'8 \\times 10^4',d:['8 \\times 10^8','15 \\times 10^4','8 \\times 10^3']},
+  {q:'(4.2 \\times 10^5) + (3.8 \\times 10^5)',ask:'Calculate. Give your answer in standard form.',correct:'8 \\times 10^5',d:['8 \\times 10^{10}','8.0 \\times 10^4','80 \\times 10^4']},
+  {q:'(7 \\times 10^3) + (5 \\times 10^2)',ask:'Calculate. Give your answer in standard form.',correct:'7.5 \\times 10^3',d:['12 \\times 10^5','1.2 \\times 10^4','7.5 \\times 10^2']},
+  {q:'(6 \\times 10^5) + (8 \\times 10^4)',ask:'Calculate. Give your answer in standard form.',correct:'6.8 \\times 10^5',d:['14 \\times 10^9','6.8 \\times 10^4','68 \\times 10^4']},
+  {q:'(9 \\times 10^3) - (4 \\times 10^3)',ask:'Calculate. Give your answer in standard form.',correct:'5 \\times 10^3',d:['5 \\times 10^0','13 \\times 10^3','5 \\times 10^6']},
+  {q:'(5.2 \\times 10^6) - (1.7 \\times 10^6)',ask:'Calculate. Give your answer in standard form.',correct:'3.5 \\times 10^6',d:['3.5 \\times 10^0','6.9 \\times 10^6','35 \\times 10^5']},
+  {q:'(3 \\times 10^4) - (5 \\times 10^3)',ask:'Calculate. Give your answer in standard form.',correct:'2.5 \\times 10^4',d:['-2 \\times 10^1','2.5 \\times 10^3','25 \\times 10^3']},
+  {q:'(1 \\times 10^{-2}) + (3 \\times 10^{-3})',ask:'Calculate. Give your answer in standard form.',correct:'1.3 \\times 10^{-2}',d:['4 \\times 10^{-5}','1.3 \\times 10^{-3}','13 \\times 10^{-3}']},
+  {q:'(5 \\times 10^{-4}) - (2 \\times 10^{-5})',ask:'Calculate. Give your answer in standard form.',correct:'4.8 \\times 10^{-4}',d:['3 \\times 10^{1}','4.8 \\times 10^{-5}','48 \\times 10^{-5}']},
+  {q:'(2.5 \\times 10^7) + (7.5 \\times 10^6)',ask:'Calculate. Give your answer in standard form.',correct:'3.25 \\times 10^7',d:['10 \\times 10^{13}','3.25 \\times 10^6','32.5 \\times 10^6']},
+  {q:'(1 \\times 10^8) - (1 \\times 10^6)',ask:'Calculate. Give your answer in standard form.',correct:'9.9 \\times 10^7',d:['0','9.9 \\times 10^{-2}','99 \\times 10^6']},
+  {q:'(4 \\times 10^5) + (6 \\times 10^5)',ask:'Calculate. Give your answer in standard form.',correct:'1 \\times 10^6',d:['10 \\times 10^5','1 \\times 10^{10}','10 \\times 10^{10}']},
+  {q:'(9.9 \\times 10^3) + (1 \\times 10^2)',ask:'Calculate. Give your answer in standard form.',correct:'1 \\times 10^4',d:['10 \\times 10^3','10.9 \\times 10^3','1 \\times 10^5']},
+  {q:'(8 \\times 10^{-3}) + (2 \\times 10^{-3})',ask:'Calculate. Give your answer in standard form.',correct:'1 \\times 10^{-2}',d:['10 \\times 10^{-3}','1.6 \\times 10^{-5}','1 \\times 10^{-3}']},
+  {q:'(3 \\times 10^9) - (2.99 \\times 10^9)',ask:'Calculate. Give your answer in standard form.',correct:'1 \\times 10^7',d:['1 \\times 10^6','0.01 \\times 10^9','1 \\times 10^{-2}']},
+  {q:'\\text{Distance to Sun: } 1.5 \\times 10^{11} \\text{ m. Speed of light: } 3 \\times 10^8 \\text{ m/s.}',ask:'Time for light to reach Earth (s)',correct:'5 \\times 10^2',d:['5 \\times 10^3','4.5 \\times 10^{19}','2 \\times 10^3']},
+  {q:'\\text{Mass of proton: } 1.67 \\times 10^{-27} \\text{ kg. How many in 1 kg?}',ask:'Calculate. Give your answer in standard form to 3 s.f.',correct:'5.99 \\times 10^{26}',d:['1.67 \\times 10^{27}','5.99 \\times 10^{-27}','6 \\times 10^{25}']},
+  {q:'\\text{UK national debt: } £2.5 \\times 10^{12}. \\text{ Population: } 6.7 \\times 10^7.',ask:'Debt per person (nearest £)',correct:'£37313',d:['£3731','£373134','£37000']},
+  {q:'\\text{Hair width: } 7 \\times 10^{-5} \\text{ m. Atom: } 1 \\times 10^{-10} \\text{ m.}',ask:'How many atoms across a hair?',correct:'7 \\times 10^5',d:['7 \\times 10^{-5}','7 \\times 10^{15}','7 \\times 10^{-15}']},
+  {q:'\\text{Earth mass: } 6 \\times 10^{24} \\text{ kg. Moon mass: } 7.3 \\times 10^{22} \\text{ kg.}',ask:'How many times heavier is Earth?',correct:'\\approx 82',d:['\\approx 8.2','\\approx 820','\\approx 46']},
+  {q:'\\text{Bacteria: } 5 \\times 10^6 \\text{ per mL. Sample: } 2 \\times 10^{-2} \\text{ mL.}',ask:'Bacteria in sample',correct:'1 \\times 10^5',d:['1 \\times 10^8','2.5 \\times 10^8','1 \\times 10^4']},
+  {q:'\\text{Wavelength of red light: } 7 \\times 10^{-7} \\text{ m. Express in nm.}',ask:'1 nm = 10⁻⁹ m',correct:'700',d:['7','70','7000']},
+  {q:'\\text{Observable universe: } 8.8 \\times 10^{26} \\text{ m. Express in km.}',ask:'Calculate. Give your answer in standard form.',correct:'8.8 \\times 10^{23} \\text{ km}',d:['8.8 \\times 10^{29} \\text{ km}','8.8 \\times 10^{24} \\text{ km}','8.8 \\times 10^{20} \\text{ km}']},
+  {q:'\\text{A hard drive stores } 2 \\times 10^{12} \\text{ bytes. A photo is } 5 \\times 10^6 \\text{ bytes.}',ask:'Max photos',correct:'4 \\times 10^5',d:['4 \\times 10^6','1 \\times 10^7','4 \\times 10^{18}']},
+  {q:'(2 \\times 10^3)^{-1}',ask:'Calculate. Give your answer in standard form.',correct:'5 \\times 10^{-4}',d:['2 \\times 10^{-3}','-2 \\times 10^3','0.5 \\times 10^{-3}']},
+  {q:'(5 \\times 10^{-2})^{-2}',ask:'Calculate. Give your answer in standard form.',correct:'4 \\times 10^2',d:['2.5 \\times 10^{3}','25 \\times 10^{2}','4 \\times 10^{-4}']},
+  {q:'(4 \\times 10^6)^{0.5}',ask:'Calculate. Give your answer in standard form.',correct:'2 \\times 10^3',d:['4 \\times 10^3','2 \\times 10^{12}','20 \\times 10^2']},
+  {q:'(2.7 \\times 10^9)^{1/3}',ask:'Calculate. Give your answer in standard form to 3 s.f.',correct:'1.39 \\times 10^3',d:['9 \\times 10^2','1.39 \\times 10^{27}','3 \\times 10^3']},
+  {q:'\\dfrac{(6 \\times 10^4)(2 \\times 10^{-3})}{4 \\times 10^{-2}}',ask:'Calculate. Give your answer in standard form.',correct:'3 \\times 10^3',d:['3 \\times 10^{-5}','3 \\times 10^{-1}','3 \\times 10^9']},
+  {q:'\\dfrac{(8 \\times 10^{-5})^2}{2 \\times 10^{-6}}',ask:'Calculate. Give your answer in standard form.',correct:'3.2 \\times 10^{-3}',d:['3.2 \\times 10^{-4}','3.2 \\times 10^{4}','3.2 \\times 10^{-14}']},
+  {q:'\\text{Arrange smallest to largest: } 3 \\times 10^{-5},\\; 2.8 \\times 10^{-4},\\; 9 \\times 10^{-6}',ask:'Which is in the middle?',correct:'3 \\times 10^{-5}',d:['9 \\times 10^{-6}','2.8 \\times 10^{-4}','All equal']},
+  {q:'\\text{Which is bigger: } 9.9 \\times 10^{99} \\text{ or } 1.0 \\times 10^{100}?',ask:'',correct:'1.0 \\times 10^{100}',d:['9.9 \\times 10^{99}','They are equal','Cannot tell']},
+  {q:'\\text{Which is bigger: } 5 \\times 10^{-8} \\text{ or } 8 \\times 10^{-9}?',ask:'',correct:'5 \\times 10^{-8}',d:['8 \\times 10^{-9}','Equal','Cannot tell']},
+  {q:'10^6 \\times 10^{-6}',ask:'Calculate',correct:'1',d:['0','10^{12}','10^{-12}']},
+  {q:'(10^3)^3',ask:'Calculate',correct:'10^9',d:['10^6','10^{27}','3 \\times 10^3']},
+  {q:'10^0',ask:'What is this?',correct:'1',d:['0','10','undefined']},
+  {q:'10^{1/2}',ask:'Calculate (3 s.f.)',correct:'3.16',d:['5','0.5','31.6']},
+  {q:'\\text{Estimate } (4.9 \\times 10^3) \\times (2.1 \\times 10^5)',ask:'Estimate to 1 s.f., in standard form.',correct:'1 \\times 10^9',d:['1 \\times 10^8','1 \\times 10^{15}','10 \\times 10^8']},
+  {q:'(3 \\times 10^n)^2 = 9 \\times 10^{10}',ask:'Find n',correct:'5',d:['10','4','20']},
+  {q:'(a \\times 10^4) \\times (2 \\times 10^3) = 1.4 \\times 10^8',ask:'Find a',correct:'7',d:['70','0.7','14']},
+]
+};
+
+let level='gcse',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,timerInterval=null,qStartTime=0;
+const BASE=100,T_K=0.15;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
+const pa=new URLSearchParams(location.search);if(pa.get('level')&&QUESTIONS[pa.get('level')]){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+function startGame(){questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}mfg('game_started',{game_slug:'standard-form-blitz',level:level});window._ggAbandoned=true;if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'standard-form-blitz',level:level,questions_answered:qIdx})});}show('game');showQ()}
+function showQ(){const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;const qEl=document.getElementById('question');qEl.innerHTML='';rk(qEl,q.q);document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
+function tick(){const e=Math.floor((Date.now()-qStartTime)/1000);document.getElementById('timer').textContent=e+'s'}
+function handle(btn,q){clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}mfg('question_answered',{game_slug:'standard-form-blitz',level:level,correct:ok,question_index:qIdx+1});document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)}
+function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
+function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
+function end(){clearInterval(timerInterval);const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'standard-form-blitz',level:level,score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('standard-form-blitz',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('standard-form-blitz',level,score);}}var _pbKey='standard-form-blitz_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'standard-form-blitz',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}show('results')}
+function showMenu(){show('menu')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

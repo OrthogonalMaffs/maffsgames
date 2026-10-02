@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Find the mistake in the maths. Develop error analysis skills by spotting misread word problems — essential exam technique for GCSE and beyond.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/spot-the-error/">
+<meta property="og:title" content="Spot the Error — MaffsGames">
+<meta property="og:description" content="Find the mistake in the maths. Develop error analysis skills by spotting misread word problems — essential exam technique for GCSE and beyond.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/spot-the-error/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Spot the Error — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--teal:#0d9488;--teal-dim:rgba(13,148,136,0.15);
+--green:#22c55e;--green-bg:#14532d;--green-dim:rgba(34,197,94,0.15);
+--red:#ef4444;--red-bg:#450a0a;--red-dim:rgba(239,68,68,0.15);
+--amber:#f59e0b;
+--ks3:#22c55e;--gcse:#3b82f6;--l4:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto}.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;color:#fff;text-transform:uppercase;letter-spacing:0.04em}
+.level-pill.ks3{background:rgba(34,197,94,0.15);color:var(--ks3);border:1px solid rgba(34,197,94,0.3)}
+.level-pill.gcse{background:rgba(59,130,246,0.15);color:var(--gcse);border:1px solid rgba(59,130,246,0.3)}
+.level-pill.l4{background:rgba(239,68,68,0.15);color:var(--l4);border:1px solid rgba(239,68,68,0.3)}
+
+.hud{display:none;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;align-items:center;justify-content:space-between;gap:16px}
+.hud.visible{display:flex}
+.hud-score{font-size:14px;font-weight:600}.hud-score span{color:var(--teal)}
+.progress-wrap{flex:1;max-width:300px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-bar{height:100%;background:var(--teal);border-radius:3px;transition:width 0.3s}
+.hud-count{font-size:13px;color:var(--muted);font-weight:500}
+
+.screen{display:none;max-width:640px;margin:0 auto;padding:32px 24px;width:100%}.screen.active{display:block}
+.start-title{font-size:28px;font-weight:800;margin-bottom:8px;text-align:center}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.5}
+.section-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px}
+.level-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px}
+.level-btn{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;padding:16px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all 0.15s;text-align:left}
+.level-btn:hover{border-color:var(--teal)}
+.level-btn.active.ks3{border-color:var(--ks3);background:rgba(34,197,94,0.08);color:var(--ks3)}
+.level-btn.active.gcse{border-color:var(--gcse);background:rgba(59,130,246,0.08);color:var(--gcse)}
+.level-btn.active.l4{border-color:var(--l4);background:rgba(239,68,68,0.08);color:var(--l4)}
+.level-btn .btn-sub{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;display:block}
+.session-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px}
+.session-btn{font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;padding:14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all 0.15s;text-align:center}
+.session-btn:hover{border-color:var(--teal)}
+.session-btn.active{border-color:var(--teal);background:rgba(13,148,136,0.1);color:var(--teal)}
+.session-btn .btn-sub{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;display:block}
+.start-go{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer;width:100%}
+.start-go:hover{opacity:0.9}.start-go:disabled{opacity:0.4;cursor:default}
+
+/* Game */
+.stage-pill{display:inline-block;font-size:12px;font-weight:600;padding:4px 12px;border-radius:8px;margin-bottom:16px}
+.stage-pill.s1{color:var(--teal);background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.2)}
+.stage-pill.s2{color:var(--amber);background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2)}
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px;line-height:1.7;font-size:16px}
+
+/* Steps */
+.steps-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.step-card{font-family:'JetBrains Mono',monospace;font-size:14px;padding:14px 16px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;transition:all 0.15s;display:flex;gap:10px;align-items:flex-start;min-height:48px}
+.step-card:hover{background:#252a3d;border-color:#3a3f55}
+.step-card.correct-pick{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.step-card.correct-pick::after{content:' \2713';font-weight:800;margin-left:8px}
+.step-card.incorrect-pick{background:var(--red-bg);border-color:var(--red);color:var(--red);animation:shake 0.3s}
+.step-card.incorrect-pick::after{content:' \2717';font-weight:800;margin-left:8px}
+.step-card.reveal{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.step-card.reveal::after{content:' \2713';font-weight:800;margin-left:8px}
+.step-card.disabled{pointer-events:none;opacity:0.7}
+.step-num{font-weight:700;color:var(--muted);min-width:20px}
+
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+/* Phrases (Stage 2) */
+.phrase-zone{line-height:1.8;font-size:16px}
+.phrase-tap{text-decoration:underline;text-decoration-color:var(--teal);text-underline-offset:3px;cursor:pointer;padding:2px 4px;border-radius:3px;transition:all 0.15s}
+.phrase-tap:hover{background:var(--teal-dim)}
+.phrase-tap.correct-pick{text-decoration-color:var(--green);background:var(--green-dim);color:var(--green)}
+.phrase-tap.correct-pick::before{content:'\2713 ';font-weight:800}
+.phrase-tap.incorrect-pick{text-decoration-color:var(--red);background:var(--red-dim);color:var(--red);animation:shake 0.3s}
+.phrase-tap.incorrect-pick::before{content:'\2717 ';font-weight:800}
+.phrase-tap.reveal{text-decoration-color:var(--green);background:var(--green-dim);color:var(--green)}
+.phrase-tap.reveal::before{content:'\2713 ';font-weight:800}
+
+/* Explanation */
+.explanation{background:var(--surface-alt);border-left:4px solid var(--amber);border-radius:0 8px 8px 0;padding:14px 18px;margin-top:16px;font-size:14px;line-height:1.6;animation:slideUp 0.2s}
+.dismiss-btn{display:block;margin:10px auto 0;padding:5px 16px;border:1.5px solid var(--amber);border-radius:6px;background:transparent;color:var(--text);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;opacity:0;animation:fadeBtn .3s ease forwards}.dismiss-btn:hover{background:rgba(255,255,255,.08)}@keyframes fadeBtn{to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Results */
+.results-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px 24px;text-align:center}
+.results-pct{font-size:56px;font-weight:800;color:var(--teal);margin-bottom:4px}
+.results-label{color:var(--muted);font-size:14px;margin-bottom:24px}
+.results-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+.stat-box{background:var(--surface-alt);border-radius:10px;padding:16px}
+.stat-val{font-size:22px;font-weight:700}.stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+.pb-banner{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--amber);border-radius:10px;padding:12px;font-weight:600;margin-bottom:16px;font-size:14px}
+.play-again{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer;width:100%}
+.play-again:hover{opacity:0.9}
+/* Accessibility toggle */
+.a11y-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 8px;cursor:pointer;font-size:14px;line-height:1;transition:all 0.15s}
+.a11y-btn:hover{border-color:var(--teal);color:var(--text)}
+.a11y-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(13,148,136,0.1)}
+body.dyslexia{background:#fdf6e3;color:#2d2006;--bg:#fdf6e3;--surface:#fff8ec;--surface-alt:#fef3d8;--border:#9a8654;--text:#2d2006;--muted:#6b5c3e;--teal:#087568;--teal-dim:rgba(8,117,104,0.18);--green:#15803d;--green-bg:rgba(21,128,61,0.15);--green-dim:rgba(21,128,61,0.12);--red:#b91c1c;--red-bg:rgba(185,28,28,0.1);--red-dim:rgba(185,28,28,0.08);--amber:#b45309;--ks3:#15803d;--gcse:#1d4ed8;--l4:#b91c1c}
+body.dyslexia .screen{font-size:18px;line-height:1.8;letter-spacing:0.12em;word-spacing:0.16em}
+body.dyslexia .question-card,body.dyslexia .phrase-zone{font-size:18px;line-height:1.8;letter-spacing:0.05em;word-spacing:0.12em}
+body.dyslexia .step-card{font-size:14px;letter-spacing:0.04em}
+body.dyslexia .start-title,body.dyslexia .results-pct{color:var(--teal)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.fade-out{opacity:0;transition:opacity 0.2s}
+@media(max-width:480px){.level-grid{grid-template-columns:1fr}.results-stats{grid-template-columns:1fr 1fr}}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <div class="header-title">Spot the Error</div>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <button class="a11y-btn" id="a11yBtn" title="Accessibility: dyslexia-friendly mode">Aa</button>
+    <span class="level-pill" id="levelPill"></span>
+  </div>
+</div>
+<div class="hud" id="hud">
+  <div class="hud-score">Points: <span id="hudScore">0 / 0</span></div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  <div class="hud-count" id="hudCount">0 / 0</div>
+</div>
+
+<div class="screen active" id="startScreen">
+  <h1 class="start-title">Spot the Error</h1>
+  <p class="start-sub">Read the word problem. Find the mistake in the working. Then find the misread phrase that caused it.</p>
+  <div class="section-label">Level</div>
+  <div class="level-grid">
+    <button class="level-btn ks3" data-level="ks3">KS3<span class="btn-sub">Year 7-9</span></button>
+    <button class="level-btn gcse" data-level="gcse">GCSE<span class="btn-sub">Year 10-11</span></button>
+    <button class="level-btn l4" data-level="level4">Level 4<span class="btn-sub">HNC/HND</span></button>
+  </div>
+  <div class="section-label">Session Length</div>
+  <div class="session-grid">
+    <button class="session-btn" data-len="10">10<span class="btn-sub">questions</span></button>
+    <button class="session-btn active" data-len="20">20<span class="btn-sub">questions</span></button>
+    <button class="session-btn" data-len="30">30<span class="btn-sub">questions</span></button>
+  </div>
+  <button class="start-go" id="startBtn" disabled>Start</button>
+</div>
+
+<div class="screen" id="gameScreen">
+  <div id="stagePill" class="stage-pill s1">Stage 1: Find the error</div>
+  <div class="question-card" id="questionCard"></div>
+  <div id="stageContent"></div>
+  <div id="explanationBox"></div>
+</div>
+
+<div class="screen" id="resultsScreen">
+  <div class="results-card">
+    <div class="results-pct" id="resultsPct">0%</div>
+    <div class="results-label">Accuracy</div>
+    <div id="pbBanner" class="pb-banner" style="display:none"></div>
+    <div class="results-stats">
+      <div class="stat-box"><div class="stat-val" id="resPoints">0</div><div class="stat-label">Points</div></div>
+      <div class="stat-box"><div class="stat-val" id="resMax">0</div><div class="stat-label">Max possible</div></div>
+      <div class="stat-box"><div class="stat-val" id="resFull">0</div><div class="stat-label">Full marks</div></div>
+    </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="play-again" id="playAgain">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+</div>
+
+<script>
+function _addDismiss(el,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Next';b.onclick=cb;el.appendChild(b);},2000);}
+/* ===== QUESTION BANK v2 ===== */
+const Q=[
+// =============================================
+// KS3 Type A — Operation misread (18)
+// =============================================
+{id:'ste_ks3_001',level:'ks3',errorType:'operation',topic:'Ratio',text:'Three friends win prize money on a scratch card. They agree to share the winnings in the ratio of the number of tickets they each bought. Amy bought 2 tickets, Ben bought 3 and Chloe bought 5. The total prize is \u00a3180. How much does Amy receive?',steps:[{id:1,content:'Total parts = 2 \u00d7 3 \u00d7 5 = 30',correct:false},{id:2,content:"Amy\u2019s share = (2/30) \u00d7 \u00a3180 = \u00a312",correct:true}],errorStepId:1,errorPhrases:[{phrase:'share the winnings in the ratio',isError:true},{phrase:'total prize is \u00a3180',isError:false},{phrase:'Amy bought 2 tickets',isError:false}],explanation:"'Ratio' means add the parts to find the total, not multiply them. Total parts = 2 + 3 + 5 = 10. Amy\u2019s share = (2/10) \u00d7 \u00a3180 = \u00a336."},
+{id:'ste_ks3_002',level:'ks3',errorType:'operation',topic:'Percentages',text:'A sports shop is having a sale. All trainers are reduced by 20%. Jayden sees a pair of trainers with an original price of \u00a365. His friend works out the sale price.',steps:[{id:1,content:'20% of \u00a365 = \u00a313',correct:true},{id:2,content:'Sale price = \u00a365 + \u00a313 = \u00a378',correct:false}],errorStepId:2,errorPhrases:[{phrase:'reduced by 20%',isError:true},{phrase:'original price of \u00a365',isError:false},{phrase:'works out the sale price',isError:false}],explanation:"'Reduced by' means subtract the discount, not add it. Sale price = \u00a365 \u2212 \u00a313 = \u00a352."},
+{id:'ste_ks3_003',level:'ks3',errorType:'operation',topic:'Fractions',text:'A baker makes 48 muffins. She sells three-quarters of them before lunch and one-third of the remainder in the afternoon. A student calculates how many are left at the end of the day.',steps:[{id:1,content:'Sold before lunch = (3/4) \u00d7 48 = 36. Remaining = 12',correct:true},{id:2,content:'Sold in afternoon = (1/3) \u00d7 48 = 16',correct:false},{id:3,content:'Left at end = 12 \u2212 16 = \u22124',correct:true}],errorStepId:2,errorPhrases:[{phrase:'one-third of the remainder',isError:true},{phrase:'three-quarters of them',isError:false},{phrase:'48 muffins',isError:false}],explanation:"The afternoon fraction applies to the remainder (12), not the original 48. Afternoon sales = (1/3) \u00d7 12 = 4. Left at end = 12 \u2212 4 = 8."},
+{id:'ste_ks3_004',level:'ks3',errorType:'operation',topic:'Proportion',text:'A car uses petrol at a constant rate. It travels 240 miles on a full tank of 30 litres. A driver plans a journey of 180 miles and needs to calculate the fuel required.',steps:[{id:1,content:'Rate = 240 \u2212 30 = 210 miles per litre',correct:false},{id:2,content:'Fuel for 180 miles = 180 \u00f7 210 = 0.86 litres',correct:true}],errorStepId:1,errorPhrases:[{phrase:'travels 240 miles on a full tank of 30 litres',isError:true},{phrase:'journey of 180 miles',isError:false},{phrase:'constant rate',isError:false}],explanation:"The rate is found by dividing, not subtracting. Rate = 240 \u00f7 30 = 8 miles per litre. Fuel needed = 180 \u00f7 8 = 22.5 litres."},
+{id:'ste_ks3_005',level:'ks3',errorType:'operation',topic:'Percentages',text:'In a Year 9 class of 30 students, 18 students said they walk to school. The teacher wants to work out what percentage walk to school.',steps:[{id:1,content:'Percentage = 18 \u00d7 30 \u00f7 100 = 5.4%',correct:false}],errorStepId:1,errorPhrases:[{phrase:'what percentage walk to school',isError:true},{phrase:'class of 30 students',isError:false},{phrase:'18 students',isError:false}],explanation:"Percentage = (part \u00f7 whole) \u00d7 100, not part \u00d7 whole \u00f7 100. Correct: (18 \u00f7 30) \u00d7 100 = 60%."},
+{id:'ste_ks3_006',level:'ks3',errorType:'operation',topic:'Sequences',text:'Square tiles are laid in a growing pattern. The first pattern uses 1 tile, the second uses 5, the third uses 9. A student finds the nth term.',steps:[{id:1,content:'Difference between terms = 5 \u2212 1 = 4',correct:true},{id:2,content:'Multiply by position: nth term = 4n',correct:false},{id:3,content:'Check: when n = 1, T = 4. But first term is 1.',correct:true}],errorStepId:2,errorPhrases:[{phrase:'nth term',isError:true},{phrase:'growing pattern',isError:false},{phrase:'first pattern uses 1 tile',isError:false}],explanation:"The nth term of an arithmetic sequence is dn + (a \u2212 d), not just dn. nth term = 4n + (1 \u2212 4) = 4n \u2212 3."},
+{id:'ste_ks3_007',level:'ks3',errorType:'operation',topic:'Area',text:'A triangular warning sign has a base of 40 cm and a perpendicular height of 35 cm. A manufacturer calculates the area of reflective material needed for one sign.',steps:[{id:1,content:'Area = base \u00d7 height = 40 \u00d7 35 = 1400 cm\u00b2',correct:false}],errorStepId:1,errorPhrases:[{phrase:'area of reflective material',isError:true},{phrase:'base of 40 cm',isError:false},{phrase:'perpendicular height of 35 cm',isError:false}],explanation:"Area of a triangle = \u00bd \u00d7 base \u00d7 height, not base \u00d7 height. Correct area = \u00bd \u00d7 40 \u00d7 35 = 700 cm\u00b2."},
+{id:'ste_ks3_008',level:'ks3',errorType:'operation',topic:'Mean',text:'The mean age of 6 players in a basketball team is 17 years. A seventh player joins and the new mean of all 7 players is 17.5 years. A coach calculates the age of the seventh player.',steps:[{id:1,content:'Total age of 6 players = 6 \u00d7 17 = 102',correct:true},{id:2,content:'Total age of 7 players = 7 \u00d7 17.5 = 122.5',correct:true},{id:3,content:'Age of 7th player = 122.5 \u00d7 102 = 12,495',correct:false}],errorStepId:3,errorPhrases:[{phrase:'age of the seventh player',isError:true},{phrase:'mean age of 6 players',isError:false},{phrase:'new mean of all 7 players',isError:false}],explanation:"To find the seventh player\u2019s age, subtract the original total from the new total, not multiply. Age = 122.5 \u2212 102 = 20.5 years."},
+{id:'ste_ks3_009',level:'ks3',errorType:'operation',topic:'Ratio',text:'A drink is made by mixing orange juice and water in the ratio 1:4. A student calculates how much orange juice is in a 500 ml drink.',steps:[{id:1,content:'Orange juice fraction = 1 out of (1 \u00d7 4) = 4 parts',correct:false},{id:2,content:'Orange juice = (1/4) \u00d7 500 = 125 ml',correct:true}],errorStepId:1,errorPhrases:[{phrase:'ratio 1:4',isError:true},{phrase:'500 ml drink',isError:false},{phrase:'orange juice and water',isError:false}],explanation:"The total parts are found by adding, not multiplying. Total = 1 + 4 = 5 parts. Orange juice = (1/5) \u00d7 500 = 100 ml."},
+{id:'ste_ks3_010',level:'ks3',errorType:'operation',topic:'Probability',text:'A bag contains red, blue and yellow counters. Maria pulls a counter and replaces it 80 times, getting red 24 times, blue 36 times, and yellow 20 times. She estimates the probability of picking red.',steps:[{id:1,content:'Total successful outcomes = 24',correct:true},{id:2,content:'P(red) = 24 \u00f7 (24 + 36 + 20 + 4) = 24 \u00f7 84',correct:false}],errorStepId:2,errorPhrases:[{phrase:'estimates the probability of picking red',isError:true},{phrase:'replaces it 80 times',isError:false},{phrase:'red 24 times',isError:false}],explanation:"The total number of trials is 80 (stated in the question), so P(red) = 24 \u00f7 80 = 0.3."},
+{id:'ste_ks3_011',level:'ks3',errorType:'operation',topic:'Fractions',text:'A water tank is three-eighths full and contains 360 litres. A plumber works out the full capacity of the tank.',steps:[{id:1,content:'3/8 full = 360 litres',correct:true},{id:2,content:'Full capacity = 360 \u00d7 (3/8) = 135 litres',correct:false}],errorStepId:2,errorPhrases:[{phrase:'full capacity of the tank',isError:true},{phrase:'three-eighths full',isError:false},{phrase:'360 litres',isError:false}],explanation:"To find the full capacity, divide by the fraction, not multiply. Full capacity = 360 \u00f7 (3/8) = 360 \u00d7 (8/3) = 960 litres."},
+{id:'ste_ks3_012',level:'ks3',errorType:'operation',topic:'Percentages',text:'A savings account pays 4% simple interest per year. Sophie invests \u00a3250. A student calculates the total interest earned after 3 years but then incorrectly switches to compound interest.',steps:[{id:1,content:'Annual interest = 4% of \u00a3250 = \u00a310',correct:true},{id:2,content:'Total interest = \u00a310 \u00d7 3 = \u00a330',correct:true},{id:3,content:'Total in account = \u00a3250 + \u00a330 = \u00a3280',correct:true},{id:4,content:"Student then says: '4% compound interest would give \u00a3250 \u00d7 1.04\u00b3 = \u00a3281.22'",correct:false}],errorStepId:4,errorPhrases:[{phrase:'4% simple interest per year',isError:true},{phrase:'invests \u00a3250',isError:false},{phrase:'after 3 years',isError:false}],explanation:"The question specifies simple interest, not compound. The method in steps 1\u20133 is correct. Compound interest gives a different answer and is not relevant here."},
+{id:'ste_ks3_013',level:'ks3',errorType:'operation',topic:'Scale',text:'A map uses a scale of 1:50,000. On the map, the distance between two locations is 6.4 cm. A hiker calculates the real distance.',steps:[{id:1,content:'Scale: 1 cm on map = 50,000 cm in reality',correct:true},{id:2,content:'Real distance = 6.4 + 50,000 = 50,006.4 cm',correct:false}],errorStepId:2,errorPhrases:[{phrase:'a scale of 1:50,000',isError:true},{phrase:'distance between two locations',isError:false},{phrase:'6.4 cm',isError:false}],explanation:"Scale means multiply, not add. Real distance = 6.4 \u00d7 50,000 = 320,000 cm = 3.2 km."},
+{id:'ste_ks3_014',level:'ks3',errorType:'operation',topic:'Angles',text:'Two roads meet at a junction. The angle between them on one side is 47\u00b0. A surveyor calculates the angle on the other side of the junction.',steps:[{id:1,content:'Angles on a straight line sum to 180\u00b0',correct:true},{id:2,content:'Other angle = 180\u00b0 \u2212 47\u00b0 = 133\u00b0',correct:true},{id:3,content:"Student says: 'Actually angles around a point sum to 360\u00b0, so other angle = 360\u00b0 \u2212 47\u00b0 = 313\u00b0'",correct:false}],errorStepId:3,errorPhrases:[{phrase:'angle on the other side of the junction',isError:true},{phrase:'47\u00b0',isError:false},{phrase:'Two roads meet',isError:false}],explanation:"The two angles on either side of a straight junction sum to 180\u00b0, not 360\u00b0. The correct answer is 133\u00b0."},
+{id:'ste_ks3_015',level:'ks3',errorType:'operation',topic:'Area & Perimeter',text:'A farmer wants to fence a rectangular field 85 m long and 62 m wide. A student calculates the total length of fencing needed.',steps:[{id:1,content:'Fencing needed = length \u00d7 width = 85 \u00d7 62 = 5,270 m',correct:false}],errorStepId:1,errorPhrases:[{phrase:'total length of fencing needed',isError:true},{phrase:'85 m long',isError:false},{phrase:'62 m wide',isError:false}],explanation:"Fencing goes around the perimeter, not the area. Perimeter = 2(85 + 62) = 294 m."},
+{id:'ste_ks3_016',level:'ks3',errorType:'operation',topic:'Fractions',text:'Freya is training for a sponsored walk. On Monday she walks 2\u2153 miles, on Wednesday 1\u00be miles and on Friday 3\u2159 miles. A student adds these to find the total distance.',steps:[{id:1,content:'Convert to improper fractions: 7/3, 7/4, 19/6',correct:true},{id:2,content:'Common denominator = 3 \u00d7 4 \u00d7 6 = 72',correct:false},{id:3,content:'168/72 + 126/72 + 228/72 = 522/72 = 7.25 miles',correct:true}],errorStepId:2,errorPhrases:[{phrase:'total distance',isError:true},{phrase:'Monday she walks 2\u2153 miles',isError:false},{phrase:'sponsored walk',isError:false}],explanation:"The LCM of 3, 4 and 6 is 12, not 72. Total = 28/12 + 21/12 + 38/12 = 87/12 = 7\u00bc miles."},
+{id:'ste_ks3_017',level:'ks3',errorType:'operation',topic:'Number',text:'Two planets orbit a star. Planet A takes 420 days per orbit and Planet B takes 315 days. A student finds when they will next align, starting from the same position.',steps:[{id:1,content:'Find HCF(420, 315) = 105',correct:false},{id:2,content:'They align again after 105 days',correct:true}],errorStepId:1,errorPhrases:[{phrase:'next align',isError:true},{phrase:'420 days per orbit',isError:false},{phrase:'315 days',isError:false}],explanation:"To find when they next align, you need the LCM, not the HCF. LCM(420, 315) = 1260 days."},
+{id:'ste_ks3_018',level:'ks3',errorType:'operation',topic:'Sequences',text:'A theatre has 20 seats in the front row. Each row has 2 more seats than the one before. A student finds the number of seats in the 15th row.',steps:[{id:1,content:'Common difference = 2',correct:true},{id:2,content:'15th term = 20 \u00d7 2 \u00d7 15 = 600',correct:false}],errorStepId:2,errorPhrases:[{phrase:'Each row has 2 more seats than the one before',isError:true},{phrase:'20 seats in the front row',isError:false},{phrase:'15th row',isError:false}],explanation:"For an arithmetic sequence, nth term = a + (n\u22121)d. 15th row = 20 + (14 \u00d7 2) = 48 seats."},
+// =============================================
+// KS3 Type B — Setup error (17)
+// =============================================
+{id:'ste_ks3_019',level:'ks3',errorType:'setup',topic:'Ratio',text:'A recipe uses oats and butter in the ratio 4:1 by mass. A chef wants to make a batch using 600 g of oats. She calculates how much butter she needs.',steps:[{id:1,content:'Total parts = 4 + 1 = 5',correct:true},{id:2,content:'Butter is 4 parts out of 5',correct:false},{id:3,content:'Butter needed = (4/5) \u00d7 600 = 480 g',correct:true}],errorStepId:2,errorPhrases:[{phrase:'oats and butter in the ratio 4:1',isError:true},{phrase:'600 g of oats',isError:false},{phrase:'how much butter',isError:false}],explanation:"In ratio 4:1, oats are 4 parts and butter is 1 part. Butter = (1/5) \u00d7 600 = 120 g."},
+{id:'ste_ks3_020',level:'ks3',errorType:'setup',topic:'Percentages',text:'A football club had 4,500 fans on average last season. This season the average is 5,040. A journalist calculates the percentage increase in average attendance.',steps:[{id:1,content:'Increase = 5,040 \u2212 4,500 = 540',correct:true},{id:2,content:'Percentage increase = (540 \u00f7 5,040) \u00d7 100 = 10.7%',correct:false}],errorStepId:2,errorPhrases:[{phrase:'percentage increase in average attendance',isError:true},{phrase:'4,500 fans',isError:false},{phrase:'5,040',isError:false}],explanation:"Percentage increase uses the original value as the denominator. Correct: (540 \u00f7 4,500) \u00d7 100 = 12%."},
+{id:'ste_ks3_021',level:'ks3',errorType:'setup',topic:'Area',text:'A circular pond has a diameter of 4.2 metres. An owner calculates the area of the pond to buy a cover.',steps:[{id:1,content:'Radius = 4.2 \u00f7 2 = 2.1 m',correct:true},{id:2,content:'Area = \u03c0 \u00d7 4.2\u00b2 = 55.4 m\u00b2',correct:false}],errorStepId:2,errorPhrases:[{phrase:'area of the pond',isError:true},{phrase:'diameter of 4.2 metres',isError:false},{phrase:'buy a cover',isError:false}],explanation:"The area formula uses the radius, not the diameter. Area = \u03c0 \u00d7 2.1\u00b2 \u2248 13.85 m\u00b2."},
+{id:'ste_ks3_022',level:'ks3',errorType:'setup',topic:'Sequences',text:'A ball is dropped from 160 cm. After each bounce it reaches half the height of the previous bounce. A student finds the height after the 4th bounce.',steps:[{id:1,content:'The sequence halves each time: 160, 80, 40, 20...',correct:true},{id:2,content:'Height after 4th bounce = 160 \u00f7 (4 \u00d7 2) = 20 cm',correct:false}],errorStepId:2,errorPhrases:[{phrase:'height after the 4th bounce',isError:true},{phrase:'half the height',isError:false},{phrase:'dropped from 160 cm',isError:false}],explanation:"Height = 160 \u00d7 (\u00bd)\u2074 = 160 \u00f7 16 = 10 cm."},
+{id:'ste_ks3_023',level:'ks3',errorType:'setup',topic:'Mean',text:'A teacher records 9 test scores: 14, 18, 9, 14, 20, 11, 14, 17, 15. A student finds the median to report to parents.',steps:[{id:1,content:'Sort: 9, 11, 14, 14, 14, 15, 17, 18, 20',correct:true},{id:2,content:'9 scores so the median is the 4th value = 14',correct:false}],errorStepId:2,errorPhrases:[{phrase:'finds the median',isError:true},{phrase:'9 test scores',isError:false},{phrase:'14, 18, 9',isError:false}],explanation:"For 9 values, the median is the (9+1)/2 = 5th value, not the 4th. The 5th value is 14 \u2014 same answer here, but the method is wrong."},
+{id:'ste_ks3_024',level:'ks3',errorType:'setup',topic:'Angles',text:'In a triangle, one angle is twice the smallest angle s. The third angle is 30\u00b0 more than s. A student finds the three angles.',steps:[{id:1,content:'Equation: s + 2s + (s + 30) = 180',correct:true},{id:2,content:'4s + 30 = 180, so 4s = 150, s = 37.5\u00b0',correct:true},{id:3,content:'Angles are: 37.5\u00b0, 75\u00b0 and 37.5\u00b0',correct:false}],errorStepId:3,errorPhrases:[{phrase:'one angle is twice the smallest angle',isError:true},{phrase:'30\u00b0 more than s',isError:false},{phrase:'three angles',isError:false}],explanation:"The third angle is s + 30\u00b0 = 67.5\u00b0, not s. The angles are 37.5\u00b0, 75\u00b0, and 67.5\u00b0."},
+{id:'ste_ks3_025',level:'ks3',errorType:'setup',topic:'Fractions',text:'In a school, two-fifths of students study French and one-quarter study Spanish. The rest study German. A student calculates the fraction who study German.',steps:[{id:1,content:'Not German = 2/5 + 1/4 = 8/20 + 5/20 = 13/20',correct:true},{id:2,content:'German = 20/20 \u2212 13/20 = 7/20',correct:true},{id:3,content:'7/20 of 400 = 7 \u00d7 400 \u00f7 20 = 560',correct:false}],errorStepId:3,errorPhrases:[{phrase:'fraction who study German',isError:true},{phrase:'two-fifths',isError:false},{phrase:'one-quarter study Spanish',isError:false}],explanation:"7 \u00d7 400 \u00f7 20 = 140, not 560. The student multiplied incorrectly."},
+{id:'ste_ks3_026',level:'ks3',errorType:'setup',topic:'Subtraction',text:'A train journey is 142 km. After travelling 87 km the driver checks how far is left. A student calculates the remaining distance.',steps:[{id:1,content:'Remaining = 87 \u2212 142 = \u221255 km',correct:false}],errorStepId:1,errorPhrases:[{phrase:'how far is left',isError:true},{phrase:'142 km',isError:false},{phrase:'87 km',isError:false}],explanation:"Remaining = total \u2212 travelled = 142 \u2212 87 = 55 km. The subtraction was reversed."},
+{id:'ste_ks3_027',level:'ks3',errorType:'setup',topic:'Triangle',text:'A right-angled triangle has shorter sides 6 cm and 8 cm. A student finds the hypotenuse.',steps:[{id:1,content:'Hypotenuse\u00b2 = 6\u00b2 + 8\u00b2 = 36 + 64 = 100',correct:true},{id:2,content:'Hypotenuse = 100 \u00f7 2 = 50 cm',correct:false}],errorStepId:2,errorPhrases:[{phrase:'finds the hypotenuse',isError:true},{phrase:'shorter sides',isError:false},{phrase:'right-angled triangle',isError:false}],explanation:"After finding c\u00b2 = 100, take the square root, not divide by 2. Hypotenuse = \u221a100 = 10 cm."},
+{id:'ste_ks3_028',level:'ks3',errorType:'setup',topic:'Angle Sum',text:'A quadrilateral has angles of 80\u00b0, 110\u00b0 and 95\u00b0. A student finds the missing angle.',steps:[{id:1,content:'Angles in a quadrilateral sum to 180\u00b0',correct:false},{id:2,content:'Missing angle = 180 \u2212 80 \u2212 110 \u2212 95 = \u2212105\u00b0',correct:true}],errorStepId:1,errorPhrases:[{phrase:'quadrilateral',isError:true},{phrase:'missing angle',isError:false},{phrase:'80\u00b0, 110\u00b0 and 95\u00b0',isError:false}],explanation:"Angles in a quadrilateral sum to 360\u00b0, not 180\u00b0. Missing angle = 360 \u2212 285 = 75\u00b0."},
+{id:'ste_ks3_029',level:'ks3',errorType:'setup',topic:'Proportion',text:'A car travels 150 km in 2 hours. A student calculates how long to travel 225 km at the same speed.',steps:[{id:1,content:'Speed = 150 + 2 = 152 km/h',correct:false},{id:2,content:'Time = 225 \u00f7 152 = 1.48 hours',correct:true}],errorStepId:1,errorPhrases:[{phrase:'150 km in 2 hours',isError:true},{phrase:'225 km',isError:false},{phrase:'same speed',isError:false}],explanation:"Speed = distance \u00f7 time = 150 \u00f7 2 = 75 km/h. Time = 225 \u00f7 75 = 3 hours."},
+{id:'ste_ks3_030',level:'ks3',errorType:'setup',topic:'Circumference',text:'A circular flower bed has radius 3.5 m. A gardener calculates the area to buy topsoil.',steps:[{id:1,content:'Area = 2\u03c0r = 2 \u00d7 3.14 \u00d7 3.5 = 22.0 m\u00b2',correct:false}],errorStepId:1,errorPhrases:[{phrase:'area to buy topsoil',isError:true},{phrase:'radius 3.5 m',isError:false},{phrase:'circular flower bed',isError:false}],explanation:"2\u03c0r is the circumference formula, not area. Area = \u03c0r\u00b2 = 3.14 \u00d7 3.5\u00b2 \u2248 38.5 m\u00b2."},
+{id:'ste_ks3_031',level:'ks3',errorType:'setup',topic:'Median',text:'A student records test scores: 5, 2, 8, 4, 6, 1, 9. They find the median without sorting the data first.',steps:[{id:1,content:'Median of 5, 2, 8, 4, 6, 1, 9 is 4 (the middle number in the list)',correct:false}],errorStepId:1,errorPhrases:[{phrase:'find the median',isError:true},{phrase:'test scores',isError:false},{phrase:'5, 2, 8, 4, 6, 1, 9',isError:false}],explanation:"The data must be sorted first: 1, 2, 4, 5, 6, 8, 9. The median (middle value) is 5, not 4. The student picked the middle of the unsorted list."},
+{id:'ste_ks3_032',level:'ks3',errorType:'setup',topic:'Rounding',text:'A measurement of 3.45 m is rounded to 1 decimal place. A student gives the answer.',steps:[{id:1,content:'3.45 rounded to 1 d.p. = 3.4',correct:false}],errorStepId:1,errorPhrases:[{phrase:'rounded to 1 decimal place',isError:true},{phrase:'3.45 m',isError:false},{phrase:'measurement',isError:false}],explanation:"When the digit is 5, round up. 3.45 to 1 d.p. = 3.5."},
+{id:'ste_ks3_033',level:'ks3',errorType:'setup',topic:'Conversion',text:'A recipe requires 1.5 litres of milk. A student converts this to millilitres.',steps:[{id:1,content:'1.5 litres = 1.5 \u00d7 10 = 15 ml',correct:false}],errorStepId:1,errorPhrases:[{phrase:'converts this to millilitres',isError:true},{phrase:'1.5 litres',isError:false},{phrase:'recipe requires',isError:false}],explanation:"1 litre = 1000 ml, not 10 ml. 1.5 litres = 1.5 \u00d7 1000 = 1500 ml."},
+{id:'ste_ks3_034',level:'ks3',errorType:'setup',topic:'Scale Factor',text:'A map has scale 1:25000. A path on the map is 8 cm. A student calculates the real length.',steps:[{id:1,content:'Real length = 8 \u00d7 25000 = 200,000 cm = 20 km',correct:false}],errorStepId:1,errorPhrases:[{phrase:'real length',isError:true},{phrase:'scale 1:25000',isError:false},{phrase:'8 cm',isError:false}],explanation:"200,000 cm = 2 km, not 20 km. The conversion from cm to km is \u00f7 100,000."},
+{id:'ste_ks3_035',level:'ks3',errorType:'setup',topic:'Brackets',text:'A student evaluates 3(x + 4) when x = 2.',steps:[{id:1,content:'3(x + 4) = 3x + 4 = 3(2) + 4 = 10',correct:false}],errorStepId:1,errorPhrases:[{phrase:'3(x + 4)',isError:true},{phrase:'x = 2',isError:false},{phrase:'evaluates',isError:false}],explanation:"The 3 multiplies the entire bracket: 3(x + 4) = 3x + 12 = 6 + 12 = 18. The student only multiplied x, not the 4."},
+// =============================================
+// GCSE Type A — Operation misread (22)
+// =============================================
+{id:'ste_gcse_001',level:'gcse',errorType:'operation',topic:'Reverse Percentage',text:'A coat is on sale for \u00a376.50 after a 10% reduction. Yasmin wants to find the original price. Her friend calculates it as follows.',steps:[{id:1,content:'10% of \u00a376.50 = \u00a37.65',correct:true},{id:2,content:'Original price = \u00a376.50 + \u00a37.65 = \u00a384.15',correct:false}],errorStepId:2,errorPhrases:[{phrase:'after a 10% reduction',isError:true},{phrase:'\u00a376.50',isError:false},{phrase:'original price',isError:false}],explanation:"The 10% was taken off the original price, not the sale price. Original = \u00a376.50 \u00f7 0.9 = \u00a385."},
+{id:'ste_gcse_002',level:'gcse',errorType:'operation',topic:'Compound Interest',text:'A savings account pays 3.5% compound interest per year. \u00a32,000 is invested. A student calculates the value after 3 years.',steps:[{id:1,content:'Annual interest = 3.5% of \u00a32,000 = \u00a370',correct:true},{id:2,content:'Total interest after 3 years = \u00a370 \u00d7 3 = \u00a3210',correct:false},{id:3,content:'Total value = \u00a32,000 + \u00a3210 = \u00a32,210',correct:true}],errorStepId:2,errorPhrases:[{phrase:'compound interest',isError:true},{phrase:'\u00a32,000 is invested',isError:false},{phrase:'after 3 years',isError:false}],explanation:"Compound means interest is calculated on the growing balance each year. Correct: A = 2000 \u00d7 1.035\u00b3 = \u00a32,217.44."},
+{id:'ste_gcse_003',level:'gcse',errorType:'operation',topic:'Vectors',text:'OABC is a parallelogram where OA = a and OC = c. M is the midpoint of BC. A student finds the vector OM in terms of a and c.',steps:[{id:1,content:'BC = OC \u2212 OB = c \u2212 (a + c) = \u2212a',correct:true},{id:2,content:'BM = \u00bdBC = \u2212\u00bda',correct:true},{id:3,content:'OM = OB \u00d7 BM = (a + c) \u00d7 (\u2212\u00bda)',correct:false}],errorStepId:3,errorPhrases:[{phrase:'vector OM in terms of a and c',isError:true},{phrase:'parallelogram',isError:false},{phrase:'midpoint of BC',isError:false}],explanation:"Vectors are combined by addition, not multiplication. OM = OB + BM = (a + c) + (\u2212\u00bda) = \u00bda + c."},
+{id:'ste_gcse_004',level:'gcse',errorType:'operation',topic:'Probability',text:'A bag has 5 red, 3 blue and 2 green counters. Two are drawn from the bag without replacement. A student finds P(both red).',steps:[{id:1,content:'P(1st red) = 5/10',correct:true},{id:2,content:'P(2nd red) = 5/10',correct:false},{id:3,content:'P(both red) = 5/10 \u00d7 5/10 = 25/100 = 1/4',correct:true}],errorStepId:2,errorPhrases:[{phrase:'without replacement',isError:true},{phrase:'5 red',isError:false},{phrase:'Two are drawn',isError:false}],explanation:"Without replacement means the denominator changes. P(2nd red | 1st red) = 4/9. P(both red) = 5/10 \u00d7 4/9 = 2/9."},
+{id:'ste_gcse_005',level:'gcse',errorType:'operation',topic:'Standard Form',text:'The speed of light is 3 \u00d7 10\u2078 m/s and the distance to Proxima Centauri is 4.013 \u00d7 10\u00b9\u2076 m. A student calculates the time in seconds for light to travel this distance.',steps:[{id:1,content:'Time = distance \u00d7 speed',correct:false},{id:2,content:'T = 4.013 \u00d7 10\u00b9\u2076 \u00d7 3 \u00d7 10\u2078 = 1.204 \u00d7 10\u00b2\u2075 seconds',correct:true}],errorStepId:1,errorPhrases:[{phrase:'3 \u00d7 10\u2078 m/s',isError:true},{phrase:'distance to Proxima Centauri',isError:false},{phrase:'time in seconds',isError:false}],explanation:"Time = distance \u00f7 speed, not \u00d7. T = 4.013 \u00d7 10\u00b9\u2076 \u00f7 (3 \u00d7 10\u2078) \u2248 1.34 \u00d7 10\u2078 seconds."},
+{id:'ste_gcse_006',level:'gcse',errorType:'operation',topic:'Trigonometry',text:'From the top of a cliff 80 m high, the angle of depression to a boat is 34\u00b0. A student finds the horizontal distance to the boat.',steps:[{id:1,content:'Angle of depression = angle of elevation = 34\u00b0',correct:true},{id:2,content:'tan(34\u00b0) = opposite \u00f7 adjacent = d \u00f7 80',correct:false},{id:3,content:'d = 80 \u00d7 tan(34\u00b0) = 53.97 m',correct:true}],errorStepId:2,errorPhrases:[{phrase:'angle of depression to a boat',isError:true},{phrase:'cliff 80 m high',isError:false},{phrase:'horizontal distance',isError:false}],explanation:"The 80 m height is the opposite side, d is adjacent. tan(34\u00b0) = 80 \u00f7 d, so d = 80 \u00f7 tan(34\u00b0) \u2248 118.5 m."},
+{id:'ste_gcse_007',level:'gcse',errorType:'operation',topic:'Similarity',text:'Two perfume bottles are similar in shape. The small bottle is 8 cm tall and holds 50 ml. The large bottle is 12 cm tall. A student finds the capacity of the large bottle.',steps:[{id:1,content:'Linear scale factor = 12 \u00f7 8 = 1.5',correct:true},{id:2,content:'Volume scale factor = 1.5\u00b2 = 2.25',correct:false},{id:3,content:'Volume = 50 \u00d7 2.25 = 112.5 ml',correct:true}],errorStepId:2,errorPhrases:[{phrase:'similar in shape',isError:true},{phrase:'8 cm tall',isError:false},{phrase:'12 cm tall',isError:false}],explanation:"Volume scales by the cube, not square, of the linear scale factor. Volume SF = 1.5\u00b3 = 3.375. Capacity = 168.75 ml."},
+{id:'ste_gcse_008',level:'gcse',errorType:'operation',topic:'Cumulative Frequency',text:'80 students complete a sponsored walk. The upper quartile is 9.1 km and the lower quartile is 4.8 km. A PE teacher calculates the interquartile range.',steps:[{id:1,content:'IQR = Q1 + Q3 = 4.8 + 9.1 = 13.9 km',correct:false}],errorStepId:1,errorPhrases:[{phrase:'interquartile range',isError:true},{phrase:'upper quartile is 9.1',isError:false},{phrase:'lower quartile is 4.8',isError:false}],explanation:"IQR = Q3 \u2212 Q1, not Q3 + Q1. IQR = 9.1 \u2212 4.8 = 4.3 km."},
+{id:'ste_gcse_009',level:'gcse',errorType:'operation',topic:'Simultaneous Equations',text:'Mr Jones buys 5 tins of paint and 4 rolls of tape for \u00a3167. He returns 1 tin and 1 roll for a refund of \u00a333.75. A student solves for the price of one tin.',steps:[{id:1,content:'5p + 4t = 167 and p + t = 33.75',correct:true},{id:2,content:'Multiply second by 4: 4p + 4t = 135',correct:true},{id:3,content:'Subtract: p = 167 \u2212 135 = 32',correct:true},{id:4,content:'t = 33.75 + 32 = 65.75',correct:false}],errorStepId:4,errorPhrases:[{phrase:'returns 1 tin and 1 roll',isError:true},{phrase:'\u00a3167',isError:false},{phrase:'5 tins of paint',isError:false}],explanation:"To find t, subtract: t = 33.75 \u2212 32 = \u00a31.75. Adding gives a nonsensical answer."},
+{id:'ste_gcse_010',level:'gcse',errorType:'operation',topic:'Surds',text:'A square patio has an area of 45 m\u00b2. A landscaper finds the exact side length in simplified surd form.',steps:[{id:1,content:'Side = \u221a45',correct:true},{id:2,content:'\u221a45 = \u221a9 + \u221a5 = 3 + \u221a5',correct:false}],errorStepId:2,errorPhrases:[{phrase:'exact side length in simplified surd form',isError:true},{phrase:'area of 45 m\u00b2',isError:false},{phrase:'square patio',isError:false}],explanation:"Surds cannot be split by addition: \u221a(ab) = \u221aa \u00d7 \u221ab, not \u221aa + \u221ab. Correct: \u221a45 = \u221a(9\u00d75) = 3\u221a5."},
+{id:'ste_gcse_011',level:'gcse',errorType:'operation',topic:'Circle Theorems',text:'ABCD is a cyclic quadrilateral. Angle DAB = (3x + 10)\u00b0 and angle BCD = (5x \u2212 18)\u00b0. A student finds x.',steps:[{id:1,content:'Opposite angles in a cyclic quadrilateral are equal',correct:false},{id:2,content:'3x + 10 = 5x \u2212 18',correct:true},{id:3,content:'28 = 2x, x = 14',correct:true}],errorStepId:1,errorPhrases:[{phrase:'cyclic quadrilateral',isError:true},{phrase:'Angle DAB',isError:false},{phrase:'angle BCD',isError:false}],explanation:"Opposite angles in a cyclic quadrilateral sum to 180\u00b0, not equal each other. Correct: (3x+10) + (5x\u221218) = 180, x = 23.5."},
+{id:'ste_gcse_012',level:'gcse',errorType:'operation',topic:'Gradient',text:'A line passes through (2, 5) and (6, 13). A student calculates the gradient.',steps:[{id:1,content:'Gradient = (6 \u2212 2) \u00f7 (13 \u2212 5) = 4 \u00f7 8 = 0.5',correct:false}],errorStepId:1,errorPhrases:[{phrase:'gradient',isError:true},{phrase:'(2, 5) and (6, 13)',isError:false},{phrase:'A line passes through',isError:false}],explanation:"Gradient = change in y \u00f7 change in x = (13\u22125) \u00f7 (6\u22122) = 8 \u00f7 4 = 2. The student inverted the fraction."},
+{id:'ste_gcse_013',level:'gcse',errorType:'operation',topic:'Sine Rule',text:'In a triangle, a = 10 cm, angle A = 30\u00b0, angle B = 45\u00b0. A student finds side b.',steps:[{id:1,content:'a/sinA = b/sinB',correct:true},{id:2,content:'b = a \u00d7 sinA \u00f7 sinB = 10 \u00d7 sin30\u00b0 \u00f7 sin45\u00b0',correct:false}],errorStepId:2,errorPhrases:[{phrase:'finds side b',isError:true},{phrase:'angle A = 30\u00b0',isError:false},{phrase:'angle B = 45\u00b0',isError:false}],explanation:"From a/sinA = b/sinB, b = a \u00d7 sinB \u00f7 sinA = 10 \u00d7 sin45\u00b0 \u00f7 sin30\u00b0. The student swapped sinA and sinB."},
+{id:'ste_gcse_014',level:'gcse',errorType:'operation',topic:'Percentage',text:'A shop buys a TV for \u00a3400 and sells it for \u00a3520. A student calculates the percentage profit.',steps:[{id:1,content:'Profit = \u00a3520 \u2212 \u00a3400 = \u00a3120',correct:true},{id:2,content:'% profit = (120 \u00f7 520) \u00d7 100 = 23.1%',correct:false}],errorStepId:2,errorPhrases:[{phrase:'percentage profit',isError:true},{phrase:'buys a TV for \u00a3400',isError:false},{phrase:'sells it for \u00a3520',isError:false}],explanation:"Percentage profit uses the cost price as denominator: (120 \u00f7 400) \u00d7 100 = 30%."},
+{id:'ste_gcse_015',level:'gcse',errorType:'operation',topic:'Bounds',text:'A rectangle is 8.4 cm by 5.2 cm, each measured to the nearest mm. A student finds the lower bound of the area.',steps:[{id:1,content:'LB of length = 8.35, LB of width = 5.15',correct:true},{id:2,content:'LB of area = 8.35 + 5.15 = 13.50 cm\u00b2',correct:false}],errorStepId:2,errorPhrases:[{phrase:'lower bound of the area',isError:true},{phrase:'nearest mm',isError:false},{phrase:'8.4 cm by 5.2 cm',isError:false}],explanation:"Area = length \u00d7 width, not length + width. LB area = 8.35 \u00d7 5.15 = 43.0 cm\u00b2."},
+{id:'ste_gcse_016',level:'gcse',errorType:'operation',topic:'Standard Form',text:'Calculate (3 \u00d7 10\u2074) \u00d7 (2 \u00d7 10\u00b3). A student works it out.',steps:[{id:1,content:'3 \u00d7 2 = 6',correct:true},{id:2,content:'10\u2074 \u00d7 10\u00b3 = 10\u00b9\u00b2',correct:false}],errorStepId:2,errorPhrases:[{phrase:'(3 \u00d7 10\u2074) \u00d7 (2 \u00d7 10\u00b3)',isError:true},{phrase:'Calculate',isError:false},{phrase:'A student works it out',isError:false}],explanation:"When multiplying powers, add the exponents: 10\u2074 \u00d7 10\u00b3 = 10\u2077, not 10\u00b9\u00b2."},
+{id:'ste_gcse_017',level:'gcse',errorType:'operation',topic:'Completing the Square',text:'A student is asked to complete the square for x\u00b2 + 8x + 3.',steps:[{id:1,content:'(x + 8)\u00b2 + 3 \u2212 64',correct:false},{id:2,content:'= (x + 8)\u00b2 \u2212 61',correct:true}],errorStepId:1,errorPhrases:[{phrase:'complete the square',isError:true},{phrase:'x\u00b2 + 8x + 3',isError:false},{phrase:'A student',isError:false}],explanation:"Half the coefficient of x is 4, not 8. Correct: (x + 4)\u00b2 + 3 \u2212 16 = (x + 4)\u00b2 \u2212 13."},
+{id:'ste_gcse_018',level:'gcse',errorType:'operation',topic:'Logarithms',text:'A student is asked to simplify log(5) + log(4).',steps:[{id:1,content:'log(5) + log(4) = log(5 + 4) = log(9)',correct:false}],errorStepId:1,errorPhrases:[{phrase:'log(5) + log(4)',isError:true},{phrase:'simplify',isError:false},{phrase:'A student',isError:false}],explanation:"log(a) + log(b) = log(a \u00d7 b) = log(20), not log(a + b)."},
+{id:'ste_gcse_019',level:'gcse',errorType:'operation',topic:'Quadratic Formula',text:'A student solves 2x\u00b2 \u2212 5x + 1 = 0 using the quadratic formula.',steps:[{id:1,content:'a=2, b=\u22125, c=1',correct:true},{id:2,content:'x = (5 \u00b1 \u221a(25 \u2212 8)) \u00f7 2',correct:false}],errorStepId:2,errorPhrases:[{phrase:'quadratic formula',isError:true},{phrase:'2x\u00b2 \u2212 5x + 1',isError:false},{phrase:'solves',isError:false}],explanation:"The denominator is 2a = 4, not 2. x = (5 \u00b1 \u221a17) \u00f7 4."},
+{id:'ste_gcse_020',level:'gcse',errorType:'operation',topic:'Functions',text:'f(x) = 2x + 3, g(x) = x\u00b2. A student finds gf(2).',steps:[{id:1,content:'g(2) = 4',correct:false},{id:2,content:'gf(2) = f(4) = 2(4) + 3 = 11',correct:true}],errorStepId:1,errorPhrases:[{phrase:'gf(2)',isError:true},{phrase:'f(x) = 2x + 3',isError:false},{phrase:'g(x) = x\u00b2',isError:false}],explanation:"gf(2) means g(f(2)). First find f(2) = 7, then g(7) = 49. The student applied them in wrong order."},
+{id:'ste_gcse_021',level:'gcse',errorType:'operation',topic:'Inequalities',text:'A student solves the inequality \u22123x > 12.',steps:[{id:1,content:'\u22123x > 12',correct:true},{id:2,content:'x > 12 \u00f7 (\u22123) = x > \u22124',correct:false}],errorStepId:2,errorPhrases:[{phrase:'solves the inequality',isError:true},{phrase:'\u22123x > 12',isError:false},{phrase:'A student',isError:false}],explanation:"When dividing by a negative number, the inequality sign reverses. x < \u22124, not x > \u22124."},
+{id:'ste_gcse_022',level:'gcse',errorType:'operation',topic:'Vectors',text:'Given a = 3i + 2j, a student is asked to find 2a.',steps:[{id:1,content:'2a = 2(3) + 2(2) = 6 + 4 = 10',correct:false}],errorStepId:1,errorPhrases:[{phrase:'find 2a',isError:true},{phrase:'a = 3i + 2j',isError:false},{phrase:'Given',isError:false}],explanation:"Scalar multiplication applies to each component: 2a = 6i + 4j, a vector, not the scalar sum 10."},
+// =============================================
+// GCSE Type B — Setup error (23)
+// =============================================
+{id:'ste_gcse_023',level:'gcse',errorType:'setup',topic:'Quadratics',text:'A rectangular field has a length that is 7 metres more than its width w metres. The area of the field is 198 m\u00b2. A student sets up the equation to find w.',steps:[{id:1,content:'Length = w + 7, Width = w',correct:true},{id:2,content:'Perimeter = 198, so 2(w + w + 7) = 198',correct:false},{id:3,content:'4w + 14 = 198, w = 46',correct:true}],errorStepId:2,errorPhrases:[{phrase:'area of the field is 198 m\u00b2',isError:true},{phrase:'length that is 7 metres more',isError:false},{phrase:'rectangular field',isError:false}],explanation:"198 m\u00b2 is the area, not the perimeter. Correct: w(w + 7) = 198."},
+{id:'ste_gcse_024',level:'gcse',errorType:'setup',topic:'Pythagoras',text:'A 6 m ladder leans against a vertical wall. Its foot is 1.8 m from the base of the wall. A student finds how far up the wall the ladder reaches.',steps:[{id:1,content:'h\u00b2 + 1.8\u00b2 = 6\u00b2',correct:true},{id:2,content:'h\u00b2 = 36 + 3.24 = 39.24',correct:false},{id:3,content:'h = \u221a39.24 \u2248 6.26 m',correct:true}],errorStepId:2,errorPhrases:[{phrase:'how far up the wall the ladder reaches',isError:true},{phrase:'6 m ladder',isError:false},{phrase:'1.8 m from the base',isError:false}],explanation:"When finding a shorter side, subtract: h\u00b2 = 36 \u2212 3.24 = 32.76. h \u2248 5.72 m."},
+{id:'ste_gcse_025',level:'gcse',errorType:'setup',topic:'Trigonometry',text:'A ramp rises 0.9 m over a horizontal distance of 6 m. An architect checks the angle of incline.',steps:[{id:1,content:'tan(\u03b8) = adjacent \u00f7 opposite = 6 \u00f7 0.9 = 6.67',correct:false},{id:2,content:'\u03b8 = arctan(6.67) = 81.5\u00b0',correct:true}],errorStepId:1,errorPhrases:[{phrase:'angle of incline',isError:true},{phrase:'rises 0.9 m',isError:false},{phrase:'horizontal distance of 6 m',isError:false}],explanation:"tan(\u03b8) = opposite \u00f7 adjacent = 0.9 \u00f7 6 = 0.15. \u03b8 \u2248 8.5\u00b0. The student inverted the fraction."},
+{id:'ste_gcse_026',level:'gcse',errorType:'setup',topic:'Standard Form',text:'The mass of the Earth is 5.97 \u00d7 10\u00b2\u2074 kg and the Moon is 7.34 \u00d7 10\u00b2\u00b2 kg. A student calculates how many times heavier Earth is than the Moon.',steps:[{id:1,content:'Combined mass = 6.0434 \u00d7 10\u00b2\u2074 kg',correct:true},{id:2,content:'Earth \u00f7 Moon = 5.97 \u00f7 7.34 = 0.81, so Earth is 0.81 times heavier',correct:false}],errorStepId:2,errorPhrases:[{phrase:'how many times heavier',isError:true},{phrase:'5.97 \u00d7 10\u00b2\u2074',isError:false},{phrase:'7.34 \u00d7 10\u00b2\u00b2',isError:false}],explanation:"Must account for the different powers of 10. (5.97 \u00d7 10\u00b2\u2074) \u00f7 (7.34 \u00d7 10\u00b2\u00b2) \u2248 81.3 times heavier."},
+{id:'ste_gcse_027',level:'gcse',errorType:'setup',topic:'Reverse Percentage',text:'A house is valued at \u00a3292,500 after its value increased by 17% over 5 years. An estate agent wants to find the value 5 years ago.',steps:[{id:1,content:'17% of \u00a3292,500 = \u00a349,725',correct:false},{id:2,content:'Value 5 years ago = \u00a3292,500 \u2212 \u00a349,725 = \u00a3242,775',correct:true}],errorStepId:1,errorPhrases:[{phrase:'after its value increased by 17%',isError:true},{phrase:'\u00a3292,500',isError:false},{phrase:'5 years ago',isError:false}],explanation:"17% was applied to the original, not current value. Original = \u00a3292,500 \u00f7 1.17 = \u00a3250,000."},
+{id:'ste_gcse_028',level:'gcse',errorType:'setup',topic:'Simultaneous Equations',text:'A cinema sells adult tickets at \u00a3a and child tickets at \u00a3c. On Monday, 3 adult and 5 child tickets cost \u00a345. On Tuesday, 5 adult and 2 child tickets cost \u00a352. A student eliminates a by multiplying.',steps:[{id:1,content:'Eq1 \u00d7 5: 15a + 25c = 225',correct:true},{id:2,content:'Eq2 \u00d7 3: 15a + 6c = 156',correct:true},{id:3,content:'Add equations: 30a + 31c = 381',correct:false}],errorStepId:3,errorPhrases:[{phrase:'eliminates a',isError:true},{phrase:'3 adult and 5 child tickets',isError:false},{phrase:'5 adult and 2 child tickets',isError:false}],explanation:"Both equations have 15a, so subtract (not add) to eliminate a: 25c \u2212 6c = 225 \u2212 156, giving 19c = 69, c = \u00a33.63."},
+{id:'ste_gcse_029',level:'gcse',errorType:'setup',topic:'Circle Theorems',text:'Points A, B and C lie on a circle with centre O. The angle AOB at the centre is 136\u00b0. A student finds angle ACB where C is any point on the major arc.',steps:[{id:1,content:'Angle at centre = 2 \u00d7 angle at circumference',correct:true},{id:2,content:'136 = 2 \u00d7 ACB, so ACB = 68\u00b0',correct:true},{id:3,content:"Student reconsiders: 'C is on major arc, use reflex: 360 \u2212 136 = 224, ACB = 112\u00b0'",correct:false}],errorStepId:3,errorPhrases:[{phrase:'angle ACB where C is any point on the major arc',isError:true},{phrase:'centre O',isError:false},{phrase:'angle AOB at the centre is 136\u00b0',isError:false}],explanation:"The angle-at-centre theorem uses the non-reflex angle when C is on the major arc. ACB = 68\u00b0."},
+{id:'ste_gcse_030',level:'gcse',errorType:'setup',topic:'Probability',text:'The probability it rains on any given day is 0.3. A student finds the probability that it rains on at least one day across two independent days.',steps:[{id:1,content:'P(rain both) = 0.3 \u00d7 0.3 = 0.09',correct:true},{id:2,content:'P(at least one rainy day) = P(day 1) + P(day 2) = 0.6',correct:false}],errorStepId:2,errorPhrases:[{phrase:'at least one day',isError:true},{phrase:'probability it rains',isError:false},{phrase:'two independent days',isError:false}],explanation:"P(at least one) = 1 \u2212 P(none) = 1 \u2212 0.7\u00b2 = 0.51. Simply adding P(A) + P(B) double-counts the overlap."},
+{id:'ste_gcse_031',level:'gcse',errorType:'setup',topic:'Trigonometry',text:'A ship sails 15 km north then 22 km east. A student uses trigonometry to find the bearing to return to port.',steps:[{id:1,content:'Distance = \u221a(15\u00b2 + 22\u00b2) = \u221a709 \u2248 26.6 km',correct:true},{id:2,content:'Bearing angle: sin(\u03b8) = 15/26.6',correct:false}],errorStepId:2,errorPhrases:[{phrase:'bearing to return',isError:true},{phrase:'15 km north',isError:false},{phrase:'22 km east',isError:false}],explanation:"The bearing angle from north uses tan(\u03b8) = opposite/adjacent = 22/15 (east/north). Using sin with the hypotenuse gives the wrong setup."},
+{id:'ste_gcse_032',level:'gcse',errorType:'setup',topic:'Bearing',text:'A ship sails on a bearing of 250\u00b0 for 30 km. A student calculates the westward displacement.',steps:[{id:1,content:'Angle from north = 250\u00b0',correct:true},{id:2,content:'West = 30 \u00d7 cos(250\u00b0)',correct:false}],errorStepId:2,errorPhrases:[{phrase:'westward displacement',isError:true},{phrase:'bearing of 250\u00b0',isError:false},{phrase:'30 km',isError:false}],explanation:"The westward component uses sin, not cos. West = 30 \u00d7 sin(250\u00b0 \u2212 180\u00b0) = 30 \u00d7 sin(70\u00b0) \u2248 28.2 km."},
+{id:'ste_gcse_033',level:'gcse',errorType:'setup',topic:'IQR',text:'A data set has Q1 = 23 and Q3 = 41. A student calculates the IQR.',steps:[{id:1,content:'IQR = Q1 \u2212 Q3 = 23 \u2212 41 = \u221218',correct:false}],errorStepId:1,errorPhrases:[{phrase:'IQR',isError:true},{phrase:'Q1 = 23',isError:false},{phrase:'Q3 = 41',isError:false}],explanation:"IQR = Q3 \u2212 Q1 = 41 \u2212 23 = 18. The subtraction was reversed."},
+{id:'ste_gcse_034',level:'gcse',errorType:'setup',topic:'Histogram',text:'A histogram bar has width 10 and height 3. A student reads the frequency.',steps:[{id:1,content:'Frequency = height = 3',correct:false}],errorStepId:1,errorPhrases:[{phrase:'frequency',isError:true},{phrase:'width 10',isError:false},{phrase:'height 3',isError:false}],explanation:"In a histogram, frequency = frequency density \u00d7 class width = 3 \u00d7 10 = 30."},
+{id:'ste_gcse_035',level:'gcse',errorType:'setup',topic:'Cosine Rule',text:'A triangle has sides a = 8, b = 6 and included angle C = 60\u00b0. A student applies the cosine rule to find side c.',steps:[{id:1,content:'c\u00b2 = a\u00b2 + b\u00b2 + 2ab\u00b7cosC',correct:false},{id:2,content:'c\u00b2 = 64 + 36 + 2(8)(6)cos60\u00b0 = 100 + 48 = 148',correct:true}],errorStepId:1,errorPhrases:[{phrase:'cosine rule',isError:true},{phrase:'included angle C = 60\u00b0',isError:false},{phrase:'sides a = 8, b = 6',isError:false}],explanation:"The cosine rule is c\u00b2 = a\u00b2 + b\u00b2 \u2212 2ab\u00b7cosC (minus, not plus). c\u00b2 = 100 \u2212 48 = 52, c = \u221a52."},
+{id:'ste_gcse_036',level:'gcse',errorType:'setup',topic:'Probability Tree',text:'P(rain) = 0.4 over two days. A student draws a tree diagram but makes an error in the second branch.',steps:[{id:1,content:'Day 1: P(rain) = 0.4, P(no rain) = 0.6',correct:true},{id:2,content:'Day 2 after rain: P(rain) = 0.4, P(no rain) = 0.4',correct:false}],errorStepId:2,errorPhrases:[{phrase:'two days',isError:true},{phrase:'P(rain) = 0.4',isError:false},{phrase:'tree diagram',isError:false}],explanation:"Independent events: P(no rain) is always 0.6, not 0.4. Each branch pair must sum to 1."},
+{id:'ste_gcse_037',level:'gcse',errorType:'setup',topic:'Perpendicular Gradient',text:'A line has gradient 3. A student finds the gradient of the perpendicular line.',steps:[{id:1,content:'Perpendicular gradient = 1/3',correct:false}],errorStepId:1,errorPhrases:[{phrase:'perpendicular',isError:true},{phrase:'gradient 3',isError:false},{phrase:'A line',isError:false}],explanation:"The perpendicular gradient is the negative reciprocal: \u22121/3, not 1/3."},
+{id:'ste_gcse_038',level:'gcse',errorType:'setup',topic:'Expanding Brackets',text:'A student is asked to expand (x + 3)(x + 5).',steps:[{id:1,content:'(x + 3)(x + 5) = x\u00b2 + 5x + 3x = x\u00b2 + 8x',correct:false}],errorStepId:1,errorPhrases:[{phrase:'expand',isError:true},{phrase:'(x + 3)(x + 5)',isError:false},{phrase:'A student',isError:false}],explanation:"Missing the constant term from 3 \u00d7 5. Correct: x\u00b2 + 8x + 15."},
+{id:'ste_gcse_039',level:'gcse',errorType:'setup',topic:'Circle Equation',text:'A circle has centre (3, \u22122) and radius 5. A student writes the equation.',steps:[{id:1,content:'(x \u2212 3)\u00b2 + (y + 2)\u00b2 = 5',correct:false}],errorStepId:1,errorPhrases:[{phrase:'equation',isError:true},{phrase:'radius 5',isError:false},{phrase:'centre (3, \u22122)',isError:false}],explanation:"The equation uses r\u00b2, not r. Correct: (x \u2212 3)\u00b2 + (y + 2)\u00b2 = 25."},
+{id:'ste_gcse_040',level:'gcse',errorType:'setup',topic:'Surds',text:'A student is asked to rationalise 6/\u221a3.',steps:[{id:1,content:'6/\u221a3 \u00d7 \u221a3/\u221a3 = 6\u221a3/9',correct:false}],errorStepId:1,errorPhrases:[{phrase:'rationalise',isError:true},{phrase:'6/\u221a3',isError:false},{phrase:'A student',isError:false}],explanation:"\u221a3 \u00d7 \u221a3 = 3, not 9. Correct: 6\u221a3/3 = 2\u221a3."},
+{id:'ste_gcse_041',level:'gcse',errorType:'setup',topic:'Composite Function',text:'f(x) = x + 2, g(x) = 3x. A student finds fg(x).',steps:[{id:1,content:'fg(x) = f(x) \u00d7 g(x) = (x + 2)(3x) = 3x\u00b2 + 6x',correct:false}],errorStepId:1,errorPhrases:[{phrase:'fg(x)',isError:true},{phrase:'f(x) = x + 2',isError:false},{phrase:'g(x) = 3x',isError:false}],explanation:"fg(x) means f(g(x)) = f(3x) = 3x + 2, not f \u00d7 g."},
+{id:'ste_gcse_042',level:'gcse',errorType:'setup',topic:'nth Term',text:'A sequence goes: 5, 8, 11, 14... A student finds the nth term.',steps:[{id:1,content:'Common difference = 3',correct:true},{id:2,content:'nth term = 3n + 5',correct:false}],errorStepId:2,errorPhrases:[{phrase:'nth term',isError:true},{phrase:'5, 8, 11, 14',isError:false},{phrase:'A student',isError:false}],explanation:"nth term = 3n + (5 \u2212 3) = 3n + 2. Check: n=1 gives 5. The student added the first term instead of adjusting."},
+{id:'ste_gcse_043',level:'gcse',errorType:'setup',topic:'Equation Rearrangement',text:'A student is asked to make t the subject of v = u + at.',steps:[{id:1,content:'v \u2212 u = at',correct:true},{id:2,content:'t = a(v \u2212 u)',correct:false}],errorStepId:2,errorPhrases:[{phrase:'make t the subject',isError:true},{phrase:'v = u + at',isError:false},{phrase:'A student',isError:false}],explanation:"t = (v \u2212 u) \u00f7 a, not a(v \u2212 u). The student multiplied instead of dividing."},
+{id:'ste_gcse_044',level:'gcse',errorType:'setup',topic:'Arc Length',text:'A sector has radius 10 cm and angle 72\u00b0. A student finds the arc length.',steps:[{id:1,content:'Arc length = (72/180) \u00d7 \u03c0 \u00d7 10 = 12.57 cm',correct:false}],errorStepId:1,errorPhrases:[{phrase:'arc length',isError:true},{phrase:'angle 72\u00b0',isError:false},{phrase:'radius 10 cm',isError:false}],explanation:"Arc length = (\u03b8/360) \u00d7 2\u03c0r. Correct: (72/360) \u00d7 2\u03c0(10) = 4\u03c0 \u2248 12.57 cm. Same answer by coincidence here, but the formula used is wrong."},
+{id:'ste_gcse_045',level:'gcse',errorType:'setup',topic:'Simultaneous',text:'A student solves: 2x + 3y = 13 and 4x \u2212 y = 5 by substitution.',steps:[{id:1,content:'From eq2: y = 4x \u2212 5',correct:true},{id:2,content:'Sub into eq1: 2x + 3(4x \u2212 5) = 13',correct:true},{id:3,content:'2x + 12x \u2212 5 = 13, so 14x = 18, x = 18/14',correct:false}],errorStepId:3,errorPhrases:[{phrase:'by substitution',isError:true},{phrase:'2x + 3y = 13',isError:false},{phrase:'4x \u2212 y = 5',isError:false}],explanation:"The \u22125 should be \u221215 (3 \u00d7 \u22125). Correct: 2x + 12x \u2212 15 = 13, 14x = 28, x = 2."},
+// =============================================
+// Level 4 Type A — Operation misread (15)
+// =============================================
+{id:'ste_l4_001',level:'level4',errorType:'operation',topic:'Differentiation',text:'A curve has equation y = 4x\u00b3 \u2212 5x\u00b2 + 2x \u2212 7. An engineer finds the rate of change of y with respect to x.',steps:[{id:1,content:'4x\u00b3 \u2192 12x\u00b2, 5x\u00b2 \u2192 10x, 2x \u2192 2, \u22127 \u2192 \u22127',correct:false},{id:2,content:'dy/dx = 12x\u00b2 \u2212 10x + 2 \u2212 7',correct:true}],errorStepId:1,errorPhrases:[{phrase:'rate of change of y with respect to x',isError:true},{phrase:'4x\u00b3 \u2212 5x\u00b2',isError:false},{phrase:'engineer finds',isError:false}],explanation:"The derivative of a constant is 0, not the constant itself. dy/dx = 12x\u00b2 \u2212 10x + 2."},
+{id:'ste_l4_002',level:'level4',errorType:'operation',topic:'Logarithms',text:'An analyst simplifies log(8) + log(4) \u2212 log(2). A student writes their working.',steps:[{id:1,content:'log(8) + log(4) = log(8 + 4) = log(12)',correct:false},{id:2,content:'log(12) \u2212 log(2) = log(10) = 1',correct:true}],errorStepId:1,errorPhrases:[{phrase:'log(8) + log(4) \u2212 log(2)',isError:true},{phrase:'simplifies',isError:false},{phrase:'student writes',isError:false}],explanation:"log(a) + log(b) = log(a \u00d7 b), not log(a + b). log(8) + log(4) = log(32). Then log(32) \u2212 log(2) = log(16)."},
+{id:'ste_l4_003',level:'level4',errorType:'operation',topic:'Complex Numbers',text:'An electrical engineer multiplies two complex numbers: (2 + 3j)(1 \u2212 j).',steps:[{id:1,content:'Expand: 2\u00d71 + 2\u00d7(\u2212j) + 3j\u00d71 + 3j\u00d7(\u2212j)',correct:true},{id:2,content:'= 2 \u2212 2j + 3j \u2212 3j\u00b2',correct:true},{id:3,content:'j\u00b2 = 1, so \u22123j\u00b2 = \u22123',correct:false},{id:4,content:'= 2 \u2212 3 + j = \u22121 + j',correct:true}],errorStepId:3,errorPhrases:[{phrase:'multiplies',isError:true},{phrase:'(2 + 3j)',isError:false},{phrase:'(1 \u2212 j)',isError:false}],explanation:"j\u00b2 = \u22121, not +1. So \u22123j\u00b2 = +3. Correct: 2 + 3 + j = 5 + j."},
+{id:'ste_l4_004',level:'level4',errorType:'operation',topic:'Integration',text:'A velocity function is v = 3t\u00b2 + 2t. An engineer integrates to find the distance s travelled from t = 0.',steps:[{id:1,content:'\u222b(3t\u00b2 + 2t) dt',correct:true},{id:2,content:'= (3t\u00b2 \u00f7 2) + (2t \u00f7 1) + c = 1.5t\u00b2 + 2t + c',correct:false}],errorStepId:2,errorPhrases:[{phrase:'distance s travelled from t = 0',isError:true},{phrase:'3t\u00b2 + 2t',isError:false},{phrase:'integrates',isError:false}],explanation:"Integration increases the power by 1 and divides by the new power. \u222b3t\u00b2 = t\u00b3. Correct: s = t\u00b3 + t\u00b2 + c."},
+{id:'ste_l4_005',level:'level4',errorType:'operation',topic:'Product Rule',text:'A function is y = x\u00b2\u00b7sin(x). An engineer applies the product rule to find dy/dx.',steps:[{id:1,content:'u = x\u00b2, v = sin(x)',correct:true},{id:2,content:'du/dx = 2x, dv/dx = cos(x)',correct:true},{id:3,content:'dy/dx = du/dx \u00d7 dv/dx = 2x\u00b7cos(x)',correct:false}],errorStepId:3,errorPhrases:[{phrase:'product rule',isError:true},{phrase:'x\u00b2\u00b7sin(x)',isError:false},{phrase:'dy/dx',isError:false}],explanation:"Product rule: dy/dx = u(dv/dx) + v(du/dx) = x\u00b2cos(x) + 2x\u00b7sin(x)."},
+{id:'ste_l4_006',level:'level4',errorType:'operation',topic:'Matrices',text:'Matrix A = [[2, 3], [1, 4]]. An engineer finds the determinant det(A).',steps:[{id:1,content:'det(A) = (2 \u00d7 4) + (3 \u00d7 1) = 8 + 3 = 11',correct:false}],errorStepId:1,errorPhrases:[{phrase:'determinant det(A)',isError:true},{phrase:'[[2, 3], [1, 4]]',isError:false},{phrase:'engineer finds',isError:false}],explanation:"det([[a,b],[c,d]]) = ad \u2212 bc, not ad + bc. det(A) = 8 \u2212 3 = 5."},
+{id:'ste_l4_007',level:'level4',errorType:'operation',topic:'Geometric Series',text:'A geometric series has first term a = 3 and common ratio r = 0.5. An engineer calculates the sum to infinity.',steps:[{id:1,content:'S\u221e = a \u00f7 (1 + r) = 3 \u00f7 1.5 = 2',correct:false}],errorStepId:1,errorPhrases:[{phrase:'sum to infinity',isError:true},{phrase:'common ratio r = 0.5',isError:false},{phrase:'geometric series',isError:false}],explanation:"S\u221e = a \u00f7 (1 \u2212 r), not (1 + r). S\u221e = 3 \u00f7 0.5 = 6."},
+{id:'ste_l4_008',level:'level4',errorType:'operation',topic:'Integration',text:'A student evaluates \u222b(4x + 1) dx.',steps:[{id:1,content:'\u222b(4x + 1) dx = 4x\u00b2 + x + c',correct:false}],errorStepId:1,errorPhrases:[{phrase:'evaluates',isError:true},{phrase:'4x + 1',isError:false},{phrase:'\u222b',isError:false}],explanation:"\u222b4x dx = 2x\u00b2, not 4x\u00b2. The power rule increases the exponent and divides by it. Correct: 2x\u00b2 + x + c."},
+{id:'ste_l4_009',level:'level4',errorType:'operation',topic:'Chain Rule',text:'y = (2x + 5)\u00b3. A student finds dy/dx.',steps:[{id:1,content:'dy/dx = 3(2x + 5)\u00b2',correct:false}],errorStepId:1,errorPhrases:[{phrase:'finds dy/dx',isError:true},{phrase:'(2x + 5)\u00b3',isError:false},{phrase:'student',isError:false}],explanation:"Chain rule requires multiplying by the inner derivative. dy/dx = 3(2x + 5)\u00b2 \u00d7 2 = 6(2x + 5)\u00b2."},
+{id:'ste_l4_010',level:'level4',errorType:'operation',topic:'Implicit Differentiation',text:'Given x\u00b2 + y\u00b2 = 25, a student finds dy/dx by differentiating both sides.',steps:[{id:1,content:'Differentiate: 2x + 2y = 0',correct:false},{id:2,content:'dy/dx = \u22122x/2y = \u2212x/y',correct:true}],errorStepId:1,errorPhrases:[{phrase:'finds dy/dx',isError:true},{phrase:'x\u00b2 + y\u00b2 = 25',isError:false},{phrase:'differentiating',isError:false}],explanation:"Differentiating y\u00b2 requires the chain rule: d/dx(y\u00b2) = 2y\u00b7dy/dx. Correct: 2x + 2y(dy/dx) = 0."},
+{id:'ste_l4_011',level:'level4',errorType:'operation',topic:'Sum to Infinity',text:'A geometric series has a = 10 and r = 2. A student finds S\u221e.',steps:[{id:1,content:'S\u221e = a/(1\u2212r) = 10/(1\u22122) = 10/(\u22121) = \u221210',correct:false}],errorStepId:1,errorPhrases:[{phrase:'S\u221e',isError:true},{phrase:'r = 2',isError:false},{phrase:'geometric series',isError:false}],explanation:"The sum to infinity only converges when |r| < 1. Since r = 2, the series diverges and S\u221e does not exist."},
+{id:'ste_l4_012',level:'level4',errorType:'operation',topic:'Binomial Expansion',text:'A student finds the coefficient of x\u00b2 in (1 + x)\u2075.',steps:[{id:1,content:'Coefficient = 5C2 = 5!/(2! \u00d7 2!) = 120/4 = 30',correct:false}],errorStepId:1,errorPhrases:[{phrase:'coefficient of x\u00b2',isError:true},{phrase:'(1 + x)\u2075',isError:false},{phrase:'finds',isError:false}],explanation:"5C2 = 5!/(2! \u00d7 3!) = 120/(2 \u00d7 6) = 10, not 30. The student used 2! twice instead of 2! and 3!."},
+{id:'ste_l4_013',level:'level4',errorType:'operation',topic:'Eigenvalue',text:'Matrix A = [[4, 1], [2, 3]]. A student finds the eigenvalues.',steps:[{id:1,content:'det(A \u2212 \u03bbI) = 0',correct:true},{id:2,content:'(4\u2212\u03bb)(3\u2212\u03bb) + 2 = 0',correct:false}],errorStepId:2,errorPhrases:[{phrase:'eigenvalues',isError:true},{phrase:'[[4, 1], [2, 3]]',isError:false},{phrase:'A student finds',isError:false}],explanation:"det = (4\u2212\u03bb)(3\u2212\u03bb) \u2212 (1)(2) = 0. The off-diagonal product should be subtracted, not added."},
+{id:'ste_l4_014',level:'level4',errorType:'operation',topic:'Partial Fractions',text:'A student expresses 1/((x+1)(x\u22121)) in partial fractions.',steps:[{id:1,content:'1/((x+1)(x\u22121)) = A/(x+1) + B/(x+1)',correct:false}],errorStepId:1,errorPhrases:[{phrase:'partial fractions',isError:true},{phrase:'(x+1)(x\u22121)',isError:false},{phrase:'expresses',isError:false}],explanation:"The second denominator should be (x\u22121), not (x+1). Correct: A/(x+1) + B/(x\u22121)."},
+{id:'ste_l4_015',level:'level4',errorType:'operation',topic:'De Moivre',text:'A student finds (cos30\u00b0 + j\u00b7sin30\u00b0)\u2074 using De Moivre\u2019s theorem.',steps:[{id:1,content:'= cos(4 \u00d7 30\u00b0) + j\u00b7sin(30\u00b0) = cos120\u00b0 + j\u00b7sin30\u00b0',correct:false}],errorStepId:1,errorPhrases:[{phrase:'De Moivre',isError:true},{phrase:'(cos30\u00b0 + j\u00b7sin30\u00b0)\u2074',isError:false},{phrase:'finds',isError:false}],explanation:"De Moivre applies the power to BOTH arguments: cos(4\u00d730\u00b0) + j\u00b7sin(4\u00d730\u00b0) = cos120\u00b0 + j\u00b7sin120\u00b0."},
+// =============================================
+// Level 4 Type B — Setup error (15)
+// =============================================
+{id:'ste_l4_016',level:'level4',errorType:'setup',topic:'Eigenvalues',text:'Matrix A = [[3, 1], [2, 4]]. An engineer finds the eigenvalues and then writes the eigenvalue equation for \u03bb = 2.',steps:[{id:1,content:'det(A \u2212 \u03bbI) = 0 gives \u03bb = 2 or \u03bb = 5',correct:true},{id:2,content:'For \u03bb = 2: solve (A + 2I)v = 0',correct:false}],errorStepId:2,errorPhrases:[{phrase:'eigenvalue equation',isError:true},{phrase:'\u03bb = 2',isError:false},{phrase:'Matrix A',isError:false}],explanation:"Eigenvectors use (A \u2212 \u03bbI)v = 0, not (A + \u03bbI)v = 0."},
+{id:'ste_l4_017',level:'level4',errorType:'setup',topic:'Integration',text:'An engineer evaluates the definite integral \u222b\u2081\u00b3 (x\u00b2 + 2) dx.',steps:[{id:1,content:'[x\u00b3/3 + 2x]\u2081\u00b3',correct:true},{id:2,content:'Upper: (27/3 + 6) = 15',correct:true},{id:3,content:'Lower: (1/3 + 2) = 7/3',correct:true},{id:4,content:'Result = 7/3 \u2212 15 = \u221238/3',correct:false}],errorStepId:4,errorPhrases:[{phrase:'definite integral',isError:true},{phrase:'\u222b\u2081\u00b3',isError:false},{phrase:'x\u00b2 + 2',isError:false}],explanation:"Definite integral = F(b) \u2212 F(a) = upper \u2212 lower. Result = 15 \u2212 7/3 = 38/3."},
+{id:'ste_l4_018',level:'level4',errorType:'setup',topic:'Partial Fractions',text:'An engineer expresses (3x+1)/((x+1)(x\u22122)) in partial fractions using the cover-up method to find A.',steps:[{id:1,content:'Cover up (x+1), substitute x = 1',correct:false},{id:2,content:'A = (3(1)+1)/(1\u22122) = 4/(\u22121) = \u22124',correct:true}],errorStepId:1,errorPhrases:[{phrase:'cover-up method',isError:true},{phrase:'An engineer expresses',isError:false},{phrase:'(3x+1)',isError:false}],explanation:"Cover-up substitutes the root of the covered factor. For (x+1), set x = \u22121. A = (3(\u22121)+1)/((\u22121)\u22122) = (\u22122)/(\u22123) = 2/3."},
+{id:'ste_l4_019',level:'level4',errorType:'setup',topic:'Chain Rule',text:'A curve has equation y = (3x\u00b2 + 1)\u2075. An engineer applies the chain rule to find dy/dx.',steps:[{id:1,content:'u = 3x\u00b2 + 1, y = u\u2075',correct:true},{id:2,content:'dy/du = 5u\u2074, du/dx = 3x\u00b2',correct:false},{id:3,content:'dy/dx = 5u\u2074 \u00d7 3x\u00b2 = 15x\u00b2(3x\u00b2+1)\u2074',correct:true}],errorStepId:2,errorPhrases:[{phrase:'chain rule',isError:true},{phrase:'(3x\u00b2 + 1)\u2075',isError:false},{phrase:'dy/dx',isError:false}],explanation:"du/dx is the derivative of 3x\u00b2 + 1, which is 6x, not 3x\u00b2. dy/dx = 30x(3x\u00b2+1)\u2074."},
+{id:'ste_l4_020',level:'level4',errorType:'setup',topic:'Modulus-Argument',text:'A complex number is z = \u22123 + 3j. An engineer converts to modulus-argument form.',steps:[{id:1,content:'|z| = \u221a(9 + 9) = 3\u221a2',correct:true},{id:2,content:'arg(z) = arctan(3/\u22123) = arctan(\u22121) = \u221245\u00b0',correct:false}],errorStepId:2,errorPhrases:[{phrase:'modulus-argument form',isError:true},{phrase:'\u22123 + 3j',isError:false},{phrase:'engineer converts',isError:false}],explanation:"z is in the second quadrant (negative real, positive imaginary). arg(z) = 180\u00b0 \u2212 45\u00b0 = 135\u00b0."},
+{id:'ste_l4_021',level:'level4',errorType:'setup',topic:'Matrix Inverse',text:'A = [[3, 2], [1, 4]]. A student finds A\u207b\u00b9.',steps:[{id:1,content:'det(A) = 12 \u2212 2 = 10',correct:true},{id:2,content:'A\u207b\u00b9 = (1/10)[[4, 1], [2, 3]]',correct:false}],errorStepId:2,errorPhrases:[{phrase:'A\u207b\u00b9',isError:true},{phrase:'[[3, 2], [1, 4]]',isError:false},{phrase:'student finds',isError:false}],explanation:"The adjugate swaps diagonal and negates off-diagonal: [[4, \u22122], [\u22121, 3]]. A\u207b\u00b9 = (1/10)[[4,\u22122],[\u22121,3]]."},
+{id:'ste_l4_022',level:'level4',errorType:'setup',topic:'Stationary Points',text:'y = x\u00b3 \u2212 3x. A student classifies the stationary point at x = 1.',steps:[{id:1,content:'dy/dx = 3x\u00b2 \u2212 3. At x=1: dy/dx = 0 \u2713',correct:true},{id:2,content:'d\u00b2y/dx\u00b2 = 6x. At x=1: d\u00b2y/dx\u00b2 = 6 > 0, so maximum',correct:false}],errorStepId:2,errorPhrases:[{phrase:'classifies',isError:true},{phrase:'stationary point',isError:false},{phrase:'x = 1',isError:false}],explanation:"d\u00b2y/dx\u00b2 > 0 indicates a minimum, not a maximum."},
+{id:'ste_l4_023',level:'level4',errorType:'setup',topic:'Integration by Parts',text:'A student evaluates \u222bx\u00b7cos(x) dx using integration by parts.',steps:[{id:1,content:'u = cos(x), dv = x dx',correct:false},{id:2,content:'du = \u2212sin(x) dx, v = x\u00b2/2',correct:true},{id:3,content:'\u222b = (x\u00b2/2)cos(x) + \u222b(x\u00b2/2)sin(x) dx',correct:true}],errorStepId:1,errorPhrases:[{phrase:'integration by parts',isError:true},{phrase:'x\u00b7cos(x)',isError:false},{phrase:'\u222b',isError:false}],explanation:"Choose u = x (simplifies on differentiation) and dv = cos(x) dx. Then du = dx, v = sin(x). \u222b = x\u00b7sin(x) \u2212 \u222bsin(x) dx."},
+{id:'ste_l4_024',level:'level4',errorType:'setup',topic:'Binomial',text:'A student finds the x\u00b3 term in (1 + 2x)\u2076.',steps:[{id:1,content:'Term = 6C3 \u00d7 (2x)\u00b2 = 15 \u00d7 4x\u00b2 = 60x\u00b2',correct:false}],errorStepId:1,errorPhrases:[{phrase:'x\u00b3 term',isError:true},{phrase:'(1 + 2x)\u2076',isError:false},{phrase:'finds',isError:false}],explanation:"For the x\u00b3 term, use (2x)\u00b3 not (2x)\u00b2. Term = 6C3 \u00d7 (2x)\u00b3 = 20 \u00d7 8x\u00b3 = 160x\u00b3."},
+{id:'ste_l4_025',level:'level4',errorType:'setup',topic:'Maclaurin',text:'A student writes the Maclaurin series for cos(x) up to x\u2074.',steps:[{id:1,content:'cos(x) = 1 \u2212 x\u00b2/2! + x\u00b3/3! \u2212 x\u2074/4!',correct:false}],errorStepId:1,errorPhrases:[{phrase:'Maclaurin series for cos(x)',isError:true},{phrase:'up to x\u2074',isError:false},{phrase:'student writes',isError:false}],explanation:"cos(x) only has even powers: 1 \u2212 x\u00b2/2! + x\u2074/4!. The x\u00b3/3! term belongs to sin(x)."},
+{id:'ste_l4_026',level:'level4',errorType:'setup',topic:'Parametric',text:'x = 2t, y = t\u00b2. A student finds dy/dx using parametric differentiation.',steps:[{id:1,content:'dx/dt = 2, dy/dt = 2t',correct:true},{id:2,content:'dy/dx = dx/dt \u00f7 dy/dt = 2/(2t) = 1/t',correct:false}],errorStepId:2,errorPhrases:[{phrase:'dy/dx',isError:true},{phrase:'x = 2t, y = t\u00b2',isError:false},{phrase:'parametric',isError:false}],explanation:"dy/dx = (dy/dt) \u00f7 (dx/dt) = 2t/2 = t. The student inverted the fraction."},
+{id:'ste_l4_027',level:'level4',errorType:'setup',topic:'Geometric Series',text:'A geometric series goes: 12, 6, 3, 1.5... A student identifies r to find S\u221e.',steps:[{id:1,content:'r = 12/6 = 2',correct:false},{id:2,content:'S\u221e = 12/(1\u22122) = \u221212',correct:true}],errorStepId:1,errorPhrases:[{phrase:'identifies r',isError:true},{phrase:'12, 6, 3, 1.5',isError:false},{phrase:'geometric series',isError:false}],explanation:"r = next term \u00f7 current term = 6/12 = 0.5, not 12/6. S\u221e = 12/(1\u22120.5) = 24."},
+{id:'ste_l4_028',level:'level4',errorType:'setup',topic:'Complex Modulus',text:'z = 3 \u2212 4j. A student finds |z|.',steps:[{id:1,content:'|z| = \u221a(3 \u2212 4) = \u221a(\u22121)',correct:false}],errorStepId:1,errorPhrases:[{phrase:'|z|',isError:true},{phrase:'3 \u2212 4j',isError:false},{phrase:'A student finds',isError:false}],explanation:"The modulus squares both components: |z| = \u221a(3\u00b2 + 4\u00b2) = \u221a(9+16) = 5. The student subtracted instead of squaring."},
+{id:'ste_l4_029',level:'level4',errorType:'setup',topic:'Cramer\'s Rule',text:'System: 2x + 3y = 7, x + 4y = 9. A student uses Cramer\u2019s rule to find x.',steps:[{id:1,content:'A = [[2,3],[1,4]], det(A) = 8\u22123 = 5',correct:true},{id:2,content:'A\u2081 = [[2,7],[1,9]], det(A\u2081) = 18\u22127 = 11',correct:false}],errorStepId:2,errorPhrases:[{phrase:"Cramer\u2019s rule",isError:true},{phrase:'find x',isError:false},{phrase:'2x + 3y = 7',isError:false}],explanation:"For x, replace the FIRST column with constants: A\u2081 = [[7,3],[9,4]]. det(A\u2081) = 28\u221227 = 1. x = 1/5."},
+{id:'ste_l4_030',level:'level4',errorType:'setup',topic:'Implicit Differentiation',text:'A student differentiates x\u00b2y = 10 implicitly.',steps:[{id:1,content:'2x \u00d7 y + x\u00b2 = 0',correct:false}],errorStepId:1,errorPhrases:[{phrase:'implicitly',isError:true},{phrase:'x\u00b2y = 10',isError:false},{phrase:'differentiates',isError:false}],explanation:"Product rule on x\u00b2y gives 2xy + x\u00b2(dy/dx) = 0. The student forgot the dy/dx factor on the y term."}
+];
+
+/* ===== STATE ===== */
+let currentLevel=null,sessionLength=20,questionQueue=[],qIndex=0,totalQ=0;
+let totalPoints=0,maxPoints=0,fullMarksCount=0;
+let stage=1,s1Attempts=0,s2Attempts=0,currentQ=null,questionPoints=0;
+
+const $=id=>document.getElementById(id);
+
+/* ===== INIT ===== */
+function init(){
+  document.querySelectorAll('.level-btn').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');currentLevel=b.dataset.level;$('startBtn').disabled=false;
+  }));
+  document.querySelectorAll('.session-btn').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.session-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');sessionLength=parseInt(b.dataset.len);
+  }));
+  $('startBtn').addEventListener('click',startGame);
+  $('playAgain').addEventListener('click',()=>showScreen('start'));
+  // Accessibility toggle
+  const a11yBtn=$('a11yBtn');
+  if(localStorage.getItem('mfg_dyslexia')==='1'){document.body.classList.add('dyslexia');a11yBtn.classList.add('active');}
+  a11yBtn.addEventListener('click',()=>{document.body.classList.toggle('dyslexia');const on=document.body.classList.contains('dyslexia');localStorage.setItem('mfg_dyslexia',on?'1':'0');a11yBtn.classList.toggle('active',on);});
+}
+
+function showScreen(name){
+  [$('startScreen'),$('gameScreen'),$('resultsScreen')].forEach(s=>s.classList.remove('active'));
+  $('hud').classList.remove('visible');$('levelPill').textContent='';
+  if(name==='start')$('startScreen').classList.add('active');
+  else if(name==='game'){$('gameScreen').classList.add('active');$('hud').classList.add('visible');
+    $('levelPill').textContent=currentLevel==='level4'?'LEVEL 4':currentLevel.toUpperCase();
+    $('levelPill').className='level-pill '+(currentLevel==='level4'?'l4':currentLevel);
+  }else $('resultsScreen').classList.add('active');
+}
+
+function startGame(){
+  let pool=Q.filter(q=>q.level===currentLevel);
+  pool=shuffle(pool).slice(0,sessionLength);
+  questionQueue=pool;totalQ=pool.length;qIndex=0;
+  totalPoints=0;maxPoints=0;fullMarksCount=0;
+  if(typeof mfg==='function')mfg('game_started',{game_slug:'spot-the-error',level:currentLevel});
+  window._mfgSlug='spot-the-error';window._mfgLevel=currentLevel;window._mfgCompleted=false;
+  showScreen('game');updateHUD();showQuestion();
+}
+
+function updateHUD(){
+  $('hudScore').innerHTML='<span>'+totalPoints+'</span> / '+maxPoints;
+  $('progressBar').style.width=(totalQ>0?qIndex/totalQ*100:0)+'%';
+  $('hudCount').textContent=qIndex+' / '+totalQ;
+}
+
+function showQuestion(){
+  if(qIndex>=totalQ){endGame();return;}
+  currentQ=questionQueue[qIndex];stage=1;s1Attempts=0;s2Attempts=0;questionPoints=0;
+  $('explanationBox').innerHTML='';
+  showStage1();
+}
+
+function showStage1(){
+  const pill=$('stagePill');pill.className='stage-pill s1';pill.textContent='Stage 1: Find the error';
+  $('questionCard').innerHTML=escapeHtml(currentQ.text);
+  const sc=$('stageContent');sc.innerHTML='';
+  const list=document.createElement('div');list.className='steps-list';
+  currentQ.steps.forEach(s=>{
+    const card=document.createElement('div');card.className='step-card';
+    card.innerHTML='<span class="step-num">'+s.id+'.</span><span>'+escapeHtml(s.content)+'</span>';
+    card.addEventListener('click',()=>handleStage1(card,s));
+    list.appendChild(card);
+  });
+  sc.appendChild(list);
+}
+
+function handleStage1(card,step){
+  if(card.classList.contains('disabled'))return;
+  s1Attempts++;
+  const isCorrect=step.id===currentQ.errorStepId;
+  if(isCorrect){
+    card.classList.add('correct-pick');
+    document.querySelectorAll('.step-card').forEach(c=>c.classList.add('disabled'));
+    if(typeof mfg==='function')mfg('question_answered',{game_slug:'spot-the-error',level:currentLevel,question_index:qIndex+1,correct:true,attempts:s1Attempts,mode:'stage1'});
+    setTimeout(()=>showStage2(),600);
+  }else{
+    card.classList.add('incorrect-pick');
+    setTimeout(()=>card.classList.remove('incorrect-pick'),300);
+    if(s1Attempts>=2){
+      // Reveal correct step
+      document.querySelectorAll('.step-card').forEach(c=>c.classList.add('disabled'));
+      const steps=document.querySelectorAll('.step-card');
+      currentQ.steps.forEach((s,i)=>{if(s.id===currentQ.errorStepId)steps[i].classList.add('reveal');});
+      if(typeof mfg==='function')mfg('question_answered',{game_slug:'spot-the-error',level:currentLevel,question_index:qIndex+1,correct:false,attempts:s1Attempts,mode:'stage1'});
+      // 0 points, skip stage 2
+      questionPoints=0;qIndex++;maxPoints+=2;updateHUD();
+      showExplanation(()=>nextQuestion());
+    }
+  }
+}
+
+function showStage2(){
+  stage=2;s2Attempts=0;
+  const pill=$('stagePill');pill.className='stage-pill s2';pill.textContent='Stage 2: Find the misread';
+  // Re-show question with tappable phrases
+  const sc=$('stageContent');sc.innerHTML='';
+  const zone=document.createElement('div');zone.className='phrase-zone';
+  let html=escapeHtml(currentQ.text);
+  // Sort phrases longest first to avoid partial matches
+  const sorted=[...currentQ.errorPhrases].sort((a,b)=>b.phrase.length-a.phrase.length);
+  sorted.forEach(p=>{
+    const esc=escapeHtml(p.phrase);
+    const id='phrase_'+Math.random().toString(36).substr(2,6);
+    html=html.replace(esc,'<span class="phrase-tap" data-id="'+id+'" data-error="'+p.isError+'">'+esc+'</span>');
+  });
+  zone.innerHTML=html;
+  zone.querySelectorAll('.phrase-tap').forEach(el=>{
+    el.addEventListener('click',()=>handleStage2(el));
+  });
+  sc.appendChild(zone);
+}
+
+function handleStage2(el){
+  if(el.classList.contains('disabled'))return;
+  s2Attempts++;
+  const isError=el.dataset.error==='true';
+  if(isError){
+    el.classList.add('correct-pick');
+    document.querySelectorAll('.phrase-tap').forEach(p=>p.classList.add('disabled'));
+    if(s1Attempts<=1&&s2Attempts<=1){questionPoints=2;fullMarksCount++;}
+    else questionPoints=1;
+    if(typeof mfg==='function')mfg('question_answered',{game_slug:'spot-the-error',level:currentLevel,question_index:qIndex+1,correct:true,attempts:s2Attempts,mode:'stage2'});
+    qIndex++;maxPoints+=2;totalPoints+=questionPoints;updateHUD();
+    showExplanation(()=>nextQuestion());
+  }else{
+    el.classList.add('incorrect-pick');
+    setTimeout(()=>el.classList.remove('incorrect-pick'),300);
+    if(s2Attempts>=2){
+      document.querySelectorAll('.phrase-tap').forEach(p=>{
+        p.classList.add('disabled');
+        if(p.dataset.error==='true')p.classList.add('reveal');
+      });
+      questionPoints=s1Attempts<=1?1:0;
+      if(typeof mfg==='function')mfg('question_answered',{game_slug:'spot-the-error',level:currentLevel,question_index:qIndex+1,correct:false,attempts:s2Attempts,mode:'stage2'});
+      qIndex++;maxPoints+=2;totalPoints+=questionPoints;updateHUD();
+      showExplanation(()=>nextQuestion());
+    }
+  }
+}
+
+function showExplanation(callback){
+  const box=$('explanationBox');
+  box.innerHTML='<div class="explanation">'+escapeHtml(currentQ.explanation)+'</div>';
+  const expEl=box.querySelector('.explanation');
+  let dismissed=false;
+  function dismiss(){if(!dismissed){dismissed=true;callback();}}
+  _addDismiss(expEl, dismiss);
+}
+
+function nextQuestion(){
+  $('questionCard').classList.add('fade-out');
+  $('stageContent').classList.add('fade-out');
+  $('explanationBox').innerHTML='';
+  setTimeout(()=>{
+    $('questionCard').classList.remove('fade-out');
+    $('stageContent').classList.remove('fade-out');
+    showQuestion();
+  },200);
+}
+
+function endGame(){
+  const pct=maxPoints>0?Math.round(totalPoints/maxPoints*100):0;
+  const pbKey='ste_pb_'+currentLevel;
+  const oldPB=parseInt(localStorage.getItem(pbKey)||'0');
+  let isNewPB=false;
+  if(totalQ>=10&&totalPoints>parseInt(localStorage.getItem(pbKey)||'0')){
+    localStorage.setItem(pbKey,totalPoints);isNewPB=true;
+    if(typeof mfg==='function')mfg('personal_best_set',{game_slug:'spot-the-error',level:currentLevel,score:totalPoints,previous_best:oldPB});
+  }
+  if(typeof mfg==='function')mfg('game_completed',{game_slug:'spot-the-error',level:currentLevel,score:totalPoints,questions_answered:totalQ,questions_correct:fullMarksCount});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('spot-the-error',currentLevel,totalPoints,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('spot-the-error',currentLevel,totalPoints);}}
+  window._mfgCompleted=true;
+  $('resultsPct').textContent=pct+'%';
+  $('resPoints').textContent=totalPoints;
+  $('resMax').textContent=maxPoints;
+  $('resFull').textContent=fullMarksCount;
+  const pb=$('pbBanner');
+  if(isNewPB){pb.textContent='New personal best! Previous: '+oldPB+' pts';pb.style.display='';}
+  else pb.style.display='none';
+  showScreen('results');
+}
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+init();
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Two-phase SUVAT practice — pick the right equation then calculate the answer. A-Level and Level 4 mechanics.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/suvat/">
+<meta property="og:title" content="SUVAT Selector — MaffsGames">
+<meta property="og:description" content="Two-phase SUVAT practice — pick the right equation then calculate the answer. A-Level and Level 4 mechanics.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/suvat/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>SUVAT Selector — MaffsGames</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+  /* canon 7.5 GCSE+ row: dark theme, Outfit + JetBrains Mono, unique accent per game.
+     Variable names are kept so every existing rule keeps working; only the values move.
+     --navy is this file's "primary readable text" (13 colour uses) and --white its card
+     surface (8 background uses), so both are remapped rather than renamed. */
+  :root{--bg:#12101a;--navy:#edf2f4;--red:#ef4444;--accent:#38bdf8;--yellow:#fbbf24;--green:#4ade80;--wrong:#f43f5e;--white:#1e1b2e;--text:#edf2f4;--muted:#9aa3b2;--border:#332d4d;--header:#1a1726;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+  .header{width:100%;background:var(--header);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:16px;}
+  .back{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;}
+  .back:hover{color:var(--text);}
+  .title{font-size:clamp(17px,2.5vw,21px);font-weight:700;background:linear-gradient(135deg,var(--red),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .game-area{width:100%;max-width:760px;padding:20px;flex:1;display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .scorebar{display:flex;justify-content:space-between;width:100%;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px 20px;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
+  .score-item{text-align:center;}
+  .score-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;}
+  .score-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--navy);margin-top:4px;}
+
+  .suvat-ref{width:100%;background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
+  .ref-title{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:10px;text-align:center;letter-spacing:2px;}
+  .suvat-eqs{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;}
+  /* Equations are KaTeX-rendered — no font-family, KaTeX supplies its own maths face */
+  .eq-chip{background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 8px;color:var(--navy);border:2px solid rgba(239,68,68,0.2);text-align:center;font-size:15px;line-height:1.4;}
+  .eq-chip .katex{font-size:1em;}
+
+  .vars-box{width:100%;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
+  .vars-title{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:14px;text-align:center;letter-spacing:2px;}
+  .vars-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+  .var-chip{padding:10px 16px;border-radius:10px;font-size:16px;font-weight:600;border:3px solid;}
+  .var-chip.known{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.6);color:#fca5a5;}
+  /* #aaa on this background was 2.13:1 — WCAG AA needs 4.5:1. #5a5a6e is 6.17:1. */
+  .var-chip.unknown{background:rgba(255,255,255,0.04);border-color:var(--border);color:#9aa3b2;}
+  .var-chip.find{background:#c81e1e;border-color:#ef4444;color:#fff;animation:pulse 1s ease infinite alternate;}
+  @keyframes pulse{from{box-shadow:0 0 0 0 rgba(239,68,68,0.4)}to{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
+  .scenario{font-size:15px;color:var(--text);font-weight:600;text-align:center;background:rgba(255,255,255,0.04);border-radius:8px;padding:10px;line-height:1.5;}
+
+  .phase-label{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);text-align:center;letter-spacing:2px;}
+  .eq-choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .eq-btn{font-size:17px;padding:16px 8px;border:2px solid var(--border);background:rgba(255,255,255,0.03);color:var(--navy);border-radius:12px;cursor:pointer;transition:all 0.15s;line-height:1.4;text-align:center;}
+  .eq-btn .katex{font-size:1em;}
+  /* KaTeX sets its own colour; force it to follow the button state */
+  .eq-btn.correct .katex,.eq-btn.wrong .katex{color:#fff;}
+  .eq-btn:hover{background:rgba(239,68,68,0.14);border-color:var(--red);transform:scale(1.02);}
+  .eq-btn.correct{background:var(--green);border-color:var(--green);color:white;}
+  .eq-btn.wrong{background:var(--wrong);border-color:var(--wrong);color:white;}
+
+  .calc-box{width:100%;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 4px 14px rgba(0,0,0,0.07);text-align:center;}
+  .calc-q{font-size:clamp(15px,3vw,19px);font-weight:600;color:var(--navy);margin-bottom:8px;line-height:1.8;}
+  .calc-input{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;width:120px;padding:10px;border:2px solid var(--border);border-radius:10px;text-align:center;color:var(--text);background:rgba(255,255,255,0.05);outline:none;margin:12px 0;}
+  .calc-btn{font-family:'Outfit',sans-serif;font-weight:900;font-size:14px;padding:10px 24px;border:none;border-radius:10px;cursor:pointer;background:var(--red);color:white;}
+
+  .feedback{font-size:15px;font-weight:700;min-height:22px;text-align:center;margin-top:8px;}
+  .feedback.correct{color:var(--green);}
+  .feedback.wrong{color:var(--wrong);}
+  .explanation{font-size:13px;color:var(--muted);line-height:1.6;margin-top:5px;min-height:16px;text-align:center;}
+
+  .start-screen,.game-over{width:100%;background:var(--white);border:1px solid var(--border);border-radius:16px;padding:28px;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
+  .game-over{display:none;}
+  .game-over.visible{display:block;}
+  .start-emoji{font-size:56px;margin-bottom:12px;}
+  .start-title{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+  .suvat-vars{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0;}
+  .svar{font-size:14px;font-weight:600;padding:8px 14px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.45);border-radius:8px;color:#fca5a5;}
+  .start-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+  .go-title{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+  .go-score{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:700;color:var(--red);margin:14px 0;}
+  .go-detail{font-size:14px;color:var(--muted);margin-bottom:18px;}
+  .btn{font-family:'Outfit',sans-serif;font-weight:900;font-size:15px;padding:12px 28px;border:none;border-radius:12px;cursor:pointer;}
+  .btn-primary{background:var(--red);color:white;}
+  .main-game{display:none;flex-direction:column;align-items:center;gap:12px;width:100%;}
+  .main-game.visible{display:flex;}
+  .leaderboard{width:100%;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
+  .lb-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:10px;text-align:center;}
+  .lb-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;}
+  .lb-row:last-child{border-bottom:none;}
+  .lb-score{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--navy);}
+
+  /* Phase 0 — component resolution */
+  .p0-box{width:100%;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 4px 14px rgba(0,0,0,0.07);text-align:center;}
+  .p0-launch{font-size:17px;font-weight:600;color:var(--navy);margin:10px 0;line-height:2;}
+  .p0-inputs{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:14px 0;}
+  .p0-field{display:flex;align-items:center;gap:6px;}
+  .p0-label{font-size:16px;font-weight:600;color:var(--navy);}
+  .p0-input{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;width:90px;padding:8px;border:2px solid var(--border);border-radius:8px;text-align:center;color:var(--text);background:rgba(255,255,255,0.05);outline:none;}
+  .p0-unit{font-size:11px;color:var(--muted);font-weight:700;}
+  .step-label{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
+/* === Accessibility === */
+body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
+body.accessible p, body.accessible .question-text, body.accessible .step-text, body.accessible .option-label, body.accessible .card-text { line-height: 2.0; max-width: 65ch; }
+body.accessible { background-color: #12141f !important; }
+body.accessible.light-theme { background-color: #fdf6e3 !important; color: #2d2d2d !important; }
+body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em; }
+.a11y-toggle { background: #1a2744; color: #ffffff; border: 1px solid #2a3a5c; border-radius: 6px; width: 36px; height: 36px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: background 0.15s; }
+.a11y-toggle.active, .a11y-toggle:hover { background: #0d9488; }
+.correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
+.incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="header">
+  <a href="../../" class="back">← Back</a>
+  <div class="title">SUVAT Selector</div>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+<div class="game-area">
+  <div class="scorebar">
+    <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
+    <div class="score-item" style="display:none"><div class="score-label">Time</div><div class="score-val" id="timer">0s</div></div>
+    <div class="score-item"><div class="score-label">Q</div><div class="score-val" id="qcount">0/8</div></div>
+    <div class="score-item"><div class="score-label">Best</div><div class="score-val" id="best">0</div></div>
+  </div>
+
+  <div class="start-screen" id="startScreen">
+    <div class="start-emoji">🚀</div>
+    <div class="start-title">SUVAT SELECTOR</div>
+    <div class="suvat-vars">
+      <span class="svar">s = displacement</span>
+      <span class="svar">u = initial velocity</span>
+      <span class="svar">v = final velocity</span>
+      <span class="svar">a = acceleration</span>
+      <span class="svar">t = time</span>
+    </div>
+    <div class="start-desc" id="startDesc">You'll be given a scenario with 3 known values. First pick the right equation, then calculate the answer.</div>
+    <button class="btn btn-primary" onclick="startGame()">START GAME</button>
+  </div>
+
+  <div class="main-game" id="mainGame">
+    <div class="suvat-ref">
+      <div class="ref-title">— THE 5 SUVAT EQUATIONS —</div>
+      <!-- Text content is the plain-string fallback if KaTeX fails to load; renderEq() replaces it. -->
+      <div class="suvat-eqs" id="suvatEqs">
+        <div class="eq-chip" data-eq="v = u + at">v = u + at</div>
+        <div class="eq-chip" data-eq="s = ut + ½at²">s = ut + ½at²</div>
+        <div class="eq-chip" data-eq="v² = u² + 2as">v² = u² + 2as</div>
+        <div class="eq-chip" data-eq="s = ½(u+v)t">s = ½(u+v)t</div>
+        <div class="eq-chip" style="grid-column:1/-1" data-eq="s = vt − ½at²">s = vt − ½at²</div>
+      </div>
+    </div>
+
+    <div class="vars-box">
+      <div class="vars-title" id="phaseTitle">— PHASE 1: PICK THE EQUATION —</div>
+      <div class="scenario" id="scenario"></div>
+      <div class="vars-row" id="varsRow"></div>
+    </div>
+
+    <!-- Phase 0 — component resolution -->
+    <div class="p0-box" id="phase0" style="display:none">
+      <div class="phase-label" style="margin-bottom:10px">PHASE 0: RESOLVE COMPONENTS</div>
+      <div class="p0-launch" id="p0Launch"></div>
+      <div class="p0-inputs">
+        <div class="p0-field">
+          <span class="p0-label">u_x =</span>
+          <input type="number" class="p0-input" id="p0ux" step="any" placeholder="?">
+          <span class="p0-unit">m/s</span>
+        </div>
+        <div class="p0-field">
+          <span class="p0-label">u_y =</span>
+          <input type="number" class="p0-input" id="p0uy" step="any" placeholder="?">
+          <span class="p0-unit">m/s</span>
+        </div>
+      </div>
+      <button class="calc-btn" onclick="submitPhase0()">CHECK</button>
+      <div class="feedback" id="fb0"></div>
+    </div>
+
+    <!-- Phase 1 -->
+    <div id="phase1" style="display:none">
+      <div class="phase-label" style="margin-bottom:10px">WHICH EQUATION USES THESE VARIABLES?</div>
+      <div class="eq-choices" id="eqChoices"></div>
+      <div class="feedback" id="fb1"></div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="calc-box" id="phase2" style="display:none">
+      <div class="step-label" id="stepLabel" style="display:none"></div>
+      <div class="calc-q" id="calcQ"></div>
+      <input type="number" class="calc-input" id="calcInput" placeholder="?" step="any" onkeydown="if(event.key==='Enter')submitCalc()">
+      <br>
+      <button class="calc-btn" onclick="submitCalc()">CHECK ANSWER</button>
+      <div class="feedback" id="fb2"></div>
+      <div class="explanation" id="exp2"></div>
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="go-title">WELL DONE!</div>
+    <div class="go-score" id="finalScore">0</div>
+    <div class="go-detail" id="goDetail"></div>
+    <div class="result-stat" style="margin:12px 0;font-size:14px;color:var(--muted);"><span class="stat-label">Time taken: </span><span class="stat-value" id="timeStat">—</span></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="btn btn-primary" onclick="startGame()">PLAY AGAIN</button>
+  <a href="/" style="display:block;text-align:center;color:var(--muted);font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-title">🏆 TOP SCORES</div>
+    <div id="lbList"></div>
+  </div>
+</div>
+
+<script>
+const g = 9.8;
+
+/* ── Level 4 questions (existing, unchanged) ── */
+const QUESTIONS_LEVEL4 = [
+  {scenario:"A car accelerates from rest to 20 m/s in 5 seconds. Find the acceleration.",
+   known:{u:0,v:20,t:5},find:'a',equation:'v = u + at',answer:4,tol:0.1,working:'v=u+at → 20=0+a×5 → a=4 m/s²'},
+  {scenario:"A ball is thrown upward at 15 m/s and decelerates at 10 m/s². Find how far it travels before stopping.",
+   known:{u:15,v:0,a:-10},find:'s',equation:'v² = u² + 2as',answer:11.25,tol:0.5,working:'v²=u²+2as → 0=225+2(−10)s → s=11.25 m'},
+  {scenario:"A train travels for 8 seconds, starting at 5 m/s with acceleration 2 m/s². Find displacement.",
+   known:{u:5,a:2,t:8},find:'s',equation:'s = ut + ½at²',answer:104,tol:1,working:'s=ut+½at² = 5×8+½×2×64 = 40+64 = 104 m'},
+  {scenario:"An object moves from 10 m/s to 30 m/s over 40 metres. Find acceleration.",
+   known:{u:10,v:30,s:40},find:'a',equation:'v² = u² + 2as',answer:10,tol:0.5,working:'v²=u²+2as → 900=100+80a → a=10 m/s²'},
+  {scenario:"A bus travels 200 m in 20 seconds. Initial velocity is 5 m/s. Find final velocity.",
+   known:{s:200,u:5,t:20},find:'v',equation:'s = ½(u+v)t',answer:15,tol:0.5,working:'s=½(u+v)t → 200=½(5+v)×20 → v=15 m/s'},
+  {scenario:"A stone is dropped from rest and falls for 3 seconds (g=10). Find the distance fallen.",
+   known:{u:0,a:10,t:3},find:'s',equation:'s = ut + ½at²',answer:45,tol:1,working:'s=0+½×10×9 = 45 m'},
+  {scenario:"A rocket decelerates from 500 m/s at −20 m/s². Find time to stop.",
+   known:{v:0,u:500,a:-20},find:'t',equation:'v = u + at',answer:25,tol:0.5,working:'0=500+(−20)t → t=25 s'},
+  {scenario:"A sprinter covers 100 m, finishing at 12 m/s with acceleration 2 m/s². Find starting velocity.",
+   known:{s:100,v:12,a:2},find:'u',equation:'v² = u² + 2as',answer:4,tol:1,working:'144=u²+400 → u²=144−400... v²=u²+2as'}
+];
+
+/* ── A-Level questions (50) ── */
+const QUESTIONS_ALEVEL = [
+  // ─── Section A: Constant acceleration, straight line (15) ───
+  {scenario:"A particle moves in a straight line with initial velocity 5 m/s and constant acceleration 3 m/s². Find the velocity after 4 seconds.",
+   known:{u:5,a:3,t:4},find:'v',equation:'v = u + at',
+   steps:[{prompt:"Find v",answer:17,tol:0.1,unit:"m/s"}],
+   working:"v = u + at = 5 + 3(4) = 17 m/s"},
+
+  {scenario:"A particle decelerates uniformly from 20 m/s to rest. The deceleration is 4 m/s². Find the distance travelled.",
+   known:{u:20,v:0,a:-4},find:'s',equation:'v² = u² + 2as',
+   steps:[{prompt:"Find s",answer:50,tol:0.5,unit:"m"}],
+   working:"0 = 400 + 2(−4)s → s = 50 m"},
+
+  {scenario:"A particle starts from rest and travels 36 m in 3 seconds under constant acceleration. Find the acceleration.",
+   known:{u:0,s:36,t:3},find:'a',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find a",answer:8,tol:0.1,unit:"m/s²"}],
+   working:"36 = 0 + ½a(9) → a = 8 m/s²"},
+
+  {scenario:"A particle has initial velocity 12 m/s and decelerates at 2 m/s². Find the time taken to travel 32 m.",
+   known:{u:12,a:-2,s:32},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find t",answer:4,tol:0.1,unit:"s"}],
+   working:"32 = 12t − t² → t² − 12t + 32 = 0 → (t−4)(t−8) = 0 → t = 4 s"},
+
+  {scenario:"A particle travels 60 m in 6 seconds. Its final velocity is 14 m/s. Find the initial velocity.",
+   known:{s:60,t:6,v:14},find:'u',equation:'s = ½(u+v)t',
+   steps:[{prompt:"Find u",answer:6,tol:0.1,unit:"m/s"}],
+   working:"60 = ½(u + 14)(6) → u + 14 = 20 → u = 6 m/s"},
+
+  {scenario:"A particle moving at 8 m/s accelerates at 1.5 m/s². Find the distance covered in the first 6 seconds.",
+   known:{u:8,a:1.5,t:6},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find s",answer:75,tol:0.5,unit:"m"}],
+   working:"s = 48 + ½(1.5)(36) = 48 + 27 = 75 m"},
+
+  {scenario:"A particle decelerates from 30 m/s at 5 m/s². Find the time taken to come to rest.",
+   known:{u:30,v:0,a:-5},find:'t',equation:'v = u + at',
+   steps:[{prompt:"Find t",answer:6,tol:0.1,unit:"s"}],
+   working:"0 = 30 − 5t → t = 6 s"},
+
+  {scenario:"A particle starts from rest and reaches 24 m/s with constant acceleration. It travels 144 m. Find the acceleration.",
+   known:{u:0,v:24,s:144},find:'a',equation:'v² = u² + 2as',
+   steps:[{prompt:"Find a",answer:2,tol:0.1,unit:"m/s²"}],
+   working:"576 = 2a(144) → a = 2 m/s²"},
+
+  {scenario:"A particle has velocity 18 m/s and decelerates at 3 m/s². Find the distance travelled in the first 4 seconds.",
+   known:{u:18,a:-3,t:4},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find s",answer:48,tol:0.5,unit:"m"}],
+   working:"s = 72 − ½(3)(16) = 72 − 24 = 48 m"},
+
+  {scenario:"A particle travels 100 m from rest under constant acceleration and reaches 20 m/s. Find the time taken.",
+   known:{u:0,v:20,s:100},find:'t',equation:'s = ½(u+v)t',
+   steps:[{prompt:"Find t",answer:10,tol:0.1,unit:"s"}],
+   working:"100 = ½(20)t → t = 10 s"},
+
+  {scenario:"A particle moving at 15 m/s accelerates at 2 m/s² for 5 seconds. Find the final velocity.",
+   known:{u:15,a:2,t:5},find:'v',equation:'v = u + at',
+   steps:[{prompt:"Find v",answer:25,tol:0.1,unit:"m/s"}],
+   working:"v = 15 + 2(5) = 25 m/s"},
+
+  {scenario:"A particle decelerates uniformly from 25 m/s to 10 m/s over 6 seconds. Find the distance travelled.",
+   known:{u:25,v:10,t:6},find:'s',equation:'s = ½(u+v)t',
+   steps:[{prompt:"Find s",answer:105,tol:0.5,unit:"m"}],
+   working:"s = ½(35)(6) = 105 m"},
+
+  {scenario:"A particle starts from rest and travels 80 m with constant acceleration. Its final velocity is 16 m/s. Find the acceleration.",
+   known:{u:0,v:16,s:80},find:'a',equation:'v² = u² + 2as',
+   steps:[{prompt:"Find a",answer:1.6,tol:0.05,unit:"m/s²"}],
+   working:"256 = 2a(80) → a = 1.6 m/s²"},
+
+  {scenario:"A particle moving at 6 m/s decelerates at 2 m/s². Find the total distance travelled before coming to rest.",
+   known:{u:6,v:0,a:-2},find:'s',equation:'v² = u² + 2as',
+   steps:[{prompt:"Find s",answer:9,tol:0.1,unit:"m"}],
+   working:"0 = 36 − 4s → s = 9 m"},
+
+  {scenario:"A particle has final velocity 22 m/s after accelerating at 4 m/s² for 3 seconds. Find the initial velocity.",
+   known:{v:22,a:4,t:3},find:'u',equation:'v = u + at',
+   steps:[{prompt:"Find u",answer:10,tol:0.1,unit:"m/s"}],
+   working:"22 = u + 12 → u = 10 m/s"},
+
+  // ─── Section B: Horizontal projectiles (15) ───
+  {scenario:"A ball is projected horizontally at 15 m/s from a cliff 45 m high. Taking downward as negative, use the vertical motion to find the time to reach the ground. (u_y = 0, a = −9.8, s = −45)",
+   known:{u:0,a:-9.8,s:-45},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find t",answer:3.03,tol:0.05,unit:"s"}],
+   working:"−45 = −4.9t² → t² = 9.18 → t = 3.03 s"},
+
+  {scenario:"A ball projected horizontally at 15 m/s from a cliff takes 3.03 s to reach the ground. Find the horizontal distance travelled. (u_x = 15, a = 0)",
+   known:{u:15,a:0,t:3.03},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find s",answer:45.5,tol:0.5,unit:"m"}],
+   working:"s = 15 × 3.03 = 45.5 m"},
+
+  {scenario:"A stone is thrown horizontally at 20 m/s from a height of 80 m. Find the vertical speed on impact. (u_y = 0, a = −9.8, s = −80). Give your answer as a magnitude.",
+   known:{u:0,a:-9.8,s:-80},find:'v',equation:'v² = u² + 2as',
+   steps:[{prompt:"Find |v_y|",answer:39.6,tol:0.5,unit:"m/s"}],
+   working:"v² = 2(9.8)(80) = 1568 → v = 39.6 m/s"},
+
+  {scenario:"A particle is projected horizontally from a platform 20 m above the ground. It lands 30 m away horizontally. First find the time of flight (vertical: u_y = 0, a = −9.8, s = −20), then find the launch speed.",
+   known:{u:0,a:-9.8,s:-20},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find t (from vertical)",answer:2.02,tol:0.05,unit:"s"},{prompt:"Find launch speed u_x = 30 ÷ t",answer:14.9,tol:0.3,unit:"m/s"}],
+   working:"Vertical: t = √(40/9.8) = 2.02 s. Horizontal: u = 30/2.02 = 14.9 m/s"},
+
+  {scenario:"A ball is projected horizontally at 12 m/s. After 2 seconds, find the vertical displacement. (u_y = 0, a = −9.8, t = 2). Give magnitude.",
+   known:{u:0,a:-9.8,t:2},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find |s|",answer:19.6,tol:0.2,unit:"m"}],
+   working:"s = ½(9.8)(4) = 19.6 m"},
+
+  {scenario:"A projectile is launched horizontally at 25 m/s from 122.5 m above the ground. Find the time of flight. (Vertical: u_y = 0, a = −9.8, s = −122.5)",
+   known:{u:0,a:-9.8,s:-122.5},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find t",answer:5,tol:0.1,unit:"s"}],
+   working:"−122.5 = −4.9t² → t² = 25 → t = 5 s"},
+
+  {scenario:"A projectile launched horizontally at 25 m/s has a time of flight of 5 s. Find the horizontal range. (u_x = 25, a = 0)",
+   known:{u:25,a:0,t:5},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find s",answer:125,tol:0.5,unit:"m"}],
+   working:"s = 25 × 5 = 125 m"},
+
+  {scenario:"A particle is projected horizontally. After 3 seconds the vertical speed is 29.4 m/s. Find the height of the launch point. (u_y = 0, a = −9.8, t = 3). Give magnitude.",
+   known:{u:0,a:-9.8,t:3},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find height",answer:44.1,tol:0.5,unit:"m"}],
+   working:"s = ½(9.8)(9) = 44.1 m"},
+
+  {scenario:"A ball is projected horizontally at 8 m/s from height h. It lands 24 m away. First find t from horizontal (s = 24, u = 8, a = 0), then find h.",
+   known:{u:8,a:0,s:24},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find t (from horizontal)",answer:3,tol:0.1,unit:"s"},{prompt:"Find h = ½(9.8)t²",answer:44.1,tol:0.5,unit:"m"}],
+   working:"Horizontal: t = 24/8 = 3 s. Vertical: h = ½(9.8)(9) = 44.1 m"},
+
+  {scenario:"A stone leaves a horizontal surface at 10 m/s from a table 5 m high. Find the speed on impact. First find v_y (vertical: u = 0, a = 9.8, s = 5), then combine with v_x = 10 m/s.",
+   known:{u:0,a:9.8,s:5},find:'v',equation:'v² = u² + 2as',
+   steps:[{prompt:"Find v_y",answer:9.9,tol:0.2,unit:"m/s"},{prompt:"Find speed √(v_x² + v_y²)",answer:14.1,tol:0.2,unit:"m/s"}],
+   working:"v_y² = 2(9.8)(5) = 98 → v_y = 9.9. Speed = √(100+98) = 14.1 m/s"},
+
+  {scenario:"A projectile is launched horizontally at 18 m/s. Find the resultant speed after 2 seconds. First find v_y (vertical: u = 0, a = 9.8, t = 2), then combine with v_x = 18.",
+   known:{u:0,a:9.8,t:2},find:'v',equation:'v = u + at',
+   steps:[{prompt:"Find v_y",answer:19.6,tol:0.2,unit:"m/s"},{prompt:"Find speed √(18² + v_y²)",answer:26.6,tol:0.3,unit:"m/s"}],
+   working:"v_y = 9.8 × 2 = 19.6. Speed = √(324+384.16) = 26.6 m/s"},
+
+  {scenario:"A ball is projected horizontally from a cliff. It strikes the ground 4 seconds later. Find the height of the cliff. (u_y = 0, a = 9.8, t = 4)",
+   known:{u:0,a:9.8,t:4},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find height",answer:78.4,tol:0.5,unit:"m"}],
+   working:"s = ½(9.8)(16) = 78.4 m"},
+
+  {scenario:"A particle is projected horizontally at speed u from height 19.6 m. It lands 40 m away. First find t (vertical: u = 0, a = 9.8, s = 19.6), then find u.",
+   known:{u:0,a:9.8,s:19.6},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find t",answer:2,tol:0.1,unit:"s"},{prompt:"Find launch speed u = 40 ÷ t",answer:20,tol:0.2,unit:"m/s"}],
+   working:"t = √(2×19.6/9.8) = 2 s. u = 40/2 = 20 m/s"},
+
+  {scenario:"A horizontal projectile is launched at 30 m/s. Find the vertical displacement after 1.5 seconds. (u_y = 0, a = 9.8, t = 1.5). Give magnitude.",
+   known:{u:0,a:9.8,t:1.5},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find |s|",answer:11.03,tol:0.2,unit:"m"}],
+   working:"s = ½(9.8)(2.25) = 11.025 m"},
+
+  {scenario:"A ball is projected horizontally. The vertical speed on landing is 24.5 m/s downward. Find the time of flight. (u_y = 0, a = 9.8, v = 24.5)",
+   known:{u:0,v:24.5,a:9.8},find:'t',equation:'v = u + at',
+   steps:[{prompt:"Find t",answer:2.5,tol:0.1,unit:"s"}],
+   working:"24.5 = 9.8t → t = 2.5 s"},
+
+  // ─── Section C: Projectiles at an angle (20) ───
+  {scenario:"A particle is projected at 20 m/s at 30° above the horizontal. Find the time to reach maximum height. (Vertical: v = 0 at max height, a = −9.8)",
+   phase0:{speed:20,angle:30,ux:17.32,uy:10,tol:0.1},
+   known:{u:10,v:0,a:-9.8},find:'t',equation:'v = u + at',
+   steps:[{prompt:"Find t",answer:1.02,tol:0.05,unit:"s"}],
+   working:"0 = 10 − 9.8t → t = 1.02 s"},
+
+  {scenario:"A ball is projected at 25 m/s at 60° above the horizontal. Find the maximum height reached. (Vertical: v = 0 at max height, a = −9.8)",
+   phase0:{speed:25,angle:60,ux:12.5,uy:21.65,tol:0.1},
+   known:{u:21.65,v:0,a:-9.8},find:'s',equation:'v² = u² + 2as',
+   steps:[{prompt:"Find max height",answer:23.9,tol:0.3,unit:"m"}],
+   working:"0 = 21.65² − 19.6s → s = 468.7/19.6 = 23.9 m"},
+
+  {scenario:"A particle is projected at 15 m/s at 45° above the horizontal from ground level. Find the time of flight. (Vertical: s = 0 on landing, a = −9.8)",
+   phase0:{speed:15,angle:45,ux:10.61,uy:10.61,tol:0.1},
+   known:{u:10.61,s:0,a:-9.8},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find t (time of flight)",answer:2.16,tol:0.05,unit:"s"}],
+   working:"0 = 10.61t − 4.9t² → t(10.61 − 4.9t) = 0 → t = 2.16 s"},
+
+  {scenario:"A particle projected at 15 m/s at 45° has a time of flight of 2.16 s. Find the horizontal range.",
+   phase0:{speed:15,angle:45,ux:10.61,uy:10.61,tol:0.1},
+   known:{u:10.61,a:0,t:2.16},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find range",answer:22.9,tol:0.3,unit:"m"}],
+   working:"s = 10.61 × 2.16 = 22.9 m"},
+
+  {scenario:"A particle is projected at 30 m/s at 40° above the horizontal. Find the speed at t = 2 s. First find v_y (vertical: a = −9.8), then combine with u_x.",
+   phase0:{speed:30,angle:40,ux:22.98,uy:19.28,tol:0.1},
+   known:{u:19.28,a:-9.8,t:2},find:'v',equation:'v = u + at',
+   steps:[{prompt:"Find v_y",answer:0.32,tol:0.3,unit:"m/s"},{prompt:"Find speed √(u_x² + v_y²)",answer:23.0,tol:0.3,unit:"m/s"}],
+   working:"v_y = 19.28 − 19.6 = −0.32. Speed = √(22.98² + 0.32²) = 23.0 m/s"},
+
+  {scenario:"A ball is projected at 18 m/s at 50° above the horizontal. Find the maximum height. (Vertical: v = 0 at max height, a = −9.8)",
+   phase0:{speed:18,angle:50,ux:11.57,uy:13.79,tol:0.1},
+   known:{u:13.79,v:0,a:-9.8},find:'s',equation:'v² = u² + 2as',
+   steps:[{prompt:"Find max height",answer:9.7,tol:0.2,unit:"m"}],
+   working:"0 = 190.2 − 19.6s → s = 9.7 m"},
+
+  {scenario:"A particle is projected from the ground at 22 m/s at 35° above the horizontal. Find the time to reach maximum height. (Vertical: v = 0, a = −9.8)",
+   phase0:{speed:22,angle:35,ux:18.02,uy:12.62,tol:0.1},
+   known:{u:12.62,v:0,a:-9.8},find:'t',equation:'v = u + at',
+   steps:[{prompt:"Find t",answer:1.29,tol:0.05,unit:"s"}],
+   working:"0 = 12.62 − 9.8t → t = 1.29 s"},
+
+  {scenario:"A stone is projected at 40 m/s at 25° above the horizontal. Find the horizontal distance when it returns to the same height. First find time of flight (vertical: s = 0), then find range.",
+   phase0:{speed:40,angle:25,ux:36.25,uy:16.90,tol:0.1},
+   known:{u:16.90,s:0,a:-9.8},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find time of flight",answer:3.45,tol:0.1,unit:"s"},{prompt:"Find range = u_x × t",answer:125.1,tol:1.0,unit:"m"}],
+   working:"0 = 16.90t − 4.9t² → t = 3.45 s. Range = 36.25 × 3.45 = 125.1 m"},
+
+  {scenario:"A particle is projected at 14 m/s at 60° to the horizontal. Find the vertical displacement at t = 1 s. (Vertical: a = −9.8)",
+   phase0:{speed:14,angle:60,ux:7,uy:12.12,tol:0.1},
+   known:{u:12.12,a:-9.8,t:1},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find s (vertical)",answer:7.22,tol:0.2,unit:"m"}],
+   working:"s = 12.12(1) − 4.9(1) = 7.22 m"},
+
+  {scenario:"A ball is projected at 28 m/s at 45° above the horizontal. At maximum height, v_y = 0. What is the speed at maximum height?",
+   phase0:{speed:28,angle:45,ux:19.80,uy:19.80,tol:0.1},
+   known:{u:19.80,v:0,a:-9.8},find:'v',equation:'v = u + at',
+   steps:[{prompt:"Find speed at max height",answer:19.8,tol:0.2,unit:"m/s"}],
+   working:"At max height v_y = 0, so speed = u_x = 19.8 m/s"},
+
+  {scenario:"A particle is projected at 35 m/s at 30° above the horizontal. Find the time of flight (lands at same level). (Vertical: s = 0, a = −9.8)",
+   phase0:{speed:35,angle:30,ux:30.31,uy:17.5,tol:0.1},
+   known:{u:17.5,s:0,a:-9.8},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find time of flight",answer:3.57,tol:0.05,unit:"s"}],
+   working:"0 = 17.5t − 4.9t² → t = 3.57 s"},
+
+  {scenario:"A particle is projected at 20 m/s at 55° above the horizontal. Find the horizontal range (lands at same level). First find time of flight (vertical: s = 0), then find range.",
+   phase0:{speed:20,angle:55,ux:11.47,uy:16.38,tol:0.1},
+   known:{u:16.38,s:0,a:-9.8},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find time of flight",answer:3.34,tol:0.05,unit:"s"},{prompt:"Find range = u_x × t",answer:38.3,tol:0.5,unit:"m"}],
+   working:"t = 2(16.38)/9.8 = 3.34 s. Range = 11.47 × 3.34 = 38.3 m"},
+
+  {scenario:"A particle projected at angle θ has initial speed 24 m/s. At t = 1.5 s, the vertical velocity is zero. First find u_y, then find θ. (Vertical: v = 0, a = −9.8, t = 1.5)",
+   known:{v:0,a:-9.8,t:1.5},find:'u',equation:'v = u + at',
+   steps:[{prompt:"Find u_y",answer:14.7,tol:0.1,unit:"m/s"},{prompt:"Find θ = arcsin(u_y ÷ 24)",answer:37.8,tol:0.5,unit:"°"}],
+   working:"u_y = 9.8 × 1.5 = 14.7. sin θ = 14.7/24 → θ = 37.8°"},
+
+  {scenario:"A ball is projected at 16 m/s at 70° above the horizontal. Find the vertical velocity at t = 2 s. (Vertical: a = −9.8). Give as a magnitude.",
+   phase0:{speed:16,angle:70,ux:5.47,uy:15.04,tol:0.1},
+   known:{u:15.04,a:-9.8,t:2},find:'v',equation:'v = u + at',
+   steps:[{prompt:"Find |v_y|",answer:4.56,tol:0.2,unit:"m/s"}],
+   working:"v = 15.04 − 19.6 = −4.56 m/s (downward). Magnitude = 4.56 m/s"},
+
+  {scenario:"A particle is projected at 50 m/s at 20° above the horizontal. Find the height at t = 3 s. (Vertical: a = −9.8)",
+   phase0:{speed:50,angle:20,ux:46.98,uy:17.10,tol:0.1},
+   known:{u:17.10,a:-9.8,t:3},find:'s',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find height",answer:7.2,tol:0.3,unit:"m"}],
+   working:"s = 17.10(3) − 4.9(9) = 51.3 − 44.1 = 7.2 m"},
+
+  {scenario:"A particle is projected at 12 m/s at 45° above the horizontal. Find the speed at t = 1 s. First find v_y (vertical: a = −9.8), then combine with u_x.",
+   phase0:{speed:12,angle:45,ux:8.49,uy:8.49,tol:0.1},
+   known:{u:8.49,a:-9.8,t:1},find:'v',equation:'v = u + at',
+   steps:[{prompt:"Find |v_y|",answer:1.31,tol:0.2,unit:"m/s"},{prompt:"Find speed √(u_x² + v_y²)",answer:8.59,tol:0.2,unit:"m/s"}],
+   working:"v_y = 8.49 − 9.8 = −1.31. Speed = √(8.49² + 1.31²) = 8.59 m/s"},
+
+  {scenario:"A particle is projected at 32 m/s at 30° above the horizontal from a cliff 20 m above the sea. Find the time when it hits the sea. (Vertical: s = −20, a = −9.8)",
+   phase0:{speed:32,angle:30,ux:27.71,uy:16,tol:0.1},
+   known:{u:16,s:-20,a:-9.8},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find t",answer:4.23,tol:0.1,unit:"s"}],
+   working:"−20 = 16t − 4.9t² → 4.9t² − 16t − 20 = 0 → t = (16+25.46)/9.8 = 4.23 s"},
+
+  {scenario:"A ball is projected at 10 m/s at 30° above the horizontal. Find the maximum height above the point of projection. (Vertical: v = 0, a = −9.8)",
+   phase0:{speed:10,angle:30,ux:8.66,uy:5,tol:0.1},
+   known:{u:5,v:0,a:-9.8},find:'s',equation:'v² = u² + 2as',
+   steps:[{prompt:"Find max height",answer:1.28,tol:0.05,unit:"m"}],
+   working:"0 = 25 − 19.6s → s = 1.28 m"},
+
+  {scenario:"A particle is projected at 45 m/s at 15° above the horizontal. Find the horizontal range (lands at same level). First find time of flight (vertical: s = 0), then find range.",
+   phase0:{speed:45,angle:15,ux:43.47,uy:11.65,tol:0.1},
+   known:{u:11.65,s:0,a:-9.8},find:'t',equation:'s = ut + ½at²',
+   steps:[{prompt:"Find time of flight",answer:2.38,tol:0.05,unit:"s"},{prompt:"Find range = u_x × t",answer:103.5,tol:1.0,unit:"m"}],
+   working:"t = 2(11.65)/9.8 = 2.378 s. Range = 43.47 × 2.378 = 103.4 m"},
+
+  {scenario:"A particle is projected at speed u at 60° above the horizontal. It reaches a maximum height of 30 m. Find u. (Vertical: v = 0, a = −9.8, s = 30, u_y = u sin 60°)",
+   known:{v:0,a:-9.8,s:30},find:'u',equation:'v² = u² + 2as',
+   steps:[{prompt:"Find u_y = √(2 × 9.8 × 30)",answer:24.25,tol:0.2,unit:"m/s"},{prompt:"Find u = u_y ÷ sin 60°",answer:28,tol:0.2,unit:"m/s"}],
+   working:"u_y² = 2(9.8)(30) = 588 → u_y = 24.25. u = 24.25/sin60° = 28 m/s"}
+];
+
+const ALL_EQS = ['v = u + at','s = ut + ½at²','v² = u² + 2as','s = ½(u+v)t','s = vt − ½at²'];
+
+/* ── KaTeX rendering (canon §7.1: mathematical notation via KaTeX only) ──
+   The plain strings above stay the canonical identity used for answer matching and
+   for the `equation` field on all 58 questions; EQ_TEX only maps identity → display. */
+const EQ_TEX = {
+  'v = u + at'    : 'v = u + at',
+  's = ut + ½at²' : 's = ut + \\tfrac{1}{2}at^2',
+  'v² = u² + 2as' : 'v^2 = u^2 + 2as',
+  's = ½(u+v)t'   : 's = \\tfrac{1}{2}(u+v)t',
+  's = vt − ½at²' : 's = vt - \\tfrac{1}{2}at^2'
+};
+
+/* Returns KaTeX HTML for an equation identity, falling back to the plain
+   string if KaTeX has not loaded (it is deferred) or the identity is unknown. */
+function eqHTML(id){
+  var tex = EQ_TEX[id];
+  if(!tex || typeof katex === 'undefined') return null;
+  try{
+    return katex.renderToString(tex, {throwOnError:false, displayMode:false});
+  }catch(e){ return null; }
+}
+
+/* Sets an element's content to the rendered equation, or leaves plain text. */
+function setEq(el, id){
+  var html = eqHTML(id);
+  if(html === null){ el.textContent = id; } else { el.innerHTML = html; }
+}
+
+/* Render the static five-equation reference panel once KaTeX is available. */
+function renderRefPanel(){
+  var chips = document.querySelectorAll('#suvatEqs .eq-chip');
+  Array.prototype.forEach.call(chips, function(c){ setEq(c, c.dataset.eq); });
+}
+window.addEventListener('DOMContentLoaded', renderRefPanel);
+
+/* ── Level detection ── */
+const params = new URLSearchParams(window.location.search);
+const level = params.get('level') || 'level4';
+const isALevel = level === 'alevel';
+const POOL = isALevel ? QUESTIONS_ALEVEL : QUESTIONS_LEVEL4;
+const GAME_SIZE = isALevel ? 10 : 8;
+const STORAGE_PREFIX = 'sv_' + level;
+
+let score = 0, qNum = 0, questions = [], currentQ = null, currentStep = 0;
+let timerStart = null, timerInterval = null, elapsedSeconds = 0, sessionStart = null;
+let _svCorrectCount = 0;
+const BASE_SCORE_P0 = 5, BASE_SCORE_EQ = 5, BASE_SCORE_CALC = 10, T_K = 0.15;
+
+function startTimer(){
+  stopTimer();
+  timerStart = Date.now(); elapsedSeconds = 0;
+  document.getElementById('timer').textContent = '0s';
+  timerInterval = setInterval(() => {
+    elapsedSeconds = Math.floor((Date.now() - timerStart) / 1000);
+    document.getElementById('timer').textContent = elapsedSeconds + 's';
+  }, 250);
+}
+function stopTimer(){
+  if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+  if(timerStart) elapsedSeconds = Math.round((Date.now() - timerStart) / 1000);
+}
+function logScore(base, seconds){
+  return Math.max(1, Math.round(base));
+}
+function shuffle(a){ return [...a].sort(() => Math.random() - 0.5); }
+
+/* ── Update start screen for level ── */
+if(isALevel){
+  document.getElementById('startDesc').textContent =
+    'A-Level SUVAT: straight-line kinematics, horizontal projectiles, and projectiles at an angle. Resolve components, pick the equation, then calculate.';
+}
+
+function startGame(){
+  score = 0; qNum = 0; currentStep = 0; _svCorrectCount = 0; sessionStart = Date.now();
+  questions = shuffle(POOL).slice(0, GAME_SIZE);
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameOver').classList.remove('visible');
+  document.getElementById('mainGame').classList.add('visible');
+  document.getElementById('score').textContent = '0';
+  mfg('game_started',{game_slug:'suvat',level:level});
+  window._ggAbandoned=true;
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'suvat',level:level,questions_answered:qNum})});}
+  loadQ();
+}
+
+function loadQ(){
+  if(qNum >= questions.length){ endGame(); return; }
+  currentQ = questions[qNum]; qNum++; currentStep = 0;
+  document.getElementById('qcount').textContent = qNum + '/' + GAME_SIZE;
+  document.getElementById('scenario').textContent = currentQ.scenario;
+
+  // Hide all phases
+  document.getElementById('phase0').style.display = 'none';
+  document.getElementById('phase1').style.display = 'none';
+  document.getElementById('phase2').style.display = 'none';
+
+  // A-Level questions with phase0
+  if(isALevel && currentQ.phase0){
+    showPhase0();
+  } else if(isALevel && currentQ.steps){
+    showPhase1AL();
+  } else {
+    // Level 4 flow
+    showPhase1L4();
+  }
+}
+
+/* ── Phase 0: Component resolution ── */
+function showPhase0(){
+  var p0 = currentQ.phase0;
+  document.getElementById('phaseTitle').textContent = '— PHASE 0: RESOLVE COMPONENTS —';
+  document.getElementById('varsRow').innerHTML = '';
+  document.getElementById('p0Launch').textContent = 'u = ' + p0.speed + ' m/s   θ = ' + p0.angle + '°';
+  document.getElementById('p0ux').value = '';
+  document.getElementById('p0uy').value = '';
+  document.getElementById('fb0').textContent = '';
+  document.getElementById('fb0').className = 'feedback';
+  document.getElementById('phase0').style.display = 'block';
+  document.getElementById('p0ux').focus();
+  startTimer();
+}
+
+function submitPhase0(){
+  var p0 = currentQ.phase0;
+  var ux = parseFloat(document.getElementById('p0ux').value);
+  var uy = parseFloat(document.getElementById('p0uy').value);
+  if(isNaN(ux) || isNaN(uy)) return;
+  var fb = document.getElementById('fb0');
+  var uxOk = Math.abs(ux - p0.ux) <= p0.tol;
+  var uyOk = Math.abs(uy - p0.uy) <= p0.tol;
+  stopTimer();
+
+  if(uxOk && uyOk){
+    score += logScore(BASE_SCORE_P0, elapsedSeconds);
+    fb.textContent = 'CORRECT! u_x = ' + p0.ux.toFixed(2) + ', u_y = ' + p0.uy.toFixed(2);
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = 'u_x = ' + p0.ux.toFixed(2) + ', u_y = ' + p0.uy.toFixed(2);
+    fb.className = 'feedback wrong';
+  }
+  document.getElementById('score').textContent = score;
+  setTimeout(function(){
+    document.getElementById('phase0').style.display = 'none';
+    showPhase1AL();
+  }, 1800);
+}
+
+/* ── Phase 1: Equation selection (A-Level) ── */
+function showPhase1AL(){
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('phase1'));
+  document.getElementById('phaseTitle').textContent = '— PHASE 1: PICK THE EQUATION —';
+
+  // Render known/find vars
+  var varsRow = document.getElementById('varsRow');
+  varsRow.innerHTML = '';
+  var allVars = ['s','u','v','a','t'];
+  allVars.forEach(function(v){
+    var chip = document.createElement('div');
+    if(v === currentQ.find){
+      chip.className = 'var-chip find'; chip.textContent = v + ' = ?';
+    } else if(currentQ.known[v] !== undefined){
+      chip.className = 'var-chip known'; chip.textContent = v + ' = ' + currentQ.known[v];
+    } else {
+      chip.className = 'var-chip unknown'; chip.textContent = v;
+    }
+    varsRow.appendChild(chip);
+  });
+
+  // Equation choices
+  var wrong = shuffle(ALL_EQS.filter(function(e){ return e !== currentQ.equation; })).slice(0, 3);
+  var choices = shuffle([currentQ.equation].concat(wrong));
+  var div = document.getElementById('eqChoices');
+  div.innerHTML = '';
+  choices.forEach(function(c){
+    var btn = document.createElement('button');
+    btn.className = 'eq-btn';
+    btn.dataset.val = c;   // identity for matching — never read back off the rendered HTML
+    setEq(btn, c);
+    btn.onclick = function(){ pickEqAL(c, btn, div); };
+    div.appendChild(btn);
+  });
+
+  document.getElementById('fb1').textContent = '';
+  document.getElementById('fb1').className = 'feedback';
+  document.getElementById('phase1').style.display = 'block';
+  startTimer();
+}
+
+function pickEqAL(val, btn, div){
+  var correct = val === currentQ.equation;
+  var fb = document.getElementById('fb1');
+  if(correct){
+    btn.classList.add('correct');
+    fb.textContent = 'CORRECT EQUATION! Now calculate...';
+    fb.className = 'feedback correct';
+    Array.from(div.children).forEach(function(b){ b.onclick = null; });
+    stopTimer();
+    score += logScore(BASE_SCORE_EQ, elapsedSeconds);
+    document.getElementById('score').textContent = score;
+    setTimeout(function(){ showPhase2AL(); }, 1200);
+  } else {
+    btn.classList.add('wrong');
+    Array.from(div.children).forEach(function(b){
+      if(b.dataset.val === currentQ.equation) b.classList.add('correct');
+      b.onclick = null;
+    });
+    fb.textContent = 'WRONG — the equation in green is the one that fits. Look at which variables it uses.';
+    fb.className = 'feedback wrong';
+    // canon 7.6: the student decides when they have read it.
+    MaffsNext.wrong({mount: document.getElementById('phase1'), onAdvance: showPhase2AL});
+  }
+}
+
+/* ── Phase 2: Calculation (A-Level, multi-step) ── */
+function showPhase2AL(){
+  document.getElementById('phase1').style.display = 'none';
+  document.getElementById('phase2').style.display = 'block';
+  currentStep = 0;
+  loadStep();
+}
+
+function loadStep(){
+  var steps = currentQ.steps;
+  var step = steps[currentStep];
+  var stepLabel = document.getElementById('stepLabel');
+  if(steps.length > 1){
+    stepLabel.textContent = 'STEP ' + (currentStep + 1) + ' OF ' + steps.length;
+    stepLabel.style.display = 'block';
+  } else {
+    stepLabel.style.display = 'none';
+  }
+  document.getElementById('phaseTitle').textContent = '— PHASE 2: CALCULATE —';
+  document.getElementById('calcQ').textContent = step.prompt + ' (' + step.unit + ')';
+  document.getElementById('calcInput').value = '';
+  document.getElementById('calcInput').focus();
+  document.getElementById('fb2').textContent = '';
+  document.getElementById('fb2').className = 'feedback';
+  document.getElementById('exp2').textContent = '';
+  startTimer();
+}
+
+function submitCalc(){
+  // Route to correct handler
+  if(isALevel && currentQ.steps){
+    submitCalcAL();
+  } else {
+    submitCalcL4();
+  }
+}
+
+function submitCalcAL(){
+  var val = parseFloat(document.getElementById('calcInput').value);
+  if(isNaN(val)) return;
+  var step = currentQ.steps[currentStep];
+  var correct = Math.abs(val - step.answer) <= step.tol;
+  var fb = document.getElementById('fb2');
+  stopTimer();
+
+  if(correct){
+    score += logScore(BASE_SCORE_CALC, elapsedSeconds);
+    fb.textContent = 'CORRECT! ' + step.prompt + ' = ' + step.answer + ' ' + step.unit;
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = 'Answer: ' + step.answer + ' ' + step.unit;
+    fb.className = 'feedback wrong';
+  }
+  document.getElementById('score').textContent = score;
+
+  currentStep++;
+  if(currentStep < currentQ.steps.length){
+    // More steps
+    setTimeout(loadStep, 1800);
+  } else {
+    // All steps done — fire question_answered for the whole question
+    if(correct) _svCorrectCount++;
+    mfg('question_answered',{game_slug:'suvat',level:level,correct:correct,question_index:qNum});
+    document.getElementById('exp2').textContent = currentQ.working;
+    setTimeout(loadQ, 2400);
+  }
+}
+
+/* ── Level 4 flow (original) ── */
+function showPhase1L4(){
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('phase1'));
+  document.getElementById('phaseTitle').textContent = '— PHASE 1: PICK THE EQUATION —';
+  var varsRow = document.getElementById('varsRow');
+  varsRow.innerHTML = '';
+  var allVars = ['s','u','v','a','t'];
+  allVars.forEach(function(v){
+    var chip = document.createElement('div');
+    if(v === currentQ.find){
+      chip.className = 'var-chip find'; chip.textContent = v + ' = ?';
+    } else if(currentQ.known[v] !== undefined){
+      chip.className = 'var-chip known'; chip.textContent = v + ' = ' + currentQ.known[v];
+    } else {
+      chip.className = 'var-chip unknown'; chip.textContent = v;
+    }
+    varsRow.appendChild(chip);
+  });
+
+  var wrong = shuffle(ALL_EQS.filter(function(e){ return e !== currentQ.equation; })).slice(0, 3);
+  var choices = shuffle([currentQ.equation].concat(wrong));
+  var div = document.getElementById('eqChoices');
+  div.innerHTML = '';
+  choices.forEach(function(c){
+    var btn = document.createElement('button');
+    btn.className = 'eq-btn';
+    btn.dataset.val = c;   // identity for matching — never read back off the rendered HTML
+    setEq(btn, c);
+    btn.onclick = function(){ pickEqL4(c, btn, div); };
+    div.appendChild(btn);
+  });
+
+  document.getElementById('fb1').textContent = '';
+  document.getElementById('fb1').className = 'feedback';
+  document.getElementById('phase1').style.display = 'block';
+  document.getElementById('phase2').style.display = 'none';
+  startTimer();
+}
+
+function pickEqL4(val, btn, div){
+  var correct = val === currentQ.equation;
+  var fb = document.getElementById('fb1');
+  if(correct){
+    btn.classList.add('correct');
+    fb.textContent = 'CORRECT EQUATION! Now calculate...';
+    fb.className = 'feedback correct';
+    Array.from(div.children).forEach(function(b){ b.onclick = null; });
+    setTimeout(function(){ showPhase2L4(true); }, 1200);
+  } else {
+    btn.classList.add('wrong');
+    Array.from(div.children).forEach(function(b){
+      if(b.dataset.val === currentQ.equation) b.classList.add('correct');
+      b.onclick = null;
+    });
+    fb.textContent = 'WRONG — the equation in green is the one that fits. Look at which variables it uses.';
+    fb.className = 'feedback wrong';
+    MaffsNext.wrong({mount: document.getElementById('phase1'), onAdvance: function(){ showPhase2L4(false); }});
+  }
+}
+
+function showPhase2L4(earnedEqPoints){
+  if(earnedEqPoints){ stopTimer(); score += logScore(BASE_SCORE_EQ, elapsedSeconds); }
+  document.getElementById('score').textContent = score;
+  startTimer();
+  document.getElementById('phase1').style.display = 'none';
+  document.getElementById('phase2').style.display = 'block';
+  document.getElementById('stepLabel').style.display = 'none';
+  document.getElementById('phaseTitle').textContent = '— PHASE 2: CALCULATE —';
+  // The equation is notation, so it renders through KaTeX; the surrounding prose does not.
+  var calcQ = document.getElementById('calcQ');
+  var eq = eqHTML(currentQ.equation);
+  if(eq === null){
+    calcQ.textContent = 'Using ' + currentQ.equation + ', find ' + currentQ.find + ' = ?';
+  } else {
+    calcQ.textContent = '';
+    calcQ.appendChild(document.createTextNode('Using '));
+    var span = document.createElement('span'); span.innerHTML = eq;
+    calcQ.appendChild(span);
+    calcQ.appendChild(document.createTextNode(', find ' + currentQ.find + ' = ?'));
+  }
+  document.getElementById('calcInput').value = '';
+  document.getElementById('calcInput').focus();
+  document.getElementById('fb2').textContent = '';
+  document.getElementById('exp2').textContent = '';
+}
+
+function submitCalcL4(){
+  var val = parseFloat(document.getElementById('calcInput').value);
+  if(isNaN(val)) return;
+  var correct = Math.abs(val - currentQ.answer) <= currentQ.tol;
+  var fb = document.getElementById('fb2');
+  stopTimer();
+  if(correct){
+    score += logScore(BASE_SCORE_CALC, elapsedSeconds);
+    _svCorrectCount++;
+    fb.textContent = 'CORRECT! ' + currentQ.find + ' = ' + currentQ.answer;
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = 'WRONG — answer is ' + currentQ.answer;
+    fb.className = 'feedback wrong';
+  }
+  mfg('question_answered',{game_slug:'suvat',level:level,correct:correct,question_index:qNum});
+  document.getElementById('exp2').textContent = currentQ.working;
+  document.getElementById('score').textContent = score;
+  setTimeout(loadQ, 2200);
+}
+
+/* ── End game ── */
+function endGame(){
+  var _elapsed=Math.floor((Date.now()-(sessionStart||Date.now()))/1000),_m=Math.floor(_elapsed/60),_s=_elapsed%60;if(document.getElementById('timeStat'))document.getElementById('timeStat').textContent=(_m>0?_m+'m '+_s+'s':_s+'s');
+  stopTimer();
+  document.getElementById('mainGame').classList.remove('visible');
+  document.getElementById('gameOver').classList.add('visible');
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('goDetail').textContent = GAME_SIZE + ' kinematics problems';
+  window._ggAbandoned=false;
+  var _svPct=GAME_SIZE>0?Math.round(_svCorrectCount/GAME_SIZE*100):0;
+  mfg('game_completed',{game_slug:'suvat',level:level,score:score,questions_answered:GAME_SIZE,accuracy:_svPct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('suvat',level,score,GAME_SIZE).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('suvat',level,score);}}
+  var _svOldBest=getBest();
+  saveBest(score);
+  if(score>_svOldBest){mfg('personal_best_set',{game_slug:'suvat',level:level,score:score,previous_best:_svOldBest});}
+  renderLB();
+}
+function getBest(){ return parseInt(localStorage.getItem(STORAGE_PREFIX + '_best') || '0'); }
+function saveBest(s){
+  if(s > getBest()) localStorage.setItem(STORAGE_PREFIX + '_best', s);
+  document.getElementById('best').textContent = getBest();
+}
+function renderLB(){
+  var scores = JSON.parse(localStorage.getItem(STORAGE_PREFIX + '_scores') || '[]');
+  var ns = scores.concat([{score:score, date:new Date().toLocaleDateString()}])
+    .sort(function(a,b){ return b.score - a.score; }).slice(0, 5);
+  localStorage.setItem(STORAGE_PREFIX + '_scores', JSON.stringify(ns));
+  document.getElementById('lbList').innerHTML = ns.map(function(s, i){
+    return '<div class="lb-row"><span>#' + (i+1) + '</span><span>' + s.date + '</span><span class="lb-score">' + s.score + '</span></div>';
+  }).join('') || '<div style="text-align:center;color:#9aa3b2;font-size:12px;padding:10px">No scores yet</div>';
+}
+document.getElementById('best').textContent = getBest();
+renderLB();
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

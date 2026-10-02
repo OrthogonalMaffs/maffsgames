@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Length, area, and volume scale factors — k, k squared, and k cubed. GCSE, A-Level, and Level 4 practice.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/scale-factor-scaling/">
+<meta property="og:title" content="Scale Factor Scaling — MaffsGames">
+<meta property="og:description" content="Length, area, and volume scale factors — k, k squared, and k cubed. GCSE, A-Level, and Level 4 practice.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/scale-factor-scaling/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Scale Factor Scaling — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#060a10;--surface:#0c1220;--border:#192038;--primary:#f97316;--accent:#06b6d4;--wrong:#f43f5e;--correct:#22c55e;--text:#e4eaf2;--muted:#607590}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+.level-row{display:flex;gap:.5rem;justify-content:center;margin:.8rem 0;flex-wrap:wrap}
+.level-btn{padding:.4rem 1rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:540px}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:50px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+.section-label{text-align:center;font-size:.7rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.6rem;text-align:center}
+.q-card .prompt{font-size:1rem;font-weight:600}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
+.opt-btn{padding:.65rem .4rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.82rem;cursor:pointer;transition:all .12s;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.08)}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1rem;margin-bottom:.6rem;text-align:left;font-size:.85rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.85rem;margin-bottom:.4rem}
+.solution .step{margin-bottom:.4rem;padding-left:.7rem;border-left:2px solid var(--border)}
+.solution .misconception{margin-top:.5rem;padding:.5rem .7rem;background:rgba(249,115,22,.08);border-radius:8px;border-left:3px solid var(--primary);font-size:.78rem;color:var(--primary)}
+.solution .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+<div id="menu" class="screen active">
+<div class="header"><h1>Scale Factor Scaling</h1><div class="sub">Length scales by k. Area scales by k². Volume scales by k³.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+<div class="level-row">
+<button class="level-btn active" data-level="gcse" onclick="setLevel('gcse')">GCSE</button>
+<button class="level-btn" data-level="alevel" onclick="setLevel('alevel')">A-Level</button>
+<button class="level-btn" data-level="level4" onclick="setLevel('level4')">Level 4</button>
+</div>
+<div class="menu-info">
+If a length doubles, the area doesn't double — it <strong>quadruples</strong> (2² = 4).<br>
+And the volume? It <strong>octuples</strong> (2³ = 8).<br>
+This game drills the difference until it's automatic.
+</div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+<button class="start-btn" onclick="startGame()">Start</button>
+</div>
+<div id="game" class="screen">
+<div class="hud"><div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div><div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div><div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div><div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div></div>
+<div class="section-label" id="sectionLabel"></div>
+<div class="q-card"><div class="prompt" id="prompt"></div></div>
+<div class="options" id="options"></div>
+<div class="solution" id="solution"></div>
+</div>
+<div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+<script>
+let level='gcse',pool=[],qIdx=0,score=0,correctN=0,total=0,currentQ=null,qStart=0;
+const BASE=100,T_K=0.15,MAX_Q=20;
+function setLevel(l){level=l;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===l))}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+const pa=new URLSearchParams(location.search);if(pa.get('level')){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+
+// TIER 1: AREA SCALE FACTORS
+const T1=[
+{sec:'Area SF',p:'Length scale factor = 2. Area scale factor = ?',c:'4',d:['2','8','16'],s:['Area SF = k² = 2² = 4'],mc:'Area scales by the SQUARE of the linear scale factor.'},
+{sec:'Area SF',p:'Length scale factor = 3. Area scale factor = ?',c:'9',d:['3','6','27'],s:['k² = 3² = 9']},
+{sec:'Area SF',p:'Length scale factor = 4. Area scale factor = ?',c:'16',d:['4','8','64'],s:['k² = 4² = 16']},
+{sec:'Area SF',p:'Length scale factor = 5. Area scale factor = ?',c:'25',d:['5','10','125'],s:['k² = 5² = 25']},
+{sec:'Area SF',p:'Length scale factor = 10. Area scale factor = ?',c:'100',d:['10','20','1000'],s:['k² = 10² = 100']},
+{sec:'Area SF',p:'Lengths double. Original area = 12 cm². New area = ?',c:'48 cm²',d:['24 cm²','96 cm²','36 cm²'],s:['Area SF = 2² = 4','New area = 12 × 4 = 48 cm²']},
+{sec:'Area SF',p:'Lengths triple. Original area = 5 m². New area = ?',c:'45 m²',d:['15 m²','125 m²','25 m²'],s:['Area SF = 3² = 9','5 × 9 = 45 m²']},
+{sec:'Area SF',p:'Scale factor = 4. Original area = 10 cm². New area = ?',c:'160 cm²',d:['40 cm²','640 cm²','80 cm²'],s:['Area SF = 16','10 × 16 = 160 cm²']},
+{sec:'Area SF',p:'Similar shapes. Lengths in ratio 2:5. Area ratio = ?',c:'4:25',d:['2:5','8:125','4:10'],s:['Area ratio = 2²:5² = 4:25']},
+{sec:'Area SF',p:'Similar triangles. Sides 3 cm and 9 cm. Area ratio = ?',c:'1:9',d:['1:3','1:27','3:9'],s:['Linear SF = 9/3 = 3','Area ratio = 1:3² = 1:9']},
+// Fractional
+{sec:'Area SF',p:'Length scale factor = ½. Area scale factor = ?',c:'¼',d:['½','⅛','1/16'],s:['(½)² = ¼'],mc:'Shrinking by half means area becomes a QUARTER, not half.'},
+{sec:'Area SF',p:'Length scale factor = ⅓. Area scale factor = ?',c:'1/9',d:['⅓','1/27','2/9'],s:['(⅓)² = 1/9']},
+{sec:'Area SF',p:'Lengths halved. Original area = 100 cm². New area = ?',c:'25 cm²',d:['50 cm²','12.5 cm²','200 cm²'],s:['Area SF = (½)² = ¼','100 × ¼ = 25 cm²']},
+{sec:'Area SF',p:'Scale factor = 1.5. Area scale factor = ?',c:'2.25',d:['1.5','3','4.5'],s:['1.5² = 2.25']},
+{sec:'Area SF',p:'Scale factor = 0.5. Original area = 64 m². New area = ?',c:'16 m²',d:['32 m²','8 m²','128 m²'],s:['(0.5)² = 0.25','64 × 0.25 = 16 m²']},
+];
+
+// TIER 2: VOLUME SCALE FACTORS
+const T2=[
+{sec:'Volume SF',p:'Length scale factor = 2. Volume scale factor = ?',c:'8',d:['2','4','16'],s:['Volume SF = k³ = 2³ = 8'],mc:'Volume scales by the CUBE of the linear scale factor.'},
+{sec:'Volume SF',p:'Length scale factor = 3. Volume scale factor = ?',c:'27',d:['3','9','81'],s:['k³ = 3³ = 27']},
+{sec:'Volume SF',p:'Length scale factor = 4. Volume scale factor = ?',c:'64',d:['4','16','256'],s:['k³ = 4³ = 64']},
+{sec:'Volume SF',p:'Length scale factor = 5. Volume scale factor = ?',c:'125',d:['5','25','625'],s:['k³ = 5³ = 125']},
+{sec:'Volume SF',p:'Length scale factor = 10. Volume scale factor = ?',c:'1000',d:['10','100','10000'],s:['k³ = 10³ = 1000']},
+{sec:'Volume SF',p:'Lengths double. Original volume = 20 cm³. New volume = ?',c:'160 cm³',d:['40 cm³','80 cm³','320 cm³'],s:['Vol SF = 8','20 × 8 = 160 cm³']},
+{sec:'Volume SF',p:'Lengths triple. Original volume = 10 m³. New volume = ?',c:'270 m³',d:['30 m³','90 m³','810 m³'],s:['Vol SF = 27','10 × 27 = 270 m³']},
+{sec:'Volume SF',p:'Similar solids. Lengths in ratio 1:4. Volume ratio = ?',c:'1:64',d:['1:4','1:16','1:256'],s:['1³:4³ = 1:64']},
+{sec:'Volume SF',p:'Length scale factor = ½. Volume scale factor = ?',c:'⅛',d:['½','¼','1/16'],s:['(½)³ = ⅛'],mc:'Halving the length gives ONE EIGHTH of the volume, not half.'},
+{sec:'Volume SF',p:'Length scale factor = ⅓. Volume scale factor = ?',c:'1/27',d:['⅓','1/9','2/27'],s:['(⅓)³ = 1/27']},
+{sec:'Volume SF',p:'Lengths halved. Volume = 1000 cm³. New volume = ?',c:'125 cm³',d:['500 cm³','250 cm³','62.5 cm³'],s:['(½)³ = ⅛','1000 × ⅛ = 125 cm³']},
+{sec:'Volume SF',p:'Scale factor = 1.5. Volume scale factor = ?',c:'3.375',d:['1.5','2.25','4.5'],s:['1.5³ = 3.375']},
+{sec:'Volume SF',p:'A model car is 1:20 scale. Real car volume = 4 m³. Model volume = ?',c:'0.0005 m³',d:['0.2 m³','0.01 m³','0.05 m³'],s:['Vol SF = (1/20)³ = 1/8000','4 ÷ 8000 = 0.0005 m³']},
+];
+
+// TIER 3: REVERSE (given area/volume SF, find linear)
+const T3=[
+{sec:'Reverse',p:'Area scale factor = 9. Linear scale factor = ?',c:'3',d:['9','81','4.5'],s:['Linear SF = √(Area SF) = √9 = 3']},
+{sec:'Reverse',p:'Area scale factor = 25. Linear scale factor = ?',c:'5',d:['25','12.5','625'],s:['√25 = 5']},
+{sec:'Reverse',p:'Area scale factor = 4. Linear scale factor = ?',c:'2',d:['4','16','8'],s:['√4 = 2']},
+{sec:'Reverse',p:'Volume scale factor = 8. Linear scale factor = ?',c:'2',d:['8','4','64'],s:['Linear SF = ∛(Vol SF) = ∛8 = 2']},
+{sec:'Reverse',p:'Volume scale factor = 27. Linear scale factor = ?',c:'3',d:['27','9','81'],s:['∛27 = 3']},
+{sec:'Reverse',p:'Volume scale factor = 125. Linear scale factor = ?',c:'5',d:['125','25','625'],s:['∛125 = 5']},
+{sec:'Reverse',p:'Similar shapes. Area ratio = 16:49. Length ratio = ?',c:'4:7',d:['16:49','2:7','8:49'],s:['√16 : √49 = 4:7']},
+{sec:'Reverse',p:'Similar solids. Volume ratio = 8:27. Length ratio = ?',c:'2:3',d:['8:27','4:9','2:9'],s:['∛8 : ∛27 = 2:3']},
+{sec:'Reverse',p:'Volume ratio = 8:27. Area ratio = ?',c:'4:9',d:['2:3','8:27','16:81'],s:['Length ratio = 2:3','Area ratio = 2²:3² = 4:9'],mc:'To go from volume to area: cube root first (get length ratio), then square.'},
+{sec:'Reverse',p:'Area ratio = 9:25. Volume ratio = ?',c:'27:125',d:['9:25','3:5','81:625'],s:['Length ratio = 3:5','Volume ratio = 3³:5³ = 27:125']},
+];
+
+// TIER 4: CONTEXT + MIXED
+const T4=[
+{sec:'Context',p:'A cube has side 5 cm, enlarged by SF 3. New volume = ?',c:'3375 cm³',d:['375 cm³','1125 cm³','125 cm³'],s:['Original V = 125 cm³','Vol SF = 27','125 × 27 = 3375 cm³']},
+{sec:'Context',p:'A sphere radius 2 cm. Radius triples. New surface area factor = ?',c:'9',d:['3','27','6'],s:['Surface area is 2D → SF = k² = 9']},
+{sec:'Context',p:'Two similar bottles. Heights 10 cm and 30 cm. Volume ratio = ?',c:'1:27',d:['1:3','1:9','1:81'],s:['Linear SF = 30/10 = 3','Vol ratio = 1:3³ = 1:27']},
+{sec:'Context',p:'A map has scale 1:50000. A lake is 4 cm² on the map. Real area = ?',s:['Length SF = 50000, so area SF = 50000² = 2.5×10⁹','4 cm² × 2.5×10⁹ = 1×10¹⁰ cm²','1 m² = 100 × 100 = 10⁴ cm²','1×10¹⁰ ÷ 10⁴ = 1,000,000 m²'],c:'1,000,000 m²',d:['200,000 m²','50,000 m²','10,000 m²']},
+{sec:'Context',p:'Paint covers 10 m² per litre. If dimensions double, how many litres for the larger shape?',c:'4 litres per 10 m²',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by k² = 4','4× more paint needed']},
+{sec:'Context',p:'A model building at 1:100 scale weighs 50g. Same material, real building weight = ?',c:'50,000 kg',d:['5000 kg','500 kg','5 kg'],s:['Vol SF = 100³ = 1,000,000','50g × 1,000,000 = 50,000,000g = 50,000 kg'],mc:'Mass scales with volume (same density), so mass SF = k³.'},
+{sec:'Context',p:'Two similar cones. Diameters 6 cm and 18 cm. Volume of small = 24 cm³. Volume of large = ?',c:'648 cm³',d:['72 cm³','216 cm³','1944 cm³'],s:['Linear SF = 18/6 = 3','Vol SF = 27','24 × 27 = 648 cm³']},
+{sec:'Context',p:'A photo is enlarged by SF 2.5. Original area = 60 cm². New area = ?',c:'375 cm²',d:['150 cm²','937.5 cm²','240 cm²'],s:['Area SF = 2.5² = 6.25','60 × 6.25 = 375 cm²']},
+];
+
+function startGame(){
+  let bank;
+  if(level==='gcse')bank=[...T1,...T2,...T3];
+  else if(level==='alevel')bank=[...T1,...T2,...T3,...T4];
+  else bank=[...T2,...T3,...T4];
+  pool=shuffle(bank).slice(0,MAX_Q);
+  qIdx=0;score=0;correctN=0;total=0;
+  document.getElementById('score').textContent='0';document.getElementById('correctCount').textContent='0';
+  mfg('game_started',{game_slug:'scale-factor-scaling',level:level});
+  window._ggAbandoned=true;
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'scale-factor-scaling',level:level,questions_answered:total})});}
+  show('game');nextQ();
+}
+function nextQ(){if(qIdx>=pool.length){endGame();return}currentQ=pool[qIdx];qIdx++;total++;document.getElementById('qNum').textContent=total;document.getElementById('solution').className='solution';qStart=Date.now();updateTimer();document.getElementById('sectionLabel').textContent=currentQ.sec;document.getElementById('prompt').textContent=currentQ.p;const opts=shuffle([currentQ.c,...currentQ.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b)})}
+function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
+function handleAnswer(btn){const q=currentQ,s=(Date.now()-qStart)/1000,ok=btn.dataset.val===q.c;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.c)b.classList.add('correct')});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++;updateHUD();setTimeout(nextQ,1000)}else{btn.classList.add('wrong');updateHUD();showExplain(q)}mfg('question_answered',{game_slug:'scale-factor-scaling',level:level,correct:ok,question_index:total});}
+function showExplain(q){const sol=document.getElementById('solution');let html='<h3>Worked solution</h3>';(q.s||[]).forEach(st=>{html+='<div class="step">'+st+'</div>'});if(q.mc)html+='<div class="misconception">⚠ '+q.mc+'</div>';html+='<button class="next-btn" onclick="closeSol()">Got it — next</button>';sol.innerHTML=html;sol.className='solution show'}
+function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
+function endGame(){const pct=total>0?Math.round(correctN/total*100):0;let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;const lvl={gcse:'GCSE',alevel:'A-Level',level4:'Level 4'};document.getElementById('statsLine').innerHTML='Scale Factor Scaling — '+lvl[level]+'<br>'+correctN+'/'+total+' correct ('+pct+'%)';window._ggAbandoned=false;mfg('game_completed',{game_slug:'scale-factor-scaling',level:level,score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('scale-factor-scaling',level,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('scale-factor-scaling',level,score);}}var _sfKey='scale-factor-scaling_best_'+level;var _sfOld=parseInt(localStorage.getItem(_sfKey)||'0');if(score>_sfOld){mfg('personal_best_set',{game_slug:'scale-factor-scaling',level:level,score:score,previous_best:_sfOld});localStorage.setItem(_sfKey,score);}show('results')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

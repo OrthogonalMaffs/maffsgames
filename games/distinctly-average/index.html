@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Mean, median, mode and range on ungrouped data. KS3 whole-number data sets and a stepped median scaffold, plus a GCSE tier with frequency tables and finding a missing value.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/distinctly-average/">
+<meta property="og:title" content="Distinctly Average — MaffsGames">
+<meta property="og:description" content="Mean, median, mode and range on ungrouped data. KS3 whole-number data sets and a stepped median scaffold, plus a GCSE tier with frequency tables and finding a missing value.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/distinctly-average/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Distinctly Average — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+  /* canon 7.5.1: this game serves KS3 (default) and GCSE, so it takes the KS3 row
+     (light/playful, Nunito + Press Start 2P) at every level — the youngest
+     audience in the room decides the register, even for the GCSE tier's content. */
+  :root {
+    --bg:        #f5f1ff;
+    --white:     #ffffff;
+    --navy:      #2c2650;
+    --muted:     #6b6390;
+    --accent:    #7c5cff;
+    --accent-lt: rgba(124,92,255,0.14);
+    --pink:      #ff6b9d;
+    --green:     #22c55e;
+    --green-lt:  rgba(34,197,94,0.14);
+    --red:       #ef4444;
+    --red-lt:    rgba(239,68,68,0.14);
+    --border:    #e3ddfa;
+    --shadow-sm: 0 1px 3px rgba(44,38,80,0.08), 0 1px 2px rgba(44,38,80,0.06);
+    --shadow-md: 0 6px 20px rgba(44,38,80,0.10), 0 2px 6px rgba(44,38,80,0.06);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    font-family: 'Nunito', sans-serif;
+    color: var(--navy);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 44px;
+  }
+  .header {
+    width: 100%;
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .back {
+    color: var(--muted);
+    text-decoration: none;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+  }
+  .back:hover { color: var(--accent); }
+  .header-divider { width: 1px; height: 18px; background: var(--border); }
+  .header-title {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(10px, 2.6vw, 14px);
+    color: var(--navy);
+  }
+  .header-level {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--accent);
+    background: var(--accent-lt);
+    border: 1px solid rgba(124,92,255,0.35);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .a11y-toggle { background: #1a2744; color: #fff; border: 1px solid #2a3a5c; border-radius: 6px; width: 34px; height: 34px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', 'Nunito', sans-serif; transition: background .15s; }
+  .a11y-toggle.active, .a11y-toggle:hover { background: #0d9488; }
+
+  .game-area { width: 100%; max-width: 720px; padding: 22px 18px 48px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+  .scorebar { display: flex; justify-content: space-between; width: 100%; background: var(--white); border-radius: 14px; padding: 14px 22px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); }
+  .score-item { text-align: center; }
+  .score-label { font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .score-val { font-family: 'Press Start 2P', monospace; font-size: 17px; color: var(--navy); margin-top: 4px; }
+
+  .card { width: 100%; background: var(--white); border-radius: 18px; padding: 26px 22px; border: 1px solid var(--border); box-shadow: var(--shadow-md); }
+
+  .start-glyph { font-size: 46px; font-weight: 900; color: var(--accent); opacity: 0.16; line-height: 1; margin-bottom: -6px; font-family: 'Nunito', sans-serif; }
+  .start-title { font-family: 'Press Start 2P', monospace; font-size: clamp(14px, 3.4vw, 18px); color: var(--navy); margin-bottom: 10px; text-align: center; }
+  .start-desc { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 20px; text-align: center; }
+  .picker-label { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; text-align: center; margin-bottom: 10px; margin-top: 4px; }
+  .level-select, .session-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+  .level-btn, .session-btn { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13px; padding: 10px 18px; border: 2px solid var(--border); background: var(--bg); color: var(--muted); border-radius: 100px; cursor: pointer; transition: all .14s ease; }
+  .level-btn:hover, .session-btn:hover { border-color: var(--accent); color: var(--navy); }
+  .level-btn.selected, .session-btn.selected { border-color: var(--accent); background: var(--accent-lt); color: var(--accent); }
+
+  .how-to { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
+  .how-to p { font-size: 13.5px; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+  .how-to p::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--pink); flex-shrink: 0; }
+  .how-to p .katex { font-size: 1em; }
+
+  .btn { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 15px; padding: 13px 30px; border: none; border-radius: 100px; cursor: pointer; transition: all .14s ease; display: block; margin: 0 auto; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+  .main-game { display: none; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
+  .main-game.visible { display: flex; }
+
+  .scaffold-area { width: 100%; }
+  .scaffold-card { background: #fffaf0; border: 2px dashed #f0c869; border-radius: 14px; padding: 16px 18px; }
+  .scaffold-title { font-size: 12px; font-weight: 800; color: #a1660c; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .scaffold-formula { text-align: center; font-size: 17px; margin: 6px 0 10px; color: var(--navy); }
+  .scaffold-steps { padding-left: 20px; font-size: 13.5px; color: var(--navy); line-height: 1.6; display: flex; flex-direction: column; gap: 4px; }
+  .scaffold-steps li::marker { color: #a1660c; font-weight: 800; }
+  .show-rule-btn { display: block; margin: 0 auto; background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 100px; padding: 7px 16px; font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; }
+  .show-rule-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .q-label { font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; text-align: center; }
+  .q-prompt { font-size: 15.5px; color: var(--navy); text-align: center; margin-bottom: 16px; line-height: 1.5; }
+
+  .data-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 4px; }
+  .data-chip { font-family: 'Press Start 2P', monospace; font-size: 13px; background: var(--bg); border: 2px solid var(--border); color: var(--navy); border-radius: 10px; padding: 8px 12px; }
+
+  .freq-table { width: 100%; border-collapse: collapse; margin: 6px 0; }
+  .freq-table th, .freq-table td { border: 1px solid var(--border); padding: 8px 10px; text-align: center; font-size: 14px; }
+  .freq-table th { background: var(--bg); font-weight: 800; color: var(--navy); }
+
+  .compare-sets { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 4px; }
+  .compare-set { flex: 1; min-width: 150px; background: var(--bg); border: 2px solid var(--border); border-radius: 12px; padding: 12px; text-align: center; }
+  .compare-set-label { font-family: 'Press Start 2P', monospace; font-size: 12px; color: var(--accent); margin-bottom: 8px; }
+
+  .options-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .opt-btn { font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; padding: 13px 16px; border: 2px solid var(--border); background: var(--bg); color: var(--navy); border-radius: 12px; cursor: pointer; transition: all .14s ease; text-align: center; }
+  .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-lt); }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct { border-color: var(--green); background: var(--green-lt); color: #15803d; }
+  .opt-btn.wrong { border-color: var(--red); background: var(--red-lt); color: #b91c1c; }
+
+  .feedback { font-family: 'Press Start 2P', monospace; font-size: 13px; min-height: 24px; text-align: center; margin-top: 14px; }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong { color: var(--red); }
+
+  .explain-box { margin-top: 4px; }
+  .explain-box p { font-size: 13.5px; color: var(--navy); line-height: 1.7; margin-bottom: 4px; }
+  .mc-box { font-size: 13.5px; color: #b91c1c; background: var(--red-lt); border: 1px solid rgba(239,68,68,0.35); border-radius: 10px; padding: 10px 14px; margin-top: 8px; line-height: 1.6; }
+
+  .next-mount { width: 100%; min-height: 4px; }
+
+  .go-label { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; text-align: center; }
+  .go-score { font-family: 'Press Start 2P', monospace; font-size: 40px; color: var(--accent); text-align: center; margin: 8px 0 6px; }
+  .go-detail { font-size: 14px; color: var(--muted); margin-bottom: 22px; text-align: center; }
+  .back-to-games { display: block; text-align: center; color: var(--muted); font-size: 14px; font-weight: 700; text-decoration: none; margin-top: 14px; }
+  .back-to-games:hover { color: var(--accent); }
+
+  @media (max-width: 480px) {
+    .game-area { padding: 16px 12px 40px; }
+    .compare-sets { flex-direction: column; }
+  }
+  /* === Accessibility === */
+  body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
+  body.accessible p, body.accessible .q-prompt, body.accessible .scaffold-steps li, body.accessible .opt-btn, body.accessible .explain-box p { line-height: 2.0; max-width: 65ch; }
+  body.accessible { background-color: #12141f !important; }
+  body.accessible.light-theme { background-color: #fdf6e3 !important; color: #2d2d2d !important; }
+  body.accessible .q-prompt { font-size: 1.1em; }
+  .correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
+  .incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', { send_page_view: true, storage: 'none', anonymize_ip: true });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body class="light-theme">
+
+<div class="header">
+  <a href="../../" class="back">&larr; Back</a>
+  <div class="header-divider"></div>
+  <div class="header-title">Distinctly Average</div>
+  <span class="header-level" id="headerLevel">KS3</span>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+
+<div class="game-area">
+  <div class="scorebar">
+    <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
+    <div class="score-item"><div class="score-label">Q</div><div class="score-val" id="qcount">0/0</div></div>
+    <div class="score-item"><div class="score-label">Best</div><div class="score-val" id="best">0</div></div>
+  </div>
+
+  <div class="card" id="startScreen">
+    <div class="start-glyph" style="text-align:center">x&#772;</div>
+    <div class="start-title">Distinctly Average</div>
+    <div class="start-desc" id="startDesc">Mean, median, mode and range — spot which one a question is really asking for.</div>
+
+    <div class="picker-label">Level</div>
+    <div class="level-select" id="levelSelect"></div>
+
+    <div class="picker-label">Questions per session</div>
+    <div class="session-row" id="sessionRow"></div>
+
+    <div class="how-to" id="howTo"></div>
+    <button class="btn btn-primary" onclick="startGame()">Start Game</button>
+  </div>
+
+  <div class="main-game" id="mainGame">
+    <div class="scaffold-area" id="scaffoldArea"></div>
+
+    <div class="card">
+      <div class="q-label" id="qCat">Mean</div>
+      <div class="q-prompt" id="qPrompt"></div>
+      <div id="qData"></div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="explain-box" id="explainBox"></div>
+      <div class="next-mount" id="nextMount"></div>
+    </div>
+  </div>
+
+  <div class="card" id="gameOver" style="display:none">
+    <div class="go-label">Game Over</div>
+    <div class="go-score" id="finalScore">0</div>
+    <div class="go-detail" id="goDetail"></div>
+    <button class="btn btn-primary" onclick="startGame()">Play Again</button>
+    <a href="../../" class="back-to-games">&larr; Back to Games</a>
+  </div>
+</div>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+
+<script>
+/* ============================================================================
+   Distinctly Average — mean, median, mode, range on ungrouped data.
+   docs/todo.md "START OF NEXT SESSION" / build brief, 29 Sep 2026.
+
+   GENERATION PRINCIPLE (CLAUDE.md "No rejection sampling")
+   ----------------------------------------------------------------------------
+   Every item is built BY CONSTRUCTION: the target statistic (mean/median/
+   mode/range) is chosen first, then the data set is assembled algebraically
+   so that statistic is exact, with every bound (values staying in [1,20],
+   frequencies staying positive, the mean staying exactly 1 d.p.) guaranteed
+   by the arithmetic of the construction itself — never by drawing a value and
+   retrying. Every nested loop is a deterministic enumeration; a `continue` in
+   one skips a combination it can prove in advance is invalid, it never
+   retries the same slot. Large enumerations are curated down to a target
+   pool size by deterministic stride-thinning (`thin()`), the same technique
+   `quadratic-factoriser`'s formula pool uses for its negative-discriminant
+   curation — never a random sample.
+
+   window.DA_ITEMS exports the raw parameters behind every item (not just the
+   rendered display strings) so scripts/verify-distinctly-average.py can
+   recompute each answer independently, from the stored numbers, with
+   fractions.Fraction — the same "read the live page's own pool, verify THAT
+   data" pattern as verify-log-laws.py / verify-quadratic-factoriser.py.
+   ============================================================================ */
+const SLUG = 'distinctly-average';
+const IMPLEMENTED_LEVELS = ['ks3', 'gcse'];
+const LEVEL_LABEL = { ks3: 'KS3', gcse: 'GCSE' };
+const LEVEL_DESC = {
+  ks3: 'Whole-number data sets, 5 to 11 values. Work out the mean, median, mode or range — and watch for a bimodal set with two modes.',
+  gcse: 'Everything from KS3, plus frequency tables, finding a missing value from the mean, comparing two data sets, and spotting outliers.'
+};
+
+/* Every KaTeX call in this game (the median scaffold formula, the how-to
+   card) is a pure expression with no surrounding prose, so tex() is used
+   directly — MaffsText's mixed prose+maths renderer has no string to earn
+   its keep on here (see the qPrompt comment in renderQuestionBody). */
+function tex(latex) { return katex.renderToString(latex, { throwOnError: false, displayMode: false }); }
+function escapeHtml(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+/* ----------------------------------------------------------------------------
+   Named misconceptions. Every distractor is tagged with one of these; the
+   wrong-answer explanation names it directly (canon §7.6: a pause needs
+   something worth reading). The required minimum set from the brief is
+   covered: unsorted_median, wrong_middle, position_not_value, mean_not_median,
+   range_as_max, mode_as_frequency, wrong_n. The rest are supplementary,
+   category-specific misconceptions the same generation principle produces
+   for free.
+   ---------------------------------------------------------------------------- */
+const MC = {
+  unsorted_median: 'You found the middle of the list in the order it was given — the data has to be sorted from smallest to largest first.',
+  wrong_middle: 'With an even number of values there are two middle numbers — you picked one of them instead of finding the value halfway between both.',
+  position_not_value: 'That is the POSITION of the middle value in the sorted list, not the value itself.',
+  mean_not_median: 'That is the mean (the total shared out equally) — the median is the middle value once the data is sorted.',
+  value_not_mean: 'That is one of the values in the data set, not the mean of all of them.',
+  sum_not_divided: 'That is the total of all the values — you still need to divide by how many values there are.',
+  wrong_n: 'You divided by the wrong number of values.',
+  range_as_max: 'That is the largest value — the range is the largest value MINUS the smallest.',
+  range_as_min: 'That is the smallest value — the range is the largest value minus the smallest.',
+  mean_not_range: 'That is the mean of the data — the range measures the spread (largest minus smallest), not the average.',
+  mode_as_frequency: 'That is how many TIMES the mode appears, not the value that appears most often.',
+  wrong_value_picked: 'That value does not occur more often than the others — check which value is repeated most.',
+  only_one_mode: 'This data has TWO modes, tied for the most common value — you only gave one of them.',
+  mode_and_wrong_value: 'Only values tied for the most common count as modes. One of the two values you chose is a mode, but the other is not.',
+  picked_extreme_values: 'Those are the biggest (or smallest) values in the list. The mode is about how often a value occurs, not how big it is.',
+  ignored_frequency: 'That treats every row as equally common — it ignores how many times each value actually occurs.',
+  wrong_cumulative_row: 'Counting through the frequencies lands one row away from that position — recount the running total carefully.',
+  missing_equals_mean: 'The missing value is not simply the mean itself — you need to work back from the total.',
+  gave_sum_of_knowns: 'That is just the total of the values you were given — it does not yet use the mean to find the missing one.',
+  compared_wrong_stat: 'That compares the wrong statistic — work out the mean of each set and compare those.',
+  range_bigger_is_better: 'A bigger range means the data is LESS consistent, not more — the smaller range is more consistent.',
+  assumed_means_equal: 'The two means are not the same — work out each set\'s total ÷ how many values, then compare them.',
+  assumed_ranges_equal: 'The two ranges are not the same — work out largest − smallest for each set, then compare them.',
+  consistent_means_higher: 'A smaller range means the set is more consistent, but it does not make the mean higher — here the two means are exactly equal.',
+  compared_means_not_ranges: 'That compares the means, but the question is about the ranges — the range is largest − smallest.',
+  lower_mean_more_consistent: 'A lower mean does not make a set more consistent — consistency is about the range (largest − smallest), and here the two ranges are equal.',
+  picked_largest: 'That is just the largest value. An outlier is the value that sits far away from all the others — here it is at the low end.',
+  picked_smallest: 'That is just the smallest value. An outlier is the value that sits far away from all the others — here it is at the high end.',
+  picked_neighbour: 'That value sits right beside the rest of the data. The outlier is the one with a big gap between it and everything else.',
+  picked_typical_value: 'That is a typical value from the middle of the data. The outlier is the value far away from the rest.',
+  mean_unaffected: 'Removing a value that is far from the rest always changes the mean — it was pulling the mean towards itself.',
+  mean_direction_reversed: 'The outlier was pulling the mean towards itself. Take it away and the mean moves back the other way — away from where the outlier sits.',
+  mean_thought_robust: 'The mean adds up every value, so one extreme value drags it a long way. The median only looks at the middle, so it barely moves.',
+  median_thought_sensitive: 'The median only depends on the middle of the sorted list, so one extreme value barely moves it. The mean is the one that gets dragged.',
+  all_averages_equal: 'They are not affected equally — an outlier drags the mean much further than it moves the median.'
+};
+
+/* ----------------------------------------------------------------------------
+   Shared construction helpers
+   ---------------------------------------------------------------------------- */
+let _idSeq = 0;
+function nid(prefix) { return prefix + '_' + (_idSeq++); }
+
+/* Deterministic "always looks unsorted" arrangement, used for every plain
+   data-list display. For n >= 3 this is never equal to the sorted-ascending
+   order, which is what makes "median of the unsorted list" a well-defined,
+   reproducible misconception rather than a coin-flip. */
+function zigzag(values) {
+  const s = values.slice().sort((a, b) => a - b);
+  const out = [];
+  let lo = 0, hi = s.length - 1, takeLow = true;
+  while (lo <= hi) {
+    if (lo === hi) { out.push(s[lo]); break; }
+    if (takeLow) { out.push(s[lo++]); } else { out.push(s[hi--]); }
+    takeLow = !takeLow;
+  }
+  // Belt-and-suspenders: a run of equal/near-equal values can make the zigzag
+  // interleave land back on the sorted-ascending order by coincidence (e.g.
+  // [14,15,15]). Swap the first two entries — a no-op when they are already
+  // equal, and otherwise guarantees the display is never sorted ascending.
+  if (out.length >= 2 && out.join(',') === s.join(',')) {
+    const t = out[0]; out[0] = out[1]; out[1] = t;
+  }
+  return out;
+}
+
+/* Deterministic stride-thinning of a large enumeration down to `target`
+   items — the same technique as quadratic-factoriser's formula-pool curation
+   (a fixed stride through a canonical order), never a random sample. */
+function thin(arr, target) {
+  if (arr.length <= target) return arr.slice();
+  const stride = arr.length / target;
+  const out = [];
+  for (let i = 0; i < target; i++) out.push(arr[Math.floor(i * stride)]);
+  return out;
+}
+
+/* tenths is an INTEGER representing value*10 — formatted digit-by-digit, no
+   division, so there is no floating-point rounding anywhere near a value
+   this game asserts is exact. */
+function fmt1dp(tenths) {
+  const neg = tenths < 0; tenths = Math.abs(Math.round(tenths));
+  const whole = Math.floor(tenths / 10), frac = tenths % 10;
+  const s = frac === 0 ? String(whole) : (whole + '.' + frac);
+  return neg ? ('-' + s) : s;
+}
+/* sum2 = a + b, the two middle values of an even-length sorted list.
+   median = sum2 / 2, formatted from the integer sum2 directly. */
+function fmtHalf(sum2) {
+  const whole = Math.floor(sum2 / 2), rem = ((sum2 % 2) + 2) % 2;
+  return rem === 0 ? String(whole) : (whole + '.5');
+}
+/* Display-only rounding for a distractor's value. Never used for a stored
+   `correct` field — those are always built from exact integer arithmetic. */
+function roundStr(x, dp) {
+  const f = Math.pow(10, dp);
+  const r = Math.round(x * f) / f;
+  return Number.isInteger(r) ? String(r) : r.toFixed(dp);
+}
+function meanDisplay(sum, n) { return roundStr(sum / n, 1); }
+function gcd(a, b) { while (b) { const t = b; b = a % b; a = t; } return a; }
+/* k positive integers summing to exactly `total` (requires total >= k),
+   deterministic per `variant` — the shared decomposition used by both GCSE
+   frequency-table categories. */
+function compositionOfTotal(k, total, variant) {
+  const base = Math.floor(total / k), rem = total - base * k;
+  const freqs = new Array(k).fill(base);
+  for (let i = 0; i < rem; i++) freqs[(i + variant) % k] += 1;
+  return freqs;
+}
+function ordinal(n) {
+  const s = ['th', 'st', 'nd', 'rd'], v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+/* ----------------------------------------------------------------------------
+   KS3 — mean. n whole values 5..11 in [1,20]; mean always an exact whole
+   number by construction: start every value at the target mean m, then move
+   `pairs` disjoint +/-mag swaps (mag <= min(m-1, 20-m), so every value stays
+   in [1,20] BY CONSTRUCTION, never checked after the fact).
+   ---------------------------------------------------------------------------- */
+function meanValuesFromRaw(r) {
+  const vals = new Array(r.n).fill(r.m);
+  for (let k = 0; k < r.pairs; k++) { vals[k] += r.mag; vals[r.n - 1 - k] -= r.mag; }
+  return vals;
+}
+function buildMeanRaw() {
+  const raws = [];
+  [5, 6, 7, 8, 9, 10, 11].forEach(n => {
+    const maxPairs = Math.floor(n / 2);
+    for (let m = 2; m <= 19; m++) {
+      const cap = Math.min(m - 1, 20 - m);
+      for (let pairs = 1; pairs <= maxPairs; pairs++) {
+        for (let mag = 1; mag <= cap; mag++) raws.push({ n, m, pairs, mag });
+      }
+    }
+  });
+  return raws;
+}
+function buildMeanItems() {
+  return thin(buildMeanRaw(), 75).map(r => {
+    const values = meanValuesFromRaw(r);
+    const data = zigzag(values);
+    const sum = values.reduce((a, b) => a + b, 0);
+    const wrongN = r.n > 1 ? r.n - 1 : r.n + 1;
+    // A value actually in the list, not the mean — mag >= 1 guarantees
+    // max(values) > m, so this can never collide with the correct answer
+    // (unlike "the median", which this pair-swap construction usually makes
+    // equal to the mean, so it cannot serve as a distractor here).
+    const dists = [
+      { val: String(sum), misconception: 'sum_not_divided' },
+      { val: String(Math.max.apply(null, values)), misconception: 'value_not_mean' },
+      { val: meanDisplay(sum, wrongN), misconception: 'wrong_n' }
+    ];
+    return { id: nid('ks3_mean'), cat: 'mean', level: 'ks3', n: r.n, data, correct: String(r.m), distractors: dists };
+  });
+}
+
+/* ----------------------------------------------------------------------------
+   KS3 — median. Odd n and even n built separately and thinned to equal
+   pool sizes (30 + 30), so a session draws roughly equal odd/even median
+   questions. Even-n items split further, by construction, between a gap of
+   1 (median ends in .5) and a gap of 2 (whole median) between the two middle
+   values, so ".5 results" are guaranteed present, not just possible.
+   ---------------------------------------------------------------------------- */
+/* sDown/sUp are DELIBERATELY allowed to differ (and required to, see the
+   `continue` below): a symmetric spread around the middle makes the mean
+   equal the median exactly, which is mathematically fine but leaves
+   "mean instead of median" with no genuine wrong value to offer. With
+   sDown != sUp the total shifts by (sUp-sDown) * (half*(half+1)/2), which is
+   provably nonzero, so the mean is guaranteed different from the median —
+   not just usually different. */
+function medianOddValues(r) {
+  const half = (r.n - 1) / 2;
+  const vals = [r.vmid];
+  for (let k = 1; k <= half; k++) { vals.push(r.vmid - r.sDown * k); vals.push(r.vmid + r.sUp * k); }
+  return vals;
+}
+function buildMedianOddRaw() {
+  const raws = [];
+  [5, 7, 9, 11].forEach(n => {
+    const half = (n - 1) / 2;
+    for (let vmid = half + 1; vmid <= 20 - half; vmid++) {
+      const capDown = Math.floor((vmid - 1) / half), capUp = Math.floor((20 - vmid) / half);
+      for (let sDown = 1; sDown <= capDown; sDown++) {
+        for (let sUp = 1; sUp <= capUp; sUp++) {
+          if (sDown === sUp) continue;
+          raws.push({ n, vmid, sDown, sUp });
+        }
+      }
+    }
+  });
+  return raws;
+}
+function medianEvenValues(r) {
+  const half = (r.n - 2) / 2;
+  const b = r.a + r.g;
+  const vals = [r.a, b];
+  for (let k = 1; k <= half; k++) { vals.push(r.a - r.sDown * k); vals.push(b + r.sUp * k); }
+  return vals;
+}
+function buildMedianEvenRaw() {
+  const raws = [];
+  [6, 8, 10].forEach(n => {
+    const half = (n - 2) / 2;
+    for (let a = 1; a <= 19; a++) {
+      [1, 2].forEach(g => { // g=1 -> median ends in .5; g=2 -> whole median
+        const b = a + g;
+        if (b > 20) return;
+        const capDown = Math.floor((a - 1) / half), capUp = Math.floor((20 - b) / half);
+        for (let sDown = 1; sDown <= capDown; sDown++) {
+          for (let sUp = 1; sUp <= capUp; sUp++) {
+            if (sDown === sUp) continue;
+            raws.push({ n, a, g, sDown, sUp });
+          }
+        }
+      });
+    }
+  });
+  return raws;
+}
+/* Format signature of an option: every run of digits becomes '#'. */
+function optionSignature(v) { return String(v).replace(/\d+/g, '#'); }
+/* True when the correct option is the only one of its shape while the distractors
+   share a shape it lacks (the only decimal, the only whole number, the only pair).
+   The same rule scripts/verify-distinctly-average.py asserts on every item. */
+function formatSingledOut(correct, distractorVals) {
+  const sigs = [correct].concat(distractorVals).map(optionSignature);
+  const count = {};
+  sigs.forEach(x => { count[x] = (count[x] || 0) + 1; });
+  return count[sigs[0]] === 1 && Object.keys(count).some(x => x !== sigs[0] && count[x] > 1);
+}
+/* An even-n median item has four candidate distractors and shows three. The one
+   dropped rotates with the item index for variety, but dropping the whole-number
+   candidate can leave three decimals against a whole-number answer, so try the
+   rotated one first and step to the next only if that would single the answer
+   out. At most four tries over a fixed list: bounded, nothing is drawn. */
+function dropOneCandidate(candidates, start, correct) {
+  for (let k = 0; k < candidates.length; k++) {
+    const j = (start + k) % candidates.length;
+    const rest = candidates.filter((_, i) => i !== j);
+    if (!formatSingledOut(correct, rest.map(d => d.val))) return rest;
+  }
+  return candidates.filter((_, i) => i !== start);
+}
+function makeMedianItem(values, n, isOdd, idx) {
+  const sorted = values.slice().sort((a, b) => a - b);
+  const data = zigzag(values);
+  let correct, posLabel, wrongMiddleVal = null, unsortedMedianVal;
+  if (isOdd) {
+    const k = (n + 1) / 2;
+    correct = String(sorted[k - 1]);
+    posLabel = String(k);
+    unsortedMedianVal = String(data[k - 1]);
+  } else {
+    const a = sorted[n / 2 - 1], b = sorted[n / 2];
+    correct = fmtHalf(a + b);
+    posLabel = fmtHalf(n + 1);
+    wrongMiddleVal = String(a);
+    unsortedMedianVal = fmtHalf(data[n / 2 - 1] + data[n / 2]);
+  }
+  const sum = values.reduce((x, y) => x + y, 0);
+  const meanVal = meanDisplay(sum, n);
+  const candidates = isOdd
+    ? [{ val: unsortedMedianVal, misconception: 'unsorted_median' },
+       { val: posLabel, misconception: 'position_not_value' },
+       { val: meanVal, misconception: 'mean_not_median' }]
+    : [{ val: wrongMiddleVal, misconception: 'wrong_middle' },
+       { val: unsortedMedianVal, misconception: 'unsorted_median' },
+       { val: posLabel, misconception: 'position_not_value' },
+       { val: meanVal, misconception: 'mean_not_median' }];
+  const dists = isOdd ? candidates : dropOneCandidate(candidates, idx % 4, correct);
+  return { id: nid('ks3_median'), cat: 'median', level: 'ks3', n, data, correct, distractors: dists, parity: isOdd ? 'odd' : 'even' };
+}
+function buildMedianItems() {
+  const items = [];
+  let idx = 0;
+  thin(buildMedianOddRaw(), 42).forEach(r => items.push(makeMedianItem(medianOddValues(r), r.n, true, idx++)));
+  thin(buildMedianEvenRaw(), 42).forEach(r => items.push(makeMedianItem(medianEvenValues(r), r.n, false, idx++)));
+  return items;
+}
+
+/* ----------------------------------------------------------------------------
+   KS3 — mode (unique and bimodal). The repeated value(s) are placed first;
+   every "other" value is a single, distinct integer found by walking
+   outward from the modal value(s) — bounded by construction (at most 9
+   others are ever needed out of 19 available integers, so the walk always
+   terminates well inside a fixed step budget; the offset counter advances
+   on every pass regardless of what it finds, so this is not rejection
+   sampling of a random draw).
+   ---------------------------------------------------------------------------- */
+function distinctOthersAround(center, avoid, needed) {
+  const others = [];
+  for (let offset = 1; offset <= 20 && others.length < needed; offset++) {
+    const up = center + offset, down = center - offset;
+    if (up <= 20 && avoid.indexOf(up) === -1) others.push(up);
+    if (others.length < needed && down >= 1 && avoid.indexOf(down) === -1) others.push(down);
+  }
+  return others.slice(0, needed);
+}
+function buildModeUniqueRaw() {
+  const raws = [];
+  [5, 6, 7, 8, 9, 10, 11].forEach(n => {
+    for (let v = 1; v <= 20; v++) {
+      for (let r = 2; r <= 3; r++) if (n - r >= 0) raws.push({ n, v, r });
+    }
+  });
+  return thin(raws, 42);
+}
+function buildModeItemsUnique() {
+  return buildModeUniqueRaw().map(r => {
+    // Symmetric "others" walk (see distinctOthersAround) frequently makes the
+    // dataset's mean equal r.v exactly, so "mean instead of mode" cannot be used
+    // as a distractor here without colliding — use two of the genuinely single
+    // "other" values instead (distinctOthersAround guarantees >= 2, both != r.v,
+    // and its up/down sequences are individually strictly monotonic, so the two
+    // ends of the list are never equal to each other either).
+    const others = distinctOthersAround(r.v, [r.v], r.n - r.r);
+    const values = new Array(r.r).fill(r.v).concat(others);
+    const data = zigzag(values);
+    const dists = [
+      { val: String(r.r), misconception: 'mode_as_frequency' },
+      { val: String(others[0]), misconception: 'wrong_value_picked' },
+      { val: String(others[others.length - 1]), misconception: 'wrong_value_picked' }
+    ];
+    return { id: nid('ks3_modeU'), cat: 'modeUnique', level: 'ks3', n: r.n, data, correct: String(r.v), distractors: dists };
+  });
+}
+function buildModeBimodalRaw() {
+  const raws = [];
+  [6, 7, 8, 9, 10, 11].forEach(n => {
+    for (let v1 = 1; v1 <= 20; v1++) {
+      for (let gap = 2; gap <= 6; gap++) {
+        const v2 = v1 + gap;
+        if (v2 > 20) continue;
+        // n - 2r >= 1: at least one value that is NOT a mode. A set of exactly two
+        // values, each repeated equally, has no non-modal value to build the
+        // "one true mode plus a wrong value" distractor from.
+        for (let r = 2; r <= 3; r++) if (n - 2 * r >= 1) raws.push({ n, v1, v2, r });
+      }
+    }
+  });
+  return thin(raws, 42);
+}
+/* A pair is always written smaller-first, exactly like the correct answer, so the
+   format of a pair distractor cannot give the correct pair away. */
+function pairStr(a, b) { return Math.min(a, b) + ' and ' + Math.max(a, b); }
+/* Bimodal options: the correct pair, ONE wrong pair, and two single values. So the
+   correct answer is never the only option written "x and y" (it shares that shape
+   with a distractor), and the layout is 2 pairs + 2 singles on every item.
+   Which pair distractor and which single value are used alternates by item index
+   (deterministic, no drawing). */
+function buildModeItemsBimodal() {
+  return buildModeBimodalRaw().map((r, i) => {
+    const others = distinctOthersAround(Math.round((r.v1 + r.v2) / 2), [r.v1, r.v2], r.n - 2 * r.r);
+    const values = new Array(r.r).fill(r.v1).concat(new Array(r.r).fill(r.v2)).concat(others);
+    const data = zigzag(values);
+    const correct = pairStr(r.v1, r.v2);
+    const half = Math.floor(i / 2) % 2;
+    let pairDist;
+    if (i % 2 === 0) {
+      // a true mode paired with a value that is not one (others[0] is the non-modal value nearest the middle)
+      pairDist = { val: pairStr(half === 0 ? r.v1 : r.v2, others[0]), misconception: 'mode_and_wrong_value' };
+    } else {
+      // the two largest distinct values, or the two smallest when the modes ARE the two largest
+      const ds = Array.from(new Set(values)).sort((a, b) => a - b);
+      const top = pairStr(ds[ds.length - 2], ds[ds.length - 1]);
+      pairDist = { val: top !== correct ? top : pairStr(ds[0], ds[1]), misconception: 'picked_extreme_values' };
+    }
+    // one of the two modes on its own; never the same number as the frequency distractor
+    const single = (half === 0 ? r.v1 : r.v2) !== r.r ? (half === 0 ? r.v1 : r.v2) : (half === 0 ? r.v2 : r.v1);
+    const dists = [
+      { val: String(r.r), misconception: 'mode_as_frequency' },
+      { val: String(single), misconception: 'only_one_mode' },
+      pairDist
+    ];
+    return { id: nid('ks3_modeB'), cat: 'modeBimodal', level: 'ks3', n: r.n, data, correct, distractors: dists };
+  });
+}
+
+/* ----------------------------------------------------------------------------
+   KS3 — range. lo and hi are placed explicitly so the range is exact; the
+   interior values are spread deterministically across [lo, hi] (they may
+   repeat lo/hi/each other — that does not affect the range).
+   ---------------------------------------------------------------------------- */
+function buildRangeRaw() {
+  const raws = [];
+  [5, 6, 7, 8, 9, 10, 11].forEach(n => {
+    for (let lo = 1; lo <= 19; lo++) {
+      for (let hi = lo + 1; hi <= 20; hi++) raws.push({ n, lo, hi });
+    }
+  });
+  return thin(raws, 55);
+}
+function rangeValues(r) {
+  const vals = [r.lo, r.hi];
+  const span = r.hi - r.lo;
+  for (let k = 2; k < r.n; k++) vals.push(r.lo + ((k * 7) % (span + 1)));
+  return vals;
+}
+function buildRangeItems() {
+  return buildRangeRaw().map(r => {
+    const values = rangeValues(r);
+    const data = zigzag(values);
+    const sum = values.reduce((a, b) => a + b, 0);
+    const dists = [
+      { val: String(r.hi), misconception: 'range_as_max' },
+      { val: String(r.lo), misconception: 'range_as_min' },
+      { val: meanDisplay(sum, r.n), misconception: 'mean_not_range' }
+    ];
+    return { id: nid('ks3_range'), cat: 'range', level: 'ks3', n: r.n, data, correct: String(r.hi - r.lo), distractors: dists };
+  });
+}
+
+/* ----------------------------------------------------------------------------
+   GCSE — ungrouped frequency-table mean. Total frequency fixed at 10, so the
+   mean (sum / 10) is exactly representable to 1 d.p. by construction: no
+   division ever happens in JS for the stored `correct` value, only string
+   formatting of the integer sum (fmt1dp).
+   ---------------------------------------------------------------------------- */
+function buildFreqMeanRaw() {
+  const raws = [];
+  for (let k = 3; k <= 6; k++) {
+    if (k === 5) continue; // 10 / 5 = 2 exactly, so every composition is uniform
+    // regardless of variant, which makes "ignoring frequency" and "wrong n"
+    // both collapse onto the true mean instead of a genuine distractor.
+    for (let vstart = 1; vstart <= 15 - (k - 1); vstart++) {
+      const maxStep = Math.floor((15 - vstart) / (k - 1));
+      for (let step = 1; step <= maxStep; step++) {
+        for (let variant = 0; variant < k; variant++) raws.push({ k, vstart, step, variant });
+      }
+    }
+  }
+  return thin(raws, 30);
+}
+function buildFreqMeanItems() {
+  return buildFreqMeanRaw().map(r => {
+    const values = []; for (let i = 0; i < r.k; i++) values.push(r.vstart + i * r.step);
+    const freqs = compositionOfTotal(r.k, 10, r.variant);
+    const N = freqs.reduce((a, b) => a + b, 0); // = 10, always, by construction
+    const S = values.reduce((sum, v, i) => sum + v * freqs[i], 0);
+    const sumDistinctOnly = values.reduce((a, b) => a + b, 0);
+    const dists = [
+      { val: roundStr(S / r.k, 1), misconception: 'wrong_n' },
+      { val: roundStr(sumDistinctOnly / r.k, 1), misconception: 'ignored_frequency' },
+      { val: String(S), misconception: 'sum_not_divided' }
+    ];
+    return { id: nid('gcse_freqMean'), cat: 'freqMean', level: 'gcse', n: N, data: { values, freqs }, correct: fmt1dp(S), distractors: dists };
+  });
+}
+
+/* ----------------------------------------------------------------------------
+   GCSE — ungrouped frequency-table median. Total frequency is always odd
+   (9, 11, 13 or 15), so the position (N+1)/2 is always a whole row, never a
+   between-rows average — kept deliberately simpler than the KS3 median's
+   even-n case, which already covers that.
+   ---------------------------------------------------------------------------- */
+function buildFreqMedianRaw() {
+  const raws = [];
+  for (let k = 3; k <= 5; k++) {
+    for (let vstart = 1; vstart <= 15 - (k - 1); vstart++) {
+      const maxStep = Math.floor((15 - vstart) / (k - 1));
+      for (let step = 1; step <= maxStep; step++) {
+        for (let variant = 0; variant < 4; variant++) raws.push({ k, vstart, step, variant });
+      }
+    }
+  }
+  return thin(raws, 30);
+}
+function buildFreqMedianItems() {
+  return buildFreqMedianRaw().map(r => {
+    const values = []; for (let i = 0; i < r.k; i++) values.push(r.vstart + i * r.step);
+    const total = 9 + 2 * (r.variant % 4); // 9, 11, 13, 15 -- always odd, always >= k
+    const freqs = compositionOfTotal(r.k, total, r.variant);
+    const N = freqs.reduce((a, b) => a + b, 0);
+    const pos = (N + 1) / 2;
+    let cum = 0, rowIdx = r.k - 1;
+    for (let i = 0; i < r.k; i++) { cum += freqs[i]; if (pos <= cum) { rowIdx = i; break; } }
+    const correctVal = values[rowIdx];
+    const S = values.reduce((sum, v, i) => sum + v * freqs[i], 0);
+    const wrongRowIdx = rowIdx > 0 ? rowIdx - 1 : Math.min(rowIdx + 1, r.k - 1);
+    const dists = [
+      { val: String(pos), misconception: 'position_not_value' },
+      { val: roundStr(S / N, 1), misconception: 'mean_not_median' },
+      { val: String(values[wrongRowIdx]), misconception: 'wrong_cumulative_row' }
+    ];
+    return { id: nid('gcse_freqMedian'), cat: 'freqMedian', level: 'gcse', n: N, data: { values, freqs }, correct: String(correctVal), distractors: dists };
+  });
+}
+
+/* ----------------------------------------------------------------------------
+   GCSE — missing value given the mean. n (including the missing value) in
+   4..7; the mean's tenths (t) are restricted to multiples of 10/gcd(n,10),
+   which is exactly the condition for total = t*n/10 to be a whole number —
+   so the total is always an exact integer, decomposed into n whole values
+   via a base/base+1 split that is always inside [1,20] because the mean is
+   restricted to [4,16].
+   ---------------------------------------------------------------------------- */
+function buildMissingRaw() {
+  const raws = [];
+  [4, 5, 6, 7].forEach(n => {
+    const bm = 10 / gcd(n, 10);
+    const tStart = Math.ceil(40 / bm) * bm;
+    for (let t = tStart; t <= 160; t += bm) {
+      for (let missIdx = 0; missIdx < n; missIdx++) raws.push({ n, t, missIdx });
+    }
+  });
+  return thin(raws, 30);
+}
+function buildMissingItems() {
+  return buildMissingRaw().map(r => {
+    const T = r.t * r.n / 10; // integer, by construction
+    const base = Math.floor(T / r.n), rem = T - base * r.n;
+    const slots = new Array(r.n).fill(base);
+    for (let i = 0; i < rem; i++) slots[i] += 1;
+    const rotated = slots.slice(r.missIdx).concat(slots.slice(0, r.missIdx));
+    const missingValue = rotated[0];
+    const known = rotated.slice(1);
+    const knownData = zigzag(known);
+    const meanStr = fmt1dp(r.t);
+    const knownSum = known.reduce((a, b) => a + b, 0);
+    const meanNum = r.t / 10;
+    const altN = r.n > 2 ? r.n - 1 : r.n + 1;
+    const dists = [
+      { val: roundStr(meanNum * altN - knownSum, 1), misconception: 'wrong_n' },
+      { val: meanStr, misconception: 'missing_equals_mean' },
+      { val: String(knownSum), misconception: 'gave_sum_of_knowns' }
+    ];
+    return { id: nid('gcse_missing'), cat: 'missing', level: 'gcse', n: r.n, data: knownData, meanStr, correct: String(missingValue), distractors: dists };
+  });
+}
+
+/* ----------------------------------------------------------------------------
+   GCSE — compare two sets by mean and range. EVERY compare item has three
+   options: Set A, Set B and "They are the same" (SAME). Two sets that are
+   equal on the statistic asked about are BUILT (not searched for), about one
+   item in six per question, so the third option is a live answer and not a
+   dead one a student could eliminate on sight.
+
+   The unequal items are deliberately constructed so the set with the higher
+   mean ALWAYS has the smaller range (an inverse relationship, chosen on
+   purpose) — that is what makes "compared the wrong statistic" a well-defined
+   misconception for the mean question, and makes "bigger range = more
+   consistent" a well-defined misconception for the range question, rather
+   than a coincidence that only sometimes holds.
+
+   Equal-mean items: mA === mB with different spreads (so the ranges differ).
+   Equal-range items: magA === magB with different means. Both use the same
+   pair-swap construction as every other set here (meanValuesFromRaw, pairs=1),
+   so a set's mean is exactly m and its range exactly 2*mag.
+   ---------------------------------------------------------------------------- */
+const SAME = 'They are the same';
+function buildCompareRaw() {
+  const raws = [];
+  [5, 6].forEach(n => {
+    for (let mA = 4; mA <= 17; mA++) {
+      for (let mB = 4; mB <= 17; mB++) {
+        if (mA === mB) continue;
+        const capA = Math.min(mA - 1, 20 - mA), capB = Math.min(mB - 1, 20 - mB);
+        for (let magA = 1; magA <= capA; magA++) {
+          for (let magB = 1; magB <= capB; magB++) {
+            if (magA === magB) continue;
+            if ((mA > mB) !== (magA < magB)) continue; // enforce the inverse relationship
+            raws.push({ n, mA, mB, magA, magB });
+          }
+        }
+      }
+    }
+  });
+  return thin(raws, 15);
+}
+/* magA < magB by construction (inner loop starts at magA + 1); the caller
+   swaps which set is A on alternate items so the wider set is not always B. */
+function buildCompareEqualMeanRaw() {
+  const raws = [];
+  [5, 6].forEach(n => {
+    for (let m = 4; m <= 17; m++) {
+      const cap = Math.min(m - 1, 20 - m);
+      for (let magA = 1; magA <= cap; magA++) {
+        for (let magB = magA + 1; magB <= cap; magB++) raws.push({ n, m, magA, magB });
+      }
+    }
+  });
+  return thin(raws, 3);
+}
+/* mA < mB by construction (inner loop starts at mA + 1); caller swaps on alternate items. */
+function buildCompareEqualRangeRaw() {
+  const raws = [];
+  [5, 6].forEach(n => {
+    for (let mA = 4; mA <= 17; mA++) {
+      for (let mB = mA + 1; mB <= 17; mB++) {
+        const cap = Math.min(Math.min(mA - 1, 20 - mA), Math.min(mB - 1, 20 - mB));
+        for (let mag = 1; mag <= cap; mag++) raws.push({ n, mA, mB, mag });
+      }
+    }
+  });
+  return thin(raws, 3);
+}
+function compareSets(r) {
+  return {
+    dataA: zigzag(meanValuesFromRaw({ n: r.n, m: r.mA, pairs: 1, mag: r.magA })),
+    dataB: zigzag(meanValuesFromRaw({ n: r.n, m: r.mB, pairs: 1, mag: r.magB })),
+    rangeA: 2 * r.magA, rangeB: 2 * r.magB
+  };
+}
+function buildCompareItems() {
+  const items = [];
+  buildCompareRaw().forEach(r => {          // unequal on both statistics
+    const s = compareSets(r);
+    const higherMean = r.mA > r.mB ? 'A' : 'B';
+    const smallerRange = s.rangeA < s.rangeB ? 'A' : 'B';
+    const largerRange = smallerRange === 'A' ? 'B' : 'A';
+    items.push({ id: nid('gcse_cmpMean'), cat: 'compareMean', level: 'gcse', n: r.n, data: { a: s.dataA, b: s.dataB }, correct: higherMean,
+      distractors: [{ val: largerRange, misconception: 'compared_wrong_stat' }, { val: SAME, misconception: 'assumed_means_equal' }] });
+    items.push({ id: nid('gcse_cmpRange'), cat: 'compareRange', level: 'gcse', n: r.n, data: { a: s.dataA, b: s.dataB }, correct: smallerRange,
+      distractors: [{ val: largerRange, misconception: 'range_bigger_is_better' }, { val: SAME, misconception: 'assumed_ranges_equal' }] });
+  });
+  buildCompareEqualMeanRaw().forEach((r, i) => {   // equal means, different ranges: the answer is SAME
+    const flip = i % 2 === 1;
+    const s = compareSets({ n: r.n, mA: r.m, mB: r.m, magA: flip ? r.magB : r.magA, magB: flip ? r.magA : r.magB });
+    const largerRange = s.rangeA > s.rangeB ? 'A' : 'B';
+    const smallerRange = largerRange === 'A' ? 'B' : 'A';
+    items.push({ id: nid('gcse_cmpMean'), cat: 'compareMean', level: 'gcse', n: r.n, data: { a: s.dataA, b: s.dataB }, correct: SAME,
+      distractors: [{ val: largerRange, misconception: 'compared_wrong_stat' }, { val: smallerRange, misconception: 'consistent_means_higher' }] });
+  });
+  buildCompareEqualRangeRaw().forEach((r, i) => {  // equal ranges, different means: the answer is SAME
+    const flip = i % 2 === 1;
+    const rr = { n: r.n, mA: flip ? r.mB : r.mA, mB: flip ? r.mA : r.mB, magA: r.mag, magB: r.mag };
+    const s = compareSets(rr);
+    const higherMean = rr.mA > rr.mB ? 'A' : 'B';
+    const lowerMean = higherMean === 'A' ? 'B' : 'A';
+    items.push({ id: nid('gcse_cmpRange'), cat: 'compareRange', level: 'gcse', n: r.n, data: { a: s.dataA, b: s.dataB }, correct: SAME,
+      distractors: [{ val: higherMean, misconception: 'compared_means_not_ranges' }, { val: lowerMean, misconception: 'lower_mean_more_consistent' }] });
+  });
+  return items;
+}
+
+/* ----------------------------------------------------------------------------
+   GCSE — outliers (Foundation: an outlier is judged BY EYE; there is no
+   1.5 x IQR test anywhere in this game).
+
+   THE RULE for "clearly separated", stated once and asserted in
+   scripts/verify-distinctly-average.py from the raw data of every item:
+
+     The other n-1 values (the "cluster") span exactly S, with 3 <= S <= 6.
+     The outlier lies g beyond the nearest cluster value, where
+     g >= max(3*S, 10).   Data is 5 to 9 whole values, all within 1..50.
+
+   Built by CONSTRUCTION: the cluster is lo + floor(i*S/(c-1)) for i = 0..c-1
+   (c = n-1), so it spans exactly S and its ends are exactly lo and lo+S; the
+   outlier is placed at lo+S+g (high) or lo-g (low). The loop bounds keep every
+   value in [1, 50] — nothing is drawn and re-checked, and no loop retries.
+
+   Why g >= 10 as well as 3S: with n <= 9 and consecutive cluster values at
+   most 2 apart, removing the outlier moves the mean by (o - clusterMean)/n
+   >= g/n >= 10/9, but moves the median by at most half a gap, <= 1. So
+   |change in mean| > |change in median| holds for EVERY item here, not just
+   the ones a check happens to sample (the verifier still asserts it).
+
+   Three question types are built. A fourth, "what happens to the RANGE when
+   the outlier is removed?", was dropped: removing a value that is the
+   maximum (or minimum) can only ever shrink the range, so the answer is
+   "goes down" on every item and the other two options are dead.
+   ---------------------------------------------------------------------------- */
+const OUT_MAX = 50;
+const BOTH = 'Both are affected equally';
+function outlierGap(S, extra) { return Math.max(3 * S, 10) + extra; }
+function buildOutlierRaw(nList, side) {
+  const raws = [];
+  nList.forEach(n => {
+    [3, 4, 5, 6].forEach(S => {
+      [0, 1, 2, 3].forEach(extra => {
+        const g = outlierGap(S, extra);
+        const loMin = side === 'low' ? g + 1 : 1;
+        const loMax = side === 'high' ? OUT_MAX - S - g : OUT_MAX - S;
+        for (let lo = loMin; lo <= loMax; lo++) raws.push({ n, S, g, side, lo });
+      });
+    });
+  });
+  return raws;
+}
+/* Like thin(), but starting `phase` (0..<1) of a stride in, so several
+   families drawing from the same enumeration do not land on the same rows. */
+function thinFrom(arr, target, phase) {
+  if (arr.length <= target) return arr.slice();
+  const stride = arr.length / target, out = [];
+  for (let i = 0; i < target; i++) out.push(arr[Math.floor(i * stride + phase * stride)]);
+  return out;
+}
+function outlierCluster(r) {
+  const c = r.n - 1, vals = [];
+  for (let i = 0; i < c; i++) vals.push(r.lo + Math.floor((i * r.S) / (c - 1)));
+  return vals;
+}
+function outlierOf(r) { return r.side === 'high' ? r.lo + r.S + r.g : r.lo - r.g; }
+function outlierValues(r) { return outlierCluster(r).concat([outlierOf(r)]); }
+/* zigzag() always puts the maximum second and the minimum first, so on its own
+   it would tell a student where the outlier sits. Rotate by a per-item amount so
+   the outlier's position varies; fall back to the plain zigzag if a rotation
+   would land on the sorted order. */
+function arrangeOutlier(values, k) {
+  const z = zigzag(values), n = z.length, sortedKey = values.slice().sort((a, b) => a - b).join(',');
+  const rot = z.slice(k % n).concat(z.slice(0, k % n));
+  return rot.join(',') === sortedKey ? z : rot;
+}
+function sumOf(arr) { return arr.reduce((a, b) => a + b, 0); }
+/* "= 25.5" when sum/n is exact to 1 d.p., "about 34.8" when it is not */
+function meanText(sum, n) { return ((sum * 10) % n === 0 ? '= ' : 'about ') + roundStr(sum / n, 1); }
+/* twice the median, as an integer (so .5 medians stay exact) */
+function twiceMedian(sortedArr) {
+  const n = sortedArr.length;
+  return n % 2 === 1 ? 2 * sortedArr[(n - 1) / 2] : sortedArr[n / 2 - 1] + sortedArr[n / 2];
+}
+let _outIdx = 0;
+function buildOutlierIdItems() {
+  const items = [];
+  ['high', 'low'].forEach((side, si) => {
+    thinFrom(buildOutlierRaw([5, 7, 9], side), 8, 0.1 + 0.4 * si).forEach(r => {
+      const values = outlierValues(r);
+      const sorted = values.slice().sort((a, b) => a - b);
+      const typical = sorted[(r.n - 1) / 2];          // n is odd, so this is a real value in the data
+      const cMin = r.lo, cMax = r.lo + r.S;
+      const dists = side === 'high'
+        ? [{ val: String(cMin), misconception: 'picked_smallest' }, { val: String(cMax), misconception: 'picked_neighbour' }, { val: String(typical), misconception: 'picked_typical_value' }]
+        : [{ val: String(cMax), misconception: 'picked_largest' }, { val: String(cMin), misconception: 'picked_neighbour' }, { val: String(typical), misconception: 'picked_typical_value' }];
+      items.push({ id: nid('gcse_outId'), cat: 'outlierId', level: 'gcse', n: r.n, side, data: arrangeOutlier(values, 1 + 2 * (_outIdx++)),
+        correct: String(outlierOf(r)), distractors: dists });
+    });
+  });
+  return items;
+}
+function buildOutlierMeanItems() {
+  const items = [];
+  ['high', 'low'].forEach((side, si) => {
+    thinFrom(buildOutlierRaw([5, 6, 7, 8, 9], side), 8, 0.2 + 0.4 * si).forEach(r => {
+      const values = outlierValues(r);
+      const goes = side === 'high' ? 'Goes down' : 'Goes up';      // the outlier pulls the mean towards itself
+      const reversed = side === 'high' ? 'Goes up' : 'Goes down';
+      items.push({ id: nid('gcse_outMean'), cat: 'outlierMean', level: 'gcse', n: r.n, side, data: arrangeOutlier(values, 1 + 2 * (_outIdx++)),
+        correct: goes, distractors: [{ val: reversed, misconception: 'mean_direction_reversed' }, { val: 'Stays the same', misconception: 'mean_unaffected' }] });
+    });
+  });
+  return items;
+}
+function buildOutlierCompareItems() {
+  const items = [];
+  let g = 0;
+  ['high', 'low'].forEach(side => {
+    ['less', 'more'].forEach(ask => {
+      thinFrom(buildOutlierRaw([5, 6, 7, 8, 9], side), 4, 0.05 + 0.23 * (g++)).forEach(r => {
+        const values = outlierValues(r);
+        const correct = ask === 'less' ? 'The median' : 'The mean';
+        const wrongAverage = ask === 'less'
+          ? { val: 'The mean', misconception: 'mean_thought_robust' }
+          : { val: 'The median', misconception: 'median_thought_sensitive' };
+        items.push({ id: nid('gcse_outCmp'), cat: 'outlierCompare', level: 'gcse', n: r.n, side, ask, data: arrangeOutlier(values, 1 + 2 * (_outIdx++)),
+          correct, distractors: [wrongAverage, { val: BOTH, misconception: 'all_averages_equal' }] });
+      });
+    });
+  });
+  return items;
+}
+
+/* ----------------------------------------------------------------------------
+   Pools
+   ---------------------------------------------------------------------------- */
+/* A handful of raw combinations still produce a distractor that happens to
+   equal the correct answer numerically (e.g. range_as_min == range when
+   hi = 2*lo) even after the systematic collisions above are fixed at their
+   source. Rather than special-case every remaining numeric coincidence,
+   drop any item that fails the platform rule directly — a deterministic
+   filter over an already-built array, not a retry of the construction. */
+function hasCollision(item) {
+  const vals = item.distractors.map(d => d.val);
+  if (vals.indexOf(item.correct) !== -1) return true;
+  return new Set(vals).size !== vals.length;
+}
+function noCollisions(items) { return items.filter(it => !hasCollision(it)); }
+
+const KS3_POOL = noCollisions([].concat(buildMeanItems(), buildMedianItems(), buildModeItemsUnique(), buildModeItemsBimodal(), buildRangeItems()));
+const GCSE_ONLY_POOL = noCollisions([].concat(buildFreqMeanItems(), buildFreqMedianItems(), buildMissingItems(), buildCompareItems(),
+  buildOutlierIdItems(), buildOutlierMeanItems(), buildOutlierCompareItems()));
+const GCSE_POOL = KS3_POOL.concat(GCSE_ONLY_POOL);
+
+/* Exported for scripts/verify-distinctly-average.py — the SAME items the
+   page itself built, not a hand re-implementation of the generator. */
+window.DA_ITEMS = { ks3: KS3_POOL, gcse: GCSE_POOL };
+/* The misconception catalogue, so the verifier can check that every tag used has
+   an explanation. (DA_PROMPTS, the prompt each item is shown with, is exported
+   further down, once CAT_PROMPT exists.) */
+window.DA_MC = MC;
+
+function poolFor(level) { return level === 'gcse' ? GCSE_POOL : KS3_POOL; }
+
+/* ----------------------------------------------------------------------------
+   Level select / session length (start screen)
+   ---------------------------------------------------------------------------- */
+const params = new URLSearchParams(window.location.search);
+let currentLevel = params.get('level');
+if (!IMPLEMENTED_LEVELS.includes(currentLevel)) currentLevel = IMPLEMENTED_LEVELS[0];
+let sessionLength = 10;
+
+function renderLevelButtons() {
+  const mount = document.getElementById('levelSelect');
+  mount.innerHTML = '';
+  IMPLEMENTED_LEVELS.forEach(lv => {
+    const btn = document.createElement('button');
+    btn.className = 'level-btn' + (lv === currentLevel ? ' selected' : '');
+    btn.textContent = LEVEL_LABEL[lv];
+    btn.addEventListener('click', () => {
+      currentLevel = lv;
+      renderLevelButtons();
+      renderStartContent();
+      renderSessionButtons();
+    });
+    mount.appendChild(btn);
+  });
+}
+function renderSessionButtons() {
+  MaffsSession.render({
+    mount: document.getElementById('sessionRow'),
+    poolSize: poolFor(currentLevel).length,
+    preferred: [10, 20, 30],
+    selected: sessionLength,
+    onChange: count => { sessionLength = count; }
+  });
+}
+function renderHowTo() {
+  const mount = document.getElementById('howTo');
+  const rows = [
+    tex('\\text{mean} = \\dfrac{\\text{total}}{\\text{how many values}}'),
+    tex('\\text{position of the median} = \\dfrac{n+1}{2}'),
+    'Mode = the value that occurs most often. Range = largest − smallest.'
+  ];
+  if (currentLevel === 'gcse') rows.push('GCSE adds frequency tables, finding a missing value, comparing two sets, and spotting outliers.');
+  mount.innerHTML = rows.map(s => '<p>' + s + '</p>').join('');
+}
+function renderStartContent() {
+  document.getElementById('startDesc').textContent = LEVEL_DESC[currentLevel] || '';
+  document.getElementById('headerLevel').textContent = LEVEL_LABEL[currentLevel];
+  renderHowTo();
+  const bestKey = 'da_best_' + currentLevel;
+  document.getElementById('best').textContent = localStorage.getItem(bestKey) || '0';
+}
+renderLevelButtons();
+renderStartContent();
+renderSessionButtons();
+
+/* ----------------------------------------------------------------------------
+   Median scaffold (canon "scaffolds fade, never pre-announce"). Generic —
+   never shows the current item's value. Open until two correct in a row on
+   a median-type question, then collapses to a button; two wrong in a row
+   reopens it. Never removed entirely.
+   ---------------------------------------------------------------------------- */
+let medianCorrectStreak = 0, medianWrongStreak = 0, scaffoldCollapsed = false;
+function isMedianCat(cat) { return cat === 'median' || cat === 'freqMedian'; }
+function updateScaffoldStreak(item, wasCorrect) {
+  if (!isMedianCat(item.cat)) return;
+  if (wasCorrect) {
+    medianCorrectStreak++; medianWrongStreak = 0;
+    if (medianCorrectStreak >= 2) scaffoldCollapsed = true;
+  } else {
+    medianWrongStreak++; medianCorrectStreak = 0;
+    if (medianWrongStreak >= 2) scaffoldCollapsed = false;
+  }
+}
+function renderScaffoldCard(mount) {
+  mount.innerHTML =
+    '<div class="scaffold-title">Finding the median</div>' +
+    '<div class="scaffold-formula">' + tex('\\text{position} = \\dfrac{n+1}{2}') + '</div>' +
+    '<ol class="scaffold-steps">' +
+      '<li>Order the data from smallest to largest.</li>' +
+      '<li>Count how many values there are (<i>n</i>).</li>' +
+      '<li>Is <i>n</i> odd or even?</li>' +
+      '<li>Work out (<i>n</i> + 1) ÷ 2.</li>' +
+      '<li><b>Odd</b> — the value at that position is the median.<br><b>Even</b> — the position ends in .5, so the median is halfway between the two values either side.</li>' +
+    '</ol>';
+}
+function renderScaffoldArea(item) {
+  const area = document.getElementById('scaffoldArea');
+  if (!isMedianCat(item.cat)) { area.style.display = 'none'; area.innerHTML = ''; return; }
+  area.style.display = '';
+  if (!scaffoldCollapsed) {
+    area.innerHTML = '<div class="scaffold-card" id="scaffoldCard"></div>';
+    renderScaffoldCard(document.getElementById('scaffoldCard'));
+  } else {
+    area.innerHTML = '<button class="show-rule-btn" type="button" id="showRuleBtn">Show the rule</button>';
+    document.getElementById('showRuleBtn').addEventListener('click', function () {
+      area.innerHTML = '<div class="scaffold-card" id="scaffoldCard"></div>';
+      renderScaffoldCard(document.getElementById('scaffoldCard'));
+    });
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   Game state / flow (canon §7.6)
+   ---------------------------------------------------------------------------- */
+let score = 0, correctCount = 0, qIndex = 0, sessionQuestions = [];
+let currentItem = null, currentDistMap = null, locked = false;
+
+const CAT_LABEL = {
+  mean: 'Mean', median: 'Median', modeUnique: 'Mode', modeBimodal: 'Mode',
+  range: 'Range', freqMean: 'Frequency table — mean', freqMedian: 'Frequency table — median',
+  missing: 'Missing value', compareMean: 'Compare — mean', compareRange: 'Compare — range',
+  outlierId: 'Outliers — spot it', outlierMean: 'Outliers — the mean', outlierCompare: 'Outliers — mean or median'
+};
+/* ONE prompt for every mode question, unique or bimodal, both tiers. The old
+   bimodal-only "(There may be more than one value.)" told the student the shape
+   of the answer before they had looked at the data. */
+const MODE_PROMPT = 'What is the <b>mode</b> of this data set? (There may be more than one value.)';
+const CAT_PROMPT = {
+  mean: 'What is the <b>mean</b> of this data set?',
+  median: 'What is the <b>median</b> of this data set?',
+  modeUnique: MODE_PROMPT,
+  modeBimodal: MODE_PROMPT,
+  range: 'What is the <b>range</b> of this data set?',
+  freqMean: 'This frequency table shows how many times each value occurs. What is the <b>mean</b>, to 1 decimal place?',
+  freqMedian: 'This frequency table shows how many times each value occurs. What is the <b>median</b>?',
+  missing: 'One value is missing from this data set. What is it?',
+  compareMean: 'Two sets of data are shown. Which set has the <b>higher mean</b>?',
+  compareRange: 'Two sets of data are shown. Which set is <b>more consistent</b> (has the smaller range)?',
+  outlierId: 'One value in this data set is an <b>outlier</b>: it is far away from all the others. Which value is it?',
+  outlierMean: 'One value in this data set is an <b>outlier</b>. The outlier is removed. What happens to the <b>mean</b>?'
+};
+/* outlierCompare is the only prompt that depends on the item: half the items ask
+   which average is LESS affected (answer: the median), half which is MORE
+   affected (answer: the mean), so the answer is not the same word every time. */
+function promptFor(item) {
+  if (item.cat === 'outlierCompare') {
+    return 'One value in this data set is an <b>outlier</b>. Which is <b>' + item.ask + '</b> affected by the outlier?';
+  }
+  return CAT_PROMPT[item.cat] || '';
+}
+/* Parallel to DA_ITEMS: DA_PROMPTS[tier][i] is the prompt item i is shown with.
+   Built here, after CAT_PROMPT exists (a const read before its declaration is a
+   temporal-dead-zone error that halts the whole script). */
+window.DA_PROMPTS = { ks3: KS3_POOL.map(it => promptFor(it)), gcse: GCSE_POOL.map(it => promptFor(it)) };
+
+function startGame() {
+  const pool = poolFor(currentLevel);
+  sessionQuestions = MaffsOptions.shuffle(pool.slice()).slice(0, sessionLength);
+  score = 0; correctCount = 0; qIndex = 0;
+  medianCorrectStreak = 0; medianWrongStreak = 0; scaffoldCollapsed = false;
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameOver').style.display = 'none';
+  document.getElementById('mainGame').classList.add('visible');
+  document.getElementById('score').textContent = '0';
+  mfg('game_started', { game_slug: SLUG, level: currentLevel });
+  loadQuestion();
+}
+
+function loadQuestion() {
+  const nextMount = document.getElementById('nextMount');
+  if (window.MaffsNext) MaffsNext.clear(nextMount);
+  if (qIndex >= sessionQuestions.length) { endGame(); return; }
+  currentItem = sessionQuestions[qIndex];
+  qIndex++;
+  locked = false;
+  document.getElementById('qcount').textContent = qIndex + '/' + sessionQuestions.length;
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('explainBox').innerHTML = '';
+  renderScaffoldArea(currentItem);
+  renderQuestionBody(currentItem);
+}
+
+function renderDataDisplay(item) {
+  const mount = document.getElementById('qData');
+  if (item.cat === 'freqMean' || item.cat === 'freqMedian') {
+    const rows = item.data.values.map((v, i) =>
+      '<tr><td>' + v + '</td><td>' + item.data.freqs[i] + '</td></tr>').join('');
+    mount.innerHTML = '<table class="freq-table"><tr><th>Value</th><th>Frequency</th></tr>' + rows + '</table>';
+  } else if (item.cat === 'compareMean' || item.cat === 'compareRange') {
+    mount.innerHTML =
+      '<div class="compare-sets">' +
+        '<div class="compare-set"><div class="compare-set-label">SET A</div><div class="data-list">' +
+          item.data.a.map(v => '<span class="data-chip">' + v + '</span>').join('') + '</div></div>' +
+        '<div class="compare-set"><div class="compare-set-label">SET B</div><div class="data-list">' +
+          item.data.b.map(v => '<span class="data-chip">' + v + '</span>').join('') + '</div></div>' +
+      '</div>';
+  } else if (item.cat === 'missing') {
+    mount.innerHTML =
+      '<div class="data-list">' + item.data.map(v => '<span class="data-chip">' + v + '</span>').join('') +
+        '<span class="data-chip" style="opacity:.5">?</span></div>' +
+      '<p style="text-align:center;margin-top:8px;font-size:13.5px;color:var(--muted)">' +
+        item.n + ' values in total — their mean is ' + item.meanStr + '</p>';
+  } else {
+    mount.innerHTML = '<div class="data-list">' + item.data.map(v => '<span class="data-chip">' + v + '</span>').join('') + '</div>';
+  }
+}
+
+/* Compare items answer with a set letter or SAME; everything else shows its value as is. */
+function optionLabel(item, v) {
+  return ((item.cat === 'compareMean' || item.cat === 'compareRange') && v !== SAME) ? ('Set ' + v) : v;
+}
+
+function renderQuestionBody(item) {
+  document.getElementById('qCat').textContent = CAT_LABEL[item.cat] || '';
+  // Every CAT_PROMPT string is plain English with at most a <b> tag — no
+  // \( \) maths at all, so it must NOT go through mx()/K(): math mode has no
+  // concept of a word boundary and would eat every space (canon §7.1, the
+  // component-crusher/factor-theorem/test-the-claim class of bug).
+  document.getElementById('qPrompt').innerHTML = promptFor(item);
+  renderDataDisplay(item);
+
+  currentDistMap = {};
+  item.distractors.forEach(d => { if (!(d.val in currentDistMap)) currentDistMap[d.val] = d.misconception; });
+
+  const optVals = MaffsOptions.build(item.correct, item.distractors.map(d => d.val), { max: item.distractors.length + 1 });
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  optVals.forEach(v => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'opt-btn';
+    btn.dataset.val = v;
+    btn.textContent = optionLabel(item, v);
+    btn.addEventListener('click', () => checkAnswer(v, btn));
+    grid.appendChild(btn);
+  });
+}
+
+function explainHTML(item) {
+  const lines = [];
+  if (item.cat === 'mean') {
+    const sorted = item.data.slice().sort((a, b) => a - b);
+    const sum = sorted.reduce((a, b) => a + b, 0);
+    lines.push('Sum = ' + sorted.join(' + ') + ' = ' + sum);
+    lines.push('Mean = ' + sum + ' ÷ ' + item.n + ' = ' + item.correct);
+  } else if (item.cat === 'median') {
+    const sorted = item.data.slice().sort((a, b) => a - b);
+    lines.push('Sorted: ' + sorted.join(', '));
+    const pos = (item.n + 1) / 2;
+    lines.push('n = ' + item.n + ' (' + item.parity + '). Position = (' + item.n + ' + 1) ÷ 2 = ' + pos);
+    if (item.parity === 'odd') {
+      lines.push('The ' + ordinal(pos) + ' value in the sorted list is the median: ' + item.correct);
+    } else {
+      const lo = Math.floor(pos), hi = Math.ceil(pos);
+      lines.push('The position ends in .5, so the median is halfway between the ' + ordinal(lo) + ' and ' + ordinal(hi) + ' values: ' + sorted[lo - 1] + ' and ' + sorted[hi - 1] + ' → ' + item.correct);
+    }
+  } else if (item.cat === 'modeUnique') {
+    lines.push('Data: ' + item.data.join(', '));
+    lines.push(item.correct + ' occurs more often than any other value → mode = ' + item.correct);
+  } else if (item.cat === 'modeBimodal') {
+    lines.push('Data: ' + item.data.join(', '));
+    lines.push('Two values are tied for the most common → mode = ' + item.correct);
+  } else if (item.cat === 'range') {
+    const sorted = item.data.slice().sort((a, b) => a - b);
+    lines.push('Largest = ' + sorted[sorted.length - 1] + ', smallest = ' + sorted[0]);
+    lines.push('Range = ' + sorted[sorted.length - 1] + ' − ' + sorted[0] + ' = ' + item.correct);
+  } else if (item.cat === 'freqMean') {
+    lines.push('Mean = (sum of value × frequency) ÷ total frequency = ' + item.correct);
+  } else if (item.cat === 'freqMedian') {
+    const pos = (item.n + 1) / 2;
+    lines.push('Total frequency = ' + item.n + '. Position = (' + item.n + ' + 1) ÷ 2 = ' + pos);
+    lines.push('Counting through the running total, the ' + ordinal(pos) + ' value is ' + item.correct);
+  } else if (item.cat === 'missing') {
+    const total = Math.round(parseFloat(item.meanStr) * item.n);
+    lines.push('Total = mean × n = ' + item.meanStr + ' × ' + item.n + ' = ' + total);
+    lines.push('Known values sum to ' + item.data.reduce((a, b) => a + b, 0));
+    lines.push('Missing value = total − known sum = ' + item.correct);
+  } else if (item.cat === 'compareMean' || item.cat === 'compareRange') {
+    const a = item.data.a, b = item.data.b;
+    lines.push('Set A: ' + a.join(', '));
+    lines.push('Set B: ' + b.join(', '));
+    if (item.cat === 'compareMean') {
+      lines.push('Mean of A = ' + sumOf(a) + ' ÷ ' + a.length + ' = ' + (sumOf(a) / a.length) + '. Mean of B = ' + sumOf(b) + ' ÷ ' + b.length + ' = ' + (sumOf(b) / b.length) + '.');
+      lines.push(item.correct === SAME ? 'The two means are equal, so neither set has the higher mean.' : 'Set ' + item.correct + ' has the higher mean.');
+    } else {
+      const ra = Math.max.apply(null, a) - Math.min.apply(null, a), rb = Math.max.apply(null, b) - Math.min.apply(null, b);
+      lines.push('Range of A = ' + Math.max.apply(null, a) + ' − ' + Math.min.apply(null, a) + ' = ' + ra + '. Range of B = ' + Math.max.apply(null, b) + ' − ' + Math.min.apply(null, b) + ' = ' + rb + '.');
+      lines.push(item.correct === SAME ? 'The two ranges are equal, so neither set is more consistent.' : 'Set ' + item.correct + ' has the smaller range, so it is more consistent.');
+    }
+  } else if (item.cat === 'outlierId') {
+    const sorted = item.data.slice().sort((x, y) => x - y), o = parseInt(item.correct, 10);
+    const rest = sorted.filter(v => v !== o);
+    lines.push('Sorted: ' + sorted.join(', '));
+    lines.push('Most of the values are between ' + rest[0] + ' and ' + rest[rest.length - 1] + '. ' + o + ' is far away from all of them, so ' + o + ' is the outlier.');
+  } else if (item.cat === 'outlierMean') {
+    const o = item.side === 'high' ? Math.max.apply(null, item.data) : Math.min.apply(null, item.data);
+    const all = sumOf(item.data), rest = all - o, n = item.data.length;
+    lines.push('With the outlier: ' + all + ' ÷ ' + n + ' ' + meanText(all, n));
+    lines.push('Without it: ' + rest + ' ÷ ' + (n - 1) + ' ' + meanText(rest, n - 1));
+    lines.push('The outlier is ' + item.side + ', so it was pulling the mean ' + (item.side === 'high' ? 'up' : 'down') + '. Take it away and the mean ' + item.correct.toLowerCase() + '.');
+  } else if (item.cat === 'outlierCompare') {
+    const o = item.side === 'high' ? Math.max.apply(null, item.data) : Math.min.apply(null, item.data);
+    const sortedAll = item.data.slice().sort((x, y) => x - y);
+    const sortedRest = sortedAll.filter((v, i) => !(v === o && i === (item.side === 'high' ? sortedAll.length - 1 : 0)));
+    const n = sortedAll.length, all = sumOf(sortedAll), rest = all - o;
+    const tAll = twiceMedian(sortedAll), tRest = twiceMedian(sortedRest);
+    lines.push('With the outlier: mean ' + meanText(all, n) + ', median ' + fmtHalf(tAll));
+    lines.push('Without it: mean ' + meanText(rest, n - 1) + ', median ' + fmtHalf(tRest));
+    const dMed = fmtHalf(Math.abs(tAll - tRest));
+    lines.push('The mean moves by about ' + roundStr(Math.abs(all / n - rest / (n - 1)), 1) + ', but the median ' + (dMed === '0' ? 'does not move at all' : 'moves by only ' + dMed) + '. So the median is the one less affected, and the mean the one more affected.');
+  }
+  return lines.map(l => '<p>' + escapeHtml(l) + '</p>').join('');
+}
+
+function checkAnswer(selectedVal, btnEl) {
+  if (locked) return;
+  locked = true;
+  const isCorrect = selectedVal === currentItem.correct;
+  document.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.val === currentItem.correct) b.classList.add('correct');
+    else if (b === btnEl) b.classList.add('wrong');
+  });
+  mfg('question_answered', { game_slug: SLUG, level: currentLevel, question_index: qIndex, correct: isCorrect });
+  updateScaffoldStreak(currentItem, isCorrect);
+
+  const feedback = document.getElementById('feedback');
+  const explainBox = document.getElementById('explainBox');
+  if (isCorrect) {
+    score += 10; correctCount++;
+    document.getElementById('score').textContent = String(score);
+    feedback.textContent = 'CORRECT! ✓ ' + optionLabel(currentItem, currentItem.correct);
+    feedback.className = 'feedback correct';
+    setTimeout(loadQuestion, 1200); // canon §7.6: brisk, capped well under 1.5s
+  } else {
+    feedback.textContent = 'WRONG';
+    feedback.className = 'feedback wrong';
+    const misId = currentDistMap[selectedVal];
+    explainBox.innerHTML = explainHTML(currentItem) + (misId ? '<div class="mc-box">' + MC[misId] + '</div>' : '');
+    // Fallback deliberately extended (24h, safely under setTimeout's ~24.8-day
+    // ceiling) rather than the shared 20s default — canon §7.6 wants NO
+    // timeout on the wrong-answer path here; MaffsNext.wrong's own
+    // fallbackMs option makes that possible without editing the helper.
+    MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: loadQuestion, fallbackMs: 24 * 60 * 60 * 1000 });
+  }
+}
+
+function endGame() {
+  document.getElementById('mainGame').classList.remove('visible');
+  document.getElementById('gameOver').style.display = 'block';
+  document.getElementById('finalScore').textContent = String(score);
+  document.getElementById('goDetail').textContent = correctCount + ' out of ' + sessionQuestions.length + ' correct';
+  const bestKey = 'da_best_' + currentLevel;
+  const prevBest = parseInt(localStorage.getItem(bestKey) || '0', 10);
+  if (score > prevBest) {
+    localStorage.setItem(bestKey, String(score));
+    mfg('personal_best_set', { game_slug: SLUG, level: currentLevel, score: score, previous_best: prevBest });
+  }
+  document.getElementById('best').textContent = String(Math.max(score, prevBest));
+  mfg('game_completed', { game_slug: SLUG, level: currentLevel, score: score, questions_answered: sessionQuestions.length, questions_correct: correctCount });
+  /* Leaderboard: wired exactly as quadratic-factoriser / better-value (one board per
+     level, 10 points per correct answer, submitted once at the natural end of a run),
+     but the SUBMIT is gated off at the call site, the same way estimation-golf,
+     equatle and log-laws are (declared in HELD in scripts/check-leaderboard-coverage.js).
+     Reason: a student picks 10, 20 or 30 questions and the board key is slug_level
+     only, so a 30-question run (up to 300) would outrank every 10-question run (up to
+     100) on one board. The fifth argument is the session length as a mode, ready for
+     docs/next-contract-leaderboard-modes.md, which is the platform's fix for this;
+     until it lands the extra argument is ignored. Lifting the gate is a one-word
+     change. Device-local score history is unaffected and still records. */
+  var LEADERBOARD_MODE_READY = false;
+  if (window.MaffsLeaderboard) {
+    if (LEADERBOARD_MODE_READY) {
+      MaffsLeaderboard.submitScore(SLUG, currentLevel, score, sessionQuestions.length, 'q' + sessionQuestions.length).catch(function () {});
+    }
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, currentLevel, score);
+  }
+}
+
+/* Aa toggle — canon §7.1, shared localStorage key so the choice carries
+   across games. .light-theme keeps a readable light background in Aa mode
+   instead of the shared style's dark default, which this KS3-row game needs. */
+(function () {
+  var KEY = 'mfg_accessible', btn = document.getElementById('a11yToggle');
+  if (!btn) return;
+  function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+  apply(localStorage.getItem(KEY) === 'true');
+  btn.addEventListener('click', function () {
+    var on = !document.body.classList.contains('accessible');
+    localStorage.setItem(KEY, String(on));
+    apply(on);
+  });
+})();
+</script>
+</body>
+</html>

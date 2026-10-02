@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Drive a calculator trolley. Maximise Muppet damage using expected value. The probability game that rewards calculation over guessing.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/expected-damage/">
+<meta property="og:title" content="Expected Damage — MaffsGames">
+<meta property="og:description" content="Drive a calculator trolley. Maximise Muppet damage using expected value. The probability game that rewards calculation over guessing.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/expected-damage/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Expected Damage — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;--purple:#8b5cf6;--orange:#f97316;
+--navy:#1a2744;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;overflow-x:hidden}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.score-display{font-size:14px;font-weight:600}
+.score-yours{color:var(--green);font-size:18px;font-weight:800}
+.score-optimal{color:var(--muted);font-size:13px}
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:rgba(13,148,136,0.15);color:var(--teal);border:1px solid rgba(13,148,136,0.3)}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+.level-preview{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:16px;border-left:3px solid var(--teal)}
+.level-preview h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.level-preview p{font-size:13px;color:var(--muted);line-height:1.5}
+.session-select{display:flex;gap:12px;margin-bottom:20px;justify-content:center}
+.session-btn{padding:12px 28px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.session-btn:hover,.session-btn.selected{border-color:var(--teal);background:var(--teal-dim)}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+.pb-info{text-align:center;margin-top:12px;font-size:13px;color:var(--muted)}
+
+/* Game area */
+.game-area{position:relative;width:100%;max-width:720px;margin:0 auto}
+
+/* Trolley scene */
+.trolley-scene{position:relative;width:100%;height:220px;margin-bottom:16px;overflow:hidden}
+
+/* Calculator trolley */
+.trolley{position:absolute;top:20px;left:50%;transform:translateX(-50%);z-index:10;transition:all 0.6s ease-in-out}
+.trolley-body{padding-bottom:44px;width:70px;height:45px;background:var(--navy);border-radius:6px;position:relative;border:1px solid #2a3a5c}
+.trolley-display{position:absolute;top:4px;left:8px;right:8px;height:12px;background:var(--teal);border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:6px;color:#0a0a0a;font-weight:600;overflow:hidden}
+.trolley-buttons{position:absolute;bottom:5px;left:8px;right:8px;display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.trolley-btn-dot{width:100%;aspect-ratio:1;background:var(--amber);border-radius:1px}
+.trolley-wheels{display:flex;justify-content:space-between;padding:0 10px;margin-top:-2px;position:relative;z-index:5}
+.trolley-wheel{width:12px;height:12px;background:#374151;border-radius:50%;border:2px solid #4b5563}
+
+/* Track */
+.track-container{position:absolute;top:80px;left:50%;transform:translateX(-50%);width:300px;height:140px}
+.track-stem{position:absolute;top:0;left:50%;width:4px;height:40px;background:#374151;transform:translateX(-50%)}
+.track-left{position:absolute;top:40px;left:10%;width:4px;height:100px;background:#374151;transform:rotate(-25deg);transform-origin:top center}
+.track-right{position:absolute;top:40px;right:10%;width:4px;height:100px;background:#374151;transform:rotate(25deg);transform-origin:top center}
+.track-left.highlight,.track-right.highlight{background:var(--teal);box-shadow:0 0 12px rgba(13,148,136,0.5)}
+
+/* Muppet figures */
+.muppets-area{position:absolute;bottom:0;width:100%;display:flex;justify-content:space-between;padding:0 20px}
+.muppet-group{display:flex;gap:4px;align-items:flex-end}
+.muppet-group.left{justify-content:flex-start}
+.muppet-group.right{justify-content:flex-end}
+.muppet-figure{display:flex;flex-direction:column;align-items:center;transition:all 0.3s}
+.muppet-figure.hit{animation:muppetHit 0.4s forwards}
+.muppet-head{width:14px;height:14px;border-radius:50%;position:relative;transform:rotate(15deg)}
+.muppet-phone{position:absolute;top:2px;right:-5px;width:6px;height:8px;background:#374151;border-radius:1px;border:1px solid #4b5563}
+.muppet-body{padding-bottom:44px;width:12px;height:18px;border-radius:3px 3px 1px 1px;margin-top:-2px}
+.muppet-legs{display:flex;gap:4px;margin-top:-1px}
+.muppet-leg{width:3px;height:10px;background:#374151;border-radius:0 0 2px 2px}
+.muppet-sparkle{position:absolute;font-size:16px;opacity:0;pointer-events:none}
+
+@keyframes muppetHit{
+0%{transform:translateY(0) scale(1);opacity:1}
+30%{transform:translateY(-20px) scale(1.2);opacity:1}
+100%{transform:translateY(-60px) scale(0.3) rotate(360deg);opacity:0}
+}
+@keyframes sparkle{
+0%{opacity:1;transform:scale(0.5)}
+100%{opacity:0;transform:scale(2) translateY(-30px)}
+}
+
+/* Rolling animation */
+@keyframes trolleyRoll{
+0%{transform:translateX(-50%) translateY(0)}
+50%{transform:translateX(-50%) translateY(2px)}
+100%{transform:translateX(-50%) translateY(0)}
+}
+.trolley.rolling{animation:trolleyRoll 0.4s ease-in-out infinite}
+.trolley.move-left{transform:translateX(-120%) translateY(120px)}
+.trolley.move-right{transform:translateX(20%) translateY(120px)}
+.trolley.impact{transform:translateX(-120%) translateY(120px) scale(1.1)}
+.trolley.impact-right{transform:translateX(20%) translateY(120px) scale(1.1)}
+
+/* Options */
+.options-row{display:flex;gap:16px;margin-bottom:12px}
+.option-card{flex:1;background:var(--surface);border-radius:14px;padding:20px;border:2px solid var(--border);cursor:pointer;transition:all 0.15s;position:relative}
+.option-card:hover{border-color:var(--teal);background:var(--surface-alt)}
+.option-card.selected{border-color:var(--teal);background:rgba(13,148,136,0.1)}
+.option-card.disabled{pointer-events:none;opacity:0.6}
+.option-label{font-size:14px;font-weight:700;color:var(--teal);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.03em}
+.option-description{font-size:13px;color:var(--text);line-height:1.6;margin-bottom:10px}
+.option-outcomes{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);line-height:1.8}
+.option-outcomes .prob{color:var(--amber);font-weight:600}
+.option-outcomes .muppet-count{color:var(--green);font-weight:600}
+.option-certain{color:var(--green);font-weight:600;font-family:'JetBrains Mono',monospace;font-size:14px}
+
+/* Escape hint */
+.escape-hint{text-align:center;font-size:12px;color:var(--amber);font-family:'JetBrains Mono',monospace;margin-bottom:16px;opacity:0.7}
+
+/* Question counter */
+.question-counter{text-align:center;color:var(--muted);font-size:13px;margin-bottom:8px}
+
+/* Outcome display */
+.outcome-display{background:var(--surface);border-radius:12px;padding:20px;text-align:center;margin-bottom:16px;border:2px solid var(--border);min-height:60px;display:none}
+.outcome-display.show{display:block}
+.outcome-text{font-size:16px;font-weight:600;line-height:1.6}
+.outcome-text.hit{color:var(--green)}
+.outcome-text.miss{color:var(--muted)}
+.outcome-text.escape{color:var(--amber)}
+.outcome-tooltip{font-size:12px;color:var(--muted);margin-top:8px;font-style:italic}
+
+/* Escape event overlay */
+.escape-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,17,23,0.92);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity 0.15s}
+.escape-overlay.show{opacity:1;pointer-events:auto}
+.escape-card{background:var(--surface);border:3px solid var(--amber);border-radius:20px;padding:40px 32px;max-width:420px;text-align:center;transform:translateY(-30px);transition:transform 0.15s}
+.escape-overlay.show .escape-card{transform:translateY(0)}
+.escape-emoji{font-size:56px;margin-bottom:16px}
+.escape-title{font-size:20px;font-weight:800;color:var(--amber);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em}
+.escape-text{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* Next button */
+.next-btn{display:none;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s}
+.next-btn:hover{border-color:var(--teal)}
+.next-btn.visible{display:block}
+
+/* Reveal screen */
+.reveal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:90;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.reveal-overlay.show{opacity:1;pointer-events:auto}
+.reveal-content{max-width:580px;padding:40px 24px;text-align:center}
+.reveal-heading{font-size:28px;font-weight:800;margin-bottom:16px}
+.reveal-scores{font-size:16px;color:var(--muted);margin-bottom:24px;line-height:1.8}
+.reveal-scores .your-score{color:var(--green);font-weight:700;font-size:20px}
+.reveal-scores .opt-score{color:var(--muted);font-weight:600}
+.reveal-formula{background:var(--surface);border-radius:12px;padding:24px;margin-bottom:24px;text-align:center}
+.reveal-formula .formula-intro{font-size:14px;color:var(--muted);margin-bottom:12px}
+.reveal-formula .formula-text{font-size:18px;font-weight:600;color:var(--teal);font-family:'JetBrains Mono',monospace}
+.reveal-subtext{font-size:14px;color:var(--text);margin-bottom:8px;font-weight:600}
+.reveal-applications{text-align:left;max-width:460px;margin:0 auto 28px;font-size:13px;color:var(--muted);line-height:2}
+.reveal-applications li{list-style:none;padding-left:0}
+.reveal-applications li::before{content:"";display:inline-block;width:6px;height:6px;background:var(--teal);border-radius:50%;margin-right:10px;vertical-align:middle}
+.reveal-closing{font-size:14px;color:var(--text);font-weight:500;margin-bottom:28px;line-height:1.7;font-style:italic}
+.reveal-btn{padding:14px 40px;border-radius:10px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s;opacity:0.3;pointer-events:none}
+.reveal-btn.enabled{opacity:1;pointer-events:auto}
+.reveal-btn:hover{opacity:0.9}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--teal)}
+.result-card .score.green{color:var(--green)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.stars-row{text-align:center;font-size:36px;margin-bottom:20px;letter-spacing:6px}
+.star-earned{color:var(--amber)}
+.star-empty{color:#2a2f45}
+.pct-bar{background:var(--surface);border-radius:10px;padding:16px 20px;margin-bottom:20px;text-align:center}
+.pct-bar h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:8px}
+.pct-value{font-size:28px;font-weight:800;color:var(--teal)}
+.pb-badge{background:var(--teal-dim);color:var(--teal);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+/* Muppet colours */
+.mc-1{background:#e06c75}
+.mc-2{background:#61afef}
+.mc-3{background:#c678dd}
+.mc-4{background:#98c379}
+.mc-5{background:#d19a66}
+.mc-6{background:#56b6c2}
+
+@keyframes sway{
+0%,100%{transform:rotate(-2deg)}
+50%{transform:rotate(2deg)}
+}
+.muppet-figure{animation:sway 2s ease-in-out infinite}
+
+@media(prefers-reduced-motion:reduce){
+.trolley.rolling{animation:none}
+.escape-card{transition:none}
+.escape-overlay{transition:none}
+.reveal-overlay{transition:none}
+.trolley{transition:none}
+.muppet-figure{animation:none}
+.muppet-figure.hit{animation:none;opacity:0}
+.track-left,.track-right{transition:none}
+}
+
+@media(max-width:480px){
+.options-row{flex-direction:column;gap:10px}
+.option-card{padding:16px}
+.results-grid{grid-template-columns:1fr}
+.trolley-scene{height:180px}
+.header{padding:10px 16px;gap:8px}
+.header-title{font-size:15px}
+.start-title{font-size:26px}
+.screen{padding:24px 16px}
+}
+/* canon §7.6.1 on a phone (<= 600px wide). Every answer waits for Next here: the outcome is
+   worth reading (Jon, 1 Oct 2026), so Next has to sit above the fold with it.
+   1. Header on one line: arrow-only back link (aria-label keeps its name), level pill hidden.
+   2. The trolley scene is scaled whole, so nothing in it changes size relative to the rest
+      and every Muppet is still drawn; the space it gives up is taken back with a negative margin.
+   3. Once a track is chosen the other card cannot be used, so it goes, and the outcome and
+      Next follow the chosen track.
+   The asking screen may still scroll on a 320px phone for the longest Core questions: the two
+   cards are the question, and alone they exceed the screen (todo §3.9, batch 1). */
+@media(max-width:600px){
+.header{padding:2px 6px;gap:4px}
+.header-right{gap:6px}
+.back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
+.back-text,.header-div,.level-pill{display:none}
+.header-title{font-size:14px;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.score-display{white-space:nowrap}
+.score-yours{font-size:16px}
+.score-optimal{font-size:12px}
+.a11y-toggle{width:44px;height:44px}
+#gameScreen.screen{padding:6px 12px}
+.question-counter{margin-bottom:2px}
+.trolley-scene{height:180px;--s:.6;transform:scale(var(--s));transform-origin:top center;margin-bottom:calc(180px * (var(--s) - 1) + 6px)}
+.options-row{gap:8px;margin-bottom:8px}
+.option-card{padding:10px 12px;min-height:44px}
+.option-label{font-size:13px;margin-bottom:4px}
+.option-description{line-height:1.45;margin-bottom:6px}
+.option-outcomes{line-height:1.6}
+.escape-hint{margin-bottom:8px}
+.outcome-display{padding:10px 12px;margin-bottom:8px;min-height:0}
+.next-btn{min-height:44px}
+#gameScreen.answered .option-card:not(.selected){display:none}
+/* the outcome's own tooltip explains a short probability total, so the hint above it goes */
+#gameScreen.answered .escape-hint{display:none !important}
+.outcome-tooltip{margin-top:4px}
+}
+/* A short phone (<= 600px tall): once a track is chosen the scene moves below Next. Until the
+   outcome appears it sits straight under the chosen card, so the trolley's run and the hits are
+   still seen; the outcome and Next then arrive above it. Visual order only (canon §7.6.1). */
+@media(max-width:600px) and (max-height:600px){
+#gameScreen.answered.active{display:flex;flex-direction:column}
+#gameScreen.answered .question-counter{order:1}
+#gameScreen.answered .options-row{order:2}
+#gameScreen.answered .escape-hint{order:3}
+#gameScreen.answered .outcome-display{order:4}
+#gameScreen.answered .next-btn{order:5}
+#gameScreen.answered .trolley-scene{order:6;margin-top:8px}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link" aria-label="Back to Games">←<span class="back-text"> Back to Games</span></a>
+  <div class="header-div"></div>
+  <span class="header-title">Expected Damage</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <span class="level-pill" id="levelPill">GCSE</span>
+    <span class="score-display">
+      <span class="score-yours" id="scoreYours">0</span>
+      <span class="score-optimal" id="scoreOptimal">opt: 0</span>
+    </span>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Expected Damage</div>
+  <div class="start-sub">A calculator trolley is rolling down the track. Muppets — oblivious phone-zombies — are in the way.<br>Choose which track to send the trolley down. Maximise total Muppets hit.<br>Calculate, don't guess.</div>
+
+  <div class="level-preview" id="lvlPreviewKs3" style="border-left-color:var(--green)">
+    <h3 style="color:var(--green)">KS3 — Year 7-9</h3>
+    <p>Certain vs single gamble. Clean decimals. Clear gaps.</p>
+  </div>
+  <div class="level-preview" id="lvlPreviewGcse" style="border-left-color:var(--orange)">
+    <h3 style="color:var(--orange)">GCSE — Year 10-11</h3>
+    <p>Two-outcome gambles, fractions, word problems. Tighter margins.</p>
+  </div>
+  <div class="level-preview" id="lvlPreviewCore" style="border-left-color:var(--purple)">
+    <h3 style="color:var(--purple)">Core Maths — AQA 1350</h3>
+    <p>All question types. Messy values. Gaps under 0.2. No certain options.</p>
+  </div>
+
+  <div style="text-align:center;margin:20px 0 8px;font-size:14px;font-weight:600;color:var(--muted)">Session length</div>
+  <div class="session-select" id="sessionSelect"></div>
+
+  <button class="start-btn" onclick="startGame()">Start</button>
+  <div class="pb-info" id="pbInfo"></div>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="question-counter" id="questionCounter">Question 1 / 10</div>
+
+  <!-- Trolley scene -->
+  <div class="trolley-scene" id="trolleyScene">
+    <div class="trolley rolling" id="trolley">
+      <div class="trolley-body">
+        <div class="trolley-display" id="trolleyDisplay">E(X)=?</div>
+        <div class="trolley-buttons">
+          <div class="trolley-btn-dot"></div><div class="trolley-btn-dot"></div><div class="trolley-btn-dot"></div><div class="trolley-btn-dot"></div>
+          <div class="trolley-btn-dot"></div><div class="trolley-btn-dot"></div><div class="trolley-btn-dot"></div><div class="trolley-btn-dot"></div>
+          <div class="trolley-btn-dot"></div><div class="trolley-btn-dot"></div><div class="trolley-btn-dot"></div><div class="trolley-btn-dot"></div>
+        </div>
+      </div>
+      <div class="trolley-wheels">
+        <div class="trolley-wheel"></div>
+        <div class="trolley-wheel"></div>
+      </div>
+    </div>
+
+    <!-- Track -->
+    <div class="track-container" id="trackContainer">
+      <div class="track-stem"></div>
+      <div class="track-left" id="trackLeft"></div>
+      <div class="track-right" id="trackRight"></div>
+    </div>
+
+    <!-- Muppet groups -->
+    <div class="muppets-area">
+      <div class="muppet-group left" id="muppetsLeft"></div>
+      <div class="muppet-group right" id="muppetsRight"></div>
+    </div>
+  </div>
+
+  <!-- Option cards -->
+  <div class="options-row" id="optionsRow">
+    <div class="option-card" id="optionA" onclick="selectOption('A')">
+      <div class="option-label">Track A</div>
+      <div class="option-description" id="descA"></div>
+      <div class="option-outcomes" id="outcomesA"></div>
+    </div>
+    <div class="option-card" id="optionB" onclick="selectOption('B')">
+      <div class="option-label">Track B</div>
+      <div class="option-description" id="descB"></div>
+      <div class="option-outcomes" id="outcomesB"></div>
+    </div>
+  </div>
+
+  <!-- Escape hint -->
+  <div class="escape-hint" id="escapeHint" style="display:none"></div>
+
+  <!-- Outcome display -->
+  <div class="outcome-display" id="outcomeDisplay">
+    <div class="outcome-text" id="outcomeText"></div>
+    <div class="outcome-tooltip" id="outcomeTooltip" style="display:none"></div>
+  </div>
+
+  <!-- Next button -->
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- ESCAPE EVENT OVERLAY -->
+<div class="escape-overlay" id="escapeOverlay">
+  <div class="escape-card">
+    <div class="escape-emoji" id="escapeEmoji"></div>
+    <div class="escape-title" id="escapeTitle"></div>
+    <div class="escape-text" id="escapeText"></div>
+  </div>
+</div>
+
+<!-- REVEAL OVERLAY -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-content">
+    <div class="reveal-heading">Expected Damage Complete</div>
+    <div class="reveal-scores">
+      You hit <span class="your-score" id="revealYourScore">0</span> Muppets.<br>
+      Optimal play would have hit <span class="opt-score" id="revealOptScore">0</span> Muppets.
+    </div>
+    <div class="reveal-formula">
+      <div class="formula-intro">Every choice you made in this game required calculating:</div>
+      <div class="formula-text" id="revealFormula"></div>
+    </div>
+    <div class="reveal-subtext">This is Expected Value — and it is not just for trolleys.</div>
+    <ul class="reveal-applications">
+      <li>Insurance companies calculate E(damage) to set your premiums</li>
+      <li>Casinos calculate E(profit) to guarantee they always win</li>
+      <li>The NHS calculates E(lives saved) to allocate treatment budgets</li>
+      <li>Engineers calculate E(failure) to decide when to replace a bridge</li>
+      <li>Weather forecasters calculate E(rainfall) to plan flood defences</li>
+    </ul>
+    <div class="reveal-closing">The students who scored closest to optimal were not luckier. They calculated.</div>
+    <button class="reveal-btn" id="revealBtn" onclick="showResults()">View Score</button>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center;margin-bottom:12px"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="stars-row" id="starsRow"></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Your Score</h4>
+      <div class="score green" id="finalYours">0</div>
+      <div class="sub">Muppets hit</div>
+    </div>
+    <div class="result-card">
+      <h4>Optimal Score</h4>
+      <div class="score" id="finalOptimal">0</div>
+      <div class="sub">If always optimal</div>
+    </div>
+  </div>
+  <div class="pct-bar">
+    <h4>Optimal Choices</h4>
+    <div class="pct-value" id="finalPct">0%</div>
+  </div>
+  <div class="sub" id="pbLine" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="restartGame()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+/* ======== ESCAPE EVENTS ======== */
+const ESCAPE_EVENTS = [
+  { emoji: '\u270F\uFE0F', title: 'PENCIL EMERGENCY', text: 'The trolley driver has stopped to sharpen his pencil. He carries 47 pencils. He sharpens them in order of colour. All Muppets have left the track.' },
+  { emoji: '\uD83C\uDFAE', title: 'RARE POKEMON SPOTTED', text: 'A shiny Charizard has appeared 200 metres away. Every single Muppet on the track has sprinted off to catch it. Track clear.' },
+  { emoji: '\uD83D\uDCF1', title: 'BREAKING: SOMEONE SAID SOMETHING', text: 'A celebrity has posted something controversial. All Muppets have stopped walking to tweet their opinion. They will be doing this for some time.' },
+  { emoji: '\uD83D\uDEF5', title: 'UBER ARRIVED EARLY', text: 'All Muppets received a notification. Their Uber is 3 minutes early and waiting outside. They have vanished.' },
+  { emoji: '\uD83C\uDF55', title: 'FOOD DELIVERY ALERT', text: 'Your order has arrived. All Muppets have abandoned the track to collect their food before it goes cold.' },
+  { emoji: '\uD83D\uDECD\uFE0F', title: 'FLASH SALE: 2 MINUTES REMAINING', text: 'A notification has landed. 60% off everything for the next 2 minutes. The track has emptied faster than you have ever seen.' },
+  { emoji: '\uD83D\uDD14', title: 'SOMEONE LIKED A POST FROM 2019', text: 'All Muppets received a notification from 4 years ago. In their confusion, they wandered off the track entirely.' },
+  { emoji: '\u26A1', title: 'PHONE BATTERY AT 1%', text: 'Simultaneous panic across the track. All Muppets have sprinted to find a charging point. Track clear.' },
+  { emoji: '\uD83C\uDFB5', title: 'NEW ALBUM DROPPED', text: 'It dropped. Right now. The Muppets on this track are huge fans. They have sat down exactly where they are and started listening. They are not moving.' },
+  { emoji: '\uD83E\uDDEE', title: 'CALCULATOR ERROR', text: 'The trolley driver\'s calculator display shows ERROR. He has pulled over to debug. He suspects it\'s a floating point issue. This will take a while.' }
+];
+
+/* ======== MUPPET COLOURS ======== */
+const MUPPET_COLOURS = ['mc-1','mc-2','mc-3','mc-4','mc-5','mc-6'];
+
+/* ======== QUESTION BANK ======== */
+const QUESTIONS = {
+  ks3: [
+    {id:'ed_ks3_001',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:3,probability:1.0}],ev:3.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.5},{muppets:0,probability:0.5}],ev:4.0},escapeEventPossible:false,higherEVOption:'B',evDifference:1.0},
+    {id:'ed_ks3_002',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:5,probability:1.0}],ev:5.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:6,probability:0.75},{muppets:0,probability:0.25}],ev:4.5},escapeEventPossible:false,higherEVOption:'A',evDifference:0.5},
+    {id:'ed_ks3_003',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:2,probability:1.0}],ev:2.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:12,probability:0.25},{muppets:0,probability:0.75}],ev:3.0},escapeEventPossible:false,higherEVOption:'B',evDifference:1.0},
+    {id:'ed_ks3_004',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:6,probability:1.0}],ev:6.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:7,probability:0.8},{muppets:0,probability:0.2}],ev:5.6},escapeEventPossible:false,higherEVOption:'A',evDifference:0.4},
+    {id:'ed_ks3_005',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:4,probability:1.0}],ev:4.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:7,probability:0.6},{muppets:0,probability:0.3}],ev:4.2},escapeEventPossible:true,higherEVOption:'B',evDifference:0.2},
+    {id:'ed_ks3_006',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:4,probability:1.0}],ev:4.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:10,probability:0.5},{muppets:0,probability:0.5}],ev:5.0},escapeEventPossible:false,higherEVOption:'B',evDifference:1.0},
+    {id:'ed_ks3_007',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:7,probability:1.0}],ev:7.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:7,probability:0.9},{muppets:0,probability:0.1}],ev:6.3},escapeEventPossible:false,higherEVOption:'A',evDifference:0.7},
+    {id:'ed_ks3_008',level:'ks3',type:'wordproblem',questionType:1,optionA:{label:'Track A',description:'Track A leads to a queue of people waiting for a new phone to be released. They have been there since 4am and are not moving for anything. There are 6 of them.',outcomes:[{muppets:6,probability:1.0}],ev:6.0},optionB:{label:'Track B',description:'Track B leads to a man walking while watching a football match on his phone. There\'s a 70% chance he\'s too engrossed in the match to notice the trolley, but a 30% chance his team scores and he jumps in the air looking up. There are 5 people on this track.',outcomes:[{muppets:5,probability:0.7},{muppets:0,probability:0.3}],ev:3.5},escapeEventPossible:false,higherEVOption:'A',evDifference:2.5},
+    {id:'ed_ks3_009',level:'ks3',type:'wordproblem',questionType:1,optionA:{label:'Track A',description:'Track A leads to 4 people having an argument in the comments section of a post about whether a Jaffa Cake is a biscuit or a cake. They have forgotten the outside world exists.',outcomes:[{muppets:4,probability:1.0}],ev:4.0},optionB:{label:'Track B',description:'Track B leads to a woman walking her dog while simultaneously ordering a takeaway, checking her emails, and watching a video. There\'s a 60% chance she looks up in time. There are 9 people on this track.',outcomes:[{muppets:9,probability:0.4},{muppets:0,probability:0.6}],ev:3.6},escapeEventPossible:false,higherEVOption:'A',evDifference:0.4},
+    {id:'ed_ks3_010',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:5,probability:0.8},{muppets:0,probability:0.2}],ev:4.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.7},{muppets:1,probability:0.2}],ev:5.8},escapeEventPossible:true,higherEVOption:'B',evDifference:1.8},
+    {id:'ed_ks3_011',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:3,probability:1.0}],ev:3.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:16,probability:0.25},{muppets:0,probability:0.75}],ev:4.0},escapeEventPossible:false,higherEVOption:'B',evDifference:1.0},
+    {id:'ed_ks3_012',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:5,probability:1.0}],ev:5.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.6},{muppets:0,probability:0.4}],ev:4.8},escapeEventPossible:false,higherEVOption:'A',evDifference:0.2},
+    {id:'ed_ks3_013',level:'ks3',type:'wordproblem',questionType:1,optionA:{label:'Track A',description:'Track A leads to 3 people who are absolutely convinced that 6\u00F72(1+2) = 1. They are shouting this at each other and have completely lost awareness of their surroundings.',outcomes:[{muppets:3,probability:1.0}],ev:3.0},optionB:{label:'Track B',description:'Track B leads to a group of 10 people watching a street performer. There\'s a 50% chance the performer\'s next trick will make them all gasp and look up.',outcomes:[{muppets:10,probability:0.5},{muppets:0,probability:0.5}],ev:5.0},escapeEventPossible:false,higherEVOption:'B',evDifference:2.0},
+    {id:'ed_ks3_014',level:'ks3',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:5,probability:1.0}],ev:5.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.5},{muppets:2,probability:0.3}],ev:4.6},escapeEventPossible:true,higherEVOption:'A',evDifference:0.4},
+    {id:'ed_ks3_015',level:'ks3',type:'wordproblem',questionType:1,optionA:{label:'Track A',description:'Track A leads to 8 people who are all watching the same video of a dog that looks like it\'s saying \'sausages\'. They have watched it 47 times and show no signs of stopping.',outcomes:[{muppets:8,probability:1.0}],ev:8.0},optionB:{label:'Track B',description:'Track B leads to someone attempting to take the perfect selfie. They need the lighting just right. There\'s a 90% chance they\'re still adjusting their angle when the trolley arrives. There are 4 people on this track.',outcomes:[{muppets:4,probability:0.9},{muppets:0,probability:0.1}],ev:3.6},escapeEventPossible:false,higherEVOption:'A',evDifference:4.4}
+  ],
+  gcse: [
+    {id:'ed_gcse_001',level:'gcse',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:5,probability:1.0}],ev:5.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.65},{muppets:0,probability:0.35}],ev:5.2},escapeEventPossible:false,higherEVOption:'B',evDifference:0.2},
+    {id:'ed_gcse_002',level:'gcse',type:'numerical',questionType:2,optionA:{label:'Track A',description:null,outcomes:[{muppets:5,probability:1.0}],ev:5.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.45},{muppets:2,probability:0.55}],ev:4.7},escapeEventPossible:false,higherEVOption:'A',evDifference:0.3},
+    {id:'ed_gcse_003',level:'gcse',type:'numerical',questionType:2,optionA:{label:'Track A',description:null,outcomes:[{muppets:4,probability:1.0}],ev:4.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:10,probability:0.3},{muppets:3,probability:0.5},{muppets:0,probability:0.2}],ev:4.5},escapeEventPossible:false,higherEVOption:'B',evDifference:0.5},
+    {id:'ed_gcse_004',level:'gcse',type:'numerical',questionType:2,optionA:{label:'Track A',description:null,outcomes:[{muppets:6,probability:0.8},{muppets:0,probability:0.2}],ev:4.8},optionB:{label:'Track B',description:null,outcomes:[{muppets:9,probability:0.5},{muppets:3,probability:0.3}],ev:5.4},escapeEventPossible:true,higherEVOption:'B',evDifference:0.6},
+    {id:'ed_gcse_005',level:'gcse',type:'wordproblem',questionType:1,optionA:{label:'Track A',description:'Track A leads to a group of 6 people who are all in a heated debate about whether Die Hard is a Christmas film. The argument has been going for 45 minutes and is escalating. They are 100% not paying attention to anything else.',outcomes:[{muppets:6,probability:1.0}],ev:6.0},optionB:{label:'Track B',description:'Track B leads to someone who has just received a notification that their online order has been \'delivered\' but they can\'t find it. There\'s a 55% chance they\'re still staring at the doorstep photo trying to work out where the parcel is. There are 9 people on this track.',outcomes:[{muppets:9,probability:0.55},{muppets:0,probability:0.45}],ev:4.95},escapeEventPossible:false,higherEVOption:'A',evDifference:1.05},
+    {id:'ed_gcse_006',level:'gcse',type:'numerical',questionType:2,optionA:{label:'Track A',description:null,outcomes:[{muppets:7,probability:0.6},{muppets:2,probability:0.4}],ev:5.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:10,probability:0.4},{muppets:1,probability:0.6}],ev:4.6},escapeEventPossible:false,higherEVOption:'A',evDifference:0.4},
+    {id:'ed_gcse_007',level:'gcse',type:'wordproblem',questionType:2,optionA:{label:'Track A',description:'Track A leads to a philosophy lecturer explaining to 5 students why numbers might not be real. The students are sufficiently confused that they have forgotten they have bodies. Probability of them moving: 0%.',outcomes:[{muppets:5,probability:1.0}],ev:5.0},optionB:{label:'Track B',description:'Track B leads to a man who is trying to go viral by pretending to be a statue while people walk past. He has been standing still for 2 hours. There\'s a 60% chance his legs have genuinely gone to sleep and he physically cannot move. There\'s a 25% chance his phone buzzes with a notification and he breaks character. There are 7 people watching him and they\'ll all follow whatever he does.',outcomes:[{muppets:7,probability:0.60},{muppets:0,probability:0.25}],ev:4.2},escapeEventPossible:true,higherEVOption:'A',evDifference:0.8},
+    {id:'ed_gcse_008',level:'gcse',type:'numerical',questionType:2,optionA:{label:'Track A',description:null,outcomes:[{muppets:6,probability:1.0}],ev:6.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:15,probability:1/3},{muppets:3,probability:2/3}],ev:7.0},escapeEventPossible:false,higherEVOption:'B',evDifference:1.0},
+    {id:'ed_gcse_009',level:'gcse',type:'numerical',questionType:2,optionA:{label:'Track A',description:null,outcomes:[{muppets:8,probability:0.7},{muppets:1,probability:0.3}],ev:5.9},optionB:{label:'Track B',description:null,outcomes:[{muppets:12,probability:0.4},{muppets:3,probability:0.6}],ev:6.6},escapeEventPossible:false,higherEVOption:'B',evDifference:0.7},
+    {id:'ed_gcse_010',level:'gcse',type:'wordproblem',questionType:2,optionA:{label:'Track A',description:'Track A leads towards 4 people who are arguing about what to order. They\'ve been at it for 20 minutes. There\'s a 70% chance they\'re still arguing when the trolley arrives. If they\'ve finally decided, they\'ll have moved on (30%).',outcomes:[{muppets:4,probability:0.7},{muppets:0,probability:0.3}],ev:2.8},optionB:{label:'Track B',description:'Track B leads to someone FaceTiming while walking. There\'s a 50% chance the person they\'re talking to is showing them something funny (distracted). 30% chance the call has just ended and they look up. 10% chance they trip over a paving stone and jump sideways. There are 6 people on this track.',outcomes:[{muppets:6,probability:0.5},{muppets:0,probability:0.3},{muppets:0,probability:0.1}],ev:3.0},escapeEventPossible:true,higherEVOption:'B',evDifference:0.2},
+    /* Generated GCSE 011-020 */
+    {id:'ed_gcse_011',level:'gcse',type:'numerical',questionType:2,optionA:{label:'Track A',description:null,outcomes:[{muppets:7,probability:0.5},{muppets:3,probability:0.5}],ev:5.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:11,probability:0.4},{muppets:1,probability:0.6}],ev:5.0},escapeEventPossible:false,higherEVOption:'A',evDifference:0.0},
+    {id:'ed_gcse_012',level:'gcse',type:'numerical',questionType:1,optionA:{label:'Track A',description:null,outcomes:[{muppets:4,probability:1.0}],ev:4.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:14,probability:0.3},{muppets:0,probability:0.7}],ev:4.2},escapeEventPossible:false,higherEVOption:'B',evDifference:0.2},
+    {id:'ed_gcse_013',level:'gcse',type:'wordproblem',questionType:2,optionA:{label:'Track A',description:'Track A leads to a man who has just dropped his phone down a drain. He is lying flat on the pavement trying to reach it with a ruler. There is a 100% chance he is not moving. There are 3 Muppets watching him in sympathy.',outcomes:[{muppets:3,probability:1.0}],ev:3.0},optionB:{label:'Track B',description:'Track B leads to a woman live-streaming her walk to the shops. There\'s a 40% chance her stream is still buffering and she is staring at her phone in frustration. There\'s a 45% chance she\'s narrating and looking at the camera. There are 8 people on this track.',outcomes:[{muppets:8,probability:0.40},{muppets:8,probability:0.45}],ev:6.8},escapeEventPossible:true,higherEVOption:'B',evDifference:3.8},
+    {id:'ed_gcse_014',level:'gcse',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:9,probability:0.5},{muppets:2,probability:0.5}],ev:5.5},optionB:{label:'Track B',description:null,outcomes:[{muppets:7,probability:0.75},{muppets:0,probability:0.25}],ev:5.25},escapeEventPossible:false,higherEVOption:'A',evDifference:0.25},
+    {id:'ed_gcse_015',level:'gcse',type:'numerical',questionType:2,optionA:{label:'Track A',description:null,outcomes:[{muppets:6,probability:2/3},{muppets:0,probability:1/3}],ev:4.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:10,probability:1/4},{muppets:4,probability:3/4}],ev:5.5},escapeEventPossible:false,higherEVOption:'B',evDifference:1.5},
+    {id:'ed_gcse_016',level:'gcse',type:'wordproblem',questionType:1,optionA:{label:'Track A',description:'Track A leads to 5 people who are all comparing their phone screen time reports. They are horrified but not moving. 100% distracted.',outcomes:[{muppets:5,probability:1.0}],ev:5.0},optionB:{label:'Track B',description:'Track B leads to someone who has been trying to take a panoramic photo for 10 minutes. There\'s a 70% chance they\'re still holding their breath and panning. There\'s a 20% chance they just gave up and are checking the result. There are 7 people on this track.',outcomes:[{muppets:7,probability:0.7},{muppets:0,probability:0.2}],ev:4.9},escapeEventPossible:true,higherEVOption:'A',evDifference:0.1},
+    {id:'ed_gcse_017',level:'gcse',type:'numerical',questionType:2,optionA:{label:'Track A',description:null,outcomes:[{muppets:8,probability:0.55},{muppets:1,probability:0.35}],ev:4.75},optionB:{label:'Track B',description:null,outcomes:[{muppets:6,probability:0.65},{muppets:3,probability:0.25}],ev:4.65},escapeEventPossible:true,higherEVOption:'A',evDifference:0.1},
+    {id:'ed_gcse_018',level:'gcse',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:5,probability:3/4},{muppets:1,probability:1/4}],ev:4.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:12,probability:1/3},{muppets:0,probability:2/3}],ev:4.0},escapeEventPossible:false,higherEVOption:'A',evDifference:0.0},
+    {id:'ed_gcse_019',level:'gcse',type:'wordproblem',questionType:2,optionA:{label:'Track A',description:'Track A leads to a man who is walking into a lamppost because he is reading a 47-tweet thread about whether cereal is a soup. There\'s a 90% chance he walks straight into it. There are 3 Muppets on this track.',outcomes:[{muppets:3,probability:0.9},{muppets:0,probability:0.1}],ev:2.7},optionB:{label:'Track B',description:'Track B leads to a group trying to take a group selfie. There\'s a 50% chance they\'re still arranging themselves. There\'s a 35% chance someone blinked and they\'re retaking. There are 6 people on this track.',outcomes:[{muppets:6,probability:0.5},{muppets:6,probability:0.35}],ev:5.1},escapeEventPossible:true,higherEVOption:'B',evDifference:2.4},
+    {id:'ed_gcse_020',level:'gcse',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:6,probability:0.6},{muppets:2,probability:0.3}],ev:4.2},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.45},{muppets:3,probability:0.4}],ev:4.8},escapeEventPossible:true,higherEVOption:'B',evDifference:0.6}
+  ],
+  core: [
+    {id:'ed_core_001',level:'core',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:7,probability:0.6},{muppets:1,probability:0.4}],ev:4.6},optionB:{label:'Track B',description:null,outcomes:[{muppets:12,probability:0.3},{muppets:3,probability:0.7}],ev:5.7},escapeEventPossible:false,higherEVOption:'B',evDifference:1.1},
+    {id:'ed_core_002',level:'core',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:8,probability:0.55},{muppets:2,probability:0.45}],ev:5.3},optionB:{label:'Track B',description:null,outcomes:[{muppets:11,probability:0.35},{muppets:3,probability:0.65}],ev:5.8},escapeEventPossible:false,higherEVOption:'B',evDifference:0.5},
+    {id:'ed_core_003',level:'core',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:9,probability:0.6},{muppets:2,probability:0.3}],ev:6.0},optionB:{label:'Track B',description:null,outcomes:[{muppets:11,probability:0.45},{muppets:3,probability:0.4}],ev:6.15},escapeEventPossible:true,higherEVOption:'B',evDifference:0.15},
+    {id:'ed_core_004',level:'core',type:'wordproblem',questionType:3,optionA:{label:'Track A',description:'Track A leads to a group of people who have just discovered their horoscope says today is \'a day of transformation\'. Four of them are convinced the trolley is a sign. There\'s a 65% chance all four stand and welcome it. There\'s a 35% chance even they decide transformation can wait.',outcomes:[{muppets:4,probability:0.65},{muppets:0,probability:0.35}],ev:2.6},optionB:{label:'Track B',description:'Track B leads to 8 people at a \'digital detox retreat\' who have secretly brought their phones. There\'s a 40% chance they\'re all on their phones when the trolley arrives. There\'s a 45% chance only half of them (4) are distracted. There\'s a 15% chance the retreat leader has confiscated all phones.',outcomes:[{muppets:8,probability:0.4},{muppets:4,probability:0.45},{muppets:0,probability:0.15}],ev:5.0},escapeEventPossible:false,higherEVOption:'B',evDifference:2.4},
+    {id:'ed_core_005',level:'core',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:8,probability:0.6},{muppets:1,probability:0.4}],ev:5.2},optionB:{label:'Track B',description:null,outcomes:[{muppets:15,probability:0.25},{muppets:4,probability:0.5},{muppets:0,probability:0.25}],ev:5.75},escapeEventPossible:false,higherEVOption:'B',evDifference:0.55},
+    {id:'ed_core_006',level:'core',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:9,probability:0.45},{muppets:3,probability:0.4}],ev:5.25},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.5},{muppets:2,probability:0.35}],ev:4.7},escapeEventPossible:true,higherEVOption:'A',evDifference:0.55},
+    {id:'ed_core_007',level:'core',type:'wordproblem',questionType:3,optionA:{label:'Track A',description:'Track A leads to 3 people who are absolutely convinced they\'ve found a maths hack that means 0.999... does not equal 1. They are writing a very long post about it. There\'s a 70% chance they\'re still typing. There\'s a 30% chance they\'ve hit post and are now waiting for validation.',outcomes:[{muppets:3,probability:0.7},{muppets:0,probability:0.3}],ev:2.1},optionB:{label:'Track B',description:'Track B leads to a crowd outside a restaurant that has been reviewed by a food influencer. There\'s a 55% chance the 10 people in the queue are all on their phones checking the review. There\'s a 30% chance only the 4 people at the back are distracted. There\'s a 15% chance the restaurant has just posted they\'re fully booked and everyone is leaving.',outcomes:[{muppets:10,probability:0.55},{muppets:4,probability:0.30},{muppets:0,probability:0.15}],ev:6.7},escapeEventPossible:false,higherEVOption:'B',evDifference:4.6},
+    {id:'ed_core_008',level:'core',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:6,probability:0.72},{muppets:2,probability:0.28}],ev:4.88},optionB:{label:'Track B',description:null,outcomes:[{muppets:10,probability:0.38},{muppets:4,probability:0.44},{muppets:0,probability:0.18}],ev:5.56},escapeEventPossible:false,higherEVOption:'B',evDifference:0.68},
+    {id:'ed_core_009',level:'core',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:7,probability:0.55},{muppets:2,probability:0.35}],ev:4.55},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.48},{muppets:3,probability:0.42}],ev:5.1},escapeEventPossible:true,higherEVOption:'B',evDifference:0.55},
+    {id:'ed_core_010',level:'core',type:'wordproblem',questionType:3,optionA:{label:'Track A',description:'Track A leads to a group who are watching a live countdown to a product launch. There\'s a 60% chance the launch has been delayed and they\'re furious, scrolling through comments. There\'s a 25% chance the product just launched and they\'re all frantically trying to add it to their cart. There are 5 people. The probability summary does not quite add up \u2014 you notice the percentages only total 85%.',outcomes:[{muppets:5,probability:0.60},{muppets:5,probability:0.25}],ev:4.25},optionB:{label:'Track B',description:'Track B leads to a yoga class that has just been told to \'be present and put phones away\'. There\'s a 50% chance two people at the back ignored this. There\'s a 40% chance everyone has actually complied and is doing tree pose. There are 8 people.',outcomes:[{muppets:2,probability:0.50},{muppets:0,probability:0.40}],ev:1.0},escapeEventPossible:true,higherEVOption:'A',evDifference:3.25},
+    /* Generated Core 011-015 */
+    {id:'ed_core_011',level:'core',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:7,probability:0.48},{muppets:3,probability:0.42}],ev:4.62},optionB:{label:'Track B',description:null,outcomes:[{muppets:9,probability:0.42},{muppets:2,probability:0.48}],ev:4.74},escapeEventPossible:true,higherEVOption:'B',evDifference:0.12},
+    {id:'ed_core_012',level:'core',type:'wordproblem',questionType:3,optionA:{label:'Track A',description:'Track A leads to a man who is trying to beat his high score on a mobile game while walking. There\'s a 55% chance he\'s in the zone and completely unaware of the trolley. There\'s a 35% chance he just lost all his lives and has thrown his phone into the air in disgust, at which point he looks up. There are 6 people on this track.',outcomes:[{muppets:6,probability:0.55},{muppets:0,probability:0.35}],ev:3.3},optionB:{label:'Track B',description:'Track B leads to a pair of people who are navigating using their phones and have just been told to turn left. There\'s a 60% chance they are still walking in the wrong direction staring at the blue dot. There\'s a 30% chance they have realised their error and have stopped in confusion. There are 5 people on this track.',outcomes:[{muppets:5,probability:0.60},{muppets:5,probability:0.30}],ev:4.5},escapeEventPossible:true,higherEVOption:'B',evDifference:1.2},
+    {id:'ed_core_013',level:'core',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:10,probability:0.35},{muppets:4,probability:0.55}],ev:5.7},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.52},{muppets:2,probability:0.38}],ev:4.92},escapeEventPossible:true,higherEVOption:'A',evDifference:0.78},
+    {id:'ed_core_014',level:'core',type:'wordproblem',questionType:3,optionA:{label:'Track A',description:'Track A leads to a group who are all trying to connect to free public WiFi. The probability that they are still entering the same email for the fourth time is twice the probability that they have given up and are actually looking where they are going. These two probabilities sum to 0.9. There are 7 people on this track.',outcomes:[{muppets:7,probability:0.6},{muppets:0,probability:0.3}],ev:4.2},optionB:{label:'Track B',description:'Track B leads to a queue of people outside a bakery that only sells one thing and there is an 80-minute wait. There\'s a 45% chance they are all scrolling social media. There\'s a 40% chance the person at the front just got served and everyone shuffled forward looking up. There are 6 people on this track.',outcomes:[{muppets:6,probability:0.45},{muppets:0,probability:0.40}],ev:2.7},escapeEventPossible:true,higherEVOption:'A',evDifference:1.5},
+    {id:'ed_core_015',level:'core',type:'numerical',questionType:3,optionA:{label:'Track A',description:null,outcomes:[{muppets:6,probability:0.52},{muppets:3,probability:0.38}],ev:4.26},optionB:{label:'Track B',description:null,outcomes:[{muppets:8,probability:0.4},{muppets:4,probability:0.35},{muppets:1,probability:0.15}],ev:4.75},escapeEventPossible:true,higherEVOption:'B',evDifference:0.49}
+  ]
+};
+
+/* ======== STATE ======== */
+let currentLevel = 'gcse';
+let sessionLength = 10;
+let questionIndex = 0;
+let sessionQuestions = [];
+let totalScore = 0;
+let optimalScore = 0;
+let optimalChoices = 0;
+let answered = false;
+let firstPlay = true;
+
+/* ======== INIT ======== */
+(function init() {
+  const params = new URLSearchParams(window.location.search);
+  const lvl = params.get('level');
+  if (lvl && QUESTIONS[lvl]) currentLevel = lvl;
+  firstPlay = !localStorage.getItem('ed_seen_reveal');
+  showPB();
+  MaffsSession.render({
+    mount: document.getElementById('sessionSelect'),
+    poolSize: QUESTIONS[currentLevel].length,
+    preferred: [10, 20],
+    selected: sessionLength,
+    onChange: count => { sessionLength = count; }
+  });
+})();
+
+function showPB() {
+  const pb = getPB();
+  const el = document.getElementById('pbInfo');
+  if (pb.score > 0) {
+    el.textContent = 'Personal best (' + currentLevel.toUpperCase() + '): ' + pb.score + ' Muppets, ' + pb.stars + ' star' + (pb.stars !== 1 ? 's' : '');
+  }
+}
+
+function getPB() {
+  try {
+    const d = JSON.parse(localStorage.getItem('ed_pb_' + currentLevel) || '{}');
+    return { score: d.score || 0, stars: d.stars || 0 };
+  } catch(e) { return { score: 0, stars: 0 }; }
+}
+
+function setPB(score, stars) {
+  const old = getPB();
+  let isNew = false;
+  const next = { score: Math.max(old.score, score), stars: Math.max(old.stars, stars) };
+  if (score > old.score || stars > old.stars) isNew = true;
+  localStorage.setItem('ed_pb_' + currentLevel, JSON.stringify(next));
+  if (isNew && typeof mfg === 'function') {
+    mfg('personal_best_set', { game_slug: 'expected-damage', level: currentLevel, score: score, previous_best: old.score });
+  }
+  return isNew;
+}
+
+/* ======== START ======== */
+function startGame() {
+  const bank = QUESTIONS[currentLevel];
+  if (!bank || bank.length === 0) return;
+  sessionQuestions = shuffle([...bank]).slice(0, Math.min(sessionLength, bank.length));
+  questionIndex = 0;
+  totalScore = 0;
+  optimalScore = 0;
+  optimalChoices = 0;
+  answered = false;
+
+  document.getElementById('startScreen').classList.remove('active');
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('gameScreen').classList.add('active');
+  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('levelPill').textContent = currentLevel.toUpperCase();
+  updateScoreDisplay();
+
+  if (typeof mfg === 'function') {
+    mfg('game_started', { game_slug: 'expected-damage', level: currentLevel });
+  }
+
+  loadQuestion();
+}
+
+function restartGame() {
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('startScreen').classList.add('active');
+  document.getElementById('gameHeader').style.display = 'none';
+  showPB();
+}
+
+/* ======== LOAD QUESTION ======== */
+function loadQuestion() {
+  const q = sessionQuestions[questionIndex];
+  answered = false;
+  document.getElementById('gameScreen').classList.remove('answered');
+  window.scrollTo(0, 0);
+
+  document.getElementById('questionCounter').textContent = 'Question ' + (questionIndex + 1) + ' / ' + sessionQuestions.length;
+
+  // Reset trolley
+  const trolley = document.getElementById('trolley');
+  trolley.className = 'trolley rolling';
+  trolley.style = '';
+
+  // Reset tracks
+  document.getElementById('trackLeft').classList.remove('highlight');
+  document.getElementById('trackRight').classList.remove('highlight');
+
+  // Reset options
+  const optA = document.getElementById('optionA');
+  const optB = document.getElementById('optionB');
+  optA.classList.remove('selected','disabled');
+  optB.classList.remove('selected','disabled');
+
+  // Render option content
+  renderOption('A', q.optionA);
+  renderOption('B', q.optionB);
+
+  // Escape hint
+  const hint = document.getElementById('escapeHint');
+  const sumA = probSum(q.optionA.outcomes);
+  const sumB = probSum(q.optionB.outcomes);
+  if (sumA < 0.999 || sumB < 0.999) {
+    const pct = Math.round(Math.min(sumA, sumB) * 100);
+    hint.innerHTML = '\u26A0\uFE0F probability: ' + pct + '%';
+    hint.style.display = 'block';
+  } else {
+    hint.style.display = 'none';
+  }
+
+  // Render muppets
+  renderMuppets('left', getMaxMuppets(q.optionA));
+  renderMuppets('right', getMaxMuppets(q.optionB));
+
+  // Hide outcome and next
+  document.getElementById('outcomeDisplay').classList.remove('show');
+  document.getElementById('outcomeDisplay').style.display = '';
+  document.getElementById('outcomeTooltip').style.display = 'none';
+  document.getElementById('nextBtn').classList.remove('visible');
+
+  // Update trolley display
+  document.getElementById('trolleyDisplay').textContent = 'E(X)=?';
+}
+
+function renderOption(side, opt) {
+  const descEl = document.getElementById('desc' + side);
+  const outEl = document.getElementById('outcomes' + side);
+
+  if (opt.description) {
+    descEl.textContent = opt.description;
+    descEl.style.display = 'block';
+  } else {
+    descEl.textContent = '';
+    descEl.style.display = 'none';
+  }
+
+  let html = '';
+  for (const o of opt.outcomes) {
+    if (o.probability === 1.0) {
+      html += '<div><span class="muppet-count">Certain: ' + o.muppets + ' Muppet' + (o.muppets !== 1 ? 's' : '') + '</span></div>';
+    } else {
+      const pStr = formatProb(o.probability);
+      html += '<div><span class="prob">' + pStr + '</span> chance of <span class="muppet-count">' + o.muppets + '</span></div>';
+    }
+  }
+  outEl.innerHTML = html;
+}
+
+function formatProb(p) {
+  // Check common fractions
+  const fracs = [[1/3,'\u2153'],[2/3,'\u2154'],[1/4,'\u00BC'],[3/4,'\u00BE'],[1/2,'\u00BD'],[3/5,'3/5'],[2/5,'2/5']];
+  for (const [v, s] of fracs) {
+    if (Math.abs(p - v) < 0.001) return s;
+  }
+  return Math.round(p * 100) + '%';
+}
+
+function probSum(outcomes) {
+  return outcomes.reduce((s, o) => s + o.probability, 0);
+}
+
+function getMaxMuppets(opt) {
+  return Math.max(...opt.outcomes.map(o => o.muppets));
+}
+
+function renderMuppets(side, count) {
+  const el = document.getElementById(side === 'left' ? 'muppetsLeft' : 'muppetsRight');
+  el.innerHTML = '';
+  const maxShow = Math.min(count, 8);
+  for (let i = 0; i < maxShow; i++) {
+    const col = MUPPET_COLOURS[i % MUPPET_COLOURS.length];
+    el.innerHTML += '<div class="muppet-figure" data-idx="' + i + '">' +
+      '<div class="muppet-head ' + col + '"><div class="muppet-phone"></div></div>' +
+      '<div class="muppet-body ' + col + '" style="opacity:0.8"></div>' +
+      '<div class="muppet-legs"><div class="muppet-leg"></div><div class="muppet-leg"></div></div>' +
+      '</div>';
+  }
+}
+
+/* ======== SELECT OPTION ======== */
+function selectOption(choice) {
+  if (answered) return;
+  answered = true;
+  document.getElementById('gameScreen').classList.add('answered');
+
+  const q = sessionQuestions[questionIndex];
+  const chosen = choice === 'A' ? q.optionA : q.optionB;
+  const chosenSide = choice === 'A' ? 'left' : 'right';
+
+  // Disable cards
+  document.getElementById('optionA').classList.add('disabled');
+  document.getElementById('optionB').classList.add('disabled');
+  document.getElementById('option' + choice).classList.add('selected');
+
+  // Highlight track
+  const trackEl = choice === 'A' ? document.getElementById('trackLeft') : document.getElementById('trackRight');
+  trackEl.classList.add('highlight');
+
+  // Animate trolley
+  const trolley = document.getElementById('trolley');
+  trolley.classList.remove('rolling');
+
+  const moveClass = choice === 'A' ? 'move-left' : 'move-right';
+  setTimeout(() => {
+    trolley.classList.add(moveClass);
+  }, 100);
+
+  // Resolve outcome after trolley animation
+  setTimeout(() => {
+    resolveOutcome(q, choice, chosen, chosenSide);
+  }, 700);
+}
+
+function resolveOutcome(q, choice, chosen, chosenSide) {
+  const pSum = probSum(chosen.outcomes);
+  const roll = Math.random();
+
+  let escaped = false;
+  let muppetsHit = 0;
+
+  if (pSum < 0.999 && roll > pSum) {
+    // Escape event
+    escaped = true;
+    muppetsHit = 0;
+    showEscapeEvent(q, pSum, chosenSide);
+  } else {
+    // Normal resolution
+    let cumulative = 0;
+    const adjustedRoll = roll * Math.min(pSum, 1);
+    for (const o of chosen.outcomes) {
+      cumulative += o.probability;
+      if (adjustedRoll <= cumulative) {
+        muppetsHit = o.muppets;
+        break;
+      }
+    }
+    showOutcome(muppetsHit, escaped, q, chosenSide, pSum);
+  }
+
+  // Update scores
+  totalScore += muppetsHit;
+
+  // Optimal: simulate for the higher EV option
+  const optOpt = q.higherEVOption === 'A' ? q.optionA : q.optionB;
+  const optPSum = probSum(optOpt.outcomes);
+  const optRoll = Math.random();
+  let optMuppets = 0;
+  if (optPSum < 0.999 && optRoll > optPSum) {
+    optMuppets = 0;
+  } else {
+    let cum = 0;
+    const aRoll = optRoll * Math.min(optPSum, 1);
+    for (const o of optOpt.outcomes) {
+      cum += o.probability;
+      if (aRoll <= cum) {
+        optMuppets = o.muppets;
+        break;
+      }
+    }
+  }
+  optimalScore += optMuppets;
+
+  const choseHigherEV = choice === q.higherEVOption;
+  if (choseHigherEV) optimalChoices++;
+
+  updateScoreDisplay();
+
+  // Analytics
+  if (typeof mfg === 'function') {
+    mfg('question_answered', {
+      game_slug: 'expected-damage',
+      level: currentLevel,
+      question_index: questionIndex + 1,
+      correct: choseHigherEV,
+      mode: q.type,
+      escape_triggered: escaped
+    });
+  }
+
+  // Update trolley display
+  document.getElementById('trolleyDisplay').textContent = muppetsHit > 0 ? muppetsHit + '!' : '--';
+}
+
+function showOutcome(muppetsHit, escaped, q, side, pSum) {
+  // Animate muppets
+  if (muppetsHit > 0) {
+    const groupEl = document.getElementById(side === 'left' ? 'muppetsLeft' : 'muppetsRight');
+    const figures = groupEl.querySelectorAll('.muppet-figure');
+    const hitCount = Math.min(muppetsHit, figures.length);
+    for (let i = 0; i < hitCount; i++) {
+      setTimeout(() => {
+        figures[i].classList.add('hit');
+      }, i * 60);
+    }
+
+    // Impact flash on trolley
+    const trolley = document.getElementById('trolley');
+    const impactClass = side === 'left' ? 'impact' : 'impact-right';
+    setTimeout(() => {
+      trolley.classList.add(impactClass);
+      setTimeout(() => {
+        trolley.classList.remove(impactClass);
+      }, 150);
+    }, 50);
+  }
+
+  // Show outcome text
+  const outcomeEl = document.getElementById('outcomeDisplay');
+  const textEl = document.getElementById('outcomeText');
+
+  setTimeout(() => {
+    if (muppetsHit > 0) {
+      textEl.className = 'outcome-text hit';
+      textEl.textContent = muppetsHit + ' Muppet' + (muppetsHit !== 1 ? 's' : '') + ' hit!';
+    } else {
+      textEl.className = 'outcome-text miss';
+      textEl.textContent = 'Miss! 0 Muppets hit.';
+    }
+    outcomeEl.classList.add('show');
+    document.getElementById('nextBtn').classList.add('visible');
+  }, 500);
+}
+
+function showEscapeEvent(q, pSum, side) {
+  const ev = ESCAPE_EVENTS[Math.floor(Math.random() * ESCAPE_EVENTS.length)];
+
+  document.getElementById('escapeEmoji').textContent = ev.emoji;
+  document.getElementById('escapeTitle').textContent = ev.title;
+  document.getElementById('escapeText').textContent = ev.text;
+
+  const overlay = document.getElementById('escapeOverlay');
+  overlay.classList.add('show');
+
+  // Clear muppets on the chosen side
+  const groupEl = document.getElementById(side === 'left' ? 'muppetsLeft' : 'muppetsRight');
+  const figures = groupEl.querySelectorAll('.muppet-figure');
+  figures.forEach((f, i) => {
+    setTimeout(() => f.classList.add('hit'), i * 40);
+  });
+
+  setTimeout(() => {
+    overlay.classList.remove('show');
+
+    // Show tooltip
+    const outcomeEl = document.getElementById('outcomeDisplay');
+    const textEl = document.getElementById('outcomeText');
+    const tooltipEl = document.getElementById('outcomeTooltip');
+
+    textEl.className = 'outcome-text escape';
+    textEl.textContent = 'Escape event! 0 Muppets hit.';
+    const pctShown = Math.round(pSum * 100);
+    tooltipEl.textContent = 'The probabilities only added to ' + pctShown + '%. The remaining ' + (100 - pctShown) + '% was always the chance this would happen.';
+    tooltipEl.style.display = 'block';
+    outcomeEl.classList.add('show');
+    document.getElementById('nextBtn').classList.add('visible');
+  }, 2200);
+}
+
+/* ======== NEXT QUESTION ======== */
+function nextQuestion() {
+  questionIndex++;
+  if (questionIndex >= sessionQuestions.length) {
+    endSession();
+    return;
+  }
+  loadQuestion();
+}
+
+/* ======== END SESSION ======== */
+function endSession() {
+  const total = sessionQuestions.length;
+  const pct = total > 0 ? Math.round((optimalChoices / total) * 100) : 0;
+  let stars = 0;
+  if (pct >= 90) stars = 3;
+  else if (pct >= 70) stars = 2;
+  else if (pct >= 50) stars = 1;
+
+  // Analytics
+  if (typeof mfg === 'function') {
+    mfg('game_completed', {
+      game_slug: 'expected-damage',
+      level: currentLevel,
+      score: totalScore,
+      questions_answered: total,
+      questions_correct: optimalChoices
+    });
+  }
+  if (window.MaffsLeaderboard) {
+    MaffsLeaderboard.submitScore('expected-damage', currentLevel, totalScore, total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('expected-damage',currentLevel,totalScore);}
+  }
+
+  // Show reveal screen
+  document.getElementById('gameScreen').classList.remove('active');
+
+  document.getElementById('revealYourScore').textContent = totalScore;
+  document.getElementById('revealOptScore').textContent = optimalScore;
+
+  // Render formula with KaTeX
+  try {
+    document.getElementById('revealFormula').innerHTML = '<div class="formula-intro">Every choice you made in this game required calculating:</div>' +
+      '<div class="formula-text">' + katex.renderToString('E(X) = \\sum x \\cdot P(x)', { throwOnError: false, displayMode: false }) + '</div>';
+  } catch(e) {
+    document.getElementById('revealFormula').innerHTML = '<div class="formula-intro">Every choice you made in this game required calculating:</div>' +
+      '<div class="formula-text">E(X) = \u03A3 x \u00B7 P(x)</div>';
+  }
+
+  const revealOverlay = document.getElementById('revealOverlay');
+  revealOverlay.classList.add('show');
+
+  const revealBtn = document.getElementById('revealBtn');
+  revealBtn.classList.remove('enabled');
+
+  const minDelay = firstPlay ? 5000 : 2000;
+  setTimeout(() => {
+    revealBtn.classList.add('enabled');
+  }, minDelay);
+
+  // Store that user has seen reveal
+  localStorage.setItem('ed_seen_reveal', '1');
+  firstPlay = false;
+
+  // Prepare results data
+  window._edResults = { totalScore, optimalScore, pct, stars, total };
+}
+
+function showResults() {
+  const r = window._edResults;
+  document.getElementById('revealOverlay').classList.remove('show');
+  document.getElementById('gameHeader').style.display = 'none';
+  document.getElementById('resultsScreen').classList.add('active');
+
+  document.getElementById('finalYours').textContent = r.totalScore;
+  document.getElementById('finalOptimal').textContent = r.optimalScore;
+  document.getElementById('finalPct').textContent = r.pct + '%';
+
+  // Stars
+  let starsHTML = '';
+  for (let i = 0; i < 3; i++) {
+    starsHTML += '<span class="' + (i < r.stars ? 'star-earned' : 'star-empty') + '">\u2605</span>';
+  }
+  document.getElementById('starsRow').innerHTML = starsHTML;
+
+  // PB
+  const isNew = setPB(r.totalScore, r.stars);
+  document.getElementById('pbBadge').style.display = isNew ? 'block' : 'none';
+  const pb = getPB();
+  document.getElementById('pbLine').textContent = 'Personal best: ' + pb.score + ' Muppets, ' + pb.stars + ' star' + (pb.stars !== 1 ? 's' : '');
+}
+
+/* ======== SCORE DISPLAY ======== */
+function updateScoreDisplay() {
+  document.getElementById('scoreYours').textContent = totalScore;
+  document.getElementById('scoreOptimal').textContent = 'opt: ' + optimalScore;
+}
+
+/* ======== UTILS ======== */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

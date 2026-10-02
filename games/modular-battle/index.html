@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="60-second remainder drill with dot grid visuals. Fast modular arithmetic practice for GCSE and A-Level.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/modular-battle/">
+<meta property="og:title" content="Modular Battle — MaffsGames">
+<meta property="og:description" content="60-second remainder drill with dot grid visuals. Fast modular arithmetic practice for GCSE and A-Level.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/modular-battle/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Modular Battle — MaffsGames</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+  :root{--bg:#12101a;--navy:#edf2f4;--yellow:#fbbf24;--orange:#ff9f43;--green:#4ade80;--red:#f43f5e;--white:#1e1b2e;--text:#edf2f4;--muted:#9aa3b2;--border:#332d4d;--header:#1a1726;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+  .header{width:100%;background:var(--header);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:16px;}
+  .back{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;}
+  .back:hover{color:var(--text);}
+  .title{font-size:clamp(17px,3vw,21px);font-weight:700;background:linear-gradient(135deg,var(--orange),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .game-area{width:100%;max-width:640px;padding:24px;flex:1;display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .scorebar{display:flex;justify-content:space-between;width:100%;background:var(--white);border-radius:12px;padding:16px 24px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+  .score-item{text-align:center;}
+  .score-label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:1px;}
+  .score-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--navy);margin-top:4px;}
+  .score-val.timer-val{color:var(--orange);}
+
+  .question-box{width:100%;background:var(--white);border-radius:16px;padding:24px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+  .q-text{font-family:'JetBrains Mono',monospace;font-size:clamp(18px,4vw,26px);font-weight:700;color:var(--text);margin-bottom:8px;}
+  .q-sub{font-size:13px;color:var(--muted);font-weight:700;}
+
+  /* Dot grid */
+  .dot-grid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:20px auto;max-width:400px;}
+  .dot-group{display:flex;gap:4px;padding:4px;border-radius:6px;background:rgba(255,255,255,0.04);}
+  .dot-group.leftover{background:rgba(244,63,94,0.12);outline:1px dashed rgba(244,63,94,0.5);}
+  .dot{width:18px;height:18px;border-radius:50%;background:var(--orange);transition:background 0.2s;}
+  .dot.group-a{background:var(--orange);}
+  .dot.group-b{background:var(--yellow);border:2px solid #e0b800;}
+  .dot.remainder{background:var(--red);animation:pulse 0.6s ease infinite alternate;}
+  @keyframes pulse{from{transform:scale(1)}to{transform:scale(1.2)}}
+  .dot-label{font-size:12px;color:var(--muted);font-weight:700;text-align:center;margin-bottom:4px;}
+
+  .answer-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px;}
+  .choice-btn{
+    font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:700;
+    width:64px;height:64px;
+    border:4px solid var(--orange);
+    background:var(--white);color:var(--navy);
+    border-radius:12px;cursor:pointer;
+    transition:transform 0.1s,background 0.15s;
+  }
+  .choice-btn:hover{background:var(--yellow);transform:scale(1.05);}
+  .choice-btn:active{transform:scale(0.95);}
+  .choice-btn.correct{background:var(--green);border-color:var(--green);color:white;}
+  .choice-btn.wrong{background:var(--red);border-color:var(--red);color:white;}
+
+  .feedback{font-size:15px;font-weight:700;min-height:24px;text-align:center;margin-top:8px;}
+  .feedback.correct{color:var(--green);}
+  .feedback.wrong{color:var(--red);}
+
+  .start-screen,.game-over{width:100%;background:var(--white);border-radius:16px;padding:32px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+  .game-over{display:none;}
+  .game-over.visible{display:block;}
+  .start-emoji{font-size:64px;margin-bottom:16px;}
+  .start-title{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:16px;line-height:1.6;}
+  .start-desc{font-size:15px;color:var(--muted);line-height:1.6;margin-bottom:24px;}
+  .how-to{background:var(--bg);border-radius:12px;padding:16px;margin-bottom:24px;text-align:left;}
+  .how-to p{font-size:13px;color:var(--muted);margin-bottom:6px;padding-left:8px;}
+  .how-to p::before{content:'▶ ';}
+  .go-title{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+  .go-score{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:700;color:var(--orange);margin:16px 0;}
+  .go-detail{font-size:14px;color:var(--muted);margin-bottom:24px;}
+  .btn{font-family:'Outfit',sans-serif;font-weight:900;font-size:16px;padding:14px 32px;border:none;border-radius:12px;cursor:pointer;}
+  .btn-primary{background:var(--orange);color:white;}
+  .main-game{display:none;flex-direction:column;align-items:center;gap:16px;width:100%;}
+  .main-game.visible{display:flex;}
+  .leaderboard{width:100%;background:var(--white);border-radius:16px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+  .lb-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:12px;text-align:center;}
+  .lb-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;}
+  .lb-row:last-child{border-bottom:none;}
+  .lb-score{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--navy);}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="header">
+  <a href="../../" class="back">← Back</a>
+  <div class="title">Modular Battle</div>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+<div class="game-area">
+  <div class="scorebar">
+    <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
+    <div class="score-item"><div class="score-label">Time</div><div class="score-val timer-val" id="timer">60</div></div>
+    <div class="score-item"><div class="score-label">Best</div><div class="score-val" id="best">0</div></div>
+  </div>
+
+  <div class="start-screen" id="startScreen">
+    <div class="start-emoji">🔢</div>
+    <div class="start-title">MODULAR BATTLE</div>
+    <div class="start-desc">60 seconds. How many remainders can you get right?</div>
+    <div class="how-to">
+      <p>47 mod 5 means: divide 47 by 5, what's the remainder?</p>
+      <p>47 ÷ 5 = 9 remainder 2, so 47 mod 5 = 2</p>
+      <p>The dot grid shows the groups visually</p>
+      <p>Red dots = the remainder!</p>
+    </div>
+    <button class="btn btn-primary" onclick="startGame()">START — 60 SECONDS</button>
+  </div>
+
+  <div class="main-game" id="mainGame">
+    <div class="question-box">
+      <div class="q-text" id="qText">47 mod 5 = ?</div>
+      <div class="q-sub">What is the remainder?</div>
+      <div class="dot-label" id="dotLabel">47 dots arranged in groups of 5:</div>
+      <div class="dot-grid" id="dotGrid"></div>
+      <div class="answer-row" id="answerRow"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="go-title">TIME'S UP!</div>
+    <div class="go-score" id="finalScore">0</div>
+    <div class="go-detail" id="goDetail"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="btn btn-primary" onclick="startGame()">TRY AGAIN</button>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-title">🏆 TOP SCORES</div>
+    <div id="lbList"></div>
+  </div>
+</div>
+
+<script>
+let score = 0, timeLeft = 90, gameTimer = null, answered = false;
+let currentA, currentB, currentAns;
+
+function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+
+function generateQ() {
+  const a = randInt(10, 60);
+  const b = randInt(2, 9);
+  const ans = a % b;
+  return {a, b, ans};
+}
+
+// Built by construction rather than by rejection sampling, so it cannot fail
+// to terminate. The old version asked a Set for 4 distinct values drawn from
+// 0..mod-1, which never completes when mod is 2 or 3 -- a quarter of questions.
+// Fewer than 4 buttons is the correct answer for a small modulus: there are
+// only that many residues to choose between.
+function generateChoices(correct, mod) {
+  const shuffle = arr => {
+    for(let i = arr.length - 1; i > 0; i--) {
+      const j = randInt(0, i);
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  };
+  const wrong = [];
+  for(let r = 0; r < mod; r++) { if(r !== correct) wrong.push(r); }
+  return shuffle([correct, ...shuffle(wrong).slice(0, Math.min(3, mod - 1))]);
+}
+
+/* The dot grid is a SCAFFOLD, not a permanent hint.
+   It shows until the student has 2 correct, then withdraws so they do the arithmetic;
+   it comes back after 2 wrong in a row, and then needs 2 more correct to withdraw again.
+
+   It is never scaled. The old version capped the drawing at 40 dots and scaled the
+   counts, which cannot preserve a remainder: 46 mod 7 drew 3 red dots for an answer of
+   4, and 3 was one of the options. Questions use a = 10..60, so every one fits honestly. */
+const MAX_DOTS = 60;
+let scaffoldOn = true;
+let scaffoldCorrect = 0;
+let scaffoldWrongStreak = 0;
+
+function updateScaffold(wasCorrect) {
+  if(wasCorrect) {
+    scaffoldWrongStreak = 0;
+    scaffoldCorrect++;
+    if(scaffoldCorrect >= 2) scaffoldOn = false;
+  } else {
+    scaffoldWrongStreak++;
+    if(scaffoldWrongStreak >= 2) { scaffoldOn = true; scaffoldCorrect = 0; scaffoldWrongStreak = 0; }
+  }
+}
+
+function renderDots(a, b) {
+  const grid = document.getElementById('dotGrid');
+  const label = document.getElementById('dotLabel');
+  grid.innerHTML = '';
+
+  if(!scaffoldOn || a > MAX_DOTS) {
+    grid.style.display = 'none';
+    label.textContent = '';
+    return;
+  }
+
+  // One visual cluster per complete group of b, wrapping across the box; the final
+  // short cluster IS the remainder. Grouping beats a single long row because at b=2
+  // a row-per-group layout is 30 rows tall and pushes the answers off screen.
+  grid.style.display = 'flex';
+
+  const remainder = a % b;
+  const groups = Math.floor(a / b);
+  for(let g = 0; g < groups; g++) {
+    const box = document.createElement('div');
+    box.className = 'dot-group';
+    for(let i = 0; i < b; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot group-a';
+      box.appendChild(dot);
+    }
+    grid.appendChild(box);
+  }
+  if(remainder > 0) {
+    const box = document.createElement('div');
+    box.className = 'dot-group leftover';
+    for(let i = 0; i < remainder; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot remainder';
+      box.appendChild(dot);
+    }
+    grid.appendChild(box);
+  }
+
+  label.textContent = remainder > 0
+    ? `${a} dots in groups of ${b} — ${groups} full groups, and what is left over:`
+    : `${a} dots in groups of ${b} — ${groups} full groups, nothing left over:`;
+}
+
+function loadQuestion() {
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('feedback').parentNode);
+  answered = false;
+  const q = generateQ();
+  currentA = q.a; currentB = q.b; currentAns = q.ans;
+
+  document.getElementById('qText').textContent = `${q.a} mod ${q.b} = ?`;
+  renderDots(q.a, q.b);
+
+  const choices = generateChoices(q.ans, q.b);
+  const row = document.getElementById('answerRow');
+  row.innerHTML = '';
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = c;
+    btn.onclick = () => guess(c, btn, choices);
+    row.appendChild(btn);
+  });
+
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+}
+
+function guess(val, btn, choices) {
+  if(answered) return;
+  answered = true;
+  const fb = document.getElementById('feedback');
+  const btns = document.querySelectorAll('.choice-btn');
+
+  _ggQCount++;
+  if(val === currentAns) {
+    score += 10; _ggCorrectCount++;
+    btn.classList.add('correct');
+    fb.textContent = `CORRECT! ${currentA}÷${currentB}=${Math.floor(currentA/currentB)} r${currentAns}`;
+    fb.className = 'feedback correct';
+    mfg('question_answered',{game_slug:'modular-battle',level:'gcse',correct:true,question_index:_ggQCount});
+  } else {
+    btn.classList.add('wrong');
+    btns.forEach(b => { if(parseInt(b.textContent) === currentAns) b.classList.add('correct'); });
+    // Show the division, not just the number -- the pause is only useful if there is
+    // something to read that explains WHY the remainder is what it is.
+    fb.textContent = `WRONG! ${currentA}÷${currentB}=${Math.floor(currentA/currentB)} remainder ${currentAns}`;
+    fb.className = 'feedback wrong';
+    mfg('question_answered',{game_slug:'modular-battle',level:'gcse',correct:false,question_index:_ggQCount});
+  }
+
+  updateScaffold(val === currentAns);
+
+  document.getElementById('score').textContent = score;
+  // A correct answer can move on briskly; a wrong one has to stay up long enough to
+  // read the division that produced the remainder.
+  if(val === currentAns) {
+    setTimeout(loadQuestion, 1200);
+  } else {
+    MaffsNext.wrong({mount: document.getElementById('feedback').parentNode, onAdvance: loadQuestion});
+  }
+}
+
+let _ggQCount = 0, _ggCorrectCount = 0;
+function startGame() {
+  scaffoldOn = true; scaffoldCorrect = 0; scaffoldWrongStreak = 0;
+  score = 0; timeLeft = 90; _ggQCount = 0; _ggCorrectCount = 0;
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('gameOver').classList.remove('visible');
+  document.getElementById('mainGame').classList.add('visible');
+  document.getElementById('score').textContent = '0';
+
+  window._ggAbandoned = true;
+  if (!window._ggUnloadBound) { window._ggUnloadBound = true; window.addEventListener('beforeunload', function() { if (window._ggAbandoned) mfg('game_abandoned',{game_slug:'modular-battle',level:'gcse',questions_answered:_ggQCount}); }); }
+  mfg('game_started',{game_slug:'modular-battle',level:'gcse'});
+
+  clearInterval(gameTimer);
+  gameTimer = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timer').textContent = timeLeft;
+    if(timeLeft <= 0) { clearInterval(gameTimer); endGame(); }
+  }, 1000);
+
+  loadQuestion();
+}
+
+function endGame() {
+  window._ggAbandoned = false;
+  document.getElementById('mainGame').classList.remove('visible');
+  document.getElementById('gameOver').classList.add('visible');
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('goDetail').textContent = `${Math.round(score/10)} correct answers`;
+  const _acc = _ggQCount > 0 ? Math.round(_ggCorrectCount / _ggQCount * 100) : 0;
+  mfg('game_completed',{game_slug:'modular-battle',level:'gcse',score:score,questions_answered:_ggQCount,accuracy:_acc});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('modular-battle','gcse',score,_ggQCount).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('modular-battle','gcse',score);}}
+  saveBest(score); renderLB();
+}
+
+function getBest(){return parseInt(localStorage.getItem('mb_best')||'0');}
+function saveBest(s){const prev=getBest();if(s>prev){localStorage.setItem('mb_best',s);mfg('personal_best_set',{game_slug:'modular-battle',level:'gcse',score:s,previous_best:prev});}document.getElementById('best').textContent=getBest();}
+function renderLB(){
+  const scores=JSON.parse(localStorage.getItem('mb_scores')||'[]');
+  const ns=[...scores,{score,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,5);
+  localStorage.setItem('mb_scores',JSON.stringify(ns));
+  document.getElementById('lbList').innerHTML=ns.map((s,i)=>`<div class="lb-row"><span>#${i+1}</span><span>${s.date}</span><span class="lb-score">${s.score}</span></div>`).join('')||'<div style="text-align:center;color:#aaa;font-size:13px;padding:12px">No scores yet</div>';
+}
+document.getElementById('best').textContent=getBest();
+renderLB();
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

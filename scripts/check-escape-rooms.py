@@ -1,0 +1,256 @@
+"""Check the built escape rooms against the audited lock bank.
+
+Run after any edit to escape-rooms/*/room.js. It catches:
+
+  * a lock id that is not in the audited bank
+  * variant 0 disagreeing with the bank's ANSWER or MISCONCEPTION — the first
+    variant of every lock is the audited one and must stay that way
+  * room.js drifting from variants.json, which is the verified source
+  * a {{token}} in the prose that some variant cannot fill, which would put
+    literal braces in front of a class
+  * a room with fewer than two empty objects
+  * a room with fewer than 20 VALID draws — see "Cross-lock collisions" below
+
+Cross-lock collisions. Each lock's library is verified on its own, but a room
+serves one variant per lock together, and those can collide. A draw is VALID
+when, across its locks:
+  a. no clue figure is printed in the clues of more than one lock
+  b. no lock's answer is printed in another lock's clues
+  c. no lock's answer equals another lock's misconception
+  d. no two locks share an answer
+A clue figure is any number the student reads in a clue: the resolved
+{{key.token}} values and any numeral written into the clue string itself. A
+clue belongs to the lock whose tokens it uses. Rules (a) and (b) ignore figures
+of 2 or less — coefficients and numerators, not clues anyone could mistake for
+another lock's; (c) and (d) apply at every size. engine.js pickVariants()
+applies the same rules and serves only VALID draws, so the two must be changed
+together.
+
+The run reports every room's VALID count. Fewer than 20 fails, live or
+withdrawn. An invalid variant-0 draw is a warning only — the engine never
+serves it — and a withdrawn (noindex) room only ever warns about it.
+
+Missing pictures are reported separately and do not fail the run. A room can be
+built and playable before its art exists — the engine drops the frame when the
+image 404s — and what is still to draw is tracked in
+docs/escape-room-image-prompts.md, not by this exit code.
+"""
+import itertools, json, re, pathlib, sys
+
+BASE = pathlib.Path(__file__).resolve().parent.parent
+ROOMS = BASE / "escape-rooms"
+ART = BASE / "docs" / "art"
+
+problems = []
+warnings = []
+pending_art = []
+collision_report = []
+
+
+def nums(s):
+    return [float(x.rstrip(".")) for x in re.findall(r"-?\d+\.?\d*", str(s))]
+
+
+# ---- cross-lock collisions (kept in step with pickVariants() in engine.js) ----
+MIN_VALID = 20
+EXEMPT = 2          # rules (a) and (b) ignore figures this small
+
+
+def clue_strings(js):
+    """The object clue strings, as (text, key of the lock whose tokens it uses)."""
+    body = re.sub(r"/\*.*?\*/", "", js, flags=re.S)
+    objs = body.split("objects: [", 1)[1].split("\n  locks: [", 1)[0]
+    lit = r"'(?:[^'\\]|\\.)*'"
+    out = []
+    for m in re.finditer(r"clue:\s*((?:" + lit + r"\s*\+?\s*)+)", objs):
+        text = "".join(s[1:-1] for s in re.findall(lit, m.group(1))).replace("\\'", "'")
+        owners = set(re.findall(r"\{\{([\w-]+)\.", text))
+        out.append((text, next(iter(owners)) if len(owners) == 1 else None))
+    return out
+
+
+def figures(text, key, var):
+    """Every number a student reads in one clue, with this variant filled in."""
+    text = re.sub(r"\{\{" + re.escape(key) + r"\.([\w-]+)\}\}",
+                  lambda m: str(var.get(m.group(1), m.group(0))), text)
+    text = re.sub(r"<[^>]*>|&[#\w]+;", " ", text)
+    return {float(x) for x in re.findall(r"\d+(?:\.\d+)?", text)}
+
+
+def flat(x):
+    if x is None:
+        return set()
+    return {float(v) for v in (x if isinstance(x, list) else [x])}
+
+
+def draw_is_valid(draw, clues):
+    """draw: [(key, variant)] one per lock. clues: from clue_strings()."""
+    clue = [set() for _ in draw]
+    for text, owner in clues:
+        for i, (key, var) in enumerate(draw):
+            if key == owner:
+                clue[i] |= {f for f in figures(text, key, var) if f > EXEMPT}
+    ans = [flat(v["answer"]) for _, v in draw]
+    miss = [flat(v.get("miss")) for _, v in draw]
+    for i in range(len(draw)):
+        for j in range(len(draw)):
+            if i == j:
+                continue
+            if i < j and (clue[i] & clue[j] or ans[i] & ans[j]):
+                return False
+            if ans[i] & clue[j] or ans[i] & miss[j]:
+                return False
+    return True
+
+
+# ---- the audited bank ------------------------------------------------------
+bank = {}
+# Every batch file in docs/, found by pattern so a new batch needs no edit here.
+# Sorted by batch number, so batch 10 follows batch 9 rather than batch 1.
+BATCHES = sorted((BASE / "docs").glob("lock-bank-batch*.txt"),
+                 key=lambda p: int(re.search(r"batch(\d+)", p.name).group(1)))
+for f in BATCHES:
+    txt = f.read_text(encoding="utf-8", errors="replace")
+    for block in re.split(r"\n(?=ID:)", txt):
+        m = re.match(r"ID:\s*(\S+)", block)
+        if not m:
+            continue
+        e = {}
+        for key in ("ANSWER", "MISCONCEPTION"):
+            mm = re.search(key + r":\s*(.+)", block)
+            if mm:
+                e[key] = mm.group(1).strip()
+        bank[m.group(1)] = e
+
+verified = json.loads((ROOMS / "variants.json").read_text(encoding="utf-8"))
+
+# ---- each room -------------------------------------------------------------
+locks_seen = 0
+for room_dir in sorted(p for p in ROOMS.iterdir() if p.is_dir() and p.name != "assets"):
+    slug = room_dir.name
+    js = (room_dir / "room.js").read_text(encoding="utf-8")
+
+    # images
+    art_keys = re.findall(r"art:\s*'([^']+)'", js)
+    wanted = [art_keys[0] + "-scene", art_keys[0] + "-fail"] + art_keys[1:]
+    # a room shows a victory picture only once it has a winAlt to describe it,
+    # so the two arrive together or not at all
+    if re.search(r"^  winAlt:", js, re.M):
+        wanted.append(art_keys[0] + "-win")
+    for name in wanted:
+        if not (ART / (name + ".webp")).exists():
+            pending_art.append(f"{slug}: {name}.webp not drawn yet")
+
+    if len(re.findall(r"clue: null", js)) < 2:
+        problems.append(f"{slug}: fewer than two empty objects")
+
+    # locks, with their injected libraries
+    lock_ids = re.findall(r"\n      id: '([^']+)'", js)
+    keys = re.findall(r"\n      key: '([^']+)'", js)
+    if len(lock_ids) != len(keys):
+        problems.append(f"{slug}: every lock needs a `key` for its tokens")
+        continue
+
+    token_values = {}
+    for lid, key in zip(lock_ids, keys):
+        locks_seen += 1
+        if lid not in bank:
+            problems.append(f"{slug}: lock '{lid}' is not in the audited bank")
+            continue
+        if lid not in verified:
+            problems.append(f"{slug}/{lid}: no verified library in variants.json")
+            continue
+
+        # the library in room.js must be exactly the verified one
+        block = js.split("id: '" + lid + "'", 1)[1]
+        start = block.index("variants: [")
+        depth, end = 0, block.index("[", start)
+        for pos in range(end, len(block)):
+            if block[pos] == "[":
+                depth += 1
+            elif block[pos] == "]":
+                depth -= 1
+                if depth == 0:
+                    end = pos
+                    break
+        try:
+            in_file = json.loads(block[block.index("[", start):end + 1])
+        except ValueError as exc:
+            problems.append(f"{slug}/{lid}: variants are not valid JSON ({exc})")
+            continue
+        if in_file != verified[lid]:
+            problems.append(f"{slug}/{lid}: room.js has drifted from variants.json "
+                            f"— re-run scripts/gen-escape-variants.py")
+            continue
+        if not in_file:
+            problems.append(f"{slug}/{lid}: empty variant library")
+            continue
+
+        # variant 0 is the audited lock and must match the bank
+        b = bank[lid]
+        if nums(in_file[0]["answer"]) != nums(b.get("ANSWER", "")):
+            problems.append(f"{slug}/{lid}: variant 0 answer {in_file[0]['answer']} "
+                            f"but the bank says {b.get('ANSWER')}")
+        if "MISCONCEPTION" in b and in_file[0].get("miss") is not None:
+            got = nums(in_file[0]["miss"])
+            want = nums(b["MISCONCEPTION"])[:len(got)]
+            if got != want:
+                problems.append(f"{slug}/{lid}: variant 0 misconception {got} "
+                                f"but the bank says {want}")
+
+        for i, var in enumerate(in_file):
+            for tok, val in var.items():
+                token_values.setdefault(f"{key}.{tok}", set()).add(i)
+
+    # every {{token}} the prose uses must be fillable by every variant.
+    # Block comments are stripped first — the file header explains the syntax
+    # using {{key.token}} as an example, which is not a real token.
+    prose = re.sub(r"/\*.*?\*/", "", js, flags=re.S)
+    used = set(re.findall(r"\{\{([\w.-]+)\}\}", prose))
+    for tok in sorted(used):
+        if tok not in token_values:
+            problems.append(f"{slug}: {{{{{tok}}}}} is used but no variant supplies it")
+            continue
+        lid_key = tok.split(".")[0]
+        count = len(verified[[k for k, v in zip(lock_ids, keys) if v == lid_key][0]])
+        if len(token_values[tok]) != count:
+            problems.append(f"{slug}: {{{{{tok}}}}} is missing from some variants")
+
+    # cross-lock collisions: count the VALID draws the engine can serve
+    if all(lid in verified for lid in lock_ids):
+        withdrawn = "noindex" in (room_dir / "index.html").read_text(encoding="utf-8")
+        clues = clue_strings(js)
+        libs = [[(key, v) for v in verified[lid]] for lid, key in zip(lock_ids, keys)]
+        total = valid = 0
+        for draw in itertools.product(*libs):
+            total += 1
+            valid += draw_is_valid(list(draw), clues)
+        v0 = draw_is_valid([lib[0] for lib in libs], clues)
+        state = "withdrawn" if withdrawn else "live"
+        collision_report.append(f"{slug:<20} {state:<9} VALID {valid:>4} of {total:<4}  "
+                                f"variant 0 {'VALID' if v0 else 'INVALID'}")
+        if valid < MIN_VALID:
+            problems.append(f"{slug}: only {valid} VALID draws, fewer than {MIN_VALID}")
+        if not v0:
+            warnings.append(f"{slug}: variant-0 draw is not VALID (never served)")
+
+print(f"locks checked: {locks_seen}")
+print(f"variants checked: {sum(len(v) for v in verified.values())}")
+print("cross-lock collisions (VALID draws per room):")
+for line in collision_report:
+    print("  " + line)
+if warnings:
+    print(f"warnings: {len(warnings)}")
+    for w in warnings:
+        print("  -", w)
+if pending_art:
+    print(f"pending art: {len(pending_art)} (tracked in docs/escape-room-image-prompts.md)")
+    for a in pending_art:
+        print("  -", a)
+if problems:
+    print("PROBLEMS:")
+    for p in problems:
+        print("  -", p)
+    sys.exit(1)
+print("every room agrees with the audited bank and with variants.json; "
+      "all tokens resolve" + ("" if pending_art else "; all art present"))

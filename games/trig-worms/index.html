@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Aim a cannon using SOH CAH TOA to hit the target. GCSE and A-Level trigonometry in a game format.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/trig-worms/">
+<meta property="og:title" content="Trig Worms — MaffsGames">
+<meta property="og:description" content="Aim a cannon using SOH CAH TOA to hit the target. GCSE and A-Level trigonometry in a game format.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/trig-worms/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Trig Worms — MaffsGames</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+  :root{--bg:#12101a;--navy:#edf2f4;--pink:#ec4899;--yellow:#fbbf24;--green:#4ade80;--red:#f43f5e;--sky:#87ceeb;--ground:#4a7c59;--white:#1e1b2e;--text:#edf2f4;--muted:#9aa3b2;--border:#332d4d;--header:#1a1726;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',sans-serif;color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+  .header{width:100%;background:var(--header);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:16px;}
+  .back{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;}
+  .back:hover{color:var(--text);}
+  .title{font-size:clamp(17px,2.5vw,21px);font-weight:700;background:linear-gradient(135deg,var(--pink),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .game-area{width:100%;max-width:760px;padding:16px;flex:1;display:flex;flex-direction:column;align-items:center;gap:12px;}
+  .scorebar{display:flex;justify-content:space-between;width:100%;background:var(--white);border-radius:12px;padding:12px 20px;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
+  .score-item{text-align:center;}
+  .score-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;}
+  .score-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--navy);margin-top:3px;}
+
+  /* Game canvas area */
+  .canvas-wrap{width:100%;background:var(--white);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,0.1);position:relative;}
+  canvas{display:block;width:100%;height:auto;}
+
+  /* Question panel */
+  .q-panel{width:100%;background:var(--white);border-radius:14px;padding:16px 20px;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
+  .q-type{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--pink);margin-bottom:6px;letter-spacing:2px;}
+  .q-text{font-size:clamp(15px,2.8vw,19px);font-weight:600;color:var(--text);line-height:1.6;margin-bottom:8px;}
+  .q-hint{font-size:12px;color:var(--muted);font-weight:700;}
+
+  /* SOH CAH TOA reference */
+  .trig-ref{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0;}
+  .trig-chip{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;padding:6px 10px;border-radius:8px;border:2px solid;text-align:center;}
+  .trig-chip.soh{border-color:var(--pink);color:var(--pink);background:rgba(236,72,153,0.08);}
+  .trig-chip.cah{border-color:#3b82f6;color:#3b82f6;background:rgba(59,130,246,0.08);}
+  .trig-chip.toa{border-color:#f97316;color:#f97316;background:rgba(249,115,22,0.08);}
+
+  /* Answer row */
+  .answer-row{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;flex-wrap:wrap;}
+  .choices-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%;}
+  .choice-btn{font-family:'JetBrains Mono',monospace;font-size:clamp(13px,2.5vw,15px);font-weight:700;padding:14px 8px;border:2px solid var(--border);background:rgba(255,255,255,0.03);color:var(--text);border-radius:10px;cursor:pointer;transition:all 0.15s;line-height:1.5;}
+  .choice-btn:hover{background:rgba(236,72,153,0.08);transform:scale(1.02);}
+  .choice-btn:active{transform:scale(0.97);}
+  .choice-btn.correct{background:var(--green);border-color:var(--green);color:white;}
+  .choice-btn.wrong{background:var(--red);border-color:var(--red);color:white;}
+
+  .feedback{font-size:15px;font-weight:700;min-height:22px;text-align:center;margin-top:8px;}
+  .feedback.correct{color:var(--green);}
+  .feedback.wrong{color:var(--red);}
+  .exp-text{font-size:12px;color:var(--muted);text-align:center;margin-top:4px;min-height:16px;}
+
+  /* Level indicator */
+  .level-bar{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+  .level-dot{width:16px;height:16px;border-radius:50%;background:#ddd;transition:background 0.3s;}
+  .level-dot.done{background:var(--green);}
+  .level-dot.current{background:var(--pink);animation:pulse 0.8s ease infinite alternate;}
+  @keyframes pulse{from{box-shadow:0 0 0 0 rgba(236,72,153,0.4)}to{box-shadow:0 0 0 6px rgba(236,72,153,0)}}
+
+  .start-screen,.game-over{width:100%;background:var(--white);border-radius:16px;padding:28px;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
+  .game-over{display:none;}
+  .game-over.visible{display:block;}
+  .start-emoji{font-size:56px;margin-bottom:12px;}
+  .start-title{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:12px;line-height:1.6;}
+  .start-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+  .how-to{background:var(--bg);border-radius:10px;padding:14px;margin-bottom:16px;text-align:left;}
+  .how-to p{font-size:12px;color:#555;margin-bottom:5px;padding-left:8px;}
+  .how-to p::before{content:'▶ ';}
+  .go-title{font-size:22px;font-weight:700;color:var(--navy);margin-bottom:8px;}
+  .go-score{font-family:'JetBrains Mono',monospace;font-size:38px;font-weight:700;color:var(--pink);margin:14px 0;}
+  .go-detail{font-size:14px;color:var(--muted);margin-bottom:16px;}
+  .btn{font-family:'Outfit',sans-serif;font-weight:900;font-size:15px;padding:12px 28px;border:none;border-radius:12px;cursor:pointer;}
+  .btn-primary{background:var(--pink);color:white;}
+  .main-game{display:none;flex-direction:column;align-items:center;gap:12px;width:100%;}
+  .main-game.visible{display:flex;}
+  .leaderboard{width:100%;background:var(--white);border-radius:14px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,0.07);}
+  .lb-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:10px;text-align:center;}
+  .lb-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;}
+  .lb-row:last-child{border-bottom:none;}
+  .lb-score{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--navy);}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="header">
+  <a href="../../" class="back">← Back</a>
+  <div class="title">Trig Worms</div>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+<div class="game-area">
+  <div class="scorebar">
+    <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
+    <div class="score-item"><div class="score-label">Level</div><div class="score-val" id="level">1</div></div>
+    <div class="score-item"><div class="score-label">Best</div><div class="score-val" id="best">0</div></div>
+  </div>
+
+  <div class="start-screen" id="startScreen">
+    <div class="start-emoji">🐛💥</div>
+    <div class="start-title">TRIG WORMS</div>
+    <div class="start-desc">Your worm has a cannon. Use SOH CAH TOA to aim it correctly and blast the target!</div>
+    <div class="how-to">
+      <p>SOH: sin θ = Opposite / Hypotenuse</p>
+      <p>CAH: cos θ = Adjacent / Hypotenuse</p>
+      <p>TOA: tan θ = Opposite / Adjacent</p>
+      <p>Rearrange to find the missing side or angle</p>
+      <p>The diagram labels will guide you!</p>
+    </div>
+    <div class="trig-ref">
+      <div class="trig-chip soh">SOH<br>sin=O/H</div>
+      <div class="trig-chip cah">CAH<br>cos=A/H</div>
+      <div class="trig-chip toa">TOA<br>tan=O/A</div>
+    </div>
+    <button class="btn btn-primary" onclick="startGame()">FIRE! 💥</button>
+  </div>
+
+  <div class="main-game" id="mainGame">
+    <div class="level-bar" id="levelBar"></div>
+    <div class="canvas-wrap">
+      <canvas id="gameCanvas" width="640" height="280"></canvas>
+    </div>
+    <div class="trig-ref">
+      <div class="trig-chip soh">SOH: sin=O/H</div>
+      <div class="trig-chip cah">CAH: cos=A/H</div>
+      <div class="trig-chip toa">TOA: tan=O/A</div>
+    </div>
+    <div class="q-panel">
+      <div class="q-type" id="qType">FIND THE ANGLE</div>
+      <div class="q-text" id="qText">Loading...</div>
+      <div class="q-hint" id="qHint"></div>
+      <div class="choices-grid" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="exp-text" id="expText"></div>
+    </div>
+  </div>
+
+  <div class="game-over" id="gameOver">
+    <div class="go-title">🐛 GAME OVER!</div>
+    <div class="go-score" id="finalScore">0</div>
+    <div class="go-detail" id="goDetail"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="btn btn-primary" onclick="startGame()">PLAY AGAIN</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-title">🏆 TOP SCORES</div>
+    <div id="lbList"></div>
+  </div>
+</div>
+
+<script>
+const TOTAL = 10;
+let score=0, qNum=0, answered=false, questions=[], shotAnimating=false;
+let cannonAngle=45, currentQ=null;
+
+// --- Question generation ---
+function round1(n){return Math.round(n*10)/10;}
+function round2(n){return Math.round(n*100)/100;}
+function toRad(d){return d*Math.PI/180;}
+function toDeg(r){return r*180/Math.PI;}
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+
+function generateQuestion(difficulty){
+  const type=difficulty<4?'angle':difficulty<7?'opposite':'hypotenuse';
+  // 15 to 85 in steps of 5. The other two angles of a right-angled triangle are acute,
+  // so 90 and 95 are excluded -- *17 used to include both, which produced a negative
+  // adjacent (hyp*cos(95) < 0) and an impossible 95 degree answer.
+  const angle=5*Math.floor(Math.random()*15)+15;
+  const hyp=Math.floor(Math.random()*15)+8; // 8-22
+  const opp=round1(hyp*Math.sin(toRad(angle)));
+  const adj=round1(hyp*Math.cos(toRad(angle)));
+
+  let qType,qText,correct,wrong,exp,findSide,ratio;
+
+  // Pick ratio randomly from SOH/CAH/TOA
+  const ratioType=['SOH','CAH','TOA'][Math.floor(Math.random()*3)];
+
+  if(type==='angle'){
+    // Find the angle
+    qType='FIND THE ANGLE θ';
+    if(ratioType==='SOH'){
+      correct=angle+'°';
+      wrong=shuffle([round1(toDeg(Math.acos(opp/hyp)))+'°',round1(toDeg(Math.atan(opp/adj)))+'°',(angle+10)+'°']).slice(0,3);
+      qText=`The opposite = ${opp}, hypotenuse = ${hyp}.\nFind angle θ.`;
+      exp=`sin θ = O/H = ${opp}/${hyp} → θ = sin⁻¹(${opp}/${hyp}) = ${angle}°`;
+      ratio='SOH';
+    } else if(ratioType==='CAH'){
+      correct=angle+'°';
+      wrong=shuffle([round1(toDeg(Math.asin(adj/hyp)))+'°',round1(toDeg(Math.atan(adj/opp)))+'°',(angle+15)+'°']).slice(0,3);
+      qText=`The adjacent = ${adj}, hypotenuse = ${hyp}.\nFind angle θ.`;
+      exp=`cos θ = A/H = ${adj}/${hyp} → θ = cos⁻¹(${adj}/${hyp}) = ${angle}°`;
+      ratio='CAH';
+    } else {
+      correct=angle+'°';
+      wrong=shuffle([round1(toDeg(Math.asin(opp/hyp)))+'°',(angle+10)+'°',(angle-10>0?(angle-10)+'°':'85°')]).slice(0,3);
+      qText=`The opposite = ${opp}, adjacent = ${adj}.\nFind angle θ.`;
+      exp=`tan θ = O/A = ${opp}/${adj} → θ = tan⁻¹(${opp}/${adj}) = ${angle}°`;
+      ratio='TOA';
+    }
+    findSide=null;
+  } else if(type==='opposite'){
+    qType='FIND THE OPPOSITE SIDE';
+    if(ratioType==='SOH'){
+      correct=opp+'';
+      wrong=shuffle([round1(hyp*Math.sin(toRad(angle+5)))+'',adj+'',round1(opp*1.2)+'']);
+      qText=`Angle θ = ${angle}°, hypotenuse = ${hyp}.\nFind the opposite side.`;
+      exp=`sin ${angle}° = O/${hyp} → O = ${hyp}×sin(${angle}°) = ${opp}`;
+      ratio='SOH';
+    } else {
+      correct=adj+'';
+      wrong=shuffle([opp+'',round1(adj*1.15)+'',round1(hyp*0.9)+'']);
+      qText=`Angle θ = ${angle}°, hypotenuse = ${hyp}.\nFind the adjacent side.`;
+      exp=`cos ${angle}° = A/${hyp} → A = ${hyp}×cos(${angle}°) = ${adj}`;
+      ratio='CAH';
+    }
+    findSide='opposite';
+  } else {
+    qType='FIND THE HYPOTENUSE';
+    correct=hyp+'';
+    wrong=shuffle([round1(hyp*0.85)+'',round1(hyp*1.15)+'',round1(opp/Math.sin(toRad(angle+10)))+'']);
+    qText=`Angle θ = ${angle}°, opposite = ${opp}.\nFind the hypotenuse.`;
+    exp=`sin ${angle}° = ${opp}/H → H = ${opp}/sin(${angle}°) = ${hyp}`;
+    ratio='SOH';
+    findSide='hypotenuse';
+  }
+
+  // Distractors are built by construction, never by retry. The candidate lists above can
+  // collide -- asin and atan of the same near-zero ratio both gave -5.1, shipping a
+  // question with the same option twice. Top up from a deterministic ladder if needed.
+  const isAngleQ = (type==='angle');
+  const num = parseFloat(correct);
+  const ladder = isAngleQ
+    ? [num+5,num-5,num+10,num-10,num+20,num-20].filter(v=>v>=15&&v<=85).map(v=>v+'°')
+    : [round1(num*1.1),round1(num*0.9),round1(num*1.25),round1(num*0.75)].filter(v=>v>0).map(String);
+  const wrongSet=[]; const seen=new Set([String(correct)]);
+  for(const c of wrong.concat(ladder)){
+    if(wrongSet.length>=3) break;
+    const k=String(c);
+    if(seen.has(k)) continue;
+    seen.add(k); wrongSet.push(k);
+  }
+  return {qType,qText,correct,wrong:wrongSet,exp,angle,hyp,opp,adj,ratio,findSide};
+}
+
+// --- Canvas rendering ---
+
+/* Draw a label with a dark halo behind it. The scene has a light sky AND a mid-green
+   ground, so no single flat colour reads everywhere: A= was #059669 green sitting on
+   #4a7c59 grass, a contrast ratio of 1.29:1. The halo makes the text read against
+   whatever is behind it, which lets O/A/H keep three distinct identity colours. */
+function labelText(text,x,y,colour){
+  ctx.save();
+  ctx.lineJoin='round';
+  ctx.lineWidth=3.5;
+  ctx.strokeStyle='rgba(12,16,28,0.9)';
+  ctx.strokeText(text,x,y);
+  ctx.fillStyle=colour;
+  ctx.fillText(text,x,y);
+  ctx.restore();
+}
+const canvas=document.getElementById('gameCanvas');
+const ctx=canvas.getContext('2d');
+
+function drawScene(q, shotProgress=0, hit=false, miss=false){
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  // Sky gradient
+  const sky=ctx.createLinearGradient(0,0,0,H*0.75);
+  sky.addColorStop(0,'#87ceeb');
+  sky.addColorStop(1,'#c8e6f7');
+  ctx.fillStyle=sky;
+  ctx.fillRect(0,0,W,H*0.75);
+
+  // Ground
+  ctx.fillStyle='#4a7c59';
+  ctx.fillRect(0,H*0.75,W,H*0.25);
+
+  // Hills
+  ctx.fillStyle='#3d6b4a';
+  ctx.beginPath();
+  ctx.ellipse(W*0.3,H*0.75,120,40,0,Math.PI,0);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(W*0.75,H*0.75,90,30,0,Math.PI,0);
+  ctx.fill();
+
+  // Cannon base (worm)
+  const wormX=80, wormY=H*0.75-20;
+
+  // Worm body
+  ctx.fillStyle='#6bcb77';
+  for(let i=0;i<4;i++){
+    ctx.beginPath();
+    ctx.arc(wormX-i*14, wormY, 12-i*0.5, 0, Math.PI*2);
+    ctx.fill();
+    ctx.strokeStyle='#2d8a3e';
+    ctx.lineWidth=2;
+    ctx.stroke();
+  }
+  // Worm face
+  ctx.fillStyle='#fff';
+  ctx.beginPath();ctx.arc(wormX+8,wormY-5,4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#333';
+  ctx.beginPath();ctx.arc(wormX+9,wormY-5,2,0,Math.PI*2);ctx.fill();
+
+  // Cannon barrel
+  const barrelLen=38;
+  const rad=toRad(q.angle);
+  ctx.save();
+  ctx.translate(wormX,wormY-8);
+  ctx.rotate(-rad);
+  ctx.fillStyle='#555';
+  ctx.fillRect(0,-8,barrelLen,16);
+  ctx.fillStyle='#333';
+  ctx.fillRect(barrelLen-4,-9,10,18);
+  ctx.restore();
+
+  // Right angle and triangle diagram
+  const triX=W*0.45, triY=H*0.72;
+  const triAdj=Math.min(q.adj*8,160);
+  const triOpp=Math.min(q.opp*8,120);
+  const triHyp=Math.sqrt(triAdj*triAdj+triOpp*triOpp);
+
+  // Triangle
+  ctx.beginPath();
+  ctx.moveTo(triX,triY);
+  ctx.lineTo(triX+triAdj,triY);
+  ctx.lineTo(triX+triAdj,triY-triOpp);
+  ctx.closePath();
+  ctx.strokeStyle='rgba(0,0,0,0.5)';
+  ctx.lineWidth=2;
+  ctx.stroke();
+  ctx.fillStyle='rgba(236,72,153,0.1)';
+  ctx.fill();
+
+  // Right angle marker
+  ctx.strokeStyle='#333';
+  ctx.lineWidth=1.5;
+  ctx.strokeRect(triX+triAdj-10,triY-10,10,10);
+
+  // Labels
+  ctx.fillStyle='#1a1a4e';
+  ctx.font='bold 12px Outfit';
+  // Hypotenuse label
+  const midHX=triX+triAdj/2-10, midHY=triY-triOpp/2;
+  ctx.save();
+  const hAngle=Math.atan2(-triOpp,triAdj);
+  ctx.translate(midHX,midHY);
+  ctx.rotate(hAngle);
+  ctx.font='bold 13px Outfit';
+  labelText(q.findSide==='hypotenuse'?'H=?':`H=${q.hyp}`,5,-6,'#ff6b8a');
+  ctx.restore();
+
+  // Opposite label
+  ctx.font='bold 13px Outfit';
+  labelText(q.findSide==='opposite'?'O=?':`O=${q.opp}`,triX+triAdj+5,triY-triOpp/2,'#60a5fa');
+
+  // Adjacent label
+  ctx.font='bold 13px Outfit';
+  labelText(`A=${q.adj}`,triX+triAdj/2-10,triY+16,'#fbbf24');
+
+  // Angle arc and theta
+  ctx.strokeStyle='#ec4899';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  // hAngle = atan2(-triOpp, triAdj) is already NEGATIVE (canvas y grows downward, so the
+  // hypotenuse points up-right). The old call passed -hAngle, i.e. a POSITIVE angle, which
+  // mirrored the wedge below the ground line. Sweep hAngle -> 0 instead: hypotenuse to adjacent.
+  ctx.arc(triX,triY,22,hAngle,0,false);
+  ctx.stroke();
+  ctx.fillStyle='#ec4899';
+  ctx.font='bold 16px Outfit, sans-serif';
+  ctx.fillText('θ',triX+24,triY-6);
+
+  // Target (castle)
+  const targetX=W-80, targetY=H*0.75-10;
+  ctx.fillStyle='#8b6914';
+  ctx.fillRect(targetX-20,targetY-40,40,40);
+  ctx.fillStyle='#a0790f';
+  ctx.fillRect(targetX-24,targetY-50,12,14);
+  ctx.fillRect(targetX-4,targetY-50,12,14);
+  ctx.fillRect(targetX+12,targetY-50,12,14);
+  // Flag
+  ctx.strokeStyle='#ef4444';
+  ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(targetX,targetY-50);ctx.lineTo(targetX,targetY-70);ctx.stroke();
+  ctx.fillStyle='#ef4444';
+  ctx.beginPath();ctx.moveTo(targetX,targetY-70);ctx.lineTo(targetX+20,targetY-62);ctx.lineTo(targetX,targetY-54);ctx.fill();
+
+  // Shot animation
+  if(shotProgress>0){
+    const startX=wormX+barrelLen*Math.cos(rad);
+    const startY=wormY-8-barrelLen*Math.sin(rad);
+    const endX=hit?targetX:W+50;
+    const endY=targetY-25;
+    const t=shotProgress;
+    const bx=startX+(endX-startX)*t;
+    const by=startY+(endY-startY)*t - (hit?60:30)*Math.sin(Math.PI*t);
+    ctx.fillStyle=hit?'#ffd93d':'#ff6b6b';
+    ctx.beginPath();ctx.arc(bx,by,8,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(255,200,0,0.3)';
+    ctx.beginPath();ctx.arc(bx,by,14,0,Math.PI*2);ctx.fill();
+  }
+
+  // Hit explosion
+  if(hit&&shotProgress>=1){
+    ctx.fillStyle='rgba(255,100,0,0.8)';
+    for(let i=0;i<8;i++){
+      const ex=targetX+Math.cos(i*Math.PI/4)*30;
+      const ey=targetY-25+Math.sin(i*Math.PI/4)*30;
+      ctx.beginPath();ctx.arc(ex,ey,8,0,Math.PI*2);ctx.fill();
+    }
+    ctx.fillStyle='#ffd93d';
+    ctx.font='bold 24px Outfit';
+    ctx.fillText('💥',targetX-16,targetY-40);
+  }
+
+  // Miss
+  if(miss&&shotProgress>=1){
+    ctx.fillStyle='rgba(100,100,200,0.4)';
+    ctx.beginPath();ctx.arc(W+20,targetY-25,20,0,Math.PI*2);ctx.fill();
+  }
+}
+
+// --- Game logic ---
+function startGame(){
+  score=0;qNum=0;answered=false;_twCorrectCount=0;
+  questions=Array.from({length:TOTAL},(_,i)=>generateQuestion(i));
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('gameOver').classList.remove('visible');
+  document.getElementById('mainGame').classList.add('visible');
+  mfg('game_started',{game_slug:'trig-worms',level:'gcse'});
+  window._ggAbandoned=true;
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'trig-worms',level:'gcse',questions_answered:qNum})});}
+  buildLevelBar();
+  loadQ();
+}
+var _twCorrectCount=0;
+
+function buildLevelBar(){
+  const bar=document.getElementById('levelBar');
+  bar.innerHTML=Array.from({length:TOTAL},(_,i)=>`<div class="level-dot ${i===0?'current':''}" id="dot${i}"></div>`).join('');
+}
+
+function updateLevelBar(){
+  for(let i=0;i<TOTAL;i++){
+    const dot=document.getElementById(`dot${i}`);
+    if(!dot)continue;
+    if(i<qNum)dot.className='level-dot done';
+    else if(i===qNum)dot.className='level-dot current';
+    else dot.className='level-dot';
+  }
+}
+
+function loadQ(){
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('expText').parentNode);
+  if(qNum>=TOTAL){endGame();return;}
+  currentQ=questions[qNum];
+  answered=false;
+  document.getElementById('level').textContent=qNum+1;
+  document.getElementById('qType').textContent=currentQ.qType;
+  document.getElementById('qText').textContent=currentQ.qText;
+  document.getElementById('qHint').textContent=`Hint: use ${currentQ.ratio}`;
+  document.getElementById('feedback').textContent='';
+  document.getElementById('feedback').className='feedback';
+  document.getElementById('expText').textContent='';
+  updateLevelBar();
+  drawScene(currentQ);
+
+  const wrong=currentQ.wrong.filter(w=>w!==currentQ.correct).slice(0,3);
+  const choices=shuffle([currentQ.correct,...wrong]);
+  const div=document.getElementById('choices');
+  div.innerHTML='';
+  choices.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='choice-btn';btn.textContent=c;
+    btn.onclick=()=>guess(c,btn,div);
+    div.appendChild(btn);
+  });
+}
+
+function guess(val,btn,div){
+  if(answered)return;answered=true;
+  const correct=val===currentQ.correct;
+  const fb=document.getElementById('feedback');
+  document.getElementById('expText').textContent=currentQ.exp;
+  [...div.children].forEach(b=>b.onclick=null);
+
+  if(correct){
+    score+=10;_twCorrectCount++;btn.classList.add('correct');
+    fb.textContent='DIRECT HIT! 💥';fb.className='feedback correct';
+    animateShot(true,()=>{qNum++;loadQ();});
+  } else {
+    btn.classList.add('wrong');
+    [...div.children].forEach(b=>{if(b.textContent===currentQ.correct)b.classList.add('correct');});
+    fb.textContent='MISSED! See correct answer above';fb.className='feedback wrong';
+    animateShot(false,()=>{qNum++;loadQ();});
+  }
+  mfg('question_answered',{game_slug:'trig-worms',level:'gcse',correct:correct,question_index:qNum+1});
+  document.getElementById('score').textContent=score;
+}
+
+function animateShot(hit,cb){
+  let t=0;
+  const interval=setInterval(()=>{
+    t+=0.04;
+    // A hit needs no reading time; a miss does -- the working is on screen and the
+    // student has to see WHY the right answer is right before the next question.
+    if(t>=1.2){
+      clearInterval(interval);
+      // A hit moves on briskly. A miss waits for the student -- the working is on
+      // screen and they decide when they have read it (canon 7.6).
+      if(hit){ setTimeout(cb,400); }
+      else { MaffsNext.wrong({mount: document.getElementById('expText').parentNode, onAdvance: cb}); }
+      return;
+    }
+    drawScene(currentQ,Math.min(t,1),hit&&t>0.9,!hit&&t>0.9);
+  },30);
+}
+
+function endGame(){
+  document.getElementById('mainGame').classList.remove('visible');
+  document.getElementById('gameOver').classList.add('visible');
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('goDetail').textContent=`${TOTAL} shots fired • ${score/10} hits`;
+  window._ggAbandoned=false;
+  var _twPct=TOTAL>0?Math.round(_twCorrectCount/TOTAL*100):0;
+  mfg('game_completed',{game_slug:'trig-worms',level:'gcse',score:score,questions_answered:TOTAL,accuracy:_twPct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('trig-worms','gcse',score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('trig-worms','gcse',score);}}
+  var _twOldBest=getBest();
+  saveBest(score);
+  if(score>_twOldBest){mfg('personal_best_set',{game_slug:'trig-worms',level:'gcse',score:score,previous_best:_twOldBest});}
+  renderLB();
+}
+function getBest(){return parseInt(localStorage.getItem('tw_best')||'0');}
+function saveBest(s){if(s>getBest())localStorage.setItem('tw_best',s);document.getElementById('best').textContent=getBest();}
+function renderLB(){
+  const scores=JSON.parse(localStorage.getItem('tw_scores')||'[]');
+  const ns=[...scores,{score,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,5);
+  localStorage.setItem('tw_scores',JSON.stringify(ns));
+  document.getElementById('lbList').innerHTML=ns.map((s,i)=>`<div class="lb-row"><span>#${i+1}</span><span>${s.date}</span><span class="lb-score">${s.score}</span></div>`).join('')||'<div style="text-align:center;color:#9aa3b2;font-size:12px;padding:10px">No scores yet</div>';
+}
+document.getElementById('best').textContent=getBest();renderLB();
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

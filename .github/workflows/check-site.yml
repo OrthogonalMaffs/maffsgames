@@ -1,0 +1,247 @@
+name: check-site
+
+# Does every page actually run? Two site-wide sweeps once left chart-interrogator
+# and modular-battle dead for six months, because the only checker in the repo
+# verified that code existed rather than that it ran. This workflow is the layer
+# that would have caught them on the push that broke them.
+#
+# No secrets, no paid runner. scripts/check-site.py aborts every request to the
+# Apps Script endpoint, to Google Analytics and to Firebase before it leaves the
+# runner, so a CI run can never write into the production Events sheet or the
+# live leaderboard.
+#
+# LAYOUT (1 Oct 2026). Until then this was one serial job: about 11.5 minutes on a
+# good run, 18m 11s on a bad one, against a 20-minute limit, and every new content
+# verifier added to it. The bad run was not our code: `playwright install --with-deps`
+# fetched 32 MB of Ubuntu libraries from azure.archive.ubuntu.com at 83 kB/s (6m 26s).
+# Now:
+#   - the checks run in Microsoft's Playwright image, which has Chromium and every
+#     system library it needs baked in, so no job touches an apt mirror or downloads
+#     a browser. The image tag and requirements-ci.txt pin the same Playwright version;
+#     bump them together.
+#   - the checks are split into parallel jobs, each with its own timeout. Nothing a
+#     check checks has changed; only where it runs.
+# Adding a content verifier: append it to the lighter of the two verifier groups.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  # Runs on the bare runner because it takes about a second and needs only node,
+  # which the runner ships, so a coverage break is reported before any image is pulled.
+  #
+  # This guard existed and had never once executed: it is JavaScript, and the
+  # machine this repo is usually worked on has no node. A guard that only runs
+  # where someone happens to have the right tool is not a guard — the same
+  # shape as the gap that let two games sit dead for six months. The script
+  # needs no dependencies (only fs and path, CommonJS, no "type" in
+  # package.json), so there is nothing to install and no setup-node step.
+  coverage:
+    name: Leaderboard coverage (every live game submits, or is declared)
+    # Pinned, not ubuntu-latest. GitHub migrates that label to Ubuntu 26 from
+    # 19 October 2026, and an image change must not be able to turn this check red
+    # without anyone touching the repo — a checker nobody trusts is worse than no
+    # checker. Bump this deliberately, after a green run on the new image.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      # Any check may call git. In the container job the checkout belongs to the runner's user, not
+      # the container's root, and git refuses a repository it does not own (exit 128). Mark this
+      # workspace, and only this workspace, as safe once per job, before any check runs.
+      - name: Mark the workspace as a safe git directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - run: node scripts/check-leaderboard-coverage.js
+      # For the record: the fallback fonts the bare runner resolves, which the container's
+      # font pin below reproduces.
+      - name: Fallback fonts on the bare runner
+        run: fc-match sans-serif; fc-match monospace
+
+  check-site:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-24.04          # pinned: see the coverage job
+    timeout-minutes: ${{ matrix.timeout }}
+    container:
+      # Pinned to the Playwright version in requirements-ci.txt (its browsers are built for it).
+      image: mcr.microsoft.com/playwright/python:v1.63.0-noble
+      # --ipc=host: Chromium's shared memory, as Playwright's Docker docs advise.
+      # --add-host: a job-level network guard under every script's own. The Apps Script
+      # endpoint and Google Analytics' collect hosts are write-only sinks (nothing reads
+      # from them), so they resolve to nowhere in every job, whatever a script does.
+      # Firebase writes are kept off by the shared assets' production-hostname gate, by
+      # serve-stubbed.py, by check-site.py's guard and by the database's create-only rules.
+      options: >-
+        --ipc=host
+        --add-host=script.google.com:0.0.0.0
+        --add-host=script.googleusercontent.com:0.0.0.0
+        --add-host=www.google-analytics.com:0.0.0.0
+        --add-host=region1.google-analytics.com:0.0.0.0
+    strategy:
+      fail-fast: false             # one group's failure must not hide another's
+      matrix:
+        include:
+          # Tier 1 loads every page and level (KaTeX and fonts allowed, every write
+          # aborted and counted by the network guard); tier 2 scans for hang loops.
+          # Every index.html outside games/ and escape-rooms/ is discovered, not listed.
+          # The link check is stdlib-only and takes about a second.
+          # The footer check (stdlib, about a second): every page carries the one canonical
+          # footer and links schools/assets/site-footer.css; no page styles it privately.
+          # The theme check (stdlib, about a second): canon 7.5. Each game's palette is derived
+          # from the roster's Levels column; MIGRATED games must link schools/assets/theme.css,
+          # carry that data-theme and use only the shared fonts and base tokens. NOT_YET games
+          # are reported, never failed.
+          # The publish-scope check (stdlib, about a second): canon 7.7. Every file Pages would publish
+          # is under a SITE path, and no SITE page references a file _config.yml excludes.
+          - name: Tiers 1 + 2 (page load, hang-loop scan)
+            timeout: 15
+            checks: |
+              Tier 1 (page load) + Tier 2 (hang-loop scan)|python scripts/check-site.py --workers 4
+              Links (no /schools/ redirects; every link on /updates/ resolves)|python scripts/check-canonical-links.py
+              Site footer (one canonical footer, one stylesheet)|python scripts/check-footer.py
+              Theme (canon 7.5: one register, palette from the roster)|python scripts/check-theme.py
+              Publish scope (canon 7.7: every published file is SITE; no page uses an excluded one)|python scripts/check-publish-scope.py
+
+          # Checker tier 4, layer A: does every game's question bank still look like the
+          # one the ledger already knows about? Extracts fresh (the live bank, post any
+          # runtime patch) and lints it, then fails ONLY on a violation the ledger doesn't
+          # have yet (a new defect) or a ledger entry that no longer reproduces (fixed but
+          # not cleared). A tracked, still-present violation is not a failure. See
+          # docs/checker-tier4-design.md.
+          # The shared Next control every canon 7.6 game uses: the 3s floor, one advance
+          # per wrong answer, clear() cancelling its timers, the 44px target. A browser
+          # test of the helper on its own (~20s), with the real floor.
+          # Section clicks: the real analytics.js on the portal, every labelled element
+          # clicked, each Sheet payload read (answered locally, never sent; ~15s).
+          - name: Tier 4 layer A + shared Next control
+            timeout: 12
+            checks: |
+              Tier 4 layer A (bank extraction)|python scripts/extract-banks.py --workers 4
+              Tier 4 layer A (lint against the ledger)|python scripts/check-banks.py --ci
+              Shared Next control (schools/assets/next-control.js)|python scripts/test-next-control.py
+              Portal section clicks (analytics.js section_clicked)|python scripts/test-section-clicks.py
+
+          # free-daily-pizza: reads each item's PARAMETERS and DISPLAYED strings from
+          # window.FDP and recomputes everything else here with fractions.Fraction -- every
+          # answer, every distractor from its misconception tag, value-equivalence, and the
+          # daily pizza from a Python port of its seeded PRNG (the engine's own values are
+          # never trusted). Plays practice and the daily pizza against a Firebase stub, and
+          # again with Firebase and KaTeX blocked; measures every item's wrong-answer screen
+          # at 320x568, 375x667 and 390x844. Nine injected faults, each must FAIL.
+          # Its own group: at about 3 minutes it is the longest single verifier.
+          - name: Content verifiers A (Free Daily Pizza)
+            timeout: 12
+            checks: |
+              Free Daily Pizza (independent recomputation + daily seed + phone fit)|python scripts/verify-free-daily-pizza.py --require-katex
+
+          # Every other content verifier. Each reads the live page's data and recomputes
+          # its answers independently; each includes a fault-injection self-test.
+          #  - log-laws Solve: every line checked with SymPy against the law its step is
+          #    named after, every answer against SymPy's solution, every TeX string
+          #    against KaTeX (docs/next-contract-log-laws-solve.md, step 6).
+          #  - distinctly-average: every mean/median/mode/range from stored parameters.
+          #  - graph-transformer: BFS with the tier's ACTUAL buttons and curve-match check,
+          #    so an unreachable or mis-parred puzzle fails here.
+          #  - test-the-claim: recomputes from raw parameters (exact binomial, 60-digit
+          #    Poisson, NormalDist, the exact null distribution of r) against the booklet's
+          #    Table 8; 16 of 48 items were once wrong (todo 1.14). Needs node: the
+          #    Playwright package's own, put on PATH below.
+          #  - normal-navigator: 47 questions recomputed with NormalDist (9 were wrong),
+          #    then every question rendered: no answer in the labels before answering.
+          #  - six-sevens-bruv: every answer recomputed, 1,200 sessions simulated, a real
+          #    session played with the Firebase SDK blocked and again with storage blocked.
+          #  - stats_common: the shared statistics module's unit tests (todo 1.26).
+          #  - core-maths-paper2a, maths-court: recomputed from their stems; nothing shown
+          #    before it is answered. (verify-regression-rumble.py is NOT here: 37 of 40
+          #    scenarios fail, held for Jon's data ruling, todo 1.26.)
+          #  - chart-interrogator: every key and tolerance in exact arithmetic, marked
+          #    through submitPhase1(); canon 7.1.2 caps; histogram classes whole numbers.
+          - name: Content verifiers B (all others)
+            timeout: 12
+            checks: |
+              Log Laws Solve (layers C + D, SymPy)|python scripts/verify-log-laws.py --require-katex
+              Distinctly Average (independent recomputation)|python scripts/verify-distinctly-average.py
+              Graph Transformer (BFS reachability + par verification)|python scripts/verify-graph-transformer.py
+              Test the Claim (independent recomputation of every key)|python scripts/verify-test-the-claim.py
+              Normal Navigator (independent recomputation + rendered labels)|python scripts/verify-normal-navigator.py
+              Six Sevens, Bruv (independent recomputation + session simulation)|python scripts/verify-six-sevens.py
+              Shared statistics module (unit tests against textbook values)|python scripts/stats_common.py --selftest
+              Core Maths Paper 2A (independent recomputation + rendered page)|python scripts/verify-core-maths-paper2a.py
+              Maths Court (independent recomputation + rendered page)|python scripts/verify-maths-court.py
+              Chart Interrogator (independent recomputation of every key and tolerance)|python scripts/verify-chart-interrogator.py
+
+    steps:
+      - uses: actions/checkout@v4
+      # Any check may call git. In the container job the checkout belongs to the runner's user, not
+      # the container's root, and git refuses a repository it does not own (exit 128). Mark this
+      # workspace, and only this workspace, as safe once per job, before any check runs.
+      - name: Mark the workspace as a safe git directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      # HOLDING STEP (Jon, 1 Oct 2026). The checks block web fonts, so they measure layout in the
+      # machine's fallback font. The Playwright image installs more fonts than the bare runner,
+      # and its fallback face set Free Daily Pizza's tightest 320x568 screens 3px taller (Next at
+      # 528px against a 528px fold; 525px on the runner). Pinning the generic families to the bare
+      # runner's DejaVu faces keeps every verdict what it was. KNOWN GAP: the phone-fit check
+      # measures in a font no student sees, with 0-3px margin on those screens; the real fix is a
+      # separate contract (self-host Outfit and KaTeX, measure in Outfit with a minimum margin).
+      # The image has no DejaVu (its fallback is WenQuanYi Zen Hei), so the two Ubuntu 24.04
+      # packages the runner has, 2.37-8, are fetched as files and unpacked: no apt-get update,
+      # no apt mirror on the critical path, about 1.3 MB, checksum-pinned. Their fonts are
+      # byte-identical to the runner's.
+      - name: Pin fallback fonts to the bare runner's (DejaVu)
+        run: |
+          echo "before: $(fc-match sans-serif) | $(fc-match monospace)"
+          fetch() {  # fetch <deb> <sha256>: Launchpad first, the Ubuntu archive as fallback
+            for base in https://launchpad.net/ubuntu/+archive/primary/+files \
+                        http://archive.ubuntu.com/ubuntu/pool/main/f/fonts-dejavu; do
+              if curl -fsSL --retry 2 --max-time 60 -o "/tmp/$1" "$base/$1" \
+                 && echo "$2  /tmp/$1" | sha256sum -c --quiet; then
+                dpkg-deb -x "/tmp/$1" / && return 0
+              fi
+            done
+            echo "::error::could not fetch $1"; return 1
+          }
+          fetch fonts-dejavu-core_2.37-8_all.deb 40049660c194f3b8a2541fc7369efebb10e9f94bdac836a2f38fafedd10fa73a
+          fetch fonts-dejavu-mono_2.37-8_all.deb 8a599d6553307db7ecb795d2f0e5a301e03234afc75c7358b0ba43466454c89a
+          cat > /etc/fonts/local.conf <<'XML'
+          <?xml version="1.0"?>
+          <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+          <fontconfig>
+            <alias binding="strong"><family>sans-serif</family><prefer><family>DejaVu Sans</family></prefer></alias>
+            <alias binding="strong"><family>monospace</family><prefer><family>DejaVu Sans Mono</family></prefer></alias>
+          </fontconfig>
+          XML
+          fc-cache -f > /dev/null
+          echo "after:  $(fc-match sans-serif) | $(fc-match monospace)"
+          fc-match sans-serif | grep -q '^DejaVuSans\.ttf' && fc-match monospace | grep -q '^DejaVuSansMono\.ttf' \
+            || { echo "::error::DejaVu fallback fonts not available in the image"; exit 1; }
+
+      - name: Python packages (pinned, requirements-ci.txt)
+        run: |
+          python --version
+          python -m pip install --disable-pip-version-check -q -r requirements-ci.txt
+          # node for verify-test-the-claim.py: the Playwright package ships its own.
+          dirname "$(python -c 'import playwright, os; print(os.path.join(os.path.dirname(playwright.__file__), "driver", "node"))')" >> "$GITHUB_PATH"
+
+      # Each line of the group is "label|command". Every check runs, even after one
+      # fails, so a single run reports every failure; the job fails if any did.
+      - name: ${{ matrix.name }}
+        shell: bash
+        env:
+          CHECKS: ${{ matrix.checks }}
+        run: |
+          node --version
+          failed=()
+          while IFS='|' read -r label cmd; do
+            [ -z "$label" ] && continue
+            echo "::group::$label"
+            start=$SECONDS
+            if bash -c "$cmd"; then status=ok; else status=FAILED; failed+=("$label"); fi
+            echo "::endgroup::"
+            echo "$status  $label  ($((SECONDS - start))s)"
+          done <<< "$CHECKS"
+          if [ ${#failed[@]} -gt 0 ]; then
+            printf '::error::FAILED: %s\n' "${failed[@]}"
+            exit 1
+          fi

@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Someone is wrong on the internet. Spot the maths mistake in viral posts, dodgy polls and confident comment threads. Free GCSE maths game.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/wrong-on-the-internet/">
+<meta property="og:title" content="Wrong on the Internet — MaffsGames">
+<meta property="og:description" content="Someone is wrong on the internet. Spot the maths mistake in viral posts, dodgy polls and confident comment threads. Free GCSE maths game.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/wrong-on-the-internet/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Wrong on the Internet — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;--blue:#3b82f6;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--teal)}
+.stage-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:rgba(13,148,136,0.15);color:var(--teal);border:1px solid rgba(13,148,136,0.3)}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.7;font-size:15px}
+
+.level-selector{display:flex;gap:10px;justify-content:center;margin-bottom:24px}
+.level-btn{padding:10px 20px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.level-btn:hover{border-color:var(--teal);color:var(--text)}
+.level-btn.active{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+
+.session-selector{display:flex;gap:10px;justify-content:center;margin-bottom:24px}
+.session-btn{padding:8px 18px;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.session-btn:hover{border-color:var(--teal);color:var(--text)}
+.session-btn.active{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
+
+.start-label{font-size:13px;font-weight:600;color:var(--muted);text-align:center;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.04em}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+.pb-start{text-align:center;color:var(--muted);font-size:13px;margin-top:12px}
+.pb-start span{color:var(--teal);font-weight:600}
+
+.how-it-works{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:16px}
+.how-it-works h3{font-size:15px;font-weight:700;margin-bottom:8px;color:var(--teal)}
+.how-it-works p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:6px}
+
+/* Numblr post card */
+.numblr-card{background:var(--surface);border-radius:16px;overflow:hidden;margin:20px 0;animation:slideIn 0.2s ease-out}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.numblr-header{background:var(--teal);padding:10px 16px;display:flex;align-items:center;gap:10px}
+.numblr-logo{font-size:20px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace}
+.numblr-label{font-size:12px;color:rgba(255,255,255,0.7);font-weight:500}
+.numblr-body{padding-bottom:44px;padding:20px}
+.numblr-username{color:var(--teal);font-weight:600;font-size:14px;margin-bottom:8px}
+.numblr-text{font-size:15px;line-height:1.7;color:var(--text);margin-bottom:16px}
+.numblr-engagement{display:flex;gap:20px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.numblr-engagement span{display:flex;align-items:center;gap:4px}
+
+/* Replies */
+.numblr-replies{border-top:1px solid var(--border);padding:12px 20px}
+.numblr-reply{padding:10px 0;border-bottom:1px solid rgba(42,47,69,0.5)}
+.numblr-reply:last-child{border-bottom:none}
+.numblr-reply .reply-user{color:var(--teal);font-weight:600;font-size:13px;margin-bottom:2px}
+.numblr-reply .reply-text{font-size:13px;color:#cbd5e1;line-height:1.5}
+
+/* Thread (indented) */
+.numblr-thread{border-top:1px solid var(--border);padding:12px 20px}
+.thread-reply{background:#141620;border-radius:8px;padding:10px 14px;margin-bottom:8px;margin-left:16px;border-left:3px solid var(--border)}
+.thread-reply:first-child{margin-left:0;border-left:3px solid var(--teal);background:var(--surface-alt)}
+.thread-reply .reply-user{color:var(--teal);font-weight:600;font-size:13px;margin-bottom:2px}
+.thread-reply .reply-text{font-size:13px;color:#cbd5e1;line-height:1.5}
+
+/* Poll */
+.numblr-poll{border-top:1px solid var(--border);padding:12px 20px}
+.poll-bar{margin-bottom:8px;position:relative;border-radius:6px;overflow:hidden;background:var(--surface-alt)}
+.poll-fill{height:36px;border-radius:6px;display:flex;align-items:center;padding:0 12px;font-size:13px;font-weight:600;color:#fff;transition:width 0.6s ease-out}
+.poll-fill.winner{background:var(--blue)}
+.poll-fill.loser{background:var(--surface-alt);color:var(--muted)}
+.poll-pct{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:13px;font-weight:700;color:var(--text)}
+.poll-votes{font-size:12px;color:var(--muted);margin-top:4px}
+.poll-caption{font-size:13px;color:var(--muted);margin-top:8px;font-style:italic}
+
+/* Stage indicator */
+.stage-indicator{text-align:center;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:16px;text-transform:uppercase;letter-spacing:0.04em}
+
+/* Options grid */
+.options-grid{display:grid;gap:10px;margin-bottom:20px}
+.option-btn{padding:14px 18px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;font-weight:500;cursor:pointer;text-align:left;line-height:1.5;transition:all 0.15s}
+.option-btn:hover:not(:disabled){border-color:var(--teal);background:var(--surface-alt)}
+.option-btn:disabled{cursor:default;opacity:0.7}
+.option-btn.correct{border-color:var(--green);background:var(--green-dim);color:var(--green)}
+.option-btn.incorrect{border-color:var(--red);background:var(--red-dim);color:var(--red)}
+.option-btn .opt-icon{display:inline-block;margin-right:6px;font-weight:700}
+
+/* Banner */
+.banner{padding:14px 20px;border-radius:10px;text-align:center;font-weight:700;font-size:15px;margin-bottom:16px;display:none}
+.banner.correct-banner{display:block;background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,0.3)}
+.banner.incorrect-banner{display:block;background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,0.3)}
+
+/* Explanation panel */
+.explanation-panel{background:var(--surface-alt);border-radius:12px;padding:20px;margin-bottom:20px;border-left:3px solid var(--teal);display:none}
+.explanation-panel.show{display:block}
+.explanation-title{font-size:14px;font-weight:700;color:var(--teal);margin-bottom:8px}
+.explanation-text{font-size:14px;color:#cbd5e1;line-height:1.7}
+
+.next-btn{display:none;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s}
+.next-btn:hover{border-color:var(--teal)}
+.next-btn.visible{display:block}
+
+/* Results screen */
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px}
+.results-grid{display:grid;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .score{font-size:32px;font-weight:800;color:var(--teal)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.pb-badge{background:var(--teal-dim);color:var(--teal);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+@media(prefers-reduced-motion:reduce){
+.numblr-card{animation:none}
+.poll-fill{transition:none}
+}
+@media(max-width:480px){
+.options-grid{gap:8px}
+.option-btn{font-size:13px;padding:12px 14px}
+.numblr-text{font-size:14px}
+.level-selector,.session-selector{flex-direction:column;align-items:center}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Wrong on the Internet</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <span class="stage-pill" id="stagePill">Stage 1 of 2</span>
+    <span class="score-display"><span id="scoreNum">0</span>/<span id="scoreMax">0</span></span>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Wrong on the Internet</div>
+  <div class="start-sub">Someone is confidently wrong on the internet. Read their post, find the correct answer, then identify exactly where they went wrong.</div>
+
+  <div class="how-it-works">
+    <h3>How it works</h3>
+    <p><strong>Stage 1:</strong> Read the post and pick the correct answer from 4 options.</p>
+    <p><strong>Stage 2:</strong> Identify the exact error in the wrong argument from 3 options.</p>
+    <p><strong>Scoring:</strong> 2 points if both stages correct first try. 1 point if either needs a retry.</p>
+  </div>
+
+  <div class="start-label">Level</div>
+  <div class="level-selector">
+    <button class="level-btn" data-level="ks3" onclick="setLevel('ks3')">KS3</button>
+    <button class="level-btn active" data-level="gcse" onclick="setLevel('gcse')">GCSE</button>
+    <button class="level-btn" data-level="core" onclick="setLevel('core')">Core Maths</button>
+  </div>
+
+  <div class="start-label">Questions</div>
+  <div class="session-selector" id="sessionSelector"></div>
+
+  <button class="start-btn" onclick="startGame()">Start</button>
+  <div class="pb-start" id="pbStart"></div>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div id="numblrPost"></div>
+  <div class="stage-indicator" id="stageIndicator">Stage 1 of 2</div>
+  <div id="bannerArea"></div>
+  <div class="options-grid" id="optionsGrid"></div>
+  <div class="explanation-panel" id="explanationPanel">
+    <div class="explanation-title">Explanation</div>
+    <div class="explanation-text" id="explanationText"></div>
+  </div>
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Score</h4>
+      <div class="score" id="finalScore">0/0</div>
+      <div class="sub" id="finalPct">0%</div>
+    </div>
+  </div>
+  <div class="sub" id="pbLine" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="play-again-btn" onclick="resetToStart()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANK
+// ============================================================
+const QUESTIONS = {
+ks3: [
+{
+  id:'woti_ks3_001',level:'ks3',topic:'BIDMAS',postType:'viral',
+  post:{username:'@QuickMathsKing',text:'2 + 3 \u00d7 4 = 20. Add first then multiply. That\'s how you read left to right. 5 \u00d7 4 = 20.',likes:'9.2k',reshares:'1.8k',comments:'1,203',
+    replies:[{username:'@ActualMathsTeacher',text:'Multiplication first. It\'s 14.'},{username:'@QuickMathsKing',text:'You\'re wrong and also rude'}]},
+  stage1CorrectAnswer:'14',stage1Options:['14','20','24','10'],
+  stage2Options:[
+    {text:'BIDMAS requires multiplication before addition: 3\u00d74=12 first, then 2+12=14. Left-to-right only applies within the same tier of operations',correct:true},
+    {text:'The poster added the wrong numbers',correct:false},
+    {text:'The poster forgot to include the 2',correct:false}],
+  explanation:'BIDMAS: multiplication before addition. 3\u00d74=12, then 2+12=14. Left-to-right only applies within equal-priority operations.'
+},
+{
+  id:'woti_ks3_002',level:'ks3',topic:'Fractions',postType:'poll',
+  post:{username:'@DailyMathsPoll',text:'Which fraction is bigger: 3/4 or 4/5?',likes:'2.1k',reshares:'890',comments:'3,421',
+    pollOptions:[{text:'3/4',percentage:61,winner:true},{text:'4/5',percentage:39,winner:false}],
+    pollVotes:'3,421 votes',pollCaption:'61% got it right! 3/4 has a bigger top number.'},
+  stage1CorrectAnswer:'4/5',stage1Options:['4/5','3/4','Equal','Can\'t compare'],
+  stage2Options:[
+    {text:'You must convert to common denominators or decimals to compare. 3/4=0.75, 4/5=0.8 \u2014 bigger numerator doesn\'t mean bigger fraction when denominators differ',correct:true},
+    {text:'The fractions can\'t be compared',correct:false},
+    {text:'3/4 is larger because 4>5 is false... wait that\'s backwards',correct:false}],
+  explanation:'Convert to compare: 3/4=0.75, 4/5=0.8. A bigger numerator only means a bigger fraction when denominators are the same.'
+},
+{
+  id:'woti_ks3_003',level:'ks3',topic:'Percentages',postType:'thread',
+  post:{username:'@HomeworkHelp',text:'Quick \u2014 15% of 60?',likes:'1.4k',reshares:'320',comments:'892',
+    replies:[{username:'@MathsExpertMike',text:'60 \u00f7 15 = 4'},{username:'@ConfidentCarla',text:'15 \u00d7 60 = 900'},{username:'@QuietlyCorrectKate',text:'0.15 \u00d7 60 = 9'}]},
+  stage1CorrectAnswer:'9',stage1Options:['9','4','900','75'],
+  stage2Options:[
+    {text:'Mike divided instead of multiplying (% of = multiply). Carla multiplied without converting 15% to 0.15. Kate\'s method is correct',correct:true},
+    {text:'All three replies are wrong',correct:false},
+    {text:'Kate used the wrong decimal for 15%',correct:false}],
+  explanation:'15% of 60 = 0.15 \u00d7 60 = 9. Mike divided (wrong operation), Carla forgot to convert 15% to 0.15.'
+},
+{
+  id:'woti_ks3_004',level:'ks3',topic:'Negative Numbers',postType:'viral',
+  post:{username:'@NegativesAreFun',text:'\u22123 + \u22125 = 2. Minus and minus makes plus!! Two negatives = positive. This is basic maths. Stop arguing with me.',likes:'7.8k',reshares:'2.1k',comments:'1,847',
+    replies:[{username:'@CalmCorrector',text:'That rule is for multiplication, not addition...'},{username:'@NegativesAreFun',text:'BLOCKED'}]},
+  stage1CorrectAnswer:'\u22128',stage1Options:['\u22128','2','8','\u22122'],
+  stage2Options:[
+    {text:'Two negatives make positive applies to MULTIPLICATION (\u2212\u00d7\u2212=+), not addition. Adding two negative numbers gives a more negative result: \u22123+\u22125=\u22128',correct:true},
+    {text:'The poster added the numbers incorrectly',correct:false},
+    {text:'The poster is correct',correct:false}],
+  explanation:'The rule "two negatives make a positive" applies to multiplication only. Adding two negatives: \u22123 + (\u22125) = \u22128.'
+},
+{
+  id:'woti_ks3_005',level:'ks3',topic:'Area vs Perimeter',postType:'poll',
+  post:{username:'@ShapesMatter',text:'The AREA of a 5cm \u00d7 3cm rectangle?',likes:'1.7k',reshares:'540',comments:'2,109',
+    pollOptions:[{text:'16cm\u00b2',percentage:58,winner:true},{text:'15cm\u00b2',percentage:42,winner:false}],
+    pollVotes:'2,109 votes',pollCaption:'Most got it right! 5+3+5+3=16!'},
+  stage1CorrectAnswer:'15cm\u00b2',stage1Options:['15cm\u00b2','16cm\u00b2','8cm\u00b2','30cm\u00b2'],
+  stage2Options:[
+    {text:'The majority (and caption) calculated perimeter (adding all sides = 16cm) but called it area. Area = length \u00d7 width = 5\u00d73 = 15cm\u00b2',correct:true},
+    {text:'The dimensions were applied the wrong way round',correct:false},
+    {text:'The poster forgot to include units',correct:false}],
+  explanation:'Perimeter = 2(5+3) = 16cm. Area = 5\u00d73 = 15cm\u00b2. The poll confused perimeter with area.'
+},
+{
+  id:'woti_ks3_006',level:'ks3',topic:'Ratio',postType:'viral',
+  post:{username:'@RatioKing',text:'Split \u00a3120 in ratio 2:3. Give one person \u00a32 and the other \u00a33. That\'s a ratio. The rest goes back.',likes:'4.1k',reshares:'1.2k',comments:'987',
+    replies:[{username:'@RatioReality',text:'That\'s... not how ratios work.'},{username:'@RatioKing',text:'It literally says 2:3. Two pounds. Three pounds.'}]},
+  stage1CorrectAnswer:'\u00a348 and \u00a372',stage1Options:['\u00a348 and \u00a372','\u00a32 and \u00a33','\u00a360 each','\u00a340 and \u00a380'],
+  stage2Options:[
+    {text:'Ratio numbers are parts, not amounts. Total parts = 5, each part = \u00a3120\u00f75 = \u00a324. Shares: 2\u00d7\u00a324=\u00a348 and 3\u00d7\u00a324=\u00a372',correct:true},
+    {text:'The poster calculated the right amounts but the wrong way',correct:false},
+    {text:'The ratio should be simplified first',correct:false}],
+  explanation:'Ratio parts: 2+3=5. Each part = \u00a3120\u00f75 = \u00a324. Shares: \u00a348 and \u00a372.'
+},
+{
+  id:'woti_ks3_007',level:'ks3',topic:'Gambler\'s Fallacy',postType:'thread',
+  post:{username:'@ProbabilityPete',text:'I\'ve flipped heads 7 times in a row. The next flip MUST be tails. The coin owes me.',likes:'3.4k',reshares:'890',comments:'1,234',
+    replies:[{username:'@StatsMaven',text:'Each flip is independent. Still 50/50.'},{username:'@ProbabilityPete',text:'You don\'t understand balance. The universe needs balance.'}]},
+  stage1CorrectAnswer:'P(tails) = 0.5 always',stage1Options:['P(tails) = 0.5 always','P(tails) > 0.5','P(tails) = 1','Depends on coin'],
+  stage2Options:[
+    {text:'The gambler\'s fallacy \u2014 a fair coin has no memory. Each flip is independent with P(heads)=P(tails)=0.5 regardless of previous results',correct:true},
+    {text:'Pete is right that probability evens out over time',correct:false},
+    {text:'The error is not knowing if the coin is fair',correct:false}],
+  explanation:'The gambler\'s fallacy: coins have no memory. Each flip is independent \u2014 P(tails) = 0.5 regardless of history.'
+},
+{
+  id:'woti_ks3_008',level:'ks3',topic:'Square Numbers',postType:'viral',
+  post:{username:'@PatternSpotter',text:'1, 4, 9, 16... next term is 25! Add 3, then 5, then 7, then 9. So add 9 to get 25. Wait that\'s right. I\'m a genius.',likes:'2.3k',reshares:'670',comments:'543',
+    replies:[{username:'@SequenceFan',text:'You got the right answer but missed the bigger picture...'},{username:'@PatternSpotter',text:'Right is right. Genius confirmed.'}]},
+  stage1CorrectAnswer:'25 (and the poster is correct)',stage1Options:['25 (and the poster is correct)','20','32','24'],
+  stage2Options:[
+    {text:'The next term IS 25 and the poster\'s difference method is valid. However they didn\'t recognise this as square numbers (1\u00b2, 2\u00b2, 3\u00b2, 4\u00b2, 5\u00b2) \u2014 the more elegant explanation',correct:true},
+    {text:'The poster is wrong \u2014 the next term is 20',correct:false},
+    {text:'Adding odd numbers doesn\'t work for this sequence',correct:false}],
+  explanation:'The sequence is 1\u00b2, 2\u00b2, 3\u00b2, 4\u00b2, 5\u00b2=25. The difference method (odd numbers) works but misses that these are perfect squares.'
+},
+{
+  id:'woti_ks3_009',level:'ks3',topic:'Mean vs Median',postType:'poll',
+  post:{username:'@AveragePoll',text:'What does the MEAN tell you?',likes:'1.9k',reshares:'430',comments:'1,567',
+    pollOptions:[{text:'The middle value',percentage:71,winner:true},{text:'Sum divided by count',percentage:29,winner:false}],
+    pollVotes:'1,567 votes',pollCaption:'71% right! Mean = middle value.'},
+  stage1CorrectAnswer:'Sum \u00f7 count',stage1Options:['Sum \u00f7 count','Middle value','Most common','(max+min)\u00f72'],
+  stage2Options:[
+    {text:'The poll caption confused mean with median. Mean = sum\u00f7count. Median = middle value when sorted. Mode = most common',correct:true},
+    {text:'Mean and median are the same thing',correct:false},
+    {text:'Both poll options are wrong',correct:false}],
+  explanation:'Mean = sum of values \u00f7 number of values. Median = middle value. The poll confused the two.'
+},
+{
+  id:'woti_ks3_010',level:'ks3',topic:'HCF vs LCM',postType:'viral',
+  post:{username:'@NumberFacts',text:'HCF of 12 and 18 is 36. Just multiply them! HCF stands for Highest so you go highest \u2014 multiply to get a big number.',likes:'3.2k',reshares:'890',comments:'1,102',
+    replies:[{username:'@FactorFinder',text:'HCF = largest factor they share. That\'s 6.'},{username:'@NumberFacts',text:'6 is tiny. Highest means HIGHEST.'}]},
+  stage1CorrectAnswer:'6',stage1Options:['6','36','216','30'],
+  stage2Options:[
+    {text:'HCF = Highest Common Factor = largest number that divides BOTH. Factors of 12: 1,2,3,4,6,12. Factors of 18: 1,2,3,6,9,18. HCF=6. Multiplying gives LCM\u00d7something, not HCF',correct:true},
+    {text:'HCF and LCM are interchangeable',correct:false},
+    {text:'The poster should have added instead',correct:false}],
+  explanation:'HCF = largest number dividing both. Common factors of 12 and 18: 1, 2, 3, 6. HCF = 6.'
+},
+{
+  id:'woti_ks3_011',level:'ks3',topic:'Angles',postType:'poll',
+  post:{username:'@AnglePoll',text:'How many degrees in a triangle?',likes:'2.4k',reshares:'560',comments:'2,891',
+    pollOptions:[{text:'180\u00b0',percentage:29,winner:false},{text:'360\u00b0',percentage:71,winner:true}],
+    pollVotes:'2,891 votes',pollCaption:'360\u00b0 \u2014 same as all shapes!'},
+  stage1CorrectAnswer:'180\u00b0',stage1Options:['180\u00b0','360\u00b0','270\u00b0','90\u00b0'],
+  stage2Options:[
+    {text:'Angles in a triangle sum to 180\u00b0. 360\u00b0 is the sum of angles at a point or around a full turn. Quadrilaterals sum to 360\u00b0, not all shapes',correct:true},
+    {text:'All polygons have angles summing to 360\u00b0',correct:false},
+    {text:'It depends on the type of triangle',correct:false}],
+  explanation:'Angles in any triangle sum to 180\u00b0. 360\u00b0 is angles at a point or in a quadrilateral.'
+},
+{
+  id:'woti_ks3_012',level:'ks3',topic:'Probability',postType:'viral',
+  post:{username:'@ProbExpert',text:'P(rolling a 6) = 1/6. I roll 6 dice so P(at least one 6) = 6 \u00d7 1/6 = 1. Guaranteed 6. This is why I always win at board games.',likes:'11.2k',reshares:'3.4k',comments:'2,456',
+    replies:[{username:'@DicePedant',text:'That\'s not how probability works...'},{username:'@ProbExpert',text:'6 times 1/6 = 1 = certainty. MATHS.'}]},
+  stage1CorrectAnswer:'P(at least one 6) = 1 \u2212 (5/6)\u2076 \u2248 0.665',stage1Options:['P(at least one 6) = 1 \u2212 (5/6)\u2076 \u2248 0.665','1 (guaranteed)','1/6','6/6'],
+  stage2Options:[
+    {text:'You cannot simply multiply probabilities when finding "at least one". P(at least one 6) = 1 \u2212 P(no sixes) = 1 \u2212 (5/6)\u2076 \u2248 66.5%, not 100%',correct:true},
+    {text:'You should add the probabilities differently',correct:false},
+    {text:'The poster\'s method works for exactly one 6',correct:false}],
+  explanation:'P(at least one 6 from 6 dice) = 1 \u2212 (5/6)\u2076 \u2248 66.5%. You cannot add probabilities past 1.'
+},
+{
+  id:'woti_ks3_013',level:'ks3',topic:'Expanding Brackets',postType:'thread',
+  post:{username:'@AlgebraForum',text:'Simplify 3(x + 4)',likes:'1.1k',reshares:'230',comments:'678',
+    replies:[{username:'@FastExpander',text:'3x + 4. Multiply the 3 by the x only.'},{username:'@SlowExpander',text:'3x + 12. Multiply 3 by everything in the bracket.'},{username:'@FastExpander',text:'Why would you multiply the 4? It\'s already a number.'}]},
+  stage1CorrectAnswer:'3x + 12',stage1Options:['3x + 12','3x + 4','3x + 7','12x'],
+  stage2Options:[
+    {text:'The distributive law: 3(x+4) = 3\u00d7x + 3\u00d74 = 3x+12. Every term inside the bracket must be multiplied by 3, including the constant',correct:true},
+    {text:'SlowExpander is wrong \u2014 constants don\'t get multiplied',correct:false},
+    {text:'FastExpander is correct',correct:false}],
+  explanation:'Distributive law: 3(x+4) = 3x + 12. Both terms inside the bracket get multiplied.'
+},
+{
+  id:'woti_ks3_014',level:'ks3',topic:'Rounding',postType:'viral',
+  post:{username:'@RoundingMaster',text:'Round 3.456 to 2 decimal places = 3.45. Just chop off the last digit. Rounding is just truncation.',likes:'5.5k',reshares:'1.3k',comments:'1,890',
+    replies:[{username:'@PrecisionMatters',text:'Look at the third decimal place \u2014 it\'s 6, so you round up.'},{username:'@RoundingMaster',text:'Chop. Done. Next.'}]},
+  stage1CorrectAnswer:'3.46',stage1Options:['3.46','3.45','3.5','3.456'],
+  stage2Options:[
+    {text:'Rounding requires looking at the next digit \u2014 the 6 means we round up the 5 to 6, giving 3.46. Truncation (chopping) gives 3.45 but loses accuracy compared to proper rounding',correct:true},
+    {text:'3.45 and 3.46 are both acceptable',correct:false},
+    {text:'The poster used too many decimal places',correct:false}],
+  explanation:'To round 3.456 to 2dp: look at the 3rd decimal (6 \u2265 5), so round up: 3.46. Truncation \u2260 rounding.'
+},
+{
+  id:'woti_ks3_015',level:'ks3',topic:'Speed',postType:'poll',
+  post:{username:'@PhysicsFacts',text:'Speed formula: Speed = Distance \u00d7 Time',likes:'3.8k',reshares:'1.1k',comments:'2,340',
+    pollOptions:[{text:'Agree',percentage:64,winner:true},{text:'Disagree',percentage:36,winner:false}],
+    pollVotes:'2,340 votes',pollCaption:'64% right. The more time you travel, the faster you go.'},
+  stage1CorrectAnswer:'Speed = Distance \u00f7 Time',stage1Options:['Speed = Distance \u00f7 Time','Speed = Distance \u00d7 Time','Time = Speed \u00d7 Distance','Distance = Speed \u00f7 Time'],
+  stage2Options:[
+    {text:'Speed = Distance \u00f7 Time. More time to cover a distance means SLOWER speed, not faster. The poll caption also has the logic completely backwards',correct:true},
+    {text:'The formula is correct but the caption is wrong',correct:false},
+    {text:'The formula depends on units',correct:false}],
+  explanation:'Speed = Distance \u00f7 Time. More time for the same distance = slower, not faster.'
+}
+],
+
+gcse: [
+{
+  id:'woti_gcse_001',level:'gcse',topic:'BIDMAS',postType:'viral',
+  post:{username:'@MathsWhiz2009',text:'6\u00f72(1+2) = 1. OBVIOUSLY. Brackets first: 6\u00f72(3) = 6\u00f76 = 1. Anyone saying 9 failed school.',likes:'18.3k',reshares:'4.1k',comments:'2,847',
+    replies:[{username:'@NumberNerd',text:'Actually it\'s 9. Left to right after brackets.'},{username:'@MathsWhiz2009',text:'Blocked.'}]},
+  stage1CorrectAnswer:'9',stage1Options:['1','9','3','36'],
+  stage2Options:[
+    {text:'After brackets: 6\u00f72\u00d73. Left to right: 6\u00f72=3, then 3\u00d73=9. Treating 2(3) as a grouped denominator is non-standard convention',correct:true},
+    {text:'(1+2) was evaluated as 2, not 3',correct:false},
+    {text:'Division comes before multiplication so it\'s 1',correct:false}],
+  explanation:'6\u00f72(1+2): brackets give 6\u00f72\u00d73. Left to right: 3\u00d73=9. The poster wrongly treated 2(3) as a single denominator.'
+},
+{
+  id:'woti_gcse_002',level:'gcse',topic:'0.999...',postType:'poll',
+  post:{username:'@MathsPhilosophy',text:'Is 0.999... equal to 1?',likes:'8.9k',reshares:'3.2k',comments:'4,201',
+    pollOptions:[{text:'No, less than 1',percentage:73,winner:true},{text:'Yes, exactly 1',percentage:19,winner:false},{text:'More than 1',percentage:5,winner:false},{text:'Undefined',percentage:3,winner:false}],
+    pollVotes:'4,201 votes',pollCaption:'73% right \u2014 it approaches 1 but never gets there.'},
+  stage1CorrectAnswer:'Yes, exactly 1',stage1Options:['Yes, exactly 1','Less than 1','Context-dependent','Undefined'],
+  stage2Options:[
+    {text:'0.999...=1 exactly. Proof: x=0.999..., 10x=9.999..., 9x=9, x=1. Also 1/3=0.333..., \u00d73 gives 1=0.999.... The "approaches but never reaches" argument fails for infinite decimals',correct:true},
+    {text:'0.999... is genuinely less than 1 in standard maths',correct:false},
+    {text:'The answer depends on the number system used',correct:false}],
+  explanation:'0.999... = 1 exactly. The algebraic proof: let x = 0.999..., then 10x = 9.999..., so 9x = 9, therefore x = 1.'
+},
+{
+  id:'woti_gcse_003',level:'gcse',topic:'Expanding Brackets',postType:'thread',
+  post:{username:'@AlgebraHelp',text:'Expand (x+3)\u00b2',likes:'2.4k',reshares:'670',comments:'1,345',
+    replies:[{username:'@FastMaths',text:'x\u00b2+9. Square both parts.'},{username:'@SlowButRight',text:'(x+3)(x+3) = x\u00b2+6x+9'},{username:'@FastMaths',text:'6x? I don\'t see any 6 in the question.'}]},
+  stage1CorrectAnswer:'x\u00b2+6x+9',stage1Options:['x\u00b2+6x+9','x\u00b2+9','x\u00b2+6x','2x+6'],
+  stage2Options:[
+    {text:'(a+b)\u00b2 \u2260 a\u00b2+b\u00b2. The middle term 2ab=6x always appears. FastMaths squared each term separately, missing all cross-products',correct:true},
+    {text:'SlowButRight expanded incorrectly',correct:false},
+    {text:'The 6x cancels out',correct:false}],
+  explanation:'(x+3)\u00b2 = (x+3)(x+3) = x\u00b2+3x+3x+9 = x\u00b2+6x+9. Never square terms individually.'
+},
+{
+  id:'woti_gcse_004',level:'gcse',topic:'Gambler\'s Fallacy',postType:'viral',
+  post:{username:'@NotAGambler',text:'12 reds in a row at roulette. I\'m putting everything on black. MATHEMATICALLY CERTAIN.',likes:'31.2k',reshares:'8.9k',comments:'5,678',
+    replies:[{username:'@CasinoDealer',text:'Sir, the wheel doesn\'t remember.'},{username:'@NotAGambler',text:'MATHEMATICS. CERTAIN.'}]},
+  stage1CorrectAnswer:'P(black) = 18/38 every spin',stage1Options:['P(black) = 18/38 every spin','P(black) > 0.5 after 12 reds','P(black) = 1 now','Depends on wheel'],
+  stage2Options:[
+    {text:'Gambler\'s fallacy \u2014 roulette wheel has no memory. P(black) = 18/38 \u2248 47.4% on every spin regardless of history. Previous results never affect independent events',correct:true},
+    {text:'Probability does even out so black is slightly more likely',correct:false},
+    {text:'The error is ignoring the green pockets',correct:false}],
+  explanation:'The gambler\'s fallacy: roulette spins are independent. P(black) = 18/38 every time, regardless of history.'
+},
+{
+  id:'woti_gcse_005',level:'gcse',topic:'Percentage Reductions',postType:'poll',
+  post:{username:'@SalesMaths',text:'20% off then 20% off again. Total reduction?',likes:'3.5k',reshares:'1.2k',comments:'4,102',
+    pollOptions:[{text:'40%',percentage:67,winner:true},{text:'36%',percentage:33,winner:false}],
+    pollVotes:'4,102 votes',pollCaption:'Easy \u2014 20+20=40%!'},
+  stage1CorrectAnswer:'36%',stage1Options:['36%','40%','44%','42%'],
+  stage2Options:[
+    {text:'Each reduction applies to the current price. After first 20%: 80%. After second 20%: 80%\u00d780%=64%. Total reduction=36%, not 40%. Successive percentages multiply, not add',correct:true},
+    {text:'Percentage reductions can be added for the same item',correct:false},
+    {text:'The answer is 44% because you overcorrect',correct:false}],
+  explanation:'Successive percentage changes multiply: 0.8 \u00d7 0.8 = 0.64. Total reduction = 36%, not 40%.'
+},
+{
+  id:'woti_gcse_006',level:'gcse',topic:'Index Laws',postType:'viral',
+  post:{username:'@IndicesAreEasy',text:'x\u00b3\u00d7x\u2074=x\u00b9\u00b2. Multiply powers when multiplying. 3\u00d74=12. It\'s literally on the formula sheet.',likes:'5.6k',reshares:'1.8k',comments:'1,234',
+    replies:[{username:'@IndexCorrector',text:'You ADD the powers. x\u2077.'},{username:'@IndicesAreEasy',text:'Adding? In MULTIPLICATION? Make it make sense.'}]},
+  stage1CorrectAnswer:'x\u2077',stage1Options:['x\u2077','x\u00b9\u00b2','x\u00b3\u2074','2x\u2077'],
+  stage2Options:[
+    {text:'Multiplying same base: ADD the powers (x\u00b3\u00d7x\u2074=x\u2077). Multiplying powers applies to (x\u00b3)\u2074=x\u00b9\u00b2 \u2014 power raised to a power. The poster confused two different index laws',correct:true},
+    {text:'Powers do multiply when bases multiply',correct:false},
+    {text:'The answer is x\u00b9\u00b2 for a different reason',correct:false}],
+  explanation:'x\u00b3 \u00d7 x\u2074 = x\u00b3\u207a\u2074 = x\u2077. ADD powers for multiplication. MULTIPLY powers for (x\u00b3)\u2074.'
+},
+{
+  id:'woti_gcse_007',level:'gcse',topic:'Pythagoras',postType:'thread',
+  post:{username:'@RightTriangles',text:'5\u00b2+12\u00b2=hypotenuse. 25+144=169. Hypotenuse=169.',likes:'2.9k',reshares:'780',comments:'1,456',
+    replies:[{username:'@PythagorasFan',text:'You forgot \u221a. \u221a169=13.'},{username:'@RightTriangles',text:'The square root cancels with the square so you don\'t need it.'}]},
+  stage1CorrectAnswer:'13',stage1Options:['13','169','17','\u221a30'],
+  stage2Options:[
+    {text:'c\u00b2=169 means c=\u221a169=13. The square and square root do not cancel here \u2014 the equation gives c\u00b2, and you must take the root to find c',correct:true},
+    {text:'Pythagoras was applied incorrectly',correct:false},
+    {text:'The square root does cancel with squaring',correct:false}],
+  explanation:'c\u00b2 = 25 + 144 = 169, so c = \u221a169 = 13. You must square root to find the length itself.'
+},
+{
+  id:'woti_gcse_008',level:'gcse',topic:'Correlation Causation',postType:'viral',
+  post:{username:'@DataScience4All',text:'Ice cream strongly correlates with drowning. THEREFORE ice cream CAUSES drowning. Ban ice cream.',likes:'22.1k',reshares:'6.7k',comments:'4,567',
+    replies:[{username:'@StatsNerd',text:'Confounding variable: hot weather.'},{username:'@DataScience4All',text:'The data speaks for itself.'}]},
+  stage1CorrectAnswer:'Correlation \u2260 causation \u2014 hot weather causes both',stage1Options:['Correlation \u2260 causation \u2014 hot weather causes both','Ice cream causes drowning','Data must be wrong','Drowning causes ice cream'],
+  stage2Options:[
+    {text:'Hot weather is the confounding variable \u2014 it independently increases both ice cream consumption and swimming (and therefore drowning). This is a textbook correlation vs causation error',correct:true},
+    {text:'Strong correlation does prove causation',correct:false},
+    {text:'The sample size is too small',correct:false}],
+  explanation:'Hot weather is the confounding variable causing both. Correlation \u2260 causation is one of the most important lessons in statistics.'
+},
+{
+  id:'woti_gcse_009',level:'gcse',topic:'Standard Form Addition',postType:'poll',
+  post:{username:'@BigNumbers',text:'2.5\u00d710\u00b3 + 3.5\u00d710\u00b3 = ?',likes:'2.1k',reshares:'560',comments:'1,890',
+    pollOptions:[{text:'6\u00d710\u2076',percentage:52,winner:true},{text:'6\u00d710\u00b3',percentage:31,winner:false},{text:'5\u00d710\u00b3',percentage:17,winner:false}],
+    pollVotes:'1,890 votes',pollCaption:'52% right \u2014 add the numbers AND add the powers!'},
+  stage1CorrectAnswer:'6\u00d710\u00b3',stage1Options:['6\u00d710\u00b3','6\u00d710\u2076','5\u00d710\u00b3','6.0\u00d710\u2070'],
+  stage2Options:[
+    {text:'Same powers means add coefficients only: 2.5+3.5=6, keeping \u00d710\u00b3. Powers only add when MULTIPLYING standard form numbers. Adding powers is like saying 300+700=1,000,000',correct:true},
+    {text:'Convert to ordinary numbers before adding',correct:false},
+    {text:'Average the coefficients to get 3\u00d710\u00b3',correct:false}],
+  explanation:'When adding standard form with same power: add coefficients only. 2.5+3.5=6, so 6\u00d710\u00b3. Powers don\'t add.'
+},
+{
+  id:'woti_gcse_010',level:'gcse',topic:'Factorising',postType:'thread',
+  post:{username:'@AlgebraGuru',text:'Factorise x\u00b2+5x+6',likes:'1.8k',reshares:'340',comments:'987',
+    replies:[{username:'@QuickAnswer',text:'(x+2)(x+3). Add to 5, multiply to 6.'},{username:'@AlgebraGuru',text:'Wrong! It\'s (x+1)(x+6). 1+6=7... hmm... (x+2)(x+3)? 2+3=5, 2\u00d73=6. Oh.'}]},
+  stage1CorrectAnswer:'(x+2)(x+3)',stage1Options:['(x+2)(x+3)','(x+1)(x+6)','(x+5)(x+1)','(x+6)(x\u22121)'],
+  stage2Options:[
+    {text:'The final answer (x+2)(x+3) is correct. The poster initially tried (x+1)(x+6) where 1+6=7\u22605, self-corrected. QuickAnswer had the right method throughout',correct:true},
+    {text:'QuickAnswer is wrong',correct:false},
+    {text:'The expression cannot be factorised',correct:false}],
+  explanation:'x\u00b2+5x+6 = (x+2)(x+3). Find two numbers that add to 5 and multiply to 6: 2 and 3.'
+},
+{
+  id:'woti_gcse_011',level:'gcse',topic:'Probability AND',postType:'viral',
+  post:{username:'@ProbMaster',text:'P(A)=0.4, P(B)=0.3. P(A and B) = 0.4+0.3 = 0.7. Add them together \u2014 AND means more!',likes:'6.8k',reshares:'2.1k',comments:'1,567',
+    replies:[{username:'@TreeDiagrammer',text:'AND means multiply, not add...'},{username:'@ProbMaster',text:'More events = more probability. Logic.'}]},
+  stage1CorrectAnswer:'0.12 (if independent)',stage1Options:['0.12 (if independent)','0.7','0.1','Need more information'],
+  stage2Options:[
+    {text:'P(A AND B) for independent events = multiply: 0.4\u00d70.3=0.12. Addition gives P(A OR B). "AND" means both occur simultaneously \u2014 use multiplication',correct:true},
+    {text:'P(A AND B) = P(A) \u2212 P(B) = 0.1',correct:false},
+    {text:'The poster is correct that AND means addition',correct:false}],
+  explanation:'P(A AND B) for independent events = P(A) \u00d7 P(B) = 0.4 \u00d7 0.3 = 0.12. AND = multiply, OR = add.'
+},
+{
+  id:'woti_gcse_012',level:'gcse',topic:'Negative Indices',postType:'poll',
+  post:{username:'@IndexPoll',text:'What is 2\u207b\u00b3?',likes:'3.4k',reshares:'890',comments:'2,345',
+    pollOptions:[{text:'\u22128',percentage:44,winner:true},{text:'\u22126',percentage:31,winner:false},{text:'1/8',percentage:25,winner:false}],
+    pollVotes:'2,345 votes',pollCaption:'44% right \u2014 negative power means negative answer!'},
+  stage1CorrectAnswer:'1/8',stage1Options:['1/8','\u22128','\u22126','8'],
+  stage2Options:[
+    {text:'Negative exponent means reciprocal: 2\u207b\u00b3 = 1/2\u00b3 = 1/8. A negative power never makes the answer negative \u2014 it creates a fraction',correct:true},
+    {text:'2\u207b\u00b3 = \u2212(2\u00b3) = \u22128 is correct',correct:false},
+    {text:'The answer depends on the base',correct:false}],
+  explanation:'Negative exponent = reciprocal: 2\u207b\u00b3 = 1/2\u00b3 = 1/8. Negative power \u2260 negative answer.'
+},
+{
+  id:'woti_gcse_013',level:'gcse',topic:'Circle Theorems',postType:'viral',
+  post:{username:'@CircleExpert',text:'Angle at centre = angle at circumference. So if the centre angle is 80\u00b0, the circumference angle is 80\u00b0. Same arc, same angle.',likes:'4.3k',reshares:'1.1k',comments:'1,678',
+    replies:[{username:'@GeometryGeek',text:'It\'s TWICE. Centre = 2 \u00d7 circumference.'},{username:'@CircleExpert',text:'That would make it 160\u00b0 which is obtuse. Doesn\'t look right.'}]},
+  stage1CorrectAnswer:'Circumference angle = 40\u00b0',stage1Options:['Circumference angle = 40\u00b0','80\u00b0','160\u00b0','100\u00b0'],
+  stage2Options:[
+    {text:'The theorem states angle at centre = TWICE the angle at circumference. Circumference angle = 80\u00b0\u00f72 = 40\u00b0. The poster inverted the relationship',correct:true},
+    {text:'The theorem only applies to isosceles triangles in circles',correct:false},
+    {text:'The angles are equal for minor arcs only',correct:false}],
+  explanation:'Angle at centre = 2 \u00d7 angle at circumference. Centre 80\u00b0 means circumference = 40\u00b0.'
+},
+{
+  id:'woti_gcse_014',level:'gcse',topic:'Gradient',postType:'thread',
+  post:{username:'@CoordinateGeom',text:'y=3x+7. What\'s the gradient?',likes:'1.5k',reshares:'290',comments:'876',
+    replies:[{username:'@FirstReply',text:'7. The gradient is the number at the end.'},{username:'@SecondReply',text:'3. It\'s the coefficient of x \u2014 how steep it is.'},{username:'@ThirdReply',text:'3x. You need to keep the x.'}]},
+  stage1CorrectAnswer:'3',stage1Options:['3','7','3x','10'],
+  stage2Options:[
+    {text:'In y=mx+c, m is the gradient and c is the y-intercept. Gradient=3 (coefficient of x). FirstReply confused gradient with y-intercept (7). ThirdReply kept the x unnecessarily',correct:true},
+    {text:'The gradient is 7 because that\'s the constant',correct:false},
+    {text:'All three replies are wrong',correct:false}],
+  explanation:'y = mx + c: gradient m = 3, y-intercept c = 7. The gradient is the coefficient of x, without the x.'
+},
+{
+  id:'woti_gcse_015',level:'gcse',topic:'Probability Tree',postType:'viral',
+  post:{username:'@TreeDiagram',text:'P(A)=0.6, P(B|A)=0.4. P(A and B) = 0.6+0.4 = 1.0. Certain! Probability trees are so easy.',likes:'3.1k',reshares:'890',comments:'1,234',
+    replies:[{username:'@BayesFan',text:'You multiply along branches...'},{username:'@TreeDiagram',text:'1.0 = certain. Trees are just addition. Easy.'}]},
+  stage1CorrectAnswer:'0.24',stage1Options:['0.24','1.0','0.4','0.6'],
+  stage2Options:[
+    {text:'P(A and B) = P(A) \u00d7 P(B|A) = 0.6\u00d70.4 = 0.24. Multiply along branches, add between branches. Adding 0.6+0.4=1.0 makes no probabilistic sense',correct:true},
+    {text:'P(B|A)=0.4 means B is impossible given A',correct:false},
+    {text:'The tree should show P(B) not P(B|A)',correct:false}],
+  explanation:'Multiply along tree branches: P(A and B) = P(A) \u00d7 P(B|A) = 0.6 \u00d7 0.4 = 0.24.'
+},
+{
+  id:'woti_gcse_016',level:'gcse',topic:'Completing the Square',postType:'thread',
+  post:{username:'@QuadraticForum',text:'Complete the square: x\u00b2+8x+3',likes:'1.3k',reshares:'210',comments:'654',
+    replies:[{username:'@FastMethod',text:'(x+8)\u00b2 + 3. Add the 8 inside and keep the 3.'},{username:'@SlowMethod',text:'(x+4)\u00b2 \u2212 13. Half the 8 to get 4, subtract 4\u00b2=16, so 3\u221216=\u221213.'},{username:'@FastMethod',text:'Why would you halve it? It\'s 8 right there.'}]},
+  stage1CorrectAnswer:'(x+4)\u00b2\u221213',stage1Options:['(x+4)\u00b2\u221213','(x+8)\u00b2+3','(x+4)\u00b2+3','(x+8)\u00b2\u221261'],
+  stage2Options:[
+    {text:'Completing the square: halve the coefficient of x (8\u00f72=4), write (x+4)\u00b2, then subtract 4\u00b2=16. Net change: +16\u221216=0. So (x+4)\u00b2\u221213. FastMethod put 8 directly in brackets',correct:true},
+    {text:'SlowMethod subtracted the wrong value',correct:false},
+    {text:'The answer is (x+4)\u00b2+3',correct:false}],
+  explanation:'Complete the square: halve the x coefficient (8\u00f72=4), form (x+4)\u00b2, adjust constant: 3\u221216=\u221213.'
+},
+{
+  id:'woti_gcse_017',level:'gcse',topic:'Is 1 Prime?',postType:'poll',
+  post:{username:'@PrimeNumbers',text:'Is 1 a prime number?',likes:'4.5k',reshares:'1.8k',comments:'5,892',
+    pollOptions:[{text:'Yes',percentage:61,winner:true},{text:'No',percentage:39,winner:false}],
+    pollVotes:'5,892 votes',pollCaption:'61% got it right \u2014 1 is divisible only by itself so it\'s prime!'},
+  stage1CorrectAnswer:'No \u2014 1 is not prime',stage1Options:['No \u2014 1 is not prime','Yes \u2014 1 is prime','Depends on definition','1 is a special prime'],
+  stage2Options:[
+    {text:'By definition, a prime number has exactly TWO distinct factors: 1 and itself. The number 1 has only ONE factor (itself), so it fails the definition. This is why 1 is excluded',correct:true},
+    {text:'1 is prime because it\'s only divisible by itself',correct:false},
+    {text:'The primality of 1 is genuinely debated',correct:false}],
+  explanation:'A prime has exactly 2 distinct factors: 1 and itself. The number 1 has only 1 factor, so it is not prime.'
+},
+{
+  id:'woti_gcse_018',level:'gcse',topic:'Sine Rule',postType:'viral',
+  post:{username:'@TrigHelp',text:'Finding a side using sine rule: a/sinA = b/sinB. I have a=8, A=30\u00b0, B=45\u00b0. So b = 8/sin30\u00b0 \u00d7 sin45\u00b0. That gives b = 16 \u00d7 0.707 = 11.31.',likes:'2.8k',reshares:'670',comments:'1,123',
+    replies:[{username:'@TrigChecker',text:'Wait... that\'s actually right.'},{username:'@TrigHelp',text:'I know. I\'m posting it because people keep getting this wrong.'}]},
+  stage1CorrectAnswer:'11.31 (the poster is correct)',stage1Options:['11.31 (the poster is correct)','8','5.66','16'],
+  stage2Options:[
+    {text:'The poster\'s calculation is correct: b = 8/sin30\u00b0 \u00d7 sin45\u00b0 = 8/0.5 \u00d7 0.707 = 16 \u00d7 0.707 = 11.31. The sine rule application and arithmetic are both right',correct:true},
+    {text:'The poster applied the sine rule incorrectly',correct:false},
+    {text:'b should be divided, not multiplied',correct:false}],
+  explanation:'b = (8 \u00d7 sin45\u00b0)/sin30\u00b0 = (8 \u00d7 0.707)/0.5 = 11.31. The poster is correct here \u2014 sometimes they get it right!'
+},
+{
+  id:'woti_gcse_019',level:'gcse',topic:'Vectors',postType:'thread',
+  post:{username:'@VectorHelp',text:'Find the magnitude of vector (3, 4)',likes:'1.6k',reshares:'340',comments:'789',
+    replies:[{username:'@VectorMike',text:'3+4=7. Add the components.'},{username:'@VectorSally',text:'\u221a(3\u00b2+4\u00b2)=\u221a(9+16)=\u221a25=5.'},{username:'@VectorMike',text:'Why are you squaring? That just makes it bigger.'}]},
+  stage1CorrectAnswer:'5',stage1Options:['5','7','25','\u221a7'],
+  stage2Options:[
+    {text:'Magnitude uses Pythagoras: \u221a(x\u00b2+y\u00b2). The vector (3,4) forms a right triangle with legs 3 and 4 \u2014 hypotenuse = 5. Mike added components which gives 7, not the length',correct:true},
+    {text:'Sally made an arithmetic error',correct:false},
+    {text:'Both methods are acceptable approximations',correct:false}],
+  explanation:'Magnitude = \u221a(3\u00b2+4\u00b2) = \u221a25 = 5. It\'s Pythagoras \u2014 the vector components are legs of a right triangle.'
+},
+{
+  id:'woti_gcse_020',level:'gcse',topic:'Bounds',postType:'viral',
+  post:{username:'@MeasurementFacts',text:'Measured as 7.3cm to nearest mm. Upper bound = 7.35cm. You always add 5 to the last digit for upper bound.',likes:'4.7k',reshares:'1.2k',comments:'1,890',
+    replies:[{username:'@BoundsChecker',text:'Hmm, that\'s actually right this time.'},{username:'@MeasurementFacts',text:'Of course it is. I\'m the measurement facts account.'}]},
+  stage1CorrectAnswer:'7.35cm (the poster is correct)',stage1Options:['7.35cm (the poster is correct)','7.4cm','7.30cm','7.305cm'],
+  stage2Options:[
+    {text:'The poster is actually correct here. Nearest mm = accuracy of 0.1cm. Half of 0.1 = 0.05. Upper bound = 7.3+0.05 = 7.35cm. Adding 5 to the last digit is a valid shortcut for this degree of accuracy',correct:true},
+    {text:'Upper bound should be 7.4cm',correct:false},
+    {text:'The poster is wrong \u2014 upper bound is 7.305cm',correct:false}],
+  explanation:'Nearest mm = \u00b10.05cm. Upper bound = 7.3 + 0.05 = 7.35cm. The poster\'s method works here.'
+}
+],
+
+core: [
+{
+  id:'woti_core_001',level:'core',topic:'Expected Value',postType:'viral',
+  post:{username:'@CasinoFan',text:'Slot machine: win \u00a3100 with P=0.01, nothing otherwise. Costs \u00a30.50. E(winnings)=\u00a3100\u00d70.01=\u00a31 > \u00a30.50 cost. FREE MONEY GLITCH!',likes:'47.8k',reshares:'12.3k',comments:'8,901',
+    replies:[{username:'@GamblingMaths',text:'The maths checks out for YOUR machine. Real machines are much worse.'},{username:'@CasinoFan',text:'FREE. MONEY. GLITCH.'}]},
+  stage1CorrectAnswer:'Expected profit = \u00a30.50 but real slots have much worse odds than this',stage1Options:['Expected profit = \u00a30.50 but real slots have much worse odds than this','Expected loss of \u00a30.50 per play','Can\'t calculate without knowing plays','\u00a31 guaranteed profit'],
+  stage2Options:[
+    {text:'The calculation E(X)=\u00a31 > \u00a30.50 cost is mathematically correct for the stated probabilities. The real error: actual slot machines have P(win) far below 0.01 or pay far less than \u00a3100. Real E(X) is always negative for slots',correct:true},
+    {text:'The expected value calculation is wrong',correct:false},
+    {text:'You need to know how many times you play',correct:false}],
+  explanation:'E(X)=\u00a31 > cost of \u00a30.50 is correct for these numbers. The error is assuming real machines offer these odds \u2014 they never do.'
+},
+{
+  id:'woti_core_002',level:'core',topic:'Normal Distribution',postType:'poll',
+  post:{username:'@NormalDistPoll',text:'In a normal distribution, what % falls within 2 standard deviations of mean?',likes:'3.7k',reshares:'890',comments:'4,301',
+    pollOptions:[{text:'68%',percentage:44,winner:true},{text:'95%',percentage:39,winner:false},{text:'99.7%',percentage:17,winner:false}],
+    pollVotes:'4,301 votes',pollCaption:'44% got it \u2014 68% within 2 SDs!'},
+  stage1CorrectAnswer:'95%',stage1Options:['95%','68%','99.7%','50%'],
+  stage2Options:[
+    {text:'68-95-99.7 rule: 68% within 1 SD, 95% within 2 SD, 99.7% within 3 SD. The poll confused 1 SD with 2 SD. Within 2 SDs = 95%, not 68%',correct:true},
+    {text:'68% within 2 SDs is correct',correct:false},
+    {text:'The answer depends on the specific distribution',correct:false}],
+  explanation:'The empirical rule: 68% within 1 SD, 95% within 2 SDs, 99.7% within 3 SDs. The poll mixed up 1 SD and 2 SDs.'
+},
+{
+  id:'woti_core_003',level:'core',topic:'Correlation',postType:'viral',
+  post:{username:'@StatsFacts',text:'r=0.95 between revision hours and exam scores PROVES revision causes good grades. Data doesn\'t lie. Study harder.',likes:'8.3k',reshares:'2.4k',comments:'1,890',
+    replies:[{username:'@CausationPolice',text:'Correlation \u2260 causation. Confounders exist.'},{username:'@StatsFacts',text:'r=0.95. That\'s basically proof.'}]},
+  stage1CorrectAnswer:'Strong correlation suggests relationship but doesn\'t prove causation',stage1Options:['Strong correlation suggests relationship but doesn\'t prove causation','Correct \u2014 r=0.95 proves causation','r=0.95 is too weak','r=0.95 means 95% who revise pass'],
+  stage2Options:[
+    {text:'Correlation shows association, not causation \u2014 confounding variables (ability, motivation) could explain both. That said, revision-grades likely IS causal, but the correlation alone cannot prove it',correct:true},
+    {text:'r=0.95 is strong enough to prove causation',correct:false},
+    {text:'r=0.95 means 95% variance explained',correct:false}],
+  explanation:'Correlation \u2260 causation. Confounders (ability, motivation, home environment) could drive both variables independently.'
+},
+{
+  id:'woti_core_004',level:'core',topic:'Compound Interest',postType:'viral',
+  post:{username:'@SavingsGuru',text:'Invest \u00a31000 at 5% for 20 years: \u00a31000\u00d71.05\u00d720=\u00a321,050. Retirement sorted!',likes:'12.4k',reshares:'4.5k',comments:'3,456',
+    replies:[{username:'@FinanceMaths',text:'That\'s not how compound interest works...'},{username:'@SavingsGuru',text:'1000 times 1.05 times 20. What\'s hard about that?'}]},
+  stage1CorrectAnswer:'\u00a31,000\u00d71.05\u00b2\u2070 = \u00a32,653',stage1Options:['\u00a31,000\u00d71.05\u00b2\u2070 = \u00a32,653','\u00a321,050','\u00a32,000','\u00a31,000\u00d71.05\u00d720 = \u00a321,050'],
+  stage2Options:[
+    {text:'Compound interest raises 1.05 to the POWER of 20 (\u00a32,653), not multiplied by 20 (\u00a321,050). The poster confused exponentiation with multiplication \u2014 a factor-of-8 error',correct:true},
+    {text:'The answer is \u00a32,000 using simple interest',correct:false},
+    {text:'The poster\'s calculation is a valid approximation',correct:false}],
+  explanation:'Compound interest: A = P \u00d7 (1+r)\u207f = 1000 \u00d7 1.05\u00b2\u2070 = \u00a32,653. The poster multiplied instead of raising to a power.'
+},
+{
+  id:'woti_core_005',level:'core',topic:'Index Numbers',postType:'poll',
+  post:{username:'@EconomicsFacts',text:'UK inflation in 2023 was 7.3%. This means everything cost 7.3% more than in 2022. Simple.',likes:'5.6k',reshares:'1.8k',comments:'2,345',
+    pollOptions:[{text:'Agree',percentage:78,winner:true},{text:'Disagree',percentage:22,winner:false}],
+    pollVotes:'2,345 votes',pollCaption:'78% agree. Inflation = everything goes up by the same amount.'},
+  stage1CorrectAnswer:'CPI inflation of 7.3% means the average basket of goods rose by 7.3% \u2014 individual items varied widely',stage1Options:['CPI inflation of 7.3% means the average basket of goods rose by 7.3% \u2014 individual items varied widely','Everything cost exactly 7.3% more','Nothing changed','Some things went up 14.6%'],
+  stage2Options:[
+    {text:'CPI measures a weighted average basket of goods \u2014 some items rose much more (energy, food), others less or fell. "7.3% inflation" describes the aggregate, not individual prices',correct:true},
+    {text:'7.3% inflation does mean all prices rose by exactly 7.3%',correct:false},
+    {text:'Inflation figures are unreliable',correct:false}],
+  explanation:'CPI is a weighted average. 7.3% is the aggregate change \u2014 individual items varied hugely (energy up 30%+, some items fell).'
+},
+{
+  id:'woti_core_006',level:'core',topic:'Regression Extrapolation',postType:'viral',
+  post:{username:'@DataDrivenDecisions',text:'My regression line for ice cream sales vs temperature (10\u00b0C-30\u00b0C) gives y=50x-200. At 100\u00b0C that\'s 4,800 sales per day! Time to open a desert ice cream shop!',likes:'6.2k',reshares:'1.9k',comments:'1,456',
+    replies:[{username:'@StatsTeacher',text:'Extrapolation beyond your data range is dangerous.'},{username:'@DataDrivenDecisions',text:'The LINE says 4,800. Lines don\'t lie.'}]},
+  stage1CorrectAnswer:'The prediction is unreliable \u2014 100\u00b0C is far outside the data range',stage1Options:['The prediction is unreliable \u2014 100\u00b0C is far outside the data range','4,800 sales is a valid prediction','The regression line is wrong','You need more data points'],
+  stage2Options:[
+    {text:'Extrapolation beyond the data range (10-30\u00b0C) assumes the linear relationship continues indefinitely. At 100\u00b0C humans can\'t survive, let alone buy ice cream. Regression models only apply within or near the observed data range',correct:true},
+    {text:'The regression equation itself is calculated incorrectly',correct:false},
+    {text:'Linear regression can\'t be used for temperature data',correct:false}],
+  explanation:'Extrapolation beyond the data range is unreliable. The linear model fitted to 10-30\u00b0C data says nothing about 100\u00b0C.'
+},
+{
+  id:'woti_core_007',level:'core',topic:'Break-Even',postType:'thread',
+  post:{username:'@BusinessMaths101',text:'My fixed costs are \u00a35,000. Each unit costs \u00a310 to make and sells for \u00a325. Break-even point?',likes:'2.1k',reshares:'560',comments:'987',
+    replies:[{username:'@QuickBusiness',text:'\u00a35000 \u00f7 \u00a325 = 200 units. Divide by selling price.'},{username:'@CarefulCalc',text:'\u00a35000 \u00f7 (\u00a325-\u00a310) = \u00a35000 \u00f7 \u00a315 = 333.3, so 334 units.'},{username:'@QuickBusiness',text:'Why subtract? You sell at \u00a325 not \u00a315.'}]},
+  stage1CorrectAnswer:'334 units',stage1Options:['334 units','200 units','500 units','167 units'],
+  stage2Options:[
+    {text:'Break-even = Fixed costs \u00f7 Contribution per unit. Contribution = selling price \u2212 variable cost = \u00a325\u2212\u00a310 = \u00a315. QuickBusiness divided by selling price, ignoring the \u00a310 production cost per unit',correct:true},
+    {text:'CarefulCalc should not round up to 334',correct:false},
+    {text:'Break-even should include profit margin',correct:false}],
+  explanation:'Break-even = Fixed costs \u00f7 (Price \u2212 Variable cost) = 5000 \u00f7 15 = 333.3, round up to 334 units.'
+},
+{
+  id:'woti_core_008',level:'core',topic:'Standard Deviation',postType:'poll',
+  post:{username:'@SpreadPoll',text:'Dataset: 10, 10, 10, 10, 10. Standard deviation?',likes:'2.8k',reshares:'670',comments:'1,890',
+    pollOptions:[{text:'10',percentage:38,winner:true},{text:'2',percentage:31,winner:false},{text:'0',percentage:31,winner:false}],
+    pollVotes:'1,890 votes',pollCaption:'38% right! SD = the mean of the data = 10.'},
+  stage1CorrectAnswer:'0',stage1Options:['0','10','2','5'],
+  stage2Options:[
+    {text:'Standard deviation measures spread from the mean. When all values are identical, there is zero deviation from the mean \u2014 SD = 0. The poll confused SD with the mean itself',correct:true},
+    {text:'SD equals the mean for uniform data',correct:false},
+    {text:'SD cannot be zero for real data',correct:false}],
+  explanation:'SD measures spread. All values identical means zero spread, so SD = 0. The poll confused SD with the mean.'
+},
+{
+  id:'woti_core_009',level:'core',topic:'Hypothesis Testing',postType:'viral',
+  post:{username:'@HypothesisPro',text:'My p-value is 0.03 < 0.05, so I ACCEPT the alternative hypothesis. The null is DISPROVED. Science!',likes:'5.4k',reshares:'1.6k',comments:'2,345',
+    replies:[{username:'@StatsPedant',text:'We reject the null. We don\'t "accept" or "prove" alternatives.'},{username:'@HypothesisPro',text:'Reject, accept, same thing. I got a significant result.'}]},
+  stage1CorrectAnswer:'We reject the null hypothesis \u2014 we don\'t "accept" or "prove" the alternative',stage1Options:['We reject the null hypothesis \u2014 we don\'t "accept" or "prove" the alternative','The alternative hypothesis is proven','p=0.03 means 3% chance the result is correct','The test should use 0.01 significance'],
+  stage2Options:[
+    {text:'In hypothesis testing, we either reject or fail to reject the null. We never "accept" or "prove" the alternative \u2014 we merely find sufficient evidence against the null at the chosen significance level',correct:true},
+    {text:'A p-value of 0.03 means there\'s a 3% chance the alternative is true',correct:false},
+    {text:'The poster should have used a two-tailed test instead',correct:false}],
+  explanation:'We "reject H\u2080" \u2014 never "accept H\u2081" or "prove" anything. Significance means sufficient evidence against the null, not proof of the alternative.'
+},
+{
+  id:'woti_core_010',level:'core',topic:'Cost-Benefit Time Value',postType:'thread',
+  post:{username:'@ProjectManager',text:'Option A costs \u00a310,000 now, saves \u00a32,000/year for 6 years. Total saving = \u00a312,000. Net benefit = \u00a32,000. Easy decision!',likes:'3.1k',reshares:'890',comments:'1,234',
+    replies:[{username:'@FinanceGrad',text:'You haven\'t discounted future cash flows. \u00a32,000 in 6 years isn\'t worth \u00a32,000 today.'},{username:'@ProjectManager',text:'A pound is a pound. Money doesn\'t change.'}]},
+  stage1CorrectAnswer:'The savings must be discounted \u2014 future money is worth less than present money',stage1Options:['The savings must be discounted \u2014 future money is worth less than present money','Net benefit is \u00a32,000 as stated','You need to add inflation on top','The costs should also be spread over 6 years'],
+  stage2Options:[
+    {text:'Time value of money: future savings must be discounted to present value using a discount rate. \u00a32,000 received in year 6 is worth less than \u00a32,000 today. The net present value (NPV) would be lower than the simple \u00a32,000 calculation suggests',correct:true},
+    {text:'Adding up undiscounted cash flows is acceptable for short time periods',correct:false},
+    {text:'The error is not including maintenance costs',correct:false}],
+  explanation:'Time value of money: future cash flows must be discounted. \u00a32,000/year for 6 years has a present value below \u00a312,000, reducing the apparent net benefit.'
+}
+]
+};
+
+// ============================================================
+//  STATE
+// ============================================================
+const S = {
+  level: 'gcse',
+  sessionLen: 10,
+  session: [],
+  qIdx: 0,
+  stage: 1,
+  score: 0,
+  maxScore: 0,
+  stage1Failed: false,
+  stage2Failed: false,
+  questionNum: 0
+};
+
+const GAME_SLUG = 'wrong-on-the-internet';
+
+// ============================================================
+//  INIT
+// ============================================================
+(function init() {
+  const params = new URLSearchParams(window.location.search);
+  const lvl = params.get('level');
+  if (lvl && QUESTIONS[lvl]) {
+    S.level = lvl;
+  }
+  setLevel(S.level);
+  showPB();
+})();
+
+function setLevel(lvl) {
+  S.level = lvl;
+  document.querySelectorAll('.level-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.level === lvl);
+  });
+  renderSessionButtons();
+  showPB();
+}
+
+function renderSessionButtons() {
+  MaffsSession.render({
+    mount: document.getElementById('sessionSelector'),
+    poolSize: QUESTIONS[S.level].length,
+    preferred: [10, 20, 30],
+    selected: S.sessionLen,
+    selectedClass: 'active',
+    onChange: count => { S.sessionLen = count; }
+  });
+}
+
+function pbKey() { return 'woti_pb_' + S.level; }
+
+function showPB() {
+  const pb = parseInt(localStorage.getItem(pbKey()) || '0');
+  const el = document.getElementById('pbStart');
+  if (pb > 0) {
+    el.innerHTML = 'Personal best (' + S.level.toUpperCase() + '): <span>' + pb + '%</span>';
+  } else {
+    el.textContent = '';
+  }
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ============================================================
+//  RENDER NUMBLR POST
+// ============================================================
+function renderPost(q) {
+  const p = q.post;
+  let html = '<div class="numblr-card">';
+
+  // Header
+  html += '<div class="numblr-header">';
+  html += '<span class="numblr-logo">N</span>';
+  html += '<span class="numblr-label">Numblr</span>';
+  html += '</div>';
+
+  // Body
+  html += '<div class="numblr-body">';
+  html += '<div class="numblr-username">' + escHtml(p.username) + '</div>';
+  html += '<div class="numblr-text">' + escHtml(p.text) + '</div>';
+
+  // Engagement bar
+  html += '<div class="numblr-engagement">';
+  html += '<span>\ud83d\udcac ' + escHtml(p.comments) + ' comments</span>';
+  html += '<span>\ud83d\udd01 ' + escHtml(p.reshares) + ' reshares</span>';
+  html += '<span>\u2764\ufe0f ' + escHtml(p.likes) + ' likes</span>';
+  html += '</div>';
+  html += '</div>';
+
+  // Post type specific
+  if (q.postType === 'poll' && p.pollOptions) {
+    html += '<div class="numblr-poll">';
+    p.pollOptions.forEach(opt => {
+      const isWinner = opt.winner;
+      html += '<div class="poll-bar">';
+      html += '<div class="poll-fill ' + (isWinner ? 'winner' : 'loser') + '" style="width:' + opt.percentage + '%">' + escHtml(opt.text) + '</div>';
+      html += '<span class="poll-pct">' + opt.percentage + '%</span>';
+      html += '</div>';
+    });
+    if (p.pollVotes) html += '<div class="poll-votes">' + escHtml(p.pollVotes) + '</div>';
+    if (p.pollCaption) html += '<div class="poll-caption">' + escHtml(p.pollCaption) + '</div>';
+    html += '</div>';
+  } else if (q.postType === 'thread' && p.replies) {
+    html += '<div class="numblr-thread">';
+    // First reply is OP
+    html += '<div class="thread-reply"><div class="reply-user">' + escHtml(p.username) + '</div><div class="reply-text">' + escHtml(p.text) + '</div></div>';
+    p.replies.forEach(r => {
+      html += '<div class="thread-reply"><div class="reply-user">' + escHtml(r.username) + '</div><div class="reply-text">' + escHtml(r.text) + '</div></div>';
+    });
+    html += '</div>';
+  } else if (p.replies && p.replies.length > 0) {
+    // viral with replies
+    html += '<div class="numblr-replies">';
+    p.replies.forEach(r => {
+      html += '<div class="numblr-reply"><div class="reply-user">' + escHtml(r.username) + '</div><div class="reply-text">' + escHtml(r.text) + '</div></div>';
+    });
+    html += '</div>';
+  }
+
+  html += '</div>';
+  return html;
+}
+
+function escHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// ============================================================
+//  GAME FLOW
+// ============================================================
+function startGame() {
+  const bank = QUESTIONS[S.level];
+  if (!bank || bank.length === 0) return;
+
+  const shuffled = shuffle([...bank]);
+  const count = Math.min(S.sessionLen, shuffled.length);
+  S.session = shuffled.slice(0, count);
+  S.qIdx = 0;
+  S.stage = 1;
+  S.score = 0;
+  S.maxScore = count * 2;
+  S.questionNum = 0;
+  S.stage1Failed = false;
+  S.stage2Failed = false;
+
+  document.getElementById('startScreen').classList.remove('active');
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('gameScreen').classList.add('active');
+
+  mfg('game_started', { game_slug: GAME_SLUG, level: S.level });
+
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = S.session[S.qIdx];
+  S.stage = 1;
+  S.stage1Failed = false;
+  S.stage2Failed = false;
+  S.questionNum++;
+
+  // Render post
+  document.getElementById('numblrPost').innerHTML = renderPost(q);
+
+  // Animate engagement numbers
+  animateEngagement();
+
+  renderStage1();
+}
+
+function animateEngagement() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const spans = document.querySelectorAll('.numblr-engagement span');
+  spans.forEach(s => {
+    s.style.opacity = '0';
+    s.style.transform = 'translateY(6px)';
+    s.style.transition = 'opacity 0.3s, transform 0.3s';
+  });
+  setTimeout(() => {
+    spans.forEach((s, i) => {
+      setTimeout(() => {
+        s.style.opacity = '1';
+        s.style.transform = 'translateY(0)';
+      }, i * 100);
+    });
+  }, 200);
+}
+
+function renderStage1() {
+  const q = S.session[S.qIdx];
+
+  // Update header
+  document.getElementById('stagePill').textContent = 'Stage 1 of 2';
+  document.getElementById('scoreNum').textContent = S.score;
+  document.getElementById('scoreMax').textContent = S.maxScore;
+
+  // Stage indicator
+  document.getElementById('stageIndicator').textContent = 'Stage 1 of 2 \u2014 What\'s the correct answer?';
+
+  // Clear banner and explanation
+  document.getElementById('bannerArea').innerHTML = '';
+  document.getElementById('explanationPanel').classList.remove('show');
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('nextBtn').style.display = '';
+
+  // Build options
+  const grid = document.getElementById('optionsGrid');
+  const shuffledOpts = shuffle([...q.stage1Options]);
+  grid.innerHTML = '';
+  shuffledOpts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleStage1(btn, opt, q));
+    grid.appendChild(btn);
+  });
+}
+
+function handleStage1(btn, chosen, q) {
+  const correct = chosen === q.stage1CorrectAnswer;
+  const grid = document.getElementById('optionsGrid');
+  const allBtns = grid.querySelectorAll('.option-btn');
+
+  if (correct) {
+    // Disable all, mark correct
+    allBtns.forEach(b => {
+      b.disabled = true;
+      if (b.textContent === q.stage1CorrectAnswer) b.classList.add('correct');
+    });
+    btn.innerHTML = '<span class="opt-icon">\u2713</span>' + escHtml(chosen);
+
+    // Banner
+    document.getElementById('bannerArea').innerHTML = '<div class="banner correct-banner">You\'re right \u2014 they\'re wrong!</div>';
+
+    // Analytics
+    mfg('question_answered', { game_slug: GAME_SLUG, level: S.level, question_index: S.questionNum, correct: true, mode: 'stage1' });
+
+    // Move to stage 2 after brief pause
+    setTimeout(() => renderStage2(), 1200);
+  } else {
+    S.stage1Failed = true;
+    btn.classList.add('incorrect');
+    btn.innerHTML = '<span class="opt-icon">\u2717</span>' + escHtml(chosen);
+    btn.disabled = true;
+
+    // Banner
+    document.getElementById('bannerArea').innerHTML = '<div class="banner incorrect-banner">Not quite \u2014 try again!</div>';
+
+    // Analytics
+    mfg('question_answered', { game_slug: GAME_SLUG, level: S.level, question_index: S.questionNum, correct: false, mode: 'stage1' });
+  }
+}
+
+function renderStage2() {
+  const q = S.session[S.qIdx];
+
+  // Update header
+  document.getElementById('stagePill').textContent = 'Stage 2 of 2';
+
+  // Stage indicator
+  document.getElementById('stageIndicator').textContent = 'Stage 2 of 2 \u2014 What did they get wrong?';
+
+  // Clear banner
+  document.getElementById('bannerArea').innerHTML = '';
+
+  // Build options
+  const grid = document.getElementById('optionsGrid');
+  const shuffledOpts = shuffle([...q.stage2Options]);
+  grid.innerHTML = '';
+  shuffledOpts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt.text;
+    btn.addEventListener('click', () => handleStage2(btn, opt, q));
+    grid.appendChild(btn);
+  });
+}
+
+function handleStage2(btn, chosen, q) {
+  const grid = document.getElementById('optionsGrid');
+  const allBtns = grid.querySelectorAll('.option-btn');
+
+  if (chosen.correct) {
+    // Disable all, mark correct
+    allBtns.forEach(b => {
+      b.disabled = true;
+      const matchOpt = q.stage2Options.find(o => o.text === b.textContent);
+      if (matchOpt && matchOpt.correct) b.classList.add('correct');
+    });
+    btn.innerHTML = '<span class="opt-icon">\u2713</span>' + escHtml(chosen.text);
+
+    // Banner
+    document.getElementById('bannerArea').innerHTML = '<div class="banner correct-banner">\u2713 Correct!</div>';
+
+    // Score
+    if (!S.stage1Failed && !S.stage2Failed) {
+      S.score += 2;
+    } else {
+      S.score += 1;
+    }
+    document.getElementById('scoreNum').textContent = S.score;
+
+    // Analytics
+    mfg('question_answered', { game_slug: GAME_SLUG, level: S.level, question_index: S.questionNum, correct: true, mode: 'stage2' });
+
+    // Show explanation
+    showExplanation(q);
+  } else {
+    S.stage2Failed = true;
+    btn.classList.add('incorrect');
+    btn.innerHTML = '<span class="opt-icon">\u2717</span>' + escHtml(chosen.text);
+    btn.disabled = true;
+
+    // Banner
+    document.getElementById('bannerArea').innerHTML = '<div class="banner incorrect-banner">Not quite \u2014 try again!</div>';
+
+    // Analytics
+    mfg('question_answered', { game_slug: GAME_SLUG, level: S.level, question_index: S.questionNum, correct: false, mode: 'stage2' });
+  }
+}
+
+function showExplanation(q) {
+  const panel = document.getElementById('explanationPanel');
+  document.getElementById('explanationText').textContent = q.explanation;
+  panel.classList.add('show');
+
+  // Show next button
+  const nextBtn = document.getElementById('nextBtn');
+  setTimeout(() => {
+    nextBtn.classList.add('visible');
+  }, 1500);
+}
+
+function nextQuestion() {
+  S.qIdx++;
+  if (S.qIdx >= S.session.length) {
+    finishGame();
+  } else {
+    showQuestion();
+  }
+}
+
+function finishGame() {
+  document.getElementById('gameScreen').classList.remove('active');
+  document.getElementById('gameHeader').style.display = 'none';
+  document.getElementById('resultsScreen').classList.add('active');
+
+  const maxPts = S.session.length * 2;
+  const pct = Math.round((S.score / maxPts) * 100);
+  document.getElementById('finalScore').textContent = S.score + '/' + maxPts;
+  document.getElementById('finalPct').textContent = pct + '%';
+
+  // Personal best
+  const key = pbKey();
+  const prevBest = parseInt(localStorage.getItem(key) || '0');
+  const pbBadge = document.getElementById('pbBadge');
+  const pbLine = document.getElementById('pbLine');
+  if (pct > prevBest) {
+    localStorage.setItem(key, pct);
+    pbBadge.style.display = 'block';
+    pbLine.textContent = 'Previous best: ' + (prevBest > 0 ? prevBest + '%' : 'none');
+    mfg('personal_best_set', { game_slug: GAME_SLUG, level: S.level, score: pct, previous_best: prevBest });
+  } else {
+    pbBadge.style.display = 'none';
+    pbLine.textContent = 'Personal best: ' + prevBest + '%';
+  }
+
+  mfg('game_completed', { game_slug: GAME_SLUG, level: S.level, score: S.score, questions_answered: S.session.length, questions_correct: S.score });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('wrong-on-the-internet',S.level,S.score,S.session.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('wrong-on-the-internet',S.level,S.score);}}
+}
+
+function resetToStart() {
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('startScreen').classList.add('active');
+  showPB();
+}
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

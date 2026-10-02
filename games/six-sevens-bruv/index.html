@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Times tables recall, 1 to 12, for GCSE resit and post-16 students. Type the answer; every fact you get right turns gold on your own 12 by 12 grid.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/six-sevens-bruv/">
+<meta property="og:title" content="Six Sevens, Bruv — MaffsGames">
+<meta property="og:description" content="Times tables recall, 1 to 12, for GCSE resit and post-16 students. Type the answer; every fact you get right turns gold on your own 12 by 12 grid.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/six-sevens-bruv/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Six Sevens, Bruv — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#090b10;--surface:#10141c;--surface2:#161b26;--border:#232b3a;--gold:#f2b705;--gold-soft:rgba(242,183,5,.14);--gold-dim:#8a6a12;--text:#e8ecf3;--muted:#8391a7;--wrong:#f43f5e;--correct:#22c55e;--focus:#7dd3fc}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:980px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1rem 0 .4rem;position:relative}
+.header h1{font-size:2rem;font-weight:700;color:var(--gold);letter-spacing:.01em}
+.header .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+body.playing .header{padding:.2rem 0 .5rem}body.playing .header h1{font-size:1.35rem}body.playing .header .sub{display:none}body.playing .header .a11y-toggle{top:.1rem}
+.header .a11y-toggle{position:absolute;right:0;top:1rem}
+@media (max-width:560px){.header h1{font-size:1.65rem}.header .a11y-toggle{position:static;margin-top:.6rem}}
+.screen{display:none}.screen.active{display:block}
+.menu-info{color:var(--muted);font-size:.9rem;line-height:1.7;margin:.8rem auto;max-width:640px;text-align:center}
+.menu-info strong{color:var(--text)}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:640px}
+.panel h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-bottom:.6rem}
+.grid-list{display:flex;flex-direction:column;gap:.4rem}
+.grid-row{display:flex;gap:.4rem;align-items:stretch}
+.grid-pick{flex:1;text-align:left;padding:.6rem .8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.95rem;cursor:pointer}
+.grid-pick:hover{border-color:var(--gold-dim)}
+.grid-pick.selected{border-color:var(--gold);background:var(--gold-soft)}
+.grid-del{padding:.4rem .8rem;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:.8rem;cursor:pointer}
+.grid-del:hover{color:var(--wrong);border-color:var(--wrong)}
+.confirm-row{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;padding:.5rem .7rem;border:1px solid var(--wrong);border-radius:10px;font-size:.85rem}
+.btn{padding:.55rem 1.1rem;border-radius:10px;border:2px solid var(--gold);background:transparent;color:var(--gold);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--gold-soft)}
+.btn.solid{background:var(--gold);color:#16120a}
+.btn.solid:hover{background:#ffd13a}
+.btn.quiet{border-color:var(--border);color:var(--muted)}
+.btn:disabled{opacity:.35;cursor:default}
+.new-grid{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-top:.6rem}
+.new-grid input{width:6.5rem;padding:.5rem .6rem;border-radius:10px;border:2px solid var(--border);background:var(--surface2);color:var(--gold);font-family:'JetBrains Mono',monospace;font-size:1.1rem;letter-spacing:.3em;text-transform:uppercase;text-align:center}
+.new-grid input:focus{outline:none;border-color:var(--gold)}
+.form-error{color:var(--wrong);font-size:.82rem;margin-top:.4rem;min-height:1em}
+.note{font-size:.84rem;color:var(--muted);line-height:1.6}
+.note.warn{color:#fbbf24}
+.session-select{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.4rem 0}
+.session-btn{padding:.5rem 1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer}
+.session-btn.selected{border-color:var(--gold);background:var(--gold);color:#16120a}
+.start-btn{display:block;margin:1rem auto .4rem;padding:.75rem 2.4rem;font-size:1.05rem}
+.lb-link{text-align:center;font-size:.85rem;margin:.6rem 0}.lb-link a{color:#0d9488;text-decoration:none}
+
+/* Times grid */
+.tgrid{border-collapse:separate;border-spacing:2px;margin:0 auto;font-family:'JetBrains Mono',monospace}
+.tgrid th,.tgrid td{width:2.35rem;height:2.1rem;text-align:center;font-size:.8rem;border-radius:5px}
+.tgrid th{color:var(--muted);font-weight:700;background:transparent}
+.tgrid th.hl{color:var(--bg);background:var(--focus)}
+.tgrid td{background:var(--surface2);border:1px solid var(--border);color:transparent}
+.tgrid td.gold{background:var(--gold-soft);border-color:var(--gold-dim);color:var(--gold);font-weight:700}
+.tgrid td.flash{animation:flash .9s ease-out}
+@keyframes flash{0%{background:var(--gold);color:#16120a;transform:scale(1.12)}100%{background:var(--gold-soft)}}
+.grid-caption{text-align:center;font-size:.82rem;color:var(--muted);margin-top:.5rem}
+.grid-caption b{color:var(--gold);font-family:'JetBrains Mono',monospace}
+
+/* Game */
+.play{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem;align-items:start}
+@media (max-width:860px){.play{grid-template-columns:1fr}.tgrid th,.tgrid td{width:1.85rem;height:1.7rem;font-size:.66rem}}
+@media (max-width:420px){.tgrid{border-spacing:1px}.tgrid th,.tgrid td{width:1.5rem;height:1.45rem;font-size:.56rem}}
+@media (max-width:360px){.container{padding:.75rem}.tgrid th,.tgrid td{width:1.3rem;height:1.3rem;font-size:.5rem;border-radius:3px}}
+.hud{display:flex;justify-content:space-between;padding:.5rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.6rem;gap:.3rem;flex-wrap:wrap}
+.hud-item{text-align:center;min-width:52px}.hud-label{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.3rem 1rem;text-align:center}
+.qline{font-family:'JetBrains Mono',monospace;font-size:2.3rem;font-weight:700;display:flex;justify-content:center;align-items:center;gap:.45rem;flex-wrap:wrap}
+.slot{min-width:3.4rem;padding:.1rem .45rem;border-bottom:3px solid var(--gold);color:var(--gold)}
+.slot.empty::after{content:'\00a0'}
+.slot.correct{border-color:var(--correct);color:var(--correct)}
+.slot.reveal{border-color:var(--gold);color:var(--gold)}
+.slot .given{font-size:.45em;color:var(--wrong);text-decoration:line-through;text-decoration-thickness:2px;vertical-align:super;margin-left:.3em;font-weight:600}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;max-width:300px;margin:1rem auto 0}
+.key{padding:.8rem 0;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:700;cursor:pointer;touch-action:manipulation}
+.key:hover{border-color:var(--gold-dim)}
+.key:active{transform:translateY(1px)}
+.key.enter{background:var(--gold);color:#16120a;border-color:var(--gold)}
+.key.back{color:var(--muted);font-size:1rem}
+.keypad.locked .key{opacity:.35;pointer-events:none}
+.feedback{margin-top:1rem;text-align:center}
+.fb-right{color:var(--correct);font-weight:700;font-size:1.05rem}
+.fb-wrong{background:var(--surface2);border:1px solid var(--wrong);border-radius:12px;padding:.9rem;text-align:left}
+.fb-fact{font-family:'JetBrains Mono',monospace;font-size:1.35rem;font-weight:700;color:var(--gold);text-align:center}
+.fb-said{font-size:.9rem;color:var(--muted);text-align:center;margin:.2rem 0 .6rem}
+.fb-said b{color:var(--wrong)}
+.array-wrap{display:flex;flex-direction:column;align-items:center;margin:.5rem 0}
+.array-label{font-size:.8rem;color:var(--muted);margin-bottom:.35rem}
+.dot-array{display:grid;gap:3px}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--gold)}
+.dot.gap-r{margin-right:5px}.dot.gap-b{margin-bottom:5px}
+.fb-hint{font-size:.92rem;line-height:1.6;margin-top:.5rem;padding:.55rem .7rem;border-left:3px solid var(--focus);background:rgba(125,211,252,.06);border-radius:0 8px 8px 0}
+.fb-hint .rule{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--focus);margin-bottom:.15rem}
+.notice{font-size:.82rem;color:#fbbf24;text-align:center;margin:.4rem 0}
+.results{text-align:center;padding:1.2rem 0}
+.results h2{font-size:1.4rem;margin-bottom:.3rem}
+.final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;color:var(--gold);margin:.5rem 0}
+.stats{color:var(--muted);line-height:1.9;font-size:.92rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+.practise{max-width:520px;margin:.6rem auto;font-size:.88rem;color:var(--muted)}
+.practise span{display:inline-block;margin:.15rem .25rem;padding:.1rem .5rem;border:1px solid var(--border);border-radius:6px;font-family:'JetBrains Mono',monospace;color:var(--text)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .menu-info,body.accessible .fb-hint,body.accessible .note{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+/* Narrow screens: declared after the base rules above so they win. */
+@media (max-width:420px){.qline{font-size:1.9rem}}
+@media (max-width:360px){.qline{font-size:1.45rem;gap:.3rem}.slot{min-width:2.4rem}.key{padding:.65rem 0;font-size:1.1rem}}
+
+/* ---- Phone layout (canon §7.6.1, the phone rule; 30 Sep 2026) ----
+   On a wrong answer the reason to read and the Next control must both sit above the fold.
+   1. The keypad cannot be used while the feedback shows, so it goes, and the feedback takes its
+      space. Wrong answers only: a right answer shows one line for a moment, and hiding the keypad
+      then would make it vanish and come back under the student's thumb on every right answer.
+   2. The grid is a secondary panel. On narrow screens it collapses to a one-line bar that opens on
+      tap; the results screen still shows it in full.
+   3. Order: the fact with the struck-through answer (the question line) -> hint -> array -> Next.
+      Dots shrink on narrow screens, but every dot is drawn (the scaffold rule: never scale a count).
+   4. On a short screen (<= 600px tall, e.g. 320x568) Next cannot fit below the array, so the array
+      moves below Next. Visually only: the reading order stays fact, hint, array, Next. The hint
+      never moves below Next.
+   5. During play the header is one line on narrow screens (below). */
+.qcard.fb-open .keypad{display:none}
+.qcard.fb-open .feedback{margin-top:.7rem}
+.grid-bar{display:none;width:100%;min-height:44px;align-items:center;gap:.6rem;padding:.55rem .8rem;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.88rem;cursor:pointer;text-align:left}
+.grid-bar b{font-family:'JetBrains Mono',monospace;color:var(--gold)}
+.grid-bar-track{flex:1;height:6px;border-radius:3px;background:var(--surface2);overflow:hidden}
+.grid-bar-fill{display:block;height:100%;background:var(--gold);transition:width .4s}
+.grid-bar-cue{font-size:.78rem;color:var(--muted);white-space:nowrap}
+.grid-bar.flash{animation:barflash .9s ease-out}
+@keyframes barflash{0%{border-color:var(--gold);background:var(--gold-soft)}100%{border-color:var(--border)}}
+@media (max-width:600px){
+  .grid-bar{display:flex}
+  .grid-box:not(.open) #gameGridWrap{display:none}
+  .grid-box.open #gameGridWrap{margin-top:.6rem}
+  .qcard{padding:1rem .8rem}
+  .fb-wrong{padding:.65rem .7rem}
+  .fb-fact{font-size:1.15rem}
+  .fb-said{margin:.1rem 0 .35rem}
+  .dot-array{gap:2px}.dot{width:8px;height:8px}.dot.gap-r{margin-right:4px}.dot.gap-b{margin-bottom:4px}
+}
+/* During play the Aa toggle stays on the title line, as on wide screens, instead of wrapping
+   under it: 46px back. The title keeps clear space on both sides so the two cannot overlap. */
+@media (max-width:560px){
+  body.playing .header .a11y-toggle{position:absolute;margin-top:0;top:.1rem}
+  body.playing .header h1{padding:0 2.7rem}
+}
+@media (max-height:600px){
+  #feedback{display:flex;flex-direction:column}
+  #feedback .array-wrap{order:1}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/progress.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+
+  <div class="header" id="gameHeader">
+    <h1>Six Sevens, Bruv</h1>
+    <div class="sub" id="headerSub">Times tables, 1 to 12. Earn every square of the grid.</div>
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+  </div>
+
+  <div id="menu" class="screen active">
+    <p class="menu-info">
+      Type the answer. Every fact you get right turns <strong>gold</strong> on your grid, both ways round:
+      get 6 × 7 and 7 × 6 lights up too. Miss one and you will see how to work it out, then it comes back
+      a few questions later. The ×1 facts start gold; the other <strong>66</strong> are yours to earn.
+    </p>
+
+    <div class="panel" id="gridPanel">
+      <h2>Your grid</h2>
+      <div id="storageNote" class="note"></div>
+      <div id="gridList" class="grid-list"></div>
+      <div id="newGridArea"></div>
+      <div id="menuGridWrap" style="margin-top:.9rem"></div>
+    </div>
+
+    <div class="panel" id="lengthPanel" style="display:none">
+      <h2>How many questions</h2>
+      <div id="sessionSelect" class="session-select"></div>
+      <div class="note" id="lengthNote" style="text-align:center;margin-top:.3rem"></div>
+      <button class="btn solid start-btn" id="startBtn" disabled>Start</button>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="play">
+      <div>
+        <div class="hud">
+          <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1</div></div>
+          <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+          <div class="hud-item"><div class="hud-label">Gold</div><div class="hud-val" id="hudGold">0</div></div>
+          <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="hudClock">0:00</div></div>
+        </div>
+        <div id="saveNotice" class="notice" style="display:none"></div>
+        <div class="qcard">
+          <div class="qline" id="qline" aria-live="polite"></div>
+          <div class="keypad" id="keypad" role="group" aria-label="Number keypad">
+            <button class="key" data-k="1">1</button><button class="key" data-k="2">2</button><button class="key" data-k="3">3</button>
+            <button class="key" data-k="4">4</button><button class="key" data-k="5">5</button><button class="key" data-k="6">6</button>
+            <button class="key" data-k="7">7</button><button class="key" data-k="8">8</button><button class="key" data-k="9">9</button>
+            <button class="key back" data-k="back" aria-label="Delete">⌫</button><button class="key" data-k="0">0</button><button class="key enter" data-k="enter" aria-label="Submit">Enter</button>
+          </div>
+          <div class="feedback" id="feedback"></div>
+        </div>
+      </div>
+      <div class="grid-box" id="gridBox">
+        <button class="grid-bar" id="gridBar" type="button" aria-expanded="false" aria-controls="gameGridWrap">
+          <span><b id="gridBarGold">0</b> / 78 gold</span>
+          <span class="grid-bar-track" aria-hidden="true"><span class="grid-bar-fill" id="gridBarFill"></span></span>
+          <span class="grid-bar-cue" id="gridBarCue">Show grid</span>
+        </button>
+        <div id="gameGridWrap"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Session done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="stats" id="resStats"></div>
+      <div class="practise" id="resPractise"></div>
+      <div id="resGridWrap" style="margin:1rem 0"></div>
+      <button class="btn solid" id="againBtn">Back to your grid</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Six Sevens, Bruv — times-tables recall. Resit fluency strand, game 1 (30 Sep 2026).
+ *
+ * Everything that decides what a student sees — the 78 facts, the question forms, the
+ * derived-fact hints, the session queue and which cells are lit — lives on window.SSB as
+ * plain functions with no DOM. The UI below calls them through SSB, and
+ * scripts/verify-six-sevens.py drives the SAME functions from the live page, so the
+ * verifier checks what ships rather than a copy of it.
+ *
+ * Rules the engine keeps (and the verifier checks):
+ *  - A fact is an unordered pair a × b, 1 ≤ a ≤ b ≤ 12: 78 facts. Getting one right
+ *    lights both cells (a,b) and (b,a). The 12 ×1 facts start gold.
+ *  - The grid never shows a product that has not been earned.
+ *  - A session draws only facts not yet gold: pool → shuffle → queue. No rejection
+ *    sampling. A gold fact is never served again in the session.
+ *  - A missed fact returns 3–5 questions later, until it is answered correctly. Each
+ *    return reserves its own slot, so two returns never collide; if the queue runs dry
+ *    first, the earliest pending return is served straight away.
+ *  - Every question has exactly one '?' and exactly one answer; never "c = ? × ?".
+ *  - A 20- or 40-question session serves exactly that many questions. "Clear the grid"
+ *    runs until every fact is gold, with a safety ceiling of CLEAR_CAP_FACTOR × the
+ *    facts left, so the session always ends even if every answer is wrong.
+ */
+(function () {
+  'use strict';
+
+  var SSB = {};
+  SSB.SLUG = 'six-sevens-bruv';
+  SSB.BOARDS = ['q20', 'q40'];   // leaderboard levels; 'clear' is history-only
+  SSB.MAX = 12;
+  SSB.RETURN_GAPS = [3, 4, 5];
+  SSB.CLEAR_CAP_FACTOR = 5;
+  SSB.BASE = 100;
+  SSB.T_K = 0.15;
+
+  /* ---------- facts ---------- */
+  SSB.keyOf = function (x, y) {
+    var a = Math.min(x, y), b = Math.max(x, y);
+    return a + 'x' + b;
+  };
+  SSB.buildFacts = function () {
+    var out = [];
+    for (var a = 1; a <= SSB.MAX; a++) {
+      for (var b = a; b <= SSB.MAX; b++) out.push({ key: a + 'x' + b, a: a, b: b, product: a * b });
+    }
+    return out;
+  };
+  SSB.FACTS = SSB.buildFacts();
+  SSB.fact = function (key) {
+    for (var i = 0; i < SSB.FACTS.length; i++) if (SSB.FACTS[i].key === key) return SSB.FACTS[i];
+    return null;
+  };
+  SSB.startGold = function () {
+    var g = {};
+    SSB.FACTS.forEach(function (f) { if (f.a === 1) g[f.key] = true; });
+    return g;
+  };
+  SSB.goldCount = function (gold) {
+    var n = 0;
+    SSB.FACTS.forEach(function (f) { if (gold[f.key]) n++; });
+    return n;
+  };
+  SSB.poolOf = function (gold) {
+    return SSB.FACTS.filter(function (f) { return !gold[f.key]; }).map(function (f) { return f.key; });
+  };
+
+  /* What a cell shows: its product if that fact is gold, otherwise nothing. The only
+     place the grid gets a number from, so an unearned product cannot be displayed. */
+  SSB.cellValue = function (r, c, gold) {
+    var f = SSB.fact(SSB.keyOf(r, c));
+    return f && gold[f.key] ? f.product : null;
+  };
+
+  /* ---------- randomness ---------- */
+  SSB.mulberry32 = function (seed) {
+    var t = seed >>> 0;
+    return function () {
+      t += 0x6D2B79F5;
+      var r = Math.imul(t ^ (t >>> 15), t | 1);
+      r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
+      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  SSB.shuffle = function (arr, rng) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  };
+
+  /* ---------- questions ----------
+     form 'product': x × y = ?     answer = the product
+     form 'left':    ? × y = c     answer = x
+     form 'right':   x × ? = c     answer = y
+     Square facts use 'product' only: "? × 6 = 36" would print its own answer. */
+  SSB.makeQuestion = function (fact, swap, form) {
+    var x = swap ? fact.b : fact.a, y = swap ? fact.a : fact.b, c = fact.product;
+    var q = { key: fact.key, x: x, y: y, form: form, c: c };
+    if (form === 'product') { q.parts = [String(x), '×', String(y), '=', '?']; q.answer = c; }
+    else if (form === 'left') { q.parts = ['?', '×', String(y), '=', String(c)]; q.answer = x; }
+    else { q.parts = [String(x), '×', '?', '=', String(c)]; q.answer = y; }
+    return q;
+  };
+  SSB.formsFor = function (fact) {
+    return fact.a === fact.b ? ['product'] : ['product', 'left', 'right'];
+  };
+  SSB.buildQuestion = function (key, rng) {
+    var f = SSB.fact(key);
+    var swap = f.a !== f.b && rng() < 0.5;
+    var r = rng(), form;
+    if (f.a === f.b || r < 0.5) form = 'product';
+    else form = r < 0.75 ? 'left' : 'right';
+    return SSB.makeQuestion(f, swap, form);
+  };
+
+  /* ---------- derived-fact hints ----------
+     The hint uses whichever factor has the EASIER rule (Jon, 30 Sep 2026), in this order:
+       ×1, ×2 double, ×10 ten lots, ×5 half of ×10, ×4 double double, ×3, ×6 double ×3,
+       ×8 double ×4, ×9 ×10 minus one lot, ×11, ×12 ×10 plus ×2, ×7 from a neighbour.
+     So 6 × 7 and 7 × 6 both use the ×6 rule, and 7 × 7 uses the neighbour rule.
+     Each rule returns the steps it uses, so every number in the hint can be checked. */
+  SSB.HINT_PRIORITY = [1, 2, 10, 5, 4, 3, 6, 8, 9, 11, 12, 7];
+  function step(op, args, value) { return { op: op, args: args, value: value }; }
+  function neighbour(n, f, label) {
+    var prev = n * (f - 1);
+    return { rule: label, steps: [step('mul', [n, f - 1], prev), step('add', [prev, n], n * f)],
+      text: n + ' × ' + f + ' is one more ' + n + ' than ' + n + ' × ' + (f - 1) + ': ' + prev + ' + ' + n + ' = ' + (n * f) + '.' };
+  }
+  SSB.HINT_RULES = {
+    1: function (n) {
+      return { rule: '×1 changes nothing', steps: [step('mul', [n, 1], n)],
+        text: n + ' × 1 is one lot of ' + n + ', which is just ' + n + '.' };
+    },
+    2: function (n) {
+      return { rule: '×2 is double', steps: [step('double', [n], 2 * n)],
+        text: n + ' × 2 is double ' + n + ': ' + n + ' + ' + n + ' = ' + (2 * n) + '.' };
+    },
+    10: function (n) {
+      return { rule: '×10 is ten lots', steps: [step('mul', [n, 10], 10 * n)],
+        text: n + ' × 10 is ten lots of ' + n + '. Each digit moves one place to the left: ' + n + ' × 10 = ' + (10 * n) + '.' };
+    },
+    5: function (n) {
+      return { rule: '×5 is half of ×10', steps: [step('mul', [n, 10], 10 * n), step('half', [10 * n], 5 * n)],
+        text: n + ' × 5 is half of ' + n + ' × 10. ' + n + ' × 10 = ' + (10 * n) + ', and half of ' + (10 * n) + ' is ' + (5 * n) + '.' };
+    },
+    4: function (n) {
+      return { rule: '×4 is double double', steps: [step('double', [n], 2 * n), step('double', [2 * n], 4 * n)],
+        text: n + ' × 4 is double, then double again: double ' + n + ' is ' + (2 * n) + ', and double ' + (2 * n) + ' is ' + (4 * n) + '.' };
+    },
+    3: function (n) { return neighbour(n, 3, '×3 is double and one more lot'); },
+    6: function (n) {
+      return { rule: '×6 is double ×3', steps: [step('mul', [n, 3], 3 * n), step('double', [3 * n], 6 * n)],
+        text: n + ' × 6 is double ' + n + ' × 3. ' + n + ' × 3 = ' + (3 * n) + ', and double ' + (3 * n) + ' is ' + (6 * n) + '.' };
+    },
+    8: function (n) {
+      return { rule: '×8 is double ×4', steps: [step('mul', [n, 4], 4 * n), step('double', [4 * n], 8 * n)],
+        text: n + ' × 8 is double ' + n + ' × 4. ' + n + ' × 4 = ' + (4 * n) + ', and double ' + (4 * n) + ' is ' + (8 * n) + '.' };
+    },
+    9: function (n) {
+      return { rule: '×9 is ×10 take away one lot', steps: [step('mul', [n, 10], 10 * n), step('sub', [10 * n, n], 9 * n)],
+        text: n + ' × 9 is ' + n + ' × 10 take away one ' + n + ': ' + (10 * n) + ' − ' + n + ' = ' + (9 * n) + '.' };
+    },
+    11: function (n) {
+      return { rule: '×11 is ×10 and one more lot', steps: [step('mul', [n, 10], 10 * n), step('add', [10 * n, n], 11 * n)],
+        text: n + ' × 11 is ' + n + ' × 10 and one more ' + n + ': ' + (10 * n) + ' + ' + n + ' = ' + (11 * n) + '.' };
+    },
+    12: function (n) {
+      return { rule: '×12 is ×10 plus ×2', steps: [step('mul', [n, 10], 10 * n), step('mul', [n, 2], 2 * n), step('add', [10 * n, 2 * n], 12 * n)],
+        text: n + ' × 12 is ' + n + ' × 10 plus ' + n + ' × 2: ' + (10 * n) + ' + ' + (2 * n) + ' = ' + (12 * n) + '.' };
+    },
+    7: function (n) { return neighbour(n, 7, '×7 from a neighbour'); }
+  };
+  /* The factor whose rule is used: the one that comes first in HINT_PRIORITY. */
+  SSB.hintFactor = function (x, y) {
+    return SSB.HINT_PRIORITY.indexOf(x) <= SSB.HINT_PRIORITY.indexOf(y) ? x : y;
+  };
+  SSB.hint = function (x, y) {
+    var f = SSB.hintFactor(x, y), n = f === y ? x : y;
+    var h = SSB.HINT_RULES[f](n);
+    // Rules are written "n × f"; if the question shows it the other way round, say so first.
+    if (f === x && x !== y) h.text = x + ' × ' + y + ' is the same as ' + y + ' × ' + x + '. ' + h.text;
+    h.x = x; h.y = y; h.factor = f;
+    return h;
+  };
+
+  /* ---------- scoring (canon §7.3; single attempt, no hints before answering) ---------- */
+  SSB.scoreFor = function (seconds, correct) {
+    if (!correct) return 0;
+    var m = 1 / (1 + SSB.T_K * Math.log(1 + Math.max(0, seconds)));
+    return Math.max(1, Math.round(SSB.BASE * m));
+  };
+
+  /* ---------- session engine ---------- */
+  SSB.createSession = function (opts) {
+    var gold = {};
+    Object.keys(opts.gold || {}).forEach(function (k) { if (opts.gold[k]) gold[k] = true; });
+    var pool = SSB.poolOf(gold);
+    var clear = opts.length === 'clear';
+    return {
+      rng: opts.rng || Math.random,
+      gold: gold,
+      queue: SSB.shuffle(pool, opts.rng || Math.random),
+      returns: [],            // [{key, due}] — due is the 1-based index it is served at
+      served: 0,
+      current: null,
+      clear: clear,
+      poolSize: pool.length,
+      cap: clear ? SSB.CLEAR_CAP_FACTOR * pool.length : Math.min(opts.length, Infinity),
+      log: []
+    };
+  };
+  SSB.boardFor = function (s) {
+    return s.clear ? 'clear' : 'q' + s.cap;
+  };
+  SSB.sessionDone = function (s) {
+    if (s.current) return false;
+    if (s.served >= s.cap) return true;
+    return s.queue.length === 0 && s.returns.length === 0;
+  };
+  SSB.sessionNext = function (s) {
+    if (s.current || SSB.sessionDone(s)) return null;
+    var idx = s.served + 1, key = null, i;
+    for (i = 0; i < s.returns.length; i++) {
+      if (s.returns[i].due === idx) { key = s.returns.splice(i, 1)[0].key; break; }
+    }
+    if (key === null && s.queue.length) key = s.queue.shift();
+    if (key === null && s.returns.length) {
+      var e = 0;
+      for (i = 1; i < s.returns.length; i++) if (s.returns[i].due < s.returns[e].due) e = i;
+      key = s.returns.splice(e, 1)[0].key;
+    }
+    if (key === null) return null;
+    s.served = idx;
+    s.current = key;
+    return key;
+  };
+  SSB.sessionAnswer = function (s, correct) {
+    var key = s.current;
+    if (!key) return;
+    s.current = null;
+    s.log.push({ i: s.served, key: key, correct: !!correct });
+    if (correct) { s.gold[key] = true; return; }
+    var taken = {};
+    s.returns.forEach(function (r) { taken[r.due] = true; });
+    var gaps = SSB.shuffle(SSB.RETURN_GAPS, s.rng), due = null;
+    for (var i = 0; i < gaps.length; i++) if (!taken[s.served + gaps[i]]) { due = s.served + gaps[i]; break; }
+    if (due === null) {             // cannot happen (at most two earlier misses reach this window);
+      due = s.served + SSB.RETURN_GAPS[SSB.RETURN_GAPS.length - 1];   // if it did, go after every
+      Object.keys(taken).forEach(function (d) { if (+d >= due) due = +d + 1; });  // reserved slot
+    }
+    s.returns.push({ key: key, due: due });
+  };
+
+  window.SSB = SSB;
+})();
+</script>
+
+<script>
+/* ---------- UI ---------- */
+(function () {
+  'use strict';
+  var SSB = window.SSB;
+  var SLUG = SSB.SLUG;
+  var CORRECT_DELAY = 700;
+  var board = null;       // 'q20' | 'q40' | 'clear': the leaderboard level and personal-best key;
+                          // analytics send it as `mode` with level 'all' (canon §1.3, Jon 30 Sep 2026)
+
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  var P = window.MaffsProgress;
+  var canSave = !!(P && P.available());
+
+  var grid = null;        // {initials|null, gold:{}, saved:bool}
+  var sessionLength = null;
+  var S = null;           // engine session
+  var q = null;           // current question
+  var typed = '';
+  var state = 'menu';     // menu | asking | right | wrong | done
+  var qStart = 0, t0 = 0, clockTimer = null;
+  var score = 0, correctCount = 0, startGoldCount = 0;
+  var missed = {};
+
+  /* ---------- grid rendering ---------- */
+  function renderGrid(mount, gold, opts) {
+    opts = opts || {};
+    var hlRow = opts.hlRow || null, hlCol = opts.hlCol || null;
+    var t = '<table class="tgrid" aria-label="Times grid, ' + SSB.goldCount(gold) + ' of ' + SSB.FACTS.length + ' facts gold"><tr><th>×</th>';
+    for (var c = 1; c <= SSB.MAX; c++) t += '<th' + (c === hlCol ? ' class="hl"' : '') + '>' + c + '</th>';
+    t += '</tr>';
+    for (var r = 1; r <= SSB.MAX; r++) {
+      t += '<tr><th' + (r === hlRow ? ' class="hl"' : '') + '>' + r + '</th>';
+      for (c = 1; c <= SSB.MAX; c++) {
+        var v = SSB.cellValue(r, c, gold);
+        t += '<td data-r="' + r + '" data-c="' + c + '"' + (v !== null ? ' class="gold">' + v : '>') + '</td>';
+      }
+      t += '</tr>';
+    }
+    t += '</table><div class="grid-caption"><b>' + SSB.goldCount(gold) + '</b> of ' + SSB.FACTS.length + ' facts gold</div>';
+    mount.innerHTML = t;
+  }
+  /* The game-screen grid, and the one-line bar it collapses to on narrow screens. */
+  function renderGameGrid(gold, opts) {
+    renderGrid($('gameGridWrap'), gold, opts);
+    var n = SSB.goldCount(gold);
+    $('gridBarGold').textContent = n;
+    $('gridBarFill').style.width = (100 * n / SSB.FACTS.length) + '%';
+  }
+  function setGridOpen(open) {
+    $('gridBox').classList.toggle('open', open);
+    $('gridBar').setAttribute('aria-expanded', String(open));
+    $('gridBarCue').textContent = open ? 'Hide grid' : 'Show grid';
+  }
+  function flashCells(mount, key) {
+    var f = SSB.fact(key);
+    [[f.a, f.b], [f.b, f.a]].forEach(function (rc) {
+      var td = mount.querySelector('td[data-r="' + rc[0] + '"][data-c="' + rc[1] + '"]');
+      if (td) { td.classList.remove('flash'); void td.offsetWidth; td.classList.add('flash'); }
+    });
+  }
+
+  /* ---------- grids on this device ---------- */
+  function freshGold() { return SSB.startGold(); }
+  function sanitiseGold(list) {
+    var g = freshGold();
+    (Array.isArray(list) ? list : []).forEach(function (k) { if (SSB.fact(k)) g[k] = true; });
+    return g;
+  }
+  function goldList(gold) { return SSB.FACTS.filter(function (f) { return gold[f.key]; }).map(function (f) { return f.key; }); }
+  function saveGrid() {
+    if (!grid || !grid.initials || !grid.saved) return;
+    var ok = P.save(SLUG, grid.initials, { gold: goldList(grid.gold) }, { gold: SSB.goldCount(grid.gold) });
+    if (!ok) {
+      grid.saved = false;
+      var n = $('saveNotice');
+      n.textContent = 'This browser stopped keeping data for the site, so from here your grid lasts only until you close the tab.';
+      n.style.display = 'block';
+    }
+  }
+
+  function renderMenu() {
+    var list = $('gridList'), area = $('newGridArea'), note = $('storageNote');
+    list.innerHTML = ''; area.innerHTML = '';
+    if (!canSave) {
+      note.className = 'note warn';
+      note.textContent = 'This browser is not keeping data for this site, so your grid lasts only until you close the tab. Nothing is saved.';
+      if (!grid) grid = { initials: null, gold: freshGold(), saved: false };
+    } else {
+      note.className = 'note';
+      note.textContent = 'Grids are kept on this device only, under your initials. Nothing leaves the device.';
+      var saved = P.list(SLUG);
+      saved.forEach(function (g) {
+        var row = document.createElement('div'); row.className = 'grid-row';
+        var pick = document.createElement('button');
+        pick.className = 'grid-pick' + (grid && grid.initials === g.initials ? ' selected' : '');
+        pick.textContent = g.initials + ' — ' + (g.summary && typeof g.summary.gold === 'number' ? g.summary.gold : '?') + ' gold';
+        pick.addEventListener('click', function () { selectGrid(g.initials); });
+        var del = document.createElement('button'); del.className = 'grid-del'; del.textContent = 'Delete grid';
+        del.setAttribute('aria-label', 'Delete grid ' + g.initials);
+        del.addEventListener('click', function () { confirmDelete(row, g.initials); });
+        row.appendChild(pick); row.appendChild(del); list.appendChild(row);
+      });
+      if (!saved.length) {
+        var none = document.createElement('div'); none.className = 'note';
+        none.textContent = 'No grids on this device yet. Start one with your initials.';
+        list.appendChild(none);
+      }
+      var nb = document.createElement('button'); nb.className = 'btn'; nb.id = 'newGridBtn'; nb.textContent = 'New grid';
+      nb.style.marginTop = '.6rem';
+      nb.addEventListener('click', showNewGridForm);
+      area.appendChild(nb);
+    }
+    if (grid) renderGrid($('menuGridWrap'), grid.gold); else $('menuGridWrap').innerHTML = '';
+    renderLength();
+  }
+
+  function confirmDelete(row, ini) {
+    row.innerHTML = '';
+    var box = document.createElement('div'); box.className = 'confirm-row';
+    box.appendChild(document.createTextNode('Delete ' + ini + '’s grid for good? '));
+    var yes = document.createElement('button'); yes.className = 'btn'; yes.textContent = 'Delete'; yes.style.borderColor = 'var(--wrong)'; yes.style.color = 'var(--wrong)';
+    var no = document.createElement('button'); no.className = 'btn quiet'; no.textContent = 'Keep it';
+    yes.addEventListener('click', function () {
+      P.remove(SLUG, ini);
+      if (grid && grid.initials === ini) grid = null;
+      renderMenu();
+    });
+    no.addEventListener('click', renderMenu);
+    box.appendChild(yes); box.appendChild(no); row.appendChild(box);
+    no.focus();
+  }
+
+  function showNewGridForm() {
+    var area = $('newGridArea');
+    area.innerHTML = '<div class="new-grid"><label for="iniInput" class="note">Your initials</label>' +
+      '<input id="iniInput" maxlength="3" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="iniError">' +
+      '<button class="btn solid" id="iniCreate">Create</button><button class="btn quiet" id="iniCancel">Cancel</button></div>' +
+      '<div class="form-error" id="iniError" role="alert"></div>';
+    var input = $('iniInput');
+    input.addEventListener('input', function () {
+      var n = window.MaffsInitials ? window.MaffsInitials.normaliseInitials(input.value).slice(0, 3) : '';
+      if (input.value !== n) input.value = n;
+      $('iniError').textContent = '';
+    });
+    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); createGrid(); } });
+    $('iniCreate').addEventListener('click', createGrid);
+    $('iniCancel').addEventListener('click', renderMenu);
+    input.focus();
+  }
+
+  function createGrid() {
+    var v = P.validate($('iniInput').value);
+    if (!v.ok) { $('iniError').textContent = v.reason; return; }
+    if (P.load(SLUG, v.initials)) {
+      $('iniError').textContent = 'There is already a grid for ' + v.initials + ' on this device. Pick it from the list.';
+      return;
+    }
+    var g = { initials: v.initials, gold: freshGold(), saved: true };
+    var ok = P.save(SLUG, g.initials, { gold: goldList(g.gold) }, { gold: SSB.goldCount(g.gold) });
+    if (!ok) {
+      canSave = false;
+      grid = { initials: null, gold: g.gold, saved: false };
+    } else {
+      grid = g;
+    }
+    renderMenu();
+  }
+
+  function selectGrid(ini) {
+    var data = P.load(SLUG, ini);
+    grid = { initials: ini, gold: sanitiseGold(data && data.gold), saved: true };
+    renderMenu();
+  }
+
+  function renderLength() {
+    var panel = $('lengthPanel');
+    if (!grid) { panel.style.display = 'none'; return; }
+    panel.style.display = 'block';
+    var pool = SSB.poolOf(grid.gold).length;
+    var mount = $('sessionSelect');
+    if (pool === 0) {
+      mount.innerHTML = '';
+      $('lengthNote').textContent = 'Every fact on this grid is gold. Nothing left to earn.';
+      $('startBtn').disabled = true;
+      return;
+    }
+    var preferred = [20, 40].filter(function (c) { return c < pool; });
+    if (!preferred.length) preferred = [pool];
+    MaffsSession.render({
+      mount: mount, poolSize: pool, preferred: preferred, selected: sessionLength || preferred[0],
+      onChange: function (n) { sessionLength = n; describeLength(pool); }
+    });
+    // The pool-sized button is "clear the grid": it keeps going until every fact is gold.
+    var btns = mount.querySelectorAll('.session-btn');
+    for (var i = 0; i < btns.length; i++) {
+      if (+btns[i].dataset.count === pool) btns[i].textContent = 'Clear the grid (' + pool + ')';
+    }
+    $('startBtn').disabled = false;
+    describeLength(pool);
+  }
+  function describeLength(pool) {
+    $('lengthNote').textContent = sessionLength === pool
+      ? 'Keeps going until all ' + pool + ' facts left are gold. Misses come back until you get them.'
+      : sessionLength + ' questions. Misses come back a few questions later.';
+  }
+
+  /* ---------- play ---------- */
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+  }
+  function clock() {
+    var s = Math.floor((Date.now() - t0) / 1000);
+    $('hudClock').textContent = Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+  }
+
+  function startGame() {
+    if (!grid) return;
+    var pool = SSB.poolOf(grid.gold).length;
+    if (!pool) return;
+    S = SSB.createSession({ gold: grid.gold, length: sessionLength === pool ? 'clear' : sessionLength });
+    board = SSB.boardFor(S);
+    score = 0; correctCount = 0; missed = {};
+    startGoldCount = SSB.goldCount(grid.gold);
+    $('saveNotice').style.display = grid.saved || !grid.initials ? 'none' : 'block';
+    setGridOpen(false);
+    show('game');
+    t0 = Date.now(); clock();
+    clearInterval(clockTimer); clockTimer = setInterval(clock, 1000);
+    ev('game_started', { game_slug: SLUG, level: 'all', mode: board });
+    nextQuestion();
+  }
+
+  /* After a wrong answer the slot shows the CORRECT value in gold, with the student's answer
+     small and struck through beside it, so the line on screen is always a true equation. */
+  function renderQuestion(slotClass, given) {
+    var html = '';
+    q.parts.forEach(function (p) {
+      if (p !== '?') { html += '<span>' + p + '</span>'; return; }
+      if (slotClass === 'reveal') {
+        html += '<span class="slot reveal" aria-label="answer ' + q.answer + ', you said ' + given + '">' + q.answer +
+          '<del class="given" aria-hidden="true">' + given + '</del></span>';
+      } else {
+        html += '<span class="slot ' + (typed ? '' : 'empty ') + (slotClass || '') + '" aria-label="answer">' + typed + '</span>';
+      }
+    });
+    $('qline').innerHTML = html;
+  }
+
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    var key = SSB.sessionNext(S);
+    if (key === null) { finish(); return; }
+    q = SSB.buildQuestion(key, S.rng);
+    typed = '';
+    state = 'asking';
+    $('keypad').classList.remove('locked');
+    $('keypad').parentNode.classList.remove('fb-open');
+    $('hudQ').textContent = S.clear ? String(S.served) : S.served + '/' + S.cap;
+    $('hudScore').textContent = score;
+    $('hudGold').textContent = SSB.goldCount(S.gold) + '/' + SSB.FACTS.length;
+    renderQuestion();
+    // Highlight only the headers the question itself shows, so the grid gives nothing away.
+    renderGameGrid(S.gold, {
+      hlRow: q.form === 'left' ? null : q.x,
+      hlCol: q.form === 'right' ? null : q.y
+    });
+    qStart = Date.now();
+  }
+
+  function press(k) {
+    if (state !== 'asking') return;
+    if (k === 'back') typed = typed.slice(0, -1);
+    else if (k === 'enter') { if (typed) submit(); return; }
+    else if (/^[0-9]$/.test(k) && typed.length < 3) typed = (typed === '0' ? '' : typed) + k;
+    renderQuestion();
+  }
+
+  function submit() {
+    var given = parseInt(typed, 10);
+    var ok = given === q.answer;
+    var secs = (Date.now() - qStart) / 1000;
+    state = ok ? 'right' : 'wrong';
+    $('keypad').classList.add('locked');
+    SSB.sessionAnswer(S, ok);
+    ev('question_answered', { game_slug: SLUG, level: 'all', mode: board, question_index: S.served, correct: ok });
+    if (ok) renderQuestion('correct'); else renderQuestion('reveal', given);
+    if (ok) {
+      correctCount++;
+      score += SSB.scoreFor(secs, true);
+      delete missed[q.key];
+      grid.gold[q.key] = true;
+      saveGrid();
+      $('hudScore').textContent = score;
+      $('hudGold').textContent = SSB.goldCount(S.gold) + '/' + SSB.FACTS.length;
+      renderGameGrid(S.gold);
+      flashCells($('gameGridWrap'), q.key);
+      var bar = $('gridBar'); bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash');
+      $('feedback').innerHTML = '<div class="fb-right">✓ ' + q.x + ' × ' + q.y + ' = ' + q.c + '</div>';
+      setTimeout(nextQuestion, CORRECT_DELAY);
+    } else {
+      missed[q.key] = true;
+      showWrong(given);
+    }
+  }
+
+  function showWrong(given) {
+    var h = SSB.hint(q.x, q.y);
+    var dots = '';
+    for (var r = 0; r < q.x; r++) {
+      for (var c = 0; c < q.y; c++) {
+        var cls = 'dot' + ((c + 1) % 5 === 0 && c + 1 < q.y ? ' gap-r' : '') + ((r + 1) % 5 === 0 && r + 1 < q.x ? ' gap-b' : '');
+        dots += '<span class="' + cls + '"></span>';
+      }
+    }
+    // Order (Jon, 30 Sep 2026): the fact with the struck-through answer (the question line
+    // above), then the hint, then the array, then Next (canon §7.6.1). The array is its own block,
+    // after the box, so a short screen can move it below Next without touching the hint.
+    var fb = $('feedback');
+    $('keypad').parentNode.classList.add('fb-open');
+    fb.innerHTML = '<div class="fb-wrong">' +
+      '<div class="fb-fact">' + q.x + ' × ' + q.y + ' = ' + q.c + '</div>' +
+      '<div class="fb-said">✗ You said <b>' + given + '</b>. It comes back in a few questions.</div>' +
+      '<div class="fb-hint"><span class="rule">' + h.rule + '</span>' + h.text + '</div>' +
+      '</div>' +
+      '<div class="array-wrap"><div class="array-label">' + q.x + (q.x === 1 ? ' row' : ' rows') + ' of ' + q.y + '</div>' +
+      '<div class="dot-array" role="img" aria-label="' + q.x + ' rows of ' + q.y + ' dots, ' + q.c + ' in all" style="grid-template-columns:repeat(' + q.y + ',auto)">' + dots + '</div></div>';
+    MaffsNext.wrong({ mount: fb, onAdvance: nextQuestion });
+  }
+
+  function finish() {
+    state = 'done';
+    clearInterval(clockTimer);
+    var secs = Math.floor((Date.now() - t0) / 1000);
+    var answered = S.log.length;
+    ev('game_completed', { game_slug: SLUG, level: 'all', mode: board, score: score, questions_answered: answered, questions_correct: correctCount });
+    // 20 and 40 rank on separate boards; "clear the grid" has no fixed length, so it ranks nowhere
+    // and is kept in this device's score history only (Jon, 30 Sep 2026).
+    if (board !== 'clear' && window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, answered).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'ssb_best_' + board;
+    var prev = parseInt(lsGet(pbKey) || '0', 10) || 0;
+    var pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: 'all', mode: board, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    var gained = SSB.goldCount(S.gold) - startGoldCount;
+    var left = SSB.poolOf(S.gold).length;
+    $('resTitle').textContent = left === 0 ? 'Grid cleared. Every fact is gold.' : 'Session done';
+    $('resScore').textContent = score;
+    $('resStats').innerHTML = '<b>' + correctCount + '</b> right out of <b>' + answered + '</b> · time <b>' +
+      Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2) + '</b><br>' +
+      '<b>+' + gained + '</b> gold this session · <b>' + SSB.goldCount(S.gold) + '</b> of ' + SSB.FACTS.length + ' on ' +
+      (grid.initials ? grid.initials + '’s grid' : 'this grid') + (pb ? '<br>New personal best' : '') +
+      (S.clear && left > 0 && S.served >= S.cap ? '<br>Stopped after ' + S.cap + ' questions. Pick it up next time.' : '') +
+      (!grid.saved ? '<br>This grid is not saved on this device.' : '');
+    var still = Object.keys(missed).filter(function (k) { return !S.gold[k]; });
+    $('resPractise').innerHTML = still.length ? 'Still to earn from this session: ' + still.map(function (k) {
+      var f = SSB.fact(k); return '<span>' + f.a + ' × ' + f.b + '</span>';
+    }).join('') : '';
+    renderGrid($('resGridWrap'), S.gold);
+    show('results');
+  }
+
+  /* ---------- wiring ---------- */
+  var keys = $('keypad').querySelectorAll('.key');
+  for (var i = 0; i < keys.length; i++) {
+    keys[i].addEventListener('click', function () { press(this.dataset.k); });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (state !== 'asking') return;
+    if (e.target && e.target.tagName === 'INPUT') return;
+    if (/^[0-9]$/.test(e.key)) { press(e.key); e.preventDefault(); }
+    else if (e.key === 'Backspace') { press('back'); e.preventDefault(); }
+    else if (e.key === 'Enter') { press('enter'); e.preventDefault(); }
+  });
+  $('startBtn').addEventListener('click', startGame);
+  $('gridBar').addEventListener('click', function () { setGridOpen(!$('gridBox').classList.contains('open')); });
+  $('againBtn').addEventListener('click', function () {
+    state = 'menu';
+    if (grid && grid.initials && grid.saved) selectGrid(grid.initials); else renderMenu();
+    show('menu');
+  });
+
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Open the most recently used grid on this device, if there is one.
+  if (canSave) {
+    var saved = P.list(SLUG);
+    if (saved.length) selectGrid(saved[0].initials); else renderMenu();
+  } else {
+    renderMenu();
+  }
+
+  // Test hooks for scripts/verify-six-sevens.py (read-only views of live state).
+  SSB.ui = {
+    state: function () { return state; },
+    question: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },
+    session: function () { return S ? { served: S.served, cap: S.cap, clear: S.clear, board: board, gold: Object.keys(S.gold) } : null; },
+    grid: function () { return grid ? { initials: grid.initials, saved: grid.saved, gold: goldList(grid.gold) } : null; },
+    canSave: function () { return canSave; }
+  };
+})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

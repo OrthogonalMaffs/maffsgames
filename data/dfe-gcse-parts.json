@@ -1,0 +1,2193 @@
+{
+ "source": {
+  "id": "dfe-gcse-subject-content",
+  "title": "Mathematics: GCSE subject content and assessment objectives",
+  "publisher": "Department for Education",
+  "url": "https://assets.publishing.service.gov.uk/media/5a7cb5b040f0b6629523b52c/GCSE_mathematics_subject_content_and_assessment_objectives.pdf",
+  "sha256": "647a751b51c71d9ced1c9356aa70b15ceb1a4acb2fd5bc9af49619ead06d0ee6",
+  "retrieved": "2026-09-24",
+  "licence": "OGL v3.0, Crown copyright 2013",
+  "vendored": "docs/sources/dfe-gcse-maths-subject-content.pdf"
+ },
+ "convention": {
+  "standard": "all students develop confidence and competence with this content",
+  "underlined": "all students are assessed on standard and underlined content",
+  "bold": "only the more highly attaining students are assessed on this content"
+ },
+ "statements": [
+  {
+   "ref": "N1",
+   "section": "Number",
+   "letter": "N",
+   "n": 1,
+   "page": 3,
+   "text": "order positive and negative integers, decimals and fractions; use the symbols =, ≠, <, >, ≤, ≥",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N1.1",
+     "tier": "standard",
+     "text": "order positive and negative integers, decimals and fractions; use the symbols =, ≠, <, >, ≤, ≥"
+    }
+   ]
+  },
+  {
+   "ref": "N2",
+   "section": "Number",
+   "letter": "N",
+   "n": 2,
+   "page": 3,
+   "text": "apply the four operations, including formal written methods, to integers, decimals and simple fractions (proper and improper), and mixed numbers – all both positive and negative; understand and use place value (e.g. when working with very large or very small numbers, and when calculating with decimals)",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N2.1",
+     "tier": "standard",
+     "text": "apply the four operations, including formal written methods, to integers, decimals and simple fractions (proper and improper), and mixed numbers – all both positive and negative; understand and use place value (e.g. when working with very large or very small numbers, and when calculating with decimals)"
+    }
+   ]
+  },
+  {
+   "ref": "N3",
+   "section": "Number",
+   "letter": "N",
+   "n": 3,
+   "page": 4,
+   "text": "recognise and use relationships between operations, including inverse operations (e.g. cancellation to simplify calculations and expressions; use conventional notation for priority of operations, including brackets, powers, roots and reciprocals",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N3.1",
+     "tier": "standard",
+     "text": "recognise and use relationships between operations, including inverse operations (e.g. cancellation to simplify calculations and expressions; use conventional notation for priority of operations, including brackets, powers, roots and reciprocals"
+    }
+   ]
+  },
+  {
+   "ref": "N4",
+   "section": "Number",
+   "letter": "N",
+   "n": 4,
+   "page": 4,
+   "text": "use the concepts and vocabulary of prime numbers, factors (divisors), multiples, common factors, common multiples, highest common factor, lowest common multiple, prime factorisation, including using product notation and the unique factorisation theorem",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N4.1",
+     "tier": "standard",
+     "text": "use the concepts and vocabulary of prime numbers, factors (divisors), multiples, common factors, common multiples, highest common factor, lowest common multiple, prime factorisation, including using product notation and the unique factorisation theorem"
+    }
+   ]
+  },
+  {
+   "ref": "N5",
+   "section": "Number",
+   "letter": "N",
+   "n": 5,
+   "page": 4,
+   "text": "apply systematic listing strategies including use of the product rule for counting",
+   "tiers": [
+    "bold",
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N5.1",
+     "tier": "standard",
+     "text": "apply systematic listing strategies"
+    },
+    {
+     "ref": "N5.2",
+     "tier": "bold",
+     "text": "including use of the product rule for counting"
+    }
+   ]
+  },
+  {
+   "ref": "N6",
+   "section": "Number",
+   "letter": "N",
+   "n": 6,
+   "page": 4,
+   "text": "use positive integer powers and associated real roots (square, cube and higher), recognise powers of 2, 3, 4, 5; estimate powers and roots of any given positive number",
+   "tiers": [
+    "bold",
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N6.1",
+     "tier": "standard",
+     "text": "use positive integer powers and associated real roots (square, cube and higher), recognise powers of 2, 3, 4, 5"
+    },
+    {
+     "ref": "N6.2",
+     "tier": "bold",
+     "text": "; estimate powers and roots of any given positive number"
+    }
+   ]
+  },
+  {
+   "ref": "N7",
+   "section": "Number",
+   "letter": "N",
+   "n": 7,
+   "page": 4,
+   "text": "calculate with roots, and with integer and fractional indices",
+   "tiers": [
+    "bold",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "N7.1",
+     "tier": "underlined",
+     "text": "calculate with roots, and with integer"
+    },
+    {
+     "ref": "N7.2",
+     "tier": "bold",
+     "text": "and fractional"
+    },
+    {
+     "ref": "N7.3",
+     "tier": "underlined",
+     "text": "indices"
+    }
+   ]
+  },
+  {
+   "ref": "N8",
+   "section": "Number",
+   "letter": "N",
+   "n": 8,
+   "page": 4,
+   "text": "calculate exactly with fractions, surds and multiples of π; simplify surd expressions involving squares (e.g. 12 = 4×3 = 4 × 3 = 2 3 ) andrationalise denominators",
+   "tiers": [
+    "bold",
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "N8.1",
+     "tier": "standard",
+     "text": "calculate exactly with fractions,"
+    },
+    {
+     "ref": "N8.2",
+     "tier": "bold",
+     "text": "surds"
+    },
+    {
+     "ref": "N8.3",
+     "tier": "underlined",
+     "text": "and multiples of π"
+    },
+    {
+     "ref": "N8.4",
+     "tier": "bold",
+     "text": "; simplify surd expressions involving squares (e.g. 12 = 4×3 = 4 × 3 = 2 3 ) andrationalise denominators"
+    }
+   ]
+  },
+  {
+   "ref": "N9",
+   "section": "Number",
+   "letter": "N",
+   "n": 9,
+   "page": 4,
+   "text": "calculate with and interpret standard form A x 10n, where 1 ≤ A < 10 and n is an integer.",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N9.1",
+     "tier": "standard",
+     "text": "calculate with and interpret standard form A x 10n, where 1 ≤ A < 10 and n is an integer."
+    }
+   ]
+  },
+  {
+   "ref": "N10",
+   "section": "Number",
+   "letter": "N",
+   "n": 10,
+   "page": 4,
+   "text": "work interchangeably with terminating decimals and their corresponding fractions (such as 3.5 and 72 or 0.375 or 38 ); change recurring decimals into their corresponding fractions and vice versa",
+   "tiers": [
+    "bold",
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N10.1",
+     "tier": "standard",
+     "text": "work interchangeably with terminating decimals and their corresponding fractions (such as 3.5 and 72 or 0.375 or 38 )"
+    },
+    {
+     "ref": "N10.2",
+     "tier": "bold",
+     "text": "; change recurring decimals into their corresponding fractions and vice versa"
+    }
+   ]
+  },
+  {
+   "ref": "N11",
+   "section": "Number",
+   "letter": "N",
+   "n": 11,
+   "page": 4,
+   "text": "identify and work with fractions in ratio problems",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N11.1",
+     "tier": "standard",
+     "text": "identify and work with fractions in ratio problems"
+    }
+   ]
+  },
+  {
+   "ref": "N12",
+   "section": "Number",
+   "letter": "N",
+   "n": 12,
+   "page": 4,
+   "text": "interpret fractions and percentages as operators.",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N12.1",
+     "tier": "standard",
+     "text": "interpret fractions and percentages as operators."
+    }
+   ]
+  },
+  {
+   "ref": "N13",
+   "section": "Number",
+   "letter": "N",
+   "n": 13,
+   "page": 4,
+   "text": "use standard units of mass, length, time, money and other measures (including standard compound measures) using decimal quantities where appropriate",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N13.1",
+     "tier": "standard",
+     "text": "use standard units of mass, length, time, money and other measures (including standard compound measures) using decimal quantities where appropriate"
+    }
+   ]
+  },
+  {
+   "ref": "N14",
+   "section": "Number",
+   "letter": "N",
+   "n": 14,
+   "page": 4,
+   "text": "estimate answers; check calculations using approximation and estimation, including answers obtained using technology",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "N14.1",
+     "tier": "standard",
+     "text": "estimate answers; check calculations using approximation and estimation, including answers obtained using technology"
+    }
+   ]
+  },
+  {
+   "ref": "N15",
+   "section": "Number",
+   "letter": "N",
+   "n": 15,
+   "page": 4,
+   "text": "round numbers and measures to an appropriate degree of accuracy (e.g. to a specified number of decimal places or significant figures); use inequality notation to specify simple error intervals due to truncation or rounding",
+   "tiers": [
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "N15.1",
+     "tier": "standard",
+     "text": "round numbers and measures to an appropriate degree of accuracy (e.g. to a specified number of decimal places or significant figures); use inequality notation"
+    },
+    {
+     "ref": "N15.2",
+     "tier": "underlined",
+     "text": "to specify simple error intervals due to truncation or rounding"
+    }
+   ]
+  },
+  {
+   "ref": "N16",
+   "section": "Number",
+   "letter": "N",
+   "n": 16,
+   "page": 4,
+   "text": "apply and interpret limits of accuracy, including upper and lower bounds",
+   "tiers": [
+    "bold",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "N16.1",
+     "tier": "underlined",
+     "text": "apply and interpret limits of accuracy"
+    },
+    {
+     "ref": "N16.2",
+     "tier": "bold",
+     "text": ", including upper and lower bounds"
+    }
+   ]
+  },
+  {
+   "ref": "A1",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 1,
+   "page": 5,
+   "text": "use and interpret algebraic notation, including:  ab in place of a × b 3y in place of y + y + y and 3 × y a2 in place of a × a, a3 in place of a × a × a, a2b in place of a × a × b ab in place of a ÷ b coefficients written as fractions rather than as decimals  brackets",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "A1.1",
+     "tier": "standard",
+     "text": "use and interpret algebraic notation, including:  ab in place of a × b 3y in place of y + y + y and 3 × y a2 in place of a × a, a3 in place of a × a × a, a2b in place of a × a × b ab in place of a ÷ b coefficients written as fractions rather than as decimals  brackets"
+    }
+   ]
+  },
+  {
+   "ref": "A2",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 2,
+   "page": 5,
+   "text": "substitute numerical values into formulae and expressions, including scientific formulae",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "A2.1",
+     "tier": "standard",
+     "text": "substitute numerical values into formulae and expressions, including scientific formulae"
+    }
+   ]
+  },
+  {
+   "ref": "A3",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 3,
+   "page": 5,
+   "text": "understand and use the concepts and vocabulary of expressions, equations, formulae, identities inequalities, terms and factors",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "A3.1",
+     "tier": "standard",
+     "text": "understand and use the concepts and vocabulary of expressions, equations, formulae, identities inequalities, terms and factors"
+    }
+   ]
+  },
+  {
+   "ref": "A4",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 4,
+   "page": 5,
+   "text": "simplify and manipulate algebraic expressions (including those involving surds and algebraic fractions) by:  collecting like terms  multiplying a single term over a bracket  taking out common factors  expanding products of two or more binomials  factorising quadratic expressions of the form x2 + bx + c, including the difference of two squares; factorising quadratic expressions of the form2ax bx c+ + simplifying expressions involving sums, products and powers, including the laws of indices",
+   "tiers": [
+    "bold",
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A4.1",
+     "tier": "standard",
+     "text": "simplify and manipulate algebraic expressions (including those involving surds"
+    },
+    {
+     "ref": "A4.2",
+     "tier": "bold",
+     "text": "and algebraic fractions"
+    },
+    {
+     "ref": "A4.3",
+     "tier": "standard",
+     "text": ") by:  collecting like terms  multiplying a single term over a bracket  taking out common factors "
+    },
+    {
+     "ref": "A4.4",
+     "tier": "underlined",
+     "text": "expanding products of two"
+    },
+    {
+     "ref": "A4.5",
+     "tier": "bold",
+     "text": "or more"
+    },
+    {
+     "ref": "A4.6",
+     "tier": "underlined",
+     "text": "binomials "
+    },
+    {
+     "ref": "A4.7",
+     "tier": "underlined",
+     "text": "factorising quadratic expressions of the form x2 + bx + c, including the difference of two squares"
+    },
+    {
+     "ref": "A4.8",
+     "tier": "bold",
+     "text": "; factorising quadratic expressions of the form2ax bx c+ +"
+    },
+    {
+     "ref": "A4.9",
+     "tier": "standard",
+     "text": " simplifying expressions involving sums, products and powers, including the laws of indices"
+    }
+   ]
+  },
+  {
+   "ref": "A5",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 5,
+   "page": 5,
+   "text": "understand and use standard mathematical formulae; rearrange formulae to change the subject",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "A5.1",
+     "tier": "standard",
+     "text": "understand and use standard mathematical formulae; rearrange formulae to change the subject"
+    }
+   ]
+  },
+  {
+   "ref": "A6",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 6,
+   "page": 5,
+   "text": "know the difference between an equation and an identity; argue mathematically to show algebraic expressions are equivalent, and use algebra to support and construct arguments and proofs",
+   "tiers": [
+    "bold",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A6.1",
+     "tier": "underlined",
+     "text": "know the difference between an equation and an identity; argue mathematically to show algebraic expressions are equivalent, and use algebra to support and construct arguments"
+    },
+    {
+     "ref": "A6.2",
+     "tier": "bold",
+     "text": "and proofs"
+    }
+   ]
+  },
+  {
+   "ref": "A7",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 7,
+   "page": 5,
+   "text": "where appropriate, interpret simple expressions as functions with inputs and outputs; interpret the reverse process as the ‘inverse function’; interpret the succession of two functions as a ‘composite function’.",
+   "tiers": [
+    "bold",
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "A7.1",
+     "tier": "standard",
+     "text": "where appropriate, interpret simple expressions as functions with inputs and outputs"
+    },
+    {
+     "ref": "A7.2",
+     "tier": "bold",
+     "text": "; interpret the reverse process as the ‘inverse function’; interpret the succession of two functions as a ‘composite function’."
+    }
+   ]
+  },
+  {
+   "ref": "A8",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 8,
+   "page": 5,
+   "text": "work with coordinates in all four quadrants",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "A8.1",
+     "tier": "standard",
+     "text": "work with coordinates in all four quadrants"
+    }
+   ]
+  },
+  {
+   "ref": "A9",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 9,
+   "page": 6,
+   "text": "plot graphs of equations that correspond to straight-line graphs in the coordinate plane; use the form y = mx + c to identify parallel and perpendicular lines; find the equation of the line through two given points, or through one point with a given gradient",
+   "tiers": [
+    "bold",
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A9.1",
+     "tier": "standard",
+     "text": "plot graphs of equations that correspond to straight-line graphs in the coordinate plane;"
+    },
+    {
+     "ref": "A9.2",
+     "tier": "underlined",
+     "text": "use the form y = mx + c to identify parallel"
+    },
+    {
+     "ref": "A9.3",
+     "tier": "bold",
+     "text": "and perpendicular lines"
+    },
+    {
+     "ref": "A9.4",
+     "tier": "underlined",
+     "text": "; find the equation of the line through two given points, or through one point with a given gradient"
+    }
+   ]
+  },
+  {
+   "ref": "A10",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 10,
+   "page": 6,
+   "text": "identify and interpret gradients and intercepts of linear functions graphically and algebraically",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "A10.1",
+     "tier": "standard",
+     "text": "identify and interpret gradients and intercepts of linear functions graphically and algebraically"
+    }
+   ]
+  },
+  {
+   "ref": "A11",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 11,
+   "page": 6,
+   "text": "identify and interpret roots, intercepts, turning points of quadratic functionsgraphically; deduce roots algebraically and turning points by completing the square",
+   "tiers": [
+    "bold",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A11.1",
+     "tier": "underlined",
+     "text": "identify and interpret roots, intercepts, turning points of quadratic functionsgraphically; deduce roots algebraically"
+    },
+    {
+     "ref": "A11.2",
+     "tier": "bold",
+     "text": "and turning points by completing the square"
+    }
+   ]
+  },
+  {
+   "ref": "A12",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 12,
+   "page": 6,
+   "text": "recognise, sketch and interpret graphs of linear functions, quadratic functions, simple cubic functions, the reciprocal function y = 1x with x ≠ 0, exponential functions = xy k for positive values of k, and the trigonometric functions (with arguments in degrees) = siny x , = cosy x and = tany x for angles of any size",
+   "tiers": [
+    "bold",
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A12.1",
+     "tier": "standard",
+     "text": "recognise, sketch and interpret graphs of linear functions, quadratic functions,"
+    },
+    {
+     "ref": "A12.2",
+     "tier": "underlined",
+     "text": "simple cubic functions, the reciprocal function"
+    },
+    {
+     "ref": "A12.3",
+     "tier": "standard",
+     "text": "y = 1x"
+    },
+    {
+     "ref": "A12.4",
+     "tier": "underlined",
+     "text": "with x ≠ 0"
+    },
+    {
+     "ref": "A12.5",
+     "tier": "bold",
+     "text": ", exponential functions = xy k for positive values of k, and the trigonometric functions (with arguments in degrees) = siny x , = cosy x and = tany x for angles of any size"
+    }
+   ]
+  },
+  {
+   "ref": "A13",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 13,
+   "page": 6,
+   "text": "sketch translations and reflections of a given function",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "A13.1",
+     "tier": "bold",
+     "text": "sketch translations and reflections of a given function"
+    }
+   ]
+  },
+  {
+   "ref": "A14",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 14,
+   "page": 6,
+   "text": "plot and interpret graphs (including reciprocal graphs and exponential graphs)and graphs of non-standard functions in real contexts, to find approximate solutions to problems such as simple kinematic problems involving distance, speed and acceleration",
+   "tiers": [
+    "bold",
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A14.1",
+     "tier": "standard",
+     "text": "plot and interpret graphs"
+    },
+    {
+     "ref": "A14.2",
+     "tier": "underlined",
+     "text": "(including reciprocal graphs"
+    },
+    {
+     "ref": "A14.3",
+     "tier": "bold",
+     "text": "and exponential graphs"
+    },
+    {
+     "ref": "A14.4",
+     "tier": "standard",
+     "text": ")and graphs of non-standard functions in real contexts, to find approximate solutions to problems such as simple kinematic problems involving distance, speed and acceleration"
+    }
+   ]
+  },
+  {
+   "ref": "A15",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 15,
+   "page": 6,
+   "text": "calculate or estimate gradients of graphs and areas under graphs (including quadratic and other non-linear graphs), and interpret results in cases such as distance-time graphs, velocity-time graphs and graphs in financial contexts",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "A15.1",
+     "tier": "bold",
+     "text": "calculate or estimate gradients of graphs and areas under graphs (including quadratic and other non-linear graphs), and interpret results in cases such as distance-time graphs, velocity-time graphs and graphs in financial contexts"
+    }
+   ]
+  },
+  {
+   "ref": "A16",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 16,
+   "page": 6,
+   "text": "recognise and use the equation of a circle with centre at the origin; find the equation of a tangent to a circle at a given point.",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "A16.1",
+     "tier": "bold",
+     "text": "recognise and use the equation of a circle with centre at the origin; find the equation of a tangent to a circle at a given point."
+    }
+   ]
+  },
+  {
+   "ref": "A17",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 17,
+   "page": 6,
+   "text": "solve linear equations in one unknown algebraically (including those with the unknown on both sides of the equation); find approximate solutions using a graph",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "A17.1",
+     "tier": "standard",
+     "text": "solve linear equations in one unknown algebraically (including those with the unknown on both sides of the equation); find approximate solutions using a graph"
+    }
+   ]
+  },
+  {
+   "ref": "A18",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 18,
+   "page": 6,
+   "text": "solve quadratic equations (including those that require rearrangement) algebraically by factorising, by completing the square and by using the quadratic formula; find approximate solutions using a graph",
+   "tiers": [
+    "bold",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A18.1",
+     "tier": "underlined",
+     "text": "solve quadratic equations ("
+    },
+    {
+     "ref": "A18.2",
+     "tier": "bold",
+     "text": "including those that require rearrangement"
+    },
+    {
+     "ref": "A18.3",
+     "tier": "underlined",
+     "text": ") algebraically by factorising"
+    },
+    {
+     "ref": "A18.4",
+     "tier": "bold",
+     "text": ", by completing the square and by using the quadratic formula"
+    },
+    {
+     "ref": "A18.5",
+     "tier": "underlined",
+     "text": "; find approximate solutions using a graph"
+    }
+   ]
+  },
+  {
+   "ref": "A19",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 19,
+   "page": 6,
+   "text": "solve two simultaneous equations in two variables (linear/linear orlinear/quadratic) algebraically; find approximate solutions using a graph",
+   "tiers": [
+    "bold",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A19.1",
+     "tier": "underlined",
+     "text": "solve two simultaneous equations in two variables (linear/linear"
+    },
+    {
+     "ref": "A19.2",
+     "tier": "bold",
+     "text": "orlinear/quadratic"
+    },
+    {
+     "ref": "A19.3",
+     "tier": "underlined",
+     "text": ") algebraically; find approximate solutions using a graph"
+    }
+   ]
+  },
+  {
+   "ref": "A20",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 20,
+   "page": 6,
+   "text": "find approximate solutions to equations numerically using iteration",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "A20.1",
+     "tier": "bold",
+     "text": "find approximate solutions to equations numerically using iteration"
+    }
+   ]
+  },
+  {
+   "ref": "A21",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 21,
+   "page": 6,
+   "text": "translate simple situations or procedures into algebraic expressions or formulae; derive an equation (or two simultaneous equations), solve the equation(s) and interpret the solution.",
+   "tiers": [
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A21.1",
+     "tier": "underlined",
+     "text": "translate simple situations or procedures into algebraic expressions or formulae; derive an equation (or two simultaneous equations), solve the equation(s) and interpret the solution."
+    }
+   ]
+  },
+  {
+   "ref": "A22",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 22,
+   "page": 6,
+   "text": "solve linear inequalities in one or two variable(s), and quadratic inequalities in one variable; represent the solution set on a number line, using set notation and on a graph",
+   "tiers": [
+    "bold",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A22.1",
+     "tier": "underlined",
+     "text": "solve linear inequalities in one"
+    },
+    {
+     "ref": "A22.2",
+     "tier": "bold",
+     "text": "or two"
+    },
+    {
+     "ref": "A22.3",
+     "tier": "underlined",
+     "text": "variable("
+    },
+    {
+     "ref": "A22.4",
+     "tier": "bold",
+     "text": "s), and quadratic inequalities in one variable"
+    },
+    {
+     "ref": "A22.5",
+     "tier": "underlined",
+     "text": "; represent the solution set on a number line"
+    },
+    {
+     "ref": "A22.6",
+     "tier": "bold",
+     "text": ", using set notation and on a graph"
+    }
+   ]
+  },
+  {
+   "ref": "A23",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 23,
+   "page": 7,
+   "text": "generate terms of a sequence from either a term-to-term or a position-to-term rule",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "A23.1",
+     "tier": "standard",
+     "text": "generate terms of a sequence from either a term-to-term or a position-to-term rule"
+    }
+   ]
+  },
+  {
+   "ref": "A24",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 24,
+   "page": 7,
+   "text": "recognise and use sequences of triangular, square and cube numbers, simple arithmetic progressions, Fibonacci type sequences, quadratic sequences, and simple geometric progressions ( r n where n is an integer, and r is a rational number > 0 or a surd) and other sequences",
+   "tiers": [
+    "bold",
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "A24.1",
+     "tier": "standard",
+     "text": "recognise and use sequences of triangular, square and cube numbers, simple"
+    },
+    {
+     "ref": "A24.2",
+     "tier": "underlined",
+     "text": "arithmetic progressions, Fibonacci type sequences, quadratic sequences, and simple geometric progressions ( r n where n is an integer, and r is a rational number > 0"
+    },
+    {
+     "ref": "A24.3",
+     "tier": "bold",
+     "text": "or a surd )"
+    },
+    {
+     "ref": "A24.4",
+     "tier": "bold",
+     "text": "and other sequences"
+    }
+   ]
+  },
+  {
+   "ref": "A25",
+   "section": "Algebra",
+   "letter": "A",
+   "n": 25,
+   "page": 7,
+   "text": "deduce expressions to calculate the nth term of linear and quadratic sequences.",
+   "tiers": [
+    "bold",
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "A25.1",
+     "tier": "standard",
+     "text": "deduce expressions to calculate the nth term of linear"
+    },
+    {
+     "ref": "A25.2",
+     "tier": "bold",
+     "text": "and quadratic"
+    },
+    {
+     "ref": "A25.3",
+     "tier": "standard",
+     "text": "sequences."
+    }
+   ]
+  },
+  {
+   "ref": "R1",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 1,
+   "page": 7,
+   "text": "change freely between related standard units (e.g. time, length, area, volume/capacity, mass) and compound units (e.g. speed, rates of pay, prices, density, pressure) in numerical and algebraic contexts",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "R1.1",
+     "tier": "standard",
+     "text": "change freely between related standard units (e.g. time, length, area, volume/capacity, mass) and compound units (e.g. speed, rates of pay, prices, density, pressure) in numerical and algebraic contexts"
+    }
+   ]
+  },
+  {
+   "ref": "R2",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 2,
+   "page": 7,
+   "text": "use scale factors, scale diagrams and maps",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "R2.1",
+     "tier": "standard",
+     "text": "use scale factors, scale diagrams and maps"
+    }
+   ]
+  },
+  {
+   "ref": "R3",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 3,
+   "page": 7,
+   "text": "express one quantity as a fraction of another, where the fraction is less than 1 or greater than 1",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "R3.1",
+     "tier": "standard",
+     "text": "express one quantity as a fraction of another, where the fraction is less than 1 or greater than 1"
+    }
+   ]
+  },
+  {
+   "ref": "R4",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 4,
+   "page": 7,
+   "text": "use ratio notation, including reduction to simplest form",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "R4.1",
+     "tier": "standard",
+     "text": "use ratio notation, including reduction to simplest form"
+    }
+   ]
+  },
+  {
+   "ref": "R5",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 5,
+   "page": 7,
+   "text": "divide a given quantity into two parts in a given part:part or part:whole ratio; express the division of a quantity into two parts as a ratio; apply ratio to real contexts and problems (such as those involving conversion, comparison, scaling, mixing, concentrations)",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "R5.1",
+     "tier": "standard",
+     "text": "divide a given quantity into two parts in a given part:part or part:whole ratio; express the division of a quantity into two parts as a ratio; apply ratio to real contexts and problems (such as those involving conversion, comparison, scaling, mixing, concentrations)"
+    }
+   ]
+  },
+  {
+   "ref": "R6",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 6,
+   "page": 7,
+   "text": "express a multiplicative relationship between two quantities as a ratio or a fraction",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "R6.1",
+     "tier": "standard",
+     "text": "express a multiplicative relationship between two quantities as a ratio or a fraction"
+    }
+   ]
+  },
+  {
+   "ref": "R7",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 7,
+   "page": 7,
+   "text": "understand and use proportion as equality of ratios",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "R7.1",
+     "tier": "standard",
+     "text": "understand and use proportion as equality of ratios"
+    }
+   ]
+  },
+  {
+   "ref": "R8",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 8,
+   "page": 7,
+   "text": "relate ratios to fractions and to linear functions",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "R8.1",
+     "tier": "standard",
+     "text": "relate ratios to fractions and to linear functions"
+    }
+   ]
+  },
+  {
+   "ref": "R9",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 9,
+   "page": 7,
+   "text": "define percentage as ‘number of parts per hundred’; interpret percentages and percentage changes as a fraction or a decimal, and interpret these multiplicatively; express one quantity as a percentage of another; compare two quantities using percentages; work with percentages greater than 100%; solve problems involving percentage change, including percentage increase/decrease and original value problems, and simple interest including in financial mathematics",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "R9.1",
+     "tier": "standard",
+     "text": "define percentage as ‘number of parts per hundred’; interpret percentages and percentage changes as a fraction or a decimal, and interpret these multiplicatively; express one quantity as a percentage of another; compare two quantities using percentages; work with percentages greater than 100%; solve problems involving percentage change, including percentage increase/decrease and original value problems, and simple interest including in financial mathematics"
+    }
+   ]
+  },
+  {
+   "ref": "R10",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 10,
+   "page": 7,
+   "text": "solve problems involving direct and inverse proportion, including graphical and algebraic representations",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "R10.1",
+     "tier": "standard",
+     "text": "solve problems involving direct and inverse proportion, including graphical and algebraic representations"
+    }
+   ]
+  },
+  {
+   "ref": "R11",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 11,
+   "page": 7,
+   "text": "use compound units such as speed, rates of pay, unit pricing, density and pressure",
+   "tiers": [
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "R11.1",
+     "tier": "standard",
+     "text": "use compound units such as speed, rates of pay, unit pricing"
+    },
+    {
+     "ref": "R11.2",
+     "tier": "underlined",
+     "text": ", density and pressure"
+    }
+   ]
+  },
+  {
+   "ref": "R12",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 12,
+   "page": 7,
+   "text": "compare lengths, areas and volumes using ratio notation; make links to similarity (including trigonometric ratios) and scale factors",
+   "tiers": [
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "R12.1",
+     "tier": "standard",
+     "text": "compare lengths, areas and volumes using ratio notation; make links to similarity"
+    },
+    {
+     "ref": "R12.2",
+     "tier": "underlined",
+     "text": "(including trigonometric ratios) and scale factors"
+    }
+   ]
+  },
+  {
+   "ref": "R13",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 13,
+   "page": 8,
+   "text": "understand that X is inversely proportional to Y is equivalent to X is proportional to1Y ; construct and interpret equations that describe direct and inverse proportion",
+   "tiers": [
+    "bold",
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "R13.1",
+     "tier": "underlined",
+     "text": "understand that X is inversely proportional to Y is equivalent to X is proportional to"
+    },
+    {
+     "ref": "R13.2",
+     "tier": "standard",
+     "text": "1Y ;"
+    },
+    {
+     "ref": "R13.3",
+     "tier": "bold",
+     "text": "construct and"
+    },
+    {
+     "ref": "R13.4",
+     "tier": "underlined",
+     "text": "interpret equations that describe direct and inverse proportion"
+    }
+   ]
+  },
+  {
+   "ref": "R14",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 14,
+   "page": 8,
+   "text": "interpret the gradient of a straight line graph as a rate of change; recognise and interpret graphs that illustrate direct and inverse proportion",
+   "tiers": [
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "R14.1",
+     "tier": "underlined",
+     "text": "interpret the gradient of a straight line graph as a rate of change; recognise and interpret graphs that illustrate direct and inverse proportion"
+    }
+   ]
+  },
+  {
+   "ref": "R15",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 15,
+   "page": 8,
+   "text": "interpret the gradient at a point on a curve as the instantaneous rate of change; apply the concepts of average and instantaneous rate of change (gradients of chords and tangents) in numerical, algebraic and graphical contexts",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "R15.1",
+     "tier": "bold",
+     "text": "interpret the gradient at a point on a curve as the instantaneous rate of change; apply the concepts of average and instantaneous rate of change (gradients of chords and tangents) in numerical, algebraic and graphical contexts"
+    }
+   ]
+  },
+  {
+   "ref": "R16",
+   "section": "Ratio, proportion and rates of change",
+   "letter": "R",
+   "n": 16,
+   "page": 8,
+   "text": "set up, solve and interpret the answers in growth and decay problems, includingcompound interest and work with general iterative processes.",
+   "tiers": [
+    "bold",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "R16.1",
+     "tier": "underlined",
+     "text": "set up, solve and interpret the answers in growth and decay problems, includingcompound interest"
+    },
+    {
+     "ref": "R16.2",
+     "tier": "bold",
+     "text": "and work with general iterative processes."
+    }
+   ]
+  },
+  {
+   "ref": "G1",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 1,
+   "page": 8,
+   "text": "use conventional terms and notations: points, lines, vertices, edges, planes, parallel lines, perpendicular lines, right angles, polygons, regular polygons and polygons with reflection and/or rotation symmetries; use the standard conventions for labelling and referring to the sides and angles of triangles; draw diagrams from written description",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "G1.1",
+     "tier": "standard",
+     "text": "use conventional terms and notations: points, lines, vertices, edges, planes, parallel lines, perpendicular lines, right angles, polygons, regular polygons and polygons with reflection and/or rotation symmetries; use the standard conventions for labelling and referring to the sides and angles of triangles; draw diagrams from written description"
+    }
+   ]
+  },
+  {
+   "ref": "G2",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 2,
+   "page": 8,
+   "text": "use the standard ruler and compass constructions (perpendicular bisector of a line segment, constructing a perpendicular to a given line from/at a given point, bisecting a given angle); use these to construct given figures and solve loci problems; know that the perpendicular distance from a point to a line is the shortest distance to the line",
+   "tiers": [
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G2.1",
+     "tier": "underlined",
+     "text": "use the standard ruler and compass constructions (perpendicular bisector of a line segment, constructing a perpendicular to a given line from/at a given point, bisecting a given angle); use these to construct given figures and solve loci problems; know that the perpendicular distance from a point to a line is the shortest distance to the line"
+    }
+   ]
+  },
+  {
+   "ref": "G3",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 3,
+   "page": 8,
+   "text": "apply the properties of angles at a point, angles at a point on a straight line, vertically opposite angles; understand and use alternate and corresponding angles on parallel lines; derive and use the sum of angles in a triangle (e.g. to deduce and use the angle sum in any polygon, and to derive properties of regular polygons)",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "G3.1",
+     "tier": "standard",
+     "text": "apply the properties of angles at a point, angles at a point on a straight line, vertically opposite angles; understand and use alternate and corresponding angles on parallel lines; derive and use the sum of angles in a triangle (e.g. to deduce and use the angle sum in any polygon, and to derive properties of regular polygons)"
+    }
+   ]
+  },
+  {
+   "ref": "G4",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 4,
+   "page": 8,
+   "text": "derive and apply the properties and definitions of: special types of quadrilaterals, including square, rectangle, parallelogram, trapezium, kite and rhombus; and triangles and other plane figures using appropriate language",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "G4.1",
+     "tier": "standard",
+     "text": "derive and apply the properties and definitions of: special types of quadrilaterals, including square, rectangle, parallelogram, trapezium, kite and rhombus; and triangles and other plane figures using appropriate language"
+    }
+   ]
+  },
+  {
+   "ref": "G5",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 5,
+   "page": 8,
+   "text": "use the basic congruence criteria for triangles (SSS, SAS, ASA, RHS)",
+   "tiers": [
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G5.1",
+     "tier": "underlined",
+     "text": "use the basic congruence criteria for triangles (SSS, SAS, ASA, RHS)"
+    }
+   ]
+  },
+  {
+   "ref": "G6",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 6,
+   "page": 8,
+   "text": "apply angle facts, triangle congruence, similarity and properties of quadrilaterals to conjecture and derive results about angles and sides, including Pythagoras’ Theorem and the fact that the base angles of an isosceles triangle are equal, and use known results to obtain simple proofs",
+   "tiers": [
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G6.1",
+     "tier": "underlined",
+     "text": "apply angle facts, triangle congruence, similarity and properties of quadrilaterals to conjecture and derive results about angles and sides, including Pythagoras’ Theorem and the fact that the base angles of an isosceles triangle are equal, and use known results to obtain simple proofs"
+    }
+   ]
+  },
+  {
+   "ref": "G7",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 7,
+   "page": 8,
+   "text": "identify, describe and construct congruent and similar shapes, including on coordinate axes, by considering rotation, reflection, translation and enlargement (including fractional and negative scale factors)",
+   "tiers": [
+    "bold",
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G7.1",
+     "tier": "standard",
+     "text": "identify, describe and construct congruent and similar shapes, including on coordinate axes, by considering rotation, reflection, translation and enlargement"
+    },
+    {
+     "ref": "G7.2",
+     "tier": "underlined",
+     "text": "(including fractional"
+    },
+    {
+     "ref": "G7.3",
+     "tier": "bold",
+     "text": "and negative"
+    },
+    {
+     "ref": "G7.4",
+     "tier": "underlined",
+     "text": "scale factors)"
+    }
+   ]
+  },
+  {
+   "ref": "G8",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 8,
+   "page": 9,
+   "text": "describe the changes and invariance achieved by combinations of rotations, reflections and translations",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "G8.1",
+     "tier": "bold",
+     "text": "describe the changes and invariance achieved by combinations of rotations, reflections and translations"
+    }
+   ]
+  },
+  {
+   "ref": "G9",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 9,
+   "page": 9,
+   "text": "identify and apply circle definitions and properties, including: centre, radius, chord, diameter, circumference, tangent, arc, sector and segment",
+   "tiers": [
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G9.1",
+     "tier": "standard",
+     "text": "identify and apply circle definitions and properties, including: centre, radius, chord,"
+    },
+    {
+     "ref": "G9.2",
+     "tier": "underlined",
+     "text": "diameter, circumference, tangent, arc, sector and segment"
+    }
+   ]
+  },
+  {
+   "ref": "G10",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 10,
+   "page": 9,
+   "text": "apply and prove the standard circle theorems concerning angles, radii, tangents and chords, and use them to prove related results",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "G10.1",
+     "tier": "bold",
+     "text": "apply and prove the standard circle theorems concerning angles, radii, tangents and chords, and use them to prove related results"
+    }
+   ]
+  },
+  {
+   "ref": "G11",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 11,
+   "page": 9,
+   "text": "solve geometrical problems on coordinate axes",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "G11.1",
+     "tier": "standard",
+     "text": "solve geometrical problems on coordinate axes"
+    }
+   ]
+  },
+  {
+   "ref": "G12",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 12,
+   "page": 9,
+   "text": "identify properties of the faces, surfaces, edges and vertices of: cubes, cuboids, prisms, cylinders, pyramids, cones and spheres",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "G12.1",
+     "tier": "standard",
+     "text": "identify properties of the faces, surfaces, edges and vertices of: cubes, cuboids, prisms, cylinders, pyramids, cones and spheres"
+    }
+   ]
+  },
+  {
+   "ref": "G13",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 13,
+   "page": 9,
+   "text": "construct and interpret plans and elevations of 3D shapes.",
+   "tiers": [
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G13.1",
+     "tier": "underlined",
+     "text": "construct and"
+    },
+    {
+     "ref": "G13.2",
+     "tier": "standard",
+     "text": "interpret plans and elevations of 3D shapes."
+    }
+   ]
+  },
+  {
+   "ref": "G14",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 14,
+   "page": 9,
+   "text": "use standard units of measure and related concepts (length, area, volume/capacity, mass, time, money, etc.)",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "G14.1",
+     "tier": "standard",
+     "text": "use standard units of measure and related concepts (length, area, volume/capacity, mass, time, money, etc.)"
+    }
+   ]
+  },
+  {
+   "ref": "G15",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 15,
+   "page": 9,
+   "text": "measure line segments and angles in geometric figures, including interpreting maps and scale drawings and use of bearings",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "G15.1",
+     "tier": "standard",
+     "text": "measure line segments and angles in geometric figures, including interpreting maps and scale drawings and use of bearings"
+    }
+   ]
+  },
+  {
+   "ref": "G16",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 16,
+   "page": 9,
+   "text": "know and apply formulae to calculate: area of triangles, parallelograms, trapezia; volume of cuboids and other right prisms (including cylinders)",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "G16.1",
+     "tier": "standard",
+     "text": "know and apply formulae to calculate: area of triangles, parallelograms, trapezia; volume of cuboids and other right prisms (including cylinders)"
+    }
+   ]
+  },
+  {
+   "ref": "G17",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 17,
+   "page": 9,
+   "text": "know the formulae: circumference of a circle = 2πr = πd, area of a circle = πr2; calculate: perimeters of 2D shapes, including circles; areas of circles and composite shapes; surface area and volume of spheres, pyramids, cones and composite solids",
+   "tiers": [
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G17.1",
+     "tier": "standard",
+     "text": "know the formulae: circumference of a circle = 2πr = πd, area of a circle = πr2; calculate: perimeters of 2D shapes, including circles; areas of circles and composite shapes"
+    },
+    {
+     "ref": "G17.2",
+     "tier": "underlined",
+     "text": "; surface area and volume of spheres, pyramids, cones and composite solids"
+    }
+   ]
+  },
+  {
+   "ref": "G18",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 18,
+   "page": 9,
+   "text": "calculate arc lengths, angles and areas of sectors of circles",
+   "tiers": [
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G18.1",
+     "tier": "underlined",
+     "text": "calculate arc lengths, angles and areas of sectors of circles"
+    }
+   ]
+  },
+  {
+   "ref": "G19",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 19,
+   "page": 9,
+   "text": "apply the concepts of congruence and similarity, including the relationships between lengths, areas and volumes in similar figures",
+   "tiers": [
+    "bold",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G19.1",
+     "tier": "underlined",
+     "text": "apply the concepts of congruence and similarity, including the relationships between lengths,"
+    },
+    {
+     "ref": "G19.2",
+     "tier": "bold",
+     "text": "areas and volumes"
+    },
+    {
+     "ref": "G19.3",
+     "tier": "underlined",
+     "text": "in similar figures"
+    }
+   ]
+  },
+  {
+   "ref": "G20",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 20,
+   "page": 9,
+   "text": "know the formulae for: Pythagoras’ theorem, a2 + b2 = c2, and the trigonometric ratios, sinθ = oppositehypotenuse , cosθ = adjacenthypotenuse and tanθ = oppositeadjacent ; apply them to find angles and lengths in right-angled triangles and, where possible, general triangles in two and three dimensional figures",
+   "tiers": [
+    "bold",
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G20.1",
+     "tier": "underlined",
+     "text": "know the formulae for: Pythagoras’ theorem, a2 + b2 = c2, and the trigonometric ratios,"
+    },
+    {
+     "ref": "G20.2",
+     "tier": "standard",
+     "text": "sinθ = oppositehypotenuse , cosθ = adjacenthypotenuse"
+    },
+    {
+     "ref": "G20.3",
+     "tier": "underlined",
+     "text": "and"
+    },
+    {
+     "ref": "G20.4",
+     "tier": "standard",
+     "text": "tanθ = oppositeadjacent"
+    },
+    {
+     "ref": "G20.5",
+     "tier": "underlined",
+     "text": "; apply them to find angles and lengths in right-angled triangles"
+    },
+    {
+     "ref": "G20.6",
+     "tier": "bold",
+     "text": "and, where possible, general triangles"
+    },
+    {
+     "ref": "G20.7",
+     "tier": "underlined",
+     "text": "in two"
+    },
+    {
+     "ref": "G20.8",
+     "tier": "bold",
+     "text": "and three"
+    },
+    {
+     "ref": "G20.9",
+     "tier": "underlined",
+     "text": "dimensional figures"
+    }
+   ]
+  },
+  {
+   "ref": "G21",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 21,
+   "page": 9,
+   "text": "know the exact values of sinθ and cosθ for θ = 00, 300, 450 , 600 and 900; know the exact value of tanθ for θ = 00, 300, 450 and 600",
+   "tiers": [
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G21.1",
+     "tier": "underlined",
+     "text": "know the exact values of sinθ and cosθ for θ = 00, 300, 450 , 600 and 900; know the exact value of tanθ for θ = 00, 300, 450 and 600"
+    }
+   ]
+  },
+  {
+   "ref": "G22",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 22,
+   "page": 9,
+   "text": "know and apply the sine rule, sin sin sina b cA B C= = , and cosine rule, 2 2 2 2 cosa b c bc A= + − , to find unknown lengths and angles",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "G22.1",
+     "tier": "bold",
+     "text": "know and apply the sine rule, sin sin sina b cA B C= = , and cosine rule, 2 2 2 2 cosa b c bc A= + − , to find unknown lengths and angles"
+    }
+   ]
+  },
+  {
+   "ref": "G23",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 23,
+   "page": 9,
+   "text": "know and apply 1Area = sin2 ab C to calculate the area, sides or angles of any triangle.",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "G23.1",
+     "tier": "bold",
+     "text": "know and apply 1Area = sin2 ab C to calculate the area, sides or angles of any triangle."
+    }
+   ]
+  },
+  {
+   "ref": "G24",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 24,
+   "page": 10,
+   "text": "describe translations as 2D vectors",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "G24.1",
+     "tier": "standard",
+     "text": "describe translations as 2D vectors"
+    }
+   ]
+  },
+  {
+   "ref": "G25",
+   "section": "Geometry and measures",
+   "letter": "G",
+   "n": 25,
+   "page": 10,
+   "text": "apply addition and subtraction of vectors, multiplication of vectors by a scalar, and diagrammatic and column representations of vectors; use vectors to construct geometric arguments and proofs",
+   "tiers": [
+    "bold",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "G25.1",
+     "tier": "underlined",
+     "text": "apply addition and subtraction of vectors, multiplication of vectors by a scalar, and diagrammatic and column representations of vectors;"
+    },
+    {
+     "ref": "G25.2",
+     "tier": "bold",
+     "text": "use vectors to construct geometric arguments and proofs"
+    }
+   ]
+  },
+  {
+   "ref": "P1",
+   "section": "Probability",
+   "letter": "P",
+   "n": 1,
+   "page": 10,
+   "text": "record describe and analyse the frequency of outcomes of probability experiments using tables and frequency trees",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "P1.1",
+     "tier": "standard",
+     "text": "record describe and analyse the frequency of outcomes of probability experiments using tables and frequency trees"
+    }
+   ]
+  },
+  {
+   "ref": "P2",
+   "section": "Probability",
+   "letter": "P",
+   "n": 2,
+   "page": 10,
+   "text": "apply ideas of randomness, fairness and equally likely events to calculate expected outcomes of multiple future experiments",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "P2.1",
+     "tier": "standard",
+     "text": "apply ideas of randomness, fairness and equally likely events to calculate expected outcomes of multiple future experiments"
+    }
+   ]
+  },
+  {
+   "ref": "P3",
+   "section": "Probability",
+   "letter": "P",
+   "n": 3,
+   "page": 10,
+   "text": "relate relative expected frequencies to theoretical probability, using appropriate language and the 0 - 1 probability scale",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "P3.1",
+     "tier": "standard",
+     "text": "relate relative expected frequencies to theoretical probability, using appropriate language and the 0 - 1 probability scale"
+    }
+   ]
+  },
+  {
+   "ref": "P4",
+   "section": "Probability",
+   "letter": "P",
+   "n": 4,
+   "page": 10,
+   "text": "apply the property that the probabilities of an exhaustive set of outcomes sum to one; apply the property that the probabilities of an exhaustive set of mutually exclusive events sum to one",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "P4.1",
+     "tier": "standard",
+     "text": "apply the property that the probabilities of an exhaustive set of outcomes sum to one; apply the property that the probabilities of an exhaustive set of mutually exclusive events sum to one"
+    }
+   ]
+  },
+  {
+   "ref": "P5",
+   "section": "Probability",
+   "letter": "P",
+   "n": 5,
+   "page": 10,
+   "text": "understand that empirical unbiased samples tend towards theoretical probability distributions, with increasing sample size",
+   "tiers": [
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "P5.1",
+     "tier": "underlined",
+     "text": "understand that empirical unbiased samples tend towards theoretical probability distributions, with increasing sample size"
+    }
+   ]
+  },
+  {
+   "ref": "P6",
+   "section": "Probability",
+   "letter": "P",
+   "n": 6,
+   "page": 10,
+   "text": "enumerate sets and combinations of sets systematically, using tables, grids, Venn diagrams and tree diagrams",
+   "tiers": [
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "P6.1",
+     "tier": "standard",
+     "text": "enumerate sets and combinations of sets systematically, using tables, grids, Venn"
+    },
+    {
+     "ref": "P6.2",
+     "tier": "underlined",
+     "text": "diagrams and tree diagrams"
+    }
+   ]
+  },
+  {
+   "ref": "P7",
+   "section": "Probability",
+   "letter": "P",
+   "n": 7,
+   "page": 10,
+   "text": "construct theoretical possibility spaces for single and combined experiments with equally likely outcomes and use these to calculate theoretical probabilities",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "P7.1",
+     "tier": "standard",
+     "text": "construct theoretical possibility spaces for single and combined experiments with equally likely outcomes and use these to calculate theoretical probabilities"
+    }
+   ]
+  },
+  {
+   "ref": "P8",
+   "section": "Probability",
+   "letter": "P",
+   "n": 8,
+   "page": 10,
+   "text": "calculate the probability of independent and dependent combined events, including using tree diagrams and other representations, and know the underlying assumptions",
+   "tiers": [
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "P8.1",
+     "tier": "underlined",
+     "text": "calculate the probability of independent and dependent combined events, including using tree diagrams and other representations, and know the underlying assumptions"
+    }
+   ]
+  },
+  {
+   "ref": "P9",
+   "section": "Probability",
+   "letter": "P",
+   "n": 9,
+   "page": 10,
+   "text": "calculate and interpret conditional probabilities through representation using expected frequencies with two-way tables, tree diagrams and Venn diagrams.",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "P9.1",
+     "tier": "bold",
+     "text": "calculate and interpret conditional probabilities through representation using expected frequencies with two-way tables, tree diagrams and Venn diagrams."
+    }
+   ]
+  },
+  {
+   "ref": "S1",
+   "section": "Statistics",
+   "letter": "S",
+   "n": 1,
+   "page": 10,
+   "text": "infer properties of populations or distributions from a sample, whilst knowing the limitations of sampling",
+   "tiers": [
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "S1.1",
+     "tier": "underlined",
+     "text": "infer properties of populations or distributions from a sample, whilst knowing the limitations of sampling"
+    }
+   ]
+  },
+  {
+   "ref": "S2",
+   "section": "Statistics",
+   "letter": "S",
+   "n": 2,
+   "page": 10,
+   "text": "interpret and construct tables, charts and diagrams, including frequency tables, bar charts, pie charts and pictograms for categorical data, vertical line charts for ungrouped discrete numerical data, tables and line graphs for time series data and know their appropriate use",
+   "tiers": [
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "S2.1",
+     "tier": "standard",
+     "text": "interpret and construct tables, charts and diagrams, including frequency tables, bar charts, pie charts and pictograms for categorical data, vertical line charts for"
+    },
+    {
+     "ref": "S2.2",
+     "tier": "underlined",
+     "text": "ungrouped discrete numerical data, tables and line graphs for time series data and"
+    },
+    {
+     "ref": "S2.3",
+     "tier": "standard",
+     "text": "know their appropriate use"
+    }
+   ]
+  },
+  {
+   "ref": "S3",
+   "section": "Statistics",
+   "letter": "S",
+   "n": 3,
+   "page": 10,
+   "text": "construct and interpret diagrams for grouped discrete data and continuous data, i.e. histograms with equal and unequal class intervals and cumulative frequency graphs, and know their appropriate use",
+   "tiers": [
+    "bold"
+   ],
+   "parts": [
+    {
+     "ref": "S3.1",
+     "tier": "bold",
+     "text": "construct and interpret diagrams for grouped discrete data and continuous data, i.e. histograms with equal and unequal class intervals and cumulative frequency graphs, and know their appropriate use"
+    }
+   ]
+  },
+  {
+   "ref": "S4",
+   "section": "Statistics",
+   "letter": "S",
+   "n": 4,
+   "page": 11,
+   "text": "interpret, analyse and compare the distributions of data sets from univariate empirical distributions through:  appropriate graphical representation involving discrete, continuous and grouped data, including box plots appropriate measures of central tendency (median, mean, mode and modal class) and spread (range, including consideration of outliers,quartiles and inter-quartile range)",
+   "tiers": [
+    "bold",
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "S4.1",
+     "tier": "standard",
+     "text": "interpret, analyse and compare the distributions of data sets from univariate empirical distributions through:  appropriate graphical representation involving discrete, continuous and grouped data,"
+    },
+    {
+     "ref": "S4.2",
+     "tier": "bold",
+     "text": "including box plots"
+    },
+    {
+     "ref": "S4.3",
+     "tier": "standard",
+     "text": " appropriate measures of central tendency (median, mean, mode and modal class) and spread (range, including consideration of outliers"
+    },
+    {
+     "ref": "S4.4",
+     "tier": "bold",
+     "text": ",quartiles and inter-quartile range )"
+    }
+   ]
+  },
+  {
+   "ref": "S5",
+   "section": "Statistics",
+   "letter": "S",
+   "n": 5,
+   "page": 11,
+   "text": "apply statistics to describe a population",
+   "tiers": [
+    "standard"
+   ],
+   "parts": [
+    {
+     "ref": "S5.1",
+     "tier": "standard",
+     "text": "apply statistics to describe a population"
+    }
+   ]
+  },
+  {
+   "ref": "S6",
+   "section": "Statistics",
+   "letter": "S",
+   "n": 6,
+   "page": 11,
+   "text": "use and interpret scatter graphs of bivariate data; recognise correlation and know that it does not indicate causation; draw estimated lines of best fit; make predictions; interpolate and extrapolate apparent trends whilst knowing the dangers of so doing",
+   "tiers": [
+    "standard",
+    "underlined"
+   ],
+   "parts": [
+    {
+     "ref": "S6.1",
+     "tier": "standard",
+     "text": "use and interpret scatter graphs of bivariate data; recognise correlation and know"
+    },
+    {
+     "ref": "S6.2",
+     "tier": "underlined",
+     "text": "that it does not indicate causation; draw estimated lines of best fit; make predictions; interpolate and extrapolate apparent trends whilst knowing the dangers of so doing"
+    }
+   ]
+  }
+ ]
+}

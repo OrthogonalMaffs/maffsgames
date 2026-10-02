@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Read the word problem, build the equation. Practise translating language into algebra — the step most students skip. Free, KS3 to Level 4.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/equation-builder/">
+<meta property="og:title" content="Equation Builder — MaffsGames">
+<meta property="og:description" content="Read the word problem, build the equation. Practise translating language into algebra — the step most students skip. Free, KS3 to Level 4.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/equation-builder/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Equation Builder — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.15);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.15);
+--ks3:#22c55e;--gcse:#3b82f6;--l4:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;color:#fff;text-transform:uppercase;letter-spacing:0.04em}
+.level-pill.ks3{background:rgba(34,197,94,0.15);color:var(--ks3);border:1px solid rgba(34,197,94,0.3)}
+.level-pill.gcse{background:rgba(59,130,246,0.15);color:var(--gcse);border:1px solid rgba(59,130,246,0.3)}
+.level-pill.l4{background:rgba(239,68,68,0.15);color:var(--l4);border:1px solid rgba(239,68,68,0.3)}
+
+.hud{display:none;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px;align-items:center;justify-content:space-between;gap:16px}
+.hud.visible{display:flex}
+.hud-score{font-size:14px;font-weight:600}.hud-score span{color:var(--teal)}
+.progress-wrap{flex:1;max-width:300px;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-bar{height:100%;background:var(--teal);border-radius:3px;transition:width 0.3s}
+.hud-count{font-size:13px;color:var(--muted);font-weight:500}
+
+.screen{display:none;max-width:640px;margin:0 auto;padding:32px 24px;width:100%}
+.screen.active{display:block}
+
+/* Start screen */
+.start-title{font-size:28px;font-weight:800;margin-bottom:8px;text-align:center}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:32px;line-height:1.5}
+.section-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px}
+.level-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px}
+.level-btn{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;padding:16px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all 0.15s;text-align:left}
+.level-btn:hover{border-color:var(--teal)}
+.level-btn.active.ks3{border-color:var(--ks3);background:rgba(34,197,94,0.08);color:var(--ks3)}
+.level-btn.active.gcse{border-color:var(--gcse);background:rgba(59,130,246,0.08);color:var(--gcse)}
+.level-btn.active.l4{border-color:var(--l4);background:rgba(239,68,68,0.08);color:var(--l4)}
+.level-btn .btn-sub{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;display:block}
+.session-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px}
+.session-btn{font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;padding:14px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all 0.15s;text-align:center}
+.session-btn:hover{border-color:var(--teal)}
+.session-btn.active{border-color:var(--teal);background:rgba(13,148,136,0.1);color:var(--teal)}
+.session-btn .btn-sub{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;display:block}
+.start-go{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer;transition:opacity 0.15s;width:100%}
+.start-go:hover{opacity:0.9}
+.start-go:disabled{opacity:0.4;cursor:default}
+
+/* Game screen */
+.question-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px 24px;margin-bottom:20px;line-height:1.7;font-size:16px}
+.type-pill{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:8px;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em}
+.type-pill.assembly{color:var(--teal);background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.2)}
+.type-pill.gapfill{color:#f59e0b;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2)}
+
+/* Equation zone */
+.equation-zone{display:flex;flex-wrap:wrap;gap:0;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;min-height:56px;align-items:center;justify-content:center}
+.slot{min-width:44px;min-height:44px;padding:8px 12px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.15s;border-radius:6px;margin:3px;white-space:nowrap}
+.slot.empty{border:2px dashed var(--border);color:var(--muted);background:transparent}
+.slot.empty:hover{border-color:var(--teal)}
+.slot.empty.selected{border-color:var(--teal);background:var(--teal-dim);box-shadow:0 0 0 2px rgba(13,148,136,0.3)}
+.slot.filled{border:2px solid var(--border);background:var(--surface-alt);color:var(--text)}
+.slot.filled:hover{border-color:var(--teal)}
+.slot.prefilled{border:2px solid rgba(42,47,69,0.5);background:#141620;color:#6b7280;cursor:default;pointer-events:none}
+.slot.correct{border-color:var(--green)!important;background:var(--green-dim)!important;color:var(--green)!important}
+.slot.correct::after{content:' \2713';font-weight:800}
+.slot.incorrect{border-color:var(--red)!important;background:var(--red-dim)!important;color:var(--red)!important;animation:shake 0.3s}
+.slot.incorrect::after{content:' \2717';font-weight:800}
+.slot.reveal{border-color:var(--green)!important;background:var(--green-dim)!important;color:var(--green)!important}
+.slot.reveal::after{content:' \2713';font-weight:800}
+.slot.snap{animation:snapIn 0.1s ease-out}
+
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@keyframes snapIn{0%{transform:scale(1.15)}100%{transform:scale(1)}}
+
+/* Tile bank */
+.tile-bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;justify-content:center}
+.tile{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;padding:10px 16px;border-radius:8px;border:1.5px solid var(--teal);background:var(--surface-alt);color:var(--text);cursor:pointer;transition:all 0.15s;white-space:nowrap;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}
+.tile:hover{background:rgba(13,148,136,0.06);border-color:var(--teal)}
+.tile.used{opacity:0.35;pointer-events:none}
+
+.check-btn{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px;border:none;border-radius:10px;background:#1a2744;color:#fff;cursor:pointer;width:100%;transition:all 0.15s;display:none}
+.check-btn.visible{display:block}
+.check-btn:hover{background:#253563}
+
+/* Results screen */
+.results-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px 24px;text-align:center}
+.results-pct{font-size:56px;font-weight:800;color:var(--teal);margin-bottom:4px}
+.results-label{color:var(--muted);font-size:14px;margin-bottom:24px}
+.results-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
+.stat-box{background:var(--surface-alt);border-radius:10px;padding:16px}
+.stat-val{font-size:22px;font-weight:700}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px}
+.pb-banner{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;border-radius:10px;padding:12px;font-weight:600;margin-bottom:16px;font-size:14px}
+.play-again{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer;width:100%;transition:opacity 0.15s}
+.play-again:hover{opacity:0.9}
+
+/* Accessibility toggle */
+.a11y-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 8px;cursor:pointer;font-size:14px;line-height:1;transition:all 0.15s}
+.a11y-btn:hover{border-color:var(--teal);color:var(--text)}
+.a11y-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(13,148,136,0.1)}
+body.dyslexia{background:#fdf6e3;color:#2d2006;--bg:#fdf6e3;--surface:#fff8ec;--surface-alt:#fef3d8;--border:#9a8654;--text:#2d2006;--muted:#6b5c3e;--teal:#087568;--teal-dim:rgba(8,117,104,0.18);--green:#15803d;--green-dim:rgba(21,128,61,0.12);--red:#b91c1c;--red-dim:rgba(185,28,28,0.1);--ks3:#15803d;--gcse:#1d4ed8;--l4:#b91c1c}
+body.dyslexia .screen{font-size:18px;line-height:1.8;letter-spacing:0.12em;word-spacing:0.16em}
+body.dyslexia .question-card{font-size:18px;line-height:1.8;letter-spacing:0.05em;word-spacing:0.12em}
+body.dyslexia .slot,body.dyslexia .tile{font-size:15px;letter-spacing:0.05em}
+body.dyslexia .start-title,body.dyslexia .results-pct{color:var(--teal)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.fade-out{opacity:0;transition:opacity 0.2s}.fade-in{opacity:1;transition:opacity 0.2s}
+@media(max-width:480px){.level-grid{grid-template-columns:1fr}.results-stats{grid-template-columns:1fr 1fr}}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <div class="header-title">Equation Builder</div>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+
+    <button class="a11y-btn" id="a11yBtn" title="Accessibility: dyslexia-friendly mode">Aa</button>
+    <span class="level-pill" id="levelPill"></span>
+  </div>
+</div>
+
+<div class="hud" id="hud">
+  <div class="hud-score">Score: <span id="hudScore">0 / 0</span></div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+  <div class="hud-count" id="hudCount">0 / 0</div>
+</div>
+
+<div class="screen active" id="startScreen">
+  <h1 class="start-title">Equation Builder</h1>
+  <p class="start-sub">Read the word problem. Build the equation from tiles. Translate language into algebra.</p>
+  <div class="section-label">Level</div>
+  <div class="level-grid" id="levelGrid">
+    <button class="level-btn ks3" data-level="ks3">KS3<span class="btn-sub">Year 7-9</span></button>
+    <button class="level-btn gcse" data-level="gcse">GCSE<span class="btn-sub">Year 10-11</span></button>
+    <button class="level-btn l4" data-level="level4">Level 4<span class="btn-sub">HNC/HND</span></button>
+  </div>
+  <div class="section-label">Session Length</div>
+  <div class="session-grid">
+    <button class="session-btn" data-len="10">10<span class="btn-sub">questions</span></button>
+    <button class="session-btn active" data-len="20">20<span class="btn-sub">questions</span></button>
+    <button class="session-btn" data-len="30">30<span class="btn-sub">questions</span></button>
+  </div>
+  <button class="start-go" id="startBtn" disabled>Start</button>
+</div>
+
+<div class="screen" id="gameScreen">
+  <div class="question-card" id="questionCard"></div>
+  <div class="equation-zone" id="equationZone"></div>
+  <div class="tile-bank" id="tileBank"></div>
+  <button class="check-btn" id="checkBtn">Check</button>
+</div>
+
+<div class="screen" id="resultsScreen">
+  <div class="results-card">
+    <div class="results-pct" id="resultsPct">0%</div>
+    <div class="results-label">Accuracy</div>
+    <div id="pbBanner" class="pb-banner" style="display:none"></div>
+    <div class="results-stats">
+      <div class="stat-box"><div class="stat-val" id="resFirst">0</div><div class="stat-label">First attempt</div></div>
+      <div class="stat-box"><div class="stat-val" id="resRetry">0</div><div class="stat-label">After retry</div></div>
+      <div class="stat-box"><div class="stat-val" id="resTotal">0</div><div class="stat-label">Total</div></div>
+    </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="play-again" id="playAgain">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+</div>
+
+<script>
+/* ===== QUESTION BANK v2 ===== */
+const QUESTIONS=[
+// KS3 Assembly (20)
+{id:'eb_ks3_001',level:'ks3',type:'assembly',topic:'Forming Equations',text:'A taxi company charges a fixed booking fee of \u00a33 plus \u00a32.50 for every mile of the journey. A customer wants to know the total cost C pounds of a journey of m miles. Write a formula for C.',slots:['C','=','2.50m','+','3'],tiles:['C','=','2.50m','+','3','\u2212','\u00d7','2.50','m','3m']},
+{id:'eb_ks3_002',level:'ks3',type:'assembly',topic:'Forming Equations',text:'A farmer mixes sand and cement in the ratio 5:1 to make mortar. He uses x kg of cement. Write an expression for the total mass T kg of the mortar mixture.',slots:['T','=','6x'],tiles:['T','=','6x','5x','+6','x+5','\u00f7','\u00d7','5']},
+{id:'eb_ks3_003',level:'ks3',type:'assembly',topic:'Forming Equations',text:'A plumber charges \u00a345 for each hour he works, plus a fixed call-out charge of \u00a360. Write a formula for the total charge T pounds when the plumber works for h hours.',slots:['T','=','45h','+','60'],tiles:['T','=','45h','+','60','\u2212','\u00d7','105h','45','h']},
+{id:'eb_ks3_004',level:'ks3',type:'assembly',topic:'Forming Equations',text:'Ellie is e years old. Her brother is 4 years younger than her. Their mum is three times Ellie\u2019s age. Write an expression for S, the sum of all three ages.',slots:['S','=','e','+','(e\u22124)','+','3e'],tiles:['S','=','e','+','(e\u22124)','+','3e','\u2212','4e','\u00d7','(e+4)']},
+{id:'eb_ks3_005',level:'ks3',type:'assembly',topic:'Perimeter',text:'A rectangular sports pitch has a length that is 15 metres more than twice its width w metres. Write a formula for the perimeter P of the pitch.',slots:['P','=','2(2w','+','15)','+','2w'],tiles:['P','=','2(2w','+','15)','+','2w','\u2212','\u00d7','6w','(w+15)']},
+{id:'eb_ks3_006',level:'ks3',type:'assembly',topic:'Sequences',text:'A theatre has 20 seats in the front row. Each row behind has 2 more seats than the row in front. Write a formula for the number of seats S in the nth row.',slots:['S','=','2n','+','18'],tiles:['S','=','2n','+','18','\u2212','20n','\u00d7','2n+20','\u00f7']},
+{id:'eb_ks3_007',level:'ks3',type:'assembly',topic:'Ratio',text:'Three friends share prize money in the ratio of the number of tickets they each bought. Amy bought 2, Ben bought 3 and Chloe bought 5. The total prize is \u00a3P. Write an expression for Amy\u2019s share A.',slots:['A','=','P','\u00f7','5'],tiles:['A','=','P','\u00f7','5','\u00d7','2P','+','10','P\u00f710']},
+{id:'eb_ks3_008',level:'ks3',type:'assembly',topic:'Speed/Distance/Time',text:'A car travels at a constant speed of v km/h. It needs to cover a distance of 240 km. Write a formula for the time T hours the journey takes.',slots:['T','=','240','\u00f7','v'],tiles:['T','=','240','\u00f7','v','\u00d7','240v','+','\u2212','24v']},
+{id:'eb_ks3_009',level:'ks3',type:'assembly',topic:'Area',text:'An L-shaped garden has outer dimensions 12 m by 10 m. A rectangular corner section of length a metres and width b metres has been removed for a shed. Write a formula for the remaining garden area G.',slots:['G','=','120','\u2212','ab'],tiles:['G','=','120','\u2212','ab','+','\u00d7','12a','10b','\u00f7']},
+{id:'eb_ks3_010',level:'ks3',type:'assembly',topic:'Percentages',text:'A shop reduces all prices by 20% in a sale. A jacket has an original price of \u00a3P. Write a formula for the sale price S.',slots:['S','=','0.8P'],tiles:['S','=','0.8P','0.2P','P\u221220','1.2P','+','\u00f7','\u00d7']},
+{id:'eb_ks3_011',level:'ks3',type:'assembly',topic:'Forming Equations',text:'Packets of crisps come in boxes of 24. A school canteen orders x boxes and keeps 6 packets aside as samples. Write an expression for the number of packets N available to sell.',slots:['N','=','24x','\u2212','6'],tiles:['N','=','24x','\u2212','6','+','\u00d7','18x','24','\u00f7']},
+{id:'eb_ks3_012',level:'ks3',type:'assembly',topic:'Angles',text:'In a triangle, one angle is twice the smallest angle s. The third angle is 30\u00b0 more than s. Write an equation using the fact that angles in a triangle sum to 180\u00b0.',slots:['s','+','2s','+','(s+30)','=','180'],tiles:['s','+','2s','+','(s+30)','=','180','\u2212','\u00f7','4s','\u00d7','360']},
+{id:'eb_ks3_013',level:'ks3',type:'assembly',topic:'Fractions',text:'A baker makes 48 muffins. She sells three-quarters before lunch. Write an expression for the number of muffins M remaining after the morning.',slots:['M','=','48','\u2212','\u00be\u00d748'],tiles:['M','=','48','\u2212','\u00be\u00d748','+','\u00f7','\u00bc\u00d748','\u00d7','36']},
+{id:'eb_ks3_014',level:'ks3',type:'assembly',topic:'Number',text:'Two planets orbit a star. Planet A takes 420 days per orbit and Planet B takes 315 days. Write an expression showing you need the LCM of 420 and 315 to find when they next align.',slots:['Days','=','LCM(420,','315)'],tiles:['Days','=','LCM(420,','315)','HCF(420,','420\u00d7315','\u00f7','+']},
+{id:'eb_ks3_015',level:'ks3',type:'assembly',topic:'Averages',text:'The mean age of 6 players in a basketball team is 17 years. A seventh player of age a joins. Write a formula for the new mean M of all 7 players.',slots:['M','=','(6\u00d717','+','a)','\u00f7','7'],tiles:['M','=','(6\u00d717','+','a)','\u00f7','7','\u00d7','\u2212','17+a','\u00f76']},
+{id:'eb_ks3_016',level:'ks3',type:'assembly',topic:'Area & Perimeter',text:'A rectangular field has length l metres and width w metres. Fencing costs \u00a34.50 per metre. Write a formula for the total fencing cost F.',slots:['F','=','4.50','\u00d7','2(l+w)'],tiles:['F','=','4.50','\u00d7','2(l+w)','+','lw','\u00f7','4.50lw','9(l+w)']},
+{id:'eb_ks3_017',level:'ks3',type:'assembly',topic:'Probability',text:'A bag contains red, blue and yellow counters. Maria pulls a counter 80 times, getting red r times. Write an expression for the estimated probability P of picking red.',slots:['P','=','r','\u00f7','80'],tiles:['P','=','r','\u00f7','80','\u00d7','+','80r','\u2212','1\u2212r']},
+{id:'eb_ks3_018',level:'ks3',type:'assembly',topic:'Ratio',text:'A recipe uses oats and butter in the ratio 4:1 by mass. The total mass of one batch is T grams. Write a formula for the mass of oats O in the recipe.',slots:['O','=','4T','\u00f7','5'],tiles:['O','=','4T','\u00f7','5','\u00d7','+','4T','T\u00f74','0.8T']},
+{id:'eb_ks3_019',level:'ks3',type:'assembly',topic:'Sequences',text:'Square tiles are laid in a growing pattern. The first pattern uses 1 tile, the second uses 5, the third uses 9. Write the nth term formula for the number of tiles T.',slots:['T','=','4n','\u2212','3'],tiles:['T','=','4n','\u2212','3','+','\u00f7','4n+1','3n','\u00d7']},
+{id:'eb_ks3_020',level:'ks3',type:'assembly',topic:'Forming Equations',text:'A swimming pool holds V litres when full. It is currently three-eighths full and contains 360 litres. Write an equation to find V.',slots:['3V','\u00f7','8','=','360'],tiles:['3V','\u00f7','8','=','360','+','\u00d7','3V','8V','\u2212']},
+// KS3 Gap-fill (20)
+{id:'eb_ks3_021',level:'ks3',type:'gapfill',topic:'Speed',text:'A car travels at a constant speed. It covers 240 miles on 30 litres of fuel. Write the formula for fuel used F litres to cover d miles.',slots:['F','=','d','\u00f7','8'],tiles:['d','\u00f7','\u00d7','+','\u2212','30'],prefilled:[0,1,4]},
+{id:'eb_ks3_022',level:'ks3',type:'gapfill',topic:'Percentages',text:'A coat costs \u00a3P. After a 15% reduction, the sale price is S. Write the formula connecting S and P.',slots:['S','=','0.85P'],tiles:['0.85P','0.15P','P\u221215','1.15P'],prefilled:[0,1]},
+{id:'eb_ks3_023',level:'ks3',type:'gapfill',topic:'Area',text:'A circular pond has radius r metres. Write the formula for its area A.',slots:['A','=','\u03c0r\u00b2'],tiles:['\u03c0r\u00b2','2\u03c0r','\u03c0r','2\u03c0r\u00b2'],prefilled:[0,1]},
+{id:'eb_ks3_024',level:'ks3',type:'gapfill',topic:'Ratio',text:'Sand and cement are mixed in ratio 5:1. x kg of cement is used. Write the formula for total mortar mass T.',slots:['T','=','6','\u00d7','x'],tiles:['6','5','\u00d7','+','\u00f7'],prefilled:[0,1,4]},
+{id:'eb_ks3_025',level:'ks3',type:'gapfill',topic:'Sequences',text:'An arithmetic sequence has first term 3 and common difference 5. Write the nth term formula T.',slots:['T','=','5n','\u2212','2'],tiles:['5n','3n','\u2212','+','2','5'],prefilled:[0,1,3]},
+{id:'eb_ks3_026',level:'ks3',type:'gapfill',topic:'Perimeter',text:'A rectangle has length (2w + 3) cm and width w cm. Write the formula for perimeter P.',slots:['P','=','2(3w','+','3)'],tiles:['2(3w','(2w','+','\u2212','3)','\u00d7'],prefilled:[0,1,4]},
+{id:'eb_ks3_027',level:'ks3',type:'gapfill',topic:'Averages',text:'Five numbers have a mean of m. Write an expression for their total T.',slots:['T','=','5','\u00d7','m'],tiles:['\u00d7','\u00f7','+','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_ks3_028',level:'ks3',type:'gapfill',topic:'Fractions',text:'Two-thirds of a number n gives 24. Write the equation.',slots:['2n','\u00f7','3','=','24'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,2,3,4]},
+{id:'eb_ks3_029',level:'ks3',type:'gapfill',topic:'Angles',text:'Angles in a triangle: the largest angle is 2x, the middle is x, and the smallest is (x \u2212 15)\u00b0. Write the equation.',slots:['2x','+','x','+','(x\u221215)','=','180'],tiles:['+','\u2212','\u00d7','\u00f7'],prefilled:[0,2,4,5,6]},
+{id:'eb_ks3_030',level:'ks3',type:'gapfill',topic:'Forming Equations',text:'A plumber charges \u00a345 per hour plus \u00a360 call-out. A customer pays \u00a3T. Write the formula for the number of hours h worked.',slots:['h','=','(T','\u2212','60)','\u00f7','45'],tiles:['\u2212','+','\u00d7','\u00f7'],prefilled:[0,1,2,4,5,6]},
+{id:'eb_ks3_031',level:'ks3',type:'gapfill',topic:'Probability',text:'A spinner has n equal sections. Write the probability P of landing on any one section.',slots:['P','=','1','\u00f7','n'],tiles:['\u00f7','\u00d7','+','n'],prefilled:[0,1,2,4]},
+{id:'eb_ks3_032',level:'ks3',type:'gapfill',topic:'Speed',text:'Distance d, speed s, time t. Write the formula for speed.',slots:['s','=','d','\u00f7','t'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_ks3_033',level:'ks3',type:'gapfill',topic:'Sequences',text:'A sequence: 2, 6, 18, 54... Each term multiplies the previous by r. Write the expression for the 4th term using a = 2.',slots:['T\u2084','=','2','\u00d7','r\u00b3'],tiles:['r\u00b3','r\u2074','3r','r+3'],prefilled:[0,1,2,3]},
+{id:'eb_ks3_034',level:'ks3',type:'gapfill',topic:'Area',text:'A triangle has base b cm and perpendicular height h cm. Write the formula for its area A.',slots:['A','=','\u00bd','\u00d7','bh'],tiles:['bh','b+h','2bh','b\u00b2h'],prefilled:[0,1,2,3]},
+{id:'eb_ks3_035',level:'ks3',type:'gapfill',topic:'Ratio',text:'Two quantities are in ratio 3:7. The smaller is x. Write the expression for the larger quantity L.',slots:['L','=','7x','\u00f7','3'],tiles:['7x','3x','7','10x'],prefilled:[0,1,3,4]},
+{id:'eb_ks3_036',level:'ks3',type:'gapfill',topic:'Forming Equations',text:'A number n is doubled and then 9 is subtracted to give 25. Write the equation.',slots:['2n','\u2212','9','=','25'],tiles:['\u2212','+','\u00d7','\u00f7'],prefilled:[0,2,3,4]},
+{id:'eb_ks3_037',level:'ks3',type:'gapfill',topic:'Percentages',text:'A salary of \u00a3S is increased by 4% to give new salary N. Write the formula for N.',slots:['N','=','1.04S'],tiles:['1.04S','0.96S','S+4','1.4S'],prefilled:[0,1]},
+{id:'eb_ks3_038',level:'ks3',type:'gapfill',topic:'Angles',text:'The exterior angle of a regular polygon with n sides. Write the formula for each exterior angle E.',slots:['E','=','360','\u00f7','n'],tiles:['\u00f7','\u00d7','+','n'],prefilled:[0,1,2,4]},
+{id:'eb_ks3_039',level:'ks3',type:'gapfill',topic:'Area',text:'A square has side s cm. Write the formula for its perimeter P.',slots:['P','=','4','\u00d7','s'],tiles:['\u00d7','+','s','\u00f7'],prefilled:[0,1,2,4]},
+{id:'eb_ks3_040',level:'ks3',type:'gapfill',topic:'Forming Equations',text:'A water tank is three-eighths full and holds 360 litres. Write the equation for the full capacity V litres.',slots:['3V','\u00f7','8','=','360'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,2,3,4]},
+// GCSE Assembly (24)
+{id:'eb_gcse_001',level:'gcse',type:'assembly',topic:'Reverse Percentage',text:'A coat is on sale for \u00a376.50 after a 10% reduction. Write the equation to find the original price P.',slots:['0.9P','=','76.50'],tiles:['0.9P','=','76.50','1.1P','P\u221210','+','\u00f7','0.1P','\u00d7']},
+{id:'eb_gcse_002',level:'gcse',type:'assembly',topic:'Compound Interest',text:'A savings account pays 3.5% compound interest per year. \u00a3P is invested. Write the formula for the amount A after n years.',slots:['A','=','P','\u00d7','1.035\u207f'],tiles:['A','=','P','\u00d7','1.035\u207f','+','0.965\u207f','\u00f7','1.35\u207f','nP']},
+{id:'eb_gcse_003',level:'gcse',type:'assembly',topic:'Simultaneous Equations',text:'Mr Jones buys 5 tins of paint and 4 rolls of tape for \u00a3167. Let p = price of a tin and t = price of a roll. Write the first equation.',slots:['5p','+','4t','=','167'],tiles:['5p','+','4t','=','167','\u2212','p','t','\u00f7','\u00d7']},
+{id:'eb_gcse_004',level:'gcse',type:'assembly',topic:'Simultaneous Equations',text:'Mr Jones buys 5 tins of paint and 4 rolls of tape for \u00a3167. He returns 1 tin and 1 roll for a refund of \u00a333.75. Write the second equation using the refund.',slots:['p','+','t','=','33.75'],tiles:['p','+','t','=','33.75','5p','4t','\u2212','\u00f7','\u00d7']},
+{id:'eb_gcse_005',level:'gcse',type:'assembly',topic:'Quadratics',text:'A rectangular field has a length that is 7 metres more than its width w metres. The area is 198 m\u00b2. Write the equation for the area of the field.',slots:['w(w','+','7)','=','198'],tiles:['w(w','+','7)','=','198','\u2212','2w+7','\u00f7','\u00d7','w\u00b2']},
+{id:'eb_gcse_006',level:'gcse',type:'assembly',topic:'Pythagoras',text:'A 6 m ladder leans against a wall. Its foot is 1.8 m from the base. Write the equation to find the height h metres the ladder reaches up the wall.',slots:['h\u00b2','+','1.8\u00b2','=','6\u00b2'],tiles:['h\u00b2','+','1.8\u00b2','=','6\u00b2','\u2212','\u00d7','h','\u00f7','1.8h']},
+{id:'eb_gcse_007',level:'gcse',type:'assembly',topic:'Trigonometry',text:'From the top of an 80 m cliff, the angle of depression to a boat is 34\u00b0. Write the equation to find the horizontal distance d metres from the cliff base to the boat.',slots:['tan34\u00b0','=','80','\u00f7','d'],tiles:['tan34\u00b0','=','80','\u00f7','d','\u00d7','sin34\u00b0','cos34\u00b0','+','80d']},
+{id:'eb_gcse_008',level:'gcse',type:'assembly',topic:'Standard Form',text:'Light travels at 3 \u00d7 10\u2078 m/s. The distance to Proxima Centauri is 4.013 \u00d7 10\u00b9\u2076 m. Write the equation for the time T seconds light takes to travel this distance.',slots:['T','=','4.013\u00d710\u00b9\u2076','\u00f7','3\u00d710\u2078'],tiles:['T','=','4.013\u00d710\u00b9\u2076','\u00f7','3\u00d710\u2078','\u00d7','+','3\u00d710\u2078','\u00f74.013','\u2212']},
+{id:'eb_gcse_009',level:'gcse',type:'assembly',topic:'Circle Theorems',text:'ABCD is a cyclic quadrilateral. Angle DAB = (3x + 10)\u00b0 and angle BCD = (5x \u2212 18)\u00b0. Write the equation using the property of cyclic quadrilaterals.',slots:['(3x+10)','+','(5x\u221218)','=','180'],tiles:['(3x+10)','+','(5x\u221218)','=','180','\u00f7','\u2212','8x','\u00d7','360']},
+{id:'eb_gcse_010',level:'gcse',type:'assembly',topic:'Probability',text:'A bag has 5 red, 3 blue and 2 green counters. Two are drawn without replacement. Write the expression for P(both red).',slots:['P','=','5/10','\u00d7','4/9'],tiles:['P','=','5/10','\u00d7','4/9','+','5/9','\u00f7','4/10','\u2212']},
+{id:'eb_gcse_011',level:'gcse',type:'assembly',topic:'Reverse Percentage',text:'After a pay rise of 4%, a nurse earns \u00a333,280 per year. Write the equation to find the original salary S.',slots:['1.04S','=','33280'],tiles:['1.04S','=','33280','0.96S','S+4','+','\u00f7','1.4S','\u00d7']},
+{id:'eb_gcse_012',level:'gcse',type:'assembly',topic:'Speed/Distance/Time',text:'Jodie swims 1.5 km at 2 km/h and cycles 40 km at 32 km/h in a triathlon. Write the equation for her total time T hours for these two stages.',slots:['T','=','1.5/2','+','40/32'],tiles:['T','=','1.5/2','+','40/32','\u00d7','\u2212','1.5\u00d72','\u00f7','41.5/34']},
+{id:'eb_gcse_013',level:'gcse',type:'assembly',topic:'Vectors',text:'OABC is a parallelogram where OA = a and OC = c. M is the midpoint of BC. Write the expression for the vector OM.',slots:['OM','=','a','+','\u00bdc'],tiles:['OM','=','a','+','\u00bdc','\u2212','\u00d7','a+c','\u00f7','2c']},
+{id:'eb_gcse_014',level:'gcse',type:'assembly',topic:'Similarity',text:'Two bottles are similar. The small bottle is 8 cm tall and holds 50 ml. The large bottle is 12 cm tall. Write the equation to find the capacity V ml of the large bottle, using the scale factor.',slots:['V','=','50','\u00d7','(12/8)\u00b3'],tiles:['V','=','50','\u00d7','(12/8)\u00b3','(12/8)\u00b2','\u00f7','+','12/8','(8/12)\u00b3']},
+{id:'eb_gcse_015',level:'gcse',type:'assembly',topic:'Equations & Inequalities',text:'Kira is 3 years older than twice Marcus\u2019s age m. The sum of their ages is 39. Write the equation to find m.',slots:['m','+','(2m+3)','=','39'],tiles:['m','+','(2m+3)','=','39','\u2212','3m','\u00d7','(2m\u22123)','\u00f7']},
+{id:'eb_gcse_016',level:'gcse',type:'assembly',topic:'Functions',text:'A function is defined as f(x) = 2x\u00b2 \u2212 3. Write the equation to solve f(x) = 15.',slots:['2x\u00b2','\u2212','3','=','15'],tiles:['2x\u00b2','\u2212','3','=','15','+','\u00f7','\u00d7','2x','15x']},
+{id:'eb_gcse_017',level:'gcse',type:'assembly',topic:'Bounds',text:'A rectangle is 4.8 m by 3.6 m to the nearest 10 cm. Write the expression for the upper bound of the area A.',slots:['A','=','4.85','\u00d7','3.65'],tiles:['A','=','4.85','\u00d7','3.65','+','4.75','3.55','\u00f7','4.8\u00d73.6']},
+{id:'eb_gcse_018',level:'gcse',type:'assembly',topic:'Scatter Graphs',text:'A line of best fit passes through (5, 85) and (20, 40). Write the equation to find the gradient m of the line.',slots:['m','=','(40\u221285)','\u00f7','(20\u22125)'],tiles:['m','=','(40\u221285)','\u00f7','(20\u22125)','\u00d7','+','(85\u221240)','(5\u221220)','\u2212']},
+{id:'eb_gcse_019',level:'gcse',type:'assembly',topic:'Cumulative Frequency',text:'80 students complete a sponsored walk. The upper quartile Q3 = 9.1 km and lower quartile Q1 = 4.8 km. Write the equation for the IQR.',slots:['IQR','=','Q3','\u2212','Q1'],tiles:['IQR','=','Q3','\u2212','Q1','+','\u00f7','\u00d7','Q3+Q1','2']},
+{id:'eb_gcse_020',level:'gcse',type:'assembly',topic:'Equations & Inequalities',text:'A rectangle has length (3x + 4) cm and width (x \u2212 1) cm. Its perimeter is 46 cm. Write the equation to find x.',slots:['2(3x+4','+','x\u22121)','=','46'],tiles:['2(3x+4','+','x\u22121)','=','46','\u2212','\u00d7','\u00f7','(4x+3)','8x+6']},
+{id:'eb_gcse_021',level:'gcse',type:'assembly',topic:'Cosine Rule',text:'A triangular plot has sides 40 m, 55 m, and 70 m. To find the largest angle C opposite the 70 m side, write the cosine rule equation.',slots:['70\u00b2','=','40\u00b2+55\u00b2','\u2212','2\u00d740\u00d755\u00d7cosC'],tiles:['70\u00b2','=','40\u00b2+55\u00b2','\u2212','2\u00d740\u00d755\u00d7cosC','+','\u00f7','\u00d7','2\u00d740\u00d755','cos70']},
+{id:'eb_gcse_022',level:'gcse',type:'assembly',topic:'Cosine Rule',text:'Two ships leave the same port. Ship A sails on bearing 040\u00b0 for 30 km. Ship B sails on bearing 160\u00b0 for 45 km. The angle between their paths is 120\u00b0. Write the cosine rule equation to find the distance d km between them.',slots:['d\u00b2','=','30\u00b2+45\u00b2','\u2212','2\u00d730\u00d745\u00d7cos120\u00b0'],tiles:['d\u00b2','=','30\u00b2+45\u00b2','\u2212','2\u00d730\u00d745\u00d7cos120\u00b0','+','\u00f7','\u00d7','cos40\u00b0','cos160\u00b0']},
+{id:'eb_gcse_023',level:'gcse',type:'assembly',topic:'Quadratics',text:'A path of uniform width x metres surrounds a rectangular garden 14 m by 10 m. The total area including path is 255 m\u00b2. Write the equation for the total area.',slots:['(14+2x)(10+2x)','=','255'],tiles:['(14+2x)(10+2x)','=','255','14\u00d710+2x','+','\u00f7','(14+x)(10+x)','\u00d7','140+2x']},
+{id:'eb_gcse_024',level:'gcse',type:'assembly',topic:'Probability',text:'The probability that it rains on any given day is 0.3. Write the expression for the probability P it rains on at least one day across two independent days.',slots:['P','=','1','\u2212','0.7\u00b2'],tiles:['P','=','1','\u2212','0.7\u00b2','+','0.3\u00b2','\u00f7','\u00d7','2\u00d70.3']},
+// GCSE Gap-fill (16)
+{id:'eb_gcse_025',level:'gcse',type:'gapfill',topic:'Compound Interest',text:'\u00a32000 invested at 5% compound interest per year. Write the formula for amount A after n years.',slots:['A','=','2000','\u00d7','1.05\u207f'],tiles:['1.05\u207f','0.95\u207f','1.5\u207f','n\u00d71.05'],prefilled:[0,1,2,3]},
+{id:'eb_gcse_026',level:'gcse',type:'gapfill',topic:'Pythagoras',text:'Ladder 6 m long, foot 1.8 m from wall. Write the Pythagoras equation for height h.',slots:['h\u00b2','=','6\u00b2','\u2212','1.8\u00b2'],tiles:['\u2212','+','\u00f7','\u00d7'],prefilled:[0,1,2,4]},
+{id:'eb_gcse_027',level:'gcse',type:'gapfill',topic:'Reverse Percentage',text:'A salary S increased by 4% gives \u00a333,280. Write the equation.',slots:['1.04S','=','33280'],tiles:['1.04S','0.96S','S+4','1.4S'],prefilled:[1,2]},
+{id:'eb_gcse_028',level:'gcse',type:'gapfill',topic:'Sine Rule',text:'Triangle with side a = 8, angle A = 30\u00b0, side b unknown, angle B = 45\u00b0. Write the sine rule equation for b.',slots:['b','\u00f7','sin45\u00b0','=','8\u00f7sin30\u00b0'],tiles:['\u00f7','\u00d7','sin45\u00b0','sin30\u00b0','+'],prefilled:[0,3,4]},
+{id:'eb_gcse_029',level:'gcse',type:'gapfill',topic:'Circle Area',text:'A cylinder has radius r cm and cross-sectional area A. Write the formula.',slots:['A','=','\u03c0','\u00d7','r\u00b2'],tiles:['\u00d7','+','\u00f7','r'],prefilled:[0,1,2,4]},
+{id:'eb_gcse_030',level:'gcse',type:'gapfill',topic:'Probability',text:'P(A) = 0.45, P(B) = 0.38, P(both) = 0.12. Write the formula for P(neither).',slots:['P(neither)','=','1','\u2212','(0.45+0.38\u22120.12)'],tiles:['\u2212','+','\u00d7','\u00f7'],prefilled:[0,1,2,4]},
+{id:'eb_gcse_031',level:'gcse',type:'gapfill',topic:'Quadratic Formula',text:'Solve 2x\u00b2 + 5x \u2212 3 = 0 using the quadratic formula. Write the formula.',slots:['x','=','(\u22125 \u00b1 \u221a(25+24))','\u00f7','4'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_gcse_032',level:'gcse',type:'gapfill',topic:'Functions',text:'h(x) = 5x \u2212 3. Write the inverse function h\u207b\u00b9(x).',slots:['h\u207b\u00b9(x)','=','(x+3)','\u00f7','5'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_gcse_033',level:'gcse',type:'gapfill',topic:'Vectors',text:'OA = 2a, OB = 3b. P divides AB in ratio 1:2. Write the vector OP.',slots:['OP','=','2a','+','\u2153(3b\u22122a)'],tiles:['+','\u2212','\u00d7','\u00f7'],prefilled:[0,1,2,4]},
+{id:'eb_gcse_034',level:'gcse',type:'gapfill',topic:'Standard Form',text:'Earth mass = 5.97 \u00d7 10\u00b2\u2074 kg, Moon mass = 7.34 \u00d7 10\u00b2\u00b2 kg. Write the expression for combined mass M.',slots:['M','=','5.97\u00d710\u00b2\u2074','+','7.34\u00d710\u00b2\u00b2'],tiles:['+','\u2212','\u00d7','\u00f7'],prefilled:[0,1,2,4]},
+{id:'eb_gcse_035',level:'gcse',type:'gapfill',topic:'Reverse Percentage',text:'House value increased by 17% over 5 years to \u00a3292,500. Write the equation for original value V.',slots:['1.17V','=','292500'],tiles:['1.17V','0.83V','V+17','1.07V'],prefilled:[1,2]},
+{id:'eb_gcse_036',level:'gcse',type:'gapfill',topic:'Similarity',text:'Two similar triangles: small has hypotenuse 10 cm, large has hypotenuse 25 cm. Write the scale factor k for lengths.',slots:['k','=','25','\u00f7','10'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_gcse_037',level:'gcse',type:'gapfill',topic:'Forming Equations',text:'A cinema: 3 adult tickets and 5 child tickets cost \u00a345. Write the first equation using a = adult price, c = child price.',slots:['3a','+','5c','=','45'],tiles:['+','\u2212','\u00d7','\u00f7'],prefilled:[0,2,3,4]},
+{id:'eb_gcse_038',level:'gcse',type:'gapfill',topic:'Cosine Rule',text:'Triangle sides 40, 55, 70 m. Write the cosine rule for angle C opposite 70 m.',slots:['cos C','=','(40\u00b2+55\u00b2\u221270\u00b2)','\u00f7','(2\u00d740\u00d755)'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_gcse_039',level:'gcse',type:'gapfill',topic:'Surds',text:'Triangle has legs \u221a7 and \u221a28. Write the Pythagoras expression for hypotenuse h.',slots:['h','=','\u221a(7+28)','=','\u221a35'],tiles:['\u221a(7+28)','\u221a(7\u00d728)','\u221a7+\u221a28','\u221a21'],prefilled:[0,1,3,4]},
+{id:'eb_gcse_040',level:'gcse',type:'gapfill',topic:'Probability',text:'Biased coin: P(heads) = 0.6. Tossed 3 times. Write P(exactly 2 heads).',slots:['P','=','3','\u00d7','0.6\u00b2\u00d70.4'],tiles:['0.6\u00b2\u00d70.4','0.6\u00b3','0.4\u00d70.6','2\u00d70.6\u00d70.4'],prefilled:[0,1,2,3]},
+// Level 4 Assembly (18)
+{id:'eb_l4_001',level:'level4',type:'assembly',topic:'Differentiation',text:'A curve has equation y = 4x\u00b3 \u2212 5x\u00b2 + 2x \u2212 7. Write the expression for dy/dx.',slots:['dy/dx','=','12x\u00b2','\u2212','10x','+','2'],tiles:['dy/dx','=','12x\u00b2','\u2212','10x','+','2','4x\u00b2','\u00f7','\u00d7']},
+{id:'eb_l4_002',level:'level4',type:'assembly',topic:'Integration',text:'A velocity-time graph shows v = 3t\u00b2 + 2t. Write the expression for distance s by integrating.',slots:['s','=','t\u00b3','+','t\u00b2','+','c'],tiles:['s','=','t\u00b3','+','t\u00b2','+','c','\u00f7','6t','\u00d7','3t\u00b3']},
+{id:'eb_l4_003',level:'level4',type:'assembly',topic:'Complex Numbers',text:'A complex number z = 3 + 4j. Write the expression for the modulus |z|.',slots:['|z|','=','\u221a(3\u00b2','+','4\u00b2)'],tiles:['|z|','=','\u221a(3\u00b2','+','4\u00b2)','\u00f7','3+4','\u00d7','\u221a(3\u00b2\u22124\u00b2)','\u2212']},
+{id:'eb_l4_004',level:'level4',type:'assembly',topic:'Matrices',text:'Matrix A = [[2, 3], [1, 4]]. Write the expression for det(A).',slots:['det(A)','=','2\u00d74','\u2212','3\u00d71'],tiles:['det(A)','=','2\u00d74','\u2212','3\u00d71','+','\u00f7','2+4','\u00d7','2\u00d71']},
+{id:'eb_l4_005',level:'level4',type:'assembly',topic:'Logarithms',text:'A population grows: P = P\u2080e\u1d4f\u1d57. Write the equation after taking natural logs when P = 2P\u2080.',slots:['kt','=','ln(2P\u2080)','\u2212','ln(P\u2080)'],tiles:['kt','=','ln(2P\u2080)','\u2212','ln(P\u2080)','+','\u00d7','ln(2)','\u00f7','ln(P\u2080/2)']},
+{id:'eb_l4_006',level:'level4',type:'assembly',topic:'Chain Rule',text:'y = (3x\u00b2 + 1)\u2075. Write the expression for dy/dx using the chain rule.',slots:['dy/dx','=','5(3x\u00b2+1)\u2074','\u00d7','6x'],tiles:['dy/dx','=','5(3x\u00b2+1)\u2074','\u00d7','6x','+','\u00f7','5(3x\u00b2+1)\u2075','30x','\u2212']},
+{id:'eb_l4_007',level:'level4',type:'assembly',topic:'Product Rule',text:'y = x\u00b2\u00b7sin(x). Write the expression for dy/dx.',slots:['dy/dx','=','x\u00b2cos(x)','+','2x\u00b7sin(x)'],tiles:['dy/dx','=','x\u00b2cos(x)','+','2x\u00b7sin(x)','\u2212','\u00d7','x\u00b2sin(x)','\u00f7','2xcos(x)']},
+{id:'eb_l4_008',level:'level4',type:'assembly',topic:'Integration by Parts',text:'\u222bx\u00b7e\u02e3 dx. Setting u = x and dv = e\u02e3 dx, write the integration by parts result.',slots:['\u222bx\u00b7e\u02e3dx','=','x\u00b7e\u02e3','\u2212','\u222be\u02e3dx'],tiles:['\u222bx\u00b7e\u02e3dx','=','x\u00b7e\u02e3','\u2212','\u222be\u02e3dx','+','\u00d7','e\u02e3','\u00f7','x\u00b2e\u02e3']},
+{id:'eb_l4_009',level:'level4',type:'assembly',topic:'Eigenvalues',text:'Matrix A = [[3, 1], [2, 4]]. Write the characteristic equation using det(A \u2212 \u03bbI) = 0.',slots:['(3\u2212\u03bb)(4\u2212\u03bb)','\u2212','2','=','0'],tiles:['(3\u2212\u03bb)(4\u2212\u03bb)','\u2212','2','=','0','+','\u00f7','(3+\u03bb)','\u00d7','12\u2212\u03bb']},
+{id:'eb_l4_010',level:'level4',type:'assembly',topic:'Partial Fractions',text:'Express (3x + 1)/((x + 1)(x \u2212 2)) in partial fractions.',slots:['A/(x+1)','+','B/(x\u22122)'],tiles:['A/(x+1)','+','B/(x\u22122)','\u00d7','\u00f7','AB/(x+1)','\u2212','(A+B)']},
+{id:'eb_l4_011',level:'level4',type:'assembly',topic:'Geometric Series',text:'Geometric series: first term a = 3, common ratio r = 0.5. Write the formula for S\u221e.',slots:['S\u221e','=','a','\u00f7','(1\u2212r)'],tiles:['S\u221e','=','a','\u00f7','(1\u2212r)','\u00d7','+','(r\u22121)','\u00f7a','\u2212']},
+{id:'eb_l4_012',level:'level4',type:'assembly',topic:'Complex Numbers',text:'z = \u22123 + 3j. Write the expression for the modulus |z|.',slots:['|z|','=','\u221a(9','+','9)'],tiles:['|z|','=','\u221a(9','+','9)','\u00f7','\u221a18','\u2212','\u00d7','\u221a(\u22129+9)']},
+{id:'eb_l4_013',level:'level4',type:'assembly',topic:'Implicit Differentiation',text:'x\u00b2 + y\u00b2 = 25. Write the expression for dy/dx.',slots:['dy/dx','=','\u2212x','\u00f7','y'],tiles:['dy/dx','=','\u2212x','\u00f7','y','+','\u00d7','x/y','\u2212y/x','\u2212']},
+{id:'eb_l4_014',level:'level4',type:'assembly',topic:'Cramer\'s Rule',text:'Write the Cramer\u2019s rule expression for x\u2081.',slots:['x\u2081','=','det(A\u2081)','\u00f7','det(A)'],tiles:['x\u2081','=','det(A\u2081)','\u00f7','det(A)','\u00d7','+','det(A)/det(A\u2081)','\u2212','A\u2081A']},
+{id:'eb_l4_015',level:'level4',type:'assembly',topic:'Logarithm Laws',text:'Simplify log(8) + log(4) \u2212 log(2). Write the single logarithm expression.',slots:['log(8\u00d74','\u00f7','2)','=','log(16)'],tiles:['log(8\u00d74','\u00f7','2)','=','log(16)','+','\u00d7','log(8+4)','\u2212','log(10)']},
+{id:'eb_l4_016',level:'level4',type:'assembly',topic:'Binomial Expansion',text:'Write the first three terms of the binomial expansion of (1 + x)\u2075.',slots:['1','+','5x','+','10x\u00b2'],tiles:['1','+','5x','+','10x\u00b2','\u00d7','x\u2075','\u00f7','5x\u00b2','\u2212']},
+{id:'eb_l4_017',level:'level4',type:'assembly',topic:'Maclaurin Series',text:'Write the first three non-zero terms of the Maclaurin series for sin(x).',slots:['x','\u2212','x\u00b3/3!','+','x\u2075/5!'],tiles:['x','\u2212','x\u00b3/3!','+','x\u2075/5!','\u00f7','x\u00b2/2!','\u00d7','\u2212x\u00b2','1']},
+{id:'eb_l4_018',level:'level4',type:'assembly',topic:'Matrix Inverse',text:'Matrix A = [[4, 2], [3, 1]]. Write det(A) as the first step in finding A\u207b\u00b9.',slots:['det(A)','=','4\u00d71','\u2212','2\u00d73'],tiles:['det(A)','=','4\u00d71','\u2212','2\u00d73','+','\u00f7','4+1','\u00d7','4\u00d73']},
+// Level 4 Assembly bonus (6)
+{id:'eb_l4_019',level:'level4',type:'assembly',topic:'Quotient Rule',text:'y = sin(x)/x\u00b2. An engineer applies the quotient rule. Write the expression for dy/dx.',slots:['dy/dx','=','(x\u00b2cos(x)','\u2212','2xsin(x))','\u00f7','x\u2074'],tiles:['dy/dx','=','(x\u00b2cos(x)','\u2212','2xsin(x))','\u00f7','x\u2074','+','\u00d7','x\u00b2sin(x)']},
+{id:'eb_l4_020',level:'level4',type:'assembly',topic:'Second Derivative',text:'y = 3x\u2074 \u2212 2x\u00b3. Write the expression for d\u00b2y/dx\u00b2.',slots:['d\u00b2y/dx\u00b2','=','36x\u00b2','\u2212','12x'],tiles:['d\u00b2y/dx\u00b2','=','36x\u00b2','\u2212','12x','+','\u00d7','12x\u00b3','\u00f7','6x\u00b2']},
+{id:'eb_l4_021',level:'level4',type:'assembly',topic:'Definite Integrals',text:'Evaluate the area under y = 2x between x = 1 and x = 4. Write the definite integral expression.',slots:['\u222b\u2081\u2074','2x dx','=','[x\u00b2]\u2081\u2074'],tiles:['\u222b\u2081\u2074','2x dx','=','[x\u00b2]\u2081\u2074','+','\u00d7','[2x\u00b2]\u2081\u2074','\u00f7','[x]\u2081\u2074']},
+{id:'eb_l4_022',level:'level4',type:'assembly',topic:'Exponential Equations',text:'Solve 5e\u00b2\u02e3 = 40 for x. Write the equation after isolating e\u00b2\u02e3.',slots:['e\u00b2\u02e3','=','8'],tiles:['e\u00b2\u02e3','=','8','40','5x','+','\u00f7','\u00d7','e\u2078']},
+{id:'eb_l4_023',level:'level4',type:'assembly',topic:'Sigma Notation',text:'Write the sum 1 + 4 + 9 + 16 + 25 in sigma notation.',slots:['\u03a3','r\u00b2','r=1','to','5'],tiles:['\u03a3','r\u00b2','r=1','to','5','r\u00b3','r=0','+','6','\u00d7']},
+{id:'eb_l4_024',level:'level4',type:'assembly',topic:'De Moivre\u2019s Theorem',text:'z = r(cos\u03b8 + jsin\u03b8). Write the expression for z\u207f using De Moivre\u2019s theorem.',slots:['z\u207f','=','r\u207f(cosn\u03b8','+','jsinn\u03b8)'],tiles:['z\u207f','=','r\u207f(cosn\u03b8','+','jsinn\u03b8)','\u2212','\u00d7','r(cosn\u03b8)','\u00f7','nr\u207f']},
+// Level 4 Gap-fill (16)
+{id:'eb_l4_025',level:'level4',type:'gapfill',topic:'Differentiation',text:'y = 5x\u00b3 \u2212 2x + 7. Write dy/dx.',slots:['dy/dx','=','15x\u00b2','\u2212','2'],tiles:['\u2212','+','\u00d7','\u00f7'],prefilled:[0,1,2,4]},
+{id:'eb_l4_026',level:'level4',type:'gapfill',topic:'Integration',text:'\u222b(6x\u00b2 + 4x) dx. Write the result with constant of integration.',slots:['2x\u00b3','+','2x\u00b2','+','c'],tiles:['+','\u2212','\u00d7','\u00f7'],prefilled:[0,2,4]},
+{id:'eb_l4_027',level:'level4',type:'gapfill',topic:'Logarithms',text:'log(a) \u2212 log(b) = ? Write as a single logarithm.',slots:['log(a','\u00f7','b)'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,2]},
+{id:'eb_l4_028',level:'level4',type:'gapfill',topic:'Complex Numbers',text:'z = 4 + 3j. Write the conjugate z*.',slots:['z*','=','4','\u2212','3j'],tiles:['\u2212','+','\u00d7','\u00f7'],prefilled:[0,1,2,4]},
+{id:'eb_l4_029',level:'level4',type:'gapfill',topic:'Eigenvalues',text:'Characteristic equation: \u03bb\u00b2 \u2212 7\u03bb + 10 = 0. Write the factorised form.',slots:['(\u03bb\u22125)','\u00d7','(\u03bb\u22122)','=','0'],tiles:['\u00d7','+','\u2212','\u00f7'],prefilled:[0,2,3,4]},
+{id:'eb_l4_030',level:'level4',type:'gapfill',topic:'Partial Fractions',text:'3/((x+1)(x\u22122)) gives A/(x+1) + B/(x\u22122). Write the identity after multiplying through.',slots:['3','=','A(x\u22122)','+','B(x+1)'],tiles:['+','\u2212','\u00d7','\u00f7'],prefilled:[0,1,2,4]},
+{id:'eb_l4_031',level:'level4',type:'gapfill',topic:'Product Rule',text:'y = x\u00b3\u00b7cos(x). Write dy/dx using the product rule.',slots:['dy/dx','=','3x\u00b2cos(x)','\u2212','x\u00b3sin(x)'],tiles:['\u2212','+','\u00d7','\u00f7'],prefilled:[0,1,2,4]},
+{id:'eb_l4_032',level:'level4',type:'gapfill',topic:'Geometric Series',text:'Sum to infinity: a = 6, r = \u2153. Write S\u221e.',slots:['S\u221e','=','6','\u00f7','(1\u2212\u2153)'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_l4_033',level:'level4',type:'gapfill',topic:'Matrices',text:'A = [[a,b],[c,d]]. Write the formula for A\u207b\u00b9.',slots:['A\u207b\u00b9','=','(1/det(A))','\u00d7','[[d,\u2212b],[\u2212c,a]]'],tiles:['\u00d7','+','\u00f7','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_l4_034',level:'level4',type:'gapfill',topic:'Integration by Parts',text:'\u222bx\u00b7e\u02e3 dx = x\u00b7e\u02e3 \u2212 \u222be\u02e3 dx. Write the final result.',slots:['x\u00b7e\u02e3','\u2212','e\u02e3','+','c'],tiles:['\u2212','+','\u00d7','\u00f7'],prefilled:[0,2,4]},
+{id:'eb_l4_035',level:'level4',type:'gapfill',topic:'Implicit Differentiation',text:'3x\u00b2 + 2y\u00b2 = 10. Differentiating gives 6x + 4y(dy/dx) = 0. Write dy/dx.',slots:['dy/dx','=','\u22126x','\u00f7','4y'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_l4_036',level:'level4',type:'gapfill',topic:'Binomial',text:'(1 + 2x)\u2074: write the coefficient of x\u00b2 in the expansion.',slots:['coeff','=','4C2','\u00d7','2\u00b2'],tiles:['\u00d7','+','\u00f7','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_l4_037',level:'level4',type:'gapfill',topic:'Stationary Points',text:'dy/dx = 6x\u00b2 \u2212 18x. Set dy/dx = 0 and factorise to find stationary points.',slots:['6x(x','\u2212','3)','=','0'],tiles:['\u2212','+','\u00d7','\u00f7'],prefilled:[0,2,3,4]},
+{id:'eb_l4_038',level:'level4',type:'gapfill',topic:'Recurrence Relations',text:'A recurrence relation is defined by u\u2099\u208a\u2081 = 3u\u2099 + 2. If u\u2081 = 1, write u\u2082.',slots:['u\u2082','=','3(1)','+','2'],tiles:['+','\u2212','\u00d7','\u00f7'],prefilled:[0,1,2,4]},
+{id:'eb_l4_039',level:'level4',type:'gapfill',topic:'Exponential Equations',text:'2e\u00b3\u02e3 = 14. After dividing by 2, take ln of both sides. Write the expression for x.',slots:['x','=','ln(7)','\u00f7','3'],tiles:['\u00f7','\u00d7','+','\u2212'],prefilled:[0,1,2,4]},
+{id:'eb_l4_040',level:'level4',type:'gapfill',topic:'Chain Rule',text:'y = (2x + 5)\u00b3. Write dy/dx.',slots:['dy/dx','=','3(2x+5)\u00b2','\u00d7','2'],tiles:['\u00d7','+','\u2212','\u00f7'],prefilled:[0,1,2,4]}
+];
+
+/* ===== STATE ===== */
+let currentLevel=null,sessionLength=20,questionQueue=[],qIndex=0,totalQ=0;
+let score=0,firstAttempts=0,retrySuccesses=0,attempts=0;
+let selectedSlot=null,slotValues=[],currentQ=null;
+
+const $=id=>document.getElementById(id);
+
+/* ===== KaTeX helper ===== */
+function renderContent(text,el){
+  // If text contains LaTeX-like patterns, try KaTeX; otherwise plain text
+  const hasLatex=/[\\{}^_]|frac|sqrt|sum|int|lim|sin|cos|tan|log|ln\(/.test(text);
+  if(hasLatex&&typeof katex!=='undefined'){
+    try{el.innerHTML=katex.renderToString(text,{throwOnError:false,displayMode:false});return;}catch(e){}
+  }
+  el.textContent=text;
+}
+
+/* ===== INIT ===== */
+function init(){
+  document.querySelectorAll('.level-btn').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');currentLevel=b.dataset.level;$('startBtn').disabled=false;
+  }));
+  document.querySelectorAll('.session-btn').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.session-btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');sessionLength=parseInt(b.dataset.len);
+  }));
+  $('startBtn').addEventListener('click',startGame);
+  $('playAgain').addEventListener('click',()=>showScreen('start'));
+  $('checkBtn').addEventListener('click',checkAnswer);
+  // Accessibility toggle
+  const a11yBtn=$('a11yBtn');
+  if(localStorage.getItem('mfg_dyslexia')==='1'){document.body.classList.add('dyslexia');a11yBtn.classList.add('active');}
+  a11yBtn.addEventListener('click',()=>{document.body.classList.toggle('dyslexia');const on=document.body.classList.contains('dyslexia');localStorage.setItem('mfg_dyslexia',on?'1':'0');a11yBtn.classList.toggle('active',on);});
+  // URL param level auto-select
+  const params=new URLSearchParams(window.location.search);
+  const urlLevel=params.get('level');
+  if(urlLevel){
+    const btn=document.querySelector('.level-btn[data-level="'+urlLevel+'"]');
+    if(btn){btn.click();}
+  }
+}
+
+function showScreen(name){
+  [$('startScreen'),$('gameScreen'),$('resultsScreen')].forEach(s=>s.classList.remove('active'));
+  $('hud').classList.remove('visible');$('levelPill').textContent='';
+  if(name==='start')$('startScreen').classList.add('active');
+  else if(name==='game'){$('gameScreen').classList.add('active');$('hud').classList.add('visible');
+    $('levelPill').textContent=currentLevel==='level4'?'LEVEL 4':currentLevel.toUpperCase();
+    $('levelPill').className='level-pill '+(currentLevel==='level4'?'l4':currentLevel);
+  }else $('resultsScreen').classList.add('active');
+}
+
+/* ===== GAME ===== */
+function startGame(){
+  let pool=QUESTIONS.filter(q=>q.level===currentLevel);
+  pool=shuffle(pool).slice(0,sessionLength);
+  questionQueue=pool;totalQ=pool.length;qIndex=0;
+  score=0;firstAttempts=0;retrySuccesses=0;attempts=0;
+  if(typeof mfg==='function')mfg('game_started',{game_slug:'equation-builder',level:currentLevel});
+  window._mfgSlug='equation-builder';window._mfgLevel=currentLevel;window._mfgCompleted=false;
+  showScreen('game');updateHUD();showQuestion();
+}
+
+function updateHUD(){
+  const pts=score.toFixed(1).replace(/\.0$/,'');
+  $('hudScore').innerHTML='<span>'+pts+'</span> / '+qIndex;
+  $('progressBar').style.width=(totalQ>0?qIndex/totalQ*100:0)+'%';
+  $('hudCount').textContent=qIndex+' / '+totalQ;
+}
+
+function showQuestion(){
+  if(qIndex>=totalQ){endGame();return;}
+  currentQ=questionQueue[qIndex];attempts=0;selectedSlot=null;
+  slotValues=currentQ.slots.map(()=>null);
+
+  // Question card
+  const typeCls=currentQ.type==='assembly'?'assembly':'gapfill';
+  const typeLabel=currentQ.type==='assembly'?'Build':'Fill gaps';
+  $('questionCard').innerHTML='<div class="type-pill '+typeCls+'">'+typeLabel+'</div><div>'+escapeHtml(currentQ.text)+'</div>';
+
+  renderSlots();renderTiles();
+  $('checkBtn').classList.remove('visible');
+}
+
+function renderSlots(){
+  const zone=$('equationZone');zone.innerHTML='';
+  const pf=currentQ.prefilled||[];
+  currentQ.slots.forEach((s,i)=>{
+    const el=document.createElement('div');
+    if(pf.includes(i)){
+      el.className='slot prefilled';renderContent(s,el);slotValues[i]=s;
+    }else if(slotValues[i]){
+      el.className='slot filled';renderContent(slotValues[i],el);
+      el.addEventListener('click',()=>clearSlot(i));
+    }else{
+      el.className='slot empty'+(selectedSlot===i?' selected':'');
+      el.textContent='\u00a0';
+      el.addEventListener('click',()=>selectSlot(i));
+    }
+    zone.appendChild(el);
+  });
+}
+
+function renderTiles(){
+  const bank=$('tileBank');bank.innerHTML='';
+  const pf=currentQ.prefilled||[];
+  const usedTiles=slotValues.filter((v,i)=>v&&!pf.includes(i));
+  currentQ.tiles.forEach(t=>{
+    const el=document.createElement('div');
+    el.className='tile';renderContent(t,el);
+    // Check if this tile is used (only count once per occurrence)
+    const usedCount=usedTiles.filter(u=>u===t).length;
+    const tileCount=currentQ.tiles.filter(x=>x===t).length;
+    if(usedCount>=tileCount)el.classList.add('used');
+    el.addEventListener('click',()=>placeTile(t));
+    bank.appendChild(el);
+  });
+}
+
+function selectSlot(i){
+  selectedSlot=i;renderSlots();
+}
+
+function clearSlot(i){
+  const pf=currentQ.prefilled||[];
+  if(pf.includes(i))return;
+  slotValues[i]=null;selectedSlot=i;
+  renderSlots();renderTiles();
+  $('checkBtn').classList.remove('visible');
+}
+
+function placeTile(tile){
+  if(selectedSlot===null){
+    // Auto-select first empty slot
+    const pf=currentQ.prefilled||[];
+    const emptyIdx=slotValues.findIndex((v,i)=>v===null&&!pf.includes(i));
+    if(emptyIdx===-1)return;
+    selectedSlot=emptyIdx;
+  }
+  slotValues[selectedSlot]=tile;
+
+  // Snap animation on the filled slot
+  const slots=document.querySelectorAll('#equationZone .slot');
+  const filledEl=slots[selectedSlot];
+  if(filledEl){filledEl.classList.add('snap');setTimeout(()=>filledEl.classList.remove('snap'),100);}
+
+  // Move to next empty slot
+  const pf=currentQ.prefilled||[];
+  const nextEmpty=slotValues.findIndex((v,i)=>i>selectedSlot&&v===null&&!pf.includes(i));
+  selectedSlot=nextEmpty!==-1?nextEmpty:slotValues.findIndex((v,i)=>v===null&&!pf.includes(i));
+  if(selectedSlot===-1)selectedSlot=null;
+
+  renderSlots();renderTiles();
+
+  // Check if all slots filled
+  const allFilled=slotValues.every((v,i)=>v!==null||((currentQ.prefilled||[]).includes(i)));
+  if(allFilled)$('checkBtn').classList.add('visible');
+}
+
+function checkAnswer(){
+  attempts++;
+  const pf=currentQ.prefilled||[];
+  const slots=document.querySelectorAll('#equationZone .slot');
+  let allCorrect=true;
+
+  slots.forEach((el,i)=>{
+    if(pf.includes(i))return;
+    if(slotValues[i]===currentQ.slots[i]){
+      el.classList.add('correct');
+    }else{
+      el.classList.add('incorrect');allCorrect=false;
+    }
+  });
+
+  if(allCorrect){
+    if(attempts===1){score+=1;firstAttempts++;}
+    else{score+=0.5;retrySuccesses++;}
+    qIndex++;
+    if(typeof mfg==='function')mfg('question_answered',{game_slug:'equation-builder',level:currentLevel,question_index:qIndex,correct:true,attempts:attempts});
+    updateHUD();
+    setTimeout(()=>nextQuestion(),800);
+  }else if(attempts>=2){
+    // Reveal correct
+    slots.forEach((el,i)=>{
+      if(pf.includes(i))return;
+      el.classList.remove('incorrect');
+      renderContent(currentQ.slots[i],el);el.classList.add('reveal');
+    });
+    qIndex++;
+    if(typeof mfg==='function')mfg('question_answered',{game_slug:'equation-builder',level:currentLevel,question_index:qIndex,correct:false,attempts:attempts});
+    updateHUD();
+    setTimeout(()=>nextQuestion(),1500);
+  }else{
+    // Allow retry — clear incorrect markers after a moment
+    setTimeout(()=>{
+      slots.forEach(el=>{el.classList.remove('correct','incorrect');});
+      $('checkBtn').classList.remove('visible');
+      // Clear incorrect slots
+      slotValues.forEach((v,i)=>{
+        if(!pf.includes(i)&&v!==currentQ.slots[i])slotValues[i]=null;
+      });
+      selectedSlot=slotValues.findIndex((v,i)=>v===null&&!pf.includes(i));
+      if(selectedSlot===-1)selectedSlot=null;
+      renderSlots();renderTiles();
+      const allFilled=slotValues.every((v,i)=>v!==null);
+      if(allFilled)$('checkBtn').classList.add('visible');
+    },800);
+  }
+}
+
+function nextQuestion(){
+  $('questionCard').classList.add('fade-out');
+  $('equationZone').classList.add('fade-out');
+  $('tileBank').classList.add('fade-out');
+  $('checkBtn').classList.remove('visible');
+  setTimeout(()=>{
+    $('questionCard').classList.remove('fade-out');
+    $('equationZone').classList.remove('fade-out');
+    $('tileBank').classList.remove('fade-out');
+    showQuestion();
+  },200);
+}
+
+function endGame(){
+  const pct=totalQ>0?Math.round(score/totalQ*100):0;
+  const pbKey='eb_pb_'+currentLevel;
+  const oldPB=parseInt(localStorage.getItem(pbKey)||'0');
+  let isNewPB=false;
+  if(totalQ>=10&&pct>oldPB){localStorage.setItem(pbKey,pct);isNewPB=true;
+    if(typeof mfg==='function')mfg('personal_best_set',{game_slug:'equation-builder',level:currentLevel,score:pct,previous_best:oldPB});
+  }
+  if(typeof mfg==='function')mfg('game_completed',{game_slug:'equation-builder',level:currentLevel,score:pct,questions_answered:totalQ,questions_correct:firstAttempts+retrySuccesses});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('equation-builder',currentLevel,pct,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('equation-builder',currentLevel,pct);}}
+  window._mfgCompleted=true;
+  $('resultsPct').textContent=pct+'%';
+  $('resFirst').textContent=firstAttempts;
+  $('resRetry').textContent=retrySuccesses;
+  $('resTotal').textContent=totalQ;
+  const pb=$('pbBanner');
+  if(isNewPB){pb.textContent='New personal best! Previous: '+oldPB+'%';pb.style.display='';}
+  else pb.style.display='none';
+  showScreen('results');
+}
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+init();
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

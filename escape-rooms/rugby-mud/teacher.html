@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Teacher page for The Rugby Mud Bath escape room: answers, hint ladder, misconceptions and timings.">
+<title>The Rugby Mud Bath — teacher page — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/engine.css">
+</head>
+<body>
+<button class="a11y-toggle" onclick="toggleAa()" aria-label="Toggle easier-reading text">Aa</button>
+<div class="wrap">
+  <a class="back-link" href="../">&larr; All escape rooms</a>
+  <div id="app"></div>
+</div>
+<script src="room.js"></script>
+<!-- clueMap labels carry NO figures on purpose: teacher.js does not pass them
+     through fill(), so a number here would disagree with the drawn variant
+     (see docs/escape-room-voice-rewrite.md §8). Keys are room.js object ids. -->
+<script>
+window.TEACH = {
+  "lockMeta": [
+    {
+      "topic": "Area scale factors",
+      "minutes": 3,
+      "curriculum": "Geometry &mdash; length and area scale factors between similar shapes."
+    },
+    {
+      "topic": "Combined rates",
+      "minutes": 4,
+      "curriculum": "Ratio and proportion &mdash; two rates working together; adding rates rather than times."
+    },
+    {
+      "topic": "Index laws and simultaneous equations",
+      "minutes": 4,
+      "curriculum": "Algebra &mdash; writing both terms to a common base, then solving two linear equations."
+    }
+  ],
+  "clueMap": {
+    "jacket": "The split hose &mdash; the sample patch&rsquo;s length and area",
+    "hose": "The split hose &mdash; the split is the same shape, and its length",
+    "board": "The tap timer &mdash; how long each tap takes alone to put on one soaking",
+    "addendum": "The tap timer &mdash; that both taps run together and the timer is the time for the job",
+    "teamsheet": "The tap-cage padlock &mdash; the power sum, 2<sup>H</sup> &times; 4<sup>A</sup>",
+    "slip": "The tap-cage padlock &mdash; the visitors&rsquo; winning margin, which gives the second equation"
+  },
+  "notes": "<p class='lede'>The tap timer has a built-in sanity check worth teaching explicitly: two taps together must beat the faster tap alone. A group that averages the two times has produced something slower than one tap on its own, and noticing that is a more valuable habit than the arithmetic.</p><p class='lede'>The padlock is the Higher lock of the room. If a group is stalling, the first hint (&ldquo;write both terms to the same base&rdquo;) usually unlocks the whole thing in one go. Home is St Martha&rsquo;s: the match on the cutting was played at home and the visitors won, so Away is the bigger number.</p>"
+};
+</script>
+<script src="../assets/teacher.js"></script>
+</body>
+</html>

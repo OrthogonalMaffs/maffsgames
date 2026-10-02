@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Can you cross every bridge exactly once? Euler's 1736 puzzle became graph theory. Trace paths, spot impossible graphs, discover the rule. Free, KS3 to A-Level.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/seven-bridges/">
+<meta property="og:title" content="Seven Bridges — Graph Theory Puzzles — MaffsGames">
+<meta property="og:description" content="Can you cross every bridge exactly once? Euler's 1736 puzzle became graph theory. Trace paths, spot impossible graphs, discover the rule. Free, KS3 to A-Level.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/seven-bridges/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Seven Bridges — Graph Theory Puzzles — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
+--text:#e8eaf0;--muted:#7a7f90;
+--cyan:#06b6d4;--cyan-dim:rgba(6,182,212,0.25);--cyan-glow:rgba(6,182,212,0.5);
+--green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,0.12);
+--amber:#f59e0b;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500}
+.back-link:hover{color:var(--text)}
+.header-div{width:1px;height:18px;background:rgba(255,255,255,0.15)}
+.header-title{font-size:17px;font-weight:700}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.score-display{font-size:14px;font-weight:600;color:var(--muted)}
+.score-display span{color:var(--cyan)}
+.level-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:12px;text-transform:uppercase;letter-spacing:0.04em;background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(6,182,212,0.3)}
+.puzzle-counter{font-size:13px;color:var(--muted);font-weight:500}
+
+.screen{display:none;max-width:760px;margin:0 auto;padding:32px 20px}
+.screen.active{display:block}
+
+.start-title{font-size:32px;font-weight:800;text-align:center;margin-bottom:8px;color:var(--cyan)}
+.start-sub{color:var(--muted);text-align:center;margin-bottom:28px;line-height:1.7;font-size:15px}
+.level-card{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:16px;cursor:pointer;border:2px solid transparent;transition:border-color 0.15s}
+.level-card:hover{border-color:var(--cyan)}
+.level-card.selected{border-color:var(--cyan);background:var(--surface-alt)}
+.level-card h3{font-size:15px;font-weight:700;margin-bottom:4px;color:var(--cyan)}
+.level-card p{font-size:13px;color:var(--muted);line-height:1.5}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--cyan);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
+.start-btn:hover{opacity:0.9}
+.start-btn:disabled{opacity:0.4;cursor:default}
+.how-to{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:20px;border-left:3px solid var(--cyan)}
+.how-to h3{font-size:14px;font-weight:700;margin-bottom:8px;color:var(--cyan)}
+.how-to p,.how-to li{font-size:13px;color:var(--muted);line-height:1.6}
+.how-to ol{padding-left:20px;margin-top:6px}
+.how-to li{margin-bottom:4px}
+
+.game-area{position:relative;max-width:620px;margin:0 auto}
+.svg-wrap{background:var(--surface);border-radius:16px;border:1px solid var(--border);overflow:hidden;position:relative}
+.svg-wrap svg{display:block;width:100%;height:auto}
+
+.controls{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.ctrl-btn{padding:10px 20px;border-radius:10px;border:none;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.ctrl-btn:disabled{opacity:0.35;cursor:default}
+.btn-undo{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-undo:hover:not(:disabled){border-color:var(--cyan)}
+.btn-reset{background:var(--surface);color:var(--amber);border:1px solid rgba(245,158,11,0.3)}
+.btn-reset:hover:not(:disabled){border-color:var(--amber)}
+.btn-impossible{background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.3);margin-left:auto}
+.btn-impossible:hover:not(:disabled){background:rgba(239,68,68,0.2);border-color:var(--red)}
+
+.hint-bar{margin-top:12px;padding:14px 18px;background:var(--surface-alt);border-radius:10px;font-size:13px;color:var(--muted);line-height:1.6;display:none;border-left:3px solid var(--amber)}
+.hint-bar.visible{display:block}
+.hint-btn{padding:6px 14px;border-radius:8px;border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.1);color:var(--amber);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;margin-top:8px}
+.hint-btn:hover{background:rgba(245,158,11,0.2)}
+
+.status-msg{margin-top:16px;padding:18px 20px;border-radius:12px;font-size:14px;line-height:1.7;display:none}
+.status-msg.visible{display:block}
+.status-msg.success{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,0.3)}
+.status-msg.fail{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,0.3)}
+.status-msg.info{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(6,182,212,0.3)}
+.status-msg h4{font-weight:700;margin-bottom:6px}
+
+.next-puzzle-btn{display:none;width:100%;padding:14px;border-radius:10px;border:none;background:var(--cyan);color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:16px;transition:opacity 0.15s}
+.next-puzzle-btn:hover{opacity:0.9}
+.next-puzzle-btn.visible{display:block}
+
+.edge-progress{margin-top:12px;display:flex;align-items:center;gap:10px}
+.edge-bar{flex:1;height:8px;background:var(--surface);border-radius:4px;overflow:hidden}
+.edge-bar-fill{height:100%;background:var(--cyan);border-radius:4px;transition:width 0.3s}
+.edge-count{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+
+.results-title{font-size:28px;font-weight:800;text-align:center;margin-bottom:24px;color:var(--cyan)}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.result-card{background:var(--surface);border-radius:12px;padding:20px;text-align:center}
+.result-card h4{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
+.result-card .val{font-size:32px;font-weight:800;color:var(--cyan)}
+.result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.pb-badge{background:var(--cyan-dim);color:var(--cyan);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
+.euler-box{background:var(--surface);border-radius:12px;padding:20px;margin-bottom:20px;border-left:3px solid var(--cyan)}
+.euler-box h4{font-size:14px;font-weight:700;color:var(--cyan);margin-bottom:8px}
+.euler-box p{font-size:13px;color:var(--muted);line-height:1.7}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--cyan);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn:hover{opacity:0.9}
+
+@media(prefers-reduced-motion:reduce){
+.edge-bar-fill{transition:none}
+svg .vertex-pulse{animation:none !important}
+}
+@media(max-width:480px){
+.results-grid{grid-template-columns:1fr}
+.controls{flex-direction:column}
+.btn-impossible{margin-left:0}
+}
+
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .status-msg,body.accessible .hint-bar{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--cyan)}
+
+.edge-line{stroke:#fff;stroke-opacity:0.6;stroke-width:3;fill:none;cursor:pointer;transition:stroke 0.2s,stroke-opacity 0.2s,stroke-width 0.2s}
+.edge-line.traversed{stroke:var(--cyan);stroke-opacity:1;stroke-width:4;filter:drop-shadow(0 0 6px var(--cyan-glow))}
+.edge-line.available{stroke-opacity:0.9;stroke-width:4}
+.edge-line.available:hover{stroke:var(--cyan);stroke-opacity:1}
+.vertex-circle{fill:var(--cyan);stroke:#fff;stroke-width:3;cursor:pointer;transition:fill 0.15s}
+.vertex-circle:hover{fill:#22d3ee}
+.vertex-circle.current{fill:#22d3ee;stroke:var(--cyan);stroke-width:4}
+.vertex-label{fill:#fff;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.degree-label{fill:var(--amber);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;text-anchor:middle;pointer-events:none}
+@keyframes pulse-vertex{0%,100%{r:22}50%{r:26}}
+.vertex-pulse{animation:pulse-vertex 1.2s ease-in-out infinite}
+@keyframes flash-edge{0%{stroke-opacity:1}50%{stroke-opacity:0.3}100%{stroke-opacity:1}}
+.edge-flash{animation:flash-edge 0.4s ease-in-out}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header" id="gameHeader" style="display:none">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="header-div"></div>
+  <span class="header-title">Seven Bridges</span>
+  <div class="header-right">
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    <span class="level-pill" id="levelPill">KS3</span>
+    <span class="puzzle-counter" id="puzzleCounter">1/10</span>
+    <span class="score-display">Score: <span id="scoreNum">0</span></span>
+  </div>
+</div>
+
+<!-- START SCREEN -->
+<div class="screen active" id="startScreen">
+  <div class="start-title">Seven Bridges</div>
+  <div class="start-sub">Can you cross every bridge exactly once? Euler asked this in 1736 and invented graph theory. Now it is your turn.</div>
+
+  <div class="how-to">
+    <h3>How to Play</h3>
+    <ol>
+      <li>Click any vertex (circle) to set your starting position</li>
+      <li>Click an adjacent vertex to cross the edge between them</li>
+      <li>Cross every edge exactly once to solve the puzzle</li>
+      <li>Some puzzles are impossible. Spot them and click IMPOSSIBLE</li>
+    </ol>
+  </div>
+
+  <div class="level-card" data-level="ks3" onclick="selectLevel('ks3')">
+    <h3>KS3</h3>
+    <p>3-5 vertices, simple graphs. Learn the basics of Eulerian paths.</p>
+  </div>
+  <div class="level-card" data-level="gcse" onclick="selectLevel('gcse')">
+    <h3>GCSE</h3>
+    <p>5-8 vertices, multigraphs, real-world contexts. Harder route-finding.</p>
+  </div>
+  <div class="level-card" data-level="alevel" onclick="selectLevel('alevel')">
+    <h3>A-Level</h3>
+    <p>6-12 vertices, complex multigraphs, circuit boards, delivery routes. Full Euler analysis.</p>
+  </div>
+  <button class="start-btn" id="startBtn" onclick="startGame()" disabled>Choose a level to begin</button>
+</div>
+
+<!-- GAME SCREEN -->
+<div class="screen" id="gameScreen">
+  <div class="game-area">
+    <div class="svg-wrap" id="svgWrap"></div>
+    <div class="edge-progress">
+      <div class="edge-bar"><div class="edge-bar-fill" id="edgeBarFill" style="width:0%"></div></div>
+      <div class="edge-count" id="edgeCount">0/0 edges</div>
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn btn-undo" id="btnUndo" onclick="undoMove()" disabled>Undo</button>
+      <button class="ctrl-btn btn-reset" id="btnReset" onclick="resetPuzzle()" disabled>Reset</button>
+      <button class="ctrl-btn btn-impossible" id="btnImpossible" onclick="declareImpossible()">Impossible</button>
+    </div>
+    <div class="hint-bar" id="hintBar">
+      <span id="hintText"></span>
+      <br>
+      <button class="hint-btn" id="hintBtn" onclick="showHint()">Show Hint</button>
+    </div>
+    <div class="status-msg" id="statusMsg"></div>
+    <button class="next-puzzle-btn" id="nextPuzzleBtn" onclick="nextPuzzle()">Next Puzzle</button>
+  </div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div class="screen" id="resultsScreen">
+  <div class="results-title">Session Complete</div>
+  <div id="pbBadge" style="display:none;text-align:center"><span class="pb-badge">New Personal Best!</span></div>
+  <div class="results-grid">
+    <div class="result-card">
+      <h4>Score</h4>
+      <div class="val" id="finalScore">0</div>
+      <div class="sub">out of 50</div>
+    </div>
+    <div class="result-card">
+      <h4>Puzzles Solved</h4>
+      <div class="val" id="finalSolved">0</div>
+      <div class="sub">paths traced</div>
+    </div>
+    <div class="result-card">
+      <h4>Impossible Spotted</h4>
+      <div class="val" id="finalImpossible">0</div>
+      <div class="sub">correctly identified</div>
+    </div>
+    <div class="result-card">
+      <h4>Time</h4>
+      <div class="val" id="finalTime">0:00</div>
+      <div class="sub">total session</div>
+    </div>
+  </div>
+  <div class="euler-box">
+    <h4>Euler's Rule</h4>
+    <p>An Eulerian path (crossing every edge exactly once) exists if and only if the graph has 0 or 2 vertices with an odd number of edges (odd degree).</p>
+    <p style="margin-top:8px">0 odd-degree vertices = Eulerian circuit (start and end at the same vertex).</p>
+    <p>2 odd-degree vertices = Eulerian path (must start at one odd vertex and end at the other).</p>
+    <p>4 or more odd-degree vertices = impossible.</p>
+  </div>
+  <div class="sub" id="pbLine" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
+  <button class="play-again-btn" onclick="location.reload()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">Back to Games</a>
+</div>
+
+<script>
+// ============================================================
+//  PUZZLE BANKS
+// ============================================================
+const KS3_PUZZLES = [{"id":"ks3_01","vertices":[{"id":"A","x":300,"y":80},{"id":"B","x":150,"y":320},{"id":"C","x":450,"y":320}],"edges":[["A","B"],["B","C"],["C","A"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","C","B","A"],"difficulty":1},{"id":"ks3_02","vertices":[{"id":"A","x":150,"y":100},{"id":"B","x":450,"y":100},{"id":"C","x":450,"y":350},{"id":"D","x":150,"y":350}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["A","C"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","C"],"sampleSolution":["A","C","D","A","B","C"],"difficulty":1},{"id":"ks3_03","vertices":[{"id":"A","x":150,"y":100},{"id":"B","x":450,"y":100},{"id":"C","x":450,"y":350},{"id":"D","x":150,"y":350}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["A","C"],["B","D"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D"],"sampleSolution":null,"difficulty":2},{"id":"ks3_04","vertices":[{"id":"A","x":150,"y":350},{"id":"B","x":450,"y":350},{"id":"C","x":450,"y":150},{"id":"D","x":150,"y":150},{"id":"E","x":300,"y":50}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["A","C"],["B","D"],["C","E"],["D","E"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","B"],"sampleSolution":["A","C","E","D","B","C","D","A","B"],"difficulty":2},{"id":"ks3_05","vertices":[{"id":"A","x":300,"y":60},{"id":"B","x":490,"y":180},{"id":"C","x":420,"y":370},{"id":"D","x":180,"y":370},{"id":"E","x":110,"y":180}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","A"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","E","D","C","B","A"],"difficulty":1},{"id":"ks3_06","vertices":[{"id":"A","x":300,"y":40},{"id":"B","x":490,"y":170},{"id":"C","x":420,"y":380},{"id":"D","x":180,"y":380},{"id":"E","x":110,"y":170}],"edges":[["A","C"],["C","E"],["E","B"],["B","D"],["D","A"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","D","B","E","C","A"],"difficulty":1},{"id":"ks3_07","vertices":[{"id":"A","x":150,"y":100},{"id":"B","x":450,"y":100},{"id":"C","x":450,"y":350},{"id":"D","x":150,"y":350}],"edges":[["A","B"],["A","C"],["A","D"],["B","C"],["B","D"],["C","D"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D"],"sampleSolution":null,"difficulty":2},{"id":"ks3_08","vertices":[{"id":"A","x":150,"y":80},{"id":"B","x":150,"y":320},{"id":"C","x":300,"y":200},{"id":"D","x":450,"y":80},{"id":"E","x":450,"y":320}],"edges":[["A","B"],["A","C"],["B","C"],["D","E"],["D","C"],["E","C"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","C","E","D","C","B","A"],"difficulty":2},{"id":"ks3_09","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":100,"y":300},{"id":"C","x":300,"y":200},{"id":"D","x":500,"y":100},{"id":"E","x":500,"y":300}],"edges":[["A","C"],["B","C"],["A","B"],["C","D"],["C","E"],["D","E"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","B","C","E","D","C","A"],"difficulty":2},{"id":"ks3_10","vertices":[{"id":"A","x":80,"y":200},{"id":"B","x":200,"y":200},{"id":"C","x":320,"y":200},{"id":"D","x":440,"y":200},{"id":"E","x":560,"y":200}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","E"],"sampleSolution":["A","B","C","D","E"],"difficulty":1},{"id":"ks3_11","vertices":[{"id":"A","x":200,"y":100},{"id":"B","x":400,"y":100},{"id":"C","x":300,"y":300},{"id":"D","x":500,"y":300}],"edges":[["A","B"],["B","C"],["C","A"],["B","D"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["B","D"],"sampleSolution":["B","C","A","B","D"],"difficulty":1},{"id":"ks3_12","vertices":[{"id":"A","x":150,"y":200},{"id":"B","x":300,"y":80},{"id":"C","x":300,"y":320},{"id":"D","x":450,"y":200}],"edges":[["A","B"],["A","B"],["A","C"],["A","C"],["B","D"],["C","D"],["B","C"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","C","B","D","C","A","B","A"],"difficulty":3,"theme":"bridges"},{"id":"ks3_13","vertices":[{"id":"A","x":150,"y":120},{"id":"B","x":450,"y":120},{"id":"C","x":450,"y":330},{"id":"D","x":150,"y":330}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","D","C","B","A"],"difficulty":1},{"id":"ks3_14","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":100,"y":300},{"id":"C","x":300,"y":200},{"id":"D","x":500,"y":100},{"id":"E","x":500,"y":300}],"edges":[["A","B"],["B","C"],["C","A"],["C","D"],["D","E"],["E","C"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","C","E","D","C","B","A"],"difficulty":2},{"id":"ks3_15","vertices":[{"id":"A","x":300,"y":50},{"id":"B","x":150,"y":180},{"id":"C","x":450,"y":180},{"id":"D","x":250,"y":180},{"id":"E","x":350,"y":180},{"id":"F","x":300,"y":380}],"edges":[["A","B"],["A","C"],["B","D"],["C","E"],["D","F"],["E","F"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","C","E","F","D","B","A"],"difficulty":2},{"id":"ks3_16","vertices":[{"id":"A","x":300,"y":50},{"id":"B","x":470,"y":130},{"id":"C","x":470,"y":300},{"id":"D","x":300,"y":380},{"id":"E","x":130,"y":300},{"id":"F","x":130,"y":130}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","F","E","D","C","B","A"],"difficulty":1},{"id":"ks3_17","vertices":[{"id":"A","x":300,"y":50},{"id":"B","x":470,"y":130},{"id":"C","x":470,"y":300},{"id":"D","x":300,"y":380},{"id":"E","x":130,"y":300},{"id":"F","x":130,"y":130}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","D"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","D"],"sampleSolution":["A","D","E","F","A","B","C","D"],"difficulty":2},{"id":"ks3_18","vertices":[{"id":"A","x":300,"y":200},{"id":"B","x":300,"y":50},{"id":"C","x":480,"y":140},{"id":"D","x":420,"y":350},{"id":"E","x":180,"y":350},{"id":"F","x":120,"y":140}],"edges":[["A","B"],["A","C"],["A","D"],["A","E"],["A","F"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","F"],"sampleSolution":null,"difficulty":2},{"id":"ks3_19","vertices":[{"id":"A","x":100,"y":120},{"id":"B","x":300,"y":120},{"id":"C","x":500,"y":120},{"id":"D","x":500,"y":330},{"id":"E","x":300,"y":330},{"id":"F","x":100,"y":330}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["B","E"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["B","E"],"sampleSolution":["B","E","F","A","B","C","D","E"],"difficulty":2},{"id":"ks3_20","vertices":[{"id":"A","x":80,"y":100},{"id":"B","x":200,"y":350},{"id":"C","x":300,"y":150},{"id":"D","x":400,"y":350},{"id":"E","x":520,"y":100}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","E"],"sampleSolution":["A","B","C","D","E"],"difficulty":1},{"id":"ks3_21","vertices":[{"id":"A","x":300,"y":60},{"id":"B","x":120,"y":350},{"id":"C","x":480,"y":350},{"id":"D","x":300,"y":220}],"edges":[["A","B"],["B","C"],["C","A"],["D","A"],["D","B"],["D","C"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D"],"sampleSolution":null,"difficulty":2},{"id":"ks3_22","vertices":[{"id":"A","x":300,"y":50},{"id":"B","x":480,"y":200},{"id":"C","x":300,"y":380},{"id":"D","x":120,"y":200}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["A","C"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","C"],"sampleSolution":["A","C","D","A","B","C"],"difficulty":1},{"id":"ks3_23","vertices":[{"id":"A","x":80,"y":300},{"id":"B","x":200,"y":100},{"id":"C","x":320,"y":300},{"id":"D","x":440,"y":100},{"id":"E","x":560,"y":300}],"edges":[["A","B"],["B","C"],["C","A"],["B","D"],["D","C"],["C","E"],["E","D"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["B","D"],"sampleSolution":["B","D","E","C","A","B","C","D"],"difficulty":3},{"id":"ks3_24","vertices":[{"id":"A","x":300,"y":50},{"id":"B","x":480,"y":200},{"id":"C","x":300,"y":350},{"id":"D","x":120,"y":200},{"id":"E","x":300,"y":200}],"edges":[["A","E"],["B","E"],["C","E"],["D","E"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D"],"sampleSolution":null,"difficulty":1},{"id":"ks3_25","vertices":[{"id":"A","x":150,"y":350},{"id":"B","x":450,"y":350},{"id":"C","x":450,"y":180},{"id":"D","x":150,"y":180},{"id":"E","x":300,"y":60}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["C","E"],["D","E"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["C","D"],"sampleSolution":["C","E","D","A","B","C","D"],"difficulty":2}];
+
+const GCSE_PUZZLES = [{"id":"gcse_01","vertices":[{"id":"A","x":300,"y":50},{"id":"B","x":490,"y":160},{"id":"C","x":430,"y":370},{"id":"D","x":170,"y":370},{"id":"E","x":110,"y":160},{"id":"F","x":300,"y":140}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","A"],["A","F"],["B","F"],["D","F"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","D","F"],"sampleSolution":null,"difficulty":3},{"id":"gcse_02","vertices":[{"id":"A","x":100,"y":120},{"id":"B","x":300,"y":120},{"id":"C","x":500,"y":120},{"id":"D","x":100,"y":320},{"id":"E","x":300,"y":320},{"id":"F","x":500,"y":320}],"edges":[["A","B"],["B","C"],["D","E"],["E","F"],["A","D"],["B","E"],["C","F"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["B","E"],"sampleSolution":["B","E","F","C","B","A","D","E"],"difficulty":3},{"id":"gcse_03","vertices":[{"id":"A","x":150,"y":200},{"id":"B","x":300,"y":100},{"id":"C","x":450,"y":200},{"id":"D","x":300,"y":300}],"edges":[["A","B"],["A","B"],["B","C"],["C","D"],["D","A"],["B","D"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","D"],"sampleSolution":["A","D","B","A","B","C","D"],"difficulty":3,"theme":"bridges"},{"id":"gcse_04","vertices":[{"id":"A","x":300,"y":200},{"id":"B","x":300,"y":50},{"id":"C","x":480,"y":150},{"id":"D","x":430,"y":350},{"id":"E","x":170,"y":350},{"id":"F","x":120,"y":150}],"edges":[["B","C"],["C","D"],["D","E"],["E","F"],["F","B"],["A","B"],["A","C"],["A","D"],["A","E"],["A","F"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","F"],"sampleSolution":null,"difficulty":3},{"id":"gcse_05","vertices":[{"id":"A","x":300,"y":40},{"id":"B","x":500,"y":150},{"id":"C","x":430,"y":370},{"id":"D","x":170,"y":370},{"id":"E","x":100,"y":150}],"edges":[["A","B"],["A","C"],["A","D"],["A","E"],["B","C"],["B","D"],["B","E"],["C","D"],["C","E"],["D","E"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","E","D","C","E","B","D","A","C","B","A"],"difficulty":4},{"id":"gcse_06","vertices":[{"id":"A","x":180,"y":120},{"id":"B","x":420,"y":120},{"id":"C","x":420,"y":300},{"id":"D","x":180,"y":300},{"id":"E","x":130,"y":80},{"id":"F","x":470,"y":80},{"id":"G","x":470,"y":260},{"id":"H","x":130,"y":260}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["E","F"],["F","G"],["G","H"],["H","E"],["A","E"],["B","F"],["C","G"],["D","H"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","F","G","H"],"sampleSolution":null,"difficulty":3},{"id":"gcse_07","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":300,"y":80},{"id":"C","x":500,"y":100},{"id":"D","x":200,"y":250},{"id":"E","x":400,"y":230},{"id":"F","x":300,"y":380}],"edges":[["A","B"],["B","C"],["A","D"],["B","D"],["B","E"],["C","E"],["D","E"],["D","F"],["E","F"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","D","F","E","D","B","E","C","B","A"],"difficulty":3},{"id":"gcse_08","vertices":[{"id":"A","x":150,"y":200},{"id":"B","x":300,"y":80},{"id":"C","x":300,"y":320},{"id":"D","x":450,"y":200}],"edges":[["A","B"],["A","B"],["A","C"],["A","C"],["B","D"],["C","D"],["B","C"],["A","D"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","D"],"sampleSolution":["A","D","C","B","A","C","A","B","D"],"difficulty":4,"theme":"bridges"},{"id":"gcse_09","vertices":[{"id":"A","x":150,"y":100},{"id":"B","x":300,"y":100},{"id":"C","x":450,"y":100},{"id":"D","x":150,"y":320},{"id":"E","x":300,"y":320},{"id":"F","x":450,"y":320}],"edges":[["A","D"],["A","E"],["A","F"],["B","D"],["B","E"],["B","F"],["C","D"],["C","E"],["C","F"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","F"],"sampleSolution":null,"difficulty":3},{"id":"gcse_10","vertices":[{"id":"A","x":300,"y":40},{"id":"B","x":500,"y":200},{"id":"C","x":300,"y":360},{"id":"D","x":100,"y":200},{"id":"E","x":220,"y":140},{"id":"F","x":380,"y":260}],"edges":[["A","B"],["A","D"],["A","E"],["A","F"],["B","C"],["B","E"],["B","F"],["C","D"],["C","E"],["C","F"],["D","E"],["D","F"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","F","D","E","C","F","B","E","A","D","C","B","A"],"difficulty":4},{"id":"gcse_11","vertices":[{"id":"A","x":100,"y":200},{"id":"B","x":250,"y":80},{"id":"C","x":400,"y":80},{"id":"D","x":550,"y":200},{"id":"E","x":400,"y":320},{"id":"F","x":250,"y":320}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","D"],["B","E"],["C","F"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","F"],"sampleSolution":null,"difficulty":3},{"id":"gcse_12","vertices":[{"id":"A","x":300,"y":50},{"id":"B","x":500,"y":170},{"id":"C","x":430,"y":370},{"id":"D","x":170,"y":370},{"id":"E","x":100,"y":170}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","A"],["A","C"],["B","D"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D"],"sampleSolution":null,"difficulty":3},{"id":"gcse_13","vertices":[{"id":"A","x":150,"y":200},{"id":"B","x":300,"y":60},{"id":"C","x":450,"y":200},{"id":"D","x":300,"y":340}],"edges":[["A","B"],["A","B"],["B","C"],["B","C"],["C","D"],["D","A"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","C"],"sampleSolution":["A","D","C","B","A","B","C"],"difficulty":3,"theme":"bridges"},{"id":"gcse_14","vertices":[{"id":"A","x":300,"y":200},{"id":"B","x":300,"y":50},{"id":"C","x":480,"y":120},{"id":"D","x":480,"y":280},{"id":"E","x":300,"y":350},{"id":"F","x":120,"y":280},{"id":"G","x":120,"y":120}],"edges":[["B","C"],["C","D"],["D","E"],["E","F"],["F","G"],["G","B"],["A","B"],["A","C"],["A","D"],["A","E"],["A","F"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","F"],"sampleSolution":null,"difficulty":3},{"id":"gcse_15","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":300,"y":100},{"id":"C","x":500,"y":100},{"id":"D","x":100,"y":300},{"id":"E","x":300,"y":300},{"id":"F","x":500,"y":300}],"edges":[["A","B"],["B","C"],["D","E"],["E","F"],["A","D"],["B","E"],["C","F"],["A","E"],["B","D"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","D"],"sampleSolution":["A","E","B","D","A","B","C","F","E","D"],"difficulty":3},{"id":"gcse_16","vertices":[{"id":"W","x":80,"y":200},{"id":"S","x":220,"y":80},{"id":"P","x":400,"y":80},{"id":"H","x":540,"y":200},{"id":"L","x":400,"y":340},{"id":"M","x":220,"y":340}],"edges":[["W","S"],["S","P"],["P","H"],["H","L"],["L","M"],["M","W"],["W","P"],["S","L"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["L","P","S","W"],"sampleSolution":null,"difficulty":2},{"id":"gcse_17","vertices":[{"id":"A","x":150,"y":80},{"id":"B","x":450,"y":80},{"id":"C","x":550,"y":240},{"id":"D","x":450,"y":370},{"id":"E","x":150,"y":370},{"id":"F","x":50,"y":240}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","D"],["B","E"],["C","F"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","F"],"sampleSolution":null,"difficulty":3},{"id":"gcse_18","vertices":[{"id":"A","x":100,"y":200},{"id":"B","x":300,"y":80},{"id":"C","x":500,"y":200},{"id":"D","x":300,"y":340}],"edges":[["A","B"],["A","B"],["B","C"],["C","D"],["D","A"],["A","C"],["B","D"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["C","D"],"sampleSolution":["C","A","D","B","A","B","C","D"],"difficulty":3,"theme":"bridges"},{"id":"gcse_19","vertices":[{"id":"G","x":80,"y":200},{"id":"P","x":220,"y":80},{"id":"C","x":380,"y":80},{"id":"L","x":520,"y":200},{"id":"F","x":380,"y":320},{"id":"B","x":220,"y":320}],"edges":[["G","P"],["P","C"],["C","L"],["L","F"],["F","B"],["B","G"],["G","C"],["P","F"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["C","F","G","P"],"sampleSolution":null,"difficulty":2},{"id":"gcse_20","vertices":[{"id":"A","x":300,"y":40},{"id":"B","x":480,"y":150},{"id":"C","x":420,"y":360},{"id":"D","x":180,"y":360},{"id":"E","x":120,"y":150},{"id":"F","x":300,"y":200}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","A"],["A","F"],["C","F"],["E","F"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","C","E","F"],"sampleSolution":null,"difficulty":3},{"id":"gcse_21","vertices":[{"id":"A","x":300,"y":50},{"id":"B","x":500,"y":170},{"id":"C","x":430,"y":370},{"id":"D","x":170,"y":370},{"id":"E","x":100,"y":170}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","A"],["A","C"],["A","D"],["B","E"],["B","D"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["C","E"],"sampleSolution":["C","A","D","B","E","A","B","C","D","E"],"difficulty":3},{"id":"gcse_22","vertices":[{"id":"W","x":100,"y":200},{"id":"X","x":300,"y":100},{"id":"Y","x":500,"y":200},{"id":"Z","x":300,"y":300}],"edges":[["W","X"],["X","Y"],["Y","Z"],["Z","W"],["W","X"],["X","Y"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["W","Y"],"sampleSolution":["W","X","Y","Z","W","X","Y"],"difficulty":3,"theme":"bridges"},{"id":"gcse_23","vertices":[{"id":"A","x":100,"y":200},{"id":"B","x":220,"y":80},{"id":"C","x":380,"y":80},{"id":"D","x":500,"y":200},{"id":"E","x":380,"y":320},{"id":"F","x":220,"y":320},{"id":"G","x":300,"y":200}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["B","G"],["D","G"],["F","G"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["B","D","F","G"],"sampleSolution":null,"difficulty":3},{"id":"gcse_24","vertices":[{"id":"A","x":100,"y":150},{"id":"B","x":300,"y":60},{"id":"C","x":500,"y":150},{"id":"D","x":500,"y":300},{"id":"E","x":300,"y":370},{"id":"F","x":100,"y":300}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["B","E"],["A","D"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","D","E"],"sampleSolution":null,"difficulty":3},{"id":"gcse_25","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":300,"y":100},{"id":"C","x":500,"y":100},{"id":"D","x":200,"y":300},{"id":"E","x":400,"y":300}],"edges":[["A","D"],["A","E"],["B","D"],["B","E"],["C","D"],["C","E"],["A","B"],["B","C"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","C","D","E"],"sampleSolution":null,"difficulty":3}];
+
+const ALEVEL_PUZZLES = [{"id":"al_01","vertices":[{"id":"A","x":150,"y":100},{"id":"B","x":450,"y":100},{"id":"C","x":450,"y":300},{"id":"D","x":150,"y":300}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["A","C"],["A","C"],["B","D"],["B","D"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","C","A","D","B","D","C","B","A"],"difficulty":3,"theme":"bridges"},{"id":"al_02","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":300,"y":60},{"id":"C","x":500,"y":100},{"id":"D","x":500,"y":300},{"id":"E","x":300,"y":350},{"id":"F","x":100,"y":300}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","D"],["B","E"],["C","F"],["A","D"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["B","C","E","F"],"sampleSolution":null,"difficulty":4,"theme":"bridges"},{"id":"al_03","vertices":[{"id":"A","x":300,"y":40},{"id":"B","x":500,"y":130},{"id":"C","x":500,"y":300},{"id":"D","x":300,"y":380},{"id":"E","x":100,"y":300},{"id":"F","x":100,"y":130}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","C"],["C","E"],["E","A"],["B","D"],["D","F"],["F","B"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","E","C","A","F","B","D","F","E","D","C","B","A"],"difficulty":4},{"id":"al_04","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":300,"y":60},{"id":"C","x":500,"y":100},{"id":"D","x":500,"y":300},{"id":"E","x":300,"y":350},{"id":"F","x":100,"y":300}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","C"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","C"],"sampleSolution":["A","C","D","E","F","A","B","C"],"difficulty":3},{"id":"al_05","vertices":[{"id":"A","x":100,"y":80},{"id":"B","x":300,"y":60},{"id":"C","x":500,"y":80},{"id":"D","x":550,"y":220},{"id":"E","x":450,"y":350},{"id":"F","x":300,"y":380},{"id":"G","x":150,"y":350},{"id":"H","x":50,"y":220}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","G"],["G","H"],["H","A"],["A","E"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["A","E"],"sampleSolution":["A","E","F","G","H","A","B","C","D","E"],"difficulty":3},{"id":"al_06","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":300,"y":60},{"id":"C","x":500,"y":100},{"id":"D","x":500,"y":300},{"id":"E","x":300,"y":350},{"id":"F","x":100,"y":300},{"id":"G","x":300,"y":200}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","G"],["B","G"],["C","G"],["D","G"],["E","G"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","G"],"sampleSolution":null,"difficulty":4},{"id":"al_07","vertices":[{"id":"A","x":100,"y":80},{"id":"B","x":300,"y":50},{"id":"C","x":500,"y":80},{"id":"D","x":550,"y":220},{"id":"E","x":450,"y":360},{"id":"F","x":300,"y":380},{"id":"G","x":150,"y":360},{"id":"H","x":50,"y":220}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","G"],["G","H"],["H","A"],["A","E"],["B","F"],["C","G"],["D","H"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","F","G","H"],"sampleSolution":null,"difficulty":4},{"id":"al_08","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":300,"y":60},{"id":"C","x":500,"y":100},{"id":"D","x":500,"y":300},{"id":"E","x":300,"y":350},{"id":"F","x":100,"y":300},{"id":"G","x":300,"y":200}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","G"],["C","G"],["E","G"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","C","E","G"],"sampleSolution":null,"difficulty":3},{"id":"al_09","vertices":[{"id":"A","x":80,"y":200},{"id":"B","x":200,"y":80},{"id":"C","x":350,"y":80},{"id":"D","x":520,"y":200},{"id":"E","x":350,"y":320},{"id":"F","x":200,"y":320}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","C"],["B","D"],["C","E"],["D","F"],["E","A"],["F","B"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","E","C","A","F","B","D","F","E","D","C","B","A"],"difficulty":4},{"id":"al_10","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":250,"y":60},{"id":"C","x":400,"y":60},{"id":"D","x":550,"y":100},{"id":"E","x":550,"y":280},{"id":"F","x":400,"y":340},{"id":"G","x":250,"y":340},{"id":"H","x":100,"y":280}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","G"],["G","H"],["H","A"],["A","C"],["B","D"],["E","G"],["F","H"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","F","G","H"],"sampleSolution":null,"difficulty":4},{"id":"al_11","vertices":[{"id":"A","x":150,"y":80},{"id":"B","x":450,"y":80},{"id":"C","x":550,"y":240},{"id":"D","x":450,"y":370},{"id":"E","x":150,"y":370},{"id":"F","x":50,"y":240}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","D"],["B","E"],["C","F"],["A","C"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["B","D","E","F"],"sampleSolution":null,"difficulty":4},{"id":"al_12","vertices":[{"id":"A","x":120,"y":200},{"id":"B","x":300,"y":80},{"id":"C","x":480,"y":200},{"id":"D","x":300,"y":320}],"edges":[["A","B"],["A","B"],["A","B"],["B","C"],["B","C"],["C","D"],["D","A"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["B","C"],"sampleSolution":["B","C","D","A","B","A","B","C"],"difficulty":4,"theme":"bridges"},{"id":"al_13","vertices":[{"id":"A","x":150,"y":200},{"id":"B","x":300,"y":80},{"id":"C","x":450,"y":200},{"id":"D","x":300,"y":320}],"edges":[["A","B"],["A","B"],["B","C"],["B","C"],["C","D"],["C","D"],["D","A"],["D","A"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","D","A","B","C","D","C","B","A"],"difficulty":4,"theme":"bridges"},{"id":"al_14","vertices":[{"id":"A","x":100,"y":200},{"id":"B","x":250,"y":80},{"id":"C","x":400,"y":80},{"id":"D","x":550,"y":200},{"id":"E","x":400,"y":320},{"id":"F","x":250,"y":320}],"edges":[["A","B"],["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["B","E"],["C","F"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","C","E","F"],"sampleSolution":null,"difficulty":4,"theme":"bridges"},{"id":"al_15","vertices":[{"id":"A","x":150,"y":100},{"id":"B","x":450,"y":100},{"id":"C","x":450,"y":300},{"id":"D","x":150,"y":300},{"id":"E","x":300,"y":200}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["A","E"],["B","E"],["C","E"],["D","E"],["A","C"],["B","D"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","C","E","D","B","E","A","D","C","B","A"],"difficulty":5},{"id":"al_16","vertices":[{"id":"A","x":100,"y":200},{"id":"B","x":300,"y":60},{"id":"C","x":500,"y":200},{"id":"D","x":300,"y":340}],"edges":[["A","B"],["A","B"],["A","D"],["A","D"],["B","C"],["B","C"],["C","D"],["C","D"],["B","D"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["B","D"],"sampleSolution":["B","D","C","D","A","B","C","B","A","D"],"difficulty":5,"theme":"bridges"},{"id":"al_17","vertices":[{"id":"A","x":80,"y":150},{"id":"B","x":200,"y":50},{"id":"C","x":350,"y":50},{"id":"D","x":520,"y":150},{"id":"E","x":520,"y":300},{"id":"F","x":350,"y":370},{"id":"G","x":200,"y":370},{"id":"H","x":80,"y":300},{"id":"I","x":300,"y":200}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","G"],["G","H"],["H","A"],["B","I"],["D","I"],["F","I"],["H","I"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["B","D","F","H"],"sampleSolution":null,"difficulty":4},{"id":"al_18","vertices":[{"id":"A","x":100,"y":100},{"id":"B","x":300,"y":50},{"id":"C","x":500,"y":100},{"id":"D","x":550,"y":250},{"id":"E","x":450,"y":370},{"id":"F","x":300,"y":390},{"id":"G","x":150,"y":370},{"id":"H","x":50,"y":250}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","G"],["G","H"],["H","A"],["A","C"],["C","E"],["E","G"],["G","A"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","G","E","C","A","H","G","F","E","D","C","B","A"],"difficulty":4},{"id":"al_19","vertices":[{"id":"A","x":150,"y":80},{"id":"B","x":450,"y":80},{"id":"C","x":550,"y":240},{"id":"D","x":450,"y":370},{"id":"E","x":150,"y":370},{"id":"F","x":50,"y":240},{"id":"G","x":200,"y":180},{"id":"H","x":400,"y":180},{"id":"I","x":400,"y":300},{"id":"J","x":200,"y":300}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["G","H"],["H","I"],["I","J"],["J","G"],["A","G"],["B","H"],["D","I"],["E","J"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","D","E","G","H","I","J"],"sampleSolution":null,"difficulty":5},{"id":"al_20","vertices":[{"id":"A","x":300,"y":40},{"id":"B","x":480,"y":120},{"id":"C","x":540,"y":280},{"id":"D","x":420,"y":380},{"id":"E","x":180,"y":380},{"id":"F","x":60,"y":280},{"id":"G","x":120,"y":120}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","G"],["G","A"],["A","D"],["B","E"],["C","F"],["D","G"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","E","F","G"],"sampleSolution":null,"difficulty":4},{"id":"al_21","vertices":[{"id":"K","x":80,"y":100},{"id":"B","x":220,"y":60},{"id":"O","x":380,"y":60},{"id":"W","x":520,"y":100},{"id":"G","x":520,"y":280},{"id":"V","x":380,"y":340},{"id":"P","x":220,"y":340},{"id":"E","x":80,"y":280}],"edges":[["K","B"],["B","O"],["O","W"],["W","G"],["G","V"],["V","P"],["P","E"],["E","K"],["K","O"],["B","W"],["G","P"],["V","E"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["B","E","G","K","O","P","V","W"],"sampleSolution":null,"difficulty":4},{"id":"al_22","vertices":[{"id":"A","x":80,"y":80},{"id":"B","x":280,"y":80},{"id":"C","x":480,"y":80},{"id":"D","x":80,"y":220},{"id":"E","x":280,"y":220},{"id":"F","x":480,"y":220},{"id":"G","x":80,"y":360},{"id":"H","x":280,"y":360},{"id":"I","x":480,"y":360}],"edges":[["A","B"],["B","C"],["D","E"],["E","F"],["G","H"],["H","I"],["A","D"],["D","G"],["B","E"],["E","H"],["C","F"],["F","I"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["B","D","F","H"],"sampleSolution":null,"difficulty":4},{"id":"al_23","vertices":[{"id":"D","x":80,"y":200},{"id":"A","x":200,"y":60},{"id":"B","x":380,"y":60},{"id":"C","x":520,"y":200},{"id":"E","x":380,"y":340},{"id":"F","x":200,"y":340},{"id":"G","x":300,"y":200}],"edges":[["D","A"],["A","B"],["B","C"],["C","E"],["E","F"],["F","D"],["D","G"],["A","G"],["B","G"],["C","G"],["E","G"],["F","G"]],"hasEulerianPath":false,"hasEulerianCircuit":false,"oddVertices":["A","B","C","D","E","F"],"sampleSolution":null,"difficulty":4},{"id":"al_24","vertices":[{"id":"A","x":100,"y":150},{"id":"B","x":250,"y":50},{"id":"C","x":400,"y":50},{"id":"D","x":550,"y":150},{"id":"E","x":550,"y":300},{"id":"F","x":400,"y":380},{"id":"G","x":250,"y":380},{"id":"H","x":100,"y":300}],"edges":[["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","G"],["G","H"],["H","A"],["A","C"],["C","E"],["E","G"],["G","A"],["B","D"],["D","F"],["F","H"],["H","B"]],"hasEulerianPath":true,"hasEulerianCircuit":true,"oddVertices":[],"sampleSolution":["A","G","E","C","A","H","B","D","F","H","G","F","E","D","C","B","A"],"difficulty":5},{"id":"al_25","vertices":[{"id":"A","x":150,"y":100},{"id":"B","x":450,"y":100},{"id":"C","x":550,"y":250},{"id":"D","x":450,"y":370},{"id":"E","x":150,"y":370},{"id":"F","x":50,"y":250}],"edges":[["A","B"],["A","B"],["B","C"],["C","D"],["D","E"],["E","F"],["F","A"],["A","D"],["B","E"]],"hasEulerianPath":true,"hasEulerianCircuit":false,"oddVertices":["D","E"],"sampleSolution":["D","A","F","E","B","A","B","C","D","E"],"difficulty":4,"theme":"bridges"}];
+
+
+const PUZZLE_BANKS = {
+  ks3: KS3_PUZZLES,
+  gcse: GCSE_PUZZLES,
+  alevel: ALEVEL_PUZZLES
+};
+
+// ============================================================
+//  STATE
+// ============================================================
+const S = {
+  level: null,
+  session: [],
+  puzzleIdx: 0,
+  scores: [],
+  puzzle: null,
+  path: [],
+  traversedEdges: [],
+  resetCount: 0,
+  hintsUsed: 0,
+  hintLevel: 0,
+  finished: false,
+  startTime: 0,
+  puzzleStartTime: 0,
+  solvedCount: 0,
+  impossibleCorrect: 0
+};
+
+const PB_KEY_PREFIX = 'mfg_seven_bridges_pb_';
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// ============================================================
+//  LEVEL SELECTION
+// ============================================================
+function selectLevel(level) {
+  document.querySelectorAll('.level-card').forEach(function(c) { c.classList.remove('selected'); });
+  document.querySelector('.level-card[data-level="'+level+'"]').classList.add('selected');
+  S.level = level;
+  var btn = document.getElementById('startBtn');
+  btn.disabled = false;
+  btn.textContent = 'Start';
+}
+
+// ============================================================
+//  GAME START
+// ============================================================
+function shuffle(arr) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+  }
+  return arr;
+}
+
+function startGame() {
+  if (!S.level) return;
+  var bank = PUZZLE_BANKS[S.level];
+  S.session = shuffle(bank.slice()).slice(0, 10);
+  S.puzzleIdx = 0;
+  S.scores = [];
+  S.solvedCount = 0;
+  S.impossibleCorrect = 0;
+  S.startTime = Date.now();
+
+  document.getElementById('startScreen').classList.remove('active');
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('gameScreen').classList.add('active');
+
+  var levelLabels = { ks3: 'KS3', gcse: 'GCSE', alevel: 'A-Level' };
+  document.getElementById('levelPill').textContent = levelLabels[S.level];
+
+  mfg('game_started', { game_slug: 'seven-bridges', level: S.level });
+
+  loadPuzzle();
+}
+
+// ============================================================
+//  PUZZLE LOADING & RENDERING
+// ============================================================
+function loadPuzzle() {
+  var p = S.session[S.puzzleIdx];
+  S.puzzle = p;
+  S.path = [];
+  S.traversedEdges = [];
+  S.resetCount = 0;
+  S.hintsUsed = 0;
+  S.hintLevel = 0;
+  S.finished = false;
+  S.puzzleStartTime = Date.now();
+
+  document.getElementById('puzzleCounter').textContent = (S.puzzleIdx + 1) + '/10';
+  document.getElementById('scoreNum').textContent = S.scores.reduce(function(a, b) { return a + b; }, 0);
+
+  hideStatus();
+  document.getElementById('hintBar').classList.remove('visible');
+  document.getElementById('hintBtn').style.display = '';
+  document.getElementById('nextPuzzleBtn').classList.remove('visible');
+  document.getElementById('btnImpossible').disabled = false;
+  document.getElementById('btnUndo').disabled = true;
+  document.getElementById('btnReset').disabled = true;
+
+  renderGraph();
+  updateEdgeProgress();
+}
+
+function renderGraph() {
+  var p = S.puzzle;
+  var svgWrap = document.getElementById('svgWrap');
+
+  var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  p.vertices.forEach(function(v) {
+    if (v.x < minX) minX = v.x;
+    if (v.y < minY) minY = v.y;
+    if (v.x > maxX) maxX = v.x;
+    if (v.y > maxY) maxY = v.y;
+  });
+  var pad = 50;
+  var vbX = minX - pad;
+  var vbY = minY - pad;
+  var vbW = (maxX - minX) + pad * 2;
+  var vbH = (maxY - minY) + pad * 2;
+
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + vbX + ' ' + vbY + ' ' + vbW + ' ' + vbH + '" style="background:transparent">';
+  svg += '<defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>';
+
+  // Count multi-edges between same vertex pairs
+  var edgePairCount = {};
+  var edgePairIndex = [];
+  p.edges.forEach(function(e) {
+    var key = [e[0], e[1]].sort().join('-');
+    if (!edgePairCount[key]) edgePairCount[key] = 0;
+    edgePairIndex.push(edgePairCount[key]);
+    edgePairCount[key]++;
+  });
+
+  // Render edges
+  p.edges.forEach(function(e, i) {
+    var v1 = p.vertices.find(function(v) { return v.id === e[0]; });
+    var v2 = p.vertices.find(function(v) { return v.id === e[1]; });
+    var key = [e[0], e[1]].sort().join('-');
+    var total = edgePairCount[key];
+    var idx = edgePairIndex[i];
+
+    var isTraversed = S.traversedEdges.indexOf(i) !== -1;
+    var cls = 'edge-line' + (isTraversed ? ' traversed' : '');
+    var filterAttr = isTraversed ? ' filter="url(#glow)"' : '';
+
+    if (total > 1) {
+      var dx = v2.x - v1.x;
+      var dy = v2.y - v1.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      var curvature = (idx - (total - 1) / 2) * Math.min(60, dist * 0.4);
+      var mx = (v1.x + v2.x) / 2;
+      var my = (v1.y + v2.y) / 2;
+      var nx = -dy / dist;
+      var ny = dx / dist;
+      var cx = mx + nx * curvature;
+      var cy = my + ny * curvature;
+      svg += '<path class="' + cls + '" d="M' + v1.x + ',' + v1.y + ' Q' + cx + ',' + cy + ' ' + v2.x + ',' + v2.y + '" data-edge="' + i + '" onclick="clickEdge(' + i + ')"' + filterAttr + '/>';
+    } else {
+      svg += '<line class="' + cls + '" x1="' + v1.x + '" y1="' + v1.y + '" x2="' + v2.x + '" y2="' + v2.y + '" data-edge="' + i + '" onclick="clickEdge(' + i + ')"' + filterAttr + '/>';
+    }
+  });
+
+  // Render vertices
+  var currentVertex = S.path.length > 0 ? S.path[S.path.length - 1] : null;
+  p.vertices.forEach(function(v) {
+    var isCurrent = v.id === currentVertex;
+    var r = isCurrent ? 24 : 22;
+    var cls = 'vertex-circle' + (isCurrent ? ' current' : '');
+    if (isCurrent && !reducedMotion) cls += ' vertex-pulse';
+    svg += '<circle class="' + cls + '" cx="' + v.x + '" cy="' + v.y + '" r="' + r + '" onclick="clickVertex(\'' + v.id + '\')"/>';
+    svg += '<text class="vertex-label" x="' + v.x + '" y="' + v.y + '">' + v.id + '</text>';
+  });
+
+  svg += '</svg>';
+  svgWrap.innerHTML = svg;
+
+  highlightAvailable();
+}
+
+function highlightAvailable() {
+  if (S.path.length === 0 || S.finished) return;
+  var current = S.path[S.path.length - 1];
+  var p = S.puzzle;
+
+  p.edges.forEach(function(e, i) {
+    if (S.traversedEdges.indexOf(i) !== -1) return;
+    var el = document.querySelector('[data-edge="' + i + '"]');
+    if (!el) return;
+    if (e[0] === current || e[1] === current) {
+      el.classList.add('available');
+    }
+  });
+}
+
+function updateEdgeProgress() {
+  var total = S.puzzle.edges.length;
+  var done = S.traversedEdges.length;
+  document.getElementById('edgeBarFill').style.width = (total > 0 ? (done / total * 100) : 0) + '%';
+  document.getElementById('edgeCount').textContent = done + '/' + total + ' edges';
+}
+
+// ============================================================
+//  INTERACTION
+// ============================================================
+function clickVertex(vid) {
+  if (S.finished) return;
+
+  if (S.path.length === 0) {
+    S.path.push(vid);
+    document.getElementById('btnReset').disabled = false;
+    renderGraph();
+    return;
+  }
+
+  var current = S.path[S.path.length - 1];
+  if (vid === current) return;
+
+  var p = S.puzzle;
+  var edgeIdx = -1;
+  for (var i = 0; i < p.edges.length; i++) {
+    if (S.traversedEdges.indexOf(i) !== -1) continue;
+    var e = p.edges[i];
+    if ((e[0] === current && e[1] === vid) || (e[1] === current && e[0] === vid)) {
+      edgeIdx = i;
+      break;
+    }
+  }
+
+  if (edgeIdx === -1) return;
+
+  S.traversedEdges.push(edgeIdx);
+  S.path.push(vid);
+  document.getElementById('btnUndo').disabled = false;
+
+  renderGraph();
+  updateEdgeProgress();
+
+  if (S.traversedEdges.length === p.edges.length) {
+    puzzleSolved();
+  }
+}
+
+function clickEdge(edgeIdx) {
+  if (S.finished) return;
+  if (S.path.length === 0) return;
+  if (S.traversedEdges.indexOf(edgeIdx) !== -1) return;
+
+  var e = S.puzzle.edges[edgeIdx];
+  var current = S.path[S.path.length - 1];
+
+  if (e[0] === current) clickVertex(e[1]);
+  else if (e[1] === current) clickVertex(e[0]);
+}
+
+function undoMove() {
+  if (S.finished || S.path.length <= 1) return;
+  S.path.pop();
+  S.traversedEdges.pop();
+  if (S.path.length <= 1) {
+    document.getElementById('btnUndo').disabled = true;
+  }
+  renderGraph();
+  updateEdgeProgress();
+}
+
+function resetPuzzle() {
+  if (S.finished) return;
+  S.path = [];
+  S.traversedEdges = [];
+  S.resetCount++;
+  document.getElementById('btnUndo').disabled = true;
+  document.getElementById('btnReset').disabled = true;
+  hideStatus();
+  renderGraph();
+  updateEdgeProgress();
+
+  if (S.resetCount >= 3 && S.hintLevel < 3) {
+    var hintBar = document.getElementById('hintBar');
+    hintBar.classList.add('visible');
+    document.getElementById('hintText').textContent = 'Stuck? A hint is available.';
+  }
+}
+
+// ============================================================
+//  HINTS
+// ============================================================
+function computeDegrees() {
+  var degrees = {};
+  S.puzzle.vertices.forEach(function(v) { degrees[v.id] = 0; });
+  S.puzzle.edges.forEach(function(e) { degrees[e[0]]++; degrees[e[1]]++; });
+  return degrees;
+}
+
+function showHint() {
+  S.hintLevel++;
+  S.hintsUsed = S.hintLevel;
+  var p = S.puzzle;
+
+  if (S.hintLevel === 1) {
+    document.getElementById('hintText').innerHTML = '<strong>Hint 1:</strong> Count the connections at each vertex. How many have an odd number?';
+    document.getElementById('hintBtn').textContent = 'Next Hint';
+  } else if (S.hintLevel === 2) {
+    var degrees = computeDegrees();
+    var html = '<strong>Hint 2:</strong> Vertex degrees: ';
+    var parts = [];
+    p.vertices.forEach(function(v) {
+      var d = degrees[v.id] || 0;
+      var isOdd = d % 2 !== 0;
+      parts.push('<span style="color:' + (isOdd ? 'var(--amber)' : 'var(--text)') + '">' + v.id + '=' + d + (isOdd ? ' (odd)' : '') + '</span>');
+    });
+    html += parts.join(', ');
+    document.getElementById('hintText').innerHTML = html;
+    renderDegreeLabels();
+    document.getElementById('hintBtn').textContent = 'Next Hint';
+  } else if (S.hintLevel === 3) {
+    var oddCount = p.oddVertices.length;
+    var html = '<strong>Hint 3 \u2014 Euler\u2019s Rule:</strong> A path exists if and only if the graph has 0 or 2 odd-degree vertices. ';
+    html += '0 odd = circuit (start and end at same vertex). 2 odd = must start at one odd vertex. ';
+    html += 'This graph has <strong>' + oddCount + '</strong> odd-degree vert' + (oddCount === 1 ? 'ex' : 'ices') + '. ';
+    if (oddCount === 0) html += 'An Eulerian circuit exists \u2014 start anywhere!';
+    else if (oddCount === 2) html += 'An Eulerian path exists \u2014 start at ' + p.oddVertices[0] + ' or ' + p.oddVertices[1] + '.';
+    else html += 'No Eulerian path exists \u2014 this is impossible.';
+    document.getElementById('hintText').innerHTML = html;
+    document.getElementById('hintBtn').style.display = 'none';
+  }
+}
+
+function renderDegreeLabels() {
+  var svg = document.querySelector('#svgWrap svg');
+  if (!svg) return;
+  var degrees = computeDegrees();
+  S.puzzle.vertices.forEach(function(v) {
+    var d = degrees[v.id] || 0;
+    var isOdd = d % 2 !== 0;
+    var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('class', 'degree-label');
+    label.setAttribute('x', v.x);
+    label.setAttribute('y', v.y - 34);
+    label.setAttribute('fill', isOdd ? '#f59e0b' : '#7a7f90');
+    label.textContent = 'deg ' + d;
+    svg.appendChild(label);
+  });
+}
+
+// ============================================================
+//  PUZZLE COMPLETION
+// ============================================================
+function puzzleSolved() {
+  S.finished = true;
+  var score;
+  if (S.hintsUsed > 0) score = 1;
+  else if (S.resetCount > 0) score = 3;
+  else score = 5;
+
+  S.scores.push(score);
+  S.solvedCount++;
+
+  document.getElementById('btnUndo').disabled = true;
+  document.getElementById('btnReset').disabled = true;
+  document.getElementById('btnImpossible').disabled = true;
+
+  animateSuccess(function() {
+    showStatus('success', '<h4>\u2713 Solved! +' + score + ' points</h4>' +
+      (S.resetCount > 0 ? '<p>Resets used: ' + S.resetCount + '</p>' : '') +
+      (S.hintsUsed > 0 ? '<p>Hints used: ' + S.hintsUsed + '</p>' : '<p>Perfect solve!</p>'));
+    document.getElementById('scoreNum').textContent = S.scores.reduce(function(a, b) { return a + b; }, 0);
+    showNextButton();
+  });
+
+  logAnswer(true);
+}
+
+function animateSuccess(callback) {
+  if (reducedMotion) { callback(); return; }
+  var edges = document.querySelectorAll('.edge-line.traversed');
+  var i = 0;
+  function flashNext() {
+    if (i >= edges.length) { callback(); return; }
+    edges[i].classList.add('edge-flash');
+    i++;
+    setTimeout(flashNext, 100);
+  }
+  flashNext();
+}
+
+function declareImpossible() {
+  if (S.finished) return;
+  S.finished = true;
+  var p = S.puzzle;
+
+  document.getElementById('btnUndo').disabled = true;
+  document.getElementById('btnReset').disabled = true;
+  document.getElementById('btnImpossible').disabled = true;
+
+  if (!p.hasEulerianPath) {
+    var score;
+    if (S.hintsUsed > 0) score = 2;
+    else score = 5;
+    S.scores.push(score);
+    S.impossibleCorrect++;
+
+    renderDegreeLabels();
+    highlightOddVertices();
+
+    var degrees = computeDegrees();
+    var oddInfo = p.oddVertices.map(function(v) { return v + ' (degree ' + degrees[v] + ')'; }).join(', ');
+    showStatus('success', '<h4>\u2713 Correct! This graph is impossible. +' + score + ' points</h4>' +
+      '<p>Odd-degree vertices: ' + oddInfo + '</p>' +
+      '<p>Euler\u2019s Rule: A graph needs 0 or 2 odd-degree vertices for an Eulerian path. This graph has ' + p.oddVertices.length + '.</p>');
+    document.getElementById('scoreNum').textContent = S.scores.reduce(function(a, b) { return a + b; }, 0);
+    logAnswer(true);
+  } else {
+    S.scores.push(0);
+    showStatus('fail', '<h4>\u2717 Actually possible!</h4><p>This graph has ' + p.oddVertices.length + ' odd-degree vert' + (p.oddVertices.length === 1 ? 'ex' : 'ices') + '. Watch the solution...</p>');
+    logAnswer(false);
+
+    if (p.sampleSolution) {
+      setTimeout(function() { animateSolution(p.sampleSolution); }, 1000);
+    }
+  }
+
+  showNextButton();
+}
+
+function highlightOddVertices() {
+  var p = S.puzzle;
+  var svg = document.querySelector('#svgWrap svg');
+  if (!svg) return;
+  p.oddVertices.forEach(function(vid) {
+    var v = p.vertices.find(function(vv) { return vv.id === vid; });
+    var ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    ring.setAttribute('cx', v.x);
+    ring.setAttribute('cy', v.y);
+    ring.setAttribute('r', 30);
+    ring.setAttribute('fill', 'none');
+    ring.setAttribute('stroke', '#f59e0b');
+    ring.setAttribute('stroke-width', '3');
+    ring.setAttribute('stroke-dasharray', '6,4');
+    svg.appendChild(ring);
+  });
+}
+
+function animateSolution(solution) {
+  S.path = [];
+  S.traversedEdges = [];
+  renderGraph();
+
+  var delay = reducedMotion ? 0 : 300;
+  var step = 0;
+
+  function nextStep() {
+    if (step >= solution.length) return;
+
+    if (step === 0) {
+      S.path.push(solution[0]);
+      renderGraph();
+      step++;
+      setTimeout(nextStep, delay);
+      return;
+    }
+
+    var current = S.path[S.path.length - 1];
+    var next = solution[step];
+
+    for (var i = 0; i < S.puzzle.edges.length; i++) {
+      if (S.traversedEdges.indexOf(i) !== -1) continue;
+      var e = S.puzzle.edges[i];
+      if ((e[0] === current && e[1] === next) || (e[1] === current && e[0] === next)) {
+        S.traversedEdges.push(i);
+        S.path.push(next);
+        break;
+      }
+    }
+
+    renderGraph();
+    updateEdgeProgress();
+    step++;
+    if (step < solution.length) {
+      setTimeout(nextStep, delay);
+    }
+  }
+
+  nextStep();
+}
+
+// ============================================================
+//  STATUS & NAVIGATION
+// ============================================================
+function showStatus(type, html) {
+  var el = document.getElementById('statusMsg');
+  el.className = 'status-msg visible ' + type;
+  el.innerHTML = html;
+}
+
+function hideStatus() {
+  var el = document.getElementById('statusMsg');
+  el.className = 'status-msg';
+  el.innerHTML = '';
+}
+
+function showNextButton() {
+  var btn = document.getElementById('nextPuzzleBtn');
+  btn.textContent = S.puzzleIdx >= 9 ? 'See Results' : 'Next Puzzle';
+  btn.classList.add('visible');
+}
+
+function nextPuzzle() {
+  S.puzzleIdx++;
+  if (S.puzzleIdx >= 10) {
+    finishGame();
+  } else {
+    loadPuzzle();
+  }
+}
+
+// ============================================================
+//  ANALYTICS
+// ============================================================
+function logAnswer(correct) {
+  mfg('question_answered', {
+    game_slug: 'seven-bridges',
+    level: S.level,
+    question_index: S.puzzleIdx + 1,
+    correct: correct,
+    attempts: S.resetCount,
+    hints_used: S.hintsUsed,
+    declared_impossible: !S.puzzle.hasEulerianPath
+  });
+}
+
+// ============================================================
+//  RESULTS
+// ============================================================
+function finishGame() {
+  document.getElementById('gameScreen').classList.remove('active');
+  document.getElementById('gameHeader').style.display = 'none';
+  document.getElementById('resultsScreen').classList.add('active');
+
+  var totalScore = S.scores.reduce(function(a, b) { return a + b; }, 0);
+  var elapsed = Math.floor((Date.now() - S.startTime) / 1000);
+  var mins = Math.floor(elapsed / 60);
+  var secs = elapsed % 60;
+
+  document.getElementById('finalScore').textContent = totalScore;
+  document.getElementById('finalSolved').textContent = S.solvedCount;
+  document.getElementById('finalImpossible').textContent = S.impossibleCorrect;
+  document.getElementById('finalTime').textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+
+  var pbKey = PB_KEY_PREFIX + S.level;
+  var prevBest = parseInt(localStorage.getItem(pbKey) || '0');
+  var pbBadge = document.getElementById('pbBadge');
+  var pbLine = document.getElementById('pbLine');
+
+  if (totalScore > prevBest) {
+    localStorage.setItem(pbKey, totalScore);
+    pbBadge.style.display = 'block';
+    pbLine.textContent = 'Previous best: ' + (prevBest > 0 ? prevBest + '/50' : 'none');
+    mfg('personal_best_set', {
+      game_slug: 'seven-bridges',
+      level: S.level,
+      score: totalScore,
+      previous_best: prevBest
+    });
+  } else {
+    pbBadge.style.display = 'none';
+    pbLine.textContent = 'Personal best: ' + prevBest + '/50';
+  }
+
+  mfg('game_completed', {
+    game_slug: 'seven-bridges',
+    level: S.level,
+    score: totalScore,
+    questions_answered: 10,
+    questions_correct: S.solvedCount + S.impossibleCorrect
+  });
+
+  if (window.MaffsLeaderboard) {
+    MaffsLeaderboard.submitScore('seven-bridges', S.level, totalScore, 50).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('seven-bridges',S.level,totalScore);}
+  }
+}
+
+// ============================================================
+//  ACCESSIBILITY TOGGLE
+// ============================================================
+(function(){
+  var K='mfg_accessible',b=document.getElementById('a11yToggle');
+  if(!b)return;
+  function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}
+  a(localStorage.getItem(K)==='true');
+  b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)});
+})();
+
+// ============================================================
+//  LEVEL FROM URL PARAM
+// ============================================================
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var lvl = params.get('level');
+  if (lvl && PUZZLE_BANKS[lvl]) {
+    selectLevel(lvl);
+  }
+})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

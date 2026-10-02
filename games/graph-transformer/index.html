@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Apply translations, reflections, and stretches to match a target curve. Interactive graph transformations for GCSE and A-Level.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/graph-transformer/">
+<meta property="og:title" content="Graph Transformer — MaffsGames">
+<meta property="og:description" content="Apply translations, reflections, and stretches to match a target curve. Interactive graph transformations for GCSE and A-Level.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/graph-transformer/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Graph Transformer — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#060a10;--surface:#0c1018;--border:#182030;--primary:#10b981;--accent:#f59e0b;--target:#f43f5e;--current:#3b82f6;--grid:#141e2e;--axis:#2a3a50;--text:#e2e8f0;--muted:#607088;--success:#22c55e}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:.8rem}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1rem 0 .5rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+
+.level-row{display:flex;gap:.5rem;justify-content:center;margin:.8rem 0}
+.level-btn{padding:.4rem 1rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.start-btn:hover{transform:scale(1.03)}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.6;margin:.8rem auto;max-width:520px}
+
+/* HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:48px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+
+/* Equation display */
+.eq-bar{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;min-height:40px;flex-wrap:wrap;gap:.4rem}
+.eq-current{color:var(--current);font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.eq-target{color:var(--target);font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.eq-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;margin-right:.3rem}
+
+/* Canvas */
+.graph-wrap{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:.5rem}
+canvas{display:block;width:100%;height:auto}
+.legend{position:absolute;top:8px;right:8px;font-size:.65rem;display:flex;flex-direction:column;gap:3px}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+/* Transform buttons */
+.transforms{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:.5rem}
+.t-btn{padding:.5rem .2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;transition:all .12s;text-align:center;line-height:1.3}
+.t-btn:hover{border-color:var(--primary);background:rgba(16,185,129,.08)}
+.t-btn:active{transform:scale(0.95)}
+.t-btn.disabled{opacity:.3;pointer-events:none}
+.t-section{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;grid-column:1/-1;padding:.2rem 0 0;text-align:center}
+
+/* Controls */
+.controls{display:flex;gap:.4rem;justify-content:center;margin-bottom:.5rem}
+.ctrl-btn{padding:.4rem 1rem;border-radius:8px;border:none;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .12s}
+.ctrl-undo{background:var(--border);color:var(--text)}.ctrl-undo:hover{background:#2a3a50}
+.ctrl-reset{background:var(--target);color:#fff;opacity:.7}.ctrl-reset:hover{opacity:1}
+.ctrl-skip{background:transparent;color:var(--muted);border:1px solid var(--border)}.ctrl-skip:hover{color:var(--text)}
+
+.ctrl-steps{background:#8b5cf6;color:#fff}
+.ctrl-steps:hover{filter:brightness(1.12)}
+.ctrl-steps.active{box-shadow:0 0 0 2px rgba(139,92,246,.45)}
+.step-caption{display:none;margin-bottom:.5rem;padding:.6rem .85rem;background:rgba(139,92,246,.09);border:1px solid rgba(139,92,246,.32);border-left:3px solid #8b5cf6;border-radius:8px;font-size:.8rem;line-height:1.55;color:var(--text)}
+.step-caption.show{display:block}
+.step-caption .step-n{display:inline-block;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#a78bfa;margin-bottom:2px}
+.step-caption .step-why{color:var(--muted);font-size:.75rem}
+
+/* Success overlay */
+.success-msg{display:none;text-align:center;padding:1rem;background:rgba(16,185,129,.1);border:1px solid var(--primary);border-radius:10px;margin-bottom:.5rem}
+.success-msg.show{display:block;animation:fadeIn .3s}
+.success-msg h3{color:var(--primary);font-size:1rem;margin-bottom:.3rem}
+.success-msg p{font-size:.82rem;color:var(--muted)}
+.success-msg .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.5rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.88rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+
+@media(max-width:500px){.transforms{grid-template-columns:repeat(4,1fr)}.t-btn{font-size:.65rem;padding:.4rem .1rem}}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Graph Transformer</h1><div class="sub">Apply transformations to match the target. Fewest moves wins.</div>  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+    <div class="level-row">
+      <button class="level-btn active" data-level="gcse" onclick="setLevel('gcse')">GCSE</button>
+      <button class="level-btn" data-level="alevel" onclick="setLevel('alevel')">A-Level</button>
+    </div>
+    <div class="menu-info">
+      The <span style="color:var(--current)">blue curve</span> is yours. The <span style="color:var(--target)">red outline</span> is the target.<br>
+      Apply transformations one at a time and watch the graph move.<br>
+      <strong>GCSE:</strong> Translations and reflections only.<br>
+      <strong>A-Level:</strong> Adds vertical and horizontal stretches.
+    </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="start-btn" onclick="startGame()">Start</button>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Puzzle</div><div class="hud-val" id="qNum">1</div></div>
+      <div class="hud-item"><div class="hud-label">Moves</div><div class="hud-val" id="moves">0</div></div>
+      <div class="hud-item"><div class="hud-label">Par</div><div class="hud-val" id="par">—</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
+    </div>
+    <div class="eq-bar">
+      <div><span class="eq-label">Yours:</span><span class="eq-current" id="eqCurrent">y = x²</span></div>
+      <div><span class="eq-label">Target:</span><span class="eq-target" id="eqTarget">y = (x−2)² + 3</span></div>
+    </div>
+    <div class="graph-wrap">
+      <canvas id="graphCanvas" width="700" height="400"></canvas>
+      <div class="legend"><span><span class="dot" style="background:var(--current)"></span>Your curve</span><span><span class="dot" style="background:var(--target)"></span>Target</span></div>
+    </div>
+    <div class="step-caption" id="stepCaption"></div>
+    <div class="transforms" id="transforms"></div>
+    <div class="controls">
+      <button class="ctrl-btn ctrl-undo" onclick="undoMove()">↩ Undo</button>
+      <button class="ctrl-btn ctrl-reset" onclick="resetPuzzle()">⟲ Reset</button>
+      <button class="ctrl-btn ctrl-steps" id="stepsBtn" onclick="stepThrough()">◆ Show steps</button>
+      <button class="ctrl-btn ctrl-skip" onclick="skipPuzzle()">Skip →</button>
+    </div>
+    <div class="success-msg" id="successMsg">
+      <h3 id="successTitle">Matched!</h3>
+      <p id="successText"></p>
+      <button class="next-btn" onclick="nextPuzzle()">Next Puzzle →</button>
+    </div>
+  </div>
+
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+
+<script>
+// ============================================================
+//  STATE
+// ============================================================
+let level='gcse';
+let puzzles=[],pIdx=0,score=0,totalMoves=0,totalPar=0,solved=0;
+// Current transform state: y = a * f(b*(x - h)) + k, reflectX, reflectY
+let state={a:1,b:1,h:0,k:0};
+let history=[],clickLog=[];
+let currentPuzzle=null,qStart=0;
+
+const canvas=document.getElementById('graphCanvas');
+const ctx=canvas.getContext('2d');
+
+function setLevel(l){level=l;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===l))}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+
+// ============================================================
+//  BASE FUNCTIONS
+// ============================================================
+const BASES={
+  'x²':{fn:x=>x*x,latex:'x^2',domain:[-5,5]},
+  'x³':{fn:x=>x*x*x,latex:'x^3',domain:[-3,3]},
+  'sin x':{fn:x=>Math.sin(x),latex:'\\sin x',domain:[-7,7]},
+  '1/x':{fn:x=>x===0?NaN:1/x,latex:'\\dfrac{1}{x}',domain:[-5,5]},
+  '√x':{fn:x=>x<0?NaN:Math.sqrt(x),latex:'\\sqrt{x}',domain:[-1,8]},
+  'eˣ':{fn:x=>Math.exp(x),latex:'e^x',domain:[-4,4]},
+};
+
+// ============================================================
+//  PUZZLE DEFINITIONS
+// ============================================================
+function generatePuzzles(){
+  const p=[];
+  if(level==='gcse'){
+    // GCSE: translations and reflections only
+    p.push({base:'x²',target:{a:1,b:1,h:3,k:0},par:1,desc:'Translate right 3'});
+    p.push({base:'x²',target:{a:1,b:1,h:-2,k:0},par:1,desc:'Translate left 2'});
+    p.push({base:'x²',target:{a:1,b:1,h:0,k:4},par:1,desc:'Translate up 4'});
+    p.push({base:'x²',target:{a:1,b:1,h:0,k:-3},par:1,desc:'Translate down 3'});
+    p.push({base:'x²',target:{a:1,b:1,h:2,k:3},par:2,desc:'Translate right 2, up 3'});
+    p.push({base:'x²',target:{a:1,b:1,h:-1,k:-2},par:2,desc:'Translate left 1, down 2'});
+    p.push({base:'x²',target:{a:-1,b:1,h:0,k:0},par:1,desc:'Reflect in x-axis'});
+    p.push({base:'x²',target:{a:-1,b:1,h:2,k:0},par:2,desc:'Reflect in x-axis, translate right 2'});
+    p.push({base:'x²',target:{a:-1,b:1,h:0,k:3},par:2,desc:'Reflect in x-axis, translate up 3'});
+    p.push({base:'x³',target:{a:1,b:1,h:2,k:0},par:1,desc:'Translate right 2'});
+    p.push({base:'x³',target:{a:-1,b:1,h:0,k:0},par:1,desc:'Reflect in x-axis'});
+    p.push({base:'x³',target:{a:1,b:-1,h:0,k:0},par:1,desc:'Reflect in y-axis'});
+    p.push({base:'x³',target:{a:1,b:1,h:-1,k:2},par:2,desc:'Translate left 1, up 2'});
+    p.push({base:'sin x',target:{a:1,b:1,h:0,k:2},par:1,desc:'Translate up 2'});
+    p.push({base:'sin x',target:{a:-1,b:1,h:0,k:0},par:1,desc:'Reflect in x-axis'});
+    p.push({base:'1/x',target:{a:1,b:1,h:2,k:0},par:1,desc:'Translate right 2'});
+    p.push({base:'1/x',target:{a:1,b:1,h:0,k:1},par:1,desc:'Translate up 1'});
+    p.push({base:'1/x',target:{a:1,b:1,h:-1,k:2},par:2,desc:'Translate left 1, up 2'});
+    p.push({base:'√x',target:{a:1,b:1,h:0,k:-1},par:1,desc:'Translate down 1'});
+    p.push({base:'√x',target:{a:-1,b:1,h:0,k:0},par:1,desc:'Reflect in x-axis'});
+    p.push({base:'x²',target:{a:-1,b:1,h:3,k:2},par:3,desc:'Reflect, right 3, up 2'});
+    p.push({base:'sin x',target:{a:1,b:1,h:1,k:-1},par:2,desc:'Translate right 1, down 1'});
+    p.push({base:'x²',target:{a:1,b:1,h:-3,k:4},par:2,desc:'Left 3, up 4'});
+    p.push({base:'x³',target:{a:-1,b:1,h:1,k:-2},par:3,desc:'Reflect, right 1, down 2'});
+    p.push({base:'eˣ',target:{a:1,b:1,h:0,k:-1},par:1,desc:'Translate down 1'});
+  } else {
+    // A-Level: all transforms including stretches
+    p.push({base:'x²',target:{a:2,b:1,h:0,k:0},par:1,desc:'Stretch ×2 in y'});
+    p.push({base:'x²',target:{a:1,b:2,h:0,k:0},par:1,desc:'Stretch ×½ in x'});
+    p.push({base:'x²',target:{a:1,b:0.5,h:0,k:0},par:1,desc:'Stretch ×2 in x'});
+    p.push({base:'x²',target:{a:2,b:1,h:1,k:0},par:2,desc:'Stretch ×2 in y, right 1'});
+    p.push({base:'x²',target:{a:1,b:1,h:2,k:3},par:2,desc:'Right 2, up 3'});
+    p.push({base:'x²',target:{a:-1,b:1,h:0,k:4},par:2,desc:'Reflect x, up 4'});
+    p.push({base:'x²',target:{a:2,b:1,h:-1,k:2},par:3,desc:'Stretch ×2 y, left 1, up 2'});
+    p.push({base:'sin x',target:{a:2,b:1,h:0,k:0},par:1,desc:'Stretch ×2 in y'});
+    p.push({base:'sin x',target:{a:1,b:2,h:0,k:0},par:1,desc:'Stretch ×½ in x (double freq)'});
+    p.push({base:'sin x',target:{a:1,b:0.5,h:0,k:0},par:1,desc:'Stretch ×2 in x (half freq)'});
+    p.push({base:'sin x',target:{a:2,b:1,h:0,k:1},par:2,desc:'Stretch ×2 y, up 1'});
+    p.push({base:'sin x',target:{a:-1,b:2,h:0,k:0},par:2,desc:'Reflect x, double freq'});
+    p.push({base:'x³',target:{a:0.5,b:1,h:0,k:0},par:1,desc:'Stretch ×½ in y'});
+    p.push({base:'x³',target:{a:1,b:1,h:1,k:-1},par:2,desc:'Right 1, down 1'});
+    p.push({base:'x³',target:{a:-1,b:1,h:2,k:0},par:2,desc:'Reflect x, right 2'});
+    p.push({base:'eˣ',target:{a:1,b:1,h:0,k:-1},par:1,desc:'Down 1 (asymptote y=−1)'});
+    p.push({base:'eˣ',target:{a:2,b:1,h:0,k:0},par:1,desc:'Stretch ×2 in y'});
+    p.push({base:'eˣ',target:{a:1,b:-1,h:0,k:0},par:1,desc:'Reflect in y (decay curve)'});
+    p.push({base:'eˣ',target:{a:-1,b:1,h:0,k:2},par:2,desc:'Reflect x, up 2'});
+    p.push({base:'1/x',target:{a:2,b:1,h:0,k:0},par:1,desc:'Stretch ×2 in y'});
+    p.push({base:'1/x',target:{a:1,b:1,h:1,k:1},par:2,desc:'Right 1, up 1'});
+    p.push({base:'√x',target:{a:2,b:1,h:0,k:0},par:1,desc:'Stretch ×2 in y'});
+    p.push({base:'√x',target:{a:1,b:1,h:-2,k:1},par:2,desc:'Left 2, up 1'});
+    p.push({base:'x²',target:{a:-2,b:1,h:1,k:3},par:4,desc:'Stretch ×2 y, reflect, right 1, up 3'});
+    p.push({base:'sin x',target:{a:2,b:2,h:0,k:-1},par:3,desc:'Amp 2, freq 2, down 1'});
+  }
+  return p;
+}
+
+// ============================================================
+//  GRAPH DRAWING
+// ============================================================
+const W=700,H=400;
+const XMIN=-6,XMAX=6,YMIN=-5,YMAX=7;
+
+function xToCanvas(x){return(x-XMIN)/(XMAX-XMIN)*W}
+function yToCanvas(y){return H-(y-YMIN)/(YMAX-YMIN)*H}
+
+// Decompose the target into the order the transformations actually apply:
+// horizontal stretch, horizontal shift, vertical stretch, vertical shift.
+// Steps that change nothing are skipped.
+let ghostSteps=[],ghostIndex=-1;
+
+function buildGhostSteps(t){
+  const steps=[];
+  let cur={a:1,b:1,h:0,k:0};
+  const push=(next,title,what,why)=>{
+    steps.push({state:{...next},title:title,what:what,why:why});
+    cur={...next};
+  };
+  if(Math.abs(t.b-1)>1e-9){
+    const squash=Math.abs(t.b)>1;
+    push({...cur,b:t.b},'Horizontal stretch',
+      squash?('Squash horizontally by a factor of '+fmt(1/Math.abs(t.b))):
+             ('Stretch horizontally by a factor of '+fmt(1/Math.abs(t.b)))
+      +(t.b<0?', and reflect in the y-axis':''),
+      'The '+fmt(t.b)+' sits inside the bracket, so it does the opposite of what it looks like \u2014 f('+fmt(t.b)+'x) scales x by 1/'+fmt(t.b)+'.');
+  }
+  if(Math.abs(t.h)>1e-9){
+    push({...cur,h:t.h},'Horizontal shift',
+      'Move '+(t.h>0?'right':'left')+' '+fmt(Math.abs(t.h)),
+      t.h>0?'f(x \u2212 '+fmt(t.h)+') moves the curve RIGHT, not left. Subtracting inside the bracket shifts the positive way.'
+           :'f(x + '+fmt(-t.h)+') moves the curve LEFT. Adding inside the bracket shifts the negative way.');
+  }
+  if(Math.abs(t.a-1)>1e-9){
+    push({...cur,a:t.a},'Vertical stretch',
+      (Math.abs(t.a)>1?'Stretch':'Squash')+' vertically by a factor of '+fmt(Math.abs(t.a))
+      +(t.a<0?', and reflect in the x-axis':''),
+      'This one is outside the function, so it behaves as you would expect \u2014 every y-value is multiplied by '+fmt(t.a)+'.');
+  }
+  if(Math.abs(t.k)>1e-9){
+    push({...cur,k:t.k},'Vertical shift',
+      'Move '+(t.k>0?'up':'down')+' '+fmt(Math.abs(t.k)),
+      'Also outside the function, so it also behaves normally \u2014 + '+fmt(t.k)+' raises every point by '+fmt(t.k)+'.');
+  }
+  return steps;
+}
+
+function fmt(n){
+  if(Math.abs(n-0.5)<1e-9)return '\u00bd';
+  if(Math.abs(n+0.5)<1e-9)return '-\u00bd';
+  return String(Math.round(n*1000)/1000);
+}
+
+function stepThrough(){
+  if(ghostIndex===-1)ghostSteps=buildGhostSteps(currentPuzzle.target);
+  if(ghostSteps.length===0){
+    showCaption('Already there','This target is the base curve \u2014 no transformations to apply.','');
+    return;
+  }
+  ghostIndex++;
+  const btn=document.getElementById('stepsBtn');
+  if(ghostIndex>=ghostSteps.length){
+    // Cycle back to off.
+    ghostIndex=-1;
+    document.getElementById('stepCaption').classList.remove('show');
+    if(btn){btn.classList.remove('active');btn.textContent='\u25c6 Show steps'}
+    drawGraph();
+    return;
+  }
+  const s=ghostSteps[ghostIndex];
+  if(btn){
+    btn.classList.add('active');
+    btn.textContent=ghostIndex+1<ghostSteps.length?'\u25c6 Next step':'\u25c6 Hide steps';
+  }
+  showCaption('Step '+(ghostIndex+1)+' of '+ghostSteps.length+' \u2014 '+s.title,s.what,s.why);
+  drawGraph();
+}
+
+function showCaption(n,what,why){
+  const el=document.getElementById('stepCaption');
+  el.innerHTML='<span class="step-n">'+n+'</span><br>'+what+
+    (why?'<br><span class="step-why">'+why+'</span>':'');
+  el.classList.add('show');
+}
+
+function resetGhosts(){
+  ghostSteps=[];ghostIndex=-1;
+  const el=document.getElementById('stepCaption');
+  if(el)el.classList.remove('show');
+  const btn=document.getElementById('stepsBtn');
+  if(btn){btn.classList.remove('active');btn.textContent='\u25c6 Show steps'}
+}
+
+function drawGraph(){
+  ctx.clearRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='#141e2e';ctx.lineWidth=0.5;
+  for(let x=Math.ceil(XMIN);x<=XMAX;x++){ctx.beginPath();ctx.moveTo(xToCanvas(x),0);ctx.lineTo(xToCanvas(x),H);ctx.stroke()}
+  for(let y=Math.ceil(YMIN);y<=YMAX;y++){ctx.beginPath();ctx.moveTo(0,yToCanvas(y));ctx.lineTo(W,yToCanvas(y));ctx.stroke()}
+  // Axes
+  ctx.strokeStyle='#2a3a50';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(xToCanvas(XMIN),yToCanvas(0));ctx.lineTo(xToCanvas(XMAX),yToCanvas(0));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(xToCanvas(0),yToCanvas(YMIN));ctx.lineTo(xToCanvas(0),yToCanvas(YMAX));ctx.stroke();
+  // Tick labels
+  ctx.fillStyle='#4a5a70';ctx.font='10px JetBrains Mono';ctx.textAlign='center';
+  for(let x=Math.ceil(XMIN);x<=XMAX;x++){if(x!==0)ctx.fillText(x,xToCanvas(x),yToCanvas(0)+14)}
+  ctx.textAlign='right';
+  for(let y=Math.ceil(YMIN);y<=YMAX;y++){if(y!==0)ctx.fillText(y,xToCanvas(0)-6,yToCanvas(y)+4)}
+
+  const base=BASES[currentPuzzle.base];
+
+  // Ghost trail: every step up to and including the current one, oldest faintest.
+  if(ghostIndex>=0){
+    for(let i=0;i<=ghostIndex&&i<ghostSteps.length;i++){
+      const isCurrent=(i===ghostIndex);
+      ctx.globalAlpha=isCurrent?0.9:0.28;
+      drawCurve(base.fn,ghostSteps[i].state,'#8b5cf6',isCurrent?2.5:1.5,isCurrent?[]:[3,3]);
+      ctx.globalAlpha=1;
+    }
+  }
+
+  // Draw target (red dashed)
+  drawCurve(base.fn,currentPuzzle.target,'#f43f5e',2,[6,4]);
+  // Draw current (blue solid)
+  drawCurve(base.fn,state,'#3b82f6',2.5,[]);
+}
+
+// ============================================================
+//  CURVE EQUALITY — match by value, not by route or parameters
+// ============================================================
+// y = (-x)^3 (Reflect y-axis) and y = -x^3 (Reflect x-axis) are the same
+// curve on an odd function, but their {a,b,h,k} tuples differ (b=-1 vs
+// a=-1). Comparing parameters rejects a correct answer reached by a
+// different, equally valid route. Comparing the curves themselves — sampled
+// at a dense, fixed, deterministic set of x across the plotted range —
+// accepts any route that lands on the target shape. See docs/todo.md 1.24:
+// this is the same "marking by representation instead of value" class.
+const MATCH_SAMPLES=(function(){
+  const pts=[],n=600;
+  for(let i=0;i<=n;i++)pts.push(XMIN+(XMAX-XMIN)*i/n);
+  return pts;
+})();
+
+function evalState(baseFn,st,x){
+  const input=st.b*(x-st.h);
+  let y=baseFn(input);
+  if(!isFinite(y))return NaN; // covers NaN and any run to +-Infinity
+  y=st.a*y+st.k;
+  return isFinite(y)?y:NaN;
+}
+
+function curvesMatch(baseFn,stA,stB){
+  for(let i=0;i<MATCH_SAMPLES.length;i++){
+    const x=MATCH_SAMPLES[i];
+    const ya=evalState(baseFn,stA,x),yb=evalState(baseFn,stB,x);
+    const aUndef=isNaN(ya),bUndef=isNaN(yb);
+    if(aUndef&&bUndef)continue;      // both undefined here — ignored
+    if(aUndef!==bUndef)return false; // one defined, one not — mismatch
+    const scale=Math.max(Math.abs(ya),Math.abs(yb));
+    const tol=scale>1?1e-9*scale:1e-9;
+    if(Math.abs(ya-yb)>tol)return false;
+  }
+  return true;
+}
+
+function drawCurve(baseFn,st,color,width,dash){
+  ctx.strokeStyle=color;ctx.lineWidth=width;ctx.setLineDash(dash);
+  ctx.beginPath();
+  let started=false;
+  const step=0.02;
+  for(let px=0;px<=W;px+=1){
+    const x=XMIN+(px/W)*(XMAX-XMIN);
+    // Apply inverse horizontal transforms to get input to base function
+    // y = a * f(b*(x - h)) + k
+    const input=st.b*(x-st.h);
+    let y=baseFn(input);
+    if(isNaN(y)||!isFinite(y)){started=false;continue}
+    y=st.a*y+st.k;
+    if(y<YMIN-2||y>YMAX+2){started=false;continue}
+    const cx=xToCanvas(x),cy=yToCanvas(y);
+    if(!started){ctx.moveTo(cx,cy);started=true}
+    else ctx.lineTo(cx,cy);
+  }
+  ctx.stroke();ctx.setLineDash([]);
+}
+
+// ============================================================
+//  EQUATION BUILDER
+// ============================================================
+// buildEquation returns LaTeX. KaTeX is loaded with defer, so fall back to
+// readable plain text if it has not arrived yet rather than leaking markup.
+function renderEq(id,latex){
+  const el=document.getElementById(id);
+  if(!el)return;
+  if(window.katex){
+    try{katex.render(latex,el,{throwOnError:false,displayMode:false});return}catch(e){}
+  }
+  el.textContent=latex
+    .replace(/\\tfrac\{1\}\{2\}/g,'\u00bd')
+    .replace(/\\dfrac\{1\}\{([^}]*)\}/g,'1/$1')
+    .replace(/\\sqrt\{([^}]*)\}/g,'\u221a($1)')
+    .replace(/\\sin/g,'sin')
+    .replace(/\^2/g,'\u00b2').replace(/\^3/g,'\u00b3')
+    .replace(/\^\{([^}]*)\}/g,'^$1');
+}
+
+function buildEquation(base,st){
+  let inner='x';
+  // b factor
+  if(st.b===-1)inner='-x';
+  else if(st.b!==1){
+    if(st.b===2)inner='2x';
+    else if(st.b===0.5)inner='\\tfrac{1}{2}x';
+    else if(st.b===3)inner='3x';
+    else inner=st.b+'x';
+  }
+  // h translation. When b===1 and h!==0, the replace below turns the bare
+  // 'x' into a self-contained '(x±h)' — that IS the whole argument, so
+  // nothing downstream should wrap it again. When a b-coefficient is also
+  // present ('2x' etc.), the replace produces '2(x-3)': the bracket groups
+  // only the shift and the coefficient sits outside it, which is correct
+  // and not redundant, so bareShift is false and the normal wrap applies.
+  const bareShift=(st.b===1)&&(st.h!==0);
+  if(st.h>0)inner=inner.replace('x','(x-'+st.h+')');
+  else if(st.h<0)inner=inner.replace('x','(x+'+(-st.h)+')');
+
+  // Build f(inner). `arg` is unwrapped, for functions that provide their own
+  // single bracket/group (sin, 1/x, sqrt, e^x). `grp` is wrapped exactly
+  // once, for x^2/x^3 which need an explicit bracket before raising to a
+  // power. Reusing the shift's own bracket instead of adding a second one
+  // is what removes the doubled-bracket bug.
+  const arg=bareShift?inner.slice(1,-1):inner;
+  const grp=bareShift?inner:'('+inner+')';
+  let expr='';
+  if(base==='x²')expr=inner==='x'?'x^2':grp+'^2';
+  else if(base==='x³')expr=inner==='x'?'x^3':grp+'^3';
+  else if(base==='sin x')expr='\\sin('+arg+')';
+  else if(base==='1/x')expr='\\dfrac{1}{'+arg+'}';
+  else if(base==='√x')expr='\\sqrt{'+arg+'}';
+  else if(base==='eˣ')expr='e^{'+arg+'}';
+
+  // a factor
+  if(st.a===-1)expr='-'+expr;
+  else if(st.a!==1){
+    if(st.a===2)expr='2'+expr;
+    else if(st.a===3)expr='3'+expr;
+    else if(st.a===0.5)expr='\\tfrac{1}{2}'+expr;
+    else expr=st.a+expr;
+  }
+
+  // k translation
+  if(st.k>0)expr=expr+'+'+st.k;
+  else if(st.k<0)expr=expr+st.k;
+
+  return'y = '+expr;
+}
+
+// ============================================================
+//  TRANSFORM BUTTONS
+// ============================================================
+// `merge:true` marks the four shift buttons: a run of consecutive clicks
+// on the SAME one of these counts as a single move (Left, Left, Left = 1
+// move of size 3), matching how par is authored (par counts
+// transformations, not button presses). Reflections and stretches are
+// deliberately NOT merge-able — each click is its own move, since
+// repeating one changes the outcome every time (Reflect x-axis twice is
+// back to the start, not "one bigger reflection").
+// Factored out of buildTransformButtons so scripts/verify-graph-transformer.py
+// can read the exact button set for a level without touching the DOM — the
+// button definitions themselves (label/fn/merge) are unchanged.
+function transformButtonDefs(lvl){
+  const btns=[
+    {label:'← Left 1',fn:()=>{state.h-=1},merge:true},
+    {label:'→ Right 1',fn:()=>{state.h+=1},merge:true},
+    {label:'↑ Up 1',fn:()=>{state.k+=1},merge:true},
+    {label:'↓ Down 1',fn:()=>{state.k-=1},merge:true},
+    {label:'Reflect x-axis',fn:()=>{state.a*=-1}},
+  ];
+  if(lvl==='gcse'){
+    btns.push({label:'Reflect y-axis',fn:()=>{state.b*=-1}});
+  } else {
+    btns.push({label:'Reflect y-axis',fn:()=>{state.b*=-1}});
+    btns.push({label:'Stretch ×2 y',fn:()=>{state.a*=2}});
+    btns.push({label:'Stretch ×½ y',fn:()=>{state.a*=0.5}});
+    btns.push({label:'Stretch ×2 x',fn:()=>{state.b*=0.5}});
+    btns.push({label:'Stretch ×½ x',fn:()=>{state.b*=2}});
+  }
+  return btns;
+}
+
+function buildTransformButtons(){
+  const el=document.getElementById('transforms');el.innerHTML='';
+  const btns=transformButtonDefs(level);
+
+  btns.forEach(b=>{
+    const btn=document.createElement('button');btn.className='t-btn';btn.textContent=b.label;
+    btn.addEventListener('click',()=>{
+      history.push({...state});
+      clickLog.push({label:b.label,merge:!!b.merge});
+      b.fn();
+      recomputeMoveCount();
+      document.getElementById('moves').textContent=moveCount;
+      updateDisplay();
+      checkMatch();
+    });
+    el.appendChild(btn);
+  });
+}
+
+// A move is a maximal run of consecutive clicks on the same merge-able
+// button. Non-merge-able clicks (reflections, stretches) never continue a
+// run, even against themselves — each one is always its own move.
+// Recomputed from the full click log on every change (including undo)
+// rather than tracked incrementally, so undo's "does this empty the run?"
+// falls out for free instead of needing its own case.
+function recomputeMoveCount(){
+  let mc=0;
+  for(let i=0;i<clickLog.length;i++){
+    const cur=clickLog[i],prev=i>0?clickLog[i-1]:null;
+    const continuesRun=prev&&cur.merge&&prev.label===cur.label;
+    if(!continuesRun)mc++;
+  }
+  moveCount=mc;
+}
+
+// ============================================================
+//  VERIFICATION HOOK — read by scripts/verify-graph-transformer.py only.
+//  Never called during play. Runs a bounded BFS over a level's ACTUAL
+//  button set (transformButtonDefs) using the ACTUAL move-merging rule
+//  (recomputeMoveCount's logic, replayed here) and the ACTUAL curve
+//  comparison (curvesMatch/evalState), so the check can never drift from
+//  what a student experiences. `puzzlesOverride` lets the verifier probe a
+//  single mutated puzzle for its fault-injection self-test without
+//  disturbing the real bank.
+// ============================================================
+function gtBfsCheck(lvl,puzzlesOverride){
+  const MAX_MOVES=6,MAX_RUN=12;
+  const savedLevel=level,savedState=state;
+  level=lvl;
+  const puzzles=puzzlesOverride||generatePuzzles();
+  const btns=transformButtonDefs(lvl);
+  const results=puzzles.map(p=>{
+    const baseFn=BASES[p.base].fn;
+    const start={a:1,b:1,h:0,k:0};
+    const key=st=>st.a.toFixed(6)+','+st.b.toFixed(6)+','+st.h.toFixed(6)+','+st.k.toFixed(6);
+    const applyN=(b,st,n)=>{state={...st};for(let i=0;i<n;i++)b.fn();return{...state}};
+    let frontier=[start],visited=new Set([key(start)]),minMoves=null;
+    if(curvesMatch(baseFn,start,p.target))minMoves=0;
+    for(let m=1;minMoves===null&&m<=MAX_MOVES&&frontier.length>0;m++){
+      const next=[];
+      for(const st of frontier){
+        for(const b of btns){
+          const runs=b.merge?MAX_RUN:1;
+          for(let n=1;n<=runs;n++){
+            const ns=applyN(b,st,n);
+            const k=key(ns);
+            if(visited.has(k))continue;
+            visited.add(k);
+            next.push(ns);
+            if(minMoves===null&&curvesMatch(baseFn,ns,p.target)){minMoves=m}
+          }
+        }
+      }
+      frontier=next;
+    }
+    return{base:p.base,target:{...p.target},par:p.par,desc:p.desc,
+      reachable:minMoves!==null,minMoves:minMoves,boundedAt:MAX_MOVES};
+  });
+  level=savedLevel;state=savedState;
+  return results;
+}
+
+// Two puzzles in the same tier whose targets are the identical curve (same
+// base, or bases that happen to agree at every sample point) — checked with
+// the same evalState()/tolerance rule curvesMatch uses, generalised to a
+// pair of (possibly different) base functions.
+function gtCurveKeyPairs(puzzles){
+  const dup=[];
+  for(let i=0;i<puzzles.length;i++){
+    for(let j=i+1;j<puzzles.length;j++){
+      const fi=BASES[puzzles[i].base].fn,fj=BASES[puzzles[j].base].fn;
+      let same=true;
+      for(let s=0;s<MATCH_SAMPLES.length&&same;s++){
+        const x=MATCH_SAMPLES[s];
+        const yi=evalState(fi,puzzles[i].target,x),yj=evalState(fj,puzzles[j].target,x);
+        const ui=isNaN(yi),uj=isNaN(yj);
+        if(ui&&uj)continue;
+        if(ui!==uj){same=false;break}
+        const scale=Math.max(Math.abs(yi),Math.abs(yj));
+        const tol=scale>1?1e-9*scale:1e-9;
+        if(Math.abs(yi-yj)>tol){same=false;break}
+      }
+      if(same)dup.push([i,j]);
+    }
+  }
+  return dup;
+}
+
+window.GT_VERIFY={bfsCheck:gtBfsCheck,curveDupPairs:gtCurveKeyPairs,
+  allPuzzles:function(lvl){const saved=level;level=lvl;const p=generatePuzzles();level=saved;return p}};
+
+// ============================================================
+//  GAME LOGIC
+// ============================================================
+let moveCount=0;
+
+function startGame(){
+  puzzles=shuffle(generatePuzzles()).slice(0,12);
+  pIdx=0;score=0;totalMoves=0;totalPar=0;solved=0;
+  document.getElementById('score').textContent='0';
+  show('game');
+  buildTransformButtons();
+  loadPuzzle();
+  mfg('game_started',{game_slug:'graph-transformer',level:level});window._ggAbandoned=true;
+  if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'graph-transformer',level:level,questions_answered:pIdx})});}
+}
+
+function loadPuzzle(){
+  currentPuzzle=puzzles[pIdx];
+  state={a:1,b:1,h:0,k:0};
+  history=[];clickLog=[];moveCount=0;
+  resetGhosts();
+  document.getElementById('qNum').textContent=(pIdx+1);
+  document.getElementById('moves').textContent='0';
+  document.getElementById('par').textContent=currentPuzzle.par;
+  document.getElementById('successMsg').className='success-msg';
+  qStart=Date.now();updateTimer();
+  updateDisplay();
+}
+
+function updateDisplay(){
+  drawGraph();
+  renderEq('eqCurrent',buildEquation(currentPuzzle.base,state));
+  renderEq('eqTarget',buildEquation(currentPuzzle.base,currentPuzzle.target));
+}
+
+function updateTimer(){
+  const el=document.getElementById('timer');
+  const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};
+  requestAnimationFrame(tick);
+}
+
+function checkMatch(){
+  const t=currentPuzzle.target;
+  const base=BASES[currentPuzzle.base];
+  if(curvesMatch(base.fn,state,t)){
+    // Matched!
+    const par=currentPuzzle.par;
+    let pts=100;
+    if(moveCount<=par)pts=150;
+    else if(moveCount<=par+1)pts=120;
+    else if(moveCount<=par+2)pts=100;
+    else pts=Math.max(50,100-(moveCount-par-2)*10);
+    score+=pts;solved++;
+    totalMoves+=moveCount;totalPar+=par;
+    document.getElementById('score').textContent=score;
+    mfg('question_answered',{game_slug:'graph-transformer',level:level,correct:true,question_index:pIdx+1});
+
+    let rating='';
+    if(moveCount<par)rating='Under par! Incredible!';
+    else if(moveCount===par)rating='Par! Perfect.';
+    else if(moveCount===par+1)rating='One over par. Close!';
+    else rating=moveCount+' moves (par was '+par+').';
+
+    document.getElementById('successTitle').textContent='✓ Matched!';
+    document.getElementById('successText').innerHTML=rating+'<br>'+currentPuzzle.desc+'<br>+'+pts+' points';
+    document.getElementById('successMsg').className='success-msg show';
+    // Disable transforms
+    document.querySelectorAll('.t-btn').forEach(b=>b.classList.add('disabled'));
+  }
+}
+
+function undoMove(){
+  if(history.length===0)return;
+  state={...history.pop()};
+  clickLog.pop();
+  recomputeMoveCount();
+  document.getElementById('moves').textContent=moveCount;
+  updateDisplay();
+}
+
+function resetPuzzle(){
+  state={a:1,b:1,h:0,k:0};history=[];clickLog=[];moveCount=0;resetGhosts();
+  document.getElementById('moves').textContent='0';
+  updateDisplay();
+}
+
+function skipPuzzle(){
+  mfg('question_answered',{game_slug:'graph-transformer',level:level,correct:false,question_index:pIdx+1});
+  nextPuzzle();
+}
+
+function nextPuzzle(){
+  pIdx++;
+  if(pIdx>=puzzles.length){endGame();return}
+  document.querySelectorAll('.t-btn').forEach(b=>b.classList.remove('disabled'));
+  loadPuzzle();
+}
+
+function endGame(){
+  const pct=puzzles.length>0?Math.round(solved/puzzles.length*100):0;
+  let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
+  document.getElementById('resultTitle').textContent=t;
+  document.getElementById('finalScore').textContent=score;
+  document.getElementById('statsLine').innerHTML=
+    solved+'/'+puzzles.length+' puzzles solved<br>'+
+    'Total moves: '+totalMoves+' (par: '+totalPar+')<br>'+
+    (level==='gcse'?'GCSE':'A-Level')+' mode';
+  window._ggAbandoned=false;mfg('game_completed',{game_slug:'graph-transformer',level:level,score:score,questions_answered:puzzles.length,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('graph-transformer',level,score,puzzles.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('graph-transformer',level,score);}}
+  var _pbKey='gt_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'graph-transformer',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}
+  show('results');
+}
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+// Init
+const pa=new URLSearchParams(location.search);
+if(pa.get('level')==='alevel'){level='alevel';document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level==='alevel'))}
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

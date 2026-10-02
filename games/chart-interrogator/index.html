@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Read statistical diagrams and build structured comparison answers. Covers stem and leaf, box plots, cumulative frequency, and histograms.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/chart-interrogator/">
+<meta property="og:title" content="Chart Interrogator — MaffsGames">
+<meta property="og:description" content="Read statistical diagrams and build structured comparison answers. Covers stem and leaf, box plots, cumulative frequency, and histograms.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/chart-interrogator/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<title>Chart Interrogator — MaffsGames</title>
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0b0e14;--surface:#141820;--surface-alt:#1c2028;--border:#2a2e3a;
+--text:#e2e4e9;--muted:#7a7f90;--accent:#3b82f6;
+--green:#22c55e;--green-dim:rgba(34,197,94,.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,.12);
+--gcse:#3b82f6;--alevel:#f97316;--core:#0ea5e9;--l4:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:15px;line-height:1.6;min-height:100vh;}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.header-left{display:flex;align-items:center;gap:12px;}
+.header-title{font-size:20px;font-weight:700;}
+.header-title span{color:var(--accent);}
+.level-pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;color:#fff;}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;}
+.back-link:hover{color:var(--text);}
+
+/* SELECTOR */
+.selector{max-width:580px;margin:60px auto;padding:0 24px;text-align:center;}
+.selector h2{font-size:26px;font-weight:700;margin-bottom:6px;}
+.selector p{color:var(--muted);margin-bottom:32px;}
+.sel-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;text-align:left;}
+.sel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;}
+.sel-btn{font-family:'Outfit',system-ui,sans-serif;font-size:14px;font-weight:600;padding:16px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all .15s;text-align:left;}
+.sel-btn:hover{border-color:var(--accent);background:rgba(59,130,246,.08);}
+.sel-btn.active{border-color:var(--accent);background:rgba(59,130,246,.12);color:var(--accent);}
+.sel-btn .sel-sub{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;display:block;}
+.sel-btn.level-btn.gcse.active{border-color:var(--gcse);background:rgba(59,130,246,.12);color:var(--gcse);}
+.sel-btn.level-btn.alevel.active{border-color:var(--alevel);background:rgba(249,115,22,.12);color:var(--alevel);}
+.sel-btn.level-btn.core.active{border-color:var(--core);background:rgba(14,165,233,.12);color:var(--core);}
+.sel-btn.level-btn.l4.active{border-color:var(--l4);background:rgba(239,68,68,.12);color:var(--l4);}
+.start-btn{font-family:'Outfit',system-ui,sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;transition:opacity .15s;}
+.start-btn:hover{opacity:.9;}
+.start-btn:disabled{opacity:.4;cursor:default;}
+
+/* GAME LAYOUT */
+.game-container{display:none;max-width:1100px;margin:0 auto;padding:24px;}
+.game-layout{display:grid;grid-template-columns:3fr 2fr;gap:24px;align-items:start;}
+.diagram-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.diagram-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--surface-alt);}
+.diagram-title{font-size:14px;font-weight:600;}
+.diagram-context{font-size:12px;color:var(--muted);}
+.diagram-body{padding-bottom:44px;padding:20px;min-height:300px;display:flex;align-items:center;justify-content:center;}
+.diagram-body canvas{max-width:100%;height:auto;}
+
+/* STEM AND LEAF TABLE */
+.sl-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:14px;}
+.sl-table th{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--border);font-family:'Outfit',system-ui,sans-serif;}
+.sl-table td{padding:5px 8px;border-bottom:1px solid rgba(42,46,58,.5);vertical-align:middle;}
+.sl-table .sl-left{text-align:right;color:var(--text);min-width:100px;}
+.sl-table .sl-stem{text-align:center;font-weight:700;color:var(--accent);background:var(--surface-alt);width:40px;}
+.sl-table .sl-right{text-align:left;color:var(--text);min-width:100px;}
+.sl-key{font-size:12px;color:var(--muted);margin-top:10px;text-align:center;}
+
+/* RIGHT PANEL */
+.question-panel{display:flex;flex-direction:column;gap:16px;}
+.phase-indicator{display:flex;gap:8px;align-items:center;}
+.phase-pill{font-size:11px;font-weight:700;padding:4px 12px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--muted);}
+.phase-pill.active{background:rgba(59,130,246,.12);border-color:var(--accent);color:var(--accent);}
+.phase-pill.done{background:var(--green-dim);border-color:rgba(34,197,94,.3);color:var(--green);}
+
+.timer-display{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);margin-left:auto;}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;}
+.q-number{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.q-text{font-size:14px;margin-bottom:14px;line-height:1.7;}
+.q-input-row{display:flex;gap:8px;align-items:center;}
+.q-input{flex:1;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
+.q-input:focus{border-color:var(--accent);}
+.q-submit{font-family:'Outfit',system-ui,sans-serif;font-size:14px;font-weight:600;padding:10px 20px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;}
+.q-submit:hover{opacity:.9;}
+
+.q-mc{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.mc-btn{font-family:'Outfit',system-ui,sans-serif;font-size:13px;font-weight:500;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-alt);color:var(--text);cursor:pointer;text-align:left;transition:all .15s;}
+.mc-btn:hover{border-color:var(--accent);}
+
+.q-feedback{margin-top:10px;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;display:none;}
+.q-feedback.correct{display:block;background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.3);}
+.q-feedback.wrong{display:block;background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+
+.completed-q{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--green-dim);border:1px solid rgba(34,197,94,.2);border-radius:8px;font-size:13px;color:var(--green);font-weight:500;}
+.completed-q .tick{flex-shrink:0;}
+
+/* PHASE 2 */
+.scaffold{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;}
+.scaffold-title{font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;}
+.scaffold-text{font-size:14px;line-height:2.2;color:var(--text);}
+.scaffold-text .filled{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--green);background:var(--green-dim);padding:2px 8px;border-radius:4px;}
+.scaffold-text select{font-family:'Outfit',system-ui,sans-serif;font-size:13px;font-weight:600;padding:4px 8px;border:1.5px solid var(--accent);border-radius:6px;background:var(--bg);color:var(--text);cursor:pointer;appearance:auto;}
+.scaffold-text input{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;width:90px;padding:4px 8px;border:1.5px solid var(--accent);border-radius:6px;background:var(--bg);color:var(--text);outline:none;}
+.scaffold-submit{margin-top:16px;}
+
+/* MODEL ANSWER */
+.model-answer{background:var(--green-dim);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:20px;margin-top:12px;}
+.model-title{font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
+.model-text{font-size:14px;line-height:2;color:var(--text);}
+
+/* SCORE + NEXT */
+.score-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:10px;}
+.score-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--accent);}
+.score-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.pb-val{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--muted);}
+.next-btn{font-family:'Outfit',system-ui,sans-serif;font-size:14px;font-weight:600;padding:10px 20px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;}
+.next-btn:hover{opacity:.9;}
+.menu-btn{font-family:'Outfit',system-ui,sans-serif;font-size:13px;font-weight:500;padding:8px 16px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);cursor:pointer;}
+.menu-btn:hover{border-color:var(--accent);}
+
+@media(max-width:768px){
+  .game-layout{grid-template-columns:1fr;}
+  .sel-grid{grid-template-columns:1fr;}
+  .header{padding:14px 18px;}
+  .game-container{padding:16px;}
+  .q-mc{grid-template-columns:1fr;}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div class="header-title"><span>Chart</span> Interrogator</div>
+    <span class="level-pill" id="headerPill" style="display:none;"></span>
+  </div>
+  <a href="../../" class="back-link">&larr; Back to Games</a>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+
+<div class="selector" id="selector">
+  <h2>Chart Interrogator</h2>
+  <p>Read statistical diagrams and build structured comparison answers — step by step.</p>
+
+  <div class="sel-label">Diagram Type</div>
+  <div class="sel-grid" id="typeGrid">
+    <button class="sel-btn" data-type="stemleaf" onclick="selectType(this)">Stem &amp; Leaf<span class="sel-sub">Back-to-back comparison</span></button>
+    <button class="sel-btn" data-type="boxplot" onclick="selectType(this)">Box Plots<span class="sel-sub">Paired box plot comparison</span></button>
+    <button class="sel-btn" data-type="cumfreq" onclick="selectType(this)">Cumulative Frequency<span class="sel-sub">Curve reading &amp; quartiles</span></button>
+    <button class="sel-btn" data-type="histogram" onclick="selectType(this)">Histograms<span class="sel-sub">Frequency density &amp; interpretation</span></button>
+  </div>
+
+  <div class="sel-label">Level</div>
+  <div class="sel-grid" id="levelGrid">
+    <button class="sel-btn level-btn gcse" data-level="gcse" onclick="selectLevel(this)">GCSE<span class="sel-sub">AQA 8300 / Edexcel 1MA1</span></button>
+    <button class="sel-btn level-btn alevel" data-level="alevel" onclick="selectLevel(this)">A-Level<span class="sel-sub">AQA 7357 / Edexcel 9MA0</span></button>
+    <button class="sel-btn level-btn core" data-level="core" onclick="selectLevel(this)">Core Maths<span class="sel-sub">AQA 1350</span></button>
+    <button class="sel-btn level-btn l4" data-level="l4" onclick="selectLevel(this)">Level 4<span class="sel-sub">Pearson BTEC HNC</span></button>
+  </div>
+
+  <button class="start-btn" id="startBtn" disabled onclick="beginGame()">Start</button>
+</div>
+
+<div class="game-container" id="gameContainer">
+  <div class="game-layout">
+    <div class="diagram-panel">
+      <div class="diagram-header">
+        <span class="diagram-title" id="diagramTitle"></span>
+        <span class="diagram-context" id="diagramContext"></span>
+      </div>
+      <div class="diagram-body" id="diagramBody"></div>
+    </div>
+
+    <div class="question-panel" id="questionPanel">
+      <div class="phase-indicator">
+        <span class="phase-pill active" id="phase1Pill">Phase 1 — Read</span>
+        <span class="phase-pill" id="phase2Pill">Phase 2 — Compare</span>
+        <span class="timer-display" id="timer">0s</span>
+      </div>
+      <div id="completedQuestions"></div>
+      <div id="activeQuestion"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+var STEM_LEAF = [
+{id:'S1',context:'Maths test scores (out of 60)',groupA:'Class A',groupB:'Class B',level:'gcse',contextNoun:'score',
+ a:[12,15,18,22,25,28,31,34,37,38,41,44,46,49,52,55],
+ b:[18,21,24,27,29,33,35,38,40,43,45,47,50,53,56,58],
+ stemDiv:10,key:'3|4 means 34'},
+{id:'S2',context:'Heights of Year 10 students (cm)',groupA:'Boys',groupB:'Girls',level:'gcse',contextNoun:'height',
+ a:[152,155,158,161,163,165,167,169,171,173,175,178,181,184],
+ b:[148,151,154,156,158,160,162,163,165,167,169,171,173],
+ stemDiv:10,key:'16|5 means 165 cm'},
+{id:'S3',context:'Long jump distances (m)',groupA:'Group A',groupB:'Group B',level:'gcse',contextNoun:'distance',
+ a:[3.2,3.5,3.7,4.0,4.2,4.4,4.6,4.8,5.0,5.2,5.4,5.6],
+ b:[3.8,4.1,4.3,4.5,4.6,4.7,4.9,5.0,5.1,5.3,5.5,5.7],
+ stemDiv:1,key:'4|2 means 4.2 m',decimal:true},
+{id:'S4',context:'Weekly hours worked',groupA:'Full-time',groupB:'Part-time',level:'alevel',contextNoun:'hours',
+ a:[35,37,38,40,40,42,43,45,46,48,50,52,55,58,60],
+ b:[8,10,12,14,16,18,20,20,22,24,25,28,30,32],
+ stemDiv:10,key:'4|2 means 42 hours'},
+{id:'S5',context:'Reaction times (ms)',groupA:'Under 25s',groupB:'Over 25s',level:'alevel',contextNoun:'reaction time',
+ a:[180,195,210,220,230,235,240,245,250,260,270,280],
+ b:[220,235,250,260,265,270,275,280,290,300,315,330],
+ stemDiv:100,key:'2|40 means 240 ms',stemWidth:2},
+{id:'S6',context:'Weekly food spend (£)',groupA:'Single adults',groupB:'Couples',level:'core',contextNoun:'spend',
+ a:[32,35,38,41,44,46,48,50,52,54,56,60,65],
+ b:[55,58,62,65,68,70,72,75,78,80,85,90,95],
+ stemDiv:10,key:'4|8 means £48'},
+{id:'S7',context:'Daily commute times (min)',groupA:'City workers',groupB:'Rural workers',level:'core',contextNoun:'commute time',
+ a:[25,28,30,32,35,38,40,42,45,48,50,55,60],
+ b:[10,12,15,18,20,22,25,28,30,35,40,45,55],
+ stemDiv:10,key:'3|5 means 35 min'},
+{id:'S8',context:'Weekly earnings (£)',groupA:'Apprentices',groupB:'Graduates',level:'core',contextNoun:'earnings',
+ a:[180,195,200,210,220,225,230,240,250,260],
+ b:[280,300,320,340,350,360,380,400,420,450],
+ stemDiv:100,key:'2|20 means £220',stemWidth:2},
+{id:'S9',context:'Component diameters (mm)',groupA:'Machine A',groupB:'Machine B',level:'l4',contextNoun:'diameter',
+ a:[48.1,48.4,48.7,49.0,49.2,49.4,49.6,49.8,50.0,50.2],
+ b:[47.5,48.0,48.5,49.0,49.5,49.8,50.0,50.2,50.5,51.0],
+ stemDiv:1,key:'49|2 means 49.2 mm',decimal:true,stemWidth:2},
+{id:'S10',context:'Assembly times (seconds)',groupA:'Line A',groupB:'Line B',level:'l4',contextNoun:'time',
+ a:[42,44,46,48,50,51,52,53,54,55,56,58],
+ b:[38,40,44,46,50,52,54,56,58,60,64,68],
+ stemDiv:10,key:'5|2 means 52 seconds'}
+];
+
+var BOX_PLOTS = [
+{id:'B1',context:'English test scores',groupA:'Class A',groupB:'Class B',level:'gcse',contextNoun:'score',unit:'',
+ a:{min:28,q1:38,med:46,q3:54,max:68},b:{min:32,q1:42,med:52,q3:60,max:72}},
+{id:'B2',context:'Time to complete puzzle (seconds)',groupA:'Males',groupB:'Females',level:'gcse',contextNoun:'time',unit:'s',
+ a:{min:45,q1:80,med:110,q3:145,max:220},b:{min:60,q1:95,med:125,q3:155,max:200}},
+{id:'B3',context:'Ages at a sports club',groupA:'Team A',groupB:'Team B',level:'gcse',contextNoun:'age',unit:'',
+ a:{min:16,q1:22,med:28,q3:34,max:45},b:{min:18,q1:26,med:33,q3:40,max:52}},
+{id:'B4',context:'Annual salaries (£k)',groupA:'Company A',groupB:'Company B',level:'alevel',contextNoun:'salary',unit:'£k',
+ a:{min:18,q1:24,med:32,q3:42,max:68},b:{min:22,q1:30,med:40,q3:52,max:85}},
+{id:'B5',context:'House prices (£k)',groupA:'North',groupB:'South',level:'alevel',contextNoun:'price',unit:'£k',
+ a:{min:95,q1:140,med:175,q3:220,max:380},b:{min:110,q1:160,med:210,q3:270,max:420}},
+{id:'B6',context:'Energy bills (£/month)',groupA:'2023',groupB:'2024',level:'core',contextNoun:'bill',unit:'£',
+ a:{min:60,q1:90,med:115,q3:145,max:200},b:{min:75,q1:110,med:140,q3:170,max:240}},
+{id:'B7',context:'Monthly take-home pay (£)',groupA:'Sector A',groupB:'Sector B',level:'core',contextNoun:'pay',unit:'£',
+ a:{min:1200,q1:1600,med:1950,q3:2300,max:3200},b:{min:1400,q1:1800,med:2150,q3:2500,max:3600}},
+{id:'B8',context:'Working hours per week',groupA:'Region A',groupB:'Region B',level:'core',contextNoun:'hours',unit:'',
+ a:{min:28,q1:34,med:38,q3:42,max:55},b:{min:30,q1:36,med:40,q3:45,max:60}},
+{id:'B9',context:'Tensile strength (MPa)',groupA:'Batch A',groupB:'Batch B',level:'l4',contextNoun:'strength',unit:'MPa',
+ a:{min:320,q1:380,med:420,q3:460,max:520},b:{min:295,q1:360,med:400,q3:445,max:510}},
+{id:'B10',context:'Component lifetime (hours)',groupA:'Supplier A',groupB:'Supplier B',level:'l4',contextNoun:'lifetime',unit:'hrs',
+ a:{min:800,q1:1200,med:1600,q3:2000,max:2800},b:{min:1000,q1:1400,med:1800,q3:2200,max:3000}}
+];
+
+var CUM_FREQ = [
+{id:'CF1',context:'Exam scores',n:80,benchmark:'Pass mark = 40',benchVal:40,level:'gcse',contextNoun:'score',contextPlural:'students',unit:'',
+ benchQuestion:'How many students passed?',benchSide:'above',compLabel:'last year\'s IQR',compIQR:32,
+ data:[{lo:0,hi:20,f:6},{lo:20,hi:30,f:10},{lo:30,hi:40,f:14},{lo:40,hi:50,f:22},{lo:50,hi:60,f:18},{lo:60,hi:80,f:10}]},
+{id:'CF2',context:'Plant heights (mm)',n:60,benchmark:'Target height = 120 mm',benchVal:120,level:'gcse',contextNoun:'height',contextPlural:'plants',unit:'mm',
+ benchQuestion:'How many plants reached the target?',benchSide:'above',compLabel:'a second greenhouse',compIQR:12,
+ data:[{lo:80,hi:100,f:8},{lo:100,hi:110,f:12},{lo:110,hi:120,f:15},{lo:120,hi:130,f:14},{lo:130,hi:150,f:11}]},
+{id:'CF3',context:'Journey times (min)',n:100,benchmark:'Timetabled time = 45 min',benchVal:45,level:'alevel',contextNoun:'time',contextPlural:'journeys',unit:'min',
+ benchQuestion:'How many journeys were late?',benchSide:'above',compLabel:'the old timetable',compIQR:28,
+ data:[{lo:0,hi:20,f:5},{lo:20,hi:30,f:12},{lo:30,hi:40,f:24},{lo:40,hi:50,f:30},{lo:50,hi:60,f:20},{lo:60,hi:80,f:9}]},
+{id:'CF4',context:'Salaries (£k)',n:120,benchmark:'National median = £28k',benchVal:28,level:'alevel',contextNoun:'salary',contextPlural:'employees',unit:'£k',
+ benchQuestion:'How many employees earn below the national median?',benchSide:'below',compLabel:'a competitor firm',compIQR:8,
+ data:[{lo:0,hi:15,f:8},{lo:15,hi:20,f:18},{lo:20,hi:25,f:26},{lo:25,hi:30,f:28},{lo:30,hi:40,f:24},{lo:40,hi:60,f:16}]},
+{id:'CF5',context:'Weekly hours worked',n:80,benchmark:'Legal maximum = 48 hrs',benchVal:48,level:'alevel',contextNoun:'hours',contextPlural:'workers',unit:'hrs',
+ benchQuestion:'How many work over the legal maximum?',benchSide:'above',compLabel:'last year',compIQR:20,
+ data:[{lo:0,hi:20,f:4},{lo:20,hi:30,f:10},{lo:30,hi:40,f:28},{lo:40,hi:48,f:24},{lo:48,hi:60,f:14}]},
+{id:'CF6',context:'House prices (£k)',n:100,benchmark:'Regional average = £220k',benchVal:220,level:'core',contextNoun:'price',contextPlural:'properties',unit:'£k',
+ benchQuestion:'How many properties are below the regional average?',benchSide:'below',compLabel:'a neighbouring town',compIQR:60,
+ data:[{lo:100,hi:150,f:8},{lo:150,hi:200,f:20},{lo:200,hi:250,f:30},{lo:250,hi:300,f:24},{lo:300,hi:400,f:18}]},
+{id:'CF7',context:'Energy costs (£/year)',n:90,benchmark:'Average bill = £1,400',benchVal:1400,level:'core',contextNoun:'cost',contextPlural:'households',unit:'£',
+ benchQuestion:'How many households pay above the average bill?',benchSide:'above',compLabel:'last year',compIQR:280,
+ data:[{lo:800,hi:1000,f:10},{lo:1000,hi:1200,f:18},{lo:1200,hi:1400,f:22},{lo:1400,hi:1600,f:20},{lo:1600,hi:2000,f:14},{lo:2000,hi:2400,f:6}]},
+{id:'CF8',context:'Working hours per week',n:110,benchmark:'Contract hours = 37.5',benchVal:37.5,level:'core',contextNoun:'hours',contextPlural:'employees',unit:'hrs',
+ benchQuestion:'How many work over contract hours?',benchSide:'above',compLabel:'another department',compIQR:14,
+ data:[{lo:20,hi:30,f:12},{lo:30,hi:35,f:20},{lo:35,hi:40,f:35},{lo:40,hi:45,f:28},{lo:45,hi:60,f:15}]},
+{id:'CF9',context:'Delivery times (days)',n:80,benchmark:'SLA target = 3 days',benchVal:3,level:'l4',contextNoun:'time',contextPlural:'deliveries',unit:'days',
+ benchQuestion:'How many deliveries missed the SLA?',benchSide:'above',compLabel:'the previous courier',compIQR:3.5,
+ data:[{lo:0,hi:1,f:10},{lo:1,hi:2,f:18},{lo:2,hi:3,f:22},{lo:3,hi:4,f:16},{lo:4,hi:6,f:10},{lo:6,hi:10,f:4}]},
+{id:'CF10',context:'Component lengths (mm)',n:100,benchmark:'Tolerance limit = 52 mm',benchVal:52,level:'l4',contextNoun:'length',contextPlural:'components',unit:'mm',
+ benchQuestion:'How many components exceed the tolerance limit?',benchSide:'above',compLabel:'Machine B',compIQR:2,
+ data:[{lo:44,hi:46,f:6},{lo:46,hi:48,f:14},{lo:48,hi:50,f:22},{lo:50,hi:52,f:28},{lo:52,hi:54,f:20},{lo:54,hi:56,f:10}]}
+];
+
+var HISTOGRAMS = [
+{id:'H1',context:'Exam scores',level:'gcse',contextNoun:'score',contextPlural:'students',unit:'',
+ data:[{lo:0,hi:20,fd:0.5},{lo:20,hi:40,fd:1.5},{lo:40,hi:50,fd:4.0},{lo:50,hi:60,fd:5.0},{lo:60,hi:100,fd:0.8}]},
+{id:'H2',context:'Heights (cm)',level:'gcse',contextNoun:'height',contextPlural:'people',unit:'cm',
+ data:[{lo:140,hi:155,fd:1.2},{lo:155,hi:165,fd:3.5},{lo:165,hi:170,fd:6.0},{lo:170,hi:180,fd:4.0},{lo:180,hi:200,fd:1.0}]},
+{id:'H3',context:'Journey times (min)',level:'alevel',contextNoun:'time',contextPlural:'journeys',unit:'min',
+ data:[{lo:0,hi:10,fd:1.0},{lo:10,hi:20,fd:2.5},{lo:20,hi:25,fd:6.0},{lo:25,hi:30,fd:5.0},{lo:30,hi:60,fd:0.8}]},
+{id:'H4',context:'Salaries (£k)',level:'alevel',contextNoun:'salary',contextPlural:'employees',unit:'£k',
+ data:[{lo:0,hi:20,fd:1.0},{lo:20,hi:30,fd:4.0},{lo:30,hi:35,fd:6.0},{lo:35,hi:40,fd:4.6},{lo:40,hi:80,fd:0.5}]},
+{id:'H5',context:'Ages',level:'alevel',ask:'modal',contextNoun:'age',contextPlural:'people',unit:'',
+ data:[{lo:16,hi:25,fd:3.0},{lo:25,hi:35,fd:5.0},{lo:35,hi:40,fd:6.0},{lo:40,hi:50,fd:3.5},{lo:50,hi:70,fd:1.0}]},
+{id:'H6',context:'House prices (£k)',level:'core',contextNoun:'price',contextPlural:'properties',unit:'£k',
+ data:[{lo:100,hi:200,fd:0.4},{lo:200,hi:250,fd:1.8},{lo:250,hi:300,fd:2.4},{lo:300,hi:350,fd:1.6},{lo:350,hi:500,fd:0.3}]},
+{id:'H7',context:'Weekly spend (£)',level:'core',ask:'wide',contextNoun:'spend',contextPlural:'people',unit:'£',
+ data:[{lo:0,hi:40,fd:1.0},{lo:40,hi:60,fd:3.5},{lo:60,hi:80,fd:4.5},{lo:80,hi:100,fd:3.0},{lo:100,hi:200,fd:0.5}]},
+{id:'H8',context:'Working hours',level:'core',ask:'wide',contextNoun:'hours',contextPlural:'employees',unit:'hrs',
+ data:[{lo:0,hi:20,fd:0.8},{lo:20,hi:30,fd:2.0},{lo:30,hi:40,fd:5.5},{lo:40,hi:45,fd:4.0},{lo:45,hi:60,fd:1.0}]},
+{id:'H9',context:'Component lifetimes (hours)',level:'l4',contextNoun:'lifetime',contextPlural:'components',unit:'hrs',
+ data:[{lo:0,hi:200,fd:0.5},{lo:200,hi:400,fd:1.5},{lo:400,hi:500,fd:4.0},{lo:500,hi:600,fd:3.5},{lo:600,hi:1000,fd:0.4}]},
+{id:'H10',context:'Batch weights (g)',level:'l4',ask:'wide',contextNoun:'weight',contextPlural:'items',unit:'g',
+ data:[{lo:0,hi:10,fd:1.0},{lo:10,hi:20,fd:2.5},{lo:20,hi:25,fd:6.0},{lo:25,hi:30,fd:4.0},{lo:30,hi:50,fd:0.8}]}
+];
+
+// ===== HELPERS =====
+function median(arr){var s=arr.slice().sort(function(a,b){return a-b;});var m=s.length;if(m%2===1)return s[(m-1)/2];return(s[m/2-1]+s[m/2])/2;}
+function range(arr){return Math.max.apply(null,arr)-Math.min.apply(null,arr);}
+function q1(arr){var s=arr.slice().sort(function(a,b){return a-b;});var h=Math.floor(s.length/2);var lower=s.slice(0,h);return median(lower);}
+function q3(arr){var s=arr.slice().sort(function(a,b){return a-b;});var h=Math.floor(s.length/2);var upper=s.length%2===1?s.slice(h+1):s.slice(h);return median(upper);}
+
+// How a scenario's contextNoun reads as the subject of a sentence: every frame that names it
+// ('What is the median score…', '…the typical score is higher…') takes its words and verb from
+// here. Most nouns are singular. A plural cannot take 'is' (CF5 read 'The median hours is…',
+// todo 1.18), so a plural count noun is read as a number ('the median number of hours is') and
+// a plural with no singular takes 'are' ('the median earnings are'). A new plural noun is
+// declared here once, for every scenario and every frame that uses it.
+var PLURAL_NOUNS={hours:'count',earnings:'mass'};
+function nounSubject(s){
+  var n=s.contextNoun,k=PLURAL_NOUNS[n];
+  if(k==='count')return{np:'number of '+n,is:'is'};
+  if(k==='mass')return{np:n,is:'are'};
+  return{np:n,is:'is'};
+}
+
+// ===== STATE =====
+var selectedType=null,selectedLevel=null;
+var currentScenario=null,currentPhase=1,currentQIndex=0;
+var phase1Questions=[],phase2Dropdowns=[];
+var sessionAnswers={};
+var timerInterval=null,startTime=0,elapsed=0;
+var usedScenarios={};
+
+function selectType(btn){
+  selectedType=btn.dataset.type;
+  document.querySelectorAll('#typeGrid .sel-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  checkReady();
+}
+function selectLevel(btn){
+  selectedLevel=btn.dataset.level;
+  document.querySelectorAll('#levelGrid .sel-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  checkReady();
+}
+function checkReady(){
+  document.getElementById('startBtn').disabled=!(selectedType&&selectedLevel);
+}
+
+// URL param support
+(function(){
+  var p=new URLSearchParams(window.location.search);
+  var t=p.get('type'),l=p.get('level');
+  if(t){var tb=document.querySelector('[data-type="'+t+'"]');if(tb){selectType(tb);}}
+  if(l){var lb=document.querySelector('[data-level="'+l+'"]');if(lb){selectLevel(lb);}}
+  if(t&&l){beginGame();}
+})();
+
+function getScenarios(){
+  if(selectedType==='stemleaf')return STEM_LEAF;
+  if(selectedType==='boxplot')return BOX_PLOTS;
+  if(selectedType==='cumfreq')return CUM_FREQ;
+  if(selectedType==='histogram')return HISTOGRAMS;
+  return[];
+}
+
+function pickScenario(){
+  var pool=getScenarios().filter(function(s){return s.level===selectedLevel;});
+  var key=selectedType+'_'+selectedLevel;
+  if(!usedScenarios[key])usedScenarios[key]=[];
+  var avail=pool.filter(function(s){return usedScenarios[key].indexOf(s.id)===-1;});
+  if(avail.length===0){usedScenarios[key]=[];avail=pool;}
+  var pick=avail[Math.floor(Math.random()*avail.length)];
+  usedScenarios[key].push(pick.id);
+  return pick;
+}
+
+function beginGame(){
+  currentScenario=pickScenario();
+  if(!currentScenario){alert('No scenarios available for this combination.');return;}
+  currentPhase=1;currentQIndex=0;sessionAnswers={};
+
+  document.getElementById('selector').style.display='none';
+  document.getElementById('gameContainer').style.display='block';
+  window._ggAbandoned=true;window._ciQAnswered=0;
+  mfg('game_started',{game_slug:'chart-interrogator',level:selectedLevel});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'chart-interrogator',level:selectedLevel,questions_answered:window._ciQAnswered||0})});}
+
+  var pill=document.getElementById('headerPill');
+  var colors={gcse:'var(--gcse)',alevel:'var(--alevel)',core:'var(--core)',l4:'var(--l4)'};
+  var labels={gcse:'GCSE',alevel:'A-Level',core:'Core Maths',l4:'Level 4'};
+  pill.style.display='';pill.style.background=colors[selectedLevel];pill.textContent=labels[selectedLevel];
+  document.documentElement.style.setProperty('--accent',colors[selectedLevel]);
+
+  drawDiagram();
+  buildPhase1Questions();
+  showCurrentQuestion();
+  startTimer();
+}
+
+function startTimer(){
+  startTime=Date.now();elapsed=0;
+  clearInterval(timerInterval);
+  timerInterval=setInterval(function(){
+    elapsed=Math.floor((Date.now()-startTime)/1000);
+    document.getElementById('timer').textContent=elapsed+'s';
+  },1000);
+}
+
+// ===== DIAGRAM RENDERING =====
+function drawDiagram(){
+  var body=document.getElementById('diagramBody');
+  body.innerHTML='';
+  document.getElementById('diagramTitle').textContent=currentScenario.context;
+  var typeLabel={stemleaf:'Stem & Leaf',boxplot:'Box Plots',cumfreq:'Cumulative Frequency',histogram:'Histogram'};
+  document.getElementById('diagramContext').textContent=typeLabel[selectedType];
+
+  if(selectedType==='stemleaf')drawStemLeaf(body);
+  else if(selectedType==='boxplot')drawBoxPlot(body);
+  else if(selectedType==='cumfreq')drawCumFreq(body);
+  else if(selectedType==='histogram')drawHistogram(body);
+}
+
+function drawStemLeaf(container){
+  var s=currentScenario;
+  var aStems={},bStems={};
+  var allStems=new Set();
+  s.a.forEach(function(v){var st=Math.floor(v/s.stemDiv);allStems.add(st);if(!aStems[st])aStems[st]=[];aStems[st].push(v);});
+  s.b.forEach(function(v){var st=Math.floor(v/s.stemDiv);allStems.add(st);if(!bStems[st])bStems[st]=[];bStems[st].push(v);});
+  var stems=Array.from(allStems).sort(function(a,b){return a-b;});
+
+  function getLeaf(val,stemVal,div,dec){
+    if(dec){var remainder=val-stemVal*div;return Math.round(remainder*10).toString();}
+    return(val%div).toString();
+  }
+
+  var html='<div style="width:100%"><table class="sl-table"><tr><th style="text-align:right">'+s.groupA+'</th><th>Stem</th><th>'+s.groupB+'</th></tr>';
+  stems.forEach(function(st){
+    var aLeaves=(aStems[st]||[]).sort(function(a,b){return a-b;}).map(function(v){return getLeaf(v,st,s.stemDiv,s.decimal);});
+    var bLeaves=(bStems[st]||[]).sort(function(a,b){return a-b;}).map(function(v){return getLeaf(v,st,s.stemDiv,s.decimal);});
+    // Left side reads right to left (reversed)
+    var leftStr=aLeaves.slice().reverse().join('  ');
+    var rightStr=bLeaves.join('  ');
+    var stemLabel=s.stemWidth===2&&st<10?'0'+st:st.toString();
+    html+='<tr><td class="sl-left">'+leftStr+'</td><td class="sl-stem">'+stemLabel+'</td><td class="sl-right">'+rightStr+'</td></tr>';
+  });
+  html+='</table><div class="sl-key">Key: '+s.key+'</div></div>';
+  container.innerHTML=html;
+}
+
+function drawBoxPlot(container){
+  var s=currentScenario;
+  var canvas=document.createElement('canvas');
+  canvas.width=600;canvas.height=280;
+  container.appendChild(canvas);
+  var ctx=canvas.getContext('2d');
+
+  var ax=bpAxis(s);
+  var scaleMin=ax.min;var scaleMax=ax.max;
+
+  var left=60,right=560,top=30,boxH=40;
+  function x(val){return left+(val-scaleMin)/(scaleMax-scaleMin)*(right-left);}
+
+  // Grid lines
+  ctx.strokeStyle='#2a2e3a';ctx.lineWidth=1;
+  var step=niceStep(scaleMin,scaleMax,8);
+  var gridStart=Math.ceil(scaleMin/step)*step;
+  ctx.fillStyle='#7a7f90';ctx.font='11px Outfit';ctx.textAlign='center';
+  for(var g=gridStart;g<=scaleMax;g+=step){
+    var gx=x(g);
+    ctx.beginPath();ctx.moveTo(gx,20);ctx.lineTo(gx,220);ctx.stroke();
+    ctx.fillText(g.toString(),gx,240);
+  }
+
+  // Draw box plot
+  function drawBP(d,y,label,color){
+    ctx.strokeStyle=color;ctx.lineWidth=2;ctx.fillStyle=color+'33';
+    // Whiskers
+    ctx.beginPath();ctx.moveTo(x(d.min),y+boxH/2);ctx.lineTo(x(d.q1),y+boxH/2);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x(d.q3),y+boxH/2);ctx.lineTo(x(d.max),y+boxH/2);ctx.stroke();
+    // Caps
+    ctx.beginPath();ctx.moveTo(x(d.min),y+10);ctx.lineTo(x(d.min),y+boxH-10);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(x(d.max),y+10);ctx.lineTo(x(d.max),y+boxH-10);ctx.stroke();
+    // Box
+    ctx.fillRect(x(d.q1),y,x(d.q3)-x(d.q1),boxH);
+    ctx.strokeRect(x(d.q1),y,x(d.q3)-x(d.q1),boxH);
+    // Median
+    ctx.strokeStyle=color;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(x(d.med),y);ctx.lineTo(x(d.med),y+boxH);ctx.stroke();
+    // Label
+    ctx.fillStyle='#e2e4e9';ctx.font='13px Outfit';ctx.textAlign='right';
+    ctx.fillText(label,left-10,y+boxH/2+4);
+    ctx.lineWidth=2;
+  }
+
+  drawBP(s.a,60,s.groupA,'#3b82f6');
+  drawBP(s.b,140,s.groupB,'#f97316');
+
+  // X-axis label
+  ctx.fillStyle='#7a7f90';ctx.font='12px Outfit';ctx.textAlign='center';
+  ctx.fillText(s.context,310,270);
+}
+
+// The drawn axis runs 10% beyond the data at each end. drawBoxPlot draws on it and the
+// box-plot tolerances are read off it, so a tolerance is always a share of the axis on screen.
+function bpAxis(s){
+  var allMin=Math.min(s.a.min,s.b.min),allMax=Math.max(s.a.max,s.b.max),pad=(allMax-allMin)*0.1;
+  return{min:allMin-pad,max:allMax+pad};
+}
+
+// A tolerance must never be wide enough to accept a named wrong answer (canon §7.1.2): a
+// scale-based band is capped below half the gap to the nearest one, so a student who reads
+// the wrong line, or the other group's box, is never marked correct. A 'wrong' answer equal
+// to the key is not wrong (B7's and B10's two IQRs are equal) and is skipped.
+function capTol(band,key,wrongs){
+  var gap=Infinity;
+  wrongs.forEach(function(w){var d=Math.abs(w-key);if(d>0&&d<gap)gap=d;});
+  return Math.min(band,gap/2*(1-1e-9));
+}
+
+function niceStep(min,max,target){
+  var range=max-min;var rough=range/target;
+  var mag=Math.pow(10,Math.floor(Math.log10(rough)));
+  var norm=rough/mag;
+  if(norm<1.5)return mag;if(norm<3.5)return 2*mag;if(norm<7.5)return 5*mag;return 10*mag;
+}
+
+function drawCumFreq(container){
+  var s=currentScenario;
+  var canvas=document.createElement('canvas');
+  canvas.width=600;canvas.height=400;
+  container.appendChild(canvas);
+  var ctx=canvas.getContext('2d');
+
+  var data=s.data;
+  var xMin=data[0].lo,xMax=data[data.length-1].hi;
+  var n=s.n;
+
+  var pl=70,pr=560,pt=30,pb=350;
+  function xc(val){return pl+(val-xMin)/(xMax-xMin)*(pr-pl);}
+  function yc(val){return pb-(val/n)*(pb-pt);}
+
+  // Grid
+  ctx.strokeStyle='#2a2e3a';ctx.lineWidth=1;
+  ctx.fillStyle='#7a7f90';ctx.font='11px Outfit';
+
+  // X grid
+  var xStep=niceStep(xMin,xMax,8);
+  ctx.textAlign='center';
+  for(var gx=Math.ceil(xMin/xStep)*xStep;gx<=xMax;gx+=xStep){
+    ctx.beginPath();ctx.moveTo(xc(gx),pt);ctx.lineTo(xc(gx),pb);ctx.stroke();
+    ctx.fillText(gx.toString(),xc(gx),pb+18);
+  }
+
+  // Y grid
+  var yStep=niceStep(0,n,6);
+  ctx.textAlign='right';
+  for(var gy=0;gy<=n;gy+=yStep){
+    ctx.beginPath();ctx.moveTo(pl,yc(gy));ctx.lineTo(pr,yc(gy));ctx.stroke();
+    ctx.fillText(gy.toString(),pl-8,yc(gy)+4);
+  }
+
+  // Axes
+  ctx.strokeStyle='#5a5e6a';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,pb);ctx.lineTo(pr,pb);ctx.stroke();
+
+  // Plot points: the ends of cfCurve's segments, the same curve every cumfreq key reads
+  var segs=cfCurve(s);
+  var points=[segs[0].p0].concat(segs.map(function(g){return g.p1;}));
+
+  // Draw smooth curve
+  ctx.strokeStyle='var(--accent)';ctx.lineWidth=2.5;ctx.beginPath();
+  ctx.moveTo(xc(points[0][0]),yc(points[0][1]));
+  segs.forEach(function(g){
+    ctx.bezierCurveTo(xc(g.c1[0]),yc(g.c1[1]),xc(g.c2[0]),yc(g.c2[1]),xc(g.p1[0]),yc(g.p1[1]));
+  });
+  ctx.stroke();
+
+  // Plot points as dots
+  ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#3b82f6';
+  points.forEach(function(p){
+    ctx.beginPath();ctx.arc(xc(p[0]),yc(p[1]),4,0,Math.PI*2);ctx.fill();
+  });
+
+  // Labels
+  ctx.fillStyle='#7a7f90';ctx.font='12px Outfit';ctx.textAlign='center';
+  ctx.fillText(s.context,315,pb+38);
+  ctx.save();ctx.translate(18,200);ctx.rotate(-Math.PI/2);ctx.fillText('Cumulative frequency',0,0);ctx.restore();
+}
+
+function drawHistogram(container){
+  var s=currentScenario;
+  var canvas=document.createElement('canvas');
+  canvas.width=600;canvas.height=380;
+  container.appendChild(canvas);
+  var ctx=canvas.getContext('2d');
+
+  var data=s.data;
+  var xMin=data[0].lo,xMax=data[data.length-1].hi;
+  var maxFD=Math.max.apply(null,data.map(function(d){return d.fd;}));
+
+  var pl=70,pr=560,pt=30,pb=320;
+  function xc(val){return pl+(val-xMin)/(xMax-xMin)*(pr-pl);}
+  function yc(val){return pb-(val/maxFD)*(pb-pt)*0.9;}
+
+  // Grid
+  ctx.strokeStyle='#2a2e3a';ctx.lineWidth=1;
+  ctx.fillStyle='#7a7f90';ctx.font='11px Outfit';
+
+  var xStep=niceStep(xMin,xMax,8);
+  ctx.textAlign='center';
+  for(var gx=Math.ceil(xMin/xStep)*xStep;gx<=xMax;gx+=xStep){
+    ctx.beginPath();ctx.moveTo(xc(gx),pt);ctx.lineTo(xc(gx),pb);ctx.stroke();
+    ctx.fillText(gx.toString(),xc(gx),pb+18);
+  }
+
+  var yStep=niceStep(0,maxFD,5);
+  ctx.textAlign='right';
+  for(var gy=0;gy<=maxFD*1.1;gy+=yStep){
+    ctx.beginPath();ctx.moveTo(pl,yc(gy));ctx.lineTo(pr,yc(gy));ctx.stroke();
+    ctx.fillText(gy.toFixed(1),pl-8,yc(gy)+4);
+  }
+
+  // Axes
+  ctx.strokeStyle='#5a5e6a';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(pl,pt);ctx.lineTo(pl,pb);ctx.lineTo(pr,pb);ctx.stroke();
+
+  // Bars
+  var accent=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#3b82f6';
+  data.forEach(function(d){
+    var bx=xc(d.lo),bw=xc(d.hi)-xc(d.lo),by=yc(d.fd),bh=pb-yc(d.fd);
+    ctx.fillStyle=accent+'44';ctx.fillRect(bx,by,bw,bh);
+    ctx.strokeStyle=accent;ctx.lineWidth=1.5;ctx.strokeRect(bx,by,bw,bh);
+  });
+
+  // Labels
+  ctx.fillStyle='#7a7f90';ctx.font='12px Outfit';ctx.textAlign='center';
+  ctx.fillText(s.context,315,pb+38);
+  ctx.save();ctx.translate(18,180);ctx.rotate(-Math.PI/2);ctx.fillText('Frequency density',0,0);ctx.restore();
+}
+
+// ===== PHASE 1 QUESTIONS =====
+function buildPhase1Questions(){
+  phase1Questions=[];
+  var s=currentScenario,ns=nounSubject(s);
+  if(selectedType==='stemleaf'){
+    var medA=median(s.a),medB=median(s.b),ranA=range(s.a),ranB=range(s.b);
+    // A stem-and-leaf value is read from a table of exact values, not estimated from a graph,
+    // so it is marked exactly (Jon, 1 Oct 2026): 35.5 and 35.50 are the same number, 35 and 36
+    // are not 35.5. The fixed +-1 it replaces accepted a median anywhere from 3.5 m to 5.5 m on
+    // 3.2-5.7 m data (todo 1.16). The tolerance is only a floating-point guard, a billionth of the
+    // precision the table shows its leaves to (0.1 where drawStemLeaf writes decimal leaves,
+    // else 1), so that 2.4 matches a key computed as 5.6-3.2 = 2.3999999999999995.
+    var slTol=(s.decimal?0.1:1)*1e-9;
+    phase1Questions=[
+      {text:'What '+ns.is+' the median '+ns.np+' for '+s.groupA+'?',expected:medA,tolerance:slTol,key:'medA',type:'number'},
+      {text:'What '+ns.is+' the median '+ns.np+' for '+s.groupB+'?',expected:medB,tolerance:slTol,key:'medB',type:'number'},
+      {text:'What is the range for '+s.groupA+'?',expected:ranA,tolerance:slTol,key:'rangeA',type:'number'},
+      {text:'What is the range for '+s.groupB+'?',expected:ranB,tolerance:slTol,key:'rangeB',type:'number'}
+    ];
+  }else if(selectedType==='boxplot'){
+    var iqrA=s.a.q3-s.a.q1,iqrB=s.b.q3-s.b.q1;
+    // A box plot is a drawn graph read by eye, so it takes cumulative frequency's rule: a
+    // reading to 2.5% of the drawn axis's span, an IQR (the difference of two readings) to
+    // twice that. The fixed +-2 it replaces was a third of a pixel on B7's and B10's axes, so
+    // only an exact reading passed there (todo 1.16). Each band is then capped by capTol so it
+    // never reaches a named wrong answer: for a median, the other group's median and the box's
+    // own edges (Q1 or Q3 read for the median); for an IQR, the other group's IQR and either
+    // group's range (the range given for the IQR).
+    var ax=bpAxis(s),bpTol=0.025*(ax.max-ax.min),A=s.a,B=s.b;
+    var spreads=[iqrA,iqrB,A.max-A.min,B.max-B.min];
+    phase1Questions=[
+      {text:'What '+ns.is+' the median '+ns.np+' for '+s.groupA+'?',expected:s.a.med,tolerance:capTol(bpTol,A.med,[B.med,A.q1,A.q3]),key:'medA',type:'number'},
+      {text:'What '+ns.is+' the median '+ns.np+' for '+s.groupB+'?',expected:s.b.med,tolerance:capTol(bpTol,B.med,[A.med,B.q1,B.q3]),key:'medB',type:'number'},
+      {text:'What is the IQR for '+s.groupA+'?',expected:iqrA,tolerance:capTol(2*bpTol,iqrA,spreads),key:'iqrA',type:'number'},
+      {text:'What is the IQR for '+s.groupB+'?',expected:iqrB,tolerance:capTol(2*bpTol,iqrB,spreads),key:'iqrB',type:'number'}
+    ];
+  }else if(selectedType==='cumfreq'){
+    var T=cfTruth(s);
+    phase1Questions=[
+      {text:'Use the graph to estimate the median.',expected:T.median,tolerance:T.tol.median,key:'median',type:'number',shown:T.shown.median},
+      {text:'Use the graph to estimate the lower quartile (Q1).',expected:T.q1,tolerance:T.tol.q1,key:'q1',type:'number',shown:T.shown.q1},
+      {text:'Use the graph to estimate the upper quartile (Q3).',expected:T.q3,tolerance:T.tol.q3,key:'q3',type:'number',shown:T.shown.q3},
+      {text:'Calculate the IQR.',expected:T.iqr,tolerance:T.tol.iqr,key:'iqr',type:'number',shown:T.shown.iqr}
+    ];
+  }else if(selectedType==='histogram'){
+    var hData=s.data;
+    var freqs=hData.map(function(d){return{interval:d.lo+'\u2013'+d.hi,freq:d.fd*(d.hi-d.lo),lo:d.lo,hi:d.hi,fd:d.fd,width:d.hi-d.lo};});
+    var maxFreqInterval=freqs.reduce(function(a,b){return a.freq>b.freq?a:b;});
+    var totalFreq=freqs.reduce(function(a,b){return a+b.freq;},0);
+    // Pick a specific interval to ask about (not the max)
+    var askIdx=freqs[1].interval===maxFreqInterval.interval?2:1;
+    var askInterval=freqs[askIdx];
+    // Pick a range for proportion question
+    var propInterval=freqs[Math.min(3,freqs.length-1)];
+    var proportion=Math.round(propInterval.freq/totalFreq*100);
+
+    phase1Questions=[
+      {text:'Which class interval has the highest frequency?',expected:maxFreqInterval.interval,key:'maxInterval',type:'mc',
+       options:shuffleArr([maxFreqInterval.interval,freqs[0].interval,freqs[freqs.length-1].interval,freqs[Math.min(2,freqs.length-1)].interval].filter(unique))},
+      {text:'Calculate the frequency for the '+askInterval.interval+' class interval.',expected:Math.round(askInterval.freq),tolerance:1,key:'askFreq',type:'number',hint:'Frequency = frequency density \u00d7 class width'},
+      {text:'How many '+s.contextPlural+' are in the sample altogether?',expected:Math.round(totalFreq),tolerance:1,key:'total',type:'number'},
+      {text:'Estimate the proportion of '+s.contextPlural+' in the range '+propInterval.interval+'.',expected:proportion,tolerance:2,key:'proportion',type:'number',suffix:'%'}
+    ];
+  }
+}
+
+// ===== THE CUMULATIVE FREQUENCY CURVE =====
+// One definition of the curve: drawCumFreq draws it and every cumfreq key is read off it.
+// The keys used to join the points with straight lines while the picture was drawn as a
+// Bezier, so a student who read the drawn curve accurately was marked wrong (todo 1.9).
+// Each class is one cubic Bezier between its two cumulative points, with both control
+// points at the class midpoint, level with each end. A Bezier survives the linear map to
+// the canvas, so solving it in data units reads exactly the curve on screen.
+function cfCurve(s){
+  var segs=[],x=s.data[0].lo,cf=0;
+  s.data.forEach(function(d){
+    var mid=(x+d.hi)/2;
+    segs.push({p0:[x,cf],c1:[mid,cf],c2:[mid,cf+d.f],p1:[d.hi,cf+d.f]});
+    x=d.hi;cf+=d.f;
+  });
+  return segs;
+}
+
+// axis 0 is x, axis 1 is cumulative frequency
+function cfBez(g,axis,t){var u=1-t;return u*u*u*g.p0[axis]+3*u*u*t*g.c1[axis]+3*u*t*t*g.c2[axis]+t*t*t*g.p1[axis];}
+
+// The t at which one coordinate reaches v. Both coordinates rise monotonically along every
+// segment, so a fixed 50 halvings pin t to machine precision -- no retry loop.
+function cfSolve(g,axis,v){
+  if(v<=g.p0[axis])return 0;
+  if(v>=g.p1[axis])return 1;
+  var lo=0,hi=1;
+  for(var i=0;i<50;i++){var t=(lo+hi)/2;if(cfBez(g,axis,t)<v)lo=t;else hi=t;}
+  return(lo+hi)/2;
+}
+
+// x where the drawn curve reaches cumulative frequency cf, and the cumulative frequency at x
+function cfXAt(s,cf){
+  var segs=cfCurve(s),g=segs[segs.length-1];
+  for(var i=0;i<segs.length;i++){if(cf<=segs[i].p1[1]){g=segs[i];break;}}
+  return cfBez(g,0,cfSolve(g,1,cf));
+}
+function cfAtX(s,x){
+  var segs=cfCurve(s),g=segs[segs.length-1];
+  for(var i=0;i<segs.length;i++){if(x<=segs[i].p1[0]){g=segs[i];break;}}
+  return cfBez(g,1,cfSolve(g,0,x));
+}
+
+// Every true value a cumfreq key needs, read off the drawn curve. A reading's tolerance is
+// 2.5% of the x axis's span, an IQR's twice that (it is the difference of two readings), a
+// count's 2.5% of n, each capped by capTol below the nearest named wrong answer (canon
+// 7.1.2): for a quartile, the other two quartiles and its own position on the cumulative
+// frequency axis (n/4, n/2, 3n/4: the position given for the value); for the IQR, the
+// position difference n/2 and the axis's range; for the benchmark count, its complement
+// n - count. Keys compare unrounded values; `shown` is display only, to the
+// precision the axis is read to (1 dp where the span is 20 or less), and the IQR shown is
+// the difference of the quartiles shown so the two never disagree on screen.
+function cfTruth(s){
+  var n=s.n,span=s.data[s.data.length-1].hi-s.data[0].lo,k=span<=20?10:1;
+  var r=function(v){return Math.round(v*k)/k;};
+  var q1=cfXAt(s,n/4),median=cfXAt(s,n/2),q3=cfXAt(s,n*3/4),below=cfAtX(s,s.benchVal);
+  var bench=s.benchSide==='above'?n-below:below,xTol=0.025*span;
+  var tol={q1:capTol(xTol,q1,[median,q3,n/4]),median:capTol(xTol,median,[q1,q3,n/2]),
+    q3:capTol(xTol,q3,[q1,median,n*3/4]),iqr:capTol(2*xTol,q3-q1,[n/2,span]),
+    bench:capTol(0.025*n,bench,[n-bench])};
+  return{q1:q1,median:median,q3:q3,iqr:q3-q1,bench:bench,tol:tol,
+    shown:{q1:r(q1),median:r(median),q3:r(q3),iqr:r(r(q3)-r(q1)),bench:Math.round(bench)}};
+}
+
+function shuffleArr(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function unique(v,i,a){return a.indexOf(v)===i;}
+
+// ===== SHOW QUESTIONS =====
+function showCurrentQuestion(){
+  var cq=document.getElementById('completedQuestions');
+  var aq=document.getElementById('activeQuestion');
+
+  if(currentPhase===1){
+    document.getElementById('phase1Pill').className='phase-pill active';
+    document.getElementById('phase2Pill').className='phase-pill';
+
+    // Show completed Phase 1 questions
+    var completedHtml='';
+    for(var i=0;i<currentQIndex;i++){
+      var q=phase1Questions[i];
+      var val=sessionAnswers[q.key];
+      var displayVal=q.shown!==undefined?q.shown:val;
+      completedHtml+='<div class="completed-q"><span class="tick">\u2713</span>'+q.text+' <strong>'+displayVal+'</strong></div>';
+    }
+    cq.innerHTML=completedHtml;
+
+    if(currentQIndex>=phase1Questions.length){
+      // Move to Phase 2
+      currentPhase=2;
+      showPhase2();
+      return;
+    }
+
+    var q=phase1Questions[currentQIndex];
+    var html='<div class="q-card"><div class="q-number">Question '+(currentQIndex+1)+' of '+phase1Questions.length+'</div>';
+    html+='<div class="q-text">'+q.text+'</div>';
+
+    if(q.type==='number'){
+      html+='<div class="q-input-row"><input type="number" class="q-input" id="qInput" placeholder="Enter value" autocomplete="off">';
+      if(q.suffix)html+='<span style="color:var(--muted);font-weight:600;">'+q.suffix+'</span>';
+      html+='<button class="q-submit" onclick="submitPhase1()">Check</button></div>';
+    }else if(q.type==='mc'){
+      html+='<div class="q-mc">';
+      q.options.forEach(function(opt){
+        html+='<button class="mc-btn" onclick="submitMC(this,\''+opt+'\')">'+opt+'</button>';
+      });
+      html+='</div>';
+    }
+
+    html+='<div class="q-feedback" id="qFeedback"></div></div>';
+    aq.innerHTML=html;
+
+    var inp=document.getElementById('qInput');
+    if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitPhase1();});}
+  }
+}
+
+function submitPhase1(){
+  var q=phase1Questions[currentQIndex];
+  var inp=document.getElementById('qInput');
+  var val=parseFloat(inp.value);
+  var fb=document.getElementById('qFeedback');
+
+  if(isNaN(val)){fb.textContent='Please enter a number.';fb.className='q-feedback wrong';return;}
+
+  if(Math.abs(val-q.expected)<=q.tolerance){
+    sessionAnswers[q.key]=q.expected;window._ciQAnswered=(window._ciQAnswered||0)+1;
+    mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:true,question_index:currentQIndex+1});
+    fb.textContent='Correct \u2014 '+(q.shown!==undefined?q.shown:q.expected)+(q.suffix||'');fb.className='q-feedback correct';
+    setTimeout(function(){currentQIndex++;showCurrentQuestion();},600);
+  }else{
+    var hint=q.hint||'Check your reading of the diagram.';
+    fb.textContent=hint;fb.className='q-feedback wrong';
+    inp.value='';inp.focus();
+  }
+}
+
+function submitMC(btn,answer){
+  var q=phase1Questions[currentQIndex];
+  var fb=document.getElementById('qFeedback');
+  if(answer===q.expected){
+    sessionAnswers[q.key]=answer;window._ciQAnswered=(window._ciQAnswered||0)+1;
+    mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:true,question_index:currentQIndex+1});
+    btn.style.borderColor='var(--green)';btn.style.background='var(--green-dim)';btn.style.color='var(--green)';
+    fb.textContent='Correct!';fb.className='q-feedback correct';
+    setTimeout(function(){currentQIndex++;showCurrentQuestion();},600);
+  }else{
+    btn.style.borderColor='var(--red)';btn.style.background='var(--red-dim)';btn.style.color='var(--red)';
+    btn.disabled=true;
+    fb.textContent='Not quite \u2014 remember, frequency = density \u00d7 width.';fb.className='q-feedback wrong';
+  }
+}
+
+// ===== PHASE 2 =====
+function showPhase2(){
+  document.getElementById('phase1Pill').className='phase-pill done';
+  document.getElementById('phase2Pill').className='phase-pill active';
+
+  var s=currentScenario;
+  var aq=document.getElementById('activeQuestion');
+  var html='<div class="scaffold"><div class="scaffold-title">Phase 2 \u2014 Structured Comparison</div>';
+  html+='<div class="scaffold-text">';
+
+  if(selectedType==='stemleaf'||selectedType==='boxplot'){
+    html+=buildComparisonScaffold(s);
+  }else if(selectedType==='cumfreq'){
+    html+=buildCFScaffold(s);
+  }else if(selectedType==='histogram'){
+    html+=buildHistScaffold(s);
+  }
+
+  html+='</div><div class="scaffold-submit"><button class="q-submit" onclick="submitPhase2()">Submit Comparison</button></div>';
+  html+='<div class="q-feedback" id="p2Feedback"></div></div>';
+  aq.innerHTML=html;
+
+  phase2Dropdowns=document.querySelectorAll('.scaffold-text select');
+}
+
+// data: optional extra data-* attributes for the select, e.g. {near:…, why:…}
+function dd(id,options,correct,data){
+  var extra='';
+  if(data)Object.keys(data).forEach(function(k){
+    if(data[k]!=null)extra+=' data-'+k+'="'+String(data[k]).replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'"';
+  });
+  var html='<select data-correct="'+correct+'" id="dd_'+id+'"'+extra+'>';
+  html+='<option value="">Choose...</option>';
+  options.forEach(function(o){html+='<option value="'+o+'">'+o+'</option>';});
+  html+='</select>';
+  return html;
+}
+
+function filled(val){return '<span class="filled">'+val+'</span>';}
+
+// ===== TWO-GROUP COMPARISON (stem & leaf, box plots) =====
+// One definition feeds both the Phase 2 dropdowns and the model answer. They used to
+// be written out separately, and all four copies named the SMALLER spread "more
+// variable" whenever group A had the larger one (5 of 20 scenarios), with no answer
+// at all for equal spreads (B7, B10).
+var EQUAL_SPREADS='neither, the spreads are equal';
+
+// Box-plot scenarios carry s.unit. Stem-and-leaf ones only state it in context, as
+// 'Heights of Year 10 students (cm)'; '(out of 60)' is a maximum, not a unit.
+function unitOf(s){
+  if(typeof s.unit==='string')return s.unit;
+  var m=/\(([^)]+)\)\s*$/.exec(s.context);
+  return m&&!/^out of /.test(m[1])?m[1]:'';
+}
+
+// Display only (2.3999999999999995 shows as 2.4); every key compares exact values.
+function withUnit(v,u){
+  var n=String(Math.round(v*100)/100);
+  if(!u)return n;
+  return u.charAt(0)==='£'?'£'+n+u.slice(1):n+' '+u;
+}
+
+function comparisonParts(s,show){
+  var sl=selectedType==='stemleaf',a=sessionAnswers,A=s.groupA,B=s.groupB,u=unitOf(s),ns=nounSubject(s);
+  var v=function(x){return show(withUnit(x,u));};
+  var spA=sl?a.rangeA:a.iqrA,spB=sl?a.rangeB:a.iqrB;
+  return[
+    {lead:'The medians are '+v(a.medA)+' for '+A+' and '+v(a.medB)+' for '+B+
+      ', so the typical '+ns.np+' '+ns.is+' higher for ',
+     options:[A,B],correct:a.medA>a.medB?A:B},
+    {lead:(sl?'The ranges are ':'The IQRs are ')+v(spA)+' for '+A+' and '+v(spB)+' for '+B+
+      ', so there is more variation '+(sl?'':'in the middle half of the data ')+'for ',
+     options:[A,B,EQUAL_SPREADS],
+     correct:Math.abs(spA-spB)<1e-9?EQUAL_SPREADS:spA>spB?A:B}
+  ];
+}
+
+function buildComparisonScaffold(s){
+  return comparisonParts(s,filled).map(function(c,i){
+    return c.lead+dd('d'+(i+1),c.options,c.correct)+'.';
+  }).join(' ');
+}
+
+// ===== CUMULATIVE FREQUENCY PHASE 2 =====
+// One definition feeds both the Phase 2 scaffold and the model answer, and every key in it
+// is read off the drawn curve by cfTruth, never from sessionAnswers. The sentence it
+// replaces compared the IQR with 1.5 x itself, so its key never changed, and its 25%
+// dropdown offered two true options and accepted one (todo 1.7).
+function cfParts(s,show){
+  var T=cfTruth(s),S=T.shown,ns=nounSubject(s);
+  var below=[['Q1',S.q1],['the median',S.median],['Q3',S.q3]].map(function(p){return 'below '+p[0]+' ('+p[1]+')';});
+  return[
+    {lead:'The median '+ns.np+' '+ns.is+' approximately '+show(S.median)+'. The middle 50% of '+s.contextPlural+
+      ' fall between '+show(S.q1)+' and '+show(S.q3)+' (an IQR of '+show(S.iqr)+').'},
+    {lead:s.benchmark+'. '+s.benchQuestion+' ',number:{expected:T.bench,tolerance:T.tol.bench,shown:S.bench}},
+    {lead:'The IQR of '+show(withUnit(S.iqr,s.unit))+' compared with '+s.compLabel+' ('+withUnit(s.compIQR,s.unit)+
+      ') shows this group is ',options:['more consistent','less consistent'],
+     correct:T.iqr<s.compIQR?'more consistent':'less consistent'},
+    // Worded so no frame needs an article before the noun: 'have a hours below' (CF5, CF8)
+    {lead:'For approximately 25% of '+s.contextPlural+', the '+ns.np+' '+ns.is+' ',options:below,correct:below[0]}
+  ];
+}
+
+function buildCFScaffold(s){
+  return cfParts(s,filled).map(function(c,i){
+    if(c.options)return c.lead+dd('d'+i,c.options,c.correct)+'.';
+    if(c.number)return c.lead+'<input type="number" id="num_'+i+'" data-expected="'+c.number.expected+
+      '" data-tolerance="'+c.number.tolerance+'" aria-label="Your answer" autocomplete="off">';
+    return c.lead;
+  }).join(' ');
+}
+
+// ===== HISTOGRAM PHASE 2 =====
+// One definition feeds both the Phase 2 scaffold and the model answer. The item it replaces
+// asked whether the fourth class was 'the most common range', keyed on its share of the
+// total (> 30%), and did not say which sense of 'most common' it meant. In H2 that class,
+// 170-180, holds the most people but is not the modal class, so a student who reasoned from
+// frequency was marked wrong (todo 1.8). The question now names one class and asks whether
+// it is the modal class: the one with the highest frequency density, the tallest bar.
+var HIST_YES='Yes, because it has the highest frequency density',
+    HIST_NO='No, because another class has a higher frequency density';
+
+function histClasses(s){
+  return s.data.map(function(d){return{interval:d.lo+'–'+d.hi,freq:d.fd*(d.hi-d.lo),fd:d.fd,width:d.hi-d.lo};});
+}
+
+// The class Phase 2 names, by the scenario's `ask` (Jon, 1 Oct 2026, to balance the keys
+// without changing any data): 'most' (the default) the class with the most observations;
+// 'modal' the modal class itself; 'wide' the most populous class wider than the modal one.
+function histNamed(s){
+  var cls=histClasses(s);
+  var most=cls.reduce(function(a,b){return b.freq>a.freq?b:a;});
+  var modal=cls.reduce(function(a,b){return b.fd>a.fd?b:a;});
+  if(s.ask==='modal')return modal;
+  if(s.ask==='wide'){
+    var wide=cls.filter(function(c){return c!==modal&&c.width>modal.width;});
+    if(wide.length)return wide.reduce(function(a,b){return b.freq>a.freq?b:a;});
+  }
+  return most;
+}
+
+// The question about any one class of s, keyed on frequency density alone. "Yes, because it
+// contains the most …" is offered only when that is true of the named class, and is never
+// the key: modal means the highest frequency density, not the most observations. When the
+// named class is the modal class too, that option is the right answer for the wrong reason,
+// and `near` carries it so the feedback can say so.
+function histQuestion(s,named){
+  var cls=histClasses(s),P=s.contextPlural;
+  var most=cls.reduce(function(a,b){return b.freq>a.freq?b:a;});
+  var modal=cls.reduce(function(a,b){return b.fd>a.fd?b:a;});
+  var isModal=named.interval===modal.interval,isMost=named.interval===most.interval;
+  var mostOpt='Yes, because it contains the most '+P;
+  var why=isModal
+    ?'Its bar is the tallest (frequency density '+modal.fd.toFixed(1)+').'+(isMost
+      ?' That is not automatic: with unequal class widths the class with the most '+P+' need not be the modal class, '+
+        'which is always found from frequency density, not frequency.'
+      :' It is the modal class even though '+most.interval+' contains more '+P+' ('+Math.round(most.freq)+' against '+
+        Math.round(named.freq)+'): '+most.interval+' is wider ('+most.width+' against '+named.width+'), so its '+P+
+        ' are spread more thinly.')
+    :'The modal class is the one with the highest frequency density, the tallest bar, and that is '+modal.interval+
+      ' (frequency density '+modal.fd.toFixed(1)+', against '+named.fd.toFixed(1)+' for '+named.interval+').'+
+      (named.freq>modal.freq?' '+named.interval+' holds more '+P+' only because it is wider ('+named.width+' against '+
+        modal.width+').':'');
+  return{lead:named.interval+' contains '+Math.round(named.freq)+' '+P+'. Is it the modal class? ',
+    options:isMost?[mostOpt,HIST_YES,HIST_NO]:[HIST_YES,HIST_NO],
+    correct:isModal?HIST_YES:HIST_NO,near:isMost&&isModal?mostOpt:null,why:why};
+}
+
+function histParts(s,show){
+  var cls=histClasses(s),propInterval=cls[Math.min(3,cls.length-1)];
+  return[
+    {lead:'The total sample size is '+show(sessionAnswers.total)+'. Approximately '+show(sessionAnswers.proportion)+
+      '% of '+s.contextPlural+' fall within '+propInterval.interval+'.'},
+    histQuestion(s,histNamed(s))
+  ];
+}
+
+function buildHistScaffold(s){
+  return histParts(s,filled).map(function(c,i){
+    return c.options?c.lead+dd('d'+i,c.options,c.correct,{near:c.near,why:c.why})+'.':c.lead;
+  }).join(' ');
+}
+
+function submitPhase2(){
+  var fb=document.getElementById('p2Feedback');
+  var allCorrect=true;
+  var inputs=document.querySelectorAll('.scaffold-text input');
+
+  phase2Dropdowns.forEach(function(sel){
+    var correct=sel.dataset.correct;
+    if(sel.value===correct){
+      sel.style.borderColor='var(--green)';sel.style.color='var(--green)';
+    }else{
+      sel.style.borderColor='var(--red)';sel.style.color='var(--red)';
+      allCorrect=false;
+    }
+  });
+
+  // A typed answer in the scaffold (cumfreq's benchmark count) is marked on its tolerance
+  inputs.forEach(function(inp){
+    var v=parseFloat(inp.value);
+    if(!isNaN(v)&&Math.abs(v-parseFloat(inp.dataset.expected))<=parseFloat(inp.dataset.tolerance)){
+      inp.style.borderColor='var(--green)';inp.style.color='var(--green)';
+    }else{
+      inp.style.borderColor='var(--red)';inp.style.color='var(--red)';
+      allCorrect=false;
+    }
+  });
+
+  if(allCorrect){
+    clearInterval(timerInterval);
+    fb.textContent='All correct! See the model answer below.';fb.className='q-feedback correct';
+    showModelAnswer();
+    showScore();
+  }else{
+    // The right conclusion reached by the misconception (histograms): say so, with the reason
+    var near=Array.prototype.filter.call(phase2Dropdowns,function(sel){return sel.dataset.near&&sel.value===sel.dataset.near;})[0];
+    fb.textContent=near?'Right answer, wrong reason. '+near.dataset.why
+      :'Some answers are incorrect \u2014 check the highlighted '+(inputs.length?'answers':'dropdowns')+'.';
+    fb.className='q-feedback wrong';
+  }
+}
+
+function showModelAnswer(){
+  var s=currentScenario;
+  var model='';
+  if(selectedType==='stemleaf'||selectedType==='boxplot'){
+    model=comparisonParts(s,function(x){return x;}).map(function(c){return c.lead+c.correct+'.';}).join(' ');
+  }else if(selectedType==='cumfreq'){
+    model=cfParts(s,function(x){return x;}).map(function(c){
+      if(c.options)return c.lead+c.correct+'.';
+      if(c.number)return c.lead+'About '+c.number.shown+'.';
+      return c.lead;
+    }).join(' ');
+  }else if(selectedType==='histogram'){
+    model=histParts(s,function(x){return x;}).map(function(c){
+      if(c.options)return c.lead+c.correct+'. '+c.why;
+      return c.lead;
+    }).join(' ');
+  }
+
+  var div=document.createElement('div');
+  div.className='model-answer';
+  div.innerHTML='<div class="model-title">Model Answer</div><div class="model-text">'+model+'</div>';
+  document.getElementById('activeQuestion').appendChild(div);
+}
+
+function showScore(){
+  var BASE=100;
+  var TK=0.015;
+  // multiplier removed — time no longer affects score
+var multiplier = 1;
+  var score=Math.max(1,Math.round(BASE*multiplier));
+
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'chart-interrogator',level:selectedLevel,score:score,questions_answered:window._ciQAnswered||0,accuracy:100});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('chart-interrogator',selectedLevel,score,window._ciQAnswered||0).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('chart-interrogator',selectedLevel,score);}}
+
+  var pbKey='ci_pb_'+selectedType+'_'+selectedLevel;
+  var pb=parseInt(localStorage.getItem(pbKey)||'0');
+  var _ciPrevBest=pb;
+  if(score>pb){localStorage.setItem(pbKey,score.toString());pb=score;mfg('personal_best_set',{game_slug:'chart-interrogator',level:selectedLevel,score:score,previous_best:_ciPrevBest});}
+
+  var bar=document.createElement('div');
+  bar.className='score-bar';
+  bar.innerHTML='<div><div class="score-val">'+score+'</div><div class="score-label">Score</div></div>'+
+    '<div><div class="pb-val">PB: '+pb+'</div></div>'+
+    '<div style="display:flex;gap:8px;"><button class="next-btn" onclick="nextScenario()">Next</button>'+
+    '<button class="menu-btn" onclick="backToMenu()">Menu</button></div>';
+  document.getElementById('activeQuestion').appendChild(bar);
+}
+
+function nextScenario(){
+  beginGame();
+}
+
+function backToMenu(){
+  clearInterval(timerInterval);
+  document.getElementById('gameContainer').style.display='none';
+  document.getElementById('selector').style.display='';
+  document.getElementById('headerPill').style.display='none';
+  document.documentElement.style.setProperty('--accent','#3b82f6');
+}
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

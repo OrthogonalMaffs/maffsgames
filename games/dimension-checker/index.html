@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Check dimensional consistency of physics equations using MLT analysis. A-Level and Level 4 mechanics practice.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/dimension-checker/">
+<meta property="og:title" content="Dimension Checker — MaffsGames">
+<meta property="og:description" content="Check dimensional consistency of physics equations using MLT analysis. A-Level and Level 4 mechanics practice.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/dimension-checker/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Dimension Checker — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080610;--surface:#10101c;--border:#201c30;--primary:#ef4444;--accent:#f59e0b;--wrong:#f43f5e;--correct:#22c55e;--text:#e4e0f0;--muted:#6a6080}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:540px}
+.dim-table{margin:1rem auto;font-size:.78rem;border-collapse:collapse;color:var(--muted)}
+.dim-table td,.dim-table th{padding:.3rem .8rem;border:1px solid var(--border);text-align:left}
+.dim-table th{color:var(--accent);font-weight:600}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:50px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem;margin-bottom:.6rem;text-align:center}
+.q-card .prompt{font-size:.95rem;font-weight:600;margin-bottom:.4rem}
+.q-card .context{font-size:.82rem;color:var(--muted)}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
+.opt-btn{padding:.65rem .4rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;cursor:pointer;transition:all .12s;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary)}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.08)}
+.opt-btn.disabled{pointer-events:none;opacity:.5}
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1rem;margin-bottom:.6rem;text-align:left;font-size:.85rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.85rem;margin-bottom:.4rem}
+.solution .step{margin-bottom:.4rem;padding-left:.7rem;border-left:2px solid var(--border)}
+.solution .misconception{margin-top:.5rem;padding:.5rem .7rem;background:rgba(245,158,11,.08);border-radius:8px;border-left:3px solid var(--accent);font-size:.78rem;color:var(--accent)}
+.solution .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+<div id="menu" class="screen active">
+<div class="header"><h1>Dimension Checker</h1><div class="sub">Is this equation dimensionally homogeneous? Prove it.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+<table class="dim-table"><tr><th>Quantity</th><th>Dimensions</th><th>SI Unit</th></tr>
+<tr><td>Mass</td><td>[M]</td><td>kg</td></tr>
+<tr><td>Length</td><td>[L]</td><td>m</td></tr>
+<tr><td>Time</td><td>[T]</td><td>s</td></tr>
+<tr><td>Force</td><td>[M L T⁻²]</td><td>N</td></tr>
+<tr><td>Energy</td><td>[M L² T⁻²]</td><td>J</td></tr>
+<tr><td>Power</td><td>[M L² T⁻³]</td><td>W</td></tr>
+<tr><td>Pressure</td><td>[M L⁻¹ T⁻²]</td><td>Pa</td></tr>
+<tr><td>Velocity</td><td>[L T⁻¹]</td><td>m/s</td></tr>
+<tr><td>Acceleration</td><td>[L T⁻²]</td><td>m/s²</td></tr>
+</table>
+<div class="menu-info">Every equation in physics must be dimensionally consistent. Both sides must have the same dimensions. If they don't, the equation is wrong.</div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+<button class="start-btn" onclick="startGame()">Start</button>
+</div>
+<div id="game" class="screen">
+<div class="hud"><div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div><div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div><div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div><div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div></div>
+<div class="q-card"><div class="prompt" id="prompt"></div><div class="context" id="context"></div></div>
+<div class="options" id="options"></div>
+<div class="solution" id="solution"></div>
+</div>
+<div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+<script>
+function rkI(tex){if(typeof katex==='undefined')return tex;const s=document.createElement('span');katex.render(tex,s,{throwOnError:false,displayMode:false});return s.innerHTML}
+
+const QS=[
+// TYPE 1: Is this homogeneous? Yes/No
+{p:'Is v = u + at dimensionally homogeneous?',c:'Yes — all terms are [L T⁻¹]',d:['No — at has wrong dimensions','No — u has wrong dimensions','Cannot determine'],s:['v: [L T⁻¹]','u: [L T⁻¹]','at: [L T⁻²][T] = [L T⁻¹] ✓','All terms match']},
+{p:'Is F = mv dimensionally homogeneous?',c:'No — [MLT⁻²] ≠ [MLT⁻¹]',d:['Yes — both are force','Yes — mass × velocity = force','Cannot determine'],s:['F: [M L T⁻²]','mv: [M][L T⁻¹] = [M L T⁻¹]','[M L T⁻²] ≠ [M L T⁻¹] — NOT homogeneous'],mc:'F = ma, not F = mv. The correct equation has acceleration, not velocity.'},
+{p:'Is E = ½mv² dimensionally homogeneous?',c:'Yes — both sides are [M L² T⁻²]',d:['No — the ½ changes the dimensions','No — v² has wrong units','Yes — both sides are [M L T⁻²]'],s:['E: [M L² T⁻²]','½mv²: ½[M][L T⁻¹]² = [M L² T⁻²] ✓','½ is dimensionless — it doesn\'t affect dimensions'],mc:'Numerical constants (½, π, 2, etc.) are dimensionless.'},
+{p:'Is P = Fv dimensionally homogeneous?',c:'Yes — both sides are [M L² T⁻³]',d:['No — should be Fa','No — P is [M L T⁻³]','Yes — both sides are [M L T⁻²]'],s:['P: [M L² T⁻³]','Fv: [M L T⁻²][L T⁻¹] = [M L² T⁻³] ✓']},
+{p:'Is s = ut + at² dimensionally homogeneous?',c:'No — should be ½at², but dimensions still check',d:['Yes — all terms are [L]','No — at² has wrong dimensions','Cannot determine'],s:['s: [L]','ut: [L T⁻¹][T] = [L] ✓','at²: [L T⁻²][T²] = [L] ✓','Dimensionally homogeneous — but missing the ½ (dimensions can\'t catch missing constants)'],mc:'Dimensional analysis checks dimensions, NOT numerical coefficients. s = ut + at² has correct dimensions but is the wrong equation (should be ½at²).'},
+{p:'Is P = I²R dimensionally homogeneous?',c:'Yes — both sides are [M L² T⁻³]',d:['No — I² has wrong dimensions','Cannot check without knowing I dimensions','No — should be IR²'],s:['P: [M L² T⁻³] (watts)','I²R: [A²][M L² T⁻³ A⁻²] = [M L² T⁻³] ✓','R has dimensions [M L² T⁻³ A⁻²] (ohms)']},
+{p:'Is pressure = force × area?',c:'No — pressure = force / area',d:['Yes — P = FA','Yes — both are [M L T⁻²]','Cannot determine'],s:['P: [M L⁻¹ T⁻²]','FA: [M L T⁻²][L²] = [M L³ T⁻²] — wrong!','F/A: [M L T⁻²]/[L²] = [M L⁻¹ T⁻²] ✓']},
+{p:'Is v² = u² + 2as dimensionally homogeneous?',c:'Yes — all terms are [L² T⁻²]',d:['No — 2as has wrong dimensions','No — should be 2as²','Yes — all terms are [L T⁻¹]'],s:['v²: [L² T⁻²]','u²: [L² T⁻²]','2as: [L T⁻²][L] = [L² T⁻²] ✓']},
+
+// TYPE 2: What are the dimensions of X?
+{p:'What are the dimensions of force (F = ma)?',c:'[M L T⁻²]',d:['[M L T⁻¹]','[M L² T⁻²]','[L T⁻²]'],s:['F = ma','[M][L T⁻²] = [M L T⁻²]']},
+{p:'What are the dimensions of energy?',c:'[M L² T⁻²]',d:['[M L T⁻²]','[M L² T⁻³]','[L² T⁻²]'],s:['E = Fd = [M L T⁻²][L] = [M L² T⁻²]','Also: E = ½mv² = [M][L² T⁻²] ✓']},
+{p:'What are the dimensions of pressure?',c:'[M L⁻¹ T⁻²]',d:['[M L T⁻²]','[M L² T⁻²]','[L⁻¹ T⁻²]'],s:['P = F/A = [M L T⁻²]/[L²] = [M L⁻¹ T⁻²]']},
+{p:'What are the dimensions of momentum?',c:'[M L T⁻¹]',d:['[M L T⁻²]','[M L² T⁻¹]','[L T⁻¹]'],s:['p = mv = [M][L T⁻¹] = [M L T⁻¹]']},
+{p:'What are the dimensions of power?',c:'[M L² T⁻³]',d:['[M L² T⁻²]','[M L T⁻³]','[L² T⁻³]'],s:['P = E/t = [M L² T⁻²]/[T] = [M L² T⁻³]','Also: P = Fv = [M L T⁻²][L T⁻¹] = [M L² T⁻³] ✓']},
+{p:'What are the dimensions of density?',c:'[M L⁻³]',d:['[M L³]','[M L⁻¹]','[L⁻³]'],s:['ρ = m/V = [M]/[L³] = [M L⁻³]']},
+{p:'What are the dimensions of torque?',c:'[M L² T⁻²]',d:['[M L T⁻²]','[M L² T⁻³]','[L² T⁻²]'],s:['τ = Fd = [M L T⁻²][L] = [M L² T⁻²]'],mc:'Torque has the same dimensions as energy! But they are different physical quantities.'},
+{p:'Stress has units N/m². Its dimensions are?',c:'[M L⁻¹ T⁻²]',d:['[M L T⁻²]','[M L² T⁻²]','[L⁻¹ T⁻²]'],s:['Same as pressure: [M L T⁻²]/[L²] = [M L⁻¹ T⁻²]']},
+
+// TYPE 3: Which term breaks homogeneity?
+{p:'In E = mgh + ½mv³, which term is wrong?',c:'½mv³ — should be ½mv²',d:['mgh is wrong','Both are wrong','Neither — it\'s correct'],s:['mgh: [M][L T⁻²][L] = [M L² T⁻²] ✓','½mv³: [M][L³ T⁻³] = [M L³ T⁻³] ✗','Energy is [M L² T⁻²], not [M L³ T⁻³]']},
+{p:'In F = mv²/r + ma, which term (if any) is wrong?',c:'Neither — both are [M L T⁻²]',d:['mv²/r is wrong','ma is wrong','Both are wrong'],s:['mv²/r: [M][L² T⁻²]/[L] = [M L T⁻²] ✓','ma: [M][L T⁻²] = [M L T⁻²] ✓']},
+{p:'In P = F²v, is this homogeneous?',c:'No — gives [M² L³ T⁻⁵]',d:['Yes — it\'s correct','No — gives [M L² T⁻³]','Cannot determine'],s:['F²v: [M L T⁻²]²[L T⁻¹] = [M² L² T⁻⁴][L T⁻¹] = [M² L³ T⁻⁵]','P should be [M L² T⁻³]','NOT homogeneous']},
+
+// TYPE 4: Engineering context
+{p:'Beam deflection: y = FL³/(EI). What are the dimensions of EI?',c:'[M L³ T⁻²]',d:['[M L² T⁻²]','[M L T⁻²]','[L³ T⁻²]'],s:['y has dimensions [L]','F has dimensions [M L T⁻²]','FL³ has dimensions [M L⁴ T⁻²]','So EI = FL³/y = [M L⁴ T⁻²]/[L] = [M L³ T⁻²]']},
+{p:'Reynolds number Re = ρvD/μ is dimensionless. What dimensions must μ (viscosity) have?',c:'[M L⁻¹ T⁻¹]',d:['[M L T⁻¹]','[L² T⁻¹]','[M L⁻² T⁻¹]'],s:['Re is dimensionless → ρvD/μ = [1]','ρvD: [M L⁻³][L T⁻¹][L] = [M L⁻¹ T⁻¹]','So μ must also be [M L⁻¹ T⁻¹]']},
+{p:'Spring constant k has units N/m. Dimensions?',c:'[M T⁻²]',d:['[M L T⁻²]','[M L⁻¹ T⁻²]','[T⁻²]'],s:['k = F/x = [M L T⁻²]/[L] = [M T⁻²]']},
+{p:'Strain is ΔL/L. Its dimensions are?',c:'Dimensionless [1]',d:['[L]','[L⁻¹]','[L²]'],s:['ΔL/L = [L]/[L] = dimensionless'],mc:'Strain has no units — it\'s a ratio of two lengths. This is why it\'s often expressed as a percentage or in microstrain.'},
+{p:'Young\'s modulus E = stress/strain. Given strain is dimensionless, E has dimensions?',c:'Same as stress: [M L⁻¹ T⁻²]',d:['[M L T⁻²]','Dimensionless','[M L² T⁻²]'],s:['E = stress/strain = [M L⁻¹ T⁻²]/[1] = [M L⁻¹ T⁻²]','Units: Pa (same as pressure)']},
+{p:'Frequency f has units Hz (s⁻¹). Angular frequency ω = 2πf. Dimensions of ω?',c:'[T⁻¹]',d:['[L T⁻¹]','Dimensionless','[T]'],s:['ω = 2πf','2π is dimensionless','[T⁻¹] — same as frequency']},
+{p:'In F = 6πμrv (Stokes\' law), check if this gives dimensions of force.',c:'Yes — [M L T⁻²]',d:['No — gives [M L² T⁻²]','No — gives [M T⁻¹]','Cannot check without μ dimensions'],s:['6π is dimensionless','μ: [M L⁻¹ T⁻¹]','r: [L]','v: [L T⁻¹]','μrv: [M L⁻¹ T⁻¹][L][L T⁻¹] = [M L T⁻²] ✓']},
+{p:'Gravitational PE: E = mgh. What dimensions must g have?',c:'[L T⁻²]',d:['[M L T⁻²]','[L T⁻¹]','[M L² T⁻²]'],s:['E = [M L² T⁻²]','mgh = [M][g][L]','[g] = [M L² T⁻²]/([M][L]) = [L T⁻²]']},
+{p:'Flow rate Q has units m³/s. Dimensions?',c:'[L³ T⁻¹]',d:['[L³]','[L² T⁻¹]','[M L³ T⁻¹]'],s:['Q = volume/time = [L³]/[T] = [L³ T⁻¹]']},
+];
+
+let pool=[],qIdx=0,score=0,correctN=0,total=0,currentQ=null,qStart=0;
+const BASE=100,T_K=0.15,MAX_Q=20;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMenu(){show('menu')}
+function startGame(){pool=shuffle([...QS]).slice(0,MAX_Q);qIdx=0;score=0;correctN=0;total=0;document.getElementById('score').textContent='0';document.getElementById('correctCount').textContent='0';show('game');nextQ();mfg('game_started',{game_slug:'dimension-checker',level:'level4'});window._ggAbandoned=true;if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'dimension-checker',level:'level4',questions_answered:total})})}}
+function nextQ(){if(qIdx>=pool.length){endGame();return}currentQ=pool[qIdx];qIdx++;total++;document.getElementById('qNum').textContent=total;document.getElementById('solution').className='solution';qStart=Date.now();updateTimer();document.getElementById('prompt').textContent=currentQ.p;document.getElementById('context').textContent=currentQ.ctx||'';const opts=shuffle([currentQ.c,...currentQ.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b)})}
+function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
+function handleAnswer(btn){const q=currentQ,s=(Date.now()-qStart)/1000,ok=btn.dataset.val===q.c;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.c)b.classList.add('correct')});mfg('question_answered',{game_slug:'dimension-checker',level:'level4',correct:ok,question_index:total});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++;updateHUD();setTimeout(nextQ,1000)}else{btn.classList.add('wrong');updateHUD();showExplain(q)}}
+function showExplain(q){const sol=document.getElementById('solution');let html='<h3>Worked solution</h3>';(q.s||[]).forEach(st=>{html+='<div class="step">'+st+'</div>'});if(q.mc)html+='<div class="misconception">⚠ '+q.mc+'</div>';html+='<button class="next-btn" onclick="closeSol()">Got it — next</button>';sol.innerHTML=html;sol.className='solution show'}
+function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
+function endGame(){const pct=total>0?Math.round(correctN/total*100):0;let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').innerHTML='Dimension Checker — Level 4<br>'+correctN+'/'+total+' correct ('+pct+'%)';window._ggAbandoned=false;mfg('game_completed',{game_slug:'dimension-checker',level:'level4',score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('dimension-checker','level4',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('dimension-checker','level4',score);}}var _pbKey='dc_best';var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'dimension-checker',level:'level4',score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score)}show('results')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

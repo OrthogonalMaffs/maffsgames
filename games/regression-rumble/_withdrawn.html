@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<!-- WITHDRAWN 30 Sep 2026: this is the full game, kept word for word except this meta and comment.
+     It is not linked from anywhere. games/regression-rumble/index.html is the holding page.
+     Why, and what the rebuild needs: docs/todo.md §1.26 and scripts/verify-regression-rumble.py.
+     To restore: rebuild, git mv this file back to index.html, drop these two additions. -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Interpret scatter diagrams, regression lines, and correlation coefficients. Core Maths, A-Level, and Level 4 statistics practice.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/regression-rumble/">
+<meta property="og:title" content="Regression Rumble — MaffsGames">
+<meta property="og:description" content="Interpret scatter diagrams, regression lines, and correlation coefficients. Core Maths, A-Level, and Level 4 statistics practice.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/regression-rumble/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<title>Regression Rumble — MaffsGames</title>
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root{
+--bg:#0b0e14;--surface:#141820;--surface-alt:#1c2028;--border:#2a2e3a;
+--text:#e2e4e9;--muted:#7a7f90;--accent:#0ea5e9;
+--green:#22c55e;--green-dim:rgba(34,197,94,.12);
+--red:#ef4444;--red-dim:rgba(239,68,68,.12);
+--core:#0ea5e9;--alevel:#f97316;--l4:#ef4444;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);font-size:15px;line-height:1.6;min-height:100vh;}
+
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.header-left{display:flex;align-items:center;gap:12px;}
+.header-title{font-size:20px;font-weight:700;}
+.header-title span{color:var(--accent);}
+.level-pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;color:#fff;}
+.back-link{color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;}
+.back-link:hover{color:var(--text);}
+.header-stats{display:flex;align-items:center;gap:16px;}
+.stat-item{text-align:center;}
+.stat-label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--accent);}
+.stat-val.timer{color:var(--muted);}
+
+/* SELECTOR */
+.selector{max-width:580px;margin:60px auto;padding:0 24px;text-align:center;}
+.selector h2{font-size:26px;font-weight:700;margin-bottom:6px;}
+.selector p{color:var(--muted);margin-bottom:32px;}
+.sel-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;text-align:left;}
+.sel-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:28px;}
+.sel-btn{font-family:'Outfit',system-ui,sans-serif;font-size:14px;font-weight:600;padding:16px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:all .15s;text-align:left;}
+.sel-btn:hover{border-color:var(--accent);background:rgba(14,165,233,.08);}
+.sel-btn.active{border-color:var(--accent);background:rgba(14,165,233,.12);color:var(--accent);}
+.sel-btn .sel-sub{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;display:block;}
+.sel-btn.level-btn.core.active{border-color:var(--core);background:rgba(14,165,233,.12);color:var(--core);}
+.sel-btn.level-btn.alevel.active{border-color:var(--alevel);background:rgba(249,115,22,.12);color:var(--alevel);}
+.sel-btn.level-btn.l4.active{border-color:var(--l4);background:rgba(239,68,68,.12);color:var(--l4);}
+.start-btn{font-family:'Outfit',system-ui,sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer;transition:opacity .15s;}
+.start-btn:hover{opacity:.9;}
+.start-btn:disabled{opacity:.4;cursor:default;}
+
+/* GAME LAYOUT */
+.game-container{display:none;max-width:1100px;margin:0 auto;padding:24px;}
+.game-layout{display:grid;grid-template-columns:3fr 2fr;gap:24px;align-items:start;}
+.diagram-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.diagram-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--surface-alt);}
+.diagram-title{font-size:14px;font-weight:600;}
+.diagram-context{font-size:12px;color:var(--muted);}
+.diagram-body{padding-bottom:44px;padding:20px;display:flex;align-items:center;justify-content:center;}
+.diagram-body canvas{max-width:100%;height:auto;}
+
+/* RIGHT PANEL */
+.question-panel{display:flex;flex-direction:column;gap:16px;}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;}
+.q-number{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.q-text{font-size:14px;margin-bottom:14px;line-height:1.7;}
+.q-text .katex{font-size:15px;}
+.q-input-row{display:flex;gap:8px;align-items:center;}
+.q-input{flex:1;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
+.q-input:focus{border-color:var(--accent);}
+.q-submit{font-family:'Outfit',system-ui,sans-serif;font-size:14px;font-weight:600;padding:10px 20px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;}
+.q-submit:hover{opacity:.9;}
+
+.q-mc{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.mc-btn{font-family:'Outfit',system-ui,sans-serif;font-size:13px;font-weight:500;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface-alt);color:var(--text);cursor:pointer;text-align:left;transition:all .15s;line-height:1.5;}
+.mc-btn:hover{border-color:var(--accent);}
+.mc-btn.correct{border-color:var(--green);background:var(--green-dim);color:var(--green);}
+.mc-btn.wrong{border-color:var(--red);background:var(--red-dim);color:var(--red);}
+.mc-btn.disabled{pointer-events:none;opacity:.5;}
+
+.q-feedback{margin-top:10px;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;display:none;}
+.q-feedback.correct{display:block;background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.3);}
+.q-feedback.wrong{display:block;background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+
+.completed-q{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--green-dim);border:1px solid rgba(34,197,94,.2);border-radius:8px;font-size:13px;color:var(--green);font-weight:500;}
+
+/* MODEL ANSWER */
+.model-answer{background:var(--green-dim);border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:20px;margin-top:12px;}
+.model-title{font-size:13px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;}
+.model-text{font-size:14px;line-height:2;color:var(--text);}
+
+/* SCORE BAR */
+.score-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:10px;}
+.score-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--accent);}
+.score-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.next-btn{font-family:'Outfit',system-ui,sans-serif;font-size:14px;font-weight:600;padding:10px 20px;border:none;border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;}
+.next-btn:hover{opacity:.9;}
+.menu-btn{font-family:'Outfit',system-ui,sans-serif;font-size:13px;font-weight:500;padding:8px 16px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);cursor:pointer;}
+.menu-btn:hover{border-color:var(--accent);}
+
+/* SUMMARY STATS TABLE */
+.stats-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:13px;margin:12px 0;}
+.stats-table td,.stats-table th{padding:6px 10px;border:1px solid var(--border);text-align:center;}
+.stats-table th{background:var(--surface-alt);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;color:var(--muted);}
+
+/* FINAL SCREEN */
+.final-screen{display:none;max-width:500px;margin:60px auto;padding:0 24px;text-align:center;}
+.final-screen h2{font-size:28px;font-weight:700;margin-bottom:8px;}
+.final-screen .final-score{font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:700;color:var(--accent);margin:20px 0;}
+.final-screen .final-label{font-size:14px;color:var(--muted);margin-bottom:6px;}
+.final-screen .final-best{font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--green);margin-bottom:24px;}
+.final-screen .final-breakdown{text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:24px;}
+.final-screen .final-breakdown .fb-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(42,46,58,.5);font-size:14px;}
+.final-screen .final-breakdown .fb-row:last-child{border-bottom:none;}
+.final-screen .final-breakdown .fb-score{font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--accent);}
+.final-btns{display:flex;gap:12px;justify-content:center;}
+
+@media(max-width:768px){
+  .game-layout{grid-template-columns:1fr;}
+  .sel-grid{grid-template-columns:1fr;}
+  .header{padding:14px 18px;}
+  .game-container{padding:16px;}
+  .q-mc{grid-template-columns:1fr;}
+  .header-stats{gap:10px;}
+  .stat-val{font-size:14px;}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <a href="../../" class="back-link">&larr; Games</a>
+    <div class="header-title"><span>Regression</span> Rumble</div>
+    <span class="level-pill" id="headerPill" style="display:none;"></span>
+  </div>
+  <div class="header-stats" id="headerStats" style="display:none;">
+    <div class="stat-item"><div class="stat-label">Score</div><div class="stat-val" id="hScore">0</div></div>
+    <div class="stat-item"><div class="stat-label">Time</div><div class="stat-val timer" id="hTimer">0:00</div></div>
+    <div class="stat-item"><div class="stat-label">Q</div><div class="stat-val" id="hQ">1/5</div></div>
+    <div class="stat-item"><div class="stat-label">Best</div><div class="stat-val timer" id="hBest">--</div></div>
+  </div>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+
+<div class="selector" id="selector">
+  <h2>Regression Rumble</h2>
+  <p>Interpret scatter diagrams, regression lines, and correlation — from reading to calculating.</p>
+
+  <div class="sel-label">Level</div>
+  <div class="sel-grid" id="levelGrid">
+    <button class="sel-btn level-btn core" data-level="core" onclick="selectLevel(this)">Core Maths<span class="sel-sub">AQA 1350</span></button>
+    <button class="sel-btn level-btn alevel" data-level="alevel" onclick="selectLevel(this)">A-Level<span class="sel-sub">AQA 7357 / Edexcel 9MA0</span></button>
+    <button class="sel-btn level-btn l4" data-level="l4" onclick="selectLevel(this)">Level 4<span class="sel-sub">Pearson BTEC HNC</span></button>
+  </div>
+
+  <button class="start-btn" id="startBtn" disabled onclick="beginGame()">Start</button>
+</div>
+
+<div class="game-container" id="gameContainer">
+  <div class="game-layout">
+    <div class="diagram-panel">
+      <div class="diagram-header">
+        <span class="diagram-title" id="diagramTitle"></span>
+        <span class="diagram-context" id="diagramContext"></span>
+      </div>
+      <div class="diagram-body" id="diagramBody">
+        <canvas id="scatterCanvas" width="600" height="450"></canvas>
+      </div>
+    </div>
+    <div class="question-panel" id="questionPanel"></div>
+  </div>
+</div>
+
+<div class="final-screen" id="finalScreen"></div>
+
+<script>
+// ===== SCENARIO DATA =====
+var SCENARIOS = {
+core: [
+{id:'CM1',xLabel:'Hours of revision',yLabel:'Exam score',n:15,r:0.88,equation:{a:32,b:4.2},xRange:[0,20],yRange:[30,100],predictX:12,predictY:82.4,sq4X:25,sq4Type:'extrapolation',seed:101},
+{id:'CM2',xLabel:'Age (years)',yLabel:'Resting heart rate (bpm)',n:18,r:-0.74,equation:{a:95,b:-0.6},xRange:[20,70],yRange:[55,95],predictX:45,predictY:68,sq4X:85,sq4Type:'extrapolation',seed:102},
+{id:'CM3',xLabel:'Distance from city centre (miles)',yLabel:'House price (\\u00a3k)',n:20,r:-0.81,equation:{a:380,b:-12.5},xRange:[0,20],yRange:[80,390],predictX:8,predictY:280,sq4X:5,sq4Type:'interpolation',seed:103},
+{id:'CM4',xLabel:'Temperature (\\u00b0C)',yLabel:'Ice cream sales (\\u00a3)',n:14,r:0.93,equation:{a:-15,b:3.8},xRange:[10,35],yRange:[20,120],predictX:28,predictY:91.4,sq4X:5,sq4Type:'extrapolation',seed:104},
+{id:'CM5',xLabel:'Exercise (hours per week)',yLabel:'BMI',n:16,r:-0.69,equation:{a:32,b:-1.1},xRange:[0,10],yRange:[18,35],predictX:6,predictY:25.4,sq4X:6,sq4Type:'interpolation',seed:105},
+{id:'CM6',xLabel:'Advertising spend (\\u00a3k)',yLabel:'Revenue (\\u00a3k)',n:12,r:0.76,equation:{a:45,b:8.2},xRange:[0,15],yRange:[40,175],predictX:7,predictY:102.4,sq4X:20,sq4Type:'extrapolation',seed:106},
+{id:'CM7',xLabel:'Screen time (hours)',yLabel:'Sleep (hours)',n:20,r:-0.72,equation:{a:9.2,b:-0.35},xRange:[1,10],yRange:[5,9],predictX:6,predictY:7.1,sq4X:6,sq4Type:'interpolation',seed:107},
+{id:'CM8',xLabel:'Rainfall (mm)',yLabel:'Crop yield (t/ha)',n:15,r:0.84,equation:{a:1.2,b:0.045},xRange:[200,800],yRange:[10,38],predictX:500,predictY:23.7,sq4X:500,sq4Type:'interpolation',seed:108},
+{id:'CM9',xLabel:'Class size',yLabel:'Average test score',n:18,r:-0.61,equation:{a:85,b:-0.9},xRange:[15,35],yRange:[50,90],predictX:25,predictY:62.5,sq4X:25,sq4Type:'interpolation',seed:109},
+{id:'CM10',xLabel:'Years of experience',yLabel:'Salary (\\u00a3k)',n:20,r:0.87,equation:{a:18,b:1.84},xRange:[0,20],yRange:[15,60],predictX:8,predictY:32.72,sq4X:25,sq4Type:'extrapolation',seed:110},
+{id:'CM11',xLabel:'Car age (years)',yLabel:'Value (\\u00a3k)',n:14,r:-0.91,equation:{a:22,b:-1.8},xRange:[0,10],yRange:[2,24],predictX:5,predictY:13,sq4X:5,sq4Type:'interpolation',seed:111},
+{id:'CM12',xLabel:'Sunshine (hours per day)',yLabel:'Energy bill (\\u00a3)',n:16,r:-0.78,equation:{a:180,b:-8.5},xRange:[2,12],yRange:[75,170],predictX:7,predictY:120.5,sq4X:7,sq4Type:'interpolation',seed:112}
+],
+alevel: [
+{id:'AL1',xLabel:'Maths grade (UCAS points)',yLabel:'Starting salary (\\u00a3k)',n:20,r:0.71,cv:0.4438,sig:true,equation:{a:12,b:1.6},xRange:[20,40],yRange:[40,80],predictX:32,predictY:63.2,sq4X:32,sq4Type:'interpolation',seed:201},
+{id:'AL2',xLabel:'Reaction time (ms)',yLabel:'Number of errors',n:15,r:0.68,cv:0.5140,sig:true,equation:{a:-2.1,b:0.08},xRange:[200,500],yRange:[10,40],predictX:350,predictY:25.9,sq4X:350,sq4Type:'interpolation',seed:202},
+{id:'AL3',xLabel:'Latitude (\\u00b0N)',yLabel:'Mean July temperature (\\u00b0C)',n:18,r:-0.89,cv:0.4683,sig:true,equation:{a:55,b:-0.7},xRange:[35,65],yRange:[10,32],predictX:52,predictY:18.6,sq4X:52,sq4Type:'interpolation',seed:203},
+{id:'AL4',xLabel:'Sleep (hours)',yLabel:'Cognitive score',n:20,r:0.62,cv:0.4438,sig:true,equation:{a:40,b:5.5},xRange:[4,10],yRange:[55,100],predictX:7.5,predictY:81.25,sq4X:7.5,sq4Type:'interpolation',seed:204},
+{id:'AL5',xLabel:'Unemployment rate (%)',yLabel:'Crime rate (per 1000)',n:15,r:0.58,cv:0.5140,sig:true,equation:{a:12,b:2.4},xRange:[3,15],yRange:[15,50],predictX:8,predictY:31.2,sq4X:8,sq4Type:'interpolation',seed:205},
+{id:'AL6',xLabel:'Population density (per km\\u00b2)',yLabel:'Price index',n:12,r:0.44,cv:0.5760,sig:false,equation:{a:85,b:0.012},xRange:[500,5000],yRange:[90,150],predictX:2000,predictY:109,sq4X:2000,sq4Type:'interpolation',seed:206},
+{id:'AL7',xLabel:'Revision hours',yLabel:'A-Level points',n:20,r:0.79,cv:0.4438,sig:true,equation:{a:60,b:3.2},xRange:[10,40],yRange:[80,200],predictX:25,predictY:140,sq4X:50,sq4Type:'extrapolation',seed:207},
+{id:'AL8',xLabel:'Alcohol units per week',yLabel:'Liver enzyme level (U/L)',n:18,r:0.83,cv:0.4683,sig:true,equation:{a:20,b:1.5},xRange:[0,40],yRange:[18,85],predictX:15,predictY:42.5,sq4X:15,sq4Type:'interpolation',seed:208},
+{id:'AL9',xLabel:'Daily calorie intake',yLabel:'Weight gain (kg)',n:15,r:0.66,cv:0.5140,sig:true,equation:{a:-8,b:0.005},xRange:[1800,3200],yRange:[1,9],predictX:2500,predictY:4.5,sq4X:2500,sq4Type:'interpolation',seed:209},
+{id:'AL10',xLabel:'Internet speed (Mbps)',yLabel:'Quality score',n:12,r:0.35,cv:0.5760,sig:false,equation:{a:55,b:0.8},xRange:[10,100],yRange:[55,140],predictX:50,predictY:95,sq4X:50,sq4Type:'interpolation',seed:210},
+{id:'AL11',xLabel:'Temperature (\\u00b0C)',yLabel:'Gas consumption (m\\u00b3)',n:20,r:-0.92,cv:0.4438,sig:true,equation:{a:120,b:-3.2},xRange:[-5,20],yRange:[35,140],predictX:5,predictY:104,sq4X:5,sq4Type:'interpolation',seed:211},
+{id:'AL12',xLabel:'Gym sessions per month',yLabel:'Resting pulse (bpm)',n:18,r:-0.75,cv:0.4683,sig:true,equation:{a:88,b:-1.2},xRange:[0,20],yRange:[60,92],predictX:12,predictY:73.6,sq4X:12,sq4Type:'interpolation',seed:212},
+{id:'AL13',xLabel:'Years of education',yLabel:'Annual earnings (\\u00a3k)',n:25,r:0.68,cv:0.3961,sig:true,equation:{a:-120,b:28},xRange:[10,22],yRange:[150,520],predictX:16,predictY:328,sq4X:16,sq4Type:'interpolation',seed:213},
+{id:'AL14',xLabel:'Noise level (dB)',yLabel:'Productivity score',n:15,r:-0.55,cv:0.5140,sig:true,equation:{a:95,b:-0.6},xRange:[40,90],yRange:[55,75],predictX:65,predictY:56,sq4X:65,sq4Type:'interpolation',seed:214}
+],
+level4: [
+{id:'L4_1',xLabel:'Temperature (\\u00b0C)',yLabel:'Failure rate (%)',n:10,sumX:850,sumY:142,sumX2:74750,sumY2:2156,sumXY:12840,r:0.89,cv:0.6319,sig:true,xRange:[60,120],yRange:[5,28],predictX:95,predictY:17.3,sq4X:95,sq4Type:'interpolation',seed:301},
+{id:'L4_2',xLabel:'Batch size',yLabel:'Unit cost (\\u00a3)',n:12,sumX:1320,sumY:744,sumX2:158400,sumY2:47952,sumXY:76560,r:-0.83,cv:0.5760,sig:true,xRange:[50,160],yRange:[40,85],predictX:100,predictY:65.96,sq4X:100,sq4Type:'interpolation',seed:302},
+{id:'L4_3',xLabel:'Speed (rpm)',yLabel:'Surface roughness (\\u03bcm)',n:10,sumX:9500,sumY:85,sumX2:9737500,sumY2:779,sumXY:77250,r:-0.76,cv:0.6319,sig:true,xRange:[500,1400],yRange:[5,12],predictX:1000,predictY:8.26,sq4X:1000,sq4Type:'interpolation',seed:303},
+{id:'L4_4',xLabel:'Curing time (hours)',yLabel:'Compressive strength (MPa)',n:12,sumX:288,sumY:4152,sumX2:7488,sumY2:1460736,sumXY:102672,r:0.91,cv:0.5760,sig:true,xRange:[18,30],yRange:[310,400],predictX:24,predictY:346,sq4X:24,sq4Type:'interpolation',seed:304},
+{id:'L4_5',xLabel:'Humidity (%)',yLabel:'Resistance (M\\u03a9)',n:15,sumX:975,sumY:315,sumX2:65325,sumY2:6867,sumXY:19845,r:-0.71,cv:0.5140,sig:true,xRange:[40,90],yRange:[10,32],predictX:65,predictY:20.0,sq4X:65,sq4Type:'interpolation',seed:305},
+{id:'L4_6',xLabel:'Weld current (A)',yLabel:'Joint strength (kN)',n:10,sumX:1800,sumY:245,sumX2:334000,sumY2:6125,sumXY:45300,r:0.85,cv:0.6319,sig:true,xRange:[150,210],yRange:[20,30],predictX:185,predictY:25.1,sq4X:185,sq4Type:'interpolation',seed:306},
+{id:'L4_7',xLabel:'Coolant flow rate (L/min)',yLabel:'Tool temperature (\\u00b0C)',n:12,sumX:180,sumY:3960,sumX2:2916,sumY2:1334400,sumXY:57600,r:-0.88,cv:0.5760,sig:true,xRange:[10,20],yRange:[280,380],predictX:15,predictY:330,sq4X:15,sq4Type:'interpolation',seed:307},
+{id:'L4_8',xLabel:'Component age (months)',yLabel:'Maintenance cost (\\u00a3)',n:18,sumX:1260,sumY:14400,sumX2:96600,sumY2:11808000,sumXY:1072800,r:0.86,cv:0.4683,sig:true,xRange:[50,90],yRange:[600,1000],predictX:72,predictY:815.4,sq4X:72,sq4Type:'interpolation',seed:308},
+{id:'L4_9',xLabel:'Insulation thickness (mm)',yLabel:'Heat loss (W/m\\u00b2)',n:10,sumX:275,sumY:480,sumX2:8125,sumY2:24400,sumXY:12000,r:-0.92,cv:0.6319,sig:true,xRange:[20,35],yRange:[35,65],predictX:28,predictY:47.0,sq4X:28,sq4Type:'interpolation',seed:309},
+{id:'L4_10',xLabel:'Shaft diameter (mm)',yLabel:'Vibration amplitude (\\u03bcm)',n:12,sumX:600,sumY:432,sumX2:30600,sumY2:16200,sumXY:20880,r:-0.78,cv:0.5760,sig:true,xRange:[40,60],yRange:[20,52],predictX:52,predictY:33.6,sq4X:52,sq4Type:'interpolation',seed:310},
+{id:'L4_11',xLabel:'Pressure (bar)',yLabel:'Defect rate (%)',n:15,sumX:1275,sumY:225,sumX2:111375,sumY2:3525,sumXY:18225,r:-0.82,cv:0.5140,sig:true,xRange:[70,100],yRange:[10,25],predictX:85,predictY:15,sq4X:85,sq4Type:'interpolation',seed:311},
+{id:'L4_12',xLabel:'Voltage (V)',yLabel:'Current (mA)',n:10,sumX:275,sumY:330,sumX2:8625,sumY2:12100,sumXY:9900,r:0.74,cv:0.6319,sig:true,xRange:[20,35],yRange:[25,42],predictX:28,predictY:33.4,sq4X:28,sq4Type:'interpolation',seed:312},
+{id:'L4_13',xLabel:'Furnace temperature (\\u00b0C)',yLabel:'Grain size (\\u03bcm)',n:12,sumX:10800,sumY:540,sumX2:9936000,sumY2:25200,sumXY:496800,r:0.93,cv:0.5760,sig:true,xRange:[800,1000],yRange:[38,52],predictX:900,predictY:45,sq4X:900,sq4Type:'interpolation',seed:313},
+{id:'L4_14',xLabel:'Quality checks per batch',yLabel:'Return rate (%)',n:15,sumX:135,sumY:210,sumX2:1305,sumY2:3150,sumXY:1755,r:-0.87,cv:0.5140,sig:true,xRange:[5,14],yRange:[5,20],predictX:10,predictY:12.5,sq4X:10,sq4Type:'interpolation',seed:314}
+]
+};
+
+// Compute b and a from summary stats for L4
+SCENARIOS.level4.forEach(function(s) {
+  var n=s.n, Sx=s.sumX, Sy=s.sumY, Sx2=s.sumX2, Sy2=s.sumY2, Sxy=s.sumXY;
+  s.equation = {
+    b: (n*Sxy - Sx*Sy) / (n*Sx2 - Sx*Sx),
+    a: (Sy/n) - ((n*Sxy - Sx*Sy) / (n*Sx2 - Sx*Sx)) * (Sx/n)
+  };
+});
+
+// Critical value lookup
+var CV_TABLE = {10:0.6319,12:0.5760,15:0.5140,18:0.4683,20:0.4438,25:0.3961};
+
+// ===== GAME STATE =====
+var state = {
+  level: null,
+  scenarios: [],
+  currentIdx: 0,
+  currentSubQ: 0,
+  subQuestions: [],
+  score: 0,
+  wrongCount: 0,
+  timerStart: 0,
+  timerInterval: null,
+  elapsed: 0,
+  scenarioScores: []
+};
+
+// ===== SEEDED RANDOM =====
+function seededRandom(seed) {
+  return function() {
+    seed = (seed * 16807 + 0) % 2147483647;
+    return (seed - 1) / 2147483646;
+  };
+}
+
+function generatePoints(scenario) {
+  var rng = seededRandom(scenario.seed);
+  var points = [];
+  var xStep = (scenario.xRange[1] - scenario.xRange[0]) / scenario.n;
+  for (var i = 0; i < scenario.n; i++) {
+    var x = scenario.xRange[0] + xStep * i + rng() * xStep * 0.8;
+    var yIdeal = scenario.equation.a + scenario.equation.b * x;
+    var scatter = (1 - Math.abs(scenario.r)) * (scenario.yRange[1] - scenario.yRange[0]) * 0.15;
+    var y = yIdeal + (rng() - 0.5) * 2 * scatter;
+    points.push({ x: x, y: Math.max(scenario.yRange[0], Math.min(scenario.yRange[1], y)) });
+  }
+  return points;
+}
+
+// ===== HELPERS =====
+function kx(latex) { return katex.renderToString(latex, {throwOnError:false, displayMode:false}); }
+function kxBlock(latex) { return katex.renderToString(latex, {throwOnError:false, displayMode:true}); }
+function round2(v) { return Math.round(v * 100) / 100; }
+function round1(v) { return Math.round(v * 10) / 10; }
+function absB(s) { return Math.abs(s.equation.b); }
+function corrDir(r) { return r > 0 ? 'positive' : 'negative'; }
+function corrStrength(r) {
+  var a = Math.abs(r);
+  if (a >= 0.90) return 'very strong';
+  if (a >= 0.70) return 'strong';
+  if (a >= 0.40) return 'moderate';
+  return 'weak';
+}
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+// ===== LEVEL SELECTION =====
+var selectedLevel = null;
+// The one map from a button's data-level or a ?level= value to a SCENARIOS key.
+// The Level 4 button says 'l4' but the bank, pill, best score and leaderboard all
+// use 'level4'; mapping only the URL route left the button throwing on Start.
+var LEVEL_KEY = {core:'core',alevel:'alevel',level4:'level4',l4:'level4'};
+function selectLevel(btn) {
+  document.querySelectorAll('#levelGrid .sel-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  selectedLevel = LEVEL_KEY[btn.dataset.level];
+  document.getElementById('startBtn').disabled = false;
+}
+
+// URL param override
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var lv = params.get('level');
+  if (lv) {
+    var mapped = LEVEL_KEY[lv.toLowerCase()];
+    if (mapped) {
+      selectedLevel = mapped;
+      var btns = document.querySelectorAll('#levelGrid .sel-btn');
+      btns.forEach(function(b) {
+        var dl = b.dataset.level;
+        if ((mapped === 'level4' && dl === 'l4') || (mapped === 'core' && dl === 'core') || (mapped === 'alevel' && dl === 'alevel')) {
+          b.classList.add('active');
+        }
+      });
+      document.getElementById('startBtn').disabled = false;
+    }
+  }
+})();
+
+// ===== SCORING =====
+function calcScore(base, seconds, wrongs) {
+  var multiplier = 1 / (1 + 0.15 * Math.log(1 + seconds));
+  return Math.max(1, Math.round((base - wrongs * 10) * multiplier));
+}
+
+function getBestKey() { return 'rr_best_' + state.level; }
+function getBest() {
+  var v = localStorage.getItem(getBestKey());
+  return v ? parseInt(v) : 0;
+}
+function saveBest(score) {
+  var prev = getBest();
+  if (score > prev) localStorage.setItem(getBestKey(), score);
+}
+
+// ===== TIMER =====
+function startTimer() {
+  state.timerStart = Date.now();
+  state.elapsed = 0;
+  state.timerInterval = setInterval(function() {
+    state.elapsed = Math.floor((Date.now() - state.timerStart) / 1000);
+    var m = Math.floor(state.elapsed / 60);
+    var s = state.elapsed % 60;
+    document.getElementById('hTimer').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+  }, 250);
+}
+function stopTimer() { clearInterval(state.timerInterval); }
+
+// ===== BEGIN GAME =====
+function beginGame() {
+  state.level = selectedLevel;
+  var key = state.level === 'level4' ? 'level4' : state.level;
+  var pool = SCENARIOS[key].slice();
+  // Shuffle and pick 5
+  state.scenarios = shuffle(pool).slice(0, 5);
+  state.currentIdx = 0;
+  state.score = 0;
+  state.scenarioScores = [];
+  state._rrQAnswered = 0;
+  state._rrCorrectCount = 0;
+
+  mfg('game_started',{game_slug:'regression-rumble',level:state.level});
+  window._ggAbandoned=true;
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'regression-rumble',level:state.level,questions_answered:state._rrQAnswered||0})});}
+
+  document.getElementById('selector').style.display = 'none';
+  document.getElementById('gameContainer').style.display = 'block';
+  document.getElementById('headerStats').style.display = 'flex';
+  document.getElementById('finalScreen').style.display = 'none';
+
+  // Set header pill
+  var pill = document.getElementById('headerPill');
+  pill.style.display = 'inline-block';
+  var pillMap = {core:['Core Maths','var(--core)'],alevel:['A-Level','var(--alevel)'],level4:['Level 4','var(--l4)']};
+  pill.textContent = pillMap[state.level][0];
+  pill.style.background = pillMap[state.level][1];
+
+  var best = getBest();
+  document.getElementById('hBest').textContent = best > 0 ? best : '--';
+
+  startTimer();
+  loadScenario();
+}
+
+// ===== LOAD SCENARIO =====
+function loadScenario() {
+  var sc = state.scenarios[state.currentIdx];
+  state.wrongCount = 0;
+  state.currentSubQ = 0;
+  document.getElementById('hQ').textContent = (state.currentIdx + 1) + '/5';
+  document.getElementById('hScore').textContent = state.score;
+
+  // Draw diagram
+  drawScatter(sc);
+
+  // Build sub-questions
+  state.subQuestions = buildSubQuestions(sc);
+
+  // Render panel
+  renderSubQuestion();
+}
+
+// ===== DRAW SCATTER =====
+function drawScatter(sc) {
+  document.getElementById('diagramTitle').textContent = sc.yLabel + ' vs ' + sc.xLabel;
+  document.getElementById('diagramContext').textContent = 'n = ' + sc.n + ' data points';
+
+  var canvas = document.getElementById('scatterCanvas');
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var pad = {top:30, right:30, bottom:60, left:70};
+  var plotW = W - pad.left - pad.right;
+  var plotH = H - pad.top - pad.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#141820';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid and axes
+  var xMin = sc.xRange[0], xMax = sc.xRange[1];
+  var yMin = sc.yRange[0], yMax = sc.yRange[1];
+
+  // Nice tick intervals
+  function niceStep(range, maxTicks) {
+    var rough = range / maxTicks;
+    var mag = Math.pow(10, Math.floor(Math.log10(rough)));
+    var res = rough / mag;
+    if (res <= 1.5) return mag;
+    if (res <= 3) return 2 * mag;
+    if (res <= 7) return 5 * mag;
+    return 10 * mag;
+  }
+
+  var xStep = niceStep(xMax - xMin, 8);
+  var yStep = niceStep(yMax - yMin, 6);
+
+  function mapX(v) { return pad.left + (v - xMin) / (xMax - xMin) * plotW; }
+  function mapY(v) { return pad.top + plotH - (v - yMin) / (yMax - yMin) * plotH; }
+
+  // Gridlines
+  ctx.strokeStyle = '#2a2e3a';
+  ctx.lineWidth = 0.5;
+  ctx.font = '11px "JetBrains Mono", monospace';
+  ctx.fillStyle = '#7a7f90';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+
+  var xStart = Math.ceil(xMin / xStep) * xStep;
+  for (var x = xStart; x <= xMax; x += xStep) {
+    var px = mapX(x);
+    ctx.beginPath(); ctx.moveTo(px, pad.top); ctx.lineTo(px, pad.top + plotH); ctx.stroke();
+    var label = x % 1 === 0 ? x.toString() : x.toFixed(1);
+    ctx.fillText(label, px, pad.top + plotH + 8);
+  }
+
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  var yStart = Math.ceil(yMin / yStep) * yStep;
+  for (var y = yStart; y <= yMax; y += yStep) {
+    var py = mapY(y);
+    ctx.beginPath(); ctx.moveTo(pad.left, py); ctx.lineTo(pad.left + plotW, py); ctx.stroke();
+    var label = y % 1 === 0 ? y.toString() : y.toFixed(1);
+    ctx.fillText(label, pad.left - 8, py);
+  }
+
+  // Axes
+  ctx.strokeStyle = '#7a7f90';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad.left, pad.top); ctx.lineTo(pad.left, pad.top + plotH); ctx.lineTo(pad.left + plotW, pad.top + plotH); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#e2e4e9';
+  ctx.font = '13px "Outfit", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(sc.xLabel, pad.left + plotW / 2, H - 16);
+
+  ctx.save();
+  ctx.translate(16, pad.top + plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText(sc.yLabel, 0, 0);
+  ctx.restore();
+
+  // Points
+  var points = generatePoints(sc);
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  points.forEach(function(p) {
+    var px = mapX(p.x), py = mapY(p.y);
+    if (px >= pad.left && px <= pad.left + plotW && py >= pad.top && py <= pad.top + plotH) {
+      ctx.beginPath();
+      ctx.arc(px, py, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  });
+
+  // Regression line
+  var a = sc.equation.a, b = sc.equation.b;
+  var lineY0 = a + b * xMin;
+  var lineY1 = a + b * xMax;
+  ctx.strokeStyle = '#0ea5e9';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(mapX(xMin), mapY(lineY0));
+  ctx.lineTo(mapX(xMax), mapY(lineY1));
+  ctx.stroke();
+
+  // Equation label
+  ctx.fillStyle = '#0ea5e9';
+  ctx.font = '12px "JetBrains Mono", monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'bottom';
+  var eqStr = 'y = ' + round2(a) + (b >= 0 ? ' + ' : ' - ') + round2(Math.abs(b)) + 'x';
+  var eqX = pad.left + 10;
+  var eqY = b >= 0 ? pad.top + 20 : pad.top + plotH - 10;
+  ctx.fillText(eqStr, eqX, eqY);
+}
+
+// ===== BUILD SUB-QUESTIONS =====
+function buildSubQuestions(sc) {
+  var qs = [];
+  var level = state.level;
+
+  if (level === 'level4') {
+    qs.push(buildSQ7(sc));
+    qs.push(buildSQ8(sc));
+  }
+
+  qs.push(buildSQ1(sc));
+
+  if (level === 'alevel' || level === 'level4') {
+    qs.push(buildSQ2(sc));
+  }
+
+  qs.push(buildSQ3(sc));
+  qs.push(buildSQ4(sc));
+  qs.push(buildSQ5(sc));
+
+  if (level === 'alevel' || level === 'level4') {
+    qs.push(buildSQ6(sc));
+  }
+
+  return qs;
+}
+
+// SQ1 - Interpret gradient
+function buildSQ1(sc) {
+  var b = sc.equation.b;
+  var dir = b > 0 ? 'increases' : 'decreases';
+  var xU = sc.xLabel, yU = sc.yLabel;
+  var correct = 'For every additional unit of ' + xU + ', ' + yU + ' ' + dir + ' by approximately ' + round2(absB(sc)) + '.';
+  var wrongs = [
+    'The ' + yU + ' starts at ' + round2(absB(sc)) + ' when ' + xU + ' is zero.',
+    'For every additional unit of ' + yU + ', ' + xU + ' ' + (b > 0 ? 'decreases' : 'increases') + ' by approximately ' + round2(absB(sc)) + '.',
+    'There is a ' + (Math.abs(sc.r) > 0.7 ? 'strong' : 'moderate') + ' correlation, so ' + xU + ' causes changes in ' + yU + '.'
+  ];
+  var options = shuffle([{text:correct,correct:true}].concat(wrongs.map(function(w){return {text:w,correct:false};})));
+  return {
+    type: 'mc',
+    label: 'Interpret the gradient',
+    question: 'The gradient of the regression line is ' + kx('b = ' + round2(b)) + '. Interpret this value in context.',
+    options: options,
+    hint: 'The gradient tells you the change in y for each unit increase in x. Be careful not to confuse gradient with intercept, or correlation with causation.'
+  };
+}
+
+// SQ2 - Interpret intercept
+function buildSQ2(sc) {
+  var a = sc.equation.a;
+  var xU = sc.xLabel, yU = sc.yLabel;
+  var xMin = sc.xRange[0];
+  var meaningful = xMin <= 0;
+  var correct = 'When ' + xU + ' is zero, the predicted ' + yU + ' is ' + round2(a) + '. This ' + (meaningful ? 'may be meaningful as zero is within the range of the data.' : 'is unlikely to be meaningful as zero is outside the range of the data (extrapolation).');
+  var wrongs = [
+    'The intercept of ' + round2(a) + ' represents the average rate of change of ' + yU + '.',
+    'When ' + yU + ' is zero, ' + xU + ' equals ' + round2(a) + '.',
+    'The intercept means there is a ' + corrStrength(sc.r) + ' relationship starting at ' + round2(a) + '.'
+  ];
+  var options = shuffle([{text:correct,correct:true}].concat(wrongs.map(function(w){return {text:w,correct:false};})));
+  return {
+    type: 'mc',
+    label: 'Interpret the y-intercept',
+    question: 'The y-intercept of the regression line is ' + kx('a = ' + round2(a)) + '. Interpret this value in context and comment on whether it is meaningful.',
+    options: options,
+    hint: 'The y-intercept is the predicted value of y when x = 0. Consider whether x = 0 falls within the range of the data.'
+  };
+}
+
+// SQ3 - Prediction
+function buildSQ3(sc) {
+  var pX = sc.predictX;
+  var pY = sc.equation.a + sc.equation.b * pX;
+  var tol = Math.max(0.5, 0.5 * absB(sc));
+  return {
+    type: 'numerical',
+    label: 'Make a prediction',
+    question: 'Use the regression line to estimate ' + sc.yLabel + ' when ' + sc.xLabel + ' = ' + pX + '.',
+    answer: round2(pY),
+    tolerance: tol,
+    hint: 'Substitute x = ' + pX + ' into the equation y = ' + round2(sc.equation.a) + (sc.equation.b >= 0 ? ' + ' : ' \u2212 ') + round2(absB(sc)) + 'x.'
+  };
+}
+
+// SQ4 - Reliability
+function buildSQ4(sc) {
+  var isExtrap = sc.sq4Type === 'extrapolation';
+  var strength = corrStrength(sc.r);
+  var reliableStr, correctText;
+
+  if (isExtrap) {
+    correctText = 'The prediction is unreliable because ' + sc.xLabel + ' = ' + sc.sq4X + ' lies outside the range of the data (extrapolation), so the linear trend may not continue.';
+  } else {
+    if (Math.abs(sc.r) >= 0.70) {
+      correctText = 'The prediction is likely to be reliable because the value lies within the range of the data (interpolation) and the correlation is ' + strength + ' (r = ' + sc.r + ').';
+    } else {
+      correctText = 'The prediction may be unreliable despite being interpolation, because the correlation is only ' + strength + ' (r = ' + sc.r + '), meaning there is considerable scatter.';
+    }
+  }
+
+  var wrongs;
+  if (isExtrap) {
+    wrongs = [
+      'The prediction is reliable because the correlation coefficient is ' + strength + '.',
+      'The prediction is reliable because we used the regression equation.',
+      'The prediction is unreliable because correlation does not prove causation.'
+    ];
+  } else {
+    wrongs = [
+      'The prediction is unreliable because it is extrapolation beyond the data range.',
+      'The prediction is reliable simply because we used the regression equation.',
+      'The prediction is unreliable because correlation does not prove causation.'
+    ];
+  }
+
+  var options = shuffle([{text:correctText,correct:true}].concat(wrongs.map(function(w){return {text:w,correct:false};})));
+  return {
+    type: 'mc',
+    label: 'Comment on reliability',
+    question: 'Comment on the reliability of predicting ' + sc.yLabel + ' when ' + sc.xLabel + ' = ' + sc.sq4X + '.',
+    options: options,
+    hint: 'Consider whether the x-value is inside the data range (interpolation) or outside (extrapolation), and how strong the correlation is.'
+  };
+}
+
+// SQ5 - Interpret r
+function buildSQ5(sc) {
+  var r = sc.r;
+  var strength = corrStrength(r);
+  var dir = corrDir(r);
+  var correct = 'There is a ' + strength + ' ' + dir + ' correlation between ' + sc.xLabel + ' and ' + sc.yLabel + '.';
+
+  // Generate wrong options with common mistakes
+  var otherStrengths = ['weak','moderate','strong','very strong'].filter(function(s){return s!==strength;});
+  var wrongDir = r > 0 ? 'negative' : 'positive';
+  var wrongs = [
+    'There is a ' + otherStrengths[0] + ' ' + dir + ' correlation between ' + sc.xLabel + ' and ' + sc.yLabel + '.',
+    'There is a ' + strength + ' ' + wrongDir + ' correlation between ' + sc.xLabel + ' and ' + sc.yLabel + '.',
+    'There is a ' + otherStrengths[1] + ' ' + wrongDir + ' correlation between ' + sc.xLabel + ' and ' + sc.yLabel + '.'
+  ];
+  var options = shuffle([{text:correct,correct:true}].concat(wrongs.map(function(w){return {text:w,correct:false};})));
+  return {
+    type: 'mc',
+    label: 'Describe the correlation',
+    question: 'The correlation coefficient is ' + kx('r = ' + r) + '. Describe the correlation.',
+    options: options,
+    hint: 'Strength thresholds: 0\u20130.39 weak, 0.40\u20130.69 moderate, 0.70\u20130.89 strong, 0.90\u20131.00 very strong. The sign tells you the direction.'
+  };
+}
+
+// SQ6 - Critical value test
+function buildSQ6(sc) {
+  var cv = sc.cv;
+  var absR = Math.abs(sc.r);
+  var sig = absR > cv;
+  var correct, wrongs;
+
+  if (sig) {
+    correct = 'Since |r| = ' + round2(absR) + ' > ' + cv + ' (critical value), there is sufficient evidence at the 5% significance level to conclude there is correlation.';
+    wrongs = [
+      'Since |r| = ' + round2(absR) + ' < ' + cv + ', there is no evidence of correlation.',
+      'Since r = ' + sc.r + ' > 0.5, there is always significant correlation.',
+      'We cannot determine significance without knowing the p-value.'
+    ];
+  } else {
+    correct = 'Since |r| = ' + round2(absR) + ' < ' + cv + ' (critical value), there is insufficient evidence at the 5% significance level to conclude there is correlation.';
+    wrongs = [
+      'Since |r| = ' + round2(absR) + ' > ' + cv + ', there is significant evidence of correlation.',
+      'Since r is not zero, there must be significant correlation.',
+      'The correlation is significant because the sample size is large enough.'
+    ];
+  }
+
+  var options = shuffle([{text:correct,correct:true}].concat(wrongs.map(function(w){return {text:w,correct:false};})));
+  return {
+    type: 'mc',
+    label: 'Hypothesis test',
+    question: 'The critical value for n = ' + sc.n + ' at the 5% significance level (two-tailed) is ' + cv + '. Is there evidence of correlation?',
+    options: options,
+    hint: 'Compare |r| with the critical value. If |r| > critical value, reject H\u2080 (no correlation).'
+  };
+}
+
+// SQ7 - Calculate b and a (L4 only)
+function buildSQ7(sc) {
+  var n=sc.n, Sx=sc.sumX, Sy=sc.sumY, Sx2=sc.sumX2, Sxy=sc.sumXY;
+  var bCalc = (n*Sxy - Sx*Sy) / (n*Sx2 - Sx*Sx);
+  var aCalc = Sy/n - bCalc * Sx/n;
+
+  var statsHTML = '<table class="stats-table"><tr><th>n</th><th>&Sigma;x</th><th>&Sigma;y</th><th>&Sigma;x&sup2;</th><th>&Sigma;y&sup2;</th><th>&Sigma;xy</th></tr>';
+  statsHTML += '<tr><td>' + n + '</td><td>' + Sx + '</td><td>' + Sy + '</td><td>' + Sx2 + '</td><td>' + sc.sumY2 + '</td><td>' + Sxy + '</td></tr></table>';
+
+  var formulaB = kxBlock('b = \\frac{n\\Sigma xy - \\Sigma x \\Sigma y}{n\\Sigma x^2 - (\\Sigma x)^2}');
+  var formulaA = kxBlock('a = \\bar{y} - b\\bar{x}');
+
+  return {
+    type: 'double_numerical',
+    label: 'Calculate b and a',
+    question: 'Using the summary statistics below, calculate the gradient ' + kx('b') + ' and intercept ' + kx('a') + ' of the regression line ' + kx('y = a + bx') + '.' + statsHTML + formulaB + formulaA,
+    answer1: round2(bCalc),
+    tolerance1: 0.05,
+    label1: 'b =',
+    answer2: round2(aCalc),
+    tolerance2: 0.5,
+    label2: 'a =',
+    hint: 'Substitute the values carefully. b = (' + n + ' \u00d7 ' + Sxy + ' \u2212 ' + Sx + ' \u00d7 ' + Sy + ') / (' + n + ' \u00d7 ' + Sx2 + ' \u2212 ' + Sx + '\u00b2). Then a = \u0233 \u2212 b\u0078\u0304.'
+  };
+}
+
+// SQ8 - Calculate r (L4 only)
+function buildSQ8(sc) {
+  var n=sc.n, Sx=sc.sumX, Sy=sc.sumY, Sx2=sc.sumX2, Sy2=sc.sumY2, Sxy=sc.sumXY;
+  var num = n*Sxy - Sx*Sy;
+  var den = Math.sqrt((n*Sx2 - Sx*Sx) * (n*Sy2 - Sy*Sy));
+  var rCalc = num / den;
+
+  var statsHTML = '<table class="stats-table"><tr><th>n</th><th>&Sigma;x</th><th>&Sigma;y</th><th>&Sigma;x&sup2;</th><th>&Sigma;y&sup2;</th><th>&Sigma;xy</th></tr>';
+  statsHTML += '<tr><td>' + n + '</td><td>' + Sx + '</td><td>' + Sy + '</td><td>' + Sx2 + '</td><td>' + Sy2 + '</td><td>' + Sxy + '</td></tr></table>';
+
+  var formula = kxBlock('r = \\frac{n\\Sigma xy - \\Sigma x \\Sigma y}{\\sqrt{\\left(n\\Sigma x^2 - (\\Sigma x)^2\\right)\\left(n\\Sigma y^2 - (\\Sigma y)^2\\right)}}');
+
+  return {
+    type: 'numerical',
+    label: 'Calculate r',
+    question: 'Using the summary statistics below, calculate the Pearson correlation coefficient ' + kx('r') + '.' + statsHTML + formula,
+    answer: round2(rCalc),
+    tolerance: 0.02,
+    hint: 'Numerator = n\u03a3xy \u2212 \u03a3x\u03a3y. Denominator = \u221a[(n\u03a3x\u00b2 \u2212 (\u03a3x)\u00b2)(n\u03a3y\u00b2 \u2212 (\u03a3y)\u00b2)].'
+  };
+}
+
+// ===== RENDER SUB-QUESTION =====
+function renderSubQuestion() {
+  var panel = document.getElementById('questionPanel');
+  panel.innerHTML = '';
+
+  // Completed sub-questions
+  for (var i = 0; i < state.currentSubQ; i++) {
+    var doneDiv = document.createElement('div');
+    doneDiv.className = 'completed-q';
+    doneDiv.innerHTML = '<span class="tick">\u2713</span> ' + state.subQuestions[i].label;
+    panel.appendChild(doneDiv);
+  }
+
+  if (state.currentSubQ >= state.subQuestions.length) {
+    // All sub-questions done — show model answer and next
+    showModelAnswer(panel);
+    return;
+  }
+
+  var sq = state.subQuestions[state.currentSubQ];
+  var card = document.createElement('div');
+  card.className = 'q-card';
+  card.id = 'activeQ';
+
+  var numDiv = document.createElement('div');
+  numDiv.className = 'q-number';
+  numDiv.textContent = 'Question ' + (state.currentSubQ + 1) + ' of ' + state.subQuestions.length;
+  card.appendChild(numDiv);
+
+  var textDiv = document.createElement('div');
+  textDiv.className = 'q-text';
+  textDiv.innerHTML = sq.question;
+  card.appendChild(textDiv);
+
+  if (sq.type === 'mc') {
+    var mcDiv = document.createElement('div');
+    mcDiv.className = 'q-mc';
+    sq.options.forEach(function(opt, idx) {
+      var btn = document.createElement('button');
+      btn.className = 'mc-btn';
+      btn.textContent = opt.text;
+      btn.onclick = function() { handleMC(btn, opt, sq, mcDiv); };
+      mcDiv.appendChild(btn);
+    });
+    card.appendChild(mcDiv);
+  } else if (sq.type === 'numerical') {
+    var row = document.createElement('div');
+    row.className = 'q-input-row';
+    var input = document.createElement('input');
+    input.className = 'q-input';
+    input.type = 'text';
+    input.inputMode = 'decimal';
+    input.placeholder = 'Enter value...';
+    input.id = 'numInput';
+    var submit = document.createElement('button');
+    submit.className = 'q-submit';
+    submit.textContent = 'Submit';
+    submit.onclick = function() { handleNumerical(input, sq); };
+    input.addEventListener('keydown', function(e) { if (e.key === 'Enter') submit.click(); });
+    row.appendChild(input);
+    row.appendChild(submit);
+    card.appendChild(row);
+  } else if (sq.type === 'double_numerical') {
+    // First input (b)
+    var row1 = document.createElement('div');
+    row1.className = 'q-input-row';
+    row1.style.marginBottom = '8px';
+    var lbl1 = document.createElement('span');
+    lbl1.style.fontFamily = "'JetBrains Mono',monospace";
+    lbl1.style.fontSize = '14px';
+    lbl1.style.color = 'var(--muted)';
+    lbl1.style.minWidth = '30px';
+    lbl1.textContent = sq.label1;
+    var inp1 = document.createElement('input');
+    inp1.className = 'q-input';
+    inp1.type = 'text';
+    inp1.inputMode = 'decimal';
+    inp1.placeholder = 'gradient';
+    inp1.id = 'numInput1';
+    row1.appendChild(lbl1);
+    row1.appendChild(inp1);
+    card.appendChild(row1);
+
+    // Second input (a)
+    var row2 = document.createElement('div');
+    row2.className = 'q-input-row';
+    var lbl2 = document.createElement('span');
+    lbl2.style.fontFamily = "'JetBrains Mono',monospace";
+    lbl2.style.fontSize = '14px';
+    lbl2.style.color = 'var(--muted)';
+    lbl2.style.minWidth = '30px';
+    lbl2.textContent = sq.label2;
+    var inp2 = document.createElement('input');
+    inp2.className = 'q-input';
+    inp2.type = 'text';
+    inp2.inputMode = 'decimal';
+    inp2.placeholder = 'intercept';
+    inp2.id = 'numInput2';
+    var submit = document.createElement('button');
+    submit.className = 'q-submit';
+    submit.textContent = 'Submit';
+    submit.onclick = function() { handleDoubleNumerical(inp1, inp2, sq); };
+    inp2.addEventListener('keydown', function(e) { if (e.key === 'Enter') submit.click(); });
+    row2.appendChild(lbl2);
+    row2.appendChild(inp2);
+    row2.appendChild(submit);
+    card.appendChild(row2);
+  }
+
+  var fb = document.createElement('div');
+  fb.className = 'q-feedback';
+  fb.id = 'feedback';
+  card.appendChild(fb);
+
+  panel.appendChild(card);
+
+  // Focus input if numerical
+  if (sq.type === 'numerical') {
+    setTimeout(function() { document.getElementById('numInput').focus(); }, 100);
+  } else if (sq.type === 'double_numerical') {
+    setTimeout(function() { document.getElementById('numInput1').focus(); }, 100);
+  }
+}
+
+// ===== HANDLE MC =====
+function handleMC(btn, opt, sq, mcDiv) {
+  var fb = document.getElementById('feedback');
+  var allBtns = mcDiv.querySelectorAll('.mc-btn');
+
+  if (opt.correct) {
+    btn.classList.add('correct');
+    allBtns.forEach(function(b) { b.classList.add('disabled'); });
+    fb.className = 'q-feedback correct';
+    fb.textContent = 'Correct!';
+    fb.style.display = 'block';
+    state._rrQAnswered++;state._rrCorrectCount++;
+    mfg('question_answered',{game_slug:'regression-rumble',level:state.level,correct:true,question_index:state._rrQAnswered});
+    setTimeout(function() {
+      state.currentSubQ++;
+      renderSubQuestion();
+    }, 1000);
+  } else {
+    btn.classList.add('wrong');
+    btn.classList.add('disabled');
+    state.wrongCount++;
+    fb.className = 'q-feedback wrong';
+    fb.innerHTML = sq.hint;
+    fb.style.display = 'block';
+  }
+}
+
+// ===== HANDLE NUMERICAL =====
+function handleNumerical(input, sq) {
+  var val = parseFloat(input.value);
+  var fb = document.getElementById('feedback');
+  if (isNaN(val)) {
+    fb.className = 'q-feedback wrong';
+    fb.textContent = 'Please enter a valid number.';
+    fb.style.display = 'block';
+    return;
+  }
+  if (Math.abs(val - sq.answer) <= sq.tolerance) {
+    input.style.borderColor = 'var(--green)';
+    input.disabled = true;
+    fb.className = 'q-feedback correct';
+    fb.textContent = 'Correct! The answer is ' + round2(sq.answer) + '.';
+    fb.style.display = 'block';
+    state._rrQAnswered++;state._rrCorrectCount++;
+    mfg('question_answered',{game_slug:'regression-rumble',level:state.level,correct:true,question_index:state._rrQAnswered});
+    setTimeout(function() {
+      state.currentSubQ++;
+      renderSubQuestion();
+    }, 1000);
+  } else {
+    state.wrongCount++;
+    fb.className = 'q-feedback wrong';
+    fb.innerHTML = sq.hint;
+    fb.style.display = 'block';
+    input.style.borderColor = 'var(--red)';
+    setTimeout(function() { input.style.borderColor = 'var(--border)'; }, 1500);
+  }
+}
+
+// ===== HANDLE DOUBLE NUMERICAL =====
+function handleDoubleNumerical(inp1, inp2, sq) {
+  var v1 = parseFloat(inp1.value);
+  var v2 = parseFloat(inp2.value);
+  var fb = document.getElementById('feedback');
+  if (isNaN(v1) || isNaN(v2)) {
+    fb.className = 'q-feedback wrong';
+    fb.textContent = 'Please enter valid numbers for both fields.';
+    fb.style.display = 'block';
+    return;
+  }
+  var b1ok = Math.abs(v1 - sq.answer1) <= sq.tolerance1;
+  var b2ok = Math.abs(v2 - sq.answer2) <= sq.tolerance2;
+
+  if (b1ok && b2ok) {
+    inp1.style.borderColor = 'var(--green)';
+    inp2.style.borderColor = 'var(--green)';
+    inp1.disabled = true;
+    inp2.disabled = true;
+    fb.className = 'q-feedback correct';
+    fb.textContent = 'Correct! b = ' + round2(sq.answer1) + ', a = ' + round2(sq.answer2) + '.';
+    fb.style.display = 'block';
+    state._rrQAnswered++;state._rrCorrectCount++;
+    mfg('question_answered',{game_slug:'regression-rumble',level:state.level,correct:true,question_index:state._rrQAnswered});
+    setTimeout(function() {
+      state.currentSubQ++;
+      renderSubQuestion();
+    }, 1000);
+  } else {
+    state.wrongCount++;
+    var msg = '';
+    if (!b1ok && !b2ok) msg = 'Both values are incorrect. ';
+    else if (!b1ok) msg = 'The gradient b is incorrect. ';
+    else msg = 'The intercept a is incorrect. ';
+    fb.className = 'q-feedback wrong';
+    fb.innerHTML = msg + sq.hint;
+    fb.style.display = 'block';
+    if (!b1ok) { inp1.style.borderColor = 'var(--red)'; setTimeout(function(){inp1.style.borderColor='var(--border)';},1500); }
+    if (!b2ok) { inp2.style.borderColor = 'var(--red)'; setTimeout(function(){inp2.style.borderColor='var(--border)';},1500); }
+  }
+}
+
+// ===== MODEL ANSWER =====
+function showModelAnswer(panel) {
+  var sc = state.scenarios[state.currentIdx];
+  var b = sc.equation.b;
+  var a = sc.equation.a;
+  var dir = b > 0 ? 'increases' : 'decreases';
+  var strength = corrStrength(sc.r);
+  var posNeg = corrDir(sc.r);
+  var interpExtrap = sc.sq4Type;
+  var reliable = interpExtrap === 'interpolation' && Math.abs(sc.r) >= 0.7;
+  var predY = round2(a + b * sc.predictX);
+
+  var text = 'For every additional unit of ' + sc.xLabel + ', ' + sc.yLabel + ' ' + dir + ' by approximately ' + round2(absB(sc)) + '. ';
+  text += 'The prediction of ' + predY + ' for ' + sc.xLabel + ' = ' + sc.predictX + ' is likely to be ';
+  text += (reliable ? 'reliable' : 'unreliable') + ' as this value ';
+  text += (interpExtrap === 'interpolation' ? 'lies within' : 'lies outside') + ' the range of the data ';
+  text += '(' + interpExtrap + ')';
+  if (interpExtrap === 'interpolation' && Math.abs(sc.r) < 0.7) {
+    text += ', though the correlation is only ' + strength;
+  } else {
+    text += ' and the correlation is ' + strength;
+  }
+  text += ' (r = ' + sc.r + '). ';
+  text += 'There is a ' + strength + ' ' + posNeg + ' correlation between ' + sc.xLabel + ' and ' + sc.yLabel + '.';
+
+  if (state.level === 'alevel' || state.level === 'level4') {
+    if (sc.cv !== undefined) {
+      var absR = Math.abs(sc.r);
+      text += ' Comparing |r| = ' + round2(absR) + ' with the critical value ' + sc.cv + ' for n = ' + sc.n;
+      text += absR > sc.cv ? ', there is significant evidence of correlation at the 5% level.' : ', there is insufficient evidence of correlation at the 5% level.';
+    }
+  }
+
+  if (state.level === 'level4' && sc.sumX !== undefined) {
+    text += ' The regression coefficients were calculated as b = ' + round2(sc.equation.b) + ' and a = ' + round2(sc.equation.a) + ' from the summary statistics.';
+  }
+
+  var maDiv = document.createElement('div');
+  maDiv.className = 'model-answer';
+  maDiv.innerHTML = '<div class="model-title">Model Answer</div><div class="model-text">' + text + '</div>';
+  panel.appendChild(maDiv);
+
+  // Scenario score
+  var scenarioScore = calcScore(100, state.elapsed, state.wrongCount);
+  state.score += scenarioScore;
+  state.scenarioScores.push({scenario: sc, score: scenarioScore});
+  document.getElementById('hScore').textContent = state.score;
+
+  // Score bar
+  var bar = document.createElement('div');
+  bar.className = 'score-bar';
+  var isLast = state.currentIdx >= 4;
+  bar.innerHTML = '<div><div class="score-label">Scenario Score</div><div class="score-val">' + scenarioScore + '</div></div>' +
+    '<div><div class="score-label">Total</div><div class="score-val">' + state.score + '</div></div>' +
+    (isLast
+      ? '<button class="next-btn" onclick="showFinal()">See Results</button>'
+      : '<button class="next-btn" onclick="nextScenario()">Next Scenario \u2192</button>');
+  panel.appendChild(bar);
+}
+
+// ===== NEXT SCENARIO =====
+function nextScenario() {
+  state.currentIdx++;
+  state.wrongCount = 0;
+  state.currentSubQ = 0;
+  loadScenario();
+}
+
+// ===== FINAL SCREEN =====
+function showFinal() {
+  stopTimer();
+  document.getElementById('gameContainer').style.display = 'none';
+  var fs = document.getElementById('finalScreen');
+  fs.style.display = 'block';
+
+  window._ggAbandoned=false;
+  var _rrPct=state._rrQAnswered>0?Math.round(state._rrCorrectCount/state._rrQAnswered*100):0;
+  mfg('game_completed',{game_slug:'regression-rumble',level:state.level,score:state.score,questions_answered:state._rrQAnswered,accuracy:_rrPct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('regression-rumble',state.level,state.score,state._rrQAnswered).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('regression-rumble',state.level,state.score);}}
+
+  var _rrOldBest=getBest();
+  saveBest(state.score);
+  var best = getBest();
+  var isNewBest = state.score >= best;
+  if(state.score>_rrOldBest){mfg('personal_best_set',{game_slug:'regression-rumble',level:state.level,score:state.score,previous_best:_rrOldBest});}
+
+  var html = '<h2>Game Complete!</h2>';
+  html += '<div class="final-label">Total Score</div>';
+  html += '<div class="final-score">' + state.score + '</div>';
+  if (isNewBest) {
+    html += '<div class="final-best" style="color:var(--green);">New Personal Best!</div>';
+  } else {
+    html += '<div class="final-best">Personal Best: ' + best + '</div>';
+  }
+
+  html += '<div class="final-breakdown">';
+  state.scenarioScores.forEach(function(ss, i) {
+    html += '<div class="fb-row"><span>Scenario ' + (i+1) + ': ' + ss.scenario.yLabel + ' vs ' + ss.scenario.xLabel + '</span><span class="fb-score">' + ss.score + '</span></div>';
+  });
+  html += '</div>';
+
+  html += '<div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>';
+  html += '<div class="final-btns">';
+  html += '<button class="next-btn" onclick="restart()">Play Again</button>';
+  html += '<button class="menu-btn" onclick="toMenu()">Change Level</button>';
+  html += '</div>';
+  html += '<a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px">\u2190 Back to Games</a>';
+
+  fs.innerHTML = html;
+}
+
+function restart() {
+  document.getElementById('finalScreen').style.display = 'none';
+  beginGame();
+}
+
+function toMenu() {
+  stopTimer();
+  document.getElementById('finalScreen').style.display = 'none';
+  document.getElementById('gameContainer').style.display = 'none';
+  document.getElementById('headerStats').style.display = 'none';
+  document.getElementById('headerPill').style.display = 'none';
+  document.getElementById('selector').style.display = 'block';
+}
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

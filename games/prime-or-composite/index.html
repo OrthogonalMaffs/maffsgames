@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Rapid prime number classification under time pressure. Sort numbers as prime or composite for KS3 and GCSE.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/prime-or-composite/">
+<meta property="og:title" content="Prime or Composite — MaffsGames">
+<meta property="og:description" content="Rapid prime number classification under time pressure. Sort numbers as prime or composite for KS3 and GCSE.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/prime-or-composite/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Prime or Composite — MaffsGames</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+:root {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --border: #334155;
+  --border-dim: rgba(51,65,85,0.5);
+  --text: #f1f5f9;
+  --text-dim: #94a3b8;
+  --accent: #3b82f6;
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.12);
+  --amber: #f59e0b;
+  --amber-bg: rgba(245,158,11,0.12);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.12);
+  --prime: #60a5fa;
+  --composite: #f97316;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{padding-bottom:44px;background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+
+/* Header */
+.header{width:100%;background:#0b1120;border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px}
+.back-link{color:var(--accent);text-decoration:none;font-size:13px;font-weight:600}
+.back-link:hover{text-decoration:underline}
+.game-title{font-weight:700;font-size:clamp(14px,3vw,18px);color:var(--text);letter-spacing:0.02em}
+.game-title span{color:var(--accent)}
+
+/* Page */
+.page{width:100%;max-width:640px;padding:20px 16px 60px;display:flex;flex-direction:column;gap:16px}
+
+/* Status bar */
+.status-bar{display:flex;gap:0.8rem;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;justify-content:space-around}
+.si{display:flex;flex-direction:column;align-items:center;gap:0.15rem}
+.si-val{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:600;color:var(--text)}
+.si-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)}
+
+/* Number arena */
+.number-arena{width:100%;min-height:200px;background:var(--surface);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;position:relative;overflow:hidden}
+.round-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-dim)}
+.big-number{font-family:'JetBrains Mono',monospace;font-size:clamp(3rem,15vw,6rem);font-weight:700;color:var(--text);transition:transform 0.15s,opacity 0.15s}
+.big-number.flash-correct{color:var(--green);transform:scale(1.05)}
+.big-number.flash-wrong{color:var(--red);animation:shake 0.35s ease}
+.number-hint{font-size:13px;color:var(--text-dim);font-style:italic;text-align:center;padding:0 16px}
+
+/* 2026/27 intro — the 6/7 mnemonic. Safe to delete wholesale after July 2027:
+   remove this block, #intro-box in the markup, and its hide-on-start line. */
+.n-comp{color:var(--composite)}
+.n-prime{color:var(--prime)}
+.intro-box{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.intro-row{display:flex;align-items:center;gap:14px}
+.intro-n{font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:700;width:40px;text-align:center;flex-shrink:0;line-height:1}
+.intro-txt{font-size:14px;color:var(--text-dim);line-height:1.5}
+.intro-txt strong{color:var(--text);font-weight:600}
+.intro-foot{font-size:12px;color:var(--text-dim);font-style:italic;border-top:1px solid var(--border-dim);padding-top:10px}
+
+/* Timer bar */
+.timer-track{width:90%;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.timer-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.1s linear,background 0.3s}
+.timer-fill.warn{background:var(--amber)}
+.timer-fill.danger{background:var(--red)}
+
+/* Answer buttons */
+.answer-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+.ans-btn{padding:20px 16px;font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;cursor:pointer;border-radius:12px;border:2px solid;transition:all 0.15s}
+.ans-prime{background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.3);color:var(--prime)}
+.ans-prime:hover{background:rgba(96,165,250,0.18);border-color:var(--prime)}
+.ans-composite{background:rgba(249,115,22,0.08);border-color:rgba(249,115,22,0.3);color:var(--composite)}
+.ans-composite:hover{background:rgba(249,115,22,0.18);border-color:var(--composite)}
+.ans-btn.correct{background:var(--green-bg);border-color:var(--green)}
+.ans-btn.wrong{background:var(--red-bg);border-color:var(--red)}
+.ans-btn:disabled{pointer-events:none}
+
+/* Streak bar */
+.streak-bar{width:100%;display:flex;gap:4px;justify-content:center;flex-wrap:wrap}
+.streak-dot{width:10px;height:10px;border-radius:50%;background:var(--border);border:1px solid var(--text-dim);transition:all 0.2s}
+.streak-dot.hit{background:var(--green);border-color:var(--green);box-shadow:0 0 6px rgba(34,197,94,0.4)}
+.streak-dot.miss{background:var(--red);border-color:var(--red)}
+
+/* Explanation box */
+.explain-box{width:100%;background:var(--surface);border:1px solid var(--border-dim);border-left:3px solid var(--accent);border-radius:10px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim);line-height:1.6;animation:slideIn 0.2s ease;display:none}
+@keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+
+/* Buttons */
+.btn{padding:12px 20px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;border-radius:10px;border:none;transition:all 0.2s;width:100%}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{opacity:0.9}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text-dim)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Leaderboard */
+.lb-section{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.lb-header{padding:12px 16px;border-bottom:1px solid var(--border-dim)}
+.lb-title{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim)}
+.lb-body{padding-bottom:44px;padding:8px 0}
+.lb-empty{font-size:13px;color:var(--text-dim);text-align:center;padding:20px;font-style:italic}
+.lb-row{display:grid;grid-template-columns:1.5rem 1fr auto auto;gap:8px;align-items:center;padding:6px 16px;border-bottom:1px solid var(--border-dim);font-family:'JetBrains Mono',monospace;font-size:12px}
+.lb-row:last-child{border-bottom:none}
+.lb-row.hl{background:rgba(59,130,246,0.06)}
+.lb-rank{color:var(--text-dim)}.lb-name{color:var(--text)}.lb-score{color:var(--accent);text-align:right}.lb-acc{color:var(--text-dim);font-size:11px;text-align:right}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(7,13,26,0.88);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeIn 0.2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-overlay.hidden{display:none}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:380px;overflow:hidden;animation:popIn 0.25s ease}
+@keyframes popIn{from{transform:scale(0.95);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.modal-header{padding:24px 24px 0;text-align:center}
+.modal-result{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.modal-score{margin:16px 24px;background:#0f172a;border:1px solid var(--border-dim);border-radius:10px;padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ms-item{display:flex;flex-direction:column;gap:2px}
+.ms-val{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--accent)}
+.ms-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}
+.modal-name{padding:0 24px;display:flex;flex-direction:column;gap:6px}
+.modal-name label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}
+.name-input{background:#0f172a;border:2px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);outline:none;width:100%;transition:border-color 0.2s}
+.name-input:focus{border-color:var(--accent)}
+.modal-acts{display:flex;gap:8px;padding:16px 24px 24px}
+.modal-acts .btn{flex:1}
+
+/* Accessibility */
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}
+body.accessible{background-color:#12141f!important}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s;margin-left:auto}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after{content:' ✓';font-size:.85em;opacity:.8}
+.incorrect::after{content:' ✗';font-size:.85em;opacity:.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="header">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div class="game-title">PRIME OR <span>COMPOSITE</span></div>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+
+<div class="page">
+  <div class="status-bar">
+    <div class="si"><span class="si-val" id="sv-q">—</span><span class="si-lbl">Question</span></div>
+    <div class="si"><span class="si-val" id="sv-score">0</span><span class="si-lbl">Score</span></div>
+    <div class="si"><span class="si-val" id="sv-streak">0</span><span class="si-lbl">Streak</span></div>
+    <div class="si"><span class="si-val" id="sv-acc">—</span><span class="si-lbl">Accuracy</span></div>
+  </div>
+
+  <div class="number-arena" id="arena">
+    <span class="round-label" id="round-label">Academic year 2026/27</span>
+    <div class="big-number" id="big-number"><span class="n-comp">6</span> <span class="n-prime">7</span></div>
+    <div class="number-hint" id="number-hint">Yes. That 6 7. But here's the thing —</div>
+    <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+  </div>
+
+  <div class="intro-box" id="intro-box">
+    <div class="intro-row">
+      <span class="intro-n n-comp">6</span>
+      <span class="intro-txt"><strong>Composite.</strong> 2 × 3. It breaks apart.</span>
+    </div>
+    <div class="intro-row">
+      <span class="intro-n n-prime">7</span>
+      <span class="intro-txt"><strong>Prime.</strong> Nothing divides it but 1 and itself.</span>
+    </div>
+    <div class="intro-foot">That's the entire game. Sort them before the timer runs out, and don't break your streak.</div>
+  </div>
+
+  <div class="streak-bar" id="streak-bar"></div>
+
+  <div class="answer-btns" id="answer-btns">
+    <button class="ans-btn ans-prime" id="btn-prime" onclick="answer(true)" disabled>PRIME</button>
+    <button class="ans-btn ans-composite" id="btn-composite" onclick="answer(false)" disabled>COMPOSITE</button>
+  </div>
+
+  <div class="explain-box" id="explain-box"></div>
+
+  <button class="btn btn-accent" id="start-btn" onclick="startGame()">Start Game</button>
+
+  <div class="lb-section">
+    <div class="lb-header"><span class="lb-title">Today's Leaderboard</span></div>
+    <div class="lb-body" id="lb-out"><div class="lb-empty">No scores yet — be the first.</div></div>
+  </div>
+</div>
+
+<div class="modal-overlay hidden" id="modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-result" id="modal-result">Game Over</div></div>
+    <div class="modal-score" id="modal-score"></div>
+    <div class="modal-name">
+      <label>Your name for the leaderboard</label>
+      <input class="name-input" id="name-input" type="text" maxlength="20" placeholder="Anonymous">
+    </div>
+    <div class="modal-acts">
+      <button class="btn btn-ghost" onclick="closeModal()">Play Again</button>
+      <button class="btn btn-accent" onclick="submitToLB()">Submit Score</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function isPrime(n){if(n<2)return false;if(n===2)return true;if(n%2===0)return false;for(let i=3;i<=Math.sqrt(n);i+=2)if(n%i===0)return false;return true;}
+function getFactors(n){const f=[];for(let i=2;i<=n/2;i++)if(n%i===0)f.push(i);return f;}
+
+const QUESTIONS=[
+  // Easy — single digit, obvious
+  {n:2,    hint:"Smallest prime"},
+  {n:6,    hint:"2 × 3 — it breaks apart"},
+  {n:7,    hint:"Single digit"},
+  {n:9,    hint:"Think: 3 × 3"},
+  {n:11,   hint:"Two digits"},
+  {n:15,   hint:"Divisible by 3 and 5"},
+  {n:17,   hint:"Two digits, odd"},
+  {n:21,   hint:"Divisible by 3 and 7"},
+  {n:23,   hint:"Two digits"},
+  {n:24,   hint:"Even number"},
+  {n:29,   hint:"Two digits"},
+  // Medium — tricky squares, near-primes
+  {n:49,   hint:"Think: 7²"},
+  {n:51,   hint:"Divisible by 3?"},
+  {n:53,   hint:"Two digits"},
+  {n:57,   hint:"Divisible by 3?"},
+  {n:59,   hint:"Two digits"},
+  {n:61,   hint:"Two digits"},
+  {n:77,   hint:"7 × 11 = ?"},
+  {n:79,   hint:"Two digits"},
+  {n:83,   hint:"Two digits"},
+  {n:87,   hint:"Divisible by 3?"},
+  {n:91,   hint:"7 × 13 = ?"},
+  {n:97,   hint:"Largest two-digit prime?"},
+  {n:99,   hint:"9 × 11 = ?"},
+  // Hard — three digits, products of large primes
+  {n:101,  hint:"Three digits"},
+  {n:103,  hint:"Three digits"},
+  {n:111,  hint:"Divisible by 3?"},
+  {n:119,  hint:"7 × 17 = ?"},
+  {n:121,  hint:"Think: 11²"},
+  {n:127,  hint:"Mersenne prime"},
+  {n:131,  hint:"Three digits"},
+  {n:133,  hint:"7 × 19 = ?"},
+  {n:137,  hint:"Three digits"},
+  {n:143,  hint:"11 × 13 = ?"},
+  {n:149,  hint:"Three digits"},
+  {n:151,  hint:"Three digits"},
+  {n:157,  hint:"Three digits"},
+  {n:161,  hint:"7 × 23 = ?"},
+  {n:163,  hint:"Three digits"},
+  {n:169,  hint:"Think: 13²"},
+  {n:173,  hint:"Three digits"},
+  {n:177,  hint:"Divisible by 3?"},
+  {n:181,  hint:"Three digits"},
+  {n:187,  hint:"11 × 17 = ?"},
+  {n:191,  hint:"Three digits"},
+  {n:197,  hint:"Three digits"},
+  {n:199,  hint:"Three digits"},
+  {n:209,  hint:"11 × 19 = ?"},
+  {n:211,  hint:"Three digits"},
+  {n:221,  hint:"13 × 17 = ?"},
+  {n:223,  hint:"Three digits"},
+  {n:227,  hint:"Three digits"},
+  {n:229,  hint:"Three digits"},
+  {n:233,  hint:"Three digits"},
+  {n:239,  hint:"Three digits"},
+  {n:241,  hint:"Three digits"},
+  {n:247,  hint:"13 × 19 = ?"},
+  {n:251,  hint:"Three digits"},
+  {n:253,  hint:"11 × 23 = ?"},
+  {n:257,  hint:"Fermat prime"},
+  {n:289,  hint:"Think: 17²"},
+  // Expert — four digits
+  {n:1009, hint:"First four-digit prime?"},
+  {n:1021, hint:"Four digits"},
+  {n:1369, hint:"Think: 37²"},
+  {n:1681, hint:"Think: 41²"},
+  {n:9973, hint:"Largest four-digit prime?"},
+];
+
+function dayStr(){const d=new Date();return`${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`}
+function seededRng(seed){let s=seed;return()=>{s=(s*1664525+1013904223)&0xffffffff;return(s>>>0)/0xffffffff}}
+function shuffle(arr,rng){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+
+const LKEY=()=>'poc_lb_'+dayStr();
+const TIME_PER_Q=30000;
+const SCORE_BASE=100;
+
+let questions,qIdx,score,streak,maxStreak,correct,total;
+let qTimer,timerStart,animFrame;
+let gameActive=false;
+
+function initQuestions(){
+  // 2026/27 opener: lead with 6 then 7 so the mnemonic lands before anything else.
+  // Falls back to a plain shuffle if either is ever removed from the bank.
+  const opener=[6,7].map(n=>QUESTIONS.find(q=>q.n===n)).filter(Boolean);
+  const rest=QUESTIONS.filter(q=>!opener.includes(q)).sort(()=>Math.random()-0.5);
+  questions=[...opener,...rest];
+}
+
+function startGame(){
+  initQuestions();
+  qIdx=0;score=0;streak=0;maxStreak=0;correct=0;total=0;
+  gameActive=true;
+  document.getElementById('start-btn').style.display='none';
+  document.getElementById('explain-box').style.display='none';
+  const introBox=document.getElementById('intro-box');
+  if(introBox)introBox.style.display='none';
+  buildStreakBar();
+  updateStatus();
+  mfg('game_started',{game_slug:'prime-or-composite',level:'all'});
+  window._ggAbandoned=true;
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('visibilitychange',function(){if(document.hidden&&window._ggAbandoned)mfg('game_abandoned',{game_slug:'prime-or-composite',level:'all',question_index:total+1});});}
+  nextQuestion();
+}
+
+function nextQuestion(){
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('explain-box'));
+  if(qIdx>=questions.length){endGame();return;}
+  const q=questions[qIdx];
+  document.getElementById('round-label').textContent=`Question ${qIdx+1} of ${questions.length}`;
+  document.getElementById('big-number').textContent=q.n;
+  document.getElementById('big-number').className='big-number';
+  document.getElementById('number-hint').textContent=q.hint;
+  document.getElementById('explain-box').style.display='none';
+  document.getElementById('btn-prime').disabled=false;
+  document.getElementById('btn-composite').disabled=false;
+  document.getElementById('btn-prime').className='ans-btn ans-prime';
+  document.getElementById('btn-composite').className='ans-btn ans-composite';
+  timerStart=Date.now();
+  startTimerBar();
+}
+
+function startTimerBar(){
+  clearTimeout(qTimer);cancelAnimationFrame(animFrame);
+  function tick(){
+    const elapsed=Date.now()-timerStart;
+    const pct=Math.max(0,100-(elapsed/TIME_PER_Q)*100);
+    const fill=document.getElementById('timer-fill');
+    fill.style.width=pct+'%';
+    fill.className='timer-fill'+(pct<15?' danger':pct<40?' warn':'');
+    if(pct>0&&gameActive)animFrame=requestAnimationFrame(tick);
+  }
+  tick();
+  qTimer=setTimeout(()=>timeOut(),TIME_PER_Q);
+}
+
+function timeOut(){cancelAnimationFrame(animFrame);markResult(false,true);}
+
+function answer(isPrimeAnswer){
+  if(!gameActive)return;
+  clearTimeout(qTimer);cancelAnimationFrame(animFrame);
+  const q=questions[qIdx];
+  markResult(isPrimeAnswer===isPrime(q.n),false);
+}
+
+function markResult(wasCorrect,timedOut){
+  document.getElementById('btn-prime').disabled=true;
+  document.getElementById('btn-composite').disabled=true;
+  const q=questions[qIdx];
+  const elapsed=(Date.now()-timerStart)/1000;
+  total++;
+  mfg('question_answered',{game_slug:'prime-or-composite',level:'all',question_index:total,correct:wasCorrect});
+
+  if(wasCorrect){
+    correct++;
+    const speedBonus=Math.round(SCORE_BASE*Math.max(0.2,1-elapsed/(TIME_PER_Q/1000)));
+    score+=speedBonus;
+    streak++;
+    if(streak>maxStreak)maxStreak=streak;
+    flashNumber(true);
+    highlightBtn(isPrime(q.n)?'prime':'composite',true);
+  } else {
+    streak=0;
+    if(!timedOut)flashNumber(false);
+    highlightBtn(isPrime(q.n)?'prime':'composite',false);
+  }
+
+  updateStreakDot(qIdx,wasCorrect);
+  showExplanation(q,wasCorrect,timedOut);
+  updateStatus();
+  qIdx++;
+  // canon 7.6: correct advances briskly, wrong waits for the student.
+  if(wasCorrect){ setTimeout(nextQuestion,1800); }
+  else { MaffsNext.wrong({mount:document.getElementById('explain-box'), onAdvance:nextQuestion}); }
+}
+
+function flashNumber(ok){
+  const el=document.getElementById('big-number');
+  el.className='big-number '+(ok?'flash-correct':'flash-wrong');
+}
+
+function highlightBtn(type,wasCorrect){
+  const btn=type==='prime'?document.getElementById('btn-prime'):document.getElementById('btn-composite');
+  btn.classList.add(wasCorrect?'correct':'wrong');
+}
+
+function showExplanation(q,correct,timedOut){
+  const box=document.getElementById('explain-box');
+  const prime=isPrime(q.n);
+  let txt=timedOut?'⏱ Too slow! ':(correct?'✓ Correct. ':'✗ Wrong. ');
+  if(prime){
+    txt+=`${q.n} is prime — no divisors other than 1 and itself.`;
+  } else {
+    const f=getFactors(q.n);
+    txt+=`${q.n} is composite — divisible by ${f.slice(0,3).join(', ')}${f.length>3?'…':''}.`;
+  }
+  box.textContent=txt;
+  box.style.display='block';
+}
+
+function buildStreakBar(){
+  const bar=document.getElementById('streak-bar');
+  bar.innerHTML='';
+  for(let i=0;i<questions.length;i++){
+    const d=document.createElement('div');
+    d.className='streak-dot';d.id='sd'+i;
+    bar.appendChild(d);
+  }
+}
+function updateStreakDot(i,ok){
+  const d=document.getElementById('sd'+i);
+  if(d)d.className='streak-dot '+(ok?'hit':'miss');
+}
+function updateStatus(){
+  document.getElementById('sv-q').textContent=(qIdx+1>questions.length?questions.length:qIdx+1);
+  document.getElementById('sv-score').textContent=score;
+  document.getElementById('sv-streak').textContent=streak;
+  document.getElementById('sv-acc').textContent=total?Math.round(correct/total*100)+'%':'—';
+}
+
+function endGame(){
+  window._ggAbandoned=false;
+  gameActive=false;
+  cancelAnimationFrame(animFrame);clearTimeout(qTimer);
+  const _acc=total>0?Math.round(correct/total*100):0;
+  mfg('game_completed',{game_slug:'prime-or-composite',level:'all',score:score,questions_answered:total,questions_correct:correct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('prime-or-composite','all',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('prime-or-composite','all',score);}}
+  const _pbKey='poc_best';const _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');
+  if(score>_pbOld){mfg('personal_best_set',{game_slug:'prime-or-composite',level:'all',score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}
+  document.getElementById('big-number').textContent='✓';
+  document.getElementById('big-number').className='big-number flash-correct';
+  document.getElementById('round-label').textContent='Complete!';
+  document.getElementById('number-hint').textContent='';
+  document.getElementById('timer-fill').style.width='100%';
+  document.getElementById('explain-box').style.display='none';
+  setTimeout(()=>showModal(),600);
+}
+
+function showModal(){
+  document.getElementById('modal').classList.remove('hidden');
+  document.getElementById('modal-result').textContent=score>1200?'Exceptional.':score>800?'Well Played.':'Keep Practising.';
+  document.getElementById('modal-score').innerHTML=`
+    <div class="ms-item"><span class="ms-val">${score.toLocaleString()}</span><span class="ms-lbl">Final Score</span></div>
+    <div class="ms-item"><span class="ms-val">${correct}/${questions.length}</span><span class="ms-lbl">Correct</span></div>
+    <div class="ms-item"><span class="ms-val">${Math.round(correct/questions.length*100)}%</span><span class="ms-lbl">Accuracy</span></div>
+    <div class="ms-item"><span class="ms-val">${maxStreak}</span><span class="ms-lbl">Best Streak</span></div>
+  `;
+}
+
+function closeModal(){
+  document.getElementById('modal').classList.add('hidden');
+  document.getElementById('start-btn').style.display='block';
+  document.getElementById('start-btn').textContent='Play Again';
+  document.getElementById('big-number').textContent='?';
+  document.getElementById('big-number').className='big-number';
+  document.getElementById('round-label').textContent='Ready to begin';
+  document.getElementById('number-hint').textContent='Press Start to play';
+  document.getElementById('timer-fill').style.width='100%';
+  buildStreakBar();
+}
+
+function loadLB(){try{return JSON.parse(localStorage.getItem(LKEY()))||[];}catch{return[]}}
+function renderLB(hl){
+  const arr=loadLB(),el=document.getElementById('lb-out');
+  if(!arr.length){el.innerHTML='<div class="lb-empty">No scores yet — be the first.</div>';return}
+  el.innerHTML=arr.slice(0,10).map((e,i)=>`
+    <div class="lb-row ${e.name===hl?'hl':''}">
+      <span class="lb-rank">${i+1}</span>
+      <span class="lb-name">${escHtml(e.name)}</span>
+      <span class="lb-score">${e.sc.toLocaleString()}</span>
+      <span class="lb-acc">${e.acc}%</span>
+    </div>`).join('');
+}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function submitToLB(){
+  const name=document.getElementById('name-input').value.trim().slice(0,20)||'Anonymous';
+  const arr=loadLB();
+  const _prevBest=arr.length>0?arr[0].sc:0;
+  arr.push({name,sc:score,acc:Math.round(correct/questions.length*100),ts:Date.now()});
+  arr.sort((a,b)=>b.sc-a.sc);
+  localStorage.setItem(LKEY(),JSON.stringify(arr));
+  document.getElementById('modal').classList.add('hidden');
+  renderLB(name);
+  document.getElementById('start-btn').style.display='block';
+  document.getElementById('start-btn').textContent='Play Again';
+}
+
+document.addEventListener('keydown',e=>{
+  if(!gameActive)return;
+  if(e.key==='p'||e.key==='P')answer(true);
+  if(e.key==='c'||e.key==='C')answer(false);
+});
+
+renderLB('');
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

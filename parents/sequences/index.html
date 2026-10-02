@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Understand sequences and the nth term the way your child is learning them: common difference, the nth term formula, and how to check an answer.">
+<link rel="canonical" href="https://maffsgames.co.uk/parents/sequences/">
+<meta property="og:title" content="Sequences &amp; Patterns — A Parent's Guide &mdash; MaffsGames">
+<meta property="og:description" content="Understand sequences and the nth term the way your child is learning them: common difference, the nth term formula, and how to check an answer.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/parents/sequences/">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Sequences &amp; Patterns — A Parent's Guide | MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false});"></script>
+<link rel="stylesheet" href="../guide.css">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<script defer src="../guide.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../../">MaffsGames</a>
+  <span class="nav-right">
+    <a href="../" class="back">&larr; All parent guides</a>
+    <button class="a11y-btn" id="a11yBtn" type="button" aria-pressed="false" title="Dyslexia-friendly mode">Aa</button>
+  </span>
+</nav>
+
+<div class="container">
+
+<div class="hero">
+  <span class="badge">KS3</span>
+  <h1>Sequences &amp; Patterns</h1>
+  <p class="subtitle">A parent's guide to sequences &mdash; what they are, how schools teach them, and how to help.</p>
+</div>
+<section>
+  <h2>What Your Child Is Learning</h2>
+  <p>A sequence is a list of numbers that follows a rule. Your child might see: 2, 5, 8, 11, 14... and be asked "what comes next?" The answer is 17 &mdash; because each number is 3 more than the one before it. That "3 more each time" is called the <strong>common difference</strong>.</p>
+  <p>But schools don't just want children to spot the next number. They want them to find a <strong>formula</strong> that works for any position in the sequence. "What's the 100th number?" You can't count up one by one to find that &mdash; you need the nth term rule. For the sequence above, the rule is \(3n + (-1)\), which we write as \(3n - 1\). Plug in \(n = 100\) and you get \(3 \times 100 - 1 = 299\).</p>
+  <p>This is your child's first real experience of building a general formula from a pattern. It's a stepping stone to much bigger ideas in GCSE and A-level maths, and it teaches them to look for structure rather than just answers.</p>
+</section>
+
+<div class="seq-visual">
+  <span class="seq-num">5</span>
+  <span class="seq-arrow">+3 &rarr;</span>
+  <span class="seq-num">8</span>
+  <span class="seq-arrow">+3 &rarr;</span>
+  <span class="seq-num">11</span>
+  <span class="seq-arrow">+3 &rarr;</span>
+  <span class="seq-num">14</span>
+  <span class="seq-arrow">+3 &rarr;</span>
+  <span class="seq-num">17</span>
+  <span class="seq-arrow">+3 &rarr;</span>
+  <span class="seq-num">?</span>
+  <span class="seq-label">Common difference = 3. Next term = 20.</span>
+</div>
+
+<section>
+  <h2>How Schools Teach It Now</h2>
+  <p>Schools teach a systematic method for finding the nth term of a linear sequence (one with a constant common difference). Here's how they'd find the nth term of 5, 8, 11, 14...:</p>
+  <ol class="step-list">
+    <li><strong>Find the common difference.</strong> Subtract consecutive terms: \(8 - 5 = 3\), \(11 - 8 = 3\), \(14 - 11 = 3\). The common difference is 3. This becomes the number in front of \(n\).</li>
+    <li><strong>Write down the \(3n\) sequence.</strong> The "\(3\) times table" gives: 3, 6, 9, 12... Compare this to our sequence: 5, 8, 11, 14...</li>
+    <li><strong>Find the adjustment.</strong> Our sequence is always 2 more than the \(3n\) sequence. \(5 - 3 = 2\), \(8 - 6 = 2\), \(11 - 9 = 2\). So we add 2.</li>
+    <li><strong>Write the nth term.</strong> \(n\text{th term} = 3n + 2\).</li>
+    <li><strong>Check it.</strong> 1st term: \(3(1) + 2 = 5\) &mdash; correct. 2nd term: \(3(2) + 2 = 8\) &mdash; correct. 3rd term: \(3(3) + 2 = 11\) &mdash; correct.</li>
+  </ol>
+</section>
+
+<div class="formula-box">
+  <div class="formula">\(n\text{th term} = dn + c\)</div>
+  <div class="explain">\(d\) = common difference, \(c\) = adjustment (first term minus \(d\))</div>
+</div>
+
+<section>
+  <h2>Common Mistakes to Watch For</h2>
+  <ul class="mistakes-list">
+    <li><strong>Confusing the first term with the constant.</strong> In the sequence 5, 8, 11, 14..., the first term is 5 but the nth term is \(3n + 2\), not \(3n + 5\). Children often assume the "+something" in the formula must be the first term. It's not &mdash; it's the difference between the first term and the common difference. \(5 - 3 = 2\), so the constant is 2.</li>
+    <li><strong>Thinking all sequences are linear.</strong> Some sequences don't have a constant difference. 1, 4, 9, 16, 25... has differences of 3, 5, 7, 9 &mdash; the differences themselves change. This is a quadratic sequence (square numbers). At KS3, most sequences will be linear, but your child should check that the difference is constant before using the \(dn + c\) method.</li>
+    <li><strong>Getting the sign wrong on the constant.</strong> If the sequence is 1, 4, 7, 10..., the common difference is 3. The \(3n\) sequence gives 3, 6, 9, 12... Our sequence is 2 <strong>less</strong> each time, so the nth term is \(3n - 2\). Children sometimes write \(3n + 2\) because they see a "2" and default to adding.</li>
+    <li><strong>Forgetting to check.</strong> The quickest way to catch errors is to substitute \(n = 1\) back into the formula. If it doesn't give the first term of the sequence, something is wrong.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Try It Together</h2>
+  <div class="worked-panel">
+    <h3>The Problem</h3>
+    <p>Find the nth term of the sequence: 5, 8, 11, 14...</p>
+    <div class="solution">
+      <p><strong>Step 1:</strong> Common difference = \(8 - 5 = 3\). So the formula starts with \(3n\).</p>
+      <p><strong>Step 2:</strong> Compare to the 3 times table (3, 6, 9, 12...).</p>
+      <p><strong>Step 3:</strong> Our sequence is always 2 more: \(5 - 3 = 2\).</p>
+      <p><strong>Step 4:</strong> nth term = \(3n + 2\).</p>
+      <p><strong>Check:</strong> \(3(1) + 2 = 5\) &#10003; &nbsp; \(3(2) + 2 = 8\) &#10003; &nbsp; \(3(3) + 2 = 11\) &#10003;</p>
+      <p style="color:var(--accent);font-style:italic;margin-bottom:0;">Now find the 50th term: \(3(50) + 2 = 152\). No need to write out all 50 numbers.</p>
+    </div>
+  </div>
+  <p>Try another one together: find the nth term of 4, 7, 10, 13... (Answer: common difference = 3, \(4 - 3 = 1\), so nth term = \(3n + 1\). Check: \(3(1) + 1 = 4\).)</p>
+</section>
+
+<section>
+  <h2>Let Them Practise</h2>
+  <p>This free game lets your child practise finding patterns and rules in number sequences.</p>
+  <a href="../../games/sequence-solver/?level=ks3" class="cta-btn">Play Sequence Solver on MaffsGames &rarr;</a>
+  <p class="practice-note">MaffsGames needs no account and no sign-up; what it records while your child plays is set out on the <a href="../../privacy/">privacy page</a>.</p>
+</section>
+
+<div class="guide-foot">
+  <p><a href="../">All parent guides</a> &middot; <a href="../../">MaffsGames home</a></p>
+</div>
+
+</div>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

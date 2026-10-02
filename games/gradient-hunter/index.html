@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Click two points on a real-world graph to find the gradient. Practise rates of change in context — Core Maths §3.11, free and curriculum-aligned.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/gradient-hunter/">
+<meta property="og:title" content="Gradient Hunter — MaffsGames">
+<meta property="og:description" content="Click two points on a real-world graph to find the gradient. Understand what rates of change actually mean.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/gradient-hunter/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Gradient Hunter — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2a2f45;
+  --primary:#0d9488;--primary-dim:rgba(13,148,136,.15);
+  --accent:#0ea5e9;--amber:#f59e0b;--amber-dim:rgba(245,158,11,.15);
+  --correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
+  --wrong:#ef4444;--wrong-dim:rgba(239,68,68,.12);
+  --text:#e4e8f0;--muted:#687890;--hint:#94a3b8;
+  --axis:#4a5568;--grid:rgba(74,85,104,0.3);
+  --chord:#ef4444;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1rem 0 .4rem}
+.header h1{font-size:1.7rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.6rem auto;max-width:540px}
+.level-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;max-width:500px;margin:1rem auto}
+.level-btn{padding:.8rem;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.level-btn:hover{border-color:var(--primary)}.level-btn.selected{border-color:var(--primary);background:var(--primary-dim)}
+.level-btn .lsub{font-size:.64rem;color:var(--muted);font-weight:400;margin-top:.15rem;display:block}
+.session-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;max-width:400px;margin:.8rem auto}
+.session-btn{padding:.5rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.session-btn:hover{border-color:var(--primary)}.session-btn.selected{border-color:var(--primary);background:var(--primary-dim)}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2.2rem;border-radius:12px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;opacity:.4;pointer-events:none}
+.start-btn.ready{opacity:1;pointer-events:auto}.start-btn.ready:hover{transform:scale(1.04)}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.6rem;flex-wrap:wrap;gap:.3rem}
+.hud-item{text-align:center;min-width:60px}
+.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:'JetBrains Mono',monospace;font-size:.88rem;font-weight:700}
+.progress-bar{width:100%;height:4px;background:var(--border);border-radius:2px;margin-top:.3rem;overflow:hidden}
+.progress-fill{height:100%;background:var(--primary);border-radius:2px;transition:width .3s}
+
+.canvas-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.6rem;margin-bottom:.6rem}
+.canvas-wrap canvas{display:block;width:100%;border-radius:8px;cursor:crosshair}
+.context-text{font-size:.82rem;color:var(--muted);line-height:1.5;margin-bottom:.5rem;padding:.5rem .6rem;background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.context-text strong{color:var(--accent)}
+.instruction{font-size:.84rem;font-weight:600;color:var(--text);margin-bottom:.5rem;line-height:1.5;text-align:center}
+.gradient-display{text-align:center;font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--accent);margin:.5rem 0}
+
+.options-grid{display:grid;gap:.4rem;margin-top:.5rem}
+.opt-btn{padding:.65rem .8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;text-align:left;transition:all .15s;line-height:1.4}
+.opt-btn:hover:not(.locked){border-color:var(--primary);background:var(--primary-dim)}
+.opt-btn.correct-choice{border-color:var(--correct);background:var(--correct-dim);color:var(--correct)}
+.opt-btn.wrong-choice{border-color:var(--wrong);background:var(--wrong-dim);color:var(--wrong)}
+.opt-btn.locked{cursor:default;opacity:.6}
+.opt-btn.locked.correct-choice{opacity:1}
+
+.feedback{margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.78rem;line-height:1.4;animation:fadeIn .25s}
+.feedback.correct{background:var(--correct-dim);border:1px solid var(--correct);color:var(--correct)}
+.feedback.wrong{background:var(--wrong-dim);border:1px solid var(--wrong);color:var(--wrong)}
+
+.click-status{display:flex;gap:.5rem;justify-content:center;margin:.4rem 0;font-size:.78rem}
+.click-status .pt{padding:.25rem .6rem;border-radius:6px;background:var(--surface2);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.75rem}
+.click-status .pt.done{border-color:var(--correct);color:var(--correct)}
+
+.next-btn{display:block;margin:.6rem auto 0;padding:.5rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer}
+.next-btn:hover{transform:scale(1.03)}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.4rem;margin-bottom:.3rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.6rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.7rem 0}
+.results .stats{color:var(--muted);margin-bottom:1rem;line-height:1.9;font-size:.83rem}
+.results .pb-line{color:var(--correct);font-weight:600;font-size:.88rem;margin-bottom:1rem}
+.play-again{padding:.6rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer}
+.play-again:hover{transform:scale(1.03)}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:.7}}
+
+@media(prefers-reduced-motion:reduce){
+  .feedback{animation:none}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1}}
+}
+
+/* Method modal */
+.method-btn{display:block;margin:.8rem auto;padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s}.method-btn:hover{border-color:var(--primary);color:var(--text)}
+.method-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}.method-overlay.show{display:flex}
+.method-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;max-width:560px;width:92%;max-height:80vh;overflow-y:auto}
+.method-box h2{font-size:1.1rem;font-weight:700;color:var(--accent);margin-bottom:1rem}
+.method-section{margin-bottom:1rem;padding:.8rem;background:var(--bg);border-radius:8px;font-size:.85rem;line-height:1.8}
+.method-section strong{color:var(--accent);display:block;margin-bottom:.3rem}
+.method-close{display:block;margin:1rem auto 0;padding:.4rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">&larr; Back to Games</a>
+
+<div id="menuScreen" class="screen active">
+  <div class="header"><h1>Gradient Hunter</h1><div class="sub">Click points, find gradients, interpret rates of change</div>  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+  <div class="menu-info">Click two points on a real-world graph to find the gradient of the chord. Then interpret what that gradient means in context. Practise rates of change for Core Maths, GCSE, and A-Level.</div>
+  <div style="text-align:center;font-size:.72rem;color:var(--muted);margin:.6rem 0 .3rem;text-transform:uppercase;letter-spacing:.04em;font-weight:600">Choose Level</div>
+  <div class="level-grid">
+    <button class="level-btn" data-level="gcse" onclick="selLevel(this)">GCSE<span class="lsub">Year 10-11</span></button>
+    <button class="level-btn" data-level="core" onclick="selLevel(this)">Core Maths<span class="lsub">AQA 1350</span></button>
+    <button class="level-btn" data-level="alevel" onclick="selLevel(this)">A-Level<span class="lsub">Year 12-13</span></button>
+  </div>
+  <div style="text-align:center;font-size:.72rem;color:var(--muted);margin:.6rem 0 .3rem;text-transform:uppercase;letter-spacing:.04em;font-weight:600">Session Length</div>
+  <div class="session-grid">
+    <button class="session-btn" data-len="10" onclick="selSession(this)">10 Qs</button>
+    <button class="session-btn selected" data-len="20" onclick="selSession(this)">20 Qs</button>
+    <button class="session-btn" data-len="30" onclick="selSession(this)">30 Qs</button>
+  </div>
+  <button class="method-btn" onclick="document.getElementById('methodOverlay').classList.add('show')">Worked Example</button>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">&larr; Back to Games</a>
+  <button class="start-btn" id="startBtn" onclick="startGame()">Start</button>
+</div>
+
+<div class="method-overlay" id="methodOverlay">
+  <div class="method-box">
+    <h2>Worked Example — Gradient of a Chord</h2>
+    <div class="method-section" id="methodReadPts"></div>
+    <div class="method-section" id="methodCalcGrad"></div>
+    <div class="method-section" id="methodInterpGrad"></div>
+    <button class="method-close" onclick="document.getElementById('methodOverlay').classList.remove('show')">Got it</button>
+  </div>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/20</div></div>
+    <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0/0</div></div>
+    <div class="hud-item"><div class="hud-label">Type</div><div class="hud-val" id="hudType">--</div></div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  <div id="contextArea"></div>
+  <div class="canvas-wrap"><canvas id="graphCanvas" width="800" height="600"></canvas></div>
+  <div id="interactionArea"></div>
+</div>
+
+<div id="resultsScreen" class="screen">
+  <div class="results">
+    <h2 id="resultTitle"></h2>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="stats" id="statsLine"></div>
+    <div class="pb-line" id="pbLine" style="display:none"></div>
+    <button class="play-again" onclick="showMenu()">Play Again</button>
+  </div>
+</div>
+</div>
+
+<script>
+// ============================================================
+//  QUESTION BANK — 45 questions
+// ============================================================
+const QUESTIONS = {
+core: [
+  // Calculate (12)
+  {id:'gh_core_001',type:'calculate',context:'A cyclist records her distance from home during a training ride.',
+   xLabel:'Time (hours)',yLabel:'Distance (km)',xMin:0,xMax:5,yMin:0,yMax:80,
+   points:[[0,0],[1,15],[2,35],[3,50],[4,62],[5,70]],curveType:'smooth',
+   pointA:{x:1,y:15,label:'A'},pointB:{x:3,y:50,label:'B'},gradient:17.5,
+   interpretations:[
+     {text:'The cyclist covers an average of 17.5 km per hour between hours 1 and 3',correct:true},
+     {text:"The cyclist's speed is always 17.5 km/h",correct:false},
+     {text:'The total journey is 17.5 km',correct:false}
+   ]},
+  {id:'gh_core_002',type:'calculate',context:'A gas meter records cumulative energy usage in a home over a week.',
+   xLabel:'Day',yLabel:'Energy used (kWh)',xMin:0,xMax:7,yMin:0,yMax:70,
+   points:[[0,0],[1,8],[2,18],[3,31],[4,42],[5,50],[6,57],[7,63]],curveType:'smooth',
+   pointA:{x:2,y:18,label:'A'},pointB:{x:5,y:50,label:'B'},gradient:10.67,
+   interpretations:[
+     {text:'The home uses approximately 10.67 kWh per day on average between days 2 and 5',correct:true},
+     {text:'The total energy used is 10.67 kWh',correct:false},
+     {text:'Energy usage is decreasing at 10.67 kWh per day',correct:false}
+   ]},
+  {id:'gh_core_003',type:'calculate',context:'A bank account balance is tracked over 6 months after a fixed monthly deposit.',
+   xLabel:'Month',yLabel:'Balance (pounds)',xMin:0,xMax:6,yMin:200,yMax:800,
+   points:[[0,200],[1,300],[2,400],[3,500],[4,600],[5,700],[6,800]],curveType:'linear',
+   pointA:{x:1,y:300,label:'A'},pointB:{x:4,y:600,label:'B'},gradient:100,
+   interpretations:[
+     {text:'The account balance increases by 100 pounds per month on average',correct:true},
+     {text:'The account earns 100 pounds in interest',correct:false},
+     {text:'The balance doubles every 100 months',correct:false}
+   ]},
+  {id:'gh_core_004',type:'calculate',context:"A car's fuel tank is being filled at a petrol station.",
+   xLabel:'Time (minutes)',yLabel:'Fuel in tank (litres)',xMin:0,xMax:4,yMin:5,yMax:55,
+   points:[[0,5],[1,18],[2,31],[3,43],[4,54]],curveType:'smooth',
+   pointA:{x:0,y:5,label:'A'},pointB:{x:4,y:54,label:'B'},gradient:12.25,
+   interpretations:[
+     {text:'Fuel is being added at approximately 12.25 litres per minute',correct:true},
+     {text:'The tank holds 12.25 litres',correct:false},
+     {text:'The car uses 12.25 litres per mile',correct:false}
+   ]},
+  {id:'gh_core_005',type:'calculate',context:'A population of bacteria is counted over time in a laboratory experiment.',
+   xLabel:'Hours',yLabel:'Population (thousands)',xMin:0,xMax:8,yMin:0,yMax:100,
+   points:[[0,2],[1,4],[2,8],[3,15],[4,28],[5,45],[6,65],[7,82],[8,95]],curveType:'smooth',
+   pointA:{x:2,y:8,label:'A'},pointB:{x:6,y:65,label:'B'},gradient:14.25,
+   interpretations:[
+     {text:'Between hours 2 and 6, the population grows by approximately 14,250 bacteria per hour on average',correct:true},
+     {text:'The bacteria population is always growing at 14.25 thousand per hour',correct:false},
+     {text:'14.25% of bacteria survive each hour',correct:false}
+   ]},
+  {id:'gh_core_006',type:'calculate',context:'A water tank is being drained. The volume of water remaining is recorded.',
+   xLabel:'Time (minutes)',yLabel:'Volume (litres)',xMin:0,xMax:10,yMin:0,yMax:500,
+   points:[[0,500],[2,420],[4,330],[6,230],[8,120],[10,0]],curveType:'smooth',
+   pointA:{x:2,y:420,label:'A'},pointB:{x:8,y:120,label:'B'},gradient:-50,
+   interpretations:[
+     {text:'Water drains at an average rate of 50 litres per minute between minutes 2 and 8',correct:true},
+     {text:'The tank loses 50% of its water per minute',correct:false},
+     {text:'The gradient is positive so the tank is filling',correct:false}
+   ]},
+  {id:'gh_core_007',type:'calculate',context:"A runner's heart rate is monitored during a race.",
+   xLabel:'Time (minutes)',yLabel:'Heart rate (bpm)',xMin:0,xMax:30,yMin:60,yMax:180,
+   points:[[0,65],[5,110],[10,145],[15,160],[20,165],[25,162],[30,155]],curveType:'smooth',
+   pointA:{x:0,y:65,label:'A'},pointB:{x:10,y:145,label:'B'},gradient:8,
+   interpretations:[
+     {text:"The runner's heart rate increases by 8 bpm per minute on average in the first 10 minutes",correct:true},
+     {text:"The runner's heart rate is 8 bpm",correct:false},
+     {text:'Heart rate increases by 8% per minute',correct:false}
+   ]},
+  {id:'gh_core_008',type:'calculate',context:'House prices in a town are tracked over 10 years.',
+   xLabel:'Year',yLabel:'Average house price (thousands, pounds)',xMin:0,xMax:10,yMin:150,yMax:310,
+   points:[[0,150],[2,170],[4,195],[6,225],[8,265],[10,305]],curveType:'smooth',
+   pointA:{x:2,y:170,label:'A'},pointB:{x:8,y:265,label:'B'},gradient:15.83,
+   interpretations:[
+     {text:'House prices increase by approximately 15,830 pounds per year on average between years 2 and 8',correct:true},
+     {text:'House prices increase by 15.83% each year',correct:false},
+     {text:'The total increase in house price is 15,830 pounds',correct:false}
+   ]},
+  {id:'gh_core_009',type:'calculate',context:'A solar panel generates electricity throughout the day. Output is recorded from 6am.',
+   xLabel:'Hours after 6am',yLabel:'Power output (watts)',xMin:0,xMax:12,yMin:0,yMax:300,
+   points:[[0,0],[2,80],[4,180],[6,280],[8,270],[10,160],[12,20]],curveType:'smooth',
+   pointA:{x:0,y:0,label:'A'},pointB:{x:6,y:280,label:'B'},gradient:46.67,
+   interpretations:[
+     {text:'Power output increases by approximately 46.67 watts per hour on average in the morning',correct:true},
+     {text:'The panel generates 46.67 watts in total',correct:false},
+     {text:'Output rises by 46.67% every hour',correct:false}
+   ]},
+  {id:'gh_core_010',type:'calculate',context:'A coffee shop records cumulative sales throughout the day.',
+   xLabel:'Hours after opening',yLabel:'Cumulative sales (pounds)',xMin:0,xMax:8,yMin:0,yMax:800,
+   points:[[0,0],[1,120],[2,210],[3,280],[4,380],[5,500],[6,620],[7,720],[8,790]],curveType:'smooth',
+   pointA:{x:1,y:120,label:'A'},pointB:{x:5,y:500,label:'B'},gradient:95,
+   interpretations:[
+     {text:'The cafe earns an average of 95 pounds per hour between hours 1 and 5',correct:true},
+     {text:'Total sales are 95 pounds',correct:false},
+     {text:'Sales grow by 95 pounds each minute',correct:false}
+   ]},
+  {id:'gh_core_011',type:'calculate',context:'A car brakes to a stop. Its speed is recorded during braking.',
+   xLabel:'Time (seconds)',yLabel:'Speed (mph)',xMin:0,xMax:6,yMin:0,yMax:60,
+   points:[[0,60],[1,50],[2,40],[3,28],[4,16],[5,6],[6,0]],curveType:'smooth',
+   pointA:{x:0,y:60,label:'A'},pointB:{x:6,y:0,label:'B'},gradient:-10,
+   interpretations:[
+     {text:'The car decelerates at an average of 10 mph per second',correct:true},
+     {text:'The car travels 10 miles during braking',correct:false},
+     {text:'The gradient is positive so the car is accelerating',correct:false}
+   ]},
+  {id:'gh_core_012',type:'calculate',context:"A patient's temperature is monitored in hospital after medication is given.",
+   xLabel:'Hours after medication',yLabel:'Temperature (deg C)',xMin:0,xMax:8,yMin:37,yMax:40.5,
+   points:[[0,40.2],[1,40.4],[2,40.1],[3,39.6],[4,39.0],[5,38.5],[6,38.1],[7,37.8],[8,37.4]],curveType:'smooth',
+   pointA:{x:2,y:40.1,label:'A'},pointB:{x:6,y:38.1,label:'B'},gradient:-0.5,
+   interpretations:[
+     {text:"The patient's temperature falls by 0.5 deg C per hour on average between hours 2 and 6",correct:true},
+     {text:'The temperature is always falling at 0.5 deg C per hour',correct:false},
+     {text:'A negative gradient means the medication is not working',correct:false}
+   ]},
+  // Reading (8)
+  {id:'gh_core_013',type:'reading',context:'A graph shows the depth of water in a bath over time.',
+   xLabel:'Time (minutes)',yLabel:'Depth (cm)',xMin:0,xMax:10,yMin:0,yMax:60,
+   points:[[0,5],[2,20],[4,32],[5,37],[7,45],[9,52],[10,55]],curveType:'smooth',
+   chordA:{x:2,y:20,label:'A'},chordB:{x:7,y:45,label:'B'},gradientShown:5,
+   interpretations:[
+     {text:'Water depth increases by 5 cm per minute on average between minutes 2 and 7',correct:true},
+     {text:'The bath is 5 cm deep',correct:false},
+     {text:'5 litres of water flows in per minute',correct:false},
+     {text:'The bath fills in 5 minutes',correct:false}
+   ]},
+  {id:'gh_core_014',type:'reading',context:"A graph shows a car's fuel consumption on a long journey.",
+   xLabel:'Distance (miles)',yLabel:'Fuel remaining (litres)',xMin:0,xMax:200,yMin:0,yMax:50,
+   points:[[0,48],[50,40],[100,34],[150,32],[200,28]],curveType:'smooth',
+   chordA:{x:50,y:40,label:'A'},chordB:{x:150,y:32,label:'B'},gradientShown:-0.08,
+   interpretations:[
+     {text:'The car uses 0.08 litres of fuel per mile on average between miles 50 and 150',correct:true},
+     {text:'The car gains 0.08 litres per mile',correct:false},
+     {text:'The negative gradient means the car has broken down',correct:false},
+     {text:'Fuel efficiency is 0.08 miles per litre',correct:false}
+   ]},
+  {id:'gh_core_015',type:'reading',context:'A graph shows the value of a car over time.',
+   xLabel:'Age (years)',yLabel:'Value (pounds)',xMin:0,xMax:6,yMin:4000,yMax:20000,
+   points:[[0,18000],[1,14000],[2,11500],[3,10000],[4,10000],[5,9000],[6,8000]],curveType:'smooth',
+   chordA:{x:0,y:18000,label:'A'},chordB:{x:4,y:10000,label:'B'},gradientShown:-2000,
+   interpretations:[
+     {text:'The car loses an average of 2,000 pounds in value per year over the first 4 years',correct:true},
+     {text:'The car is worth -2,000 pounds',correct:false},
+     {text:'The car loses 2,000% of its value',correct:false},
+     {text:'The car will be worthless in 2,000 years',correct:false}
+   ]},
+  {id:'gh_core_016',type:'reading',context:'A graph shows electricity usage in a factory.',
+   xLabel:'Hour of day',yLabel:'Cumulative kWh used',xMin:6,xMax:18,yMin:0,yMax:500,
+   points:[[6,20],[8,120],[10,200],[12,280],[14,320],[16,360],[18,400]],curveType:'smooth',
+   chordA:{x:8,y:120,label:'A'},chordB:{x:16,y:360,label:'B'},gradientShown:30,
+   interpretations:[
+     {text:'The factory uses electricity at an average rate of 30 kWh per hour between 8am and 4pm',correct:true},
+     {text:'30 machines are running',correct:false},
+     {text:'The factory uses 30 kWh in total',correct:false},
+     {text:'Electricity usage doubles every 30 hours',correct:false}
+   ]},
+  {id:'gh_core_017',type:'reading',context:'A graph tracks the number of social media followers for a new account.',
+   xLabel:'Days since launch',yLabel:'Followers',xMin:0,xMax:50,yMin:0,yMax:1800,
+   points:[[0,10],[10,200],[20,500],[30,900],[40,1400],[50,1700]],curveType:'smooth',
+   chordA:{x:10,y:200,label:'A'},chordB:{x:40,y:1400,label:'B'},gradientShown:40,
+   interpretations:[
+     {text:'The account gains an average of 40 followers per day between days 10 and 40',correct:true},
+     {text:'There are 40 followers in total',correct:false},
+     {text:'The account doubles every 40 days',correct:false},
+     {text:'40% of visitors follow the account',correct:false}
+   ]},
+  {id:'gh_core_018',type:'reading',context:'A graph shows distance remaining on a delivery route.',
+   xLabel:'Time (hours)',yLabel:'Distance remaining (km)',xMin:0,xMax:4,yMin:0,yMax:130,
+   points:[[0,120],[1,90],[2,60],[3,30],[4,5]],curveType:'smooth',
+   chordA:{x:0,y:120,label:'A'},chordB:{x:3,y:30,label:'B'},gradientShown:-30,
+   interpretations:[
+     {text:'The driver covers 30 km per hour on average in the first 3 hours',correct:true},
+     {text:'The driver is travelling backwards',correct:false},
+     {text:'The journey is 30 km long',correct:false},
+     {text:'Speed decreases by 30 km/h each hour',correct:false}
+   ]},
+  {id:'gh_core_019',type:'reading',context:'A graph shows the temperature of a metal rod being heated in a furnace.',
+   xLabel:'Time (minutes)',yLabel:'Temperature (deg C)',xMin:0,xMax:25,yMin:0,yMax:750,
+   points:[[0,20],[5,200],[10,380],[15,500],[20,650],[25,720]],curveType:'smooth',
+   chordA:{x:5,y:200,label:'A'},chordB:{x:20,y:650,label:'B'},gradientShown:30,
+   interpretations:[
+     {text:'The rod heats up at an average rate of 30 deg C per minute between minutes 5 and 20',correct:true},
+     {text:'The rod reaches 30 deg C',correct:false},
+     {text:'It takes 30 minutes to heat the rod',correct:false},
+     {text:'Temperature increases by 30% each minute',correct:false}
+   ]},
+  {id:'gh_core_020',type:'reading',context:"A graph shows a student's cumulative revision hours over a term.",
+   xLabel:'Days into term',yLabel:'Total revision hours',xMin:0,xMax:70,yMin:0,yMax:70,
+   points:[[0,0],[10,5],[20,15],[30,25],[40,35],[50,45],[60,55],[70,65]],curveType:'smooth',
+   chordA:{x:20,y:15,label:'A'},chordB:{x:60,y:55,label:'B'},gradientShown:1,
+   interpretations:[
+     {text:'The student revises for an average of 1 hour per day between days 20 and 60',correct:true},
+     {text:'The student has done 1 hour of revision in total',correct:false},
+     {text:'Revision increases by 1% per day',correct:false},
+     {text:'A gradient of 1 means the graph is horizontal',correct:false}
+   ]}
+],
+gcse: [
+  // Calculate (9)
+  {id:'gh_gcse_001',type:'calculate',context:'A car travels along a motorway. Distance from the start is recorded every 30 minutes.',
+   xLabel:'Time (hours)',yLabel:'Distance (miles)',xMin:0,xMax:3,yMin:0,yMax:180,
+   points:[[0,0],[0.5,30],[1,60],[1.5,90],[2,120],[2.5,150],[3,180]],curveType:'linear',
+   pointA:{x:0,y:0,label:'A'},pointB:{x:3,y:180,label:'B'},gradient:60,
+   interpretations:[
+     {text:'The car travels at an average speed of 60 mph',correct:true},
+     {text:'The car has 60 litres of fuel',correct:false},
+     {text:'The journey takes 60 minutes',correct:false}
+   ]},
+  {id:'gh_gcse_002',type:'calculate',context:'A plant grows over 10 days. Its height is measured daily.',
+   xLabel:'Day',yLabel:'Height (cm)',xMin:0,xMax:10,yMin:0,yMax:25,
+   points:[[0,2],[2,5],[4,9],[6,14],[8,19],[10,24]],curveType:'smooth',
+   pointA:{x:2,y:5,label:'A'},pointB:{x:8,y:19,label:'B'},gradient:2.33,
+   interpretations:[
+     {text:'The plant grows approximately 2.33 cm per day on average between days 2 and 8',correct:true},
+     {text:'The plant is 2.33 cm tall',correct:false},
+     {text:'The plant grows by 2.33% each day',correct:false}
+   ]},
+  {id:'gh_gcse_003',type:'calculate',context:'Water is poured into a tank at a steady rate. The depth of water is recorded.',
+   xLabel:'Time (minutes)',yLabel:'Depth (cm)',xMin:0,xMax:8,yMin:0,yMax:40,
+   points:[[0,0],[2,10],[4,20],[6,30],[8,40]],curveType:'linear',
+   pointA:{x:0,y:0,label:'A'},pointB:{x:8,y:40,label:'B'},gradient:5,
+   interpretations:[
+     {text:'The water depth increases by 5 cm per minute',correct:true},
+     {text:'There are 5 cm of water in the tank',correct:false},
+     {text:'The tank holds 5 litres',correct:false}
+   ]},
+  {id:'gh_gcse_004',type:'calculate',context:'A taxi charges based on distance. The total fare is recorded.',
+   xLabel:'Distance (miles)',yLabel:'Fare (pounds)',xMin:0,xMax:10,yMin:0,yMax:20,
+   points:[[0,3],[2,6],[4,9],[6,12],[8,15],[10,18]],curveType:'linear',
+   pointA:{x:2,y:6,label:'A'},pointB:{x:8,y:15,label:'B'},gradient:1.5,
+   interpretations:[
+     {text:'The fare increases by 1.50 pounds per mile',correct:true},
+     {text:'The taxi has driven 1.5 miles',correct:false},
+     {text:'The total fare is 1.50 pounds',correct:false}
+   ]},
+  {id:'gh_gcse_005',type:'calculate',context:'A phone battery drains during the day. Charge percentage is recorded.',
+   xLabel:'Hours',yLabel:'Battery (%)',xMin:0,xMax:10,yMin:0,yMax:100,
+   points:[[0,100],[2,82],[4,64],[6,46],[8,28],[10,10]],curveType:'smooth',
+   pointA:{x:0,y:100,label:'A'},pointB:{x:10,y:10,label:'B'},gradient:-9,
+   interpretations:[
+     {text:'The battery loses 9% charge per hour on average',correct:true},
+     {text:'The battery has 9% remaining',correct:false},
+     {text:'The battery charges at 9% per hour',correct:false}
+   ]},
+  {id:'gh_gcse_006',type:'calculate',context:'A student walks to school. Their distance from home is plotted.',
+   xLabel:'Time (minutes)',yLabel:'Distance (metres)',xMin:0,xMax:15,yMin:0,yMax:900,
+   points:[[0,0],[3,180],[6,360],[9,540],[12,720],[15,900]],curveType:'linear',
+   pointA:{x:3,y:180,label:'A'},pointB:{x:12,y:720,label:'B'},gradient:60,
+   interpretations:[
+     {text:'The student walks at an average of 60 metres per minute',correct:true},
+     {text:'The school is 60 metres away',correct:false},
+     {text:'It takes 60 minutes to walk to school',correct:false}
+   ]},
+  {id:'gh_gcse_007',type:'calculate',context:'A pool is being emptied. The volume of water is recorded.',
+   xLabel:'Time (hours)',yLabel:'Volume (litres)',xMin:0,xMax:5,yMin:0,yMax:5000,
+   points:[[0,5000],[1,4000],[2,3000],[3,2000],[4,1000],[5,0]],curveType:'linear',
+   pointA:{x:1,y:4000,label:'A'},pointB:{x:4,y:1000,label:'B'},gradient:-1000,
+   interpretations:[
+     {text:'The pool loses 1000 litres per hour on average',correct:true},
+     {text:'The pool contains 1000 litres',correct:false},
+     {text:'A negative gradient means the pool is being filled',correct:false}
+   ]},
+  {id:'gh_gcse_008',type:'calculate',context:'A shop records the number of customers who have entered since opening.',
+   xLabel:'Hours after opening',yLabel:'Total customers',xMin:0,xMax:8,yMin:0,yMax:200,
+   points:[[0,0],[1,15],[2,40],[3,70],[4,100],[5,130],[6,155],[7,175],[8,190]],curveType:'smooth',
+   pointA:{x:1,y:15,label:'A'},pointB:{x:5,y:130,label:'B'},gradient:28.75,
+   interpretations:[
+     {text:'The shop gets approximately 28.75 customers per hour on average between hours 1 and 5',correct:true},
+     {text:'The shop has 28.75 customers in total',correct:false},
+     {text:'Customer numbers increase by 28.75% per hour',correct:false}
+   ]},
+  {id:'gh_gcse_009',type:'calculate',context:'Temperature outside is recorded throughout the morning.',
+   xLabel:'Time (hours after 6am)',yLabel:'Temperature (deg C)',xMin:0,xMax:6,yMin:4,yMax:16,
+   points:[[0,4],[1,5],[2,7],[3,10],[4,12],[5,14],[6,15]],curveType:'smooth',
+   pointA:{x:1,y:5,label:'A'},pointB:{x:5,y:14,label:'B'},gradient:2.25,
+   interpretations:[
+     {text:'The temperature rises by 2.25 deg C per hour on average between 7am and 11am',correct:true},
+     {text:'The temperature is 2.25 deg C',correct:false},
+     {text:'Temperature increases by 2.25% each hour',correct:false}
+   ]},
+  // Reading (6)
+  {id:'gh_gcse_010',type:'reading',context:'A graph shows how far a bus has travelled. The chord from (0, 0) to (2, 80) has gradient 40.',
+   xLabel:'Time (hours)',yLabel:'Distance (km)',xMin:0,xMax:3,yMin:0,yMax:130,
+   points:[[0,0],[0.5,20],[1,40],[1.5,60],[2,80],[2.5,100],[3,120]],curveType:'linear',
+   chordA:{x:0,y:0,label:'A'},chordB:{x:2,y:80,label:'B'},gradientShown:40,
+   interpretations:[
+     {text:'The bus travels at an average speed of 40 km per hour',correct:true},
+     {text:'The bus has 40 passengers',correct:false},
+     {text:'The journey is 40 km long',correct:false},
+     {text:'The bus stops 40 times',correct:false}
+   ]},
+  {id:'gh_gcse_011',type:'reading',context:'A graph shows savings in a jar over weeks. The chord from (2, 10) to (10, 50) has gradient 5.',
+   xLabel:'Week',yLabel:'Savings (pounds)',xMin:0,xMax:12,yMin:0,yMax:60,
+   points:[[0,0],[2,10],[4,20],[6,30],[8,40],[10,50],[12,58]],curveType:'smooth',
+   chordA:{x:2,y:10,label:'A'},chordB:{x:10,y:50,label:'B'},gradientShown:5,
+   interpretations:[
+     {text:'The person saves 5 pounds per week on average between weeks 2 and 10',correct:true},
+     {text:'They have saved 5 pounds in total',correct:false},
+     {text:'They save 5% more each week',correct:false},
+     {text:'They will have 5 pounds at the end',correct:false}
+   ]},
+  {id:'gh_gcse_012',type:'reading',context:'A graph shows a car slowing down. The chord from (0, 30) to (6, 0) has gradient -5.',
+   xLabel:'Time (seconds)',yLabel:'Speed (m/s)',xMin:0,xMax:7,yMin:0,yMax:35,
+   points:[[0,30],[1,25],[2,20],[3,15],[4,10],[5,5],[6,0]],curveType:'linear',
+   chordA:{x:0,y:30,label:'A'},chordB:{x:6,y:0,label:'B'},gradientShown:-5,
+   interpretations:[
+     {text:'The car decelerates at 5 m/s every second on average',correct:true},
+     {text:'The car speeds up by 5 m/s',correct:false},
+     {text:'The negative gradient means the car is going backwards',correct:false},
+     {text:'The car is 5 metres from the start',correct:false}
+   ]},
+  {id:'gh_gcse_013',type:'reading',context:'A graph shows the cost of electricity. The chord from (100, 20) to (500, 100) has gradient 0.2.',
+   xLabel:'Units used',yLabel:'Cost (pounds)',xMin:0,xMax:600,yMin:0,yMax:120,
+   points:[[0,5],[100,20],[200,40],[300,60],[400,80],[500,100],[600,115]],curveType:'smooth',
+   chordA:{x:100,y:20,label:'A'},chordB:{x:500,y:100,label:'B'},gradientShown:0.2,
+   interpretations:[
+     {text:'Each unit of electricity costs 0.20 pounds on average between 100 and 500 units',correct:true},
+     {text:'The total bill is 0.20 pounds',correct:false},
+     {text:'Electricity usage is 0.2 kWh',correct:false},
+     {text:'The price increases by 20% each unit',correct:false}
+   ]},
+  {id:'gh_gcse_014',type:'reading',context:'A graph shows how much paint is left in a tin during decorating. Chord from (1, 4) to (5, 1) has gradient -0.75.',
+   xLabel:'Hours of painting',yLabel:'Paint remaining (litres)',xMin:0,xMax:6,yMin:0,yMax:5,
+   points:[[0,5],[1,4],[2,3.2],[3,2.5],[4,1.8],[5,1],[6,0.3]],curveType:'smooth',
+   chordA:{x:1,y:4,label:'A'},chordB:{x:5,y:1,label:'B'},gradientShown:-0.75,
+   interpretations:[
+     {text:'Paint is used at a rate of 0.75 litres per hour on average between hours 1 and 5',correct:true},
+     {text:'0.75 litres of paint remains',correct:false},
+     {text:'The negative sign means paint is being added',correct:false},
+     {text:'The tin holds 0.75 litres',correct:false}
+   ]},
+  {id:'gh_gcse_015',type:'reading',context:'A graph shows the height of a ball thrown upwards. Chord from (0, 1) to (2, 21) has gradient 10.',
+   xLabel:'Time (seconds)',yLabel:'Height (metres)',xMin:0,xMax:4,yMin:0,yMax:25,
+   points:[[0,1],[0.5,10],[1,16],[1.5,20],[2,21],[2.5,20],[3,16],[3.5,10],[4,1]],curveType:'smooth',
+   chordA:{x:0,y:1,label:'A'},chordB:{x:2,y:21,label:'B'},gradientShown:10,
+   interpretations:[
+     {text:'The ball rises at an average of 10 metres per second in the first 2 seconds',correct:true},
+     {text:'The ball is 10 metres high',correct:false},
+     {text:'The ball weighs 10 kg',correct:false},
+     {text:'The ball is always moving at 10 m/s',correct:false}
+   ]}
+],
+alevel: [
+  // Calculate (6)
+  {id:'gh_alevel_001',type:'calculate',context:'A particle moves along a line. Its displacement s (m) is recorded over 10 seconds.',
+   xLabel:'Time (s)',yLabel:'Displacement (m)',xMin:0,xMax:10,yMin:0,yMax:60,
+   points:[[0,0],[1,1],[2,4],[3,9],[4,16],[5,25],[6,30],[7,34],[8,38],[9,42],[10,45]],curveType:'smooth',
+   pointA:{x:2,y:4,label:'A'},pointB:{x:5,y:25,label:'B'},gradient:7,
+   interpretations:[
+     {text:'The average velocity of the particle between t=2 and t=5 is 7 m/s',correct:true},
+     {text:'The instantaneous velocity at t=2 is 7 m/s',correct:false},
+     {text:'The particle accelerates at 7 m/s squared',correct:false}
+   ]},
+  {id:'gh_alevel_002',type:'calculate',context:'The population of a colony of organisms is modelled. Population P (thousands) is recorded.',
+   xLabel:'Time (days)',yLabel:'Population (thousands)',xMin:0,xMax:12,yMin:0,yMax:50,
+   points:[[0,1],[2,2],[4,4],[6,8],[8,16],[10,30],[12,45]],curveType:'smooth',
+   pointA:{x:4,y:4,label:'A'},pointB:{x:10,y:30,label:'B'},gradient:4.33,
+   interpretations:[
+     {text:'The average rate of population growth between days 4 and 10 is approximately 4,330 organisms per day',correct:true},
+     {text:'The population grows at a constant rate of 4.33 thousand per day',correct:false},
+     {text:'4.33% of organisms reproduce each day',correct:false}
+   ]},
+  {id:'gh_alevel_003',type:'calculate',context:'An object is launched vertically. Its height h (m) is plotted against time.',
+   xLabel:'Time (s)',yLabel:'Height (m)',xMin:0,xMax:6,yMin:0,yMax:50,
+   points:[[0,0],[1,25],[2,40],[3,45],[4,40],[5,25],[6,0]],curveType:'smooth',
+   pointA:{x:1,y:25,label:'A'},pointB:{x:4,y:40,label:'B'},gradient:5,
+   interpretations:[
+     {text:'The average velocity between t=1 and t=4 is 5 m/s upward',correct:true},
+     {text:'The instantaneous velocity at t=1 is 5 m/s',correct:false},
+     {text:'The acceleration is 5 m/s squared',correct:false}
+   ]},
+  {id:'gh_alevel_004',type:'calculate',context:'A chemical reaction is monitored. Concentration of reactant (mol/L) is measured.',
+   xLabel:'Time (minutes)',yLabel:'Concentration (mol/L)',xMin:0,xMax:20,yMin:0,yMax:2,
+   points:[[0,2.0],[2,1.6],[4,1.3],[6,1.05],[8,0.85],[10,0.7],[12,0.58],[14,0.48],[16,0.4],[18,0.34],[20,0.3]],curveType:'smooth',
+   pointA:{x:2,y:1.6,label:'A'},pointB:{x:10,y:0.7,label:'B'},gradient:-0.1125,
+   interpretations:[
+     {text:'The concentration decreases by approximately 0.11 mol/L per minute on average between minutes 2 and 10',correct:true},
+     {text:'The rate of reaction is constant at 0.11 mol/L per minute',correct:false},
+     {text:'0.11 moles of product are formed in total',correct:false}
+   ]},
+  {id:'gh_alevel_005',type:'calculate',context:'Revenue R (thousands of pounds) is plotted against the number of units sold.',
+   xLabel:'Units sold (hundreds)',yLabel:'Revenue (thousands, pounds)',xMin:0,xMax:10,yMin:0,yMax:30,
+   points:[[0,0],[2,8],[4,16],[5,20],[6,22],[8,24],[10,20]],curveType:'smooth',
+   pointA:{x:2,y:8,label:'A'},pointB:{x:6,y:22,label:'B'},gradient:3.5,
+   interpretations:[
+     {text:'Revenue increases by an average of 3,500 pounds per 100 units sold between 200 and 600 units',correct:true},
+     {text:'Marginal revenue is always 3.5 thousand pounds per 100 units',correct:false},
+     {text:'Total revenue is 3,500 pounds',correct:false}
+   ]},
+  {id:'gh_alevel_006',type:'calculate',context:'A capacitor discharges through a resistor. Voltage V (volts) is measured.',
+   xLabel:'Time (ms)',yLabel:'Voltage (V)',xMin:0,xMax:50,yMin:0,yMax:12,
+   points:[[0,12],[5,9.5],[10,7.5],[15,5.9],[20,4.7],[25,3.7],[30,2.9],[35,2.3],[40,1.8],[45,1.4],[50,1.1]],curveType:'smooth',
+   pointA:{x:5,y:9.5,label:'A'},pointB:{x:25,y:3.7,label:'B'},gradient:-0.29,
+   interpretations:[
+     {text:'The voltage drops by approximately 0.29 V per millisecond on average between 5 ms and 25 ms',correct:true},
+     {text:'The voltage is always decreasing at 0.29 V/ms',correct:false},
+     {text:'The capacitor stores 0.29 joules of energy',correct:false}
+   ]},
+  // Reading (4)
+  {id:'gh_alevel_007',type:'reading',context:'A displacement-time graph for a particle is shown. A chord is drawn between (1, 3) and (5, 19). The tangent at t=3 has gradient 5. The chord gradient is 4.',
+   xLabel:'Time (s)',yLabel:'Displacement (m)',xMin:0,xMax:6,yMin:0,yMax:25,
+   points:[[0,0],[1,3],[2,6],[3,11],[4,15],[5,19],[6,22]],curveType:'smooth',
+   chordA:{x:1,y:3,label:'A'},chordB:{x:5,y:19,label:'B'},gradientShown:4,
+   interpretations:[
+     {text:'The average velocity between t=1 and t=5 is 4 m/s',correct:true},
+     {text:'The instantaneous velocity at t=3 is 4 m/s',correct:false},
+     {text:'The particle is decelerating at 4 m/s squared',correct:false},
+     {text:'The particle has travelled 4 metres in total',correct:false}
+   ]},
+  {id:'gh_alevel_008',type:'reading',context:'A velocity-time graph is shown. The chord between (2, 10) and (8, 34) has gradient 4.',
+   xLabel:'Time (s)',yLabel:'Velocity (m/s)',xMin:0,xMax:10,yMin:0,yMax:40,
+   points:[[0,2],[2,10],[4,18],[6,25],[8,34],[10,38]],curveType:'smooth',
+   chordA:{x:2,y:10,label:'A'},chordB:{x:8,y:34,label:'B'},gradientShown:4,
+   interpretations:[
+     {text:'The average acceleration between t=2 and t=8 is 4 m/s squared',correct:true},
+     {text:'The velocity is 4 m/s',correct:false},
+     {text:'The particle travels 4 metres',correct:false},
+     {text:'Acceleration is constant at 4 m/s squared throughout',correct:false}
+   ]},
+  {id:'gh_alevel_009',type:'reading',context:'An exponential growth model shows bacteria count. The chord from (0, 100) to (6, 800) has gradient 116.7. The tangent at t=3 has a steeper gradient of 150.',
+   xLabel:'Time (hours)',yLabel:'Bacteria count',xMin:0,xMax:8,yMin:0,yMax:1500,
+   points:[[0,100],[1,130],[2,180],[3,270],[4,400],[5,580],[6,800],[7,1100],[8,1400]],curveType:'smooth',
+   chordA:{x:0,y:100,label:'A'},chordB:{x:6,y:800,label:'B'},gradientShown:116.7,
+   interpretations:[
+     {text:'The average growth rate over 6 hours is approximately 117 bacteria per hour (the chord gradient gives the average, not the instantaneous rate)',correct:true},
+     {text:'The instantaneous rate of growth at t=3 is 116.7 bacteria per hour',correct:false},
+     {text:'116.7 bacteria are alive at each hour',correct:false},
+     {text:'The population doubles every 116.7 hours',correct:false}
+   ]},
+  {id:'gh_alevel_010',type:'reading',context:'A cost function is plotted. The chord from (10, 50) to (50, 170) has gradient 3. The tangent at x=30 has gradient 4, which is the marginal cost.',
+   xLabel:'Output (units)',yLabel:'Total cost (pounds)',xMin:0,xMax:60,yMin:0,yMax:220,
+   points:[[0,20],[10,50],[20,75],[30,105],[40,140],[50,170],[60,210]],curveType:'smooth',
+   chordA:{x:10,y:50,label:'A'},chordB:{x:50,y:170,label:'B'},gradientShown:3,
+   interpretations:[
+     {text:'The average cost per additional unit between 10 and 50 units is 3 pounds (the chord gradient gives the average rate, not the marginal cost at a specific point)',correct:true},
+     {text:'The marginal cost at 30 units is 3 pounds',correct:false},
+     {text:'Total cost is 3 pounds',correct:false},
+     {text:'Each unit always costs exactly 3 pounds to produce',correct:false}
+   ]}
+]
+};
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let G = {
+  level: null, sessionLen: 20, questions: [], qIdx: 0,
+  score: 0, maxScore: 0, correct: 0, total: 0,
+  clickedA: false, clickedB: false,
+  phase: 'idle', // 'clickA', 'clickB', 'interpret', 'reading', 'done'
+  pulseAnim: null
+};
+const $ = id => document.getElementById(id);
+
+// Canvas state
+let _cw, _ch, _pad = 50, _plotW, _plotH, _q;
+
+function toCanvasX(gx) { return _pad + (gx - _q.xMin) / (_q.xMax - _q.xMin) * _plotW; }
+function toCanvasY(gy) { return _pad + _plotH - (gy - _q.yMin) / (_q.yMax - _q.yMin) * _plotH; }
+function toGraphX(cx) { return _q.xMin + (cx - _pad) / _plotW * (_q.xMax - _q.xMin); }
+function toGraphY(cy) { return _q.yMin + (1 - (cy - _pad) / _plotH) * (_q.yMax - _q.yMin); }
+
+// ============================================================
+//  MENU
+// ============================================================
+function selLevel(btn) {
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  G.level = btn.dataset.level;
+  updateStartBtn();
+}
+function selSession(btn) {
+  document.querySelectorAll('.session-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  G.sessionLen = parseInt(btn.dataset.len);
+}
+function updateStartBtn() {
+  $('startBtn').classList.toggle('ready', !!G.level);
+}
+function parseURL() {
+  const p = new URLSearchParams(location.search);
+  const l = p.get('level');
+  if (l) {
+    const btn = document.querySelector(`.level-btn[data-level="${l}"]`);
+    if (btn) selLevel(btn);
+  }
+}
+
+// ============================================================
+//  START GAME
+// ============================================================
+function startGame() {
+  if (!G.level) return;
+  const pool = [...QUESTIONS[G.level]];
+  // Shuffle
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  // If session length > pool, cycle through pool again (shuffled differently)
+  G.questions = [];
+  while (G.questions.length < G.sessionLen) {
+    if (G.questions.length === 0) {
+      G.questions = pool.slice(0, Math.min(G.sessionLen, pool.length));
+    } else {
+      const extra = [...pool];
+      for (let i = extra.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [extra[i], extra[j]] = [extra[j], extra[i]];
+      }
+      G.questions = G.questions.concat(extra.slice(0, G.sessionLen - G.questions.length));
+    }
+  }
+  G.qIdx = 0; G.score = 0; G.maxScore = 0; G.correct = 0; G.total = 0;
+  $('menuScreen').classList.remove('active');
+  $('gameScreen').classList.add('active');
+  mfg('game_started', { game_slug: 'gradient-hunter', level: G.level });
+  loadQuestion();
+}
+
+// ============================================================
+//  DRAW GRAPH
+// ============================================================
+function drawGraph(q, opts) {
+  opts = opts || {};
+  _q = q;
+  const c = $('graphCanvas');
+  const rect = c.parentElement.getBoundingClientRect();
+  const w = Math.min(800, Math.max(300, rect.width - 14));
+  const h = Math.round(w * 0.75);
+  _cw = w; _ch = h; _plotW = _cw - 2 * _pad; _plotH = _ch - 2 * _pad;
+  const dpr = window.devicePixelRatio || 1;
+  c.width = _cw * dpr; c.height = _ch * dpr;
+  c.style.width = _cw + 'px'; c.style.height = _ch + 'px';
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, _cw, _ch);
+
+  // Background
+  ctx.fillStyle = '#1a1d27';
+  ctx.fillRect(0, 0, _cw, _ch);
+
+  // Grid lines
+  const xSpan = q.xMax - q.xMin, ySpan = q.yMax - q.yMin;
+  const xStep = niceStep(xSpan, 8), yStep = niceStep(ySpan, 6);
+  ctx.strokeStyle = 'rgba(74,85,104,0.3)'; ctx.lineWidth = 0.5;
+  for (let x = Math.ceil(q.xMin / xStep) * xStep; x <= q.xMax; x += xStep) {
+    ctx.beginPath(); ctx.moveTo(toCanvasX(x), _pad); ctx.lineTo(toCanvasX(x), _pad + _plotH); ctx.stroke();
+  }
+  for (let y = Math.ceil(q.yMin / yStep) * yStep; y <= q.yMax; y += yStep) {
+    ctx.beginPath(); ctx.moveTo(_pad, toCanvasY(y)); ctx.lineTo(_pad + _plotW, toCanvasY(y)); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#4a5568'; ctx.lineWidth = 1.5;
+  // X-axis
+  const yAxisPos = (q.yMin <= 0 && q.yMax >= 0) ? toCanvasY(0) : _pad + _plotH;
+  ctx.beginPath(); ctx.moveTo(_pad, yAxisPos); ctx.lineTo(_pad + _plotW, yAxisPos); ctx.stroke();
+  // Y-axis
+  const xAxisPos = (q.xMin <= 0 && q.xMax >= 0) ? toCanvasX(0) : _pad;
+  ctx.beginPath(); ctx.moveTo(xAxisPos, _pad); ctx.lineTo(xAxisPos, _pad + _plotH); ctx.stroke();
+
+  // Tick labels
+  ctx.fillStyle = '#4a5568'; ctx.font = '10px JetBrains Mono'; ctx.textAlign = 'center';
+  for (let x = Math.ceil(q.xMin / xStep) * xStep; x <= q.xMax; x += xStep) {
+    ctx.fillText(fmtN(x), toCanvasX(x), _pad + _plotH + 16);
+  }
+  ctx.textAlign = 'right';
+  for (let y = Math.ceil(q.yMin / yStep) * yStep; y <= q.yMax; y += yStep) {
+    ctx.fillText(fmtN(y), _pad - 6, toCanvasY(y) + 4);
+  }
+
+  // Axis labels
+  ctx.fillStyle = '#687890'; ctx.font = '12px Outfit'; ctx.textAlign = 'center';
+  ctx.fillText(q.xLabel, _pad + _plotW / 2, _ch - 4);
+  ctx.save();
+  ctx.translate(12, _pad + _plotH / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(q.yLabel, 0, 0);
+  ctx.restore();
+
+  // Draw curve/line through points
+  if (q.points && q.points.length > 1) {
+    ctx.strokeStyle = '#0d9488'; ctx.lineWidth = 2.5; ctx.beginPath();
+    if (q.curveType === 'smooth' && q.points.length > 2) {
+      drawSmoothCurve(ctx, q.points);
+    } else {
+      ctx.moveTo(toCanvasX(q.points[0][0]), toCanvasY(q.points[0][1]));
+      for (let i = 1; i < q.points.length; i++) {
+        ctx.lineTo(toCanvasX(q.points[i][0]), toCanvasY(q.points[i][1]));
+      }
+    }
+    ctx.stroke();
+  }
+
+  // Mark named points on graph
+  const ptsToMark = [];
+  if (q.type === 'calculate') {
+    ptsToMark.push(q.pointA, q.pointB);
+  } else {
+    ptsToMark.push(q.chordA, q.chordB);
+  }
+  ptsToMark.forEach(pt => {
+    const cx = toCanvasX(pt.x), cy = toCanvasY(pt.y);
+    // Coordinate label
+    ctx.fillStyle = '#94a3b8'; ctx.font = '10px JetBrains Mono'; ctx.textAlign = 'left';
+    ctx.fillText(`${pt.label}(${fmtN(pt.x)}, ${fmtN(pt.y)})`, cx + 10, cy - 8);
+  });
+
+  // Chord line (for reading type, or after both points clicked in calculate)
+  if (opts.showChord) {
+    const cA = q.type === 'reading' ? q.chordA : q.pointA;
+    const cB = q.type === 'reading' ? q.chordB : q.pointB;
+    ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2; ctx.setLineDash([8, 5]);
+    ctx.beginPath();
+    ctx.moveTo(toCanvasX(cA.x), toCanvasY(cA.y));
+    ctx.lineTo(toCanvasX(cB.x), toCanvasY(cB.y));
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Target points (pulsing amber or clicked green)
+  if (q.type === 'calculate') {
+    drawTargetPoint(ctx, q.pointA, G.clickedA);
+    drawTargetPoint(ctx, q.pointB, G.clickedB);
+  } else {
+    // Reading: both points shown as static green (already placed)
+    drawStaticPoint(ctx, q.chordA);
+    drawStaticPoint(ctx, q.chordB);
+  }
+}
+
+function drawTargetPoint(ctx, pt, clicked) {
+  const cx = toCanvasX(pt.x), cy = toCanvasY(pt.y);
+  if (clicked) {
+    ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+    ctx.fillStyle = '#22c55e'; ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Outfit'; ctx.textAlign = 'center';
+    ctx.fillText('\u2713', cx, cy + 4);
+  } else {
+    // Pulsing effect is handled by animation loop
+    const t = (Date.now() % 1000) / 1000;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const scale = reducedMotion ? 1 : 1 + 0.3 * Math.sin(t * Math.PI * 2);
+    const alpha = reducedMotion ? 1 : 0.7 + 0.3 * Math.cos(t * Math.PI * 2);
+    ctx.globalAlpha = alpha;
+    ctx.beginPath(); ctx.arc(cx, cy, 7 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = '#f59e0b'; ctx.fill();
+    ctx.globalAlpha = 1;
+    // Outer ring
+    ctx.beginPath(); ctx.arc(cx, cy, 10 * scale, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(245,158,11,0.4)'; ctx.lineWidth = 1.5; ctx.stroke();
+  }
+}
+
+function drawStaticPoint(ctx, pt) {
+  const cx = toCanvasX(pt.x), cy = toCanvasY(pt.y);
+  ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+  ctx.fillStyle = '#22c55e'; ctx.fill();
+}
+
+function drawSmoothCurve(ctx, pts) {
+  // Cardinal spline through points
+  const tension = 0.3;
+  ctx.moveTo(toCanvasX(pts[0][0]), toCanvasY(pts[0][1]));
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(pts.length - 1, i + 2)];
+    const cp1x = toCanvasX(p1[0]) + (toCanvasX(p2[0]) - toCanvasX(p0[0])) * tension;
+    const cp1y = toCanvasY(p1[1]) + (toCanvasY(p2[1]) - toCanvasY(p0[1])) * tension;
+    const cp2x = toCanvasX(p2[0]) - (toCanvasX(p3[0]) - toCanvasX(p1[0])) * tension;
+    const cp2y = toCanvasY(p2[1]) - (toCanvasY(p3[1]) - toCanvasY(p1[1])) * tension;
+    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, toCanvasX(p2[0]), toCanvasY(p2[1]));
+  }
+}
+
+function niceStep(span, target) {
+  const r = span / target;
+  const mag = Math.pow(10, Math.floor(Math.log10(r)));
+  const n = r / mag;
+  if (n <= 1.5) return mag;
+  if (n <= 3.5) return 2 * mag;
+  if (n <= 7.5) return 5 * mag;
+  return 10 * mag;
+}
+
+function fmtN(v) {
+  if (Math.abs(v) < 1e-10) return '0';
+  if (Number.isInteger(v)) return String(v);
+  if (Math.abs(v) >= 10000) return v.toFixed(0);
+  return parseFloat(v.toPrecision(4)).toString();
+}
+
+// ============================================================
+//  PULSE ANIMATION LOOP
+// ============================================================
+function startPulse() {
+  stopPulse();
+  function animate() {
+    const q = G.questions[G.qIdx];
+    if (!q || G.phase === 'done' || G.phase === 'interpret' || G.phase === 'reading') return;
+    drawGraph(q, { showChord: G.clickedA && G.clickedB });
+    G.pulseAnim = requestAnimationFrame(animate);
+  }
+  G.pulseAnim = requestAnimationFrame(animate);
+}
+function stopPulse() {
+  if (G.pulseAnim) { cancelAnimationFrame(G.pulseAnim); G.pulseAnim = null; }
+}
+
+// ============================================================
+//  LOAD QUESTION
+// ============================================================
+function loadQuestion() {
+  if (G.qIdx >= G.sessionLen) { endGame(); return; }
+  const q = G.questions[G.qIdx];
+  G.clickedA = false; G.clickedB = false;
+
+  // HUD
+  $('hudQ').textContent = `${G.qIdx + 1}/${G.sessionLen}`;
+  $('hudScore').textContent = `${G.score}/${G.maxScore}`;
+  $('hudType').textContent = q.type === 'calculate' ? 'Calculate' : 'Reading';
+  $('progressFill').style.width = (G.qIdx / G.sessionLen * 100) + '%';
+
+  // Context
+  $('contextArea').innerHTML = `<div class="context-text"><strong>${q.type === 'calculate' ? 'Calculate the gradient' : 'Interpret the gradient'}</strong><br>${q.context}</div>`;
+
+  if (q.type === 'calculate') {
+    G.phase = 'clickA';
+    drawGraph(q, { showChord: false });
+    startPulse();
+    $('interactionArea').innerHTML = `
+      <div class="instruction">Click point ${q.pointA.label} then point ${q.pointB.label} to find the gradient of the chord.</div>
+      <div class="click-status">
+        <span class="pt" id="ptA">Point ${q.pointA.label}: waiting</span>
+        <span class="pt" id="ptB">Point ${q.pointB.label}: waiting</span>
+      </div>
+      <div id="calcFeedback"></div>`;
+    enableCanvasClick(q);
+  } else {
+    // Reading type
+    G.phase = 'reading';
+    G.maxScore += 1;
+    drawGraph(q, { showChord: true });
+    $('interactionArea').innerHTML = `
+      <div class="gradient-display">Gradient of chord = ${q.gradientShown}</div>
+      <div class="instruction">What does this gradient mean in context?</div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div id="readFeedback"></div>`;
+    renderInterpretations(q, 'readFeedback', function(correct) {
+      G.total++;
+      if (correct) { G.correct++; G.score++; }
+      $('hudScore').textContent = `${G.score}/${G.maxScore}`;
+      mfg('question_answered', {
+        game_slug: 'gradient-hunter', level: G.level,
+        question_index: G.qIdx + 1, correct: correct, mode: 'reading'
+      });
+      showNextBtn();
+    });
+  }
+}
+
+// ============================================================
+//  CLICK DETECTION
+// ============================================================
+function enableCanvasClick(q) {
+  const c = $('graphCanvas');
+  function handleClick(clientX, clientY) {
+    if (G.phase !== 'clickA' && G.phase !== 'clickB') return;
+    const rect = c.getBoundingClientRect();
+    const scaleX = _cw / rect.width;
+    const scaleY = _ch / rect.height;
+    const clickCX = (clientX - rect.left) * scaleX;
+    const clickCY = (clientY - rect.top) * scaleY;
+
+    const targetPt = G.phase === 'clickA' ? q.pointA : q.pointB;
+    const targetCX = toCanvasX(targetPt.x);
+    const targetCY = toCanvasY(targetPt.y);
+    const dist = Math.sqrt((clickCX - targetCX) ** 2 + (clickCY - targetCY) ** 2);
+
+    if (dist <= 20) {
+      if (G.phase === 'clickA') {
+        G.clickedA = true;
+        $('ptA').classList.add('done');
+        $('ptA').textContent = `Point ${q.pointA.label}: \u2713 (${fmtN(q.pointA.x)}, ${fmtN(q.pointA.y)})`;
+        G.phase = 'clickB';
+      } else {
+        G.clickedB = true;
+        $('ptB').classList.add('done');
+        $('ptB').textContent = `Point ${q.pointB.label}: \u2713 (${fmtN(q.pointB.x)}, ${fmtN(q.pointB.y)})`;
+        G.phase = 'interpret';
+        stopPulse();
+        disableCanvas();
+        onBothPointsClicked(q);
+      }
+    }
+  }
+
+  c.onclick = function(e) { handleClick(e.clientX, e.clientY); };
+  c.ontouchstart = function(e) {
+    e.preventDefault();
+    handleClick(e.touches[0].clientX, e.touches[0].clientY);
+  };
+}
+
+function disableCanvas() {
+  const c = $('graphCanvas');
+  c.onclick = null; c.ontouchstart = null;
+}
+
+function onBothPointsClicked(q) {
+  // Calculate gradient
+  const grad = (q.pointB.y - q.pointA.y) / (q.pointB.x - q.pointA.x);
+  G.maxScore += 2;
+
+  // Redraw with chord
+  drawGraph(q, { showChord: true });
+
+  const gradDisplay = Math.abs(grad - Math.round(grad)) < 0.001 ? Math.round(grad) : parseFloat(grad.toFixed(2));
+  $('calcFeedback').innerHTML = `
+    <div class="gradient-display">Gradient = (${fmtN(q.pointB.y)} - ${fmtN(q.pointA.y)}) / (${fmtN(q.pointB.x)} - ${fmtN(q.pointA.x)}) = ${gradDisplay}</div>
+    <div class="instruction">What does this gradient mean in context?</div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <div id="interpFeedback"></div>`;
+
+  renderInterpretations(q, 'interpFeedback', function(correct) {
+    G.total++;
+    // Calculate type: 2pts for gradient + interpretation, 1pt for gradient only
+    if (correct) { G.correct++; G.score += 2; }
+    else { G.score += 1; } // gradient was correct (they clicked both points)
+    $('hudScore').textContent = `${G.score}/${G.maxScore}`;
+    mfg('question_answered', {
+      game_slug: 'gradient-hunter', level: G.level,
+      question_index: G.qIdx + 1, correct: correct, mode: 'calculate'
+    });
+    showNextBtn();
+  });
+}
+
+// ============================================================
+//  INTERPRETATION OPTIONS
+// ============================================================
+function renderInterpretations(q, feedbackId, callback) {
+  const interps = [...q.interpretations];
+  // Shuffle interpretations
+  for (let i = interps.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [interps[i], interps[j]] = [interps[j], interps[i]];
+  }
+
+  const grid = $('optionsGrid');
+  grid.innerHTML = '';
+  interps.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = opt.text;
+    btn.onclick = function() {
+      // Lock all buttons
+      grid.querySelectorAll('.opt-btn').forEach(b => {
+        b.classList.add('locked');
+        const isCorrect = interps[Array.from(grid.children).indexOf(b)].correct;
+        if (isCorrect) b.classList.add('correct-choice');
+      });
+      if (!opt.correct) btn.classList.add('wrong-choice');
+
+      const fb = $(feedbackId);
+      if (opt.correct) {
+        fb.innerHTML = '<div class="feedback correct">\u2713 Correct! You interpreted the gradient correctly.</div>';
+      } else {
+        const correctText = q.interpretations.find(i => i.correct).text;
+        fb.innerHTML = `<div class="feedback wrong">\u2717 Incorrect. The correct interpretation: ${correctText}</div>`;
+      }
+      callback(opt.correct);
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function showNextBtn() {
+  const container = $('interactionArea');
+  const btn = document.createElement('button');
+  btn.className = 'next-btn';
+  btn.textContent = G.qIdx < G.sessionLen - 1 ? 'Next Question \u2192' : 'See Results';
+  btn.onclick = function() {
+    G.qIdx++;
+    loadQuestion();
+  };
+  container.appendChild(btn);
+}
+
+// ============================================================
+//  END GAME
+// ============================================================
+function endGame() {
+  stopPulse(); disableCanvas();
+  $('gameScreen').classList.remove('active');
+  $('resultsScreen').classList.add('active');
+  $('progressFill').style.width = '100%';
+
+  const pct = G.maxScore > 0 ? Math.round(100 * G.score / G.maxScore) : 0;
+  const title = pct >= 90 ? 'Outstanding!' : pct >= 70 ? 'Great work!' : pct >= 50 ? 'Good effort!' : 'Keep practising!';
+  $('resultTitle').textContent = title;
+  $('finalScore').textContent = `${G.score}/${G.maxScore}`;
+
+  const labels = { core: 'Core Maths', gcse: 'GCSE', alevel: 'A-Level' };
+  $('statsLine').innerHTML = `Score: <strong>${G.score}/${G.maxScore}</strong> (${pct}%)<br>Questions: <strong>${G.sessionLen}</strong><br>Level: <strong>${labels[G.level]}</strong>`;
+
+  // PB (only for sessions of 10+ questions)
+  if (G.sessionLen >= 10) {
+    const key = `pb_gradient-hunter_${G.level}`;
+    const prev = parseInt(localStorage.getItem(key) || '0');
+    if (pct > prev) {
+      localStorage.setItem(key, pct);
+      mfg('personal_best_set', { game_slug: 'gradient-hunter', level: G.level, score: pct, previous_best: prev });
+      if (prev > 0) {
+        $('pbLine').textContent = `New personal best! ${pct}% (Previous: ${prev}%)`;
+        $('pbLine').style.display = 'block';
+      } else {
+        $('pbLine').textContent = `Personal best set: ${pct}%`;
+        $('pbLine').style.display = 'block';
+      }
+    } else if (prev > 0) {
+      $('pbLine').textContent = `Personal best: ${prev}%`;
+      $('pbLine').style.display = 'block';
+    } else {
+      $('pbLine').style.display = 'none';
+    }
+  } else {
+    $('pbLine').style.display = 'none';
+  }
+
+  window._mfgCompleted = true;
+  mfg('game_completed', {
+    game_slug: 'gradient-hunter', level: G.level,
+    score: G.score, questions_answered: G.sessionLen, questions_correct: G.correct
+  });
+
+  if (window.MaffsLeaderboard) {
+    MaffsLeaderboard.submitScore('gradient-hunter', G.level, G.score, G.sessionLen).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('gradient-hunter',G.level,G.score);}
+  }
+}
+
+function showMenu() {
+  $('resultsScreen').classList.remove('active');
+  $('gameScreen').classList.remove('active');
+  $('menuScreen').classList.add('active');
+  $('pbLine').style.display = 'none';
+  stopPulse();
+}
+
+window.addEventListener('DOMContentLoaded', () => { parseURL(); });
+
+
+(function renderMethodRef(){
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
+  var k=function(t){return katex.renderToString(t,{throwOnError:false});};
+
+  document.getElementById('methodReadPts').innerHTML=
+    '<strong>(a) Reading two points from a curve</strong>'+
+    'A graph shows temperature ('+k('\\degree C')+') against time (hours).<br><br>'+
+    'Pick two clear points on the curve \u2014 ideally where gridlines cross:<br>'+
+    'Point 1: '+k('(2,\\; 15)')+' and Point 2: '+k('(8,\\; 33)')+
+    '<br><br>Use points that are <b>far apart</b> to reduce reading errors.';
+
+  document.getElementById('methodCalcGrad').innerHTML=
+    '<strong>(b) Calculating the gradient of the chord</strong>'+
+    K('\\text{Gradient} = \\frac{\\Delta y}{\\Delta x} = \\frac{y_2 - y_1}{x_2 - x_1}')+
+    K('= \\frac{33 - 15}{8 - 2} = \\frac{18}{6} = 3')+
+    'The gradient is <b>3</b>.';
+
+  document.getElementById('methodInterpGrad').innerHTML=
+    '<strong>(c) Interpreting the gradient in context</strong>'+
+    'The gradient tells you the <b>rate of change</b>.<br><br>'+
+    'Here: the temperature is increasing at approximately <b>3 \u00B0C per hour</b>.<br><br>'+
+    'Always include:<br>'+
+    '<ul style="margin:.3rem 0 0 1.2rem;list-style:disc">'+
+    '<li>The value (3)</li>'+
+    '<li>The units of '+k('y')+' per unit of '+k('x')+' (\u00B0C per hour)</li>'+
+    '<li>Whether it is increasing or decreasing</li></ul><br>'+
+    'A <b>negative</b> gradient means the quantity is decreasing over that interval.';
+})();
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

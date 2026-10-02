@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Vectors from GCSE to Level 4. Column vectors, magnitude, addition, scalar product, line equations, and 3D engineering applications.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/component-crusher/">
+<meta property="og:title" content="Component Crusher — MaffsGames">
+<meta property="og:description" content="Vectors — column vectors, magnitude, scalar product, 3D applications. 45 scenarios.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/component-crusher/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Component Crusher — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070b14;--surface:#0e1424;--surface2:#131b2e;--border:#1a2440;
+  --primary:#3b82f6;--primary-dim:rgba(59,130,246,.15);--primary-glow:rgba(59,130,246,.25);
+  --accent:#60a5fa;--teal:#14b8a6;--orange:#f97316;--red:#ef4444;
+  --correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
+  --wrong:#f43f5e;--wrong-dim:rgba(244,63,94,.12);
+  --text:#e4e8f0;--muted:#687890;--hint:#94a3b8;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:1100px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1rem 0 .4rem}
+.header h1{font-size:1.7rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+.screen{display:none}.screen.active{display:block}
+
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.6rem auto;max-width:540px}
+.level-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;max-width:500px;margin:1rem auto}
+.level-btn{padding:.8rem;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.level-btn:hover{border-color:var(--primary)}.level-btn.selected{border-color:var(--primary);background:var(--primary-dim)}
+.level-btn .lsub{font-size:.64rem;color:var(--muted);font-weight:400;margin-top:.15rem;display:block}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2.2rem;border-radius:12px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;opacity:.4;pointer-events:none}
+.start-btn.ready{opacity:1;pointer-events:auto}.start-btn.ready:hover{transform:scale(1.04)}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:'JetBrains Mono',monospace;font-size:.88rem;font-weight:700}
+
+.game-layout{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;align-items:start}
+@media(max-width:780px){.game-layout{grid-template-columns:1fr}}
+
+.canvas-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.5rem}
+.canvas-panel canvas{display:block;width:100%;border-radius:8px}
+
+.right-panel{display:flex;flex-direction:column;gap:.5rem}
+.scenario-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem}
+.scenario-box h3{font-size:.72rem;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem}
+.scenario-box .katex{font-size:.95em!important}
+.scenario-desc{font-size:.82rem;color:var(--muted);line-height:1.5;margin-top:.3rem}
+
+.q-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem}
+.sq-label{font-size:.65rem;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.2rem;font-weight:700}
+.sq-prompt{font-size:.84rem;font-weight:600;color:var(--text);margin-bottom:.6rem;line-height:1.5}
+.sq-prompt .katex{font-size:.9em!important}
+
+.input-row{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.5rem}
+.vec-input{width:65px;padding:.45rem .5rem;border-radius:6px;border:1.5px solid var(--border);background:var(--surface2);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.85rem;font-weight:500;text-align:center}
+.vec-input:focus{outline:none;border-color:var(--primary)}
+.vec-input.correct{border-color:var(--correct);background:var(--correct-dim)}
+.vec-input.wrong{border-color:var(--wrong);background:var(--wrong-dim)}
+.vec-label{font-size:.78rem;color:var(--muted);font-weight:600}
+
+.check-btn{padding:.45rem 1.2rem;border-radius:8px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;margin-top:.3rem}
+.check-btn:hover{transform:scale(1.03)}
+
+.mcq-grid{display:grid;gap:.3rem;margin-bottom:.4rem}
+.mcq-btn{padding:.45rem .6rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.76rem;cursor:pointer;text-align:left;transition:all .12s;line-height:1.3}
+.mcq-btn:hover{border-color:var(--primary)}
+.mcq-btn.correct{border-color:var(--correct);background:var(--correct-dim)}
+.mcq-btn.wrong{border-color:var(--wrong);background:var(--wrong-dim)}
+.mcq-btn.disabled{pointer-events:none;opacity:.5}
+
+.feedback{margin-top:.4rem;padding:.4rem .6rem;border-radius:8px;font-size:.76rem;line-height:1.4;animation:fadeIn .25s}
+.feedback.correct{background:var(--correct-dim);border:1px solid var(--correct);color:var(--correct)}
+.feedback.wrong{background:var(--wrong-dim);border:1px solid var(--wrong);color:var(--wrong)}
+
+.next-btn{display:block;margin:.6rem auto 0;padding:.5rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer}
+
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.4rem;margin-bottom:.3rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.6rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.7rem 0}
+.results .stats{color:var(--muted);margin-bottom:1rem;line-height:1.9;font-size:.83rem}
+.results .pb-line{color:var(--correct);font-weight:600;font-size:.88rem;margin-bottom:1rem}
+.play-again{padding:.6rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+
+<div id="menuScreen" class="screen active">
+  <div class="header"><h1>Component Crusher</h1><div class="sub">Break it into components — then put it back together.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+  <div class="menu-info">Vectors from column notation to 3D scalar products. Read diagrams, calculate magnitudes, add vectors, find angles.</div>
+  <div class="level-grid">
+    <button class="level-btn" data-level="gcse" onclick="selLevel(this)">GCSE<span class="lsub">Column vectors, magnitude</span></button>
+    <button class="level-btn" data-level="alevel" onclick="selLevel(this)">A-Level<span class="lsub">i j notation, scalar product</span></button>
+    <button class="level-btn" data-level="level4" onclick="selLevel(this)">Level 4<span class="lsub">3D vectors, engineering</span></button>
+  </div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="start-btn" id="startBtn" onclick="startGame()">Start</button>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><div class="hud-label">Scenario</div><div class="hud-val" id="hudQ">1/6</div></div>
+    <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    <div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="hudCorrect">0/0</div></div>
+    <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val mono" id="hudTimer">0s</div></div>
+  </div>
+  <div class="game-layout">
+    <div class="canvas-panel"><canvas id="vecCanvas" width="600" height="400"></canvas></div>
+    <div class="right-panel">
+      <div class="scenario-box" id="scenarioBox"></div>
+      <div class="q-box" id="qBox"></div>
+    </div>
+  </div>
+</div>
+
+<div id="resultsScreen" class="screen">
+  <div class="results">
+    <h2 id="resultTitle"></h2>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="stats" id="statsLine"></div>
+    <div class="pb-line" id="pbLine" style="display:none"></div>
+    <button class="play-again" onclick="showMenu()">Play Again</button>
+  </div>
+</div>
+</div>
+
+<script>
+// ============================================================
+//  SCENARIOS
+// ============================================================
+const SCENARIOS={
+gcse:[
+  {id:'G1',desc:'Two vectors from the origin',
+   vectors:[{from:[0,0],to:[3,4],label:'a',color:'#14b8a6'},{from:[0,0],to:[-2,5],label:'b',color:'#f97316'}],
+   grid:{x:[-4,6],y:[-2,8]},
+   sqs:[
+     {type:'vec2',prompt:'Write down vector \\(\\mathbf{a}\\) as a column vector.',answers:[3,4],labels:['x','y']},
+     {type:'num',prompt:'Find |\\mathbf{a}|.',answer:5,tol:0.01,working:'√(9+16) = √25 = 5'},
+     {type:'vec2',prompt:'Find \\mathbf{a} + \\mathbf{b}.',answers:[1,9],labels:['x','y']},
+     {type:'vec2',prompt:'Find 2\\mathbf{a} - \\mathbf{b}.',answers:[8,3],labels:['x','y']}
+   ]},
+  {id:'G2',desc:'Axis-aligned vectors',
+   vectors:[{from:[0,0],to:[5,0],label:'a',color:'#14b8a6'},{from:[0,0],to:[0,-3],label:'b',color:'#f97316'}],
+   grid:{x:[-2,7],y:[-5,3]},
+   sqs:[
+     {type:'vec2',prompt:'Find \\mathbf{a} + \\mathbf{b}.',answers:[5,-3],labels:['x','y']},
+     {type:'num',prompt:'Find \\(|\\mathbf{a} + \\mathbf{b}|\\). Give to 2 d.p.',answer:5.83,tol:0.02},
+     {type:'vec2',prompt:'Find 3\\mathbf{b}.',answers:[0,-9],labels:['x','y']}
+   ]},
+  {id:'G3',desc:'Collinearity test',
+   vectors:[{from:[1,1],to:[4,3],label:'AB',color:'#14b8a6'},{from:[4,3],to:[7,5],label:'BC',color:'#f97316'}],
+   points:[{c:[1,1],l:'A'},{c:[4,3],l:'B'},{c:[7,5],l:'C'}],
+   grid:{x:[-1,9],y:[-1,7]},
+   sqs:[
+     {type:'vec2',prompt:'Find \\overrightarrow{AB}.',answers:[3,2],labels:['x','y']},
+     {type:'vec2',prompt:'Find \\overrightarrow{BC}.',answers:[3,2],labels:['x','y']},
+     {type:'mcq',prompt:'Are A, B, C collinear?',correct:'Yes — BC = AB so parallel and share point B',wrong:['No — they form a triangle','Only if |AB| = |BC|','Cannot tell from vectors']}
+   ]},
+  {id:'G4',desc:'Magnitude and unit vector',
+   vectors:[{from:[0,0],to:[-4,3],label:'a',color:'#14b8a6'}],
+   grid:{x:[-6,2],y:[-2,5]},
+   sqs:[
+     {type:'num',prompt:'Find |\\mathbf{a}|.',answer:5,tol:0.01},
+     {type:'vec2',prompt:'Find -2\\mathbf{a}.',answers:[8,-6],labels:['x','y']}
+   ]},
+  {id:'G5',desc:'Parallel vectors',
+   vectors:[{from:[0,0],to:[6,8],label:'a',color:'#14b8a6'},{from:[0,0],to:[-3,-4],label:'b',color:'#f97316'}],
+   grid:{x:[-5,8],y:[-6,10]},
+   sqs:[
+     {type:'vec2',prompt:'Find \\mathbf{a} + \\mathbf{b}.',answers:[3,4],labels:['x','y']},
+     {type:'num',prompt:'Find |\\mathbf{a} + \\mathbf{b}|.',answer:5,tol:0.01},
+     {type:'mcq',prompt:'Is \\mathbf{b} = -\\frac{1}{2}\\mathbf{a}?',correct:'Yes — b is parallel to a and half the length in opposite direction',wrong:['No — they are perpendicular','Only if |a| = |b|','Cannot determine from diagram']}
+   ]},
+  {id:'G6',desc:'Translation vector',
+   vectors:[{from:[1,3],to:[5,1],label:'',color:'#60a5fa'}],
+   grid:{x:[-1,7],y:[-1,5]},
+   sqs:[
+     {type:'vec2',prompt:'Write down the column vector of the translation shown.',answers:[4,-2],labels:['x','y']},
+     {type:'vec2',prompt:'The arrow shows a translation. What translation takes the arrowhead back to the start?',answers:[-4,2],labels:['x','y']}
+   ]},
+  {id:'G7',desc:'Linear combination',
+   vectors:[{from:[0,0],to:[2,5],label:'a',color:'#14b8a6'},{from:[0,0],to:[4,-1],label:'b',color:'#f97316'}],
+   grid:{x:[-2,7],y:[-3,7]},
+   sqs:[
+     {type:'vec2',prompt:'Find \\mathbf{a} + \\mathbf{b}.',answers:[6,4],labels:['x','y']},
+     {type:'vec2',prompt:'Find 3\\mathbf{a} - \\mathbf{b}.',answers:[2,16],labels:['x','y']},
+     {type:'num',prompt:'Find \\(|\\mathbf{a}|\\). Give to 2 d.p.',answer:5.39,tol:0.02}
+   ]},
+  {id:'G8',desc:'Position vectors',
+   vectors:[{from:[0,0],to:[3,1],label:'a=OA',color:'#14b8a6'},{from:[0,0],to:[1,4],label:'b=OB',color:'#f97316'}],
+   points:[{c:[0,0],l:'O'},{c:[3,1],l:'A'},{c:[1,4],l:'B'}],
+   grid:{x:[-2,5],y:[-2,6]},
+   sqs:[
+     {type:'vec2',prompt:'Find \\overrightarrow{AB}.',answers:[-2,3],labels:['x','y']},
+     {type:'num',prompt:'Find \\(|\\overrightarrow{AB}|\\). Give to 2 d.p.',answer:3.61,tol:0.02}
+   ]},
+  {id:'G9',desc:'Pythagorean triple',
+   vectors:[{from:[0,0],to:[5,12],label:'p',color:'#14b8a6'}],
+   grid:{x:[-2,7],y:[-2,14]},
+   sqs:[
+     {type:'num',prompt:'Find |\\mathbf{p}|.',answer:13,tol:0.01},
+     {type:'vec2',prompt:'Find \\frac{1}{2}\\mathbf{p}.',answers:[2.5,6],labels:['x','y']}
+   ]},
+  {id:'G10',desc:'Scalar multiple test',
+   vectors:[{from:[0,0],to:[-3,4],label:'m',color:'#14b8a6'},{from:[0,0],to:[6,-8],label:'n',color:'#f97316'}],
+   grid:{x:[-5,8],y:[-10,6]},
+   sqs:[
+     {type:'mcq',prompt:'Show that \\(\\mathbf{n} = -2\\mathbf{m}\\).',correct:'n = (6,-8) = -2(-3,4) = -2m ✓ Collinear',wrong:['n = 2m','They are perpendicular','Cannot be expressed as a scalar multiple']},
+     {type:'vec2',prompt:'Find \\mathbf{m} + \\mathbf{n}.',answers:[3,-4],labels:['x','y']},
+     {type:'num',prompt:'Find |\\mathbf{m} + \\mathbf{n}|.',answer:5,tol:0.01}
+   ]},
+  {id:'G11',desc:'Two combinations',
+   vectors:[{from:[0,0],to:[1,2],label:'a',color:'#14b8a6'},{from:[0,0],to:[3,1],label:'b',color:'#f97316'}],
+   grid:{x:[-6,5],y:[-2,6]},
+   sqs:[
+     {type:'vec2',prompt:'Find 2\\mathbf{a} + \\mathbf{b}.',answers:[5,5],labels:['x','y']},
+     {type:'vec2',prompt:'Find \\mathbf{a} - 2\\mathbf{b}.',answers:[-5,0],labels:['x','y']},
+     {type:'num',prompt:'Find |\\mathbf{a} - 2\\mathbf{b}|.',answer:5,tol:0.01}
+   ]},
+  {id:'G12',desc:'Midpoint via vectors',
+   vectors:[{from:[2,3],to:[8,7],label:'AB',color:'#14b8a6'}],
+   points:[{c:[2,3],l:'A'},{c:[8,7],l:'B'},{c:[5,5],l:'M'}],
+   grid:{x:[0,10],y:[0,9]},
+   sqs:[
+     {type:'vec2',prompt:'Find \\overrightarrow{AB}.',answers:[6,4],labels:['x','y']},
+     {type:'vec2',prompt:'Find \\(\\overrightarrow{AM}\\) (M is midpoint).',answers:[3,2],labels:['x','y']},
+     {type:'vec2',prompt:'State the position of M.',answers:[5,5],labels:['x','y']}
+   ]},
+  {id:'G13',desc:'Another Pythagorean triple',
+   vectors:[{from:[0,0],to:[8,15],label:'v',color:'#14b8a6'}],
+   grid:{x:[-2,10],y:[-2,17]},
+   sqs:[
+     {type:'num',prompt:'Find |\\mathbf{v}|.',answer:17,tol:0.01}
+   ]},
+  {id:'G14',desc:'Two operations',
+   vectors:[{from:[0,0],to:[2,-3],label:'a',color:'#14b8a6'},{from:[0,0],to:[-1,4],label:'b',color:'#f97316'}],
+   grid:{x:[-4,5],y:[-5,6]},
+   sqs:[
+     {type:'vec2',prompt:'Find \\mathbf{a} + 2\\mathbf{b}.',answers:[0,5],labels:['x','y']},
+     {type:'vec2',prompt:'Find 3\\mathbf{a} - \\mathbf{b}.',answers:[7,-13],labels:['x','y']}
+   ]},
+  {id:'G15',desc:'Path cancellation',
+   vectors:[{from:[0,0],to:[3,2],label:'a',color:'#14b8a6'},{from:[3,2],to:[2,6],label:'b',color:'#f97316'},{from:[2,6],to:[-1,4],label:'-a',color:'#a78bfa'}],
+   grid:{x:[-3,5],y:[-1,8]},
+   sqs:[
+     {type:'vec2',prompt:'Total displacement \\(= \\mathbf{a} + \\mathbf{b} + (-\\mathbf{a})\\). Calculate.',answers:[-1,4],labels:['x','y']},
+     {type:'mcq',prompt:'Explain why the total equals \\(\\mathbf{b}\\).',correct:'Adding a then −a cancels, leaving just b',wrong:['a and b are perpendicular','The path forms a triangle','Total is always zero']}
+   ]}
+],
+alevel:[
+  {id:'AL1',desc:'Scalar product and angle',
+   vectors:[{from:[0,0],to:[3,4],label:'a',color:'#14b8a6'},{from:[0,0],to:[1,-2],label:'b',color:'#f97316'}],
+   grid:{x:[-2,5],y:[-4,6]},
+   sqs:[
+     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:-5,tol:0.01,working:'3(1)+4(-2) = 3-8 = -5'},
+     {type:'num',prompt:'Find the angle between \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) to 1 d.p.',answer:116.6,tol:0.3,working:'cosθ = -5/(5×√5)'},
+     {type:'vec2',prompt:'Find the unit vector in the direction of \\(\\mathbf{a}\\).',answers:[0.6,0.8],labels:['i','j'],tol:0.01}
+   ]},
+  {id:'AL2',desc:'Midpoint test',
+   vectors:[{from:[0,0],to:[2,3],label:'A',color:'#14b8a6'},{from:[0,0],to:[6,7],label:'B',color:'#f97316'}],
+   points:[{c:[2,3],l:'A'},{c:[6,7],l:'B'},{c:[4,5],l:'C'}],
+   grid:{x:[-1,8],y:[-1,9]},
+   sqs:[
+     {type:'vec2',prompt:'Find \\overrightarrow{AB} in \\mathbf{i}, \\mathbf{j} form.',answers:[4,4],labels:['i','j']},
+     {type:'vec2',prompt:'Find \\overrightarrow{AC}.',answers:[2,2],labels:['i','j']},
+     {type:'mcq',prompt:'\\(\\overrightarrow{AC} = \\frac{1}{2}\\overrightarrow{AB}\\). What does this tell us?',correct:'C is the midpoint of AB',wrong:['C is on the perpendicular bisector','A, B, C form an equilateral triangle','AC is perpendicular to AB']}
+   ]},
+  {id:'AL3',desc:'Line equation',
+   vectors:[{from:[2,1],to:[5,0],label:'d',color:'#14b8a6'}],
+   points:[{c:[2,1],l:'A'}],
+   grid:{x:[-1,9],y:[-3,4]},
+   sqs:[
+     {type:'mcq',prompt:'Which is the vector equation of the line through A with direction \\(\\mathbf{d} = 3\\mathbf{i} - \\mathbf{j}\\)?',
+       correct:'\\mathbf{r} = (2\\mathbf{i}+\\mathbf{j}) + t(3\\mathbf{i}-\\mathbf{j})',
+       wrong:['\\mathbf{r} = (3\\mathbf{i}-\\mathbf{j}) + t(2\\mathbf{i}+\\mathbf{j})','\\mathbf{r} = t(2\\mathbf{i}+\\mathbf{j})','\\mathbf{r} = (2\\mathbf{i}+\\mathbf{j}) - t(3\\mathbf{i}+\\mathbf{j})']},
+     {type:'vec2',prompt:'Find the point on the line when \\(t = 3\\).',answers:[11,-2],labels:['i','j']}
+   ]},
+  {id:'AL4',desc:'Scalar product',
+   vectors:[{from:[0,0],to:[2,1],label:'a',color:'#14b8a6'},{from:[0,0],to:[-1,3],label:'b',color:'#f97316'}],
+   grid:{x:[-3,4],y:[-1,5]},
+   sqs:[
+     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:1,tol:0.01},
+     {type:'num',prompt:'Find the angle between \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) to 1 d.p.',answer:81.9,tol:0.3}
+   ]},
+  {id:'AL5',desc:'Line through two points',
+   vectors:[{from:[1,4],to:[5,2],label:'AB',color:'#14b8a6'}],
+   points:[{c:[1,4],l:'A'},{c:[5,2],l:'B'}],
+   grid:{x:[-1,7],y:[-1,6]},
+   sqs:[
+     {type:'vec2',prompt:'Find \\overrightarrow{AB}.',answers:[4,-2],labels:['i','j']},
+     {type:'num',prompt:'Find \\(|\\overrightarrow{AB}|\\). Give as simplified surd or decimal.',answer:4.47,tol:0.02}
+   ]},
+  {id:'AL6',desc:'Large magnitude',
+   vectors:[{from:[0,0],to:[5,-12],label:'p',color:'#14b8a6'}],
+   grid:{x:[-2,7],y:[-14,2]},
+   sqs:[
+     {type:'num',prompt:'Find |\\mathbf{p}|.',answer:13,tol:0.01},
+     {type:'num',prompt:'Find \\mathbf{p} \\cdot (2\\mathbf{i}+\\mathbf{j}).',answer:-2,tol:0.01}
+   ]},
+  {id:'AL7',desc:'Perpendicularity test',
+   vectors:[{from:[0,0],to:[1,2],label:'a',color:'#14b8a6'},{from:[0,0],to:[3,-1],label:'b',color:'#f97316'}],
+   grid:{x:[-2,5],y:[-3,4]},
+   sqs:[
+     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:1,tol:0.01},
+     {type:'mcq',prompt:'Are \\mathbf{a} and \\mathbf{b} perpendicular?',correct:'No — a·b = 1 ≠ 0',wrong:['Yes — they look perpendicular','Only if |a| = |b|','Cannot tell from dot product']}
+   ]},
+  {id:'AL8',desc:'Parallel vectors',
+   vectors:[{from:[0,0],to:[4,3],label:'a',color:'#14b8a6'},{from:[0,0],to:[-8,-6],label:'b',color:'#f97316'}],
+   grid:{x:[-10,6],y:[-8,5]},
+   sqs:[
+     {type:'mcq',prompt:'Show \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) are parallel.',correct:'b = −2a → parallel (antiparallel)',wrong:['They are perpendicular','a·b = 0','Cannot determine']},
+     {type:'num',prompt:'Find |\\mathbf{a}|.',answer:5,tol:0.01},
+     {type:'num',prompt:'Find |\\mathbf{b}|.',answer:10,tol:0.01}
+   ]},
+  {id:'AL9',desc:'Force resultant (Mechanics)',
+   vectors:[{from:[0,0],to:[3,4],label:'F₁',color:'#14b8a6'},{from:[0,0],to:[-1,2],label:'F₂',color:'#f97316'}],
+   grid:{x:[-3,5],y:[-1,8]},
+   sqs:[
+     {type:'vec2',prompt:'Find the resultant \\(R = F₁ + F₂\\).',answers:[2,6],labels:['i','j']},
+     {type:'num',prompt:'Find |R| to 2 d.p.',answer:6.32,tol:0.02}
+   ]},
+  {id:'AL10',desc:'Resolve a force (Mechanics)',
+   vectors:[{from:[0,0],to:[8.66,5],label:'10N at 30°',color:'#14b8a6'}],
+   grid:{x:[-2,11],y:[-2,7]},
+   sqs:[
+     {type:'num',prompt:'Find the horizontal component of 10N at 30°.',answer:8.66,tol:0.1},
+     {type:'num',prompt:'Find the vertical component.',answer:5,tol:0.1}
+   ]},
+  {id:'AL11',desc:'Velocity and bearing (Mechanics)',
+   vectors:[{from:[0,0],to:[4,-3],label:'v',color:'#14b8a6'}],
+   grid:{x:[-2,6],y:[-5,2]},
+   sqs:[
+     {type:'num',prompt:'Find the speed \\(|\\mathbf{v}|\\).',answer:5,tol:0.01},
+     {type:'num',prompt:'Find the bearing of motion (3-figure).',answer:143.1,tol:0.5}
+   ]},
+  {id:'AL12',desc:'Position with velocity (Mechanics)',
+   vectors:[{from:[2,3],to:[5,1],label:'v',color:'#14b8a6'}],
+   points:[{c:[2,3],l:'Start'}],
+   grid:{x:[-1,16],y:[-8,5]},
+   sqs:[
+     {type:'vec2',prompt:'\\(r₀ = (2i+3j), v = (i+2j)\\). Position after \\(t = 5\\)?',answers:[7,13],labels:['i','j']}
+   ]},
+  {id:'AL13',desc:'Equilibrium (Mechanics)',
+   vectors:[{from:[0,0],to:[5,2],label:'F₁',color:'#14b8a6'},{from:[0,0],to:[-3,1],label:'F₂',color:'#f97316'},{from:[0,0],to:[-2,-3],label:'F₃',color:'#a78bfa'}],
+   grid:{x:[-5,7],y:[-5,4]},
+   sqs:[
+     {type:'vec2',prompt:'Find R = F₁ + F₂ + F₃.',answers:[0,0],labels:['i','j']},
+     {type:'mcq',prompt:'The resultant is zero. What does this mean?',correct:'The system is in equilibrium — no net force',wrong:['The forces cancel in the i direction only','All forces are equal','The object accelerates']}
+   ]},
+  {id:'AL14',desc:'Velocity from bearing (Mechanics)',
+   vectors:[{from:[0,0],to:[12.99,7.5],label:'15 m/s on 060°',color:'#14b8a6'}],
+   grid:{x:[-2,15],y:[-2,10]},
+   sqs:[
+     {type:'num',prompt:'i-component (east) of 15 m/s on bearing 060°.',answer:12.99,tol:0.1},
+     {type:'num',prompt:'j-component (north).',answer:7.5,tol:0.1}
+   ]},
+  {id:'AL15',desc:'SUVAT with vectors (Mechanics)',
+   vectors:[{from:[0,0],to:[3,4],label:'u',color:'#14b8a6'},{from:[0,0],to:[0,-10],label:'a',color:'#f97316'}],
+   grid:{x:[-2,5],y:[-22,6]},
+   sqs:[
+     {type:'vec2',prompt:'\\(u = (3i+4j), a = (0i-10j)\\). Find \\(v = u+at\\) at \\(t = 2\\).',answers:[3,-16],labels:['i','j']},
+     {type:'num',prompt:'Find |v| to 1 d.p.',answer:16.3,tol:0.1}
+   ]}
+],
+level4:[
+  {id:'L1',desc:'3D displacement',
+   vectors:[{from:[0,0,0],to:[3,4,4],label:'AB',color:'#14b8a6'}],
+   points:[{c:[1,2,3],l:'A'},{c:[4,6,7],l:'B'}],
+   grid3d:true,
+   sqs:[
+     {type:'vec3',prompt:'Find \\overrightarrow{AB}.',answers:[3,4,4],labels:['i','j','k']},
+     {type:'num',prompt:'Find |\\overrightarrow{AB}| to 2 d.p.',answer:6.40,tol:0.02}
+   ]},
+  {id:'L2',desc:'3D scalar product',
+   vectors:[{from:[0,0,0],to:[2,1,-2],label:'a',color:'#14b8a6'},{from:[0,0,0],to:[3,-2,1],label:'b',color:'#f97316'}],
+   grid3d:true,
+   sqs:[
+     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:2,tol:0.01},
+     {type:'num',prompt:'Find the angle between \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) to 1 d.p.',answer:79.6,tol:0.3}
+   ]},
+  {id:'L3',desc:'Force resultant (3D)',
+   vectors:[{from:[0,0,0],to:[4,2,-1],label:'F₁',color:'#14b8a6'},{from:[0,0,0],to:[-2,3,5],label:'F₂',color:'#f97316'},{from:[0,0,0],to:[1,-1,2],label:'F₃',color:'#a78bfa'}],
+   grid3d:true,
+   sqs:[
+     {type:'vec3',prompt:'Find the resultant \\(R = F₁ + F₂ + F₃\\).',answers:[3,4,6],labels:['i','j','k']},
+     {type:'num',prompt:'Find |R| to 2 d.p.',answer:7.81,tol:0.02}
+   ]},
+  {id:'L4',desc:'Robot arm displacement',
+   vectors:[{from:[2,3,1],to:[5,-1,4],label:'displacement',color:'#14b8a6'}],
+   grid3d:true,
+   sqs:[
+     {type:'vec3',prompt:'Find the displacement vector.',answers:[3,-4,3],labels:['i','j','k']},
+     {type:'num',prompt:'Find the magnitude to 2 d.p.',answer:5.83,tol:0.02}
+   ]},
+  {id:'L5',desc:'Speed from 3D velocity',
+   vectors:[{from:[0,0,0],to:[3,-4,12],label:'v',color:'#14b8a6'}],
+   grid3d:true,
+   sqs:[
+     {type:'num',prompt:'Find the speed \\(|\\mathbf{v}|\\).',answer:13,tol:0.01},
+     {type:'num',prompt:'Find \\mathbf{v} \\cdot (2\\mathbf{i}+\\mathbf{j}-\\mathbf{k}).',answer:-10,tol:0.01}
+   ]},
+  {id:'L6',desc:'Collinearity in 3D',
+   vectors:[{from:[0,1,2],to:[3,3,6],label:'AB',color:'#14b8a6'},{from:[3,3,6],to:[6,5,10],label:'BC',color:'#f97316'}],
+   grid3d:true,
+   sqs:[
+     {type:'vec3',prompt:'Find \\overrightarrow{AB}.',answers:[3,2,4],labels:['i','j','k']},
+     {type:'vec3',prompt:'Find \\overrightarrow{BC}.',answers:[3,2,4],labels:['i','j','k']},
+     {type:'mcq',prompt:'Are A, B, C collinear?',correct:'Yes — BC = AB, so parallel and share B',wrong:['No — different magnitudes','Only in 2D','Cannot determine in 3D']}
+   ]},
+  {id:'L7',desc:'Force at angle in xz-plane',
+   vectors:[{from:[0,0,0],to:[7.07,0,7.07],label:'10N at 45°',color:'#14b8a6'}],
+   grid3d:true,
+   sqs:[
+     {type:'num',prompt:'i-component of 10N at 45° in xz-plane.',answer:7.07,tol:0.1},
+     {type:'num',prompt:'k-component.',answer:7.07,tol:0.1}
+   ]},
+  {id:'L8',desc:'Angle between 3D vectors',
+   vectors:[{from:[0,0,0],to:[1,2,2],label:'a',color:'#14b8a6'},{from:[0,0,0],to:[2,-1,2],label:'b',color:'#f97316'}],
+   grid3d:true,
+   sqs:[
+     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:4,tol:0.01},
+     {type:'num',prompt:'|\\mathbf{a}| = ?',answer:3,tol:0.01},
+     {type:'num',prompt:'|\\mathbf{b}| = ?',answer:3,tol:0.01},
+     {type:'num',prompt:'Angle between them to 1 d.p.',answer:63.6,tol:0.3}
+   ]},
+  {id:'L9',desc:'Parametric position',
+   vectors:[{from:[1,3,2],to:[3,2,5],label:'d',color:'#14b8a6'}],
+   grid3d:true,
+   sqs:[
+     {type:'vec3',prompt:'\\(r = (1+2t)i + (3-t)j + (2+3t)k\\). Position at \\(t = 2\\).',answers:[5,1,8],labels:['i','j','k']},
+     {type:'vec3',prompt:'Direction vector of the line.',answers:[2,-1,3],labels:['i','j','k']}
+   ]},
+  {id:'L10',desc:'Cable tension',
+   vectors:[{from:[0,0,0],to:[3,4,0],label:'T direction',color:'#14b8a6'}],
+   grid3d:true,
+   sqs:[
+     {type:'num',prompt:'T = 500N along 3\\mathbf{i}+4\\mathbf{j}. Find i-component.',answer:300,tol:1},
+     {type:'num',prompt:'Find j-component.',answer:400,tol:1}
+   ]},
+  {id:'L11',desc:'Mast equilibrium',
+   vectors:[{from:[0,0,0],to:[2,0,6],label:'F₁',color:'#14b8a6'},{from:[0,0,0],to:[-3,4,6],label:'F₂',color:'#f97316'},{from:[0,0,0],to:[1,-4,6],label:'F₃',color:'#a78bfa'}],
+   grid3d:true,
+   sqs:[
+     {type:'vec3',prompt:'Find the resultant of \\(F₁ + F₂ + F₃\\).',answers:[0,0,18],labels:['i','j','k']},
+     {type:'mcq',prompt:'What does this resultant tell us?',correct:'Purely vertical — mast is in horizontal equilibrium',wrong:['The mast will topple','All forces are equal','Net force is zero']}
+   ]},
+  {id:'L12',desc:'Displacement magnitude',
+   vectors:[{from:[0,0,0],to:[4,-3,12],label:'s',color:'#14b8a6'}],
+   grid3d:true,
+   sqs:[
+     {type:'num',prompt:'Find |\\mathbf{s}|.',answer:13,tol:0.01},
+     {type:'num',prompt:'Find \\mathbf{s} \\cdot (\\mathbf{i}+\\mathbf{j}+\\mathbf{k}).',answer:13,tol:0.01}
+   ]},
+  {id:'L13',desc:'Velocity under acceleration',
+   vectors:[{from:[0,0,0],to:[2,3,1],label:'u',color:'#14b8a6'},{from:[0,0,0],to:[1,-1,2],label:'a',color:'#f97316'}],
+   grid3d:true,
+   sqs:[
+     {type:'vec3',prompt:'\\(u = (2i+3j+k), a = (i-j+2k)\\). Find \\(v = u+at\\) at \\(t = 3\\).',answers:[5,0,7],labels:['i','j','k']},
+     {type:'num',prompt:'Find |v| to 2 d.p.',answer:8.60,tol:0.02}
+   ]},
+  {id:'L14',desc:'Collinearity check',
+   vectors:[{from:[1,0,1],to:[3,2,5],label:'PQ',color:'#14b8a6'},{from:[3,2,5],to:[5,4,9],label:'QR',color:'#f97316'}],
+   grid3d:true,
+   sqs:[
+     {type:'vec3',prompt:'Find \\overrightarrow{PQ}.',answers:[2,2,4],labels:['i','j','k']},
+     {type:'vec3',prompt:'Find \\overrightarrow{QR}.',answers:[2,2,4],labels:['i','j','k']},
+     {type:'mcq',prompt:'Collinear?',correct:'Yes — QR = PQ',wrong:['No','Only if magnitudes differ','Insufficient information']}
+   ]},
+  {id:'L15',desc:'Find unknown components',
+   vectors:[{from:[0,0,0],to:[5,1,2],label:'R',color:'#14b8a6'}],
+   grid3d:true,
+   sqs:[
+     {type:'num',prompt:'F₁ = (ai+2j-k), F₂ = (3i-j+bk). Resultant = (5i+j+2k). Find a.',answer:2,tol:0.01},
+     {type:'num',prompt:'Find b.',answer:3,tol:0.01}
+   ]}
+]
+};
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let G={level:null,questions:[],qIdx:0,sqIdx:0,score:0,correct:0,total:0,
+  penalties:0,timerStart:0,timerElapsed:0,timerInterval:null,qCorrect:0};
+const $=id=>document.getElementById(id);
+function K(l,d){try{return katex.renderToString(l,{throwOnError:false,displayMode:!!d})}catch(e){return l}}
+// PQ (Prompt render): most sq.prompt values are still whole-LaTeX strings
+// authored the old way ('Find \mathbf{a} + \mathbf{b}.', no \( \) at all) and
+// must keep going through K() exactly as before -- that's the "has a LaTeX
+// command AND no \( \) delimiter" case. Everything else -- a prompt migrated
+// to \( \) for its maths (MaffsText.hasMaths true), or a prompt that is pure
+// prose with no LaTeX command in it at all (checker tier 4 B7's "Angle
+// between them to 1 d.p." class, which has nothing to delimit) -- goes
+// through MaffsText.html, which correctly returns plain escaped text when
+// there is nothing to render as maths.
+function PQ(s){return(/\\[A-Za-z]/.test(s)&&!MaffsText.hasMaths(s))?K(s):MaffsText.html(s)}
+
+function selLevel(btn){
+  document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');G.level=btn.dataset.level;$('startBtn').classList.add('ready');
+  // Update accent
+  const colors={gcse:'#3b82f6',alevel:'#f97316',level4:'#ef4444'};
+  document.documentElement.style.setProperty('--primary',colors[G.level]||'#3b82f6');
+}
+function parseURL(){const p=new URLSearchParams(location.search),l=p.get('level');if(l){const b=document.querySelector(`.level-btn[data-level="${l}"]`);if(b)selLevel(b);}}
+
+function startGame(){
+  if(!G.level)return;
+  const pool=[...SCENARIOS[G.level]];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  G.questions=pool.slice(0,6);G.qIdx=0;G.score=0;G.correct=0;G.total=0;G.penalties=0;
+  G.timerStart=Date.now();G.timerInterval=setInterval(updateTimer,1000);
+  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');
+  mfg('game_started',{game_slug:'component-crusher',level:G.level});
+  loadScenario();
+}
+function updateTimer(){
+  G.timerElapsed=Math.floor((Date.now()-G.timerStart)/1000);
+  const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
+  $('hudTimer').textContent=m>0?`${m}m${s.toString().padStart(2,'0')}s`:`${s}s`;
+}
+
+// ============================================================
+//  LOAD SCENARIO
+// ============================================================
+function loadScenario(){
+  if(G.qIdx>=G.questions.length){endGame();return;}
+  const q=G.questions[G.qIdx];G.sqIdx=0;G.qCorrect=0;
+  $('hudQ').textContent=`${G.qIdx+1}/${G.questions.length}`;
+  $('hudScore').textContent=G.score;$('hudCorrect').textContent=`${G.correct}/${G.total}`;
+
+  // Scenario box
+  let html=`<h3>Scenario ${G.qIdx+1}</h3><div class="scenario-desc">${q.desc}</div>`;
+  $('scenarioBox').innerHTML=html;
+
+  // Draw diagram
+  drawVectors(q);
+  loadSQ(q);
+}
+
+// ============================================================
+//  CANVAS — VECTOR DIAGRAM
+// ============================================================
+function drawVectors(q){
+  const c=$('vecCanvas');
+  const rect=c.parentElement.getBoundingClientRect();
+  const w=Math.max(300,rect.width-12),h=Math.round(w*0.67);
+  c.width=w*2;c.height=h*2;c.style.width=w+'px';c.style.height=h+'px';
+  const ctx=c.getContext('2d');ctx.scale(2,2);
+  ctx.clearRect(0,0,w,h);
+
+  const pad={l:40,r:15,t:15,b:30};
+  const pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;
+
+  let xMin,xMax,yMin,yMax;
+  if(q.grid3d){
+    // Simple 2D projection for 3D
+    xMin=-2;xMax=10;yMin=-10;yMax=10;
+  } else {
+    xMin=q.grid.x[0];xMax=q.grid.x[1];yMin=q.grid.y[0];yMax=q.grid.y[1];
+  }
+
+  function tx(x){return pad.l+(x-xMin)/(xMax-xMin)*pw;}
+  function ty(y){return pad.t+(1-(y-yMin)/(yMax-yMin))*ph;}
+
+  // Grid
+  const xStep=niceStep(xMax-xMin,8),yStep=niceStep(yMax-yMin,6);
+  ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=.5;
+  for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax;x+=xStep){
+    ctx.beginPath();ctx.moveTo(tx(x),pad.t);ctx.lineTo(tx(x),pad.t+ph);ctx.stroke();
+    ctx.fillStyle='#4a5568';ctx.font='9px JetBrains Mono';ctx.textAlign='center';
+    ctx.fillText(Math.round(x*10)/10,tx(x),h-pad.b+14);
+  }
+  for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax;y+=yStep){
+    ctx.beginPath();ctx.moveTo(pad.l,ty(y));ctx.lineTo(pad.l+pw,ty(y));ctx.stroke();
+    ctx.fillStyle='#4a5568';ctx.font='9px JetBrains Mono';ctx.textAlign='right';
+    ctx.fillText(Math.round(y*10)/10,pad.l-5,ty(y)+3);
+  }
+
+  // Axes
+  ctx.strokeStyle='#fff';ctx.lineWidth=1;
+  if(yMin<=0&&yMax>=0){ctx.beginPath();ctx.moveTo(pad.l,ty(0));ctx.lineTo(pad.l+pw,ty(0));ctx.stroke();}
+  if(xMin<=0&&xMax>=0){ctx.beginPath();ctx.moveTo(tx(0),pad.t);ctx.lineTo(tx(0),pad.t+ph);ctx.stroke();}
+
+  // Vectors
+  q.vectors.forEach(v=>{
+    let fx,fy,ex,ey;
+    if(q.grid3d){
+      // Simple isometric: project 3D to 2D
+      const s=0.8;
+      fx=v.from[0]+v.from[2]*s*Math.cos(Math.PI/6);
+      fy=v.from[1]+v.from[2]*s*Math.sin(Math.PI/6);
+      ex=v.to[0]+v.to[2]*s*Math.cos(Math.PI/6);
+      ey=v.to[1]+v.to[2]*s*Math.sin(Math.PI/6);
+    } else {
+      fx=v.from[0];fy=v.from[1];ex=v.to[0];ey=v.to[1];
+    }
+    const sx=tx(fx),sy=ty(fy),dx=tx(ex),dy=ty(ey);
+    const angle=Math.atan2(dy-sy,dx-sx);
+
+    ctx.strokeStyle=v.color;ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(dx,dy);ctx.stroke();
+
+    // Arrowhead
+    const aLen=10,aAng=0.45;
+    ctx.fillStyle=v.color;ctx.beginPath();
+    ctx.moveTo(dx,dy);
+    ctx.lineTo(dx-aLen*Math.cos(angle-aAng),dy-aLen*Math.sin(angle-aAng));
+    ctx.lineTo(dx-aLen*Math.cos(angle+aAng),dy-aLen*Math.sin(angle+aAng));
+    ctx.closePath();ctx.fill();
+
+    // Label
+    if(v.label){
+      const mx=(sx+dx)/2,my=(sy+dy)/2;
+      const offX=-Math.sin(angle)*14,offY=Math.cos(angle)*14;
+      ctx.fillStyle=v.color;ctx.font='bold 12px Outfit';ctx.textAlign='center';
+      ctx.fillText(v.label,mx+offX,my+offY);
+    }
+  });
+
+  // Points
+  if(q.points){
+    q.points.forEach(p=>{
+      let px,py;
+      if(q.grid3d){const s=0.8;px=p.c[0]+(p.c[2]||0)*s*Math.cos(Math.PI/6);py=p.c[1]+(p.c[2]||0)*s*Math.sin(Math.PI/6);}
+      else{px=p.c[0];py=p.c[1];}
+      ctx.beginPath();ctx.arc(tx(px),ty(py),4,0,Math.PI*2);ctx.fillStyle='#e4e8f0';ctx.fill();
+      ctx.fillStyle='#e4e8f0';ctx.font='bold 11px Outfit';ctx.textAlign='left';
+      ctx.fillText(p.l,tx(px)+6,ty(py)-6);
+    });
+  }
+}
+
+function niceStep(span,t){const r=span/t;const m=Math.pow(10,Math.floor(Math.log10(r)));const n=r/m;if(n<=1.5)return m;if(n<=3.5)return 2*m;if(n<=7.5)return 5*m;return 10*m;}
+
+// ============================================================
+//  SUB-QUESTIONS
+// ============================================================
+function loadSQ(q){
+  if(G.sqIdx>=q.sqs.length){finishScenario();return;}
+  const sq=q.sqs[G.sqIdx];
+  const box=$('qBox');
+  const label=`Sub-question ${G.sqIdx+1} of ${q.sqs.length}`;
+
+  if(sq.type==='vec2'){
+    box.innerHTML=`<div class="sq-label">${label}</div><div class="sq-prompt">${PQ(sq.prompt)}</div>
+      <div class="input-row">
+        <span class="vec-label">${sq.labels[0]}:</span><input type="number" class="vec-input" id="v0" step="any" placeholder="?">
+        <span class="vec-label">${sq.labels[1]}:</span><input type="number" class="vec-input" id="v1" step="any" placeholder="?">
+      </div>
+      <button class="check-btn" onclick="checkVec(2)">Check</button><div id="sqFb"></div>`;
+  } else if(sq.type==='vec3'){
+    box.innerHTML=`<div class="sq-label">${label}</div><div class="sq-prompt">${PQ(sq.prompt)}</div>
+      <div class="input-row">
+        <span class="vec-label">${sq.labels[0]}:</span><input type="number" class="vec-input" id="v0" step="any" placeholder="?">
+        <span class="vec-label">${sq.labels[1]}:</span><input type="number" class="vec-input" id="v1" step="any" placeholder="?">
+        <span class="vec-label">${sq.labels[2]}:</span><input type="number" class="vec-input" id="v2" step="any" placeholder="?">
+      </div>
+      <button class="check-btn" onclick="checkVec(3)">Check</button><div id="sqFb"></div>`;
+  } else if(sq.type==='num'){
+    box.innerHTML=`<div class="sq-label">${label}</div><div class="sq-prompt">${PQ(sq.prompt)}</div>
+      <div class="input-row"><input type="number" class="vec-input" id="v0" step="any" placeholder="?" style="width:100px"></div>
+      <button class="check-btn" onclick="checkNum()">Check</button><div id="sqFb"></div>`;
+  } else if(sq.type==='mcq'){
+    const opts=[{text:sq.correct,c:true},...sq.wrong.map(w=>({text:w,c:false}))];
+    for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
+    let html=`<div class="sq-label">${label}</div><div class="sq-prompt">${PQ(sq.prompt)}</div><div class="mcq-grid">`;
+    opts.forEach((o,i)=>{html+=`<button class="mcq-btn" id="mc${i}" onclick="checkMCQ(${i},${o.c})">${o.text}</button>`;});
+    html+=`</div><div id="sqFb"></div>`;
+    box.innerHTML=html;box._opts=opts;
+  }
+  const first=box.querySelector('input');if(first)setTimeout(()=>first.focus(),50);
+}
+
+function checkVec(n){
+  const q=G.questions[G.qIdx],sq=q.sqs[G.sqIdx];
+  const vals=[];for(let i=0;i<n;i++){vals.push(parseFloat($('v'+i).value));}
+  if(vals.some(isNaN))return;
+  G.total++;
+  const tol=sq.tol||0.01;
+  const ok=vals.every((v,i)=>Math.abs(v-sq.answers[i])<=tol);
+  vals.forEach((v,i)=>{$('v'+i).classList.add(Math.abs(v-sq.answers[i])<=tol?'correct':'wrong');});
+  if(ok){G.correct++;G.qCorrect++;G.score+=15;$('hudScore').textContent=G.score;}else{G.penalties++;}
+  $('hudCorrect').textContent=`${G.correct}/${G.total}`;
+  $('sqFb').innerHTML=`<div class="feedback ${ok?'correct':'wrong'}">${ok?'Correct!':'Incorrect. Answer: '+sq.answers.join(', ')}</div>`;
+  mfg('question_answered',{game_slug:'component-crusher',level:G.level,question_index:G.total,correct:ok});
+  setTimeout(()=>{G.sqIdx++;loadSQ(q);},ok?800:1800);
+}
+
+function checkNum(){
+  const q=G.questions[G.qIdx],sq=q.sqs[G.sqIdx];
+  const val=parseFloat($('v0').value);if(isNaN(val))return;
+  G.total++;
+  const tol=sq.tol||0.01;
+  const ok=Math.abs(val-sq.answer)<=tol;
+  $('v0').classList.add(ok?'correct':'wrong');
+  if(ok){G.correct++;G.qCorrect++;G.score+=15;$('hudScore').textContent=G.score;}else{G.penalties++;}
+  $('hudCorrect').textContent=`${G.correct}/${G.total}`;
+  const msg=ok?'Correct!':`Incorrect. Answer: ${sq.answer}${sq.working?' — '+sq.working:''}`;
+  $('sqFb').innerHTML=`<div class="feedback ${ok?'correct':'wrong'}">${msg}</div>`;
+  mfg('question_answered',{game_slug:'component-crusher',level:G.level,question_index:G.total,correct:ok});
+  setTimeout(()=>{G.sqIdx++;loadSQ(q);},ok?800:2000);
+}
+
+function checkMCQ(idx,correct){
+  G.total++;
+  document.querySelectorAll('.mcq-btn').forEach(b=>b.classList.add('disabled'));
+  $('mc'+idx).classList.add(correct?'correct':'wrong');
+  if(!correct){const opts=$('qBox')._opts;opts.forEach((o,i)=>{if(o.c)$('mc'+i).classList.add('correct');});}
+  if(correct){G.correct++;G.qCorrect++;G.score+=15;$('hudScore').textContent=G.score;}else{G.penalties++;}
+  $('hudCorrect').textContent=`${G.correct}/${G.total}`;
+  $('sqFb').innerHTML=`<div class="feedback ${correct?'correct':'wrong'}">${correct?'Correct!':'Incorrect.'}</div>`;
+  mfg('question_answered',{game_slug:'component-crusher',level:G.level,question_index:G.total,correct:correct});
+  setTimeout(()=>{G.sqIdx++;loadSQ(G.questions[G.qIdx]);},1200);
+}
+
+function finishScenario(){
+  $('qBox').innerHTML=`<div style="text-align:center;padding:.5rem">
+    <div style="font-size:.78rem;color:var(--correct);font-weight:700;text-transform:uppercase;margin-bottom:.3rem">Scenario Complete</div>
+    <button class="next-btn" onclick="nextScenario()">${G.qIdx<G.questions.length-1?'Next Scenario →':'See Results'}</button></div>`;
+}
+function nextScenario(){G.qIdx++;loadScenario();}
+
+function endGame(){
+  clearInterval(G.timerInterval);$('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
+  const pct=G.total>0?Math.round(100*G.correct/G.total):0;
+  let title=pct>=90?'Outstanding!':pct>=70?'Great work!':pct>=50?'Good effort!':'Keep practising!';
+  $('resultTitle').textContent=title;$('finalScore').textContent=G.score;
+  const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
+  const labels={gcse:'GCSE',alevel:'A-Level',level4:'Level 4'};
+  $('statsLine').innerHTML=`Correct: <strong>${G.correct}/${G.total}</strong> (${pct}%)<br>Time: <strong>${m>0?m+'m '+s+'s':s+'s'}</strong><br>Level: <strong>${labels[G.level]}</strong>`;
+  const key=`pb_component-crusher_${G.level}`;const prev=parseInt(localStorage.getItem(key)||'0');
+  if(G.score>prev){localStorage.setItem(key,G.score);
+    mfg('personal_best_set',{game_slug:'component-crusher',level:G.level,score:G.score,previous_best:prev});
+    if(prev>0){$('pbLine').textContent=`New personal best! (Previous: ${prev})`;$('pbLine').style.display='block';}}
+  else if(prev>0){$('pbLine').textContent=`Personal best: ${prev}`;$('pbLine').style.display='block';}
+  else $('pbLine').style.display='none';
+  window._mfgCompleted=true;
+  mfg('game_completed',{game_slug:'component-crusher',level:G.level,score:G.score,questions_answered:G.total,questions_correct:G.correct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('component-crusher',G.level,G.score,G.total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('component-crusher',G.level,G.score);}}
+}
+function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active');$('pbLine').style.display='none';}
+window.addEventListener('DOMContentLoaded',()=>{parseURL();});
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

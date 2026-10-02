@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Friction, SUVAT, momentum, and collisions in a curling theme. 77 questions for A-Level mechanics and Level 4.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/curling-friction/">
+<meta property="og:title" content="Curling Friction — MaffsGames">
+<meta property="og:description" content="Friction, SUVAT, momentum, and collisions in a curling theme. 77 questions for A-Level mechanics and Level 4.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/curling-friction/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Curling Friction — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a1628;--surface:#111f3a;--border:#1c3054;--primary:#38bdf8;--accent:#67e8f9;--ice:#e0f2fe;--wrong:#f43f5e;--sweep:#fbbf24;--text:#e8f4fd;--muted:#6b8db5;--stone-a:#dc2626;--stone-b:#facc15}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.level-select{display:flex;gap:.5rem;justify-content:center;margin:1rem 0}
+.level-btn{padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#000}
+.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316;color:#fff}
+.level-btn[data-level="level4"].active{background:#ef4444;border-color:#ef4444;color:#fff}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}.hud-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
+
+/* Rink visualisation */
+.rink{background:linear-gradient(180deg,#1e3a5f 0%,#1a3355 100%);border:2px solid var(--border);border-radius:12px;height:100px;margin-bottom:1rem;position:relative;overflow:hidden}
+.rink::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(90deg,transparent,transparent 49px,rgba(255,255,255,.04) 49px,rgba(255,255,255,.04) 50px)}
+.house{position:absolute;right:40px;top:50%;transform:translateY(-50%);width:60px;height:60px;border-radius:50%;border:2px solid rgba(255,255,255,.15);background:radial-gradient(circle,var(--stone-a) 8px,transparent 8px,transparent 15px,#3b82f6 15px,#3b82f6 20px,transparent 20px,transparent 25px,var(--stone-a) 25px,var(--stone-a) 30px)}
+.stone{position:absolute;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;transition:left 1.5s ease-out;z-index:2}
+.stone-a{background:radial-gradient(circle at 8px 8px,#ef4444,#991b1b);left:20px;box-shadow:0 0 8px rgba(239,68,68,.4)}
+.stone-b{background:radial-gradient(circle at 8px 8px,#fbbf24,#b45309);left:-30px;display:none;box-shadow:0 0 8px rgba(251,191,36,.4)}
+.sweep-indicator{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:.65rem;color:var(--sweep);font-weight:600;opacity:0;transition:opacity .3s}
+.sweep-indicator.active{opacity:1}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:130px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.6rem}
+.q-card .context{font-size:.9rem;color:var(--text);line-height:1.6;max-width:640px}
+.q-card .prompt{font-size:.85rem;color:var(--accent);font-weight:600;margin-top:.3rem}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.92rem;cursor:pointer;transition:all .15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(56,189,248,.2)}
+.opt-btn.correct{border-color:var(--accent);background:rgba(103,232,249,.1);animation:pop .3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.1);animation:shake .3s}
+.opt-btn.reveal{border-color:var(--accent);opacity:.7}.opt-btn.disabled{pointer-events:none;opacity:.5}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s}
+.pip.done{background:var(--accent)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem}
+.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.play-again:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+/* Worked solution panel */
+.solution{display:none;background:var(--surface);border:1px solid var(--primary);border-radius:12px;padding:1.2rem;margin-bottom:1rem;text-align:left;font-size:.88rem;line-height:1.7}
+.solution.show{display:block;animation:fadeIn .3s}
+.solution h3{color:var(--accent);font-size:.9rem;margin-bottom:.6rem;font-weight:600}
+.solution .step{margin-bottom:.5rem;padding-left:.8rem;border-left:2px solid var(--border)}
+.solution .step .katex{font-size:1.1em!important}
+.solution .misconception{margin-top:.8rem;padding:.6rem .8rem;background:rgba(251,191,36,.08);border-radius:8px;border-left:3px solid var(--sweep);font-size:.82rem;color:var(--sweep)}
+.solution .next-btn{display:inline-block;margin-top:.8rem;padding:.5rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.katex{font-size:1em!important}.q-card .katex{font-size:1.15em!important}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
+.topic-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.7rem;font-weight:600;margin:0 2px}
+.tag-friction{background:rgba(251,191,36,.15);color:#fbbf24}
+.tag-suvat{background:rgba(56,189,248,.15);color:#38bdf8}
+.tag-momentum{background:rgba(163,230,53,.15);color:#a3e635}
+.tag-collision{background:rgba(244,63,94,.15);color:#f43f5e}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Curling Friction</h1><div class="sub">Friction. Momentum. Collisions. On ice.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="level-select">
+      <button class="level-btn active" data-level="alevel">A-Level</button>
+      <button class="level-btn" data-level="level4">Level 4</button>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:.8rem 0;line-height:1.6">
+      A curling stone slides across ice. Calculate friction forces, stopping distances,<br>
+      and what happens when stones collide.<br><br>
+      <span class="topic-tag tag-friction">Friction</span>
+      <span class="topic-tag tag-suvat">SUVAT</span>
+      <span class="topic-tag tag-momentum">Momentum</span>
+      <span class="topic-tag tag-collision">Collisions</span>
+    </p>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <div style="text-align:center;margin-top:1.5rem"><button class="play-again" onclick="startGame()">Start</button></div>
+  </div>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
+    </div>
+    <div class="rink">
+      <div class="house"></div>
+      <div class="stone stone-a" id="stoneA"></div>
+      <div class="stone stone-b" id="stoneB"></div>
+      <div class="sweep-indicator" id="sweepInd">SWEEP!</div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="q-card">
+      <div class="context" id="context"></div>
+      <div id="question"></div>
+      <div class="prompt" id="prompt"></div>
+    </div>
+    <div class="options" id="options"></div>
+    <div class="solution" id="solution"></div>
+  </div>
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+<script>
+const QUESTIONS={
+alevel:[
+  // === FRICTION BASICS (Q1-12) ===
+  {ctx:'A 20 kg curling stone sits on ice. μ = 0.04. Take g = 9.8 m/s².',q:'F = \\mu R',ask:'Find the friction force',correct:'7.84 N',d:['0.8 N','19.6 N','0.784 N'],cat:'friction'},
+  {ctx:'A 19 kg stone on ice. μ = 0.03. g = 9.8 m/s².',q:'F = \\mu mg',ask:'Find the friction force',correct:'5.586 N',d:['5.7 N','0.588 N','57 N'],cat:'friction'},
+  {ctx:'A 20 kg stone experiences a friction force of 5.88 N. g = 9.8 m/s².',q:'F = \\mu R',ask:'Find μ',correct:'0.03',d:['0.3','0.003','3'],cat:'friction'},
+  {ctx:'A stone on ice. μ = 0.05. The normal reaction is 196 N.',q:'',ask:'Find the friction force',correct:'9.8 N',d:['10 N','3.92 N','19.6 N'],cat:'friction'},
+  {ctx:'A 20 kg stone. μ = 0.04. g = 9.8 m/s².',q:'a = \\mu g',ask:'Find the deceleration',correct:'0.392 \\text{ m/s}^2',d:['0.04 \\text{ m/s}^2','3.92 \\text{ m/s}^2','0.0392 \\text{ m/s}^2'],cat:'friction'},
+  {ctx:'A stone decelerates at 0.294 m/s². g = 9.8 m/s².',q:'a = \\mu g',ask:'Find μ',correct:'0.03',d:['0.3','0.003','2.94'],cat:'friction'},
+  {ctx:'The team sweeps the ice, reducing μ from 0.04 to 0.02. Stone mass 20 kg. g = 9.8.',q:'',ask:'By how much does the friction force decrease?',correct:'3.92 N',d:['1.96 N','7.84 N','0.392 N'],cat:'friction'},
+  {ctx:'Sweeping reduces μ from 0.05 to 0.03. Mass = 19.6 kg. g = 10 m/s².',q:'',ask:'New friction force',correct:'5.88 N',d:['9.8 N','3.92 N','0.588 N'],cat:'friction'},
+  {ctx:'A stone has mass m on ice with friction coefficient μ.',q:'',ask:'Which expression gives the deceleration?',correct:'\\mu g',d:['\\mu mg','\\dfrac{\\mu}{g}','\\dfrac{g}{\\mu}'],cat:'friction'},
+  {ctx:'A stone is sliding on ice. There is no air resistance.',q:'',ask:'What is the only horizontal force acting?',correct:'Friction',d:['Weight','Normal reaction','Applied force'],cat:'friction'},
+  {ctx:'The normal reaction on a 20 kg stone on flat ice. g = 9.8.',q:'',ask:'Find R',correct:'196 N',d:['20 N','200 N','19.6 N'],cat:'friction'},
+  {ctx:'On a flat surface, for any object, R equals...',q:'',ask:'Complete the statement',correct:'mg',d:['\\mu mg','ma','F'],cat:'friction'},
+  // === SUVAT + FRICTION (Q13-25) ===
+  {ctx:'A stone is released at 4 m/s. μ = 0.04. g = 10 m/s². (a = 0.4 m/s²)',q:'v^2 = u^2 - 2as',ask:'Find the stopping distance',correct:'20 m',d:['10 m','40 m','16 m'],cat:'suvat'},
+  {ctx:'A stone at 3 m/s. μ = 0.03. g = 10. (a = 0.3 m/s²)',q:'v^2 = u^2 - 2as',ask:'Find the stopping distance',correct:'15 m',d:['10 m','30 m','9 m'],cat:'suvat'},
+  {ctx:'A stone at 5 m/s. μ = 0.05. g = 10. (a = 0.5 m/s²)',q:'v^2 = u^2 - 2as',ask:'Find the stopping distance',correct:'25 m',d:['50 m','10 m','12.5 m'],cat:'suvat'},
+  {ctx:'A stone must travel 30 m. μ = 0.03. g = 10. (a = 0.3 m/s²)',q:'v^2 = u^2 - 2as',ask:'Find the required initial speed',correct:'\\sqrt{18} \\approx 4.24 \\text{ m/s}',d:['3 \\text{ m/s}','6 \\text{ m/s}','9 \\text{ m/s}'],cat:'suvat'},
+  {ctx:'A stone at 4 m/s. a = 0.4 m/s².',q:'v = u - at',ask:'How long until it stops?',correct:'10 s',d:['8 s','16 s','4 s'],cat:'suvat'},
+  {ctx:'A stone at 6 m/s. μ = 0.04. g = 10.',q:'',ask:'Find the stopping distance',correct:'45 m',d:['36 m','90 m','22.5 m'],cat:'suvat'},
+  {ctx:'Without sweeping: μ = 0.04, u = 4 m/s, g = 10. With sweeping: μ = 0.02.',q:'',ask:'How much further does the stone travel with sweeping?',correct:'20 m',d:['10 m','40 m','5 m'],cat:'suvat'},
+  {ctx:'The target is 25 m away. μ = 0.05. g = 10. (a = 0.5)',q:'s = 25, a = 0.5',ask:'Required launch speed',correct:'5 \\text{ m/s}',d:['25 \\text{ m/s}','\\sqrt{50} \\text{ m/s}','10 \\text{ m/s}'],cat:'suvat'},
+  {ctx:'A stone launched at 3 m/s travels 22.5 m. g = 10.',q:'',ask:'Find μ',correct:'0.02',d:['0.04','0.03','0.01'],cat:'suvat'},
+  {ctx:'A stone is at 2 m/s after sliding 12 m. μ = 0.04, g = 10.',q:'v^2 = u^2 - 2as',ask:'Find the initial speed',correct:'\\sqrt{4.96} \\approx 2.23 \\text{ m/s}',d:['4 \\text{ m/s}','3 \\text{ m/s}','2.5 \\text{ m/s}'],cat:'suvat'},
+  {ctx:'Stone slides 40 m in 10 seconds before stopping.',q:'s = \\dfrac{(u+v)}{2} \\times t',ask:'Find the initial speed',correct:'8 \\text{ m/s}',d:['4 \\text{ m/s}','10 \\text{ m/s}','16 \\text{ m/s}'],cat:'suvat'},
+  {ctx:'A stone decelerates from 5 m/s at 0.5 m/s². After 6 seconds...',q:'v = u - at',ask:'What is the velocity?',correct:'2 \\text{ m/s}',d:['0 \\text{ m/s}','-1 \\text{ m/s}','3 \\text{ m/s}'],cat:'suvat'},
+  // === MOMENTUM (Q26-38) ===
+  {ctx:'A 20 kg stone moves at 3 m/s.',q:'p = mv',ask:'Find its momentum',correct:'60 \\text{ kg m/s}',d:['6.67 \\text{ kg m/s}','0.15 \\text{ kg m/s}','600 \\text{ kg m/s}'],cat:'momentum'},
+  {ctx:'A 19 kg stone moves at 4.5 m/s.',q:'p = mv',ask:'Find its momentum',correct:'85.5 \\text{ kg m/s}',d:['23.5 \\text{ kg m/s}','4.22 \\text{ kg m/s}','855 \\text{ kg m/s}'],cat:'momentum'},
+  {ctx:'A stone has momentum 80 kg m/s and mass 20 kg.',q:'p = mv',ask:'Find its speed',correct:'4 \\text{ m/s}',d:['1600 \\text{ m/s}','0.25 \\text{ m/s}','400 \\text{ m/s}'],cat:'momentum'},
+  {ctx:'Two identical stones. Stone A at 4 m/s hits stationary stone B.',q:'\\text{Conservation: } m_A u_A = m_A v_A + m_B v_B',ask:'In a perfectly elastic collision with equal masses, what happens?',correct:'A stops, B moves at 4 m/s',d:['Both move at 2 m/s','A bounces back at 4 m/s','Both stop'],cat:'momentum'},
+  {ctx:'Stone A (20 kg, 3 m/s) hits stationary Stone B (20 kg). Perfectly elastic, equal masses.',q:'',ask:'Speed of stone B after collision',correct:'3 \\text{ m/s}',d:['1.5 \\text{ m/s}','6 \\text{ m/s}','0 \\text{ m/s}'],cat:'collision'},
+  {ctx:'Stone A (20 kg, 3 m/s) hits stationary Stone B (20 kg). Perfectly elastic, equal masses.',q:'',ask:'Speed of stone A after collision',correct:'0 \\text{ m/s}',d:['3 \\text{ m/s}','1.5 \\text{ m/s}','-3 \\text{ m/s}'],cat:'collision'},
+  {ctx:'Stone A (20 kg, 5 m/s) hits stationary Stone B (20 kg). They stick together.',q:'m_A u_A = (m_A + m_B) v',ask:'Find their common speed',correct:'2.5 \\text{ m/s}',d:['5 \\text{ m/s}','10 \\text{ m/s}','0 \\text{ m/s}'],cat:'collision'},
+  {ctx:'Stone A (20 kg, 4 m/s) hits Stone B (10 kg, stationary). Perfectly elastic.',q:'',ask:'Speed of B after collision',correct:'\\dfrac{16}{3} \\approx 5.33 \\text{ m/s}',d:['4 \\text{ m/s}','8 \\text{ m/s}','2 \\text{ m/s}'],cat:'collision'},
+  {ctx:'Stone A (20 kg, 4 m/s) hits Stone B (10 kg, stationary). They stick together.',q:'',ask:'Speed after collision',correct:'\\dfrac{8}{3} \\approx 2.67 \\text{ m/s}',d:['4 \\text{ m/s}','2 \\text{ m/s}','1.33 \\text{ m/s}'],cat:'collision'},
+  {ctx:'Before collision: A at 5 m/s, B stationary. After: A at 2 m/s. Both 20 kg.',q:'',ask:'Speed of B after collision',correct:'3 \\text{ m/s}',d:['5 \\text{ m/s}','7 \\text{ m/s}','2 \\text{ m/s}'],cat:'collision'},
+  {ctx:'Two stones collide. Total momentum before = 100 kg m/s.',q:'',ask:'Total momentum after collision',correct:'100 \\text{ kg m/s}',d:['0 \\text{ kg m/s}','50 \\text{ kg m/s}','200 \\text{ kg m/s}'],cat:'momentum'},
+  {ctx:'A 20 kg stone at 3 m/s is brought to rest in 0.1 s by a collision.',q:'I = \\Delta p = F \\Delta t',ask:'Find the impulse',correct:'60 \\text{ Ns}',d:['6 \\text{ Ns}','200 \\text{ Ns}','600 \\text{ Ns}'],cat:'momentum'},
+  {ctx:'Impulse = 60 Ns. Contact time = 0.1 s.',q:'F = \\dfrac{I}{\\Delta t}',ask:'Find the average force',correct:'600 \\text{ N}',d:['6 \\text{ N}','0.006 \\text{ N}','60 \\text{ N}'],cat:'momentum'},
+  // === COLLISIONS — ELASTIC VS INELASTIC (Q39-48) ===
+  {ctx:'In a perfectly elastic collision...',q:'',ask:'What is conserved?',correct:'Momentum AND kinetic energy',d:['Momentum only','Kinetic energy only','Neither'],cat:'collision'},
+  {ctx:'In a perfectly inelastic collision...',q:'',ask:'What is conserved?',correct:'Momentum only',d:['Kinetic energy only','Momentum AND kinetic energy','Neither'],cat:'collision'},
+  {ctx:'Two objects stick together after colliding.',q:'',ask:'This is a...',correct:'Perfectly inelastic collision',d:['Perfectly elastic collision','Partially elastic collision','Explosion'],cat:'collision'},
+  {ctx:'Stone A (20 kg, 4 m/s) hits stationary B (20 kg). After: A stops, B at 4 m/s.',q:'',ask:'Is kinetic energy conserved?',correct:'Yes — elastic collision',d:['No — energy is lost','Cannot tell','Only if μ = 0'],cat:'collision'},
+  {ctx:'Stone A (20 kg, 4 m/s) hits stationary B (20 kg). They stick together at 2 m/s.',q:'',ask:'KE before vs KE after',correct:'160 J before, 80 J after — energy lost',d:['Equal — 160 J each','160 J before, 160 J after','80 J before, 80 J after'],cat:'collision'},
+  {ctx:'KE before = 160 J. KE after = 80 J.',q:'',ask:'Where did the lost KE go?',correct:'Heat and sound',d:['It was destroyed','Into potential energy','Back to the thrower'],cat:'collision'},
+  {ctx:'A 20 kg stone at 4 m/s.',q:'KE = \\tfrac{1}{2}mv^2',ask:'Find the kinetic energy',correct:'160 \\text{ J}',d:['80 \\text{ J}','40 \\text{ J}','320 \\text{ J}'],cat:'collision'},
+  {ctx:'Two stones (20 kg each) both at 3 m/s approach head-on. They stick together.',q:'',ask:'Speed after collision',correct:'0 \\text{ m/s}',d:['3 \\text{ m/s}','6 \\text{ m/s}','1.5 \\text{ m/s}'],cat:'collision'},
+  {ctx:'Stone A (20 kg, 3 m/s) hits stone B (20 kg, 1 m/s, same direction). They stick.',q:'',ask:'Speed after collision',correct:'2 \\text{ m/s}',d:['4 \\text{ m/s}','1 \\text{ m/s}','3 \\text{ m/s}'],cat:'collision'},
+  {ctx:'After an elastic collision between equal masses, stone B moves at 5 m/s. Stone B then slides on ice with μ = 0.05, g = 10.',q:'',ask:'How far does B slide?',correct:'25 \\text{ m}',d:['50 \\text{ m}','10 \\text{ m}','12.5 \\text{ m}'],cat:'collision'},
+  // === COMBINED PROBLEMS (Q49-57) ===
+  {ctx:'Stone A (20 kg) launched at 5 m/s. μ = 0.04, g = 10. Target stone B (20 kg) is 20 m away.',q:'',ask:'Speed of A when it reaches B',correct:'3 \\text{ m/s}',d:['4 \\text{ m/s}','1 \\text{ m/s}','9 \\text{ m/s}'],cat:'suvat'},
+  {ctx:'Stone A reaches B at 3 m/s. Equal masses. Elastic collision.',q:'',ask:'Speed of B after collision',correct:'3 \\text{ m/s}',d:['1.5 \\text{ m/s}','6 \\text{ m/s}','0 \\text{ m/s}'],cat:'collision'},
+  {ctx:'After collision, stone B moves at 3 m/s on ice with μ = 0.04, g = 10.',q:'',ask:'How far does B travel?',correct:'11.25 \\text{ m}',d:['22.5 \\text{ m}','9 \\text{ m}','15 \\text{ m}'],cat:'suvat'},
+  {ctx:'The house centre is 30 m from launch. μ = 0.04, g = 10.',q:'v^2 = u^2 - 2as, \\; a = 0.4',ask:'Required launch speed to stop at 30 m',correct:'\\sqrt{24} \\approx 4.90 \\text{ m/s}',d:['6 \\text{ m/s}','3 \\text{ m/s}','\\sqrt{30} \\text{ m/s}'],cat:'suvat'},
+  {ctx:'Team sweeps from 15 m onwards, reducing μ from 0.04 to 0.02. Stone at 3 m/s at the 15 m mark. g = 10.',q:'',ask:'Additional distance with sweeping vs without',correct:'22.5 \\text{ m vs } 11.25 \\text{ m}',d:['Both 11.25 m','22.5 m vs 22.5 m','45 m vs 11.25 m'],cat:'friction'},
+  {ctx:'A stone has KE = 200 J. Mass = 20 kg. It slides until KE = 0. μ = 0.04, g = 10.',q:'\\text{Work done by friction} = Fd',ask:'Find the stopping distance',correct:'25 \\text{ m}',d:['50 \\text{ m}','10 \\text{ m}','200 \\text{ m}'],cat:'friction'},
+  {ctx:'Work done by friction = friction force × distance = μmgd.',q:'',ask:'This equals the...',correct:'Loss in kinetic energy',d:['Gain in potential energy','Momentum change','Impulse'],cat:'friction'},
+  {ctx:'A stone (20 kg, 4 m/s) collides with a stationary stone (20 kg). Elastic. The target stone then decelerates at 0.3 m/s².',q:'',ask:'How far does the target stone travel?',correct:'\\dfrac{16}{0.6} \\approx 26.7 \\text{ m}',d:['13.3 \\text{ m}','40 \\text{ m}','53.3 \\text{ m}'],cat:'collision'},
+  {ctx:'Newton\'s third law in a collision between two curling stones.',q:'',ask:'The forces on each stone are...',correct:'Equal in magnitude, opposite in direction',d:['Equal in magnitude, same direction','Proportional to mass','Zero during contact'],cat:'momentum'},
+],
+level4:[
+  // Level 4 — same physics, engineering context framing
+  {ctx:'A 20 kg stone on ice (μ = 0.04, g = 9.81 m/s²). Calculate the friction force to 3 significant figures.',q:'F = \\mu mg',ask:'Find F',correct:'7.85 N',d:['7.84 N','7.8 N','0.785 N'],cat:'friction'},
+  {ctx:'Deceleration of a body on a surface with μ = 0.035, g = 9.81.',q:'a = \\mu g',ask:'Find the deceleration (3 s.f.)',correct:'0.343 \\text{ m/s}^2',d:['0.35 \\text{ m/s}^2','3.43 \\text{ m/s}^2','0.0343 \\text{ m/s}^2'],cat:'friction'},
+  {ctx:'A component slides along a surface at 6 m/s. μ = 0.04, g = 9.81.',q:'v^2 = u^2 - 2as',ask:'Stopping distance (3 s.f.)',correct:'45.9 \\text{ m}',d:['45.0 \\text{ m}','91.7 \\text{ m}','22.9 \\text{ m}'],cat:'suvat'},
+  {ctx:'A trolley (50 kg) moving at 2 m/s on a factory floor. μ = 0.1, g = 9.81.',q:'',ask:'Friction force',correct:'49.05 N',d:['9.81 N','4.905 N','490.5 N'],cat:'friction'},
+  {ctx:'A 50 kg trolley. F_friction = 49.05 N. u = 2 m/s.',q:'F = ma, \\; v^2 = u^2 - 2as',ask:'Stopping distance',correct:'2.04 \\text{ m}',d:['4.08 \\text{ m}','1.02 \\text{ m}','20.4 \\text{ m}'],cat:'suvat'},
+  {ctx:'A 20 kg stone at 5 m/s collides with a 20 kg stationary stone. They stick together.',q:'',ask:'Common velocity (3 s.f.)',correct:'2.50 \\text{ m/s}',d:['5.00 \\text{ m/s}','1.25 \\text{ m/s}','10.0 \\text{ m/s}'],cat:'collision'},
+  {ctx:'A 1500 kg car at 20 m/s rear-ends a 1000 kg car at 10 m/s. They lock together.',q:'m_1 u_1 + m_2 u_2 = (m_1+m_2)v',ask:'Find the common speed',correct:'16 \\text{ m/s}',d:['15 \\text{ m/s}','30 \\text{ m/s}','12 \\text{ m/s}'],cat:'collision'},
+  {ctx:'A 2 kg hammer at 8 m/s strikes a 6 kg anvil at rest. Elastic collision.',q:'',ask:'Speed of hammer after (equal mass formula not valid here)',correct:'-4 \\text{ m/s (bounces back)}',d:['0 \\text{ m/s}','4 \\text{ m/s}','8 \\text{ m/s}'],cat:'collision'},
+  {ctx:'A 0.5 kg ball at 10 m/s bounces off a wall. It returns at 8 m/s.',q:'I = m(v - u)',ask:'Impulse (take original direction as positive)',correct:'-9 \\text{ Ns}',d:['9 \\text{ Ns}','1 \\text{ Ns}','-1 \\text{ Ns}'],cat:'momentum'},
+  {ctx:'An impulse of 120 Ns acts on a 20 kg stone initially at rest.',q:'I = mv - mu',ask:'Final speed',correct:'6 \\text{ m/s}',d:['120 \\text{ m/s}','2400 \\text{ m/s}','0.167 \\text{ m/s}'],cat:'momentum'},
+  {ctx:'A 20 kg stone at 4 m/s. KE = ½mv². After collision with equal stationary stone (inelastic, stick).',q:'',ask:'Percentage of KE lost',correct:'50\\%',d:['0\\%','25\\%','75\\%'],cat:'collision'},
+  {ctx:'Coefficient of restitution e = speed of separation / speed of approach. Two equal stones: A at 5 m/s hits B at rest. After: A at 1 m/s, B at 4 m/s.',q:'',ask:'Find e',correct:'0.6',d:['0.8','1','0.2'],cat:'collision'},
+  {ctx:'If e = 1, the collision is...',q:'',ask:'',correct:'Perfectly elastic',d:['Perfectly inelastic','Impossible','Explosive'],cat:'collision'},
+  {ctx:'If e = 0, the collision is...',q:'',ask:'',correct:'Perfectly inelastic',d:['Perfectly elastic','Explosive','Impossible'],cat:'collision'},
+  {ctx:'A body of mass 25 kg slides on a surface. The friction force is 12.5 N. g = 10.',q:'',ask:'Find μ',correct:'0.05',d:['0.5','2','0.005'],cat:'friction'},
+  {ctx:'A stone (20 kg, u = 4 m/s) decelerates uniformly over 8 seconds to rest.',q:'',ask:'Find the friction force',correct:'10 \\text{ N}',d:['5 \\text{ N}','20 \\text{ N}','2.5 \\text{ N}'],cat:'friction'},
+  {ctx:'Work done against friction = F × d. A 20 kg stone slides 30 m. μ = 0.04, g = 10.',q:'',ask:'Work done against friction',correct:'240 \\text{ J}',d:['24 \\text{ J}','2400 \\text{ J}','120 \\text{ J}'],cat:'friction'},
+  {ctx:'The work-energy theorem: work done by friction = loss in KE. Stone: 20 kg, slides from 5 m/s to rest.',q:'',ask:'Work done against friction',correct:'250 \\text{ J}',d:['100 \\text{ J}','500 \\text{ J}','50 \\text{ J}'],cat:'friction'},
+  {ctx:'A 30 kg crate is pushed with 60 N on a surface where μ = 0.15, g = 10.',q:'F_{net} = F_{applied} - F_{friction}',ask:'Find the acceleration',correct:'0.5 \\text{ m/s}^2',d:['2 \\text{ m/s}^2','1.5 \\text{ m/s}^2','0.15 \\text{ m/s}^2'],cat:'friction'},
+  {ctx:'A 20 kg stone launched at u = 6 m/s. It must stop between 28 m and 32 m (the house). g = 10.',q:'',ask:'What range of μ achieves this?',correct:'0.0563 \\leq \\mu \\leq 0.0643',d:['0.03 to 0.04','0.1 to 0.2','0.04 to 0.05'],cat:'suvat'},
+]
+};
+
+let level='alevel',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,qStartTime=0;
+const BASE=100,T_K=0.15;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
+function rkStr(tex){if(!tex.includes('\\')&&!tex.includes('^')&&!tex.includes('{'))return tex;const span=document.createElement('span');katex.render(tex,span,{throwOnError:false,displayMode:false});return span.innerHTML}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
+const pa=new URLSearchParams(location.search);if(pa.get('level')&&QUESTIONS[pa.get('level')]){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+
+function startGame(){questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}show('game');showQ();window._ggAbandoned=true;mfg('game_started',{game_slug:'curling-friction',level:level});if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'curling-friction',level:level,questions_answered:qIdx})})}}
+
+function animateStone(q,correct){
+  const sa=document.getElementById('stoneA');const sb=document.getElementById('stoneB');
+  sa.style.transition='none';sa.style.left='20px';sb.style.display='none';
+  void sa.offsetWidth;sa.style.transition='left 1.5s ease-out';
+  const cat=q.cat||'';
+  if(cat==='collision'){
+    sb.style.display='block';sb.style.left='60%';sb.style.transition='none';
+    void sb.offsetWidth;
+    sa.style.left='55%';
+    if(correct){setTimeout(()=>{sb.style.transition='left 1s ease-out';sb.style.left='85%';sa.style.left='55%'},800)}
+  } else if(cat==='friction'||cat==='suvat'){
+    const dist=correct?'70%':'45%';sa.style.left=dist;
+  } else {sa.style.left='60%'}
+  const sw=document.getElementById('sweepInd');
+  if(q.ctx&&q.ctx.toLowerCase().includes('sweep')){sw.classList.add('active');setTimeout(()=>sw.classList.remove('active'),2000)}
+}
+
+function showQ(){
+  const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;
+  document.getElementById('context').textContent=q.ctx||'';
+  const qEl=document.getElementById('question');qEl.innerHTML='';
+  if(q.q)rk(qEl,q.q);
+  document.getElementById('prompt').textContent=q.ask;
+  document.getElementById('solution').className='solution';
+  const opts=shuffle([q.correct,...q.d]);
+  const oEl=document.getElementById('options');oEl.innerHTML='';
+  opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
+    if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}
+    b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});
+  qStartTime=Date.now();updateTimer();
+  // Reset rink
+  const sa=document.getElementById('stoneA');sa.style.transition='none';sa.style.left='20px';
+  document.getElementById('stoneB').style.display='none';
+}
+
+function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){const s=Math.floor((Date.now()-qStartTime)/1000);el.textContent=s;requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
+
+function handle(btn,q){
+  const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});
+  mfg('question_answered',{game_slug:'curling-friction',level:level,correct:ok,question_index:qIdx+1});
+  animateStone(q,ok);
+  if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done');
+    document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1800)}
+  else{btn.classList.add('wrong');streak=0;pip('fail');
+    document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;showSolution(q)}
+}
+function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
+function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
+
+function showSolution(q){
+  const sol=document.getElementById('solution');
+  let html='<h3>Worked solution</h3>';
+  if(q.steps){
+    q.steps.forEach(step=>{html+=`<div class="step">${rkStr(step)}</div>`});
+  } else {
+    // Auto-generate a basic solution from the question data
+    if(q.q) html+=`<div class="step">Using: ${rkStr(q.q)}</div>`;
+    if(q.ctx) html+=`<div class="step">${q.ctx}</div>`;
+    html+=`<div class="step">Correct answer: ${rkStr(q.correct)}</div>`;
+  }
+  if(q.misconception){
+    html+=`<div class="misconception">\u26a0 ${q.misconception}</div>`;
+  }
+  html+=`<button class="next-btn" onclick="closeSolution()">Got it \u2014 next question</button>`;
+  sol.innerHTML=html;
+  sol.className='solution show';
+}
+
+function closeSolution(){
+  document.getElementById('solution').className='solution';
+  adv();
+}
+function end(){const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'curling-friction',level:level,score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('curling-friction',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('curling-friction',level,score);}}show('results')}
+function showMenu(){show('menu')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

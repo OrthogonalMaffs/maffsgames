@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="MaffsGames leaderboards. See the top scores from the last 7 days and all-time highs for every game, plus your own score history stored on this device.">
+<link rel="canonical" href="https://maffsgames.co.uk/leaderboards/">
+<meta property="og:title" content="Leaderboards — MaffsGames">
+<meta property="og:description" content="Top scores from the last 7 days and all-time highs for every MaffsGames game, plus your own local score history.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/leaderboards/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../schools/assets/favicon.svg">
+<title>Leaderboards — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', { send_page_view: true, storage: 'none', anonymize_ip: true });
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../schools/assets/score-history.js"></script>
+<script src="../schools/assets/firebase-leaderboard.js"></script>
+<style>
+  :root{
+    --bg:#f8fafc; --white:#ffffff; --navy:#1a2744; --teal:#0d9488;
+    --text:#1e293b; --text-muted:#64748b; --border:#e2e8f0;
+    --gold:#f59e0b; --gold-dim:rgba(245,158,11,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{
+    padding-bottom:56px;
+    background:var(--bg);
+    font-family:'Outfit',system-ui,sans-serif;
+    color:var(--text);
+    font-size:15px;
+    line-height:1.6;
+    min-height:100vh;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  .header{background:var(--navy);padding:28px 32px;}
+  .header-inner{max-width:1200px;margin:0 auto;}
+  .header-title{font-size:24px;font-weight:800;color:#fff;display:flex;align-items:center;gap:10px;}
+  .header-sub{font-size:14px;color:rgba(255,255,255,0.7);margin-top:6px;max-width:640px;}
+  .header-badges{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+  .hbadge{font-size:12px;padding:5px 10px;border-radius:20px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,0.15);}
+
+  .content{max-width:1200px;margin:0 auto;padding:32px 32px 64px;}
+
+  /* Your Scores */
+  .your-scores{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:32px;}
+  .your-scores h2{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+  .your-scores .sub{font-size:13px;color:var(--text-muted);margin-bottom:16px;}
+  .your-empty{font-size:13px;color:var(--text-muted);padding:12px 0;}
+  .ys-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+  .ys-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+  .ys-card .ys-game{font-size:13px;font-weight:700;color:var(--navy);}
+  .ys-card .ys-level{font-size:11px;color:var(--text-muted);margin-bottom:8px;}
+  .ys-row{display:flex;justify-content:space-between;font-size:12.5px;padding:2px 0;color:var(--text);}
+  .ys-row .ys-score{font-weight:700;color:var(--teal);font-family:'JetBrains Mono',monospace;}
+  .ys-row .ys-date{color:var(--text-muted);}
+
+  /* Controls */
+  .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:20px;}
+  .search-box{flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;background:var(--white);}
+  .search-box:focus{outline:none;border-color:var(--teal);}
+  .level-pills{display:flex;gap:6px;flex-wrap:wrap;}
+  .level-pill{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--white);color:var(--text-muted);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .level-pill.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+  /* Game grid */
+  .game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+  .game-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:10px;}
+  .gc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+  .gc-name{font-size:15px;font-weight:700;color:var(--navy);text-decoration:none;}
+  .gc-name:hover{color:var(--teal);}
+  .gc-levels{display:flex;gap:5px;flex-wrap:wrap;}
+  .gc-level-pill{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:12px;background:var(--bg);color:var(--text-muted);border:1px solid var(--border);cursor:pointer;font-family:inherit;}
+  .gc-level-pill.active{background:var(--teal);color:#fff;border-color:var(--teal);}
+
+  .gc-ath{font-size:12.5px;color:var(--text);background:var(--gold-dim);border-left:3px solid var(--gold);border-radius:4px;padding:6px 10px;display:flex;justify-content:space-between;gap:8px;}
+  .gc-ath .ath-label{color:#92660a;font-weight:600;}
+  .gc-ath .ath-val{font-family:'JetBrains Mono',monospace;font-weight:700;}
+
+  .gc-week-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-muted);margin-top:2px;}
+  .gc-rows{display:flex;flex-direction:column;gap:3px;min-height:24px;}
+  .gc-row{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:3px 0;border-bottom:1px solid var(--bg);}
+  .gc-rank{width:16px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:11px;}
+  .gc-initials{font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--navy);width:28px;}
+  .gc-gscore{margin-left:auto;font-weight:700;color:var(--teal);font-family:'JetBrains Mono',monospace;}
+  .gc-gdate{color:var(--text-muted);font-size:11px;}
+  .gc-empty, .gc-loading{font-size:12px;color:var(--text-muted);padding:6px 0;}
+  .gc-note{font-size:11.5px;color:#92660a;background:var(--gold-dim);border-radius:6px;padding:8px 10px;line-height:1.5;}
+
+  .back-link{display:inline-block;margin-top:8px;color:var(--teal);text-decoration:none;font-weight:600;font-size:14px;}
+  .back-link:hover{text-decoration:underline;}
+
+  @media(max-width:768px){
+    .header{padding:22px 20px;}
+    .content{padding:24px 16px 48px;}
+  }
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-title">&#127942; Leaderboards</div>
+    <div class="header-sub">Top scores from the last 7 days and all-time highs for every game, plus your own local score history. Anonymous — no accounts, no sign-up.</div>
+    <div class="header-badges">
+      <span class="hbadge">91 scoring games</span>
+      <span class="hbadge">Rolling 7-day window</span>
+      <span class="hbadge">Your scores never leave this device</span>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <div class="your-scores">
+    <h2>Your Scores</h2>
+    <div class="sub">Stored only on this device — nothing here is sent anywhere. Play a game to start building history.</div>
+    <div id="yourScoresBody"><div class="your-empty">Loading your local history&hellip;</div></div>
+  </div>
+
+  <div class="controls">
+    <input type="text" class="search-box" id="searchBox" placeholder="Search games&hellip;">
+    <div class="level-pills" id="levelPills"></div>
+  </div>
+
+  <div class="game-grid" id="gameGrid"></div>
+
+  <a href="../" class="back-link">&larr; Back to Games</a>
+
+</div>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+
+<script>
+(function(){
+'use strict';
+
+/* ---- Firebase ---- */
+var firebaseConfig = {
+  apiKey:"AIzaSyCvLgIk8hdHaX7nL0aZ3p_Q8zNlRuKX18g",
+  databaseURL:"https://maffsgames-c1c9f-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"maffsgames-c1c9f"
+};
+try { firebase.initializeApp(firebaseConfig); } catch(e) {}
+var db = firebase.database();
+
+/* ---- Level names ----
+   One source: MaffsLeaderboard.levelLabel() in firebase-leaderboard.js, the same
+   function the portal ticker uses. This page used to keep a second, hand-kept copy,
+   and the two had already disagreed on 'all'. levelLabel() returns null for a key
+   nothing names (the coverage check fails on that for every level a game submits),
+   so the raw key is only ever a last resort. */
+function levelName(key){
+  var n = MaffsLeaderboard.levelLabel(key);
+  return n === null ? key : n;
+}
+
+/* Single copy of both lives in firebase-leaderboard.js now (28 Sep 2026),
+   shared with the portal ticker via MaffsLeaderboard.standing() — these
+   used to be a second, hand-kept copy here. */
+var LOWER_IS_BETTER = MaffsLeaderboard.LOWER_IS_BETTER;
+var MIXED_UNRELIABLE = MaffsLeaderboard.MIXED_UNRELIABLE;
+
+/* slug -> { name, levels[] }. Levels sourced from .claude/rules/game-roster.md,
+   overridden with the literal level string where the game's own submitScore()
+   call site hardcodes one (ground truth over roster intent). ENFORCED since
+   30 Sep 2026: scripts/check-leaderboard-coverage.js fails CI if a game that
+   calls submitScore() is missing here, or if a row's levels differ from the
+   keys the game submits under. Keys that are not roster tiers (q20, higher,
+   alevel2, l4 ...) are declared in that script's LEVEL_OVERRIDES. Keep one
+   row per line, in this shape, so the check can read it. */
+var GAMES = [
+  ['sequence-solver','Sequence Solver',['ks3','gcse','alevel','level4']],
+  ['estimation-golf','Estimation Golf',['year6','ks3','gcse','alevel','level4','core']],
+  ['estimation-engine','Estimation Engine',['all']],
+  ['factor-race','Factor Race',['year6','ks3','gcse']],
+  ['prime-factorisation','Prime Sprint',['year6','ks3','gcse']],
+  ['prime-or-composite','Prime or Composite',['all']],
+  ['percentage-flip','Percentage Flip',['year6','ks3','gcse']],
+  ['fraction-equivalence','Fraction Snap',['year6','ks3','gcse']],
+  ['equatle','Equatle',['all']],
+  ['52dle','52-dle',['all']],
+  ['split-it','Split It',['ks3','gcse']],
+  ['word-problem-decoder','Word Problem Decoder',['ks3','gcse']],
+  ['equation-builder','Equation Builder',['ks3','gcse','level4']],
+  ['spot-the-error','Spot the Error',['ks3','gcse','level4']],
+  ['gradient-hunter','Gradient Hunter',['gcse','core','alevel']],
+  ['truth-buster','Truth Buster',['all']],
+  ['spot-the-muppet','Spot the Muppet',['ks3','gcse','core']],
+  ['terrible-advice','Terrible Advice',['ks3','gcse','core']],
+  ['wrong-on-the-internet','Wrong on the Internet',['ks3','gcse','core']],
+  ['maths-court','Maths Court',['ks3','gcse','core']],
+  ['expected-damage','Expected Damage',['ks3','gcse','core']],
+  ['negative-number-line','Negative Number Line',['year6']],
+  ['think-of-a-number','Think of a Number',['year6']],
+  ['formula-plug-in','Formula Plug-In',['year6']],
+  ['decimal-detective','Decimal Detective',['year6']],
+  ['four-quadrant-explorer','Four Quadrant Explorer',['year6']],
+  ['like-terms-collector','Like Terms Collector',['year6']],
+  ['probability-pioneer','Probability Pioneer',['year6']],
+  ['shape-shifter','Shape Shifter',['year6']],
+  ['new-shapes','New Shapes',['year6']],
+  ['higher-power','Higher Power',['ks3','gcse','alevel']],
+  ['prisoners-dilemma',"Prisoner's Dilemma",['ks3','gcse','alevel','core']],
+  ['seven-bridges','Seven Bridges',['ks3','gcse','alevel']],
+  ['index-laws','Index Laws',['gcse']],
+  ['quadratic-factoriser','Quadratic Factoriser',['gcse','higher','formula']],
+  ['six-sevens-bruv','Six Sevens, Bruv',['q20','q40']],
+  ['free-daily-pizza','Free Daily Pizza',['practice-q20','practice-q40']],
+  ['linear-equation-solver','Linear Equation Solver',['gcse']],
+  ['distinctly-average','Distinctly Average',['ks3','gcse']],
+  ['trig-wars','Trig Wars',['gcse']],
+  ['trig-worms','Trig Worms',['gcse']],
+  ['modular-battle','Modular Battle',['gcse']],
+  ['surd-simplifier','Surd Simplifier',['gcse','alevel']],
+  ['proportion-blaster','Proportion Blaster',['gcse','alevel']],
+  ['trig-identity-duel','Trig Identity Duel',['gcse','alevel','level4']],
+  ['standard-form-blitz','Standard Form Blitz',['gcse','alevel']],
+  ['simultaneous-solver','Simultaneous Solver',['gcse','alevel']],
+  ['circle-theorem-spotter','Circle Theorem Spotter',['gcse']],
+  ['probability-paradox','Probability Paradox',['gcse']],
+  ['angle-ace','Angle Ace',['year6','ks3','gcse']],
+  ['coordinate-geometry-dash','Coordinate Geometry Dash',['gcse','alevel']],
+  ['graph-transformer','Graph Transformer',['gcse','alevel']],
+  ['formula-unlocked','Formula Unlocked',['gcse','alevel','level4']],
+  ['bearing-blitz','Bearing Blitz',['all']],
+  ['scale-factor-scaling','Scale Factor Scaling',['gcse','alevel','level4']],
+  ['unit-converter','Unit Converter',['gcse','alevel','level4']],
+  ['formula-forge','Formula Forge',['gcse','alevel','level4']],
+  ['correlation-or-coincidence','Correlation or Coincidence',['gcse']],
+  ['chart-interrogator','Chart Interrogator',['gcse','alevel','core','l4']],
+  ['component-crusher','Component Crusher',['gcse','alevel','level4']],
+  ['expectation-station','Expectation Station',['gcse','core','alevel']],
+  ['better-value','Better Value',['gcse','core']],
+  ['screening-room','Screening Room',['gcse','alevel','core','level4']],
+  ['core-maths-paper1','Core Maths Paper 1',['core']],
+  ['core-maths-paper2a','Core Maths Paper 2A',['core']],
+  ['core-maths-paper2b','Core Maths Paper 2B',['core']],
+  ['core-maths-paper2c','Core Maths Paper 2C',['core']],
+  ['tax-theft','Tax Theft',['core']],
+  ['stat-attack','Stat Attack',['gcse','core','level4']],
+  ['growth-and-decay','Growth and Decay',['core','alevel','level4']],
+  ['graph-sketcher','Graph Sketcher',['core','alevel','level4']],
+  ['glorious-gantt','Glorious Gantt',['core','level4']],
+  ['test-the-claim','Test the Claim',['alevel']],
+  ['differentiation-duel','Differentiation Duel',['alevel','level4']],
+  ['integration-duel','Integration Duel',['alevel','level4']],
+  ['suvat','SUVAT Selector',['alevel','level4']],
+  ['curling-friction','Curling Friction',['alevel','level4']],
+  ['force-resolver','Force Resolver',['alevel','level4']],
+  ['moments-master','Moments Master',['alevel','level4']],
+  ['log-laws','Log Laws',['alevel','level3','level4']],
+  ['binomial-blaster','Binomial Blaster',['alevel','alevel2']],
+  ['partial-fractions-duel','Partial Fractions Duel',['alevel']],
+  ['proof-builder','Proof Builder',['alevel','further']],
+  ['normal-navigator','Normal Navigator',['alevel']],
+  ['fermi-lab','Fermi Lab',['ks3','gcse','alevel','level4','core']],
+  ['dimension-checker','Dimension Checker',['level4']],
+  ['regression-rumble','Regression Rumble (being rebuilt)',['core','alevel','level4']],
+  ['factor-theorem','Factor Theorem',['alevel']],
+  ['boolean-blitz','Boolean Blitz',['level4']],
+  ['truth-will-set-you-free','The Truth Will Set You Free',['level4']],
+  ['complex-converter','Complex Converter',['further','level4']],
+  ['matrix-crunch','Matrix Crunch',['further','level4']],
+  ['characteristic-quest','Characteristic Quest',['further']],
+  ['eigenvalue-extractor','Eigenvalue Extractor',['further']],
+  ['eigenvector-engine','Eigenvector Engine',['further']]
+].map(function(g){ return { slug:g[0], name:g[1], levels:g[2] }; });
+
+/* ---- Helpers ---- */
+function fmtDate(ts){
+  var d = new Date(ts);
+  return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
+}
+function timeAgo(ts){
+  var diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60)+'m ago';
+  if (diff < 86400) return Math.floor(diff/3600)+'h ago';
+  return Math.floor(diff/86400)+'d ago';
+}
+
+/* ---- Your Scores (device-local) ---- */
+function renderYourScores(){
+  var body = document.getElementById('yourScoresBody');
+  var found = [];
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k.indexOf('mfg_hist_v1::') !== 0) continue;
+      var parts = k.substring('mfg_hist_v1::'.length).split('::');
+      if (parts.length !== 2) continue;
+      var slug = parts[0], level = parts[1];
+      var hist = JSON.parse(localStorage.getItem(k) || '[]');
+      if (!hist.length) continue;
+      found.push({ slug: slug, level: level, hist: hist });
+    }
+  } catch(e) {}
+
+  if (!found.length) {
+    body.innerHTML = '<div class="your-empty">No local scores yet on this device. Play any game and it\'ll show up here.</div>';
+    return;
+  }
+
+  var gameMap = {};
+  GAMES.forEach(function(g){ gameMap[g.slug] = g; });
+
+  var grid = document.createElement('div');
+  grid.className = 'ys-grid';
+  found.sort(function(a,b){ return b.hist[0].timestamp - a.hist[0].timestamp; });
+  found.forEach(function(f){
+    var g = gameMap[f.slug];
+    var name = g ? g.name : f.slug;
+    var levelLabel = levelName(f.level);
+    var card = document.createElement('div');
+    card.className = 'ys-card';
+    var rows = f.hist.slice(0, 5).map(function(entry){
+      return '<div class="ys-row"><span>' + entry.score + '</span><span class="ys-date">' + timeAgo(entry.timestamp) + '</span></div>';
+    }).join('');
+    card.innerHTML = '<div class="ys-game">' + name + '</div><div class="ys-level">' + levelLabel + '</div>' + rows;
+    grid.appendChild(card);
+  });
+  body.innerHTML = '';
+  body.appendChild(grid);
+}
+
+/* ---- Public leaderboard cards ---- */
+var SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+var cache = {}; // key -> array of entries, once fetched
+
+function fetchLeaderboard(slug, level, cb){
+  var key = (slug + '_' + level).replace(/-/g, '_');
+  if (cache[key]) { cb(cache[key]); return; }
+  db.ref('leaderboards/' + key).once('value').then(function(snap){
+    var data = snap.val() || {};
+    var entries = Object.keys(data).map(function(k){ return data[k]; })
+      .filter(function(e){ return e && typeof e.score === 'number'; });
+    cache[key] = entries;
+    cb(entries);
+  }).catch(function(){ cb([]); });
+}
+
+function renderCardBody(card, slug, level){
+  var rowsEl = card.querySelector('.gc-rows');
+  var athEl = card.querySelector('.gc-ath');
+  var weekLabelEl = card.querySelector('.gc-week-label');
+
+  if (MIXED_UNRELIABLE[slug]) {
+    rowsEl.innerHTML = '<div class="gc-note">This game\'s modes share one leaderboard key with incompatible scoring directions (streak vs. attempts), so ranked scores can\'t be shown reliably here. Flagged, not yet fixed.</div>';
+    athEl.style.display = 'none';
+    weekLabelEl.style.display = 'none';
+    return;
+  }
+
+  rowsEl.innerHTML = '<div class="gc-loading">Loading&hellip;</div>';
+
+  fetchLeaderboard(slug, level, function(entries){
+    var lowerBetter = !!LOWER_IS_BETTER[slug];
+
+    if (!entries.length) {
+      rowsEl.innerHTML = '<div class="gc-empty">No scores yet &mdash; be the first!</div>';
+      athEl.style.display = 'none';
+      return;
+    }
+
+    var sorted = entries.slice().sort(function(a,b){
+      return lowerBetter ? a.score - b.score : b.score - a.score;
+    });
+
+    var best = sorted[0];
+    athEl.style.display = 'flex';
+    athEl.innerHTML = '<span class="ath-label">&#127942; All-time high</span><span class="ath-val">' + best.score + ' &middot; ' + fmtDate(best.timestamp) + '</span>';
+
+    var cutoff = Date.now() - SEVEN_DAYS;
+    var recent = entries.filter(function(e){ return e.timestamp >= cutoff; })
+      .sort(function(a,b){ return lowerBetter ? a.score - b.score : b.score - a.score; })
+      .slice(0, 5);
+
+    if (!recent.length) {
+      rowsEl.innerHTML = '<div class="gc-empty">No scores in the last 7 days.</div>';
+      return;
+    }
+
+    rowsEl.innerHTML = recent.map(function(e, i){
+      var initials = e.initials ? e.initials : '&mdash;';
+      return '<div class="gc-row"><span class="gc-rank">#' + (i+1) + '</span><span class="gc-initials">' + initials + '</span><span class="gc-gdate">' + timeAgo(e.timestamp) + '</span><span class="gc-gscore">' + e.score + '</span></div>';
+    }).join('');
+  });
+}
+
+function buildCard(game){
+  var card = document.createElement('div');
+  card.className = 'game-card';
+  card.dataset.slug = game.slug;
+  card.dataset.name = game.name.toLowerCase();
+
+  var levelPillsHTML = game.levels.map(function(lv, i){
+    return '<button class="gc-level-pill' + (i===0?' active':'') + '" data-level="' + lv + '">' + levelName(lv) + '</button>';
+  }).join('');
+
+  card.innerHTML =
+    '<div class="gc-head">' +
+      '<a class="gc-name" href="../games/' + game.slug + '/">' + game.name + '</a>' +
+    '</div>' +
+    (game.levels.length > 1 ? '<div class="gc-levels">' + levelPillsHTML + '</div>' : '') +
+    '<div class="gc-ath" style="display:none"></div>' +
+    '<div class="gc-week-label">Last 7 days</div>' +
+    '<div class="gc-rows"><div class="gc-loading">&nbsp;</div></div>';
+
+  card.querySelectorAll('.gc-level-pill').forEach(function(pill){
+    pill.addEventListener('click', function(){
+      card.querySelectorAll('.gc-level-pill').forEach(function(p){ p.classList.remove('active'); });
+      pill.classList.add('active');
+      renderCardBody(card, game.slug, pill.dataset.level);
+    });
+  });
+
+  card._loaded = false;
+  card._loadFn = function(){
+    if (card._loaded) return;
+    card._loaded = true;
+    if (MIXED_UNRELIABLE[game.slug]) {
+      renderCardBody(card, game.slug, game.levels[0]);
+      return;
+    }
+    pickDefaultLevel(game, function(bestLevel){
+      var pill = card.querySelector('.gc-level-pill[data-level="' + bestLevel + '"]');
+      if (pill) {
+        card.querySelectorAll('.gc-level-pill').forEach(function(p){ p.classList.remove('active'); });
+        pill.classList.add('active');
+      }
+      renderCardBody(card, game.slug, bestLevel);
+    });
+  };
+
+  return card;
+}
+
+/* Pick the first level (in the game's own declared order) that actually
+   has data, rather than blindly trusting the registry's first entry —
+   several games' "first" tier turned out to have zero traffic while a
+   later tier had plenty (e.g. factor-race: year6 empty, ks3 populated).
+   Falls back to levels[0] if none have data yet (genuinely new game). */
+function pickDefaultLevel(game, cb){
+  var levels = game.levels;
+  var results = new Array(levels.length);
+  var remaining = levels.length;
+  levels.forEach(function(lv, i){
+    fetchLeaderboard(game.slug, lv, function(entries){
+      results[i] = entries;
+      remaining--;
+      if (remaining === 0) {
+        for (var j = 0; j < levels.length; j++) {
+          if (results[j] && results[j].length > 0) { cb(levels[j]); return; }
+        }
+        cb(levels[0]);
+      }
+    });
+  });
+}
+
+function initGrid(){
+  var grid = document.getElementById('gameGrid');
+  var cards = GAMES.map(function(game){
+    var card = buildCard(game);
+    grid.appendChild(card);
+    return card;
+  });
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target._loadFn();
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '200px' });
+    cards.forEach(function(card){ observer.observe(card); });
+  } else {
+    cards.forEach(function(card){ card._loadFn(); });
+  }
+
+  /* Search */
+  document.getElementById('searchBox').addEventListener('input', function(e){
+    var q = e.target.value.toLowerCase().trim();
+    cards.forEach(function(card){
+      card.style.display = (!q || card.dataset.name.indexOf(q) !== -1) ? '' : 'none';
+    });
+  });
+
+  /* Level filter row */
+  var allLevels = ['all','year6','ks3','gcse','alevel','further','level4','core'];
+  var pillsWrap = document.getElementById('levelPills');
+  allLevels.forEach(function(lv, i){
+    var btn = document.createElement('button');
+    btn.className = 'level-pill' + (i===0?' active':'');
+    btn.textContent = lv === 'all' ? 'All levels' : levelName(lv);
+    btn.dataset.level = lv;
+    btn.addEventListener('click', function(){
+      pillsWrap.querySelectorAll('.level-pill').forEach(function(p){ p.classList.remove('active'); });
+      btn.classList.add('active');
+      cards.forEach(function(card, idx){
+        var game = GAMES[idx];
+        var matches = lv === 'all' || game.levels.indexOf(lv) !== -1;
+        if (matches) {
+          card.style.display = (card.style.display === 'none' && document.getElementById('searchBox').value) ? card.style.display : '';
+          card._loadFn();
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+    pillsWrap.appendChild(btn);
+  });
+}
+
+renderYourScores();
+initGrid();
+
+})();
+</script>
+</body>
+</html>

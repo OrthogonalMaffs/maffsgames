@@ -1,0 +1,256 @@
+Batch 3 - Gemini, 2026-08-26, repaired. Fifteen locks: five rooms, three each.
+Ten came from Gemini across two messages. Five were written here to fill locks the
+storylines described but did not supply: locker-nth-term, hamster-feeder-bounds,
+heat-lamp-gradient, sprinkler-flow-rates, mat-tiling-hcf.
+What was changed and why: docs/escape-puzzle-bank.md, "Batch 3".
+
+
+Room 3 - The P.E. Shed Rebellion (KS3 / GCSE)
+=============================================
+
+ID:          sprinkler-sector-area
+LEVEL:       GCSE
+TOPIC:       Geometry / Area of a sector
+INSTRUMENT:  Radial arc slider, 10 to 360 degrees, 10-degree increments.
+CONTEXT:     The cricket-pitch sprinklers are running and the only way across the field unseen is the dry strip they leave behind.
+CLUE:        "Sprinkler reach: 12 m. The groundsman's log says the wet patch must never exceed 48pi square metres. Set the arc."
+ANSWER:      120
+AHA:         The area is given in terms of pi, so the pi cancels: the sector is 48pi out of a whole circle of 144pi, which is a third of 360 degrees.
+MISCONCEPTION: 40 (dividing 48 by the radius 12 instead of by the radius squared).
+SOLVE:       Whole circle = pi * 12^2 = 144pi.
+             48pi / 144pi = 1/3.
+             Angle = 360 / 3 = 120 degrees.
+TIME:        3
+VERIFY:      [deg for deg in range(10, 361, 10) if deg * 144 == 48 * 360]
+
+ID:          dodgeball-pressure-boyle
+LEVEL:       GCSE
+TOPIC:       Algebra / Inverse proportion
+INSTRUMENT:  Compressor pressure gauge, 0-100 psi, whole psi.
+CONTEXT:     The inflatable dodgeball arena is folded flat in the shed. The compressor holds whatever pressure you leave on the gauge, and too much of it splits the seams.
+CLUE:        "Pressure is inversely proportional to volume. Folded, the arena holds 20 cubic metres at 60 psi. Set the gauge for it fully open at 25 cubic metres."
+ANSWER:      48
+AHA:         Inverse proportion means pressure times volume is constant, so find that constant before touching the new volume.
+MISCONCEPTION: 75 (scaling up with the volume - 60 x 25/20 - instead of down).
+SOLVE:       k = 20 * 60 = 1200.
+             P * 25 = 1200.
+             P = 1200 / 25 = 48 psi.
+TIME:        2
+VERIFY:      [p for p in range(101) if p * 25 == 60 * 20]
+
+ID:          locker-nth-term
+LEVEL:       KS3 / GCSE
+TOPIC:       Algebra / Linear sequences, nth term
+INSTRUMENT:  Combination dial on the equipment locker, 0-99, whole numbers.
+CONTEXT:     The locker code changes every day of term. The P.E. teacher keeps a clipboard of the ones already used, but only bothers writing it down when he forgets one.
+CLUE:        "Clipboard: day 3 - 23. Day 7 - 43. Day 12 - 68. Today is day 15 of term. Set the dial."
+ANSWER:      83
+AHA:         The written days are not consecutive, so the gaps between the numbers are not the daily step - divide by the number of days between entries first.
+MISCONCEPTION: 88 (treating 68 as yesterday's code and adding the last written gap of 20).
+SOLVE:       Day 3 to day 12 is 9 days and 68 - 23 = 45, so the step is 45 / 9 = 5 a day.
+             Check: day 7 = 23 + 4*5 = 43. Consistent.
+             Day 15 = 68 + 3*5 = 83.
+TIME:        3
+VERIFY:      [c for c in range(100) if (c - 23) * 9 == (68 - 23) * 12 and (43 - 23) * 9 == (68 - 23) * 4]
+
+
+Room 4 - The Prom Budget Embezzlement (GCSE / Core Maths)
+=========================================================
+
+ID:          finance-reverse-percentage
+LEVEL:       KS3 / GCSE
+TOPIC:       Number / Reverse percentages
+INSTRUMENT:  Bank transfer keypad, 0 to 5000 pounds, whole pounds.
+CONTEXT:     The prom budget went on a bronze statue of the headteacher. The finance portal will reverse the order, but only for the exact amount the sculptor was quoted.
+CLUE:        "INVOICE - Bronze commission. Total charged, including the 20% vanity levy: 2160 pounds. Enter the quoted price to cancel."
+ANSWER:      1800
+AHA:         2160 is 120% of the quote, not 100% of it, so the levy comes off by dividing by 1.2 rather than by subtracting 20% of 2160.
+MISCONCEPTION: 1728 (taking 20% of 2160 and subtracting it).
+SOLVE:       120% = 2160.
+             1% = 2160 / 120 = 18.
+             100% = 1800 pounds.
+TIME:        3
+VERIFY:      [amt for amt in range(5001) if amt * 120 == 2160 * 100]
+
+ID:          dj-deposit-compound
+LEVEL:       GCSE Higher
+TOPIC:       Algebra / Compound growth, unknown exponent
+INSTRUMENT:  Account-age slider, 1 to 20 years, whole years.
+CONTEXT:     The prom reserve has sat in a fixed-rate account since some long-forgotten year group opened it. The bank releases the money only to someone who can say how long it has been in there.
+CLUE:        "Opening deposit 1000 pounds. Fixed 10% compound interest, paid annually. Balance today: 1610.51 pounds. Set the account age."
+ANSWER:      5
+AHA:         Each year multiplies the balance by 1.1, so the question is which power of 1.1 turns 1000 into 1610.51 - build it up year by year rather than dividing the interest.
+MISCONCEPTION: 6 (treating the interest as a flat 100 pounds a year: 610.51 / 100 rounds to 6).
+SOLVE:       1000 * 1.1^n = 1610.51.
+             1.1^2 = 1.21, 1.1^3 = 1.331, 1.1^4 = 1.4641, 1.1^5 = 1.61051.
+             n = 5 years.
+TIME:        4
+VERIFY:      [y for y in range(1, 21) if 100000 * 11**y == 161051 * 10**y]
+
+ID:          wifi-venn-router
+LEVEL:       GCSE
+TOPIC:       Statistics / Sets and Venn diagrams
+INSTRUMENT:  Router bandwidth dial, 0-100 devices, whole numbers.
+CONTEXT:     The prom playlist streams over the school network, and the filter only passes traffic if the dual-service allocation on the router matches what the network is actually doing.
+CLUE:        "Devices connected: 80. Requesting Spotify: 48. Requesting YouTube: 37. Requesting neither: 12. Set the dial to the number requesting both."
+ANSWER:      17
+AHA:         48 + 37 + 12 comes to 97 on an 80-device network, and the 17 counted twice are exactly the ones asking for both.
+MISCONCEPTION: 0 (assuming the two services are mutually exclusive because the clue names them separately).
+SOLVE:       Devices requesting something = 80 - 12 = 68.
+             68 = 48 + 37 - both.
+             both = 85 - 68 = 17.
+TIME:        3
+VERIFY:      [b for b in range(101) if 48 + 37 - b + 12 == 80]
+
+
+Room 5 - The Great Hamster Heist (KS3 / GCSE)
+=============================================
+
+ID:          hamster-wheel-rpm
+LEVEL:       KS3 / GCSE
+TOPIC:       Geometry / Circumference and compound units
+INSTRUMENT:  Dynamo RPM slider, 0-500, whole numbers.
+CONTEXT:     The cage lock is powered by the wheel. With Pythagoras asleep in your coat, the dynamo has to be told he is still running.
+CLUE:        "Wheel diameter 20 cm. The lock holds only while the wheel covers 120pi cm every second. Set the dynamo."
+ANSWER:      360
+AHA:         One turn covers a circumference, so the distance per second gives turns per second - and the dial is per minute, not per second.
+MISCONCEPTION: 6 (stopping at revolutions per second).
+SOLVE:       Circumference = 20pi cm.
+             Turns per second = 120pi / 20pi = 6.
+             RPM = 6 * 60 = 360.
+TIME:        3
+VERIFY:      [rpm for rpm in range(501) if rpm * 20 == 120 * 60]
+
+ID:          hamster-feeder-bounds
+LEVEL:       GCSE
+TOPIC:       Number / Upper and lower bounds
+INSTRUMENT:  Feeder release slider, 0-1000 cubic centimetres, whole numbers.
+CONTEXT:     The feeder drops the latch when it is told the smallest volume its hopper could possibly be holding. It is a prism, and the caretaker's label gives its measurements.
+CLUE:        "HOPPER - cross-section 40 square centimetres exactly. Depth 15 centimetres, measured to the nearest centimetre. Set the slider to the smallest volume it could hold."
+ANSWER:      580
+AHA:         Measured to the nearest centimetre, the depth lies from 14.5 up to but not reaching 15.5, so the smallest possible volume uses 14.5 - a depth that really does round to 15.
+MISCONCEPTION: 600 (using the measured 15 cm rather than its lower bound).
+SOLVE:       Lower bound of depth = 14.5 cm.
+             Volume = 40 * 14.5.
+             = 580 cubic centimetres.
+TIME:        3
+VERIFY:      [v for v in range(1001) if 2 * v == 40 * 29]
+NOTE:        Changed 2026-09-08 from the greatest volume to the smallest. The upper bound 15.5 is a
+             supremum that is never attained - a depth of exactly 15.5 rounds to 16, so it could not have
+             been recorded as 15 - which made the old question ask for a volume the hopper cannot have.
+             The lower bound 14.5 does round to 15, so the minimum is real and reached.
+
+ID:          heat-lamp-gradient
+LEVEL:       KS3 / GCSE
+TOPIC:       Algebra / Gradient of a straight-line graph
+INSTRUMENT:  Thermostat rate slider, 0.0 to 20.0 degrees per minute, 0.1 steps.
+CONTEXT:     The heat lamp watches how fast the cage warms up. Leave the rate wrong and it reports an empty cage.
+CLUE:        "Cage log, plotted straight: 4 minutes - 21 degrees. 16 minutes - 39 degrees. Set the warming rate the lamp should expect."
+ANSWER:      1.5
+AHA:         The rate is the gradient - the rise divided by the run - and the run here is 12 minutes, not 1.
+MISCONCEPTION: 18 (setting the rise, 39 - 21, and never dividing by the time between readings).
+SOLVE:       Rise = 39 - 21 = 18 degrees.
+             Run = 16 - 4 = 12 minutes.
+             Gradient = 18 / 12 = 1.5 degrees per minute.
+TIME:        3
+VERIFY:      [d/10 for d in range(201) if d * 12 == 10 * (39 - 21)]
+
+
+Room 6 - The Rugby Mud Sabotage (GCSE)
+======================================
+
+ID:          elbow-patch-scale
+LEVEL:       GCSE
+TOPIC:       Geometry / Area scale factors
+INSTRUMENT:  Fabric cutting dial, 1-100 square centimetres, whole numbers.
+CONTEXT:     The hose has split, and the only leather to hand is the spare elbow patch from the Geography teacher's jacket. The split is the same shape as the patch, and smaller.
+CLUE:        "Patch: length 15 cm, area 90 square centimetres. The split is the same shape, length 5 cm. Set the cutter to the area of leather it needs."
+ANSWER:      10
+AHA:         Lengths divide by 3, so areas divide by 3 squared - the area scale factor is the square of the length one.
+MISCONCEPTION: 30 (dividing the area by 3, the length scale factor, instead of by 9).
+SOLVE:       Length scale factor = 5 / 15 = 1/3.
+             Area scale factor = (1/3)^2 = 1/9.
+             Area = 90 / 9 = 10 square centimetres.
+TIME:        3
+VERIFY:      [a for a in range(1, 101) if a * 15**2 == 90 * 5**2]
+
+ID:          sprinkler-flow-rates
+LEVEL:       GCSE
+TOPIC:       Ratio and proportion / Combined rates
+INSTRUMENT:  Flood timer dial, 1-60 whole minutes.
+CONTEXT:     Both mains valves are open on the pitch. The timer has to be set to the moment the drainage is beaten, or the system shuts the water off before the mud arrives.
+CLUE:        "Alone, the main valve floods the pitch in 20 minutes. Alone, the reserve valve takes 30. Both are open. Set the timer."
+ANSWER:      12
+AHA:         Times cannot be added or averaged - add what each valve does in one minute, and the answer is how long that combined share takes to reach a whole pitch.
+MISCONCEPTION: 25 (averaging the two times).
+SOLVE:       In one minute: 1/20 + 1/30 of the pitch.
+             = 3/60 + 2/60 = 5/60 = 1/12 of the pitch a minute.
+             A whole pitch takes 12 minutes.
+TIME:        4
+VERIFY:      [m for m in range(1, 61) if m * 20 + m * 30 == 20 * 30]
+
+ID:          rugby-scoreboard-bases
+LEVEL:       GCSE Higher
+TOPIC:       Algebra / Index laws and simultaneous equations
+INSTRUMENT:  Two dials - Home score 0-100, Away score 0-100.
+CONTEXT:     The scoreboard is locked to the rival coach's own predicted result. Enter his prediction and it hands the display over to you.
+CLUE:        "COACH'S LOCK: 2^H x 4^A = 2^17, and Away beat Home by exactly 4. Set both dials."
+ANSWER:      Home 3, Away 7
+AHA:         Both sides can be written in base 2 - 4^A is 2^(2A) - so the indices add to give a linear equation, and the second sentence is the other one.
+MISCONCEPTION: Home 13, Away 17 (reading 4^A as 2^A and solving H + A = 17).
+SOLVE:       2^H * (2^2)^A = 2^17, so H + 2A = 17.
+             A = H + 4, so H + 2(H + 4) = 17.
+             3H = 9, H = 3.
+             A = 7.
+TIME:        4
+VERIFY:      [(h, a) for h in range(101) for a in range(101) if 2**h * 4**a == 2**17 and a == h + 4]
+
+
+Room 7 - The IT Teacher's Vengeance (GCSE Higher)
+=================================================
+
+ID:          mechanical-keyboard-perms
+LEVEL:       GCSE Higher / Core Maths
+TOPIC:       Probability / Arrangements with repeats
+INSTRUMENT:  Overload limit dial, 1-100, whole numbers.
+CONTEXT:     The sound system is behind a 4-key macro pad. Its brute-force guard trips only if you tell it exactly how many passcodes it would have to try.
+CLUE:        "MACRO PAD - passcode is 4 keys long and uses A, A, B, C in some order. Set the dial to how many different passcodes that allows."
+ANSWER:      12
+AHA:         Four keys arrange 24 ways, but swapping the two A's gives the same passcode, so every code has been counted twice.
+MISCONCEPTION: 24 (4! with no correction for the repeated A).
+SOLVE:       4 keys in order = 4! = 24 arrangements.
+             The two A's are identical, so each passcode appears 2! = 2 times.
+             24 / 2 = 12.
+TIME:        4
+VERIFY:      [n for n in range(1, 101) if n * math.factorial(2) == math.factorial(4)]
+
+ID:          vault-trajectory-vertex
+LEVEL:       GCSE Higher
+TOPIC:       Algebra / Quadratics, turning point
+INSTRUMENT:  Vaulting horse height slider, 0.0 to 5.0 metres, 0.1 steps.
+CONTEXT:     The horse rises to meet the gymnast. Set it anywhere but the top of her flight and she comes down on the frame.
+CLUE:        "Flight path: h = -2t^2 + 4.8t + 0.12, h in metres, t in seconds. Set the horse to the height she reaches."
+ANSWER:      3.0
+AHA:         The peak is the turning point, so find the time it happens at first - the height only comes out once that t goes back into the equation.
+MISCONCEPTION: 1.2 (setting the time of the peak, -b/2a, and stopping there).
+SOLVE:       t at the peak = -b / 2a = -4.8 / -4 = 1.2 s.
+             h = -2(1.2^2) + 4.8(1.2) + 0.12
+             = -2.88 + 5.76 + 0.12
+             = 3.0 metres.
+TIME:        5
+VERIFY:      [d/10 for d in range(51) if Fraction(d, 10) == max(Fraction(-2)*Fraction(t, 10)**2 + Fraction(24, 5)*Fraction(t, 10) + Fraction(3, 25) for t in range(26))]
+
+ID:          mat-tiling-hcf
+LEVEL:       KS3 / GCSE
+TOPIC:       Number / Highest common factor
+INSTRUMENT:  Mat-size slider, 0.1 to 5.0 metres, 0.1 steps.
+CONTEXT:     The mats deploy from the wall as identical squares of whatever size you dial in. Any gap or overlap and the floor sensor refuses the routine.
+CLUE:        "Tumbling floor: 4.8 m by 7.2 m. Square mats, all one size, no gaps, no overlaps, nothing cut. Set the largest mat that works."
+ANSWER:      2.4
+AHA:         The mat size has to divide both floor measurements exactly, and the largest that does is their highest common factor - not the largest that fits one side.
+MISCONCEPTION: 1.2 (a size that tiles the floor, but not the largest one that does).
+SOLVE:       In tenths of a metre the floor is 48 by 72.
+             Common factors of 48 and 72: 1, 2, 3, 4, 6, 8, 12, 24.
+             Highest is 24 tenths = 2.4 m.
+TIME:        3
+VERIFY_MAX:  [s/10 for s in range(1, 51) if 48 % s == 0 and 72 % s == 0]

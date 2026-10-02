@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Virtual compass and straightedge constructions. Bisect angles, construct perpendiculars, and draw loci for GCSE geometry.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/constructions-lab/">
+<meta property="og:title" content="Constructions Lab — MaffsGames">
+<meta property="og:description" content="Virtual compass and straightedge constructions. Bisect angles, construct perpendiculars, and draw loci for GCSE geometry.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/constructions-lab/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Constructions Lab — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f8fafc;--surface:#ffffff;--border:#e2e8f0;--primary:#1a2744;--accent:#0d9488;--wrong:#ef4444;--correct:#22c55e;--text:#1e293b;--muted:#64748b;--compass:#3b82f6;--ruler:#f97316;--arc:rgba(59,130,246,.3)}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1rem 0 .5rem}
+.header h1{font-size:1.8rem;font-weight:700;color:var(--primary)}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+.header .tool-badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.65rem;font-weight:600;background:rgba(13,148,136,.1);color:var(--accent);margin-top:.4rem;text-transform:uppercase;letter-spacing:.08em}
+.screen{display:none}.screen.active{display:block}
+
+/* Menu */
+.task-grid{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}
+.task-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;cursor:pointer;transition:all .15s;display:flex;justify-content:space-between;align-items:center}
+.task-card:hover{border-color:var(--accent);transform:translateX(3px)}
+.task-card h3{font-size:.88rem;font-weight:600;color:var(--primary)}
+.task-card .difficulty{font-size:.65rem;padding:2px 8px;border-radius:8px;font-weight:600}
+.diff-easy{background:rgba(34,197,94,.1);color:#16a34a}
+.diff-med{background:rgba(245,158,11,.1);color:#d97706}
+.diff-hard{background:rgba(239,68,68,.1);color:#dc2626}
+.section-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .3rem;padding-left:.3rem}
+
+/* Tutorial button */
+.tutorial-btn{display:block;margin:.8rem auto;padding:.5rem 1.5rem;border-radius:8px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+.tutorial-btn:hover{background:var(--accent);color:#fff}
+
+/* Canvas area */
+.canvas-area{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:.5rem;position:relative}
+canvas{display:block;width:100%;height:auto;cursor:crosshair}
+
+/* Tool bar */
+.toolbar{display:flex;gap:.4rem;justify-content:center;margin-bottom:.5rem;flex-wrap:wrap}
+.tool-btn{padding:.4rem .8rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .12s}
+.tool-btn:hover{border-color:var(--primary)}
+.tool-btn.active{border-color:var(--compass);background:rgba(59,130,246,.08);color:var(--compass)}
+.tool-btn.active.ruler-active{border-color:var(--ruler);background:rgba(249,115,22,.08);color:var(--ruler)}
+
+/* Instructions panel */
+.instructions{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem;margin-bottom:.5rem}
+.instructions h3{font-size:.82rem;color:var(--accent);margin-bottom:.3rem}
+.instructions .step-list{font-size:.78rem;color:var(--muted);line-height:1.6}
+.instructions .step-list .current{color:var(--primary);font-weight:600}
+.instructions .video-link{display:inline-block;margin-top:.4rem;padding:.3rem .8rem;border-radius:6px;background:rgba(239,68,68,.08);color:var(--wrong);font-size:.72rem;font-weight:600;text-decoration:none;border:1px solid rgba(239,68,68,.2)}
+.instructions .video-link:hover{background:rgba(239,68,68,.15)}
+
+/* Controls */
+.controls{display:flex;gap:.4rem;justify-content:center;margin-bottom:.5rem}
+.ctrl-btn{padding:.35rem .8rem;border-radius:6px;border:none;font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer}
+.ctrl-undo{background:var(--border);color:var(--text)}.ctrl-undo:hover{background:#cbd5e1}
+.ctrl-clear{background:rgba(239,68,68,.1);color:var(--wrong)}.ctrl-clear:hover{background:rgba(239,68,68,.2)}
+.ctrl-check{background:var(--accent);color:#fff}.ctrl-check:hover{opacity:.9}
+
+.feedback{text-align:center;padding:.5rem;margin-bottom:.5rem;border-radius:8px;font-size:.82rem;font-weight:600;display:none}
+.feedback.show{display:block}
+.feedback.pass{background:rgba(34,197,94,.1);border:1px solid var(--correct);color:var(--correct)}
+.feedback.fail{background:rgba(239,68,68,.1);border:1px solid var(--wrong);color:var(--wrong)}
+
+/* Tutorial modal */
+.tutorial-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
+.tutorial-overlay.show{display:flex}
+.tutorial-box{background:var(--surface);border-radius:14px;padding:1.5rem;max-width:500px;width:90%;max-height:80vh;overflow-y:auto}
+.tutorial-box h2{font-size:1.1rem;color:var(--primary);margin-bottom:.8rem}
+.tutorial-box .tut-step{margin-bottom:.8rem;padding:.6rem;background:var(--bg);border-radius:8px;font-size:.82rem;line-height:1.6}
+.tutorial-box .tut-step strong{color:var(--accent)}
+.tutorial-box .close-btn{display:block;margin:1rem auto 0;padding:.4rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+
+<div id="menu" class="screen active">
+<div class="header">
+<h1>Constructions Lab</h1>
+<div class="sub">Virtual compass and ruler. Learn by constructing.</div>
+<div class="tool-badge">Learning Tool — Not a Game</div>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+<button class="tutorial-btn" onclick="showTutorial()">📐 How to use the tools</button>
+
+<div class="section-title">Essential Constructions</div>
+<div class="task-grid">
+<div class="task-card" onclick="loadTask(0)"><div><h3>Perpendicular Bisector</h3></div><span class="difficulty diff-easy">Easy</span></div>
+<div class="task-card" onclick="loadTask(1)"><div><h3>Angle Bisector</h3></div><span class="difficulty diff-easy">Easy</span></div>
+<div class="task-card" onclick="loadTask(2)"><div><h3>Perpendicular from a Point to a Line</h3></div><span class="difficulty diff-med">Medium</span></div>
+<div class="task-card" onclick="loadTask(3)"><div><h3>Perpendicular at a Point on a Line</h3></div><span class="difficulty diff-med">Medium</span></div>
+<div class="task-card" onclick="loadTask(4)"><div><h3>60° Angle</h3></div><span class="difficulty diff-easy">Easy</span></div>
+<div class="task-card" onclick="loadTask(5)"><div><h3>Equilateral Triangle</h3></div><span class="difficulty diff-easy">Easy</span></div>
+</div>
+
+<div class="section-title">Loci</div>
+<div class="task-grid">
+<div class="task-card" onclick="loadTask(6)"><div><h3>Locus: Fixed Distance from a Point</h3></div><span class="difficulty diff-easy">Easy</span></div>
+<div class="task-card" onclick="loadTask(7)"><div><h3>Locus: Equidistant from Two Points</h3></div><span class="difficulty diff-med">Medium</span></div>
+<div class="task-card" onclick="loadTask(8)"><div><h3>Locus: Equidistant from Two Lines</h3></div><span class="difficulty diff-med">Medium</span></div>
+<div class="task-card" onclick="loadTask(9)"><div><h3>Locus: Fixed Distance from a Line</h3></div><span class="difficulty diff-med">Medium</span></div>
+</div>
+</div>
+
+<!-- CONSTRUCTION SCREEN -->
+<div id="construct" class="screen">
+<div class="instructions" id="instructions"></div>
+<div class="canvas-area"><canvas id="cCanvas" width="700" height="600"></canvas></div>
+<div class="toolbar">
+<button class="tool-btn active" id="tbCompass" onclick="setTool('compass')">🔵 Compass</button>
+<button class="tool-btn" id="tbLock" onclick="toggleLockRadius()" style="opacity:.4;font-size:.7rem">🔒 Lock Radius</button>
+<button class="tool-btn" id="tbRuler" onclick="setTool('ruler')">🟠 Ruler</button>
+<button class="tool-btn" id="tbPoint" onclick="setTool('point')">⚫ Point</button>
+</div>
+<div class="controls">
+<button class="ctrl-btn ctrl-undo" onclick="undo()">↩ Undo</button>
+<button class="ctrl-btn ctrl-clear" onclick="clearAll()">⟲ Clear All</button>
+<button class="ctrl-btn ctrl-check" onclick="backToMenu()">← Back to Tasks</button>
+</div>
+<div class="feedback" id="feedback"></div>
+</div>
+
+<!-- TUTORIAL OVERLAY -->
+<div class="tutorial-overlay" id="tutorialOverlay">
+<div class="tutorial-box">
+<h2>How to Use the Tools</h2>
+<div class="tut-step"><strong>🔵 Compass Tool</strong><br>1. Click a centre point on the canvas<br>2. Click a second point to set the radius<br>3. An arc is drawn centred on the first point, passing through the second<br>4. The arc draws a full circle — use this to find intersection points</div>
+<div class="tut-step"><strong>🟠 Ruler Tool</strong><br>1. Click a start point<br>2. Click an end point<br>3. A straight line is drawn between them<br>4. Use intersection points from your compass arcs as start/end points</div>
+<div class="tut-step"><strong>⚫ Point Tool</strong><br>1. Click anywhere to place a point<br>2. Use this to mark intersection points where arcs cross<br>3. Points snap to nearby intersections automatically</div>
+<div class="tut-step"><strong>🔒 Lock Radius</strong><br>1. Draw a compass arc with the radius you want<br>2. Click the Lock Radius button in the toolbar<br>3. Now each click places a new arc at that exact radius — no need to set it again<br>4. Essential for perpendicular bisectors and angle bisectors where both arcs must be equal<br>5. Click again to unlock and set a new radius</div>
+<div class="tut-step"><strong>Tips</strong><br>• Set your compass radius to more than half the line segment<br>• Draw arcs from both ends to find the perpendicular bisector<br>• The intersection of two arcs gives you a construction point<br>• Use Lock Radius when you need equal arcs from different centres<br>• Use ↩ Undo if you make a mistake</div>
+<button class="close-btn" onclick="hideTutorial()">Got it — let me construct</button>
+</div>
+</div>
+</div>
+
+<script>
+const canvas=document.getElementById('cCanvas');
+const ctx=canvas.getContext('2d');
+const W=700,H=600;
+let tool='compass',currentTask=null;
+let elements=[]; // All drawn elements: {type:'arc',cx,cy,r} or {type:'line',x1,y1,x2,y2} or {type:'point',x,y}
+let clickState=0,firstClick=null; // For two-click tools
+let lockedRadius=null; // When set, compass uses this radius with single click
+let hoverPos=null; // Track mouse for locked-radius preview
+
+// Scale for responsive canvas
+function getScale(){return canvas.getBoundingClientRect().width/W}
+
+function getCanvasPos(e){
+  const rect=canvas.getBoundingClientRect();
+  const s=W/rect.width;
+  const clientX=e.touches?e.touches[0].clientX:e.clientX;
+  const clientY=e.touches?e.touches[0].clientY:e.clientY;
+  return{x:(clientX-rect.left)*s,y:(clientY-rect.top)*s};
+}
+
+// ============================================================
+//  TASKS
+// ============================================================
+const TASKS=[
+{name:'Perpendicular Bisector',
+ setup:c=>{drawLineAB(c,200,200,500,200);drawLabel(c,190,215,'A');drawLabel(c,505,215,'B')},
+ steps:['Set compass to more than half the distance AB','Place compass at A, draw an arc above and below the line','Without changing the compass width, place at B and draw another arc','Mark where the arcs intersect (above and below)','Use the ruler to draw a line through both intersection points','This line is the perpendicular bisector of AB'],
+ video:''},
+{name:'Angle Bisector',
+ setup:c=>{c.strokeStyle='#1e293b';c.lineWidth=2;c.beginPath();c.moveTo(150,350);c.lineTo(350,150);c.stroke();c.beginPath();c.moveTo(150,350);c.lineTo(550,350);c.stroke();drawLabel(c,345,145,'B');drawLabel(c,555,350,'C');drawLabel(c,135,365,'A')},
+ steps:['Place compass at A (the vertex of the angle)','Draw an arc that crosses both lines of the angle','Mark where the arc crosses each line (call them P and Q)','Place compass at P, draw an arc in the interior of the angle','Same compass width, place at Q, draw another arc','Mark where these two arcs intersect','Draw a line from A through this intersection point — this bisects the angle'],
+ video:''},
+{name:'Perpendicular from a Point to a Line',
+ setup:c=>{drawLineAB(c,100,350,600,350);drawDot(c,350,150,'#ef4444',6);drawLabel(c,355,140,'P')},
+ steps:['Place compass at P with a radius that reaches the line','Draw an arc that crosses the line in two places (call them X and Y)','Now construct the perpendicular bisector of XY:','Place compass at X, draw an arc below the line','Same width, place at Y, draw another arc below','Mark the intersection of these arcs','Draw a line from P through this intersection — this is perpendicular to the line'],
+ video:''},
+{name:'Perpendicular at a Point on a Line',
+ setup:c=>{drawLineAB(c,100,300,600,300);drawDot(c,350,300,'#ef4444',6);drawLabel(c,355,320,'P')},
+ steps:['Place compass at P on the line','Draw an arc that crosses the line on both sides of P (call them X and Y)','Now construct the perpendicular bisector of XY:','Place compass at X, draw a large arc above the line','Same width, place at Y, draw another arc above','Mark where these arcs intersect','Draw a line from P through this intersection — perpendicular at P'],
+ video:''},
+{name:'60° Angle',
+ setup:c=>{drawLineAB(c,150,350,550,350);drawDot(c,150,350,'#ef4444',6);drawLabel(c,140,370,'A')},
+ steps:['Place compass at A','Draw an arc that crosses the line (call it B)','Without changing width, place compass at B','Draw an arc that crosses the first arc (call it C)','Draw a line from A through C','Angle BAC = 60° (equilateral triangle property)'],
+ video:''},
+{name:'Equilateral Triangle',
+ setup:c=>{drawLineAB(c,200,350,500,350);drawLabel(c,190,370,'A');drawLabel(c,505,370,'B')},
+ steps:['Set compass width to the length AB','Place compass at A, draw an arc above the line','Without changing width, place at B, draw another arc','Mark where the arcs intersect (call it C)','Draw lines AC and BC','Triangle ABC is equilateral — all sides equal, all angles 60°'],
+ video:''},
+{name:'Locus: Fixed Distance from a Point',
+ setup:c=>{drawDot(c,350,250,'#ef4444',6);drawLabel(c,360,245,'P');drawLabel(c,250,420,'Draw the locus of points 120px from P')},
+ steps:['Place compass at P','Set the radius to 120 pixels (use the grid lines as a guide)','Draw a full circle','This circle IS the locus — every point on it is exactly 120px from P'],
+ video:''},
+{name:'Locus: Equidistant from Two Points',
+ setup:c=>{drawDot(c,200,250,'#3b82f6',6);drawDot(c,500,250,'#3b82f6',6);drawLabel(c,190,270,'A');drawLabel(c,505,270,'B')},
+ steps:['This is the perpendicular bisector of AB','Set compass to more than half of AB','Draw arcs from A (above and below)','Same width, draw arcs from B','Mark intersections, draw the line through them','Every point on this line is equidistant from A and B'],
+ video:''},
+{name:'Locus: Equidistant from Two Lines',
+ setup:c=>{c.strokeStyle='#1e293b';c.lineWidth=2;c.beginPath();c.moveTo(150,350);c.lineTo(550,150);c.stroke();c.beginPath();c.moveTo(150,350);c.lineTo(550,350);c.stroke();drawLabel(c,135,365,'V')},
+ steps:['This is the angle bisector','Place compass at V (where the lines meet)','Draw an arc crossing both lines','From each crossing point, draw equal arcs into the angle','Mark their intersection','The line from V through this point is the locus','Every point on this line is equidistant from both lines'],
+ video:''},
+{name:'Locus: Fixed Distance from a Line',
+ setup:c=>{drawLineAB(c,100,250,600,250);drawLabel(c,300,420,'Draw the locus of points 80px from the line')},
+ steps:['The locus is TWO parallel lines — one above, one below','Use the ruler to draw a line 80px above the given line','Draw another line 80px below','Both lines together form the complete locus','Don\'t forget: the locus is BOTH lines, not just one'],
+ video:''},
+];
+
+// ============================================================
+//  DRAWING HELPERS
+// ============================================================
+function drawBackground(){
+  ctx.fillStyle='#ffffff';ctx.fillRect(0,0,W,H);
+  // Grid dots
+  ctx.fillStyle='#e8ecf0';
+  for(let x=50;x<W;x+=50)for(let y=50;y<H;y+=50){ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.fill()}
+}
+
+function drawLineAB(c,x1,y1,x2,y2){
+  c.strokeStyle='#1e293b';c.lineWidth=2;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();
+}
+
+function drawDot(c,x,y,color,r){
+  c.fillStyle=color;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();
+}
+
+function drawLabel(c,x,y,text){
+  c.fillStyle='#475569';c.font='bold 14px Outfit';c.textAlign='left';c.fillText(text,x,y);
+}
+
+function redraw(){
+  drawBackground();
+  if(currentTask)currentTask.setup(ctx);
+  // Draw all user elements
+  elements.forEach(el=>{
+    if(el.type==='arc'){
+      ctx.strokeStyle='rgba(59,130,246,0.4)';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.arc(el.cx,el.cy,el.r,0,Math.PI*2);ctx.stroke();
+      // Centre dot
+      ctx.fillStyle='rgba(59,130,246,0.6)';ctx.beginPath();ctx.arc(el.cx,el.cy,3,0,Math.PI*2);ctx.fill();
+    } else if(el.type==='line'){
+      ctx.strokeStyle='#f97316';ctx.lineWidth=1.5;
+      // Extend line beyond click points
+      const dx=el.x2-el.x1,dy=el.y2-el.y1;
+      const len=Math.sqrt(dx*dx+dy*dy);
+      if(len>0){
+        const ux=dx/len,uy=dy/len;
+        const ext=800;
+        ctx.beginPath();ctx.moveTo(el.x1-ux*ext,el.y1-uy*ext);ctx.lineTo(el.x2+ux*ext,el.y2+uy*ext);ctx.stroke();
+      }
+    } else if(el.type==='point'){
+      ctx.fillStyle='#1e293b';ctx.beginPath();ctx.arc(el.x,el.y,4,0,Math.PI*2);ctx.fill();
+    }
+  });
+  // Draw pending first click indicator
+  if(clickState===1&&firstClick){
+    if(tool==='compass'){
+      ctx.fillStyle='rgba(59,130,246,0.8)';ctx.beginPath();ctx.arc(firstClick.x,firstClick.y,4,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(59,130,246,0.5)';ctx.font='11px Outfit';ctx.textAlign='left';
+      ctx.fillText('Centre set — click to set radius',firstClick.x+8,firstClick.y-8);
+    } else if(tool==='ruler'){
+      ctx.fillStyle='rgba(249,115,22,0.8)';ctx.beginPath();ctx.arc(firstClick.x,firstClick.y,4,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(249,115,22,0.5)';ctx.font='11px Outfit';ctx.textAlign='left';
+      ctx.fillText('Start set — click end point',firstClick.x+8,firstClick.y-8);
+    }
+  }
+  // Locked radius indicator
+  if(lockedRadius!==null&&tool==='compass'&&hoverPos){
+    ctx.strokeStyle='rgba(59,130,246,0.25)';ctx.lineWidth=1;ctx.setLineDash([6,4]);
+    ctx.beginPath();ctx.arc(hoverPos.x,hoverPos.y,lockedRadius,0,Math.PI*2);ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+// ============================================================
+//  TOOL HANDLING
+// ============================================================
+function setTool(t){
+  tool=t;clickState=0;firstClick=null;
+  document.querySelectorAll('.tool-btn').forEach(b=>{if(b.id!=='tbLock')b.classList.remove('active','ruler-active')});
+  if(t==='compass')document.getElementById('tbCompass').classList.add('active');
+  else if(t==='ruler'){document.getElementById('tbRuler').classList.add('active');document.getElementById('tbRuler').classList.add('ruler-active')}
+  else document.getElementById('tbPoint').classList.add('active');
+  redraw();
+}
+
+function toggleLockRadius(){
+  const lockBtn=document.getElementById('tbLock');
+  if(lockedRadius!==null){
+    // Unlock
+    lockedRadius=null;
+    lockBtn.classList.remove('active');
+    lockBtn.style.opacity='.4';
+    lockBtn.textContent='🔒 Lock Radius';
+  } else {
+    // Lock to the last compass arc's radius
+    const lastArc=[...elements].reverse().find(e=>e.type==='arc');
+    if(!lastArc){
+      // No arc drawn yet — flash the button to indicate nothing to lock
+      lockBtn.style.background='rgba(239,68,68,.15)';
+      setTimeout(()=>{lockBtn.style.background='';},400);
+      return;
+    }
+    lockedRadius=lastArc.r;
+    lockBtn.classList.add('active');
+    lockBtn.style.opacity='1';
+    lockBtn.textContent='🔓 Radius Locked ('+Math.round(lockedRadius)+'px)';
+    // Auto-switch to compass tool
+    setTool('compass');
+  }
+}
+
+canvas.addEventListener('click',e=>{
+  const pos=getCanvasPos(e);
+  // Snap to nearby intersection points
+  const snapped=snapToIntersection(pos);
+
+  if(tool==='point'){
+    elements.push({type:'point',x:snapped.x,y:snapped.y});
+    redraw();
+  } else if(tool==='compass'){
+    if(lockedRadius!==null){
+      // Locked: single click places arc at that centre with locked radius
+      elements.push({type:'arc',cx:snapped.x,cy:snapped.y,r:lockedRadius});
+      redraw();
+    } else if(clickState===0){firstClick=snapped;clickState=1;redraw()}
+    else{
+      const r=Math.sqrt((snapped.x-firstClick.x)**2+(snapped.y-firstClick.y)**2);
+      elements.push({type:'arc',cx:firstClick.x,cy:firstClick.y,r:r});
+      clickState=0;firstClick=null;redraw();
+    }
+  } else if(tool==='ruler'){
+    if(clickState===0){firstClick=snapped;clickState=1;redraw()}
+    else{
+      elements.push({type:'line',x1:firstClick.x,y1:firstClick.y,x2:snapped.x,y2:snapped.y});
+      clickState=0;firstClick=null;redraw();
+    }
+  }
+});
+
+canvas.addEventListener('touchstart',e=>{
+  e.preventDefault();
+  const touch=e.touches[0];
+  const mouseEvent=new MouseEvent('click',{clientX:touch.clientX,clientY:touch.clientY});
+  canvas.dispatchEvent(mouseEvent);
+},{passive:false});
+
+canvas.addEventListener('mousemove',e=>{
+  hoverPos=getCanvasPos(e);
+  if(lockedRadius!==null&&tool==='compass')redraw();
+});
+canvas.addEventListener('mouseleave',()=>{hoverPos=null;redraw()});
+
+// Snap to intersection of arcs
+function snapToIntersection(pos){
+  const SNAP_DIST=12;
+  // Check intersections between all pairs of arcs
+  const intersections=[];
+  for(let i=0;i<elements.length;i++){
+    for(let j=i+1;j<elements.length;j++){
+      if(elements[i].type==='arc'&&elements[j].type==='arc'){
+        const pts=circleCircleIntersect(elements[i],elements[j]);
+        intersections.push(...pts);
+      }
+    }
+  }
+  // Also check arc-line intersections
+  for(let i=0;i<elements.length;i++){
+    for(let j=0;j<elements.length;j++){
+      if(elements[i].type==='arc'&&elements[j].type==='line'){
+        const pts=circleLineIntersect(elements[i],elements[j]);
+        intersections.push(...pts);
+      }
+    }
+  }
+  // Find nearest intersection within snap distance
+  let best=null,bestDist=SNAP_DIST;
+  intersections.forEach(pt=>{
+    const d=Math.sqrt((pt.x-pos.x)**2+(pt.y-pos.y)**2);
+    if(d<bestDist){bestDist=d;best=pt}
+  });
+  return best||pos;
+}
+
+function circleCircleIntersect(c1,c2){
+  const dx=c2.cx-c1.cx,dy=c2.cy-c1.cy;
+  const d=Math.sqrt(dx*dx+dy*dy);
+  if(d>c1.r+c2.r||d<Math.abs(c1.r-c2.r)||d===0)return[];
+  const a=(c1.r*c1.r-c2.r*c2.r+d*d)/(2*d);
+  const h=Math.sqrt(Math.max(0,c1.r*c1.r-a*a));
+  const mx=c1.cx+a*dx/d,my=c1.cy+a*dy/d;
+  return[{x:mx+h*dy/d,y:my-h*dx/d},{x:mx-h*dy/d,y:my+h*dx/d}];
+}
+
+function circleLineIntersect(circle,line){
+  const dx=line.x2-line.x1,dy=line.y2-line.y1;
+  const fx=line.x1-circle.cx,fy=line.y1-circle.cy;
+  const a=dx*dx+dy*dy,b=2*(fx*dx+fy*dy),c=fx*fx+fy*fy-circle.r*circle.r;
+  let disc=b*b-4*a*c;
+  if(disc<0)return[];
+  disc=Math.sqrt(disc);
+  const pts=[];
+  [(-b-disc)/(2*a),(-b+disc)/(2*a)].forEach(t=>{
+    pts.push({x:line.x1+t*dx,y:line.y1+t*dy});
+  });
+  return pts;
+}
+
+function undo(){
+  if(clickState>0){clickState=0;firstClick=null;redraw();return}
+  elements.pop();redraw();
+}
+
+function clearAll(){elements=[];clickState=0;firstClick=null;lockedRadius=null;
+  const lb=document.getElementById('tbLock');lb.classList.remove('active');lb.style.opacity='.4';lb.textContent='🔒 Lock Radius';
+  redraw()}
+
+// ============================================================
+//  TASK LOADING
+// ============================================================
+function loadTask(idx){
+  currentTask=TASKS[idx];
+  elements=[];clickState=0;firstClick=null;tool='compass';lockedRadius=null;
+  const lb=document.getElementById('tbLock');lb.classList.remove('active');lb.style.opacity='.4';lb.textContent='🔒 Lock Radius';
+  setTool('compass');
+  show('construct');
+  window._ggAbandoned=true;
+  mfg('game_started',{game_slug:'constructions-lab',level:'gcse'});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'constructions-lab',level:'gcse',questions_answered:0})});}
+
+  // Build instructions
+  const inst=document.getElementById('instructions');
+  let html='<h3>'+currentTask.name+'</h3><div class="step-list">';
+  currentTask.steps.forEach((s,i)=>{html+='<div>'+(i+1)+'. '+s+'</div>'});
+  html+='</div>';
+  if(currentTask.video){html+='<a class="video-link" href="'+currentTask.video+'" target="_blank">🎬 Watch walkthrough video</a>'}
+  else{html+='<span class="video-link" style="opacity:.4">🎬 Walkthrough video coming soon</span>'}
+  inst.innerHTML=html;
+
+  redraw();
+}
+
+function backToMenu(){show('menu')}
+
+// ============================================================
+//  TUTORIAL
+// ============================================================
+function showTutorial(){document.getElementById('tutorialOverlay').classList.add('show')}
+function hideTutorial(){document.getElementById('tutorialOverlay').classList.remove('show')}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

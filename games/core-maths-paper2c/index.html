@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="36 exam-style questions for AQA Core Maths Paper 2C. Covers graphical methods, rates of change, and exponential functions including model-fitting and growth and decay. Free, no sign-up required.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/core-maths-paper2c/">
+<meta property="og:title" content="Core Maths Paper 2C Practice — MaffsGames">
+<meta property="og:description" content="36 exam-style questions for AQA Core Maths Paper 2C. Covers graphical methods, rates of change, and exponential functions including model-fitting and growth and decay. Free, no sign-up required.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://maffsgames.co.uk/games/core-maths-paper2c/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Core Maths Paper 2C Practice — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--surface2:#162032;--border:#334155;
+  --accent:#0ea5e9;--accent-dim:rgba(14,165,233,.12);--accent-glow:rgba(14,165,233,.25);
+  --correct:#0d9488;--correct-dim:rgba(13,148,136,.12);
+  --wrong:#ef4444;--wrong-dim:rgba(239,68,68,.12);
+  --text:#e2e8f0;--muted:#94a3b8;--text-dark:#1e293b;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:720px;width:100%;padding:1rem;flex:1;display:flex;flex-direction:column}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1.2rem 0 .5rem;position:relative}
+.header h1{font-size:1.6rem;font-weight:800;color:var(--accent)}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .q-stem,body.accessible .option-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{position:absolute;top:1.2rem;right:0;background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--correct)}
+.screen{display:none;flex-direction:column;gap:16px}.screen.active{display:flex}
+.start-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.start-icon{font-size:48px;margin-bottom:12px}
+.start-desc{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:20px;max-width:520px;margin-left:auto;margin-right:auto}
+.start-btn{padding:14px 40px;border-radius:12px;border:none;background:var(--accent);color:#000;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .15s}
+.start-btn:hover{transform:scale(1.04)}
+.progress-bar{width:100%;height:4px;background:var(--surface);border-radius:2px;overflow:hidden;margin-bottom:4px}
+.progress-fill{height:100%;background:var(--accent);transition:width .3s ease;width:0%}
+.section-banner{background:#1a2744;border-left:4px solid var(--accent);border-radius:8px;padding:16px 20px;text-align:center;animation:fadeIn .4s}
+.section-banner h2{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px}
+.section-banner .section-range{font-size:.8rem;color:var(--muted)}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;animation:fadeIn .3s}
+.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.q-counter{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent)}
+.q-tag{font-size:12px;color:var(--muted)}
+.q-stem{font-size:16px;line-height:1.7;color:var(--text);margin-bottom:20px}
+.data-table{border-collapse:collapse;margin:12px 0 16px;max-width:480px}
+.data-table th{background:#1a2744;color:#fff;padding:8px 12px;font-size:13px;font-weight:600;text-align:left;border:1px solid var(--border)}
+.data-table td{padding:8px 12px;font-size:13px;border:1px solid var(--border);color:var(--text)}
+.data-table tr:nth-child(even) td{background:rgba(248,250,252,.04)}
+.data-table tr:nth-child(odd) td{background:transparent}
+.svg-container{margin:12px 0 16px;display:flex;justify-content:center}
+.svg-container svg{max-width:100%;height:auto}
+.options{display:flex;flex-direction:column;gap:10px}
+.option-btn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;cursor:pointer;transition:all .15s;text-align:left}
+.option-btn:hover:not(.locked){border-color:var(--accent);background:var(--accent-dim)}
+.option-letter{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.option-text{flex:1;line-height:1.5}
+.option-btn.correct{border-color:var(--correct);background:var(--correct-dim)}
+.option-btn.correct .option-letter{background:var(--correct);color:#fff}
+.option-btn.incorrect{border-color:var(--wrong);background:var(--wrong-dim)}
+.option-btn.incorrect .option-letter{background:var(--wrong);color:#fff}
+.option-btn.reveal{border-color:var(--correct);background:var(--correct-dim)}
+.option-btn.reveal .option-letter{background:var(--correct);color:#fff}
+.working-note{font-size:13px;color:var(--muted);font-style:italic;line-height:1.6;padding:12px 16px;background:rgba(14,165,233,.06);border-radius:8px;border-left:3px solid var(--accent);margin-top:12px;display:none}
+.working-note.visible{display:block}
+.next-btn{padding:12px 32px;border-radius:10px;border:none;background:var(--accent);color:#000;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;display:none;align-self:flex-end;transition:transform .15s}
+.next-btn.visible{display:block}
+.next-btn:hover{transform:scale(1.04)}
+.fermi-signpost{font-size:12px;color:var(--muted);text-align:center;padding:8px;margin-top:4px}
+.fermi-signpost a{color:var(--accent);text-decoration:none;font-weight:600}
+.fermi-signpost a:hover{text-decoration:underline}
+.results-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;text-align:center}
+.results-title{font-size:1.4rem;font-weight:800;color:var(--accent);margin-bottom:8px}
+.results-score{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;margin:16px 0}
+.section-scores{display:flex;flex-direction:column;gap:8px;margin:20px auto;max-width:400px}
+.section-score-row{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)}
+.section-score-label{font-size:13px;color:var(--muted)}
+.section-score-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700}
+.dot-grid{display:flex;flex-direction:column;gap:8px;max-width:360px;margin:16px auto}
+.dot-grid-section{display:flex;flex-direction:column;gap:4px;width:100%}
+.dot-grid-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.dot-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.dot{width:16px;height:16px;border-radius:50%;cursor:default;position:relative}
+.dot.correct-dot{background:var(--correct)}
+.dot.incorrect-dot{background:var(--wrong)}
+.dot:hover::after{content:attr(data-q);position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);font-size:10px;background:#000;color:#fff;padding:2px 6px;border-radius:4px;white-space:nowrap;pointer-events:none}
+.results-actions{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.results-btn{padding:12px 28px;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;text-decoration:none}
+.results-btn:hover{background:var(--accent);color:#000}
+.results-btn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+.results-btn.primary:hover{background:#38bdf8}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:500px){.q-card{padding:16px}.option-btn{padding:12px}.results-card{padding:20px}}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">MaffsGames</a>
+  <div id="startScreen" class="screen active">
+    <div class="header" style="position:relative">
+      <h1>Core Maths Paper 2C Practice</h1>
+      <div class="sub">AQA Level 3 Mathematical Studies — Graphical Techniques</div>
+      <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    </div>
+    <div class="start-card">
+      <div class="start-icon">&#128200;</div>
+      <p class="start-desc">
+        36 exam-style questions covering <strong>§3.4 Critical Analysis</strong> (Q1–6), <strong>§3.11 Graphical Methods</strong> (Q7–15), <strong>§3.12 Rates of Change</strong> (Q16–24), and <strong>§3.13 Exponential Functions</strong> (Q25–36). No timer — work at your own pace.
+      </p>
+      <button class="start-btn" onclick="startGame()">Begin Practice</button>
+    </div>
+  </div>
+  <div id="gameScreen" class="screen">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div id="sectionBanner" class="section-banner" style="display:none">
+      <h2 id="sectionTitle"></h2>
+      <div class="section-range" id="sectionRange"></div>
+    </div>
+    <div id="questionArea" style="display:none">
+      <div class="q-card">
+        <div class="q-header">
+          <span class="q-counter" id="qCounter"></span>
+          <span class="q-tag" id="qTag"></span>
+        </div>
+        <div class="q-stem" id="qStem"></div>
+        <div class="options" id="optionsContainer"></div>
+        <div class="working-note" id="workingNote"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question</button>
+      </div>
+      <div class="fermi-signpost">For exponential growth and decay graphs \u2192 <a href="../growth-and-decay/?level=core">Play Growth and Decay</a></div>
+      <div class="fermi-signpost">For rates of change and gradient \u2192 <a href="../gradient-hunter/">Play Gradient Hunter</a></div>
+    </div>
+  </div>
+  <div id="resultsScreen" class="screen">
+    <div class="results-card">
+      <div class="results-title">Core Maths Paper 2C Practice — Complete</div>
+      <div class="results-score" id="finalScore"></div>
+      <div class="section-scores">
+        <div class="section-score-row"><span class="section-score-label">§3.4 Critical Analysis</span><span class="section-score-val" id="s1Score"></span></div>
+        <div class="section-score-row"><span class="section-score-label">§3.11 Graphical Methods</span><span class="section-score-val" id="s2Score"></span></div>
+        <div class="section-score-row"><span class="section-score-label">§3.12 Rates of Change</span><span class="section-score-val" id="s3Score"></span></div>
+        <div class="section-score-row"><span class="section-score-label">§3.13 Exponential</span><span class="section-score-val" id="s4Score"></span></div>
+      </div>
+      <div class="dot-grid">
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.4 Critical Analysis</div><div class="dot-row" id="s1Dots"></div></div>
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.11 Graphical Methods</div><div class="dot-row" id="s2Dots"></div></div>
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.12 Rates of Change</div><div class="dot-row" id="s3Dots"></div></div>
+        <div class="dot-grid-section"><div class="dot-grid-label">§3.13 Exponential</div><div class="dot-row" id="s4Dots"></div></div>
+      </div>
+      <div class="results-actions">
+        <button class="results-btn primary" onclick="restartGame()">Play Again</button>
+        <a href="../../" class="results-btn">Back to Portal</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+var SECTIONS = [
+  { title:'Section A \u2014 \u00a73.4 Critical Analysis', range:'Q1\u2013Q6', count:6 },
+  { title:'Section B \u2014 \u00a73.11 Graphical Methods', range:'Q7\u2013Q15', count:9 },
+  { title:'Section C \u2014 \u00a73.12 Rates of Change', range:'Q16\u2013Q24', count:9 },
+  { title:'Section D \u2014 \u00a73.13 Exponential Functions', range:'Q25\u2013Q36', count:12 }
+];
+var SECTION_STARTS = [0, 6, 15, 24];
+
+var QUESTIONS = [
+  // ═══ §3.4 Critical Analysis — Q1 to Q6 ═══
+  {
+    section:'3.4',ao:'AO2',
+    stem:'A student plots distance vs time with the points (0, 0), (1, 20), (2, 40), (3, 55), (4, 65) and draws a straight line through them.\n\nWhat is wrong with the student\u2019s graph?',
+    options:['The axes are swapped','A straight line doesn\u2019t fit \u2014 the rate of change is decreasing','The line should start at (1, 20)','Distance should be on the x-axis'],
+    correct:1,
+    working:'The gaps between consecutive distances are 20, 20, 15, 10 \u2014 the rate of change is decreasing, so a straight line is not an appropriate model. A curve would be more suitable.'
+  },
+  {
+    section:'3.4',ao:'AO2',
+    stem:'A town\u2019s population is modelled by P = 12,000 \u00d7 1.03\u1d57. A planner uses the model to predict the population in 2150.\n\nWhat is the main problem with this prediction?',
+    options:['The base 1.03 is wrong','Extrapolating 150 years ahead is unreliable','The model should use e instead of 1.03','Population cannot exceed 100,000'],
+    correct:1,
+    working:'Extrapolating 150 years far exceeds the data range used to build the model. Growth rates, resources, and demographics will change unpredictably over such a long period.'
+  },
+  {
+    section:'3.4',ao:'AO3',
+    stem:'A scientist fits the model y = ax\u00b2 + b to experimental data. Two data points lie clearly above the fitted curve.\n\nWhat is the best response?',
+    options:['Discard the two points and refit','Accept the model and ignore the points','Investigate whether the points represent errors or genuine exceptions','Switch to a linear model'],
+    correct:2,
+    working:'Outliers should be investigated, not automatically discarded or ignored. They may represent measurement errors, or they may reveal genuine behaviour the model does not capture.'
+  },
+  {
+    section:'3.4',ao:'AO2',
+    stem:'Two graphs show the same sales data. Graph A has a y-axis starting at \u00a30. Graph B has a y-axis starting at \u00a380,000.\n\nA manager uses Graph B and says: "Sales have rocketed this year." What is the issue?',
+    options:['Graph A is wrong','Graph B\u2019s truncated y-axis exaggerates the growth','A bar chart should be used instead','Same data, so neither graph is misleading'],
+    correct:1,
+    working:'Truncating the y-axis makes small changes appear dramatic. The underlying data shows the same modest growth in both graphs, but Graph B\u2019s visual presentation exaggerates it.'
+  },
+  {
+    section:'3.4',ao:'AO3',
+    stem:'Bacteria are modelled by N = Ce^(kt), with C = 500 and k = 0.08. The model predicts N \u2248 1.49 million after 100 hours.\n\nWhy is this prediction unreliable?',
+    options:['The formula is wrong','The model breaks down as nutrients deplete','You cannot use exponential models for biology','k should be negative'],
+    correct:1,
+    working:'Exponential growth assumes unlimited resources. In reality, nutrients deplete, waste accumulates, and growth slows. The model is only valid for the early phase of growth.'
+  },
+  {
+    section:'3.4',ao:'AO2',
+    stem:'A velocity\u2013time graph shows a straight line from (0, 0) to (5, 30).\n\nA student says: "The acceleration is 6 m/s\u00b2." Is this correct?',
+    options:['Yes \u2014 acceleration is the gradient of a v\u2013t graph','No \u2014 acceleration is the area under a v\u2013t graph','No \u2014 acceleration should be 5 \u00f7 30','Yes \u2014 but only when the line is horizontal'],
+    correct:0,
+    working:'Acceleration = gradient of v\u2013t graph = (30 \u2212 0) \u00f7 (5 \u2212 0) = 30 \u00f7 5 = 6 m/s\u00b2. The student is correct.'
+  },
+  // ═══ §3.11 Graphical Methods — Q7 to Q15 ═══
+  {
+    section:'3.11',ao:'AO1',
+    stem:'Consider the function y = x\u00b3 \u2212 3x.\n\nWhat happens to y for large positive values of x?',
+    options:['y approaches a maximum value','y decreases to \u2212\u221e','y increases to +\u221e','y oscillates'],
+    correct:2,
+    working:'For large positive x, the x\u00b3 term dominates. Since the coefficient of x\u00b3 is positive, y \u2192 +\u221e as x \u2192 +\u221e.'
+  },
+  {
+    section:'3.11',ao:'AO1',
+    stem:'The graphs y = 2x + 3 and y = x\u00b2 \u2212 1 intersect. Solving the equation gives x = 1 \u00b1 \u221a5.\n\nWhat do these values represent?',
+    options:['The y-intercepts of both graphs','The x-coordinates of the points of intersection','The turning point of the quadratic','The gradients at the origin'],
+    correct:1,
+    working:'Setting 2x + 3 = x\u00b2 \u2212 1 and solving gives the x-coordinates where the two graphs meet.'
+  },
+  {
+    section:'3.11',ao:'AO1',
+    stem:'A quadratic y = ax\u00b2 + bx + c has a < 0.\n\nWhich statement is true?',
+    options:['The graph has a minimum turning point','The graph has a maximum turning point','The graph has no turning points','The graph must pass through the origin'],
+    correct:1,
+    working:'When a < 0, the parabola opens downwards, so it has a maximum turning point.'
+  },
+  {
+    section:'3.11',ao:'AO2',
+    stem:'Find the x-coordinate of the turning point of y = 3x\u00b2 \u2212 12x + 7.',
+    options:['1','2','3','4'],
+    correct:1,
+    working:'x = \u2212b \u00f7 (2a) = 12 \u00f7 6 = 2.'
+  },
+  {
+    section:'3.11',ao:'AO2',
+    stem:'The model y = ax\u00b2 + c is fitted to the data points shown below.',
+    table:{headers:['x','y'],rows:[['2','11'],['4','35']]},
+    stemAfterTable:'Find the values of a and c.',
+    options:['a = 1, c = 7','a = 2, c = 3','a = 3, c = \u22121','a = 4, c = \u22125'],
+    correct:1,
+    working:'Substituting: 11 = 4a + c and 35 = 16a + c. Subtracting: 24 = 12a \u2192 a = 2. Then c = 11 \u2212 8 = 3.'
+  },
+  {
+    section:'3.11',ao:'AO2',
+    stem:'The graph of y = f(x) passes through (2, 7) and (6, 7), with a minimum between them.\n\nWhat is the x-coordinate of the minimum?',
+    options:['3','4','5','7'],
+    correct:1,
+    working:'By symmetry, the minimum lies halfway between x = 2 and x = 6: (2 + 6) \u00f7 2 = 4.'
+  },
+  {
+    section:'3.11',ao:'AO2',
+    stem:'Find the x-coordinate of the intersection of y = 3x \u2212 2 and y = \u2212x + 6.',
+    options:['1','2','3','4'],
+    correct:1,
+    working:'3x \u2212 2 = \u2212x + 6 \u2192 4x = 8 \u2192 x = 2.'
+  },
+  {
+    section:'3.11',ao:'AO3',
+    stem:'A cubic function has roots at x = \u22122, x = 1, and x = 3, with a positive x\u00b3 coefficient.\n\nWhich description is correct?',
+    options:['The graph goes from high-left to low-right','The graph goes from low-left to high-right, crossing the x-axis at \u22122, 1, and 3','The graph is always above the x-axis between the roots','The graph has two turning points above the x-axis'],
+    correct:1,
+    working:'A positive x\u00b3 coefficient means the graph rises from bottom-left to top-right. It crosses the x-axis at each of the three roots.'
+  },
+  {
+    section:'3.11',ao:'AO3',
+    stem:'A population is modelled by N = t\u00b2 + 5t + 100.\n\nWhen does N first exceed 200?',
+    options:['t = 7','t = 8','t = 9','t = 10'],
+    correct:1,
+    working:'Solve t\u00b2 + 5t + 100 = 200 \u2192 t\u00b2 + 5t \u2212 100 = 0 \u2192 t = (\u22125 + \u221a425) \u00f7 2 \u2248 7.8. First complete value: t = 8. Check: 64 + 40 + 100 = 204 > 200.'
+  },
+  // ═══ §3.12 Rates of Change — Q16 to Q24 ═══
+  {
+    section:'3.12',ao:'AO1',
+    stem:'A straight line passes through (2, 5) and (6, 13).\n\nWhat is its gradient?',
+    options:['1.5','2','2.5','4'],
+    correct:1,
+    working:'Gradient = (13 \u2212 5) \u00f7 (6 \u2212 2) = 8 \u00f7 4 = 2.'
+  },
+  {
+    section:'3.12',ao:'AO1',
+    stem:'A distance\u2013time graph is a straight line from (0, 0) to (4, 100).\n\nWhat does the gradient of this line represent?',
+    options:['Total distance','Acceleration','Speed','Time per unit distance'],
+    correct:2,
+    working:'The gradient of a distance\u2013time graph gives the speed: 100 \u00f7 4 = 25 units per second.'
+  },
+  {
+    section:'3.12',ao:'AO1',
+    stem:'A velocity\u2013time graph shows a horizontal line at 15 m/s from t = 0 to t = 8.\n\nWhat is the acceleration?',
+    options:['15 m/s\u00b2','1.875 m/s\u00b2','0 m/s\u00b2','120 m/s\u00b2'],
+    correct:2,
+    working:'A horizontal line on a v\u2013t graph means the velocity is constant, so acceleration = 0.'
+  },
+  {
+    section:'3.12',ao:'AO1',
+    stem:'A velocity\u2013time graph shows a straight line from (0, 8) to (5, 28).\n\nWhat is the distance travelled?',
+    options:['20 m','90 m','100 m','140 m'],
+    correct:1,
+    working:'Distance = area under v\u2013t graph = trapezium = \u00bd(8 + 28) \u00d7 5 = \u00bd \u00d7 36 \u00d7 5 = 90 m.'
+  },
+  {
+    section:'3.12',ao:'AO2',
+    stem:'The curve y = x\u00b2 has a tangent drawn at the point (3, 9). The tangent has gradient 6.\n\nWhat does the gradient of the tangent represent?',
+    options:['The average rate of change over the whole curve','The instantaneous rate of change at x = 3','The total change in y','The acceleration at x = 3'],
+    correct:1,
+    working:'The gradient of a tangent at a point gives the instantaneous rate of change of y with respect to x at that specific point.'
+  },
+  {
+    section:'3.12',ao:'AO2',
+    stem:'A curved distance\u2013time graph is given. How do you estimate the speed at t = 4?',
+    options:['Total distance \u00f7 total time','Read off the distance at t = 4','Draw a tangent at t = 4 and calculate its gradient','Find the area under the curve up to t = 4'],
+    correct:2,
+    working:'For a curved graph, the instantaneous speed at a point is found by drawing a tangent at that point and calculating its gradient.'
+  },
+  {
+    section:'3.12',ao:'AO2',
+    stem:'A curve passes through (2, 16) and (4, 36). The chord between these points is used to estimate the gradient at x = 3.\n\nWhat is the estimate?',
+    options:['5','9','10','20'],
+    correct:2,
+    working:'Chord gradient = (36 \u2212 16) \u00f7 (4 \u2212 2) = 20 \u00f7 2 = 10. This estimates the gradient at the midpoint x = 3.'
+  },
+  {
+    section:'3.12',ao:'AO3',
+    stem:'A car starts from rest. Its velocity\u2013time curve is concave upward (curving away from the t-axis).\n\nWhat does the increasing gradient indicate?',
+    options:['The car has constant speed','The car is decelerating','The car\u2019s acceleration is increasing','The car has reached its maximum speed'],
+    correct:2,
+    working:'On a v\u2013t graph, gradient = acceleration. A concave-upward curve has an increasing gradient, meaning the acceleration itself is increasing over time.'
+  },
+  {
+    section:'3.12',ao:'AO3',
+    stem:'For y = 3x\u00b2 \u2212 2x + 1, the gradient at x = 2 is estimated using the points (1.9, 8.03) and (2.1, 10.03).\n\nWhat is the result?',
+    options:['4','8','10','20'],
+    correct:2,
+    working:'Gradient \u2248 (10.03 \u2212 8.03) \u00f7 (2.1 \u2212 1.9) = 2 \u00f7 0.2 = 10. This matches the calculus result: dy/dx = 6x \u2212 2, so at x = 2: 6(2) \u2212 2 = 10.'
+  },
+  // ═══ §3.13 Exponential Functions — Q25 to Q36 ═══
+  {
+    section:'3.13',ao:'AO1',
+    stem:'Consider y = 500 \u00d7 1.06\u1d57.\n\nWhat is the value of y when t = 0?',
+    options:['0','1','500','530'],
+    correct:2,
+    working:'When t = 0: y = 500 \u00d7 1.06\u2070 = 500 \u00d7 1 = 500.'
+  },
+  {
+    section:'3.13',ao:'AO1',
+    stem:'A model is given by P = 8000 \u00d7 e^(\u22120.05t).\n\nWhat is the value of P when t = 0?',
+    options:['0','800','7610','8000'],
+    correct:3,
+    working:'When t = 0: P = 8000 \u00d7 e\u2070 = 8000 \u00d7 1 = 8000.'
+  },
+  {
+    section:'3.13',ao:'AO1',
+    stem:'Evaluate 3^4.2 to 1 decimal place.',
+    options:['81.0','98.7','100.9','112.0'],
+    correct:2,
+    working:'3\u2074 = 81. 3^0.2 \u2248 1.246. So 3^4.2 = 81 \u00d7 1.246 \u2248 100.9.'
+  },
+  {
+    section:'3.13',ao:'AO1',
+    stem:'Solve 2\u02e3 = 50 to 2 decimal places.',
+    options:['5.34','5.64','6.02','6.25'],
+    correct:1,
+    working:'x = log 50 \u00f7 log 2 = 1.699 \u00f7 0.301 = 5.64.'
+  },
+  {
+    section:'3.13',ao:'AO1',
+    stem:'A car depreciates according to V = 18,000 \u00d7 0.85\u1d57.\n\nWhat is the annual depreciation rate?',
+    options:['0.85%','8.5%','15%','85%'],
+    correct:2,
+    working:'The multiplier 0.85 means the car retains 85% of its value each year, so it loses 15% per year.'
+  },
+  {
+    section:'3.13',ao:'AO2',
+    stem:'The model y = Ca\u1d57 fits the data points (0, 400) and (3, 1350).\n\nFind C and a.',
+    options:['C = 400, a = 1.50','C = 400, a = 3.375','C = 450, a = 1.50','C = 1350, a = 0.30'],
+    correct:0,
+    working:'At t = 0: 400 = C \u00d7 a\u2070 = C, so C = 400. At t = 3: 1350 = 400a\u00b3 \u2192 a\u00b3 = 3.375 \u2192 a = 1.5.'
+  },
+  {
+    section:'3.13',ao:'AO2',
+    stem:'A population model N = 2000 \u00d7 e^(kt) gives N = 3500 when t = 4.\n\nFind k to 3 decimal places.',
+    options:['k = 0.137','k = 0.140','k = 0.175','k = 0.219'],
+    correct:1,
+    working:'3500 = 2000e^(4k) \u2192 e^(4k) = 1.75 \u2192 4k = ln 1.75 = 0.5596 \u2192 k = 0.140.'
+  },
+  {
+    section:'3.13',ao:'AO2',
+    stem:'A substance decays according to M = M\u2080e^(\u22120.03t).\n\nWhat is the half-life?',
+    options:['17','23','33','50'],
+    correct:1,
+    working:'Half-life: e^(\u22120.03t) = 0.5 \u2192 \u22120.03t = ln 0.5 \u2192 t = ln 2 \u00f7 0.03 = 23.1 \u2248 23.'
+  },
+  {
+    section:'3.13',ao:'AO2',
+    stem:'An investment grows according to V = 5000 \u00d7 e^(0.06t).\n\nHow many years until the investment reaches \u00a38000?',
+    options:['7.8','9.4','12.2','16.0'],
+    correct:0,
+    working:'8000 = 5000e^(0.06t) \u2192 e^(0.06t) = 1.6 \u2192 0.06t = ln 1.6 = 0.4700 \u2192 t = 7.83 \u2248 7.8 years.'
+  },
+  {
+    section:'3.13',ao:'AO3',
+    stem:'Two competing models predict bacteria growth:',
+    table:{headers:['Hour (t)','Model A: N = 10 \u00d7 1.4\u1d57','Model B: N = 10 \u00d7 2.1\u1d57'],rows:[['0','10','10'],['1','14','21'],['2','19.6','44.1'],['5','53.8','408.4'],['10','289.3','16,680']]},
+    stemAfterTable:'At what first complete hour does Model A predict N > 400?',
+    options:['t = 9','t = 10','t = 11','t = 12'],
+    correct:2,
+    working:'1.4\u1d57 = 40 \u2192 t = ln 40 \u00f7 ln 1.4 = 3.689 \u00f7 0.3365 = 10.96. First complete hour: t = 11.'
+  },
+  {
+    section:'3.13',ao:'AO3',
+    stem:'A population is modelled by P = 1200e^(0.04t). A student claims: "The doubling time is constant regardless of the starting population."\n\nIs the student correct?',
+    options:['No \u2014 doubling time depends on the initial population','Yes \u2014 for exponential models, doubling time is constant','No \u2014 doubling time increases as the population grows','Yes \u2014 but only when k > 0'],
+    correct:1,
+    working:'Doubling time T = ln 2 \u00f7 k. This depends only on k, not on C (the initial value). The student is correct.'
+  },
+  {
+    section:'3.13',ao:'AO3',
+    stem:'A town\u2019s population is modelled by P = 5000 \u00d7 1.03\u1d57. A planner forecasts 80 years ahead.\n\nGive two reasons why this forecast is unreliable.',
+    options:['The model gives negative values; the growth rate is wrong','Growth rates change over time; 80 years is far outside the data range','The model is valid for any period; e should be used instead of 1.03','e must be used; 80 years is too short a forecast'],
+    correct:1,
+    working:'(1) Growth rates are unlikely to remain constant for 80 years \u2014 economic, social, and environmental factors will change. (2) 80 years of extrapolation far exceeds the data range used to fit the model.'
+  }
+];
+
+// ── GAME STATE ──
+var currentQ = 0, score = 0, answers = [], answered = false;
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+}
+
+function startGame() {
+  currentQ = 0; score = 0; answers = []; answered = false;
+  mfg('game_started',{game_slug:'core-maths-paper2c',level:'core'});
+  showScreen('gameScreen');
+  showSectionBanner(0);
+}
+
+function showSectionBanner(qIndex) {
+  var banner = document.getElementById('sectionBanner');
+  var qArea = document.getElementById('questionArea');
+  qArea.style.display = 'none';
+  banner.style.display = 'block';
+  var sIdx = SECTION_STARTS.indexOf(qIndex);
+  document.getElementById('sectionTitle').textContent = SECTIONS[sIdx].title;
+  document.getElementById('sectionRange').textContent = SECTIONS[sIdx].range;
+  setTimeout(function(){banner.style.display='none';qArea.style.display='block';showQuestion();},2000);
+}
+
+function showQuestion() {
+  var q = QUESTIONS[currentQ];
+  answered = false;
+  document.getElementById('progressFill').style.width = (currentQ/36*100)+'%';
+  document.getElementById('qCounter').textContent = 'Q'+(currentQ+1)+' of 36';
+  document.getElementById('qTag').textContent = '\u00a7'+q.section+' \u00b7 '+q.ao;
+
+  var stemHTML = q.stem.replace(/\n/g,'<br>');
+  if (q.table) {
+    stemHTML += '<table class="data-table"><tr>';
+    q.table.headers.forEach(function(h){stemHTML+='<th>'+h+'</th>';});
+    stemHTML += '</tr>';
+    q.table.rows.forEach(function(row){stemHTML+='<tr>';row.forEach(function(cell){stemHTML+='<td>'+cell+'</td>';});stemHTML+='</tr>';});
+    stemHTML += '</table>';
+    if (q.stemAfterTable) stemHTML += q.stemAfterTable.replace(/\n/g,'<br>');
+  }
+  if (q.svg) stemHTML += '<div class="svg-container">'+renderSVG(q.svg)+'</div>';
+  document.getElementById('qStem').innerHTML = stemHTML;
+
+  var letters = ['A','B','C','D'];
+  var container = document.getElementById('optionsContainer');
+  container.innerHTML = '';
+  q.options.forEach(function(opt,i){
+    var btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.dataset.val = String(i);
+    btn.innerHTML = '<span class="option-letter">'+letters[i]+'</span><span class="option-text">'+opt+'</span>';
+    btn.addEventListener('click',function(){selectAnswer(i);});
+    container.appendChild(btn);
+  });
+  document.getElementById('workingNote').classList.remove('visible');
+  document.getElementById('nextBtn').classList.remove('visible');
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  var q = QUESTIONS[currentQ];
+  var isCorrect = idx === q.correct;
+  answers.push(isCorrect);
+  if (isCorrect) score++;
+  var buttons = document.querySelectorAll('.option-btn');
+  buttons.forEach(function(btn){
+    btn.classList.add('locked');
+    var val = parseInt(btn.dataset.val);
+    if (val === q.correct) { btn.classList.add(val===idx?'correct':'reveal'); btn.querySelector('.option-letter').textContent='\u2713'; }
+    if (val === idx && !isCorrect) { btn.classList.add('incorrect'); btn.querySelector('.option-letter').textContent='\u2717'; }
+  });
+  var note = document.getElementById('workingNote');
+  note.textContent = q.working;
+  note.classList.add('visible');
+  mfg('question_answered',{game_slug:'core-maths-paper2c',level:'core',question_index:currentQ+1,correct:isCorrect,section:q.section});
+  setTimeout(function(){document.getElementById('nextBtn').classList.add('visible');},1500);
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= 36) { showResults(); return; }
+  if (SECTION_STARTS.indexOf(currentQ) !== -1) { showSectionBanner(currentQ); }
+  else { showQuestion(); }
+}
+
+function showResults() {
+  document.getElementById('progressFill').style.width = '100%';
+  var counts = [0,0,0,0];
+  SECTIONS.forEach(function(sec,si){
+    var start = SECTION_STARTS[si];
+    for (var i=0;i<sec.count;i++) if (answers[start+i]) counts[si]++;
+  });
+  document.getElementById('finalScore').textContent = score+' / 36';
+  document.getElementById('s1Score').textContent = counts[0]+' / 6';
+  document.getElementById('s2Score').textContent = counts[1]+' / 9';
+  document.getElementById('s3Score').textContent = counts[2]+' / 9';
+  document.getElementById('s4Score').textContent = counts[3]+' / 12';
+  ['s1Dots','s2Dots','s3Dots','s4Dots'].forEach(function(id,si){
+    var el = document.getElementById(id);
+    el.innerHTML = '';
+    var start = SECTION_STARTS[si];
+    for (var i=0;i<SECTIONS[si].count;i++){
+      var d = document.createElement('span');
+      d.className = 'dot '+(answers[start+i]?'correct-dot':'incorrect-dot');
+      d.dataset.q = 'Q'+(start+i+1);
+      el.appendChild(d);
+    }
+  });
+  mfg('game_completed',{game_slug:'core-maths-paper2c',level:'core',score:score,questions_answered:36,questions_correct:score});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('core-maths-paper2c','core',score,36).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('core-maths-paper2c','core',score);}}
+  showScreen('resultsScreen');
+}
+
+function restartGame(){startGame();}
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o));}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

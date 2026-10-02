@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Resolve forces on inclined planes, pulleys, and connected particles. 72 questions for A-Level mechanics and Level 4.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/force-resolver/">
+<meta property="og:title" content="Force Resolver — MaffsGames">
+<meta property="og:description" content="Resolve forces on inclined planes, pulleys, and connected particles. 72 questions for A-Level mechanics and Level 4.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/force-resolver/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Force Resolver — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f0f17;--surface:#1a1a2e;--border:#2d2d4a;--primary:#f97316;--accent:#22d3ee;--wrong:#f43f5e;--text:#edf2f4;--muted:#8d99ae}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.level-select{display:flex;gap:.5rem;justify-content:center;margin:1rem 0}
+.level-btn{padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316}
+.level-btn[data-level="level4"].active{background:#ef4444;border-color:#ef4444}
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}.hud-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:130px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.6rem}
+.q-card .context{font-size:.9rem;color:var(--text);line-height:1.6;max-width:640px}
+.q-card .context .given-list{margin-top:.5rem;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:.3rem .8rem}
+.q-card .context .given-list li{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--accent);white-space:nowrap}
+.q-card .prompt{font-size:.85rem;color:var(--accent);font-weight:600;margin-top:.3rem}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.92rem;cursor:pointer;transition:all .15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
+.opt-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(249,115,22,.2)}
+.opt-btn.correct{border-color:var(--accent);background:rgba(34,211,238,.1);animation:pop .3s}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.1);animation:shake .3s}
+.opt-btn.reveal{border-color:var(--accent);opacity:.7}.opt-btn.disabled{pointer-events:none;opacity:.5}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .3s}
+.pip.done{background:var(--accent)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--primary);box-shadow:0 0 6px var(--primary)}
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.6rem;margin-bottom:.5rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
+.results .stats{color:var(--muted);margin-bottom:1.5rem}
+.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.play-again:hover{transform:scale(1.05)}
+.screen{display:none}.screen.active{display:block}
+.katex{font-size:1em!important}.q-card .katex{font-size:1.15em!important}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Force Resolver</h1><div class="sub">Resolve. Resultant. Equilibrium.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="level-select">
+      <button class="level-btn active" data-level="alevel">A-Level</button>
+      <button class="level-btn" data-level="level4">Level 4</button>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:.8rem 0;line-height:1.6">
+      Resolve forces into components, find resultants, solve inclined plane problems,<br>
+      and determine equilibrium conditions.
+    </p>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <div style="text-align:center;margin-top:1.5rem"><button class="play-again" onclick="startGame()">Start</button></div>
+  </div>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <div class="q-card">
+      <div class="context" id="context"></div>
+      <div id="question"></div>
+      <div class="prompt" id="prompt"></div>
+    </div>
+    <div class="options" id="options"></div>
+  </div>
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+</div>
+<script>
+const QUESTIONS={
+alevel:[
+  // Resolving into components (Q1-12)
+  {ctx:'A force of 10 N acts at 30° to the horizontal.',q:'',ask:'Horizontal component',correct:'10\\cos 30° = 5\\sqrt{3} \\approx 8.66 \\text{ N}',d:['10\\sin 30° = 5 \\text{ N}','10\\tan 30° \\text{ N}','10 \\text{ N}']},
+  {ctx:'A force of 10 N acts at 30° to the horizontal.',q:'',ask:'Vertical component',correct:'10\\sin 30° = 5 \\text{ N}',d:['10\\cos 30° \\approx 8.66 \\text{ N}','10\\tan 30° \\text{ N}','0 \\text{ N}']},
+  {ctx:'A force of 20 N acts at 45° to the horizontal.',q:'',ask:'Horizontal component',correct:'10\\sqrt{2} \\approx 14.1 \\text{ N}',d:['10 \\text{ N}','20 \\text{ N}','20\\sqrt{2} \\text{ N}']},
+  {ctx:'A force of 50 N acts at 60° to the horizontal.',q:'',ask:'Horizontal component',correct:'25 \\text{ N}',d:['25\\sqrt{3} \\text{ N}','50 \\text{ N}','50\\sqrt{3} \\text{ N}']},
+  {ctx:'A force of 50 N acts at 60° to the horizontal.',q:'',ask:'Vertical component',correct:'25\\sqrt{3} \\approx 43.3 \\text{ N}',d:['25 \\text{ N}','50 \\text{ N}','50\\cos 60° \\text{ N}']},
+  {ctx:'A 12 N force at 0° to the horizontal.',q:'',ask:'Horizontal component',correct:'12 \\text{ N}',d:['0 \\text{ N}','6 \\text{ N}','12\\cos 0° \\text{ N}']},
+  {ctx:'A 12 N force at 90° to the horizontal.',q:'',ask:'Horizontal component',correct:'0 \\text{ N}',d:['12 \\text{ N}','6 \\text{ N}','12\\sin 90° \\text{ N}']},
+  {ctx:'A force has horizontal component 8 N and vertical component 6 N.',q:'R = \\sqrt{F_x^2 + F_y^2}',ask:'Find the magnitude of the force',correct:'10 \\text{ N}',d:['14 \\text{ N}','7 \\text{ N}','100 \\text{ N}']},
+  {ctx:'A force has horizontal component 8 N and vertical component 6 N.',q:'\\theta = \\arctan\\left(\\dfrac{F_y}{F_x}\\right)',ask:'Find the angle to the horizontal',correct:'36.9°',d:['53.1°','45°','30°']},
+  {ctx:'Components: Fx = 5 N, Fy = 12 N.',q:'',ask:'Resultant magnitude',correct:'13 \\text{ N}',d:['17 \\text{ N}','7 \\text{ N}','169 \\text{ N}']},
+  {ctx:'A 100 N force at 37° to horizontal (sin 37° ≈ 0.6, cos 37° ≈ 0.8).',q:'',ask:'Horizontal component',correct:'80 \\text{ N}',d:['60 \\text{ N}','100 \\text{ N}','37 \\text{ N}']},
+  {ctx:'A 100 N force at 37° to horizontal.',q:'',ask:'Vertical component',correct:'60 \\text{ N}',d:['80 \\text{ N}','100 \\text{ N}','37 \\text{ N}']},
+  // Newton's second law (Q13-22)
+  {ctx:'A 5 kg object. Resultant force = 20 N.',q:'F = ma',ask:'Find the acceleration',correct:'4 \\text{ m/s}^2',d:['100 \\text{ m/s}^2','0.25 \\text{ m/s}^2','25 \\text{ m/s}^2']},
+  {ctx:'A 3 kg object accelerates at 2 m/s².',q:'F = ma',ask:'Find the resultant force',correct:'6 \\text{ N}',d:['1.5 \\text{ N}','5 \\text{ N}','0.67 \\text{ N}']},
+  {ctx:'A resultant force of 24 N causes acceleration of 8 m/s².',q:'F = ma',ask:'Find the mass',correct:'3 \\text{ kg}',d:['192 \\text{ kg}','32 \\text{ kg}','16 \\text{ kg}']},
+  {ctx:'A 10 kg box on a smooth surface. A horizontal force of 30 N is applied.',q:'',ask:'Acceleration',correct:'3 \\text{ m/s}^2',d:['300 \\text{ m/s}^2','0.33 \\text{ m/s}^2','30 \\text{ m/s}^2']},
+  {ctx:'A 10 kg box on a rough surface (μ = 0.2). A horizontal force of 30 N is applied. g = 10.',q:'F_{net} = F - \\mu mg',ask:'Acceleration',correct:'1 \\text{ m/s}^2',d:['3 \\text{ m/s}^2','2 \\text{ m/s}^2','0.1 \\text{ m/s}^2']},
+  {ctx:'A 2 kg object on a smooth surface. Forces of 10 N right and 4 N left.',q:'',ask:'Resultant and acceleration',correct:'6 \\text{ N right, } 3 \\text{ m/s}^2',d:['14 \\text{ N, } 7 \\text{ m/s}^2','6 \\text{ N, } 12 \\text{ m/s}^2','4 \\text{ N, } 2 \\text{ m/s}^2']},
+  {ctx:'A lift (mass 800 kg) accelerates upward at 2 m/s². g = 10.',q:'T - mg = ma',ask:'Find the cable tension',correct:'9600 \\text{ N}',d:['8000 \\text{ N}','1600 \\text{ N}','6400 \\text{ N}']},
+  {ctx:'A lift (800 kg) decelerates while going up at 1.5 m/s². g = 10.',q:'T - mg = -ma',ask:'Find the cable tension',correct:'6800 \\text{ N}',d:['8000 \\text{ N}','9200 \\text{ N}','1200 \\text{ N}']},
+  {ctx:'A person (70 kg) stands in a lift. The scales read 756 N. g = 9.8.',q:'R - mg = ma',ask:'Find the acceleration of the lift',correct:'1 \\text{ m/s}^2 \\text{ upward}',d:['0.8 \\text{ m/s}^2','2 \\text{ m/s}^2','0 \\text{ m/s}^2']},
+  {ctx:'A lift descends at constant velocity. Person mass 60 kg. g = 10.',q:'',ask:'Reading on scales',correct:'600 \\text{ N}',d:['0 \\text{ N}','500 \\text{ N}','700 \\text{ N}']},
+  // Inclined planes (Q23-35)
+  {ctx:'A 5 kg box on a smooth slope at 30° to horizontal. g = 10.',q:'mg\\sin\\theta',ask:'Component of weight along the slope',correct:'25 \\text{ N}',d:['25\\sqrt{3} \\text{ N}','50 \\text{ N}','43.3 \\text{ N}']},
+  {ctx:'A 5 kg box on a smooth slope at 30°. g = 10.',q:'mg\\cos\\theta',ask:'Normal reaction force',correct:'25\\sqrt{3} \\approx 43.3 \\text{ N}',d:['25 \\text{ N}','50 \\text{ N}','50\\cos 30° \\text{ N}']},
+  {ctx:'A 5 kg box on a smooth slope at 30°. g = 10.',q:'a = g\\sin\\theta',ask:'Acceleration down the slope',correct:'5 \\text{ m/s}^2',d:['10 \\text{ m/s}^2','2.5 \\text{ m/s}^2','8.66 \\text{ m/s}^2']},
+  {ctx:'A 4 kg box on a smooth slope at 45°. g = 10.',q:'',ask:'Acceleration down the slope',correct:'5\\sqrt{2} \\approx 7.07 \\text{ m/s}^2',d:['10 \\text{ m/s}^2','5 \\text{ m/s}^2','40 \\text{ m/s}^2']},
+  {ctx:'A 10 kg box on a rough slope at 30°. μ = 0.3. g = 10.',q:'F_{net} = mg\\sin\\theta - \\mu mg\\cos\\theta',ask:'Net force down the slope',correct:'24.0 \\text{ N}',d:['50 \\text{ N}','76 \\text{ N}','26 \\text{ N}']},
+  {ctx:'A box is on the point of sliding on a rough slope at angle α. μ = tan α.',q:'',ask:'If α = 30°, find μ',correct:'\\dfrac{1}{\\sqrt{3}} \\approx 0.577',d:['\\sqrt{3}','0.5','0.3']},
+  {ctx:'A 2 kg box on a slope at 20°. It remains stationary. g = 10.',q:'',ask:'Friction force',correct:'2g\\sin 20° \\approx 6.84 \\text{ N}',d:['2g\\cos 20° \\text{ N}','20 \\text{ N}','0 \\text{ N}']},
+  {ctx:'A box is pushed UP a smooth slope at 30° with force P parallel to slope. Mass 8 kg, g = 10.',q:'P - mg\\sin 30° = ma',ask:'Find P for acceleration 2 m/s² up slope',correct:'56 \\text{ N}',d:['40 \\text{ N}','16 \\text{ N}','96 \\text{ N}']},
+  {ctx:'A 6 kg box slides down a rough slope at 40°. μ = 0.2. g = 9.8. sin 40° ≈ 0.643, cos 40° ≈ 0.766.',q:'',ask:'Acceleration down the slope',correct:'4.80 \\text{ m/s}^2',d:['6.30 \\text{ m/s}^2','3.10 \\text{ m/s}^2','9.8 \\text{ m/s}^2']},
+  {ctx:'On a slope, if friction = component of weight down slope, the object is in...',q:'',ask:'What state?',correct:'Equilibrium (about to move)',d:['Free fall','Accelerating','Weightless']},
+  {ctx:'A particle on a rough slope (μ = 0.4, θ = 30°). g = 10, mass = 5 kg.',q:'',ask:'Does the particle slide?',correct:'No — mg sin θ (25 N) < μmg cos θ (17.3 N) is false — it slides',d:['Yes','Cannot tell','Only if pushed']},
+  {ctx:'On an inclined plane, the normal reaction R equals...',q:'',ask:'Complete the statement',correct:'mg\\cos\\theta',d:['mg','mg\\sin\\theta','mg\\tan\\theta']},
+  {ctx:'The component of weight parallel to a slope at angle θ is...',q:'',ask:'Complete the statement',correct:'mg\\sin\\theta',d:['mg\\cos\\theta','mg\\tan\\theta','mg']},
+  // Connected particles (Q36-45)
+  {ctx:'Two particles A (3 kg) and B (2 kg) connected by a light string over a smooth pulley.',q:'(m_A - m_B)g = (m_A + m_B)a',ask:'Find the acceleration',correct:'2 \\text{ m/s}^2',d:['5 \\text{ m/s}^2','10 \\text{ m/s}^2','0.2 \\text{ m/s}^2']},
+  {ctx:'A (3 kg) and B (2 kg) over a smooth pulley. a = 2 m/s². g = 10.',q:'T = m_B(g + a)',ask:'Find the tension',correct:'24 \\text{ N}',d:['20 \\text{ N}','30 \\text{ N}','12 \\text{ N}']},
+  {ctx:'Particles A (5 kg) and B (3 kg) connected over a smooth pulley. g = 10.',q:'',ask:'Acceleration',correct:'2.5 \\text{ m/s}^2',d:['5 \\text{ m/s}^2','1.25 \\text{ m/s}^2','10 \\text{ m/s}^2']},
+  {ctx:'A (4 kg) on a smooth table connected to B (6 kg) hanging over the edge. g = 10.',q:'m_B g = (m_A + m_B) a',ask:'Acceleration',correct:'6 \\text{ m/s}^2',d:['10 \\text{ m/s}^2','15 \\text{ m/s}^2','2.4 \\text{ m/s}^2']},
+  {ctx:'A (4 kg) on table, B (6 kg) hanging. a = 6 m/s².',q:'T = m_A a',ask:'Tension in the string',correct:'24 \\text{ N}',d:['60 \\text{ N}','40 \\text{ N}','36 \\text{ N}']},
+  {ctx:'A (4 kg) on a ROUGH table (μ = 0.25), B (6 kg) hanging. g = 10.',q:'m_B g - \\mu m_A g = (m_A + m_B)a',ask:'Acceleration',correct:'5 \\text{ m/s}^2',d:['6 \\text{ m/s}^2','4 \\text{ m/s}^2','3 \\text{ m/s}^2']},
+  {ctx:'Two particles of equal mass (m) connected over a smooth pulley.',q:'',ask:'What is the acceleration?',correct:'0 \\text{ — system in equilibrium}',d:['g','\\dfrac{g}{2}','2g']},
+  {ctx:'A (2 kg) on smooth slope at 30°, string over pulley to B (3 kg) hanging. g = 10.',q:'m_B g - m_A g \\sin 30° = (m_A + m_B)a',ask:'Acceleration',correct:'4 \\text{ m/s}^2',d:['5 \\text{ m/s}^2','2 \\text{ m/s}^2','8 \\text{ m/s}^2']},
+  {ctx:'In any connected particle system, the string is "light and inextensible." This means...',q:'',ask:'What two things?',correct:'No mass, same acceleration for both particles',d:['Elastic, different tensions','Heavy, different accelerations','No friction, no tension']},
+  {ctx:'A tow bar connects a car (1200 kg) and trailer (400 kg). Driving force 4800 N. Resistance: car 200 N, trailer 100 N.',q:'',ask:'Acceleration of the system',correct:'2.8125 \\text{ m/s}^2',d:['3 \\text{ m/s}^2','4 \\text{ m/s}^2','10 \\text{ m/s}^2']},
+  // Equilibrium (Q46-52)
+  {ctx:'Three forces in equilibrium: 3 N horizontal, 4 N vertical, and F.',q:'',ask:'Find F',correct:'5 \\text{ N}',d:['7 \\text{ N}','1 \\text{ N}','12 \\text{ N}']},
+  {ctx:'A particle in equilibrium under forces of 5 N, 12 N, and F.',q:'',ask:'Find F if the 5 N and 12 N are perpendicular',correct:'13 \\text{ N}',d:['17 \\text{ N}','7 \\text{ N}','60 \\text{ N}']},
+  {ctx:'A 10 N weight hangs from two strings at 30° and 60° to horizontal.',q:'',ask:'Tension in the string at 30° to horizontal',correct:'5\\sqrt{3} \\approx 8.66 \\text{ N}',d:['5 \\text{ N}','10 \\text{ N}','10\\sqrt{3} \\text{ N}']},
+  {ctx:'A particle is in equilibrium. The resultant of all forces is...',q:'',ask:'Complete the statement',correct:'Zero',d:['mg','Equal to weight','Maximum']},
+  {ctx:'If an object moves at constant velocity, the resultant force is...',q:'',ask:'',correct:'Zero (Newton\'s first law)',d:['Equal to friction','mg','Non-zero in direction of motion']},
+  {ctx:'A 5 kg lamp hangs from a ceiling by a single cable. g = 10.',q:'',ask:'Tension in the cable',correct:'50 \\text{ N}',d:['5 \\text{ N}','100 \\text{ N}','0 \\text{ N}']},
+  {ctx:'A box (20 kg) is pushed at constant velocity across a rough floor with 40 N. g = 10.',q:'',ask:'Friction force',correct:'40 \\text{ N}',d:['200 \\text{ N}','0 \\text{ N}','160 \\text{ N}']},
+],
+level4:[
+  {ctx:'A 500 N force acts at 25° to a beam. cos 25° = 0.906, sin 25° = 0.423.',q:'',ask:'Horizontal component',correct:'453 \\text{ N}',d:['211.5 \\text{ N}','500 \\text{ N}','125 \\text{ N}']},
+  {ctx:'A 500 N force acts at 25° to a beam.',q:'',ask:'Vertical component',correct:'211.5 \\text{ N}',d:['453 \\text{ N}','500 \\text{ N}','125 \\text{ N}']},
+  {ctx:'A bracket supports a 2 kN load. The bracket arm is at 40° to the wall.',q:'',ask:'Force along the bracket arm',correct:'\\dfrac{2}{\\cos 40°} \\approx 2.61 \\text{ kN}',d:['2 \\text{ kN}','2\\cos 40° \\text{ kN}','2\\sin 40° \\text{ kN}']},
+  {ctx:'A crane lifts a 10 kN load with a jib at 50° to horizontal. sin 50° = 0.766.',q:'',ask:'Tension in the horizontal tie',correct:'\\dfrac{10}{\\tan 50°} \\approx 8.39 \\text{ kN}',d:['10 \\text{ kN}','10\\tan 50° \\text{ kN}','10\\sin 50° \\text{ kN}']},
+  {ctx:'Two forces: 300 N at 0° and 400 N at 90°.',q:'',ask:'Resultant magnitude',correct:'500 \\text{ N}',d:['700 \\text{ N}','100 \\text{ N}','350 \\text{ N}']},
+  {ctx:'Two forces: 300 N at 0° and 400 N at 90°.',q:'',ask:'Direction of resultant (angle to horizontal)',correct:'53.1°',d:['36.9°','45°','30°']},
+  {ctx:'A body of mass 80 kg on a slope of 15°. g = 9.81.',q:'',ask:'Component of weight along the slope',correct:'203 \\text{ N}',d:['758 \\text{ N}','784.8 \\text{ N}','80 \\text{ N}']},
+  {ctx:'A 200 kg crate on a 20° ramp. μ = 0.3. g = 9.81.',q:'',ask:'Force required to push it up at constant speed',correct:'200g(\\sin 20° + 0.3\\cos 20°) \\approx 1222 \\text{ N}',d:['670 \\text{ N}','1962 \\text{ N}','552 \\text{ N}']},
+  {ctx:'A 50 kg box is pulled along a floor by a rope at 35° to horizontal with force 200 N. μ = 0.25, g = 9.81.',q:'',ask:'Acceleration (to 2 d.p.)',correct:'1.79 \\text{ m/s}^2',d:['4 \\text{ m/s}^2','0.82 \\text{ m/s}^2','3.28 \\text{ m/s}^2']},
+  {ctx:'A structure has three members meeting at a joint. Forces: 5 kN down, T₁ at 30° to horizontal, T₂ horizontal.',q:'',ask:'T₁ (resolving vertically)',correct:'\\dfrac{5}{\\sin 30°} = 10 \\text{ kN}',d:['5 \\text{ kN}','5\\sqrt{3} \\text{ kN}','2.5 \\text{ kN}']},
+  {ctx:'A 1500 kg car tows a 500 kg trailer. Driving force 6000 N. Total resistance 1000 N.',q:'',ask:'Acceleration',correct:'2.5 \\text{ m/s}^2',d:['3 \\text{ m/s}^2','4 \\text{ m/s}^2','10 \\text{ m/s}^2']},
+  {ctx:'Same system. a = 2.5 m/s². Trailer resistance = 200 N.',q:'T - 200 = 500 \\times 2.5',ask:'Tension in tow bar',correct:'1450 \\text{ N}',d:['1250 \\text{ N}','1000 \\text{ N}','3000 \\text{ N}']},
+  {ctx:'A jib crane: horizontal tie, jib at 60° to horizontal, load 8 kN.',q:'',ask:'Force in the jib (compression)',correct:'\\dfrac{8}{\\sin 60°} \\approx 9.24 \\text{ kN}',d:['8 \\text{ kN}','16 \\text{ kN}','4 \\text{ kN}']},
+  {ctx:'A belt drive applies 250 N at 20° below horizontal to a pulley.',q:'',ask:'Horizontal force on the pulley',correct:'250\\cos 20° \\approx 235 \\text{ N}',d:['250\\sin 20° \\text{ N}','250 \\text{ N}','85.5 \\text{ N}']},
+  {ctx:'A hook supports a 3 kN load. Two chains at 45° either side of vertical.',q:'',ask:'Tension in each chain',correct:'\\dfrac{3}{2\\cos 45°} \\approx 2.12 \\text{ kN}',d:['1.5 \\text{ kN}','3 \\text{ kN}','3\\sqrt{2} \\text{ kN}']},
+  {ctx:'A particle on a rough slope. θ = 25°, mass = 12 kg, μ = 0.35, g = 9.81.',q:'',ask:'Will it slide? (compare mg sin θ with μmg cos θ)',correct:'Yes — 49.7 N > 37.3 N',d:['No','Exactly balanced','Need more information']},
+  {ctx:'For a particle on a slope to be on the point of sliding, the condition is...',q:'',ask:'',correct:'\\tan\\theta = \\mu',d:['\\sin\\theta = \\mu','\\cos\\theta = \\mu','\\theta = \\mu']},
+  {ctx:'A 60 kg engineer stands at the midpoint of a 4 m beam supported at both ends. g = 9.81.',q:'',ask:'Reaction at each support',correct:'294.3 \\text{ N}',d:['588.6 \\text{ N}','147.15 \\text{ N}','60 \\text{ N}']},
+  {ctx:'A truss joint has forces: 10 kN at 0°, 8 kN at 120°, and F at 240°.',q:'',ask:'For equilibrium, F = ?',correct:'10 \\text{ kN} \\text{ (by symmetry of equilateral triangle of forces)}',d:['8 \\text{ kN}','18 \\text{ kN}','2 \\text{ kN}']},
+  {ctx:'Weight W on a slope angle θ. String parallel to slope holds it. Smooth surface.',q:'',ask:'Tension in string',correct:'W\\sin\\theta',d:['W\\cos\\theta','W','W\\tan\\theta']},
+]
+};
+
+let level='alevel',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,qStartTime=0;
+const BASE=100,T_K=0.15;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
+const pa=new URLSearchParams(location.search);if(pa.get('level')&&QUESTIONS[pa.get('level')]){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+function startGame(){questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}show('game');showQ();mfg('game_started',{game_slug:'force-resolver',level:level});window._ggAbandoned=true;if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'force-resolver',level:level,questions_answered:qIdx})})}}
+function formatCtx(ctx){
+  if(!ctx)return '';
+  // Split on '. ' to separate scenario from given values
+  var parts=ctx.split(/\.\s+/);
+  if(parts.length<=1)return ctx;
+  // First part is the scenario sentence
+  var scenario=parts[0]+'.';
+  // Remaining parts are given values — render as a list
+  var givens=parts.slice(1).map(function(p){return p.replace(/\.$/,'');}).filter(function(p){return p.length>0;});
+  if(givens.length===0)return scenario;
+  var html=scenario+'<ul class="given-list">';
+  givens.forEach(function(g){html+='<li>'+g+'</li>';});
+  html+='</ul>';
+  return html;
+}
+function showQ(){const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;document.getElementById('context').innerHTML=formatCtx(q.ctx);const qEl=document.getElementById('question');qEl.innerHTML='';if(q.q)rk(qEl,q.q);document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});qStartTime=Date.now();updateTimer()}
+function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStartTime)/1000);requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
+function handle(btn,q){const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});mfg('question_answered',{game_slug:'force-resolver',level:level,correct:ok,question_index:qIdx+1});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)}
+function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
+function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
+function end(){const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'force-resolver',level:level,score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('force-resolver',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('force-resolver',level,score);}}var _pbKey='fr_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'force-resolver',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score)}show('results')}
+function showMenu(){show('menu')}
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

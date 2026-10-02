@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Convert between Cartesian, polar, and exponential forms of complex numbers. Three game modes for Further Maths.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/complex-converter/">
+<meta property="og:title" content="Complex Converter — MaffsGames">
+<meta property="og:description" content="Convert between Cartesian, polar, and exponential forms of complex numbers. Three game modes for Further Maths.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/complex-converter/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Complex Converter — MaffsGames</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0f172a;--panel:#1e293b;--border:#334155;
+  --text:#e2e8f0;--muted:#94a3b8;--accent:#0d9488;
+  --correct:#22c55e;--wrong:#ef4444;--orange:#f97316;
+  --l4:#ef4444;--further:#8b5cf6;
+}
+body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.5;}
+.back-link{position:fixed;top:16px;left:16px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;z-index:200;opacity:0.7;transition:opacity .2s;}
+.back-link:hover{opacity:1;color:var(--accent);}
+
+/* MENU */
+#menuScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px;text-align:center;}
+.menu-title{font-size:32px;font-weight:700;margin-bottom:8px;}
+.menu-sub{color:var(--muted);font-size:15px;margin-bottom:12px;}
+.level-pill{display:inline-block;padding:4px 14px;border-radius:16px;font-size:12px;font-weight:700;color:#fff;margin-bottom:32px;}
+.level-pill.l4{background:var(--l4);}
+.level-pill.further{background:var(--further);}
+.mode-cards{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;max-width:1100px;}
+.mode-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:28px 24px;width:260px;cursor:pointer;transition:all .2s;text-align:left;}
+.mode-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+.mode-card h3{font-size:17px;font-weight:700;margin-bottom:8px;color:var(--accent);}
+.mode-card p{font-size:13px;color:var(--muted);line-height:1.6;}
+
+/* GAME HEADER */
+.game-header{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:var(--panel);border-bottom:1px solid var(--border);}
+.game-header .title{font-size:15px;font-weight:700;}
+.game-header .info{display:flex;gap:16px;align-items:center;font-size:13px;color:var(--muted);}
+.game-header .score-val{color:var(--accent);font-weight:700;}
+
+/* TIMER DISPLAY */
+.timer-bar-wrap{height:28px;background:var(--panel);width:100%;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);font-weight:600;letter-spacing:.04em;border-bottom:1px solid var(--border);}
+
+/* FORM ROULETTE */
+#rouletteScreen{display:none;}
+.roulette-main{display:flex;gap:24px;padding:24px;min-height:calc(100vh - 60px);align-items:flex-start;}
+.argand-col{flex:0 0 380px;}
+.question-col{flex:1;display:flex;flex-direction:column;gap:16px;}
+.conversion-label{font-size:13px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+.given-display{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;}
+.given-display .katex{font-size:1.6em;}
+.target-label{font-size:14px;color:var(--orange);font-weight:600;margin-top:4px;}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.opt-btn{background:var(--panel);border:2px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .15s;text-align:center;min-height:60px;display:flex;align-items:center;justify-content:center;}
+.opt-btn:hover{border-color:var(--accent);}
+.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.12);}
+.opt-btn.wrong{border-color:var(--wrong);background:rgba(239,68,68,.12);}
+.opt-btn.disabled{pointer-events:none;opacity:.6;}
+.opt-btn .katex{font-size:1.15em;}
+.context-line{font-size:12px;color:var(--muted);font-style:italic;margin-top:4px;}
+
+/* MATCHING TRIPLES */
+#triplesScreen{display:none;}
+.triples-area{padding:24px;}
+.triples-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.col-header{text-align:center;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding-bottom:8px;border-bottom:1px solid var(--border);margin-bottom:12px;}
+.triple-card{background:var(--panel);border:2px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;margin-bottom:10px;transition:all .15s;min-height:52px;display:flex;align-items:center;justify-content:center;}
+.triple-card:hover{border-color:var(--accent);}
+.triple-card.selected{border-color:var(--accent);background:rgba(13,148,136,.12);}
+.triple-card.matched{border-color:var(--correct);background:rgba(34,197,94,.12);pointer-events:none;opacity:.4;}
+.triple-card.wrong-flash{border-color:var(--wrong);background:rgba(239,68,68,.15);}
+.triple-card .katex{font-size:1em;}
+.triples-status{text-align:center;padding:16px;font-size:14px;color:var(--muted);}
+
+/* ARGAND SNIPER */
+#sniperScreen{display:none;}
+.sniper-main{display:flex;gap:24px;padding:24px;min-height:calc(100vh - 56px);align-items:flex-start;}
+.sniper-diagram{flex:0 0 480px;position:relative;}
+.sniper-question{flex:1;display:flex;flex-direction:column;gap:16px;}
+.sniper-prompt{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:24px;text-align:center;}
+.sniper-prompt .katex{font-size:1.8em;}
+.sniper-feedback{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;min-height:60px;}
+.sniper-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px 28px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;}
+.sniper-btn:hover{opacity:.9;}
+
+/* ARGAND SVG */
+.argand-svg{background:var(--panel);border-radius:10px;border:1px solid var(--border);display:block;width:100%;height:auto;}
+
+/* END SCREEN */
+#endScreen{display:none;}
+.end-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px;text-align:center;}
+.end-title{font-size:28px;font-weight:700;margin-bottom:6px;}
+.end-score{font-size:48px;font-weight:700;color:var(--accent);margin:12px 0;}
+.end-stats{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin:24px 0;}
+.end-stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 24px;min-width:120px;}
+.end-stat .val{font-size:22px;font-weight:700;color:var(--accent);}
+.end-stat .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;}
+.end-breakdown{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0;text-align:left;max-width:500px;width:100%;}
+.end-breakdown h4{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;}
+.bd-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-bottom:1px solid var(--border);}
+.bd-row:last-child{border:none;}
+.end-btns{display:flex;gap:12px;margin-top:24px;}
+.end-btn{padding:12px 32px;border-radius:8px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;border:none;}
+.end-btn.primary{background:var(--accent);color:#fff;}
+.end-btn.secondary{background:var(--panel);color:var(--text);border:1px solid var(--border);}
+
+/* CALCULATOR HINT */
+.calc-btn-wrap{text-align:center;margin-top:12px}
+.calc-btn{padding:8px 20px;background:var(--panel);color:var(--muted);border:1.5px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.calc-btn:hover{border-color:var(--orange);color:var(--orange)}
+.calc-btn.used{opacity:.4;pointer-events:none}
+.calc-panel{display:none;margin-top:12px;background:#0f172a;border:1.5px solid var(--border);border-radius:10px;padding:16px}
+.calc-panel.open{display:block;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.calc-mode-badge{font-size:11px;color:var(--orange);font-weight:700;text-align:right;margin-bottom:8px;letter-spacing:.06em}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.calc-opt{background:var(--panel);border:1.5px solid var(--border);border-radius:8px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s;min-height:48px;display:flex;align-items:center;justify-content:center}
+.calc-opt:hover{border-color:var(--orange)}
+.calc-opt.selected{border-color:var(--orange);background:rgba(249,115,22,.1);pointer-events:none}
+.calc-opt.not-selected{opacity:.4;pointer-events:none}
+.calc-opt .katex{font-size:.95em}
+.calc-result{margin-top:12px;text-align:center;font-size:20px;font-weight:700;color:var(--orange);min-height:28px}
+
+/* HEATMAP (sniper end) */
+.heatmap-wrap{margin:16px auto;max-width:400px;width:100%;}
+
+@media(max-width:768px){
+  .roulette-main,.sniper-main{flex-direction:column;}
+  .argand-col,.sniper-diagram{flex:none;width:100%;max-width:400px;margin:0 auto;}
+  .question-col,.sniper-question{width:100%;}
+  .options-grid{grid-template-columns:1fr;}
+  .triples-cols{grid-template-columns:1fr;gap:8px;}
+  .col-header{display:none;}
+  .triple-card::before{font-size:10px;color:var(--muted);display:block;margin-bottom:4px;}
+  .mode-card{width:100%;}
+  .menu-title{font-size:24px;}
+}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<a href="../../" class="back-link">&larr; Back to Games</a>
+
+<!-- MENU SCREEN -->
+<div id="menuScreen">
+  <div class="menu-title">Complex Converter</div>
+  <div class="menu-sub">Convert between Cartesian, polar, and exponential forms</div>
+  <div class="level-pill l4" id="levelPill">Level 4</div>
+  <div class="mode-cards">
+    <div class="mode-card" onclick="startMode('roulette')">
+      <h3>Form Roulette</h3>
+      <p>A complex number appears in one form. Convert it to the target form. 20 questions.</p>
+    </div>
+    <div class="mode-card" onclick="startMode('triples')">
+      <h3>Matching Triples</h3>
+      <p>Match Cartesian, polar, and exponential cards that represent the same number. 5 rounds.</p>
+    </div>
+    <div class="mode-card" onclick="startMode('sniper')">
+      <h3>Argand Sniper</h3>
+      <p>A complex number is shown. Tap where it lives on the Argand diagram. Accuracy is everything.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FORM ROULETTE SCREEN -->
+<div id="rouletteScreen">
+  <div class="game-header">
+    <div class="title">Form Roulette</div>
+    <div class="info">
+      <span>Q <span id="rqNum">1</span>/20</span>
+      <span>Score: <span class="score-val" id="rScore">0</span></span>
+    </div>
+  </div>
+  <div class="timer-bar-wrap"><span id="rTimerDisplay">0s</span></div>
+  <div class="roulette-main">
+    <div class="argand-col">
+      <svg id="rArgand" class="argand-svg" viewBox="0 0 380 380"></svg>
+    </div>
+    <div class="question-col">
+      <div class="conversion-label" id="rConvLabel">Cartesian &rarr; Polar</div>
+      <div class="given-display" id="rGiven"></div>
+      <div class="target-label" id="rTarget">Convert to polar form</div>
+      <div class="options-grid" id="rOptions"></div>
+      <div class="calc-btn-wrap" id="calcBtnWrap" style="display:none"><button class="calc-btn" id="calcBtn" onclick="toggleCalc()">&#x1f522; Calculator (&minus;25 pts)</button></div>
+      <div class="calc-panel" id="calcPanel"><div class="calc-mode-badge" id="calcMode">DEG</div><div class="calc-grid" id="calcGrid"></div><div class="calc-result" id="calcResult"></div></div>
+      <div class="context-line" id="rContext"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MATCHING TRIPLES SCREEN -->
+<div id="triplesScreen">
+  <div class="game-header">
+    <div class="title">Matching Triples</div>
+    <div class="info">
+      <span>Round <span id="tRound">1</span>/5</span>
+      <span>Score: <span class="score-val" id="tScore">0</span></span>
+    </div>
+  </div>
+  <div class="timer-bar-wrap"><span id="tTimerDisplay">0s</span></div>
+  <div class="triples-area">
+    <div class="triples-cols" id="triplesCols">
+      <div>
+        <div class="col-header">Cartesian</div>
+        <div id="colCart"></div>
+      </div>
+      <div>
+        <div class="col-header">Polar</div>
+        <div id="colPolar"></div>
+      </div>
+      <div>
+        <div class="col-header">Exponential</div>
+        <div id="colExp"></div>
+      </div>
+    </div>
+    <div class="triples-status" id="triplesStatus">Select one card from each column</div>
+  </div>
+</div>
+
+<!-- ARGAND SNIPER SCREEN -->
+<div id="sniperScreen">
+  <div class="game-header">
+    <div class="title">Argand Sniper</div>
+    <div class="info">
+      <span>Shot <span id="sNum">1</span>/15</span>
+      <span>Score: <span class="score-val" id="sScore">0</span></span>
+    </div>
+  </div>
+  <div class="sniper-main">
+    <div class="sniper-diagram">
+      <svg id="sArgand" class="argand-svg" viewBox="0 0 480 480" style="cursor:crosshair;"></svg>
+    </div>
+    <div class="sniper-question">
+      <div class="sniper-prompt" id="sPrompt"></div>
+      <div class="sniper-feedback" id="sFeedback">Tap the Argand diagram to place this number</div>
+      <button class="sniper-btn" id="sNextBtn" style="display:none;" onclick="sniperNext()">Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- END SCREEN -->
+<div id="endScreen">
+  <div class="end-wrap">
+    <div class="end-title" id="endTitle">Round Complete</div>
+    <div class="end-score" id="endScoreVal">0</div>
+    <div class="end-stats" id="endStats"></div>
+    <div class="end-breakdown" id="endBreakdown" style="display:none;"></div>
+    <div class="heatmap-wrap" id="heatmapWrap" style="display:none;"></div>
+    <div class="end-btns">
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+      <button class="end-btn primary" onclick="location.reload()">Play Again</button>
+      <button class="end-btn secondary" onclick="showMenu()">Menu</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// === GLOBALS ===
+const params = new URLSearchParams(location.search);
+const LEVEL = params.get('level') || 'level4';
+const useJ = LEVEL === 'level4';
+function swapNotation(s) { return useJ ? s : s.replace(/j/g, 'i'); }
+
+document.getElementById('levelPill').textContent = LEVEL === 'level4' ? 'Level 4' : 'Further Maths';
+if (LEVEL === 'further') document.getElementById('levelPill').classList.replace('l4','further');
+
+function K(latex) { return katex.renderToString(swapNotation(latex), {throwOnError:false, displayMode:false}); }
+
+// === QUESTION BANK ===
+const QUESTIONS = { level4: [
+{id:1,source:"cartesian",target:"polar",given:"3 + 4j",givenLatex:"3 + 4j",correct:"5\\angle 53.13°",correctLatex:"5\\angle 53.13°",distractors:["5\\angle 36.87°","4\\angle 53.13°","5\\angle 126.87°"],re:3,im:4,r:5,argDeg:53.13,argRad:0.927,context:"Express this impedance in polar form."},
+{id:2,source:"cartesian",target:"exponential",given:"3 + 4j",givenLatex:"3 + 4j",correct:"5e^{j0.927}",correctLatex:"5e^{j0.927}",distractors:["5e^{j0.644}","4e^{j0.927}","5e^{j2.214}"],re:3,im:4,r:5,argDeg:53.13,argRad:0.927,context:"Write this phasor in exponential form."},
+{id:3,source:"polar",target:"cartesian",given:"5∠53.13°",givenLatex:"5\\angle 53.13°",correct:"3 + 4j",correctLatex:"3 + 4j",distractors:["4 + 3j","3 + 5j","4 + 4j"],re:3,im:4,r:5,argDeg:53.13,argRad:0.927,context:"Convert this phasor to rectangular form."},
+{id:4,source:"polar",target:"exponential",given:"5∠53.13°",givenLatex:"5\\angle 53.13°",correct:"5e^{j0.927}",correctLatex:"5e^{j0.927}",distractors:["5e^{j53.13}","5e^{j0.644}","3e^{j0.927}"],re:3,im:4,r:5,argDeg:53.13,argRad:0.927,context:"Express in exponential form."},
+{id:5,source:"exponential",target:"cartesian",given:"5e^(j0.927)",givenLatex:"5e^{j0.927}",correct:"3 + 4j",correctLatex:"3 + 4j",distractors:["4 + 3j","3.5 + 3.5j","2.5 + 4.3j"],re:3,im:4,r:5,argDeg:53.13,argRad:0.927,context:"Find the rectangular form of this impedance."},
+{id:6,source:"exponential",target:"polar",given:"5e^(j0.927)",givenLatex:"5e^{j0.927}",correct:"5\\angle 53.13°",correctLatex:"5\\angle 53.13°",distractors:["5\\angle 0.927°","5\\angle 36.87°","0.927\\angle 5°"],re:3,im:4,r:5,argDeg:53.13,argRad:0.927,context:"Convert to polar form."},
+{id:7,source:"cartesian",target:"polar",given:"1 + j",givenLatex:"1 + j",correct:"\\sqrt{2}\\angle 45°",correctLatex:"\\sqrt{2}\\angle 45°",distractors:["1\\angle 45°","\\sqrt{2}\\angle 90°","2\\angle 45°"],re:1,im:1,r:1.414,argDeg:45,argRad:0.785,context:"Express this voltage phasor in polar form."},
+{id:8,source:"cartesian",target:"exponential",given:"1 + j",givenLatex:"1 + j",correct:"\\sqrt{2}e^{j\\pi/4}",correctLatex:"\\sqrt{2}e^{j\\pi/4}",distractors:["\\sqrt{2}e^{j\\pi/2}","e^{j\\pi/4}","2e^{j\\pi/4}"],re:1,im:1,r:1.414,argDeg:45,argRad:0.785,context:"Write in exponential form."},
+{id:9,source:"polar",target:"cartesian",given:"2∠30°",givenLatex:"2\\angle 30°",correct:"\\sqrt{3} + j",correctLatex:"\\sqrt{3} + j",distractors:["1 + \\sqrt{3}j","1.5 + 1.5j","2 + j"],re:1.732,im:1,r:2,argDeg:30,argRad:0.524,context:"Convert this current phasor to rectangular form."},
+{id:10,source:"polar",target:"cartesian",given:"4∠60°",givenLatex:"4\\angle 60°",correct:"2 + 2\\sqrt{3}j",correctLatex:"2 + 2\\sqrt{3}j",distractors:["2\\sqrt{3} + 2j","2 + 2j","3 + 2j"],re:2,im:3.464,r:4,argDeg:60,argRad:1.047,context:"Find the rectangular form."},
+{id:11,source:"cartesian",target:"polar",given:"√3 + j",givenLatex:"\\sqrt{3} + j",correct:"2\\angle 30°",correctLatex:"2\\angle 30°",distractors:["2\\angle 60°","\\sqrt{3}\\angle 30°","2\\angle 45°"],re:1.732,im:1,r:2,argDeg:30,argRad:0.524,context:"Express in polar form."},
+{id:12,source:"exponential",target:"cartesian",given:"2e^(jπ/3)",givenLatex:"2e^{j\\pi/3}",correct:"1 + \\sqrt{3}j",correctLatex:"1 + \\sqrt{3}j",distractors:["\\sqrt{3} + j","1 + j","2 + \\sqrt{3}j"],re:1,im:1.732,r:2,argDeg:60,argRad:1.047,context:"Convert this impedance to rectangular form."},
+{id:13,source:"cartesian",target:"polar",given:"5 + 12j",givenLatex:"5 + 12j",correct:"13\\angle 67.38°",correctLatex:"13\\angle 67.38°",distractors:["13\\angle 22.62°","12\\angle 67.38°","13\\angle 112.62°"],re:5,im:12,r:13,argDeg:67.38,argRad:1.176,context:"Find the magnitude and phase of this signal."},
+{id:14,source:"polar",target:"exponential",given:"10∠45°",givenLatex:"10\\angle 45°",correct:"10e^{j\\pi/4}",correctLatex:"10e^{j\\pi/4}",distractors:["10e^{j45}","10e^{j\\pi/2}","\\sqrt{10}e^{j\\pi/4}"],re:7.071,im:7.071,r:10,argDeg:45,argRad:0.785,context:"Write this phasor in exponential notation."},
+{id:15,source:"exponential",target:"polar",given:"3e^(jπ/6)",givenLatex:"3e^{j\\pi/6}",correct:"3\\angle 30°",correctLatex:"3\\angle 30°",distractors:["3\\angle 60°","3\\angle \\pi/6","6\\angle 30°"],re:2.598,im:1.5,r:3,argDeg:30,argRad:0.524,context:"Express in polar form (degrees)."},
+{id:16,source:"cartesian",target:"exponential",given:"6 + 8j",givenLatex:"6 + 8j",correct:"10e^{j0.927}",correctLatex:"10e^{j0.927}",distractors:["10e^{j0.644}","8e^{j0.927}","10e^{j1.047}"],re:6,im:8,r:10,argDeg:53.13,argRad:0.927,context:"Convert this voltage to exponential form."},
+{id:17,source:"polar",target:"cartesian",given:"6∠45°",givenLatex:"6\\angle 45°",correct:"3\\sqrt{2} + 3\\sqrt{2}j",correctLatex:"3\\sqrt{2} + 3\\sqrt{2}j",distractors:["3 + 3j","6 + 6j","3\\sqrt{2} + 3j"],re:4.243,im:4.243,r:6,argDeg:45,argRad:0.785,context:"Convert to rectangular form."},
+{id:18,source:"exponential",target:"cartesian",given:"4e^(jπ/4)",givenLatex:"4e^{j\\pi/4}",correct:"2\\sqrt{2} + 2\\sqrt{2}j",correctLatex:"2\\sqrt{2} + 2\\sqrt{2}j",distractors:["2 + 2j","4 + 4j","2\\sqrt{2} + 2j"],re:2.828,im:2.828,r:4,argDeg:45,argRad:0.785,context:"Find the rectangular components of this phasor."},
+{id:19,source:"cartesian",target:"polar",given:"-3 + 4j",givenLatex:"-3 + 4j",correct:"5\\angle 126.87°",correctLatex:"5\\angle 126.87°",distractors:["5\\angle 53.13°","5\\angle -53.13°","5\\angle 233.13°"],re:-3,im:4,r:5,argDeg:126.87,argRad:2.214,context:"This impedance has a negative real part. Find its polar form."},
+{id:20,source:"cartesian",target:"polar",given:"-3 - 4j",givenLatex:"-3 - 4j",correct:"5\\angle 233.13°",correctLatex:"5\\angle 233.13°",distractors:["5\\angle -126.87°","5\\angle 53.13°","5\\angle 306.87°"],re:-3,im:-4,r:5,argDeg:233.13,argRad:4.069,context:"Convert to polar form. Give angle as positive."},
+{id:21,source:"cartesian",target:"polar",given:"3 - 4j",givenLatex:"3 - 4j",correct:"5\\angle -53.13°",correctLatex:"5\\angle -53.13°",distractors:["5\\angle 53.13°","5\\angle 306.87°","5\\angle -126.87°"],re:3,im:-4,r:5,argDeg:-53.13,argRad:-0.927,context:"This capacitive impedance has negative imaginary part. Find polar form."},
+{id:22,source:"polar",target:"cartesian",given:"2∠120°",givenLatex:"2\\angle 120°",correct:"-1 + \\sqrt{3}j",correctLatex:"-1 + \\sqrt{3}j",distractors:["1 + \\sqrt{3}j","-\\sqrt{3} + j","-1 + j"],re:-1,im:1.732,r:2,argDeg:120,argRad:2.094,context:"Convert to rectangular form."},
+{id:23,source:"polar",target:"cartesian",given:"2∠210°",givenLatex:"2\\angle 210°",correct:"-\\sqrt{3} - j",correctLatex:"-\\sqrt{3} - j",distractors:["\\sqrt{3} - j","-1 - \\sqrt{3}j","-\\sqrt{3} + j"],re:-1.732,im:-1,r:2,argDeg:210,argRad:3.665,context:"Find the rectangular form."},
+{id:24,source:"polar",target:"cartesian",given:"2∠-60°",givenLatex:"2\\angle -60°",correct:"1 - \\sqrt{3}j",correctLatex:"1 - \\sqrt{3}j",distractors:["\\sqrt{3} - j","1 + \\sqrt{3}j","-1 - \\sqrt{3}j"],re:1,im:-1.732,r:2,argDeg:-60,argRad:-1.047,context:"Convert this capacitive reactance phasor to rectangular form."},
+{id:25,source:"exponential",target:"cartesian",given:"4e^(j2π/3)",givenLatex:"4e^{j2\\pi/3}",correct:"-2 + 2\\sqrt{3}j",correctLatex:"-2 + 2\\sqrt{3}j",distractors:["2 + 2\\sqrt{3}j","-2\\sqrt{3} + 2j","-2 - 2\\sqrt{3}j"],re:-2,im:3.464,r:4,argDeg:120,argRad:2.094,context:"Find the rectangular components."},
+{id:26,source:"cartesian",target:"exponential",given:"1 - j",givenLatex:"1 - j",correct:"\\sqrt{2}e^{-j\\pi/4}",correctLatex:"\\sqrt{2}e^{-j\\pi/4}",distractors:["\\sqrt{2}e^{j\\pi/4}","\\sqrt{2}e^{j3\\pi/4}","e^{-j\\pi/4}"],re:1,im:-1,r:1.414,argDeg:-45,argRad:-0.785,context:"Express in exponential form."},
+{id:27,source:"cartesian",target:"polar",given:"-1 + j",givenLatex:"-1 + j",correct:"\\sqrt{2}\\angle 135°",correctLatex:"\\sqrt{2}\\angle 135°",distractors:["\\sqrt{2}\\angle 45°","\\sqrt{2}\\angle -45°","1\\angle 135°"],re:-1,im:1,r:1.414,argDeg:135,argRad:2.356,context:"Find the polar form of this impedance."},
+{id:28,source:"cartesian",target:"polar",given:"-1 - j",givenLatex:"-1 - j",correct:"\\sqrt{2}\\angle 225°",correctLatex:"\\sqrt{2}\\angle 225°",distractors:["\\sqrt{2}\\angle 45°","\\sqrt{2}\\angle -135°","\\sqrt{2}\\angle 315°"],re:-1,im:-1,r:1.414,argDeg:225,argRad:3.927,context:"Convert to polar form (positive angle)."},
+{id:29,source:"polar",target:"exponential",given:"3∠150°",givenLatex:"3\\angle 150°",correct:"3e^{j5\\pi/6}",correctLatex:"3e^{j5\\pi/6}",distractors:["3e^{j\\pi/6}","3e^{j2\\pi/3}","3e^{j7\\pi/6}"],re:-2.598,im:1.5,r:3,argDeg:150,argRad:2.618,context:"Write in exponential form."},
+{id:30,source:"exponential",target:"polar",given:"5e^(j7π/6)",givenLatex:"5e^{j7\\pi/6}",correct:"5\\angle 210°",correctLatex:"5\\angle 210°",distractors:["5\\angle 30°","5\\angle 150°","5\\angle 330°"],re:-4.330,im:-2.5,r:5,argDeg:210,argRad:3.665,context:"Convert to polar form (degrees)."},
+{id:31,source:"cartesian",target:"polar",given:"8 + 6j",givenLatex:"8 + 6j",correct:"10\\angle 36.87°",correctLatex:"10\\angle 36.87°",distractors:["10\\angle 53.13°","8\\angle 36.87°","10\\angle 143.13°"],re:8,im:6,r:10,argDeg:36.87,argRad:0.644,context:"Find the magnitude and phase angle."},
+{id:32,source:"polar",target:"cartesian",given:"5∠-30°",givenLatex:"5\\angle -30°",correct:"\\dfrac{5\\sqrt{3}}{2} - \\dfrac{5}{2}j",correctLatex:"\\dfrac{5\\sqrt{3}}{2} - \\dfrac{5}{2}j",distractors:["\\dfrac{5}{2} - \\dfrac{5\\sqrt{3}}{2}j","5 - \\dfrac{5}{2}j","\\dfrac{5\\sqrt{3}}{2} + \\dfrac{5}{2}j"],re:4.330,im:-2.5,r:5,argDeg:-30,argRad:-0.524,context:"Convert this lagging phasor to rectangular form."},
+{id:33,source:"exponential",target:"cartesian",given:"6e^(j5π/4)",givenLatex:"6e^{j5\\pi/4}",correct:"-3\\sqrt{2} - 3\\sqrt{2}j",correctLatex:"-3\\sqrt{2} - 3\\sqrt{2}j",distractors:["3\\sqrt{2} - 3\\sqrt{2}j","-3\\sqrt{2} + 3\\sqrt{2}j","-3 - 3j"],re:-4.243,im:-4.243,r:6,argDeg:225,argRad:3.927,context:"Find the rectangular form."},
+{id:34,source:"cartesian",target:"exponential",given:"-5 + 12j",givenLatex:"-5 + 12j",correct:"13e^{j1.966}",correctLatex:"13e^{j1.966}",distractors:["13e^{j1.176}","12e^{j1.966}","13e^{j4.317}"],re:-5,im:12,r:13,argDeg:112.62,argRad:1.966,context:"Express this impedance in exponential form."},
+{id:35,source:"polar",target:"cartesian",given:"3∠270°",givenLatex:"3\\angle 270°",correct:"-3j",correctLatex:"-3j",distractors:["3j","3","-3"],re:0,im:-3,r:3,argDeg:270,argRad:4.712,context:"Convert to rectangular form."},
+{id:36,source:"cartesian",target:"polar",given:"5j",givenLatex:"5j",correct:"5\\angle 90°",correctLatex:"5\\angle 90°",distractors:["5\\angle 0°","5\\angle 180°","5\\angle 270°"],re:0,im:5,r:5,argDeg:90,argRad:1.571,context:"This is a purely reactive impedance. Find its polar form."},
+{id:37,source:"polar",target:"cartesian",given:"4∠180°",givenLatex:"4\\angle 180°",correct:"-4",correctLatex:"-4",distractors:["4","-4j","4j"],re:-4,im:0,r:4,argDeg:180,argRad:3.14159,context:"Convert to rectangular form."},
+{id:38,source:"exponential",target:"polar",given:"7e^(j3π/2)",givenLatex:"7e^{j3\\pi/2}",correct:"7\\angle 270°",correctLatex:"7\\angle 270°",distractors:["7\\angle 90°","7\\angle 180°","\\dfrac{3\\pi}{2}\\angle 7°"],re:0,im:-7,r:7,argDeg:270,argRad:4.712,context:"Express in polar form (degrees)."},
+{id:39,source:"cartesian",target:"exponential",given:"-2 + 2j",givenLatex:"-2 + 2j",correct:"2\\sqrt{2}e^{j3\\pi/4}",correctLatex:"2\\sqrt{2}e^{j3\\pi/4}",distractors:["2\\sqrt{2}e^{j\\pi/4}","2e^{j3\\pi/4}","2\\sqrt{2}e^{j5\\pi/4}"],re:-2,im:2,r:2.828,argDeg:135,argRad:2.356,context:"Write in exponential form."},
+{id:40,source:"polar",target:"exponential",given:"8∠-90°",givenLatex:"8\\angle -90°",correct:"8e^{-j\\pi/2}",correctLatex:"8e^{-j\\pi/2}",distractors:["8e^{j\\pi/2}","8e^{-j90}","-8e^{j\\pi/2}"],re:0,im:-8,r:8,argDeg:-90,argRad:-1.571,context:"Convert this capacitive reactance to exponential form."},
+{id:41,source:"exponential",target:"cartesian",given:"e^(jπ/3)",givenLatex:"e^{j\\pi/3}",correct:"\\dfrac{1}{2} + \\dfrac{\\sqrt{3}}{2}j",correctLatex:"\\dfrac{1}{2} + \\dfrac{\\sqrt{3}}{2}j",distractors:["\\dfrac{\\sqrt{3}}{2} + \\dfrac{1}{2}j","1 + \\sqrt{3}j","\\dfrac{1}{2} + j"],re:0.5,im:0.866,r:1,argDeg:60,argRad:1.047,context:"This is a unit phasor. Find its rectangular form."},
+{id:42,source:"exponential",target:"cartesian",given:"e^(j5π/6)",givenLatex:"e^{j5\\pi/6}",correct:"-\\dfrac{\\sqrt{3}}{2} + \\dfrac{1}{2}j",correctLatex:"-\\dfrac{\\sqrt{3}}{2} + \\dfrac{1}{2}j",distractors:["\\dfrac{\\sqrt{3}}{2} + \\dfrac{1}{2}j","-\\dfrac{1}{2} + \\dfrac{\\sqrt{3}}{2}j","-\\dfrac{\\sqrt{3}}{2} - \\dfrac{1}{2}j"],re:-0.866,im:0.5,r:1,argDeg:150,argRad:2.618,context:"Find the rectangular components of this unit phasor."},
+{id:43,source:"exponential",target:"cartesian",given:"7e^(j0)",givenLatex:"7e^{j \\cdot 0}",correct:"7",correctLatex:"7",distractors:["7j","0 + 7j","-7"],re:7,im:0,r:7,argDeg:0,argRad:0,context:"This phasor has zero phase angle. What is its rectangular form?"},
+{id:44,source:"polar",target:"cartesian",given:"3∠180°",givenLatex:"3\\angle 180°",correct:"-3",correctLatex:"-3",distractors:["3","-3j","3j"],re:-3,im:0,r:3,argDeg:180,argRad:3.14159,context:"Convert to rectangular form."},
+{id:45,source:"cartesian",target:"polar",given:"12 - 5j",givenLatex:"12 - 5j",correct:"13\\angle -22.62°",correctLatex:"13\\angle -22.62°",distractors:["13\\angle 22.62°","13\\angle 67.38°","12\\angle -22.62°"],re:12,im:-5,r:13,argDeg:-22.62,argRad:-0.395,context:"Find the magnitude and phase of this impedance."},
+{id:46,source:"polar",target:"cartesian",given:"10∠-150°",givenLatex:"10\\angle -150°",correct:"-5\\sqrt{3} - 5j",correctLatex:"-5\\sqrt{3} - 5j",distractors:["-5 - 5\\sqrt{3}j","5\\sqrt{3} - 5j","-5\\sqrt{3} + 5j"],re:-8.660,im:-5,r:10,argDeg:-150,argRad:-2.618,context:"Convert to rectangular form."},
+{id:47,source:"cartesian",target:"exponential",given:"4j",givenLatex:"4j",correct:"4e^{j\\pi/2}",correctLatex:"4e^{j\\pi/2}",distractors:["4e^{j0}","4e^{j\\pi}","4e^{j3\\pi/2}"],re:0,im:4,r:4,argDeg:90,argRad:1.571,context:"This purely inductive reactance — express in exponential form."},
+{id:48,source:"cartesian",target:"exponential",given:"-6j",givenLatex:"-6j",correct:"6e^{-j\\pi/2}",correctLatex:"6e^{-j\\pi/2}",distractors:["6e^{j\\pi/2}","-6e^{j\\pi/2}","6e^{j\\pi}"],re:0,im:-6,r:6,argDeg:-90,argRad:-1.571,context:"This purely capacitive reactance — express in exponential form."},
+{id:49,source:"exponential",target:"polar",given:"e^(jπ)",givenLatex:"e^{j\\pi}",correct:"1\\angle 180°",correctLatex:"1\\angle 180°",distractors:["1\\angle 0°","\\pi\\angle 1°","1\\angle 90°"],re:-1,im:0,r:1,argDeg:180,argRad:3.14159,context:"Euler's famous identity in polar form."},
+{id:50,source:"cartesian",target:"polar",given:"-7 + 24j",givenLatex:"-7 + 24j",correct:"25\\angle 106.26°",correctLatex:"25\\angle 106.26°",distractors:["25\\angle 73.74°","25\\angle -106.26°","24\\angle 106.26°"],re:-7,im:24,r:25,argDeg:106.26,argRad:1.855,context:"Find the polar form of this impedance."},
+{id:51,source:"polar",target:"cartesian",given:"1∠0°",givenLatex:"1\\angle 0°",correct:"1",correctLatex:"1",distractors:["j","0","-1"],re:1,im:0,r:1,argDeg:0,argRad:0,context:"The simplest phasor. Convert to rectangular."},
+{id:52,source:"exponential",target:"cartesian",given:"2e^(j11π/6)",givenLatex:"2e^{j11\\pi/6}",correct:"\\sqrt{3} - j",correctLatex:"\\sqrt{3} - j",distractors:["1 - \\sqrt{3}j","\\sqrt{3} + j","-\\sqrt{3} - j"],re:1.732,im:-1,r:2,argDeg:330,argRad:5.760,context:"Convert to rectangular form."},
+{id:53,source:"cartesian",target:"polar",given:"-8 - 15j",givenLatex:"-8 - 15j",correct:"17\\angle 241.93°",correctLatex:"17\\angle 241.93°",distractors:["17\\angle 61.93°","17\\angle 118.07°","15\\angle 241.93°"],re:-8,im:-15,r:17,argDeg:241.93,argRad:4.224,context:"Find magnitude and phase angle (positive angle)."},
+{id:54,source:"polar",target:"exponential",given:"12∠-45°",givenLatex:"12\\angle -45°",correct:"12e^{-j\\pi/4}",correctLatex:"12e^{-j\\pi/4}",distractors:["12e^{j\\pi/4}","12e^{-j45}","-12e^{j\\pi/4}"],re:8.485,im:-8.485,r:12,argDeg:-45,argRad:-0.785,context:"Convert this lagging current phasor to exponential form."},
+{id:55,source:"exponential",target:"cartesian",given:"10e^(j4π/3)",givenLatex:"10e^{j4\\pi/3}",correct:"-5 - 5\\sqrt{3}j",correctLatex:"-5 - 5\\sqrt{3}j",distractors:["-5\\sqrt{3} - 5j","5 - 5\\sqrt{3}j","-5 + 5\\sqrt{3}j"],re:-5,im:-8.660,r:10,argDeg:240,argRad:4.189,context:"Find the rectangular form of this phasor."}
+] };
+QUESTIONS.further = QUESTIONS.level4;
+
+// === CALCULATOR HINTS (keyed by question id) ===
+const CALC_HINTS = {
+// Cartesian → Polar (argument via arctan, DEG)
+1:{correct:"\\arctan\\!\\left(\\dfrac{4}{3}\\right)",result:"53.13\u00b0",distractors:["\\arctan\\!\\left(\\dfrac{3}{4}\\right)","\\arctan\\!\\left(\\dfrac{4}{5}\\right)","\\arctan\\!\\left(\\dfrac{3}{5}\\right)"],results:["36.87\u00b0","38.66\u00b0","30.96\u00b0"],mode:"DEG"},
+11:{correct:"\\arctan\\!\\left(\\dfrac{1}{\\sqrt{3}}\\right)",result:"30.00\u00b0",distractors:["\\arctan(\\sqrt{3})","\\arctan\\!\\left(\\dfrac{1}{2}\\right)","\\arctan\\!\\left(\\dfrac{\\sqrt{3}}{2}\\right)"],results:["60.00\u00b0","26.57\u00b0","40.89\u00b0"],mode:"DEG"},
+13:{correct:"\\arctan\\!\\left(\\dfrac{12}{5}\\right)",result:"67.38\u00b0",distractors:["\\arctan\\!\\left(\\dfrac{5}{12}\\right)","\\arctan\\!\\left(\\dfrac{12}{13}\\right)","\\arctan\\!\\left(\\dfrac{5}{13}\\right)"],results:["22.62\u00b0","42.71\u00b0","21.04\u00b0"],mode:"DEG"},
+19:{correct:"\\arctan\\!\\left(\\dfrac{4}{3}\\right)",result:"53.13\u00b0 (ref. angle)",distractors:["\\arctan\\!\\left(\\dfrac{3}{4}\\right)","\\arctan\\!\\left(\\dfrac{4}{5}\\right)","\\arctan\\!\\left(\\dfrac{-4}{3}\\right)"],results:["36.87\u00b0","\u200b38.66\u00b0","-53.13\u00b0"],mode:"DEG"},
+20:{correct:"\\arctan\\!\\left(\\dfrac{4}{3}\\right)",result:"53.13\u00b0 (ref. angle)",distractors:["\\arctan\\!\\left(\\dfrac{3}{4}\\right)","\\arctan\\!\\left(\\dfrac{4}{5}\\right)","\\arctan\\!\\left(\\dfrac{3}{5}\\right)"],results:["36.87\u00b0","38.66\u00b0","30.96\u00b0"],mode:"DEG"},
+21:{correct:"\\arctan\\!\\left(\\dfrac{4}{3}\\right)",result:"53.13\u00b0 (ref. angle)",distractors:["\\arctan\\!\\left(\\dfrac{3}{4}\\right)","\\arctan\\!\\left(\\dfrac{4}{5}\\right)","\\arctan\\!\\left(\\dfrac{3}{5}\\right)"],results:["36.87\u00b0","38.66\u00b0","30.96\u00b0"],mode:"DEG"},
+31:{correct:"\\arctan\\!\\left(\\dfrac{6}{8}\\right)",result:"36.87\u00b0",distractors:["\\arctan\\!\\left(\\dfrac{8}{6}\\right)","\\arctan\\!\\left(\\dfrac{6}{10}\\right)","\\arctan\\!\\left(\\dfrac{8}{10}\\right)"],results:["53.13\u00b0","30.96\u00b0","38.66\u00b0"],mode:"DEG"},
+45:{correct:"\\arctan\\!\\left(\\dfrac{5}{12}\\right)",result:"22.62\u00b0 (ref. angle)",distractors:["\\arctan\\!\\left(\\dfrac{12}{5}\\right)","\\arctan\\!\\left(\\dfrac{5}{13}\\right)","\\arctan\\!\\left(\\dfrac{12}{13}\\right)"],results:["67.38\u00b0","21.04\u00b0","42.71\u00b0"],mode:"DEG"},
+50:{correct:"\\arctan\\!\\left(\\dfrac{24}{7}\\right)",result:"73.74\u00b0 (ref. angle)",distractors:["\\arctan\\!\\left(\\dfrac{7}{24}\\right)","\\arctan\\!\\left(\\dfrac{24}{25}\\right)","\\arctan\\!\\left(\\dfrac{7}{25}\\right)"],results:["16.26\u00b0","43.83\u00b0","15.64\u00b0"],mode:"DEG"},
+53:{correct:"\\arctan\\!\\left(\\dfrac{15}{8}\\right)",result:"61.93\u00b0 (ref. angle)",distractors:["\\arctan\\!\\left(\\dfrac{8}{15}\\right)","\\arctan\\!\\left(\\dfrac{15}{17}\\right)","\\arctan\\!\\left(\\dfrac{8}{17}\\right)"],results:["28.07\u00b0","41.42\u00b0","25.21\u00b0"],mode:"DEG"},
+// Cartesian → Exponential (argument via arctan, RAD)
+2:{correct:"\\arctan\\!\\left(\\dfrac{4}{3}\\right)",result:"0.927 rad",distractors:["\\arctan\\!\\left(\\dfrac{3}{4}\\right)","\\arctan\\!\\left(\\dfrac{4}{5}\\right)","\\arctan\\!\\left(\\dfrac{3}{5}\\right)"],results:["0.644 rad","0.675 rad","0.540 rad"],mode:"RAD"},
+16:{correct:"\\arctan\\!\\left(\\dfrac{8}{6}\\right)",result:"0.927 rad",distractors:["\\arctan\\!\\left(\\dfrac{6}{8}\\right)","\\arctan\\!\\left(\\dfrac{8}{10}\\right)","\\arctan\\!\\left(\\dfrac{6}{10}\\right)"],results:["0.644 rad","0.675 rad","0.540 rad"],mode:"RAD"},
+34:{correct:"\\arctan\\!\\left(\\dfrac{12}{5}\\right)",result:"1.176 rad (ref. angle)",distractors:["\\arctan\\!\\left(\\dfrac{5}{12}\\right)","\\arctan\\!\\left(\\dfrac{12}{13}\\right)","\\arctan\\!\\left(\\dfrac{5}{13}\\right)"],results:["0.395 rad","0.747 rad","0.368 rad"],mode:"RAD"},
+// Polar → Cartesian (trig evaluation, DEG)
+3:{correct:"5\\cos(53.13\u00b0)",result:"3.00",distractors:["5\\sin(53.13\u00b0)","5\\cos(36.87\u00b0)","5\\tan(53.13\u00b0)"],results:["4.00","4.00","6.65"],mode:"DEG"},
+10:{correct:"4\\cos(60\u00b0)",result:"2.00",distractors:["4\\sin(60\u00b0)","4\\cos(30\u00b0)","4\\tan(60\u00b0)"],results:["3.46","3.46","6.93"],mode:"DEG"},
+22:{correct:"2\\cos(120\u00b0)",result:"-1.00",distractors:["2\\sin(120\u00b0)","2\\cos(60\u00b0)","2\\tan(120\u00b0)"],results:["1.73","1.00","-3.46"],mode:"DEG"},
+46:{correct:"10\\cos(-150\u00b0)",result:"-8.66",distractors:["10\\sin(-150\u00b0)","10\\cos(-30\u00b0)","10\\tan(-150\u00b0)"],results:["-5.00","8.66","5.77"],mode:"DEG"},
+// Exponential → Cartesian (trig evaluation, RAD)
+5:{correct:"5\\cos(0.927)",result:"3.00",distractors:["5\\sin(0.927)","5\\cos(0.644)","5\\tan(0.927)"],results:["4.00","4.00","6.65"],mode:"RAD"},
+25:{correct:"4\\cos\\!\\left(\\dfrac{2\\pi}{3}\\right)",result:"-2.00",distractors:["4\\sin\\!\\left(\\dfrac{2\\pi}{3}\\right)","4\\cos\\!\\left(\\dfrac{\\pi}{3}\\right)","4\\tan\\!\\left(\\dfrac{2\\pi}{3}\\right)"],results:["3.46","2.00","-6.93"],mode:"RAD"},
+55:{correct:"10\\cos\\!\\left(\\dfrac{4\\pi}{3}\\right)",result:"-5.00",distractors:["10\\sin\\!\\left(\\dfrac{4\\pi}{3}\\right)","10\\cos\\!\\left(\\dfrac{\\pi}{3}\\right)","10\\tan\\!\\left(\\dfrac{4\\pi}{3}\\right)"],results:["-8.66","5.00","1.73"],mode:"RAD"},
+};
+
+const bank = QUESTIONS[LEVEL] || QUESTIONS.level4;
+
+// === UTILITY ===
+function shuffle(a) { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function pickN(arr,n) { return shuffle([...arr]).slice(0,n); }
+const formName = {cartesian:'Cartesian',polar:'Polar',exponential:'Exponential'};
+
+// === ARGAND DIAGRAM ===
+function drawArgand(svgEl, re, im, size, opts={}) {
+  const s = size || 380;
+  const pad = 40;
+  const maxAbs = Math.max(Math.abs(re), Math.abs(im), 1) * 1.4;
+  const gridStep = maxAbs <= 2 ? 0.5 : maxAbs <= 6 ? 1 : maxAbs <= 15 ? 2 : 5;
+  const range = Math.ceil(maxAbs / gridStep) * gridStep;
+  const scale = (s - 2*pad) / (2*range);
+  const cx = s/2, cy = s/2;
+  const toX = v => cx + v * scale;
+  const toY = v => cy - v * scale;
+
+  let svg = '';
+  // grid
+  for(let v = -range; v <= range; v += gridStep) {
+    if(v === 0) continue;
+    svg += `<line x1="${pad}" y1="${toY(v)}" x2="${s-pad}" y2="${toY(v)}" stroke="#334155" stroke-width="0.5"/>`;
+    svg += `<line x1="${toX(v)}" y1="${pad}" x2="${toX(v)}" y2="${s-pad}" stroke="#334155" stroke-width="0.5"/>`;
+  }
+  // axes
+  svg += `<line x1="${pad}" y1="${cy}" x2="${s-pad}" y2="${cy}" stroke="#94a3b8" stroke-width="1.5"/>`;
+  svg += `<line x1="${cx}" y1="${pad}" x2="${cx}" y2="${s-pad}" stroke="#94a3b8" stroke-width="1.5"/>`;
+  // axis labels
+  const rLabel = useJ ? 'Real' : 'Re';
+  const iLabel = useJ ? 'Imaginary' : 'Im';
+  svg += `<text x="${s-pad+4}" y="${cy+4}" fill="#94a3b8" font-size="11" font-family="Outfit">${rLabel}</text>`;
+  svg += `<text x="${cx+6}" y="${pad-6}" fill="#94a3b8" font-size="11" font-family="Outfit">${iLabel}</text>`;
+  // tick labels
+  for(let v = -range; v <= range; v += gridStep) {
+    if(v === 0) continue;
+    const label = Number.isInteger(v) ? v : v.toFixed(1);
+    svg += `<text x="${toX(v)}" y="${cy+14}" fill="#64748b" font-size="9" text-anchor="middle" font-family="Outfit">${label}</text>`;
+    svg += `<text x="${cx-10}" y="${toY(v)+3}" fill="#64748b" font-size="9" text-anchor="end" font-family="Outfit">${label}</text>`;
+  }
+
+  if(!opts.hidePoint) {
+    // modulus line (dashed)
+    svg += `<line x1="${cx}" y1="${cy}" x2="${toX(re)}" y2="${toY(im)}" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="6,3"/>`;
+    // argument arc
+    const r2 = Math.min(30, Math.sqrt(re*re+im*im)*scale*0.3);
+    if(r2 > 5) {
+      const angRad = Math.atan2(im, re);
+      const startAng = 0;
+      const endAng = angRad;
+      const arcStartX = cx + r2 * Math.cos(startAng);
+      const arcStartY = cy - r2 * Math.sin(startAng);
+      const arcEndX = cx + r2 * Math.cos(endAng);
+      const arcEndY = cy - r2 * Math.sin(endAng);
+      const largeArc = Math.abs(endAng - startAng) > Math.PI ? 1 : 0;
+      const sweepFlag = endAng > 0 ? 0 : 1;
+      svg += `<path d="M${arcStartX},${arcStartY} A${r2},${r2} 0 ${largeArc},${sweepFlag} ${arcEndX},${arcEndY}" fill="none" stroke="#f97316" stroke-width="1.5"/>`;
+    }
+    // point
+    svg += `<circle cx="${toX(re)}" cy="${toY(im)}" r="6" fill="#0d9488"/>`;
+  }
+
+  svgEl.innerHTML = svg;
+  svgEl._toX = toX;
+  svgEl._toY = toY;
+  svgEl._cx = cx;
+  svgEl._cy = cy;
+  svgEl._scale = scale;
+  svgEl._range = range;
+  svgEl._size = s;
+  svgEl._pad = pad;
+}
+
+// === SCREEN MANAGEMENT ===
+function showScreen(id) {
+  ['menuScreen','rouletteScreen','triplesScreen','sniperScreen','endScreen'].forEach(s => {
+    document.getElementById(s).style.display = 'none';
+  });
+  document.getElementById(id).style.display = id === 'menuScreen' ? 'flex' : 'block';
+}
+function showMenu() { showScreen('menuScreen'); }
+
+// ==========================================
+// MODE 1: FORM ROULETTE
+// ==========================================
+let rQuestions, rIndex, rScore, rCorrect, rTimerId, rStartTime, rDirStats, rTimes, rUsedCalc, rCalcUses;
+
+function startMode(mode) {
+  if(mode === 'roulette') startRoulette();
+  else if(mode === 'triples') startTriples();
+  else if(mode === 'sniper') startSniper();
+}
+
+function startRoulette() {
+  rQuestions = pickN(bank, 20);
+  rIndex = 0; rScore = 0; rCorrect = 0; rTimes = []; rCalcUses = 0;
+  rDirStats = {};
+  showScreen('rouletteScreen');
+  showRouletteQ();
+  window._ggAbandoned=true;
+  mfg('game_started',{game_slug:'complex-converter',level:LEVEL});
+  mfg('mode_selected',{game_slug:'complex-converter',mode:'roulette'});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'complex-converter',level:LEVEL,questions_answered:rIndex||0})});}
+}
+
+function showRouletteQ() {
+  if(rIndex >= rQuestions.length) { endRoulette(); return; }
+  const q = rQuestions[rIndex];
+  document.getElementById('rqNum').textContent = rIndex + 1;
+  document.getElementById('rScore').textContent = rScore;
+
+  const dir = `${formName[q.source]} → ${formName[q.target]}`;
+  document.getElementById('rConvLabel').textContent = dir;
+  document.getElementById('rGiven').innerHTML = K(q.givenLatex);
+  document.getElementById('rTarget').textContent = `Convert to ${formName[q.target].toLowerCase()} form`;
+  document.getElementById('rContext').textContent = q.context || '';
+
+  drawArgand(document.getElementById('rArgand'), q.re, q.im, 380);
+
+  // build options
+  const opts = shuffle([q.correctLatex, ...q.distractors]);
+  const grid = document.getElementById('rOptions');
+  grid.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('div');
+    btn.className = 'opt-btn';
+    btn.innerHTML = K(o);
+    btn.dataset.val = o;
+    btn.onclick = () => rouletteAnswer(btn, q, o);
+    grid.appendChild(btn);
+  });
+
+  // calculator hint
+  rUsedCalc = false;
+  const hint = CALC_HINTS[q.id];
+  const calcWrap = document.getElementById('calcBtnWrap');
+  const calcPanel = document.getElementById('calcPanel');
+  calcPanel.classList.remove('open');
+  document.getElementById('calcResult').textContent = '';
+  document.getElementById('calcGrid').innerHTML = '';
+  if (hint) {
+    calcWrap.style.display = '';
+    const calcBtn = document.getElementById('calcBtn');
+    calcBtn.classList.remove('used');
+    calcBtn.textContent = '\u{1f522} Calculator (\u221225 pts)';
+  } else {
+    calcWrap.style.display = 'none';
+  }
+
+  // count-up timer
+  rStartTime = Date.now();
+  clearInterval(rTimerId);
+  document.getElementById('rTimerDisplay').textContent = '0s';
+  rTimerId = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - rStartTime) / 1000);
+    document.getElementById('rTimerDisplay').textContent = elapsed + 's';
+  }, 250);
+}
+
+function toggleCalc() {
+  const q = rQuestions[rIndex];
+  const hint = CALC_HINTS[q.id];
+  if (!hint) return;
+  rUsedCalc = true;
+  document.getElementById('calcBtn').classList.add('used');
+  const panel = document.getElementById('calcPanel');
+  panel.classList.add('open');
+  document.getElementById('calcMode').textContent = hint.mode;
+  // build calc options
+  const allOpts = shuffle([
+    {latex: hint.correct, result: hint.result, isCorrect: true},
+    ...hint.distractors.map((d, i) => ({latex: d, result: hint.results[i], isCorrect: false}))
+  ]);
+  const grid = document.getElementById('calcGrid');
+  grid.innerHTML = '';
+  allOpts.forEach(opt => {
+    const div = document.createElement('div');
+    div.className = 'calc-opt';
+    div.innerHTML = K(opt.latex);
+    div.onclick = () => selectCalcOpt(div, opt, grid);
+    grid.appendChild(div);
+  });
+}
+
+function selectCalcOpt(div, opt, grid) {
+  grid.querySelectorAll('.calc-opt').forEach(c => {
+    if (c !== div) c.classList.add('not-selected');
+  });
+  div.classList.add('selected');
+  document.getElementById('calcResult').textContent = '= ' + opt.result;
+}
+
+function rouletteAnswer(btn, q, val) {
+  clearInterval(rTimerId);
+  const elapsed = (Date.now() - rStartTime) / 1000;
+  const dir = `${formName[q.source]} → ${formName[q.target]}`;
+  if(!rDirStats[dir]) rDirStats[dir] = {correct:0, total:0};
+  rDirStats[dir].total++;
+
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.add('disabled'));
+
+  if(val === q.correctLatex) {
+    mfg('question_answered',{game_slug:'complex-converter',level:LEVEL,correct:true,question_index:rIndex+1});
+    btn.classList.add('correct');
+    rCorrect++;
+    if (rUsedCalc) rCalcUses++;
+    const base = rUsedCalc ? 75 : 100;
+    const mult = 1 / (1 + 0.05 * Math.log(1 + elapsed));
+    const pts = Math.max(1, Math.round(base * mult));
+    rScore += pts;
+    rDirStats[dir].correct++;
+    rTimes.push(elapsed);
+  } else {
+    mfg('question_answered',{game_slug:'complex-converter',level:LEVEL,correct:false,question_index:rIndex+1});
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn').forEach(b => {
+      if(b.dataset.val === q.correctLatex) b.classList.add('correct');
+    });
+    rTimes.push(elapsed);
+  }
+  document.getElementById('rScore').textContent = rScore;
+  setTimeout(() => { rIndex++; showRouletteQ(); }, 1200);
+}
+
+
+function endRoulette() {
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'complex-converter',level:LEVEL,score:rScore,questions_answered:rQuestions.length,accuracy:Math.round(rCorrect/rQuestions.length*100)});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('complex-converter',LEVEL,rScore,rQuestions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('complex-converter',LEVEL,rScore);}}
+  showScreen('endScreen');
+  document.getElementById('endTitle').textContent = 'Form Roulette Complete';
+  document.getElementById('endScoreVal').textContent = rScore;
+  const avgTime = rTimes.length ? (rTimes.reduce((a,b)=>a+b,0)/rTimes.length).toFixed(1) : '0';
+  document.getElementById('endStats').innerHTML = `
+    <div class="end-stat"><div class="val">${rCorrect}/${rQuestions.length}</div><div class="lbl">Correct</div></div>
+    <div class="end-stat"><div class="val">${avgTime}s</div><div class="lbl">Avg Time</div></div>
+    <div class="end-stat"><div class="val">${rScore}</div><div class="lbl">Score</div></div>
+    <div class="end-stat"><div class="val">${rCalcUses}</div><div class="lbl">Calc Used</div></div>
+  `;
+  const bd = document.getElementById('endBreakdown');
+  bd.style.display = '';
+  let rows = '<h4>By Conversion Direction</h4>';
+  for(const [dir, s] of Object.entries(rDirStats)) {
+    rows += `<div class="bd-row"><span>${dir}</span><span>${s.correct}/${s.total}</span></div>`;
+  }
+  bd.innerHTML = rows;
+  document.getElementById('heatmapWrap').style.display = 'none';
+}
+
+// ==========================================
+// MODE 2: MATCHING TRIPLES
+// ==========================================
+let tRound, tScore, tWrong, tMatched, tRoundData, tSelected, tStartTime2, tTimerId2, tRoundStart;
+
+function startTriples() {
+  tRound = 0; tScore = 0; tWrong = 0;
+  tStartTime2 = Date.now();
+  showScreen('triplesScreen');
+  nextTriplesRound();
+  window._ggAbandoned=true;
+  mfg('game_started',{game_slug:'complex-converter',level:LEVEL});
+  mfg('mode_selected',{game_slug:'complex-converter',mode:'triples'});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'complex-converter',level:LEVEL,questions_answered:tRound||0})});}
+}
+
+function nextTriplesRound() {
+  if(tRound >= 5) { endTriples(); return; }
+  tRound++;
+  document.getElementById('tRound').textContent = tRound;
+  document.getElementById('tScore').textContent = tScore;
+  tMatched = 0;
+  tSelected = {cart:null, polar:null, exp:null};
+
+  // pick 5 unique questions for this round
+  // Ensure at least 2 share the same magnitude to prevent solving by magnitude alone
+  const pool = tRound <= 2
+    ? bank.filter(q => q.re >= 0 && q.im >= 0)
+    : tRound <= 4 ? bank : bank.filter(q => q.r <= 2 || q.im === 0 || q.re === 0);
+
+  // Group by magnitude (rounded to avoid float issues)
+  const byMag = {};
+  pool.forEach(q => {
+    const magKey = parseFloat(q.r.toFixed(3));
+    if(!byMag[magKey]) byMag[magKey] = [];
+    byMag[magKey].push(q);
+  });
+
+  // Find magnitudes that have 2+ distinct (re,im) pairs
+  const dupMags = Object.keys(byMag).filter(m => {
+    const pairs = new Set(byMag[m].map(q => `${q.re},${q.im}`));
+    return pairs.size >= 2;
+  });
+
+  const unique = [];
+  const usedKeys = new Set();
+
+  // Start by picking 2 questions that share a magnitude
+  if(dupMags.length > 0) {
+    const chosenMag = dupMags[Math.floor(Math.random() * dupMags.length)];
+    const magPool = byMag[chosenMag];
+    const magShuffled = shuffle([...magPool]);
+    for(const q of magShuffled) {
+      const key = `${q.re},${q.im}`;
+      if(!usedKeys.has(key) && unique.length < 2) {
+        usedKeys.add(key);
+        unique.push(q);
+      }
+    }
+  }
+
+  // Fill remaining 3 from the full pool
+  const shuffled = shuffle([...pool]);
+  for(const q of shuffled) {
+    const key = `${q.re},${q.im}`;
+    if(!usedKeys.has(key) && unique.length < 5) {
+      usedKeys.add(key);
+      unique.push(q);
+    }
+  }
+  // pad if needed
+  while(unique.length < 5) {
+    const q = bank[Math.floor(Math.random()*bank.length)];
+    const key = `${q.re},${q.im}`;
+    if(!usedKeys.has(key)) { usedKeys.add(key); unique.push(q); }
+  }
+  // Shuffle the final 5 so the duplicate-magnitude pair aren't always first
+  shuffle(unique);
+
+  tRoundData = unique.map((q, i) => ({
+    id: i,
+    cartLatex: q.re === 0 && q.im === 0 ? '0' :
+      q.im === 0 ? `${q.re}` :
+      q.re === 0 ? `${q.im}j` :
+      `${q.re} ${q.im > 0 ? '+' : '-'} ${Math.abs(q.im)}j`,
+    polarLatex: `${parseFloat(q.r.toFixed(3))}\\angle ${parseFloat(q.argDeg.toFixed(2))}°`,
+    expLatex: `${parseFloat(q.r.toFixed(3))}e^{j${parseFloat(q.argRad.toFixed(3))}}`,
+    matched: false
+  }));
+
+  // generate proper cartesian latex from the question bank
+  tRoundData = unique.map((q, i) => {
+    // find a question with this re/im for its cartesian latex
+    const cartQ = bank.find(b => b.re === q.re && b.im === q.im && b.source === 'cartesian');
+    const polQ = bank.find(b => b.re === q.re && b.im === q.im && b.source === 'polar');
+    const expQ = bank.find(b => b.re === q.re && b.im === q.im && b.source === 'exponential');
+
+    // generate simple latex
+    let cLatex;
+    if(q.re === 0 && q.im === 0) cLatex = '0';
+    else if(q.im === 0) cLatex = `${q.re}`;
+    else if(q.re === 0) cLatex = q.im === 1 ? 'j' : q.im === -1 ? '-j' : `${q.im}j`;
+    else {
+      const imPart = q.im === 1 ? 'j' : q.im === -1 ? 'j' : `${Math.abs(q.im)}j`;
+      cLatex = `${q.re} ${q.im > 0 ? '+' : '-'} ${imPart}`;
+    }
+
+    const pLatex = `${parseFloat(q.r.toFixed(3))}\\angle ${parseFloat(q.argDeg.toFixed(2))}°`;
+    const eLatex = `${parseFloat(q.r.toFixed(3))}e^{j${parseFloat(q.argRad.toFixed(3))}}`;
+
+    return { id: i, cartLatex: cLatex, polarLatex: pLatex, expLatex: eLatex, matched: false };
+  });
+
+  renderTriplesCols();
+
+  // count-up timer (per round)
+  clearInterval(tTimerId2);
+  tRoundStart = Date.now();
+  document.getElementById('tTimerDisplay').textContent = '0s';
+  tTimerId2 = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - tRoundStart) / 1000);
+    document.getElementById('tTimerDisplay').textContent = elapsed + 's';
+  }, 250);
+}
+
+function renderTriplesCols() {
+  const cartOrder = shuffle(tRoundData.filter(d => !d.matched).map(d => d.id));
+  const polOrder = shuffle(tRoundData.filter(d => !d.matched).map(d => d.id));
+  const expOrder = shuffle(tRoundData.filter(d => !d.matched).map(d => d.id));
+
+  const colCart = document.getElementById('colCart');
+  const colPolar = document.getElementById('colPolar');
+  const colExp = document.getElementById('colExp');
+
+  colCart.innerHTML = '';
+  colPolar.innerHTML = '';
+  colExp.innerHTML = '';
+
+  cartOrder.forEach(id => {
+    const d = tRoundData[id];
+    const card = document.createElement('div');
+    card.className = 'triple-card';
+    card.innerHTML = K(d.cartLatex);
+    card.dataset.id = id;
+    card.dataset.col = 'cart';
+    card.onclick = () => selectTriple(card, 'cart', id);
+    colCart.appendChild(card);
+  });
+
+  polOrder.forEach(id => {
+    const d = tRoundData[id];
+    const card = document.createElement('div');
+    card.className = 'triple-card';
+    card.innerHTML = K(d.polarLatex);
+    card.dataset.id = id;
+    card.dataset.col = 'polar';
+    card.onclick = () => selectTriple(card, 'polar', id);
+    colPolar.appendChild(card);
+  });
+
+  expOrder.forEach(id => {
+    const d = tRoundData[id];
+    const card = document.createElement('div');
+    card.className = 'triple-card';
+    card.innerHTML = K(d.expLatex);
+    card.dataset.id = id;
+    card.dataset.col = 'exp';
+    card.onclick = () => selectTriple(card, 'exp', id);
+    colExp.appendChild(card);
+  });
+}
+
+function selectTriple(card, col, id) {
+  // deselect previous in this column
+  document.querySelectorAll(`.triple-card[data-col="${col}"]`).forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  tSelected[col] = id;
+
+  // check if all three selected
+  if(tSelected.cart !== null && tSelected.polar !== null && tSelected.exp !== null) {
+    checkTriple();
+  }
+}
+
+function checkTriple() {
+  const {cart, polar, exp} = tSelected;
+  if(cart === polar && polar === exp) {
+    // correct match — logarithmic time scoring
+    tRoundData[cart].matched = true;
+    tMatched++;
+    const tElapsed = (Date.now() - tRoundStart) / 1000;
+    const tMult = 1 / (1 + 0.05 * Math.log(1 + tElapsed));
+    tScore += Math.max(1, Math.round(100 * tMult));
+    document.getElementById('tScore').textContent = tScore;
+    document.getElementById('triplesStatus').textContent = `Matched! ${tMatched}/5`;
+
+    // flash green
+    document.querySelectorAll('.triple-card.selected').forEach(c => c.classList.add('matched'));
+
+    tSelected = {cart:null, polar:null, exp:null};
+
+    if(tMatched >= 5) {
+      clearInterval(tTimerId2);
+      setTimeout(() => nextTriplesRound(), 800);
+    } else {
+      setTimeout(() => renderTriplesCols(), 600);
+    }
+  } else {
+    // wrong
+    tWrong++;
+    tScore = Math.max(0, tScore - 20);
+    document.getElementById('tScore').textContent = tScore;
+    document.getElementById('triplesStatus').textContent = 'Not a match — try again';
+    document.querySelectorAll('.triple-card.selected').forEach(c => {
+      c.classList.add('wrong-flash');
+      setTimeout(() => { c.classList.remove('wrong-flash','selected'); }, 600);
+    });
+    tSelected = {cart:null, polar:null, exp:null};
+  }
+}
+
+function endTriples() {
+  clearInterval(tTimerId2);
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'complex-converter',level:LEVEL,score:tScore,questions_answered:tRound*5,accuracy:tRound>0?Math.round(((tRound*5-tWrong)/(tRound*5))*100):0});
+  const totalTime = ((Date.now() - tStartTime2)/1000).toFixed(1);
+  showScreen('endScreen');
+  document.getElementById('endTitle').textContent = 'Matching Triples Complete';
+  document.getElementById('endScoreVal').textContent = tScore;
+  document.getElementById('endStats').innerHTML = `
+    <div class="end-stat"><div class="val">${tRound}</div><div class="lbl">Rounds</div></div>
+    <div class="end-stat"><div class="val">${tWrong}</div><div class="lbl">Wrong Matches</div></div>
+    <div class="end-stat"><div class="val">${totalTime}s</div><div class="lbl">Total Time</div></div>
+  `;
+  document.getElementById('endBreakdown').style.display = 'none';
+  document.getElementById('heatmapWrap').style.display = 'none';
+}
+
+// ==========================================
+// MODE 3: ARGAND SNIPER
+// ==========================================
+let sQuestions, sIndex, sScore2, sShots, sWaiting;
+
+function startSniper() {
+  sQuestions = pickN(bank, 15);
+  sIndex = 0; sScore2 = 0; sShots = [];
+  sWaiting = false;
+  showScreen('sniperScreen');
+  document.getElementById('sNextBtn').style.display = 'none';
+
+  const svg = document.getElementById('sArgand');
+  svg.addEventListener('click', sniperClick);
+  showSniperQ();
+  window._ggAbandoned=true;
+  mfg('game_started',{game_slug:'complex-converter',level:LEVEL});
+  mfg('mode_selected',{game_slug:'complex-converter',mode:'sniper'});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'complex-converter',level:LEVEL,questions_answered:sIndex||0})});}
+}
+
+function showSniperQ() {
+  if(sIndex >= sQuestions.length) { endSniper(); return; }
+  const q = sQuestions[sIndex];
+  document.getElementById('sNum').textContent = sIndex + 1;
+  document.getElementById('sScore').textContent = sScore2;
+  document.getElementById('sPrompt').innerHTML = K(q.givenLatex);
+  document.getElementById('sFeedback').textContent = 'Tap the Argand diagram to place this number';
+  document.getElementById('sNextBtn').style.display = 'none';
+  sWaiting = true;
+
+  // draw empty argand (no point)
+  drawArgand(document.getElementById('sArgand'), q.re, q.im, 480, {hidePoint:true});
+}
+
+function sniperClick(e) {
+  if(!sWaiting) return;
+  sWaiting = false;
+  const svg = document.getElementById('sArgand');
+  const rect = svg.getBoundingClientRect();
+  const svgW = 480;
+  const scaleRatio = svgW / rect.width;
+  const clickX = (e.clientX - rect.left) * scaleRatio;
+  const clickY = (e.clientY - rect.top) * scaleRatio;
+
+  const q = sQuestions[sIndex];
+  // convert click to complex coords
+  const clickRe = (clickX - svg._cx) / svg._scale;
+  const clickIm = -(clickY - svg._cy) / svg._scale;
+
+  const dist = Math.sqrt((clickRe - q.re)**2 + (clickIm - q.im)**2);
+  const tolerance = 0.3 * svg._range; // scale tolerance to range
+
+  let pts = 0;
+  if(dist <= tolerance) {
+    pts = Math.max(1, Math.round(100 * (1 - dist/tolerance)));
+    if(dist <= 0.05 * svg._range) pts += 50;
+  }
+
+  sScore2 += pts;
+  sShots.push({re:q.re, im:q.im, clickRe, clickIm, dist, pts});
+  mfg('question_answered',{game_slug:'complex-converter',level:LEVEL,correct:pts>0,question_index:sIndex+1});
+
+  // draw result on diagram
+  const toX = svg._toX, toY = svg._toY;
+
+  // correct point (crosshair)
+  let extra = '';
+  extra += `<circle cx="${toX(q.re)}" cy="${toY(q.im)}" r="8" fill="none" stroke="#22c55e" stroke-width="2"/>`;
+  extra += `<line x1="${toX(q.re)-12}" y1="${toY(q.im)}" x2="${toX(q.re)+12}" y2="${toY(q.im)}" stroke="#22c55e" stroke-width="1.5"/>`;
+  extra += `<line x1="${toX(q.re)}" y1="${toY(q.im)-12}" x2="${toX(q.re)}" y2="${toY(q.im)+12}" stroke="#22c55e" stroke-width="1.5"/>`;
+
+  // player tap
+  extra += `<circle cx="${toX(clickRe)}" cy="${toY(clickIm)}" r="5" fill="${pts > 0 ? '#0d9488' : '#ef4444'}"/>`;
+
+  // line between
+  extra += `<line x1="${toX(q.re)}" y1="${toY(q.im)}" x2="${toX(clickRe)}" y2="${toY(clickIm)}" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4,3"/>`;
+
+  // distance label
+  const midX = (toX(q.re) + toX(clickRe))/2;
+  const midY = (toY(q.im) + toY(clickIm))/2;
+  extra += `<text x="${midX}" y="${midY-8}" fill="#e2e8f0" font-size="12" text-anchor="middle" font-family="Outfit">${dist.toFixed(2)}</text>`;
+
+  svg.innerHTML += extra;
+
+  document.getElementById('sScore').textContent = sScore2;
+  document.getElementById('sFeedback').innerHTML = pts > 0
+    ? `<span style="color:#22c55e">+${pts} points</span> — distance: ${dist.toFixed(2)}`
+    : `<span style="color:#ef4444">Miss</span> — distance: ${dist.toFixed(2)}`;
+  document.getElementById('sNextBtn').style.display = '';
+}
+
+function sniperNext() {
+  sIndex++;
+  showSniperQ();
+}
+
+function endSniper() {
+  // remove click listener
+  document.getElementById('sArgand').removeEventListener('click', sniperClick);
+
+  const hits = sShots.filter(s=>s.pts>0).length;
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'complex-converter',level:LEVEL,score:sScore2,questions_answered:sShots.length,accuracy:sShots.length>0?Math.round(hits/sShots.length*100):0});
+
+  showScreen('endScreen');
+  document.getElementById('endTitle').textContent = 'Argand Sniper Complete';
+  document.getElementById('endScoreVal').textContent = sScore2;
+
+  const avgDist = sShots.length ? (sShots.reduce((a,s)=>a+s.dist,0)/sShots.length).toFixed(2) : '0';
+  const bestShot = sShots.length ? Math.min(...sShots.map(s=>s.dist)).toFixed(2) : '0';
+
+  document.getElementById('endStats').innerHTML = `
+    <div class="end-stat"><div class="val">${hits}/${sShots.length}</div><div class="lbl">Hits</div></div>
+    <div class="end-stat"><div class="val">${avgDist}</div><div class="lbl">Avg Distance</div></div>
+    <div class="end-stat"><div class="val">${bestShot}</div><div class="lbl">Best Shot</div></div>
+  `;
+  document.getElementById('endBreakdown').style.display = 'none';
+
+  // draw heatmap
+  const wrap = document.getElementById('heatmapWrap');
+  wrap.style.display = '';
+  wrap.innerHTML = '<svg id="heatSvg" class="argand-svg" viewBox="0 0 400 400"></svg>';
+  const hSvg = document.getElementById('heatSvg');
+
+  // find range
+  const allPts = sShots.flatMap(s => [Math.abs(s.re), Math.abs(s.im), Math.abs(s.clickRe), Math.abs(s.clickIm)]);
+  const maxR = Math.max(...allPts, 1) * 1.3;
+  const gridStep = maxR <= 3 ? 1 : maxR <= 8 ? 2 : 5;
+  const range = Math.ceil(maxR/gridStep)*gridStep;
+  const hSize = 400, hPad = 36;
+  const hScale = (hSize-2*hPad)/(2*range);
+  const hcx = hSize/2, hcy = hSize/2;
+  const htX = v => hcx + v*hScale;
+  const htY = v => hcy - v*hScale;
+
+  let hsvg = '';
+  // grid
+  for(let v=-range;v<=range;v+=gridStep){
+    if(v===0)continue;
+    hsvg+=`<line x1="${hPad}" y1="${htY(v)}" x2="${hSize-hPad}" y2="${htY(v)}" stroke="#334155" stroke-width="0.5"/>`;
+    hsvg+=`<line x1="${htX(v)}" y1="${hPad}" x2="${htX(v)}" y2="${hSize-hPad}" stroke="#334155" stroke-width="0.5"/>`;
+  }
+  hsvg+=`<line x1="${hPad}" y1="${hcy}" x2="${hSize-hPad}" y2="${hcy}" stroke="#94a3b8" stroke-width="1"/>`;
+  hsvg+=`<line x1="${hcx}" y1="${hPad}" x2="${hcx}" y2="${hSize-hPad}" stroke="#94a3b8" stroke-width="1"/>`;
+
+  sShots.forEach(s => {
+    // correct crosshair
+    hsvg+=`<circle cx="${htX(s.re)}" cy="${htY(s.im)}" r="4" fill="none" stroke="#22c55e" stroke-width="1"/>`;
+    // player tap
+    const col = s.pts > 50 ? '#22c55e' : s.pts > 0 ? '#f97316' : '#ef4444';
+    hsvg+=`<circle cx="${htX(s.clickRe)}" cy="${htY(s.clickIm)}" r="3" fill="${col}"/>`;
+    hsvg+=`<line x1="${htX(s.re)}" y1="${htY(s.im)}" x2="${htX(s.clickRe)}" y2="${htY(s.clickIm)}" stroke="${col}" stroke-width="0.5" opacity="0.5"/>`;
+  });
+
+  hSvg.innerHTML = hsvg;
+}
+
+// init
+showMenu();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

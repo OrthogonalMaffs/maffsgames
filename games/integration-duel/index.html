@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Integrate polynomials, trig, exponentials, and by parts. 90 questions across A-Level and Level 4 tiers.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/integration-duel/">
+<meta property="og:title" content="Integration Duel — MaffsGames">
+<meta property="og:description" content="Integrate polynomials, trig, exponentials, and by parts. 90 questions across A-Level and Level 4 tiers.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/integration-duel/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Integration Duel — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+  :root {
+    --bg:        #f8fafc;
+    --white:     #ffffff;
+    --navy:      #1a2744;
+    --navy-mid:  #253563;
+    --teal:      #0d9488;
+    --accent:    #0d9488;
+    --accent-lt: #f0fdfa;
+    --green:     #15803d;
+    --green-lt:  #dcfce7;
+    --red:       #dc2626;
+    --red-lt:    #fee2e2;
+    --text:      #1e293b;
+    --muted:     #64748b;
+    --border:    #e2e8f0;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.09), 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Outfit', system-ui, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Header ── */
+  .header {
+    width: 100%;
+    background: var(--navy);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .back {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s;
+  }
+  .back:hover { color: #fff; }
+
+  .header-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .header-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .header-level {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(13,148,136,0.15);
+    border: 1px solid rgba(13,148,136,0.3);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* ── Game area ── */
+  .game-area {
+    width: 100%;
+    max-width: 760px;
+    padding: 24px 20px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* ── Score bar ── */
+  .scorebar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 14px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .score-item { text-align: center; }
+
+  .score-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .score-val {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-top: 2px;
+    letter-spacing: -0.02em;
+  }
+
+  /* ── Timer bar ── */
+  .timer-wrap {
+    width: 100%;
+    height: 5px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .timer-fill {
+    height: 100%;
+    background: var(--teal);
+    transition: width 0.1s linear;
+    border-radius: 4px;
+  }
+  /* no urgency styles — timer is purely informational */
+
+  /* ── Rules reference panel ── */
+  .rules-ref {
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .ref-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .rule-chip {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--navy);
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+  }
+
+  /* ── Question card ── */
+  .question-box {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 28px 24px 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .rule-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-lt);
+    border: 1px solid rgba(13,148,136,0.2);
+    padding: 3px 12px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+
+  .q-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  .q-text {
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 24px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.8;
+  }
+
+  /* KaTeX overrides */
+  .q-text .katex { font-size: 1em; }
+  .choice .katex { font-size: 0.9em; }
+  .rule-chip .katex { font-size: 0.85em; }
+  .explanation .katex { font-size: 0.9em; }
+
+  /* ── Answer choices ── */
+  .choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .choice {
+    font-family: 'Outfit', system-ui, sans-serif;
+    font-size: clamp(13px, 2.5vw, 15px);
+    font-weight: 600;
+    padding: 16px 10px;
+    border: 2px solid var(--border);
+    background: var(--white);
+    color: var(--navy);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+  }
+
+  .choice:hover {
+    border-color: var(--accent);
+    background: var(--accent-lt);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13,148,136,0.12);
+  }
+
+  .choice.correct {
+    background: var(--green-lt);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .choice.wrong {
+    background: var(--red-lt);
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  .choice.reveal {
+    background: var(--bg);
+    border-color: var(--border);
+    color: #94a3b8;
+    cursor: default;
+  }
+
+  .choice:disabled { pointer-events: none; }
+
+  .choice.correct .katex { color: var(--green); }
+  .choice.wrong .katex { color: var(--red); }
+  .choice.reveal .katex { color: #94a3b8; }
+
+  /* ── Feedback ── */
+  .feedback {
+    font-size: 13px;
+    font-weight: 700;
+    min-height: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: center;
+    margin-top: 10px;
+  }
+  .feedback.correct { color: var(--green); }
+  .feedback.wrong   { color: var(--red); }
+
+  .explanation {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+    min-height: 18px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  /* ── Start screen ── */
+  .start-screen {
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+
+  .start-glyph {
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--navy);
+    opacity: 0.08;
+    line-height: 1;
+    margin-bottom: -8px;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.05em;
+  }
+
+  .start-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .start-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .how-to {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .law-row {
+    font-size: 14px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .law-row::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--teal);
+    flex-shrink: 0;
+  }
+
+  .law-row .katex { font-size: 1em; }
+  .law-note {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* ── Level select ── */
+  .level-select {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .level-btn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 100px;
+    border: 2px solid;
+    cursor: pointer;
+    background: transparent;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .level-btn.alevel {
+    border-color: #ea580c;
+    color: #ea580c;
+  }
+  .level-btn.alevel.active,
+  .level-btn.alevel:hover {
+    background: #ea580c;
+    color: white;
+  }
+
+  .level-btn.l4 {
+    border-color: #dc2626;
+    color: #dc2626;
+  }
+  .level-btn.l4.active,
+  .level-btn.l4:hover {
+    background: #dc2626;
+    color: white;
+  }
+
+  /* ── Game over ── */
+  .game-over {
+    display: none;
+    width: 100%;
+    background: var(--white);
+    border-radius: 16px;
+    padding: 32px 28px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+  }
+  .game-over.visible { display: block; }
+
+  .go-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .go-score {
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 8px 0 6px;
+  }
+
+  .go-detail {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  /* ── Main game ── */
+  .main-game { display: none; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
+  .main-game.visible { display: flex; }
+
+  /* ── Button ── */
+  .btn {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .btn-primary {
+    background: var(--navy);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--navy-mid);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(26,39,68,0.2);
+  }
+
+  /* ── Leaderboard ── */
+  .leaderboard {
+    width: 100%;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 18px 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .lb-title {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .lb-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .lb-row:last-child { border-bottom: none; }
+
+  .lb-rank { color: var(--muted); font-weight: 600; width: 28px; }
+  .lb-date { color: var(--muted); flex: 1; text-align: center; }
+  .lb-score { font-weight: 800; color: var(--navy); font-size: 15px; }
+
+  @media (max-width: 500px) {
+    .choices { grid-template-columns: 1fr; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .game-area { padding: 16px 14px 40px; }
+  }
+
+/* === OpenDyslexic font === */
+body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
+body.accessible p, body.accessible .question-text, body.accessible .step-text, body.accessible .option-label, body.accessible .card-text { line-height: 2.0; max-width: 65ch; }
+body.accessible { background-color: #12141f !important; }
+body.accessible.light-theme { background-color: #fdf6e3 !important; color: #2d2d2d !important; }
+body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em; }
+.a11y-toggle { background: #1a2744; color: #ffffff; border: 1px solid #2a3a5c; border-radius: 6px; width: 36px; height: 36px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: background 0.15s; }
+.a11y-toggle.active, .a11y-toggle:hover { background: #0d9488; }
+.correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
+.incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<div class="header">
+  <a href="../../" class="back">&larr; Back</a>
+  <div class="header-divider"></div>
+  <div class="header-title">Integration Duel</div>
+  <span class="header-level">A-Level / L4</span>
+  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+
+<div class="game-area">
+
+  <div class="scorebar">
+    <div class="score-item"><div class="score-label">Score</div><div class="score-val" id="score">0</div></div>
+    <div class="score-item"><div class="score-label">Streak</div><div class="score-val" id="streak">0</div></div>
+    <div class="score-item"><div class="score-label">Best</div><div class="score-val" id="best">0</div></div>
+  </div>
+
+  <!-- Start screen -->
+  <div class="start-screen" id="startScreen">
+    <div class="start-glyph">&int;</div>
+    <div class="start-title">Integration Duel</div>
+    <div class="start-desc">Standard forms, substitution, by parts, definite integrals. Take your time — faster answers score higher.</div>
+    <div class="how-to" id="howTo"></div>
+    <div class="level-select">
+      <button class="level-btn alevel active" onclick="setLevel('alevel')">A-Level</button>
+      <button class="level-btn l4" onclick="setLevel('level4')">Level 4</button>
+    </div>
+    <button class="btn btn-primary" onclick="startGame()">Start Game</button>
+  </div>
+
+  <!-- Main game -->
+  <div class="main-game" id="mainGame">
+    <div class="timer-wrap"><div class="timer-fill" id="timerFill"></div></div>
+    <div class="rules-ref">
+      <div class="ref-title">Quick Reference</div>
+      <div class="rules-grid" id="rulesGrid"></div>
+    </div>
+    <div class="question-box">
+      <div><span class="rule-badge" id="ruleBadge">Power Rule</span></div>
+      <div class="q-label">Find:</div>
+      <div class="q-text" id="qText"></div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="explanation" id="explanation"></div>
+    </div>
+  </div>
+
+  <!-- Game over -->
+  <div class="game-over" id="gameOver">
+    <div class="go-label">Game Over</div>
+    <div class="go-score" id="finalScore">0</div>
+    <div class="go-detail" id="goDetail"></div>
+    <div class="result-stat" style="margin:12px 0;font-size:14px;color:#64748b;"><span class="stat-label">Time taken: </span><span class="stat-value" id="timeStat">—</span></div>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+    <button class="btn btn-primary" onclick="startGame()">Play Again</button>
+  <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  </div>
+
+  <div class="leaderboard">
+    <div class="lb-title">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Top Scores
+    </div>
+    <div id="lbList"></div>
+  </div>
+
+</div>
+
+<script>
+// ─── KaTeX helper ───────────────────────────────────────────────────
+function tex(latex) {
+  return katex.renderToString(latex, {throwOnError: false, displayMode: false});
+}
+
+// ─── Reference rules ────────────────────────────────────────────────
+const RULES = [
+  {latex: '\\int x^n\\,dx = \\frac{x^{n+1}}{n+1} + c', note: 'power rule'},
+  {latex: '\\int \\sin x\\,dx = -\\cos x + c', note: 'sine'},
+  {latex: '\\int \\cos x\\,dx = \\sin x + c', note: 'cosine'},
+  {latex: '\\int e^x\\,dx = e^x + c', note: 'exponential'},
+  {latex: '\\int \\frac{1}{x}\\,dx = \\ln|x| + c', note: 'reciprocal'},
+  {latex: '\\int u\\,dv = uv - \\int v\\,du', note: 'by parts'},
+];
+
+// Render how-to section
+document.getElementById('howTo').innerHTML = RULES.map(r =>
+  `<div class="law-row">${tex(r.latex)} <span class="law-note">(${r.note})</span></div>`
+).join('');
+
+// Render quick reference grid
+document.getElementById('rulesGrid').innerHTML = RULES.map(r =>
+  `<div class="rule-chip">${tex(r.latex)}</div>`
+).join('');
+
+// ─── QUESTIONS ──────────────────────────────────────────────────────
+const TOTAL = 14, BASE = 100, T_K = 0.3;
+
+const QUESTIONS = {
+  alevel: [
+    // ── Power Rule (10) ──────────────────────────────────────────────
+    {rule:'Power Rule', q:'\\int x^3\\,dx', correct:'\\frac{x^4}{4} + c',
+      wrong:['\\frac{x^4}{4}','3x^2','x^4 + c'], exp:'Power rule: x⁴/4 + c'},
+    {rule:'Power Rule', q:'\\int 5x^4\\,dx', correct:'x^5 + c',
+      wrong:['x^5','5x^5 + c','20x^3 + c'], exp:'5 × x⁵/5 + c = x⁵ + c'},
+    {rule:'Power Rule', q:'\\int 6x^2\\,dx', correct:'2x^3 + c',
+      wrong:['2x^3','3x^3 + c','6x^3 + c'], exp:'6 × x³/3 + c = 2x³ + c'},
+    {rule:'Power Rule', q:'\\int x^{-2}\\,dx', correct:'-x^{-1} + c',
+      wrong:['-x^{-1}','\\frac{x^{-3}}{3} + c','-2x^{-3} + c'], exp:'x⁻¹/(−1) + c = −x⁻¹ + c'},
+    {rule:'Power Rule', q:'\\int \\sqrt{x}\\,dx', correct:'\\frac{2x^{3/2}}{3} + c',
+      wrong:['\\frac{2x^{3/2}}{3}','x^{3/2} + c','\\frac{1}{2\\sqrt{x}} + c'], exp:'x^(3/2) / (3/2) + c = 2x^(3/2)/3 + c'},
+    {rule:'Power Rule', q:'\\int (3x^2 + 2x)\\,dx', correct:'x^3 + x^2 + c',
+      wrong:['x^3 + x^2','3x^3 + 2x^2 + c','6x + 2 + c'], exp:'3×x³/3 + 2×x²/2 + c = x³ + x² + c'},
+    {rule:'Power Rule', q:'\\int 4\\,dx', correct:'4x + c',
+      wrong:['4x','4','0 + c'], exp:'Constant: 4x + c'},
+    {rule:'Power Rule', q:'\\int (x^2 - 1)\\,dx', correct:'\\frac{x^3}{3} - x + c',
+      wrong:['\\frac{x^3}{3} - x','2x + c','x^3 - x + c'], exp:'x³/3 − x + c'},
+    {rule:'Power Rule', q:'\\int x^{-3}\\,dx', correct:'-\\frac{x^{-2}}{2} + c',
+      wrong:['-\\frac{x^{-2}}{2}','\\frac{x^{-2}}{2} + c','-3x^{-4} + c'], exp:'x⁻²/(−2) + c = −x⁻²/2 + c'},
+    {rule:'Power Rule', q:'\\int x^{1/3}\\,dx', correct:'\\frac{3x^{4/3}}{4} + c',
+      wrong:['\\frac{3x^{4/3}}{4}','\\frac{x^{4/3}}{4} + c','\\frac{4x^{4/3}}{3} + c'], exp:'x^(4/3)/(4/3) = 3x^(4/3)/4 + c'},
+
+    // ── Trig (8) ─────────────────────────────────────────────────────
+    {rule:'Trig', q:'\\int \\cos x\\,dx', correct:'\\sin x + c',
+      wrong:['\\sin x','-\\sin x + c','\\cos x + c'], exp:'Standard: sin x + c'},
+    {rule:'Trig', q:'\\int \\sin x\\,dx', correct:'-\\cos x + c',
+      wrong:['-\\cos x','\\cos x + c','-\\sin x + c'], exp:'Standard: −cos x + c'},
+    {rule:'Trig', q:'\\int 3\\cos x\\,dx', correct:'3\\sin x + c',
+      wrong:['3\\sin x','-3\\sin x + c','\\sin 3x + c'], exp:'3 × sin x + c = 3sin x + c'},
+    {rule:'Trig', q:'\\int \\sec^2 x\\,dx', correct:'\\tan x + c',
+      wrong:['\\tan x','\\sec x + c','2\\sec x \\tan x + c'], exp:'Standard: tan x + c'},
+    {rule:'Trig', q:'\\int -\\sin x\\,dx', correct:'\\cos x + c',
+      wrong:['\\cos x','-\\cos x + c','\\sin x + c'], exp:'−(−cos x) + c = cos x + c'},
+    {rule:'Trig', q:'\\int 5\\sin x\\,dx', correct:'-5\\cos x + c',
+      wrong:['-5\\cos x','5\\cos x + c','-\\cos 5x + c'], exp:'5 × (−cos x) + c = −5cos x + c'},
+    {rule:'Trig', q:'\\int 2\\sec^2 x\\,dx', correct:'2\\tan x + c',
+      wrong:['2\\tan x','\\tan 2x + c','2\\sec x + c'], exp:'2 × tan x + c = 2tan x + c'},
+    {rule:'Trig', q:'\\int (\\cos x - \\sin x)\\,dx', correct:'\\sin x + \\cos x + c',
+      wrong:['\\sin x + \\cos x','\\sin x - \\cos x + c','-\\sin x + \\cos x + c'], exp:'sin x + (−(−cos x)) + c = sin x + cos x + c'},
+
+    // ── Exponential (6) ──────────────────────────────────────────────
+    {rule:'Exponential', q:'\\int e^x\\,dx', correct:'e^x + c',
+      wrong:['e^x','xe^x + c','\\frac{e^x}{x} + c'], exp:'e^x integrates to itself + c'},
+    {rule:'Exponential', q:'\\int e^{2x}\\,dx', correct:'\\frac{e^{2x}}{2} + c',
+      wrong:['\\frac{e^{2x}}{2}','e^{2x} + c','2e^{2x} + c'], exp:'Reverse chain: e^(2x)/2 + c'},
+    {rule:'Exponential', q:'\\int 4e^{2x}\\,dx', correct:'2e^{2x} + c',
+      wrong:['2e^{2x}','4e^{2x} + c','\\frac{4e^{2x}}{2}'], exp:'4 × e^(2x)/2 + c = 2e^(2x) + c'},
+    {rule:'Exponential', q:'\\int e^{3x}\\,dx', correct:'\\frac{e^{3x}}{3} + c',
+      wrong:['\\frac{e^{3x}}{3}','e^{3x} + c','3e^{3x} + c'], exp:'e^(3x)/3 + c'},
+    {rule:'Exponential', q:'\\int 6e^{3x}\\,dx', correct:'2e^{3x} + c',
+      wrong:['2e^{3x}','6e^{3x} + c','18e^{3x} + c'], exp:'6 × e^(3x)/3 = 2e^(3x) + c'},
+    {rule:'Exponential', q:'\\int e^{-x}\\,dx', correct:'-e^{-x} + c',
+      wrong:['-e^{-x}','e^{-x} + c','-xe^{-x} + c'], exp:'e^(−x)/(−1) + c = −e^(−x) + c'},
+
+    // ── Logarithm (4) ────────────────────────────────────────────────
+    {rule:'Logarithm', q:'\\int \\frac{1}{x}\\,dx', correct:'\\ln|x| + c',
+      wrong:['\\ln|x|','\\ln x + c','x^{-1} + c'], exp:'Standard: ln|x| + c'},
+    {rule:'Logarithm', q:'\\int \\frac{3}{x}\\,dx', correct:'3\\ln|x| + c',
+      wrong:['3\\ln|x|','\\ln|3x| + c','\\frac{3}{x^2} + c'], exp:'3 × ln|x| + c = 3ln|x| + c'},
+    {rule:'Logarithm', q:'\\int \\frac{5}{x}\\,dx', correct:'5\\ln|x| + c',
+      wrong:['5\\ln|x|','\\ln|5x| + c','\\frac{5}{x^2} + c'], exp:'5 × ln|x| + c'},
+    {rule:'Logarithm', q:'\\int \\frac{-2}{x}\\,dx', correct:'-2\\ln|x| + c',
+      wrong:['-2\\ln|x|','2\\ln|x| + c','\\frac{2}{x^2} + c'], exp:'−2 × ln|x| + c'},
+
+    // ── Definite Integrals (7) ───────────────────────────────────────
+    {rule:'Definite', q:'\\int_0^1 2x\\,dx', correct:'1',
+      wrong:['-1','2','0'], exp:'[x²]₀¹ = 1 − 0 = 1'},
+    {rule:'Definite', q:'\\int_1^3 2x\\,dx', correct:'8',
+      wrong:['-8','6','10'], exp:'[x²]₁³ = 9 − 1 = 8'},
+    {rule:'Definite', q:'\\int_0^2 3x^2\\,dx', correct:'8',
+      wrong:['-8','6','12'], exp:'[x³]₀² = 8 − 0 = 8'},
+    {rule:'Definite', q:'\\int_0^{\\pi} \\sin x\\,dx', correct:'2',
+      wrong:['-2','0','\\pi'], exp:'[−cos x]₀^π = 1+1 = 2'},
+    {rule:'Definite', q:'\\int_1^e \\frac{1}{x}\\,dx', correct:'1',
+      wrong:['-1','e','\\ln 2'], exp:'[ln|x|]₁ᵉ = ln e − ln 1 = 1'},
+    {rule:'Definite', q:'\\int_0^3 x^2\\,dx', correct:'9',
+      wrong:['-9','6','27'], exp:'[x³/3]₀³ = 27/3 = 9'},
+    {rule:'Definite', q:'\\int_1^4 2x\\,dx', correct:'15',
+      wrong:['-15','16','8'], exp:'[x²]₁⁴ = 16 − 1 = 15'},
+
+    // ── Reverse Chain Rule (5) ───────────────────────────────────────
+    {rule:'Reverse Chain', q:'\\int 2x(x^2+1)^3\\,dx', correct:'\\frac{(x^2+1)^4}{4} + c',
+      wrong:['\\frac{(x^2+1)^4}{4}','(x^2+1)^4 + c','2x(x^2+1)^4 + c'], exp:'u = x²+1, du = 2x dx'},
+    {rule:'Reverse Chain', q:'\\int \\cos(2x)\\,dx', correct:'\\frac{\\sin(2x)}{2} + c',
+      wrong:['\\frac{\\sin(2x)}{2}','\\sin(2x) + c','2\\sin(2x) + c'], exp:'Reverse chain: sin(2x)/2 + c'},
+    {rule:'Reverse Chain', q:'\\int xe^{x^2}\\,dx', correct:'\\frac{e^{x^2}}{2} + c',
+      wrong:['\\frac{e^{x^2}}{2}','e^{x^2} + c','xe^{x^2} + c'], exp:'u = x², du = 2x dx → ½e^(x²) + c'},
+    {rule:'Reverse Chain', q:'\\int \\sin(3x)\\,dx', correct:'-\\frac{\\cos(3x)}{3} + c',
+      wrong:['-\\frac{\\cos(3x)}{3}','-\\cos(3x) + c','\\frac{\\cos(3x)}{3} + c'], exp:'−cos(3x)/3 + c'},
+    {rule:'Reverse Chain', q:'\\int 3x^2(x^3+5)^2\\,dx', correct:'\\frac{(x^3+5)^3}{3} + c',
+      wrong:['\\frac{(x^3+5)^3}{3}','(x^3+5)^3 + c','3x^2(x^3+5)^3 + c'], exp:'u = x³+5, du = 3x² dx'},
+
+    // ── By Parts (3) ────────────────────────────────────────────────
+    {rule:'By Parts', q:'\\int xe^x\\,dx', correct:'xe^x - e^x + c',
+      wrong:['xe^x - e^x','xe^x + c','\\frac{x^2 e^x}{2} + c'], exp:'u=x, dv=eˣdx → xeˣ − eˣ + c'},
+    {rule:'By Parts', q:'\\int x\\cos x\\,dx', correct:'x\\sin x + \\cos x + c',
+      wrong:['x\\sin x + \\cos x','x\\sin x + c','x\\cos x - \\sin x + c'], exp:'u=x, dv=cos x dx'},
+    {rule:'By Parts', q:'\\int \\ln x\\,dx', correct:'x\\ln x - x + c',
+      wrong:['x\\ln x - x','\\frac{1}{x} + c','x\\ln x + c'], exp:'u=ln x, dv=dx → x ln x − x + c'},
+
+    // ── Partial Fractions (2) ────────────────────────────────────────
+    {rule:'Partial Fractions', q:'\\int \\frac{1}{(x+1)(x+2)}\\,dx', correct:'\\ln|x+1| - \\ln|x+2| + c',
+      wrong:['\\ln|x+1| - \\ln|x+2|','\\ln|(x+1)(x+2)| + c','\\frac{1}{x+1} - \\frac{1}{x+2} + c'], exp:'Decompose then integrate each term'},
+    {rule:'Partial Fractions', q:'\\int \\frac{3}{(x-1)(x+2)}\\,dx', correct:'\\ln|x-1| - \\ln|x+2| + c',
+      wrong:['\\ln|x-1| - \\ln|x+2|','3\\ln|(x-1)(x+2)| + c','\\frac{3}{x-1} - \\frac{3}{x+2} + c'], exp:'3/((x−1)(x+2)) = 1/(x−1) − 1/(x+2)'},
+  ],
+
+  level4: [
+    // ── Kinematics (8) ───────────────────────────────────────────────
+    {rule:'Kinematics', q:'\\int 3t^2\\,dt', correct:'t^3 + c',
+      wrong:['t^3','6t + c','3t^3 + c'], exp:'v(t)=3t² → s = t³ + c'},
+    {rule:'Kinematics', q:'\\int 4t\\,dt', correct:'2t^2 + c',
+      wrong:['2t^2','4t^2 + c','\\frac{4t^2}{2}'], exp:'a(t)=4t → v = 2t² + c'},
+    {rule:'Kinematics', q:'\\int (6t^2 + 2t)\\,dt', correct:'2t^3 + t^2 + c',
+      wrong:['2t^3 + t^2','12t + 2 + c','6t^3 + 2t^2 + c'], exp:'6t³/3 + 2t²/2 + c'},
+    {rule:'Kinematics', q:'\\int 9.81\\,dt', correct:'9.81t + c',
+      wrong:['9.81t','9.81','0 + c'], exp:'Constant acceleration: 9.81t + c'},
+    {rule:'Kinematics', q:'\\int (10 - 2t)\\,dt', correct:'10t - t^2 + c',
+      wrong:['10t - t^2','10 - 2t^2 + c','10t - 2t^2 + c'], exp:'v(t) → s(t): 10t − t² + c'},
+    {rule:'Kinematics', q:'\\int_0^3 6t\\,dt', correct:'27',
+      wrong:['-27','18','9'], exp:'[3t²]₀³ = 27 m/s'},
+    {rule:'Kinematics', q:'\\int_0^4 (8 - 2t)\\,dt', correct:'16',
+      wrong:['-16','24','32'], exp:'[8t − t²]₀⁴ = 32 − 16 = 16 m'},
+    {rule:'Kinematics', q:'\\int 5t^4\\,dt', correct:'t^5 + c',
+      wrong:['t^5','5t^5 + c','20t^3 + c'], exp:'a(t)=5t⁴ → v = t⁵ + c'},
+
+    // ── Structural (4) ───────────────────────────────────────────────
+    {rule:'Structural', q:'\\int 12x\\,dx', correct:'6x^2 + c',
+      wrong:['6x^2','12x^2 + c','\\frac{12x^2}{2}'], exp:'Load → shear: 12x²/2 + c = 6x² + c'},
+    {rule:'Structural', q:'\\int 6x^2\\,dx', correct:'2x^3 + c',
+      wrong:['2x^3','6x^3 + c','12x + c'], exp:'Shear → moment: 6x³/3 + c = 2x³ + c'},
+    {rule:'Structural', q:'\\int (8 - 4x)\\,dx', correct:'8x - 2x^2 + c',
+      wrong:['8x - 2x^2','8x - 4x^2 + c','8 - 2x^2 + c'], exp:'Load → shear: 8x − 2x² + c'},
+    {rule:'Structural', q:'\\int_0^2 10x\\,dx', correct:'20',
+      wrong:['-20','10','40'], exp:'[5x²]₀² = 20 kN·m'},
+
+    // ── AC Circuits (5) ──────────────────────────────────────────────
+    {rule:'AC Circuits', q:'\\int 5\\cos(\\omega t)\\,dt', correct:'\\frac{5\\sin(\\omega t)}{\\omega} + c',
+      wrong:['\\frac{5\\sin(\\omega t)}{\\omega}','5\\sin(\\omega t) + c','-\\frac{5\\sin(\\omega t)}{\\omega} + c'], exp:'Reverse chain: 5sin(ωt)/ω + c'},
+    {rule:'AC Circuits', q:'\\int \\sin(100t)\\,dt', correct:'-\\frac{\\cos(100t)}{100} + c',
+      wrong:['-\\frac{\\cos(100t)}{100}','-\\cos(100t) + c','\\frac{\\cos(100t)}{100} + c'], exp:'−cos(100t)/100 + c'},
+    {rule:'AC Circuits', q:'\\int 10\\sin(50t)\\,dt', correct:'-\\frac{\\cos(50t)}{5} + c',
+      wrong:['-\\frac{\\cos(50t)}{5}','-10\\cos(50t) + c','\\frac{\\cos(50t)}{5} + c'], exp:'10 × (−cos(50t)/50) = −cos(50t)/5 + c'},
+    {rule:'AC Circuits', q:'\\int 3\\cos(2t)\\,dt', correct:'\\frac{3\\sin(2t)}{2} + c',
+      wrong:['\\frac{3\\sin(2t)}{2}','3\\sin(2t) + c','-\\frac{3\\sin(2t)}{2} + c'], exp:'3 × sin(2t)/2 + c'},
+    {rule:'AC Circuits', q:'\\int -4\\sin(\\omega t)\\,dt', correct:'\\frac{4\\cos(\\omega t)}{\\omega} + c',
+      wrong:['\\frac{4\\cos(\\omega t)}{\\omega}','-4\\cos(\\omega t) + c','-\\frac{4\\cos(\\omega t)}{\\omega} + c'], exp:'−4 × (−cos(ωt)/ω) = 4cos(ωt)/ω + c'},
+
+    // ── Decay / Thermal (4) ──────────────────────────────────────────
+    {rule:'Decay', q:'\\int_0^{\\infty} 200e^{-0.1t}\\,dt', correct:'2000',
+      wrong:['-2000','200','20'], exp:'200/0.1 = 2000'},
+    {rule:'Thermal', q:'\\int 50e^{-2t}\\,dt', correct:'-25e^{-2t} + c',
+      wrong:['-25e^{-2t}','50e^{-2t} + c','-\\frac{50e^{-2t}}{2}'], exp:'50 × e^(−2t)/(−2) + c'},
+    {rule:'Decay', q:'\\int 100e^{-5t}\\,dt', correct:'-20e^{-5t} + c',
+      wrong:['-20e^{-5t}','100e^{-5t} + c','-500e^{-5t} + c'], exp:'100/(−5) = −20e^(−5t) + c'},
+    {rule:'Thermal', q:'\\int_0^{\\infty} 80e^{-4t}\\,dt', correct:'20',
+      wrong:['-20','80','320'], exp:'80/4 = 20'},
+
+    // ── Work / Impulse / Energy (8) ──────────────────────────────────
+    {rule:'Impulse', q:'\\int_0^2 (4t - t^2)\\,dt', correct:'\\frac{8}{3}',
+      wrong:['-\\frac{8}{3}','4','2'], exp:'[2t² − t³/3]₀² = 8 − 8/3 = 8/3'},
+    {rule:'Work Done', q:'\\int_0^3 6x\\,dx', correct:'27',
+      wrong:['-27','18','9'], exp:'[3x²]₀³ = 27 J'},
+    {rule:'Work Done', q:'\\int_0^5 (10 - 2x)\\,dx', correct:'25',
+      wrong:['-25','50','0'], exp:'[10x − x²]₀⁵ = 50−25 = 25 J'},
+    {rule:'Electrical', q:'\\int_0^4 3t^2\\,dt', correct:'64',
+      wrong:['-64','48','36'], exp:'[t³]₀⁴ = 64 J'},
+    {rule:'Work Done', q:'\\int_0^2 (5 + 3x)\\,dx', correct:'16',
+      wrong:['-16','10','14'], exp:'[5x + 3x²/2]₀² = 10 + 6 = 16 J'},
+    {rule:'Impulse', q:'\\int_0^3 2t\\,dt', correct:'9',
+      wrong:['-9','6','3'], exp:'[t²]₀³ = 9 N·s'},
+    {rule:'Work Done', q:'\\int_1^3 4x\\,dx', correct:'16',
+      wrong:['-16','12','8'], exp:'[2x²]₁³ = 18 − 2 = 16 J'},
+    {rule:'Electrical', q:'\\int_0^2 (6t^2 + 4t)\\,dt', correct:'24',
+      wrong:['-24','16','20'], exp:'[2t³ + 2t²]₀² = 16 + 8 = 24 J'},
+
+    // ── Substitution (5) ─────────────────────────────────────────────
+    {rule:'Substitution', q:'\\int 2te^{t^2}\\,dt', correct:'e^{t^2} + c',
+      wrong:['e^{t^2}','2e^{t^2} + c','t^2 e^{t^2} + c'], exp:'u=t², du=2t dt → e^(t²) + c'},
+    {rule:'Substitution', q:'\\int \\omega\\cos(\\omega t)\\,dt', correct:'\\sin(\\omega t) + c',
+      wrong:['\\sin(\\omega t)','\\omega\\sin(\\omega t) + c','-\\sin(\\omega t) + c'], exp:'u=ωt → sin(ωt) + c'},
+    {rule:'Substitution', q:'\\int 6t^2\\cos(t^3)\\,dt', correct:'2\\sin(t^3) + c',
+      wrong:['2\\sin(t^3)','6\\sin(t^3) + c','\\sin(t^3) + c'], exp:'u=t³, du=3t² dt, (6/3)sin(t³) + c'},
+    {rule:'Substitution', q:'\\int \\frac{2t}{t^2+1}\\,dt', correct:'\\ln(t^2+1) + c',
+      wrong:['\\ln(t^2+1)','2\\ln(t^2+1) + c','\\frac{1}{t^2+1} + c'], exp:'u=t²+1, du=2t dt → ln|u| + c'},
+    {rule:'Substitution', q:'\\int 4t(t^2+3)^5\\,dt', correct:'\\frac{(t^2+3)^6}{3} + c',
+      wrong:['\\frac{(t^2+3)^6}{3}','(t^2+3)^6 + c','4t(t^2+3)^6 + c'], exp:'u=t²+3, du=2t dt, 4/(2)×u⁶/6 + c'},
+
+    // ── By Parts (4) ────────────────────────────────────────────────
+    {rule:'By Parts', q:'\\int te^{-t}\\,dt', correct:'-te^{-t} - e^{-t} + c',
+      wrong:['-te^{-t} - e^{-t}','te^{-t} + c','-te^{-t} + c'], exp:'u=t, dv=e^(−t)dt'},
+    {rule:'By Parts', q:'\\int t\\cos t\\,dt', correct:'t\\sin t + \\cos t + c',
+      wrong:['t\\sin t + \\cos t','t\\sin t + c','t\\cos t - \\sin t + c'], exp:'u=t, dv=cos t dt'},
+    {rule:'By Parts', q:'\\int t\\sin t\\,dt', correct:'-t\\cos t + \\sin t + c',
+      wrong:['-t\\cos t + \\sin t','t\\sin t + c','-t\\cos t + c'], exp:'u=t, dv=sin t dt → −t cos t + sin t + c'},
+    {rule:'By Parts', q:'\\int t^2 e^t\\,dt', correct:'t^2 e^t - 2te^t + 2e^t + c',
+      wrong:['t^2 e^t - 2te^t + 2e^t','t^2 e^t + c','t^2 e^t - 2te^t + c'], exp:'Apply by parts twice'},
+
+    // ── Area Under Curve (4) ────────────────────────────────────────
+    {rule:'Area', q:'\\int_0^3 t^2\\,dt', correct:'9',
+      wrong:['-9','6','27'], exp:'[t³/3]₀³ = 9'},
+    {rule:'Area', q:'\\int_0^5 4x\\,dx', correct:'50',
+      wrong:['-50','20','25'], exp:'[2x²]₀⁵ = 50'},
+    {rule:'Area', q:'\\int_0^4 (3x^2 + 1)\\,dx', correct:'68',
+      wrong:['-68','64','48'], exp:'[x³ + x]₀⁴ = 64 + 4 = 68'},
+    {rule:'Area', q:'\\int_1^2 x^3\\,dx', correct:'\\frac{15}{4}',
+      wrong:['\\frac{15}{4} + c','4','\\frac{16}{4}'], exp:'[x⁴/4]₁² = 16/4 − 1/4 = 15/4'},
+
+    // ── Logarithmic (3) ─────────────────────────────────────────────
+    {rule:'Logarithm', q:'\\int_1^4 \\frac{8}{t}\\,dt', correct:'8\\ln 4',
+      wrong:['8\\ln 4 + c','\\ln 4','8\\ln 3'], exp:'8[ln|t|]₁⁴ = 8 ln 4'},
+    {rule:'Logarithm', q:'\\int \\frac{6}{t}\\,dt', correct:'6\\ln|t| + c',
+      wrong:['6\\ln|t|','\\ln|6t| + c','\\frac{6}{t^2} + c'], exp:'6 × ln|t| + c'},
+    {rule:'Logarithm', q:'\\int_1^e \\frac{3}{t}\\,dt', correct:'3',
+      wrong:['-3','e','3 + c'], exp:'3[ln|t|]₁ᵉ = 3(1−0) = 3'},
+  ]
+};
+
+// Read level from URL param
+const urlLevel = new URLSearchParams(location.search).get('level');
+let currentLevel = (urlLevel === 'level4') ? 'level4' : 'alevel';
+
+let score=0, streak=0, qNum=0, answered=false, timerInt=null, timerStart=null, questions=[], sessionStart=null;
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+function makeChoices(correct, wrong){
+  const w = wrong.filter(x => x !== correct);
+  return shuffle([correct, ...shuffle(w).slice(0,3)]);
+}
+
+function setLevel(level){
+  currentLevel = level;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.level-btn.${level === 'level4' ? 'l4' : 'alevel'}`).classList.add('active');
+}
+
+// Set initial level from URL
+if(currentLevel === 'level4'){
+  document.querySelector('.level-btn.alevel').classList.remove('active');
+  document.querySelector('.level-btn.l4').classList.add('active');
+}
+
+let _ggCorrectCount=0;
+function startGame(){
+  score=0; streak=0; qNum=0; _ggCorrectCount=0; sessionStart=Date.now();
+  const bank = QUESTIONS[currentLevel];
+  questions = shuffle(bank).slice(0, Math.min(TOTAL, bank.length));
+  document.getElementById('startScreen').style.display='none';
+  document.getElementById('gameOver').classList.remove('visible');
+  document.getElementById('mainGame').classList.add('visible');
+  document.getElementById('score').textContent='0';
+  document.getElementById('streak').textContent='0';
+
+  window._ggAbandoned=true;
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'integration-duel',level:currentLevel,questions_answered:qNum});});}
+  mfg('game_started',{game_slug:'integration-duel',level:currentLevel});
+
+  nextQ();
+}
+
+function nextQ(){
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('explanation').parentNode);
+  if(qNum >= questions.length){endGame(); return;}
+  answered = false;
+  const q = questions[qNum]; qNum++;
+  document.getElementById('ruleBadge').textContent = q.rule;
+  document.getElementById('qText').innerHTML = tex(q.q);
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('explanation').textContent = '';
+
+  const choices = makeChoices(q.correct, q.wrong);
+  const div = document.getElementById('choices');
+  div.innerHTML = '';
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.dataset.val = c;
+    btn.innerHTML = tex(c);
+    btn.onclick = () => guess(c, q, btn, div);
+    div.appendChild(btn);
+  });
+
+  clearInterval(timerInt);
+  timerStart = Date.now();
+  const fill = document.getElementById('timerFill');
+  fill.style.width = '0%';
+  timerInt = setInterval(() => {
+    const elapsed = (Date.now()-timerStart)/1000;
+    // Grow bar: reaches ~50% at 10s, ~75% at 30s, approaches 100% asymptotically
+    const pct = Math.min(100, 100 * (1 - 1/(1 + elapsed/15)));
+    fill.style.width = pct+'%';
+    fill.className = 'timer-fill';
+  }, 50);
+}
+
+function guess(val, q, btn, div){
+  if(answered) return;
+  answered=true;
+  clearInterval(timerInt);
+  const seconds = (Date.now()-timerStart)/1000;
+  const correct = val === q.correct;
+  mfg('question_answered',{game_slug:'integration-duel',level:currentLevel,correct:correct,question_index:qNum});
+  const fb = document.getElementById('feedback');
+  document.getElementById('explanation').textContent = q.exp;
+  if(correct){
+    _ggCorrectCount++;
+    const earned = Math.max(1, Math.round(BASE));
+    score += earned; streak++;
+    btn.classList.add('correct');
+    const timeNote = `+${earned} (${Math.round(seconds)}s)`;
+    fb.textContent = streak>2 ? `CORRECT! ${streak} streak! ${timeNote}` : `CORRECT! ${timeNote}`;
+    fb.className = 'feedback correct';
+  } else {
+    streak = 0;
+    btn.classList.add('wrong');
+    [...div.children].forEach(b => {if(b.dataset.val === q.correct) b.classList.add('correct');});
+    fb.textContent = 'WRONG!';
+    fb.className = 'feedback wrong';
+  }
+  document.getElementById('score').textContent = score;
+  document.getElementById('streak').textContent = streak;
+  // canon 7.6: correct advances briskly, wrong waits for the student.
+  if(correct){ setTimeout(nextQ,1800); }
+  else { MaffsNext.wrong({mount:document.getElementById('explanation').parentNode, onAdvance:nextQ}); }
+}
+
+
+function endGame(){
+  var _elapsed=Math.floor((Date.now()-(sessionStart||Date.now()))/1000),_m=Math.floor(_elapsed/60),_s=_elapsed%60;if(document.getElementById('timeStat'))document.getElementById('timeStat').textContent=(_m>0?_m+'m '+_s+'s':_s+'s');
+  window._ggAbandoned=false;
+  document.getElementById('mainGame').classList.remove('visible');
+  document.getElementById('gameOver').classList.add('visible');
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('goDetail').textContent = `${questions.length} integrals attempted`;
+  const _acc=questions.length>0?Math.round(_ggCorrectCount/questions.length*100):0;
+  mfg('game_completed',{game_slug:'integration-duel',level:currentLevel,score:score,questions_answered:questions.length,accuracy:_acc});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('integration-duel',currentLevel,score,questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('integration-duel',currentLevel,score);}}
+  saveBest(score); renderLB();
+}
+
+const LB_KEY = 'id_' + currentLevel;
+function getBest(){return parseInt(localStorage.getItem('id_best_'+currentLevel)||'0');}
+function saveBest(s){
+  const prev=getBest();
+  if(s > prev){localStorage.setItem('id_best_'+currentLevel, s);mfg('personal_best_set',{game_slug:'integration-duel',level:currentLevel,score:s,previous_best:prev});}
+  document.getElementById('best').textContent = getBest();
+}
+function renderLB(){
+  const key = 'id_scores_'+currentLevel;
+  const scores = JSON.parse(localStorage.getItem(key)||'[]');
+  const ns = [...scores,{score, date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,5);
+  localStorage.setItem(key, JSON.stringify(ns));
+  document.getElementById('lbList').innerHTML = ns.map((s,i) =>
+    `<div class="lb-row"><span class="lb-rank">#${i+1}</span><span class="lb-date">${s.date}</span><span class="lb-score">${s.score}</span></div>`
+  ).join('') || '<div style="text-align:center;color:#94a3b8;font-size:13px;padding:12px">No scores yet</div>';
+}
+document.getElementById('best').textContent = getBest(); renderLB();
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <!-- White background -->
+  <rect width="400" height="300" fill="#FFFFFF"/>
+
+  <!-- Main M shape - dark blue -->
+  <path d="M 140,100
+           L 170,100
+           L 200,140
+           L 230,100
+           L 260,100
+           L 260,200
+           L 220,200
+           L 220,155
+           L 205,175
+           L 195,175
+           L 180,155
+           L 180,200
+           L 140,200
+           Z"
+        fill="#1a2744"/>
+
+  <!-- Plus sign - white -->
+  <path d="M 155,140
+           L 155,130
+           L 165,130
+           L 165,140
+           L 175,140
+           L 175,150
+           L 165,150
+           L 165,160
+           L 155,160
+           L 155,150
+           L 145,150
+           L 145,140
+           Z"
+        fill="#FFFFFF"/>
+
+  <!-- Two teal bars -->
+  <rect x="215" y="130" width="35" height="12" rx="2" fill="#0d9488"/>
+  <rect x="215" y="148" width="35" height="12" rx="2" fill="#0d9488"/>
+</svg>

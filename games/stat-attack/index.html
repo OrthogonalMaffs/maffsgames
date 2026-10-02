@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Grouped frequency tables — modal class, median class, mean, and step-by-step standard deviation calculation. 36 scenarios across three levels.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/stat-attack/">
+<meta property="og:title" content="Stat Attack — MaffsGames">
+<meta property="og:description" content="Grouped frequency tables — modal class, median class, mean, and step-by-step standard deviation calculation. 36 scenarios across three levels.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/stat-attack/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Stat Attack — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070b14;--surface:#0e1424;--surface2:#131b2e;--border:#1a2440;
+  --primary:#0ea5e9;--primary-dim:rgba(14,165,233,.15);--primary-glow:rgba(14,165,233,.25);
+  --accent:#38bdf8;--teal:#14b8a6;--teal-dim:rgba(20,184,166,.12);
+  --correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
+  --wrong:#f43f5e;--wrong-dim:rgba(244,63,94,.12);
+  --text:#e4e8f0;--muted:#687890;--hint:#94a3b8;
+  --col-x:#14b8a6;--col-fx:#f59e0b;--col-x2:#a78bfa;--col-fx2:#f472b6;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.mono{font-family:'JetBrains Mono',monospace}
+.container{max-width:1100px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+
+.header{text-align:center;padding:1.2rem 0 .5rem}
+.header h1{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{font-size:.82rem;color:var(--muted);margin-top:.25rem}
+
+.screen{display:none}.screen.active{display:block}
+
+/* Menu */
+.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:560px}
+.level-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;max-width:480px;margin:1.2rem auto}
+.level-btn{padding:.9rem;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.92rem;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
+.level-btn:hover{border-color:var(--primary);box-shadow:0 0 20px var(--primary-glow)}
+.level-btn.selected{border-color:var(--primary);background:var(--primary-dim)}
+.level-btn .level-sub{font-size:.68rem;color:var(--muted);font-weight:400;margin-top:.2rem;display:block}
+.start-btn{display:block;margin:1.5rem auto;padding:.8rem 2.5rem;border-radius:12px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:transform .15s;opacity:.4;pointer-events:none}
+.start-btn.ready{opacity:1;pointer-events:auto}
+.start-btn.ready:hover{transform:scale(1.04)}
+
+/* HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.6rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.6rem;flex-wrap:wrap;gap:.3rem}
+.hud-item{text-align:center;min-width:55px}
+.hud-label{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700}
+
+/* Scenario title */
+.scenario-title{font-size:.9rem;font-weight:600;color:var(--primary);margin-bottom:.5rem}
+.scenario-context{font-size:.84rem;color:var(--muted);line-height:1.5;margin-bottom:.8rem}
+
+/* Frequency table */
+.table-wrap{overflow-x:auto;margin-bottom:.8rem;-webkit-overflow-scrolling:touch}
+.freq-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:.84rem}
+.freq-table th,.freq-table td{padding:.5rem .6rem;text-align:center;border:1px solid var(--border);white-space:nowrap}
+.freq-table th{background:var(--surface2);color:var(--muted);font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.freq-table td{background:var(--surface);color:var(--text)}
+.freq-table .col-class{text-align:left;font-weight:500;min-width:110px}
+.freq-table .col-f{color:var(--accent);font-weight:700}
+.freq-table .col-x{color:var(--col-x)}
+.freq-table .col-fx{color:var(--col-fx)}
+.freq-table .col-x2{color:var(--col-x2)}
+.freq-table .col-fx2{color:var(--col-fx2)}
+.freq-table .total-row td{border-top:2px solid var(--primary);font-weight:700}
+.freq-table .col-hidden{display:none}
+.freq-table .col-reveal{animation:colReveal .4s ease}
+@keyframes colReveal{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Question area */
+.q-area{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.8rem}
+.q-label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem;font-weight:600}
+.q-prompt{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:.7rem;line-height:1.5}
+.q-prompt .katex{font-size:.92em!important}
+
+.num-input{width:130px;padding:.55rem .8rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:500}
+.num-input:focus{outline:none;border-color:var(--primary)}
+.num-input::placeholder{color:var(--muted);font-weight:400}
+.num-input.sm{width:90px;font-size:.82rem;padding:.4rem .6rem}
+.text-input{width:180px;padding:.55rem .8rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.text-input:focus{outline:none;border-color:var(--primary)}
+
+.check-btn{padding:.5rem 1.4rem;border-radius:8px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;margin-top:.4rem;transition:transform .12s}
+.check-btn:hover{transform:scale(1.03)}
+.check-btn:disabled{opacity:.4;pointer-events:none}
+
+.feedback{margin-top:.5rem;padding:.5rem .7rem;border-radius:8px;font-size:.82rem;line-height:1.5;animation:fadeIn .25s}
+.feedback.correct{background:var(--correct-dim);border:1px solid var(--correct);color:var(--correct)}
+.feedback.wrong{background:var(--wrong-dim);border:1px solid var(--wrong);color:var(--wrong)}
+.dismiss-btn{display:block;margin:8px auto 0;padding:5px 16px;border:1.5px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer;opacity:0;animation:fadeBtn .3s ease forwards}.dismiss-btn:hover{background:rgba(255,255,255,.08)}@keyframes fadeBtn{to{opacity:1}}
+.feedback.hint{background:rgba(148,163,184,.08);border:1px solid var(--hint);color:var(--hint)}
+
+/* SD step inputs in row */
+.sd-inputs{display:grid;grid-template-columns:1fr auto;gap:.3rem .6rem;align-items:center;margin-bottom:.5rem}
+.sd-row-label{font-size:.78rem;color:var(--muted);text-align:right}
+
+/* Interpretation MCQ */
+.mcq-grid{display:grid;gap:.4rem;margin-bottom:.5rem}
+.mcq-btn{padding:.6rem .8rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;cursor:pointer;text-align:left;transition:all .12s;line-height:1.4}
+.mcq-btn:hover{border-color:var(--primary)}
+.mcq-btn.correct{border-color:var(--correct);background:var(--correct-dim)}
+.mcq-btn.wrong{border-color:var(--wrong);background:var(--wrong-dim)}
+.mcq-btn.disabled{pointer-events:none;opacity:.5}
+
+/* Completion */
+.completion{background:var(--surface);border:1px solid var(--correct);border-radius:12px;padding:1rem;margin-bottom:.8rem;animation:fadeIn .4s}
+.completion h3{font-size:.82rem;color:var(--correct);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
+.completion .stat-line{font-size:.86rem;line-height:1.8;color:var(--text)}
+.completion .stat-line strong{color:var(--accent)}
+.completion .context-line{font-size:.82rem;color:var(--muted);margin-top:.5rem;line-height:1.5;font-style:italic}
+
+.next-btn{display:block;margin:.8rem auto 0;padding:.6rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:transform .12s}
+.next-btn:hover{transform:scale(1.03)}
+
+/* Results */
+.results{text-align:center;padding:2rem 1rem}
+.results h2{font-size:1.5rem;margin-bottom:.3rem}
+.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
+.results .stats{color:var(--muted);margin-bottom:1rem;line-height:1.9;font-size:.85rem}
+.results .pb-line{color:var(--correct);font-weight:600;font-size:.9rem;margin-bottom:1rem}
+.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* === Accessibility === */
+body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
+body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
+.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+
+.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+.method-btn{display:block;margin:.8rem auto;padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .15s}.method-btn:hover{border-color:var(--primary);color:var(--text)}
+.method-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}.method-overlay.show{display:flex}
+.method-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;max-width:600px;width:92%;max-height:80vh;overflow-y:auto}
+.method-box h2{font-size:1.1rem;font-weight:700;color:var(--accent);margin-bottom:1rem}
+.method-section{margin-bottom:1rem;padding:.8rem;background:var(--bg);border-radius:8px;font-size:.85rem;line-height:1.8}
+.method-section strong{color:var(--accent);display:block;margin-bottom:.3rem}
+.method-close{display:block;margin:1rem auto 0;padding:.4rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+<a href="../../" class="back-link">← Back to Games</a>
+
+<!-- MENU -->
+<div id="menuScreen" class="screen active">
+  <div class="header">
+    <h1>Stat Attack</h1>
+    <div class="sub">Can you calculate the standard deviation from a frequency table?</div>
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+</div>
+  <div class="menu-info">
+    Grouped frequency tables — modal class, median class, estimated mean, and standard deviation.
+    The SD calculation is built step-by-step: midpoints, fx, x², fx², variance, then the final answer.
+    Watch your working columns appear in the table as you go.
+  </div>
+  <div class="level-grid">
+    <button class="level-btn" data-level="gcse" onclick="selectLevel(this)">
+      GCSE<span class="level-sub">Exam scores, heights, distances</span>
+    </button>
+    <button class="level-btn" data-level="core" onclick="selectLevel(this)">
+      Core Maths<span class="level-sub">Salaries, bills, finance</span>
+    </button>
+    <button class="level-btn" data-level="level4" onclick="selectLevel(this)">
+      Level 4<span class="level-sub">Engineering measurements</span>
+    </button>
+  </div>
+  <button class="method-btn" onclick="document.getElementById('methodOverlay').classList.add('show')">Worked Example</button>
+  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
+  <button class="start-btn" id="startBtn" onclick="startGame()">Start</button>
+</div>
+
+<div class="method-overlay" id="methodOverlay">
+  <div class="method-box">
+    <h2>Worked Example — Grouped Frequency Table</h2>
+    <div class="method-section" id="methodTable"></div>
+    <div class="method-section" id="methodMeanSD"></div>
+    <button class="method-close" onclick="document.getElementById('methodOverlay').classList.remove('show')">Got it</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="gameScreen" class="screen">
+  <div class="hud">
+    <div class="hud-item"><div class="hud-label">Scenario</div><div class="hud-val" id="hudQ">1/6</div></div>
+    <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    <div class="hud-item"><div class="hud-label">Level</div><div class="hud-val" id="hudLevel">—</div></div>
+    <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val mono" id="hudTimer">0s</div></div>
+  </div>
+  <div id="scenarioTitle" class="scenario-title"></div>
+  <div id="scenarioContext" class="scenario-context"></div>
+  <div class="table-wrap"><table class="freq-table" id="freqTable"></table></div>
+  <div id="qArea" class="q-area"></div>
+</div>
+
+<!-- RESULTS -->
+<div id="resultsScreen" class="screen">
+  <div class="results">
+    <h2 id="resultTitle"></h2>
+    <div class="final-score" id="finalScore">0</div>
+    <div class="stats" id="statsLine"></div>
+    <div class="pb-line" id="pbLine" style="display:none"></div>
+    <button class="play-again" onclick="showMenu()">Play Again</button>
+  </div>
+</div>
+</div>
+
+<script>
+function _addDismiss(fb,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
+// ============================================================
+//  QUESTION BANK — 36 scenarios
+// ============================================================
+const SCENARIOS = {
+gcse: [
+  {id:'G1',title:'Maths exam scores',context:'35 students sat a maths exam. The grouped frequency table shows their scores.',
+   unit:'',classLabel:'Score',
+   classes:['20 ≤ x < 30','30 ≤ x < 40','40 ≤ x < 50','50 ≤ x < 60','60 ≤ x < 70'],
+   freqs:[3,7,12,8,5],midpoints:[25,35,45,55,65],
+   modalClass:'40 ≤ x < 50',medianClass:'40 ≤ x < 50',
+   mean:46.4,variance:134.9,sd:11.6,
+   fx:[75,245,540,440,325],sumFx:1625,
+   x2:[625,1225,2025,3025,4225],
+   fx2:[1875,8575,24300,24200,21125],sumFx2:80075,
+   contextLine:'The mean exam score is 46.4 with a standard deviation of 11.6 — scores are fairly spread across the grade boundaries.'},
+  {id:'G2',title:'Heights of students (cm)',context:'35 students had their heights measured in PE.',
+   unit:'cm',classLabel:'Height (cm)',
+   classes:['150 ≤ x < 155','155 ≤ x < 160','160 ≤ x < 165','165 ≤ x < 170','170 ≤ x < 175'],
+   freqs:[4,9,11,8,3],midpoints:[152.5,157.5,162.5,167.5,172.5],
+   modalClass:'160 ≤ x < 165',medianClass:'160 ≤ x < 165',
+   mean:162.1,variance:26.98,sd:5.19,
+   fx:[610,1417.5,1787.5,1340,517.5],sumFx:5672.5,
+   x2:[23256.25,24806.25,26406.25,28056.25,29756.25],
+   fx2:[93025,223256.25,290468.75,224450,89268.75],sumFx2:920468.75,
+   contextLine:'The mean height is 162.1 cm with a standard deviation of 5.19 cm — most students are within about 5 cm of the average.'},
+  {id:'G3',title:'Journey times to school (minutes)',context:'30 students recorded how long it takes them to get to school.',
+   unit:'min',classLabel:'Time (min)',
+   classes:['0 ≤ x < 10','10 ≤ x < 20','20 ≤ x < 30','30 ≤ x < 40','40 ≤ x < 50'],
+   freqs:[5,8,10,6,1],midpoints:[5,15,25,35,45],
+   modalClass:'20 ≤ x < 30',medianClass:'20 ≤ x < 30',
+   mean:21.7,variance:114.11,sd:10.7,
+   fx:[25,120,250,210,45],sumFx:650,
+   x2:[25,225,625,1225,2025],
+   fx2:[125,1800,6250,7350,2025],sumFx2:17550,
+   contextLine:'The mean journey time is 21.7 minutes with a standard deviation of 10.7 minutes.'},
+  {id:'G4',title:'Ages at a leisure centre',context:'40 people at a leisure centre were surveyed about their age.',
+   unit:'',classLabel:'Age',
+   classes:['10 ≤ x < 20','20 ≤ x < 30','30 ≤ x < 40','40 ≤ x < 50','50 ≤ x < 60'],
+   freqs:[6,14,10,7,3],midpoints:[15,25,35,45,55],
+   modalClass:'20 ≤ x < 30',medianClass:'20 ≤ x < 30',
+   mean:31.75,variance:131.94,sd:11.5,
+   fx:[90,350,350,315,165],sumFx:1270,
+   x2:[225,625,1225,2025,3025],
+   fx2:[1350,8750,12250,14175,9075],sumFx2:45600,
+   contextLine:'The mean age is 31.75 with a standard deviation of 11.5 years — visitors span a wide age range.'},
+  {id:'G5',title:'Text messages sent per day',context:'40 students recorded how many text messages they sent in one day.',
+   unit:'',classLabel:'Messages',
+   classes:['0 ≤ x < 20','20 ≤ x < 40','40 ≤ x < 60','60 ≤ x < 80','80 ≤ x < 100'],
+   freqs:[4,11,13,7,5],midpoints:[10,30,50,70,90],
+   modalClass:'40 ≤ x < 60',medianClass:'40 ≤ x < 60',
+   mean:49.0,variance:539,sd:23.2,
+   fx:[40,330,650,490,450],sumFx:1960,
+   x2:[100,900,2500,4900,8100],
+   fx2:[400,9900,32500,34300,40500],sumFx2:117600,
+   contextLine:'The mean is 49 messages with a standard deviation of 23.2 — there is a wide spread in texting habits.'},
+  {id:'G6',title:'Spelling test scores (out of 40)',context:'30 students took a spelling test marked out of 40.',
+   unit:'',classLabel:'Score',
+   classes:['0 ≤ x < 10','10 ≤ x < 20','20 ≤ x < 30','30 ≤ x < 40'],
+   freqs:[2,6,15,7],midpoints:[5,15,25,35],
+   modalClass:'20 ≤ x < 30',medianClass:'20 ≤ x < 30',
+   mean:24.0,variance:69,sd:8.31,
+   fx:[10,90,375,245],sumFx:720,
+   x2:[25,225,625,1225],
+   fx2:[50,1350,9375,8575],sumFx2:19350,
+   contextLine:'The mean spelling score is 24 out of 40 with a standard deviation of 8.31.'},
+  {id:'G7',title:'Distance thrown in PE (metres)',context:'35 students measured how far they could throw a ball in PE.',
+   unit:'m',classLabel:'Distance (m)',
+   classes:['5 ≤ x < 10','10 ≤ x < 15','15 ≤ x < 20','20 ≤ x < 25','25 ≤ x < 30'],
+   freqs:[3,8,12,9,3],midpoints:[7.5,12.5,17.5,22.5,27.5],
+   modalClass:'15 ≤ x < 20',medianClass:'15 ≤ x < 20',
+   mean:17.6,variance:30.78,sd:5.55,
+   fx:[22.5,100,210,202.5,82.5],sumFx:617.5,
+   x2:[56.25,156.25,306.25,506.25,756.25],
+   fx2:[168.75,1250,3675,4556.25,2268.75],sumFx2:11918.75,
+   contextLine:'The mean throw distance is 17.6 m with a standard deviation of 5.55 m.'},
+  {id:'G8',title:'Weekly pocket money (£)',context:'35 students reported their weekly pocket money.',
+   unit:'£',classLabel:'Amount (£)',
+   classes:['0 ≤ x < 5','5 ≤ x < 10','10 ≤ x < 15','15 ≤ x < 20','20 ≤ x < 25'],
+   freqs:[5,12,10,6,2],midpoints:[2.5,7.5,12.5,17.5,22.5],
+   modalClass:'5 ≤ x < 10',medianClass:'10 ≤ x < 15',
+   mean:10.8,variance:29.61,sd:5.44,
+   fx:[12.5,90,125,105,45],sumFx:377.5,
+   x2:[6.25,56.25,156.25,306.25,506.25],
+   fx2:[31.25,675,1562.5,1837.5,1012.5],sumFx2:5118.75,
+   contextLine:'The mean pocket money is £10.80 with a standard deviation of £5.44.'},
+  {id:'G9',title:'Time spent on homework (minutes)',context:'40 students recorded how long they spent on homework per night.',
+   unit:'min',classLabel:'Time (min)',
+   classes:['0 ≤ x < 15','15 ≤ x < 30','30 ≤ x < 45','45 ≤ x < 60','60 ≤ x < 75'],
+   freqs:[4,10,14,8,4],midpoints:[7.5,22.5,37.5,52.5,67.5],
+   modalClass:'30 ≤ x < 45',medianClass:'30 ≤ x < 45',
+   mean:36.75,variance:280.69,sd:16.8,
+   fx:[30,225,525,420,270],sumFx:1470,
+   x2:[56.25,506.25,1406.25,2756.25,4556.25],
+   fx2:[225,5062.5,19687.5,22050,18225],sumFx2:65250,
+   contextLine:'The mean homework time is 36.75 minutes with a standard deviation of 16.8 minutes.'},
+  {id:'G10',title:'Book pages read per week',context:'40 students recorded how many pages they read in a week.',
+   unit:'',classLabel:'Pages',
+   classes:['0 ≤ x < 50','50 ≤ x < 100','100 ≤ x < 150','150 ≤ x < 200','200 ≤ x < 250'],
+   freqs:[6,14,11,7,2],midpoints:[25,75,125,175,225],
+   modalClass:'50 ≤ x < 100',medianClass:'100 ≤ x < 150',
+   mean:106.25,variance:2960.94,sd:54.4,
+   fx:[150,1050,1375,1225,450],sumFx:4250,
+   x2:[625,5625,15625,30625,50625],
+   fx2:[3750,78750,171875,214375,101250],sumFx2:570000,
+   contextLine:'The mean pages read is 106.25 with a standard deviation of 54.4 — a wide range of reading habits.'},
+  {id:'G11',title:'Steps walked per day (thousands)',context:'40 people tracked their daily step count using a pedometer.',
+   unit:'k',classLabel:'Steps (thousands)',
+   classes:['2 ≤ x < 4','4 ≤ x < 6','6 ≤ x < 8','8 ≤ x < 10','10 ≤ x < 12'],
+   freqs:[5,9,13,8,5],midpoints:[3,5,7,9,11],
+   modalClass:'6 ≤ x < 8',medianClass:'6 ≤ x < 8',
+   mean:6.95,variance:5.6975,sd:2.39,
+   fx:[15,45,91,72,55],sumFx:278,
+   x2:[9,25,49,81,121],
+   fx2:[45,225,637,648,605],sumFx2:2160,
+   contextLine:'The mean is 6,950 steps with a standard deviation of 2,390 steps.'},
+  {id:'G12',title:'Time to complete a puzzle (seconds)',context:'40 students timed how long it took them to complete a logic puzzle.',
+   unit:'s',classLabel:'Time (s)',
+   classes:['30 ≤ x < 60','60 ≤ x < 90','90 ≤ x < 120','120 ≤ x < 150','150 ≤ x < 180'],
+   freqs:[3,9,14,8,6],midpoints:[45,75,105,135,165],
+   modalClass:'90 ≤ x < 120',medianClass:'90 ≤ x < 120',
+   mean:108.75,variance:1178.44,sd:34.3,
+   fx:[135,675,1470,1080,990],sumFx:4350,
+   x2:[2025,5625,11025,18225,27225],
+   fx2:[6075,50625,154350,145800,163350],sumFx2:520200,
+   contextLine:'The mean completion time is 108.75 seconds with a standard deviation of 34.3 seconds.'}
+],
+core: [
+  {id:'CM1',title:'Annual salaries (£k)',context:'60 employees at a company reported their annual salary.',
+   unit:'£k',classLabel:'Salary (£k)',
+   classes:['15 ≤ x < 20','20 ≤ x < 25','25 ≤ x < 30','30 ≤ x < 40','40 ≤ x < 60'],
+   freqs:[8,14,18,12,8],midpoints:[17.5,22.5,27.5,35,50],
+   modalClass:'25 ≤ x < 30',medianClass:'25 ≤ x < 30',
+   mean:29.5,variance:93.92,sd:9.69,
+   fx:[140,315,495,420,400],sumFx:1770,
+   x2:[306.25,506.25,756.25,1225,2500],
+   fx2:[2450,7087.5,13612.5,14700,20000],sumFx2:57850,
+   contextLine:'The mean salary is £29,500 with a standard deviation of £9,690 — salaries are moderately spread.',
+   interpretOptions:[
+     {text:'On average, salaries vary by approximately £9,690 from the mean salary of £29,500.',correct:true},
+     {text:'The standard deviation of £9,690 means most employees earn exactly £29,500.',correct:false},
+     {text:'The mean salary is £9,690.',correct:false},
+     {text:'Salaries are clustered within £29,500 of zero.',correct:false}
+   ]},
+  {id:'CM2',title:'Monthly energy bills (£)',context:'60 households reported their monthly energy bill.',
+   unit:'£',classLabel:'Bill (£)',
+   classes:['50 ≤ x < 100','100 ≤ x < 150','150 ≤ x < 200','200 ≤ x < 250','250 ≤ x < 300','300 ≤ x < 400'],
+   freqs:[5,12,18,14,8,3],midpoints:[75,125,175,225,275,350],
+   modalClass:'150 ≤ x < 200',medianClass:'150 ≤ x < 200',
+   mean:190.4,variance:4549.92,sd:67.5,
+   fx:[375,1500,3150,3150,2200,1050],sumFx:11425,
+   x2:[5625,15625,30625,50625,75625,122500],
+   fx2:[28125,187500,551250,708750,605000,367500],sumFx2:2448125,
+   contextLine:'The mean energy bill is £190.40 with a standard deviation of £67.50.',
+   interpretOptions:[
+     {text:'On average, household energy bills vary by approximately £67.50 from the mean bill of £190.40.',correct:true},
+     {text:'All households pay between £122.90 and £257.90.',correct:false},
+     {text:'The average energy bill is £67.50.',correct:false},
+     {text:'Energy bills never exceed £190.40.',correct:false}
+   ]},
+  {id:'CM3',title:'Weekly working hours',context:'60 workers reported their weekly hours.',
+   unit:'hours',classLabel:'Hours',
+   classes:['16 ≤ x < 24','24 ≤ x < 32','32 ≤ x < 40','40 ≤ x < 48','48 ≤ x < 56'],
+   freqs:[6,10,22,14,8],midpoints:[20,28,36,44,52],
+   modalClass:'32 ≤ x < 40',medianClass:'32 ≤ x < 40',
+   mean:37.1,variance:81.72,sd:9.04,
+   fx:[120,280,792,616,416],sumFx:2224,
+   x2:[400,784,1296,1936,2704],
+   fx2:[2400,7840,28512,27104,21632],sumFx2:87488,
+   contextLine:'The mean working week is 37.1 hours with a standard deviation of 9.04 hours.',
+   interpretOptions:[
+     {text:'On average, weekly working hours vary by approximately 9 hours from the mean of 37.1 hours.',correct:true},
+     {text:'Most workers do exactly 37.1 hours per week.',correct:false},
+     {text:'The standard deviation means workers do between 28 and 46 hours.',correct:false},
+     {text:'9.04 hours is the most common working time.',correct:false}
+   ]},
+  {id:'CM4',title:'House prices (£k)',context:'60 houses sold in one area were recorded by price.',
+   unit:'£k',classLabel:'Price (£k)',
+   classes:['100 ≤ x < 150','150 ≤ x < 200','200 ≤ x < 250','250 ≤ x < 300','300 ≤ x < 400','400 ≤ x < 600'],
+   freqs:[4,10,18,16,8,4],midpoints:[125,175,225,275,350,500],
+   modalClass:'200 ≤ x < 250',medianClass:'200 ≤ x < 250',
+   mean:258.3,variance:7781.11,sd:88.2,
+   fx:[500,1750,4050,4400,2800,2000],sumFx:15500,
+   x2:[15625,30625,50625,75625,122500,250000],
+   fx2:[62500,306250,911250,1210000,980000,1000000],sumFx2:4470000,
+   contextLine:'The mean house price is £258,300 with a standard deviation of £88,200.',
+   interpretOptions:[
+     {text:'On average, house prices vary by approximately £88,200 from the mean price of £258,300.',correct:true},
+     {text:'The cheapest house costs £88,200.',correct:false},
+     {text:'House prices are tightly clustered around £258,300.',correct:false},
+     {text:'The standard deviation means half of houses cost more than £258,300.',correct:false}
+   ]},
+  {id:'CM5',title:'Monthly food spend (£)',context:'60 adults reported their monthly food expenditure.',
+   unit:'£',classLabel:'Spend (£)',
+   classes:['100 ≤ x < 150','150 ≤ x < 200','200 ≤ x < 250','250 ≤ x < 300','300 ≤ x < 400'],
+   freqs:[7,15,20,12,6],midpoints:[125,175,225,275,350],
+   modalClass:'200 ≤ x < 250',medianClass:'200 ≤ x < 250',
+   mean:223.3,variance:3866.28,sd:62.2,
+   fx:[875,2625,4500,3300,2100],sumFx:13400,
+   x2:[15625,30625,50625,75625,122500],
+   fx2:[109375,459375,1012500,907500,735000],sumFx2:3223750,
+   contextLine:'The mean food spend is £223.30 with a standard deviation of £62.20.',
+   interpretOptions:[
+     {text:'On average, monthly food spending varies by approximately £62.20 from the mean of £223.30.',correct:true},
+     {text:'Nobody spends more than £285.50 on food.',correct:false},
+     {text:'The mean food spend is £62.20.',correct:false},
+     {text:'£62.20 is the median food spend.',correct:false}
+   ]},
+  {id:'CM6',title:'Commuting time per day (minutes)',context:'60 commuters recorded their daily commuting time.',
+   unit:'min',classLabel:'Time (min)',
+   classes:['0 ≤ x < 20','20 ≤ x < 40','40 ≤ x < 60','60 ≤ x < 80','80 ≤ x < 120'],
+   freqs:[8,16,20,10,6],midpoints:[10,30,50,70,100],
+   modalClass:'40 ≤ x < 60',medianClass:'40 ≤ x < 60',
+   mean:47.7,variance:628.04,sd:25.1,
+   fx:[80,480,1000,700,600],sumFx:2860,
+   x2:[100,900,2500,4900,10000],
+   fx2:[800,14400,50000,49000,60000],sumFx2:174200,
+   contextLine:'The mean commuting time is 47.7 minutes with a standard deviation of 25.1 minutes.',
+   interpretOptions:[
+     {text:'On average, commuting times vary by approximately 25.1 minutes from the mean of 47.7 minutes.',correct:true},
+     {text:'25.1 minutes is the shortest commute recorded.',correct:false},
+     {text:'Most commuters travel exactly 47.7 minutes.',correct:false},
+     {text:'The standard deviation tells us the range of commuting times.',correct:false}
+   ]},
+  {id:'CM7',title:'Annual holiday spend (£)',context:'60 families reported their annual spend on holidays.',
+   unit:'£',classLabel:'Spend (£)',
+   classes:['0 ≤ x < 500','500 ≤ x < 1000','1000 ≤ x < 1500','1500 ≤ x < 2000','2000 ≤ x < 3000'],
+   freqs:[10,18,16,10,6],midpoints:[250,750,1250,1750,2500],
+   modalClass:'500 ≤ x < 1000',medianClass:'1000 ≤ x < 1500',
+   mean:1141.7,variance:427770.11,sd:654,
+   fx:[2500,13500,20000,17500,15000],sumFx:68500,
+   x2:[62500,562500,1562500,3062500,6250000],
+   fx2:[625000,10125000,25000000,30625000,37500000],sumFx2:103875000,
+   contextLine:'The mean holiday spend is £1,141.70 with a standard deviation of £654 — a wide range of budgets.',
+   interpretOptions:[
+     {text:'On average, holiday spending varies by approximately £654 from the mean spend of £1,142.',correct:true},
+     {text:'All families spend between £488 and £1,796 on holidays.',correct:false},
+     {text:'£654 is the most popular amount spent on holidays.',correct:false},
+     {text:'The mean holiday spend is £654.',correct:false}
+   ]},
+  {id:'CM8',title:'Age of first-time buyers',context:'60 first-time property buyers had their ages recorded.',
+   unit:'',classLabel:'Age',
+   classes:['25 ≤ x < 30','30 ≤ x < 35','35 ≤ x < 40','40 ≤ x < 45','45 ≤ x < 55'],
+   freqs:[12,20,16,8,4],midpoints:[27.5,32.5,37.5,42.5,50],
+   modalClass:'30 ≤ x < 35',medianClass:'30 ≤ x < 35',
+   mean:35.3,variance:39.74,sd:6.30,
+   fx:[330,650,600,340,200],sumFx:2120,
+   x2:[756.25,1056.25,1406.25,1806.25,2500],
+   fx2:[9075,21125,22500,14450,10000],sumFx2:77150,
+   contextLine:'The mean age of first-time buyers is 35.3 with a standard deviation of 6.30 years.',
+   interpretOptions:[
+     {text:'On average, first-time buyer ages vary by approximately 6.3 years from the mean age of 35.3.',correct:true},
+     {text:'6.3 years is the youngest age of a first-time buyer.',correct:false},
+     {text:'Most first-time buyers are exactly 35.3 years old.',correct:false},
+     {text:'The standard deviation shows the range is 6.3 years.',correct:false}
+   ]},
+  {id:'CM9',title:'Weekly screen time (hours)',context:'60 adults reported their weekly screen time.',
+   unit:'hours',classLabel:'Time (hours)',
+   classes:['10 ≤ x < 20','20 ≤ x < 30','30 ≤ x < 40','40 ≤ x < 50','50 ≤ x < 70'],
+   freqs:[6,14,20,12,8],midpoints:[15,25,35,45,60],
+   modalClass:'30 ≤ x < 40',medianClass:'30 ≤ x < 40',
+   mean:36.0,variance:165.67,sd:12.9,
+   fx:[90,350,700,540,480],sumFx:2160,
+   x2:[225,625,1225,2025,3600],
+   fx2:[1350,8750,24500,24300,28800],sumFx2:87700,
+   contextLine:'The mean weekly screen time is 36 hours with a standard deviation of 12.9 hours.',
+   interpretOptions:[
+     {text:'On average, weekly screen time varies by approximately 12.9 hours from the mean of 36 hours.',correct:true},
+     {text:'12.9 hours is the median screen time.',correct:false},
+     {text:'Nobody has screen time below 23.1 hours.',correct:false},
+     {text:'Screen time data is not spread out at all.',correct:false}
+   ]},
+  {id:'CM10',title:'Monthly savings (£)',context:'60 adults reported how much they save per month.',
+   unit:'£',classLabel:'Amount (£)',
+   classes:['0 ≤ x < 100','100 ≤ x < 200','200 ≤ x < 300','300 ≤ x < 500','500 ≤ x < 1000'],
+   freqs:[14,18,14,10,4],midpoints:[50,150,250,400,750],
+   modalClass:'100 ≤ x < 200',medianClass:'100 ≤ x < 200',
+   mean:231.7,variance:32398.44,sd:180,
+   fx:[700,2700,3500,4000,3000],sumFx:13900,
+   x2:[2500,22500,62500,160000,562500],
+   fx2:[35000,405000,875000,1600000,2250000],sumFx2:5165000,
+   contextLine:'The mean monthly saving is £231.70 with a standard deviation of £180 — savings habits vary widely.',
+   interpretOptions:[
+     {text:'On average, monthly savings vary by approximately £180 from the mean of £231.70.',correct:true},
+     {text:'£180 is the most common amount saved per month.',correct:false},
+     {text:'The mean saving is £180.',correct:false},
+     {text:'All savers put away between £51.70 and £411.70.',correct:false}
+   ]},
+  {id:'CM11',title:'Daily calorie intake',context:'60 adults recorded their daily calorie intake.',
+   unit:'kcal',classLabel:'Calories',
+   classes:['1200 ≤ x < 1600','1600 ≤ x < 2000','2000 ≤ x < 2400','2400 ≤ x < 2800','2800 ≤ x < 3200'],
+   freqs:[8,18,20,10,4],midpoints:[1400,1800,2200,2600,3000],
+   modalClass:'2000 ≤ x < 2400',medianClass:'2000 ≤ x < 2400',
+   mean:2093.3,variance:191428.4,sd:437.5,
+   fx:[11200,32400,44000,26000,12000],sumFx:125600,
+   x2:[1960000,3240000,4840000,6760000,9000000],
+   fx2:[15680000,58320000,96800000,67600000,36000000],sumFx2:274400000,
+   contextLine:'The mean daily calorie intake is 2,093 kcal with a standard deviation of 437.5 kcal.',
+   interpretOptions:[
+     {text:'On average, daily calorie intakes vary by approximately 438 kcal from the mean intake of 2,093 kcal.',correct:true},
+     {text:'437.5 kcal is the recommended daily intake.',correct:false},
+     {text:'Most people consume exactly 2,093 calories per day.',correct:false},
+     {text:'The standard deviation measures the total calories consumed.',correct:false}
+   ]},
+  {id:'CM12',title:'Fuel costs per month (£)',context:'60 drivers reported their monthly fuel expenditure.',
+   unit:'£',classLabel:'Cost (£)',
+   classes:['50 ≤ x < 100','100 ≤ x < 150','150 ≤ x < 200','200 ≤ x < 250','250 ≤ x < 350'],
+   freqs:[8,16,20,10,6],midpoints:[75,125,175,225,300],
+   modalClass:'150 ≤ x < 200',medianClass:'150 ≤ x < 200',
+   mean:169.2,variance:3933.86,sd:62.7,
+   fx:[600,2000,3500,2250,1800],sumFx:10150,
+   x2:[5625,15625,30625,50625,90000],
+   fx2:[45000,250000,612500,506250,540000],sumFx2:1953750,
+   contextLine:'The mean fuel cost is £169.20 with a standard deviation of £62.70.',
+   interpretOptions:[
+     {text:'On average, monthly fuel costs vary by approximately £62.70 from the mean cost of £169.20.',correct:true},
+     {text:'£62.70 is the cheapest monthly fuel cost.',correct:false},
+     {text:'Fuel costs do not vary between drivers.',correct:false},
+     {text:'The mean fuel cost is £62.70.',correct:false}
+   ]}
+],
+level4: [
+  {id:'L4_1',title:'Component diameter (mm)',context:'50 machined components were measured for diameter.',
+   unit:'mm',classLabel:'Diameter (mm)',
+   classes:['48 ≤ x < 49','49 ≤ x < 50','50 ≤ x < 51','51 ≤ x < 52','52 ≤ x < 53'],
+   freqs:[4,12,18,10,6],midpoints:[48.5,49.5,50.5,51.5,52.5],
+   modalClass:'50 ≤ x < 51',medianClass:'50 ≤ x < 51',
+   mean:50.54,variance:1.24,sd:1.11,
+   fx:[194,594,909,515,315],sumFx:2527,
+   x2:[2352.25,2450.25,2550.25,2652.25,2756.25],
+   fx2:[9409,29403,45904.5,26522.5,16537.5],sumFx2:127776.5,
+   contextLine:'The mean diameter is 50.54 mm with a standard deviation of 1.11 mm — tight tolerance.',
+   interpretOptions:[
+     {text:'On average, component diameters vary by approximately 1.11 mm from the mean of 50.54 mm.',correct:true},
+     {text:'1.11 mm is the smallest diameter measured.',correct:false},
+     {text:'All components are within 1.11 mm of the target.',correct:false},
+     {text:'The standard deviation means the process is out of control.',correct:false}
+   ]},
+  {id:'L4_2',title:'Tensile strength (MPa)',context:'50 steel samples were tested for tensile strength.',
+   unit:'MPa',classLabel:'Strength (MPa)',
+   classes:['300 ≤ x < 320','320 ≤ x < 340','340 ≤ x < 360','360 ≤ x < 380','380 ≤ x < 400'],
+   freqs:[5,12,18,10,5],midpoints:[310,330,350,370,390],
+   modalClass:'340 ≤ x < 360',medianClass:'340 ≤ x < 360',
+   mean:349.2,variance:495.36,sd:22.3,
+   fx:[1550,3960,6300,3700,1950],sumFx:17460,
+   x2:[96100,108900,122500,136900,152100],
+   fx2:[480500,1306800,2205000,1369000,760500],sumFx2:6121800,
+   contextLine:'The mean tensile strength is 349.2 MPa with a standard deviation of 22.3 MPa.',
+   interpretOptions:[
+     {text:'On average, tensile strengths vary by approximately 22.3 MPa from the mean of 349.2 MPa.',correct:true},
+     {text:'22.3 MPa is the minimum acceptable strength.',correct:false},
+     {text:'All samples have strength within 22.3 MPa of 349.2 MPa.',correct:false},
+     {text:'The mean tensile strength is 22.3 MPa.',correct:false}
+   ]},
+  {id:'L4_3',title:'Processing time (seconds)',context:'50 manufacturing processes were timed.',
+   unit:'s',classLabel:'Time (s)',
+   classes:['10 ≤ x < 15','15 ≤ x < 20','20 ≤ x < 25','25 ≤ x < 30','30 ≤ x < 40'],
+   freqs:[6,14,16,10,4],midpoints:[12.5,17.5,22.5,27.5,35],
+   modalClass:'20 ≤ x < 25',medianClass:'20 ≤ x < 25',
+   mean:21.9,variance:36.14,sd:6.01,
+   fx:[75,245,360,275,140],sumFx:1095,
+   x2:[156.25,306.25,506.25,756.25,1225],
+   fx2:[937.5,4287.5,8100,7562.5,4900],sumFx2:25787.5,
+   contextLine:'The mean processing time is 21.9 seconds with a standard deviation of 6.01 seconds.',
+   interpretOptions:[
+     {text:'On average, processing times vary by approximately 6.01 seconds from the mean of 21.9 seconds.',correct:true},
+     {text:'6.01 seconds is the fastest processing time.',correct:false},
+     {text:'The mean processing time is 6.01 seconds.',correct:false},
+     {text:'All processes take exactly 21.9 seconds.',correct:false}
+   ]},
+  {id:'L4_4',title:'Operating temperature (°C)',context:'50 readings of operating temperature were recorded from a furnace.',
+   unit:'°C',classLabel:'Temp (°C)',
+   classes:['60 ≤ x < 70','70 ≤ x < 80','80 ≤ x < 90','90 ≤ x < 100','100 ≤ x < 110'],
+   freqs:[5,13,18,10,4],midpoints:[65,75,85,95,105],
+   modalClass:'80 ≤ x < 90',medianClass:'80 ≤ x < 90',
+   mean:84.0,variance:117,sd:10.8,
+   fx:[325,975,1530,950,420],sumFx:4200,
+   x2:[4225,5625,7225,9025,11025],
+   fx2:[21125,73125,130050,90250,44100],sumFx2:358650,
+   contextLine:'The mean operating temperature is 84.0°C with a standard deviation of 10.8°C.',
+   interpretOptions:[
+     {text:'On average, operating temperatures vary by approximately 10.8°C from the mean of 84.0°C.',correct:true},
+     {text:'10.8°C is the lowest temperature recorded.',correct:false},
+     {text:'The furnace always runs at exactly 84.0°C.',correct:false},
+     {text:'The standard deviation tells us the furnace is broken.',correct:false}
+   ]},
+  {id:'L4_5',title:'Batch weight (g)',context:'50 product batches were weighed during quality control.',
+   unit:'g',classLabel:'Weight (g)',
+   classes:['490 ≤ x < 495','495 ≤ x < 500','500 ≤ x < 505','505 ≤ x < 510','510 ≤ x < 515'],
+   freqs:[4,11,20,11,4],midpoints:[492.5,497.5,502.5,507.5,512.5],
+   modalClass:'500 ≤ x < 505',medianClass:'500 ≤ x < 505',
+   mean:502.5,variance:18.75,sd:4.33,
+   fx:[1970,5472.5,10050,5582.5,2050],sumFx:25125,
+   x2:[242556.25,247506.25,252506.25,257556.25,262656.25],
+   fx2:[970225,2722568.75,5050125,2833118.75,1050625],sumFx2:12626661.75,
+   contextLine:'The mean batch weight is 502.5 g with a standard deviation of 4.33 g — good process control.',
+   interpretOptions:[
+     {text:'On average, batch weights vary by approximately 4.33 g from the mean weight of 502.5 g.',correct:true},
+     {text:'4.33 g is the lightest batch.',correct:false},
+     {text:'All batches weigh exactly 502.5 g.',correct:false},
+     {text:'The standard deviation means the process fails quality checks.',correct:false}
+   ]},
+  {id:'L4_6',title:'Voltage readings (V)',context:'50 voltage readings were taken from a power supply under load.',
+   unit:'V',classLabel:'Voltage (V)',
+   classes:['218 ≤ x < 220','220 ≤ x < 222','222 ≤ x < 224','224 ≤ x < 226','226 ≤ x < 228'],
+   freqs:[6,15,18,8,3],midpoints:[219,221,223,225,227],
+   modalClass:'222 ≤ x < 224',medianClass:'222 ≤ x < 224',
+   mean:222.48,variance:4.49,sd:2.12,
+   fx:[1314,3315,4014,1800,681],sumFx:11124,
+   x2:[47961,48841,49729,50625,51529],
+   fx2:[287766,732615,895122,405000,154587],sumFx2:2475090,
+   contextLine:'The mean voltage is 222.48 V with a standard deviation of 2.12 V.',
+   interpretOptions:[
+     {text:'On average, voltage readings vary by approximately 2.12 V from the mean of 222.48 V.',correct:true},
+     {text:'2.12 V is the minimum acceptable voltage.',correct:false},
+     {text:'The mean voltage is 2.12 V.',correct:false},
+     {text:'Voltage readings are extremely unstable.',correct:false}
+   ]},
+  {id:'L4_7',title:'Surface roughness (μm)',context:'50 machined surfaces were measured for roughness.',
+   unit:'μm',classLabel:'Roughness (μm)',
+   classes:['1.0 ≤ x < 2.0','2.0 ≤ x < 3.0','3.0 ≤ x < 4.0','4.0 ≤ x < 5.0','5.0 ≤ x < 6.0'],
+   freqs:[5,14,18,10,3],midpoints:[1.5,2.5,3.5,4.5,5.5],
+   modalClass:'3.0 ≤ x < 4.0',medianClass:'3.0 ≤ x < 4.0',
+   mean:3.34,variance:1.094,sd:1.05,
+   fx:[7.5,35,63,45,16.5],sumFx:167,
+   x2:[2.25,6.25,12.25,20.25,30.25],
+   fx2:[11.25,87.5,220.5,202.5,90.75],sumFx2:612.5,
+   contextLine:'The mean surface roughness is 3.34 μm with a standard deviation of 1.05 μm.',
+   interpretOptions:[
+     {text:'On average, surface roughness values vary by approximately 1.05 μm from the mean of 3.34 μm.',correct:true},
+     {text:'1.05 μm is the smoothest surface measured.',correct:false},
+     {text:'All surfaces have roughness below 3.34 μm.',correct:false},
+     {text:'The standard deviation of 1.05 μm is the target roughness.',correct:false}
+   ]},
+  {id:'L4_8',title:'Hardness (HV)',context:'50 metal samples were tested for Vickers hardness.',
+   unit:'HV',classLabel:'Hardness (HV)',
+   classes:['200 ≤ x < 220','220 ≤ x < 240','240 ≤ x < 260','260 ≤ x < 280','280 ≤ x < 300'],
+   freqs:[4,12,20,10,4],midpoints:[210,230,250,270,290],
+   modalClass:'240 ≤ x < 260',medianClass:'240 ≤ x < 260',
+   mean:249.2,variance:431.36,sd:20.8,
+   fx:[840,2760,5000,2700,1160],sumFx:12460,
+   x2:[44100,52900,62500,72900,84100],
+   fx2:[176400,634800,1250000,729000,336400],sumFx2:3126600,
+   contextLine:'The mean hardness is 249.2 HV with a standard deviation of 20.8 HV.',
+   interpretOptions:[
+     {text:'On average, hardness values vary by approximately 20.8 HV from the mean hardness of 249.2 HV.',correct:true},
+     {text:'20.8 HV is the minimum hardness for the material.',correct:false},
+     {text:'The mean hardness is 20.8 HV.',correct:false},
+     {text:'All samples have hardness between 228.4 and 270.0 HV.',correct:false}
+   ]},
+  {id:'L4_9',title:'Cycle time (minutes)',context:'50 production cycles were timed.',
+   unit:'min',classLabel:'Time (min)',
+   classes:['5 ≤ x < 7','7 ≤ x < 9','9 ≤ x < 11','11 ≤ x < 13','13 ≤ x < 15'],
+   freqs:[5,13,18,10,4],midpoints:[6,8,10,12,14],
+   modalClass:'9 ≤ x < 11',medianClass:'9 ≤ x < 11',
+   mean:9.80,variance:4.68,sd:2.16,
+   fx:[30,104,180,120,56],sumFx:490,
+   x2:[36,64,100,144,196],
+   fx2:[180,832,1800,1440,784],sumFx2:5036,
+   contextLine:'The mean cycle time is 9.80 minutes with a standard deviation of 2.16 minutes.',
+   interpretOptions:[
+     {text:'On average, cycle times vary by approximately 2.16 minutes from the mean of 9.80 minutes.',correct:true},
+     {text:'2.16 minutes is the fastest cycle time.',correct:false},
+     {text:'All cycles take between 7.64 and 11.96 minutes.',correct:false},
+     {text:'The standard deviation means cycles are inconsistent.',correct:false}
+   ]},
+  {id:'L4_10',title:'Insulation resistance (MΩ)',context:'50 cable samples were tested for insulation resistance.',
+   unit:'MΩ',classLabel:'Resistance (MΩ)',
+   classes:['10 ≤ x < 15','15 ≤ x < 20','20 ≤ x < 25','25 ≤ x < 30','30 ≤ x < 40'],
+   freqs:[6,16,15,9,4],midpoints:[12.5,17.5,22.5,27.5,35],
+   modalClass:'15 ≤ x < 20',medianClass:'20 ≤ x < 25',
+   mean:21.6,variance:36.19,sd:6.02,
+   fx:[75,280,337.5,247.5,140],sumFx:1080,
+   x2:[156.25,306.25,506.25,756.25,1225],
+   fx2:[937.5,4900,7593.75,6806.25,4900],sumFx2:25137.5,
+   contextLine:'The mean insulation resistance is 21.6 MΩ with a standard deviation of 6.02 MΩ.',
+   interpretOptions:[
+     {text:'On average, insulation resistance values vary by approximately 6.02 MΩ from the mean of 21.6 MΩ.',correct:true},
+     {text:'6.02 MΩ is the minimum acceptable resistance.',correct:false},
+     {text:'The mean resistance is 6.02 MΩ.',correct:false},
+     {text:'All cables have resistance above 21.6 MΩ.',correct:false}
+   ]},
+  {id:'L4_11',title:'Torque (Nm)',context:'50 bolts were tested for tightening torque.',
+   unit:'Nm',classLabel:'Torque (Nm)',
+   classes:['40 ≤ x < 50','50 ≤ x < 60','60 ≤ x < 70','70 ≤ x < 80','80 ≤ x < 90'],
+   freqs:[5,14,18,9,4],midpoints:[45,55,65,75,85],
+   modalClass:'60 ≤ x < 70',medianClass:'60 ≤ x < 70',
+   mean:63.6,variance:116.04,sd:10.8,
+   fx:[225,770,1170,675,340],sumFx:3180,
+   x2:[2025,3025,4225,5625,7225],
+   fx2:[10125,42350,76050,50625,28900],sumFx2:208050,
+   contextLine:'The mean torque is 63.6 Nm with a standard deviation of 10.8 Nm.',
+   interpretOptions:[
+     {text:'On average, torque values vary by approximately 10.8 Nm from the mean of 63.6 Nm.',correct:true},
+     {text:'10.8 Nm is the target torque.',correct:false},
+     {text:'All bolts are tightened to exactly 63.6 Nm.',correct:false},
+     {text:'The standard deviation of 10.8 Nm is the maximum allowable torque.',correct:false}
+   ]},
+  {id:'L4_12',title:'Yield stress (MPa)',context:'50 steel specimens were tested for yield stress.',
+   unit:'MPa',classLabel:'Stress (MPa)',
+   classes:['250 ≤ x < 270','270 ≤ x < 290','290 ≤ x < 310','310 ≤ x < 330','330 ≤ x < 350'],
+   freqs:[4,11,20,11,4],midpoints:[260,280,300,320,340],
+   modalClass:'290 ≤ x < 310',medianClass:'290 ≤ x < 310',
+   mean:300.0,variance:432,sd:20.8,
+   fx:[1040,3080,6000,3520,1360],sumFx:15000,
+   x2:[67600,78400,90000,102400,115600],
+   fx2:[270400,862400,1800000,1126400,462400],sumFx2:4521600,
+   contextLine:'The mean yield stress is 300.0 MPa with a standard deviation of 20.8 MPa.',
+   interpretOptions:[
+     {text:'On average, yield stress values vary by approximately 20.8 MPa from the mean of 300.0 MPa.',correct:true},
+     {text:'20.8 MPa is the minimum yield stress allowed.',correct:false},
+     {text:'All specimens have yield stress of exactly 300 MPa.',correct:false},
+     {text:'The mean yield stress is 20.8 MPa.',correct:false}
+   ]}
+]
+};
+
+// ============================================================
+//  GAME STATE
+// ============================================================
+let G = {
+  level:null, questions:[], qIdx:0,
+  score:0, scenariosCorrect:0, totalScenarios:0,
+  timerStart:0, timerElapsed:0, timerInterval:null,
+  currentQ:0, // 0=modal, 1=median, 2=mean, 3=sd
+  sdStep:0, penalties:0, qPenalties:0,
+  // Columns revealed
+  showX:false, showFx:false, showX2:false, showFx2:false
+};
+
+function $(id){return document.getElementById(id)}
+function K(latex,display=false){
+  try{return katex.renderToString(latex,{throwOnError:false,displayMode:display})}
+  catch(e){return latex}
+}
+
+// ============================================================
+//  MENU
+// ============================================================
+function selectLevel(btn){
+  document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  G.level=btn.dataset.level;
+  $('startBtn').classList.add('ready');
+}
+
+function parseURL(){
+  const p=new URLSearchParams(window.location.search);
+  const lv=p.get('level');
+  if(lv){
+    const btn=document.querySelector(`.level-btn[data-level="${lv}"]`);
+    if(btn) selectLevel(btn);
+  }
+}
+
+// ============================================================
+//  START
+// ============================================================
+function startGame(){
+  if(!G.level) return;
+  const pool=[...SCENARIOS[G.level]];
+  // Shuffle
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  G.questions=pool.slice(0,6);
+  G.qIdx=0;G.score=0;G.scenariosCorrect=0;G.totalScenarios=G.questions.length;
+  G.timerStart=Date.now();
+  G.timerInterval=setInterval(updateTimer,1000);
+
+  $('menuScreen').classList.remove('active');
+  $('gameScreen').classList.add('active');
+  const labels={gcse:'GCSE',core:'Core Maths',level4:'Level 4'};
+  $('hudLevel').textContent=labels[G.level];
+
+  mfg('game_started',{game_slug:'stat-attack',level:G.level});
+  window._ggAbandoned=true;
+  window.addEventListener('beforeunload',function(){
+    if(window._ggAbandoned) mfg('game_abandoned',{game_slug:'stat-attack',level:G.level,questions_answered:G.qIdx});
+  });
+
+  loadScenario();
+}
+
+function updateTimer(){
+  G.timerElapsed=Math.floor((Date.now()-G.timerStart)/1000);
+  const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
+  $('hudTimer').textContent=m>0?`${m}m${s.toString().padStart(2,'0')}s`:`${s}s`;
+}
+
+// ============================================================
+//  LOAD SCENARIO
+// ============================================================
+function loadScenario(){
+  const q=G.questions[G.qIdx];
+  G.currentQ=0;G.sdStep=0;G.penalties=0;G.qPenalties=0;
+  G.showX=false;G.showFx=false;G.showX2=false;G.showFx2=false;
+
+  $('hudQ').textContent=`${G.qIdx+1}/${G.totalScenarios}`;
+  $('hudScore').textContent=G.score;
+  $('scenarioTitle').textContent=q.title;
+  $('scenarioContext').textContent=q.context;
+
+  renderTable(q);
+  renderQuestion(q);
+}
+
+// ============================================================
+//  RENDER TABLE
+// ============================================================
+function renderTable(q){
+  const n=q.classes.length;
+  const sumF=q.freqs.reduce((a,b)=>a+b,0);
+  let html='<thead><tr>';
+  html+=`<th class="col-class">${q.classLabel}</th>`;
+  html+='<th>Frequency (f)</th>';
+  html+=`<th class="${G.showX?'col-x col-reveal':'col-hidden'}">x</th>`;
+  html+=`<th class="${G.showFx?'col-fx col-reveal':'col-hidden'}">fx</th>`;
+  html+=`<th class="${G.showX2?'col-x2 col-reveal':'col-hidden'}">x²</th>`;
+  html+=`<th class="${G.showFx2?'col-fx2 col-reveal':'col-hidden'}">fx²</th>`;
+  html+='</tr></thead><tbody>';
+
+  for(let i=0;i<n;i++){
+    html+='<tr>';
+    html+=`<td class="col-class">${q.classes[i]}</td>`;
+    html+=`<td class="col-f">${q.freqs[i]}</td>`;
+    html+=`<td class="${G.showX?'col-x col-reveal':'col-hidden'}">${q.midpoints[i]}</td>`;
+    html+=`<td class="${G.showFx?'col-fx col-reveal':'col-hidden'}">${fmt(q.fx[i])}</td>`;
+    html+=`<td class="${G.showX2?'col-x2 col-reveal':'col-hidden'}">${fmt(q.x2[i])}</td>`;
+    html+=`<td class="${G.showFx2?'col-fx2 col-reveal':'col-hidden'}">${fmt(q.fx2[i])}</td>`;
+    html+='</tr>';
+  }
+
+  // Totals row
+  html+='<tr class="total-row">';
+  html+='<td class="col-class"><strong>Total</strong></td>';
+  html+=`<td class="col-f"><strong>${sumF}</strong></td>`;
+  html+=`<td class="${G.showX?'col-x':'col-hidden'}"></td>`;
+  html+=`<td class="${G.showFx?'col-fx col-reveal':'col-hidden'}"><strong>${fmt(q.sumFx)}</strong></td>`;
+  html+=`<td class="${G.showX2?'col-x2':'col-hidden'}"></td>`;
+  html+=`<td class="${G.showFx2?'col-fx2 col-reveal':'col-hidden'}"><strong>${fmt(q.sumFx2)}</strong></td>`;
+  html+='</tr></tbody>';
+
+  $('freqTable').innerHTML=html;
+}
+
+function fmt(v){
+  if(Number.isInteger(v)) return v;
+  // Show up to 2dp, strip trailing zeros
+  return parseFloat(v.toFixed(2)).toString();
+}
+
+// ============================================================
+//  RENDER QUESTION
+// ============================================================
+function renderQuestion(q){
+  const area=$('qArea');
+  if(G.currentQ===0) renderModalQ(q,area);
+  else if(G.currentQ===1) renderMedianQ(q,area);
+  else if(G.currentQ===2) renderMeanQ(q,area);
+  else if(G.currentQ===3) renderSDQ(q,area);
+}
+
+// Q1: Modal class
+function renderModalQ(q,area){
+  area.innerHTML=`
+    <div class="q-label">Question 1 of 4</div>
+    <div class="q-prompt">Write down the modal class.</div>
+    <input type="text" class="text-input" id="modalInput" placeholder="e.g. 40 ≤ x < 50">
+    <button class="check-btn" onclick="checkModal()">Check</button>
+    <div id="modalFb"></div>
+  `;
+}
+
+function checkModal(){
+  const q=G.questions[G.qIdx];
+  const val=$('modalInput').value.trim();
+  if(!val) return;
+  const correct=parseInterval(val)===parseInterval(q.modalClass);
+  const fb=$('modalFb');
+  if(correct){
+    fb.innerHTML='<div class="feedback correct">Correct! The modal class has the highest frequency.</div>';
+    setTimeout(()=>{G.currentQ=1;renderQuestion(q);},1000);
+  } else {
+    G.penalties++;G.qPenalties++;
+    fb.innerHTML='<div class="feedback wrong">Incorrect. Look for the class interval with the highest frequency.</div>';
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// Q2: Median class
+function renderMedianQ(q,area){
+  const n=q.freqs.reduce((a,b)=>a+b,0);
+  area.innerHTML=`
+    <div class="q-label">Question 2 of 4</div>
+    <div class="q-prompt">Identify the class interval containing the median. (n = ${n})</div>
+    <input type="text" class="text-input" id="medianInput" placeholder="e.g. 40 ≤ x < 50">
+    <button class="check-btn" onclick="checkMedian()">Check</button>
+    <div id="medianFb"></div>
+  `;
+}
+
+function checkMedian(){
+  const q=G.questions[G.qIdx];
+  const val=$('medianInput').value.trim();
+  if(!val) return;
+  const correct=parseInterval(val)===parseInterval(q.medianClass);
+  const fb=$('medianFb');
+  if(correct){
+    fb.innerHTML='<div class="feedback correct">Correct!</div>';
+    setTimeout(()=>{G.currentQ=2;renderQuestion(q);},1000);
+  } else {
+    G.penalties++;G.qPenalties++;
+    const n=q.freqs.reduce((a,b)=>a+b,0);
+    const medPos=((n+1)/2);
+    fb.innerHTML=`<div class="feedback wrong">Incorrect. The median is the ${medPos}th value. Count through cumulative frequencies to find which class it falls in.</div>`;
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// Q3: Mean
+function renderMeanQ(q,area){
+  area.innerHTML=`
+    <div class="q-label">Question 3 of 4</div>
+    <div class="q-prompt">Calculate an estimate of the mean. Give your answer to 3 significant figures.</div>
+    <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">${K('\\text{Mean} = \\frac{\\Sigma fx}{\\Sigma f}')}</div>
+    <input type="number" class="num-input" id="meanInput" placeholder="e.g. 46.4" step="any">
+    <button class="check-btn" onclick="checkMean()">Check</button>
+    <div id="meanFb"></div>
+  `;
+}
+
+function checkMean(){
+  const q=G.questions[G.qIdx];
+  const val=parseFloat($('meanInput').value);
+  if(isNaN(val)) return;
+  const correct=Math.abs(val-q.mean)<=0.15;
+  const fb=$('meanFb');
+  if(correct){
+    fb.innerHTML=`<div class="feedback correct">Correct! Mean = ${q.mean}</div>`;
+    setTimeout(()=>{G.currentQ=3;G.sdStep=0;renderQuestion(q);},1000);
+  } else {
+    G.penalties++;G.qPenalties++;
+    fb.innerHTML='<div class="feedback wrong">Incorrect. Use the midpoint of each class interval. Multiply each midpoint by its frequency, sum these products, then divide by the total frequency.</div>';
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// Q4: Standard deviation — step by step
+function renderSDQ(q,area){
+  if(G.sdStep===0) renderSD_midpoints(q,area);
+  else if(G.sdStep===1) renderSD_fx(q,area);
+  else if(G.sdStep===2) renderSD_x2(q,area);
+  else if(G.sdStep===3) renderSD_fx2(q,area);
+  else if(G.sdStep===4) renderSD_variance(q,area);
+  else if(G.sdStep===5) renderSD_final(q,area);
+  else if(G.sdStep===6) renderSD_interpret(q,area);
+}
+
+// Step 4a: Midpoints
+function renderSD_midpoints(q,area){
+  const n=q.classes.length;
+  let html=`<div class="q-label">Question 4 — Step A</div>
+    <div class="q-prompt">Complete the midpoint (x) column.</div>
+    <div class="sd-inputs">`;
+  for(let i=0;i<n;i++){
+    html+=`<div class="sd-row-label">${q.classes[i]}</div>`;
+    html+=`<input type="number" class="num-input sm" id="mp${i}" placeholder="x" step="any">`;
+  }
+  html+=`</div>
+    <button class="check-btn" onclick="checkMidpoints()">Check</button>
+    <div id="sdFb"></div>`;
+  area.innerHTML=html;
+}
+
+function checkMidpoints(){
+  const q=G.questions[G.qIdx];
+  const n=q.classes.length;
+  let allCorrect=true;
+  for(let i=0;i<n;i++){
+    const val=parseFloat($('mp'+i).value);
+    if(isNaN(val)||Math.abs(val-q.midpoints[i])>0.01){allCorrect=false;break;}
+  }
+  const fb=$('sdFb');
+  if(allCorrect){
+    G.showX=true;renderTable(q);
+    fb.innerHTML='<div class="feedback correct">Midpoints correct!</div>';
+    setTimeout(()=>{G.sdStep=1;renderSDQ(q,$('qArea'));},1000);
+  } else {
+    G.penalties++;G.qPenalties++;
+    fb.innerHTML='<div class="feedback wrong">Check your midpoints. Each midpoint = (lower + upper) / 2.</div>';
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// Step 4b: fx
+function renderSD_fx(q,area){
+  const n=q.classes.length;
+  let html=`<div class="q-label">Question 4 — Step B</div>
+    <div class="q-prompt">Complete the fx column (frequency × midpoint).</div>
+    <div class="sd-inputs">`;
+  for(let i=0;i<n;i++){
+    html+=`<div class="sd-row-label">${q.midpoints[i]} × ${q.freqs[i]}</div>`;
+    html+=`<input type="number" class="num-input sm" id="fx${i}" placeholder="fx" step="any">`;
+  }
+  html+=`</div>
+    <button class="check-btn" onclick="checkFx()">Check</button>
+    <div id="sdFb"></div>`;
+  area.innerHTML=html;
+}
+
+function checkFx(){
+  const q=G.questions[G.qIdx];
+  const n=q.classes.length;
+  let allCorrect=true;
+  for(let i=0;i<n;i++){
+    const val=parseFloat($('fx'+i).value);
+    if(isNaN(val)||Math.abs(val-q.fx[i])>0.5){allCorrect=false;break;}
+  }
+  const fb=$('sdFb');
+  if(allCorrect){
+    G.showFx=true;renderTable(q);
+    fb.innerHTML=`<div class="feedback correct">fx column correct! Σfx = ${fmt(q.sumFx)}</div>`;
+    setTimeout(()=>{G.sdStep=2;renderSDQ(q,$('qArea'));},1000);
+  } else {
+    G.penalties++;G.qPenalties++;
+    fb.innerHTML='<div class="feedback wrong">Check your multiplication. fx = frequency × midpoint.</div>';
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// Step 4c: x²
+function renderSD_x2(q,area){
+  const n=q.classes.length;
+  let html=`<div class="q-label">Question 4 — Step C</div>
+    <div class="q-prompt">Complete the x² column (midpoint squared).</div>
+    <div class="sd-inputs">`;
+  for(let i=0;i<n;i++){
+    html+=`<div class="sd-row-label">${q.midpoints[i]}²</div>`;
+    html+=`<input type="number" class="num-input sm" id="x2_${i}" placeholder="x²" step="any">`;
+  }
+  html+=`</div>
+    <button class="check-btn" onclick="checkX2()">Check</button>
+    <div id="sdFb"></div>`;
+  area.innerHTML=html;
+}
+
+function checkX2(){
+  const q=G.questions[G.qIdx];
+  const n=q.classes.length;
+  let allCorrect=true;
+  for(let i=0;i<n;i++){
+    const val=parseFloat($('x2_'+i).value);
+    if(isNaN(val)||Math.abs(val-q.x2[i])>0.5){allCorrect=false;break;}
+  }
+  const fb=$('sdFb');
+  if(allCorrect){
+    G.showX2=true;renderTable(q);
+    fb.innerHTML='<div class="feedback correct">x² column correct!</div>';
+    setTimeout(()=>{G.sdStep=3;renderSDQ(q,$('qArea'));},1000);
+  } else {
+    G.penalties++;G.qPenalties++;
+    fb.innerHTML='<div class="feedback wrong">Check your squares. x² = midpoint × midpoint.</div>';
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// Step 4d: fx²
+function renderSD_fx2(q,area){
+  const n=q.classes.length;
+  let html=`<div class="q-label">Question 4 — Step D</div>
+    <div class="q-prompt">Complete the fx² column (frequency × midpoint²).</div>
+    <div class="sd-inputs">`;
+  for(let i=0;i<n;i++){
+    html+=`<div class="sd-row-label">${q.freqs[i]} × ${fmt(q.x2[i])}</div>`;
+    html+=`<input type="number" class="num-input sm" id="fx2_${i}" placeholder="fx²" step="any">`;
+  }
+  html+=`</div>
+    <button class="check-btn" onclick="checkFx2()">Check</button>
+    <div id="sdFb"></div>`;
+  area.innerHTML=html;
+}
+
+function checkFx2(){
+  const q=G.questions[G.qIdx];
+  const n=q.classes.length;
+  let allCorrect=true;
+  for(let i=0;i<n;i++){
+    const val=parseFloat($('fx2_'+i).value);
+    if(isNaN(val)||Math.abs(val-q.fx2[i])>Math.max(1,q.fx2[i]*0.001)){allCorrect=false;break;}
+  }
+  const fb=$('sdFb');
+  if(allCorrect){
+    G.showFx2=true;renderTable(q);
+    fb.innerHTML=`<div class="feedback correct">fx² column correct! Σfx² = ${fmt(q.sumFx2)}</div>`;
+    setTimeout(()=>{G.sdStep=4;renderSDQ(q,$('qArea'));},1000);
+  } else {
+    G.penalties++;G.qPenalties++;
+    fb.innerHTML='<div class="feedback wrong">Check your multiplication. fx² = frequency × x².</div>';
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// Step 4e: Variance
+function renderSD_variance(q,area){
+  const sumF=q.freqs.reduce((a,b)=>a+b,0);
+  area.innerHTML=`
+    <div class="q-label">Question 4 — Step E</div>
+    <div class="q-prompt">Calculate the variance.</div>
+    <div style="font-size:.85rem;color:var(--muted);margin-bottom:.6rem;line-height:1.8">
+      ${K('\\sigma^2 = \\frac{\\Sigma fx^2}{\\Sigma f} - \\left(\\frac{\\Sigma fx}{\\Sigma f}\\right)^2',true)}
+      <br>
+      ${K(`= \\frac{${fmt(q.sumFx2)}}{${sumF}} - \\left(\\frac{${fmt(q.sumFx)}}{${sumF}}\\right)^2`)}
+    </div>
+    <input type="number" class="num-input" id="varInput" placeholder="Variance" step="any">
+    <button class="check-btn" onclick="checkVariance()">Check</button>
+    <div id="sdFb"></div>
+  `;
+}
+
+function checkVariance(){
+  const q=G.questions[G.qIdx];
+  const val=parseFloat($('varInput').value);
+  if(isNaN(val)) return;
+  const correct=Math.abs(val-q.variance)<=Math.max(0.5,q.variance*0.005);
+  const fb=$('sdFb');
+  if(correct){
+    fb.innerHTML=`<div class="feedback correct">Correct! Variance = ${q.variance}</div>`;
+    setTimeout(()=>{G.sdStep=5;renderSDQ(q,$('qArea'));},1000);
+  } else {
+    G.penalties++;G.qPenalties++;
+    fb.innerHTML='<div class="feedback wrong">Check your arithmetic. Compute Σfx²/Σf first, then subtract (Σfx/Σf)².</div>';
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// Step 4f: SD
+function renderSD_final(q,area){
+  area.innerHTML=`
+    <div class="q-label">Question 4 — Step F</div>
+    <div class="q-prompt">Calculate the standard deviation to 3 significant figures.</div>
+    <div style="font-size:.82rem;color:var(--muted);margin-bottom:.5rem">${K(`\\sigma = \\sqrt{${q.variance}} = \\;?`)}</div>
+    <input type="number" class="num-input" id="sdInput" placeholder="σ" step="any">
+    <button class="check-btn" onclick="checkSD()">Check</button>
+    <div id="sdFb"></div>
+  `;
+}
+
+function checkSD(){
+  const q=G.questions[G.qIdx];
+  const val=parseFloat($('sdInput').value);
+  if(isNaN(val)) return;
+  const correct=Math.abs(val-q.sd)<=Math.max(0.1,q.sd*0.01);
+  const fb=$('sdFb');
+  if(correct){
+    fb.innerHTML=`<div class="feedback correct">Correct! σ = ${q.sd}</div>`;
+    // Check if interpretation step needed
+    if((G.level==='core'||G.level==='level4')&&q.interpretOptions){
+      setTimeout(()=>{G.sdStep=6;renderSDQ(q,$('qArea'));},1000);
+    } else {
+      setTimeout(()=>showCompletion(q),1200);
+    }
+  } else {
+    G.penalties++;G.qPenalties++;
+    fb.innerHTML=`<div class="feedback wrong">Incorrect. σ = √(variance). Check your square root.</div>`;
+    _addDismiss(fb,()=>{fb.innerHTML='';});
+  }
+}
+
+// Step 4g: Interpret (Core/L4 only)
+function renderSD_interpret(q,area){
+  const opts=q.interpretOptions;
+  // Shuffle
+  const shuffled=[...opts];
+  for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}
+  q._interpShuffle=shuffled;
+
+  let html=`<div class="q-label">Question 4 — Step G</div>
+    <div class="q-prompt">Interpret the standard deviation in context.</div>
+    <div class="mcq-grid">`;
+  shuffled.forEach((opt,i)=>{
+    html+=`<button class="mcq-btn" id="interp${i}" onclick="checkInterp(${i})">${opt.text}</button>`;
+  });
+  html+=`</div><div id="sdFb"></div>`;
+  area.innerHTML=html;
+}
+
+function checkInterp(idx){
+  const q=G.questions[G.qIdx];
+  const opt=q._interpShuffle[idx];
+  const fb=$('sdFb');
+  document.querySelectorAll('.mcq-btn').forEach(b=>b.classList.add('disabled'));
+
+  if(opt.correct){
+    $('interp'+idx).classList.add('correct');
+    fb.innerHTML='<div class="feedback correct">Correct interpretation!</div>';
+  } else {
+    G.penalties++;G.qPenalties++;
+    $('interp'+idx).classList.add('wrong');
+    // Highlight correct
+    q._interpShuffle.forEach((o,i)=>{if(o.correct) $('interp'+i).classList.add('correct');});
+    fb.innerHTML='<div class="feedback wrong">Not quite. The correct interpretation references both the SD value and the mean in context.</div>';
+  }
+  setTimeout(()=>showCompletion(q),1500);
+}
+
+// ============================================================
+//  COMPLETION
+// ============================================================
+function showCompletion(q){
+  // Score this scenario
+  const G_COST_Q=5;
+  const G_COST_SD=10;
+  const BASE=100;
+  const T_K=0.3;
+  const penalty=G.qPenalties*(G.sdStep>0?G_COST_SD:G_COST_Q);
+  const seconds=G.timerElapsed;
+  // multiplier removed — time no longer affects score
+const multiplier = 1;
+  const qScore=Math.max(1,Math.round((BASE-penalty)*multiplier));
+  G.score+=qScore;
+  if(G.qPenalties===0) G.scenariosCorrect++;
+  $('hudScore').textContent=G.score;
+  mfg('question_answered',{game_slug:'stat-attack',level:G.level,correct:G.qPenalties===0,question_index:G.qIdx+1});
+
+  const area=$('qArea');
+  area.innerHTML=`
+    <div class="completion">
+      <h3>Worked Solution</h3>
+      <div class="stat-line">
+        Modal class: <strong>${q.modalClass}</strong><br>
+        Median class: <strong>${q.medianClass}</strong><br>
+        Mean: <strong>${q.mean}</strong><br>
+        Standard deviation: <strong>${q.sd}</strong>
+      </div>
+      <div class="context-line">${q.contextLine}</div>
+    </div>
+    <button class="next-btn" onclick="nextScenario()">
+      ${G.qIdx<G.totalScenarios-1?'Next Scenario →':'See Results'}
+    </button>
+  `;
+}
+
+function nextScenario(){
+  G.qIdx++;
+  if(G.qIdx>=G.totalScenarios){endGame();}
+  else{loadScenario();}
+}
+
+// ============================================================
+//  END GAME
+// ============================================================
+function endGame(){
+  clearInterval(G.timerInterval);
+  $('gameScreen').classList.remove('active');
+  $('resultsScreen').classList.add('active');
+
+  const pct=G.totalScenarios>0?Math.round(100*G.scenariosCorrect/G.totalScenarios):0;
+  let title='Well done!';
+  if(pct>=90) title='Outstanding!';
+  else if(pct>=70) title='Great work!';
+  else if(pct>=50) title='Good effort!';
+  else title='Keep practising!';
+
+  $('resultTitle').textContent=title;
+  $('finalScore').textContent=G.score;
+
+  const m=Math.floor(G.timerElapsed/60),s=G.timerElapsed%60;
+  const timeStr=m>0?`${m}m ${s}s`:`${s}s`;
+  const labels={gcse:'GCSE',core:'Core Maths',level4:'Level 4'};
+
+  $('statsLine').innerHTML=`
+    Scenarios perfect: <strong>${G.scenariosCorrect}/${G.totalScenarios}</strong><br>
+    Time: <strong>${timeStr}</strong><br>
+    Level: <strong>${labels[G.level]}</strong>
+  `;
+
+  const key=`sa_pb_${G.level}`;
+  const prev=parseInt(localStorage.getItem(key)||'0');
+  if(G.score>prev){
+    localStorage.setItem(key,G.score);
+    mfg('personal_best_set',{game_slug:'stat-attack',level:G.level,score:G.score,previous_best:prev});
+    if(prev>0){$('pbLine').textContent=`New personal best! (Previous: ${prev})`;$('pbLine').style.display='block';}
+  } else if(prev>0){
+    $('pbLine').textContent=`Personal best: ${prev}`;$('pbLine').style.display='block';
+  }
+
+  window._ggAbandoned=false;
+  mfg('game_completed',{game_slug:'stat-attack',level:G.level,score:G.score,questions_answered:G.totalScenarios,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('stat-attack',G.level,G.score,G.totalScenarios).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('stat-attack',G.level,G.score);}}
+}
+
+function showMenu(){
+  $('resultsScreen').classList.remove('active');
+  $('gameScreen').classList.remove('active');
+  $('menuScreen').classList.add('active');
+}
+
+// ============================================================
+//  INTERVAL PARSER — flexible matching
+// ============================================================
+function parseInterval(s){
+  // Extract numbers from interval string
+  const nums=s.match(/[\d.]+/g);
+  if(!nums||nums.length<2) return s.trim().toLowerCase();
+  return nums[0]+'_'+nums[1];
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded',()=>{parseURL();});
+
+
+(function renderMethodRef(){
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
+  var k=function(t){return katex.renderToString(t,{throwOnError:false});};
+
+  document.getElementById('methodTable').innerHTML=
+    '<strong>Step 1 — Modal class, median class, estimated mean</strong>'+
+    'Suppose we have test scores for 30 students:<br><br>'+
+    '<table style="width:100%;border-collapse:collapse;font-family:JetBrains Mono,monospace;font-size:.8rem;margin:.5rem 0">'+
+    '<tr style="background:var(--surface2);color:var(--muted);font-size:.7rem"><th style="padding:.4rem;border:1px solid var(--border)">Score</th><th style="padding:.4rem;border:1px solid var(--border)">f</th><th style="padding:.4rem;border:1px solid var(--border)">x (mid)</th><th style="padding:.4rem;border:1px solid var(--border)">fx</th></tr>'+
+    '<tr><td style="padding:.4rem;border:1px solid var(--border)">0\u201320</td><td style="padding:.4rem;border:1px solid var(--border)">4</td><td style="padding:.4rem;border:1px solid var(--border);color:#14b8a6">10</td><td style="padding:.4rem;border:1px solid var(--border);color:#f59e0b">40</td></tr>'+
+    '<tr><td style="padding:.4rem;border:1px solid var(--border)">20\u201340</td><td style="padding:.4rem;border:1px solid var(--border)">7</td><td style="padding:.4rem;border:1px solid var(--border);color:#14b8a6">30</td><td style="padding:.4rem;border:1px solid var(--border);color:#f59e0b">210</td></tr>'+
+    '<tr><td style="padding:.4rem;border:1px solid var(--border)">40\u201360</td><td style="padding:.4rem;border:1px solid var(--border)">12</td><td style="padding:.4rem;border:1px solid var(--border);color:#14b8a6">50</td><td style="padding:.4rem;border:1px solid var(--border);color:#f59e0b">600</td></tr>'+
+    '<tr><td style="padding:.4rem;border:1px solid var(--border)">60\u201380</td><td style="padding:.4rem;border:1px solid var(--border)">5</td><td style="padding:.4rem;border:1px solid var(--border);color:#14b8a6">70</td><td style="padding:.4rem;border:1px solid var(--border);color:#f59e0b">350</td></tr>'+
+    '<tr><td style="padding:.4rem;border:1px solid var(--border)">80\u2013100</td><td style="padding:.4rem;border:1px solid var(--border)">2</td><td style="padding:.4rem;border:1px solid var(--border);color:#14b8a6">90</td><td style="padding:.4rem;border:1px solid var(--border);color:#f59e0b">180</td></tr>'+
+    '<tr style="font-weight:700;border-top:2px solid var(--primary)"><td style="padding:.4rem;border:1px solid var(--border)">Total</td><td style="padding:.4rem;border:1px solid var(--border)">30</td><td style="padding:.4rem;border:1px solid var(--border)"></td><td style="padding:.4rem;border:1px solid var(--border);color:#f59e0b">1380</td></tr>'+
+    '</table>'+
+    '<b style="color:var(--primary)">Modal class:</b> 40\u201360 (highest frequency = 12)<br>'+
+    '<b style="color:var(--primary)">Median class:</b> The 15th and 16th values fall in 40\u201360 (cumulative: 4, 11, <b>23</b>, ...)<br>'+
+    '<b style="color:var(--primary)">Estimated mean:</b> '+k('\\bar{x} = \\frac{\\sum fx}{\\sum f} = \\frac{1380}{30} = 46');
+
+  document.getElementById('methodMeanSD').innerHTML=
+    '<strong>Step 2 — Standard deviation</strong>'+
+    'Build the extra columns:'+
+    K('x^2: \\quad 100,\\; 900,\\; 2500,\\; 4900,\\; 8100')+
+    K('fx^2: \\quad 400,\\; 6300,\\; 30000,\\; 24500,\\; 16200')+
+    K('\\sum fx^2 = 77\\,400')+
+    'Variance:'+
+    K('\\sigma^2 = \\frac{\\sum fx^2}{\\sum f} - \\bar{x}^2 = \\frac{77400}{30} - 46^2 = 2580 - 2116 = 464')+
+    'Standard deviation:'+
+    K('\\sigma = \\sqrt{464} \\approx 21.5')+
+    'This tells us scores are spread about 21.5 marks either side of the mean on average.';
+})();
+
+(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
+
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

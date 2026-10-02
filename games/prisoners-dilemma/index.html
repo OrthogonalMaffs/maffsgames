@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Prisoner's Dilemma — Game Theory — MaffsGames</title>
+<meta name="description" content="Can cooperation beat selfishness? Play the iterated prisoner's dilemma against computer opponents and discover why game theory matters. Free, KS3 to A-Level.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/prisoners-dilemma/">
+<meta property="og:title" content="Prisoner's Dilemma — Game Theory — MaffsGames">
+<meta property="og:description" content="Can cooperation beat selfishness? Play the iterated prisoner's dilemma against computer opponents and discover why game theory matters. Free, KS3 to A-Level.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/prisoners-dilemma/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Prisoner's Dilemma — Game Theory — MaffsGames">
+<meta name="twitter:description" content="Can cooperation beat selfishness? Play the iterated prisoner's dilemma against computer opponents and discover why game theory matters. Free, KS3 to A-Level.">
+<meta name="twitter:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a12;--surface:#14142a;--border:#252550;
+  --primary:#d97706;--accent:#fbbf24;--wrong:#f43f5e;--correct:#22c55e;
+  --text:#ede9fe;--muted:#8b85b0;
+  --coop:#22c55e;--defect:#ef4444;
+}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.header{text-align:center;padding:1.5rem 0 1rem}
+.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header .sub{font-size:.85rem;color:var(--muted);margin-top:.3rem}
+.level-select{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:1rem 0}
+.level-btn{padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
+.level-btn:hover{border-color:var(--primary)}
+.level-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.screen{display:none}.screen.active{display:block}
+.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
+.btn-primary{padding:.7rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.btn-primary:hover{transform:scale(1.05)}
+.btn-secondary{padding:.6rem 1.4rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-secondary:hover{border-color:var(--primary)}
+
+/* Opponent select grid */
+.opponent-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin:1rem 0}
+@media(max-width:500px){.opponent-grid{grid-template-columns:1fr}}
+.opp-card{display:flex;align-items:center;gap:.8rem;padding:.8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);cursor:pointer;transition:all .15s}
+.opp-card:hover{border-color:var(--primary);box-shadow:0 0 12px rgba(217,119,6,.2)}
+.opp-card.locked{opacity:.45;pointer-events:none}
+.opp-card .avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:#fff;flex-shrink:0}
+.opp-card .opp-info{flex:1;min-width:0}
+.opp-card .opp-name{font-weight:600;font-size:.9rem}
+.opp-card .opp-hint{font-size:.75rem;color:var(--muted);margin-top:.15rem}
+.opp-card .opp-pb{font-size:.7rem;color:var(--accent);margin-top:.15rem;font-family:'JetBrains Mono',monospace}
+
+/* Game HUD */
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
+.hud-item{text-align:center}.hud-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700}
+
+/* Payoff matrix */
+.matrix-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem;margin-bottom:1rem}
+.matrix-wrap h3{font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em}
+.matrix{width:100%;border-collapse:collapse;font-size:.82rem;font-family:'JetBrains Mono',monospace}
+.matrix th,.matrix td{padding:.4rem .5rem;text-align:center;border:1px solid var(--border)}
+.matrix th{background:rgba(217,119,6,.15);color:var(--accent);font-weight:600;font-family:'Outfit',sans-serif;font-size:.75rem}
+.matrix td{background:var(--bg)}
+.matrix .you-label{color:var(--accent);font-weight:600;font-family:'Outfit',sans-serif;font-size:.75rem;background:rgba(217,119,6,.15)}
+
+/* Choice buttons */
+.choice-area{display:flex;gap:1rem;justify-content:center;margin:1.2rem 0}
+.choice-btn{flex:1;max-width:200px;padding:1.2rem 1rem;border-radius:12px;border:3px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:.3rem}
+.choice-btn .symbol{font-size:1.4rem}
+.choice-btn.coop-btn{border-color:rgba(34,197,94,.3)}.choice-btn.coop-btn:hover{border-color:var(--coop);background:rgba(34,197,94,.1);box-shadow:0 0 20px rgba(34,197,94,.2)}
+.choice-btn.defect-btn{border-color:rgba(239,68,68,.3)}.choice-btn.defect-btn:hover{border-color:var(--defect);background:rgba(239,68,68,.1);box-shadow:0 0 20px rgba(239,68,68,.2)}
+.choice-btn:disabled{opacity:.4;pointer-events:none;cursor:default}
+.choice-btn kbd{font-size:.65rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:.2rem}
+
+/* Reveal area */
+.reveal-area{display:flex;justify-content:center;gap:2rem;align-items:center;margin:1rem 0;min-height:100px}
+.reveal-card{width:120px;text-align:center}
+.reveal-card .rc-label{font-size:.75rem;color:var(--muted);margin-bottom:.4rem}
+.reveal-card .rc-choice{width:80px;height:80px;margin:0 auto;border-radius:12px;border:2px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:700;transition:all .3s}
+.reveal-card .rc-choice.coop{border-color:var(--coop);background:rgba(34,197,94,.15);color:var(--coop)}
+.reveal-card .rc-choice.defect{border-color:var(--defect);background:rgba(239,68,68,.15);color:var(--defect)}
+.reveal-card .rc-choice.hidden{background:var(--surface);color:var(--muted);font-size:2rem}
+.reveal-card .rc-points{font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:700;margin-top:.4rem;min-height:1.4rem}
+.reveal-vs{font-size:1.2rem;color:var(--muted);font-weight:700;margin-top:1.5rem}
+
+/* Score animation */
+.score-pop{position:fixed;pointer-events:none;font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;z-index:200;opacity:0}
+@keyframes scorePop{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-40px)}}
+
+/* Round tooltip (KS3) */
+.round-tooltip{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;text-align:center;font-size:.82rem;color:var(--muted);margin:.5rem 0;min-height:2.2rem;line-height:1.5}
+
+/* History strip */
+.history-wrap{margin:1rem 0}
+.history-wrap h3{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.history-strip{display:flex;gap:4px;flex-wrap:wrap}
+.history-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;border:1px solid var(--border);position:relative}
+.history-icon .hi-round{position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-size:.5rem;color:var(--muted)}
+.hi-cc{background:rgba(34,197,94,.2);color:var(--coop);border-color:rgba(34,197,94,.3)}
+.hi-dd{background:rgba(239,68,68,.2);color:var(--defect);border-color:rgba(239,68,68,.3)}
+.hi-cd{background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(239,68,68,.2));color:var(--accent);border-color:rgba(217,119,6,.3)}
+.hi-dc{background:linear-gradient(135deg,rgba(239,68,68,.2),rgba(34,197,94,.2));color:var(--accent);border-color:rgba(217,119,6,.3)}
+
+/* Halfway message */
+.halfway-msg{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:10px;padding:.8rem;text-align:center;font-size:.9rem;color:var(--accent);margin:.8rem 0;font-weight:600}
+
+/* Results screen */
+.results{text-align:center;padding:1.5rem 0}
+.results h2{font-size:1.5rem;margin-bottom:.8rem}
+.score-comparison{display:flex;justify-content:center;gap:2rem;margin:1rem 0}
+.score-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.5rem;min-width:120px}
+.score-box .sb-label{font-size:.75rem;color:var(--muted);text-transform:uppercase;margin-bottom:.3rem}
+.score-box .sb-val{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700}
+.score-box.winner .sb-val{color:var(--accent)}
+.ideal-note{font-size:.82rem;color:var(--muted);margin:.8rem 0;font-style:italic}
+.strategy-reveal{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;margin:1rem 0;text-align:left}
+.strategy-reveal h3{font-size:1rem;color:var(--accent);margin-bottom:.5rem}
+.strategy-reveal p{font-size:.85rem;color:var(--muted);line-height:1.6}
+.breakdown{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:1rem 0;font-size:.82rem}
+.bd-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;display:flex;justify-content:space-between}
+.bd-item .bd-label{color:var(--muted)}.bd-item .bd-val{font-family:'JetBrains Mono',monospace;font-weight:700}
+.insight-box{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.3);border-radius:10px;padding:1rem;margin:1rem 0;font-size:.9rem;line-height:1.6}
+.insight-box strong{color:var(--accent)}
+.result-actions{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.2rem}
+
+/* EV section (GCSE) */
+.ev-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;margin:1rem 0;text-align:left}
+.ev-section h3{font-size:.9rem;color:var(--accent);margin-bottom:.6rem}
+.ev-section p{font-size:.82rem;color:var(--muted);line-height:1.7;margin-bottom:.4rem}
+.ev-section .ev-calc{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text);background:var(--bg);border-radius:6px;padding:.5rem;margin:.4rem 0}
+
+/* Nash section (A-Level) */
+.nash-section{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;margin:1rem 0;text-align:left}
+.nash-section h3{font-size:.9rem;color:var(--accent);margin-bottom:.6rem}
+.nash-section p{font-size:.82rem;color:var(--muted);line-height:1.7;margin-bottom:.4rem}
+
+/* Tournament */
+.tournament-header{text-align:center;margin:1rem 0}
+.tournament-header h2{font-size:1.3rem;color:var(--accent)}
+.tournament-header p{font-size:.82rem;color:var(--muted);margin-top:.3rem}
+.tournament-progress{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem;margin:1rem 0}
+.tp-row{display:flex;justify-content:space-between;align-items:center;padding:.3rem 0;font-size:.82rem;border-bottom:1px solid var(--border)}
+.tp-row:last-child{border-bottom:none}
+.tp-row .tp-name{color:var(--text)}.tp-row .tp-score{font-family:'JetBrains Mono',monospace;font-weight:700}
+.tp-row.current{color:var(--accent);font-weight:600}
+.tp-row.done{color:var(--muted)}
+.tournament-results{margin:1rem 0}
+.tournament-results h3{font-size:1rem;color:var(--accent);margin-bottom:.6rem;text-align:center}
+.tr-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.tr-table th,.tr-table td{padding:.4rem .6rem;text-align:left;border-bottom:1px solid var(--border)}
+.tr-table th{color:var(--muted);font-weight:600;text-transform:uppercase;font-size:.7rem}
+.tr-table .tr-you{color:var(--accent);font-weight:700}
+
+/* Opponent avatar in game */
+.game-opponent{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem}
+.game-opponent .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;color:#fff;flex-shrink:0}
+.game-opponent .opp-name{font-weight:600;font-size:.95rem}
+.game-opponent .opp-round{font-size:.75rem;color:var(--muted);margin-left:auto;font-family:'JetBrains Mono',monospace}
+
+/* Accessibility */
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}
+body.accessible p,body.accessible .round-tooltip,body.accessible .opp-hint{line-height:2;max-width:65ch}
+body.accessible{background-color:#12141f!important}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+
+/* Reduced motion */
+@media(prefers-reduced-motion:reduce){
+  .reveal-card .rc-choice,.score-pop,.choice-btn,.btn-primary{transition:none!important;animation:none!important}
+}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+
+  <!-- ==================== MENU SCREEN ==================== -->
+  <div id="menu" class="screen active">
+    <div class="header">
+      <h1>Prisoner's Dilemma</h1>
+      <div class="sub">Can cooperation beat selfishness?</div>
+      <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    </div>
+    <div class="level-select">
+      <button class="level-btn active" data-level="ks3">KS3</button>
+      <button class="level-btn" data-level="gcse">GCSE</button>
+      <button class="level-btn" data-level="alevel">A-Level</button>
+      <button class="level-btn" data-level="core">Core Maths</button>
+    </div>
+    <div id="menuOpponents"></div>
+    <div id="tournamentBtn" style="text-align:center;margin:.8rem 0;display:none">
+      <button class="btn-secondary" onclick="startTournament()">Tournament Mode</button>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:.3rem">Round-robin: play all opponents at this level</div>
+    </div>
+  </div>
+
+  <!-- ==================== OPPONENT SELECT SCREEN ==================== -->
+  <div id="selectScreen" class="screen">
+    <div class="header">
+      <h1>Choose Opponent</h1>
+      <div class="sub" id="selectSub">Pick who to play against</div>
+    </div>
+    <div id="selectGrid" class="opponent-grid"></div>
+    <div style="text-align:center;margin-top:1rem">
+      <button class="btn-secondary" onclick="showScreen('menu')">Back</button>
+    </div>
+  </div>
+
+  <!-- ==================== GAME SCREEN ==================== -->
+  <div id="game" class="screen">
+    <div class="game-opponent" id="gameOpponent"></div>
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Round</div><div class="hud-val" id="hudRound">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">You</div><div class="hud-val" id="hudYou">0</div></div>
+      <div class="hud-item"><div class="hud-label">Them</div><div class="hud-val" id="hudThem">0</div></div>
+    </div>
+
+    <div class="matrix-wrap" id="matrixWrap">
+      <h3 id="matrixTitle">Payoff Matrix</h3>
+      <table class="matrix" id="matrixTable">
+        <tr><th></th><th>Opponent Cooperates</th><th>Opponent Defects</th></tr>
+        <tr><td class="you-label">You Cooperate</td><td id="mc_cc">3, 3</td><td id="mc_cd">0, 5</td></tr>
+        <tr><td class="you-label">You Defect</td><td id="mc_dc">5, 0</td><td id="mc_dd">1, 1</td></tr>
+      </table>
+    </div>
+
+    <div id="halfwayMsg" class="halfway-msg" style="display:none"></div>
+
+    <div class="choice-area" id="choiceArea">
+      <button class="choice-btn coop-btn" id="btnCoop" onclick="makeChoice('cooperate')">
+        <span class="symbol">&#10003;</span>
+        <span>COOPERATE</span>
+        <kbd>C</kbd>
+      </button>
+      <button class="choice-btn defect-btn" id="btnDefect" onclick="makeChoice('defect')">
+        <span class="symbol">&#10007;</span>
+        <span>DEFECT</span>
+        <kbd>D</kbd>
+      </button>
+    </div>
+
+    <div class="reveal-area" id="revealArea" style="display:none">
+      <div class="reveal-card">
+        <div class="rc-label">You</div>
+        <div class="rc-choice" id="revealYou"></div>
+        <div class="rc-points" id="revealYouPts"></div>
+      </div>
+      <div class="reveal-vs">vs</div>
+      <div class="reveal-card">
+        <div class="rc-label" id="revealOppLabel">Opponent</div>
+        <div class="rc-choice" id="revealOpp"></div>
+        <div class="rc-points" id="revealOppPts"></div>
+      </div>
+    </div>
+
+    <div class="round-tooltip" id="roundTooltip" style="display:none"></div>
+
+    <div class="history-wrap" id="historyWrap" style="display:none">
+      <h3>Round History</h3>
+      <div class="history-strip" id="historyStrip"></div>
+    </div>
+
+    <!-- Tournament progress -->
+    <div id="tournamentProgress" style="display:none"></div>
+  </div>
+
+  <!-- ==================== RESULTS SCREEN ==================== -->
+  <div id="results" class="screen">
+    <div class="results" id="resultsContent"></div>
+  </div>
+
+  <!-- ==================== TOURNAMENT RESULTS SCREEN ==================== -->
+  <div id="tournamentResults" class="screen">
+    <div id="tournamentResultsContent"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   PRISONER'S DILEMMA — MaffsGames
+   ============================================================ */
+
+// ---- State ----
+let currentLevel = 'ks3';
+let currentOpponent = null;
+let roundNum = 0;
+const TOTAL_ROUNDS = 20;
+let playerScore = 0;
+let opponentScore = 0;
+let history = []; // [{player:'cooperate'|'defect', opponent:'cooperate'|'defect', pPts, oPts}]
+let choiceLocked = false;
+let gameMode = 'single'; // 'single' | 'tournament'
+let tournamentOpponents = [];
+let tournamentIdx = 0;
+let tournamentScores = {}; // oppId -> {player, opponent}
+let gamesWon = {}; // level -> Set of oppIds beaten
+let firstGameDone = false;
+
+// ---- Personal bests ----
+function getPB(level, oppId) {
+  try { const d = JSON.parse(localStorage.getItem('pd_pb') || '{}'); return (d[level] && d[level][oppId]) || null; } catch(e) { return null; }
+}
+function setPB(level, oppId, score) {
+  try {
+    const d = JSON.parse(localStorage.getItem('pd_pb') || '{}');
+    if (!d[level]) d[level] = {};
+    const old = d[level][oppId] || null;
+    if (old === null || score > old) {
+      d[level][oppId] = score;
+      localStorage.setItem('pd_pb', JSON.stringify(d));
+      mfg('personal_best_set', { game_slug: 'prisoners-dilemma', level: currentLevel, score: score, previous_best: old || 0 });
+      return true;
+    }
+    return false;
+  } catch(e) { return false; }
+}
+
+// ---- Wins tracking ----
+function getWins(level) {
+  try { const d = JSON.parse(localStorage.getItem('pd_wins') || '{}'); return new Set(d[level] || []); } catch(e) { return new Set(); }
+}
+function addWin(level, oppId) {
+  try {
+    const d = JSON.parse(localStorage.getItem('pd_wins') || '{}');
+    if (!d[level]) d[level] = [];
+    if (!d[level].includes(oppId)) d[level].push(oppId);
+    localStorage.setItem('pd_wins', JSON.stringify(d));
+  } catch(e) {}
+}
+
+// ---- Opponent Definitions ----
+const OPPONENTS = {
+  ks3: [
+    { id: 'nora', name: 'Always Nice Nora', hint: 'Believes the best in everyone', color: '#22c55e', letter: 'N',
+      stratName: 'Always Cooperate', desc: 'Nora always cooperates, no matter what you do. She believes that kindness is always the best policy.',
+      play: function() { return 'cooperate'; }
+    },
+    { id: 'marcus', name: 'Always Mean Marcus', hint: 'Trust no one, take everything', color: '#ef4444', letter: 'M',
+      stratName: 'Always Defect', desc: 'Marcus always defects. He thinks the only way to win is to take advantage of everyone.',
+      play: function() { return 'defect'; }
+    },
+    { id: 'chloe', name: 'Copycat Chloe', hint: 'Starts friendly, then mirrors your choices', color: '#3b82f6', letter: 'C',
+      stratName: 'Tit-for-Tat', desc: 'Chloe cooperates on the first round, then copies whatever you did last round. She treats you exactly how you treated her.',
+      play: function(h) { if (h.length === 0) return 'cooperate'; return h[h.length - 1].player; }
+    },
+    { id: 'rita', name: 'Random Rita', hint: 'Nobody knows what she\'ll do next', color: '#a855f7', letter: 'R',
+      stratName: 'Random', desc: 'Rita flips a coin each round. There\'s no pattern to find — she\'s completely unpredictable.',
+      play: function() { return Math.random() < 0.5 ? 'cooperate' : 'defect'; }
+    },
+    { id: 'gary', name: 'Grudge Gary', hint: 'Starts friendly but has a long memory', color: '#f97316', letter: 'G',
+      stratName: 'Grudge (Grim Trigger)', desc: 'Gary starts by cooperating, but the moment you defect even once, he defects for the rest of the game. He never forgives.',
+      play: function(h) { for (let i = 0; i < h.length; i++) { if (h[i].player === 'defect') return 'defect'; } return 'cooperate'; }
+    }
+  ],
+  gcse: [
+    // includes all KS3 + 2 more
+    { id: 'nora', name: 'Always Nice Nora', hint: 'Believes the best in everyone', color: '#22c55e', letter: 'N',
+      stratName: 'Always Cooperate', desc: 'Nora always cooperates, no matter what you do. She believes that kindness is always the best policy.',
+      play: function() { return 'cooperate'; }
+    },
+    { id: 'marcus', name: 'Always Mean Marcus', hint: 'Trust no one, take everything', color: '#ef4444', letter: 'M',
+      stratName: 'Always Defect', desc: 'Marcus always defects. He thinks the only way to win is to take advantage of everyone.',
+      play: function() { return 'defect'; }
+    },
+    { id: 'chloe', name: 'Copycat Chloe', hint: 'Starts friendly, then mirrors your choices', color: '#3b82f6', letter: 'C',
+      stratName: 'Tit-for-Tat', desc: 'Chloe cooperates on the first round, then copies whatever you did last round. She treats you exactly how you treated her.',
+      play: function(h) { if (h.length === 0) return 'cooperate'; return h[h.length - 1].player; }
+    },
+    { id: 'rita', name: 'Random Rita', hint: 'Nobody knows what she\'ll do next', color: '#a855f7', letter: 'R',
+      stratName: 'Random', desc: 'Rita flips a coin each round. There\'s no pattern to find — she\'s completely unpredictable.',
+      play: function() { return Math.random() < 0.5 ? 'cooperate' : 'defect'; }
+    },
+    { id: 'gary', name: 'Grudge Gary', hint: 'Starts friendly but has a long memory', color: '#f97316', letter: 'G',
+      stratName: 'Grudge (Grim Trigger)', desc: 'Gary starts by cooperating, but the moment you defect even once, he defects for the rest of the game. He never forgives.',
+      play: function(h) { for (let i = 0; i < h.length; i++) { if (h[i].player === 'defect') return 'defect'; } return 'cooperate'; }
+    },
+    { id: 'sue', name: 'Suspicious Sue', hint: 'Doesn\'t trust easily — you have to earn it', color: '#ec4899', letter: 'S',
+      stratName: 'Suspicious Tit-for-Tat', desc: 'Sue defects on the first round (she doesn\'t trust strangers), then copies your last move — just like Tit-for-Tat but with a suspicious start.',
+      play: function(h) { if (h.length === 0) return 'defect'; return h[h.length - 1].player; }
+    },
+    { id: 'pete', name: 'Pavlov Pete', hint: 'Sticks with what works, changes what doesn\'t', color: '#06b6d4', letter: 'P',
+      stratName: 'Pavlov (Win-Stay, Lose-Shift)', desc: 'Pete cooperates first. If he scored 3 or 5 points last round (a "win"), he repeats his choice. If he scored 0 or 1 (a "loss"), he switches. He adapts based on outcomes.',
+      play: function(h) {
+        if (h.length === 0) return 'cooperate';
+        const last = h[h.length - 1];
+        const myLastPts = last.oPts; // opponent's points from history (Pete is the opponent)
+        if (myLastPts === 3 || myLastPts === 5) return last.opponent; // repeat
+        return last.opponent === 'cooperate' ? 'defect' : 'cooperate'; // switch
+      }
+    }
+  ],
+  alevel: [
+    // includes all GCSE + 2 more
+    { id: 'nora', name: 'Always Nice Nora', hint: 'Believes the best in everyone', color: '#22c55e', letter: 'N',
+      stratName: 'Always Cooperate (ALLC)', desc: 'Always cooperates regardless of opponent\'s actions. Formally: s(h) = C for all histories h.',
+      play: function() { return 'cooperate'; }
+    },
+    { id: 'marcus', name: 'Always Mean Marcus', hint: 'Trust no one, take everything', color: '#ef4444', letter: 'M',
+      stratName: 'Always Defect (ALLD)', desc: 'Always defects regardless of opponent\'s actions. Formally: s(h) = D for all histories h. This is the Nash equilibrium strategy in the one-shot game.',
+      play: function() { return 'defect'; }
+    },
+    { id: 'chloe', name: 'Copycat Chloe', hint: 'Starts friendly, then mirrors your choices', color: '#3b82f6', letter: 'C',
+      stratName: 'Tit-for-Tat (TFT)', desc: 'Cooperates first, then copies opponent\'s previous move. Winner of Axelrod\'s 1980 tournament. Key properties: nice (never defects first), retaliatory, forgiving, and clear.',
+      play: function(h) { if (h.length === 0) return 'cooperate'; return h[h.length - 1].player; }
+    },
+    { id: 'rita', name: 'Random Rita', hint: 'Nobody knows what she\'ll do next', color: '#a855f7', letter: 'R',
+      stratName: 'Random (RAND)', desc: 'Each round independently P(C) = P(D) = 0.5. A memoryless strategy with no exploitable pattern.',
+      play: function() { return Math.random() < 0.5 ? 'cooperate' : 'defect'; }
+    },
+    { id: 'gary', name: 'Grudge Gary', hint: 'Starts friendly but has a long memory', color: '#f97316', letter: 'G',
+      stratName: 'Grim Trigger', desc: 'Cooperates until opponent defects once, then defects forever. Uses permanent punishment as a deterrent. Formally: s(h) = C if opponent has never played D in h, else D.',
+      play: function(h) { for (let i = 0; i < h.length; i++) { if (h[i].player === 'defect') return 'defect'; } return 'cooperate'; }
+    },
+    { id: 'sue', name: 'Suspicious Sue', hint: 'Doesn\'t trust easily — you have to earn it', color: '#ec4899', letter: 'S',
+      stratName: 'Suspicious Tit-for-Tat (STFT)', desc: 'Defects first round, then mirrors opponent\'s last move. Like TFT but assumes the worst initially.',
+      play: function(h) { if (h.length === 0) return 'defect'; return h[h.length - 1].player; }
+    },
+    { id: 'pete', name: 'Pavlov Pete', hint: 'Sticks with what works, changes what doesn\'t', color: '#06b6d4', letter: 'P',
+      stratName: 'Pavlov / Win-Stay Lose-Shift (WSLS)', desc: 'Cooperates first. Repeats previous action if it yielded a high payoff (3 or 5); switches if it yielded a low payoff (0 or 1). Can correct mutual defection spirals, unlike TFT.',
+      play: function(h) {
+        if (h.length === 0) return 'cooperate';
+        const last = h[h.length - 1];
+        const myLastPts = last.oPts;
+        if (myLastPts === 3 || myLastPts === 5) return last.opponent;
+        return last.opponent === 'cooperate' ? 'defect' : 'cooperate';
+      }
+    },
+    { id: 'tara', name: 'Two-Tit Tara', hint: 'Patient and forgiving — but push her too far...', color: '#14b8a6', letter: 'T',
+      stratName: 'Two-Tits-for-Tat (TF2T)', desc: 'Cooperates initially. Only retaliates after TWO consecutive defections by the opponent. More forgiving than TFT — a single defection is forgiven, but two in a row triggers punishment.',
+      play: function(h) {
+        if (h.length < 2) return 'cooperate';
+        if (h[h.length - 1].player === 'defect' && h[h.length - 2].player === 'defect') return 'defect';
+        return 'cooperate';
+      }
+    },
+    { id: 'pat', name: 'Prober Pat', hint: 'Tests you early — your response determines everything', color: '#eab308', letter: 'P',
+      stratName: 'Prober', desc: 'Cooperates rounds 1-3, defects round 4 as a probe. If the opponent cooperates on round 5 (doesn\'t retaliate), Pat concludes they\'re exploitable and always defects. If the opponent defects on round 5 (retaliates), Pat switches to Tit-for-Tat.',
+      play: function(h) {
+        const r = h.length; // 0-indexed current round
+        if (r < 3) return 'cooperate';
+        if (r === 3) return 'defect'; // probe on round 4
+        if (r === 4) return 'cooperate'; // wait to see reaction
+        // After round 5, check if opponent retaliated to the probe
+        if (h.length >= 5) {
+          const retaliatedOnR5 = h[4].player === 'defect'; // opponent's round 5 response
+          if (!retaliatedOnR5) {
+            // Opponent didn't retaliate — exploit
+            return 'defect';
+          } else {
+            // Opponent retaliated — play TFT
+            return h[h.length - 1].player;
+          }
+        }
+        return 'cooperate';
+      }
+    }
+  ],
+  core: [
+    { id: 'discount', name: 'The Discount Store', hint: 'Always undercuts to share the market', color: '#22c55e', letter: 'D',
+      stratName: 'Always Cooperate', desc: 'The Discount Store always keeps prices fair, sharing the market with competitors. They believe collaboration grows the whole pie.',
+      play: function() { return 'cooperate'; }
+    },
+    { id: 'monopolist', name: 'The Monopolist', hint: 'Aggressive pricing to crush the competition', color: '#ef4444', letter: 'M',
+      stratName: 'Always Defect', desc: 'The Monopolist always undercuts aggressively, trying to drive competitors out and dominate the market.',
+      play: function() { return 'defect'; }
+    },
+    { id: 'fairtrader', name: 'The Fair Trader', hint: 'Matches your pricing strategy exactly', color: '#3b82f6', letter: 'F',
+      stratName: 'Tit-for-Tat', desc: 'The Fair Trader starts with fair prices, then mirrors your strategy. If you compete fairly, so do they. If you undercut, they undercut back.',
+      play: function(h) { if (h.length === 0) return 'cooperate'; return h[h.length - 1].player; }
+    },
+    { id: 'random_market', name: 'The Random Market', hint: 'Unpredictable pricing — no clear strategy', color: '#a855f7', letter: 'R',
+      stratName: 'Random', desc: 'The Random Market has no consistent pricing strategy. External factors drive their decisions unpredictably.',
+      play: function() { return Math.random() < 0.5 ? 'cooperate' : 'defect'; }
+    },
+    { id: 'reputation', name: 'The Reputation Builder', hint: 'Values trust above all — but betray them once...', color: '#f97316', letter: 'R',
+      stratName: 'Grudge', desc: 'The Reputation Builder cooperates as long as you do. But if you ever undercut them, they permanently switch to aggressive pricing. Trust, once broken, is never rebuilt.',
+      play: function(h) { for (let i = 0; i < h.length; i++) { if (h[i].player === 'defect') return 'defect'; } return 'cooperate'; }
+    },
+    { id: 'cautious', name: 'The Cautious Entrant', hint: 'New to the market — starts defensive', color: '#ec4899', letter: 'C',
+      stratName: 'Suspicious Tit-for-Tat', desc: 'The Cautious Entrant enters the market with aggressive pricing (defensive), then mirrors your approach. You need to show good faith first.',
+      play: function(h) { if (h.length === 0) return 'defect'; return h[h.length - 1].player; }
+    },
+    { id: 'adaptive', name: 'The Adaptive Firm', hint: 'Changes strategy based on profit outcomes', color: '#06b6d4', letter: 'A',
+      stratName: 'Pavlov (Win-Stay, Lose-Shift)', desc: 'The Adaptive Firm sticks with a pricing strategy while it\'s profitable and changes when it\'s not. They respond to the bottom line, not emotions.',
+      play: function(h) {
+        if (h.length === 0) return 'cooperate';
+        const last = h[h.length - 1];
+        const myLastPts = last.oPts;
+        if (myLastPts === 3 || myLastPts === 5) return last.opponent;
+        return last.opponent === 'cooperate' ? 'defect' : 'cooperate';
+      }
+    }
+  ]
+};
+
+// ---- Payoff calculation ----
+function getPayoffs(playerChoice, opponentChoice) {
+  if (playerChoice === 'cooperate' && opponentChoice === 'cooperate') return { p: 3, o: 3 };
+  if (playerChoice === 'cooperate' && opponentChoice === 'defect') return { p: 0, o: 5 };
+  if (playerChoice === 'defect' && opponentChoice === 'cooperate') return { p: 5, o: 0 };
+  return { p: 1, o: 1 }; // both defect
+}
+
+function isCoreMaths() { return currentLevel === 'core'; }
+
+function formatPts(n) {
+  return isCoreMaths() ? '\u00A3' + n + 'k' : String(n);
+}
+
+// ---- Screen management ----
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ---- Render menu ----
+function renderMenu() {
+  const opps = OPPONENTS[currentLevel];
+  const wins = getWins(currentLevel);
+  const container = document.getElementById('menuOpponents');
+  container.innerHTML = '<div class="opponent-grid">' + opps.map(opp => {
+    const pb = getPB(currentLevel, opp.id);
+    const pbStr = pb !== null ? '<div class="opp-pb">PB: ' + formatPts(pb) + '</div>' : '';
+    return '<div class="opp-card" onclick="selectOpponent(\'' + opp.id + '\')">' +
+      '<div class="avatar" style="background:' + opp.color + '">' + opp.letter + '</div>' +
+      '<div class="opp-info"><div class="opp-name">' + opp.name + '</div>' +
+      '<div class="opp-hint">' + opp.hint + '</div>' + pbStr + '</div></div>';
+  }).join('') + '</div>';
+
+  // Tournament unlock: need 3+ wins
+  const tBtn = document.getElementById('tournamentBtn');
+  if (wins.size >= 3) {
+    tBtn.style.display = 'block';
+  } else {
+    tBtn.style.display = 'none';
+  }
+}
+
+// ---- Select opponent ----
+function selectOpponent(oppId) {
+  const opps = OPPONENTS[currentLevel];
+  currentOpponent = opps.find(o => o.id === oppId);
+  if (!currentOpponent) return;
+  gameMode = 'single';
+  startGame();
+}
+
+// ---- Start game ----
+function startGame() {
+  roundNum = 0;
+  playerScore = 0;
+  opponentScore = 0;
+  history = [];
+  choiceLocked = false;
+
+  // Update game opponent header
+  const goEl = document.getElementById('gameOpponent');
+  goEl.innerHTML = '<div class="avatar" style="background:' + currentOpponent.color + '">' + currentOpponent.letter + '</div>' +
+    '<div class="opp-name">' + currentOpponent.name + '</div>' +
+    '<div class="opp-round">vs</div>';
+
+  // Matrix labels for Core Maths
+  if (isCoreMaths()) {
+    document.getElementById('matrixTitle').textContent = 'Profit Matrix';
+    document.getElementById('mc_cc').textContent = '\u00A33k, \u00A33k';
+    document.getElementById('mc_cd').textContent = '\u00A30k, \u00A35k';
+    document.getElementById('mc_dc').textContent = '\u00A35k, \u00A30k';
+    document.getElementById('mc_dd').textContent = '\u00A31k, \u00A31k';
+  } else {
+    document.getElementById('matrixTitle').textContent = 'Payoff Matrix';
+    document.getElementById('mc_cc').textContent = '3, 3';
+    document.getElementById('mc_cd').textContent = '0, 5';
+    document.getElementById('mc_dc').textContent = '5, 0';
+    document.getElementById('mc_dd').textContent = '1, 1';
+  }
+
+  // Reset UI
+  document.getElementById('hudRound').textContent = '1/' + TOTAL_ROUNDS;
+  document.getElementById('hudYou').textContent = formatPts(0);
+  document.getElementById('hudThem').textContent = formatPts(0);
+  document.getElementById('historyStrip').innerHTML = '';
+  document.getElementById('historyWrap').style.display = 'none';
+  document.getElementById('halfwayMsg').style.display = 'none';
+  document.getElementById('revealArea').style.display = 'none';
+  document.getElementById('roundTooltip').style.display = currentLevel === 'ks3' ? 'block' : 'none';
+  if (currentLevel === 'ks3') document.getElementById('roundTooltip').textContent = 'Choose to cooperate or defect!';
+  document.getElementById('choiceArea').style.display = 'flex';
+  document.getElementById('btnCoop').disabled = false;
+  document.getElementById('btnDefect').disabled = false;
+
+  // Tournament progress
+  if (gameMode === 'tournament') {
+    renderTournamentProgress();
+    document.getElementById('tournamentProgress').style.display = 'block';
+  } else {
+    document.getElementById('tournamentProgress').style.display = 'none';
+  }
+
+  showScreen('game');
+
+  mfg('game_started', {
+    game_slug: 'prisoners-dilemma',
+    level: currentLevel,
+    mode: gameMode,
+    opponent: currentOpponent.id
+  });
+}
+
+// ---- Make choice ----
+function makeChoice(choice) {
+  if (choiceLocked) return;
+  choiceLocked = true;
+
+  document.getElementById('btnCoop').disabled = true;
+  document.getElementById('btnDefect').disabled = true;
+
+  // Get opponent choice
+  const oppChoice = currentOpponent.play(history);
+
+  // Show player choice immediately
+  const revealArea = document.getElementById('revealArea');
+  revealArea.style.display = 'flex';
+  document.getElementById('choiceArea').style.display = 'none';
+
+  const revYou = document.getElementById('revealYou');
+  revYou.className = 'rc-choice ' + (choice === 'cooperate' ? 'coop' : 'defect');
+  revYou.textContent = choice === 'cooperate' ? '\u2713' : '\u2717';
+  document.getElementById('revealYouPts').textContent = '';
+
+  // Opponent hidden
+  const revOpp = document.getElementById('revealOpp');
+  revOpp.className = 'rc-choice hidden';
+  revOpp.textContent = '?';
+  document.getElementById('revealOppPts').textContent = '';
+  document.getElementById('revealOppLabel').textContent = currentOpponent.name.split(' ').pop();
+
+  // Suspense delay
+  const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 50 : 500;
+  setTimeout(function() {
+    // Reveal opponent
+    revOpp.className = 'rc-choice ' + (oppChoice === 'cooperate' ? 'coop' : 'defect');
+    revOpp.textContent = oppChoice === 'cooperate' ? '\u2713' : '\u2717';
+
+    // Calculate payoffs
+    const payoffs = getPayoffs(choice, oppChoice);
+    playerScore += payoffs.p;
+    opponentScore += payoffs.o;
+
+    document.getElementById('revealYouPts').textContent = '+' + formatPts(payoffs.p);
+    document.getElementById('revealOppPts').textContent = '+' + formatPts(payoffs.o);
+
+    // Update HUD
+    document.getElementById('hudYou').textContent = formatPts(playerScore);
+    document.getElementById('hudThem').textContent = formatPts(opponentScore);
+
+    // Record history
+    history.push({ player: choice, opponent: oppChoice, pPts: payoffs.p, oPts: payoffs.o });
+
+    // Update history strip
+    updateHistory();
+
+    // KS3 tooltip
+    if (currentLevel === 'ks3') {
+      const tip = document.getElementById('roundTooltip');
+      tip.style.display = 'block';
+      if (choice === 'cooperate' && oppChoice === 'cooperate') {
+        tip.textContent = 'You both cooperated! You each got ' + formatPts(3) + '. Cooperation pays when both commit.';
+      } else if (choice === 'cooperate' && oppChoice === 'defect') {
+        tip.textContent = 'You cooperated but they defected! You got ' + formatPts(0) + ', they got ' + formatPts(5) + '. They took advantage of your trust.';
+      } else if (choice === 'defect' && oppChoice === 'cooperate') {
+        tip.textContent = 'You defected while they cooperated! You got ' + formatPts(5) + ', they got ' + formatPts(0) + '. You exploited their trust.';
+      } else {
+        tip.textContent = 'You both defected. You each got ' + formatPts(1) + '. Mutual distrust costs everyone.';
+      }
+    }
+
+    // Analytics
+    mfg('question_answered', {
+      game_slug: 'prisoners-dilemma',
+      level: currentLevel,
+      question_index: roundNum + 1,
+      correct: null,
+      player_choice: choice,
+      opponent_choice: oppChoice,
+      round_score: payoffs.p
+    });
+
+    roundNum++;
+
+    // Advance after delay
+    setTimeout(function() {
+      if (roundNum >= TOTAL_ROUNDS) {
+        endGame();
+      } else {
+        // Halfway message
+        if (roundNum === 10) {
+          document.getElementById('halfwayMsg').textContent = 'Halfway through! Can you spot ' + currentOpponent.name.split(' ')[0] + '\'s pattern?';
+          document.getElementById('halfwayMsg').style.display = 'block';
+        } else {
+          document.getElementById('halfwayMsg').style.display = 'none';
+        }
+
+        document.getElementById('hudRound').textContent = (roundNum + 1) + '/' + TOTAL_ROUNDS;
+        document.getElementById('revealArea').style.display = 'none';
+        document.getElementById('choiceArea').style.display = 'flex';
+        document.getElementById('btnCoop').disabled = false;
+        document.getElementById('btnDefect').disabled = false;
+        choiceLocked = false;
+      }
+    }, 1200);
+  }, delay);
+}
+
+// ---- Update history strip ----
+function updateHistory() {
+  const wrap = document.getElementById('historyWrap');
+  wrap.style.display = 'block';
+  const strip = document.getElementById('historyStrip');
+  const last = history[history.length - 1];
+  const div = document.createElement('div');
+  let cls = 'history-icon ';
+  let symbol = '';
+  if (last.player === 'cooperate' && last.opponent === 'cooperate') {
+    cls += 'hi-cc'; symbol = '\u{1F91D}'; // handshake (will use text fallback)
+  } else if (last.player === 'defect' && last.opponent === 'defect') {
+    cls += 'hi-dd'; symbol = '\u2694';
+  } else if (last.player === 'cooperate' && last.opponent === 'defect') {
+    cls += 'hi-cd'; symbol = '\u2713\u2717';
+  } else {
+    cls += 'hi-dc'; symbol = '\u2717\u2713';
+  }
+  div.className = cls;
+  div.innerHTML = '<span class="hi-round">' + history.length + '</span>' + symbol;
+  div.title = 'R' + history.length + ': You ' + last.player + ', them ' + last.opponent + ' (' + last.pPts + ',' + last.oPts + ')';
+  strip.appendChild(div);
+}
+
+// ---- End game ----
+function endGame() {
+  firstGameDone = true;
+
+  // Count categories
+  let mutualCoop = 0, mutualDef = 0, youBetrayed = 0, theyBetrayed = 0;
+  history.forEach(function(h) {
+    if (h.player === 'cooperate' && h.opponent === 'cooperate') mutualCoop++;
+    else if (h.player === 'defect' && h.opponent === 'defect') mutualDef++;
+    else if (h.player === 'cooperate' && h.opponent === 'defect') theyBetrayed++;
+    else youBetrayed++;
+  });
+
+  // Personal best
+  const isPB = setPB(currentLevel, currentOpponent.id, playerScore);
+
+  // Win tracking
+  if (playerScore > opponentScore) addWin(currentLevel, currentOpponent.id);
+
+  // Analytics
+  mfg('game_completed', {
+    game_slug: 'prisoners-dilemma',
+    level: currentLevel,
+    mode: gameMode,
+    score: playerScore,
+    questions_answered: TOTAL_ROUNDS,
+    questions_correct: mutualCoop,
+    opponent: currentOpponent.id
+  });
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('prisoners-dilemma',currentLevel,playerScore,TOTAL_ROUNDS).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('prisoners-dilemma',currentLevel,playerScore);}}
+
+  // Tournament mode: record and move on
+  if (gameMode === 'tournament') {
+    tournamentScores[currentOpponent.id] = { player: playerScore, opponent: opponentScore };
+    tournamentIdx++;
+    if (tournamentIdx < tournamentOpponents.length) {
+      // Next opponent
+      currentOpponent = tournamentOpponents[tournamentIdx];
+      setTimeout(function() { startGame(); }, 500);
+      return;
+    } else {
+      // Tournament complete
+      showTournamentResults();
+      return;
+    }
+  }
+
+  // Build results screen
+  const rc = document.getElementById('resultsContent');
+  let html = '';
+
+  // Title
+  let title = 'Game Over';
+  if (playerScore > opponentScore) title = 'You Won!';
+  else if (playerScore < opponentScore) title = 'They Won!';
+  else title = 'It\'s a Draw!';
+  html += '<h2>' + title + '</h2>';
+
+  if (isPB) html += '<div style="color:var(--accent);font-weight:700;margin:.5rem 0">New Personal Best!</div>';
+
+  // Score comparison
+  html += '<div class="score-comparison">' +
+    '<div class="score-box' + (playerScore >= opponentScore ? ' winner' : '') + '"><div class="sb-label">You</div><div class="sb-val">' + formatPts(playerScore) + '</div></div>' +
+    '<div class="score-box' + (opponentScore >= playerScore ? ' winner' : '') + '"><div class="sb-label">' + currentOpponent.name.split(' ').pop() + '</div><div class="sb-val">' + formatPts(opponentScore) + '</div></div>' +
+    '</div>';
+
+  // Ideal note
+  html += '<div class="ideal-note">If you\'d both cooperated every round: ' + formatPts(60) + ' each</div>';
+
+  // History strip
+  html += '<div class="history-wrap"><h3>Full History</h3><div class="history-strip">';
+  history.forEach(function(h, i) {
+    let cls = 'history-icon ';
+    let sym = '';
+    if (h.player === 'cooperate' && h.opponent === 'cooperate') { cls += 'hi-cc'; sym = '\u{1F91D}'; }
+    else if (h.player === 'defect' && h.opponent === 'defect') { cls += 'hi-dd'; sym = '\u2694'; }
+    else if (h.player === 'cooperate' && h.opponent === 'defect') { cls += 'hi-cd'; sym = '\u2713\u2717'; }
+    else { cls += 'hi-dc'; sym = '\u2717\u2713'; }
+    html += '<div class="' + cls + '" title="R' + (i+1) + ': You ' + h.player + ', them ' + h.opponent + '">' +
+      '<span class="hi-round">' + (i+1) + '</span>' + sym + '</div>';
+  });
+  html += '</div></div>';
+
+  // Strategy reveal
+  html += '<div class="strategy-reveal"><h3>Strategy Revealed: ' + currentOpponent.stratName + '</h3>' +
+    '<p>' + currentOpponent.desc + '</p></div>';
+
+  // Breakdown
+  html += '<div class="breakdown">' +
+    '<div class="bd-item"><span class="bd-label">Mutual cooperation</span><span class="bd-val">' + mutualCoop + '</span></div>' +
+    '<div class="bd-item"><span class="bd-label">Mutual defection</span><span class="bd-val">' + mutualDef + '</span></div>' +
+    '<div class="bd-item"><span class="bd-label">You betrayed them</span><span class="bd-val">' + youBetrayed + '</span></div>' +
+    '<div class="bd-item"><span class="bd-label">They betrayed you</span><span class="bd-val">' + theyBetrayed + '</span></div>' +
+    '</div>';
+
+  // Insight message
+  html += '<div class="insight-box">' + getInsight(mutualCoop, mutualDef, youBetrayed, theyBetrayed) + '</div>';
+
+  // Level-specific content
+  if (currentLevel === 'gcse') {
+    html += getEVSection();
+  } else if (currentLevel === 'alevel') {
+    html += getNashSection();
+  } else if (currentLevel === 'core') {
+    html += getCoreSection();
+  }
+
+  // Actions
+  html += '<div class="result-actions">' +
+    '<button class="btn-primary" onclick="replayOpponent()">Play Again</button>' +
+    '<button class="btn-secondary" onclick="chooseOpponent()">Choose Opponent</button>' +
+    '<button class="btn-secondary" onclick="showScreen(\'menu\')">Change Level</button>' +
+    '</div>';
+
+  rc.innerHTML = html;
+  showScreen('results');
+}
+
+// ---- Insight messages ----
+function getInsight(mc, md, yb, tb) {
+  const total = mc + md + yb + tb;
+  if (mc >= 15) return '<strong>Key Insight:</strong> You found the power of mutual cooperation! When both players cooperate consistently, everyone benefits more than the selfish outcome.';
+  if (md >= 12) return '<strong>Key Insight:</strong> Mutual distrust trapped you both. When nobody cooperates, everyone loses — you each got 1 point per round instead of a possible 3.';
+  if (yb >= 10) return '<strong>Key Insight:</strong> You exploited your opponent heavily. This works against nice strategies, but in the real world, reputation matters — exploiters often end up worse off in repeated interactions.';
+  if (tb >= 10) return '<strong>Key Insight:</strong> You were exploited repeatedly. Consider: if an opponent keeps defecting, cooperating every round isn\'t kindness — it\'s a losing strategy. Sometimes you need to match their behaviour.';
+  if (mc >= 10 && md >= 5) return '<strong>Key Insight:</strong> Your game had phases of cooperation and conflict. The best strategies in game theory are those that encourage cooperation while protecting against exploitation — like Tit-for-Tat.';
+  return '<strong>Key Insight:</strong> Game theory shows us that the "obvious" selfish choice (always defect) often leads to worse outcomes than cooperation. The dilemma is real — trust is risky, but mutual cooperation pays off.';
+}
+
+// ---- GCSE EV section ----
+function getEVSection() {
+  return '<div class="ev-section"><h3>Expected Value Analysis</h3>' +
+    '<p>Against a <strong>random opponent</strong> (50% cooperate, 50% defect):</p>' +
+    '<div class="ev-calc">If you cooperate: E(X) = 0.5 x 3 + 0.5 x 0 = 1.5</div>' +
+    '<div class="ev-calc">If you defect: E(X) = 0.5 x 5 + 0.5 x 1 = 3.0</div>' +
+    '<p>In a <strong>single round</strong>, defecting has higher expected value (3.0 vs 1.5).</p>' +
+    '<p>But over 20 rounds, your opponent adapts. Strategies like <strong>Tit-for-Tat</strong> punish defection and reward cooperation, changing the expected outcome.</p>' +
+    '<p><strong>This is why cooperation can emerge</strong> — in repeated games, the expected value calculation depends on how the other player responds to your choices.</p>' +
+    '</div>';
+}
+
+// ---- A-Level Nash section ----
+function getNashSection() {
+  return '<div class="nash-section"><h3>Nash Equilibrium &amp; Formal Analysis</h3>' +
+    '<p>In the <strong>one-shot</strong> Prisoner\'s Dilemma, (Defect, Defect) is the unique <strong>Nash equilibrium</strong>: neither player can improve their payoff by unilaterally changing strategy.</p>' +
+    '<p>Defect <strong>strictly dominates</strong> Cooperate: regardless of what the opponent does, defecting gives a higher payoff (5 &gt; 3 if they cooperate; 1 &gt; 0 if they defect).</p>' +
+    '<p>Yet (Cooperate, Cooperate) is <strong>Pareto optimal</strong> — both players prefer it to the Nash equilibrium. This tension between individual rationality and collective welfare is the core of the dilemma.</p>' +
+    '<p>In the <strong>iterated</strong> game (finitely repeated), backward induction suggests defection in every round. But in practice, strategies like <strong>Tit-for-Tat</strong> (Anatol Rapoport, Axelrod\'s Tournament 1980) outperform Always Defect by sustaining cooperation.</p>' +
+    '<p>This game demonstrated ' + TOTAL_ROUNDS + ' iterations against <strong>' + currentOpponent.stratName + '</strong>.</p>' +
+    '</div>';
+}
+
+// ---- Core Maths business section ----
+function getCoreSection() {
+  return '<div class="ev-section"><h3>Real-World Applications</h3>' +
+    '<p><strong>OPEC oil pricing:</strong> OPEC members agree production quotas (cooperation), but each country has an incentive to secretly overproduce (defect) for higher revenue. When too many defect, prices crash — everyone loses.</p>' +
+    '<p><strong>Price wars:</strong> Competing firms can maintain higher prices (cooperate) or undercut rivals (defect). Aggressive undercutting may win short-term sales but often triggers retaliation, driving all profits down.</p>' +
+    '<p><strong>Cost-benefit analysis:</strong> The payoff matrix is a simplified cost-benefit model. Each cell represents the profit outcome for a strategic decision. In business, these values come from market research and financial modelling.</p>' +
+    '<p>The key lesson: <strong>short-term rational decisions can lead to long-term suboptimal outcomes</strong> when interactions are repeated.</p>' +
+    '</div>';
+}
+
+// ---- Replay / choose ----
+function replayOpponent() {
+  startGame();
+}
+function chooseOpponent() {
+  renderMenu();
+  showScreen('menu');
+}
+
+// ---- Tournament ----
+function startTournament() {
+  gameMode = 'tournament';
+  tournamentOpponents = [...OPPONENTS[currentLevel]];
+  tournamentIdx = 0;
+  tournamentScores = {};
+  currentOpponent = tournamentOpponents[0];
+  startGame();
+}
+
+function renderTournamentProgress() {
+  const el = document.getElementById('tournamentProgress');
+  let html = '<div class="tournament-progress"><div style="font-size:.82rem;color:var(--accent);font-weight:600;margin-bottom:.4rem;text-align:center">Tournament Progress</div>';
+  tournamentOpponents.forEach(function(opp, i) {
+    let cls = 'tp-row';
+    let scoreStr = '';
+    if (i < tournamentIdx) {
+      cls += ' done';
+      const s = tournamentScores[opp.id];
+      scoreStr = formatPts(s.player) + ' - ' + formatPts(s.opponent);
+    } else if (i === tournamentIdx) {
+      cls += ' current';
+      scoreStr = 'Playing...';
+    } else {
+      scoreStr = '—';
+    }
+    html += '<div class="' + cls + '"><span class="tp-name">' + opp.name + '</span><span class="tp-score">' + scoreStr + '</span></div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function showTournamentResults() {
+  let totalPlayer = 0, totalOpp = 0;
+  tournamentOpponents.forEach(function(opp) {
+    const s = tournamentScores[opp.id];
+    totalPlayer += s.player;
+    totalOpp += s.opponent;
+  });
+
+  const rc = document.getElementById('tournamentResultsContent');
+  let html = '<div class="results"><h2>Tournament Complete!</h2>';
+  html += '<div class="score-comparison">' +
+    '<div class="score-box winner"><div class="sb-label">Your Total</div><div class="sb-val">' + formatPts(totalPlayer) + '</div></div>' +
+    '</div>';
+
+  // Results table
+  html += '<div class="tournament-results"><h3>Match Results</h3><table class="tr-table"><tr><th>Opponent</th><th>You</th><th>Them</th><th>Result</th></tr>';
+  tournamentOpponents.forEach(function(opp) {
+    const s = tournamentScores[opp.id];
+    let result = 'Draw';
+    if (s.player > s.opponent) result = 'Win';
+    else if (s.player < s.opponent) result = 'Loss';
+    html += '<tr><td>' + opp.name + '</td><td class="tr-you">' + formatPts(s.player) + '</td><td>' + formatPts(s.opponent) + '</td><td>' + result + '</td></tr>';
+  });
+  html += '</table></div>';
+
+  // Ideal comparison
+  const idealTotal = tournamentOpponents.length * 60;
+  html += '<div class="ideal-note">Perfect mutual cooperation across all matches: ' + formatPts(idealTotal) + '</div>';
+
+  // A-Level tournament analysis
+  if (currentLevel === 'alevel') {
+    html += '<div class="nash-section"><h3>Tournament Analysis</h3>' +
+      '<p>Robert Axelrod\'s famous 1980 computer tournament showed that <strong>Tit-for-Tat</strong> (submitted by Anatol Rapoport) won despite never "winning" a single match. It succeeded by scoring consistently well against all strategies.</p>' +
+      '<p>The winning properties: <strong>nice</strong> (never defects first), <strong>retaliatory</strong> (punishes defection), <strong>forgiving</strong> (returns to cooperation), and <strong>clear</strong> (easy to understand).</p>' +
+      '</div>';
+  }
+
+  html += '<div class="result-actions">' +
+    '<button class="btn-primary" onclick="startTournament()">Play Tournament Again</button>' +
+    '<button class="btn-secondary" onclick="chooseOpponent()">Single Game</button>' +
+    '<button class="btn-secondary" onclick="showScreen(\'menu\')">Change Level</button>' +
+    '</div></div>';
+
+  rc.innerHTML = html;
+  showScreen('tournamentResults');
+}
+
+// ---- Level selection ----
+document.querySelectorAll('.level-btn').forEach(function(b) {
+  b.addEventListener('click', function() {
+    document.querySelectorAll('.level-btn').forEach(function(x) { x.classList.remove('active'); });
+    b.classList.add('active');
+    currentLevel = b.dataset.level;
+    renderMenu();
+  });
+});
+
+// URL param level
+(function() {
+  var pa = new URLSearchParams(location.search);
+  var lvl = pa.get('level');
+  if (lvl && OPPONENTS[lvl]) {
+    currentLevel = lvl;
+    document.querySelectorAll('.level-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.level === lvl);
+    });
+  }
+})();
+
+// ---- Keyboard controls ----
+document.addEventListener('keydown', function(e) {
+  if (choiceLocked) return;
+  if (!document.getElementById('game').classList.contains('active')) return;
+  if (e.key === 'c' || e.key === 'C') { e.preventDefault(); makeChoice('cooperate'); }
+  if (e.key === 'd' || e.key === 'D') { e.preventDefault(); makeChoice('defect'); }
+});
+
+// ---- Accessibility toggle ----
+(function() {
+  var KEY = 'mfg_accessible', btn = document.getElementById('a11yToggle');
+  if (!btn) return;
+  function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+  apply(localStorage.getItem(KEY) === 'true');
+  btn.addEventListener('click', function() {
+    var on = !document.body.classList.contains('accessible');
+    localStorage.setItem(KEY, String(on));
+    apply(on);
+  });
+})();
+
+// ---- Initial render ----
+renderMenu();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

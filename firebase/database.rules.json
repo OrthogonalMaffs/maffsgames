@@ -1,0 +1,37 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "leaderboards": {
+      "$board": {
+        ".read": true,
+        "$entry": {
+          ".write": "!data.exists() && newData.exists() && $board.matches(/^[a-z0-9_]{1,80}$/)",
+          ".validate": "newData.hasChildren(['score', 'timestamp'])",
+          "score": { ".validate": "newData.isNumber()" },
+          "timestamp": { ".validate": "newData.isNumber() && newData.val() >= now - 60000 && newData.val() <= now + 60000" },
+          "initials": { ".validate": "newData.isString() && newData.val().matches(/^[A-Z]{0,3}$/)" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+
+    "recent_scores": {
+      ".read": true,
+      ".indexOn": ["timestamp"],
+      "$entry": {
+        ".write": "!data.exists() && newData.exists()",
+        ".validate": "newData.hasChildren(['game', 'slug', 'level', 'levelKey', 'score', 'timestamp'])",
+        "game": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80" },
+        "slug": { ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9-]{1,60}$/)" },
+        "level": { ".validate": "newData.isString() && newData.val().length <= 60" },
+        "levelKey": { ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9-]{1,40}$/)" },
+        "score": { ".validate": "newData.isNumber()" },
+        "timestamp": { ".validate": "newData.isNumber() && newData.val() >= now - 60000 && newData.val() <= now + 60000" },
+        "initials": { ".validate": "newData.isString() && newData.val().matches(/^[A-Z]{0,3}$/)" },
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}

@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Fractions, decimals and percentages for GCSE resit and post-16 students. Match three quarters to 0.75 and 75%, practise by stage, or play today's pizza: ten questions, the same for everyone.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/free-daily-pizza/">
+<meta property="og:title" content="Free Daily Pizza — MaffsGames">
+<meta property="og:description" content="Fractions, decimals and percentages for GCSE resit and post-16 students. Match three quarters to 0.75 and 75%, practise by stage, or play today's pizza: ten questions, the same for everyone.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/free-daily-pizza/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Free Daily Pizza — MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0b0a0d;--surface:#15131a;--surface2:#1d1a24;--border:#2d2836;--accent:#ff8a3d;--accent-soft:rgba(255,138,61,.14);--accent-dim:#9a5429;--crust:#c98a3e;--text:#eeeaf2;--muted:#9a91a8;--wrong:#f43f5e;--correct:#22c55e;--focus:#7dd3fc}
+body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:1rem 0 .4rem;position:relative}
+.header h1{font-size:2rem;font-weight:700;color:var(--accent);letter-spacing:.01em}
+.header .sub{font-size:.9rem;color:var(--muted);margin-top:.25rem}
+body.playing a.back-link{margin:.3rem 0}
+body.playing .header{padding:.2rem 0 .5rem}body.playing .header h1{font-size:1.35rem}body.playing .header .sub{display:none}body.playing .header .a11y-toggle{top:.1rem}
+.header .a11y-toggle{position:absolute;right:0;top:1rem}
+@media (max-width:560px){.header h1{font-size:1.65rem}.header .a11y-toggle{position:static;margin-top:.6rem}}
+.screen{display:none}.screen.active{display:block}
+.menu-info{color:var(--muted);font-size:.92rem;line-height:1.7;margin:.8rem auto;max-width:620px;text-align:center}
+.menu-info strong{color:var(--text)}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:620px}
+.panel h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-bottom:.6rem}
+.note{font-size:.86rem;color:var(--muted);line-height:1.6}
+.note b{color:var(--text)}
+.target{margin-top:.5rem;font-size:.95rem;color:var(--text)}
+.target b{font-family:'JetBrains Mono',monospace;color:var(--accent)}
+.btn{padding:.6rem 1.2rem;min-height:44px;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-soft)}
+.btn.solid{background:var(--accent);color:#1a0d04}
+.btn.solid:hover{background:#ffa463}
+.btn.quiet{border-color:var(--border);color:var(--muted)}
+.start-btn{display:block;margin:1rem auto .3rem;padding:.75rem 2.2rem;font-size:1.05rem}
+.stage-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.5rem}
+.stage-btn{min-height:44px;text-align:left;padding:.55rem .75rem;border-radius:10px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;cursor:pointer}
+.stage-btn b{display:block;font-size:.92rem}
+.stage-btn span{display:block;font-size:.8rem;color:var(--muted);margin-top:.1rem;line-height:1.9}
+.stage-btn i{font-style:normal}.stage-btn .katex,.menu-info .katex{font-size:1.1em}
+.stage-btn:hover{border-color:var(--accent-dim)}
+.stage-btn.selected{border-color:var(--accent);background:var(--accent-soft)}
+.len-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin:1rem 0 .4rem}
+.session-select{display:flex;gap:.5rem;flex-wrap:wrap}
+.session-btn{min-height:44px;min-width:64px;padding:.5rem 1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.session-btn.selected{border-color:var(--accent);background:var(--accent);color:#1a0d04}
+.lb-link{text-align:center;font-size:.85rem;margin:.6rem 0}.lb-link a{color:#0d9488;text-decoration:none}
+
+/* Game */
+.hud{display:flex;justify-content:space-between;padding:.45rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.6rem;gap:.3rem;flex-wrap:wrap}
+.hud-item{text-align:center;min-width:52px}.hud-label{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700}
+.hud-item.tgt .hud-val{color:var(--accent)}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1rem;text-align:center}
+.stage-tag{font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:.35rem}
+.prompt{font-size:1.25rem;line-height:1.6;font-weight:600}
+.prompt .katex{font-size:1.2em}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin:1rem auto 0;max-width:460px}
+.opt{min-width:0;overflow:hidden;min-height:64px;padding:.5rem;border-radius:12px;border:2px solid var(--border);background:var(--surface2);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1.3rem;font-weight:700;cursor:pointer;touch-action:manipulation}
+.opt .katex{font-size:1.2em}
+.opt:hover{border-color:var(--accent-dim)}
+.opt:disabled{cursor:default}
+.opt.correct{border-color:var(--correct);color:var(--correct)}
+.feedback{margin-top:.9rem;text-align:center}
+.fb-right{color:var(--correct);font-weight:700;font-size:1.05rem}
+.fb-wrong{background:var(--surface2);border:1px solid var(--wrong);border-radius:12px;padding:.8rem .9rem;text-align:left}
+.fb-fact{font-size:1.2rem;font-weight:700;color:var(--accent);text-align:center;line-height:1.9}
+.fb-fact .katex,.fb-said .katex{font-size:1.15em}
+.fb-work .katex{font-size:1.1em}
+.review li .katex{font-size:1.1em}
+.fb-said{font-size:.9rem;color:var(--muted);text-align:center;margin:.25rem 0 .55rem;line-height:1.5}
+.fb-said b{color:var(--wrong)}
+.fb-work{font-size:.95rem;line-height:2.1;padding:.5rem .7rem;border-left:3px solid var(--focus);background:rgba(125,211,252,.06);border-radius:0 8px 8px 0}
+.fb-work .rule{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--focus);margin-bottom:.15rem}
+.pics{display:flex;justify-content:center;align-items:flex-start;gap:1rem;flex-wrap:wrap;margin:.7rem 0 .1rem}
+.pic{display:flex;flex-direction:column;align-items:center;margin:0}
+.pic figcaption{font-size:.76rem;color:var(--muted);margin-top:.3rem;max-width:150px;text-align:center;line-height:1.35}
+.pic svg{display:block}
+.pizza{width:112px;height:112px}
+.pizza .crust{fill:var(--crust)}
+.pizza .slice{fill:#2a2431;stroke:var(--bg);stroke-width:.9}
+.pizza .slice.on{fill:var(--accent)}
+.grid100{width:104px;height:104px}
+.grid100 .sq{fill:#2a2431}
+.grid100 .sq.on{fill:var(--accent)}
+.bar{display:grid;width:min(300px,86vw);height:40px;border:2px solid var(--crust);border-radius:6px;overflow:hidden}
+.bar .part{display:flex;align-items:center;justify-content:center;background:#2a2431;border-right:1px solid var(--bg);font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted)}
+.bar .part:last-child{border-right:0}
+.bar .part.on{background:var(--accent);color:#1a0d04;font-weight:700}
+.results{text-align:center;padding:1.2rem 0}
+.results h2{font-size:1.4rem;margin-bottom:.3rem}
+.final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;color:var(--accent);margin:.5rem 0}
+.stats{color:var(--muted);line-height:1.9;font-size:.92rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+.stats .unranked{color:#fbbf24}
+.review{max-width:520px;margin:.6rem auto;font-size:.9rem;color:var(--muted)}
+.review ul{list-style:none;margin-top:.3rem}
+.review li{margin:.25rem 0;color:var(--text)}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+.sfrac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.9em;line-height:1.1;margin:0 .1em}
+.sfrac>span:first-child{border-bottom:2px solid currentColor;padding:0 .15em}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .menu-info,body.accessible .fb-work,body.accessible .note{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}
+.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+
+/* ---- Phone layout (canon §7.6.1, the phone rule) ----
+   On a wrong answer the reason to read and the Next control both sit above the fold.
+   1. The four options cannot be used while the feedback shows, so they go and the feedback
+      takes their space. Wrong answers only: a right answer shows one line for a moment.
+   2. There is no secondary panel during play to collapse; the HUD is one line, and on narrow
+      screens the stage label goes while the feedback shows (the true statement restates the
+      question). Fractions are never shrunk to make room (Jon: stacked, and big enough to read).
+   3. Order: the true statement and what was picked -> the working -> the pictures -> Next.
+   4. On a short screen (<= 600px tall, e.g. 320x568) the pictures move below Next. Visually
+      only: the reading order stays fact, working, pictures, Next. The working never moves.
+   5. During play the title and the Aa toggle share one line on narrow screens. */
+.qcard.fb-open .options{display:none}
+@media (max-width:600px){
+  .container{padding:.75rem}
+  .qcard{padding:.9rem .75rem}
+  .prompt{font-size:1.12rem}
+  .fb-wrong{padding:.6rem .65rem}
+  .fb-fact{font-size:1.08rem}
+  .fb-said{margin:.15rem 0 .4rem;font-size:.86rem}
+  .fb-work{font-size:.9rem;line-height:1.9}
+  .qcard.fb-open .stage-tag{display:none}
+  .qcard.fb-open .feedback{margin-top:.55rem}
+  body.playing a.back-link{margin:.15rem 0}
+  .hud{margin-bottom:.45rem}
+  .pizza{width:84px;height:84px}.grid100{width:80px;height:80px}.pic figcaption{max-width:130px}
+}
+@media (max-width:560px){
+  body.playing .header .a11y-toggle{position:absolute;margin-top:0;top:.1rem}
+  body.playing .header h1{padding:0 2.7rem}
+}
+@media (max-width:360px){.opt{font-size:1.1rem}.hud{padding:.4rem .5rem}.hud-item{min-width:44px}}
+@media (max-height:600px){
+  #feedback{display:flex;flex-direction:column}
+  #feedback .pics{order:1}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+
+  <div class="header" id="gameHeader">
+    <h1>Free Daily Pizza</h1>
+    <div class="sub">Fractions, decimals and percentages. Three ways to write the same number.</div>
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+  </div>
+
+  <div id="menu" class="screen active">
+    <p class="menu-info">
+      <strong data-tex="\dfrac{3}{4}">3 quarters</strong>, <strong>0.75</strong> and <strong>75%</strong> are the same number written three ways.
+      Pick the one that matches. Get one wrong and you will see the working, and the pizza to prove it.
+    </p>
+
+    <div class="panel" id="dailyPanel">
+      <h2>Today's pizza</h2>
+      <div class="note"><b id="dailyDate"></b> · 10 questions, easiest first. The same pizza for everyone today; play it as often as you like.</div>
+      <div class="target" id="dailyTarget" style="display:none"></div>
+      <button class="btn solid start-btn" id="dailyBtn" data-mode="daily">Play today's pizza</button>
+    </div>
+
+    <div class="panel" id="practicePanel">
+      <h2>Practice</h2>
+      <div class="stage-list" id="stageList">
+        <button class="stage-btn" data-stage="1"><b>1 · Benchmarks</b><span>Halves, quarters, fifths, tenths, thirds, eighths, hundredths</span></button>
+        <button class="stage-btn" data-stage="2"><b>2 · Wider set</b><span>Eighths, twentieths, hundredths, simplifying</span></button>
+        <button class="stage-btn" data-stage="3"><b>3 · Of an amount</b><span>25% of 80, <i data-tex="\dfrac{3}{5}">3 fifths</i> of 45</span></button>
+        <button class="stage-btn" data-stage="4"><b>4 · Out of</b><span>15 out of 60 as a fraction and a percentage</span></button>
+        <button class="stage-btn" data-stage="mixed"><b>All four</b><span>A quarter from each stage, easiest first</span></button>
+      </div>
+      <div class="len-label">How many questions</div>
+      <div id="sessionSelect" class="session-select"></div>
+      <button class="btn solid start-btn" id="startBtn">Start practice</button>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="hudClock">0:00</div></div>
+      <div class="hud-item tgt" id="hudTargetBox" style="display:none"><div class="hud-label">Target</div><div class="hud-val" id="hudTarget"></div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="stage-tag" id="stageTag"></div>
+      <div class="prompt" id="prompt" aria-live="polite"></div>
+      <div class="options" id="options" role="group" aria-label="Answer options"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="stats" id="resStats"></div>
+      <div class="review" id="resReview"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="againBtn">Play again</button>
+        <button class="btn quiet" id="menuBtn">Menu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Free Daily Pizza — fraction, decimal and percentage equivalence. Resit fluency strand,
+ * game 2 (30 Sep 2026).
+ *
+ * Everything that decides what a student sees — the four stage banks, every option and the
+ * misconception it stands for, the working, the pictures, the daily pizza and the practice
+ * sets — lives on window.FDP as plain functions. The UI below calls them through FDP, and
+ * scripts/verify-free-daily-pizza.py reads the SAME objects back from the live page and
+ * recomputes every value in Python with exact fractions, so it checks what ships.
+ *
+ * Rules the engine keeps (and the verifier checks):
+ *  - Every value is an exact rational [numerator, denominator] of integers in lowest terms.
+ *    Nothing is ever a float, and options are compared by value, never by the digits shown.
+ *  - No distractor equals the answer in value, except the one tagged 'unsimplified', and only
+ *    on a question that asks for the simplest form. Each distractor is a named misconception
+ *    (FDP.TAGS) and its value is recomputable from its tag and the question alone.
+ *  - A recurring decimal is shown recurring (0.3̇), and a third of a percent as 33⅓%.
+ *    A truncated decimal such as 0.33 only ever appears as a wrong option, valued at 33/100.
+ *  - Pictures are drawn in full or not at all: a pizza of b equal slices (b <= 24), a
+ *    100-square grid only when the value is a whole number of squares, a bar of equal parts
+ *    only when each part is a whole number. They appear only after a wrong answer.
+ *  - The daily pizza is 3 + 3 + 2 + 2 questions from stages 1-4, in stage order, drawn by a
+ *    PRNG seeded from the UK date, with no two questions in a stage about the same value.
+ */
+(function () {
+  'use strict';
+
+  var FDP = {};
+  FDP.SLUG = 'free-daily-pizza';
+  FDP.BASE = 100;
+  FDP.T_K = 0.15;
+  FDP.LENGTHS = [20, 40];
+  FDP.DAILY_MIX = [[1, 3], [2, 3], [3, 2], [4, 2]];   // [stage, how many], served in this order
+  FDP.PIZZA_MAX = 24;   // more slices than this are too thin to count, so no pizza is drawn
+  FDP.BAR_MAX = 20;     // a bar has at most this many equal parts
+  FDP.PERIOD_MAX = 2;   // longest recurring block any option shows (only thirds occur in answers)
+
+  /* ---------- exact rationals: [n, d], integers, d > 0, lowest terms ---------- */
+  function gcd(a, b) {
+    a = Math.abs(a); b = Math.abs(b);
+    while (b) { var t = a % b; a = b; b = t; }
+    return a;
+  }
+  function R(n, d) {
+    if (d === undefined) d = 1;
+    if (d < 0) { n = -n; d = -d; }
+    var g = gcd(n, d) || 1;
+    return [n / g, d / g];
+  }
+  function mul(x, y) { return R(x[0] * y[0], x[1] * y[1]); }
+  function sub(x, y) { return R(x[0] * y[1] - y[0] * x[1], x[1] * y[1]); }
+  function eq(x, y) { return x[0] === y[0] && x[1] === y[1]; }   // both in lowest terms
+  function pow10(k) { var p = 1; for (var i = 0; i < k; i++) p *= 10; return p; }
+  function idiv(n, d) { return (n - n % d) / d; }                 // n >= 0, d > 0
+  function shift10(x, s) { return s >= 0 ? R(x[0] * pow10(s), x[1]) : R(x[0], x[1] * pow10(-s)); }
+  function floorTo(x, k) { var p = pow10(k); return R(idiv(x[0] * p, x[1]), p); }
+  FDP.R = R; FDP.gcd = gcd; FDP.eq = eq;
+
+  /* Decimal expansion of x >= 0 as {int, pre, rep}: 1/3 -> {0, '', '3'}, 3/8 -> {0, '375', ''}.
+     null when the recurring block is longer than periodMax (periodMax 0: terminating only). */
+  FDP.expand = function (x, periodMax) {
+    var d = x[1], r = x[0] % d, digits = '', seen = {}, i;
+    for (i = 0; i < 64 && r !== 0 && seen[r] === undefined; i++) {
+      seen[r] = i;
+      r *= 10;
+      digits += String(idiv(r, d));
+      r = r % d;
+    }
+    var ip = idiv(x[0], d);
+    if (r === 0) return { int: ip, pre: digits, rep: '' };
+    if (seen[r] === undefined) return null;
+    var rep = digits.slice(seen[r]);
+    if (rep.length > periodMax) return null;
+    return { int: ip, pre: digits.slice(0, seen[r]), rep: rep };
+  };
+  function terminates(x) { return FDP.expand(x, 0) !== null; }
+  function decimalPlaces(x) { var e = FDP.expand(x, 0); return e ? e.pre.length : null; }
+
+  function decText(e) {
+    var s = String(e.int);
+    if (!e.pre && !e.rep) return s;
+    var rep = e.rep;
+    if (rep.length === 1) rep = rep + '̇';
+    else if (rep.length > 1) rep = rep[0] + '̇' + rep.slice(1, -1) + rep.slice(-1) + '̇';
+    return s + '.' + e.pre + rep;
+  }
+  function decTex(e) {
+    var s = String(e.int);
+    if (!e.pre && !e.rep) return s;
+    var rep = e.rep;
+    if (rep.length === 1) rep = '\\dot{' + rep + '}';
+    else if (rep.length > 1) rep = '\\dot{' + rep[0] + '}' + rep.slice(1, -1) + '\\dot{' + rep.slice(-1) + '}';
+    return s + '.' + e.pre + rep;
+  }
+  /* A percentage is shown as a terminating decimal (37.5%) or a whole number and a third (33⅓%).
+     Anything else is not shown at all (null), rather than rounded. */
+  var VULGAR = { '1/3': '⅓', '2/3': '⅔' };
+  function pctParts(x) {
+    var p = mul(x, [100, 1]);
+    var e = FDP.expand(p, 0);
+    if (e) return { e: e };
+    var whole = idiv(p[0], p[1]), f = R(p[0] - whole * p[1], p[1]);
+    return f[1] === 3 ? { whole: whole, f: f } : null;
+  }
+  function pctText(pp) {
+    return pp.e ? decText(pp.e) + '%' : (pp.whole ? String(pp.whole) : '') + VULGAR[pp.f[0] + '/' + pp.f[1]] + '%';
+  }
+  function pctTex(pp) {
+    return pp.e ? decTex(pp.e) + '\\%' : (pp.whole ? String(pp.whole) : '') + '\\dfrac{' + pp.f[0] + '}{' + pp.f[1] + '}\\%';
+  }
+  function fracText(s) { return s[1] === 1 ? String(s[0]) : s[0] + '/' + s[1]; }
+  function fracTex(s) { return s[1] === 1 ? String(s[0]) : '\\dfrac{' + s[0] + '}{' + s[1] + '}'; }
+  FDP.fmt = {
+    decText: function (x) { var e = FDP.expand(x, FDP.PERIOD_MAX); return e ? decText(e) : null; },
+    decTex: function (x) { var e = FDP.expand(x, FDP.PERIOD_MAX); return e ? decTex(e) : null; },
+    pctText: function (x) { var p = pctParts(x); return p ? pctText(p) : null; },
+    pctTex: function (x) { var p = pctParts(x); return p ? pctTex(p) : null; },
+    fracText: fracText, fracTex: fracTex
+  };
+
+  /* ---------- options ----------
+     form 'f' fraction, 'd' decimal, 'p' percentage, 'n' an amount (shown as a decimal).
+     key is what dataset.val carries and what marking compares: the form and the exact value,
+     or for a fraction the numbers actually shown (so 15/60 and 1/4 are different answers). */
+  function opt(form, value, extra) {
+    extra = extra || {};
+    var o = { form: form, value: value, tag: extra.tag || null };
+    if (extra.k !== undefined) o.k = extra.k;
+    if (extra.shift !== undefined) o.shift = extra.shift;
+    if (form === 'f') {
+      var s = extra.shown || value;
+      o.shown = s; o.text = fracText(s); o.tex = fracTex(s);
+      o.key = 'f:' + s[0] + '/' + s[1];
+    } else if (form === 'd' || form === 'n') {
+      var e = FDP.expand(value, FDP.PERIOD_MAX);
+      if (!e) return null;
+      o.text = decText(e); o.tex = decTex(e);
+      o.key = form + ':' + value[0] + '/' + value[1];
+    } else {
+      var pp = pctParts(value);
+      if (!pp) return null;
+      o.text = pctText(pp); o.tex = pctTex(pp);
+      o.key = 'p:' + value[0] + '/' + value[1];
+    }
+    return o;
+  }
+  function C(form, value, tag, extra) {
+    if (!value) return null;
+    var e = {}; if (extra) { e.k = extra.k; e.shift = extra.shift; e.shown = extra.shown; }
+    e.tag = tag;
+    return opt(form, value, e);
+  }
+  function PV(form, v, s) { return C(form, shift10(v, s), 'place-value', { shift: s }); }
+  /* Truncation only where a student would plausibly cut a decimal short: a recurring value, or
+     one with three or more decimal places. */
+  function truncOf(v, k) {
+    var dp = decimalPlaces(v);
+    if (dp !== null && dp < 3) return null;
+    var t = floorTo(v, k);
+    return t[0] > 0 && !eq(t, v) ? t : null;
+  }
+  function digitReadDec(v) {        // 0.4 -> 1/4: the digits after the point read as a denominator
+    var e = FDP.expand(v, 0);
+    if (!e || e.int !== 0 || !e.pre || e.pre[0] === '0') return null;
+    var n = parseInt(e.pre, 10);
+    return n >= 2 ? R(1, n) : null;
+  }
+  function digitReadPct(v) {        // 25% -> 1/25
+    var p = mul(v, [100, 1]);
+    return p[1] === 1 && p[0] >= 2 ? R(1, p[0]) : null;
+  }
+
+  /* The misconceptions. The verifier recomputes each value from these definitions. */
+  FDP.TAGS = {
+    'denominator-as-decimal': 'That reads the bottom number as if it were the decimal.',
+    'digit-reading': 'That turns the digits into the bottom of a fraction. Read the place value instead: 0.4 is four tenths.',
+    'place-value': null,   // worded from its shift, below
+    'truncation': 'That cuts the decimal short. The digits carry on, so it is close but not exact.',
+    'inversion': 'That is the fraction turned upside down.',
+    'unsimplified': 'Same value, but not in its simplest form.',
+    'raw-part': 'That uses the top number as the percentage. It is only a percentage when it is out of 100.',
+    'subtract-instead': 'Taking the same number off top and bottom changes the fraction. Divide instead.',
+    'one-side-only': 'That divides the top but not the bottom.',
+    'one-part-only': 'That is only one part. Now scale it up.',
+    'no-divide': 'That multiplies by the top number but never divides by the bottom one.',
+    'complement': 'That is the other part: the bit that is left over.',
+    'part-to-part': 'That compares the part with the rest, not with the whole.',
+    'subtract-percent': 'That takes the number off. A percentage is a share of the amount, not a number to subtract.'
+  };
+  FDP.tagSays = function (o, item) {
+    if (!o || !o.tag) return '';
+    if (o.tag === 'place-value') {
+      var big = o.shift > 0, n = Math.abs(o.shift) === 1 ? '10' : '100';
+      return 'Right digits, wrong place: that is ' + n + ' times too ' + (big ? 'big' : 'small') + '.';
+    }
+    if (o.tag === 'inversion' && item && (item.kind === 'outof-f' || item.kind === 'outof-p')) return 'That divides the wrong way round: the whole goes on the bottom.';
+    if (o.tag === 'inversion' && item && (item.kind === 'ofamt-f' || item.kind === 'ofamt-p')) return 'That divides by the fraction instead of multiplying by it.';
+    return FDP.TAGS[o.tag] || '';
+  };
+
+  /* Keep the first `want` candidates that can be shown, are positive, are not the answer's value
+     (unless tagged `allowEqualTag`), and do not repeat a value already kept. Finite list, one
+     pass, no retries. */
+  function pick(answer, cands, want, allowEqualTag) {
+    var out = [];
+    for (var i = 0; i < cands.length && out.length < want; i++) {
+      var c = cands[i];
+      if (!c || c.value[0] <= 0 || c.key === answer.key) continue;
+      if (eq(c.value, answer.value) && !(allowEqualTag && c.tag === allowEqualTag)) continue;
+      var dup = false;
+      for (var j = 0; j < out.length; j++) if (eq(out[j].value, c.value)) dup = true;
+      if (!dup) out.push(c);
+    }
+    return out;
+  }
+
+  /* ---------- words for the working ---------- */
+  var PLACE = { 10: 'tenths', 100: 'hundredths', 1000: 'thousandths' };
+  function overTen(v) {        // v as n/10, n/100 or n/1000, whichever is first; null for thirds
+    var dens = [10, 100, 1000];
+    for (var i = 0; i < dens.length; i++) if (dens[i] % v[1] === 0) return [v[0] * dens[i] / v[1], dens[i]];
+    return null;
+  }
+  function simplifyLine(n, d) {
+    var g = gcd(n, d);
+    if (g === 1) return 'It will not simplify.';
+    return 'Divide top and bottom by ' + g + ': \\(' + fracTex([n, d]) + ' = ' + fracTex(R(n, d)) + '\\).';
+  }
+  function longDigits(v) {     // 0.333 for 1/3: the recurring block written out three times
+    var e = FDP.expand(v, FDP.PERIOD_MAX);
+    return String(e.int) + '.' + e.pre + e.rep + e.rep + e.rep;
+  }
+  function thirdOfHundred(v) { // "\frac13 of 100 is 100 \div 3 = 33\dfrac13"
+    return '\\(' + fracTex(v) + '\\) of 100 is \\(' + (100 * v[0]) + ' \\div ' + v[1] + ' = ' + pctTex(pctParts(v)).replace('\\%', '') + '\\)';
+  }
+
+  function convWorking(it) {
+    var v = it.v, a = v[0], b = v[1], F = fracTex(v);
+    var D = FDP.fmt.decTex(v), P = FDP.fmt.pctTex(v), o = overTen(v);
+    switch (it.from + '>' + it.to) {
+      case 'f>d':
+        if (!o) return '\\(' + F + '\\) means \\(' + a + ' \\div ' + b + ' = ' + longDigits(v) + '\\ldots\\). The ' +
+          FDP.expand(v, FDP.PERIOD_MAX).rep + ' goes on for ever, so it is written \\(' + D + '\\).';
+        if (o[1] === b) return '\\(' + F + '\\) is ' + a + ' ' + PLACE[b] + ', which is \\(' + D + '\\).';
+        return 'Multiply top and bottom by ' + (o[1] / b) + ': \\(' + F + ' = ' + fracTex(o) + '\\), which is ' +
+          o[0] + ' ' + PLACE[o[1]] + ', \\(' + D + '\\).';
+      case 'f>p':
+        if (!o) return thirdOfHundred(v) + ', so \\(' + F + ' = ' + P + '\\).';
+        if (100 % b === 0) {
+          if (b === 100) return '\\(' + F + '\\) is ' + a + ' out of 100, and out of 100 is per cent: \\(' + P + '\\).';
+          return 'Multiply top and bottom by ' + (100 / b) + ': \\(' + F + ' = ' + fracTex([a * 100 / b, 100]) +
+            '\\). Out of 100 is per cent, so \\(' + P + '\\).';
+        }
+        return '\\(' + F + ' = ' + fracTex(o) + ' = ' + D + '\\), and \\(' + D + ' \\times 100 = ' +
+          FDP.fmt.decTex(mul(v, [100, 1])) + '\\), so \\(' + P + '\\).';
+      case 'd>f':
+        if (!o) return '\\(' + D + '\\) is \\(' + longDigits(v) + '\\ldots\\), which is what \\(' + a + ' \\div ' + b +
+          '\\) gives. So it is \\(' + F + '\\).';
+        return '\\(' + D + '\\) is ' + o[0] + ' ' + PLACE[o[1]] + ': \\(' + fracTex(o) + '\\). ' + simplifyLine(o[0], o[1]);
+      case 'd>p':
+        if (!o) return 'Multiply by 100: \\(' + D + ' \\times 100 = ' + FDP.fmt.decTex(mul(v, [100, 1])) + '\\), which is \\(' +
+          P.replace('\\%', '') + '\\). So \\(' + P + '\\).';
+        return 'Multiply by 100: \\(' + D + ' \\times 100 = ' + FDP.fmt.decTex(mul(v, [100, 1])) + '\\), so \\(' + P + '\\).';
+      case 'p>d':
+        if (!o) return '\\(' + P + '\\) is \\(' + F + '\\) of 100%, so it is \\(' + F + '\\), and \\(' + a + ' \\div ' + b +
+          ' = ' + longDigits(v) + '\\ldots = ' + D + '\\).';
+        return 'Divide by 100: \\(' + FDP.fmt.decTex(mul(v, [100, 1])) + ' \\div 100 = ' + D + '\\).';
+      default: // p>f
+        if (!o) return '\\(' + P + '\\) is \\(' + F + '\\) of 100%, so it is \\(' + F + '\\).';
+        var p = mul(v, [100, 1]);
+        if (p[1] === 1) return '\\(' + P + '\\) means ' + p[0] + ' out of 100: \\(' + fracTex([p[0], 100]) + '\\). ' + simplifyLine(p[0], 100);
+        return '\\(' + P + '\\) means ' + FDP.fmt.decText(p) + ' out of 100, which is \\(' + fracTex(o) + '\\). ' + simplifyLine(o[0], o[1]);
+    }
+  }
+  function amountWorking(f, N, ans) {   // f of N, found one part first
+    var a = f[0], b = f[1], one = N / b;
+    if (a === 1) return '\\(' + fracTex(f) + '\\) of ' + N + ': divide by ' + b + '. \\(' + N + ' \\div ' + b + ' = ' + one + '\\).';
+    return 'Find \\(' + fracTex([1, b]) + '\\) of ' + N + ' first: \\(' + N + ' \\div ' + b + ' = ' + one + '\\). Then \\(' +
+      fracTex(f) + '\\) is ' + a + ' lots of that: \\(' + one + ' \\times ' + a + ' = ' + ans + '\\).';
+  }
+
+  /* ---------- pictures ---------- */
+  function pizzaSpec(s) { return s[1] >= 2 && s[1] <= FDP.PIZZA_MAX && s[0] >= 1 && s[0] <= s[1] ? { type: 'pizza', slices: s[1], shaded: s[0] } : null; }
+  function gridSpec(v, each) {
+    var k = mul(v, [100, 1]);
+    if (k[1] !== 1 || k[0] < 1 || k[0] > 100) return null;
+    var sp = { type: 'grid', squares: 100, shaded: k[0] };
+    if (each !== undefined) sp.each = each;
+    return sp;
+  }
+  function barSpec(f, N) {
+    if (f[1] < 2 || f[1] > FDP.BAR_MAX || N % f[1] !== 0) return null;
+    return { type: 'bar', parts: f[1], shaded: f[0], each: N / f[1], total: N };
+  }
+  function nonNull(list) { return list.filter(function (x) { return !!x; }); }
+
+  /* ---------- items ---------- */
+  var FORM_WORD = { f: 'a fraction', d: 'a decimal', p: 'a percentage' };
+  function finish(it, cands) {
+    it.distractors = pick(it.answer, cands, 3, it.asksSimplest ? 'unsimplified' : null);
+    if (it.distractors.length < 3 && typeof console !== 'undefined') console.warn('[FDP] ' + it.id + ' has only ' + it.distractors.length + ' distractors');
+    return it;
+  }
+
+  function convItem(stage, v, from, to) {
+    var a = v[0], b = v[1], inv = R(b, a);
+    var t1 = truncOf(v, 1), t2 = truncOf(v, 2), c, pair = from + '>' + to;
+    if (pair === 'f>d') c = [b <= 9 ? C('d', R(b, 10), 'denominator-as-decimal') : null,
+      C('d', t1, 'truncation', { k: 1 }), C('d', t2, 'truncation', { k: 2 }), C('d', inv, 'inversion'),
+      PV('d', v, 1), PV('d', v, -1), PV('d', v, 2)];
+    else if (pair === 'f>p') c = [C('p', t2, 'truncation', { k: 2 }), C('p', R(a, 100), 'raw-part'),
+      b <= 9 ? C('p', R(b, 10), 'denominator-as-decimal') : null, PV('p', v, -1), PV('p', v, 1), C('p', inv, 'inversion'),
+      PV('p', v, -2)];
+    else if (pair === 'd>f') c = [C('f', digitReadDec(v), 'digit-reading'),
+      terminates(v) ? null : C('f', floorTo(v, 1), 'truncation', { k: 1 }), C('f', inv, 'inversion'), PV('f', v, 1), PV('f', v, -1)];
+    else if (pair === 'd>p') c = [C('p', t2, 'truncation', { k: 2 }), PV('p', v, -1), PV('p', v, -2), PV('p', v, 1)];
+    else if (pair === 'p>d') c = [C('d', t2, 'truncation', { k: 2 }), C('d', t1, 'truncation', { k: 1 }),
+      PV('d', v, 1), PV('d', v, 2), PV('d', v, -1)];
+    else c = [C('f', digitReadPct(v), 'digit-reading'), terminates(v) ? null : C('f', floorTo(v, 2), 'truncation', { k: 2 }),
+      PV('f', v, 1), C('f', inv, 'inversion'), PV('f', v, -1)];
+    var given = opt(from, v), answer = opt(to, v);
+    var it = {
+      id: 'S' + stage + ':conv:' + pair + ':' + a + '/' + b, stage: stage, kind: 'conv', from: from, to: to,
+      v: v, given: given, answer: answer, asksSimplest: false, family: 'v' + a + '/' + b,
+      prompt: 'Write \\(' + given.tex + '\\) as ' + FORM_WORD[to] + '.',
+      promptText: 'Write ' + given.text + ' as ' + FORM_WORD[to] + '.',
+      equation: '\\(' + given.tex + ' = ' + answer.tex + '\\)',
+      pictures: nonNull([pizzaSpec(v), gridSpec(v)])
+    };
+    it.working = convWorking(it);
+    return finish(it, c);
+  }
+
+  function simpItem(n, d) {
+    var g = gcd(n, d), ans = R(n, d), a = ans[0], b = ans[1], k = 1;
+    for (var j = 2; j < g; j++) if (g % j === 0) k = j;     // the largest proper factor of g, or 1
+    var c = [C('f', ans, 'unsimplified', { shown: [n / k, d / k] }),
+      C('f', R(a, d - n + a), 'subtract-instead', { shown: [a, d - n + a] }),
+      C('f', R(b, a), 'inversion'),
+      C('f', R(a, d), 'one-side-only', { shown: [a, d] })];
+    var answer = opt('f', ans);
+    var it = {
+      id: 'S2:simp:' + n + '/' + d, stage: 2, kind: 'simp', n: n, d: d, answer: answer, asksSimplest: true,
+      family: 'v' + a + '/' + b,
+      prompt: 'Write \\(' + fracTex([n, d]) + '\\) in its simplest form.',
+      promptText: 'Write ' + n + '/' + d + ' in its simplest form.',
+      equation: '\\(' + fracTex([n, d]) + ' = ' + answer.tex + '\\)',
+      working: 'The biggest number into both ' + n + ' and ' + d + ' is ' + g + '. ' + simplifyLine(n, d),
+      pictures: nonNull([pizzaSpec([n, d]), pizzaSpec(ans)])
+    };
+    return finish(it, c);
+  }
+
+  function ofFractionItem(a, b, N) {
+    var f = [a, b], ans = R(a * N, b), c;
+    if (a > 1) c = [C('n', R(N, b), 'one-part-only'), C('n', R(N * (b - a), b), 'complement'), C('n', R(a * N), 'no-divide'),
+      C('n', R(N * b, a), 'inversion'), b <= 9 ? C('n', R(N * b, 10), 'denominator-as-decimal') : null,
+      PV('n', ans, 1), PV('n', ans, -1)];
+    else c = [C('n', R(N * b, a), 'inversion'), b <= 9 ? C('n', R(N * b, 10), 'denominator-as-decimal') : null,
+      C('n', R(N * (b - a), b), 'complement'), PV('n', ans, 1), PV('n', ans, -1)];
+    var answer = opt('n', ans);
+    var it = {
+      id: 'S3:frac:' + a + '/' + b + ':' + N, stage: 3, kind: 'ofamt-f', a: a, b: b, N: N, answer: answer, asksSimplest: false,
+      family: 'of' + a + '/' + b,
+      prompt: 'Work out \\(' + fracTex(f) + '\\) of ' + N + '.',
+      promptText: 'Work out ' + a + '/' + b + ' of ' + N + '.',
+      equation: '\\(' + fracTex(f) + '\\) of ' + N + ' = ' + answer.text,
+      working: amountWorking(f, N, answer.text),
+      pictures: nonNull([barSpec(f, N)])
+    };
+    return finish(it, c);
+  }
+
+  function ofPercentItem(p, N) {
+    var f = R(p, 100), ans = R(p * N, 100);
+    var c = [N - p > 0 ? C('n', R(N - p), 'subtract-percent') : null,
+      p % 10 === 0 && p !== 10 ? C('n', R(N, 10), 'one-part-only') : null,
+      C('n', R(N * (100 - p), 100), 'complement'), PV('n', ans, 1), C('n', R(100 * N, p), 'inversion'), PV('n', ans, -1)];
+    var answer = opt('n', ans);
+    var pic = barSpec(f, N) || (N % 100 === 0 ? gridSpec(f, N / 100) : null);
+    var it = {
+      id: 'S3:pct:' + p + ':' + N, stage: 3, kind: 'ofamt-p', p: p, N: N, answer: answer, asksSimplest: false,
+      family: 'of' + f[0] + '/' + f[1],
+      prompt: 'Work out ' + p + '% of ' + N + '.',
+      promptText: 'Work out ' + p + '% of ' + N + '.',
+      equation: p + '% of ' + N + ' = ' + answer.text,
+      working: '\\(' + p + '\\% = ' + fracTex(f) + '\\). ' + amountWorking(f, N, answer.text),
+      pictures: nonNull([pic])
+    };
+    return finish(it, c);
+  }
+
+  function outOfItem(A, B, to) {
+    var v = R(A, B), answer = opt(to, v), c;
+    if (to === 'f') c = [C('f', v, 'unsimplified', { shown: [A, B] }), C('f', R(B, A), 'inversion'),
+      C('f', R(A, B - A), 'part-to-part'), C('f', R(B - A, B), 'complement')];
+    else c = [C('p', R(A, 100), 'raw-part'), C('p', R(A, B - A), 'part-to-part'), C('p', R(B - A, B), 'complement'),
+      C('p', R(B, A), 'inversion'), PV('p', v, -1), PV('p', v, 1)];
+    var first = A + ' out of ' + B + ' is \\(' + fracTex([A, B]) + '\\). ', work;
+    if (to === 'f') work = first + simplifyLine(A, B);
+    else {
+      var P = FDP.fmt.pctTex(v), g = gcd(A, B);
+      work = A + ' out of ' + B + ' is \\(' + fracTex([A, B]) + (g > 1 ? ' = ' + fracTex(v) : '') + '\\). ';
+      if (100 % v[1] === 0) work += (v[1] === 100 ? 'Out of 100 is per cent: \\(' + P + '\\).' :
+        'Multiply top and bottom by ' + (100 / v[1]) + ': \\(' + fracTex(v) + ' = ' + fracTex([v[0] * 100 / v[1], 100]) + ' = ' + P + '\\).');
+      else work += thirdOfHundred(v) + ', so it is \\(' + P + '\\).';
+    }
+    var it = {
+      id: 'S4:' + to + ':' + A + '/' + B, stage: 4, kind: 'outof-' + to, A: A, B: B, answer: answer, asksSimplest: to === 'f',
+      family: 'v' + v[0] + '/' + v[1],
+      prompt: 'Write ' + A + ' out of ' + B + ' as ' + (to === 'f' ? 'a fraction in its simplest form.' : 'a percentage.'),
+      equation: A + ' out of ' + B + ' = \\(' + answer.tex + '\\)',
+      working: work,
+      pictures: nonNull([pizzaSpec(v), gridSpec(v)])
+    };
+    it.promptText = it.prompt;
+    return finish(it, c);
+  }
+
+  /* ---------- the four banks, enumerated from parameters ---------- */
+  var PAIRS = ['f>d', 'f>p', 'd>f', 'd>p', 'p>d', 'p>f'];
+  FDP.S1_VALUES = [[1, 2], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 10], [3, 10], [7, 10], [9, 10],
+    [1, 3], [2, 3], [1, 8], [1, 100]];
+  FDP.S2_VALUES = [[3, 8], [5, 8], [7, 8], [1, 20], [3, 20], [7, 20], [9, 20], [11, 20], [13, 20], [17, 20], [19, 20],
+    [3, 100], [7, 100], [9, 100], [11, 100], [13, 100], [17, 100], [21, 100], [37, 100], [49, 100], [63, 100], [81, 100], [99, 100]];
+  FDP.S2_SIMPLIFY_DENS = [6, 8, 10, 12, 15, 16, 18, 20, 24];
+  FDP.S3_FRACTIONS = [[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 8], [3, 8], [5, 8],
+    [1, 10], [3, 10], [7, 10]];
+  FDP.S3_MULTIPLES = [3, 4, 6, 7, 9, 12];        // the amount is the denominator times one of these
+  FDP.S3_PERCENTS = [[50, [30, 90, 140, 260]], [25, [40, 80, 120, 200]], [75, [20, 40, 80, 120]], [10, [70, 150, 230, 480]],
+    [20, [35, 60, 90, 250]], [30, [50, 80, 120, 200]], [40, [20, 45, 70, 150]], [60, [40, 70, 150, 300]],
+    [5, [60, 120, 180, 400]], [1, [300, 500, 800, 1200]], [15, [40, 80, 120, 200]], [90, [30, 50, 70, 200]]];
+  FDP.S4_FRACTIONS = [[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 10], [3, 10], [7, 10],
+    [9, 10], [1, 20], [3, 20], [7, 20], [11, 20], [1, 25], [4, 25], [6, 25], [12, 25]];
+  FDP.S4_SCALES = { 2: [7, 15], 3: [6, 12], 4: [6, 15], 5: [4, 12], 10: [3, 6], 20: [2, 3], 25: [2, 3] };
+
+  FDP.buildBank = function () {
+    var bank = { 1: [], 2: [], 3: [], 4: [] };
+    FDP.S1_VALUES.forEach(function (v) { PAIRS.forEach(function (p) { bank[1].push(convItem(1, v, p[0], p[2])); }); });
+    FDP.S2_VALUES.forEach(function (v) { PAIRS.forEach(function (p) { bank[2].push(convItem(2, v, p[0], p[2])); }); });
+    FDP.S2_SIMPLIFY_DENS.forEach(function (d) {
+      for (var n = 1; n < d; n++) if (gcd(n, d) > 1) bank[2].push(simpItem(n, d));
+    });
+    FDP.S3_FRACTIONS.forEach(function (f) {
+      FDP.S3_MULTIPLES.forEach(function (m) { bank[3].push(ofFractionItem(f[0], f[1], f[1] * m)); });
+    });
+    FDP.S3_PERCENTS.forEach(function (row) { row[1].forEach(function (N) { bank[3].push(ofPercentItem(row[0], N)); }); });
+    FDP.S4_FRACTIONS.forEach(function (f) {
+      FDP.S4_SCALES[f[1]].forEach(function (g) {
+        bank[4].push(outOfItem(f[0] * g, f[1] * g, 'f'));
+        bank[4].push(outOfItem(f[0] * g, f[1] * g, 'p'));
+      });
+    });
+    return bank;
+  };
+  FDP.BANK = FDP.buildBank();
+  FDP.index = function () {
+    var ix = {};
+    [1, 2, 3, 4].forEach(function (s) { FDP.BANK[s].forEach(function (it) { ix[it.id] = it; }); });
+    return ix;
+  };
+  var INDEX = FDP.index();
+  FDP.item = function (id) { return INDEX[id] || null; };
+  FDP.ids = function (stage) { return FDP.BANK[stage].map(function (it) { return it.id; }); };
+  FDP.family = function (id) { var it = FDP.item(id); return it.stage + ':' + it.family; };
+
+  /* ---------- randomness ---------- */
+  FDP.mulberry32 = function (seed) {
+    var t = seed >>> 0;
+    return function () {
+      t += 0x6D2B79F5;
+      var r = Math.imul(t ^ (t >>> 15), t | 1);
+      r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
+      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  FDP.seedOf = function (s) {           // FNV-1a, 32-bit
+    var h = 0x811c9dc5;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193); }
+    return h >>> 0;
+  };
+  FDP.shuffle = function (arr, rng) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  };
+
+  /* ---------- the UK date and the daily pizza ---------- */
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  FDP.ukDate = function (d) {
+    try {
+      var o = {};
+      new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' })
+        .formatToParts(d).forEach(function (p) { o[p.type] = p.value; });
+      if (o.year && o.month && o.day) return o.year + '-' + o.month + '-' + o.day;
+    } catch (e) { /* no time-zone support: fall back to the device's own date */ }
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  };
+  /* Take `k` from a shuffled list, skipping any whose family (same value, same stage) is already
+     taken. One pass over a finite list: it always ends, and every stage has more families than k. */
+  function takeDistinct(list, k) {
+    var out = [], fams = {};
+    for (var i = 0; i < list.length && out.length < k; i++) {
+      var f = FDP.family(list[i]);
+      if (fams[f]) continue;
+      fams[f] = true; out.push(list[i]);
+    }
+    return out;
+  }
+  FDP.dailySet = function (date) {
+    var rng = FDP.mulberry32(FDP.seedOf('free-daily-pizza:' + date)), out = [];
+    FDP.DAILY_MIX.forEach(function (m) { out = out.concat(takeDistinct(FDP.shuffle(FDP.ids(m[0]), rng), m[1])); });
+    return out;
+  };
+
+  /* ---------- practice sets ---------- */
+  /* No two neighbours share a family where a swap can fix it: first with a later item, else
+     with an earlier one that fits both places. One pass; each step scans the list at most once
+     each way, so it is bounded. */
+  FDP.spread = function (list) {
+    var a = list.slice(), n = a.length;
+    function fam(i) { return FDP.family(a[i]); }
+    function swap(i, j) { var t = a[i]; a[i] = a[j]; a[j] = t; }
+    for (var i = 1; i < n; i++) {
+      if (fam(i) !== fam(i - 1)) continue;
+      var moved = false, j;
+      for (j = i + 1; j < n && !moved; j++) {
+        if (fam(j) !== fam(i - 1)) { swap(i, j); moved = true; }
+      }
+      for (j = 0; j < i - 1 && !moved; j++) {
+        if (fam(j) !== fam(i - 1) && (i + 1 >= n || fam(j) !== fam(i + 1)) &&
+            (j === 0 || fam(i) !== fam(j - 1)) && fam(i) !== fam(j + 1)) { swap(i, j); moved = true; }
+      }
+    }
+    return a;
+  };
+  FDP.poolSize = function (stage) {
+    return stage === 'mixed' ? Math.min.apply(null, [1, 2, 3, 4].map(function (s) { return FDP.BANK[s].length; })) * 4 : FDP.BANK[stage].length;
+  };
+  /* A single stage: n from that stage. Mixed: n/4 from each stage, served stage by stage. */
+  FDP.practiceSet = function (stage, n, rng) {
+    if (stage !== 'mixed') return FDP.spread(FDP.shuffle(FDP.ids(stage), rng).slice(0, n));
+    var out = [];
+    [1, 2, 3, 4].forEach(function (s) { out = out.concat(FDP.spread(FDP.shuffle(FDP.ids(s), rng).slice(0, n / 4))); });
+    return out;
+  };
+
+  /* ---------- scoring (canon §7.3; single attempt, no hints before answering) ---------- */
+  FDP.scoreFor = function (seconds, correct) {
+    if (!correct) return 0;
+    var m = 1 / (1 + FDP.T_K * Math.log(1 + Math.max(0, seconds)));
+    return Math.max(1, Math.round(FDP.BASE * m));
+  };
+  /* Which leaderboard a run ranks on (Jon, 30 Sep 2026). The daily pizza ranks on its day's key;
+     practice ranks only when it is MIXED, on 'practice-q20' / 'practice-q40'. A single-stage run
+     ranks nowhere (null): a stage-1 round and a mixed round are not the same test, so they must not
+     share a board. It is kept in this device's score history instead, under its own key. */
+  FDP.boardFor = function (mode, stage, n, date) {
+    if (mode === 'daily') return 'daily-' + date;
+    return stage === 'mixed' ? 'practice-q' + n : null;
+  };
+  /* The analytics mode, and the key for history and personal bests: the board where there is one,
+     else 'stage-s1-q20' and so on, so a single-stage run stays distinguishable. */
+  FDP.modeFor = function (mode, stage, n) {
+    if (mode === 'daily') return 'daily';
+    return stage === 'mixed' ? 'practice-q' + n : 'stage-s' + stage + '-q' + n;
+  };
+
+  /* ---------- rendering (the UI draws only through these) ---------- */
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function hasKatex() { return typeof katex !== 'undefined' && window.MaffsText; }
+  /* Mixed prose and maths: MaffsText when KaTeX is there; otherwise the plain-text form, so the
+     game still plays with the CDN blocked. */
+  FDP.mathHtml = function (str, plain) {
+    if (hasKatex()) return MaffsText.html(str);
+    return FDP.stackHtml(plain !== undefined ? plain : FDP.texPlain(str));
+  };
+  FDP.promptHtml = function (it) { return FDP.mathHtml(it.prompt, it.promptText); };
+  FDP.optionHtml = function (o) {
+    if (hasKatex()) return katex.renderToString(o.tex, { throwOnError: false });
+    return FDP.stackHtml(o.text);
+  };
+  /* The no-KaTeX fallback. Every fraction is still drawn stacked, never as 3/4 or a small
+     glyph: n/d in plain text, the thirds glyphs, and \dfrac from TeX (carried here between
+     control-character markers so "33" and a following fraction cannot run together). */
+  function sfrac(n, d) { return '<span class="sfrac"><span>' + n + '</span><span>' + d + '</span></span>'; }
+  FDP.stackHtml = function (text) {
+    return esc(text)
+      .replace(/\u0001(\d+)\u0002(\d+)\u0003/g, function (m, n, d) { return sfrac(n, d); })
+      .replace(/(\d+)\/(\d+)/g, function (m, n, d) { return sfrac(n, d); })
+      .replace(/\u2153/g, sfrac(1, 3)).replace(/\u2154/g, sfrac(2, 3));
+  };
+  FDP.texPlain = function (str) {
+    return str.replace(/\\\(|\\\)/g, '')
+      .replace(/\\dfrac\{(\d+)\}\{(\d+)\}/g, '\u0001$1\u0002$2\u0003')
+      .replace(/\\dot\{(\d)\}/g, '$1\u0307')
+      .replace(/\\div/g, '\u00f7').replace(/\\times/g, '\u00d7').replace(/\\ldots/g, '\u2026')
+      .replace(/\\%/g, '%').replace(/ {2,}/g, ' ');
+  };
+  function f2(x) { return (Math.round(x * 100) / 100).toString(); }
+  function pizzaSvg(sp) {
+    var n = sp.slices, r = 44, out = '';
+    for (var i = 0; i < n; i++) {
+      var a0 = -Math.PI / 2 + 2 * Math.PI * i / n, a1 = -Math.PI / 2 + 2 * Math.PI * (i + 1) / n;
+      out += '<path class="slice' + (i < sp.shaded ? ' on' : '') + '" d="M50 50L' + f2(50 + r * Math.cos(a0)) + ' ' +
+        f2(50 + r * Math.sin(a0)) + 'A' + r + ' ' + r + ' 0 0 1 ' + f2(50 + r * Math.cos(a1)) + ' ' + f2(50 + r * Math.sin(a1)) + 'Z"/>';
+    }
+    return '<svg class="pizza" viewBox="0 0 100 100" aria-hidden="true"><circle class="crust" cx="50" cy="50" r="49"/>' + out + '</svg>';
+  }
+  function gridSvg(sp) {
+    var out = '';
+    for (var i = 0; i < 100; i++) {
+      out += '<rect class="sq' + (i < sp.shaded ? ' on' : '') + '" x="' + ((i % 10) * 10 + 0.6) + '" y="' +
+        (Math.floor(i / 10) * 10 + 0.6) + '" width="8.8" height="8.8" rx="1"/>';
+    }
+    return '<svg class="grid100" viewBox="0 0 100 100" aria-hidden="true">' + out + '</svg>';
+  }
+  function barHtml(sp) {
+    var out = '';
+    for (var i = 0; i < sp.parts; i++) {
+      out += '<span class="part' + (i < sp.shaded ? ' on' : '') + '">' + (sp.parts <= 10 ? sp.each : '') + '</span>';
+    }
+    return '<div class="bar" aria-hidden="true" style="grid-template-columns:repeat(' + sp.parts + ',1fr)">' + out + '</div>';
+  }
+  FDP.pictureCaption = function (sp) {
+    if (sp.type === 'pizza') return sp.shaded + ' of ' + sp.slices + ' equal slices';
+    if (sp.type === 'grid') return sp.shaded + ' of 100 squares' + (sp.each !== undefined ? ', each worth ' + sp.each : '');
+    return sp.total + ' in ' + sp.parts + ' equal parts of ' + sp.each + '; ' + sp.shaded + (sp.shaded === 1 ? ' part is ' : ' parts are ') + (sp.shaded * sp.each);
+  };
+  FDP.pictureHtml = function (it) {
+    if (!it.pictures.length) return '';
+    return '<div class="pics">' + it.pictures.map(function (sp) {
+      var body = sp.type === 'pizza' ? pizzaSvg(sp) : sp.type === 'grid' ? gridSvg(sp) : barHtml(sp);
+      var cap = FDP.pictureCaption(sp);
+      return '<figure class="pic" data-type="' + sp.type + '" role="img" aria-label="' + esc(cap) + '">' + body +
+        '<figcaption>' + esc(cap) + '</figcaption></figure>';
+    }).join('') + '</div>';
+  };
+
+  window.FDP = FDP;
+})();
+</script>
+
+<script>
+/* ---------- UI ---------- */
+(function () {
+  'use strict';
+  var FDP = window.FDP;
+  var SLUG = FDP.SLUG;
+  var CORRECT_DELAY = 900;
+  var STAGE_NAME = { 1: 'Stage 1 · Benchmarks', 2: 'Stage 2 · Wider set', 3: 'Stage 3 · Of an amount', 4: 'Stage 4 · Out of' };
+
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+
+  var stageSel = 'mixed', sessionLength = 20;
+  var mode = null;        // 'practice' | 'daily'
+  var board = null;       // leaderboard level and personal-best key: 'practice-q20' | 'practice-q40' | 'daily-YYYY-MM-DD'
+  var evMode = null;      // analytics mode: 'practice-q20' | 'practice-q40' | 'daily'; level is always 'all'
+  var playDate = null;    // the UK date of the pizza being played
+  var playStage = null;   // practice: 1-4 or 'mixed'
+  var histKey = null;     // score history and personal-best key: the board, else 'stage-s1-q20' etc.
+  var ids = [], qi = 0, item = null, state = 'menu';
+  var score = 0, correctCount = 0, t0 = 0, qStart = 0, clockTimer = null, missed = [];
+  var targets = {};       // UK date -> today's best on the board, when Firebase says so
+  var runId = 0;          // bumped per session, so a timer left over from an earlier one does nothing
+  function advanceFor(run) { return function () { if (run === runId && state !== 'asking') next(); }; }
+
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+  }
+  function clock() {
+    var s = Math.floor((Date.now() - t0) / 1000);
+    $('hudClock').textContent = Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+  }
+  function longDate(iso) {
+    var p = iso.split('-');
+    try {
+      return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2])).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+    } catch (e) { return iso; }
+  }
+
+  /* ---------- menu ---------- */
+  function renderMenu() {
+    var today = FDP.ukDate(new Date());
+    $('dailyDate').textContent = longDate(today);
+    showTarget(today);
+    var btns = $('stageList').querySelectorAll('.stage-btn');
+    for (var i = 0; i < btns.length; i++) btns[i].classList.toggle('selected', btns[i].dataset.stage === String(stageSel));
+    // Every stage holds 40 or more items, so the pool can always fill 20 and 40. The pool passed is
+    // capped at 40 so MaffsSession offers exactly the two boards, not an extra "All (n)" length.
+    MaffsSession.render({
+      mount: $('sessionSelect'), poolSize: Math.min(FDP.poolSize(stageSel), 40), preferred: FDP.LENGTHS,
+      selected: sessionLength, onChange: function (n) { sessionLength = n; }
+    });
+  }
+  /* Today's best, read live with standing(). With Firebase blocked or empty there is simply no
+     target: nothing waits on it and nothing reports an error. */
+  function showTarget(date) {
+    var box = $('dailyTarget');
+    if (targets[date] !== undefined) {
+      box.innerHTML = 'Today’s best: <b>' + targets[date] + '</b>. Beat it.';
+      box.style.display = 'block';
+      return;
+    }
+    box.style.display = 'none';
+    if (!window.MaffsLeaderboard || typeof MaffsLeaderboard.standing !== 'function') return;
+    try {
+      MaffsLeaderboard.standing(SLUG, 'daily-' + date).then(function (s) {
+        if (s && typeof s.allTimeBest === 'number') {
+          targets[date] = s.allTimeBest;
+          if (state === 'menu' && FDP.ukDate(new Date()) === date) showTarget(date);
+        }
+      }, function () {});
+    } catch (e) { /* no target */ }
+  }
+
+  /* ---------- play ---------- */
+  function begin(newMode) {
+    mode = newMode;
+    if (mode === 'daily') {
+      playDate = FDP.ukDate(new Date());
+      ids = FDP.dailySet(playDate);
+    } else {
+      playDate = null;
+      playStage = stageSel;
+      ids = FDP.practiceSet(stageSel, sessionLength, Math.random);
+    }
+    start(ids);
+  }
+  function start(list) {
+    ids = list;
+    runId++;
+    board = FDP.boardFor(mode, playStage, ids.length, playDate);   // null: this run ranks nowhere
+    evMode = FDP.modeFor(mode, playStage, ids.length);
+    histKey = board || evMode;
+    qi = 0; score = 0; correctCount = 0; missed = [];
+    var tgt = mode === 'daily' ? targets[playDate] : undefined;
+    $('hudTargetBox').style.display = tgt !== undefined ? '' : 'none';
+    $('hudTarget').textContent = tgt !== undefined ? tgt : '';
+    show('game');
+    t0 = Date.now(); clock();
+    clearInterval(clockTimer); clockTimer = setInterval(clock, 1000);
+    ev('game_started', { game_slug: SLUG, level: 'all', mode: evMode });
+    next();
+  }
+
+  function next() {
+    var fb = $('feedback');
+    if (window.MaffsNext) MaffsNext.clear(fb);
+    fb.innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= ids.length) { finish(); return; }
+    item = FDP.item(ids[qi]);
+    qi++;
+    if (window.scrollY > 0) window.scrollTo(0, 0);
+    $('hudQ').textContent = qi + ' of ' + ids.length;
+    $('hudScore').textContent = score;
+    $('stageTag').textContent = STAGE_NAME[item.stage];
+    $('prompt').innerHTML = FDP.promptHtml(item);
+    var byKey = {};
+    byKey[item.answer.key] = item.answer;
+    item.distractors.forEach(function (o) { byKey[o.key] = o; });
+    var keys = MaffsOptions.build(item.answer.key, item.distractors.map(function (o) { return o.key; }));
+    var box = $('options');
+    box.innerHTML = '';
+    keys.forEach(function (k) {
+      var b = document.createElement('button');
+      b.className = 'opt';
+      b.dataset.val = k;
+      b.setAttribute('aria-label', byKey[k].text);
+      b.innerHTML = FDP.optionHtml(byKey[k]);
+      b.addEventListener('click', function () { answer(b, byKey[k]); });
+      box.appendChild(b);
+    });
+    state = 'asking';
+    qStart = Date.now();
+  }
+
+  function answer(btn, chosen) {
+    if (state !== 'asking') return;
+    var ok = btn.dataset.val === item.answer.key;
+    var secs = (Date.now() - qStart) / 1000;
+    state = ok ? 'right' : 'wrong';
+    var all = $('options').querySelectorAll('.opt');
+    for (var i = 0; i < all.length; i++) all[i].disabled = true;
+    ev('question_answered', { game_slug: SLUG, level: 'all', mode: evMode, question_index: qi, correct: ok });
+    if (ok) {
+      correctCount++;
+      score += FDP.scoreFor(secs, true);
+      $('hudScore').textContent = score;
+      btn.classList.add('correct');
+      $('feedback').innerHTML = '<div class="fb-right">✓ ' + FDP.mathHtml(item.equation) + '</div>';
+      setTimeout(advanceFor(runId), CORRECT_DELAY);
+    } else {
+      missed.push(item.id);
+      showWrong(chosen);
+    }
+  }
+
+  /* Order (canon §7.6.1): the true statement and what was picked, the working, the pictures,
+     then Next. The pictures are their own block after the box, so a short screen can move them
+     below Next without touching the working. */
+  function showWrong(chosen) {
+    var fb = $('feedback');
+    $('qcard').classList.add('fb-open');
+    fb.innerHTML = '<div class="fb-wrong">' +
+      '<div class="fb-fact">' + FDP.mathHtml(item.equation) + '</div>' +
+      '<div class="fb-said">✗ You picked <b>' + FDP.optionHtml(chosen) + '</b>. ' + FDP.tagSays(chosen, item) + '</div>' +
+      '<div class="fb-work"><span class="rule">Working</span>' + FDP.mathHtml(item.working) + '</div>' +
+      '</div>' + FDP.pictureHtml(item);
+    MaffsNext.wrong({ mount: fb, onAdvance: advanceFor(runId) });
+  }
+
+  function finish() {
+    state = 'done';
+    clearInterval(clockTimer);
+    var secs = Math.floor((Date.now() - t0) / 1000);
+    var answered = ids.length;
+    ev('game_completed', { game_slug: SLUG, level: 'all', mode: evMode, score: score, questions_answered: answered, questions_correct: correctCount });
+    // Each board ranks alone: mixed practice at 20 and at 40 separately, and each UK day's pizza on
+    // its own key. Single-stage practice submits to no board at all (Jon, 30 Sep 2026).
+    if (board && window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, answered).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, histKey, score);
+    var pbKey = 'fdp_best_' + histKey;
+    var prev = parseInt(lsGet(pbKey) || '0', 10) || 0;
+    var pb = score > prev;
+    if (pb) {
+      ev('personal_best_set', { game_slug: SLUG, level: 'all', mode: evMode, score: score, previous_best: prev });
+      lsSet(pbKey, String(score));
+      if (mode === 'daily') pruneOldDaily(pbKey);
+    }
+    var tgt = mode === 'daily' ? targets[playDate] : undefined;
+    $('resTitle').textContent = mode === 'daily' ? 'Pizza eaten: ' + longDate(playDate) : 'Practice done';
+    $('resScore').textContent = score;
+    $('resStats').innerHTML = '<b>' + correctCount + '</b> right out of <b>' + answered + '</b> · time <b>' +
+      Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2) + '</b>' +
+      (pb ? '<br>New personal best' : '') +
+      (!board ? '<br><span class="unranked">Stage practice isn\u2019t ranked; play a mixed round to get on the board.</span>' : '') +
+      (tgt !== undefined ? '<br>' + (score > tgt ? 'You beat today’s best of <b>' + tgt + '</b>.' : 'Today’s best to beat: <b>' + tgt + '</b>.') : '');
+    $('resReview').innerHTML = missed.length ? 'Worth another look:<ul>' + missed.map(function (id) {
+      return '<li>' + FDP.mathHtml(FDP.item(id).equation) + '</li>';
+    }).join('') + '</ul>' : '';
+    show('results');
+  }
+  /* One personal-best key per day would pile up for ever; only today's is kept. */
+  function pruneOldDaily(keep) {
+    try {
+      var drop = [];
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k && k.indexOf('fdp_best_daily-') === 0 && k !== keep) drop.push(k);
+      }
+      drop.forEach(function (k) { localStorage.removeItem(k); });
+    } catch (e) {}
+  }
+
+  /* ---------- wiring ---------- */
+  var stageBtns = $('stageList').querySelectorAll('.stage-btn');
+  for (var i = 0; i < stageBtns.length; i++) {
+    stageBtns[i].addEventListener('click', function () {
+      stageSel = this.dataset.stage === 'mixed' ? 'mixed' : parseInt(this.dataset.stage, 10);
+      renderMenu();
+    });
+  }
+  $('dailyBtn').addEventListener('click', function () { begin('daily'); });
+  $('startBtn').addEventListener('click', function () { begin('practice'); });
+  $('againBtn').addEventListener('click', function () { begin(mode); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; renderMenu(); show('menu'); });
+
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Menu fractions are stacked by KaTeX; without it they read as words, never as 3/4.
+  if (typeof katex !== 'undefined') {
+    var texEls = document.querySelectorAll('[data-tex]');
+    for (var t = 0; t < texEls.length; t++) texEls[t].innerHTML = katex.renderToString(texEls[t].dataset.tex, { throwOnError: false });
+  }
+  renderMenu();
+
+  // Test hooks for scripts/verify-free-daily-pizza.py (read-only views of live state, and a way
+  // to serve a chosen list of items so every question shape can be measured on a phone).
+  FDP.ui = {
+    state: function () { return state; },
+    question: function () { return item ? { id: item.id, index: qi, answer: item.answer.key, keys: Array.prototype.map.call($('options').querySelectorAll('.opt'), function (b) { return b.dataset.val; }) } : null; },
+    session: function () { return { mode: mode, board: board, evMode: evMode, ids: ids.slice(), served: qi, score: score, date: playDate }; },
+    serve: function (list) { mode = 'practice'; playDate = null; playStage = FDP.item(list[0]).stage; start(list.slice()); }
+  };
+})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>
