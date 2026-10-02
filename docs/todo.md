@@ -168,6 +168,10 @@ The work was left out of the fresh repo's first commit and is held as patch file
    rounding, and the 'lost your personal allowance entirely' line (false below £125,140).
 2. **Reapply contracts-into-docs (APPROVED by Jon, 2 Oct 2026)** (PR #68 on the old repo: the wrong-keys batch 1 and
    Fermi Lab rebuild contracts as `docs/next-contract-*.md`), with the Fermi wheel-revs question's start city changed to Bristol (Jon's ruling; its id changes to match).
+3. **Review Firebase database rules (leaderboard write access) and consider HTTP-referrer restriction
+   on the web API key; Jon to make the GCP change.** Context (2 Oct 2026): the repo is public, and
+   GitHub secret scanning flagged the Firebase web config `apiKey` (alert #1, closed as won't fix: public
+   by design, access controlled by the database rules). The rules are `firebase/database.rules.json`.
 
 **Handover, 2 Oct 2026 (home, the theme pilot). Pick up here.**
 
