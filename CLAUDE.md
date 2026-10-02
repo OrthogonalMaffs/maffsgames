@@ -14,6 +14,20 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
 
+## Handover — 2026-10-02 (late): wrong-keys batch 1 + verifier coverage (PR #3)
+
+- **Wrong-keys batch 1 is reapplied** (patch 0001, old `2e1ffe5`): the keys in stat-attack,
+  graph-sketcher and growth-and-decay are corrected, and each game has a `scripts/verify-<slug>.py` that
+  recomputes every key from the question's own data. Each verifier failed on the uncorrected game
+  (83, 34 and 17 FAILs) and passes on the corrected one.
+- **CI now enforces verifier coverage.** `scripts/check-verifier-coverage.py` (Tiers 1 + 2, stdlib) fails
+  if any `scripts/verify-*.py` or `scripts/test-*.py` is not run by `check-site.yml`, unless its `HELD`
+  table declares it with a reason (only `verify-regression-rumble.py`). A new verifier must be added to
+  a group, or the run fails. Five verifiers were not running before this: the three above, plus
+  `verify-quadratic-factoriser.py` and `verify-parent-guides.py`. All five pass and are now in group B.
+- **Tax-theft is NOT started**; patch 0001 never held tax-theft work. Its rulings, and a docs trace of
+  the misread 'whole pounds' ruling, are to-do START items 4 and 5.
+
 ## Handover — 2026-10-02 (cutover): this repository started fresh
 
 - **Started fresh on 2 Oct 2026**, public, from one commit (`ab701b4`, then `6c478cb` for `CNAME`).

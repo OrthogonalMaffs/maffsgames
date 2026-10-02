@@ -22,6 +22,8 @@ name: check-site
 #   - the checks are split into parallel jobs, each with its own timeout. Nothing a
 #     check checks has changed; only where it runs.
 # Adding a content verifier: append it to the lighter of the two verifier groups.
+# scripts/check-verifier-coverage.py fails the run if any scripts/verify-*.py or
+# scripts/test-*.py is not listed here (or declared held in that script, with a reason).
 
 on:
   push:
@@ -93,6 +95,8 @@ jobs:
           # are reported, never failed.
           # The publish-scope check (stdlib, about a second): canon 7.7. Every file Pages would publish
           # is under a SITE path, and no SITE page references a file _config.yml excludes.
+          # The verifier-coverage check (stdlib, about a second): every scripts/verify-*.py and
+          # scripts/test-*.py is run by a group below, or declared held in that script with a reason.
           - name: Tiers 1 + 2 (page load, hang-loop scan)
             timeout: 15
             checks: |
@@ -101,6 +105,7 @@ jobs:
               Site footer (one canonical footer, one stylesheet)|python scripts/check-footer.py
               Theme (canon 7.5: one register, palette from the roster)|python scripts/check-theme.py
               Publish scope (canon 7.7: every published file is SITE; no page uses an excluded one)|python scripts/check-publish-scope.py
+              Verifier coverage (every verify-*/test-* script runs in CI, or is declared held)|python scripts/check-verifier-coverage.py
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
@@ -156,6 +161,11 @@ jobs:
           #    scenarios fail, held for Jon's data ruling, todo 1.26.)
           #  - chart-interrogator: every key and tolerance in exact arithmetic, marked
           #    through submitPhase1(); canon 7.1.2 caps; histogram classes whole numbers.
+          #  - stat-attack, graph-sketcher, growth-and-decay (wrong-keys batch 1): every key
+          #    recomputed from the question's own table, printed equation or printed model,
+          #    then marked through the page; each failed on the uncorrected game.
+          #  - quadratic-factoriser: every pooled item's factorisation and formula answer (SymPy).
+          #  - parent-guides: every figure a guide states, recomputed from the page's operands.
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |
@@ -169,6 +179,11 @@ jobs:
               Core Maths Paper 2A (independent recomputation + rendered page)|python scripts/verify-core-maths-paper2a.py
               Maths Court (independent recomputation + rendered page)|python scripts/verify-maths-court.py
               Chart Interrogator (independent recomputation of every key and tolerance)|python scripts/verify-chart-interrogator.py
+              Stat Attack (keys recomputed from each question's table)|python scripts/verify-stat-attack.py
+              Graph Sketcher (keys recomputed from each printed equation)|python scripts/verify-graph-sketcher.py
+              Growth and Decay (keys recomputed from each printed model)|python scripts/verify-growth-and-decay.py
+              Quadratic Factoriser (every pooled item recomputed, SymPy)|python scripts/verify-quadratic-factoriser.py
+              Parent guides (every stated figure recomputed from the page)|python scripts/verify-parent-guides.py
 
     steps:
       - uses: actions/checkout@v4
