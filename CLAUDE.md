@@ -20,7 +20,22 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-03 (night, latest): the seeded phone gate (todo §4 item 16)
+## Handover — 2026-10-03 (night, latest): every game on the spec map (todo §1.42)
+
+- **Jon ruled on a drafted table of all 28 unmapped games**; 27 are mapped, `truth-buster` is an
+  exception. `check-spec-mapping.py`: `UNMAPPED` is empty; new `EXCEPTIONS` dict (slug -> reason,
+  printed, never fails; fails if an exception is mapped, off the portal, or also in UNMAPPED). A new
+  live game that ships unmapped still fails.
+- **New spec-map sections:** GCSE Assessment Objectives (AO2, AO3) and BTEC Level 4 HNC Digital
+  Principles (Unit 4020 LO1). Further Maths gains DA1–DA2 (graphs, AQA 7367 discrete).
+- **Core Maths rows use AQA 1350's own titles** (canon §6.1 updated): §3.4 Critical analysis, §3.6
+  Probabilities and estimation, §3.11 Graphical methods, §3.12 Rates of change; games re-homed (Jon).
+  1350 has no hypothesis testing. GCSE "A7" row is now "A5 Rearranging formulae" (Formula Unlocked).
+- **Needs Jon:** the About wording that restores a full spec claim (proposed in the PR, not applied),
+  todo §1.49 (Decimal Detective duplicate values, resit game), §1.50 (Truth Buster −1/12 already keyed
+  false; keep or replace its explanation), §3.14 (portal level labels).
+
+## Handover — 2026-10-03 (night): the seeded phone gate (todo §4 item 16)
 
 - **Tier 1's phone pass is deterministic:** `PHONE_SEED` (mulberry32, FNV-1a of `location.pathname`)
   replaces `Math.random` before any page script. Three local runs gave byte-identical

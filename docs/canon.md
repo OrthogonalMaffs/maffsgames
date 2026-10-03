@@ -374,22 +374,22 @@ were all closed by games that were built and shipped without this table being up
 | §3.1 | Analysis of data | Stat Attack, Chart Interrogator, Core Maths Paper 1 | Covered |
 | §3.2 | Maths for personal finance | Tax Theft, Core Maths Paper 1 | Covered |
 | §3.3 | Estimation | Fermi Lab, Estimation Golf, Estimation Engine | Covered |
-| §3.4 | Graph sketching, tables of values / critical analysis | Graph Sketcher, Core Maths Papers 2A, 2B, 2C | Covered |
+| §3.4 | Critical analysis of given data and models | Core Maths Papers 2A, 2B, 2C | Covered |
 | §3.5 | Normal distribution, exponential models | Normal Navigator, Growth and Decay, Core Maths Paper 2A | Covered |
-| §3.6 | Hypothesis testing | Test the Claim, Core Maths Paper 2A | Covered |
+| §3.6 | Probabilities and estimation (sampling, point estimates, confidence intervals) | Core Maths Paper 2A | Covered (by the practice paper only) |
 | §3.7 | Correlation and regression | Correlation or Coincidence, Regression Rumble, Core Maths Paper 2A | Covered |
 | §3.8 | Critical path analysis | Glorious Gantt Game | Covered |
-| §3.9 | Expectation | **Expectation Station**, Core Maths Paper 2B | **Covered** — was listed as a gap until 08/09/2026 |
+| §3.9 | Expectation (incl. Venn and tree diagrams, combined events) | **Expectation Station**, Expected Damage, Given That, Screening Room, Probability Paradox, Core Maths Paper 2B | **Covered** — was listed as a gap until 08/09/2026 |
 | §3.10 | Cost-benefit analysis | **Better Value**, Core Maths Paper 2B | **Covered** — was listed as a gap until 08/09/2026 |
-| §3.11 | Graphical methods / rates of change, gradients | **Gradient Hunter**, Core Maths Paper 2C | **Covered** — was listed as a gap until 08/09/2026 |
-| §3.12 | Rates of change | Gradient Hunter, Core Maths Paper 2C | Covered |
+| §3.11 | Graphical methods | Graph Sketcher, Core Maths Paper 2C | Covered |
+| §3.12 | Rates of change | **Gradient Hunter**, Core Maths Paper 2C | **Covered** — was listed as a gap (as §3.11) until 08/09/2026 |
 | §3.13 | Exponential modelling | Growth and Decay, Core Maths Paper 2C | Covered |
 
-**One wording discrepancy, unresolved and left visible on purpose.** The practice-paper games tag §3.4 as
-"Critical Analysis" and split rates of change across §3.11/§3.12, where this table has carried "graph
-sketching, tables of values" at §3.4 since March. The games are right about what they contain either way;
-**AQA's own 1350 specification is the tiebreak** and nobody has checked it against this table. Do not
-silently pick one.
+**Titles are AQA 1350's own (resolved 3 Oct 2026, Jon's ruling, checked on aqa.org.uk).** This table carried "graph sketching" at §3.4, "hypothesis testing" at §3.6 and rates of change at
+§3.11 from March; AQA's are §3.4 Critical analysis, §3.6 Probabilities and estimation, §3.11 Graphical
+methods, §3.12 Rates of change. The games moved with them (spec map, todo §1.42): Graph Sketcher to
+§3.11, Gradient Hunter to §3.12, the probability games to §3.9. 1350 has no hypothesis testing, so Test
+the Claim is not a Core Maths game (it stays mapped at A-Level L1–L3 and HNC LO4).
 
 ## 6.2 Spec-Map Gaps
 
