@@ -20,7 +20,18 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-03 (night, latest): /updates/ entries + SR-10
+## Handover — 2026-10-03 (night, latest): the seeded phone gate (todo §4 item 16)
+
+- **Tier 1's phone pass is deterministic:** `PHONE_SEED` (mulberry32, FNV-1a of `location.pathname`)
+  replaces `Math.random` before any page script. Three local runs gave byte-identical
+  `--phone-widths` dumps. No game broke and no new overflow appeared. No retry logic anywhere in CI.
+- **`moments-master` (§1.40):** a sweep of every question in all 24 option orders at 320/375/390 found
+  two, `alevel[19]` and `alevel[40]`, at 320 only (KaTeX keys that cannot wrap; `alevel[19]` is also
+  prose in math mode, losing its spaces). Not fixed (needs layout or question changes; Jon's ruling:
+  §3.12 pass). Not in `tier1_phone_overflow`: the seeded draw fits, so an entry would be stale.
+- Next: START queue item 2 (wrong-keys batch 2) unless Jon reorders.
+
+## Handover — 2026-10-03 (night): /updates/ entries + SR-10
 
 - **/updates/:** Jon's two approved entries (Circle Theorem Spotter; Split It money to the penny)
   added under October's Corrected. Nothing queued for /updates/ now.
@@ -859,7 +870,15 @@ is the missing layer:
   size but not at 320×568 FAILs as "phone start unreachable". Four games start at neither by this
   method and are noted, not measured (`factor-theorem`, `six-sevens-bruv`, `trig-worms`,
   `test-the-claim`; reasons in the to-do's §1.34). Commented in `check-site.py` at "Tier 1, phone
-  width".
+  width". **The phone pass is seeded** (3 Oct 2026, to-do §4 item 16): `PHONE_SEED` replaces
+  `Math.random` before any page script runs with mulberry32 seeded by the FNV-1a hash of the page's own
+  `location.pathname` (e.g. `/games/moments-master/`), so every run draws the same first question and
+  option order and the verdict cannot flip between runs of one commit. Only the phone pass is seeded.
+  A seed measures one draw, not a game's worst question: a game whose width depends on the draw is
+  recorded in the to-do with its question ids (`moments-master`, §1.40), because a
+  `tier1_phone_overflow` entry for a draw that fits fails as stale. **Never add retry or re-run
+  logic to CI**; make the check deterministic instead. `--phone-widths FILE` writes every phone
+  measurement to JSON so two runs can be compared.
 - **Tier 2** scans every inline `<script>` and every `room.js` for the loop shape that froze
   modular-battle. Unlisted hits FAIL. Reviewed-safe loops live in `scripts/checker-allowlist.json`,
   keyed on **file + enclosing function name** (not line number), each with a written reason.
