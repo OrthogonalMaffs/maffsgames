@@ -193,7 +193,8 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
   (c) whether `?level=resit` is wanted, and what it does (no spec exists). The shortest path to a
   route by w/c 26 Oct is a static curated page, which needs (a) and (b), not `games.json`.
 - **§1.42 done (3 Oct, Jon's rulings):** every live game is on the spec map except `truth-buster` (an exception).
-  Needs Jon: the About wording that restores the full claim (proposed in the PR), §1.49, §1.50, §3.14.
+  About now says so, in Jon's wording (3 Oct, with the spec map intro, §3.5 title and Core heading tidied).
+  Needs Jon: §1.49, §3.14.
 - **Log Laws Solve (Level 3 class, w/c 12 Oct): done and live.** Jon to confirm the class date against
   the SOW. Its phone fit (+570px, §3.9 batch 9) matters only if the class plays on phones.
 
