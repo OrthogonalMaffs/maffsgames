@@ -2,7 +2,7 @@
 
 **Repository history:** this repository started fresh on 2 Oct 2026. Any PR number or commit hash from before then, here or in canon and CLAUDE.md, refers to `OrthogonalMaffs/maffsgames-archive` (archived, read-only). This repository's PRs are #1–#14 so far.
 
-Last updated: 3 Oct 2026 (home, night: the spec map): §1.42 done (27 games mapped to Jon's rulings, truth-buster an exception, UNMAPPED empty; new AO and HNC Unit 4020 sections; Core Maths titles corrected to AQA 1350 and games re-homed, canon §6.1); §1.49 (Decimal Detective duplicates), §1.50 (Truth Buster −1/12, checked) and §3.14 (portal level labels) filed. Before that, 3 Oct 2026 (home, night: the seeded phone gate): §4 item 16 done (tier 1's phone pass seeds Math.random per page; identical results across runs); §1.40 records moments-master's two overflowing questions (alevel[19], alevel[40]) for its §3.12 pass. Earlier the same night: SR-10 and §1.47 (PR #15), the two /updates/ entries (PR #16). Before that, 3 Oct 2026 (home, night: docs clear after PRs #10–#13): START rewritten (PRs #10–#13 live; canon §0.3 Standing rulings to check before stopping; /updates/ wording and §1.47 for Jon; §1.4 placed under "Also open"); the old START moved to history. Before that, 3 Oct 2026 (home: the shared answer checker): `MaffsAnswer` (schools/assets/answer.js, canon §7.1.3) built and required; tax-theft on it unchanged; split-it's §1.36 case done (PR #12); START item 4 rewritten; §1.47 (3.3 eggs) and §1.48 (speed working) filed. Before that, 3 Oct 2026 (home: Circle Theorem Spotter): §1.3 done (Q48 and Q19 to Jon's rulings, PR #11), new CI verifier, an /updates/ line queued in START. Before that, 3 Oct 2026 (home, late night: docs clear after PRs #5–#9): START rewritten (PRs #6–#9 live; the April rule and its April 2027 deadline; §1.42 for Jon; the moments-master flake's two hits). Before that, 3 Oct 2026 (home, the docs clear): START rewritten from `docs/status-2026-10-03.md`; §1.6 escalated (the About page's "no data collected" is live and false); §1.41 (NI at 12%), §3.13 (resit route, unspecified), §4 items 17 (four check scripts not in CI) and 18 (CI Contract B) filed; drift fixed (canon §7.5.1 note, archive PR labels, counts). Before that, 3 Oct 2026 (home, tax-theft): START item 4 done (band method on taxable income, two medium salaries replaced, penny keys, the money-answer standard as canon §7.1.3, closing line); §1.36 corrected to Jon's actual 'whole pounds' rule; items 5 and 6 are next. Before that, 2 Oct 2026 (home, phone-gate filing): §1.40 (moments-master overflows 320 on some questions) and §4 item 16 (seed the phone gate) filed; NEXT now starts with item 16, then the four correctness items with their Project-doc pointers. Before that, 2 Oct 2026 (home, theme rulings): Jon's rulings on the pilot filed (Split It's KS3 is "Foundation"; level keys never change, labels per game; age wording removed per game; §3.12 waits behind the correctness work, see NEXT). Before that, 2 Oct 2026 (home, the theme pilot): one adult register for every game, canon §7.5 rewritten, schools/assets/theme.css and scripts/check-theme.py in CI, Split It migrated as the pilot; the migration queue is §3.12. Before that, 2 Oct 2026 (cloud, the phone-width gate): tier 1 loads every served page and fails any page or game start over 320px wide, 44 known overflows recorded (§1.34, §4 item 12, PR 62); class findings filed as §1.37–§1.39. Before that, 2 Oct 2026 (cloud, late night: the B7 rebuild): B7 rebuilt (§1.31, PR 59), 277 KaTeX entries in 12 games ledgered; next is fix batch 1, drawn by Project Claude from the per-game counts in START. Before that, 2 Oct 2026 (cloud, late night): §1.33 fixed (PR 58), the stale Sequence Solver copy is a redirect stub; tier 1's index.html-only discovery filed as §4 item 12. Before that, 2 Oct 2026 (cloud, night): one site footer on every page, one stylesheet, checked in CI (§1.28, PR 57); §1.33 and §1.34 filed; next is phone-fit batch 2. Before that, 2 Oct 2026 (cloud, evening): KaTeX wrapper audit done (docs/audit-katex-wrappers.md), 386 strings in 19 games by B7's test, 522 in 25 by the second count; §1.32 filed; next is the fix contract. Before that, 2 Oct 2026 (cloud, late afternoon): Contract 2 live (PR 54), 100 asks name their form; proof-builder split out as §1.30; next is the read-only KaTeX wrapper audit. Before that, 2 Oct 2026 (cloud, afternoon): §4 item 10 live (PR 53), --write-ledger merges and refuses an unread bank; next is Contract 2. Before that, 2 Oct 2026 (cloud): item 7 live (PR 52), ledger identity by content for every rule; next is Contract 2. Before that, 2 Oct 2026 (home): B11 live (PR 51), options equal in value; split A 1 / B 68 / C 88 / D 42; next is item 7. Before that, 1 Oct 2026 (daytime, home): /updates/ launched; footer clipping filed as §1.28. Before that, 1 Oct 2026 (after midnight, home): section click tracking built, PR held for Jon's privacy wording. Before that, 1 Oct 2026 (late night, home): group A FIXED, 39 questions, scan 252 → 210, B11 next. Before that, 1 Oct 2026 (night, home) — the "What's changed" page built at /updates/, unlaunched (noindex, unlinked); check-site.py discovers root pages; the link check is in CI. Before that, 1 Oct 2026 (late, home) — CI in parallel in the Playwright image (~5 min), with a known font gap; before that the value-equivalent options scan made deterministic, group A is 39, see START. Before that, 1 Oct 2026 (late) — the shared Next control. Before that, 1 Oct 2026 (evening) — phone-fit batch 1. Before that, 1 Oct 2026 (afternoon) — the portal fits a phone (item 3.10). Before that, 1 Oct 2026 — New Shapes fits a phone; every game measured (item 3.9), see START. Before that, 30 Sep 2026 — Normal Navigator recomputed, see START. Before that, 29 Sep 2026 — **Graph Transformer: the 3 puzzle-authoring mismatches found
+Last updated: 3 Oct 2026 (home, late night: docs clear after PRs #14–#20): START rewritten (PRs #14–#20 live; the resit section is NEXT, with Jon's three calls first); the old START moved to history. Before that, 3 Oct 2026 (home, night: the spec map): §1.42 done (27 games mapped to Jon's rulings, truth-buster an exception, UNMAPPED empty; new AO and HNC Unit 4020 sections; Core Maths titles corrected to AQA 1350 and games re-homed, canon §6.1); §1.49 (Decimal Detective duplicates), §1.50 (Truth Buster −1/12, checked) and §3.14 (portal level labels) filed. Before that, 3 Oct 2026 (home, night: the seeded phone gate): §4 item 16 done (tier 1's phone pass seeds Math.random per page; identical results across runs); §1.40 records moments-master's two overflowing questions (alevel[19], alevel[40]) for its §3.12 pass. Earlier the same night: SR-10 and §1.47 (PR #15), the two /updates/ entries (PR #16). Before that, 3 Oct 2026 (home, night: docs clear after PRs #10–#13): START rewritten (PRs #10–#13 live; canon §0.3 Standing rulings to check before stopping; /updates/ wording and §1.47 for Jon; §1.4 placed under "Also open"); the old START moved to history. Before that, 3 Oct 2026 (home: the shared answer checker): `MaffsAnswer` (schools/assets/answer.js, canon §7.1.3) built and required; tax-theft on it unchanged; split-it's §1.36 case done (PR #12); START item 4 rewritten; §1.47 (3.3 eggs) and §1.48 (speed working) filed. Before that, 3 Oct 2026 (home: Circle Theorem Spotter): §1.3 done (Q48 and Q19 to Jon's rulings, PR #11), new CI verifier, an /updates/ line queued in START. Before that, 3 Oct 2026 (home, late night: docs clear after PRs #5–#9): START rewritten (PRs #6–#9 live; the April rule and its April 2027 deadline; §1.42 for Jon; the moments-master flake's two hits). Before that, 3 Oct 2026 (home, the docs clear): START rewritten from `docs/status-2026-10-03.md`; §1.6 escalated (the About page's "no data collected" is live and false); §1.41 (NI at 12%), §3.13 (resit route, unspecified), §4 items 17 (four check scripts not in CI) and 18 (CI Contract B) filed; drift fixed (canon §7.5.1 note, archive PR labels, counts). Before that, 3 Oct 2026 (home, tax-theft): START item 4 done (band method on taxable income, two medium salaries replaced, penny keys, the money-answer standard as canon §7.1.3, closing line); §1.36 corrected to Jon's actual 'whole pounds' rule; items 5 and 6 are next. Before that, 2 Oct 2026 (home, phone-gate filing): §1.40 (moments-master overflows 320 on some questions) and §4 item 16 (seed the phone gate) filed; NEXT now starts with item 16, then the four correctness items with their Project-doc pointers. Before that, 2 Oct 2026 (home, theme rulings): Jon's rulings on the pilot filed (Split It's KS3 is "Foundation"; level keys never change, labels per game; age wording removed per game; §3.12 waits behind the correctness work, see NEXT). Before that, 2 Oct 2026 (home, the theme pilot): one adult register for every game, canon §7.5 rewritten, schools/assets/theme.css and scripts/check-theme.py in CI, Split It migrated as the pilot; the migration queue is §3.12. Before that, 2 Oct 2026 (cloud, the phone-width gate): tier 1 loads every served page and fails any page or game start over 320px wide, 44 known overflows recorded (§1.34, §4 item 12, PR 62); class findings filed as §1.37–§1.39. Before that, 2 Oct 2026 (cloud, late night: the B7 rebuild): B7 rebuilt (§1.31, PR 59), 277 KaTeX entries in 12 games ledgered; next is fix batch 1, drawn by Project Claude from the per-game counts in START. Before that, 2 Oct 2026 (cloud, late night): §1.33 fixed (PR 58), the stale Sequence Solver copy is a redirect stub; tier 1's index.html-only discovery filed as §4 item 12. Before that, 2 Oct 2026 (cloud, night): one site footer on every page, one stylesheet, checked in CI (§1.28, PR 57); §1.33 and §1.34 filed; next is phone-fit batch 2. Before that, 2 Oct 2026 (cloud, evening): KaTeX wrapper audit done (docs/audit-katex-wrappers.md), 386 strings in 19 games by B7's test, 522 in 25 by the second count; §1.32 filed; next is the fix contract. Before that, 2 Oct 2026 (cloud, late afternoon): Contract 2 live (PR 54), 100 asks name their form; proof-builder split out as §1.30; next is the read-only KaTeX wrapper audit. Before that, 2 Oct 2026 (cloud, afternoon): §4 item 10 live (PR 53), --write-ledger merges and refuses an unread bank; next is Contract 2. Before that, 2 Oct 2026 (cloud): item 7 live (PR 52), ledger identity by content for every rule; next is Contract 2. Before that, 2 Oct 2026 (home): B11 live (PR 51), options equal in value; split A 1 / B 68 / C 88 / D 42; next is item 7. Before that, 1 Oct 2026 (daytime, home): /updates/ launched; footer clipping filed as §1.28. Before that, 1 Oct 2026 (after midnight, home): section click tracking built, PR held for Jon's privacy wording. Before that, 1 Oct 2026 (late night, home): group A FIXED, 39 questions, scan 252 → 210, B11 next. Before that, 1 Oct 2026 (night, home) — the "What's changed" page built at /updates/, unlaunched (noindex, unlinked); check-site.py discovers root pages; the link check is in CI. Before that, 1 Oct 2026 (late, home) — CI in parallel in the Playwright image (~5 min), with a known font gap; before that the value-equivalent options scan made deterministic, group A is 39, see START. Before that, 1 Oct 2026 (late) — the shared Next control. Before that, 1 Oct 2026 (evening) — phone-fit batch 1. Before that, 1 Oct 2026 (afternoon) — the portal fits a phone (item 3.10). Before that, 1 Oct 2026 — New Shapes fits a phone; every game measured (item 3.9), see START. Before that, 30 Sep 2026 — Normal Navigator recomputed, see START. Before that, 29 Sep 2026 — **Graph Transformer: the 3 puzzle-authoring mismatches found
 by the earlier par-verification pass (below) are now fixed, and that pass is a permanent CI
 check.** A-level #7 and #25 both targeted amplitude ×3, unreachable with only the ±2ⁿ y-scale
 buttons (Stretch ×2/×½ y + Reflect x-axis) — retargeted to amplitude ×2 on Jon's ruling: #7 is now
@@ -163,7 +163,7 @@ section.
 
 **Format of this block (standing, from 30 Sep 2026): it holds only the current handover — what is live, what is in flight, what needs Jon. When a new handover is written, the previous one moves word for word into "Done — full history" at the bottom of this file, under its date.**
 
-**Handover, 3 Oct 2026 (home, night: docs clear after PRs #10–#13). Pick up here.**
+**Handover, 3 Oct 2026 (home, late night: docs clear after PRs #14–#20). Pick up here.**
 
 **`docs/status-2026-10-03.md` is a dated snapshot taken after PR #4.** Read it for the resit picture,
 sizes and the paths to 26 Oct and 12 Oct; where it and this block differ, this block is newer.
@@ -173,37 +173,44 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
 §0.3's "Still stops for Jon" list.
 
 - **Live and verified (3 Oct), every changed page byte-identical to `main`, CI green, nothing open.**
-  PRs #3–#9 are recorded in the history below ("Done 3 Oct 2026 (home, PRs #10–#13)" holds the
+  PRs #10–#13 are recorded in the history below ("Done 3 Oct 2026 (home, PRs #14–#20)" holds the
   handover that listed them). Since then:
-  - PR #10 docs clear (`eae7e34`).
-  - PR #11 Circle Theorem Spotter (`a7f0d4a`, §1.3): Q48 and Q19 corrected to Jon's rulings (Q19's
-    figure now draws its point on the major arc); new CI `verify-circle-theorem-spotter.py`.
-  - PR #12 the shared answer checker (`2ac8ad8`): `schools/assets/answer.js` (`MaffsAnswer`, canon
-    §7.1.3, REQUIRED for typed numeric answers: `money()`, `decimal()`, `exact()`); tax-theft on it,
-    unchanged; split-it marks every typed answer exactly at its stated precision (§1.36's split-it case);
-    new CI `test-answer-js.py` and `verify-split-it.py`.
-  - PR #13 Standing rulings: canon §0.3, SR-1 to SR-9, and the CLAUDE.md apply-and-list rule.
-- **/updates/ entries done (3 Oct, Jon's approved wording):** "Circle Theorem Spotter: two answers
-  corrected" and "Split It now marks money to the penny", under October's Corrected.
-- **§1.47 done (3 Oct, Jon's ruling = canon SR-10):** split-it's GCSE Pancakes scales only by ×2 or ×3.
+  - PR #14 docs clear (`49dda70`).
+  - PR #15 SR-10, whole items scale by whole numbers (`1f37b4b`, §1.47): split-it's GCSE Pancakes
+    scales only by ×2 or ×3; `verify-split-it.py` fails any unitless ingredient scaled to a fraction.
+  - PR #16 /updates/ (`799a6e6`): Jon's entries for Circle Theorem Spotter and Split It money.
+  - PR #17 seeded phone gate (`6e86016`, §4 item 16): tier 1's phone pass seeds `Math.random` per page
+    (`PHONE_SEED`); identical results run to run; no retry logic. `moments-master` overflows 320 on
+    `alevel[19]` and `alevel[40]` only, recorded in §1.40 for its §3.12 pass.
+  - PR #18 spec map (`e4e4736`, §1.42): every live game mapped except `truth-buster` (a named exception
+    in `check-spec-mapping.py`'s `EXCEPTIONS`); new GCSE Assessment Objectives and HNC Unit 4020 sections;
+    Core Maths rows on AQA 1350's own titles with the games re-homed (canon §6.1).
+  - PR #19 About spec claim restored in Jon's wording (`b63c1d2`, §1.6), with the spec-map tidy
+    (intro, §3.5 "The normal distribution", Core heading).
+  - PR #20 Truth Buster −1/12 (`1a9a338`, §1.50): still FALSE, Jon's explanation, Learn More links
+    Mathologer's reply.
+- **Needs Jon: §1.49**, Decimal Detective lists the same value twice in three ordering puzzles (a resit
+  candidate game; check the marking, then a replacement value each).
+- **Needs Jon: §3.14**, portal level labels: five Year 6 games with KS3 content, Seven Bridges' KS3/GCSE
+  levels, Truth Buster's single mixed session.
 - **Diary: April 2027.** Advance the teaching year to 2026/27 (canon §7.1.4) before 30 April, or CI
   fails. Plan 5's £25,000 becomes usable then (it is the 2026/27 figure).
-- **Needs Jon before the resit route (§3.13):** (a) which games make the resit suite (the audit's 31
-  candidates are unruled); (b) what `/resit/` is (a curated page, or the portal filtering redesign);
-  (c) whether `?level=resit` is wanted, and what it does (no spec exists). The shortest path to a
-  route by w/c 26 Oct is a static curated page, which needs (a) and (b), not `games.json`.
-- **§1.42 done (3 Oct, Jon's rulings):** every live game is on the spec map except `truth-buster` (an exception).
-  About now says so, in Jon's wording (3 Oct, with the spec map intro, §3.5 title and Core heading tidied).
-  Truth Buster's −1/12 explanation is Jon's wording (§1.50 done). Needs Jon: §1.49, §3.14.
 - **Log Laws Solve (Level 3 class, w/c 12 Oct): done and live.** Jon to confirm the class date against
   the SOW. Its phone fit (+570px, §3.9 batch 9) matters only if the class plays on phones.
 
-**Queue (Jon's NEXT of 2 Oct, with today's state; the order is Jon's to change):**
+**Queue (Jon, 3 Oct: the resit section of the site is next; the rest is Jon's NEXT of 2 Oct):**
 
-1. ~~**Seeded phone gate, §4 item 16**~~ **DONE 3 Oct 2026 (night):** the phone pass seeds
-   `Math.random` per page (§4 item 16); identical results across runs; no retry logic. `moments-master`
-   overflows 320 only on `alevel[19]` and `alevel[40]`, which the seeded draw does not reach: recorded
-   in §1.40 with those ids (no allowlist entry, which would be stale), fix in its §3.12 pass.
+1. **Build the resit section of the site (§3.13). NEXT.** Nothing is built: `/resit/` is a live 404,
+   there is no `games.json` and no `?level=resit`. Jon's three calls come first: (a) which games make the
+   resit suite (audit §10.5's 31 candidates are unruled; the audit itself rules `bearing-blitz` out as a
+   topic, and the two strand games `six-sevens-bruv` and `free-daily-pizza` are in by design); (b) what
+   `/resit/` is (a static curated page, or the portal filtering redesign); (c) whether `?level=resit` is
+   wanted and what it does. The shortest path to a route by w/c 26 Oct is a static curated page (needs
+   (a) and (b) only; publish scope, sitemap, footer, canonical and tier 1 all apply). Ready to use: every
+   live game is now on the spec map, so the page can point lecturers at it (§1.42); audit §10.6 tags every
+   Foundation part; audit §10.7's ruling gives every resit game an adult register (§3.12's theme
+   migration is how a game gets one). Related: §1.49 (a candidate game's bug), §3.14 (Year 6 labels on
+   candidate games).
 2. **Wrong-keys batch 2.** Contract to come from Project Claude.
 3. **Fermi Lab rebuild.** Contracts are Project files (`claude/fermi-lab-review-2026-10-02.md`,
    `claude/fermi-lab-rebuild-2026-10-02.md`); ask Jon if they are not in the session.
@@ -229,13 +236,15 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
 - **§1.4**, matrix-crunch and formula-unlocked's missing fourth distractors (Jon authors them; SR-4).
 
 **Local suite on Windows (known, not regressions):** tier 1's 14 "stale: now fits" phone entries
-(fallback font), Test the Claim (no node on PATH), and an occasional Free Daily Pizza page-load
-timeout under load (passes when re-run alone). CI is the judge. There is no local runner script: run
-each `label|command` line of `.github/workflows/check-site.yml` in turn.
+(fallback font), Test the Claim (no node on PATH), and an occasional page-load timeout under load
+(Free Daily Pizza; once Truth Buster; passes when re-run alone). `verify-parent-guides.py` fails only
+when its output is piped through a cp1252 console: set `PYTHONIOENCODING=utf-8`. CI is the judge.
+There is no local runner script: run each `label|command` line of `.github/workflows/check-site.yml`
+in turn.
 
 **Repository history.** This repository started fresh on 2 Oct 2026. In this file, canon and CLAUDE.md,
 any PR number or commit hash from before 2 Oct 2026 refers to `OrthogonalMaffs/maffsgames-archive`
-(archived, read-only). This repository's own PRs are #1–#14 so far.
+(archived, read-only). This repository's own PRs are #1–#20 so far.
 
 **A live bug is never a decision item, even when its fix needs a call.** It goes at the top of
 this file as a bug, filed under §1. Expectation Station's stage-1 lock sat for three days under
@@ -982,6 +991,84 @@ Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resi
 ---
 
 ## Done — full history
+
+### Done 3 Oct 2026 (home, PRs #14–#20)
+
+*Moved here word for word from the START OF NEXT SESSION block on 3 Oct 2026 (home, late night: docs clear after PRs #14–#20).*
+
+**Handover, 3 Oct 2026 (home, night: docs clear after PRs #10–#13). Pick up here.**
+
+**`docs/status-2026-10-03.md` is a dated snapshot taken after PR #4.** Read it for the resit picture,
+sizes and the paths to 26 Oct and 12 Oct; where it and this block differ, this block is newer.
+
+**Before stopping a contract for a decision, check canon §0.3, the Standing rulings (SR-1 to SR-10).**
+If one applies, apply it and list "SR-n applied: …" in the PR; stop only for what none covers, or for
+§0.3's "Still stops for Jon" list.
+
+- **Live and verified (3 Oct), every changed page byte-identical to `main`, CI green, nothing open.**
+  PRs #3–#9 are recorded in the history below ("Done 3 Oct 2026 (home, PRs #10–#13)" holds the
+  handover that listed them). Since then:
+  - PR #10 docs clear (`eae7e34`).
+  - PR #11 Circle Theorem Spotter (`a7f0d4a`, §1.3): Q48 and Q19 corrected to Jon's rulings (Q19's
+    figure now draws its point on the major arc); new CI `verify-circle-theorem-spotter.py`.
+  - PR #12 the shared answer checker (`2ac8ad8`): `schools/assets/answer.js` (`MaffsAnswer`, canon
+    §7.1.3, REQUIRED for typed numeric answers: `money()`, `decimal()`, `exact()`); tax-theft on it,
+    unchanged; split-it marks every typed answer exactly at its stated precision (§1.36's split-it case);
+    new CI `test-answer-js.py` and `verify-split-it.py`.
+  - PR #13 Standing rulings: canon §0.3, SR-1 to SR-9, and the CLAUDE.md apply-and-list rule.
+- **/updates/ entries done (3 Oct, Jon's approved wording):** "Circle Theorem Spotter: two answers
+  corrected" and "Split It now marks money to the penny", under October's Corrected.
+- **§1.47 done (3 Oct, Jon's ruling = canon SR-10):** split-it's GCSE Pancakes scales only by ×2 or ×3.
+- **Diary: April 2027.** Advance the teaching year to 2026/27 (canon §7.1.4) before 30 April, or CI
+  fails. Plan 5's £25,000 becomes usable then (it is the 2026/27 figure).
+- **Needs Jon before the resit route (§3.13):** (a) which games make the resit suite (the audit's 31
+  candidates are unruled); (b) what `/resit/` is (a curated page, or the portal filtering redesign);
+  (c) whether `?level=resit` is wanted, and what it does (no spec exists). The shortest path to a
+  route by w/c 26 Oct is a static curated page, which needs (a) and (b), not `games.json`.
+- **§1.42 done (3 Oct, Jon's rulings):** every live game is on the spec map except `truth-buster` (an exception).
+  About now says so, in Jon's wording (3 Oct, with the spec map intro, §3.5 title and Core heading tidied).
+  Truth Buster's −1/12 explanation is Jon's wording (§1.50 done). Needs Jon: §1.49, §3.14.
+- **Log Laws Solve (Level 3 class, w/c 12 Oct): done and live.** Jon to confirm the class date against
+  the SOW. Its phone fit (+570px, §3.9 batch 9) matters only if the class plays on phones.
+
+**Queue (Jon's NEXT of 2 Oct, with today's state; the order is Jon's to change):**
+
+1. ~~**Seeded phone gate, §4 item 16**~~ **DONE 3 Oct 2026 (night):** the phone pass seeds
+   `Math.random` per page (§4 item 16); identical results across runs; no retry logic. `moments-master`
+   overflows 320 only on `alevel[19]` and `alevel[40]`, which the seeded draw does not reach: recorded
+   in §1.40 with those ids (no allowlist entry, which would be stale), fix in its §3.12 pass.
+2. **Wrong-keys batch 2.** Contract to come from Project Claude.
+3. **Fermi Lab rebuild.** Contracts are Project files (`claude/fermi-lab-review-2026-10-02.md`,
+   `claude/fermi-lab-rebuild-2026-10-02.md`); ask Jon if they are not in the session.
+4. **Move the remaining money games onto `MaffsAnswer` (canon §7.1.3, SR-1 to SR-3).** Tax-theft and
+   split-it use it. Still marking with their own code: `chart-interrogator`, `graph-sketcher`,
+   `growth-and-decay`, `stat-attack`, `test-the-claim` (not yet classified as having money answers;
+   classify each, then move every typed numeric answer onto `money()`, `decimal()` or `exact()` and
+   drop its bands, keeping §7.1.2's capped band for graph readings). `growth-and-decay` should mark by
+   its `sf` field (an s.f. variant of the helper). §1.48 (split-it's speed working prints a float, and
+   "miles" shows twice) can ride with it. Skip-after-three rides with it; its contract is to come from
+   Project Claude.
+5. **Then §3.12**, the theme migration queue, starting with batch 2 (`distinctly-average`,
+   `estimation-golf`, `angle-ace`) together with their phone fit.
+
+**Also open, not yet placed in that order:**
+
+- **Patch 0002** (`E:\jon\maffsgames-c1\patches\0002-*.patch`, archive PR 68: contracts into `docs/`,
+  Fermi start city changed to Bristol, id to match). Approved. The commit hook blocks it until the
+  city is changed. S–M.
+- **Firebase rules review** (leaderboard write access); Jon makes the GCP key restriction. S–M.
+- **§4 item 17, the four check scripts not in CI**; **§4 item 18, CI Contract B**; then Jon adds branch
+  protection (none today).
+- **§1.4**, matrix-crunch and formula-unlocked's missing fourth distractors (Jon authors them; SR-4).
+
+**Local suite on Windows (known, not regressions):** tier 1's 14 "stale: now fits" phone entries
+(fallback font), Test the Claim (no node on PATH), and an occasional Free Daily Pizza page-load
+timeout under load (passes when re-run alone). CI is the judge. There is no local runner script: run
+each `label|command` line of `.github/workflows/check-site.yml` in turn.
+
+**Repository history.** This repository started fresh on 2 Oct 2026. In this file, canon and CLAUDE.md,
+any PR number or commit hash from before 2 Oct 2026 refers to `OrthogonalMaffs/maffsgames-archive`
+(archived, read-only). This repository's own PRs are #1–#14 so far.
 
 ### Done 3 Oct 2026 (home, PRs #10–#13)
 

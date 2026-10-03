@@ -20,7 +20,16 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-03 (night, latest): every game on the spec map (todo §1.42)
+## Handover — 2026-10-03 (late night, latest): docs clear after PRs #14–#20
+
+- **Start here: `docs/todo.md`'s START block** (rewritten 3 Oct, late night). Nothing is open; PRs
+  #1–#20 are merged and live. **Next is the resit section of the site (todo §3.13, START queue item 1):**
+  Jon's three calls come first (suite membership, what `/resit/` is, `?level=resit` or not).
+- **Needs Jon:** todo §1.49 (Decimal Detective duplicate values), §3.14 (portal level labels).
+- **April 2027:** advance the teaching year (canon §7.1.4) before 30 April or `check-tax-year.py`
+  fails CI.
+
+## Handover — 2026-10-03 (night): every game on the spec map (todo §1.42)
 
 - **Jon ruled on a drafted table of all 28 unmapped games**; 27 are mapped, `truth-buster` is an
   exception. `check-spec-mapping.py`: `UNMAPPED` is empty; new `EXCEPTIONS` dict (slug -> reason,
