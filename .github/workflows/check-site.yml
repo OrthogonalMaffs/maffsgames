@@ -116,6 +116,7 @@ jobs:
               Spec mapping (every live game is on the spec map, or in UNMAPPED)|python scripts/check-spec-mapping.py
               Public claims (no page says no data is collected)|python scripts/check-public-claims.py
               Tax year (canon 7.1.4: every tax game registered, states only the teaching year)|python scripts/check-tax-year.py
+              GCSE Resit page (every game live, mapped, offering the level its card names; SR-11)|python scripts/check-resit-page.py
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
