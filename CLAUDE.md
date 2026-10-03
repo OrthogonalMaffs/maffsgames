@@ -33,8 +33,8 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
   1350 has no hypothesis testing. GCSE "A7" row is now "A5 Rearranging formulae" (Formula Unlocked).
 - **About spec line restored in Jon's wording** ("every game is mapped ... apart from one enrichment game"),
   with the spec-map tidy (intro, §3.5 = AQA "The normal distribution", Core heading). **Needs Jon:**
-  todo §1.49 (Decimal Detective duplicate values, resit game), §1.50 (Truth Buster −1/12 already keyed
-  false; keep or replace its explanation), §3.14 (portal level labels).
+  todo §1.49 (Decimal Detective duplicate values, resit game), §3.14 (portal level labels). §1.50 done:
+  Truth Buster's −1/12 stays FALSE, with Jon's explanation and a link to Mathologer's reply.
 
 ## Handover — 2026-10-03 (night): the seeded phone gate (todo §4 item 16)
 
