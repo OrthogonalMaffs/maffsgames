@@ -520,6 +520,39 @@ separately, and a wrong form is never a mark.**
   valid number exactly as typed, so 114.4 and 114.40 can be told apart. `scripts/verify-tax-theft.py`
   checks all three outcomes on every step of every salary.
 
+### 7.1.4 UK tax and NI rates in use
+
+Ruled by Jon, 3 Oct 2026.
+
+**Teaching year: 2025/26.** Every game that states or uses UK income tax or National Insurance uses
+the 2025/26 figures below, for England, Wales and Northern Ireland (never Scottish rates).
+**Why 2025/26, not the current tax year:** exam papers are set well before the tax year they are sat
+in, so the June 2027 series most likely uses 2025/26 figures.
+
+**Review point: every summer, after the exam series.** Check the series' papers and the board's
+guidance for the year they used, then move the teaching year (this table, `scripts/uk_rates.py`, and
+every game `scripts/check-tax-year.py` registers) in one PR.
+
+| Figure | 2025/26 | Source |
+|---|---|---|
+| Personal allowance | £12,570 | [Rates and thresholds for employers 2025 to 2026](https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2025-to-2026) |
+| Allowance taper | −£1 for every £2 of adjusted net income over £100,000; zero at £125,140 and above | [Income over £100,000](https://www.gov.uk/income-tax-rates/income-over-100000) |
+| Basic rate, 20% | the first £37,700 of **taxable** income | employers 2025 to 2026 (above) |
+| Higher rate, 40% | taxable income £37,701 to £125,140 | employers 2025 to 2026 (above) |
+| Additional rate, 45% | taxable income above £125,140 | employers 2025 to 2026 (above) |
+| Employee Class 1 NI, primary threshold | £12,570 a year (£242 a week, £1,048 a month) | employers 2025 to 2026 (above) |
+| Employee Class 1 NI, upper earnings limit | £50,270 a year (£967 a week, £4,189 a month) | employers 2025 to 2026 (above) |
+| Employee Class 1 NI, main rate | 8% between the primary threshold and the upper earnings limit | employers 2025 to 2026 (above) |
+| Employee Class 1 NI, above the UEL | 2% | employers 2025 to 2026 (above) |
+
+- The bands apply to **taxable** income (salary minus the allowance), so the basic band does not widen
+  when the allowance tapers (canon §7.1.3's tax-theft, todo §1.36).
+- **One copy in code:** `scripts/uk_rates.py`. Verifiers import it, as statistics verifiers import
+  `stats_common.py`; none restates a rate. `verify-tax-theft.py` and `verify-core-maths-paper1-tax.py` use it.
+- **Checked in CI:** `scripts/check-tax-year.py` registers every game that states or uses UK tax or
+  NI. A game that does so without being registered fails, and so does a registered game that states a
+  tax year other than the teaching year.
+
 ## 7.2 KaTeX Reference — Common Patterns
 
 | **Pattern** | **LaTeX** | **Output** |
