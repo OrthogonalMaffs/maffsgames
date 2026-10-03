@@ -52,13 +52,18 @@ from fractions import Fraction as F
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
+import uk_rates as ur  # noqa: E402  (canon §7.1.4: the one copy of the rates)
 
 SLUG = 'tax-theft'
 
-# HMRC 2025/26 (England, Wales and Northern Ireland), from the gov.uk pages above.
-HMRC = dict(personalAllowance=12570, paReducesAbove=100000, basicRateBand=37700,
-            higherRateLimit=125140, basicRate=0.20, higherRate=0.40, additionalRate=0.45,
-            niPrimaryThreshold=12570, niUpperLimit=50270, niMainRate=0.08, niHigherRate=0.02)
+# The game's TAX_RULES must equal the teaching year's figures (scripts/uk_rates.py, canon §7.1.4).
+# The game holds rates as JS numbers (0.2, 0.08), so the rates are compared as floats.
+HMRC = dict(personalAllowance=ur.PERSONAL_ALLOWANCE, paReducesAbove=ur.PA_TAPER_FROM,
+            basicRateBand=ur.BASIC_RATE_BAND, higherRateLimit=ur.HIGHER_RATE_LIMIT,
+            basicRate=float(ur.BASIC_RATE), higherRate=float(ur.HIGHER_RATE),
+            additionalRate=float(ur.ADDITIONAL_RATE), niPrimaryThreshold=ur.NI_PRIMARY_THRESHOLD,
+            niUpperLimit=ur.NI_UPPER_EARNINGS_LIMIT, niMainRate=float(ur.NI_MAIN_RATE),
+            niHigherRate=float(ur.NI_UPPER_RATE))
 HARD = [106000, 114000, 120000, 130000]
 FORMAT_MSG = ('Right amount, but money always has two decimal places. In the exam, '
               '£{raw} loses the mark. Fix it and resubmit.')
@@ -69,13 +74,11 @@ PAYSLIP = {'pa': 'payPA', 'taxable': 'payTaxable', 'tax': 'payTax', 'ni': 'payNI
 
 
 def keys(gross):
-    """Every step's key as an exact Fraction of pounds, from HMRC's rules."""
-    pa = max(0, 12570 - max(0, gross - 100000) // 2)
-    taxable = gross - pa
-    tax = (min(taxable, 37700) * F(20, 100)
-           + max(0, min(taxable, 125140) - 37700) * F(40, 100)
-           + max(0, taxable - 125140) * F(45, 100))
-    ni = max(0, min(gross, 50270) - 12570) * F(8, 100) + max(0, gross - 50270) * F(2, 100)
+    """Every step's key as an exact Fraction of pounds, from HMRC's rules (scripts/uk_rates.py)."""
+    pa = ur.personal_allowance(gross)
+    taxable = ur.taxable_income(gross)
+    tax = ur.income_tax(gross)
+    ni = ur.employee_ni(gross)
     deductions = tax + ni
     exact = (gross - deductions) / 12
     net = Decimal(exact.numerator) / Decimal(exact.denominator)
@@ -256,9 +259,10 @@ def check_params(rep, sal, rules, year):
             rep.fail('salaries', 'easy %d' % g, 'not a basic-rate salary')
     for name, v in HMRC.items():
         if rules.get(name) != v:
-            rep.fail('TAX_RULES', name, '%r, HMRC 2025/26 is %r' % (rules.get(name), v))
-    if rules.get('taxYear') != '2025/26' or year != '2025/26':
-        rep.fail('tax year', 'stated', 'game says %r / payslip %r, expected 2025/26' % (rules.get('taxYear'), year))
+            rep.fail('TAX_RULES', name, '%r, HMRC %s is %r' % (rules.get(name), ur.TEACHING_YEAR, v))
+    if rules.get('taxYear') != ur.TEACHING_YEAR or year != ur.TEACHING_YEAR:
+        rep.fail('tax year', 'stated', 'game says %r / payslip %r, expected %s'
+                 % (rules.get('taxYear'), year, ur.TEACHING_YEAR))
 
 
 def run(patch_js=None, only=None, verbose=False):

@@ -102,6 +102,8 @@ jobs:
           # or a stale UNMAPPED entry fails. The public-claims check (stdlib, about a second): no published
           # page says no data is collected (the site records anonymous gameplay statistics; the privacy
           # page is the source of truth). Both added 3 Oct 2026 after the About page claimed both.
+          # The tax-year check (stdlib, about a second): canon 7.1.4. Every game with UK tax/NI wording
+          # is registered, and any tax year it prints is scripts/uk_rates.py's teaching year.
           - name: Tiers 1 + 2 (page load, hang-loop scan)
             timeout: 15
             checks: |
@@ -113,6 +115,7 @@ jobs:
               Verifier coverage (every verify-*/test-* script runs in CI, or is declared held)|python scripts/check-verifier-coverage.py
               Spec mapping (every live game is on the spec map, or in UNMAPPED)|python scripts/check-spec-mapping.py
               Public claims (no page says no data is collected)|python scripts/check-public-claims.py
+              Tax year (canon 7.1.4: every tax game registered, states only the teaching year)|python scripts/check-tax-year.py
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
@@ -173,6 +176,9 @@ jobs:
           #    then marked through the page; each failed on the uncorrected game.
           #  - quadratic-factoriser: every pooled item's factorisation and formula answer (SymPy).
           #  - parent-guides: every figure a guide states, recomputed from the page's operands.
+          #  - uk_rates: the teaching year's tax/NI figures (canon 7.1.4), unit tests against gov.uk.
+          #  - core-maths-paper1 tax/NI: its income tax, NI and budget items recomputed with uk_rates;
+          #    each NI distractor must be a named error. Failed on the 12% NI file (todo 1.41).
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |
@@ -192,6 +198,8 @@ jobs:
               Quadratic Factoriser (every pooled item recomputed, SymPy)|python scripts/verify-quadratic-factoriser.py
               Parent guides (every stated figure recomputed from the page)|python scripts/verify-parent-guides.py
               Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)|python scripts/verify-tax-theft.py
+              UK rates module (unit tests against the gov.uk 2025/26 figures)|python scripts/uk_rates.py --selftest
+              Core Maths Paper 1 tax and NI (recomputed with uk_rates)|python scripts/verify-core-maths-paper1-tax.py
 
     steps:
       - uses: actions/checkout@v4

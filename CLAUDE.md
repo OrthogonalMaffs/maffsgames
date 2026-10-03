@@ -14,6 +14,20 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
 
+## Handover — 2026-10-03 (latest): UK tax and NI rates, one copy
+
+- **Teaching year 2025/26 (canon §7.1.4,** Jon: papers are set before the tax year, so June 2027 most
+  likely uses 2025/26; review every summer after the exam series). The figures live once in
+  `scripts/uk_rates.py`; `verify-tax-theft.py` and the new `verify-core-maths-paper1-tax.py` import it.
+- **core-maths-paper1 fixed (todo §1.41):** NI 12% → 8% in both questions; Q30's distractors are named
+  errors; Q36's savings £300 → £350 (it was mis-keyed even at 12%). Verifier failed old, passes new.
+- **`scripts/check-tax-year.py` (CI):** registers the three tax games (tax-theft, core-maths-paper1,
+  better-value); an unregistered page with tax/NI wording, or a tax year other than the teaching year,
+  fails. Register a new tax game in its own PR.
+- **Portal + /op/:** "safe for school networks" → "built to be safe for school networks".
+- **Filed, not fixed:** §1.43 better-value's "Tax and NI ≈ 25%", §1.44 the student loan threshold
+  (2024/25), §1.45 Q21's unnamed distractor, §1.46 the privacy page's school-networks wording.
+
 ## Handover — 2026-10-03 (later): docs cleared for the next contract
 
 - **Read first: `docs/todo.md`'s START block** (rewritten today) and **`docs/status-2026-10-03.md`**, a
