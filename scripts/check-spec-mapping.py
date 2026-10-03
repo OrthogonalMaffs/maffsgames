@@ -15,12 +15,16 @@ The spec map (spec-map/index.html) is static HTML: one <tr> per spec reference, 
 <td class="ref"> (the reference) and <td class="games"> (links to ../games/<slug>/). A game is
 mapped when a row with a non-empty reference links it.
 
-Every live game is either mapped or in UNMAPPED. Fails on:
-  - a live game that is not mapped and not in UNMAPPED (a new game ships mapped);
+Every live game is mapped, in UNMAPPED, or in EXCEPTIONS (Jon has ruled it has no honest
+curriculum mapping; each entry carries the reason). Fails on:
+  - a live game that is not mapped, not in UNMAPPED and not in EXCEPTIONS (a new game ships mapped);
+  - an EXCEPTIONS entry that is now mapped, that the portal no longer links, or that is also in
+    UNMAPPED;
   - an UNMAPPED entry that is now mapped (stale: remove it in the PR that maps it);
   - an UNMAPPED entry the portal no longer links (remove it);
   - a spec map with no reference rows at all (the page changed shape; this check is blind).
-Reported, never fails: the UNMAPPED games, and spec-map links to games the portal does not list.
+Reported, never fails: the UNMAPPED games, the EXCEPTIONS with their reasons, and spec-map links
+to games the portal does not list.
 Mapping a game is a curriculum judgement (Jon's); this check never decides one.
 
 Stdlib only; about a second. A self-test runs first on every run.
@@ -31,17 +35,17 @@ BASE = pathlib.Path(__file__).resolve().parent.parent
 PORTAL = "index.html"
 SPEC_MAP = "spec-map/index.html"
 
-# Live games not yet on the spec map (audit of 3 Oct 2026, docs/todo.md). Remove an entry in
-# the PR that maps the game; a stale entry fails.
-UNMAPPED = [
-    "boolean-blitz", "core-maths-paper1", "core-maths-paper2a", "core-maths-paper2b",
-    "core-maths-paper2c", "decimal-detective", "equation-builder", "formula-plug-in",
-    "four-quadrant-explorer", "free-daily-pizza", "higher-power", "like-terms-collector",
-    "linear-equation-solver", "maths-court", "negative-number-line", "new-shapes",
-    "probability-pioneer", "seven-bridges", "shape-shifter", "six-sevens-bruv", "spot-the-error",
-    "spot-the-muppet", "terrible-advice", "think-of-a-number", "truth-buster",
-    "truth-will-set-you-free", "word-problem-decoder", "wrong-on-the-internet",
-]
+# Live games not yet on the spec map. Remove an entry in the PR that maps the game; a stale entry
+# fails. The audit of 3 Oct 2026 found 28; all were mapped or ruled exceptions the same day
+# (Jon's rulings, todo §1.42), so the list is empty.
+UNMAPPED = []
+
+# Live games Jon has ruled have no honest curriculum mapping: slug -> the reason, which the check
+# prints. Never fails while the game is live and unmapped.
+EXCEPTIONS = {
+    "truth-buster": "enrichment by design: every session mixes KS3/GCSE, A-Level and 'beyond the "
+                    "curriculum' statements (Jon, 3 Oct 2026)",
+}
 
 PORTAL_GAME = re.compile(r"""href\s*=\s*["'](?:\./|/)?games/([a-z0-9-]+)/?""", re.I)
 SECTION = re.compile(r'<span class="spec-label">(.*?)</span>|<tr\b[^>]*>(.*?)</tr>', re.S | re.I)
@@ -72,8 +76,9 @@ def spec_refs(map_html):
     return out
 
 
-def check(games, refs, unmapped):
-    """(errors, reported) for one portal + spec map + UNMAPPED list."""
+def check(games, refs, unmapped, exceptions=None):
+    """(errors, reported) for one portal + spec map + UNMAPPED list + EXCEPTIONS."""
+    exceptions = exceptions or {}
     errors = []
     if not refs:
         errors.append("the spec map has no reference rows this check can read "
@@ -81,7 +86,7 @@ def check(games, refs, unmapped):
     for s in sorted({s for s in unmapped if unmapped.count(s) > 1}):
         errors.append("%s: listed more than once in UNMAPPED" % s)
     for s in games:
-        if s not in refs and s not in unmapped:
+        if s not in refs and s not in unmapped and s not in exceptions:
             errors.append("%s: live on the portal but not on the spec map, and not in UNMAPPED "
                           "(map it on spec-map/index.html; the mapping is Jon's call)" % s)
     for s in sorted(set(unmapped)):
@@ -90,6 +95,14 @@ def check(games, refs, unmapped):
                           % (s, "; ".join(refs[s])))
         elif s not in games:
             errors.append("%s: in UNMAPPED but the portal does not list it: remove it" % s)
+    for s in sorted(exceptions):
+        if s in unmapped:
+            errors.append("%s: in both UNMAPPED and EXCEPTIONS: keep one" % s)
+        if s in refs:
+            errors.append("%s: in EXCEPTIONS but mapped (%s): remove one or the other"
+                          % (s, "; ".join(refs[s])))
+        elif s not in games:
+            errors.append("%s: in EXCEPTIONS but the portal does not list it: remove it" % s)
     reported = sorted(set(refs) - set(games))
     return errors, reported
 
@@ -116,6 +129,16 @@ def selftest():
         assert len(errors) == want, (unmapped, errors)
         assert reported == ["old"], reported
     assert check(g, {}, ["alpha", "beta", "gamma"])[0], "an unreadable map must fail"
+    exc_cases = [
+        ([], {"beta": "x", "gamma": "y"}, 0),     # exceptions account for unmapped games
+        ([], {"beta": "x"}, 1),                   # gamma still unaccounted for: fails
+        (["gamma"], {"beta": "x", "alpha": "z"}, 1),  # alpha is mapped: fails
+        (["gamma"], {"beta": "x", "delta": "z"}, 1),  # delta not on the portal: fails
+        (["beta", "gamma"], {"beta": "x"}, 1),    # in both lists: fails
+    ]
+    for unmapped, exc, want in exc_cases:
+        errors, _ = check(g, r, unmapped, exc)
+        assert len(errors) == want, (unmapped, exc, errors)
 
 
 def main():
@@ -128,17 +151,22 @@ def main():
     root = pathlib.Path(args.root).resolve()
     games = live_games((root / PORTAL).read_text(encoding="utf-8"))
     refs = spec_refs((root / SPEC_MAP).read_text(encoding="utf-8"))
-    errors, reported = check(games, refs, UNMAPPED)
+    errors, reported = check(games, refs, UNMAPPED, EXCEPTIONS)
 
     mapped = [s for s in games if s in refs]
-    print("Live games on the portal: %d. On the spec map: %d. UNMAPPED (reported, never fails): %d."
-          % (len(games), len(mapped), len([s for s in games if s in UNMAPPED and s not in refs])))
+    print("Live games on the portal: %d. On the spec map: %d. UNMAPPED (reported, never fails): %d. "
+          "EXCEPTIONS: %d."
+          % (len(games), len(mapped), len([s for s in games if s in UNMAPPED and s not in refs]),
+             len([s for s in games if s in EXCEPTIONS and s not in refs])))
     if args.verbose:
         for s in mapped:
             print("  mapped    %-28s %s" % (s, "; ".join(refs[s])))
     for s in UNMAPPED:
         if s in games and s not in refs:
             print("  UNMAPPED  %s" % s)
+    for s in sorted(EXCEPTIONS):
+        if s in games and s not in refs:
+            print("  EXCEPTION %s: %s" % (s, EXCEPTIONS[s]))
     for s in reported:
         print("  NOTE      the spec map links %s, which the portal does not list (%s)"
               % (s, "; ".join(refs[s])))
@@ -147,7 +175,7 @@ def main():
     if errors:
         print("\n%d problem(s)." % len(errors))
         return 1
-    print("\nOK  every live game is on the spec map or in UNMAPPED.")
+    print("\nOK  every live game is on the spec map, in UNMAPPED or in EXCEPTIONS.")
     return 0
 
 
