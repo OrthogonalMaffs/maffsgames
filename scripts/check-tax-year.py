@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
-"""Does every game that uses UK tax or NI state the teaching year, and is every such game known?
+"""Does every game that uses UK tax, NI or student loans state the teaching year, and is every such game known?
 
     python scripts/check-tax-year.py               # CI
     python scripts/check-tax-year.py --root <copy of the repo>   # testing
+    python scripts/check-tax-year.py --today 2027-05-01          # testing the April rule
 
 Until 3 Oct 2026 tax and NI rates were typed into each game separately, with no shared record and
 no check, so core-maths-paper1 kept the pre-2024 12% NI rate unnoticed (todo §1.41). The rates now
 have one canon table (§7.1.4) and one copy in code (scripts/uk_rates.py, TEACHING_YEAR). This
 check is the game-side half:
 
-  - Every page under games/ and escape-rooms/ is scanned for UK tax or NI wording (SIGNALS). A
+  - THE APRIL RULE (canon §7.1.4): from uk_rates.REVIEW_WARN_FROM (1 April) this check WARNS that
+    the teaching year is due to advance, and after uk_rates.REVIEW_BY it FAILS until it has been.
+  - Every page under games/ and escape-rooms/ is scanned for UK tax, NI or student loan wording
+    (SIGNALS; student loans since 3 Oct 2026, as their thresholds change each April too). A
     page that has it must be registered in TAX_GAMES below, with what it does, so a new tax game
     cannot ship unseen. A registered game whose page no longer has the wording fails as stale.
   - In every registered game, a tax year printed near tax wording ("Income Tax 2025/26",
@@ -20,7 +24,7 @@ What each game's rates are worth is its verifier's job (verify-tax-theft.py,
 verify-core-maths-paper1-tax.py, both on uk_rates.py); this check reads years and registration.
 Stdlib only; about a second. A self-test runs first on every run.
 """
-import argparse, pathlib, re, sys
+import argparse, datetime, pathlib, re, sys
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE / "scripts"))
@@ -36,13 +40,13 @@ TAX_GAMES = {
     },
     "core-maths-paper1": {
         "states_year": False,
-        "what": "three §3.2 items print their own rates (income tax, NI, take-home budget); "
-                "verify-core-maths-paper1-tax.py checks them against uk_rates.py",
+        "what": "four §3.2 items print their own rates (income tax, NI, take-home budget, student "
+                "loan); verify-core-maths-paper1-tax.py checks them against uk_rates.py",
     },
     "better-value": {
         "states_year": False,
-        "what": "a job comparison gives 'Tax and NI approximately 25% of gross'; an approximation, "
-                "not table rates (todo §1.43: 15-18% at those salaries in 2025/26)",
+        "what": "a job comparison estimates tax and NI as roughly a sixth of gross; "
+                "verify-better-value-tax.py checks the estimate against uk_rates.py at each salary",
     },
 }
 
@@ -54,10 +58,14 @@ SIGNALS = [
     re.compile(r"\bPAYE\b"),
     re.compile(r"\btax code\b", re.I),
     re.compile(r"(?<![\w-])NI(?![\w-])"),
+    re.compile(r"\bstudent loans?\b", re.I),
+    re.compile(r"\bpostgraduate loans?\b", re.I),
+    re.compile(r"\bplan [1245]\b", re.I),
+    re.compile(r"\brepayment threshold\b", re.I),
 ]
 # A UK tax year printed near tax wording, within 80 characters either side.
 YEAR = re.compile(r"\b(20\d\d)\s*[/–-]\s*(\d\d)\b")
-NEAR = re.compile(r"tax|\bNI\b|national insurance|HMRC|payslip|allowance", re.I)
+NEAR = re.compile(r"tax|\bNI\b|national insurance|HMRC|payslip|allowance|student loan|repayment", re.I)
 YEAR_WINDOW = 80
 NOISE = [re.compile(r"\\u([0-9a-fA-F]{4})")]
 
@@ -117,6 +125,18 @@ def check(found, registry, year):
     return errors, report
 
 
+def review(today, warn_from, review_by, year):
+    """(errors, warnings) for the April rule on a given date."""
+    if today > review_by:
+        return (["the teaching year %s was due to advance by %s (canon §7.1.4, the April rule): advance "
+                 "TEACHING_YEAR, REVIEW_BY and the figures in scripts/uk_rates.py, canon §7.1.4's table "
+                 "and every registered game, in one PR" % (year, review_by.isoformat())], [])
+    if today >= warn_from:
+        return ([], ["the April rule: advance the teaching year %s by one before %s, or this check fails"
+                     % (year, review_by.isoformat())])
+    return ([], [])
+
+
 def selftest():
     assert decode(r"Income Tax 2025\/26 £12,570") == r"Income Tax 2025\/26 £12,570"
     assert stated_years("<h4>Income Tax 2025/26</h4>") == ["2025/26"]
@@ -134,11 +154,18 @@ def selftest():
     assert len(check({**ok, "c": (["x"], [])}, reg, "2025/26")[0]) == 1                      # unregistered
     assert len(check({**ok, "b": ([], [])}, reg, "2025/26")[0]) == 1                         # stale
     assert len(check({"a": ok["a"]}, reg, "2025/26")[0]) == 1                                # gone
+    d = datetime.date
+    assert review(d(2027, 3, 31), d(2027, 4, 1), d(2027, 4, 30), "2025/26") == ([], [])
+    assert review(d(2027, 4, 1), d(2027, 4, 1), d(2027, 4, 30), "2025/26")[1]
+    assert not review(d(2027, 4, 30), d(2027, 4, 1), d(2027, 4, 30), "2025/26")[0]
+    assert review(d(2027, 5, 1), d(2027, 4, 1), d(2027, 4, 30), "2025/26")[0]
+    assert signals("Student loan repayments are 9%") and signals("on Plan 2")
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--root", default=str(BASE))
+    ap.add_argument("--today", help="YYYY-MM-DD, to test the April rule (default: today)")
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # a Windows console is cp1252
     selftest()
@@ -151,9 +178,16 @@ def main():
         if sig or slug in TAX_GAMES:
             found[slug] = (sig, stated_years(text))
     errors, report = check(found, TAX_GAMES, ur.TEACHING_YEAR)
+    today = datetime.date.fromisoformat(args.today) if args.today else datetime.date.today()
+    r_err, r_warn = review(today, ur.REVIEW_WARN_FROM, ur.REVIEW_BY, ur.TEACHING_YEAR)
+    errors += r_err
 
-    print("Teaching year (scripts/uk_rates.py): %s. Pages scanned: %d. Registered tax games: %d."
-          % (ur.TEACHING_YEAR, n, len(TAX_GAMES)))
+    print("Teaching year (scripts/uk_rates.py): %s, review by %s (today %s). Pages scanned: %d. "
+          "Registered tax games: %d." % (ur.TEACHING_YEAR, ur.REVIEW_BY.isoformat(), today.isoformat(),
+                                         n, len(TAX_GAMES)))
+    for w in r_warn:
+        print("WARN  %s" % w)
+        print("::warning::%s" % w)   # an annotation on the GitHub Actions run
     for slug, years, what in report:
         print("  %-20s years stated: %-22s %s" % (slug, ", ".join(sorted(set(years))) or "(none)", what))
     for e in errors:

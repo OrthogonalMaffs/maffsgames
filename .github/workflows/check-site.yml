@@ -179,6 +179,9 @@ jobs:
           #  - uk_rates: the teaching year's tax/NI figures (canon 7.1.4), unit tests against gov.uk.
           #  - core-maths-paper1 tax/NI: its income tax, NI and budget items recomputed with uk_rates;
           #    each NI distractor must be a named error. Failed on the 12% NI file (todo 1.41).
+          #    Since todo 1.44/1.45 also the student loan item (plan named, 2025/26 threshold) and Q21.
+          #  - better-value tax: its tax-and-NI rule of thumb within 2 points of the true share at each
+          #    salary, and the right answer the same under the rule and the true rates (todo 1.43).
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |
@@ -199,7 +202,8 @@ jobs:
               Parent guides (every stated figure recomputed from the page)|python scripts/verify-parent-guides.py
               Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)|python scripts/verify-tax-theft.py
               UK rates module (unit tests against the gov.uk 2025/26 figures)|python scripts/uk_rates.py --selftest
-              Core Maths Paper 1 tax and NI (recomputed with uk_rates)|python scripts/verify-core-maths-paper1-tax.py
+              Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)|python scripts/verify-core-maths-paper1-tax.py
+              Better Value tax-and-NI rule of thumb (checked with uk_rates)|python scripts/verify-better-value-tax.py
 
     steps:
       - uses: actions/checkout@v4

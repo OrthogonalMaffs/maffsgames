@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independent verification of core-maths-paper1's income tax and NI questions (canon §7.1.4).
+"""Independent verification of core-maths-paper1's income tax, NI and student loan questions (canon §7.1.4).
 
 Until 3 Oct 2026 two of these questions charged employee NI at 12%, the rate before January
 2024 (todo §1.41), and the budget question keyed "No" on numbers that left £15.50 a month spare.
@@ -11,7 +11,10 @@ the working).
 The items are found by what they ask, not by position, and each must be found exactly once:
   INCOME TAX  "Personal allowance £A. Income tax R% on earnings above this up to £L. A worker
               earns £S." A is the allowance, R the basic rate, L the allowance plus the basic
-              band; the key is the tax on S; no distractor equals it.
+              band; the key is the tax on S. Each distractor is a named error (Jon, 3 Oct 2026):
+                - the rate on the whole salary (forgetting the allowance);
+                - the rate on the allowance itself;
+                - the higher rate on the taxable income.
   NI          "NI is charged at R% on earnings between £A and £B. A worker earns £S." R, A, B
               are the main rate, primary threshold and upper earnings limit; the key is the NI on
               S. Each distractor is a named error (Jon, 3 Oct 2026), and the three are exactly:
@@ -22,12 +25,19 @@ The items are found by what they ask, not by position, and each must be found ex
               above £B) ... monthly budget": rates and thresholds as above; take-home per month is
               recomputed and compared with the table's total; the key must be the "No" option
               exactly when take-home is below the budget, and the working must print both.
+  STUDENT LOAN "Plan P student loan repayments are R% of earnings above £T. A graduate earns £S."
+              The plan must be named (todo §1.44: it was not); R and T are that plan's 2025/26
+              rate and threshold; the key is the repayment on S. Each distractor is a named error:
+                - the rate on the whole salary (forgetting the threshold);
+                - the annual key divided by 12 (a monthly figure for an annual question);
+                - "£0 — earnings below threshold" (misjudging the comparison).
 Every stem in the game that names income tax or NI must print only the teaching year's rates
 and thresholds. Every '=' chain in these items' working must be arithmetically true
 (stats_common.arith_problems).
 
 A fault-injection self-test (the old 12% rate, a wrong key, an unnamed distractor, the old
-£300 savings line) must FAIL each time; it runs unless --no-selftest.
+£300 savings line, the old £27,295 loan threshold, an unnamed plan, Q21's old £4,628) must FAIL
+each time; it runs unless --no-selftest.
 
     python scripts/verify-core-maths-paper1-tax.py [--verbose] [--no-selftest]
 """
@@ -52,6 +62,8 @@ TAX_RX = re.compile(r'Personal allowance £([\d,]+)\. Income tax (\d+(?:\.\d+)?)
                     r'up to £([\d,]+)\. A worker earns £([\d,]+)\.')
 NI_RX = re.compile(r'NI is charged at (\d+(?:\.\d+)?)% on earnings between £([\d,]+) and £([\d,]+)\. '
                    r'A worker earns £([\d,]+)\. How much NI do they pay annually\?')
+LOAN_RX = re.compile(r'(?:Plan (\d) )?[Ss]tudent loan repayments are (\d+(?:\.\d+)?)% of earnings above '
+                     r'£([\d,]+)\. A graduate earns £([\d,]+)\.')
 BUDGET_RX = re.compile(r'earns £([\d,]+) per year\. After income tax \((\d+(?:\.\d+)?)% on earnings above '
                        r'£([\d,]+)\) and NI \((\d+(?:\.\d+)?)% on earnings above £([\d,]+)\)')
 TAXNI_WORDS = re.compile(r'\bincome tax\b|\bNI\b|\bnational insurance\b|\bpersonal allowance\b', re.I)
@@ -67,7 +79,8 @@ def pct(s):
 
 
 def money_value(opt):
-    m = MONEY.fullmatch(opt.strip())
+    """The amount an option leads with: '£137.70' -> 137.70; '£0 — earnings below threshold' -> 0."""
+    m = MONEY.match(opt.strip())
     return num(m.group(1)) if m else None
 
 
@@ -121,7 +134,53 @@ def check_tax(rep, q):
                  % (lim, ur.TEACHING_YEAR, ur.PERSONAL_ALLOWANCE + ur.BASIC_RATE_BAND))
     if not ur.PERSONAL_ALLOWANCE < s <= ur.PERSONAL_ALLOWANCE + ur.BASIC_RATE_BAND:
         rep.fail(w, 'salary', '£%s is not a basic-rate salary, so the stem\'s single rate is wrong' % s)
-    check_key_options(rep, w, q, ur.income_tax(s))
+    key = ur.income_tax(s)
+    vals = check_key_options(rep, w, q, key)
+    if vals is not None:
+        check_named(rep, w, q, vals, {
+            penny(s * ur.BASIC_RATE): 'the rate on the whole salary',
+            penny(ur.PERSONAL_ALLOWANCE * ur.BASIC_RATE): 'the rate on the allowance',
+            penny(ur.taxable_income(s) * ur.HIGHER_RATE): 'the higher rate on the taxable income',
+        })
+    check_arith(rep, w, q)
+
+
+def check_named(rep, w, q, vals, named):
+    got = [v for i, v in enumerate(vals) if i != q['correct']]
+    for v in got:
+        if v not in named:
+            rep.fail(w, 'distractor', '%s comes from no named error (expected %s)'
+                     % (gbp(v), ', '.join('%s = %s' % (gbp(k), e) for k, e in named.items())))
+    for k, e in named.items():
+        if k not in got:
+            rep.fail(w, 'distractor', 'missing %s (%s)' % (gbp(k), e))
+
+
+def check_loan(rep, q):
+    w = 'STUDENT LOAN'
+    m = LOAN_RX.search(q['stem'])
+    plan, r, thr, s = m.group(1), pct(m.group(2)), num(m.group(3)), num(m.group(4))
+    key_plan = 'plan%s' % plan if plan else None
+    if key_plan not in ur.STUDENT_LOAN_THRESHOLDS:
+        rep.fail(w, 'plan', 'the stem names %s; it must name a plan with a %s threshold (%s)'
+                 % ('Plan %s' % plan if plan else 'no plan', ur.TEACHING_YEAR,
+                    ', '.join(sorted(ur.STUDENT_LOAN_THRESHOLDS))))
+        return
+    if thr != ur.STUDENT_LOAN_THRESHOLDS[key_plan]:
+        rep.fail(w, 'threshold', 'states £%s, the %s Plan %s threshold is £%s'
+                 % (thr, ur.TEACHING_YEAR, plan, ur.STUDENT_LOAN_THRESHOLDS[key_plan]))
+    if r != ur.STUDENT_LOAN_RATES[key_plan]:
+        rep.fail(w, 'rate', 'states %s%%, Plan %s is %s%%' % (r * 100, plan, ur.percent(ur.STUDENT_LOAN_RATES[key_plan])))
+    key = ur.student_loan(s, key_plan)
+    if key == 0:
+        rep.fail(w, 'salary', '£%s is below the threshold, so the key is £0: choose a salary above it' % s)
+    vals = check_key_options(rep, w, q, key)
+    if vals is not None:
+        check_named(rep, w, q, vals, {
+            penny(s * ur.STUDENT_LOAN_RATES[key_plan]): 'the rate on the whole salary',
+            penny(key / 12): 'a monthly figure for an annual question',
+            F(0): 'misjudging the comparison (below threshold)',
+        })
     check_arith(rep, w, q)
 
 
@@ -139,19 +198,11 @@ def check_ni(rep, q):
     vals = check_key_options(rep, w, q, key)
     if vals is None:
         return
-    named = {
+    check_named(rep, w, q, vals, {
         penny(s * ur.NI_MAIN_RATE): 'the rate on the whole salary',
         penny((s - ur.NI_PRIMARY_THRESHOLD) * ur.BASIC_RATE): 'the income tax rate instead of NI',
         penny(key / 12): 'a monthly figure for an annual question',
-    }
-    got = [v for i, v in enumerate(vals) if i != q['correct']]
-    for v in got:
-        if v not in named:
-            rep.fail(w, 'distractor', '%s comes from no named error (expected %s)'
-                     % (gbp(v), ', '.join('%s = %s' % (gbp(k), e) for k, e in named.items())))
-    for k, e in named.items():
-        if k not in got:
-            rep.fail(w, 'distractor', 'missing %s (%s)' % (gbp(k), e))
+    })
     check_arith(rep, w, q)
 
 
@@ -181,7 +232,8 @@ def check_budget(rep, q):
     check_arith(rep, w, q)
 
 
-KINDS = [('INCOME TAX', TAX_RX, check_tax), ('NI', NI_RX, check_ni), ('BUDGET', BUDGET_RX, check_budget)]
+KINDS = [('INCOME TAX', TAX_RX, check_tax), ('NI', NI_RX, check_ni), ('BUDGET', BUDGET_RX, check_budget),
+         ('STUDENT LOAN', LOAN_RX, check_loan)]
 
 
 def check_bank(rep, bank, verbose=False):
@@ -271,6 +323,21 @@ def selftest(bank):
         q = find(b, BUDGET_RX)
         q['table']['rows'] = [r if r[0] != 'Savings' else ['Savings', '£300'] for r in q['table']['rows']]
     expect('old £300 savings (budget covered)', old_savings)
+
+    def old_threshold(b):
+        q = find(b, LOAN_RX)
+        q['stem'] = re.sub(r'above £[\d,]+', 'above £27,295', q['stem'])
+    expect('old £27,295 loan threshold', old_threshold)
+
+    def no_plan(b):
+        q = find(b, LOAN_RX)
+        q['stem'] = re.sub(r'^Plan \d s', 'S', q['stem'])
+    expect('loan plan not named', no_plan)
+
+    def old_q21(b):
+        q = find(b, TAX_RX)
+        q['options'] = [o if o != '£7,400.00' else '£4,628.00' for o in q['options']]
+    expect("Q21's old £4,628 distractor", old_q21)
     return ok, lines
 
 
@@ -296,7 +363,7 @@ def main():
         for ln in lines:
             print(ln)
         ok = ok and s_ok
-    print('\n%s: %d FAIL(s); income tax, NI and budget items checked against %s (scripts/uk_rates.py)'
+    print('\n%s: %d FAIL(s); income tax, NI, budget and student loan items checked against %s (scripts/uk_rates.py)'
           % ('PASS' if ok else 'FAILED', len(rep.fails), ur.TEACHING_YEAR))
     return 0 if ok else 1
 
