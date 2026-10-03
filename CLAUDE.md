@@ -20,7 +20,20 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-03 (late night, latest): docs clear after PRs #14–#20
+## Handover — 2026-10-03 (late night, latest): the GCSE Resit section (PRs #22, #23)
+
+- **Live:** canon SR-11 (age-neutral level labels: Year 6 → Starter, KS3 → Foundation; keys never change),
+  applied to the 31 resit-suite games (PR #22, keys proven identical); `/resit/` (PR #23): Jon's intro, six
+  topic sections, the geometry note, one card per game, a "GCSE Resit →" badge first in the portal header row.
+- **Guard:** `scripts/check-resit-page.py` (CI, Tiers 1+2). `SUITE` in it is Jon's list; change the suite there
+  and on the page together. Card spec lines must equal the spec map; a card's level label must be shown by
+  the game (rendered) and match SR-11; no age wording on any suite game's start screen. Cards are built
+  from data, so after a spec-map change, edit the card's `card-spec` line to what the check prints.
+- **Card level lines:** "Choose: X" (the game has a picker), "Opens at: X" (no picker; the link sets
+  `?level=`), "One level". Jon asked for "Choose:" on every card; the other two are where no choice exists.
+- **Needs Jon:** the `/updates/` entry (todo START item 1, wording proposed), §3.15–§3.18, plus §1.49, §3.14.
+
+## Handover — 2026-10-03 (late night): docs clear after PRs #14–#20
 
 - **Start here: `docs/todo.md`'s START block** (rewritten 3 Oct, late night). Nothing is open; PRs
   #1–#20 are merged and live. **Next is the resit section of the site (todo §3.13, START queue item 1):**

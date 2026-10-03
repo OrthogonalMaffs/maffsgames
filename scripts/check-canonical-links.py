@@ -20,7 +20,9 @@ A second check runs on the pages in RESOLVE_PAGES only (Oct 2026: /updates/, the
 On those pages every internal href and src must resolve to a file in the repo; a page
 link must not land on a withdrawn page (one whose index.html carries a robots noindex,
 which is how a holding page marks itself); and no link may carry ?level=, because a
-level link breaks the day that game's levels are renamed. The first check is unchanged
+level link breaks the day that game's levels are renamed. Pages in LEVEL_LINKS_GUARDED are
+exempt from that one rule only, because their own check fails the moment a ?level= key they
+link is no longer one the game reads. The first check is unchanged
 by this and still runs on every file.
 
     python scripts/check-canonical-links.py
@@ -41,7 +43,9 @@ REDIRECTS = {
     "/games/sequence-solver/index-original.html": "/games/sequence-solver/",
 }
 EXEMPT = {p.strip("/") + "/index.html" for p in REDIRECTS}
-RESOLVE_PAGES = {"updates/index.html"}
+RESOLVE_PAGES = {"updates/index.html", "resit/index.html"}
+# Resolve pages whose ?level= links another check guards: page -> that check.
+LEVEL_LINKS_GUARDED = {"resit/index.html": "scripts/check-resit-page.py (every card's ?level= key is read by its game)"}
 NOINDEX = re.compile(r'''<meta\s+name\s*=\s*["']robots["'][^>]*noindex''', re.I)
 LINK = re.compile(
     r'''(?:href|src)\s*=\s*["']([^"']*)["']'''
@@ -75,7 +79,7 @@ def resolve(link, file_dir):
 
 def resolve_problem(link, target, root, self_rel):
     """Why `link` (resolved to `target`) fails the RESOLVE_PAGES check, or None."""
-    if re.search(r"(^|&)level=", urlsplit(link).query):
+    if self_rel not in LEVEL_LINKS_GUARDED and re.search(r"(^|&)level=", urlsplit(link).query):
         return "carries ?level="
     rel = target.lstrip("/")
     file = root / (rel + "index.html" if target.endswith("/") else rel)
