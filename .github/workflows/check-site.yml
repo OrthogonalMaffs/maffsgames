@@ -184,6 +184,7 @@ jobs:
               Growth and Decay (keys recomputed from each printed model)|python scripts/verify-growth-and-decay.py
               Quadratic Factoriser (every pooled item recomputed, SymPy)|python scripts/verify-quadratic-factoriser.py
               Parent guides (every stated figure recomputed from the page)|python scripts/verify-parent-guides.py
+              Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)|python scripts/verify-tax-theft.py
 
     steps:
       - uses: actions/checkout@v4

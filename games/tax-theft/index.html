@@ -375,6 +375,14 @@ body {
   border: 1px solid rgba(239,68,68,0.3);
 }
 
+/* Right amount, wrongly written: neither marked right nor wrong */
+.feedback.format {
+  display: block;
+  background: rgba(14,165,233,0.15);
+  color: var(--core);
+  border: 1px solid rgba(14,165,233,0.3);
+}
+
 /* COMPLETED STEPS */
 .completed-steps {
   display: flex;
@@ -788,19 +796,21 @@ const TAX_RULES = {
   niPrimaryThreshold: 12570,
   niUpperLimit: 50270,
   niMainRate: 0.08,
-  niHigherRate: 0.02
+  niHigherRate: 0.02,
+  basicRateBand: 37700
 };
 
 const SALARIES = {
   easy: [14000, 18500, 22000, 27500, 31000, 35750, 41000, 48500],
-  medium: [52000, 58500, 65000, 72000, 80000, 92500, 105000, 118000],
+  medium: [52000, 58500, 65000, 72000, 80000, 86500, 92500, 97500],
   hard: [106000, 114000, 120000, 130000]
 };
 
 const WRY_LINES = {
   easy: "Welcome to adulthood.",
   medium: "And that's before pension contributions.",
-  hard: "At this salary, you've lost your personal allowance entirely. The government thanks you."
+  hard: "At this salary, you've lost your personal allowance entirely. The government thanks you.",
+  hardReduced: "At this salary, your personal allowance is reduced to {pa}. The government thanks you."
 };
 
 let currentDifficulty = '';
@@ -834,16 +844,40 @@ function fmtMoney(n) {
   return '\u00a3' + fmt(n);
 }
 
+// Money is held in whole pence so every key is exact; worked answers are shown in full money form.
+function fmtPence(p) {
+  return '\u00a3' + (p / 100).toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 function getPA(gross) {
   if (gross <= TAX_RULES.paReducesAbove) return TAX_RULES.personalAllowance;
   const reduction = Math.floor((gross - TAX_RULES.paReducesAbove) / 2);
   return Math.max(0, TAX_RULES.personalAllowance - reduction);
 }
 
-function buildSteps(gross, diff) {
+// Every step's key, in whole pence, worked from the figures the payslip shows.
+// Income tax bands apply to TAXABLE income: 20% on the first £37,700, 40% up to
+// £125,140, 45% above. The basic band does not widen when the allowance tapers.
+function computeKeys(gross) {
   const pa = getPA(gross);
   const taxable = gross - pa;
-  const basicBand = TAX_RULES.basicRateLimit - (pa > 0 ? pa : 0);
+  const basic = Math.min(taxable, TAX_RULES.basicRateBand);
+  const higher = Math.max(0, Math.min(taxable, TAX_RULES.higherRateLimit) - TAX_RULES.basicRateBand);
+  const additional = Math.max(0, taxable - TAX_RULES.higherRateLimit);
+  const tax = basic * 20 + higher * 40 + additional * 45;
+  const niMain = Math.max(0, Math.min(gross, TAX_RULES.niUpperLimit) - TAX_RULES.niPrimaryThreshold);
+  const niUpper = Math.max(0, gross - TAX_RULES.niUpperLimit);
+  const ni = niMain * 8 + niUpper * 2;
+  const deductions = tax + ni;
+  const net = Math.floor((gross * 100 - deductions + 6) / 12); // nearest penny, half up
+  return {
+    pa: pa * 100, taxable: taxable * 100, tax: tax, ni: ni, deductions: deductions, net: net,
+    basic: basic, higher: higher, additional: additional, niMain: niMain, niUpper: niUpper
+  };
+}
+
+function buildSteps(gross, diff) {
+  const k = computeKeys(gross);
   const stepsArr = [];
   answers = {};
 
@@ -855,8 +889,7 @@ function buildSteps(gross, diff) {
       title: 'Reduced Personal Allowance',
       instruction: 'This salary is over \u00a3100,000. The personal allowance reduces by \u00a31 for every \u00a32 earned above \u00a3100,000. Work out the reduced personal allowance.',
       bands: null,
-      expected: pa,
-      tolerance: 1,
+      key: k.pa,
       payslipField: 'payPA',
       payslipRow: 'payPARow'
     });
@@ -865,100 +898,77 @@ function buildSteps(gross, diff) {
   // Step 1 — Taxable income
   stepsArr.push({
     id: 'taxable',
-    number: diff === 'hard' ? 'Step 1' : 'Step 1',
+    number: 'Step 1',
     title: 'Taxable Income',
     instruction: 'Subtract the personal allowance from your gross salary.',
     bands: null,
-    expected: taxable,
-    tolerance: 1,
+    key: k.taxable,
     payslipField: 'payTaxable'
   });
 
-  // Step 2 — Income tax
-  let tax;
+  // Step 2 — Income tax, band by band on taxable income
   let taxBandsHtml = null;
-  if (diff === 'easy') {
-    tax = taxable * TAX_RULES.basicRate;
-    taxBandsHtml = null;
-  } else {
-    // Medium or hard — crosses into higher rate
-    const basicAmount = TAX_RULES.basicRateLimit - (pa > 0 ? pa : 0);
-    const higherAmount = gross - TAX_RULES.basicRateLimit;
-
-    if (gross <= TAX_RULES.higherRateLimit) {
-      tax = basicAmount * TAX_RULES.basicRate + higherAmount * TAX_RULES.higherRate;
-      taxBandsHtml = '<strong>Basic rate:</strong> 20% on ' + fmtMoney(pa > 0 ? pa + 1 : 1) + ' \u2013 ' + fmtMoney(TAX_RULES.basicRateLimit) + ' (' + fmtMoney(basicAmount) + ')<br>' +
-        '<strong>Higher rate:</strong> 40% on ' + fmtMoney(TAX_RULES.basicRateLimit + 1) + ' \u2013 ' + fmtMoney(gross) + ' (' + fmtMoney(higherAmount) + ')';
+  if (diff !== 'easy') {
+    if (k.additional === 0) {
+      taxBandsHtml = '<strong>Basic rate:</strong> 20% on the first ' + fmtMoney(TAX_RULES.basicRateBand) + ' of taxable income<br>' +
+        '<strong>Higher rate:</strong> 40% on the rest of your taxable income (' + fmtMoney(k.higher) + ')';
     } else {
-      const additionalAmount = gross - TAX_RULES.higherRateLimit;
-      const higherBand = TAX_RULES.higherRateLimit - TAX_RULES.basicRateLimit;
-      tax = basicAmount * TAX_RULES.basicRate + higherBand * TAX_RULES.higherRate + additionalAmount * TAX_RULES.additionalRate;
-      taxBandsHtml = '<strong>Basic rate:</strong> 20% on ' + fmtMoney(basicAmount) + '<br>' +
-        '<strong>Higher rate:</strong> 40% on ' + fmtMoney(higherBand) + '<br>' +
-        '<strong>Additional rate:</strong> 45% on ' + fmtMoney(additionalAmount);
+      taxBandsHtml = '<strong>Basic rate:</strong> 20% on the first ' + fmtMoney(TAX_RULES.basicRateBand) + ' of taxable income<br>' +
+        '<strong>Higher rate:</strong> 40% on the next ' + fmtMoney(TAX_RULES.higherRateLimit - TAX_RULES.basicRateBand) + ' (taxable income up to ' + fmtMoney(TAX_RULES.higherRateLimit) + ')<br>' +
+        '<strong>Additional rate:</strong> 45% on taxable income over ' + fmtMoney(TAX_RULES.higherRateLimit) + ' (' + fmtMoney(k.additional) + ')';
     }
   }
 
   stepsArr.push({
     id: 'tax',
-    number: diff === 'hard' ? 'Step 2' : 'Step 2',
+    number: 'Step 2',
     title: 'Income Tax',
     instruction: diff === 'easy'
       ? 'Tax is 20% on your taxable income. Calculate the total income tax due.'
-      : 'You have income in multiple tax bands. Calculate tax on each band separately, then add them together.',
+      : 'The tax bands apply to your taxable income, not your gross salary. Calculate the tax on each band separately, then add them together.',
     bands: taxBandsHtml,
-    expected: tax,
-    tolerance: 2,
+    key: k.tax,
     payslipField: 'payTax'
   });
 
-  // Step 3 — National Insurance
-  let ni;
+  // Step 3 — National Insurance (on gross pay; the allowance taper does not affect it)
   let niBandsHtml = null;
-  if (gross <= TAX_RULES.niUpperLimit) {
-    ni = (gross - TAX_RULES.niPrimaryThreshold) * TAX_RULES.niMainRate;
-  } else {
-    const niStandard = (TAX_RULES.niUpperLimit - TAX_RULES.niPrimaryThreshold) * TAX_RULES.niMainRate;
-    const niHigher = (gross - TAX_RULES.niUpperLimit) * TAX_RULES.niHigherRate;
-    ni = niStandard + niHigher;
-    niBandsHtml = '<strong>Standard rate:</strong> 8% on ' + fmtMoney(TAX_RULES.niPrimaryThreshold + 1) + ' \u2013 ' + fmtMoney(TAX_RULES.niUpperLimit) + ' (' + fmtMoney(TAX_RULES.niUpperLimit - TAX_RULES.niPrimaryThreshold) + ')<br>' +
-      '<strong>Above UEL:</strong> 2% on earnings over ' + fmtMoney(TAX_RULES.niUpperLimit) + ' (' + fmtMoney(gross - TAX_RULES.niUpperLimit) + ')';
+  if (gross > TAX_RULES.niUpperLimit) {
+    niBandsHtml = '<strong>Standard rate:</strong> 8% on ' + fmtMoney(TAX_RULES.niPrimaryThreshold + 1) + ' \u2013 ' + fmtMoney(TAX_RULES.niUpperLimit) + ' (' + fmtMoney(k.niMain) + ')<br>' +
+      '<strong>Above UEL:</strong> 2% on earnings over ' + fmtMoney(TAX_RULES.niUpperLimit) + ' (' + fmtMoney(k.niUpper) + ')';
   }
 
   stepsArr.push({
     id: 'ni',
-    number: diff === 'hard' ? 'Step 3' : 'Step 3',
+    number: 'Step 3',
     title: 'National Insurance',
     instruction: (diff === 'easy' || gross <= TAX_RULES.niUpperLimit)
       ? 'NI is 8% on earnings between \u00a312,570 and \u00a350,270. Calculate the total National Insurance due.'
       : 'You have earnings in two NI bands. Calculate each separately, then add them.',
     bands: niBandsHtml,
-    expected: ni,
-    tolerance: 2,
+    key: k.ni,
     payslipField: 'payNI'
   });
 
   // Step 4 — Total deductions
   stepsArr.push({
     id: 'deductions',
-    number: diff === 'hard' ? 'Step 4' : 'Step 4',
+    number: 'Step 4',
     title: 'Total Deductions',
     instruction: 'Add your income tax and National Insurance together.',
     bands: null,
-    expected: tax + ni,
-    tolerance: 2,
+    key: k.deductions,
     payslipField: 'payDeductions'
   });
 
   // Step 5 — Net monthly pay
   stepsArr.push({
     id: 'net',
-    number: diff === 'hard' ? 'Step 5' : 'Step 5',
+    number: 'Step 5',
     title: 'Net Monthly Pay',
-    instruction: 'Subtract total deductions from gross salary, then divide by 12.',
+    instruction: 'Subtract total deductions from gross salary, then divide by 12. Give your answer to the nearest penny.',
     bands: null,
-    expected: (gross - tax - ni) / 12,
-    tolerance: 2,
+    key: k.net,
     payslipField: 'payNet'
   });
 
@@ -1024,9 +1034,20 @@ function showStep() {
   document.getElementById('submitBtn').disabled = false;
 }
 
+// Money-answer standard (canon §7.1.3): the typed amount is compared numerically with the
+// key; a right amount written wrongly (1250.7, 3050.0) is neither marked right nor wrong.
+// Pence answers need exactly 2 d.p.; a whole number of pounds may also be typed without .00.
+function moneyResult(raw, keyPence) {
+  var v = parseFloat(raw);
+  if (Math.abs(v * 100 - keyPence) > 1e-6) return 'wrong';
+  var written = keyPence % 100 === 0 ? /^\d+(\.\d\d)?$/ : /^\d+\.\d\d$/;
+  return written.test(raw) ? 'correct' : 'format';
+}
+
 function checkAnswer() {
   var input = document.getElementById('stepInput');
-  var val = parseFloat(input.value);
+  var raw = String(input.value).trim();
+  var val = parseFloat(raw);
   var step = steps[currentStepIndex];
   var fb = document.getElementById('feedback');
 
@@ -1036,25 +1057,30 @@ function checkAnswer() {
     return;
   }
 
-  var expected = step.expected;
-  var diff = Math.abs(val - Math.round(expected));
+  var result = moneyResult(raw, step.key);
 
-  if (diff <= step.tolerance) {
+  if (result === 'format') {
+    // Not marked either way: no event, no penalty. The student fixes it and resubmits.
+    fb.textContent = 'Right amount, but money always has two decimal places. In the exam, \u00a3' + raw + ' loses the mark. Fix it and resubmit.';
+    fb.className = 'feedback format';
+    input.focus();
+    return;
+  }
+
+  if (result === 'correct') {
     // Correct
     _ttCorrectCount++;
     mfg('question_answered',{game_slug:'tax-theft',level:'core',correct:true,question_index:currentStepIndex+1});
-    answers[step.id] = Math.round(expected);
-    fb.textContent = 'Correct \u2014 ' + fmtMoney(Math.round(expected));
+    answers[step.id] = step.key;
+    fb.textContent = 'Correct \u2014 ' + fmtPence(step.key);
     fb.className = 'feedback correct';
 
     // Update payslip
     var payEl = document.getElementById(step.payslipField);
-    if (step.id === 'net') {
-      payEl.textContent = fmtMoney(Math.round(expected));
-    } else if (step.id === 'tax' || step.id === 'ni' || step.id === 'deductions') {
-      payEl.textContent = '\u2212' + fmtMoney(Math.round(expected));
+    if (step.id === 'tax' || step.id === 'ni' || step.id === 'deductions') {
+      payEl.textContent = '\u2212' + fmtPence(step.key);
     } else {
-      payEl.textContent = fmtMoney(Math.round(expected));
+      payEl.textContent = fmtPence(step.key);
     }
     payEl.className = 'value revealed';
 
@@ -1067,7 +1093,7 @@ function checkAnswer() {
     var completedDiv = document.getElementById('completedSteps');
     var stepDiv = document.createElement('div');
     stepDiv.className = 'completed-step';
-    stepDiv.innerHTML = '<span class="tick">\u2713</span> ' + step.title + ': ' + fmtMoney(Math.round(expected));
+    stepDiv.innerHTML = '<span class="tick">\u2713</span> ' + step.title + ': ' + fmtPence(step.key);
     completedDiv.appendChild(stepDiv);
 
     document.getElementById('submitBtn').disabled = true;
@@ -1083,7 +1109,7 @@ function checkAnswer() {
   } else {
     // Wrong
     mfg('question_answered',{game_slug:'tax-theft',level:'core',correct:false,question_index:currentStepIndex+1});
-    var hint = getHint(val, expected, step);
+    var hint = getHint(val, step.key / 100, step);
     fb.textContent = hint;
     fb.className = 'feedback wrong';
     input.value = '';
@@ -1112,6 +1138,16 @@ function getHint(val, expected, step) {
     if (Math.abs(val - basicOnly) <= 2) {
       return "Check your band boundaries \u2014 does this salary cross into the higher rate?";
     }
+    // Basic band stretched to a gross salary of \u00a350,270 instead of \u00a337,700 of taxable income
+    var pa = getPA(currentSalary);
+    if (pa < TAX_RULES.personalAllowance) {
+      var grossMethod = (TAX_RULES.basicRateLimit - pa) * TAX_RULES.basicRate +
+        (Math.min(currentSalary, TAX_RULES.higherRateLimit) - TAX_RULES.basicRateLimit) * TAX_RULES.higherRate +
+        Math.max(0, currentSalary - TAX_RULES.higherRateLimit) * TAX_RULES.additionalRate;
+      if (Math.abs(val - grossMethod) <= 2) {
+        return "The bands apply to taxable income: the basic rate covers the first \u00a337,700 of it, even when the allowance is reduced.";
+      }
+    }
   }
   return "Check your calculation \u2014 use the table above.";
 }
@@ -1126,18 +1162,25 @@ function showCompletion() {
   document.getElementById('gameContainer').style.display = 'none';
   document.getElementById('completionScreen').style.display = 'block';
 
+  // All in pence
+  var gross = currentSalary * 100;
   var tax = answers.tax;
   var ni = answers.ni;
-  var net = currentSalary - tax - ni;
+  var net = gross - tax - ni;
 
-  document.getElementById('sumTax').textContent = fmtMoney(tax);
-  document.getElementById('sumTaxPct').textContent = (tax / currentSalary * 100).toFixed(1) + '% of gross';
-  document.getElementById('sumNI').textContent = fmtMoney(ni);
-  document.getElementById('sumNIPct').textContent = (ni / currentSalary * 100).toFixed(1) + '% of gross';
-  document.getElementById('sumKeep').textContent = fmtMoney(net);
-  document.getElementById('sumKeepPct').textContent = (net / currentSalary * 100).toFixed(1) + '% of gross';
+  document.getElementById('sumTax').textContent = fmtPence(tax);
+  document.getElementById('sumTaxPct').textContent = (tax / gross * 100).toFixed(1) + '% of gross';
+  document.getElementById('sumNI').textContent = fmtPence(ni);
+  document.getElementById('sumNIPct').textContent = (ni / gross * 100).toFixed(1) + '% of gross';
+  document.getElementById('sumKeep').textContent = fmtPence(net);
+  document.getElementById('sumKeepPct').textContent = (net / gross * 100).toFixed(1) + '% of gross';
 
-  document.getElementById('wryLine').textContent = WRY_LINES[currentDifficulty];
+  // The allowance is lost entirely only at £125,140 and above; below that it is reduced
+  var wry = WRY_LINES[currentDifficulty];
+  if (currentDifficulty === 'hard' && answers.pa > 0) {
+    wry = WRY_LINES.hardReduced.replace('{pa}', fmtPence(answers.pa));
+  }
+  document.getElementById('wryLine').textContent = wry;
 }
 
 function nextQuestion() {
