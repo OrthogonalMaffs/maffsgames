@@ -1200,6 +1200,16 @@ async def level_controls(browser, base, pages, live, workers, timeout_ms):
 #            unreachable" (itself a phone defect) unless recorded with reason
 #            "unreachable"; starting at neither size is not a phone fact, and is
 #            noted, not failed.
+#   seed     Math.random is replaced, before any page script runs, by a seeded
+#            generator (PHONE_SEED: mulberry32, seeded with the FNV-1a hash of
+#            the page's own location.pathname, e.g. /games/moments-master/). So
+#            every run draws the same first question, the same option order and
+#            the same everything else, and the verdict cannot flip between runs
+#            of one commit (todo §4 item 16: moments-master's start passed one CI
+#            run and failed the next, §1.40). Only this pass is seeded; the other
+#            tier 1 passes keep the real Math.random. A seed shows one draw, not
+#            a game's worst question: a game whose width depends on the draw is
+#            swept on its own (moments-master: §1.40).
 #
 # The outermost elements past the right edge are named in a FAIL, skipping any
 # inside a fixed-position or overflow-clipped ancestor: those cannot scroll the
@@ -1229,6 +1239,27 @@ async () => {
   })();
   return Promise.race([settle, new Promise(function (r) { setTimeout(function () { r(false); }, 8000); })]);
 }
+"""
+
+# Added to the phone pass's contexts before any other init script, so it runs before
+# every page script, in every frame. See "seed" above.
+PHONE_SEED = r"""
+(() => {
+  let h = 0x811c9dc5;
+  const p = location.pathname;
+  for (let i = 0; i < p.length; i++) {
+    h ^= p.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
+  }
+  let s = h;
+  Math.random = function () {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+})();
 """
 
 PHONE_INIT = r"""
@@ -1307,6 +1338,7 @@ async def phone_width(browser, base, pages, workers, timeout_ms):
     async def new_ctx(viewport):
         ctx = await browser.new_context(viewport=viewport) if viewport \
             else await browser.new_context()
+        await ctx.add_init_script(PHONE_SEED)
         await ctx.add_init_script(TIER3_INIT)
         await ctx.add_init_script(LEVEL_INIT)
         await ctx.add_init_script(PHONE_INIT)
@@ -1331,7 +1363,8 @@ async def phone_width(browser, base, pages, workers, timeout_ms):
         res = {"label": ("phone:" + label) if at == "load"
                else "phone-start:" + label.split(":", 1)[1],
                "url": "%s [%s%s]" % (rel, size, ", after start" if at == "start" else ""),
-               "status": "PASS", "detail": "", "blocked": [], "escaped": []}
+               "status": "PASS", "detail": "", "blocked": [], "escaped": [],
+               "width": m["sw"]}
         excess = m["sw"] - m["vw"]
         if entry and entry.get("reason") == "unreachable":
             res["status"] = "FAIL"
@@ -2352,6 +2385,9 @@ def main():
                     help="tier 3: questions to play per run (default 10). "
                          "modular-battle froze on ~25%% of questions, which 10 "
                          "plays catches better than 94%% of the time.")
+    ap.add_argument("--phone-widths", metavar="FILE",
+                    help="tier 1: also write every phone-width measurement (label, url, "
+                         "width) to FILE as JSON, to compare runs (todo §4 item 16)")
     ap.add_argument("--advance-ms", type=int, default=6000,
                     help="tier 3: how long to wait for a question to change after "
                          "answering (default 6000)")
@@ -2365,6 +2401,11 @@ def main():
         pages = build_page_list(args.only)
         t1_results, blocked, escaped = asyncio.run(
             tier1(pages, args.live, args.workers, args.timeout))
+        if args.phone_widths:
+            with open(args.phone_widths, "w", encoding="utf-8") as fh:
+                json.dump(sorted(({"label": r["label"], "url": r["url"], "width": r["width"]}
+                                  for r in t1_results if "width" in r),
+                                 key=lambda r: (r["url"], r["label"])), fh, indent=1)
         f = [r for r in t1_results if r["status"] == "FAIL"]
         w = [r for r in t1_results if r["status"] == "WARN"]
         fails += len(f)
