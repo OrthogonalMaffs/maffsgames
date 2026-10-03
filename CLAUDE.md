@@ -14,6 +14,17 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
 
+## Handover — 2026-10-03 (late night): /updates/ October entries (PR #9, Jon approved)
+
+- **/updates/ now covers 2–3 Oct**, in Jon's approved wording: a "Which tax year?" note; Corrected
+  (wrong-keys batch 1, Tax Theft, Core Maths Paper 1, Better Value, the About and home page claims,
+  Sequence Solver's one distractor); Clarified (100 asks name their form); Improved (phone footer,
+  Split It's new design). Jon's rulings: the About/home claims are **Corrected**, not Clarified;
+  the old Sequence Solver copy (archive #58) stays out.
+- **Writing an entry about a false claim:** describe it, don't quote it. `check-public-claims.py`
+  blocks the literal "No data collected" on /updates/ like any other live page.
+- **Next /updates/ entry:** add it to the newest month; never edit an existing entry.
+
 ## Handover — 2026-10-03 (night): money-correctness batch
 
 - **The April rule (canon §7.1.4, Jon):** each April, advance the teaching year by one. `uk_rates.py`
