@@ -14,6 +14,18 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
 
+## Handover — 2026-10-03 (latest): Circle Theorem Spotter keys + verifier (PR #11, todo §1.3)
+
+- **Q48 and Q19 corrected to Jon's rulings** (full record in todo §1.3). Q19's figure drew its point
+  on the minor arc (`inside:true`) while the text said major: the contract stopped there, Jon ruled
+  to remove the flag. **Words, figure and key must agree:** a centreCirc `inside` flag puts C inside
+  the marked angle.
+- **`scripts/verify-circle-theorem-spotter.py` (CI group B):** every calculation key solved again
+  from the stated values (SymPy), options distinct in value, stated degrees labelled in the figure,
+  arc wording vs figure. A new calculation question with a shape it cannot solve FAILS: extend
+  `derive()`, never skip.
+- **Queued for /updates/:** "Circle Theorem Spotter: two answers corrected" (todo START).
+
 ## Handover — 2026-10-03 (late night): /updates/ October entries (PR #9, Jon approved)
 
 - **Start here: `docs/todo.md`'s START block** (rewritten 3 Oct, late night). Nothing is open; PRs

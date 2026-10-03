@@ -182,6 +182,9 @@ jobs:
           #    Since todo 1.44/1.45 also the student loan item (plan named, 2025/26 threshold) and Q21.
           #  - better-value tax: its tax-and-NI rule of thumb within 2 points of the true share at each
           #    salary, and the right answer the same under the rule and the true rates (todo 1.43).
+          #  - circle-theorem-spotter: every calculation key solved again from the stated values by
+          #    the figure's theorem (SymPy); options distinct in value; "major/minor arc" wording must
+          #    match the figure. Failed on the uncorrected Q48 and Q19 (todo 1.3).
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |
@@ -204,6 +207,7 @@ jobs:
               UK rates module (unit tests against the gov.uk 2025/26 figures)|python scripts/uk_rates.py --selftest
               Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)|python scripts/verify-core-maths-paper1-tax.py
               Better Value tax-and-NI rule of thumb (checked with uk_rates)|python scripts/verify-better-value-tax.py
+              Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure)|python scripts/verify-circle-theorem-spotter.py
 
     steps:
       - uses: actions/checkout@v4
