@@ -19,7 +19,7 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
 - **Read first: `docs/todo.md`'s START block** (rewritten today) and **`docs/status-2026-10-03.md`**, a
   dated snapshot of what is done, in progress and not started, with every open item sized and the
   paths to a resit route by w/c 26 Oct and Log Laws by 12 Oct.
-- **About page claims (todo §1.6), 3 Oct 2026, branch `claude/about-claims`, HELD before merge.** The
+- **About page claims (todo §1.6), 3 Oct 2026, PR #6, `claude/about-claims`, HELD before merge.** The
   false "no data collected" is replaced everywhere it was live (About meta/og/principles; portal
   meta/og and header badge) with Jon's approved wording. The spec claim ("every game maps to a spec
   reference") is false: 68 of 96 games are on the spec map, the 28 others are §1.42. Waiting on Jon's
