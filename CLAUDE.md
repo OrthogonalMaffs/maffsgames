@@ -16,6 +16,11 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
 
 ## Handover — 2026-10-03 (late night): /updates/ October entries (PR #9, Jon approved)
 
+- **Start here: `docs/todo.md`'s START block** (rewritten 3 Oct, late night). Nothing is open; PRs
+  #1–#9 are merged and live. Next is §4 item 16 (seed the phone gate) unless Jon reorders.
+- **April 2027:** advance the teaching year (canon §7.1.4) before 30 April or `check-tax-year.py`
+  fails CI.
+
 - **/updates/ now covers 2–3 Oct**, in Jon's approved wording: a "Which tax year?" note; Corrected
   (wrong-keys batch 1, Tax Theft, Core Maths Paper 1, Better Value, the About and home page claims,
   Sequence Solver's one distractor); Clarified (100 asks name their form); Improved (phone footer,
@@ -25,7 +30,7 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   blocks the literal "No data collected" on /updates/ like any other live page.
 - **Next /updates/ entry:** add it to the newest month; never edit an existing entry.
 
-## Handover — 2026-10-03 (night): money-correctness batch
+## Handover — 2026-10-03 (night): money-correctness batch (PR #8)
 
 - **The April rule (canon §7.1.4, Jon):** each April, advance the teaching year by one. `uk_rates.py`
   holds `REVIEW_BY` (30 April 2027); `check-tax-year.py` warns from 1 April and FAILS CI after it, so
@@ -37,7 +42,7 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   better-value "roughly a sixth" (new `verify-better-value-tax.py`); privacy page "built to be safe
   for school networks". todo §1.43–§1.46 done.
 
-## Handover — 2026-10-03 (latest): UK tax and NI rates, one copy
+## Handover — 2026-10-03 (evening): UK tax and NI rates, one copy (PR #7)
 
 - **Teaching year 2025/26 (canon §7.1.4,** Jon: papers are set before the tax year, so June 2027 most
   likely uses 2025/26; review every summer after the exam series). The figures live once in
