@@ -66,6 +66,7 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 | SR-7 | **Tax, NI and student loan figures** in a game are the teaching year's, as in `scripts/uk_rates.py`, and the game is registered in `scripts/check-tax-year.py`. Scripts never restate a rate. | 3 Oct 2026 | §7.1.4; PR #7, PR #8 |
 | SR-8 | **When a key changes,** recompute every dependent answer, distractor and worked line. | 3 Oct 2026 | PR #4 (tax-theft), PR #11 |
 | SR-9 | **Bugs found outside the task are logged, not fixed,** except a live wrong answer in the same game that one of these rulings fixes: fix it and list it in the PR. | 3 Oct 2026 | todo START ("a live bug is never a decision item") |
+| SR-10 | **Whole items scale by whole numbers.** A recipe with an ingredient that comes in whole items (eggs) is scaled only by a whole-number factor (×2, ×3). Draw its scale factors from whole numbers only (no redraw loop, SR-5); the game's verifier checks every whole-item amount it scales is a whole number. | 3 Oct 2026 | todo §1.47; split-it's GCSE Pancakes (3.3 eggs) |
 
 **Still stops for Jon**, whatever the rulings say:
 - New content choices: contexts, numbers, a question's level.

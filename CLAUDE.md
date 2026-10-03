@@ -20,17 +20,23 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-03 (night, latest): docs clear after PRs #10–#13 (PR #14)
+## Handover — 2026-10-03 (night, latest): SR-10, whole items scale by whole numbers (todo §1.47)
+
+- **Canon SR-10 (Jon, 3 Oct):** a recipe with a whole-item ingredient (eggs) scales only by a whole
+  number. split-it: Eggs has `whole:true`; such a GCSE recipe draws 3/4/6 people ×2 or ×3.
+  `verify-split-it.py` fails any unitless ingredient scaled to a fraction. §1.47 closed.
+
+## Handover — 2026-10-03 (night): docs clear after PRs #10–#13 (PR #14)
 
 - **Start here: `docs/todo.md`'s START block** (rewritten 3 Oct, night). Nothing is open; PRs #1–#13
   are merged and live. Next is §4 item 16 (seed the phone gate) unless Jon reorders.
-- **Needs Jon:** wording for the two queued /updates/ entries (his voice, canon §0.3), and §1.47.
+- **Needs Jon:** wording for the two queued /updates/ entries (his voice, canon §0.3). (§1.47 since done: SR-10.)
 - **April 2027:** advance the teaching year (canon §7.1.4) before 30 April or `check-tax-year.py`
   fails CI.
 
 ## Handover — 2026-10-03 (night): Standing rulings in canon (PR #13)
 
-- **Canon §0.3 "Standing rulings"**: SR-1 to SR-9 (Jon, 3 Oct 2026), the "Still stops for Jon" list,
+- **Canon §0.3 "Standing rulings"**: SR-1 to SR-9 (Jon, 3 Oct 2026; SR-10 added later the same night), the "Still stops for Jon" list,
   and how a new ruling is added (next SR number, dated, in the PR that prompted it).
 - Four of the drafted rulings contradicted canon and were reworded on Jon's ruling: SR-1 keeps
   §7.1.2's band for graph readings; SR-4 keeps §7.1's named-form exception and two-way comparisons;

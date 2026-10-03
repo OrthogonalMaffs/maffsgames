@@ -351,7 +351,7 @@ const generators={
   scale(level){
     const recipes=[
       {name:'Smoothie',items:[{n:'Orange juice',v:300,u:'ml'},{n:'Banana',v:150,u:'g'},{n:'Yoghurt',v:80,u:'ml'}]},
-      {name:'Pancakes',items:[{n:'Flour',v:200,u:'g'},{n:'Milk',v:300,u:'ml'},{n:'Eggs',v:2,u:''}]},
+      {name:'Pancakes',items:[{n:'Flour',v:200,u:'g'},{n:'Milk',v:300,u:'ml'},{n:'Eggs',v:2,u:'',whole:true}]},
       {name:'Concrete mix',items:[{n:'Cement',v:12,u:'kg'},{n:'Sand',v:24,u:'kg'},{n:'Gravel',v:8,u:'kg'}]},
       {name:'Salad dressing',items:[{n:'Oil',v:90,u:'ml'},{n:'Vinegar',v:30,u:'ml'},{n:'Mustard',v:10,u:'g'}]},
       {name:'Flapjacks',items:[{n:'Oats',v:250,u:'g'},{n:'Butter',v:100,u:'g'},{n:'Syrup',v:60,u:'ml'}]}
@@ -362,7 +362,9 @@ const generators={
     if(level==='ks3'){
       sf=rInt(2,5);target=orig*sf;
     } else {
-      const pairs=[[4,6],[4,10],[6,9],[3,5],[6,10]];const p=pairs[rInt(0,pairs.length-1)];
+      // A whole-item ingredient (eggs) is only scaled by a whole number (canon SR-10, Jon 3 Oct 2026):
+      // such a recipe draws from these pairs, the usual serving counts times 2 or 3, never a redraw.
+      const pairs=r.items.some(i=>i.whole)?[[3,6],[3,9],[4,8],[4,12],[6,12],[6,18]]:[[4,6],[4,10],[6,9],[3,5],[6,10]];const p=pairs[rInt(0,pairs.length-1)];
       sf=p[1]/p[0];target=p[1];
       // Recalc orig
       return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${p[0]}</span> people uses the amounts below.<br>How much of each do you need for <span class="highlight">${p[1]}</span> people?<br>Give your answers to 1 decimal place.`,

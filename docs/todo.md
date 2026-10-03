@@ -168,7 +168,7 @@ section.
 **`docs/status-2026-10-03.md` is a dated snapshot taken after PR #4.** Read it for the resit picture,
 sizes and the paths to 26 Oct and 12 Oct; where it and this block differ, this block is newer.
 
-**Before stopping a contract for a decision, check canon §0.3, the Standing rulings (SR-1 to SR-9).**
+**Before stopping a contract for a decision, check canon §0.3, the Standing rulings (SR-1 to SR-10).**
 If one applies, apply it and list "SR-n applied: …" in the PR; stop only for what none covers, or for
 §0.3's "Still stops for Jon" list.
 
@@ -186,8 +186,7 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
 - **Needs Jon: /updates/ wording** (his voice, §0.3) for the two queued entries, "Circle Theorem
   Spotter: two answers corrected" and "Split It now marks money to the penny". Add them to the newest
   month; never edit an existing entry.
-- **Needs Jon: §1.47**, split-it's GCSE Pancakes recipe asks for 3.3 eggs (drop eggs from the GCSE
-  recipes, or pick factors that keep eggs whole).
+- **§1.47 done (3 Oct, Jon's ruling = canon SR-10):** split-it's GCSE Pancakes scales only by ×2 or ×3.
 - **Diary: April 2027.** Advance the teaching year to 2026/27 (canon §7.1.4) before 30 April, or CI
   fails. Plan 5's £25,000 becomes usable then (it is the 2026/27 figure).
 - **Needs Jon before the resit route (§3.13):** (a) which games make the resit suite (the audit's 31
@@ -293,7 +292,7 @@ Sections, in priority order. **Nothing in §4 starts until §1–2 are clear.**
 | 1.44 | **Live (content): `core-maths-paper1`'s student loan question uses the 2024/25 Plan 2 threshold** ("9% of earnings above £27,295"; graduate on £28,000 repays £63.45). The 2025/26 threshold is £28,470 (https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2025-to-2026), at which the graduate repays £0, so the present "£0, earnings below threshold" distractor would become the key. The question states its own threshold, so it is self-consistent; student loans are outside canon §7.1.4's table. Found 3 Oct 2026. | **DONE 3 Oct 2026 (branch `claude/money-batch`):** Jon ruled Plan 2 at 2025/26 (Plan 5's £25,000 is the 2026/27 figure, SI 2022/1335 reg 65; 2025/26 has none). Now "Plan 2 ... above £28,470. A graduate earns £30,000", key £137.70; distractors £2,700.00 (9% of the whole salary), £11.48 (monthly), £0 (below threshold). Student loans are now in canon §7.1.4 and `scripts/uk_rates.py`. | — done |
 | 1.45 | **`core-maths-paper1` income tax item (Q21) has a distractor no named error produces:** £4,628.00 (20% of £23,140). The other two are named: £6,214.00 (20% of the whole salary) and £2,514.00 (20% of the allowance). Jon's rule of 3 Oct 2026 for the NI item (every distractor a nameable student error) would replace it. Found 3 Oct 2026 while checking the file's other tax figures (the rates themselves match 2025/26). | **DONE 3 Oct 2026 (branch `claude/money-batch`):** £4,628.00 → £7,400.00 (40% × £18,500, the higher rate on the taxable income; Jon). The verifier now requires all three Q21 distractors to be named errors. | — done |
 | 1.46 | **The privacy page still says "Safe for school networks"** (meta `:6`, og `:9`) and "This makes MaffsGames safe to use on school networks without ICT approval barriers" (`:205`). The portal and /op/ now say "built to be safe for school networks" (3 Oct 2026); the privacy page was out of that contract's scope. | **DONE 3 Oct 2026 (branch `claude/money-batch`):** "Built to be safe for school networks" (meta, og) and "MaffsGames is built to be safe to use on school networks without ICT approval barriers" (`:205`). Nothing else on the page changed. | — done |
-| 1.47 | **Content oddity (not fixed): split-it's GCSE Pancakes recipe asks for 3.3 eggs.** The recipe uses 2 eggs, and the GCSE scale factors include 5/3 (3 to 5 people, 6 to 10), so the key is 2 × 5/3 = 3.3 eggs to 1 d.p. Found 3 Oct 2026 while fixing §1.36; logged on Jon's ruling, not changed (question content). Options: drop eggs from the GCSE recipes, or pick factors that keep eggs whole. | **Jon** |
+| 1.47 | ~~**Content oddity (not fixed): split-it's GCSE Pancakes recipe asks for 3.3 eggs.**~~ The recipe uses 2 eggs, and the GCSE scale factors include 5/3 (3 to 5 people, 6 to 10), so the key is 2 × 5/3 = 3.3 eggs to 1 d.p. Found 3 Oct 2026 while fixing §1.36; logged on Jon's ruling, not changed (question content). Options: drop eggs from the GCSE recipes, or pick factors that keep eggs whole. **DONE 3 Oct 2026 (Jon's ruling, now canon SR-10):** a recipe with a whole-item ingredient is scaled only by a whole number. In split-it, Eggs carries `whole:true` and a GCSE recipe with a whole item draws its serving pair from 3, 4 or 6 people times 2 or 3 (3→6, 3→9, 4→8, 4→12, 6→12, 6→18; no redraw loop); other recipes keep their pairs. `verify-split-it.py` checks every unitless ingredient's scaled amount is whole (read from the unit, not the flag): 113 FAILs on the old file, PASS on the new. | — done |
 | 1.48 | **Cosmetic (not fixed): split-it's speed working shows the speed unrounded.** The feedback line reads e.g. "Speed = 40÷3 = 13.333333333333334 mph" (`spd = d/t` printed as a float). The key itself is now exact (PR #12). Also: the speed input shows "miles" on both sides (the unit label is drawn before the input for every unit and after it for non-money units). Found 3 Oct 2026; both left (question content and layout were out of scope). | Code Claude, with item 4 |
 
 **Done this session (26 Sep):**
