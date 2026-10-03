@@ -97,6 +97,11 @@ jobs:
           # is under a SITE path, and no SITE page references a file _config.yml excludes.
           # The verifier-coverage check (stdlib, about a second): every scripts/verify-*.py and
           # scripts/test-*.py is run by a group below, or declared held in that script with a reason.
+          # The spec-mapping check (stdlib, about a second): every game the portal links is on the spec
+          # map against a reference, or in its UNMAPPED list (reported, never fails); a new unmapped game
+          # or a stale UNMAPPED entry fails. The public-claims check (stdlib, about a second): no published
+          # page says no data is collected (the site records anonymous gameplay statistics; the privacy
+          # page is the source of truth). Both added 3 Oct 2026 after the About page claimed both.
           - name: Tiers 1 + 2 (page load, hang-loop scan)
             timeout: 15
             checks: |
@@ -106,6 +111,8 @@ jobs:
               Theme (canon 7.5: one register, palette from the roster)|python scripts/check-theme.py
               Publish scope (canon 7.7: every published file is SITE; no page uses an excluded one)|python scripts/check-publish-scope.py
               Verifier coverage (every verify-*/test-* script runs in CI, or is declared held)|python scripts/check-verifier-coverage.py
+              Spec mapping (every live game is on the spec map, or in UNMAPPED)|python scripts/check-spec-mapping.py
+              Public claims (no page says no data is collected)|python scripts/check-public-claims.py
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
