@@ -14,6 +14,21 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
 
+## Handover — 2026-10-03 (later): docs cleared for the next contract
+
+- **Read first: `docs/todo.md`'s START block** (rewritten today) and **`docs/status-2026-10-03.md`**, a
+  dated snapshot of what is done, in progress and not started, with every open item sized and the
+  paths to a resit route by w/c 26 Oct and Log Laws by 12 Oct.
+- **Critical and live: the About page claims "no data collected … GDPR compliant"** (todo §1.6), which is
+  false while GA4, the Sheets log and Firebase run. Waiting on Jon's wording.
+- **Resit route: nothing built or specified** (todo §3.13): no `games.json`, no `/resit/`, no
+  `?level=resit`; Jon to rule the suite and what `/resit/` is. Log Laws Solve is live.
+- **Filed today:** §1.41 (`core-maths-paper1` NI at 12%), §3.13, §4 item 17 (four check scripts not in
+  CI), §4 item 18 (**CI Contract B**, named apart from Chart Interrogator's 28 Sep "Contract B").
+- **Drift fixed:** canon's stale "unmerged branch" warning and its date; a repository-history note at the
+  top of canon and todo (pre-2 Oct hashes and PR numbers are the archive's); archive PR #1–#3 labelled;
+  game and `submitScore()` counts recounted (94 of 96 live games submit).
+
 ## Handover — 2026-10-03: tax-theft fixed; the money-answer standard (canon §7.1.3)
 
 - **PR #3 merged** (`9f9ce59`); the three games' live pages are byte-identical to the merge.
@@ -25,8 +40,7 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
 - **Money-answer standard, canon §7.1.3:** numeric match first; a right amount wrongly written (114.4,
   3050.0) gets the format message and a resubmit, never a mark. `moneyResult()` in tax-theft is the
   reference. `scripts/verify-tax-theft.py` (CI group B) plays all 20 salaries; 489 FAILs on the old game.
-- **Next:** START item 5 (apply §7.1.3 to every money game; shared helper or not, Jon's call), item 6
-  (other income-tax games: only `core-maths-paper1`, which also states NI at 12%, not 8%), then items 2–3.
+- **Next:** superseded by the docs-clear handover above (the START block's queue).
 
 ## Handover — 2026-10-02 (late): wrong-keys batch 1 + verifier coverage (PR #3)
 
@@ -89,7 +103,7 @@ Checker tier 4, layer A (bank extraction + lint) was built, verified and regress
 **Tiers 1–3 prove a page runs and can be played; nothing before today inspected the question
 data itself.** `extract-banks.py` reads every game's bank back from the live page under
 Playwright (so a runtime patch is included, not just the source literal); `check-banks.py` lints
-it against eleven rules and tracks every known violation in `data/check-ledger.json`. All 97 games
+it against eleven rules and tracks every known violation in `data/check-ledger.json`. All 97 games (the 96 live plus the withdrawn `regression-rumble`)
 are accounted for — 83 banks read live, 1 via a static fallback for a module-pattern IIFE
 (`given-that`), 13 confirmed true generators with no static bank anywhere in source
 (`distinctly-average` added 29 Sep 2026 — its window.DA_ITEMS pools are built by the same

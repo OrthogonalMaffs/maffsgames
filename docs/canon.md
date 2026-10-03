@@ -2,16 +2,13 @@
 
 *Source of truth for platform facts. Update here first — except the per-game roster, which lives in `.claude/rules/game-roster.md`. See below.*
 
-Last updated: 29 September 2026
+Last updated: 3 October 2026
 
-> **⚠ Unmerged branch, 25 Sep 2026.** `origin/claude/wizardly-gauss-uxv4v4` holds two commits
-> from a Claude web session on 23 Sep that are **not on main** — `151baa4` *Leaderboard:
-> eligibility is completion, not a 10-question count* (removes `MIN_QUESTIONS_FOR_LEADERBOARD`;
-> **13 games could not rank at all**) and `d3dc13a` *Chart Interrogator*. It branches from
-> `b6c797a`, so it contains none of the 23-25 Sep work, and it edits this file, `CLAUDE.md` and
-> `docs/todo.md` — **all three conflict on merge.** Keep both sides: its §9 leaderboard rewrite
-> and this document's §8.2c are both wanted. Its own commit message names the open item:
-> `estimation-golf` and `equatle` are lower-is-better and the ticker's high-score flag is not.
+> **Repository history.** This repository started fresh on 2 Oct 2026. Any commit hash or PR number
+> from before then, here or in `CLAUDE.md` and `docs/todo.md`, refers to
+> `OrthogonalMaffs/maffsgames-archive` (archived, read-only). The 25 Sep warning that stood here, about
+> the unmerged branch `claude/wizardly-gauss-uxv4v4`, is resolved: it was merged on 24-25 Sep with both
+> sides kept (todo, "Done") and `MIN_QUESTIONS_FOR_LEADERBOARD` no longer exists anywhere in the code.
 
 **What is authoritative where.** This document is the source of truth for platform facts — IDs, policies, structure, curriculum coverage, the escape rooms and the backlog. It deliberately does **not** hold the per-game table: that is `.claude/rules/game-roster.md`, which is maintained and has all 93 rows with descriptions. Canon carried its own 60-row copy until 8 September 2026, by which point it was 33 games behind. Do not reintroduce a second roster here — see §4.
 
@@ -752,7 +749,7 @@ each NOT_YET game's static page text (its start screen; text a script builds is 
 **Migration is per game, never by sweep.** Two site-wide sweeps once left `chart-interrogator` and
 `modular-battle` dead for six months. A game moves from NOT_YET to MIGRATED in the PR that migrates
 it, with its phone fit re-measured (§7.6.1) in normal and Aa mode (`measure-phone-fit.py --aa`) and
-its wording changes quoted for Jon. The order is in to-do §3.12: the resit suite first, each
+its wording changes quoted for Jon. The order is in to-do §3.12: the resit suite (the audit's candidate list, `docs/resit-coverage-audit.md` §10.5; not the two-game resit strand, to-do §3.13) first, each
 game's migration and its phone-fit fix done together, three at a time. **A new game is built to the
 theme and goes straight into MIGRATED.** If a game can only look right by redefining a base token,
 the token set is wrong: report it, never add an exception.
@@ -1156,11 +1153,10 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
   it cannot import Python. **A roster label the table does not list is an error in both readers**,
   never silently dropped: that is how `A-Level Year 2` went unchecked, and how `extract-banks.py`
   never extracted log-laws' Level 3 bank. Add a new label there, and nowhere else.
-- 95 games call `submitScore()` (recounted from the repo on 29 Sep 2026, plus `six-sevens-bruv` and
-  `free-daily-pizza` 30 Sep; the older
-  "91 correctly, retrofit completed 21 July 2026" figure predates three additions
-  and was one short even before the last of them). 91 of the 95 submit
-  unconditionally.
+- **94 of the 96 live games call `submitScore()`** (recounted 3 Oct 2026; the two that do not are
+  `constructions-lab` and `given-that`, above). The 29 Sep count of 95 included `regression-rumble`,
+  withdrawn on 30 Sep (its `_withdrawn.html` still calls it). On 29 Sep, 91 of the 95 submitted
+  unconditionally; that split has not been recounted.
 - **Pattern keys off the hub (30 Sep 2026).** `free-daily-pizza` submits **mixed-stage** practice to
   `practice-q20` / `practice-q40` (on the hub, "Practice · 20" / "Practice · 40"). Single-stage practice
   submits to no board; it goes to score history only, under `stage-s1-q20` etc., and says so on its end
@@ -1215,7 +1211,7 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
   `mfg_hist_v1::{slug}::{level}`, additive alongside each game's
   existing single-value "personal best" key (untouched, different
   naming per game — see §8 backlog).
-- Wired into every game that calls `submitScore()` (91 games), called
+- Wired into every game that calls `submitScore()` (all 94 live ones, recounted 3 Oct 2026), called
   immediately after the `submitScore()` call.
 
 ## Leaderboard Hub Page
@@ -1272,7 +1268,7 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
 
 Narrative maths escape rooms at `/escape-rooms/`. Started 2026-08-26; reference point
 **Unlock!**. **Under 15 minutes each** — built to end a lesson, not fill one, and to be played by three or
-four students round one screen. Not counted in the 97 games.
+four students round one screen. Not counted in the 96 live games.
 
 ## 11.1 Current state — 17 September 2026
 
