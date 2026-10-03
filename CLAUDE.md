@@ -14,6 +14,20 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
 
+## Handover — 2026-10-03: tax-theft fixed; the money-answer standard (canon §7.1.3)
+
+- **PR #3 merged** (`9f9ce59`); the three games' live pages are byte-identical to the merge.
+- **Tax-theft (todo START item 4) is fixed.** Income tax is charged on taxable income (20% on the first
+  £37,700, 40% to £125,140, 45% above); the game had stretched the basic band to a gross £50,270,
+  under-taxing every salary over £100,000 by £500 to £2,514. Medium's £105,000 and £118,000 (taper maths)
+  are now £86,500 and £97,500. Every key comes from `computeKeys()`, in whole pence, from the payslip's
+  figures. Hard's closing line names the reduced allowance below £125,140.
+- **Money-answer standard, canon §7.1.3:** numeric match first; a right amount wrongly written (114.4,
+  3050.0) gets the format message and a resubmit, never a mark. `moneyResult()` in tax-theft is the
+  reference. `scripts/verify-tax-theft.py` (CI group B) plays all 20 salaries; 489 FAILs on the old game.
+- **Next:** START item 5 (apply §7.1.3 to every money game; shared helper or not, Jon's call), item 6
+  (other income-tax games: only `core-maths-paper1`, which also states NI at 12%, not 8%), then items 2–3.
+
 ## Handover — 2026-10-02 (late): wrong-keys batch 1 + verifier coverage (PR #3)
 
 - **Wrong-keys batch 1 is reapplied** (patch 0001, old `2e1ffe5`): the keys in stat-attack,

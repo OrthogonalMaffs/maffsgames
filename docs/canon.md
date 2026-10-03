@@ -497,6 +497,32 @@ wrong box was marked correct.
 - `scripts/verify-chart-interrogator.py` (in CI) recomputes every band. Its self-test puts a band
   back uncapped and must fail.
 
+### 7.1.3 Money answers — the format standard
+
+Ruled by Jon, 2–3 Oct 2026.
+
+**A typed money answer is compared with the key as a number first. Its written form is then checked
+separately, and a wrong form is never a mark.**
+
+- **Pence answers are written to exactly 2 d.p.:** £114.40, never 114.4. **1 d.p. is never accepted**,
+  and neither are 3 or more.
+- **A whole number of pounds needs no .00:** 3050 and 3050.00 are both right. 3050.0 is the wrong form.
+- **Right amount, wrong form → the format check, not a mark.** The step is not marked right or wrong,
+  no penalty or analytics event is recorded, and the student is told: "Right amount, but money always
+  has two decimal places. In the exam, £1250.7 loses the mark. Fix it and resubmit." (with their own
+  figure). The corrected resubmission is marked correct.
+- **Wrong amount → marked wrong as normal.** No tolerance band: a penny out is wrong.
+- **Keys are exact to the penny**, worked from the figures the student can see (never unrounded
+  internals); where the maths rounds, the question says "Give your answer to the nearest penny" and the
+  key rounds half up. Worked answers are shown in full money form (£30,432.00, £1,133.33).
+- **Where it came from.** Jon's 2 Oct ruling that "whole pounds" are fine was misread as "round money
+  answers to whole pounds" (todo §1.36's tax-theft line, corrected 3 Oct 2026). It means only that a
+  whole-pound amount needs no .00.
+- **Implementation:** `moneyResult()` in `games/tax-theft/index.html` (game-local; whether it becomes a
+  shared helper is todo START item 5). It reads the raw typed string: a `type="number"` input keeps a
+  valid number exactly as typed, so 114.4 and 114.40 can be told apart. `scripts/verify-tax-theft.py`
+  checks all three outcomes on every step of every salary.
+
 ## 7.2 KaTeX Reference — Common Patterns
 
 | **Pattern** | **LaTeX** | **Output** |
