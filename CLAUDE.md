@@ -19,8 +19,14 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
 - **Read first: `docs/todo.md`'s START block** (rewritten today) and **`docs/status-2026-10-03.md`**, a
   dated snapshot of what is done, in progress and not started, with every open item sized and the
   paths to a resit route by w/c 26 Oct and Log Laws by 12 Oct.
-- **Critical and live: the About page claims "no data collected … GDPR compliant"** (todo §1.6), which is
-  false while GA4, the Sheets log and Firebase run. Waiting on Jon's wording.
+- **About page claims (todo §1.6), 3 Oct 2026, branch `claude/about-claims`, HELD before merge.** The
+  false "no data collected" is replaced everywhere it was live (About meta/og/principles; portal
+  meta/og and header badge) with Jon's approved wording. The spec claim ("every game maps to a spec
+  reference") is false: 68 of 96 games are on the spec map, the 28 others are §1.42. Waiting on Jon's
+  wording for that line and his ruling on the bio's "collects zero student data" (`about/index.html:155`).
+  New CI checks (Tiers 1 + 2 group): `scripts/check-spec-mapping.py` (UNMAPPED list, reported) and
+  `scripts/check-public-claims.py` (patterns in the script; KNOWN list, reported). Both fail on a new
+  breach and on a stale list entry.
 - **Resit route: nothing built or specified** (todo §3.13): no `games.json`, no `/resit/`, no
   `?level=resit`; Jon to rule the suite and what `/resit/` is. Log Laws Solve is live.
 - **Filed today:** §1.41 (`core-maths-paper1` NI at 12%), §3.13, §4 item 17 (four check scripts not in
