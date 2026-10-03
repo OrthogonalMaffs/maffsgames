@@ -52,10 +52,7 @@ COMPILED = [re.compile(p, re.I) for p in PATTERNS]
 
 # Live claims awaiting Jon's ruling: (path, exact matched text, lower case). Reported, never fail;
 # a stale entry fails. Remove the entry in the PR that rewords the claim.
-KNOWN = {
-    ("about/index.html", "collects zero student data"):
-        "the bio's fourth paragraph, which the 3 Oct 2026 contract put out of scope; Jon to rule",
-}
+KNOWN = {}   # empty since 3 Oct 2026: the About bio's "collects zero student data" was reworded (Jon)
 
 TAG = re.compile(r"<[^>]+>")
 COMMENT = re.compile(r"<!--.*?-->", re.S)
