@@ -320,11 +320,11 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div class="start-sub">A calculator trolley is rolling down the track. Muppets — oblivious phone-zombies — are in the way.<br>Choose which track to send the trolley down. Maximise total Muppets hit.<br>Calculate, don't guess.</div>
 
   <div class="level-preview" id="lvlPreviewKs3" style="border-left-color:var(--green)">
-    <h3 style="color:var(--green)">KS3 — Year 7-9</h3>
+    <h3 style="color:var(--green)">Foundation</h3>
     <p>Certain vs single gamble. Clean decimals. Clear gaps.</p>
   </div>
   <div class="level-preview" id="lvlPreviewGcse" style="border-left-color:var(--orange)">
-    <h3 style="color:var(--orange)">GCSE — Year 10-11</h3>
+    <h3 style="color:var(--orange)">GCSE</h3>
     <p>Two-outcome gambles, fractions, word problems. Tighter margins.</p>
   </div>
   <div class="level-preview" id="lvlPreviewCore" style="border-left-color:var(--purple)">
@@ -573,7 +573,7 @@ function showPB() {
   const pb = getPB();
   const el = document.getElementById('pbInfo');
   if (pb.score > 0) {
-    el.textContent = 'Personal best (' + currentLevel.toUpperCase() + '): ' + pb.score + ' Muppets, ' + pb.stars + ' star' + (pb.stars !== 1 ? 's' : '');
+    el.textContent = 'Personal best (' + (currentLevel === 'ks3' ? 'FOUNDATION' : currentLevel.toUpperCase()) + '): ' + pb.score + ' Muppets, ' + pb.stars + ' star' + (pb.stars !== 1 ? 's' : '');
   }
 }
 
@@ -611,7 +611,7 @@ function startGame() {
   document.getElementById('resultsScreen').classList.remove('active');
   document.getElementById('gameScreen').classList.add('active');
   document.getElementById('gameHeader').style.display = 'flex';
-  document.getElementById('levelPill').textContent = currentLevel.toUpperCase();
+  document.getElementById('levelPill').textContent = currentLevel === 'ks3' ? 'FOUNDATION' : currentLevel.toUpperCase();
   updateScoreDisplay();
 
   if (typeof mfg === 'function') {

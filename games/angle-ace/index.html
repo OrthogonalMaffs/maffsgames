@@ -104,7 +104,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     </div>
     <div class="level-select" id="levelSelect">
       <div style="font-size:.85rem;font-weight:600;margin-bottom:.5rem;text-align:center">Choose your level:</div>
-      <button class="level-btn" data-level="year6" onclick="selectLevel('year6')"><span class="level-name">Year 6</span> <span class="level-arrow">Year 6 &rarr; Year 7</span> <span class="level-star">This is real KS3 maths</span></button>
+      <button class="level-btn" data-level="year6" onclick="selectLevel('year6')"><span class="level-name">Starter</span> <span class="level-arrow">Build the method</span></button>
       <button class="level-btn" data-level="gcse" onclick="selectLevel('gcse')"><span class="level-name">GCSE</span> <span class="level-arrow">Full exam practice</span></button>
     </div>
   <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
@@ -861,7 +861,7 @@ function endGame(){
   document.getElementById('finalScore').textContent=score;
   let statsHTML='Full marks (angle + reason): '+fullMarks+'/'+total+' ('+pct+'%)<br>';
   if(currentLevel==='year6'){
-    statsHTML+='You just completed a KS3 maths topic. In September, when your teacher introduces angles, you\'ll be the student who already knows this.';
+    statsHTML+='You just completed a full angles topic. GCSE level is next: the same reasons, in exam-style questions.';
   } else {
     statsHTML+='In the exam, every angle question requires the reason for full marks.';
   }
