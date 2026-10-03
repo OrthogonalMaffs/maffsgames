@@ -3,6 +3,10 @@ Ten came from Gemini across two messages. Five were written here to fill locks t
 storylines described but did not supply: locker-nth-term, hamster-feeder-bounds,
 heat-lamp-gradient, sprinkler-flow-rates, mat-tiling-hcf.
 What was changed and why: docs/escape-puzzle-bank.md, "Batch 3".
+STALE RECORD (noted 3 Oct 2026): hamster-feeder-bounds below is NOT the live lock. It was
+corrected in the room on 2026-09-08 (docs/escape-puzzle-bank.md), and its VERIFY line here is
+a syntax error, so scripts/check-lock-bank.py rejects it. Do not build from this block; read
+the room's own data (escape-rooms/hamster-heist/). Todo §4 item 17.
 
 
 Room 3 - The P.E. Shed Rebellion (KS3 / GCSE)

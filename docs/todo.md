@@ -1,6 +1,8 @@
 # MaffsGames to-do
 
-Last updated: 3 Oct 2026 (home, tax-theft): START item 4 done (band method on taxable income, two medium salaries replaced, penny keys, the money-answer standard as canon §7.1.3, closing line); §1.36 corrected to Jon's actual 'whole pounds' rule; items 5 and 6 are next. Before that, 2 Oct 2026 (home, phone-gate filing): §1.40 (moments-master overflows 320 on some questions) and §4 item 16 (seed the phone gate) filed; NEXT now starts with item 16, then the four correctness items with their Project-doc pointers. Before that, 2 Oct 2026 (home, theme rulings): Jon's rulings on the pilot filed (Split It's KS3 is "Foundation"; level keys never change, labels per game; age wording removed per game; §3.12 waits behind the correctness work, see NEXT). Before that, 2 Oct 2026 (home, the theme pilot): one adult register for every game, canon §7.5 rewritten, schools/assets/theme.css and scripts/check-theme.py in CI, Split It migrated as the pilot; the migration queue is §3.12. Before that, 2 Oct 2026 (cloud, the phone-width gate): tier 1 loads every served page and fails any page or game start over 320px wide, 44 known overflows recorded (§1.34, §4 item 12, PR 62); class findings filed as §1.37–§1.39. Before that, 2 Oct 2026 (cloud, late night: the B7 rebuild): B7 rebuilt (§1.31, PR 59), 277 KaTeX entries in 12 games ledgered; next is fix batch 1, drawn by Project Claude from the per-game counts in START. Before that, 2 Oct 2026 (cloud, late night): §1.33 fixed (PR 58), the stale Sequence Solver copy is a redirect stub; tier 1's index.html-only discovery filed as §4 item 12. Before that, 2 Oct 2026 (cloud, night): one site footer on every page, one stylesheet, checked in CI (§1.28, PR 57); §1.33 and §1.34 filed; next is phone-fit batch 2. Before that, 2 Oct 2026 (cloud, evening): KaTeX wrapper audit done (docs/audit-katex-wrappers.md), 386 strings in 19 games by B7's test, 522 in 25 by the second count; §1.32 filed; next is the fix contract. Before that, 2 Oct 2026 (cloud, late afternoon): Contract 2 live (PR 54), 100 asks name their form; proof-builder split out as §1.30; next is the read-only KaTeX wrapper audit. Before that, 2 Oct 2026 (cloud, afternoon): §4 item 10 live (PR 53), --write-ledger merges and refuses an unread bank; next is Contract 2. Before that, 2 Oct 2026 (cloud): item 7 live (PR 52), ledger identity by content for every rule; next is Contract 2. Before that, 2 Oct 2026 (home): B11 live (PR 51), options equal in value; split A 1 / B 68 / C 88 / D 42; next is item 7. Before that, 1 Oct 2026 (daytime, home): /updates/ launched; footer clipping filed as §1.28. Before that, 1 Oct 2026 (after midnight, home): section click tracking built, PR held for Jon's privacy wording. Before that, 1 Oct 2026 (late night, home): group A FIXED, 39 questions, scan 252 → 210, B11 next. Before that, 1 Oct 2026 (night, home) — the "What's changed" page built at /updates/, unlaunched (noindex, unlinked); check-site.py discovers root pages; the link check is in CI. Before that, 1 Oct 2026 (late, home) — CI in parallel in the Playwright image (~5 min), with a known font gap; before that the value-equivalent options scan made deterministic, group A is 39, see START. Before that, 1 Oct 2026 (late) — the shared Next control. Before that, 1 Oct 2026 (evening) — phone-fit batch 1. Before that, 1 Oct 2026 (afternoon) — the portal fits a phone (item 3.10). Before that, 1 Oct 2026 — New Shapes fits a phone; every game measured (item 3.9), see START. Before that, 30 Sep 2026 — Normal Navigator recomputed, see START. Before that, 29 Sep 2026 — **Graph Transformer: the 3 puzzle-authoring mismatches found
+**Repository history:** this repository started fresh on 2 Oct 2026. Any PR number or commit hash from before then, here or in canon and CLAUDE.md, refers to `OrthogonalMaffs/maffsgames-archive` (archived, read-only). This repository's PRs are #1–#4 so far.
+
+Last updated: 3 Oct 2026 (home, the docs clear): START rewritten from `docs/status-2026-10-03.md`; §1.6 escalated (the About page's "no data collected" is live and false); §1.41 (NI at 12%), §3.13 (resit route, unspecified), §4 items 17 (four check scripts not in CI) and 18 (CI Contract B) filed; drift fixed (canon §7.5.1 note, archive PR labels, counts). Before that, 3 Oct 2026 (home, tax-theft): START item 4 done (band method on taxable income, two medium salaries replaced, penny keys, the money-answer standard as canon §7.1.3, closing line); §1.36 corrected to Jon's actual 'whole pounds' rule; items 5 and 6 are next. Before that, 2 Oct 2026 (home, phone-gate filing): §1.40 (moments-master overflows 320 on some questions) and §4 item 16 (seed the phone gate) filed; NEXT now starts with item 16, then the four correctness items with their Project-doc pointers. Before that, 2 Oct 2026 (home, theme rulings): Jon's rulings on the pilot filed (Split It's KS3 is "Foundation"; level keys never change, labels per game; age wording removed per game; §3.12 waits behind the correctness work, see NEXT). Before that, 2 Oct 2026 (home, the theme pilot): one adult register for every game, canon §7.5 rewritten, schools/assets/theme.css and scripts/check-theme.py in CI, Split It migrated as the pilot; the migration queue is §3.12. Before that, 2 Oct 2026 (cloud, the phone-width gate): tier 1 loads every served page and fails any page or game start over 320px wide, 44 known overflows recorded (§1.34, §4 item 12, PR 62); class findings filed as §1.37–§1.39. Before that, 2 Oct 2026 (cloud, late night: the B7 rebuild): B7 rebuilt (§1.31, PR 59), 277 KaTeX entries in 12 games ledgered; next is fix batch 1, drawn by Project Claude from the per-game counts in START. Before that, 2 Oct 2026 (cloud, late night): §1.33 fixed (PR 58), the stale Sequence Solver copy is a redirect stub; tier 1's index.html-only discovery filed as §4 item 12. Before that, 2 Oct 2026 (cloud, night): one site footer on every page, one stylesheet, checked in CI (§1.28, PR 57); §1.33 and §1.34 filed; next is phone-fit batch 2. Before that, 2 Oct 2026 (cloud, evening): KaTeX wrapper audit done (docs/audit-katex-wrappers.md), 386 strings in 19 games by B7's test, 522 in 25 by the second count; §1.32 filed; next is the fix contract. Before that, 2 Oct 2026 (cloud, late afternoon): Contract 2 live (PR 54), 100 asks name their form; proof-builder split out as §1.30; next is the read-only KaTeX wrapper audit. Before that, 2 Oct 2026 (cloud, afternoon): §4 item 10 live (PR 53), --write-ledger merges and refuses an unread bank; next is Contract 2. Before that, 2 Oct 2026 (cloud): item 7 live (PR 52), ledger identity by content for every rule; next is Contract 2. Before that, 2 Oct 2026 (home): B11 live (PR 51), options equal in value; split A 1 / B 68 / C 88 / D 42; next is item 7. Before that, 1 Oct 2026 (daytime, home): /updates/ launched; footer clipping filed as §1.28. Before that, 1 Oct 2026 (after midnight, home): section click tracking built, PR held for Jon's privacy wording. Before that, 1 Oct 2026 (late night, home): group A FIXED, 39 questions, scan 252 → 210, B11 next. Before that, 1 Oct 2026 (night, home) — the "What's changed" page built at /updates/, unlaunched (noindex, unlinked); check-site.py discovers root pages; the link check is in CI. Before that, 1 Oct 2026 (late, home) — CI in parallel in the Playwright image (~5 min), with a known font gap; before that the value-equivalent options scan made deterministic, group A is 39, see START. Before that, 1 Oct 2026 (late) — the shared Next control. Before that, 1 Oct 2026 (evening) — phone-fit batch 1. Before that, 1 Oct 2026 (afternoon) — the portal fits a phone (item 3.10). Before that, 1 Oct 2026 — New Shapes fits a phone; every game measured (item 3.9), see START. Before that, 30 Sep 2026 — Normal Navigator recomputed, see START. Before that, 29 Sep 2026 — **Graph Transformer: the 3 puzzle-authoring mismatches found
 by the earlier par-verification pass (below) are now fixed, and that pass is a permanent CI
 check.** A-level #7 and #25 both targeted amplitude ×3, unreachable with only the ±2ⁿ y-scale
 buttons (Stretch ×2/×½ y + Reflect x-axis) — retargeted to amplitude ×2 on Jon's ruling: #7 is now
@@ -161,112 +163,60 @@ section.
 
 **Format of this block (standing, from 30 Sep 2026): it holds only the current handover — what is live, what is in flight, what needs Jon. When a new handover is written, the previous one moves word for word into "Done — full history" at the bottom of this file, under its date.**
 
-**Deferred when the repo was rebuilt for public release (2 Oct 2026). Do these first, in this order.**
-The work was left out of the fresh repo's first commit and is held as patch files outside the repo.
+**Handover, 3 Oct 2026 (home, the docs clear). Pick up here.**
 
-1. **Wrong-keys batch 1 (stat-attack, graph-sketcher, growth-and-decay): reapplied from patch 0001
-   (old `2e1ffe5`) in PR #3. DONE: merged 3 Oct 2026 (`9f9ce59`), live pages byte-identical to the merge.** Corrects the keys in the three games, including the
-   three growth-and-decay keys ruled under §1.36 (`:229` → 1800, `:380` → 15500, `:404` → 2170), and adds
-   `scripts/verify-stat-attack.py`, `verify-graph-sketcher.py` and `verify-growth-and-decay.py`. Each one fails on
-   the uncorrected game and passes on the corrected one, and all three now run in CI. Patch 0001 holds no
-   tax-theft work; an earlier version of this item said it did.
-2. **Reapply contracts-into-docs (APPROVED by Jon, 2 Oct 2026)** (PR #68 on the old repo: the wrong-keys batch 1 and
-   Fermi Lab rebuild contracts as `docs/next-contract-*.md`), with the Fermi wheel-revs question's start city changed to Bristol (Jon's ruling; its id changes to match).
-3. **Review Firebase database rules (leaderboard write access) and consider HTTP-referrer restriction
-   on the web API key; Jon to make the GCP change.** Context (2 Oct 2026): the repo is public, and
-   GitHub secret scanning flagged the Firebase web config `apiKey` (alert #1, closed as won't fix: public
-   by design, access controlled by the database rules). The rules are `firebase/database.rules.json`.
-4. **Tax-theft: DONE (3 Oct 2026, branch `claude/tax-theft-keys`).** Four faults fixed in
-   `games/tax-theft/index.html`. (1) **Band method:** income tax was charged with the basic band
-   stretched to a gross £50,270, so every salary over £100,000 was under-taxed by £500 to £2,514. Tax is now
-   on taxable income: 20% on the first £37,700, 40% to £125,140, 45% above (gov.uk 2025/26). The step's
-   wording teaches band widths on taxable income. (2) **Medium:** £105,000 and £118,000 needed the taper
-   medium never teaches; replaced by £86,500 and £97,500. (3) **Keys:** every key comes from one function
-   (`computeKeys`), in whole pence, from the figures the payslip shows; only net monthly pay rounds (nearest
-   penny, half up; no ties in any salary), and its step says so. (4) **Closing line:** "lost your personal
-   allowance entirely" only at £125,140 and above; below that it names the reduced allowance. Answers are
-   checked to the money-answer standard (canon §7.1.3). `scripts/verify-tax-theft.py` (CI, group B)
-   plays all 20 salaries; it failed on the old game (489 FAILs) and passes on the new one.
-5. **Apply the money-answer standard (canon §7.1.3) to every money game, and decide whether it belongs in
-   a shared helper.** The 'whole pounds' ruling was misread as "round answers to pounds"; it means
-   whole-pound amounts need no .00. §1.36 is corrected; tax-theft is the reference implementation (a
-   game-local `moneyResult()`). Games with a typed number input and £ on the page, NOT yet classified as
-   having money answers: `chart-interrogator`, `graph-sketcher`, `growth-and-decay`, `split-it`,
-   `stat-attack`, `test-the-claim`. `split-it` is the known live case (§1.36: ±0.05 accepts wrong pence).
-   A shared `schools/assets/` helper is §1.36's proposal; the decision is Jon's.
-6. **Check other games that compute income tax for the gross-threshold band misconception** (the basic
-   band treated as ending at a gross £50,270 whatever the allowance). Search of 3 Oct 2026 (every game and
-   escape room, for income tax / personal allowance / £12,570 / £37,700 / £50,270 / tax band / payslip):
-   only `core-maths-paper1`. `:383` uses the gross framing ("20% on earnings above this up to £50,270")
-   but with a full allowance, so its answer is right; no question there tapers. Separately, `:447` and
-   `:489` state NI at 12% (the employee rate has been 8% since 6 April 2024; 2025/26 is 8%). Report only;
-   not changed.
+**The full status picture is `docs/status-2026-10-03.md`** (a dated snapshot: what is done, in
+progress and not started, every open item sized, and the paths to a resit route by half-term and Log
+Laws by 12 Oct). This block holds only what the next session needs.
 
-**Handover, 2 Oct 2026 (home, the theme pilot). Pick up here.**
+- **Live and verified (3 Oct):** PR #3 (wrong-keys batch 1, `9f9ce59`) and PR #4 (tax-theft, `b2c4cd2`)
+  merged; each changed game's live page is byte-identical to `main`; CI and Pages green on both.
+  Nothing is open. The money-answer standard is canon §7.1.3.
+- **Critical, live: the About page's false privacy claim (§1.6).** "No data collected — safe for school
+  networks, GDPR compliant" is still on `/about/` (`about/index.html:6,9,170,171`), while the site runs
+  GA4, the Sheets event log, Firebase initials and click tracking. Waiting on Jon's wording; then S.
+  Do it before anything points resit lecturers at the site.
+- **Needs Jon before the resit route (§3.13):** (a) which games make the resit suite (the audit's 31
+  candidates are unruled); (b) what `/resit/` is (a curated page, or the portal filtering redesign);
+  (c) whether `?level=resit` is wanted, and what it does (no spec exists). The shortest path to a
+  route by w/c 26 Oct is a static curated page, which needs (a), (b) and the About fix, not
+  `games.json`.
+- **Log Laws Solve (Level 3 class, w/c 12 Oct): done and live.** Jon to confirm the class date against
+  the SOW. Its phone fit (+570px, §3.9 batch 9) matters only if the class plays on phones.
 
-- **Done: one adult register for every game (Jon's contract, 2 Oct 2026; canon §7.5 rewritten).**
-  - **Canon §7.5 / §7.5.1** replace the three-row table and the lowest-tier rule with ONE register
-    (Outfit text, JetBrains Mono numbers, OpenDyslexic only in Aa; no emoji in `<h1>`; age-neutral
-    copy; each game its own `--accent`), with Jon's reason and the resit-strand reasoning folded in.
-    **Palette rule:** roster levels include Year 6, KS3 or GCSE → `data-theme="light"`; only A-Level,
-    A-Level Year 2, Further, Core, L3, L4 → dark (Core dark by Jon's ruling). Derived from the roster,
-    never chosen: `palette()` in `scripts/check-theme.py` is the only copy. 67 light, 30 dark.
-    CLAUDE.md's Theme section, the roster's resit-strand note and `.claude/rules/project-claude.md`'s
-    design summary now point at canon.
-  - **`schools/assets/theme.css`**: base tokens (`--bg --surface --surface-alt --text --muted
-    --border --correct --wrong --hint --font-text --font-num`), a light palette (white surfaces, navy
-    `#1a2744` text, beside the portal) and a dark one, chosen by `data-theme` on `<html>`; it loads
-    both fonts. **Aa wins on font**: `body.accessible` switches both font tokens to OpenDyslexic, so
-    every element written with them follows. **Contrast measured, all AA**, table in canon §7.5:
-    lowest light 5.20 (`--hint` on its tint), lowest dark 5.24 (`--wrong` on `--surface-alt`). Light
-    `--correct` was first `#15803d`; on its own 10% feedback tint that was 4.38, so it is `#166534`.
-    `opendyslexic.css` and `site-footer.css` untouched.
-  - **`scripts/check-theme.py`**, in CI (Tiers 1 + 2 job). MIGRATED = `split-it` (every rule
-    enforced); NOT_YET = the other 96 roster games, each reported with its expected palette, never
-    failing. Fails on: a roster level the rule cannot place; a roster game in neither list; a folder
-    under `games/` that is neither (only `the-perfect-prank` is listed, as the unlisted prototype).
-    13 injected faults, one per rule, all caught; a clean copy passes. Run `--verbose` for every
-    NOT_YET finding and **the age-wording inventory: 27 of 96 games, for Jon to rule on.**
-  - **Split It migrated** (light): links `theme.css`, `data-theme="light"`, Nunito and Press Start 2P
-    gone, every colour a token (its own: `--accent #15803d`, `--accent-dim`, `--on-accent`, three
-    ratio-bar part colours), header title now an `<h1>`, the Aa snippet's hard-coded backgrounds
-    replaced by `theme.css`'s Aa tokens. Bank, generators, marking, scoring, analytics events and
-    leaderboard calls untouched; the `ks3`/`gcse` level keys are unchanged. **No base token redefined.**
-  - **Wording, every before/after line, for Jon's review:**
-    - `:153` `KS3<span class="lbl">Years 7–9</span>` → `Starter<span class="lbl">Build the method</span>`
-    - `:154` `GCSE<span class="lbl">Years 10–11</span>` → `GCSE<span class="lbl">Exam standard</span>`
-    - results line `Level: ${S.level.toUpperCase()}` (showed "KS3") → `Level: ${S.level==='ks3'?'Starter':'GCSE'}`
-    - header `<div class="hdr-title">SPLIT IT</div>` → `<h1 class="hdr-title">Split It</h1>` (case only)
-    - **RULED 2 Oct 2026 (Jon): Foundation / GCSE / Advanced (if a third is needed).** "Starter" is now
-      "Foundation" (button and results line; sub-labels unchanged). The leaderboard hub still names the
-      level "KS3" until Split It's next migration pass declares its labels (§3.12, ruling 2).
-  - **Phone fit, Split It** (`measure-phone-fit.py`, which now takes `--aa`): asking screen better at
-    every size, both modes, identical over repeated runs: normal 410/354/354 → **403/350/350**, Aa
-    470/386/386 → **459/378/378**; no sideways scroll. A first pass was worse (Aa 539 at 320, sideways)
-    and was fixed before commit: OpenDyslexic now reaches the HUD numbers and the buttons, which
-    the old per-element fonts kept out of Aa. Wrong-answer screen still unmeasurable by the
-    driver, as before. Recorded in §3.9.
-  - **Screenshots**, before and after, normal and Aa, at 390×844: `docs/screens/theme-pilot-split-it/`
-    (`*-2-levels.png` the level picker, `*-4-wrong.png` a wrong answer).
-  - **Checks:** `check-theme.py` OK; `check-footer.py` OK; `check-canonical-links.py` OK; tier 3
-    `--only split-it` OK. Tiers 1+2 on this Windows machine: 14 FAILs, all "stale: now fits" phone
-    entries in pages and games this PR does not touch, and **the same 14 on `main`** here: the gate
-    measures in the fallback font and Windows' is narrower than CI's DejaVu. CI is the judge (see PR).
-- **Held, by Jon's ruling of 2 Oct 2026: phone-fit batch 2** (`distinctly-average`,
-  `estimation-golf`, `angle-ace`) waits for this contract to merge, then is done **with** their theme
-  migration (§3.12).
-- **NEXT, in this order (Jon, 2 Oct 2026; canon §0.2, correctness first):** (0) **the seeded phone
-  gate, §4 item 16, with §1.40's `moments-master` entry**: a flaky gate blocks every merge under the
-  zero-failures rule, so it goes first; (1) **wrong-keys batch 1**, contract
-  `claude/contract-wrong-keys-batch1-2026-10-02.md`; (2) **wrong-keys batch 2**, contract to come from
-  Project Claude; (3) **the Fermi Lab rebuild**, `claude/fermi-lab-review-2026-10-02.md` and
-  `claude/fermi-lab-rebuild-2026-10-02.md`; (4) **the shared precision marker (§1.36) with
-  skip-after-three**, the skip-after-three contract to come from Project Claude; **then** §3.12, the
-  theme migration queue, starting with batch 2 above. The `claude/…` files are Project docs (the
-  claude.ai Project), not in this repo: ask Jon for them if they are not in the session.
-  **Needs Jon:** the earlier
-  handovers' items, which stand (see "Done — full history" under 2 Oct 2026 (cloud, the phone-width
-  gate)), including the two `--live` checks.
+**Queue (Jon's NEXT of 2 Oct, with today's state; the order is Jon's to change):**
+
+1. **Seeded phone gate, §4 item 16, with §1.40's `moments-master` entry.** Not started. First, because a
+   flaky gate blocks every merge under the zero-failures rule. S–M.
+2. **Wrong-keys batch 2.** Contract to come from Project Claude.
+3. **Fermi Lab rebuild.** Contracts are Project files (`claude/fermi-lab-review-2026-10-02.md`,
+   `claude/fermi-lab-rebuild-2026-10-02.md`); ask Jon if they are not in the session.
+4. **The money-answer standard (canon §7.1.3) across every money game, and whether it is a shared
+   helper (§1.36; Jon's call).** Tax-theft is the reference (`moneyResult()`). Games with a typed number
+   input and £ on the page, not yet classified as having money answers: `chart-interrogator`,
+   `graph-sketcher`, `growth-and-decay`, `split-it`, `stat-attack`, `test-the-claim`. `split-it` is the
+   known live case (±0.05 accepts wrong pence); `growth-and-decay` still marks by band, not `sf`.
+   Skip-after-three rides with it; its contract is to come from Project Claude.
+5. **Then §3.12**, the theme migration queue, starting with batch 2 (`distinctly-average`,
+   `estimation-golf`, `angle-ace`) together with their phone fit.
+
+**Also open, not yet placed in that order:**
+
+- **§1.41, `core-maths-paper1` states NI at 12%** (`:447`, `:489`). Jon: update to 8% or label the rate
+  as given. S.
+- **Income-tax band misconception, checked 3 Oct:** only `core-maths-paper1` computes income tax;
+  `:383` uses the gross framing ("20% on earnings above this up to £50,270") with a full allowance, so
+  its answer is right and nothing there tapers. No action unless a tapered question is added.
+- **Patch 0002** (`E:\jon\maffsgames-c1\patches\0002-*.patch`, archive PR 68: contracts into `docs/`,
+  Fermi start city changed to Bristol, id to match). Approved. The commit hook blocks it until the
+  city is changed. S–M.
+- **Firebase rules review** (leaderboard write access); Jon makes the GCP key restriction. S–M.
+- **§4 item 17, the four check scripts not in CI**; **§4 item 18, CI Contract B**; then Jon adds branch
+  protection (none today).
+
+**Repository history.** This repository started fresh on 2 Oct 2026. In this file, canon and CLAUDE.md,
+any PR number or commit hash from before 2 Oct 2026 refers to `OrthogonalMaffs/maffsgames-archive`
+(archived, read-only). This repository's own PRs are #1–#4 so far.
 
 **A live bug is never a decision item, even when its fix needs a call.** It goes at the top of
 this file as a bug, filed under §1. Expectation Station's stage-1 lock sat for three days under
@@ -284,7 +234,7 @@ Sections, in priority order. **Nothing in §4 starts until §1–2 are clear.**
 |---|---|---|
 | 1.3 | **Circle Theorem Spotter Q48 has no solution**, and its marked answer encodes the misconception the game exists to correct. | **Jon** — pick the numbers |
 | 1.4 | `matrix-crunch:171` and `formula-unlocked:295` show 3 options where there should be 4. `MaffsOptions.build()` drops the duplicate correctly but cannot invent a replacement. Each needs one genuine 4th distractor authored — a teaching call, not a code change. Until then `options.js` logs a `console.warn` on those questions, deliberately, as a visible canary. | **Jon** — two distractors |
-| 1.6 | **About page false claims**: "no data collected" and "every game maps to a spec". Also gives an out-of-date teaching role and doesn't mention escape rooms. Portal credibility, worth doing soon. | **Jon** — wording, then CC |
+| 1.6 | **About page false claims**: "no data collected" and "every game maps to a spec". Also gives an out-of-date teaching role and doesn't mention escape rooms. Portal credibility, worth doing soon. **CRITICAL, still live 3 Oct 2026:** `about/index.html:6`, `:9` (meta and og descriptions: "No sign-up, no data collected"), `:170` ("No data collected — safe for school networks, GDPR compliant") and `:171` ("every game maps to a spec reference"). The site runs GA4, the Sheets event log, Firebase leaderboard initials and section-click tracking (canon §1), so the claim is false and contradicts `/privacy/`. Fix before the site is pointed at resit lecturers. | **Jon** — wording, then CC |
 | 1.7 | **Chart Interrogator, cumulative-frequency Phase 2: the spread key can never vary.** It compares the IQR with 1.5 × itself (`sessionAnswers.iqr < (q3 − q1) × 1.5`), so the key is "relatively consistent" in all 10 scenarios and the model answer repeats it. Its other dropdown, "25% have a value below Q1 / above Q3", offers **two true options** and accepts only "below Q1". **RULED 26 Sep:** C (a benchmark question built from the scenario's existing `benchVal`) + D (a per-scenario IQR comparator keyed on the scenario's true IQR, replacing the constant ×1.5 self-comparison). Contract B: docs/next-contract-chart-interrogator-cumfreq.md. **FIXED 28 Sep 2026 (`d8b244e`).** The spread sentence is replaced by a benchmark question (a typed count, marked to ±2.5% of n) and an IQR comparator keyed on the drawn curve's true IQR. The verdicts split 5/5, every compIQR/IQR ratio lies outside 0.7–1.4, and CF7's comparator is £280 by Jon's ruling. The 25% dropdown now offers below Q1 / the median / Q3, with only Q1 correct. No Phase 2 key reads `sessionAnswers`. Record: `docs/audit-chart-interrogator-cumfreq.md`. | — fixed |
 | 1.8 | **Chart Interrogator, histogram Phase 2: H2 rejects a true answer.** The sentence always keys on the 4th class interval's share alone (>30% "most common range", >15% "typical"). In H2 that interval, 170–180, *is* the modal class at 28%, so "this is the most common range" is true and marked wrong. The other nine scenarios are not contradicted by the data. **RULED 29 Sep (modal class = highest frequency density); HELD 1 Oct 2026 by Jon, unbuilt: the ruling changes no key.** Under the ruled definition 170–180 is *not* H2's modal class: it has the highest frequency (40 of 143), but 165–170 has the highest density (6.0 against 4.0). So the rule keeps H2 on "typical", and keeps every other histogram's key too (H1 "most common", H3–H10 "typical"). Keying on highest frequency instead would call 170–180 "the most common range" beside a visibly taller 165–170 bar. The ruling also leaves the typical / relatively-few split on the 15% share. **The defect is the wording:** the same sentence opens "the class interval with the highest frequency is 170–180" and then asks if 170–180 is "the most common range", which a student reads as highest frequency. All ten tabled in `docs/audit-chart-interrogator-tolerances.md`. **RULED 1 Oct 2026 (Jon):** reword the item as a modal-class question ("170–180 contains the most people. Is it the modal class?"), keyed on highest frequency density, with an explanation that names frequency against frequency density. It applies to every histogram where class widths differ, which is all ten. **DONE 1 Oct 2026 (Jon approved the wording, with three additions).** Each histogram names one class and asks "[class] contains N [people]. Is it the modal class?", keyed on frequency density alone. Which class is named comes from a one-word `ask` field, with the data unchanged: `most` (the most populous class, the default), `modal` (H5) or `wide` (the most populous class wider than the modal one: H7, H8, H10). The keys split **5 Yes / 5 No** (H1, H3, H5, H6, H9 Yes). "Yes, because it contains the most …" is offered only when that is true of the named class, and is never keyed. Where the key is Yes it gets "Right answer, wrong reason." and the explanation (H1, H3, H6, H9). The % thresholds are gone. `scripts/verify-chart-interrogator.py` is in CI: it checks every class of every histogram, not only the named one, and its self-test has six injected faults. **Note for Jon:** H7's and H8's wide classes (fd 0.5 and 0.8 against 4.5 and 5.5) are easy Nos. H10's 10–20 (25 items against the modal 20–25's 30) is the only wide class that is a real trap. | — done; `--live` owed (home CC) |
 | 1.9 | **Chart Interrogator marks accurate readers wrong.** The key uses straight-line interpolation between class boundaries; the chart itself is drawn as a Bezier curve, so a student reading correctly off the curve is marked wrong against the straight-line value (CF6 Q1: 185 drawn vs 192.5 keyed; CF7 Q3: 1546 drawn vs 1575 keyed). Expected values are also rounded oddly (CF9 Q1: 1.53 → keyed 2). The fixed ±3 tolerance IS the bug. Fix: tolerance = 2.5% of the axis span (IQR: 2 ×), key from the drawn curve, no rounding of expected values. Class across chart types, not just cumulative frequency. Contract B: docs/next-contract-chart-interrogator-cumfreq.md. **FIXED for cumulative frequency, 28 Sep 2026 (`d8b244e`).** One curve definition, `cfCurve`, now feeds the drawing and every key. The tolerance is 2.5% of the axis span (5% for the IQR), and keys are unrounded. In all 10 scenarios the key matches the pixel-measured drawn curve to within 0.05% of the axis, and the drawing is pixel-identical. The rest of the class, box plots and stem and leaf, is 1.16. | — fixed (cumfreq); rest → 1.16 |
@@ -319,6 +269,7 @@ Sections, in priority order. **Nothing in §4 starts until §1–2 are clear.**
 | 1.38 | **KaTeX display maths overflows a phone in four parent guides** (`indices-surds` 364, `probability-trees` 397, `pythagoras` 325, `statistics-data` 325; the gate names `span.base`). Display maths with no horizontal scroll container. **Fix at the shared stylesheet, `parents/guide.css`** (`overflow-x: auto` on `.katex-display`), not per guide; check any other page that renders display maths. Then remove the 4 entries. Listed in §1.34 but a different cause from its tables. | CC |
 | 1.39 | **`div.header-right` overflows a phone in 10 games** (`decimal-detective`, `equation-builder`, `four-quadrant-explorer`, `like-terms-collector`, `maths-court`, `negative-number-line`, `probability-pioneer`, `shape-shifter`, `word-problem-decoder`, `wrong-on-the-internet`, after start; 4 to 55px over). 24 games use the class name. **First establish whether it is a shared copied template** (diff the `.header-right` rules); if it is, one fix in the template's source and the 24 games that carry it; if not, §3.9's per-game batches (§3.9 already treats it per game). Nothing is changed until that is known. | CC |
 | 1.40 | **Live (phone): `moments-master`'s option buttons overflow a 320px phone on some questions.** Seen in CI on 2 Oct 2026 (run 37045374170, the push run of PR 66, which touched no game): `phone-start:moments-master` 355px wide at 320×568 (+35), `button.opt-btn` to 355px. The pull-request run of the same commit passed, so it depends on the random first question; a student on a small phone gets sideways scroll on those questions. Not in `tier1_phone_overflow`, so the gate fails at random. **Jon (2 Oct): record it in `tier1_phone_overflow` with its width so CI is deterministic about it; fix it in the game's theme migration pass (§3.12).** **The entry lands with §4 item 16, not before:** an entry for a page that fits fails as stale (`check-site.py:1350`), so until the gate measures the same draws every run, an entry only flips which runs fail. Record the width §4 item 16's seeded measurement gives (its worst seed), not the 355px of one draw. | **Code Claude**, in §4 item 16's PR; fix in the §3.12 pass |
+| 1.41 | **Live (content): `core-maths-paper1` states employee NI at 12%** (`:447` "NI is charged at 12% on earnings between £12,570 and £50,270"; `:489` the same rate in Marcus's budget question). The Class 1 employee main rate has been 8% since 6 April 2024 and is 8% for 2025/26 (https://www.gov.uk/guidance/rates-and-thresholds-for-employers-2025-to-2026). Each question states its own rate, so the sums are self-consistent, but a student is taught a rate that is two years out of date. Found 3 Oct 2026 checking other income-tax games (the band misconception does not occur there: `:383` uses a full allowance). | **Jon** — update to 8% (and the keys), or label the rate as given; then CC, S |
 
 **Done this session (26 Sep):**
 - [x] **1.1 Expectation Station cannot be completed — since it shipped (`812cd6a`, 22 Mar).**
@@ -533,7 +484,7 @@ started.** Widen it before it runs so it covers the whole class:
 | 3.2 | Spec mapping contract 2 — render `spec-map/` from the data, board selector, Foundation filter, checker in CI. This is the real fix for §1.5. | 3.1 review |
 | 3.3 | Exam-topic tool, OCR first — needs the OCR crosswalk and gap list from 3.1; building it first would repeat the work. | 3.1 |
 | 3.4 | **Times-tables recall game (new build) — for resitters and Jon's Level 3 maths-module student. Requested 30 Sep 2026. DONE 30 Sep 2026 as `six-sevens-bruv` (START block); design points 1-4 settled by its contract: reverse questions as missing-factor forms, never "c = ? × ?"; the grid is a mastery map that never shows an unearned product; visible count-up, no countdown; adult register. The second game below, "Don't Count the Zeroes", is still to build and should reuse `schools/assets/progress.js`.** Design points to settle before a build contract: (1) the 12×12 grid must not turn recall into lookup — preferred: reverse questions ("56 = ? × ?", click the cell) and/or the grid as a mastery map with keypad answers; (2) speed via count-up scoring, per canon §5 (no countdown under 30 s); (3) adult register for 16+ users — choose tiers with §7.5.1 in mind; (4) adaptive: weak facts served more often, device-local mastery (localStorage). **Roster check done 30 Sep: no existing times-tables or multiplication game** (roster, `games/`, todo, canon and the idea backlog searched; `factor-race` and `prime-factorisation` practise factors, not recall of products). **Same entry, second game: "Don't Count the Zeroes" — standard form (name ruled by Jon, 30 Sep).** Progression: ×/÷ by powers of 10 on a fixed place-value chart (digits slide, placeholder zeros fill, count the jumps) → large numbers to standard form → small numbers (negative powers) → converting back and ordering → calculating (top tier only). Distractors are named misconceptions: counting zeros (0.00045 → 4.5×10⁻³), A outside 1 ≤ A < 10 (45×10⁻⁵), wrong sign of the power. The counting-zeros feedback line is "Don't count the zeroes — count the jumps." **Existing coverage checked 30 Sep:** `standard-form-blitz` (roster #44, GCSE/A-Level, 50+50, convert/multiply/divide) exists. `docs/resit-coverage-audit.md` finds N9.1 COVERED by it (30 of its 50 GCSE items are Foundation-pitched conversions and comparisons; the 20 multiply/divide items are grade 5-6), and a search of its source finds no place-value chart or jump-counting scaffold. It also contradicts `timer-policy.md` today (item 12). So the new game is a scaffold-first sibling, not a duplicate; to rule: does it sit beside Blitz or replace it, and note the CLAUDE.md rule that a scaffold must fade once the student can work without it. | Jon: design points 1-4. The relationship to Standard Form Blitz is ruled, see 3.5 |
-| 3.5 | **Resit strand rulings (Jon, 30 Sep 2026).** (1) **Register: every resit-strand game gets an adult register.** A game entering the strand is restyled to it regardless of what its roster levels give it under canon §7.5.1, which says the lowest tier served decides. **Canon §7.5.1 is to be amended and has not been**; until it is, the rule is only written here and in `docs/resit-coverage-audit.md` §10.7. The audit's §5 lists what needs changing: of the 24 candidate-suite games, 12 list Year 6 first and 12 render a different row from the one §7.5.1 gives them (measured 30 Sep). (2) **`standard-form-blitz` stays** as it is; standard form is STRETCH (`N9.1`), COVERED by it. (3) **"Don't Count the Zeroes" is built as the resit-strand standard form game** — this rules the relationship question left open in 3.4: it sits beside Blitz, does not replace it, and is scaffold-first with a place-value chart. The 3.4 design points 1-4 are still owed. The item 12 conflict between Blitz and `timer-policy.md` is not touched by this ruling. Banding: audit §10. (4) **Algebra basics is one game (Jon, 30 Sep 2026): `A4.1` (simplifying, surds excluded) and `A1.1` (notation) join `A3.1` (vocabulary) and `A7.1` (function machines)**, so audit §10.4's ranks 7, 8 and 11 are one build of 4 formal parts plus the `A4.3` sub-skill (expanding one bracket). The audit's table is left as the record of the ranking on the day. (5) **Six Sevens, Bruv** follows (1): first game under the amended §7.5.1. | Jon: none on the banding (all ruled 30 Sep); canon §7.5.1 amendment (a canon contract, not started) |
+| 3.5 | **Resit strand rulings (Jon, 30 Sep 2026).** (1) **Register: every resit-strand game gets an adult register.** A game entering the strand is restyled to it regardless of what its roster levels give it under canon §7.5.1, which says the lowest tier served decides. **Canon §7.5 / §7.5.1 were rewritten on 2 Oct 2026 (one adult register for every game), which carries this rule; the note that they had not been amended is out of date (corrected 3 Oct 2026).** The audit's §5 lists what needs changing: of the 24 candidate-suite games (audit §10.5 lists **31**; use §10.5, this count is unreconciled), 12 list Year 6 first and 12 render a different row from the one §7.5.1 gives them (measured 30 Sep). (2) **`standard-form-blitz` stays** as it is; standard form is STRETCH (`N9.1`), COVERED by it. (3) **"Don't Count the Zeroes" is built as the resit-strand standard form game** — this rules the relationship question left open in 3.4: it sits beside Blitz, does not replace it, and is scaffold-first with a place-value chart. The 3.4 design points 1-4 are still owed. The item 12 conflict between Blitz and `timer-policy.md` is not touched by this ruling. Banding: audit §10. (4) **Algebra basics is one game (Jon, 30 Sep 2026): `A4.1` (simplifying, surds excluded) and `A1.1` (notation) join `A3.1` (vocabulary) and `A7.1` (function machines)**, so audit §10.4's ranks 7, 8 and 11 are one build of 4 formal parts plus the `A4.3` sub-skill (expanding one bracket). The audit's table is left as the record of the ranking on the day. (5) **Six Sevens, Bruv** follows (1): first game under the amended §7.5.1. | Jon: none on the banding (all ruled 30 Sep); canon §7.5.1 amendment (a canon contract, not started) |
 | 3.6 | **Free Daily Pizza — FDP equivalence, resit fluency strand game 2. DONE 30 Sep 2026 as `free-daily-pizza` (START block has the full record and ten points for Jon).** Was: QUEUED 30 Sep 2026 for a new session, to start only after Six Sevens, Bruv is merged. Jon's full seven-field contract, with his addendum (the daily pizza is a fixed easiest-first mix: 3 from S1, 3 S2, 2 S3, 2 S4, verified for any date), is recorded verbatim in `docs/next-contract-free-daily-pizza.md`, with notes on leaderboard keying for its two STOP IFs. Top of the audit §10.4 build list (the fractions game, 7 parts incl. `R3.1`/`R6.1`). | Done; Jon: eyeball pass and the ten points in START |
 | 3.7 | **Six Sevens, Bruv fits a phone — DONE 30 Sep 2026.** After a wrong answer, Next is above the fold on all 144 orientations at 320×568, 375×667 and 390×844; before, it was below the fold on every one, with its bottom edge 782–1,006px down the page. Keypad hidden during wrong-answer feedback; grid collapsed to a bar on narrow screens; order fact → hint → array → Next; the array below Next on screens 600px tall or less. The phone rule is canon §7.6.1. Open: Aa mode, and the 41px shared Next control. Full record in START OF NEXT SESSION. | Done; Aa mode for Jon |
 | 3.8 | **Leaderboard tidy — BUILT 30 Sep 2026 (PR 23), follow-ups built the same day.** `regression-rumble` Level 4 plays from the button; tier 1 presses every level button (125 controls, 47 games); `binomial-blaster` roster row is A-Level Year 2; `levelLabel()` names every submitted level, on the ticker and the hub; one roster-level table (`scripts/roster-levels.json`); `extract-banks.py` fails loudly on a dead server. Full record in START OF NEXT SESSION. Open: seven other scripts start the stub server unchecked, and 14 games keep in-game level-name maps. | Done; follow-ups listed |
@@ -548,6 +499,7 @@ read by the leaderboard hub (today `levelLabel()` in `firebase-leaderboard.js` n
 when that is built. (c) **Age wording** (`check-theme.py --verbose`, 27 games) is removed game by game as each
 game migrates, never by sweep; each batch quotes its before and after lines for Jon. (d) **§3.12 is not next:**
 see the START block's NEXT line. | **Code Claude**, batch by batch; **Jon** rules each batch's wording |
+| 3.13 | **Resit route: nothing built, nothing specified (status 3 Oct 2026, `docs/status-2026-10-03.md` §1).** Terms: the **resit suite** is the audit's **candidate** list of existing games (`docs/resit-coverage-audit.md` §10.5, 31 games, all live, not ruled; the audit itself excludes `bearing-blitz`); the **resit strand** is the purpose-built games (roster "Resit Fluency Strand": `six-sevens-bruv`, `free-daily-pizza`). Not started: (a) a single games metadata source (`games.json`, referred to in §3.12 but never specified) and the portal filtering redesign; (b) a `/resit/` route (live 404); (c) a `?level=resit` mechanism (no game or doc defines it). The shortest path to a route by w/c 26 Oct is a static curated `/resit/` page (M: publish scope, sitemap, footer, canonical, tier 1), which needs neither (a) nor (c). Of audit §10.4's 19 build targets, only target 1 is part-met (`free-daily-pizza`); the slate (below) is the build list. | **Jon** — rule the suite membership and what `/resit/` is; spec `?level=resit` if wanted; then CC |
 
 ### 3.9 — Phone fit order (Jon, 1 Oct 2026)
 
@@ -804,6 +756,22 @@ Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resi
    overflow, `moments-master` among them: §1.40's entry lands in this PR). Check the pass time against
    the job's timeout, and whether `measure-phone-fit.py` (same driver) should take the same seeds.
 
+17. **Four check scripts are never run in CI** (found 3 Oct 2026): `check-escape-rooms.py`,
+   `check-lock-uniqueness.py` and `check-feedback-options.py` pass locally; `check-lock-bank.py` takes a
+   bank file and passes batches 4–7. Batch 3 rejects `hamster-feeder-bounds`, whose VERIFY in
+   `docs/lock-bank-batch3.txt` is a syntax error: that file is a stale record (the live room was
+   corrected 8 Sep, `docs/escape-puzzle-bank.md`; a header note now says so). `check-verifier-coverage.py`
+   only polices `verify-*`/`test-*`, so it did not catch them. **Fix:** add the three to a CI group, run
+   `check-lock-bank.py` over the batches that are still the record (or retire the batch files), and
+   widen the coverage check to `check-*`. S.
+18. **CI Contract B: triggers, concurrency and local/CI parity** (named "CI Contract B" to keep it apart
+   from Chart Interrogator's 28 Sep "Contract B"; first recorded here 3 Oct 2026). `check-site.yml` runs on
+   `push` to every branch and on `pull_request`, with no `concurrency` group, so every PR commit runs
+   the whole suite twice (PR #3 and #4 each show every job twice). Parity gaps that make local runs
+   disagree with CI: CRLF checkouts (`verify-test-the-claim.py`'s node driver), `node` not on PATH on
+   Windows (Playwright's bundled node works), and the Windows fallback font (14 "stale: now fits" phone
+   entries locally, 0 in CI). Jon adds branch protection after it (none today: API 404, 0 rulesets). M.
+
 
 ## 5. Parked, deliberately
 
@@ -978,6 +946,117 @@ Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resi
 ---
 
 ## Done — full history
+
+### Done 3 Oct 2026 (home, the docs clear)
+
+*Moved here word for word from the START OF NEXT SESSION block on 3 Oct 2026 (home, the docs clear).*
+
+**Deferred when the repo was rebuilt for public release (2 Oct 2026). Do these first, in this order.**
+The work was left out of the fresh repo's first commit and is held as patch files outside the repo.
+
+1. **Wrong-keys batch 1 (stat-attack, graph-sketcher, growth-and-decay): reapplied from patch 0001
+   (old `2e1ffe5`) in PR #3. DONE: merged 3 Oct 2026 (`9f9ce59`), live pages byte-identical to the merge.** Corrects the keys in the three games, including the
+   three growth-and-decay keys ruled under §1.36 (`:229` → 1800, `:380` → 15500, `:404` → 2170), and adds
+   `scripts/verify-stat-attack.py`, `verify-graph-sketcher.py` and `verify-growth-and-decay.py`. Each one fails on
+   the uncorrected game and passes on the corrected one, and all three now run in CI. Patch 0001 holds no
+   tax-theft work; an earlier version of this item said it did.
+2. **Reapply contracts-into-docs (APPROVED by Jon, 2 Oct 2026)** (PR #68 on the old repo: the wrong-keys batch 1 and
+   Fermi Lab rebuild contracts as `docs/next-contract-*.md`), with the Fermi wheel-revs question's start city changed to Bristol (Jon's ruling; its id changes to match).
+3. **Review Firebase database rules (leaderboard write access) and consider HTTP-referrer restriction
+   on the web API key; Jon to make the GCP change.** Context (2 Oct 2026): the repo is public, and
+   GitHub secret scanning flagged the Firebase web config `apiKey` (alert #1, closed as won't fix: public
+   by design, access controlled by the database rules). The rules are `firebase/database.rules.json`.
+4. **Tax-theft: DONE (3 Oct 2026, branch `claude/tax-theft-keys`).** Four faults fixed in
+   `games/tax-theft/index.html`. (1) **Band method:** income tax was charged with the basic band
+   stretched to a gross £50,270, so every salary over £100,000 was under-taxed by £500 to £2,514. Tax is now
+   on taxable income: 20% on the first £37,700, 40% to £125,140, 45% above (gov.uk 2025/26). The step's
+   wording teaches band widths on taxable income. (2) **Medium:** £105,000 and £118,000 needed the taper
+   medium never teaches; replaced by £86,500 and £97,500. (3) **Keys:** every key comes from one function
+   (`computeKeys`), in whole pence, from the figures the payslip shows; only net monthly pay rounds (nearest
+   penny, half up; no ties in any salary), and its step says so. (4) **Closing line:** "lost your personal
+   allowance entirely" only at £125,140 and above; below that it names the reduced allowance. Answers are
+   checked to the money-answer standard (canon §7.1.3). `scripts/verify-tax-theft.py` (CI, group B)
+   plays all 20 salaries; it failed on the old game (489 FAILs) and passes on the new one.
+5. **Apply the money-answer standard (canon §7.1.3) to every money game, and decide whether it belongs in
+   a shared helper.** The 'whole pounds' ruling was misread as "round answers to pounds"; it means
+   whole-pound amounts need no .00. §1.36 is corrected; tax-theft is the reference implementation (a
+   game-local `moneyResult()`). Games with a typed number input and £ on the page, NOT yet classified as
+   having money answers: `chart-interrogator`, `graph-sketcher`, `growth-and-decay`, `split-it`,
+   `stat-attack`, `test-the-claim`. `split-it` is the known live case (§1.36: ±0.05 accepts wrong pence).
+   A shared `schools/assets/` helper is §1.36's proposal; the decision is Jon's.
+6. **Check other games that compute income tax for the gross-threshold band misconception** (the basic
+   band treated as ending at a gross £50,270 whatever the allowance). Search of 3 Oct 2026 (every game and
+   escape room, for income tax / personal allowance / £12,570 / £37,700 / £50,270 / tax band / payslip):
+   only `core-maths-paper1`. `:383` uses the gross framing ("20% on earnings above this up to £50,270")
+   but with a full allowance, so its answer is right; no question there tapers. Separately, `:447` and
+   `:489` state NI at 12% (the employee rate has been 8% since 6 April 2024; 2025/26 is 8%). Report only;
+   not changed.
+
+**Handover, 2 Oct 2026 (home, the theme pilot). Pick up here.**
+
+- **Done: one adult register for every game (Jon's contract, 2 Oct 2026; canon §7.5 rewritten).**
+  - **Canon §7.5 / §7.5.1** replace the three-row table and the lowest-tier rule with ONE register
+    (Outfit text, JetBrains Mono numbers, OpenDyslexic only in Aa; no emoji in `<h1>`; age-neutral
+    copy; each game its own `--accent`), with Jon's reason and the resit-strand reasoning folded in.
+    **Palette rule:** roster levels include Year 6, KS3 or GCSE → `data-theme="light"`; only A-Level,
+    A-Level Year 2, Further, Core, L3, L4 → dark (Core dark by Jon's ruling). Derived from the roster,
+    never chosen: `palette()` in `scripts/check-theme.py` is the only copy. 67 light, 30 dark.
+    CLAUDE.md's Theme section, the roster's resit-strand note and `.claude/rules/project-claude.md`'s
+    design summary now point at canon.
+  - **`schools/assets/theme.css`**: base tokens (`--bg --surface --surface-alt --text --muted
+    --border --correct --wrong --hint --font-text --font-num`), a light palette (white surfaces, navy
+    `#1a2744` text, beside the portal) and a dark one, chosen by `data-theme` on `<html>`; it loads
+    both fonts. **Aa wins on font**: `body.accessible` switches both font tokens to OpenDyslexic, so
+    every element written with them follows. **Contrast measured, all AA**, table in canon §7.5:
+    lowest light 5.20 (`--hint` on its tint), lowest dark 5.24 (`--wrong` on `--surface-alt`). Light
+    `--correct` was first `#15803d`; on its own 10% feedback tint that was 4.38, so it is `#166534`.
+    `opendyslexic.css` and `site-footer.css` untouched.
+  - **`scripts/check-theme.py`**, in CI (Tiers 1 + 2 job). MIGRATED = `split-it` (every rule
+    enforced); NOT_YET = the other 96 roster games, each reported with its expected palette, never
+    failing. Fails on: a roster level the rule cannot place; a roster game in neither list; a folder
+    under `games/` that is neither (only `the-perfect-prank` is listed, as the unlisted prototype).
+    13 injected faults, one per rule, all caught; a clean copy passes. Run `--verbose` for every
+    NOT_YET finding and **the age-wording inventory: 27 of 96 games, for Jon to rule on.**
+  - **Split It migrated** (light): links `theme.css`, `data-theme="light"`, Nunito and Press Start 2P
+    gone, every colour a token (its own: `--accent #15803d`, `--accent-dim`, `--on-accent`, three
+    ratio-bar part colours), header title now an `<h1>`, the Aa snippet's hard-coded backgrounds
+    replaced by `theme.css`'s Aa tokens. Bank, generators, marking, scoring, analytics events and
+    leaderboard calls untouched; the `ks3`/`gcse` level keys are unchanged. **No base token redefined.**
+  - **Wording, every before/after line, for Jon's review:**
+    - `:153` `KS3<span class="lbl">Years 7–9</span>` → `Starter<span class="lbl">Build the method</span>`
+    - `:154` `GCSE<span class="lbl">Years 10–11</span>` → `GCSE<span class="lbl">Exam standard</span>`
+    - results line `Level: ${S.level.toUpperCase()}` (showed "KS3") → `Level: ${S.level==='ks3'?'Starter':'GCSE'}`
+    - header `<div class="hdr-title">SPLIT IT</div>` → `<h1 class="hdr-title">Split It</h1>` (case only)
+    - **RULED 2 Oct 2026 (Jon): Foundation / GCSE / Advanced (if a third is needed).** "Starter" is now
+      "Foundation" (button and results line; sub-labels unchanged). The leaderboard hub still names the
+      level "KS3" until Split It's next migration pass declares its labels (§3.12, ruling 2).
+  - **Phone fit, Split It** (`measure-phone-fit.py`, which now takes `--aa`): asking screen better at
+    every size, both modes, identical over repeated runs: normal 410/354/354 → **403/350/350**, Aa
+    470/386/386 → **459/378/378**; no sideways scroll. A first pass was worse (Aa 539 at 320, sideways)
+    and was fixed before commit: OpenDyslexic now reaches the HUD numbers and the buttons, which
+    the old per-element fonts kept out of Aa. Wrong-answer screen still unmeasurable by the
+    driver, as before. Recorded in §3.9.
+  - **Screenshots**, before and after, normal and Aa, at 390×844: `docs/screens/theme-pilot-split-it/`
+    (`*-2-levels.png` the level picker, `*-4-wrong.png` a wrong answer).
+  - **Checks:** `check-theme.py` OK; `check-footer.py` OK; `check-canonical-links.py` OK; tier 3
+    `--only split-it` OK. Tiers 1+2 on this Windows machine: 14 FAILs, all "stale: now fits" phone
+    entries in pages and games this PR does not touch, and **the same 14 on `main`** here: the gate
+    measures in the fallback font and Windows' is narrower than CI's DejaVu. CI is the judge (see PR).
+- **Held, by Jon's ruling of 2 Oct 2026: phone-fit batch 2** (`distinctly-average`,
+  `estimation-golf`, `angle-ace`) waits for this contract to merge, then is done **with** their theme
+  migration (§3.12).
+- **NEXT, in this order (Jon, 2 Oct 2026; canon §0.2, correctness first):** (0) **the seeded phone
+  gate, §4 item 16, with §1.40's `moments-master` entry**: a flaky gate blocks every merge under the
+  zero-failures rule, so it goes first; (1) **wrong-keys batch 1**, contract
+  `claude/contract-wrong-keys-batch1-2026-10-02.md`; (2) **wrong-keys batch 2**, contract to come from
+  Project Claude; (3) **the Fermi Lab rebuild**, `claude/fermi-lab-review-2026-10-02.md` and
+  `claude/fermi-lab-rebuild-2026-10-02.md`; (4) **the shared precision marker (§1.36) with
+  skip-after-three**, the skip-after-three contract to come from Project Claude; **then** §3.12, the
+  theme migration queue, starting with batch 2 above. The `claude/…` files are Project docs (the
+  claude.ai Project), not in this repo: ask Jon for them if they are not in the session.
+  **Needs Jon:** the earlier
+  handovers' items, which stand (see "Done — full history" under 2 Oct 2026 (cloud, the phone-width
+  gate)), including the two `--live` checks.
 
 ### Done 2 Oct 2026 (cloud, the phone-width gate)
 
@@ -2299,12 +2378,12 @@ publishes `averages` against it. See NOW above.)*
 *Moved here word for word from the START OF NEXT SESSION block on 30 Sep 2026.*
 
 **Handover, 28 Sep 2026, from a web session.** **Live and deployed by GitHub Pages:**
-- PR #1, the "Schools" brand strip (`5710294`, merged as `55d8914`). "MaffsGames Schools" is now
+- Archive PR #1, the "Schools" brand strip (`5710294`, merged as `55d8914`). "MaffsGames Schools" is now
   "MaffsGames" in the portal header, the About, Feedback and Spec Map titles and nav links, and
   complex-converter's back link. Record: `docs/audit-schools-brand.md`.
-- PR #2, the OpenDyslexic fix (`506a6e6`, merged as `1a37ad7`). Aa mode now loads the font on 94
+- Archive PR #2, the OpenDyslexic fix (`506a6e6`, merged as `1a37ad7`). Aa mode now loads the font on 94
   games.
-- PR #3, the first version of this handover (`b9a6850`, merged as `e07b4ab`).
+- Archive PR #3, the first version of this handover (`b9a6850`, merged as `e07b4ab`).
 - PR #7, the parent guides audit (`70c18b3`, merged as `7f0d3e5`). Queue item 6.
 - PR #8: `coordinate-geometry-dash:233` fixed (√50 → 50), the value-equivalent options scan, and
   two DRAFT contracts. §1.24 and queue item 8.
@@ -2354,7 +2433,7 @@ the migration contract, deliberately.
 
 **The queue, in order:**
 
-1. **OpenDyslexic fix: done, live since 28 Sep.** PR #2, one commit `506a6e6`. The font is self-hosted in
+1. **OpenDyslexic fix: done, live since 28 Sep.** Archive PR #2, one commit `506a6e6`. The font is self-hosted in
    `schools/assets/fonts/opendyslexic/`, declared once in `schools/assets/opendyslexic.css`, and linked
    from 94 games. The contract and Jon's rulings are in `docs/next-contract-opendyslexic.md`; the inventory
    and verification are in `docs/audit-opendyslexic.md`.
