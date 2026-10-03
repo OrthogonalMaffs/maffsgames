@@ -128,6 +128,9 @@ jobs:
           # test of the helper on its own (~20s), with the real floor.
           # Section clicks: the real analytics.js on the portal, every labelled element
           # clicked, each Sheet payload read (answered locally, never sent; ~15s).
+          # MaffsAnswer (schools/assets/answer.js, canon 7.1.3): every outcome of money(), decimal()
+          # and exact(), and money() identical to tax-theft's old moneyResult() on every string a
+          # type="number" input can pass (~3s).
           - name: Tier 4 layer A + shared Next control
             timeout: 12
             checks: |
@@ -135,6 +138,7 @@ jobs:
               Tier 4 layer A (lint against the ledger)|python scripts/check-banks.py --ci
               Shared Next control (schools/assets/next-control.js)|python scripts/test-next-control.py
               Portal section clicks (analytics.js section_clicked)|python scripts/test-section-clicks.py
+              Shared answer checker (schools/assets/answer.js, every outcome)|python scripts/test-answer-js.py
 
           # free-daily-pizza: reads each item's PARAMETERS and DISPLAYED strings from
           # window.FDP and recomputes everything else here with fractions.Fraction -- every
@@ -185,6 +189,9 @@ jobs:
           #  - circle-theorem-spotter: every calculation key solved again from the stated values by
           #    the figure's theorem (SymPy); options distinct in value; "major/minor arc" wording must
           #    match the figure. Failed on the uncorrected Q48 and Q19 (todo 1.3).
+          #  - split-it: every generator at both levels, 18,000 questions, keys recomputed exactly at
+          #    the precision each prompt states; every marking rule probed through checkAnswer() (to
+          #    the penny, 0.1 off, unrounded, £/€). Failed on the ±0.05 / ±0.15 file (todo 1.36).
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |
@@ -208,6 +215,7 @@ jobs:
               Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)|python scripts/verify-core-maths-paper1-tax.py
               Better Value tax-and-NI rule of thumb (checked with uk_rates)|python scripts/verify-better-value-tax.py
               Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure)|python scripts/verify-circle-theorem-spotter.py
+              Split It (every generator's keys recomputed + marking at the stated precision)|python scripts/verify-split-it.py
 
     steps:
       - uses: actions/checkout@v4
