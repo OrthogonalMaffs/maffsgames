@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Read the word problem, build the equation. Practise translating language into algebra — the step most students skip. Free, KS3 to Level 4.">
+<meta name="description" content="Read the word problem, build the equation. Practise translating language into algebra — the step most students skip. Free, Foundation to Level 4.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/equation-builder/">
 <meta property="og:title" content="Equation Builder — MaffsGames">
-<meta property="og:description" content="Read the word problem, build the equation. Practise translating language into algebra — the step most students skip. Free, KS3 to Level 4.">
+<meta property="og:description" content="Read the word problem, build the equation. Practise translating language into algebra — the step most students skip. Free, Foundation to Level 4.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/equation-builder/">
 <meta property="og:type" content="website">
@@ -174,8 +174,8 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <p class="start-sub">Read the word problem. Build the equation from tiles. Translate language into algebra.</p>
   <div class="section-label">Level</div>
   <div class="level-grid" id="levelGrid">
-    <button class="level-btn ks3" data-level="ks3">KS3<span class="btn-sub">Year 7-9</span></button>
-    <button class="level-btn gcse" data-level="gcse">GCSE<span class="btn-sub">Year 10-11</span></button>
+    <button class="level-btn ks3" data-level="ks3">Foundation<span class="btn-sub">Build the method</span></button>
+    <button class="level-btn gcse" data-level="gcse">GCSE<span class="btn-sub">Exam standard</span></button>
     <button class="level-btn l4" data-level="level4">Level 4<span class="btn-sub">HNC/HND</span></button>
   </div>
   <div class="section-label">Session Length</div>
@@ -390,7 +390,7 @@ function showScreen(name){
   $('hud').classList.remove('visible');$('levelPill').textContent='';
   if(name==='start')$('startScreen').classList.add('active');
   else if(name==='game'){$('gameScreen').classList.add('active');$('hud').classList.add('visible');
-    $('levelPill').textContent=currentLevel==='level4'?'LEVEL 4':currentLevel.toUpperCase();
+    $('levelPill').textContent=currentLevel==='level4'?'LEVEL 4':currentLevel==='ks3'?'FOUNDATION':currentLevel.toUpperCase();
     $('levelPill').className='level-pill '+(currentLevel==='level4'?'l4':currentLevel);
   }else $('resultsScreen').classList.add('active');
 }

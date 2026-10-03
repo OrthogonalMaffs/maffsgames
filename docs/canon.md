@@ -67,6 +67,7 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 | SR-8 | **When a key changes,** recompute every dependent answer, distractor and worked line. | 3 Oct 2026 | PR #4 (tax-theft), PR #11 |
 | SR-9 | **Bugs found outside the task are logged, not fixed,** except a live wrong answer in the same game that one of these rulings fixes: fix it and list it in the PR. | 3 Oct 2026 | todo START ("a live bug is never a decision item") |
 | SR-10 | **Whole items scale by whole numbers.** A recipe with an ingredient that comes in whole items (eggs) is scaled only by a whole-number factor (×2, ×3). Draw its scale factors from whole numbers only (no redraw loop, SR-5); the game's verifier checks every whole-item amount it scales is a whole number. | 3 Oct 2026 | todo §1.47; split-it's GCSE Pancakes (3.3 eggs) |
+| SR-11 | **Age-neutral level labels.** A student-facing level label never names a year group or key stage: "Year 6" becomes "Starter", "KS3" becomes "Foundation"; "GCSE" and every level above it keep their names. Start screens and other student-facing copy carry no year-group or key-stage wording (no "Year 7", "primary", "secondary school", "when your teacher introduces this"). **Level keys never change** (`year6`, `ks3` …): analytics values, leaderboard keys, personal-best keys and the label `firebase-leaderboard.js` stores with a ticker entry stay as they are. A question's own context ("90 Year 9 students") is content, not a label: it is listed for Jon, never changed under this ruling. | 3 Oct 2026 | Jon, 3 Oct 2026 (resit section contract); §7.5; Jon's ruling of 2 Oct 2026 on age wording |
 
 **Still stops for Jon**, whatever the rulings say:
 - New content choices: contexts, numbers, a question's level.
@@ -778,7 +779,7 @@ the same look whatever the age. This reasoning was first ruled for the resit str
 - **Student-facing copy is age-neutral**: no year group, no key stage, no "primary" or "secondary
   school", no "when your teacher introduces this". A level's *name* on a button may still be a
   qualification (GCSE, A-Level, Core Maths); a key stage or a year group is replaced by what the
-  level does (Split It's KS3 button reads "Foundation", Jon's ruling of 2 Oct 2026; a third level, if a game has one, is "Advanced"). **Level keys never change**: the Firebase leaderboard keys (`ks3`, `gcse` …) stay as they are, and the label a student sees is declared once per game and read by the leaderboard hub too (§3.12; it folds into `games.json` when that is built).
+  level does (Split It's KS3 button reads "Foundation", Jon's ruling of 2 Oct 2026; a third level, if a game has one, is "Advanced"; a Year 6 level is "Starter", SR-11). **Level keys never change**: the Firebase leaderboard keys (`ks3`, `gcse` …) stay as they are, and the label a student sees is declared once per game and read by the leaderboard hub too (§3.12; it folds into `games.json` when that is built).
 - **Each game keeps its own `--accent`** (and `--accent-dim`). The level colours of §3.1 are portal
   chrome and are not a game's accent.
 - **A light or a dark palette, set by the rule below**, never chosen per game.
