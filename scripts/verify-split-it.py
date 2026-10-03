@@ -13,7 +13,8 @@ Every generator is run on the page itself (seeded Math.random), at both levels, 
     rounded half up to it; if it states none, the exact value must terminate (at most 2 d.p. for
     money, otherwise a value the student can write exactly) and the key must equal it. Best Value:
     the two unit prices, each rounded to the nearest penny, differ by at least 1p, and the key is
-    the cheaper pack.
+    the cheaper pack. Recipes (canon SR-10): every whole-item ingredient (one with no unit, e.g.
+    eggs) scales to a whole number; the GCSE Pancakes recipe once asked for 3.3 eggs (todo §1.47).
   - MARKING: a sample of every question type is rendered and answered through checkAnswer(),
     one input at a time (the others correct). Money (a £ or € amount): the key at 2 d.p., a
     whole-pound key also as an integer, and with a leading £/€, are correct; 1p and 4p off are
@@ -205,6 +206,13 @@ def check_key(q, rep):
         if q['answers'] != [x.numerator, x.denominator]:
             rep[(where, 'fraction key')].append(f'{t} keyed {q["answers"]}, expected {x}')
         return None
+    # SR-10 (Jon, 3 Oct 2026): a whole-item ingredient (one with no unit: eggs) is only scaled
+    # by a whole number, so its scaled amount is a whole number. Read from the unit, not from the
+    # page's own `whole` flag, so a recipe that forgets the flag is still caught.
+    for i, it in enumerate(q.get('items') or []):
+        if it.get('u', '') == '' and exact[i].denominator != 1:
+            rep[(where, 'whole-item ingredient scaled to a fraction (SR-10)')].append(
+                f'{t} -> {it["n"]} {float(exact[i]):g}')
     m = DP_RE.search(t)
     dp = int(m.group(1)) if m else None
     keys = []
