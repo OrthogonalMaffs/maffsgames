@@ -14,7 +14,24 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
 
-## Handover — 2026-10-03 (latest): Circle Theorem Spotter keys + verifier (PR #11, todo §1.3)
+## Handover — 2026-10-03 (latest): the shared answer checker MaffsAnswer (PR #12, todo §1.36)
+
+- **Every typed numeric answer is marked by `MaffsAnswer` (`schools/assets/answer.js`, canon §7.1.3).**
+  Never a game-local tolerance band. `money(raw, key)` (to the penny, optional £/€), `decimal(raw, key,
+  dp)` (the question states dp; unrounded = 'format'), `exact(raw, key)` (no rounding asked). 'format'
+  and 'unreadable' are never marked: no score, no penalty, no event. Money inputs are `type="text"
+  inputmode="decimal"` (a number input empties on £).
+- **tax-theft** uses it with no change in behaviour: `test-answer-js.py` shows `money()` equal to the old
+  rule on 8,316 input/key pairs, and `verify-tax-theft.py` passes unchanged. `moneyResult()` stays as a
+  one-line adapter (pence to pounds) because that verifier's self-test patches it by name. Its empty-input
+  text stays "Please enter a number." (Jon).
+- **split-it** (Jon's rulings): GCSE recipes and speed questions say "Give your answer(s) to 1 decimal
+  place."; speed keys are exact, half up; Best Value's unit prices always differ by at least 1p (drawn
+  without a redraw loop, which tier 2 forbids). `verify-split-it.py` probes every marking rule through
+  `checkAnswer()`.
+- **Next for the helper:** todo START item 4, the five other money games. Filed: §1.47 (3.3 eggs), §1.48.
+
+## Handover — 2026-10-03: Circle Theorem Spotter keys + verifier (PR #11, todo §1.3)
 
 - **Q48 and Q19 corrected to Jon's rulings** (full record in todo §1.3). Q19's figure drew its point
   on the minor arc (`inside:true`) while the text said major: the contract stopped there, Jon ruled

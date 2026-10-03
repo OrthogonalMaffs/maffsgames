@@ -95,6 +95,8 @@ body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;ali
 .feedback{width:100%;padding:12px 16px;border-radius:12px;font-size:15px;font-weight:600;text-align:center;animation:fadeIn .25s}
 .feedback.correct{background:color-mix(in srgb,var(--correct) 10%,var(--surface));color:var(--correct);border:2px solid var(--correct)}
 .feedback.wrong{background:color-mix(in srgb,var(--wrong) 10%,var(--surface));color:var(--wrong);border:2px solid var(--wrong)}
+/* Right value wrongly written, or not a number: neither marked right nor wrong (canon §7.1.3) */
+.feedback.format,.feedback.notice{background:color-mix(in srgb,var(--accent) 10%,var(--surface));color:var(--text);border:2px solid var(--accent)}
 .dismiss-btn{display:block;margin:8px auto 0;padding:5px 16px;border:1.5px solid currentColor;border-radius:6px;background:transparent;color:inherit;font-size:13px;font-weight:600;cursor:pointer;opacity:0;animation:fadeBtn .3s ease forwards}.dismiss-btn:hover{background:rgba(0,0,0,.05)}@keyframes fadeBtn{to{opacity:1}}
 
 /* MCQ for best value */
@@ -125,6 +127,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -311,7 +314,7 @@ const generators={
       const units=['£','','kg ','ml ','cm '][rInt(0,4)];
       const prefix=units==='£'?'£':'';const suffix=units==='£'?'':' '+units.trim();
       return{prompt:`Share <span class="highlight">${prefix}${amt}${suffix}</span> in the ratio <span class="highlight">${a} : ${b}</span>`,
-        type:'divide2',answers:[a*k,b*k],ratio:[a,b],total:amt,
+        type:'divide2',answers:[a*k,b*k],ratio:[a,b],total:amt,money:prefix==='£'?'£':null,
         working:`Total parts = ${tp}. One part = ${amt}÷${tp} = ${k}. ${a}×${k} = ${a*k}, ${b}×${k} = ${b*k}`,
         hint:`Total parts = ${a} + ${b} = ${tp}. Divide ${amt} by ${tp} first.`};
     } else {
@@ -362,8 +365,8 @@ const generators={
       const pairs=[[4,6],[4,10],[6,9],[3,5],[6,10]];const p=pairs[rInt(0,pairs.length-1)];
       sf=p[1]/p[0];target=p[1];
       // Recalc orig
-      return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${p[0]}</span> people uses the amounts below.<br>How much of each do you need for <span class="highlight">${p[1]}</span> people?`,
-        type:'scale',items:r.items,scaleFactor:sf,origServes:p[0],targetServes:p[1],
+      return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${p[0]}</span> people uses the amounts below.<br>How much of each do you need for <span class="highlight">${p[1]}</span> people?<br>Give your answers to 1 decimal place.`,
+        type:'scale',items:r.items,scaleFactor:sf,origServes:p[0],targetServes:p[1],dp:1,
         answers:r.items.map(i=>parseFloat((i.v*sf).toFixed(1))),
         working:`Scale factor = ${p[1]}/${p[0]} = ${sf}. Multiply each amount by ${sf}.`,
         hint:`Scale factor = ${p[1]} ÷ ${p[0]} = ${sf}. Multiply each ingredient by this.`};
@@ -382,7 +385,7 @@ const generators={
       const items=['pens','pencils','rulers','rubbers','notebooks','stickers'][rInt(0,5)];
       const costStr=(cost/100).toFixed(2);const ansStr=(m*unitP/100).toFixed(2);
       return{prompt:`<span class="highlight">${n} ${items}</span> cost <span class="highlight">£${costStr}</span>.<br>How much do <span class="highlight">${m} ${items}</span> cost?`,
-        type:'single',answers:[parseFloat(ansStr)],unit:'£',
+        type:'single',answers:[parseFloat(ansStr)],unit:'£',money:'£',
         working:`One ${items.slice(0,-1)} = £${costStr} ÷ ${n} = £${(unitP/100).toFixed(2)}. ${m} × £${(unitP/100).toFixed(2)} = £${ansStr}`,
         hint:`Find the cost of 1 first: £${costStr} ÷ ${n}`};
     } else {
@@ -391,21 +394,29 @@ const generators={
           const rate=rInt(105,150)/100;const amt=rInt(5,20)*5;
           const ans=parseFloat((amt*rate).toFixed(2));
           return{prompt:`£1 = <span class="highlight">€${rate.toFixed(2)}</span>. Convert <span class="highlight">£${amt}</span> to euros.`,
-            type:'single',answers:[ans],unit:'€',
+            type:'single',answers:[ans],unit:'€',money:'€',
             working:`£${amt} × ${rate} = €${ans}`,hint:`Multiply £${amt} by the exchange rate.`};
         },
         ()=>{// Speed
           const d=rInt(3,8)*rInt(10,30);const t=rInt(2,5);const spd=d/t;const t2=rInt(2,8);
-          const ans=spd*t2;
-          return{prompt:`A car travels <span class="highlight">${d} miles</span> in <span class="highlight">${t} hours</span>.<br>How far in <span class="highlight">${t2} hours</span>?`,
-            type:'single',answers:[ans],unit:'miles',
+          // d×t2÷t to 1 d.p., rounded half up, in whole numbers (exact: no float in the key)
+          const ans=Math.floor((20*d*t2+t)/(2*t))/10;
+          return{prompt:`A car travels <span class="highlight">${d} miles</span> in <span class="highlight">${t} hours</span>.<br>How far in <span class="highlight">${t2} hours</span>?<br>Give your answer to 1 decimal place.`,
+            type:'single',answers:[ans],unit:'miles',dp:1,
             working:`Speed = ${d}÷${t} = ${spd} mph. Distance = ${spd}×${t2} = ${ans} miles`,
             hint:`Find the speed first: ${d} ÷ ${t}`};
         },
         ()=>{// Best value
           const nA=rInt(4,8);const pA=nA*rInt(20,60);
-          const nB=rInt(nA+2,nA+6);const unitB=rInt(15,55);const pB=nB*unitB;
-          const unitA=Math.round(pA/nA);const better=unitA<unitB?'A':'B';
+          // The two unit prices must differ by at least 1p, each rounded to the nearest penny
+          // (Jon, 3 Oct 2026). Both are whole pence here (pA = nA × a whole price), so that means
+          // unequal. B's price is drawn from 15p–55p leaving out A's own: the same as redrawing
+          // until they differ, without a redraw loop (tier 2 forbids rejection sampling).
+          const unitA=Math.round(pA/nA);
+          const skipA=unitA>=15&&unitA<=55;
+          const nB=rInt(nA+2,nA+6);let unitB=rInt(15,skipA?54:55);if(skipA&&unitB>=unitA)unitB++;
+          const pB=nB*unitB;
+          const better=unitA<unitB?'A':'B';
           return{prompt:`Pack A: <span class="highlight">${nA} for £${(pA/100).toFixed(2)}</span>.<br>Pack B: <span class="highlight">${nB} for £${(pB/100).toFixed(2)}</span>.<br>Which is better value?`,
             type:'bestvalue',nA,pA,nB,pB,unitA,unitB,
             answers:[better],
@@ -442,9 +453,9 @@ function renderQ(q){
   } else if(q.type==='divide2'){
     html+=`<div class="ratio-bar"><div class="bar-a" id="barA" style="flex:${q.ratio[0]}"></div><div class="bar-b" id="barB" style="flex:${q.ratio[1]}"></div></div>`;
     html+=`<div class="input-row">
-      <input type="number" class="ratio-input" id="in0" placeholder="?" oninput="updateBar()">
+      <input ${inputType(q)} class="ratio-input" id="in0" placeholder="?" oninput="updateBar()">
       <span class="colon">and</span>
-      <input type="number" class="ratio-input" id="in1" placeholder="?" oninput="updateBar()">
+      <input ${inputType(q)} class="ratio-input" id="in1" placeholder="?" oninput="updateBar()">
     </div>`;
   } else if(q.type==='divide3'){
     html+=`<div class="ratio-bar"><div class="bar-a" id="barA" style="flex:${q.ratio[0]}"></div><div class="bar-b" id="barB" style="flex:${q.ratio[1]}"></div><div class="bar-c" id="barC" style="flex:${q.ratio[2]}"></div></div>`;
@@ -475,7 +486,7 @@ function renderQ(q){
   } else if(q.type==='single'){
     html+=`<div class="input-row">
       ${q.unit?`<span class="unit-label">${q.unit}</span>`:''}
-      <input type="number" class="ratio-input" id="in0" placeholder="?" step="any" style="width:100px">
+      <input ${inputType(q)} class="ratio-input" id="in0" placeholder="?" step="any" style="width:100px">
       ${q.unit&&q.unit!=='£'&&q.unit!=='€'?`<span class="unit-label">${q.unit}</span>`:''}
     </div>`;
   } else if(q.type==='bestvalue'){
@@ -498,33 +509,45 @@ function renderQ(q){
 // ============================================================
 //  CHECK
 // ============================================================
+// Money answers are typed as text so a leading £ or € survives (a type="number" input empties).
+function inputType(q){return q.money?'type="text" inputmode="decimal"':'type="number"';}
+
+// Every typed answer is marked by MaffsAnswer (schools/assets/answer.js, canon §7.1.3), never by
+// a tolerance band: money to the penny, a stated precision (q.dp) exactly, anything else exactly.
+function markInput(q,i){
+  const raw=$('in'+i).value,key=q.answers[i];
+  if(q.money)return MaffsAnswer.money(raw,key);
+  if(q.dp!==undefined)return MaffsAnswer.decimal(raw,key,q.dp);
+  return MaffsAnswer.exact(raw,key);
+}
+
+// 'format' and 'unreadable' are never marked: no score, no penalty, no event. The student resubmits.
+function showNotice(cls,msg){
+  $('fbArea').innerHTML=`<div class="feedback ${cls}"></div>`;
+  $('fbArea').firstChild.textContent=msg;
+}
+
 function checkAnswer(){
   const q=S._currentQ;
-  S.attempts++;
   let correct=false;
 
-  if(q.type==='ratio2'||q.type==='ratio3'){
-    const n=q.answers.length;
-    const vals=[];
-    for(let i=0;i<n;i++){vals.push(parseFloat($('in'+i).value));}
-    if(vals.some(isNaN))return;
-    correct=vals.every((v,i)=>v===q.answers[i]);
-    vals.forEach((v,i)=>{
-      $('in'+i).classList.add(v===q.answers[i]?'correct':'wrong');
-    });
-  } else if(q.type==='divide2'||q.type==='divide3'){
-    const n=q.answers.length;
-    const vals=[];
-    for(let i=0;i<n;i++){vals.push(parseFloat($('in'+i).value));}
-    if(vals.some(isNaN))return;
-    correct=vals.every((v,i)=>Math.abs(v-q.answers[i])<0.05);
-    vals.forEach((v,i)=>{
-      $('in'+i).classList.add(Math.abs(v-q.answers[i])<0.05?'correct':'wrong');
-    });
-    if(correct)document.querySelector('.ratio-bar').classList.add('correct');
+  if(q.type==='ratio2'||q.type==='ratio3'||q.type==='divide2'||q.type==='divide3'||q.type==='scale'||q.type==='single'){
+    const results=q.answers.map((_,i)=>markInput(q,i));
+    if(results.includes('unreadable')){showNotice('notice',MaffsAnswer.message('unreadable'));return;}
+    const f=results.indexOf('format');
+    if(f>=0&&!results.includes('wrong')){
+      showNotice('format',MaffsAnswer.message('format',$('in'+f).value,q.money?{currency:q.money}:{dp:q.dp}));
+      return;
+    }
+    S.attempts++;
+    correct=results.every(r=>r==='correct');
+    results.forEach((r,i)=>{$('in'+i).classList.add(r==='wrong'?'wrong':'correct');});
+    if(correct&&(q.type==='divide2'||q.type==='divide3'))document.querySelector('.ratio-bar').classList.add('correct');
   } else if(q.type==='fraction'){
-    const num=parseInt($('in0').value),den=parseInt($('in1').value);
-    if(isNaN(num)||isNaN(den)||den===0)return;
+    const num=MaffsAnswer.parse($('in0').value),den=MaffsAnswer.parse($('in1').value);
+    if(num===null||den===null){showNotice('notice',MaffsAnswer.message('unreadable'));return;}
+    if(den===0)return;
+    S.attempts++;
     correct=num===q.answers[0]&&den===q.answers[1];
     if(!correct&&num/den===q.answers[0]/q.answers[1]){
       // Correct value but not simplified
@@ -535,18 +558,6 @@ function checkAnswer(){
     }
     $('in0').classList.add(correct?'correct':'wrong');
     $('in1').classList.add(correct?'correct':'wrong');
-  } else if(q.type==='scale'){
-    const vals=q.items.map((_,i)=>parseFloat($('in'+i).value));
-    if(vals.some(isNaN))return;
-    correct=vals.every((v,i)=>Math.abs(v-q.answers[i])<0.15);
-    vals.forEach((v,i)=>{
-      $('in'+i).classList.add(Math.abs(v-q.answers[i])<0.15?'correct':'wrong');
-    });
-  } else if(q.type==='single'){
-    const val=parseFloat($('in0').value);
-    if(isNaN(val))return;
-    correct=Math.abs(val-q.answers[0])<0.05;
-    $('in0').classList.add(correct?'correct':'wrong');
   }
 
   if(correct){

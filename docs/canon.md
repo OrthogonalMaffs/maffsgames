@@ -515,10 +515,28 @@ separately, and a wrong form is never a mark.**
 - **Where it came from.** Jon's 2 Oct ruling that "whole pounds" are fine was misread as "round money
   answers to whole pounds" (todo §1.36's tax-theft line, corrected 3 Oct 2026). It means only that a
   whole-pound amount needs no .00.
-- **Implementation:** `moneyResult()` in `games/tax-theft/index.html` (game-local; whether it becomes a
-  shared helper is todo START item 5). It reads the raw typed string: a `type="number"` input keeps a
-  valid number exactly as typed, so 114.4 and 114.40 can be told apart. `scripts/verify-tax-theft.py`
-  checks all three outcomes on every step of every salary.
+- **A leading £ or € is optional** (Jon, 3 Oct 2026): £12.34 and 12.34 are the same answer. A money input
+  is `type="text" inputmode="decimal"`, because a `type="number"` input silently empties on a typed £.
+- **Implementation, REQUIRED for every typed numeric answer:** `MaffsAnswer` in
+  `schools/assets/answer.js` (3 Oct 2026). No game marks a typed number with its own code or a
+  tolerance band. It reads the raw typed string, never a number the game parsed (114.4 and 114.40 are
+  the same number, not the same answer), and returns `'correct'`, `'wrong'`, `'format'` or
+  `'unreadable'`. `'format'` and `'unreadable'` are never marked: no score change, no penalty, no
+  analytics event; the game shows `MaffsAnswer.message(...)` and the student resubmits.
+  - `money(raw, key)`: this section's rule. Key in pounds (or euros) at the penny.
+  - `decimal(raw, key, dp)`: **the question states its precision** ("Give your answer to 1 decimal
+    place") and the key is the exact answer rounded half up to it. Any form equal in value is correct
+    (2.5 and 2.50). A value that rounds to the key but isn't equal to it is `'format'`, with the words
+    "Right value, but the question asks for 1 decimal place. In the exam, 333.33 loses the mark. Fix it
+    and resubmit." (with the student's own figure). Anything else is wrong.
+  - `exact(raw, key)`: an answer that needs no rounding (whole-number ratios, integer scale factors).
+    Equal in value or wrong; nothing is `'format'`, since no precision was asked for.
+  - **A question whose exact answer doesn't terminate must state its precision.** An unstated
+    rounding is a key bug, not a marking choice.
+  - Users: `tax-theft` (keys in pence; `moneyResult()` is now a one-line adapter, kept so its
+    verifier's self-test can still patch it), `split-it`. The other money games move onto it under
+    todo START item 5. `scripts/test-answer-js.py` (CI) tests every outcome, and shows `money()`
+    equal to tax-theft's old rule on every string a `type="number"` input can pass.
 
 ### 7.1.4 UK tax, NI and student loan rates in use
 

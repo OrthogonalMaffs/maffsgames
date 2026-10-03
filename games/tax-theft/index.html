@@ -621,6 +621,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -1034,14 +1035,10 @@ function showStep() {
   document.getElementById('submitBtn').disabled = false;
 }
 
-// Money-answer standard (canon §7.1.3): the typed amount is compared numerically with the
-// key; a right amount written wrongly (1250.7, 3050.0) is neither marked right nor wrong.
-// Pence answers need exactly 2 d.p.; a whole number of pounds may also be typed without .00.
+// Money-answer standard (canon §7.1.3), marked by the shared MaffsAnswer.money()
+// (schools/assets/answer.js). Keys here are in pence; the helper takes pounds.
 function moneyResult(raw, keyPence) {
-  var v = parseFloat(raw);
-  if (Math.abs(v * 100 - keyPence) > 1e-6) return 'wrong';
-  var written = keyPence % 100 === 0 ? /^\d+(\.\d\d)?$/ : /^\d+\.\d\d$/;
-  return written.test(raw) ? 'correct' : 'format';
+  return MaffsAnswer.money(raw, keyPence / 100);
 }
 
 function checkAnswer() {
@@ -1061,7 +1058,7 @@ function checkAnswer() {
 
   if (result === 'format') {
     // Not marked either way: no event, no penalty. The student fixes it and resubmits.
-    fb.textContent = 'Right amount, but money always has two decimal places. In the exam, \u00a3' + raw + ' loses the mark. Fix it and resubmit.';
+    fb.textContent = MaffsAnswer.message('format', raw, { currency: '\u00a3' });
     fb.className = 'feedback format';
     input.focus();
     return;
