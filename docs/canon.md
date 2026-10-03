@@ -375,7 +375,7 @@ were all closed by games that were built and shipped without this table being up
 | §3.2 | Maths for personal finance | Tax Theft, Core Maths Paper 1 | Covered |
 | §3.3 | Estimation | Fermi Lab, Estimation Golf, Estimation Engine | Covered |
 | §3.4 | Critical analysis of given data and models | Core Maths Papers 2A, 2B, 2C | Covered |
-| §3.5 | Normal distribution, exponential models | Normal Navigator, Growth and Decay, Core Maths Paper 2A | Covered |
+| §3.5 | The normal distribution | Normal Navigator, Core Maths Paper 2A | Covered |
 | §3.6 | Probabilities and estimation (sampling, point estimates, confidence intervals) | Core Maths Paper 2A | Covered (by the practice paper only) |
 | §3.7 | Correlation and regression | Correlation or Coincidence, Regression Rumble, Core Maths Paper 2A | Covered |
 | §3.8 | Critical path analysis | Glorious Gantt Game | Covered |

@@ -31,7 +31,8 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 - **Core Maths rows use AQA 1350's own titles** (canon §6.1 updated): §3.4 Critical analysis, §3.6
   Probabilities and estimation, §3.11 Graphical methods, §3.12 Rates of change; games re-homed (Jon).
   1350 has no hypothesis testing. GCSE "A7" row is now "A5 Rearranging formulae" (Formula Unlocked).
-- **Needs Jon:** the About wording that restores a full spec claim (proposed in the PR, not applied),
+- **About spec line restored in Jon's wording** ("every game is mapped ... apart from one enrichment game"),
+  with the spec-map tidy (intro, §3.5 = AQA "The normal distribution", Core heading). **Needs Jon:**
   todo §1.49 (Decimal Detective duplicate values, resit game), §1.50 (Truth Buster −1/12 already keyed
   false; keep or replace its explanation), §3.14 (portal level labels).
 
