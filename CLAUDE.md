@@ -14,6 +14,18 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
 
+## Handover — 2026-10-03 (night): money-correctness batch
+
+- **The April rule (canon §7.1.4, Jon):** each April, advance the teaching year by one. `uk_rates.py`
+  holds `REVIEW_BY` (30 April 2027); `check-tax-year.py` warns from 1 April and FAILS CI after it, so
+  in April 2027 do the advance PR (2025/26 → 2026/27: figures, table, registered games, both dates).
+- **Student loans** are in `uk_rates.py` and the canon table (Plans 1, 2, 4 and Postgraduate for
+  2025/26; Plan 5 has no 2025/26 threshold: £25,000 is its 2026/27 figure). `check-tax-year.py`
+  now scans for student loan wording too.
+- **Fixed:** core-maths-paper1 student loan (Plan 2, £28,470, salary £30,000) and Q21 (£7,400);
+  better-value "roughly a sixth" (new `verify-better-value-tax.py`); privacy page "built to be safe
+  for school networks". todo §1.43–§1.46 done.
+
 ## Handover — 2026-10-03 (latest): UK tax and NI rates, one copy
 
 - **Teaching year 2025/26 (canon §7.1.4,** Jon: papers are set before the tax year, so June 2027 most

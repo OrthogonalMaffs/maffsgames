@@ -520,18 +520,21 @@ separately, and a wrong form is never a mark.**
   valid number exactly as typed, so 114.4 and 114.40 can be told apart. `scripts/verify-tax-theft.py`
   checks all three outcomes on every step of every salary.
 
-### 7.1.4 UK tax and NI rates in use
+### 7.1.4 UK tax, NI and student loan rates in use
 
 Ruled by Jon, 3 Oct 2026.
 
-**Teaching year: 2025/26.** Every game that states or uses UK income tax or National Insurance uses
-the 2025/26 figures below, for England, Wales and Northern Ireland (never Scottish rates).
+**Teaching year: 2025/26.** Every game that states or uses UK income tax, National Insurance or a
+student loan uses the 2025/26 figures below, for England, Wales and Northern Ireland (never Scottish
+rates).
 **Why 2025/26, not the current tax year:** exam papers are set well before the tax year they are sat
 in, so the June 2027 series most likely uses 2025/26 figures.
 
-**Review point: every summer, after the exam series.** Check the series' papers and the board's
-guidance for the year they used, then move the teaching year (this table, `scripts/uk_rates.py`, and
-every game `scripts/check-tax-year.py` registers) in one PR.
+**The April rule: each April, advance the teaching year by one** (2025/26 → 2026/27 in April 2027;
+Jon, 3 Oct 2026). Jon has a yearly 1 April calendar reminder, and CI enforces it: `scripts/uk_rates.py`
+holds `REVIEW_BY` (now 30 April 2027), and `scripts/check-tax-year.py` warns from 1 April and fails
+after `REVIEW_BY` until the year is advanced. Advancing is one PR: `TEACHING_YEAR`, `REVIEW_BY` and
+the figures in `scripts/uk_rates.py`, this table, and every game `check-tax-year.py` registers.
 
 | Figure | 2025/26 | Source |
 |---|---|---|
@@ -544,14 +547,22 @@ every game `scripts/check-tax-year.py` registers) in one PR.
 | Employee Class 1 NI, upper earnings limit | £50,270 a year (£967 a week, £4,189 a month) | employers 2025 to 2026 (above) |
 | Employee Class 1 NI, main rate | 8% between the primary threshold and the upper earnings limit | employers 2025 to 2026 (above) |
 | Employee Class 1 NI, above the UEL | 2% | employers 2025 to 2026 (above) |
+| Student loan, Plan 1 | 9% above £26,065 a year | employers 2025 to 2026 (above), "Student loan and postgraduate loan recovery" |
+| Student loan, Plan 2 | 9% above £28,470 a year | employers 2025 to 2026 (above) |
+| Student loan, Plan 4 | 9% above £32,745 a year | employers 2025 to 2026 (above) |
+| Student loan, Plan 5 | no 2025/26 threshold: repayments began April 2026 | [What you pay](https://www.gov.uk/repaying-your-student-loan/what-you-pay) (rate 9%) |
+| Postgraduate Loan | 6% above £21,000 a year | employers 2025 to 2026 (above) |
 
 - The bands apply to **taxable** income (salary minus the allowance), so the basic band does not widen
   when the allowance tapers (canon §7.1.3's tax-theft, todo §1.36).
 - **One copy in code:** `scripts/uk_rates.py`. Verifiers import it, as statistics verifiers import
-  `stats_common.py`; none restates a rate. `verify-tax-theft.py` and `verify-core-maths-paper1-tax.py` use it.
-- **Checked in CI:** `scripts/check-tax-year.py` registers every game that states or uses UK tax or
-  NI. A game that does so without being registered fails, and so does a registered game that states a
-  tax year other than the teaching year.
+  `stats_common.py`; none restates a rate. `verify-tax-theft.py`, `verify-core-maths-paper1-tax.py`
+  and `verify-better-value-tax.py` use it.
+- **gov.uk's "What you pay" page always shows the current year's thresholds** (2026/27 when checked),
+  so take a teaching year's figures from that year's "Rates and thresholds for employers" page.
+- **Checked in CI:** `scripts/check-tax-year.py` registers every game that states or uses UK tax, NI
+  or student loans. A game that does so without being registered fails, so does a registered game
+  that states a tax year other than the teaching year, and so does the April rule above.
 
 ## 7.2 KaTeX Reference — Common Patterns
 
