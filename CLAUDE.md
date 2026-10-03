@@ -14,7 +14,22 @@ Free curriculum-aligned maths games for UK schools. 96 games and eight escape ro
   labour and the platform principles. Loaded at the start of every session; read it with the note
   under **Task Contract** at the end of this file.
 
-## Handover — 2026-10-03 (latest): the shared answer checker MaffsAnswer (PR #12, todo §1.36)
+## Before stopping for a decision: the Standing rulings (canon §0.3)
+
+Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, apply it and list
+"SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
+§0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
+
+## Handover — 2026-10-03 (latest): Standing rulings in canon (PR #13)
+
+- **Canon §0.3 "Standing rulings"**: SR-1 to SR-9 (Jon, 3 Oct 2026), the "Still stops for Jon" list,
+  and how a new ruling is added (next SR number, dated, in the PR that prompted it).
+- Four of the drafted rulings contradicted canon and were reworded on Jon's ruling: SR-1 keeps
+  §7.1.2's band for graph readings; SR-4 keeps §7.1's named-form exception and two-way comparisons;
+  SR-5 draws from qualifying values (no redraw loop); SR-7 matches §7.1.4 (games hold the figures,
+  checked by `check-tax-year.py`).
+
+## Handover — 2026-10-03: the shared answer checker MaffsAnswer (PR #12, todo §1.36)
 
 - **Every typed numeric answer is marked by `MaffsAnswer` (`schools/assets/answer.js`, canon §7.1.3).**
   Never a game-local tolerance band. `money(raw, key)` (to the penny, optional £/€), `decimal(raw, key,

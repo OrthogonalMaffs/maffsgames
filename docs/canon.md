@@ -48,6 +48,37 @@ When deciding what comes next:
 
 This is the only copy in the repo. The claude.ai Project instructions mirror it; if the two disagree, this one wins.
 
+## 0.3 Standing rulings
+
+Jon's settled precedent, in one citable list (3 Oct 2026). **Before stopping a contract for a
+decision, check this list.** If a ruling covers it, apply it and say so in the PR description
+("SR-n applied: …"). Stop only for what no ruling covers, or for anything on the "Still stops for
+Jon" list below. Where a ruling and a canon section say more, the section has the detail.
+
+| # | Ruling | Date | Source |
+|---|---|---|---|
+| SR-1 | **Unstated precision.** If a typed answer isn't exact, the question states its precision; the default for a non-money answer is "Give your answer to 1 decimal place." Keys are computed exactly (no floating-point drift) and rounded half up. *Except* a value read from a drawn graph, which keeps §7.1.2's capped band. | 3 Oct 2026 | §7.1.2, §7.1.3; todo §1.36; PR #12 (split-it recipes and speed) |
+| SR-2 | **Money** follows §7.1.3 through `MaffsAnswer.money()`: pence answers to exactly 2 d.p.; a whole-pound key needs no .00; a leading £ or € is optional. A typed answer that needs no rounding is marked with `MaffsAnswer.exact()`. | 3 Oct 2026 | §7.1.3; PR #4, PR #12 |
+| SR-3 | **A right value in the wrong form** (1250.7; 333.33 when 1 d.p. is asked) gets the format message and is never marked right or wrong: no score, no penalty, no event. `MaffsAnswer.exact()` has no wrong form (nothing was asked to be rounded). | 3 Oct 2026 | §7.1.3; PR #12 |
+| SR-4 | **Distractors.** Each comes from a nameable student error. Four distinct options wherever the student chooses from a list; a two-way comparison (Pack A / Pack B) keeps its two. None is equal in value to the key, unless the ask names the form that tells them apart (§7.1). Don't reuse one error type across a paper where an alternative exists. | 3 Oct 2026 | §7.1 (B11); §7.1.2; PR #7 (paper1 NI distractors), PR #11 |
+| SR-5 | **Comparison questions never tie.** The options differ by at least the smallest unit shown (1p, 0.1, …). Draw from the values that qualify, never a redraw loop (no rejection sampling: CLAUDE.md, tier 2). | 3 Oct 2026 | PR #12 (split-it Best Value) |
+| SR-6 | **Wording, picture and key agree.** Where one disagrees, change it to match the other two. | 3 Oct 2026 | PR #11 (Circle Theorem Spotter Q19) |
+| SR-7 | **Tax, NI and student loan figures** in a game are the teaching year's, as in `scripts/uk_rates.py`, and the game is registered in `scripts/check-tax-year.py`. Scripts never restate a rate. | 3 Oct 2026 | §7.1.4; PR #7, PR #8 |
+| SR-8 | **When a key changes,** recompute every dependent answer, distractor and worked line. | 3 Oct 2026 | PR #4 (tax-theft), PR #11 |
+| SR-9 | **Bugs found outside the task are logged, not fixed,** except a live wrong answer in the same game that one of these rulings fixes: fix it and list it in the PR. | 3 Oct 2026 | todo START ("a live bug is never a decision item") |
+
+**Still stops for Jon**, whatever the rulings say:
+- New content choices: contexts, numbers, a question's level.
+- Spec mappings (todo §1.42).
+- Anything in Jon's voice: `/updates/` entries, the bio.
+- Privacy, data collection or public claims (§1, §3.3).
+- Design or theme changes (§7.5).
+- Anything irreversible.
+
+**Adding a ruling.** When Jon rules on something that generalises, it becomes the next SR number,
+dated, with its source, in the same PR as the work that prompted it. A ruling is changed only by Jon,
+and the change is dated in its row.
+
 ---
 
 # 1. Analytics — Dual Logging (GA4 + Google Sheets)
