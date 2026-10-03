@@ -183,9 +183,8 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
     unchanged; split-it marks every typed answer exactly at its stated precision (§1.36's split-it case);
     new CI `test-answer-js.py` and `verify-split-it.py`.
   - PR #13 Standing rulings: canon §0.3, SR-1 to SR-9, and the CLAUDE.md apply-and-list rule.
-- **Needs Jon: /updates/ wording** (his voice, §0.3) for the two queued entries, "Circle Theorem
-  Spotter: two answers corrected" and "Split It now marks money to the penny". Add them to the newest
-  month; never edit an existing entry.
+- **/updates/ entries done (3 Oct, Jon's approved wording):** "Circle Theorem Spotter: two answers
+  corrected" and "Split It now marks money to the penny", under October's Corrected.
 - **§1.47 done (3 Oct, Jon's ruling = canon SR-10):** split-it's GCSE Pancakes scales only by ×2 or ×3.
 - **Diary: April 2027.** Advance the teaching year to 2026/27 (canon §7.1.4) before 30 April, or CI
   fails. Plan 5's £25,000 becomes usable then (it is the 2026/27 figure).
