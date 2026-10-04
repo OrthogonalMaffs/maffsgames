@@ -469,6 +469,23 @@ input[type=number]:focus { border-color: var(--green); }
   transition: all 0.15s;
 }
 .play-again-btn:hover { background: var(--fairway); transform: translate(-1px,-1px); box-shadow: 4px 4px 0 rgba(0,0,0,0.3); }
+
+/* ── PHONES: one column, the hole card above the scorecard ──
+   The desktop grid (a fixed 340px scorecard column beside the hole card) needs about 815px, and the
+   level bar 473px: on a phone both ran off the right edge (797px at 320 and 390), and focusing the
+   answer box on load then scrolled the page sideways to reach it. The title scales with the screen so it
+   stays on one line (at 320px two lines pushed the answer box below the fold, and focusing it scrolled the
+   page down), and the flag row keeps room for the right flag's pennant (::after, 22px). Desktop is
+   untouched. */
+@media (max-width: 820px) {
+  h1 { font-size: min(2.4rem, 9.5vw); }
+  .flag-row { padding: 0 22px; }
+  .level-bar { flex-wrap: wrap; justify-content: center; max-width: 100%; }
+  .game-wrap { grid-template-columns: minmax(0, 1fr); width: 100%; }
+  .play-area { order: -1; min-width: 0; }
+  .scorecard { min-width: 0; }
+  input[type=number] { min-width: 0; }
+}
 body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
 </style>
 <!-- Google Analytics -->

@@ -1656,20 +1656,6 @@
       "where": "button#submit-btn.btn"
     },
     {
-      "path": "games/estimation-golf/index.html",
-      "at": "load",
-      "width": 797,
-      "todo": "§3.9 batch 2",
-      "where": "div.play-area"
-    },
-    {
-      "path": "games/estimation-golf/index.html",
-      "at": "start",
-      "width": 797,
-      "todo": "§3.9 batch 2",
-      "where": "div.play-area"
-    },
-    {
       "path": "games/four-quadrant-explorer/index.html",
       "at": "start",
       "width": 332,
