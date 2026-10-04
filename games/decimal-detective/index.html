@@ -627,8 +627,9 @@ function renderPlaceit(data) {
     }
   }
 
-  // Start marker at 50%
-  markerPos = 0.5;
+  // Start marker at 50%, unless that is the answer: then at the left end (it started on the answer
+  // for 4.5 and 5.5, a free mark, until 4 Oct 2026).
+  markerPos = placeitCorrect(data, 0.5) ? 0 : 0.5;
 
   area.innerHTML = `
     <div class="number-line-container">
@@ -637,8 +638,8 @@ function renderPlaceit(data) {
           ${ticksHTML}
           <div class="tolerance-zone" id="toleranceZone"></div>
           <div class="target-marker" id="targetMarker"></div>
-          <div class="line-marker" id="lineMarker" style="left:50%">
-            <div class="marker-value" id="markerValue">${formatPlaceit(data.min + 0.5 * range)}</div>
+          <div class="line-marker" id="lineMarker" style="left:${markerPos * 100}%">
+            <div class="marker-value" id="markerValue">${(data.min + markerPos * range).toFixed(2)}</div>
           </div>
         </div>
       </div>
@@ -796,13 +797,22 @@ function checkRoundup(data) {
   recordAnswer('roundup', isCorrect);
 }
 
+// Place It marking. The line has 10 tick gaps; the marker reads to 2 d.p. The reading the student sees
+// is marked, and it must be within a quarter of a tick gap of the value: nearer it than any other tick,
+// or the half-way point between two ticks. (A fixed +/-0.05 accepted the neighbouring tick on the
+// 0 to 0.5 line, and 0.20 or 0.30 for 0.25, until 4 Oct 2026.)
+function placeitTolerance(data) { return (data.max - data.min) / 40; }
+function placeitCorrect(data, pos) {
+  const shown = Math.round((data.min + pos * (data.max - data.min)) * 100) / 100;
+  return Math.abs(shown - data.value) < placeitTolerance(data) - 1e-9;
+}
+
 function checkPlaceit(data) {
   const range = data.max - data.min;
-  const userValue = data.min + markerPos * range;
   const targetPct = (data.value - data.min) / range;
-  const tolerance = 0.05; // +/- 0.05 absolute
+  const tolerance = placeitTolerance(data);
 
-  const isCorrect = Math.abs(userValue - data.value) <= tolerance;
+  const isCorrect = placeitCorrect(data, markerPos);
 
   // Show target position
   const targetMarker = document.getElementById('targetMarker');
@@ -812,7 +822,7 @@ function checkPlaceit(data) {
   targetMarker.style.left = (targetPct * 100) + '%';
   targetMarker.style.display = '';
 
-  const tolPct = (0.05 / range) * 100;
+  const tolPct = (tolerance / range) * 100;
   toleranceZone.style.left = ((targetPct * 100) - tolPct) + '%';
   toleranceZone.style.width = (tolPct * 2) + '%';
   toleranceZone.style.display = '';

@@ -238,6 +238,11 @@ function gridToPixel(gx, gy) {
   return [px, py];
 }
 
+function pixelToGridExact(px, py) {
+  const cellW = (canvasRect.width - 2 * MARGIN) / GRID_SIZE;
+  return [GRID_MIN + (px - MARGIN) / cellW, GRID_MAX - (py - MARGIN) / cellW];
+}
+
 function pixelToGrid(px, py) {
   const cw = canvasRect.width;
   const cellW = (cw - 2 * MARGIN) / GRID_SIZE;
@@ -286,7 +291,8 @@ const REFLECTION_QUESTIONS = [
   { shape:[[-4,-1],[-2,-1],[-2,1],[-4,1]], axis:'x', desc:'Reflect in the x-axis', type:'rectangle' },
 ];
 
-// Rotation helper
+// Rotation helper. The grid is y-up (pixelToGrid: gy = GRID_MAX - ...), so a positive angle here
+// turns ANTICLOCKWISE, as in maths. The question's label is derived from that (buildRotationQuestions).
 function rotatePoint(x, y, cx, cy, angleDeg) {
   const rad = angleDeg * Math.PI / 180;
   const dx = x - cx, dy = y - cy;
@@ -320,10 +326,8 @@ function generateWrongRotations(shape, cx, cy, correctAngle) {
 
 function shapesEqual(a, b) {
   if (a.length !== b.length) return false;
-  for (let i = 0; i < a.length; i++) {
-    if (a[i][0] !== b[i][0] || a[i][1] !== b[i][1]) return false;
-  }
-  return true;
+  const key = sh => sh.map(([x, y]) => x + ',' + y).sort().join(' ');
+  return key(a) === key(b);
 }
 
 // Check if shape fits in grid
@@ -355,10 +359,12 @@ const ROTATION_QUESTIONS = [];
 
       const wrongs = generateWrongRotations(b.shape, b.cx, b.cy, angle);
       // Filter out wrongs that match correct or don't fit
-      const validWrongs = wrongs.filter(w => shapeFits(w) && !shapesEqual(w, correct));
+      const validWrongs = wrongs.filter((w, k) => shapeFits(w) && !shapesEqual(w, correct) &&
+        !shapesEqual(w, b.shape) && !wrongs.slice(0, k).some(v => shapesEqual(v, w)));
       if (validWrongs.length < 3) continue;
 
-      const dirLabel = angle === 90 ? '90\u00b0 clockwise' : angle === -90 ? '90\u00b0 anticlockwise' : '180\u00b0';
+      // +90 is anticlockwise on this y-up grid (rotatePoint); it was labelled clockwise until 4 Oct 2026.
+      const dirLabel = angle === 90 ? '90\u00b0 anticlockwise' : angle === -90 ? '90\u00b0 clockwise' : '180\u00b0';
       ROTATION_QUESTIONS.push({
         shape: b.shape,
         cx: b.cx, cy: b.cy,
@@ -535,6 +541,25 @@ function buildRotationOptions() {
   shuffle(opts);
   const labels = ['A','B','C','D'];
   rotationOptions = opts.map((o, i) => ({ ...o, label: labels[i] }));
+  placeLabels();
+}
+
+// Where each option's letter goes: a point inside the shape (its centroid, or part-way to a vertex),
+// as far as possible from the letters already placed. Two options can share a centroid (a 90-degree
+// image and a reflection did), which drew one letter over the other until 4 Oct 2026.
+function placeLabels() {
+  const placed = [];
+  for (const o of rotationOptions) {
+    const [cx, cy] = shapeCentroid(o.shape);
+    const cands = [[cx, cy], ...o.shape.map(([x, y]) => [cx + 0.6 * (x - cx), cy + 0.6 * (y - cy)])];
+    let best = cands[0], bestD = -1;
+    for (const c of cands) {
+      const d = placed.length ? Math.min(...placed.map(p => Math.hypot(c[0] - p[0], c[1] - p[1]))) : Infinity;
+      if (d > bestD + 1e-9) { bestD = d; best = c; }
+    }
+    o.at = best;
+    placed.push(best);
+  }
 }
 
 // ── DRAWING ──
@@ -632,8 +657,7 @@ function drawGrid() {
         drawShape(opt.shape, 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0.05)', 1);
       }
       // Label
-      const centroid = shapeCentroid(opt.shape);
-      const [lx, ly] = gridToPixel(centroid[0], centroid[1]);
+      const [lx, ly] = gridToPixel(opt.at[0], opt.at[1]);
       ctx.fillStyle = (i === hoveredOption && !answered) ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.4)';
       ctx.font = '700 16px Outfit';
       ctx.textAlign = 'center';
@@ -736,13 +760,8 @@ function handleCanvasClick(e) {
   if (gx < GRID_MIN || gx > GRID_MAX || gy < GRID_MIN || gy > GRID_MAX) return;
 
   if (mode === 'rotation') {
-    // Check which ghost shape was clicked
-    for (let i = 0; i < rotationOptions.length; i++) {
-      if (pointInShape(gx, gy, rotationOptions[i].shape)) {
-        selectRotationOption(i);
-        return;
-      }
-    }
+    const i = optionAt(...pixelToGridExact(px, py));
+    if (i >= 0) selectRotationOption(i);
     return;
   }
 
@@ -760,14 +779,7 @@ function handleCanvasClick(e) {
 function handleCanvasMove(e) {
   if (answered || mode !== 'rotation') return;
   const [px, py] = getCanvasCoords(e);
-  const [gx, gy] = pixelToGrid(px, py);
-  let newHover = -1;
-  for (let i = 0; i < rotationOptions.length; i++) {
-    if (pointInShape(gx, gy, rotationOptions[i].shape)) {
-      newHover = i;
-      break;
-    }
-  }
+  const newHover = optionAt(...pixelToGridExact(px, py));
   if (newHover !== hoveredOption) {
     hoveredOption = newHover;
     canvas.style.cursor = newHover >= 0 ? 'pointer' : 'crosshair';
@@ -775,26 +787,38 @@ function handleCanvasMove(e) {
   }
 }
 
-// Point-in-polygon (ray casting)
-function pointInShape(px, py, vertices) {
-  // Use a bounding approach: check if point is within ~1 unit of centroid or edges
-  // For simplicity, use expanded bounding box + ray cast
-  let inside = false;
-  const n = vertices.length;
-  for (let i = 0, j = n - 1; i < n; j = i++) {
-    const [xi, yi] = vertices[i];
-    const [xj, yj] = vertices[j];
-    if (((yi > py) !== (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) {
-      inside = !inside;
-    }
+// Which rotation option a tap at grid point (x, y) (unsnapped) means. Options overlap, so of the shapes
+// under the tap (inside, or within half a unit of an edge) take the one whose letter (placeLabels) is
+// nearest. Tapping a letter always picks that option. -1 if no shape is under the tap.
+function optionAt(x, y) {
+  let best = -1, bestD = Infinity;
+  for (let i = 0; i < rotationOptions.length; i++) {
+    const sh = rotationOptions[i].shape;
+    if (!insideShape(x, y, sh) && edgeDistance(x, y, sh) > 0.5) continue;
+    const [cx, cy] = rotationOptions[i].at, d = Math.hypot(x - cx, y - cy);
+    if (d < bestD) { bestD = d; best = i; }
   }
-  // Also check proximity (within 1 grid unit of any vertex)
-  if (!inside) {
-    for (const [vx, vy] of vertices) {
-      if (Math.abs(vx - px) <= 1 && Math.abs(vy - py) <= 1) return true;
-    }
+  return best;
+}
+
+function insideShape(px, py, vertices) {
+  let inside = false;
+  for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+    const [xi, yi] = vertices[i], [xj, yj] = vertices[j];
+    if (((yi > py) !== (yj > py)) && (px < (xj - xi) * (py - yi) / (yj - yi) + xi)) inside = !inside;
   }
   return inside;
+}
+
+function edgeDistance(px, py, vertices) {
+  let best = Infinity;
+  for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+    const [ax, ay] = vertices[j], [bx, by] = vertices[i];
+    const L = (bx - ax) ** 2 + (by - ay) ** 2;
+    const t = L ? Math.max(0, Math.min(1, ((px - ax) * (bx - ax) + (py - ay) * (by - ay)) / L)) : 0;
+    best = Math.min(best, Math.hypot(px - (ax + t * (bx - ax)), py - (ay + t * (by - ay))));
+  }
+  return best;
 }
 
 canvas.addEventListener('click', handleCanvasClick);

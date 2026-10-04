@@ -15,7 +15,8 @@ SUITE and the page in the same PR.
 Static half (stdlib), fails on:
   - a topic section missing, renamed or out of order, or a card out of SUITE's order;
   - a game on the page that is not in SUITE, or a SUITE game with no card;
-  - an EXCLUDED game linked anywhere on the page;
+  - an EXCLUDED or WITHDRAWN game linked anywhere on the page, or a WITHDRAWN game the portal
+    no longer links (withdrawn from /resit/ only, pending a rebuild);
   - a card whose game the portal (index.html) does not link (not live);
   - a card whose game is not on the spec map, or whose spec line differs from the spec map's
     references for it (GCSE references; a game with none shows the map's other references);
@@ -33,25 +34,28 @@ BASE = pathlib.Path(__file__).resolve().parent.parent
 PAGE = "resit/index.html"
 
 # Jon, 3 Oct 2026: the suite, by topic, in this order. shape-shifter added 4 Oct 2026 (Jon: G7
-# transformations banded STRETCH).
+# transformations banded STRETCH). Three withdrawn 4 Oct 2026 (WITHDRAWN below).
 SUITE = [
     ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
-        "estimation-engine", "estimation-golf", "unit-converter"]),
+        "estimation-golf", "unit-converter"]),
     ("algebra", "Algebra", ["formula-plug-in", "like-terms-collector", "linear-equation-solver",
-        "equation-builder", "four-quadrant-explorer", "formula-unlocked", "formula-forge",
-        "sequence-solver"]),
+        "four-quadrant-explorer", "formula-unlocked", "formula-forge", "sequence-solver"]),
     ("ratio", "Ratio, proportion and percentages", ["split-it", "proportion-blaster",
         "better-value", "percentage-flip"]),
     ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter"]),
     ("probability", "Probability", ["probability-pioneer", "expected-damage", "given-that"]),
-    ("statistics", "Statistics", ["distinctly-average", "stat-attack", "chart-interrogator",
-        "correlation-or-coincidence"]),
+    ("statistics", "Statistics", ["distinctly-average", "stat-attack", "chart-interrogator"]),
 ]
 # Jon, 3 Oct 2026: never on the page. prime-or-composite runs to 9,973 (todo: needs a
 # Foundation-range option to join); bearings are out as a topic.
 EXCLUDED = {"prime-or-composite": "numbers up to 9,973; needs a Foundation-range option to join",
             "bearing-blitz": "bearings are out as a topic"}
+# Jon, 4 Oct 2026: withdrawn from the page pending a rebuild (resit correctness audit, PR #35). Each
+# stays live on the portal; it returns by moving it back into SUITE in the rebuild's PR.
+WITHDRAWN = {"estimation-engine": "1-5% bands mark the GCSE 1 s.f. method wrong; rebuild under SR-12",
+             "equation-builder": "slot-by-slot marking rejects equally correct arrangements",
+             "correlation-or-coincidence": "the variables are hidden until after the answer"}
 # Canon SR-11: the label a student sees for each level key.
 LABEL = {"year6": "Starter", "ks3": "Foundation", "gcse": "GCSE", "alevel": "A-Level",
          "core": "Core Maths", "level4": "Level 4", "l4": "Level 4"}
@@ -104,6 +108,11 @@ def static_check(page, portal, refs, game_src):
     for slug, why in EXCLUDED.items():
         if re.search(r"games/%s/" % re.escape(slug), page):
             errors.append("%s is on the page but EXCLUDED (%s)" % (slug, why))
+    for slug, why in WITHDRAWN.items():
+        if re.search(r"games/%s/" % re.escape(slug), page):
+            errors.append("%s is on the page but WITHDRAWN pending rebuild (%s)" % (slug, why))
+        if slug not in live:
+            errors.append("%s: WITHDRAWN from /resit/ only, but the portal no longer links it" % slug)
     sections = parse(page)
     got = [(s, h) for s, h, _ in sections]
     want = [(s, h) for s, h, _ in SUITE]
@@ -198,6 +207,7 @@ def selftest(page, portal, refs, game_src):
         return []   # the real run reports them
     first = re.search(r'<a class="card" href="/games/([a-z0-9-]+)/', page).group(1)
     faults = {
+        "a withdrawn game added back": page.replace("</main>", '<a href="/games/equation-builder/">x</a></main>'),
         "an excluded game added": page.replace("</main>", '<a href="/games/prime-or-composite/">x</a></main>'),
         "a card removed": re.sub(r'<a class="card" href="/games/%s/.*?</a>' % first, "", page, count=1, flags=re.S),
         "a Starter card relabelled": page.replace('data-label="Starter" data-key="year6"', 'data-label="Year 6" data-key="year6"', 1),
@@ -235,6 +245,7 @@ def main():
     for e in errors:
         print("FAIL  " + e)
     print("/resit/: %d sections, %d cards; EXCLUDED checked: %s" % (len(sections), n, ", ".join(EXCLUDED)))
+    print("WITHDRAWN pending rebuild (checked off the page, still live): %s" % ", ".join(WITHDRAWN))
     print("FAILED" if errors else "OK")
     return 1 if errors else 0
 

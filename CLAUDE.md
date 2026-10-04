@@ -20,7 +20,25 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-04 (very late, latest): the PHONE KEYPAD, PR #34; Just Pythag It, Bruv still UNLISTED
+## Handover — 2026-10-04 (latest): RESIT SAFETY, PR #36; three games withdrawn from /resit/ pending rebuild
+
+From the resit correctness audit (PR #35, `docs/audit-resit-correctness-2026-10-04.md`), Jon's contract:
+- **/resit/ lists 29.** Withdrawn pending rebuild (still on the portal): `correlation-or-coincidence` and
+  `equation-builder` (Jon: rebuild within 24 hours), `estimation-engine` (Jon's ruling after the contract's
+  STOP IF fired: 18 of 49 items have no defined 1 s.f. method). `check-resit-page.py` holds them in
+  `WITHDRAWN`. To bring one back, move it from `WITHDRAWN` into `SUITE` and restore its card in the rebuild PR.
+- **Fixed with regression checks** (`scripts/check-resit-fixes.py`, CI group B; fails on the pre-fix files,
+  self-test reverts each fix): shape-shifter rotation labels (the grid is y-up, +90 is anticlockwise), options
+  distinct as vertex sets, tap = nearest letter, letters placed apart; probability-pioneer MATHS/GAMES 3/5;
+  estimation-engine √(e×1000) 52.137; decimal-detective marker start + quarter-tick marking;
+  negative-number-line exact snapped value. Correlation's "suicides by hanging" pair removed (bank 12).
+- **SR-12** in canon §0.3: estimation marked by the stated method, exact match.
+- **Next:** the three rebuilds (todo START); the estimation games still to bring under SR-12; the /updates/
+  "Corrected: …" entry (Jon's wording); §1.51 (the five games' remaining audit faults); §3.21 (Jon ruled (b):
+  the shared keypad for the 22 typed-answer games); then the audit's batches. Just Pythag It, Bruv: unchanged
+  (Jon plays it, then the listing PR).
+
+## Handover — 2026-10-04 (very late): the PHONE KEYPAD, PR #34; Just Pythag It, Bruv still UNLISTED
 
 Jon's contract: on phones one shared keypad types into the calculator or the answer box (no system keyboard),
 compact triangle, 48px keys. **Jon's ruling (option B, after a STOP IF):** rounds 1-2 fit one 390x844 screen

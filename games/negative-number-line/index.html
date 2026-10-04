@@ -580,7 +580,9 @@ function confirmPlace() {
   answered = true;
   const q = questions[qIndex];
   const target = q.data;
-  const correct = Math.abs(placedValue - target) <= 0.5;
+  // The marker snaps to the nearest 0.5 and shows its value, which forgives an imprecise tap; the value
+  // shown must then be the target. (Within 0.5 accepted 0 and 1 for 0.5, and -2.5 for -3, until 4 Oct 2026.)
+  const correct = placedValue === target;
 
   totalAnswered++;
   if (correct) { score++; totalCorrect++; }
