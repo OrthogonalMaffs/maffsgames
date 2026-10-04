@@ -250,7 +250,12 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
   2. **Batch 2: wrong keys at the card's level.** ~~`probability-pioneer`~~ **DONE, PR #45** (audit F1-F6 and
      F8: Stage 3 Q7 rekeyed False with Jon's explanation, decision 4; lottery Unlikely only; rain Likely only;
      Q9 and Q13 value-equal distractors replaced; Q10 "tend to get closer"; F7 left as a judgement call;
-     `scripts/verify-probability-pioneer.py` in CI). `angle-ace` Starter diagrams (L293,
+     `scripts/verify-probability-pioneer.py` in CI). Follow-ups (Jon, 4 Oct; content, not Code Claude's):
+     - Probability Pioneer: Stage 2 reasons for the other 19 questions (PC drafts, Jon approves). The optional
+       `why` field stays (PR #45); only Q20 has one.
+     - Probability Pioneer: standardise on one form, Jon to rule (PC recommends 'dice'). Stage 2 Q9 and Stage 3
+       Q7's explanation say "dice"; the rest of the bank says "die".
+     `angle-ace` Starter diagrams (L293,
      L437, L423/444/465). `decimal-detective` §1.49 (decision 6): remove the identical cards (:256 1.9, :261
      0.6, :263 0.11); keep the equal-value pairs (0.77/0.770, 0.44/0.440) with feedback that trailing zeros
      don't change the value.

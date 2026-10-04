@@ -40,8 +40,9 @@ whole suite locally if ever wanted.
   (a stem no reader understands fails: extend `stage2_value()`); Stage 1 and 3 keys pinned in reviewed
   tables with reasons (re-review and update the table to change an item); every answer to all 45 items
   clicked in Chromium. Failed on the pre-fix bank (9 FAILs).
-- **For Jon (my calls, in PR #45):** an optional `why` reason on Stage 2 items (only Q20 has one; display
-  only); "on a dice" (the contract's) vs the bank's "on a die" elsewhere.
+- **Jon's rulings on my two calls (4 Oct):** the optional Stage 2 `why` field stays, and its reasons for the
+  other 19 questions are content (PC drafts, Jon approves); "dice" vs "die" waits for Jon's ruling (PC
+  recommends "dice"). Both logged in todo START batch 2; Code Claude writes neither.
 - **Gotcha:** `check-resit-fixes.py`'s Q20 regex now allows fields after the options; extend it the same
   way if another of its patterns meets a new field.
 
