@@ -20,7 +20,17 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-03 (late night, latest): the GCSE Resit section (PRs #22, #23)
+## Handover — 2026-10-04 (latest): docs clear after PRs #21–#26
+
+- **Start here: `docs/todo.md`'s START block** (rewritten 4 Oct). Nothing is open; PRs #1–#26 are merged and
+  live, and this docs clear is #27.
+- **Next, in a fresh session: Just Pythag It, Bruv.** Jon held the contract; it is word for word, with the
+  scaled-triples addendum and six pre-flight notes, in `docs/next-contract-just-pythag-it-bruv.md`. Settle
+  pre-flight note 1 (level key: `ks3` labelled "Foundation" vs a new `foundation` key that `levelLabel()`
+  cannot name) with Jon before building.
+- **Needs Jon:** see START (§3.14–§3.17, §1.49, the /updates/ "31 games" vs 32 cards, the G20 split).
+
+## Handover — 2026-10-03 (late night): the GCSE Resit section (PRs #22, #23)
 
 - **Live:** canon SR-11 (age-neutral level labels: Year 6 → Starter, KS3 → Foundation; keys never change),
   applied to the 31 resit-suite games (PR #22, keys proven identical); `/resit/` (PR #23): Jon's intro, six
