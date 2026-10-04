@@ -39,7 +39,18 @@ WHAT IT ASSERTS (Jon's contract, docs/next-contract-just-pythag-it-bruv.md, poin
               20-50 degrees, slope 3-6 m. Every given number is in the prompt with its unit; all
               five situations appear in every session; the hypotenuse is drawn in at least three
               different directions in every session's rounds 1 and 2.
-  UI          a full session played with the Firebase SDK blocked: the start screen shows
+  Positions   (Jon, 4 Oct 2026) the abstract triangles of rounds 1-2, read from the drawing: every session
+              has the hypotenuse along the bottom (right angle at the top), up a side, and sloping both
+              ways, with the right angle in all four corners; no position or group of positions is over
+              40%; round 1 alone has the bottom, a side and both slopes.
+  Tap step    round 1 only: one tap target per side, lying on that side; every side drawn at least 44px
+              at 320px, and the middle 44px of it, from 6px inside to 22px outside, registers as that
+              side by this script's nearest-side test and the page's; only the hypotenuse is accepted;
+              every side label is styled alike (the unknown is "?" in round 1), in the markup and as
+              rendered.
+  UI          a full session played with the Firebase SDK blocked (round 1 tapped with real pointer
+              clicks: a leg first, which gets the message and no event, then the hypotenuse; once by
+              keyboard); a calculator note on every question; the start screen shows
               "Foundation" and "Calculator required"; the page is noindex; a format answer is not
               marked and sends no event; the first three add errors show the worked example (with
               the Next control's fallback timer off), the fourth and fifth the nudge; other wrong
@@ -57,7 +68,10 @@ Each fault is patched into a FRESH page at run time (never into the file) and th
 must FAIL: keys truncated instead of rounded; the hypotenuse label moved to a leg; the rounds out
 of order; a run of three; too few 'short' questions; the add check switched off; the add check
 firing on 'hyp' questions; a wrong scale word; a wrong base triple; an implausible ladder; the
-right-angle mark at the wrong vertex; the nudge never replacing the worked example.
+right-angle mark at the wrong vertex; the nudge never replacing the worked example; tap targets
+mapped to the wrong side; a leg accepted as the hypotenuse; thin round-1 triangles not widened; the
+unknown's label styled differently; no hypotenuse along the bottom; one position over 40%; the
+hypotenuse sloping one way only.
 
 USAGE
     python scripts/verify-just-pythag-it-bruv.py
@@ -85,6 +99,10 @@ ROUND_ASK = "Give your answer to 1 decimal place."
 SPOT_BASES = {(3, 4, 5): "3-4-5", (5, 12, 13): "5-12-13"}
 NUDGE = "Is the side you're finding the longest one?"
 PHONES = [(320, 568), (375, 667), (390, 844)]
+TAP_RADIUS_PX = 22        # half a 44px fingertip
+TAP_TOL_PX = 40           # the page counts a tap for the nearest side within this distance
+SCALE_320 = 0.75          # screen px per viewBox unit at 320px wide; measured in run_all, this is the floor
+TAP_WRONG = "The hypotenuse is opposite the right angle, and always the longest side."
 FOOTER = 40
 MIN_LABEL_PX = 12
 
@@ -166,7 +184,7 @@ def sides_of(q):
     out = {}
     for lab in q["layout"]["labels"]:
         t = lab["text"]
-        if t == "x":
+        if t in ("x", "?"):
             out[lab["side"]] = None
         else:
             m = re.match(r"^(\d+(?:\.\d+)?) (cm|m|mm)$", t)
@@ -221,7 +239,7 @@ def check_layout(q, s, out, where):
             return float(s[k])
         return math.sqrt(float(true_unknown_sq(q, s)))
     P, Qn = true_len("p"), true_len("q")
-    thin = min(P, Qn) / max(P, Qn) < 0.25
+    thin = min(P, Qn) / max(P, Qn) < (0.5 if q["stage"] == "a" else 0.25)   # round 1 widens thin ones to tap
     if bool(L["notToScale"]) != thin:
         out.append("%s: notToScale=%r for legs %.3g and %.3g" % (where, L["notToScale"], P, Qn))
     if not thin and abs(la / lb - P / Qn) > 1e-6 * (P / Qn):
@@ -398,11 +416,66 @@ def check_context(q, s, S, out, where):
         out.append("%s: the prompt shows the answer %s" % (where, q["keyText"]))
 
 
-def octant(q):
+def position(q):
+    """Where the hypotenuse is drawn, read from the drawing (SVG y runs down):
+    Hb/Ht horizontal with the right angle above/below it; Vl/Vr vertical on the left/right;
+    BL/BR/TL/TR legs horizontal and vertical with the right angle in that corner; 'other' else."""
     L = q["layout"]
     O, A, B = L["O"], L["A"], L["B"]
-    mx, my = (A[0] + B[0]) / 2 - O[0], (A[1] + B[1]) / 2 - O[1]
-    return int(((math.degrees(math.atan2(my, mx)) + 360) % 360) // 45)
+    dx, dy = B[0] - A[0], B[1] - A[1]
+    ln = math.hypot(dx, dy)
+    if abs(dy) < 1e-6 * ln:
+        return "Hb" if O[1] < A[1] else "Ht"
+    if abs(dx) < 1e-6 * ln:
+        return "Vl" if O[0] > A[0] else "Vr"
+    def axis(P):
+        ex, ey = P[0] - O[0], P[1] - O[1]
+        e = math.hypot(ex, ey)
+        return abs(ex) < 1e-6 * e or abs(ey) < 1e-6 * e
+    if not (axis(A) and axis(B)):
+        return "other"
+    mx, my = (A[0] + B[0]) / 2, (A[1] + B[1]) / 2
+    return ("B" if O[1] > my else "T") + ("L" if O[0] < mx else "R")
+
+
+def slope(pos):
+    """'down' if the hypotenuse runs down to the right, 'up' if up to the right."""
+    return {"BL": "down", "TR": "down", "BR": "up", "TL": "up"}.get(pos)
+
+
+GROUP = {"Hb": "horizontal", "Ht": "horizontal", "Vl": "vertical", "Vr": "vertical",
+         "BL": "sloping", "BR": "sloping", "TL": "sloping", "TR": "sloping"}
+
+
+def check_positions(qs, out, tag):
+    """Jon, 4 Oct 2026: every session's abstract triangles (rounds 1 and 2) include the hypotenuse
+    along the bottom (right angle at the top), up a side, and sloping both ways, with the right angle
+    in every corner; no position, and no group of positions, is more than 40% of them. Round 1, where
+    the tap step is, has the bottom, a side and both slopes on its own."""
+    ab = [position(q) for q in qs if q["stage"] in "ab"]
+    a = [position(q) for q in qs if q["stage"] == "a"]
+    if "other" in ab:
+        out.append("%s: a triangle in rounds 1-2 is drawn in no defined position" % tag)
+    for name, ps in (("rounds 1-2", ab), ("round 1", a)):
+        miss = []
+        if "Hb" not in ps:
+            miss.append("hypotenuse along the bottom")
+        if not ({"Vl", "Vr"} & set(ps)):
+            miss.append("hypotenuse up a side")
+        if {slope(x) for x in ps} < {"down", "up"}:
+            miss.append("sloping both ways")
+        if miss:
+            out.append("%s: %s has no %s (%s)" % (tag, name, ", no ".join(miss), " ".join(ps)))
+    if not {"BL", "BR", "TL", "TR"} <= set(ab):
+        out.append("%s: the right angle is not in all four corners (%s)" % (tag, " ".join(ab)))
+    n = len(ab)
+    for key, label in ((lambda x: x, "position"), (lambda x: GROUP.get(x, x), "group")):
+        counts = {}
+        for x in ab:
+            counts[key(x)] = counts.get(key(x), 0) + 1
+        top = max(counts.items(), key=lambda kv: kv[1])
+        if top[1] > 0.4 * n:
+            out.append("%s: hypotenuse %s %s is %d of %d abstract triangles (over 40%%)" % (tag, label, top[0], top[1], n))
 
 
 def check_session(sess, out, tag):
@@ -424,9 +497,7 @@ def check_session(sess, out, tag):
     ctx = {q["context"] for q in qs if q["stage"] == "c"}
     if ctx != {"ladder", "tv", "ramp", "field", "roof"}:
         out.append("%s: round 3 used %s" % (tag, sorted(c for c in ctx if c)))
-    octs = {octant(q) for q in qs if q["stage"] in "ab"}
-    if len(octs) < 3:
-        out.append("%s: the hypotenuse is drawn in only %d direction(s) in rounds 1-2" % (tag, len(octs)))
+    check_positions(qs, out, tag)
     adds = []
     for q in qs:
         adds.append(check_question(q, out, "%s q%d" % (tag, q["index"])))
@@ -441,6 +512,7 @@ COLLECT_JS = """(seeds) => seeds.map(seed => {
     q.layout = JPIB.layout(q);
     q.worked = JPIB.worked(q);
     q.example = q.type === 'short' ? JPIB.addExample(q) : null;
+    q.svg = JPIB.svg(q).html;
   });
   return s;
 })"""
@@ -462,23 +534,112 @@ def probes(q, add):
     return raws
 
 
-async def collect_and_check(page, seeds):
+LABEL_TAG = re.compile(r"<text\b([^>]*)>")
+HIT_TAG = re.compile(r'<line class="tri-hit" data-side="([pqr])"[^>]*x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)"')
+
+
+def check_svg(q, out, where):
+    """Label styling identical for every side (Jon: styling must never give the hypotenuse away), and
+    in round 1 exactly one tap target per side, lying on that side."""
+    attrs = [re.sub(r'\s(data-side|x|y)="[^"]*"', "", a) for a in LABEL_TAG.findall(q["svg"])]
+    if len(attrs) != 3 or len(set(attrs)) != 1:
+        out.append("%s: the side labels are not styled identically: %r" % (where, attrs))
+    hits = HIT_TAG.findall(q["svg"])
+    if q["stage"] != "a":
+        if hits:
+            out.append("%s: tap targets outside round 1" % where)
+        return
+    L = q["layout"]
+    ends = {"p": (L["O"], L["A"]), "q": (L["O"], L["B"]), "r": (L["A"], L["B"])}
+    if sorted(h[0] for h in hits) != ["p", "q", "r"]:
+        out.append("%s: tap targets %r, expected one per side" % (where, [h[0] for h in hits]))
+    for k, x1, y1, x2, y2 in hits:
+        a, b = ends[k]
+        got = sorted([(round(float(x1), 1), round(float(y1), 1)), (round(float(x2), 1), round(float(y2), 1))])
+        want = sorted([(round(a[0], 1), round(a[1], 1)), (round(b[0], 1), round(b[1], 1))])
+        if any(abs(g[0] - w[0]) > 0.11 or abs(g[1] - w[1]) > 0.11 for g, w in zip(got, want)):
+            out.append("%s: the tap target for side %s does not lie on that side" % (where, k))
+
+
+TAP_JS = """(items) => items.map(it => {
+  const q = JPIB.buildSession(it.seed).questions[it.i], L = JPIB.layout(q);
+  return it.pts.map(p => { const h = JPIB.sideAt(L, p[0], p[1]); return [h.side, h.dist]; });
+})"""
+
+
+def seg_dist(P, a, b):
+    dx, dy = b[0] - a[0], b[1] - a[1]
+    t = max(0.0, min(1.0, ((P[0] - a[0]) * dx + (P[1] - a[1]) * dy) / (dx * dx + dy * dy)))
+    return math.hypot(P[0] - a[0] - t * dx, P[1] - a[1] - t * dy)
+
+
+async def check_taps(page, taps, scale, out):
+    """Every side of every round-1 triangle is a finger-sized target at 320px: drawn at least 44px long,
+    and the 44px stretch at its middle, from 6px inside the line to 22px outside (where a finger
+    aimed at the line lands), maps to that side by this script's nearest-side test and the page's own."""
+    if not taps:
+        return
+    u = 1.0 / scale                                   # viewBox units per screen px
+    items, want = [], []
+    for seed, i, q in taps:
+        L = q["layout"]
+        O, A, B = L["O"], L["A"], L["B"]
+        ends = {"p": (O, A), "q": (O, B), "r": (A, B)}
+        opp = {"p": B, "q": A, "r": O}
+        pts, exp = [], []
+        bad = False
+        for k, (a, b) in ends.items():
+            ln = math.hypot(b[0] - a[0], b[1] - a[1])
+            if ln * scale < 2 * TAP_RADIUS_PX and not bad:
+                out.append("seed %d q%d (%s): side %s is drawn %.0fpx long at 320px, under %dpx"
+                           % (seed, q["index"], position(q), k, ln * scale, 2 * TAP_RADIUS_PX))
+                bad = True
+            tx, ty = (b[0] - a[0]) / ln, (b[1] - a[1]) / ln
+            nx, ny = -ty, tx
+            mid = ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
+            if (opp[k][0] - mid[0]) * nx + (opp[k][1] - mid[1]) * ny > 0:
+                nx, ny = -nx, -ny                       # outward
+            for t in (-22, -11, 0, 11, 22):
+                for n in (-6, 0, 11, 22):
+                    P = (mid[0] + (t * tx + n * nx) * u, mid[1] + (t * ty + n * ny) * u)
+                    d = {kk: seg_dist(P, aa, bb) for kk, (aa, bb) in ends.items()}
+                    near = min(d, key=d.get)
+                    if near != k and not bad:
+                        out.append("seed %d q%d (%s): a tap %dpx along and %dpx out from side %s's middle is "
+                                   "nearer side %s" % (seed, q["index"], position(q), t, n, k, near))
+                        bad = True
+                    pts.append(P)
+                    exp.append(k)
+        items.append({"seed": seed, "i": i, "pts": pts})
+        want.append((seed, q, exp))
+    got = await page.evaluate(TAP_JS, items)
+    tol = TAP_TOL_PX / scale
+    for (seed, q, exp), res in zip(want, got):
+        for k, (side, dist) in zip(exp, res):
+            if side != k or dist > tol:
+                out.append("seed %d q%d: a tap on side %s registers as %s (%.1f units away)" % (seed, q["index"], k, side, dist))
+                break
+
+
+async def collect_and_check(page, seeds, scale=None):
+    scale = scale or SCALE_320
     out = []
     data = await page.evaluate(COLLECT_JS, list(range(1, seeds + 1)))
     items, expect = [], []
-    oct_counts = [0] * 8
+    taps = []
     for sess in data:
         adds = check_session(sess, out, "seed %d" % sess["seed"]) or []
         for i, q in enumerate(sess["questions"]):
-            if q["stage"] in "ab":
-                oct_counts[octant(q)] += 1
+            check_svg(q, out, "seed %d q%d" % (sess["seed"], q["index"]))
+            if q["stage"] == "a":
+                taps.append((sess["seed"], i, q))
             add = adds[i] if i < len(adds) else None
             raws = probes(q, add)
             items.append({"seed": sess["seed"], "i": i, "raws": raws})
             expect.append((sess["seed"], q, raws, add))
-    total = sum(oct_counts)
-    if total and min(oct_counts) < 0.05 * total:
-        out.append("the hypotenuse direction is lopsided across rounds 1-2: %r" % oct_counts)
+    await check_taps(page, taps, scale, out)
+    if await page.evaluate("['p','q','r'].map(k => JPIB.isHypTap(k))") != [False, False, True]:
+        out.append("isHypTap accepts a leg, or refuses the hypotenuse")
     got = await page.evaluate(PROBE_JS, items)
     for (seed, q, raws, add), res in zip(expect, got):
         for raw, (m, isadd) in zip(raws, res):
@@ -529,8 +690,60 @@ STUBS = """() => { window.__submits = []; window.__events = []; window.__next = 
 
 async def wait_next_question(page, prev):
     await page.wait_for_function(
-        "(p) => { const s = JPIB.ui.state(); return s === 'done' || (s === 'asking' && JPIB.ui.index() > p); }",
+        "(p) => { const s = JPIB.ui.state(); return s === 'done' || "
+        "((s === 'asking' || s === 'tap') && JPIB.ui.index() > p); }",
         arg=prev, timeout=15000)
+
+
+# The screen point just outside a side's midpoint (off px along its outward normal): where a finger lands.
+CLICK_PT = """([k, off]) => { const L = JPIB.layout(JPIB.ui.question());
+  const svg = document.querySelector('#fig svg'), r = svg.getBoundingClientRect(), s = r.width / L.vb[0];
+  const e = {p: [L.O, L.A], q: [L.O, L.B], r: [L.A, L.B]}[k], opp = {p: L.B, q: L.A, r: L.O}[k];
+  const mx = (e[0][0] + e[1][0]) / 2, my = (e[0][1] + e[1][1]) / 2;
+  let nx = -(e[1][1] - e[0][1]), ny = e[1][0] - e[0][0]; const n = Math.hypot(nx, ny); nx /= n; ny /= n;
+  if ((opp[0] - mx) * nx + (opp[1] - my) * ny > 0) { nx = -nx; ny = -ny; }
+  return [r.left + mx * s + nx * off, r.top + my * s + ny * off]; }"""
+
+LABEL_STYLES = """() => [...document.querySelectorAll('#fig text.tri-label')].map(t => { const c = getComputedStyle(t);
+  return [t.getAttribute('class'), c.fill, c.fontStyle, c.fontWeight, c.fontSize, c.fontFamily, c.textDecorationLine].join('|'); })"""
+
+
+async def tap_step(page, q, out, where, wrong_first=False, keyboard=False):
+    """Round 1: the answer box is hidden until the hypotenuse is tapped; a leg gets the message, no
+    event, no change of state; the hypotenuse opens the answer box. Real pointer events on real pixels."""
+    if await page.evaluate("JPIB.ui.state()") != "tap":
+        out.append("%s: round 1 question opened without the tap step" % where)
+        return
+    if await page.is_visible("#answer"):
+        out.append("%s: the answer box shows before the hypotenuse is tapped" % where)
+    nev = len(await page.evaluate("window.__events || []"))
+    if wrong_first:
+        leg = "p" if q["unknown"] != "p" else "q"
+        x, y = await page.evaluate(CLICK_PT, [leg, 12])
+        await page.mouse.click(x, y)
+        if await page.evaluate("JPIB.ui.state()") != "tap":
+            out.append("%s: tapping a leg moved on" % where)
+        msg = (await page.inner_text("#msg")).strip()
+        if msg != TAP_WRONG:
+            out.append("%s: a wrong tap says %r" % (where, msg))
+        if await page.is_visible("#answer"):
+            out.append("%s: a wrong tap opened the answer box" % where)
+    if keyboard:
+        await page.focus('#fig .tri-hit[data-side="r"]')
+        await page.keyboard.press("Enter")
+    else:
+        x, y = await page.evaluate(CLICK_PT, ["r", 12])
+        await page.mouse.click(x, y)
+    if await page.evaluate("JPIB.ui.state()") != "asking":
+        out.append("%s: tapping the hypotenuse did not open the answer box" % where)
+        return
+    if not await page.is_visible("#answer"):
+        out.append("%s: the answer box is hidden after the hypotenuse tap" % where)
+    picked = await page.evaluate("[...document.querySelectorAll('#fig .tri-side.picked')].map(l => l.dataset.side)")
+    if picked != ["r"]:
+        out.append("%s: highlighted %r after the tap" % (where, picked))
+    if len(await page.evaluate("window.__events || []")) != nev:
+        out.append("%s: the tap step sent an analytics event" % where)
 
 
 async def ui_playthrough(browser, out, seed=4242):
@@ -555,9 +768,20 @@ async def ui_playthrough(browser, out, seed=4242):
         await wait_next_question(page, 0)
         n_add, right, answered, expected_correct = 0, 0, [], []
         format_done = unread_done = False
-        while await page.evaluate("JPIB.ui.state()") == "asking":
+        taps_done = 0
+        while await page.evaluate("JPIB.ui.state()") in ("asking", "tap"):
             q = await page.evaluate("JPIB.ui.question()")
             i = q["index"]
+            styles = await page.evaluate(LABEL_STYLES)
+            if len(styles) != 3 or len(set(styles)) != 1:
+                out.append("UI q%d: side labels styled differently: %r" % (i, styles))
+            if not await page.is_visible("#qcard .qhead .calc-badge"):
+                out.append("UI q%d: no calculator note on the question" % i)
+            if q["stage"] == "a":
+                await tap_step(page, q, out, "UI q%d" % i, wrong_first=taps_done < 2, keyboard=taps_done == 2)
+                taps_done += 1
+            elif await page.evaluate("document.querySelectorAll('#fig .tri-hit').length"):
+                out.append("UI q%d: tap targets outside round 1" % i)
             if q["dp"] == 1 and not format_done:
                 format_done = True
                 # the right value at 2 d.p. when 1 d.p. is asked: format, never marked (SR-3)
@@ -654,16 +878,23 @@ async def ui_playthrough(browser, out, seed=4242):
 
 async def phone_fit(browser, out):
     """Every question shape, wrong-answer feedback (the worked example for 'short'), at three sizes."""
-    measured, worst = 0, {}
+    measured, worst, tapworst = 0, {}, {}
     for (w, h) in PHONES:
         ctx, page, errors = await new_page(browser, (w, h))
         try:
             await page.evaluate(STUBS)
             await page.evaluate("""() => {
               const J = JPIB, rng = J.mulberry32(99), qs = [];
-              J.TRIPLES.forEach(t => { qs.push(J.buildStageA('hyp', t, rng)); qs.push(J.buildStageA('short', t, rng)); });
+              const P = J.POSITIONS; let n = 0;
+              // round 1: every triangle, both types, the positions dealt in turn; then the thinnest
+              // triangles (7-24-25, 5-12-13) in all eight positions, where the tap targets are smallest
+              J.TRIPLES.forEach(t => { qs.push(J.buildStageA('hyp', t, rng, P[n++ % 8]));
+                qs.push(J.buildStageA('short', t, rng, P[n++ % 8])); });
+              J.TRIPLES.filter(t => t.k === 1 && (t.base[0] === 7 || t.base[0] === 5)).forEach(t =>
+                P.forEach(pos => qs.push(J.buildStageA('short', t, rng, pos))));
+              // round 2: the longest labels and answers, in all eight positions
               const lastH = J.POOL_B.hyp[J.POOL_B.hyp.length - 1], lastS = J.POOL_B.short[J.POOL_B.short.length - 1];
-              qs.push(J.buildStageB('hyp', lastH, rng), J.buildStageB('short', lastS, rng));
+              P.forEach(pos => qs.push(J.buildStageB('hyp', lastH, rng, pos), J.buildStageB('short', lastS, rng, pos)));
               J.CONTEXT_IDS.forEach(id => ['hyp', 'short'].forEach(t => {
                 const kinds = {};
                 J.CONTEXTS[id].pool[t].forEach(e => { const k = String(e[2] || ''); (kinds[k] = kinds[k] || []).push(e); });
@@ -678,11 +909,33 @@ async def phone_fit(browser, out):
             }""")
             await page.click("#startBtn")
             await wait_next_question(page, 0)
-            while await page.evaluate("JPIB.ui.state()") == "asking":
+            while await page.evaluate("JPIB.ui.state()") in ("asking", "tap"):
                 q = await page.evaluate("JPIB.ui.question()")
                 i = q["index"]
                 where = "%dx%d %s%s %s q%d" % (w, h, q["stage"], ("/" + q["context"]) if q["context"] else "",
                                               q["type"], i)
+                if q["stage"] == "a":
+                    # the whole triangle above the fold to tap, then the answer box and Check after it
+                    svgb = await page.evaluate("document.querySelector('#fig svg').getBoundingClientRect().bottom")
+                    if svgb > h - FOOTER:
+                        out.append("%s: the triangle ends at %.0fpx, below the fold, during the tap step" % (where, svgb))
+                    await tap_step(page, q, out, where, wrong_first=True)
+                    chk = await page.evaluate("document.querySelector('#submitBtn').getBoundingClientRect().bottom")
+                    # one line with room to spare: a wider fallback font (CI's) must not wrap Check below
+                    row = await page.evaluate("""() => { const r = document.querySelector('#answerForm');
+                      const kids = [...r.children].filter(e => e.offsetParent !== null);
+                      const tops = kids.map(e => Math.round(e.getBoundingClientRect().top + e.getBoundingClientRect().height / 2));
+                      // the fixed parts at their own width, plus the input at its minimum
+                      const used = kids.reduce((a, e) => a + (e.tagName === 'INPUT'
+                          ? parseFloat(getComputedStyle(e).minWidth) : e.getBoundingClientRect().width), 0)
+                        + parseFloat(getComputedStyle(r).columnGap || 0) * (kids.length - 1);
+                      return [Math.max(...tops) - Math.min(...tops), r.getBoundingClientRect().width - used]; }""")
+                    if row[0] > 4 or row[1] < 20:
+                        out.append("%s: the answer row is not one line with 20px spare (centres %dpx apart, %.0fpx spare)"
+                                   % (where, row[0], row[1]))
+                    tapworst[(w, h)] = max(tapworst.get((w, h), 0), max(svgb, chk))
+                    if chk > h - FOOTER:
+                        out.append("%s: Check ends at %.0fpx, below the fold, after the tap" % (where, chk))
                 lab = await page.evaluate("""() => { const svg = document.querySelector('#fig svg');
                   const k = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
                   const rs = [...svg.querySelectorAll('text')].map(t => { const r = t.getBoundingClientRect();
@@ -714,6 +967,7 @@ async def phone_fit(browser, out):
         finally:
             await ctx.close()
     print("Lowest Next: " + ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER) for (w, h), v in sorted(worst.items())))
+    print("Tap step, lowest of triangle/Check: " + ", ".join("%dx%d %.0fpx" % (w, h, v) for (w, h), v in sorted(tapworst.items())))
     return measured
 
 
@@ -749,7 +1003,40 @@ FAULTS = [
      " L.mark = [L.A, L.A, L.A]; return L; }; })();"),
     ("the nudge never replaces the worked example",
      "JPIB.helpFor = function () { return 'example'; };"),
+    ("tap targets mapped to the wrong side",
+     "(function(){ var o = JPIB.sideAt; JPIB.sideAt = function (L, x, y) { var h = o(L, x, y);"
+     " if (h.side === 'p') h.side = 'r'; else if (h.side === 'r') h.side = 'p'; return h; }; })();"),
+    ("a leg accepted as the hypotenuse",
+     "JPIB.isHypTap = function () { return true; };"),
+    ("thin round-1 triangles not widened (targets too small)",
+     "JPIB.MIN_RATIO_TAP = 0.25;"),
+    ("unknown side's label styled differently",
+     "(function(){ var o = JPIB.svg; JPIB.svg = function (q) { var r = o(q);"
+     " r.html = r.html.replace(/<text class=\"tri-label\"([^>]*)>(x|\\?)</, '<text class=\"tri-label unknown\"$1>$2<');"
+     " return r; }; })();"),
+    ("no hypotenuse along the bottom",
+     "(function(){ var o = JPIB.positionPlan; JPIB.positionPlan = function (rng) { var p = o(rng);"
+     " var f = function (x) { return x === 'Hb' ? 'Ht' : x; }; return { a: p.a.map(f), b: p.b.map(f) }; }; })();"),
+    ("one position over 40%",
+     "(function(){ var o = JPIB.positionPlan; JPIB.positionPlan = function (rng) { var p = o(rng);"
+     " var f = function (x) { return x === 'Ht' || x === 'Vr' ? 'Hb' : x; }; return { a: p.a.map(f), b: p.b.map(f) }; }; })();"),
+    ("the hypotenuse slopes one way only",
+     "(function(){ var o = JPIB.positionPlan; JPIB.positionPlan = function (rng) { var p = o(rng);"
+     " var f = function (x) { return x === 'BR' || x === 'TL' ? 'BL' : x; }; return { a: p.a.map(f), b: p.b.map(f) }; }; })();"),
 ]
+
+
+async def measure_scale(browser):
+    """Screen px per viewBox unit of a round-1 triangle on a 320px phone: what the tap test is held to."""
+    ctx, page, _ = await new_page(browser, (320, 568))
+    try:
+        await page.evaluate(STUBS)
+        await page.click("#startBtn")
+        await wait_next_question(page, 0)
+        return await page.evaluate("(() => { const s = document.querySelector('#fig svg');"
+                                   " return s.getBoundingClientRect().width / s.viewBox.baseVal.width; })()")
+    finally:
+        await ctx.close()
 
 
 async def selftest(browser):
@@ -772,6 +1059,10 @@ async def run_all(args):
     from playwright.async_api import async_playwright
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
+        global SCALE_320
+        SCALE_320 = await measure_scale(browser)
+        print("Round-1 triangle at 320px: %.3f px per unit (tap target: the middle %dpx of each side, 6px in to 22px out)"
+              % (SCALE_320, 2 * TAP_RADIUS_PX))
         ctx, page, errors = await new_page(browser)
         found, data = await collect_and_check(page, seeds=args.seeds)
         await ctx.close()

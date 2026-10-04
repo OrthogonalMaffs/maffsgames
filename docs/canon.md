@@ -358,7 +358,8 @@ exam has a non-calculator paper and calculator papers.
 | `optional` | Either works | worded when the first game is tagged |
 | `untagged` | Not yet decided. Every game starts here and is tagged in its own PR | nothing |
 
-**One badge, one style.** The start screen shows `<span class="calc-badge" data-calc="…">…</span>`,
+**One badge, one style.** The start screen shows `<span class="calc-badge" data-calc="…">…</span>` (a game may
+repeat it on each question card, as `just-pythag-it-bruv` does at Jon's request of 4 Oct 2026),
 styled once in `schools/assets/theme.css` (`.calc-badge`; `data-calc="required"` takes `--hint`,
 `"not-allowed"` takes `--wrong`, anything else `--muted`, all AA on `--surface-alt`). A game never styles
 its own. First user: `just-pythag-it-bruv` (`required`); every other game is `untagged` and its display is
