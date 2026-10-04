@@ -20,7 +20,25 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-04 (latest): RESIT SAFETY, PR #36; three games withdrawn from /resit/ pending rebuild
+## Before pushing: `python scripts/check-changed.py`, not the full local suite (canon §7.8, 4 Oct 2026)
+
+This replaces "full local suite before every push", including in contracts that still say it. It runs
+the content verifiers `scripts/ci-deps.py` selects for the branch's changes, plus the fast site-wide
+checks; then push and let CI run the rest. **Why:** the repo is public, so CI minutes are free, and the
+full local run was a slower second copy of CI with known Windows-only false failures (todo §4 item 18).
+**Safety net:** every PR runs every site-wide check; every merge to main, a weekly schedule and a manual
+run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
+whole suite locally if ever wanted.
+
+## Handover — 2026-10-04 (latest): SELECTIVE CI, PR #38; resit safety PR #36 live
+
+- **PR #38 (Jon's contract):** `scripts/ci-deps.py` (derived dependency map, self-tested on every run),
+  `scripts/check-changed.py` (local), `check-site.yml` gains a plan job, line selection in the "Content
+  verifiers" groups, a gate job, push-on-main-only, concurrency, a weekly full run. Canon §7.8. The
+  measurements and the five proofs are in the PR.
+- **Next:** unchanged from the handover below (the three /resit/ rebuilds first).
+
+## Handover — 2026-10-04: RESIT SAFETY, PR #36; three games withdrawn from /resit/ pending rebuild
 
 From the resit correctness audit (PR #35, `docs/audit-resit-correctness-2026-10-04.md`), Jon's contract:
 - **/resit/ lists 29.** Withdrawn pending rebuild (still on the portal): `correlation-or-coincidence` and

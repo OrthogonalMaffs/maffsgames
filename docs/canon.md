@@ -986,6 +986,43 @@ public web pages on maffsgames.co.uk.
 - **No personal contact details in the repo.** The repo copy of the Apps Script holds a placeholder
   for the report address (`docs/apps-script-redeploy.md` says where it is set).
 
+## 7.8 CI: what runs when (Jon, 4 Oct 2026)
+
+**Why it changed.** The repository is public, so GitHub Actions minutes are free; the cost of a check is
+the wall-clock time a PR waits. Every PR used to run every content verifier (Just Pythag It, Bruv alone is
+about 9 minutes) whatever it touched, and the full suite was run again locally on Windows first. The cost
+grew with the number of games, not with the size of the change.
+
+| **Run** | **What runs** |
+| --- | --- |
+| Pull request | Every site-wide check (tiers 1-2, links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /resit/, calculator; tier 4 bank extraction and lint; the shared-asset tests; leaderboard coverage), plus the content verifiers `scripts/ci-deps.py` selects for the files the PR changes |
+| Push to main (every merge) | **Everything**, every verifier: the safety net |
+| Weekly (Mondays 05:17 UTC) and manual (`workflow_dispatch`) | **Everything** |
+
+- **The selection is derived, never kept by hand.** `scripts/ci-deps.py` reads the checks from
+  `check-site.yml` (a group whose name starts "Content verifiers" is per-game; every other group is
+  site-wide) and works out each verifier's dependencies: the script and the local modules it imports;
+  the repo files its literals name; each game it names (its whole folder, and every local file the
+  game's page loads, followed through the shared JS and CSS). A changed file selects every verifier
+  that depends on it. A change to CI itself (`.github/`, `scripts/ci-*`, `requirements*.txt`) or a path
+  in no known area runs everything. A verifier whose dependencies cannot be derived (it names no page and
+  is not a library's self-test, or its pages load a file through a computed path) always runs; none does
+  today. `python scripts/ci-deps.py --explain` prints the map.
+- **Proven on every run:** the plan job runs `ci-deps.py --selftest` first. A change to one game's page
+  selects exactly the verifiers that name that game; a shared asset selects every verifier whose game
+  loads it; CI files and unknown paths select everything; a docs-only change selects none; every verifier
+  is reachable from its own script.
+- **The gate.** The `gate` job passes only if every job in the run passed (none failed, cancelled or
+  skipped). It is the one check branch protection should require when Jon adds it.
+- **Triggers.** `push` runs on main only (a branch's commits are checked through its PR), so a PR no
+  longer runs every job twice; a new push to a PR cancels its running checks; runs on main are never
+  cancelled. A red run on main or on the schedule is the signal: GitHub marks the commit and emails the
+  workflow's owner.
+- **Before pushing:** `python scripts/check-changed.py` runs the verifiers `ci-deps.py` selects for the
+  branch, the fast site-wide checks, and the shared-asset tests when `schools/` changed; CI runs the rest.
+  `--full` still runs everything locally, but is not required. Known Windows-only differences from CI:
+  todo §4 item 18.
+
 ---
 
 # 8. Outstanding Backlog

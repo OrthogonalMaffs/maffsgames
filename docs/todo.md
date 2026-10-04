@@ -329,10 +329,10 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
 - **Known gap, this game:** Aa (OpenDyslexic) mode is not measured for phone fit (canon §7.6.1's known gap,
   ruled to be fixed once across games); the verifier measures normal mode only.
 
-**Local suite on Windows (known, not regressions):** tier 1's 13–14 "stale: now fits" phone entries
-(fallback font), Test the Claim and leaderboard coverage (no node on PATH), and an occasional page-load
-timeout under load (passes when re-run alone). Set `PYTHONIOENCODING=utf-8`. CI is the judge. There is
-no local runner script: run each `label|command` line of `.github/workflows/check-site.yml` in turn.
+**Before pushing (canon §7.8, 4 Oct 2026): `python scripts/check-changed.py`**, which runs the verifiers
+the branch's changes select plus the fast site-wide checks; CI runs the rest, and everything on every merge
+to main and weekly. The full local suite (`--full`) is no longer required. Windows-only differences from
+CI are todo §4 item 18. Set `PYTHONIOENCODING=utf-8`. CI is the judge.
 Heredocs (`python - <<EOF`) mangle backslashes and non-ASCII output can crash a cp1252 pipe: write a .py
 file instead.
 
@@ -929,6 +929,18 @@ Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resi
    disagree with CI: CRLF checkouts (`verify-test-the-claim.py`'s node driver), `node` not on PATH on
    Windows (Playwright's bundled node works), and the Windows fallback font (14 "stale: now fits" phone
    entries locally, 0 in CI). Jon adds branch protection after it (none today: API 404, 0 rulesets). M.
+   **Triggers and concurrency DONE 4 Oct 2026 (selective CI, canon §7.8):** push on main only, a PR's new
+   push cancels its running checks, and a `gate` job for branch protection to require. **Parity still open
+   (Windows-only local failures, for a later tidy-up; `check-changed.py` avoids the first by not running
+   tier 1 locally):** (a) tier 1's 13 "stale: now fits" phone entries, from the fallback font; (b)
+   `verify-test-the-claim.py` fails locally with `ReferenceError: generateWrongContexts is not defined`
+   under Playwright's node v24 (it passes in CI; CRLF checkouts are the suspected cause, above); (c) node
+   is not on PATH on Windows (Playwright's bundled node works; `check-changed.py` does not need it unless
+   Test the Claim is selected).
+19. **CI flake: tier 4 lint reported B4 "level bank below 40" for `proportion-blaster::gcse`** in one of
+   two identical runs of PR #36 (same commit; the other passed, as did a re-run). Locally the extraction
+   reads 50 GCSE items and the game never mutates its bank, so the extraction or its grouping is
+   intermittently short. Not investigated further (outside that PR). S.
 
 
 ## 5. Parked, deliberately
