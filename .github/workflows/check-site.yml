@@ -24,12 +24,80 @@ name: check-site
 # Adding a content verifier: append it to the lighter of the two verifier groups.
 # scripts/check-verifier-coverage.py fails the run if any scripts/verify-*.py or
 # scripts/test-*.py is not listed here (or declared held in that script, with a reason).
+#
+# SELECTIVE RUNS (4 Oct 2026, canon §7.8). The repo is public, so Actions minutes are free; what a PR
+# costs is wall-clock. On a pull request the "plan" job asks scripts/ci-deps.py which content verifiers
+# the change can affect (a dependency map DERIVED from each verifier's source and the pages it tests,
+# never a hand-kept list), and the "Content verifiers" groups run only those lines. Every other group,
+# and the leaderboard-coverage job, is site-wide and always runs. A change to CI itself (.github/,
+# scripts/ci-*, requirements*.txt) or to a path in no known area runs everything. The safety net: a push
+# to main (every merge), the weekly schedule and a manual run all run EVERYTHING; a failure there is a red
+# run on main. The "gate" job is the one check that sums up a run (for branch protection, later).
 
 on:
   push:
+    branches: [main]
   pull_request:
+  schedule:
+    - cron: "17 5 * * 1"          # Mondays 05:17 UTC: the weekly full run
+  workflow_dispatch:
+
+# A new push to a PR supersedes its running checks; runs on main are never cancelled.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  # Which content verifiers does this run need? All of them, except on a pull request, where
+  # scripts/ci-deps.py selects from the files the PR changes. Its selftest proves the selection rules
+  # on every run first (one game -> its verifier; a shared asset -> every verifier whose pages load it;
+  # CI or an unknown path -> everything; every verifier reachable).
+  plan:
+    name: Plan (which content verifiers this change needs)
+    runs-on: ubuntu-24.04          # pinned: see the coverage job
+    timeout-minutes: 5
+    outputs:
+      run_all: ${{ steps.select.outputs.run_all }}
+      selected: ${{ steps.select.outputs.selected }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0           # the PR's base commit, for the diff
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check -q "pyyaml==6.0.3"
+      - name: Selection rules (self-test)
+        run: python scripts/ci-deps.py --selftest
+      - name: Select
+        id: select
+        env:
+          EVENT: ${{ github.event_name }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            python scripts/ci-deps.py --changed-from "$BASE" --github-output "$GITHUB_OUTPUT"
+          else
+            python scripts/ci-deps.py --all --github-output "$GITHUB_OUTPUT"
+          fi
+
+  # One required check for the whole run: it fails unless every job that ran passed (none failed,
+  # none cancelled, none skipped). Branch protection, when Jon adds it, requires only this.
+  gate:
+    name: Gate (every job passed)
+    if: always()
+    needs: [plan, coverage, check-site]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Every job passed
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          echo "$RESULTS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
+          bad=$(echo "$RESULTS" | jq -r '[to_entries[] | select(.value.result != "success")] | length')
+          if [ "$bad" != "0" ]; then echo "::error::$bad job(s) did not pass"; exit 1; fi
+
   # Runs on the bare runner because it takes about a second and needs only node,
   # which the runner ships, so a coverage break is reported before any image is pulled.
   #
@@ -62,6 +130,7 @@ jobs:
 
   check-site:
     name: ${{ matrix.name }}
+    needs: plan
     runs-on: ubuntu-24.04          # pinned: see the coverage job
     timeout-minutes: ${{ matrix.timeout }}
     container:
@@ -250,6 +319,31 @@ jobs:
       - name: Mark the workspace as a safe git directory
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
+      # Which of this group's lines run. Site-wide groups run every line; a "Content verifiers" group
+      # runs the lines whose script the plan selected (all of them on main, the schedule, a manual run,
+      # or a PR that changes CI). A group with nothing selected skips its setup too.
+      - name: Lines to run
+        id: lines
+        shell: bash
+        env:
+          CHECKS: ${{ matrix.checks }}
+          GROUP: ${{ matrix.name }}
+          RUN_ALL: ${{ needs.plan.outputs.run_all }}
+          SELECTED: ${{ needs.plan.outputs.selected }}
+        run: |
+          run=""; n=0; skipped=0
+          while IFS='|' read -r label cmd; do
+            [ -z "$label" ] && continue
+            script=$(grep -oE 'scripts/[A-Za-z0-9_.-]+\.py' <<< "$cmd" | head -1)
+            if [[ "$GROUP" != "Content verifiers"* ]] || [ "$RUN_ALL" = "true" ] || grep -qF "\"$script\"" <<< "$SELECTED"; then
+              run+="$label|$cmd"$'\n'; n=$((n + 1))
+            else
+              echo "skipped  $label  (not selected: nothing it depends on changed)"; skipped=$((skipped + 1))
+            fi
+          done <<< "$CHECKS"
+          echo "$n line(s) to run, $skipped skipped"
+          { echo "checks<<CHECKS_EOF"; printf '%s' "$run"; echo "CHECKS_EOF"; echo "any=$([ $n -gt 0 ] && echo true || echo false)"; } >> "$GITHUB_OUTPUT"
+
       # HOLDING STEP (Jon, 1 Oct 2026). The checks block web fonts, so they measure layout in the
       # machine's fallback font. The Playwright image installs more fonts than the bare runner,
       # and its fallback face set Free Daily Pizza's tightest 320x568 screens 3px taller (Next at
@@ -262,6 +356,7 @@ jobs:
       # no apt mirror on the critical path, about 1.3 MB, checksum-pinned. Their fonts are
       # byte-identical to the runner's.
       - name: Pin fallback fonts to the bare runner's (DejaVu)
+        if: steps.lines.outputs.any == 'true'
         run: |
           echo "before: $(fc-match sans-serif) | $(fc-match monospace)"
           fetch() {  # fetch <deb> <sha256>: Launchpad first, the Ubuntu archive as fallback
@@ -290,6 +385,7 @@ jobs:
             || { echo "::error::DejaVu fallback fonts not available in the image"; exit 1; }
 
       - name: Python packages (pinned, requirements-ci.txt)
+        if: steps.lines.outputs.any == 'true'
         run: |
           python --version
           python -m pip install --disable-pip-version-check -q -r requirements-ci.txt
@@ -299,9 +395,10 @@ jobs:
       # Each line of the group is "label|command". Every check runs, even after one
       # fails, so a single run reports every failure; the job fails if any did.
       - name: ${{ matrix.name }}
+        if: steps.lines.outputs.any == 'true'
         shell: bash
         env:
-          CHECKS: ${{ matrix.checks }}
+          CHECKS: ${{ steps.lines.outputs.checks }}
         run: |
           node --version
           failed=()
