@@ -209,7 +209,7 @@ START apply them. Decisions 3 and 5 are canon SR-13 (§0.3).
    - **Jon's ruling (4 Oct 2026):** change the numbers so no comparison ties (SR-5).
 8. **`estimation-golf` Starter:** 8 of 20 items are general knowledge with no maths (continents 7,
    class size 30). Is that the level a resit card should open at?
-   - **Jon's ruling (4 Oct 2026):** the `/resit/` card opens at Foundation (done in the rulings PR;
+   - **Jon's ruling (4 Oct 2026):** the `/resit/` card opens at Foundation (done, PR #42;
      `check-resit-page.py` pins it in `RULED_LEVEL`). The general-knowledge Starter items are to be
      replaced in a later batch.
 

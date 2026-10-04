@@ -169,7 +169,7 @@ section.
 If one applies, apply it and list "SR-n applied: …" in the PR; stop only for what none covers, or for
 §0.3's "Still stops for Jon" list.
 
-- **Jon's resit audit rulings (4 Oct, the rulings PR): all eight audit decisions ruled; the fix batches below
+- **Jon's resit audit rulings (4 Oct, PR #42): all eight audit decisions ruled; the fix batches below
   apply them.** Each ruling is recorded under its item in `docs/audit-resit-correctness-2026-10-04.md`
   ("Decisions for Jon"). **Canon SR-13 (move-based equation games):** any operation applied to both sides is
   valid, except × 0 and ÷ 0 (blocked, with an explanation); a valid move that makes the problem harder scores

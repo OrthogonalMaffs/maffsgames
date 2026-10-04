@@ -30,7 +30,7 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest): JON'S RESIT AUDIT RULINGS recorded; SR-13
+## Handover — 2026-10-04 (latest): JON'S RESIT AUDIT RULINGS recorded, PR #42; SR-13
 
 - **Jon ruled on all eight decisions** in `docs/audit-resit-correctness-2026-10-04.md`; each ruling sits
   under its item there. **Canon SR-13** (§0.3): in move-based equation games every operation on both sides
