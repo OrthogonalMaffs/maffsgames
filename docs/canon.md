@@ -376,10 +376,24 @@ styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours 
 - **Display:** 10 significant figures, trailing zeros dropped, so 0.1 + 0.2 shows 0.3, never
   0.30000000000000004; 10^10 and over, or under 10^−6, as a×10^n. Divide by 0, √ of a negative,
   unbalanced brackets and 1.2.3 show "Error", never NaN. The engine is a parser, never `eval()`.
-- **On the page:** `MaffsCalc.mount(el)` puts a "Calculator" toggle and a panel in the page flow, under
-  the answer box. It never covers the question or the answer box; the page may scroll to it. Closed at
-  first; it stays open between questions once opened. Five columns of keys at least 44px fit a 320px
-  phone. The game hides it while the answer box is hidden (Pythag's tap step, and the feedback, §7.6.1).
+- **On the page:** `MaffsCalc.mount(el, {dock: card})` puts a "Calculator" toggle and a panel in the page
+  flow, under the answer box. It never covers the question or the answer box; the page may scroll to it.
+  Closed at first; it stays open between questions once opened. Five columns of keys at least 44px fit a
+  320px phone. Below the dock breakpoint the game hides it while the answer box is hidden (Pythag's tap
+  step, and the feedback, §7.6.1), and puts the feedback above it, never below.
+- **Wide screens: docked beside the card (Jon, 4 Oct 2026).** When the room right of the `dock` element
+  (the question card) holds the panel, it docks there: level with the card's top, sticky while the page
+  scrolls, out of the page flow, so opening or closing it never moves the game column. The breakpoint is
+  measured, not a fixed media query: room = window width − card's right edge − 12px gap − 8px edge, and it
+  docks when that is at least 262px (the narrowest panel whose keys stay 44px), up to 340px wide. For a
+  720px column (a 688px card) that is a 1252px-wide page: 1252px windows with overlay scrollbars,
+  about 1269px with a 17px desktop scrollbar; 1280px docks either way. Docked, it stays in view through the
+  tap step and the feedback; only its toggle goes with the answer box. The constants are
+  `MaffsCalc.DOCK`; the dock is in `theme.css` (`.maffs-calc.docked`, `.maffs-calc-host`).
+- **Feedback in view.** A game that carries it shows its feedback without scrolling at 1280×720,
+  1366×768 and 1920×1080 with the calculator docked (layout, never a scroll), and on phones; below the
+  breakpoint, if the feedback is ever not fully in view after Check, the page glides to it (smoothly,
+  instantly under reduced motion).
 - **Keyboard:** typed keys drive it only while focus is inside the panel, so typing in the answer box is
   never taken over. Enter on a focused key presses that key; Escape closes the panel.
 - **Nothing is sent:** no analytics event, no storage, no request.
@@ -387,8 +401,9 @@ styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours 
   such game includes the script itself; `scripts/check-calculator.py` (CI) fails if a game's include, its
   badge and its roster field disagree, either way, or if any other page loads it.
 - **Checked by** `scripts/test-calculator-js.py` (CI): 65 expressions (arithmetic, precedence, x², √,
-  brackets, errors, the display), 16 key sequences, the keyboard, the toggle, nothing sent, and key sizes
-  at 320, 375 and 390px. A game that uses it measures its own phone fit with the panel open and closed
+  brackets, errors, the display), 16 key sequences, the keyboard, the toggle, nothing sent, key sizes
+  at 320, 375 and 390px, and the dock beside a 720px column (docked at 1280/1366/1920, sticky, never over
+  the column, not docked at 1240 or 390) with five planted dock faults. A game that uses it measures its own phone fit with the panel open and closed
   (`verify-just-pythag-it-bruv.py`).
 
 ---

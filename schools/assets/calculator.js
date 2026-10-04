@@ -9,8 +9,13 @@
  *                             trailing operator, 1.2.3).
  *   MaffsCalc.format(x)       the display: 10 significant figures with trailing zeros dropped, so
  *                             0.1 + 0.2 shows 0.3, never 0.30000000000000004.
- *   MaffsCalc.mount(el)       the UI: a "Calculator" toggle and a panel in the page flow, below
- *                             whatever comes before el. It never covers anything; the page may scroll.
+ *   MaffsCalc.mount(el, {dock: card})
+ *                             the UI: a "Calculator" toggle and a panel. On a narrow screen the panel
+ *                             opens in the page flow, below whatever comes before el; it never covers
+ *                             anything and the page may scroll. Where the space to the right of the
+ *                             dock element (the game's question card) holds the panel, it docks there
+ *                             instead: beside the card, level with its top, sticky while the page
+ *                             scrolls, out of the page flow so the game column never moves (canon §4.4).
  *
  * Grammar (calculator conventions: -3² = -9; √ opens a bracket, like a Casio; missing closing
  * brackets are closed on =, extra ones are an error; a number, bracket or √ straight after a value
@@ -144,13 +149,18 @@
   };
   var OPERATORS = ['+', MINUS, MUL, DIV, SQ];
   var uid = 0;
+  // The wide-screen dock. min is the narrowest panel whose five columns of keys stay 44px
+  // (5 x 44 + 4 gaps of 6 + 2 x 8 padding + 2 x 1 border); the panel docks only when the room right of
+  // the card, less the gap and an edge margin, is at least that. The breakpoint follows from the
+  // game's own column, so it is measured, never a fixed media query.
+  var DOCK = { gap: 12, edge: 8, min: 262, max: 340 };
 
   function mount(el, opts) {
     opts = opts || {};
     var id = 'maffsCalc' + (++uid);
     el.classList.add('maffs-calc');
     var h = '<button type="button" class="maffs-calc-toggle" aria-expanded="false" aria-controls="' + id + '">' +
-      'Calculator</button>' +
+      'Calculator</button><div class="maffs-calc-rail" hidden>' +
       '<div class="maffs-calc-panel" id="' + id + '" role="group" aria-label="Calculator" tabindex="-1" hidden>' +
       '<div class="maffs-calc-screen"><div class="maffs-calc-expr" aria-hidden="true">&nbsp;</div>' +
       '<div class="maffs-calc-result" aria-live="polite">0</div></div><div class="maffs-calc-keys">';
@@ -158,9 +168,11 @@
       h += '<button type="button" class="maffs-calc-key' + (k[4] ? ' ' + k[4] : '') + (k[1] !== 'in' || /[^0-9.]/.test(k[0]) ? ' op' : '') +
         '" data-act="' + k[1] + '" data-val="' + k[2] + '"' + (k[3] ? ' aria-label="' + k[3] + '"' : '') + '>' + k[0] + '</button>';
     });
-    el.innerHTML = h + '</div></div>';
+    el.innerHTML = h + '</div></div></div>';
 
     var toggle = el.querySelector('.maffs-calc-toggle'), panel = el.querySelector('.maffs-calc-panel');
+    var rail = el.querySelector('.maffs-calc-rail'), host = opts.dock || null;
+    if (host) host.classList.add('maffs-calc-host');
     var exprEl = el.querySelector('.maffs-calc-expr'), resEl = el.querySelector('.maffs-calc-result');
     var expr = '', ans = null, done = false, ok = false;   // done: the last key was =; ok: and it gave a number
 
@@ -194,7 +206,25 @@
       expr += val;
       render('');
     }
+    // Dock beside the card when the room to its right holds the panel; otherwise stay in the flow.
+    function dock() {
+      var D = window.MaffsCalc.DOCK;     // read live, so a test can move the threshold
+      if (host && !host.getBoundingClientRect().width) return el.classList.contains('docked');   // not laid out yet
+      var room = host ? document.documentElement.clientWidth - host.getBoundingClientRect().right - D.gap - D.edge : 0;
+      var on = !!host && room >= D.min;
+      el.classList.toggle('docked', on);
+      rail.style.width = on ? Math.min(D.max, Math.floor(room)) + 'px' : '';
+      rail.style.left = on ? 'calc(100% + ' + D.gap + 'px)' : '';
+      return on;
+    }
+    if (host) {
+      var t = null;
+      window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(dock, 100); });
+      dock();
+    }
     function setOpen(on) {
+      if (on) dock();
+      rail.hidden = !on;
       panel.hidden = !on;
       toggle.setAttribute('aria-expanded', String(on));
       toggle.classList.toggle('open', on);
@@ -226,6 +256,8 @@
       open: function () { setOpen(true); },
       close: function () { setOpen(false); },
       isOpen: function () { return !panel.hidden; },
+      isDocked: function () { return el.classList.contains('docked'); },
+      redock: dock,
       clear: function () { press('clear', ''); },
       // For tests: press keys by their labels ('7', '×', 'x²', '√', 'DEL', 'C', '=').
       press: function (label) {
@@ -236,5 +268,5 @@
     };
   }
 
-  window.MaffsCalc = { evaluate: evaluate, format: format, calc: calc, mount: mount, KEYS: KEYS };
+  window.MaffsCalc = { evaluate: evaluate, format: format, calc: calc, mount: mount, KEYS: KEYS, DOCK: DOCK };
 })();

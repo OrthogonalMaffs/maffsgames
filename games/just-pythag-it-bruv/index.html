@@ -93,9 +93,11 @@ a.back-link:hover{color:var(--text)}
 /* "Use a calculator." ends every question's text (Jon, 4 Oct 2026): part of the instruction, so it costs
    no line of its own on a phone. */
 .calc-note{font-weight:600;color:var(--hint);white-space:nowrap}
-/* The calculator (MaffsCalc, theme.css): under the answer box, never over it; it goes while the
-   answer box does (the tap step, the feedback). */
-.qcard.tap-mode .maffs-calc,.qcard.fb-open .maffs-calc{display:none}
+/* The calculator (MaffsCalc, theme.css): under the answer box on a narrow screen, never over it, and
+   gone while the answer box is (the tap step, the feedback). On a wide screen it docks beside this card
+   and stays, open or closed as the student left it; only its toggle goes with the answer box. */
+.qcard.tap-mode .maffs-calc-toggle,.qcard.fb-open .maffs-calc-toggle{display:none}
+.qcard.tap-mode .maffs-calc:not(.docked),.qcard.fb-open .maffs-calc:not(.docked){display:none}
 .tap-ask{font-weight:700;color:var(--accent)}
 /* One line at every width, whatever the font: the input gives way, the button never wraps. */
 .answer-row{display:flex;gap:.5rem;align-items:center;justify-content:center;flex-wrap:nowrap}
@@ -145,7 +147,7 @@ a.back-link:hover{color:var(--text)}
   body.fb-open .hud,.qcard.fb-open .qhead{display:none}
   .qcard.fb-open{gap:.4rem;padding-top:.6rem}
 }
-@media (max-height:760px){
+@media (max-height:800px){
   .qcard.fb-open .fig-wrap{order:10}
   .qcard.fb-open .prompt{display:none}
 }
@@ -227,8 +229,8 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
         <button class="btn solid" type="submit" id="submitBtn">Check</button>
       </form>
       <div class="msg" id="msg" aria-live="polite"></div>
-      <div id="calc"></div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
+      <div id="calc"></div>
     </div>
   </div>
 
@@ -734,7 +736,8 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   J.BOX_RATIO_TAP = 0.72;    // round 1: a taller box, so every side is a finger-sized target at 320px
   J.BOX_MIN_H = 178;         // never shorter than this (a 320px phone's box)...
   J.BOX_MIN_H_TAP = 199;
-  J.BOX_MAX_H = 440;         // ...nor taller than this, nor than 42% of the window
+  J.BOX_MAX_H = 440;         // ...nor taller than this, nor than 36% of the window (a 1280x720 desktop keeps
+                             // the answer box, the Calculator button and the feedback above the fold)
   // A short screen (600px tall or less, canon 7.6.1): rounds 2 and 3, whose prompts run to six lines,
   // get a shorter box so the answer box and Check stay above the fold. Round 1 keeps its tap-sized box.
   J.SHORT_VH = 600;
@@ -744,7 +747,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     var tap = Q.stage === 'a';
     w = Math.max(240, w);
     var hMin = tap ? J.BOX_MIN_H_TAP : vh <= J.SHORT_VH ? J.BOX_H_SHORT : J.BOX_MIN_H;
-    var cap = !tap && vh <= J.SHORT_VH ? J.BOX_H_SHORT : Math.max(hMin, Math.min(J.BOX_MAX_H, 0.42 * vh));
+    var cap = !tap && vh <= J.SHORT_VH ? J.BOX_H_SHORT : Math.max(hMin, Math.min(J.BOX_MAX_H, 0.36 * vh));
     return { w: w, h: Math.round(Math.max(hMin, Math.min(cap, w * (tap ? J.BOX_RATIO_TAP : J.BOX_RATIO)))),
       font: Math.max(15, Math.min(18, Math.round(w / 18))) };
   };
@@ -1053,6 +1056,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       $('hudScore').textContent = score;
       if (!q.spot) {
         $('feedback').innerHTML = '<div class="fb-quick">✓ ' + J.sym(q) + ' = ' + esc(q.keyText) + ' ' + esc(q.unit) + '</div>';
+        feedbackInView();
         setTimeout(function () { if (state === 'right') nextQuestion(); }, CORRECT_DELAY);
         return;
       }
@@ -1062,6 +1066,19 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       if (J.isAddError(q, raw)) { addCount++; help = J.helpFor(addCount); }
       showFeedback(false, raw, help);
     }
+  }
+
+  // The feedback must be seen without scrolling. Wide screens guarantee it by layout (the calculator docks
+  // beside the card); below the dock breakpoint, where the student may have scrolled down to the
+  // calculator, the page glides to it when it is not fully in view (not past the fixed footer).
+  var FOOTER_PX = 40;
+  function feedbackInView() {
+    if (calc && calc.isDocked()) return;
+    var r = $('feedback').getBoundingClientRect(), fold = window.innerHeight - FOOTER_PX;
+    if (!r.height || (r.top >= 0 && r.bottom <= fold)) return;
+    var dy = r.top < 0 ? r.top - 8 : Math.min(r.top - 8, r.bottom - fold + 8);
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: window.scrollY + dy, behavior: still ? 'auto' : 'smooth' });
   }
 
   function showFeedback(ok, raw, help) {
@@ -1082,6 +1099,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     var opts = { mount: $('feedback'), onAdvance: nextQuestion };
     if (help === 'example') opts.fallbackMs = NO_FALLBACK;
     MaffsNext.wrong(opts);
+    feedbackInView();
   }
 
   function finish() {
@@ -1109,7 +1127,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   $('startBtn').addEventListener('click', startGame);
   $('againBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
   $('theorem').innerHTML = tex('a^2 + b^2 = c^2');
-  var calc = window.MaffsCalc ? MaffsCalc.mount($('calc')) : null;
+  var calc = window.MaffsCalc ? MaffsCalc.mount($('calc'), { dock: $('qcard') }) : null;
   MaffsSession.render({ mount: $('sessionSelect'), poolSize: J.LENGTH, preferred: [J.LENGTH],
     selected: sessionLength, onChange: function (n) { sessionLength = n; } });
 
@@ -1127,6 +1145,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     question: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },
     layout: function () { return layout ? JSON.parse(JSON.stringify(layout)) : null; },
     calc: function () { return calc; },
+    feedbackInView: function () { feedbackInView(); },
     index: function () { return q ? q.index : 0; },
     addCount: function () { return addCount; },
     session: function () { return session ? JSON.parse(JSON.stringify(session)) : null; }

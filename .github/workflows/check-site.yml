@@ -162,6 +162,14 @@ jobs:
             checks: |
               Free Daily Pizza (independent recomputation + daily seed + phone fit)|python scripts/verify-free-daily-pizza.py --require-katex
 
+          # Just Pythag It, Bruv on its own (~5 min): since the wide-screen calculator dock (4 Oct 2026) it plays
+          # every question shape at three phone and three desktop sizes, with the calculator open and closed,
+          # plus seven planted layout faults, which would push group B towards its limit.
+          - name: Content verifiers C (Just Pythag It, Bruv)
+            timeout: 12
+            checks: |
+              Just Pythag It, Bruv (every key and triangle recomputed + sessions + phone and desktop fit)|python scripts/verify-just-pythag-it-bruv.py
+
           # Every other content verifier. Each reads the live page's data and recomputes
           # its answers independently; each includes a fault-injection self-test.
           #  - log-laws Solve: every line checked with SymPy against the law its step is
@@ -207,7 +215,7 @@ jobs:
           #    with Firebase blocked (round 1's hypotenuse tapped with real clicks); hypotenuse positions
           #    per session and tap targets at 320px; every question shape's feedback and tap step measured
           #    at three phone sizes, the asking screen with the calculator closed and open; the diagram
-          #    full width at 1:1; the standard header, Aa clear of everything. 22 planted faults, each must FAIL.
+          #    full width at 1:1; the standard header, Aa clear of everything. Runs in its own job (C, above).
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |
@@ -232,7 +240,6 @@ jobs:
               Better Value tax-and-NI rule of thumb (checked with uk_rates)|python scripts/verify-better-value-tax.py
               Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure)|python scripts/verify-circle-theorem-spotter.py
               Split It (every generator's keys recomputed + marking at the stated precision)|python scripts/verify-split-it.py
-              Just Pythag It, Bruv (every key and triangle recomputed + sessions + phone fit)|python scripts/verify-just-pythag-it-bruv.py
 
     steps:
       - uses: actions/checkout@v4

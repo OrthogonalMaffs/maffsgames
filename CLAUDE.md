@@ -20,7 +20,22 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-04 (late night, latest): the calculator, PR #32; Just Pythag It, Bruv still UNLISTED
+## Handover — 2026-10-04 (late night, latest): the calculator dock, PR #33; Just Pythag It, Bruv still UNLISTED
+
+- **PR #33 (Jon's dock contract):** on wide screens `MaffsCalc.mount(el, {dock: card})` docks the open
+  calculator right of the card (sticky, level with its top, out of the flow). The breakpoint is measured
+  from the room beside the card (`MaffsCalc.DOCK`: 12px gap, 8px edge, 262-340px panel): for this game's
+  720px column, a 1252px page (about 1269px with a desktop scrollbar). Phones unchanged except the feedback
+  now comes before the calculator, plus a glide-to-feedback safety net below the breakpoint.
+- **Pythag:** figure height cap 36% of the window (1280x720 kept the Calculator button and feedback clear of
+  the footer in CI's font); the feedback fold-away rule now up to 800px tall (1366x768).
+- **Checks:** `test-calculator-js.py` adds the dock at 1280/1366/1920 (and not at 1240/390) with five dock
+  faults. The game verifier plays every question shape at three phone and three desktop sizes, calculator
+  open and closed, right and wrong answers, and asserts the feedback is in view (desktops: no scrolling);
+  seven layout faults. It now runs as its own CI job (C), about 5 minutes.
+- **Next:** unchanged: Jon plays it (phone and desktop), then the listing PR (todo START).
+
+## Handover — 2026-10-04 (late night): the calculator, PR #32; Just Pythag It, Bruv still UNLISTED
 
 - **PR #32 (Jon's calculator contract):** the shared on-screen calculator, `schools/assets/calculator.js`
   (global `MaffsCalc`, canon §4.4, styles `.maffs-calc*` in `theme.css`), built as the plan below said, and
