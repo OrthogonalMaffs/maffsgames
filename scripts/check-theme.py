@@ -60,6 +60,7 @@ def palette(levels):
 # ── The two lists. Move a game from NOT_YET to MIGRATED in the PR that migrates it. ─────────
 MIGRATED = [
     "split-it",           # the pilot, 2 Oct 2026
+    "just-pythag-it-bruv",  # built to the theme, 4 Oct 2026 (unlisted until Jon approves it)
 ]
 NOT_YET = [
     "sequence-solver", "estimation-golf", "estimation-engine", "factor-race", "prime-factorisation",

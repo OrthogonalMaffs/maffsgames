@@ -20,7 +20,24 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-04 (latest): docs clear after PRs #21–#26
+## Handover — 2026-10-04 (night, latest): Just Pythag It, Bruv merged UNLISTED (PR #29)
+
+- **Start here: `docs/todo.md`'s START block.** PR #28 (/updates/ "more than 30 games") and PR #29 are live.
+- **Just Pythag It, Bruv** (`games/just-pythag-it-bruv/`), Jon's contract with the scaled-triples addendum:
+  Pythagoras in three rounds (whole-number triples and multiples, 1 d.p. answers, metric situations), at least
+  12 of 20 find-a-shorter-side and never three of a type in a row, every triangle drawn with the right angle
+  marked, typed answers through `MaffsAnswer`, and a worked example when a student adds instead of
+  subtracting (first three per session, then a nudge). **Unlisted:** `noindex`, off the portal, /resit/, the
+  sitemap, the spec map, /updates/ and the leaderboard hub (`NOT_ON_HUB`); a roster row under "Unlisted".
+  Level key `ks3` shown as "Foundation" (Jon's ruling, SR-11). Engine on `window.JPIB`, driven by
+  `scripts/verify-just-pythag-it-bruv.py` (in CI). Built to the theme: MIGRATED in `check-theme.py`.
+- **The calculator tag** (canon §4.4): a Calculator column on every roster row (`required` / `not allowed` /
+  `optional` / `untagged`), one `.calc-badge` style in `schools/assets/theme.css`. Only this game is tagged.
+- **Next: Jon plays it.** On approval the listing PR does what todo START lists (portal, /resit/ card, spec map
+  G20, sitemap, hub row, drop `noindex` and `NOT_ON_HUB`, queue an /updates/ entry in Jon's words). The build's
+  judgement calls for him to check are listed there too ((a)–(h)).
+
+## Handover — 2026-10-04: docs clear after PRs #21–#26
 
 - **Start here: `docs/todo.md`'s START block** (rewritten 4 Oct). Nothing is open; PRs #1–#26 are merged and
   live, and this docs clear is #27.

@@ -193,6 +193,11 @@ jobs:
           #  - split-it: every generator at both levels, 18,000 questions, keys recomputed exactly at
           #    the precision each prompt states; every marking rule probed through checkAnswer() (to
           #    the penny, 0.1 off, unrounded, £/€). Failed on the ±0.05 / ±0.15 file (todo 1.36).
+          #  - just-pythag-it-bruv: 300 sessions; every triangle, key (exact or 1 d.p. half up),
+          #    "Spotted it?" line and add-instead-of-subtract probe recomputed with exact fractions;
+          #    round order, >=60% shorter-side, no run of three, plausible contexts; a session played
+          #    with Firebase blocked; every question shape's feedback measured at three phone sizes.
+          #    Twelve planted faults, each must FAIL.
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |
@@ -217,6 +222,7 @@ jobs:
               Better Value tax-and-NI rule of thumb (checked with uk_rates)|python scripts/verify-better-value-tax.py
               Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure)|python scripts/verify-circle-theorem-spotter.py
               Split It (every generator's keys recomputed + marking at the stated precision)|python scripts/verify-split-it.py
+              Just Pythag It, Bruv (every key and triangle recomputed + sessions + phone fit)|python scripts/verify-just-pythag-it-bruv.py
 
     steps:
       - uses: actions/checkout@v4

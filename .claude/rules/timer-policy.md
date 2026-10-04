@@ -11,7 +11,9 @@ BASE 100, T_K 0.15). No countdown, nothing fails on time.
 
 Games: **Six Sevens, Bruv** (added 30 Sep 2026 — a recall game, so this file's first rule would have
 given it a countdown; Jon ruled a visible count-up that feeds the score instead), **Free Daily Pizza**
-(added 30 Sep 2026, practice and the daily pizza alike).
+(added 30 Sep 2026, practice and the daily pizza alike), **Just Pythag It, Bruv** (added 4 Oct 2026,
+the resit strand's pattern; the clock stops while feedback shows, so reading a worked example costs
+nothing).
 
 ## Hidden Count-Up
 Timer runs silently, no score multiplier, time shown on results screen only.
