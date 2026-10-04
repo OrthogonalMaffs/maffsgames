@@ -186,6 +186,7 @@ body.accessible p,body.accessible .status-msg,body.accessible .hint-bar{line-hei
     <p>6-12 vertices, complex multigraphs, circuit boards, delivery routes. Full Euler analysis.</p>
   </div>
   <button class="start-btn" id="startBtn" onclick="startGame()" disabled>Choose a level to begin</button>
+<p id="teacherInvite"></p>
 </div>
 
 <!-- GAME SCREEN -->
@@ -865,6 +866,8 @@ function finishGame() {
   }
 })();
 </script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'seven-bridges');</script>
 <footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
 </body>
 </html>

@@ -246,6 +246,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   </div>
 
   <button class="btn bgh" id="nxtbtn" style="display:none;max-width:420px" onclick="nextFree()">Next Puzzle →</button>
+<p id="teacherInvite"></p>
 </div>
 
 <!-- Leaderboard -->
@@ -926,6 +927,8 @@ function init(){
 
 init();
 </script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'equatle');</script>
 <footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
 </body>
 </html>

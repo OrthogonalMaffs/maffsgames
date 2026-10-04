@@ -230,6 +230,7 @@ body {
   <p>Build truth tables from real engineering scenarios. Then match them to Boolean algebra.</p>
   <p class="start-inst">Read each scenario. Fill in the output column of the truth table. Then identify the matching Boolean expression.</p>
   <button class="start-btn" onclick="startGame()">Start</button>
+<p id="teacherInvite"></p>
 </div>
 
 <!-- QUESTION AREA -->
@@ -906,6 +907,8 @@ function toggleAa() {
   document.getElementById('aaBtn').classList.toggle('active');
 }
 </script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'truth-will-set-you-free');</script>
 <footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
 </body>
 </html>

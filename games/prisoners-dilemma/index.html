@@ -206,6 +206,7 @@ body.accessible{background-color:#12141f!important}
       <button class="btn-secondary" onclick="startTournament()">Tournament Mode</button>
       <div style="font-size:.72rem;color:var(--muted);margin-top:.3rem">Round-robin: play all opponents at this level</div>
     </div>
+  <p id="teacherInvite"></p>
   </div>
 
   <!-- ==================== OPPONENT SELECT SCREEN ==================== -->
@@ -1045,6 +1046,8 @@ document.addEventListener('keydown', function(e) {
 // ---- Initial render ----
 renderMenu();
 </script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'prisoners-dilemma');</script>
 <footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
 </body>
 </html>
