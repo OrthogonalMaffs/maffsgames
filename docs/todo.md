@@ -191,15 +191,24 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
   - **/updates/ entry live**, Jon's wording, first under October "New".
   - Jon approved (4 Oct): the C7 and C11 rewrites; the Tyler Vigen credit as text, no link.
 - **SR-14 fix batch (tier (a) KNOWN hits; Jon: not fixed in PR #43).** One game per contract; each lowers
-  KNOWN in `check-content-safety.py`. Run it with `--known` for the lines.
+  KNOWN in `check-content-safety.py`. Run it with `--known` for the lines. **Jon's rulings, 4 Oct 2026
+  20:06** (recorded on the teacher-invite branch; no game changed there):
   - **Drowning (the ice-cream example):** `core-maths-paper2a` :413-416, `maths-court` :544-549,
     `wrong-on-the-internet` :503-507, `truth-buster` :261 (Nicolas Cage films vs pool drownings).
-  - **Fatal:** `given-that` :366 (a seatbelt table with a "Fatal" injury row).
-  - **For Jon to rule (probably fine or false alarms):** `the-perfect-prank` :323 and `prom-budget` room.js
-    :177 ("half dead" / "three quarters dead" pot plants), `proof-builder` :139 ("one kills the claim"),
-    `probability-paradox` :317 ("What has the doctor neglected?", base rate). **False alarms (code, not
-    text):** `bearing-blitz` :210 and `trig-wars` :1050 use `dead` as a CSS class name; a scan fix, not a
-    game fix.
+    **Ruled:** replace drownings with sunburn cases or sunglasses sales: the same shared cause, hot weather.
+    Recompute every dependent answer (SR-8). Note for the truth-buster contract: its line pairs pool
+    drownings with Nicolas Cage films, not ice cream, so the swap needs a pairing that still reads as
+    coincidence; check the item's answer after the swap.
+  - **Fatal:** `given-that` :366 (a seatbelt table with a "Fatal" injury row). **Ruled:** replace "fatal"
+    with a non-death outcome; recompute dependent answers (SR-8).
+  - **Allowlisted as idioms, not SR-14 content (ruled):** "half dead" / "three quarters dead" pot plants
+    (`the-perfect-prank` :323, `prom-budget` room.js :177), "kills the claim" (`proof-builder` :139),
+    "neglected" (`probability-paradox` :317, base rate neglect). Scan change: add them to the allowlist.
+  - **Displayed text only (ruled):** the scan checks text a player sees; code identifiers are excluded.
+    `bearing-blitz` :210 and `trig-wars` :1050 (`dead` as a CSS class name) drop out by that rule; a scan
+    fix, not a game fix.
+  - **Crime (ruled):** crime words stay out of SR-14. Neutral crime contexts are allowed; violent crime is
+    already banned under tier (a) ("violence").
 - **Jon's resit audit rulings (4 Oct, PR #42): all eight audit decisions ruled; the fix batches below
   apply them.** Each ruling is recorded under its item in `docs/audit-resit-correctness-2026-10-04.md`
   ("Decisions for Jon"). **Canon SR-13 (move-based equation games):** any operation applied to both sides is
