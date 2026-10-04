@@ -30,7 +30,22 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest, cloud): PROBABILITY PIONEER fixed + verified, PR #45 MERGED
+## Handover — 2026-10-04 (latest, cloud): ESTIMATION GOLF fits phones, PR #47 MERGED
+
+- **Trace:** the game had no phone CSS. A fixed `340px 1fr` grid (~815px) and a 473px level bar made the page
+  797px wide; `loadHole()` focuses the answer box on load, so the browser scrolled 336–371px sideways to it.
+  At 320 the right flag's pennant (`.flag::after`) also ran 6px past the edge.
+- **Fix:** one `@media (max-width: 820px)` block in the game's CSS (one column, hole card above the scorecard,
+  level bar wraps, title `min(2.4rem, 9.5vw)`, flag row padded for the pennant). `focus()` untouched. Every
+  level, full round, 320/375/390, normal and Aa: width = viewport, loads at 0,0. Desktop pixel-identical.
+  Both `tier1_phone_overflow` entries removed; tier 1's gate holds it now.
+- **Still open:** at 320×568 the answer box sits partly under the fixed footer (todo START). Audit F1–F5 are
+  a separate batch.
+- **Gotcha:** an element walk misses a pseudo-element past the edge; bisect by hiding elements and re-reading
+  `scrollWidth`. PR screenshots were committed, linked by hash, then removed in the next commit (no
+  `pr-assets` branch: this session pushes only its own branch).
+
+## Handover — 2026-10-04 (cloud): PROBABILITY PIONEER fixed + verified, PR #45 MERGED
 
 - **Fixed (resit audit, todo START batch 2):** Stage 3 Q7 "equally likely ⇒ 0.5" rekeyed False with Jon's
   explanation (decision 4); lottery Unlikely only, rain Likely only (feedback says why); Q9 and Q13's
