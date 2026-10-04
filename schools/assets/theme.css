@@ -100,8 +100,8 @@ code, kbd, samp, pre {
 
 /* The on-screen calculator, MaffsCalc (schools/assets/calculator.js, canon §4.4), on games whose
    Calculator field is "required". A toggle and a panel in the page flow: it never covers the
-   question or the answer box (the page scrolls instead). Five columns of keys at least 44px square
-   fit a 278px card (a 320px phone). Tokens only; a game's --accent and --on-accent colour the
+   question or the answer box (the page scrolls instead); on a wide screen it docks beside the card
+   (below). Five columns of keys at least 44px square fit a 278px card (a 320px phone). Tokens only; a game's --accent and --on-accent colour the
    toggle and = when it sets them. */
 .maffs-calc { display: flex; flex-direction: column; align-items: center; gap: .5rem; width: 100%; }
 .maffs-calc-toggle {
@@ -126,7 +126,15 @@ code, kbd, samp, pre {
   border: 1px solid var(--border);
   background: var(--surface-alt);
 }
-.maffs-calc-panel[hidden] { display: none; }
+.maffs-calc-panel[hidden], .maffs-calc-rail[hidden] { display: none !important; }
+.maffs-calc-rail { width: 100%; display: flex; justify-content: center; }
+/* Docked (wide screens; MaffsCalc measures the room beside the card and adds .docked): the rail spans
+   the card's height just to its right, out of the page flow, and the panel sticks inside it, so it
+   stays in view while the page scrolls and the game column never moves. MaffsCalc sets the rail's
+   width and left; .maffs-calc-host makes the card the rail's containing block. */
+.maffs-calc-host { position: relative; }
+.maffs-calc.docked .maffs-calc-rail { position: absolute; top: 0; bottom: 0; display: block; }
+.maffs-calc.docked .maffs-calc-panel { position: sticky; top: 16px; max-width: none; }
 .maffs-calc-panel:focus { outline: none; }
 .maffs-calc-panel:focus-visible { outline: 2px solid var(--accent, var(--text)); outline-offset: 2px; }
 .maffs-calc-screen {

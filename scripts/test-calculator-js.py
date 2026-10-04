@@ -17,6 +17,12 @@ Runs the real file in Chromium, with theme.css for its styles, and checks:
   Privacy   nothing leaves the page: no request, no analytics call (window.mfg, gtag), no storage.
   Fit       at 320, 375 and 390px (a game card's padding around it): no key under 44x44px, the panel
             inside its card, the page never scrolls sideways.
+  Dock      a game column 720px wide (a 688px card), mounted with {dock: card}: at 1280x720, 1366x768
+            and 1920x1080 the open panel sits right of the card (never over it), inside the window,
+            level with the card's top, keys at least 44px; opening and closing it never moves the card;
+            scrolled 600px it stays in view (sticky). At 1240px and 390px it does not dock: it opens in
+            the flow under its toggle. Five planted faults (no dock, not sticky, over the column, docking
+            below the breakpoint, never docking) must each fail.
 
     python scripts/test-calculator-js.py
 """
@@ -73,6 +79,80 @@ PAGE = """<!doctype html><html data-theme="light"><head><meta name="viewport" co
 <style>body{margin:0}.container{max-width:720px;width:100%;padding:.6rem;box-sizing:border-box}
 .qcard{border:1px solid #ccc;border-radius:14px;padding:.75rem .7rem;box-sizing:border-box}*{box-sizing:border-box}</style></head>
 <body><div class="container"><div class="qcard" id="card"><input id="answer" type="text"><div id="calc"></div></div></div></body></html>"""
+
+
+# A game column like Just Pythag It, Bruv's: 720px wide with 1rem padding, so a 688px card.
+DOCK_PAGE = """<!doctype html><html data-theme="light"><head><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>*{box-sizing:border-box}body{margin:0;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}.qcard{border:1px solid #ccc;border-radius:14px;padding:1rem;
+display:flex;flex-direction:column;gap:.6rem;min-height:1600px}</style></head>
+<body><div class="container"><div class="qcard" id="card"><input id="answer" type="text"><div id="calc"></div></div></div></body></html>"""
+
+DOCK_SIZES = [(1280, 720, True), (1366, 768, True), (1920, 1080, True), (1240, 800, False), (390, 844, False)]
+
+DOCK_FAULTS = [
+    ("no dock (the panel stays in the flow)", "style", ".maffs-calc.docked .maffs-calc-rail{position:static!important}"),
+    ("not sticky", "style", ".maffs-calc.docked .maffs-calc-panel{position:static!important}"),
+    ("docked over the game column", "style", ".maffs-calc.docked .maffs-calc-rail{left:40%!important}"),
+    ("docks below the breakpoint", "script", "MaffsCalc.DOCK.min = 100;"),
+    ("never docks", "script", "MaffsCalc.DOCK.min = 5000;"),
+]
+
+DOCK_JS = """() => { const R = e => { const r = e.getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom]; };
+  const card = document.getElementById('card'), keys = [...document.querySelectorAll('.maffs-calc-key')].map(k => k.getBoundingClientRect());
+  return { card: R(card), panel: R(document.querySelector('.maffs-calc-panel')), toggle: R(document.querySelector('.maffs-calc-toggle')),
+    docked: __calc.isDocked(), open: __calc.isOpen(), cw: document.documentElement.clientWidth,
+    sw: document.documentElement.scrollWidth, vh: innerHeight,
+    key: [Math.min(...keys.map(k => k.width)), Math.min(...keys.map(k => k.height))] }; }"""
+
+
+async def dock_check(browser, css, w, h, want, fault=None):
+    """Failures for one window size (with a fault patched in, if given)."""
+    out, at = [], '%dx%d' % (w, h)
+    ctx = await browser.new_context(viewport={'width': w, 'height': h})
+    await ctx.route('**/*', lambda r: r.abort())
+    page = await ctx.new_page()
+    await page.set_content(DOCK_PAGE)
+    await page.add_style_tag(content=css)
+    await page.add_script_tag(path=CALC_JS)
+    if fault and fault[1] == 'style':
+        await page.add_style_tag(content=fault[2])
+    if fault and fault[1] == 'script':
+        await page.evaluate(fault[2])
+    await page.evaluate("window.__calc = MaffsCalc.mount(document.getElementById('calc'), {dock: document.getElementById('card')})")
+    before = await page.evaluate(DOCK_JS)
+    await page.evaluate("document.querySelector('.maffs-calc-toggle').click()")   # a click that does not scroll
+    m = await page.evaluate(DOCK_JS)
+    if m['docked'] != want:
+        out.append('%s: docked=%s, expected %s' % (at, m['docked'], want))
+    if any(abs(a - b) > 0.5 for a, b in zip(before['card'], m['card'])):
+        out.append('%s: opening the calculator moved or resized the card: %r -> %r' % (at, before['card'], m['card']))
+    if m['sw'] > m['cw']:
+        out.append('%s: the page is %dpx wide in a %dpx window' % (at, m['sw'], m['cw']))
+    if m['key'][0] < 44 or m['key'][1] < 44:
+        out.append('%s: a key is %.1f x %.1f px, under 44' % (at, m['key'][0], m['key'][1]))
+    if want:
+        P, C = m['panel'], m['card']
+        if P[0] < C[2] + 4:
+            out.append('%s: the docked panel starts at x=%.0f, over or touching the card (right edge %.0f)' % (at, P[0], C[2]))
+        if P[2] > m['cw']:
+            out.append('%s: the docked panel ends at x=%.0f, past the window (%d)' % (at, P[2], m['cw']))
+        if abs(P[1] - C[1]) > 2:
+            out.append('%s: the docked panel top %.0f is not level with the card top %.0f' % (at, P[1], C[1]))
+        await page.evaluate("window.scrollTo(0, 600)")
+        s2 = await page.evaluate(DOCK_JS)
+        if not (0 <= s2['panel'][1] <= 40 and s2['panel'][3] <= s2['vh']):
+            out.append('%s: scrolled 600px, the panel is at y=%.0f..%.0f, not held in view' % (at, s2['panel'][1], s2['panel'][3]))
+        await page.evaluate("window.scrollTo(0, 0)")
+    else:
+        if m['panel'][1] < m['toggle'][3] - 0.5 or m['panel'][0] < m['card'][0] or m['panel'][2] > m['card'][2]:
+            out.append('%s: undocked, the panel is not in the flow under its toggle, inside the card' % at)
+    await page.evaluate("document.querySelector('.maffs-calc-toggle').click()")
+    m3 = await page.evaluate(DOCK_JS)
+    if m3['open'] or any(abs(a - b) > 0.5 for a, b in zip(before['card'], m3['card'])):
+        out.append('%s: closing did not close the panel, or moved the card' % at)
+    await ctx.close()
+    return out
 
 
 async def run():
@@ -195,6 +275,17 @@ async def run():
             if m['overflow']:
                 fails.append('%dpx: %d key labels overflow their key' % (w, m['overflow']))
             await ctx.close()
+        # The wide-screen dock, and each planted fault must fail somewhere
+        css = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import'))
+        for w, h, want in DOCK_SIZES:
+            fails.extend(await dock_check(browser, css, w, h, want))
+        for fault in DOCK_FAULTS:
+            caught = []
+            for w, h, want in DOCK_SIZES:
+                caught.extend(await dock_check(browser, css, w, h, want, fault))
+            print('  fault %-40s %s' % (fault[0], ('caught (%s)' % caught[0][:70]) if caught else '*** MISSED ***'))
+            if not caught:
+                fails.append('planted fault not caught: ' + fault[0])
         await browser.close()
     return fails
 
@@ -211,7 +302,9 @@ def main():
         print('\nFAILED: %d problem(s)' % len(fails))
         return 1
     print('PASS: %d expressions (arithmetic, precedence, x², √, brackets, errors, 10 s.f. display); '
-          '%d key sequences; keyboard, toggle, privacy; keys >= 44px at 320/375/390px' % (len(CASES), len(SEQS)))
+          '%d key sequences; keyboard, toggle, privacy; keys >= 44px at 320/375/390px; docked beside a 720px '
+          'column at 1280/1366/1920 (sticky, never over it), in the flow at 1240 and 390; %d planted dock faults caught'
+          % (len(CASES), len(SEQS), len(DOCK_FAULTS)))
     return 0
 
 

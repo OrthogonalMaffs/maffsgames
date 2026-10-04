@@ -76,6 +76,17 @@ WHAT IT ASSERTS (Jon's contract, docs/next-contract-just-pythag-it-bruv.md, poin
               44px, and the page still never scrolls sideways; the feedback (with the panel left
               open, so hidden) still keeps Next above the fold. The SVG is the figure's full width
               at 1:1, and Aa overlaps nothing.
+  Desktop     (Jon, 4 Oct 2026) the same pass at 1280x720, 1366x768 and 1920x1080: the open calculator
+              docks right of the card, level with its top, never over it, and opening it moves nothing.
+  Feedback    after Check, at all six sizes, with the calculator open on even questions and closed on
+              odd ones, for wrong answers (the worked example), "Spotted it?" and the quick tick: the
+              whole feedback in the window once the page settles; on a desktop without any scrolling.
+              On phones Check is also pressed from scrolled positions (the answer box at the top of the
+              window, or all the way down at the calculator). Once per size the feedback is pushed out
+              of view: a phone must glide back to it, a desktop must not scroll.
+  Layout      seven planted faults, each run at 1366x768 and 320x568 on a short question set, must
+  faults      fail: no glide, the feedback pushed below the fold, the calculator not docked, docked
+              over the column, the dock pushing the column, docked on a phone, a desktop scrolling.
 
 FAULT-INJECTION SELF-TEST (runs every time; --no-selftest skips it)
 -------------------------------------------------------------------------------
@@ -114,6 +125,8 @@ ROUND_ASK = "Give your answer to 1 decimal place."
 SPOT_BASES = {(3, 4, 5): "3-4-5", (5, 12, 13): "5-12-13"}
 NUDGE = "Is the side you're finding the longest one?"
 PHONES = [(320, 568), (375, 667), (390, 844)]
+DESKTOPS = [(1280, 720), (1366, 768), (1920, 1080)]
+DESKTOP_MIN_W = 1000      # these sizes must dock the calculator; the phones must not
 TAP_RADIUS_PX = 22        # half a 44px fingertip
 TAP_TOL_PX = 40           # the page counts a tap for the nearest side within this distance
 SCALE_320 = 0.75          # screen px per viewBox unit at 320px wide; measured in run_all, this is the floor
@@ -1013,22 +1026,51 @@ FIG_JS = """() => { const f = document.getElementById('fig'), s = f.querySelecto
 # Page coordinates (as at scroll 0): clicking the toggle may scroll the page to it.
 CALC_JS = """() => { const R = e => { const r = e.getBoundingClientRect(), y = scrollY, x = scrollX;
     return [r.left + x, r.top + y, r.right + x, r.bottom + y]; };
+  const docked = JPIB.ui.calc().isDocked(), cw = document.documentElement.clientWidth;
   const p = document.querySelector('.maffs-calc-panel'), open = p && p.offsetParent !== null;
   const keys = [...document.querySelectorAll('.maffs-calc-key')].map(k => k.getBoundingClientRect());
   return { panel: open ? R(p) : null, row: R(document.getElementById('answer')), check: R(document.getElementById('submitBtn')),
     card: R(document.getElementById('qcard')),
     key: open ? [Math.min(...keys.map(k => k.width)), Math.min(...keys.map(k => k.height))] : null,
-    scroll: document.documentElement.scrollWidth, inner: innerWidth }; }"""
+    scroll: document.documentElement.scrollWidth, inner: innerWidth, docked: docked, cw: cw }; }"""
+
+# After Check: wait until the page stops scrolling (a phone glides to the feedback), then measure the
+# feedback in the window. null if it has already gone (a quick tick moves on after 1.1s).
+SETTLED_FB_JS = """() => new Promise(res => { let last = -1, n = 0; const t0 = performance.now();
+  (function f() { const y = scrollY; n = y === last ? n + 1 : 0; last = y;
+    if (n < 4 && performance.now() - t0 < 900) return requestAnimationFrame(f);
+    const fb = document.querySelector('#feedback .fb, #feedback .fb-quick');
+    if (!fb) return res(null);
+    const r = fb.getBoundingClientRect(), nx = document.querySelector('#feedback .maffs-next');
+    const p = document.querySelector('.maffs-calc-panel');
+    res({ top: r.top, bottom: Math.max(r.bottom, nx ? nx.getBoundingClientRect().bottom : 0),
+          next: nx ? nx.getBoundingClientRect().bottom : 0, scrollY: scrollY,
+          calc: !!(p && p.offsetParent !== null), sw: document.documentElement.scrollWidth, iw: innerWidth }); })(); })"""
 
 
-async def phone_fit(browser, out):
-    """Every question shape, wrong-answer feedback (the worked example for 'short'), at three sizes."""
-    measured, worst, tapworst, calcworst, checkworst = 0, {}, {}, {}, {}
-    for (w, h) in PHONES:
+async def apply_patch(page, patch):
+    kind, code = patch
+    if kind == "style":
+        await page.add_style_tag(content=code)
+    else:
+        await page.evaluate(code)
+
+
+async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True):
+    """Every question shape at three phone and three desktop sizes: the asking screen with the calculator
+    closed then open, then the feedback after Check (wrong: the worked example for 'short'; right: the
+    quick tick or "Spotted it?"), which must be fully in view. only: a JS filter (q, i) for a short run;
+    patch: a planted fault, applied before the game starts."""
+    sizes = sizes or PHONES + DESKTOPS
+    measured, worst, tapworst, calcworst, checkworst, fbworst, glided = 0, {}, {}, {}, {}, {}, set()
+    for (w, h) in sizes:
         ctx, page, errors = await new_page(browser, (w, h))
         try:
             await page.evaluate(STUBS)
+            if patch:
+                await apply_patch(page, patch)
             await page.evaluate("""() => {
+              const ONLY = __ONLY__;
               const J = JPIB, rng = J.mulberry32(99), qs = [];
               const P = J.POSITIONS; let n = 0;
               // round 1: every triangle, both types, the positions dealt in turn; then the thinnest
@@ -1048,10 +1090,11 @@ async def phone_fit(browser, out):
                     if (!best || q.prompt.length > best.prompt.length) best = q; });
                   qs.push(best); });
               }));
-              qs.forEach((q, i) => { q.index = i + 1; });
-              J.buildSession = () => ({ seed: 0, types: qs.map(q => q.type), questions: qs });
+              const keep = ONLY ? qs.filter(ONLY) : qs;
+              keep.forEach((q, i) => { q.index = i + 1; });
+              J.buildSession = () => ({ seed: 0, types: keep.map(q => q.type), questions: keep });
               J.helpFor = () => 'example';   // measure the longest feedback a 'short' question can show
-            }""")
+            }""".replace("__ONLY__", only or "null"))
             out.extend(await check_header(page, "%dx%d start screen" % (w, h), aa=True))
             await page.click("#startBtn")
             await wait_next_question(page, 0)
@@ -1100,54 +1143,124 @@ async def phone_fit(browser, out):
                     for b in lab[j + 1:]:
                         if a[0] < b[2] - 0.5 and b[0] < a[2] - 0.5 and a[1] < b[3] - 0.5 and b[1] < a[3] - 0.5:
                             out.append("%s: two triangle labels overlap on screen" % where)
-                # the calculator, closed then open: nothing above it moves, the panel fits below the answer row
+                # the calculator, closed then open. Phones: in the flow under the answer row, inside the card,
+                # moving nothing above it. Desktops: docked right of the card, level with its top, never over
+                # it, and the card does not move.
+                desk = w >= DESKTOP_MIN_W
                 closed = await page.evaluate(CALC_JS)
                 await page.click(".maffs-calc-toggle")
                 opened = await page.evaluate(CALC_JS)
-                calcworst[(w, h)] = max(calcworst.get((w, h), 0), opened["panel"][3] if opened["panel"] else 0)
                 checkworst[(w, h)] = max(checkworst.get((w, h), 0), opened["check"][3])
                 if closed["panel"] is not None:
                     out.append("%s: the calculator panel shows before it is opened" % where)
                 if opened["panel"] is None:
                     out.append("%s: the Calculator button does not open the panel" % where)
                 else:
-                    if any(abs(a - b) > 0.5 for a, b in zip(closed["row"] + closed["check"], opened["row"] + opened["check"])):
-                        out.append("%s: opening the calculator moved the answer box or Check" % where)
+                    calcworst[(w, h)] = max(calcworst.get((w, h), 0), opened["panel"][3])
+                    if any(abs(a - b) > 0.5 for a, b in zip(closed["row"] + closed["check"] + closed["card"][:3],
+                                                             opened["row"] + opened["check"] + opened["card"][:3])):
+                        out.append("%s: opening the calculator moved the card, the answer box or Check" % where)
                     if opened["check"][3] > h - FOOTER:
                         out.append("%s: with the calculator open, Check ends at %.0fpx, below the fold" % (where, opened["check"][3]))
-                    if opened["panel"][1] < opened["row"][3] - 0.5:
-                        out.append("%s: the calculator panel starts above the bottom of the answer row" % where)
-                    if opened["panel"][0] < opened["card"][0] - 0.5 or opened["panel"][2] > opened["card"][2] + 0.5:
-                        out.append("%s: the calculator panel spills out of the card" % where)
                     if opened["key"][0] < 44 or opened["key"][1] < 44:
                         out.append("%s: a calculator key is %.0fx%.0fpx, under 44" % (where, opened["key"][0], opened["key"][1]))
                     if opened["scroll"] > opened["inner"]:
                         out.append("%s: with the calculator open the page is %dpx wide" % (where, opened["scroll"]))
-                raw = q["add"]["k1Text"] if q["type"] == "short" else str(int(F(q["keyText"])) + 3)
+                    if opened["docked"] != desk:
+                        out.append("%s: the calculator is %s" % (where, "not docked beside the card" if desk else "docked on a phone"))
+                    elif desk:
+                        P, C = opened["panel"], opened["card"]
+                        if P[0] < C[2] + 4:
+                            out.append("%s: the docked calculator starts at x=%.0f, over the card (right edge %.0f)" % (where, P[0], C[2]))
+                        if P[2] > opened["cw"]:
+                            out.append("%s: the docked calculator runs past the window (x=%.0f > %d)" % (where, P[2], opened["cw"]))
+                        if abs(P[1] - C[1]) > 2:
+                            out.append("%s: the docked calculator's top (%.0f) is not level with the card's (%.0f)" % (where, P[1], C[1]))
+                    else:
+                        if opened["panel"][1] < opened["row"][3] - 0.5:
+                            out.append("%s: the calculator panel starts above the bottom of the answer row" % where)
+                        if opened["panel"][0] < opened["card"][0] - 0.5 or opened["panel"][2] > opened["card"][2] + 0.5:
+                            out.append("%s: the calculator panel spills out of the card" % where)
+                # Check, with the calculator open on even questions and closed on odd ones. Right answers too:
+                # "Spotted it?" (round 1 triples) and, every fifth question, the quick tick.
+                calc_open = i % 2 == 0
+                if not calc_open:
+                    await page.evaluate("JPIB.ui.calc().close()")
+                if q["spot"] or i % 5 == 0:
+                    raw, kind = q["keyText"], ("spot" if q["spot"] else "quick")
+                else:
+                    raw, kind = (q["add"]["k1Text"] if q["type"] == "short" else str(int(F(q["keyText"])) + 3)), "wrong"
                 await page.fill("#answer", raw)
-                await page.click("#submitBtn")
-                await page.wait_for_selector("#feedback .maffs-next")
-                if await page.is_visible(".maffs-calc"):
-                    out.append("%s: the calculator shows with the feedback (the panel hides while feedback shows)" % where)
-                m = await page.evaluate("""() => { const b = document.querySelector('#feedback .maffs-next').getBoundingClientRect();
-                  return [b.bottom, document.documentElement.scrollWidth, window.innerWidth]; }""")
-                worst[(w, h)] = max(worst.get((w, h), 0), m[0])
-                if m[0] > h - FOOTER:
-                    out.append("%s: Next ends at %.0fpx, below the fold (%dpx)" % (where, m[0], h - FOOTER))
-                if m[1] > m[2]:
-                    out.append("%s: the page is %dpx wide" % (where, m[1]))
+                if not desk and calc_open and i % 3 != 2:
+                    # The student scrolled down to use the calculator and pressed Check from there: with the
+                    # answer box at the top of the window and the calculator below it (the usual case), or
+                    # all the way down. The question text folds away on Check, so the feedback moves.
+                    await page.evaluate("window.scrollTo(0, document.documentElement.scrollHeight)" if i % 3 else
+                                        "window.scrollTo(0, document.getElementById('answerForm').getBoundingClientRect().top + scrollY - 8)")
+                    await page.evaluate("document.getElementById('submitBtn').click()")
+                else:
+                    await page.click("#submitBtn")
+                await page.wait_for_selector("#feedback .fb-quick" if kind == "quick" else "#feedback .maffs-next")
+                fb = await page.evaluate(SETTLED_FB_JS)
+                where_fb = "%s, %s answer, calculator %s" % (where, kind, "open" if calc_open else "closed")
+                if fb is None:
+                    out.append("%s: the feedback was gone before it could be measured" % where_fb)
+                else:
+                    fbworst[(w, h)] = max(fbworst.get((w, h), 0), fb["bottom"])
+                    if fb["top"] < -0.5 or fb["bottom"] > h - FOOTER + 0.5:
+                        out.append("%s: the feedback is at y=%.0f..%.0f, not fully in view (fold %d)"
+                                   % (where_fb, fb["top"], fb["bottom"], h - FOOTER))
+                    if desk and fb["scrollY"] > 0.5:
+                        out.append("%s: the page is scrolled %.0fpx (a desktop must show the feedback without scrolling)"
+                                   % (where_fb, fb["scrollY"]))
+                    if fb["sw"] > fb["iw"]:
+                        out.append("%s: the page is %dpx wide" % (where_fb, fb["sw"]))
+                    if kind != "quick":
+                        if fb["calc"] and not desk:
+                            out.append("%s: the calculator shows with the feedback on a phone" % where_fb)
+                        if desk and calc_open and not fb["calc"]:
+                            out.append("%s: the docked calculator vanished with the feedback" % where_fb)
+                        worst[(w, h)] = max(worst.get((w, h), 0), fb["next"])
+                        if fb["next"] > h - FOOTER:
+                            out.append("%s: Next ends at %.0fpx, below the fold (%dpx)" % (where_fb, fb["next"], h - FOOTER))
+                if kind == "wrong" and (w, h) not in glided:
+                    # The safety net, once per size: push the feedback out of view (a spacer makes the page
+                    # long enough) and ask the page to bring it back. Phones glide to it; a desktop, where
+                    # the layout guarantees it, never scrolls.
+                    glided.add((w, h))
+                    await page.evaluate("""() => { const d = document.createElement('div'); d.id = '__spacer';
+                      d.style.height = '3000px'; document.body.appendChild(d);
+                      const r = document.querySelector('#feedback .fb').getBoundingClientRect();
+                      document.documentElement.scrollTop = r.bottom + scrollY + 200; }""")
+                    before_y = await page.evaluate("scrollY")
+                    await page.evaluate("JPIB.ui.feedbackInView()")
+                    g = await page.evaluate(SETTLED_FB_JS)
+                    if desk:
+                        if abs(g["scrollY"] - before_y) > 0.5:
+                            out.append("%s: on a desktop the page scrolled to the feedback (only phones may)" % where_fb)
+                    elif g["top"] < -0.5 or g["bottom"] > h - FOOTER + 0.5:
+                        out.append("%s: pushed out of view, the feedback was not brought back (y=%.0f..%.0f)"
+                                   % (where_fb, g["top"], g["bottom"]))
+                    await page.evaluate("document.getElementById('__spacer').remove(); document.documentElement.scrollTop = 0")
                 measured += 1
-                await page.click("#feedback .maffs-next")
-                await wait_next_question(page, i)
+                if kind == "quick":
+                    await wait_next_question(page, i)
+                else:
+                    await page.click("#feedback .maffs-next")
+                    await wait_next_question(page, i)
             for e in errors:
-                out.append("phone %dx%d page error: %s" % (w, h, e))
+                out.append("%dx%d page error: %s" % (w, h, e))
         finally:
             await ctx.close()
+    if not report:
+        return measured
+    print("Feedback after Check, lowest bottom: " + ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER)
+                                                              for (w, h), v in sorted(fbworst.items())))
     print("Lowest Next: " + ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER) for (w, h), v in sorted(worst.items())))
     print("Tap step, lowest of triangle/Check: " + ", ".join("%dx%d %.0fpx" % (w, h, v) for (w, h), v in sorted(tapworst.items())))
     print("Asking, lowest Check (calculator open or closed, as at scroll 0): " +
           ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER) for (w, h), v in sorted(checkworst.items())))
-    print("Calculator open, lowest panel bottom (the page scrolls to it): " +
+    print("Calculator open, lowest panel bottom (phones: the page scrolls to it; desktops: docked): " +
           ", ".join("%dx%d %.0fpx" % (w, h, v) for (w, h), v in sorted(calcworst.items())))
     return measured
 
@@ -1212,6 +1325,23 @@ FAULTS = [
 ]
 
 
+# Planted layout faults: each must fail the fit run. Round 1's first triangles (a "Spotted it?"), the
+# roofs and the fields (the longest prompts, both types: the worked example) and a spread of the rest.
+UI_FAULT_SIZES = [(1366, 768), (320, 568)]
+UI_FAULT_ONLY = "(q, i) => i % 12 === 0 || q.context === 'roof' || q.context === 'field'"
+UI_FAULTS = [
+    ("phone: no glide to the feedback", ("script", "window.scrollTo = function (a, b) { if (a === 0 && b === 0 && typeof a === 'number') document.documentElement.scrollTop = 0; };")),
+    ("desktop: the page scrolls to the feedback", ("script", "JPIB.ui.calc().isDocked = function () { return false; };")),
+    ("desktop: the feedback pushed below the fold",
+     ("style", "@media (max-height:800px){.qcard.fb-open .fig-wrap{order:0!important}.qcard.fb-open .prompt{display:block!important}}"
+               ".qcard.fb-open .fig svg{max-height:none!important}")),
+    ("desktop: the calculator not docked", ("script", "MaffsCalc.DOCK.min = 5000;")),
+    ("desktop: docked over the game column", ("style", ".maffs-calc.docked .maffs-calc-rail{left:40%!important}")),
+    ("desktop: the dock pushes the column", ("style", ".maffs-calc.docked .maffs-calc-rail{position:static!important}")),
+    ("phone: the calculator docked", ("script", "MaffsCalc.DOCK.min = -1000;")),
+]
+
+
 async def measure_scale(browser):
     """Screen px per viewBox unit of a round-1 triangle on a 320px phone: what the tap test is held to."""
     ctx, page, _ = await new_page(browser, (320, 568))
@@ -1272,7 +1402,21 @@ async def run_all(args):
             n = await phone_fit(browser, ph_out)
             for f in ph_out:
                 fail(f)
-            print("Phone fit: %d wrong-answer screens at %s" % (n, ", ".join("%dx%d" % p for p in PHONES)))
+            print("Fit: %d feedback screens (wrong, quick tick, Spotted it?; calculator open and closed) at %s"
+                  % (n, ", ".join("%dx%d" % p for p in PHONES + DESKTOPS)))
+
+        if not args.no_selftest and not args.no_phone:
+            print()
+            print("Layout faults (a short run at 1366x768 and 320x568, each patched into a fresh page):")
+            for name, patch in UI_FAULTS:
+                found = []
+                try:
+                    await phone_fit(browser, found, sizes=UI_FAULT_SIZES, only=UI_FAULT_ONLY, patch=patch, report=False)
+                except Exception as exc:          # a fault that breaks the page outright is caught too
+                    found.append("the run broke: %s" % str(exc).splitlines()[0])
+                print("  %-48s %s" % (name, ("CAUGHT (%d failures, e.g. %s)" % (len(found), found[0][:90])) if found else "*** MISSED ***"))
+                if not found:
+                    fail("layout fault not caught: " + name)
 
         if not args.no_selftest:
             ok, lines = await selftest(browser)
