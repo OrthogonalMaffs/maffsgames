@@ -12,7 +12,8 @@ held an unsafe pair. This verifier holds the rebuild to its contract:
               the three roughly a third each (each within 2 of a third of the bank); a non-empty
               explanation for every item; the lurking variable named on every "both" item; a joke
               theory on every coincidence (and none elsewhere); unique ids; ranges the right way round.
-  SR-14       every item's text passes scripts/check-content-safety.py's word list (canon §0.3).
+  SR-14       no tier (a) word anywhere in an item and no tier (b) word (illness, injury) in its joke,
+              by scripts/check-content-safety.py's word lists (canon §0.3).
   Graphs      every item's points recomputed into Pearson's r here (not by the page): the sign is the
               item's direction and |r| is inside the band its stated strength names; every point is
               inside the axis range; whole-number variables are whole.
@@ -107,10 +108,11 @@ def check_bank(bank, points):
             out.append("%s: direction %r is not +1 or -1" % (qid, q.get("dir")))
         if q.get("str") not in BANDS:
             out.append("%s: strength %r is not one of %s" % (qid, q.get("str"), ", ".join(BANDS)))
-        text = " ".join(str(v) for v in (q.get("x", [""])[0], q.get("y", [""])[0], q.get("explain"), lurk, joke))
-        words = SAFETY.hits_in(text)
+        # SR-14: tier (a) anywhere in the item; tier (b) (illness, injury) also in its joke.
+        text = " ".join(str(v) for v in (q.get("x", [""])[0], q.get("y", [""])[0], q.get("explain"), lurk))
+        words = SAFETY.terms(text) + SAFETY.terms(joke, humour=True)
         if words:
-            out.append("%s: SR-14 word(s) %s" % (qid, ", ".join(sorted(set(w for _, w in words)))))
+            out.append("%s: SR-14 word(s) %s" % (qid, ", ".join(sorted(set(words)))))
         # The graph, recomputed here.
         pts = points.get(qid) or []
         if len(pts) != q.get("n") or len(pts) < 5:
@@ -332,7 +334,8 @@ FAULTS = [
     ("the lurking variable left out of the feedback",
      "(function(){ var o = COC.feedbackHtml; COC.feedbackHtml = function (q, ok) {"
      " return o(q, ok).replace(/<div class=\"fb-lurk\">.*?<\\/div>/, ''); }; })();"),
-    ("a SR-14 word in an explanation", "COC.BANK[1].explain = 'A crash on the motorway.';"),
+    ("a SR-14 tier (a) word in an explanation", "COC.BANK[1].explain = 'Nobody drowned.';"),
+    ("a SR-14 tier (b) word in a joke", "COC.BANK.filter(function(q){return q.cat==='chance';})[2].joke = 'Cheese cures flu.';"),
     ("a deal that leaves out a kind",
      "(function(){ COC.deal = function (n) { return COC.BANK.filter(function(q){return q.cat!=='chance';}).slice(0, n); }; })();"),
 ]

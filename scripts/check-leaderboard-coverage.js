@@ -174,7 +174,8 @@ const LEVEL_OVERRIDES = {
   'free-daily-pizza':     [['practice-q20', 'practice-q40'], "FDP.boardFor(): mixed practice is 'practice-q' + session length (single-stage practice submits nothing); the daily pizza's keys are in OFF_HUB_LEVEL_PATTERNS"],
   'quadratic-factoriser': [['gcse', 'higher', 'formula'], 'IMPLEMENTED_LEVELS'],
   'chart-interrogator':   [['gcse', 'alevel', 'core', 'l4'], "selectedLevel = the level button's data-level; the L4 button says 'l4'"],
-  'the-perfect-prank':    [['ks3'], "const LEVEL='ks3'; no roster row (unlisted prototype), so the default rule finds nothing"]
+  'the-perfect-prank':    [['ks3'], "const LEVEL='ks3'; no roster row (unlisted prototype), so the default rule finds nothing"],
+  'correlation-or-coincidence': [['gcse'], "const LEVEL='gcse': one board, as before the rebuild (4 Oct 2026); the roster's A-Level and Core tiers play the same bank"]
 };
 
 // Level keys a game submits that follow a pattern rather than a fixed list, and that the hub

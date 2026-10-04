@@ -176,9 +176,10 @@ jobs:
           # The calculator check (stdlib, under a second): canon 4.4. A game loads the shared on-screen
           # calculator (schools/assets/calculator.js) and shows "Calculator required" exactly when its
           # roster Calculator field is "required"; no other page loads it.
-          # The content-safety check (stdlib, about a second): canon SR-14. Every game's and escape room's
-          # student-facing text is scanned against a documented word list; the hits present on 4 Oct 2026
-          # are KNOWN (reported for Jon, never failed); a new hit, or a stale KNOWN count, fails.
+          # The content-safety check (stdlib, about a second): canon SR-14's three tiers. Every game's and
+          # escape room's student-facing text: tier (a) words fail anywhere, tier (b) (illness, injury) only
+          # in humour fields; technical terms and Tax Theft allowlisted. The hits present on 4 Oct 2026 are
+          # KNOWN (reported, never failed: todo's SR-14 fix batch); a new hit or a stale KNOWN count fails.
           - name: Tiers 1 + 2 (page load, hang-loop scan)
             timeout: 15
             checks: |
@@ -193,7 +194,7 @@ jobs:
               Tax year (canon 7.1.4: every tax game registered, states only the teaching year)|python scripts/check-tax-year.py
               GCSE Resit page (every game live, mapped, offering the level its card names; SR-11)|python scripts/check-resit-page.py
               Calculator (canon 4.4: the on-screen calculator loads exactly where the roster says required)|python scripts/check-calculator.py
-              Content safety (canon SR-14: no new death, injury, illness, self-harm, crime, abuse or family-breakdown wording)|python scripts/check-content-safety.py
+              Content safety (canon SR-14 tiers: no new banned wording, no illness or injury in humour)|python scripts/check-content-safety.py
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
@@ -286,7 +287,7 @@ jobs:
           #    lurking variable on every 'both' and a joke on every coincidence, SR-14 words; every graph's r
           #    recomputed against its stated direction and strength; 300 deals; a full session with both
           #    variable names on screen BEFORE every answer (the audit's F1); every item fitted at three phone
-          #    sizes. Twelve planted faults.
+          #    sizes. Thirteen planted faults.
           #  - just-pythag-it-bruv: 300 sessions; every triangle, key (exact or 1 d.p. half up),
           #    "Spotted it?" line and add-instead-of-subtract probe recomputed with exact fractions;
           #    round order, >=60% shorter-side, no run of three, plausible contexts; a session played
