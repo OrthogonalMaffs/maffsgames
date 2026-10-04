@@ -30,7 +30,40 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest): CORRELATION OR COINCIDENCE rebuilt, PR #43; SR-14 + content-safety scan
+## Handover — 2026-10-04 (latest): TEACHER FEEDBACK LINE built, PR #44 (branch claude/teacher-invite)
+
+- **What it is:** `MaffsInvite.mount(el, slug)` (`schools/assets/teacher-invite.js`, canon §7.1) fills an empty
+  `<p id="teacherInvite">` with one small line, "Using this with a class? I'd love to hear how it went. — Jon",
+  linking to `/feedback/?type=classroom&game=<slug>` in a new tab. Each game page has the mount point plus two
+  script lines just before the site footer (the include and the one mount call).
+- **Where:** 97 roster games (withdrawn `regression-rumble` skipped); the escape-room engine renders the mount
+  point under its Start row and mounts with `R.slug` minus `escape-` (8 live rooms load the script; the two
+  withdrawn holding pages do not); /leaderboards/ under the header badges, `null` slug. Jon's placements for
+  the menu games, Free Daily Pizza, Six Sevens, Trig Worms, Estimation Golf, 52dle (below the input area, above
+  the leaderboard) and Factor Theorem (after all three tab sections, so every tab shows it) applied. **Equatle
+  was not in the ruled list (no start screen): placed below its keyboard and Next button, the 52dle rule; my
+  call, Jon to overturn.** `the-perfect-prank` is not a roster game and is not covered.
+- **Colour:** inherits the page; no opacity (0.75 put four games under 4.5:1). Estimation Golf
+  (`style="color:var(--cream)"`) and /leaderboards/ (`class="header-sub"`) colour their mount points.
+- **/feedback/:** `classroom` option; `?type=` preselects an existing non-disabled option; `?game=` applies
+  after `buildGameMenu()` has filled the menu and wins over the referrer; a bare escape-room name maps to
+  `escape-room:<name>`; anything unknown is ignored. Field names sent to Formspree unchanged (checked: `type`,
+  `game`, `message`, `email` + the existing hidden fields).
+- **CI:** `scripts/check-teacher-invite.py` (Tiers 1 + 2 group; `--selftest` plants 9 faults). ci-deps's
+  selftest (b) now includes the asset. Contract's three in-tree faults (removed mount on split-it, wrong slug
+  on 52dle, altered text) each failed the check, then were reverted.
+- **Verified locally:** a rendered sweep of every game, the 8 rooms (visibility) and /leaderboards/ at 390x844 and 1280x800 (visible on load, text,
+  href, new tab, below the element before it, not under the fixed footer when scrolled to the end, 4.5:1
+  contrast); prefill on split-it, 52dle, canteen-hack (bare and prefixed), an unknown slug and a bad type.
+  Screenshots on the `pr-assets/teacher-invite` branch, linked from the PR.
+- **Found, not fixed:** Estimation Golf at 390px loads scrolled 327px sideways (807px document); pre-existing,
+  in todo START. Jon's SR-14 rulings (20:06) are recorded in todo's SR-14 fix batch and canon SR-14; no game
+  changed for them.
+- **Gotcha:** a full-page Playwright screenshot draws the fixed footer over the last 40px of the page, and
+  `scrollIntoView({block:'end'})` puts an element's edge at the viewport bottom: neither shows what a user
+  scrolled to the end sees. Measure by scrolling the page (and any scrolling overlay) to the end.
+
+## Handover — 2026-10-04: CORRELATION OR COINCIDENCE rebuilt, PR #43 MERGED + LIVE (f5a5e24); SR-14 + content-safety scan
 
 - **The game:** 42 items (cause / both / chance, 14 each), variables named in the axis titles before the answer,
   joke theories on coincidences, every answer behind `MaffsNext`; back on /resit/ (30). Verifier

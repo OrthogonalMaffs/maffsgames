@@ -124,6 +124,7 @@ h1{font-size:1.6rem;font-weight:700;color:var(--navy);margin-bottom:0.5rem}
           <option value="error">Maths error — a wrong answer or question</option>
           <option value="request">Feature request — a game or topic you'd like</option>
           <option value="general">General feedback</option>
+          <option value="classroom">Classroom use: how it went with a class</option>
         </select>
       </div>
 
@@ -212,6 +213,15 @@ async function buildGameMenu() {
     return; // leave only the default option
   }
 
+  // A link that names the game (?game=, e.g. the teacher line under a game's
+  // Start button) wins over the referrer. An escape room may be named by its
+  // bare directory name. An unknown slug is ignored: the referrer, then the
+  // default, applies.
+  const has = value => value && [...select.options].some(o => o.value === value);
+  const asked = new URLSearchParams(location.search).get('game') || '';
+  const named = has(asked) ? asked : has('escape-room:' + asked) ? 'escape-room:' + asked : '';
+  if (named) { select.value = named; return; }
+
   // Arrived from a game or escape room? Preselect it.
   try {
     const ref = new URL(document.referrer);
@@ -219,12 +229,20 @@ async function buildGameMenu() {
     const g = ref.pathname.match(/^\/games\/([^/]+)\//);
     const r = ref.pathname.match(/^\/escape-rooms\/([^/]+)\//);
     const value = g ? g[1] : r ? 'escape-room:' + r[1] : '';
-    if (value && [...select.options].some(o => o.value === value)) select.value = value;
+    if (has(value)) select.value = value;
   } catch (err) {
     // no or unreadable referrer: keep the default
   }
 }
 buildGameMenu();
+
+// ?type= preselects the feedback type when it names an existing option
+// (e.g. ?type=classroom from the teacher line). Anything else is ignored.
+(function () {
+  const type = new URLSearchParams(location.search).get('type');
+  const select = document.getElementById('type');
+  if (type && [...select.options].some(o => o.value === type && !o.disabled)) select.value = type;
+})();
 
 // Record page load time for time-check anti-spam
 const loaded = Date.now();

@@ -647,6 +647,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
     <div class="law-list" id="startLaws"></div>
     <div class="law-list" id="solveLawList" hidden></div>
     <button class="btn btn-primary" onclick="startGame()">Start Game</button>
+  <p id="teacherInvite"></p>
   </div>
 
   <!-- Main game -->
@@ -1951,6 +1952,8 @@ waitForKaTeX(buildRefPanels);
   };
 })();
 </script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'log-laws');</script>
 <footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
 </body>
 </html>

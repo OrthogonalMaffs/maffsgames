@@ -166,6 +166,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb{line-height:2;max-
       <h2>Questions</h2>
       <div id="sessionSelect" class="session-select"></div>
       <button class="btn solid start-btn" id="startBtn">Start</button>
+    <p id="teacherInvite"></p>
     </div>
     <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
     <div class="credit">Inspired by Tyler Vigen's Spurious Correlations.</div>
@@ -518,6 +519,8 @@ const QUESTIONS = [
   };
 })();
 </script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'correlation-or-coincidence');</script>
 <footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
 </body>
 </html>
