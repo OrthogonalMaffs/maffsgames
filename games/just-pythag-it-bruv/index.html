@@ -90,9 +90,11 @@ body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;ali
 .qhead{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
 .qhead .calc-badge{font-size:.72rem;padding:.15em .55em}
 .tap-ask{font-weight:700;color:var(--accent)}
-.answer-row{display:flex;gap:.5rem;align-items:center;justify-content:center;flex-wrap:wrap}
+/* One line at every width, whatever the font: the input gives way, the button never wraps. */
+.answer-row{display:flex;gap:.5rem;align-items:center;justify-content:center;flex-wrap:nowrap}
+.answer-row label,.answer-row .unit,.answer-row button{flex:none;white-space:nowrap}
 .answer-row label{font-family:var(--font-num);font-weight:700;color:var(--accent);font-size:1.15rem}
-.answer-row input{width:7rem;min-height:44px;padding:.45rem .6rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.2rem;text-align:center}
+.answer-row input{flex:0 1 7rem;width:7rem;min-width:3.5rem;min-height:44px;padding:.45rem .6rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.2rem;text-align:center}
 .answer-row input:focus{outline:none;border-color:var(--accent)}
 .answer-row .unit{font-family:var(--font-num);font-size:1.05rem;color:var(--muted);min-width:1.6rem}
 .msg{min-height:1.2em;text-align:center;font-size:.9rem;color:var(--hint)}

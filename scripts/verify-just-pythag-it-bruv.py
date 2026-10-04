@@ -921,6 +921,18 @@ async def phone_fit(browser, out):
                         out.append("%s: the triangle ends at %.0fpx, below the fold, during the tap step" % (where, svgb))
                     await tap_step(page, q, out, where, wrong_first=True)
                     chk = await page.evaluate("document.querySelector('#submitBtn').getBoundingClientRect().bottom")
+                    # one line with room to spare: a wider fallback font (CI's) must not wrap Check below
+                    row = await page.evaluate("""() => { const r = document.querySelector('#answerForm');
+                      const kids = [...r.children].filter(e => e.offsetParent !== null);
+                      const tops = kids.map(e => Math.round(e.getBoundingClientRect().top + e.getBoundingClientRect().height / 2));
+                      // the fixed parts at their own width, plus the input at its minimum
+                      const used = kids.reduce((a, e) => a + (e.tagName === 'INPUT'
+                          ? parseFloat(getComputedStyle(e).minWidth) : e.getBoundingClientRect().width), 0)
+                        + parseFloat(getComputedStyle(r).columnGap || 0) * (kids.length - 1);
+                      return [Math.max(...tops) - Math.min(...tops), r.getBoundingClientRect().width - used]; }""")
+                    if row[0] > 4 or row[1] < 20:
+                        out.append("%s: the answer row is not one line with 20px spare (centres %dpx apart, %.0fpx spare)"
+                                   % (where, row[0], row[1]))
                     tapworst[(w, h)] = max(tapworst.get((w, h), 0), max(svgb, chk))
                     if chk > h - FOOTER:
                         out.append("%s: Check ends at %.0fpx, below the fold, after the tap" % (where, chk))
