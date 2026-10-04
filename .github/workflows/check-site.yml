@@ -176,6 +176,10 @@ jobs:
           # The calculator check (stdlib, under a second): canon 4.4. A game loads the shared on-screen
           # calculator (schools/assets/calculator.js) and shows "Calculator required" exactly when its
           # roster Calculator field is "required"; no other page loads it.
+          # The content-safety check (stdlib, about a second): canon SR-14's three tiers. Every game's and
+          # escape room's student-facing text: tier (a) words fail anywhere, tier (b) (illness, injury) only
+          # in humour fields; technical terms and Tax Theft allowlisted. The hits present on 4 Oct 2026 are
+          # KNOWN (reported, never failed: todo's SR-14 fix batch); a new hit or a stale KNOWN count fails.
           - name: Tiers 1 + 2 (page load, hang-loop scan)
             timeout: 15
             checks: |
@@ -190,6 +194,7 @@ jobs:
               Tax year (canon 7.1.4: every tax game registered, states only the teaching year)|python scripts/check-tax-year.py
               GCSE Resit page (every game live, mapped, offering the level its card names; SR-11)|python scripts/check-resit-page.py
               Calculator (canon 4.4: the on-screen calculator loads exactly where the roster says required)|python scripts/check-calculator.py
+              Content safety (canon SR-14 tiers: no new banned wording, no illness or injury in humour)|python scripts/check-content-safety.py
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
@@ -278,6 +283,11 @@ jobs:
           #  - split-it: every generator at both levels, 18,000 questions, keys recomputed exactly at
           #    the precision each prompt states; every marking rule probed through checkAnswer() (to
           #    the penny, 0.1 off, unrounded, £/€). Failed on the ±0.05 / ±0.15 file (todo 1.36).
+          #  - correlation-or-coincidence (rebuilt 4 Oct 2026): 40+ items, three kinds a third each, a
+          #    lurking variable on every 'both' and a joke on every coincidence, SR-14 words; every graph's r
+          #    recomputed against its stated direction and strength; 300 deals; a full session with both
+          #    variable names on screen BEFORE every answer (the audit's F1); every item fitted at three phone
+          #    sizes. Thirteen planted faults.
           #  - just-pythag-it-bruv: 300 sessions; every triangle, key (exact or 1 d.p. half up),
           #    "Spotted it?" line and add-instead-of-subtract probe recomputed with exact fractions;
           #    round order, >=60% shorter-side, no run of three, plausible contexts; a session played
@@ -309,6 +319,7 @@ jobs:
               Better Value tax-and-NI rule of thumb (checked with uk_rates)|python scripts/verify-better-value-tax.py
               Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure)|python scripts/verify-circle-theorem-spotter.py
               Split It (every generator's keys recomputed + marking at the stated precision)|python scripts/verify-split-it.py
+              Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)|python scripts/verify-correlation-or-coincidence.py
               Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)|python scripts/check-resit-fixes.py
 
     steps:

@@ -69,9 +69,9 @@ REVERT = {
         ("games/negative-number-line/index.html",
          "const correct = placedValue === target;", "const correct = Math.abs(placedValue - target) <= 0.5;")],
     "correlation-or-coincidence": [
-        ("games/correlation-or-coincidence/index.html", "label1:'Cheese consumption per capita (lbs)'",
-         "label1:'US spending on science (billions $)',label2:'Suicides by hanging per year'},\n{type:'spurious',\n"
-         " label1:'Cheese consumption per capita (lbs)'")],
+        ("games/correlation-or-coincidence/index.html", "{id:'C1', cat:'chance',",
+         "{id:'C0', cat:'chance', x:['US spending on science (billions $)'], y:['Suicides by hanging per year']},\n"
+         "{id:'C1', cat:'chance',")],
 }
 
 # Estimation Engine: every expression's exact value (Python floats, 15+ s.f.).

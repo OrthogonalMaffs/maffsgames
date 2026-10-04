@@ -34,7 +34,8 @@ BASE = pathlib.Path(__file__).resolve().parent.parent
 PAGE = "resit/index.html"
 
 # Jon, 3 Oct 2026: the suite, by topic, in this order. shape-shifter added 4 Oct 2026 (Jon: G7
-# transformations banded STRETCH). Three withdrawn 4 Oct 2026 (WITHDRAWN below).
+# transformations banded STRETCH). Three withdrawn 4 Oct 2026 (WITHDRAWN below); correlation-or-coincidence
+# returned the same day, rebuilt (labels before the answer, three answers, SR-14).
 SUITE = [
     ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
@@ -45,7 +46,8 @@ SUITE = [
         "better-value", "percentage-flip"]),
     ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter"]),
     ("probability", "Probability", ["probability-pioneer", "expected-damage", "given-that"]),
-    ("statistics", "Statistics", ["distinctly-average", "stat-attack", "chart-interrogator"]),
+    ("statistics", "Statistics", ["distinctly-average", "stat-attack", "chart-interrogator",
+        "correlation-or-coincidence"]),
 ]
 # Jon, 3 Oct 2026: never on the page. prime-or-composite runs to 9,973 (todo: needs a
 # Foundation-range option to join); bearings are out as a topic.
@@ -54,8 +56,7 @@ EXCLUDED = {"prime-or-composite": "numbers up to 9,973; needs a Foundation-range
 # Jon, 4 Oct 2026: withdrawn from the page pending a rebuild (resit correctness audit, PR #35). Each
 # stays live on the portal; it returns by moving it back into SUITE in the rebuild's PR.
 WITHDRAWN = {"estimation-engine": "1-5% bands mark the GCSE 1 s.f. method wrong; rebuild under SR-12",
-             "equation-builder": "slot-by-slot marking rejects equally correct arrangements",
-             "correlation-or-coincidence": "the variables are hidden until after the answer"}
+             "equation-builder": "slot-by-slot marking rejects equally correct arrangements"}
 # Jon, 4 Oct 2026 (resit audit, decision 8): cards whose opening level Jon has ruled. A card for one of
 # these games must carry this level key. estimation-golf's Starter is 8 of 20 general-knowledge items.
 RULED_LEVEL = {"estimation-golf": "ks3"}

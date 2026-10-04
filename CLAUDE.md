@@ -30,7 +30,16 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest): JON'S RESIT AUDIT RULINGS recorded, PR #42; SR-13
+## Handover — 2026-10-04 (latest): CORRELATION OR COINCIDENCE rebuilt, PR #43; SR-14 + content-safety scan
+
+- **The game:** 42 items (cause / both / chance, 14 each), variables named in the axis titles before the answer,
+  joke theories on coincidences, every answer behind `MaffsNext`; back on /resit/ (30). Verifier
+  `scripts/verify-correlation-or-coincidence.py` (group B, 12 planted faults). Ledger B4 entries cleared.
+- **SR-14, three tiers** (canon §0.3, Jon's amended text) + `scripts/check-content-safety.py` (site-wide CI): tier (a)
+  fails anywhere, tier (b) in humour fields; KNOWN = 27 tier-(a) hits in 11 files = todo's SR-14 fix batch (one
+  game per contract). /updates/ entry live in Jon's wording. Jon approved C7/C11 and the credit without a link.
+
+## Handover — 2026-10-04: JON'S RESIT AUDIT RULINGS recorded, PR #42; SR-13
 
 - **Jon ruled on all eight decisions** in `docs/audit-resit-correctness-2026-10-04.md`; each ruling sits
   under its item there. **Canon SR-13** (§0.3): in move-based equation games every operation on both sides
