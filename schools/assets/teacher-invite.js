@@ -13,8 +13,12 @@
 
    The slug is the game's directory name. A null slug links to the form with no
    game chosen (/leaderboards/). The line inherits the page's text colour and
-   font; it adds no theme tokens. Placement rule (Jon, 4 Oct 2026): never
-   between an answer input and its keypad, and visible without changing tabs.
+   font; it adds no theme tokens and no opacity (at 0.75, four games' already
+   muted start-screen text fell below 4.5:1 contrast). A page whose inherited
+   colour does not read on its background sets an existing colour on the mount
+   point (Estimation Golf, /leaderboards/). Placement rule (Jon, 4 Oct 2026):
+   never between an answer input and its keypad, and visible without changing
+   tabs.
 
    scripts/check-teacher-invite.py holds every game to the mount, its slug and
    the wording below. Nothing is recorded or sent. */
@@ -42,7 +46,7 @@
     // Inline, so a game's own rules for p (often by id) cannot resize or hide it.
     var st = target.style;
     st.display = 'block'; st.margin = '12px auto 0'; st.padding = '0'; st.maxWidth = '100%';
-    st.fontSize = '0.8rem'; st.lineHeight = '1.4'; st.textAlign = 'center'; st.opacity = '0.75';
+    st.fontSize = '0.8rem'; st.lineHeight = '1.4'; st.textAlign = 'center';
     target.textContent = '';
     target.appendChild(a);
     return target;

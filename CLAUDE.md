@@ -30,40 +30,38 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest): TEACHER FEEDBACK LINE, Jon's contract, branch claude/teacher-invite, NOT BUILT YET
+## Handover — 2026-10-04 (latest): TEACHER FEEDBACK LINE built, PR #44 (branch claude/teacher-invite)
 
-Session stopped for a context clear (Jon's 60% rule) before any code. **The contract text is in Jon's message; ask
-him to resend it if it is not in the session.** Jon's rulings (4 Oct, 19:40) are part of it:
-- Wording, exactly: "Using this with a class? I'd love to hear how it went. — Jon", linking to
-  /feedback/?type=classroom&game=<slug>. Muted, small, below Start, no emoji, fits 320px.
-- **Placements ruled:** below Start in the 79 games with one Start control; below the menu in the mode/level-menu
-  games (split-it, shape-shifter, tax-theft, probability-paradox, proof-builder, complex-converter,
-  constructions-lab, fermi-lab, prisoners-dilemma); free-daily-pizza below both buttons; six-sevens-bruv below
-  the "Your grid" panel; trig-worms under the Top Scores panel; estimation-golf under the course and scorecard;
-  **52dle at the bottom of the game, below all play controls (NOT under the guess box)**; **factor-theorem below
-  the tab area so it shows on every tab (NOT the Learn tab only)**. bearing-blitz's Start is "Dive! Dive!
-  Dive!"; spot-the-muppet's is "Spot the Muppets".
-- **Rule 10 (add to SUCCESS CONDITION and CI where testable):** the line never sits between an answer input and
-  its keypad, and it is visible without changing tabs.
-- /leaderboards/: one line, no game param (the page shows every game; nothing is "selected"); proposed place:
-  under the header badges.
-- Escape rooms: all ten share `escape-rooms/assets/engine.js`, which renders the start screen and `#startBtn`
-  (line 245): one placement, game value `escape-room:<slug>` (the feedback menu's own value format).
-- /feedback/: add option value "classroom" ("Classroom use: how it went with a class"); prefill from
-  ?type=&game= AFTER `buildGameMenu()` resolves (it is async: await it, then apply; unknown slug -> "Not specific
-  to a game"; the URL param wins over the referrer preselect). Email stays optional. Formspree: a new value in an
-  existing field changes nothing for old submissions.
-- **Plan:** `schools/assets/teacher-invite.js` fills every `[data-teacher-invite]` (data-game=slug) with the link
-  and exposes `MaffsTeacherInvite.fill(root)` for markup a script builds (the escape-room engine); styles in
-  `schools/assets/site-footer.css` (every page loads it), colour `var(--muted, inherit)`. Per game: the mount
-  `<p class="teacher-invite" data-teacher-invite data-game="SLUG"></p>` inserted after the Start control plus the
-  script tag. Most Start buttons have no id: tag the control in a browser, find its opening tag in the source,
-  insert after its closing tag; hand-place any built by script. CI check (new script, site-wide group): every
-  roster game page and /leaderboards/ has exactly one mount with the right slug and loads the script once; a
-  rendered pass checks the line is visible on load (no tab change), sits below the Start control, is not in a
-  form, and is not between an input and a keypad; planted faults. Privacy page: confirm nothing to change.
-- Survey data and screenshots were in the session scratchpad only (not kept). Re-run the survey: load each live
-  game, list visible buttons; 79 have one Start-like control.
+- **What it is:** `MaffsInvite.mount(el, slug)` (`schools/assets/teacher-invite.js`, canon §7.1) fills an empty
+  `<p id="teacherInvite">` with one small line, "Using this with a class? I'd love to hear how it went. — Jon",
+  linking to `/feedback/?type=classroom&game=<slug>` in a new tab. Each game page has the mount point plus two
+  script lines just before the site footer (the include and the one mount call).
+- **Where:** 97 roster games (withdrawn `regression-rumble` skipped); the escape-room engine renders the mount
+  point under its Start row and mounts with `R.slug` minus `escape-` (8 live rooms load the script; the two
+  withdrawn holding pages do not); /leaderboards/ under the header badges, `null` slug. Jon's placements for
+  the menu games, Free Daily Pizza, Six Sevens, Trig Worms, Estimation Golf, 52dle (below the input area, above
+  the leaderboard) and Factor Theorem (after all three tab sections, so every tab shows it) applied. **Equatle
+  was not in the ruled list (no start screen): placed below its keyboard and Next button, the 52dle rule; my
+  call, Jon to overturn.** `the-perfect-prank` is not a roster game and is not covered.
+- **Colour:** inherits the page; no opacity (0.75 put four games under 4.5:1). Estimation Golf
+  (`style="color:var(--cream)"`) and /leaderboards/ (`class="header-sub"`) colour their mount points.
+- **/feedback/:** `classroom` option; `?type=` preselects an existing non-disabled option; `?game=` applies
+  after `buildGameMenu()` has filled the menu and wins over the referrer; a bare escape-room name maps to
+  `escape-room:<name>`; anything unknown is ignored. Field names sent to Formspree unchanged (checked: `type`,
+  `game`, `message`, `email` + the existing hidden fields).
+- **CI:** `scripts/check-teacher-invite.py` (Tiers 1 + 2 group; `--selftest` plants 9 faults). ci-deps's
+  selftest (b) now includes the asset. Contract's three in-tree faults (removed mount on split-it, wrong slug
+  on 52dle, altered text) each failed the check, then were reverted.
+- **Verified locally:** a rendered sweep of every game, the 8 rooms (visibility) and /leaderboards/ at 390x844 and 1280x800 (visible on load, text,
+  href, new tab, below the element before it, not under the fixed footer when scrolled to the end, 4.5:1
+  contrast); prefill on split-it, 52dle, canteen-hack (bare and prefixed), an unknown slug and a bad type.
+  Screenshots on the `pr-assets/teacher-invite` branch, linked from the PR.
+- **Found, not fixed:** Estimation Golf at 390px loads scrolled 327px sideways (807px document); pre-existing,
+  in todo START. Jon's SR-14 rulings (20:06) are recorded in todo's SR-14 fix batch and canon SR-14; no game
+  changed for them.
+- **Gotcha:** a full-page Playwright screenshot draws the fixed footer over the last 40px of the page, and
+  `scrollIntoView({block:'end'})` puts an element's edge at the viewport bottom: neither shows what a user
+  scrolled to the end sees. Measure by scrolling the page (and any scrolling overlay) to the end.
 
 ## Handover — 2026-10-04: CORRELATION OR COINCIDENCE rebuilt, PR #43 MERGED + LIVE (f5a5e24); SR-14 + content-safety scan
 

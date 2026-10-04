@@ -519,6 +519,19 @@ closed them had shipped. The four, and what closed them, are in §8.1.
 - Answer matching via `dataset.val` always — never compare rendered HTML strings
 - Session-length controls use `MaffsSession` (`schools/assets/session-length.js`) — never
   hand-roll one, the same pattern as `MaffsOptions` for answer options
+- The teacher feedback line uses `MaffsInvite` (`schools/assets/teacher-invite.js`, Jon, 4 Oct 2026):
+  one small line, "Using this with a class? I'd love to hear how it went. — Jon", linking to
+  `/feedback/?type=classroom&game=<slug>` in a new tab. Every roster game has one empty mount point
+  (`<p id="teacherInvite">`) under its Start control and ONE `MaffsInvite.mount(el, '<directory name>')`
+  call; the escape-room engine mounts it under Start for every live room; /leaderboards/ mounts it with no
+  game (`null`). Placements for the games without a single Start (menus, 52dle, Factor Theorem, Trig
+  Worms, Estimation Golf, Free Daily Pizza, Six Sevens) are Jon's rulings, in the 4 Oct handover in
+  CLAUDE.md. **Rule:** the line never sits between an answer input and its keypad, and is visible without
+  changing tabs. It inherits the page's text colour (no opacity, no new tokens); a page whose colour does
+  not read on its background sets an existing colour on the mount point. A new game adds the mount
+  point and the call; `scripts/check-teacher-invite.py` (CI) fails a missing mount, a wrong slug or
+  altered wording. /feedback/ reads `?type=` and `?game=` (a bare escape-room name maps to
+  `escape-room:<name>`; an unknown value is ignored).
 - Mixed prose and maths renders through `MaffsText` (`schools/assets/mathtext.js`) — never
   pass prose to K()/`katex.renderToString()` whole. Math mode drops inter-word spacing, so a
   string that mixes English words with a symbol or two ("Find the angle between \(\mathbf{a}\)
