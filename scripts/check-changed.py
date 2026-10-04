@@ -75,6 +75,11 @@ def main():
     if a.list:
         return 0
     env = dict(os.environ, PYTHONIOENCODING="utf-8")
+    try:                                         # node for Test the Claim: Playwright's own, as CI does
+        import playwright
+        env["PATH"] = os.path.join(os.path.dirname(playwright.__file__), "driver") + os.pathsep + env.get("PATH", "")
+    except ImportError:
+        pass
     failed = []
     for label, cmd in todo:
         t = time.time()
