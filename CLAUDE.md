@@ -30,42 +30,40 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest): EQUATION BUILDER marking contract STOPPED at STOP IF (branch claude/equation-builder-marking, no PR)
+## Handover — 2026-10-04 (latest): EQUATION BUILDER marking, verifier + bank DONE, game NOT yet changed (branch claude/equation-builder-marking, no PR)
 
-Jon's contract (rebuild marking to SR-13 via an ACCEPTED list computed by SymPy; gcse_013; back on /resit/).
-**Built so far:** `scripts/verify-equation-builder.py` (engine only, NOT in CI, bank NOT written, game NOT
-changed). It loads the bank from the page, translates each tile on its own into an explicit SymPy fragment (no
-implicit multiplication across tiles), enumerates every grammar-valid arrangement up to the slot count (unused
-tiles allowed; gap-fill = placements into empty slots) and classifies by the key's kind: formula (lone subject
-either side, other side equal in value), equation (non-zero constant multiple of the key's difference, or the
-same real solution set in one unknown; identities rejected), expression (equal value). Whole bank in 3.5 min
-locally. `--report` prints every accepted arrangement and every distractor build; `--json` dumps them.
-Confirmed accepted: `C = 3 + 2.50m`, `d = 80 ÷ tan34°`, `360 = 3V ÷ 8`, `F = 9(l+w)`, `A = 2P ÷ 10`.
+Jon's contract + his rulings of 21:04 (all applied). Session stopped for context (Jon's 60% rule). **Next session:
+finish this contract first, then Jon's ESTIMATION ENGINE contract (sent the same evening; ask Jon to resend
+its text: it is not in the repo).**
 
-**Why it stopped (three STOP IFs), with my proposals for Jon:**
-1. **Key not buildable (pre-existing live bug, missed by the audit):** ks3_029 (`2x + x + (x−15) = 180`) and
-   l4_026 (`2x³ + 2x² + c`) are gap-fills whose keys need `+` twice, but each has one `+` tile, and a used tile
-   cannot be clicked (`.tile.used{pointer-events:none}`). Both are unanswerable in the live game today.
-   Proposal: add a second `+` tile to each (tiles only, no wording change).
-2. **Not classifiable by the generic rules** (hard-coded in `UNCLASSIFIABLE`). Proposals:
-   l4_008 (by parts, `∫x·eˣdx = x·eˣ − ∫eˣdx`): integrals as opaque symbols, so the key, its swap and
-   rearrangements of the same step are accepted, `∫x·eˣdx = x·eˣ − eˣ` is not;
-   l4_021 (`∫₁⁴ 2x dx = [x²]₁⁴`): key and swap only; l4_023 (sigma): `r=1` and `r=0` (contract rule);
-   l4_033 (matrix), gcse_031 (±), gcse_039 (two `=`): gap-fills, key only (one operator or tile slot; no
-   other placement is equal); l4_015 (`log(8×4 ÷ 2) = log(16)`, no unknown: "not an identity" rejects the key):
-   key and its side swap only.
-3. **Distractor builds** (an accepted arrangement using a tile not in the key). My classification:
-   - **Wrong method, replace the tile (contract):** gcse_010 `5/9`, `4/10`; l4_004 `2×1`; l4_012 `√(−9+9)`.
-   - **Right method, retag valid:** ks3_004 `4e`; ks3_007 `2P`, `10`; ks3_012 `−`, `4s` (SR-13 equivalent
-     equations, e.g. `(s+30) + 4s = 180 + s`: my call); ks3_013 `36`, `¼×48`; ks3_016 `9(l+w)`; ks3_018 `0.8T`;
-     ks3_020 `×`; gcse_003/004/006/009/015 `−`; gcse_007 `×`; gcse_013 `a+c`, `−` (`OM = a+c − ½c`, valid
-     once the question says AB); gcse_014 `(8/12)³`, `÷`; gcse_016/021/022 `+`; gcse_018 `(85−40)`, `(5−20)`;
-     gcse_020 `8x+6`; gcse_024 `0.3²`, `2×0.3` (inclusion-exclusion); l4_005 `+`, `ln(2)`, `ln(P₀/2)`
-     (`kt = ln(P₀) − ln(P₀/2)` is ln 2); l4_009 `+` (`(3−λ)(4−λ) + 0 = 2`: SR-13, my call); l4_012 `√18`;
-     l4_013 `x/y`, `−`.
-**Also still to build:** the ± c rule (l4_026, l4_034, l4_002) as a SPECIAL; the bank field for the
-ACCEPTED lists and tile tags; the game marking/UI changes; the planted-fault self-test; CI + coverage
-registration; gcse_013 rewording; /resit/ relisting; docs. Accepted-list sizes per question: `--report`.
+**Done (committed):**
+- `scripts/verify-equation-builder.py`: SymPy decides every accepted arrangement (formula / equation / expression
+  rules; `SPECIAL` holds the per-question rules, each with its one-line reason: l4_008 integrals as fixed symbols,
+  l4_021 key + swap, l4_023 r=1 and r=0, l4_033 / gcse_031 / gcse_039 key only, l4_015 formula for log(16),
+  l4_002 / l4_026 / l4_034 ± c). `--write` regenerates the page block; the check fails if the block differs,
+  any list is empty, a key is not in its own list, or an accepted build uses a tile outside the key and the
+  question's `valid` list; also confirms gcse_013's key is the midpoint of AB. `--selftest` 4/4 (clean, wrong
+  key, missing arrangement, value-equal distractor). Whole bank PASS, 435 accepted arrangements, ~3.5 min.
+- Bank (games/equation-builder/index.html): generated block `ACCEPTED` (arrays of tile strings) + `TILE_KINDS`
+  + `FULL_SLOTS` above the bank; `valid:[...]` on 28 questions (Jon's retags + l4_008 `+`, l4_023 `r=0`,
+  l4_026 `−`); second `+` tile on ks3_029 and l4_026 (keys were unbuildable live); replaced gcse_010 5/9, 4/10
+  -> 5/10, 3/9; l4_004 2×1 -> 3×4; l4_012 √(−9+9) -> √(3+3); gcse_013 now "midpoint of AB".
+- Gotchas: the Bash tool collapses `\` in heredocs (write edit scripts with the Write tool); test points must be
+  1-10 and non-integer (poles at x = 2; e^x at x ~ 97 made unrelated equations look proportional).
+
+**Still to build (contract EXACT CHANGE 2-4):**
+1. Game JS: marking = token sequence (filled slots, in order, as a prefix) in `ACCEPTED[id]`; delete the
+   slot-by-slot comparison. Check enabled when the filled prefix is grammar-valid (port `arrangements()`'s
+   automaton using `TILE_KINDS`: operand/op/eq/open/openx/close/lead), leftover tiles allowed; questions in
+   `FULL_SLOTS` (gap-fills + fixed specials) keep "all slots filled". Feedback: "Correct." / "Correct. Also
+   written as: <key>"; wrong 1st: keep tiles, "That doesn't match the question yet.", retry for 0.5;
+   wrong 2nd: show key. Standard-form tiles (4.013×10¹⁶, 3×10⁸, 5.97×10²⁴, 7.34×10²²) display in brackets.
+2. Chromium: ≥10 F1/F3/F4/F8 arrangements across levels marked correct (incl. C = 3 + 2.50m, d = 80 ÷ tan34°,
+   360 = 3V ÷ 8, F = 9(l+w)); gcse_010's old build impossible.
+3. CI: add the verifier (+ `--selftest`) to a content-verifier group in check-site.yml; check-verifier-coverage.
+4. /resit/: relist at Foundation (`?level=ks3`) in its old place; check-resit-page.py WITHDRAWN/count.
+5. Docs: audit F1-F8 resolved (PR #); canon class-4 note (the ACCEPTED-list pattern for linear-equation-solver and
+   angle-ace); todo; this handover. Then PR, CI green, merge.
 
 ## Handover — 2026-10-04: TEACHER FEEDBACK LINE built, PR #44 (branch claude/teacher-invite)
 
