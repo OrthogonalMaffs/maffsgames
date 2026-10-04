@@ -30,7 +30,42 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest): CORRELATION OR COINCIDENCE rebuilt, PR #43; SR-14 + content-safety scan
+## Handover — 2026-10-04 (latest): TEACHER FEEDBACK LINE, Jon's contract, branch claude/teacher-invite, NOT BUILT YET
+
+Session stopped for a context clear (Jon's 60% rule) before any code. **The contract text is in Jon's message; ask
+him to resend it if it is not in the session.** Jon's rulings (4 Oct, 19:40) are part of it:
+- Wording, exactly: "Using this with a class? I'd love to hear how it went. — Jon", linking to
+  /feedback/?type=classroom&game=<slug>. Muted, small, below Start, no emoji, fits 320px.
+- **Placements ruled:** below Start in the 79 games with one Start control; below the menu in the mode/level-menu
+  games (split-it, shape-shifter, tax-theft, probability-paradox, proof-builder, complex-converter,
+  constructions-lab, fermi-lab, prisoners-dilemma); free-daily-pizza below both buttons; six-sevens-bruv below
+  the "Your grid" panel; trig-worms under the Top Scores panel; estimation-golf under the course and scorecard;
+  **52dle at the bottom of the game, below all play controls (NOT under the guess box)**; **factor-theorem below
+  the tab area so it shows on every tab (NOT the Learn tab only)**. bearing-blitz's Start is "Dive! Dive!
+  Dive!"; spot-the-muppet's is "Spot the Muppets".
+- **Rule 10 (add to SUCCESS CONDITION and CI where testable):** the line never sits between an answer input and
+  its keypad, and it is visible without changing tabs.
+- /leaderboards/: one line, no game param (the page shows every game; nothing is "selected"); proposed place:
+  under the header badges.
+- Escape rooms: all ten share `escape-rooms/assets/engine.js`, which renders the start screen and `#startBtn`
+  (line 245): one placement, game value `escape-room:<slug>` (the feedback menu's own value format).
+- /feedback/: add option value "classroom" ("Classroom use: how it went with a class"); prefill from
+  ?type=&game= AFTER `buildGameMenu()` resolves (it is async: await it, then apply; unknown slug -> "Not specific
+  to a game"; the URL param wins over the referrer preselect). Email stays optional. Formspree: a new value in an
+  existing field changes nothing for old submissions.
+- **Plan:** `schools/assets/teacher-invite.js` fills every `[data-teacher-invite]` (data-game=slug) with the link
+  and exposes `MaffsTeacherInvite.fill(root)` for markup a script builds (the escape-room engine); styles in
+  `schools/assets/site-footer.css` (every page loads it), colour `var(--muted, inherit)`. Per game: the mount
+  `<p class="teacher-invite" data-teacher-invite data-game="SLUG"></p>` inserted after the Start control plus the
+  script tag. Most Start buttons have no id: tag the control in a browser, find its opening tag in the source,
+  insert after its closing tag; hand-place any built by script. CI check (new script, site-wide group): every
+  roster game page and /leaderboards/ has exactly one mount with the right slug and loads the script once; a
+  rendered pass checks the line is visible on load (no tab change), sits below the Start control, is not in a
+  form, and is not between an input and a keypad; planted faults. Privacy page: confirm nothing to change.
+- Survey data and screenshots were in the session scratchpad only (not kept). Re-run the survey: load each live
+  game, list visible buttons; 79 have one Start-like control.
+
+## Handover — 2026-10-04: CORRELATION OR COINCIDENCE rebuilt, PR #43 MERGED + LIVE (f5a5e24); SR-14 + content-safety scan
 
 - **The game:** 42 items (cause / both / chance, 14 each), variables named in the axis titles before the answer,
   joke theories on coincidences, every answer behind `MaffsNext`; back on /resit/ (30). Verifier
