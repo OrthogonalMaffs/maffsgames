@@ -61,6 +61,7 @@ def palette(levels):
 MIGRATED = [
     "split-it",           # the pilot, 2 Oct 2026
     "just-pythag-it-bruv",  # built to the theme, 4 Oct 2026 (unlisted until Jon approves it)
+    "correlation-or-coincidence",  # rebuilt to the theme, 4 Oct 2026 (resit audit rebuild)
 ]
 NOT_YET = [
     "sequence-solver", "estimation-golf", "estimation-engine", "factor-race", "prime-factorisation",
@@ -75,7 +76,7 @@ NOT_YET = [
     "surd-simplifier", "proportion-blaster", "trig-identity-duel", "standard-form-blitz",
     "simultaneous-solver", "circle-theorem-spotter", "probability-paradox", "angle-ace",
     "coordinate-geometry-dash", "graph-transformer", "formula-unlocked", "bearing-blitz",
-    "scale-factor-scaling", "unit-converter", "formula-forge", "correlation-or-coincidence",
+    "scale-factor-scaling", "unit-converter", "formula-forge",
     "chart-interrogator", "component-crusher", "expectation-station", "better-value",
     "given-that", "screening-room", "linear-equation-solver",
     "core-maths-paper1", "core-maths-paper2a", "core-maths-paper2b", "core-maths-paper2c",

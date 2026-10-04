@@ -1,366 +1,522 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta name="description" content="Spot the difference between real correlations and spurious coincidences. Inspired by Tyler Vigen. GCSE, A-Level, and Core Maths.">
+<meta name="description" content="Two variables, one scatter graph: does one cause the other, does something else cause both, or is it a coincidence? 42 questions on correlation and causation.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/correlation-or-coincidence/">
 <meta property="og:title" content="Correlation or Coincidence — MaffsGames">
-<meta property="og:description" content="Spot the difference between real correlations and spurious coincidences. Inspired by Tyler Vigen. GCSE, A-Level, and Core Maths.">
+<meta property="og:description" content="Two variables, one scatter graph: does one cause the other, does something else cause both, or is it a coincidence? 42 questions on correlation and causation.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/correlation-or-coincidence/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
 <title>Correlation or Coincidence — MaffsGames</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/schools/assets/theme.css">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
 <script src="../../schools/assets/analytics.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
+/* Theme: schools/assets/theme.css (canon §7.5). The base tokens come from there; this game sets
+   its accent and the colours of its scatter graph. */
+:root{--accent:#0f766e;--accent-dim:#ccfbf1;--on-accent:#ffffff;
+  --plot-grid:#e2e8f0;--plot-axis:#526077;--plot-dot:#0f766e}
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#080a10;--surface:#0f1520;--border:#1a2438;--primary:#f59e0b;--accent:#3b82f6;--wrong:#f43f5e;--correct:#22c55e;--text:#e8ecf4;--muted:#6b7a94;--tinfoil:#a855f7}
-body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
-.container{max-width:760px;width:100%;padding:1rem}
-a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
-.header{text-align:center;padding:1.2rem 0 .5rem}
-.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--wrong));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.header .sub{font-size:.82rem;color:var(--muted);margin-top:.2rem}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:680px;width:100%;padding:1rem}
+/* The standard game header: "← Back to Games" above every screen, then the start screen's title,
+   subtitle and Aa. The back link is padded to a 44px target. */
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.6rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.6rem}}
 .screen{display:none}.screen.active{display:block}
-.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer}
-.menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:540px}
-.credit{text-align:center;font-size:.72rem;color:var(--muted);margin-top:1rem}
-.credit a{color:var(--primary)}
 
-.hud{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:.5rem;flex-wrap:wrap;gap:.2rem}
-.hud-item{text-align:center;min-width:50px}.hud-label{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700}
+/* Start screen */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.panel h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-bottom:.6rem}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.badges{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.2rem 0 .4rem}
+.level-tag{display:inline-flex;align-items:center;padding:.25em .7em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-size:.85rem;font-weight:600;line-height:1.3}
+.kinds{list-style:none;margin:.2rem 0 0}
+.kinds li{padding:.35rem 0;border-top:1px solid var(--border);font-size:.92rem;line-height:1.5}
+.kinds li:first-child{border-top:none}
+.kinds b{color:var(--accent)}
+.session-select{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.2rem 0}
+.session-btn{padding:.5rem 1rem;min-height:44px;min-width:44px;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:.95rem;font-weight:600;cursor:pointer}
+.session-btn.selected{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.start-btn{display:block;margin:1rem auto .3rem;padding:.75rem 2.6rem;font-size:1.05rem}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.credit{text-align:center;font-size:.8rem;color:var(--muted);margin:.4rem 0}
 
-/* Charts */
-.charts{display:flex;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap}
-.chart-box{flex:1;min-width:280px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.8rem;text-align:center}
-.chart-box canvas{display:block;width:100%;height:auto;margin:0 auto}
-.chart-box .chart-label{font-size:.7rem;color:var(--muted);margin-top:.3rem;font-style:italic}
-.chart-label.hidden{color:transparent}
+/* Play */
+.hud{display:flex;justify-content:space-between;padding:.45rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.6rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.55rem}
+.prompt{font-size:1rem;line-height:1.5}
+.prompt b{color:var(--accent)}
+/* The variables are named on the graph before any answer (resit audit F1): the y-axis title above the
+   plot, the x-axis title under it, both in the page's own text so they wrap on a phone. */
+.fig{display:flex;flex-direction:column;gap:.15rem}
+.axis-title{font-size:.85rem;font-weight:600;color:var(--text);line-height:1.3}
+.axis-title .dir{color:var(--accent);font-family:var(--font-num)}
+.axis-x{text-align:right}
+.plot svg{width:100%;height:auto;display:block;max-height:230px}
+.plot .grid{stroke:var(--plot-grid);stroke-width:1}
+.plot .axis{stroke:var(--plot-axis);stroke-width:1.5}
+.plot .tick{font-family:var(--font-num);font-size:11px;fill:var(--muted)}
+.plot .dot{fill:var(--plot-dot);fill-opacity:.85}
+.invented{font-size:.75rem;color:var(--muted);text-align:center;font-style:italic}
+.choices{display:grid;grid-template-columns:1fr;gap:.45rem}
+.choice{min-height:46px;padding:.55rem .8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:.95rem;font-weight:600;cursor:pointer;text-align:center;line-height:1.3}
+.choice:hover{border-color:var(--accent)}
+.choice:disabled{cursor:default}
+.choice.is-key{border-color:var(--correct);color:var(--correct)}
+.choice.is-wrong{border-color:var(--wrong);color:var(--wrong)}
+@media (min-width:560px){.choices{grid-template-columns:1fr 1fr 1fr}.choice{font-size:.9rem}}
+.feedback:empty{display:none}
+.fb{border-radius:12px;padding:.75rem .85rem;border:1px solid var(--border);background:var(--surface-alt);font-size:.93rem;line-height:1.5}
+.fb.right{border-color:var(--correct)}
+.fb.wrong{border-color:var(--wrong)}
+.fb-verdict{font-weight:700;font-size:1rem}
+.fb.right .fb-verdict{color:var(--correct)}
+.fb.wrong .fb-verdict{color:var(--wrong)}
+.fb-line{margin-top:.35rem}
+.fb-line .tag{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.fb-lurk{margin-top:.45rem;padding:.4rem .6rem;border-left:3px solid var(--accent);border-radius:0 8px 8px 0}
+.fb-lurk .tag{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:700}
+.fb-joke{margin-top:.45rem;padding:.4rem .6rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0;font-style:italic}
+.fb-joke .tag{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--hint);font-weight:700;font-style:normal}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
 
-.q-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:.5rem;text-align:center}
-.q-card .prompt{font-size:.95rem;font-weight:600}
-.q-card .reveal{font-size:.85rem;color:var(--primary);margin-top:.4rem;line-height:1.5}
-.q-card .r-value{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--accent);margin-top:.3rem}
+/* Phone rule (canon §7.6.1). Once answered, the three choices cannot be used and the verdict names
+   the answer, so they fold away and the feedback takes their place. On screens up to 800px tall the
+   graph moves below the feedback and Next (visual order only: the reading order stays question,
+   reason, Next). On a narrow screen it moves whatever the height. */
+.qcard.fb-open .choices{display:none}
+@media (max-height:800px),(max-width:600px){
+  .qcard.fb-open .fig,.qcard.fb-open .invented{order:10}
+}
+@media (max-height:700px){
+  .plot svg{max-height:170px}
+  .qcard{gap:.4rem}
+}
+@media (max-height:600px){
+  .plot svg{max-height:120px}
+  .prompt{font-size:.93rem;line-height:1.4}
+  .hud{padding:.3rem .6rem;margin-bottom:.4rem}
+  .choice{min-height:44px;padding:.4rem .6rem}
+  body.fb-open .hud{display:none}
+}
+@media (max-width:420px){
+  .container{padding:.6rem}
+  .qcard{padding:.75rem .7rem}
+  .fb{padding:.6rem .65rem;font-size:.9rem}
+  .hud{padding:.35rem .5rem}
+}
 
-.options{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem}
-.options.single{grid-template-columns:1fr}
-.opt-btn{padding:.65rem .5rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;cursor:pointer;transition:all .12s;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;line-height:1.4}
-.opt-btn:hover{border-color:var(--primary)}
-.opt-btn.correct{border-color:var(--correct);background:rgba(34,197,94,.08)}
-.opt-btn.wrong{border-color:var(--wrong);background:rgba(244,63,94,.08)}
-.opt-btn.disabled{pointer-events:none;opacity:.5}
-.opt-btn.tinfoil{border-color:var(--tinfoil);color:var(--tinfoil);font-style:italic}
-
-/* Tinfoil hat phase */
-.tinfoil-card{display:none;background:var(--surface);border:1px solid var(--tinfoil);border-radius:10px;padding:1rem;margin-bottom:.5rem;text-align:center}
-.tinfoil-card.show{display:block;animation:fadeIn .3s}
-.tinfoil-card h3{color:var(--tinfoil);font-size:.9rem;margin-bottom:.5rem}
-.tinfoil-card .conspiracy{font-size:.85rem;line-height:1.6;color:var(--muted);margin-bottom:.5rem}
-.tinfoil-card .next-btn{padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
-
-.solution{display:none;background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:1rem;margin-bottom:.5rem;text-align:left;font-size:.85rem;line-height:1.7}
-.solution.show{display:block;animation:fadeIn .3s}
-.solution h3{color:var(--accent);font-size:.85rem;margin-bottom:.4rem}
-.solution .step{margin-bottom:.4rem;padding-left:.7rem;border-left:2px solid var(--border)}
-.solution .next-btn{display:inline-block;margin-top:.5rem;padding:.4rem 1.2rem;border:none;border-radius:8px;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-
-.results{text-align:center;padding:2rem 1rem}
-.results h2{font-size:1.5rem;margin-bottom:.5rem}
-.results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--wrong));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
-.results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
-.play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
-
-/* === Accessibility === */
-body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
-body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
-.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
-.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
-.correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
-.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
+body.accessible p,body.accessible .prompt,body.accessible .fb{line-height:2;max-width:65ch}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
 <div class="container">
-<a href="../../" class="back-link">← Back to Games</a>
-<div id="menu" class="screen active">
-<div class="header"><h1>Correlation or Coincidence?</h1><div class="sub">Two datasets. One question. Is it real — or just a coincidence?</div>  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
-</div>
-<div class="menu-info">
-You'll see two line charts side by side. They might be genuinely related... or they might be completely spurious.<br><br>
-<strong>Phase 1:</strong> Is there a real causal relationship, or is this just a coincidence?<br>
-<strong>Phase 2:</strong> If it's spurious... how COULD they be connected? 🧐🪄
-</div>
-  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
-<button class="start-btn" onclick="startGame()">Start Investigating</button>
-<div class="credit">Inspired by <a href="https://tylervigen.com/spurious-correlations" target="_blank">Spurious Correlations by Tyler Vigen</a>. Check out his site — it's brilliant.</div>
-</div>
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Correlation or Coincidence?</h1><div class="sub">Two things rise and fall together. Why?</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="badges"><span class="level-tag" id="levelTag">GCSE</span></div>
+    <div class="panel menu-info">
+      <p>Each question is a scatter graph of two things, both named on the graph. They are
+        correlated: as one goes up, the other tends to go up (or down). Decide why.</p>
+    </div>
+    <div class="panel">
+      <h2>Three possible answers</h2>
+      <ul class="kinds">
+        <li><b>One causes the other.</b> Change one and the other changes because of it.</li>
+        <li><b>Something else causes both.</b> A third thing, the lurking variable, drives them both.</li>
+        <li><b>Coincidence.</b> Nothing links them: the pattern turned up by chance.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>Questions</h2>
+      <div id="sessionSelect" class="session-select"></div>
+      <button class="btn solid start-btn" id="startBtn">Start</button>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="credit">Inspired by Tyler Vigen's Spurious Correlations.</div>
+  </div>
 
-<div id="game" class="screen">
-<div class="hud"><div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1</div></div><div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div><div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div></div>
-<div class="charts"><div class="chart-box"><canvas id="chart1" width="320" height="180"></canvas><div class="chart-label hidden" id="label1">Dataset A</div></div><div class="chart-box"><canvas id="chart2" width="320" height="180"></canvas><div class="chart-label hidden" id="label2">Dataset B</div></div></div>
-<div class="q-card"><div class="prompt" id="prompt">Are these datasets genuinely related?</div><div class="reveal" id="reveal" style="display:none"></div><div class="r-value" id="rValue"></div></div>
-<div class="options" id="options"></div>
-<div class="tinfoil-card" id="tinfoilCard"><h3>🪄 But what if...</h3><div class="conspiracy" id="conspiracy"></div><button class="next-btn" onclick="nextQ()">Next question →</button></div>
-<div class="solution" id="solution"></div>
-</div>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
+      <div class="hud-item"><div class="hud-label">Correct</div><div class="hud-val" id="correctCount">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="prompt" id="prompt"></div>
+      <div class="fig" id="fig">
+        <div class="axis-title axis-y" id="labelY"></div>
+        <div class="plot" id="plot"></div>
+        <div class="axis-title axis-x" id="labelX"></div>
+      </div>
+      <div class="invented">Figures invented to show the idea.</div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
 
-<div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resultTitle"></h2>
+      <div class="final-score" id="finalScore">0</div>
+      <div class="stats" id="statsLine"></div>
+      <button class="btn solid" id="againBtn">Play again</button>
+    </div>
+  </div>
 </div>
 
 <script>
 // ============================================================
-//  QUESTION BANK
+//  QUESTION BANK (Jon approved the draft with his edits, 4 Oct 2026). Canon SR-14 applies to
+//  every item: no death, injury, illness, self-harm, crime, abuse or family breakdown.
+//  cat: 'cause' one causes the other | 'both' something else causes both | 'chance' coincidence.
+//  x, y: [variable, low, high, whole numbers (1) or not (0)]. dir: +1 or -1. str: the strength.
+//  n: points. lurk: the lurking variable ('both'). joke: the silly theory ('chance').
+//  Figures are invented to show the idea (the page says so under every graph).
 // ============================================================
-const QUESTIONS=[
-// SPURIOUS CORRELATIONS
-{type:'spurious',
- data1:[12,14,13,15,16,14,17,15,18,16],data2:[2500,2700,2600,2900,3100,2800,3300,3000,3500,3100],
- label1:'Nicolas Cage films released per year',label2:'Swimming pool drownings per year',
- r:0.87,explain:'Both happened to trend upward over the same decade. There is no causal mechanism connecting Nicolas Cage\'s filmography to pool safety.',
- conspiracies:['Nicolas Cage films cause a nationwide swimming frenzy that inevitably leads to drownings','Each Cage film release triggers a secret government pool-party mandate that goes catastrophically wrong','Nicolas Cage is actually a pool-drowning vampire who feeds on the psychic energy released during his own film premieres','Cage\'s on-screen intensity is so powerful it causes viewers to spontaneously leap into the nearest body of water']},
+const QUESTIONS = [
+// ---- One causes the other ----
+{id:'A1', cat:'cause', x:['Outside temperature (°C)',8,30,0], y:['Ice creams sold in a day',40,420,1], dir:1, str:'strong', n:12,
+ explain:'Hot weather makes people want something cold, so the temperature drives ice cream sales.'},
+{id:'A2', cat:'cause', x:['Distance driven (miles)',20,400,1], y:['Fuel used (litres)',2,40,0], dir:1, str:'very strong', n:12,
+ explain:'Every mile driven burns fuel, so a longer drive uses more.'},
+{id:'A3', cat:'cause', x:['Outside temperature (°C)',-2,18,0], y:['Gas used to heat a home in a day (kWh)',20,110,0], dir:-1, str:'strong', n:12,
+ explain:'Colder days mean the heating runs for longer.'},
+{id:'A4', cat:'cause', x:['Hours of sunshine in a day',1,12,0], y:['Electricity from solar panels (kWh)',2,30,0], dir:1, str:'strong', n:12,
+ explain:'Solar panels turn sunlight into electricity, so more sunshine means more electricity.'},
+{id:'A5', cat:'cause', x:['Wind speed (mph)',5,35,1], y:['Electricity from a wind turbine in an hour (kWh)',50,1500,1], dir:1, str:'strong', n:12,
+ explain:'Faster wind turns the blades faster, up to the turbine\'s limit.'},
+{id:'A6', cat:'cause', x:['Weight of a parcel (kg)',0.5,20,0], y:['Cost to post it (£)',3,25,0], dir:1, str:'very strong', n:12,
+ explain:'Postage is priced by weight, so a heavier parcel costs more to send.'},
+{id:'A7', cat:'cause', x:['Height above sea level (m)',0,1200,1], y:['Air temperature (°C)',4,14,0], dir:-1, str:'very strong', n:12,
+ explain:'Air gets colder the higher you climb.'},
+{id:'A8', cat:'cause', x:['Hours the phone screen is on',0.5,8,0], y:['Battery left (%)',10,95,1], dir:-1, str:'very strong', n:12,
+ explain:'The screen uses battery power, so the longer it is on, the less is left.'},
+{id:'A9', cat:'cause', x:['Length of a pendulum (cm)',10,100,1], y:['Time for one swing (seconds)',0.6,2.0,0], dir:1, str:'very strong', n:12,
+ explain:'A longer pendulum swings more slowly, so each swing takes longer.'},
+{id:'A10', cat:'cause', x:['Water in the kettle (litres)',0.3,1.7,0], y:['Time to boil (seconds)',60,240,1], dir:1, str:'very strong', n:12,
+ explain:'More water takes more energy to heat, so it takes longer to boil.'},
+{id:'A11', cat:'cause', x:['Rainfall in a month (mm)',10,150,1], y:['Reservoir level (%)',40,95,1], dir:1, str:'moderate', n:12,
+ explain:'Rain fills the reservoir. How much water people use matters too, which is why the pattern is only moderate.'},
+{id:'A12', cat:'cause', x:['Height a ball is dropped from (cm)',20,200,1], y:['Height it bounces (cm)',12,130,1], dir:1, str:'very strong', n:12,
+ explain:'Dropped from higher, the ball hits the ground faster and bounces higher.'},
+{id:'A13', cat:'cause', x:['Guests at a party',4,30,1], y:['Slices of pizza eaten',10,90,1], dir:1, str:'strong', n:12,
+ explain:'More guests means more people eating, so more slices go.'},
+{id:'A14', cat:'cause', x:['Minutes of typing practice a day',0,60,1], y:['Typing speed (words per minute)',15,70,1], dir:1, str:'moderate', n:12,
+ explain:'Practice builds speed. People also start at different speeds, which is why the pattern is only moderate.'},
 
-{type:'spurious',
- data1:[30,32,33,35,34,36,38,37,40,39],data2:[8,9,8.5,10,9.5,11,12,11.5,13,12.5],
- label1:'Cheese consumption per capita (lbs)',label2:'People who died tangled in bedsheets',
- r:0.95,explain:'Cheese consumption rose gradually. Bedsheet deaths are a tiny, noisy number. With enough datasets, you\'ll always find spurious correlations.',
- conspiracies:['Late-night cheese binges cause such vivid nightmares that people thrash around until the sheets win','Big Cheese has been secretly weakening bedsheet thread counts to create dependency on their products','Cheese dreams are actually interdimensional travel, and the bedsheets are trying to keep us in this reality','The calcium in cheese makes bones more brittle, reducing the ability to escape aggressive bedding']},
+// ---- Something else causes both ----
+{id:'B1', cat:'both', x:['Ice creams sold in a day',40,420,1], y:['Sunglasses sold in a day',5,60,1], dir:1, str:'strong', n:12,
+ lurk:'hot, sunny weather', explain:'Sunglasses don\'t make anyone buy an ice cream. Sunny days sell both.'},
+{id:'B2', cat:'both', x:['Hot chocolates sold in a day',20,200,1], y:['Scarves sold in a day',2,40,1], dir:1, str:'strong', n:12,
+ lurk:'cold weather', explain:'Scarves don\'t make anyone thirsty for hot chocolate. Cold days sell both.'},
+{id:'B3', cat:'both', x:['Umbrellas sold in a week',5,80,1], y:['Wellington boots sold in a week',3,50,1], dir:1, str:'strong', n:12,
+ lurk:'rain', explain:'Buying an umbrella doesn\'t make anyone buy boots. Wet weeks sell both.'},
+{id:'B4', cat:'both', x:['Foot length, children aged 5 to 11 (cm)',16,23,0], y:['Reading test score',5,50,1], dir:1, str:'strong', n:12,
+ lurk:'age', explain:'Bigger feet don\'t help anyone read. Older children have bigger feet and have been reading for longer.'},
+{id:'B5', cat:'both', x:['Libraries in a town',1,12,1], y:['Cafés in the town',3,60,1], dir:1, str:'strong', n:12,
+ lurk:'the number of people living there', explain:'Libraries don\'t create cafés. Bigger towns have more of everything.'},
+{id:'B6', cat:'both', x:['Bedrooms in a house',1,5,1], y:['Toothbrushes in the house',1,7,1], dir:1, str:'moderate', n:12,
+ lurk:'the number of people living there', explain:'Bedrooms don\'t buy toothbrushes. More people need more beds and more toothbrushes.'},
+{id:'B7', cat:'both', x:['Christmas cards posted in a week (millions)',5,150,0], y:['Mince pies sold in a week (millions)',2,40,0], dir:1, str:'strong', n:12,
+ lurk:'the time of year', explain:'Posting cards doesn\'t make anyone hungry. Both peak in December.'},
+{id:'B8', cat:'both', x:['Pumpkins sold in a week (thousands)',5,300,0], y:['Fireworks sold in a week (thousands)',10,400,0], dir:1, str:'moderate', n:12,
+ lurk:'the autumn celebrations, Halloween and Bonfire Night', explain:'Pumpkins don\'t sell fireworks. Both peak in late October and early November.'},
+{id:'B9', cat:'both', x:['Mobile phones in a country (millions)',2,120,0], y:['Airports in the country',3,90,1], dir:1, str:'strong', n:12,
+ lurk:'the size and wealth of the country', explain:'Phones don\'t build airports. Bigger, richer countries have more of both.'},
+{id:'B10', cat:'both', x:['Height of an oak tree (m)',3,30,0], y:['Width of its trunk (cm)',10,150,1], dir:1, str:'strong', n:12,
+ lurk:'the age of the tree', explain:'Height doesn\'t widen a trunk. Older trees have had longer to grow both ways.'},
+{id:'B11', cat:'both', x:['Diaries sold in a week (thousands)',5,120,0], y:['Calendars sold in a week (thousands)',10,200,0], dir:1, str:'strong', n:12,
+ lurk:'the start of a new year', explain:'Diaries don\'t sell calendars. Both sell in the weeks around New Year.'},
+{id:'B12', cat:'both', x:['Pens sold near a school in a week',20,200,1], y:['Revision guides sold in a week',5,90,1], dir:1, str:'strong', n:12,
+ lurk:'exam season', explain:'Pens don\'t sell revision guides. Both rise in the weeks before exams.'},
+{id:'B13', cat:'both', x:['Cinema popcorn sold in a week (thousands)',10,90,0], y:['Toys from the film sold in a week (thousands)',1,40,0], dir:1, str:'strong', n:12,
+ lurk:'a big new film coming out', explain:'Popcorn doesn\'t sell toys. A blockbuster\'s opening weeks sell both.'},
+{id:'B14', cat:'both', x:['Big-screen TVs sold in a week (thousands)',10,80,0], y:['Football shirts sold in a week (thousands)',5,120,0], dir:1, str:'strong', n:12,
+ lurk:'a major football tournament', explain:'TVs don\'t sell shirts. Both peak just before a big tournament starts.'},
 
-{type:'spurious',
- data1:[5,6,7,8,9,10,11,12,11,10],data2:[120,130,140,150,160,170,180,190,185,175],
- label1:'Number of films featuring robots',label2:'Total revenue of ski resorts ($M)',
- r:0.91,explain:'Both grew with the economy and entertainment spending. Robot films didn\'t cause skiing.',
- conspiracies:['Watching robots ski in films inspires humans to prove they can do it better','Robot films emit a specific frequency that makes people crave cold weather activities','Ski resorts secretly fund robot films to make humans feel inadequate and seek outdoor thrills','Robots are actually running the ski resorts and producing propaganda films to attract customers']},
-
-{type:'spurious',
- data1:[3.2,3.5,3.8,4.0,4.2,4.5,4.3,4.6,4.8,5.0],data2:[55,60,58,65,63,70,68,75,73,80],
- label1:'Organic food sales (£ billions)',label2:'Autism diagnosis rates per 10,000',
- r:0.88,explain:'This is one of the most harmful spurious correlations in history. Autism diagnoses rose because of better awareness and broader diagnostic criteria. Organic food sales rose because of consumer trends. There is zero causal connection.',
- conspiracies:['None — this specific correlation has been weaponised to spread dangerous misinformation. The rise in autism diagnoses is due to better diagnostic criteria and increased awareness, not any food or vaccine.'],
- serious:true},
-
-// REAL CORRELATIONS
-{type:'real',
- data1:[160,165,170,175,180,185,190,195,170,175],data2:[55,60,65,72,78,85,90,95,68,73],
- label1:'Height (cm)',label2:'Weight (kg)',
- r:0.94,explain:'Taller people tend to weigh more. Height is a genuine predictor of weight, though with significant variation. This is a real positive correlation with a causal mechanism (larger frame = more mass).'},
-
-{type:'real',
- data1:[0,1,2,3,4,5,6,7,8,9],data2:[15,18,22,28,35,42,48,55,60,65],
- label1:'Hours of study per week',label2:'Exam score (%)',
- r:0.97,explain:'More study time genuinely leads to better exam performance. This is a real correlation with a clear causal mechanism, though there are diminishing returns at the extreme.'},
-
-{type:'real',
- data1:[0,5,10,15,20,25,30,35,40,45],data2:[0,8,15,20,24,27,29,30,30,30],
- label1:'Temperature (°C)',label2:'Ice cream sales (thousands)',
- r:0.92,explain:'Hot weather causes people to buy more ice cream. This is a real correlation with a direct causal mechanism. Note the plateau at high temperatures — there\'s a ceiling effect.'},
-
-{type:'real',
- data1:[1,2,3,5,8,10,15,20,30,40],data2:[200,190,175,160,140,120,100,80,55,30],
- label1:'Distance from city centre (miles)',label2:'House price per sq ft (£)',
- r:-0.96,explain:'Genuine negative correlation. Properties closer to the city centre command higher prices per square foot. The causal mechanism is demand, transport links, and amenities.'},
-
-{type:'real',
- data1:[0,2,5,10,15,20,25,30,35,40],data2:[100,95,88,78,65,50,35,22,12,5],
- label1:'Cigarettes smoked per day',label2:'Lung capacity (% of normal)',
- r:-0.98,explain:'Smoking directly damages lung tissue. This is one of the strongest causal relationships in medicine, established by decades of research.'},
-
-// MORE SPURIOUS
-{type:'spurious',
- data1:[25,28,30,27,32,35,33,38,36,40],data2:[15,17,19,16,21,23,22,25,24,27],
- label1:'Number of maths teachers hired in Devon',label2:'Shark attacks in Australia',
- r:0.89,explain:'Both numbers happened to increase over the same period. Devon maths teachers have no influence on Australian marine predators.',
- conspiracies:['Devon maths teachers are secretly training sharks to attack using complex equations beamed via submarine cable','The Pythagorean theorem, when read aloud underwater, attracts great whites','Sharks can sense when someone is being taught trigonometry and it enrages them','Devon County Council is running a covert shark-breeding programme disguised as a maths department']},
-
-{type:'spurious',
- data1:[100,105,110,115,120,125,130,135,140,145],data2:[8,9,10,11,12,13,14,15,16,17],
- label1:'UK butter sales (tonnes)',label2:'Divorce rate in Maine, USA',
- r:0.99,explain:'Two independent upward trends. British butter consumption has no mechanism to affect American marriages.',
- conspiracies:['Butter makes British people so happy that their joy radiates across the Atlantic and makes Maine residents realise how unhappy their own marriages are','There\'s a secret transatlantic butter pipeline and the delivery drivers are having affairs with Maine residents','Butter causes such intense satisfaction that it sets unrealistic standards for what marriage should feel like','The molecular structure of butter when exposed to Atlantic winds creates a divorce-inducing pheromone']},
-
-{type:'spurious',
- data1:[40,42,45,43,47,50,48,52,55,53],data2:[3,4,3.5,5,4.5,6,5.5,7,6.5,8],
- label1:'Renewable energy capacity (GW)',label2:'Number of pirates globally (thousands)',
- r:0.85,explain:'Both happen to be increasing. Wind turbines do not create pirates.',
- conspiracies:['Wind turbines generate a specific hum that awakens the dormant pirate gene in nearby populations','Solar panels, when viewed from space, form a treasure map that attracts pirates','Pirates are investing their plunder in renewable energy startups','Renewable energy has made the seas calmer, making piracy a more viable career option']},
+// ---- Coincidence (Jon, 4 Oct 2026: small samples or across places, so chance is the only fair answer) ----
+{id:'C1', cat:'chance', x:['Robot films watched this year (8 friends)',0,12,1], y:['Times each friend has been skiing',0,10,1], dir:1, str:'moderate', n:8,
+ joke:'Robots secretly love skiing, and every robot film makes you want a lift pass.',
+ explain:'With only 8 friends, a pattern can turn up by chance. Nothing connects robot films and skiing.'},
+{id:'C2', cat:'chance', x:['UK butter sales over 8 years (thousand tonnes)',180,230,0], y:['Letters in the spelling bee\'s winning word',8,16,1], dir:1, str:'moderate', n:8,
+ joke:'Butter makes long words slide out more easily.',
+ explain:'Over just 8 years, two unrelated numbers can line up by luck.'},
+{id:'C3', cat:'chance', x:['Llamas on the farm (9 farms)',2,30,1], y:['Letters in the farm\'s name',6,22,1], dir:1, str:'strong', n:9,
+ joke:'Llamas choose farms with long names: more to read on the gate.',
+ explain:'Even a strong pattern can be chance when there are only 9 farms. Nothing links llamas and names.'},
+{id:'C4', cat:'chance', x:['Cheese sandwiches eaten this week (8 students)',0,10,1], y:['Weight their straw bridge held (g)',50,600,1], dir:1, str:'moderate', n:8,
+ joke:'Cheese builds bridges in your brain.',
+ explain:'With only 8 students, a pattern can appear by chance. Cheese has nothing to do with bridge-building.'},
+{id:'C5', cat:'chance', x:['Last digit of house number (8 students)',0,9,1], y:['Letters in their favourite planet\'s name',4,7,1], dir:1, str:'moderate', n:8,
+ joke:'The post is delivered to space, and bigger house numbers get the planets with longer addresses.',
+ explain:'House numbers and favourite planets have nothing to do with each other. With 8 students, a pattern can appear by chance.'},
+{id:'C6', cat:'chance', x:['Letters in first name (9 quiz players)',3,10,1], y:['Points scored in the quiz',2,20,1], dir:1, str:'moderate', n:9,
+ joke:'Longer names have more room to store facts.',
+ explain:'With only 9 players, a pattern can turn up by chance. A name says nothing about what you know.'},
+{id:'C7', cat:'chance', x:['Rubber ducks owned (8 friends)',0,15,1], y:['Floors in the tallest building each has been up',3,90,1], dir:1, str:'moderate', n:8,
+ joke:'Rubber ducks, stacked up, make excellent scaffolding.',
+ explain:'With only 8 friends, a pattern can appear by chance. Ducks and tall buildings are not connected.'},
+{id:'C8', cat:'chance', x:['Winning Eurovision song length (seconds, 8 years)',160,190,1], y:['UK porridge sales (thousand tonnes)',40,60,0], dir:-1, str:'moderate', n:8,
+ joke:'Porridge makes singers want to finish early and go for breakfast.',
+ explain:'A pattern in a handful of years, by chance. Song lengths and porridge have nothing to do with each other.'},
+{id:'C9', cat:'chance', x:['Sprouts eaten at Christmas (thousand tonnes, 8 years)',20,40,0], y:['Drawn league matches that season',60,120,1], dir:1, str:'moderate', n:8,
+ joke:'Sprout power makes both teams exactly as strong as each other.',
+ explain:'Over 8 seasons, two unrelated numbers can line up by luck.'},
+{id:'C10', cat:'chance', x:['Emojis in their last message (8 friends)',0,12,1], y:['Garden gnomes in their garden',0,9,1], dir:1, str:'moderate', n:8,
+ joke:'Gnomes are the secret models for every emoji, and they inspire their owners.',
+ explain:'With only 8 friends, a pattern can appear by chance. Gnomes and emojis are not connected.'},
+{id:'C11', cat:'chance', x:['Times they say "literally" in an hour (8 friends)',0,20,1], y:['Odd socks in their drawer',0,12,1], dir:1, str:'moderate', n:8,
+ joke:'Every "literally" sends one sock to wherever odd socks go.',
+ explain:'With only 8 friends, a pattern can appear by chance. Words don\'t lose socks.'},
+{id:'C12', cat:'chance', x:['Day of the month they were born (8 students)',1,31,1], y:['Spelling test score (out of 20)',4,20,1], dir:1, str:'moderate', n:8,
+ joke:'Later birthdays have had more of the month to practise.',
+ explain:'With only 8 students, a pattern can appear by chance. Your birthday doesn\'t change your spelling.'},
+{id:'C13', cat:'chance', x:['Pigeons in the park (8 matches)',5,60,1], y:['Goals a five-a-side team scored that day',1,12,1], dir:1, str:'moderate', n:8,
+ joke:'The pigeons are talent scouts, and the players show off for them.',
+ explain:'Over only 8 matches, a pattern can turn up by chance. Pigeons don\'t score goals.'},
+{id:'C14', cat:'chance', x:['Seconds they can hold a note (8 trombonists)',5,25,1], y:['Hot-air balloon rides taken',0,6,1], dir:1, str:'moderate', n:8,
+ joke:'Trombone players fill the balloons with their spare breath.',
+ explain:'With only 8 players, a pattern can appear by chance. Nothing links trombones and balloon rides.'},
 ];
 
-// ============================================================
-//  CHART DRAWING
-// ============================================================
-function drawChart(canvasId,data,color){
-  const c=document.getElementById(canvasId);
-  const ctx=c.getContext('2d');
-  const W=320,H=180,PAD=25;
-  ctx.clearRect(0,0,W,H);
+(function () {
+  'use strict';
+  var SLUG = 'correlation-or-coincidence', LEVEL = 'gcse', BASE = 100;
+  var COC = window.COC = {};
+  COC.BANK = QUESTIONS;
+  // The three answers, in button order.
+  COC.CATS = ['cause', 'both', 'chance'];
+  COC.BUTTON = { cause: 'One causes the other', both: 'Something else causes both', chance: 'Coincidence' };
+  // The correlation each strength is drawn at (exact before whole-number rounding); the verifier
+  // holds the drawn points to COC.BANDS.
+  COC.R = { 'very strong': 0.97, 'strong': 0.88, 'moderate': 0.66 };
+  COC.BANDS = { 'very strong': [0.94, 1], 'strong': [0.8, 0.94], 'moderate': [0.5, 0.8] };
 
-  // Background
-  ctx.fillStyle='#0f1520';ctx.fillRect(0,0,W,H);
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
-  // Grid
-  ctx.strokeStyle='#1a2438';ctx.lineWidth=0.5;
-  for(let i=1;i<5;i++){const y=PAD+(H-2*PAD)*i/5;ctx.beginPath();ctx.moveTo(PAD,y);ctx.lineTo(W-PAD,y);ctx.stroke()}
+  // ---- The points: seeded per item, so a question always draws the same graph. ----
+  function hash(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function rng(seed) {
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function standardise(v) {
+    var n = v.length, m = 0, s = 0, i;
+    for (i = 0; i < n; i++) m += v[i];
+    m /= n;
+    for (i = 0; i < n; i++) s += (v[i] - m) * (v[i] - m);
+    s = Math.sqrt(s / n) || 1;
+    return v.map(function (a) { return (a - m) / s; });
+  }
+  // x spread across its range; y built so the correlation is exactly dir × R[str] before rounding:
+  // y = r·zx + √(1 − r²)·e, where e is noise made uncorrelated with x. A linear map onto y's range
+  // keeps r unchanged.
+  COC.points = function (q) {
+    var rand = rng(hash(q.id)), n = q.n, xs = [], i;
+    var xlo = q.x[1], xhi = q.x[2], ylo = q.y[1], yhi = q.y[2];
+    for (i = 0; i < n; i++) {
+      var x = xlo + (xhi - xlo) * (i + 0.5 + (rand() - 0.5) * 0.8) / n;
+      xs.push(q.x[3] ? Math.round(x) : x);
+    }
+    var zx = standardise(xs), e = [];
+    for (i = 0; i < n; i++) {
+      var u = Math.max(rand(), 1e-9), w = rand();
+      e.push(Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * w));
+    }
+    var dot = 0, zz = 0;
+    for (i = 0; i < n; i++) { dot += e[i] * zx[i]; zz += zx[i] * zx[i]; }
+    e = standardise(e.map(function (a, k) { return a - dot / zz * zx[k]; }));
+    var r = q.dir * COC.R[q.str], k = Math.sqrt(1 - r * r);
+    var ys = zx.map(function (a, j) { return r * a + k * e[j]; });
+    var lo = Math.min.apply(null, ys), hi = Math.max.apply(null, ys);
+    return xs.map(function (x, j) {
+      var y = ylo + (ys[j] - lo) / (hi - lo) * (yhi - ylo);
+      return [x, q.y[3] ? Math.round(y) : y];
+    });
+  };
+  COC.describe = function (q) {
+    return q.str.charAt(0).toUpperCase() + q.str.slice(1) + ' ' + (q.dir > 0 ? 'positive' : 'negative') + ' correlation';
+  };
 
-  // Axes
-  ctx.strokeStyle='#2a3a50';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(PAD,PAD);ctx.lineTo(PAD,H-PAD);ctx.lineTo(W-PAD,H-PAD);ctx.stroke();
+  // ---- A session: drawn from the whole bank, the three kinds dealt in turn so none is crowded out. ----
+  function shuffle(a, rand) { rand = rand || Math.random; for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rand() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  COC.deal = function (count, rand) {
+    var piles = COC.CATS.map(function (c) { return shuffle(QUESTIONS.filter(function (q) { return q.cat === c; }), rand); });
+    var order = shuffle(COC.CATS.map(function (_, i) { return i; }), rand), out = [], p = 0;
+    while (out.length < count && piles.some(function (pl) { return pl.length; })) {
+      var pile = piles[order[p % 3]]; p++;
+      if (pile.length) out.push(pile.pop());
+    }
+    return shuffle(out, rand);
+  };
 
-  // Data
-  const min=Math.min(...data),max=Math.max(...data);
-  const range=max-min||1;
-  const xStep=(W-2*PAD)/(data.length-1);
+  // ---- Drawing ----
+  var W = 320, H = 200, L = 34, R = 10, T = 8, B = 22;
+  function fmt(v) { return Math.abs(v) >= 100 || v === Math.round(v) ? String(Math.round(v)) : String(Math.round(v * 10) / 10); }
+  COC.renderLabels = function (q) {
+    $('prompt').textContent = 'These two move together. Why?';
+    $('labelY').innerHTML = '<span class="dir">↑</span> ' + esc(q.y[0]);
+    $('labelX').innerHTML = esc(q.x[0]) + ' <span class="dir">→</span>';
+  };
+  COC.renderPlot = function (q) {
+    var pts = COC.points(q), xlo = q.x[1], xhi = q.x[2], ylo = q.y[1], yhi = q.y[2];
+    // Points sit 6px inside the axes, so none is drawn on an axis line.
+    var px = function (x) { return L + 6 + (x - xlo) / (xhi - xlo) * (W - L - R - 12); };
+    var py = function (y) { return H - B - 6 - (y - ylo) / (yhi - ylo) * (H - T - B - 12); };
+    var s = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Scatter graph of ' + esc(q.y[0]) + ' against ' + esc(q.x[0]) + '">';
+    for (var g = 1; g <= 3; g++) {
+      var gy = T + (H - T - B) * g / 4, gx = L + (W - L - R) * g / 4;
+      s += '<line class="grid" x1="' + L + '" y1="' + gy + '" x2="' + (W - R) + '" y2="' + gy + '"/>';
+      s += '<line class="grid" x1="' + gx + '" y1="' + T + '" x2="' + gx + '" y2="' + (H - B) + '"/>';
+    }
+    s += '<line class="axis" x1="' + L + '" y1="' + T + '" x2="' + L + '" y2="' + (H - B) + '"/>';
+    s += '<line class="axis" x1="' + L + '" y1="' + (H - B) + '" x2="' + (W - R) + '" y2="' + (H - B) + '"/>';
+    s += '<text class="tick" x="' + (L - 4) + '" y="' + (T + 9) + '" text-anchor="end">' + fmt(yhi) + '</text>';
+    s += '<text class="tick" x="' + (L - 4) + '" y="' + (H - B) + '" text-anchor="end">' + fmt(ylo) + '</text>';
+    s += '<text class="tick" x="' + L + '" y="' + (H - 6) + '" text-anchor="middle">' + fmt(xlo) + '</text>';
+    s += '<text class="tick" x="' + (W - R) + '" y="' + (H - 6) + '" text-anchor="end">' + fmt(xhi) + '</text>';
+    pts.forEach(function (p) { s += '<circle class="dot" cx="' + px(p[0]).toFixed(1) + '" cy="' + py(p[1]).toFixed(1) + '" r="4.5"/>'; });
+    $('plot').innerHTML = s + '</svg>';
+  };
+  COC.feedbackHtml = function (q, ok) {
+    var h = '<div class="fb-verdict">' + (ok ? 'Right.' : 'Not this time.') + ' ' + esc(COC.BUTTON[q.cat]) + '.</div>';
+    h += '<div class="fb-line"><span class="tag">The pattern</span>' + esc(COC.describe(q)) + '.</div>';
+    if (q.cat === 'both') h += '<div class="fb-lurk"><span class="tag">The lurking variable</span>' + esc(q.lurk.charAt(0).toUpperCase() + q.lurk.slice(1)) + '.</div>';
+    if (q.cat === 'chance') h += '<div class="fb-joke"><span class="tag">A silly theory (a joke)</span>“' + esc(q.joke) + '”</div>';
+    h += '<div class="fb-line"><span class="tag">' + (q.cat === 'chance' ? 'Really' : 'Why') + '</span>' + esc(q.explain) + '</div>';
+    return h;
+  };
 
-  // Line
-  ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.beginPath();
-  data.forEach((v,i)=>{
-    const x=PAD+i*xStep;
-    const y=H-PAD-(v-min)/range*(H-2*PAD);
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  ctx.stroke();
+  // ---- Game ----
+  var pool = [], qIdx = 0, score = 0, correctN = 0, total = 0, currentQ = null, answered = false, sessionLength = 10;
+  function mfg() { if (typeof window.mfg === 'function') window.mfg.apply(null, arguments); }
+  function showS(id) { document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); }); $(id).classList.add('active'); }
 
-  // Dots
-  ctx.fillStyle=color;
-  data.forEach((v,i)=>{
-    const x=PAD+i*xStep;
-    const y=H-PAD-(v-min)/range*(H-2*PAD);
-    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
-  });
-}
-
-// ============================================================
-//  GAME ENGINE
-// ============================================================
-let pool=[],qIdx=0,score=0,correctN=0,total=0,currentQ=null,phase=1;
-const BASE=100,MAX_Q=12;
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function showS(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
-function showMenu(){showS('menu')}
-
-function startGame(){
-  pool=shuffle([...QUESTIONS]).slice(0,MAX_Q);
-  qIdx=0;score=0;correctN=0;total=0;phase=1;
-  document.getElementById('score').textContent='0';
-  document.getElementById('correctCount').textContent='0';
-  showS('game');nextQ();
-  window._ggAbandoned=true;
-  mfg('game_started',{game_slug:'correlation-or-coincidence',level:'gcse'});
-  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'correlation-or-coincidence',level:'gcse',questions_answered:total})});}
-}
-
-function nextQ(){
-  if(qIdx>=pool.length){endGame();return}
-  currentQ=pool[qIdx];qIdx++;total++;phase=1;
-  document.getElementById('qNum').textContent=total;
-  document.getElementById('tinfoilCard').className='tinfoil-card';
-  document.getElementById('solution').className='solution';
-  document.getElementById('reveal').style.display='none';
-  document.getElementById('rValue').textContent='';
-
-  // Hide labels initially
-  document.getElementById('label1').className='chart-label hidden';
-  document.getElementById('label2').className='chart-label hidden';
-
-  // Draw charts
-  drawChart('chart1',currentQ.data1,'#3b82f6');
-  drawChart('chart2',currentQ.data2,'#f97316');
-
-  document.getElementById('prompt').textContent='These two datasets appear to correlate. Is there a real causal relationship?';
-
-  // Phase 1 options
-  const oEl=document.getElementById('options');oEl.innerHTML='';oEl.className='options';
-  ['Yes — real causal relationship','No — just a coincidence'].forEach(v=>{
-    const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;
-    b.addEventListener('click',()=>handlePhase1(b));oEl.appendChild(b);
-  });
-}
-
-function handlePhase1(btn){
-  const q=currentQ;
-  const correctAnswer=q.type==='real'?'Yes — real causal relationship':'No — just a coincidence';
-  const ok=btn.dataset.val===correctAnswer;
-
-  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===correctAnswer)b.classList.add('correct')});
-  if(!ok)btn.classList.add('wrong');
-
-  // Reveal labels
-  document.getElementById('label1').textContent=q.label1;
-  document.getElementById('label1').className='chart-label';
-  document.getElementById('label2').textContent=q.label2;
-  document.getElementById('label2').className='chart-label';
-
-  // Show r value
-  document.getElementById('rValue').textContent='Correlation coefficient: r = '+q.r;
-
-  mfg('question_answered',{game_slug:'correlation-or-coincidence',level:'gcse',correct:ok,question_index:total});
-  if(ok){
-    score+=BASE;correctN++;
-    document.getElementById('score').textContent=score;
-    document.getElementById('correctCount').textContent=correctN;
+  function startGame() {
+    pool = COC.deal(sessionLength);
+    qIdx = 0; score = 0; correctN = 0; total = 0;
+    $('score').textContent = '0'; $('correctCount').textContent = '0';
+    showS('game'); nextQ();
+    window._ggAbandoned = true;
+    mfg('game_started', { game_slug: SLUG, level: LEVEL });
+    if (!window._ggUnloadBound) { window._ggUnloadBound = true; window.addEventListener('beforeunload', function () { if (window._ggAbandoned) mfg('game_abandoned', { game_slug: SLUG, level: LEVEL, questions_answered: total }); }); }
   }
 
-  // Reveal
-  document.getElementById('reveal').textContent=q.label1+' vs '+q.label2;
-  document.getElementById('reveal').style.display='block';
-
-  // If spurious and not the serious one, go to Phase 2 (tinfoil hat)
-  if(q.type==='spurious'&&!q.serious&&q.conspiracies){
-    setTimeout(()=>showPhase2(q),1500);
-  } else {
-    // Show explanation
-    setTimeout(()=>{
-      const sol=document.getElementById('solution');
-      let html='<h3>'+(q.type==='real'?'Real correlation ✓':'Spurious correlation ✗')+'</h3>';
-      html+='<div class="step">'+q.explain+'</div>';
-      html+='<button class="next-btn" onclick="closeSol()">Next question →</button>';
-      sol.innerHTML=html;sol.className='solution show';
-    },1500);
+  function nextQ() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = ''; $('feedback').className = 'feedback';
+    $('qcard').classList.remove('fb-open'); document.body.classList.remove('fb-open');
+    if (qIdx >= pool.length) { endGame(); return; }
+    currentQ = pool[qIdx]; qIdx++; total++; answered = false;
+    window.scrollTo(0, 0);
+    $('qNum').textContent = total + '/' + pool.length;
+    COC.renderLabels(currentQ);
+    COC.renderPlot(currentQ);
+    var box = $('choices'); box.innerHTML = '';
+    COC.CATS.forEach(function (c) {
+      var b = document.createElement('button');
+      b.className = 'choice'; b.type = 'button'; b.dataset.cat = c; b.textContent = COC.BUTTON[c];
+      b.addEventListener('click', function () { answer(c); });
+      box.appendChild(b);
+    });
   }
-}
 
-function showPhase2(q){
-  document.getElementById('options').innerHTML='';
-  const card=document.getElementById('tinfoilCard');
-  card.className='tinfoil-card show';
-  document.getElementById('prompt').textContent='No causal link. But... unless...';
+  function answer(cat) {
+    if (answered) return;
+    answered = true;
+    var q = currentQ, ok = cat === q.cat;
+    document.querySelectorAll('.choice').forEach(function (b) {
+      b.disabled = true;
+      if (b.dataset.cat === q.cat) b.classList.add('is-key');
+      else if (b.dataset.cat === cat) b.classList.add('is-wrong');
+    });
+    mfg('question_answered', { game_slug: SLUG, level: LEVEL, correct: ok, question_index: total });
+    if (ok) { score += BASE; correctN++; $('score').textContent = score; $('correctCount').textContent = correctN; }
+    var fb = $('feedback');
+    fb.className = 'feedback fb ' + (ok ? 'right' : 'wrong');
+    fb.innerHTML = COC.feedbackHtml(q, ok);
+    $('qcard').classList.add('fb-open'); document.body.classList.add('fb-open');
+    // The explanation, and for a coincidence the joke, is the point of every question (Jon's
+    // contract, 4 Oct 2026), so a right answer waits for Next too.
+    if (window.MaffsNext) MaffsNext.wrong({ mount: fb, onAdvance: nextQ });
+    else setTimeout(nextQ, 4000);
+  }
 
-  // Pick a random conspiracy
-  const c=q.conspiracies[Math.floor(Math.random()*q.conspiracies.length)];
-  document.getElementById('conspiracy').textContent='🪄 "'+c+'"';
-}
+  function endGame() {
+    var pct = total > 0 ? Math.round(correctN / total * 100) : 0;
+    var t = 'Keep practising'; if (pct >= 90) t = 'Excellent'; else if (pct >= 70) t = 'Good instincts'; else if (pct >= 50) t = 'Getting there';
+    $('resultTitle').textContent = t;
+    $('finalScore').textContent = score;
+    $('statsLine').innerHTML = '<b>' + correctN + '/' + total + '</b> correct (' + pct + '%)<br>Correlation is not causation. Always ask: what could cause this?';
+    window._ggAbandoned = false;
+    mfg('game_completed', { game_slug: SLUG, level: LEVEL, score: score, questions_answered: total, accuracy: pct });
+    if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(SLUG, LEVEL, score, total).catch(function () {}); if (window.MaffsScoreHistory) { MaffsScoreHistory.record(SLUG, LEVEL, score); } }
+    showS('results');
+  }
 
-function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+  $('startBtn').addEventListener('click', startGame);
+  $('againBtn').addEventListener('click', function () { showS('menu'); });
+  MaffsSession.render({ mount: $('sessionSelect'), poolSize: QUESTIONS.length, preferred: [10, 20],
+    selected: sessionLength, onChange: function (n) { sessionLength = n; } });
 
-function endGame(){
-  const pct=total>0?Math.round(correctN/total*100):0;
-  let t='Keep Practising!';if(pct>=90)t='Statistical Genius!';else if(pct>=70)t='Good Instincts!';else if(pct>=50)t='Getting There!';
-  document.getElementById('resultTitle').textContent=t;
-  document.getElementById('finalScore').textContent=score;
-  document.getElementById('statsLine').innerHTML=
-    'Correlation or Coincidence<br>'+correctN+'/'+total+' correct ('+pct+'%)<br><br>'+
-    'Remember: correlation ≠ causation.<br>Always ask: <em>what is the causal mechanism?</em>';
-  window._ggAbandoned=false;
-  mfg('game_completed',{game_slug:'correlation-or-coincidence',level:'gcse',score:score,questions_answered:total,accuracy:pct});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('correlation-or-coincidence','gcse',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('correlation-or-coincidence','gcse',score);}}
-  showS('results');
-}
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+    function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(get() === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); set(String(on)); apply(on); });
+  })();
 
-
-(function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
-
+  // Read-only views of live state for scripts/verify-correlation-or-coincidence.py.
+  COC.ui = {
+    current: function () { return currentQ ? currentQ.id : null; },
+    answered: function () { return answered; },
+    pool: function () { return pool.map(function (q) { return q.id; }); },
+    score: function () { return score; }
+  };
+})();
 </script>
 <footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
 </body>
