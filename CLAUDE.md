@@ -30,7 +30,44 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest): TEACHER FEEDBACK LINE built, PR #44 (branch claude/teacher-invite)
+## Handover — 2026-10-04 (latest): EQUATION BUILDER marking contract STOPPED at STOP IF (branch claude/equation-builder-marking, no PR)
+
+Jon's contract (rebuild marking to SR-13 via an ACCEPTED list computed by SymPy; gcse_013; back on /resit/).
+**Built so far:** `scripts/verify-equation-builder.py` (engine only, NOT in CI, bank NOT written, game NOT
+changed). It loads the bank from the page, translates each tile on its own into an explicit SymPy fragment (no
+implicit multiplication across tiles), enumerates every grammar-valid arrangement up to the slot count (unused
+tiles allowed; gap-fill = placements into empty slots) and classifies by the key's kind: formula (lone subject
+either side, other side equal in value), equation (non-zero constant multiple of the key's difference, or the
+same real solution set in one unknown; identities rejected), expression (equal value). Whole bank in 3.5 min
+locally. `--report` prints every accepted arrangement and every distractor build; `--json` dumps them.
+Confirmed accepted: `C = 3 + 2.50m`, `d = 80 ÷ tan34°`, `360 = 3V ÷ 8`, `F = 9(l+w)`, `A = 2P ÷ 10`.
+
+**Why it stopped (three STOP IFs), with my proposals for Jon:**
+1. **Key not buildable (pre-existing live bug, missed by the audit):** ks3_029 (`2x + x + (x−15) = 180`) and
+   l4_026 (`2x³ + 2x² + c`) are gap-fills whose keys need `+` twice, but each has one `+` tile, and a used tile
+   cannot be clicked (`.tile.used{pointer-events:none}`). Both are unanswerable in the live game today.
+   Proposal: add a second `+` tile to each (tiles only, no wording change).
+2. **Not classifiable by the generic rules** (hard-coded in `UNCLASSIFIABLE`). Proposals:
+   l4_008 (by parts, `∫x·eˣdx = x·eˣ − ∫eˣdx`): integrals as opaque symbols, so the key, its swap and
+   rearrangements of the same step are accepted, `∫x·eˣdx = x·eˣ − eˣ` is not;
+   l4_021 (`∫₁⁴ 2x dx = [x²]₁⁴`): key and swap only; l4_023 (sigma): `r=1` and `r=0` (contract rule);
+   l4_033 (matrix), gcse_031 (±), gcse_039 (two `=`): gap-fills, key only (one operator or tile slot; no
+   other placement is equal); l4_015 (`log(8×4 ÷ 2) = log(16)`, no unknown: "not an identity" rejects the key):
+   key and its side swap only.
+3. **Distractor builds** (an accepted arrangement using a tile not in the key). My classification:
+   - **Wrong method, replace the tile (contract):** gcse_010 `5/9`, `4/10`; l4_004 `2×1`; l4_012 `√(−9+9)`.
+   - **Right method, retag valid:** ks3_004 `4e`; ks3_007 `2P`, `10`; ks3_012 `−`, `4s` (SR-13 equivalent
+     equations, e.g. `(s+30) + 4s = 180 + s`: my call); ks3_013 `36`, `¼×48`; ks3_016 `9(l+w)`; ks3_018 `0.8T`;
+     ks3_020 `×`; gcse_003/004/006/009/015 `−`; gcse_007 `×`; gcse_013 `a+c`, `−` (`OM = a+c − ½c`, valid
+     once the question says AB); gcse_014 `(8/12)³`, `÷`; gcse_016/021/022 `+`; gcse_018 `(85−40)`, `(5−20)`;
+     gcse_020 `8x+6`; gcse_024 `0.3²`, `2×0.3` (inclusion-exclusion); l4_005 `+`, `ln(2)`, `ln(P₀/2)`
+     (`kt = ln(P₀) − ln(P₀/2)` is ln 2); l4_009 `+` (`(3−λ)(4−λ) + 0 = 2`: SR-13, my call); l4_012 `√18`;
+     l4_013 `x/y`, `−`.
+**Also still to build:** the ± c rule (l4_026, l4_034, l4_002) as a SPECIAL; the bank field for the
+ACCEPTED lists and tile tags; the game marking/UI changes; the planted-fault self-test; CI + coverage
+registration; gcse_013 rewording; /resit/ relisting; docs. Accepted-list sizes per question: `--report`.
+
+## Handover — 2026-10-04: TEACHER FEEDBACK LINE built, PR #44 (branch claude/teacher-invite)
 
 - **What it is:** `MaffsInvite.mount(el, slug)` (`schools/assets/teacher-invite.js`, canon §7.1) fills an empty
   `<p id="teacherInvite">` with one small line, "Using this with a class? I'd love to hear how it went. — Jon",
