@@ -31,7 +31,9 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
   from data, so after a spec-map change, edit the card's `card-spec` line to what the check prints.
 - **Card level lines:** "Choose: X" (the game has a picker), "Opens at: X" (no picker; the link sets
   `?level=`), "One level". Jon asked for "Choose:" on every card; the other two are where no choice exists.
-- **Needs Jon:** the `/updates/` entry (todo START item 1, wording proposed), §3.15–§3.18, plus §1.49, §3.14.
+- **4 Oct:** spec map GCSE R11/P2/S6 for the last three cards (#24); /updates/ entry live (#25); G7 STRETCH +
+  `shape-shifter` on /resit/ (32 cards) + Pythagoras STRETCH build target "Just Pythag It, Bruv" (todo build order 14).
+- **Needs Jon:** §3.15–§3.17, plus §1.49, §3.14; whether the /updates/ entry's "31 games" becomes 32.
 
 ## Handover — 2026-10-03 (late night): docs clear after PRs #14–#20
 

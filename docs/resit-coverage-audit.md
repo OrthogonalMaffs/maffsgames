@@ -2,7 +2,7 @@
 
 **Dated 30 Sep 2026. Read-only audit of `main` at `81b341a`.** A dated report, not a maintained table: it does not replace `spec-map/`, the roster or `docs/todo.md` §3.1, and nothing in it has been wired into the site. Written for Jon to rule on; it proposes no resit suite, no grade 1-3 banding and no portal change.
 
-**Update, 30 Sep 2026: grade 1–3 banding added as §10** (Jon's ruling: CORE / STRETCH / OUT for all 129 parts, all 129 parts tagged after his rulings on the open questions, the ranked CORE gaps and the candidate resit suite). The sentence above that this audit "proposes no grade 1-3 banding" describes §§1–9; §10 is the banding.
+**Update, 4 Oct 2026 (Jon): G7 transformations and Pythagoras are STRETCH (§10.1, third amendment); `G7.1`, `G20.1` and `G20.3` retagged; Pythagoras added as a STRETCH build target (§10.4).** **Update, 30 Sep 2026: grade 1–3 banding added as §10** (Jon's ruling: CORE / STRETCH / OUT for all 129 parts, all 129 parts tagged after his rulings on the open questions, the ranked CORE gaps and the candidate resit suite). The sentence above that this audit "proposes no grade 1-3 banding" describes §§1–9; §10 is the banding.
 
 **Why it exists.** The priority audience is grade 1-3 students and post-16 resitters. The portal is organised by KS3/GCSE/A-Level, and the spec-map has been stale before. Without this map the resit suite and the half-term target (w/c 26 Oct) would be chosen by guesswork.
 
@@ -1754,10 +1754,12 @@ Facts noticed while reading banks; none is acted on here.
 
 **Second amendment, 30 Sep 2026 (Jon).** The remaining questions were ruled part by part; §10.3 records each ruling. Where a part-level ruling and the band lists above disagree, **the ruling wins**: for example `G16.1` is CORE although volume of prisms is STRETCH, and `P6.1`/`P6.2` are CORE although Venn diagrams are STRETCH.
 
+**Third amendment, 4 Oct 2026 (Jon).** **STRETCH** also takes: **transformations (translation, reflection, rotation; `G7`)**, with **enlargement staying OUT**; and **Pythagoras' theorem (find the hypotenuse; find a shorter side; in context)**, which the OUT list above named. Trigonometry stays OUT. Parts retagged: `G7.1` OUT → STRETCH (it names enlargement too, which stays OUT; its fragments `G7.2`/`G7.4`, fractional scale factors, are enlargement and stay OUT); `G20.1` OUT → STRETCH (it names Pythagoras and the trigonometric ratios; the Pythagoras half is the STRETCH skill, the trigonometric half stays OUT); `G20.3` follows `G20.1` (rule 2). `G20.2`, `G20.4` (sin, cos, tan) and `G20.5`, `G20.7`, `G20.9` (applying them) stay OUT; applying Pythagoras in context is part of the build target, §10.4. Totals in §10.2 are recounted from §10.6.
+
 Rules used to place a part, so the tags can be re-run if a band moves:
 
 1. **The band lists are read as exhaustive.** A skill named in neither CORE nor STRETCH is OUT, unless a named phrase could plausibly cover it *and* the answer matters; those went to Jon (§10.3).
-2. **A fragment takes the band of the skill it belongs to** (the same rule §1.1 uses for verdicts). `A22.3` "variable(" is STRETCH because `A22.1` is; `G20.3` "and" is OUT because `G20.1` is.
+2. **A fragment takes the band of the skill it belongs to** (the same rule §1.1 uses for verdicts). `A22.3` "variable(" is STRETCH because `A22.1` is; `G20.3` "and" is STRETCH because `G20.1` is (OUT until the third amendment, 4 Oct).
 3. **A composite part is tagged by its principal (main-clause) skill.** A named sub-skill in a different band is recorded in §10.6, not tagged separately, because the audit's verdict is one per part. Where no principal skill could be picked, the part went to Jon (§10.3).
 4. **THIN that depends only on the spot-the-error family is treated as GAP, and marked GAP†.** "The spot-the-error family" is read as the five diagnostic games §1.7 names: `spot-the-error`, `spot-the-muppet`, `terrible-advice`, `wrong-on-the-internet`, `maths-court`. A THIN whose only evidence is one to five diagnostic items is a GAP in practice: a student cannot practise a skill by finding it wrong once. Jon confirmed this set (30 Sep). The audit's own verdict column is unchanged; GAP† appears only in this section.
 
@@ -1779,11 +1781,11 @@ Rules used to place a part, so the tags can be re-run if a band moves:
 | Band | Parts | COVERED | THIN | GAP† | GAP |
 |---|---|---|---|---|---|
 | CORE | 65 | 41 | 6 | 4 | 14 |
-| STRETCH | 11 | 2 | 3 | 3 | 3 |
-| OUT | 53 | 19 | 15 | 5 | 14 |
+| STRETCH | 14 | 5 | 3 | 3 | 3 |
+| OUT | 50 | 16 | 15 | 5 | 14 |
 | **Total** | **129** | **62** | **24** | **12** | **31** |
 
-Reconciliation to §2: COVERED 62 = 62; THIN 24 + GAP† 12 = 36 = the audit's 36 THIN; GAP 31 = the audit's 31 GAP. 65 CORE + 11 STRETCH + 53 OUT = 129; none awaits a ruling.
+Reconciliation to §2: COVERED 62 = 62; THIN 24 + GAP† 12 = 36 = the audit's 36 THIN; GAP 31 = the audit's 31 GAP. 65 CORE + 14 STRETCH + 50 OUT = 129; none awaits a ruling. (Until 4 Oct: 11 STRETCH, 53 OUT; the third amendment moved `G7.1`, `G20.1` and `G20.3`, all COVERED.)
 
 ### 10.3 The questions Jon ruled (30 Sep)
 
@@ -1880,6 +1882,22 @@ All 24 formal parts appear exactly once, and 17 further parts are sub-skill hole
 
 **Where Jon has named a game:** the fractions game (rank 1) takes `R3.1` and `R6.1`; the shape-vocabulary game (rank 2) takes `G9.1`; `A3.1` and `A7.1` form the algebra-basics candidate (rank 7). Every other grouping is the author's, by shared skill, and is a proposal only.
 
+**STRETCH build target (Jon, 4 Oct 2026), outside the CORE ranking above:**
+
+| Build target | Band | Parts | Games today |
+|---|---|---|---|
+| **Pythagoras: find the hypotenuse; find a shorter side; in context.** Working title **"Just Pythag It, Bruv"** (Jon). | **STRETCH** | `G20.1` (Pythagoras half), `G20.3`; applying it in context | **No dedicated Pythagoras game.** `G20`'s COVERED verdict rests on `trig-worms`, which tests the trigonometric ratios only; Pythagoras appears only in single diagnostic items (`spot-the-error`, `spot-the-muppet`, `terrible-advice`, `wrong-on-the-internet`) and in 4 distance items in `coordinate-geometry-dash` (`G11.1`, GCSE label, a dark A-Level-facing game). |
+
+Design (Jon, 4 Oct 2026):
+
+1. Every question starts by identifying the hypotenuse.
+2. The bank is weighted towards finding a shorter side (subtract).
+3. The two types are mixed unpredictably, so students can't add by habit.
+4. The adding-instead-of-subtracting answer must appear as a distractor wherever options are shown.
+5. Stage (a) includes scaled triples (e.g. 6-8-10, 9-12-15, 15-20-25, 30-40-50, 10-24-26). When a question is a 3-4-5 or 5-12-13 multiple, the feedback after answering names it: "Spotted it? 6, 8, 10 is the 3-4-5 triangle doubled. No calculation needed." (adjusted to the triple and scale). The full worked method is still shown. The verifier checks every triple-family message names the correct base triple and scale factor.
+
+Not yet specified: the stages themselves (point 5 names a stage (a)); the rest of a build contract.
+
 ### 10.5 CORE COVERED — the candidate resit suite
 
 **41 CORE parts are COVERED** by the audit's rule (one game with 10+ Foundation-pitched items). The games below are the candidate suite. The part list under each game is the CORE parts for which that game carries the 10+ items; a game that only adds diagnostic items to a part is not listed. Register columns are §5's measurements, facts not verdicts: the row §7.5.1 gives the game, the row it renders, and whether its start screen or bank carries school-age wording. **Per Jon's ruling (§10.7) every game entering the resit strand gets an adult register whatever it shows today.**
@@ -1925,6 +1943,7 @@ Things the list does not say, so nobody reads it as a warranty:
 - **Covered is a floor** (headline). 17 parts in this table carry a missing CORE sub-skill (the right-hand column of §10.4): `N1.1`, `N2.1`, `N3.1`, `N4.1`, `N6.1`, `N12.1`, `N13.1`, `N14.1`, `A4.3`, `A21.1`, `R1.1`, `G14.1`, `G15.1`, `P6.1`, `P6.2`, `S4.1`, `S6.2`.
 - **Pitch differs by game.** 13 games in the table list Year 6 first (`formula-plug-in`, `decimal-detective`, `negative-number-line`, `percentage-flip`, `probability-pioneer`, `angle-ace`, `estimation-golf`, `factor-race`, `four-quadrant-explorer`, `like-terms-collector`, `new-shapes`, `prime-factorisation`, `think-of-a-number`). §1.4 counts easy Foundation-level questions in them as Foundation-pitched, but a resit student needs Foundation depth, not primary depth. Their register is the largest job under the ruling in §10.7.
 - **`bearing-blitz` is listed only because it is the sole 10+ cover for `G15.1`, and every one of its items is a bearing, which stays OUT as a topic (Jon, 30 Sep).** On that evidence it is not a resit-suite game; the part's CORE content is rank 9 in §10.4.
+- **Added 4 Oct 2026 (Jon): `shape-shifter` joined the /resit/ suite (Geometry and measures) for `G7.1`, now STRETCH (§10.1, third amendment).** It is not in the table above, which lists CORE parts only.
 - **`unit-converter` is the only cover for three parts, and 11 of its 58 items (19%) are not Foundation-pitched** (§8), and `prime-or-composite` runs to 9,973.
 
 ### 10.6 Every Foundation part, tagged
@@ -2017,7 +2036,7 @@ Type: s standard, u underlined. Verdict is the audit's; **GAP†** is THIN that 
 | `G4.1` | s | **CORE** | GAP | GAP | Q3 | Ruling Q3: CORE. |
 | `G5.1` | u | OUT | GAP | GAP |  |  |
 | `G6.1` | u | OUT | GAP | GAP |  |  |
-| `G7.1` | s | OUT | COVERED | COVERED |  | Transformations and enlargement; enlargement named OUT. |
+| `G7.1` | s | **STRETCH** | COVERED | COVERED | 4 Oct | Transformations STRETCH, enlargement stays OUT (Jon, 4 Oct). `shape-shifter` 45/45, no enlargement items; on /resit/ since 4 Oct. |
 | `G7.2` | u | OUT | GAP | GAP |  |  |
 | `G7.4` | u | OUT | GAP | GAP |  |  |
 | `G9.1` | s | **CORE** | GAP | GAP | Q4 |  |
@@ -2034,9 +2053,9 @@ Type: s standard, u underlined. Verdict is the audit's; **GAP†** is THIN that 
 | `G18.1` | u | OUT | GAP | GAP |  |  |
 | `G19.1` | u | OUT | COVERED | COVERED |  |  |
 | `G19.3` | u | OUT | COVERED | COVERED |  |  |
-| `G20.1` | u | OUT | COVERED | COVERED |  |  |
+| `G20.1` | u | **STRETCH** | COVERED | COVERED | 4 Oct | Pythagoras STRETCH, trigonometric ratios stay OUT (Jon, 4 Oct). The COVERED verdict rests on `trig-worms`, which never tests Pythagoras; Pythagoras has diagnostic items only and no dedicated game: build target, §10.4. |
 | `G20.2` | s | OUT | COVERED | COVERED |  |  |
-| `G20.3` | u | OUT | COVERED | COVERED |  |  |
+| `G20.3` | u | **STRETCH** | COVERED | COVERED | 4 Oct | Fragment; follows `G20.1` (rule 2). |
 | `G20.4` | s | OUT | COVERED | COVERED |  |  |
 | `G20.5` | u | OUT | COVERED | COVERED |  |  |
 | `G20.7` | u | OUT | COVERED | COVERED |  |  |
@@ -2064,5 +2083,7 @@ Type: s standard, u underlined. Verdict is the audit's; **GAP†** is THIN that 
 | `S6.2` | u | **CORE** | COVERED | COVERED | Q2 |  |
 
 ### 10.7 Rulings recorded
+
+**4 Oct 2026 (Jon):** G7 transformations STRETCH, enlargement stays OUT; `shape-shifter` joins the /resit/ suite. Pythagoras STRETCH, added as a build target with its design (§10.4), working title "Just Pythag It, Bruv"; recorded in `docs/todo.md` (build order, item 14).
 
 Recorded in `docs/todo.md` under §3.1 (resit strand). In brief: **(1)** every resit-strand game gets an adult register, and canon §7.5.1 is to be amended (not amended here); **(2)** `standard-form-blitz` stays as it is; **(3)** "Don't Count the Zeroes" is built as the resit-strand standard form game (todo 3.4). Part-level rulings: §10.1a and §10.3. Standard form is STRETCH (`N9.1`, COVERED by `standard-form-blitz`); the new game is the resit-strand version, not a replacement.

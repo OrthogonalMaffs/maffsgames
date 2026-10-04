@@ -32,7 +32,8 @@ import argparse, html, importlib.util, pathlib, re, sys
 BASE = pathlib.Path(__file__).resolve().parent.parent
 PAGE = "resit/index.html"
 
-# Jon, 3 Oct 2026: the suite, by topic, in this order.
+# Jon, 3 Oct 2026: the suite, by topic, in this order. shape-shifter added 4 Oct 2026 (Jon: G7
+# transformations banded STRETCH).
 SUITE = [
     ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
@@ -42,7 +43,7 @@ SUITE = [
         "sequence-solver"]),
     ("ratio", "Ratio, proportion and percentages", ["split-it", "proportion-blaster",
         "better-value", "percentage-flip"]),
-    ("geometry", "Geometry and measures", ["new-shapes", "angle-ace"]),
+    ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter"]),
     ("probability", "Probability", ["probability-pioneer", "expected-damage", "given-that"]),
     ("statistics", "Statistics", ["distinctly-average", "stat-attack", "chart-interrogator",
         "correlation-or-coincidence"]),
