@@ -55,7 +55,7 @@ WHAT IT ASSERTS (Jon's contract, docs/next-contract-just-pythag-it-bruv.md, poin
               figure's full width and 1:1 (one viewBox unit per pixel).
   Header      the standard header (58 games, todo 3.20): "← Back to Games" linking ../../ on every
               screen, above it; Aa on the start screen only, overlapping nothing, at every size.
-  Calculator  "Use a calculator." on every question; the shared calculator (MaffsCalc) is on the
+  Calculator  every question's text ends "Use a calculator."; the shared calculator (MaffsCalc) is on the
               page, closed at first, and shows only while the answer box does; the play-through
               works one question out on its keys; using it sends no event.
   UI          a full session played with the Firebase SDK blocked (round 1 tapped with real pointer
@@ -891,10 +891,6 @@ async def ui_playthrough(browser, out, seed=4242):
             styles = await page.evaluate(LABEL_STYLES)
             if len(styles) != 3 or len(set(styles)) != 1:
                 out.append("UI q%d: side labels styled differently: %r" % (i, styles))
-            note = await page.evaluate("(() => { const n = document.querySelector('#qcard .qhead .calc-note');"
-                                       " return n && n.offsetParent !== null ? n.textContent.trim() : null; })()")
-            if note != CALC_NOTE:
-                out.append("UI q%d: the question shows %r, not %r" % (i, note, CALC_NOTE))
             if i == 1:
                 out.extend(await check_header(page, "UI q1"))
                 fig = await page.evaluate(FIG_JS)
@@ -906,6 +902,11 @@ async def ui_playthrough(browser, out, seed=4242):
                 taps_done += 1
             elif await page.evaluate("document.querySelectorAll('#fig .tri-hit').length"):
                 out.append("UI q%d: tap targets outside round 1" % i)
+            # every question ends "Use a calculator." (after round 1's tap step, which has its own prompt)
+            shown = await page.evaluate("(() => { const p = document.getElementById('prompt'), n = p.querySelector('.calc-note');"
+                                        " return [p.textContent.trim(), n && n.offsetParent !== null ? n.textContent : null]; })()")
+            if shown != [q["prompt"] + " " + CALC_NOTE, CALC_NOTE]:
+                out.append("UI q%d: the question reads %r, not the prompt then %r" % (i, shown[0][-60:], CALC_NOTE))
             if q["stage"] == "b" and not calc_done:
                 calc_done = True
                 await use_calculator(page, q, out, "UI q%d" % i)

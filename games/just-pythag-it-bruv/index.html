@@ -90,7 +90,9 @@ a.back-link:hover{color:var(--text)}
 .tri-side.miss{stroke:var(--wrong);stroke-width:5}
 .qcard.tap-mode .answer-row{display:none}
 .qhead{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
-.calc-note{font-size:.85rem;font-weight:600;color:var(--hint)}
+/* "Use a calculator." ends every question's text (Jon, 4 Oct 2026): part of the instruction, so it costs
+   no line of its own on a phone. */
+.calc-note{font-weight:600;color:var(--hint);white-space:nowrap}
 /* The calculator (MaffsCalc, theme.css): under the answer box, never over it; it goes while the
    answer box does (the tap step, the feedback). */
 .qcard.tap-mode .maffs-calc,.qcard.fb-open .maffs-calc{display:none}
@@ -139,7 +141,7 @@ a.back-link:hover{color:var(--text)}
 .qcard.fb-open .fig svg{max-height:150px}
 @media (max-height:600px){
   .qcard{gap:.4rem}
-  .prompt{line-height:1.45}
+  .prompt{font-size:.95rem;line-height:1.4}
   body.fb-open .hud,.qcard.fb-open .qhead{display:none}
   .qcard.fb-open{gap:.4rem;padding-top:.6rem}
 }
@@ -215,7 +217,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="hudClock">0:00</div></div>
     </div>
     <div class="qcard" id="qcard">
-      <div class="qhead"><div class="round-label" id="roundLabel"></div><span class="calc-note" id="calcNote">Use a calculator.</span></div>
+      <div class="qhead"><div class="round-label" id="roundLabel"></div></div>
       <div class="prompt" id="prompt"></div>
       <div class="fig-wrap"><div class="fig" id="fig"></div><div class="note" id="figNote"></div></div>
       <form class="answer-row" id="answerForm" autocomplete="off">
@@ -917,6 +919,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   var score = 0, correctCount = 0, addCount = 0, byStage = {}, t0 = 0, askedMs = 0, askStart = 0, clockTimer = null;
   var scoreStart = 0;      // when the answer box opened: the tap step never costs score
   var TAP_TOL_PX = 40;     // a tap counts for the nearest side if it lands within this many screen pixels
+  var CALC_NOTE = 'Use a calculator.';   // every question, Jon 4 Oct 2026 (the roster says Calculator required)
   var TAP_WRONG = 'The hypotenuse is opposite the right angle, and always the longest side.';
   var sessionLength = J.LENGTH;
 
@@ -976,7 +979,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     state = 'asking';
     scoreStart = Date.now();
     $('qcard').classList.remove('tap-mode');
-    $('prompt').textContent = q.prompt;
+    $('prompt').innerHTML = esc(q.prompt) + ' <span class="calc-note">' + CALC_NOTE + '</span>';
     try { $('answer').focus({ preventScroll: true }); } catch (e) {}
   }
 

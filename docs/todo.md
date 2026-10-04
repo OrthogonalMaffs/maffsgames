@@ -201,14 +201,17 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
   the calculator closed and open (22 planted faults). Clock unchanged (Jon: counting up is fine).
   **Found by the new measurement and fixed here:** on a 320x568 phone the longest round-3 prompts (six lines)
   put Check 7-15px below the fold, already so on main (the old verifier measured Check only in round 1).
-  On screens 600px tall or less, rounds 2-3 now draw a 150px-tall figure (178 before) with tighter card
-  spacing; Check's lowest is now 496px against a 528px fold.
+  On screens 600px tall or less, rounds 2-3 now draw a 150px-tall figure (178 before), with tighter card
+  spacing and the prompt at .95rem; Check's lowest is now 503px against a 528px fold (502px in Verdana, a
+  stand-in for CI's wider DejaVu fallback, which first put it at 538px).
 - **My calls in PR #32, Jon's to overturn:** (i) Aa is on the start screen only, as in the 58 standard games
   (it is a saved preference). (ii) √ opens a bracket, as on a Casio; missing closing brackets close on =.
   (iii) After =, an operator carries the answer on as "Ans"; there is no separate Ans key. (iv) No button
   copies the result into the answer box: the student types it, rounding it themselves, which is the skill.
   (v) The panel stays open between questions once opened, cleared for each new question. (vi) The 150px
-  short-screen figure above.
+  short-screen figure above. (vii) "Use a calculator." ends each question's text (in the hint colour) rather
+  than sitting beside the round label, where it wrapped to a second line on a 320px phone; round 1 shows it
+  once the hypotenuse is tapped and the question appears.
 - **Jon to play /games/just-pythag-it-bruv/; on approval: list it on the portal, /resit/ (Geometry and
   measures, Choose: Foundation, Calculator required), spec map G20, sitemap, and queue an /updates/ entry.**
   The listing PR also: removes the `noindex` line, moves the roster row to its section, adds the leaderboard
