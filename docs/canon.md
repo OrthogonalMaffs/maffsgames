@@ -396,6 +396,27 @@ styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours 
   instantly under reduced motion).
 - **Keyboard:** typed keys drive it only while focus is inside the panel, so typing in the answer box is
   never taken over. Enter on a focused key presses that key; Escape closes the panel.
+- **Phones: one keypad for the calculator and the answer (Jon, 4 Oct 2026).** On a touch screen
+  (`(pointer: coarse)`) below the dock breakpoint the panel is **compact**: 48px keys, a slim display, and once
+  open the Calculator toggle gives way to a close key inside the display. `mount(el, {answer: input,
+  keepInView, foldInset, onToggle})` makes the same keypad type the answer, so the system keyboard never
+  opens (it would cover the question and the diagram). The answer box is read-only with `inputmode="none"`
+  and is never focused; tapping it opens the keypad on it. The student taps a display (the calculator's or
+  the answer box) to choose where the keys go; the chosen one has a heavier border and a "typing here" tag.
+  While the keypad types the answer, only 0-9, the point, DEL and C work (12 characters at most); the
+  operators, brackets, x², √ and = are disabled. On open the page scrolls just enough to show the answer
+  row, Check and the keypad together. Desktop, a mouse, and the docked calculator are unchanged: the answer
+  box takes the physical keyboard as before. The switches are `MaffsCalc.ANSWER`, read live so a test can
+  turn each off. Pythag's layout under it (Jon's option B): rounds 1-2 fit 390×844 with the keypad open;
+  round 3 may scroll there; everything fits 412×915.
+  - **WebKit (found in testing):** to keep focus, and so the keyboard, away, the answer box cancels
+    `pointerdown`; WebKit then sends **no `click`**, so a click-only handler would never open the keypad
+    on an iPhone. It opens on **`pointerup`** (`click` stays, debounced, for anything without pointer
+    events).
+  - **Ghost click (found in testing):** opening the keypad moves the page (the game shrinks its figure),
+    so the tap's own synthetic click landed on whatever was now under the finger, a key. The answer box
+    cancels `touchend`, which stops that click.
+  - **Not yet tried on a real iPhone** (Playwright WebKit with touch passes; Jon tests on Android).
 - **Nothing is sent:** no analytics event, no storage, no request.
 - **Where it loads:** only on games whose roster field is `required`. The roster is not served, so each
   such game includes the script itself; `scripts/check-calculator.py` (CI) fails if a game's include, its
@@ -403,8 +424,9 @@ styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours 
 - **Checked by** `scripts/test-calculator-js.py` (CI): 65 expressions (arithmetic, precedence, x², √,
   brackets, errors, the display), 16 key sequences, the keyboard, the toggle, nothing sent, key sizes
   at 320, 375 and 390px, and the dock beside a 720px column (docked at 1280/1366/1920, sticky, never over
-  the column, not docked at 1240 or 390) with five planted dock faults. A game that uses it measures its own phone fit with the panel open and closed
-  (`verify-just-pythag-it-bruv.py`).
+  the column, not docked at 1240 or 390) with five planted dock faults, and the answer target in Chromium and WebKit (touch at 390 and
+  320px, mouse at 1280 and 390px) with eight planted answer faults. A game that uses it measures its own
+  phone fit with the panel open and closed, typing on the keypad (`verify-just-pythag-it-bruv.py`).
 
 ---
 

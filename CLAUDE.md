@@ -20,7 +20,7 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-04 (very late, latest): PHONE KEYPAD contract IN PROGRESS on branch `claude/phone-keypad` (no PR yet)
+## Handover — 2026-10-04 (very late, latest): the PHONE KEYPAD, PR #34; Just Pythag It, Bruv still UNLISTED
 
 Jon's contract: on phones one shared keypad types into the calculator or the answer box (no system keyboard),
 compact triangle, 48px keys. **Jon's ruling (option B, after a STOP IF):** rounds 1-2 fit one 390x844 screen
@@ -29,7 +29,7 @@ everything fits at 412x915; Calculator button moves inside the panel on phones; 
 48px keys. Jon tests the keyboard on Android (and an iPhone if he can borrow one): **a real iPhone test is
 still outstanding** (say so in the PR and the handover).
 
-**Built and passing locally (committed WIP on the branch):**
+**What it built:**
 - `calculator.js`: `MaffsCalc.ANSWER` (query '(pointer: coarse)', readOnly, inputmode, blur, disableOps, route,
   cue; read live so tests can switch each off). "Compact" = touch and not docked: close key in the display,
   48px keys, slim display. `mount(el, {answer, keepInView, foldInset, onToggle})`: answer box read-only +
@@ -47,13 +47,13 @@ still outstanding** (say so in the PR and the handover).
   switching, WebKit pass on the game page, compact tap check in the engine, 17 layout faults; job C timeout 20.
   Last full run: main pass PASS; the two faults it missed were fixed and each re-tested as caught.
 
-**Still to do:** (1) one full `verify-just-pythag-it-bruv.py` run (about 8 min) to confirm PASS with every
-fault caught; (2) canon §4.4: document the answer target, compact mode, the WebKit pointerup and ghost-click
-findings; (3) todo: new item "phone-fit checks don't model the system keyboard; any game with a typed answer
-may lose its question/diagram when it opens", with the list of games that have typed inputs (grep
-`<input` type text/number in games/); START bullet for this PR + listing checklist (play-test the keypad on
-Android/iPhone); (4) full local suite; (5) push, PR (note iPhone test outstanding), merge on zero failing
-checks; (6) confirm live at 390px (touch emulation) and at desktop; (7) update memory.
+**Finished in PR #34:** a full verifier run PASSES (17 layout faults and 22 engine faults, every one caught);
+canon §4.4 documents the phone keypad (compact mode, the answer target, the WebKit pointerup and ghost-click
+findings, the outstanding iPhone test); todo §3.21 files the gap that phone-fit checks do not model the system
+keyboard, listing the 22 games with a typed answer box; todo START has this PR and the keypad play-test in the
+listing checklist. **Next:** unchanged: Jon plays it (now including the keypad on Android and, if he can borrow
+one, an iPhone), then the listing PR (todo START). §3.21 needs Jon's choice of option.
+Local run on Windows: set `PYTHONIOENCODING=utf-8`, or the verifier's √ crashes a cp1252 console mid-report.
 
 ## Handover — 2026-10-04 (late night, latest): the calculator dock, PR #33; Just Pythag It, Bruv still UNLISTED
 
