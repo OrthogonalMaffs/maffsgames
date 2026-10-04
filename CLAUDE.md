@@ -30,7 +30,20 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest): SELECTIVE CI, PR #38; resit safety PR #36 live
+## Handover — 2026-10-04 (latest): JON'S RESIT AUDIT RULINGS recorded; SR-13
+
+- **Jon ruled on all eight decisions** in `docs/audit-resit-correctness-2026-10-04.md`; each ruling sits
+  under its item there. **Canon SR-13** (§0.3): in move-based equation games every operation on both sides
+  is accepted except × 0 and ÷ 0 (blocked, explained); harder valid moves score full marks plus a nudge;
+  equivalent final forms accepted unless the form is specified; moves by an expression in the variable must
+  be handled explicitly. Applies to `linear-equation-solver` and the `equation-builder` rebuild.
+- **Done here:** Estimation Golf's /resit/ card opens at Foundation (`ks3`), pinned by `RULED_LEVEL` in
+  `check-resit-page.py` (self-test 7 of 7). The /updates/ "Corrected" entry was already live (PR #41).
+- **Next:** the fix batches in `docs/todo.md` START (top bullet), batch 1 first, starting with the
+  `proportion-blaster` GCSE question-count investigation (todo §4 item 19), then the three rebuilds and
+  `linear-equation-solver` under SR-13. One game per contract, each adding its verifier to CI.
+
+## Handover — 2026-10-04: SELECTIVE CI, PR #38; resit safety PR #36 live
 
 - **PR #38 (Jon's contract):** `scripts/ci-deps.py` (derived dependency map, self-tested on every run),
   `scripts/check-changed.py` (local), `check-site.yml` gains a plan job, line selection in the "Content

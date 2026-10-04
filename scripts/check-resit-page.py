@@ -56,6 +56,9 @@ EXCLUDED = {"prime-or-composite": "numbers up to 9,973; needs a Foundation-range
 WITHDRAWN = {"estimation-engine": "1-5% bands mark the GCSE 1 s.f. method wrong; rebuild under SR-12",
              "equation-builder": "slot-by-slot marking rejects equally correct arrangements",
              "correlation-or-coincidence": "the variables are hidden until after the answer"}
+# Jon, 4 Oct 2026 (resit audit, decision 8): cards whose opening level Jon has ruled. A card for one of
+# these games must carry this level key. estimation-golf's Starter is 8 of 20 general-knowledge items.
+RULED_LEVEL = {"estimation-golf": "ks3"}
 # Canon SR-11: the label a student sees for each level key.
 LABEL = {"year6": "Starter", "ks3": "Foundation", "gcse": "GCSE", "alevel": "A-Level",
          "core": "Core Maths", "level4": "Level 4", "l4": "Level 4"}
@@ -137,6 +140,8 @@ def static_check(page, portal, refs, game_src):
             want_level = {"choose": "Choose: %s" % label, "link": "Opens at: %s" % label, "one": "One level"}.get(kind)
             if want_level is None or c.get("level") != want_level:
                 errors.append("%s: level line %r does not match data-kind=%r data-label=%r" % (slug, c.get("level"), kind, label))
+            if slug in RULED_LEVEL and key != RULED_LEVEL[slug]:
+                errors.append("%s: Jon ruled the card opens at level %s, it carries %r" % (slug, RULED_LEVEL[slug], key))
             if kind == "link" and not key:
                 errors.append("%s: an 'Opens at' card must carry the level key in its link" % slug)
             if key:
@@ -212,6 +217,8 @@ def selftest(page, portal, refs, game_src):
         "a card removed": re.sub(r'<a class="card" href="/games/%s/.*?</a>' % first, "", page, count=1, flags=re.S),
         "a Starter card relabelled": page.replace('data-label="Starter" data-key="year6"', 'data-label="Year 6" data-key="year6"', 1),
         "a spec line edited": page.replace("GCSE spec: N4", "GCSE spec: N5", 1),
+        "a ruled level reverted": page.replace('/games/estimation-golf/?level=ks3" data-mfg-item="estimation-golf" data-slug="estimation-golf" data-kind="choose" data-label="Foundation" data-key="ks3"',
+                                               '/games/estimation-golf/?level=year6" data-mfg-item="estimation-golf" data-slug="estimation-golf" data-kind="choose" data-label="Starter" data-key="year6"').replace("Choose: Foundation</span>\n</a>\n<a class=\"card\" href=\"/games/unit-converter", "Choose: Starter</span>\n</a>\n<a class=\"card\" href=\"/games/unit-converter"),
         "a section renamed": page.replace("<h2>Probability</h2>", "<h2>Chance</h2>"),
     }
     missed = [name for name, bad in faults.items() if not static_check(bad, portal, refs, game_src)[0]]

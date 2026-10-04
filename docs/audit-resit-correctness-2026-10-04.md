@@ -32,8 +32,9 @@ recomputed independently. **Nothing was fixed** (SR-9); this file is the evidenc
 - **Every HIGH and CRITICAL fault below was re-checked against the source by the reviewing session**
   (the line, the key and the arithmetic), not taken from the auditing agent's word alone. MEDIUM and
   LOW faults carry the agents' evidence and were spot-checked, not all re-derived.
-- **Next:** Jon rules on the decision items (section "Decisions for Jon"), then fix batches in the
-  order proposed below, one game per contract, each with its own verifier added to CI (the class
+- **Next:** Jon ruled on all eight decision items on 4 Oct 2026 (recorded under each in "Decisions
+  for Jon"; canon SR-13). The fix batches, with the rulings applied, are in `docs/todo.md` START,
+  in the order proposed below, one game per contract, each with its own verifier added to CI (the class
   this audit measures is "games without verifiers"; fixing keys without adding the verifier leaves
   the class open).
 
@@ -167,30 +168,50 @@ wrong keys at the card's level, then wrong keys a student reaches from the picke
 
 ## Decisions for Jon
 
-These are judgement calls the audit cannot settle; each blocks or shapes a fix.
+These are judgement calls the audit cannot settle; each blocks or shapes a fix. **Jon ruled on all
+eight on 4 Oct 2026**; each ruling is recorded under its item, and the fix batches in `docs/todo.md`
+START apply them. Decisions 3 and 5 are canon SR-13 (§0.3).
 
 1. **`correlation-or-coincidence`:** are the hidden labels meant as a "guess first" mechanic? If so,
    it should not be scored or ranked. If not, show the variable names before the choice. Also: the
    "suicides by hanging" pair is played for laughs in its Phase 2 jokes (L138–140); a safeguarding
    question for a resit audience.
+   - **Jon's ruling (4 Oct 2026):** show the variable names before the choice. The "suicides by
+     hanging" pair is removed (done, PR #36). Withdrawn from `/resit/` pending the rebuild.
 2. **`estimation-engine`:** the `/resit/` card advertises GCSE estimation (N14: round each number to
    1 s.f.). The game's 1–5% bands mark that method wrong on 21 of the 27 KS3, GCSE and π items, and 10
    of 49 items need e, φ, ln or log (φ never defined). Keep it on `/resit/`, re-band it, or move it?
+   - **Jon's ruling (4 Oct 2026):** withdrawn from `/resit/` pending rebuild (done, PR #36), under
+     SR-12, marked by an exact match to the method's answer(s).
 3. **`linear-equation-solver`:** is "×2 first" for x/2 + 5 = 11, or ÷(−1) for −x + 6 = 10, a correct
    move? Today it is marked wrong (14 questions; 63 of 141 if "divide first" on 3x + 7 = 22 is also
    ruled correct).
+   - **Jon's ruling (4 Oct 2026): SR-13.** Any operation applied to both sides is valid and accepted,
+     except × 0 and ÷ 0 (blocked, with an explanation); a valid move that makes the problem harder
+     scores full marks and is followed by a nudge towards a neater move. So "×2 first", ÷(−1) and
+     "divide first" are all correct moves.
 4. **`probability-pioneer` Stage 3:** "If two outcomes are equally likely, each has probability 0.5"
    is keyed True. True only if there are exactly two outcomes; as worded it teaches the 50-50
    misconception. Reword or rekey?
+   - **Jon's ruling (4 Oct 2026):** rekey as False, with an explanation: the probability is 0.5 only
+     when there are exactly two outcomes; each face of a dice is equally likely, at 1/6.
 5. **`equation-builder`:** when a question says "write the equation", is an equivalent rearrangement
    (`d = 80 ÷ tan 34°`) correct, and may the sides be swapped?
+   - **Jon's ruling (4 Oct 2026): SR-13.** Equivalent rearrangements and swapped sides are accepted
+     unless the question specifies the form. Withdrawn from `/resit/` pending the rebuild (done, PR #36).
 6. **`decimal-detective` (todo §1.49):** the marking risk does not occur (equal cards are accepted in
    either order). What remains is content: identical cards at :256 (1.9), :261 (0.6), :263 (0.11) and
    equal-value pairs 0.77/0.770 (:267), 0.44/0.440 (:269). Intended?
+   - **Jon's ruling (4 Oct 2026):** remove the identical cards; keep the equal-value pairs (0.77/0.770),
+     with feedback that trailing zeros don't change the value.
 7. **`expected-damage`:** two GCSE questions have equal expected values; rekey as "either" or change
    the numbers (SR-5 says comparisons never tie)?
+   - **Jon's ruling (4 Oct 2026):** change the numbers so no comparison ties (SR-5).
 8. **`estimation-golf` Starter:** 8 of 20 items are general knowledge with no maths (continents 7,
    class size 30). Is that the level a resit card should open at?
+   - **Jon's ruling (4 Oct 2026):** the `/resit/` card opens at Foundation (done in the rulings PR;
+     `check-resit-page.py` pins it in `RULED_LEVEL`). The general-knowledge Starter items are to be
+     replaced in a later batch.
 
 ---
 
