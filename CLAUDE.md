@@ -20,7 +20,45 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-04 (night, latest): Just Pythag It, Bruv amended (PR #30), still UNLISTED
+## Handover — 2026-10-04 (late night, latest): Pythag PRs #28-#30 live; NEXT = the calculator contract (fresh session)
+
+- **Live:** #28 /updates/ "more than 30 games"; #29 Just Pythag It, Bruv (unlisted) + the calculator tag; #30
+  Jon's amendment (round 1 tap-the-hypotenuse, dealt hypotenuse positions, "?" and identical labels, a
+  calculator note per question, a header bar). The game is still UNLISTED; todo START has the listing checklist.
+- **Next: Jon sends the calculator contract fresh.** It also fixes this game's layout: Jon saw the Aa button over
+  the TIME label and the triangle at a third of the card's width on the live #29 build. #30's header bar
+  removes the overlap, but the contract asks for the STANDARD header pattern (below), not split-it's bar. Its
+  STOP IFs are already checked: (1) **no on-screen calculator exists in the repo.** complex-converter's
+  "Calculator (-25 pts)" is a multiple-choice hint mechanic (pick the right key sequence), not a working
+  calculator, so there is nothing to reuse. (2) **There is one dominant header pattern** (below).
+- **Calculator plan (Code Claude, 4 Oct; Jon has seen it, not yet ruled):**
+  - `schools/assets/calculator.js`, global `MaffsCalc`. The engine is a tokenizer plus a precedence parser
+    (shunting-yard) covering + - x /, brackets, unary minus, postfix x^2 and prefix sqrt (on a number or a
+    bracket), with implicit multiplication (2(3), 2sqrt9).
+  - **Display at 10 significant figures** (`Number(x.toPrecision(10))`, trailing zeros dropped), so
+    0.1 + 0.2 shows 0.3. Errors (sqrt of a negative, divide by 0, unbalanced brackets) show "Error", never NaN.
+  - **A panel in the page flow, under the answer box**, opened and closed by a "Calculator" toggle: it never
+    covers the question or the answer box, and the page may scroll. Keys at least 44px; 5 columns fit 320px.
+    The physical keyboard drives it only while focus is inside the panel, so typing in the answer box is
+    never hijacked. Nothing goes to analytics. The game hides the panel while feedback shows (phone rule).
+  - Styles in theme.css (`.maffs-calc*`, tokens only). Canon §4.4 documents it next to the field.
+  - **Loads only where the roster says `required`:** each such game includes the script, and a new CI check
+    (`scripts/check-calculator.py`) fails if a game's include, its badge and its roster Calculator field
+    disagree, either way. The roster is not served, so the page cannot read it at run time.
+  - Self-tests: `scripts/test-calculator-js.py` in CI (arithmetic, precedence, x^2, sqrt, brackets, unary
+    minus, errors, 10 s.f. display incl. 0.1+0.2, and key sequences through the UI).
+  - **Triangle at the card's actual width:** `JPIB.layout(Q, box)` takes the box in screen pixels (width = the
+    figure's measured width; height from the width, capped by the viewport) so 1 unit = 1px. Labels stay a fixed
+    16px and the triangle fills what is left; it re-lays out on resize. The tap test maps clicks with
+    `getScreenCTM()`, and the verifier measures `box` at each phone width instead of assuming 360 units.
+  - Phone measurements at 320/375/390 with the panel open and closed: the answer box and Check above the fold
+    with it open; feedback's Next above the fold (the panel hides).
+- **Header survey (4 Oct, all 99 `games/` folders; correcting "58/68" said in chat):** **58** use the
+  standard `<a href="../../" class="back-link">← Back to Games</a>` above the game's header; **41** do not.
+  10 of the 41 differ only in writing `&larr;`. All 41 are listed by kind in todo §3.20. This game moves
+  to the standard pattern in the calculator PR.
+
+## Handover — 2026-10-04 (night): Just Pythag It, Bruv amended (PR #30), still UNLISTED
 
 - Jon's amendment: round 1 opens with a tap-the-hypotenuse step (`JPIB.sideAt`, nearest side within 40px;
   no score, no event); rounds 1-2 get a dealt hypotenuse-position plan (`JPIB.positionPlan`: Hb/Ht/Vl/Vr and
