@@ -2,7 +2,8 @@
 
 **Calculator** (last column, canon §4.4): `required`, `not allowed`, `optional` or `untagged`. A game's
 tag shows as the shared `.calc-badge` (`schools/assets/theme.css`) on its start screen; `untagged`
-shows nothing. Every game is `untagged` until it is tagged in its own PR.
+shows nothing. Every game is `untagged` until it is tagged in its own PR. A `required` game also loads the
+shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-calculator.py` keeps the two in step.
 
 ## KS3 Games (35)
 | # | Game | Slug | Levels | Topics | Description | Calculator |
@@ -131,7 +132,7 @@ Live at its URL behind `<meta name="robots" content="noindex">`, and off the por
 
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
-| 98 | Just Pythag It, Bruv | `just-pythag-it-bruv` | KS3 | Geometry | Pythagoras' theorem, resit strand. One level (key `ks3`, shown as "Foundation", SR-11), 20 questions in three rounds: whole-number triangles (3-4-5, 5-12-13, 8-15-17, 7-24-25 and multiples; a 3-4-5 or 5-12-13 multiple gets "Spotted it?"), decimal answers to 1 d.p., then ladders, TV screens, ramps, fields and roofs in metric units. At least 12 of 20 find a shorter side, never three of a type in a row; every triangle drawn, right angle marked. Round 1 opens with a tap-the-hypotenuse step (no score, no event). Rounds 1-2 place the hypotenuse along the bottom, up a side and sloping both ways in every session, no position over 40%; the unknown side is "?" in round 1 and every label is styled alike. Calculator note on every question. Typed answers (`MaffsAnswer`); adding instead of subtracting gets a worked example on the question's own numbers (first three per session), then a nudge. Visible count-up, scored. Verified by `scripts/verify-just-pythag-it-bruv.py` (in CI) | required |
+| 98 | Just Pythag It, Bruv | `just-pythag-it-bruv` | KS3 | Geometry | Pythagoras' theorem, resit strand. One level (key `ks3`, shown as "Foundation", SR-11), 20 questions in three rounds: whole-number triangles (3-4-5, 5-12-13, 8-15-17, 7-24-25 and multiples; a 3-4-5 or 5-12-13 multiple gets "Spotted it?"), decimal answers to 1 d.p., then ladders, TV screens, ramps, fields and roofs in metric units. At least 12 of 20 find a shorter side, never three of a type in a row; every triangle drawn, right angle marked. Round 1 opens with a tap-the-hypotenuse step (no score, no event). Rounds 1-2 place the hypotenuse along the bottom, up a side and sloping both ways in every session, no position over 40%; the unknown side is "?" in round 1 and every label is styled alike. "Use a calculator." on every question, with the shared on-screen calculator (`MaffsCalc`, canon §4.4) under the answer box. The standard header (back link, Aa on the start screen); the triangle drawn at the card's full width. Typed answers (`MaffsAnswer`); adding instead of subtracting gets a worked example on the question's own numbers (first three per session), then a nudge. Visible count-up, scored. Verified by `scripts/verify-just-pythag-it-bruv.py` (in CI) | required |
 
 ## Withdrawn (1)
 Kept at its URL behind a `noindex` holding page, off the portal and the sitemap, nothing deleted (canon §11.5). The `—` in the # column keeps it out of every roster parser; row numbers are not reused.

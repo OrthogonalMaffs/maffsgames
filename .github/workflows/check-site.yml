@@ -104,6 +104,9 @@ jobs:
           # page is the source of truth). Both added 3 Oct 2026 after the About page claimed both.
           # The tax-year check (stdlib, about a second): canon 7.1.4. Every game with UK tax/NI wording
           # is registered, and any tax year it prints is scripts/uk_rates.py's teaching year.
+          # The calculator check (stdlib, under a second): canon 4.4. A game loads the shared on-screen
+          # calculator (schools/assets/calculator.js) and shows "Calculator required" exactly when its
+          # roster Calculator field is "required"; no other page loads it.
           - name: Tiers 1 + 2 (page load, hang-loop scan)
             timeout: 15
             checks: |
@@ -117,6 +120,7 @@ jobs:
               Public claims (no page says no data is collected)|python scripts/check-public-claims.py
               Tax year (canon 7.1.4: every tax game registered, states only the teaching year)|python scripts/check-tax-year.py
               GCSE Resit page (every game live, mapped, offering the level its card names; SR-11)|python scripts/check-resit-page.py
+              Calculator (canon 4.4: the on-screen calculator loads exactly where the roster says required)|python scripts/check-calculator.py
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
@@ -132,6 +136,9 @@ jobs:
           # MaffsAnswer (schools/assets/answer.js, canon 7.1.3): every outcome of money(), decimal()
           # and exact(), and money() identical to tax-theft's old moneyResult() on every string a
           # type="number" input can pass (~3s).
+          # MaffsCalc (schools/assets/calculator.js, canon 4.4): arithmetic, precedence, x², √, brackets,
+          # errors, the 10 s.f. display (0.1 + 0.2 shows 0.3), key sequences, keyboard, nothing sent,
+          # keys >= 44px at 320/375/390px (~10s).
           - name: Tier 4 layer A + shared Next control
             timeout: 12
             checks: |
@@ -140,6 +147,7 @@ jobs:
               Shared Next control (schools/assets/next-control.js)|python scripts/test-next-control.py
               Portal section clicks (analytics.js section_clicked)|python scripts/test-section-clicks.py
               Shared answer checker (schools/assets/answer.js, every outcome)|python scripts/test-answer-js.py
+              Shared on-screen calculator (schools/assets/calculator.js, MaffsCalc)|python scripts/test-calculator-js.py
 
           # free-daily-pizza: reads each item's PARAMETERS and DISPLAYED strings from
           # window.FDP and recomputes everything else here with fractions.Fraction -- every
@@ -198,7 +206,8 @@ jobs:
           #    round order, >=60% shorter-side, no run of three, plausible contexts; a session played
           #    with Firebase blocked (round 1's hypotenuse tapped with real clicks); hypotenuse positions
           #    per session and tap targets at 320px; every question shape's feedback and tap step measured
-          #    at three phone sizes. Twenty planted faults, each must FAIL.
+          #    at three phone sizes, the asking screen with the calculator closed and open; the diagram
+          #    full width at 1:1; the standard header, Aa clear of everything. 22 planted faults, each must FAIL.
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |

@@ -97,3 +97,72 @@ code, kbd, samp, pre {
 }
 .calc-badge[data-calc="required"] { border-color: var(--hint); color: var(--hint); }
 .calc-badge[data-calc="not-allowed"] { border-color: var(--wrong); color: var(--wrong); }
+
+/* The on-screen calculator, MaffsCalc (schools/assets/calculator.js, canon §4.4), on games whose
+   Calculator field is "required". A toggle and a panel in the page flow: it never covers the
+   question or the answer box (the page scrolls instead). Five columns of keys at least 44px square
+   fit a 278px card (a 320px phone). Tokens only; a game's --accent and --on-accent colour the
+   toggle and = when it sets them. */
+.maffs-calc { display: flex; flex-direction: column; align-items: center; gap: .5rem; width: 100%; }
+.maffs-calc-toggle {
+  min-height: 44px;
+  padding: .45rem 1.1rem;
+  border-radius: 10px;
+  border: 2px solid var(--accent, var(--text));
+  background: var(--surface);
+  color: var(--accent, var(--text));
+  font-family: var(--font-text);
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.maffs-calc-toggle::after { content: " \25be"; }
+.maffs-calc-toggle.open::after { content: " \25b4"; }
+.maffs-calc-panel {
+  width: 100%;
+  max-width: 340px;
+  padding: .5rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+}
+.maffs-calc-panel[hidden] { display: none; }
+.maffs-calc-panel:focus { outline: none; }
+.maffs-calc-panel:focus-visible { outline: 2px solid var(--accent, var(--text)); outline-offset: 2px; }
+.maffs-calc-screen {
+  padding: .35rem .6rem;
+  margin-bottom: .45rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-family: var(--font-num);
+  text-align: right;
+}
+.maffs-calc-expr, .maffs-calc-result { white-space: nowrap; overflow-x: auto; overflow-y: hidden; }
+.maffs-calc-expr { min-height: 1.3em; font-size: .85rem; color: var(--muted); }
+.maffs-calc-result { min-height: 1.4em; font-size: 1.35rem; font-weight: 700; color: var(--text); }
+.maffs-calc-keys { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.maffs-calc-key {
+  min-height: 44px;
+  min-width: 0;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-num);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.maffs-calc-key.op { color: var(--muted); }
+.maffs-calc-key.wide { grid-column: span 2; }
+.maffs-calc-key.eq {
+  grid-column: span 3;
+  background: var(--accent, var(--text));
+  border-color: var(--accent, var(--text));
+  color: var(--on-accent, var(--surface));
+}
+.maffs-calc-key:active { background: var(--border); }
+.maffs-calc-key.eq:active { opacity: .85; }
