@@ -654,7 +654,7 @@ async def ui_playthrough(browser, out, seed=4242):
 
 async def phone_fit(browser, out):
     """Every question shape, wrong-answer feedback (the worked example for 'short'), at three sizes."""
-    measured = 0
+    measured, worst = 0, {}
     for (w, h) in PHONES:
         ctx, page, errors = await new_page(browser, (w, h))
         try:
@@ -701,6 +701,7 @@ async def phone_fit(browser, out):
                 await page.wait_for_selector("#feedback .maffs-next")
                 m = await page.evaluate("""() => { const b = document.querySelector('#feedback .maffs-next').getBoundingClientRect();
                   return [b.bottom, document.documentElement.scrollWidth, window.innerWidth]; }""")
+                worst[(w, h)] = max(worst.get((w, h), 0), m[0])
                 if m[0] > h - FOOTER:
                     out.append("%s: Next ends at %.0fpx, below the fold (%dpx)" % (where, m[0], h - FOOTER))
                 if m[1] > m[2]:
@@ -712,6 +713,7 @@ async def phone_fit(browser, out):
                 out.append("phone %dx%d page error: %s" % (w, h, e))
         finally:
             await ctx.close()
+    print("Lowest Next: " + ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER) for (w, h), v in sorted(worst.items())))
     return measured
 
 

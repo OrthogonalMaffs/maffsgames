@@ -121,12 +121,13 @@ body.playing a.back-link{display:none}
 /* Phone rule (canon §7.6.1). On a wrong answer the answer box cannot be used, so it goes and the
    feedback takes its place; on a short screen the triangle moves below the feedback and Next
    (visual order only: the reading order stays question, reason, Next), the question text (restated
-   in the working) folds away, and at 600px tall or less so does the score bar, which nothing
-   changes while the feedback shows. */
+   in the working) folds away, and at 600px tall or less so do the score bar and the round label,
+   which nothing changes while the feedback shows. */
 .qcard.fb-open .answer-row,.qcard.fb-open .msg{display:none}
 .qcard.fb-open .fig svg{max-height:150px}
 @media (max-height:600px){
-  body.fb-open .hud{display:none}
+  body.fb-open .hud,.qcard.fb-open .round-label{display:none}
+  .qcard.fb-open{gap:.4rem;padding-top:.6rem}
 }
 @media (max-height:760px){
   .qcard.fb-open .fig-wrap{order:10}
