@@ -203,6 +203,9 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
 1. **Resit section DONE and announced** (§3.13; PRs #22, #23; spec-map GCSE refs for the last three cards #24;
    /updates/ entry in Jon's wording #25). Still for Jon: §3.15–§3.17. §3.12's theme migration still owes the
    suite its adult register (fonts, palette).
+   **4 Oct (Jon):** G7 transformations banded STRETCH (audit §10.1 third amendment); `shape-shifter` joined
+   /resit/ (32 cards; the /updates/ entry still says 31, Jon's wording, his call). Pythagoras is a STRETCH build
+   target: build order item 14, "Just Pythag It, Bruv".
 2. **Wrong-keys batch 2.** Contract to come from Project Claude.
 3. **Fermi Lab rebuild.** Contracts are Project files (`claude/fermi-lab-review-2026-10-02.md`,
    `claude/fermi-lab-rebuild-2026-10-02.md`); ask Jon if they are not in the session.
@@ -660,6 +663,17 @@ Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resi
 11. **Maths Wizard** [PROPOSED]: Jon's mental strategies. Each card gives the trick, why it works and where it breaks, then a drill.
 12. **Don't Count the Zeroes**: standard form (STRETCH). Item 3.5(3): built beside `standard-form-blitz`, scaffold-first with a place-value chart.
 13. **Venn Diagrams AGAIN?**: HCF and LCM via prime-factor Venn diagrams.
+14. **Just Pythag It, Bruv** (working title, Jon): Pythagoras' theorem, find the hypotenuse, find a shorter side, in
+    context (G20.1's Pythagoras half; **STRETCH**, Jon 4 Oct 2026; for the June 2027 exams). **There is no dedicated
+    Pythagoras game in the library:** G20's COVERED verdict rests on `trig-worms`, which never tests Pythagoras
+    (audit §10.4, STRETCH build target). Design (Jon, 4 Oct 2026): (1) every question starts by identifying the
+    hypotenuse; (2) the bank is weighted towards finding a shorter side (subtract); (3) the two types are mixed
+    unpredictably so students can't add by habit; (4) the adding-instead-of-subtracting answer must appear as a
+    distractor where options are shown; (5) Stage (a) includes scaled triples (e.g. 6-8-10, 9-12-15, 15-20-25,
+    30-40-50, 10-24-26). When a question is a 3-4-5 or 5-12-13 multiple, the feedback after answering names it:
+    "Spotted it? 6, 8, 10 is the 3-4-5 triangle doubled. No calculation needed." (adjusted to the triple and scale).
+    The full worked method is still shown. The verifier checks every triple-family message names the correct base
+    triple and scale factor. Still to specify: the stages (only stage (a) is named) and the build contract.
 
 ## 4. Prevention and quality — after §1–3
 
