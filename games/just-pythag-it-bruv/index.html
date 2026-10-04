@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED until Jon approves it (4 Oct 2026): noindex, and off the portal, /resit/, the sitemap,
+     the spec map and /updates/. Listing it removes this robots line. -->
+<meta name="robots" content="noindex">
+<meta name="description" content="Pythagoras' theorem with a calculator: find the hypotenuse or a shorter side of a right-angled triangle, from whole-number triangles to ladders, ramps and roofs.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/just-pythag-it-bruv/">
+<meta property="og:title" content="Just Pythag It, Bruv — MaffsGames">
+<meta property="og:description" content="Pythagoras' theorem with a calculator: find the hypotenuse or a shorter side of a right-angled triangle, from whole-number triangles to ladders, ramps and roofs.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/just-pythag-it-bruv/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Just Pythag It, Bruv — MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5). The base tokens come from there; this game sets
+   only its accent and the colours of its triangle. */
+:root{--accent:#6d28d9;--accent-dim:#ede9fe;--on-accent:#ffffff;
+  --tri-line:#1a2744;--tri-fill:#ede9fe;--tri-hyp:#6d28d9}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-block;margin:.4rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.8rem 0 .4rem;position:relative}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);letter-spacing:.01em}
+.header .sub{font-size:.92rem;color:var(--muted);margin-top:.25rem}
+.header .a11y-toggle{position:absolute;right:0;top:.8rem}
+@media (max-width:560px){.header h1{font-size:1.55rem}.header .a11y-toggle{position:static;margin-top:.6rem}}
+body.playing .header{padding:.1rem 0 .4rem}body.playing .header h1{font-size:1.25rem}body.playing .header .sub{display:none}
+body.playing a.back-link{display:none}
+@media (max-width:560px){
+  body.playing .header .a11y-toggle{position:absolute;margin-top:0;top:0}
+  body.playing .header h1{padding:0 2.7rem}
+}
+.screen{display:none}.screen.active{display:block}
+
+/* Start screen */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.panel h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-bottom:.6rem}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.menu-info .katex{font-size:1.1em}
+.theorem{text-align:center;font-size:1.25rem;margin:.7rem 0 .2rem;color:var(--accent)}
+.badges{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.2rem 0 .4rem}
+.level-tag{display:inline-flex;align-items:center;padding:.25em .7em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-size:.85rem;font-weight:600;line-height:1.3}
+.rounds{list-style:none;margin:.2rem 0 0}
+.rounds li{display:flex;gap:.6rem;align-items:baseline;padding:.3rem 0;border-top:1px solid var(--border);font-size:.92rem}
+.rounds li:first-child{border-top:none}
+.rounds b{font-family:var(--font-num);color:var(--accent);min-width:1.2rem}
+.session-select{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.2rem 0}
+.session-btn{padding:.5rem 1rem;min-height:44px;min-width:44px;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:.95rem;font-weight:600;cursor:pointer}
+.session-btn.selected{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.start-btn{display:block;margin:1rem auto .3rem;padding:.75rem 2.6rem;font-size:1.05rem}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+/* Play */
+.hud{display:flex;justify-content:space-between;padding:.45rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.6rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.6rem}
+.round-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:700}
+.prompt{font-size:1rem;line-height:1.55}
+.fig{display:flex;justify-content:center}
+.fig svg{width:100%;max-width:380px;height:auto;display:block}
+.fig-wrap .note{font-size:.75rem;color:var(--muted);text-align:center}
+.fig-wrap{display:flex;flex-direction:column;align-items:center;gap:.2rem}
+.tri-side{stroke:var(--tri-line);stroke-width:3;stroke-linecap:round}
+.tri-fill{fill:var(--tri-fill);stroke:none}
+.tri-right{fill:none;stroke:var(--tri-line);stroke-width:2}
+.tri-label{font-family:var(--font-num);font-weight:700;fill:var(--text)}
+.tri-label.unknown{fill:var(--accent);font-style:italic}
+.answer-row{display:flex;gap:.5rem;align-items:center;justify-content:center;flex-wrap:wrap}
+.answer-row label{font-family:var(--font-num);font-weight:700;color:var(--accent);font-size:1.15rem}
+.answer-row input{width:8.5rem;min-height:44px;padding:.45rem .6rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.2rem;text-align:center}
+.answer-row input:focus{outline:none;border-color:var(--accent)}
+.answer-row .unit{font-family:var(--font-num);font-size:1.05rem;color:var(--muted);min-width:1.6rem}
+.msg{min-height:1.2em;text-align:center;font-size:.9rem;color:var(--hint)}
+.feedback:empty{display:none}
+.fb{border-radius:12px;padding:.75rem .85rem;border:1px solid var(--border);background:var(--surface-alt)}
+.fb.wrong{border-color:var(--wrong)}
+.fb.right{border-color:var(--correct)}
+.fb-verdict{font-weight:700;font-size:1rem}
+.fb.right .fb-verdict{color:var(--correct)}
+.fb.wrong .fb-verdict{color:var(--wrong)}
+.fb-verdict .num{font-family:var(--font-num)}
+.fb-said{font-size:.88rem;font-weight:400;color:var(--muted);margin-left:.4rem}
+.fb-said del{color:var(--wrong);font-family:var(--font-num)}
+.fb-help,.fb-spot,.fb-nudge{margin-top:.5rem;padding:.45rem .65rem;border-left:3px solid var(--hint);border-radius:0 8px 8px 0;font-size:.92rem;line-height:1.5}
+.fb-spot{border-left-color:var(--accent)}
+.fb-help .rule,.fb-spot .rule{display:block;font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--hint);font-weight:700}
+.fb-spot .rule{color:var(--accent)}
+.fb-nudge{font-weight:700;color:var(--hint)}
+.fb-work{margin-top:.5rem;font-size:.92rem;line-height:1.5}
+.fb-work .id{margin-bottom:.3rem}
+.fb-work .line{font-family:var(--font-num);margin:.15rem 0;overflow-x:auto}
+.fb-work .line .katex{font-size:1.05em}
+.fb-quick{font-weight:700;color:var(--correct);text-align:center;font-size:1.05rem}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Phone rule (canon §7.6.1). On a wrong answer the answer box cannot be used, so it goes and the
+   feedback takes its place; on a short screen the triangle moves below the feedback and Next
+   (visual order only: the reading order stays question, reason, Next), the question text (restated
+   in the working) folds away, and at 600px tall or less so do the score bar and the round label,
+   which nothing changes while the feedback shows. */
+.qcard.fb-open .answer-row,.qcard.fb-open .msg{display:none}
+.qcard.fb-open .fig svg{max-height:150px}
+@media (max-height:600px){
+  body.fb-open .hud,.qcard.fb-open .round-label{display:none}
+  .qcard.fb-open{gap:.4rem;padding-top:.6rem}
+}
+@media (max-height:760px){
+  .qcard.fb-open .fig-wrap{order:10}
+  .qcard.fb-open .prompt{display:none}
+}
+@media (max-width:420px){
+  .fb-work,.fb-help,.fb-spot{font-size:.86rem}
+  .fb-work .line .katex,.fb-help .katex{font-size:1em}
+  .container{padding:.6rem}
+  .qcard{padding:.75rem .7rem}
+  .fb{padding:.6rem .65rem}
+  .hud{padding:.35rem .5rem}
+}
+
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
+body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2;max-width:65ch}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+
+  <div class="header" id="gameHeader">
+    <h1>Just Pythag It, Bruv</h1>
+    <div class="sub">Pythagoras' theorem. Find the hypotenuse, or find a shorter side.</div>
+    <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+  </div>
+
+  <div id="menu" class="screen active">
+    <div class="badges">
+      <span class="level-tag" id="levelTag">Foundation</span>
+      <span class="calc-badge" data-calc="required" id="calcBadge">Calculator required</span>
+    </div>
+    <div class="panel menu-info">
+      <div class="theorem" id="theorem">a² + b² = c²</div>
+      <p>Every question is a right-angled triangle. Start by finding the <strong>hypotenuse</strong>: the
+        longest side, opposite the right angle.</p>
+      <p>Finding the hypotenuse? Square the other two sides and <strong>add</strong>. Is the hypotenuse
+        given? Then you're finding a shorter side: <strong>subtract</strong>. Then square root.</p>
+    </div>
+    <div class="panel">
+      <h2>Three rounds, in order</h2>
+      <ul class="rounds">
+        <li><b>1</b><span>Whole-number triangles. Some you might spot without a calculator.</span></li>
+        <li><b>2</b><span>Decimal answers, to 1 decimal place.</span></li>
+        <li><b>3</b><span>Real situations: ladders, screens, ramps, fields and roofs.</span></li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>Questions</h2>
+      <div id="sessionSelect" class="session-select"></div>
+      <button class="btn solid start-btn" id="startBtn">Start</button>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Round</div><div class="hud-val" id="hudRound">1</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="hudClock">0:00</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="round-label" id="roundLabel"></div>
+      <div class="prompt" id="prompt"></div>
+      <div class="fig-wrap"><div class="fig" id="fig"></div><div class="note" id="figNote"></div></div>
+      <form class="answer-row" id="answerForm" autocomplete="off">
+        <label for="answer">x =</label>
+        <input id="answer" type="text" inputmode="decimal" enterkeyhint="done" aria-label="Your answer">
+        <span class="unit" id="unit"></span>
+        <button class="btn solid" type="submit" id="submitBtn">Check</button>
+      </form>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Session done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="stats" id="resStats"></div>
+      <button class="btn solid" id="againBtn">Play again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Just Pythag It, Bruv — Pythagoras' theorem. Resit strand (built 4 Oct 2026, Jon's contract in
+ * docs/next-contract-just-pythag-it-bruv.md).
+ *
+ * Everything that decides what a student sees — the order of question types, every triangle, every
+ * key, the worked solutions, the "Spotted it?" line, the add-instead-of-subtract check and the
+ * drawing — lives on window.JPIB as plain functions with no DOM. The UI calls them through JPIB,
+ * and scripts/verify-just-pythag-it-bruv.py drives the SAME functions from the live page.
+ *
+ * Rules the engine keeps (and the verifier checks):
+ *  - A session is 20 questions in three rounds, in order: 7 whole-number triangles (Pythagorean
+ *    triples and their multiples), 7 decimal answers, 6 worded situations in metric units.
+ *  - Question types: 'hyp' (find the hypotenuse) and 'short' (find a shorter side). At least 12 of
+ *    the 20 are 'short' (60%), and no three in a row share a type. The sequence is built from runs
+ *    of one or two, so both hold by construction: no redraw loop.
+ *  - Lengths are integers in units of 1/D (D = 1 or 10), so every square is exact. A key is the
+ *    square root of an integer S over D, rounded half up from the exact value (SR-1), or the exact
+ *    whole number in round 1. Rounds 2 and 3 never draw a perfect square, so "to 1 decimal place"
+ *    is always needed.
+ *  - Add-instead-of-subtract: on a 'short' question, an answer marked wrong whose value is the one
+ *    you get by ADDING the squares, rounded the way the question asks (1 d.p.; a round-1 question
+ *    asks for no rounding, so its whole number or 1 d.p.), is that error. The first three per
+ *    session get a worked example on the question's own numbers; after that, a one-line nudge.
+ *  - Every 'short' question keeps that value at least 0.1 (1 d.p.) or 1 (whole numbers) away from
+ *    the key, so the two can never round to the same answer.
+ */
+(function () {
+  'use strict';
+
+  var J = {};
+  J.SLUG = 'just-pythag-it-bruv';
+  J.LEVEL = 'ks3';                 // the level key (SR-11: keys never change); shown as "Foundation"
+  J.LEVEL_LABEL = 'Foundation';
+  J.LENGTH = 20;
+  J.STAGES = [
+    { id: 'a', n: 7, label: 'Round 1 · Whole numbers' },
+    { id: 'b', n: 7, label: 'Round 2 · Decimal answers' },
+    { id: 'c', n: 6, label: 'Round 3 · In context' }
+  ];
+  J.H_COUNTS = [7, 8];            // 'hyp' questions per session: 12 or 13 of 20 are 'short'
+  J.HELP_EXAMPLES = 3;            // worked examples for the add error, per session
+  J.BASE = 100;
+  J.T_K = 0.15;
+  J.NUDGE = "Is the side you're finding the longest one?";
+
+  /* ---------- randomness: seeded, so a session can be replayed exactly ---------- */
+  J.mulberry32 = function (seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  };
+  J.shuffle = function (arr, rng) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  };
+  J.pick = function (arr, rng) { return arr[Math.floor(rng() * arr.length)]; };
+  J.newSeed = function () { return (Math.floor(Math.random() * 4294967296) ^ Date.now()) >>> 0; };
+
+  /* ---------- exact integer arithmetic ---------- */
+  J.isqrt = function (n) {
+    var r = Math.floor(Math.sqrt(n));
+    if (r * r > n) r -= 1;              // Math.sqrt is correctly rounded: at most one step either way
+    if ((r + 1) * (r + 1) <= n) r += 1;
+    return r;
+  };
+  J.isSquare = function (n) { var r = J.isqrt(n); return r * r === n; };
+  // sqrt(S)/D rounded half up to dp places (0 or 1), as an integer count of 10^-dp units.
+  // K is the largest integer with (2K - 1) * D <= 2 * 10^dp * sqrt(S), so a tie rounds up.
+  J.roundSqrt = function (S, D, dp) {
+    var f = dp === 1 ? 400 : 4;
+    var m = Math.floor(J.isqrt(f * S) / D);
+    return Math.floor((m + 1) / 2);
+  };
+  J.fmtUnits = function (v, D) { return D === 1 ? String(v) : (v / D).toFixed(D === 10 ? 1 : 2); };
+  // An exact value S / scale (scale a power of 10), written with no trailing zeros.
+  J.fmtExact = function (S, scale) {
+    if (scale === 1) return String(S);
+    var dp = String(scale).length - 1;
+    return (S / scale).toFixed(dp).replace(/\.?0+$/, '');
+  };
+  // sqrt(S)/D truncated to 3 decimal places, for the working line ("6.244...").
+  J.sqrtDigits = function (S, D) {
+    var t = Math.floor(J.isqrt(S * 1000000) / D);
+    return Math.floor(t / 1000) + '.' + ('00' + (t % 1000)).slice(-3);
+  };
+
+  /* ---------- the type sequence ---------- */
+  // Runs of 'short' (S) of length 1 or 2, separated by runs of 'hyp' (H) of length 1 or 2, with up
+  // to two H at either end. k, the number of S runs, is drawn from the values that can hold the
+  // counts, so every draw succeeds and no run reaches three.
+  J.typeSequence = function (rng) {
+    var nH = J.pick(J.H_COUNTS, rng), nS = J.LENGTH - nH;
+    var kMin = Math.max(Math.ceil(nS / 2), Math.ceil((nH - 2) / 2));
+    var kMax = Math.min(nS, nH + 1);
+    var ks = [];
+    for (var k0 = kMin; k0 <= kMax; k0++) ks.push(k0);
+    var k = J.pick(ks, rng);
+    var sRuns = [], i;
+    for (i = 0; i < k; i++) sRuns.push(1);
+    J.shuffle(sRuns.map(function (_, j) { return j; }), rng).slice(0, nS - k)
+      .forEach(function (j) { sRuns[j] = 2; });
+    var inner = [];
+    for (i = 0; i < k - 1; i++) inner.push(1);
+    var start = 0, end = 0;
+    var units = [];
+    for (i = 0; i < k - 1; i++) units.push(i);
+    units.push('s', 's', 'e', 'e');
+    J.shuffle(units, rng).slice(0, nH - (k - 1)).forEach(function (u) {
+      if (u === 's') start++; else if (u === 'e') end++; else inner[u]++;
+    });
+    var out = [];
+    function put(t, n) { for (var x = 0; x < n; x++) out.push(t); }
+    put('hyp', start);
+    for (i = 0; i < k; i++) { put('short', sRuns[i]); if (i < k - 1) put('hyp', inner[i]); }
+    put('hyp', end);
+    return out;
+  };
+
+  /* ---------- round 1: Pythagorean triples and their multiples ---------- */
+  J.TRIPLES = [];
+  [1, 2, 3, 4, 5, 6, 7, 8, 10].forEach(function (k) { J.TRIPLES.push({ base: [3, 4, 5], k: k }); });
+  [1, 2, 3].forEach(function (k) { J.TRIPLES.push({ base: [5, 12, 13], k: k }); });
+  J.TRIPLES.push({ base: [8, 15, 17], k: 1 });
+  J.TRIPLES.push({ base: [7, 24, 25], k: 1 });
+  // Only the 3-4-5 and 5-12-13 families get the line (Jon's addendum, 4 Oct 2026).
+  J.SPOT_BASES = ['3-4-5', '5-12-13'];
+  J.scaleWord = function (k) {
+    return k === 1 ? '' : k === 2 ? ' doubled' : k === 3 ? ' tripled' : ' multiplied by ' + k;
+  };
+  J.spotLine = function (triple) {
+    var name = triple.base.join('-');
+    if (J.SPOT_BASES.indexOf(name) === -1) return null;
+    var s = triple.base.map(function (x) { return x * triple.k; });
+    return 'Spotted it? ' + s.join(', ') + ' is the ' + name + ' triangle' + J.scaleWord(triple.k) +
+      '. No calculation needed.';
+  };
+
+  /* ---------- round 2: decimal answers ---------- */
+  J.POOL_B = { hyp: [], short: [] };
+  (function () {
+    var p, q, r, a;
+    for (p = 3; p <= 20; p++) for (q = p; q <= 20; q++) {
+      if (!J.isSquare(p * p + q * q)) J.POOL_B.hyp.push([p, q]);
+    }
+    for (r = 6; r <= 25; r++) for (a = 3; a < r; a++) {
+      var S = r * r - a * a;
+      if (S >= 9 && !J.isSquare(S)) J.POOL_B.short.push([r, a]);
+    }
+  })();
+  J.UNITS = ['cm', 'm', 'mm'];
+
+  /* ---------- round 3: situations, metric, every number plausible ---------- */
+  // Each pool entry is the given numbers in units of 1/D. Bounds (checked again by the verifier):
+  //  ladder  foot 0.6-1.6 m, height 2.4-6.0 m, ladder 2.5-7.0 m, angle with the ground 65-80 degrees
+  //  tv      16:9 screens, 32" to 75" (diagonal 81-191 cm), width:height 1.70-1.85
+  //  ramp    rise 20-33 cm, run in whole 10 cm up to 5 m, gradient 1:15 to 1:20 (within the UK
+  //          limit for a ramp's going of up to 5 m, Approved Document M)
+  //  field   60-150 m long, width 0.4-1 times the length
+  //  roof    half-span 2.5-5.0 m, rise 1.2-3.5 m, pitch 20-50 degrees, rafter 3.0-6.0 m
+  function deg(rad) { return rad * 180 / Math.PI; }
+  // "a 4.5 m ladder", "an 8.0 m ladder", "an 81 cm diagonal": eight, eleven, eighteen, eighty...
+  J.aOrAn = function (num) { return /^(8|11(?!\d)|18(?!\d))/.test(String(num)) ? 'an' : 'a'; };
+  J.CONTEXTS = {
+    ladder: { D: 10, unit: 'm', types: ['hyp', 'short'], pool: { hyp: [], short: [] } },
+    tv: { D: 1, unit: 'cm', types: ['hyp', 'short'], pool: { hyp: [], short: [] } },
+    ramp: { D: 1, unit: 'cm', types: ['hyp'], pool: { hyp: [], short: [] } },
+    field: { D: 1, unit: 'm', types: ['hyp', 'short'], pool: { hyp: [], short: [] } },
+    roof: { D: 10, unit: 'm', types: ['hyp', 'short'], pool: { hyp: [], short: [] } }
+  };
+  J.CONTEXT_IDS = ['ladder', 'tv', 'ramp', 'field', 'roof'];
+  (function () {
+    var C = J.CONTEXTS, h, f, L, d, w, rise, run, l, s, R;
+    // ladder: [foot, height] for hyp; [ladder, foot, 'height'] / [ladder, height, 'foot'] for short
+    for (h = 24; h <= 60; h++) for (f = 6; f <= 16; f++) {
+      var ang = deg(Math.atan2(h, f));
+      if (ang >= 65 && ang <= 80 && !J.isSquare(h * h + f * f)) C.ladder.pool.hyp.push([f, h]);
+    }
+    for (L = 25; L <= 70; L += 5) {
+      for (f = 6; f <= 16; f++) {
+        var a1 = deg(Math.acos(f / L));
+        if (a1 >= 65 && a1 <= 80 && !J.isSquare(L * L - f * f)) C.ladder.pool.short.push([L, f, 'height']);
+      }
+      for (h = 24; h <= 60; h++) {
+        if (h >= L) continue;
+        var a2 = deg(Math.asin(h / L));
+        if (a2 >= 65 && a2 <= 80 && !J.isSquare(L * L - h * h)) C.ladder.pool.short.push([L, h, 'foot']);
+      }
+    }
+    // tv: 16:9 screens by diagonal (32, 40, 43, 50, 55, 65, 75 inches, in whole cm)
+    // A screen counts as 16:9 if width:height is 1.70 to 1.85 once the unknown side is worked out.
+    function tvOk(wd, ht) { var a = wd / ht; return a >= 1.70 && a <= 1.85; }
+    [81, 102, 109, 127, 140, 165, 191].forEach(function (dg) {
+      var nw = dg * 16 / Math.sqrt(337), nh = dg * 9 / Math.sqrt(337);
+      [-1, 0, 1].forEach(function (e) {
+        w = Math.round(nw) + e; h = Math.round(nh);
+        if (tvOk(w, h) && !J.isSquare(w * w + h * h)) C.tv.pool.hyp.push([w, h]);
+        if (tvOk(w, Math.sqrt(dg * dg - w * w)) && !J.isSquare(dg * dg - w * w)) C.tv.pool.short.push([dg, w, 'height']);
+        h = Math.round(nh) + e; w = Math.round(nw);
+        if (tvOk(Math.sqrt(dg * dg - h * h), h) && !J.isSquare(dg * dg - h * h)) C.tv.pool.short.push([dg, h, 'width']);
+      });
+    });
+    // ramp: [rise, run], hyp only (a gentle slope makes "find the rise" an unreal question)
+    for (rise = 20; rise <= 35; rise += 5) {
+      for (run = 10 * Math.ceil(15 * rise / 10); run <= Math.min(20 * rise, 500); run += 10) {
+        if (run <= 500 && !J.isSquare(rise * rise + run * run)) C.ramp.pool.hyp.push([rise, run]);
+      }
+    }
+    // field: [length, width] for hyp; [diagonal, length] for short
+    for (l = 60; l <= 150; l += 5) {
+      for (w = 30; w < l; w += 5) {
+        if (w >= 0.4 * l && !J.isSquare(l * l + w * w)) C.field.pool.hyp.push([l, w]);
+      }
+      for (d = l + 5; d <= 200; d += 5) {
+        var ww = Math.sqrt(d * d - l * l);
+        if (ww >= 0.4 * l && ww < l && !J.isSquare(d * d - l * l)) C.field.pool.short.push([d, l]);
+      }
+    }
+    // roof: [half-span, rise] for hyp; [rafter, half-span] for short (find the rise)
+    for (s = 25; s <= 50; s++) for (h = 12; h <= 35; h++) {
+      var p1 = deg(Math.atan2(h, s)), R2 = s * s + h * h;
+      if (p1 >= 20 && p1 <= 50 && R2 >= 900 && R2 <= 3600 && !J.isSquare(R2)) C.roof.pool.hyp.push([s, h]);
+    }
+    for (R = 30; R <= 60; R++) for (s = 25; s <= 50; s++) {
+      if (s >= R) continue;
+      var hh = Math.sqrt(R * R - s * s), p2 = deg(Math.acos(s / R));
+      if (p2 >= 20 && p2 <= 50 && hh >= 12 && hh <= 35 && !J.isSquare(R * R - s * s)) C.roof.pool.short.push([R, s]);
+    }
+  })();
+
+  /* ---------- building one question ---------- */
+  // legs p, q and hypotenuse r, in units of 1/D; exactly one is null (the unknown).
+  J.makeQuestion = function (o) {
+    var D = o.D, p = o.p, q = o.q, r = o.r, unknown = p === null ? 'p' : q === null ? 'q' : 'r';
+    var S, other = null;
+    if (unknown === 'r') S = p * p + q * q;
+    else { other = unknown === 'p' ? q : p; S = r * r - other * other; }
+    var Q = {
+      stage: o.stage, type: unknown === 'r' ? 'hyp' : 'short', unknown: unknown, D: D, unit: o.unit,
+      sides: { p: p, q: q, r: r }, S: S, dp: o.dp, context: o.context || null, triple: o.triple || null,
+      draw: o.draw, prompt: o.prompt
+    };
+    Q.given = {};
+    ['p', 'q', 'r'].forEach(function (k) { Q.given[k] = Q.sides[k] === null ? null : J.fmtUnits(Q.sides[k], D); });
+    if (o.dp === 0) { var e = J.isqrt(S); Q.keyUnits = e; Q.key = e / D; Q.keyText = J.fmtUnits(e, D); }
+    else { var K = J.roundSqrt(S, D, 1); Q.keyUnits = K; Q.key = K / 10; Q.keyText = (K / 10).toFixed(1); }
+    if (Q.type === 'short') {
+      var Sa = r * r + other * other, K1 = J.roundSqrt(Sa, D, 1), K0 = J.roundSqrt(Sa, D, 0);
+      Q.add = { S: Sa, k1: K1 / 10, k1Text: (K1 / 10).toFixed(1), k0: K0, k0Text: String(K0) };
+    } else Q.add = null;
+    Q.spot = Q.triple ? J.spotLine(Q.triple) : null;
+    return Q;
+  };
+
+  J.drawPlain = function (rng) {
+    return { rot: 15 * Math.floor(rng() * 24), mirror: rng() < 0.5 };
+  };
+
+  J.buildStageA = function (type, triple, rng) {
+    var s = triple.base.map(function (x) { return x * triple.k; });
+    var legs = rng() < 0.5 ? [s[0], s[1]] : [s[1], s[0]];
+    var unit = J.pick(J.UNITS, rng);
+    var p = legs[0], q = legs[1], r = s[2];
+    if (type === 'hyp') r = null; else if (rng() < 0.5) p = null; else q = null;
+    return J.makeQuestion({ stage: 'a', D: 1, unit: unit, p: p, q: q, r: r, dp: 0, triple: triple,
+      draw: J.drawPlain(rng), prompt: 'Find the length of the side marked x.' });
+  };
+
+  J.buildStageB = function (type, entry, rng) {
+    var unit = J.pick(J.UNITS, rng), p, q, r;
+    if (type === 'hyp') {
+      var legs = rng() < 0.5 ? entry : [entry[1], entry[0]];
+      p = legs[0]; q = legs[1]; r = null;
+    } else {
+      r = entry[0];
+      if (rng() < 0.5) { p = entry[1]; q = null; } else { p = null; q = entry[1]; }
+    }
+    return J.makeQuestion({ stage: 'b', D: 1, unit: unit, p: p, q: q, r: r, dp: 1, draw: J.drawPlain(rng),
+      prompt: 'Find the length of the side marked x. Give your answer to 1 decimal place.' });
+  };
+
+  J.ROUND = ' Give your answer to 1 decimal place.';
+  J.buildContext = function (id, type, entry, rng) {
+    var C = J.CONTEXTS[id], D = C.D, u = C.unit, f = function (v) { return J.fmtUnits(v, D); };
+    var p = null, q = null, r = null, text, draw = { rot: 0, mirror: rng() < 0.5 };
+    // p is drawn along the ground (horizontal), q up from the right angle (vertical).
+    if (id === 'ladder') {
+      if (type === 'hyp') {
+        p = entry[0]; q = entry[1];
+        text = 'A ladder leans against a wall. Its foot is ' + f(p) + ' m from the wall and its top is ' +
+          f(q) + ' m up the wall. How long is the ladder?';
+      } else if (entry[2] === 'height') {
+        r = entry[0]; p = entry[1];
+        text = (J.aOrAn(f(r)) === 'an' ? 'An ' : 'A ') + f(r) + ' m ladder leans against a wall, with its foot ' + f(p) +
+          ' m from the wall. How far up the wall does it reach?';
+      } else {
+        r = entry[0]; q = entry[1];
+        text = (J.aOrAn(f(r)) === 'an' ? 'An ' : 'A ') + f(r) + ' m ladder leans against a wall and reaches ' + f(q) +
+          ' m up the wall. How far is its foot from the wall?';
+      }
+    } else if (id === 'tv') {
+      // width along the ground, height upright: the right angle in any of the screen's four corners
+      draw = { rot: rng() < 0.5 ? 0 : 180, mirror: rng() < 0.5 };
+      if (type === 'hyp') {
+        p = entry[0]; q = entry[1];
+        text = 'A TV screen is ' + p + ' cm wide and ' + q + ' cm tall. Screens are sold by the length of ' +
+          'the diagonal. How long is this one?';
+      } else if (entry[2] === 'height') {
+        r = entry[0]; p = entry[1];
+        text = 'A TV screen has ' + J.aOrAn(r) + ' ' + r + ' cm diagonal and is ' + p + ' cm wide. How tall is the screen?';
+      } else {
+        r = entry[0]; q = entry[1];
+        text = 'A TV screen has ' + J.aOrAn(r) + ' ' + r + ' cm diagonal and is ' + q + ' cm tall. How wide is the screen?';
+      }
+    } else if (id === 'ramp') {
+      q = entry[0]; p = entry[1];
+      text = 'A wheelchair ramp rises ' + q + ' cm over a horizontal distance of ' + p +
+        ' cm. How long is the sloping surface of the ramp?';
+    } else if (id === 'field') {
+      draw = { rot: 15 * Math.floor(rng() * 24), mirror: rng() < 0.5 };
+      if (type === 'hyp') {
+        p = entry[0]; q = entry[1];
+        text = 'A rectangular field is ' + p + ' m long and ' + q + ' m wide. You cut straight across it ' +
+          'from one corner to the opposite corner. How far do you walk?';
+      } else {
+        r = entry[0]; p = entry[1];
+        text = 'A path runs straight across a rectangular field from one corner to the opposite corner. ' +
+          'The path is ' + r + ' m long and the field is ' + p + ' m long. How wide is the field?';
+      }
+    } else if (id === 'roof') {
+      if (type === 'hyp') {
+        p = entry[0]; q = entry[1];
+        text = 'A roof slopes up from the top of a wall to the ridge. The ridge is ' + f(q) +
+          ' m higher than the top of the wall and ' + f(p) + ' m in from it. How long is the slope ' +
+          'of the roof, from the wall to the ridge?';
+      } else {
+        r = entry[0]; p = entry[1];
+        text = 'A roof slopes up from the top of a wall to the ridge. The slope is ' + f(r) +
+          ' m long and the ridge is ' + f(p) + ' m in from the wall. How much higher is the ridge than ' +
+          'the top of the wall?';
+      }
+    }
+    return J.makeQuestion({ stage: 'c', D: D, unit: u, p: p, q: q, r: r, dp: 1, context: id, draw: draw,
+      prompt: text + J.ROUND });
+  };
+
+  // Round 3: all five situations in every session. The ramp ('hyp' only) takes one of the round's
+  // 'hyp' slots (there are always at least two: no three 'short' in a row); the other four, which
+  // have both types, fill the rest in a shuffled order, and the sixth slot repeats one of them.
+  J.assignContexts = function (types, rng) {
+    var out = types.map(function () { return null; });
+    var hSlots = [];
+    types.forEach(function (t, i) { if (t === 'hyp') hSlots.push(i); });
+    out[J.pick(hSlots, rng)] = 'ramp';
+    var both = J.shuffle(J.CONTEXT_IDS.filter(function (id) { return id !== 'ramp'; }), rng);
+    var free = J.shuffle(out.map(function (v, i) { return v ? -1 : i; }).filter(function (i) { return i >= 0; }), rng);
+    free.forEach(function (slot, n) { out[slot] = n < both.length ? both[n] : J.pick(both, rng); });
+    return out;
+  };
+
+  J.buildSession = function (seed) {
+    var rng = J.mulberry32(seed);
+    var types = J.typeSequence(rng);
+    var qs = [], pos = 0;
+    var triples = J.shuffle(J.TRIPLES, rng);
+    var poolB = { hyp: J.shuffle(J.POOL_B.hyp, rng), short: J.shuffle(J.POOL_B.short, rng) };
+    var usedB = { hyp: 0, short: 0 };
+    J.STAGES.forEach(function (st) {
+      var stTypes = types.slice(pos, pos + st.n);
+      var ctx = st.id === 'c' ? J.assignContexts(stTypes, rng) : null;
+      stTypes.forEach(function (t, i) {
+        var Q;
+        if (st.id === 'a') Q = J.buildStageA(t, triples[i], rng);
+        else if (st.id === 'b') Q = J.buildStageB(t, poolB[t][usedB[t]++], rng);
+        else Q = J.buildContext(ctx[i], t, J.pick(J.CONTEXTS[ctx[i]].pool[t], rng), rng);
+        Q.index = pos + i + 1;
+        qs.push(Q);
+      });
+      pos += st.n;
+    });
+    return { seed: seed, types: types, questions: qs };
+  };
+
+  /* ---------- marking ---------- */
+  J.mark = function (Q, raw) {
+    return Q.dp === 0 ? MaffsAnswer.exact(raw, Q.key) : MaffsAnswer.decimal(raw, Q.key, 1);
+  };
+  J.isAddError = function (Q, raw) {
+    if (Q.type !== 'short' || J.mark(Q, raw) !== 'wrong') return false;
+    var d = MaffsAnswer.decimal(raw, Q.add.k1, 1);
+    if (d === 'correct' || d === 'format') return true;
+    return Q.dp === 0 && MaffsAnswer.exact(raw, Q.add.k0) === 'correct';
+  };
+  // What a detected add error gets: the worked example the first HELP_EXAMPLES times, then the nudge.
+  J.helpFor = function (nth) { return nth <= J.HELP_EXAMPLES ? 'example' : 'nudge'; };
+  J.scoreFor = function (seconds) {
+    return Math.max(1, Math.round(J.BASE / (1 + J.T_K * Math.log(1 + Math.max(0, seconds)))));
+  };
+
+  /* ---------- worked solutions ---------- */
+  // Plain data: text lines and TeX lines. The UI renders them; the verifier reads them.
+  J.sideName = function (Q, k) { return Q.sides[k] === null ? 'x' : Q.given[k]; };
+  J.worked = function (Q) {
+    var D = Q.D, sq = D * D, u = Q.unit, lines = [];
+    var g = Q.given, x;
+    if (Q.type === 'hyp') {
+      lines.push({ kind: 'text', role: 'id', text: "Hypotenuse (opposite the right angle): x, the side you're " +
+        'finding. So add.' });
+      var sp = Q.sides.p * Q.sides.p, sq2 = Q.sides.q * Q.sides.q;
+      lines.push({ kind: 'tex', tex: 'x^2 = ' + g.p + '^2 + ' + g.q + '^2 = ' + J.fmtExact(sp, sq) + ' + ' +
+        J.fmtExact(sq2, sq) + ' = ' + J.fmtExact(Q.S, sq) });
+    } else {
+      var o = Q.unknown === 'p' ? 'q' : 'p';
+      lines.push({ kind: 'text', role: 'id', text: 'Hypotenuse (opposite the right angle): ' + g.r + ' ' + u +
+        ", given. You're finding a shorter side, so subtract." });
+      var rr = Q.sides.r * Q.sides.r, oo = Q.sides[o] * Q.sides[o];
+      lines.push({ kind: 'tex', tex: 'x^2 = ' + g.r + '^2 - ' + g[o] + '^2 = ' + J.fmtExact(rr, sq) + ' - ' +
+        J.fmtExact(oo, sq) + ' = ' + J.fmtExact(Q.S, sq) });
+    }
+    if (Q.dp === 0) {
+      lines.push({ kind: 'tex', tex: 'x = \\sqrt{' + J.fmtExact(Q.S, sq) + '} = ' + Q.keyText, after: ' ' + u });
+    } else {
+      lines.push({ kind: 'tex', tex: 'x = \\sqrt{' + J.fmtExact(Q.S, sq) + '} = ' + J.sqrtDigits(Q.S, D) +
+        '\\ldots = ' + Q.keyText, after: ' ' + u + ' (1 d.p.)' });
+    }
+    return lines;
+  };
+  // The worked example for the add error, on the question's own numbers.
+  J.addExample = function (Q) {
+    var o = Q.unknown === 'p' ? 'q' : 'p', g = Q.given, u = Q.unit, sq = Q.D * Q.D;
+    // Under the heading "You added instead of subtracting": the student's own sum, then why it fails.
+    return [
+      { kind: 'tex', tex: g.r + '^2 + ' + g[o] + '^2 = ' + J.fmtExact(Q.add.S, sq) },
+      { kind: 'tex', tex: '\\sqrt{' + J.fmtExact(Q.add.S, sq) + '} = ' + J.sqrtDigits(Q.add.S, Q.D) + '\\ldots',
+        after: ' ' + u },
+      { kind: 'text', text: 'Longer than the hypotenuse, ' + g.r + ' ' + u + ', the side opposite the right ' +
+        "angle: impossible. It's given, so subtract:" }
+    ];
+  };
+
+  /* ---------- the drawing ---------- */
+  // Pure geometry: the right angle at O, leg p along OA, leg q along OB, hypotenuse AB, then
+  // mirrored and rotated, scaled into a fixed box with room for the labels outside every side.
+  J.VB = { w: 360, h: 230 };
+  J.FONT = 19;
+  J.CHAR_W = 0.6;           // monospace advance, in ems (JetBrains Mono and its fallbacks)
+  J.MIN_RATIO = 0.25;       // a thinner triangle is drawn at this ratio and marked "Not to scale"
+  J.labelText = function (Q, k) { return Q.sides[k] === null ? 'x' : Q.given[k] + ' ' + Q.unit; };
+  J.layout = function (Q) {
+    var len = function (k) {
+      if (Q.sides[k] !== null) return Q.sides[k] / Q.D;
+      return Math.sqrt(Q.S) / Q.D;
+    };
+    var P = len('p'), Qn = len('q'), notToScale = false;
+    if (Math.min(P, Qn) / Math.max(P, Qn) < J.MIN_RATIO) {
+      notToScale = true;
+      if (P < Qn) P = Qn * J.MIN_RATIO; else Qn = P * J.MIN_RATIO;
+    }
+    var th = Q.draw.rot * Math.PI / 180, c = Math.cos(th), s = Math.sin(th), m = Q.draw.mirror ? -1 : 1;
+    function tf(x, y) { x *= m; var X = x * c - y * s, Y = x * s + y * c; return [X, -Y]; }  // y down
+    var raw = { O: tf(0, 0), A: tf(P, 0), B: tf(0, Qn) };
+    var fs = J.FONT, pad = 6;
+    var texts = { p: J.labelText(Q, 'p'), q: J.labelText(Q, 'q'), r: J.labelText(Q, 'r') };
+    var maxW = 0;
+    Object.keys(texts).forEach(function (k) { maxW = Math.max(maxW, texts[k].length * J.CHAR_W * fs + 6); });
+    var lh = fs * 1.15;
+    var mx = pad + maxW + 4, my = pad + lh + 4;
+    var xs = [raw.O[0], raw.A[0], raw.B[0]], ys = [raw.O[1], raw.A[1], raw.B[1]];
+    var minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
+    var minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
+    var sc = Math.min((J.VB.w - 2 * mx) / (maxX - minX), (J.VB.h - 2 * my) / (maxY - minY));
+    var ox = (J.VB.w - sc * (maxX - minX)) / 2 - sc * minX, oy = (J.VB.h - sc * (maxY - minY)) / 2 - sc * minY;
+    function pt(v) { return [ox + sc * v[0], oy + sc * v[1]]; }
+    var O = pt(raw.O), A = pt(raw.A), B = pt(raw.B);
+    // right-angle mark: a square on the two legs at O
+    var la = Math.hypot(A[0] - O[0], A[1] - O[1]), lb = Math.hypot(B[0] - O[0], B[1] - O[1]);
+    var ua = [(A[0] - O[0]) / la, (A[1] - O[1]) / la], ub = [(B[0] - O[0]) / lb, (B[1] - O[1]) / lb];
+    var ms = Math.min(16, 0.3 * Math.min(la, lb));
+    var mark = [[O[0] + ms * ua[0], O[1] + ms * ua[1]],
+      [O[0] + ms * ua[0] + ms * ub[0], O[1] + ms * ua[1] + ms * ub[1]],
+      [O[0] + ms * ub[0], O[1] + ms * ub[1]]];
+    // labels: at each side's midpoint, pushed outward along its normal until the box clears the line
+    var sides = { p: [O, A, B], q: [O, B, A], r: [A, B, O] };
+    var labels = Object.keys(sides).map(function (k) {
+      var e0 = sides[k][0], e1 = sides[k][1], opp = sides[k][2];
+      var mid = [(e0[0] + e1[0]) / 2, (e0[1] + e1[1]) / 2];
+      var dx = e1[0] - e0[0], dy = e1[1] - e0[1], L = Math.hypot(dx, dy);
+      var n = [-dy / L, dx / L];
+      if ((opp[0] - mid[0]) * n[0] + (opp[1] - mid[1]) * n[1] > 0) n = [-n[0], -n[1]];
+      var w = texts[k].length * J.CHAR_W * fs + 6, h = lh;
+      var off = pad + Math.abs(n[0]) * w / 2 + Math.abs(n[1]) * h / 2;
+      return { side: k, text: texts[k], unknown: Q.sides[k] === null, x: mid[0] + n[0] * off,
+        y: mid[1] + n[1] * off, w: w, h: h };
+    });
+    return { vb: [J.VB.w, J.VB.h], O: O, A: A, B: B, mark: mark, labels: labels, font: fs,
+      notToScale: notToScale };
+  };
+  J.svg = function (Q) {
+    var Lo = J.layout(Q), f = function (v) { return v.toFixed(1); };
+    var pts = function (arr) { return arr.map(function (p) { return f(p[0]) + ',' + f(p[1]); }).join(' '); };
+    var O = Lo.O, A = Lo.A, B = Lo.B;
+    var desc = 'Right-angled triangle. The sides next to the right angle are ' + J.labelText(Q, 'p') + ' and ' +
+      J.labelText(Q, 'q') + '. The side opposite the right angle is ' + J.labelText(Q, 'r') + '.';
+    var s = '<svg viewBox="0 0 ' + Lo.vb[0] + ' ' + Lo.vb[1] + '" role="img" aria-label="' + desc + '">' +
+      '<polygon class="tri-fill" points="' + pts([O, A, B]) + '"/>' +
+      '<polyline class="tri-right" points="' + pts(Lo.mark) + '"/>' +
+      '<line class="tri-side" data-side="p" x1="' + f(O[0]) + '" y1="' + f(O[1]) + '" x2="' + f(A[0]) + '" y2="' + f(A[1]) + '"/>' +
+      '<line class="tri-side" data-side="q" x1="' + f(O[0]) + '" y1="' + f(O[1]) + '" x2="' + f(B[0]) + '" y2="' + f(B[1]) + '"/>' +
+      '<line class="tri-side" data-side="r" x1="' + f(A[0]) + '" y1="' + f(A[1]) + '" x2="' + f(B[0]) + '" y2="' + f(B[1]) + '"/>';
+    Lo.labels.forEach(function (l) {
+      s += '<text class="tri-label' + (l.unknown ? ' unknown' : '') + '" data-side="' + l.side + '" x="' + f(l.x) +
+        '" y="' + f(l.y) + '" font-size="' + Lo.font + '" text-anchor="middle" dominant-baseline="central">' +
+        l.text + '</text>';
+    });
+    return { html: s + '</svg>', notToScale: Lo.notToScale };
+  };
+
+  window.JPIB = J;
+})();
+
+/* ---------------------------------------------------------------- UI ---------------------------------------------------------------- */
+(function () {
+  'use strict';
+  var J = window.JPIB, SLUG = J.SLUG, LEVEL = J.LEVEL;
+  var CORRECT_DELAY = 1100;
+  var NO_FALLBACK = 2147483647;      // the longest delay setTimeout takes: the worked example waits for Next
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  function tex(t) {
+    if (window.katex) {
+      try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ }
+    }
+    return '<span>' + esc(t.replace(/\\sqrt\{([^}]*)\}/g, '√$1').replace(/\\ldots/g, '…').replace(/\\quad/g, '  ')
+      .replace(/\^2/g, '²')) + '</span>';
+  }
+  function renderLines(lines) {
+    return lines.map(function (l) {
+      if (l.kind === 'tex') return '<div class="line">' + tex(l.tex) + (l.after ? esc(l.after) : '') + '</div>';
+      return '<div class="' + (l.role === 'id' ? 'id' : 'txt') + '">' + esc(l.text) + '</div>';
+    }).join('');
+  }
+
+  var session = null, q = null, idx = 0, state = 'menu';
+  var score = 0, correctCount = 0, addCount = 0, byStage = {}, t0 = 0, askedMs = 0, askStart = 0, clockTimer = null;
+  var sessionLength = J.LENGTH;
+
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+  }
+  // The clock counts only time spent on a question, not time reading feedback.
+  function elapsed() { return askedMs + (state === 'asking' ? Date.now() - askStart : 0); }
+  function clock() {
+    var s = Math.floor(elapsed() / 1000);
+    $('hudClock').textContent = Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
+  }
+
+  function startGame() {
+    session = J.buildSession(J.newSeed());
+    idx = 0; score = 0; correctCount = 0; addCount = 0; askedMs = 0; byStage = { a: 0, b: 0, c: 0 };
+    show('game');
+    clearInterval(clockTimer); clockTimer = setInterval(clock, 1000);
+    ev('game_started', { game_slug: SLUG, level: LEVEL });
+    nextQuestion();
+  }
+
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('msg').textContent = '';
+    $('qcard').classList.remove('fb-open');
+    document.body.classList.remove('fb-open');
+    if (idx >= session.questions.length) { finish(); return; }
+    q = session.questions[idx++];
+    var st = J.STAGES.filter(function (s) { return s.id === q.stage; })[0];
+    $('roundLabel').textContent = st.label;
+    $('hudQ').textContent = q.index + '/' + session.questions.length;
+    $('hudRound').textContent = String(J.STAGES.indexOf(st) + 1);
+    $('hudScore').textContent = score;
+    $('prompt').textContent = q.prompt;
+    var pic = J.svg(q);
+    $('fig').innerHTML = pic.html;
+    $('figNote').textContent = pic.notToScale ? 'Not drawn to scale' : '';
+    $('unit').textContent = q.unit;
+    $('answer').value = '';
+    state = 'asking';
+    askStart = Date.now();
+    clock();
+    window.scrollTo(0, 0);
+    try { $('answer').focus({ preventScroll: true }); } catch (e) {}
+  }
+
+  function submit() {
+    if (state !== 'asking') return;
+    var raw = $('answer').value;
+    var res = J.mark(q, raw);
+    if (res === 'unreadable') { $('msg').textContent = MaffsAnswer.message('unreadable'); return; }
+    if (res === 'format') { $('msg').textContent = MaffsAnswer.message('format', raw, { dp: 1 }); return; }
+    var ok = res === 'correct';
+    var secs = (Date.now() - askStart) / 1000;
+    askedMs += Date.now() - askStart;
+    state = ok ? 'right' : 'wrong';
+    $('msg').textContent = '';
+    ev('question_answered', { game_slug: SLUG, level: LEVEL, question_index: q.index, correct: ok });
+    if (ok) {
+      correctCount++; byStage[q.stage]++;
+      score += J.scoreFor(secs);
+      $('hudScore').textContent = score;
+      if (!q.spot) {
+        $('feedback').innerHTML = '<div class="fb-quick">✓ x = ' + esc(q.keyText) + ' ' + esc(q.unit) + '</div>';
+        setTimeout(function () { if (state === 'right') nextQuestion(); }, CORRECT_DELAY);
+        return;
+      }
+      showFeedback(true, raw, null);
+    } else {
+      var help = null;
+      if (J.isAddError(q, raw)) { addCount++; help = J.helpFor(addCount); }
+      showFeedback(false, raw, help);
+    }
+  }
+
+  function showFeedback(ok, raw, help) {
+    var h = '<div class="fb ' + (ok ? 'right' : 'wrong') + '">';
+    if (ok) h += '<div class="fb-verdict">✓ x = <span class="num">' + esc(q.keyText) + '</span> ' + esc(q.unit) + '</div>';
+    else h += '<div class="fb-verdict">x = <span class="num">' + esc(q.keyText) + '</span> ' + esc(q.unit) +
+      ' <span class="fb-said">you said <del>' + esc(raw.trim()) + '</del></span></div>';
+    if (help === 'example') h += '<div class="fb-help" data-help="example"><span class="rule">You added instead of subtracting</span>' +
+      renderLines(J.addExample(q)) + '</div>';
+    if (help === 'nudge') h += '<div class="fb-nudge" data-help="nudge">' + esc(J.NUDGE) + '</div>';
+    if (q.spot) h += '<div class="fb-spot"><span class="rule">Pythagorean triple</span>' + esc(q.spot) + '</div>';
+    var work = J.worked(q);
+    if (help === 'example') work = work.filter(function (l) { return l.role !== 'id'; });
+    h += '<div class="fb-work">' + renderLines(work) + '</div></div>';
+    $('feedback').innerHTML = h;
+    $('qcard').classList.add('fb-open');
+    document.body.classList.add('fb-open');
+    var opts = { mount: $('feedback'), onAdvance: nextQuestion };
+    if (help === 'example') opts.fallbackMs = NO_FALLBACK;
+    MaffsNext.wrong(opts);
+  }
+
+  function finish() {
+    state = 'done';
+    clearInterval(clockTimer);
+    var n = session.questions.length, secs = Math.floor(elapsed() / 1000);
+    ev('game_completed', { game_slug: SLUG, level: LEVEL, score: score, questions_answered: n, questions_correct: correctCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, LEVEL, score, n).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, LEVEL, score);
+    var pbKey = 'jpib_best_' + LEVEL;
+    var prev = parseInt(lsGet(pbKey) || '0', 10) || 0;
+    var pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: LEVEL, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('resScore').textContent = score;
+    $('resStats').innerHTML = '<b>' + correctCount + '</b> right out of <b>' + n + '</b> · time <b>' +
+      Math.floor(secs / 60) + ':' + ('0' + (secs % 60)).slice(-2) + '</b><br>' +
+      'Round 1 <b>' + byStage.a + '/7</b> · Round 2 <b>' + byStage.b + '/7</b> · Round 3 <b>' + byStage.c + '/6</b>' +
+      (addCount ? '<br>Added instead of subtracting: <b>' + addCount + '</b>' + (addCount === 1 ? ' time' : ' times') : '') +
+      (pb ? '<br>New personal best' : '');
+    show('results');
+  }
+
+  /* ---------- wiring ---------- */
+  $('answerForm').addEventListener('submit', function (e) { e.preventDefault(); submit(); });
+  $('startBtn').addEventListener('click', startGame);
+  $('againBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('theorem').innerHTML = tex('a^2 + b^2 = c^2');
+  MaffsSession.render({ mount: $('sessionSelect'), poolSize: J.LENGTH, preferred: [J.LENGTH],
+    selected: sessionLength, onChange: function (n) { sessionLength = n; } });
+
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of live state for scripts/verify-just-pythag-it-bruv.py.
+  J.ui = {
+    state: function () { return state; },
+    question: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },
+    index: function () { return q ? q.index : 0; },
+    addCount: function () { return addCount; },
+    session: function () { return session ? JSON.parse(JSON.stringify(session)) : null; }
+  };
+})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

@@ -76,3 +76,24 @@ h1, h2, h3, h4, button, input, select, textarea {
 code, kbd, samp, pre {
   font-family: var(--font-num);
 }
+
+/* The calculator tag (canon §4.4): one badge, on the start screen of a game whose roster
+   Calculator field is "required", "not allowed" or "optional" ("untagged" shows nothing).
+   Markup: <span class="calc-badge" data-calc="required">Calculator required</span>.
+   Tokens only, so it takes either palette; --hint, --wrong and --muted all pass AA on
+   --surface-alt (canon §7.5). */
+.calc-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: .25em .7em;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  color: var(--muted);
+  font-family: var(--font-text);
+  font-size: .85rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.calc-badge[data-calc="required"] { border-color: var(--hint); color: var(--hint); }
+.calc-badge[data-calc="not-allowed"] { border-color: var(--wrong); color: var(--wrong); }
