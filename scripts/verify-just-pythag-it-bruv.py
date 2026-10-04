@@ -124,16 +124,23 @@ STAGE_ORDER = ["a"] * 7 + ["b"] * 7 + ["c"] * 6
 ROUND_ASK = "Give your answer to 1 decimal place."
 SPOT_BASES = {(3, 4, 5): "3-4-5", (5, 12, 13): "5-12-13"}
 NUDGE = "Is the side you're finding the longest one?"
-PHONES = [(320, 568), (375, 667), (390, 844)]
+PHONES = [(320, 568), (375, 667), (390, 844), (412, 915)]
+# Jon's ruling (option B, 4 Oct 2026): with the keypad open, everything fits one screen at 412x915, and
+# rounds 1-2 at 390x844; elsewhere the answer row, Check and the keypad fit the window together.
+FULL_FIT = {(412, 915): "abc", (390, 844): "ab"}
+COMPACT_MIN_H = 150       # round 3's compact triangle stays readable
+OPS = ["(", ")", "÷", "√", "×", "x²", "−", "+", "="]
 DESKTOPS = [(1280, 720), (1366, 768), (1920, 1080)]
 DESKTOP_MIN_W = 1000      # these sizes must dock the calculator; the phones must not
+COMPACT_H = {"a": 180, "b": 160, "c": 160}   # JPIB.BOX_H_COMPACT, re-read from the page in run_all
 TAP_RADIUS_PX = 22        # half a 44px fingertip
 TAP_TOL_PX = 40           # the page counts a tap for the nearest side within this distance
 SCALE_320 = 0.75          # screen px per viewBox unit at 320px wide; measured in run_all, this is the floor
 TAP_WRONG = "The hypotenuse is opposite the right angle, and always the longest side."
 FOOTER = 40
 MIN_LABEL_PX = 12
-DIAGRAM_SIZES = [(276, 568), (331, 667), (346, 844), (654, 1000)]   # the figure's width and the window height
+DIAGRAM_SIZES = [(276, 568, False), (331, 667, False), (346, 844, False), (654, 1000, False),
+                 (276, 568, True), (346, 844, True), (368, 915, True)]   # figure width, window height, compact
 FILL_DRAWING = 0.90       # the drawing, labels included, spans this much of its box in the tighter direction
 FILL_TRIANGLE = 0.70      # the triangle alone
 CALC_NOTE = "Use a calculator."
@@ -542,6 +549,8 @@ COLLECT_JS = """(seeds) => seeds.map(seed => {
   const s = JPIB.buildSession(seed);
   s.questions.forEach(q => {
     q.layout = JPIB.layout(q);
+    // a phone with the calculator open: the compact triangle, which round 1's tap step must also work on
+    if (q.stage === 'a') q.layoutC = JPIB.layout(q, JPIB.box(q, JPIB.REF.w, JPIB.REF.vh, true));
     q.worked = JPIB.worked(q);
     q.example = q.type === 'short' ? JPIB.addExample(q) : null;
     q.svg = JPIB.svg(q).html;
@@ -552,9 +561,9 @@ COLLECT_JS = """(seeds) => seeds.map(seed => {
 # The drawing sized to the figure: the box is the width it is given, the labels a legible fixed size, and
 # the triangle grown until the drawing meets the box. Returns failures (the first few), not data.
 DIAGRAM_JS = """([seeds, sizes, fillD, fillT]) => { const out = [];
-  seeds.forEach(sd => JPIB.buildSession(sd).questions.forEach(q => sizes.forEach(([w, vh]) => {
+  seeds.forEach(sd => JPIB.buildSession(sd).questions.forEach(q => sizes.forEach(([w, vh, c]) => {
     if (out.length > 5) return;
-    const b = JPIB.box(q, w, vh), L = JPIB.layout(q, b), at = 'seed ' + sd + ' q' + q.index + ' at ' + w + 'px';
+    const b = JPIB.box(q, w, vh, c), L = JPIB.layout(q, b), at = 'seed ' + sd + ' q' + q.index + ' at ' + w + 'px' + (c ? ' (compact)' : '');
     if (Math.abs(b.w - w) > 0.01 || L.vb[0] !== b.w || L.vb[1] !== b.h) { out.push(at + ': the box is ' + L.vb + ', not the figure width'); return; }
     if (b.font < 15 || b.font > 18 || L.font !== b.font) { out.push(at + ': labels at ' + L.font + 'px'); return; }
     const xs = [L.O[0], L.A[0], L.B[0]], ys = [L.O[1], L.A[1], L.B[1]];
@@ -614,7 +623,8 @@ def check_svg(q, out, where):
 
 
 TAP_JS = """(items) => items.map(it => {
-  const q = JPIB.buildSession(it.seed).questions[it.i], L = JPIB.layout(q);
+  const q = JPIB.buildSession(it.seed).questions[it.i];
+  const L = it.compact ? JPIB.layout(q, JPIB.box(q, JPIB.REF.w, JPIB.REF.vh, true)) : JPIB.layout(q);
   return it.pts.map(p => { const h = JPIB.sideAt(L, p[0], p[1]); return [h.side, h.dist]; });
 })"""
 
@@ -625,7 +635,7 @@ def seg_dist(P, a, b):
     return math.hypot(P[0] - a[0] - t * dx, P[1] - a[1] - t * dy)
 
 
-async def check_taps(page, taps, scale, out):
+async def check_taps(page, taps, scale, out, key="layout"):
     """Every side of every round-1 triangle is a finger-sized target at 320px: drawn at least 44px long,
     and the 44px stretch at its middle, from 6px inside the line to 22px outside (where a finger
     aimed at the line lands), maps to that side by this script's nearest-side test and the page's own."""
@@ -633,8 +643,9 @@ async def check_taps(page, taps, scale, out):
         return
     u = 1.0 / scale                                   # viewBox units per screen px
     items, want = [], []
+    tag = " (compact, calculator open)" if key == "layoutC" else ""
     for seed, i, q in taps:
-        L = q["layout"]
+        L = q[key]
         O, A, B = L["O"], L["A"], L["B"]
         ends = {"p": (O, A), "q": (O, B), "r": (A, B)}
         opp = {"p": B, "q": A, "r": O}
@@ -643,8 +654,8 @@ async def check_taps(page, taps, scale, out):
         for k, (a, b) in ends.items():
             ln = math.hypot(b[0] - a[0], b[1] - a[1])
             if ln * scale < 2 * TAP_RADIUS_PX and not bad:
-                out.append("seed %d q%d (%s): side %s is drawn %.0fpx long at 320px, under %dpx"
-                           % (seed, q["index"], position(q), k, ln * scale, 2 * TAP_RADIUS_PX))
+                out.append("seed %d q%d (%s)%s: side %s is drawn %.0fpx long at 320px, under %dpx"
+                           % (seed, q["index"], position(q), tag, k, ln * scale, 2 * TAP_RADIUS_PX))
                 bad = True
             tx, ty = (b[0] - a[0]) / ln, (b[1] - a[1]) / ln
             nx, ny = -ty, tx
@@ -657,19 +668,19 @@ async def check_taps(page, taps, scale, out):
                     d = {kk: seg_dist(P, aa, bb) for kk, (aa, bb) in ends.items()}
                     near = min(d, key=d.get)
                     if near != k and not bad:
-                        out.append("seed %d q%d (%s): a tap %dpx along and %dpx out from side %s's middle is "
-                                   "nearer side %s" % (seed, q["index"], position(q), t, n, k, near))
+                        out.append("seed %d q%d (%s)%s: a tap %dpx along and %dpx out from side %s's middle is "
+                                   "nearer side %s" % (seed, q["index"], position(q), tag, t, n, k, near))
                         bad = True
                     pts.append(P)
                     exp.append(k)
-        items.append({"seed": seed, "i": i, "pts": pts})
+        items.append({"seed": seed, "i": i, "pts": pts, "compact": key == "layoutC"})
         want.append((seed, q, exp))
     got = await page.evaluate(TAP_JS, items)
     tol = TAP_TOL_PX / scale
     for (seed, q, exp), res in zip(want, got):
         for k, (side, dist) in zip(exp, res):
             if side != k or dist > tol:
-                out.append("seed %d q%d: a tap on side %s registers as %s (%.1f units away)" % (seed, q["index"], k, side, dist))
+                out.append("seed %d q%d%s: a tap on side %s registers as %s (%.1f units away)" % (seed, q["index"], tag, k, side, dist))
                 break
 
 
@@ -690,6 +701,7 @@ async def collect_and_check(page, seeds, scale=None):
             items.append({"seed": sess["seed"], "i": i, "raws": raws})
             expect.append((sess["seed"], q, raws, add))
     await check_taps(page, taps, scale, out)
+    await check_taps(page, taps, 1.0, out, key="layoutC")      # drawn 1:1 on a phone
     if await page.evaluate("['p','q','r'].map(k => JPIB.isHypTap(k))") != [False, False, True]:
         out.append("isHypTap accepts a leg, or refuses the hypotenuse")
     got = await page.evaluate(PROBE_JS, items)
@@ -714,8 +726,10 @@ async def collect_and_check(page, seeds, scale=None):
 
 # ---------------------------------------------------------------- browser
 
-async def new_page(browser, viewport=(1200, 1000)):
-    ctx = await browser.new_context(viewport={"width": viewport[0], "height": viewport[1]})
+async def new_page(browser, viewport=(1200, 1000), touch=False):
+    """touch: a phone (pointer: coarse), where the calculator's keypad types the answer."""
+    ctx = await browser.new_context(viewport={"width": viewport[0], "height": viewport[1]},
+                                    has_touch=touch, is_mobile=touch)
     await bc.no_next_floor(ctx)
 
     async def route(r):
@@ -1023,6 +1037,21 @@ async def ui_playthrough(browser, out, seed=4242):
 FIG_JS = """() => { const f = document.getElementById('fig'), s = f.querySelector('svg');
   return [f.getBoundingClientRect().width, s.getBoundingClientRect().width, s.viewBox.baseVal.width]; }"""
 
+# The answer box and the keypad's state (a phone types the answer on the keypad).
+ANSWER_JS = """() => { const a = document.getElementById('answer'), c = JPIB.ui.calc(), vis = e => !!e && e.offsetParent !== null;
+  const keys = [...document.querySelectorAll('.maffs-calc-key')].map(k => k.getBoundingClientRect());
+  const svg = document.querySelector('#fig svg'), k = svg.getBoundingClientRect().width / svg.viewBox.baseVal.width;
+  const row = document.getElementById('answerForm').getBoundingClientRect(), p = document.querySelector('.maffs-calc-panel').getBoundingClientRect();
+  return { mode: c.answerMode(), ro: a.readOnly, im: a.getAttribute('inputmode'), focused: document.activeElement === a,
+    open: c.isOpen(), target: c.target(), selected: a.classList.contains('maffs-calc-selected'),
+    cue: vis(document.querySelector('.maffs-calc-cue-answer')), screenSel: document.querySelector('.maffs-calc-screen').classList.contains('maffs-calc-selected'),
+    disabled: [...document.querySelectorAll('.maffs-calc-key:disabled')].map(k => k.textContent),
+    toggle: vis(document.querySelector('.maffs-calc-toggle')), close: vis(document.querySelector('.maffs-calc-close')),
+    keyH: Math.min(...keys.map(r => r.height)), keyW: Math.min(...keys.map(r => r.width)),
+    svgH: svg.getBoundingClientRect().height,
+    label: Math.min(...[...svg.querySelectorAll('text')].map(t => parseFloat(t.getAttribute('font-size')) * k)),
+    scrollY: scrollY, rowTopV: row.top, panelBottomV: p.bottom }; }"""
+
 # Page coordinates (as at scroll 0): clicking the toggle may scroll the page to it.
 CALC_JS = """() => { const R = e => { const r = e.getBoundingClientRect(), y = scrollY, x = scrollX;
     return [r.left + x, r.top + y, r.right + x, r.bottom + y]; };
@@ -1063,8 +1092,9 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
     patch: a planted fault, applied before the game starts."""
     sizes = sizes or PHONES + DESKTOPS
     measured, worst, tapworst, calcworst, checkworst, fbworst, glided = 0, {}, {}, {}, {}, {}, set()
+    compactworst, switched = {}, set()
     for (w, h) in sizes:
-        ctx, page, errors = await new_page(browser, (w, h))
+        ctx, page, errors = await new_page(browser, (w, h), touch=w < DESKTOP_MIN_W)
         try:
             await page.evaluate(STUBS)
             if patch:
@@ -1104,8 +1134,15 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
                 i = q["index"]
                 where = "%dx%d %s%s %s q%d" % (w, h, q["stage"], ("/" + q["context"]) if q["context"] else "",
                                               q["type"], i)
-                await page.evaluate("JPIB.ui.calc().close()")     # measure closed first, every question
+                desk = w >= DESKTOP_MIN_W
+                compact_tap = not desk and q["stage"] == "a" and i % 2 == 0
+                # measure closed first; a phone keeps it open for every other round-1 tap step (compact triangle)
+                await page.evaluate("JPIB.ui.calc().%s()" % ("open" if compact_tap else "close"))
                 fig = await page.evaluate(FIG_JS)
+                if compact_tap:
+                    svgh = await page.evaluate("document.querySelector('#fig svg').getBoundingClientRect().height")
+                    if svgh > COMPACT_H["a"] + 0.5:
+                        out.append("%s: with the calculator open the tap-step triangle is %.0fpx tall, not compact" % (where, svgh))
                 if abs(fig[0] - fig[1]) > 1 or abs(fig[1] - fig[2]) > 1:
                     out.append("%s: the figure is %.0fpx wide, the SVG %.0fpx, its viewBox %.0f: not full width at 1:1"
                                % (where, fig[0], fig[1], fig[2]))
@@ -1143,54 +1180,130 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
                     for b in lab[j + 1:]:
                         if a[0] < b[2] - 0.5 and b[0] < a[2] - 0.5 and a[1] < b[3] - 0.5 and b[1] < a[3] - 0.5:
                             out.append("%s: two triangle labels overlap on screen" % where)
-                # the calculator, closed then open. Phones: in the flow under the answer row, inside the card,
-                # moving nothing above it. Desktops: docked right of the card, level with its top, never over
-                # it, and the card does not move.
-                desk = w >= DESKTOP_MIN_W
-                closed = await page.evaluate(CALC_JS)
-                await page.click(".maffs-calc-toggle")
-                opened = await page.evaluate(CALC_JS)
-                checkworst[(w, h)] = max(checkworst.get((w, h), 0), opened["check"][3])
-                if closed["panel"] is not None:
-                    out.append("%s: the calculator panel shows before it is opened" % where)
-                if opened["panel"] is None:
-                    out.append("%s: the Calculator button does not open the panel" % where)
-                else:
-                    calcworst[(w, h)] = max(calcworst.get((w, h), 0), opened["panel"][3])
-                    if any(abs(a - b) > 0.5 for a, b in zip(closed["row"] + closed["check"] + closed["card"][:3],
-                                                             opened["row"] + opened["check"] + opened["card"][:3])):
-                        out.append("%s: opening the calculator moved the card, the answer box or Check" % where)
-                    if opened["check"][3] > h - FOOTER:
-                        out.append("%s: with the calculator open, Check ends at %.0fpx, below the fold" % (where, opened["check"][3]))
-                    if opened["key"][0] < 44 or opened["key"][1] < 44:
-                        out.append("%s: a calculator key is %.0fx%.0fpx, under 44" % (where, opened["key"][0], opened["key"][1]))
-                    if opened["scroll"] > opened["inner"]:
-                        out.append("%s: with the calculator open the page is %dpx wide" % (where, opened["scroll"]))
-                    if opened["docked"] != desk:
-                        out.append("%s: the calculator is %s" % (where, "not docked beside the card" if desk else "docked on a phone"))
-                    elif desk:
-                        P, C = opened["panel"], opened["card"]
-                        if P[0] < C[2] + 4:
-                            out.append("%s: the docked calculator starts at x=%.0f, over the card (right edge %.0f)" % (where, P[0], C[2]))
-                        if P[2] > opened["cw"]:
-                            out.append("%s: the docked calculator runs past the window (x=%.0f > %d)" % (where, P[2], opened["cw"]))
-                        if abs(P[1] - C[1]) > 2:
-                            out.append("%s: the docked calculator's top (%.0f) is not level with the card's (%.0f)" % (where, P[1], C[1]))
-                    else:
-                        if opened["panel"][1] < opened["row"][3] - 0.5:
-                            out.append("%s: the calculator panel starts above the bottom of the answer row" % where)
-                        if opened["panel"][0] < opened["card"][0] - 0.5 or opened["panel"][2] > opened["card"][2] + 0.5:
-                            out.append("%s: the calculator panel spills out of the card" % where)
-                # Check, with the calculator open on even questions and closed on odd ones. Right answers too:
-                # "Spotted it?" (round 1 triples) and, every fifth question, the quick tick.
                 calc_open = i % 2 == 0
-                if not calc_open:
-                    await page.evaluate("JPIB.ui.calc().close()")
                 if q["spot"] or i % 5 == 0:
                     raw, kind = q["keyText"], ("spot" if q["spot"] else "quick")
                 else:
                     raw, kind = (q["add"]["k1Text"] if q["type"] == "short" else str(int(F(q["keyText"])) + 3)), "wrong"
-                await page.fill("#answer", raw)
+                if desk:
+                    # Desktops: docked right of the card, level with its top, never over it; the card does not move;
+                    # the answer box is an ordinary input (no answer target).
+                    await page.evaluate("JPIB.ui.calc().close()")
+                    if not await page.evaluate("document.activeElement === document.getElementById('answer')"):
+                        out.append("%s: on a desktop the answer box is not focused when the question opens" % where)
+                    closed = await page.evaluate(CALC_JS)
+                    await page.click(".maffs-calc-toggle")
+                    opened = await page.evaluate(CALC_JS)
+                    a = await page.evaluate(ANSWER_JS)
+                    if a["mode"] or a["ro"] or a["im"] == "none":
+                        out.append("%s: a desktop answer box is read-only or keypad-only (mode %s, readOnly %s, inputmode %r)"
+                                   % (where, a["mode"], a["ro"], a["im"]))
+                    checkworst[(w, h)] = max(checkworst.get((w, h), 0), opened["check"][3])
+                    if closed["panel"] is not None:
+                        out.append("%s: the calculator panel shows before it is opened" % where)
+                    if opened["panel"] is None:
+                        out.append("%s: the Calculator button does not open the panel" % where)
+                    else:
+                        calcworst[(w, h)] = max(calcworst.get((w, h), 0), opened["panel"][3])
+                        if any(abs(x - y) > 0.5 for x, y in zip(closed["row"] + closed["check"] + closed["card"][:3],
+                                                                 opened["row"] + opened["check"] + opened["card"][:3])):
+                            out.append("%s: opening the calculator moved the card, the answer box or Check" % where)
+                        if opened["check"][3] > h - FOOTER:
+                            out.append("%s: with the calculator open, Check ends at %.0fpx, below the fold" % (where, opened["check"][3]))
+                        if opened["key"][0] < 44 or opened["key"][1] < 44:
+                            out.append("%s: a calculator key is %.0fx%.0fpx, under 44" % (where, opened["key"][0], opened["key"][1]))
+                        if opened["scroll"] > opened["inner"]:
+                            out.append("%s: with the calculator open the page is %dpx wide" % (where, opened["scroll"]))
+                        P, C = opened["panel"], opened["card"]
+                        if not opened["docked"]:
+                            out.append("%s: the calculator is not docked beside the card" % where)
+                        else:
+                            if P[0] < C[2] + 4:
+                                out.append("%s: the docked calculator starts at x=%.0f, over the card (right edge %.0f)" % (where, P[0], C[2]))
+                            if P[2] > opened["cw"]:
+                                out.append("%s: the docked calculator runs past the window (x=%.0f > %d)" % (where, P[2], opened["cw"]))
+                            if abs(P[1] - C[1]) > 2:
+                                out.append("%s: the docked calculator's top (%.0f) is not level with the card's (%.0f)" % (where, P[1], C[1]))
+                    if not calc_open:
+                        await page.evaluate("JPIB.ui.calc().close()")
+                    await page.fill("#answer", raw)
+                else:
+                    # Phones: a tap on the answer box opens the keypad on it. No system keyboard: read-only,
+                    # inputmode none, never focused. The keypad types the answer; the operators are disabled.
+                    await page.evaluate("JPIB.ui.calc().close()")
+                    await page.tap("#answer")
+                    a = await page.evaluate(ANSWER_JS)
+                    o = await page.evaluate(CALC_JS)
+                    if not (a["mode"] and a["ro"] and a["im"] == "none"):
+                        out.append("%s: on a phone the answer box could open the system keyboard (keypad mode %s, readOnly %s, "
+                                   "inputmode %r)" % (where, a["mode"], a["ro"], a["im"]))
+                    if a["focused"]:
+                        out.append("%s: tapping the answer box focused it (the system keyboard would open)" % where)
+                    if not a["open"] or a["target"] != "answer":
+                        out.append("%s: tapping the answer box did not open the keypad on it (open %s, target %r)" % (where, a["open"], a["target"]))
+                    if not (a["selected"] and a["cue"]) or a["screenSel"]:
+                        out.append("%s: the answer box is not marked as selected (border %s, 'typing here' %s; display marked %s)"
+                                   % (where, a["selected"], a["cue"], a["screenSel"]))
+                    if a["disabled"] != OPS:
+                        out.append("%s: typing the answer, the disabled keys are %r, expected %r" % (where, a["disabled"], OPS))
+                    if a["toggle"] or not a["close"]:
+                        out.append("%s: the Calculator button is not inside the panel (button shown %s, close key %s)" % (where, a["toggle"], a["close"]))
+                    if a["keyH"] < 47.5 or a["keyW"] < 44:
+                        out.append("%s: the smallest key is %.0fx%.0fpx (want 48px tall, 44px wide at least)" % (where, a["keyW"], a["keyH"]))
+                    if a["svgH"] > COMPACT_H[q["stage"]] + 0.5 or a["svgH"] < COMPACT_MIN_H - 0.5:
+                        out.append("%s: with the keypad open the triangle is %.0fpx tall (compact: %d-%dpx)"
+                                   % (where, a["svgH"], COMPACT_MIN_H, COMPACT_H[q["stage"]]))
+                    if a["label"] < 15:
+                        out.append("%s: with the keypad open a triangle label is %.1fpx" % (where, a["label"]))
+                    if o["scroll"] > o["inner"]:
+                        out.append("%s: with the keypad open the page is %dpx wide" % (where, o["scroll"]))
+                    if o["panel"] and (o["panel"][1] < o["row"][3] - 0.5 or o["panel"][0] < o["card"][0] - 0.5
+                                       or o["panel"][2] > o["card"][2] + 0.5):
+                        out.append("%s: the keypad is not under the answer row inside the card" % where)
+                    # the fit (Jon's option B)
+                    fold = h - FOOTER
+                    if o["panel"]:
+                        full = q["stage"] in FULL_FIT.get((w, h), "")
+                        key = (w, h, "full" if full else "together")
+                        if full:
+                            compactworst[key] = max(compactworst.get(key, 0), o["panel"][3])
+                            if o["panel"][3] > fold or a["scrollY"] > 0.5:
+                                out.append("%s: with the keypad open the page needs scrolling (keypad ends at %.0fpx, fold %d, "
+                                           "scrolled %.0f): question to keypad must fit one screen" % (where, o["panel"][3], fold, a["scrollY"]))
+                        else:
+                            span = o["panel"][3] - o["row"][1]
+                            compactworst[key] = max(compactworst.get(key, 0), span)
+                            if span > fold:
+                                out.append("%s: the answer row to the keypad's bottom is %.0fpx, taller than the window (%d)" % (where, span, fold))
+                        if a["rowTopV"] < -0.5 or a["panelBottomV"] > fold + 0.5:
+                            out.append("%s: after the tap the answer row and keypad are not in view together (y=%.0f..%.0f, fold %d)"
+                                       % (where, a["rowTopV"], a["panelBottomV"], fold))
+                    if (w, h) not in switched:
+                        # switching: the display takes the keys, the operators come back, the answer is untouched
+                        switched.add((w, h))
+                        await page.tap(".maffs-calc-lines")
+                        b = await page.evaluate(ANSWER_JS)
+                        if b["target"] != "calc" or b["disabled"] or not b["screenSel"] or b["selected"]:
+                            out.append("%s: tapping the calculator display did not select it (target %r, disabled %r)" % (where, b["target"], b["disabled"]))
+                        await page.tap('.maffs-calc-key[data-val="7"]')
+                        await page.tap('.maffs-calc-key[data-val="×"]')
+                        await page.tap('.maffs-calc-key[data-val="6"]')
+                        await page.tap('.maffs-calc-key[data-act="eq"]')
+                        c = await page.evaluate("[JPIB.ui.calc().display().result, document.getElementById('answer').value]")
+                        if c != ["42", ""]:
+                            out.append("%s: with the display selected, 7 × 6 = gave %r (calculator, answer)" % (where, c))
+                        await page.tap("#answer")
+                        if (await page.evaluate(ANSWER_JS))["target"] != "answer":
+                            out.append("%s: tapping the answer box again did not select it" % where)
+                    for ch in raw:
+                        await page.tap('.maffs-calc-key[data-val="%s"]' % ch)
+                    typed = await page.evaluate("document.getElementById('answer').value")
+                    if typed != raw:
+                        out.append("%s: typing %r on the keypad put %r in the answer box" % (where, raw, typed))
+                    if not calc_open:
+                        await page.tap(".maffs-calc-close")
+                # Check, with the calculator open on even questions and closed on odd ones. Right answers too:
+                # "Spotted it?" (round 1 triples) and, every fifth question, the quick tick.
                 if not desk and calc_open and i % 3 != 2:
                     # The student scrolled down to use the calculator and pressed Check from there: with the
                     # answer box at the top of the window and the calculator below it (the usual case), or
@@ -1198,8 +1311,10 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
                     await page.evaluate("window.scrollTo(0, document.documentElement.scrollHeight)" if i % 3 else
                                         "window.scrollTo(0, document.getElementById('answerForm').getBoundingClientRect().top + scrollY - 8)")
                     await page.evaluate("document.getElementById('submitBtn').click()")
-                else:
+                elif desk:
                     await page.click("#submitBtn")
+                else:
+                    await page.tap("#submitBtn")
                 await page.wait_for_selector("#feedback .fb-quick" if kind == "quick" else "#feedback .maffs-next")
                 fb = await page.evaluate(SETTLED_FB_JS)
                 where_fb = "%s, %s answer, calculator %s" % (where, kind, "open" if calc_open else "closed")
@@ -1254,6 +1369,9 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
             await ctx.close()
     if not report:
         return measured
+    print("Phone, keypad open: " + ", ".join(
+        ("%dx%d %s %.0fpx" % (k[0], k[1], "keypad bottom (fold %d)" % (k[1] - FOOTER) if k[2] == "full" else "answer row to keypad (window %d)" % (k[1] - FOOTER), v))
+        for k, v in sorted(compactworst.items())))
     print("Feedback after Check, lowest bottom: " + ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER)
                                                               for (w, h), v in sorted(fbworst.items())))
     print("Lowest Next: " + ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER) for (w, h), v in sorted(worst.items())))
@@ -1319,6 +1437,8 @@ FAULTS = [
     ("the triangle not grown to the box",
      "(function(){ var o = JPIB.layout; JPIB.layout = function (q, b) { b = b || JPIB.box(q, JPIB.REF.w, JPIB.REF.vh);"
      " var L = o(q, { w: b.w * 0.6, h: b.h * 0.6, font: b.font }); L.vb = [b.w, b.h]; return L; }; })();"),
+    ("round 1's compact triangle too small to tap",
+     "JPIB.BOX_H_COMPACT = { a: 60, b: 165, c: 165 };"),
     ("the hypotenuse slopes one way only",
      "(function(){ var o = JPIB.positionPlan; JPIB.positionPlan = function (rng) { var p = o(rng);"
      " var f = function (x) { return x === 'BR' || x === 'TL' ? 'BL' : x; }; return { a: p.a.map(f), b: p.b.map(f) }; }; })();"),
@@ -1327,19 +1447,90 @@ FAULTS = [
 
 # Planted layout faults: each must fail the fit run. Round 1's first triangles (a "Spotted it?"), the
 # roofs and the fields (the longest prompts, both types: the worked example) and a spread of the rest.
-UI_FAULT_SIZES = [(1366, 768), (320, 568)]
-UI_FAULT_ONLY = "(q, i) => i % 12 === 0 || q.context === 'roof' || q.context === 'field'"
+# Each planted layout fault runs on a short question set at the sizes it concerns: round 1's first
+# triangles (a "Spotted it?"), every twelfth shape, and the roofs (the longest prompts, both types).
+UI_FAULT_ONLY = "(q, i) => i % 12 === 0 || q.context === 'roof'"
+DESK, PHONE, SMALL = [(1366, 768)], [(390, 844)], [(320, 568)]
 UI_FAULTS = [
-    ("phone: no glide to the feedback", ("script", "window.scrollTo = function (a, b) { if (a === 0 && b === 0 && typeof a === 'number') document.documentElement.scrollTop = 0; };")),
-    ("desktop: the page scrolls to the feedback", ("script", "JPIB.ui.calc().isDocked = function () { return false; };")),
-    ("desktop: the feedback pushed below the fold",
+    ("phone: no glide to the feedback", SMALL,
+     ("script", "window.scrollTo = function (a, b) { if (a === 0 && b === 0 && typeof a === 'number') document.documentElement.scrollTop = 0; };")),
+    ("desktop: the page scrolls to the feedback", DESK, ("script", "JPIB.ui.calc().isDocked = function () { return false; };")),
+    ("desktop: the feedback pushed below the fold", DESK,
      ("style", "@media (max-height:800px){.qcard.fb-open .fig-wrap{order:0!important}.qcard.fb-open .prompt{display:block!important}}"
                ".qcard.fb-open .fig svg{max-height:none!important}")),
-    ("desktop: the calculator not docked", ("script", "MaffsCalc.DOCK.min = 5000;")),
-    ("desktop: docked over the game column", ("style", ".maffs-calc.docked .maffs-calc-rail{left:40%!important}")),
-    ("desktop: the dock pushes the column", ("style", ".maffs-calc.docked .maffs-calc-rail{position:static!important}")),
-    ("phone: the calculator docked", ("script", "MaffsCalc.DOCK.min = -1000;")),
+    ("desktop: the calculator not docked", DESK, ("script", "MaffsCalc.DOCK.min = 5000;")),
+    ("desktop: docked over the game column", DESK, ("style", ".maffs-calc.docked .maffs-calc-rail{left:40%!important}")),
+    ("desktop: the dock pushes the column", DESK, ("style", ".maffs-calc.docked .maffs-calc-rail{position:static!important}")),
+    ("desktop: the answer box no longer focused", DESK,
+     ("script", "JPIB.ui.calc().answerMode = function () { return true; };")),
+    ("phone: the calculator docked", SMALL, ("script", "MaffsCalc.DOCK.min = -1000;")),
+    ("phone: the answer box can open the system keyboard", PHONE,
+     ("script", "MaffsCalc.ANSWER.readOnly = false; MaffsCalc.ANSWER.inputmode = false; JPIB.ui.calc().redock();")),
+    ("phone: tapping the answer box focuses it", PHONE, ("script", "MaffsCalc.ANSWER.blur = false;")),
+    ("phone: operator keys live while typing the answer", PHONE, ("script", "MaffsCalc.ANSWER.disableOps = false;")),
+    ("phone: no 'typing here' cue", PHONE, ("script", "MaffsCalc.ANSWER.cue = false;")),
+    ("phone: the keys type into the calculator", PHONE, ("script", "MaffsCalc.ANSWER.route = false;")),
+    ("phone: tapping the display does not select it", PHONE,
+     ("script", "document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.maffs-calc-lines')) e.stopPropagation(); }, true);")),
+    ("phone: full-size triangle with the keypad open", PHONE, ("script", "JPIB.BOX_H_COMPACT = { a: 999, b: 999, c: 999 };")),
+    ("phone: the Calculator button keeps its own row", PHONE,
+     ("style", ".maffs-calc.compact.open .maffs-calc-toggle{display:inline-block!important}")),
+    ("phone: keys under 48px", PHONE, ("style", ".maffs-calc.compact .maffs-calc-key{min-height:42px!important}")),
 ]
+
+
+async def webkit_answer_box(pw, out):
+    """The answer box in WebKit (Safari's engine) on the game page: a touch phone types through the keypad
+    (read-only, inputmode none, never focused, the keypad opens on a tap, operators disabled, Check marks
+    the typed answer); a desktop keeps an ordinary, focused input. WebKit cannot show a system keyboard
+    here either, so this confirms the behaviour that keeps it shut, not the keyboard itself."""
+    try:
+        wk = await pw.webkit.launch()
+    except Exception as exc:
+        out.append("WebKit would not start: %s" % str(exc).splitlines()[0])
+        return
+    try:
+        for (w, h), touch in (((390, 844), True), ((1280, 720), False)):
+            at = "WebKit %dx%d %s" % (w, h, "touch" if touch else "mouse")
+            ctx, page, errors = await new_page(wk, (w, h), touch=touch)
+            try:
+                page.set_default_timeout(8000)
+                await page.evaluate(STUBS)
+                await page.evaluate("JPIB.newSeed = () => 4242")
+                await (page.tap if touch else page.click)("#startBtn")
+                await wait_next_question(page, 0)
+                await page.evaluate("JPIB.ui.tap('r')")
+                q = await page.evaluate("JPIB.ui.question()")
+                if touch:
+                    await page.tap("#answer")
+                    a = await page.evaluate(ANSWER_JS)
+                    if not (a["mode"] and a["ro"] and a["im"] == "none") or a["focused"]:
+                        out.append("%s: the answer box could open the system keyboard (keypad mode %s, readOnly %s, inputmode %r, focused %s)"
+                                   % (at, a["mode"], a["ro"], a["im"], a["focused"]))
+                    if not a["open"] or a["target"] != "answer" or a["disabled"] != OPS:
+                        out.append("%s: a tap on the answer box did not open the keypad on it (open %s, target %r, disabled %r)"
+                                   % (at, a["open"], a["target"], a["disabled"]))
+                    for ch in q["keyText"]:
+                        await page.tap('.maffs-calc-key[data-val="%s"]' % ch)
+                    await page.tap("#submitBtn")
+                else:
+                    a = await page.evaluate(ANSWER_JS)
+                    if a["mode"] or a["ro"] or a["im"] == "none" or not a["focused"]:
+                        out.append("%s: the desktop answer box is not an ordinary focused input (keypad mode %s, readOnly %s, inputmode %r, focused %s)"
+                                   % (at, a["mode"], a["ro"], a["im"], a["focused"]))
+                    await page.keyboard.type(q["keyText"])
+                    await page.keyboard.press("Enter")
+                await page.wait_for_function("JPIB.ui.state() !== 'asking'")
+                if await page.evaluate("JPIB.ui.state()") != "right":
+                    out.append("%s: the right answer, typed, was not marked right (state %s)" % (at, await page.evaluate("JPIB.ui.state()")))
+                for e in errors:
+                    out.append("%s page error: %s" % (at, e))
+            except Exception as exc:
+                out.append("%s: broke: %s" % (at, str(exc).splitlines()[0]))
+            finally:
+                await ctx.close()
+    finally:
+        await wk.close()
 
 
 async def measure_scale(browser):
@@ -1377,6 +1568,11 @@ async def run_all(args):
         browser = await pw.chromium.launch()
         global SCALE_320
         SCALE_320 = await measure_scale(browser)
+        ctx0, page0, _ = await new_page(browser)
+        page_h = await page0.evaluate("JPIB.BOX_H_COMPACT")
+        await ctx0.close()
+        if page_h != COMPACT_H:
+            fail("the page's compact triangle heights %r differ from this script's COMPACT_H %r: update both" % (page_h, COMPACT_H))
         print("Round-1 triangle at 320px: %.3f px per unit (tap target: the middle %dpx of each side, 6px in to 22px out)"
               % (SCALE_320, 2 * TAP_RADIUS_PX))
         ctx, page, errors = await new_page(browser)
@@ -1389,6 +1585,12 @@ async def run_all(args):
         nq = sum(len(s["questions"]) for s in data)
         ns = sum(1 for s in data for q in s["questions"] if q["type"] == "short")
         print("Sessions: %d   questions: %d (%d find-a-shorter-side, %.1f%%)" % (len(data), nq, ns, 100.0 * ns / nq))
+
+        wk_out = []
+        await webkit_answer_box(pw, wk_out)
+        for f in wk_out:
+            fail(f)
+        print("WebKit: the answer box on a touch phone (keypad only, never focused) and on a desktop (ordinary input)")
 
         ui_out = []
         n_add = await ui_playthrough(browser, ui_out)
@@ -1407,11 +1609,11 @@ async def run_all(args):
 
         if not args.no_selftest and not args.no_phone:
             print()
-            print("Layout faults (a short run at 1366x768 and 320x568, each patched into a fresh page):")
-            for name, patch in UI_FAULTS:
+            print("Layout faults (a short run at the size each concerns, each patched into a fresh page):")
+            for name, sizes, patch in UI_FAULTS:
                 found = []
                 try:
-                    await phone_fit(browser, found, sizes=UI_FAULT_SIZES, only=UI_FAULT_ONLY, patch=patch, report=False)
+                    await phone_fit(browser, found, sizes=sizes, only=UI_FAULT_ONLY, patch=patch, report=False)
                 except Exception as exc:          # a fault that breaks the page outright is caught too
                     found.append("the run broke: %s" % str(exc).splitlines()[0])
                 print("  %-48s %s" % (name, ("CAUGHT (%d failures, e.g. %s)" % (len(found), found[0][:90])) if found else "*** MISSED ***"))

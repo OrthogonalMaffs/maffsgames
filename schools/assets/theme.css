@@ -174,3 +174,38 @@ code, kbd, samp, pre {
 }
 .maffs-calc-key:active { background: var(--border); }
 .maffs-calc-key.eq:active { opacity: .85; }
+.maffs-calc-key:disabled { opacity: .28; cursor: not-allowed; }
+.maffs-calc-screen { position: relative; display: flex; align-items: center; gap: .4rem; }
+.maffs-calc-lines { flex: 1; min-width: 0; }
+.maffs-calc-close { display: none; }
+
+/* Phones (MaffsCalc adds .compact on a touch screen below the dock breakpoint; Jon, 4 Oct 2026): the
+   Calculator button moves into the panel as a close key in the display, the display slims, keys are
+   48px. With .answer-mode the keypad types into the calculator or the game's answer box, whichever is
+   selected: a heavier border plus a "typing here" tag, never colour alone. */
+.maffs-calc.compact.open .maffs-calc-toggle { display: none; }
+.maffs-calc.compact .maffs-calc-close {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 44px; height: 44px; margin: -.15rem 0 -.15rem -.3rem; padding: 0;
+  border: 1px solid var(--border); border-radius: 8px; background: var(--surface-alt);
+  color: var(--text); font-size: 1.5rem; line-height: 1; cursor: pointer;
+}
+.maffs-calc.compact .maffs-calc-screen { padding: .15rem .45rem; margin-bottom: .35rem; }
+.maffs-calc.compact .maffs-calc-expr { min-height: 1.1em; font-size: .75rem; }
+.maffs-calc.compact .maffs-calc-result { min-height: 1.2em; font-size: 1.15rem; }
+.maffs-calc.compact .maffs-calc-key { min-height: 48px; -webkit-tap-highlight-color: transparent; }
+.maffs-calc.compact .maffs-calc-keys { gap: 5px; }
+.maffs-calc.compact .maffs-calc-panel { padding: .4rem; }
+.maffs-calc-screen.maffs-calc-selected, input.maffs-calc-selected {
+  border-color: var(--accent, var(--text)); outline: 2px solid var(--accent, var(--text)); outline-offset: 0;
+}
+.maffs-calc-answer-host { position: relative; }
+.maffs-calc-cue {
+  display: none; position: absolute; z-index: 1; padding: 0 .3em; border-radius: 4px;
+  background: var(--surface); color: var(--text); font-family: var(--font-text);
+  font-size: .62rem; font-weight: 700; line-height: 1.25; letter-spacing: .04em;
+  text-transform: uppercase; white-space: nowrap; pointer-events: none;
+}
+.maffs-calc-screen .maffs-calc-cue { top: -.6em; right: .6rem; }
+.maffs-calc-screen.maffs-calc-selected .maffs-calc-cue { display: block; }
+.maffs-calc-cue-answer:not([hidden]) { display: block; }

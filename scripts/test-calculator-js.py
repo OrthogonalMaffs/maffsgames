@@ -23,6 +23,15 @@ Runs the real file in Chromium, with theme.css for its styles, and checks:
             scrolled 600px it stays in view (sticky). At 1240px and 390px it does not dock: it opens in
             the flow under its toggle. Five planted faults (no dock, not sticky, over the column, docking
             below the breakpoint, never docking) must each fail.
+  Answer    (Jon, 4 Oct 2026) mounted with {answer: input}, on a touch phone (390x844 and 320x568), in
+  target    Chromium AND WebKit: the answer box is read-only with inputmode="none"; a tap on it never
+            focuses it (no system keyboard) and opens the keypad on it, marked by a heavier border and a
+            "typing here" tag; the operators, brackets, x², √ and = are disabled, digits, the point, DEL
+            and C type into the answer; a tap on the calculator display selects it (operators back, the
+            answer untouched); the Calculator button moves into the panel as a close key; keys 48px tall,
+            44px wide at least. With a mouse (1280x720, and 390px) nothing changes: the answer box is an
+            ordinary input. Eight planted faults (Chromium) must each fail. WebKit cannot show a system
+            keyboard either: what it confirms is the attributes and the focus behaviour, not the keyboard.
 
     python scripts/test-calculator-js.py
 """
@@ -155,6 +164,111 @@ async def dock_check(browser, css, w, h, want, fault=None):
     return out
 
 
+OPS = ['(', ')', '÷', '√', '×', 'x²', '−', '+', '=']
+ANSWER_JS = """() => { const a = document.getElementById('answer'), c = __calc, vis = e => !!e && e.offsetParent !== null;
+  const keys = [...document.querySelectorAll('.maffs-calc-key')].map(k => k.getBoundingClientRect());
+  return { mode: c.answerMode(), ro: a.readOnly, im: a.getAttribute('inputmode'), focused: document.activeElement === a,
+    open: c.isOpen(), target: c.target(), selected: a.classList.contains('maffs-calc-selected'),
+    cue: vis(document.querySelector('.maffs-calc-cue-answer')), screenSel: document.querySelector('.maffs-calc-screen').classList.contains('maffs-calc-selected'),
+    screenCue: vis(document.querySelector('.maffs-calc-screen .maffs-calc-cue')),
+    disabled: [...document.querySelectorAll('.maffs-calc-key:disabled')].map(k => k.textContent),
+    toggle: vis(document.querySelector('.maffs-calc-toggle')), close: vis(document.querySelector('.maffs-calc-close')),
+    keyH: Math.min(...keys.map(r => r.height)), keyW: Math.min(...keys.map(r => r.width)),
+    value: a.value, result: c.display().result }; }"""
+
+ANSWER_FAULTS = [
+    ("answer box writable", "MaffsCalc.ANSWER.readOnly = false;"),
+    ("no inputmode none", "MaffsCalc.ANSWER.inputmode = false;"),
+    ("a tap focuses the answer box", "MaffsCalc.ANSWER.blur = false;"),
+    ("operators live while typing the answer", "MaffsCalc.ANSWER.disableOps = false;"),
+    ("keys go to the calculator", "MaffsCalc.ANSWER.route = false;"),
+    ("no 'typing here' cue", "MaffsCalc.ANSWER.cue = false;"),
+    ("answer target with a mouse", "MaffsCalc.ANSWER.query = 'all';"),
+    ("phone keys under 48px", "STYLE:.maffs-calc.compact .maffs-calc-key{min-height:40px!important}"),
+]
+
+
+async def answer_check(browser, css, w, h, touch, fault=None):
+    """Failures for the answer target at one size, touch or mouse (with a fault patched in, if given)."""
+    at = '%s %dx%d %s' % (browser.browser_type.name, w, h, 'touch' if touch else 'mouse')
+    try:
+        return await _answer_check(browser, css, w, h, touch, fault, at)
+    except Exception as exc:              # a step that cannot happen (a key never shown) is a failure too
+        return ['%s: broke: %s' % (at, str(exc).splitlines()[0])]
+
+
+async def _answer_check(browser, css, w, h, touch, fault, at):
+    out = []
+    ctx = await browser.new_context(viewport={'width': w, 'height': h}, has_touch=touch, is_mobile=touch)
+    await ctx.route('**/*', lambda r: r.abort())
+    page = await ctx.new_page()
+    page.set_default_timeout(5000)
+    await page.set_content(PAGE)
+    await page.add_style_tag(content=css)
+    await page.add_script_tag(path=CALC_JS)
+    if fault and fault[1].startswith('STYLE:'):
+        await page.add_style_tag(content=fault[1][6:])
+    elif fault:
+        await page.evaluate(fault[1])
+    await page.evaluate("window.__calc = MaffsCalc.mount(document.getElementById('calc'), {answer: document.getElementById('answer')})")
+    a = await page.evaluate(ANSWER_JS)
+    if not touch:
+        if a['mode'] or a['ro'] or a['im'] is not None:
+            out.append('%s: with a mouse the answer box changed (keypad mode %s, readOnly %s, inputmode %r)' % (at, a['mode'], a['ro'], a['im']))
+        await page.click('#answer')
+        await page.keyboard.type('12.5')
+        b = await page.evaluate(ANSWER_JS)
+        if not b['focused'] or b['value'] != '12.5' or b['open']:
+            out.append('%s: with a mouse the answer box is not an ordinary input (focused %s, value %r, keypad opened %s)'
+                       % (at, b['focused'], b['value'], b['open']))
+        await ctx.close()
+        return out
+    if not (a['mode'] and a['ro'] and a['im'] == 'none'):
+        out.append('%s: the answer box could open the system keyboard (keypad mode %s, readOnly %s, inputmode %r)' % (at, a['mode'], a['ro'], a['im']))
+    await page.tap('#answer')
+    a = await page.evaluate(ANSWER_JS)
+    if a['focused']:
+        out.append('%s: a tap focused the answer box' % at)
+    if not a['open'] or a['target'] != 'answer':
+        out.append('%s: a tap on the answer box did not open the keypad on it (open %s, target %r)' % (at, a['open'], a['target']))
+    if not (a['selected'] and a['cue']) or a['screenSel'] or a['screenCue']:
+        out.append('%s: the answer box is not the one marked (border %s, tag %s; display marked %s/%s)'
+                   % (at, a['selected'], a['cue'], a['screenSel'], a['screenCue']))
+    if a['disabled'] != OPS:
+        out.append('%s: typing the answer, the disabled keys are %r, expected %r' % (at, a['disabled'], OPS))
+    if a['toggle'] or not a['close']:
+        out.append('%s: the Calculator button is not inside the panel (button %s, close key %s)' % (at, a['toggle'], a['close']))
+    if a['keyH'] < 47.5 or a['keyW'] < 44:
+        out.append('%s: the smallest key is %.1f x %.1f px (want 48 tall, 44 wide)' % (at, a['keyW'], a['keyH']))
+    for k in ['1', '2', '.', '5', 'DEL', '7']:
+        await page.tap('.maffs-calc-key[data-act="del"]' if k == 'DEL' else '.maffs-calc-key[data-val="%s"]' % k)
+    a = await page.evaluate(ANSWER_JS)
+    if a['value'] != '12.7' or a['result'] != '0':
+        out.append('%s: 1 2 . 5 DEL 7 gave answer %r, calculator %r (expected 12.7, 0)' % (at, a['value'], a['result']))
+    await page.tap('.maffs-calc-key[data-act="clear"]')
+    if (await page.evaluate(ANSWER_JS))['value'] != '':
+        out.append('%s: C did not clear the answer' % at)
+    await page.tap('.maffs-calc-lines')
+    a = await page.evaluate(ANSWER_JS)
+    if a['target'] != 'calc' or a['disabled'] or not (a['screenSel'] and a['screenCue']) or a['selected'] or a['cue']:
+        out.append('%s: a tap on the display did not select it (target %r, disabled %r)' % (at, a['target'], a['disabled']))
+    for k in ['3', '+', '4']:
+        await page.tap('.maffs-calc-key[data-val="%s"]' % k)
+    await page.tap('.maffs-calc-key[data-act="eq"]')
+    a = await page.evaluate(ANSWER_JS)
+    if a['result'] != '7' or a['value'] != '':
+        out.append('%s: with the display selected 3 + 4 = gave calculator %r, answer %r' % (at, a['result'], a['value']))
+    await page.tap('#answer')
+    if (await page.evaluate(ANSWER_JS))['target'] != 'answer':
+        out.append('%s: a second tap on the answer box did not select it' % at)
+    await page.tap('.maffs-calc-close')
+    a = await page.evaluate(ANSWER_JS)
+    if a['open'] or not a['toggle']:
+        out.append('%s: the close key did not close the panel and bring the Calculator button back' % at)
+    await ctx.close()
+    return out
+
+
 async def run():
     from playwright.async_api import async_playwright
     fails = []
@@ -279,6 +393,25 @@ async def run():
         css = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import'))
         for w, h, want in DOCK_SIZES:
             fails.extend(await dock_check(browser, css, w, h, want))
+        # The answer target: Chromium and WebKit, touch phones and mouse
+        from playwright.async_api import async_playwright as _ap   # noqa: F401 (same session)
+        engines = [browser]
+        try:
+            engines.append(await p.webkit.launch())
+        except Exception as exc:
+            fails.append('WebKit would not start (answer-box checks need it): %s' % str(exc).splitlines()[0])
+        for eng in engines:
+            for w, h, touch in [(390, 844, True), (320, 568, True), (1280, 720, False), (390, 844, False)]:
+                fails.extend(await answer_check(eng, css, w, h, touch))
+        for fault in ANSWER_FAULTS:
+            caught = []
+            for w, h, touch in [(390, 844, True), (1280, 720, False)]:
+                caught.extend(await answer_check(browser, css, w, h, touch, fault))
+            print('  fault %-40s %s' % (fault[0], ('caught (%s)' % caught[0][:70]) if caught else '*** MISSED ***'))
+            if not caught:
+                fails.append('planted fault not caught: ' + fault[0])
+        for eng in engines[1:]:
+            await eng.close()
         for fault in DOCK_FAULTS:
             caught = []
             for w, h, want in DOCK_SIZES:
@@ -303,8 +436,10 @@ def main():
         return 1
     print('PASS: %d expressions (arithmetic, precedence, x², √, brackets, errors, 10 s.f. display); '
           '%d key sequences; keyboard, toggle, privacy; keys >= 44px at 320/375/390px; docked beside a 720px '
-          'column at 1280/1366/1920 (sticky, never over it), in the flow at 1240 and 390; %d planted dock faults caught'
-          % (len(CASES), len(SEQS), len(DOCK_FAULTS)))
+          'column at 1280/1366/1920 (sticky, never over it), in the flow at 1240 and 390; %d planted dock faults caught; '
+          'answer target on touch phones in Chromium and WebKit (read-only, inputmode none, never focused, '
+          'operators disabled, display switching, 48px keys), unchanged with a mouse; %d planted answer faults caught'
+          % (len(CASES), len(SEQS), len(DOCK_FAULTS), len(ANSWER_FAULTS)))
     return 0
 
 

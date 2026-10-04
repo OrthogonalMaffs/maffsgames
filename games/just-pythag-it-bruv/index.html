@@ -107,6 +107,9 @@ a.back-link:hover{color:var(--text)}
 .answer-row input:focus{outline:none;border-color:var(--accent)}
 .answer-row .unit{font-family:var(--font-num);font-size:1.05rem;color:var(--muted);min-width:1.6rem}
 .msg{min-height:1.2em;text-align:center;font-size:.9rem;color:var(--hint)}
+/* A phone (the calculator compact): the empty message line takes no room (Jon, 4 Oct 2026). */
+.qcard.calc-compact .msg:empty{display:none}
+.qcard.calc-compact{gap:.4rem}
 .feedback:empty{display:none}
 .fb{border-radius:12px;padding:.75rem .85rem;border:1px solid var(--border);background:var(--surface-alt)}
 .fb.wrong{border-color:var(--wrong)}
@@ -742,14 +745,19 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   // get a shorter box so the answer box and Check stay above the fold. Round 1 keeps its tap-sized box.
   J.SHORT_VH = 600;
   J.BOX_H_SHORT = 150;
+  // A phone with the calculator open (Jon's ruling, 4 Oct 2026, option B): the triangle shrinks so that
+  // rounds 1-2 fit one 390x844 screen with the keypad (180px and 160px, 20px to spare in CI's font); round 3's long prompts may
+  // scroll there, the triangle staying readable. Never taller than the normal box.
+  J.BOX_H_COMPACT = { a: 180, b: 160, c: 160 };
   J.REF = { w: 276, vh: 568 };   // the figure on a 320x568 phone: the default box, and the hardest one
-  J.box = function (Q, w, vh) {
+  J.box = function (Q, w, vh, compact) {
     var tap = Q.stage === 'a';
     w = Math.max(240, w);
     var hMin = tap ? J.BOX_MIN_H_TAP : vh <= J.SHORT_VH ? J.BOX_H_SHORT : J.BOX_MIN_H;
     var cap = !tap && vh <= J.SHORT_VH ? J.BOX_H_SHORT : Math.max(hMin, Math.min(J.BOX_MAX_H, 0.36 * vh));
-    return { w: w, h: Math.round(Math.max(hMin, Math.min(cap, w * (tap ? J.BOX_RATIO_TAP : J.BOX_RATIO)))),
-      font: Math.max(15, Math.min(18, Math.round(w / 18))) };
+    var h = Math.round(Math.max(hMin, Math.min(cap, w * (tap ? J.BOX_RATIO_TAP : J.BOX_RATIO))));
+    if (compact) h = Math.min(h, J.BOX_H_COMPACT[Q.stage]);
+    return { w: w, h: h, font: Math.max(15, Math.min(18, Math.round(w / 18))) };
   };
   J.CHAR_W = 0.6;           // monospace advance, in ems (JetBrains Mono and its fallbacks)
   J.MIN_RATIO = 0.25;       // a thinner triangle is drawn at this ratio and marked "Not to scale"
@@ -983,7 +991,9 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     scoreStart = Date.now();
     $('qcard').classList.remove('tap-mode');
     $('prompt').innerHTML = esc(q.prompt) + ' <span class="calc-note">' + CALC_NOTE + '</span>';
-    try { $('answer').focus({ preventScroll: true }); } catch (e) {}
+    // On a phone the keypad types the answer (MaffsCalc's answer target): never focus the box there,
+    // or the system keyboard would open.
+    if (!(calc && calc.answerMode())) { try { $('answer').focus({ preventScroll: true }); } catch (e) {} }
   }
 
   function tapSide(side) {
@@ -1005,7 +1015,10 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   var layout = null, drawnW = 0;
   function draw() {
     drawnW = $('fig').getBoundingClientRect().width;
-    var pic = J.svg(q, J.box(q, drawnW, window.innerHeight));
+    // A phone with the calculator open draws the compact triangle (the tap step too, so nothing jumps).
+    var compact = !!(calc && calc.isCompact() && calc.isOpen());
+    $('qcard').classList.toggle('calc-compact', !!(calc && calc.isCompact()));
+    var pic = J.svg(q, J.box(q, drawnW, window.innerHeight, compact));
     layout = pic.layout;
     $('fig').innerHTML = pic.html;
     $('figNote').textContent = pic.notToScale ? 'Not drawn to scale' : '';
@@ -1127,7 +1140,9 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   $('startBtn').addEventListener('click', startGame);
   $('againBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
   $('theorem').innerHTML = tex('a^2 + b^2 = c^2');
-  var calc = window.MaffsCalc ? MaffsCalc.mount($('calc'), { dock: $('qcard') }) : null;
+  var calc = window.MaffsCalc ? MaffsCalc.mount($('calc'), { dock: $('qcard'), answer: $('answer'),
+    keepInView: $('answerForm'), foldInset: FOOTER_PX,
+    onToggle: function () { if (q && (state === 'tap' || state === 'asking')) draw(); } }) : null;
   MaffsSession.render({ mount: $('sessionSelect'), poolSize: J.LENGTH, preferred: [J.LENGTH],
     selected: sessionLength, onChange: function (n) { sessionLength = n; } });
 
