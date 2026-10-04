@@ -166,7 +166,7 @@ jobs:
           # every question shape at three phone and three desktop sizes, with the calculator open and closed,
           # plus seven planted layout faults, which would push group B towards its limit.
           - name: Content verifiers C (Just Pythag It, Bruv)
-            timeout: 12
+            timeout: 20
             checks: |
               Just Pythag It, Bruv (every key and triangle recomputed + sessions + phone and desktop fit)|python scripts/verify-just-pythag-it-bruv.py
 

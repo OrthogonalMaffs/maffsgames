@@ -20,6 +20,41 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
+## Handover — 2026-10-04 (very late, latest): the PHONE KEYPAD, PR #34; Just Pythag It, Bruv still UNLISTED
+
+Jon's contract: on phones one shared keypad types into the calculator or the answer box (no system keyboard),
+compact triangle, 48px keys. **Jon's ruling (option B, after a STOP IF):** rounds 1-2 fit one 390x844 screen
+with the keypad open; round 3 may scroll at 390x844 (answer row, Check, keypad together; triangle readable);
+everything fits at 412x915; Calculator button moves inside the panel on phones; empty message line collapses;
+48px keys. Jon tests the keyboard on Android (and an iPhone if he can borrow one): **a real iPhone test is
+still outstanding** (say so in the PR and the handover).
+
+**What it built:**
+- `calculator.js`: `MaffsCalc.ANSWER` (query '(pointer: coarse)', readOnly, inputmode, blur, disableOps, route,
+  cue; read live so tests can switch each off). "Compact" = touch and not docked: close key in the display,
+  48px keys, slim display. `mount(el, {answer, keepInView, foldInset, onToggle})`: answer box read-only +
+  inputmode none, never focused (pointerdown/mousedown preventDefault, focus->blur, touchend preventDefault);
+  opens on **pointerup** (WebKit sends no click after a cancelled pointerdown: found in testing, would have
+  broken iPhones); touchend cancel stops a ghost click landing on a key after the layout shifts. Selected
+  display: border + outline + "typing here" tag. Answer mode: operators, brackets, x², √, = disabled; digits,
+  point, DEL, C type into the answer. Desktop/docked unchanged.
+- `theme.css`: `.maffs-calc.compact*`, cue, disabled keys, `[hidden]` on the rail is !important.
+- Game: `JPIB.BOX_H_COMPACT = {a: 180, b: 160, c: 160}` when compact and open (tap step too); `.qcard.calc-compact`
+  (gap .4rem, empty msg collapsed); mount with answer target; no focus in answer mode.
+- Measured in Verdana (CI font stand-in): 390x844 keypad bottom 780 (fold 804), 412x915 844 (fold 875).
+- `test-calculator-js.py`: answer target in Chromium AND WebKit (touch 390/320, mouse 1280/390), 8 answer faults
+  caught. Verifier: phones run as touch (PHONES now includes 412x915), keypad typing, option-B fit, display
+  switching, WebKit pass on the game page, compact tap check in the engine, 17 layout faults; job C timeout 20.
+  Last full run: main pass PASS; the two faults it missed were fixed and each re-tested as caught.
+
+**Finished in PR #34:** a full verifier run PASSES (17 layout faults and 22 engine faults, every one caught);
+canon §4.4 documents the phone keypad (compact mode, the answer target, the WebKit pointerup and ghost-click
+findings, the outstanding iPhone test); todo §3.21 files the gap that phone-fit checks do not model the system
+keyboard, listing the 22 games with a typed answer box; todo START has this PR and the keypad play-test in the
+listing checklist. **Next:** unchanged: Jon plays it (now including the keypad on Android and, if he can borrow
+one, an iPhone), then the listing PR (todo START). §3.21 needs Jon's choice of option.
+Local run on Windows: set `PYTHONIOENCODING=utf-8`, or the verifier's √ crashes a cp1252 console mid-report.
+
 ## Handover — 2026-10-04 (late night, latest): the calculator dock, PR #33; Just Pythag It, Bruv still UNLISTED
 
 - **PR #33 (Jon's dock contract):** on wide screens `MaffsCalc.mount(el, {dock: card})` docks the open
