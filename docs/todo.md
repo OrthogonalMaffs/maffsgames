@@ -200,13 +200,9 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
 
 **Queue (Jon, 3 Oct: the resit section of the site is next; the rest is Jon's NEXT of 2 Oct):**
 
-1. **Resit section DONE (§3.13; PR #22 SR-11 labels, PR #23 `/resit/`).** Queued for Jon: the `/updates/` entry
-   (Jon's voice, not published until he approves; proposed wording): **"GCSE Resit section launched.** A new page,
-   [GCSE Resit](/resit/), brings together 31 games for Foundation resit classes, organised by topic. Each card says
-   what the game practises, its GCSE spec references and which level to choose. In those games, level names no
-   longer mention school years: Year 6 is now Starter and KS3 is Foundation." Also for Jon: §3.15 (hub/ticker
-   labels), §3.16 (school-year question contexts), §3.17 (prime-or-composite range), §3.18 (three games with no
-   GCSE spec-map reference). §3.12's theme migration still owes the suite its adult register (fonts, palette).
+1. **Resit section DONE and announced** (§3.13; PRs #22, #23; spec-map GCSE refs for the last three cards #24;
+   /updates/ entry in Jon's wording #25). Still for Jon: §3.15–§3.17. §3.12's theme migration still owes the
+   suite its adult register (fonts, palette).
 2. **Wrong-keys batch 2.** Contract to come from Project Claude.
 3. **Fermi Lab rebuild.** Contracts are Project files (`claude/fermi-lab-review-2026-10-02.md`,
    `claude/fermi-lab-rebuild-2026-10-02.md`); ask Jon if they are not in the session.
