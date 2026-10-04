@@ -197,8 +197,7 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
     `fermi-lab` (order-of-magnitude estimates: check whether SR-12 applies at all), `standard-form-blitz`
     ("Estimate to 1 s.f., in standard form" items: check each key is the method's answer),
     `word-problem-decoder` (its estimate questions).
-  - **/updates/ entry queued for Jon's wording:** "Corrected: Shape Shifter, Probability Pioneer, Estimation
-    Engine, Decimal Detective, Negative Number Line."
+  - **/updates/ entry: DONE 4 Oct 2026 (PR #41), Jon's wording,** first under October's "Corrected".
   - The five games' remaining audit faults: §1.51.
 
 - **Live (4 Oct):**
