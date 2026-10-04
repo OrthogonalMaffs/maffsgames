@@ -20,7 +20,24 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-04 (late night, latest): Pythag PRs #28-#30 live; NEXT = the calculator contract (fresh session)
+## Handover — 2026-10-04 (late night, latest): the calculator, PR #32; Just Pythag It, Bruv still UNLISTED
+
+- **PR #32 (Jon's calculator contract):** the shared on-screen calculator, `schools/assets/calculator.js`
+  (global `MaffsCalc`, canon §4.4, styles `.maffs-calc*` in `theme.css`), built as the plan below said, and
+  this game moved to the standard header (back link above every screen, Aa on the start screen only), its
+  triangle drawn at the figure's measured width at 1:1 (`JPIB.box(Q, width, windowHeight)`; the layout grows
+  the triangle until it and its labels meet the box), "Use a calculator." on every question.
+- **CI:** `scripts/check-calculator.py` (Tiers 1+2: include, badge and roster field agree, either way; no
+  other page loads it) and `scripts/test-calculator-js.py` (Tier 4 group: 65 expressions, 16 key sequences,
+  keyboard, toggle, nothing sent, keys at 320/375/390). The game's verifier: header, note, 1:1 full-width
+  diagram, the calculator used in the play-through, every question measured with it closed and open; 22 faults.
+- **Found and fixed:** at 320x568 the six-line round-3 prompts had Check below the fold (already so on main).
+  Short screens (600px tall or less) now give rounds 2-3 a 150px figure. My calls (i)-(vi) are in todo START.
+- **Next:** Jon plays the game (with the calculator, on a phone); then the listing PR (todo START checklist).
+  Adding the calculator to another game = tag it `required` in the roster, include the script and the badge,
+  mount it under the answer box, measure its phone fit open and closed (Pythag's verifier shows how).
+
+## Handover — 2026-10-04 (late night): Pythag PRs #28-#30 live; NEXT = the calculator contract (fresh session)
 
 - **Live:** #28 /updates/ "more than 30 games"; #29 Just Pythag It, Bruv (unlisted) + the calculator tag; #30
   Jon's amendment (round 1 tap-the-hypotenuse, dealt hypotenuse positions, "?" and identical labels, a

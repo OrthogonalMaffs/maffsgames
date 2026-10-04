@@ -48,9 +48,19 @@ WHAT IT ASSERTS (Jon's contract, docs/next-contract-just-pythag-it-bruv.md, poin
               side by this script's nearest-side test and the page's; only the hypotenuse is accepted;
               every side label is styled alike (the unknown is "?" in round 1), in the markup and as
               rendered.
+  Diagram     (Jon, 4 Oct 2026: it was a third of the card's width) JPIB.box sizes the drawing from the
+              figure's width: the box is that width, labels 15-18px; the triangle with its labels
+              reaches the box's edges (at least 90% of it in the tighter direction) and the triangle
+              alone at least 70%, at 320, 375 and 390px and on a desktop; on screen the SVG is the
+              figure's full width and 1:1 (one viewBox unit per pixel).
+  Header      the standard header (58 games, todo 3.20): "← Back to Games" linking ../../ on every
+              screen, above it; Aa on the start screen only, overlapping nothing, at every size.
+  Calculator  every question's text ends "Use a calculator."; the shared calculator (MaffsCalc) is on the
+              page, closed at first, and shows only while the answer box does; the play-through
+              works one question out on its keys; using it sends no event.
   UI          a full session played with the Firebase SDK blocked (round 1 tapped with real pointer
               clicks: a leg first, which gets the message and no event, then the hypotenuse; once by
-              keyboard); a calculator note on every question; the start screen shows
+              keyboard); the start screen shows
               "Foundation" and "Calculator required"; the page is noindex; a format answer is not
               marked and sends no event; the first three add errors show the worked example (with
               the Next control's fallback timer off), the fourth and fifth the nudge; other wrong
@@ -60,7 +70,12 @@ WHAT IT ASSERTS (Jon's contract, docs/next-contract-just-pythag-it-bruv.md, poin
               both types, both types of round 2, every situation's variants): the feedback for a
               wrong answer (for 'short', the longest: the worked example) keeps Next above the
               footer, the page never scrolls sideways, and triangle labels render at 12px or more
-              without overlapping.
+              without overlapping. Every question is measured with the calculator closed and then
+              open: opening it moves nothing above it (the answer box and Check stay put, above the
+              fold), the panel sits below the answer row inside the card with every key at least
+              44px, and the page still never scrolls sideways; the feedback (with the panel left
+              open, so hidden) still keeps Next above the fold. The SVG is the figure's full width
+              at 1:1, and Aa overlaps nothing.
 
 FAULT-INJECTION SELF-TEST (runs every time; --no-selftest skips it)
 -------------------------------------------------------------------------------
@@ -71,7 +86,7 @@ firing on 'hyp' questions; a wrong scale word; a wrong base triple; an implausib
 right-angle mark at the wrong vertex; the nudge never replacing the worked example; tap targets
 mapped to the wrong side; a leg accepted as the hypotenuse; thin round-1 triangles not widened; the
 unknown's label styled differently; no hypotenuse along the bottom; one position over 40%; the
-hypotenuse sloping one way only.
+hypotenuse sloping one way only; the box ignoring the figure's width; the triangle not grown to the box.
 
 USAGE
     python scripts/verify-just-pythag-it-bruv.py
@@ -105,6 +120,10 @@ SCALE_320 = 0.75          # screen px per viewBox unit at 320px wide; measured i
 TAP_WRONG = "The hypotenuse is opposite the right angle, and always the longest side."
 FOOTER = 40
 MIN_LABEL_PX = 12
+DIAGRAM_SIZES = [(276, 568), (331, 667), (346, 844), (654, 1000)]   # the figure's width and the window height
+FILL_DRAWING = 0.90       # the drawing, labels included, spans this much of its box in the tighter direction
+FILL_TRIANGLE = 0.70      # the triangle alone
+CALC_NOTE = "Use a calculator."
 
 _FAILURES = []
 
@@ -517,6 +536,26 @@ COLLECT_JS = """(seeds) => seeds.map(seed => {
   return s;
 })"""
 
+# The drawing sized to the figure: the box is the width it is given, the labels a legible fixed size, and
+# the triangle grown until the drawing meets the box. Returns failures (the first few), not data.
+DIAGRAM_JS = """([seeds, sizes, fillD, fillT]) => { const out = [];
+  seeds.forEach(sd => JPIB.buildSession(sd).questions.forEach(q => sizes.forEach(([w, vh]) => {
+    if (out.length > 5) return;
+    const b = JPIB.box(q, w, vh), L = JPIB.layout(q, b), at = 'seed ' + sd + ' q' + q.index + ' at ' + w + 'px';
+    if (Math.abs(b.w - w) > 0.01 || L.vb[0] !== b.w || L.vb[1] !== b.h) { out.push(at + ': the box is ' + L.vb + ', not the figure width'); return; }
+    if (b.font < 15 || b.font > 18 || L.font !== b.font) { out.push(at + ': labels at ' + L.font + 'px'); return; }
+    const xs = [L.O[0], L.A[0], L.B[0]], ys = [L.O[1], L.A[1], L.B[1]];
+    const tri = Math.max((Math.max(...xs) - Math.min(...xs)) / b.w, (Math.max(...ys) - Math.min(...ys)) / b.h);
+    let x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    L.labels.forEach(l => { x0 = Math.min(x0, l.x - l.w / 2); x1 = Math.max(x1, l.x + l.w / 2);
+      y0 = Math.min(y0, l.y - l.h / 2); y1 = Math.max(y1, l.y + l.h / 2); });
+    const all = Math.max((x1 - x0) / b.w, (y1 - y0) / b.h);
+    if (all < fillD || tri < fillT) out.push(at + ': the drawing spans ' + (100 * all).toFixed(0) + '% of its box and the triangle ' +
+      (100 * tri).toFixed(0) + '% (want ' + Math.round(100 * fillD) + '% and ' + Math.round(100 * fillT) + '%)');
+    if (x0 < -0.01 || y0 < -0.01 || x1 > b.w + 0.01 || y1 > b.h + 0.01) out.push(at + ': the drawing spills out of its box');
+  })));
+  return out; }"""
+
 PROBE_JS = """(items) => items.map(it => {
   const s = JPIB.buildSession(it.seed), q = s.questions[it.i];
   return it.raws.map(r => [JPIB.mark(q, r), JPIB.isAddError(q, r)]);
@@ -652,6 +691,8 @@ async def collect_and_check(page, seeds, scale=None):
                            % (seed, q["index"], q["type"], isadd, raw, want))
         if add is not None and not any(py_is_add(q, r, add) for r in raws):
             out.append("seed %d q%d: no probe is the add error" % (seed, q["index"]))
+    out.extend(await page.evaluate(DIAGRAM_JS, [list(range(1, min(seeds, 60) + 1)), DIAGRAM_SIZES,
+                                                FILL_DRAWING, FILL_TRIANGLE]))
     helps = await page.evaluate("[1,2,3,4,5,9].map(n => JPIB.helpFor(n))")
     if helps != ["example"] * 3 + ["nudge"] * 3:
         out.append("helpFor(1..5, 9) gave %r: the first three get the example, then the nudge" % helps)
@@ -696,7 +737,7 @@ async def wait_next_question(page, prev):
 
 
 # The screen point just outside a side's midpoint (off px along its outward normal): where a finger lands.
-CLICK_PT = """([k, off]) => { const L = JPIB.layout(JPIB.ui.question());
+CLICK_PT = """([k, off]) => { const L = JPIB.ui.layout();
   const svg = document.querySelector('#fig svg'), r = svg.getBoundingClientRect(), s = r.width / L.vb[0];
   const e = {p: [L.O, L.A], q: [L.O, L.B], r: [L.A, L.B]}[k], opp = {p: L.B, q: L.A, r: L.O}[k];
   const mx = (e[0][0] + e[1][0]) / 2, my = (e[0][1] + e[1][1]) / 2;
@@ -746,6 +787,78 @@ async def tap_step(page, q, out, where, wrong_first=False, keyboard=False):
         out.append("%s: the tap step sent an analytics event" % where)
 
 
+HEADER_JS = """() => { const vis = e => e && e.offsetParent !== null;
+  const back = [...document.querySelectorAll('a.back-link')].filter(vis);
+  const aa = document.getElementById('a11yToggle'), r = vis(aa) ? aa.getBoundingClientRect() : null;
+  const hits = [];
+  if (r) document.querySelectorAll('body *').forEach(e => {
+    if (e === aa || e.contains(aa) || aa.contains(e) || !vis(e)) return;
+    if ([...e.childNodes].every(n => n.nodeType !== 3 || !n.textContent.trim()) && e.children.length) return;   // boxes only via their text
+    const b = e.getBoundingClientRect();
+    if (b.width && b.height && r.left < b.right - 0.5 && b.left < r.right - 0.5 && r.top < b.bottom - 0.5 && b.top < r.bottom - 0.5)
+      hits.push(e.tagName.toLowerCase() + (e.id ? '#' + e.id : '') + (e.className && typeof e.className === 'string' ? '.' + e.className.split(' ')[0] : ''));
+  });
+  const scr = document.querySelector('.screen.active');
+  return { back: back.map(a => [a.getAttribute('href'), a.textContent.trim()]), aa: !!r, hits: hits,
+           backAbove: !!(back.length && scr && back[0].getBoundingClientRect().bottom <= scr.getBoundingClientRect().top + 0.5) }; }"""
+
+
+async def check_header(page, where, aa=False):
+    """The standard header: one "← Back to Games" to ../../, above the screen; Aa on the start screen
+    only, overlapping nothing."""
+    out = []
+    h = await page.evaluate(HEADER_JS)
+    if h["back"] != [["../../", "← Back to Games"]]:
+        out.append("%s: back links %r, expected one '← Back to Games' to ../../" % (where, h["back"]))
+    elif not h["backAbove"]:
+        out.append("%s: the back link is not above the screen" % where)
+    if h["aa"] != aa:
+        out.append("%s: Aa is %s" % (where, "missing" if aa else "shown (it belongs on the start screen only)"))
+    if h["hits"]:
+        out.append("%s: Aa overlaps %s" % (where, ", ".join(h["hits"][:4])))
+    return out
+
+
+async def use_calculator(page, q, out, where):
+    """Open the calculator and work the unknown side out on its keys (square root of a sum or difference
+    of squares), as a student with no calculator of their own does. No event may fire; it closes again."""
+    nev = len(await page.evaluate("window.__events || []"))
+    if await page.evaluate("JPIB.ui.calc().isOpen()"):
+        out.append("%s: the calculator starts open" % where)
+    await page.click(".maffs-calc-toggle")
+    if not await page.is_visible(".maffs-calc-panel"):
+        out.append("%s: the Calculator button does not open the panel" % where)
+        return
+    g = q["given"]
+    if q["type"] == "hyp":
+        seq = [g["p"], "x²", "+", g["q"], "x²"]
+    else:
+        seq = [g["r"], "x²", "−", g["p"] if g["p"] is not None else g["q"], "x²"]
+    await page.click('.maffs-calc-key[data-act="clear"]')
+    await page.click('.maffs-calc-key[data-val="√("]')
+    for tok in seq:
+        if tok in ("x²", "+", "−"):
+            await page.click('.maffs-calc-key >> text="%s"' % tok)
+        else:
+            for ch in tok:
+                await page.click('.maffs-calc-key[data-val="%s"]' % ch)
+    await page.click('.maffs-calc-key[data-act="eq"]')
+    shown = await page.evaluate("JPIB.ui.calc().display().result")
+    q = dict(q, layout=await page.evaluate("JPIB.ui.layout()"))
+    want = math.sqrt(float(true_unknown_sq(q, sides_of(q))))
+    try:
+        ok = abs(float(shown) - float("%.10g" % want)) <= 1e-9 * want
+    except ValueError:
+        ok = False
+    if not ok:
+        out.append("%s: the calculator shows %r for the unknown side, expected %.10g" % (where, shown, want))
+    if len(await page.evaluate("window.__events || []")) != nev:
+        out.append("%s: using the calculator sent an analytics event" % where)
+    await page.click(".maffs-calc-toggle")
+    if await page.is_visible(".maffs-calc-panel"):
+        out.append("%s: the Calculator button does not close the panel" % where)
+
+
 async def ui_playthrough(browser, out, seed=4242):
     ctx, page, errors = await new_page(browser)
     try:
@@ -758,6 +871,9 @@ async def ui_playthrough(browser, out, seed=4242):
                                     "[b.textContent.trim(), b.dataset.calc, b.offsetParent !== null] : null; })()")
         if badge != ["Calculator required", "required", True]:
             out.append("UI: calculator badge on the start screen is %r" % (badge,))
+        out.extend(await check_header(page, "UI start screen", aa=True))
+        if await page.evaluate("typeof window.MaffsCalc") != "object":
+            out.append("UI: the shared calculator (MaffsCalc) is not loaded")
         if (await page.inner_text("#levelTag")).strip() != "Foundation":
             out.append("UI: the level is not labelled Foundation")
         if (await page.inner_text("#sessionSelect")).split() != ["20"]:
@@ -767,7 +883,7 @@ async def ui_playthrough(browser, out, seed=4242):
         await page.click("#startBtn")
         await wait_next_question(page, 0)
         n_add, right, answered, expected_correct = 0, 0, [], []
-        format_done = unread_done = False
+        format_done = unread_done = calc_done = False
         taps_done = 0
         while await page.evaluate("JPIB.ui.state()") in ("asking", "tap"):
             q = await page.evaluate("JPIB.ui.question()")
@@ -775,13 +891,25 @@ async def ui_playthrough(browser, out, seed=4242):
             styles = await page.evaluate(LABEL_STYLES)
             if len(styles) != 3 or len(set(styles)) != 1:
                 out.append("UI q%d: side labels styled differently: %r" % (i, styles))
-            if not await page.is_visible("#qcard .qhead .calc-badge"):
-                out.append("UI q%d: no calculator note on the question" % i)
+            if i == 1:
+                out.extend(await check_header(page, "UI q1"))
+                fig = await page.evaluate(FIG_JS)
+                if abs(fig[0] - fig[1]) > 1 or abs(fig[1] - fig[2]) > 1:
+                    out.append("UI q1 (desktop): the figure is %.0fpx wide, the SVG %.0fpx, its viewBox %.0f"
+                               % (fig[0], fig[1], fig[2]))
             if q["stage"] == "a":
                 await tap_step(page, q, out, "UI q%d" % i, wrong_first=taps_done < 2, keyboard=taps_done == 2)
                 taps_done += 1
             elif await page.evaluate("document.querySelectorAll('#fig .tri-hit').length"):
                 out.append("UI q%d: tap targets outside round 1" % i)
+            # every question ends "Use a calculator." (after round 1's tap step, which has its own prompt)
+            shown = await page.evaluate("(() => { const p = document.getElementById('prompt'), n = p.querySelector('.calc-note');"
+                                        " return [p.textContent.trim(), n && n.offsetParent !== null ? n.textContent : null]; })()")
+            if shown != [q["prompt"] + " " + CALC_NOTE, CALC_NOTE]:
+                out.append("UI q%d: the question reads %r, not the prompt then %r" % (i, shown[0][-60:], CALC_NOTE))
+            if q["stage"] == "b" and not calc_done:
+                calc_done = True
+                await use_calculator(page, q, out, "UI q%d" % i)
             if q["dp"] == 1 and not format_done:
                 format_done = True
                 # the right value at 2 d.p. when 1 d.p. is asked: format, never marked (SR-3)
@@ -844,6 +972,9 @@ async def ui_playthrough(browser, out, seed=4242):
                     out.append("UI q%d: the 'Spotted it?' line is missing" % i)
                 await page.click("#feedback .maffs-next")
             await wait_next_question(page, i)
+        if not calc_done:
+            out.append("UI: the play-through never used the calculator")
+        out.extend(await check_header(page, "UI results screen"))
         evs = await page.evaluate("window.__events")
         names = [e[0] for e in evs]
         for name, p in evs:
@@ -876,9 +1007,23 @@ async def ui_playthrough(browser, out, seed=4242):
         await ctx.close()
 
 
+FIG_JS = """() => { const f = document.getElementById('fig'), s = f.querySelector('svg');
+  return [f.getBoundingClientRect().width, s.getBoundingClientRect().width, s.viewBox.baseVal.width]; }"""
+
+# Page coordinates (as at scroll 0): clicking the toggle may scroll the page to it.
+CALC_JS = """() => { const R = e => { const r = e.getBoundingClientRect(), y = scrollY, x = scrollX;
+    return [r.left + x, r.top + y, r.right + x, r.bottom + y]; };
+  const p = document.querySelector('.maffs-calc-panel'), open = p && p.offsetParent !== null;
+  const keys = [...document.querySelectorAll('.maffs-calc-key')].map(k => k.getBoundingClientRect());
+  return { panel: open ? R(p) : null, row: R(document.getElementById('answer')), check: R(document.getElementById('submitBtn')),
+    card: R(document.getElementById('qcard')),
+    key: open ? [Math.min(...keys.map(k => k.width)), Math.min(...keys.map(k => k.height))] : null,
+    scroll: document.documentElement.scrollWidth, inner: innerWidth }; }"""
+
+
 async def phone_fit(browser, out):
     """Every question shape, wrong-answer feedback (the worked example for 'short'), at three sizes."""
-    measured, worst, tapworst = 0, {}, {}
+    measured, worst, tapworst, calcworst, checkworst = 0, {}, {}, {}, {}
     for (w, h) in PHONES:
         ctx, page, errors = await new_page(browser, (w, h))
         try:
@@ -907,13 +1052,20 @@ async def phone_fit(browser, out):
               J.buildSession = () => ({ seed: 0, types: qs.map(q => q.type), questions: qs });
               J.helpFor = () => 'example';   // measure the longest feedback a 'short' question can show
             }""")
+            out.extend(await check_header(page, "%dx%d start screen" % (w, h), aa=True))
             await page.click("#startBtn")
             await wait_next_question(page, 0)
+            out.extend(await check_header(page, "%dx%d question 1" % (w, h)))
             while await page.evaluate("JPIB.ui.state()") in ("asking", "tap"):
                 q = await page.evaluate("JPIB.ui.question()")
                 i = q["index"]
                 where = "%dx%d %s%s %s q%d" % (w, h, q["stage"], ("/" + q["context"]) if q["context"] else "",
                                               q["type"], i)
+                await page.evaluate("JPIB.ui.calc().close()")     # measure closed first, every question
+                fig = await page.evaluate(FIG_JS)
+                if abs(fig[0] - fig[1]) > 1 or abs(fig[1] - fig[2]) > 1:
+                    out.append("%s: the figure is %.0fpx wide, the SVG %.0fpx, its viewBox %.0f: not full width at 1:1"
+                               % (where, fig[0], fig[1], fig[2]))
                 if q["stage"] == "a":
                     # the whole triangle above the fold to tap, then the answer box and Check after it
                     svgb = await page.evaluate("document.querySelector('#fig svg').getBoundingClientRect().bottom")
@@ -948,10 +1100,35 @@ async def phone_fit(browser, out):
                     for b in lab[j + 1:]:
                         if a[0] < b[2] - 0.5 and b[0] < a[2] - 0.5 and a[1] < b[3] - 0.5 and b[1] < a[3] - 0.5:
                             out.append("%s: two triangle labels overlap on screen" % where)
+                # the calculator, closed then open: nothing above it moves, the panel fits below the answer row
+                closed = await page.evaluate(CALC_JS)
+                await page.click(".maffs-calc-toggle")
+                opened = await page.evaluate(CALC_JS)
+                calcworst[(w, h)] = max(calcworst.get((w, h), 0), opened["panel"][3] if opened["panel"] else 0)
+                checkworst[(w, h)] = max(checkworst.get((w, h), 0), opened["check"][3])
+                if closed["panel"] is not None:
+                    out.append("%s: the calculator panel shows before it is opened" % where)
+                if opened["panel"] is None:
+                    out.append("%s: the Calculator button does not open the panel" % where)
+                else:
+                    if any(abs(a - b) > 0.5 for a, b in zip(closed["row"] + closed["check"], opened["row"] + opened["check"])):
+                        out.append("%s: opening the calculator moved the answer box or Check" % where)
+                    if opened["check"][3] > h - FOOTER:
+                        out.append("%s: with the calculator open, Check ends at %.0fpx, below the fold" % (where, opened["check"][3]))
+                    if opened["panel"][1] < opened["row"][3] - 0.5:
+                        out.append("%s: the calculator panel starts above the bottom of the answer row" % where)
+                    if opened["panel"][0] < opened["card"][0] - 0.5 or opened["panel"][2] > opened["card"][2] + 0.5:
+                        out.append("%s: the calculator panel spills out of the card" % where)
+                    if opened["key"][0] < 44 or opened["key"][1] < 44:
+                        out.append("%s: a calculator key is %.0fx%.0fpx, under 44" % (where, opened["key"][0], opened["key"][1]))
+                    if opened["scroll"] > opened["inner"]:
+                        out.append("%s: with the calculator open the page is %dpx wide" % (where, opened["scroll"]))
                 raw = q["add"]["k1Text"] if q["type"] == "short" else str(int(F(q["keyText"])) + 3)
                 await page.fill("#answer", raw)
                 await page.click("#submitBtn")
                 await page.wait_for_selector("#feedback .maffs-next")
+                if await page.is_visible(".maffs-calc"):
+                    out.append("%s: the calculator shows with the feedback (the panel hides while feedback shows)" % where)
                 m = await page.evaluate("""() => { const b = document.querySelector('#feedback .maffs-next').getBoundingClientRect();
                   return [b.bottom, document.documentElement.scrollWidth, window.innerWidth]; }""")
                 worst[(w, h)] = max(worst.get((w, h), 0), m[0])
@@ -968,6 +1145,10 @@ async def phone_fit(browser, out):
             await ctx.close()
     print("Lowest Next: " + ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER) for (w, h), v in sorted(worst.items())))
     print("Tap step, lowest of triangle/Check: " + ", ".join("%dx%d %.0fpx" % (w, h, v) for (w, h), v in sorted(tapworst.items())))
+    print("Asking, lowest Check (calculator open or closed, as at scroll 0): " +
+          ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER) for (w, h), v in sorted(checkworst.items())))
+    print("Calculator open, lowest panel bottom (the page scrolls to it): " +
+          ", ".join("%dx%d %.0fpx" % (w, h, v) for (w, h), v in sorted(calcworst.items())))
     return measured
 
 
@@ -1020,6 +1201,11 @@ FAULTS = [
     ("one position over 40%",
      "(function(){ var o = JPIB.positionPlan; JPIB.positionPlan = function (rng) { var p = o(rng);"
      " var f = function (x) { return x === 'Ht' || x === 'Vr' ? 'Hb' : x; }; return { a: p.a.map(f), b: p.b.map(f) }; }; })();"),
+    ("the box ignores the figure's width",
+     "JPIB.box = function (Q) { return { w: 360, h: 230, font: 19 }; };"),
+    ("the triangle not grown to the box",
+     "(function(){ var o = JPIB.layout; JPIB.layout = function (q, b) { b = b || JPIB.box(q, JPIB.REF.w, JPIB.REF.vh);"
+     " var L = o(q, { w: b.w * 0.6, h: b.h * 0.6, font: b.font }); L.vb = [b.w, b.h]; return L; }; })();"),
     ("the hypotenuse slopes one way only",
      "(function(){ var o = JPIB.positionPlan; JPIB.positionPlan = function (rng) { var p = o(rng);"
      " var f = function (x) { return x === 'BR' || x === 'TL' ? 'BL' : x; }; return { a: p.a.map(f), b: p.b.map(f) }; }; })();"),

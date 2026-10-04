@@ -31,14 +31,15 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:720px;width:100%;padding:1rem}
-/* The header bar, as the other theme games have it (Split It): back, title, Aa, on every screen. */
-.header{width:100%;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:12px}
-.back{color:var(--muted);text-decoration:none;font-size:14px;font-weight:600;white-space:nowrap;min-height:44px;display:inline-flex;align-items:center}
-.back:hover{color:var(--text)}
-.hdr-title{font-size:18px;font-weight:700;color:var(--accent);letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;flex:1;min-width:0}
-.header .a11y-toggle{flex:none}
-.menu-sub{text-align:center;font-size:.95rem;color:var(--muted);margin:.2rem 0 .6rem}
-@media (max-width:420px){.header{padding:6px 12px;gap:10px}.hdr-title{font-size:16px}}
+/* The standard game header (58 games, todo 3.20): "← Back to Games" above every screen, then the
+   start screen's title, subtitle and Aa. Aa lives on the start screen only, as in those games, so
+   nothing sits over the score bar. The back link is padded to a 44px target. */
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.6rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.6rem}}
 .screen{display:none}.screen.active{display:block}
 
 /* Start screen */
@@ -71,8 +72,9 @@ body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;ali
 .qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.6rem}
 .round-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);font-weight:700}
 .prompt{font-size:1rem;line-height:1.55}
-.fig{display:flex;justify-content:center}
-.fig svg{width:100%;max-width:380px;height:auto;display:block}
+.fig{display:flex;justify-content:center;width:100%}
+/* The viewBox is the figure's measured size (JPIB.box), so the drawing is 1:1 with the screen. */
+.fig svg{width:100%;height:auto;display:block}
 .fig-wrap .note{font-size:.75rem;color:var(--muted);text-align:center}
 .fig-wrap{display:flex;flex-direction:column;align-items:center;gap:.2rem}
 .tri-side{stroke:var(--tri-line);stroke-width:3;stroke-linecap:round}
@@ -88,7 +90,12 @@ body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;ali
 .tri-side.miss{stroke:var(--wrong);stroke-width:5}
 .qcard.tap-mode .answer-row{display:none}
 .qhead{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
-.qhead .calc-badge{font-size:.72rem;padding:.15em .55em}
+/* "Use a calculator." ends every question's text (Jon, 4 Oct 2026): part of the instruction, so it costs
+   no line of its own on a phone. */
+.calc-note{font-weight:600;color:var(--hint);white-space:nowrap}
+/* The calculator (MaffsCalc, theme.css): under the answer box, never over it; it goes while the
+   answer box does (the tap step, the feedback). */
+.qcard.tap-mode .maffs-calc,.qcard.fb-open .maffs-calc{display:none}
 .tap-ask{font-weight:700;color:var(--accent)}
 /* One line at every width, whatever the font: the input gives way, the button never wraps. */
 .answer-row{display:flex;gap:.5rem;align-items:center;justify-content:center;flex-wrap:nowrap}
@@ -133,6 +140,8 @@ body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;ali
 .qcard.fb-open .answer-row,.qcard.fb-open .msg{display:none}
 .qcard.fb-open .fig svg{max-height:150px}
 @media (max-height:600px){
+  .qcard{gap:.4rem}
+  .prompt{font-size:.95rem;line-height:1.4}
   body.fb-open .hud,.qcard.fb-open .qhead{display:none}
   .qcard.fb-open{gap:.4rem;padding-top:.6rem}
 }
@@ -163,17 +172,16 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
 <script src="../../schools/assets/session-length.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer.js"></script>
+<!-- Calculator required (roster, canon §4.4): the shared on-screen calculator. scripts/check-calculator.py
+     keeps this include, the badge and the roster field in step. -->
+<script src="../../schools/assets/calculator.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
-<div class="header" id="gameHeader">
-  <a href="../../" class="back">← Back</a>
-  <h1 class="hdr-title">Just Pythag It, Bruv</h1>
-  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
-</div>
 <div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
-    <p class="menu-sub">Pythagoras' theorem. Find the hypotenuse, or find a shorter side.</p>
+    <div class="header"><h1>Just Pythag It, Bruv</h1><div class="sub">Pythagoras' theorem. Find the hypotenuse, or find a shorter side.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
     <div class="badges">
       <span class="level-tag" id="levelTag">Foundation</span>
       <span class="calc-badge" data-calc="required" id="calcBadge">Calculator required</span>
@@ -209,7 +217,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="hudClock">0:00</div></div>
     </div>
     <div class="qcard" id="qcard">
-      <div class="qhead"><div class="round-label" id="roundLabel"></div><span class="calc-badge" data-calc="required">Calculator required</span></div>
+      <div class="qhead"><div class="round-label" id="roundLabel"></div></div>
       <div class="prompt" id="prompt"></div>
       <div class="fig-wrap"><div class="fig" id="fig"></div><div class="note" id="figNote"></div></div>
       <form class="answer-row" id="answerForm" autocomplete="off">
@@ -219,6 +227,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
         <button class="btn solid" type="submit" id="submitBtn">Check</button>
       </form>
       <div class="msg" id="msg" aria-live="polite"></div>
+      <div id="calc"></div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
     </div>
   </div>
@@ -717,10 +726,28 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
 
   /* ---------- the drawing ---------- */
   // Pure geometry: the right angle at O, leg p along OA, leg q along OB, hypotenuse AB, then
-  // mirrored and rotated, scaled into a fixed box with room for the labels outside every side.
-  J.VB = { w: 360, h: 230 };
-  J.VB_TAP = { w: 360, h: 260 };   // round 1: a taller box, so every side is a finger-sized target at 320px
-  J.FONT = 19;
+  // mirrored and rotated, scaled into a box with room for the labels outside every side.
+  // The box is the figure's real size in screen pixels (1 unit = 1px), so the triangle fills the
+  // card's width at every width, and the labels are a fixed, legible size (Jon, 4 Oct 2026: the
+  // triangle was drawn at about a third of the card's width).
+  J.BOX_RATIO = 0.64;        // height : width
+  J.BOX_RATIO_TAP = 0.72;    // round 1: a taller box, so every side is a finger-sized target at 320px
+  J.BOX_MIN_H = 178;         // never shorter than this (a 320px phone's box)...
+  J.BOX_MIN_H_TAP = 199;
+  J.BOX_MAX_H = 440;         // ...nor taller than this, nor than 42% of the window
+  // A short screen (600px tall or less, canon 7.6.1): rounds 2 and 3, whose prompts run to six lines,
+  // get a shorter box so the answer box and Check stay above the fold. Round 1 keeps its tap-sized box.
+  J.SHORT_VH = 600;
+  J.BOX_H_SHORT = 150;
+  J.REF = { w: 276, vh: 568 };   // the figure on a 320x568 phone: the default box, and the hardest one
+  J.box = function (Q, w, vh) {
+    var tap = Q.stage === 'a';
+    w = Math.max(240, w);
+    var hMin = tap ? J.BOX_MIN_H_TAP : vh <= J.SHORT_VH ? J.BOX_H_SHORT : J.BOX_MIN_H;
+    var cap = !tap && vh <= J.SHORT_VH ? J.BOX_H_SHORT : Math.max(hMin, Math.min(J.BOX_MAX_H, 0.42 * vh));
+    return { w: w, h: Math.round(Math.max(hMin, Math.min(cap, w * (tap ? J.BOX_RATIO_TAP : J.BOX_RATIO)))),
+      font: Math.max(15, Math.min(18, Math.round(w / 18))) };
+  };
   J.CHAR_W = 0.6;           // monospace advance, in ems (JetBrains Mono and its fallbacks)
   J.MIN_RATIO = 0.25;       // a thinner triangle is drawn at this ratio and marked "Not to scale"
   J.MIN_RATIO_TAP = 0.5;    // round 1: the short leg stays long enough to tap
@@ -752,13 +779,14 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     });
     return best;
   };
-  J.layout = function (Q) {
+  J.layout = function (Q, box) {
+    box = box || J.box(Q, J.REF.w, J.REF.vh);
     var len = function (k) {
       if (Q.sides[k] !== null) return Q.sides[k] / Q.D;
       return Math.sqrt(Q.S) / Q.D;
     };
     var P = len('p'), Qn = len('q'), notToScale = false;
-    var VB = Q.stage === 'a' ? J.VB_TAP : J.VB, minR = Q.stage === 'a' ? J.MIN_RATIO_TAP : J.MIN_RATIO;
+    var VB = box, minR = Q.stage === 'a' ? J.MIN_RATIO_TAP : J.MIN_RATIO;
     if (Math.min(P, Qn) / Math.max(P, Qn) < minR) {
       notToScale = true;
       if (P < Qn) P = Qn * minR; else Qn = P * minR;
@@ -768,19 +796,52 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     var th = pl.th, c = Math.cos(th), s = Math.sin(th), m = pl.m;
     function tf(x, y) { x *= m; var X = x * c - y * s, Y = x * s + y * c; return [X, -Y]; }  // y down
     var raw = { O: tf(0, 0), A: tf(P, 0), B: tf(0, Qn) };
-    var fs = J.FONT, pad = 6;
+    var fs = box.font, pad = 6;
     var texts = { p: J.labelText(Q, 'p'), q: J.labelText(Q, 'q'), r: J.labelText(Q, 'r') };
     var maxW = 0;
     Object.keys(texts).forEach(function (k) { maxW = Math.max(maxW, texts[k].length * J.CHAR_W * fs + 6); });
     var lh = fs * 1.15;
     var mx = pad + maxW + 4, my = pad + lh + 4;
     var xs = [raw.O[0], raw.A[0], raw.B[0]], ys = [raw.O[1], raw.A[1], raw.B[1]];
-    var minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
-    var minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
-    var sc = Math.min((VB.w - 2 * mx) / Math.max(maxX - minX, 1e-9), (VB.h - 2 * my) / Math.max(maxY - minY, 1e-9));
-    var ox = (VB.w - sc * (maxX - minX)) / 2 - sc * minX, oy = (VB.h - sc * (maxY - minY)) / 2 - sc * minY;
-    function pt(v) { return [ox + sc * v[0], oy + sc * v[1]]; }
-    var O = pt(raw.O), A = pt(raw.A), B = pt(raw.B);
+    var Tx = Math.max(Math.max.apply(null, xs) - Math.min.apply(null, xs), 1e-9);
+    var Ty = Math.max(Math.max.apply(null, ys) - Math.min.apply(null, ys), 1e-9);
+    // The triangle at scale sc (origin anywhere), with its labels and the box around both.
+    function build(sc) {
+      function pt(v) { return [sc * v[0], sc * v[1]]; }
+      var O = pt(raw.O), A = pt(raw.A), B = pt(raw.B);
+      // labels: at each side's midpoint, pushed outward along its normal until the box clears the line
+      var sides = { p: [O, A, B], q: [O, B, A], r: [A, B, O] };
+      var labels = Object.keys(sides).map(function (k) {
+        var e0 = sides[k][0], e1 = sides[k][1], opp = sides[k][2];
+        var mid = [(e0[0] + e1[0]) / 2, (e0[1] + e1[1]) / 2];
+        var dx = e1[0] - e0[0], dy = e1[1] - e0[1], L = Math.hypot(dx, dy);
+        var n = [-dy / L, dx / L];
+        if ((opp[0] - mid[0]) * n[0] + (opp[1] - mid[1]) * n[1] > 0) n = [-n[0], -n[1]];
+        var w = texts[k].length * J.CHAR_W * fs + 6, h = lh;
+        var off = pad + Math.abs(n[0]) * w / 2 + Math.abs(n[1]) * h / 2;
+        return { side: k, text: texts[k], x: mid[0] + n[0] * off, y: mid[1] + n[1] * off, w: w, h: h };
+      });
+      var bx = [O[0], A[0], B[0]], by = [O[1], A[1], B[1]];
+      labels.forEach(function (l) { bx.push(l.x - l.w / 2, l.x + l.w / 2); by.push(l.y - l.h / 2, l.y + l.h / 2); });
+      return { sc: sc, O: O, A: A, B: B, labels: labels,
+        x0: Math.min.apply(null, bx), x1: Math.max.apply(null, bx), y0: Math.min.apply(null, by), y1: Math.max.apply(null, by) };
+    }
+    function fits(r) { return r.x1 - r.x0 <= VB.w - 2 * pad + 1e-6 && r.y1 - r.y0 <= VB.h - 2 * pad + 1e-6; }
+    // Start from a scale that leaves room for the widest label on every side (it always fits), then grow
+    // the triangle until the drawing, labels included, meets the box: the labels are a fixed size and the
+    // triangle takes whatever is left. Each step solves sc * T + overhang = room in each direction.
+    var best = build(Math.min((VB.w - 2 * mx) / Tx, (VB.h - 2 * my) / Ty));
+    for (var it = 0; it < 6; it++) {
+      var ovx = best.x1 - best.x0 - best.sc * Tx, ovy = best.y1 - best.y0 - best.sc * Ty;
+      var next = build(Math.min((VB.w - 2 * pad - ovx) / Tx, (VB.h - 2 * pad - ovy) / Ty));
+      if (!fits(next) || next.sc <= best.sc * 1.0005) break;
+      best = next;
+    }
+    // Centre the drawing in the box.
+    var dxc = (VB.w - (best.x1 - best.x0)) / 2 - best.x0, dyc = (VB.h - (best.y1 - best.y0)) / 2 - best.y0;
+    function mv(v) { return [v[0] + dxc, v[1] + dyc]; }
+    var O = mv(best.O), A = mv(best.A), B = mv(best.B);
+    var labels = best.labels.map(function (l) { l.x += dxc; l.y += dyc; return l; });
     // right-angle mark: a square on the two legs at O
     var la = Math.hypot(A[0] - O[0], A[1] - O[1]), lb = Math.hypot(B[0] - O[0], B[1] - O[1]);
     var ua = [(A[0] - O[0]) / la, (A[1] - O[1]) / la], ub = [(B[0] - O[0]) / lb, (B[1] - O[1]) / lb];
@@ -788,24 +849,11 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     var mark = [[O[0] + ms * ua[0], O[1] + ms * ua[1]],
       [O[0] + ms * ua[0] + ms * ub[0], O[1] + ms * ua[1] + ms * ub[1]],
       [O[0] + ms * ub[0], O[1] + ms * ub[1]]];
-    // labels: at each side's midpoint, pushed outward along its normal until the box clears the line
-    var sides = { p: [O, A, B], q: [O, B, A], r: [A, B, O] };
-    var labels = Object.keys(sides).map(function (k) {
-      var e0 = sides[k][0], e1 = sides[k][1], opp = sides[k][2];
-      var mid = [(e0[0] + e1[0]) / 2, (e0[1] + e1[1]) / 2];
-      var dx = e1[0] - e0[0], dy = e1[1] - e0[1], L = Math.hypot(dx, dy);
-      var n = [-dy / L, dx / L];
-      if ((opp[0] - mid[0]) * n[0] + (opp[1] - mid[1]) * n[1] > 0) n = [-n[0], -n[1]];
-      var w = texts[k].length * J.CHAR_W * fs + 6, h = lh;
-      var off = pad + Math.abs(n[0]) * w / 2 + Math.abs(n[1]) * h / 2;
-      return { side: k, text: texts[k], x: mid[0] + n[0] * off,
-        y: mid[1] + n[1] * off, w: w, h: h };
-    });
     return { vb: [VB.w, VB.h], O: O, A: A, B: B, mark: mark, labels: labels, font: fs,
       notToScale: notToScale };
   };
-  J.svg = function (Q) {
-    var Lo = J.layout(Q), f = function (v) { return v.toFixed(1); };
+  J.svg = function (Q, box) {
+    var Lo = J.layout(Q, box), f = function (v) { return v.toFixed(1); };
     var pts = function (arr) { return arr.map(function (p) { return f(p[0]) + ',' + f(p[1]); }).join(' '); };
     var O = Lo.O, A = Lo.A, B = Lo.B;
     var tap = Q.stage === 'a';
@@ -835,7 +883,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
         '" y="' + f(l.y) + '" font-size="' + Lo.font + '" text-anchor="middle" dominant-baseline="central">' +
         l.text + '</text>';
     });
-    return { html: s + '</svg>', notToScale: Lo.notToScale };
+    return { html: s + '</svg>', notToScale: Lo.notToScale, layout: Lo };
   };
 
   window.JPIB = J;
@@ -871,6 +919,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   var score = 0, correctCount = 0, addCount = 0, byStage = {}, t0 = 0, askedMs = 0, askStart = 0, clockTimer = null;
   var scoreStart = 0;      // when the answer box opened: the tap step never costs score
   var TAP_TOL_PX = 40;     // a tap counts for the nearest side if it lands within this many screen pixels
+  var CALC_NOTE = 'Use a calculator.';   // every question, Jon 4 Oct 2026 (the roster says Calculator required)
   var TAP_WRONG = 'The hypotenuse is opposite the right angle, and always the longest side.';
   var sessionLength = J.LENGTH;
 
@@ -907,9 +956,8 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     $('hudQ').textContent = q.index + '/' + session.questions.length;
     $('hudRound').textContent = String(J.STAGES.indexOf(st) + 1);
     $('hudScore').textContent = score;
-    var pic = J.svg(q);
-    $('fig').innerHTML = pic.html;
-    $('figNote').textContent = pic.notToScale ? 'Not drawn to scale' : '';
+    draw();
+    if (calc) calc.clear();
     $('unit').textContent = q.unit;
     $('answerLabel').textContent = J.sym(q) + ' =';
     $('answer').value = '';
@@ -931,7 +979,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     state = 'asking';
     scoreStart = Date.now();
     $('qcard').classList.remove('tap-mode');
-    $('prompt').textContent = q.prompt;
+    $('prompt').innerHTML = esc(q.prompt) + ' <span class="calc-note">' + CALC_NOTE + '</span>';
     try { $('answer').focus({ preventScroll: true }); } catch (e) {}
   }
 
@@ -950,11 +998,30 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     }
   }
 
+  // The triangle at the figure's measured width (1 unit = 1px), its height from that width and the window.
+  var layout = null, drawnW = 0;
+  function draw() {
+    drawnW = $('fig').getBoundingClientRect().width;
+    var pic = J.svg(q, J.box(q, drawnW, window.innerHeight));
+    layout = pic.layout;
+    $('fig').innerHTML = pic.html;
+    $('figNote').textContent = pic.notToScale ? 'Not drawn to scale' : '';
+    if (state === 'tap') wireTaps();
+    else if (state === 'asking' && q.stage === 'a') { var r = $('fig').querySelector('.tri-side[data-side="r"]'); if (r) r.classList.add('picked'); }
+  }
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      if (q && (state === 'tap' || state === 'asking') && Math.abs($('fig').getBoundingClientRect().width - drawnW) > 1) draw();
+    }, 150);
+  });
+
   // A tap goes to the nearest side (J.sideAt), so the targets never overlap, however thin the triangle.
   function wireTaps() {
     var svg = $('fig').querySelector('svg');
     if (!svg) return;
-    var L = J.layout(q);
+    var L = layout;
     svg.addEventListener('click', function (e) {
       if (state !== 'tap') return;
       var r = svg.getBoundingClientRect(), k = L.vb[0] / r.width;
@@ -1042,6 +1109,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   $('startBtn').addEventListener('click', startGame);
   $('againBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
   $('theorem').innerHTML = tex('a^2 + b^2 = c^2');
+  var calc = window.MaffsCalc ? MaffsCalc.mount($('calc')) : null;
   MaffsSession.render({ mount: $('sessionSelect'), poolSize: J.LENGTH, preferred: [J.LENGTH],
     selected: sessionLength, onChange: function (n) { sessionLength = n; } });
 
@@ -1057,6 +1125,8 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     state: function () { return state; },
     tap: function (side) { tapSide(side); },
     question: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },
+    layout: function () { return layout ? JSON.parse(JSON.stringify(layout)) : null; },
+    calc: function () { return calc; },
     index: function () { return q ? q.index : 0; },
     addCount: function () { return addCount; },
     session: function () { return session ? JSON.parse(JSON.stringify(session)) : null; }

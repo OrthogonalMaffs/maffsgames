@@ -358,12 +358,38 @@ exam has a non-calculator paper and calculator papers.
 | `optional` | Either works | worded when the first game is tagged |
 | `untagged` | Not yet decided. Every game starts here and is tagged in its own PR | nothing |
 
-**One badge, one style.** The start screen shows `<span class="calc-badge" data-calc="…">…</span>` (a game may
-repeat it on each question card, as `just-pythag-it-bruv` does at Jon's request of 4 Oct 2026),
+**One badge, one style.** The start screen shows `<span class="calc-badge" data-calc="…">…</span>`,
 styled once in `schools/assets/theme.css` (`.calc-badge`; `data-calc="required"` takes `--hint`,
 `"not-allowed"` takes `--wrong`, anything else `--muted`, all AA on `--surface-alt`). A game never styles
-its own. First user: `just-pythag-it-bruv` (`required`); every other game is `untagged` and its display is
-unchanged. When `games.json` is built (§3.12) the field moves there with the rest of the roster.
+its own. A `required` game also says **"Use a calculator."** on every question (Jon, 4 Oct 2026). First
+user: `just-pythag-it-bruv` (`required`); every other game is `untagged` and its display is unchanged.
+When `games.json` is built (§3.12) the field moves there with the rest of the roster.
+
+**The on-screen calculator, `MaffsCalc` (4 Oct 2026).** Many resit students do not own a scientific
+calculator, so every `required` game carries one: `schools/assets/calculator.js` (global `MaffsCalc`),
+styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours the toggle and =).
+
+- **Keys:** 0–9, decimal point, + − × ÷, brackets, x², √ (which opens a bracket, as on a Casio), C, DEL,
+  =. Order of operations as on a scientific calculator: −3² = −9; a number, bracket or √ straight after a
+  value multiplies (2(3) = 6); missing closing brackets are closed on =, extra ones are an error. After =,
+  an operator carries the answer on as "Ans"; a digit starts afresh.
+- **Display:** 10 significant figures, trailing zeros dropped, so 0.1 + 0.2 shows 0.3, never
+  0.30000000000000004; 10^10 and over, or under 10^−6, as a×10^n. Divide by 0, √ of a negative,
+  unbalanced brackets and 1.2.3 show "Error", never NaN. The engine is a parser, never `eval()`.
+- **On the page:** `MaffsCalc.mount(el)` puts a "Calculator" toggle and a panel in the page flow, under
+  the answer box. It never covers the question or the answer box; the page may scroll to it. Closed at
+  first; it stays open between questions once opened. Five columns of keys at least 44px fit a 320px
+  phone. The game hides it while the answer box is hidden (Pythag's tap step, and the feedback, §7.6.1).
+- **Keyboard:** typed keys drive it only while focus is inside the panel, so typing in the answer box is
+  never taken over. Enter on a focused key presses that key; Escape closes the panel.
+- **Nothing is sent:** no analytics event, no storage, no request.
+- **Where it loads:** only on games whose roster field is `required`. The roster is not served, so each
+  such game includes the script itself; `scripts/check-calculator.py` (CI) fails if a game's include, its
+  badge and its roster field disagree, either way, or if any other page loads it.
+- **Checked by** `scripts/test-calculator-js.py` (CI): 65 expressions (arithmetic, precedence, x², √,
+  brackets, errors, the display), 16 key sequences, the keyboard, the toggle, nothing sent, and key sizes
+  at 320, 375 and 390px. A game that uses it measures its own phone fit with the panel open and closed
+  (`verify-just-pythag-it-bruv.py`).
 
 ---
 
