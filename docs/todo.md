@@ -180,15 +180,21 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
     `theme.css`; this game is `required`, every other game `untagged`.
   - Jon's rulings applied (4 Oct): level key `ks3` labelled "Foundation" (SR-11; no shared change); G20 split
     accepted as PR #26 left it (G20.1/G20.3 STRETCH, G20.5 OUT, Pythagoras in context inside the build target).
+- **PR #30 (4 Oct, Jon's amendment): round 1's tap-the-hypotenuse step** (the answer box opens only on a correct
+  tap; a wrong tap says "The hypotenuse is opposite the right angle, and always the longest side."; no score,
+  no event), **hypotenuse positions guaranteed** in rounds 1-2 (along the bottom, up a side, sloping both ways,
+  the right angle in every corner, no position over 40%), the unknown marked "?" in round 1 with every label
+  styled alike, a calculator note on every question, and the standard header bar (Back, title, Aa) on every
+  screen. The verifier enforces all of it (tap targets at 320px, positions, label styling) with eight more
+  planted faults. Call (a) below is superseded. The field (round 3) keeps its own free rotation: it is a
+  real-world drawing, which the amendment left alone.
 - **Jon to play /games/just-pythag-it-bruv/; on approval: list it on the portal, /resit/ (Geometry and
   measures, Choose: Foundation, Calculator required), spec map G20, sitemap, and queue an /updates/ entry.**
   The listing PR also: removes the `noindex` line, moves the roster row to its section, adds the leaderboard
   hub row and drops its `NOT_ON_HUB` entry (`check-leaderboard-coverage.js`), adds it to `SUITE` in
   `check-resit-page.py`, and updates canon §4.2. The `/updates/` entry is Jon's wording.
 - **My calls in the build, Jon's to overturn when he plays it:**
-  (a) "Every question starts by identifying the hypotenuse" is built as the first line of every worked
-  solution (and the start screen's instruction). There is no tap-the-hypotenuse step before typing; one could
-  be added. (b) The ladder, ramp, roof and TV are drawn upright, mirrored left or right (a ladder at 137°
+  (a) Superseded by PR #30: round 1 now has the tap step (Jon's amendment). (b) The ladder, ramp, roof and TV are drawn upright, mirrored left or right (a ladder at 137°
   reads wrongly); rounds 1–2 and the field turn freely, in steps of 15°. (c) Scoring: visible count-up into the
   standard score (canon §7.3), as the other resit-strand games; the clock stops while feedback shows.
   (d) The ramp is find-the-hypotenuse only (a 1:15–1:20 slope makes "find the rise" unreal), runs up to 5 m.

@@ -20,7 +20,16 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
-## Handover — 2026-10-04 (night, latest): Just Pythag It, Bruv merged UNLISTED (PR #29)
+## Handover — 2026-10-04 (night, latest): Just Pythag It, Bruv amended (PR #30), still UNLISTED
+
+- Jon's amendment: round 1 opens with a tap-the-hypotenuse step (`JPIB.sideAt`, nearest side within 40px;
+  no score, no event); rounds 1-2 get a dealt hypotenuse-position plan (`JPIB.positionPlan`: Hb/Ht/Vl/Vr and
+  four corners, no position over 40%); round 1 marks the unknown "?" and every label is styled alike; a
+  calculator note on every question; the standard header bar (Back, title, Aa) on every screen. The verifier
+  checks tap targets at 320px, positions per session and label styling, with 20 planted faults.
+- Still unlisted; todo START has the listing checklist.
+
+## Handover — 2026-10-04 (night): Just Pythag It, Bruv merged UNLISTED (PR #29)
 
 - **Start here: `docs/todo.md`'s START block.** PR #28 (/updates/ "more than 30 games") and PR #29 are live.
 - **Just Pythag It, Bruv** (`games/just-pythag-it-bruv/`), Jon's contract with the scaled-triples addendum:

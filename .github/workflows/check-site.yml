@@ -196,8 +196,9 @@ jobs:
           #  - just-pythag-it-bruv: 300 sessions; every triangle, key (exact or 1 d.p. half up),
           #    "Spotted it?" line and add-instead-of-subtract probe recomputed with exact fractions;
           #    round order, >=60% shorter-side, no run of three, plausible contexts; a session played
-          #    with Firebase blocked; every question shape's feedback measured at three phone sizes.
-          #    Twelve planted faults, each must FAIL.
+          #    with Firebase blocked (round 1's hypotenuse tapped with real clicks); hypotenuse positions
+          #    per session and tap targets at 320px; every question shape's feedback and tap step measured
+          #    at three phone sizes. Twenty planted faults, each must FAIL.
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |
