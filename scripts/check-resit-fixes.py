@@ -104,7 +104,7 @@ def read(root, rel, patches):
 # ---------- static checks ----------
 def check_probability(root, patches):
     src = read(root, "games/probability-pioneer/index.html", patches)
-    m = re.search(r'\{q:"P\(letter in (\w+) also in (\w+)\)", answer:"(\d+)/(\d+)", options:\[([^\]]*)\]\}', src)
+    m = re.search(r'\{q:"P\(letter in (\w+) also in (\w+)\)", answer:"(\d+)/(\d+)", options:\[([^\]]*)\][^}]*\}', src)
     if not m:
         return ["probability-pioneer: the MATHS/GAMES question is missing"]
     a, b = m.group(1), m.group(2)

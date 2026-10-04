@@ -301,12 +301,12 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 const STAGE1 = [
   {event:"You will breathe today", answer:1, label:"Certain"},
   {event:"You will roll a 7 on a standard die", answer:0, label:"Impossible"},
-  {event:"It will rain somewhere in Britain this week", answer:1, label:"Certain"},
+  {event:"It will rain somewhere in Britain this week", answer:0.75, label:"Likely: very likely, but not certain. Certain means it must happen"},
   {event:"You will flip heads on a fair coin", answer:0.5, label:"Even Chance"},
   {event:"A randomly chosen month starts with J", answer:0.25, label:"Unlikely"},
   {event:"You pick a red card from a standard pack", answer:0.5, label:"Even Chance"},
   {event:"You roll an even number on a die", answer:0.5, label:"Even Chance"},
-  {event:"You win the lottery with one ticket", answer:0, accept:0.25, label:"Impossible", acceptLabel:"Unlikely"},
+  {event:"You win the lottery with one ticket", answer:0.25, label:"Unlikely: about 1 in 45 million, but possible"},
   {event:"A baby born today is a boy", answer:0.5, label:"Even Chance"},
   {event:"The sun will rise tomorrow", answer:1, label:"Certain"}
 ];
@@ -320,18 +320,18 @@ const STAGE2 = [
   {q:"P(blue from 4 red, 6 blue)", answer:"3/5", options:["3/5","2/5","4/6","1/2"]},
   {q:"P(odd on a die)", answer:"1/2", options:["1/2","1/3","3","1/6"]},
   {q:"P(heart from 52 cards)", answer:"1/4", options:["1/4","1/52","1/13","1/3"]},
-  {q:"P(rolling greater than 4)", answer:"1/3", options:["1/3","2/3","4/6","1/6"]},
+  {q:"P(rolling greater than 4 on a dice)", answer:"1/3", options:["1/3","2/3","1/2","1/6"]},
   {q:"P(green from 5R, 3G, 2Y)", answer:"3/10", options:["3/10","1/3","3/8","7/10"]},
   {q:"P(multiple of 3 on a die)", answer:"1/3", options:["1/3","2/3","1/2","1/6"]},
   {q:"P(consonant from M, A, T, H, S)", answer:"4/5", options:["4/5","1/5","3/5","2/5"]},
-  {q:"P(heads twice in a row)", answer:"1/4", options:["1/4","1/2","1/8","2/4"]},
+  {q:"P(heads twice in a row)", answer:"1/4", options:["1/4","1/2","1/8","1/3"]},
   {q:"P(rolling 1 or 2)", answer:"1/3", options:["1/3","1/36","1/6","2/3"]},
   {q:"P(face card from 52)", answer:"3/13", options:["3/13","3/52","1/4","4/52"]},
   {q:"P(prime on a die)", answer:"1/2", options:["1/2","1/3","2/3","1/6"]},
   {q:"P(yellow from 8R, 2Y)", answer:"1/5", options:["1/5","1/2","8/10","2/8"]},
   {q:"P(square number on a die)", answer:"1/3", options:["1/3","2/3","1/6","1/2"]},
   {q:"P(even from 1\u20138)", answer:"1/2", options:["1/2","4/7","3/8","5/8"]},
-  {q:"P(letter in MATHS also in GAMES)", answer:"3/5", options:["2/5","3/5","1/5","4/5"]}
+  {q:"P(letter in MATHS also in GAMES)", answer:"3/5", options:["2/5","3/5","1/5","4/5"], why:"M, A and S are in both, so 3 of 5."}
 ];
 
 const STAGE3 = [
@@ -341,10 +341,10 @@ const STAGE3 = [
   {statement:"P(impossible event) = 0", answer:true, explanation:"Correct. If something cannot happen, its probability is exactly 0."},
   {statement:"P(certain event) = 1", answer:true, explanation:"Correct. If something is guaranteed to happen, its probability is exactly 1."},
   {statement:"You can have P(event) = 1.5", answer:false, explanation:"Probability can never exceed 1. The maximum probability is 1 (certain) and the minimum is 0 (impossible)."},
-  {statement:"If two outcomes are equally likely, each has probability 0.5", answer:true, explanation:"Correct. If there are exactly two equally likely outcomes, each must have probability 0.5 since they must add up to 1."},
+  {statement:"If two outcomes are equally likely, each has probability 0.5", answer:false, explanation:"Only when there are exactly two outcomes. Each face of a dice is equally likely, and each has probability 1/6."},
   {statement:"P(A) + P(not A) always equals 1", answer:true, explanation:"Correct. An event either happens or it doesn't. These two probabilities must always add up to 1."},
   {statement:"A probability of 0.9 means the event will definitely happen", answer:false, explanation:"0.9 means the event is very likely, but not certain. Only a probability of 1 means it will definitely happen. There is still a 0.1 (10%) chance it won't."},
-  {statement:"The more times you repeat an experiment, the closer results get to theoretical probability", answer:true, explanation:"Correct. This is called the Law of Large Numbers. With more trials, the experimental probability gets closer to the theoretical probability."},
+  {statement:"The more times you repeat an experiment, the closer the results tend to get to the theoretical probability", answer:true, explanation:"Correct. This is called the Law of Large Numbers. With more trials, the experimental probability tends to get closer to the theoretical probability."},
   {statement:"A fair die gives each number probability exactly 1/6", answer:true, explanation:"Correct. A fair die has 6 equally likely outcomes, so each has probability 1/6."},
   {statement:"P(rolling 7 on a standard die) = 7/6", answer:false, explanation:"A standard die only has numbers 1\u20136. Rolling a 7 is impossible, so P = 0. Also, 7/6 is greater than 1, which is impossible for any probability."},
   {statement:"Probability can be written as a fraction, decimal or percentage", answer:true, explanation:"Correct. For example, the probability of flipping heads can be written as 1/2, 0.5, or 50%. All three representations are valid."},
@@ -581,12 +581,12 @@ function pickMCQ(btn, picked, q) {
     ind.className = 'feedback-indicator correct';
     ind.textContent = 'Correct';
     fb.classList.add('flash-green');
-    txt.textContent = 'The answer is ' + q.answer + '.';
+    txt.textContent = 'The answer is ' + q.answer + '.' + (q.why ? ' ' + q.why : '');
   } else {
     ind.className = 'feedback-indicator incorrect';
     ind.textContent = 'Not quite';
     fb.classList.add('flash-red');
-    txt.textContent = 'The correct answer is ' + q.answer + '. You chose ' + picked + '.';
+    txt.textContent = 'The correct answer is ' + q.answer + '. You chose ' + picked + '.' + (q.why ? ' ' + q.why : '');
   }
 
   fb.classList.add('show');
