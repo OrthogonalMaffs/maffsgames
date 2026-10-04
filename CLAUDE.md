@@ -30,7 +30,22 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest): TEACHER FEEDBACK LINE built, PR #44 (branch claude/teacher-invite)
+## Handover — 2026-10-04 (latest, cloud): PROBABILITY PIONEER fixed + verified, PR #45 MERGED
+
+- **Fixed (resit audit, todo START batch 2):** Stage 3 Q7 "equally likely ⇒ 0.5" rekeyed False with Jon's
+  explanation (decision 4); lottery Unlikely only, rain Likely only (feedback says why); Q9 and Q13's
+  value-equal distractors replaced (1/2 counts the 4; 1/3 takes HH, one of each, TT as equally likely);
+  Q10 "tend to get closer"; Q20's key was already 3/5 (PR #36) and now gives its reason. F7 (baby) left.
+- **`scripts/verify-probability-pioneer.py` (CI, group B):** Stage 2 keys recomputed exactly from each stem
+  (a stem no reader understands fails: extend `stage2_value()`); Stage 1 and 3 keys pinned in reviewed
+  tables with reasons (re-review and update the table to change an item); every answer to all 45 items
+  clicked in Chromium. Failed on the pre-fix bank (9 FAILs).
+- **For Jon (my calls, in PR #45):** an optional `why` reason on Stage 2 items (only Q20 has one; display
+  only); "on a dice" (the contract's) vs the bank's "on a die" elsewhere.
+- **Gotcha:** `check-resit-fixes.py`'s Q20 regex now allows fields after the options; extend it the same
+  way if another of its patterns meets a new field.
+
+## Handover — 2026-10-04: TEACHER FEEDBACK LINE built, PR #44 (branch claude/teacher-invite)
 
 - **What it is:** `MaffsInvite.mount(el, slug)` (`schools/assets/teacher-invite.js`, canon §7.1) fills an empty
   `<p id="teacherInvite">` with one small line, "Using this with a class? I'd love to hear how it went. — Jon",
