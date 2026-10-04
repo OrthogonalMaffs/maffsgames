@@ -26,8 +26,9 @@ recomputed independently. **Nothing was fixed** (SR-9); this file is the evidenc
   (MATHS/GAMES keyed 2/5, the answer is 3/5), `angle-ace` Starter diagrams (L293, L437 and three
   co-interior recognition items), `decimal-detective` and `negative-number-line` (number-line
   tolerances that mark a neighbouring tick correct, and a marker that starts on the answer),
-  `estimation-engine` (√(e × 1000) keyed 52.07, the answer is 52.137). Everything else HIGH is in a
-  level reached from the picker (A-Level, Core, Level 4, or GCSE where the card opens at Foundation).
+  `estimation-engine` (√(e × 1000) keyed 52.07, the answer is 52.137); and `linear-equation-solver`'s
+  judgement-call HIGH. Every other HIGH is at a level a student reaches from the card's picker, except
+  `expected-damage`'s GCSE ties: its card is a link that opens at Foundation, with no picker.
 - **Every HIGH and CRITICAL fault below was re-checked against the source by the reviewing session**
   (the line, the key and the arithmetic), not taken from the auditing agent's word alone. MEDIUM and
   LOW faults carry the agents' evidence and were spot-checked, not all re-derived.
@@ -489,7 +490,7 @@ Items checked: all 50 questions. Each `formulaKatex` was parsed to SymPy, the st
 #### Faults
 None at HIGH or CRITICAL.
 - **F1 [LOW]** year6, `:513-517` (marking): an input of "." alone is submitted, `parseFloat('.')` is `NaN`, and it is marked wrong. It counts as an attempt, sends `question_answered correct:false` and shows "Not quite". Canon §7.1.3 never marks an unreadable answer. This is the only unreadable input the keypad allows.
-- **F2 [LOW, teaching quality, judgement call]** the bank has no negatives, decimals, fractions, squares of negatives or order-of-operations traps. Every value is a positive whole number and every answer is a positive whole number (largest 200). There is no minus key on the keypad (`:229-241`), so a negative answer could not be typed at all if one were added. The brief asked to watch negatives and order of operations: none occur. Area of a square is the only power (s², s = 5 to 9), and P = 2(l + w) is the only bracket.
+- **F2 [LOW, teaching quality, judgement call]** the bank has no negatives, decimals, fractions, squares of negatives or order-of-operations traps. Every value is a positive whole number and every answer is a positive whole number (largest 200). There is no minus key on the keypad (`:229-241`), so a negative answer could not be typed at all if one were added. The audit watched for negatives and order of operations: none occur. Area of a square is the only power (s², s = 5 to 9), and P = 2(l + w) is the only bracket.
 - **F3 [LOW, judgement call]** answers repeat inside a formula: 4 of the 5 perimeter-of-a-rectangle questions answer 28 (`:292-295`), and the speed questions answer 20, 20, 8, 9, 9 (`:305-309`). Not wrong, but a student can learn the answer rather than substitute.
 
 #### Clean
