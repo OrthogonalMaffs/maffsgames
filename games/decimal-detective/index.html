@@ -101,7 +101,18 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .line-marker.incorrect{background:var(--red);box-shadow:0 4px 12px rgba(239,68,68,0.4)}
 .marker-value{position:absolute;top:-36px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--accent);background:var(--surface);padding:2px 8px;border-radius:6px;border:1px solid var(--accent);white-space:nowrap}
 .target-marker{position:absolute;top:-18px;width:32px;height:32px;border:3px dashed var(--green);border-radius:50%;transform:translateX(-50%);display:none}
-.tolerance-zone{position:absolute;top:-2px;height:10px;background:rgba(34,197,94,0.15);border-radius:4px;display:none}
+/* The marker snaps to half a tick gap and shows no value until Check, so the scale has to be read (audit
+   F4; Jon, 5 Oct 2026). The step buttons below the line move a placed marker one grid step; once answered
+   they hide, so the feedback and Next sit above the fold on a phone (canon 7.6.1). */
+.marker-value:empty{display:none}
+.step-row{display:flex;justify-content:center;gap:24px;margin:-8px 0 16px}
+.step-btn{width:56px;height:48px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-size:18px;cursor:pointer;touch-action:manipulation}
+.step-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.step-btn:disabled{opacity:0.35;cursor:default}
+.number-line-container.answered .step-row{display:none}
+/* A short phone (320x568): less space around the line, so Check stays above the footer with the step
+   buttons in place. */
+@media (max-height: 600px){.number-line-container{margin:12px 0;padding:8px 0}}
 
 /* Check / Next buttons */
 .check-btn{display:block;width:100%;padding:14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s;margin:16px 0}
@@ -162,6 +173,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/number-line.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -635,21 +647,25 @@ function renderPlaceit(data) {
   markerPos = null;
 
   area.innerHTML = `
-    <div class="number-line-container">
+    <div class="number-line-container" id="placeItBox">
       <div class="number-line-wrap">
         <div class="number-line" id="numberLine">
           ${ticksHTML}
-          <div class="tolerance-zone" id="toleranceZone"></div>
           <div class="target-marker" id="targetMarker"></div>
           <div class="line-marker" id="lineMarker" style="left:${(markerPos || 0) * 100}%${markerPos === null ? ';display:none' : ''}">
-            <div class="marker-value" id="markerValue">${markerPos === null ? '' : (data.min + markerPos * range).toFixed(2)}</div>
+            <div class="marker-value" id="markerValue"></div>
           </div>
         </div>
+      </div>
+      <div class="step-row">
+        <button class="step-btn" id="stepLeft" onclick="stepMarker(-1)" aria-label="Move the marker left one step" disabled>&#9664;&#xFE0E;</button>
+        <button class="step-btn" id="stepRight" onclick="stepMarker(1)" aria-label="Move the marker right one step" disabled>&#9654;&#xFE0E;</button>
       </div>
     </div>
   `;
 
   document.getElementById('checkBtn').disabled = markerPos === null;
+  setStepButtons();
   setupNumberLine();
 }
 
@@ -740,18 +756,56 @@ function onMarkerTouchEnd() {
   markerDragging = false;
 }
 
+// The grid: half a tick gap, so 20 steps on every line (0 to 1 in 0.05s, 0 to 0.5 in 0.025s), and every
+// target in the bank lies on it (scripts/verify-decimal-detective.py checks). A tap or a drag puts the
+// marker on the nearest grid point; it shows no value until Check (audit F4; Jon, 5 Oct 2026). Until
+// 5 Oct 2026 the marker moved freely and showed its value to 2 d.p., so dragging until the label
+// matched solved any item without reading the scale.
+const PLACEIT_STEPS = 20;
+
 function setMarkerPosition(pct) {
-  markerPos = pct;
+  markerPos = Math.round(Math.max(0, Math.min(1, pct)) * PLACEIT_STEPS) / PLACEIT_STEPS;
   const marker = document.getElementById('lineMarker');
-  const label = document.getElementById('markerValue');
   if (!marker) return;
-  marker.style.left = (pct * 100) + '%';
+  marker.style.left = (markerPos * 100) + '%';
   marker.style.display = '';
-  const range = placeItData.max - placeItData.min;
-  const val = placeItData.min + pct * range;
-  label.textContent = val.toFixed(2);
   document.getElementById('checkBtn').disabled = false;
+  setStepButtons();
 }
+
+// The value at a grid position.
+function placeitValue(data, pos) {
+  return data.min + Math.round(pos * PLACEIT_STEPS) * (data.max - data.min) / PLACEIT_STEPS;
+}
+
+// The step buttons follow the marker: disabled until it is placed and after the answer; an end of the
+// line disables the button that would leave it.
+function setStepButtons() {
+  const left = document.getElementById('stepLeft'), right = document.getElementById('stepRight');
+  if (!left || !right) return;
+  const live = markerPos !== null && !answered;
+  left.disabled = !live || markerPos <= 0;
+  right.disabled = !live || markerPos >= 1;
+}
+
+function placingNow() {
+  const q = questions[currentQ];
+  return !answered && markerPos !== null && q && q.type === 'placeit' && document.getElementById('lineMarker');
+}
+
+// One grid step left (-1) or right (+1): a step is a few pixels on a phone, so the buttons (and the
+// arrow keys) make every position reachable, as on Negative Number Line.
+function stepMarker(dir) {
+  if (!placingNow()) return;
+  setMarkerPosition(markerPos + dir / PLACEIT_STEPS);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  if (!placingNow()) return;
+  e.preventDefault();
+  stepMarker(e.key === 'ArrowLeft' ? -1 : 1);
+});
 
 // ============================================================
 //  CHECK ANSWER
@@ -815,44 +869,38 @@ function checkRoundup(data) {
   recordAnswer('roundup', isCorrect);
 }
 
-// Place It marking. The line has 10 tick gaps; the marker reads to 2 d.p. The reading the student sees
-// is marked, and it must be within a quarter of a tick gap of the value: nearer it than any other tick,
-// or the half-way point between two ticks. (A fixed +/-0.05 accepted the neighbouring tick on the
-// 0 to 0.5 line, and 0.20 or 0.30 for 0.25, until 4 Oct 2026.)
-function placeitTolerance(data) { return (data.max - data.min) / 40; }
-function placeitCorrect(data, pos) {
-  const shown = Math.round((data.min + pos * (data.max - data.min)) * 100) / 100;
-  return Math.abs(shown - data.value) < placeitTolerance(data) - 1e-9;
-}
-
+// Place It marking: exact match on the snapped grid, through the shared helper (canon 7.1.2), so a
+// neighbouring grid point is never accepted. (A tolerance band marked this until 5 Oct 2026: +/-0.05,
+// then a quarter of a tick gap.)
 function checkPlaceit(data) {
   if (markerPos === null) return;
-  const range = data.max - data.min;
-  const targetPct = (data.value - data.min) / range;
-  const tolerance = placeitTolerance(data);
+  const targetPct = (data.value - data.min) / (data.max - data.min);
+  const placed = placeitValue(data, markerPos);
+  const isCorrect = MaffsNumberLine.placementCorrect({ placed: placed, target: data.value, mode: 'snapped' });
 
-  const isCorrect = placeitCorrect(data, markerPos);
-
-  // Show target position
+  // Both positions on the line: the marker where it was placed, the ring where the value is.
   const targetMarker = document.getElementById('targetMarker');
-  const toleranceZone = document.getElementById('toleranceZone');
   const marker = document.getElementById('lineMarker');
-
   targetMarker.style.left = (targetPct * 100) + '%';
-  targetMarker.style.display = '';
-
-  const tolPct = (tolerance / range) * 100;
-  toleranceZone.style.left = ((targetPct * 100) - tolPct) + '%';
-  toleranceZone.style.width = (tolPct * 2) + '%';
-  toleranceZone.style.display = '';
+  targetMarker.style.display = 'block';   // '' fell back to the stylesheet's display:none: never shown before 5 Oct 2026
+  document.getElementById('placeItBox').classList.add('answered');
 
   if (isCorrect) {
     marker.classList.add('correct');
+    document.getElementById('markerValue').textContent = formatPlaceit(placed);
   } else {
     marker.classList.add('incorrect');
   }
 
-  recordAnswer('placeit', isCorrect);
+  recordAnswer('placeit', isCorrect,
+               isCorrect ? '' : `You placed ${formatPlaceit(placed)}. ${formatPlaceit(data.value)} is here.`);
+  setStepButtons();
+
+  // Canon 7.6.1: the reason and Next sit above the fold. On a short phone they can end under the fixed
+  // 40px footer, so bring Next up (the feedback is above it, and fits with it on any phone).
+  const next = document.getElementById('nextBtn').getBoundingClientRect();
+  const fold = window.innerHeight - 40;
+  if (next.bottom > fold) window.scrollBy(0, next.bottom - fold + 8);
 }
 
 function recordAnswer(type, isCorrect, note) {

@@ -18,7 +18,9 @@ Full per-game verifiers follow in the audit's fix batches (docs/audit-resit-corr
   probability-pioneer  "P(letter in MATHS also in GAMES)" keyed 3/5, recomputed from the words
   estimation-engine    all 49 keys within 0.02% of the exact value (sqrt(e x 1000) = 52.137, not 52.07)
   decimal-detective    Place It: the marker never starts on the answer; the reading equal to the
-                       value is marked right, the neighbouring ticks and half-way points wrong
+                       value is marked right, the neighbouring ticks and half-way points wrong (since
+                       5 Oct 2026 the marker snaps and is marked exactly by MaffsNumberLine; the planted
+                       fault is a one-step tolerance)
   negative-number-line Place It: the target is marked right, the snapped half-steps either side wrong
   correlation-or-coincidence  the "suicides by hanging" pair is gone (Jon: safeguarding, 4 Oct 2026)
 """
@@ -63,8 +65,8 @@ REVERT = {
          "until 5 Oct 2026.\n  markerPos = null;", "until 5 Oct 2026.\n  markerPos = 0.5;")],
     "decimal-detective tolerance": [
         ("games/decimal-detective/index.html",
-         "function placeitTolerance(data) { return (data.max - data.min) / 40; }",
-         "function placeitTolerance(data) { return 0.05 + 1e-9; }")],
+         "const isCorrect = MaffsNumberLine.placementCorrect({ placed: placed, target: data.value, mode: 'snapped' });",
+         "const isCorrect = Math.abs(placed - data.value) <= (data.max - data.min) / 20 + 1e-9;")],
     "negative-number-line": [
         ("games/negative-number-line/index.html",
          "const correct = MaffsNumberLine.placementCorrect({ placed: placedValue, target: target, mode: 'snapped' });",
