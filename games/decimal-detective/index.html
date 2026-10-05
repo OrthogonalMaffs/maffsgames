@@ -115,6 +115,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .feedback{text-align:center;padding:12px;border-radius:10px;margin:12px 0;font-weight:600;font-size:15px}
 .feedback.correct{background:var(--green-dim);color:var(--green)}
 .feedback.incorrect{background:var(--red-dim);color:var(--red)}
+.feedback-note{margin-top:6px;font-weight:400;font-size:14px;color:var(--text)}
 
 /* Reveal screen */
 .reveal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:900;align-items:center;justify-content:center;padding:24px}
@@ -254,14 +255,14 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 // ============================================================
 const LINEUP_QUESTIONS = [
   {suspects:['0.3','0.03','3.0','0.33','0.303'],sorted:['0.03','0.3','0.303','0.33','3.0']},
-  {suspects:['1.9','1.09','1.99','1.9','1.099'],sorted:['1.09','1.099','1.9','1.9','1.99']},
+  {suspects:['1.9','1.09','1.99','1.909','1.099'],sorted:['1.09','1.099','1.9','1.909','1.99']},
   {suspects:['0.5','0.45','0.54','0.505','0.455'],sorted:['0.45','0.455','0.5','0.505','0.54']},
   {suspects:['2.1','2.01','2.11','2.101','2.011'],sorted:['2.01','2.011','2.1','2.101','2.11']},
   {suspects:['0.8','0.08','0.88','0.808','0.088'],sorted:['0.08','0.088','0.8','0.808','0.88']},
   {suspects:['3.4','3.04','3.44','3.404','3.044'],sorted:['3.04','3.044','3.4','3.404','3.44']},
-  {suspects:['0.6','0.66','0.606','0.066','0.6'],sorted:['0.066','0.6','0.6','0.606','0.66']},
+  {suspects:['0.6','0.66','0.606','0.066','0.06'],sorted:['0.06','0.066','0.6','0.606','0.66']},
   {suspects:['5.2','5.02','5.22','5.202','5.022'],sorted:['5.02','5.022','5.2','5.202','5.22']},
-  {suspects:['0.1','0.11','0.101','0.011','0.11'],sorted:['0.011','0.1','0.101','0.11','0.11']},
+  {suspects:['0.1','0.11','0.101','0.011','0.111'],sorted:['0.011','0.1','0.101','0.11','0.111']},
   {suspects:['7.5','7.05','7.55','7.505','7.055'],sorted:['7.05','7.055','7.5','7.505','7.55']},
   {suspects:['0.9','0.09','0.99','0.909','0.099'],sorted:['0.09','0.099','0.9','0.909','0.99']},
   {suspects:['4.3','4.03','4.33','4.303','4.033'],sorted:['4.03','4.033','4.3','4.303','4.33']},
@@ -278,7 +279,7 @@ const ROUNDUP_QUESTIONS = [
   {value:'1.23',instruction:'Round to the nearest whole number',answer:'1',options:['1','2','1.2','0']},
   {value:'6.78',instruction:'Round to the nearest whole number',answer:'7',options:['6','7','6.8','6.78']},
   {value:'3.45',instruction:'Round to the nearest whole number',answer:'3',options:['3','4','3.5','3.45']},
-  {value:'9.50',instruction:'Round to the nearest whole number',answer:'10',options:['9','10','9.5','9.50']},
+  {value:'9.50',instruction:'Round to the nearest whole number',answer:'10',options:['9','10','9.5','95']},
   {value:'0.456',instruction:'Round to 2 decimal places',answer:'0.46',options:['0.45','0.46','0.456','0.5']},
   {value:'1.234',instruction:'Round to 2 decimal places',answer:'1.23',options:['1.23','1.24','1.234','1.2']},
   {value:'7.895',instruction:'Round to 2 decimal places',answer:'7.90',options:['7.89','7.90','7.895','7.9']},
@@ -316,7 +317,7 @@ let correctCount = 0;
 let typeCorrect = {lineup:0,roundup:0,placeit:0};
 let typeTotal = {lineup:0,roundup:0,placeit:0};
 let answered = false;
-let markerPos = 0.5; // for Place It
+let markerPos = null; // for Place It: null until the student places the marker
 let revealShown = false;
 
 const GAME_SLUG = 'decimal-detective';
@@ -628,9 +629,10 @@ function renderPlaceit(data) {
     }
   }
 
-  // Start marker at 50%, unless that is the answer: then at the left end (it started on the answer
-  // for 4.5 and 5.5, a free mark, until 4 Oct 2026).
-  markerPos = placeitCorrect(data, 0.5) ? 0 : 0.5;
+  // The marker starts off the line (hidden) and Check waits for the student to place it. It started at
+  // 50% with Check enabled, the answer for 4.5 and 5.5, a free mark, until 4 Oct 2026; then at the left
+  // end for those two, with Check still enabled, until 5 Oct 2026.
+  markerPos = null;
 
   area.innerHTML = `
     <div class="number-line-container">
@@ -639,14 +641,15 @@ function renderPlaceit(data) {
           ${ticksHTML}
           <div class="tolerance-zone" id="toleranceZone"></div>
           <div class="target-marker" id="targetMarker"></div>
-          <div class="line-marker" id="lineMarker" style="left:${markerPos * 100}%">
-            <div class="marker-value" id="markerValue">${(data.min + markerPos * range).toFixed(2)}</div>
+          <div class="line-marker" id="lineMarker" style="left:${(markerPos || 0) * 100}%${markerPos === null ? ';display:none' : ''}">
+            <div class="marker-value" id="markerValue">${markerPos === null ? '' : (data.min + markerPos * range).toFixed(2)}</div>
           </div>
         </div>
       </div>
     </div>
   `;
 
+  document.getElementById('checkBtn').disabled = markerPos === null;
   setupNumberLine();
 }
 
@@ -743,6 +746,7 @@ function setMarkerPosition(pct) {
   const label = document.getElementById('markerValue');
   if (!marker) return;
   marker.style.left = (pct * 100) + '%';
+  marker.style.display = '';
   const range = placeItData.max - placeItData.min;
   const val = placeItData.min + pct * range;
   label.textContent = val.toFixed(2);
@@ -778,7 +782,20 @@ function checkLineup(data) {
     }
   });
 
-  recordAnswer('lineup', allCorrect);
+  recordAnswer('lineup', allCorrect, equalValueNote(data.suspects));
+}
+
+// Cards that are different strings but the same number (0.77 and 0.770) may go in either order; say
+// why, right or wrong, so the student does not think one of them is bigger.
+function equalValueNote(suspects) {
+  const notes = [];
+  suspects.forEach((a, i) => suspects.slice(i + 1).forEach(b => {
+    if (a !== b && parseFloat(a) === parseFloat(b)) {
+      const [short, long] = a.length < b.length ? [a, b] : [b, a];
+      notes.push(`${short} and ${long} are equal: a zero on the end doesn't change the value.`);
+    }
+  }));
+  return notes.join(' ');
 }
 
 function checkRoundup(data) {
@@ -809,6 +826,7 @@ function placeitCorrect(data, pos) {
 }
 
 function checkPlaceit(data) {
+  if (markerPos === null) return;
   const range = data.max - data.min;
   const targetPct = (data.value - data.min) / range;
   const tolerance = placeitTolerance(data);
@@ -837,7 +855,7 @@ function checkPlaceit(data) {
   recordAnswer('placeit', isCorrect);
 }
 
-function recordAnswer(type, isCorrect) {
+function recordAnswer(type, isCorrect, note) {
   answered = true;
 
   typeTotal[type]++;
@@ -852,6 +870,12 @@ function recordAnswer(type, isCorrect) {
   fb.style.display = 'block';
   fb.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect');
   fb.textContent = isCorrect ? 'Correct! Case solved.' : 'Not quite. Check the evidence.';
+  if (note) {
+    const n = document.createElement('div');
+    n.className = 'feedback-note';
+    n.textContent = note;
+    fb.appendChild(n);
+  }
 
   document.getElementById('checkBtn').style.display = 'none';
   document.getElementById('nextBtn').classList.add('visible');

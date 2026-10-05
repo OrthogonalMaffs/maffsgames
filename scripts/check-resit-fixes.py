@@ -60,7 +60,7 @@ REVERT = {
         ("games/estimation-engine/index.html", "ans:52.137,  tol:4", "ans:52.07,   tol:4")],
     "decimal-detective start": [
         ("games/decimal-detective/index.html",
-         "markerPos = placeitCorrect(data, 0.5) ? 0 : 0.5;", "markerPos = 0.5;")],
+         "until 5 Oct 2026.\n  markerPos = null;", "until 5 Oct 2026.\n  markerPos = 0.5;")],
     "decimal-detective tolerance": [
         ("games/decimal-detective/index.html",
          "function placeitTolerance(data) { return (data.max - data.min) / 40; }",
@@ -259,7 +259,7 @@ async def check_decimal_detective(browser, root, patches):
         tick = (hi - lo) / 10
         where = "decimal-detective Place It %s on %s to %s" % (d["value"], d["min"], d["max"])
         start, ok = await mark(d)
-        if Fraction(start) == v:
+        if start and Fraction(start) == v:
             errs.append("%s: the marker starts on the answer (reads %s)" % (where, start))
         if ok:
             errs.append("%s: Check with the marker untouched is marked right" % where)
