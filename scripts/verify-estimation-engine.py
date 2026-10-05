@@ -365,6 +365,8 @@ def play(fails, shots=None, katex_dir=None):
                             fails.append("%dx%d%s %s %s: the boxes, Check and keypad span y=%.0f..%.0f, the window ends at %.0f"
                                          % (w, h, " Aa" * aa, iid, step, m["top"], m["bottom"], m["fold"]))
                         await page.locator("#checkBtn").tap()
+                    if await page.evaluate("[...document.querySelectorAll('.maffs-keypad-cue-answer')].some(c => !c.hidden)"):
+                        fails.append("%dx%d%s %s: after the answer a box still says \"typing here\"" % (w, h, " Aa" * aa, iid))
                     if await page.evaluate("EE.ui.marks()") != [True, True]:
                         fails.append("%dx%d%s %s: typed on the keypad, the right answers were not both marked" % (w, h, " Aa" * aa, iid))
                     nb = await page.evaluate("(() => { const b = document.querySelector('.maffs-next'); if (!b) return null; "

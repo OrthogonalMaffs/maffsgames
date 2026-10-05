@@ -431,6 +431,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     mfg('question_answered', { game_slug: SLUG, level: LEVEL, question_index: total, correct: qMarks[0] && ok });
     state = 'feedback';
     $('estimate').readOnly = true;
+    if (kp) kp.select(-1);              // answered: no box is "typing here" any more
     var f = shapeForms(q.shape, q.rounded), cur = q.money ? '£' : '';
     var fb = $('feedback');
     fb.className = 'feedback fb ' + (ok ? 'right' : 'wrong');
