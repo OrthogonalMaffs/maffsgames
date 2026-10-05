@@ -62,9 +62,10 @@ MIGRATED = [
     "split-it",           # the pilot, 2 Oct 2026
     "just-pythag-it-bruv",  # built to the theme, 4 Oct 2026 (unlisted until Jon approves it)
     "correlation-or-coincidence",  # rebuilt to the theme, 4 Oct 2026 (resit audit rebuild)
+    "estimation-engine",  # rebuilt to the theme, 5 Oct 2026 (SR-12 rebuild)
 ]
 NOT_YET = [
-    "sequence-solver", "estimation-golf", "estimation-engine", "factor-race", "prime-factorisation",
+    "sequence-solver", "estimation-golf", "factor-race", "prime-factorisation",
     "prime-or-composite", "percentage-flip", "fraction-equivalence", "equatle", "52dle",
     "constructions-lab", "word-problem-decoder", "equation-builder", "spot-the-error",
     "gradient-hunter", "truth-buster", "spot-the-muppet", "terrible-advice",

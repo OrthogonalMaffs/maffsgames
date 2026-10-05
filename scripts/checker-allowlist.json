@@ -1642,20 +1642,6 @@
       "where": "div.nav-r; button.key"
     },
     {
-      "path": "games/estimation-engine/index.html",
-      "at": "load",
-      "width": 378,
-      "todo": "§3.9 batch 7",
-      "where": "button#submit-btn.btn"
-    },
-    {
-      "path": "games/estimation-engine/index.html",
-      "at": "start",
-      "width": 378,
-      "todo": "§3.9 batch 7",
-      "where": "button#submit-btn.btn"
-    },
-    {
       "path": "games/four-quadrant-explorer/index.html",
       "at": "start",
       "width": 332,

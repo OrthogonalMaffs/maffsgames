@@ -320,6 +320,10 @@ jobs:
           #    per session and tap targets at 320px; every question shape's feedback and tap step measured
           #    at three phone sizes, the asking screen with the calculator closed and open; the diagram
           #    full width at 1:1; the standard header, Aa clear of everything. Runs in its own job (C, above).
+          # estimation-engine (SR-12 rebuild, 5 Oct 2026): every 1 s.f. rounding, estimate and calculator answer
+          # recomputed from the stored numbers (Decimal, SymPy), no exact halves, three planted faults; then the page
+          # in Chromium: D01 and F02 marked as Jon's contract states, every item's calculator and % lines, a full game
+          # (A-F, no timer, 20/20, Next every question), phones at 320/375/390 typing on MaffsKeypad (~2 min).
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |
@@ -346,6 +350,7 @@ jobs:
               Split It (every generator's keys recomputed + marking at the stated precision)|python scripts/verify-split-it.py
               Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)|python scripts/verify-correlation-or-coincidence.py
               Equation Builder (every tile arrangement classified by SymPy; the page's ACCEPTED lists match)|python scripts/verify-equation-builder.py && python scripts/verify-equation-builder.py --selftest
+              Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)|python scripts/verify-estimation-engine.py
               Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)|python scripts/check-resit-fixes.py
               Probability Pioneer (Stage 2 keys recomputed, Stages 1 and 3 pinned, every answer marked in Chromium)|python scripts/verify-probability-pioneer.py
               Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)|python scripts/verify-expected-damage.py

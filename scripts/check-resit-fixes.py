@@ -16,7 +16,8 @@ Full per-game verifiers follow in the audit's fix batches (docs/audit-resit-corr
                        option's letter selects that option,
                        for every question in several letter orders (real clicks in Chromium)
   probability-pioneer  "P(letter in MATHS also in GAMES)" keyed 3/5, recomputed from the words
-  estimation-engine    all 49 keys within 0.02% of the exact value (sqrt(e x 1000) = 52.137, not 52.07)
+  (estimation-engine's check, sqrt(e x 1000) = 52.137, retired 5 Oct 2026: the whole pool was replaced in its
+  SR-12 rebuild, and scripts/verify-estimation-engine.py recomputes every key of the new bank)
   decimal-detective    Place It: the marker never starts on the answer; the reading equal to the
                        value is marked right, the neighbouring ticks and half-way points wrong (since
                        5 Oct 2026 the marker snaps and is marked exactly by MaffsNumberLine; the planted
@@ -58,8 +59,6 @@ REVERT = {
     "probability-pioneer": [
         ("games/probability-pioneer/index.html",
          '{q:"P(letter in MATHS also in GAMES)", answer:"3/5",', '{q:"P(letter in MATHS also in GAMES)", answer:"2/5",')],
-    "estimation-engine": [
-        ("games/estimation-engine/index.html", "ans:52.137,  tol:4", "ans:52.07,   tol:4")],
     "decimal-detective start": [
         ("games/decimal-detective/index.html",
          "until 5 Oct 2026.\n  markerPos = null;", "until 5 Oct 2026.\n  markerPos = 0.5;")],
@@ -77,21 +76,6 @@ REVERT = {
          "{id:'C1', cat:'chance',")],
 }
 
-# Estimation Engine: every expression's exact value (Python floats, 15+ s.f.).
-E, PI, PHI = math.e, math.pi, (1 + 5 ** 0.5) / 2
-EE_EXACT = {
-    "12 × 15": 180, "144 ÷ 12": 12, "25 × 25": 625, "√400": 20, "8 × 8 × 8": 512, "1,000 ÷ 8": 125,
-    "18 × 19": 342, "√1,764": 42, "3⁴": 81, "200 × 15": 3000, "480 ÷ 16": 30, "13 × 13": 169,
-    "847 × 23": 19481, "√5041": 71, "1,234 ÷ 17": 1234 / 17, "52 × 52": 2704, "∛27000": 30,
-    "314 × 159": 49926, "9,801 ÷ 99": 99, "2¹⁰": 1024, "17 × 18 × 19": 5814, "1,000 ÷ 7": 1000 / 7,
-    "365 × 24": 8760, "√(144 × 25)": 60, "63 × 63": 3969, "∛8000": 20, "999 × 11": 10989,
-    "√9801": 99, "256 × 256": 65536, "2,500 ÷ 16": 156.25, "7 × 8 × 9 × 10": 5040, "∛125000": 50,
-    "e × 100": 100 * E, "φ × 1000": 1000 * PHI, "π²": PI ** 2, "ln(1000)": math.log(1000),
-    "log₁₀(500)": math.log10(500), "e²": E ** 2, "√(π × 1000)": math.sqrt(1000 * PI),
-    "π × 50²": 2500 * PI, "e × π": E * PI, "2¹²": 4096, "3¹⁰": 59049, "ln(100)": math.log(100),
-    "φ²": PHI ** 2, "π³": PI ** 3, "√(e × 1000)": math.sqrt(1000 * E), "log₁₀(π × 100)": math.log10(100 * PI),
-    "π × 100": 100 * PI,
-}
 BANNED = re.compile(r"suicid|hanging", re.I)
 
 
@@ -121,21 +105,6 @@ def check_probability(root, patches):
         errs.append("probability-pioneer: the answer %s is not among the options exactly once: %s" % (want, opts))
     return errs
 
-
-def check_estimation(root, patches):
-    src = read(root, "games/estimation-engine/index.html", patches)
-    items = re.findall(r'\{expr:"([^"]+)",\s*ans:([\d.]+),', src)
-    errs = []
-    if len(items) != len(EE_EXACT):
-        errs.append("estimation-engine: %d items, this check knows %d" % (len(items), len(EE_EXACT)))
-    for expr, ans in items:
-        if expr not in EE_EXACT:
-            errs.append("estimation-engine: unknown item %r (add its exact value here)" % expr)
-            continue
-        exact = EE_EXACT[expr]
-        if abs(float(ans) - exact) / exact > 0.0002:
-            errs.append("estimation-engine: %s keyed %s, the value is %.6g" % (expr, ans, exact))
-    return errs
 
 
 def check_correlation(root, patches):
@@ -312,8 +281,7 @@ async def check_negative_number_line(browser, root, patches):
 
 async def run_checks(browser, root, which=None, patches=()):
     """{check name: [errors]}; which limits to some checks (the self-test)."""
-    static = {"probability-pioneer": check_probability, "estimation-engine": check_estimation,
-              "correlation-or-coincidence": check_correlation}
+    static = {"probability-pioneer": check_probability, "correlation-or-coincidence": check_correlation}
     live = {"shape-shifter": check_shape_shifter, "decimal-detective": check_decimal_detective,
             "negative-number-line": check_negative_number_line}
     out = {}

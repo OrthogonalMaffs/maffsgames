@@ -1,496 +1,514 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-992JLHLP2D', {
-    send_page_view: true,
-    storage: 'none',
-    anonymize_ip: true
-  });
-</script>
-<script src="../../schools/assets/analytics.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Mental arithmetic with a tolerance band. Quick-fire estimation practice for GCSE and Core Maths students.">
+<meta name="description" content="Estimate by rounding each number to 1 significant figure, then calculating. GCSE N14 practice for the non-calculator paper: 45 questions, marked on the method.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/estimation-engine/">
 <meta property="og:title" content="Estimation Engine — MaffsGames">
-<meta property="og:description" content="Mental arithmetic with a tolerance band. Quick-fire estimation practice for GCSE and Core Maths students.">
+<meta property="og:description" content="Estimate by rounding each number to 1 significant figure, then calculating. GCSE N14 practice for the non-calculator paper: 45 questions, marked on the method.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/estimation-engine/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
 <title>Estimation Engine — MaffsGames</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <style>
-:root {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --border: #334155;
-  --border-dim: rgba(51,65,85,0.5);
-  --text: #f1f5f9;
-  --text-dim: #94a3b8;
-  --text-dark: #1e293b;
-  --accent: #3b82f6;
-  --accent-glow: rgba(59,130,246,0.15);
-  --green: #22c55e;
-  --green-bg: rgba(34,197,94,0.12);
-  --amber: #f59e0b;
-  --amber-bg: rgba(245,158,11,0.12);
-  --red: #ef4444;
-  --red-bg: rgba(239,68,68,0.12);
+/* Theme: schools/assets/theme.css (canon §7.5). The base tokens come from there; this game sets its accent. */
+:root{--accent:#b45309;--accent-dim:#fef3c7;--on-accent:#ffffff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:680px;width:100%;padding:1rem}
+/* The standard game header: "← Back to Games" above every screen, then the start screen's title,
+   subtitle and Aa. The back link is padded to a 44px target. */
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.6rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.6rem}}
+.screen{display:none}.screen.active{display:block}
+
+/* Start screen */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.panel h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-bottom:.6rem}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.65}
+.menu-info p+p{margin-top:.6rem}
+.example{margin:.6rem 0 .2rem;padding:.5rem .7rem;border-left:3px solid var(--accent);border-radius:0 8px 8px 0;background:var(--surface-alt)}
+.example .line{font-size:1rem;line-height:1.8}
+.badges{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.2rem 0 .4rem}
+.level-tag{display:inline-flex;align-items:center;padding:.25em .7em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-size:.85rem;font-weight:600;line-height:1.3}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+/* Hover only where a pointer can hover: on a touch screen it sticks after a tap. */
+@media (hover:hover){.btn:hover{background:var(--accent-dim)}.btn.solid:hover{background:var(--accent);opacity:.9}}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.start-btn{display:block;margin:.4rem auto .3rem;padding:.75rem 2.6rem;font-size:1.05rem}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+/* Play */
+.hud{display:flex;justify-content:space-between;padding:.45rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.6rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.6rem}
+.method{font-size:.88rem;color:var(--muted);line-height:1.4}
+.question{font-size:1.15rem;line-height:1.5;text-align:center}
+.question.words{font-size:1rem;text-align:left}
+.question .katex{font-size:1.15em}
+.step-head{font-size:.95rem;font-weight:600;line-height:1.4}
+.step-head .katex{font-size:1.05em}
+.cells{display:flex;gap:.5rem;width:100%}
+/* The number sits above its box with room between for the keypad's "typing here" tag, which must
+   never cover the number being rounded. */
+.cell{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:.7rem}
+.cell .from{font-family:var(--font-num);font-size:.85rem;color:var(--muted);text-align:center;white-space:nowrap}
+.cell input,.est-row input{width:100%;min-width:0;min-height:44px;font-family:var(--font-num);font-size:1.1rem;text-align:center;padding:.4rem .3rem;border:2px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
+.cell input:focus,.est-row input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+.cell .val{display:flex;align-items:center;justify-content:center;min-height:44px;font-family:var(--font-num);font-size:1.1rem;font-weight:700;border:2px solid var(--border);border-radius:8px;background:var(--surface-alt)}
+.cell.done .val{border-color:var(--correct)}
+.cell.missed .val{border-color:var(--wrong)}
+.cell .you{font-size:.75rem;color:var(--wrong);text-align:center;font-family:var(--font-num)}
+.est-row{display:flex;align-items:center;gap:.5rem;max-width:260px;width:100%;margin:0 auto}
+.est-row .cur{font-family:var(--font-num);font-size:1.1rem;font-weight:700}
+.check-row{display:flex;justify-content:center}
+.check-row .btn{min-width:140px}
+.msg{font-size:.88rem;color:var(--wrong);text-align:center;min-height:1.2em}
+.msg:empty{display:none}
+.step1-fb{font-size:.9rem;line-height:1.5;padding:.45rem .6rem;border-radius:10px;border:1px solid var(--border);background:var(--surface-alt)}
+.step1-fb.right{border-color:var(--correct)}
+.step1-fb.wrong{border-color:var(--wrong)}
+.step1-fb .v{font-weight:700}
+.step1-fb.right .v{color:var(--correct)}
+.step1-fb.wrong .v{color:var(--wrong)}
+.feedback:empty{display:none}
+.fb{border-radius:12px;padding:.75rem .85rem;border:1px solid var(--border);background:var(--surface-alt);font-size:.93rem;line-height:1.55}
+.fb.right{border-color:var(--correct)}
+.fb.wrong{border-color:var(--wrong)}
+.fb-verdict{font-weight:700;font-size:1rem}
+.fb.right .fb-verdict{color:var(--correct)}
+.fb.wrong .fb-verdict{color:var(--wrong)}
+.fb-work{margin-top:.3rem;font-size:1.05rem}
+.fb-line{margin-top:.35rem}
+.fb-line .num{font-family:var(--font-num);font-weight:700}
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+.actions{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap}
+#teacherInvite{margin-top:1rem}
+
+/* Phone rule (canon §7.6.1). Once a question is finished the inputs, Check and the keypad cannot be
+   used, so they fold away and the feedback and Next take their place. */
+.qcard.fb-open .check-row,.qcard.fb-open .kp-holder,.qcard.fb-open .msg{display:none}
+@media (max-height:700px){.qcard{gap:.45rem}.method{font-size:.82rem}}
+@media (max-height:600px){
+  .hud{padding:.3rem .6rem;margin-bottom:.4rem}
+  body.fb-open .hud{display:none}
+  .qcard{gap:.35rem}
+  .question{font-size:1.05rem}
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{padding-bottom:44px;background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+@media (max-width:420px){
+  .container{padding:.6rem}
+  .qcard{padding:.75rem .7rem}
+  .fb{padding:.6rem .65rem;font-size:.9rem}
+  .hud{padding:.35rem .5rem}
+}
 
-/* Header */
-.header{width:100%;background:#0b1120;border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px}
-.back-link{color:var(--accent);text-decoration:none;font-size:13px;font-weight:600}
-.back-link:hover{text-decoration:underline}
-.game-title{font-weight:700;font-size:clamp(14px,3vw,18px);color:var(--text);letter-spacing:0.02em}
-.game-title span{color:var(--accent)}
-
-/* Page */
-.page{width:100%;max-width:640px;padding:20px 16px 60px;display:flex;flex-direction:column;gap:16px}
-
-/* Status bar */
-.status-bar{display:flex;gap:0.8rem;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 20px;justify-content:space-around}
-.si{display:flex;flex-direction:column;align-items:center;gap:0.15rem}
-.si-val{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:600;color:var(--text)}
-.si-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim)}
-
-/* Question card */
-.question-card{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center}
-.q-round{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-dim);margin-bottom:10px}
-.q-tolerance{display:inline-block;padding:4px 14px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);margin-bottom:16px}
-.q-expression{font-family:'JetBrains Mono',monospace;font-size:clamp(1.8rem,8vw,3rem);font-weight:700;color:var(--text);line-height:1.1;margin-bottom:16px}
-.q-timer-track{width:80%;height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin:0 auto}
-.q-timer-fill{height:100%;background:var(--accent);border-radius:2px;transition:background 0.3s}
-.q-timer-fill.warn{background:var(--amber)}
-.q-timer-fill.danger{background:var(--red)}
-
-/* Tolerance meter */
-.tolerance-meter{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px}
-.tm-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:10px;text-align:center}
-.tm-track{position:relative;height:24px;background:var(--border);border-radius:12px;overflow:hidden}
-.tm-zone{position:absolute;top:0;bottom:0;background:rgba(34,197,94,0.25);border:1px solid rgba(34,197,94,0.4)}
-.tm-marker{position:absolute;top:50%;transform:translateY(-50%) translateX(-50%);width:3px;height:20px;background:var(--accent);border-radius:2px;transition:left 0.2s;z-index:2}
-.tm-answer-marker{position:absolute;top:50%;transform:translateY(-50%) translateX(-50%);width:3px;height:20px;border-radius:2px;z-index:3;display:none}
-.tm-answer-marker.correct{background:var(--green)}
-.tm-answer-marker.wrong{background:var(--red)}
-.tm-labels{display:flex;justify-content:space-between;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim)}
-
-/* Input */
-.input-row{display:flex;gap:8px;width:100%}
-.est-input{flex:1;background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:12px 16px;font-family:'JetBrains Mono',monospace;font-size:1.1rem;color:var(--text);outline:none;transition:border-color 0.2s;text-align:center}
-.est-input:focus{border-color:var(--accent)}
-.est-input::placeholder{color:var(--text-dim);font-size:0.75rem}
-.est-input:disabled{opacity:0.5}
-
-/* Buttons */
-.btn{padding:12px 20px;font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;border-radius:10px;border:none;transition:all 0.2s}
-.btn-accent{background:var(--accent);color:#fff}
-.btn-accent:hover{opacity:0.9}
-.btn-accent:disabled{opacity:0.4;cursor:not-allowed}
-.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text-dim);width:100%}
-.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
-
-/* Result flash */
-.result-flash{width:100%;padding:12px 16px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;text-align:center;display:none;animation:slideIn 0.2s ease}
-.result-flash.correct{background:var(--green-bg);border:1px solid rgba(34,197,94,0.3);color:var(--green)}
-.result-flash.wrong{background:var(--red-bg);border:1px solid rgba(239,68,68,0.3);color:var(--red)}
-.result-flash.timeout{background:var(--amber-bg);border:1px solid rgba(245,158,11,0.3);color:var(--amber)}
-@keyframes slideIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-
-/* Score history */
-.score-history{width:100%;display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
-.sh-dot{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);transition:all 0.3s}
-.sh-dot.hit{background:var(--green-bg);border-color:rgba(34,197,94,0.4);color:var(--green)}
-.sh-dot.partial{background:var(--amber-bg);border-color:rgba(245,158,11,0.4);color:var(--amber)}
-.sh-dot.miss{background:var(--red-bg);border-color:rgba(239,68,68,0.3);color:var(--red)}
-
-/* Leaderboard */
-.lb-section{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-.lb-header{padding:12px 16px;border-bottom:1px solid var(--border-dim)}
-.lb-title{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim)}
-.lb-body{padding-bottom:44px;padding:8px 0}
-.lb-empty{font-size:13px;color:var(--text-dim);text-align:center;padding:20px;font-style:italic}
-.lb-row{display:grid;grid-template-columns:1.5rem 1fr auto auto;gap:8px;align-items:center;padding:6px 16px;border-bottom:1px solid var(--border-dim);font-family:'JetBrains Mono',monospace;font-size:12px}
-.lb-row:last-child{border-bottom:none}
-.lb-row.hl{background:rgba(59,130,246,0.06)}
-.lb-rank{color:var(--text-dim)}.lb-name{color:var(--text)}.lb-score{color:var(--accent);text-align:right}.lb-hits{color:var(--text-dim);font-size:11px;text-align:right}
-
-/* Modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(7,13,26,0.88);backdrop-filter:blur(8px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;animation:fadeIn 0.2s ease}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.modal-overlay.hidden{display:none}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:380px;overflow:hidden;animation:popIn 0.25s ease}
-@keyframes popIn{from{transform:scale(0.95);opacity:0}to{transform:scale(1);opacity:1}}
-.modal-header{padding:24px 24px 0;text-align:center}
-.modal-result{font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:6px}
-.modal-score{margin:16px 24px;background:#0f172a;border:1px solid var(--border-dim);border-radius:10px;padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ms-item{display:flex;flex-direction:column;gap:2px}
-.ms-val{font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--accent)}
-.ms-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}
-.modal-name{padding:0 24px;display:flex;flex-direction:column;gap:6px}
-.modal-name label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim)}
-.name-input{background:#0f172a;border:2px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text);outline:none;width:100%;transition:border-color 0.2s}
-.name-input:focus{border-color:var(--accent)}
-.modal-acts{display:flex;gap:8px;padding:16px 24px 24px}
-.modal-acts .btn{flex:1}
-
-/* Accessibility */
-body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}
-body.accessible{background-color:#12141f!important}
-.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s;margin-left:auto}
-.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
-.correct::after{content:' ✓';font-size:.85em;opacity:.8}
-.incorrect::after{content:' ✗';font-size:.85em;opacity:.8}
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val,body.accessible .cell .from,body.accessible input{letter-spacing:0}
+body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer.js"></script>
+<!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): a non-calculator game, so the keypad
+     only, never the calculator (roster Calculator field: not allowed). -->
+<script src="../../schools/assets/keypad.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
-<div class="header">
+<div class="container">
   <a href="../../" class="back-link">← Back to Games</a>
-  <div class="game-title">ESTIMATION <span>ENGINE</span></div>
-  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
-</div>
-
-<div class="page">
-  <div class="status-bar">
-    <div class="si"><span class="si-val" id="sv-q">—</span><span class="si-lbl">Question</span></div>
-    <div class="si"><span class="si-val" id="sv-score">0</span><span class="si-lbl">Score</span></div>
-    <div class="si"><span class="si-val" id="sv-hits">0</span><span class="si-lbl">Within Tol.</span></div>
-    <div class="si"><span class="si-val" id="sv-best">—</span><span class="si-lbl">Best Error</span></div>
-  </div>
-
-  <div class="question-card" id="q-card">
-    <div class="q-round" id="q-round">Ready to begin</div>
-    <div class="q-tolerance" id="q-tolerance">Within 5%</div>
-    <div class="q-expression" id="q-expr">Press Start</div>
-    <div class="q-timer-track"><div class="q-timer-fill" id="q-timer" style="width:100%"></div></div>
-  </div>
-
-  <div class="tolerance-meter" id="tol-meter" style="display:none">
-    <div class="tm-label" id="tm-label">Your estimate vs correct answer</div>
-    <div class="tm-track">
-      <div class="tm-zone" id="tm-zone"></div>
-      <div class="tm-marker" id="tm-marker" style="left:50%"></div>
-      <div class="tm-answer-marker" id="tm-answer-marker"></div>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Estimation Engine</h1><div class="sub">Round, then calculate. No calculator.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="badges"><span class="level-tag">GCSE</span><span class="calc-badge" data-calc="not-allowed">Non-calculator</span></div>
+    <div class="panel menu-info">
+      <p>To estimate, round each number to 1 significant figure, then work out the answer with the rounded numbers.</p>
+      <div class="example"><div class="line" id="exampleA"></div><div class="line" id="exampleB"></div></div>
+      <p>Each question has two steps, a mark for each: round every number, then estimate. If a rounding goes wrong
+        you are shown the right ones, so you can still earn the second mark.</p>
     </div>
-    <div class="tm-labels"><span id="tm-min">—</span><span id="tm-mid">—</span><span id="tm-max">—</span></div>
-  </div>
-
-  <div class="input-row">
-    <input class="est-input" id="est-input" type="number" placeholder="Your estimate…" autocomplete="off" disabled>
-    <button class="btn btn-accent" id="submit-btn" onclick="submitAnswer()" disabled>Submit</button>
-  </div>
-
-  <div class="result-flash" id="result-flash"></div>
-  <div class="score-history" id="score-history"></div>
-
-  <button class="btn btn-ghost" id="start-btn" onclick="startGame()">Start Game</button>
-  <p id="teacherInvite"></p>
-
-  <div class="lb-section">
-    <div class="lb-header"><span class="lb-title">Today's Leaderboard</span></div>
-    <div class="lb-body" id="lb-out"><div class="lb-empty">No scores yet.</div></div>
-  </div>
-</div>
-
-<div class="modal-overlay hidden" id="modal">
-  <div class="modal">
-    <div class="modal-header"><div class="modal-result" id="modal-result">—</div></div>
-    <div class="modal-score" id="modal-score"></div>
-    <div class="modal-name">
-      <label>Your name for the leaderboard</label>
-      <input class="name-input" id="name-input" type="text" maxlength="20" placeholder="Anonymous">
+    <div class="panel">
+      <h2>10 questions, 20 marks</h2>
+      <button class="btn solid start-btn" id="startBtn">Start</button>
     </div>
-    <div class="modal-acts">
-      <button class="btn btn-ghost" onclick="resetGame()">Play Again</button>
-      <button class="btn btn-accent" onclick="submitToLB()">Submit Score</button>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Marks</div><div class="hud-val" id="marks">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="method">Round each number to 1 significant figure, then estimate.</div>
+      <div class="question" id="question"></div>
+      <form id="stepForm" autocomplete="off" novalidate>
+        <div class="step-head" id="stepHead"></div>
+        <div id="stepBody"></div>
+      </form>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="check-row"><button class="btn solid" id="checkBtn" type="button">Check</button></div>
+      <div class="kp-holder" id="kpHolder"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resultTitle"></h2>
+      <div class="final-score" id="finalScore">0/20</div>
+      <div class="stats" id="statsLine"></div>
+      <div class="actions"><button class="btn solid" id="againBtn">Play again</button></div>
+      <p id="teacherInvite"></p>
     </div>
   </div>
 </div>
 
 <script>
-const QUESTIONS = [
-  // KS3 — simple arithmetic, round numbers
-  {expr:"12 × 15",          ans:180,     tol:5, time:30},
-  {expr:"144 ÷ 12",         ans:12,      tol:2, time:30},
-  {expr:"25 × 25",          ans:625,     tol:2, time:30},
-  {expr:"√400",             ans:20,      tol:1, time:30},
-  {expr:"8 × 8 × 8",        ans:512,     tol:3, time:30},
-  {expr:"1,000 ÷ 8",        ans:125,     tol:3, time:30},
-  {expr:"18 × 19",          ans:342,     tol:5, time:30},
-  {expr:"√1,764",           ans:42,      tol:2, time:30},
-  {expr:"3⁴",               ans:81,      tol:2, time:30},
-  {expr:"200 × 15",         ans:3000,    tol:3, time:30},
-  {expr:"480 ÷ 16",         ans:30,      tol:2, time:30},
-  {expr:"13 × 13",          ans:169,     tol:2, time:30},
-  // GCSE — harder arithmetic, roots, powers
-  {expr:"847 × 23",         ans:19481,   tol:5, time:30},
-  {expr:"√5041",            ans:71,      tol:3, time:30},
-  {expr:"1,234 ÷ 17",       ans:72.6,    tol:5, time:30},
-  {expr:"52 × 52",          ans:2704,    tol:2, time:30},
-  {expr:"∛27000",           ans:30,      tol:2, time:30},
-  {expr:"314 × 159",        ans:49926,   tol:5, time:30},
-  {expr:"9,801 ÷ 99",       ans:99,      tol:2, time:30},
-  {expr:"2¹⁰",              ans:1024,    tol:1, time:30},
-  {expr:"17 × 18 × 19",     ans:5814,    tol:5, time:30},
-  {expr:"1,000 ÷ 7",        ans:142.86,  tol:3, time:30},
-  {expr:"365 × 24",         ans:8760,    tol:2, time:30},
-  {expr:"√(144 × 25)",      ans:60,      tol:2, time:30},
-  {expr:"63 × 63",          ans:3969,    tol:3, time:30},
-  {expr:"∛8000",            ans:20,      tol:1, time:30},
-  {expr:"999 × 11",         ans:10989,   tol:3, time:30},
-  {expr:"√9801",            ans:99,      tol:2, time:30},
-  {expr:"256 × 256",        ans:65536,   tol:5, time:30},
-  {expr:"2,500 ÷ 16",       ans:156.25,  tol:3, time:30},
-  {expr:"7 × 8 × 9 × 10",   ans:5040,    tol:5, time:30},
-  {expr:"∛125000",          ans:50,      tol:2, time:30},
-  // A-Level / Core Maths — constants, logs, compound
-  {expr:"e × 100",          ans:271.83,  tol:3, time:30},
-  {expr:"φ × 1000",         ans:1618,    tol:2, time:30},
-  {expr:"π²",               ans:9.87,    tol:3, time:30},
-  {expr:"ln(1000)",         ans:6.908,   tol:3, time:30},
-  {expr:"log₁₀(500)",       ans:2.699,   tol:3, time:30},
-  {expr:"e²",               ans:7.389,   tol:3, time:30},
-  {expr:"√(π × 1000)",      ans:56.05,   tol:4, time:30},
-  {expr:"π × 50²",          ans:7854,    tol:3, time:30},
-  {expr:"e × π",            ans:8.54,    tol:3, time:30},
-  {expr:"2¹²",              ans:4096,    tol:1, time:30},
-  {expr:"3¹⁰",              ans:59049,   tol:3, time:30},
-  {expr:"ln(100)",          ans:4.605,   tol:3, time:30},
-  {expr:"φ²",               ans:2.618,   tol:3, time:30},
-  {expr:"π³",               ans:31.006,  tol:4, time:30},
-  {expr:"√(e × 1000)",      ans:52.137,  tol:4, time:30},
-  {expr:"log₁₀(π × 100)",   ans:2.497,   tol:3, time:30},
-  {expr:"π × 100",          ans:314.16,  tol:3, time:30},
-];
+// ============================================================
+//  QUESTION BANK (Jon approved, 5 Oct 2026). GCSE N14: round each number to 1 significant figure,
+//  then estimate. Marked by exact match to the method's answers (canon SR-12), never a band.
+//  nums: the numbers as printed, in reading order. rounded: each to 1 s.f. shape: the calculation
+//  on a, b, c, d (the numbers in order). estimate: shape on the rounded numbers. exact: the
+//  calculator answer as shown (exact, or to 4 s.f.; money to the penny). group: A-F.
+//  tex (KaTeX) or text (a word problem) is what the student reads; show is the plain-text fallback.
+//  scripts/verify-estimation-engine.py recomputes every rounding, estimate and calculator answer
+//  from nums and shape; change an item here only with that script passing.
+// ============================================================
+/* BANK-START */ var BANK = [
+  {"id": "A01", "group": "A", "nums": ["48", "21"], "shape": "a*b", "rounded": ["50", "20"], "estimate": "1000", "exact": "1008", "show": "48 × 21", "tex": "48 \\times 21"},
+  {"id": "A02", "group": "A", "nums": ["387", "52"], "shape": "a*b", "rounded": ["400", "50"], "estimate": "20000", "exact": "20124", "show": "387 × 52", "tex": "387 \\times 52"},
+  {"id": "A03", "group": "A", "nums": ["612", "38"], "shape": "a*b", "rounded": ["600", "40"], "estimate": "24000", "exact": "23256", "show": "612 × 38", "tex": "612 \\times 38"},
+  {"id": "A04", "group": "A", "nums": ["29", "71"], "shape": "a*b", "rounded": ["30", "70"], "estimate": "2100", "exact": "2059", "show": "29 × 71", "tex": "29 \\times 71"},
+  {"id": "A05", "group": "A", "nums": ["4127", "19"], "shape": "a*b", "rounded": ["4000", "20"], "estimate": "80000", "exact": "78413", "show": "4127 × 19", "tex": "4127 \\times 19"},
+  {"id": "A06", "group": "A", "nums": ["83", "293"], "shape": "a*b", "rounded": ["80", "300"], "estimate": "24000", "exact": "24319", "show": "83 × 293", "tex": "83 \\times 293"},
+  {"id": "A07", "group": "A", "nums": ["9.2", "31"], "shape": "a*b", "rounded": ["9", "30"], "estimate": "270", "exact": "285.2", "show": "9.2 × 31", "tex": "9.2 \\times 31"},
+  {"id": "A08", "group": "A", "nums": ["706", "4.1"], "shape": "a*b", "rounded": ["700", "4"], "estimate": "2800", "exact": "2894.6", "show": "706 × 4.1", "tex": "706 \\times 4.1"},
+  {"id": "B01", "group": "B", "nums": ["812", "39"], "shape": "a/b", "rounded": ["800", "40"], "estimate": "20", "exact": "20.82", "show": "812 ÷ 39", "tex": "812 \\div 39", "approx": true},
+  {"id": "B02", "group": "B", "nums": ["6234", "28"], "shape": "a/b", "rounded": ["6000", "30"], "estimate": "200", "exact": "222.6", "show": "6234 ÷ 28", "tex": "6234 \\div 28", "approx": true},
+  {"id": "B03", "group": "B", "nums": ["587", "2.9"], "shape": "a/b", "rounded": ["600", "3"], "estimate": "200", "exact": "202.4", "show": "587 ÷ 2.9", "tex": "587 \\div 2.9", "approx": true},
+  {"id": "B04", "group": "B", "nums": ["3912", "81"], "shape": "a/b", "rounded": ["4000", "80"], "estimate": "50", "exact": "48.30", "show": "3912 ÷ 81", "tex": "3912 \\div 81", "approx": true},
+  {"id": "B05", "group": "B", "nums": ["18.7", "4.2"], "shape": "a/b", "rounded": ["20", "4"], "estimate": "5", "exact": "4.452", "show": "18.7 ÷ 4.2", "tex": "18.7 \\div 4.2", "approx": true},
+  {"id": "B06", "group": "B", "nums": ["9.31", "0.48"], "shape": "a/b", "rounded": ["9", "0.5"], "estimate": "18", "exact": "19.40", "show": "9.31 ÷ 0.48", "tex": "9.31 \\div 0.48", "approx": true},
+  {"id": "B07", "group": "B", "nums": ["61.3", "0.19"], "shape": "a/b", "rounded": ["60", "0.2"], "estimate": "300", "exact": "322.6", "show": "61.3 ÷ 0.19", "tex": "61.3 \\div 0.19", "approx": true},
+  {"id": "B08", "group": "B", "nums": ["4180", "19.6"], "shape": "a/b", "rounded": ["4000", "20"], "estimate": "200", "exact": "213.3", "show": "4180 ÷ 19.6", "tex": "4180 \\div 19.6", "approx": true},
+  {"id": "C01", "group": "C", "nums": ["0.32", "61"], "shape": "a*b", "rounded": ["0.3", "60"], "estimate": "18", "exact": "19.52", "show": "0.32 × 61", "tex": "0.32 \\times 61"},
+  {"id": "C02", "group": "C", "nums": ["0.48", "0.72"], "shape": "a*b", "rounded": ["0.5", "0.7"], "estimate": "0.35", "exact": "0.3456", "show": "0.48 × 0.72", "tex": "0.48 \\times 0.72"},
+  {"id": "C03", "group": "C", "nums": ["289", "0.31"], "shape": "a*b", "rounded": ["300", "0.3"], "estimate": "90", "exact": "89.59", "show": "289 × 0.31", "tex": "289 \\times 0.31"},
+  {"id": "C04", "group": "C", "nums": ["0.087", "412"], "shape": "a*b", "rounded": ["0.09", "400"], "estimate": "36", "exact": "35.84", "show": "0.087 × 412", "tex": "0.087 \\times 412", "approx": true},
+  {"id": "C05", "group": "C", "nums": ["0.61", "0.29"], "shape": "a*b", "rounded": ["0.6", "0.3"], "estimate": "0.18", "exact": "0.1769", "show": "0.61 × 0.29", "tex": "0.61 \\times 0.29"},
+  {"id": "C06", "group": "C", "nums": ["7.8", "0.0213"], "shape": "a*b", "rounded": ["8", "0.02"], "estimate": "0.16", "exact": "0.1661", "show": "7.8 × 0.0213", "tex": "7.8 \\times 0.0213", "approx": true},
+  {"id": "C07", "group": "C", "nums": ["0.392", "0.0021"], "shape": "a/b", "rounded": ["0.4", "0.002"], "estimate": "200", "exact": "186.7", "show": "0.392 ÷ 0.0021", "tex": "0.392 \\div 0.0021", "approx": true},
+  {"id": "C08", "group": "C", "nums": ["52.1", "0.038"], "shape": "a*b", "rounded": ["50", "0.04"], "estimate": "2", "exact": "1.980", "show": "52.1 × 0.038", "tex": "52.1 \\times 0.038", "approx": true},
+  {"id": "D01", "group": "D", "nums": ["21.3", "3.98", "0.49"], "shape": "(a*b)/c", "rounded": ["20", "4", "0.5"], "estimate": "160", "exact": "173.0", "show": "(21.3 × 3.98) ÷ 0.49", "tex": "(21.3 \\times 3.98) \\div 0.49", "approx": true},
+  {"id": "D02", "group": "D", "nums": ["6.12", "19.8", "3.94"], "shape": "(a*b)/c", "rounded": ["6", "20", "4"], "estimate": "30", "exact": "30.76", "show": "(6.12 × 19.8) ÷ 3.94", "tex": "(6.12 \\times 19.8) \\div 3.94", "approx": true},
+  {"id": "D03", "group": "D", "nums": ["48.7", "9.1", "0.21"], "shape": "(a*b)/c", "rounded": ["50", "9", "0.2"], "estimate": "2250", "exact": "2110", "show": "(48.7 × 9.1) ÷ 0.21", "tex": "(48.7 \\times 9.1) \\div 0.21", "approx": true},
+  {"id": "D04", "group": "D", "nums": ["312", "7.9", "41"], "shape": "(a*b)/c", "rounded": ["300", "8", "40"], "estimate": "60", "exact": "60.12", "show": "(312 × 7.9) ÷ 41", "tex": "(312 \\times 7.9) \\div 41", "approx": true},
+  {"id": "D05", "group": "D", "nums": ["5.79", "3.88", "0.48"], "shape": "(a+b)/c", "rounded": ["6", "4", "0.5"], "estimate": "20", "exact": "20.15", "show": "(5.79 + 3.88) ÷ 0.48", "tex": "(5.79 + 3.88) \\div 0.48", "approx": true},
+  {"id": "D06", "group": "D", "nums": ["81.2", "18.9", "2.11"], "shape": "(a-b)/c", "rounded": ["80", "20", "2"], "estimate": "30", "exact": "29.53", "show": "(81.2 − 18.9) ÷ 2.11", "tex": "(81.2 - 18.9) \\div 2.11", "approx": true},
+  {"id": "D07", "group": "D", "nums": ["29.4", "61.7", "3.12", "1.96"], "shape": "(a*b)/(c*d)", "rounded": ["30", "60", "3", "2"], "estimate": "300", "exact": "296.6", "show": "(29.4 × 61.7) ÷ (3.12 × 1.96)", "tex": "(29.4 \\times 61.7) \\div (3.12 \\times 1.96)", "approx": true},
+  {"id": "D08", "group": "D", "nums": ["0.38", "412", "7.6"], "shape": "(a*b)/c", "rounded": ["0.4", "400", "8"], "estimate": "20", "exact": "20.60", "show": "(0.38 × 412) ÷ 7.6", "tex": "(0.38 \\times 412) \\div 7.6"},
+  {"id": "D09", "group": "D", "nums": ["197", "0.62", "0.31"], "shape": "(a*b)/c", "rounded": ["200", "0.6", "0.3"], "estimate": "400", "exact": "394", "show": "(197 × 0.62) ÷ 0.31", "tex": "(197 \\times 0.62) \\div 0.31"},
+  {"id": "D10", "group": "D", "nums": ["9.87", "20.3", "4.1"], "shape": "(a+b)*c", "rounded": ["10", "20", "4"], "estimate": "120", "exact": "123.7", "show": "(9.87 + 20.3) × 4.1", "tex": "(9.87 + 20.3) \\times 4.1", "approx": true},
+  {"id": "E01", "group": "E", "nums": ["3.9"], "shape": "a**2", "rounded": ["4"], "estimate": "16", "exact": "15.21", "show": "3.9²", "tex": "3.9^2"},
+  {"id": "E02", "group": "E", "nums": ["19.2", "4.1"], "shape": "a**2/b", "rounded": ["20", "4"], "estimate": "100", "exact": "89.91", "show": "19.2² ÷ 4.1", "tex": "19.2^2 \\div 4.1", "approx": true},
+  {"id": "E03", "group": "E", "nums": ["3.92", "4.11"], "shape": "sqrt(a*b)", "rounded": ["4", "4"], "estimate": "4", "exact": "4.014", "show": "√(3.92 × 4.11)", "tex": "\\sqrt{3.92 \\times 4.11}", "approx": true},
+  {"id": "E04", "group": "E", "nums": ["4.87", "19.6"], "shape": "sqrt(a*b)", "rounded": ["5", "20"], "estimate": "10", "exact": "9.770", "show": "√(4.87 × 19.6)", "tex": "\\sqrt{4.87 \\times 19.6}", "approx": true},
+  {"id": "E05", "group": "E", "nums": ["0.29", "512"], "shape": "a**2*b", "rounded": ["0.3", "500"], "estimate": "45", "exact": "43.06", "show": "0.29² × 512", "tex": "0.29^2 \\times 512", "approx": true},
+  {"id": "F01", "group": "F", "nums": ["18.95", "42"], "shape": "a*b", "rounded": ["20", "40"], "estimate": "800", "exact": "795.90", "text": "A ticket costs £18.95. Estimate the cost of 42 tickets.", "money": true},
+  {"id": "F02", "group": "F", "nums": ["287", "9.8"], "shape": "a/b", "rounded": ["300", "10"], "estimate": "30", "exact": "29.29", "text": "A car travels 287 miles on 9.8 gallons. Estimate the miles per gallon.", "approx": true},
+  {"id": "F03", "group": "F", "nums": ["61.4", "38.7"], "shape": "a*b", "rounded": ["60", "40"], "estimate": "2400", "exact": "2376", "text": "A field is 61.4 m by 38.7 m. Estimate its area in m².", "approx": true},
+  {"id": "F04", "group": "F", "nums": ["4180", "21"], "shape": "a/b", "rounded": ["4000", "20"], "estimate": "200", "exact": "199.05", "text": "£4,180 is shared equally between 21 people. Estimate each share.", "money": true, "approx": true},
+  {"id": "F05", "group": "F", "nums": ["11.8", "392"], "shape": "b/a", "rounded": ["10", "400"], "estimate": "40", "exact": "33.22", "text": "Paint covers 11.8 m² per litre. Estimate the litres needed for 392 m².", "approx": true},
+  {"id": "F06", "group": "F", "nums": ["3.12", "487"], "shape": "a*b", "rounded": ["3", "500"], "estimate": "1500", "exact": "1519", "text": "A runner averages 3.12 m/s for 487 s. Estimate the distance in metres.", "approx": true}
+]; /* BANK-END */
 
-function dayStr(){const d=new Date();return`${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`}
-function seededRng(seed){let s=seed;return()=>{s=(s*1664525+1013904223)&0xffffffff;return(s>>>0)/0xffffffff}}
-function shuffle(arr,rng){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-
-const LKEY=()=>'est_lb_'+dayStr();
-const ROUNDS=10;
-let questions,qIdx,score,hits,bestError,gameActive=false,qTimer,animFrame;
-
-function startGame(){
-  const rng=()=>Math.random();
-  questions=[...QUESTIONS].sort(()=>rng()-0.5).slice(0,ROUNDS);
-  qIdx=0;score=0;hits=0;bestError=Infinity;gameActive=true;
-  document.getElementById('start-btn').style.display='none';
-  document.getElementById('tol-meter').style.display='block';
-  buildScoreHistory();
-  updateStatus();
-  nextQuestion();
-  mfg('game_started',{game_slug:'estimation-engine',level:'all'});
-  window._ggAbandoned=true;
-  if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('visibilitychange',function(){if(document.hidden&&window._ggAbandoned)mfg('game_abandoned',{game_slug:'estimation-engine',level:'all',question_index:qIdx+1});});}
-}
-
-function nextQuestion(){
-  if(qIdx>=ROUNDS){endGame();return}
-  const q=questions[qIdx];
-  document.getElementById('q-round').textContent=`Question ${qIdx+1} of ${ROUNDS}`;
-  document.getElementById('q-tolerance').textContent=`Within ${q.tol}%`;
-  document.getElementById('q-expr').textContent=q.expr;
-  document.getElementById('result-flash').style.display='none';
-  document.getElementById('tm-answer-marker').style.display='none';
-  document.getElementById('tol-meter').style.display='none';
-  document.getElementById('tm-min').textContent='—';
-  document.getElementById('tm-mid').textContent='—';
-  document.getElementById('tm-max').textContent='—';
-  document.getElementById('tm-marker').style.left='50%';
-  document.getElementById('est-input').value='';
-  document.getElementById('est-input').disabled=false;
-  document.getElementById('submit-btn').disabled=false;
-  document.getElementById('est-input').focus();
-  startTimerBar(q.time*1000);
-}
-
-function startTimerBar(ms){
-  clearTimeout(qTimer);cancelAnimationFrame(animFrame);
-  const start=Date.now();
-  function tick(){
-    const pct=Math.max(0,100-(Date.now()-start)/ms*100);
-    const fill=document.getElementById('q-timer');
-    fill.style.width=pct+'%';
-    fill.className='q-timer-fill'+(pct<15?' danger':pct<40?' warn':'');
-    if(pct>0&&gameActive)animFrame=requestAnimationFrame(tick);
+(function () {
+  'use strict';
+  var EE = window.EE = { BANK: BANK };
+  var SLUG = 'estimation-engine', LEVEL = 'gcse', ROUNDS = 10, GROUPS = ['A', 'B', 'C', 'D', 'E', 'F'], FOOTER_PX = 40;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function mfg() { if (typeof window.mfg === 'function') window.mfg.apply(null, arguments); }
+  // KaTeX when it loaded; the plain-text form otherwise (never raw TeX on screen).
+  function math(el, tex, plain) {
+    if (window.katex) { try { katex.render(tex, el, { throwOnError: true }); return; } catch (e) {} }
+    el.textContent = plain;
   }
-  tick();
-  qTimer=setTimeout(()=>timeOut(),ms);
-}
-
-function updateMeter(userVal,q){
-  const ans=q.ans,range=ans*0.5;
-  const zone=document.getElementById('tm-zone');
-  zone.style.left=(50-q.tol)+'%';
-  zone.style.width=(q.tol*2)+'%';
-  document.getElementById('tm-min').textContent=Math.round(ans-range).toLocaleString();
-  document.getElementById('tm-mid').textContent=Math.round(ans).toLocaleString();
-  document.getElementById('tm-max').textContent=Math.round(ans+range).toLocaleString();
-  if(userVal!==null){
-    const pct=Math.min(100,Math.max(0,50+(userVal-ans)/range*50));
-    document.getElementById('tm-marker').style.left=pct+'%';
-    document.getElementById('tm-answer-marker').style.left='50%';
-    document.getElementById('tm-answer-marker').style.display='block';
-    const err=Math.abs(userVal-ans)/ans*100;
-    document.getElementById('tm-answer-marker').className='tm-answer-marker '+(err<=q.tol?'correct':'wrong');
-  } else {
-    document.getElementById('tm-marker').style.left='50%';
+  function mathHtml(tex, plain) {
+    if (window.katex) { try { return katex.renderToString(tex, { throwOnError: true }); } catch (e) {} }
+    return esc(plain);
   }
-}
 
-function submitAnswer(){
-  if(!gameActive)return;
-  clearTimeout(qTimer);cancelAnimationFrame(animFrame);
-  const val=parseFloat(document.getElementById('est-input').value);
-  if(isNaN(val))return;
-  processAnswer(val,false);
-}
-
-function timeOut(){
-  cancelAnimationFrame(animFrame);
-  processAnswer(null,true);
-}
-
-function processAnswer(val,timedOut){
-  document.getElementById('est-input').disabled=true;
-  document.getElementById('submit-btn').disabled=true;
-  const q=questions[qIdx];
-  const flash=document.getElementById('result-flash');
-  // Reveal meter now that answer is in
-  document.getElementById('tol-meter').style.display='block';
-  document.getElementById('tm-mid').textContent='Correct';
-  updateMeter(val,q);
-  if(timedOut||val===null){
-    flash.className='result-flash timeout';
-    flash.textContent=`⏱ Time's up! Answer: ${q.ans.toLocaleString()}`;
-    flash.style.display='block';
-    updateScoreDot(qIdx,'miss');
-    mfg('question_answered',{game_slug:'estimation-engine',level:'all',question_index:qIdx+1,correct:false});
-  } else {
-    const err=Math.abs(val-q.ans)/q.ans*100;
-    if(err<bestError)bestError=err;
-    if(err<=q.tol){
-      hits++;
-      const precision=Math.round((1-err/q.tol)*100);
-      const pts=Math.round(150*(1+precision/100));
-      score+=pts;
-      flash.className='result-flash correct';
-      flash.textContent=`✓ Within tolerance! Error: ${err.toFixed(2)}% · +${pts} pts`;
-      updateScoreDot(qIdx,'hit');
-      mfg('question_answered',{game_slug:'estimation-engine',level:'all',question_index:qIdx+1,correct:true});
-    } else {
-      const pts=Math.round(20*Math.max(0,1-err/100));
-      score+=pts;
-      flash.className='result-flash wrong';
-      flash.textContent=`✗ ${err.toFixed(1)}% off. Answer: ${q.ans.toLocaleString()}.${pts>0?' +'+pts+' consolation pts':''}`;
-      updateScoreDot(qIdx,'miss');
-      mfg('question_answered',{game_slug:'estimation-engine',level:'all',question_index:qIdx+1,correct:false});
+  // ---- The calculation on given numbers, as KaTeX and as plain text ----
+  function shapeForms(shape, vals) {
+    var tex = shape, plain = shape, root = /^sqrt\((.*)\)$/.exec(shape);
+    // The numbers go in first: written after the operators, they would hit the d of \div.
+    function fill(s, t) {
+      s = s.replace(/[abcd]/g, function (v) { return vals['abcd'.indexOf(v)]; });
+      return s.replace(/\*\*2/g, t ? '^2' : '²').replace(/\*/g, t ? ' \\times ' : ' × ').replace(/\//g, t ? ' \\div ' : ' ÷ ')
+        .replace(/\+/g, ' + ').replace(/-/g, t ? ' - ' : ' − ');
     }
-    flash.style.display='block';
+    if (root) { tex = '\\sqrt{' + fill(root[1], true) + '}'; plain = '√(' + fill(root[1], false) + ')'; }
+    else { tex = fill(shape, true); plain = fill(shape, false); }
+    return { tex: tex, plain: plain };
   }
-  updateStatus();
-  qIdx++;
-  setTimeout(nextQuestion,2000);
-}
+  EE.shapeForms = shapeForms;
 
-function buildScoreHistory(){
-  const el=document.getElementById('score-history');
-  el.innerHTML='';
-  for(let i=0;i<ROUNDS;i++){
-    const d=document.createElement('div');
-    d.className='sh-dot';d.id='sh'+i;d.textContent=i+1;
-    el.appendChild(d);
+  // ---- The calculator answer and how far the estimate is from it (Jon, 5 Oct 2026) ----
+  // approx: the calculator answer is rounded (to its significant figures, or a money one to the penny);
+  // without it the value is exact. The verifier checks the flag against the numbers.
+  // Exact decimal arithmetic on the bank's strings: value = digits / 10^scale, the digits an integer
+  // well inside Number's exact range (a dozen digits at most).
+  function dec(s) { var p = String(s).split('.'); var f = p[1] || ''; return { n: parseInt(p[0] + f, 10), s: f.length }; }
+  function sigFigs(s) { return String(s).replace('.', '').replace(/^0+/, '').length; }
+  EE.calcLine = function (q) {
+    var v = q.exact;
+    if (q.money) return 'Calculator answer: £' + v + (q.approx ? ' (to the nearest penny)' : '');
+    if (!q.approx) v = v.indexOf('.') >= 0 ? v.replace(/0+$/, '').replace(/\.$/, '') : v;   // a calculator shows 20.6, not 20.60
+    return 'Calculator answer: ' + v + (q.approx ? ' (to ' + sigFigs(q.exact) + ' s.f.)' : '');
+  };
+  // |estimate - calculator answer| / calculator answer, in whole percents, rounded half up.
+  EE.percentOff = function (q) {
+    var e = dec(q.estimate), c = dec(q.exact), s = Math.max(e.s, c.s);
+    var E = e.n * Math.pow(10, s - e.s), C = c.n * Math.pow(10, s - c.s);
+    var num = Math.abs(E - C) * 200 + C, den = 2 * C;    // round(100 |E - C| / C), half up, in integers
+    return (num - num % den) / den;
+  };
+  EE.percentLine = function (q) {
+    var n = EE.percentOff(q);
+    return 'The estimate is ' + (n < 1 ? 'less than 1%' : n + '%') + ' off the calculator answer. That’s what estimates are for.';
+  };
+
+  // ---- Drawing a game: one from each group, four more from the rest, served A to F ----
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  EE.deal = function () {
+    var picked = [], rest = [];
+    GROUPS.forEach(function (g) {
+      var inG = shuffle(BANK.filter(function (q) { return q.group === g; }));
+      picked.push(inG[0]);
+      rest = rest.concat(inG.slice(1));
+    });
+    picked = picked.concat(shuffle(rest).slice(0, ROUNDS - GROUPS.length));
+    return GROUPS.reduce(function (out, g) { return out.concat(picked.filter(function (q) { return q.group === g; })); }, []);
+  };
+
+  // ---- Game ----
+  var pool = [], qIdx = 0, marks = 0, total = 0, q = null, state = 'menu', kp = null, qMarks = [false, false], firstRight = 0, secondRight = 0, bothRight = 0;
+
+  function showS(id) { document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); }); $(id).classList.add('active'); }
+  function mark(raw, key) { return q.money ? MaffsAnswer.money(raw, key) : MaffsAnswer.exact(raw, key); }
+
+  // A fresh keypad for each step's boxes (touch screens only; with a mouse they are ordinary inputs).
+  function keypadFor(inputs) {
+    var holder = $('kpHolder'), el = document.createElement('div');
+    holder.innerHTML = ''; holder.appendChild(el);
+    kp = window.MaffsKeypad ? MaffsKeypad.mount(el, { targets: inputs, keepInView: $('stepForm'), foldInset: FOOTER_PX }) : null;
+    if (!(kp && kp.enabled())) { try { inputs[0].focus({ preventScroll: true }); } catch (e) {} }
   }
-}
-function updateScoreDot(i,cls){
-  const d=document.getElementById('sh'+i);
-  if(d)d.className='sh-dot '+cls;
-}
-function updateStatus(){
-  document.getElementById('sv-q').textContent=Math.min(qIdx+1,ROUNDS)+'/'+ROUNDS;
-  document.getElementById('sv-score').textContent=score.toLocaleString();
-  document.getElementById('sv-hits').textContent=hits;
-  document.getElementById('sv-best').textContent=bestError===Infinity?'—':bestError.toFixed(1)+'%';
-}
 
-function endGame(){
-  gameActive=false;clearTimeout(qTimer);cancelAnimationFrame(animFrame);
-  window._ggAbandoned=false;
-  const _acc=Math.round(hits/ROUNDS*100);
-  mfg('game_completed',{game_slug:'estimation-engine',level:'all',score:score,questions_answered:ROUNDS,questions_correct:hits});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('estimation-engine','all',score,ROUNDS).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('estimation-engine','all',score);}}
-  const _pbKey='esteng_best';const _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');
-  if(score>_pbOld){mfg('personal_best_set',{game_slug:'estimation-engine',level:'all',score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}
-  setTimeout(()=>{
-    document.getElementById('modal').classList.remove('hidden');
-    const verdict=hits>=8?'Exceptional Engine':hits>=5?'Good Estimation':hits>=3?'Needs Calibration':'Engine Misfiring';
-    document.getElementById('modal-result').textContent=verdict;
-    document.getElementById('modal-score').innerHTML=`
-      <div class="ms-item"><span class="ms-val">${score.toLocaleString()}</span><span class="ms-lbl">Final Score</span></div>
-      <div class="ms-item"><span class="ms-val">${hits}/${ROUNDS}</span><span class="ms-lbl">Within Tol.</span></div>
-      <div class="ms-item"><span class="ms-val">${_acc}%</span><span class="ms-lbl">Hit Rate</span></div>
-      <div class="ms-item"><span class="ms-val">${bestError===Infinity?'—':bestError.toFixed(1)+'%'}</span><span class="ms-lbl">Best Precision</span></div>
-    `;
-  },600);
-}
+  function startGame(items) {
+    pool = items || EE.deal();
+    qIdx = 0; marks = 0; total = 0; firstRight = 0; secondRight = 0; bothRight = 0;
+    $('marks').textContent = '0';
+    showS('game'); nextQ();
+    window._ggAbandoned = true;
+    mfg('game_started', { game_slug: SLUG, level: LEVEL });
+    if (!window._ggUnloadBound) { window._ggUnloadBound = true; window.addEventListener('beforeunload', function () { if (window._ggAbandoned) mfg('game_abandoned', { game_slug: SLUG, level: LEVEL, questions_answered: total }); }); }
+  }
 
-function resetGame(){
-  document.getElementById('modal').classList.add('hidden');
-  document.getElementById('start-btn').style.display='block';
-  document.getElementById('start-btn').textContent='Play Again';
-  document.getElementById('tol-meter').style.display='none';
-  document.getElementById('result-flash').style.display='none';
-  document.getElementById('score-history').innerHTML='';
-  document.getElementById('q-expr').textContent='Press Start';
-  document.getElementById('q-round').textContent='Ready to begin';
-  document.getElementById('q-timer').style.width='100%';
-}
+  function nextQ() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = ''; $('feedback').className = 'feedback';
+    $('qcard').classList.remove('fb-open'); document.body.classList.remove('fb-open');
+    if (qIdx >= pool.length) { endGame(); return; }
+    q = pool[qIdx]; qIdx++; total++; qMarks = [false, false];
+    window.scrollTo(0, 0);
+    $('qNum').textContent = total + '/' + pool.length;
+    var qe = $('question');
+    qe.className = 'question' + (q.text ? ' words' : '');
+    if (q.text) qe.textContent = q.text; else math(qe, q.tex, q.show);
+    askRounding();
+  }
 
-const LKEY2=()=>'est_lb_'+dayStr();
-function loadLB(){try{return JSON.parse(localStorage.getItem(LKEY2()))||[];}catch{return[]}}
-function renderLB(hl){
-  const arr=loadLB(),el=document.getElementById('lb-out');
-  if(!arr.length){el.innerHTML='<div class="lb-empty">No scores yet.</div>';return}
-  el.innerHTML=arr.slice(0,10).map((e,i)=>`
-    <div class="lb-row ${e.name===hl?'hl':''}">
-      <span class="lb-rank">${i+1}</span>
-      <span class="lb-name">${escHtml(e.name)}</span>
-      <span class="lb-score">${e.sc.toLocaleString()}</span>
-      <span class="lb-hits">${e.hits}/${ROUNDS}</span>
-    </div>`).join('');
-}
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function submitToLB(){
-  const name=document.getElementById('name-input').value.trim().slice(0,20)||'Anonymous';
-  const arr=loadLB();
-  arr.push({name,sc:score,hits,ts:Date.now()});
-  arr.sort((a,b)=>b.sc-a.sc);
-  localStorage.setItem(LKEY2(),JSON.stringify(arr));
-  document.getElementById('modal').classList.add('hidden');
-  renderLB(name);
-  resetGame();
-}
+  function askRounding() {
+    state = 'round';
+    $('msg').textContent = '';
+    $('stepHead').textContent = 'Step 1: round each number.';
+    var body = $('stepBody'); body.innerHTML = '';
+    var row = document.createElement('div'); row.className = 'cells';
+    var inputs = q.nums.map(function (n, i) {
+      var cell = document.createElement('label'); cell.className = 'cell';
+      cell.innerHTML = '<span class="from">' + (q.money ? '£' : '') + esc(n) + '</span>';
+      var inp = document.createElement('input');
+      inp.type = 'text'; inp.inputMode = 'decimal'; inp.setAttribute('aria-label', n + ' to 1 significant figure');
+      inp.dataset.i = i;
+      cell.appendChild(inp); row.appendChild(cell);
+      return inp;
+    });
+    body.appendChild(row);
+    keypadFor(inputs);
+  }
 
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&gameActive)submitAnswer()});
-renderLB('');
-(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+  function checkRounding() {
+    var inputs = [].slice.call($('stepBody').querySelectorAll('input'));
+    var results = inputs.map(function (inp, i) { return mark(inp.value, q.rounded[i]); });
+    var bad = results.indexOf('unreadable');
+    if (bad >= 0) { $('msg').textContent = MaffsAnswer.message('unreadable') + ' (the ' + (q.money ? '£' : '') + q.nums[bad] + ' box)'; return; }
+    var ok = results.every(function (r) { return r === 'correct'; });
+    qMarks[0] = ok;
+    if (ok) { marks++; firstRight++; $('marks').textContent = marks; }
+    // Show the correct roundings in the boxes, whatever was typed; a wrong one keeps the student's entry below it.
+    // The boxes become plain values, so nothing from step 1 can be typed into or selected again.
+    inputs.forEach(function (inp, i) {
+      var cell = inp.parentElement, typed = inp.value, val = document.createElement('span');
+      val.className = 'val'; val.textContent = (q.money ? '£' : '') + q.rounded[i];
+      cell.replaceChild(val, inp);
+      var cue = cell.querySelector('.maffs-keypad-cue'); if (cue) cue.remove();
+      cell.classList.add(results[i] === 'correct' ? 'done' : 'missed');
+      if (results[i] !== 'correct') { var you = document.createElement('span'); you.className = 'you'; you.textContent = 'you: ' + typed; cell.appendChild(you); }
+    });
+    // The verdict and any reasons sit straight under the rounded values, above step 2.
+    var fb = document.createElement('div');
+    fb.className = 'step1-fb ' + (ok ? 'right' : 'wrong');
+    if (ok) fb.innerHTML = '<span class="v">✓ Rounding right.</span>';
+    else {
+      fb.innerHTML = '<span class="v">✗ Not all of them.</span> ' + q.nums.map(function (n, i) {
+        return results[i] === 'correct' ? '' : esc((q.money ? '£' : '') + n) + ' to 1 s.f. is ' + esc((q.money ? '£' : '') + q.rounded[i]) + '.';
+      }).filter(Boolean).join(' ');
+    }
+    $('stepBody').appendChild(fb);
+    askEstimate();
+  }
+
+  function askEstimate() {
+    state = 'estimate';
+    $('msg').textContent = '';
+    var f = shapeForms(q.shape, q.rounded);
+    $('stepHead').innerHTML = 'Step 2: estimate. ' + mathHtml(f.tex + ' = \\,?', f.plain + ' = ?');
+    var row = document.createElement('div'); row.className = 'est-row';
+    if (q.money) { var c = document.createElement('span'); c.className = 'cur'; c.textContent = '£'; row.appendChild(c); }
+    var inp = document.createElement('input');
+    inp.type = 'text'; inp.inputMode = 'decimal'; inp.id = 'estimate'; inp.setAttribute('aria-label', 'Your estimate');
+    row.appendChild(inp);
+    var old = $('stepBody').querySelector('.est-row'); if (old) old.remove();
+    $('stepBody').appendChild(row);
+    keypadFor([inp]);
+  }
+
+  function checkEstimate() {
+    var raw = $('estimate').value, r = mark(raw, q.estimate);
+    if (r === 'unreadable') { $('msg').textContent = MaffsAnswer.message('unreadable'); return; }
+    var ok = r === 'correct';
+    qMarks[1] = ok;
+    if (ok) { marks++; secondRight++; $('marks').textContent = marks; }
+    if (qMarks[0] && ok) bothRight++;
+    mfg('question_answered', { game_slug: SLUG, level: LEVEL, question_index: total, correct: qMarks[0] && ok });
+    state = 'feedback';
+    $('estimate').readOnly = true;
+    var f = shapeForms(q.shape, q.rounded), cur = q.money ? '£' : '';
+    var fb = $('feedback');
+    fb.className = 'feedback fb ' + (ok ? 'right' : 'wrong');
+    fb.innerHTML = '<div class="fb-verdict">' + (ok ? '✓ Right.' : '✗ Not quite. You put ' + esc(raw) + '.') + '</div>' +
+      '<div class="fb-work">' + mathHtml(f.tex + ' = ' + (q.money ? '\\text{\u00a3}' : '') + q.estimate, f.plain + ' = ' + cur + q.estimate) + '</div>' +
+      '<div class="fb-line">' + esc(EE.calcLine(q)) + '</div>' +
+      '<div class="fb-line">' + esc(EE.percentLine(q)) + '</div>';
+    $('qcard').classList.add('fb-open'); document.body.classList.add('fb-open');
+    // The working and the calculator answer are the point of every question, so every question waits for Next.
+    if (window.MaffsNext) MaffsNext.wrong({ mount: fb, onAdvance: nextQ });
+    nextInView();
+  }
+
+  // Phone rule (canon §7.6.1): the working and Next above the fixed footer. If Next fell under it (a short
+  // phone, or Aa's wider spacing), scroll just enough, never past the top of the feedback.
+  function nextInView() {
+    var nx = $('feedback').querySelector('.maffs-next');
+    if (!nx) return;
+    var r = nx.getBoundingClientRect(), top = $('feedback').getBoundingClientRect().top, fold = window.innerHeight - FOOTER_PX;
+    var dy = Math.min(r.bottom - fold + 8, top - 8);
+    if (r.bottom > fold && dy > 0) window.scrollBy(0, dy);
+  }
+
+  function check() {
+    if (state === 'round') checkRounding();
+    else if (state === 'estimate') checkEstimate();
+  }
+
+  function endGame() {
+    state = 'done';
+    var t = 'Keep practising'; if (marks >= 18) t = 'Excellent'; else if (marks >= 14) t = 'Good estimating'; else if (marks >= 10) t = 'Getting there';
+    $('resultTitle').textContent = t;
+    $('finalScore').textContent = marks + '/20';
+    $('statsLine').innerHTML = 'Rounding: <b>' + firstRight + '/' + total + '</b> · Estimates: <b>' + secondRight + '/' + total + '</b>';
+    window._ggAbandoned = false;
+    mfg('game_completed', { game_slug: SLUG, level: LEVEL, score: marks, questions_answered: total, questions_correct: bothRight });
+    var key = 'mfg_pb_' + SLUG + '_' + LEVEL, old = null;
+    try { old = localStorage.getItem(key); } catch (e) {}
+    if (old === null || marks > Number(old)) {
+      if (old !== null) mfg('personal_best_set', { game_slug: SLUG, level: LEVEL, score: marks, previous_best: Number(old) });
+      try { localStorage.setItem(key, String(marks)); } catch (e) {}
+    }
+    if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(SLUG, LEVEL, marks, total).catch(function () {}); if (window.MaffsScoreHistory) { MaffsScoreHistory.record(SLUG, LEVEL, marks); } }
+    showS('results');
+  }
+
+  $('startBtn').addEventListener('click', function () { startGame(); });
+  $('againBtn').addEventListener('click', function () { state = 'menu'; showS('menu'); });
+  $('checkBtn').addEventListener('click', check);
+  $('stepForm').addEventListener('submit', function (e) { e.preventDefault(); check(); });
+  math($('exampleA'), '48 \\times 21 \\approx 50 \\times 20', '48 × 21 ≈ 50 × 20');
+  math($('exampleB'), '50 \\times 20 = 1000', '50 × 20 = 1000');
+
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+    function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(get() === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); set(String(on)); apply(on); });
+  })();
+
+  // Views and drivers for scripts/verify-estimation-engine.py.
+  function byId(ids) { return ids.map(function (id) { return BANK.filter(function (x) { return x.id === id; })[0]; }); }
+  EE.ui = {
+    state: function () { return state; },
+    item: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },
+    marks: function () { return qMarks.slice(); },
+    score: function () { return marks; },
+    pool: function () { return pool.map(function (x) { return x.id; }); },
+    roundedShown: function () { return [].slice.call($('stepBody').querySelectorAll('.cell .val')).map(function (i) { return i.textContent.replace('£', ''); }); },
+    typeRounding: function (vals) { $('stepBody').querySelectorAll('.cell input').forEach(function (inp, i) { inp.value = vals[i]; }); },
+    typeEstimate: function (v) { $('estimate').value = v; },
+    startWith: function (ids) { if (window.MaffsNext) MaffsNext.clear($('feedback')); startGame(byId(ids)); },
+    restart: function () { if (window.MaffsNext) MaffsNext.clear($('feedback')); state = 'menu'; showS('menu'); },
+    keypad: function () { return kp; }
+  };
+})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'estimation-engine');</script>
