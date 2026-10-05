@@ -1,14 +1,12 @@
 {
  "_comment": [
-  "THE source of every game page's search title and meta description (and their og: copies).",
+  "THE source of every game page's search title and meta description, and their og:/twitter: copies (Jon, 5 Oct 2026).",
   "One entry per numbered row of .claude/rules/game-roster.md; slugs equal the roster's set exactly.",
   "Game names and levels are NOT held here: levels come from the roster's Levels column.",
-  "Title (generated): '<search_phrase> Game – <levels> Maths | MaffsGames', at most 60 characters;",
-  "  over 60, the levels part is dropped: '<search_phrase> Maths Game | MaffsGames' (no second 'Maths').",
-  "Description (generated): '<description> For <levels>. Free, no sign-up.', at most 155 characters.",
-  "search_phrase is stored exactly as it appears in the title (no case rewriting).",
-  "DRAFT (Phase 1, 5 Oct 2026): nothing is applied to any page yet; docs/seo-titles-draft.md is the review table.",
-  "Once Phase 2 lands: edit this file, then run scripts/apply-meta.py; never hand-edit a game's title."
+  "The rules live in scripts/check-meta.py (its docstring): titles at most 60 characters, descriptions at most 155,",
+  "  'Year 6' never shown, the levels sentence and 'Free, no sign-up.' generated.",
+  "search_phrase is written exactly as it appears in the title; description is what the student practises.",
+  "Edit this file, run python scripts/apply-meta.py, then python scripts/check-meta.py. Never hand-edit a game's title."
  ],
  "games": [
   {
@@ -93,7 +91,7 @@
   },
   {
    "slug": "truth-buster",
-   "search_phrase": "PHRASE NEEDED",
+   "search_phrase": "Always, Sometimes or Never True",
    "description": "Is it always true? Decide whether mathematical statements always hold, then see why."
   },
   {
@@ -493,7 +491,7 @@
   },
   {
    "slug": "just-pythag-it-bruv",
-   "search_phrase": "PHRASE NEEDED",
+   "search_phrase": "Pythagoras' Theorem",
    "description": "Use Pythagoras' theorem with a calculator to find the hypotenuse or a shorter side, from simple triangles to ladders and ramps."
   }
  ],
