@@ -266,29 +266,29 @@ Marking:
 Items checked: all 45 (`scratchpad/work/decimal-detective/check.py`, output in `check.txt`). Line-Up was re-sorted with `Decimal`. Every rounding was recomputed with `Decimal` half up (tenths, whole numbers, 2 d.p., 1 s.f.); the options were checked for presence and for equal values. For Place It: the range, tick size, tolerance in ticks, and whether the starting marker already sits on the answer. Reproduced in Chromium: `scratchpad/work/repro.py`, `scratchpad/work/repro2.py` (outputs `repro-out.json`, `repro2-out.json`).
 
 #### Faults
-- **F1 [HIGH]** year6 / Place It, :301 (`{value:4.5,min:4,max:5}`) and :305 (`{value:5.5,min:5,max:6}`); start state :630-641, Check enabled :425
+- **F1 [HIGH]** **RESOLVED PR #50** (marker off the line, Check disabled until placed) year6 / Place It, :301 (`{value:4.5,min:4,max:5}`) and :305 (`{value:5.5,min:5,max:6}`); start state :630-641, Check enabled :425
   - Question: "Place 4.5 on the number line from 4 to 5" (and 5.5, from 5 to 6).
   - Keyed answer: 4.5 / 5.5. The marker starts at 50% of the line, which is exactly the answer, already labelled "4.5" / "5.5". The Check button is enabled on load (:425; `renderPlaceit` never disables it).
   - Evidence: pressing Check with no input gives "Correct! Case solved." in Chromium for both items. So a free mark, and the starting picture pre-announces the answer.
   - Share affected: 2 of 15 Place It items.
-- **F2 [HIGH]** year6 / Place It on the 0 to 0.5 line, :299 (`0.15`) and :300 (`0.45`); tolerance :803
+- **F2 [HIGH]** **OPEN** (band narrowed to a quarter tick gap in PR #36; left open with F4) year6 / Place It on the 0 to 0.5 line, :299 (`0.15`) and :300 (`0.45`); tolerance :803
   - Question: "Place 0.15 on the number line from 0 to 0.5" (and 0.45).
   - Keyed answer: 0.15 / 0.45. The fixed ±0.05 tolerance is a whole tick on this line (ticks every 0.05), so the neighbouring ticks are accepted as well.
   - Evidence (Chromium, `repro2-out.json`): for 0.15, the marker reading "0.10" and the marker reading "0.20" are both "Correct! Case solved.". For 0.45, "0.40" and "0.50" are both correct. 0.4 and 0.5 are exactly the truncate/round-up confusions the item tests.
   - Share affected: 2 of 15 Place It items.
-- **F3 [MEDIUM]** year6 / Place It, hundredths targets on a 0.1-tick line: :293 (`0.25`), :294 (`0.75`), :302 (`1.25`), :303 (`2.75`); also every other 0-1 item
+- **F3 [MEDIUM]** **OPEN** (band narrowed to a quarter tick gap in PR #36; left open with F4) year6 / Place It, hundredths targets on a 0.1-tick line: :293 (`0.25`), :294 (`0.75`), :302 (`1.25`), :303 (`2.75`); also every other 0-1 item
   - Question: e.g. "Place 0.25 on the number line from 0 to 1".
   - Keyed answer: 0.25. The ±0.05 band reaches both neighbouring tenths ticks, so a marker reading "0.20" or "0.30" is accepted. For 0.3, the band accepts the reading "0.25".
   - Evidence: reproduced in Chromium (`repro2-out.json`): 0.25 with the marker at "0.20" and at "0.30" are correct; 0.3 at "0.25" is correct.
   - Share affected: 4 of 15 Place It items at the tick boundaries (the half-tick band on the other 0.1-tick items is a judgement call).
-- **F4 [MEDIUM, judgement call]** year6 / Place It, all 15; `setMarkerPosition` :738-748
+- **F4 [MEDIUM, judgement call]** **OPEN, awaiting Jon's ruling** year6 / Place It, all 15; `setMarkerPosition` :738-748
   - The marker shows its exact value to 2 d.p. as it moves. Only 3 ticks are labelled (min, middle, max). So any item can be solved by dragging until the label reads the target, without reading the scale. That breaks "a visual aid must never give the answer away" (CLAUDE.md, Scaffolds).
 - **F5 [LOW]** year6 / Round Up, :283 (7.895 to 2 d.p.)
   - Options: 7.89 / 7.90 / 7.895 / 7.9. Key "7.90".
   - "7.9" is equal in value to the key and is marked wrong. The ask names the form ("Round to 2 decimal places"), so this is allowed by the audit's form rule (SR-4). Listed so Jon can confirm it is intended.
-- **F6 [LOW]** year6 / Round Up, :280 (9.50 to the nearest whole number)
+- **F6 [LOW]** **RESOLVED PR #50** (9.50 replaced by 95, decimal point ignored; Jon 5 Oct) year6 / Round Up, :280 (9.50 to the nearest whole number)
   - Options: 9 / 10 / 9.5 / 9.50. Key "10" is correct, but two distractors (9.5 and 9.50) are the same value, so the student effectively has 3 distinct choices.
-- **F7 [LOW] (todo §1.49)** year6 / Line-Up: :256 (`1.9` twice), :261 (`0.6` twice), :263 (`0.11` twice); also :267 (`0.77` and `0.770`) and :269 (`0.44` and `0.440`), which are equal in value
+- **F7 [LOW] (todo §1.49)** **RESOLVED PR #50** (1.909, 0.06, 0.111; the equal-value pairs kept with a note; Jon 4-5 Oct) year6 / Line-Up: :256 (`1.9` twice), :261 (`0.6` twice), :263 (`0.11` twice); also :267 (`0.77` and `0.770`) and :269 (`0.44` and `0.440`), which are equal in value
   - **The marking risk §1.49 feared does not occur.** `checkLineup` compares values by position (:769-777), so either order of two equal cards is accepted. Reproduced: `1.09, 1.099, 1.9, 1.9, 1.99` gives "Correct! Case solved.". No student is marked wrong.
   - What remains is content. Two identical cards in a five-card line-up look like a typo, and the wording "smallest to largest" with a tie may unsettle a weak student. The pattern of the other rows (x, x.0y, x.yy, x.y0y, x.0yy) suggests 1.909, 0.66/0.606-style and 0.101-style values were intended; for example, :256 probably meant `1.909`. The two trailing-zero pairs (0.77/0.770, 0.44/0.440) may be deliberate teaching that a trailing zero does not change the value. Jon to rule; replacement values are content.
   - Share affected: 5 of 15 Line-Up items (3 identical strings, 2 equal values).
@@ -305,6 +305,17 @@ Items checked: all 45 (`scratchpad/work/decimal-detective/check.py`, output in `
   - Line-Up's Check is enabled on load, so a shuffle that happens to come out sorted (1/120, or more with duplicates) scores with no move.
 
 **Reviewing session re-check:** F1 re-checked: the marker starts at 50% (:630-631) with Check enabled (:425); the targets 4.5 on 4–5 (:301) and 5.5 on 5–6 (:305) are the midpoints. F2 re-checked: fixed tolerance 0.05 (:803) on the 0–0.5 line (:299-300).
+
+**Resolved, PR #50 (5 Oct 2026), Jon's contract and rulings of 5 Oct 10:10:** F1, F6 and F7 fixed. Place It's
+marker starts off the line and Check stays disabled until the student places it (PR #36 had already moved the
+marker off the answer for 4.5 and 5.5, but Check was still enabled on load). Round Up 9.50's distractor 9.50 is
+now 95. Line-Up's identical cards are 1.909, 0.06 and 0.111; 0.77/0.770 and 0.44/0.440 stay, and their feedback
+says "0.77 and 0.770 are equal: a zero on the end doesn't change the value." F5 (7.895: 7.90 vs 7.9) stands, the
+ask names the form (SR-4). **F2, F3 and F4 stay open** for Jon's F4 ruling (the live 2 d.p. readout), which may
+change how Place It is marked (`MaffsNumberLine`'s continuous mode waits on it). The bank is held in CI by
+`scripts/verify-decimal-detective.py`: Line-Up and Round Up keys recomputed with `Decimal`, options distinct in
+value unless the ask names the form, the Place It start state, every answer marked in Chromium; it failed on the
+pre-fix game (55 FAILs).
 
 
 ### Think of a Number (`think-of-a-number`)
