@@ -334,7 +334,7 @@ def selftest():
               "-> " + ", ".join(sorted(os.path.basename(p) for p in picked)))
     # (b) a shared asset fans out to every verifier whose pages load it, and to none that don't.
     for asset in ("schools/assets/answer.js", "schools/assets/theme.css", "schools/assets/calculator.js",
-                  "schools/assets/teacher-invite.js"):
+                  "schools/assets/keypad.js", "schools/assets/teacher-invite.js"):
         _, _, picked = select([asset], dmap)
         want = {s for s, i in sel.items() if asset in i["deps"]} | always
         loaders = {s for s, i in sel.items() for g in i["games"]

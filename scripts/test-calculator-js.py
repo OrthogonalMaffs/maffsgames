@@ -41,6 +41,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CALC_JS = os.path.join(ROOT, 'schools', 'assets', 'calculator.js')
+KEYPAD_JS = os.path.join(ROOT, 'schools', 'assets', 'keypad.js')   # MaffsCalc's answer mode composes MaffsKeypad
 THEME_CSS = os.path.join(ROOT, 'schools', 'assets', 'theme.css')
 
 # (expression, expected display). ASCII forms: * / - ^2 sqrt( are the keys × ÷ − x² √(.
@@ -123,6 +124,7 @@ async def dock_check(browser, css, w, h, want, fault=None):
     page = await ctx.new_page()
     await page.set_content(DOCK_PAGE)
     await page.add_style_tag(content=css)
+    await page.add_script_tag(path=KEYPAD_JS)
     await page.add_script_tag(path=CALC_JS)
     if fault and fault[1] == 'style':
         await page.add_style_tag(content=fault[2])
@@ -205,6 +207,7 @@ async def _answer_check(browser, css, w, h, touch, fault, at):
     page.set_default_timeout(5000)
     await page.set_content(PAGE)
     await page.add_style_tag(content=css)
+    await page.add_script_tag(path=KEYPAD_JS)
     await page.add_script_tag(path=CALC_JS)
     if fault and fault[1].startswith('STYLE:'):
         await page.add_style_tag(content=fault[1][6:])
@@ -288,6 +291,7 @@ async def run():
             # theme.css less its Google Fonts @import (no network here; the fallback fonts are wider, the harder case)
             css = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import'))
             await page.add_style_tag(content=css)
+            await page.add_script_tag(path=KEYPAD_JS)
             await page.add_script_tag(path=CALC_JS)
             await page.evaluate("""() => { window.__mfg = []; window.mfg = function () { window.__mfg.push([...arguments]); };
               window.gtag = function () { window.__mfg.push(['gtag', ...arguments]); };
