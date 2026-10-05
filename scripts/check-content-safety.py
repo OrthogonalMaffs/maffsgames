@@ -366,7 +366,6 @@ def scan(root, override=None):
 # Reported, never failed. Lower a count (or drop the entry) in the PR that removes the words. 5 Oct 2026: the
 # idioms and the class names Jon ruled out of SR-14 (4 Oct, 20:06) are no longer hits (ALLOW, displayed()).
 KNOWN = {
-    "games/maths-court/index.html": {"drowning": 4, "drownings": 3},
     "games/truth-buster/index.html": {"drownings": 1},
     "games/wrong-on-the-internet/index.html": {"drowning": 5},
 }
