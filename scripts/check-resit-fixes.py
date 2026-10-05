@@ -67,7 +67,8 @@ REVERT = {
          "function placeitTolerance(data) { return 0.05 + 1e-9; }")],
     "negative-number-line": [
         ("games/negative-number-line/index.html",
-         "const correct = placedValue === target;", "const correct = Math.abs(placedValue - target) <= 0.5;")],
+         "const correct = MaffsNumberLine.placementCorrect({ placed: placedValue, target: target, mode: 'snapped' });",
+         "const correct = Math.abs(placedValue - target) <= 0.5;")],
     "correlation-or-coincidence": [
         ("games/correlation-or-coincidence/index.html", "{id:'C1', cat:'chance',",
          "{id:'C0', cat:'chance', x:['US spending on science (billions $)'], y:['Suicides by hanging per year']},\n"
