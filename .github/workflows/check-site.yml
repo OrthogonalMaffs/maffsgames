@@ -299,6 +299,11 @@ jobs:
           #    each E(X), ev and evDifference recomputed; higherEVOption the strictly higher track, a tie FAILS
           #    (SR-5); story percentages match the stored outcomes; every outcome line read back from the page.
           #    Failed on the two ties (resit audit F1: ed_gcse_011, ed_gcse_018).
+          #  - negative-number-line: Order Them and Calculate keys recomputed; the shared MaffsNumberLine rule
+          #    (exact match when snapped; continuous throws pending audit DD F4); every target clicked on all 41
+          #    positions; arrow keys; at 320, 375 and 390 on a touch profile every target reached with one tap
+          #    and the step buttons (44px+, below the line, the value shown above it). Its self-test plants a
+          #    0.5 tolerance in the helper (resit audit F1, F2).
           #  - decimal-detective: Line-Up rows re-sorted with Decimal, no identical cards in a row, equal-value
           #    cards differ only by zeros on the end; Round Up keys recomputed half up, four options distinct
           #    in value (SR-4) unless the ask names the form; Place It starts with the marker off the line and
@@ -339,6 +344,7 @@ jobs:
               Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)|python scripts/check-resit-fixes.py
               Probability Pioneer (Stage 2 keys recomputed, Stages 1 and 3 pinned, every answer marked in Chromium)|python scripts/verify-probability-pioneer.py
               Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)|python scripts/verify-expected-damage.py
+              Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)|python scripts/verify-negative-number-line.py
               Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)|python scripts/verify-decimal-detective.py
 
     steps:

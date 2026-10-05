@@ -80,6 +80,17 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .confirm-btn{display:block;width:100%;max-width:300px;margin:0 auto;padding:14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.15s}
 .confirm-btn:hover{opacity:0.9}
 .confirm-btn:disabled{opacity:0.4;cursor:default}
+/* The marker's value, above the line so a finger on the line or on the step buttons never covers it;
+   the step buttons below the line move the placed marker by one snap step (0.5). */
+.place-readout{font-size:15px;color:var(--muted);text-align:center;min-height:30px;margin-top:10px}
+.place-readout b{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--accent)}
+.step-row{display:flex;justify-content:center;gap:24px;margin:-8px 0 16px}
+.step-btn{width:56px;height:48px;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-size:18px;cursor:pointer;touch-action:manipulation}
+.step-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.step-btn:disabled{opacity:0.35;cursor:default}
+/* Once answered, nothing here can be used: hide it so the feedback and Next sit above the fold on a
+   phone (canon 7.6.1). */
+#placeItArea.answered .place-readout,#placeItArea.answered .step-row,#placeItArea.answered .confirm-btn{display:none}
 
 /* Order Them */
 .order-prompt{font-size:1.2rem;font-weight:700;text-align:center;color:var(--text);margin-bottom:20px}
@@ -170,6 +181,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/number-line.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -218,9 +230,14 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <!-- Place It content -->
   <div id="placeItArea" style="display:none">
     <div class="place-prompt">Place <span class="target-num" id="placeTarget"></span> on the number line</div>
-    <div class="place-instruction">Tap or drag on the number line below</div>
+    <div class="place-instruction">Tap the number line, then use &#9664;&#xFE0E; &#9654;&#xFE0E; to move your marker</div>
+    <div class="place-readout" id="placeReadout" aria-live="polite"></div>
     <div class="number-line-wrap" id="placeNLWrap">
       <svg class="number-line-svg" id="placeNL" viewBox="0 0 680 80"></svg>
+    </div>
+    <div class="step-row">
+      <button class="step-btn" id="stepLeft" onclick="stepMarker(-1)" aria-label="Move the marker left by 0.5" disabled>&#9664;&#xFE0E;</button>
+      <button class="step-btn" id="stepRight" onclick="stepMarker(1)" aria-label="Move the marker right by 0.5" disabled>&#9654;&#xFE0E;</button>
     </div>
     <button class="confirm-btn" id="placeConfirm" onclick="confirmPlace()" disabled>Confirm</button>
   </div>
@@ -535,37 +552,62 @@ function showQuestion() {
 // ============================================================
 function showPlaceIt(target) {
   document.getElementById('placeItArea').style.display = 'block';
+  document.getElementById('placeItArea').classList.remove('answered');
   document.getElementById('placeTarget').textContent = formatNum(target);
   document.getElementById('placeConfirm').disabled = true;
   placedValue = null;
+  setStepButtons();
 
   drawNumberLine('placeNL');
   setupPlaceInteraction(target);
 }
 
+// Place the marker at val, snapped to the nearest 0.5 (the line's only positions), and show it.
+function setPlaced(val) {
+  placedValue = Math.max(-10, Math.min(10, Math.round(val * 2) / 2));
+  const x = valueToX(placedValue);
+  drawNumberLine('placeNL');
+  const svgEl = document.getElementById('placeNL');
+  const y = 40;
+  svgEl.innerHTML += `<line class="nl-marker-line" x1="${x}" y1="${y - 20}" x2="${x}" y2="${y + 20}"/>`;
+  svgEl.innerHTML += `<circle class="nl-marker" cx="${x}" cy="${y}" r="7"/>`;
+  svgEl.innerHTML += `<text x="${x}" y="${y - 24}" text-anchor="middle" fill="var(--accent)" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">${formatNum(placedValue)}</text>`;
+  document.getElementById('placeConfirm').disabled = false;
+  setStepButtons();
+}
+
+// The readout and the step buttons follow the marker: blank and disabled until it is placed, and
+// after the answer; an end of the line disables the button that would leave it.
+function setStepButtons() {
+  const live = placedValue !== null && !answered && currentType === 'place';
+  document.getElementById('placeReadout').innerHTML = placedValue === null ? '' : `Marker: <b>${formatNum(placedValue)}</b>`;
+  document.getElementById('stepLeft').disabled = !live || placedValue <= -10;
+  document.getElementById('stepRight').disabled = !live || placedValue >= 10;
+}
+
+// One snap step left (-1) or right (+1): a tap on a phone lands within a few pixels, and a step is
+// only 7.4px wide at 390px, so the buttons (and the arrow keys) make every position reachable.
+function stepMarker(dir) {
+  if (answered || currentType !== 'place' || placedValue === null) return;
+  setPlaced(placedValue + dir * 0.5);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+  if (answered || currentType !== 'place' || placedValue === null) return;
+  e.preventDefault();
+  stepMarker(e.key === 'ArrowLeft' ? -1 : 1);
+});
+
 function setupPlaceInteraction(target) {
   const svg = document.getElementById('placeNL');
   const wrap = document.getElementById('placeNLWrap');
-
-  function updateMarker(val) {
-    placedValue = Math.round(val * 2) / 2; // snap to 0.5
-    const x = valueToX(placedValue);
-    // Redraw base + marker
-    drawNumberLine('placeNL');
-    const svgEl = document.getElementById('placeNL');
-    const y = 40;
-    svgEl.innerHTML += `<line class="nl-marker-line" x1="${x}" y1="${y - 20}" x2="${x}" y2="${y + 20}"/>`;
-    svgEl.innerHTML += `<circle class="nl-marker" cx="${x}" cy="${y}" r="7"/>`;
-    svgEl.innerHTML += `<text x="${x}" y="${y - 24}" text-anchor="middle" fill="var(--accent)" font-family="JetBrains Mono,monospace" font-size="12" font-weight="700">${formatNum(placedValue)}</text>`;
-    document.getElementById('placeConfirm').disabled = false;
-  }
 
   function handlePointer(e) {
     if (answered) return;
     e.preventDefault();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const val = xToValue(clientX, svg);
-    updateMarker(val);
+    setPlaced(xToValue(clientX, svg));
   }
 
   wrap.onmousedown = (e) => { handlePointer(e); wrap.onmousemove = handlePointer; };
@@ -581,9 +623,10 @@ function confirmPlace() {
   answered = true;
   const q = questions[qIndex];
   const target = q.data;
-  // The marker snaps to the nearest 0.5 and shows its value, which forgives an imprecise tap; the value
-  // shown must then be the target. (Within 0.5 accepted 0 and 1 for 0.5, and -2.5 for -3, until 4 Oct 2026.)
-  const correct = placedValue === target;
+  // The marker snaps to the nearest 0.5 and shows its value, and the step buttons reach every position,
+  // so the value shown must be the target: exact match (MaffsNumberLine, canon 7.1.2). Within 0.5
+  // accepted 0 and 1 for 0.5, and -2.5 for -3, until 4 Oct 2026.
+  const correct = MaffsNumberLine.placementCorrect({ placed: placedValue, target: target, mode: 'snapped' });
 
   totalAnswered++;
   if (correct) { score++; totalCorrect++; }
@@ -596,8 +639,10 @@ function confirmPlace() {
   svg.innerHTML += `<circle class="nl-answer-marker" cx="${ax}" cy="${y}" r="7"/>`;
   svg.innerHTML += `<text x="${ax}" y="${y + 36}" text-anchor="middle" fill="var(--green)" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700">${formatNum(target)}</text>`;
 
-  showFeedback(correct, correct ? 'Correct!' : `The correct position was ${formatNum(target)}`);
+  showFeedback(correct, correct ? 'Correct!' : `You placed ${formatNum(placedValue)}; ${formatNum(target)} is here.`);
   document.getElementById('placeConfirm').disabled = true;
+  setStepButtons();
+  document.getElementById('placeItArea').classList.add('answered');
 
   const wrap = document.getElementById('placeNLWrap');
   wrap.onmousedown = null; wrap.onmousemove = null; wrap.ontouchstart = null; wrap.ontouchmove = null;
