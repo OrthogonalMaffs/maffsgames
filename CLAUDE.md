@@ -38,7 +38,7 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (cloud, latest): quoted-statistics audit HALTED on three STOP IFs; awaiting Jon
+## Handover — 2026-10-05 (cloud, latest): three contracts HALTED on STOP IFs (audit, self-test 23/24, invite line); awaiting Jon
 
 Jon's contract (audit every real-world figure quoted as fact; report only, no game changes). Stopped before the
 report: **`docs/audits/quoted-statistics-2026-10-STOP.md`** has everything (branch `claude/peaceful-mayer-3ktsgv`, no PR).
@@ -50,10 +50,17 @@ report: **`docs/audits/quoted-statistics-2026-10-STOP.md`** has everything (bran
   maths history, school-sample rates, CPI years). Scope options (a)/(b)/(c) in that file.
 - **Also:** 52-dle's "52! … more than atoms in the observable universe" is false (8×10⁶⁷ vs ~10⁸⁰), not keyed.
 - **Next:** Jon's rulings on scope, then finish the audit into `docs/audits/quoted-statistics-2026-10.md` (STOP
-  file folded in or deleted), todo, PR, merge on green. **Then Jon's second contract (queued, not started):**
-  `check-content-safety.py` self-test cases 23 (a tier-(a) word as an object key shown via `Object.keys()` →
-  flagged) and 24 (same key only looked up → not flagged); STOP if 23 or 24 fails, with 2-3 options. Jon said to
-  finish this audit first.
+  file folded in or deleted), todo, PR, merge on green.
+- **Contract 2 (content-safety self-test cases 23/24): HALTED, nothing committed.** Both fail on today's scanner:
+  a key shown via `Object.keys`/`entries`/`for…in` is not seen (quoted or bare); a key looked up as
+  `g['dead']`, `'dead' in g` or `hasOwnProperty('dead')` IS flagged (`g.dead` and `case 'dead':` are quiet).
+  Live exposure 0 (no tier-(a) key or string lookup in any of the 134 files). Options given to Jon: (1) ban
+  tier-(a) words as keys anywhere (recommended) plus lookup strings as code; (2) read keys as displayed in files
+  that enumerate objects; (3) flow tracing.
+- **Contract 3 (teacher feedback line to the results screen): HALTED before any edit.** `constructions-lab` and
+  `trig-wars` have no results screen (STOP IFs 1 and 2). Survey of all 97 games + engine:
+  `docs/teacher-invite-results-survey.md` (91 static, 4 function route, 2 STOP; engine's `finish()` rebuilds
+  `#endCard`).
 - **Gotchas:** WebFetch is blocked for gov.uk, ONS, Wikipedia, Network Rail; only WebSearch works (summaries naming
   their source URL), and sandbox `curl` reaches only GitHub. Fermi Lab's keyed values are `reference` fields that
   the scan's regex net cannot see as claims: read data-driven games' banks directly.
