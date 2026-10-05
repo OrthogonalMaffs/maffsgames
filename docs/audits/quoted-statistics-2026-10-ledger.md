@@ -148,3 +148,17 @@ COMPUTED (definition or arithmetic, no search needed).
 - grains-sand-beach.s4 | 8e9 grains/m³ (hint: "A grain of sand is about 0.5mm across") | Wentworth medium sand 0.25-0.5 mm; (1/0.0005)^3 = 8e9 (COMPUTED) | https://en.wikipedia.org/wiki/Grain_size | VERIFIED (a 0.5 mm grain is the coarse end of medium sand; finer sand packs more grains)
 - eq_textbooks.s4 | 0.5 kg ("A typical textbook weighs about 500g") | US textbooks 0.9-2.7 kg (hardcover 3-4 lb); no UK/GCSE figure found | https://parcelpath.com/shipping-terms-glossary/glossary-weights-and-measurements/how-much-does-a-text-book-weigh/ ; https://hypertextbook.com/facts/2003/BettyTan.shtml | UNVERIFIABLE (the only data are US hardcovers, 2-5x heavier)
 - lessons-yr7-yr11.s1 | 5 lessons a day ("5 or 6") | typical academy day 4 + 1 = 5; others 6; 25 taught hours a week recommended | https://www.spaldingacademy.org.uk/academy-day/ | VERIFIED
+
+# Phase 2: Screening Room's real-world rates (stated, not keyed)
+
+Screening Room's answers are computed from the rates each scenario states, so a wrong rate never marks a student
+wrong; it teaches a wrong prevalence. In scope: a base rate that reads as a real prevalence, and test accuracy
+attributed to a real, named test or programme. Invented contexts (security gates, spam filters, engineering NDT,
+fraud, pregnancy-test takers, an "outbreak" sample) are OUT.
+
+- gcse_01 | hearing problem 3% of school students | mild hearing loss in school-age children 2.4-14.9% depending on the study | https://www.thieme-connect.com/products/ejournals/html/10.1055/s-0039-1695024 | VERIFIED (inside the published range)
+- gcse_02 | nut allergy 2% of primary children | "primary nut allergy affects over 2% of children in the UK"; ~1 in 50 seven-year-olds | https://practicenurse.co.uk/articles/allergy/nut-allergy-in-children-a-growing-concern ; https://www.bsaci.org/resources/allergy-management/food-allergy/foods-involved/peanut-tree-nut-and-seed-allergy/ | VERIFIED
+- gcse_03 | colour blindness 8% of 200 students | 8% of MALES (1 in 12), 0.5% of females; 4.5% of the UK population overall | https://www.colourblindawareness.org/?p=21 ; https://www.city.ac.uk/news-and-events/news/2017/09/colour-blindness-statistically-affects-every-male-football-team | CONTRADICTED (a mixed group of students would be ~4%; 8% holds only for boys)
+- gcse_08 | dyslexia 10% | BDA: 10% of the UK population, 4% severely (origin of the figure hard to trace; estimates range 3-20%) | https://dyslexiaaction.org.uk/?p=11526 | VERIFIED (as the BDA figure)
+- gcse_17 | scoliosis 3% "requiring monitoring" | AIS (Cobb >= 10°) 2-3% of adolescents; UK 2-3% of 10-16s | https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11300313/ ; https://www.aafp.org/pubs/afp/issues/2001/0701/p111.html | VERIFIED
+- gcse_10 | head lice 15% of primary children | meta-analysis 7.4% of primary pupils (40 studies); one classroom study 20.9%; LMIC pooled 20% | https://bmcpublichealth.biomedcentral.com/articles/10.1186/s12889-024-19712-2 | VERIFIED (inside the published range; high for the UK)
