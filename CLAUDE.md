@@ -38,7 +38,20 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (home, latest): Jon's 18:10 rulings; SR-14 keys done (PR #66); NEXT = the audit
+## Handover — 2026-10-05 (home, latest): AUDIT PHASES 1 + 2 reported (PR #68); NEXT = the teacher line on 95 results screens
+
+- **Audit phase 1** (branch `claude/peaceful-mayer-3ktsgv`): `docs/audits/quoted-statistics-2026-10.md` (findings,
+  effects, for-Jon list) + `...-ledger.md` (one line per figure with its URL). The STOP file is folded in and deleted.
+  Contradicted keys that cost marks: `eq_school_trip` s2, `uk-texts-per-day` answer, `uk-energy-daily` s2,
+  `eq_packed_lunch` s1. Report only; nothing changed in any game.
+- **Method worth reusing:** effects come from each step's own `tolerance` (`getLight`) and `getFinalRating`; a coverage
+  script lists every Fermi step not yet in the ledger, so none is skipped silently. WebSearch works (standard mode);
+  WebFetch was not needed.
+- **Phase 2 done in the same report** (6 Screening Room rates and the core-maths CPI pair contradicted; stated, not
+  keyed). Gotcha: the personal-details hook blocks some place names in docs; reword to a region. **NEXT:** the teacher line on 95 results screens (not constructions-lab or trig-wars); the survey
+  is `docs/teacher-invite-results-survey.md` (on main once this PR merges).
+
+## Handover — 2026-10-05 (home): Jon's 18:10 rulings; SR-14 keys done (PR #66)
 
 Jon's rulings of 5 Oct 18:10 cover three contracts; order chosen: SR-14 keys, then the audit, then the teacher line.
 - **PR #66, SR-14 keys (option 1):** a tier-(a) word as an object key is a hit anywhere (`key_spans()` records
@@ -92,6 +105,33 @@ Jon's contract, from the quoted-statistics audit's STOP 2 and §4.
 - **Gotchas:** `extract-banks.py` reads banks from the live page, so a reference to `FIG` resolves; `data/banks/`
   is gitignored. `scripts/serve-stubbed.py` serves ITS OWN repo root, not the cwd: to serve a main worktree, run
   that worktree's copy. Python heredocs in Git Bash on Windows mangle `\u` escapes; write the script to a file.
+
+## Handover — 2026-10-05 (cloud): three contracts HALTED on STOP IFs (audit, self-test 23/24, invite line); awaiting Jon
+
+Jon's contract (audit every real-world figure quoted as fact; report only, no game changes). Stopped before the
+report: **`docs/audits/quoted-statistics-2026-10-STOP.md`** has everything (branch `claude/peaceful-mayer-3ktsgv`, no PR).
+- **STOP 1, over 150:** ~265 figures in ~133 items (lower bound), mostly `fermi-lab` (~155) and `screening-room` (≥40).
+- **STOP 2, keyed and contradicted:** `fermi-lab` `eq_sleep_loss` (300,000 GCSE candidates) and `eq_homework`
+  (600,000 in Years 10 and 11); DfE has 625,673 at the end of KS4 in 2024/25. A student who enters the true figure
+  gets amber (8 pts), not green (15). Not fixed.
+- **STOP 3, judgement classes:** six, listed in §3 of the STOP file (Fermi guesses, constants, general knowledge,
+  maths history, school-sample rates, CPI years). Scope options (a)/(b)/(c) in that file.
+- **Also:** 52-dle's "52! … more than atoms in the observable universe" is false (8×10⁶⁷ vs ~10⁸⁰), not keyed.
+- **Next:** Jon's rulings on scope, then finish the audit into `docs/audits/quoted-statistics-2026-10.md` (STOP
+  file folded in or deleted), todo, PR, merge on green.
+- **Contract 2 (content-safety self-test cases 23/24): HALTED, nothing committed.** Both fail on today's scanner:
+  a key shown via `Object.keys`/`entries`/`for…in` is not seen (quoted or bare); a key looked up as
+  `g['dead']`, `'dead' in g` or `hasOwnProperty('dead')` IS flagged (`g.dead` and `case 'dead':` are quiet).
+  Live exposure 0 (no tier-(a) key or string lookup in any of the 134 files). Options given to Jon: (1) ban
+  tier-(a) words as keys anywhere (recommended) plus lookup strings as code; (2) read keys as displayed in files
+  that enumerate objects; (3) flow tracing.
+- **Contract 3 (teacher feedback line to the results screen): HALTED before any edit.** `constructions-lab` and
+  `trig-wars` have no results screen (STOP IFs 1 and 2). Survey of all 97 games + engine:
+  `docs/teacher-invite-results-survey.md` (91 static, 4 function route, 2 STOP; engine's `finish()` rebuilds
+  `#endCard`).
+- **Gotchas:** WebFetch is blocked for gov.uk, ONS, Wikipedia, Network Rail; only WebSearch works (summaries naming
+  their source URL), and sandbox `curl` reaches only GitHub. Fermi Lab's keyed values are `reference` fields that
+  the scan's regex net cannot see as claims: read data-driven games' banks directly.
 
 ## Handover — 2026-10-05 (cloud): SR-14 fix batch done, PRs #56-#60, #62, #63; KNOWN = 0
 
