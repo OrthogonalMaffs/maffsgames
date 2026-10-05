@@ -169,7 +169,10 @@ section.
 If one applies, apply it and list "SR-n applied: …" in the PR; stop only for what none covers, or for
 §0.3's "Still stops for Jon" list.
 
-- **PR #68 (5 Oct, home): quoted-statistics audit, phase 1 (report only).** `docs/audits/quoted-statistics-2026-10.md`
+- **PR #68 (5 Oct, home): quoted-statistics audit, phases 1 and 2 (report only).** Phase 2 (same report): six
+  Screening Room rates wrong as stated facts (NHS FIT sensitivity 74% vs ~48%; HIV test specificity 98.5% vs 99.8%+;
+  HbA1c 85% vs ~61%; AAA 1.5% vs ~0.7-0.9%; colour blindness 8% in a mixed group; Year 7 glasses 10% vs 15-18%) and
+  `core-maths-paper1`'s "CPI 8.7% in 2022, 6.3% in 2023" (ONS: 9.1%, 7.3%); not keyed, so fixes are wording. Phase 1: `docs/audits/quoted-statistics-2026-10.md`
   + the per-figure ledger `...-ledger.md` (the STOP file is folded in and deleted). **For Jon, in order:**
   (1) four contradicted keys that cost a student marks, each a fix contract like PR #64: `fermi-lab`
   `eq_school_trip` (coach fuel 8 L/100 km, real 18-24), `uk-texts-per-day` (120M SMS/day, real 17.5M person-to-person;

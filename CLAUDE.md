@@ -38,7 +38,7 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (home, latest): AUDIT PHASE 1 reported (PR #68); NEXT = audit phase 2, then the teacher line
+## Handover — 2026-10-05 (home, latest): AUDIT PHASES 1 + 2 reported (PR #68); NEXT = the teacher line on 95 results screens
 
 - **Audit phase 1** (branch `claude/peaceful-mayer-3ktsgv`): `docs/audits/quoted-statistics-2026-10.md` (findings,
   effects, for-Jon list) + `...-ledger.md` (one line per figure with its URL). The STOP file is folded in and deleted.
@@ -47,9 +47,8 @@ whole suite locally if ever wanted.
 - **Method worth reusing:** effects come from each step's own `tolerance` (`getLight`) and `getFinalRating`; a coverage
   script lists every Fermi step not yet in the ledger, so none is skipped silently. WebSearch works (standard mode);
   WebFetch was not needed.
-- **NEXT:** phase 2 in the same report (Screening Room's sample rates: hearing 3%, colour blindness 8%, nut allergy 2%
-  and the rest of the screening rates; real-year CPI in `core-maths-paper1` 8.7%/6.3% and `wrong-on-the-internet`
-  `woti_core_005` 7.3%). Then the teacher line on 95 results screens (not constructions-lab or trig-wars); the survey
+- **Phase 2 done in the same report** (6 Screening Room rates and the core-maths CPI pair contradicted; stated, not
+  keyed). Gotcha: the personal-details hook blocks some place names in docs; reword to a region. **NEXT:** the teacher line on 95 results screens (not constructions-lab or trig-wars); the survey
   is `docs/teacher-invite-results-survey.md` (on main once this PR merges).
 
 ## Handover — 2026-10-05 (home): Jon's 18:10 rulings; SR-14 keys done (PR #66)

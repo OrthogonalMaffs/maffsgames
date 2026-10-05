@@ -1,7 +1,8 @@
-# Quoted real-world statistics audit (October 2026): phase 1 report
+# Quoted real-world statistics audit (October 2026)
 
-**Status: phase 1 done, report only.** No game, bank, check script or canon was changed. Phase 2 (Screening Room's
-sample rates and the real-year CPI/inflation figures) follows in this file.
+**Status: phases 1 and 2 done, report only.** No game, bank, check script or canon was changed. Phase 1 (below) is
+every real-world figure a student is marked against; phase 2 (the last section) is Screening Room's real-world rates
+and the real-year CPI/inflation figures, which are stated, not keyed.
 
 **Scope (Jon's rulings, 5 Oct 2026 18:10):** (b). Phase 1 covers every real-world figure a student is marked against.
 - Fermi modelling guesses are OUT; references a hint states as fact are IN.
@@ -152,11 +153,47 @@ Fermi modelling guesses (slices of bread a day, the fraction of households with 
 - **Network:** WebSearch for every figure (standard mode; extended once, for the Mersenne record). WebFetch was not
   needed.
 
-## Next
+## Phase 2: Screening Room's real-world rates and real-year CPI
 
-- **Phase 2:** Screening Room's sample rates and the real-year CPI/inflation figures (`core-maths-paper1`,
-  `wrong-on-the-internet`).
-- **For Jon:**
-  - Fixes for §1, the four contradicted keys. Like PR #64, each is a contract of its own.
-  - The SMS count question.
-  - Goldbach (§8).
+These figures are **stated, not keyed**: Screening Room computes every answer from the rates its scenario states,
+and the CPI questions do arithmetic on the rates given. A wrong figure never marks a student wrong. **It teaches a
+wrong fact**, and in Screening Room the size of the rate is the whole lesson (the positive predictive value moves
+with it).
+- **In scope (Jon's ruling, "Screening Room's sample rates"):**
+  - every base rate that reads as a real prevalence: 20 of the 70 scenarios;
+  - test accuracy credited to a real, named test or programme.
+- **Out:** invented contexts (security gates, spam filters, engineering NDT, fraud, an "outbreak" sample, the people
+  who take a pregnancy test).
+
+| Item | Stated | Source | Status |
+|---|---|---|---|
+| `screening-room` `alevel_05` | NHS FIT: "sensitivity of 74%" | At England's programme threshold (120 µg/g) FIT finds **47.8%** of colorectal cancers; 74% matches a threshold near 40 µg/g ([PMC8366184](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8366184/)) | **CONTRADICTED** |
+| `screening-room` `alevel_03` | "standard ELISA test" specificity **98.5%** | 4th-generation assays 99.81-99.97% ([aidsmap](https://aidsmap.com/node/9459)) | **CONTRADICTED**, and it drives the lesson: at 0.16% prevalence the PPV is about 10% at 98.5% but about 60% at 99.9% |
+| `screening-room` `core_01` | NHS Health Check: HbA1c "correctly identifies **85%** of diabetics", flags 7% | HbA1c at 48 mmol/mol in a UK population: **61%** sensitive, 99% specific ([Oxford PHC](https://www.phc.ox.ac.uk/publications/1217970)) | **CONTRADICTED** |
+| `screening-room` `alevel_15` | NHS AAA: "About **1.5%** have an aneurysm" | NHS detection 1.12% (2015-16), 0.92% (2019-20), ~0.74% (2023-24) ([AAA standards report](https://www.gov.uk/government/statistics/abdominal-aortic-aneurysm-screening-standards-report-2023-to-2024/aaa-standards-report-2023-to-2024--2)) | **CONTRADICTED** (about 2x) |
+| `screening-room` `gcse_03` | colour blindness **8%** of 200 students | 8% of **males**, 0.5% of females; 4.5% of the UK overall ([Colour Blind Awareness](https://www.colourblindawareness.org/?p=21)) | **CONTRADICTED** for a mixed group (true only for boys) |
+| `screening-room` `gcse_05` | **10%** of Year 7 "actually need glasses" | NICER: 14.6-17.7% of 12-13-year-olds are myopic alone ([PMC4718680](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4718680/)) | **CONTRADICTED** (low) |
+| `core-maths-paper1` (3.2, AO2) | "CPI inflation: **8.7% in 2022, 6.3% in 2023**" | ONS CPI: annual average 9.1% (2022), 7.3% (2023); to December 10.5%, 4.0%. 8.7% was the April/May **2023** rate; no 2023 measure was 6.3% ([ONS](https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/december2023), [CIPP](https://www.cipp.org.uk/resources/news/uk-inflation-falls-to-8-7.html)) | **CONTRADICTED** (real years, wrong rates) |
+| `wrong-on-the-internet` `woti_core_005` | "UK inflation in 2023 was 7.3%" | ONS annual average 2023: 7.3% | VERIFIED |
+| `screening-room` `alevel_13` | NHS cervical screening: "The Pap smear" (sensitivity 70%, specificity 95%) | The accuracy figures match cytology meta-analyses; but **England's programme has used HPV primary testing since 2019** | VERIFIED but DATED |
+
+**Verified, in the ledger:**
+- hearing 3%; nut allergy 2%; dyslexia 10% (the BDA figure); scoliosis 3%; head lice 15% (inside the published
+  range, high for the UK); strep 25% (true for children, high for a GP's mixed list);
+- mammography 0.8% with sensitivity 87% (UK 86.6%; specificity 91% is at the low end);
+- UK HIV 0.16%; lateral flow 80% and 99% (the best-case laboratory figure; field sensitivity was about half);
+- COVID 0.2% in a low period; diabetes 8%; CF carriers 1 in 25; radon 7% "in certain parts"; meningitis 15% of
+  suspected cases.
+
+**Not checked separately** (listed in the ledger): bowel cancer 0.3% of 60-74s, prostate cancer 4% of men over 50,
+the PCR accuracy, and cervical 0.6%.
+
+## For Jon
+
+1. **Phase 1, §1:** four contradicted keys that cost a student marks. Each is a fix contract of its own, like
+   PR #64. The SMS item first needs a ruling: does "text messages (SMS)" include business texts?
+2. **Phase 2:** six Screening Room rates and the core-maths CPI pair are wrong as stated facts. They are not keyed,
+   so a fix is a wording change: correct the rate, or drop the claim that it is real ("In the NHS…",
+   "CPI inflation in 2022…").
+3. **§2:** the M25 hint misleads (it scores amber if followed). The other hint and note errors are cosmetic.
+4. **§8:** Goldbach keyed `false` in `truth-buster`.
