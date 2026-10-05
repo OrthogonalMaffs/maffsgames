@@ -367,7 +367,6 @@ def scan(root, override=None):
 # idioms and the class names Jon ruled out of SR-14 (4 Oct, 20:06) are no longer hits (ALLOW, displayed()).
 KNOWN = {
     "games/core-maths-paper2a/index.html": {"drowning": 2, "drownings": 2},
-    "games/given-that/index.html": {"fatal": 4},
     "games/maths-court/index.html": {"drowning": 4, "drownings": 3},
     "games/truth-buster/index.html": {"drownings": 1},
     "games/wrong-on-the-internet/index.html": {"drowning": 5},
