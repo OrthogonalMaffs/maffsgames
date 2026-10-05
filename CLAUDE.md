@@ -38,7 +38,24 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (cloud, latest): Jon's three contracts done: DECIMAL DETECTIVE (#50), EXPECTED DAMAGE (#52), NEGATIVE NUMBER LINE (#54)
+## Handover — 2026-10-05 (cloud, latest): SR-14 fix batch done, PRs #56-#60; KNOWN = 1 (Truth Buster)
+
+Jon's contract (clear SR-14 tier-(a) KNOWN to Truth Buster), one PR per step, each merged on a green Gate.
+- **#56 scanner** (`scripts/check-content-safety.py`): `displayed()` reduces a file to what a player can be shown
+  (HTML text + attribute values bar `CODE_ATTRS`, on* read as JS; JS strings and template text, each read as an
+  HTML fragment) and blanks code: identifiers, comments, regex literals, quoted keys, case labels, and strings
+  used as class names, ids, selectors or attribute names. ALLOW adds "half dead", "three quarters dead", "kills
+  the claim", "doctor neglected". Self-test 22 cases (snippets run whatever the tree's state). KNOWN 27 -> 21.
+- **#57-#60:** given-that core_01 (Minor, Moderate, Serious); drownings -> sunburn cases in core-maths-paper2a Q32,
+  maths-court mc_core_005, wrong-on-the-internet woti_gcse_008. Keys unchanged; each played in Chromium.
+- **Next:** Truth Buster :262 waits for Jon's new coincidence pairing. Then Jon's next contract.
+- **Gotchas:** "scan JS string literals" is not "displayed text": `'dead'` passed to `classList.toggle` is a
+  string. Re-run an old-vs-new coverage diff after any change to `displayed()` (the PR #56 description has the
+  method). In a cloud sandbox `pip install playwright==1.56.0` matches `/opt/pw-browsers` chromium-1194, so
+  every verifier runs unmodified. Games inside an IIFE (given-that) cannot be driven by globals: pin
+  `Math.random` near 1 before Start and the game's Fisher-Yates keeps bank order.
+
+## Handover — 2026-10-05 (cloud): Jon's three contracts done: DECIMAL DETECTIVE (#50), EXPECTED DAMAGE (#52), NEGATIVE NUMBER LINE (#54)
 
 Jon's three contracts of 5 Oct, run in his order (2, 3, 1) under his rulings of 10:10.
 - **PR #50 (Decimal Detective, audit F1, F6, F7):** Place It's marker starts off the line (hidden) and Check is
@@ -151,7 +168,7 @@ locally, outside the repo; ask Jon if it is not to hand).
   joke theories on coincidences, every answer behind `MaffsNext`; back on /resit/ (30). Verifier
   `scripts/verify-correlation-or-coincidence.py` (group B, 12 planted faults). Ledger B4 entries cleared.
 - **SR-14, three tiers** (canon §0.3, Jon's amended text) + `scripts/check-content-safety.py` (site-wide CI): tier (a)
-  fails anywhere, tier (b) in humour fields; KNOWN = 27 tier-(a) hits in 11 files = todo's SR-14 fix batch (one
+  fails anywhere, tier (b) in humour fields; KNOWN = 27 tier-(a) hits in 11 files (1 since PR #60) = todo's SR-14 fix batch (one
   game per contract). /updates/ entry live in Jon's wording. Jon approved C7/C11 and the credit without a link.
 
 ## Handover — 2026-10-04: JON'S RESIT AUDIT RULINGS recorded, PR #42; SR-13
