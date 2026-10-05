@@ -38,7 +38,7 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (cloud, latest): DECIMAL DETECTIVE, PR #50 MERGED; Expected Damage and Negative Number Line next
+## Handover — 2026-10-05 (cloud, latest): DECIMAL DETECTIVE (PR #50) and EXPECTED DAMAGE (PR #52) MERGED; Negative Number Line next
 
 Jon's three contracts of 5 Oct, run in his order (2, 3, 1) under his rulings of 10:10.
 - **PR #50 (Decimal Detective, audit F1, F6, F7):** Place It's marker starts off the line (hidden) and Check is
@@ -46,7 +46,10 @@ Jon's three contracts of 5 Oct, run in his order (2, 3, 1) under his rulings of 
   equal-value pair (0.77/0.770) explains it in the feedback; Round Up 9.50 offers 95, not 9.50.
   `scripts/verify-decimal-detective.py` (CI group B). `check-resit-fixes.py`'s start check follows the new start.
   F2-F4 (band and live readout) wait for Jon's F4 ruling.
-- **Next, in this session:** Expected Damage (ed_gcse_011 and 018 ties, SR-5, plus its verifier), then Negative
+- **PR #52 (Expected Damage, audit F1):** ed_gcse_011 (B 1 → 0 Muppets) and ed_gcse_018 (A 5 → 6) no longer tie,
+  both keyed A; `scripts/verify-expected-damage.py` (CI group B) fails any tie and reads every shown outcome back.
+  F2 (outcome draw) logged, not fixed.
+- **Next, in this session:** Negative
   Number Line (Jon's ruling (a): exact match via the new shared `schools/assets/number-line.js`, ◀ ▶ step
   buttons and arrow keys, the value shown above the line; canon §7.1.2 line in its docs PR).
 - **Gotchas:** in a cloud sandbox `esprima==4.0.1` fails to build (`install_layout`); its unpacked source tarball
