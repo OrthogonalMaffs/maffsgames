@@ -59,14 +59,22 @@ its text: it is not in the repo).**
 - Gotchas: the Bash tool collapses `\` in heredocs (write edit scripts with the Write tool); test points must be
   1-10 and non-integer (poles at x = 2; e^x at x ~ 97 made unrelated equations look proportional).
 
-**Still to build (contract EXACT CHANGE 2-4):**
-1. Game JS: marking = token sequence (filled slots, in order, as a prefix) in `ACCEPTED[id]`; delete the
+**Done 5 Oct (committed):** game marking by `ACCEPTED` lookup (`builtSeq`/`wellFormed`/`updateCheck`/`checkAnswer`;
+slot-by-slot comparison deleted); Check appears when the filled prefix is grammar-valid; "Correct." / "Correct. Also
+written as:" / "That doesn't match the question yet." (tiles kept) / key shown on the 2nd wrong; standard-form
+tiles shown in brackets. **My call (flag in PR):** l4_034 got a second `−` tile so `− c` is buildable (as Jon ruled
+for ks3_029/l4_026). Chromium (scratch `eb_play.py`, 390px): 18 builds across all levels marked right, incl. all
+four contract examples, l4_023 r=0, l4_026/l4_034 − c, ks3_029; wrong path; gcse_010 tiles; brackets. 436
+accepted arrangements, verifier PASS.
+
+**Still to build (contract EXACT CHANGE 2-4), items 1-2 DONE:**
+1. (done) Game JS: marking = token sequence (filled slots, in order, as a prefix) in `ACCEPTED[id]`; delete the
    slot-by-slot comparison. Check enabled when the filled prefix is grammar-valid (port `arrangements()`'s
    automaton using `TILE_KINDS`: operand/op/eq/open/openx/close/lead), leftover tiles allowed; questions in
    `FULL_SLOTS` (gap-fills + fixed specials) keep "all slots filled". Feedback: "Correct." / "Correct. Also
    written as: <key>"; wrong 1st: keep tiles, "That doesn't match the question yet.", retry for 0.5;
    wrong 2nd: show key. Standard-form tiles (4.013×10¹⁶, 3×10⁸, 5.97×10²⁴, 7.34×10²²) display in brackets.
-2. Chromium: ≥10 F1/F3/F4/F8 arrangements across levels marked correct (incl. C = 3 + 2.50m, d = 80 ÷ tan34°,
+2. (done) Chromium: ≥10 F1/F3/F4/F8 arrangements across levels marked correct (incl. C = 3 + 2.50m, d = 80 ÷ tan34°,
    360 = 3V ÷ 8, F = 9(l+w)); gcse_010's old build impossible.
 3. CI: add the verifier (+ `--selftest`) to a content-verifier group in check-site.yml; check-verifier-coverage.
 4. /resit/: relist at Foundation (`?level=ks3`) in its old place; check-resit-page.py WITHDRAWN/count.
