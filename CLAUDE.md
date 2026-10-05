@@ -38,7 +38,21 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (home, latest): Jon's 18:10 rulings; SR-14 keys done (PR #66); NEXT = the audit
+## Handover — 2026-10-05 (home, latest): AUDIT PHASE 1 reported (PR #AUDIT); NEXT = audit phase 2, then the teacher line
+
+- **Audit phase 1** (branch `claude/peaceful-mayer-3ktsgv`): `docs/audits/quoted-statistics-2026-10.md` (findings,
+  effects, for-Jon list) + `...-ledger.md` (one line per figure with its URL). The STOP file is folded in and deleted.
+  Contradicted keys that cost marks: `eq_school_trip` s2, `uk-texts-per-day` answer, `uk-energy-daily` s2,
+  `eq_packed_lunch` s1. Report only; nothing changed in any game.
+- **Method worth reusing:** effects come from each step's own `tolerance` (`getLight`) and `getFinalRating`; a coverage
+  script lists every Fermi step not yet in the ledger, so none is skipped silently. WebSearch works (standard mode);
+  WebFetch was not needed.
+- **NEXT:** phase 2 in the same report (Screening Room's sample rates: hearing 3%, colour blindness 8%, nut allergy 2%
+  and the rest of the screening rates; real-year CPI in `core-maths-paper1` 8.7%/6.3% and `wrong-on-the-internet`
+  `woti_core_005` 7.3%). Then the teacher line on 95 results screens (not constructions-lab or trig-wars); the survey
+  is `docs/teacher-invite-results-survey.md` (on main once this PR merges).
+
+## Handover — 2026-10-05 (home): Jon's 18:10 rulings; SR-14 keys done (PR #66)
 
 Jon's rulings of 5 Oct 18:10 cover three contracts; order chosen: SR-14 keys, then the audit, then the teacher line.
 - **PR #66, SR-14 keys (option 1):** a tier-(a) word as an object key is a hit anywhere (`key_spans()` records
