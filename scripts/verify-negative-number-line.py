@@ -17,7 +17,8 @@ The bank is read from the live page, then:
   Calculate: the key is start + val or start - val; start and key on the line. (Distractors that
     lie off the line are logged LOW in the audit and not checked here.)
   The helper, in the page: snapped placements match exactly (0.1 + 0.2 counts as 0.3; 0 and 1 do
-    not count as 0.5; nothing placed is false); continuous mode throws "awaiting ruling (audit DD F4)".
+    not count as 0.5; nothing placed is false); any other mode ('continuous') throws "must snap (canon
+    §7.1.2)": the mode was removed on Jon's ruling on audit DD F4 (5 Oct 2026).
   Marking, in Chromium at 1000px with a mouse: for every target, a real click on every one of the
     41 positions on the line; the marker must read that position, and Confirm must say "Correct!"
     only when it is the target, otherwise "You placed P; T is here." The arrow keys move a placed
@@ -287,8 +288,8 @@ def run_page(rep, chromium=None, verbose=False, patched_helper=False):
                 for (p, t, got), want in zip(h['cases'], HELPER_WANT):
                     if got is not want:
                         rep.fail('MaffsNumberLine', 'snapped', 'placed %s, target %s gave %s, expected %s' % (p, t, got, want))
-                if 'awaiting ruling (audit DD F4)' not in h['cont']:
-                    rep.fail('MaffsNumberLine', 'continuous', 'expected a throw "awaiting ruling (audit DD F4)", got %r' % h['cont'])
+                if 'must snap (canon §7.1.2)' not in h['cont']:
+                    rep.fail('MaffsNumberLine', 'continuous', 'expected a throw "must snap (canon §7.1.2)", got %r' % h['cont'])
             clicks = desktop_pass(rep, page, bank['PLACE'], verbose)
             if not patched_helper:
                 keys_pass(rep, page)
