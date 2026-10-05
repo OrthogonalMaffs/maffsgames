@@ -612,13 +612,17 @@ capped below half the gap to the nearest one.**
   only. Equivalent forms such as 35.5 and 35.50 are the same number. A value estimated from a
   drawn graph takes a scale band (2.5% of the axis span, twice that for a difference of two
   readings), capped as above.
-- **A snapped, labelled placement is marked by exact match (`MaffsNumberLine`).** A marker that
-  snaps to a grid and shows its value is marked by `MaffsNumberLine.placementCorrect({placed,
-  target, mode: 'snapped'})` (`schools/assets/number-line.js`, 1e-9 guard only): any band of a grid
-  step or more accepts a neighbour while the marker's own label shows the wrong value. The line must
-  then let a phone reach every grid position (Negative Number Line's ◀ ▶ step buttons and arrow
-  keys, Jon 5 Oct 2026). A freely dragged marker (`mode: 'continuous'`) throws until Jon rules on the
-  resit audit's Decimal Detective F4. Held in CI by `scripts/verify-negative-number-line.py`.
+- **Every number-line placement snaps to a grid containing every target, is marked by exact match
+  through `MaffsNumberLine`, and offers step buttons on phones** (Jon, 5 Oct 2026: Negative Number
+  Line's ruling (a), then his ruling on the resit audit's Decimal Detective F4).
+  `MaffsNumberLine.placementCorrect({placed, target, mode: 'snapped'})` (`schools/assets/number-line.js`,
+  1e-9 guard only): a band of a grid step or more would accept a neighbour, a named wrong answer.
+  There is no other mode: 'continuous' (a freely dragged marker marked by a band) was removed, and any
+  mode but 'snapped' throws, so no game can bring a tolerance band back through the helper. ◀ ▶ step
+  buttons (at least 44px) and the arrow keys move a placed marker one grid step, so a phone reaches every
+  position. Decimal Detective's marker shows no value until Check (F4: a live readout gave the answer
+  away); Negative Number Line's marker label is a separate question for Jon. Held in CI by
+  `scripts/verify-negative-number-line.py` and `scripts/verify-decimal-detective.py`.
 
 **Worked example 1, box plots** (Chart Interrogator).
 - **For a median:** the other group's median, and the box's own Q1 and Q3 (an edge read for the

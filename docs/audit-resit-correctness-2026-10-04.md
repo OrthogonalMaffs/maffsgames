@@ -281,17 +281,17 @@ Items checked: all 45 (`scratchpad/work/decimal-detective/check.py`, output in `
   - Keyed answer: 4.5 / 5.5. The marker starts at 50% of the line, which is exactly the answer, already labelled "4.5" / "5.5". The Check button is enabled on load (:425; `renderPlaceit` never disables it).
   - Evidence: pressing Check with no input gives "Correct! Case solved." in Chromium for both items. So a free mark, and the starting picture pre-announces the answer.
   - Share affected: 2 of 15 Place It items.
-- **F2 [HIGH]** **OPEN** (band narrowed to a quarter tick gap in PR #36; left open with F4) year6 / Place It on the 0 to 0.5 line, :299 (`0.15`) and :300 (`0.45`); tolerance :803
+- **F2 [HIGH]** **RESOLVED PR #65** (Jon's F4 ruling, 5 Oct: the marker snaps to half a tick gap and is marked by exact match through `MaffsNumberLine`; no band) year6 / Place It on the 0 to 0.5 line, :299 (`0.15`) and :300 (`0.45`); tolerance :803
   - Question: "Place 0.15 on the number line from 0 to 0.5" (and 0.45).
   - Keyed answer: 0.15 / 0.45. The fixed ±0.05 tolerance is a whole tick on this line (ticks every 0.05), so the neighbouring ticks are accepted as well.
   - Evidence (Chromium, `repro2-out.json`): for 0.15, the marker reading "0.10" and the marker reading "0.20" are both "Correct! Case solved.". For 0.45, "0.40" and "0.50" are both correct. 0.4 and 0.5 are exactly the truncate/round-up confusions the item tests.
   - Share affected: 2 of 15 Place It items.
-- **F3 [MEDIUM]** **OPEN** (band narrowed to a quarter tick gap in PR #36; left open with F4) year6 / Place It, hundredths targets on a 0.1-tick line: :293 (`0.25`), :294 (`0.75`), :302 (`1.25`), :303 (`2.75`); also every other 0-1 item
+- **F3 [MEDIUM]** **RESOLVED PR #65** (as F2: the neighbouring grid points are marked wrong) year6 / Place It, hundredths targets on a 0.1-tick line: :293 (`0.25`), :294 (`0.75`), :302 (`1.25`), :303 (`2.75`); also every other 0-1 item
   - Question: e.g. "Place 0.25 on the number line from 0 to 1".
   - Keyed answer: 0.25. The ±0.05 band reaches both neighbouring tenths ticks, so a marker reading "0.20" or "0.30" is accepted. For 0.3, the band accepts the reading "0.25".
   - Evidence: reproduced in Chromium (`repro2-out.json`): 0.25 with the marker at "0.20" and at "0.30" are correct; 0.3 at "0.25" is correct.
   - Share affected: 4 of 15 Place It items at the tick boundaries (the half-tick band on the other 0.1-tick items is a judgement call).
-- **F4 [MEDIUM, judgement call]** **OPEN, awaiting Jon's ruling** year6 / Place It, all 15; `setMarkerPosition` :738-748
+- **F4 [MEDIUM, judgement call]** **RESOLVED PR #65** (Jon, 5 Oct 2026: no value on the marker until Check; snapped grid, exact match, ◀ ▶ step buttons) year6 / Place It, all 15; `setMarkerPosition` :738-748
   - The marker shows its exact value to 2 d.p. as it moves. Only 3 ticks are labelled (min, middle, max). So any item can be solved by dragging until the label reads the target, without reading the scale. That breaks "a visual aid must never give the answer away" (CLAUDE.md, Scaffolds).
 - **F5 [LOW]** year6 / Round Up, :283 (7.895 to 2 d.p.)
   - Options: 7.89 / 7.90 / 7.895 / 7.9. Key "7.90".
@@ -326,6 +326,14 @@ change how Place It is marked (`MaffsNumberLine`'s continuous mode waits on it).
 `scripts/verify-decimal-detective.py`: Line-Up and Round Up keys recomputed with `Decimal`, options distinct in
 value unless the ask names the form, the Place It start state, every answer marked in Chromium; it failed on the
 pre-fix game (55 FAILs).
+
+**5 Oct 2026, PR #65 (Jon's ruling on F4): F2, F3 and F4 resolved.** Place It's marker snaps to half a tick gap
+(20 steps a line; every target is on its grid) and shows no value until Check; Check marks by exact match through
+`MaffsNumberLine` (snapped), whose continuous mode is removed. ◀ ▶ step buttons and the arrow keys reach every
+grid position on a phone (11.6px a step at 320 wide). After Check both positions show on the line, and a wrong
+answer says "You placed P. T is here." The verifier now clicks all 21 grid positions of every item (only the
+value is accepted, no value visible before Check) and reaches every target on three phones; its self-test plants
+a one-step tolerance and a live readout. It also found that the answer's ring had never shown (fixed).
 
 
 ### Think of a Number (`think-of-a-number`)
