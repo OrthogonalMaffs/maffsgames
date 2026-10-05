@@ -1378,7 +1378,7 @@
  "decimal-detective": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -1394,14 +1394,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "ROUNDUP_QUESTIONS[7]: '9.5' = '9.50' (both wrong options)",
-      "id": "decimal-detective::7fd3894f1189#1::B11::[\"9.5\", \"9.50\"]",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
