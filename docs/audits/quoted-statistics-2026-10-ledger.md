@@ -1,7 +1,8 @@
-# Quoted statistics audit: working notes (phase 1 in progress)
+# Quoted statistics audit: per-figure ledger (phase 1)
 
-Scratch record of each search, so a context clear loses nothing. The report is
-`docs/audits/quoted-statistics-2026-10.md`; this file is folded into it (or deleted) when phase 1 is reported.
+One line per figure: the item, the keyed value, what the source says, the source URL, and the status. Every
+VERIFIED status rests on a WebSearch result that named the URL given (Jon's definition, 5 Oct 2026); the page
+itself was not always read. The findings and their scoring effect are in `quoted-statistics-2026-10.md`.
 
 Rulings (Jon, 5 Oct 2026 18:10): scope (b). Phase 1 = every real-world figure a student is marked against.
 VERIFIED = a WebSearch result naming its source URL. Fermi modelling guesses OUT; references a hint states
@@ -144,3 +145,6 @@ COMPUTED (definition or arithmetic, no search needed).
 - eq_steps.s3 | 100 steps per minute | 100 steps/min is the moderate-walking cadence threshold for adults | https://www.umass.edu/news/article/walking-health-benefits-just-got-easier | VERIFIED
 - eq_bus_distance.s2 | 5 km ("Average school bus journey is about 5 km") | NTS: average trip to school for 11-16s 3.4 miles (5.5 km, 2014) | https://www.gov.uk/government/statistics/national-travel-survey-2023/nts-2023-travel-to-and-from-school | VERIFIED
 - NOT SEARCHED (modelling statements a hint words as fact, no public statistic expected): uk-milkmen-pints.s3/s4 (2-4 pints, 3 deliveries a week), eq_textbooks.s3 (60% compliance), eq_markers.s2 (1.5 markers a week), eq_morning_routine.s2 (45 minutes), eq_packed_lunch.s2 (4 items), eq_plastic_bottles.s2 (3 a week). Listed so the count is complete.
+- grains-sand-beach.s4 | 8e9 grains/m³ (hint: "A grain of sand is about 0.5mm across") | Wentworth medium sand 0.25-0.5 mm; (1/0.0005)^3 = 8e9 (COMPUTED) | https://en.wikipedia.org/wiki/Grain_size | VERIFIED (a 0.5 mm grain is the coarse end of medium sand; finer sand packs more grains)
+- eq_textbooks.s4 | 0.5 kg ("A typical textbook weighs about 500g") | US textbooks 0.9-2.7 kg (hardcover 3-4 lb); no UK/GCSE figure found | https://parcelpath.com/shipping-terms-glossary/glossary-weights-and-measurements/how-much-does-a-text-book-weigh/ ; https://hypertextbook.com/facts/2003/BettyTan.shtml | UNVERIFIABLE (the only data are US hardcovers, 2-5x heavier)
+- lessons-yr7-yr11.s1 | 5 lessons a day ("5 or 6") | typical academy day 4 + 1 = 5; others 6; 25 taught hours a week recommended | https://www.spaldingacademy.org.uk/academy-day/ | VERIFIED
