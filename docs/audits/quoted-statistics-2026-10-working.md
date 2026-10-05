@@ -131,3 +131,16 @@ COMPUTED (definition or arithmetic, no search needed).
 ## 52-dle
 
 - No keyed real-world figure beyond definitions: 52 (cards in a deck) and 7 (days in a week). Clue claims are not keyed ("7: the most favourite number"; "521 ... discovered by computer in 1952", a maths-history date, OUT unless keyed).
+- probability-paradox (hot hand) | keyed: "It's debated — recent research suggests a small effect may exist" | Miller & Sanjurjo, Econometrica Nov 2018 (working paper 2015): de-biased reanalysis reverses Gilovich, Vallone & Tversky 1985 | https://econometricsociety.org/publications/econometrica/2018/11/01/surprised-hot-hand-fallacy-truth-law-small-numbers ; https://en.wikipedia.org/wiki/Hot_hand | VERIFIED (a keyed research claim, not a figure)
+
+## Fermi Lab: hint-stated facts on otherwise-guess steps (found by the coverage pass)
+
+- uk-trees.s3 | 30,000 trees/km² (hint: "A typical broadleaf wood has 200-400 trees per hectare") | UK planting minimums at year 5: 1,100-3,100/ha (young stands; mature woods are thinned); no mature-stand average found | https://www.ruralpayments.org/topics/all-schemes/forestry-grant-scheme/woodland-creation/broadleaves/ | UNVERIFIABLE (planting densities are not mature densities)
+- aircraft-rivets.s1 hint | "A 747 is about 70m long, 6.5m diameter" | 747-400 length 70.7 m; fuselage ~6.5 m (cabin 6.1 m) | https://www.lufthansagroup.com/en/company/fleet/lufthansa-and-regional-partners/boeing-747-400.html ; https://knaviation.net/boeing-747-specs/ | VERIFIED
+- m25-concrete.s3 | 0.3 m (hint: "typically 0.3-0.5m deep") | heavy-traffic UK asphalt 180-360 mm total (>80 msa: 360 mm) | https://www.contractsfinder.service.gov.uk/Notice/Attachment/2828a5fe-a4e9-4538-ab73-5ce435a17794 | KEY VERIFIED; the hint's upper 0.5 m overstates
+- ball-bearings-global.s2 hint | "A car has 20-30 bearings" | 100-150 bearings in a conventional car; minimum count 36 (NTN-SNR) | https://www.ntn-snr.com/pt/blog/how-many-bearings-are-there-car | HINT CONTRADICTED (the step's key, 10 per device averaged over all devices, is a modelling guess, OUT)
+- ball-bearings-global.s3 | 10 balls per bearing ("8-12") | 7-10 balls in a conventional small bearing | https://patents.google.com/patent/US6513983 | VERIFIED
+- london-bus-annual-km.s3 | 365 days ("London buses run every day of the year") | no TfL buses run on Christmas Day (364 days) | https://www.timeout.com/london/travel/everything-you-need-to-know-about-public-transport-in-london-over-the-festive-period | HINT CONTRADICTED (key 365 vs 364 is inside the band; no scoring effect)
+- eq_steps.s3 | 100 steps per minute | 100 steps/min is the moderate-walking cadence threshold for adults | https://www.umass.edu/news/article/walking-health-benefits-just-got-easier | VERIFIED
+- eq_bus_distance.s2 | 5 km ("Average school bus journey is about 5 km") | NTS: average trip to school for 11-16s 3.4 miles (5.5 km, 2014) | https://www.gov.uk/government/statistics/national-travel-survey-2023/nts-2023-travel-to-and-from-school | VERIFIED
+- NOT SEARCHED (modelling statements a hint words as fact, no public statistic expected): uk-milkmen-pints.s3/s4 (2-4 pints, 3 deliveries a week), eq_textbooks.s3 (60% compliance), eq_markers.s2 (1.5 markers a week), eq_morning_routine.s2 (45 minutes), eq_packed_lunch.s2 (4 items), eq_plastic_bottles.s2 (3 a week). Listed so the count is complete.
