@@ -38,7 +38,23 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (home, latest): FERMI LAB cohort figure held once (FIG), 52-dle atoms claim, PR #64
+## Handover — 2026-10-05 (home, latest): Jon's 18:10 rulings; SR-14 keys done (PR #66); NEXT = the audit
+
+Jon's rulings of 5 Oct 18:10 cover three contracts; order chosen: SR-14 keys, then the audit, then the teacher line.
+- **PR #66, SR-14 keys (option 1):** a tier-(a) word as an object key is a hit anywhere (`key_spans()` records
+  literal keys, `g.x =` and `g['x'] =` writes); lookups are code (`_LOOKUP_CALL`, member `[...]`, `'x' in g`).
+  Self-test 26/26; cases 23/24 fail on the old scanner; the coverage diff of `displayed()` over 134 files is
+  empty (the tree has no string lookups). Canon SR-14 amended.
+- **NEXT, the audit** (branch `claude/peaceful-mayer-3ktsgv`): merge main in; STOP 2 and the 52-dle note are
+  fixed by PR #64. Scope (b): phase 1 = every real-world figure a student is marked against (Fermi modelling
+  guesses OUT, references a hint states as fact IN; constants IN where keyed; Estimation Golf general knowledge
+  OUT; maths-history dates IN only if keyed); phase 2 after phase 1 is reported = Screening Room's sample rates
+  and real-year CPI/inflation. No 150 cap. VERIFIED = a WebSearch result naming its source URL, recorded per
+  figure. Higher Power's Mersenne exponent: a review-by note in todo. Report only; contradicted keyed first.
+- **Then the teacher line on results screens:** 95 games (skip constructions-lab and trig-wars; their
+  start-screen line stays). Survey: `docs/teacher-invite-results-survey.md` on the audit branch.
+
+## Handover — 2026-10-05 (home): FERMI LAB cohort figure held once (FIG), 52-dle atoms claim, PR #64
 
 Jon's contract, from the quoted-statistics audit's STOP 2 and §4.
 - **`FIG`** (new, above `QUESTIONS` in `games/fermi-lab/index.html`): one copy of each real-world quantity that
