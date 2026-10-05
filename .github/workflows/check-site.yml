@@ -184,7 +184,8 @@ jobs:
           # and mounts it once with its own directory name, on its results screen after the last control row (Jon,
           # 5 Oct 2026; two games with no end keep the start screen, one is pending a rebuild); the four function-route
           # games are played to every end state, and every live escape room to a win and a loss, in Chromium at 390
-          # and 1280px; /leaderboards/ mounts it with no game; the link text is Jon's exact wording (4 Oct 2026).
+          # and 1280px; on every roster page the line reads at 4.5:1 or better and is not squeezed into a flex row;
+          # /leaderboards/ mounts it with no game; the link text is Jon's exact wording (4 Oct 2026).
           - name: Tiers 1 + 2 (page load, hang-loop scan)
             timeout: 15
             checks: |

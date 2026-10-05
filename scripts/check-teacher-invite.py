@@ -24,7 +24,10 @@ escape-room engine (escape-rooms/assets/engine.js) does not mount the line on th
 (and nowhere else), a live room does not load teacher-invite.js, or a room's R.slug is not 'escape-' + its directory
 name; if /leaderboards/ does not mount it once with no game (null); if the link text is not exactly TEXT. In
 Chromium, every live room is played to a win and to a loss: the line must be on the end card both times, naming
-the room, and not on the brief.
+the room, and not on the brief. And on every roster page, in Chromium: the line reads at 4.5:1 or better against the
+background behind it (canon 7.5), and its parent is not a flex row or a grid, where it would be squeezed in beside
+the buttons instead of sitting under them (both slipped past the first version of this check, 5 Oct 2026: Estimation
+Golf's cream line on its cream summary card, Complex Converter's line inside its button row).
 
     python scripts/check-teacher-invite.py               # the check (static + Chromium)
     python scripts/check-teacher-invite.py --static      # the static half only (no browser)
@@ -214,6 +217,35 @@ LINE = """(sel) => {
   const a = p.querySelector('a');
   return {vis: vis, inside: sel ? !!p.closest(sel) : true, href: a && a.getAttribute('href')};
 }"""
+
+# The line's contrast against the first opaque background behind it (translucent layers composited), and how its
+# parent lays it out. Computed styles do not depend on the screen being shown, so the page is measured as loaded.
+STYLE = r"""(() => {
+  const p = document.getElementById('teacherInvite');
+  if (!p) return null;
+  const a = p.querySelector('a') || p, q = p.parentElement, pc = getComputedStyle(q);
+  const rgb = s => { const v = (s.match(/rgba?\(([^)]+)\)/) || [0, ''])[1].split(/[ ,\/]+/).filter(Boolean).map(Number);
+    return v.length < 3 ? null : {r: v[0], g: v[1], b: v[2], a: v.length > 3 ? v[3] : 1}; };
+  const layers = [];
+  for (let e = p; e; e = e.parentElement) {
+    const b = rgb(getComputedStyle(e).backgroundColor);
+    if (b && b.a > 0) { layers.push(b); if (b.a >= 0.99) break; }
+  }
+  let bg = {r: 255, g: 255, b: 255};
+  for (let i = layers.length - 1; i >= 0; i--) {
+    const L = layers[i];
+    bg = {r: L.r * L.a + bg.r * (1 - L.a), g: L.g * L.a + bg.g * (1 - L.a), b: L.b * L.a + bg.b * (1 - L.a)};
+  }
+  const c = rgb(getComputedStyle(a).color);
+  const fg = {r: c.r * c.a + bg.r * (1 - c.a), g: c.g * c.a + bg.g * (1 - c.a), b: c.b * c.a + bg.b * (1 - c.a)};
+  const lum = x => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+    return 0.2126 * f(x.r) + 0.7152 * f(x.g) + 0.0722 * f(x.b); };
+  const l1 = lum(fg), l2 = lum(bg);
+  return {ratio: (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05),
+          row: (/flex/.test(pc.display) && pc.flexDirection.startsWith('row')) || /grid/.test(pc.display),
+          parent: (q.id ? '#' + q.id : '') + (q.className ? '.' + String(q.className).split(' ')[0] : q.id ? '' : q.tagName.toLowerCase())};
+})()"""
+
 
 # Escape rooms: set each lock to its value (win), or keep setting a wrong value until the penalties run the clock
 # out (loss). The value comes from the room's own data for the variant this play drew.
@@ -535,6 +567,30 @@ async def _game_end_state(browser, base, slug, state, container, steps, width):
         await ctx.close()
 
 
+async def _page_style(browser, base, slug):
+    ctx = await browser.new_context(viewport=_viewport(390))
+    page = await ctx.new_page()
+    where = "games/%s/" % slug
+    try:
+        await page.goto(base + "/games/%s/" % slug, wait_until="domcontentloaded")
+        await page.wait_for_timeout(300)
+        got = await page.evaluate(STYLE)
+        if got is None:
+            return []  # reported by the static half
+        fails = []
+        if got["ratio"] < 4.5:
+            fails.append("%s: the teacher line's contrast is %.2f:1 against the background behind it (want 4.5:1; "
+                         "set an existing colour on the mount point)" % (where, got["ratio"]))
+        if got["row"]:
+            fails.append("%s: the teacher line sits inside %s, a flex row or grid, so it is squeezed in beside the "
+                         "controls; put it after that row" % (where, got["parent"]))
+        return fails
+    except Exception as exc:
+        return ["%s: %s" % (where, str(exc).splitlines()[0][:160])]
+    finally:
+        await ctx.close()
+
+
 async def _room_end(browser, base, name, win, width):
     ctx = await browser.new_context(viewport=_viewport(width))
     page = await ctx.new_page()
@@ -565,11 +621,13 @@ async def _room_end(browser, base, name, win, width):
         await ctx.close()
 
 
-def check_browser(root, games=None, rooms=None, widths=WIDTHS):
-    """Play every function-route end state, and every live room to a win and a loss, in Chromium."""
+def check_browser(root, games=None, rooms=None, styled=None, widths=WIDTHS):
+    """Play every function-route end state, and every live room to a win and a loss, in Chromium; measure every
+    roster page's line (contrast, and not in a row)."""
     from playwright.async_api import async_playwright
     games = list(FUNCTION_ROUTE) if games is None else games
     rooms = live_rooms(root) if rooms is None else rooms
+    styled = roster(root) if styled is None else styled
     proc, base = _serve(root)
 
     async def run():
@@ -583,9 +641,11 @@ def check_browser(root, games=None, rooms=None, widths=WIDTHS):
             jobs = [lim(_game_end_state(browser, base, g, s, c, st, w))
                     for w in widths for g in games for s, (c, st) in FUNCTION_ROUTE[g].items()]
             jobs += [lim(_room_end(browser, base, r, win, w)) for w in widths for r in rooms for win in (True, False)]
+            plays = len(jobs)
+            jobs += [lim(_page_style(browser, base, g)) for g in styled]
             out = await asyncio.gather(*jobs)
             await browser.close()
-            return [f for fs in out for f in fs], len(jobs)
+            return [f for fs in out for f in fs], plays
     try:
         return asyncio.run(run())
     finally:
@@ -628,7 +688,10 @@ def selftest():
         return check_static(d)[0]
 
     def log_laws(d):
-        return check_browser(d, games=["log-laws"], rooms=[], widths=(390,))[0]
+        return check_browser(d, games=["log-laws"], rooms=[], styled=[], widths=(390,))[0]
+
+    def styled(*slugs):
+        return lambda d: check_browser(d, games=[], rooms=[], styled=list(slugs))[0]
 
     def unplace_solve(d):
         edit(page(d, "log-laws"), lambda s: s.replace("if (window.MaffsInvite) MaffsInvite.place($('solveOver'));", "", 1))
@@ -644,6 +707,13 @@ def selftest():
         ("missing end-state mount (log-laws solve)", unplace_solve, log_laws, True),
         ("wrong slug", lambda d: edit(page(d), lambda s: s.replace("'%s')" % g, "'%s-x')" % g)), static, True),
         ("clean copy passes in Chromium", None, log_laws, False),
+        ("line the same colour as its card (Golf)", lambda d: edit(page(d, "estimation-golf"), lambda s: s.replace(
+            'id="teacherInvite" style="color:var(--ink)"', 'id="teacherInvite" style="color:var(--cream)"')),
+         styled("estimation-golf"), True),
+        ("line inside a button row", lambda d: edit(page(d, "complex-converter"), lambda s: s.replace(
+            'Menu</button>\n    </div>\n    ' + point, 'Menu</button>\n    ' + point + '\n    </div>')),
+         styled("complex-converter"), True),
+        ("clean pages pass the style check", None, styled("estimation-golf", "complex-converter", g), False),
         ("control after the line", lambda d: edit(page(d), lambda s: s.replace(
             point, point + '\n  <button onclick="startGame()">x</button>', 1)), static, True),
         ("function-route game never places", lambda d: edit(page(d, "factor-theorem"), lambda s: s.replace(
