@@ -431,6 +431,33 @@ styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours 
   320px, mouse at 1280 and 390px) with eight planted answer faults. A game that uses it measures its own
   phone fit with the panel open and closed, typing on the keypad (`verify-just-pythag-it-bruv.py`).
 
+**The phone keypad, `MaffsKeypad` (5 Oct 2026, PR #70; todo §3.21, Jon's ruling (b)).** MaffsKeypad is
+the phone keypad for every typed answer on the site, calculator or not: `schools/assets/keypad.js`
+(global `MaffsKeypad`), styled in `theme.css` (`.maffs-keypad*`: the calculator's phone keypad, same
+panel, five columns, 48px keys). **MaffsCalc composes it**: the answer mode above is MaffsKeypad driving
+the answer box (attributes, focus handling, the WebKit `pointerup` and ghost-click handling, the mark,
+typing, the fold scroll), with the calculator's own toggle, display and keys; `MaffsCalc.ANSWER` is passed
+in as its live switches and its class names are kept. So there is one copy of the answer-box behaviour.
+
+- **Mount:** `MaffsKeypad.mount(el, {targets, keys, maxLength, keepInView, foldInset})`. `targets` is one or
+  more inputs; the first is active to begin with, and a tap makes another the active one. Keys: 0-9, the
+  point, DEL, C, and a minus where the game asks for one (`keys: {minus: true}`; it types "-" into an empty
+  box only). The keys type into the active box only, at most `maxLength` characters (12), firing an
+  `input` event each.
+- **Touch screens only** (`(pointer: coarse)`, `MaffsKeypad.CONFIG.query`): every box is read-only with
+  `inputmode="none"` and never focused, so the system keyboard never opens. With a mouse nothing is drawn
+  and the boxes are ordinary inputs (`inputmode="decimal"` unless the page set its own).
+- **The active box** has a heavier border and outline plus the "typing here" tag, never colour alone. A box
+  narrower than the tag (four in a row on a 320px phone) gets the tag centred on it, its text shrunk so it
+  is at most 6px wider than the box each side, so it never lies over the next box, in any font.
+- **Where it loads:** any page, whatever its roster Calculator field: it has no calculator in it. A page
+  that loads `calculator.js` loads `keypad.js` too (before it); `scripts/check-calculator.py` checks both.
+- **Checked by** `scripts/check-keypad.py` (CI): 1, 2 and 4 boxes on touch phones at 320, 375 and 390px
+  (keys reach the active box only, DEL and C act on it alone, nothing editable is focused, the length limit
+  holds, one box marked and its tag over no other box, 48px keys, no sideways scroll, a box below the fold
+  brought into view with the keys, the minus key), ordinary inputs with a mouse, six planted faults.
+- **Rollout:** the other typed-answer games (todo §3.21's list) move onto it one game per contract.
+
 ---
 
 # 5. Timer Policy
