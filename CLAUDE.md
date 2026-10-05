@@ -38,7 +38,7 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (cloud, latest): SR-14 fix batch done, PRs #56-#60 and #62; KNOWN = 0
+## Handover — 2026-10-05 (cloud, latest): SR-14 fix batch done, PRs #56-#60, #62, #63; KNOWN = 0
 
 Jon's contract (clear SR-14 tier-(a) KNOWN to Truth Buster), one PR per step, each merged on a green Gate.
 - **#56 scanner** (`scripts/check-content-safety.py`): `displayed()` reduces a file to what a player can be shown
@@ -51,6 +51,9 @@ Jon's contract (clear SR-14 tier-(a) KNOWN to Truth Buster), one PR per step, ea
 - **#62 truth-buster tb_t2_012** (a true/false item, `answer:false`; the pairing is only its `counterexample`):
   mozzarella cheese consumption vs US civil engineering doctorates, r = 0.959 (2000-2009), from CC0 CRAN
   `spuriouscorrelations` 0.2 (`mozzarella_consumption`; r recomputed from the rows). `KNOWN = {}`.
+- **#63, same field:** the statement is about r = 1 exactly, so the box opens with an exact r = 1 non-causal
+  case (your age and an older sibling's age), mozzarella kept as real data that gets close (Jon's wording).
+  Fits 320/375/390 with no overflow. A counterexample must refute the statement as written, not a softer one.
 - **Next:** Jon's next contract. SR-14 KNOWN is empty, so any tier-(a) word in displayed text now fails CI.
 - **Gotchas:** "scan JS string literals" is not "displayed text": `'dead'` passed to `classList.toggle` is a
   string. Re-run an old-vs-new coverage diff after any change to `displayed()` (the PR #56 description has the
