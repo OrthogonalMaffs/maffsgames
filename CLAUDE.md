@@ -54,6 +54,28 @@ Jon's rulings of 5 Oct 18:10 cover three contracts; order chosen: SR-14 keys, th
 - **Then the teacher line on results screens:** 95 games (skip constructions-lab and trig-wars; their
   start-screen line stays). Survey: `docs/teacher-invite-results-survey.md` on the audit branch.
 
+## Handover — 2026-10-05 (cloud): DECIMAL DETECTIVE Place It on the snapped grid, PR #65 (audit F2-F4)
+
+Jon's contract (his F4 ruling). Audit class 3 (number-line tolerance) finished at the shared layer.
+- **Game:** Place It snaps to half a tick gap (`PLACEIT_STEPS = 20`; `markerPos` stays a fraction of the line,
+  so `check-resit-fixes.py`'s hooks still work); no value on the marker until Check; marked by
+  `MaffsNumberLine.placementCorrect({mode:'snapped'})`; ◀ ▶ step buttons (56×48) and arrow keys, hidden after
+  the answer; after Check the marker and the dashed ring show both positions and a wrong answer says "You placed
+  P. T is here."; a short phone (max-height 600px) trims the line's spacing, and Next is scrolled above the
+  footer after Check if it fell under it.
+- **Helper:** `number-line.js` has no continuous mode; any mode but 'snapped' throws "number-line placements
+  must snap (canon §7.1.2)". Canon §7.1.2 states the rule once.
+- **Checks:** `verify-decimal-detective.py` clicks all 21 grid positions of every item, checks no value is
+  visible before Check, reaches every target on 320/375/390 (touch) and the fold; self-test 7 faults.
+  `check-resit-fixes.py`'s planted DD fault is a one-step tolerance; the NNL verifier expects the new throw.
+- **Next:** the queue in the handover above. Open: Negative Number Line's marker label (Jon's separate
+  question); the game header's 320px overflow (todo §1.39, pre-existing).
+- **Gotchas:** in Playwright mobile emulation, `touchscreen.tap` after a programmatic `scrollIntoView` can land
+  ~30px off what `elementFromPoint` reports: tap with `locator.tap(position=...)`. A page wider than the
+  viewport makes mobile emulation zoom out (`innerHeight` 609 at 320×568 here): measure folds against
+  `innerHeight`. The sandbox has no WebKit, so `test-calculator-js.py` fails locally (CI has it).
+  `style.display = ''` on an element hidden by its stylesheet does not show it.
+
 ## Handover — 2026-10-05 (home): FERMI LAB cohort figure held once (FIG), 52-dle atoms claim, PR #64
 
 Jon's contract, from the quoted-statistics audit's STOP 2 and §4.
@@ -114,6 +136,7 @@ Jon's three contracts of 5 Oct, run in his order (2, 3, 1) under his rulings of 
   (canon §7.6.1). `scripts/verify-negative-number-line.py` (CI group B) proves every target reachable on 320/375/390.
 - **Next:** Jon's next contract (Estimation Engine is queued for the home session). Decimal Detective F2-F4 wait for
   Jon's F4 ruling; when it comes, build `MaffsNumberLine`'s continuous mode and move Decimal Detective onto it.
+  (Superseded: PR #65 resolved F2-F4 on the snapped grid and removed continuous mode.)
 - **Gotchas:** a new control on a phone screen can push the feedback below the fold: measure Next after a
   wrong answer at 320×568 (the NNL verifier does). In a cloud sandbox `esprima==4.0.1` fails to build (`install_layout`); its unpacked source tarball
   on `PYTHONPATH` is enough for `extract-banks.py` / `check-banks.py`. Editing a question changes its ledger
