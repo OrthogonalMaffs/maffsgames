@@ -57,6 +57,36 @@ locally, outside the repo; ask Jon if it is not to hand).
 - **Gotchas:** the Bash tool collapses `\` in heredocs: write edit scripts with the Write tool. SymPy test points
   must be 1-10 and non-integer (a pole at x = 2; e^x at x ~ 97 made unrelated equations look proportional).
   A tile containing `|` (|z|) broke a `|`-joined encoding: the lists are JSON arrays.
+## Handover — 2026-10-04 (cloud): ESTIMATION GOLF fits phones, PR #47 MERGED
+
+- **Trace:** the game had no phone CSS. A fixed `340px 1fr` grid (~815px) and a 473px level bar made the page
+  797px wide; `loadHole()` focuses the answer box on load, so the browser scrolled 336–371px sideways to it.
+  At 320 the right flag's pennant (`.flag::after`) also ran 6px past the edge.
+- **Fix:** one `@media (max-width: 820px)` block in the game's CSS (one column, hole card above the scorecard,
+  level bar wraps, title `min(2.4rem, 9.5vw)`, flag row padded for the pennant). `focus()` untouched. Every
+  level, full round, 320/375/390, normal and Aa: width = viewport, loads at 0,0. Desktop pixel-identical.
+  Both `tier1_phone_overflow` entries removed; tier 1's gate holds it now.
+- **Still open:** at 320×568 the answer box sits partly under the fixed footer (todo START). Audit F1–F5 are
+  a separate batch.
+- **Gotcha:** an element walk misses a pseudo-element past the edge; bisect by hiding elements and re-reading
+  `scrollWidth`. PR screenshots were committed, linked by hash, then removed in the next commit (no
+  `pr-assets` branch: this session pushes only its own branch).
+
+## Handover — 2026-10-04 (cloud): PROBABILITY PIONEER fixed + verified, PR #45 MERGED
+
+- **Fixed (resit audit, todo START batch 2):** Stage 3 Q7 "equally likely ⇒ 0.5" rekeyed False with Jon's
+  explanation (decision 4); lottery Unlikely only, rain Likely only (feedback says why); Q9 and Q13's
+  value-equal distractors replaced (1/2 counts the 4; 1/3 takes HH, one of each, TT as equally likely);
+  Q10 "tend to get closer"; Q20's key was already 3/5 (PR #36) and now gives its reason. F7 (baby) left.
+- **`scripts/verify-probability-pioneer.py` (CI, group B):** Stage 2 keys recomputed exactly from each stem
+  (a stem no reader understands fails: extend `stage2_value()`); Stage 1 and 3 keys pinned in reviewed
+  tables with reasons (re-review and update the table to change an item); every answer to all 45 items
+  clicked in Chromium. Failed on the pre-fix bank (9 FAILs).
+- **Jon's rulings on my two calls (4 Oct):** the optional Stage 2 `why` field stays, and its reasons for the
+  other 19 questions are content (PC drafts, Jon approves); "dice" vs "die" waits for Jon's ruling (PC
+  recommends "dice"). Both logged in todo START batch 2; Code Claude writes neither.
+- **Gotcha:** `check-resit-fixes.py`'s Q20 regex now allows fields after the options; extend it the same
+  way if another of its patterns meets a new field.
 
 ## Handover — 2026-10-04: TEACHER FEEDBACK LINE built, PR #44 (branch claude/teacher-invite)
 

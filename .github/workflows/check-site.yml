@@ -292,6 +292,9 @@ jobs:
           #    recomputed against its stated direction and strength; 300 deals; a full session with both
           #    variable names on screen BEFORE every answer (the audit's F1); every item fitted at three phone
           #    sizes. Thirteen planted faults.
+          #  - probability-pioneer: every Stage 2 key recomputed exactly from its stem, four options with
+          #    no two equal in value; Stage 1 and 3 keys pinned to a reviewed table; every answer to all
+          #    45 items clicked in Chromium. Failed on the pre-fix bank (resit audit F2-F6, F8).
           #  - just-pythag-it-bruv: 300 sessions; every triangle, key (exact or 1 d.p. half up),
           #    "Spotted it?" line and add-instead-of-subtract probe recomputed with exact fractions;
           #    round order, >=60% shorter-side, no run of three, plausible contexts; a session played
@@ -326,6 +329,7 @@ jobs:
               Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)|python scripts/verify-correlation-or-coincidence.py
               Equation Builder (every tile arrangement classified by SymPy; the page's ACCEPTED lists match)|python scripts/verify-equation-builder.py && python scripts/verify-equation-builder.py --selftest
               Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)|python scripts/check-resit-fixes.py
+              Probability Pioneer (Stage 2 keys recomputed, Stages 1 and 3 pinned, every answer marked in Chromium)|python scripts/verify-probability-pioneer.py
 
     steps:
       - uses: actions/checkout@v4

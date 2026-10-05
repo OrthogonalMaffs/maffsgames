@@ -194,7 +194,7 @@ START apply them. Decisions 3 and 5 are canon SR-13 (§0.3).
    is keyed True. True only if there are exactly two outcomes; as worded it teaches the 50-50
    misconception. Reword or rekey?
    - **Jon's ruling (4 Oct 2026):** rekey as False, with an explanation: the probability is 0.5 only
-     when there are exactly two outcomes; each face of a dice is equally likely, at 1/6.
+     when there are exactly two outcomes; each face of a dice is equally likely, at 1/6. **Done, PR #45.**
 5. **`equation-builder`:** when a question says "write the equation", is an equivalent rearrangement
    (`d = 80 ÷ tan 34°`) correct, and may the sides be swapped?
    - **Jon's ruling (4 Oct 2026): SR-13.** Equivalent rearrangements and swapped sides are accepted
@@ -1100,25 +1100,25 @@ Marking: Stage 1 `confirmScale()` compares the clicked float literal to `q.answe
 Items checked: all 45. Stage 2 keys recomputed exactly with Fraction from the question wording, options checked for key-once and value-equal pairs (scratchpad/work/probability-pioneer/check.py, output out.txt). Stage 1 and Stage 3 read and judged by hand.
 
 #### Faults
-- **F1 [HIGH]** year6 / Stage 2 Q20, index.html:333
+- **F1 [HIGH]** **RESOLVED** (key PR #36; reason line PR #45) year6 / Stage 2 Q20, index.html:333
   - Question: "P(letter in MATHS also in GAMES)"   Options: 2/5, 3/5, 1/5, 4/5
   - Keyed answer: 2/5   Correct answer: 3/5
   - Evidence: MATHS = {M, A, T, H, S}; GAMES = {G, A, M, E, S}; common letters M, A, S = 3 of 5. 3/5 is offered and marked wrong; feedback says "The correct answer is 2/5".
   - Share affected: 1 of 20 Stage 2 questions; every session (fixed order).
-- **F2 [HIGH, wording-dependent]** year6 / Stage 3 Q7, index.html:343
+- **F2 [HIGH, wording-dependent]** **RESOLVED PR #45** (rekeyed False, decision 4) year6 / Stage 3 Q7, index.html:343
   - Statement: "If two outcomes are equally likely, each has probability 0.5"   Keyed: True
   - As worded this is false in general: rolling a 1 and rolling a 2 on a die are two equally likely outcomes, each 1/6. It is only true if the experiment has exactly two outcomes, a condition the explanation adds ("If there are exactly two equally likely outcomes...") but the statement does not. A student who answers False for the right reason is marked wrong, and the True key reinforces the "it either happens or it doesn't, so 50-50" equiprobability misconception that probability teaching targets. Fix is a wording change ("If an experiment has exactly two outcomes and they are equally likely...").
   - Share affected: 1 of 15 Stage 3 statements.
-- **F3 [MEDIUM]** year6 / Stage 1 Q8, index.html:308
+- **F3 [MEDIUM]** **RESOLVED PR #45** (Unlikely only) year6 / Stage 1 Q8, index.html:308
   - Event: "You win the lottery with one ticket"   Keyed: Impossible (0), Unlikely (0.25) also accepted.
   - Marking is safe (Unlikely is accepted), but the feedback states a false fact: on any answer the text reads '"You win the lottery with one ticket" is Impossible.' (index.html:500/505), and the Impossible label is the one highlighted as correct (index.html:484). Winning with one ticket is possible (about 1 in 45 million for UK Lotto), so the right label is Unlikely; Impossible should not be the headline key, and the scale has no "very unlikely" point so 0.25 Unlikely is the best fit. Wrong explanation.
-- **F4 [MEDIUM, judgement call]** year6 / Stage 1 Q3, index.html:303
+- **F4 [MEDIUM, judgement call]** **RESOLVED PR #45** (Likely only) year6 / Stage 1 Q3, index.html:303
   - Event: "It will rain somewhere in Britain this week"   Keyed: Certain (1) only.
   - Not certain in the probability sense (P = 1); it is very likely. A student who picks Likely (0.75), arguably the more defensible answer, is marked wrong. Either accept Likely or reword (e.g. something genuinely certain).
-- **F5 [LOW]** year6 / Stage 2 Q9, index.html:322: "P(rolling greater than 4)", options 1/3, 2/3, 4/6, 1/6. Key 1/3 correct (5, 6 of 6), but two distractors, 2/3 and 4/6, are equal in value, so the question has only three distinct values. Also the stem does not say "on a die" (context implies it).
-- **F6 [LOW]** year6 / Stage 2 Q13, index.html:326: "P(heads twice in a row)", options 1/4, 1/2, 1/8, 2/4. Key 1/4 correct, but distractors 1/2 and 2/4 are equal in value (three distinct values).
-- **F7 [LOW, judgement call]** year6 / Stage 1 Q9, index.html:309: "A baby born today is a boy" keyed Even Chance. Conventional, though the real figure is about 0.51; acceptable at this level.
-- **F8 [LOW]** year6 / Stage 3 Q10, index.html:346: "The more times you repeat an experiment, the closer results get to theoretical probability" keyed True. Standard GCSE answer, but "tend to get closer" is the accurate form (it is not guaranteed to get closer with every extra trial).
+- **F5 [LOW]** **RESOLVED PR #45** (4/6 → 1/2; "on a dice") year6 / Stage 2 Q9, index.html:322: "P(rolling greater than 4)", options 1/3, 2/3, 4/6, 1/6. Key 1/3 correct (5, 6 of 6), but two distractors, 2/3 and 4/6, are equal in value, so the question has only three distinct values. Also the stem does not say "on a die" (context implies it).
+- **F6 [LOW]** **RESOLVED PR #45** (2/4 → 1/3) year6 / Stage 2 Q13, index.html:326: "P(heads twice in a row)", options 1/4, 1/2, 1/8, 2/4. Key 1/4 correct, but distractors 1/2 and 2/4 are equal in value (three distinct values).
+- **F7 [LOW, judgement call]** **open, judgement call (unchanged in PR #45)** year6 / Stage 1 Q9, index.html:309: "A baby born today is a boy" keyed Even Chance. Conventional, though the real figure is about 0.51; acceptable at this level.
+- **F8 [LOW]** **RESOLVED PR #45** ("tend to get closer") year6 / Stage 3 Q10, index.html:346: "The more times you repeat an experiment, the closer results get to theoretical probability" keyed True. Standard GCSE answer, but "tend to get closer" is the accurate form (it is not guaranteed to get closer with every extra trial).
 
 #### Clean
 - Stage 2: 19 of 20 keys recomputed exactly and correct; every key appears exactly once in its options; no distractor equal in value to the key (20/20).
@@ -1130,6 +1130,8 @@ Items checked: all 45. Stage 2 keys recomputed exactly with Fraction from the qu
 - Not run in a browser; marking paths read from source. Bank in data/banks matches source literals (45 items).
 
 **Reviewing session re-check:** F1 re-checked: :333 keyed "2/5"; the letters of MATHS also in GAMES are M, A, S, so 3/5. F2 re-checked: :343 keyed `true`.
+
+**Resolved, PR #45 (4 Oct 2026):** F1 to F6 and F8 fixed (F1's key was already fixed in PR #36; #45 adds its reason line); F7 left as a judgement call. The whole bank is now held in CI by `scripts/verify-probability-pioneer.py`: Stage 2 keys recomputed exactly from each stem, four options with none equal in value, Stage 1 and 3 keys pinned to a reviewed table with reasons, and every answer to all 45 items clicked in Chromium. It failed on the pre-fix bank (9 FAILs).
 
 
 ### Expected Damage (`expected-damage`)
