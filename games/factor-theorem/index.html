@@ -223,7 +223,7 @@ body.accessible{background-color:#12141f!important}
     </div>
     <div class="progress-pips" id="p-pips"></div>
     <div id="practice-area"></div>
-    <div id="practice-results" class="results" style="display:none"></div>
+    <div id="practice-results" class="results" style="display:none"><p id="teacherInvite"></p></div>
   </div>
 </div>
 
@@ -239,7 +239,6 @@ body.accessible{background-color:#12141f!important}
     <div id="test-results" class="results" style="display:none"></div>
   </div>
 </div>
-<p id="teacherInvite"></p>
 
 <script>
 // Wait for KaTeX to load
@@ -774,6 +773,7 @@ function renderPractice() {
       <div class="final-score">${pct}%</div>
       <div class="stats">${practiceState.score} / ${practiceState.maxScore} marks &middot; ${practiceState.hintsTotal} hints used</div>
       <button class="play-again" onclick="resetPractice()">Try Again</button>`;
+    if (window.MaffsInvite) MaffsInvite.place(resultsEl);
     if (typeof mfg === 'function') {
       mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: practiceState.score, questions_answered: questions.length, questions_correct: practiceState.answers.filter(a => a).length, mode: 'practice' });
     }
@@ -1039,6 +1039,7 @@ function renderTest() {
       <div class="stats">${pct}% &middot; ${mins}:${secs.toString().padStart(2,'0')}</div>
       ${testState.answers.some(a => !a.correct) ? '<div class="review-link" onclick="switchToLearn()">Review the worked examples for topics you found tricky</div>' : ''}
       <br><button class="play-again" onclick="resetTest()">Try Again</button>`;
+    if (window.MaffsInvite) MaffsInvite.place(resultsEl);
     if (typeof mfg === 'function') {
       mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: testState.score, questions_answered: questions.length, questions_correct: testState.answers.filter(a => a.correct).length, mode: 'test' });
     }

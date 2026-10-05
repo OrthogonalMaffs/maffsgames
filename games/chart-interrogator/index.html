@@ -187,7 +187,6 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   </div>
 
   <button class="start-btn" id="startBtn" disabled onclick="beginGame()">Start</button>
-<p id="teacherInvite"></p>
 </div>
 
 <div class="game-container" id="gameContainer">
@@ -207,7 +206,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
         <span class="timer-display" id="timer">0s</span>
       </div>
       <div id="completedQuestions"></div>
-      <div id="activeQuestion"></div>
+      <div id="activeQuestion"><p id="teacherInvite"></p></div>
     </div>
   </div>
 </div>
@@ -1160,6 +1159,7 @@ var multiplier = 1;
     '<div style="display:flex;gap:8px;"><button class="next-btn" onclick="nextScenario()">Next</button>'+
     '<button class="menu-btn" onclick="backToMenu()">Menu</button></div>';
   document.getElementById('activeQuestion').appendChild(bar);
+  if(window.MaffsInvite)MaffsInvite.place(document.getElementById('activeQuestion'));
 }
 
 function nextScenario(){

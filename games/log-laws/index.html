@@ -647,7 +647,6 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
     <div class="law-list" id="startLaws"></div>
     <div class="law-list" id="solveLawList" hidden></div>
     <button class="btn btn-primary" onclick="startGame()">Start Game</button>
-  <p id="teacherInvite"></p>
   </div>
 
   <!-- Main game -->
@@ -675,6 +674,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
     <button class="btn btn-primary" onclick="startGame()">Play Again</button>
     <button type="button" class="btn btn-secondary" onclick="LL_SOLVE.menu()">Change mode</button>
   <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
+  <p id="teacherInvite"></p>
   </div>
 
   <!-- Solve mode -->
@@ -1080,6 +1080,7 @@ function endGame() {
   window._ggAbandoned=false;
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
+  if (window.MaffsInvite) MaffsInvite.place(document.getElementById('gameOver'));
   document.getElementById('finalScore').textContent = score;
   document.getElementById('goDetail').textContent   = TOTAL + ' questions completed';
   const _acc=TOTAL>0?Math.round(_ggCorrectCount/TOTAL*100):0;
@@ -1913,6 +1914,7 @@ waitForKaTeX(buildRefPanels);
     cur = null;
     $('solveGame').classList.remove('visible');
     $('solveOver').classList.add('visible');
+    if (window.MaffsInvite) MaffsInvite.place($('solveOver'));
     $('solveFinal').textContent = sScore;
     $('solveDetail').textContent = sQueue.length + ' questions, ' + sCorrect + ' correct · Stage ' + sStage + ': ' + FAMILIES[sStage - 1].name;
     const acc = sQueue.length ? Math.round(sCorrect / sQueue.length * 100) : 0;
