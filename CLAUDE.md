@@ -38,48 +38,25 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest): EQUATION BUILDER marking, verifier + bank DONE, game NOT yet changed (branch claude/equation-builder-marking, no PR)
+## Handover — 2026-10-05 (latest): EQUATION BUILDER rebuilt, PR #49 (branch claude/equation-builder-marking)
 
-Jon's contract + his rulings of 21:04 (all applied). Resumed 5 Oct. **Next session:
-finish this contract first, then Jon's ESTIMATION ENGINE contract (sent the same evening; ask Jon to resend
-its text: it is not in the repo).**
-
-**Done (committed):**
-- `scripts/verify-equation-builder.py`: SymPy decides every accepted arrangement (formula / equation / expression
-  rules; `SPECIAL` holds the per-question rules, each with its one-line reason: l4_008 integrals as fixed symbols,
-  l4_021 key + swap, l4_023 r=1 and r=0, l4_033 / gcse_031 / gcse_039 key only, l4_015 formula for log(16),
-  l4_002 / l4_026 / l4_034 ± c). `--write` regenerates the page block; the check fails if the block differs,
-  any list is empty, a key is not in its own list, or an accepted build uses a tile outside the key and the
-  question's `valid` list; also confirms gcse_013's key is the midpoint of AB. `--selftest` 4/4 (clean, wrong
-  key, missing arrangement, value-equal distractor). Whole bank PASS, 435 accepted arrangements, ~3.5 min.
-- Bank (games/equation-builder/index.html): generated block `ACCEPTED` (arrays of tile strings) + `TILE_KINDS`
-  + `FULL_SLOTS` above the bank; `valid:[...]` on 28 questions (Jon's retags + l4_008 `+`, l4_023 `r=0`,
-  l4_026 `−`); second `+` tile on ks3_029 and l4_026 (keys were unbuildable live); replaced gcse_010 5/9, 4/10
-  -> 5/10, 3/9; l4_004 2×1 -> 3×4; l4_012 √(−9+9) -> √(3+3); gcse_013 now "midpoint of AB".
-- Gotchas: the Bash tool collapses `\` in heredocs (write edit scripts with the Write tool); test points must be
-  1-10 and non-integer (poles at x = 2; e^x at x ~ 97 made unrelated equations look proportional).
-
-**Done 5 Oct (committed):** game marking by `ACCEPTED` lookup (`builtSeq`/`wellFormed`/`updateCheck`/`checkAnswer`;
-slot-by-slot comparison deleted); Check appears when the filled prefix is grammar-valid; "Correct." / "Correct. Also
-written as:" / "That doesn't match the question yet." (tiles kept) / key shown on the 2nd wrong; standard-form
-tiles shown in brackets. **My call (flag in PR):** l4_034 got a second `−` tile so `− c` is buildable (as Jon ruled
-for ks3_029/l4_026). Chromium (scratch `eb_play.py`, 390px): 18 builds across all levels marked right, incl. all
-four contract examples, l4_023 r=0, l4_026/l4_034 − c, ks3_029; wrong path; gcse_010 tiles; brackets. 436
-accepted arrangements, verifier PASS.
-
-**Still to build (contract EXACT CHANGE 2-4), items 1-2 DONE:**
-1. (done) Game JS: marking = token sequence (filled slots, in order, as a prefix) in `ACCEPTED[id]`; delete the
-   slot-by-slot comparison. Check enabled when the filled prefix is grammar-valid (port `arrangements()`'s
-   automaton using `TILE_KINDS`: operand/op/eq/open/openx/close/lead), leftover tiles allowed; questions in
-   `FULL_SLOTS` (gap-fills + fixed specials) keep "all slots filled". Feedback: "Correct." / "Correct. Also
-   written as: <key>"; wrong 1st: keep tiles, "That doesn't match the question yet.", retry for 0.5;
-   wrong 2nd: show key. Standard-form tiles (4.013×10¹⁶, 3×10⁸, 5.97×10²⁴, 7.34×10²²) display in brackets.
-2. (done) Chromium: ≥10 F1/F3/F4/F8 arrangements across levels marked correct (incl. C = 3 + 2.50m, d = 80 ÷ tan34°,
-   360 = 3V ÷ 8, F = 9(l+w)); gcse_010's old build impossible.
-3. (done: group B, with --selftest; coverage PASS) CI: add the verifier (+ `--selftest`) to a content-verifier group in check-site.yml; check-verifier-coverage.
-4. (done: before four-quadrant-explorer, SUITE + WITHDRAWN updated, 31 cards) /resit/: relist at Foundation (`?level=ks3`) in its old place; check-resit-page.py WITHDRAWN/count.
-5. Docs: audit F1-F8 resolved (PR #); canon class-4 note (the ACCEPTED-list pattern for linear-equation-solver and
-   angle-ace); todo; this handover. Then PR, CI green, merge.
+Jon's contract + rulings of 4 Oct 21:04, all applied. **Next contract: Estimation Engine** (Jon's text is kept
+locally, outside the repo; ask Jon if it is not to hand).
+- **How it marks:** `scripts/verify-equation-builder.py` enumerates every grammar-valid tile arrangement (up to
+  the slot count, unused tiles allowed; gap-fill = placements), classifies each with SymPy (formula: lone subject
+  tile either side + equal value; equation: constant multiple or same real solution set, not an identity;
+  expression: equal value; `SPECIAL` = per-question rules with one-line reasons) and writes `ACCEPTED`,
+  `TILE_KINDS`, `FULL_SLOTS` into the page (`--write`). The game looks the filled slots up; Check appears when
+  the filled prefix is grammar-valid (gap-fills and fixed specials: all slots). CI (group B) fails on a list that
+  differs, an empty list, a key not in its own list, an accepted build using a tile outside key + `valid`, or
+  gcse_013's key not the midpoint of AB. `--selftest`: 4 cases. 436 arrangements; ~3.5 min.
+- **Data changes:** `valid` tags on 29 questions; tiles replaced on gcse_010 (5/10, 3/9), l4_004 (3×4), l4_012
+  (√(3+3)); second + on ks3_029 and l4_026, second − on l4_034 (**my call**, so − c is buildable); gcse_013 "AB".
+- **Verified:** Chromium at 390px, 18 builds across all levels + the wrong-answer path + gcse_010 tiles +
+  standard-form brackets (scratch script, not in the repo); /resit/ 31 cards.
+- **Gotchas:** the Bash tool collapses `\` in heredocs: write edit scripts with the Write tool. SymPy test points
+  must be 1-10 and non-integer (a pole at x = 2; e^x at x ~ 97 made unrelated equations look proportional).
+  A tile containing `|` (|z|) broke a `|`-joined encoding: the lists are JSON arrays.
 
 ## Handover — 2026-10-04: TEACHER FEEDBACK LINE built, PR #44 (branch claude/teacher-invite)
 

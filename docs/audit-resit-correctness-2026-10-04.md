@@ -704,6 +704,17 @@ l4_023, l4_024, l4_033, l4_034: integrals, sigma, matrices, LCM, two `=` signs) 
 **Reviewing session re-check:** F1 re-checked: `checkAnswer` compares `slotValues[i]===currentQ.slots[i]` slot by slot (:511-517); ks3_001's key is `C = 2.50m + 3` (:217), so `C = 3 + 2.50m` is marked wrong. F2 re-checked: OM = OC + CM = c + ½a; the key at :271 is `a + ½c`.
 
 
+**Resolved, PR #49 (5 Oct 2026), Jon's rulings of 4 Oct 21:04:** F1-F8 all fixed at the root. Marking is now a
+lookup in each question's ACCEPTED list, which `scripts/verify-equation-builder.py` computes with SymPy from the
+tiles (every well-formed arrangement, any length up to the slot count, unused tiles allowed) and CI holds the page
+to. F1 and F3: equal-value and equivalent forms and swapped sides accepted (SR-13). F2: gcse_013 now says "midpoint
+of AB", so the key a + ½c is right (the verifier checks the geometry). F4: sigma from r = 0 accepted. F5: gcse_010's
+5/9 and 4/10, l4_004's 2×1 and l4_012's √(−9+9) replaced; the verifier fails any accepted build that uses a
+distractor tile. F6: standard-form tiles display in brackets. F7: Check appears as soon as the built answer is
+well formed, leftover tiles allowed. F8: + c and − c both accepted (l4_002, l4_026, l4_034). Also found and fixed:
+ks3_029 and l4_026 keys could not be built at all (one + tile for two + slots); l4_034 likewise needed a second −
+for − c. Back on /resit/ at Foundation.
+
 ### Four Quadrant Explorer (`four-quadrant-explorer`)
 Resit card level: year6 (single level; `LEVEL = 'year6'`, line 241). Levels audited: year6 only, 45 items: Plot It 20
 (lines 199-204), Read It 15 (lines 206-222), Complete the Shape 10 (lines 224-235). Bank type: static.
