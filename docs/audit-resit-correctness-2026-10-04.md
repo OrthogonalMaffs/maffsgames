@@ -229,12 +229,12 @@ Marking:
 Items checked: all 45, recomputed with exact integer arithmetic (`scratchpad/work/extract.js`; output in `scratchpad/work/negative-number-line/check.txt`). Order: each `answer` equals `nums` sorted, and no duplicates. Calc: start ± val equals the answer, and the start and answer are both on the -10..10 line. Place: targets distinct and in range. Every calc item's distractor candidate set has at least 3 distinct values other than the key, so the random pad loop (:837) never runs. The Place It tolerance was enumerated for every target (`scratchpad/work/negative-number-line/place-tolerance.txt`) and reproduced in Chromium (`scratchpad/work/repro.py`, `scratchpad/work/repro-out.json`).
 
 #### Faults
-- **F1 [HIGH]** year6 / Place It, :282 (targets `0.5` and `-0.5`); marking at :550 and :583
+- **F1 [HIGH]** **RESOLVED** (exact match PR #36; shared `MaffsNumberLine` and step buttons PR #54) year6 / Place It, :282 (targets `0.5` and `-0.5`); marking at :550 and :583
   - Question: "Place 0.5 on the number line" (and "Place -0.5 …"). The line has a labelled tick at every integer from -10 to 10.
   - Keyed answer: 0.5. But the game also marks the whole-number ticks 0 and 1 correct (for -0.5, it marks -1 and 0 correct).
   - Evidence: a placement snaps to a multiple of 0.5, and the game accepts a placement within 0.5 of the target. For 0.5 that accepts {0, 0.5, 1}. Reproduced in Chromium: tapping 1 shows the marker label "1" and the feedback "Correct!", and the score goes up. The same happens at 0 for 0.5, and at -1 and at 0 for -0.5. So putting -0.5 at -1 or at 0, the misconception this item tests, is marked right.
   - Share affected: 2 of 15 Place It items (2 of 45 items).
-- **F2 [MEDIUM]** year6 / Place It, all integer targets (:282), same marking (:550, :583)
+- **F2 [MEDIUM]** **RESOLVED** (PR #36; PR #54 as F1) year6 / Place It, all integer targets (:282), same marking (:550, :583)
   - Question: e.g. "Place -3 on the number line".
   - Keyed answer: -3. Also accepted: -3.5 and -2.5. The marker's own label shows "-2.5" when the game says "Correct!".
   - Evidence: `|−2.5 − (−3)| = 0.5 <= 0.5`. Reproduced: tapping -2.5 shows the label "-2.5" and "Correct!"; tapping -2 is rejected. The half-unit band is probably meant to forgive a slightly-off tap. But the placement is snapped and labelled, so the student sees a wrong value accepted. Judgement call: a tolerance of 0.25 would still forgive the tap and reject the half-way points.
@@ -255,6 +255,16 @@ Items checked: all 45, recomputed with exact integer arithmetic (`scratchpad/wor
   - The wrong-answer Next is a plain button, not `MaffsNext` (no 3s floor, canon §7.6).
 
 **Reviewing session re-check:** F1 re-checked: taps snap to the nearest 0.5 (:550) and are accepted within ≤ 0.5 (:583); for the target 0.5 the snapped values 0 and 1 pass.
+
+**Resolved, PR #54 (5 Oct 2026), Jon's contract 1 and ruling (a) of 5 Oct 10:10:** PR #36 had already made the
+match exact; at 390px wide a 0.5 step is then 7.4px (5.8px at 320), too small to hit with a finger. Place It now
+marks through the shared `MaffsNumberLine.placementCorrect` (canon §7.1.2, audit class 3); the placed marker moves
+by 0.5 with ◀ ▶ step buttons (56×48px, below the line) and the arrow keys; its value is shown at 20px above the
+line; a wrong placement says "You placed P; T is here."; after the answer the controls hide so the feedback and
+Next stay above the fold. `scripts/verify-negative-number-line.py` (CI): Order Them and Calculate keys
+recomputed (all right), every target clicked on all 41 positions, and at 320/375/390 on a touch profile every
+target reached with one tap plus the step buttons. Its self-test plants a 0.5 tolerance in the helper. The LOW
+notes (Calculate distractors off the line; wrong-answer Next not `MaffsNext`) stay logged.
 
 
 ### Decimal Detective (`decimal-detective`)

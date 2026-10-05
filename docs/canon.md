@@ -612,6 +612,13 @@ capped below half the gap to the nearest one.**
   only. Equivalent forms such as 35.5 and 35.50 are the same number. A value estimated from a
   drawn graph takes a scale band (2.5% of the axis span, twice that for a difference of two
   readings), capped as above.
+- **A snapped, labelled placement is marked by exact match (`MaffsNumberLine`).** A marker that
+  snaps to a grid and shows its value is marked by `MaffsNumberLine.placementCorrect({placed,
+  target, mode: 'snapped'})` (`schools/assets/number-line.js`, 1e-9 guard only): any band of a grid
+  step or more accepts a neighbour while the marker's own label shows the wrong value. The line must
+  then let a phone reach every grid position (Negative Number Line's ◀ ▶ step buttons and arrow
+  keys, Jon 5 Oct 2026). A freely dragged marker (`mode: 'continuous'`) throws until Jon rules on the
+  resit audit's Decimal Detective F4. Held in CI by `scripts/verify-negative-number-line.py`.
 
 **Worked example 1, box plots** (Chart Interrogator).
 - **For a median:** the other group's median, and the box's own Q1 and Q3 (an edge read for the

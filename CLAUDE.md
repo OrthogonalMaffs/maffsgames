@@ -38,7 +38,7 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (cloud, latest): DECIMAL DETECTIVE (PR #50) and EXPECTED DAMAGE (PR #52) MERGED; Negative Number Line next
+## Handover — 2026-10-05 (cloud, latest): Jon's three contracts done: DECIMAL DETECTIVE (#50), EXPECTED DAMAGE (#52), NEGATIVE NUMBER LINE (#54)
 
 Jon's three contracts of 5 Oct, run in his order (2, 3, 1) under his rulings of 10:10.
 - **PR #50 (Decimal Detective, audit F1, F6, F7):** Place It's marker starts off the line (hidden) and Check is
@@ -49,10 +49,15 @@ Jon's three contracts of 5 Oct, run in his order (2, 3, 1) under his rulings of 
 - **PR #52 (Expected Damage, audit F1):** ed_gcse_011 (B 1 → 0 Muppets) and ed_gcse_018 (A 5 → 6) no longer tie,
   both keyed A; `scripts/verify-expected-damage.py` (CI group B) fails any tie and reads every shown outcome back.
   F2 (outcome draw) logged, not fixed.
-- **Next, in this session:** Negative
-  Number Line (Jon's ruling (a): exact match via the new shared `schools/assets/number-line.js`, ◀ ▶ step
-  buttons and arrow keys, the value shown above the line; canon §7.1.2 line in its docs PR).
-- **Gotchas:** in a cloud sandbox `esprima==4.0.1` fails to build (`install_layout`); its unpacked source tarball
+- **PR #54 (Negative Number Line, audit F1, F2; Jon's ruling (a)):** the shared `MaffsNumberLine`
+  (`schools/assets/number-line.js`, canon §7.1.2): snapped placements by exact match; continuous mode throws until
+  Jon rules on Decimal Detective F4. A 0.5 step is 7.4px at 390px, so ◀ ▶ step buttons (below the line) and the
+  arrow keys move the placed marker; its value shows at 20px above the line; the controls hide after the answer
+  (canon §7.6.1). `scripts/verify-negative-number-line.py` (CI group B) proves every target reachable on 320/375/390.
+- **Next:** Jon's next contract (Estimation Engine is queued for the home session). Decimal Detective F2-F4 wait for
+  Jon's F4 ruling; when it comes, build `MaffsNumberLine`'s continuous mode and move Decimal Detective onto it.
+- **Gotchas:** a new control on a phone screen can push the feedback below the fold: measure Next after a
+  wrong answer at 320×568 (the NNL verifier does). In a cloud sandbox `esprima==4.0.1` fails to build (`install_layout`); its unpacked source tarball
   on `PYTHONPATH` is enough for `extract-banks.py` / `check-banks.py`. Editing a question changes its ledger
   content id: a B11 entry for a pair you removed goes stale and fails CI, so run `check-banks.py --only <slug>
   --write-ledger` in the same PR.
