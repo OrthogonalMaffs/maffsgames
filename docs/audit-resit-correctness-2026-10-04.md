@@ -1151,12 +1151,12 @@ Marking: a two-way choice (Track A / Track B). `choseHigherEV = choice === q.hig
 Items checked: all 50. For each: both options' probabilities summed exactly (Fraction; source literals like `1/3` read as exact thirds), each track's E(X) recomputed, the higher track recomputed and compared with `higherEVOption`, stored `ev`/`evDifference`, `escapeEventPossible` vs sums below 1, every displayed probability passed through a copy of `formatProb()` (index.html:709) to confirm the shown % or fraction equals the stored value; all 14 word problems read against their outcome lists. The game's outcome draw (`resolveOutcome`, index.html:774) was modelled exactly and confirmed by a 2-million-draw Monte Carlo of the copied code. Scripts: scratchpad/work/expected-damage/check.py (out.txt), sim.py (sim_out.txt), mc.js (mc_out.txt).
 
 #### Faults
-- **F1 [HIGH]** gcse, index.html:514 (`ed_gcse_011`) and index.html:521 (`ed_gcse_018`): equal expected values, but one track is keyed as the only correct choice.
+- **F1 [HIGH]** **RESOLVED PR #52** (011: B's 1 → 0, E 5 vs 4.4; 018: A's 5 → 6, E 4.75 vs 4; SR-5) gcse, index.html:514 (`ed_gcse_011`) and index.html:521 (`ed_gcse_018`): equal expected values, but one track is keyed as the only correct choice.
   - ed_gcse_011: Track A "½ chance of 7, ½ chance of 3"; Track B "40% chance of 11, 60% chance of 1". E(A) = 3.5 + 1.5 = 5; E(B) = 4.4 + 0.6 = 5. Keyed: A only (the bank even stores `evDifference: 0.0`). Correct: either.
   - ed_gcse_018: Track A "¾ chance of 5, ¼ chance of 1"; Track B "⅓ chance of 12, ⅔ chance of 0". E(A) = 3.75 + 0.25 = 4; E(B) = 4 + 0 = 4. Keyed: A only (`evDifference: 0.0`). Correct: either.
   - A student who calculates correctly and picks B is counted as a non-optimal choice (lower Optimal Choices %, fewer stars, `correct:false` in analytics).
   - Share affected: 2 of 20 GCSE questions (10%, which meets the audit's share threshold for CRITICAL; graded HIGH because the miscount shows only in the end-of-session percentage and stars, not as a per-question "wrong"). Caller to rule.
-- **F2 [MEDIUM]** all levels, index.html:789 (and the "optimal" replay at index.html:812): the outcome draw does not follow the probabilities shown on screen whenever a track's probabilities total less than 1.
+- **F2 [MEDIUM]** **OPEN, logged** (not in contract 3) all levels, index.html:789 (and the "optimal" replay at index.html:812): the outcome draw does not follow the probabilities shown on screen whenever a track's probabilities total less than 1.
   - Code: escape if `roll > pSum`; otherwise `adjustedRoll = roll * Math.min(pSum, 1)` and the first outcome whose running total reaches `adjustedRoll` is hit. Given no escape, `roll` is already uniform on [0, pSum], so multiplying by pSum again squeezes it into [0, pSum²] and over-weights the first listed outcome. (Using `roll` itself would give exactly the stated probabilities.)
   - Example ed_ks3_014 (index.html:499), Track B shown "50% chance of 8, 30% chance of 2": the game actually hits 8 with probability 5/8 and 2 with 7/40 (escape 1/5 is right). Its E(B) as played is 5.35, not the stated 4.6, so the keyed track A (E = 5) yields fewer Muppets on average than B. Same flip on ed_gcse_016 (index.html:519): B played 5.44 vs keyed A 5. Monte Carlo of the copied code: ks3_014 B mean 5.349, gcse_016 B mean 5.443.
   - Share affected: 20 of 50 questions play outcomes at probabilities other than those displayed (ks3 3/15, gcse 9/20, core 8/15); on 2 of them (ks3_014, gcse_016) the track keyed as higher-EV is the lower-scoring one in play. Marking (`higherEVOption`) is unaffected, but the leaderboard score, the "Optimal play would have hit N" figure and the closing claim "The students who scored closest to optimal were not luckier. They calculated." rest on this draw.
@@ -1177,6 +1177,14 @@ Items checked: all 50. For each: both options' probabilities summed exactly (Fra
 - Not played in a browser; marking and draw paths read from source and the draw modelled exactly + Monte Carlo of the copied code.
 
 **Reviewing session re-check:** F1 re-checked: :514 (EV 5.0 and 5.0) and :521 (EV 4.0 and 4.0), `higherEVOption:'A'` in both; the choice is scored by `choice === q.higherEVOption` (:823).
+
+**Resolved, PR #52 (5 Oct 2026), Jon's contract 3 (change the numbers, SR-5):** F1 fixed. ed_gcse_011's Track B
+is now "40% chance of 11, 60% chance of 0" (E 4.4 against A's 5); ed_gcse_018's Track A is now "¾ chance of 6,
+¼ chance of 1" (E 4.75 against B's 4). Both stay keyed A, with `ev` and `evDifference` recomputed (SR-8). The bank
+is held in CI by `scripts/verify-expected-damage.py`: every probability read as an exact fraction, every E(X),
+`ev`, `evDifference` and `higherEVOption` recomputed, ties fail, story percentages checked against the outcomes,
+and every outcome line read back from the page. On the pre-fix bank it failed exactly the two ties. F2 to F7 are
+unchanged and stay logged.
 
 
 ### Given That (`given-that`)
