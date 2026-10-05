@@ -16,6 +16,9 @@ Fails on:
   - a game that includes calculator.js, or shows a "required" badge, when its roster field is
     anything else (the calculator never appears on a game that does not need it);
   - any other published page (not a roster game) that includes calculator.js;
+  - a page that includes calculator.js without schools/assets/keypad.js (MaffsKeypad, the phone
+    keypad its answer mode composes). keypad.js itself may load on any page, whatever the roster says:
+    it is the keypad for typed answers, with no calculator in it;
   - a roster value outside required / not allowed / optional / untagged; a roster with no rows at
     all (the table changed shape; this check is blind).
 
@@ -27,6 +30,9 @@ BASE = pathlib.Path(__file__).resolve().parent.parent
 ROSTER = ".claude/rules/game-roster.md"
 VALUES = {"required", "not allowed", "optional", "untagged"}
 INCLUDE = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/calculator\.js"', re.I)
+# The phone keypad (MaffsKeypad) may load on any page; the calculator composes it, so every page that
+# loads calculator.js loads keypad.js too.
+KEYPAD = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/keypad\.js"', re.I)
 BADGE = re.compile(r'<span class="calc-badge" data-calc="required"[^>]*>Calculator required</span>')
 # A game row: | 12 | Name | `slug` | ... | calculator |   (a withdrawn game is numbered "—")
 ROW = re.compile("^\\|\\s*(?:\\d+|—)\\s*\\|[^|]*\\|\\s*`([a-z0-9-]+)`\\s*\\|.*\\|\\s*([^|]*?)\\s*\\|\\s*$")
@@ -57,6 +63,9 @@ def check(root):
             continue
         src = page.read_text(encoding="utf-8")
         inc, badge = bool(INCLUDE.search(src)), bool(BADGE.search(src))
+        if inc and not KEYPAD.search(src):
+            fails.append("%s: loads the on-screen calculator without schools/assets/keypad.js, which its answer "
+                         "mode needs" % slug)
         if val == "required":
             if not inc:
                 fails.append("%s: roster says required, but the page does not load schools/assets/calculator.js" % slug)
@@ -114,6 +123,11 @@ def selftest():
                         lambda s: s.replace("</head>", '<script src="../../schools/assets/calculator.js"></script></head>', 1)), True),
         ("required tag dropped from the roster", lambda d: edit(d / ROSTER, retag(r, "required", "untagged")), True),
         ("a value outside the four", lambda d: edit(d / ROSTER, retag(o, "untagged", "maybe")), True),
+        ("other game loads the keypad only (allowed on any roster value)",
+         lambda d: edit(d / "games" / o / "index.html",
+                        lambda s: s.replace("</head>", '<script src="../../schools/assets/keypad.js"></script></head>', 1)), False),
+        ("required game without the keypad",
+         lambda d: edit(d / "games" / r / "index.html", lambda s: KEYPAD.sub("<script data-x", s)), True),
         ("a non-game page loads it",
          lambda d: (d / "about").mkdir() or (d / "about" / "index.html").write_text(
              '<script src="/schools/assets/calculator.js"></script>', encoding="utf-8"), True),

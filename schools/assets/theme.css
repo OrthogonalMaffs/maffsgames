@@ -196,11 +196,11 @@ code, kbd, samp, pre {
 .maffs-calc.compact .maffs-calc-key { min-height: 48px; -webkit-tap-highlight-color: transparent; }
 .maffs-calc.compact .maffs-calc-keys { gap: 5px; }
 .maffs-calc.compact .maffs-calc-panel { padding: .4rem; }
-.maffs-calc-screen.maffs-calc-selected, input.maffs-calc-selected {
+.maffs-calc-screen.maffs-calc-selected, input.maffs-calc-selected, input.maffs-keypad-selected {
   border-color: var(--accent, var(--text)); outline: 2px solid var(--accent, var(--text)); outline-offset: 0;
 }
-.maffs-calc-answer-host { position: relative; }
-.maffs-calc-cue {
+.maffs-calc-answer-host, .maffs-keypad-answer-host { position: relative; }
+.maffs-calc-cue, .maffs-keypad-cue {
   display: none; position: absolute; z-index: 1; padding: 0 .3em; border-radius: 4px;
   background: var(--surface); color: var(--text); font-family: var(--font-text);
   font-size: .62rem; font-weight: 700; line-height: 1.25; letter-spacing: .04em;
@@ -208,4 +208,39 @@ code, kbd, samp, pre {
 }
 .maffs-calc-screen .maffs-calc-cue { top: -.6em; right: .6rem; }
 .maffs-calc-screen.maffs-calc-selected .maffs-calc-cue { display: block; }
-.maffs-calc-cue-answer:not([hidden]) { display: block; }
+.maffs-calc-cue-answer:not([hidden]), .maffs-keypad-cue-answer:not([hidden]) { display: block; }
+
+/* The phone keypad, MaffsKeypad (schools/assets/keypad.js, canon §4.4): digits, the point, DEL and C
+   (a minus where a game asks for one), typing into whichever answer box is marked. Drawn on touch screens
+   only, with the look and sizes of the calculator's phone keypad: the same panel, five columns, 48px keys.
+   MaffsCalc's answer mode marks its answer box through the same component, under its own class names. */
+.maffs-keypad { width: 100%; display: flex; justify-content: center; }
+.maffs-keypad[hidden] { display: none !important; }
+.maffs-keypad-panel {
+  width: 100%;
+  max-width: 340px;
+  padding: .4rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+}
+.maffs-keypad-keys { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; }
+.maffs-keypad-key {
+  min-height: 48px;
+  min-width: 0;
+  padding: 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-num);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.maffs-keypad-key.op { color: var(--muted); }
+.maffs-keypad-key.wide { grid-column: span 2; }
+.maffs-keypad-key:active { background: var(--border); }
+.maffs-keypad-key:disabled { opacity: .28; cursor: not-allowed; }
