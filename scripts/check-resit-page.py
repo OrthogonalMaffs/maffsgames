@@ -35,13 +35,14 @@ PAGE = "resit/index.html"
 
 # Jon, 3 Oct 2026: the suite, by topic, in this order. shape-shifter added 4 Oct 2026 (Jon: G7
 # transformations banded STRETCH). Three withdrawn 4 Oct 2026 (WITHDRAWN below); correlation-or-coincidence
-# returned the same day, rebuilt (labels before the answer, three answers, SR-14).
+# returned the same day, rebuilt (labels before the answer, three answers, SR-14); equation-builder returned
+# 5 Oct 2026, its marking rebuilt (SR-13, the verifier's ACCEPTED lists).
 SUITE = [
     ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
         "estimation-golf", "unit-converter"]),
     ("algebra", "Algebra", ["formula-plug-in", "like-terms-collector", "linear-equation-solver",
-        "four-quadrant-explorer", "formula-unlocked", "formula-forge", "sequence-solver"]),
+        "equation-builder", "four-quadrant-explorer", "formula-unlocked", "formula-forge", "sequence-solver"]),
     ("ratio", "Ratio, proportion and percentages", ["split-it", "proportion-blaster",
         "better-value", "percentage-flip"]),
     ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter"]),
@@ -55,8 +56,8 @@ EXCLUDED = {"prime-or-composite": "numbers up to 9,973; needs a Foundation-range
             "bearing-blitz": "bearings are out as a topic"}
 # Jon, 4 Oct 2026: withdrawn from the page pending a rebuild (resit correctness audit, PR #35). Each
 # stays live on the portal; it returns by moving it back into SUITE in the rebuild's PR.
-WITHDRAWN = {"estimation-engine": "1-5% bands mark the GCSE 1 s.f. method wrong; rebuild under SR-12",
-             "equation-builder": "slot-by-slot marking rejects equally correct arrangements"}
+# equation-builder relisted 5 Oct 2026: marking rebuilt on scripts/verify-equation-builder.py's ACCEPTED lists (SR-13).
+WITHDRAWN = {"estimation-engine": "1-5% bands mark the GCSE 1 s.f. method wrong; rebuild under SR-12"}
 # Jon, 4 Oct 2026 (resit audit, decision 8): cards whose opening level Jon has ruled. A card for one of
 # these games must carry this level key. estimation-golf's Starter is 8 of 20 general-knowledge items.
 RULED_LEVEL = {"estimation-golf": "ks3"}
@@ -213,7 +214,7 @@ def selftest(page, portal, refs, game_src):
         return []   # the real run reports them
     first = re.search(r'<a class="card" href="/games/([a-z0-9-]+)/', page).group(1)
     faults = {
-        "a withdrawn game added back": page.replace("</main>", '<a href="/games/equation-builder/">x</a></main>'),
+        "a withdrawn game added back": page.replace("</main>", '<a href="/games/estimation-engine/">x</a></main>'),
         "an excluded game added": page.replace("</main>", '<a href="/games/prime-or-composite/">x</a></main>'),
         "a card removed": re.sub(r'<a class="card" href="/games/%s/.*?</a>' % first, "", page, count=1, flags=re.S),
         "a Starter card relabelled": page.replace('data-label="Starter" data-key="year6"', 'data-label="Year 6" data-key="year6"', 1),

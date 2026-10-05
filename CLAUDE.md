@@ -20,6 +20,14 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
+## Checkpoint discipline, not a context stop (Jon, 5 Oct 2026)
+
+No contract stops at "context passes 60%": that line is removed from every STOP IF, in current and future
+contracts. A session cannot measure its own context; Jon can, and clears when needed. Instead:
+- **Commit and push at every milestone** (a verifier passing, a bank written, a UI change working, docs done).
+- **Keep the CLAUDE.md handover on the branch current as you go**, so a clear at any moment loses nothing:
+  what is done, what is next, and anything learned that the next session needs.
+
 ## Before pushing: `python scripts/check-changed.py`, not the full local suite (canon §7.8, 4 Oct 2026)
 
 This replaces "full local suite before every push", including in contracts that still say it. It runs
@@ -30,7 +38,26 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-04 (latest, cloud): ESTIMATION GOLF fits phones, PR #47 MERGED
+## Handover — 2026-10-05 (latest): EQUATION BUILDER rebuilt, PR #49 (branch claude/equation-builder-marking)
+
+Jon's contract + rulings of 4 Oct 21:04, all applied. **Next contract: Estimation Engine** (Jon's text is kept
+locally, outside the repo; ask Jon if it is not to hand).
+- **How it marks:** `scripts/verify-equation-builder.py` enumerates every grammar-valid tile arrangement (up to
+  the slot count, unused tiles allowed; gap-fill = placements), classifies each with SymPy (formula: lone subject
+  tile either side + equal value; equation: constant multiple or same real solution set, not an identity;
+  expression: equal value; `SPECIAL` = per-question rules with one-line reasons) and writes `ACCEPTED`,
+  `TILE_KINDS`, `FULL_SLOTS` into the page (`--write`). The game looks the filled slots up; Check appears when
+  the filled prefix is grammar-valid (gap-fills and fixed specials: all slots). CI (group B) fails on a list that
+  differs, an empty list, a key not in its own list, an accepted build using a tile outside key + `valid`, or
+  gcse_013's key not the midpoint of AB. `--selftest`: 4 cases. 436 arrangements; ~3.5 min.
+- **Data changes:** `valid` tags on 29 questions; tiles replaced on gcse_010 (5/10, 3/9), l4_004 (3×4), l4_012
+  (√(3+3)); second + on ks3_029 and l4_026, second − on l4_034 (**my call**, so − c is buildable); gcse_013 "AB".
+- **Verified:** Chromium at 390px, 18 builds across all levels + the wrong-answer path + gcse_010 tiles +
+  standard-form brackets (scratch script, not in the repo); /resit/ 31 cards.
+- **Gotchas:** the Bash tool collapses `\` in heredocs: write edit scripts with the Write tool. SymPy test points
+  must be 1-10 and non-integer (a pole at x = 2; e^x at x ~ 97 made unrelated equations look proportional).
+  A tile containing `|` (|z|) broke a `|`-joined encoding: the lists are JSON arrays.
+## Handover — 2026-10-04 (cloud): ESTIMATION GOLF fits phones, PR #47 MERGED
 
 - **Trace:** the game had no phone CSS. A fixed `340px 1fr` grid (~815px) and a 473px level bar made the page
   797px wide; `loadHole()` focuses the answer box on load, so the browser scrolled 336–371px sideways to it.

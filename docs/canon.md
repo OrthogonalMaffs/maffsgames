@@ -519,6 +519,15 @@ closed them had shipped. The four, and what closed them, are in §8.1.
 - Answer matching via `dataset.val` always — never compare rendered HTML strings
 - Session-length controls use `MaffsSession` (`schools/assets/session-length.js`) — never
   hand-roll one, the same pattern as `MaffsOptions` for answer options
+- **Marking by structure, not value (audit class 4): the ACCEPTED-list pattern** (Equation Builder, PR #49,
+  5 Oct 2026). When a game assembles an answer from tiles or steps, correctness is decided once, offline, by a
+  verifier: it enumerates every well-formed answer the student can build, classifies each with SymPy (SR-13:
+  equal value, or the same solution set and not an identity; per-question exceptions recorded in the verifier
+  with a one-line reason), and writes the accepted list into the page as data. The game only looks answers up;
+  it never compares slot by slot or evaluates anything. The verifier fails CI if the page's lists differ from
+  what it computes, if a key is not in its own list (an unbuildable key), or if an accepted answer uses a tile
+  tagged as a distractor (SR-4 applied to tiles). `scripts/verify-equation-builder.py` is the reference;
+  linear-equation-solver and angle-ace reuse the pattern in their own contracts.
 - The teacher feedback line uses `MaffsInvite` (`schools/assets/teacher-invite.js`, Jon, 4 Oct 2026):
   one small line, "Using this with a class? I'd love to hear how it went. — Jon", linking to
   `/feedback/?type=classroom&game=<slug>` in a new tab. Every roster game has one empty mount point
