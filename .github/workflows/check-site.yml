@@ -180,9 +180,11 @@ jobs:
           # escape room's student-facing text: tier (a) words fail anywhere, tier (b) (illness, injury) only
           # in humour fields; technical terms and Tax Theft allowlisted. The hits present on 4 Oct 2026 are
           # KNOWN (reported, never failed: todo's SR-14 fix batch); a new hit or a stale KNOWN count fails.
-          # The teacher-line check (stdlib, under a second): every roster game loads schools/assets/teacher-invite.js
-          # and mounts it once with its own directory name; the escape-room engine mounts it for every live room;
-          # /leaderboards/ mounts it with no game; the link text is Jon's exact wording (4 Oct 2026).
+          # The teacher-line check (about 40s with its self-test): every roster game loads schools/assets/teacher-invite.js
+          # and mounts it once with its own directory name, on its results screen after the last control row (Jon,
+          # 5 Oct 2026; two games with no end keep the start screen, one is pending a rebuild); the four function-route
+          # games are played to every end state, and every live escape room to a win and a loss, in Chromium at 390
+          # and 1280px; /leaderboards/ mounts it with no game; the link text is Jon's exact wording (4 Oct 2026).
           - name: Tiers 1 + 2 (page load, hang-loop scan)
             timeout: 15
             checks: |
@@ -198,7 +200,7 @@ jobs:
               GCSE Resit page (every game live, mapped, offering the level its card names; SR-11)|python scripts/check-resit-page.py
               Calculator (canon 4.4: the on-screen calculator loads exactly where the roster says required)|python scripts/check-calculator.py
               Content safety (canon SR-14 tiers: no new banned wording, no illness or injury in humour)|python scripts/check-content-safety.py
-              Teacher feedback line (every game mounts it with its own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
+              Teacher feedback line (on every results screen, played in Chromium; own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
