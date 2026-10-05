@@ -38,7 +38,7 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (home, latest): AUDIT PHASE 1 reported (PR #AUDIT); NEXT = audit phase 2, then the teacher line
+## Handover — 2026-10-05 (home, latest): AUDIT PHASE 1 reported (PR #68); NEXT = audit phase 2, then the teacher line
 
 - **Audit phase 1** (branch `claude/peaceful-mayer-3ktsgv`): `docs/audits/quoted-statistics-2026-10.md` (findings,
   effects, for-Jon list) + `...-ledger.md` (one line per figure with its URL). The STOP file is folded in and deleted.
