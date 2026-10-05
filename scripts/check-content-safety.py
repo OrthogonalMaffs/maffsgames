@@ -34,7 +34,12 @@ displayed() to the text a player can be shown, everything else blanked with its 
         toggle/contains/replace(...)); selectors (getElementById, querySelector(All), closest, matches,
         getElementsByClassName); attribute names, and setAttribute's value for a CODE_ATTRS name.
   A string the code shows (textContent, innerHTML, a bank field, a ternary branch) is still read.
-Whole words, case-insensitive.
+  Lookup strings are code too: g['x'], 'x' in g, hasOwnProperty('x'), Object.hasOwn(g, 'x').
+Keys are the exception (Jon, 5 Oct 2026, option 1): a tier-(a) word is banned as an object key anywhere,
+because Object.keys / entries / for...in can put a key on screen. A key is one a script defines: an object
+literal key, quoted or bare ({dead: 1}, {'dead': 1}), or a property written by assignment (g.dead = ...,
+g['dead'] = ...). Reading a property (g.dead, g['dead']) is a lookup, not a key, and is not a hit.
+Whole words, case-insensitive (a camelCase key such as deadCount is one word, so not a hit).
 
 It is a word list, so it is a net, not a judge: a hit means "look". Every hit present when a tier was set
 is in KNOWN, for Jon to rule on: reported, never failed. A hit not in KNOWN fails (a new one, or one more
@@ -130,6 +135,11 @@ _DOM_CALL = re.compile(r"(?:classList\s*\.\s*(?:add|remove|toggle|contains|repla
                        r"getElementsByClassName|getElementsByTagName|querySelector|querySelectorAll|closest|"
                        r"matches))\s*$")
 _ATTR_CALL = re.compile(r"\b(?:set|get|has|remove|toggle)Attribute(?:NS)?\s*$")
+# A call whose string arguments are property names looked up (Jon, 5 Oct 2026: lookup strings are code).
+_LOOKUP_CALL = re.compile(r"\b(?:hasOwnProperty|hasOwn|propertyIsEnumerable)\s*$")
+# A property written: `= ` but not `==`, `===` or `=>` (+= too).
+_KEY_ASSIGN = re.compile(r"\s*\+?=(?![=>])")
+_KEYS = None        # while key_spans() runs: the (start, end) of every object key the script defines
 _NAME_ASSIGN = re.compile(r"\s*\+?=(?!=)")
 _NEXT = re.compile(r"\s*")
 _WS = re.compile(r"[ \t\r]+")
@@ -198,7 +208,7 @@ def _string_end(src, pos, end):
 def _js(src, pos, end, out, brace_stop=False):
     """Keep the displayed strings of the JavaScript in src[pos:end]; returns where it stopped (at the '}'
     closing a template's ${...} when brace_stop)."""
-    frames, depth, assign, prev = [], 0, None, ""
+    frames, depth, assign, prev, member = [], 0, None, "", False
     while pos < end:
         c = src[pos]
         if c in " \t\r":
@@ -243,11 +253,20 @@ def _js(src, pos, end, out, brace_stop=False):
                 body = src[pos + 1:after - 1]
             frame = frames[-1] if frames else None
             nxt = _NEXT.match(src, after, end)
-            is_code = (assign is not None
+            is_key = prev in ("{", ",") and nxt.end() < end and src[nxt.end()] == ":" and c != "`"
+            # g['x'] (a member lookup, or a write when '] =' follows) and 'x' in g
+            is_member = (prev == "[" and member and nxt.end() < end and src[nxt.end()] == "]")
+            if is_member and _KEY_ASSIGN.match(src, nxt.end() + 1, end):
+                is_key = True
+            is_lookup = is_member or re.match(r"\s*in(?![\w$])", src[after:after + 8]) is not None
+            if is_key and _KEYS is not None:
+                _KEYS.append((pos + 1, after - 1))
+            is_code = (is_lookup
+                       or assign is not None
                        or (frame is not None and frame["dom"])
                        or (frame is not None and frame["attr"] and (frame["args"] == 0 or frame["first"] in CODE_ATTRS))
                        or prev == "case"
-                       or (prev in ("{", ",") and nxt.end() < end and src[nxt.end()] == ":" and c != "`"))
+                       or is_key)
             if frame is not None and frame["attr"] and frame["args"] == 0:
                 frame["first"] = body.lower()
             if not is_code:
@@ -279,15 +298,22 @@ def _js(src, pos, end, out, brace_stop=False):
             if (word in ("className", "id") and src[max(0, pos - 40):pos].rstrip().endswith(".")
                     and _NAME_ASSIGN.match(src, i)):
                 assign = (len(frames), depth)
+            if _KEYS is not None:
+                nxt = _NEXT.match(src, i, end).end()
+                bare = prev in ("{", ",") and src[nxt:nxt + 1] == ":" and src[nxt:nxt + 2] != "::"
+                if bare or (prev == "." and _KEY_ASSIGN.match(src, i, end)):
+                    _KEYS.append((pos, i))
             prev, pos = word, i
             continue
         if c.isdigit():
             pos = _NUM.match(src, pos, end).end()
             prev = "num"
             continue
+        if c == "[":
+            member = prev in (")", "]", "str") or (prev[:1].isalpha() or prev[:1] in "_$") and prev not in _REGEX_AFTER
         if c == "(":
             before = src[max(0, pos - 80):pos]
-            frames.append({"dom": bool(_DOM_CALL.search(before)), "attr": bool(_ATTR_CALL.search(before)),
+            frames.append({"dom": bool(_DOM_CALL.search(before) or _LOOKUP_CALL.search(before)), "attr": bool(_ATTR_CALL.search(before)),
                            "args": 0, "first": None})
         elif c == ")":
             if frames:
@@ -322,6 +348,18 @@ def displayed(src, js=False):
     return "".join(out)
 
 
+def key_spans(src, js=False):
+    """[(start, end)] of every object key the file's scripts define (an object literal key, or a property
+    written by assignment). Keys are code to displayed(), but a tier-(a) key is banned anywhere."""
+    global _KEYS
+    _KEYS = []
+    try:
+        displayed(src, js)
+        return _KEYS
+    finally:
+        _KEYS = None
+
+
 @functools.lru_cache(maxsize=None)
 def hits_in(text, js=False):
     """[(line, word)] for one file: tier (a) in displayed text, tier (b) in displayed text inside humour fields."""
@@ -329,6 +367,8 @@ def hits_in(text, js=False):
     code = student_text(text)                    # the humour keys are code, so they are found in the source
     line = lambda pos: shown.count("\n", 0, pos) + 1
     out = [(line(m.start()), m.group(1).lower()) for m in A_RE.finditer(shown)]
+    for a, b in key_spans(text, js):             # tier (a) as an object key: banned anywhere (Jon, 5 Oct 2026)
+        out += [(line(a + m.start()), m.group(1).lower()) for m in A_RE.finditer(ALLOW_RE.sub(_blank, text[a:b]))]
     for h in HUMOUR_RE.finditer(code):
         out += [(line(h.start(1) + m.start()), m.group(1).lower())
                 for m in B_RE.finditer(shown[h.start(1):h.end(1)])]
@@ -426,18 +466,26 @@ def _selftest_snippets():
         "tier (a) in a .js bank string": ("window.ROOM = {flavour: 'A dead plant.'};", True),
         "tier (a) in an alt attribute": ("<img alt=\"a dead tree\" src=\"x.webp\">", False),
         "tier (a) in an onclick string": ("<button onclick=\"say('it is dead')\">Go</button>", False),
+        # Keys (Jon, 5 Oct 2026, option 1): banned anywhere, since enumeration can show them.
+        "case 23: a bare key shown by Object.keys / for...in": ("<script>var g = {dead: 1, alive: 2};\n"
+                                                              "for (var k in g) el.textContent += k;\n"
+                                                              "el.title = Object.keys(g).join(', ');</script>", False),
+        "tier (a) as a quoted object key": ("<script>var s = {'dead': 1, \"killed\": 2};</script>", False),
+        "tier (a) as a property written by dot": ("<script>worm.dead = true;</script>", False),
+        "tier (a) as a property written by bracket": ("window.G = {}; G['killed'] = 3;", True),
     }
     quiet = {
         "comments, CSS and 'die'": ("<style>.dead{}</style><!-- murder --><script>/* drowning */\n// killed\n</script><p>Roll a fair die.</p>", False),
         "tier (b) in a neutral context (tier c)": ("<p>A test for a disease is given to 1000 patients in a hospital.</p>", False),
         "allowlisted terms": ("<h1>Prisoner's Dilemma</h1><p>Base rate neglect.</p><a href='/games/tax-theft/'>Tax Theft</a>", False),
         "allowlisted idioms": ("<p>Half dead. Three quarters dead. One kills the claim. What has the doctor neglected?</p>", False),
-        "tier (a) as a JS identifier": ("<script>let dead = 0; dead++; worm.dead = true; function kill(){}</script>", False),
+        "tier (a) as a JS identifier": ("<script>let dead = 0; dead++; if (worm.dead === true) kill(); function kill(){}</script>", False),
         "tier (a) as a CSS class name": ("<script>d.className = 'life ' + (i < n ? 'alive' : 'dead');\n"
                                          "el.classList.toggle('dead', !t.alive);</script><div class=\"dead\">ok</div>", False),
         "tier (a) as an id or selector": ("<script>document.getElementById('dead').id = 'killed';"
                                           "document.querySelector('.dead');</script>", False),
-        "tier (a) as an object key": ("<script>var s = {'dead': 1, \"killed\": 2};</script>", False),
+        "case 24: lookup strings": ("<script>if (g['dead'] || 'killed' in g || g.hasOwnProperty('dead') ||\n"
+                                    "    Object.hasOwn(g, 'killed') || g.dead) go(g['dead'] == 1);</script>", False),
         "tier (a) as a .js identifier": ("function paintDead(dead) { return dead.killed; }", True),
     }
     for name, (text, js) in loud.items():
