@@ -107,3 +107,27 @@ COMPUTED (definition or arithmetic, no search needed).
 - ball-bearings-global.ANS | 150,000,000,000 balls ("~150-200 billion balls/year") | "over 18 billion ball bearings produced annually" (bearings, not balls); US alone 5.778 billion balls in 2008 | https://en.wikipedia.org/wiki/Ball_(bearing) | UNVERIFIABLE (no source counts balls worldwide; 18bn bearings x ~10 balls would be ~180bn)
 - uk-photos-daily.s2 / ANS | 3 photos per user per day; 165,000,000 a day ("True figure likely 100-200M/day") | average Brit takes 884 photos a year (2.4/day); giffgaff: 328 million phone photos a week (47M/day) | https://www.grimsbytelegraph.co.uk/news/uk-world-news/now-take-450-selfies-year-3659537 ; https://www.giffgaff.com/blog/we-take-over-328-million-pictures-on-our-phones-each-week | s2 VERIFIED (2.4/day); ANS UNVERIFIABLE (sources disagree: 47M-133M a day)
 - eq_bus_distance.s1 | 4,000 students (hint: "20% are school-age ... 40% use buses") | 0-18s are ~22% of the population; NTS: 31% of 11-16s travelled to school by bus (2006), 35-47% for trips over 2 miles | https://dera.ioe.ac.uk/id/eprint/8703/1/school.pdf | VERIFIED (ratio ~1.3)
+
+## Higher Power (keyed card values; the comparison's answer depends on them)
+
+- ks3_32 | speed of light 299,792,458 m/s | exact by definition of the metre | https://en.wikipedia.org/wiki/Metre | VERIFIED
+- ks3_33 | Moon 384,400 km | NASA average 384,400 km (363,300-405,500) | https://api2.apination.com/?p=22775 | VERIFIED
+- ks3_34 | Sun 149,600,000 km; "light takes 8 minutes 20 seconds" | 1 AU = 149,597,870.7 km; light ~8 min 20 s | https://www.space.com/17081-how-far-is-earth-from-the-sun.html | VERIFIED
+- gcse_29 | speed of sound 343 m/s | 343.2 m/s in dry air at 20°C | https://en.wikipedia.org/wiki/Speed_of_sound | VERIFIED (the card does not state 20°C)
+- gcse_30 | absolute zero -273.15°C | exact by definition | https://astro4edu.org/resources/glossary/term/3/ | VERIFIED
+- gcse_31 | Earth's radius 6,371 km | IUGG mean radius ~6,371 km | https://en.wikipedia.org/wiki/Earth_radius | VERIFIED
+- gcse_32 | world population ~8 x 10^9 | ~8.2 billion mid-2024 (UN WPP 2024) | https://www.un.org/sustainabledevelopment/blog/2024/07/press-release-wpp2024/ | VERIFIED
+- gcse_34 | largest Mersenne exponent 136,279,841 | M136279841, found 12 Oct 2024, still the largest known as of Sep 2026 | https://www.mersenne.org/primes/?press=M136279841 ; https://en.wikipedia.org/wiki/Largest_known_prime_number | VERIFIED, DATED: review-by note in todo (stale when GIMPS finds M53)
+- al_33, al_31 fact | atoms in the observable universe ~10^80 | ~10^80 (range 10^78-10^82) | https://proofwiki.org/wiki/Number_of_Atoms_in_Observable_Universe | VERIFIED
+- razor_02 | g ~ 9.81 m/s² | standard gravity 9.80665 m/s² | https://en.wikipedia.org/wiki/Standard_gravity | VERIFIED
+- ks3_22 | days in a year 365 ("Actually 365.2422") | mean tropical year 365.24219 days | https://encycloreader.org/r/citizendium.php?q=Year | VERIFIED
+- ks3_21, ks3_23-25 | seconds/hours/minutes in a day/year/week | arithmetic | - | COMPUTED
+
+## Estimation Golf
+
+- "speed of sound in air at 20°C (= 343 m/s)" | 343 | 343.2 m/s at 20°C | https://en.wikipedia.org/wiki/Speed_of_sound | VERIFIED (the question also states it)
+- Out per Jon's ruling (general knowledge, ruled for replacement): teeth 32, bones 206, continents 7, class 30, door 200 cm, pizza 8 slices, spider legs 8, football team 11.
+
+## 52-dle
+
+- No keyed real-world figure beyond definitions: 52 (cards in a deck) and 7 (days in a week). Clue claims are not keyed ("7: the most favourite number"; "521 ... discovered by computer in 1952", a maths-history date, OUT unless keyed).
