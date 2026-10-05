@@ -20,6 +20,14 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 "SR-n applied: …" in the PR description. Stop only for what no ruling covers, or for an item on
 §0.3's "Still stops for Jon" list. A contract's own STOP IF still applies as written.
 
+## Checkpoint discipline, not a context stop (Jon, 5 Oct 2026)
+
+No contract stops at "context passes 60%": that line is removed from every STOP IF, in current and future
+contracts. A session cannot measure its own context; Jon can, and clears when needed. Instead:
+- **Commit and push at every milestone** (a verifier passing, a bank written, a UI change working, docs done).
+- **Keep the CLAUDE.md handover on the branch current as you go**, so a clear at any moment loses nothing:
+  what is done, what is next, and anything learned that the next session needs.
+
 ## Before pushing: `python scripts/check-changed.py`, not the full local suite (canon §7.8, 4 Oct 2026)
 
 This replaces "full local suite before every push", including in contracts that still say it. It runs
@@ -32,7 +40,7 @@ whole suite locally if ever wanted.
 
 ## Handover — 2026-10-04 (latest): EQUATION BUILDER marking, verifier + bank DONE, game NOT yet changed (branch claude/equation-builder-marking, no PR)
 
-Jon's contract + his rulings of 21:04 (all applied). Session stopped for context (Jon's 60% rule). **Next session:
+Jon's contract + his rulings of 21:04 (all applied). Resumed 5 Oct. **Next session:
 finish this contract first, then Jon's ESTIMATION ENGINE contract (sent the same evening; ask Jon to resend
 its text: it is not in the repo).**
 
