@@ -38,7 +38,24 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (cloud, latest): SR-14 fix batch done, PRs #56-#60, #62, #63; KNOWN = 0
+## Handover — 2026-10-05 (home, latest): FERMI LAB cohort figure held once (FIG), 52-dle atoms claim, PR #64
+
+Jon's contract, from the quoted-statistics audit's STOP 2 and §4.
+- **`FIG`** (new, above `QUESTIONS` in `games/fermi-lab/index.html`): one copy of each real-world quantity that
+  more than one item uses. One entry: `gcseCohortEngland` 600,000 per year group (DfE KS4 2024/25, 625,673).
+  `eq_sleep_loss` step 1 = `FIG...value` (answer 12,600,000); `eq_homework` step 1 = `2*FIG...value` (6,000,000).
+  Played in Chromium, main vs branch: 625,000 and 1,250,000 at step 1 went amber -> green; no page errors.
+- **52-dle** `PUZZLES[0]` clue: "52! ≈ 8 × 10⁶⁷ — more than the number of atoms in the Earth (about 10⁵⁰)."
+  (`textContent`, so Unicode superscripts; checked at 320px.)
+- **Open, untouched: the audit branch `claude/peaceful-mayer-3ktsgv`** (no PR; STOP file
+  `docs/audits/quoted-statistics-2026-10-STOP.md`, waiting for Jon's scope ruling). Its STOP 2 and §4's 52-dle
+  note are fixed on main by PR #64: merge main in when it resumes and record them as fixed. Fermi shared figures
+  it finds go into `FIG`.
+- **Gotchas:** `extract-banks.py` reads banks from the live page, so a reference to `FIG` resolves; `data/banks/`
+  is gitignored. `scripts/serve-stubbed.py` serves ITS OWN repo root, not the cwd: to serve a main worktree, run
+  that worktree's copy. Python heredocs in Git Bash on Windows mangle `\u` escapes; write the script to a file.
+
+## Handover — 2026-10-05 (cloud): SR-14 fix batch done, PRs #56-#60, #62, #63; KNOWN = 0
 
 Jon's contract (clear SR-14 tier-(a) KNOWN to Truth Buster), one PR per step, each merged on a green Gate.
 - **#56 scanner** (`scripts/check-content-safety.py`): `displayed()` reduces a file to what a player can be shown
