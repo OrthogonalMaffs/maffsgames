@@ -110,6 +110,9 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .step-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
 .step-btn:disabled{opacity:0.35;cursor:default}
 .number-line-container.answered .step-row{display:none}
+/* A short phone (320x568): less space around the line, so Check stays above the footer with the step
+   buttons in place. */
+@media (max-height: 600px){.number-line-container{margin:12px 0;padding:8px 0}}
 
 /* Check / Next buttons */
 .check-btn{display:block;width:100%;padding:14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s;margin:16px 0}
@@ -879,7 +882,7 @@ function checkPlaceit(data) {
   const targetMarker = document.getElementById('targetMarker');
   const marker = document.getElementById('lineMarker');
   targetMarker.style.left = (targetPct * 100) + '%';
-  targetMarker.style.display = '';
+  targetMarker.style.display = 'block';   // '' fell back to the stylesheet's display:none: never shown before 5 Oct 2026
   document.getElementById('placeItBox').classList.add('answered');
 
   if (isCorrect) {
@@ -892,6 +895,12 @@ function checkPlaceit(data) {
   recordAnswer('placeit', isCorrect,
                isCorrect ? '' : `You placed ${formatPlaceit(placed)}. ${formatPlaceit(data.value)} is here.`);
   setStepButtons();
+
+  // Canon 7.6.1: the reason and Next sit above the fold. On a short phone they can end under the fixed
+  // 40px footer, so bring Next up (the feedback is above it, and fits with it on any phone).
+  const next = document.getElementById('nextBtn').getBoundingClientRect();
+  const fold = window.innerHeight - 40;
+  if (next.bottom > fold) window.scrollBy(0, next.bottom - fold + 8);
 }
 
 function recordAnswer(type, isCorrect, note) {
