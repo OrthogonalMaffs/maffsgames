@@ -76,8 +76,8 @@ accepted arrangements, verifier PASS.
    wrong 2nd: show key. Standard-form tiles (4.013×10¹⁶, 3×10⁸, 5.97×10²⁴, 7.34×10²²) display in brackets.
 2. (done) Chromium: ≥10 F1/F3/F4/F8 arrangements across levels marked correct (incl. C = 3 + 2.50m, d = 80 ÷ tan34°,
    360 = 3V ÷ 8, F = 9(l+w)); gcse_010's old build impossible.
-3. CI: add the verifier (+ `--selftest`) to a content-verifier group in check-site.yml; check-verifier-coverage.
-4. /resit/: relist at Foundation (`?level=ks3`) in its old place; check-resit-page.py WITHDRAWN/count.
+3. (done: group B, with --selftest; coverage PASS) CI: add the verifier (+ `--selftest`) to a content-verifier group in check-site.yml; check-verifier-coverage.
+4. (done: before four-quadrant-explorer, SUITE + WITHDRAWN updated, 31 cards) /resit/: relist at Foundation (`?level=ks3`) in its old place; check-resit-page.py WITHDRAWN/count.
 5. Docs: audit F1-F8 resolved (PR #); canon class-4 note (the ACCEPTED-list pattern for linear-equation-solver and
    angle-ace); todo; this handover. Then PR, CI green, merge.
 
