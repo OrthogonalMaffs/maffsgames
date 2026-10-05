@@ -38,10 +38,10 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (home, latest): Jon's 18:10 rulings; SR-14 keys done (PR #KEYS); NEXT = the audit
+## Handover — 2026-10-05 (home, latest): Jon's 18:10 rulings; SR-14 keys done (PR #66); NEXT = the audit
 
 Jon's rulings of 5 Oct 18:10 cover three contracts; order chosen: SR-14 keys, then the audit, then the teacher line.
-- **PR #KEYS, SR-14 keys (option 1):** a tier-(a) word as an object key is a hit anywhere (`key_spans()` records
+- **PR #66, SR-14 keys (option 1):** a tier-(a) word as an object key is a hit anywhere (`key_spans()` records
   literal keys, `g.x =` and `g['x'] =` writes); lookups are code (`_LOOKUP_CALL`, member `[...]`, `'x' in g`).
   Self-test 26/26; cases 23/24 fail on the old scanner; the coverage diff of `displayed()` over 134 files is
   empty (the tree has no string lookups). Canon SR-14 amended.
