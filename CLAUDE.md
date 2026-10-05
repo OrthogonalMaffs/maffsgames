@@ -38,7 +38,7 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (cloud, latest): SR-14 fix batch done, PRs #56-#60; KNOWN = 1 (Truth Buster)
+## Handover — 2026-10-05 (cloud, latest): SR-14 fix batch done, PRs #56-#60 and #62; KNOWN = 0
 
 Jon's contract (clear SR-14 tier-(a) KNOWN to Truth Buster), one PR per step, each merged on a green Gate.
 - **#56 scanner** (`scripts/check-content-safety.py`): `displayed()` reduces a file to what a player can be shown
@@ -48,10 +48,15 @@ Jon's contract (clear SR-14 tier-(a) KNOWN to Truth Buster), one PR per step, ea
   the claim", "doctor neglected". Self-test 22 cases (snippets run whatever the tree's state). KNOWN 27 -> 21.
 - **#57-#60:** given-that core_01 (Minor, Moderate, Serious); drownings -> sunburn cases in core-maths-paper2a Q32,
   maths-court mc_core_005, wrong-on-the-internet woti_gcse_008. Keys unchanged; each played in Chromium.
-- **Next:** Truth Buster :262 waits for Jon's new coincidence pairing. Then Jon's next contract.
+- **#62 truth-buster tb_t2_012** (a true/false item, `answer:false`; the pairing is only its `counterexample`):
+  mozzarella cheese consumption vs US civil engineering doctorates, r = 0.959 (2000-2009), from CC0 CRAN
+  `spuriouscorrelations` 0.2 (`mozzarella_consumption`; r recomputed from the rows). `KNOWN = {}`.
+- **Next:** Jon's next contract. SR-14 KNOWN is empty, so any tier-(a) word in displayed text now fails CI.
 - **Gotchas:** "scan JS string literals" is not "displayed text": `'dead'` passed to `classList.toggle` is a
   string. Re-run an old-vs-new coverage diff after any change to `displayed()` (the PR #56 description has the
-  method). In a cloud sandbox `pip install playwright==1.56.0` matches `/opt/pw-browsers` chromium-1194, so
+  method). CRAN and tylervigen.com are refused by the sandbox proxy; the METACRAN mirror
+  (`raw.githubusercontent.com/cran/<pkg>`) is reachable and is a copy of each CRAN release; read `.rda` files
+  with `pip install pyreadr pandas`. In a cloud sandbox `pip install playwright==1.56.0` matches `/opt/pw-browsers` chromium-1194, so
   every verifier runs unmodified. Games inside an IIFE (given-that) cannot be driven by globals: pin
   `Math.random` near 1 before Start and the game's Fisher-Yates keeps bank order.
 
@@ -168,7 +173,7 @@ locally, outside the repo; ask Jon if it is not to hand).
   joke theories on coincidences, every answer behind `MaffsNext`; back on /resit/ (30). Verifier
   `scripts/verify-correlation-or-coincidence.py` (group B, 12 planted faults). Ledger B4 entries cleared.
 - **SR-14, three tiers** (canon §0.3, Jon's amended text) + `scripts/check-content-safety.py` (site-wide CI): tier (a)
-  fails anywhere, tier (b) in humour fields; KNOWN = 27 tier-(a) hits in 11 files (1 since PR #60) = todo's SR-14 fix batch (one
+  fails anywhere, tier (b) in humour fields; KNOWN = 27 tier-(a) hits in 11 files (0 since PR #62) = todo's SR-14 fix batch (one
   game per contract). /updates/ entry live in Jon's wording. Jon approved C7/C11 and the credit without a link.
 
 ## Handover — 2026-10-04: JON'S RESIT AUDIT RULINGS recorded, PR #42; SR-13

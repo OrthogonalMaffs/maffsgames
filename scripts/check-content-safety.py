@@ -365,9 +365,7 @@ def scan(root, override=None):
 # Every hit present on 4 Oct 2026 (SR-14 as amended that evening), for Jon to rule on: file -> {word: count}.
 # Reported, never failed. Lower a count (or drop the entry) in the PR that removes the words. 5 Oct 2026: the
 # idioms and the class names Jon ruled out of SR-14 (4 Oct, 20:06) are no longer hits (ALLOW, displayed()).
-KNOWN = {
-    "games/truth-buster/index.html": {"drownings": 1},
-}
+KNOWN = {}
 
 
 def compare(found, known):
