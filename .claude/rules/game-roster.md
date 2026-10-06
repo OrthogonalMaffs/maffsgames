@@ -1,11 +1,11 @@
-# MaffsGames — Complete Game Roster (96 games on the portal, 1 unlisted, 1 withdrawn)
+# MaffsGames — Complete Game Roster (94 games on the portal, 3 unlisted, 1 withdrawn)
 
 **Calculator** (last column, canon §4.4): `required`, `not allowed`, `optional` or `untagged`. A game's
 tag shows as the shared `.calc-badge` (`schools/assets/theme.css`) on its start screen; `untagged`
 shows nothing. Every game is `untagged` until it is tagged in its own PR. A `required` game also loads the
 shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-calculator.py` keeps the two in step.
 
-## KS3 Games (34)
+## KS3 Games (33)
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
 | 1 | Sequence Solver | `sequence-solver` | KS3, GCSE, A-Level, L4 | Algebra | Tiered rebuild. KS3 (50q), GCSE (50q), A-Level (55q) — nth term, geometric, sigma, recurrence | untagged |
@@ -21,7 +21,6 @@ shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-cal
 | 12 | Split It | `split-it` | KS3, GCSE | Number | Six-mode ratio practice: simplify, equivalent, divide, fractions, scale, unitary. Procedural generation | untagged |
 | 13 | Word Problem Decoder | `word-problem-decoder` | KS3, GCSE | All Topics | Word Problem suite 1/3. Identify the maths topic. 110 questions (v2 bank) | untagged |
 | 14 | Equation Builder | `equation-builder` | KS3, GCSE, L4 | Algebra | Word Problem suite 2/3. Slot-and-tile equation building. 120 questions (v2 bank) | untagged |
-| 15 | Spot the Error | `spot-the-error` | KS3, GCSE, L4 | All Topics | Word Problem suite 3/3. Two-stage error analysis. 110 questions (v2 bank) | untagged |
 | 16 | Gradient Hunter | `gradient-hunter` | GCSE, Core, A-Level | Applied, Statistics | Canvas graphs, click-to-find-gradient. 45 questions. Core Maths S3.11 | untagged |
 | 17 | Truth Buster | `truth-buster` | KS3, GCSE, A-Level | Algebra, Number, Geometry, Statistics | Always true or not? 60 questions across 3 tiers with Learn More links | untagged |
 | 18 | Spot the Muppet | `spot-the-muppet` | KS3, GCSE, Core | Number, Algebra, Statistics | Light theme. Comedy characters give wrong advice. 50 questions | untagged |
@@ -43,13 +42,12 @@ shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-cal
 | 34 | Seven Bridges | `seven-bridges` | KS3, GCSE, A-Level | Geometry, Reasoning | Euler's bridge puzzle. Trace paths, spot impossible graphs, discover the rule | untagged |
 | 35 | Distinctly Average | `distinctly-average` | KS3, GCSE | Statistics | Mean, median, mode and range on ungrouped data. KS3 whole-number sets with a stepped median scaffold; GCSE adds frequency tables, missing-value and set-comparison questions | untagged |
 
-## GCSE Games (29)
+## GCSE Games (28)
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
 | 36 | Index Laws | `index-laws` | GCSE, A-Level | Algebra | 6 index rules, 45 questions, KaTeX rendered | untagged |
 | 37 | Quadratic Factoriser | `quadratic-factoriser` | GCSE, A-Level | Algebra | Three levels: GCSE (a=1) factorising, GCSE Higher (a>1) with a fading AC-method tutorial, and the quadratic formula. Enumerated pools, SymPy-verified (`scripts/verify-quadratic-factoriser.py`) | untagged |
 | 38 | Trig Wars | `trig-wars` | GCSE, A-Level | Geometry | Artillery projectile game — set angle + power | untagged |
-| 39 | Trig Worms | `trig-worms` | GCSE, A-Level | Geometry | Cannon aiming using SOH CAH TOA | untagged |
 | 40 | Modular Battle | `modular-battle` | GCSE, A-Level | Number | 90-second remainder drill with dot grid visuals | untagged |
 | 41 | Surd Simplifier | `surd-simplifier` | GCSE, A-Level | Number, Algebra | 50+50 questions. Simplify surds, rationalise denominators | untagged |
 | 42 | Proportion Blaster | `proportion-blaster` | GCSE, A-Level | Number, Algebra | 50+50 questions. Direct/inverse proportion, ratio sharing | untagged |
@@ -127,12 +125,16 @@ Adult register, as every game now is (canon §7.5, Jon's ruling 2 Oct 2026, whic
 | 96 | Six Sevens, Bruv | `six-sevens-bruv` | KS3, GCSE | Number | Times-tables recall, 1 to 12. Typed answers, no multiple choice. 78 facts (commutative pairs are one fact), lit gold on a 12×12 grid kept per student on the device (`schools/assets/progress.js`). Misses return 3–5 questions later with a full array and a derived-fact hint. Verified by `scripts/verify-six-sevens.py` (in CI) | untagged |
 | 97 | Free Daily Pizza | `free-daily-pizza` | KS3, GCSE | Number | Fraction, decimal and percentage equivalence. Four stages, all generated from parameters: benchmarks (90), wider set and simplifying (206), fraction or percentage of an amount (138), one quantity out of another (84). Four options, each distractor a named misconception; recurring decimals shown recurring, thirds of a percent as a stacked mixed number; every fraction on screen is stacked (KaTeX, or an HTML fallback). Wrong answers show the working, then a pizza, 100-square grid or bar drawn exactly. Practice 20/40: mixed-stage runs rank on `practice-q20`/`practice-q40`, single-stage runs rank nowhere (history only); a daily pizza of 3+3+2+2 questions, easiest first, seeded from the UK date (board `daily-YYYY-MM-DD`, not on the hub). Verified by `scripts/verify-free-daily-pizza.py` (in CI) | untagged |
 
-## Unlisted (1)
-Live at its URL behind `<meta name="robots" content="noindex">`, and off the portal, `/resit/`, the sitemap, the spec map and `/updates/` until Jon has played it and approved it (todo START). It is a numbered row so every roster parser reads it: the theme check, tier 1's level loads and the bank tools. On approval it moves to the section it is listed under.
+## Unlisted (3)
+Live at their URLs, and off the portal, `/resit/`, the sitemap, the spec map and the leaderboard hub (`NOT_ON_HUB` in `scripts/check-leaderboard-coverage.js`). Each is a numbered row so every roster parser reads it: the theme check, tier 1's level loads and the bank tools. On relisting a row moves back to the section it came from.
+- `just-pythag-it-bruv`: new, behind `<meta name="robots" content="noindex">` and off `/updates/` until Jon has played it and approved it (todo START).
+- `spot-the-error` (was KS3 #15) and `trig-worms` (was GCSE #39): unlisted 6 Oct 2026 (Jon) for faults found by the 6 Oct audit of 12 unverified games; relisted when each game's audit fix PR merges. Their pages are unchanged (no `noindex`), so existing links and search results still work.
 
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
 | 98 | Just Pythag It, Bruv | `just-pythag-it-bruv` | KS3 | Geometry | Pythagoras' theorem, resit strand. One level (key `ks3`, shown as "Foundation", SR-11), 20 questions in three rounds: whole-number triangles (3-4-5, 5-12-13, 8-15-17, 7-24-25 and multiples; a 3-4-5 or 5-12-13 multiple gets "Spotted it?"), decimal answers to 1 d.p., then ladders, TV screens, ramps, fields and roofs in metric units. At least 12 of 20 find a shorter side, never three of a type in a row; every triangle drawn, right angle marked. Round 1 opens with a tap-the-hypotenuse step (no score, no event). Rounds 1-2 place the hypotenuse along the bottom, up a side and sloping both ways in every session, no position over 40%; the unknown side is "?" in round 1 and every label is styled alike. "Use a calculator." on every question, with the shared on-screen calculator (`MaffsCalc`, canon §4.4) under the answer box. The standard header (back link, Aa on the start screen); the triangle drawn at the card's full width. Typed answers (`MaffsAnswer`); adding instead of subtracting gets a worked example on the question's own numbers (first three per session), then a nudge. Visible count-up, scored. Verified by `scripts/verify-just-pythag-it-bruv.py` (in CI) | required |
+| 15 | Spot the Error | `spot-the-error` | KS3, GCSE, L4 | All Topics | Word Problem suite 3/3. Two-stage error analysis. 110 questions (v2 bank) | untagged |
+| 39 | Trig Worms | `trig-worms` | GCSE, A-Level | Geometry | Cannon aiming using SOH CAH TOA | untagged |
 
 ## Withdrawn (1)
 Kept at its URL behind a `noindex` holding page, off the portal and the sitemap, nothing deleted (canon §11.5). The `—` in the # column keeps it out of every roster parser; row numbers are not reused.
