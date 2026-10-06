@@ -273,10 +273,14 @@ jobs:
           # SymPy), no exact halves, three planted faults; then the page in Chromium: D01 and F02 marked as Jon's
           # contract states, every item's calculator and % lines, a full game (A-F, no timer, 20/20, Next every
           # question), phones at 320/375/390 typing on MaffsKeypad (~2 min).
-          - name: Content verifiers E (Estimation Engine)
+          # Angle Ace joins it (6 Oct 2026, ~1 min; E had used about 1 minute of 12): every diagram's canvas calls
+          # recorded at 320/390/1280px and measured (label vs the angle it sits in, x vs the key, the drawn
+          # relationship vs the keyed reason, every valid reason accepted), every option and reason marked.
+          - name: Content verifiers E (Estimation Engine, Angle Ace)
             timeout: 12
             checks: |
               Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)|python scripts/verify-estimation-engine.py
+              Angle Ace (every diagram measured against its words and key; every option and reason marked in Chromium)|python scripts/verify-angle-ace.py
 
           # Every other content verifier. Each reads the live page's data and recomputes
           # its answers independently; each includes a fault-injection self-test.

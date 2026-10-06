@@ -95,8 +95,38 @@
    "B3": {
     "entries": [
      {
-      "detail": "QUESTIONS_BY_LEVEL.year6[39]: exact duplicate of angle-ace::QUESTIONS_BY_LEVEL.year6[36]: 'What type of angle pair is this? :: Corresponding angles (equal)'",
-      "id": "angle-ace::B3::4a27f7a275a4#1+5e4ff1bbeaeb#1",
+      "detail": "QUESTIONS_BY_LEVEL.year6[33]: exact duplicate of angle-ace::QUESTIONS_BY_LEVEL.year6[30]: 'What type of angle pair is this? :: Corresponding angles (equal)'",
+      "id": "angle-ace::B3::15b87acff70e#1+47973aeed575#1+b991f023ff76#1+e17606d98f26#1",
+      "line": null
+     },
+     {
+      "detail": "QUESTIONS_BY_LEVEL.year6[34]: exact duplicate of angle-ace::QUESTIONS_BY_LEVEL.year6[31]: 'What type of angle pair is this? :: Alternate angles (equal)'",
+      "id": "angle-ace::B3::1c5608b6c5f1#1+bda5bac0151b#1+e015f1d3d0cf#1",
+      "line": null
+     },
+     {
+      "detail": "QUESTIONS_BY_LEVEL.year6[35]: exact duplicate of angle-ace::QUESTIONS_BY_LEVEL.year6[32]: 'What type of angle pair is this? :: Co-interior angles (sum to 180°)'",
+      "id": "angle-ace::B3::1ff7174ccf54#1+b8ce6a8efc38#1+d2ef2d0d56b7#1",
+      "line": null
+     },
+     {
+      "detail": "QUESTIONS_BY_LEVEL.year6[36]: exact duplicate of angle-ace::QUESTIONS_BY_LEVEL.year6[30]: 'What type of angle pair is this? :: Corresponding angles (equal)'",
+      "id": "angle-ace::B3::15b87acff70e#1+47973aeed575#1+b991f023ff76#1+e17606d98f26#1",
+      "line": null
+     },
+     {
+      "detail": "QUESTIONS_BY_LEVEL.year6[37]: exact duplicate of angle-ace::QUESTIONS_BY_LEVEL.year6[31]: 'What type of angle pair is this? :: Alternate angles (equal)'",
+      "id": "angle-ace::B3::1c5608b6c5f1#1+bda5bac0151b#1+e015f1d3d0cf#1",
+      "line": null
+     },
+     {
+      "detail": "QUESTIONS_BY_LEVEL.year6[38]: exact duplicate of angle-ace::QUESTIONS_BY_LEVEL.year6[32]: 'What type of angle pair is this? :: Co-interior angles (sum to 180°)'",
+      "id": "angle-ace::B3::1ff7174ccf54#1+b8ce6a8efc38#1+d2ef2d0d56b7#1",
+      "line": null
+     },
+     {
+      "detail": "QUESTIONS_BY_LEVEL.year6[39]: exact duplicate of angle-ace::QUESTIONS_BY_LEVEL.year6[30]: 'What type of angle pair is this? :: Corresponding angles (equal)'",
+      "id": "angle-ace::B3::15b87acff70e#1+47973aeed575#1+b991f023ff76#1+e17606d98f26#1",
       "line": null
      }
     ],
