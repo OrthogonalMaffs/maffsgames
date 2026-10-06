@@ -67,6 +67,12 @@ Stage 1-2 typed answers through `MaffsAnswer` (exact integers; 8.9 rejected) + `
   - `check-spec-mapping.py`: truth-buster's `EXCEPTIONS` entry removed (stale once off the portal); relisting restores it.
   - No parent guide links any of the 18.
   - Relist checklists: todo §1.58-§1.75, one per game.
+- **PR #87 merged** (unlisting + canon), main's full run green after it. **PR 2 (Like Terms Collector):** `checkInputAnswer`
+  marks each box with `MaffsAnswer.exact()`; a decimal is marked wrong and the feedback says it is not a whole number;
+  an empty box still does nothing. `scripts/verify-like-terms-collector.py` (CI group E, ~30s): SymPy recomputes all 45
+  keys (Stage 3 distractors never equal the key, SR-16); at 390px item 1 8.9/6.5 wrong, 8/6 right, every typed item's
+  key right and key+0.9 wrong. Self-test plants the parseInt marking back (caught). `--against FILE` serves another copy
+  of the page: main's file fails on all 15 typed items. Closes register entry like-terms-collector-t3-001 (PR 3 files it).
 - **Canon:** §0.2 BUILD FREEZE + the six-point exit bar (top of §0.2); §0.3 SR-16 to SR-20 + the three "also recorded"
   rules; §6.1: §3.8 has no listed game while Glorious Gantt is rebuilt.
 - **Not touched (contract F / Project Claude):** the unlisted games' keys and banks; shared answer lock, level

@@ -32,7 +32,7 @@ shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-cal
 | 25 | Formula Plug-In | `formula-plug-in` | Year 6 | Algebra | Substitute values into formulae. KaTeX. 50 questions | untagged |
 | 26 | Decimal Detective | `decimal-detective` | Year 6 | Number | Order/round/place decimals. 45 questions | untagged |
 | 27 | Four Quadrant Explorer | `four-quadrant-explorer` | Year 6 | Geometry | Canvas 4-quadrant coordinate grid. 45 questions | untagged |
-| 28 | Like Terms Collector | `like-terms-collector` | Year 6 | Algebra | Light theme. Fruit-to-letters-to-full simplification. 45 questions | untagged |
+| 28 | Like Terms Collector | `like-terms-collector` | Year 6 | Algebra | Light theme. Fruit-to-letters-to-full simplification. 45 questions. Stage 1-2 typed answers marked as exact whole numbers by `MaffsAnswer` (canon §7.1.3). Verified by `scripts/verify-like-terms-collector.py` (in CI) | untagged |
 | 29 | Probability Pioneer | `probability-pioneer` | Year 6 | Statistics | Scale-to-calculate-to-true/false. 45 questions | untagged |
 | 30 | Shape Shifter | `shape-shifter` | Year 6 | Geometry | 4 selectable modes (Translation, Reflection, Rotation, Random Mix), 10 questions each | untagged |
 | 31 | New Shapes | `new-shapes` | Year 6 | Geometry | Parallelogram/trapezium/prism. CSS diagrams. 50 questions | untagged |

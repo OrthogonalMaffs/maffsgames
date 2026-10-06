@@ -177,7 +177,9 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
 - **6 Oct night (home): Jon's rulings on audit tranches 3-6 (20:30), three PRs in order.** PR 1 (unlist 18 games;
   canon SR-16 to SR-20, the freeze; relist checklists §1.58-§1.75), PR 2 (Like Terms Collector's typed answers
   through `MaffsAnswer`, its verifier in CI), PR 3 (the findings register, `docs/audits/REGISTER.md`). Each merges on a
-  green Gate with main's full run green before the next. **Queue after PR 3:** contract B, contract C, contract F
+  green Gate with main's full run green before the next. **PR 1 = #87, merged.** PR 2: Like Terms Collector's Stage 1-2
+  answers marked by `MaffsAnswer.exact()` (8.9 rejected with the reason), `scripts/verify-like-terms-collector.py` in CI
+  group E (tranche 3 audit, like-terms-collector-t3-001). **Queue after PR 3:** contract B, contract C, contract F
   (revised: Jon pastes it), contract D, contract E.
 - **6 Oct (home): SIMULTANEOUS SOLVER, Jon's contract, PR #83 merged on a green Gate (main's full run after
   it: see the CLAUDE.md handover).** Foundation (key `gcse`) is four staged modes: 1 scale (two multipliers on
