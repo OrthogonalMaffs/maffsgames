@@ -38,6 +38,17 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
+## After merging: watch main's full run (Jon, 5 Oct 2026)
+
+The session that merges a PR waits for the full `check-site` run that the merge starts on `main`, and
+reports its result (green, red or cancelled, naming the job and the check). **A red or cancelled main run
+is fixed before any new work starts.** **Why:** a PR runs only the verifiers its changes select, so a
+group that has outgrown its timeout passes on every PR and fails only on main. Group B was cancelled at
+its 12-minute limit on every main run from #68 to #71, and it was seen only when a PR touched every game.
+Each verifier group now also fails at 75% of its timeout ("time budget: … split it", in
+`.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
+every verifier's duration.
+
 ## Handover — 2026-10-05 (cloud, latest): MAFFSKEYPAD built, PR #70; NEXT = Estimation Engine rebuild (same session)
 
 Jon's keypad contract (his ruling (b), 18:45), run before the Estimation Engine rebuild.

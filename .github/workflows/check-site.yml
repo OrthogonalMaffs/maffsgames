@@ -257,6 +257,14 @@ jobs:
             checks: |
               Just Pythag It, Bruv (every key and triangle recomputed + sessions + phone and desktop fit)|python scripts/verify-just-pythag-it-bruv.py
 
+          # Equation Builder on its own (279s on 5 Oct 2026): it enumerates every grammar-valid tile arrangement
+          # of all 120 questions and classifies each with SymPy (PR #49). In group B it took the group past its
+          # 12-minute limit, so every full run from #68 to #71 (main, and any PR touching every game) was cancelled.
+          - name: Content verifiers D (Equation Builder)
+            timeout: 12
+            checks: |
+              Equation Builder (every tile arrangement classified by SymPy; the page's ACCEPTED lists match)|python scripts/verify-equation-builder.py && python scripts/verify-equation-builder.py --selftest
+
           # Every other content verifier. Each reads the live page's data and recomputes
           # its answers independently; each includes a fault-injection self-test.
           #  - log-laws Solve: every line checked with SymPy against the law its step is
@@ -349,7 +357,6 @@ jobs:
               Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure)|python scripts/verify-circle-theorem-spotter.py
               Split It (every generator's keys recomputed + marking at the stated precision)|python scripts/verify-split-it.py
               Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)|python scripts/verify-correlation-or-coincidence.py
-              Equation Builder (every tile arrangement classified by SymPy; the page's ACCEPTED lists match)|python scripts/verify-equation-builder.py && python scripts/verify-equation-builder.py --selftest
               Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)|python scripts/check-resit-fixes.py
               Probability Pioneer (Stage 2 keys recomputed, Stages 1 and 3 pinned, every answer marked in Chromium)|python scripts/verify-probability-pioneer.py
               Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)|python scripts/verify-expected-damage.py
@@ -361,8 +368,12 @@ jobs:
       # Any check may call git. In the container job the checkout belongs to the runner's user, not
       # the container's root, and git refuses a repository it does not own (exit 128). Mark this
       # workspace, and only this workspace, as safe once per job, before any check runs.
+      # It also starts the group's clock for the time budget (below): the first step after the
+      # container starts, so container start-up (about 30s) sits inside the budget's 25% headroom.
       - name: Mark the workspace as a safe git directory
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          echo "JOB_T0=$(date +%s)" >> "$GITHUB_ENV"
 
       # Which of this group's lines run. Site-wide groups run every line; a "Content verifiers" group
       # runs the lines whose script the plan selected (all of them on main, the schedule, a manual run,
@@ -439,13 +450,25 @@ jobs:
 
       # Each line of the group is "label|command". Every check runs, even after one
       # fails, so a single run reports every failure; the job fails if any did.
+      # TIME BUDGET (Jon, 5 Oct 2026): a group fails once it passes 75% of its timeout, measured from
+      # the job's first step (JOB_T0), so it is split before it is ever cut off. Group B ran past its
+      # 12 minutes on every full run from #68 to #71 and was cancelled mid-verifier: a cancelled job
+      # reports nothing about the checks it never reached. The budget's error is raised the moment it
+      # is passed (an annotation survives a later cancel); the remaining checks still run. Every
+      # check's duration goes to the log and to the job summary.
       - name: ${{ matrix.name }}
         if: steps.lines.outputs.any == 'true'
         shell: bash
         env:
           CHECKS: ${{ steps.lines.outputs.checks }}
+          GROUP: ${{ matrix.name }}
+          TIMEOUT_MIN: ${{ matrix.timeout }}
         run: |
           node --version
+          mmss() { printf '%dm%02ds' $(($1 / 60)) $(($1 % 60)); }
+          budget=$((TIMEOUT_MIN * 60 * 3 / 4)); over=""
+          { echo "### $GROUP"; echo; echo "Time budget: $(mmss $budget) (75% of ${TIMEOUT_MIN}m)"; echo
+            echo "| Check | Result | Duration | Group elapsed |"; echo "|---|---|---|---|"; } >> "$GITHUB_STEP_SUMMARY"
           failed=()
           while IFS='|' read -r label cmd; do
             [ -z "$label" ] && continue
@@ -453,9 +476,22 @@ jobs:
             start=$SECONDS
             if bash -c "$cmd"; then status=ok; else status=FAILED; failed+=("$label"); fi
             echo "::endgroup::"
-            echo "$status  $label  ($((SECONDS - start))s)"
+            took=$((SECONDS - start)); elapsed=$(( $(date +%s) - JOB_T0 ))
+            echo "$status  $label  (${took}s; group at $(mmss $elapsed) of ${TIMEOUT_MIN}m)"
+            echo "| $label | $status | ${took}s | $(mmss $elapsed) |" >> "$GITHUB_STEP_SUMMARY"
+            if [ -z "$over" ] && [ $elapsed -gt $budget ]; then
+              over="$GROUP at $(mmss $elapsed) of ${TIMEOUT_MIN}m (budget $(mmss $budget), 75%): split it"
+              echo "::error::time budget: $over"
+            fi
           done <<< "$CHECKS"
+          elapsed=$(( $(date +%s) - JOB_T0 ))
+          echo; echo "group total: $(mmss $elapsed) of ${TIMEOUT_MIN}m (budget $(mmss $budget))"
+          { echo; echo "Group total: $(mmss $elapsed) of ${TIMEOUT_MIN}m"; } >> "$GITHUB_STEP_SUMMARY"
           if [ ${#failed[@]} -gt 0 ]; then
             printf '::error::FAILED: %s\n' "${failed[@]}"
-            exit 1
           fi
+          if [ -n "$over" ]; then
+            echo "::error::time budget: $over (move its slowest verifier into a group of its own, as A, C and D are)"
+            echo "**Over the time budget:** $over" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          [ ${#failed[@]} -eq 0 ] && [ -z "$over" ]
