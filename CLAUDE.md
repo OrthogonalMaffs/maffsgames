@@ -49,7 +49,29 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-06 (cloud, latest): ANGLE ACE drawn from data, PRs #79 + #80 MERGED; NEXT = Jon's next contract
+## Handover — 2026-10-06 (home, latest): SIMULTANEOUS SOLVER staged elimination, PR 1 (branch claude/simultaneous-staged)
+
+Jon's contract of 6 Oct (PR 1 = Foundation Stages 1-4 + the A-Level level + the verifier; PR 2 = Stage 5 word
+problems, only after Jon approves Project Claude's drafted bank).
+- **Game:** one level key `gcse` shown as "Foundation", four stages = four modes (`stage1`..`stage4`, on every
+  event) with one board each (`foundation-s1`..`-s4`; names in `firebase-leaderboard.js` LEVEL_NAMES, the hub
+  GAMES row, `LEVEL_OVERRIDES` in the coverage check; no rules change: board keys fit the existing regex). Steps:
+  mult (two keypad boxes) → op (Add/Subtract buttons) → combine (`[ ] y = [ ]`, ±(K, C) accepted) → solve → sub.
+  Stage 4 adds an unscored letter choice. Right step: next step at once; wrong step: reason + `MaffsNext` ("Next
+  step →"); every problem ends on Next. A-Level kept as four options (timer gone, wrong waits for Next, 100 a
+  question so the old `alevel` board still compares). Theme migrated (`theme.css`: the keypad and calc badge).
+- **Bank:** `scripts/gen-simultaneous.py --write` pastes 48 problems a stage between the GENERATED BANK markers
+  (enumerated pool, seeded Fisher-Yates, quotas; no rejection sampling). `--check` = page matches generator.
+- **Verifier:** `scripts/verify-simultaneous-solver.py` (CI group E, ~1 min): Fraction solutions, every bank
+  rule, A-Level keys by SymPy (found a23 and a42 wrong, and two SR-4 twins, all fixed), 6912 Stage 1 pairs marked
+  in Chromium, the three wrong-step feedbacks, a full game per stage, a Stage 4 problem on the keypad at
+  390/375/320 (+Aa). `--shots DIR` saves the phone screenshots.
+- **Gotcha:** the Bash tool collapses `\\` in heredocs (a `\\tfrac` became TAB + "frac" in JSON): edit TeX with
+  the Edit tool or a script written by the Write tool.
+- **Next:** CI green → merge on a green Gate → main green → docs PR (canon staged-method note beside the class-4
+  note, todo, this handover). Then Stage 5 when the bank arrives.
+
+## Handover — 2026-10-06 (cloud): ANGLE ACE drawn from data, PRs #79 + #80 MERGED; NEXT = Jon's next contract
 
 Jon's Angle Ace contract (SR-6, audit class 6). Each PR merged on a green Gate; main's full run green after each.
 - **The renderer** (`games/angle-ace/index.html`, `drawFig()`): every question carries `fig` (line, point, cross,
