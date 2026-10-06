@@ -52,7 +52,7 @@ sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
 
 SLUG = 'angle-ace'
-LEVELS = ['year6']                 # the GCSE bank joins in its own PR (it is still hand-drawn)
+LEVELS = ['year6', 'gcse']
 COUNTS = {'year6': 40, 'gcse': 35}
 WIDTHS = [(320, 568), (390, 844), (1280, 800)]
 LINE_MIN = 40      # px: a stroked segment this long is a line of the figure; shorter strokes are marks
