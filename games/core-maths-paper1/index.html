@@ -235,10 +235,10 @@ const QUESTIONS = [
   // ═══ §3.1 Analysis of Data — Q1 to Q18 ═══
   {
     section: '3.1', ao: 'AO1',
-    stem: 'The times (in minutes) taken by 9 students to complete a puzzle are: 12, 15, 15, 18, 21, 24, 27, 31, 44. What is the interquartile range?',
-    options: ['9', '12', '15', '32'],
-    correct: 1,
-    working: 'Order the values. LQ = 15 (3rd value), UQ = 27 (7th value). IQR = 27 \u2212 15 = 12.'
+    stem: 'The times (in minutes) taken by 9 students to complete a puzzle are: 12, 15, 15, 18, 21, 24, 27, 31, 44. Using the (n + 1)/4 method, what is the interquartile range?',
+    options: ['5', '12', '14', '32'],
+    correct: 2,
+    working: 'With n = 9, the LQ is the (9 + 1)/4 = 2.5th value: halfway between 15 and 15, so 15. The UQ is the 7.5th value: halfway between 27 and 31, so 29. IQR = 29 \u2212 15 = 14.'
   },
   {
     section: '3.1', ao: 'AO1',
@@ -280,7 +280,7 @@ const QUESTIONS = [
   {
     section: '3.1', ao: 'AO2',
     stem: 'A researcher collects: shoe size, favourite colour, time to complete a task (seconds), number of siblings. Which correctly classifies all four?',
-    options: ['Quantitative discrete, qualitative, quantitative continuous, quantitative discrete', 'Quantitative, qualitative, quantitative discrete, quantitative continuous', 'Discrete, qualitative, continuous, discrete', 'All four are quantitative'],
+    options: ['Quantitative discrete, qualitative, quantitative continuous, quantitative discrete', 'Quantitative, qualitative, quantitative discrete, quantitative continuous', 'Quantitative continuous, qualitative, quantitative continuous, quantitative discrete', 'All four are quantitative'],
     correct: 0,
     working: 'Shoe size = discrete. Favourite colour = qualitative. Time = continuous. Siblings = discrete.'
   },
@@ -295,9 +295,9 @@ const QUESTIONS = [
     section: '3.1', ao: 'AO2',
     stem: 'A box plot shows scores in a class test. Min: 18, LQ: 34, Median: 51, UQ: 63, Max: 79. A student says "more than half the class scored above 51." Is this correct?',
     svg: 'boxplot_q9',
-    options: ['Yes \u2014 by definition, 50% of values lie at or above the median', 'No \u2014 the median means most students scored below 51', 'Yes \u2014 the upper quartile is above 51 so most students scored above it', 'Cannot be determined from a box plot'],
-    correct: 0,
-    working: 'The median splits data 50/50. The student\'s statement is broadly correct \u2014 "more than half" is slightly imprecise, but A is the best answer.'
+    options: ['Yes \u2014 by definition, 50% of values lie at or above the median', 'No \u2014 at most half the values can be above the median', 'Yes \u2014 the upper quartile is above 51 so most students scored above it', 'Cannot be determined from a box plot'],
+    correct: 1,
+    working: 'The median is the middle value, so at most half the values can be above the median. "More than half the class scored above 51" is false.'
   },
   {
     section: '3.1', ao: 'AO2',
@@ -460,9 +460,9 @@ const QUESTIONS = [
   {
     section: '3.2', ao: 'AO3',
     stem: 'Account A: 3.5% simple interest per year. Account B: 3.6% compound interest per year. Lena invests \u00a35,000 for 3 years. Which gives more interest, and by how much?',
-    options: ['Account A by \u00a35.30', 'Account B by \u00a344.70', 'Account A by \u00a324.70', 'Both give the same total interest'],
+    options: ['Account A by \u00a33.59', 'Account B by \u00a334.67', 'Account B by \u00a315.00', 'Account B by \u00a35.00'],
     correct: 1,
-    working: 'A: 5000 \u00d7 0.035 \u00d7 3 = \u00a3525.00. B: 5000 \u00d7 1.036\u00b3 \u2212 5000 = \u00a3569.70. Account B wins by \u00a344.70.'
+    working: 'A: 5000 \u00d7 0.035 \u00d7 3 = \u00a3525.00. B: 5000 \u00d7 1.036\u00b3 \u2212 5000 = \u00a3559.67. Account B wins by \u00a334.67.'
   },
   {
     section: '3.2', ao: 'AO3',
@@ -573,11 +573,11 @@ function renderBoxPlot(min, lq, med, uq, max) {
 
   var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="font-family:Outfit,sans-serif">';
   // Whiskers
-  svg += '<line x1="' + sx(min) + '" y1="' + midY + '" x2="' + sx(lq) + '" y2="' + midY + '" stroke="#1e293b" stroke-width="2"/>';
-  svg += '<line x1="' + sx(uq) + '" y1="' + midY + '" x2="' + sx(max) + '" y2="' + midY + '" stroke="#1e293b" stroke-width="2"/>';
+  svg += '<line x1="' + sx(min) + '" y1="' + midY + '" x2="' + sx(lq) + '" y2="' + midY + '" stroke="#94a3b8" stroke-width="2"/>';
+  svg += '<line x1="' + sx(uq) + '" y1="' + midY + '" x2="' + sx(max) + '" y2="' + midY + '" stroke="#94a3b8" stroke-width="2"/>';
   // Min/max caps
-  svg += '<line x1="' + sx(min) + '" y1="' + (midY - 8) + '" x2="' + sx(min) + '" y2="' + (midY + 8) + '" stroke="#1e293b" stroke-width="2"/>';
-  svg += '<line x1="' + sx(max) + '" y1="' + (midY - 8) + '" x2="' + sx(max) + '" y2="' + (midY + 8) + '" stroke="#1e293b" stroke-width="2"/>';
+  svg += '<line x1="' + sx(min) + '" y1="' + (midY - 8) + '" x2="' + sx(min) + '" y2="' + (midY + 8) + '" stroke="#94a3b8" stroke-width="2"/>';
+  svg += '<line x1="' + sx(max) + '" y1="' + (midY - 8) + '" x2="' + sx(max) + '" y2="' + (midY + 8) + '" stroke="#94a3b8" stroke-width="2"/>';
   // Box
   svg += '<rect x="' + sx(lq) + '" y="' + (midY - boxH / 2) + '" width="' + (sx(uq) - sx(lq)) + '" height="' + boxH + '" fill="#0d9488" stroke="#1e293b" stroke-width="2" opacity="0.8" rx="2"/>';
   // Median line
