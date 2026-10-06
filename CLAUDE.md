@@ -49,7 +49,7 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-06 (cloud, latest): the four open PRs one at a time; #75, #72, #73 MERGED; NEXT = #74
+## Handover — 2026-10-06 (cloud, latest): the four open PRs ALL MERGED (#75, #72, #73, #74), main green; NEXT = Jon's next contract
 
 Jon's instruction of 6 Oct, 09:30: this session alone drives #75, #72, #73 and #74, one PR at a time. It pushes
 one, waits for its result, and never queues two.
@@ -63,9 +63,13 @@ one, waits for its result, and never queues two.
 - **#73 merged:** the teacher line is on every results screen (canon §7.1: RESULTS, FUNCTION_ROUTE with
   `MaffsInvite.place`, START_SCREEN with a reason, PENDING with a hash). Its Chromium half needs KaTeX: in this
   sandbox, run it through a wrapper that routes `cdn.jsdelivr.net/npm/katex*/dist/**` to the npm copy (below).
-- **Next:** #74. #74 adds its verifier as a new group of its own, removes its PENDING entries from
-  `check-meta.py` and `check-teacher-invite.py`, and fixes its games.json description (no timer). It stops for
-  Jon's six calls before merging.
+- **#74 merged: Estimation Engine rebuilt under SR-12** (todo START, canon SR-12 and §4.4).
+  - Its verifier is CI group E (12 minutes; about 1 minute used).
+  - `check-meta.py` and `check-teacher-invite.py` have no PENDING entries left.
+  - Jon's calls of 12:30 are applied: the Step 1 heading reads "Step 1: round each number to 1 s.f.". It is one
+    line at 320px; in Aa mode it is two lines, as the old heading was.
+- **Next:** Jon's next contract. The home session deletes the 49 merged remote branches; the cloud proxy refuses
+  `git push --delete` and the refs API. `pr-assets/teacher-invite` stays.
 - **Gotchas:**
   - githubstatus.com is refused by this sandbox's proxy; judge Actions by whether a re-run's jobs get runners.
   - `gh api .../jobs/<id>/logs` is refused (blob storage); the GitHub MCP `get_job_logs` works.
