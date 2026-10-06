@@ -183,6 +183,9 @@ jobs:
           # The teacher-line check (stdlib, under a second): every roster game loads schools/assets/teacher-invite.js
           # and mounts it once with its own directory name; the escape-room engine mounts it for every live room;
           # /leaderboards/ mounts it with no game; the link text is Jon's exact wording (4 Oct 2026).
+          # The search-titles check (stdlib, about a second): every game page's and /resit/'s <title>, meta
+          # description and og:/twitter: copies equal what data/games.json generates under Jon's rules of
+          # 5 Oct 2026 (titles <= 60, descriptions <= 155, no "Year 6"); edit games.json, run apply-meta.py.
           - name: Tiers 1 + 2 (page load, hang-loop scan)
             timeout: 15
             checks: |
@@ -199,6 +202,7 @@ jobs:
               Calculator (canon 4.4: the on-screen calculator loads exactly where the roster says required)|python scripts/check-calculator.py
               Content safety (canon SR-14 tiers: no new banned wording, no illness or injury in humour)|python scripts/check-content-safety.py
               Teacher feedback line (every game mounts it with its own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
+              Search titles (every game page and /resit/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any

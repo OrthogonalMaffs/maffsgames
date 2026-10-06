@@ -1,0 +1,504 @@
+{
+ "_comment": [
+  "THE source of every game page's search title and meta description, and their og:/twitter: copies (Jon, 5 Oct 2026).",
+  "One entry per numbered row of .claude/rules/game-roster.md; slugs equal the roster's set exactly.",
+  "Game names and levels are NOT held here: levels come from the roster's Levels column.",
+  "The rules live in scripts/check-meta.py (its docstring): titles at most 60 characters, descriptions at most 155,",
+  "  'Year 6' never shown, the levels sentence and 'Free, no sign-up.' generated.",
+  "search_phrase is written exactly as it appears in the title; description is what the student practises.",
+  "Edit this file, run python scripts/apply-meta.py, then python scripts/check-meta.py. Never hand-edit a game's title."
+ ],
+ "games": [
+  {
+   "slug": "sequence-solver",
+   "search_phrase": "Sequences and nth Term",
+   "description": "Find the nth term of arithmetic and geometric sequences, then sigma notation and recurrence."
+  },
+  {
+   "slug": "estimation-golf",
+   "search_phrase": "Estimation and Rounding",
+   "description": "Estimate answers by rounding: the closer you get, the further the ball goes."
+  },
+  {
+   "slug": "estimation-engine",
+   "search_phrase": "Estimating by Rounding",
+   "description": "Estimate calculations by rounding each number first, against the clock."
+  },
+  {
+   "slug": "factor-race",
+   "search_phrase": "Finding Factors",
+   "description": "Two numbers, one tap: pick the one with more factors. Fast factor recall."
+  },
+  {
+   "slug": "prime-factorisation",
+   "search_phrase": "Prime Factorisation",
+   "description": "Build a number's prime factorisation by multiplying up from 1, one prime at a time."
+  },
+  {
+   "slug": "prime-or-composite",
+   "search_phrase": "Prime Numbers",
+   "description": "Sort numbers as prime or composite against the clock."
+  },
+  {
+   "slug": "percentage-flip",
+   "search_phrase": "Percentages of Amounts",
+   "description": "Find percentages of amounts, from 50% of 80 to harder percentages, in a quick card-flip game."
+  },
+  {
+   "slug": "fraction-equivalence",
+   "search_phrase": "Equivalent Fractions",
+   "description": "Decide whether two fractions are equivalent, at speed, by cross-multiplying or simplifying."
+  },
+  {
+   "slug": "equatle",
+   "search_phrase": "Equation Wordle",
+   "description": "Deduce a hidden equation from colour-coded clues, Wordle style. Number sense and reasoning."
+  },
+  {
+   "slug": "52dle",
+   "search_phrase": "Daily Number Puzzle",
+   "description": "A daily number deduction puzzle: use the maths clues to find the hidden number."
+  },
+  {
+   "slug": "constructions-lab",
+   "search_phrase": "Constructions and Loci",
+   "description": "Bisect angles and lines, draw perpendiculars and loci, with a virtual compass and ruler."
+  },
+  {
+   "slug": "split-it",
+   "search_phrase": "Ratio",
+   "description": "Simplify ratios, find equivalents, share amounts in a ratio, scale recipes and use the unitary method."
+  },
+  {
+   "slug": "word-problem-decoder",
+   "search_phrase": "Word Problems",
+   "description": "Read a word problem and identify the maths it needs: the step before any calculation."
+  },
+  {
+   "slug": "equation-builder",
+   "search_phrase": "Forming Equations",
+   "description": "Turn a word problem into an equation or formula by building it from tiles."
+  },
+  {
+   "slug": "spot-the-error",
+   "search_phrase": "Errors in Word Problems",
+   "description": "Find the error in a worked word problem, then the misreading that caused it."
+  },
+  {
+   "slug": "gradient-hunter",
+   "search_phrase": "Gradient and Rate of Change",
+   "description": "Find the gradient of real-world graphs and say what the rate of change means."
+  },
+  {
+   "slug": "truth-buster",
+   "search_phrase": "Always, Sometimes or Never True",
+   "description": "Is it always true? Decide whether mathematical statements always hold, then see why."
+  },
+  {
+   "slug": "spot-the-muppet",
+   "search_phrase": "Maths Misconceptions",
+   "description": "Spot who has the maths wrong and pick the right answer: misconceptions in number, algebra and statistics."
+  },
+  {
+   "slug": "terrible-advice",
+   "search_phrase": "Financial Maths Mistakes",
+   "description": "Spot the maths mistakes in bad money advice: percentages, ratios and interest."
+  },
+  {
+   "slug": "wrong-on-the-internet",
+   "search_phrase": "Spot the Mistake",
+   "description": "Find the maths mistake in social media posts, polls and comment threads."
+  },
+  {
+   "slug": "maths-court",
+   "search_phrase": "Mathematical Reasoning",
+   "description": "Three arguments, one correct: rule on maths disputes by finding the argument that holds up."
+  },
+  {
+   "slug": "expected-damage",
+   "search_phrase": "Expected Value",
+   "description": "Use probability and expected value to choose the best option, not a guess."
+  },
+  {
+   "slug": "negative-number-line",
+   "search_phrase": "Negative Numbers",
+   "description": "Place, order and calculate with negative numbers on a number line from −10 to 10."
+  },
+  {
+   "slug": "think-of-a-number",
+   "search_phrase": "Inverse Operations",
+   "description": "Solve 'I think of a number' puzzles by undoing each step with inverse operations."
+  },
+  {
+   "slug": "formula-plug-in",
+   "search_phrase": "Substitution into Formulae",
+   "description": "Substitute values into formulae and work out the answer, from simple rules to area and speed."
+  },
+  {
+   "slug": "decimal-detective",
+   "search_phrase": "Ordering and Rounding Decimals",
+   "description": "Order decimals, round them and place them on a number line."
+  },
+  {
+   "slug": "four-quadrant-explorer",
+   "search_phrase": "Four Quadrant Coordinates",
+   "description": "Plot points and read coordinates in all four quadrants, and complete shapes on the grid."
+  },
+  {
+   "slug": "like-terms-collector",
+   "search_phrase": "Collecting Like Terms",
+   "description": "Simplify expressions by collecting like terms, from fruit to letters to full algebra."
+  },
+  {
+   "slug": "probability-pioneer",
+   "search_phrase": "Simple Probability",
+   "description": "Place events on the probability scale, calculate simple probabilities and test true-or-false claims."
+  },
+  {
+   "slug": "shape-shifter",
+   "search_phrase": "Transformations",
+   "description": "Translate, reflect and rotate shapes on a coordinate grid."
+  },
+  {
+   "slug": "new-shapes",
+   "search_phrase": "Area and Volume",
+   "description": "Area of parallelograms and trapezia, and volume of prisms."
+  },
+  {
+   "slug": "higher-power",
+   "search_phrase": "Comparing Powers and Roots",
+   "description": "Compare powers, roots and famous constants: which is higher? Then match expressions to their values."
+  },
+  {
+   "slug": "prisoners-dilemma",
+   "search_phrase": "Prisoner's Dilemma",
+   "description": "Play the iterated prisoner's dilemma against computer opponents and weigh up the payoffs."
+  },
+  {
+   "slug": "seven-bridges",
+   "search_phrase": "Graph Theory: Euler Paths",
+   "description": "Euler's bridges puzzle: trace routes, spot impossible graphs and find the rule for Euler paths."
+  },
+  {
+   "slug": "distinctly-average",
+   "search_phrase": "Mean, Median, Mode and Range",
+   "description": "Find the mean, median, mode and range of data sets, then frequency tables and missing values."
+  },
+  {
+   "slug": "index-laws",
+   "search_phrase": "Laws of Indices",
+   "description": "Apply the laws of indices: multiplying, dividing, powers of powers, zero, negative and fractional indices."
+  },
+  {
+   "slug": "quadratic-factoriser",
+   "search_phrase": "Factorising Quadratics",
+   "description": "Factorise quadratics with a = 1, then a > 1 by the AC method, then solve with the quadratic formula."
+  },
+  {
+   "slug": "trig-wars",
+   "search_phrase": "Trigonometry and Projectiles",
+   "description": "Set the angle and power of a shot and watch the trigonometry resolve it into horizontal and vertical parts."
+  },
+  {
+   "slug": "trig-worms",
+   "search_phrase": "SOH CAH TOA",
+   "description": "Use SOH CAH TOA to find the side or angle that aims the cannon."
+  },
+  {
+   "slug": "modular-battle",
+   "search_phrase": "Modular Arithmetic",
+   "description": "Find remainders against the clock, with dot pictures while you need them."
+  },
+  {
+   "slug": "surd-simplifier",
+   "search_phrase": "Simplifying Surds",
+   "description": "Simplify surds and rationalise denominators."
+  },
+  {
+   "slug": "proportion-blaster",
+   "search_phrase": "Direct and Inverse Proportion",
+   "description": "Direct and inverse proportion problems, and sharing in a ratio."
+  },
+  {
+   "slug": "trig-identity-duel",
+   "search_phrase": "Sine and Cosine Rules",
+   "description": "Exact trig values, the sine rule and the cosine rule."
+  },
+  {
+   "slug": "standard-form-blitz",
+   "search_phrase": "Standard Form",
+   "description": "Convert to and from standard form, then multiply and divide numbers in standard form."
+  },
+  {
+   "slug": "simultaneous-solver",
+   "search_phrase": "Simultaneous Equations",
+   "description": "Solve linear simultaneous equations, then linear with non-linear pairs."
+  },
+  {
+   "slug": "circle-theorem-spotter",
+   "search_phrase": "Circle Theorems",
+   "description": "Spot and apply all seven circle theorems, with a diagram on every question."
+  },
+  {
+   "slug": "probability-paradox",
+   "search_phrase": "Probability Misconceptions",
+   "description": "Probability paradoxes, conditional probability and common fallacies, in three modes."
+  },
+  {
+   "slug": "angle-ace",
+   "search_phrase": "Angle Facts",
+   "description": "Find missing angles, then name the angle fact that gives each one."
+  },
+  {
+   "slug": "coordinate-geometry-dash",
+   "search_phrase": "Coordinate Geometry",
+   "description": "Midpoints, gradients, lengths and equations of lines and circles on a plotted grid."
+  },
+  {
+   "slug": "graph-transformer",
+   "search_phrase": "Graph Transformations",
+   "description": "Translate, reflect and stretch a curve to match the target graph in as few moves as possible."
+  },
+  {
+   "slug": "formula-unlocked",
+   "search_phrase": "Changing the Subject",
+   "description": "Change the subject of a formula, step by step, with hints when you need them."
+  },
+  {
+   "slug": "bearing-blitz",
+   "search_phrase": "Three-Figure Bearings",
+   "description": "Estimate and set three-figure bearings, then fire at the target."
+  },
+  {
+   "slug": "scale-factor-scaling",
+   "search_phrase": "Area and Volume Scale Factors",
+   "description": "Length, area and volume scale factors: k, k squared and k cubed."
+  },
+  {
+   "slug": "unit-converter",
+   "search_phrase": "Area and Volume Unit Conversions",
+   "description": "Convert between units of length, area and volume, including cm² to m² and cm³ to litres."
+  },
+  {
+   "slug": "formula-forge",
+   "search_phrase": "Rearranging Formulae",
+   "description": "Rearrange formulae through four progressive stages, with step-by-step feedback."
+  },
+  {
+   "slug": "correlation-or-coincidence",
+   "search_phrase": "Correlation and Causation",
+   "description": "Does one variable cause the other, does something else cause both, or is it coincidence?"
+  },
+  {
+   "slug": "chart-interrogator",
+   "search_phrase": "Interpreting Statistical Diagrams",
+   "description": "Read stem and leaf, box plots, cumulative frequency and histograms, then compare data sets."
+  },
+  {
+   "slug": "component-crusher",
+   "search_phrase": "Vectors",
+   "description": "Column vectors, magnitude, addition, scalar product and vector equations of lines."
+  },
+  {
+   "slug": "expectation-station",
+   "search_phrase": "Expectation and E(X)",
+   "description": "Set up a probability table, calculate E(X), then say what it means in context."
+  },
+  {
+   "slug": "better-value",
+   "search_phrase": "Value for Money",
+   "description": "Compare phone contracts, energy tariffs and loans to decide which is better value."
+  },
+  {
+   "slug": "given-that",
+   "search_phrase": "Conditional Probability",
+   "description": "Conditional probability from two-way tables, Venn diagrams and frequency trees."
+  },
+  {
+   "slug": "screening-room",
+   "search_phrase": "False Positives and Base Rates",
+   "description": "Why a 99% accurate test can still be wrong most of the time: base rates with icon arrays."
+  },
+  {
+   "slug": "linear-equation-solver",
+   "search_phrase": "Solving Linear Equations",
+   "description": "Solve one- and two-step linear equations by choosing the inverse operation at each step."
+  },
+  {
+   "slug": "core-maths-paper1",
+   "search_phrase": "Paper 1 Exam Practice",
+   "description": "Exam-style questions for AQA Core Maths Paper 1: analysis of data and personal finance."
+  },
+  {
+   "slug": "core-maths-paper2a",
+   "search_phrase": "Paper 2A Exam Practice",
+   "description": "Exam-style questions for AQA Core Maths Paper 2A: critical analysis, normal distribution, estimation, correlation."
+  },
+  {
+   "slug": "core-maths-paper2b",
+   "search_phrase": "Paper 2B Exam Practice",
+   "description": "Exam-style questions for AQA Core Maths Paper 2B: critical analysis, expectation, cost-benefit and risk."
+  },
+  {
+   "slug": "core-maths-paper2c",
+   "search_phrase": "Paper 2C Exam Practice",
+   "description": "Exam-style questions for AQA Core Maths Paper 2C: graphs, rates of change and exponential models."
+  },
+  {
+   "slug": "tax-theft",
+   "search_phrase": "Tax and National Insurance",
+   "description": "Work out income tax, National Insurance and take-home pay from a payslip, step by step."
+  },
+  {
+   "slug": "stat-attack",
+   "search_phrase": "Grouped Frequency Tables",
+   "description": "Modal class, median class, estimated mean and standard deviation from grouped frequency tables."
+  },
+  {
+   "slug": "growth-and-decay",
+   "search_phrase": "Exponential Growth and Decay",
+   "description": "Exponential models: substitute, interpret the parameters, find constants and solve with logarithms."
+  },
+  {
+   "slug": "graph-sketcher",
+   "search_phrase": "Sketching Graphs",
+   "description": "Tables of values, sketching and reading quadratic, cubic, exponential, reciprocal and trig graphs."
+  },
+  {
+   "slug": "glorious-gantt",
+   "search_phrase": "Critical Path and Gantt Charts",
+   "description": "Critical path analysis: early and late times, the critical path, floats and Gantt charts."
+  },
+  {
+   "slug": "test-the-claim",
+   "search_phrase": "Hypothesis Testing",
+   "description": "Six-step hypothesis tests for binomial, Poisson, normal and correlation."
+  },
+  {
+   "slug": "differentiation-duel",
+   "search_phrase": "Differentiation",
+   "description": "Differentiate polynomials, trig and exponentials, with the chain, product and quotient rules."
+  },
+  {
+   "slug": "integration-duel",
+   "search_phrase": "Integration",
+   "description": "Integrate polynomials, trig and exponentials, and integrate by parts."
+  },
+  {
+   "slug": "suvat",
+   "search_phrase": "SUVAT Equations",
+   "description": "Pick the right SUVAT equation, then use it to find the answer."
+  },
+  {
+   "slug": "curling-friction",
+   "search_phrase": "Friction Problems",
+   "description": "Friction, Newton's laws, SUVAT and momentum, in a curling setting."
+  },
+  {
+   "slug": "force-resolver",
+   "search_phrase": "Resolving Forces",
+   "description": "Resolve forces on inclined planes, pulleys and connected particles."
+  },
+  {
+   "slug": "moments-master",
+   "search_phrase": "Moments",
+   "description": "Moments, beams, reactions at supports and tilting problems."
+  },
+  {
+   "slug": "log-laws",
+   "search_phrase": "Laws of Logarithms",
+   "description": "Practise the laws of logarithms, then use them to solve exponential equations step by step."
+  },
+  {
+   "slug": "binomial-blaster",
+   "search_phrase": "Binomial Expansion",
+   "description": "Binomial expansion, Pascal's triangle and nCr."
+  },
+  {
+   "slug": "partial-fractions-duel",
+   "search_phrase": "Partial Fractions",
+   "description": "Split into partial fractions: distinct linear, repeated and improper."
+  },
+  {
+   "slug": "proof-builder",
+   "search_phrase": "Mathematical Proof",
+   "description": "Find counterexamples, order the steps of a proof and build proofs by induction."
+  },
+  {
+   "slug": "normal-navigator",
+   "search_phrase": "Normal Distribution",
+   "description": "Z-scores, shaded regions and normal probabilities."
+  },
+  {
+   "slug": "fermi-lab",
+   "search_phrase": "Fermi Estimation",
+   "description": "Break a big estimation question into smaller steps and estimate each one."
+  },
+  {
+   "slug": "dimension-checker",
+   "search_phrase": "Dimensional Analysis",
+   "description": "Check whether physics equations are dimensionally consistent using M, L and T."
+  },
+  {
+   "slug": "factor-theorem",
+   "search_phrase": "Factor and Remainder Theorem",
+   "description": "Learn the factor theorem, the remainder theorem and algebraic division, then practise."
+  },
+  {
+   "slug": "boolean-blitz",
+   "search_phrase": "Boolean Algebra",
+   "description": "Simplify Boolean expressions with the logic laws, with full step-by-step working."
+  },
+  {
+   "slug": "truth-will-set-you-free",
+   "search_phrase": "Truth Tables",
+   "description": "Build truth tables from engineering scenarios and match them to Boolean expressions."
+  },
+  {
+   "slug": "complex-converter",
+   "search_phrase": "Complex Numbers",
+   "description": "Convert complex numbers between Cartesian, polar and exponential form."
+  },
+  {
+   "slug": "matrix-crunch",
+   "search_phrase": "Matrices",
+   "description": "Determinants, inverse matrices and solving equations with Cramer's rule."
+  },
+  {
+   "slug": "characteristic-quest",
+   "search_phrase": "Characteristic Equations",
+   "description": "Find the characteristic equation of a matrix: eigenvectors, part 1."
+  },
+  {
+   "slug": "eigenvalue-extractor",
+   "search_phrase": "Eigenvalues",
+   "description": "Solve the characteristic equation to find eigenvalues: eigenvectors, part 2."
+  },
+  {
+   "slug": "eigenvector-engine",
+   "search_phrase": "Eigenvectors",
+   "description": "Find the eigenvector for each eigenvalue: eigenvectors, part 3."
+  },
+  {
+   "slug": "six-sevens-bruv",
+   "search_phrase": "Times Tables",
+   "description": "Times tables to 12 by 12, typed not chosen; each fact you know lights up your own grid."
+  },
+  {
+   "slug": "free-daily-pizza",
+   "search_phrase": "Fractions, Decimals and Percentages",
+   "description": "Convert between fractions, decimals and percentages, and find fractions and percentages of amounts."
+  },
+  {
+   "slug": "just-pythag-it-bruv",
+   "search_phrase": "Pythagoras' Theorem",
+   "description": "Use Pythagoras' theorem with a calculator to find the hypotenuse or a shorter side, from simple triangles to ladders and ramps."
+  }
+ ],
+ "pages": {
+  "resit/index.html": {
+   "title": "GCSE Maths Resit Games – Free, No Sign-up | MaffsGames",
+   "description": "Maths games for GCSE Foundation resit classes aiming for grade 4: number, algebra, ratio, geometry, probability and statistics. Free, no sign-up."
+  }
+ }
+}
