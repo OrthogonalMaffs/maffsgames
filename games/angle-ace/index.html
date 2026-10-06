@@ -139,7 +139,151 @@ function showMenu(){show('menu')}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
 // ============================================================
-//  DRAWING HELPERS
+//  DIAGRAMS (SR-6: wording, picture and key agree)
+//  Every figure is drawn by drawFig() from its question's `fig` data, to scale, at the
+//  canvas's real width. A given value sets the geometry; an unknown (x, y) is whatever the
+//  givens leave, so its drawn size comes from the figure, never from the key.
+//  scripts/verify-angle-ace.py records these canvas calls and measures every label against
+//  the angle it sits in, and the drawn relationship against the keyed reason.
+//  Angles are degrees, anticlockwise from east (the maths convention); screen y runs down.
+//  fig types (regions listed anticlockwise; a number is given and labelled, 'x'/'y' unknown,
+//  null unlabelled):
+//    line   {r:[...]}            rays from a point on a straight line, the upper half from east
+//    point  {r:[...], rot}       rays round a point, from direction rot (default 0)
+//    cross  {r:[a,b,c,d], rot}   two crossing lines; the first number sets them (rot default
+//                                centres region 0 on east)
+//    par    {m:[[at,pos,lab]..]} two parallel lines and a transversal; at 'T' (top) or 'B';
+//                                pos ur, ul, ll, lr (upper/lower, right/left of the transversal);
+//                                the first number and its position set the transversal
+//    tri    {A,B,C, sq, iso}     triangle: A, B base angles (left, right), C apex; sq names a
+//                                vertex drawn with a right-angle square ('sq' as a vertex's value:
+//                                a square and no number); iso: AC = BC (ticks), apex unlabelled
+//    ext    {A,C,x}              triangle with AB extended past B; x is the exterior angle at B
+//    partri {q0,R,Q}             parallel lines, triangle PRQ with P, R on the top line, Q on the
+//                                bottom: q0 is the angle at Q between QP and the line (alternate
+//                                to the triangle's angle at P), R and Q the triangle's angles
+// ============================================================
+const COL={line:'#4a6080',trans:'#8090a8',par:'#06b6d4',bg:'#0d1118',x:'#f43f5e',y:'#f97316',given:['#3b82f6','#f97316','#22c55e']};
+const PAD=14,ARC=20,SQ=12,FIG_FONT='bold 15px JetBrains Mono, monospace',RAD=Math.PI/180;
+function uv(a){return [Math.cos(a*RAD),-Math.sin(a*RAD)]}
+function at(V,a,d){const u=uv(a);return [V[0]+d*u[0],V[1]+d*u[1]]}
+function dirOf(P,Q){return (Math.atan2(P[1]-Q[1],Q[0]-P[0])/RAD+360)%360}
+function isNum(v){return typeof v==='number'}
+function sumNums(r){return r.filter(isNum).reduce((s,v)=>s+v,0)}
+// the ray from V at angle a, cut PAD short of the canvas edge
+function toEdge(V,a,W,H,cap){const u=uv(a);let t=cap;
+  if(u[0]>1e-9)t=Math.min(t,(W-PAD-V[0])/u[0]);if(u[0]<-1e-9)t=Math.min(t,(PAD-V[0])/u[0]);
+  if(u[1]>1e-9)t=Math.min(t,(H-PAD-V[1])/u[1]);if(u[1]<-1e-9)t=Math.min(t,(PAD-V[1])/u[1]);
+  return at(V,a,t)}
+// the interior angle at P of a triangle with other vertices Q1, Q2, as [from, to] anticlockwise
+function interior(P,Q1,Q2){const a1=dirOf(P,Q1),a2=dirOf(P,Q2),s=(a2-a1+360)%360;return s<180?[a1,a1+s]:[a2,a2+360-s]}
+function mark(S,V,a,b,lab,sq){if(lab!==null&&lab!==undefined)S.marks.push({V,a,b,lab,sq:!!sq})}
+
+const FIG={
+  line(f,W,H){
+    const V=[W/2,Math.round(H*0.8)],R=Math.min(W/2-PAD,V[1]-PAD),S={segs:[[at(V,180,R),at(V,0,R),'line']],marks:[],par:[]};
+    const left=180-sumNums(f.r);let a=0;
+    f.r.forEach((v,i)=>{const s=isNum(v)?v:left;if(i>0)S.segs.push([V,at(V,a,R),'line']);mark(S,V,a,a+s,v,s===90&&isNum(v));a+=s});
+    return S},
+  point(f,W,H){
+    const V=[W/2,H/2],S={segs:[],marks:[],par:[]},left=360-sumNums(f.r);let a=f.rot||0;
+    f.r.forEach(v=>{const s=isNum(v)?v:left;S.segs.push([V,toEdge(V,a,W,H,0.45*W),'line']);mark(S,V,a,a+s,v,s===90&&isNum(v));a+=s});
+    return S},
+  cross(f,W,H){
+    const i=f.r.findIndex(isNum),e=i%2===0?f.r[i]:180-f.r[i],sizes=[e,180-e,e,180-e];
+    const V=[W/2,H/2],S={segs:[],marks:[],par:[]};let a=f.rot===undefined?-e/2:f.rot;
+    sizes.forEach((s,k)=>{S.segs.push([V,toEdge(V,a,W,H,0.45*W),'line']);mark(S,V,a,a+s,f.r[k],s===90&&isNum(f.r[k]));a+=s});
+    return S},
+  par(f,W,H){
+    const g=f.m.find(m=>isNum(m[2])),d=(g[1]==='ur'||g[1]==='ll')?g[2]:180-g[2];
+    const gap=Math.round(H*0.42),y1=Math.round((H-gap)/2),y2=y1+gap,dx=gap/Math.tan(d*RAD);
+    const V={T:[W/2+dx/2,y1],B:[W/2-dx/2,y2]},e=Math.min(gap*0.75,(y1-PAD)/Math.sin(d*RAD));
+    const S={segs:[[[PAD,y1],[W-PAD,y1],'line'],[[PAD,y2],[W-PAD,y2],'line'],[at(V.T,d,e),at(V.B,d+180,e),'trans']],marks:[],par:[y1,y2],avoid:[V.T,V.B]};
+    const R={ur:[0,d],ul:[d,180],ll:[180,180+d],lr:[180+d,360]};
+    f.m.forEach(([w,p,lab])=>mark(S,V[w],R[p][0],R[p][1],lab));
+    return S},
+  tri(f,W,H){
+    const val=k=>isNum(f[k])?f[k]:f[k]==='sq'?90:null;let A=val('A'),B=val('B'),C=val('C');
+    if(f.iso){B=A;C=180-2*A}else if(A===null)A=180-B-C;else if(B===null)B=180-A-C;else C=180-A-B;
+    const t=Math.sin(B*RAD)/Math.sin((A+B)*RAD),P=fit([[0,0],[1,0],[t*Math.cos(A*RAD),t*Math.sin(A*RAD)]],W,H,PAD+4);
+    const S={segs:[[P[0],P[1],'line'],[P[1],P[2],'line'],[P[2],P[0],'line']],marks:[],par:[],ticks:[]};
+    ['A','B','C'].forEach((k,i)=>{const r=interior(P[i],P[(i+1)%3],P[(i+2)%3]);mark(S,P[i],r[0],r[1],f.iso&&k==='C'?null:f[k]==='sq'?'':f[k],f.sq===k||f[k]==='sq')});
+    if(f.iso)S.ticks=[[P[0],P[2]],[P[1],P[2]]];
+    return S},
+  ext(f,W,H){
+    const A=f.A,C=f.C,B=180-A-C,t=Math.sin(B*RAD)/Math.sin((A+B)*RAD);
+    const P=fit([[0,0],[1,0],[t*Math.cos(A*RAD),t*Math.sin(A*RAD)],[1.5,0]],W,H,PAD+22);
+    const S={segs:[[P[0],P[3],'line'],[P[1],P[2],'line'],[P[2],P[0],'line']],marks:[],par:[]};
+    let r=interior(P[0],P[1],P[2]);mark(S,P[0],r[0],r[1],A);r=interior(P[2],P[0],P[1]);mark(S,P[2],r[0],r[1],C);
+    mark(S,P[1],dirOf(P[1],P[3]),dirOf(P[1],P[2]),f.x);
+    return S},
+  partri(f,W,H){
+    const p=f.q0,r=f.R,w=1/Math.tan(p*RAD)+1/Math.tan(r*RAD);
+    const P=fit([[0,1],[w,1],[1/Math.tan(p*RAD),0],[-0.25,1],[w+0.25,0]],W,H,PAD+6);
+    const [Pp,Rp,Qp]=P,y1=Pp[1],y2=Qp[1];
+    const S={segs:[[[PAD,y1],[W-PAD,y1],'line'],[[PAD,y2],[W-PAD,y2],'line'],[Pp,Qp,'trans'],[Rp,Qp,'trans']],marks:[],par:[y1,y2],avoid:[Pp,Rp,Qp]};
+    mark(S,Qp,dirOf(Qp,Pp),180,p);let i=interior(Rp,Pp,Qp);mark(S,Rp,i[0],i[1],r);i=interior(Qp,Pp,Rp);mark(S,Qp,i[0],i[1],f.Q);
+    return S},
+};
+// points in maths coordinates (y up), scaled uniformly and centred in the canvas less pad
+function fit(pts,W,H,pad){
+  const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]),x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  const s=Math.min((W-2*pad)/(x1-x0||1),(H-2*pad)/(y1-y0||1)),ox=(W-s*(x1-x0))/2,oy=(H-s*(y1-y0))/2;
+  return pts.map(p=>[ox+s*(p[0]-x0),H-oy-s*(p[1]-y0)])}
+// does segment PQ touch box [x0,y0,x1,y1]? (Liang-Barsky)
+function segHitsBox(P,Q,b){
+  let t0=0,t1=1;const dx=Q[0]-P[0],dy=Q[1]-P[1];
+  for(const [p,q] of [[-dx,P[0]-b[0]],[dx,b[2]-P[0]],[-dy,P[1]-b[1]],[dy,b[3]-P[1]]]){
+    if(p===0){if(q<0)return false}else{const t=q/p;if(p<0){if(t>t0)t0=t}else if(t<t1)t1=t;if(t0>t1)return false}}
+  return true}
+function boxClear(b,S,boxes,W,H){
+  const m=3,g=[b[0]-m,b[1]-m,b[2]+m,b[3]+m];
+  if(b[0]<2||b[1]<2||b[2]>W-2||b[3]>H-2)return false;
+  if(S.segs.some(s=>segHitsBox(s[0],s[1],g)))return false;
+  return !boxes.some(o=>!(g[2]<o[0]||g[0]>o[2]||g[3]<o[1]||g[1]>o[3]))}
+// a label in its region: on the bisector, far enough out to clear both of the region's rays and its arc;
+// if that spot touches a line or another label, slid round within the region and then pushed further out.
+// A spot nearer another vertex than its own is never used: a reader would take the label for that vertex's.
+function placeLabel(m,w,h,S,boxes,W,H){
+  const th=m.b-m.a,mid=(m.a+m.b)/2,half=Math.min(th/2,90)*RAD,u=uv(mid);
+  const ext=a=>w/2*Math.abs(Math.sin(a*RAD))+h/2*Math.abs(Math.cos(a*RAD));
+  const d0=Math.max((ext(m.a)+4)/Math.sin(half),(ext(m.b)+4)/Math.sin(half),ARC+6+w/2*Math.abs(u[0])+h/2*Math.abs(u[1]));
+  const box=(a,d)=>{const c=at(m.V,a,d);return [c[0]-w/2,c[1]-h/2,c[0]+w/2,c[1]+h/2]};
+  const own=b=>{const c=[(b[0]+b[2])/2,(b[1]+b[3])/2],dv=Math.hypot(c[0]-m.V[0],c[1]-m.V[1]);
+    return S.marks.every(o=>o.V===m.V||Math.hypot(c[0]-o.V[0],c[1]-o.V[1])>dv+4)};
+  for(let k=0;k<30;k++)for(const f of [0,0.25,-0.25,0.45,-0.45]){
+    const b=box(mid+f*Math.min(th,180)/2,d0+3*k);if(boxClear(b,S,boxes,W,H)&&own(b))return b}
+  return box(mid,d0)}
+function drawFig(q){
+  const w=canvas.clientWidth||canvas.parentNode.clientWidth||600,W=Math.round(w),H=Math.round(Math.min(340,Math.max(180,W*0.64)));
+  const dpr=window.devicePixelRatio||1;
+  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);canvas.style.height=H+'px';ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.fillStyle=COL.bg;ctx.fillRect(0,0,W,H);
+  const S=FIG[q.fig.t](q.fig,W,H);
+  ctx.lineWidth=2;ctx.lineCap='round';
+  S.segs.forEach(([P,Q,k])=>{ctx.strokeStyle=COL[k];ctx.beginPath();ctx.moveTo(P[0],P[1]);ctx.lineTo(Q[0],Q[1]);ctx.stroke()});
+  (S.ticks||[]).forEach(([P,Q])=>{const M=[(P[0]+Q[0])/2,(P[1]+Q[1])/2],n=dirOf(P,Q)+90,a=at(M,n,6),b=at(M,n+180,6);
+    ctx.strokeStyle=COL.par;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke()});
+  ctx.font=FIG_FONT;ctx.textAlign='center';ctx.textBaseline='middle';
+  const boxes=[];let gi=0;
+  S.marks.forEach(m=>{
+    const unk=m.lab==='x'||m.lab==='y',col=unk?COL[m.lab]:COL.given[gi++%3],text=unk?m.lab:m.lab+'°';
+    ctx.strokeStyle=col;ctx.beginPath();
+    if(m.sq){const p=at(m.V,m.a,SQ),r=at(m.V,m.b,SQ);ctx.moveTo(p[0],p[1]);ctx.lineTo(p[0]+r[0]-m.V[0],p[1]+r[1]-m.V[1]);ctx.lineTo(r[0],r[1])}
+    else ctx.arc(m.V[0],m.V[1],ARC,-m.b*RAD,-m.a*RAD);
+    ctx.stroke();
+    if(m.lab==='')return;
+    const b=placeLabel(m,ctx.measureText(text).width,15,S,boxes,W,H);boxes.push(b);
+    ctx.fillStyle=col;ctx.fillText(text,(b[0]+b[2])/2,(b[1]+b[3])/2)});
+  // parallel marks: one arrowhead on each line, where it clears every label and every vertex
+  S.par.forEach(y=>{
+    for(let k=0;k<12;k++){const x=k%2?PAD+14+(k>>1)*18:W-PAD-14-(k>>1)*18,b=[x-6,y-7,x+7,y+7];
+      if(!boxes.some(o=>!(b[2]<o[0]||b[0]>o[2]||b[3]<o[1]||b[1]>o[3]))&&!(S.avoid||[]).some(p=>Math.hypot(p[0]-x,p[1]-y)<40)){
+        ctx.fillStyle=COL.par;ctx.beginPath();ctx.moveTo(x-5,y-6);ctx.lineTo(x+6,y);ctx.lineTo(x-5,y+6);ctx.closePath();ctx.fill();break}}});
+}
+
+// ============================================================
+//  LEGACY DRAWING HELPERS (GCSE bank only, until it moves onto drawFig)
 // ============================================================
 function clear(){ctx.clearRect(0,0,W,H);ctx.fillStyle='#0d1118';ctx.fillRect(0,0,W,H)}
 
@@ -196,283 +340,179 @@ const ALL_REASONS=Object.values(REASONS);
 const QUESTIONS_BY_LEVEL={};
 
 // ============================================================
-//  YEAR 6 QUESTION BANK — 40 questions
+//  STARTER (key year6) QUESTION BANK — 40 questions, each drawn from its fig
 // ============================================================
 QUESTIONS_BY_LEVEL.year6=[
 // === ANGLES ON A STRAIGHT LINE (10) ===
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(400,60);ctx.stroke();
-drawAngleValue(300,180,0,40,35,'#3b82f6',40);drawAngleArc(300,180,40,180,35,'#f43f5e','x')},
+{fig:{t:'line',r:[40,'x']},
 prompt:'Find angle x',answer:140,reason:REASONS.STRAIGHT,
 angleOpts:[140,40,120,160],steps:['x and 40° are on a straight line','Angles on a straight line sum to 180°','x = 180° − 40° = 140°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(220,50);ctx.stroke();
-drawAngleValue(300,180,105,180,35,'#3b82f6',75);drawAngleArc(300,180,0,105,35,'#f43f5e','x')},
+{fig:{t:'line',r:['x',75]},
 prompt:'Find angle x',answer:105,reason:REASONS.STRAIGHT,
 angleOpts:[105,75,115,85],steps:['Angles on a straight line sum to 180°','x = 180° − 75° = 105°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(180,50);ctx.stroke();
-drawAngleValue(300,180,120,180,35,'#3b82f6',120);drawAngleArc(300,180,0,120,35,'#f43f5e','x')},
+{fig:{t:'line',r:['x',120]},
 prompt:'Find angle x',answer:60,reason:REASONS.STRAIGHT,
 angleOpts:[60,120,80,40],steps:['Angles on a straight line sum to 180°','x = 180° − 120° = 60°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(380,50);ctx.stroke();
-drawAngleValue(300,180,0,55,35,'#3b82f6',55);drawAngleArc(300,180,55,180,35,'#f43f5e','x')},
+{fig:{t:'line',r:[55,'x']},
 prompt:'Find angle x',answer:125,reason:REASONS.STRAIGHT,
 angleOpts:[125,55,135,145],steps:['Angles on a straight line sum to 180°','x = 180° − 55° = 125°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(300,40);ctx.stroke();
-drawAngleValue(300,180,0,90,35,'#3b82f6',90);drawAngleArc(300,180,90,180,35,'#f43f5e','x');
-ctx.beginPath();ctx.moveTo(280,160);ctx.lineTo(280,180);ctx.lineTo(300,180);ctx.stroke()},
+{fig:{t:'line',r:[90,'x']},
 prompt:'Find angle x',answer:90,reason:REASONS.STRAIGHT,
 angleOpts:[90,180,45,270],steps:['Angles on a straight line sum to 180°','x = 180° − 90° = 90°'],misconception:'A right angle is exactly 90°. Two right angles make a straight line (180°).'},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(420,50);ctx.stroke();
-drawAngleValue(300,180,0,30,35,'#3b82f6',30);drawAngleArc(300,180,30,180,35,'#f43f5e','x')},
+{fig:{t:'line',r:[30,'x']},
 prompt:'Find angle x',answer:150,reason:REASONS.STRAIGHT,
 angleOpts:[150,30,160,130],steps:['Angles on a straight line sum to 180°','x = 180° − 30° = 150°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(190,50);ctx.stroke();
-drawAngleValue(300,180,115,180,35,'#3b82f6',115);drawAngleArc(300,180,0,115,35,'#f43f5e','x')},
+{fig:{t:'line',r:['x',115]},
 prompt:'Find angle x',answer:65,reason:REASONS.STRAIGHT,
 angleOpts:[65,115,75,55],steps:['Angles on a straight line sum to 180°','x = 180° − 115° = 65°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(370,50);ctx.stroke();
-drawAngleValue(300,180,0,45,35,'#3b82f6',45);drawAngleArc(300,180,45,180,35,'#f43f5e','x')},
+{fig:{t:'line',r:[45,'x']},
 prompt:'Find angle x',answer:135,reason:REASONS.STRAIGHT,
 angleOpts:[135,45,125,155],steps:['Angles on a straight line sum to 180°','x = 180° − 45° = 135°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(380,60);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(220,50);ctx.stroke();
-drawAngleValue(300,180,0,60,35,'#3b82f6',60);drawAngleArc(300,180,60,180,35,'#f43f5e','x')},
+{fig:{t:'line',r:[60,'x']},
 prompt:'Two angles on a straight line: one is 60°. Find x.',answer:120,reason:REASONS.STRAIGHT,
 angleOpts:[120,60,100,140],steps:['60° + x = 180°','x = 180° − 60° = 120°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(80,180);ctx.lineTo(520,180);ctx.stroke();
-ctx.beginPath();ctx.moveTo(300,180);ctx.lineTo(350,50);ctx.stroke();
-drawAngleValue(300,180,0,85,35,'#3b82f6',85);drawAngleArc(300,180,85,180,35,'#f43f5e','x')},
+{fig:{t:'line',r:[85,'x']},
 prompt:'Find angle x',answer:95,reason:REASONS.STRAIGHT,
 angleOpts:[95,85,105,75],steps:['Angles on a straight line sum to 180°','x = 180° − 85° = 95°']},
 
 // === ANGLES AROUND A POINT (10) ===
-{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-[0,90,210].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
-drawAngleValue(cx,cy,0,90,40,'#3b82f6',90);drawAngleValue(cx,cy,90,210,40,'#f97316',120);drawAngleArc(cx,cy,210,360,38,'#f43f5e','x')},
+{fig:{t:'point',r:[90,120,'x']},
 prompt:'Find angle x',answer:150,reason:REASONS.POINT,
 angleOpts:[150,120,90,180],steps:['Angles at a point sum to 360°','90° + 120° + x = 360°','x = 360° − 210° = 150°']},
 
-{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-[0,100,180].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
-drawAngleValue(cx,cy,0,100,40,'#3b82f6',100);drawAngleValue(cx,cy,100,180,40,'#f97316',80);drawAngleArc(cx,cy,180,360,38,'#f43f5e','x')},
-prompt:'Find angle x',answer:180,reason:REASONS.POINT,
+{fig:{t:'point',r:[100,80,'x']},
+prompt:'Find angle x',answer:180,reason:REASONS.POINT,multiReason:[REASONS.POINT,REASONS.STRAIGHT],
 angleOpts:[180,160,200,100],steps:['Angles at a point sum to 360°','100° + 80° + x = 360°','x = 360° − 180° = 180°']},
 
-{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-[0,120,210].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
-drawAngleValue(cx,cy,0,120,40,'#3b82f6',120);drawAngleValue(cx,cy,120,210,40,'#f97316',90);drawAngleArc(cx,cy,210,360,38,'#f43f5e','x')},
+{fig:{t:'point',r:[120,90,'x']},
 prompt:'Find angle x',answer:150,reason:REASONS.POINT,
 angleOpts:[150,130,170,90],steps:['Angles at a point sum to 360°','120° + 90° + x = 360°','x = 360° − 210° = 150°']},
 
-{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-[0,270].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
-drawAngleValue(cx,cy,270,360,50,'#3b82f6',270);drawAngleArc(cx,cy,0,270,38,'#f43f5e','x');
-ctx.fillStyle='#3b82f6';ctx.font='bold 13px Outfit';ctx.textAlign='center';ctx.fillText('270°',cx+60,cy+70)},
+{fig:{t:'point',r:[270,'x']},
 prompt:'One angle is 270°. Find angle x.',answer:90,reason:REASONS.POINT,
 angleOpts:[90,180,270,45],steps:['Angles at a point sum to 360°','270° + x = 360°','x = 360° − 270° = 90°']},
 
-{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-[0,60,120].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
-drawAngleValue(cx,cy,0,60,40,'#3b82f6',60);drawAngleValue(cx,cy,60,120,40,'#f97316',60);drawAngleArc(cx,cy,120,360,38,'#f43f5e','x')},
+{fig:{t:'point',r:[60,60,'x']},
 prompt:'Find angle x',answer:240,reason:REASONS.POINT,
 angleOpts:[240,120,180,300],steps:['Angles at a point sum to 360°','60° + 60° + x = 360°','x = 360° − 120° = 240°']},
 
-{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-[0,150,280].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
-drawAngleValue(cx,cy,0,150,40,'#3b82f6',150);drawAngleValue(cx,cy,150,280,40,'#f97316',130);drawAngleArc(cx,cy,280,360,38,'#f43f5e','x')},
+{fig:{t:'point',r:[150,130,'x']},
 prompt:'Find angle x',answer:80,reason:REASONS.POINT,
 angleOpts:[80,100,60,130],steps:['Angles at a point sum to 360°','150° + 130° + x = 360°','x = 360° − 280° = 80°']},
 
-{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-[0,200].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
-drawAngleValue(cx,cy,0,200,50,'#3b82f6',200);drawAngleArc(cx,cy,200,360,38,'#f43f5e','x');
-ctx.fillStyle='#3b82f6';ctx.font='bold 13px Outfit';ctx.textAlign='center';ctx.fillText('200°',cx-50,cy+50)},
+{fig:{t:'point',r:[200,'x']},
 prompt:'One angle is 200°. Find angle x.',answer:160,reason:REASONS.POINT,
 angleOpts:[160,200,140,180],steps:['Angles at a point sum to 360°','200° + x = 360°','x = 360° − 200° = 160°']},
 
-{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-[0,45,135].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
-drawAngleValue(cx,cy,0,45,40,'#3b82f6',45);drawAngleValue(cx,cy,45,135,40,'#f97316',90);drawAngleArc(cx,cy,135,360,38,'#f43f5e','x')},
+{fig:{t:'point',r:[45,90,'x']},
 prompt:'Find angle x',answer:225,reason:REASONS.POINT,
 angleOpts:[225,135,180,270],steps:['Angles at a point sum to 360°','45° + 90° + x = 360°','x = 360° − 135° = 225°']},
 
-{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-[0,110,210].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
-drawAngleValue(cx,cy,0,110,40,'#3b82f6',110);drawAngleValue(cx,cy,110,210,40,'#f97316',100);drawAngleArc(cx,cy,210,360,38,'#f43f5e','x')},
+{fig:{t:'point',r:[110,100,'x']},
 prompt:'Find angle x',answer:150,reason:REASONS.POINT,
 angleOpts:[150,130,170,110],steps:['Angles at a point sum to 360°','110° + 100° + x = 360°','x = 360° − 210° = 150°']},
 
-{draw:q=>{clear();const cx=300,cy=180;ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-[0,90,180,270].forEach(a=>{const r=a*Math.PI/180;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+140*Math.cos(r),cy-140*Math.sin(r));ctx.stroke()});
-drawAngleValue(cx,cy,0,90,40,'#3b82f6',90);drawAngleValue(cx,cy,90,180,40,'#f97316',90);drawAngleValue(cx,cy,180,270,40,'#22c55e',90);drawAngleArc(cx,cy,270,360,38,'#f43f5e','x')},
-prompt:'Four angles around a point. Three are 90°. Find x.',answer:90,reason:REASONS.POINT,
+{fig:{t:'point',r:[90,90,90,'x']},
+prompt:'Four angles around a point. Three are 90°. Find x.',answer:90,reason:REASONS.POINT,multiReason:[REASONS.POINT,REASONS.STRAIGHT,REASONS.VERTOP],
 angleOpts:[90,180,270,45],steps:['Angles at a point sum to 360°','90° + 90° + 90° + x = 360°','x = 360° − 270° = 90°']},
 
 // === VERTICALLY OPPOSITE ANGLES (10) ===
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(100,110);ctx.lineTo(500,250);ctx.stroke();
-ctx.beginPath();ctx.moveTo(100,250);ctx.lineTo(500,110);ctx.stroke();
-drawAngleValue(300,180,15,60,40,'#3b82f6',50);drawAngleArc(300,180,195,240,38,'#f43f5e','x')},
+{fig:{t:'cross',r:[50,null,'x',null]},
 prompt:'Find angle x',answer:50,reason:REASONS.VERTOP,
 angleOpts:[50,130,40,140],steps:['x and 50° are vertically opposite','Vertically opposite angles are equal','x = 50°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(100,100);ctx.lineTo(500,260);ctx.stroke();
-ctx.beginPath();ctx.moveTo(100,260);ctx.lineTo(500,100);ctx.stroke();
-drawAngleValue(300,180,15,55,40,'#3b82f6',73);drawAngleArc(300,180,195,235,38,'#f43f5e','x')},
+{fig:{t:'cross',r:[73,null,'x',null]},
 prompt:'Find angle x',answer:73,reason:REASONS.VERTOP,
 angleOpts:[73,107,63,117],steps:['Vertically opposite angles are equal','x = 73°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(100,80);ctx.lineTo(500,280);ctx.stroke();
-ctx.beginPath();ctx.moveTo(80,250);ctx.lineTo(520,110);ctx.stroke();
-drawAngleValue(300,180,20,70,40,'#3b82f6',118);drawAngleArc(300,180,200,250,38,'#f43f5e','x')},
+{fig:{t:'cross',r:[118,null,'x',null]},
 prompt:'Find angle x',answer:118,reason:REASONS.VERTOP,
 angleOpts:[118,62,108,72],steps:['Vertically opposite angles are equal','x = 118°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(100,110);ctx.lineTo(500,250);ctx.stroke();
-ctx.beginPath();ctx.moveTo(100,250);ctx.lineTo(500,110);ctx.stroke();
-drawAngleValue(300,180,20,60,40,'#3b82f6',45);drawAngleArc(300,180,200,240,38,'#f43f5e','x')},
+{fig:{t:'cross',r:[45,null,'x',null]},
 prompt:'Find angle x',answer:45,reason:REASONS.VERTOP,
 angleOpts:[45,135,55,125],steps:['Vertically opposite angles are equal','x = 45°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(100,95);ctx.lineTo(500,265);ctx.stroke();
-ctx.beginPath();ctx.moveTo(100,265);ctx.lineTo(500,95);ctx.stroke();
-drawAngleValue(300,180,15,55,40,'#3b82f6',92);drawAngleArc(300,180,195,235,38,'#f43f5e','x')},
+{fig:{t:'cross',r:[92,null,'x',null]},
 prompt:'Find angle x',answer:92,reason:REASONS.VERTOP,
 angleOpts:[92,88,82,98],steps:['Vertically opposite angles are equal','x = 92°'],misconception:'92° is close to a right angle but it is NOT 90°. The vertically opposite angle must be exactly the same.'},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(100,80);ctx.lineTo(500,280);ctx.stroke();
-ctx.beginPath();ctx.moveTo(80,260);ctx.lineTo(520,100);ctx.stroke();
-drawAngleValue(300,180,20,65,40,'#3b82f6',135);drawAngleArc(300,180,200,245,38,'#f43f5e','x')},
+{fig:{t:'cross',r:[135,null,'x',null]},
 prompt:'Find angle x',answer:135,reason:REASONS.VERTOP,
 angleOpts:[135,45,125,55],steps:['Vertically opposite angles are equal','x = 135°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(100,105);ctx.lineTo(500,255);ctx.stroke();
-ctx.beginPath();ctx.moveTo(100,255);ctx.lineTo(500,105);ctx.stroke();
-drawAngleValue(300,180,18,55,40,'#3b82f6',67);drawAngleArc(300,180,198,235,38,'#f43f5e','x')},
+{fig:{t:'cross',r:[67,null,'x',null]},
 prompt:'Find angle x',answer:67,reason:REASONS.VERTOP,
 angleOpts:[67,113,57,123],steps:['Vertically opposite angles are equal','x = 67°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(100,75);ctx.lineTo(500,285);ctx.stroke();
-ctx.beginPath();ctx.moveTo(80,265);ctx.lineTo(520,95);ctx.stroke();
-drawAngleValue(300,180,20,70,40,'#3b82f6',154);drawAngleArc(300,180,200,250,38,'#f43f5e','x')},
+{fig:{t:'cross',r:[154,null,'x',null]},
 prompt:'Find angle x',answer:154,reason:REASONS.VERTOP,
 angleOpts:[154,26,144,36],steps:['Vertically opposite angles are equal','x = 154°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(100,120);ctx.lineTo(500,240);ctx.stroke();
-ctx.beginPath();ctx.moveTo(100,240);ctx.lineTo(500,120);ctx.stroke();
-drawAngleValue(300,180,18,50,40,'#3b82f6',28);drawAngleArc(300,180,198,230,38,'#f43f5e','x')},
+{fig:{t:'cross',r:[28,null,'x',null]},
 prompt:'Find angle x',answer:28,reason:REASONS.VERTOP,
 angleOpts:[28,152,38,142],steps:['Vertically opposite angles are equal','x = 28°']},
 
-{draw:q=>{clear();ctx.strokeStyle='#4a6080';ctx.lineWidth=2;
-ctx.beginPath();ctx.moveTo(100,70);ctx.lineTo(500,290);ctx.stroke();
-ctx.beginPath();ctx.moveTo(80,270);ctx.lineTo(520,90);ctx.stroke();
-drawAngleValue(300,180,20,75,40,'#3b82f6',171);drawAngleArc(300,180,200,255,38,'#f43f5e','x')},
+{fig:{t:'cross',r:[171,null,'x',null]},
 prompt:'Find angle x',answer:171,reason:REASONS.VERTOP,
 angleOpts:[171,9,161,19],steps:['Vertically opposite angles are equal','x = 171°']},
 
 // === PARALLEL LINES — RECOGNITION (10) ===
-{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
-drawAngleValue(275,100,0,50,30,'#3b82f6',50);drawAngleArc(345,240,0,50,28,'#22c55e','50°');
-ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('F-shape',300,320)},
-prompt:'These angles form an F-shape. What type of angle pair is this?',answer:'Corresponding angles (equal)',reason:REASONS.CORR,
+{fig:{t:'par',m:[['T','ur',50],['B','ur',50]]},
+prompt:'What type of angle pair is this?',answer:'Corresponding angles (equal)',reason:REASONS.CORR,
 isRecognition:true,recognitionOpts:['Corresponding angles (equal)','Alternate angles (equal)','Co-interior angles (sum to 180°)'],
 angleOpts:null,steps:['Same position at each intersection','F-shape = corresponding angles','Corresponding angles are equal']},
 
-{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(180,40,400,300);
-drawAngleValue(265,100,0,55,30,'#3b82f6',55);drawAngleArc(340,240,180,235,28,'#22c55e','55°');
-ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('Z-shape',300,320)},
-prompt:'These angles form a Z-shape. What type of angle pair is this?',answer:'Alternate angles (equal)',reason:REASONS.ALT,
+{fig:{t:'par',m:[['T','ll',55],['B','ur',55]]},
+prompt:'What type of angle pair is this?',answer:'Alternate angles (equal)',reason:REASONS.ALT,
 isRecognition:true,recognitionOpts:['Alternate angles (equal)','Corresponding angles (equal)','Co-interior angles (sum to 180°)'],
 angleOpts:null,steps:['Opposite sides of the transversal, between the parallel lines','Z-shape = alternate angles','Alternate angles are equal']},
 
-{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
-drawAngleValue(275,100,0,60,30,'#3b82f6',60);drawAngleArc(340,240,140,180,28,'#22c55e','120°');
-ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('C-shape',300,320)},
-prompt:'These angles form a C-shape. What type of angle pair is this?',answer:'Co-interior angles (sum to 180°)',reason:REASONS.COINT,
+{fig:{t:'par',m:[['T','ll',60],['B','ul',120]]},
+prompt:'What type of angle pair is this?',answer:'Co-interior angles (sum to 180°)',reason:REASONS.COINT,
 isRecognition:true,recognitionOpts:['Co-interior angles (sum to 180°)','Alternate angles (equal)','Corresponding angles (equal)'],
 angleOpts:null,steps:['Same side of the transversal, between the parallel lines','C-shape (or U-shape) = co-interior angles','Co-interior angles sum to 180°']},
 
-{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(400,40,200,300);
-drawAngleValue(325,100,130,180,30,'#3b82f6',65);drawAngleArc(255,240,130,180,28,'#22c55e','65°');
-ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('Reverse F-shape',300,320)},
-prompt:'These angles form a reverse F-shape. What type of angle pair is this?',answer:'Corresponding angles (equal)',reason:REASONS.CORR,
+{fig:{t:'par',m:[['T','ul',65],['B','ul',65]]},
+prompt:'What type of angle pair is this?',answer:'Corresponding angles (equal)',reason:REASONS.CORR,
 isRecognition:true,recognitionOpts:['Corresponding angles (equal)','Alternate angles (equal)','Co-interior angles (sum to 180°)'],
 angleOpts:null,steps:['Same position at each intersection','Reverse F is still corresponding','Corresponding angles are equal']},
 
-{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(400,40,200,300);
-drawAngleValue(325,100,130,180,30,'#3b82f6',48);drawAngleArc(255,240,0,48,28,'#22c55e','48°');
-ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('Reverse Z-shape',300,320)},
-prompt:'These angles form a reverse Z-shape. What type of angle pair is this?',answer:'Alternate angles (equal)',reason:REASONS.ALT,
+{fig:{t:'par',m:[['T','lr',48],['B','ul',48]]},
+prompt:'What type of angle pair is this?',answer:'Alternate angles (equal)',reason:REASONS.ALT,
 isRecognition:true,recognitionOpts:['Alternate angles (equal)','Corresponding angles (equal)','Co-interior angles (sum to 180°)'],
 angleOpts:null,steps:['Opposite sides of the transversal, between the parallel lines','Reverse Z is still alternate','Alternate angles are equal']},
 
-{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
-drawAngleValue(275,100,0,70,30,'#3b82f6',70);drawAngleArc(340,240,110,180,28,'#22c55e','110°');
-ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('U-shape',300,320)},
-prompt:'These angles form a U-shape. What type of angle pair is this?',answer:'Co-interior angles (sum to 180°)',reason:REASONS.COINT,
+{fig:{t:'par',m:[['T','lr',70],['B','ur',110]]},
+prompt:'What type of angle pair is this?',answer:'Co-interior angles (sum to 180°)',reason:REASONS.COINT,
 isRecognition:true,recognitionOpts:['Co-interior angles (sum to 180°)','Alternate angles (equal)','Corresponding angles (equal)'],
 angleOpts:null,steps:['Same side of the transversal, between the parallel lines','U-shape = co-interior (same as C-shape)','Co-interior angles sum to 180°']},
 
-{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(180,40,380,300);
-drawAngleValue(253,100,0,45,30,'#3b82f6',45);drawAngleArc(327,240,0,45,28,'#22c55e','45°');
-ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('F-shape',300,320)},
+{fig:{t:'par',m:[['T','ll',45],['B','ll',45]]},
 prompt:'What type of angle pair is this?',answer:'Corresponding angles (equal)',reason:REASONS.CORR,
 isRecognition:true,recognitionOpts:['Corresponding angles (equal)','Alternate angles (equal)','Co-interior angles (sum to 180°)'],
 angleOpts:null,steps:['Same position at each intersection → F-shape','Corresponding angles are equal']},
 
-{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(180,40,420,300);
-drawAngleValue(262,100,0,52,30,'#3b82f6',52);drawAngleArc(362,240,180,232,28,'#22c55e','52°');
-ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('Z-shape',300,320)},
+{fig:{t:'par',m:[['T','lr',52],['B','ul',52]]},
 prompt:'What type of angle pair is this?',answer:'Alternate angles (equal)',reason:REASONS.ALT,
 isRecognition:true,recognitionOpts:['Alternate angles (equal)','Corresponding angles (equal)','Co-interior angles (sum to 180°)'],
 angleOpts:null,steps:['Opposite sides, between the lines → Z-shape','Alternate angles are equal']},
 
-{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,400,300);
-drawAngleValue(275,100,0,80,30,'#3b82f6',80);drawAngleArc(340,240,100,180,28,'#22c55e','100°');
-ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('C-shape',300,320)},
+{fig:{t:'par',m:[['T','lr',80],['B','ur',100]]},
 prompt:'What type of angle pair is this?',answer:'Co-interior angles (sum to 180°)',reason:REASONS.COINT,
 isRecognition:true,recognitionOpts:['Co-interior angles (sum to 180°)','Alternate angles (equal)','Corresponding angles (equal)'],
 angleOpts:null,steps:['Same side of the transversal → C-shape','Co-interior angles sum to 180°']},
 
-{draw:q=>{clear();drawParallelLines(100,240);drawTransversal(200,40,380,300);
-drawAngleValue(260,100,0,55,30,'#3b82f6',55);drawAngleArc(330,240,0,55,28,'#22c55e','55°');
-ctx.fillStyle='#f97316';ctx.font='bold 14px Outfit';ctx.textAlign='center';ctx.fillText('F-shape',300,320)},
+{fig:{t:'par',m:[['T','lr',55],['B','lr',55]]},
 prompt:'What type of angle pair is this?',answer:'Corresponding angles (equal)',reason:REASONS.CORR,
 isRecognition:true,recognitionOpts:['Corresponding angles (equal)','Alternate angles (equal)','Co-interior angles (sum to 180°)'],
 angleOpts:null,steps:['Same position at each intersection','Corresponding angles are equal']},
@@ -751,7 +791,8 @@ function nextQ(){
   document.getElementById('solution').className='solution';
   qStart=Date.now();updateTimer();
   // Draw diagram
-  currentQ.draw(currentQ);
+  if(currentQ.fig)drawFig(currentQ);
+  else{canvas.width=W;canvas.height=H;canvas.style.height='';ctx.setTransform(1,0,0,1,0,0);currentQ.draw(currentQ)}
   document.getElementById('prompt').textContent=currentQ.prompt;
   showPhase1();
 }
@@ -815,9 +856,13 @@ function showPhase2(){
   });
 }
 
+// Every reason that validly gives the angle is accepted: multiReason where more than one does
+// (two facts that each give it in one step, or the two steps of a two-step question).
+function validReasons(q){return q.multiReason||[q.reason]}
+
 function handlePhase2(btn){
-  const correct=btn.dataset.val===currentQ.reason;
-  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===currentQ.reason)b.classList.add('correct')});
+  const ok=validReasons(currentQ),correct=ok.includes(btn.dataset.val);
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(ok.includes(b.dataset.val))b.classList.add('correct')});
   mfg('question_answered',{game_slug:'angle-ace',level:currentLevel,correct:correct,question_index:total});
   if(correct){
     btn.classList.add('correct');
@@ -841,10 +886,14 @@ function showExplain(type){
   else html+='<h3>Worked solution</h3>';
   (currentQ.steps||[]).forEach(st=>{html+='<div class="step">'+st+'</div>'});
   html+='<div class="step" style="border-left-color:var(--correct)"><strong>Reason:</strong> '+currentQ.reason+'</div>';
+  const also=validReasons(currentQ).filter(r=>r!==currentQ.reason);
+  if(also.length)html+='<div class="step" style="border-left-color:var(--correct)"><strong>Also accepted:</strong> '+also.join('; ')+'</div>';
   if(currentQ.misconception)html+='<div class="misconception">⚠ '+currentQ.misconception+'</div>';
   html+='<button class="next-btn" onclick="closeSol()">Got it — next question</button>';
   sol.innerHTML=html;sol.className='solution show';
 }
+
+window.addEventListener('resize',()=>{if(currentQ&&currentQ.fig&&document.getElementById('game').classList.contains('active'))drawFig(currentQ)});
 
 function closeSol(){document.getElementById('solution').className='solution';nextQ()}
 function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('fullCount').textContent=fullMarks}
