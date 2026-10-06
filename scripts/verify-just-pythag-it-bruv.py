@@ -55,17 +55,26 @@ WHAT IT ASSERTS (Jon's contract, docs/next-contract-just-pythag-it-bruv.md, poin
               figure's full width and 1:1 (one viewBox unit per pixel).
   Header      the standard header (58 games, todo 3.20): "← Back to Games" linking ../../ on every
               screen, above it; Aa on the start screen only, overlapping nothing, at every size.
-  Calculator  every question's text ends "Use a calculator."; the shared calculator (MaffsCalc) is on the
-              page, closed at first, and shows only while the answer box does; the play-through
-              works one question out on its keys; using it sends no event.
+  Calculator  every question's text ends with the calculator line: round 1 "Spot the shortcut? Calculator
+              allowed." (Jon, 6 Oct 2026), rounds 2-3 "Use a calculator."; the shared calculator
+              (MaffsCalc) is on the page, closed at first, and shows only while the answer box does; the
+              play-through works one question out on its keys; using it sends no event.
   UI          a full session played with the Firebase SDK blocked (round 1 tapped with real pointer
               clicks: a leg first, which gets the message and no event, then the hypotenuse; once by
               keyboard); the start screen shows
-              "Foundation" and "Calculator required"; the page is noindex; a format answer is not
+              "Foundation" and "Calculator required"; the page is listed (no noindex); a format answer is not
               marked and sends no event; the first three add errors show the worked example (with
               the Next control's fallback timer off), the fourth and fifth the nudge; other wrong
               answers show the worked solution; the four canon 1.3 events carry their parameters
               at level 'ks3'; one score is submitted, to 'ks3', for 20 questions.
+  Fit         (Jon, 6 Oct 2026) with the keypad showing on a phone the triangle shrinks until the page,
+              from its top to the keypad (8px clear), fits the window, never below 60% of its normal
+              height, labels never under 14px. JPIB.floorBox, for every question of 60 sessions at each
+              phone width: the shortest box keeping 60%, same width and labels, the drawing inside it.
+              On screen, at 320, 375 and 390 with the keypad open: labels 14px or more, the triangle 60%
+              or more of normal, never taller than normal, at the floor whenever the page still runs
+              past the fold, and shrunk no further than the fit needs; round 1's note and rounds 2-3's,
+              each sentence on one line. The tap step (keypad hidden) keeps the normal tap-sized box.
   Phone       at 320x568, 375x667 and 390x844, every question shape (all 14 triangles of round 1 as
               both types, both types of round 2, every situation's variants): the feedback for a
               wrong answer (for 'short', the longest: the worked example) keeps Next above the
@@ -97,7 +106,8 @@ firing on 'hyp' questions; a wrong scale word; a wrong base triple; an implausib
 right-angle mark at the wrong vertex; the nudge never replacing the worked example; tap targets
 mapped to the wrong side; a leg accepted as the hypotenuse; thin round-1 triangles not widened; the
 unknown's label styled differently; no hypotenuse along the bottom; one position over 40%; the
-hypotenuse sloping one way only; the box ignoring the figure's width; the triangle not grown to the box.
+hypotenuse sloping one way only; the box ignoring the figure's width; the triangle not grown to the box;
+the fit's floor below 60%; the fitted box shrinking the labels; the floor not the shortest box.
 
 USAGE
     python scripts/verify-just-pythag-it-bruv.py
@@ -128,22 +138,24 @@ PHONES = [(320, 568), (375, 667), (390, 844), (412, 915)]
 # Jon's ruling (option B, 4 Oct 2026): with the keypad open, everything fits one screen at 412x915, and
 # rounds 1-2 at 390x844; elsewhere the answer row, Check and the keypad fit the window together.
 FULL_FIT = {(412, 915): "abc", (390, 844): "ab"}
-COMPACT_MIN_H = 150       # round 3's compact triangle stays readable
 OPS = ["(", ")", "÷", "√", "×", "x²", "−", "+", "="]
 DESKTOPS = [(1280, 720), (1366, 768), (1920, 1080)]
 DESKTOP_MIN_W = 1000      # these sizes must dock the calculator; the phones must not
-COMPACT_H = {"a": 180, "b": 160, "c": 160}   # JPIB.BOX_H_COMPACT, re-read from the page in run_all
+FIT_MIN = 0.6             # Jon, 6 Oct 2026: with the keypad open, the triangle at least 60% of its normal height
+LABEL_FLOOR_PX = 14       # ...and its labels never under 14px
+FIT_CLEAR = 8             # the keypad's bottom this far above the fold (as MaffsKeypad.together leaves it)
 TAP_RADIUS_PX = 22        # half a 44px fingertip
 TAP_TOL_PX = 40           # the page counts a tap for the nearest side within this distance
 SCALE_320 = 0.75          # screen px per viewBox unit at 320px wide; measured in run_all, this is the floor
 TAP_WRONG = "The hypotenuse is opposite the right angle, and always the longest side."
 FOOTER = 40
 MIN_LABEL_PX = 12
-DIAGRAM_SIZES = [(276, 568, False), (331, 667, False), (346, 844, False), (654, 1000, False),
-                 (276, 568, True), (346, 844, True), (368, 915, True)]   # figure width, window height, compact
+DIAGRAM_SIZES = [(276, 568), (331, 667), (346, 844), (654, 1000)]   # figure width, window height
+FIT_SIZES = [(276, 568), (331, 667), (346, 844)]                      # the three phones' figures
 FILL_DRAWING = 0.90       # the drawing, labels included, spans this much of its box in the tighter direction
 FILL_TRIANGLE = 0.70      # the triangle alone
-CALC_NOTE = "Use a calculator."
+CALC_NOTE = {"a": ["Spot the shortcut?", "Calculator allowed."],   # Jon, 6 Oct 2026: round 1's triangles are triples
+             "b": ["Use a calculator."], "c": ["Use a calculator."]}
 
 _FAILURES = []
 
@@ -549,8 +561,6 @@ COLLECT_JS = """(seeds) => seeds.map(seed => {
   const s = JPIB.buildSession(seed);
   s.questions.forEach(q => {
     q.layout = JPIB.layout(q);
-    // a phone with the calculator open: the compact triangle, which round 1's tap step must also work on
-    if (q.stage === 'a') q.layoutC = JPIB.layout(q, JPIB.box(q, JPIB.REF.w, JPIB.REF.vh, true));
     q.worked = JPIB.worked(q);
     q.example = q.type === 'short' ? JPIB.addExample(q) : null;
     q.svg = JPIB.svg(q).html;
@@ -561,9 +571,9 @@ COLLECT_JS = """(seeds) => seeds.map(seed => {
 # The drawing sized to the figure: the box is the width it is given, the labels a legible fixed size, and
 # the triangle grown until the drawing meets the box. Returns failures (the first few), not data.
 DIAGRAM_JS = """([seeds, sizes, fillD, fillT]) => { const out = [];
-  seeds.forEach(sd => JPIB.buildSession(sd).questions.forEach(q => sizes.forEach(([w, vh, c]) => {
+  seeds.forEach(sd => JPIB.buildSession(sd).questions.forEach(q => sizes.forEach(([w, vh]) => {
     if (out.length > 5) return;
-    const b = JPIB.box(q, w, vh, c), L = JPIB.layout(q, b), at = 'seed ' + sd + ' q' + q.index + ' at ' + w + 'px' + (c ? ' (compact)' : '');
+    const b = JPIB.box(q, w, vh), L = JPIB.layout(q, b), at = 'seed ' + sd + ' q' + q.index + ' at ' + w + 'px';
     if (Math.abs(b.w - w) > 0.01 || L.vb[0] !== b.w || L.vb[1] !== b.h) { out.push(at + ': the box is ' + L.vb + ', not the figure width'); return; }
     if (b.font < 15 || b.font > 18 || L.font !== b.font) { out.push(at + ': labels at ' + L.font + 'px'); return; }
     const xs = [L.O[0], L.A[0], L.B[0]], ys = [L.O[1], L.A[1], L.B[1]];
@@ -575,6 +585,29 @@ DIAGRAM_JS = """([seeds, sizes, fillD, fillT]) => { const out = [];
     if (all < fillD || tri < fillT) out.push(at + ': the drawing spans ' + (100 * all).toFixed(0) + '% of its box and the triangle ' +
       (100 * tri).toFixed(0) + '% (want ' + Math.round(100 * fillD) + '% and ' + Math.round(100 * fillT) + '%)');
     if (x0 < -0.01 || y0 < -0.01 || x1 > b.w + 0.01 || y1 > b.h + 0.01) out.push(at + ': the drawing spills out of its box');
+  })));
+  return out; }"""
+
+# The fitted box's floor (Jon, 6 Oct 2026): JPIB.fitBox(q, box, 0) is the shortest box, same width and
+# labels, whose triangle is at least FIT_MIN as tall as in the normal box; one pixel shorter is under it;
+# fitBox never goes taller than normal. Recomputed here from JPIB.layout, the page's own geometry.
+FIT_JS = """([seeds, sizes, fitMin]) => { const out = [];
+  const tri = L => { const ys = [L.O[1], L.A[1], L.B[1]]; return Math.max(...ys) - Math.min(...ys); };
+  seeds.forEach(sd => JPIB.buildSession(sd).questions.forEach(q => sizes.forEach(([w, vh]) => {
+    if (out.length > 5) return;
+    const b = JPIB.box(q, w, vh), f = JPIB.fitBox(q, b, 0), top = JPIB.fitBox(q, b, 1e9), at = 'seed ' + sd + ' q' + q.index + ' at ' + w + 'px';
+    const T0 = tri(JPIB.layout(q, b)), L = JPIB.layout(q, f), T = tri(L);
+    if (f.w !== b.w || f.font !== b.font) { out.push(at + ': the fitted box changes the width or the labels (' + JSON.stringify(f) + ')'); return; }
+    if (top.h !== b.h) out.push(at + ': fitBox gives ' + top.h + 'px for a box of ' + b.h + 'px: never taller, never shorter, than asked');
+    if (T < fitMin * T0 - 0.01) out.push(at + ': at the floor the triangle is ' + T.toFixed(1) + 'px, under ' + fitMin + ' of ' + T0.toFixed(1));
+    const lo = Math.ceil(2 * (6 + 1.15 * b.font + 4)) + 1;
+    if (f.h > lo && tri(JPIB.layout(q, { w: b.w, h: f.h - 1, font: b.font })) >= fitMin * T0 - 1e-6)
+      out.push(at + ': the floor box (' + f.h + 'px) is not the shortest that keeps ' + fitMin);
+    let x0 = Math.min(L.O[0], L.A[0], L.B[0]), x1 = Math.max(L.O[0], L.A[0], L.B[0]);
+    let y0 = Math.min(L.O[1], L.A[1], L.B[1]), y1 = Math.max(L.O[1], L.A[1], L.B[1]);
+    L.labels.forEach(l => { x0 = Math.min(x0, l.x - l.w / 2); x1 = Math.max(x1, l.x + l.w / 2);
+      y0 = Math.min(y0, l.y - l.h / 2); y1 = Math.max(y1, l.y + l.h / 2); });
+    if (x0 < -0.01 || y0 < -0.01 || x1 > f.w + 0.01 || y1 > f.h + 0.01) out.push(at + ': at the floor the drawing spills out of its box');
   })));
   return out; }"""
 
@@ -624,7 +657,7 @@ def check_svg(q, out, where):
 
 TAP_JS = """(items) => items.map(it => {
   const q = JPIB.buildSession(it.seed).questions[it.i];
-  const L = it.compact ? JPIB.layout(q, JPIB.box(q, JPIB.REF.w, JPIB.REF.vh, true)) : JPIB.layout(q);
+  const L = JPIB.layout(q);
   return it.pts.map(p => { const h = JPIB.sideAt(L, p[0], p[1]); return [h.side, h.dist]; });
 })"""
 
@@ -643,7 +676,7 @@ async def check_taps(page, taps, scale, out, key="layout"):
         return
     u = 1.0 / scale                                   # viewBox units per screen px
     items, want = [], []
-    tag = " (compact, calculator open)" if key == "layoutC" else ""
+    tag = ""
     for seed, i, q in taps:
         L = q[key]
         O, A, B = L["O"], L["A"], L["B"]
@@ -673,7 +706,7 @@ async def check_taps(page, taps, scale, out, key="layout"):
                         bad = True
                     pts.append(P)
                     exp.append(k)
-        items.append({"seed": seed, "i": i, "pts": pts, "compact": key == "layoutC"})
+        items.append({"seed": seed, "i": i, "pts": pts})
         want.append((seed, q, exp))
     got = await page.evaluate(TAP_JS, items)
     tol = TAP_TOL_PX / scale
@@ -701,7 +734,6 @@ async def collect_and_check(page, seeds, scale=None):
             items.append({"seed": sess["seed"], "i": i, "raws": raws})
             expect.append((sess["seed"], q, raws, add))
     await check_taps(page, taps, scale, out)
-    await check_taps(page, taps, 1.0, out, key="layoutC")      # drawn 1:1 on a phone
     if await page.evaluate("['p','q','r'].map(k => JPIB.isHypTap(k))") != [False, False, True]:
         out.append("isHypTap accepts a leg, or refuses the hypotenuse")
     got = await page.evaluate(PROBE_JS, items)
@@ -718,6 +750,7 @@ async def collect_and_check(page, seeds, scale=None):
             out.append("seed %d q%d: no probe is the add error" % (seed, q["index"]))
     out.extend(await page.evaluate(DIAGRAM_JS, [list(range(1, min(seeds, 60) + 1)), DIAGRAM_SIZES,
                                                 FILL_DRAWING, FILL_TRIANGLE]))
+    out.extend(await page.evaluate(FIT_JS, [list(range(1, min(seeds, 60) + 1)), FIT_SIZES, FIT_MIN]))
     helps = await page.evaluate("[1,2,3,4,5,9].map(n => JPIB.helpFor(n))")
     if helps != ["example"] * 3 + ["nudge"] * 3:
         out.append("helpFor(1..5, 9) gave %r: the first three get the example, then the nudge" % helps)
@@ -890,8 +923,8 @@ async def ui_playthrough(browser, out, seed=4242):
     ctx, page, errors = await new_page(browser)
     try:
         html = await page.content()
-        if not re.search(r'<meta name="robots" content="noindex', html):
-            out.append("UI: the page is not noindex")
+        if re.search(r'<meta name="robots" content="noindex', html):
+            out.append("UI: the page is noindex, but it is listed (Jon, 6 Oct 2026)")
         if await page.evaluate("typeof window.firebase") != "undefined":
             out.append("UI: the Firebase SDK was meant to be blocked but loaded")
         badge = await page.evaluate("(() => { const b = document.querySelector('.calc-badge'); return b ? "
@@ -929,11 +962,12 @@ async def ui_playthrough(browser, out, seed=4242):
                 taps_done += 1
             elif await page.evaluate("document.querySelectorAll('#fig .tri-hit').length"):
                 out.append("UI q%d: tap targets outside round 1" % i)
-            # every question ends "Use a calculator." (after round 1's tap step, which has its own prompt)
+            # every question ends with its round's calculator line (after round 1's tap step, which has its own prompt)
+            note = " ".join(CALC_NOTE[q["stage"]])
             shown = await page.evaluate("(() => { const p = document.getElementById('prompt'), n = p.querySelector('.calc-note');"
                                         " return [p.textContent.trim(), n && n.offsetParent !== null ? n.textContent : null]; })()")
-            if shown != [q["prompt"] + " " + CALC_NOTE, CALC_NOTE]:
-                out.append("UI q%d: the question reads %r, not the prompt then %r" % (i, shown[0][-60:], CALC_NOTE))
+            if shown != [q["prompt"] + " " + note, note]:
+                out.append("UI q%d: the question reads %r, not the prompt then %r" % (i, shown[0][-60:], note))
             if q["stage"] == "b" and not calc_done:
                 calc_done = True
                 await use_calculator(page, q, out, "UI q%d" % i)
@@ -1065,6 +1099,15 @@ CALC_JS = """() => { const R = e => { const r = e.getBoundingClientRect(), y = s
 
 # After Check: wait until the page stops scrolling (a phone glides to the feedback), then measure the
 # feedback in the window. null if it has already gone (a quick tick moves on after 1.1s).
+# With the keypad open: the triangle's box against its normal and floor boxes, and the calculator line.
+FITCHK_JS = """() => { const q = JPIB.ui.question(), L = JPIB.ui.layout(), w = document.getElementById('fig').getBoundingClientRect().width;
+  const tri = L => { const ys = [L.O[1], L.A[1], L.B[1]]; return Math.max(...ys) - Math.min(...ys); };
+  const b = JPIB.box(q, w, innerHeight), spans = [...document.querySelectorAll('#prompt .calc-note > span')];
+  const lh = s => parseFloat(getComputedStyle(s).lineHeight) || 1.5 * parseFloat(getComputedStyle(s).fontSize);
+  return { svgH: document.querySelector('#fig svg').getBoundingClientRect().height, normalH: b.h,
+    floorH: JPIB.fitBox(q, b, 0).h, tri: tri(L), triNormal: tri(JPIB.layout(q, b)),
+    note: spans.map(s => s.textContent), noteLines: spans.map(s => Math.round(s.getBoundingClientRect().height / lh(s))) }; }"""
+
 SETTLED_FB_JS = """() => new Promise(res => { let last = -1, n = 0; const t0 = performance.now();
   (function f() { const y = scrollY; n = y === last ? n + 1 : 0; last = y;
     if (n < 4 && performance.now() - t0 < 900) return requestAnimationFrame(f);
@@ -1092,7 +1135,7 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
     patch: a planted fault, applied before the game starts."""
     sizes = sizes or PHONES + DESKTOPS
     measured, worst, tapworst, calcworst, checkworst, fbworst, glided = 0, {}, {}, {}, {}, {}, set()
-    compactworst, switched = {}, set()
+    compactworst, switched, fitworst = {}, set(), {}
     for (w, h) in sizes:
         ctx, page, errors = await new_page(browser, (w, h), touch=w < DESKTOP_MIN_W)
         try:
@@ -1135,14 +1178,17 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
                 where = "%dx%d %s%s %s q%d" % (w, h, q["stage"], ("/" + q["context"]) if q["context"] else "",
                                               q["type"], i)
                 desk = w >= DESKTOP_MIN_W
-                compact_tap = not desk and q["stage"] == "a" and i % 2 == 0
-                # measure closed first; a phone keeps it open for every other round-1 tap step (compact triangle)
-                await page.evaluate("JPIB.ui.calc().%s()" % ("open" if compact_tap else "close"))
+                open_tap = not desk and q["stage"] == "a" and i % 2 == 0
+                # measure closed first; a phone keeps it open for every other round-1 tap step, where the keypad
+                # is hidden: the triangle keeps its normal, tap-sized box
+                await page.evaluate("JPIB.ui.calc().%s()" % ("open" if open_tap else "close"))
                 fig = await page.evaluate(FIG_JS)
-                if compact_tap:
-                    svgh = await page.evaluate("document.querySelector('#fig svg').getBoundingClientRect().height")
-                    if svgh > COMPACT_H["a"] + 0.5:
-                        out.append("%s: with the calculator open the tap-step triangle is %.0fpx tall, not compact" % (where, svgh))
+                if open_tap:
+                    svgh = await page.evaluate("[document.querySelector('#fig svg').getBoundingClientRect().height,"
+                                               " JPIB.box(JPIB.ui.question(), document.getElementById('fig').getBoundingClientRect().width, innerHeight).h]")
+                    if abs(svgh[0] - svgh[1]) > 0.5:
+                        out.append("%s: with the calculator open (keypad hidden) the tap-step triangle is %.0fpx tall, not its normal %dpx"
+                                   % (where, svgh[0], svgh[1]))
                 if abs(fig[0] - fig[1]) > 1 or abs(fig[1] - fig[2]) > 1:
                     out.append("%s: the figure is %.0fpx wide, the SVG %.0fpx, its viewBox %.0f: not full width at 1:1"
                                % (where, fig[0], fig[1], fig[2]))
@@ -1250,18 +1296,38 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
                         out.append("%s: the Calculator button is not inside the panel (button shown %s, close key %s)" % (where, a["toggle"], a["close"]))
                     if a["keyH"] < 47.5 or a["keyW"] < 44:
                         out.append("%s: the smallest key is %.0fx%.0fpx (want 48px tall, 44px wide at least)" % (where, a["keyW"], a["keyH"]))
-                    if a["svgH"] > COMPACT_H[q["stage"]] + 0.5 or a["svgH"] < COMPACT_MIN_H - 0.5:
-                        out.append("%s: with the keypad open the triangle is %.0fpx tall (compact: %d-%dpx)"
-                                   % (where, a["svgH"], COMPACT_MIN_H, COMPACT_H[q["stage"]]))
-                    if a["label"] < 15:
-                        out.append("%s: with the keypad open a triangle label is %.1fpx" % (where, a["label"]))
+                    if a["label"] < LABEL_FLOOR_PX:
+                        out.append("%s: with the keypad open a triangle label is %.1fpx (floor %dpx)" % (where, a["label"], LABEL_FLOOR_PX))
+                    # the fit (Jon, 6 Oct 2026): shrink until the page fits, floor 60%, never taller than normal
+                    f = await page.evaluate(FITCHK_JS)
+                    fold = h - FOOTER
+                    if o["panel"]:
+                        over = o["panel"][3] + FIT_CLEAR - fold          # page coordinates: the page at its top
+                        ratio = f["tri"] / f["triNormal"]
+                        fw = fitworst.setdefault((w, h), [-1e9, 9.0])
+                        fw[0], fw[1] = max(fw[0], over), min(fw[1], ratio)
+                        if ratio < FIT_MIN - 1e-4:
+                            out.append("%s: with the keypad open the triangle is %.0f%% of its normal height (floor %d%%)"
+                                       % (where, 100 * ratio, 100 * FIT_MIN))
+                        if f["svgH"] > f["normalH"] + 0.5:
+                            out.append("%s: with the keypad open the triangle's box is %.0fpx, taller than normal (%dpx)"
+                                       % (where, f["svgH"], f["normalH"]))
+                        if over > 1.5 and abs(f["svgH"] - f["floorH"]) > 0.5:
+                            out.append("%s: the page runs %.0fpx past the fold with the keypad open, but the triangle's box is "
+                                       "%.0fpx, not its floor (%dpx)" % (where, over, f["svgH"], f["floorH"]))
+                        if over < -1.5 and f["svgH"] < f["normalH"] - 0.5:
+                            out.append("%s: the page has %.0fpx to spare with the keypad open, but the triangle's box was shrunk "
+                                       "to %.0fpx (normal %dpx)" % (where, -over, f["svgH"], f["normalH"]))
+                    want = CALC_NOTE[q["stage"]]
+                    if f["note"] != want or f["noteLines"] != [1] * len(want):
+                        out.append("%s: the calculator line reads %r on %r lines, expected %r, each on one line"
+                                   % (where, f["note"], f["noteLines"], want))
                     if o["scroll"] > o["inner"]:
                         out.append("%s: with the keypad open the page is %dpx wide" % (where, o["scroll"]))
                     if o["panel"] and (o["panel"][1] < o["row"][3] - 0.5 or o["panel"][0] < o["card"][0] - 0.5
                                        or o["panel"][2] > o["card"][2] + 0.5):
                         out.append("%s: the keypad is not under the answer row inside the card" % where)
-                    # the fit (Jon's option B)
-                    fold = h - FOOTER
+                    # everything on one screen where Jon ruled it (option B, 4 Oct 2026; still true with the fit)
                     if o["panel"]:
                         full = q["stage"] in FULL_FIT.get((w, h), "")
                         key = (w, h, "full" if full else "together")
@@ -1372,6 +1438,8 @@ async def phone_fit(browser, out, sizes=None, only=None, patch=None, report=True
     print("Phone, keypad open: " + ", ".join(
         ("%dx%d %s %.0fpx" % (k[0], k[1], "keypad bottom (fold %d)" % (k[1] - FOOTER) if k[2] == "full" else "answer row to keypad (window %d)" % (k[1] - FOOTER), v))
         for k, v in sorted(compactworst.items())))
+    print("Keypad open, the fit: " + ", ".join("%dx%d page past the fold by up to %.0fpx, triangle at least %.0f%% of normal"
+                                                % (w, h, v[0], 100 * v[1]) for (w, h), v in sorted(fitworst.items())))
     print("Feedback after Check, lowest bottom: " + ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER)
                                                               for (w, h), v in sorted(fbworst.items())))
     print("Lowest Next: " + ", ".join("%dx%d %.0fpx (fold %d)" % (w, h, v, h - FOOTER) for (w, h), v in sorted(worst.items())))
@@ -1437,8 +1505,12 @@ FAULTS = [
     ("the triangle not grown to the box",
      "(function(){ var o = JPIB.layout; JPIB.layout = function (q, b) { b = b || JPIB.box(q, JPIB.REF.w, JPIB.REF.vh);"
      " var L = o(q, { w: b.w * 0.6, h: b.h * 0.6, font: b.font }); L.vb = [b.w, b.h]; return L; }; })();"),
-    ("round 1's compact triangle too small to tap",
-     "JPIB.BOX_H_COMPACT = { a: 60, b: 165, c: 165 };"),
+    ("the fit's floor below 60%",
+     "JPIB.FIT_MIN = 0.4;"),
+    ("the fitted box shrinks the labels",
+     "(function(){ var o = JPIB.fitBox; JPIB.fitBox = function (q, b, w) { var f = o(q, b, w); f.font = 12; return f; }; })();"),
+    ("the floor not the shortest box",
+     "(function(){ var o = JPIB.fitBox; JPIB.fitBox = function (q, b, w) { var f = o(q, b, w); f.h = Math.min(b.h, f.h + 12); return f; }; })();"),
     ("the hypotenuse slopes one way only",
      "(function(){ var o = JPIB.positionPlan; JPIB.positionPlan = function (rng) { var p = o(rng);"
      " var f = function (x) { return x === 'BR' || x === 'TL' ? 'BL' : x; }; return { a: p.a.map(f), b: p.b.map(f) }; }; })();"),
@@ -1472,7 +1544,15 @@ UI_FAULTS = [
     ("phone: the keys type into the calculator", PHONE, ("script", "MaffsCalc.ANSWER.route = false;")),
     ("phone: tapping the display does not select it", PHONE,
      ("script", "document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.maffs-calc-lines')) e.stopPropagation(); }, true);")),
-    ("phone: full-size triangle with the keypad open", PHONE, ("script", "JPIB.BOX_H_COMPACT = { a: 999, b: 999, c: 999 };")),
+    ("phone: full-size triangle with the keypad open", PHONE, ("script", "JPIB.fitBox = function (q, b) { return b; };")),
+    ("phone: the triangle below its floor", SMALL,
+     ("script", "JPIB.fitBox = function (q, b) { return { w: b.w, h: 70, font: b.font }; };")),
+    ("phone: shrunk though the page fits", PHONE,
+     ("script", "(function(){ var o = JPIB.fitBox; JPIB.fitBox = function (q, b, w) { return o(q, b, 0); }; })();")),
+    ("phone: round 1's line reverted", SMALL,
+     ("script", "new MutationObserver(function () { var n = document.querySelector('#prompt .calc-note');"
+                " if (n && /shortcut/.test(n.textContent)) n.innerHTML = '<span>Use a calculator.</span>'; })"
+                ".observe(document.getElementById('prompt'), { childList: true, subtree: true });")),
     ("phone: the Calculator button keeps its own row", PHONE,
      ("style", ".maffs-calc.compact.open .maffs-calc-toggle{display:inline-block!important}")),
     ("phone: keys under 48px", PHONE, ("style", ".maffs-calc.compact .maffs-calc-key{min-height:42px!important}")),
@@ -1569,10 +1649,10 @@ async def run_all(args):
         global SCALE_320
         SCALE_320 = await measure_scale(browser)
         ctx0, page0, _ = await new_page(browser)
-        page_h = await page0.evaluate("JPIB.BOX_H_COMPACT")
+        page_min = await page0.evaluate("JPIB.FIT_MIN")
         await ctx0.close()
-        if page_h != COMPACT_H:
-            fail("the page's compact triangle heights %r differ from this script's COMPACT_H %r: update both" % (page_h, COMPACT_H))
+        if page_min != FIT_MIN:
+            fail("the page's fit floor JPIB.FIT_MIN %r differs from this script's FIT_MIN %r: update both" % (page_min, FIT_MIN))
         print("Round-1 triangle at 320px: %.3f px per unit (tap target: the middle %dpx of each side, 6px in to 22px out)"
               % (SCALE_320, 2 * TAP_RADIUS_PX))
         ctx, page, errors = await new_page(browser)

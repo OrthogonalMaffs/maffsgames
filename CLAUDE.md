@@ -49,7 +49,31 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-06 (cloud, latest): AUDIT TRANCHES 1-2 committed, ES + TID unlisted (PR #85 MERGED), CORE MATHS PAPER 1 fixed (PR #86); NEXT = Jon's next contract
+## Handover — 2026-10-06 (cloud, latest): JUST PYTHAG IT, BRUV LISTED (contract G); contract H complete (main green on 1150a1d)
+
+Contract H finished: PR #86's merge `1150a1d` ran green on main. Contract G (Jon's build freeze of 19:26 has this one
+exception, 19:31) lists Just Pythag It, Bruv after his phone play-test, in one PR on this branch.
+- **The fit (Jon, 6 Oct; replaces his option B's fixed 180/160/160 heights):** with the keypad showing (a phone, the
+  calculator open, the asking state) `draw()` renders the normal box, measures how far the keypad's bottom (8px clear,
+  as `MaffsKeypad.together` leaves it) runs past the fold with the page at its top, and re-renders at
+  `JPIB.fitBox(q, box, box.h - over)`: never under `JPIB.floorBox` (the shortest box keeping the triangle at
+  `JPIB.FIT_MIN` = 60% of its normal height; labels stay 15-18px, set by width). `openAnswer()` re-fits once the
+  answer row shows. The tap step (keypad hidden) keeps the normal tap box. **Fit from the page top, not the prompt**: at
+  390x844 a prompt-relative fit would grow the triangle and add ~35px of scrolling; the contract asks for less.
+- **Measured (calculator open, scroll needed to the keypad from the page top, before -> after, worst per round):**
+  320x568 244/221/306 -> 222/185/261; 375x667 152/142/216 -> 134/126/199 (rounds 1-2 now fit question to keypad);
+  390x844 0/0/39 -> 0/0/28, rounds 1-2's triangle larger than before (196-211 and 186px vs 180 and 160).
+- **Round 1's line:** "Spot the shortcut? Calculator allowed." (two nowrap sentence spans); rounds 2-3 "Use a calculator.".
+- **Listing:** portal (KS3, New 2026-10-06), /resit/ Geometry (33 cards; "One level" like the other resit-strand games,
+  no picker), spec map G20 split from G21 (the game claims Pythagoras, not exact values; Trig Wars keeps both), sitemap,
+  hub `['ks3']` (shows "KS3", every ks3 board does: todo §3.14), `NOT_ON_HUB` entry gone, /updates/ in Jon's wording
+  (his "New:" is the heading), `noindex` off, roster row in KS3 (34), canon §1/§4.2/§4.4.
+- **Verifier:** `FIT_JS` (floor box for 60 sessions x 3 phone widths), on-screen fit checks at 320/375/390 (labels
+  >= 14px, >= 60%, at the floor when over, not shrunk when it fits, the round's line one sentence per line), 3 new
+  session faults and 4 new layout faults; the compact-height and layoutC checks are gone.
+- **Still outstanding:** a real iPhone test of the keypad (Jon: Android only so far).
+
+## Handover — 2026-10-06 (cloud): AUDIT TRANCHES 1-2 committed, ES + TID unlisted (PR #85 MERGED), CORE MATHS PAPER 1 fixed (PR #86); NEXT = Jon's next contract
 
 Jon's contract of 6 Oct (after his rulings of 19:15), two PRs in sequence.
 - **PR #85 (merged, main green):** the audit reports `docs/audits/audit-tranche1-2026-10-06.md` and `...-tranche2-...`

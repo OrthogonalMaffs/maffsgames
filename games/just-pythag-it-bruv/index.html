@@ -3,9 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- UNLISTED until Jon approves it (4 Oct 2026): noindex, and off the portal, /resit/, the sitemap,
-     the spec map and /updates/. Listing it removes this robots line. -->
-<meta name="robots" content="noindex">
 <meta name="description" content="Use Pythagoras' theorem with a calculator to find the hypotenuse or a shorter side, from simple triangles to ladders and ramps. For KS3. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/just-pythag-it-bruv/">
 <meta property="og:title" content="Pythagoras' Theorem Game – KS3 Maths | MaffsGames">
@@ -90,9 +87,10 @@ a.back-link:hover{color:var(--text)}
 .tri-side.miss{stroke:var(--wrong);stroke-width:5}
 .qcard.tap-mode .answer-row{display:none}
 .qhead{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
-/* "Use a calculator." ends every question's text (Jon, 4 Oct 2026): part of the instruction, so it costs
-   no line of its own on a phone. */
-.calc-note{font-weight:600;color:var(--hint);white-space:nowrap}
+/* The calculator line ends every question's text (Jon, 4 Oct 2026; round 1's version 6 Oct): part of the
+   instruction, so it costs no line of its own on a phone. Each sentence stays whole; they wrap between. */
+.calc-note{font-weight:600;color:var(--hint)}
+.calc-note span{white-space:nowrap}
 /* The calculator (MaffsCalc, theme.css): under the answer box on a narrow screen, never over it, and
    gone while the answer box is (the tap step, the feedback). On a wide screen it docks beside this card
    and stays, open or closed as the student left it; only its toggle goes with the answer box. */
@@ -748,19 +746,34 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   // get a shorter box so the answer box and Check stay above the fold. Round 1 keeps its tap-sized box.
   J.SHORT_VH = 600;
   J.BOX_H_SHORT = 150;
-  // A phone with the calculator open (Jon's ruling, 4 Oct 2026, option B): the triangle shrinks so that
-  // rounds 1-2 fit one 390x844 screen with the keypad (180px and 160px, 20px to spare in CI's font); round 3's long prompts may
-  // scroll there, the triangle staying readable. Never taller than the normal box.
-  J.BOX_H_COMPACT = { a: 180, b: 160, c: 160 };
   J.REF = { w: 276, vh: 568 };   // the figure on a 320x568 phone: the default box, and the hardest one
-  J.box = function (Q, w, vh, compact) {
+  J.box = function (Q, w, vh) {
     var tap = Q.stage === 'a';
     w = Math.max(240, w);
     var hMin = tap ? J.BOX_MIN_H_TAP : vh <= J.SHORT_VH ? J.BOX_H_SHORT : J.BOX_MIN_H;
     var cap = !tap && vh <= J.SHORT_VH ? J.BOX_H_SHORT : Math.max(hMin, Math.min(J.BOX_MAX_H, 0.36 * vh));
     var h = Math.round(Math.max(hMin, Math.min(cap, w * (tap ? J.BOX_RATIO_TAP : J.BOX_RATIO))));
-    if (compact) h = Math.min(h, J.BOX_H_COMPACT[Q.stage]);
     return { w: w, h: h, font: Math.max(15, Math.min(18, Math.round(w / 18))) };
+  };
+  // A phone with the keypad showing (Jon, 6 Oct 2026; it replaces the fixed heights of 4 Oct): the triangle
+  // shrinks until the page, from its top to the keypad, fits the window, but never below a floor: the
+  // triangle at least J.FIT_MIN of its height in the normal box. The labels keep their size (15-18px, set
+  // by the width alone). If the page still does not fit at the floor, it scrolls. Never taller than normal.
+  J.FIT_MIN = 0.6;
+  J.triHeight = function (L) { var ys = [L.O[1], L.A[1], L.B[1]]; return Math.max.apply(null, ys) - Math.min.apply(null, ys); };
+  // The shortest box of the same width and labels whose triangle is at least J.FIT_MIN as tall as box's.
+  J.floorBox = function (Q, box) {
+    var T0 = J.triHeight(J.layout(Q, box));
+    var ok = function (h) { return J.triHeight(J.layout(Q, { w: box.w, h: h, font: box.font })) >= J.FIT_MIN * T0 - 1e-6; };
+    var lo = Math.ceil(2 * (6 + 1.15 * box.font + 4)) + 1, hi = box.h;   // lo: room for a label above and below
+    if (ok(lo)) return { w: box.w, h: lo, font: box.font };
+    while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (ok(mid)) hi = mid; else lo = mid; }
+    return { w: box.w, h: hi, font: box.font };
+  };
+  // box (the normal one) made want px tall, within [floor, normal].
+  J.fitBox = function (Q, box, want) {
+    var f = J.floorBox(Q, box);
+    return { w: box.w, h: Math.max(f.h, Math.min(box.h, Math.floor(want))), font: box.font };
   };
   J.CHAR_W = 0.6;           // monospace advance, in ems (JetBrains Mono and its fallbacks)
   J.MIN_RATIO = 0.25;       // a thinner triangle is drawn at this ratio and marked "Not to scale"
@@ -933,7 +946,10 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   var score = 0, correctCount = 0, addCount = 0, byStage = {}, t0 = 0, askedMs = 0, askStart = 0, clockTimer = null;
   var scoreStart = 0;      // when the answer box opened: the tap step never costs score
   var TAP_TOL_PX = 40;     // a tap counts for the nearest side if it lands within this many screen pixels
-  var CALC_NOTE = 'Use a calculator.';   // every question, Jon 4 Oct 2026 (the roster says Calculator required)
+  // The calculator line under every question (Jon, 4 Oct 2026; the roster says Calculator required). Round 1's
+  // triangles are whole-number triples, so it invites the shortcut first (Jon, 6 Oct 2026). Each sentence
+  // keeps to one line; the two may wrap between them on a narrow phone.
+  var CALC_NOTE = { a: ['Spot the shortcut?', 'Calculator allowed.'], b: ['Use a calculator.'], c: ['Use a calculator.'] };
   var TAP_WRONG = 'The hypotenuse is opposite the right angle, and always the longest side.';
   var sessionLength = J.LENGTH;
 
@@ -993,10 +1009,12 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     state = 'asking';
     scoreStart = Date.now();
     $('qcard').classList.remove('tap-mode');
-    $('prompt').innerHTML = esc(q.prompt) + ' <span class="calc-note">' + CALC_NOTE + '</span>';
+    $('prompt').innerHTML = esc(q.prompt) + ' <span class="calc-note">' +
+      CALC_NOTE[q.stage].map(function (s) { return '<span>' + esc(s) + '</span>'; }).join(' ') + '</span>';
     // On a phone the keypad types the answer (MaffsCalc's answer target): never focus the box there,
     // or the system keyboard would open.
     if (!(calc && calc.answerMode())) { try { $('answer').focus({ preventScroll: true }); } catch (e) {} }
+    if (keypadShowing()) draw();   // the answer row and keypad are now on the page: fit the triangle to them
   }
 
   function tapSide(side) {
@@ -1016,15 +1034,26 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
 
   // The triangle at the figure's measured width (1 unit = 1px), its height from that width and the window.
   var layout = null, drawnW = 0;
-  function draw() {
-    drawnW = $('fig').getBoundingClientRect().width;
-    // A phone with the calculator open draws the compact triangle (the tap step too, so nothing jumps).
-    var compact = !!(calc && calc.isCompact() && calc.isOpen());
-    $('qcard').classList.toggle('calc-compact', !!(calc && calc.isCompact()));
-    var pic = J.svg(q, J.box(q, drawnW, window.innerHeight, compact));
+  // The keypad shows on a phone with the calculator open, once the answer box does (not in the tap step).
+  function keypadShowing() { return !!(calc && calc.isCompact() && calc.isOpen()) && state === 'asking'; }
+  function render(box) {
+    var pic = J.svg(q, box);
     layout = pic.layout;
     $('fig').innerHTML = pic.html;
     $('figNote').textContent = pic.notToScale ? 'Not drawn to scale' : '';
+  }
+  function draw() {
+    drawnW = $('fig').getBoundingClientRect().width;
+    $('qcard').classList.toggle('calc-compact', !!(calc && calc.isCompact()));
+    var box = J.box(q, drawnW, window.innerHeight);
+    render(box);
+    if (keypadShowing()) {
+      // How far the keypad's bottom (8px clear, as MaffsKeypad.together leaves it) runs past the fold with
+      // the page at its top; the SVG is drawn 1:1, so the box gives up exactly that much height.
+      var p = calc.el.querySelector('.maffs-calc-panel');
+      var over = p.getBoundingClientRect().bottom + window.scrollY + 8 - (window.innerHeight - FOOTER_PX);
+      if (over > 0) render(J.fitBox(q, box, box.h - over));
+    }
     if (state === 'tap') wireTaps();
     else if (state === 'asking' && q.stage === 'a') { var r = $('fig').querySelector('.tri-side[data-side="r"]'); if (r) r.classList.add('picked'); }
   }

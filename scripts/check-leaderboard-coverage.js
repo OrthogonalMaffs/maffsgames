@@ -157,10 +157,6 @@ if (gatedButUndeclared.length) {
 // Games that submit but are deliberately not on the hub.
 const NOT_ON_HUB = {
   'the-perfect-prank': 'unlisted escape-room prototype, never on the portal (canon §4)',
-  // Jon's contract, 4 Oct 2026: unlisted (noindex, off the portal, /resit/, sitemap, spec map,
-  // /updates/) until he has played it. It submits to 'ks3' as built; the hub row is added with the
-  // listing, and this entry removed in the same PR.
-  'just-pythag-it-bruv': 'unlisted until Jon approves it (todo START); hub row added at listing',
   // Jon, 6 Oct 2026: unlisted (off the portal, sitemap, spec map and hub) until each game's fix
   // for the 6 Oct audit merges; the hub row is restored, and this entry removed, in that PR.
   'spot-the-error': 'unlisted pending its 6 Oct audit fix; hub row restored at relisting',

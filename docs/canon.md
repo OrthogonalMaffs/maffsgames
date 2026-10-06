@@ -19,7 +19,7 @@ Last updated: 3 October 2026
 | GA4 Measurement ID | G-992JLHLP2D |
 | Sheets Endpoint | Google Apps Script (see docs/apps-script-endpoint.js) |
 | Contact | contact@maffsgames.co.uk |
-| Total games | 96 live on the portal, plus `just-pythag-it-bruv` live **unlisted** (4 Oct 2026, §4.2) (`six-sevens-bruv` and `free-daily-pizza` added 30 Sep 2026; `regression-rumble` **withdrawn** the same night behind a `noindex` holding page pending its data rebuild, todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (96 numbered rows, plus a Withdrawn section). `games/` holds **98 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
+| Total games | 93 on the portal (6 Oct 2026: `just-pythag-it-bruv` listed; `spot-the-error`, `trig-worms`, `expectation-station` and `trig-identity-duel` live but **unlisted** pending their audit fixes, roster section "Unlisted") (`six-sevens-bruv` and `free-daily-pizza` added 30 Sep 2026; `regression-rumble` **withdrawn** the same night behind a `noindex` holding page pending its data rebuild, todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (96 numbered rows, plus a Withdrawn section). `games/` holds **98 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
 | Escape rooms | **8 live at `/escape-rooms/`**, indexed, in the sitemap and led from the front page. Not counted in the 96. **Two more are built but withdrawn** (`it-vengeance`, `car-trap`) behind `noindex` holding pages at their own URLs until each one's voice rewrite is done. Teacher pages stay `noindex` deliberately — they hold every answer. Full detail in **§11**; the live work is `docs/escape-room-voice-rewrite.md` |
 | Parent guides | **20 at `/parents/`**, plus the hub: 21 indexed URLs, in the sitemap and linked from the portal footer. Ported from MathsWins on 28 Sep 2026 and corrected again on 29 Sep against Jon's approved wording; the findings are in `docs/audit-parent-guides.md` and the fix-by-fix record is in `docs/migrate-parent-guides.md`. `averages` links Distinctly Average at `?level=ks3`. The section has one template: `parents/guide.css` and `parents/guide.js`, portal theme, adult register (the game theme, §7.5, does not apply -- the reader is the parent). **GCSE tier badge:** one component in `parents/guide.js` (its `TIERS` table, built from bold parts of `data/dfe-gcse-parts.json`) on exactly four guides and their hub cards; partly-Higher guides mark each Higher section in the body. `scripts/verify-parent-guides.py` reads every checked value back from the pages. **`scripts/check-site.py` does not discover these pages**: `build_page_list()` globs `games/` and `escape-rooms/` and otherwise walks a hard-coded list of root pages |
 
@@ -354,7 +354,6 @@ Section is the game's home level, not its only one — most games declare severa
 | **Slug** | **Why** |
 | --- | --- |
 | `the-perfect-prank` | The original escape-room prototype, built to the old 40-minute spec. Unlisted on purpose and kept as the long-form example. It has a directory under `games/` but no portal card, which is why `games/` counts 95 and the site says 93 |
-| `just-pythag-it-bruv` | Built 4 Oct 2026 and merged **unlisted** for Jon to play first (his contract): `noindex`, and off the portal, `/resit/`, the sitemap, the spec map and `/updates/`. Unlike the prototype it is a roster row (section "Unlisted"), so every roster check covers it. Its scores go to `ks3` but it is declared `NOT_ON_HUB` in `scripts/check-leaderboard-coverage.js` until it is listed. Listing it: remove the `noindex`, add the portal card, the `/resit/` card (Geometry and measures, Choose: Foundation, Calculator required), spec map G20, the sitemap, the hub row (dropping `NOT_ON_HUB`), and queue an `/updates/` entry |
 
 ## 4.3 Games excluded from leaderboards
 
@@ -425,8 +424,10 @@ styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours 
   operators, brackets, x², √ and = are disabled. On open the page scrolls just enough to show the answer
   row, Check and the keypad together. Desktop, a mouse, and the docked calculator are unchanged: the answer
   box takes the physical keyboard as before. The switches are `MaffsCalc.ANSWER`, read live so a test can
-  turn each off. Pythag's layout under it (Jon's option B): rounds 1-2 fit 390×844 with the keypad open;
-  round 3 may scroll there; everything fits 412×915.
+  turn each off. Pythag's layout under it (Jon, 6 Oct 2026, replacing his option B of 4 Oct): with the
+  keypad showing, the triangle shrinks until the page, from its top to the keypad, fits the window, never
+  below 60% of its normal height (`JPIB.FIT_MIN`); its labels stay 15-18px. Past that floor the page
+  scrolls. Measured: rounds 1-2 fit 390×844 with no scrolling; everything fits 412×915.
   - **WebKit (found in testing):** to keep focus, and so the keyboard, away, the answer box cancels
     `pointerdown`; WebKit then sends **no `click`**, so a click-only handler would never open the keypad
     on an iPhone. It opens on **`pointerup`** (`click` stays, debounced, for anything without pointer

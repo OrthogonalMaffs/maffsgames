@@ -36,7 +36,8 @@ PAGE = "resit/index.html"
 # Jon, 3 Oct 2026: the suite, by topic, in this order. shape-shifter added 4 Oct 2026 (Jon: G7
 # transformations banded STRETCH). Three withdrawn 4 Oct 2026 (WITHDRAWN below); correlation-or-coincidence
 # returned the same day, rebuilt (labels before the answer, three answers, SR-14); equation-builder returned
-# 5 Oct 2026, its marking rebuilt (SR-13, the verifier's ACCEPTED lists).
+# 5 Oct 2026, its marking rebuilt (SR-13, the verifier's ACCEPTED lists). just-pythag-it-bruv added 6 Oct 2026
+# (Jon's contract G: listed after his phone play-test).
 SUITE = [
     ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
@@ -45,7 +46,7 @@ SUITE = [
         "equation-builder", "four-quadrant-explorer", "formula-unlocked", "formula-forge", "sequence-solver"]),
     ("ratio", "Ratio, proportion and percentages", ["split-it", "proportion-blaster",
         "better-value", "percentage-flip"]),
-    ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter"]),
+    ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter", "just-pythag-it-bruv"]),
     ("probability", "Probability", ["probability-pioneer", "expected-damage", "given-that"]),
     ("statistics", "Statistics", ["distinctly-average", "stat-attack", "chart-interrogator",
         "correlation-or-coincidence"]),
