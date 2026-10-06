@@ -169,6 +169,15 @@ section.
 If one applies, apply it and list "SR-n applied: …" in the PR; stop only for what none covers, or for
 §0.3's "Still stops for Jon" list.
 
+- **6 Oct (cloud, Jon's instruction of 09:30): the four open PRs, one at a time.** **#75 merged:** Equation
+  Builder is CI group D, and every verifier group fails at 75% of its timeout. Main's full run on `6179044`
+  was green, the first since #68; group B took 5m38s of 12m. **#72 merged:** search titles and descriptions
+  are generated from `data/games.json` by `scripts/apply-meta.py` and held by `scripts/check-meta.py` (canon
+  §2.1). `estimation-engine` stays PENDING until #74 applies it.
+  **For Jon (#72's call, his to overturn):** "lowest level" ranks KS3 < GCSE < Core Maths < A-Level < Level 3
+  < Further Maths < Level 4. It decides three titles (`growth-and-decay`, `graph-sketcher`,
+  `normal-navigator` say "Core Maths", not "A-Level"); `RANK` in check-meta.py is one line. **Next:** #73
+  (teacher line on results screens), then #74 (Estimation Engine; stops for Jon's six calls).
 - **PR #68 (5 Oct, home): quoted-statistics audit, phases 1 and 2 (report only).** Phase 2 (same report): six
   Screening Room rates wrong as stated facts (NHS FIT sensitivity 74% vs ~48%; HIV test specificity 98.5% vs 99.8%+;
   HbA1c 85% vs ~61%; AAA 1.5% vs ~0.7-0.9%; colour blindness 8% in a mixed group; Year 7 glasses 10% vs 15-18%) and
