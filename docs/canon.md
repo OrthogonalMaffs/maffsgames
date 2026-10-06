@@ -223,9 +223,22 @@ checks the payload, and that game cards and `fact_expanded` are unchanged.
 
 ## 2.1 Required Tags
 
+**Every game page's and /resit/'s title and description are generated, never hand-written (Jon, 5 Oct 2026,
+PR #72).** `data/games.json` holds one search phrase and one description per roster game (plus /resit/'s
+stated pair); the levels come from the roster's Levels column. `scripts/apply-meta.py` writes `<title>`, the
+meta description and their og:/twitter: copies; `scripts/check-meta.py` (CI) holds every page to it and is
+the authority on the rules:
+- Title: `<phrase> Game – <levels> Maths | MaffsGames`, at most 60 characters (over 60: GCSE only, else the
+  game's lowest level; still over, `<phrase> Maths Game | MaffsGames`).
+- Description: `<what the student practises> For <levels>. Free, no sign-up.`, at most 155 characters.
+- "Year 6" and "Starter" never appear (SR-11): a Year 6-only game has no levels sentence.
+
+To change one, edit `data/games.json`, run `apply-meta.py`, then `check-meta.py`. A new game gets its
+games.json entry in the PR that adds it, or `check-meta.py` fails.
+
 ### Meta description
 ```html
-<meta name="description" content="[150-160 char description]">
+<meta name="description" content="[generated from data/games.json, at most 155 characters]">
 ```
 
 ### Canonical link
@@ -235,7 +248,7 @@ checks the payload, and that game cards and `fact_expanded` are unchanged.
 
 ### OG and Twitter tags (every game page)
 ```html
-<meta property="og:title" content="{Game Name} — MaffsGames">
+<meta property="og:title" content="{the generated title}">
 <meta property="og:description" content="{description}">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:type" content="website">

@@ -49,7 +49,30 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-05 (cloud, latest): MAFFSKEYPAD built, PR #70; NEXT = Estimation Engine rebuild (same session)
+## Handover — 2026-10-06 (cloud, latest): the four open PRs one at a time; #75 and #72 MERGED; NEXT = #73, then #74
+
+Jon's instruction of 6 Oct, 09:30: this session alone drives #75, #72, #73 and #74, one PR at a time. It pushes
+one, waits for its result, and never queues two.
+- **Why one at a time:** on 5 Oct evening, four PRs and main pushed within an hour. Jobs sat queued with
+  `runner_id: 0` and were cancelled after 15 minutes without running a test. A cancelled job is not a failure:
+  its log is a 404 and it has no runner. A cancel at the job's own `timeout-minutes` (group B before #75) is real.
+- **#75 merged:** Equation Builder is CI group D, and every group fails at 75% of its timeout. Main's full run on
+  `6179044` was green, the first since #68; group B took 5m38s of 12m.
+- **#72 merged:** search titles and descriptions come from `data/games.json` (canon §2.1); `estimation-engine` is
+  PENDING in `check-meta.py` until #74.
+- **Next:** #73, then #74. #74 adds its verifier as a new group of its own, removes its PENDING entries from
+  `check-meta.py` and `check-teacher-invite.py`, and fixes its games.json description (no timer). It stops for
+  Jon's six calls before merging.
+- **Gotchas:**
+  - githubstatus.com is refused by this sandbox's proxy; judge Actions by whether a re-run's jobs get runners.
+  - `gh api .../jobs/<id>/logs` is refused (blob storage); the GitHub MCP `get_job_logs` works.
+  - The six local failures of a full `check-changed.py` here are all environmental: no WebKit (calculator suite,
+    Just Pythag It), the KaTeX CDN (Log Laws Solve), Distinctly Average and Negative Number Line's 320×568 fold
+    (both fail identically on main), and Free Daily Pizza under load (it passes alone).
+  - `pip install playwright==1.56.0 sympy==1.14.0 mpmath==1.3.0`. For esprima, add a `.pth` file pointing at its
+    unpacked source.
+
+## Handover — 2026-10-05 (cloud): MAFFSKEYPAD built, PR #70; NEXT = Estimation Engine rebuild (same session)
 
 Jon's keypad contract (his ruling (b), 18:45), run before the Estimation Engine rebuild.
 - **`MaffsKeypad`** (`schools/assets/keypad.js`, canon §4.4): `mount(el, {targets, keys, maxLength, keepInView,
