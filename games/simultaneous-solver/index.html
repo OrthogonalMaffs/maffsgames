@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <meta name="description" content="Solve linear simultaneous equations, then linear with non-linear pairs. For GCSE and A-Level. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/simultaneous-solver/">
 <meta property="og:title" content="Simultaneous Equations Game – GCSE Maths | MaffsGames">
@@ -14,412 +13,1048 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
 <title>Simultaneous Equations Game – GCSE Maths | MaffsGames</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<link rel="stylesheet" href="/schools/assets/theme.css">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-992JLHLP2D', {
-    send_page_view: true,
-    storage: 'none',
-    anonymize_ip: true
-  });
-</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
 <script src="../../schools/assets/analytics.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <style>
+/* Theme: schools/assets/theme.css (canon §7.5). The base tokens come from there; this game sets its accent. */
+:root{--accent:#1d4ed8;--accent-dim:#dbeafe;--on-accent:#ffffff}
 *{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#0a0e1a;--surface:#131929;--border:#1e2a42;
-  --primary:#4f8cff;--accent:#00e5a0;--wrong:#ff4d6a;
-  --text:#e8ecf4;--muted:#7a8ba8;
-  --glow:0 0 20px rgba(79,140,255,0.3);
-}
-body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
-.container{max-width:760px;width:100%;padding:1rem}
-.header{text-align:center;padding:1.5rem 0 1rem}
-.header h1{font-size:1.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.header .sub{font-size:0.85rem;color:var(--muted);margin-top:0.3rem}
-.level-select{display:flex;gap:0.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap}
-.level-btn{padding:0.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
-.level-btn:hover{border-color:var(--primary)}
-.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
-.level-btn[data-level="gcse"]{--lc:#3b82f6}.level-btn[data-level="gcse"].active{background:#3b82f6;border-color:#3b82f6}
-.level-btn[data-level="alevel"]{--lc:#f97316}.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316}
-.hud{display:flex;justify-content:space-between;align-items:center;padding:0.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
-.hud-item{text-align:center}
-.hud-label{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em}
-.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
-.q-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1rem;text-align:center;min-height:140px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:0.8rem}
-.q-card .system{font-size:1.3rem;line-height:1.8}
-.q-card .prompt{font-size:0.9rem;color:var(--accent);font-weight:600;margin-top:0.5rem}
-.options{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-bottom:1rem}
-.opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1rem;cursor:pointer;transition:all 0.15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center}
-.opt-btn:hover{border-color:var(--primary);box-shadow:var(--glow)}
-.opt-btn.correct{border-color:var(--accent);background:rgba(0,229,160,0.15);animation:pulse-correct 0.4s}
-.opt-btn.wrong{border-color:var(--wrong);background:rgba(255,77,106,0.15);animation:shake 0.3s}
-.opt-btn.reveal{border-color:var(--accent);opacity:0.7}
-.opt-btn.disabled{pointer-events:none;opacity:0.5}
-@keyframes pulse-correct{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.timer-text{text-align:center;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:1rem}
-.progress{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
-.pip{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background 0.3s}
-.pip.done{background:var(--accent)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--primary);box-shadow:0 0 6px var(--primary)}
-.results{text-align:center;padding:2rem 1rem}
-.results h2{font-size:1.6rem;margin-bottom:0.5rem}
-.results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
-.results .stats{color:var(--muted);margin-bottom:1.5rem}
-.play-again{padding:0.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform 0.15s}
-.play-again:hover{transform:scale(1.05)}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:680px;width:100%;padding:1rem}
+/* The standard game header: "← Back to Games" above every screen, then the start screen's title,
+   subtitle and Aa. The back link is padded to a 44px target. */
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.6rem 0 .5rem}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem 0 .5rem}
+@media (max-width:420px){.header h1{font-size:1.6rem}}
 .screen{display:none}.screen.active{display:block}
-.katex{font-size:1.1em!important}
-.q-card .katex{font-size:1.3em!important}
-.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:0.85rem}
-.back-link:hover{color:var(--text)}
-body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
-.timer-display,.hud-timer,.timer,.time-display{display:none !important}
+
+/* Start screen */
+.tabs{display:flex;gap:.5rem;justify-content:center;margin:.4rem 0 .2rem}
+.tab{min-height:44px;padding:.5rem 1.3rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-size:.95rem;font-weight:600;cursor:pointer}
+.tab[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.9rem auto;max-width:600px}
+.panel h2{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin:.9rem 0 .6rem}
+.panel[hidden]{display:none}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.6}
+.rule{margin:.5rem 0 .1rem;padding:.45rem .7rem;border-left:3px solid var(--accent);border-radius:0 8px 8px 0;background:var(--surface-alt);font-weight:600}
+.badges{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:.1rem 0 .7rem}
+.level-tag{display:inline-flex;align-items:center;padding:.25em .7em;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-size:.85rem;font-weight:600;line-height:1.3}
+.stage-list{display:flex;flex-direction:column;gap:.5rem}
+.stage-btn{display:block;width:100%;text-align:left;min-height:44px;padding:.6rem .8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:.9rem;line-height:1.4}
+.stage-btn b{display:block;font-size:.98rem}
+.stage-btn .n{color:var(--muted);font-size:.8rem}
+.stage-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-dim)}
+.btn{min-height:44px;padding:.6rem 1.2rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer}
+/* Hover only where a pointer can hover: on a touch screen it sticks after a tap. */
+@media (hover:hover){.btn:hover{background:var(--accent-dim)}.btn.solid:hover{background:var(--accent);opacity:.9}.stage-btn:hover,.tab:hover{border-color:var(--accent)}}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.start-btn{display:block;margin:.9rem auto .2rem;padding:.75rem 2.6rem;font-size:1.05rem}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+
+/* Play */
+.hud{display:flex;justify-content:space-between;padding:.45rem .8rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.6rem;gap:.3rem}
+.hud-item{text-align:center;min-width:48px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;display:flex;flex-direction:column;gap:.6rem}
+.system{display:grid;grid-template-columns:auto auto;column-gap:.6rem;row-gap:.15rem;align-items:center;justify-content:center;font-size:1.1rem}
+.system .lab{font-family:var(--font-num);font-size:.85rem;color:var(--muted)}
+.working{display:flex;flex-direction:column;gap:.35rem}
+.working:empty{display:none}
+.wl{font-size:.88rem;line-height:1.5;padding:.35rem .6rem;border-radius:8px;border:1px solid var(--border);background:var(--surface-alt)}
+.wl.right{border-left:4px solid var(--correct)}
+.wl.wrong{border-left:4px solid var(--wrong)}
+.wl.info{border-left:4px solid var(--accent)}
+.wl .v{font-weight:700}
+.wl.right .v{color:var(--correct)}
+.wl.wrong .v{color:var(--wrong)}
+.wl .eqs{display:block;margin-top:.15rem}
+.step-head{font-size:.95rem;font-weight:600;line-height:1.45;margin-bottom:.55rem}
+.step-head .sub-eqs{display:block;font-weight:400;margin-top:.2rem}
+.row{display:flex;align-items:center;justify-content:center;gap:.45rem;flex-wrap:nowrap;padding-top:.4rem}
+.row .lbl{font-size:1.05rem;white-space:nowrap}
+/* Each box sits in its own label, so the keypad's "typing here" tag has room above it. */
+.row label{display:block}
+.row input{width:4.6rem;min-width:0;min-height:44px;font-family:var(--font-num);font-size:1.1rem;text-align:center;padding:.4rem .2rem;border:2px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text)}
+.row input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:var(--accent)}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.choice{min-height:48px;padding:.5rem;border-radius:10px;border:2px solid var(--accent);background:var(--surface);color:var(--accent);font-size:1rem;font-weight:600;cursor:pointer}
+@media (hover:hover){.choice:hover{background:var(--accent-dim)}}
+.check-row{display:flex;justify-content:center;margin-top:.55rem}
+.check-row .btn{min-width:140px}
+.check-row[hidden],.kp-holder[hidden]{display:none}
+.kp-holder{margin-top:.55rem}
+.msg{font-size:.88rem;color:var(--wrong);text-align:center;margin-top:.4rem}
+.msg:empty{display:none}
+.feedback:empty{display:none}
+.fb{border-radius:12px;padding:.7rem .85rem;border:1px solid var(--border);background:var(--surface-alt);font-size:.93rem;line-height:1.55}
+.fb.right{border-color:var(--correct)}
+.fb.wrong{border-color:var(--wrong)}
+.fb-verdict{font-weight:700;font-size:1rem}
+.fb.right .fb-verdict{color:var(--correct)}
+.fb.wrong .fb-verdict{color:var(--wrong)}
+.fb-line{margin-top:.3rem}
+.fb-work{margin-top:.3rem;display:grid;grid-template-columns:auto 1fr;column-gap:.6rem;row-gap:.1rem;align-items:center}
+.fb-work .lab{font-size:.8rem;color:var(--muted)}
+.fb .maffs-next{margin-top:.6rem}
+
+/* A-Level: four options */
+.ask{font-size:.95rem;color:var(--accent);font-weight:600;text-align:center}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.opt-btn{min-height:56px;padding:.7rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--font-num);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+@media (hover:hover){.opt-btn:hover{border-color:var(--accent)}}
+.opt-btn.correct{border-color:var(--correct);background:var(--surface-alt)}
+.opt-btn.wrong{border-color:var(--wrong);background:var(--surface-alt)}
+.opt-btn:disabled{cursor:default;color:var(--text)}
+.mc-fb:empty{display:none}
+
+.results{text-align:center;padding:1rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.4rem 0}
+.stats{color:var(--muted);line-height:1.9;font-size:.95rem;margin-bottom:.8rem}
+.stats b{color:var(--text)}
+.actions{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap}
+#teacherInvite{margin-top:1rem}
+
+/* Phone rule (canon §7.6.1). While a step's feedback is open, its inputs, Check and the keypad cannot be
+   used, so they fold away and the feedback and Next take their place. */
+.qcard.fb-open .step{display:none}
+@media (max-height:700px){.qcard{gap:.45rem}.wl{font-size:.84rem;padding:.3rem .5rem}}
+@media (max-height:600px){
+  .hud{padding:.3rem .6rem;margin-bottom:.4rem}
+  .qcard{gap:.35rem}
+}
+@media (max-width:420px){
+  .container{padding:.6rem}
+  .qcard{padding:.75rem .7rem}
+  .fb{padding:.6rem .65rem;font-size:.9rem}
+  .hud{padding:.35rem .5rem}
+  .row{gap:.3rem}
+  .row input{width:4.1rem}
+}
+
+body.accessible{letter-spacing:.12em;word-spacing:.16em}
+body.accessible .hud-label,body.accessible .hud-val,body.accessible input,body.accessible .row .lbl{letter-spacing:0}
+body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<script src="../../schools/assets/answer.js"></script>
+<!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): a non-calculator game, so the keypad
+     only, never the calculator (roster Calculator field: not allowed). -->
+<script src="../../schools/assets/keypad.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
 <div class="container">
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
-    <div class="header">
-      <h1>Simultaneous Solver</h1>
-      <div class="sub">Solve the system. Find the unknowns.</div>
-      <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
+    <div class="header"><h1>Simultaneous Solver</h1><div class="sub">Elimination, one step at a time.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="tabs" role="group" aria-label="Level">
+      <button class="tab" type="button" data-level="gcse" aria-pressed="true">Foundation</button>
+      <button class="tab" type="button" data-level="alevel" aria-pressed="false">A-Level</button>
     </div>
-    <div class="level-select">
-      <button class="level-btn active" data-level="gcse">GCSE</button>
-      <button class="level-btn" data-level="alevel">A-Level</button>
+    <div class="panel menu-info" id="foundationPanel">
+      <div class="badges"><span class="level-tag">Foundation</span><span class="calc-badge" data-calc="not-allowed">Non-calculator</span></div>
+      <p>Solve two equations by elimination: scale them so one letter matches, add or subtract to get rid of it,
+        solve, then substitute back. Each stage adds a step.</p>
+      <div class="rule">Same signs, subtract. Different signs, add.</div>
+      <h2>Choose a stage</h2>
+      <div class="stage-list" id="stageList">
+        <button class="stage-btn" type="button" data-stage="stage1" aria-pressed="true"><b>Stage 1: Scale</b>Multiply each equation so one letter matches. <span class="n">10 problems, 10 marks</span></button>
+        <button class="stage-btn" type="button" data-stage="stage2" aria-pressed="false"><b>Stage 2: Eliminate</b>Scale, then add or subtract to get rid of the letter. <span class="n">8 problems, 24 marks</span></button>
+        <button class="stage-btn" type="button" data-stage="stage3" aria-pressed="false"><b>Stage 3: Solve</b>Eliminate, solve for one letter, substitute for the other. <span class="n">6 problems, 30 marks</span></button>
+        <button class="stage-btn" type="button" data-stage="stage4" aria-pressed="false"><b>Stage 4: The whole problem</b>You choose which letter to eliminate, then solve it all. <span class="n">6 problems, 30 marks</span></button>
+      </div>
     </div>
-    <p style="text-align:center;color:var(--muted);font-size:0.85rem;margin:1rem 0">
-      <strong>GCSE:</strong> Linear simultaneous equations<br>
-      <strong>A-Level:</strong> Linear + non-linear (quadratic, circle)
-    </p>
-    <div style="text-align:center;margin-top:1.5rem">
-  <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
-      <button class="play-again" onclick="startGame()">Start</button>
+    <div class="panel menu-info" id="alevelPanel" hidden>
+      <div class="badges"><span class="level-tag">A-Level</span></div>
+      <p>Linear pairs, then a line with a curve or a circle: solve by substitution. 20 questions, four options each.</p>
     </div>
+    <button class="btn solid start-btn" id="startBtn" type="button">Start</button>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
   </div>
+
   <div id="game" class="screen">
     <div class="hud">
-      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
-      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
-      <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
-      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div>
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStageVal">1</div></div>
+      <div class="hud-item"><div class="hud-label">Problem</div><div class="hud-val" id="qNum">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Marks</div><div class="hud-val" id="marks">0</div></div>
     </div>
-    <div class="timer-text" id="timerDisplay">0s</div>
-    <div class="progress" id="progress"></div>
-    <div class="q-card" id="qCard">
+    <div class="qcard" id="qcard">
       <div class="system" id="system"></div>
-      <div class="prompt" id="prompt"></div>
+      <div class="working" id="working"></div>
+      <div class="step" id="step">
+        <form id="stepForm" autocomplete="off" novalidate>
+          <div class="step-head" id="stepHead"></div>
+          <div id="stepBody"></div>
+        </form>
+        <div class="msg" id="msg" aria-live="polite"></div>
+        <div class="check-row" id="checkRow"><button class="btn solid" id="checkBtn" type="button">Check</button></div>
+        <div class="kp-holder" id="kpHolder"></div>
+      </div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
     </div>
-    <div class="options" id="options"></div>
   </div>
+
+  <div id="mc" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Level</div><div class="hud-val">A-Level</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="mcNum">1/20</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="mcScore">0</div></div>
+    </div>
+    <div class="qcard">
+      <div class="system" id="mcSystem"></div>
+      <div class="ask" id="mcAsk"></div>
+      <div class="options" id="mcOptions"></div>
+      <div class="mc-fb" id="mcFeedback" aria-live="polite"></div>
+    </div>
+  </div>
+
   <div id="results" class="screen">
     <div class="results">
-      <h2 id="resultTitle">Well Done!</h2>
+      <h2 id="resultTitle"></h2>
       <div class="final-score" id="finalScore">0</div>
       <div class="stats" id="statsLine"></div>
-      <button class="play-again" onclick="showMenu()">Play Again</button>
+      <div class="actions"><button class="btn solid" id="againBtn" type="button">Play again</button></div>
       <p id="teacherInvite"></p>
     </div>
   </div>
 </div>
+
 <script>
-const QUESTIONS = {
-gcse: [
-  {sys:['2x + y = 7','x - y = 2'],ask:'Find x',correct:'3',distractors:['2','4','5']},
-  {sys:['2x + y = 7','x - y = 2'],ask:'Find y',correct:'1',distractors:['2','3','-1']},
-  {sys:['x + y = 10','x - y = 4'],ask:'Find x',correct:'7',distractors:['6','3','8']},
-  {sys:['x + y = 10','x - y = 4'],ask:'Find y',correct:'3',distractors:['4','7','6']},
-  {sys:['3x + 2y = 12','x + 2y = 8'],ask:'Find x',correct:'2',distractors:['3','4','1']},
-  {sys:['3x + 2y = 12','x + 2y = 8'],ask:'Find y',correct:'3',distractors:['2','4','1']},
-  {sys:['2x + 3y = 13','x + y = 5'],ask:'Find x',correct:'2',distractors:['3','1','4']},
-  {sys:['2x + 3y = 13','x + y = 5'],ask:'Find y',correct:'3',distractors:['2','4','1']},
-  {sys:['5x + y = 17','3x + y = 11'],ask:'Find x',correct:'3',distractors:['2','4','1']},
-  {sys:['5x + y = 17','3x + y = 11'],ask:'Find y',correct:'2',distractors:['3','1','4']},
-  {sys:['x + 3y = 11','x + y = 5'],ask:'Find y',correct:'3',distractors:['2','4','5']},
-  {sys:['4x + y = 14','2x + y = 8'],ask:'Find x',correct:'3',distractors:['2','4','1']},
-  {sys:['3x + 4y = 18','x + 4y = 10'],ask:'Find x',correct:'4',distractors:['3','2','5']},
-  {sys:['x + 2y = 8','3x + 2y = 14'],ask:'Find x',correct:'3',distractors:['2','4','5']},
-  {sys:['2x + 5y = 16','2x + 3y = 10'],ask:'Find y',correct:'3',distractors:['2','1','4']},
-  {sys:['3x + 2y = 16','x + y = 6'],ask:'Find x',correct:'4',distractors:['2','3','5']},
-  {sys:['2x + 3y = 19','x + 2y = 12'],ask:'Find x',correct:'2',distractors:['3','5','1']},
-  {sys:['2x + 3y = 19','x + 2y = 12'],ask:'Find y',correct:'5',distractors:['3','4','2']},
-  {sys:['4x + 3y = 23','2x + y = 9'],ask:'Find x',correct:'2',distractors:['3','4','1']},
-  {sys:['4x + 3y = 23','2x + y = 9'],ask:'Find y',correct:'5',distractors:['3','4','2']},
-  {sys:['3x + y = 10','x + 4y = 18'],ask:'Find x',correct:'2',distractors:['3','1','4']},
-  {sys:['3x + y = 10','x + 4y = 18'],ask:'Find y',correct:'4',distractors:['3','2','5']},
-  {sys:['5x + 2y = 24','x + 3y = 15'],ask:'Find x',correct:'2',distractors:['3','4','1']},
-  {sys:['5x + 3y = 21','2x + y = 8'],ask:'Find x',correct:'3',distractors:['2','4','1']},
-  {sys:['5x + 3y = 21','2x + y = 8'],ask:'Find y',correct:'2',distractors:['3','1','4']},
-  {sys:['x + 5y = 22','2x + 3y = 16'],ask:'Find x',correct:'2',distractors:['3','4','1']},
-  {sys:['x + 5y = 22','2x + 3y = 16'],ask:'Find y',correct:'4',distractors:['3','5','2']},
-  {sys:['4x + y = 17','x + 2y = 13'],ask:'Find x',correct:'3',distractors:['2','4','1']},
-  {sys:['4x + y = 17','x + 2y = 13'],ask:'Find y',correct:'5',distractors:['3','4','2']},
-  {sys:['3x + 5y = 31','x + 2y = 12'],ask:'Find x',correct:'2',distractors:['3','4','1']},
-  {sys:['2x - y = 5','x + y = 4'],ask:'Find x',correct:'3',distractors:['2','4','1']},
-  {sys:['2x - y = 5','x + y = 4'],ask:'Find y',correct:'1',distractors:['2','-1','3']},
-  {sys:['x - 2y = -1','x + y = 5'],ask:'Find y',correct:'2',distractors:['3','1','4']},
-  {sys:['3x - y = 7','x + 2y = 7'],ask:'Find x',correct:'3',distractors:['2','4','1']},
-  {sys:['3x - y = 7','x + 2y = 7'],ask:'Find y',correct:'2',distractors:['1','3','-1']},
-  {sys:['x - 3y = -5','2x + y = 9'],ask:'Find x',correct:'4',distractors:['2','3','5']},
-  {sys:['x - 3y = -5','2x + y = 9'],ask:'Find y',correct:'3',distractors:['1','2','4']},
-  {sys:['5x - 2y = 1','3x + y = 10'],ask:'Find x',correct:'1',distractors:['2','3','-1']},
-  {sys:['5x - 2y = -1','x + y = 5'],ask:'Find y',correct:'\\tfrac{26}{7}',distractors:['4','3','\\tfrac{9}{7}']},
-  {sys:['2x + y = 1','x - y = 5'],ask:'Find x',correct:'2',distractors:['3','1','-1']},
-  {sys:['2x + y = 1','x - y = 5'],ask:'Find y',correct:'-3',distractors:['-1','3','-2']},
-  {sys:['3x + 2y = 4','x - y = 3'],ask:'Find x',correct:'2',distractors:['1','3','4']},
-  {sys:['3x + 2y = 4','x - y = 3'],ask:'Find y',correct:'-1',distractors:['1','-2','2']},
-  {sys:['4x - 3y = 11','2x + y = 5'],ask:'Find x',correct:'\\tfrac{13}{5}',distractors:['3','2','\\tfrac{11}{4}']},
-  {sys:['x + y = 1','2x - 3y = 12'],ask:'Find x',correct:'3',distractors:['2','4','5']},
-  {sys:['x + y = 1','2x - 3y = 12'],ask:'Find y',correct:'-2',distractors:['-1','-3','2']},
-  {sys:['2x - y = 0','x + 3y = 14'],ask:'Find x',correct:'2',distractors:['4','3','1']},
-  {sys:['2x - y = 0','x + 3y = 14'],ask:'Find y',correct:'4',distractors:['2','3','6']},
-  {sys:['5x + 2y = 3','x - y = 3'],ask:'Find x',correct:'\\tfrac{9}{7}',distractors:['1','2','\\tfrac{3}{5}']},
-  {sys:['7x + 2y = 20','3x - y = 5'],ask:'Find x',correct:'\\tfrac{30}{13}',distractors:['2','3','\\tfrac{20}{7}']},
-],
-alevel: [
-  {sys:['2x + 3y = 7','5x - y = 9'],ask:'Find x',correct:'2',distractors:['1','3','\\tfrac{20}{13}']},
-  {sys:['2x + 3y = 7','5x - y = 9'],ask:'Find y',correct:'1',distractors:['2','-1','\\tfrac{7}{3}']},
-  {sys:['3x - 4y = -1','2x + y = 3'],ask:'Find x',correct:'1',distractors:['2','\\tfrac{3}{2}','-1']},
-  {sys:['3x - 4y = -1','2x + y = 3'],ask:'Find y',correct:'1',distractors:['2','-1','\\tfrac{1}{4}']},
-  {sys:['x + 2y = 0','3x - y = 7'],ask:'Find x',correct:'2',distractors:['1','-2','3']},
-  {sys:['x + 2y = 0','3x - y = 7'],ask:'Find y',correct:'-1',distractors:['1','-2','0']},
-  {sys:['4x + y = 3','x - 2y = 5'],ask:'Find x',correct:'\\tfrac{11}{9}',distractors:['1','2','\\tfrac{3}{4}']},
-  {sys:['7x + 3y = 1','2x - y = 5'],ask:'Find x',correct:'\\tfrac{16}{13}',distractors:['1','2','\\tfrac{1}{7}']},
-  {sys:['x + y = 4','3x + 5y = 14'],ask:'Find x',correct:'3',distractors:['2','1','4']},
-  {sys:['x + y = 4','3x + 5y = 14'],ask:'Find y',correct:'1',distractors:['2','3','0']},
-  {sys:['2x - 3y = -8','4x + y = 2'],ask:'Find x',correct:'-\\tfrac{1}{7}',distractors:['0','1','-1']},
-  {sys:['6x + y = 5','2x + 3y = 7'],ask:'Find x',correct:'\\tfrac{1}{2}',distractors:['1','0','\\tfrac{5}{6}']},
-  {sys:['6x + y = 5','2x + 3y = 7'],ask:'Find y',correct:'2',distractors:['1','3','\\tfrac{7}{3}']},
-  {sys:['x - 5y = -7','2x + y = 8'],ask:'Find x',correct:'3',distractors:['2','4','1']},
-  {sys:['x - 5y = -7','2x + y = 8'],ask:'Find y',correct:'2',distractors:['1','3','-1']},
-  {sys:['y = x + 1','y = x^2 - x - 2'],ask:'Find the positive x value',correct:'3',distractors:['2','4','1']},
-  {sys:['y = x + 1','y = x^2 - x - 2'],ask:'How many solutions?',correct:'2',distractors:['0','1','3']},
-  {sys:['y = 2x','y = x^2 - 3'],ask:'Find the positive x value',correct:'3',distractors:['1','2','4']},
-  {sys:['y = 2x','y = x^2 - 3'],ask:'Find the negative x value',correct:'-1',distractors:['-2','-3','0']},
-  {sys:['y = 3x + 2','y = x^2 + 2'],ask:'Find the non-zero x value',correct:'3',distractors:['1','2','-1']},
-  {sys:['y = x + 3','y = x^2 + 1'],ask:'Find the positive x value',correct:'2',distractors:['3','1','4']},
-  {sys:['y = x + 3','y = x^2 + 1'],ask:'Find the negative x value',correct:'-1',distractors:['-2','-3','0']},
-  {sys:['y = 4 - x','y = x^2 - 2x'],ask:'Find the positive x value',correct:'2',distractors:['1','4','3']},
-  {sys:['y = 5 - x','y = x^2 - x - 1'],ask:'Find the positive x value',correct:'\\sqrt{6}',distractors:['3','2','\\sqrt{5}']},
-  {sys:['y = 2x + 1','y = x^2 - 2x + 1'],ask:'Find the values of x (sum)',correct:'4',distractors:['2','3','5']},
-  {sys:['y = x','y = x^2 - 6'],ask:'Find the positive x value',correct:'3',distractors:['2','6','1']},
-  {sys:['y = x','y = x^2 - 6'],ask:'Find the negative x value',correct:'-2',distractors:['-3','-1','-6']},
-  {sys:['y = 2x - 1','y = x^2 - 4'],ask:'Find the positive x value',correct:'3',distractors:['1','2','4']},
-  {sys:['y = 2x - 1','y = x^2 - 4'],ask:'Find the negative x value',correct:'-1',distractors:['-2','-3','0']},
-  {sys:['y = 3 - x','y = x^2 - 3x + 3'],ask:'How many solutions?',correct:'2',distractors:['0','1','3']},
-  {sys:['y = 5 - 2x','y = x^2 - 3'],ask:'Find the positive x value',correct:'2',distractors:['1','4','3']},
-  {sys:['y = 5 - 2x','y = x^2 - 3'],ask:'Find the negative x value',correct:'-4',distractors:['-2','-3','-1']},
-  {sys:['y = 3x','y = 2x^2 + x'],ask:'Find the non-zero x value',correct:'1',distractors:['2','3','\\tfrac{1}{2}']},
-  {sys:['y = 4x - 3','y = x^2'],ask:'Find the larger x value',correct:'3',distractors:['4','2','1']},
-  {sys:['y = 4x - 3','y = x^2'],ask:'Find the smaller x value',correct:'1',distractors:['0','-1','2']},
-  {sys:['x^2 + y^2 = 25','y = 0'],ask:'Find the positive x value',correct:'5',distractors:['4','3','25']},
-  {sys:['x^2 + y^2 = 25','x = 0'],ask:'Find the positive y value',correct:'5',distractors:['4','3','25']},
-  {sys:['x^2 + y^2 = 10','y = x'],ask:'Find the positive x value',correct:'\\sqrt{5}',distractors:['\\sqrt{10}','5','\\sqrt{2}']},
-  {sys:['x^2 + y^2 = 20','y = 2x'],ask:'Find the positive x value',correct:'2',distractors:['4','\\sqrt{20}','\\sqrt{5}']},
-  {sys:['x^2 + y^2 = 13','y = x + 1'],ask:'Find the positive x value',correct:'2',distractors:['3','1','\\sqrt{13}']},
-  {sys:['x^2 + y^2 = 13','y = x + 1'],ask:'Find the negative x value',correct:'-3',distractors:['-2','-1','-\\sqrt{13}']},
-  {sys:['x^2 + y^2 = 5','y = 2x - 1'],ask:'Find the larger x value',correct:'\\tfrac{2+\\sqrt{19}}{5}',distractors:['2','1','\\sqrt{5}']},
-  {sys:['x^2 + y^2 = 50','y = x'],ask:'Find the positive x value',correct:'5',distractors:['\\sqrt{50}','25','\\dfrac{\\sqrt{50}}{2}']},
-  {sys:['x^2 + y^2 = 8','y = x + 2'],ask:'How many solutions?',correct:'2',distractors:['0','1','4']},
-  {sys:['x^2 + y^2 = 9','y = x + 5'],ask:'How many solutions?',correct:'0',distractors:['1','2','3']},
-  {sys:['x^2 + y^2 = 45','x = 2y'],ask:'Find the positive y value',correct:'3',distractors:['\\sqrt{45}','9','\\sqrt{15}']},
-  {sys:['x^2 + y^2 = 25','y = x - 1'],ask:'Find the larger x value',correct:'4',distractors:['5','3','\\sqrt{25}']},
-  {sys:['x^2 + y^2 = 25','y = x - 1'],ask:'Find the smaller x value',correct:'-3',distractors:['-4','-5','-2']},
-  {sys:['x^2 + y^2 = 4','y = x'],ask:'Find the positive x value',correct:'\\sqrt{2}',distractors:['2','1','\\sqrt{4}']},
-  {sys:['x^2 + y^2 = 2','y = -x'],ask:'Find the positive x value',correct:'1',distractors:['\\sqrt{2}','2','\\tfrac{1}{2}']},
-]
+// ============================================================
+//  FOUNDATION BANK (Stages 1-4). Generated by scripts/gen-simultaneous.py; never edit it by hand.
+//  e: the two equations as [a, b, c] for ax + by = c. x, y: the solution. elim: the letter the game
+//  names (Stages 1-3); m: its neatest (LCM) multipliers. Stage 4: mx, my: each letter's neatest
+//  multipliers; neat: the neater letter ("either" when they tie).
+//  scripts/verify-simultaneous-solver.py recomputes every solution and checks every bank rule.
+// ============================================================
+/* GENERATED BANK START */
+var BANK = {
+  "stage1": [
+    {"id": "s1_01", "e": [[5, -2, 1], [2, 5, 12]], "x": 1, "y": 2, "elim": "y", "m": [5, 2]},
+    {"id": "s1_02", "e": [[7, -6, -13], [5, -2, -23]], "x": -7, "y": -6, "elim": "y", "m": [1, 3]},
+    {"id": "s1_03", "e": [[7, -1, 14], [-8, 5, 11]], "x": 3, "y": 7, "elim": "y", "m": [5, 1]},
+    {"id": "s1_04", "e": [[2, 3, 7], [5, -6, 58]], "x": 8, "y": -3, "elim": "x", "m": [5, 2]},
+    {"id": "s1_05", "e": [[6, 1, -31], [-7, -4, 39]], "x": -5, "y": -1, "elim": "y", "m": [4, 1]},
+    {"id": "s1_06", "e": [[4, -5, -43], [4, 1, -25]], "x": -7, "y": 3, "elim": "y", "m": [1, 5]},
+    {"id": "s1_07", "e": [[9, 10, 6], [-3, -8, -30]], "x": -6, "y": 6, "elim": "y", "m": [4, 5]},
+    {"id": "s1_08", "e": [[10, 1, 18], [6, -1, -2]], "x": 1, "y": 8, "elim": "x", "m": [3, 5]},
+    {"id": "s1_09", "e": [[1, -6, -12], [3, 4, -14]], "x": -6, "y": 1, "elim": "y", "m": [2, 3]},
+    {"id": "s1_10", "e": [[5, -4, -25], [2, 3, -33]], "x": -9, "y": -5, "elim": "y", "m": [3, 4]},
+    {"id": "s1_11", "e": [[6, -5, 3], [8, -7, 7]], "x": -7, "y": -9, "elim": "x", "m": [4, 3]},
+    {"id": "s1_12", "e": [[5, 2, 42], [3, -4, 20]], "x": 8, "y": 1, "elim": "x", "m": [3, 5]},
+    {"id": "s1_13", "e": [[3, 2, 12], [-3, 10, 24]], "x": 2, "y": 3, "elim": "y", "m": [5, 1]},
+    {"id": "s1_14", "e": [[3, 10, -48], [1, 10, -36]], "x": -6, "y": -3, "elim": "x", "m": [1, 3]},
+    {"id": "s1_15", "e": [[3, -2, 20], [11, 10, 4]], "x": 4, "y": -4, "elim": "y", "m": [5, 1]},
+    {"id": "s1_16", "e": [[3, 7, 11], [3, 5, 7]], "x": -1, "y": 2, "elim": "x", "m": [1, 1]},
+    {"id": "s1_17", "e": [[7, -5, -14], [5, -3, -6]], "x": 3, "y": 7, "elim": "y", "m": [3, 5]},
+    {"id": "s1_18", "e": [[3, -5, -15], [2, -11, 13]], "x": -10, "y": -3, "elim": "x", "m": [2, 3]},
+    {"id": "s1_19", "e": [[3, -1, -1], [-4, 5, 27]], "x": 2, "y": 7, "elim": "y", "m": [5, 1]},
+    {"id": "s1_20", "e": [[6, -5, 6], [8, -11, 34]], "x": -4, "y": -6, "elim": "x", "m": [4, 3]},
+    {"id": "s1_21", "e": [[2, -7, 39], [3, 2, 21]], "x": 9, "y": -3, "elim": "x", "m": [3, 2]},
+    {"id": "s1_22", "e": [[8, -3, 3], [6, -5, -17]], "x": 3, "y": 7, "elim": "x", "m": [3, 4]},
+    {"id": "s1_23", "e": [[1, -6, 5], [3, -5, -11]], "x": -7, "y": -2, "elim": "x", "m": [3, 1]},
+    {"id": "s1_24", "e": [[11, 3, -24], [1, 1, 0]], "x": -3, "y": 3, "elim": "y", "m": [1, 3]},
+    {"id": "s1_25", "e": [[2, -7, -30], [3, -10, -43]], "x": -1, "y": 4, "elim": "x", "m": [3, 2]},
+    {"id": "s1_26", "e": [[4, 7, -33], [3, 2, -2]], "x": 4, "y": -7, "elim": "x", "m": [3, 4]},
+    {"id": "s1_27", "e": [[3, 5, 37], [2, -5, -17]], "x": 4, "y": 5, "elim": "x", "m": [2, 3]},
+    {"id": "s1_28", "e": [[6, 1, 28], [6, 5, 44]], "x": 4, "y": 4, "elim": "x", "m": [1, 1]},
+    {"id": "s1_29", "e": [[5, -4, -29], [-1, -3, 2]], "x": -5, "y": 1, "elim": "y", "m": [3, 4]},
+    {"id": "s1_30", "e": [[1, 6, 11], [-5, 4, 47]], "x": -7, "y": 3, "elim": "y", "m": [2, 3]},
+    {"id": "s1_31", "e": [[7, 5, -17], [7, 10, 8]], "x": -6, "y": 5, "elim": "x", "m": [1, 1]},
+    {"id": "s1_32", "e": [[5, -4, -51], [7, 8, -17]], "x": -7, "y": 4, "elim": "y", "m": [2, 1]},
+    {"id": "s1_33", "e": [[1, -12, 52], [5, -4, -20]], "x": -8, "y": -5, "elim": "y", "m": [1, 3]},
+    {"id": "s1_34", "e": [[11, 3, 35], [2, 1, 5]], "x": 4, "y": -3, "elim": "y", "m": [1, 3]},
+    {"id": "s1_35", "e": [[3, 10, 29], [2, 5, 11]], "x": -7, "y": 5, "elim": "y", "m": [1, 2]},
+    {"id": "s1_36", "e": [[5, 7, 45], [-8, 7, 19]], "x": 2, "y": 5, "elim": "y", "m": [1, 1]},
+    {"id": "s1_37", "e": [[7, 10, 1], [1, -5, -32]], "x": -7, "y": 5, "elim": "y", "m": [1, 2]},
+    {"id": "s1_38", "e": [[3, 11, -32], [4, 7, -12]], "x": 4, "y": -4, "elim": "x", "m": [4, 3]},
+    {"id": "s1_39", "e": [[1, 2, -9], [7, -5, -44]], "x": -7, "y": -1, "elim": "y", "m": [5, 2]},
+    {"id": "s1_40", "e": [[5, -1, -30], [4, 5, 34]], "x": -4, "y": 10, "elim": "y", "m": [5, 1]},
+    {"id": "s1_41", "e": [[8, -3, 25], [6, 5, -3]], "x": 2, "y": -3, "elim": "x", "m": [3, 4]},
+    {"id": "s1_42", "e": [[1, -2, -15], [2, 1, -5]], "x": -5, "y": 5, "elim": "x", "m": [2, 1]},
+    {"id": "s1_43", "e": [[10, -11, 41], [4, -7, 19]], "x": 3, "y": -1, "elim": "x", "m": [2, 5]},
+    {"id": "s1_44", "e": [[1, -6, -17], [-5, 4, 7]], "x": 1, "y": 3, "elim": "y", "m": [2, 3]},
+    {"id": "s1_45", "e": [[3, 4, -20], [-1, -10, -2]], "x": -8, "y": 1, "elim": "y", "m": [5, 2]},
+    {"id": "s1_46", "e": [[1, -1, -11], [7, -5, -59]], "x": -2, "y": 9, "elim": "y", "m": [5, 1]},
+    {"id": "s1_47", "e": [[1, -4, 2], [-1, 10, 4]], "x": 6, "y": 1, "elim": "y", "m": [5, 2]},
+    {"id": "s1_48", "e": [[1, 4, -7], [-4, -5, -5]], "x": 5, "y": -3, "elim": "y", "m": [5, 4]}
+  ],
+  "stage2": [
+    {"id": "s2_01", "e": [[7, 6, -43], [1, -3, 17]], "x": -1, "y": -6, "elim": "y", "m": [1, 2]},
+    {"id": "s2_02", "e": [[1, 5, 22], [2, 3, 9]], "x": -3, "y": 5, "elim": "x", "m": [2, 1]},
+    {"id": "s2_03", "e": [[1, 6, -19], [-5, -9, 11]], "x": 5, "y": -4, "elim": "y", "m": [3, 2]},
+    {"id": "s2_04", "e": [[1, 6, 51], [2, 3, 39]], "x": 9, "y": 7, "elim": "x", "m": [2, 1]},
+    {"id": "s2_05", "e": [[5, 9, -26], [3, 8, -13]], "x": -7, "y": 1, "elim": "x", "m": [3, 5]},
+    {"id": "s2_06", "e": [[7, 3, 6], [-5, -2, -5]], "x": 3, "y": -5, "elim": "y", "m": [2, 3]},
+    {"id": "s2_07", "e": [[2, -1, -13], [5, -4, -37]], "x": -5, "y": 3, "elim": "y", "m": [4, 1]},
+    {"id": "s2_08", "e": [[2, -5, 1], [5, 1, 16]], "x": 3, "y": 1, "elim": "x", "m": [5, 2]},
+    {"id": "s2_09", "e": [[11, -5, -36], [1, 10, 49]], "x": -1, "y": 5, "elim": "y", "m": [2, 1]},
+    {"id": "s2_10", "e": [[8, 5, 7], [12, 5, 3]], "x": -1, "y": 3, "elim": "x", "m": [3, 2]},
+    {"id": "s2_11", "e": [[7, -6, 5], [4, 9, -22]], "x": -1, "y": -2, "elim": "y", "m": [3, 2]},
+    {"id": "s2_12", "e": [[1, 8, 27], [3, 11, 29]], "x": -5, "y": 4, "elim": "x", "m": [3, 1]},
+    {"id": "s2_13", "e": [[5, -4, 34], [5, -8, 18]], "x": 10, "y": 4, "elim": "y", "m": [2, 1]},
+    {"id": "s2_14", "e": [[1, -4, -12], [-11, 2, -36]], "x": 4, "y": 4, "elim": "y", "m": [1, 2]},
+    {"id": "s2_15", "e": [[2, 9, 6], [-1, 12, 30]], "x": -6, "y": 2, "elim": "y", "m": [4, 3]},
+    {"id": "s2_16", "e": [[1, 1, -3], [-11, -4, -9]], "x": 3, "y": -6, "elim": "y", "m": [4, 1]},
+    {"id": "s2_17", "e": [[8, 5, 6], [10, 7, 6]], "x": 2, "y": -2, "elim": "x", "m": [5, 4]},
+    {"id": "s2_18", "e": [[1, 8, 25], [4, 5, 46]], "x": 9, "y": 2, "elim": "x", "m": [4, 1]},
+    {"id": "s2_19", "e": [[2, 3, 17], [4, 3, 31]], "x": 7, "y": 1, "elim": "x", "m": [2, 1]},
+    {"id": "s2_20", "e": [[1, 1, -8], [-11, 4, 28]], "x": -4, "y": -4, "elim": "y", "m": [4, 1]},
+    {"id": "s2_21", "e": [[1, 5, 13], [5, 8, 14]], "x": -2, "y": 3, "elim": "x", "m": [5, 1]},
+    {"id": "s2_22", "e": [[1, -8, 6], [-1, 12, -14]], "x": -10, "y": -2, "elim": "y", "m": [3, 2]},
+    {"id": "s2_23", "e": [[9, 1, -10], [-9, -4, -14]], "x": -2, "y": 8, "elim": "y", "m": [4, 1]},
+    {"id": "s2_24", "e": [[2, 1, -6], [3, -1, -4]], "x": -2, "y": -2, "elim": "y", "m": [1, 1]},
+    {"id": "s2_25", "e": [[3, 4, 31], [1, 1, 7]], "x": -3, "y": 10, "elim": "x", "m": [1, 3]},
+    {"id": "s2_26", "e": [[1, 8, -16], [2, -11, 49]], "x": 8, "y": -3, "elim": "x", "m": [2, 1]},
+    {"id": "s2_27", "e": [[5, -1, 28], [-1, -5, 36]], "x": 4, "y": -8, "elim": "y", "m": [5, 1]},
+    {"id": "s2_28", "e": [[10, 9, -15], [5, 6, 0]], "x": -6, "y": 5, "elim": "y", "m": [2, 3]},
+    {"id": "s2_29", "e": [[8, -5, -39], [8, 5, -9]], "x": -3, "y": 3, "elim": "y", "m": [1, 1]},
+    {"id": "s2_30", "e": [[3, -8, 31], [2, -11, 49]], "x": -3, "y": -5, "elim": "x", "m": [2, 3]},
+    {"id": "s2_31", "e": [[1, 2, -30], [4, -7, 30]], "x": -10, "y": -10, "elim": "x", "m": [4, 1]},
+    {"id": "s2_32", "e": [[1, -5, -33], [5, 4, -20]], "x": -8, "y": 5, "elim": "y", "m": [4, 5]},
+    {"id": "s2_33", "e": [[9, 1, -26], [9, 4, 4]], "x": -4, "y": 10, "elim": "y", "m": [4, 1]},
+    {"id": "s2_34", "e": [[1, 6, -28], [5, -4, -38]], "x": -10, "y": -3, "elim": "y", "m": [2, 3]},
+    {"id": "s2_35", "e": [[5, -1, -26], [9, -1, -42]], "x": -4, "y": 6, "elim": "y", "m": [1, 1]},
+    {"id": "s2_36", "e": [[6, 5, -44], [4, 5, -46]], "x": 1, "y": -10, "elim": "x", "m": [2, 3]},
+    {"id": "s2_37", "e": [[1, 2, 9], [5, 2, 21]], "x": 3, "y": 3, "elim": "x", "m": [5, 1]},
+    {"id": "s2_38", "e": [[11, -5, -26], [1, 1, 2]], "x": -1, "y": 3, "elim": "y", "m": [1, 5]},
+    {"id": "s2_39", "e": [[9, 8, -31], [-1, -12, -41]], "x": -7, "y": 4, "elim": "y", "m": [3, 2]},
+    {"id": "s2_40", "e": [[1, 4, 17], [5, 7, 20]], "x": -3, "y": 5, "elim": "x", "m": [5, 1]},
+    {"id": "s2_41", "e": [[5, 4, 26], [10, 3, 7]], "x": -2, "y": 9, "elim": "x", "m": [2, 1]},
+    {"id": "s2_42", "e": [[5, -8, 28], [1, 1, -10]], "x": -4, "y": -6, "elim": "x", "m": [1, 5]},
+    {"id": "s2_43", "e": [[10, -9, -59], [11, 9, -46]], "x": -5, "y": 1, "elim": "y", "m": [1, 1]},
+    {"id": "s2_44", "e": [[5, -3, -59], [11, 3, -53]], "x": -7, "y": 8, "elim": "y", "m": [1, 1]},
+    {"id": "s2_45", "e": [[4, -3, -52], [4, 3, -4]], "x": -7, "y": 8, "elim": "y", "m": [1, 1]},
+    {"id": "s2_46", "e": [[11, -3, -14], [-9, 5, -14]], "x": -4, "y": -10, "elim": "y", "m": [5, 3]},
+    {"id": "s2_47", "e": [[3, -10, 8], [3, 8, -28]], "x": -4, "y": -2, "elim": "y", "m": [4, 5]},
+    {"id": "s2_48", "e": [[5, 4, 33], [2, 1, 9]], "x": 1, "y": 7, "elim": "x", "m": [2, 5]}
+  ],
+  "stage3": [
+    {"id": "s3_01", "e": [[3, 4, 37], [1, 1, 11]], "x": 7, "y": 4, "elim": "x", "m": [1, 3]},
+    {"id": "s3_02", "e": [[8, -7, 11], [12, 1, 51]], "x": 4, "y": 3, "elim": "x", "m": [3, 2]},
+    {"id": "s3_03", "e": [[12, -1, 26], [8, -1, 14]], "x": 3, "y": 10, "elim": "y", "m": [1, 1]},
+    {"id": "s3_04", "e": [[7, -1, -15], [-1, 1, -3]], "x": -3, "y": -6, "elim": "y", "m": [1, 1]},
+    {"id": "s3_05", "e": [[4, -5, 42], [-7, -10, -36]], "x": 8, "y": -2, "elim": "y", "m": [2, 1]},
+    {"id": "s3_06", "e": [[4, 9, 21], [10, 11, 41]], "x": 3, "y": 1, "elim": "x", "m": [5, 2]},
+    {"id": "s3_07", "e": [[6, -5, 29], [3, -2, 11]], "x": -1, "y": -7, "elim": "y", "m": [2, 5]},
+    {"id": "s3_08", "e": [[4, 3, 13], [6, 1, 9]], "x": 1, "y": 3, "elim": "x", "m": [3, 2]},
+    {"id": "s3_09", "e": [[3, 2, -35], [2, -3, -6]], "x": -9, "y": -4, "elim": "y", "m": [3, 2]},
+    {"id": "s3_10", "e": [[1, 5, 16], [2, 3, 18]], "x": 6, "y": 2, "elim": "x", "m": [2, 1]},
+    {"id": "s3_11", "e": [[2, -9, -15], [7, 6, -15]], "x": -3, "y": 1, "elim": "y", "m": [2, 3]},
+    {"id": "s3_12", "e": [[3, 5, 15], [4, 5, 10]], "x": -5, "y": 6, "elim": "x", "m": [4, 3]},
+    {"id": "s3_13", "e": [[4, 1, -11], [11, -3, -13]], "x": -2, "y": -3, "elim": "y", "m": [3, 1]},
+    {"id": "s3_14", "e": [[12, -5, -9], [11, 5, -37]], "x": -2, "y": -3, "elim": "y", "m": [1, 1]},
+    {"id": "s3_15", "e": [[12, 1, -10], [4, 1, -2]], "x": -1, "y": 2, "elim": "x", "m": [1, 3]},
+    {"id": "s3_16", "e": [[9, 1, -30], [2, -1, -14]], "x": -4, "y": 6, "elim": "y", "m": [1, 1]},
+    {"id": "s3_17", "e": [[8, -11, -21], [4, -9, -35]], "x": 7, "y": 7, "elim": "x", "m": [1, 2]},
+    {"id": "s3_18", "e": [[12, 5, -46], [-3, -5, -26]], "x": -8, "y": 10, "elim": "y", "m": [1, 1]},
+    {"id": "s3_19", "e": [[4, 3, -15], [8, 9, -33]], "x": -3, "y": -1, "elim": "y", "m": [3, 1]},
+    {"id": "s3_20", "e": [[2, 9, -7], [-10, -3, -7]], "x": 1, "y": -1, "elim": "y", "m": [1, 3]},
+    {"id": "s3_21", "e": [[8, 1, -19], [4, -1, -5]], "x": -2, "y": -3, "elim": "y", "m": [1, 1]},
+    {"id": "s3_22", "e": [[1, 2, 3], [2, -5, -3]], "x": 1, "y": 1, "elim": "x", "m": [2, 1]},
+    {"id": "s3_23", "e": [[11, 4, 21], [1, 3, 23]], "x": -1, "y": 8, "elim": "y", "m": [3, 4]},
+    {"id": "s3_24", "e": [[9, -10, -17], [9, 5, -32]], "x": -3, "y": -1, "elim": "y", "m": [1, 2]},
+    {"id": "s3_25", "e": [[4, 11, 50], [2, 1, 16]], "x": 7, "y": 2, "elim": "x", "m": [1, 2]},
+    {"id": "s3_26", "e": [[3, -10, -58], [1, 6, 18]], "x": -6, "y": 4, "elim": "x", "m": [1, 3]},
+    {"id": "s3_27", "e": [[2, 5, 13], [6, 7, 47]], "x": 9, "y": -1, "elim": "x", "m": [3, 1]},
+    {"id": "s3_28", "e": [[3, 2, -9], [7, 4, -17]], "x": 1, "y": -6, "elim": "y", "m": [2, 1]},
+    {"id": "s3_29", "e": [[2, -3, 9], [9, 1, -32]], "x": -3, "y": -5, "elim": "y", "m": [1, 3]},
+    {"id": "s3_30", "e": [[5, 1, 36], [3, 2, 9]], "x": 9, "y": -9, "elim": "y", "m": [2, 1]},
+    {"id": "s3_31", "e": [[1, 2, 16], [3, 2, 8]], "x": -4, "y": 10, "elim": "x", "m": [3, 1]},
+    {"id": "s3_32", "e": [[1, 12, 9], [4, 9, -3]], "x": -3, "y": 1, "elim": "y", "m": [3, 4]},
+    {"id": "s3_33", "e": [[5, -6, -23], [-8, 9, 32]], "x": 5, "y": 8, "elim": "y", "m": [3, 2]},
+    {"id": "s3_34", "e": [[3, -5, -40], [1, -3, -20]], "x": -5, "y": 5, "elim": "x", "m": [1, 3]},
+    {"id": "s3_35", "e": [[2, 1, -16], [5, -4, 25]], "x": -3, "y": -10, "elim": "y", "m": [4, 1]},
+    {"id": "s3_36", "e": [[7, -12, 27], [9, -8, 5]], "x": -3, "y": -4, "elim": "y", "m": [2, 3]},
+    {"id": "s3_37", "e": [[1, 1, 11], [5, 2, 52]], "x": 10, "y": 1, "elim": "x", "m": [5, 1]},
+    {"id": "s3_38", "e": [[2, 7, 38], [6, 11, 34]], "x": -9, "y": 8, "elim": "x", "m": [3, 1]},
+    {"id": "s3_39", "e": [[3, -2, 2], [7, 1, -52]], "x": -6, "y": -10, "elim": "y", "m": [1, 2]},
+    {"id": "s3_40", "e": [[5, 12, -49], [-3, -8, 31]], "x": -5, "y": -2, "elim": "y", "m": [2, 3]},
+    {"id": "s3_41", "e": [[3, 4, -12], [5, 2, 22]], "x": 8, "y": -9, "elim": "x", "m": [5, 3]},
+    {"id": "s3_42", "e": [[7, -3, -3], [-10, 1, -22]], "x": 3, "y": 8, "elim": "y", "m": [1, 3]},
+    {"id": "s3_43", "e": [[2, 1, -7], [5, -2, -22]], "x": -4, "y": 1, "elim": "y", "m": [2, 1]},
+    {"id": "s3_44", "e": [[8, -5, -60], [1, -10, -45]], "x": -5, "y": 4, "elim": "y", "m": [2, 1]},
+    {"id": "s3_45", "e": [[3, -4, -35], [1, 1, 0]], "x": -5, "y": 5, "elim": "y", "m": [1, 4]},
+    {"id": "s3_46", "e": [[12, 11, 18], [6, 5, 6]], "x": -4, "y": 6, "elim": "x", "m": [1, 2]},
+    {"id": "s3_47", "e": [[3, 4, 7], [9, 5, 14]], "x": 1, "y": 1, "elim": "x", "m": [3, 1]},
+    {"id": "s3_48", "e": [[4, -1, 39], [1, 4, 14]], "x": 10, "y": 1, "elim": "x", "m": [1, 4]}
+  ],
+  "stage4": [
+    {"id": "s4_01", "e": [[6, -1, -7], [-4, 5, 9]], "x": -1, "y": 1, "mx": [2, 3], "my": [5, 1], "neat": "y"},
+    {"id": "s4_02", "e": [[3, 2, 10], [9, -10, 46]], "x": 4, "y": -1, "mx": [3, 1], "my": [5, 1], "neat": "x"},
+    {"id": "s4_03", "e": [[1, -1, 6], [4, 5, -39]], "x": -1, "y": -7, "mx": [4, 1], "my": [5, 1], "neat": "x"},
+    {"id": "s4_04", "e": [[1, 6, 7], [3, 10, 13]], "x": 1, "y": 1, "mx": [3, 1], "my": [5, 3], "neat": "x"},
+    {"id": "s4_05", "e": [[3, -2, -5], [5, -2, 5]], "x": 5, "y": 10, "mx": [5, 3], "my": [1, 1], "neat": "y"},
+    {"id": "s4_06", "e": [[1, -12, -27], [-1, -4, -21]], "x": 9, "y": 3, "mx": [1, 1], "my": [1, 3], "neat": "x"},
+    {"id": "s4_07", "e": [[5, -8, -17], [3, -2, -13]], "x": -5, "y": -1, "mx": [3, 5], "my": [1, 4], "neat": "y"},
+    {"id": "s4_08", "e": [[5, 1, -33], [3, -2, -25]], "x": -7, "y": 2, "mx": [3, 5], "my": [2, 1], "neat": "y"},
+    {"id": "s4_09", "e": [[1, 6, 33], [3, 8, 49]], "x": 3, "y": 5, "mx": [3, 1], "my": [4, 3], "neat": "x"},
+    {"id": "s4_10", "e": [[8, 3, 46], [2, 1, 14]], "x": 2, "y": 10, "mx": [1, 4], "my": [1, 3], "neat": "y"},
+    {"id": "s4_11", "e": [[5, -6, 10], [3, 2, -22]], "x": -4, "y": -5, "mx": [3, 5], "my": [1, 3], "neat": "y"},
+    {"id": "s4_12", "e": [[11, 6, -2], [11, 3, 10]], "x": 2, "y": -4, "mx": [1, 1], "my": [1, 2], "neat": "y"},
+    {"id": "s4_13", "e": [[1, 4, 42], [3, 2, 46]], "x": 10, "y": 8, "mx": [3, 1], "my": [1, 2], "neat": "x"},
+    {"id": "s4_14", "e": [[1, -3, 4], [5, -2, -32]], "x": -8, "y": -4, "mx": [5, 1], "my": [2, 3], "neat": "x"},
+    {"id": "s4_15", "e": [[8, 5, -39], [6, 1, -21]], "x": -3, "y": -3, "mx": [3, 4], "my": [1, 5], "neat": "y"},
+    {"id": "s4_16", "e": [[7, -6, 25], [7, -2, 41]], "x": 7, "y": 4, "mx": [1, 1], "my": [1, 3], "neat": "y"},
+    {"id": "s4_17", "e": [[5, 4, 22], [-4, -5, -23]], "x": 2, "y": 3, "mx": [4, 5], "my": [5, 4], "neat": "either"},
+    {"id": "s4_18", "e": [[5, 2, -18], [-2, -5, 24]], "x": -2, "y": -4, "mx": [2, 5], "my": [5, 2], "neat": "either"},
+    {"id": "s4_19", "e": [[1, 6, 54], [2, 3, 18]], "x": -6, "y": 10, "mx": [2, 1], "my": [1, 2], "neat": "x"},
+    {"id": "s4_20", "e": [[12, 1, -34], [8, -1, -6]], "x": -2, "y": -10, "mx": [2, 3], "my": [1, 1], "neat": "y"},
+    {"id": "s4_21", "e": [[3, -4, -20], [-1, -6, 14]], "x": -8, "y": -1, "mx": [1, 3], "my": [3, 2], "neat": "x"},
+    {"id": "s4_22", "e": [[7, -2, -52], [7, 2, -32]], "x": -6, "y": 5, "mx": [1, 1], "my": [1, 1], "neat": "y"},
+    {"id": "s4_23", "e": [[5, -1, -12], [2, 1, -16]], "x": -4, "y": -8, "mx": [2, 5], "my": [1, 1], "neat": "y"},
+    {"id": "s4_24", "e": [[3, -4, 1], [-9, 10, -7]], "x": 3, "y": 2, "mx": [3, 1], "my": [5, 2], "neat": "x"},
+    {"id": "s4_25", "e": [[6, -5, 23], [9, -4, 10]], "x": -2, "y": -7, "mx": [3, 2], "my": [4, 5], "neat": "x"},
+    {"id": "s4_26", "e": [[3, 2, -9], [9, 8, -39]], "x": 1, "y": -6, "mx": [3, 1], "my": [4, 1], "neat": "y"},
+    {"id": "s4_27", "e": [[11, -9, 39], [-11, 3, 9]], "x": -3, "y": -8, "mx": [1, 1], "my": [1, 3], "neat": "y"},
+    {"id": "s4_28", "e": [[1, -3, -36], [-2, -3, -9]], "x": -9, "y": 9, "mx": [2, 1], "my": [1, 1], "neat": "x"},
+    {"id": "s4_29", "e": [[3, 4, -6], [5, -1, -33]], "x": -6, "y": 3, "mx": [5, 3], "my": [1, 4], "neat": "y"},
+    {"id": "s4_30", "e": [[8, -3, -22], [6, 1, -10]], "x": -2, "y": 2, "mx": [3, 4], "my": [1, 3], "neat": "y"},
+    {"id": "s4_31", "e": [[1, -8, -27], [1, -12, -39]], "x": -3, "y": 3, "mx": [1, 1], "my": [3, 2], "neat": "x"},
+    {"id": "s4_32", "e": [[2, 1, -1], [5, -4, -9]], "x": -1, "y": 1, "mx": [5, 2], "my": [4, 1], "neat": "y"},
+    {"id": "s4_33", "e": [[1, 9, 42], [2, 3, 24]], "x": 6, "y": 4, "mx": [2, 1], "my": [1, 3], "neat": "x"},
+    {"id": "s4_34", "e": [[1, -1, -13], [-3, -4, -3]], "x": -7, "y": 6, "mx": [3, 1], "my": [4, 1], "neat": "x"},
+    {"id": "s4_35", "e": [[3, 2, 11], [5, 4, 21]], "x": 1, "y": 4, "mx": [5, 3], "my": [2, 1], "neat": "y"},
+    {"id": "s4_36", "e": [[3, 1, 7], [12, 5, 20]], "x": 5, "y": -8, "mx": [4, 1], "my": [5, 1], "neat": "y"},
+    {"id": "s4_37", "e": [[2, -5, 17], [4, -5, -1]], "x": -9, "y": -7, "mx": [2, 1], "my": [1, 1], "neat": "x"},
+    {"id": "s4_38", "e": [[3, 2, 13], [-6, -1, -29]], "x": 5, "y": -1, "mx": [2, 1], "my": [1, 2], "neat": "y"},
+    {"id": "s4_39", "e": [[5, 6, 19], [-1, 2, -7]], "x": 5, "y": -1, "mx": [1, 5], "my": [1, 3], "neat": "x"},
+    {"id": "s4_40", "e": [[10, -3, 40], [-4, 1, -14]], "x": 1, "y": -10, "mx": [2, 5], "my": [1, 3], "neat": "y"},
+    {"id": "s4_41", "e": [[7, 2, -42], [-7, 1, 21]], "x": -4, "y": -7, "mx": [1, 1], "my": [1, 2], "neat": "y"},
+    {"id": "s4_42", "e": [[5, -12, -33], [-1, 8, 1]], "x": -9, "y": -1, "mx": [1, 5], "my": [2, 3], "neat": "x"},
+    {"id": "s4_43", "e": [[1, -5, -8], [4, 5, 43]], "x": 7, "y": 3, "mx": [4, 1], "my": [1, 1], "neat": "x"},
+    {"id": "s4_44", "e": [[9, 4, 52], [9, 8, 32]], "x": 8, "y": -5, "mx": [1, 1], "my": [2, 1], "neat": "y"},
+    {"id": "s4_45", "e": [[2, 5, 13], [1, 1, 2]], "x": -1, "y": 3, "mx": [1, 2], "my": [1, 5], "neat": "x"},
+    {"id": "s4_46", "e": [[1, 3, 11], [4, 9, 26]], "x": -7, "y": 6, "mx": [4, 1], "my": [3, 1], "neat": "x"},
+    {"id": "s4_47", "e": [[9, -4, -41], [3, 2, -17]], "x": -5, "y": -1, "mx": [1, 3], "my": [1, 2], "neat": "y"},
+    {"id": "s4_48", "e": [[3, 5, 22], [2, 3, 12]], "x": -6, "y": 8, "mx": [2, 3], "my": [3, 5], "neat": "x"}
+  ]
 };
+/* GENERATED BANK END */
 
-let level = 'gcse';
-let questions = [];
-let qIdx = 0;
-let score = 0;
-let streak = 0;
-let bestStreak = 0;
-let correctCount = 0;
-let totalQ = 20;
-let timerInterval = null;
-let qStartTime = 0;
-const BASE = 100;
-const T_K = 0.15;
+// ============================================================
+//  A-LEVEL BANK: linear pairs, then a line with a quadratic or a circle, by substitution. Four options.
+//  scripts/verify-simultaneous-solver.py solves every system with SymPy and checks each key, and that no
+//  two options are equal in value (SR-4).
+// ============================================================
+/* ALEVEL BANK START */
+var ALEVEL = [
+  {"id": "a01", "sys": ["2x + 3y = 7", "5x - y = 9"], "ask": "Find x", "correct": "2", "distractors": ["1", "3", "\\tfrac{20}{13}"]},
+  {"id": "a02", "sys": ["2x + 3y = 7", "5x - y = 9"], "ask": "Find y", "correct": "1", "distractors": ["2", "-1", "\\tfrac{7}{3}"]},
+  {"id": "a03", "sys": ["3x - 4y = -1", "2x + y = 3"], "ask": "Find x", "correct": "1", "distractors": ["2", "\\tfrac{3}{2}", "-1"]},
+  {"id": "a04", "sys": ["3x - 4y = -1", "2x + y = 3"], "ask": "Find y", "correct": "1", "distractors": ["2", "-1", "\\tfrac{1}{4}"]},
+  {"id": "a05", "sys": ["x + 2y = 0", "3x - y = 7"], "ask": "Find x", "correct": "2", "distractors": ["1", "-2", "3"]},
+  {"id": "a06", "sys": ["x + 2y = 0", "3x - y = 7"], "ask": "Find y", "correct": "-1", "distractors": ["1", "-2", "0"]},
+  {"id": "a07", "sys": ["4x + y = 3", "x - 2y = 5"], "ask": "Find x", "correct": "\\tfrac{11}{9}", "distractors": ["1", "2", "\\tfrac{3}{4}"]},
+  {"id": "a08", "sys": ["7x + 3y = 1", "2x - y = 5"], "ask": "Find x", "correct": "\\tfrac{16}{13}", "distractors": ["1", "2", "\\tfrac{1}{7}"]},
+  {"id": "a09", "sys": ["x + y = 4", "3x + 5y = 14"], "ask": "Find x", "correct": "3", "distractors": ["2", "1", "4"]},
+  {"id": "a10", "sys": ["x + y = 4", "3x + 5y = 14"], "ask": "Find y", "correct": "1", "distractors": ["2", "3", "0"]},
+  {"id": "a11", "sys": ["2x - 3y = -8", "4x + y = 2"], "ask": "Find x", "correct": "-\\tfrac{1}{7}", "distractors": ["0", "1", "-1"]},
+  {"id": "a12", "sys": ["6x + y = 5", "2x + 3y = 7"], "ask": "Find x", "correct": "\\tfrac{1}{2}", "distractors": ["1", "0", "\\tfrac{5}{6}"]},
+  {"id": "a13", "sys": ["6x + y = 5", "2x + 3y = 7"], "ask": "Find y", "correct": "2", "distractors": ["1", "3", "\\tfrac{7}{3}"]},
+  {"id": "a14", "sys": ["x - 5y = -7", "2x + y = 8"], "ask": "Find x", "correct": "3", "distractors": ["2", "4", "1"]},
+  {"id": "a15", "sys": ["x - 5y = -7", "2x + y = 8"], "ask": "Find y", "correct": "2", "distractors": ["1", "3", "-1"]},
+  {"id": "a16", "sys": ["y = x + 1", "y = x^2 - x - 2"], "ask": "Find the positive x value", "correct": "3", "distractors": ["2", "4", "1"]},
+  {"id": "a17", "sys": ["y = x + 1", "y = x^2 - x - 2"], "ask": "How many solutions?", "correct": "2", "distractors": ["0", "1", "3"]},
+  {"id": "a18", "sys": ["y = 2x", "y = x^2 - 3"], "ask": "Find the positive x value", "correct": "3", "distractors": ["1", "2", "4"]},
+  {"id": "a19", "sys": ["y = 2x", "y = x^2 - 3"], "ask": "Find the negative x value", "correct": "-1", "distractors": ["-2", "-3", "0"]},
+  {"id": "a20", "sys": ["y = 3x + 2", "y = x^2 + 2"], "ask": "Find the non-zero x value", "correct": "3", "distractors": ["1", "2", "-1"]},
+  {"id": "a21", "sys": ["y = x + 3", "y = x^2 + 1"], "ask": "Find the positive x value", "correct": "2", "distractors": ["3", "1", "4"]},
+  {"id": "a22", "sys": ["y = x + 3", "y = x^2 + 1"], "ask": "Find the negative x value", "correct": "-1", "distractors": ["-2", "-3", "0"]},
+  {"id": "a23", "sys": ["y = 4 - x", "y = x^2 - 2x"], "ask": "Find the positive x value", "correct": "\\tfrac{1+\\sqrt{17}}{2}", "distractors": ["2", "\\tfrac{-1+\\sqrt{17}}{2}", "1+\\sqrt{17}"]},
+  {"id": "a24", "sys": ["y = 5 - x", "y = x^2 - x - 1"], "ask": "Find the positive x value", "correct": "\\sqrt{6}", "distractors": ["3", "2", "\\sqrt{5}"]},
+  {"id": "a25", "sys": ["y = 2x + 1", "y = x^2 - 2x + 1"], "ask": "Find the values of x (sum)", "correct": "4", "distractors": ["2", "3", "5"]},
+  {"id": "a26", "sys": ["y = x", "y = x^2 - 6"], "ask": "Find the positive x value", "correct": "3", "distractors": ["2", "6", "1"]},
+  {"id": "a27", "sys": ["y = x", "y = x^2 - 6"], "ask": "Find the negative x value", "correct": "-2", "distractors": ["-3", "-1", "-6"]},
+  {"id": "a28", "sys": ["y = 2x - 1", "y = x^2 - 4"], "ask": "Find the positive x value", "correct": "3", "distractors": ["1", "2", "4"]},
+  {"id": "a29", "sys": ["y = 2x - 1", "y = x^2 - 4"], "ask": "Find the negative x value", "correct": "-1", "distractors": ["-2", "-3", "0"]},
+  {"id": "a30", "sys": ["y = 3 - x", "y = x^2 - 3x + 3"], "ask": "How many solutions?", "correct": "2", "distractors": ["0", "1", "3"]},
+  {"id": "a31", "sys": ["y = 5 - 2x", "y = x^2 - 3"], "ask": "Find the positive x value", "correct": "2", "distractors": ["1", "4", "3"]},
+  {"id": "a32", "sys": ["y = 5 - 2x", "y = x^2 - 3"], "ask": "Find the negative x value", "correct": "-4", "distractors": ["-2", "-3", "-1"]},
+  {"id": "a33", "sys": ["y = 3x", "y = 2x^2 + x"], "ask": "Find the non-zero x value", "correct": "1", "distractors": ["2", "3", "\\tfrac{1}{2}"]},
+  {"id": "a34", "sys": ["y = 4x - 3", "y = x^2"], "ask": "Find the larger x value", "correct": "3", "distractors": ["4", "2", "1"]},
+  {"id": "a35", "sys": ["y = 4x - 3", "y = x^2"], "ask": "Find the smaller x value", "correct": "1", "distractors": ["0", "-1", "2"]},
+  {"id": "a36", "sys": ["x^2 + y^2 = 25", "y = 0"], "ask": "Find the positive x value", "correct": "5", "distractors": ["4", "3", "25"]},
+  {"id": "a37", "sys": ["x^2 + y^2 = 25", "x = 0"], "ask": "Find the positive y value", "correct": "5", "distractors": ["4", "3", "25"]},
+  {"id": "a38", "sys": ["x^2 + y^2 = 10", "y = x"], "ask": "Find the positive x value", "correct": "\\sqrt{5}", "distractors": ["\\sqrt{10}", "5", "\\sqrt{2}"]},
+  {"id": "a39", "sys": ["x^2 + y^2 = 20", "y = 2x"], "ask": "Find the positive x value", "correct": "2", "distractors": ["4", "\\sqrt{20}", "\\sqrt{5}"]},
+  {"id": "a40", "sys": ["x^2 + y^2 = 13", "y = x + 1"], "ask": "Find the positive x value", "correct": "2", "distractors": ["3", "1", "\\sqrt{13}"]},
+  {"id": "a41", "sys": ["x^2 + y^2 = 13", "y = x + 1"], "ask": "Find the negative x value", "correct": "-3", "distractors": ["-2", "-1", "-\\sqrt{13}"]},
+  {"id": "a42", "sys": ["x^2 + y^2 = 5", "y = 2x - 1"], "ask": "Find the larger x value", "correct": "\\tfrac{2+2\\sqrt{6}}{5}", "distractors": ["2", "\\tfrac{2+\\sqrt{6}}{5}", "\\sqrt{5}"]},
+  {"id": "a43", "sys": ["x^2 + y^2 = 50", "y = x"], "ask": "Find the positive x value", "correct": "5", "distractors": ["\\sqrt{50}", "25", "\\dfrac{\\sqrt{50}}{2}"]},
+  {"id": "a44", "sys": ["x^2 + y^2 = 8", "y = x + 2"], "ask": "How many solutions?", "correct": "2", "distractors": ["0", "1", "4"]},
+  {"id": "a45", "sys": ["x^2 + y^2 = 9", "y = x + 5"], "ask": "How many solutions?", "correct": "0", "distractors": ["1", "2", "3"]},
+  {"id": "a46", "sys": ["x^2 + y^2 = 45", "x = 2y"], "ask": "Find the positive y value", "correct": "3", "distractors": ["\\sqrt{45}", "9", "\\sqrt{15}"]},
+  {"id": "a47", "sys": ["x^2 + y^2 = 25", "y = x - 1"], "ask": "Find the larger x value", "correct": "4", "distractors": ["5", "3", "-3"]},
+  {"id": "a48", "sys": ["x^2 + y^2 = 25", "y = x - 1"], "ask": "Find the smaller x value", "correct": "-3", "distractors": ["-4", "-5", "-2"]},
+  {"id": "a49", "sys": ["x^2 + y^2 = 4", "y = x"], "ask": "Find the positive x value", "correct": "\\sqrt{2}", "distractors": ["2", "1", "\\sqrt{8}"]},
+  {"id": "a50", "sys": ["x^2 + y^2 = 2", "y = -x"], "ask": "Find the positive x value", "correct": "1", "distractors": ["\\sqrt{2}", "2", "\\tfrac{1}{2}"]}
+];
+/* ALEVEL BANK END */
 
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+(function () {
+  'use strict';
+  var SS = window.SS = { BANK: BANK, ALEVEL: ALEVEL };
+  var SLUG = 'simultaneous-solver', FOOTER_PX = 40, MC_ROUNDS = 20, MC_BASE = 100;
+  // One board per stage (Jon, 6 Oct 2026), never the old 'gcse' board; the A-Level board is kept.
+  var STAGES = {
+    stage1: { n: 1, rounds: 10, steps: ['mult'], board: 'foundation-s1' },
+    stage2: { n: 2, rounds: 8, steps: ['mult', 'op', 'combine'], board: 'foundation-s2' },
+    stage3: { n: 3, rounds: 6, steps: ['mult', 'op', 'combine', 'solve', 'sub'], board: 'foundation-s3' },
+    stage4: { n: 4, rounds: 6, steps: ['letter', 'mult', 'op', 'combine', 'solve', 'sub'], board: 'foundation-s4' }
+  };
+  SS.STAGES = STAGES;
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function mfg() { if (typeof window.mfg === 'function') window.mfg.apply(null, arguments); }
+  // KaTeX when it loaded; a plain-text form otherwise (never raw TeX on screen).
+  function plainOf(tex) {
+    return tex.replace(/\\times/g, '×').replace(/\\div/g, '÷').replace(/\\;|\\,/g, ' ').replace(/\\checkmark/g, '✓')
+      .replace(/\\text\{([^}]*)\}/g, '$1').replace(/\\[td]frac\{([^}]*)\}\{([^}]*)\}/g, '($1)/($2)')
+      .replace(/\\sqrt\{([^}]*)\}/g, '√($1)').replace(/\^2/g, '²').replace(/-/g, '−').replace(/[{}\\]/g, '');
   }
-  return arr;
-}
-
-function renderKaTeX(el, tex) {
-  katex.render(tex, el, { throwOnError: false, displayMode: false });
-}
-
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-document.querySelectorAll('.level-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    level = btn.dataset.level;
-  });
-});
-
-const params = new URLSearchParams(window.location.search);
-if (params.get('level') && QUESTIONS[params.get('level')]) {
-  level = params.get('level');
-  document.querySelectorAll('.level-btn').forEach(b => {
-    b.classList.toggle('active', b.dataset.level === level);
-  });
-}
-
-function startGame() {
-  const bank = [...QUESTIONS[level]];
-  questions = shuffle(bank).slice(0, totalQ);
-  qIdx = 0; score = 0; streak = 0; bestStreak = 0; correctCount = 0;
-  document.getElementById('score').textContent = '0';
-  document.getElementById('streak').textContent = '0';
-  buildProgress();
-  mfg('game_started',{game_slug:'simultaneous-solver',level:level});
-  window._ggAbandoned=true;
-  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'simultaneous-solver',level:level,questions_answered:qIdx})});}
-  showScreen('game');
-  showQuestion();
-}
-
-function buildProgress() {
-  const el = document.getElementById('progress');
-  el.innerHTML = '';
-  for (let i = 0; i < totalQ; i++) {
-    const pip = document.createElement('div');
-    pip.className = 'pip' + (i === 0 ? ' current' : '');
-    el.appendChild(pip);
+  function mathHtml(tex) {
+    if (window.katex) { try { return katex.renderToString(tex, { throwOnError: true }); } catch (e) {} }
+    return esc(plainOf(tex));
   }
-}
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
-function showQuestion() {
-  const q = questions[qIdx];
-  document.getElementById('qNum').textContent = `${qIdx + 1}/${totalQ}`;
-  const sysEl = document.getElementById('system');
-  sysEl.innerHTML = '';
-  q.sys.forEach(eq => {
-    const line = document.createElement('div');
-    renderKaTeX(line, eq);
-    sysEl.appendChild(line);
-  });
-  const promptEl = document.getElementById('prompt');
-  promptEl.textContent = q.ask;
-  const opts = shuffle([q.correct, ...q.distractors]);
-  const optEl = document.getElementById('options');
-  optEl.innerHTML = '';
-  opts.forEach(val => {
-    const btn = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.dataset.val = val;
-    renderKaTeX(btn, val);
-    btn.addEventListener('click', () => handleAnswer(btn, q));
-    optEl.appendChild(btn);
-  });
-  qStartTime = Date.now();
-  document.getElementById('timer').textContent = '0s';
-  clearInterval(timerInterval);
-  timerInterval = setInterval(tick, 250);
-}
+  // ---- The algebra: whole-number arithmetic on [a, b, c] rows (ax + by = c) ----
+  function idx(letter) { return letter === 'x' ? 0 : 1; }
+  function other(letter) { return letter === 'x' ? 'y' : 'x'; }
+  function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = a % b; a = b; b = t; } return a; }
+  // The neatest multipliers: the LCM of the two coefficients' sizes, over each.
+  SS.neat = function (p, q) { var l = Math.abs(p) * Math.abs(q) / gcd(p, q); return [l / Math.abs(p), l / Math.abs(q)]; };
+  SS.scale = function (e, m) { return [e[0].map(function (v) { return v * m[0]; }), e[1].map(function (v) { return v * m[1]; })]; };
+  // Same signs, subtract; different signs, add.
+  SS.opFor = function (s, letter) { var i = idx(letter); return (s[0][i] > 0) === (s[1][i] > 0) ? 'sub' : 'add'; };
+  // (1) op (2), column by column. K (the other letter's coefficient) and C (the number) are the result.
+  SS.combine = function (s, letter, op) {
+    var sg = op === 'sub' ? -1 : 1, r = [0, 1, 2].map(function (k) { return s[0][k] + sg * s[1][k]; });
+    return { K: r[idx(other(letter))], C: r[2], row: r };
+  };
+  // The equation to substitute into: the one whose coefficient on the letter still to find is smaller in size.
+  SS.subEq = function (e, letter) { var i = idx(letter); return Math.abs(e[1][i]) < Math.abs(e[0][i]) ? 1 : 0; };
 
-function tick() {
-  const e = Math.floor((Date.now() - qStartTime) / 1000);
-  document.getElementById('timer').textContent = e + 's';
-}
-
-function handleAnswer(btn, q) {
-  clearInterval(timerInterval);
-  const seconds = (Date.now() - qStartTime) / 1000;
-  const isCorrect = btn.dataset.val === q.correct;
-  document.querySelectorAll('.opt-btn').forEach(b => {
-    b.classList.add('disabled');
-    if (b.dataset.val === q.correct) b.classList.add('correct');
-  });
-  if (isCorrect) {
-    btn.classList.add('correct');
-    // multiplier removed — time no longer affects score
-const multiplier = 1;
-    const pts = Math.max(1, Math.round(BASE * multiplier));
-    score += pts;
-    streak++;
-    correctCount++;
-    if (streak > bestStreak) bestStreak = streak;
-    updatePip('done');
-  } else {
-    btn.classList.add('wrong');
-    streak = 0;
-    updatePip('fail');
+  // ---- Writing it down (TeX) ----
+  function mono(v, letter) { return letter ? (v === 1 ? letter : v === -1 ? '-' + letter : v + letter) : String(v); }
+  function br(v, letter) { return v < 0 ? '(' + mono(v, letter) + ')' : mono(v, letter); }
+  // ax + by, leaving out a zero term.
+  function lhs(a, b) {
+    var t = [];
+    if (a) t.push(mono(a, 'x'));
+    if (b) t.push(t.length ? (b < 0 ? '- ' + mono(-b, 'y') : '+ ' + mono(b, 'y')) : mono(b, 'y'));
+    return t.join(' ') || '0';
   }
-  mfg('question_answered',{game_slug:'simultaneous-solver',level:level,correct:isCorrect,question_index:qIdx+1});
-  document.getElementById('score').textContent = score;
-  document.getElementById('streak').textContent = streak;
-  setTimeout(advance, 1000);
-}
+  function eqTex(r) { return lhs(r[0], r[1]) + ' = ' + r[2]; }
+  SS.eqTex = eqTex;
+  function mulsTex(m) { return '\\times ' + br(m[0]) + '\\text{ and }\\times ' + br(m[1]); }
+  SS.mulsTex = mulsTex;
 
-function updatePip(cls) {
-  const pips = document.querySelectorAll('.pip');
-  if (pips[qIdx]) {
-    pips[qIdx].classList.remove('current');
-    pips[qIdx].classList.add(cls);
+  // ---- Marking (SR-13: any valid step scores; a valid but clumsier step scores, with the neatest shown) ----
+  function readInt(raw) {
+    var s = String(raw == null ? '' : raw).trim();
+    var v = window.MaffsAnswer ? MaffsAnswer.parse(s) : (s === '' ? null : Number(s));
+    if (v === null || !isFinite(v)) return { bad: 'unreadable' };
+    if (Math.floor(v) !== v) return { bad: 'whole' };
+    return { v: v };
   }
-}
+  // The multiplier step. 'correct': non-zero whole numbers that make the letter's coefficients equal in size.
+  // 'blocked' (× 0, SR-13), 'whole' (not a whole number) and 'unreadable' are never marked.
+  SS.markMult = function (e, letter, raw1, raw2) {
+    var a = readInt(raw1), b = readInt(raw2);
+    if (a.bad === 'unreadable' || b.bad === 'unreadable') return { result: 'unreadable' };
+    if (a.bad || b.bad) return { result: 'whole' };
+    if (a.v === 0 || b.v === 0) return { result: 'blocked' };
+    var i = idx(letter), ok = Math.abs(a.v * e[0][i]) === Math.abs(b.v * e[1][i]), n = SS.neat(e[0][i], e[1][i]);
+    return { result: ok ? 'correct' : 'wrong', m: [a.v, b.v], neat: n, neatest: ok && a.v === n[0] && b.v === n[1] };
+  };
+  // The combined equation: K and C as worked, or -K and -C (the other way round, (2) - (1)); both are right.
+  SS.markCombine = function (comb, rawK, rawC) {
+    var k = readInt(rawK), c = readInt(rawC);
+    if (k.bad === 'unreadable' || c.bad === 'unreadable') return { result: 'unreadable' };
+    if (k.bad || c.bad) return { result: 'wrong' };
+    var ok = (k.v === comb.K && c.v === comb.C) || (k.v === -comb.K && c.v === -comb.C);
+    return { result: ok ? 'correct' : 'wrong' };
+  };
+  SS.markValue = function (raw, key) {
+    var r = window.MaffsAnswer ? MaffsAnswer.exact(raw, String(key)) : (Number(raw) === key ? 'correct' : 'wrong');
+    return { result: r === 'format' ? 'wrong' : r };
+  };
+  function unreadableMsg() { return window.MaffsAnswer ? MaffsAnswer.message('unreadable') : 'Type a number.'; }
 
-function advance() {
-  qIdx++;
-  if (qIdx >= totalQ) {
-    endGame();
-    return;
+  // ---- Game state ----
+  var level = 'gcse', stageKey = 'stage1', st = STAGES.stage1, pool = [], qIdx = 0, total = 0, marks = 0, maxMarks = 0,
+    allRight = 0, q = null, state = 'menu', stepNo = 0, kp = null, P = null;
+
+  function showS(id) { document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); }); $(id).classList.add('active'); }
+  function scored(steps) { return steps.filter(function (s) { return s !== 'letter'; }).length; }
+  function mode() { return level === 'alevel' ? 'choice' : stageKey; }
+  function board() { return level === 'alevel' ? 'alevel' : st.board; }
+
+  // A fresh keypad for each step's boxes (touch screens only; with a mouse they are ordinary inputs).
+  function keypadFor(inputs) {
+    var holder = $('kpHolder'), el = document.createElement('div');
+    holder.innerHTML = ''; holder.hidden = false; holder.appendChild(el);
+    kp = window.MaffsKeypad ? MaffsKeypad.mount(el, { targets: inputs, keys: { minus: true }, maxLength: 5, keepInView: $('step'), foldInset: FOOTER_PX }) : null;
+    if (!(kp && kp.enabled())) { try { inputs[0].focus({ preventScroll: true }); } catch (e) {} }
   }
-  const pips = document.querySelectorAll('.pip');
-  if (pips[qIdx]) pips[qIdx].classList.add('current');
-  showQuestion();
-}
+  function noKeypad() { $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true; kp = null; }
 
-function endGame() {
-  clearInterval(timerInterval);
-  const pct = Math.round((correctCount / totalQ) * 100);
-  let title = 'Keep Practising!';
-  if (pct >= 90) title = 'Outstanding!';
-  else if (pct >= 70) title = 'Well Done!';
-  else if (pct >= 50) title = 'Good Effort!';
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('finalScore').textContent = score;
-  document.getElementById('statsLine').textContent =
-    `${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;
-  window._ggAbandoned=false;
-  mfg('game_completed',{game_slug:'simultaneous-solver',level:level,score:score,questions_answered:totalQ,accuracy:pct});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('simultaneous-solver',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('simultaneous-solver',level,score);}}
-  var _pbKey='simultaneous-solver_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');
-  if(score>_pbOld){mfg('personal_best_set',{game_slug:'simultaneous-solver',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}
-  showScreen('results');
-}
+  // The step and its keys in the window together: the keys above the footer, never the step's top above the window.
+  function stepInView() {
+    var top = $('step').getBoundingClientRect().top, kpEl = $('kpHolder').querySelector('.maffs-keypad-panel');
+    var last = kpEl && kpEl.offsetParent !== null ? kpEl : ($('checkRow').hidden ? $('stepBody') : $('checkRow'));
+    var bottom = last.getBoundingClientRect().bottom, fold = window.innerHeight - FOOTER_PX;
+    var dy = Math.min(bottom - fold + 8, top - 8);
+    if (bottom > fold && dy > 0) window.scrollBy(0, dy);
+    else if (top < 0) window.scrollBy(0, top - 8);
+  }
+  function nextInView(box) {
+    box = box || $('feedback');
+    var nx = box.querySelector('.maffs-next');
+    if (!nx) return;
+    var r = nx.getBoundingClientRect(), top = box.getBoundingClientRect().top, fold = window.innerHeight - FOOTER_PX;
+    var dy = Math.min(r.bottom - fold + 8, top - 8);
+    if (r.bottom > fold && dy > 0) window.scrollBy(0, dy);
+    else if (top < 0) window.scrollBy(0, top - 8);
+  }
 
-function showMenu() {
-  showScreen('menu');
-}
-(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+  function startGame(items) {
+    if (level === 'alevel') { startMC(items); return; }
+    st = STAGES[stageKey];
+    pool = items || shuffle(BANK[stageKey].slice()).slice(0, st.rounds);
+    qIdx = 0; total = 0; marks = 0; allRight = 0; maxMarks = pool.length * scored(st.steps);
+    $('marks').textContent = '0';
+    $('hudStageVal').textContent = st.n;
+    showS('game'); nextQ();
+    window._ggAbandoned = true;
+    mfg('game_started', { game_slug: SLUG, level: level, mode: mode() });
+    bindUnload();
+  }
+  function bindUnload() {
+    if (window._ggUnloadBound) return;
+    window._ggUnloadBound = true;
+    window.addEventListener('beforeunload', function () { if (window._ggAbandoned) mfg('game_abandoned', { game_slug: SLUG, level: level, mode: mode(), questions_answered: total }); });
+  }
+
+  function nextQ() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = ''; $('feedback').className = 'feedback';
+    $('qcard').classList.remove('fb-open');
+    if (qIdx >= pool.length) { endGame(); return; }
+    q = pool[qIdx]; qIdx++; total++;
+    P = { letter: q.elim || null, m: null, s: null, op: null, comb: null, subJ: 0, right: 0 };
+    stepNo = 0;
+    window.scrollTo(0, 0);
+    $('qNum').textContent = total + '/' + pool.length;
+    $('system').innerHTML = q.e.map(function (r, k) {
+      return '<span class="lab">(' + (k + 1) + ')</span><span class="eq">' + mathHtml(eqTex(r)) + '</span>';
+    }).join('');
+    $('working').innerHTML = '';
+    askStep();
+  }
+
+  function addWork(cls, html) {
+    var d = document.createElement('div');
+    d.className = 'wl ' + cls; d.innerHTML = html;
+    $('working').appendChild(d);
+  }
+  function scaledHtml(s, m) {
+    return '<span class="eqs">' + s.map(function (r, k) {
+      return mathHtml('(' + (k + 1) + ')\\times ' + br(m[k]) + ':\\; ' + eqTex(r));
+    }).join('<br>') + '</span>';
+  }
+
+  // ---- Steps: each needs an answer before the next appears ----
+  function stepName() { return st.steps[stepNo]; }
+  function askStep() {
+    state = stepName();
+    $('msg').textContent = '';
+    $('checkRow').hidden = false;
+    $('stepBody').innerHTML = '';
+    var head = $('stepHead');
+    if (state === 'letter') {
+      head.textContent = 'Which letter will you eliminate?';
+      choices([['x', 'Eliminate x'], ['y', 'Eliminate y']], chooseLetter);
+    } else if (state === 'mult') {
+      head.innerHTML = 'Make the ' + mathHtml(P.letter) + ' coefficients the same size. Multiply each equation by:';
+      boxes([['(1)\\times', 'Multiply equation 1 by'], ['(2)\\times', 'Multiply equation 2 by']]);
+    } else if (state === 'op') {
+      var i = idx(P.letter);
+      head.innerHTML = 'Now ' + mathHtml(mono(P.s[0][i], P.letter)) + ' and ' + mathHtml(mono(P.s[1][i], P.letter)) + '. Add or subtract the equations?';
+      choices([['add', 'Add'], ['sub', 'Subtract']], chooseOp);
+    } else if (state === 'combine') {
+      var o = other(P.letter);
+      head.innerHTML = (P.op === 'sub' ? 'Subtract: (1) − (2).' : 'Add: (1) + (2).') + ' What do you get?' +
+        '<span class="sub-eqs">' + P.s.map(function (r, k) { return mathHtml('(' + (k + 1) + ')\\;\\; ' + eqTex(r)); }).join('<br>') + '</span>';
+      boxes([['', 'The number in front of ' + o], ['=', 'The number on the right']], o);
+    } else if (state === 'solve') {
+      var o2 = other(P.letter);
+      head.innerHTML = 'Solve ' + mathHtml(mono(P.comb.K, o2) + ' = ' + P.comb.C) + '.';
+      boxes([[o2 + ' =', o2 + ' equals']]);
+    } else if (state === 'sub') {
+      var f = other(P.letter), t = P.letter;
+      P.subJ = SS.subEq(q.e, t);
+      var lines = SS.subLines(q.e[P.subJ], f, q[f]);
+      head.innerHTML = 'Put ' + mathHtml(f + ' = ' + q[f]) + ' into (' + (P.subJ + 1) + '):' +
+        '<span class="sub-eqs">' + mathHtml(lines[0]) + '<br>' + mathHtml(lines[1]) + '</span>';
+      boxes([[t + ' =', t + ' equals']]);
+    }
+    stepInView();
+  }
+  // Row r with the found letter f = v put in, then tidied: 2x + 3(-2) = 7, then 2x - 6 = 7.
+  SS.subLines = function (r, f, v) {
+    var fi = idx(f), t = other(f), ti = idx(t), c = r[fi], p = c * v;
+    var put = (Math.abs(c) === 1 ? '' : Math.abs(c)) + '(' + v + ')';
+    var tt = mono(r[ti], t);
+    var l1, l2;
+    if (fi === 1) { l1 = tt + (c < 0 ? ' - ' : ' + ') + put; l2 = tt + (p < 0 ? ' - ' + (-p) : ' + ' + p); }
+    else {
+      var rest = r[ti] < 0 ? ' - ' + mono(-r[ti], t) : ' + ' + tt;
+      l1 = (c < 0 ? '-' : '') + put + rest; l2 = p + rest;
+    }
+    return [l1 + ' = ' + r[2], l2 + ' = ' + r[2]];
+  };
+  function choices(list, fn) {
+    noKeypad();
+    $('checkRow').hidden = true;
+    var row = document.createElement('div'); row.className = 'choices';
+    list.forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'choice'; b.dataset.val = c[0]; b.textContent = c[1];
+      b.addEventListener('click', function () { if (state === stepName() && (state === 'letter' || state === 'op')) fn(c[0]); });
+      row.appendChild(b);
+    });
+    $('stepBody').appendChild(row);
+  }
+  // A row of boxes, each after its label. after: a letter written straight after the first box ("[ ] y = [ ]").
+  function boxes(spec, after) {
+    var row = document.createElement('div'); row.className = 'row';
+    var inputs = spec.map(function (s, k) {
+      if (s[0]) { var lb = document.createElement('span'); lb.className = 'lbl'; lb.innerHTML = mathHtml(s[0]); row.appendChild(lb); }
+      var wrap = document.createElement('label'), inp = document.createElement('input');
+      inp.type = 'text'; inp.inputMode = 'numeric'; inp.setAttribute('aria-label', s[1]);
+      wrap.appendChild(inp); row.appendChild(wrap);
+      if (after && k === 0) { var lt = document.createElement('span'); lt.className = 'lbl'; lt.innerHTML = mathHtml(after); row.appendChild(lt); }
+      return inp;
+    });
+    $('stepBody').appendChild(row);
+    keypadFor(inputs);
+  }
+  function typed() { return [].slice.call($('stepBody').querySelectorAll('input')).map(function (i) { return i.value; }); }
+  function lockInputs() { $('stepBody').querySelectorAll('input').forEach(function (i) { i.readOnly = true; }); if (kp) kp.select(-1); }
+
+  function check() {
+    if (state === 'mult') checkMult();
+    else if (state === 'combine') checkCombine();
+    else if (state === 'solve') checkSolve();
+    else if (state === 'sub') checkSub();
+  }
+
+  function gain(ok) { if (ok) { marks++; P.right++; $('marks').textContent = marks; } }
+
+  // A step is done. Right: the next step straight away. Wrong: the reason, then Next (canon §7.6).
+  function stepDone(ok, workCls, workHtml, fbHtml) {
+    lockInputs();
+    addWork(workCls, workHtml);
+    stepNo++;
+    var last = stepNo >= st.steps.length;
+    if (!ok && fbHtml) {
+      state = 'stepfb';
+      noKeypad();
+      var fb = $('feedback');
+      fb.className = 'feedback fb wrong'; fb.innerHTML = fbHtml;
+      $('qcard').classList.add('fb-open');
+      if (window.MaffsNext) MaffsNext.wrong({ mount: fb, label: last ? 'Next →' : 'Next step →', onAdvance: function () {
+        fb.innerHTML = ''; fb.className = 'feedback'; $('qcard').classList.remove('fb-open');
+        if (last) problemDone(); else askStep();
+      } });
+      nextInView();
+      return;
+    }
+    if (last) problemDone(); else askStep();
+  }
+
+  function chooseLetter(letter) {
+    P.letter = letter;
+    var n = q.neat;
+    var cost = function (l) { var m = l === 'x' ? q.mx : q.my; return mathHtml(mulsTex(m)) + ' (' + mathHtml(mono(Math.abs(q.e[0][idx(l)]) * m[0], l)) + ')'; };
+    var html = '<span class="v">Eliminate ' + mathHtml(letter) + '.</span> ';
+    if (n === 'either') html += 'Both letters are as neat here: ' + mathHtml('x') + ' needs ' + cost('x') + ', ' + mathHtml('y') + ' needs ' + cost('y') + '.';
+    else if (n === letter) html += 'The neater choice: ' + cost(letter) + ', against ' + cost(other(letter)) + ' for ' + mathHtml(other(letter)) + '.';
+    else html += 'That works. Eliminating ' + mathHtml(n) + ' is neater: ' + cost(n) + ', against ' + cost(letter) + '.';
+    stepDone(true, 'info', html);
+  }
+
+  function checkMult() {
+    var v = typed(), r = SS.markMult(q.e, P.letter, v[0], v[1]), i = idx(P.letter);
+    if (r.result === 'unreadable') { $('msg').textContent = unreadableMsg(); return; }
+    if (r.result === 'whole') { $('msg').textContent = 'Use whole-number multipliers.'; return; }
+    if (r.result === 'blocked') { $('msg').textContent = '× 0 turns an equation into 0 = 0, and the equation is lost. Use a number that is not 0.'; return; }
+    var ok = r.result === 'correct', p = Math.abs(q.e[0][i]), qq = Math.abs(q.e[1][i]);
+    gain(ok);
+    P.m = ok ? r.m : r.neat;
+    P.s = SS.scale(q.e, P.m);
+    var html, fb = null;
+    if (ok) {
+      html = '<span class="v">✓ Right:</span> ' + mathHtml(mono(Math.abs(P.s[0][i]), P.letter)) + ' in both.' +
+        (r.neatest ? '' : ' <span class="neatest">Neatest: ' + mathHtml(mulsTex(r.neat)) + ', from the LCM of ' + p + ' and ' + qq + '. Carry on with yours.</span>') +
+        scaledHtml(P.s, P.m);
+    } else {
+      var a = r.m[0] * q.e[0][i], b = r.m[1] * q.e[1][i];
+      html = '<span class="v">✗ You put ' + mathHtml(mulsTex(r.m)) + '.</span> Using ' + mathHtml(mulsTex(r.neat)) + ':' + scaledHtml(P.s, P.m);
+      fb = '<div class="fb-verdict">✗ Not the same size.</div><div class="fb-line">' + mathHtml(mulsTex(r.m)) + ' gives ' + mathHtml(mono(a, P.letter)) + ' and ' + mathHtml(mono(b, P.letter)) + '.</div>' +
+        '<div class="fb-line">The LCM of ' + p + ' and ' + qq + ' is ' + p * r.neat[0] + ', so multiply by ' + mathHtml(mulsTex(r.neat)) + '.</div>';
+    }
+    stepDone(ok, ok ? 'right' : 'wrong', html, fb);
+  }
+
+  function chooseOp(op) {
+    var need = SS.opFor(P.s, P.letter), ok = op === need, i = idx(P.letter), a = P.s[0][i], b = P.s[1][i];
+    gain(ok);
+    P.op = need;
+    P.comb = SS.combine(P.s, P.letter, need);
+    var pair = mathHtml(mono(a, P.letter)) + ' and ' + mathHtml(mono(b, P.letter));
+    var why = need === 'sub' ? 'Same signs (' + pair + '): subtract.' : 'Different signs (' + pair + '): add.';
+    var html, fb = null;
+    if (ok) html = '<span class="v">✓ ' + (need === 'sub' ? 'Subtract' : 'Add') + '.</span> ' + why;
+    else {
+      var w = op === 'add' ? a + b : a - b;
+      var work = mono(a, P.letter) + (op === 'add' ? ' + ' : ' - ') + br(b, P.letter) + ' = ' + mono(w, P.letter);
+      html = '<span class="v">✗ You chose ' + (op === 'sub' ? 'subtract' : 'add') + '.</span> ' + why;
+      fb = '<div class="fb-verdict">✗ The ' + mathHtml(P.letter) + ' doubles instead of vanishing.</div>' +
+        '<div class="fb-line doubled">' + mathHtml(work) + '</div>' +
+        '<div class="fb-line">Same signs, subtract. Different signs, add. ' + why + '</div>';
+    }
+    stepDone(ok, ok ? 'right' : 'wrong', html, fb);
+  }
+
+  // The working, term by term (x, y, the number), with a negative second term in brackets: 4 - (-5) = 9.
+  SS.termLines = function (s, op) {
+    var sym = op === 'sub' ? ' - ' : ' + ', sg = op === 'sub' ? -1 : 1;
+    return [['x', 0], ['y', 1], ['', 2]].map(function (c) {
+      var u = s[0][c[1]], v = s[1][c[1]], w = u + sg * v;
+      return [c[0] || 'number', mono(u, c[0]) + sym + br(v, c[0]) + ' = ' + (w === 0 ? '0' : mono(w, c[0]))];
+    });
+  };
+  function combTex(c, o) { return mono(c.K, o) + ' = ' + c.C; }
+
+  function checkCombine() {
+    var v = typed(), r = SS.markCombine(P.comb, v[0], v[1]), o = other(P.letter);
+    if (r.result === 'unreadable') { $('msg').textContent = unreadableMsg(); return; }
+    var ok = r.result === 'correct', html, fb = null;
+    gain(ok);
+    if (ok) {
+      var flipped = Number(v[0]) === -P.comb.K;
+      html = '<span class="v">✓</span> ' + mathHtml(combTex(P.comb, o)) + (flipped ? ' (you wrote ' + mathHtml(combTex({ K: -P.comb.K, C: -P.comb.C }, o)) + ', the same equation)' : '');
+    } else {
+      html = '<span class="v">✗ You put ' + esc(v[0]) + mathHtml(o) + ' = ' + esc(v[1]) + '.</span> It is ' + mathHtml(combTex(P.comb, o)) + '.';
+      fb = '<div class="fb-verdict">✗ Not quite. ' + (P.op === 'sub' ? '(1) − (2)' : '(1) + (2)') + ', term by term:</div><div class="fb-work">' +
+        SS.termLines(P.s, P.op).map(function (l) { return '<span class="lab">' + (l[0] === 'number' ? 'number' : mathHtml(l[0])) + '</span><span>' + mathHtml(l[1]) + '</span>'; }).join('') +
+        '</div><div class="fb-line">So ' + mathHtml(combTex(P.comb, o)) + '.</div>';
+    }
+    stepDone(ok, ok ? 'right' : 'wrong', html, fb);
+  }
+
+  function checkSolve() {
+    var o = other(P.letter), key = q[o], v = typed()[0], r = SS.markValue(v, key);
+    if (r.result === 'unreadable') { $('msg').textContent = unreadableMsg(); return; }
+    var ok = r.result === 'correct';
+    gain(ok);
+    var work = o + ' = ' + P.comb.C + ' \\div ' + br(P.comb.K) + ' = ' + key;
+    var html = ok ? '<span class="v">✓</span> ' + mathHtml(o + ' = ' + key) : '<span class="v">✗ You put ' + esc(v) + '.</span> ' + mathHtml(work);
+    var fb = ok ? null : '<div class="fb-verdict">✗ Not quite.</div><div class="fb-line">' + mathHtml(combTex(P.comb, o)) + ', so ' + mathHtml(work) + '</div>';
+    stepDone(ok, ok ? 'right' : 'wrong', html, fb);
+  }
+
+  function checkSub() {
+    var t = P.letter, f = other(t), key = q[t], v = typed()[0], r = SS.markValue(v, key);
+    if (r.result === 'unreadable') { $('msg').textContent = unreadableMsg(); return; }
+    var ok = r.result === 'correct';
+    gain(ok);
+    var row = q.e[P.subJ], p = row[idx(f)] * q[f], a = row[idx(t)], rest = row[2] - p;
+    var w1 = mono(a, t) + ' = ' + row[2] + ' - ' + br(p) + ' = ' + rest, w2 = a === 1 ? '' : t + ' = ' + rest + ' \\div ' + br(a) + ' = ' + key;
+    var html = ok ? '<span class="v">✓</span> ' + mathHtml(t + ' = ' + key) : '<span class="v">✗ You put ' + esc(v) + '.</span> ' + mathHtml(w1) + (w2 ? ', ' + mathHtml(w2) : '');
+    var fb = ok ? null : '<div class="fb-verdict">✗ Not quite.</div><div class="fb-line">' + mathHtml(w1) + '</div>' + (w2 ? '<div class="fb-line">' + mathHtml(w2) + '</div>' : '');
+    stepDone(ok, ok ? 'right' : 'wrong', html, fb);
+  }
+
+  // The problem is finished: what it came to (and the check), then Next.
+  function problemDone() {
+    state = 'feedback';
+    noKeypad();
+    var n = scored(st.steps), ok = P.right === n, fb = $('feedback'), h, o = other(P.letter);
+    if (ok) allRight++;
+    mfg('question_answered', { game_slug: SLUG, level: level, mode: mode(), question_index: total, correct: ok });
+    if (stageKey === 'stage1') {
+      h = '<div class="fb-verdict">' + (ok ? '✓ ' : '') + 'The ' + mathHtml(P.letter) + ' terms match.</div>' +
+        '<div class="fb-line">Next they would be ' + (SS.opFor(P.s, P.letter) === 'sub' ? 'subtracted (same signs)' : 'added (different signs)') + ': that is Stage 2.</div>';
+    } else if (stageKey === 'stage2') {
+      h = '<div class="fb-verdict">' + P.right + ' of ' + n + ' steps right.</div><div class="fb-line">' + mathHtml(o) + ' is on its own: ' +
+        mathHtml(combTex(P.comb, o)) + '. Solving it is Stage 3.</div>';
+    } else {
+      var k = 1 - P.subJ, r = q.e[k];
+      var chk = (r[0] === 1 ? '' : r[0] === -1 ? '-' : r[0]) + '(' + q.x + ')' + (r[1] < 0 ? ' - ' + (r[1] === -1 ? '' : -r[1]) : ' + ' + (r[1] === 1 ? '' : r[1])) + '(' + q.y + ') = ' + r[2];
+      h = '<div class="fb-verdict">' + P.right + ' of ' + n + ' steps right. ' + mathHtml('x = ' + q.x + ',\\; y = ' + q.y) + '</div>' +
+        '<div class="fb-line">Check in (' + (k + 1) + '): ' + mathHtml(chk + '\\;\\checkmark') + '</div>';
+    }
+    fb.className = 'feedback fb ' + (ok ? 'right' : 'wrong');
+    fb.innerHTML = h;
+    $('qcard').classList.add('fb-open');
+    // The working is the point of every problem, so every problem waits for Next.
+    if (window.MaffsNext) MaffsNext.wrong({ mount: fb, onAdvance: nextQ });
+    nextInView();
+  }
+
+  function endGame() {
+    state = 'done';
+    var pct = maxMarks ? marks / maxMarks : 0;
+    $('resultTitle').textContent = pct >= 0.9 ? 'Excellent' : pct >= 0.7 ? 'Well done' : pct >= 0.5 ? 'Getting there' : 'Keep practising';
+    $('finalScore').textContent = marks + '/' + maxMarks;
+    $('statsLine').innerHTML = 'Stage ' + st.n + ' · Problems with every step right: <b>' + allRight + '/' + total + '</b>';
+    finish(marks, allRight);
+  }
+  function finish(score, correct) {
+    window._ggAbandoned = false;
+    mfg('game_completed', { game_slug: SLUG, level: level, mode: mode(), score: score, questions_answered: total, questions_correct: correct });
+    var BOARD = board(), key = SLUG + '_best_' + BOARD, old = null;
+    try { old = localStorage.getItem(key); } catch (e) {}
+    var prev = parseInt(old || '0', 10);
+    if (score > prev) {
+      mfg('personal_best_set', { game_slug: SLUG, level: level, mode: mode(), score: score, previous_best: prev });
+      try { localStorage.setItem(key, String(score)); } catch (e) {}
+    }
+    if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(SLUG, BOARD, score, total).catch(function () {}); if (window.MaffsScoreHistory) { MaffsScoreHistory.record(SLUG, BOARD, score); } }
+    showS('results');
+  }
+
+  // ---- A-Level: four options per question ----
+  var mcPool = [], mcQ = null, mcScore = 0, mcCorrect = 0, mcLocked = false, mcTimer = null;
+  function startMC(items) {
+    mcPool = items || shuffle(ALEVEL.slice()).slice(0, MC_ROUNDS);
+    qIdx = 0; total = 0; mcScore = 0; mcCorrect = 0;
+    $('mcScore').textContent = '0';
+    showS('mc'); nextMC();
+    window._ggAbandoned = true;
+    mfg('game_started', { game_slug: SLUG, level: level, mode: mode() });
+    bindUnload();
+  }
+  function nextMC() {
+    clearTimeout(mcTimer);
+    if (window.MaffsNext) MaffsNext.clear($('mcFeedback'));
+    $('mcFeedback').innerHTML = '';
+    if (qIdx >= mcPool.length) { endMC(); return; }
+    mcQ = mcPool[qIdx]; qIdx++; total++; mcLocked = false;
+    state = 'mc';
+    $('mcNum').textContent = total + '/' + mcPool.length;
+    $('mcSystem').innerHTML = mcQ.sys.map(function (t, k) { return '<span class="lab">(' + (k + 1) + ')</span><span class="eq">' + mathHtml(t) + '</span>'; }).join('');
+    $('mcAsk').textContent = mcQ.ask;
+    var opts = window.MaffsOptions ? MaffsOptions.build(mcQ.correct, mcQ.distractors) : shuffle([mcQ.correct].concat(mcQ.distractors));
+    var box = $('mcOptions'); box.innerHTML = '';
+    opts.forEach(function (val) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt-btn'; b.dataset.val = val; b.innerHTML = mathHtml(val);
+      b.addEventListener('click', function () { answerMC(b); });
+      box.appendChild(b);
+    });
+  }
+  function answerMC(btn) {
+    if (mcLocked) return;
+    mcLocked = true;
+    var ok = btn.dataset.val === mcQ.correct;
+    document.querySelectorAll('#mcOptions .opt-btn').forEach(function (b) {
+      b.disabled = true;
+      if (b.dataset.val === mcQ.correct) b.classList.add('correct');
+    });
+    if (ok) { mcScore += MC_BASE; mcCorrect++; } else btn.classList.add('wrong');
+    $('mcScore').textContent = mcScore;
+    mfg('question_answered', { game_slug: SLUG, level: level, mode: mode(), question_index: total, correct: ok });
+    if (ok) { mcTimer = setTimeout(nextMC, 900); return; }
+    var fb = $('mcFeedback');
+    fb.innerHTML = '<div class="fb wrong"><div class="fb-verdict">✗ The answer is ' + mathHtml(mcQ.correct) + '.</div></div>';
+    if (window.MaffsNext) MaffsNext.wrong({ mount: fb.firstChild, onAdvance: nextMC });
+    nextInView(fb);
+  }
+  function endMC() {
+    state = 'done';
+    var pct = Math.round(100 * mcCorrect / mcPool.length);
+    $('resultTitle').textContent = pct >= 90 ? 'Outstanding' : pct >= 70 ? 'Well done' : pct >= 50 ? 'Good effort' : 'Keep practising';
+    $('finalScore').textContent = mcScore;
+    $('statsLine').innerHTML = '<b>' + mcCorrect + '/' + mcPool.length + '</b> correct (' + pct + '%)';
+    finish(mcScore, mcCorrect);
+  }
+
+  // ---- Start screen ----
+  function setLevel(l) {
+    level = l;
+    document.querySelectorAll('.tab').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.level === l)); });
+    $('foundationPanel').hidden = l !== 'gcse';
+    $('alevelPanel').hidden = l !== 'alevel';
+  }
+  function setStage(s) {
+    stageKey = s; st = STAGES[s];
+    document.querySelectorAll('.stage-btn').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.stage === s)); });
+  }
+  document.querySelectorAll('.tab').forEach(function (b) { b.addEventListener('click', function () { setLevel(b.dataset.level); }); });
+  document.querySelectorAll('.stage-btn').forEach(function (b) {
+    b.addEventListener('click', function () { setStage(b.dataset.stage); mfg('mode_selected', { game_slug: SLUG, mode: b.dataset.stage }); });
+  });
+  if (new URLSearchParams(window.location.search).get('level') === 'alevel') setLevel('alevel');
+
+  $('startBtn').addEventListener('click', function () { startGame(); });
+  $('againBtn').addEventListener('click', function () { state = 'menu'; showS('menu'); });
+  $('checkBtn').addEventListener('click', check);
+  $('stepForm').addEventListener('submit', function (e) { e.preventDefault(); check(); });
+
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+    function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(get() === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); set(String(on)); apply(on); });
+  })();
+
+  // Views and drivers for scripts/verify-simultaneous-solver.py.
+  function byId(list, ids) { return ids.map(function (id) { return list.filter(function (x) { return x.id === id; })[0]; }); }
+  function clearAll() { if (window.MaffsNext) { MaffsNext.clear($('feedback')); MaffsNext.clear($('mcFeedback')); } clearTimeout(mcTimer); }
+  SS.ui = {
+    state: function () { return state; },
+    item: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },
+    plan: function () { return P ? JSON.parse(JSON.stringify(P)) : null; },
+    score: function () { return level === 'alevel' ? mcScore : marks; },
+    maxMarks: function () { return maxMarks; },
+    mcItem: function () { return mcQ ? JSON.parse(JSON.stringify(mcQ)) : null; },
+    type: function (vals) { $('stepBody').querySelectorAll('input').forEach(function (inp, i) { inp.value = vals[i]; }); },
+    choose: function (val) { var b = $('stepBody').querySelector('.choice[data-val="' + val + '"]'); if (b) b.click(); return !!b; },
+    startWith: function (stage, ids) {
+      clearAll();
+      if (stage === 'alevel') { setLevel('alevel'); startGame(byId(ALEVEL, ids)); }
+      else { setLevel('gcse'); setStage(stage); startGame(byId(BANK[stage], ids)); }
+    },
+    restart: function () { clearAll(); state = 'menu'; showS('menu'); },
+    keypad: function () { return kp; }
+  };
+})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'simultaneous-solver');</script>
