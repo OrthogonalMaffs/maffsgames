@@ -359,7 +359,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
   function askRounding() {
     state = 'round';
     $('msg').textContent = '';
-    $('stepHead').textContent = 'Step 1: round each number.';
+    $('stepHead').textContent = 'Step 1: round each number to 1 s.f.';
     var body = $('stepBody'); body.innerHTML = '';
     var row = document.createElement('div'); row.className = 'cells';
     var inputs = q.nums.map(function (n, i) {
