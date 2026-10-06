@@ -198,7 +198,7 @@ const FIG={
     const g=f.m.find(m=>isNum(m[2])),d=(g[1]==='ur'||g[1]==='ll')?g[2]:180-g[2];
     const gap=Math.round(H*0.42),y1=Math.round((H-gap)/2),y2=y1+gap,dx=gap/Math.tan(d*RAD);
     const V={T:[W/2+dx/2,y1],B:[W/2-dx/2,y2]},e=Math.min(gap*0.75,(y1-PAD)/Math.sin(d*RAD));
-    const S={segs:[[[PAD,y1],[W-PAD,y1],'line'],[[PAD,y2],[W-PAD,y2],'line'],[at(V.T,d,e),at(V.B,d+180,e),'trans']],marks:[],par:[y1,y2]};
+    const S={segs:[[[PAD,y1],[W-PAD,y1],'line'],[[PAD,y2],[W-PAD,y2],'line'],[at(V.T,d,e),at(V.B,d+180,e),'trans']],marks:[],par:[y1,y2],avoid:[V.T,V.B]};
     const R={ur:[0,d],ul:[d,180],ll:[180,180+d],lr:[180+d,360]};
     f.m.forEach(([w,p,lab])=>mark(S,V[w],R[p][0],R[p][1],lab));
     return S},
@@ -219,9 +219,9 @@ const FIG={
     return S},
   partri(f,W,H){
     const p=f.q0,r=f.R,w=1/Math.tan(p*RAD)+1/Math.tan(r*RAD);
-    const P=fit([[0,1],[w,1],[1/Math.tan(p*RAD),0],[-0.55,1],[w+0.55,0]],W,H,PAD+6);
+    const P=fit([[0,1],[w,1],[1/Math.tan(p*RAD),0],[-0.25,1],[w+0.25,0]],W,H,PAD+6);
     const [Pp,Rp,Qp]=P,y1=Pp[1],y2=Qp[1];
-    const S={segs:[[[PAD,y1],[W-PAD,y1],'line'],[[PAD,y2],[W-PAD,y2],'line'],[Pp,Qp,'trans'],[Rp,Qp,'trans']],marks:[],par:[y1,y2]};
+    const S={segs:[[[PAD,y1],[W-PAD,y1],'line'],[[PAD,y2],[W-PAD,y2],'line'],[Pp,Qp,'trans'],[Rp,Qp,'trans']],marks:[],par:[y1,y2],avoid:[Pp,Rp,Qp]};
     mark(S,Qp,dirOf(Qp,Pp),180,p);let i=interior(Rp,Pp,Qp);mark(S,Rp,i[0],i[1],r);i=interior(Qp,Pp,Rp);mark(S,Qp,i[0],i[1],f.Q);
     return S},
 };
@@ -275,10 +275,10 @@ function drawFig(q){
     if(m.lab==='')return;
     const b=placeLabel(m,ctx.measureText(text).width,15,S,boxes,W,H);boxes.push(b);
     ctx.fillStyle=col;ctx.fillText(text,(b[0]+b[2])/2,(b[1]+b[3])/2)});
-  // parallel marks: one arrowhead on each line, where it clears every label
+  // parallel marks: one arrowhead on each line, where it clears every label and every vertex
   S.par.forEach(y=>{
     for(let k=0;k<12;k++){const x=k%2?PAD+14+(k>>1)*18:W-PAD-14-(k>>1)*18,b=[x-6,y-7,x+7,y+7];
-      if(!boxes.some(o=>!(b[2]<o[0]||b[0]>o[2]||b[3]<o[1]||b[1]>o[3]))){
+      if(!boxes.some(o=>!(b[2]<o[0]||b[0]>o[2]||b[3]<o[1]||b[1]>o[3]))&&!(S.avoid||[]).some(p=>Math.hypot(p[0]-x,p[1]-y)<40)){
         ctx.fillStyle=COL.par;ctx.beginPath();ctx.moveTo(x-5,y-6);ctx.lineTo(x+6,y);ctx.lineTo(x-5,y+6);ctx.closePath();ctx.fill();break}}});
 }
 
