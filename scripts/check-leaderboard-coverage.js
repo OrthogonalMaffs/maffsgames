@@ -164,7 +164,11 @@ const NOT_ON_HUB = {
   // Jon, 6 Oct 2026: unlisted (off the portal, sitemap, spec map and hub) until each game's fix
   // for the 6 Oct audit merges; the hub row is restored, and this entry removed, in that PR.
   'spot-the-error': 'unlisted pending its 6 Oct audit fix; hub row restored at relisting',
-  'trig-worms': 'unlisted pending its 6 Oct audit fix; hub row restored at relisting'
+  'trig-worms': 'unlisted pending its 6 Oct audit fix; hub row restored at relisting',
+  // Jon, 6 Oct 2026 (19:15): unlisted the same way for the tranche 2 audit's faults until contract F's
+  // verifier for each game merges; the hub row is restored, and this entry removed, in that PR.
+  'expectation-station': 'unlisted pending its tranche 2 audit fix; hub row restored at relisting',
+  'trig-identity-duel': 'unlisted pending its tranche 2 audit fix; hub row restored at relisting'
 };
 
 // The levels a game submits under are read from its source: the level argument of
