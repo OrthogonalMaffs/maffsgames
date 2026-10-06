@@ -2,7 +2,7 @@
 
 **Status: report only, as delivered to Jon on 6 Oct 2026.** Read-only audit of main at `3e46400`, by the same method
 as tranche 1 (`audit-tranche1-2026-10-06.md`). Follow-up: `expectation-station` and `trig-identity-duel` unlisted
-(relist checklists, todo §1.55 and §1.56); Core Maths Paper 1's four faults fixed under a new verifier; Jon's rulings
+(relist checklists, todo §1.55 and §1.56); Core Maths Paper 1's four faults fixed under a new verifier, `scripts/verify-core-maths-paper1.py` (PR #86); Jon's rulings
 of 6 Oct 19:15 are the last section. Fixes are marked against each item as they merge.
 
 ---
@@ -82,11 +82,12 @@ Bold sizes are below the 40-question minimum. The bank size is what each level a
 - **Double-click on Next answers the next question unseen**, the same mechanism as Spot the Muppet.
 
 ### Core Maths Paper 1
-- **Q32 (:462–465):** simple interest A = 5000 × 0.035 × 3 = £525.00. Compound B = 5000 × 1.036³ − 5000 = £559.67. B wins by **£34.67**.
+**All four FIXED, PR #86**, under `scripts/verify-core-maths-paper1.py` (CI group B), which fails on the old file at each.
+- **Q32 (:462–465):** simple interest A = 5000 × 0.035 × 3 = £525.00. Compound B = 5000 × 1.036³ − 5000 = £559.67. B wins by **£34.67**. **FIXED, PR #86:** keyed £34.67; the other options are named errors (rates on the wrong account types, both simple, one year only).
   - The key is "B by £44.70", from the working's false £569.70. No option is correct.
-- **Q9 (:296–300):** keyed "Yes" to "more than half the class scored above 51" (the median). At most half the values are strictly above the median, so the answer is No. The working concedes it ("slightly imprecise").
-- **Q7 (:282–284):** option C, "Discrete, qualitative, continuous, discrete", is the same classification as the key, because discrete and continuous imply quantitative.
-- **Q1 (:238), JC:** the IQR of 9 values is keyed 12, which needs the inclusive-median convention.
+- **Q9 (:296–300):** keyed "Yes" to "more than half the class scored above 51" (the median). At most half the values are strictly above the median, so the answer is No. The working concedes it ("slightly imprecise"). **FIXED, PR #86:** keyed "No — at most half the values can be above the median"; the old "No" with a wrong reason removed (Jon's ruling).
+- **Q7 (:282–284):** option C, "Discrete, qualitative, continuous, discrete", is the same classification as the key, because discrete and continuous imply quantitative. **FIXED, PR #86:** option C now treats shoe size as continuous.
+- **Q1 (:238), JC:** the IQR of 9 values is keyed 12, which needs the inclusive-median convention. **FIXED, PR #86:** the stem names the (n + 1)/4 method, keyed 14; 12 (inclusive), 32 (range) and 5 (positions) are the distractors.
   - The (n+1)/4 rule gives 29 − 15 = 14, and so does a calculator's exclusive method.
   - 14 is not offered, and the question names no method.
 
@@ -149,7 +150,7 @@ Bold sizes are below the 40-question minimum. The bank size is what each level a
   - The 562.45 vs 562.43 slip.
   - SR-14: the "patients" joke, which the scanner cannot see (class 9 below).
 - **Core Maths papers**
-  - Paper 1 Q9's box-plot whiskers are drawn in the background colour, so they are invisible.
+  - Paper 1 Q9's box-plot whiskers are drawn in the background colour, so they are invisible. **FIXED, PR #86** (the chart's axis grey, 5.7:1).
   - Paper 1 Q27's CPI pair is already in the quoted-statistics audit.
   - Paper 2B Q23's Monty Hall never says the host knows where the car is.
   - Options are never shuffled, and B is the key on 26 of 36 in 2B.

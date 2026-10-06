@@ -49,17 +49,24 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-06 (cloud, latest): AUDIT TRANCHES 1-2 committed, ES + TID unlisted (PR 1 of 2); NEXT = Core Maths Paper 1 (PR 2)
+## Handover — 2026-10-06 (cloud, latest): AUDIT TRANCHES 1-2 committed, ES + TID unlisted (PR #85 MERGED), CORE MATHS PAPER 1 fixed (PR #86); NEXT = Jon's next contract
 
-Jon's contract of 6 Oct (after his rulings of 19:15). Two PRs in sequence; this one is PR 1.
-- **Reports:** `docs/audits/audit-tranche1-2026-10-06.md` and `...-tranche2-...` (24 games audited read-only at
-  `3e46400`; Jon's rulings of 19:15 verbatim at the end of each; contract F turns them into canon SR-16-19).
-- **Unlisted, as PR #82 did trig-worms and spot-the-error:** `expectation-station` and `trig-identity-duel` (roster
-  "Unlisted", `NOT_ON_HUB`, portal, sitemap, spec map, hub). Relist checklists: todo §1.55, §1.56 (§1.53-1.54 are #82's).
-  Spec-map row G22–G23 had Trig Identity Duel as its only game: it reads "Trig Identity Duel (being fixed)" in plain
-  text, as the map already does for Regression Rumble.
-- **Next, PR 2 (after this merges and main is green):** Core Maths Paper 1 Q32, Q9, Q7, Q1 fixed under a new
-  `scripts/verify-core-maths-paper1.py` in CI (the four faults are in the tranche 2 report).
+Jon's contract of 6 Oct (after his rulings of 19:15), two PRs in sequence.
+- **PR #85 (merged, main green):** the audit reports `docs/audits/audit-tranche1-2026-10-06.md` and `...-tranche2-...`
+  (24 games read-only at `3e46400`; Jon's 19:15 rulings verbatim at the end of each; contract F turns them into canon
+  SR-16-19). `expectation-station` and `trig-identity-duel` unlisted as #82 did trig-worms and spot-the-error (roster
+  "Unlisted", `NOT_ON_HUB`, portal, sitemap, spec map, hub); relist checklists todo §1.55, §1.56. Spec-map row G22–G23
+  reads "Trig Identity Duel (being fixed)" in plain text (its only game), as for Regression Rumble.
+- **PR #86 (Core Maths Paper 1):** Q32 keyed £34.67 (distractors: rates on the wrong account types £3.59, both simple
+  £15.00, one year £5.00; the contract's "£44.70 slip" has no derivation, so not used); Q9 keyed "No", the wrong-reason
+  "No" removed, whiskers in the axis grey; Q7's C = shoe size continuous; Q1 names the (n + 1)/4 method, keyed 14.
+  `scripts/verify-core-maths-paper1.py` (CI group B, a few seconds): every rule found by its stem pattern, exactly one per
+  question; 28 computed, 6 pinned judgement items (2 more in part); options distinct in value; chart lines vs the card
+  >= 3:1; every key clicked through `selectAnswer()`. Self-test: 7 planted faults. Todo §1.57.
+- **Gotchas:** a verdict word can open a false option ("Yes, but only if ..."), so "exactly one option says Yes" is not a
+  general rule; only Q9 (bare verdict) is held to it. Chart data is read by wrapping the page's own `renderHistogram` /
+  `renderBoxPlot` before calling `renderSVG()`. A branch push with no open PR triggers no CI: push the screenshot commit
+  and its removal together, then open the PR (one run).
 
 ## Handover — 2026-10-06 (home): SIMULTANEOUS SOLVER staged elimination, PR #83 MERGED; NEXT = Stage 5 (PR 2)
 
