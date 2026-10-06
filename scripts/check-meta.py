@@ -62,9 +62,7 @@ RANK = ["KS3", "GCSE", "Core Maths", "A-Level", "Level 3", "Further Maths", "Lev
 
 # Games in games.json whose page is not yet written: slug -> reason. Reported, never fails; fails
 # once the page matches (remove the entry in the PR that runs apply-meta.py on it).
-PENDING = {
-    "estimation-engine": "rebuild in progress (another session); apply in the PR that merges the rebuild",
-}
+PENDING = {}
 
 BANNED = re.compile(r"\byear\s*6\b|\bstarter\b", re.I)
 

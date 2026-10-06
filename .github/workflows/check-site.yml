@@ -268,6 +268,16 @@ jobs:
             checks: |
               Equation Builder (every tile arrangement classified by SymPy; the page's ACCEPTED lists match)|python scripts/verify-equation-builder.py && python scripts/verify-equation-builder.py --selftest
 
+          # Estimation Engine on its own (Jon, 6 Oct 2026: group B is near its 75% budget). SR-12 rebuild, 5 Oct
+          # 2026: every 1 s.f. rounding, estimate and calculator answer recomputed from the stored numbers (Decimal,
+          # SymPy), no exact halves, three planted faults; then the page in Chromium: D01 and F02 marked as Jon's
+          # contract states, every item's calculator and % lines, a full game (A-F, no timer, 20/20, Next every
+          # question), phones at 320/375/390 typing on MaffsKeypad (~2 min).
+          - name: Content verifiers E (Estimation Engine)
+            timeout: 12
+            checks: |
+              Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)|python scripts/verify-estimation-engine.py
+
           # Every other content verifier. Each reads the live page's data and recomputes
           # its answers independently; each includes a fault-injection self-test.
           #  - log-laws Solve: every line checked with SymPy against the law its step is

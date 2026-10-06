@@ -5,12 +5,11 @@ tag shows as the shared `.calc-badge` (`schools/assets/theme.css`) on its start 
 shows nothing. Every game is `untagged` until it is tagged in its own PR. A `required` game also loads the
 shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-calculator.py` keeps the two in step.
 
-## KS3 Games (35)
+## KS3 Games (34)
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
 | 1 | Sequence Solver | `sequence-solver` | KS3, GCSE, A-Level, L4 | Algebra | Tiered rebuild. KS3 (50q), GCSE (50q), A-Level (55q) — nth term, geometric, sigma, recurrence | untagged |
 | 2 | Estimation Golf | `estimation-golf` | Year 6, KS3, GCSE, A-Level, L4, Core | Number, Statistics | Proximity scoring — accuracy determines ball distance. 9-hole par-based rounds | untagged |
-| 3 | Estimation Engine | `estimation-engine` | KS3, GCSE, Core | Number | Mental arithmetic with tolerance band | untagged |
 | 4 | Factor Race | `factor-race` | Year 6, KS3, GCSE | Number | Two-card comparison — tap the one with more factors | untagged |
 | 5 | Prime Sprint | `prime-factorisation` | Year 6, KS3, GCSE | Number | Multiply-up from 1 to build prime factorisation. 3 lives, product hidden after Q3 | untagged |
 | 6 | Prime or Composite | `prime-or-composite` | KS3, GCSE | Number | Rapid number classification | untagged |
@@ -44,7 +43,7 @@ shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-cal
 | 34 | Seven Bridges | `seven-bridges` | KS3, GCSE, A-Level | Geometry, Reasoning | Euler's bridge puzzle. Trace paths, spot impossible graphs, discover the rule | untagged |
 | 35 | Distinctly Average | `distinctly-average` | KS3, GCSE | Statistics | Mean, median, mode and range on ungrouped data. KS3 whole-number sets with a stepped median scaffold; GCSE adds frequency tables, missing-value and set-comparison questions | untagged |
 
-## GCSE Games (28)
+## GCSE Games (29)
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
 | 36 | Index Laws | `index-laws` | GCSE, A-Level | Algebra | 6 index rules, 45 questions, KaTeX rendered | untagged |
@@ -75,6 +74,7 @@ shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-cal
 | 61 | Given That | `given-that` | GCSE, A-Level, Core, L4 | Statistics | Conditional probability with two-way tables, Venn diagrams, frequency trees | untagged |
 | 62 | Screening Room | `screening-room` | GCSE, A-Level, Core, L4 | Statistics | False positives and base-rate effect with visual icon arrays | untagged |
 | 63 | Linear Equation Solver | `linear-equation-solver` | GCSE | Algebra | Solve one- and two-step equations by choosing the inverse operation at each step. 141 questions across 10 shapes: unknown either side, brackets, negative and fractional | untagged |
+| 3 | Estimation Engine | `estimation-engine` | GCSE | Number | Estimate by rounding to 1 s.f. GCSE N14, rebuilt 5 Oct 2026 under SR-12: 45 questions in six groups (whole numbers, division, decimals under 1, three or four numbers, squares and roots, word problems); round each number, then estimate, a mark each, both marked by exact match (`MaffsAnswer`); the phone keypad is `MaffsKeypad`. 10 per game, at least one from each group, served easiest first. Verified by `scripts/verify-estimation-engine.py` (in CI) | not allowed |
 
 ## Core Maths Games (10)
 | # | Game | Slug | Levels | Topics | Description | Calculator |
