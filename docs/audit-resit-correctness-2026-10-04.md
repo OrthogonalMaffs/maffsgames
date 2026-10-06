@@ -418,24 +418,28 @@ Resit card level: none (card says "One level", links to `/games/estimation-engin
 Marking: typed, `parseFloat(input.value)` (index.html:360, `type="number"` input), `err = |val - ans| / ans * 100`, hit iff `err <= q.tol` (index.html:388-389). Band is relative to the stored key `ans`, not to the true value. A miss shows "x% off. Answer: <ans>" (index.html:401) and advances on a fixed 2 s timer (index.html:409).
 Items checked: 49 of 49 keys recomputed with sympy to 15 s.f. (exact rationals/roots/powers; e, π, φ, ln, log10 symbolic); every band printed; the meter's labels re-derived; GCSE N14 1-s.f. estimates tested against the 27 KS3/GCSE/π items; float behaviour at the band edges run in node. Scripts: scratchpad/work/estimation-engine/check.py, scratchpad/work/estimation-engine/est.py.
 
+**Resolved, PR #74 (6 Oct 2026), Jon's Estimation Engine contract of 5 Oct and his answers:** the pool was replaced by
+Jon's 45-item GCSE N14 bank (round each number to 1 s.f., then estimate), marked under SR-12 by exact match, and
+checked by `scripts/verify-estimation-engine.py` (CI group E). The game is back on `/resit/` (32 cards).
+
 #### Faults
-- **F1 [HIGH]** A-Level/Core block, index.html:276
+- **F1 [HIGH]** **RESOLVED PR #74** (the item is gone: the rebuilt bank has no e, φ, ln or log items) A-Level/Core block, index.html:276
   - Question: "√(e × 1000)", "Within 4%". Typed.
   - Keyed answer: 52.07   Correct answer: 52.137 (52.14 to 2 d.p.)
   - Evidence: e × 1000 = 2718.2818…, √2718.2818 = 52.1371. Key is 0.13% low. The miss/timeout message prints "Answer: 52.07" (wrong). Marking effect is small: the band is [49.99, 54.15] instead of [50.05, 54.22], so 54.16–54.22 (within 4% of the truth) is marked wrong and 49.99–50.05 marked right.
   - Share affected: 1 of 49 items (drawn in about 20% of games).
-- **F2 [MEDIUM]** all items, index.html:377 then :343
+- **F2 [MEDIUM]** **RESOLVED PR #74** (no tolerance meter: marked by exact match, SR-12) all items, index.html:377 then :343
   - The tolerance meter's centre label is set to "Correct" and then overwritten by `updateMeter` with `Math.round(ans)`, so the label under the answer marker shows the key rounded to a whole number. For six items that rounded value is itself outside the band, i.e. the picture shows as "the answer" a value the game marks wrong: log₁₀(500) shows 3 (key 2.699, 11.2% off, tol 3%); e² shows 7 (key 7.389, 5.3%); e × π shows 9 (key 8.54, 5.4%); ln(100) shows 5 (key 4.605, 8.6%); φ² shows 3 (key 2.618, 14.6%); log₁₀(π × 100) shows 2 (key 2.497, 19.9%). (The text flash above it does give the right key.) The min/max labels are likewise whole-number rounded (e.g. φ²: "1 … 3 … 4").
   - Share affected: 6 of 49 items show a centre label outside the band; 16 of 49 show a label different from the key.
-- **F3 [MEDIUM, judgement call]** whole pool, index.html:226-279, :291
+- **F3 [MEDIUM, judgement call]** **RESOLVED PR #74** (GCSE only; the 45-item bank is GCSE N14, every item a 1 s.f. method; roster level GCSE) whole pool, index.html:226-279, :291
   - A-Level content is served to everyone, with no level choice. 10 items need e, φ, ln or log₁₀ (e × 100, φ × 1000, ln(1000), log₁₀(500), e², e × π, ln(100), φ², √(e × 1000), log₁₀(π × 100)); φ is never defined on screen and is on no GCSE/Core spec. A 10-question game contains at least one of these with probability 0.92 (expected 2.0 per game); at least one item from the 17-item A-Level block with probability 0.99 (expected 3.5). For the resit audience these are effectively unanswerable. Not a wrong key.
-- **F4 [MEDIUM, judgement call]** KS3/GCSE items, tolerances at index.html:228-260
+- **F4 [MEDIUM, judgement call]** **RESOLVED PR #74** (SR-12: rounding and the estimate each marked by exact match through `MaffsAnswer`) KS3/GCSE items, tolerances at index.html:228-260
   - The resit card describes "Quick estimates of calculations" and maps the game to GCSE N14 (estimate by rounding to 1 significant figure). With tolerances of 1–5%, the N14 estimate is rejected on 21 of 27 KS3/GCSE/π items (e.g. 847 × 23 ≈ 800 × 20 = 16,000, 17.9% off, tol 5%; 314 × 159 ≈ 300 × 200 = 60,000, 20.2% off; 12 × 15 ≈ 10 × 20 = 200, 11.1% off; π × 100 ≈ 3 × 100 = 300, 4.5% off, tol 3%; 2¹⁰ ≈ 1000, 2.3% off, tol 1%). The game rewards near-exact mental calculation, not N14 estimation; a resit student doing the taught technique is marked wrong almost every time. Design/spec-fit issue for Jon, not a key error. Table in est.py output.
-- **F5 [LOW]** index.html:388
+- **F5 [LOW]** **RESOLVED PR #74** (no band, so no band edge) index.html:388
   - Float edge: an entry exactly on the stated band edge is rejected for 9 of the 16 integer keys tested (e.g. 12, tol 2%: 11.76 gives err 2.0000000000000018 > 2). Only an exact-edge entry is affected.
-- **F6 [LOW]** index.html:357-361
+- **F6 [LOW]** **RESOLVED PR #74** (`MaffsAnswer`: an unreadable entry gets a message naming the box and is never marked; no timer) index.html:357-361
   - `submitAnswer` cancels the question timer before checking the input; an empty or unparseable entry (e.g. "19,481" in a number field reads as empty) returns silently with no message, and the question then never times out. No mark is given either way.
-- **F7 [LOW]** index.html:409
+- **F7 [LOW]** **RESOLVED PR #74** (`MaffsNext` after every question; nothing advances on a timer; the method shown on every question) index.html:409
   - Wrong answers advance on a fixed 2 s timer with only "x% off. Answer: …" (canon §7.6 `MaffsNext.wrong` not applied). The start screen has no instructions beyond "Press Start" and the "Within n%" tag.
 
 #### Clean
