@@ -49,7 +49,23 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-06 (cloud, latest): the four open PRs ALL MERGED (#75, #72, #73, #74), main green; NEXT = Jon's next contract
+## Handover — 2026-10-06 (cloud, latest): ANGLE ACE drawn from data, PRs #79 + #80 MERGED; NEXT = Jon's next contract
+
+Jon's Angle Ace contract (SR-6, audit class 6). Each PR merged on a green Gate; main's full run green after each.
+- **The renderer** (`games/angle-ace/index.html`, `drawFig()`): every question carries `fig` (line, point, cross,
+  par, tri, ext, partri; the comment above `FIG` documents each). A given value sets the rays; x/y is what the
+  givens leave. Drawn at the canvas's CSS width (height 0.64 x width, 180-340px). Labels: bisector, clear of every
+  line and label, never nearer another vertex than their own. A given 90 gets a square; an unknown never does.
+- **`scripts/verify-angle-ace.py`** (CI group E): measures only the recorded canvas calls; `TWO_STEP` holds each
+  two-step item's routes. A new question needs only `fig` data; the verifier says whether it is right.
+- **Canon SR-15** (Jon, 6 Oct): every valid reason accepted; two-step = union of routes, through the labelled y.
+- **Gotchas:** the verifier's 'nearest vertex' rule caught a crowded label at 320px that looked fine at 390: let it
+  fail, fix the placement. Never swap the repo's game file to preview; serve a scratch copy (`--against`). With a
+  workflow edit, `check-changed.py` selects every verifier (about 30 min here); run it in the background to a log
+  file, never through `| tail` under a timeout (the output is lost).
+- **Open:** todo §1.52 (GCSE 35 < 40; no KS3 bank).
+
+## Handover — 2026-10-06 (cloud): the four open PRs ALL MERGED (#75, #72, #73, #74), main green; NEXT = Jon's next contract
 
 Jon's instruction of 6 Oct, 09:30: this session alone drives #75, #72, #73 and #74, one PR at a time. It pushes
 one, waits for its result, and never queues two.
