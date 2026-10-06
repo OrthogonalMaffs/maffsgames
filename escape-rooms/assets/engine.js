@@ -225,9 +225,6 @@
       screenBrief() + screenPlay() + screenEnd() +
       '<div class="penalty-flash" id="penaltyFlash" role="status"></div>';
     bindStatic();
-    // The teacher feedback line under Start (schools/assets/teacher-invite.js), one placement for every
-    // room. Its game value is the room's directory name: R.slug is 'escape-' + that name.
-    if (window.MaffsInvite) window.MaffsInvite.mount(el('teacherInvite'), R.slug.replace(/^escape-/, ''));
   }
 
   function screenBrief() {
@@ -249,7 +246,6 @@
             '<button class="btn ghost" id="resumeBtn" style="display:none">Resume</button>' +
             '<a class="btn ghost" href="teacher.html" target="_blank" rel="noopener">Teacher page</a>' +
           '</div>' +
-          '<p id="teacherInvite"></p>' +
         '</div>' +
       '</section>';
   }
@@ -807,7 +803,12 @@
         '<button class="btn" id="againBtn">Play again</button>' +
         '<a class="btn ghost" href="../">Other rooms</a>' +
         '<a class="btn ghost" href="teacher.html" target="_blank" rel="noopener">Teacher page</a>' +
-      '</div>';
+      '</div>' +
+      '<p id="teacherInvite"></p>';
+    // The teacher feedback line (schools/assets/teacher-invite.js) on the end card, after its buttons, for
+    // both outcomes; mounted here because the card is rebuilt each time. Its game value is the room's
+    // directory name: R.slug is 'escape-' + that name.
+    if (window.MaffsInvite) window.MaffsInvite.mount(el('teacherInvite'), R.slug.replace(/^escape-/, ''));
     el('againBtn').onclick = function () { begin(freshState()); };
     show('scrEnd');
     window.scrollTo({ top: 0, behavior: 'smooth' });
