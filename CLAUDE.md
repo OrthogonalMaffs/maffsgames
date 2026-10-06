@@ -49,7 +49,31 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-06 (cloud, latest): AUDIT TRANCHES 1-2 committed, ES + TID unlisted (PR #85 MERGED), CORE MATHS PAPER 1 fixed (PR #86); NEXT = Jon's next contract
+## Handover — 2026-10-06 (home, night, latest): Jon's rulings on audit tranches 3-6 (20:30); 18 games UNLISTED, BUILD FREEZE in canon (PR 1 of 3)
+
+Jon's contract of 6 Oct, 20:30: three PRs in sequence, each merged on a green Gate with main's full run green before
+the next. **PR 1 (this one):** unlist 18 games, canon SR-16 to SR-20 + the freeze. **PR 2:** Like Terms Collector's
+Stage 1-2 typed answers through `MaffsAnswer` (exact integers; 8.9 rejected) + `scripts/verify-like-terms-collector.py`.
+**PR 3:** the findings register (`docs/audits/findings/<slug>.yml`, `scripts/audit-register.py`,
+`docs/audits/REGISTER.md`, CI) and the four tranche 3-6 reports committed; then delete the `audit/tranche-3..6` branches.
+- **Unlisted (as #82/#85 did, no new mechanism):** tranche 5 all eleven (binomial-blaster, moments-master,
+  force-resolver, proof-builder, factor-theorem, partial-fractions-duel, suvat, curling-friction, dimension-checker,
+  differentiation-duel, integration-duel), tranche 6 eigenvector-engine + truth-will-set-you-free, tranche 4
+  glorious-gantt, screening-room, component-crusher, linear-equation-solver, tranche 3 truth-buster. Roster: 74 on the
+  portal, 23 unlisted. Portal cards (22), five weekly-fact game links, hub rows, sitemap, spec map ("(being fixed)"
+  where a row had no other game), `NOT_ON_HUB`. Pages unchanged and indexable; direct links work.
+  - `/resit/`: linear-equation-solver's card gone (31 cards); `check-resit-page.py` gains `UNLISTED` (off the page AND
+    off the portal; self-test fault 7).
+  - `check-spec-mapping.py`: truth-buster's `EXCEPTIONS` entry removed (stale once off the portal); relisting restores it.
+  - No parent guide links any of the 18.
+  - Relist checklists: todo §1.58-§1.75, one per game.
+- **Canon:** §0.2 BUILD FREEZE + the six-point exit bar (top of §0.2); §0.3 SR-16 to SR-20 + the three "also recorded"
+  rules; §6.1: §3.8 has no listed game while Glorious Gantt is rebuilt.
+- **Not touched (contract F / Project Claude):** the unlisted games' keys and banks; shared answer lock, level
+  resolver, B11 parser; Like Terms Collector's double-click carry-over. Simultaneous Solver Stage 5 parked (freeze).
+- **After PR 3, the queue (todo START):** contract B, contract C, contract F (revised: Jon pastes it), contract D, E.
+
+## Handover — 2026-10-06 (cloud): AUDIT TRANCHES 1-2 committed, ES + TID unlisted (PR #85 MERGED), CORE MATHS PAPER 1 fixed (PR #86); NEXT = Jon's next contract
 
 Jon's contract of 6 Oct (after his rulings of 19:15), two PRs in sequence.
 - **PR #85 (merged, main green):** the audit reports `docs/audits/audit-tranche1-2026-10-06.md` and `...-tranche2-...`
@@ -127,8 +151,8 @@ one, waits for its result, and never queues two.
   - `check-meta.py` and `check-teacher-invite.py` have no PENDING entries left.
   - Jon's calls of 12:30 are applied: the Step 1 heading reads "Step 1: round each number to 1 s.f.". It is one
     line at 320px; in Aa mode it is two lines, as the old heading was.
-- **Next:** Jon's next contract. The home session deletes the 49 merged remote branches; the cloud proxy refuses
-  `git push --delete` and the refs API. `pr-assets/teacher-invite` stays.
+- **Next:** Jon's next contract. (The merged remote branches were deleted from home on 6 Oct;
+  `pr-assets/teacher-invite` stays.)
 - **Gotchas:**
   - githubstatus.com is refused by this sandbox's proxy; judge Actions by whether a re-run's jobs get runners.
   - `gh api .../jobs/<id>/logs` is refused (blob storage); the GitHub MCP `get_job_logs` works.

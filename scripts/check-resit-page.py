@@ -15,8 +15,9 @@ SUITE and the page in the same PR.
 Static half (stdlib), fails on:
   - a topic section missing, renamed or out of order, or a card out of SUITE's order;
   - a game on the page that is not in SUITE, or a SUITE game with no card;
-  - an EXCLUDED or WITHDRAWN game linked anywhere on the page, or a WITHDRAWN game the portal
-    no longer links (withdrawn from /resit/ only, pending a rebuild);
+  - an EXCLUDED, WITHDRAWN or UNLISTED game linked anywhere on the page, a WITHDRAWN game the
+    portal no longer links (withdrawn from /resit/ only, pending a rebuild), or an UNLISTED game the
+    portal still links (unlisted everywhere, roster "Unlisted" section);
   - a card whose game the portal (index.html) does not link (not live);
   - a card whose game is not on the spec map, or whose spec line differs from the spec map's
     references for it (GCSE references; a game with none shows the map's other references);
@@ -41,7 +42,7 @@ SUITE = [
     ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
         "estimation-engine", "estimation-golf", "unit-converter"]),
-    ("algebra", "Algebra", ["formula-plug-in", "like-terms-collector", "linear-equation-solver",
+    ("algebra", "Algebra", ["formula-plug-in", "like-terms-collector",
         "equation-builder", "four-quadrant-explorer", "formula-unlocked", "formula-forge", "sequence-solver"]),
     ("ratio", "Ratio, proportion and percentages", ["split-it", "proportion-blaster",
         "better-value", "percentage-flip"]),
@@ -59,6 +60,10 @@ EXCLUDED = {"prime-or-composite": "numbers up to 9,973; needs a Foundation-range
 # equation-builder relisted 5 Oct 2026: marking rebuilt on scripts/verify-equation-builder.py's ACCEPTED lists (SR-13).
 # estimation-engine relisted 5 Oct 2026: rebuilt under SR-12 (scripts/verify-estimation-engine.py). None withdrawn now.
 WITHDRAWN = {}
+# Jon, 6 Oct 2026 (20:30, rulings on audit tranches 3-6, canon SR-20): unlisted from the whole site (roster
+# "Unlisted" section), so off this page and off the portal. A game returns by moving it back into SUITE, at its
+# old place, in the PR that relists it. linear-equation-solver sat in "algebra" after like-terms-collector.
+UNLISTED = {"linear-equation-solver": "tranche 4 audit; relist when its verifier merges and its register entries are fixed"}
 # Jon, 4 Oct 2026 (resit audit, decision 8): cards whose opening level Jon has ruled. A card for one of
 # these games must carry this level key. estimation-golf's Starter is 8 of 20 general-knowledge items.
 RULED_LEVEL = {"estimation-golf": "ks3"}
@@ -119,6 +124,11 @@ def static_check(page, portal, refs, game_src):
             errors.append("%s is on the page but WITHDRAWN pending rebuild (%s)" % (slug, why))
         if slug not in live:
             errors.append("%s: WITHDRAWN from /resit/ only, but the portal no longer links it" % slug)
+    for slug, why in UNLISTED.items():
+        if re.search(r"games/%s/" % re.escape(slug), page):
+            errors.append("%s is on the page but UNLISTED (%s)" % (slug, why))
+        if slug in live:
+            errors.append("%s: UNLISTED, but the portal still links it" % slug)
     sections = parse(page)
     got = [(s, h) for s, h, _ in sections]
     want = [(s, h) for s, h, _ in SUITE]
@@ -225,6 +235,8 @@ def selftest(page, portal, refs, game_src):
     }
     for slug in WITHDRAWN:   # while any game is withdrawn, adding one back must fail
         faults["a withdrawn game added back (%s)" % slug] = page.replace("</main>", '<a href="/games/%s/">x</a></main>' % slug)
+    for slug in UNLISTED:    # while any game is unlisted, adding one back must fail
+        faults["an unlisted game added back (%s)" % slug] = page.replace("</main>", '<a href="/games/%s/">x</a></main>' % slug)
     missed = [name for name, bad in faults.items() if not static_check(bad, portal, refs, game_src)[0]]
     print("self-test: %d of %d injected faults caught" % (len(faults) - len(missed), len(faults)))
     return ["self-test: injected fault not caught: " + n for n in missed]
@@ -257,6 +269,7 @@ def main():
         print("FAIL  " + e)
     print("/resit/: %d sections, %d cards; EXCLUDED checked: %s" % (len(sections), n, ", ".join(EXCLUDED)))
     print("WITHDRAWN pending rebuild (checked off the page, still live): %s" % (", ".join(WITHDRAWN) or "none"))
+    print("UNLISTED (checked off the page and off the portal): %s" % (", ".join(UNLISTED) or "none"))
     print("FAILED" if errors else "OK")
     return 1 if errors else 0
 

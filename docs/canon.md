@@ -37,6 +37,18 @@ The existing library, KS3 to Level 4, stays live and maintained. New effort goes
 The gatekeeper is still a teacher, now typically a resit lecturer in an FE college. The test: within seconds of landing, would they trust this and share it?
 
 ## 0.2 Priority order
+
+**BUILD FREEZE (Jon, 6 Oct 2026).** No new builds (games, modes, stages) until the exit bar is met:
+1. every live game has a verifier in CI;
+2. every CRITICAL and HIGH in the findings register fixed;
+3. shared checks green site-wide (answer lock, level resolver, served bank size, SR-14 fields, B11 parser);
+4. every level serves 40+;
+5. every unlisted game relisted or archived;
+6. one sweep of the already-verified games for true wrong options and unstated conventions.
+
+Simultaneous Solver Stage 5 is parked under it. The register's exit-bar dashboard
+(`docs/audits/REGISTER.md`) shows how far the site is from each point.
+
 When deciding what comes next:
 
 1. **Correctness on live games.** Wrong maths or a broken game, first. A struggling student is the least able to spot a wrong answer.
@@ -72,6 +84,16 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 | SR-13 | **Move-based equation games.** "In move-based equation games, any operation applied to both sides is valid and accepted, except × 0 and ÷ 0, which are blocked with an explanation (× 0 gives 0 = 0, true for every x, so the solution is lost; ÷ 0 is undefined). A valid move that makes the problem harder (introducing fractions or decimals, adding steps, or undoing the previous move) scores full marks and is followed by a nudge towards a neater move; the student chooses whether to continue their way or try the neater one. Equivalent final forms are accepted unless the question specifies the form. Multiplying or dividing by an expression containing the variable can gain or lose solutions; any game offering such moves must handle this explicitly." Where the question does specify the form, SR-3 applies (format message, no score). First games: `linear-equation-solver` (audit decision 3) and `equation-builder` (decision 5: equivalent rearrangements and swapped sides accepted), withdrawn from `/resit/` pending its rebuild. | 4 Oct 2026 | Jon, 4 Oct 2026 (resit correctness audit, decisions 3 and 5) |
 | SR-14 | **Sensitive content, three tiers** (Jon, 4 Oct 2026). (a) **Banned everywhere:** death, fatal outcomes, suicide, self-harm, abuse, drowning, violence, family breakdown. (b) **Banned in jokes, silly theories and humour:** everything in (a), plus illness and injury. (c) **Allowed in neutral exam-style contexts:** illness, medical tests, screening, patients, hospitals, phrased as the exam boards phrase them. Established technical terms are not hits: "Prisoner's Dilemma", "base rate neglect". Titles and humour Jon has approved are allowlisted: "Tax Theft". Idioms are not SR-14 content (Jon, 4 Oct 2026 20:06): "half dead" (pot plants), "kills the claim", "neglected". Crime words are not in SR-14: neutral crime contexts are allowed, and violent crime is already tier (a). **SR-14 judges context, not keywords:** the scan is a tripwire, and a hit is a prompt to look, not an automatic fail of the content. The scan reads displayed text only; code identifiers (a CSS class named `dead`) are excluded, and so are lookup strings (`g['x']`, `'x' in g`, `hasOwnProperty('x')`). **Object keys are the exception** (Jon, 5 Oct 2026): a tier-(a) word is banned as an object key anywhere, quoted or bare, in a literal or written by assignment (`{dead: 1}`, `g.dead = …`, `g['dead'] = …`), because `Object.keys`/`entries`/`for…in` can put a key on screen. Checked by `scripts/check-content-safety.py` (CI, every game and escape room): tier (a) words fail anywhere, tier (b) words fail in humour fields (`joke:`, `theory:`, `conspiracies:` …); a new hit fails; the hits present when it was set are its `KNOWN` list, the SR-14 fix batch in todo START. A word list is a net, not a judge. First game: `correlation-or-coincidence`, rebuilt to it. | 4 Oct 2026 (amended the same evening, before merge) | Jon, 4 Oct 2026 (Correlation or Coincidence rebuild contract; rulings on PR #43) |
 | SR-15 | **Every valid reason is accepted.** Where a game marks the reason for an answer, every reason that gives the answer in one step from what is drawn is accepted. A two-step item accepts the union of the reasons of every route its drawing allows; where the figure labels the intermediate angle (y), only the routes through it count (Jon: otherwise Angle Ace's L625 would accept 5 of 9 reasons and the question would stop discriminating). The game lists the accepted set (`multiReason`); the verifier derives it from the drawing and holds each two-step item's routes in a reviewed table with a one-line reason. First game: `angle-ace` (PR #79 one-step, PR #80 two-step; `scripts/verify-angle-ace.py`, `TWO_STEP`). | 6 Oct 2026 | Jon, 6 Oct 2026 (Angle Ace contract, audit F13; ruling on L638 and L625) |
+| SR-16 | **A true statement is never a wrong option.** An option with the right value by a wrong method names the fault in its own text, or goes. A distractor may carry a stored reason, shown as feedback (e.g. "missing + c"). | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
+| SR-17 | **Conventions and precision are stated in the question:** quartile method; wheel type; Monty Hall's host knowing; "simplify" names the form (Boolean, algebraic, trig); mechanics items state g; approximations state the number of terms and the precision; "speed" keys the magnitude; complex items state r > 0 and the argument range; a scalar multiple of an eigenvector is never a wrong option; rounded natural frequencies say so or use whole-count populations; multiple-choice answers state their precision (SR-1 applies to MC); square roots in rearranging state "positive". Notation puzzles (6÷2(1+2)) are removed. | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
+| SR-18 | **Game-specific rulings.** Probability Paradox states assumptions; Sleeping Beauty accepts 1/2 and 1/3; the envelope item is "can't tell". Word Problem Decoder: one category scheme, both accepted where both fit. Spot the Error: a strategy choice is not an error. Truth Buster's statements are worded so the key holds as written. | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
+| SR-19 | **Bank size alone never unlists a game.** | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
+| SR-20 | **When a game is unlisted.** A game is unlisted until its verifier merges when a level reaches CRITICAL (10%+ of its items mark a correct answer wrong or a wrong one right) or 3+ items mark a correct answer wrong. Jon may unlist beyond this (tranche 5: all eleven). | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
+
+**Also recorded with SR-16 to SR-20** (Jon, 6 Oct 2026, 20:30):
+- Start screens and cards state what the code does (timers, scoring claims).
+- A level that serves another level's items is not listed as that level.
+- Verifiers recompute explanation and hint figures, not just keys.
 
 **Still stops for Jon**, whatever the rulings say:
 - New content choices: contexts, numbers, a question's level.
@@ -499,6 +521,9 @@ penalty per wrong setting. See §11.
 **No open gaps as of 8 September 2026.** The three that stood here for months — §3.9, §3.10 and §3.11 —
 were all closed by games that were built and shipped without this table being updated.
 
+**6 Oct 2026: §3.8 (critical path) has no listed game while Glorious Gantt is rebuilt** (unlisted under SR-20,
+tranche 4 audit). The spec map shows it as "Glorious Gantt Game (being fixed)".
+
 | **Section** | **Topic** | **Coverage** | **Status** |
 | --- | --- | --- | --- |
 | §3.1 | Analysis of data | Stat Attack, Chart Interrogator, Core Maths Paper 1 | Covered |
@@ -508,8 +533,8 @@ were all closed by games that were built and shipped without this table being up
 | §3.5 | The normal distribution | Normal Navigator, Core Maths Paper 2A | Covered |
 | §3.6 | Probabilities and estimation (sampling, point estimates, confidence intervals) | Core Maths Paper 2A | Covered (by the practice paper only) |
 | §3.7 | Correlation and regression | Correlation or Coincidence, Regression Rumble, Core Maths Paper 2A | Covered |
-| §3.8 | Critical path analysis | Glorious Gantt Game | Covered |
-| §3.9 | Expectation (incl. Venn and tree diagrams, combined events) | **Expectation Station**, Expected Damage, Given That, Screening Room, Probability Paradox, Core Maths Paper 2B | **Covered** — was listed as a gap until 08/09/2026 |
+| §3.8 | Critical path analysis | Glorious Gantt Game (unlisted 6 Oct 2026 while it is rebuilt) | **No listed game** until Glorious Gantt is relisted (todo, its relist checklist) |
+| §3.9 | Expectation (incl. Venn and tree diagrams, combined events) | **Expectation Station** (unlisted), Expected Damage, Given That, Screening Room (unlisted), Probability Paradox, Core Maths Paper 2B | **Covered** — was listed as a gap until 08/09/2026 |
 | §3.10 | Cost-benefit analysis | **Better Value**, Core Maths Paper 2B | **Covered** — was listed as a gap until 08/09/2026 |
 | §3.11 | Graphical methods | Graph Sketcher, Core Maths Paper 2C | Covered |
 | §3.12 | Rates of change | **Gradient Hunter**, Core Maths Paper 2C | **Covered** — was listed as a gap (as §3.11) until 08/09/2026 |
