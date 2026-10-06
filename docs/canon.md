@@ -570,6 +570,17 @@ closed them had shipped. The four, and what closed them, are in §8.1.
   what it computes, if a key is not in its own list (an unbuildable key), or if an accepted answer uses a tile
   tagged as a distractor (SR-4 applied to tiles). `scripts/verify-equation-builder.py` is the reference;
   linear-equation-solver and angle-ace reuse the pattern in their own contracts.
+- **Teaching a method step by step: the staged-method pattern** (Simultaneous Solver, PR #83, 6 Oct 2026).
+  When marks are lost in the method, not the answer, the game asks for each step in turn and marks each one:
+  every step needs an answer before the next appears; a right step moves straight on; a wrong step shows its
+  reason (the misconception made visible, such as the letter doubling instead of vanishing, or the working term
+  by term) and waits for `MaffsNext`, then play continues from the correct values, so one slip costs one mark.
+  Marking follows SR-13: any valid step scores, a valid but clumsier one scores with the neatest shown, x0 is
+  blocked. Stages that add one step at a time are modes (`mode` on every event), each with its own board.
+  The bank is generated offline by a seeded script to rules (`scripts/gen-simultaneous.py`), and a verifier
+  recomputes every answer, holds every rule, marks every possible answer to the marked step in Chromium, and
+  plays a whole problem on MaffsKeypad at phone sizes. A step that builds an answer from tiles (Stage 5, to
+  come) uses the ACCEPTED-list pattern above. `scripts/verify-simultaneous-solver.py` is the reference.
 - The teacher feedback line uses `MaffsInvite` (`schools/assets/teacher-invite.js`, Jon, 4 Oct 2026):
   one small line, "Using this with a class? I'd love to hear how it went. — Jon", linking to
   `/feedback/?type=classroom&game=<slug>` in a new tab. **It sits on the results screen (Jon, 5 Oct 2026,

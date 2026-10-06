@@ -49,10 +49,13 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-06 (home, latest): SIMULTANEOUS SOLVER staged elimination, PR 1 (branch claude/simultaneous-staged)
+## Handover — 2026-10-06 (home, latest): SIMULTANEOUS SOLVER staged elimination, PR #83 MERGED; NEXT = Stage 5 (PR 2)
 
-Jon's contract of 6 Oct (PR 1 = Foundation Stages 1-4 + the A-Level level + the verifier; PR 2 = Stage 5 word
-problems, only after Jon approves Project Claude's drafted bank).
+Jon's contract of 6 Oct. PR #83 (Foundation Stages 1-4, the A-Level level, the verifier) merged on a green Gate
+after merging main (#82 landed meanwhile); main's full run on `0cd53bd` watched. Docs PR: canon §7.1 staged-method
+note, todo START + §1.53/§1.54 (Jon's #82 relist checklists for Trig Worms and Spot the Error). PR 2 = Stage 5
+word problems, only after Jon approves Project Claude's drafted bank (tiles, ACCEPTED lists by SymPy, any letters,
+equivalent forms, forming only; re-add spec row A21 then).
 - **Game:** one level key `gcse` shown as "Foundation", four stages = four modes (`stage1`..`stage4`, on every
   event) with one board each (`foundation-s1`..`-s4`; names in `firebase-leaderboard.js` LEVEL_NAMES, the hub
   GAMES row, `LEVEL_OVERRIDES` in the coverage check; no rules change: board keys fit the existing regex). Steps:
@@ -68,8 +71,7 @@ problems, only after Jon approves Project Claude's drafted bank).
   390/375/320 (+Aa). `--shots DIR` saves the phone screenshots.
 - **Gotcha:** the Bash tool collapses `\\` in heredocs (a `\\tfrac` became TAB + "frac" in JSON): edit TeX with
   the Edit tool or a script written by the Write tool.
-- **Next:** CI green → merge on a green Gate → main green → docs PR (canon staged-method note beside the class-4
-  note, todo, this handover). Then Stage 5 when the bank arrives.
+- **Next:** Stage 5 when the bank arrives; otherwise Jon's next contract.
 
 ## Handover — 2026-10-06 (cloud): ANGLE ACE drawn from data, PRs #79 + #80 MERGED; NEXT = Jon's next contract
 
