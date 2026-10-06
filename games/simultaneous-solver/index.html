@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Solve linear simultaneous equations, then linear with non-linear pairs. For GCSE and A-Level. Free, no sign-up.">
+<meta name="description" content="Elimination one step at a time: scale, add or subtract, solve, substitute. A-Level adds line-and-curve pairs. For GCSE and A-Level. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/simultaneous-solver/">
 <meta property="og:title" content="Simultaneous Equations Game – GCSE Maths | MaffsGames">
-<meta property="og:description" content="Solve linear simultaneous equations, then linear with non-linear pairs. For GCSE and A-Level. Free, no sign-up.">
+<meta property="og:description" content="Elimination one step at a time: scale, add or subtract, solve, substitute. A-Level adds line-and-curve pairs. For GCSE and A-Level. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/simultaneous-solver/">
 <meta property="og:type" content="website">
@@ -566,7 +566,7 @@ var ALEVEL = [
   }
   function eqTex(r) { return lhs(r[0], r[1]) + ' = ' + r[2]; }
   SS.eqTex = eqTex;
-  function mulsTex(m) { return '\\times ' + br(m[0]) + '\\text{ and }\\times ' + br(m[1]); }
+  function mulsTex(m) { return '{\\times}' + br(m[0]) + '\\text{ and }{\\times}' + br(m[1]); }
   SS.mulsTex = mulsTex;
 
   // ---- Marking (SR-13: any valid step scores; a valid but clumsier step scores, with the neatest shown) ----
@@ -680,7 +680,7 @@ var ALEVEL = [
   }
   function scaledHtml(s, m) {
     return '<span class="eqs">' + s.map(function (r, k) {
-      return mathHtml('(' + (k + 1) + ')\\times ' + br(m[k]) + ':\\; ' + eqTex(r));
+      return mathHtml('(' + (k + 1) + '){\\times}' + br(m[k])) + ': ' + mathHtml(eqTex(r));
     }).join('<br>') + '</span>';
   }
 

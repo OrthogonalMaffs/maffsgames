@@ -122,7 +122,10 @@
     'core':'Core Maths','year6':'Year 6','all':'',
     'q20':'20 questions','q40':'40 questions',
     'practice-q20':'Practice · 20','practice-q40':'Practice · 40',
-    'higher':'GCSE Higher','formula':'Quadratic formula'
+    'higher':'GCSE Higher','formula':'Quadratic formula',
+    // Simultaneous Solver: one board per Foundation stage (Jon, 6 Oct 2026).
+    'foundation-s1':'Foundation · Stage 1','foundation-s2':'Foundation · Stage 2',
+    'foundation-s3':'Foundation · Stage 3','foundation-s4':'Foundation · Stage 4'
   };
 
   // Keys that are not a fixed list. A pattern cannot be inverted, which is one

@@ -63,6 +63,7 @@ MIGRATED = [
     "just-pythag-it-bruv",  # built to the theme, 4 Oct 2026 (unlisted until Jon approves it)
     "correlation-or-coincidence",  # rebuilt to the theme, 4 Oct 2026 (resit audit rebuild)
     "estimation-engine",  # rebuilt to the theme, 5 Oct 2026 (SR-12 rebuild)
+    "simultaneous-solver",  # rebuilt to the theme, 6 Oct 2026 (staged elimination; the keypad and the calculator badge live in theme.css)
 ]
 NOT_YET = [
     "sequence-solver", "estimation-golf", "factor-race", "prime-factorisation",
@@ -75,7 +76,7 @@ NOT_YET = [
     "prisoners-dilemma", "seven-bridges", "distinctly-average",
     "index-laws", "quadratic-factoriser", "trig-wars", "trig-worms", "modular-battle",
     "surd-simplifier", "proportion-blaster", "trig-identity-duel", "standard-form-blitz",
-    "simultaneous-solver", "circle-theorem-spotter", "probability-paradox", "angle-ace",
+    "circle-theorem-spotter", "probability-paradox", "angle-ace",
     "coordinate-geometry-dash", "graph-transformer", "formula-unlocked", "bearing-blitz",
     "scale-factor-scaling", "unit-converter", "formula-forge",
     "chart-interrogator", "component-crusher", "expectation-station", "better-value",

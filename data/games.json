@@ -232,7 +232,7 @@
   {
    "slug": "simultaneous-solver",
    "search_phrase": "Simultaneous Equations",
-   "description": "Solve linear simultaneous equations, then linear with non-linear pairs."
+   "description": "Elimination one step at a time: scale, add or subtract, solve, substitute. A-Level adds line-and-curve pairs."
   },
   {
    "slug": "circle-theorem-spotter",
