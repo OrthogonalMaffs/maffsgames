@@ -168,7 +168,28 @@ const NOT_ON_HUB = {
   // Jon, 6 Oct 2026 (19:15): unlisted the same way for the tranche 2 audit's faults until contract F's
   // verifier for each game merges; the hub row is restored, and this entry removed, in that PR.
   'expectation-station': 'unlisted pending its tranche 2 audit fix; hub row restored at relisting',
-  'trig-identity-duel': 'unlisted pending its tranche 2 audit fix; hub row restored at relisting'
+  'trig-identity-duel': 'unlisted pending its tranche 2 audit fix; hub row restored at relisting',
+  // Jon, 6 Oct 2026 (20:30): unlisted the same way for the tranche 3-6 audits' faults (canon SR-20) until
+  // each game's verifier merges and its register entries are fixed; the hub row is restored, and this
+  // entry removed, in that PR.
+  'binomial-blaster': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'moments-master': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'force-resolver': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'proof-builder': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'factor-theorem': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'partial-fractions-duel': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'suvat': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'curling-friction': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'dimension-checker': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'differentiation-duel': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'integration-duel': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
+  'eigenvector-engine': 'unlisted pending its tranche 6 audit fix; hub row restored at relisting',
+  'truth-will-set-you-free': 'unlisted pending its tranche 6 audit fix; hub row restored at relisting',
+  'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
+  'screening-room': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
+  'component-crusher': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
+  'linear-equation-solver': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
+  'truth-buster': 'unlisted pending its tranche 3 audit fix; hub row restored at relisting'
 };
 
 // The levels a game submits under are read from its source: the level argument of
