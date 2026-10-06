@@ -86,7 +86,7 @@ RESULTS = {
     "boolean-blitz": "resultsScreen", "truth-will-set-you-free": "resultsScreen", "complex-converter": "endScreen",
     "matrix-crunch": "results", "characteristic-quest": "results", "eigenvalue-extractor": "results",
     "eigenvector-engine": "results", "six-sevens-bruv": "results", "free-daily-pizza": "results",
-    "just-pythag-it-bruv": "results",
+    "just-pythag-it-bruv": "results", "estimation-engine": "results",
 }
 
 START_SCREEN = {
@@ -95,15 +95,7 @@ START_SCREEN = {
                  "screen to mount on, and giving it one would change how the game ends",
 }
 
-PENDING = {
-    "estimation-engine": {
-        "why": "pending rebuild (Jon's Estimation Engine contract, 5 Oct 2026): the rebuild places its own "
-               "results-screen line",
-        # sha256 of games/estimation-engine/index.html (LF line endings) on main at 89d4c55, before the rebuild.
-        "sha256": "54a6f24294eec9d8fe2f00b59be1918035f740816c258ee7bc77a67949953f09",
-        "container": "modal",
-    },
-}
+PENDING = {}
 
 # Drivers for the function route. Each end state is (CSS selector of the end container the line must be inside,
 # steps). A step is ("click", selector), pressing one of the game's controls, or ("play", js_step, js_done): js_step
@@ -718,8 +710,6 @@ def selftest():
             point, point + '\n  <button onclick="startGame()">x</button>', 1)), static, True),
         ("function-route game never places", lambda d: edit(page(d, "factor-theorem"), lambda s: s.replace(
             "if (window.MaffsInvite) MaffsInvite.place(resultsEl);", "")), static, True),
-        ("pending page changed, line not moved", lambda d: edit(page(d, "estimation-engine"),
-                                                                lambda s: s + "\n<!-- rebuilt -->\n"), static, True),
         ("roster game in no list", lambda d: edit(d / ROSTER, lambda s: s + "\n| 999 | X | `truth-buster-2` | x |\n"),
          static, True),
         ("mount call removed", lambda d: edit(page(d), lambda s: MOUNT.sub("", s)), static, True),
@@ -731,6 +721,12 @@ def selftest():
         ("leaderboards names a game", lambda d: edit(d / "leaderboards/index.html", lambda s: s.replace(
             "'teacherInvite'), null)", "'teacherInvite'), 'x')")), static, True),
     ]
+    # A pending game whose page changes must have its line on its results screen. Planted on the first PENDING
+    # game, so it runs only while one is pending (none since estimation-engine's rebuild, 6 Oct 2026).
+    pend = next(iter(PENDING), None)
+    if pend:
+        cases.append(("pending page changed, line not moved", lambda d: edit(page(d, pend),
+                                                                     lambda s: s + "\n<!-- rebuilt -->\n"), static, True))
     bad = []
     for name, plant, run, should_fail in cases:
         d = scratch(serve=run is not static)

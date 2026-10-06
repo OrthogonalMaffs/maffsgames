@@ -22,7 +22,7 @@
   {
    "slug": "estimation-engine",
    "search_phrase": "Estimating by Rounding",
-   "description": "Estimate calculations by rounding each number first, against the clock."
+   "description": "Round each number to 1 significant figure, then work out the estimate and see how far it is from the exact answer."
   },
   {
    "slug": "factor-race",

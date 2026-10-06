@@ -3,7 +3,7 @@
 ## Countdown Timers
 Recall and recognition games only. 30-second minimum per question.
 
-Games: Factor Race (30s), Prime or Composite (30s), Fraction Snap (30s), Percentage Flip, Modular Battle (90s session), Estimation Engine (30s).
+Games: Factor Race (30s), Prime or Composite (30s), Fraction Snap (30s), Percentage Flip, Modular Battle (90s session).
 
 ## Visible Count-Up (scored)
 A session clock counts up on screen, and each question's time feeds the standard score (canon §7.3:
@@ -23,7 +23,8 @@ Games: Differentiation Duel, Integration Duel, SUVAT Selector, Complex Converter
 ## No Timer
 Interactive/exploratory/reasoning games.
 
-Games: **Index Laws** (countdown removed 22 Sep 2026 — Jon: students use it in class and do not
+Games: **Estimation Engine** (countdown removed in its SR-12 rebuild, 5 Oct 2026, Jon's contract: no timer;
+two marks a question, round then estimate), **Index Laws** (countdown removed 22 Sep 2026 — Jon: students use it in class and do not
 need the pressure. It had been running a 7s countdown that failed the question outright, despite
 being listed here under Hidden Count-Up; the doc and the game had disagreed since it shipped),
 Probability Paradox, Normal Navigator, Fermi Lab, Constructions Lab, Tax Theft, Word Problem Decoder, Equation Builder, Spot the Error, Truth Buster, Spot the Muppet, Terrible Advice, Wrong on the Internet, Maths Court, Expected Damage, Expectation Station, Better Value, Graph Transformer, Core Maths Paper 1 Practice, Core Maths Paper 2A Practice, Core Maths Paper 2B Practice, Core Maths Paper 2C Practice, all Year 6 games.
