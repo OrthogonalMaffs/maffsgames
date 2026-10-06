@@ -176,8 +176,21 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
   §2.1). `estimation-engine` stays PENDING until #74 applies it.
   **For Jon (#72's call, his to overturn):** "lowest level" ranks KS3 < GCSE < Core Maths < A-Level < Level 3
   < Further Maths < Level 4. It decides three titles (`growth-and-decay`, `graph-sketcher`,
-  `normal-navigator` say "Core Maths", not "A-Level"); `RANK` in check-meta.py is one line. **Next:** #73
-  (teacher line on results screens), then #74 (Estimation Engine; stops for Jon's six calls).
+  `normal-navigator` say "Core Maths", not "A-Level"); `RANK` in check-meta.py is one line. **#73 merged:**
+  the teacher line is on the results screen (canon §7.1).
+  - 90 games: static results containers.
+  - 4 games: the function route, `MaffsInvite.place`.
+  - constructions-lab and trig-wars keep the start screen.
+  - The escape-room end card, for a win and a loss.
+
+  **Found by #73, not fixed (each its own contract):**
+  - (a) `equatle` `:337`: the end modal's first button has the leaderboard/back-link markup pasted into its
+    `onclick` (malformed HTML, pre-existing).
+  - (b) `boolean-blitz`'s results screen is 418px wide at 390, with or without the line.
+  - (c) For 40 static games the line was verified by calling the game's own end function, not by playing to
+    the end. The static check holds the placement; per-game drivers would close the gap if Jon wants it.
+
+  **Next:** #74 (Estimation Engine; stops for Jon's six calls).
 - **PR #68 (5 Oct, home): quoted-statistics audit, phases 1 and 2 (report only).** Phase 2 (same report): six
   Screening Room rates wrong as stated facts (NHS FIT sensitivity 74% vs ~48%; HIV test specificity 98.5% vs 99.8%+;
   HbA1c 85% vs ~61%; AAA 1.5% vs ~0.7-0.9%; colour blindness 8% in a mixed group; Year 7 glasses 10% vs 15-18%) and
