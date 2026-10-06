@@ -144,6 +144,7 @@ body.accessible p,body.accessible .question-text,body.accessible .feedback-detai
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -413,24 +414,27 @@ function checkInputAnswer(){
   const bank=currentStage===0?STAGE1:STAGE2;
   const q=bank[currentQ];
   const inputs=[document.getElementById('ans0'),document.getElementById('ans1')];
-  const vals=inputs.map(i=>parseInt(i.value,10));
+  // Marked by MaffsAnswer (schools/assets/answer.js, canon §7.1.3): exact whole numbers. parseInt
+  // truncated 8.9 to 8 and marked it right (tranche 3 audit, like-terms-collector-t3-001).
+  const res=inputs.map((inp,k)=>MaffsAnswer.exact(inp.value,q.answers[k]));
 
-  if(isNaN(vals[0])||isNaN(vals[1])) return;
+  if(res[0]==='unreadable'||res[1]==='unreadable') return;
 
   answered=true;
   questionIndex++;
   document.getElementById('checkBtn').disabled=true;
   inputs.forEach(i=>i.disabled=true);
 
-  const correct=vals[0]===q.answers[0]&&vals[1]===q.answers[1];
-  inputs[0].classList.add(vals[0]===q.answers[0]?'correct-input':'incorrect-input');
-  inputs[1].classList.add(vals[1]===q.answers[1]?'correct-input':'incorrect-input');
+  const correct=res[0]==='correct'&&res[1]==='correct';
+  inputs[0].classList.add(res[0]==='correct'?'correct-input':'incorrect-input');
+  inputs[1].classList.add(res[1]==='correct'?'correct-input':'incorrect-input');
+  const decimals=inputs.map(i=>i.value.trim()).filter(v=>!Number.isInteger(MaffsAnswer.parse(v)));
 
   if(correct){
     totalCorrect++;stageCorrect[currentStage]++;
   }
   updateScore();
-  showFeedback(correct, correct?null:`The answer is ${q.answers[0]} ${q.labels[0]} and ${q.answers[1]} ${q.labels[1]}.`);
+  showFeedback(correct, correct?null:(decimals.length?`${decimals.join(' and ')} ${decimals.length>1?'are not whole numbers':'is not a whole number'}: you are counting, so each answer is a whole number. `:'')+`The answer is ${q.answers[0]} ${q.labels[0]} and ${q.answers[1]} ${q.labels[1]}.`);
 
   if(typeof mfg==='function') mfg('question_answered',{game_slug:'like-terms-collector',level:'year6',question_index:questionIndex,correct:correct});
 }
