@@ -73,6 +73,10 @@ Stage 1-2 typed answers through `MaffsAnswer` (exact integers; 8.9 rejected) + `
   keys (Stage 3 distractors never equal the key, SR-16); at 390px item 1 8.9/6.5 wrong, 8/6 right, every typed item's
   key right and key+0.9 wrong. Self-test plants the parseInt marking back (caught). `--against FILE` serves another copy
   of the page: main's file fails on all 15 typed items. Closes register entry like-terms-collector-t3-001 (PR 3 files it).
+- **#88's verifier flaked on main's first run** (item 1 saw no question_answered event and no feedback text). The fix PR
+  reads the mark from the feedback icon's class, which showFeedback() sets synchronously, not from the analytics event
+  (analytics.js can replace window.mfg after a hook is installed). **Gotcha for every verifier: never read a mark from a
+  wrapped mfg; read what the page shows.**
 - **Canon:** §0.2 BUILD FREEZE + the six-point exit bar (top of §0.2); §0.3 SR-16 to SR-20 + the three "also recorded"
   rules; §6.1: §3.8 has no listed game while Glorious Gantt is rebuilt.
 - **Not touched (contract F / Project Claude):** the unlisted games' keys and banks; shared answer lock, level

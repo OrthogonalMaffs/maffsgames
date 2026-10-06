@@ -11,8 +11,7 @@ Keys, recomputed with SymPy from what the student reads (the bank is read from t
   - Stage 3: the expression simplified; the key must equal it and no distractor may (canon SR-16:
     a true statement is never a wrong option); the four options are distinct.
 
-Marking, in Chromium at 390x844, through the game's own Check button and its question_answered
-event: item 1 typed 8.9 and 6.5 must be marked wrong, and the feedback must say a decimal is not
+Marking, in Chromium at 390x844, through the game's own Check button, read from the feedback it shows: item 1 typed 8.9 and 6.5 must be marked wrong, and the feedback must say a decimal is not
 a whole number; 8 and 6 must be marked right. Every typed item's keys must be marked right, and
 its first key plus 0.9 (a decimal parseInt would truncate back to the key) marked wrong. Marking
 is MaffsAnswer.exact() (schools/assets/answer.js, canon §7.1.3); parseInt truncated 8.9 to 8.
@@ -94,22 +93,25 @@ def check_bank(fails, bank, verbose=False):
 
 
 # Every typed item, loaded through the game's own loadQuestion(); answers typed into its boxes and
-# marked by its own Check button. Returns the question_answered `correct` value for each attempt.
+# marked by its own Check button. Returns the mark it gave each attempt (MARK).
 SWEEP_JS = """async (attempts) => {
   const out = [];
   for (const a of attempts) {
     currentStage = a.stage; currentQ = a.q; loadQuestion();
     document.getElementById('ans0').value = a.v[0];
     document.getElementById('ans1').value = a.v[1];
-    window.__ltc = [];
     document.getElementById('checkBtn').click();
-    out.push(window.__ltc.length ? window.__ltc[0].correct : null);
+    out.push(MARK());
   }
   return out;
 }"""
-HOOK_JS = """() => { const real = window.mfg; window.__ltc = [];
-  window.mfg = function (name, p) { if (name === 'question_answered') window.__ltc.push(p);
-    if (typeof real === 'function') return real.apply(this, arguments); }; }"""
+# The mark the game gave: showFeedback() sets the icon's class synchronously ('correct' or 'incorrect'); null if
+# Check marked nothing. (Not the analytics event: analytics.js can replace window.mfg after a hook is installed,
+# which made the first run on main see no event, 6 Oct 2026.)
+MARK_JS = """() => { window.MARK = () => {
+  const panel = document.getElementById('feedbackPanel'), icon = document.getElementById('feedbackIcon');
+  if (!panel.classList.contains('correct-fb') && !panel.classList.contains('incorrect-fb')) return null;
+  return icon.classList.contains('correct'); }; }"""
 
 
 def play(fails, against=None, planted=False):
@@ -136,7 +138,7 @@ def play(fails, against=None, planted=False):
                 page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
                 page.wait_for_function('typeof STAGE1 !== "undefined" && typeof checkInputAnswer === "function"',
                                        timeout=8000)
-                page.evaluate(HOOK_JS)
+                page.evaluate(MARK_JS)
                 page.click('.start-btn')
                 page.wait_for_selector('#ans0', state='visible')
                 return page
@@ -150,10 +152,10 @@ def play(fails, against=None, planted=False):
                 page.fill('#ans0', typed[0])
                 page.fill('#ans1', typed[1])
                 page.click('#checkBtn')
-                got = page.evaluate('() => window.__ltc.map(p => p.correct)')
-                fb = page.inner_text('#feedbackPanel')
-                if got != [want]:
-                    fails.append('item 1: typed %s/%s, question_answered correct=%s, expected %s'
+                got = page.evaluate('() => MARK()')
+                fb = page.evaluate("() => document.getElementById('feedbackDetail').textContent")
+                if got is not want:
+                    fails.append('item 1: typed %s/%s, marked correct=%s, expected %s'
                                  % (typed[0], typed[1], got, want))
                 if not want and not re.search(r'not (a )?whole number', fb):
                     fails.append('item 1: typed %s/%s, the feedback does not say why: %r'
