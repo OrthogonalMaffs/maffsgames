@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="Read statistical diagrams and build structured comparison answers. Covers stem and leaf, box plots, cumulative frequency, and histograms.">
+<meta name="description" content="Read stem and leaf, box plots, cumulative frequency and histograms, then compare data sets. For GCSE, A-Level, Level 4 and Core Maths. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/chart-interrogator/">
-<meta property="og:title" content="Chart Interrogator — MaffsGames">
-<meta property="og:description" content="Read statistical diagrams and build structured comparison answers. Covers stem and leaf, box plots, cumulative frequency, and histograms.">
+<meta property="og:title" content="Interpreting Statistical Diagrams Maths Game | MaffsGames">
+<meta property="og:description" content="Read stem and leaf, box plots, cumulative frequency and histograms, then compare data sets. For GCSE, A-Level, Level 4 and Core Maths. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/chart-interrogator/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<title>Chart Interrogator — MaffsGames</title>
+<title>Interpreting Statistical Diagrams Maths Game | MaffsGames</title>
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
 <script>
@@ -187,7 +187,6 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   </div>
 
   <button class="start-btn" id="startBtn" disabled onclick="beginGame()">Start</button>
-<p id="teacherInvite"></p>
 </div>
 
 <div class="game-container" id="gameContainer">
@@ -207,7 +206,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
         <span class="timer-display" id="timer">0s</span>
       </div>
       <div id="completedQuestions"></div>
-      <div id="activeQuestion"></div>
+      <div id="activeQuestion"><p id="teacherInvite"></p></div>
     </div>
   </div>
 </div>
@@ -1160,6 +1159,7 @@ var multiplier = 1;
     '<div style="display:flex;gap:8px;"><button class="next-btn" onclick="nextScenario()">Next</button>'+
     '<button class="menu-btn" onclick="backToMenu()">Menu</button></div>';
   document.getElementById('activeQuestion').appendChild(bar);
+  if(window.MaffsInvite)MaffsInvite.place(document.getElementById('activeQuestion'));
 }
 
 function nextScenario(){

@@ -1,7 +1,10 @@
 /* The teacher feedback line (canon §4, shared components; contract 4 Oct 2026).
 
-   One line of small text under a game's Start control, inviting a teacher who
-   has used the game with a class to say how it went. It links to the feedback
+   One line of small text on a game's results screen, after its last control
+   row, inviting a teacher who has used the game with a class to say how it
+   went (Jon, 5 Oct 2026: the results screen is where a game ends in a lesson
+   and where the teacher looks at how it went; only a game with no end keeps
+   it on its start screen: constructions-lab, trig-wars). It links to the feedback
    form with the type set to "classroom" and the game already chosen, and opens
    in a new tab so a game in progress is never lost.
 
@@ -11,10 +14,19 @@
        <p id="teacherInvite"></p>
        <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'slug');</script>
 
+   A game whose results are BUILT by script (innerHTML), or which has more than
+   one end state, keeps the mount point inside a hidden end container and, each
+   time it shows an end state, moves the one line in after its controls:
+
+       MaffsInvite.place(resultsEl);           // appended
+       MaffsInvite.place(parentEl, beforeEl);  // or before a given child
+
+   The line is moved, never copied, so a page always has exactly one.
+
    The slug is the game's directory name. A null slug links to the form with no
    game chosen (/leaderboards/). The line inherits the page's text colour and
    font; it adds no theme tokens and no opacity (at 0.75, four games' already
-   muted start-screen text fell below 4.5:1 contrast). A page whose inherited
+   muted text fell below 4.5:1 contrast). A page whose inherited
    colour does not read on its background sets an existing colour on the mount
    point (Estimation Golf, /leaderboards/). Placement rule (Jon, 4 Oct 2026):
    never between an answer input and its keypad, and visible without changing
@@ -34,8 +46,11 @@
     (document.head || document.documentElement).appendChild(s);
   }
 
+  var mounted = null;
+
   function mount(target, slug) {
     if (!target) return null;
+    mounted = target;
     style();
     var a = document.createElement('a');
     a.href = '/feedback/?type=classroom' + (slug ? '&game=' + encodeURIComponent(slug) : '');
@@ -52,5 +67,13 @@
     return target;
   }
 
-  window.MaffsInvite = { mount: mount, TEXT: TEXT };
+  // Move the mounted line into an end container the game has just shown or
+  // rebuilt. The element survives its old container's innerHTML being replaced.
+  function place(parent, before) {
+    if (!mounted || !parent) return null;
+    parent.insertBefore(mounted, before || null);
+    return mounted;
+  }
+
+  window.MaffsInvite = { mount: mount, place: place, TEXT: TEXT };
 })();

@@ -180,9 +180,15 @@ jobs:
           # escape room's student-facing text: tier (a) words fail anywhere, tier (b) (illness, injury) only
           # in humour fields; technical terms and Tax Theft allowlisted. The hits present on 4 Oct 2026 are
           # KNOWN (reported, never failed: todo's SR-14 fix batch); a new hit or a stale KNOWN count fails.
-          # The teacher-line check (stdlib, under a second): every roster game loads schools/assets/teacher-invite.js
-          # and mounts it once with its own directory name; the escape-room engine mounts it for every live room;
+          # The teacher-line check (about 40s with its self-test): every roster game loads schools/assets/teacher-invite.js
+          # and mounts it once with its own directory name, on its results screen after the last control row (Jon,
+          # 5 Oct 2026; two games with no end keep the start screen, one is pending a rebuild); the four function-route
+          # games are played to every end state, and every live escape room to a win and a loss, in Chromium at 390
+          # and 1280px; on every roster page the line reads at 4.5:1 or better and is not squeezed into a flex row;
           # /leaderboards/ mounts it with no game; the link text is Jon's exact wording (4 Oct 2026).
+          # The search-titles check (stdlib, about a second): every game page's and /resit/'s <title>, meta
+          # description and og:/twitter: copies equal what data/games.json generates under Jon's rules of
+          # 5 Oct 2026 (titles <= 60, descriptions <= 155, no "Year 6"); edit games.json, run apply-meta.py.
           - name: Tiers 1 + 2 (page load, hang-loop scan)
             timeout: 15
             checks: |
@@ -198,7 +204,8 @@ jobs:
               GCSE Resit page (every game live, mapped, offering the level its card names; SR-11)|python scripts/check-resit-page.py
               Calculator (canon 4.4: the on-screen calculator loads exactly where the roster says required)|python scripts/check-calculator.py
               Content safety (canon SR-14 tiers: no new banned wording, no illness or injury in humour)|python scripts/check-content-safety.py
-              Teacher feedback line (every game mounts it with its own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
+              Teacher feedback line (on every results screen, played in Chromium; own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
+              Search titles (every game page and /resit/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
@@ -252,6 +259,24 @@ jobs:
             timeout: 20
             checks: |
               Just Pythag It, Bruv (every key and triangle recomputed + sessions + phone and desktop fit)|python scripts/verify-just-pythag-it-bruv.py
+
+          # Equation Builder on its own (279s on 5 Oct 2026): it enumerates every grammar-valid tile arrangement
+          # of all 120 questions and classifies each with SymPy (PR #49). In group B it took the group past its
+          # 12-minute limit, so every full run from #68 to #71 (main, and any PR touching every game) was cancelled.
+          - name: Content verifiers D (Equation Builder)
+            timeout: 12
+            checks: |
+              Equation Builder (every tile arrangement classified by SymPy; the page's ACCEPTED lists match)|python scripts/verify-equation-builder.py && python scripts/verify-equation-builder.py --selftest
+
+          # Estimation Engine on its own (Jon, 6 Oct 2026: group B is near its 75% budget). SR-12 rebuild, 5 Oct
+          # 2026: every 1 s.f. rounding, estimate and calculator answer recomputed from the stored numbers (Decimal,
+          # SymPy), no exact halves, three planted faults; then the page in Chromium: D01 and F02 marked as Jon's
+          # contract states, every item's calculator and % lines, a full game (A-F, no timer, 20/20, Next every
+          # question), phones at 320/375/390 typing on MaffsKeypad (~2 min).
+          - name: Content verifiers E (Estimation Engine)
+            timeout: 12
+            checks: |
+              Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)|python scripts/verify-estimation-engine.py
 
           # Every other content verifier. Each reads the live page's data and recomputes
           # its answers independently; each includes a fault-injection self-test.
@@ -320,10 +345,6 @@ jobs:
           #    per session and tap targets at 320px; every question shape's feedback and tap step measured
           #    at three phone sizes, the asking screen with the calculator closed and open; the diagram
           #    full width at 1:1; the standard header, Aa clear of everything. Runs in its own job (C, above).
-          # estimation-engine (SR-12 rebuild, 5 Oct 2026): every 1 s.f. rounding, estimate and calculator answer
-          # recomputed from the stored numbers (Decimal, SymPy), no exact halves, three planted faults; then the page
-          # in Chromium: D01 and F02 marked as Jon's contract states, every item's calculator and % lines, a full game
-          # (A-F, no timer, 20/20, Next every question), phones at 320/375/390 typing on MaffsKeypad (~2 min).
           - name: Content verifiers B (all others)
             timeout: 12
             checks: |
@@ -349,8 +370,6 @@ jobs:
               Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure)|python scripts/verify-circle-theorem-spotter.py
               Split It (every generator's keys recomputed + marking at the stated precision)|python scripts/verify-split-it.py
               Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)|python scripts/verify-correlation-or-coincidence.py
-              Equation Builder (every tile arrangement classified by SymPy; the page's ACCEPTED lists match)|python scripts/verify-equation-builder.py && python scripts/verify-equation-builder.py --selftest
-              Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)|python scripts/verify-estimation-engine.py
               Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)|python scripts/check-resit-fixes.py
               Probability Pioneer (Stage 2 keys recomputed, Stages 1 and 3 pinned, every answer marked in Chromium)|python scripts/verify-probability-pioneer.py
               Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)|python scripts/verify-expected-damage.py
@@ -362,8 +381,12 @@ jobs:
       # Any check may call git. In the container job the checkout belongs to the runner's user, not
       # the container's root, and git refuses a repository it does not own (exit 128). Mark this
       # workspace, and only this workspace, as safe once per job, before any check runs.
+      # It also starts the group's clock for the time budget (below): the first step after the
+      # container starts, so container start-up (about 30s) sits inside the budget's 25% headroom.
       - name: Mark the workspace as a safe git directory
-        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          echo "JOB_T0=$(date +%s)" >> "$GITHUB_ENV"
 
       # Which of this group's lines run. Site-wide groups run every line; a "Content verifiers" group
       # runs the lines whose script the plan selected (all of them on main, the schedule, a manual run,
@@ -440,13 +463,25 @@ jobs:
 
       # Each line of the group is "label|command". Every check runs, even after one
       # fails, so a single run reports every failure; the job fails if any did.
+      # TIME BUDGET (Jon, 5 Oct 2026): a group fails once it passes 75% of its timeout, measured from
+      # the job's first step (JOB_T0), so it is split before it is ever cut off. Group B ran past its
+      # 12 minutes on every full run from #68 to #71 and was cancelled mid-verifier: a cancelled job
+      # reports nothing about the checks it never reached. The budget's error is raised the moment it
+      # is passed (an annotation survives a later cancel); the remaining checks still run. Every
+      # check's duration goes to the log and to the job summary.
       - name: ${{ matrix.name }}
         if: steps.lines.outputs.any == 'true'
         shell: bash
         env:
           CHECKS: ${{ steps.lines.outputs.checks }}
+          GROUP: ${{ matrix.name }}
+          TIMEOUT_MIN: ${{ matrix.timeout }}
         run: |
           node --version
+          mmss() { printf '%dm%02ds' $(($1 / 60)) $(($1 % 60)); }
+          budget=$((TIMEOUT_MIN * 60 * 3 / 4)); over=""
+          { echo "### $GROUP"; echo; echo "Time budget: $(mmss $budget) (75% of ${TIMEOUT_MIN}m)"; echo
+            echo "| Check | Result | Duration | Group elapsed |"; echo "|---|---|---|---|"; } >> "$GITHUB_STEP_SUMMARY"
           failed=()
           while IFS='|' read -r label cmd; do
             [ -z "$label" ] && continue
@@ -454,9 +489,22 @@ jobs:
             start=$SECONDS
             if bash -c "$cmd"; then status=ok; else status=FAILED; failed+=("$label"); fi
             echo "::endgroup::"
-            echo "$status  $label  ($((SECONDS - start))s)"
+            took=$((SECONDS - start)); elapsed=$(( $(date +%s) - JOB_T0 ))
+            echo "$status  $label  (${took}s; group at $(mmss $elapsed) of ${TIMEOUT_MIN}m)"
+            echo "| $label | $status | ${took}s | $(mmss $elapsed) |" >> "$GITHUB_STEP_SUMMARY"
+            if [ -z "$over" ] && [ $elapsed -gt $budget ]; then
+              over="$GROUP at $(mmss $elapsed) of ${TIMEOUT_MIN}m (budget $(mmss $budget), 75%): split it"
+              echo "::error::time budget: $over"
+            fi
           done <<< "$CHECKS"
+          elapsed=$(( $(date +%s) - JOB_T0 ))
+          echo; echo "group total: $(mmss $elapsed) of ${TIMEOUT_MIN}m (budget $(mmss $budget))"
+          { echo; echo "Group total: $(mmss $elapsed) of ${TIMEOUT_MIN}m"; } >> "$GITHUB_STEP_SUMMARY"
           if [ ${#failed[@]} -gt 0 ]; then
             printf '::error::FAILED: %s\n' "${failed[@]}"
-            exit 1
           fi
+          if [ -n "$over" ]; then
+            echo "::error::time budget: $over (move its slowest verifier into a group of its own, as A, C and D are)"
+            echo "**Over the time budget:** $over" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          [ ${#failed[@]} -eq 0 ] && [ -z "$over" ]

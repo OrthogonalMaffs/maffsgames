@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Prisoner's Dilemma — Game Theory — MaffsGames</title>
-<meta name="description" content="Can cooperation beat selfishness? Play the iterated prisoner's dilemma against computer opponents and discover why game theory matters. Free, KS3 to A-Level.">
+<title>Prisoner's Dilemma Game – GCSE Maths | MaffsGames</title>
+<meta name="description" content="Play the iterated prisoner's dilemma against computer opponents and weigh up the payoffs. For KS3, GCSE, A-Level and Core Maths. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/prisoners-dilemma/">
-<meta property="og:title" content="Prisoner's Dilemma — Game Theory — MaffsGames">
-<meta property="og:description" content="Can cooperation beat selfishness? Play the iterated prisoner's dilemma against computer opponents and discover why game theory matters. Free, KS3 to A-Level.">
+<meta property="og:title" content="Prisoner's Dilemma Game – GCSE Maths | MaffsGames">
+<meta property="og:description" content="Play the iterated prisoner's dilemma against computer opponents and weigh up the payoffs. For KS3, GCSE, A-Level and Core Maths. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/prisoners-dilemma/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Prisoner's Dilemma — Game Theory — MaffsGames">
-<meta name="twitter:description" content="Can cooperation beat selfishness? Play the iterated prisoner's dilemma against computer opponents and discover why game theory matters. Free, KS3 to A-Level.">
+<meta name="twitter:title" content="Prisoner's Dilemma Game – GCSE Maths | MaffsGames">
+<meta name="twitter:description" content="Play the iterated prisoner's dilemma against computer opponents and weigh up the payoffs. For KS3, GCSE, A-Level and Core Maths. Free, no sign-up.">
 <meta name="twitter:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -206,7 +206,6 @@ body.accessible{background-color:#12141f!important}
       <button class="btn-secondary" onclick="startTournament()">Tournament Mode</button>
       <div style="font-size:.72rem;color:var(--muted);margin-top:.3rem">Round-robin: play all opponents at this level</div>
     </div>
-  <p id="teacherInvite"></p>
   </div>
 
   <!-- ==================== OPPONENT SELECT SCREEN ==================== -->
@@ -281,7 +280,7 @@ body.accessible{background-color:#12141f!important}
 
   <!-- ==================== RESULTS SCREEN ==================== -->
   <div id="results" class="screen">
-    <div class="results" id="resultsContent"></div>
+    <div class="results" id="resultsContent"><p id="teacherInvite"></p></div>
   </div>
 
   <!-- ==================== TOURNAMENT RESULTS SCREEN ==================== -->
@@ -865,6 +864,7 @@ function endGame() {
     '</div>';
 
   rc.innerHTML = html;
+  placeInvite(rc);
   showScreen('results');
 }
 
@@ -997,7 +997,14 @@ function showTournamentResults() {
     '</div></div>';
 
   rc.innerHTML = html;
+  placeInvite(rc);
   showScreen('tournamentResults');
+}
+
+// The teacher feedback line, after the end screen's button row (two end states, one line).
+function placeInvite(rc) {
+  const acts = rc.querySelector('.result-actions');
+  if (window.MaffsInvite && acts) MaffsInvite.place(acts.parentNode, acts.nextSibling);
 }
 
 // ---- Level selection ----

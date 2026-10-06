@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="Apply translations, reflections, and stretches to match a target curve. Interactive graph transformations for GCSE and A-Level.">
+<meta name="description" content="Translate, reflect and stretch a curve to match the target graph in as few moves as possible. For GCSE and A-Level. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/graph-transformer/">
-<meta property="og:title" content="Graph Transformer — MaffsGames">
-<meta property="og:description" content="Apply translations, reflections, and stretches to match a target curve. Interactive graph transformations for GCSE and A-Level.">
+<meta property="og:title" content="Graph Transformations Game – GCSE/A-Level Maths | MaffsGames">
+<meta property="og:description" content="Translate, reflect and stretch a curve to match the target graph in as few moves as possible. For GCSE and A-Level. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/graph-transformer/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
-<title>Graph Transformer — MaffsGames</title>
+<title>Graph Transformations Game – GCSE/A-Level Maths | MaffsGames</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -129,7 +129,6 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     </div>
   <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
     <button class="start-btn" onclick="startGame()">Start</button>
-  <p id="teacherInvite"></p>
   </div>
 
   <div id="game" class="screen">
@@ -163,7 +162,8 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     </div>
   </div>
 
-  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button></div></div>
+  <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button>
+  <p id="teacherInvite"></p></div></div>
 </div>
 
 <script>
