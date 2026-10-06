@@ -165,10 +165,26 @@ section.
 
 **Handover, 4 Oct 2026 (home, night: Just Pythag It, Bruv; PRs #28 and #29). Pick up here.**
 
-**Before stopping a contract for a decision, check canon §0.3, the Standing rulings (SR-1 to SR-14).**
+**Before stopping a contract for a decision, check canon §0.3, the Standing rulings (SR-1 to SR-15).**
 If one applies, apply it and list "SR-n applied: …" in the PR; stop only for what none covers, or for
 §0.3's "Still stops for Jon" list.
 
+- **6 Oct (cloud): ANGLE ACE, Jon's contract (SR-6), PRs #79 (Starter) and #80 (GCSE), each merged on a green
+  Gate with main's full run green after it.** Every diagram is drawn by one renderer, `drawFig()`, from the
+  question's geometry (`fig`); the per-question `draw:` functions are gone. An unknown's drawn size comes from
+  the givens, never the key; each label sits on its region's bisector, clear of every line, nearest its own
+  vertex, with an arc spanning exactly that region. Audit F1-F13 resolved. Recognition captions name no shape.
+  - **`scripts/verify-angle-ace.py` (CI group E, about 5s):** reads only the recorded canvas calls at
+    320/390/1280px: label vs region (1°), x vs key, the drawn relationship vs the keyed reason, every
+    one-step fact vs the accepted reasons, two-step routes vs `TWO_STEP`; every option and reason marked in
+    Chromium; six planted faults. Fails all 75 items of the pre-fix file.
+  - **Canon SR-15 (Jon, 6 Oct):** every valid reason accepted; a two-step item accepts the union of its
+    routes, through the labelled y where there is one. L638 accepts alternate, triangle and straight line;
+    L625 keeps corresponding + straight line (unrestricted it would accept 5 of 9).
+  - **Ledger:** the ten recognition items share Jon's prompt, so B3 lists three groups (corresponding x4,
+    alternate x3, co-interior x3): not duplicates, each has its own diagram.
+  - **Logged, not fixed:** §1.52 (GCSE 35 questions; the roster's KS3 level has no bank).
+  - **Next:** Jon's next contract.
 - **6 Oct (cloud, Jon's instruction of 09:30): the four open PRs, one at a time.** **#75 merged:** Equation
   Builder is CI group D, and every verifier group fails at 75% of its timeout. Main's full run on `6179044`
   was green, the first since #68; group B took 5m38s of 12m. **#72 merged:** search titles and descriptions
@@ -386,17 +402,17 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
        `why` field stays (PR #45); only Q20 has one.
      - Probability Pioneer: standardise on one form, Jon to rule (PC recommends 'dice'). Stage 2 Q9 and Stage 3
        Q7's explanation say "dice"; the rest of the bank says "die".
-     `angle-ace` Starter diagrams (L293,
-     L437, L423/444/465). ~~`decimal-detective` §1.49 (decision 6): remove the identical cards (:256 1.9, :261
+     ~~`angle-ace` Starter diagrams (L293,
+     L437, L423/444/465)~~ **DONE, PR #79**. ~~`decimal-detective` §1.49 (decision 6): remove the identical cards (:256 1.9, :261
      0.6, :263 0.11); keep the equal-value pairs (0.77/0.770, 0.44/0.440) with feedback that trailing zeros
      don't change the value.~~ **DONE, PR #50** (1.909, 0.06, 0.111; with audit F1 and F6).
   3. **Batch 3: wrong keys reached from the picker.** `better-value` Core (five), `given-that` (alevel_18, and
      free entry onto `MaffsAnswer.decimal` with a stated precision), `proportion-blaster` :242,
      `formula-unlocked` :297, `sequence-solver` :291, `estimation-golf` :663/:680 (and SR-12),
-     ~~`expected-damage`: change the numbers so no comparison ties (SR-5; decision 7)~~ **DONE, PR #52**, `angle-ace` GCSE diagrams.
+     ~~`expected-damage`: change the numbers so no comparison ties (SR-5; decision 7)~~ **DONE, PR #52**, ~~`angle-ace` GCSE diagrams~~ **DONE, PR #80**.
   4. **Batch 4: MEDIUM.** Raw LaTeX in `sequence-solver` GCSE (15 questions), `unit-converter` precision and π,
-     `percentage-flip` SKIP race, `expected-damage` outcome draw, `like-terms-collector` emoji, the remaining
-     `angle-ace` picture faults, and §1.51's batch 4 items.
+     `percentage-flip` SKIP race, `expected-damage` outcome draw, `like-terms-collector` emoji, ~~the remaining
+     `angle-ace` picture faults~~ (done, PRs #79-#80), and §1.51's batch 4 items.
   5. **Batch 5: LOW**, §1.51's batch 5 items, the `?level=` fallbacks (audit class 8) as one roster-and-checker
      change, and **`estimation-golf`'s general-knowledge Starter items replaced** (decision 8: 8 of 20, e.g.
      continents 7, class size 30; replacements are content, so Jon approves them).
@@ -634,6 +650,7 @@ Sections, in priority order. **Nothing in §4 starts until §1–2 are clear.**
 | 1.49 | **Live (resit game): Decimal Detective lists the same value twice in three ordering puzzles.** `games/decimal-detective/index.html:256` (1.9 twice), `:261` (0.6 twice), `:263` (0.11 twice). A student is asked to put two equal values in order, and the marking may compare by position, so a correct order could be marked wrong. Found 3 Oct 2026 while mapping §1.42. High: `decimal-detective` is in the resit candidate suite (audit §10.5). **Jon ruled 4 Oct 2026 (resit audit, decision 6): remove the identical cards; keep the equal-value pairs (0.77/0.770) with feedback that trailing zeros don't change the value** (START, batch 2). **DONE 5 Oct 2026, PR #50:** 1.909, 0.06 and 0.111 (Jon's approved values); the equal-value pairs carry the note; `scripts/verify-decimal-detective.py` fails any identical cards in a row. | — done |
 | 1.50 | ~~**Checked: Truth Buster does not mark "1 + 2 + 3 + … = −1/12" as true.**~~ `tb_t3_006` (`games/truth-buster/index.html:278`) is keyed `answer:false`, so Jon's 3 Oct ruling (re-key it FALSE if it marks it true) needed no change. Its explanation differs from Jon's wording (it says the value "appears genuinely in string theory") and its Learn More link is Numberphile's video titled "ASTOUNDING: 1+2+3+4+5+...= −1/12". Whether to replace the explanation with Jon's wording anyway is his call. **DONE 3 Oct 2026 (Jon's ruling):** still keyed FALSE; the explanation is now Jon's wording ("False. Adding 1 + 2 + 3 + … just keeps growing without limit. The −1/12 comes from a special technique called Ramanujan summation, which assigns values to sums that don't add up in the ordinary way."); Learn More now links Mathologer's reply, "Numberphile v. Math: the truth about 1+2+3+...=-1/12" (`YuIIjLr6vUA`, title and channel verified via YouTube oEmbed). | — done |
 | 1.51 | **Resit audit (PR #35): what is left in the five games PR #36 fixed**, by the audit's fix batches. **Batch 2 (wrong keys at the card's level):** ~~`probability-pioneer` Stage 3 Q7 "If two outcomes are equally likely, each has probability 0.5" keyed True (audit F2; Jon ruled 4 Oct (decision 4): rekey False, with the explanation)~~ **DONE PR #45, with F3-F6 and F8 below; probability-pioneer now has its full verifier (`scripts/verify-probability-pioneer.py`, CI); only F7 (judgement call) remains.** **Batch 4 (MEDIUM):** ~~`probability-pioneer` F3 (lottery feedback says Impossible), F4 (rain in Britain keyed Certain only)~~ (done, PR #45); `estimation-engine` F2 (the meter's centre label is the key rounded to a whole number, outside the band on six items) and F3 (A-Level items served to everyone; rides with its SR-12 rebuild); `decimal-detective` ~~F4 (the 2 d.p. readout lets a student drag to the target without reading the scale; judgement call)~~ (done, PR #65, with F2 and F3). **Batch 5 (LOW):** `shape-shifter` F5 (15 items per mode; no 180° question is ever built, because its wrong-direction distractor equals the answer, so it is filtered out; every rotation is about (0,0)); `probability-pioneer` ~~F5/F6 (two value-equal distractor pairs, 2/3 and 4/6, 1/2 and 2/4)~~, F7, ~~F8~~ (F5, F6, F8 done, PR #45; F7 a judgement call, left); `estimation-engine` F5 (float edge on the band), F6 (an empty entry stops the timer silently), F7 (2 s auto-advance, not `MaffsNext`); `decimal-detective` ~~F6 (Round Up 9.5/9.50), F7 (= §1.49)~~ (done, PR #50, with F1), F5 (7.895: 7.90 vs 7.9, stands: the ask names the form), Line-Up's Check enabled on load; `negative-number-line` (Calculate distractors off the drawn line; wrong-answer Next not `MaffsNext`; its full verifier is in CI since PR #54). **Fixed in PR #36 beyond the contract's list:** shape-shifter F3 (duplicate options) and F4 (a distractor equal to the object), decimal-detective F3 (0.25's neighbouring tenths), negative-number-line F2 (half-way points). Each game still needs its full verifier (audit class 1); `check-resit-fixes.py` covers only the fixed faults. | Code Claude, batch by batch (F2 of probability-pioneer ruled by Jon, 4 Oct) |
+| 1.52 | **Angle Ace: GCSE has 35 questions, and the roster lists a KS3 level with no bank** (resit audit F14). 35 is below the 40-50 minimum (`check-banks.py` B4 carries it in the ledger). `?level=ks3` falls back to GCSE (audit class 8, batch 5). Adding questions is content (Jon's call); every new item needs only a `fig` and passes `scripts/verify-angle-ace.py` or fails it. Found 4 Oct 2026, logged 6 Oct 2026 (Angle Ace contract, SR-9). | Jon (content) |
 
 **Done this session (26 Sep):**
 - [x] **1.1 Expectation Station cannot be completed — since it shipped (`812cd6a`, 22 Mar).**
