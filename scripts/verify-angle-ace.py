@@ -34,7 +34,7 @@ phase-2 option builder always offers the keyed reason among four distinct reason
 end screen or submits: endGame and setTimeout are stubbed and every request off the stub server aborted.
 
 A fault-injection self-test must FAIL on each planted fault: a misplaced label, a wrong-sized angle, an
-exterior "alternate" pair, a dropped valid reason and a wrong key. The file is never touched.
+exterior "alternate" pair, a dropped valid reason, a dropped second two-step route and a wrong key. The file is never touched.
 
     python scripts/verify-angle-ace.py [--verbose] [--no-selftest] [--chromium PATH] [--against FILE]
 
@@ -60,6 +60,18 @@ TOL = 1.0          # degrees: a label against its region, an arc against its reg
 NEAR = 2.0         # px: points this close are the same point
 PAIRS = {'Corresponding angles (equal)': 'CORR', 'Alternate angles (equal)': 'ALT',
          'Co-interior angles (sum to 180°)': 'COINT'}
+# The two-step items, reviewed (Jon, 6 Oct 2026): (prompt, key) -> (every route the drawing allows, why).
+# The game accepts the union of a item's routes; where the figure labels the intermediate angle (y), only
+# the routes through it count. Change an entry only after re-reading the item and its drawing.
+TWO_STEP = {
+    ('Find angle x (two steps needed)', 118): (
+        [('CORR', 'STRAIGHT')],
+        'L625: y is labelled, so only the route through y: y = 62 (corresponding), x = 180 - y (straight line)'),
+    ('Find angle x in the triangle', 105): (
+        [('ALT', 'TRIANGLE'), ('ALT', 'STRAIGHT')],
+        'L638: the 45 is alternate to the triangle angle at P, then the triangle; or the 30 is alternate '
+        'to the angle at Q beside x, then the straight line (Jon, 6 Oct 2026: accept both routes)'),
+}
 SHAPE_RE = re.compile(r'\b[A-Z]-shape|\bshape\b', re.I)
 
 
@@ -549,7 +561,9 @@ def check_item(q, F, reasons, where, fail, notes=None):
         if notes is not None:
             notes.append('%s: x = %g by %s' % (where, key, '/'.join(sorted(found))))
         return
-    # two steps, through one intermediate angle
+    # Two steps, through one intermediate angle (Jon, 6 Oct 2026): the valid reasons are the union of every
+    # two-step route the drawing allows, through the labelled intermediate (y) where the figure labels one,
+    # through any angle where it does not. The routes must match the reviewed table TWO_STEP.
     zs = [letters[y] for y in letters if y != 'x'] or \
         [(vi, k) for vi, V in enumerate(F.verts) for k in range(len(V['regs'])) if (vi, k) not in K and (vi, k) != t]
     routes = set()
@@ -562,13 +576,22 @@ def check_item(q, F, reasons, where, fail, notes=None):
                     fail(where, 'picture', 'the picture gives x = %g° by %s then %s; the key is %g°' % (vx, r1, r2, key))
                 else:
                     routes.add(frozenset((r1, r2)))
+    shown = ' or '.join(sorted('+'.join(sorted(r)) for r in routes))
+    union = set().union(*routes) if routes else set()
+    review = TWO_STEP.get((q.get('prompt'), q.get('answer')))
     if not routes:
         fail(where, 'picture', 'no angle fact, in one step or two, gives x from what is drawn')
-    elif acc not in routes:
-        fail(where, 'reasons', 'two-step routes drawn: %s; the game accepts %s'
-             % (' or '.join(sorted('+'.join(sorted(r)) for r in routes)), sorted(acc)))
+        return
+    if review is None:
+        fail(where, 'reasons', 'a two-step item missing from TWO_STEP; drawn routes: %s (review, then add it)' % shown)
+    elif routes != {frozenset(r) for r in review[0]}:
+        fail(where, 'reasons', 'drawn routes %s differ from the reviewed TWO_STEP routes %s'
+             % (shown, ' or '.join(sorted('+'.join(sorted(r)) for r in review[0]))))
+    if union != acc:
+        fail(where, 'reasons', 'two-step routes drawn: %s; the game must accept their union %s, it accepts %s'
+             % (shown, sorted(union), sorted(acc)))
     elif notes is not None:
-        notes.append('%s: x = %g in two steps by %s' % (where, key, ' or '.join(sorted('+'.join(sorted(r)) for r in routes))))
+        notes.append('%s: x = %g in two steps by %s' % (where, key, shown))
 
 
 def describe(F, rids, rel):
@@ -801,6 +824,13 @@ def selftest(banks, reasons, renders, marks, extra):
     i = next(i for i, q in enumerate(b2['year6']) if q.get('multiReason') and q['answer'] == 180)
     del b2['year6'][i]['multiReason']
     expect('valid reason not accepted (F13)', b=b2, m={k: v for k, v in marks.items() if k != ('year6', i)})
+
+    # a second two-step route not accepted: L638 without "angles on a straight line" (Jon, 6 Oct 2026)
+    if 'gcse' in LEVELS:
+        b2 = copy.deepcopy(banks)
+        i = next(i for i, q in enumerate(b2['gcse']) if q['prompt'] == 'Find angle x in the triangle')
+        b2['gcse'][i]['multiReason'] = [r for r in b2['gcse'][i]['multiReason'] if r != reasons['STRAIGHT']]
+        expect('second two-step route dropped', b=b2, m={k: v for k, v in marks.items() if k != ('gcse', i)})
 
     # a wrong key
     b2 = copy.deepcopy(banks)
