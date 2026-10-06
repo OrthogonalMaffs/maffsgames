@@ -6347,7 +6347,7 @@
  "simultaneous-solver": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -6363,19 +6363,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.alevel[46]: '5' = '\\\\sqrt{25}' (both wrong options)",
-      "id": "simultaneous-solver::605db961087a#1::B11::[\"5\", \"\\\\sqrt{25}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.alevel[48]: '2' = '\\\\sqrt{4}' (both wrong options)",
-      "id": "simultaneous-solver::a059acb1fbe3#1::B11::[\"2\", \"\\\\sqrt{4}\"]",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],

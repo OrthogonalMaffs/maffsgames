@@ -179,7 +179,8 @@ const LEVEL_OVERRIDES = {
   'quadratic-factoriser': [['gcse', 'higher', 'formula'], 'IMPLEMENTED_LEVELS'],
   'chart-interrogator':   [['gcse', 'alevel', 'core', 'l4'], "selectedLevel = the level button's data-level; the L4 button says 'l4'"],
   'the-perfect-prank':    [['ks3'], "const LEVEL='ks3'; no roster row (unlisted prototype), so the default rule finds nothing"],
-  'correlation-or-coincidence': [['gcse'], "const LEVEL='gcse': one board, as before the rebuild (4 Oct 2026); the roster's A-Level and Core tiers play the same bank"]
+  'correlation-or-coincidence': [['gcse'], "const LEVEL='gcse': one board, as before the rebuild (4 Oct 2026); the roster's A-Level and Core tiers play the same bank"],
+  'simultaneous-solver':  [['foundation-s1', 'foundation-s2', 'foundation-s3', 'foundation-s4', 'alevel'], "BOARD = board(): STAGES[stage].board for Foundation (one board per stage, never the old 'gcse' board), 'alevel' kept (Jon, 6 Oct 2026)"]
 };
 
 // Level keys a game submits that follow a pattern rather than a fixed list, and that the hub
