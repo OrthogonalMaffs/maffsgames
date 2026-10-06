@@ -221,6 +221,10 @@ jobs:
           # MaffsCalc (schools/assets/calculator.js, canon 4.4): arithmetic, precedence, x², √, brackets,
           # errors, the 10 s.f. display (0.1 + 0.2 shows 0.3), key sequences, keyboard, nothing sent,
           # keys >= 44px at 320/375/390px (~10s).
+          # MaffsKeypad (schools/assets/keypad.js, canon 4.4), the phone keypad for typed answers that MaffsCalc's
+          # answer mode composes: 1, 2 and 4 answer boxes on touch phones at 320/375/390 (keys reach the active
+          # box only, DEL and C act on it alone, nothing editable is focused, the length limit holds, the active
+          # box is marked and its tag lies over no other box), ordinary inputs with a mouse; six planted faults (~40s).
           - name: Tier 4 layer A + shared Next control
             timeout: 12
             checks: |
@@ -230,6 +234,7 @@ jobs:
               Portal section clicks (analytics.js section_clicked)|python scripts/test-section-clicks.py
               Shared answer checker (schools/assets/answer.js, every outcome)|python scripts/test-answer-js.py
               Shared on-screen calculator (schools/assets/calculator.js, MaffsCalc)|python scripts/test-calculator-js.py
+              Shared phone keypad (schools/assets/keypad.js, MaffsKeypad)|python scripts/check-keypad.py
 
           # free-daily-pizza: reads each item's PARAMETERS and DISPLAYED strings from
           # window.FDP and recomputes everything else here with fractions.Fraction -- every

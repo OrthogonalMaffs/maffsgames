@@ -38,7 +38,25 @@ full local run was a slower second copy of CI with known Windows-only false fail
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
 
-## Handover — 2026-10-05 (home, latest): AUDIT PHASES 1 + 2 reported (PR #68); NEXT = the teacher line on 95 results screens
+## Handover — 2026-10-05 (cloud, latest): MAFFSKEYPAD built, PR #70; NEXT = Estimation Engine rebuild (same session)
+
+Jon's keypad contract (his ruling (b), 18:45), run before the Estimation Engine rebuild.
+- **`MaffsKeypad`** (`schools/assets/keypad.js`, canon §4.4): `mount(el, {targets, keys, maxLength, keepInView,
+  foldInset})`. Touch screens only: boxes read-only, `inputmode="none"`, never focused; a tap picks the active box
+  (border + "typing here" tag, centred and shrunk on a narrow box); 0-9, point, DEL, C, optional minus. Mouse:
+  ordinary inputs. Any page may load it; a page loading `calculator.js` must load it first (`check-calculator.py`).
+- **MaffsCalc composes it** (answer mode). Just Pythag It, Bruv measured byte-identical to main at 8 profiles
+  through every keypad step (scratch script, pinned seed via `JPIB.newSeed`).
+- **Checks:** `scripts/check-keypad.py` (CI, Tier 4 group; 1/2/4 boxes at 320/375/390; six planted faults).
+- **Next:** Estimation Engine (Jon's contract + his answers of 19:45 + the results-screen teacher line, 19:15),
+  then its docs PR. Rollout of the keypad to other typed-answer games: one per contract (todo §3.21).
+- **Gotchas:** the sandbox has no WebKit (calculator suite and Pythag verifier fail only on that) and no CI Python
+  packages: `pip install sympy==1.14.0 mpmath==1.3.0` (not `-r requirements-ci.txt`, which would move playwright
+  off 1.56.0). KaTeX's CDN is refused here but `registry.npmjs.org/katex/-/katex-0.16.9.tgz` is reachable: route
+  `cdn.jsdelivr.net/npm/katex/...` to its `package/dist` to measure pages with KaTeX rendered. Running every check at
+  once (`check-changed.py` after a workflow edit) made Free Daily Pizza fail once under load; it passes alone.
+
+## Handover — 2026-10-05 (home): AUDIT PHASES 1 + 2 reported (PR #68); NEXT = the teacher line on 95 results screens
 
 - **Audit phase 1** (branch `claude/peaceful-mayer-3ktsgv`): `docs/audits/quoted-statistics-2026-10.md` (findings,
   effects, for-Jon list) + `...-ledger.md` (one line per figure with its URL). The STOP file is folded in and deleted.

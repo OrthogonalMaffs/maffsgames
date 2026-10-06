@@ -29,7 +29,8 @@
  * On a phone (a touch screen below the dock breakpoint) the panel is compact: its close key sits in the
  * display, keys are 48px. mount(el, {answer: input}) makes the keypad type the game's answer too, so the
  * system keyboard never opens; the student taps a display to choose where the keys go (ANSWER below).
- * Anywhere else nothing about the answer box changes.
+ * Anywhere else nothing about the answer box changes. The answer box is driven by MaffsKeypad
+ * (keypad.js, the one phone keypad on the site), which a page with {answer} loads before mounting.
  *
  * The physical keyboard drives the panel only while focus is inside it, so typing in a game's answer
  * box is never taken over. Nothing is sent anywhere: no analytics event, no storage.
@@ -193,15 +194,16 @@
     if (host) host.classList.add('maffs-calc-host');
     var exprEl = el.querySelector('.maffs-calc-expr'), resEl = el.querySelector('.maffs-calc-result');
     var expr = '', ans = null, done = false, ok = false;   // done: the last key was =; ok: and it gave a number
-    var input = opts.answer || null, target = 'calc', cueA = null, orig = null;
+    var input = opts.answer || null, target = 'calc', kp = null;
+    if ((input || opts.keepInView) && !window.MaffsKeypad) {
+      throw new Error('MaffsCalc: {answer} and {keepInView} need schools/assets/keypad.js (MaffsKeypad) on the page');
+    }
     if (input) {
-      orig = { readOnly: input.readOnly, inputmode: input.getAttribute('inputmode') };
-      cueA = document.createElement('span');
-      cueA.className = 'maffs-calc-cue maffs-calc-cue-answer';
-      cueA.setAttribute('aria-hidden', 'true');
-      cueA.textContent = 'typing here';
-      input.insertAdjacentElement('afterend', cueA);
-      input.parentElement.classList.add('maffs-calc-answer-host');
+      // The answer box is MaffsKeypad's target: read-only, never focused, marked when selected. This panel's
+      // keys type into it through kp.type(); MaffsCalc.ANSWER stays the live switches, under its class names.
+      kp = window.MaffsKeypad.mount(null, { targets: [input], prefix: 'maffs-calc', plain: null, initial: -1,
+        maxLength: ANSWER_MAX, config: function () { return window.MaffsCalc.ANSWER; }, enabled: answerMode,
+        onTap: function () { if (panel.hidden) setOpen(true); select('answer'); } });
     }
 
     function shown(e) { return e.split(ANS).join('Ans'); }
@@ -209,18 +211,9 @@
       exprEl.textContent = (done ? shown(expr) + ' =' : shown(expr)) || ' ';
       resEl.textContent = result;
     }
-    // The answer box, when the keypad is typing into it: digits, the point, DEL and C only.
-    function typeAnswer(act, val) {
-      var v = input.value;
-      if (act === 'clear') v = '';
-      else if (act === 'del') v = v.slice(0, -1);
-      else if (act === 'in' && /^[0-9.]$/.test(val) && v.length < ANSWER_MAX) v += val;
-      else return;
-      input.value = v;
-      input.dispatchEvent(new Event('input', { bubbles: true }));
-    }
     function press(act, val) {
-      if (target === 'answer' && answerMode() && window.MaffsCalc.ANSWER.route) { typeAnswer(act, val); return; }
+      // Typing the answer: MaffsKeypad takes digits, the point, DEL and C only.
+      if (target === 'answer' && answerMode() && window.MaffsCalc.ANSWER.route) { kp.type(act, val); return; }
       if (act === 'clear') { expr = ''; done = false; ok = false; render('0'); return; }
       if (act === 'del') {
         if (done) { done = false; render(''); return; }
@@ -263,15 +256,10 @@
     function answerMode() { return !!input && compact(); }
     // Compact or not, answer target or not: set the classes and the answer box's attributes to match.
     function applyMode() {
-      var A = window.MaffsCalc.ANSWER, c = compact(), am = !!input && c;
+      var c = compact(), am = !!input && c;
       el.classList.toggle('compact', c);
       el.classList.toggle('answer-mode', am);
-      if (input) {
-        input.readOnly = am && A.readOnly ? true : orig.readOnly;
-        if (am && A.inputmode) input.setAttribute('inputmode', 'none');
-        else if (orig.inputmode === null) input.removeAttribute('inputmode');
-        else input.setAttribute('inputmode', orig.inputmode);
-      }
+      if (kp) kp.attrs();
       select(am ? target : 'calc');
     }
     // Which display the keypad types into. The selected one has a heavier border and a "typing here" tag.
@@ -282,14 +270,7 @@
       el.classList.toggle('target-answer', am && target === 'answer');
       el.classList.toggle('target-calc', am && target === 'calc');
       screen.classList.toggle('maffs-calc-selected', cue && target === 'calc');
-      if (input) {
-        input.classList.toggle('maffs-calc-selected', cue && target === 'answer');
-        if (cueA) {
-          cueA.hidden = !(cue && target === 'answer');
-          cueA.style.left = (input.offsetLeft + 6) + 'px';
-          cueA.style.top = (input.offsetTop - 7) + 'px';
-        }
-      }
+      if (kp) kp.select(target === 'answer' ? 0 : -1);
       var off = am && target === 'answer' && A.disableOps;
       keys.forEach(function (b) {
         var act = b.getAttribute('data-act'), val = b.getAttribute('data-val');
@@ -312,14 +293,7 @@
       if (on && compact()) together();
     }
     // Compact and open: the answer row (opts.keepInView), Check and the keypad in the window together.
-    function together() {
-      var keep = opts.keepInView;
-      if (!keep) return;
-      var r1 = keep.getBoundingClientRect(), r2 = panel.getBoundingClientRect();
-      var fold = window.innerHeight - (opts.foldInset || 0);
-      var dy = Math.min(r2.bottom - fold + 8, r1.top - 8);
-      if (r2.bottom > fold && dy > 0) window.scrollBy(0, dy);
-    }
+    function together() { if (opts.keepInView) window.MaffsKeypad.together(opts.keepInView, panel, opts.foldInset); }
 
     if (host) {
       var t = null;
@@ -337,22 +311,6 @@
     screen.addEventListener('click', function (e) {
       if (e.target !== closeBtn && answerMode()) select('calc');
     });
-    if (input) {
-      // A tap on the answer box opens the keypad on it; the box itself is never focused (no system keyboard).
-      var noFocus = function (e) { if (answerMode() && window.MaffsCalc.ANSWER.blur) e.preventDefault(); };
-      input.addEventListener('pointerdown', noFocus);
-      input.addEventListener('mousedown', noFocus);
-      input.addEventListener('focus', function () { if (answerMode() && window.MaffsCalc.ANSWER.blur) input.blur(); });
-      // Open on pointerup: WebKit sends no click after a touch whose pointerdown was cancelled (which is
-      // what keeps focus, and so the keyboard, away). click stays for anything without pointer events.
-      var lastUp = 0;
-      var activate = function () { if (panel.hidden) setOpen(true); select('answer'); };
-      input.addEventListener('pointerup', function () { if (!answerMode()) return; lastUp = Date.now(); activate(); });
-      // Opening the keypad moves the page (the game may shrink its picture), so the tap's own click could
-      // land on whatever is now under the finger, a key: cancel it.
-      input.addEventListener('touchend', function (e) { if (answerMode() && window.MaffsCalc.ANSWER.blur) e.preventDefault(); }, { passive: false });
-      input.addEventListener('click', function () { if (answerMode() && Date.now() - lastUp > 600) activate(); });
-    }
     // Keyboard: only while focus is inside the panel. Enter or Space on a focused key presses that key.
     panel.addEventListener('keydown', function (e) {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
