@@ -71,4 +71,5 @@ findings:
   summary: Q27's CPI pair (already in the quoted-statistics audit)
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct'
-  status: open
+  status: fixed
+  pr: 93
