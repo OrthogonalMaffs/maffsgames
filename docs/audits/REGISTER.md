@@ -8,8 +8,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | # | Point | Status |
 |---|---|---|
-| 1 | Every live game has a verifier in CI | NOT MET: 60 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 160 open (15 CRITICAL, 145 HIGH) |
+| 1 | Every live game has a verifier in CI | NOT MET: 59 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 144 open (13 CRITICAL, 131 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -21,18 +21,18 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 15 | 9 | 0 | 24 |
-| HIGH | 145 | 61 | 0 | 206 |
-| MEDIUM | 204 | 56 | 0 | 260 |
+| CRITICAL | 13 | 11 | 0 | 24 |
+| HIGH | 131 | 75 | 0 | 206 |
+| MEDIUM | 201 | 59 | 0 | 260 |
 | LOW | 52 | 3 | 0 | 55 |
-| **All** | 416 | 129 | 0 | 545 |
+| **All** | 397 | 148 | 0 | 545 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| 2 | 71 | 102 |
-| 3 | 55 | 85 |
+| 2 | 67 | 102 |
+| 3 | 43 | 85 |
 | 6 | 34 | 56 |
 | 1 | 35 | 35 |
 | NEW:wrong-explanation-text | 19 | 33 |
@@ -41,7 +41,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 7 | 10 | 15 |
 | NEW:value-equal distractors | 12 | 13 |
 | 8 | 10 | 10 |
-| NEW:convention-unstated | 9 | 10 |
+| NEW:convention-unstated | 8 | 10 |
 | NEW:precision-not-stated | 4 | 8 |
 | NEW:hand-typed explanation figure | 7 | 7 |
 | NEW:text-contradicts-content | 5 | 7 |
@@ -76,7 +76,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:estimation-not-by-stated-method | 0 | 1 |
 | NEW:exact-order sorter marking | 1 | 1 |
 | NEW:false scoring claim | 1 | 1 |
-| NEW:false-general-statement | 1 | 1 |
+| NEW:false-general-statement | 0 | 1 |
 | NEW:form-omitted-in-stem | 1 | 1 |
 | NEW:g not stated | 1 | 1 |
 | NEW:generator-drops-items | 1 | 1 |
@@ -104,7 +104,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:precision unstated (SR-1) | 1 | 1 |
 | NEW:prose in KaTeX | 1 | 1 |
 | NEW:raw-latex shown | 1 | 1 |
-| NEW:raw-latex-in-text | 1 | 1 |
+| NEW:raw-latex-in-text | 0 | 1 |
 | NEW:scaffold-pre-announces | 1 | 1 |
 | NEW:snap-misses-given-geometry | 1 | 1 |
 | NEW:sr13-single-move-key | 1 | 1 |
@@ -124,7 +124,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 0 | 0 | 13 | 0 |
 | `bearing-blitz` | yes | none | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `better-value` | yes | partial: verify-better-value-tax.py | 0 | 5 | 4 | 0 | 9 | 0 | 0 |
-| `binomial-blaster` | unlisted | none | 2 | 15 | 4 | 1 | 22 | 0 | 0 |
+| `binomial-blaster` | unlisted | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 3 | 19 | 0 |
 | `boolean-blitz` | yes | none | 0 | 3 | 0 | 5 | 8 | 0 | 0 |
 | `characteristic-quest` | yes | none | 0 | 1 | 3 | 1 | 5 | 0 | 0 |
 | `complex-converter` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
@@ -376,22 +376,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ### `binomial-blaster` (A-Level, A-Level Year 2; unlisted)
 
-- **CRITICAL** binomial-blaster-t5-001, `games/binomial-blaster/index.html:134,160,161,163,164,174`: 6 of 50 alevel items (12%) mark a correct answer wrong or key a wrong value (t5-002..007)
-- **CRITICAL** binomial-blaster-t5-010, `games/binomial-blaster/index.html:209,216,218,219,222`: 5 of 50 alevel2 items (10%) have wrong keys (t5-011..015)
-- **HIGH** binomial-blaster-t5-002, `games/binomial-blaster/index.html:134 (C(5,2)+C(5,3), Pascal rule)`: Distractor \binom{6}{3} equals the key 20 and is the Pascal-rule answer the ask names
-- **HIGH** binomial-blaster-t5-003, `games/binomial-blaster/index.html:160 ((1.01)^5, first 3 terms)`: Key 1.05101 is the 4-term sum; the 3-term value 1.051 is a distractor
-- **HIGH** binomial-blaster-t5-004, `games/binomial-blaster/index.html:161 ((0.98)^4, first 3 terms)`: Key 0.92237 is the exact value; the 3-term value 0.9224 is a distractor
-- **HIGH** binomial-blaster-t5-005, `games/binomial-blaster/index.html:163 ((0.99)^10, first 3 terms)`: Key 0.90438 is the 4-term sum; the 3-term value 0.9045 is not offered
-- **HIGH** binomial-blaster-t5-006, `games/binomial-blaster/index.html:164 ((1.05)^3, first 3 terms)`: Key 1.15763 is the exact value; the 3-term value 1.1575 is not offered
-- **HIGH** binomial-blaster-t5-007, `games/binomial-blaster/index.html:174 ((2x+3)^3, coefficient of x^2)`: Key 54 is the coefficient of x; the correct 36 is a distractor
-- **HIGH** binomial-blaster-t5-008 (JC), `games/binomial-blaster/index.html:162 ((2.01)^3, Estimate)`: No method or precision stated (SR-1); 8.121 and 8.12 are true values at other precisions, marked wrong
-- **HIGH** binomial-blaster-t5-009 (JC), `games/binomial-blaster/index.html:165 (Row 6 of Pascal's triangle, middle)`: Row numbering not stated; counting from row 1 the middle is 10, offered and marked wrong
-- **HIGH** binomial-blaster-t5-011, `games/binomial-blaster/index.html:209 (sqrt(1.1) from 1 + x/2 - x^2/8)`: Key 1.04881 is the true sqrt(1.1), not the stated approximation 1.04875 (not offered)
-- **HIGH** binomial-blaster-t5-012, `games/binomial-blaster/index.html:216 (3/((1-x)(1+2x)), coefficient of x)`: Key 5; true coefficient -3, not offered
-- **HIGH** binomial-blaster-t5-013, `games/binomial-blaster/index.html:218 ((1+ax)^n = 1 + 6x + 16x^2, find n)`: Key n = -2; true n = 9, not offered
-- **HIGH** binomial-blaster-t5-014, `games/binomial-blaster/index.html:219 (same, find a)`: Key a = -3; true a = 2/3, not offered
-- **HIGH** binomial-blaster-t5-015, `games/binomial-blaster/index.html:222 (why nCr formula fails for negative n)`: Key '(-n)! is undefined' is false; the undefined factorials are n! and (n-r)!
-- **HIGH** binomial-blaster-t5-016 (JC), `games/binomial-blaster/index.html:205 (sqrt(4.08), Estimate)`: No method or precision stated (SR-1); 2.02 (2-term value, and exact to 3 s.f.) marked wrong
 - **HIGH** binomial-blaster-t5-017, `games/binomial-blaster/index.html:240 (handle), :48 (.disabled is pointer-events only)`: Enter on a focused option re-marks after answering: re-scores, skips questions, repeats end()/submitScore
 
 ### `curling-friction` (A-Level, L4; unlisted)
@@ -524,7 +508,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Exit bar detail
 
-**1. No verifier in CI (60):** `52dle`, `bearing-blitz`, `better-value` (partial: verify-better-value-tax.py), `binomial-blaster`, `boolean-blitz`, `characteristic-quest`, `complex-converter`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `curling-friction`, `differentiation-duel`, `dimension-checker`, `eigenvalue-extractor`, `eigenvector-engine`, `equatle`, `estimation-golf`, `factor-race`, `factor-theorem`, `force-resolver`, `formula-forge`, `formula-plug-in`, `formula-unlocked`, `four-quadrant-explorer`, `fraction-equivalence`, `given-that`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `integration-duel`, `linear-equation-solver`, `matrix-crunch`, `modular-battle`, `moments-master`, `new-shapes`, `partial-fractions-duel`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `proof-builder`, `proportion-blaster`, `scale-factor-scaling`, `sequence-solver`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `suvat`, `terrible-advice`, `think-of-a-number`, `trig-wars`, `truth-will-set-you-free`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
+**1. No verifier in CI (59):** `52dle`, `bearing-blitz`, `better-value` (partial: verify-better-value-tax.py), `boolean-blitz`, `characteristic-quest`, `complex-converter`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `curling-friction`, `differentiation-duel`, `dimension-checker`, `eigenvalue-extractor`, `eigenvector-engine`, `equatle`, `estimation-golf`, `factor-race`, `factor-theorem`, `force-resolver`, `formula-forge`, `formula-plug-in`, `formula-unlocked`, `four-quadrant-explorer`, `fraction-equivalence`, `given-that`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `integration-duel`, `linear-equation-solver`, `matrix-crunch`, `modular-battle`, `moments-master`, `new-shapes`, `partial-fractions-duel`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `proof-builder`, `proportion-blaster`, `scale-factor-scaling`, `sequence-solver`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `suvat`, `terrible-advice`, `think-of-a-number`, `trig-wars`, `truth-will-set-you-free`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
 
 **4. Audited levels serving under 40 (106):** 52dle all (20 in rotation), angle-ace gcse (35), better-value gcse (20), binomial-blaster alevel (20), binomial-blaster alevel2 (20), characteristic-quest further (15), complex-converter further (20), complex-converter level4 (20), component-crusher gcse (38), component-crusher alevel (32), component-crusher level4 (34), constructions-lab all (10/10), constructions-lab ks3 (10/10), constructions-lab gcse (10/10), coordinate-geometry-dash gcse (24), coordinate-geometry-dash alevel (21), core-maths-paper1 core (36), core-maths-paper2b core (36), core-maths-paper2c core (36), correlation-or-coincidence all (13), curling-friction alevel (20), curling-friction level4 (20), differentiation-duel alevel (14), differentiation-duel level4 (14), dimension-checker level4 (20), dimension-checker alevel (20), eigenvalue-extractor further (15), eigenvector-engine further (15), estimation-golf year6 (9/20), estimation-golf ks3 (9/9), estimation-golf gcse (9/9), estimation-golf alevel (9/9), estimation-golf level4 (9/9), expectation-station core (20), expectation-station gcse (15), expectation-station alevel (10), expected-damage ks3 (15), expected-damage gcse (20), expected-damage core (15), factor-race year6 (10/20), force-resolver alevel (20), force-resolver level4 (20), formula-forge gcse (29), formula-forge alevel (29), formula-forge level4 (16), formula-unlocked gcse (29), formula-unlocked alevel (25), formula-unlocked level4 (14), fraction-equivalence year6 (20), given-that gcse (25), given-that alevel (25), given-that core (20), given-that level4 (20), glorious-gantt core-a (4), glorious-gantt level4-a (4), glorious-gantt core-b (3), glorious-gantt level4-b (4), gradient-hunter gcse (15), gradient-hunter core (20), gradient-hunter alevel (10), integration-duel alevel (14), integration-duel level4 (14), matrix-crunch further (20), matrix-crunch level4 (20), moments-master alevel (20), moments-master level4 (20), partial-fractions-duel alevel (20), partial-fractions-duel level4 (20), percentage-flip year6 (20), percentage-flip default (12), prime-factorisation all (8/28), prime-factorisation year6 (8/20), prisoners-dilemma ks3 (5), prisoners-dilemma gcse (7), prisoners-dilemma alevel (9), prisoners-dilemma core (7), probability-paradox all (38 (3 modes; Paradox mode 12)), proof-builder alevel (counter 15/25, sorter 8/8), proof-builder further (counter 15/35, sorter 8/11, induction 4/4), scale-factor-scaling gcse (38), scale-factor-scaling level4 (31), screening-room gcse (20), screening-room alevel (20), screening-room core (15), screening-room level4 (15), seven-bridges ks3 (25), seven-bridges gcse (25), seven-bridges alevel (25), shape-shifter year6-translation (10/15), shape-shifter year6-reflection (10/15), shape-shifter year6-rotation (10/15), spot-the-error ks3 (35), spot-the-error level4 (30), spot-the-muppet gcse (20), spot-the-muppet core (12), spot-the-muppet ks3 (18), suvat alevel (10), suvat level4 (8), terrible-advice gcse (20), terrible-advice core (12), terrible-advice ks3 (18), truth-will-set-you-free level4 (10), unit-converter alevel (38), wrong-on-the-internet gcse (20), wrong-on-the-internet core (10), wrong-on-the-internet ks3 (15)
 
