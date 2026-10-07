@@ -86,7 +86,7 @@ shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-cal
 | 71 | Graph Sketcher | `graph-sketcher` | Core, A-Level, L4 | Statistics, Applied | Table completion, curve drawing, graph interpretation. 45 scenarios | untagged |
 | 73 | Test the Claim | `test-the-claim` | A-Level, L4 | Statistics | Six-step hypothesis testing: Binomial, Poisson, Normal, Correlation. 48 questions | untagged |
 
-## A-Level Games (14)
+## A-Level Games (15)
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
 | 74 | Differentiation Duel | `differentiation-duel` | A-Level, L4 | Calculus | 45+53 questions | untagged |
@@ -97,6 +97,7 @@ shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-cal
 | 79 | Moments Master | `moments-master` | A-Level, L4 | Mechanics | 50+20 questions | untagged |
 | 80 | Log Laws | `log-laws` | A-Level, L3, L4 | Algebra | 45 questions across 7 categories. Solve mode — apply the laws: 501 equations solved step by step in six stages (aˣ = b; a^{kx} and a^{x+k}; base e and capacitor discharge; quotient law; product law with the invalid root rejected; two bases). SymPy-verified (`scripts/verify-log-laws.py`, in CI). L3 = EAL Level 3 Engineering | untagged |
 | 81 | Binomial Blaster | `binomial-blaster` | A-Level, A-Level Year 2 | Algebra, Statistics | 50+50 questions | untagged |
+| 82 | Partial Fractions Duel | `partial-fractions-duel` | A-Level, L4 | Algebra | 50 questions | untagged |
 | 83 | Proof Builder | `proof-builder` | A-Level, Further | Reasoning | Three modes | untagged |
 | 84 | Normal Navigator | `normal-navigator` | A-Level, L4, Core | Statistics | 47 questions (one bank shared by all three levels; read from the live bank 1 Oct 2026) | untagged |
 | 85 | Fermi Lab | `fermi-lab` | KS3, GCSE, A-Level, L4, Core | Statistics, Reasoning | Chain estimation. 65 questions (50 original + 15 Core tier). Core tier: everyday social contexts with eval_question/eval_answer stored for future use | untagged |
@@ -121,12 +122,12 @@ Adult register, as every game now is (canon §7.5, Jon's ruling 2 Oct 2026, whic
 | 96 | Six Sevens, Bruv | `six-sevens-bruv` | KS3, GCSE | Number | Times-tables recall, 1 to 12. Typed answers, no multiple choice. 78 facts (commutative pairs are one fact), lit gold on a 12×12 grid kept per student on the device (`schools/assets/progress.js`). Misses return 3–5 questions later with a full array and a derived-fact hint. Verified by `scripts/verify-six-sevens.py` (in CI) | untagged |
 | 97 | Free Daily Pizza | `free-daily-pizza` | KS3, GCSE | Number | Fraction, decimal and percentage equivalence. Four stages, all generated from parameters: benchmarks (90), wider set and simplifying (206), fraction or percentage of an amount (138), one quantity out of another (84). Four options, each distractor a named misconception; recurring decimals shown recurring, thirds of a percent as a stacked mixed number; every fraction on screen is stacked (KaTeX, or an HTML fallback). Wrong answers show the working, then a pizza, 100-square grid or bar drawn exactly. Practice 20/40: mixed-stage runs rank on `practice-q20`/`practice-q40`, single-stage runs rank nowhere (history only); a daily pizza of 3+3+2+2 questions, easiest first, seeded from the UK date (board `daily-YYYY-MM-DD`, not on the hub). Verified by `scripts/verify-free-daily-pizza.py` (in CI) | untagged |
 
-## Unlisted (7)
+## Unlisted (6)
 Live at their URLs, and off the portal, `/resit/`, the sitemap, the spec map and the leaderboard hub (`NOT_ON_HUB` in `scripts/check-leaderboard-coverage.js`). Each is a numbered row so every roster parser reads it: the theme check, tier 1's level loads and the bank tools. On relisting a row moves back to the section it came from.
 - `just-pythag-it-bruv`: new, behind `<meta name="robots" content="noindex">` and off `/updates/` until Jon has played it and approved it (todo START).
 - `expectation-station` (was GCSE #59): unlisted 6 Oct 2026 (Jon) for faults found by the tranche 2 audit (`docs/audits/audit-tranche2-2026-10-06.md`). Its verifier is merged and the audit's entries are fixed, but expectation-station-pc-001 (CRITICAL, Stage 1 underdetermined; Project Claude, 7 Oct) is open and awaits Jon's ruling (A/B): not relisted until it is fixed (Jon, 7 Oct 2026). Its page is unchanged (no `noindex`).
-- Unlisted 6 Oct 2026 (Jon's rulings on audit tranches 3-6, 20:30; canon SR-20) for faults found by the tranche 3-6 audits (`docs/audits/`), still unlisted: `factor-theorem` (was A-Level #88) and `partial-fractions-duel` (was A-Level #82), tranche 5; `glorious-gantt` (was Core #72) and `screening-room` (was GCSE #62), tranche 4; `truth-buster` (was KS3 #17), tranche 3. Relisted under canon SR-21 (verifier merged, no open CRITICAL or HIGH; todo §1.58-§1.75). Their pages are unchanged (no `noindex`), so existing links, Google Classroom links and search results still work.
-- **Relisted 7 Oct 2026 (canon SR-21, contract F1):** spot-the-error, trig-worms, trig-identity-duel, component-crusher, linear-equation-solver, differentiation-duel, integration-duel, suvat, curling-friction, force-resolver, moments-master, binomial-blaster, proof-builder, dimension-checker, truth-will-set-you-free and eigenvector-engine, each back in the section it came from.
+- Unlisted 6 Oct 2026 (Jon's rulings on audit tranches 3-6, 20:30; canon SR-20) for faults found by the tranche 3-6 audits (`docs/audits/`), still unlisted: `factor-theorem` (was A-Level #88), tranche 5; `glorious-gantt` (was Core #72) and `screening-room` (was GCSE #62), tranche 4; `truth-buster` (was KS3 #17), tranche 3. Relisted under canon SR-21 (verifier merged, no open CRITICAL or HIGH; todo §1.58-§1.75). Their pages are unchanged (no `noindex`), so existing links, Google Classroom links and search results still work.
+- **Relisted 7 Oct 2026 (canon SR-21, contract F1):** spot-the-error, trig-worms, trig-identity-duel, component-crusher, linear-equation-solver, differentiation-duel, integration-duel, suvat, curling-friction, force-resolver, moments-master, binomial-blaster, partial-fractions-duel, proof-builder, dimension-checker, truth-will-set-you-free and eigenvector-engine, each back in the section it came from.
 
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
@@ -135,7 +136,6 @@ Live at their URLs, and off the portal, `/resit/`, the sitemap, the spec map and
 | 17 | Truth Buster | `truth-buster` | KS3, GCSE, A-Level | Algebra, Number, Geometry, Statistics | Always true or not? 60 questions across 3 tiers with Learn More links | untagged |
 | 62 | Screening Room | `screening-room` | GCSE, A-Level, Core, L4 | Statistics | False positives and base-rate effect with visual icon arrays | untagged |
 | 72 | Glorious Gantt Game | `glorious-gantt` | Core, L4 | Applied | CPA: forward/backward pass, critical path, floats, Gantt charts. 15 scenarios | untagged |
-| 82 | Partial Fractions Duel | `partial-fractions-duel` | A-Level, L4 | Algebra | 50 questions | untagged |
 | 88 | Factor Theorem | `factor-theorem` | A-Level, L4 | Algebra | Learn + Practice resource. 4 examples, 40 practice, 10 test. Exam vocab tooltips | untagged |
 
 ## Withdrawn (1)

@@ -42,8 +42,9 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   jc, Stage 1 underdetermined on ~33 of 45 items; fix design awaits his ruling A/B), and the self-test now
   plants decimal-detective by name (binomial-blaster, first in MIGRATED once the cloud games joined, guards
   itself, so its no-lock plant played clean).
-- **Relist PR (SR-21):** 16 games back, **listed 74 -> 90**. Still unlisted (7): expectation-station (Jon's hold,
-  pc-001), factor-theorem, partial-fractions-duel, screening-room, glorious-gantt (open CRITICAL/HIGH),
+- **Relist PR (SR-21):** 17 games back, **listed 74 -> 91** (partial-fractions-duel joined after #139 took it off
+  the cloud list; also to MIGRATED, NOT_YET 61). Still unlisted (6): expectation-station (Jon's hold,
+  pc-001), factor-theorem, screening-room, glorious-gantt (open CRITICAL/HIGH),
   truth-buster (on `cloud-remaining:`), just-pythag-it-bruv (Jon's play-test). Canon SR-21 written. The todo
   checklists' "every entry fixed" item was read as superseded by SR-21's bar (open MEDIUM/LOW stay in the
   register): flagged in the PR for Jon.
