@@ -10,6 +10,9 @@ must not: a range stated, a vector the item does not ask for up to scale, a Bool
 game that is not Boolean, a prose option that must never be read as a product. Until F0 every
 EQUAL fixture here failed: parse_value returned None for one side, so B11 skipped the pair.
 
+REGEX_GUARDS (7 Oct, queue item 0b): a render site guarded by a regex literal's .test() must be
+decided per value; until the fix the evaluator raised on it (the cloud lane's note in #115).
+
 No browser, no bank data: stdlib + SymPy. CI runs it in the Tier 4 layer A job.
 """
 import inspect
@@ -100,6 +103,34 @@ EQUAL += [(g, t, a, b, "Boolean distributive law over AND (distinct from ring al
           for g, t, a, b, why in UNEQUAL if why is None]
 UNEQUAL = [r for r in UNEQUAL if r[4] is not None]
 
+# Render-site guards that are a regex literal's .test() (the cloud lane's note, #102/#105/#115:
+# `AttributeError: 'tuple' object has no attribute 'search'`). Each guard must be decided per
+# value: (why, script, the sources that must reach KaTeX).
+REGEX_GUARDS = [
+    ("an if guard: /[\\^_{}]/.test(q.a) (Proof Builder's shape)",
+     "function show(q, el){\n"
+     "  if (/[\\\\^_{}]/.test(q.a)) katex.render(q.a, el);\n"
+     "  else el.textContent = q.a;\n}\n",
+     {"x^2"}),
+    ("a ternary inside a template literal (Component Crusher's shape)",
+     "function show(q, el){\n"
+     "  el.innerHTML = `<b>${/\\^/.test(q.a) ? katex.renderToString(q.a) : q.a}</b>`;\n}\n",
+     {"x^2"}),
+]
+REGEX_BANK = {"generator": False, "levels": {"default": {"groups": [
+    {"variable": "QUESTIONS", "path": [], "in_pool": True,
+     "questions": [{"a": "x^2"}, {"a": "seven"}]}]}}}
+
+
+def regex_guard_reaches(script):
+    _w, sites = bc.katex_render_sites("<script>\n" + script + "</script>")
+    reached, unres = set(), []
+    for st in sites:
+        r = bc.resolve_render_site(st, REGEX_BANK)
+        unres += [r["unresolved"]] if r["unresolved"] else []
+        reached |= {it["source"] for it in r["items"].values() if "source" in it}
+    return reached, unres
+
 
 def pairs(game, text, a, b):
     """value_equal_pairs on [a, b] with the item's context, if this bank_common takes one."""
@@ -125,7 +156,17 @@ def main():
             got, why = False, "%s (raised %s)" % (why, exc)
         print("%-4s unequal  %-34r %-34r %s" % ("OK" if got else "FAIL", a, b, why))
         fails += not got
-    print("\n%s: %d fixtures, %d failed" % ("PASS" if not fails else "FAILED", len(EQUAL) + len(UNEQUAL), fails))
+    for why, script, want in REGEX_GUARDS:
+        try:
+            reached, unres = regex_guard_reaches(script)
+            got = reached == want and not unres
+            detail = "reaches %s%s" % (sorted(reached), " (unresolved: %s)" % unres[0] if unres else "")
+        except Exception as exc:
+            got, detail = False, "raised %r" % exc
+        print("%-4s guard    %s: %s" % ("OK" if got else "FAIL", why, detail))
+        fails += not got
+    total = len(EQUAL) + len(UNEQUAL) + len(REGEX_GUARDS)
+    print("\n%s: %d fixtures, %d failed" % ("PASS" if not fails else "FAILED", total, fails))
     return 1 if fails else 0
 
 
