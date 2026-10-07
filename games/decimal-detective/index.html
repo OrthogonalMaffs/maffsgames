@@ -173,6 +173,19 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active')",
+  "answer": [
+    "if (!document.getElementById('gameScreen').classList.contains('active')) return;",
+    "const q = questions[currentQ]; if (!q) return;",
+    "if (q.type === 'roundup') { const b = [...document.querySelectorAll('.option-btn')];",
+    "  if (b.length) b[i % b.length].click();",
+    " }if (q.type === 'placeit') setMarkerPosition(i % 2 ? 0.1 : 0.9);",
+    "document.getElementById('checkBtn').click();"
+  ]
+}
+-->
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/number-line.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">

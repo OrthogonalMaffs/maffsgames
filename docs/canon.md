@@ -983,6 +983,19 @@ stale timers that fired after the student moved on (two games finished and submi
 - A control MaffsNext mounts, or anything inside `data-maffs-lock-skip`, is never locked.
 - Checked by `scripts/test-answer-lock.py` (the asset, with planted faults) and
   `scripts/check-answer-lock.py` (every migrated game played in Chromium; `NOT_YET` may only shrink).
+- **Adopting MaffsLock includes the game's lock-hint declaration; the game passes `check-answer-lock.py`**
+  (contract LH, 7 Oct 2026). The declaration says how the check produces a wrong answer. It is the game's
+  own fact, so it lives in the game's page, never in the shared script: one HTML comment,
+  `<!-- maffs-lock-hint ...` then a JSON object, then `-->`. Its keys are `answer` (JS that submits an
+  answer, given `i`; it may return a promise), `ready`, `start`, `start_sel`, `level`, `surface`, `keys`,
+  `each`, `mark_any` and `repeat` (check-answer-lock.py's `HINT_KEYS` documents each). A JS value may be a
+  list of strings, joined with nothing between them. `{}` declares a game the generic driver plays unaided.
+- **Script order is free.** answer-lock.js and next-control.js do not read each other at load (MaffsNext
+  asks for `window.MaffsLock` only when it advances), so either may load first.
+- **The home lane adds a game to `MIGRATED`.** A game the cloud lane migrates is judged in full as soon
+  as its page loads the lock. Its failures are reported, not failed, only while it is on the
+  `cloud-remaining:` line in `docs/handover/cloud.md`. Once the cloud lane takes it off that line, a failure
+  fails CI.
 
 ### 7.6.1 The phone rule — the reason and the control both above the fold
 

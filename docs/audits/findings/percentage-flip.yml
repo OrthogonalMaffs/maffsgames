@@ -28,3 +28,12 @@ findings:
     This needs a student action; it is not tied to particular questions.'
   status: fixed
   pr: 132
+- id: percentage-flip-f1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:phone-layout
+  level: all
+  where: games/percentage-flip/index.html (#feedback, #nextMount)
+  summary: At 320x568, measured from the top of the page, a wrong answer's reason and Next both sit below the fold (canon 7.6.1)
+  evidence: 'Chromium 320x568, wrong answer: from the page top reason 721-749, Next 760-804, fold 528. The page scrolls itself 346px as the answer box takes focus, so in this run both were on screen; on a phone the keyboard may cover them (F1 batch 2, #132)'
+  status: open

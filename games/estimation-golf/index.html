@@ -505,6 +505,20 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "ready": "document.getElementById('holeCard').style.display !== 'none' && !!currentQ",
+  "answer": [
+    "if (document.getElementById('holeCard').style.display === 'none') return;",
+    "const inp = document.getElementById('answerInput');",
+    " inp.value = String(currentQ.answer * 9 + i);",
+    "document.getElementById('submitBtn').click();"
+  ],
+  "keys": [
+    "Enter"
+  ]
+}
+-->
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>

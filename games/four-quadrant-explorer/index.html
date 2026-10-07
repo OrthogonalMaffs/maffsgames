@@ -112,6 +112,20 @@ body.accessible p,body.accessible .prompt-bar,body.accessible .confidence-text,b
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "ready": "document.getElementById('gameScreen').style.display !== 'none'",
+  "answer": [
+    "const row = document.getElementById('optionsRow');",
+    "if (row.style.display !== 'none' && row.children.length) {",
+    " row.children[i % row.children.length].click();",
+    " return; }const c = document.getElementById('gridCanvas'), r = c.getBoundingClientRect();",
+    "for (let k = 0; k < 2; k++) c.dispatchEvent(new MouseEvent('click', {",
+    "bubbles: true, clientX: r.left + 4, clientY: r.top + 4}));"
+  ],
+  "surface": "#gridCanvas"
+}
+-->
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>

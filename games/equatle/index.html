@@ -203,6 +203,20 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "ready": "!!document.getElementById('t00')",
+  "answer": [
+    "if (G.status !== 'playing') return;const eqs = ['12+34=46', '10+20=30', '11+22=33', '40+15=55', '25+25=50', '13+14=27', '30+31=61'];",
+    "for (let k = 0; k < 6 && G.status === 'playing';",
+    " k++) {  for (const ch of eqs[(i + k) % eqs.length]) key(ch);",
+    " key('ENTER'); }"
+  ],
+  "keys": [
+    "Enter"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>

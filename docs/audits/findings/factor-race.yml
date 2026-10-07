@@ -56,3 +56,12 @@ findings:
   evidence: 'Chromium: qa indices [1,3,4,...,10] after a forced timeout on Q2; nonsense/constructor/__proto__ ->
     ks3, no errors (the fixed 1600ms wrong advance is replaced by MaffsNext in #132; the rest is open)'
   status: open
+- id: factor-race-f1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:phone-layout
+  level: all
+  where: games/factor-race/index.html (#feedback, #nextMount)
+  summary: At 320x568 a wrong answer's reason (the factor counts) and its Next both sit below the fold (canon 7.6.1)
+  evidence: 'Chromium 320x568, wrong answer, scrollY 0, fold 528 (568 - 40px footer): reason 648-680, Next 691-735 (F1 batch 2, #132)'
+  status: open

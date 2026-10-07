@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: L1 | Answer lock in play, part 1 (canon 7.6.0: static rules; migrated games played in Chromium) | --part 1/2
+# ci-line: L1 | Answer lock in play, part 1 (canon 7.6.0: self-test, static rules; migrated games played in Chromium) | --selftest && --part 1/2
 # ci-line: L2 | Answer lock in play, part 2 (canon 7.6.0: migrated games played in Chromium) | --part 2/2
 # ci-deps: schools/assets/answer-lock.js schools/assets/next-control.js scripts/check-site.py
 """Does every game mark through MaffsLock (canon §7.6.0), so that no repeat marks twice or finishes twice?
@@ -7,13 +7,21 @@
 Every roster game that records question_answered is either MIGRATED (its own guards replaced by
 schools/assets/answer-lock.js) or on NOT_YET. NOT_YET is reported, never failed, and may only shrink:
 it must be a subset of NOT_YET_AT_START (the games when contract F1 began), so a new game cannot be put on
-it, and a game on it that already loads answer-lock.js fails as stale (take it off). A cloud-lane game
-(CLOUD_LANE) is the exception: that lane adopts the lock in its own PRs, so it is reported, and the home
-lane moves it to MIGRATED once it passes (suvat, #128, 7 Oct 2026).
+it. A game on NOT_YET that already loads answer-lock.js (the cloud lane adopts the lock in its own PRs) is
+played and judged like a migrated one: its failures fail, and when it passes the home lane moves it to
+MIGRATED. The one exception: while the game is on the cloud lane's remaining list (the `cloud-remaining:`
+line in docs/handover/cloud.md), its failures are reported, not failed. That state ends when the cloud lane
+takes the game off its list (contract LH, 7 Oct 2026). A missing list fails the check.
+
+How the check produces a wrong answer is the game's own declaration, never this script's (contract LH): a
+`<!-- maffs-lock-hint ... -->` comment in the game's page, holding JSON (canon §7.6.0; answer-lock.js's
+header). Every migrated game has one; `{}` when the generic driver plays it unaided. Its keys are HINT_KEYS
+below; a JS value may be a list of strings, joined with nothing between them.
 
 A migrated game must, statically:
-  - load answer-lock.js once (after next-control.js where it loads that) and call MaffsLock.lock(,
-    MaffsLock.fresh( or MaffsLock.screen(, and MaffsLock.finishOnce(;
+  - load answer-lock.js once (in either order with next-control.js: neither reads the other at load) and
+    call MaffsLock.lock(, MaffsLock.fresh( or MaffsLock.screen(, and MaffsLock.finishOnce(;
+  - declare a maffs-lock-hint that parses, with known keys only;
   - keep no local answered flag: no `answered = true` (or locked, answerLocked, choiceLocked, busy,
     canAnswer, isAnswering, acceptingInput ...) assignment of a boolean;
   - make no raw setTimeout: every timer goes through MaffsLock.timer. A line that must keep one (focus,
@@ -29,11 +37,13 @@ the real clock), at its first roster level:
   4. tap through to the end quickly (each answer followed at once by its continue control, then the end
      screen tapped for a while, the way formula-plug-in's reveal screen ran showResults twice): exactly one
      game_completed and at most one submitScore.
-A game the driver cannot play (no option group, no input) is reported UNPLAYABLE and fails: give it a HINT.
+A game the driver cannot play (no option group, no input) is reported UNPLAYABLE and fails: its declaration
+needs an "answer" (and whatever else it takes to reach a question).
 
     python scripts/check-answer-lock.py                    # every migrated game
     python scripts/check-answer-lock.py --game formula-plug-in [--against FILE]
     python scripts/check-answer-lock.py --not-yet          # play the NOT_YET games too (a report, never fails)
+    python scripts/check-answer-lock.py --selftest         # a planted failing game off the cloud list is caught
     python scripts/check-answer-lock.py --part 1/2         # CI: every other migrated game (by slug); part 1 also
                                                            # runs the static rules. Add a part (and a group,
                                                            # L1-L4 in ci-groups.py) when a part passes 3 minutes.
@@ -53,10 +63,20 @@ import bank_common as bc  # noqa: E402
 TIME_SCALE = 0.25
 WORKERS = 4
 
-# Games the cloud lane still has on its list (docs/handover/cloud.md, 7 Oct 2026). The cloud lane adopts
-# MaffsLock in these itself once the asset is on main; it takes the game off NOT_YET in that PR.
-CLOUD_LANE = {'linear-equation-solver', 'moments-master', 'force-resolver', 'suvat', 'factor-theorem',
-              'eigenvector-engine', 'truth-will-set-you-free'}
+# The cloud lane's remaining list: the one `cloud-remaining: <slug> <slug> ...` line in its own handover. While a
+# game is on it, a failure here is reported, not failed; the cloud lane takes a game off in the PR that finishes it.
+CLOUD_HANDOVER = os.path.join(ROOT, 'docs', 'handover', 'cloud.md')
+CLOUD_LIST = re.compile(r'`cloud-remaining:([^`]*)`')
+
+
+def cloud_remaining(text=None):
+    """The slugs on the cloud lane's remaining list; ValueError if the handover has no single such line."""
+    if text is None:
+        text = open(CLOUD_HANDOVER, encoding='utf-8').read()
+    found = CLOUD_LIST.findall(text)
+    if len(found) != 1:
+        raise ValueError('docs/handover/cloud.md has %d `cloud-remaining:` lines (exactly one)' % len(found))
+    return set(found[0].split())
 
 # Every roster game that recorded question_answered when contract F1 began (7 Oct 2026). Frozen: never add
 # to it. NOT_YET must stay a subset, so a new game is migrated from the start.
@@ -79,122 +99,57 @@ terrible-advice test-the-claim think-of-a-number trig-identity-duel trig-wars tr
 truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-internet
 '''.split())
 
-# Migrated games, added in the PR that migrates each. NOT_YET is the rest: reported, never failed, and it
-# may only shrink.
+# Migrated games. The home lane adds each: in the PR that migrates it, or, for a game the cloud lane migrated,
+# once it passes here. NOT_YET is the rest: reported, never failed, and it may only shrink.
 MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 think-of-a-number decimal-detective
 prime-or-composite probability-pioneer factor-race prime-factorisation
 percentage-flip fraction-equivalence equatle estimation-golf
+suvat
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
-# Per-game driving hints, where the generic driver needs one: 'level' (the level key to load), 'start' (JS
-# that reaches the first question), 'ready' (JS: true when a question is on screen), 'answer' (JS that submits
-# an answer; gets `i`, the attempt), 'surface' (a selector for an answer surface that is not an option
-# group, such as a canvas: the repeat phase really clicks its centre and corners too), 'start_sel' (the
-# control that starts a run, when it is not a Start button: double-clicked for real), 'keys' (the game's
-# own answer keys: pressed on the page in the repeat phase, inside MaffsNext's floor), 'each' (JS run before
-# each step of the tap-through: a wait the game measures on the real clock, which TIME_SCALE cannot shorten),
-# 'mark_any' (the game logs only right answers, as a built answer does: the repeat phase follows any mark),
-# 'repeat' (JS that presses every answer control of the marked question, where they are not an option group).
-HINTS = {
-    'four-quadrant-explorer': {
-        'ready': "document.getElementById('gameScreen').style.display !== 'none'",
-        'answer': ("const row = document.getElementById('optionsRow');"
-                   "if (row.style.display !== 'none' && row.children.length) { row.children[i % row.children.length].click(); return; }"
-                   "const c = document.getElementById('gridCanvas'), r = c.getBoundingClientRect();"
-                   "for (let k = 0; k < 2; k++) c.dispatchEvent(new MouseEvent('click', {bubbles: true, clientX: r.left + 4, clientY: r.top + 4}));"),
-        'surface': '#gridCanvas',
-    },
-    'shape-shifter': {
-        'start_sel': "[onclick=\"startGame('rotation')\"]",
-        'ready': "document.getElementById('gameScreen').classList.contains('active')",
-        'answer': ("if (!document.getElementById('gameScreen').classList.contains('active') || !rotationOptions.length) return;"
-                   "const o = rotationOptions[i % rotationOptions.length], p = gridToPixel(o.at[0], o.at[1]);"
-                   "const r = canvas.getBoundingClientRect();"
-                   "canvas.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true,"
-                   "  clientX: r.left + p[0], clientY: r.top + p[1]}));"),
-        'surface': '#gridCanvas',
-    },
-    'negative-number-line': {
-        'ready': "document.getElementById('gameScreen').classList.contains('active')",
-        'answer': ("if (!document.getElementById('gameScreen').classList.contains('active')) return;"
-                   "const q = questions[qIndex];"
-                   "if (q.type === 'place') { setPlaced(q.data >= 0 ? q.data - 1 : q.data + 1);"
-                   "  document.getElementById('placeConfirm').click(); return; }"
-                   "if (q.type === 'order') { [...document.querySelectorAll('#sourceZone .order-tile')].reverse()"
-                   "  .forEach(t => t.click()); document.getElementById('orderCheck').click(); return; }"
-                   "const b = [...document.querySelectorAll('#calcOptions .calc-option')]; if (b.length) b[i % b.length].click();"),
-        'surface': '#placeNLWrap',
-    },
-    'think-of-a-number': {
-        'ready': "document.getElementById('gameScreen').classList.contains('active')",
-        'answer': ("if (!document.getElementById('gameScreen').classList.contains('active')) return;"
-                   "document.querySelector('#numpad [data-val=\"' + ((i % 9) + 1) + '\"]').click();"
-                   "document.querySelector('#numpad [data-val=\"enter\"]').click();"),
-        'surface': '#numpad',
-    },
-    'decimal-detective': {
-        'ready': "document.getElementById('gameScreen').classList.contains('active')",
-        'answer': ("if (!document.getElementById('gameScreen').classList.contains('active')) return;"
-                   "const q = questions[currentQ]; if (!q) return;"
-                   "if (q.type === 'roundup') { const b = [...document.querySelectorAll('.option-btn')];"
-                   "  if (b.length) b[i % b.length].click(); }"
-                   "if (q.type === 'placeit') setMarkerPosition(i % 2 ? 0.1 : 0.9);"
-                   "document.getElementById('checkBtn').click();"),
-    },
-    'probability-pioneer': {
-        'ready': "['stage1Screen', 'stage2Screen', 'stage3Screen'].some(id => document.getElementById(id).classList.contains('active'))",
-        'answer': ("const on = id => document.getElementById(id).classList.contains('active');"
-                   "if (on('stage1Screen')) { const l = [...document.querySelectorAll('#scaleLabels .scale-label')];"
-                   "  l[i % l.length].click(); document.getElementById('scaleConfirmBtn').click(); return; }"
-                   "if (on('stage2Screen')) { const b = [...document.querySelectorAll('#mcqGrid .mcq-btn')];"
-                   "  if (b.length) b[i % b.length].click(); return; }"
-                   "if (on('stage3Screen')) document.getElementById(i % 2 ? 'btnTrue' : 'btnFalse').click();"),
-        'each': 'revealStartTime = 0;',
-    },
-    'prime-factorisation': {
-        'mark_any': True,
-        'ready': "document.getElementById('mainGame').classList.contains('visible')",
-        'answer': ("if (!document.getElementById('mainGame').classList.contains('visible')) return;"
-                   "let r = currentTarget / product;"
-                   "for (const p of [2, 3, 5, 7, 11, 13]) while (r % p === 0) {"
-                   "  document.querySelector('#primeBtns [data-p=\"' + p + '\"]').click(); r /= p; }"),
-        'repeat': "document.querySelectorAll('#primeBtns .prime-btn').forEach(b => { b.click(); b.click(); });",
-    },
-    'equatle': {
-        'ready': "!!document.getElementById('t00')",
-        'answer': ("if (G.status !== 'playing') return;"
-                   "const eqs = ['12+34=46', '10+20=30', '11+22=33', '40+15=55', '25+25=50', '13+14=27', '30+31=61'];"
-                   # a wrong guess is not a finished question (the next row is the same puzzle): lose it, so
-                   # the wrong path ends on MaffsNext (canon 7.6) as a lost puzzle does
-                   "for (let k = 0; k < 6 && G.status === 'playing'; k++) {"
-                   "  for (const ch of eqs[(i + k) % eqs.length]) key(ch); key('ENTER'); }"),
-        'keys': ['Enter'],
-    },
-    'estimation-golf': {
-        'ready': "document.getElementById('holeCard').style.display !== 'none' && !!currentQ",
-        'answer': ("if (document.getElementById('holeCard').style.display === 'none') return;"
-                   "const inp = document.getElementById('answerInput'); inp.value = String(currentQ.answer * 9 + i);"
-                   "document.getElementById('submitBtn').click();"),
-        'keys': ['Enter'],
-    },
-    'prime-or-composite': {
-        'keys': ['p', 'c', 'P', 'C'],
-    },
-    'like-terms-collector': {
-        'ready': "document.getElementById('gameScreen').classList.contains('active')",
-        'answer': ("const a = document.getElementById('ans0');"
-                   "if (a && a.offsetParent) { a.value = '0'; document.getElementById('ans1').value = '0';"
-                   "  document.getElementById('checkBtn').click(); return; }"
-                   "const b = [...document.querySelectorAll('#mcqGrid .mcq-btn')].filter(e => e.offsetParent); if (b.length) b[i % b.length].click();"),
-        'surface': '#inputArea',
-    },
-}
+# A game's declaration (its maffs-lock-hint), keys: 'level' (the level key to load), 'start' (JS that reaches the
+# first question), 'ready' (JS: true when a question is on screen), 'answer' (JS that submits an answer; gets `i`,
+# the attempt; it may return a promise), 'surface' (a selector for an answer surface that is not an option group,
+# such as a canvas: the repeat phase really clicks its centre and corners too), 'start_sel' (the control that
+# starts a run, when it is not a Start button: double-clicked for real), 'keys' (the game's own answer keys:
+# pressed on the page in the repeat phase, inside MaffsNext's floor), 'each' (JS run before each step of the
+# tap-through: a wait the game measures on the real clock, which TIME_SCALE cannot shorten), 'mark_any' (the game
+# logs only right answers, as a built answer does: the repeat phase follows any mark), 'repeat' (JS that presses
+# every answer control of the marked question, where they are not an option group).
+HINT_KEYS = {'level': str, 'start': str, 'ready': str, 'answer': str, 'surface': str, 'start_sel': str,
+             'keys': list, 'each': str, 'mark_any': bool, 'repeat': str}
+HINT_RE = re.compile(r'<!--\s*maffs-lock-hint\b[^\n]*\n(.*?)-->', re.S)
+
+
+def read_hint(html):
+    """(the game's declaration as a dict, [fault]). A JS value given as a list of strings is joined."""
+    import json
+    found = HINT_RE.findall(html)
+    if len(found) != 1:
+        return {}, ['declares maffs-lock-hint %d times (once; {} when the generic driver plays it)' % len(found)]
+    try:
+        raw = json.loads(found[0])
+    except ValueError as e:
+        return {}, ['its maffs-lock-hint is not JSON: %s' % e]
+    if not isinstance(raw, dict):
+        return {}, ['its maffs-lock-hint is not a JSON object']
+    hint, faults = {}, []
+    for k, v in raw.items():
+        want = HINT_KEYS.get(k)
+        if want is str and isinstance(v, list) and all(isinstance(x, str) for x in v):
+            v = ''.join(v)
+        if want is None:
+            faults.append('its maffs-lock-hint has an unknown key %r (known: %s)' % (k, ', '.join(sorted(HINT_KEYS))))
+        elif not isinstance(v, want):
+            faults.append('its maffs-lock-hint %r is not a %s' % (k, want.__name__))
+        else:
+            hint[k] = v
+    return hint, faults
 
 INCLUDE = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/answer-lock\.js"', re.I)
-NEXT_INCLUDE = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/next-control\.js"', re.I)
 FLAG = re.compile(r'\b(answered|isAnswered|hasAnswered|answerLocked|choiceLocked|inputLocked|optionsLocked|'
                   r'locked|isLocked|busy|isBusy|canAnswer|canClick|acceptingInput|accepting|isAnswering|'
                   r'answering|processing|waitingForNext|awaitingNext)\s*=\s*(true|false)\b')
@@ -233,10 +188,7 @@ def static_faults(slug, html):
     inc = INCLUDE.findall(html)
     if len(inc) != 1:
         faults.append('loads answer-lock.js %d times (once)' % len(inc))
-    else:
-        nx = NEXT_INCLUDE.search(html)
-        if nx and nx.start() > INCLUDE.search(html).start():
-            faults.append('loads answer-lock.js before next-control.js')
+    faults += read_hint(html)[1]
     for call in ('MaffsLock.lock(', 'MaffsLock.finishOnce('):
         if call not in html:
             faults.append('never calls %s' % call[:-1])
@@ -519,7 +471,8 @@ class Driver:
 async def play(browser, base, slug, level, page_html):
     """[fault] for one game, played in Chromium."""
     faults = []
-    hint = HINTS.get(slug, {})
+    hint = read_hint(page_html if page_html is not None else
+                     open(os.path.join(ROOT, 'games', slug, 'index.html'), encoding='utf-8').read())[0]
     level = hint.get('level', level)
     url = base + '/games/%s/%s' % (slug, ('?level=%s' % level) if level else '')
 
@@ -547,14 +500,14 @@ async def play(browser, base, slug, level, page_html):
     d = Driver(page, slug, hint)
     if not await d.start(dbl=True):
         await ctx.close()
-        return ['UNPLAYABLE: no option group or input after Start (give it a HINT)']
+        return ['UNPLAYABLE: no option group or input after Start (declare it in the page: maffs-lock-hint, canon 7.6.0)']
     s = await d.snap()
     if s['answered']:
         faults.append('dblclick on Start: its second click answered the first question')
     s0 = await d.answer_wrong()
     if s0 is None:
         await ctx.close()
-        return faults + ['UNPLAYABLE: no wrong answer marked in 8 questions (give it a HINT)']
+        return faults + ['UNPLAYABLE: no wrong answer marked in 8 questions (declare it in the page: maffs-lock-hint, canon 7.6.0)']
     rects = await d.ev('() => __lockGroupRects()')
     if hint.get('surface'):
         rects += await d.ev('''(sel) => { const e = document.querySelector(sel); if (!e) return [];
@@ -708,6 +661,72 @@ VERBOSE = False
 AUTO_ADVANCE = set()   # games that moved on by themselves after a wrong answer (no Next): reported
 
 
+def counts(slug, remaining):
+    """Does a failure of this game fail the check? Yes, unless the game is not yet MIGRATED and is still on the
+    cloud lane's remaining list (then it is reported). Contract LH: that state ends when the list drops it."""
+    return slug in MIGRATED or slug not in remaining
+
+
+# A page with no lock at all: lock() never refuses, nothing is ever locked, no fresh window.
+PLANT = ('<script>MaffsLock.lock = function () { return true; }; MaffsLock.isLocked = function () { return false; };'
+         ' MaffsLock.fresh = function () {}; MaffsLock.screen = function () { MaffsLock.clearTimers(); };</script>\n')
+
+
+def selftest(games):
+    """The reported state is bounded: a planted failing game off the cloud lane's list is caught, on it reported."""
+    import tempfile
+    errs = []
+    if cloud_remaining('x `cloud-remaining: a b` y') != {'a', 'b'}:
+        errs.append('cloud_remaining() misreads a list')
+    for bad in ('no list here', '`cloud-remaining: a` and `cloud-remaining: b`'):
+        try:
+            cloud_remaining(bad)
+            errs.append('cloud_remaining() accepted %r (a missing or doubled list must fail)' % bad)
+        except ValueError:
+            pass
+    try:
+        cloud_remaining()
+    except ValueError as e:
+        errs.append(str(e))
+    for page, why in (('<!-- maffs-lock-hint\n{"answer": \n-->', 'not JSON'),
+                      ('<!-- maffs-lock-hint\n{"anwser": "x"}\n-->', 'an unknown key'),
+                      ('<p>no declaration</p>', 'no declaration')):
+        if not read_hint(page)[1]:
+            errs.append('a maffs-lock-hint with %s passed' % why)
+    if read_hint('<!-- maffs-lock-hint x\n{"answer": ["a;", " b"], "keys": ["p"]}\n-->') != ({'answer': 'a; b', 'keys': ['p']}, []):
+        errs.append('read_hint() misreads a declaration')
+    # The plant: the first migrated game, its MaffsLock.lock never refusing, played as a game the cloud lane
+    # adopted and has taken off its list.
+    slug, level = sorted((g for g in games if g[0] in MIGRATED))[0]
+    html = open(os.path.join(ROOT, 'games', slug, 'index.html'), encoding='utf-8').read()
+    m = INCLUDE.search(html)
+    end = html.index('\n', m.end()) + 1
+    with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8') as f:
+        f.write(html[:end] + PLANT + html[end:])
+    try:
+        res = asyncio.run(play_all([(slug, level)], f.name)).get(slug, [])
+    finally:
+        os.unlink(f.name)
+    saved = set(MIGRATED)
+    MIGRATED.discard(slug)
+    try:
+        if not res:
+            errs.append('planted %s (no lock: MaffsLock.lock never refuses, no fresh window) played clean: the check cannot see a missing lock' % slug)
+        elif not counts(slug, set()):
+            errs.append('planted %s fails, off the cloud list, but its failure is not counted' % slug)
+        elif counts(slug, {slug}):
+            errs.append('planted %s on the cloud list is failed, not reported' % slug)
+        else:
+            print('  self-test: planted %s (no lock: MaffsLock.lock never refuses, no fresh window), off the cloud list: CAUGHT (%d, e.g. %s);'
+                  ' on the list: reported' % (slug, len(res), res[0][:90]))
+    finally:
+        MIGRATED.clear()
+        MIGRATED.update(saved)
+    for e in errs:
+        print('FAIL  self-test: ' + e)
+    return errs
+
+
 def main():
     global CHECK_SITE, VERBOSE
     ap = argparse.ArgumentParser()
@@ -716,6 +735,7 @@ def main():
     ap.add_argument('--not-yet', action='store_true', help='play the NOT_YET games too (reported only)')
     ap.add_argument('--static', action='store_true', help='static rules only, no browser')
     ap.add_argument('--part', help='i/n: play only the i-th of n slices of the migrated games (CI)')
+    ap.add_argument('--selftest', action='store_true', help='a planted failing game off the cloud list is caught')
     ap.add_argument('-v', '--verbose', action='store_true')
     args = ap.parse_args()
     VERBOSE = args.verbose
@@ -725,60 +745,71 @@ def main():
         pass
     CHECK_SITE = load_check_site()
     games = roster_games()
+    if args.selftest:
+        errs = selftest(games)
+        print('FAILED' if errs else 'PASS')
+        return 1 if errs else 0
     slugs = {s for s, _ in games}
     fails = []
+    try:
+        remaining = cloud_remaining()
+    except ValueError as e:
+        fails.append(str(e))
+        remaining = set()
     for s in sorted(NOT_YET - NOT_YET_AT_START):
         fails.append('%s: on NOT_YET but not in NOT_YET_AT_START (a new game is migrated from the start)' % s)
     for s in sorted(NOT_YET - slugs):
         fails.append('%s: on NOT_YET but not a roster game that records question_answered' % s)
-    migrated = [(s, l) for s, l in games if s not in NOT_YET]
-    adopted = []
-    for s, _ in games:
-        html = open(os.path.join(ROOT, 'games', s, 'index.html'), encoding='utf-8').read()
-        if s in NOT_YET and not args.against:
-            if INCLUDE.search(html) and s in CLOUD_LANE:
-                adopted.append(s)       # the cloud lane adopts the lock in its own PRs; the home lane lists it
-            elif INCLUDE.search(html):
-                fails.append('%s: loads answer-lock.js but is still on NOT_YET (stale: take it off)' % s)
-            continue
+    page = {s: open(os.path.join(ROOT, 'games', s, 'index.html'), encoding='utf-8').read() for s, _ in games}
+    # Adopted: on NOT_YET, but the page loads the lock (the cloud lane migrates its own games). Judged in full.
+    adopted = {s for s in NOT_YET & slugs if INCLUDE.search(page[s])}
+    judged = [(s, l) for s, l in games if s not in NOT_YET or s in adopted]
+    reported = []      # [(slug, fault)]: an adopted game still on the cloud lane's list
+    for s, _ in judged:
         if args.game and s not in args.game:
             continue
-        for f in static_faults(s, open(args.against, encoding='utf-8').read() if args.against else html):
-            fails.append('%s: %s' % (s, f))
-    to_play = [(s, l) for s, l in migrated if not args.game or s in args.game]
+        for f in static_faults(s, open(args.against, encoding='utf-8').read() if args.against else page[s]):
+            (fails if counts(s, remaining) or args.against else reported).append('%s: %s' % (s, f))
+    to_play = [(s, l) for s, l in judged if not args.game or s in args.game]
     if args.part:
         i, n = (int(x) for x in args.part.split('/'))
         to_play = [g for k, g in enumerate(sorted(to_play)) if k % n == i - 1]
         if i != 1:
-            fails = []          # the static rules and NOT_YET are part 1's (one report, not n)
+            fails, reported = [], []    # the static rules and NOT_YET are part 1's (one report, not n)
     if args.not_yet:
-        to_play += [(s, l) for s, l in games if s in NOT_YET and (not args.game or s in args.game)]
+        to_play += [(s, l) for s, l in games if s in NOT_YET - adopted and (not args.game or s in args.game)]
     if args.game and args.against and len(args.game) == 1:
         to_play = [(s, l) for s, l in games if s in args.game]
-    print('Answer lock (canon 7.6.0): %d roster games record question_answered; %d migrated, %d on NOT_YET '
-          '(%d of them the cloud lane\'s)' % (len(games), len(migrated), len(NOT_YET & slugs),
-                                              len(NOT_YET & slugs & CLOUD_LANE)))
+    print('Answer lock (canon 7.6.0): %d roster games record question_answered; %d migrated, %d adopted by the '
+          'cloud lane, %d on NOT_YET; the cloud lane\'s remaining list: %s'
+          % (len(games), len(slugs - NOT_YET), len(adopted), len(NOT_YET & slugs - adopted),
+             ' '.join(sorted(remaining)) or '(empty)'))
     if not args.static and to_play:
         results = asyncio.run(play_all(to_play, args.against))
         for s, _ in to_play:
             res = results.get(s, ['not played'])
-            tag = 'NOT_YET' if s in NOT_YET and not args.against else ('PASS' if not res else 'FAIL')
+            hard = args.against or (s not in NOT_YET or s in adopted) and counts(s, remaining)
+            tag = 'PASS' if not res else ('FAIL' if hard else ('REPORTED' if s in adopted else 'NOT_YET'))
             print('  %-8s %s%s' % (tag, s, ('' if not res else ': ' + '; '.join(res))))
-            if res and (s not in NOT_YET or args.against):
+            if res and hard:
                 fails += ['%s: %s' % (s, r) for r in res]
-    if adopted:
-        print('  note: the cloud lane\'s %s load answer-lock.js and are still on NOT_YET: the home lane moves each to'
-              ' MIGRATED once it passes here' % ', '.join(sorted(adopted)))
+            elif res and s in adopted:
+                reported += ['%s: %s' % (s, r) for r in res]
+    for s in sorted(adopted):
+        print('  note: %s loads answer-lock.js and is on NOT_YET: %s' % (s, (
+            'on the cloud lane\'s list, so its failures are reported, not failed' if s in remaining else
+            'off the cloud lane\'s list, so it is judged in full; the home lane adds it to MIGRATED once it passes')))
+    for r in reported:
+        print('  REPORTED (on the cloud lane\'s list) ' + r)
     if AUTO_ADVANCE:
         print('  note: no Next after a wrong answer (the game moves on by itself; canon 7.6 asks for Next): %s'
               % ', '.join(sorted(AUTO_ADVANCE)))
-    if NOT_YET & slugs:
-        print('  NOT_YET (%d): %s' % (len(NOT_YET & slugs), ', '.join(sorted(NOT_YET & slugs))))
+    if NOT_YET & slugs - adopted:
+        print('  NOT_YET (%d): %s' % (len(NOT_YET & slugs - adopted), ', '.join(sorted(NOT_YET & slugs - adopted))))
     for f in fails:
         print('FAIL  ' + f)
     print('FAILED' if fails else 'PASS')
     return 1 if fails else 0
-
 
 if __name__ == '__main__':
     sys.exit(main())

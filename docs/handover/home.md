@@ -9,13 +9,16 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
-**QUEUE (home lane, F1, Jon's re-ordering of 7 Oct 18:05):** MaffsLock #125, batch 1 #129 and batch 2 #132 are
-done. Next:
+**QUEUE (home lane, F1, Jon's re-ordering of 7 Oct 18:05; contract LH inserted before batch 3):** MaffsLock #125,
+batch 1 #129, batch 2 #132 and contract LH (this entry's PR) are done. Next:
 1. **Batches 3-4:** the unlisted games the cloud lane has finished and merged: spot-the-error, truth-buster,
    trig-worms, expectation-station, component-crusher, trig-identity-duel, binomial-blaster,
    partial-fractions-duel, differentiation-duel, integration-duel, curling-friction, dimension-checker,
    proof-builder, linear-equation-solver, moments-master, force-resolver. Skip any game still on the cloud
-   lane's list in `docs/handover/cloud.md` (re-read it first).
+   lane's list: since LH that is the `cloud-remaining:` line in `docs/handover/cloud.md`. As of 7 Oct night it
+   holds **trig-identity-duel, binomial-blaster, partial-fractions-duel and truth-buster** (Jon's 15:27
+   follow-ups), so those four are skipped: 12 games left. Each migrated game gets its `maffs-lock-hint`
+   declaration (`{}` if none is needed). Add factor-theorem's (from #130) if #130 has merged by then.
 2. **Straight after batch 4:** the relist PR for every game in REGISTER.md's "Ready to relist" (SR-21). Give
    the listed-game count before and after.
 3. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty.
@@ -25,6 +28,49 @@ done. Next:
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-07 (home, night): contract LH, lock hints declared by each game (this PR)
+
+- **Jon's contract LH (before batch 3).** The root cause: per-game facts sat in a shared script, so each cloud
+  migration needed a home-lane edit (suvat #128, factor-theorem #130). The fix is at that layer, the same
+  shape as contract V.
+  - **Declaration.** Each migrated game declares how the check produces a wrong answer in its own page: one
+    `<!-- maffs-lock-hint` comment holding a JSON object (canon §7.6.0, answer-lock.js's header,
+    `HINT_KEYS` in the script).
+  - **Moved out of the script:** all 11 central hints (each reads back equal), plus suvat's from #130. The five games that needed
+    none declare `{}`, and a declaration is now required. No per-game hint is left in the script.
+- **The load-order rule is removed, and tested both ways in Chromium.**
+  - factor-race, reversed (answer-lock.js first) and played through `--against`, passes every behaviour,
+    including the double-click on MaffsNext.
+  - suvat loads answer-lock.js first natively, and it passes.
+  - No STOP IF.
+- **The "reported, not failed" state now has an exit.**
+  - A NOT_YET game whose page loads the lock is judged in full.
+  - Its failures are reported only while it is on the `cloud-remaining:` line, which the home lane added to
+    cloud.md's header at Jon's instruction (the one cross-lane edit; the cloud lane keeps it from now on). A
+    missing or doubled line fails the check.
+  - An off-list game that passes is noted for the home lane to add to MIGRATED.
+  - `--selftest` (run in L1 before part 1) plants a page with no lock. In it `MaffsLock.lock` never refuses
+    and there's no fresh window. It is played as an off-list adopter: CAUGHT (a question skip in the
+    tap-through). On the list it is reported. Overriding `lock()` alone was not enough: decimal-detective
+    replaces its Check button, so the plant had to remove the fresh window too.
+- **suvat is in MIGRATED and passes.** All 17 migrated games pass both parts.
+- **CI selection.** The script no longer names any game, so `ci-deps.py` marks it ALWAYS: it runs on every PR,
+  cloud-lane game PRs included. Before, a game PR selected it only through the slugs in HINTS/CLOUD_LANE, so
+  factor-race, formula-plug-in and others were never selected by their own changes.
+- **Register (item 5).** §7.6.1 says the reason and Next both sit above the fold, so these are MEDIUM
+  (`NEW:phone-layout`, open):
+  - factor-race-f1-001: reason 648-680 and Next 691-735; the fold is 528.
+  - fraction-equivalence-f1-001: Next 534-578. Its reason, 477-501, is above the fold, so the entry says so.
+  - percentage-flip-f1-001: below the fold from the top of the page. But the page scrolls itself 346px as
+    the answer box takes focus, so in the run both were on screen.
+- **For the cloud lane:**
+  - #130 (factor-theorem) edits check-answer-lock.py and suvat's page, and it will conflict. On rebase:
+    factor-theorem's hint goes in its page as a declaration, and MIGRATED stays the home lane's. Its suvat
+    script-order swap is no longer needed.
+  - factor-theorem is on the remaining list, so its failures are reported until it comes off.
+  - Its open note (moving to MaffsNext needs `FT_STEP` in check-teacher-invite.py taught first) is home-lane
+    work, not yet queued.
 
 ## 2026-10-07 (home, night): F1 batches 1 (#129) and 2 (#132) merged; CHECKPOINT STOP (2 batches)
 

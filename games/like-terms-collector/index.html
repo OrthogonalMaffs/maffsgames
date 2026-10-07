@@ -144,6 +144,20 @@ body.accessible p,body.accessible .question-text,body.accessible .feedback-detai
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active')",
+  "answer": [
+    "const a = document.getElementById('ans0');",
+    "if (a && a.offsetParent) { a.value = '0';",
+    " document.getElementById('ans1').value = '0';",
+    "  document.getElementById('checkBtn').click();",
+    " return; }const b = [...document.querySelectorAll('#mcqGrid .mcq-btn')].filter(e => e.offsetParent);",
+    " if (b.length) b[i % b.length].click();"
+  ],
+  "surface": "#inputArea"
+}
+-->
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">

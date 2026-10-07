@@ -165,6 +165,22 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "ready": [
+    "['stage1Screen', 'stage2Screen', 'stage3Screen'].some(id => document.getElementById(id).classList.contains('active'))"
+  ],
+  "answer": [
+    "const on = id => document.getElementById(id).classList.contains('active');",
+    "if (on('stage1Screen')) { const l = [...document.querySelectorAll('#scaleLabels .scale-label')];",
+    "  l[i % l.length].click(); document.getElementById('scaleConfirmBtn').click();",
+    " return; }if (on('stage2Screen')) { const b = [...document.querySelectorAll('#mcqGrid .mcq-btn')];",
+    "  if (b.length) b[i % b.length].click();",
+    " return; }if (on('stage3Screen')) document.getElementById(i % 2 ? 'btnTrue' : 'btnFalse').click();"
+  ],
+  "each": "revealStartTime = 0;"
+}
+-->
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
