@@ -29,11 +29,18 @@ negative or fractional.
 
 Writes the bank straight into games/linear-equation-solver/index.html between
 the GENERATED BANK markers. Nothing else in that file is touched.
+
+Since 7 Oct 2026 (Jon's "optimal move" design) the options a student sees at
+each step, and the hints, come from scripts/gen-linear-moves.py, which reads
+this bank's equations, keyed moves and lines from the page and writes MOVES.
+The templates below still build `opts` and `hint` for each move (their
+distractor reasoning is kept as the record of the original design), but only
+`correct` and `line` are written to the page.
 """
 import pathlib, re, json
 from fractions import Fraction as F
 
-GAME = pathlib.Path(r"E:\jon\maffsgames\games\linear-equation-solver\index.html")
+GAME = pathlib.Path(__file__).resolve().parent.parent / 'games' / 'linear-equation-solver' / 'index.html'
 START = "// >>> GENERATED BANK START — built by scripts/gen-linear-equations.py, do not edit by hand"
 END = "// >>> GENERATED BANK END"
 
@@ -510,7 +517,7 @@ for q in QS:
     parts = ['id:%s' % js(q['id']), 'tag:%s' % js(q['tag']), 'eq:%s' % js(q['eq'])]
     ops = []
     for o in q['ops']:
-        p = ['correct:%s' % js(o['correct']), 'opts:%s' % js(o['opts']), 'hint:%s' % js(o['hint'])]
+        p = ['correct:%s' % js(o['correct'])]
         if 'line' in o:
             p.append('line:%s' % js(o['line']))
         ops.append('{' + ', '.join(p) + '}')
