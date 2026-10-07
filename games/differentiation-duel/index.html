@@ -527,6 +527,10 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{}
+-->
 <script src="../../schools/assets/mathtext.js"></script>
 <script src="../../schools/assets/options.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -871,7 +875,7 @@ const QUESTIONS = {
   ]
 };
 
-let score=0,streak=0,qNum=0,answered=false,timerInt=null,timerStart=null,questions=[],sessionStart=null;
+let score=0,streak=0,qNum=0,timerInt=null,timerStart=null,questions=[],sessionStart=null;
 const pool = QUESTIONS[LEVEL] || QUESTIONS.alevel;
 
 // Set level badge
@@ -907,6 +911,7 @@ function selectWeighted(bank, count, currentStreak){
 }
 
 function startGame(){
+  MaffsLock.newSession();
   score=0;streak=0;qNum=0;window._ddCorrect=0;sessionStart=Date.now();
   questions = LEVEL==='level4' ? selectWeighted(pool,TOTAL,0) : shuffle(pool).slice(0,TOTAL);
   document.getElementById('startScreen').style.display='none';
@@ -921,7 +926,6 @@ function startGame(){
 function nextQ(){
   if(window.MaffsNext) MaffsNext.clear(document.getElementById('explanation').parentNode);
   if(qNum>=TOTAL){endGame();return;}
-  answered=false;
   const q=questions[qNum]; qNum++;
   document.getElementById('ruleBadge').textContent=q.rule;
   // Implicit/parametric: show equation and custom prompt
@@ -948,12 +952,11 @@ function nextQ(){
     btn.onclick=()=>guess(c,q,btn,div);
     div.appendChild(btn);
   });
-
+  MaffsLock.fresh(div);   // a new question: a double-click on Start or Next cannot answer it (canon 7.6.0)
 }
 
 function guess(val,q,btn,div){
-  if(answered)return;
-  answered=true;
+  if(!MaffsLock.lock(div))return;
   const correct=val===q.correct;
   const fb=document.getElementById('feedback');
   document.getElementById('explanation').innerHTML=MaffsText.html(q.exp);
@@ -975,14 +978,16 @@ function guess(val,q,btn,div){
   document.getElementById('score').textContent=score;
   document.getElementById('streak').textContent=streak;
   // canon 7.6: correct advances briskly, wrong waits for the student.
-  if(correct){ setTimeout(nextQ,1800); }
+  if(correct){ MaffsLock.timer(nextQ,1800); }
   else { MaffsNext.wrong({mount:document.getElementById('explanation').parentNode, onAdvance:nextQ}); }
 }
 
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
+  MaffsLock.screen(document.getElementById('gameOver'));
   document.getElementById('finalScore').textContent=score;
   document.getElementById('goDetail').textContent=`${TOTAL} derivatives attempted`;
   var _elapsed=Math.floor((Date.now()-(sessionStart||Date.now()))/1000),_m=Math.floor(_elapsed/60),_s=_elapsed%60;document.getElementById('timeStat').textContent=(_m>0?_m+'m '+_s+'s':_s+'s');
@@ -992,7 +997,7 @@ function endGame(){
   mfg('game_completed',{game_slug:'differentiation-duel',level:LEVEL,score:score,questions_answered:TOTAL,accuracy:Math.round((window._ddCorrect||0)/TOTAL*100)});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('differentiation-duel',LEVEL,score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('differentiation-duel',LEVEL,score);}}
   if(score>_ddPrevBest){mfg('personal_best_set',{game_slug:'differentiation-duel',level:LEVEL,score:score,previous_best:_ddPrevBest});}
-}
+});
 const BEST_KEY='dd_best_'+(LEVEL==='level4'?'level4':'alevel'), SCORES_KEY='dd_scores_'+(LEVEL==='level4'?'level4':'alevel');
 function getBest(){return parseInt(localStorage.getItem(BEST_KEY)||'0');}
 function saveBest(s){if(s>getBest())localStorage.setItem(BEST_KEY,s);document.getElementById('best').textContent=getBest();}
