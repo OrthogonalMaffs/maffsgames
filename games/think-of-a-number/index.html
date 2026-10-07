@@ -145,6 +145,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -214,7 +215,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     <div class="feedback-icon" id="feedbackIcon"></div>
     <div class="feedback-title" id="feedbackTitle"></div>
     <div id="feedbackBody"></div>
-    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+    <button class="next-btn" id="nextBtn" data-maffs-lock-skip onclick="nextQuestion()">Next</button>
   </div>
 </div>
 
@@ -424,7 +425,7 @@ let currentQuestions = [];
 let currentIndex = 0;
 let correctCount = 0;
 let inputValue = '';
-let answered = false;
+const gameEl = document.getElementById('gameScreen');   // MaffsLock's container (canon 7.6.0)
 let stats = {oneStep:{total:0,correct:0},twoStep:{total:0,correct:0},threeStep:{total:0,correct:0}};
 
 const PB_KEY = 'mfg_ton_pb';
@@ -446,7 +447,7 @@ function startGame() {
   currentIndex = 0;
   correctCount = 0;
   inputValue = '';
-  answered = false;
+  MaffsLock.newSession();
   stats = {oneStep:{total:0,correct:0},twoStep:{total:0,correct:0},threeStep:{total:0,correct:0}};
 
   // Build question set based on session length
@@ -508,9 +509,11 @@ function showQuestion() {
 
   // Reset input
   inputValue = '';
-  answered = false;
   updateInputDisplay();
   enableNumpad(true);
+  // A new question: input on it is ignored for MaffsLock.FRESH_MS, so a second Enter or the second click of a
+  // double-click on Next cannot answer it or skip it.
+  MaffsLock.fresh(gameEl);
 
   // Hide feedback
   const fb = document.getElementById('feedback');
@@ -557,12 +560,13 @@ document.getElementById('numpad').addEventListener('click', function(e) {
 
 // Also support physical keyboard
 document.addEventListener('keydown', function(e) {
-  if (answered) {
+  // Keys act on the game screen only: on the reveal screen Enter belongs to "Continue to Results".
+  const screen = document.getElementById('gameScreen');
+  if (!screen.classList.contains('active')) return;
+  if (MaffsLock.isLocked(gameEl)) {
     if (e.key === 'Enter') nextQuestion();
     return;
   }
-  const screen = document.getElementById('gameScreen');
-  if (!screen.classList.contains('active')) return;
 
   if (e.key >= '0' && e.key <= '9') {
     if (inputValue.length < 4) {
@@ -581,8 +585,7 @@ document.addEventListener('keydown', function(e) {
 //  ANSWER CHECKING
 // ============================================================
 function submitAnswer() {
-  if (answered || inputValue === '') return;
-  answered = true;
+  if (inputValue === '' || !MaffsLock.lock(gameEl)) return;
   enableNumpad(true); // Keep enter enabled for next
 
   const q = currentQuestions[currentIndex];
@@ -665,7 +668,7 @@ function updateScore() {
 }
 
 function nextQuestion() {
-  if (!answered) return;
+  if (!MaffsLock.isLocked(gameEl)) return;
   currentIndex++;
 
   // Reset display border
@@ -674,6 +677,7 @@ function nextQuestion() {
   if (currentIndex >= currentQuestions.length) {
     // Show reveal screen first
     showScreen('revealScreen');
+    MaffsLock.screen(document.getElementById('revealScreen'));
     // Auto-advance after 5 seconds, but also allow click
     document.getElementById('revealContinueBtn').style.display = 'block';
     return;
@@ -683,8 +687,10 @@ function nextQuestion() {
   updateScore();
 }
 
-function showResults() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const showResults = MaffsLock.finishOnce(function () {
   showScreen('resultsScreen');
+  MaffsLock.screen(document.getElementById('resultsScreen'));
   document.getElementById('gameHeader').style.display = 'none';
 
   const total = currentQuestions.length;
@@ -732,7 +738,7 @@ function showResults() {
     });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('think-of-a-number','year6',correctCount,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('think-of-a-number','year6',correctCount);}}
   }
-}
+});
 
 // ============================================================
 //  SCREEN MANAGEMENT

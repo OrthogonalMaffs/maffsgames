@@ -17,8 +17,8 @@ A migrated game must, statically:
     an animation frame that marks nothing) says why in a `// lock-ok: <reason>` comment on that line.
 and, in Chromium (game timers run at TIME_SCALE so a run takes seconds; MaffsLock's 300 ms window runs on
 the real clock), at its first roster level:
-  1. answer wrong (up to 8 questions to find one), then click every option of that question, press Enter
-     and Space on each, and press Enter and Space on the page, all inside MaffsNext's floor: the score,
+  1. answer wrong (up to 8 questions to find one), then click every option of that question and press
+     Enter and Space on each, all inside MaffsNext's floor: the score,
      the question_answered count and its correct count, game_completed and submitScore are unchanged;
   2. double-click Next (MaffsNext, or the game's own continue control): one advance, and its second click
      marks nothing on the next question;
@@ -77,6 +77,7 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 # may only shrink.
 MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
+think-of-a-number
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -114,6 +115,13 @@ HINTS = {
                    "  .forEach(t => t.click()); document.getElementById('orderCheck').click(); return; }"
                    "const b = [...document.querySelectorAll('#calcOptions .calc-option')]; if (b.length) b[i % b.length].click();"),
         'surface': '#placeNLWrap',
+    },
+    'think-of-a-number': {
+        'ready': "document.getElementById('gameScreen').classList.contains('active')",
+        'answer': ("if (!document.getElementById('gameScreen').classList.contains('active')) return;"
+                   "document.querySelector('#numpad [data-val=\"' + ((i % 9) + 1) + '\"]').click();"
+                   "document.querySelector('#numpad [data-val=\"enter\"]').click();"),
+        'surface': '#numpad',
     },
     'like-terms-collector': {
         'ready': "document.getElementById('gameScreen').classList.contains('active')",
@@ -486,9 +494,8 @@ async def play(browser, base, slug, level, page_html):
     for r in rects:
         if r:
             await page.mouse.click(r['x'], r['y'])
-    await d.ev('() => __lockKeyOptions()')
-    await page.keyboard.press('Space')
-    await page.keyboard.press('Enter')
+    await d.ev('() => __lockKeyOptions()')   # Enter and Space on the options themselves (a page-level Enter
+                                             # may be the game's own Next: it is pressed in the tap-through)
     await page.wait_for_timeout(250)
     s1 = await d.snap()
     if not same(s0, s1):
