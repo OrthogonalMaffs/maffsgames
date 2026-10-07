@@ -51,6 +51,16 @@
  * RULE (canon §7.6): every game marks through MaffsLock; no game keeps a local "answered" flag.
  * scripts/test-answer-lock.py tests this file in Chromium (every behaviour above, and planted
  * faults); scripts/check-answer-lock.py plays every migrated game against it.
+ *
+ * THE GAME'S DECLARATION (contract LH, canon §7.6.0)
+ * --------------------------------------------------
+ * Adopting MaffsLock includes declaring, in the game's own page, how check-answer-lock.py produces
+ * a wrong answer there: one HTML comment, "<!-- maffs-lock-hint" then a JSON object then "-->", e.g.
+ *   {"ready": "document.getElementById('gameScreen').classList.contains('active')",
+ *    "answer": "document.querySelector('#numpad [data-val=\"enter\"]').click();"}
+ * {} when the check's generic driver plays the game unaided. Keys and meanings: HINT_KEYS in
+ * scripts/check-answer-lock.py. Nothing here reads it; it is for the check only. The script order of
+ * this file and next-control.js is free: neither reads the other at load.
  */
 (function () {
   'use strict';

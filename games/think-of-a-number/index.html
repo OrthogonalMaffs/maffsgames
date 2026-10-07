@@ -146,6 +146,17 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active')",
+  "answer": [
+    "if (!document.getElementById('gameScreen').classList.contains('active')) return;",
+    "document.querySelector('#numpad [data-val=\"' + ((i % 9) + 1) + '\"]').click();",
+    "document.querySelector('#numpad [data-val=\"enter\"]').click();"
+  ],
+  "surface": "#numpad"
+}
+-->
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>

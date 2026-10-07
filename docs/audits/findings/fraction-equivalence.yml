@@ -18,3 +18,12 @@ findings:
   summary: The Year 6 bank has only 20 items
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3 (Fraction Snap)'
   status: open
+- id: fraction-equivalence-f1-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:phone-layout
+  level: all
+  where: games/fraction-equivalence/index.html (#hint, #nextMount)
+  summary: At 320x568 a wrong answer's Next sits below the fold (canon 7.6.1); the reason is above it
+  evidence: 'Chromium 320x568, wrong answer, scrollY 0, fold 528: reason (#feedback) 477-501, Next 534-578 (F1 batch 2, #132)'
+  status: open

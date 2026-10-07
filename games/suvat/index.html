@@ -134,6 +134,27 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "level": "level4",
+  "ready": "document.getElementById('mainGame').classList.contains('visible')",
+  "answer": [
+    "return (async () => {  const vis = id => {",
+    " const e = document.getElementById(id); return e && e.offsetParent !== null;",
+    " };  const real = ms => new Promise(r => {",
+    " const t = performance.now(); (function f() {",
+    "    if (performance.now() - t >= ms) r();",
+    " else requestAnimationFrame(f); })(); });",
+    "  for (let k = 0; k < 60; k++) {    if (vis('phase2') && !document.getElementById('calcInput').disabled) {",
+    "      await real(350); document.getElementById('calcInput').value = '9999';",
+    "      document.querySelector('#phase2 .calc-btn').click();",
+    " return; }    const b = [...document.querySelectorAll('#eqChoices .eq-btn')].find(e => !e.disabled && e.dataset.val === currentQ.equation);",
+    "    if (vis('phase1') && b) { await real(350);",
+    " b.click(); }    await real(60);  }})();"
+  ],
+  "surface": "#phase2"
+}
+-->
 <script src="../../schools/assets/answer.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>

@@ -119,6 +119,20 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "start_sel": "[onclick=\"startGame('rotation')\"]",
+  "ready": "document.getElementById('gameScreen').classList.contains('active')",
+  "answer": [
+    "if (!document.getElementById('gameScreen').classList.contains('active') || !rotationOptions.length) return;",
+    "const o = rotationOptions[i % rotationOptions.length], p = gridToPixel(o.at[0], o.at[1]);",
+    "const r = canvas.getBoundingClientRect();",
+    "canvas.dispatchEvent(new MouseEvent('click', {",
+    "bubbles: true, cancelable: true,  clientX: r.left + p[0], clientY: r.top + p[1]}));"
+  ],
+  "surface": "#gridCanvas"
+}
+-->
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
