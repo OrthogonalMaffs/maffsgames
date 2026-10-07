@@ -64,6 +64,7 @@ a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decorati
 .scenario-box h3{font-size:.72rem;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.3rem}
 .scenario-box .katex{font-size:.95em!important}
 .scenario-desc{font-size:.82rem;color:var(--muted);line-height:1.5;margin-top:.3rem}
+.scenario-given{font-size:.95rem;line-height:1.7;margin-top:.35rem}
 
 .q-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.7rem}
 .sq-label{font-size:.65rem;color:var(--primary);text-transform:uppercase;letter-spacing:.04em;margin-bottom:.2rem;font-weight:700}
@@ -109,6 +110,8 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
+<script src="../../schools/assets/answer.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -166,7 +169,7 @@ gcse:[
    grid:{x:[-4,6],y:[-2,8]},
    sqs:[
      {type:'vec2',prompt:'Write down vector \\(\\mathbf{a}\\) as a column vector.',answers:[3,4],labels:['x','y']},
-     {type:'num',prompt:'Find |\\mathbf{a}|.',answer:5,tol:0.01,working:'√(9+16) = √25 = 5'},
+     {type:'num',prompt:'Find |\\mathbf{a}|.',answer:5,working:'√(9+16) = √25 = 5'},
      {type:'vec2',prompt:'Find \\mathbf{a} + \\mathbf{b}.',answers:[1,9],labels:['x','y']},
      {type:'vec2',prompt:'Find 2\\mathbf{a} - \\mathbf{b}.',answers:[8,3],labels:['x','y']}
    ]},
@@ -175,7 +178,7 @@ gcse:[
    grid:{x:[-2,7],y:[-5,3]},
    sqs:[
      {type:'vec2',prompt:'Find \\mathbf{a} + \\mathbf{b}.',answers:[5,-3],labels:['x','y']},
-     {type:'num',prompt:'Find \\(|\\mathbf{a} + \\mathbf{b}|\\). Give to 2 d.p.',answer:5.83,tol:0.02},
+     {type:'num',prompt:'Find \\(|\\mathbf{a} + \\mathbf{b}|\\). Give to 2 d.p.',answer:5.83,dp:2},
      {type:'vec2',prompt:'Find 3\\mathbf{b}.',answers:[0,-9],labels:['x','y']}
    ]},
   {id:'G3',desc:'Collinearity test',
@@ -187,11 +190,11 @@ gcse:[
      {type:'vec2',prompt:'Find \\overrightarrow{BC}.',answers:[3,2],labels:['x','y']},
      {type:'mcq',prompt:'Are A, B, C collinear?',correct:'Yes — BC = AB so parallel and share point B',wrong:['No — they form a triangle','Only if |AB| = |BC|','Cannot tell from vectors']}
    ]},
-  {id:'G4',desc:'Magnitude and unit vector',
+  {id:'G4',desc:'Magnitude and scalar multiple',
    vectors:[{from:[0,0],to:[-4,3],label:'a',color:'#14b8a6'}],
    grid:{x:[-6,2],y:[-2,5]},
    sqs:[
-     {type:'num',prompt:'Find |\\mathbf{a}|.',answer:5,tol:0.01},
+     {type:'num',prompt:'Find |\\mathbf{a}|.',answer:5},
      {type:'vec2',prompt:'Find -2\\mathbf{a}.',answers:[8,-6],labels:['x','y']}
    ]},
   {id:'G5',desc:'Parallel vectors',
@@ -199,7 +202,7 @@ gcse:[
    grid:{x:[-5,8],y:[-6,10]},
    sqs:[
      {type:'vec2',prompt:'Find \\mathbf{a} + \\mathbf{b}.',answers:[3,4],labels:['x','y']},
-     {type:'num',prompt:'Find |\\mathbf{a} + \\mathbf{b}|.',answer:5,tol:0.01},
+     {type:'num',prompt:'Find |\\mathbf{a} + \\mathbf{b}|.',answer:5},
      {type:'mcq',prompt:'Is \\mathbf{b} = -\\frac{1}{2}\\mathbf{a}?',correct:'Yes — b is parallel to a and half the length in opposite direction',wrong:['No — they are perpendicular','Only if |a| = |b|','Cannot determine from diagram']}
    ]},
   {id:'G6',desc:'Translation vector',
@@ -215,7 +218,7 @@ gcse:[
    sqs:[
      {type:'vec2',prompt:'Find \\mathbf{a} + \\mathbf{b}.',answers:[6,4],labels:['x','y']},
      {type:'vec2',prompt:'Find 3\\mathbf{a} - \\mathbf{b}.',answers:[2,16],labels:['x','y']},
-     {type:'num',prompt:'Find \\(|\\mathbf{a}|\\). Give to 2 d.p.',answer:5.39,tol:0.02}
+     {type:'num',prompt:'Find \\(|\\mathbf{a}|\\). Give to 2 d.p.',answer:5.39,dp:2}
    ]},
   {id:'G8',desc:'Position vectors',
    vectors:[{from:[0,0],to:[3,1],label:'a=OA',color:'#14b8a6'},{from:[0,0],to:[1,4],label:'b=OB',color:'#f97316'}],
@@ -223,13 +226,13 @@ gcse:[
    grid:{x:[-2,5],y:[-2,6]},
    sqs:[
      {type:'vec2',prompt:'Find \\overrightarrow{AB}.',answers:[-2,3],labels:['x','y']},
-     {type:'num',prompt:'Find \\(|\\overrightarrow{AB}|\\). Give to 2 d.p.',answer:3.61,tol:0.02}
+     {type:'num',prompt:'Find \\(|\\overrightarrow{AB}|\\). Give to 2 d.p.',answer:3.61,dp:2}
    ]},
   {id:'G9',desc:'Pythagorean triple',
    vectors:[{from:[0,0],to:[5,12],label:'p',color:'#14b8a6'}],
    grid:{x:[-2,7],y:[-2,14]},
    sqs:[
-     {type:'num',prompt:'Find |\\mathbf{p}|.',answer:13,tol:0.01},
+     {type:'num',prompt:'Find |\\mathbf{p}|.',answer:13},
      {type:'vec2',prompt:'Find \\frac{1}{2}\\mathbf{p}.',answers:[2.5,6],labels:['x','y']}
    ]},
   {id:'G10',desc:'Scalar multiple test',
@@ -238,7 +241,7 @@ gcse:[
    sqs:[
      {type:'mcq',prompt:'Show that \\(\\mathbf{n} = -2\\mathbf{m}\\).',correct:'n = (6,-8) = -2(-3,4) = -2m ✓ Collinear',wrong:['n = 2m','They are perpendicular','Cannot be expressed as a scalar multiple']},
      {type:'vec2',prompt:'Find \\mathbf{m} + \\mathbf{n}.',answers:[3,-4],labels:['x','y']},
-     {type:'num',prompt:'Find |\\mathbf{m} + \\mathbf{n}|.',answer:5,tol:0.01}
+     {type:'num',prompt:'Find |\\mathbf{m} + \\mathbf{n}|.',answer:5}
    ]},
   {id:'G11',desc:'Two combinations',
    vectors:[{from:[0,0],to:[1,2],label:'a',color:'#14b8a6'},{from:[0,0],to:[3,1],label:'b',color:'#f97316'}],
@@ -246,7 +249,7 @@ gcse:[
    sqs:[
      {type:'vec2',prompt:'Find 2\\mathbf{a} + \\mathbf{b}.',answers:[5,5],labels:['x','y']},
      {type:'vec2',prompt:'Find \\mathbf{a} - 2\\mathbf{b}.',answers:[-5,0],labels:['x','y']},
-     {type:'num',prompt:'Find |\\mathbf{a} - 2\\mathbf{b}|.',answer:5,tol:0.01}
+     {type:'num',prompt:'Find |\\mathbf{a} - 2\\mathbf{b}|.',answer:5}
    ]},
   {id:'G12',desc:'Midpoint via vectors',
    vectors:[{from:[2,3],to:[8,7],label:'AB',color:'#14b8a6'}],
@@ -261,7 +264,7 @@ gcse:[
    vectors:[{from:[0,0],to:[8,15],label:'v',color:'#14b8a6'}],
    grid:{x:[-2,10],y:[-2,17]},
    sqs:[
-     {type:'num',prompt:'Find |\\mathbf{v}|.',answer:17,tol:0.01}
+     {type:'num',prompt:'Find |\\mathbf{v}|.',answer:17}
    ]},
   {id:'G14',desc:'Two operations',
    vectors:[{from:[0,0],to:[2,-3],label:'a',color:'#14b8a6'},{from:[0,0],to:[-1,4],label:'b',color:'#f97316'}],
@@ -283,9 +286,9 @@ alevel:[
    vectors:[{from:[0,0],to:[3,4],label:'a',color:'#14b8a6'},{from:[0,0],to:[1,-2],label:'b',color:'#f97316'}],
    grid:{x:[-2,5],y:[-4,6]},
    sqs:[
-     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:-5,tol:0.01,working:'3(1)+4(-2) = 3-8 = -5'},
-     {type:'num',prompt:'Find the angle between \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) to 1 d.p.',answer:116.6,tol:0.3,working:'cosθ = -5/(5×√5)'},
-     {type:'vec2',prompt:'Find the unit vector in the direction of \\(\\mathbf{a}\\).',answers:[0.6,0.8],labels:['i','j'],tol:0.01}
+     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:-5,working:'3(1)+4(-2) = 3-8 = -5'},
+     {type:'num',prompt:'Find the angle between \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) to 1 d.p.',answer:116.6,dp:1,working:'cosθ = -5/(5×√5)'},
+     {type:'vec2',prompt:'Find the unit vector in the direction of \\(\\mathbf{a}\\).',answers:[0.6,0.8],labels:['i','j']}
    ]},
   {id:'AL2',desc:'Midpoint test',
    vectors:[{from:[0,0],to:[2,3],label:'A',color:'#14b8a6'},{from:[0,0],to:[6,7],label:'B',color:'#f97316'}],
@@ -294,7 +297,7 @@ alevel:[
    sqs:[
      {type:'vec2',prompt:'Find \\overrightarrow{AB} in \\mathbf{i}, \\mathbf{j} form.',answers:[4,4],labels:['i','j']},
      {type:'vec2',prompt:'Find \\overrightarrow{AC}.',answers:[2,2],labels:['i','j']},
-     {type:'mcq',prompt:'\\(\\overrightarrow{AC} = \\frac{1}{2}\\overrightarrow{AB}\\). What does this tell us?',correct:'C is the midpoint of AB',wrong:['C is on the perpendicular bisector','A, B, C form an equilateral triangle','AC is perpendicular to AB']}
+     {type:'mcq',prompt:'\\(\\overrightarrow{AC} = \\frac{1}{2}\\overrightarrow{AB}\\). What does this tell us?',correct:'C is the midpoint of AB',wrong:['C divides AB in the ratio 1 : 2','A, B, C form an equilateral triangle','AC is perpendicular to AB']}
    ]},
   {id:'AL3',desc:'Line equation',
    vectors:[{from:[2,1],to:[5,0],label:'d',color:'#14b8a6'}],
@@ -310,8 +313,8 @@ alevel:[
    vectors:[{from:[0,0],to:[2,1],label:'a',color:'#14b8a6'},{from:[0,0],to:[-1,3],label:'b',color:'#f97316'}],
    grid:{x:[-3,4],y:[-1,5]},
    sqs:[
-     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:1,tol:0.01},
-     {type:'num',prompt:'Find the angle between \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) to 1 d.p.',answer:81.9,tol:0.3}
+     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:1},
+     {type:'num',prompt:'Find the angle between \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) to 1 d.p.',answer:81.9,dp:1}
    ]},
   {id:'AL5',desc:'Line through two points',
    vectors:[{from:[1,4],to:[5,2],label:'AB',color:'#14b8a6'}],
@@ -319,20 +322,20 @@ alevel:[
    grid:{x:[-1,7],y:[-1,6]},
    sqs:[
      {type:'vec2',prompt:'Find \\overrightarrow{AB}.',answers:[4,-2],labels:['i','j']},
-     {type:'num',prompt:'Find \\(|\\overrightarrow{AB}|\\). Give as simplified surd or decimal.',answer:4.47,tol:0.02}
+     {type:'num',prompt:'Find \\(|\\overrightarrow{AB}|\\). Give your answer to 2 d.p.',answer:4.47,dp:2}
    ]},
   {id:'AL6',desc:'Large magnitude',
    vectors:[{from:[0,0],to:[5,-12],label:'p',color:'#14b8a6'}],
    grid:{x:[-2,7],y:[-14,2]},
    sqs:[
-     {type:'num',prompt:'Find |\\mathbf{p}|.',answer:13,tol:0.01},
-     {type:'num',prompt:'Find \\mathbf{p} \\cdot (2\\mathbf{i}+\\mathbf{j}).',answer:-2,tol:0.01}
+     {type:'num',prompt:'Find |\\mathbf{p}|.',answer:13},
+     {type:'num',prompt:'Find \\mathbf{p} \\cdot (2\\mathbf{i}+\\mathbf{j}).',answer:-2}
    ]},
   {id:'AL7',desc:'Perpendicularity test',
    vectors:[{from:[0,0],to:[1,2],label:'a',color:'#14b8a6'},{from:[0,0],to:[3,-1],label:'b',color:'#f97316'}],
    grid:{x:[-2,5],y:[-3,4]},
    sqs:[
-     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:1,tol:0.01},
+     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:1},
      {type:'mcq',prompt:'Are \\mathbf{a} and \\mathbf{b} perpendicular?',correct:'No — a·b = 1 ≠ 0',wrong:['Yes — they look perpendicular','Only if |a| = |b|','Cannot tell from dot product']}
    ]},
   {id:'AL8',desc:'Parallel vectors',
@@ -340,34 +343,34 @@ alevel:[
    grid:{x:[-10,6],y:[-8,5]},
    sqs:[
      {type:'mcq',prompt:'Show \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) are parallel.',correct:'b = −2a → parallel (antiparallel)',wrong:['They are perpendicular','a·b = 0','Cannot determine']},
-     {type:'num',prompt:'Find |\\mathbf{a}|.',answer:5,tol:0.01},
-     {type:'num',prompt:'Find |\\mathbf{b}|.',answer:10,tol:0.01}
+     {type:'num',prompt:'Find |\\mathbf{a}|.',answer:5},
+     {type:'num',prompt:'Find |\\mathbf{b}|.',answer:10}
    ]},
   {id:'AL9',desc:'Force resultant (Mechanics)',
    vectors:[{from:[0,0],to:[3,4],label:'F₁',color:'#14b8a6'},{from:[0,0],to:[-1,2],label:'F₂',color:'#f97316'}],
    grid:{x:[-3,5],y:[-1,8]},
    sqs:[
      {type:'vec2',prompt:'Find the resultant \\(R = F₁ + F₂\\).',answers:[2,6],labels:['i','j']},
-     {type:'num',prompt:'Find |R| to 2 d.p.',answer:6.32,tol:0.02}
+     {type:'num',prompt:'Find |R| to 2 d.p.',answer:6.32,dp:2}
    ]},
   {id:'AL10',desc:'Resolve a force (Mechanics)',
    vectors:[{from:[0,0],to:[8.66,5],label:'10N at 30°',color:'#14b8a6'}],
    grid:{x:[-2,11],y:[-2,7]},
    sqs:[
-     {type:'num',prompt:'Find the horizontal component of 10N at 30°.',answer:8.66,tol:0.1},
-     {type:'num',prompt:'Find the vertical component.',answer:5,tol:0.1}
+     {type:'num',prompt:'Find the horizontal component of 10N at 30° to the horizontal, to 2 d.p.',answer:8.66,dp:2},
+     {type:'num',prompt:'Find the vertical component.',answer:5}
    ]},
   {id:'AL11',desc:'Velocity and bearing (Mechanics)',
    vectors:[{from:[0,0],to:[4,-3],label:'v',color:'#14b8a6'}],
    grid:{x:[-2,6],y:[-5,2]},
    sqs:[
-     {type:'num',prompt:'Find the speed \\(|\\mathbf{v}|\\).',answer:5,tol:0.01},
-     {type:'num',prompt:'Find the bearing of motion (3-figure).',answer:143.1,tol:0.5}
+     {type:'num',prompt:'Find the speed \\(|\\mathbf{v}|\\).',answer:5},
+     {type:'num',prompt:'Find the bearing of the motion, in degrees to 1 d.p.',answer:126.9,dp:1}
    ]},
   {id:'AL12',desc:'Position with velocity (Mechanics)',
-   vectors:[{from:[2,3],to:[5,1],label:'v',color:'#14b8a6'}],
+   vectors:[{from:[2,3],to:[3,5],label:'v',color:'#14b8a6'}],
    points:[{c:[2,3],l:'Start'}],
-   grid:{x:[-1,16],y:[-8,5]},
+   grid:{x:[-1,9],y:[-1,8]},
    sqs:[
      {type:'vec2',prompt:'\\(r₀ = (2i+3j), v = (i+2j)\\). Position after \\(t = 5\\)?',answers:[7,13],labels:['i','j']}
    ]},
@@ -382,55 +385,61 @@ alevel:[
    vectors:[{from:[0,0],to:[12.99,7.5],label:'15 m/s on 060°',color:'#14b8a6'}],
    grid:{x:[-2,15],y:[-2,10]},
    sqs:[
-     {type:'num',prompt:'i-component (east) of 15 m/s on bearing 060°.',answer:12.99,tol:0.1},
-     {type:'num',prompt:'j-component (north).',answer:7.5,tol:0.1}
+     {type:'num',prompt:'i-component (east) of 15 m/s on bearing 060°, to 2 d.p.',answer:12.99,dp:2},
+     {type:'num',prompt:'j-component (north).',answer:7.5}
    ]},
   {id:'AL15',desc:'SUVAT with vectors (Mechanics)',
    vectors:[{from:[0,0],to:[3,4],label:'u',color:'#14b8a6'},{from:[0,0],to:[0,-10],label:'a',color:'#f97316'}],
    grid:{x:[-2,5],y:[-22,6]},
    sqs:[
      {type:'vec2',prompt:'\\(u = (3i+4j), a = (0i-10j)\\). Find \\(v = u+at\\) at \\(t = 2\\).',answers:[3,-16],labels:['i','j']},
-     {type:'num',prompt:'Find |v| to 1 d.p.',answer:16.3,tol:0.1}
+     {type:'num',prompt:'Find |v| to 1 d.p.',answer:16.3,dp:1}
    ]}
 ],
 level4:[
   {id:'L1',desc:'3D displacement',
-   vectors:[{from:[0,0,0],to:[3,4,4],label:'AB',color:'#14b8a6'}],
+   given:{A:[1,2,3],B:[4,6,7]},
+   vectors:[{from:[1,2,3],to:[4,6,7],label:'AB',color:'#14b8a6'}],
    points:[{c:[1,2,3],l:'A'},{c:[4,6,7],l:'B'}],
    grid3d:true,
    sqs:[
      {type:'vec3',prompt:'Find \\overrightarrow{AB}.',answers:[3,4,4],labels:['i','j','k']},
-     {type:'num',prompt:'Find |\\overrightarrow{AB}| to 2 d.p.',answer:6.40,tol:0.02}
+     {type:'num',prompt:'Find |\\overrightarrow{AB}| to 2 d.p.',answer:6.40,dp:2}
    ]},
   {id:'L2',desc:'3D scalar product',
+   given:{a:[2,1,-2],b:[3,-2,1]},
    vectors:[{from:[0,0,0],to:[2,1,-2],label:'a',color:'#14b8a6'},{from:[0,0,0],to:[3,-2,1],label:'b',color:'#f97316'}],
    grid3d:true,
    sqs:[
-     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:2,tol:0.01},
-     {type:'num',prompt:'Find the angle between \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) to 1 d.p.',answer:79.6,tol:0.3}
+     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:2},
+     {type:'num',prompt:'Find the angle between \\(\\mathbf{a}\\) and \\(\\mathbf{b}\\) to 1 d.p.',answer:79.7,dp:1}
    ]},
   {id:'L3',desc:'Force resultant (3D)',
+   given:{'F_1':[4,2,-1],'F_2':[-2,3,5],'F_3':[1,-1,2]},
    vectors:[{from:[0,0,0],to:[4,2,-1],label:'F₁',color:'#14b8a6'},{from:[0,0,0],to:[-2,3,5],label:'F₂',color:'#f97316'},{from:[0,0,0],to:[1,-1,2],label:'F₃',color:'#a78bfa'}],
    grid3d:true,
    sqs:[
      {type:'vec3',prompt:'Find the resultant \\(R = F₁ + F₂ + F₃\\).',answers:[3,4,6],labels:['i','j','k']},
-     {type:'num',prompt:'Find |R| to 2 d.p.',answer:7.81,tol:0.02}
+     {type:'num',prompt:'Find |R| to 2 d.p.',answer:7.81,dp:2}
    ]},
-  {id:'L4',desc:'Robot arm displacement',
+  {id:'L4',desc:'Robot arm: the gripper moves from Start to End',
+   given:{'Start':[2,3,1],'End':[5,-1,4]},
    vectors:[{from:[2,3,1],to:[5,-1,4],label:'displacement',color:'#14b8a6'}],
    grid3d:true,
    sqs:[
      {type:'vec3',prompt:'Find the displacement vector.',answers:[3,-4,3],labels:['i','j','k']},
-     {type:'num',prompt:'Find the magnitude to 2 d.p.',answer:5.83,tol:0.02}
+     {type:'num',prompt:'Find the magnitude to 2 d.p.',answer:5.83,dp:2}
    ]},
   {id:'L5',desc:'Speed from 3D velocity',
+   given:{v:[3,-4,12]},
    vectors:[{from:[0,0,0],to:[3,-4,12],label:'v',color:'#14b8a6'}],
    grid3d:true,
    sqs:[
-     {type:'num',prompt:'Find the speed \\(|\\mathbf{v}|\\).',answer:13,tol:0.01},
-     {type:'num',prompt:'Find \\mathbf{v} \\cdot (2\\mathbf{i}+\\mathbf{j}-\\mathbf{k}).',answer:-10,tol:0.01}
+     {type:'num',prompt:'Find the speed \\(|\\mathbf{v}|\\).',answer:13},
+     {type:'num',prompt:'Find \\mathbf{v} \\cdot (2\\mathbf{i}+\\mathbf{j}-\\mathbf{k}).',answer:-10}
    ]},
   {id:'L6',desc:'Collinearity in 3D',
+   given:{A:[0,1,2],B:[3,3,6],C:[6,5,10]},
    vectors:[{from:[0,1,2],to:[3,3,6],label:'AB',color:'#14b8a6'},{from:[3,3,6],to:[6,5,10],label:'BC',color:'#f97316'}],
    grid3d:true,
    sqs:[
@@ -442,17 +451,18 @@ level4:[
    vectors:[{from:[0,0,0],to:[7.07,0,7.07],label:'10N at 45°',color:'#14b8a6'}],
    grid3d:true,
    sqs:[
-     {type:'num',prompt:'i-component of 10N at 45° in xz-plane.',answer:7.07,tol:0.1},
-     {type:'num',prompt:'k-component.',answer:7.07,tol:0.1}
+     {type:'num',prompt:'i-component of 10N at 45° to the x-axis in the xz-plane, to 2 d.p.',answer:7.07,dp:2},
+     {type:'num',prompt:'k-component, to 2 d.p.',answer:7.07,dp:2}
    ]},
   {id:'L8',desc:'Angle between 3D vectors',
+   given:{a:[1,2,2],b:[2,-1,2]},
    vectors:[{from:[0,0,0],to:[1,2,2],label:'a',color:'#14b8a6'},{from:[0,0,0],to:[2,-1,2],label:'b',color:'#f97316'}],
    grid3d:true,
    sqs:[
-     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:4,tol:0.01},
-     {type:'num',prompt:'|\\mathbf{a}| = ?',answer:3,tol:0.01},
-     {type:'num',prompt:'|\\mathbf{b}| = ?',answer:3,tol:0.01},
-     {type:'num',prompt:'Angle between them to 1 d.p.',answer:63.6,tol:0.3}
+     {type:'num',prompt:'Find \\mathbf{a} \\cdot \\mathbf{b}.',answer:4},
+     {type:'num',prompt:'|\\mathbf{a}| = ?',answer:3},
+     {type:'num',prompt:'|\\mathbf{b}| = ?',answer:3},
+     {type:'num',prompt:'Angle between them to 1 d.p.',answer:63.6,dp:1}
    ]},
   {id:'L9',desc:'Parametric position',
    vectors:[{from:[1,3,2],to:[3,2,5],label:'d',color:'#14b8a6'}],
@@ -465,10 +475,11 @@ level4:[
    vectors:[{from:[0,0,0],to:[3,4,0],label:'T direction',color:'#14b8a6'}],
    grid3d:true,
    sqs:[
-     {type:'num',prompt:'T = 500N along 3\\mathbf{i}+4\\mathbf{j}. Find i-component.',answer:300,tol:1},
-     {type:'num',prompt:'Find j-component.',answer:400,tol:1}
+     {type:'num',prompt:'T = 500N along 3\\mathbf{i}+4\\mathbf{j}. Find i-component.',answer:300},
+     {type:'num',prompt:'Find j-component.',answer:400}
    ]},
   {id:'L11',desc:'Mast equilibrium',
+   given:{'F_1':[2,0,6],'F_2':[-3,4,6],'F_3':[1,-4,6]},
    vectors:[{from:[0,0,0],to:[2,0,6],label:'F₁',color:'#14b8a6'},{from:[0,0,0],to:[-3,4,6],label:'F₂',color:'#f97316'},{from:[0,0,0],to:[1,-4,6],label:'F₃',color:'#a78bfa'}],
    grid3d:true,
    sqs:[
@@ -476,20 +487,22 @@ level4:[
      {type:'mcq',prompt:'What does this resultant tell us?',correct:'Purely vertical — mast is in horizontal equilibrium',wrong:['The mast will topple','All forces are equal','Net force is zero']}
    ]},
   {id:'L12',desc:'Displacement magnitude',
+   given:{s:[4,-3,12]},
    vectors:[{from:[0,0,0],to:[4,-3,12],label:'s',color:'#14b8a6'}],
    grid3d:true,
    sqs:[
-     {type:'num',prompt:'Find |\\mathbf{s}|.',answer:13,tol:0.01},
-     {type:'num',prompt:'Find \\mathbf{s} \\cdot (\\mathbf{i}+\\mathbf{j}+\\mathbf{k}).',answer:13,tol:0.01}
+     {type:'num',prompt:'Find |\\mathbf{s}|.',answer:13},
+     {type:'num',prompt:'Find \\mathbf{s} \\cdot (\\mathbf{i}+\\mathbf{j}+\\mathbf{k}).',answer:13}
    ]},
   {id:'L13',desc:'Velocity under acceleration',
    vectors:[{from:[0,0,0],to:[2,3,1],label:'u',color:'#14b8a6'},{from:[0,0,0],to:[1,-1,2],label:'a',color:'#f97316'}],
    grid3d:true,
    sqs:[
      {type:'vec3',prompt:'\\(u = (2i+3j+k), a = (i-j+2k)\\). Find \\(v = u+at\\) at \\(t = 3\\).',answers:[5,0,7],labels:['i','j','k']},
-     {type:'num',prompt:'Find |v| to 2 d.p.',answer:8.60,tol:0.02}
+     {type:'num',prompt:'Find |v| to 2 d.p.',answer:8.60,dp:2}
    ]},
   {id:'L14',desc:'Collinearity check',
+   given:{P:[1,0,1],Q:[3,2,5],R:[5,4,9]},
    vectors:[{from:[1,0,1],to:[3,2,5],label:'PQ',color:'#14b8a6'},{from:[3,2,5],to:[5,4,9],label:'QR',color:'#f97316'}],
    grid3d:true,
    sqs:[
@@ -501,8 +514,8 @@ level4:[
    vectors:[{from:[0,0,0],to:[5,1,2],label:'R',color:'#14b8a6'}],
    grid3d:true,
    sqs:[
-     {type:'num',prompt:'F₁ = (ai+2j-k), F₂ = (3i-j+bk). Resultant = (5i+j+2k). Find a.',answer:2,tol:0.01},
-     {type:'num',prompt:'Find b.',answer:3,tol:0.01}
+     {type:'num',prompt:'F₁ = (ai+2j-k), F₂ = (3i-j+bk). Resultant = (5i+j+2k). Find a.',answer:2},
+     {type:'num',prompt:'Find b.',answer:3}
    ]}
 ]
 };
@@ -525,6 +538,18 @@ function K(l,d){try{return katex.renderToString(l,{throwOnError:false,displayMod
 // there is nothing to render as maths.
 function PQ(s){return(/\\[A-Za-z]/.test(s)&&!MaffsText.hasMaths(s))?K(s):MaffsText.html(s)}
 
+// A point (capital letter or a word) is written as coordinates; a vector in i, j, k form.
+function givenTeX(g){
+  return Object.entries(g).map(([name,c])=>{
+    const nm=name.replace(/_(\d)$/,'_{$1}');
+    if(/^[A-Z]$|^[A-Z][a-z]+$/.test(name))return (name.length>1?'\\text{'+name+'}':name)+' = ('+c.join(',\\ ')+')';
+    const parts=c.map((v,i)=>[v,['\\mathbf{i}','\\mathbf{j}','\\mathbf{k}'][i]]).filter(([v])=>v!==0);
+    const body=parts.map(([v,u],i)=>{const a=Math.abs(v),sgn=v<0?(i?' - ':'-'):(i?' + ':'');return sgn+(a===1?'':a)+u;}).join('');
+    return (/^[a-z]$/.test(name)?'\\mathbf{'+nm+'}':nm)+' = '+(body||'\\mathbf{0}');
+  });
+}
+// The key as the student must write it: at the stated places, or exactly.
+function keyText(v,dp){return dp===undefined?String(v):Number(v).toFixed(dp);}
 function selLevel(btn){
   document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('selected'));
   btn.classList.add('selected');G.level=btn.dataset.level;$('startBtn').classList.add('ready');
@@ -561,6 +586,8 @@ function loadScenario(){
 
   // Scenario box
   let html=`<h3>Scenario ${G.qIdx+1}</h3><div class="scenario-desc">${q.desc}</div>`;
+  // The data to work from, in words: a 3D diagram drawn on 2D axes cannot be read (audit t4-001).
+  if(q.given)html+=`<div class="scenario-given" id="scenarioGiven">${givenTeX(q.given).map(t=>K(t)).join('<span class="given-sep">&nbsp;&nbsp;</span>')}</div>`;
   $('scenarioBox').innerHTML=html;
 
   // Draw diagram
@@ -595,14 +622,15 @@ function drawVectors(q){
 
   // Grid
   const xStep=niceStep(xMax-xMin,8),yStep=niceStep(yMax-yMin,6);
-  ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=.5;
+  // A line at every whole unit, so integer endpoints sit on lines (audit t4-013); numbers at the nice step.
+  ctx.strokeStyle='rgba(255,255,255,.16)';ctx.lineWidth=.6;
+  if(!q.grid3d){for(let x=Math.ceil(xMin);x<=xMax;x++){ctx.beginPath();ctx.moveTo(tx(x),pad.t);ctx.lineTo(tx(x),pad.t+ph);ctx.stroke();}
+    for(let y=Math.ceil(yMin);y<=yMax;y++){ctx.beginPath();ctx.moveTo(pad.l,ty(y));ctx.lineTo(pad.l+pw,ty(y));ctx.stroke();}}
   for(let x=Math.ceil(xMin/xStep)*xStep;x<=xMax;x+=xStep){
-    ctx.beginPath();ctx.moveTo(tx(x),pad.t);ctx.lineTo(tx(x),pad.t+ph);ctx.stroke();
     ctx.fillStyle='#4a5568';ctx.font='9px JetBrains Mono';ctx.textAlign='center';
     ctx.fillText(Math.round(x*10)/10,tx(x),h-pad.b+14);
   }
   for(let y=Math.ceil(yMin/yStep)*yStep;y<=yMax;y+=yStep){
-    ctx.beginPath();ctx.moveTo(pad.l,ty(y));ctx.lineTo(pad.l+pw,ty(y));ctx.stroke();
     ctx.fillStyle='#4a5568';ctx.font='9px JetBrains Mono';ctx.textAlign='right';
     ctx.fillText(Math.round(y*10)/10,pad.l-5,ty(y)+3);
   }
@@ -695,41 +723,56 @@ function loadSQ(q){
     const opts=[{text:sq.correct,c:true},...sq.wrong.map(w=>({text:w,c:false}))];
     for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
     let html=`<div class="sq-label">${label}</div><div class="sq-prompt">${PQ(sq.prompt)}</div><div class="mcq-grid">`;
-    opts.forEach((o,i)=>{html+=`<button class="mcq-btn" id="mc${i}" onclick="checkMCQ(${i},${o.c})">${o.text}</button>`;});
+    opts.forEach((o,i)=>{html+=`<button class="mcq-btn" id="mc${i}" onclick="checkMCQ(${i},${o.c})">${/\\[A-Za-z]/.test(o.text)?K(o.text):MaffsText.html(o.text)}</button>`;});
     html+=`</div><div id="sqFb"></div>`;
     box.innerHTML=html;box._opts=opts;
   }
   const first=box.querySelector('input');if(first)setTimeout(()=>first.focus(),50);
 }
 
+// Typed answers are marked by MaffsAnswer (canon 7.1.3): exactly, or at the places the question states. A right
+// value in the wrong form ('format') or something unreadable is not marked: the message shows and the student
+// types again (SR-3). A tolerance used to accept wrong final digits (audit t4-006).
+function mark(raw,key,dp){return dp===undefined?MaffsAnswer.exact(raw,key):MaffsAnswer.decimal(raw,key,dp);}
+function unmarked(results,dp){
+  const r=results.find(x=>x==='unreadable')||results.find(x=>x==='format');
+  if(!r)return false;
+  $('sqFb').innerHTML=`<div class="feedback wrong">${MaffsAnswer.message(r,'',{dp:dp})}</div>`;
+  return true;
+}
+function afterMark(q,ok){
+  if(ok){setTimeout(()=>{G.sqIdx++;loadSQ(q);},800);return;}
+  MaffsNext.wrong({mount:$('sqFb'),onAdvance:()=>{G.sqIdx++;loadSQ(q);}});
+}
+
 function checkVec(n){
   const q=G.questions[G.qIdx],sq=q.sqs[G.sqIdx];
-  const vals=[];for(let i=0;i<n;i++){vals.push(parseFloat($('v'+i).value));}
-  if(vals.some(isNaN))return;
+  const raws=[];for(let i=0;i<n;i++){raws.push($('v'+i).value);}
+  const res=raws.map((r,i)=>mark(r,sq.answers[i],sq.dp));
+  if(unmarked(res,sq.dp))return;
   G.total++;
-  const tol=sq.tol||0.01;
-  const ok=vals.every((v,i)=>Math.abs(v-sq.answers[i])<=tol);
-  vals.forEach((v,i)=>{$('v'+i).classList.add(Math.abs(v-sq.answers[i])<=tol?'correct':'wrong');});
+  const ok=res.every(r=>r==='correct');
+  res.forEach((r,i)=>{$('v'+i).classList.add(r==='correct'?'correct':'wrong');});
   if(ok){G.correct++;G.qCorrect++;G.score+=15;$('hudScore').textContent=G.score;}else{G.penalties++;}
   $('hudCorrect').textContent=`${G.correct}/${G.total}`;
-  $('sqFb').innerHTML=`<div class="feedback ${ok?'correct':'wrong'}">${ok?'Correct!':'Incorrect. Answer: '+sq.answers.join(', ')}</div>`;
+  $('sqFb').innerHTML=`<div class="feedback ${ok?'correct':'wrong'}">${ok?'Correct!':'Incorrect. Answer: '+sq.answers.map(a=>keyText(a,sq.dp)).join(', ')}</div>`;
   mfg('question_answered',{game_slug:'component-crusher',level:G.level,question_index:G.total,correct:ok});
-  setTimeout(()=>{G.sqIdx++;loadSQ(q);},ok?800:1800);
+  afterMark(q,ok);
 }
 
 function checkNum(){
   const q=G.questions[G.qIdx],sq=q.sqs[G.sqIdx];
-  const val=parseFloat($('v0').value);if(isNaN(val))return;
+  const res=mark($('v0').value,sq.answer,sq.dp);
+  if(unmarked([res],sq.dp))return;
   G.total++;
-  const tol=sq.tol||0.01;
-  const ok=Math.abs(val-sq.answer)<=tol;
+  const ok=res==='correct';
   $('v0').classList.add(ok?'correct':'wrong');
   if(ok){G.correct++;G.qCorrect++;G.score+=15;$('hudScore').textContent=G.score;}else{G.penalties++;}
   $('hudCorrect').textContent=`${G.correct}/${G.total}`;
-  const msg=ok?'Correct!':`Incorrect. Answer: ${sq.answer}${sq.working?' — '+sq.working:''}`;
+  const msg=ok?'Correct!':`Incorrect. Answer: ${keyText(sq.answer,sq.dp)}${sq.working?' — '+sq.working:''}`;
   $('sqFb').innerHTML=`<div class="feedback ${ok?'correct':'wrong'}">${msg}</div>`;
   mfg('question_answered',{game_slug:'component-crusher',level:G.level,question_index:G.total,correct:ok});
-  setTimeout(()=>{G.sqIdx++;loadSQ(q);},ok?800:2000);
+  afterMark(q,ok);
 }
 
 function checkMCQ(idx,correct){
@@ -741,7 +784,7 @@ function checkMCQ(idx,correct){
   $('hudCorrect').textContent=`${G.correct}/${G.total}`;
   $('sqFb').innerHTML=`<div class="feedback ${correct?'correct':'wrong'}">${correct?'Correct!':'Incorrect.'}</div>`;
   mfg('question_answered',{game_slug:'component-crusher',level:G.level,question_index:G.total,correct:correct});
-  setTimeout(()=>{G.sqIdx++;loadSQ(G.questions[G.qIdx]);},1200);
+  afterMark(G.questions[G.qIdx],correct);
 }
 
 function finishScenario(){
