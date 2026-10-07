@@ -139,6 +139,21 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game (a two-option game: the wrong answer is the button that is not the key).
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && !document.getElementById('tierTransition').classList.contains('active')",
+  "answer": [
+    "return (async () => {",
+    "  const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    "  await real(350);",
+    "  const row = document.querySelector('#gameScreen .btn-row');",
+    "  if (MaffsLock.isLocked(row)) return;",
+    "  document.getElementById(S.session[S.qIdx].answer ? 'btnFalse' : 'btnTrue').click();",
+    "})();"
+  ]
+}
+-->
 </head>
 <body>
 
