@@ -84,6 +84,7 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 think-of-a-number decimal-detective
+prime-or-composite
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -91,7 +92,8 @@ NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 # that reaches the first question), 'ready' (JS: true when a question is on screen), 'answer' (JS that submits
 # an answer; gets `i`, the attempt), 'surface' (a selector for an answer surface that is not an option
 # group, such as a canvas: the repeat phase really clicks its centre and corners too), 'start_sel' (the
-# control that starts a run, when it is not a Start button: double-clicked for real).
+# control that starts a run, when it is not a Start button: double-clicked for real), 'keys' (the game's
+# own answer keys: pressed on the page in the repeat phase, inside MaffsNext's floor).
 HINTS = {
     'four-quadrant-explorer': {
         'ready': "document.getElementById('gameScreen').style.display !== 'none'",
@@ -137,6 +139,9 @@ HINTS = {
                    "  if (b.length) b[i % b.length].click(); }"
                    "if (q.type === 'placeit') setMarkerPosition(i % 2 ? 0.1 : 0.9);"
                    "document.getElementById('checkBtn').click();"),
+    },
+    'prime-or-composite': {
+        'keys': ['p', 'c', 'P', 'C'],
     },
     'like-terms-collector': {
         'ready': "document.getElementById('gameScreen').classList.contains('active')",
@@ -333,6 +338,13 @@ INIT = r"""
       /^(play again|restart|try again|new game|start again)/.test((e.textContent || '').trim().toLowerCase()));
     return el ? window.__lockRect(el) : null;
   };
+  // Something to do: an enabled option of the probed group, a ready continue control, or the end.
+  window.__lockActionable = function () {
+    const p = window.__mfgProbe();
+    const free = (window.__mfgGroup || []).some(e => !e.disabled && e.getAttribute('aria-disabled') !== 'true');
+    const c = window.__lockContinue();
+    return free || !!(c && c.ready) || p.atEnd || p.n < 2;
+  };
   // Synthetic Enter and Space on every option of the answered question (listeners on the option itself).
   window.__lockKeyOptions = function () {
     (window.__mfgGroup || []).forEach(function (el) {
@@ -509,6 +521,8 @@ async def play(browser, base, slug, level, page_html):
     for r in rects:
         if r:
             await page.mouse.click(r['x'], r['y'])
+    for k in hint.get('keys', []):
+        await page.keyboard.press(k)
     await d.ev('() => __lockKeyOptions()')   # Enter and Space on the options themselves (a page-level Enter
                                              # may be the game's own Next: it is pressed in the tap-through)
     await page.wait_for_timeout(250)
@@ -533,7 +547,13 @@ async def play(browser, base, slug, level, page_html):
         faults.append('no continue control after a wrong answer (MaffsNext expected)')
     # 4: tap through to the end; each continue pressed with two Enters and no gap (shape-shifter-t3-005)
     mark = len(await d.ev('() => __lockEvents'))
-    for _ in range(120):
+    t_end = asyncio.get_event_loop().time() + 180
+    while asyncio.get_event_loop().time() < t_end:
+        for _ in range(40):                  # wait until the game offers something (a right answer moves on itself)
+            if await d.ev('() => __lockActionable()'):
+                break
+            await page.wait_for_timeout(50)
+        await page.wait_for_timeout(320)     # past MaffsLock's 300 ms window on what just rendered
         s = await d.snap()
         if s['completed'] or (await d.probe())['atEnd']:
             break
