@@ -153,7 +153,7 @@ KEYS = {
     'L8': [lambda s: s.G('a').dot(s.G('b')), lambda s: mag(s.G('a')), lambda s: mag(s.G('b')), lambda s: ang(s.G('a'), s.G('b'))],
     'L9': [(lambda s: M(1 + 2 * 2, 3 - 2, 2 + 3 * 2), ['r = (1+2t)i + (3-t)j + (2+3t)k', 't = 2']),
            (lambda s: M(2, -1, 3), [])],
-    'L10': [(lambda s: 500 * M(3, 4, 0)[0] / mag(M(3, 4, 0)), ['500N along 3\\mathbf{i}+4\\mathbf{j}']),
+    'L10': [(lambda s: 500 * M(3, 4, 0)[0] / mag(M(3, 4, 0)), ['500N along \\(3\\mathbf{i}+4\\mathbf{j}\\)']),
             (lambda s: 500 * M(3, 4, 0)[1] / mag(M(3, 4, 0)), [])],
     'L11': [lambda s: s.G('F_1') + s.G('F_2') + s.G('F_3'),
             MC('R = 18k, vertical', {'The mast will topple': 'nothing in R says so', 'All forces are equal': 'they differ',
