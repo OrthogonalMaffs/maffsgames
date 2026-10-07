@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 40 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 66 open (3 CRITICAL, 63 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 63 open (3 CRITICAL, 60 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -22,10 +22,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 3 | 21 | 0 | 24 |
-| HIGH | 63 | 143 | 0 | 206 |
-| MEDIUM | 165 | 102 | 0 | 267 |
+| HIGH | 60 | 146 | 0 | 206 |
+| MEDIUM | 164 | 103 | 0 | 267 |
 | LOW | 34 | 25 | 0 | 59 |
-| **All** | 265 | 291 | 0 | 556 |
+| **All** | 261 | 295 | 0 | 556 |
 
 ### By class
 
@@ -34,7 +34,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 33 | 103 |
 | 3 | 10 | 85 |
 | 6 | 31 | 56 |
-| 1 | 27 | 35 |
+| 1 | 23 | 35 |
 | NEW:wrong-explanation-text | 18 | 34 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
@@ -128,24 +128,24 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `boolean-blitz` | yes | none | 0 | 3 | 0 | 5 | 8 | 0 | 0 |
 | `characteristic-quest` | yes | none | 0 | 1 | 3 | 1 | 5 | 0 | 0 |
 | `complex-converter` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
-| `component-crusher` | unlisted | verify-component-crusher.py | 1 | 6 | 6 | 1 | 3 | 11 | 0 |
+| `component-crusher` | unlisted | verify-component-crusher.py | 1 | 6 | 6 | 1 | 2 | 12 | 0 |
 | `constructions-lab` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `coordinate-geometry-dash` | yes | none | 0 | 1 | 3 | 0 | 4 | 0 | 0 |
 | `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 2 | 0 | 0 | 6 | 0 |
 | `core-maths-paper2b` | yes | none | 0 | 1 | 1 | 0 | 2 | 0 | 0 |
 | `core-maths-paper2c` | yes | none | 0 | 3 | 5 | 1 | 9 | 0 | 0 |
 | `correlation-or-coincidence` | yes | verify-correlation-or-coincidence.py | 1 | 0 | 2 | 0 | 0 | 3 | 0 |
-| `curling-friction` | unlisted | verify-curling-friction.py | 0 | 3 | 3 | 2 | 3 | 5 | 0 |
+| `curling-friction` | unlisted | verify-curling-friction.py | 0 | 3 | 3 | 2 | 2 | 6 | 0 |
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `differentiation-duel` | unlisted | verify-differentiation-duel.py | 0 | 2 | 10 | 2 | 2 | 12 | 0 |
-| `dimension-checker` | unlisted | verify-dimension-checker.py | 0 | 3 | 3 | 1 | 3 | 4 | 0 |
+| `dimension-checker` | unlisted | verify-dimension-checker.py | 0 | 3 | 3 | 1 | 2 | 5 | 0 |
 | `eigenvalue-extractor` | yes | none | 0 | 1 | 3 | 1 | 5 | 0 | 0 |
 | `eigenvector-engine` | unlisted | verify-eigenvector-engine.py | 1 | 1 | 2 | 8 | 1 | 11 | 0 |
 | `equation-builder` | yes | verify-equation-builder.py | 1 | 1 | 3 | 0 | 0 | 5 | 0 |
 | `equatle` | yes | none | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 3 | 0 | 0 | 4 | 0 |
 | `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 3 | 0 | 3 | 2 | 0 |
-| `expectation-station` | unlisted | verify-expectation-station.py | 1 | 12 | 5 | 1 | 1 | 18 | 0 |
+| `expectation-station` | unlisted | verify-expectation-station.py | 1 | 12 | 5 | 1 | 0 | 19 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `factor-race` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 10 | 9 | 0 |
@@ -248,10 +248,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 - **HIGH** wrong-on-the-internet-t2-001 (JC), `games/wrong-on-the-internet/index.html:458-461 (gcse_004)`: Keyed 18/38 (American wheel); a UK or European wheel gives 18/37, so the distractor 'Depends on wheel' is correct
 - **HIGH** wrong-on-the-internet-t2-002 (JC), `games/wrong-on-the-internet/index.html:537 (gcse_011)`: Keyed '0.12 (if independent)' but the post never says A and B are independent, so 'Need more information' is correct; the stage-2 key's 'Addition gives P(A OR B)' is false unless mutually exclusive
 
-### `component-crusher` (GCSE, A-Level, L4; unlisted)
-
-- **HIGH** component-crusher-t4-005, `games/component-crusher/index.html:704-745,770`: No marking lock: re-checking scores again, double-click scores twice and skips; inflated score and attempt count submitted
-
 ### `coordinate-geometry-dash` (GCSE, A-Level)
 
 - **HIGH** coordinate-geometry-dash-t1-001, `games/coordinate-geometry-dash/index.html:287`: x = 3t, y = 4/t: xy = 12, y = 12/x and x = 12/y are each correct and marked wrong; only 'All equivalent' is accepted
@@ -313,14 +309,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 - **HIGH** glorious-gantt-t4-006, `games/glorious-gantt/index.html:684 (L4_B2)`: Floats of C and E wrong (keys 5 and 4; true 8 and 1); node 4 late keyed 12, LF(C) = 15
 - **HIGH** glorious-gantt-t4-007, `games/glorious-gantt/index.html:541 (CM_B2)`: Node 3 late keyed 6; LF(B) = 9 by the table, and node 3 is a dead end in the drawing
 - **HIGH** glorious-gantt-t4-008, `games/glorious-gantt/index.html:968,1003,1089,1188,1236`: Retries score full marks; double-clicking Check scores twice and skips items; inflated score submitted
-
-### `curling-friction` (A-Level, L4; unlisted)
-
-- **HIGH** curling-friction-t5-003, `games/curling-friction/index.html:281-290, 292`: No answered guard: Enter re-marks, re-scores, skips questions and submits repeatedly
-
-### `dimension-checker` (A-Level, L4; unlisted)
-
-- **HIGH** dimension-checker-t5-003, `games/dimension-checker/index.html:50, 148-150 (handleAnswer)`: Options disabled only by pointer-events:none; Enter re-marks: extra score, skipped questions, a correct mark after a wrong first answer
 
 ### `factor-theorem` (A-Level, L4; unlisted)
 
