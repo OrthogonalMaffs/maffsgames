@@ -512,6 +512,7 @@ jobs:
               Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)|python scripts/verify-negative-number-line.py
               Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)|python scripts/verify-trig-worms.py
               Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 110 played in Chromium)|python scripts/verify-spot-the-error.py
+              Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium)|python scripts/verify-component-crusher.py
               Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)|python scripts/verify-decimal-detective.py
 
     steps:
