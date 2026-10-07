@@ -14,6 +14,42 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-07 (cloud): Linear Equation Solver, Jon's "optimal move" contract (PR #124); #115 Proof Builder merged; NEXT = moments-master
+
+- **Proof Builder (PR #115) merged**; main's full run after it green (and after #117).
+- **Jon's list (7 Oct, this session):** proof-builder (done), linear-equation-solver, then with Project Claude's
+  replacement data moments-master, force-resolver, suvat, factor-theorem, eigenvector-engine, then
+  truth-will-set-you-free; then (Jon, 15:27) follow-ups to merged games, one PR each: trig-identity-duel gcse[16]
+  replaced + timer to hidden count-up; binomial-blaster alevel2[36] replaced; partial-fractions-duel alevel[22]
+  replaced (each clears its B3 ledger entry); truth-buster Next visible at 390x844 on every item. The replacement
+  data is in Jon's 7 Oct paste (the session's first message); if it is not to hand, ask Jon.
+- **MaffsLock (`schools/assets/answer-lock.js`) is not on main yet:** class 1 stays open. Once it lands, adopt it in
+  each game fixed (lock, fresh, timer, finishOnce) and close that game's class-1 entries.
+- **Linear Equation Solver:** `scripts/gen-linear-moves.py` (depth-3 search, iterative deepening, under 1 s) writes
+  MOVES between its own GENERATED markers: per line, every optimal move (one per distinct line), one slower move
+  where one exists, named errors (one-side, carry, xonly, constnot) to fill four. Options show the move and the line
+  it gives with the number side unevaluated (x = 12 - 7), so a one-side error can be shown and the answer phase
+  still asks for the value. The trail follows the student's route (295 lines for 141 questions). Amber = 12.5 (half
+  the 25 at stake), streak kept; amber and red wait for MaffsNext. Hints and feedback through MaffsText (t4-002).
+  `gen-linear-equations.py` no longer writes the superseded per-step `opts`/`hint` (QUESTIONS otherwise identical)
+  and uses a repo path. `scripts/verify-linear-equation-solver.py` (group E, ~40 s): its own TeX parser and search,
+  SymPy for every value; every option clicked in Chromium; Jon's four cases tapped; page == generator. On main's
+  file it fails on exactly r-001 (18 options in the 14 questions), r-002 (49) and t4-002 (11).
+  - **Decision to review:** "fractions" in the tie-break means fractional constants, not coefficients (Jon's own x2
+    example on x/2 + 5 = 11 needs x/2 = 6 to count as fraction-free). Under that reading every keyed move is
+    optimal (STOP IF not triggered).
+  - Four lines (-x = c in U1-U4) have 3 options: no fourth honest one exists.
+  - Open: t4-003 (class 1).
+  - **Gotcha (MOVES size):** the first version stored each option's feedback sentence (MOVES 280 KB, page 348 KB)
+    and tier 4's extraction of this one game ran for minutes: the render-site evaluator calls `literal_to_json` on a
+    literal every time it resolves an identifier (about 350 calls a second, no cache). Options are now compact arrays
+    and the page words the feedback from their fields (MOVES 92 KB, page 159 KB, extraction 8.5 s). A large
+    generated literal in any game will hit the same cost.
+- **For the home lane:** content group B4 ran 243 s on main's run after #117, over canon's 4-minute cap; this
+  verifier went in E (133 s on that run) instead. `bank_common.literal_to_json` is re-run per identifier
+  resolution; memoising it by node would make large literals cheap (shared code). SR-13's scoring sentence
+  ("scores full marks") needs a note for Jon's 7 Oct amber rule.
+
 ## 2026-10-07 (cloud): game 13 Proof Builder (PR #115); #112 Dimension Checker merged; NEXT = Linear Equation Solver (Jon's 7 Oct contract)
 
 - **Dimension Checker (PR #112) merged** on a green Gate; main's full run after it green.

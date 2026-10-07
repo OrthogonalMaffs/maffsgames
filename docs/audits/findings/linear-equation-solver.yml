@@ -31,7 +31,8 @@ findings:
     the convention is intended (the generator offers the swapped order as the "wrong order" misconception, `gen-linear-equations.py:187-204`),
     but the ask does not say "first step in the usual order", and a student who multiplies through first is doing
     correct algebra and is penalised 25 points and loses the clean streak.'
-  status: open
+  status: fixed
+  pr: 124
 - id: linear-equation-solver-r-002
   severity: MEDIUM
   jc: true
@@ -49,7 +50,8 @@ findings:
     or replacing that distractor with an invalid move (e.g. `÷3` applied to the x-term only is the real misconception,
     but the button cannot show that).'
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. '
-  status: open
+  status: fixed
+  pr: 124
 - id: linear-equation-solver-t4-001
   severity: CRITICAL
   jc: false
@@ -60,7 +62,8 @@ findings:
   evidence: '681/681 non-key options are valid both-side operations; 67 in 63 questions make progress; 14/141 (10%)
     narrowest reading, 63/141 progress moves. L1 3x+7=22: /3 marked wrong (-25). U1: x(-1) and /(-1) both offered
     and both wrong.'
-  status: open
+  status: fixed
+  pr: 124
 - id: linear-equation-solver-t4-002
   severity: MEDIUM
   jc: false
@@ -69,7 +72,8 @@ findings:
   where: games/linear-equation-solver/index.html:379 (J1-J5, Y1-Y6)
   summary: 11 hints show raw TeX
   evidence: 'useHint writes innerHTML without rk(): ''Multiplying by \frac{3}{2} undoes …''.'
-  status: open
+  status: fixed
+  pr: 124
 - id: linear-equation-solver-t4-003
   severity: LOW
   jc: false
