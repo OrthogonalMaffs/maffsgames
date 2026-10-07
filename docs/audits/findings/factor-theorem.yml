@@ -18,7 +18,8 @@ findings:
   summary: 'Comma blanks matched with every/includes, ignoring position: 13/40 practice items accept wrong answers'
   evidence: Q6 '(x − ___)(x + ___)' key '3, 2'; '2, 3' -> (x-2)(x+3) = x²+x-6 ≠ x²-x-6, full marks (Chromium); Q11
     '4, 9' accepted for '4, 4'; Q16 'a=1,b=4' accepted (a=4,b=1)
-  status: open
+  status: fixed
+  pr: 130
 - id: factor-theorem-t5-002
   severity: CRITICAL
   jc: false
@@ -29,7 +30,8 @@ findings:
     letters, 'x=' after an 'x =' label)
   evidence: 'Chromium: Q21 ''(x-2)(x-3)(x+4)'' wrong; Q29 ''x=-3, x=1, x=2'' wrong; Q4 ''x^2'' wrong (key ''x²'');
     T1 ''(x+1)(x+1)(x-2)'' wrong. 23/40 practice, 9/10 test'
-  status: open
+  status: fixed
+  pr: 130
 - id: factor-theorem-t5-003
   severity: HIGH
   jc: false
@@ -38,7 +40,8 @@ findings:
   where: games/factor-theorem/index.html:551 (T4(b))
   summary: Key (x-3)(x+7)(x-2) is not p(x) = x³-23x+42; true (x-3)(x²+3x-14), no integer factorisation
   evidence: p(3)=0, p(1)=20 -> a=-23, b=42 (SymPy); key expands to x³+2x²-29x+42; p(2)=4; disc 65
-  status: open
+  status: fixed
+  pr: 130
 - id: factor-theorem-t5-004
   severity: HIGH
   jc: false
@@ -65,7 +68,8 @@ findings:
   where: games/factor-theorem/index.html:483-484 (practice Q24)
   summary: Asks 'factorise and state all roots'; key is the factorisation only
   evidence: finalAnswer '(x-1)(x+1)(x+2)'; roots 1, -1, -2
-  status: open
+  status: fixed
+  pr: 130
 - id: factor-theorem-t5-007
   severity: HIGH
   jc: true
@@ -74,7 +78,8 @@ findings:
   where: games/factor-theorem/index.html:520-521 (practice Q38)
   summary: Asks 'fully factorise and solve f(x)=0'; key is the factorisation only
   evidence: finalAnswer '(x-1)(x-3)(x+4)'; roots 1, 3, -4
-  status: open
+  status: fixed
+  pr: 130
 - id: factor-theorem-t5-008
   severity: MEDIUM
   jc: false
@@ -102,7 +107,8 @@ findings:
   where: games/factor-theorem/index.html:466 (practice Q20)
   summary: Prompt says 'Find k' but x³+4x²+x-6 has no k
   evidence: prompt text
-  status: open
+  status: fixed
+  pr: 130
 - id: factor-theorem-t5-011
   severity: MEDIUM
   jc: false
@@ -111,7 +117,8 @@ findings:
   where: games/factor-theorem/index.html:479 (practice Q22)
   summary: Hint 1 says try x = ½; f(½) = -7/2 (roots 1, -½, -⅔)
   evidence: SymPy f(1/2) = -7/2
-  status: open
+  status: fixed
+  pr: 130
 - id: factor-theorem-t5-012
   severity: MEDIUM
   jc: false
@@ -120,7 +127,8 @@ findings:
   where: games/factor-theorem/index.html:314 (Learn example 4, step 1)
   summary: Candidate list includes ±⅓ and omits ±3/2
   evidence: ±(1,2,3,6)/(1,2) = ±1, ±2, ±3, ±6, ±1/2, ±3/2
-  status: open
+  status: fixed
+  pr: 130
 - id: factor-theorem-t5-013
   severity: MEDIUM
   jc: true
@@ -176,3 +184,14 @@ findings:
     hint button live after marking; Enter does not submit; wrong-answer advance not MaffsNext (class 11 note)
   evidence: Chromium 390x844 measurements
   status: open
+- id: factor-theorem-t5-019
+  severity: MEDIUM
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: all
+  where: games/factor-theorem/index.html (test prompts T1-T4, T6-T8, T10; practice Q25, Q35 answer lines)
+  summary: 'Test prompts written without \( \) show raw TeX ("f(x) = x^3 - 3x - 2"); the shown key "(x-2)^2(x+3)"'
+  evidence: 'verify-factor-theorem.py on main''s page: raw TeX on screen in test 1, 2, 3, 4, 6, 7, 8, 10 and practice
+    25, 35 (Chromium, 390px). Found by the fix PR''s verifier work (7 Oct 2026)'
+  status: fixed
+  pr: 130

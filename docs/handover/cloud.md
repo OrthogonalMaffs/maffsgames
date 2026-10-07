@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-07 (cloud): game 18 Factor Theorem (PR pending); #128 SUVAT merged; NEXT = eigenvector-engine
+## 2026-10-07 (cloud): game 18 Factor Theorem (PR #130); #128 SUVAT merged; NEXT = eigenvector-engine
 
 - **SUVAT Selector (PR #128) merged** at 17:12 on a green Gate (its first run lost its Gate job in GitHub's 500s; one
   re-run); main green after #125 before it.
