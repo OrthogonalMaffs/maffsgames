@@ -21,6 +21,24 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-07 (home): item 0, Like Terms Collector's flaky read (this PR); STOP for a clear before F1
+
+- **Contract C is complete:** #111, #113, #114, #116, #117, #118 all merged on green Gates (#118's main run:
+  watch it if not yet reported below). Contract V (#108) merged earlier.
+- **Item 0 (Jon, 7 Oct):** `verify-like-terms-collector.py` failed once on main (run 37626794263, #109, attempt 1:
+  "item 1: typed 8.9/6.5, marked correct=None") and passed on rerun. It read MARK() straight after
+  `page.click('#checkBtn')`. Now `read_mark()` waits for the game's own mark to land (up to 5 s), and the in-page
+  sweep polls the same way. New self-test: a copy whose showFeedback() marks 300 ms late; the waiting read must
+  see every mark and a read straight off the click must see none. With the old immediate read put back, the
+  self-test fails with main's exact message. Not traced: why the real page was ever late (the check no longer
+  depends on it).
+- **Then STOP (Jon):** he clears the session before contract F1. Next session: read this file and the memory's
+  LATEST block; F1 starts when Jon pastes it.
+- **Open for Jon (carried):** eigenvector-engine-f0-005 set jc: false (done in #108); the cloud lane's #112 and
+  #115 already declare their verifiers by ci-line header, so V is working as intended. B3 now carries 11
+  lines: check its time on the next full main run; re-record `scripts/ci-timings.json` with
+  `python scripts/ci-groups.py --record-timings <run id>` if it grows.
+
 ## 2026-10-07 (home): contract C game 6, Estimation Golf (#118); contract C complete once it merges
 
 - **#117 (Sequence Solver) merged.** Slip to note: the cloud lane merged #115 seconds before, and #117 went in
