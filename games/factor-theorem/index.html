@@ -26,6 +26,8 @@
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
+<script src="../../schools/assets/answer.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -79,7 +81,7 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .step-card.future{background:var(--step-future);color:var(--step-future-text);border-color:transparent}
 .step-card.future .step-working,.step-card.future .step-explain{opacity:.2}
 .step-number{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--primary);font-weight:700;margin-bottom:.4rem}
-.step-working{margin-bottom:.4rem;font-size:1.05rem}
+.step-working{margin-bottom:.4rem;font-size:1.05rem;overflow-x:auto;overflow-y:hidden}
 .step-explain{color:var(--body);font-size:.82rem;line-height:1.5}
 .why-btn{display:inline-block;margin-top:.4rem;padding:2px 8px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--accent);font-size:.72rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif}
 .why-btn:hover{background:var(--accent-dim)}
@@ -260,6 +262,176 @@ function K(tex, display = false) {
 // renders each \( \) segment and leaves the rest as plain escaped text.
 function PQ(s) { return (/\\[A-Za-z]/.test(s) && !MaffsText.hasMaths(s)) ? K(s) : MaffsText.html(s); }
 
+// ── MARKING ─────────────────────────────────────────────────────────
+// Every typed answer is looked up, never compared character by character (canon 7.1, the ACCEPTED-list
+// pattern). scripts/verify-factor-theorem.py works out offline, with SymPy, every form of each answer that is
+// right (factors in any order, a repeated factor squared or written twice, roots in any order with or without
+// "x =", a terminating decimal for a fraction, named values in any order) and writes them below; --write
+// regenerates the block and CI fails if it differs. Keys: 'p<id>' a practice answer, 'p<id>.<step>' a
+// scaffold step, 'T<n>.<part>' a test part. A step with several boxes is one entry, its boxes joined by '|'
+// and matched by position. A box whose accepted entry is a number is read by MaffsAnswer; anything else is
+// written in one notation by canon() and looked up.
+// >>> GENERATED ACCEPTED START
+const ACCEPTED = {
+  "T1.0": ["0"],
+  "T1.1": ["(x+1)(x+1)(x-2)", "(x+1)(x-2)(x+1)", "(x+1)^2(x-2)", "(x-2)(x+1)(x+1)", "(x-2)(x+1)^2"],
+  "T1.2": ["-1,2", "2,-1", "x=-1,2", "x=-1,x=2", "x=2,-1", "x=2,x=-1"],
+  "T2.0": ["0"],
+  "T2.1": ["-3"],
+  "T3.0": ["6"],
+  "T3.1": ["0"],
+  "T3.2": ["(2x+1)(3x-2)(x+1)", "(2x+1)(x+1)(3x-2)", "(3x-2)(2x+1)(x+1)", "(3x-2)(x+1)(2x+1)", "(x+1)(2x+1)(3x-2)", "(x+1)(3x-2)(2x+1)"],
+  "T3.3": ["-0.5,-1,2/3", "-0.5,2/3,-1", "-1,-0.5,2/3", "-1,-1/2,2/3", "-1,2/3,-0.5", "-1,2/3,-1/2", "-1/2,-1,2/3", "-1/2,2/3,-1", "2/3,-0.5,-1", "2/3,-1,-0.5", "2/3,-1,-1/2", "2/3,-1/2,-1", "x=-0.5,-1,2/3", "x=-0.5,2/3,-1", "x=-0.5,x=-1,x=2/3", "x=-0.5,x=2/3,x=-1", "x=-1,-0.5,2/3", "x=-1,-1/2,2/3", "x=-1,2/3,-0.5", "x=-1,2/3,-1/2", "x=-1,x=-0.5,x=2/3", "x=-1,x=-1/2,x=2/3", "x=-1,x=2/3,x=-0.5", "x=-1,x=2/3,x=-1/2", "x=-1/2,-1,2/3", "x=-1/2,2/3,-1", "x=-1/2,x=-1,x=2/3", "x=-1/2,x=2/3,x=-1", "x=2/3,-0.5,-1", "x=2/3,-1,-0.5", "x=2/3,-1,-1/2", "x=2/3,-1/2,-1", "x=2/3,x=-0.5,x=-1", "x=2/3,x=-1,x=-0.5", "x=2/3,x=-1,x=-1/2", "x=2/3,x=-1/2,x=-1"],
+  "T4.0": ["a=-19,b=30", "b=30,a=-19"],
+  "T4.1": ["(x+5)(x-2)(x-3)", "(x+5)(x-3)(x-2)", "(x-2)(x+5)(x-3)", "(x-2)(x-3)(x+5)", "(x-3)(x+5)(x-2)", "(x-3)(x-2)(x+5)"],
+  "T5.0": ["1,2,3", "1,3,2", "2,1,3", "2,3,1", "3,1,2", "3,2,1", "λ=1,2,3", "λ=1,3,2", "λ=1,λ=2,λ=3", "λ=1,λ=3,λ=2", "λ=2,1,3", "λ=2,3,1", "λ=2,λ=1,λ=3", "λ=2,λ=3,λ=1", "λ=3,1,2", "λ=3,2,1", "λ=3,λ=1,λ=2", "λ=3,λ=2,λ=1"],
+  "T6.0": ["12"],
+  "T6.1": ["(x+3)(x-1)(x-2)", "(x+3)(x-2)(x-1)", "(x-1)(x+3)(x-2)", "(x-1)(x-2)(x+3)", "(x-2)(x+3)(x-1)", "(x-2)(x-1)(x+3)"],
+  "T7.0": ["0"],
+  "T7.1": ["(2x-1)(x+3)(x-3)", "(2x-1)(x-3)(x+3)", "(x+3)(2x-1)(x-3)", "(x+3)(x-3)(2x-1)", "(x-3)(2x-1)(x+3)", "(x-3)(x+3)(2x-1)"],
+  "T7.2": ["-3,0.5,3", "-3,1/2,3", "-3,3,0.5", "-3,3,1/2", "0.5,-3,3", "0.5,3,-3", "1/2,-3,3", "1/2,3,-3", "3,-3,0.5", "3,-3,1/2", "3,0.5,-3", "3,1/2,-3", "x=-3,0.5,3", "x=-3,1/2,3", "x=-3,3,0.5", "x=-3,3,1/2", "x=-3,x=0.5,x=3", "x=-3,x=1/2,x=3", "x=-3,x=3,x=0.5", "x=-3,x=3,x=1/2", "x=0.5,-3,3", "x=0.5,3,-3", "x=0.5,x=-3,x=3", "x=0.5,x=3,x=-3", "x=1/2,-3,3", "x=1/2,3,-3", "x=1/2,x=-3,x=3", "x=1/2,x=3,x=-3", "x=3,-3,0.5", "x=3,-3,1/2", "x=3,0.5,-3", "x=3,1/2,-3", "x=3,x=-3,x=0.5", "x=3,x=-3,x=1/2", "x=3,x=0.5,x=-3", "x=3,x=1/2,x=-3"],
+  "T8.0": ["3"],
+  "T8.1": ["(x+2)(x+3)(x-2)", "(x+2)(x-2)(x+3)", "(x+3)(x+2)(x-2)", "(x+3)(x-2)(x+2)", "(x-2)(x+2)(x+3)", "(x-2)(x+3)(x+2)"],
+  "T8.2": ["-2,-3,2", "-2,2,-3", "-3,-2,2", "-3,2,-2", "2,-2,-3", "2,-3,-2", "x=-2,-3,2", "x=-2,2,-3", "x=-2,x=-3,x=2", "x=-2,x=2,x=-3", "x=-3,-2,2", "x=-3,2,-2", "x=-3,x=-2,x=2", "x=-3,x=2,x=-2", "x=2,-2,-3", "x=2,-3,-2", "x=2,x=-2,x=-3", "x=2,x=-3,x=-2"],
+  "T9.0": ["0"],
+  "T9.1": ["2,3,4", "2,4,3", "3,2,4", "3,4,2", "4,2,3", "4,3,2", "t=2,3,4", "t=2,4,3", "t=2,t=3,t=4", "t=2,t=4,t=3", "t=3,2,4", "t=3,4,2", "t=3,t=2,t=4", "t=3,t=4,t=2", "t=4,2,3", "t=4,3,2", "t=4,t=2,t=3", "t=4,t=3,t=2"],
+  "T9.2": ["objectcrossesoriginatt=2,3,4"],
+  "T10.0": ["0"],
+  "T10.1": ["(2x-1)(x+3)(x-2)", "(2x-1)(x-2)(x+3)", "(x+3)(2x-1)(x-2)", "(x+3)(x-2)(2x-1)", "(x-2)(2x-1)(x+3)", "(x-2)(x+3)(2x-1)"],
+  "T10.2": ["-3,0.5,2", "-3,1/2,2", "-3,2,0.5", "-3,2,1/2", "0.5,-3,2", "0.5,2,-3", "1/2,-3,2", "1/2,2,-3", "2,-3,0.5", "2,-3,1/2", "2,0.5,-3", "2,1/2,-3", "x=-3,0.5,2", "x=-3,1/2,2", "x=-3,2,0.5", "x=-3,2,1/2", "x=-3,x=0.5,x=2", "x=-3,x=1/2,x=2", "x=-3,x=2,x=0.5", "x=-3,x=2,x=1/2", "x=0.5,-3,2", "x=0.5,2,-3", "x=0.5,x=-3,x=2", "x=0.5,x=2,x=-3", "x=1/2,-3,2", "x=1/2,2,-3", "x=1/2,x=-3,x=2", "x=1/2,x=2,x=-3", "x=2,-3,0.5", "x=2,-3,1/2", "x=2,0.5,-3", "x=2,1/2,-3", "x=2,x=-3,x=0.5", "x=2,x=-3,x=1/2", "x=2,x=0.5,x=-3", "x=2,x=1/2,x=-3"],
+  "T10.3": ["18"],
+  "p1.0": ["2"],
+  "p1.2": ["8"],
+  "p1.3": ["7"],
+  "p2.0": ["-1"],
+  "p2.2": ["-1"],
+  "p2.3": ["-2"],
+  "p2.4": ["-10"],
+  "p3.0": ["1"],
+  "p3.2": ["6"],
+  "p3.3": ["0"],
+  "p4.0": ["-2"],
+  "p4.2": ["4"],
+  "p4.3": ["0"],
+  "p4.4": ["factor"],
+  "p4.5": ["x^2"],
+  "p4.6": ["2x^2"],
+  "p4.7": ["-1"],
+  "p4.8": ["-x"],
+  "p4.9": ["-2x"],
+  "p4.10": ["-2"],
+  "p4.11": ["-2"],
+  "p4.12": ["-1|-2", "2|1"],
+  "p5.0": ["1"],
+  "p5.1": ["0"],
+  "p5.2": ["5"],
+  "p5.3": ["5"],
+  "p6.0": ["0"],
+  "p6.1": ["1"],
+  "p6.2": ["x^2"],
+  "p6.3": ["6"],
+  "p6.4": ["-2|-3", "3|2"],
+  "p7.0": ["0"],
+  "p7.1": ["2x^2"],
+  "p7.2": ["1"],
+  "p7.3": ["-2|-1/2", "1|1"],
+  "p8.0": ["12"],
+  "p8.1": ["0"],
+  "p8.2": ["0"],
+  "p9.0": ["0"],
+  "p9.1": ["2"],
+  "p9.2": ["15"],
+  "p9.3": ["-3|-5", "5|3"],
+  "p10.0": ["0"],
+  "p10.1": ["0"],
+  "p10.2": ["0"],
+  "p10.3": ["2|3", "3|2"],
+  "p11.0": ["0"],
+  "p11.1": ["4|4"],
+  "p11.2": ["2"],
+  "p12.0": ["0"],
+  "p12.1": ["4|1"],
+  "p12.2": ["1|1", "3|1/3"],
+  "p13.0": ["1"],
+  "p13.1": ["-7"],
+  "p14.0": ["0"],
+  "p14.1": ["3|2"],
+  "p14.2": ["1|2", "2|1"],
+  "p15.0": ["0"],
+  "p15.1": ["3|2"],
+  "p15.2": ["-4|-1/2", "1|2"],
+  "p16.0": ["5"],
+  "p16.1": ["14"],
+  "p16.2": ["4|1"],
+  "p17.0": ["0"],
+  "p17.1": ["3|10"],
+  "p17.2": ["-2|-5", "5|2"],
+  "p18.0": ["0"],
+  "p18.1": ["1|6"],
+  "p18.2": ["-2|-3", "3|2"],
+  "p19.0": ["0"],
+  "p19.1": ["4|4"],
+  "p19.2": ["2"],
+  "p20.0": ["0"],
+  "p20.1": ["2|3"],
+  "p20.2": ["-1|-3", "3|1"],
+  "p21": ["(x+4)(x-2)(x-3)", "(x+4)(x-3)(x-2)", "(x-2)(x+4)(x-3)", "(x-2)(x-3)(x+4)", "(x-3)(x+4)(x-2)", "(x-3)(x-2)(x+4)"],
+  "p22": ["(2x+1)(3x+2)(x-1)", "(2x+1)(x-1)(3x+2)", "(3x+2)(2x+1)(x-1)", "(3x+2)(x-1)(2x+1)", "(x-1)(2x+1)(3x+2)", "(x-1)(3x+2)(2x+1)"],
+  "p23": ["1,2,3", "1,3,2", "2,1,3", "2,3,1", "3,1,2", "3,2,1", "ω=1,2,3", "ω=1,3,2", "ω=1,ω=2,ω=3", "ω=1,ω=3,ω=2", "ω=2,1,3", "ω=2,3,1", "ω=2,ω=1,ω=3", "ω=2,ω=3,ω=1", "ω=3,1,2", "ω=3,2,1", "ω=3,ω=1,ω=2", "ω=3,ω=2,ω=1"],
+  "p24": ["(x+1)(x+2)(x-1)", "(x+1)(x-1)(x+2)", "(x+2)(x+1)(x-1)", "(x+2)(x-1)(x+1)", "(x-1)(x+1)(x+2)", "(x-1)(x+2)(x+1)"],
+  "p25": ["(x+3)(x-2)(x-2)", "(x+3)(x-2)^2", "(x-2)(x+3)(x-2)", "(x-2)(x-2)(x+3)", "(x-2)^2(x+3)"],
+  "p26": ["(x+3)(x-2)(x-4)", "(x+3)(x-4)(x-2)", "(x-2)(x+3)(x-4)", "(x-2)(x-4)(x+3)", "(x-4)(x+3)(x-2)", "(x-4)(x-2)(x+3)"],
+  "p27": ["(2x-1)(x+1)(x-3)", "(2x-1)(x-3)(x+1)", "(x+1)(2x-1)(x-3)", "(x+1)(x-3)(2x-1)", "(x-3)(2x-1)(x+1)", "(x-3)(x+1)(2x-1)"],
+  "p28": ["(x+1)(x+2)(x+3)", "(x+1)(x+3)(x+2)", "(x+2)(x+1)(x+3)", "(x+2)(x+3)(x+1)", "(x+3)(x+1)(x+2)", "(x+3)(x+2)(x+1)"],
+  "p29": ["-3,1,2", "-3,2,1", "1,-3,2", "1,2,-3", "2,-3,1", "2,1,-3", "x=-3,1,2", "x=-3,2,1", "x=-3,x=1,x=2", "x=-3,x=2,x=1", "x=1,-3,2", "x=1,2,-3", "x=1,x=-3,x=2", "x=1,x=2,x=-3", "x=2,-3,1", "x=2,1,-3", "x=2,x=-3,x=1", "x=2,x=1,x=-3"],
+  "p30": ["a=-1,b=4", "b=4,a=-1"],
+  "p31": ["(2x-1)(x+3)(x-3)", "(2x-1)(x-3)(x+3)", "(x+3)(2x-1)(x-3)", "(x+3)(x-3)(2x-1)", "(x-3)(2x-1)(x+3)", "(x-3)(x+3)(2x-1)"],
+  "p32": ["(x+2)(x+3)(x-3)", "(x+2)(x-3)(x+3)", "(x+3)(x+2)(x-3)", "(x+3)(x-3)(x+2)", "(x-3)(x+2)(x+3)", "(x-3)(x+3)(x+2)"],
+  "p33": ["f(2)=2^n-2^n=0"],
+  "p34": ["-0.5,0.5,2", "-0.5,1/2,2", "-0.5,2,0.5", "-0.5,2,1/2", "-1/2,0.5,2", "-1/2,1/2,2", "-1/2,2,0.5", "-1/2,2,1/2", "0.5,-0.5,2", "0.5,-1/2,2", "0.5,2,-0.5", "0.5,2,-1/2", "1/2,-0.5,2", "1/2,-1/2,2", "1/2,2,-0.5", "1/2,2,-1/2", "2,-0.5,0.5", "2,-0.5,1/2", "2,-1/2,0.5", "2,-1/2,1/2", "2,0.5,-0.5", "2,0.5,-1/2", "2,1/2,-0.5", "2,1/2,-1/2", "θ=-0.5,0.5,2", "θ=-0.5,1/2,2", "θ=-0.5,2,0.5", "θ=-0.5,2,1/2", "θ=-0.5,θ=0.5,θ=2", "θ=-0.5,θ=1/2,θ=2", "θ=-0.5,θ=2,θ=0.5", "θ=-0.5,θ=2,θ=1/2", "θ=-1/2,0.5,2", "θ=-1/2,1/2,2", "θ=-1/2,2,0.5", "θ=-1/2,2,1/2", "θ=-1/2,θ=0.5,θ=2", "θ=-1/2,θ=1/2,θ=2", "θ=-1/2,θ=2,θ=0.5", "θ=-1/2,θ=2,θ=1/2", "θ=0.5,-0.5,2", "θ=0.5,-1/2,2", "θ=0.5,2,-0.5", "θ=0.5,2,-1/2", "θ=0.5,θ=-0.5,θ=2", "θ=0.5,θ=-1/2,θ=2", "θ=0.5,θ=2,θ=-0.5", "θ=0.5,θ=2,θ=-1/2", "θ=1/2,-0.5,2", "θ=1/2,-1/2,2", "θ=1/2,2,-0.5", "θ=1/2,2,-1/2", "θ=1/2,θ=-0.5,θ=2", "θ=1/2,θ=-1/2,θ=2", "θ=1/2,θ=2,θ=-0.5", "θ=1/2,θ=2,θ=-1/2", "θ=2,-0.5,0.5", "θ=2,-0.5,1/2", "θ=2,-1/2,0.5", "θ=2,-1/2,1/2", "θ=2,0.5,-0.5", "θ=2,0.5,-1/2", "θ=2,1/2,-0.5", "θ=2,1/2,-1/2", "θ=2,θ=-0.5,θ=0.5", "θ=2,θ=-0.5,θ=1/2", "θ=2,θ=-1/2,θ=0.5", "θ=2,θ=-1/2,θ=1/2", "θ=2,θ=0.5,θ=-0.5", "θ=2,θ=0.5,θ=-1/2", "θ=2,θ=1/2,θ=-0.5", "θ=2,θ=1/2,θ=-1/2"],
+  "p35": ["(x+2)(x-2)(x-2)", "(x+2)(x-2)^2", "(x-2)(x+2)(x-2)", "(x-2)(x-2)(x+2)", "(x-2)^2(x+2)"],
+  "p36": ["(3x+1)(x+1)(x+2)", "(3x+1)(x+2)(x+1)", "(x+1)(3x+1)(x+2)", "(x+1)(x+2)(3x+1)", "(x+2)(3x+1)(x+1)", "(x+2)(x+1)(3x+1)"],
+  "p37": ["(x+2)(x+3)(x-1),p=4,q=1", "(x+2)(x+3)(x-1),q=1,p=4", "(x+2)(x-1)(x+3),p=4,q=1", "(x+2)(x-1)(x+3),q=1,p=4", "(x+3)(x+2)(x-1),p=4,q=1", "(x+3)(x+2)(x-1),q=1,p=4", "(x+3)(x-1)(x+2),p=4,q=1", "(x+3)(x-1)(x+2),q=1,p=4", "(x-1)(x+2)(x+3),p=4,q=1", "(x-1)(x+2)(x+3),q=1,p=4", "(x-1)(x+3)(x+2),p=4,q=1", "(x-1)(x+3)(x+2),q=1,p=4", "p=4,(x+2)(x+3)(x-1),q=1", "p=4,(x+2)(x-1)(x+3),q=1", "p=4,(x+3)(x+2)(x-1),q=1", "p=4,(x+3)(x-1)(x+2),q=1", "p=4,(x-1)(x+2)(x+3),q=1", "p=4,(x-1)(x+3)(x+2),q=1", "p=4,q=1,(x+2)(x+3)(x-1)", "p=4,q=1,(x+2)(x-1)(x+3)", "p=4,q=1,(x+3)(x+2)(x-1)", "p=4,q=1,(x+3)(x-1)(x+2)", "p=4,q=1,(x-1)(x+2)(x+3)", "p=4,q=1,(x-1)(x+3)(x+2)", "q=1,(x+2)(x+3)(x-1),p=4", "q=1,(x+2)(x-1)(x+3),p=4", "q=1,(x+3)(x+2)(x-1),p=4", "q=1,(x+3)(x-1)(x+2),p=4", "q=1,(x-1)(x+2)(x+3),p=4", "q=1,(x-1)(x+3)(x+2),p=4", "q=1,p=4,(x+2)(x+3)(x-1)", "q=1,p=4,(x+2)(x-1)(x+3)", "q=1,p=4,(x+3)(x+2)(x-1)", "q=1,p=4,(x+3)(x-1)(x+2)", "q=1,p=4,(x-1)(x+2)(x+3)", "q=1,p=4,(x-1)(x+3)(x+2)"],
+  "p38": ["(x+4)(x-1)(x-3)", "(x+4)(x-3)(x-1)", "(x-1)(x+4)(x-3)", "(x-1)(x-3)(x+4)", "(x-3)(x+4)(x-1)", "(x-3)(x-1)(x+4)"],
+  "p39": ["(2x-1)(x+3)(x-1)", "(2x-1)(x-1)(x+3)", "(x+3)(2x-1)(x-1)", "(x+3)(x-1)(2x-1)", "(x-1)(2x-1)(x+3)", "(x-1)(x+3)(2x-1)"],
+  "p40": ["a=-4,b=-7,c=10", "a=-4,c=10,b=-7", "b=-7,a=-4,c=10", "b=-7,c=10,a=-4", "c=10,a=-4,b=-7", "c=10,b=-7,a=-4"],
+};
+// >>> GENERATED ACCEPTED END
+
+// One notation for typed algebra: lower case; no spaces or multiplication signs; the minus sign, the
+// superscripts and the half written as typed on a keyboard; Greek letters by name; ';' and 'and' as commas;
+// a leading 'f(x) =' (the box's label says it) and a full stop at the end dropped.
+function canon(raw) {
+  return String(raw == null ? '' : raw).toLowerCase()
+    .replace(/[−–—]/g, '-').replace(/²/g, '^2').replace(/³/g, '^3').replace(/½/g, '1/2')
+    .replace(/omega/g, 'ω').replace(/theta/g, 'θ').replace(/lambda/g, 'λ')
+    .replace(/\band\b/g, ',').replace(/;/g, ',')
+    .replace(/[\s*×·]/g, '')
+    .replace(/\.$/, '')
+    .replace(/^[a-zθωλ]\([a-zθωλ]\)=/, '').replace(/^=/, '');
+}
+// A box against one accepted entry. A number is read by MaffsAnswer: the fraction exactly, a decimal only where
+// the number has a terminating decimal (0.5 for 1/2; nothing for 2/3).
+function boxMatches(raw, k) {
+  if (/^-?\d+(\/\d+)?$/.test(k)) {
+    const kf = MaffsAnswer.fraction(k), f = MaffsAnswer.fraction(raw);
+    if (f) return f.num === kf.num && f.den === kf.den;
+    let d = kf.den; while (d % 2 === 0) d /= 2; while (d % 5 === 0) d /= 5;
+    return d === 1 && MaffsAnswer.exact(raw, kf.num / kf.den) === 'correct';
+  }
+  return canon(raw) === k;
+}
+function accepts(id, raws) {
+  return (ACCEPTED[id] || []).some(e => {
+    const ks = e.split('|');
+    return ks.length === raws.length && ks.every((k, i) => boxMatches(raws[i], k));
+  });
+}
+// A key as the student reads it: superscripts and the minus sign.
+function pretty(a) {
+  return String(a).replace(/\^2/g, '²').replace(/\^3/g, '³').replace(/\^n/g, 'ⁿ').replace(/-/g, '−').replace(/,\s*/g, ', ');
+}
+
 // ── CONTENT ──────────────────────────────────────────────────────────
 const CONTENT = {
   slug: 'factor-theorem',
@@ -311,7 +483,7 @@ const CONTENT = {
         title: 'Putting It All Together',
         setup: 'Here\'s the full process from start to finish \u2014 find a factor, divide, factorise the quadratic.',
         steps: [
-          { working: 'f(x) = 2x^3 + x^2 - 13x + 6', explain: 'A cubic with leading coefficient 2. Values to try: \u00B11, \u00B12, \u00B13, \u00B16, \u00B1\u00BD, \u00B1\u2153.' },
+          { working: 'f(x) = 2x^3 + x^2 - 13x + 6', explain: 'A cubic with leading coefficient 2. Values to try: \u00B1(factors of 6) \u00F7 (factors of 2), which is \u00B11, \u00B12, \u00B13, \u00B16, \u00B1\u00BD, \u00B13/2.' },
           { working: 'f(2) = 2(8) + (4) - 13(2) + 6 = 16 + 4 - 26 + 6 = 0 \\checkmark', explain: 'x = 2 gives zero, so (x \u2212 2) is a factor.' },
           { working: '2x^3 + x^2 - 13x + 6 \\div (x - 2)', explain: 'Perform algebraic long division. All terms present, no zero placeholder needed this time.' },
           { working: '2x^3 \\div x = 2x^2', explain: 'First term of quotient: 2x\u00B2.' },
@@ -463,7 +635,7 @@ const CONTENT = {
           {label:'Quotient = x\u00B2 \u2212 ___x + ___',answer:'4, 4'},
           {label:'x\u00B2 \u2212 4x + 4 = (x \u2212 ___)\u00B2',answer:'2'}],
         finalAnswer:'(x-1)(x-2)^2',hints:['Try x = 1','Divide by (x \u2212 1)','The quadratic is a perfect square'] },
-      { id:20, tier:3, prompt:'f(x) = \\(x^3 + 4x^2 + x - 6\\). \\((x + 2)\\) is a factor. Find k and fully factorise.',
+      { id:20, tier:3, prompt:'f(x) = \\(x^3 + 4x^2 + x - 6\\). \\((x + 2)\\) is a factor. Fully factorise.',
         scaffoldSteps:[
           {label:'f(\u22122) = \u22128 + 16 \u2212 2 \u2212 6 = ___',answer:'0'},
           {label:'Quotient = x\u00B2 + ___x \u2212 ___',answer:'2, 3'},
@@ -476,11 +648,11 @@ const CONTENT = {
         hints:['Try x = 2','After dividing by (x \u2212 2), you get x\u00B2 + x \u2212 12','x\u00B2 + x \u2212 12 = (x + 4)(x \u2212 3)'] },
       { id:22, tier:4, prompt:'Fully factorise f(x) = \\(6x^3 + x^2 - 5x - 2\\).',
         scaffoldSteps:[], finalAnswer:'(2x+1)(3x+2)(x-1)',
-        hints:['The leading coefficient is 6, so try x = \u00BD','f(\u2212\u00BD) = 0, so (2x + 1) is a factor','Quotient is 3x\u00B2 \u2212 x \u2212 2 = (3x + 2)(x \u2212 1)'] },
+        hints:['The leading coefficient is 6, so try fractions too: x = \u2212\u00BD','f(\u2212\u00BD) = 0, so (2x + 1) is a factor','Quotient is 3x\u00B2 \u2212 x \u2212 2 = (3x + 2)(x \u2212 1)'] },
       { id:23, tier:4, prompt:'The impedance of a circuit is Z(\u03C9) = \\(\\omega^3 - 6\\omega^2 + 11\\omega - 6\\). Find all values of \u03C9 where \\(Z = 0\\).',
         scaffoldSteps:[], finalAnswer:'\u03C9=1, \u03C9=2, \u03C9=3',
         hints:['Try \u03C9 = 1','Divide by (\u03C9 \u2212 1) to get \u03C9\u00B2 \u2212 5\u03C9 + 6','Factorise: (\u03C9 \u2212 2)(\u03C9 \u2212 3)'] },
-      { id:24, tier:4, prompt:'Factorise f(x) = \\(x^3 + 2x^2 - x - 2\\) and state all roots.',
+      { id:24, tier:4, prompt:'Fully factorise f(x) = \\(x^3 + 2x^2 - x - 2\\).',
         scaffoldSteps:[], finalAnswer:'(x-1)(x+1)(x+2)',
         hints:['Try x = 1','Quotient is x\u00B2 + 3x + 2','= (x + 1)(x + 2)'] },
       { id:25, tier:4, prompt:'f(x) = \\(x^3 - x^2 - 8x + 12\\). Fully factorise. (This has a repeated root.)',
@@ -517,7 +689,7 @@ const CONTENT = {
         scaffoldSteps:[], finalAnswer:'(x+1)(3x+1)(x+2)', hints:[] },
       { id:37, tier:5, prompt:'f(x) = \\(x^3 + px^2 + qx - 6\\). \\(f(1) = 0\\) and \\(f(-3) = 0\\). Find p and q, and fully factorise.',
         scaffoldSteps:[], finalAnswer:'p=4, q=1, (x-1)(x+2)(x+3)', hints:[] },
-      { id:38, tier:5, prompt:'f(x) = \\(x^3 - 13x + 12\\). Fully factorise and solve \\(f(x) = 0\\).',
+      { id:38, tier:5, prompt:'f(x) = \\(x^3 - 13x + 12\\). Fully factorise.',
         scaffoldSteps:[], finalAnswer:'(x-1)(x-3)(x+4)', hints:[] },
       { id:39, tier:5, prompt:'f(x) = \\(2x^3 + 3x^2 - 8x + 3\\). Fully factorise.',
         scaffoldSteps:[], finalAnswer:'(x-1)(2x-1)(x+3)', hints:[] },
@@ -527,57 +699,57 @@ const CONTENT = {
   },
   test: {
     questions: [
-      { id:'T1', marks:4, prompt:'f(x) = x^3 - 3x - 2',
+      { id:'T1', marks:4, prompt:'f(x) = \\(x^3 - 3x - 2\\)',
         parts:[
           {label:'(a) Show that (x + 1) is a factor of f(x).',marks:1,answer:'0',answerLabel:'f(\u22121) ='},
           {label:'(b) Hence fully factorise f(x).',marks:2,answer:'(x+1)^2(x-2)',answerLabel:'f(x) ='},
           {label:'(c) Solve f(x) = 0.',marks:1,answer:'x=-1, x=2',answerLabel:'x ='}],
         learnRef:0 },
-      { id:'T2', marks:3, prompt:'f(x) = 2x^3 + ax^2 - 5x + 3',
+      { id:'T2', marks:3, prompt:'f(x) = \\(2x^3 + ax^2 - 5x + 3\\)',
         parts:[
           {label:'(a) Given that (x \u2212 1) is a factor, find a.',marks:2,answer:'0',answerLabel:'a ='},
           {label:'(b) Find the remainder when f(x) is divided by (x + 2).',marks:1,answer:'-3',answerLabel:'Remainder ='}],
         learnRef:0 },
-      { id:'T3', marks:5, prompt:'f(x) = 6x^3 + 5x^2 - 3x - 2',
+      { id:'T3', marks:5, prompt:'f(x) = \\(6x^3 + 5x^2 - 3x - 2\\)',
         parts:[
           {label:'(a) Show that f(1) \u2260 0.',marks:1,answer:'6',answerLabel:'f(1) ='},
           {label:'(b) Show that (2x + 1) is a factor.',marks:1,answer:'0',answerLabel:'f(\u2212\u00BD) ='},
           {label:'(c) Fully factorise f(x).',marks:2,answer:'(2x+1)(3x-2)(x+1)',answerLabel:'f(x) ='},
           {label:'(d) Solve f(x) = 0.',marks:1,answer:'x=-1/2, x=2/3, x=-1',answerLabel:'x ='}],
         learnRef:2 },
-      { id:'T4', marks:4, prompt:'p(x) = x^3 + ax + b',
+      { id:'T4', marks:4, prompt:'p(x) = \\(x^3 + ax + b\\)',
         parts:[
-          {label:'(a) p(x) has a factor (x \u2212 3) and leaves remainder 20 when divided by (x \u2212 1). Find a and b.',marks:3,answer:'a=-23, b=42',answerLabel:'a, b ='},
-          {label:'(b) Fully factorise p(x).',marks:1,answer:'(x-3)(x+7)(x-2)',answerLabel:'p(x) ='}],
+          {label:'(a) p(x) = x\u00B3 + ax + b has a factor (x \u2212 3) and leaves remainder 12 when divided by (x \u2212 1). Find a and b.',marks:3,answer:'a=-19, b=30',answerLabel:'a, b ='},
+          {label:'(b) Fully factorise p(x).',marks:1,answer:'(x-3)(x-2)(x+5)',answerLabel:'p(x) ='}],
         learnRef:3 },
-      { id:'T5', marks:3, prompt:'\\text{The characteristic equation of a matrix is } \\lambda^3 - 6\\lambda^2 + 11\\lambda - 6 = 0',
+      { id:'T5', marks:3, prompt:'The characteristic equation of a matrix is \\(\\lambda^3 - 6\\lambda^2 + 11\\lambda - 6 = 0\\).',
         parts:[
           {label:'Find all eigenvalues.',marks:3,answer:'\u03BB=1, \u03BB=2, \u03BB=3',answerLabel:'\u03BB ='}],
         learnRef:1 },
-      { id:'T6', marks:3, prompt:'f(x) = x^3 - 7x + 6',
+      { id:'T6', marks:3, prompt:'f(x) = \\(x^3 - 7x + 6\\)',
         parts:[
           {label:'(a) Find the remainder when f(x) is divided by (x \u2212 3).',marks:1,answer:'12',answerLabel:'Remainder ='},
           {label:'(b) Fully factorise f(x).',marks:2,answer:'(x-1)(x-2)(x+3)',answerLabel:'f(x) ='}],
         learnRef:0 },
-      { id:'T7', marks:4, prompt:'f(x) = 2x^3 - x^2 - 18x + 9',
+      { id:'T7', marks:4, prompt:'f(x) = \\(2x^3 - x^2 - 18x + 9\\)',
         parts:[
           {label:'(a) Show that (x \u2212 3) is a factor.',marks:1,answer:'0',answerLabel:'f(3) ='},
           {label:'(b) Fully factorise f(x).',marks:2,answer:'(x-3)(x+3)(2x-1)',answerLabel:'f(x) ='},
           {label:'(c) Solve f(x) = 0.',marks:1,answer:'x=3, x=-3, x=1/2',answerLabel:'x ='}],
         learnRef:2 },
-      { id:'T8', marks:5, prompt:'f(x) = x^3 + kx^2 - 4x - 12',
+      { id:'T8', marks:5, prompt:'f(x) = \\(x^3 + kx^2 - 4x - 12\\)',
         parts:[
           {label:'(a) Given that (x + 2) is a factor, find k.',marks:2,answer:'3',answerLabel:'k ='},
           {label:'(b) Hence fully factorise f(x).',marks:2,answer:'(x+2)(x+3)(x-2)',answerLabel:'f(x) ='},
           {label:'(c) Write down the roots of f(x) = 0.',marks:1,answer:'x=-2, x=-3, x=2',answerLabel:'x ='}],
         learnRef:3 },
-      { id:'T9', marks:4, prompt:'\\text{A displacement is modelled by } s(t) = t^3 - 9t^2 + 26t - 24',
+      { id:'T9', marks:4, prompt:'A displacement is modelled by \\(s(t) = t^3 - 9t^2 + 26t - 24\\).',
         parts:[
           {label:'(a) Find s(2).',marks:1,answer:'0',answerLabel:'s(2) ='},
           {label:'(b) Find all values of t where displacement is zero.',marks:2,answer:'t=2, t=3, t=4',answerLabel:'t ='},
           {label:'(c) Interpret what these values mean physically.',marks:1,answer:'object crosses origin at t=2, 3, 4',answerLabel:'Interpretation:'}],
         learnRef:1 },
-      { id:'T10', marks:6, prompt:'f(x) = 2x^3 + x^2 - 13x + 6',
+      { id:'T10', marks:6, prompt:'f(x) = \\(2x^3 + x^2 - 13x + 6\\)',
         parts:[
           {label:'(a) Show that (x \u2212 2) is a factor of f(x).',marks:1,answer:'0',answerLabel:'f(2) ='},
           {label:'(b) Hence fully factorise f(x).',marks:2,answer:'(x-2)(2x-1)(x+3)',answerLabel:'f(x) ='},
@@ -680,7 +852,7 @@ function setupLayout() {
   };
   check();
   let resizeTimer;
-  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(check, 300); });
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(check, 300); });  // lock-ok: a resize debounce, it marks nothing
 }
 
 // ── LEARN ──────────────────────────────────────────────────────────
@@ -759,6 +931,15 @@ function scrollToStep() {
 }
 
 // ── PRACTICE ──────────────────────────────────────────────────────
+// The end of a run is sent once (MaffsLock.finishOnce); Try Again starts a new session.
+const finishPractice = MaffsLock.finishOnce(() => {
+  const questions = CONTENT.practice.questions;
+  if (typeof mfg === 'function') {
+    mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: practiceState.score, questions_answered: questions.length, questions_correct: practiceState.answers.filter(a => a).length, mode: 'practice' });
+  }
+  if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', practiceState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',practiceState.score);} }
+});
+
 function renderPractice() {
   const questions = CONTENT.practice.questions;
   const area = document.getElementById('practice-area');
@@ -774,10 +955,7 @@ function renderPractice() {
       <div class="stats">${practiceState.score} / ${practiceState.maxScore} marks &middot; ${practiceState.hintsTotal} hints used</div>
       <button class="play-again" onclick="resetPractice()">Try Again</button>`;
     if (window.MaffsInvite) MaffsInvite.place(resultsEl);
-    if (typeof mfg === 'function') {
-      mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: practiceState.score, questions_answered: questions.length, questions_correct: practiceState.answers.filter(a => a).length, mode: 'practice' });
-    }
-    if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', practiceState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',practiceState.score);} }
+    finishPractice();
     return;
   }
 
@@ -798,229 +976,155 @@ function renderPractice() {
     return `<div class="${cls}"></div>`;
   }).join('');
 
+  // Answer once (canon 7.6.0): the question is locked through MaffsLock when it is marked for the last time (a
+  // scaffold has three attempts), never by a local flag. Next is outside the lock (data-maffs-lock-skip).
   let hintsUsed = 0;
-  let currentScaffold = 0;
-  let answered = false;
-
-  // Build scaffold steps
+  let attempts = 0;
   const scaffoldSteps = q.scaffoldSteps || [];
   const hasScaffold = scaffoldSteps.length > 0;
+  const qid = 'p' + q.id;
 
+  // One box per blank, marked by position (a step's boxes are matched together against its ACCEPTED entry, so
+  // (x - 3)(x + 2) is never accepted as (x - 2)(x + 3)). units: what is marked, each with its boxes and key.
+  const box = (id, w) => `<input type="text" class="answer-input" id="${id}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="?" style="width:${w}px;display:inline-block;text-align:center;margin:0 2px">`;
+  const units = [];
+  let body = '';
   if (hasScaffold) {
-    let html = `<div class="q-card"><div class="q-prompt">${PQ(q.prompt)}</div>`;
     scaffoldSteps.forEach((s, i) => {
       if (s.display) {
-        html += `<div class="scaffold-step" id="scaffold-${i}"><div class="scaffold-label">${s.label}</div></div>`;
-      } else {
-        // Replace ___ with an inline input box so students see exactly where their answer goes
-        const parts = s.label.split('___');
-        let labelHtml;
-        if (parts.length === 2) {
-          labelHtml = `<span>${parts[0]}</span><input type="text" class="answer-input" id="sinput-${i}" data-answer="${s.answer}" data-idx="${i}" autocomplete="off" spellcheck="false" placeholder="?" style="width:80px;display:inline-block;text-align:center;margin:0 2px"><span>${parts[1]}</span>`;
-        } else {
-          labelHtml = `<span>${s.label}</span> <input type="text" class="answer-input" id="sinput-${i}" data-answer="${s.answer}" data-idx="${i}" autocomplete="off" spellcheck="false" placeholder="?" style="width:80px;display:inline-block;text-align:center;margin:0 2px">`;
-        }
-        html += `<div class="scaffold-step" id="scaffold-${i}">
-          <div class="scaffold-input">${labelHtml}</div>
-        </div>`;
+        body += `<div class="scaffold-step" id="scaffold-${i}"><div class="scaffold-label">${s.label}</div></div>`;
+        return;
       }
+      const parts = s.label.split('___');
+      if (parts.length === 1) parts.push('');
+      const boxes = parts.slice(1).map((_, j) => `sinput-${i}-${j}`);
+      units.push({ id: qid + '.' + i, boxes, key: s.answer.split(',').map(p => p.trim()), done: false });
+      body += `<div class="scaffold-step" id="scaffold-${i}"><div class="scaffold-input">` +
+        parts.map((p, j) => `<span>${p}</span>` + (j < boxes.length ? box(boxes[j], 80) : '')).join('') + `</div></div>`;
     });
-    html += `<div class="hint-bar">
-      <button class="hint-btn" id="hintBtn">Hint (${q.hints.length} available)</button>
-    </div>
+  } else {
+    units.push({ id: qid, boxes: ['final-answer'], key: [q.finalAnswer], done: false });
+    body = `<div class="scaffold-input" style="justify-content:center;margin-top:1rem">
+        <span style="color:var(--body);font-size:.88rem">Answer:</span>${box('final-answer', 200)}</div>`;
+  }
+  area.innerHTML = `<div class="q-card"><div class="q-prompt">${PQ(q.prompt)}</div>${body}
+    <div class="hint-bar"><button class="hint-btn" id="hintBtn">Hint (${q.hints.length} available)</button></div>
     <div id="hint-area"></div>
     <div id="feedback" class="feedback-msg"></div>
     <button class="submit-btn" id="checkBtn">Check</button>
-    <button class="next-q-btn" id="nextQBtn" style="display:none">Next Question →</button>
-    </div>`;
+    <button class="next-q-btn" id="nextQBtn" style="display:none" data-maffs-lock-skip>Next Question →</button>
+  </div>`;
+  MaffsLock.fresh(area);
 
-    area.innerHTML = html;
-
-    // Apply exam vocabulary tooltips to question prompt
-    if (window.MaffsVocab) {
-      MaffsVocab.resetVocabProcessing('.q-prompt');
-      MaffsVocab.applyExamVocabTooltips('.q-prompt');
-    }
-
-    // Hint button
-    const hintBtn = document.getElementById('hintBtn');
-    const hintArea = document.getElementById('hint-area');
-    hintBtn.addEventListener('click', () => {
-      if (hintsUsed < q.hints.length) {
-        hintArea.innerHTML += `<div class="hint-text">${q.hints[hintsUsed]}</div>`;
-        hintsUsed++;
-        practiceState.hintsTotal++;
-        document.getElementById('p-hints').textContent = practiceState.hintsTotal;
-        hintBtn.textContent = hintsUsed >= q.hints.length ? 'No more hints' : `Hint (${q.hints.length - hintsUsed} left)`;
-        if (hintsUsed >= q.hints.length) hintBtn.disabled = true;
-      }
-    });
-
-    // Check button
-    let attempts = 0;
-    document.getElementById('checkBtn').addEventListener('click', () => {
-      if (answered) return;
-      attempts++;
-      let allCorrect = true;
-
-      scaffoldSteps.forEach((s, i) => {
-        if (s.display) return;
-        const input = document.getElementById('sinput-' + i);
-        if (!input) return;
-        // Clear previous styling
-        input.classList.remove('correct-input', 'wrong-input');
-
-        const userVal = input.value.trim().toLowerCase().replace(/\s/g, '');
-        const expected = s.answer.toLowerCase().replace(/\s/g, '');
-        // Handle comma-separated answers
-        const expectedParts = expected.split(',').map(p => p.trim());
-        const userParts = userVal.split(',').map(p => p.trim());
-        let match = false;
-        if (expectedParts.length > 1) {
-          match = expectedParts.length === userParts.length && expectedParts.every(p => userParts.includes(p));
-        } else {
-          match = userVal === expected;
-        }
-        if (match) {
-          input.classList.add('correct-input');
-          input.disabled = true;
-        } else {
-          input.classList.add('wrong-input');
-          allCorrect = false;
-        }
-      });
-
-      const feedback = document.getElementById('feedback');
-
-      if (allCorrect) {
-        answered = true;
-        let qScore = 0;
-        if (hintsUsed === 0 && attempts === 1) qScore = 3;
-        else if (hintsUsed <= 1 && attempts <= 2) qScore = 2;
-        else qScore = 1;
-        feedback.className = 'feedback-msg correct-msg';
-        feedback.textContent = attempts === 1 && hintsUsed === 0 ? 'Correct — full marks' : `Correct — ${qScore}/3`;
-
-        practiceState.score += qScore;
-        practiceState.maxScore += 3;
-        practiceState.answers.push(true);
-        document.getElementById('p-score').textContent = `${practiceState.score} / ${practiceState.maxScore}`;
-        document.getElementById('checkBtn').style.display = 'none';
-        document.getElementById('nextQBtn').style.display = 'block';
-
-        if (typeof mfg === 'function') {
-          mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: practiceState.qIdx, correct: true, attempts, hints_used: hintsUsed, mode: 'practice' });
-        }
-      } else if (attempts >= 3) {
-        // After 3 attempts, show answers and move on
-        answered = true;
-        scaffoldSteps.forEach((s, i) => {
-          if (s.display) return;
-          const input = document.getElementById('sinput-' + i);
-          if (!input || input.disabled) return;
-          input.value = s.answer;
-          input.classList.remove('wrong-input');
-          input.classList.add('correct-input');
-          input.disabled = true;
-        });
-        feedback.className = 'feedback-msg wrong-msg';
-        feedback.textContent = `Answers shown above — study these before moving on`;
-
-        practiceState.maxScore += 3;
-        practiceState.answers.push(false);
-        document.getElementById('p-score').textContent = `${practiceState.score} / ${practiceState.maxScore}`;
-        document.getElementById('checkBtn').style.display = 'none';
-        document.getElementById('nextQBtn').style.display = 'block';
-
-        if (typeof mfg === 'function') {
-          mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: practiceState.qIdx, correct: false, attempts, hints_used: hintsUsed, mode: 'practice' });
-        }
-      } else {
-        feedback.className = 'feedback-msg wrong-msg';
-        feedback.textContent = `Not quite — correct your highlighted answers and try again (attempt ${attempts}/3)`;
-      }
-    });
-
-    document.getElementById('nextQBtn').addEventListener('click', () => {
-      practiceState.qIdx++;
-      renderPractice();
-    });
-
-  } else {
-    // Non-scaffolded — simple answer input
-    area.innerHTML = `<div class="q-card">
-      <div class="q-prompt">${PQ(q.prompt)}</div>
-      <div class="scaffold-input" style="justify-content:center;margin-top:1rem">
-        <span style="color:var(--body);font-size:.88rem">Answer:</span>
-        <input type="text" class="answer-input" id="final-answer" autocomplete="off" spellcheck="false" style="width:200px">
-      </div>
-      <div class="hint-bar"><button class="hint-btn" id="hintBtn">Hint (${q.hints.length} available)</button></div>
-      <div id="hint-area"></div>
-      <div id="feedback" class="feedback-msg"></div>
-      <button class="submit-btn" id="checkBtn">Check</button>
-      <button class="next-q-btn" id="nextQBtn" style="display:none">Next Question →</button>
-    </div>`;
-
-    const hintBtn = document.getElementById('hintBtn');
-    const hintArea = document.getElementById('hint-area');
-    hintBtn.addEventListener('click', () => {
-      if (hintsUsed < q.hints.length) {
-        hintArea.innerHTML += `<div class="hint-text">${q.hints[hintsUsed]}</div>`;
-        hintsUsed++;
-        practiceState.hintsTotal++;
-        document.getElementById('p-hints').textContent = practiceState.hintsTotal;
-        if (hintsUsed >= q.hints.length) hintBtn.disabled = true;
-        else hintBtn.textContent = `Hint (${q.hints.length - hintsUsed} left)`;
-      }
-    });
-
-    document.getElementById('checkBtn').addEventListener('click', () => {
-      if (answered) return;
-      const input = document.getElementById('final-answer');
-      const userVal = input.value.trim().toLowerCase().replace(/\s/g, '');
-      const expected = q.finalAnswer.toLowerCase().replace(/\s/g, '');
-      const correct = userVal === expected;
-      answered = true;
-
-      input.classList.add(correct ? 'correct-input' : 'wrong-input');
-      input.disabled = true;
-
-      const feedback = document.getElementById('feedback');
-      let qScore = 0;
-      if (correct) {
-        if (hintsUsed === 0) qScore = 3;
-        else if (hintsUsed === 1) qScore = 2;
-        else qScore = 1;
-        feedback.className = 'feedback-msg correct-msg';
-        feedback.textContent = `Correct — ${qScore}/3`;
-      } else {
-        feedback.className = 'feedback-msg wrong-msg';
-        feedback.textContent = `Answer: ${q.finalAnswer}`;
-      }
-
-      practiceState.score += qScore;
-      practiceState.maxScore += 3;
-      practiceState.answers.push(correct);
-      document.getElementById('p-score').textContent = `${practiceState.score} / ${practiceState.maxScore}`;
-      document.getElementById('checkBtn').style.display = 'none';
-      document.getElementById('nextQBtn').style.display = 'block';
-
-      if (typeof mfg === 'function') {
-        mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: practiceState.qIdx, correct, attempts: 1, hints_used: hintsUsed, mode: 'practice' });
-      }
-    });
-
-    document.getElementById('nextQBtn').addEventListener('click', () => { practiceState.qIdx++; renderPractice(); });
+  // Apply exam vocabulary tooltips to question prompt
+  if (hasScaffold && window.MaffsVocab) {
+    MaffsVocab.resetVocabProcessing('.q-prompt');
+    MaffsVocab.applyExamVocabTooltips('.q-prompt');
   }
+
+  const hintBtn = document.getElementById('hintBtn');
+  const hintArea = document.getElementById('hint-area');
+  if (!q.hints.length) hintBtn.disabled = true;
+  hintBtn.addEventListener('click', () => {
+    if (MaffsLock.isLocked(area) || hintsUsed >= q.hints.length) return;
+    hintArea.innerHTML += `<div class="hint-text">${q.hints[hintsUsed]}</div>`;
+    hintsUsed++;
+    practiceState.hintsTotal++;
+    document.getElementById('p-hints').textContent = practiceState.hintsTotal;
+    hintBtn.textContent = hintsUsed >= q.hints.length ? 'No more hints' : `Hint (${q.hints.length - hintsUsed} left)`;
+    if (hintsUsed >= q.hints.length) hintBtn.disabled = true;
+  });
+
+  const finish = (correct) => {
+    MaffsLock.lock(area);
+    let qScore = 0;
+    if (correct) qScore = hasScaffold
+      ? (hintsUsed === 0 && attempts === 1 ? 3 : hintsUsed <= 1 && attempts <= 2 ? 2 : 1)
+      : (hintsUsed === 0 ? 3 : hintsUsed === 1 ? 2 : 1);
+    practiceState.score += qScore;
+    practiceState.maxScore += 3;
+    practiceState.answers.push(correct);
+    document.getElementById('p-score').textContent = `${practiceState.score} / ${practiceState.maxScore}`;
+    document.getElementById('checkBtn').style.display = 'none';
+    document.getElementById('nextQBtn').style.display = 'block';
+    document.getElementById('nextQBtn').focus();
+    if (typeof mfg === 'function') {
+      mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: practiceState.qIdx + 1, correct, attempts, hints_used: hintsUsed, mode: 'practice' });
+    }
+    return qScore;
+  };
+
+  document.getElementById('checkBtn').addEventListener('click', () => {
+    if (MaffsLock.isLocked(area)) return;
+    const feedback = document.getElementById('feedback');
+    const open = units.filter(u => !u.done);
+    if (open.some(u => u.boxes.some(b => !document.getElementById(b).value.trim()))) {
+      feedback.className = 'feedback-msg';
+      feedback.textContent = 'Fill in every box first.';
+      return;
+    }
+    attempts++;
+    open.forEach(u => {
+      const els = u.boxes.map(b => document.getElementById(b));
+      u.done = accepts(u.id, els.map(e => e.value));
+      els.forEach(e => {
+        e.classList.remove('correct-input', 'wrong-input');
+        e.classList.add(u.done ? 'correct-input' : 'wrong-input');
+        if (u.done) e.disabled = true;
+      });
+    });
+    const allCorrect = units.every(u => u.done);
+    if (allCorrect) {
+      const qScore = finish(true);
+      feedback.className = 'feedback-msg correct-msg';
+      feedback.textContent = qScore === 3 ? 'Correct — full marks' : `Correct — ${qScore}/3`;
+    } else if (!hasScaffold || attempts >= 3) {
+      // A typed answer gets one attempt; a scaffold, three. Then the answers are shown.
+      finish(false);
+      units.filter(u => !u.done).forEach(u => u.boxes.forEach((b, j) => {
+        const e = document.getElementById(b);
+        if (hasScaffold) { e.value = u.key[j]; e.classList.remove('wrong-input'); e.classList.add('correct-input'); }
+        e.disabled = true;
+      }));
+      feedback.className = 'feedback-msg wrong-msg';
+      feedback.textContent = hasScaffold ? 'Answers shown above — study these before moving on' : `Answer: ${pretty(q.finalAnswer)}`;
+    } else {
+      feedback.className = 'feedback-msg wrong-msg';
+      feedback.textContent = `Not quite — correct your highlighted answers and try again (attempt ${attempts}/3)`;
+    }
+  });
+
+  document.getElementById('nextQBtn').addEventListener('click', () => { practiceState.qIdx++; renderPractice(); });
+  enterSubmits(area, 'checkBtn', 'nextQBtn');
+}
+
+// Enter in an answer box checks the answer, or moves on once it is marked.
+function enterSubmits(area, checkId, nextId) {
+  area.onkeydown = (e) => {
+    if (e.key !== 'Enter' || !e.target.classList.contains('answer-input')) return;
+    e.preventDefault();
+    const c = document.getElementById(checkId), n = document.getElementById(nextId);
+    if (c && c.style.display !== 'none') c.click();
+    else if (n && n.style.display !== 'none') n.click();
+  };
 }
 
 function resetPractice() {
+  MaffsLock.newSession();
   practiceState = { qIdx: 0, score: 0, maxScore: 0, hintsTotal: 0, answers: [], started: false };
   renderPractice();
   if (currentSection === 'practice') beginRun('practice');
 }
 
 // ── TEST ──────────────────────────────────────────────────────────
+const finishTest = MaffsLock.finishOnce(() => {
+  const questions = CONTENT.test.questions;
+  if (typeof mfg === 'function') {
+    mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: testState.score, questions_answered: questions.length, questions_correct: testState.answers.filter(a => a.correct).length, mode: 'test' });
+  }
+  if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', testState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',testState.score);} }
+});
+
 function renderTest() {
   const questions = CONTENT.test.questions;
   const area = document.getElementById('test-area');
@@ -1040,10 +1144,7 @@ function renderTest() {
       ${testState.answers.some(a => !a.correct) ? '<div class="review-link" onclick="switchToLearn()">Review the worked examples for topics you found tricky</div>' : ''}
       <br><button class="play-again" onclick="resetTest()">Try Again</button>`;
     if (window.MaffsInvite) MaffsInvite.place(resultsEl);
-    if (typeof mfg === 'function') {
-      mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: testState.score, questions_answered: questions.length, questions_correct: testState.answers.filter(a => a.correct).length, mode: 'test' });
-    }
-    if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', testState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',testState.score);} }
+    finishTest();
     return;
   }
 
@@ -1062,17 +1163,18 @@ function renderTest() {
       <div class="scaffold-label vocab-target" style="font-weight:600;color:var(--text)">${p.label} <span style="color:var(--muted);font-weight:400">[${p.marks}]</span></div>
       <div class="scaffold-input" style="margin-top:.3rem">
         <span style="color:var(--body);font-size:.85rem">${p.answerLabel}</span>
-        <input type="text" class="answer-input" id="tpart-${i}" autocomplete="off" spellcheck="false" style="width:200px">
+        <input type="text" class="answer-input" id="tpart-${i}" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:200px">
       </div>
     </div>`;
   });
 
   html += `<div id="t-feedback" class="feedback-msg"></div>
     <button class="submit-btn" id="tCheckBtn">Submit Answer</button>
-    <button class="next-q-btn" id="tNextBtn" style="display:none">Next Question →</button>
+    <button class="next-q-btn" id="tNextBtn" style="display:none" data-maffs-lock-skip>Next Question →</button>
   </div>`;
 
   area.innerHTML = html;
+  MaffsLock.fresh(area);
 
   // Apply exam vocabulary tooltips to question labels
   if (window.MaffsVocab) {
@@ -1080,18 +1182,22 @@ function renderTest() {
     MaffsVocab.applyExamVocabTooltips('.vocab-target');
   }
 
-  let testAnswered = false;
   document.getElementById('tCheckBtn').addEventListener('click', () => {
-    if (testAnswered) return;
-    testAnswered = true;
+    if (MaffsLock.isLocked(area)) return;
+    const feedback = document.getElementById('t-feedback');
+    if (q.parts.some((p, i) => !document.getElementById('tpart-' + i).value.trim())) {
+      feedback.className = 'feedback-msg';
+      feedback.textContent = 'Fill in every box first.';
+      return;
+    }
+    // answer once (canon 7.6.0): a test question is marked a single time
+    if (!MaffsLock.lock(area)) return;
     let qScore = 0;
     let allCorrect = true;
 
     q.parts.forEach((p, i) => {
       const input = document.getElementById('tpart-' + i);
-      const userVal = input.value.trim().toLowerCase().replace(/\s/g, '');
-      const expected = p.answer.toLowerCase().replace(/\s/g, '');
-      const correct = userVal === expected;
+      const correct = accepts(q.id + '.' + i, [input.value]);
       input.classList.add(correct ? 'correct-input' : 'wrong-input');
       input.disabled = true;
       if (correct) {
@@ -1101,7 +1207,7 @@ function renderTest() {
         // Show the correct answer below the wrong input
         const correction = document.createElement('div');
         correction.style.cssText = 'font-size:.82rem;color:var(--correct);margin-top:.3rem;font-family:"JetBrains Mono",monospace';
-        correction.textContent = `${p.answerLabel} ${p.answer}`;
+        correction.textContent = `${p.answerLabel} ${pretty(p.answer)}`;
         input.parentElement.appendChild(correction);
       }
     });
@@ -1111,22 +1217,24 @@ function renderTest() {
     testState.answers.push({ correct: allCorrect, learnRef: q.learnRef });
     document.getElementById('t-score').textContent = `${testState.score} / ${testState.maxScore}`;
 
-    const feedback = document.getElementById('t-feedback');
     feedback.className = 'feedback-msg ' + (allCorrect ? 'correct-msg' : 'wrong-msg');
     feedback.textContent = `${qScore} / ${q.marks} marks`;
 
     document.getElementById('tCheckBtn').style.display = 'none';
     document.getElementById('tNextBtn').style.display = 'block';
+    document.getElementById('tNextBtn').focus();
 
     if (typeof mfg === 'function') {
-      mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: testState.qIdx, correct: allCorrect, attempts: 1, hints_used: 0, mode: 'test' });
+      mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: testState.qIdx + 1, correct: allCorrect, attempts: 1, hints_used: 0, mode: 'test' });
     }
   });
 
   document.getElementById('tNextBtn').addEventListener('click', () => { testState.qIdx++; renderTest(); });
+  enterSubmits(area, 'tCheckBtn', 'tNextBtn');
 }
 
 function resetTest() {
+  MaffsLock.newSession();
   if (testState.timerInterval) clearInterval(testState.timerInterval);
   testState = { qIdx: 0, score: 0, maxScore: 0, startTime: null, timerInterval: null, answers: [], started: false };
   renderTest();
