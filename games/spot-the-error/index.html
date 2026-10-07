@@ -150,13 +150,17 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     "return (async () => {",
     " const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
     " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
-    " await real(350);",
+    " for (let t = 0; t < 100 && !document.querySelector('#stageContent .step-card:not(.disabled), #stageContent .phrase-tap'); t++) await real(30);",
+    " await real(400);",
     " if (!document.getElementById('gameScreen').classList.contains('active')) return;",
     " const cards = [...document.querySelectorAll('#stageContent .step-card')];",
     " if (cards.length) { const w = cards.find((c, k) => currentQ.steps[k] && currentQ.steps[k].id !== currentQ.errorStepId);",
-    " if (!w) return; w.click(); await real(350); w.click(); return; }",
+    " if (w) { w.click(); await real(450); w.click(); return; }",
+    " cards[0].click();",
+    " for (let t = 0; t < 100 && !document.querySelector('#stageContent .phrase-tap'); t++) await real(30);",
+    " await real(400); }",
     " const p = [...document.querySelectorAll('#stageContent .phrase-tap')].find(e => e.dataset.error !== 'true');",
-    " if (p) { p.click(); await real(350); p.click(); }",
+    " if (p) { p.click(); await real(450); p.click(); }",
     "})();"
   ]
 }

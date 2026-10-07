@@ -9,15 +9,25 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
-**QUEUE (home lane, F1; Jon's re-ordering of 7 Oct 18:05, contract LH before batch 3):** MaffsLock #125, batches 1
-(#129), 2 (#132), contract LH (#133) and batch 3 (this entry's PR) are done. **Jon has a new contract to paste
-(7 Oct, at the batch 3 checkpoint): it goes first.** Then:
-1. **Batch 4:** proof-builder, linear-equation-solver, moments-master, force-resolver (the last 4 of the cloud
-   lane's finished games). Re-read the `cloud-remaining:` line first: trig-identity-duel, binomial-blaster,
-   partial-fractions-duel and truth-buster are skipped while they are on it. Any of them that has come off it
-   may join batch 4. Each migrated game gets its `maffs-lock-hint` declaration (`{}` if none is needed).
-2. **Straight after batch 4:** the relist PR for every game in REGISTER.md's "Ready to relist" (SR-21). Give
-   the listed-game count before and after.
+**QUEUE (home lane; Jon, 7 Oct evening session):** MaffsLock #125, batches 1 (#129), 2 (#132), contract LH (#133)
+and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then stops at the checkpoint. Then:
+1. **FIRST in the next session: contract DET, check-answer-lock.py made deterministic** (Jon, 7 Oct). Two
+   causes fail a PR at random: (a) after a right answer `to_next()` waits a fixed 350 ms and returns 'auto', so the
+   next tap can land in MaffsLock's 300 ms fresh window (UNPLAYABLE; #134 prime-or-composite, #137
+   fraction-equivalence); (b) with no answer hint the driver taps option (k+1) % 2 on 8 unseeded questions, all
+   right ~1/2^8 of the time in a two-option game. Fix in the driver, never with retries: wait for game state (next
+   question rendered AND its fresh window over; a read-only `MaffsLock.isFresh(container)` in answer-lock.js if
+   needed, documented, no behaviour change); two-option games declare an answer that picks the option differing
+   from the key; a seeded default (seed printed) for games with no hint; no new declaration key (else STOP IF).
+   Proofs: same seed, identical event log; a forced all-right draw and a tap inside the fresh window both handled
+   every time; no Math.random and no fixed delay on the path to a wrong answer; a planted lock removal still caught
+   every run; then 20 consecutive passes on prime-or-composite and fraction-equivalence (smoke test only). Canon
+   §7.6, this file, and one line in cloud.md (two-option games declare the differing-from-key answer). DO NOT
+   TOUCH: answer-lock.js behaviour, what the check tests, scoring, cloud-remaining games, CI retry settings.
+   STOP IF: the fresh window can't be observed without changing answer-lock.js behaviour; a two-option game's
+   wrong answer can't be expressed with the existing key; determinism would stop it testing something it tests now.
+2. **Contract ESSENTIALS** (Jon's paste, 7 Oct 20:03): after the relist PR merges and main is green. **Its text
+   was not in the paste this session received (a placeholder line only): get it from Jon.**
 3. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty.
 - **Checkpoint rule:** stop after every 2 batches merged (main green), or at the next batch boundary when Jon
   says "checkpoint". At each stop, update this file.
