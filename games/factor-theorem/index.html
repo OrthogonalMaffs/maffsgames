@@ -852,7 +852,7 @@ function setupLayout() {
   };
   check();
   let resizeTimer;
-  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(check, 300); });
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(check, 300); });  // lock-ok: a resize debounce, it marks nothing
 }
 
 // ── LEARN ──────────────────────────────────────────────────────────

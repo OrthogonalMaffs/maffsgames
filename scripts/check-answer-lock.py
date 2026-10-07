@@ -82,6 +82,7 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 think-of-a-number decimal-detective
+suvat factor-theorem
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -91,6 +92,44 @@ NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 # group, such as a canvas: the repeat phase really clicks its centre and corners too), 'start_sel' (the
 # control that starts a run, when it is not a Start button: double-clicked for real).
 HINTS = {
+    # suvat (Level 4: pick the equation, then type the answer; question_answered fires on the typed answer).
+    # The answer waits out MaffsLock's 300 ms window on the real clock before it presses CHECK.
+    'suvat': {
+        'level': 'level4',
+        'ready': "document.getElementById('mainGame').classList.contains('visible')",
+        'answer': ("return (async () => {"
+                   "  const vis = id => { const e = document.getElementById(id); return e && e.offsetParent !== null; };"
+                   "  const real = ms => new Promise(r => { const t = performance.now(); (function f() {"
+                   "    if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });"
+                   "  for (let k = 0; k < 60; k++) {"
+                   "    if (vis('phase2') && !document.getElementById('calcInput').disabled) {"
+                   "      await real(350); document.getElementById('calcInput').value = '9999';"
+                   "      document.querySelector('#phase2 .calc-btn').click(); return; }"
+                   "    const b = [...document.querySelectorAll('#eqChoices .eq-btn')].find(e => !e.disabled && e.dataset.val === currentQ.equation);"
+                   "    if (vis('phase1') && b) { await real(350); b.click(); }"
+                   "    await real(60);"
+                   "  }"
+                   "})();"),
+        'surface': '#phase2',
+    },
+    # factor-theorem: the Practice tab; a wrong answer in every box, Check pressed until the question is marked
+    # (a scaffold has three attempts).
+    'factor-theorem': {
+        'start': "document.querySelector('[data-section=\"practice\"]').click()",
+        'ready': "document.getElementById('sec-practice').classList.contains('active') && !!document.getElementById('checkBtn')",
+        'answer': ("return (async () => {"
+                   "  const real = ms => new Promise(r => { const t = performance.now(); (function f() {"
+                   "    if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });"
+                   "  await real(350);"
+                   "  for (let k = 0; k < 3; k++) {"
+                   "    const c = document.getElementById('checkBtn');"
+                   "    if (!c || c.style.display === 'none') return;"
+                   "    document.querySelectorAll('#practice-area input.answer-input:not([disabled])').forEach(e => { e.value = 'zz'; });"
+                   "    c.click();"
+                   "  }"
+                   "})();"),
+        'surface': '#practice-area .q-card',
+    },
     'four-quadrant-explorer': {
         'ready': "document.getElementById('gameScreen').style.display !== 'none'",
         'answer': ("const row = document.getElementById('optionsRow');"
