@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: E | Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px) |
 """Independent verification of like-terms-collector (tranche 3 audit, like-terms-collector-t3-001).
 
 The game has one level (year6), 45 items in three stages: Stage 1 (5) and Stage 2 (10) are typed,

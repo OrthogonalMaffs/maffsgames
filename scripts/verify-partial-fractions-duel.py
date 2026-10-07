@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked) |
 """Partial Fractions Duel: every key solved from its own stem with SymPy; every option checked and clicked.
 
 The game (50 multiple-choice items, one bank) asks for partial-fraction coefficients, decomposition forms,

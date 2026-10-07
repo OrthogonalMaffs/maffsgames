@@ -95,11 +95,11 @@ findings:
   status: open
 - id: eigenvector-engine-f0-005
   severity: LOW
-  jc: true
+  jc: false
   class: 2
   level: further
   where: games/eigenvector-engine/index.html:122 (QS[16])
-  summary: Wrong option (6, 3) is a multiple of the key (2, 1); the prompt asks for the simplest integer eigenvector (see t6-001 for :122)
+  summary: 'Wrong option (6, 3) is a multiple of the key (2, 1); the prompt asks for the simplest integer eigenvector (see t6-001 for :122). Not a judgement call (Jon, 7 Oct 2026): by SR-17 a scalar multiple of an eigenvector is never a wrong option, whatever the prompt says about "simplest"'
   evidence: 'B11 parser, F0 (7 Oct 2026): \begin{pmatrix} 2 \\ 1 \end{pmatrix} = \begin{pmatrix} 6 \\ 3 \end{pmatrix}, exact (scripts/bank_common.py); ledger eigenvector-engine::0e70b936c929#1::B11::["\\begin{pmatrix} 2 \\\\ 1 \\end{pmatrix}", "\\begin{pmatrix} 6 \\\\ 3 \\end{pmatrix}"]'
   status: open
 - id: eigenvector-engine-f0-006

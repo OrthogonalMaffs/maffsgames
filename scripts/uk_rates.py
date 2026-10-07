@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | UK rates module (unit tests against the gov.uk 2025/26 figures) | --selftest
 """UK income tax, employee NI and student loans for the teaching year: the one copy in code (canon §7.1.4).
 
     python scripts/uk_rates.py --selftest

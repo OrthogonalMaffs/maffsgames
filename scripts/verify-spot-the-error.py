@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B3 | Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 110 played in Chromium) |
 """Spot the Error: every worked step, key, phrase and explanation checked, and every item played in Chromium.
 
 The game (110 items: ks3 35, gcse 45, level4 30) shows a word problem and some worked steps. Stage 1: the

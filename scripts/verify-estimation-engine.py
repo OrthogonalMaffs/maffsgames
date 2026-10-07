@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: E | Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit) |
 """Estimation Engine (GCSE N14, canon SR-12): every method answer recomputed from the stored numbers.
 
 The game asks: round each number to 1 significant figure, then estimate. It marks both steps by exact

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B2 | Truth Buster (every key reviewed against its statement's own words, SR-18; every reveal figure recomputed; all 60 played in Chromium) |
 """Truth Buster: every key reviewed against its statement as written, every figure recomputed, every item played.
 
 The game (60 statements, three tiers of 20; a session deals 7 + 7 + 6) asks "Always True" or "Not Always True",

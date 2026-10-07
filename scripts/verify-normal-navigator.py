@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B2 | Normal Navigator (independent recomputation + rendered labels) |
 """Independent verification for normal-navigator (docs/todo.md §1.26).
 
 WHY THIS EXISTS

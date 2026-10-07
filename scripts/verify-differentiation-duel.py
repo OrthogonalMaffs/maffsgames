@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium) |
 """Differentiation Duel: every key and option differentiated again with SymPy; every explanation checked; every
 option marked in Chromium.
 

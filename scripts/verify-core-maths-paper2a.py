@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B2 | Core Maths Paper 2A (independent recomputation + rendered page) |
 """Independent verification of core-maths-paper2a's statistics (todo §1.26).
 
 The game is 36 fixed multiple-choice questions. §3.5 (Normal), §3.6 (confidence

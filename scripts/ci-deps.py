@@ -7,9 +7,10 @@
     python scripts/ci-deps.py --all                        # select everything (push to main, schedule)
     python scripts/ci-deps.py --selftest                   # the selection proofs (CI runs this first)
 
-CI (canon §7.8, 4 Oct 2026). The checks live in .github/workflows/check-site.yml, as before. Groups whose name
-starts "Content verifiers" are per-game: on a pull request each of their lines runs only when this script
-selects it. Every other group, and the leaderboard-coverage job, always runs (site-wide checks). On a push to
+CI (canon §7.8, 4 Oct 2026). The site-wide checks are listed in .github/workflows/check-site.yml; the
+"Content verifiers" groups are built from each script's own "# ci-line:" header by scripts/ci-groups.py
+(contract V, 7 Oct 2026). Content groups are per-game: on a pull request each of their lines runs only when
+this script selects it. Every other group, and the leaderboard-coverage job, always runs (site-wide checks). On a push to
 main, the weekly schedule and a manual run, everything runs.
 
 A verifier's dependencies, derived from its source and the pages it tests:
@@ -17,7 +18,9 @@ A verifier's dependencies, derived from its source and the pages it tests:
   - every repo path its string literals name (a file, or a folder as a prefix);
   - each game it names (a literal equal to a games/ folder name, or containing games/<slug>/): that whole
     folder, plus every local file the game's page loads (src/href and quoted asset paths), followed through
-    the shared JS and CSS it loads in turn.
+    the shared JS and CSS it loads in turn;
+  - every path its own "# ci-deps:" header names (a dependency the derivation cannot see; a games/<slug>/
+    folder there counts as a game it names). No central per-verifier rule: a verifier declares its own.
 A verifier that names no page and is not a library's own self-test (`python scripts/<module>.py --selftest`
 for a module other scripts import) cannot be mapped, so it ALWAYS runs; so does one whose pages load a local
 file through a computed path (a fetch, import() or script element whose target is not a literal).
@@ -31,7 +34,6 @@ A changed path selects:
 import argparse, ast, json, os, re, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-WORKFLOW = ".github/workflows/check-site.yml"
 SELECTIVE_PREFIX = "Content verifiers"
 ALL_PREFIXES = (".github/", "scripts/ci-", "requirements")
 # Top-level areas whose files are classified (not "unknown"): the published site, docs and the checks.
@@ -59,18 +61,31 @@ def game_slugs():
 
 
 # ---------------------------------------------------------------- the workflow's checks
+def ci_groups():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("ci_groups", os.path.join(ROOT, "scripts", "ci-groups.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
 def checks():
-    """[(group, selective, label, command, script)] from check-site.yml, in order."""
-    import yaml
-    with open(os.path.join(ROOT, WORKFLOW), encoding="utf-8") as f:
-        wf = yaml.safe_load(f)
+    """[(group, selective, label, command, script)]: the workflow's site-wide lines, then each content group's
+    lines from its scripts' ci-line headers (scripts/ci-groups.py, contract V), in order."""
     out = []
-    for inc in wf["jobs"]["check-site"]["strategy"]["matrix"]["include"]:
-        sel = inc["name"].startswith(SELECTIVE_PREFIX)
-        for line in inc["checks"].strip().splitlines():
-            label, cmd = line.split("|", 1)
-            m = re.search(r"scripts/[\w.-]+\.py", cmd)
-            out.append((inc["name"], sel, label.strip(), cmd.strip(), m.group(0) if m else None))
+    for group, sel, label, cmd in ci_groups().all_checks():
+        m = re.search(r"scripts/[\w.-]+\.py", cmd)
+        out.append((group, sel, label, cmd, m.group(0) if m else None))
+    return out
+
+
+def declared_deps():
+    """{script: set of repo paths} from each script's '# ci-deps:' header (a folder ends in '/'): extra
+    dependencies a verifier declares in its own file, added to the derived ones."""
+    out = {}
+    for name, info in ci_groups().headers().items():
+        if info["deps"]:
+            out["scripts/" + name] = {d[2:] if d.startswith("./") else d for d in info["deps"]}
     return out
 
 
@@ -243,13 +258,16 @@ def dependency_map():
         if s:
             p, _ = script_deps(s)
             libs |= {x for x in p if x != s}
+    declared = declared_deps()
     out = {}
     for group, sel, label, cmd, s in checks():
         if not s or s in out:
             continue
         paths, lits = script_deps(s)
         games = named_games(lits, slugs)
-        deps = set(paths) | literal_paths(lits)
+        extra = declared.get(s, set())               # its own '# ci-deps:' header
+        games |= {m.group(1) for m in (re.match(r"games/([a-z0-9-]+)/?$", d) for d in extra) if m and m.group(1) in slugs}
+        deps = set(paths) | literal_paths(lits) | extra
         hazards = []
         pages = {d for d in deps if d.endswith(".html")} | {"games/%s/index.html" % g for g in games}
         for d in list(deps):

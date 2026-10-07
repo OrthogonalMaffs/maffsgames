@@ -1162,11 +1162,12 @@ grew with the number of games, not with the size of the change.
 | Push to main (every merge) | **Everything**, every verifier: the safety net |
 | Weekly (Mondays 05:17 UTC) and manual (`workflow_dispatch`) | **Everything** |
 
-- **The selection is derived, never kept by hand.** `scripts/ci-deps.py` reads the checks from
-  `check-site.yml` (a group whose name starts "Content verifiers" is per-game; every other group is
-  site-wide) and works out each verifier's dependencies: the script and the local modules it imports;
+- **The selection is derived, never kept by hand.** `scripts/ci-deps.py` reads the checks (the site-wide
+  jobs from `check-site.yml`, the "Content verifiers" groups from each script's `# ci-line:` header, §7.8.2;
+  a content group is per-game, every other group site-wide) and works out each verifier's dependencies: the script and the local modules it imports;
   the repo files its literals name; each game it names (its whole folder, and every local file the
-  game's page loads, followed through the shared JS and CSS). A changed file selects every verifier
+  game's page loads, followed through the shared JS and CSS); and any path its own `# ci-deps:` header
+  names. A changed file selects every verifier
   that depends on it. A change to CI itself (`.github/`, `scripts/ci-*`, `requirements*.txt`) or a path
   in no known area runs everything. A verifier whose dependencies cannot be derived (it names no page and
   is not a library's self-test, or its pages load a file through a computed path) always runs; none does
@@ -1199,7 +1200,7 @@ for 9m41s, and group B for 8 minutes. Nothing a check checks changed; only where
 | Site-wide checks | links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /resit/, calculator, content safety, teacher line, search titles, findings register, quoted figures |
 | Tier 4 layer A | bank extraction and its lint (together: the lint reads what the extraction wrote) |
 | Shared asset tests | Next control, section clicks, answer.js, calculator, keypad |
-| Content verifiers A, B1-B4, C1-C4, D1-D2, E | the per-game verifiers, selected on a PR (above). C1-C4 are Just Pythag It, Bruv's `--part 1` .. `4`, dealt by measured cost; each first runs `--part-selftest` (the parts are exactly the unsplit task list, nothing twice, and the workflow runs every part). D1-D2 are Equation Builder's `--part 1/2` and `2/2`: each classifies every second candidate arrangement of every question (one question is 60% of the time, so it is split by candidate, not by question); the whole-question checks and the planted-fault self-test run in D1, and the self-test proves the two parts together fail exactly where the whole run does. B1-B4 are group B cut by the slowest time each line has taken (runners vary up to 1.8x). |
+| Content verifiers A, B1-B4, C1-C4, D1-D2, E (the `content` job) | the per-game verifiers, selected on a PR (above); since contract V the matrix is built in the plan job from each script's `# ci-line:` header (§7.8.2), not listed in the workflow. C1-C4 are Just Pythag It, Bruv's `--part 1` .. `4`, dealt by measured cost; each first runs `--part-selftest` (the parts are exactly the unsplit task list, nothing twice, and CI runs every part). D1-D2 are Equation Builder's `--part 1/2` and `2/2`: each classifies every second candidate arrangement of every question (one question is 60% of the time, so it is split by candidate, not by question); the whole-question checks and the planted-fault self-test run in D1, and the self-test proves the two parts together fail exactly where the whole run does. B1-B4 are group B cut by the slowest time each line has taken (runners vary up to 1.8x). |
 | Regenerate REGISTER.md | push to main only, after the Gate (§0.4) |
 
 **Timings** (GitHub-hosted `ubuntu-24.04`, 4 CPUs):
@@ -1213,9 +1214,10 @@ The same evening (queue item 2) every content job was brought under 4 minutes: B
 Measured on the full run of the PR that did it (#103): every job 3m38s or less (A 3m38s, B2 3m29s, C4 3m10s, D1/D2 1m56s/2m03s); the whole run 4m47s (main after #99: 6m19s, with D 5m23s and B2 4m33s).
 
 **Rules that keep it fast.** Every job still fails at 75% of its timeout ("time budget: … split it"). **No
-"Content verifiers" job may run past 4 minutes** (Jon, 7 Oct 2026): a new content verifier goes into whichever
-group keeps every group under 4 minutes as a job (each job's summary lists every check's duration), and a group
-that would pass 4 minutes is split, by an option on its script (`--shard`, `--part`) with a self-test proving the
+"Content verifiers" job may run past 4 minutes** (Jon, 7 Oct 2026): a new content verifier's ci-line names whichever
+group keeps every group under 4 minutes as a job (each job's summary lists every check's duration;
+`check-verifier-coverage.py` reports any group whose lines took more than 4 minutes on the main run recorded in
+`scripts/ci-timings.json`), and a group that would pass 4 minutes is split, by an option on its script (`--shard`, `--part`) with a self-test proving the
 parts are the whole, or by cutting its list of lines.
 
 ### 7.8.2 Two lanes: home and cloud (7 Oct 2026)
@@ -1230,6 +1232,15 @@ and is not edited by fix PRs.
   verifier, closing its register entries in its own `docs/audits/findings/<slug>.yml`. It never edits
   `schools/assets/`, the shared modules in `scripts/`, the workflow, canon, the roster's listed section or
   `docs/todo.md`.
+- **A new verifier never edits the workflow** (contract V, Jon, 7 Oct 2026). It declares its CI lines in its
+  own file, `# ci-line: <group> | <label> | <args>` (one per line it contributes; `&&` in `<args>` runs the
+  script again, as `--part-selftest && --part 1`), plus `# ci-deps: <paths>` if it depends on something the
+  derivation cannot see, or `# ci-held: <reason>` if it is deliberately not run. `scripts/ci-groups.py` builds the
+  content groups from those headers in the plan job; the groups' names and timeouts are its `GROUPS`. Either lane
+  adds a verifier this way; neither edits `.github/workflows/check-site.yml` for it. A new group, a change to a
+  group's timeout and every site-wide job stay home-lane CI work. (Until then canon reserved the workflow for the
+  home lane while the cloud contract had the cloud lane add its verifier's line there: #96, #97 and #100-#102 did,
+  and two conflicted with home-lane PRs. Both lanes now follow this rule.)
 - **A per-game fix PR edits neither `docs/todo.md` nor `docs/audits/REGISTER.md`:** the register file records
   the fix, and the `register` job regenerates REGISTER.md on main.
 - **Neither lane merges while main's last full run is red.**

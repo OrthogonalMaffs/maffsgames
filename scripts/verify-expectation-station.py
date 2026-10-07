@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B2 | Expectation Station (every table, E(X) and explanation figure exact; all 180 Stage 3 cards reviewed against the distribution; every stage played in Chromium) |
 """Expectation Station: every distribution, product, E(X), Stage 3 card and explanation checked; every item played.
 
 The game (45 items: core 20, gcse 15, alevel 10) has three stages: complete the probability table from tiles,

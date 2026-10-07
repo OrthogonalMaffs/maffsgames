@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: E | Angle Ace (every diagram measured against its words and key; every option and reason marked in Chromium) |
 """Angle Ace: every diagram measured against its words and key, and every answer marked in Chromium.
 
 The resit correctness audit of 4 Oct 2026 found every numeric key right (75/75) and the pictures wrong:

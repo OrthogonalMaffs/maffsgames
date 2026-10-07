@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# ci-line: D1 | Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test) | --part-selftest && --part 1/2 && --selftest
+# ci-line: D2 | Equation Builder, part 2 (the other half of every question's tile arrangements, classified by SymPy) | --part-selftest && --part 2/2
 """Equation Builder: which tile arrangements are correct? Decided here, once, by SymPy (SR-13; audit 2026-10-04 F1-F8).
 
 The game marks a built answer correct only if its token sequence is in that question's ACCEPTED list. This
@@ -617,7 +619,13 @@ def selftest():
     return 1 if bad else 0
 
 
-WORKFLOW = BASE / ".github" / "workflows" / "check-site.yml"
+def ci_commands():
+    """Every command CI runs: the workflow's static lines and every script's ci-line header (scripts/ci-groups.py)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("ci_groups", BASE / "scripts" / "ci-groups.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.ci_text()
 
 
 def part_selftest(n=2):
@@ -635,7 +643,7 @@ def part_selftest(n=2):
     cands = candidates(load_bank()[0])
     if sorted(cands[1:]) == sorted(cands) or sorted(cands + cands[:1]) == sorted(cands):
         bad.append('self-test: a dropped or doubled candidate was not noticed')
-    runs = re.findall(r'python scripts/verify-equation-builder\.py\b([^\n|&]*)', WORKFLOW.read_text(encoding='utf-8'))
+    runs = re.findall(r'python scripts/verify-equation-builder\.py\b([^\n|&]*)', ci_commands())
     got = sorted(m.group(1) for m in (re.search(r'--part (\d+/\d+)', r) for r in runs) if m)
     want = sorted('%d/%d' % (i, n) for i in range(1, n + 1))
     if got != want:

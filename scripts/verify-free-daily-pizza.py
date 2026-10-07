@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: A | Free Daily Pizza (independent recomputation + daily seed + phone fit) | --require-katex
 """Independent verification for Free Daily Pizza (games/free-daily-pizza/), built 30 Sep 2026.
 
 WHAT IS READ FROM THE PAGE, AND WHAT IS NOT

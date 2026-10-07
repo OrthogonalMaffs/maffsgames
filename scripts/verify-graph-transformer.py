@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B1 | Graph Transformer (BFS reachability + par verification) |
 """Verifies every Graph Transformer puzzle is solvable with its tier's buttons and
 correctly parred (docs/snagging-list.md snag #7's par-verification pass, promoted
 to CI so an unsolvable or misparred puzzle cannot ship again).

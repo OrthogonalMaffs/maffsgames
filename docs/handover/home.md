@@ -9,10 +9,50 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
-**QUEUE (home lane):**
-1. ~~F0: B11 value comparison~~ (#99, merged, main green).
-2. ~~**CI split:** D in two (`--part`), B and C re-cut so no content job passes 4 min; canon §7.8.1 rule~~ (this PR).
-3. Contract C (audit batch 3): Jon pastes it. **The queue is empty after item 2 until he does.**
+**QUEUE (home lane, Jon 7 Oct):**
+1. **V: each verifier declares its own CI group** (#108, this entry).
+2. **C (revised 7 Oct): audit batch 3**, one game per PR in this order: proportion-blaster, better-value,
+   given-that, formula-unlocked, sequence-solver, estimation-golf. The contract text is in Jon's 7 Oct paste;
+   its rules are summarised in the next entry when it starts. Each verifier declares its own ci-line (no
+   workflow edit).
+3. F1, when Jon pastes it.
+
+**Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
+eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
+verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-07 (home): contract V, verifiers declare their own CI group (#108)
+
+- **Why:** each new verifier edited `.github/workflows/check-site.yml` (the cloud lane's #96, #97, #100-#102), two
+  conflicted with home-lane PRs, and canon §7.8.2 and the cloud contract disagreed about it.
+- **Headers:** every content script carries `# ci-line: <group> | <label> | <args>` (51 lines in 47 scripts,
+  including `stats_common.py`, `uk_rates.py` and `check-resit-fixes.py`); `&&` in `<args>` runs the script again,
+  so the C and D parts (`--part-selftest && --part 1`) and Fermi Lab / Screening Room (` && --selftest`) are
+  expressed exactly. `verify-regression-rumble.py` carries `# ci-held:` (the HELD dict is gone). Optional
+  `# ci-deps: <paths>` adds dependencies (none uses it yet: ci-deps.py had no per-verifier central rule to move).
+- **`scripts/ci-groups.py`:** reads the headers; `GROUPS` holds the 12 groups' job names and timeouts (unchanged);
+  the plan job writes the matrix (`groups` output) and the new `content` job runs `fromJSON` of it with the same
+  container and steps as `check-site` (YAML anchors `check-container`, `check-steps`). Job names unchanged; the
+  Gate needs `content` too, so nothing is hidden from it. Site-wide jobs stay static in the workflow.
+- **Proof (item 5):** `ci-groups.py --compare <workflow>` ran in the plan job on the commit that still had the
+  static lists. Its first run caught the cloud lane's Integration Duel line, merged to main minutes earlier (51 static
+  lines, 50 from headers: DIFFERENT); after merging main and adding that header, 51 = 51, EQUAL. Then the lists
+  were deleted.
+- **Readers of the workflow moved to the headers:** `ci-deps.py` (checks + `# ci-deps:`), `check-changed.py` (via
+  ci-deps), `audit-register.py` (which games have a verifier: without this, REGISTER.md would have said 97 of 97
+  games have none), and the `--part-selftest`s of Just Pythag It, Bruv and Equation Builder ("CI runs every part").
+- **`check-verifier-coverage.py`:** a verify-*.py with no ci-line and no ci-held fails; an unknown group fails; a
+  verifier listed in the workflow, or declared AND listed, fails. Reports each group's check seconds from
+  `scripts/ci-timings.json` (recorded from main's run 37625188261 after #107 by `ci-groups.py --record-timings`;
+  B4 164s is the largest, setup excluded) and flags any over 240s.
+- **Success proof:** throwaway PR #110 (based on this branch) added only `scripts/verify-zz-v-probe.py` with a
+  `B3` ci-line: the plan selected just it, and B3 ran it (1 line run, 5 skipped; run 37626296241); closed and
+  deleted. #108's own full run (CI changed, so everything): 51 of 51 content lines ran, Gate green, 4m39s.
+- **The cloud lane merged twice while this was open** (#107 Integration Duel, #109 Curling Friction), each adding a
+  workflow line; each time main was merged in, the verifier given its header, and `--compare` against main's
+  workflow re-run: 52 = 52, EQUAL, before the merge.
+- **For the cloud lane:** add the verifier's `# ci-line:` header in its own file; never edit the workflow for it.
+  Canon §7.8.2 says so (the cloud handover is the cloud lane's to update).
 
 ## 2026-10-07 (home): queue item 2, every content job under 4 minutes
 

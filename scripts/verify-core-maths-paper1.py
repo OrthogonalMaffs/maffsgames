@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | Core Maths Paper 1 (every key recomputed from its stem and charts; options distinct in value; every key marked in Chromium) |
 """Independent verification of every core-maths-paper1 question (all 36), from the question's own data.
 
 Until 6 Oct 2026 only the tax, NI and student loan items had a verifier (verify-core-maths-paper1-tax.py,
