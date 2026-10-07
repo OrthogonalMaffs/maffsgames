@@ -23,7 +23,8 @@ findings:
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: the key uses π = 3.14, which neither the question
     nor the hint states. A student using π (calculator) gets Eagle (2 strokes) not Hole in One, and is told "Actual
     answer: 565.2 cm³", which is wrong. Share affected: 1 of 9 level4 items (every level4 round).'
-  status: open
+  status: fixed
+  pr: 118
 - id: estimation-golf-r-002
   severity: HIGH
   jc: false
@@ -37,7 +38,8 @@ findings:
     and is shown "Actual answer: 27". (A central difference would give 27.000001, but "first principles with h"
     normally means the forward difference.) Judgement on the method wording; the key is the limit either way. Share
     affected: 1 of 9 alevel items (every alevel round).'
-  status: open
+  status: fixed
+  pr: 118
 - id: estimation-golf-r-003
   severity: MEDIUM
   jc: false
