@@ -20,7 +20,8 @@ Every item is read from its TeX (read() below; one it cannot read FAILS: extend 
     in value. In Chromium (390x844) every item is shown through showQ() and every option clicked through
     handle(): the key marked right, the others wrong; options come from MaffsOptions.build().
 A self-test plants three of the audit's own faults back (t5-001: A keyed 1/2; t5-004: remainder keyed 2;
-t5-005: the valid form (Ax+B)/(x-1)^2 + C/(x+2) as a wrong option); each must FAIL naming its item.
+t5-005: the valid form (Ax+B)/(x-1)^2 + C/(x+2) as a wrong option), and Play Again without MaffsLock.screen (a
+double click on it opened /leaderboards/); each must FAIL naming its item.
 
     python scripts/verify-partial-fractions-duel.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
@@ -208,6 +209,46 @@ LOCK_JS = r"""async () => {
   return res;
 }"""
 
+# Play Again (canon 7.6.0, MaffsLock.screen): it shows the menu, whose "Global leaderboard" link and Start button
+# are under the pointer at some widths. The second click of a double click, or a click on either within the 300 ms
+# window, must do nothing: before the fix a double click on Play Again at 1280x900 opened /leaderboards/.
+TO_RESULTS_JS = r"""() => {
+  window.MaffsLeaderboard = { submitScore: () => Promise.resolve() };
+  startGame(); end();
+  const b = document.querySelector('#results .play-again'); b.scrollIntoView({ block: 'center' });
+  const r = b.getBoundingClientRect();
+  return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
+}"""
+MENU_RECTS_JS = r"""() => ['#menu a[href="/leaderboards/"]', '#menu .play-again'].map(sel => {
+  const r = document.querySelector(sel).getBoundingClientRect();
+  return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
+})"""
+STATE_JS = r"""() => ({ menu: document.getElementById('menu').classList.contains('active'),
+                     game: document.getElementById('game').classList.contains('active') })"""
+
+
+def check_play_again(fails, page, url):
+    """The second click after Play Again (a double click, or a click on the menu's link or Start) is dropped."""
+    page.set_viewport_size({'width': 1280, 'height': 900})
+    for how in ('a double click on Play Again', 'Play Again, then the leaderboard link and Start at once'):
+        page.goto(url, wait_until='load', timeout=20000)
+        page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
+        r = page.evaluate(TO_RESULTS_JS)
+        if how.startswith('a double'):
+            page.mouse.dblclick(r['x'], r['y'])
+        else:
+            page.mouse.click(r['x'], r['y'])
+            for q in page.evaluate(MENU_RECTS_JS):
+                page.mouse.click(q['x'], q['y'])
+        page.wait_for_timeout(400)
+        if '/games/%s/' % SLUG not in page.url:
+            fails.append('Play Again: %s opened %s (MaffsLock.screen on the menu)' % (how, page.url))
+            continue
+        st = page.evaluate(STATE_JS)
+        if not st['menu'] or st['game']:
+            fails.append('Play Again: %s left the menu (%s; MaffsLock.screen on the menu)' % (how, st))
+
+
 KATEX_DIR = None
 
 
@@ -240,6 +281,7 @@ def play(fails, html):
             page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             for i, pick, what in page.evaluate(SWEEP_JS):
                 fails.append('item %d in Chromium: option %s %s' % (i, pick, what))
+            check_play_again(fails, page, base + '/games/%s/?cb=verify' % SLUG)
             browser.close()
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
@@ -255,6 +297,9 @@ PLANTS = [
     ('item 46 ', 't5-004: remainder keyed 2', "correct:'3',d:['2','5','0']", "correct:'2',d:['3','5','0']"),
     ('item 38 ', 't5-005: a valid equivalent form as a wrong option',
      "'\\\\dfrac{A}{x-1}+\\\\dfrac{B}{x-1}+\\\\dfrac{C}{x+2}'", "'\\\\dfrac{Ax+B}{(x-1)^2}+\\\\dfrac{C}{x+2}'"),
+    ('Play Again: ', 't5-007: Play Again without MaffsLock.screen',
+     "function showMenu(){show('menu');MaffsLock.screen(document.getElementById('menu'))}",
+     "function showMenu(){show('menu')}"),
 ]
 
 
