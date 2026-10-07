@@ -21,7 +21,23 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-07 (home): queue item 0c, canon SR-22 and SR-23 (docs only, this PR)
+## 2026-10-07 (home): queue item 0d, shared fraction answers (#122) and Given That (this PR)
+
+- **#121 (0c) and #122 merged** on green Gates. Slip: #122 merged while main's run for #121 was still in
+  progress (both green as PRs, disjoint files); both main runs watched to the end.
+- **#122, shared:** `MaffsAnswer.fraction(raw)` (exact a/b, signs, whole numbers, lowest terms) and
+  `fractionOrDecimal(raw, num, den, dp)` (a slash: exact, right or wrong, never 'format'; else the unchanged
+  `decimal()` against num/den rounded half up in integers). `message()` gains `{sf}` and `{fraction}`.
+  test-answer-js.py 68 to 125 cases; canon §7.1.3.
+- **This PR, Given That:** each free-entry question ends "Give your answer as a fraction, or as a decimal to 3
+  significant figures." (marked at dpFor()'s places, as before); placeholder "e.g. 3/7 or 0.429"; the exact key
+  comes from answerDisplay (`exactOf()`), `keyAt()` gone. The verifier types every key as a fraction (lowest
+  terms and x3), every other diagram ratio as a fraction (wrong), and on the 3/7 items 3/7 and 0.429 right, 0.43
+  wrong; new plant r-004 (decimals only). Against main's page it fails on every fraction.
+- **Register:** no open entry covered it (r-002/r-003 closed in #114), so r-004 (MEDIUM, class 7: fractions
+  unreadable since #114) is filed and closed here.
+
+## 2026-10-07 (home): queue item 0c, canon SR-22 and SR-23 (docs only, #121)
 
 - **#120 (0b) merged** on a green Gate.
 - **Numbering (decision taken, for Jon to see):** Jon called the leaderboard ruling "R15", but §0.3 numbers by SR-n
