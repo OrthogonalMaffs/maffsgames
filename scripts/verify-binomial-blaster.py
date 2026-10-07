@@ -161,7 +161,7 @@ TARGETS = {
                 ('est', est((1 - x) ** -1, R('0.02'), 3)), ('est', 2 * est((1 + x) ** R('1/2'), R('0.02'), 3)),
                 ('est', est((1 - x) ** -2, R('0.03'), 3)), V(R('1/3')), V(R('3/8')),
                 ('est', 1 + R('0.1') / 2 - R('0.1') ** 2 / 8), ('est', 1 - R('0.1') + R('0.1') ** 2),
-                ('est', est((1 + x) ** -2, R('0.05'), 2)), V(R('1/2')), V(R('1/2')),
+                ('est', est((1 + x) ** -2, R('0.05'), 2)), V(R('1/2')), V((3 / (1 + x)).subs(x, R('1/2'))),
                 ('verdict', '\\dfrac{n(n-1)\\cdots(n-r+1)}{r!}', 'n! is not defined for non-integer n; the falling product is'),
                 ('verdict', 'It is a GP with ratio -x', 'a GP converges only for |ratio| < 1'),
                 V(coeff(series(3 / ((1 - x) * (1 + 2 * x)), 3), 1)), V(6), ('solve', n), ('solve', a),
@@ -174,7 +174,7 @@ TARGETS = {
 COEFF_ASK = re.compile(r'Coefficient of x([²³⁴]?)|Constant term')
 # The words an item must carry for its target to be the one above.
 PINNED = {('alevel', 40): 'is row 0', ('alevel2', 41): '27x^2', ('alevel2', 42): '27x^2', ('alevel2', 40): 'product a',
-          ('alevel2', 46): '\\{0, 1, 2, \\ldots\\}'}
+          ('alevel2', 46): '\\{0, 1, 2, \\ldots\\}', ('alevel2', 36): '\\dfrac{3}{(1+x)(1-2x)}'}
 AUDIT = {('alevel', 9): 't5-002', ('alevel', 35): 't5-003', ('alevel', 36): 't5-004', ('alevel', 38): 't5-005',
          ('alevel', 39): 't5-006', ('alevel', 49): 't5-007', ('alevel', 37): 't5-008', ('alevel', 40): 't5-009',
          ('alevel2', 32): 't5-011', ('alevel2', 39): 't5-012', ('alevel2', 41): 't5-013', ('alevel2', 42): 't5-014',
@@ -257,6 +257,7 @@ def check_bank(fails, bank):
 
 SWEEP_JS = r"""() => {
   window.setTimeout = () => 0; window.setInterval = () => 0;
+  if (window.MaffsLock) MaffsLock.FRESH_MS = 0;
   const out = [];
   for (const lv of ['alevel', 'alevel2']) QUESTIONS[lv].forEach((q, i) => {
     for (const pick of [q.correct, ...q.d]) {
@@ -274,6 +275,27 @@ SWEEP_JS = r"""() => {
   });
   return out;
 }"""
+# Answer once (canon 7.6.0, MaffsLock; binomial-blaster-t5-017): with the real 300 ms window, the key clicked and then Enter three times
+# on it counts once, and the results screen submits once.
+LOCK_JS = r"""async () => {
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  let submits = 0;
+  window.MaffsLeaderboard = { submitScore: () => { submits++; return Promise.resolve(); } };
+  const q = QUESTIONS.alevel2[36];
+  startGame();
+  questions = [q, q]; qIdx = 0; totalQ = 2; score = 0; correctCount = 0;
+  showQ();
+  await wait((window.MaffsLock ? MaffsLock.FRESH_MS : 0) + 50);
+  const key = [...document.querySelectorAll('#options .opt-btn')].find(b => b.dataset.val === q.correct);
+  key.click(); key.focus();
+  for (let k = 0; k < 3; k++) { key.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); key.click(); }
+  const res = { correct: correctCount };
+  if (window.MaffsLock) MaffsLock.clearTimers();
+  end(); end();
+  res.submits = submits;
+  return res;
+}"""
+
 KATEX_DIR = None
 
 
@@ -297,6 +319,13 @@ def play(fails, html):
             page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             bank = page.evaluate('() => QUESTIONS')
+            lk = page.evaluate(LOCK_JS)
+            if lk['correct'] != 1:
+                fails.append('the key clicked, then Enter three times on it, counted %d times (binomial-blaster-t5-017)' % lk['correct'])
+            if lk['submits'] != 1:
+                fails.append('the results screen submitted %d scores (MaffsLock.finishOnce)' % lk['submits'])
+            page.reload(wait_until='load')
+            page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             for lv, i, pick, what in page.evaluate(SWEEP_JS):
                 fails.append('%s[%d] in Chromium: option %s %s' % (lv, i, pick, what))
             browser.close()
