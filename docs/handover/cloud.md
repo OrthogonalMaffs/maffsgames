@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: truth-buster`
+`cloud-remaining:`
 
 **Resume rule, MaffsLock (Jon, contract LH):** adopting MaffsLock includes the game's lock-hint declaration
 (`<!-- maffs-lock-hint ... -->`, canon §7.6.0), and the game passes `check-answer-lock.py`. Hints live in the
@@ -22,6 +22,21 @@ game's page, never in the shared script.
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-07 (cloud): truth-buster (queue 6 of 6, the last); #139 partial-fractions-duel merged; LIST EMPTY: STOP
+
+- **#139 merged** at 21:46 on a green Gate (main green on b139a30 after the home lane's #136 at 21:10).
+- **truth-buster:** the old session's commit (fcc5e4c) cherry-picked onto main: MaffsLock (lock on the answer row,
+  fresh on each statement, timer for the tier transition and Next's 3 s, Next locked at its first press, finishOnce,
+  newSession); t3-013 closes. The reason and Next above the fold at 390x844 on all 60 items (the answer buttons fold
+  away during the reveal on a phone, and the page moves up just enough). Plus its maffs-lock-hint: a two-option
+  game, so the wrong answer is the button that is not the key (`S.session[S.qIdx].answer`), deterministic. It comes
+  off the remaining list, which is now empty. `check-answer-lock.py --game truth-buster` passes.
+- **Register:** t3-013 fixed. t3-016 filed open (MEDIUM, Jon's ruling of 7 Oct 18:00): Next under the fold at
+  320x568 on 28 of 60 items (lowest Next bottom 790px against a 528px fold) and at 375x667 on 2 of 60; it needs
+  shorter reveal text (content) or a layout ruling. t3-014 (class 5/4) and t3-015 (Learn More IDs) stay open.
+- **The list is empty.** After this PR merges and main's run is green, the cloud lane stops: Jon and Project Claude
+  decide the next queue.
 
 ## 2026-10-07 (cloud): partial-fractions-duel (queue 5 of 6); #138 binomial-blaster merged; NEXT = truth-buster
 
