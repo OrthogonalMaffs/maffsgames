@@ -87,9 +87,11 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .learn-more-btn:hover{opacity:0.85}
 @keyframes pulse-learn{0%,100%{box-shadow:0 0 0 0 rgba(13,148,136,0.4)}50%{box-shadow:0 0 0 8px rgba(13,148,136,0)}}
 
-.next-btn{display:none;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s}
+.next-btn{display:block;visibility:hidden;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s}
 .next-btn:hover{border-color:var(--teal)}
-.next-btn.visible{display:block}
+.next-btn.visible{visibility:visible}
+/* canon 7.6.1: on a phone the buttons that cannot be used during the reveal fold away */
+@media(max-width:600px){#gameScreen.revealed .btn-row{display:none}#gameScreen.revealed .statement-card{margin:12px 0;padding:20px 18px;min-height:0}}
 
 /* Tier transition */
 .tier-transition{display:none;max-width:680px;margin:0 auto;padding:80px 20px;text-align:center}
@@ -136,6 +138,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<script src="../../schools/assets/answer-lock.js"></script>
 </head>
 <body>
 
@@ -330,6 +333,7 @@ function tierName(t) { return t === 1 ? 'Tier 1: Seems Obvious' : t === 2 ? 'Tie
 //  GAME FLOW
 // ============================================================
 function startGame() {
+  MaffsLock.newSession();
   // Pick 7 from tier1, 7 from tier2, 6 from tier3
   const t1 = shuffle([...QUESTIONS.tier1]).slice(0, 7);
   const t2 = shuffle([...QUESTIONS.tier2]).slice(0, 7);
@@ -338,7 +342,6 @@ function startGame() {
   S.qIdx = 0;
   S.correct = 0;
   S.tierScores = [0, 0, 0];
-  S.answered = false;
 
   document.getElementById('startScreen').classList.remove('active');
   document.getElementById('resultsScreen').classList.remove('active');
@@ -359,7 +362,7 @@ function showQuestion() {
     const trans = document.getElementById('tierTransition');
     document.getElementById('transName').textContent = tierName(tier);
     trans.classList.add('active');
-    setTimeout(() => {
+    MaffsLock.timer(() => {
       trans.classList.remove('active');
       renderQuestion();
     }, 1000);
@@ -385,8 +388,6 @@ function renderQuestion() {
   // Reset buttons
   const btnT = document.getElementById('btnTrue');
   const btnF = document.getElementById('btnFalse');
-  btnT.disabled = false;
-  btnF.disabled = false;
   btnT.classList.remove('selected');
   btnF.classList.remove('selected');
 
@@ -397,15 +398,20 @@ function renderQuestion() {
   document.getElementById('counterBox').style.display = 'none';
   document.getElementById('learnMoreWrap').style.display = 'none';
 
-  S.answered = false;
+  // A new statement: the answer buttons and Next are live again, after MaffsLock's fresh window
+  const screen = document.getElementById('gameScreen');
+  screen.classList.remove('revealed');
+  MaffsLock.fresh(screen.querySelector('.btn-row'));
+  MaffsLock.fresh(panel);
 
   // Show game screen
-  document.getElementById('gameScreen').classList.add('active');
+  screen.classList.add('active');
+  window.scrollTo(0, 0);
 }
 
+// Answer once (canon 7.6.0): MaffsLock disables both answer buttons on the first press.
 function answer(playerSaidTrue) {
-  if (S.answered) return;
-  S.answered = true;
+  if (!MaffsLock.lock(document.querySelector('#gameScreen .btn-row'))) return;
 
   const q = S.session[S.qIdx];
   const tier = tierOf(S.qIdx);
@@ -419,8 +425,6 @@ function answer(playerSaidTrue) {
   // Highlight selected button
   const btnT = document.getElementById('btnTrue');
   const btnF = document.getElementById('btnFalse');
-  btnT.disabled = true;
-  btnF.disabled = true;
   if (playerSaidTrue) btnT.classList.add('selected');
   else btnF.classList.add('selected');
 
@@ -452,6 +456,7 @@ function answer(playerSaidTrue) {
 
   // Show reveal with animation
   panel.classList.add('show', isCorrect ? 'flash-green' : 'flash-red');
+  placeReveal();
 
   // Analytics
   mfg('question_answered', {
@@ -464,14 +469,29 @@ function answer(playerSaidTrue) {
 
   // Show Next button after 3 seconds
   S.revealTime = Date.now();
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     document.getElementById('nextBtn').classList.add('visible');
   }, 3000);
 }
 
+// canon 7.6.1: on a phone the reason and Next both sit above the fold. The buttons fold away (CSS, .revealed) and,
+// if Next would still be under the fixed footer, the page moves up just enough, never past the reveal's top.
+function placeReveal() {
+  const screen = document.getElementById('gameScreen');
+  screen.classList.add('revealed');
+  if (!window.matchMedia('(max-width: 600px)').matches) return;
+  const fold = window.innerHeight - 40;
+  const next = document.getElementById('nextBtn').getBoundingClientRect();
+  const top = document.getElementById('revealPanel').getBoundingClientRect().top;
+  const by = Math.min(next.bottom + 8 - fold, top - 8);
+  if (by > 0) window.scrollBy({ top: by, behavior: 'instant' });
+}
+
+// Next moves on once: MaffsLock locks it at the first press, so a second Enter during the tier transition is dropped.
 function nextQuestion() {
   // Enforce minimum reveal time
   if (Date.now() - S.revealTime < 3000) return;
+  if (!MaffsLock.lock(document.getElementById('revealPanel'))) return;
 
   S.qIdx++;
   if (S.qIdx >= 20) {
@@ -481,7 +501,7 @@ function nextQuestion() {
   }
 }
 
-function finishGame() {
+const finishGame = MaffsLock.finishOnce(function () {
   document.getElementById('gameScreen').classList.remove('active');
   document.getElementById('gameHeader').style.display = 'none';
   document.getElementById('resultsScreen').classList.add('active');
@@ -523,7 +543,7 @@ function finishGame() {
   if (window.MaffsLeaderboard) {
     MaffsLeaderboard.submitScore('truth-buster', 'all', S.correct, 20).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('truth-buster','all',S.correct);}
   }
-}
+});
 
 
 (function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
