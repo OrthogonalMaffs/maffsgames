@@ -23,7 +23,23 @@ game's page, never in the shared script.
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-07 (cloud): game 18 Factor Theorem (PR #130); NEXT = merge #130, then the six queued games
+## 2026-10-07 (cloud): eigenvector-engine (queue 1 of 6); #130 Factor Theorem merged; NEXT = truth-will-set-you-free
+
+- **#130 merged** at 18:22 on a green Gate (main green on b7e634b; last home merge 17:43). Main's run on d337b0b watched.
+- **eigenvector-engine:** the old session's commit (3394734, from `claude/keen-cray-ypsime-eigenvector-engine`)
+  cherry-picked onto main. It already adopts MaffsLock in full (newSession, lock, fresh, timer, finishOnce; no local
+  flags), so the class-1 entry t6-002 closes. One addition here: `check-answer-lock.py` (on main since #129, after the
+  commit was written) found a raw `setTimeout(buildExample, 300)` on load; it draws the start screen's worked example
+  and marks nothing, so it carries `// lock-ok:`. Static rules pass. Verifier passes on the branch, fails on main's page
+  (QS[22], [23], [24]); both self-test plants caught.
+- **Register:** t6-001, -002, -004, -005, f0-001..007 fixed; t6-003 (class 5) stays open.
+- **TWSYF is ready in `/home/user/tw-wt` (branch tw-local):** [27] uses Project Claude's approved wording (7 Oct):
+  "This expression can be written (A ⊕ B)·C·D·Ē, where A ⊕ B = A·B̄ + Ā·B (XOR: one or the other, but not both). Play
+  Boolean Blitz →", in KaTeX. XOR is introduced nowhere else in the game; the verifier checks the identity, the gloss
+  and the rendered line, and a third plant (XOR with no definition) is caught.
+- **Delete each `claude/keen-cray-ypsime-<game>` branch once its game has merged (Jon).**
+
+## 2026-10-07 (cloud): game 18 Factor Theorem (PR #130, merged); NEXT = merge #130, then the six queued games
 
 - **New instance, fresh container (18:00 UTC).** The old worktrees and `/home/user/queue-patches/` were gone. Jon
   approved the old session pushing the six queued games to their own branches; this lane picks each up from its
