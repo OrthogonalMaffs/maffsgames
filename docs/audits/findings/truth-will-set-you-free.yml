@@ -17,7 +17,8 @@ findings:
   summary: Every truth-table cell scores a point whether right or wrong; leaderboard and Final Score use it
   evidence: 'all-zero tables, every expression wrong: totalPoints 232, Final Score 89%, submitScore 232; accuracy
     card 75%'
-  status: open
+  status: fixed
+  pr: 135
 - id: truth-will-set-you-free-t6-002
   severity: HIGH
   jc: false
@@ -27,7 +28,8 @@ findings:
   summary: Stored outputs are B·D̄, not the key (AB + C)·D̄; a correct table is marked 13/16 and 'corrected' wrongly
   evidence: 'rows 0010 and 1010 should be 1, row 0100 should be 0; Chromium: correct table -> ''13 / 16 correct
     (81%)'''
-  status: open
+  status: fixed
+  pr: 135
 - id: truth-will-set-you-free-t6-003
   severity: MEDIUM
   jc: false
@@ -36,7 +38,8 @@ findings:
   where: games/truth-will-set-you-free/index.html:588, :861 (library [27])
   summary: bbLink set without 'simplified'; shows 'This expression simplifies to undefined.'
   evidence: rendered in Chromium
-  status: open
+  status: fixed
+  pr: 135
 - id: truth-will-set-you-free-t6-004
   severity: MEDIUM
   jc: false
@@ -54,4 +57,15 @@ findings:
   where: games/truth-will-set-you-free/index.html:905
   summary: Aa toggle never saved to mfg_accessible
   evidence: toggleAa touches only the class list
-  status: open
+  status: fixed
+  pr: 135
+- id: truth-will-set-you-free-t6-006
+  severity: LOW
+  jc: false
+  class: 2
+  level: level4
+  where: games/truth-will-set-you-free/index.html (library [6])
+  summary: Two distractors equal by the distributive law, A + B·C and (A + B)·(A + C), both offered as wrong
+  evidence: scripts/verify-truth-will-set-you-free.py (SymPy) on main's page; found by the cloud lane's fix (PR #135)
+  status: fixed
+  pr: 135
