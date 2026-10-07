@@ -30,8 +30,16 @@ main's last full run is red; watch main's run after merging.
   cherry-picked onto main. It already adopts MaffsLock in full (newSession, lock, fresh, timer, finishOnce; no local
   flags), so the class-1 entry t6-002 closes. One addition here: `check-answer-lock.py` (on main since #129, after the
   commit was written) found a raw `setTimeout(buildExample, 300)` on load; it draws the start screen's worked example
-  and marks nothing, so it carries `// lock-ok:`. Static rules pass. Verifier passes on the branch, fails on main's page
-  (QS[22], [23], [24]); both self-test plants caught.
+  and marks nothing, so it carries `// lock-ok:`. Static rules pass.
+- **Found here, fixed (class 1, part of t6-002):** `check-answer-lock.py --game eigenvector-engine --not-yet` (KaTeX
+  served) reported "question_index jumped" on the old page every run. Instrumented: the worked solution's "Got it —
+  next" was a plain onclick, only hidden after use, so a second Enter in the same frame (about 10 ms apart in the
+  tap-through) ran closeSol() twice and skipped a question unseen. Now MaffsNext.wrong (canon 7.6; next-control.js
+  loads before answer-lock.js), label kept. The verifier checks a real double click and two activations in one task
+  (two Enters in one frame); a third plant (the old onclick) is caught. Python's separate key presses never land in
+  one frame, so a keyboard test of this needs the in-page double activation.
+- Verifier passes on the branch, fails on main's page (QS[22], [23], [24]); all three plants caught. The tap-through
+  passes on the fixed page.
 - **Register:** t6-001, -002, -004, -005, f0-001..007 fixed; t6-003 (class 5) stays open.
 - **TWSYF is ready in `/home/user/tw-wt` (branch tw-local):** [27] uses Project Claude's approved wording (7 Oct):
   "This expression can be written (A ⊕ B)·C·D·Ē, where A ⊕ B = A·B̄ + Ā·B (XOR: one or the other, but not both). Play

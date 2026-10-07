@@ -17,10 +17,12 @@ Working. The first line's matrix is A - lambda I; every equation in the working 
 Chromium (390x844, KaTeX). Every option of every item is clicked through the game's own handler: the key is marked
   right, every other option wrong with the worked solution shown; the solution's words keep their spaces. With
   MaffsLock's real window: the key clicked, then Enter three times on it, scores once; a wrong answer, then Tab and
-  Enter, stays wrong; the end screen submits once.
+  Enter, stays wrong; the end screen submits once. A wrong answer, then a real double click on the worked solution's
+  Next (MaffsNext, canon 7.6) moves one question, and so do two activations of it in one frame (two Enters with no
+  gap): the old plain onclick was only hidden after use, so the second ran again and skipped a question unseen.
 
-A self-test plants two of the audit's own faults back (t6-001: the old QS[16]; f0-005-style: (-1, 2) offered as
-wrong for QS[11], whose key is (1, -2)); each must FAIL naming its item.
+A self-test plants three faults back (t6-001: the old QS[16]; f0-005-style: (-1, 2) offered as wrong for QS[11],
+whose key is (1, -2); t6-002: the old Next, a plain onclick); each must FAIL naming its item.
 
     python scripts/verify-eigenvector-engine.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
@@ -180,6 +182,25 @@ LOCK_JS = r"""async () => {
   return res;
 }"""
 
+# A wrong answer, then the worked solution's Next: set up here, then double-clicked for real with page.mouse at the
+# button (clicking a detached element twice would fire its old listener), then NEXT_READ_JS counts the questions.
+NEXT_SETUP_JS = r"""async () => {
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  if (window.MaffsLock) MaffsLock.clearTimers();
+  const q = QS[2];
+  pool = [q, q, q, q]; qIdx = 0; total = 0; score = 0; correctN = 0;
+  show('game'); nextQ();
+  await wait((window.MaffsLock ? MaffsLock.FRESH_MS : 0) + 50);
+  [...document.querySelectorAll('#options .opt-btn')].find(b => b.dataset.val !== q.c).click();
+  await wait(100);
+  const b = document.querySelector('#solution button');
+  if (!b) return null;
+  b.scrollIntoView({block: 'center'});
+  const r = b.getBoundingClientRect();
+  return {x: r.left + r.width / 2, y: r.top + r.height / 2, before: total};
+}"""
+NEXT_READ_JS = "() => total"
+
 KATEX_DIR = None
 
 
@@ -234,6 +255,26 @@ def play(fails, html):
                              % (lk['wrongStays'],))
             if lk['submits'] != 1:
                 fails.append('the end screen submitted %d scores (MaffsLock.finishOnce)' % lk['submits'])
+            # Next after a wrong answer moves one question however it is pressed: a real double click; and two
+            # activations of the same button in one task, which is what two Enters with no gap do when they land in
+            # one frame. The old Next was a plain onclick, only hidden after use, so the second activation ran
+            # closeSol() again and skipped a question unseen (check-answer-lock.py's tap-through, two Enters about
+            # 10 ms apart: "question_index jumped").
+            for how in ('a double click', 'two activations in one frame (Enter, Enter)'):
+                nx = page.evaluate(NEXT_SETUP_JS)
+                if not nx:
+                    fails.append('a wrong answer shows no Next button under the worked solution')
+                    break
+                if how == 'a double click':
+                    page.mouse.click(nx['x'], nx['y'])
+                    page.mouse.click(nx['x'], nx['y'])
+                else:
+                    page.evaluate("() => { const b = document.querySelector('#solution button'); b.click(); b.click(); }")
+                page.wait_for_timeout(300)
+                moved = page.evaluate(NEXT_READ_JS) - nx['before']
+                if moved != 1:
+                    fails.append('Next: %s after a wrong answer moved %d questions, not 1 (a question skipped '
+                                 'unseen; eigenvector-engine-t6-002)' % (how, moved))
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
             ctx.close()
@@ -250,6 +291,9 @@ PLANTS = [
     ('QS[11]', 'SR-17: (-1, 2) offered as wrong for (1, -2)',
      "d:['\\\\begin{pmatrix} 2 \\\\\\\\ 1 \\\\end{pmatrix}','\\\\begin{pmatrix} 2 \\\\\\\\ -1 \\\\end{pmatrix}'",
      "d:['\\\\begin{pmatrix} -1 \\\\\\\\ 2 \\\\end{pmatrix}','\\\\begin{pmatrix} 2 \\\\\\\\ -1 \\\\end{pmatrix}'"),
+    ('Next', 't6-002: the old Next (a plain onclick)',
+     "html+='<div id=\"nextMount\"></div>';",
+     "html+='<button class=\"next-btn\" onclick=\"closeSol()\">Got it — next</button>';"),
 ]
 
 

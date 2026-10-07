@@ -22,6 +22,7 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
 <script src="../../schools/assets/analytics.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
@@ -157,7 +158,10 @@ function updateTimer(){const el=document.getElementById('timer');const tick=()=>
 // Answer once (canon 7.6.0): MaffsLock disables every option on the first answer, so Enter, Tab+Enter or a second
 // click can never mark it again.
 function handleAnswer(btn){if(!MaffsLock.lock(document.getElementById('options')))return;const q=currentQ,s=(Date.now()-qStart)/1000,ok=btn.dataset.val===q.c;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.c)b.classList.add('correct')});mfg('question_answered',{game_slug:'eigenvector-engine',level:'further',correct:ok,question_index:total});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++;updateHUD();MaffsLock.timer(nextQ,1000)}else{btn.classList.add('wrong');updateHUD();showExplain(q)}}
-function showExplain(q){const sol=document.getElementById('solution');let html='<h3>Worked solution</h3>';(q.s||[]).forEach(st=>{html+='<div class="step">'+MaffsText.html(st)+'</div>'});if(q.mc)html+='<div class="misconception">⚠ '+q.mc+'</div>';html+='<button class="next-btn" onclick="closeSol()">Got it — next</button>';sol.innerHTML=html;sol.className='solution show'}
+function showExplain(q){const sol=document.getElementById('solution');let html='<h3>Worked solution</h3>';(q.s||[]).forEach(st=>{html+='<div class="step">'+MaffsText.html(st)+'</div>'});if(q.mc)html+='<div class="misconception">⚠ '+q.mc+'</div>';html+='<div id="nextMount"></div>';sol.innerHTML=html;sol.className='solution show';
+  // The advance after a wrong answer goes through MaffsNext (canon 7.6), which moves on once however it is
+  // triggered: a plain onclick here let a double click skip the next question unseen.
+  MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:closeSol,label:'Got it — next'})}
 function closeSol(){document.getElementById('solution').className='solution';nextQ()}
 function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
 const endGame=MaffsLock.finishOnce(function(){const pct=total>0?Math.round(correctN/total*100):0;let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').innerHTML='Eigenvector Engine<br>Igands Gonna Get You — Part 3<br>'+correctN+'/'+total+' correct ('+pct+'%)';window._ggAbandoned=false;mfg('game_completed',{game_slug:'eigenvector-engine',level:'further',score:score,questions_answered:total,accuracy:pct});
