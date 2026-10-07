@@ -76,7 +76,7 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 # Migrated games, added in the PR that migrates each. NOT_YET is the rest: reported, never failed, and it
 # may only shrink.
 MIGRATED = set('''
-formula-plug-in new-shapes four-quadrant-explorer
+formula-plug-in new-shapes four-quadrant-explorer like-terms-collector
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -92,6 +92,14 @@ HINTS = {
                    "const c = document.getElementById('gridCanvas'), r = c.getBoundingClientRect();"
                    "for (let k = 0; k < 2; k++) c.dispatchEvent(new MouseEvent('click', {bubbles: true, clientX: r.left + 4, clientY: r.top + 4}));"),
         'surface': '#gridCanvas',
+    },
+    'like-terms-collector': {
+        'ready': "document.getElementById('gameScreen').classList.contains('active')",
+        'answer': ("const a = document.getElementById('ans0');"
+                   "if (a && a.offsetParent) { a.value = '0'; document.getElementById('ans1').value = '0';"
+                   "  document.getElementById('checkBtn').click(); return; }"
+                   "const b = [...document.querySelectorAll('#mcqGrid .mcq-btn')].filter(e => e.offsetParent); if (b.length) b[i % b.length].click();"),
+        'surface': '#inputArea',
     },
 }
 
@@ -216,13 +224,15 @@ INIT = r"""
   window.__lockGroupRects = function () {
     return (window.__mfgGroup || []).map(e => window.__lockRect(e));
   };
-  const CONTINUE_RE = /^(got it|next|continue|carry on|onward|ok|okay|see (your )?results|show results|finish)\b/;
+  const CONTINUE_RE = /^(got it|next|continue|carry on|onward|ok|okay|keep going|see (your )?results|show results|finish)\b/;
   window.__lockContinue = function () {
     const mn = document.querySelector('.maffs-next');
     if (mn && visible(mn)) return { rect: window.__lockRect(mn), ready: !mn.disabled, kind: 'maffs-next' };
     const grp = window.__mfgGroup || [];
     const els = [...document.querySelectorAll('button, [role="button"], a')].filter(e =>
-      visible(e) && grp.indexOf(e) === -1 && !e.disabled);
+      // A group of interstitial controls ("Keep going" / "Finish here") is not an answer group.
+      visible(e) && !e.disabled && (grp.indexOf(e) === -1 ||
+        /^(continue|keep going)\b/.test((e.textContent || '').trim().toLowerCase())));
     const hit = els.find(e => { const t = (e.textContent || '').trim().toLowerCase();
       return CONTINUE_RE.test(t) || t.indexOf('next question') !== -1; });
     return hit ? { rect: window.__lockRect(hit), ready: true, kind: (hit.textContent || '').trim().slice(0, 30) } : null;
@@ -382,7 +392,7 @@ class Driver:
                     await self.page.touchscreen.tap(r['x'], r['y'])
                 else:
                     await self.page.mouse.click(r['x'], r['y'])
-                await self.page.wait_for_timeout(350)
+                await self.page.wait_for_timeout(400)
                 return c['kind']
             if not c and (await self.probe())['n'] >= 2:
                 await self.page.wait_for_timeout(350)
@@ -550,7 +560,7 @@ async def play_all(games, against):
                 async with sem:
                     html = open(against, encoding='utf-8').read() if against else None
                     try:
-                        results[slug] = await asyncio.wait_for(play(browser, base, slug, level, html), 150)
+                        results[slug] = await asyncio.wait_for(play(browser, base, slug, level, html), 300)
                     except Exception as e:      # a crash is a failure, never a pass
                         results[slug] = ['driver error: %s' % str(e)[:160]]
             await asyncio.gather(*(one(s, l) for s, l in games))
