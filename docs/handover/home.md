@@ -9,14 +9,62 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
-**QUEUE (home lane, Jon 7 Oct, after the clear):** 0b #120, 0c #121, 0d #122 + #123 all merged. Now:
-1. **F1: MaffsLock, one shared "answer once" lock**, then the roll-out (89 games, batches of up to 8) and the
-   relist. Contract text in Jon's 7 Oct paste; summarised in the newest entry. STOP IF (c) applies and is
-   reported: **89 games need migrating** (over 40): carry on in batches.
+**QUEUE (home lane, F1, Jon's re-ordering of 7 Oct 18:05):** MaffsLock #125, batch 1 #129 and batch 2 #132 are
+done. Next:
+1. **Batches 3-4:** the unlisted games the cloud lane has finished and merged: spot-the-error, truth-buster,
+   trig-worms, expectation-station, component-crusher, trig-identity-duel, binomial-blaster,
+   partial-fractions-duel, differentiation-duel, integration-duel, curling-friction, dimension-checker,
+   proof-builder, linear-equation-solver, moments-master, force-resolver. Skip any game still on the cloud
+   lane's list in `docs/handover/cloud.md` (re-read it first).
+2. **Straight after batch 4:** the relist PR for every game in REGISTER.md's "Ready to relist" (SR-21). Give
+   the listed-game count before and after.
+3. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty.
+- **Checkpoint rule:** stop after every 2 batches merged (main green), or at the next batch boundary when Jon
+  says "checkpoint". At each stop, update this file.
 
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-07 (home, night): F1 batches 1 (#129) and 2 (#132) merged; CHECKPOINT STOP (2 batches)
+
+- **#129 (batch 1) merged.** Of the three local failures, two were environmental and fail on main too:
+  Negative Number Line's 320px fold (fonts) and Test the Claim (no Node on this machine, `FileNotFoundError`).
+  **check-resit-fixes.py was a real break** (Shape Shifter and NNL). Its clicks landed in MaffsLock's 300 ms
+  window, and it reset an `answered` flag the games no longer have. It now uses `bc.NO_LOCK_FRESH_INIT` and calls
+  `MaffsLock.fresh(gameEl)`; its self-test still catches every reverted fix. Closed: formula-plug-in-t3-001,
+  new-shapes-t3-001, four-quadrant-explorer-t3-001, like-terms-collector-t3-002. shape-shifter-t3-005 has its
+  fixed part noted.
+- **Main went red after #129 (#131 fixed it).** The cloud lane's #128 put suvat on answer-lock.js while
+  check-answer-lock (new in #129) still had it on NOT_YET, and the "stale" rule failed it. Both PRs were green
+  alone. Now a CLOUD_LANE game that loads the lock is a note, not a failure, and the home lane moves it to
+  MIGRATED once it passes. **suvat does not pass yet, and it is the cloud lane's game:** it loads answer-lock.js
+  before next-control.js, and the driver needs a HINT to produce a wrong answer. factor-theorem (#130, open)
+  will be in the same position.
+- **#132 (batch 2) adds two things, on Jon's order.**
+  - **(a) MaffsNext on a wrong answer (canon §7.6)** for factor-race, fraction-equivalence and percentage-flip,
+    on wrong answers and time-outs. Two of the games needed a call on what counts as the wrong path:
+    - prime-factorisation: a wrong tap that leaves lives never moved on, so Next goes on the last life. It
+      shows the whole factorisation, then Game Over.
+    - equatle: a wrong guess is the next row of the same puzzle, so Next goes on a lost puzzle. It shows the
+      equation, then the results.
+  - **(b) Equatle :337 restored.** The links pasted into the button's onclick now sit under the buttons, with
+    the teacher line after them, outside the `.mf` flex row (check-teacher-invite required this).
+  - Closed: prime-or-composite-t1-001 (HIGH) and percentage-flip-r-001. factor-race-t3-004 has its fixed part
+    noted.
+- **NOT_YET: 80** (73 home + 7 cloud). 16 games migrated.
+- **For Jon:**
+  - **Phone rule:** at 320×568, Next is below the fold on factor-race, fraction-equivalence and percentage-flip.
+    Their answer controls are already below the fold on main (`measure-phone-fit.py`), so this is phone-fit
+    work, not F1. Not queued.
+  - **check-teacher-invite.py** drives Log Laws through its global `answered`. Fix that when log-laws migrates.
+  - **Equatle and Prime Factorisation:** the reading of "wrong path" above is mine, so overrule it if needed.
+- **Lessons:**
+  - `measure-phone-fit.py --only X` rewrites `docs/phone-fit-report.md`. Restore the file afterwards.
+  - A one-off wrong-path script must click Next with `force` or `dispatch_event` during the floor. A plain
+    `click()` waits for Next to enable, and a raw coordinate click can land on the fixed footer.
+  - Heredocs still eat `\'`: use Edit or Write for those.
+- **Next session:** read the QUEUE above and start batch 3 (re-read `docs/handover/cloud.md` first).
 
 ## 2026-10-07 (home, evening): F1 batches 1 and 2 built; PAUSED for a context clear (Jon, at 55%)
 
