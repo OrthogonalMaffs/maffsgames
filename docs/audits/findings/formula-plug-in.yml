@@ -1,0 +1,75 @@
+# Findings register for formula-plug-in (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: formula-plug-in
+audited:
+- tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: '50'
+- tranche: 3
+  head: 4be3342
+  date: 2026-10-06
+  served:
+    year6: 10|20|30/50
+findings:
+- id: formula-plug-in-t3-001
+  severity: HIGH
+  jc: false
+  class: NEW:double-finish
+  level: year6
+  where: games/formula-plug-in/index.html:611 (showRevealScreen)
+  summary: 8s reveal timer never cleared after a tap; showResults runs twice (double game_completed + submitScore)
+    and can end the next game after Play Again
+  evidence: Tap at 5.3s -> game_completed x2, submits [[fpi,year6,7,20],[fpi,year6,7,20]] (reproduced twice); tap,
+    Play Again, Start -> Results 0/10 mid-question, submit [fpi,year6,0,10]
+  status: open
+- id: formula-plug-in-t3-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:board-mixes-session-lengths
+  level: year6
+  where: games/formula-plug-in/index.html:660
+  summary: 10/20/30-question sessions submit raw correctCount to one board; 30-question runs outrank all 10-question
+    runs (canon §9 class, game not in its list)
+  evidence: submitScore(slug,'year6',correctCount,total); board stores score only (firebase-leaderboard.js:387)
+  status: open
+- id: formula-plug-in-t3-003
+  severity: MEDIUM
+  jc: false
+  class: 7
+  level: year6
+  where: games/formula-plug-in/index.html:517
+  summary: Game-local parseFloat === key instead of MaffsAnswer.exact; a lone '.' is scored wrong rather than treated
+    as unreadable
+  evidence: '''.'' gives NaN, marked wrong, question_answered correct:false; all 50 integer keys accepted (''014'',
+    ''200.'', ''64.0'')'
+  status: open
+- id: formula-plug-in-t3-004
+  severity: MEDIUM
+  jc: true
+  class: NEW:board-mixes-session-lengths
+  level: year6
+  where: games/formula-plug-in/index.html:360,422
+  summary: One PB key across session lengths, shown as pb/selected-length using the default 20
+  evidence: 'Stored PB 27 shows ''Personal Best: 27/20'', unchanged after choosing 10'
+  status: open
+- id: formula-plug-in-t3-005
+  severity: MEDIUM
+  jc: true
+  class: 6
+  level: year6
+  where: games/formula-plug-in/index.html:453
+  summary: Header score-display shows questions done (currentIndex), not correct answers
+  evidence: After one wrong answer the header reads '1/10' while correctCount = 0
+  status: open
+- id: formula-plug-in-t3-006
+  severity: LOW
+  jc: true
+  class: NEW:low-answer-variety
+  level: year6
+  where: games/formula-plug-in/index.html:293-296 (fpi_007-010), 348-352, 430, 257
+  summary: 4 of 5 rectangle-perimeter items answer 28 (same step 2x14); 3 mean items answer 5; 'ensuring variety'
+    comment false; reveal praises regardless of score
+  evidence: Answers fpi_007..010 = 28,28,28,28; fpi_046/048/050 = 5
+  status: open

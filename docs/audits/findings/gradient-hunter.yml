@@ -1,0 +1,33 @@
+# Findings register for gradient-hunter (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: gradient-hunter
+audited:
+  tranche: 2
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    gcse: '15'
+    core: '20'
+    alevel: '10'
+findings:
+- id: gradient-hunter-t2-001
+  severity: CRITICAL
+  jc: true
+  class: 8
+  level: all
+  where: games/gradient-hunter/index.html:1046-1062 (renderInterpretations)
+  summary: 'Buttons get only a ''locked'' class and onclick stays live: clicking the revealed correct option after
+    a wrong pick re-scores it, unlimited, onto the leaderboard'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. Reproduced: 38/16 over 10 questions, 30 question_answered
+    events'
+  status: open
+- id: gradient-hunter-t2-002
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: alevel
+  where: games/gradient-hunter/index.html (alevel_007, 009, 010)
+  summary: State tangent gradients (150, 4, 5) that disagree with the model or the drawn curve (98.0, 3.25, 4.5)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open

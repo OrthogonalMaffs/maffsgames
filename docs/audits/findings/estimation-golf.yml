@@ -1,0 +1,84 @@
+# Findings register for estimation-golf (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: estimation-golf
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: 9/20
+    ks3: 9/9
+    gcse: 9/9
+    alevel: 9/9
+    level4: 9/9
+findings:
+- id: estimation-golf-r-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: level4
+  where: level4, index.html:680
+  summary: 'Question: "A cylinder has diameter 60 mm and length 200 mm. Estimate its volume in cm³." Hint: "V =
+    π × r² × h. r = 3 cm, h = 20 cm". Keyed answer: 565.2 Correct answer: 565.49 (180π = 565.4867…)'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: the key uses π = 3.14, which neither the question
+    nor the hint states. A student using π (calculator) gets Eagle (2 strokes) not Hole in One, and is told "Actual
+    answer: 565.2 cm³", which is wrong. Share affected: 1 of 9 level4 items (every level4 round).'
+  status: open
+- id: estimation-golf-r-002
+  severity: HIGH
+  jc: false
+  class: 3
+  level: alevel
+  where: alevel, index.html:663
+  summary: 'Question: "Estimate the gradient of y = x³ at x = 3 using first principles with h = 0.001." Keyed answer:
+    27 Correct answer: 27.009001 (the estimate asked for)'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Evidence: ((3.001)³ − 27) / 0.001 = 27.009001. 27 is
+    the exact derivative (the limit), not the h = 0.001 estimate; the student who does what is asked gets Eagle
+    and is shown "Actual answer: 27". (A central difference would give 27.000001, but "first principles with h"
+    normally means the forward difference.) Judgement on the method wording; the key is the limit either way. Share
+    affected: 1 of 9 alevel items (every alevel round).'
+  status: open
+- id: estimation-golf-r-003
+  severity: MEDIUM
+  jc: false
+  class: 7
+  level: ks3, gcse, alevel
+  where: ks3, gcse, alevel; index.html:640, :643, :651, :662, :665, :669
+  summary: 'Questions that ask for a specific rounding are scored by proximity, so wrong roundings score under par
+    and are logged as correct. Through the game''s own code: "Round 3,847 to the nearest hundred" (key 3800): 3900
+    (rounded the wrong way), 3840, 3850 and the unrounded 3847 all score Birdie (1.0–2.6%); "Estimate √50 to 1 decimal
+    place" (7.1): 7 and 7.2 Birdie; "Round 0.004857 to 2 significant figures" (0.0049): 0.0048 (truncated) and 0.005
+    Birdie, 0.00486 (3 s.f.) Eagle; "e to 4 s.f." (2.718): 2.719, 2.72, 2.7 all Eagle; "ln(10) to 2 d.p." (2.30):
+    2.31 Eagle; sphere "to the nearest whole number" (268): 269 Eagle. Only the exact key earns Hole in One, so
+    a correct answer is still distinguished, but the named rounding errors are rewarded as under-par (canon 7.1.2:
+    a band must not accept a named wrong answer). Judgement call on game design.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. Share affected: ks3 2 of 9, gcse 1 of 9, alevel 3 of
+    9.'
+  status: open
+- id: estimation-golf-r-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:precision-not-stated
+  level: level4
+  where: level4, index.html:673, :677, :681 (and :680)
+  summary: 'No precision is stated, yet only the stored rounding earns Hole in One: RMS 325/√2 = 229.8097 keyed
+    229.8; Xc = 1/(2π·50·100µF) = 31.831 keyed 31.8; R = 0.1/(0.6×2) = 0.08333… keyed 0.0833. A more precise correct
+    answer (229.81, 31.83, 0.08333) scores Eagle. SR-1 (state the precision) not met. Keys are correct to their
+    stored rounding.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F4. '
+  status: open
+- id: estimation-golf-r-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:level-content-mismatch
+  level: year6
+  where: year6 (the resit card's level), index.html:617-637
+  summary: 'The Starter bank is mostly general-knowledge recall, not estimation (the card maps the game to GCSE
+    N14–N16): football team 11, adult teeth 32, spider legs 8, bones 206, pizza slices 8, letters in the alphabet
+    26, continents 7, pupils in a class 30 (8 of 20 have no maths content); most of the rest are unit facts (60,
+    100, 1000, 24). Factual keys needing Jon''s check (convention-dependent, not wrong as such): continents 7 (5
+    or 6 under other conventions; the hint lists 7), class size 30 (the hint says 25–35; England averages are in
+    the mid-20s), adult teeth 32 (full set including wisdom teeth), door 200 cm (UK standard internal door is 1,981
+    mm, 1% off). Proximity scoring blunts the effect (28 for class size is Par).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F5. '
+  status: open

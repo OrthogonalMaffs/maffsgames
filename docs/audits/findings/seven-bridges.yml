@@ -1,0 +1,97 @@
+# Findings register for seven-bridges (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: seven-bridges
+audited:
+  tranche: 4
+  head: fc20f8c
+  date: '2026-10-06'
+  served:
+    ks3: 25
+    gcse: 25
+    alevel: 25
+findings:
+- id: seven-bridges-t4-001
+  severity: HIGH
+  jc: false
+  class: NEW:uncancelled-timer
+  level: all
+  where: games/seven-bridges/index.html:682-683,708,343
+  summary: The solution animation after a wrong 'Impossible' is never cancelled and traces onto the next puzzle,
+    making it unsolvable
+  evidence: 'No clearTimeout in the file. ks3_16 -> ks3_11 opens at 3/4 edges, Undo/Reset disabled. Simulated: KS3
+    147/380, GCSE 67/110, A-Level 47/132 next puzzles unsolvable.'
+  status: open
+- id: seven-bridges-t4-002
+  severity: HIGH
+  jc: false
+  class: '6'
+  level: alevel
+  where: games/seven-bridges/index.html:261 (al_15)
+  summary: E is the midpoint of AC and BD, so edges A-C and B-D are drawn over A-E-C and B-E-D
+  evidence: E (300,200), A (150,100), C (450,300), B (450,100), D (150,300). Screen shows 4 odd vertices; data all
+    degree 4, circuit exists; Impossible scores 0.
+  status: open
+- id: seven-bridges-t4-003
+  severity: MEDIUM
+  jc: true
+  class: '1'
+  level: all
+  where: games/seven-bridges/index.html:772
+  summary: Two Enter presses on Next skip a puzzle
+  evidence: puzzleIdx 0 -> 2; session ends 45/50 max.
+  status: open
+- id: seven-bridges-t4-004
+  severity: MEDIUM
+  jc: false
+  class: '6'
+  level: alevel
+  where: games/seven-bridges/index.html:261 (al_10, al_18, al_21)
+  summary: Edges pass under third vertices' circles
+  evidence: 19.8-21.1 px from a vertex of radius 22; parity unchanged.
+  status: open
+- id: seven-bridges-t4-005
+  severity: MEDIUM
+  jc: false
+  class: '5'
+  level: all
+  where: games/seven-bridges/index.html
+  summary: Pools of 25 per level (10 served)
+  evidence: Measured over 30 sessions per level.
+  status: open
+- id: seven-bridges-t4-006
+  severity: MEDIUM
+  jc: true
+  class: '6'
+  level: all
+  where: games/seven-bridges/index.html:242,582,674
+  summary: Euler's rule stated without 'connected'
+  evidence: Every graph in the game is connected; marking unaffected.
+  status: open
+- id: seven-bridges-t4-007
+  severity: MEDIUM
+  jc: true
+  class: '8'
+  level: gcse, alevel
+  where: games/seven-bridges/index.html:662
+  summary: Always pressing Impossible earns about 28/50 (GCSE), 26/50 (A-Level)
+  evidence: 14 and 13 of 25 are impossible.
+  status: open
+- id: seven-bridges-t4-008
+  severity: MEDIUM
+  jc: false
+  class: '4'
+  level: all
+  where: games/seven-bridges/index.html:864
+  summary: ?level=constructor/__proto__ throws on load
+  evidence: selectLevel reads classList of null; page stays usable.
+  status: open
+- id: seven-bridges-t4-009
+  severity: LOW
+  jc: false
+  class: NEW:phone-fold
+  level: all
+  where: games/seven-bridges/index.html:792,843
+  summary: Start and post-verdict Next below the fold on phones; start-card descriptions do not match the data;
+    submitScore passes 50 for 10 puzzles; declared_impossible records the graph, not the student
+  evidence: Agent's evidence.
+  status: open

@@ -1,0 +1,66 @@
+# Findings register for matrix-crunch (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: matrix-crunch
+audited:
+  tranche: 6
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    further: 20
+    level4: 20
+findings:
+- id: matrix-crunch-t6-001
+  severity: HIGH
+  jc: false
+  class: 1
+  level: all
+  where: games/matrix-crunch/index.html:329 (handleAnswer)
+  summary: CSS-only lock on options; Enter re-scores (and builds streak/stage), Tab+Enter converts a wrong answer
+  evidence: key click then Enter x3 -> score 96->383, streak 4; wrong click, Tab, Enter -> 0->96
+  status: open
+- id: matrix-crunch-t6-002
+  severity: HIGH
+  jc: false
+  class: 1
+  level: all
+  where: games/matrix-crunch/index.html:354 (flagSingular)
+  summary: 'Flag button re-fires on Enter: +25 per press and skipped questions; on a wrong flag, all 3 lives lost
+    on one question'
+  evidence: singular flag + Enter x3 -> score 25->100, totalAnswered 1->5; wrong flag + Enter x2 -> lives 3->0
+  status: open
+- id: matrix-crunch-t6-003
+  severity: MEDIUM
+  jc: false
+  class: 5
+  level: all
+  where: games/matrix-crunch/index.html:158-230
+  summary: Pools of 35 (further) and 18 (level4); 20 served with repeats
+  evidence: 'full plays: 20 served, 17 and 14 distinct (B4 ledgered)'
+  status: open
+- id: matrix-crunch-t6-004
+  severity: MEDIUM
+  jc: false
+  class: 4
+  level: all
+  where: games/matrix-crunch/index.html:245
+  summary: ?level=constructor and __proto__ pass the QUESTIONS[level] test; Start throws
+  evidence: 'TypeError: bank.det is not iterable; nonsense falls back to further'
+  status: open
+- id: matrix-crunch-t6-005
+  severity: MEDIUM
+  jc: false
+  class: B7 (ledgered)
+  level: all
+  where: games/matrix-crunch/index.html:385 (rkStr steps)
+  summary: Worked-solution prose loses its spaces in KaTeX
+  evidence: '''Cannot divide by zero'' renders ''Cannotdividebyzero'' (about 30 ledger entries)'
+  status: open
+- id: matrix-crunch-t6-006
+  severity: LOW
+  jc: false
+  class: 2
+  level: further
+  where: games/matrix-crunch/index.html:174
+  summary: Duplicate '0' option; question renders 3 options (B2 ledgered)
+  evidence: correct '0', d ['12','0','6']
+  status: open

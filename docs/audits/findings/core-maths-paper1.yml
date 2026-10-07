@@ -1,0 +1,74 @@
+# Findings register for core-maths-paper1 (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: core-maths-paper1
+audited:
+  tranche: 2
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    core: '36'
+findings:
+- id: core-maths-paper1-t2-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: core
+  where: games/core-maths-paper1/index.html:462-465 (Q32)
+  summary: 'Simple £525.00 vs compound £559.67: B wins by £34.67; keyed ''B by £44.70'' (from the working''s false
+    £569.70) and no option is correct'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: fixed
+  pr: 86
+- id: core-maths-paper1-t2-002
+  severity: HIGH
+  jc: false
+  class: 3
+  level: core
+  where: games/core-maths-paper1/index.html:296-300 (Q9)
+  summary: Keyed 'Yes' to 'more than half the class scored above 51' (the median); at most half the values are strictly
+    above the median, so the answer is No
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: fixed
+  pr: 86
+- id: core-maths-paper1-t2-003
+  severity: HIGH
+  jc: false
+  class: 2
+  level: core
+  where: games/core-maths-paper1/index.html:282-284 (Q7)
+  summary: Option C 'Discrete, qualitative, continuous, discrete' is the key's classification in other words
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: fixed
+  pr: 86
+- id: core-maths-paper1-t2-004
+  severity: HIGH
+  jc: true
+  class: NEW:convention-unstated
+  level: core
+  where: games/core-maths-paper1/index.html:238 (Q1)
+  summary: IQR of 9 values keyed 12 (inclusive-median convention); the (n+1)/4 rule and a calculator's exclusive
+    method give 14, which is not offered, and no method is named
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: fixed
+  pr: 86
+- id: core-maths-paper1-t2-005
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: core
+  where: games/core-maths-paper1/index.html (Q9 chart)
+  summary: Q9's box-plot whiskers are drawn in the background colour, so they are invisible
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: fixed
+  pr: 86
+- id: core-maths-paper1-t2-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: core
+  where: games/core-maths-paper1/index.html (Q27)
+  summary: Q27's CPI pair (already in the quoted-statistics audit)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open

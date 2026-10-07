@@ -1,0 +1,55 @@
+# Findings register for sequence-solver (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: sequence-solver
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    ks3: '50'
+    gcse: '50'
+    alevel: '54'
+findings:
+- id: sequence-solver-r-001
+  severity: HIGH
+  jc: false
+  class: 2
+  level: alevel
+  where: alevel, games/sequence-solver/index.html:291
+  summary: 'Question: `0.\dot{9} = \sum_{r=1}^{\infty} 9 \times 10^{-r}` "What does this sum equal?" Options: 1,
+    0.999..., 9/10, ∞. Keyed answer: 1. Correct answer: 1, and 0.999... is the same number.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: Σ 9×10^(−r) = 0.9/(1 − 0.1) = 1 exactly, and
+    0.999... is 0.9̇ = 1. Marking "0.999..." wrong is a value-equal distractor, and it tells the student that 0.999...
+    ≠ 1, the opposite of the point the question makes. (0.999... is also the left-hand side of the question as written.)
+    Share affected: 1 of 54 A-level questions (drawn in about 37% of A-level sessions: 20 of 54).'
+  status: open
+- id: sequence-solver-r-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: gcse
+  where: 'gcse, index.html:314 (`seqEl.textContent = q.seq`): the sequence line is written as plain text, so LaTeX
+    in `seq` reaches the student raw (confirmed in Chromium). Worst cases: :219 shows `T_n = 3 \times 2^{n-1}`,
+    :220 `T_n = 5 \times 3^{n-1}`, :229 `T_n = 3 \times 2^n`, :232 `T_n = (-1)^n \times n` '
+  summary: 'gcse, index.html:314 (`seqEl.textContent = q.seq`): the sequence line is written as plain text, so LaTeX
+    in `seq` reaches the student raw (confirmed in Chromium). Worst cases: :219 shows `T_n = 3 \times 2^{n-1}`,
+    :220 `T_n = 5 \times 3^{n-1}`, :229 `T_n = 3 \times 2^n`, :232 `T_n = (-1)^n \times n` (4 questions whose rule
+    is unreadable to a grade 1-3 student). Milder: `n^2` and `T_n` shown raw at :193-196, :209-212, :227-228, :230
+    (11 more). 15 of 50 GCSE questions in all; canon §7.1.1 requires KaTeX for expressions.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. '
+  status: open
+- id: sequence-solver-r-003
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: alevel
+  where: 'alevel, index.html:262: "Sum of GP — Which formula when |r| < 1?" Key `S_n = a(1−r^n)/(1−r)`; distractor
+    `S_n = a/(1−r)`. |r| < 1 is precisely the condition for the sum to infinity a/(1−r), so the wording steers a
+    student who knows S∞ to a distractor. The key is defensible only because the distracto'
+  summary: 'alevel, index.html:262: "Sum of GP — Which formula when |r| < 1?" Key `S_n = a(1−r^n)/(1−r)`; distractor
+    `S_n = a/(1−r)`. |r| < 1 is precisely the condition for the sum to infinity a/(1−r), so the wording steers a
+    student who knows S∞ to a distractor. The key is defensible only because the distractor is labelled S_n; and
+    a(1−r^n)/(1−r) is valid for every r ≠ 1, so "when |r| < 1" does not single it out. (todo §1.29 fixed this question''s
+    earlier value-equal distractor; the wording remains.)'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. '
+  status: open

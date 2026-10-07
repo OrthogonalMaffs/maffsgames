@@ -1,0 +1,77 @@
+# Findings register for dimension-checker (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: dimension-checker
+audited:
+  tranche: 5
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    level4: 20
+    alevel: 20
+findings:
+- id: dimension-checker-t5-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: all
+  where: games/dimension-checker/index.html:110 (Is s = ut + at² homogeneous?)
+  summary: Keyed 'No — should be ½at², but dimensions still check'; the true 'Yes — all terms are [L]' is marked
+    wrong
+  evidence: s:[L]; ut:[LT⁻¹][T] = [L]; at²:[LT⁻²][T²] = [L]; the game's own solution says homogeneous
+  status: open
+- id: dimension-checker-t5-002
+  severity: HIGH
+  jc: true
+  class: 2
+  level: all
+  where: games/dimension-checker/index.html:137 (Stokes' law F = 6πμrv)
+  summary: μ's dimensions not given; 'Cannot check without μ dimensions' is true for the item as written
+  evidence: the check needs μ = [ML⁻¹T⁻¹], given only in the Reynolds item (:132)
+  status: open
+- id: dimension-checker-t5-003
+  severity: HIGH
+  jc: false
+  class: 1
+  level: all
+  where: games/dimension-checker/index.html:50, 148-150 (handleAnswer)
+  summary: 'Options disabled only by pointer-events:none; Enter re-marks: extra score, skipped questions, a correct
+    mark after a wrong first answer'
+  evidence: correct + Enter x3 -> 3 question_answered, score 297, total 1->4; wrong then Enter on correct -> +98,
+    correct:true
+  status: open
+- id: dimension-checker-t5-004
+  severity: MEDIUM
+  jc: true
+  class: NEW:outside stated framework
+  level: all
+  where: games/dimension-checker/index.html:111 (Is P = I²R homogeneous?)
+  summary: Needs [A] and R's dimensions, neither given (page says M, L, T)
+  evidence: 'key correct: [A²][ML²T⁻³A⁻²] = [ML²T⁻³]'
+  status: open
+- id: dimension-checker-t5-005
+  severity: MEDIUM
+  jc: false
+  class: 5
+  level: all
+  where: games/dimension-checker/index.html:143
+  summary: Serves 20 of a 28-question pool at every level
+  evidence: MAX_Q = 20; QS has 28
+  status: open
+- id: dimension-checker-t5-006
+  severity: MEDIUM
+  jc: true
+  class: 4
+  level: all
+  where: games/dimension-checker/index.html:147, 155
+  summary: ?level ignored; every URL (incl. alevel) plays and submits as 'level4'
+  evidence: submitScore('dimension-checker','level4',…) for ?level=alevel
+  status: open
+- id: dimension-checker-t5-007
+  severity: LOW
+  jc: false
+  class: 11
+  level: all
+  where: games/dimension-checker/index.html:148, 151
+  summary: Hand-rolled 'Got it — next' (note); local shuffle not MaffsOptions; KaTeX loaded but unused
+  evidence: code read; double-click advanced once
+  status: open

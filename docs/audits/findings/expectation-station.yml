@@ -1,0 +1,174 @@
+# Findings register for expectation-station (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: expectation-station
+audited:
+  tranche: 2
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    core: '20'
+    gcse: '15'
+    alevel: '10'
+findings:
+- id: expectation-station-t2-001
+  severity: CRITICAL
+  jc: true
+  class: 2
+  level: alevel
+  where: games/expectation-station/index.html:369-378 (stage 3)
+  summary: Stage-3 'wrong' cards are true statements on 6 of the 10 A-Level items (the level crosses CRITICAL);
+    GCSE 2 of 15, Core 2 of 20
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. SR-16: a true statement is never a wrong option'
+  status: open
+- id: expectation-station-t2-002
+  severity: HIGH
+  jc: true
+  class: 2
+  level: alevel
+  where: games/expectation-station/index.html:369 (es_alevel_001)
+  summary: Distractor 'The median of X is 3' is true (cumulative 0.1, 0.3, 0.6)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-003
+  severity: HIGH
+  jc: true
+  class: 2
+  level: alevel
+  where: games/expectation-station/index.html:370 (es_alevel_002)
+  summary: Distractor 'X = 1 occurs more than any other value' is true (P(X = 1) = 0.4 is the largest)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-004
+  severity: HIGH
+  jc: true
+  class: 2
+  level: alevel
+  where: games/expectation-station/index.html:371 (es_alevel_003)
+  summary: 'Two true distractors: ''X = 3 is the most probable outcome'' (0.4 > 0.2) and ''60% exceed the mean''
+    (P(X > 2.6) = 0.6)'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-005
+  severity: HIGH
+  jc: true
+  class: 2
+  level: alevel
+  where: games/expectation-station/index.html:372 (es_alevel_004)
+  summary: Distractor 'more likely to break down than not' is true (P(X >= 1) = 0.55; the game's own explanation
+    says so)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-006
+  severity: HIGH
+  jc: true
+  class: 2
+  level: alevel
+  where: games/expectation-station/index.html:375 (es_alevel_007)
+  summary: Distractor says the median is 5, which it is
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-007
+  severity: HIGH
+  jc: true
+  class: 2
+  level: alevel
+  where: games/expectation-station/index.html:378 (es_alevel_010)
+  summary: Distractor says P(profit) = 0.5, which it is
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-008
+  severity: HIGH
+  jc: true
+  class: 2
+  level: gcse
+  where: games/expectation-station/index.html:352 (es_gcse_001)
+  summary: Distractor 'Half the scores are above 2.5' is true (P(3 or 4) = 0.5)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-009
+  severity: HIGH
+  jc: true
+  class: 2
+  level: gcse
+  where: games/expectation-station/index.html:356 (es_gcse_005)
+  summary: Distractor states P(heads) = 0.5, which the explanation itself states
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-010
+  severity: HIGH
+  jc: true
+  class: 2
+  level: core
+  where: games/expectation-station/index.html:334 (es_core_005)
+  summary: Distractor 'Most transactions need no assistance' is true (P(X = 0) = 0.72)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-011
+  severity: HIGH
+  jc: true
+  class: 2
+  level: core
+  where: games/expectation-station/index.html:346 (es_core_017)
+  summary: Distractor's 74% conversion rate is the explanation's own figure
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-012
+  severity: HIGH
+  jc: false
+  class: 7
+  level: alevel
+  where: games/expectation-station/index.html:374 (es_alevel_006); marking :674
+  summary: 'Stage 1 marks a tile with abs(x - p) < 0.001: the wrong tile 0.0004 is 0.0003 from the true 0.0001,
+    so it is accepted and the table shows ''complete'''
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: expectation-station-t2-013
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse
+  where: games/expectation-station/index.html (es_gcse_005)
+  summary: Says 'biased coin', but its table is exactly Bin(3, 1/2)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open
+- id: expectation-station-t2-014
+  severity: MEDIUM
+  jc: true
+  class: 3
+  level: alevel
+  where: games/expectation-station/index.html (es_alevel_005)
+  summary: Keys E(X) = £2.50 where X is the die score (E = 3.5)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct; changes the marking: a possible HIGH, for Project Claude to rule'
+  status: open
+- id: expectation-station-t2-015
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: alevel
+  where: games/expectation-station/index.html (es_alevel_009)
+  summary: Calls a left-skewed distribution 'right-skewed'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open
+- id: expectation-station-t2-016
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: all
+  where: games/expectation-station/index.html (stage 3 cards)
+  summary: 'Several ''true within the model'' cards (report: JC)'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct; changes the marking: a possible HIGH, for Project Claude to rule'
+  status: open
+- id: expectation-station-t2-017
+  severity: MEDIUM
+  jc: true
+  class: 1
+  level: all
+  where: games/expectation-station/index.html (Check)
+  summary: 'A double-click on Check spends the retry (report: LOW)'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct; changes the marking: a possible HIGH, for Project Claude to rule'
+  status: open

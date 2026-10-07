@@ -186,6 +186,10 @@ jobs:
           # games are played to every end state, and every live escape room to a win and a loss, in Chromium at 390
           # and 1280px; on every roster page the line reads at 4.5:1 or better and is not squeezed into a flex row;
           # /leaderboards/ mounts it with no game; the link text is Jon's exact wording (4 Oct 2026).
+          # The findings register (PyYAML, about a second; Jon, 6 Oct 2026): docs/audits/findings/<slug>.yml, one file per
+          # audited game, each valid against the audits' schema; a fixed entry names its PR, a ruled one its ruling; every
+          # roster-Unlisted game has a file; docs/audits/REGISTER.md equals a fresh regeneration. Self-test: a fixed entry
+          # with no PR, and a stale REGISTER.md, each fail.
           # The search-titles check (stdlib, about a second): every game page's and /resit/'s <title>, meta
           # description and og:/twitter: copies equal what data/games.json generates under Jon's rules of
           # 5 Oct 2026 (titles <= 60, descriptions <= 155, no "Year 6"); edit games.json, run apply-meta.py.
@@ -206,6 +210,7 @@ jobs:
               Content safety (canon SR-14 tiers: no new banned wording, no illness or injury in humour)|python scripts/check-content-safety.py
               Teacher feedback line (on every results screen, played in Chromium; own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
               Search titles (every game page and /resit/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
+              Findings register (every audit finding filed per game, schema valid; fixed entries name their PR; REGISTER.md current)|python scripts/audit-register.py --check --selftest
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any

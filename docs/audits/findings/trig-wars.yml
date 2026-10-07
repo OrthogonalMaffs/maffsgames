@@ -1,0 +1,71 @@
+# Findings register for trig-wars (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: trig-wars
+audited:
+  tranche: 2
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    gcse: generator
+findings:
+- id: trig-wars-t2-001
+  severity: CRITICAL
+  jc: true
+  class: 8
+  level: all
+  where: games/trig-wars/index.html:888-903
+  summary: 'Every hit by either side runs _twHits++, logs correct:true and feeds submitScore: a player who never
+    hit lost 3-0 and submitted 3'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: trig-wars-t2-002
+  severity: HIGH
+  jc: true
+  class: 6
+  level: all
+  where: games/trig-wars/index.html:968
+  summary: 'The trig panel shows Vx = power . cos theta . 0.28 while labelling V as the power: at V = 60, 45 deg
+    it shows Vx = 11.9 beside cos 45 = Vx/V = 0.707'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: trig-wars-t2-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:hit-detection
+  level: all
+  where: games/trig-wars/index.html (hit check)
+  summary: 'Shells that land on a tank miss 9-12% of the time: the ground check runs before the hit check'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct; changes the marking: a possible HIGH, for Project Claude to rule'
+  status: open
+- id: trig-wars-t2-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/trig-wars/index.html (miss advice)
+  summary: The miss advice is backwards above 45 deg
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open
+- id: trig-wars-t2-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/trig-wars/index.html (trig panel)
+  summary: Vx and Vy are labelled 'u/s' but are pixels per frame
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open
+- id: trig-wars-t2-006
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: all
+  where: games/trig-wars/index.html :791, :804, :893
+  summary: 'SR-14 (report: JC): ''Are you... shooting yourself?'', ''nearly did themselves in'', ''WE LOST ONE'',
+    ''DOWN!'''
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open

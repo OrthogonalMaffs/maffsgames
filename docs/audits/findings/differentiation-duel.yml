@@ -1,0 +1,120 @@
+# Findings register for differentiation-duel (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: differentiation-duel
+audited:
+  tranche: 5
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    alevel: 14
+    level4: 14
+findings:
+- id: differentiation-duel-t5-001
+  severity: HIGH
+  jc: false
+  class: 2
+  level: level4
+  where: games/differentiation-duel/index.html:820 (Quotient Rule, e^x/x^2)
+  summary: Wrong option e^x(x-2)/x^3 equals the key (x^2e^x-2xe^x)/x^4
+  evidence: 'SymPy simplify(key - option) = 0; Chromium: clicking it shows WRONG!'
+  status: open
+- id: differentiation-duel-t5-002
+  severity: HIGH
+  jc: false
+  class: 2
+  level: level4
+  where: games/differentiation-duel/index.html:848 (Implicit, e^y = x^2 + 1)
+  summary: 2xe^{-y} is identical to key 2x/e^y, and 2x/(x^2+1) equals it on the curve; 3 of 4 buttons correct
+  evidence: 2x/e^y = 2x e^{-y}; e^y = x^2+1 -> 2x/(x^2+1) = d/dx ln(x^2+1)
+  status: open
+- id: differentiation-duel-t5-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/differentiation-duel/index.html:806 (e^x cos x)
+  summary: Wrong options e^x cos x + e^x sin x and e^x(cos x + sin x) equal (not in B11 ledger)
+  evidence: SymPy difference 0
+  status: open
+- id: differentiation-duel-t5-004
+  severity: MEDIUM
+  jc: true
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/differentiation-duel/index.html:818 (sin x / x)
+  summary: Wrong options cos x/x and x cos x/x^2 equal (not in B11 ledger)
+  evidence: x cos x / x^2 = cos x / x
+  status: open
+- id: differentiation-duel-t5-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/differentiation-duel/index.html:846 (sin y = x)
+  summary: Wrong options cos(y) and cos(y)/1 equal (not in B11 ledger)
+  evidence: cos(y)/1 = cos(y)
+  status: open
+- id: differentiation-duel-t5-006
+  severity: MEDIUM
+  jc: true
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/differentiation-duel/index.html:754 (x^{-2})
+  summary: Wrong options 2x^{-3} and 2/x^3 equal (B11 ledger)
+  evidence: 2x^{-3} = 2/x^3
+  status: open
+- id: differentiation-duel-t5-007
+  severity: MEDIUM
+  jc: true
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/differentiation-duel/index.html:758 (1/x^3)
+  summary: Wrong options -3x^{-2} and -3/x^2 equal (B11 ledger)
+  evidence: -3x^{-2} = -3/x^2
+  status: open
+- id: differentiation-duel-t5-008
+  severity: MEDIUM
+  jc: true
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/differentiation-duel/index.html:834 (x^2 + y^2 = 25)
+  summary: Wrong options x/y and 2x/2y equal (B11 ledger)
+  evidence: 2x/2y = x/y
+  status: open
+- id: differentiation-duel-t5-009
+  severity: MEDIUM
+  jc: true
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/differentiation-duel/index.html:858 (x = e^t, y = e^{2t})
+  summary: Wrong options e^t and e^{2t}/e^t equal (B11 ledger)
+  evidence: e^{2t}/e^t = e^t
+  status: open
+- id: differentiation-duel-t5-010
+  severity: MEDIUM
+  jc: true
+  class: 4
+  level: all
+  where: games/differentiation-duel/index.html:870,877
+  summary: '?level=constructor/__proto__: nonsense badge text, Start throws, game cannot start'
+  evidence: pool = QUESTIONS[LEVEL] || QUESTIONS.alevel takes Object; pageerror 'a is not iterable'
+  status: open
+- id: differentiation-duel-t5-011
+  severity: MEDIUM
+  jc: true
+  class: 4
+  level: all
+  where: games/differentiation-duel/index.html:627,870
+  summary: ?level=nonsense serves alevel but logs and submits under 'nonsense' (stray board)
+  evidence: game_started level 'nonsense'; board differentiation_duel_nonsense matches the rules regex
+  status: open
+- id: differentiation-duel-t5-012
+  severity: LOW
+  jc: true
+  class: NEW:misc cosmetic
+  level: all
+  where: games/differentiation-duel/index.html:563,570,614-626,881,925,950-953,1000-1001
+  summary: '''Finddxdy'' (B7 ledger); visible timer vs hidden in timer-policy; quick reference lacks product/tan/implicit;
+    start text names 3 rules; caret notation in exp; biased sort-shuffle; dd_best shared across levels'
+  evidence: read from source; 390px scrollWidth 390 throughout
+  status: open

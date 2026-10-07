@@ -1,0 +1,215 @@
+# Findings register for angle-ace (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: angle-ace
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: '40'
+    gcse: '35'
+findings:
+- id: angle-ace-r-001
+  severity: HIGH
+  jc: false
+  class: 6
+  level: gcse
+  where: gcse, index.html:563 and index.html:665 (2 questions)
+  summary: 'Question: "Find angle x" (two crossing lines). Options 65, 115, 75, 105 (L563); 43, 137, 47, 133 (L665).
+    Keyed: 65 (reason: angles on a straight line), 43. Picture: the "115°" (resp. "137°") label and the x arc are
+    drawn in the same region, the top angle between the two lines (rays at 17.65° and 153.43° from the vertex; label
+    direction 40°, x arc 55°-155°; for L665 rays 16.7°/163.3°, label 32.5°, arc 55°-170°). Read from the picture,
+    x is the 115° (137°) angle, which is an offered option; nothing drawn shows x adjacent to it on a straight line,
+    although the step text (and L568''s misconception note) says so. Words and key disagree with the picture. Share:
+    2 of 35 gcse.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. '
+  status: fixed
+  pr: 80
+- id: angle-ace-r-002
+  severity: HIGH
+  jc: false
+  class: 6
+  level: gcse
+  where: gcse, index.html:630
+  summary: 'Question: "Find angle x", options 73, 107, 83, 97; keyed 73, reason "Alternate angles are equal"; steps
+    "73° and x are alternate angles".'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Evidence: x''s arc is at (320,240) between the lower
+    parallel line and a third line drawn from (320,240) to (240,100), not the transversal (the transversal runs
+    (200,40)-(380,300)). The 73° label is at the transversal''s crossing of the upper line, above the line. The
+    third line is not parallel to the transversal (drawn angles 60.3° for x against 55.3° for the 73° region), so
+    no angle fact links x to 73°: the question is unanswerable from the figure and the stated alternate pair is
+    not drawn.'
+  status: fixed
+  pr: 80
+- id: angle-ace-r-003
+  severity: HIGH
+  jc: false
+  class: 6
+  level: gcse
+  where: gcse, index.html:638
+  summary: 'Question: "Find angle x in the triangle", options 105, 75, 115, 85; keyed 105 (45° + 30° + x = 180°;
+    reasons alternate then triangle).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. Evidence: the "45°" is printed at (260,100) above the
+    upper parallel line where the only rays are the line itself (0°, 180°) and the third line going down (299.4°):
+    it labels a straight angle, not an angle of any triangle. The x arc is centred at (310,180), 34.5px from the
+    nearest line intersection (323,212), so x marks no vertex. No triangle with angles 45°, 30°, x is drawn. Unanswerable
+    from the figure.'
+  status: fixed
+  pr: 80
+- id: angle-ace-r-004
+  severity: HIGH
+  jc: false
+  class: 6
+  level: year6
+  where: year6 (resit level), index.html:293
+  summary: 'Question: "One angle is 270°. Find angle x." Options 90, 180, 270, 45; keyed 90.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F4. Evidence: rays at 0° and 270°. The "270°" is printed
+    twice (drawAngleValue span 270-360, plus a second fillText at (360,250)), both inside the lower-right quarter,
+    which is drawn as 90°. The x arc is drawn 0°-270°, the reflex angle. The picture labels the right angle 270°
+    and draws x as the reflex angle, so a student reading the picture picks 270 (offered). Key and picture contradict.'
+  status: fixed
+  pr: 79
+- id: angle-ace-r-005
+  severity: HIGH
+  jc: false
+  class: 6
+  level: year6, gcse
+  where: '"co-interior" pairs that are not co-interior: gcse index.html:517, 522, 527, 655, 688; year6 recognition
+    index.html:423, 444, 465 (8 questions)'
+  summary: 'Questions: gcse "Find angle x" keyed 120/105/132/70/55, reason "Co-interior angles sum to 180°"; year6
+    "These angles form a C-shape / U-shape. What type of angle pair is this?" keyed "Co-interior angles (sum to
+    180°)". Share: 5 of 35 gcse, 3 of 40 year6.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F5. Evidence: in every one the given angle''s label is printed
+    above the upper parallel line, right of the transversal (an exterior angle, drawn 127.6°), and the other angle
+    (x, or the 120°/110°/100° arc) is between the lines, left of the transversal (drawn 52.4°). The two angles are
+    on opposite sides of the transversal and one is outside the parallel lines: not co-interior, not a C or U shape
+    (getting from one to the other needs vertically opposite + co-interior, or corresponding + straight line). The
+    numbers are consistent with the drawing (the drawn pair does sum to 180°), but the keyed reason is not the relationship
+    drawn, and in 6 of the 8 the acute/obtuse sizes are swapped (e.g. L517: "60°" on a 127.6° angle, x = 120 drawn
+    52.4°). Year6''s caption text "C-shape"/"U-shape" names a shape the angles do not form.'
+  status: fixed
+  pr:
+  - 79
+  - 80
+- id: angle-ace-r-006
+  severity: HIGH
+  jc: false
+  class: 6
+  level: year6
+  where: year6 recognition, index.html:437
+  summary: 'Question: "These angles form a reverse Z-shape. What type of angle pair is this?" keyed "Alternate angles
+    (equal)"; both angles labelled 48°.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F6. Evidence: transversal (400,40)-(200,300). The upper
+    "48°" is above the upper line, left of the transversal (drawn 127.6°); the lower 48° arc is between the lines,
+    right of the transversal (drawn 52.4°). Opposite sides, one exterior and one interior: not alternate, not corresponding,
+    not co-interior; the drawn pair sums to 180° yet both are labelled 48°.'
+  status: fixed
+  pr: 79
+- id: angle-ace-r-007
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: year6, gcse
+  where: '"alternate" pairs drawn as alternate EXTERIOR angles: gcse index.html:485, 495, 647, 683; year6 recognition
+    index.html:416, 458 (6 questions)'
+  summary: 'Keyed "Alternate angles are equal" / "Z-shape". Evidence: the given label is above the upper line right
+    of the transversal and x (or the second angle) is below the lower line left of it: both outside the parallel
+    lines. They are equal (key values hold), but they are not the Z pair GCSE means by alternate angles, and the
+    drawn angles are obtuse (124.7°-137.1°) while labelled 40°-68°.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F7. '
+  status: fixed
+  pr:
+  - 79
+  - 80
+- id: angle-ace-r-008
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: gcse
+  where: 'label printed on the transversal: gcse index.html:490, 506'
+  summary: 'L490 "Find angle x", options 70, 110, 180, 60, keyed 70 (alternate): the "70°" sits across the transversal
+    at the upper line (label direction 133.8°, boundary 124.7°: just inside the acute upper-left angle). Read as
+    the upper-left angle, x (below the lower line, left) is supplementary to it, giving 110 (offered). L506 keyed
+    65 (corresponding): the "65°" sits exactly on the transversal (direction 127.6° = the ray); read as the upper-right
+    angle, x is supplementary, giving 115 (offered). Ambiguous picture, one reading gives an offered distractor.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F8. '
+  status: fixed
+  pr: 80
+- id: angle-ace-r-009
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: year6, gcse
+  where: 'label value contradicts the drawn size (acute labelled on an obtuse angle, or the reverse); key unaffected.
+    year6: index.html:216 ("120°" on a 47.3° angle, x = 60 drawn 132.7°), 245 ("115°" on 49.8°, x = 65 drawn 130.2°),
+    338/345/359/380/394 (vertically opposite: 50°, 73°, 45°, 67°, 28° printed on a'
+  summary: 'label value contradicts the drawn size (acute labelled on an obtuse angle, or the reverse); key unaffected.
+    year6: index.html:216 ("120°" on a 47.3° angle, x = 60 drawn 132.7°), 245 ("115°" on 49.8°, x = 65 drawn 130.2°),
+    338/345/359/380/394 (vertically opposite: 50°, 73°, 45°, 67°, 28° printed on angles drawn 136°-147°), 409/430/451/472
+    (corresponding: 50°, 65°, 45°, 55° on angles drawn 124.7°-127.6°). gcse: index.html:501, 511, 651 (corresponding
+    50°, 35°, 42° on 121.6°-127.6°), 556, 671 (vertically opposite 48°, 63° on 136.4°, 126.9°), 590 ("90°" printed
+    in the 35.5° corner of the triangle, with no right-angle mark), 625 ("62°" on 132.7°). No diagram says "not
+    drawn accurately"; a student checking "is x acute or obtuse?" is misled.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F9. '
+  status: fixed
+  pr:
+  - 79
+  - 80
+- id: angle-ace-r-010
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: year6
+  where: 'year6, index.html:259: "Two angles on a straight line: one is 60°. Find x." The drawing has a second ray
+    (to (220,50)), so three angles meet on the line and the x arc (60°-180°) spans two of them. Key 120 holds if
+    x is the whole arc; words and picture disagree.'
+  summary: 'year6, index.html:259: "Two angles on a straight line: one is 60°. Find x." The drawing has a second
+    ray (to (220,50)), so three angles meet on the line and the x arc (60°-180°) spans two of them. Key 120 holds
+    if x is the whole arc; words and picture disagree.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F10. '
+  status: fixed
+  pr: 79
+- id: angle-ace-r-011
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: year6
+  where: 'year6, index.html:312: "One angle is 200°. Find angle x." A second "200°" is printed at (250,230), inside
+    x''s region (200°-360°), right beside the x label.'
+  summary: 'year6, index.html:312: "One angle is 200°. Find angle x." A second "200°" is printed at (250,230), inside
+    x''s region (200°-360°), right beside the x label.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F11. '
+  status: fixed
+  pr: 79
+- id: angle-ace-r-012
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: gcse
+  where: 'gcse, index.html:625: "Find angle x (two steps needed)". The y arc (0°-62°) and x arc (62°-180°) meet
+    at 62°, where no line is drawn; the transversal is at 132.7°, and the "x" letter falls on the same side of it
+    as y. The figure does not show x and y as two angles separated by the transversal.'
+  summary: 'gcse, index.html:625: "Find angle x (two steps needed)". The y arc (0°-62°) and x arc (62°-180°) meet
+    at 62°, where no line is drawn; the transversal is at 132.7°, and the "x" letter falls on the same side of it
+    as y. The figure does not show x and y as two angles separated by the transversal.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F12. '
+  status: fixed
+  pr: 80
+- id: angle-ace-r-013
+  severity: MEDIUM
+  jc: false
+  class: NEW:marking-by-structure
+  level: all
+  where: phase 2 marks a valid reason wrong (handlePhase2, index.html:818; reasons drawn at random, 806-809)
+  summary: 'year6 index.html:281 (x = 180, rays at 0°, 100°, 180°): x is the angle on the straight line formed by
+    the 0° and 180° rays, so "Angles on a straight line sum to 180°" is also a valid reason; it is offered with
+    probability 3/8 and marked wrong. year6 index.html:331 (four right angles on two perpendicular lines, x = 90):
+    "Vertically opposite angles are equal" and "Angles on a straight line" are both valid; at least one is offered
+    with probability 36/56 = 64%, marked wrong. gcse index.html:625 and 638 carry `multiReason` (corresponding +
+    straight line; alternate + triangle) but only the single keyed reason is accepted, so the other needed reason,
+    when offered (3/8), is marked wrong. Judgement call for the multi-step pair.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F13. '
+  status: fixed
+  pr:
+  - 79
+  - 80

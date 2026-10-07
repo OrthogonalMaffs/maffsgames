@@ -49,7 +49,22 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-06 (home, night, latest): Jon's rulings on audit tranches 3-6 (20:30); 18 games UNLISTED, BUILD FREEZE in canon (PR 1 of 3)
+## Handover — 2026-10-07 (home, latest): FINDINGS REGISTER (PR 3 of Jon's tranche 3-6 contract); NEXT = contract B
+
+- **#87, #88 merged; #89 fixed #88's verifier flake** (read the page's feedback, never a wrapped `mfg`). Main green.
+- **PR 3 = the findings register.** One file per audited game in `docs/audits/findings/<slug>.yml`. `scripts/audit-register.py`
+  validates them and writes `docs/audits/REGISTER.md`. CI runs it in Tiers 1+2 with `--check --selftest`; `pyyaml` is pinned
+  in `requirements-ci.txt`. Canon §0.4 says how a fix PR closes its entries (status fixed + pr, regenerate).
+  - 78 games, 523 findings: the resit audit (`-r-`), tranches 1-2 converted (`-t1-`, `-t2-`), tranches 3-6 as they are.
+  - Jon's 7 Oct decision: tranche 1's 5 undescribed MEDIUMs are one `class: uncounted` placeholder per game (spot-the-error,
+    word-problem-decoder, probability-paradox). Each is closed by that game's contract F fix PR, which re-audits the game.
+  - Tranche 2's MEDIUM/LOW bullets are classified by the brief's definitions. Nine change the marking and are possible
+    HIGHs (jc: true); the PR lists them for Project Claude.
+  - The builders are kept in `~/.maffsgames-local/register-build/` (not in the repo); from now on the files are edited by hand.
+- **Exit-bar points 3 and 6** are stated in the script (`SHARED_CHECKS_GREEN`, `SWEEP_DONE`). The PR that meets one sets it.
+- **Next: contract B** (Jon pastes it), then C, F (revised, Jon pastes), D, E. Build freeze in force (canon §0.2).
+
+## Handover — 2026-10-06 (home, night): Jon's rulings on audit tranches 3-6 (20:30); 18 games UNLISTED, BUILD FREEZE in canon (PR 1 of 3)
 
 Jon's contract of 6 Oct, 20:30: three PRs in sequence, each merged on a green Gate with main's full run green before
 the next. **PR 1 (this one):** unlist 18 games, canon SR-16 to SR-20 + the freeze. **PR 2:** Like Terms Collector's

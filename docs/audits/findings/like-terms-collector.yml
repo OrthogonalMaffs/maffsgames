@@ -1,0 +1,81 @@
+# Findings register for like-terms-collector (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: like-terms-collector
+audited:
+- tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: '45'
+- tranche: 3
+  head: 4be3342
+  date: 2026-10-06
+  served:
+    year6: 45/45
+findings:
+- id: like-terms-collector-r-001
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: all
+  where: Stage 1, `:253` (picture and words disagree, SR-6)
+  summary: 'Question: "8 🍒 + 1 🍒 + 6 🪣 + 4 🪣", input boxes labelled "cherries" and "plums". The second emoji is
+    `🪣` = U+1FAA3 **BUCKET**, not a plum (Unicode has no plum emoji). Students see buckets under a box labelled
+    "plums". The keys (9, 10) are right for the counts shown. U+1FAA3 is Unicode 13 (2020), so older school devices
+    may show an empty box instead.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Share affected: 1 of 5 Stage 1 questions.'
+  status: open
+- id: like-terms-collector-r-002
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: all
+  where: Stage 1, `:252` (picture and words disagree, SR-6)
+  summary: 'Question: "4 🍋 + 3 🍋 + 5 🥝 + 2 🥝", boxes labelled "lemons" and "limes". The second emoji is U+1F95D
+    **KIWIFRUIT**, not a lime. The keys (7, 7) are right for the counts shown.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Share affected: 1 of 5 Stage 1 questions.'
+  status: open
+- id: like-terms-collector-t3-001
+  severity: CRITICAL
+  jc: true
+  class: 7
+  level: year6
+  where: games/like-terms-collector/index.html:416 (checkInputAnswer)
+  summary: 'Stage 1-2 typed answers marked by parseInt: decimal entries truncated, so a wrong answer is marked right
+    on all 15 typed items (33% of the level)'
+  evidence: 'Item 1 key [8,6]: typed 8.9 and 6.5 in type=number inputs -> question_answered correct:true (reproduced
+    twice); all 15 items accept decimals, run 45/45, submitScore(...,45,45)'
+  status: fixed
+  pr: 88
+- id: like-terms-collector-t3-002
+  severity: HIGH
+  jc: true
+  class: 1
+  level: year6
+  where: games/like-terms-collector/index.html:187,195 (continueToNextStage :538, continueStage3 :529)
+  summary: 'Double-click on Continue or Keep going: the second click answers Q16/Q26/Q36 with whichever option is
+    under the pointer'
+  evidence: '390x844: Q16 arrived answered ''3a + b'' (wrong), Q26 ''6m + 4n'' (wrong), Q36 ''4x + 2y'' (wrong);
+    all-correct script finished 43/45; also at 1280x800'
+  status: open
+- id: like-terms-collector-t3-003
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: year6
+  where: games/like-terms-collector/index.html:253-254 (Stage 1 items 3, 4)
+  summary: 'Fruit pictures do not match labels: ''limes'' drawn as U+1F95D kiwifruit, ''plums'' as U+1FAA3 bucket'
+  evidence: Source surrogate escapes decode to U+1F95D KIWIFRUIT (🥝) and U+1FAA3 BUCKET (🪣); keys (7,7) and (9,10)
+    correct
+  status: open
+- id: like-terms-collector-t3-004
+  severity: LOW
+  jc: true
+  class: NEW:board-mixes-session-lengths
+  level: year6
+  where: games/like-terms-collector/index.html:394,317 and showResults
+  summary: 'Bundle: Stage 3 card has no ''Simplify'' instruction; ''5x'' in a number box is a silent no-op; same
+    45 questions in the same order every session; 25/35/45 bank-out runs share one board (intended); a11y key mfg_dyslexia
+    not mfg_accessible'
+  evidence: Read in source; checked in Chromium
+  status: open

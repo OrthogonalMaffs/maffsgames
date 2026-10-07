@@ -1,0 +1,94 @@
+# Findings register for core-maths-paper2c (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: core-maths-paper2c
+audited:
+  tranche: 4
+  head: fc20f8c
+  date: '2026-10-06'
+  served:
+    core: 36
+findings:
+- id: core-maths-paper2c-t4-001
+  severity: HIGH
+  jc: true
+  class: '1'
+  level: core
+  where: games/core-maths-paper2c/index.html:531
+  summary: A double-tap on Next answers the next question unseen
+  evidence: 'No guard on nextQuestion; options live at once. 375x667: 16 of 36 answered by the second tap, all recorded
+    wrong.'
+  status: open
+- id: core-maths-paper2c-t4-002
+  severity: HIGH
+  jc: true
+  class: '2'
+  level: core
+  where: games/core-maths-paper2c/index.html:270 (Q12)
+  summary: Minimum of f between (2,7) and (6,7) keyed 4 'by symmetry'; f is not said to be quadratic, so 3 and 5
+    are possible
+  evidence: Stem never states symmetry.
+  status: open
+- id: core-maths-paper2c-t4-003
+  severity: HIGH
+  jc: true
+  class: '2'
+  level: core
+  where: games/core-maths-paper2c/index.html:435 (Q35)
+  summary: Option D 'Yes - but only when k > 0' is a true statement marked wrong
+  evidence: A doubling time exists only for growth.
+  status: open
+- id: core-maths-paper2c-t4-004
+  severity: MEDIUM
+  jc: false
+  class: '5'
+  level: core
+  where: games/core-maths-paper2c/index.html
+  summary: 36 questions (paper format)
+  evidence: Report only.
+  status: open
+- id: core-maths-paper2c-t4-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:options-unshuffled
+  level: core
+  where: games/core-maths-paper2c/index.html:497-504
+  summary: Options never shuffled; key B on 20 of 36
+  evidence: A 3, C 12, D 1.
+  status: open
+- id: core-maths-paper2c-t4-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: core
+  where: games/core-maths-paper2c/index.html:18-19,377
+  summary: Raw notation (3^4.2, e^(kt)) with KaTeX loaded and never called
+  evidence: Listed in docs/audit-katex-wrappers.md:560.
+  status: open
+- id: core-maths-paper2c-t4-007
+  severity: MEDIUM
+  jc: true
+  class: '6'
+  level: core
+  where: games/core-maths-paper2c/index.html:197 (Q2)
+  summary: Option says 'Extrapolating 150 years ahead'; the stem gives no base year
+  evidence: Marking unaffected.
+  status: open
+- id: core-maths-paper2c-t4-008
+  severity: MEDIUM
+  jc: true
+  class: NEW:precision-not-stated
+  level: core
+  where: games/core-maths-paper2c/index.html:291,412,419 (Q15, Q32, Q33)
+  summary: Precision or 'first whole t' not stated
+  evidence: Q15 exact 7.81, key t = 8; Q32 23.1 with integer options; Q33 7.8.
+  status: open
+- id: core-maths-paper2c-t4-009
+  severity: LOW
+  jc: false
+  class: '1'
+  level: core
+  where: games/core-maths-paper2c/index.html:149-150,491
+  summary: Next below the fold at 375x667; literal '\u2192' rendered in signposts; two Enters in one frame skip;
+    renderSVG undefined (dead code); Q2 and Q36 test the same point
+  evidence: Agent's evidence.
+  status: open

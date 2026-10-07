@@ -1,0 +1,57 @@
+# Findings register for prime-factorisation (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: prime-factorisation
+audited:
+- tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: '20'
+    ks3: '28'
+    gcse: '28'
+- tranche: 3
+  head: 4be3342
+  date: 2026-10-06
+  served:
+    all: 8/28
+    year6: 8/20
+findings:
+- id: prime-factorisation-t3-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:board-key-mismatch
+  level: all
+  where: games/prime-factorisation/index.html:213,408
+  summary: Non-year6 play (incl. the portal's ?level=ks3 card) submits to board 'all', which the hub registry [year6,ks3,gcse]
+    (leaderboards/index.html:191) never shows; the coverage check misses it because the level is a variable
+  evidence: 'Chromium ?level=ks3: submitScore(''prime-factorisation'',''all'',1700,8)'
+  status: open
+- id: prime-factorisation-t3-002
+  severity: MEDIUM
+  jc: false
+  class: 5
+  level: all
+  where: games/prime-factorisation/index.html:208 (NUMBERS_DEFAULT)
+  summary: Default level (ks3/gcse/none) serves 28 distinct targets, 8 per session
+  evidence: NUMBERS_DEFAULT.length = 28; all factorise over buttons 2..13 (SymPy factorint)
+  status: open
+- id: prime-factorisation-t3-003
+  severity: MEDIUM
+  jc: false
+  class: 5
+  level: year6
+  where: games/prime-factorisation/index.html:209 (NUMBERS_YEAR6)
+  summary: Year 6 level serves 20 distinct targets, 8 per session
+  evidence: NUMBERS_YEAR6.length = 20, all distinct
+  status: open
+- id: prime-factorisation-t3-004
+  severity: LOW
+  jc: true
+  class: 8
+  level: all
+  where: games/prime-factorisation/index.html:145,207,213,226,334,345,406
+  summary: Silent fallback to 'all' (class 4); a wrong tap still earns the item's full 200 (only -50 life bonus);
+    question_answered only ever correct:true; game over submits 0/0 runs; visible Time contradicts timer policy;
+    Dismiss lands on later feedback; biased shuffle; no index form
+  evidence: 'Chromium: 1 wrong tap + 8 solved = 1600 + 2x50 = 1700; zero-life run submitted [''prime-factorisation'',''all'',0,0]'
+  status: open

@@ -1,0 +1,78 @@
+# Findings register for complex-converter (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: complex-converter
+audited:
+  tranche: 6
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    further: 20
+    level4: 20
+findings:
+- id: complex-converter-t6-001
+  severity: HIGH
+  jc: false
+  class: 2
+  level: all
+  where: games/complex-converter/index.html:331 (id 21)
+  summary: 3 − 4j keyed 5∠−53.13°; 5∠306.87° is the same number and is marked wrong; no angle range stated
+  evidence: −53.13 + 360 = 306.87; context 'Find polar form.' (ids 20, 28, 53 say 'positive angle')
+  status: open
+- id: complex-converter-t6-002
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: all
+  where: games/complex-converter/index.html:350 (id 40)
+  summary: −8e^{jπ/2} equals 8∠−90° but is a wrong option; form requires r>0 unstated
+  evidence: −8(cos90°+j sin90°) = −8j = 8∠−90°
+  status: open
+- id: complex-converter-t6-003
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: all
+  where: games/complex-converter/index.html:358 (id 48)
+  summary: −6e^{jπ/2} equals −6j but is a wrong option
+  evidence: −6·j = −6j
+  status: open
+- id: complex-converter-t6-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:precision unstated (SR-1)
+  level: all
+  where: games/complex-converter/index.html:311-365
+  summary: Angles keyed to 2 d.p. (deg) and 3 d.p. (rad) with no precision stated
+  evidence: ids 1, 2, 4, 6, 13, 16, 19, 20, 21, 31, 34, 45, 50, 53
+  status: open
+- id: complex-converter-t6-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:hand-typed explanation figure
+  level: all
+  where: games/complex-converter/index.html:381, :385, :387, :392, :394 (CALC_HINTS)
+  summary: Six calculator-hint results are wrong (all on distractor key sequences)
+  evidence: id 55 10tan(4π/3)=17.32 shown 1.73; id 3 6.67 shown 6.65; id 5 6.66 shown 6.65; id 34 0.745/0.367 shown
+    0.747/0.368; id 53 25.20 shown 25.21
+  status: open
+- id: complex-converter-t6-006
+  severity: MEDIUM
+  jc: false
+  class: 4
+  level: all
+  where: games/complex-converter/index.html:300, :397
+  summary: Unknown ?level submits to a new board under that name; constructor/__proto__ crash every mode
+  evidence: '?level=nonsense: i-notation, ''Further Maths'' pill, submitScore(''complex-converter'',''nonsense'',2000,20);
+    constructor: ''arr is not iterable'''
+  status: open
+- id: complex-converter-t6-007
+  severity: LOW
+  jc: true
+  class: 6
+  level: all
+  where: games/complex-converter/index.html:325, :441-455, :728-757, :180, :936
+  summary: id 15 offers 3∠π/6 against '(degrees)'; Further shows engineering context; Triples shows rounded values
+    as exact and hides column headers on phones; back link overlaps title; Sniper scale reveals magnitude; arc clockwise
+    on positive-angle items; 'Sniper/Shot' framing (SR-14 JC)
+  evidence: screenshot at 390px; drawArgand range = 1.4·max(|re|,|im|)
+  status: open

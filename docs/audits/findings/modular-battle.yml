@@ -1,0 +1,47 @@
+# Findings register for modular-battle (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: modular-battle
+audited:
+  tranche: 4
+  head: fc20f8c
+  date: '2026-10-06'
+  served:
+    gcse: 408
+findings:
+- id: modular-battle-t4-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: gcse
+  where: games/modular-battle/index.html:119,126,133,163,322
+  summary: Says 60 seconds (start text, button, initial timer, portal card); runs 90
+  evidence: timeLeft = 90 at :163 and :322.
+  status: open
+- id: modular-battle-t4-002
+  severity: MEDIUM
+  jc: true
+  class: '4'
+  level: alevel
+  where: index.html:1943
+  summary: Card data-levels 'gcse alevel' lists it at A-Level; there is no A-Level content and ?level= is ignored
+  evidence: Every URL fires game_started level 'gcse'.
+  status: open
+- id: modular-battle-t4-003
+  severity: MEDIUM
+  jc: true
+  class: '6'
+  level: gcse
+  where: spec-map/index.html:161
+  summary: Spec map lists it as N5 'Modular arithmetic'; DfE N5 is the product rule for counting
+  evidence: data/dfe-gcse-parts.json ref N5.
+  status: open
+- id: modular-battle-t4-004
+  severity: LOW
+  jc: true
+  class: NEW:scaffold-pre-announces
+  level: gcse
+  where: games/modular-battle/index.html:244-257,313,349
+  summary: Scaffold's red leftover and 'nothing left over' label give the answer while shown; uncancelled setTimeout(loadQuestion,1200)
+    can swap the first question after TRY AGAIN; game_completed sends accuracy
+  evidence: All 408 outcomes' keys, options and dot grids correct.
+  status: open

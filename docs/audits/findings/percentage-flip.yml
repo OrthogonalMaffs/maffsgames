@@ -1,0 +1,29 @@
+# Findings register for percentage-flip (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: percentage-flip
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: '20'
+    default: '12'
+findings:
+- id: percentage-flip-r-001
+  severity: MEDIUM
+  jc: false
+  class: 1
+  level: all
+  where: all levels, index.html:299-303 (`checkAnswer` timers and `skipQ`)
+  summary: 'What happens: after CHECK, the game schedules an auto-flip at 1.5 s and an advance at 3 s (:299-300).
+    SKIP stays live during that feedback window, and `skipQ()` (:303) does not check `answered`. If the student
+    presses SKIP while the feedback shows, the next question loads at once. 1.5 s later the old auto-flip fires
+    on the **new** question''s card: it reveals the answer and marks it wrong with nothing typed, logging `question_answered
+    correct:false`. The two pending advances then skip one more question unseen.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence (skip_race.py, year6): Q1 "What is 50% of 80?"
+    was answered 40 → correct. Pressing SKIP 0.3 s later showed "What is 25% of 120?", and 1.4 s after that its
+    feedback read "Answer was 30". Events: [{q1 correct:true}, {q2 correct:false}]. qNum went 0 → 3 in 4.2 s, so
+    Q2 was marked wrong unanswered and Q3 was never shown. The same double advance (without the auto-mark) follows
+    SKIP after a card-tap answer (:276). Share affected: any question where the student presses SKIP during feedback.
+    This needs a student action; it is not tied to particular questions.'
+  status: open

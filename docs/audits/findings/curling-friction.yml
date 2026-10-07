@@ -1,0 +1,75 @@
+# Findings register for curling-friction (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: curling-friction
+audited:
+  tranche: 5
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    alevel: 20
+    level4: 20
+findings:
+- id: curling-friction-t5-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: alevel
+  where: games/curling-friction/index.html:169
+  summary: Initial speed keyed √4.96 = 2.23 (g dropped); correct √13.6 = 3.69 not offered
+  evidence: u² = 2² + 2(0.04×10)(12) = 13.6 -> 3.688
+  status: open
+- id: curling-friction-t5-002
+  severity: HIGH
+  jc: false
+  class: 2
+  level: level4
+  where: games/curling-friction/index.html:217
+  summary: Asks the hammer's speed; key −4 m/s, the true speed '4 m/s' is marked wrong
+  evidence: v1 = (2−6)/8 × 8 = −4 -> speed 4
+  status: open
+- id: curling-friction-t5-003
+  severity: HIGH
+  jc: false
+  class: 1
+  level: all
+  where: games/curling-friction/index.html:281-290, 292
+  summary: 'No answered guard: Enter re-marks, re-scores, skips questions and submits repeatedly'
+  evidence: 'wrong then Enter x2: 3 question_answered, score 0->189; Enter x4 on Q20: submitScore x4'
+  status: open
+- id: curling-friction-t5-004
+  severity: MEDIUM
+  jc: true
+  class: 4
+  level: all
+  where: games/curling-friction/index.html:240
+  summary: ?level=constructor/__proto__ throw on Start; nonsense silently falls back to alevel
+  evidence: pageerror 'QUESTIONS[level] is not iterable'
+  status: open
+- id: curling-friction-t5-005
+  severity: MEDIUM
+  jc: false
+  class: 5
+  level: level4
+  where: games/curling-friction/index.html:208-230
+  summary: level4 pool 20 (ledger B4)
+  evidence: 20 items
+  status: open
+- id: curling-friction-t5-006
+  severity: MEDIUM
+  jc: true
+  class: NEW:static friction wording
+  level: alevel
+  where: games/curling-friction/index.html:147
+  summary: 'Stone ''sits on ice'' with no applied force: friction is 0; key 7.84 N is limiting friction'
+  evidence: μR = 0.04 × 196 = 7.84 is a maximum
+  status: open
+- id: curling-friction-t5-007
+  severity: LOW
+  jc: false
+  class: 6
+  level: all
+  where: games/curling-friction/index.html:244-259, 202, 294-316
+  summary: Stone animation not from the data (70% if right, 45% if wrong); :202 key wording; hand-rolled wrong-answer
+    panel with no MaffsNext floor (class 11 note)
+  evidence: animateStone uses only correct/cat
+  status: open

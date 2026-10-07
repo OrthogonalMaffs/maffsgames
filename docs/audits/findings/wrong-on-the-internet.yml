@@ -1,0 +1,72 @@
+# Findings register for wrong-on-the-internet (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: wrong-on-the-internet
+audited:
+  tranche: 2
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    gcse: '20'
+    core: '10'
+    ks3: '15'
+findings:
+- id: wrong-on-the-internet-t2-001
+  severity: HIGH
+  jc: true
+  class: NEW:convention-unstated
+  level: gcse
+  where: games/wrong-on-the-internet/index.html:458-461 (gcse_004)
+  summary: Keyed 18/38 (American wheel); a UK or European wheel gives 18/37, so the distractor 'Depends on wheel'
+    is correct
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. SR-17: wheel type stated'
+  status: open
+- id: wrong-on-the-internet-t2-002
+  severity: HIGH
+  jc: true
+  class: NEW:convention-unstated
+  level: gcse
+  where: games/wrong-on-the-internet/index.html:537 (gcse_011)
+  summary: Keyed '0.12 (if independent)' but the post never says A and B are independent, so 'Need more information'
+    is correct; the stage-2 key's 'Addition gives P(A OR B)' is false unless mutually exclusive
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: wrong-on-the-internet-t2-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/wrong-on-the-internet/index.html (banner)
+  summary: The banner always says "they're wrong", including on 4 items where the poster is right
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open
+- id: wrong-on-the-internet-t2-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse, ks3
+  where: games/wrong-on-the-internet/index.html (gcse_009, ks3_012, ks3_010)
+  summary: Wrong or contradictory reasoning text
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open
+- id: wrong-on-the-internet-t2-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:notation-puzzle
+  level: gcse
+  where: games/wrong-on-the-internet/index.html (gcse_001)
+  summary: 'Keys 6/2(1+2) = 9 (report: JC); SR-17 removes notation puzzles'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct; changes the marking: a possible HIGH, for Project Claude to rule'
+  status: open
+- id: wrong-on-the-internet-t2-006
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: core
+  where: games/wrong-on-the-internet/index.html (core_006)
+  summary: '''humans can''t survive'' in a jokey key (SR-14; report: JC)'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open

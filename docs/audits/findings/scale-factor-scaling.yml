@@ -1,0 +1,22 @@
+# Findings register for scale-factor-scaling (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: scale-factor-scaling
+audited:
+  tranche: 1
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    gcse: '38'
+    alevel: '46'
+    level4: '31'
+findings:
+- id: scale-factor-scaling-t1-001
+  severity: HIGH
+  jc: false
+  class: NEW:ill-posed wording
+  level: alevel, level4
+  where: games/scale-factor-scaling/index.html:165
+  summary: '''Paint covers 10 m^2 per litre. If dimensions double, how many litres?'' gives no original area or
+    amount, so it cannot be answered; the key ''4 litres per 10 m^2'' contradicts the stem''s own rate'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2'
+  status: open

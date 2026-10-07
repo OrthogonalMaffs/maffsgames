@@ -1,0 +1,100 @@
+# Findings register for equation-builder (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: equation-builder
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    ks3: '40'
+    gcse: '40'
+    level4: '40'
+findings:
+- id: equation-builder-r-001
+  severity: CRITICAL
+  jc: false
+  class: NEW:marking-by-structure
+  level: all
+  where: 'all levels, assembly questions: an equally correct arrangement of the same tiles is marked wrong, because
+    marking is slot-by-slot string equality (line 513). Each question below has a correct answer the student can
+    build that is not the keyed one (evidence: `hits.json`, class REORDER = both sides eq'
+  summary: 'ks3 (9 of 40, 22%): ks3_001 l.217 key `C = 2.50m + 3`, also `C = 3 + 2.50m`; ks3_003 l.219 `T = 45h
+    + 60` / `T = 60 + 45h`; ks3_004 l.220 `S = e + (e−4) + 3e` / 5 other orders; ks3_005 l.221 `P = 2(2w + 15) +
+    2w` / `P = 2w + 2(2w + 15)`; ks3_006 l.222 `S = 2n + 18` / `S = 18 + 2n`; **ks3_007 l.223 `A = P ÷ 5` / `A =
+    2P ÷ 10`** (Amy''s 2 shares of 10, the more natural form, both tiles on offer); ks3_012 l.228 `s + 2s + (s+30)
+    = 180` / 5 other orders; **ks3_013 l.229 `M = 48 − ¾×48` / `M = 48 − 36`** (36 is a tile and is ¾ of 48); ks3_016
+    l.232 `F = 4.50 × 2(l+w)` / `F = 2(l+w) × 4.50`. gcse (12 of 40, 30%): gcse_002 l.260 `A = 1.035ⁿ × P`; gcse_003
+    l.261 `4t + 5p = 167`; gcse_004 l.262 `t + p = 33.75`; gcse_006 l.264 `1.8² + h² = 6²`; gcse_009 l.267 `(5x−18)
+    + (3x+10) = 180`; gcse_010 l.268 `P = 4/9 × 5/10`; gcse_012 l.270 `T = 40/32 + 1.5/2`; **gcse_014 l.272 `V =
+    50 ÷ (8/12)³`** (equal value) and `V = (12/8)³ × 50`; gcse_015 l.273 `(2m+3) + m = 39`; gcse_017 l.275 `A =
+    3.65 × 4.85`; **gcse_018 l.276 `m = (85−40) ÷ (5−20)`** (= −3, both tiles offered); **gcse_024 l.282 `P = 2×0.3
+    − 0.3²`** (= 0.51, P(A or B)). level4 (8 of 40, 20%): l4_001 l.301 e.g. `dy/dx = 2 − 10x + 12x²`; l4_002 l.302
+    `s = c + t² + t³` (5 orders); l4_005 l.305 `kt = ln(P₀) − ln(P₀/2)` (= ln 2); l4_006 l.306 `dy/dx = 6x × 5(3x²+1)⁴`;
+    l4_007 l.307 `dy/dx = 2x·sin(x) + x²cos(x)` (the usual order); l4_010 l.310 `B/(x−2) + A/(x+1)`; l4_016 l.316
+    `10x² + 5x + 1` (5 orders); l4_017 l.317 `x + x⁵/5! − x³/3!` (3 orders).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Share affected: 29 of 120 questions (ks3 22%, gcse 30%,
+    level4 20%); in each, only the students who choose another order are hit. A student marked wrong is shown the
+    key''s order on retry, so the game teaches that `3 + 2.50m` is wrong.'
+  status: fixed
+  pr: 49
+- id: equation-builder-r-002
+  severity: HIGH
+  jc: false
+  class: 3
+  level: gcse
+  where: 'gcse, line 271 (gcse_013): wrong key.'
+  summary: 'Question: "OABC is a parallelogram where OA = a and OC = c. M is the midpoint of BC. Write the expression
+    for the vector OM." Tiles: OM, =, a, +, ½c, −, ×, a+c, ÷, 2c (5 slots). Keyed answer: `OM = a + ½c`. Correct
+    answer: `OM = c + ½a` (½a + c).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Evidence: OABC in order, so OB = a + c and CB = OA =
+    a; M is the midpoint of BC, so OM = OC + ½CB = c + ½a. `a + ½c` is the midpoint of AB. The correct answer cannot
+    be built from the tiles (no ½a tile). Share affected: 1 of 40 gcse questions.'
+  status: fixed
+  pr: 49
+- id: equation-builder-r-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:marking-by-structure
+  level: all
+  where: 'questions that say "Write the equation (to find ...)" rather than "a formula for X": an equivalent rearranged
+    equation is marked wrong. Examples: ks3_020 l.236 key `3V ÷ 8 = 360`, also `3V = 360 × 8`; gcse_006 l.264 `h²
+    = 6² − 1.8²`; gcse_007 l.265 key `tan34° = 80 ÷ d`, also `d = 80 ÷ tan34°` (lite'
+  summary: 'questions that say "Write the equation (to find ...)" rather than "a formula for X": an equivalent rearranged
+    equation is marked wrong. Examples: ks3_020 l.236 key `3V ÷ 8 = 360`, also `3V = 360 × 8`; gcse_006 l.264 `h²
+    = 6² − 1.8²`; gcse_007 l.265 key `tan34° = 80 ÷ d`, also `d = 80 ÷ tan34°` (literally "the equation to find
+    d"); gcse_008 l.266 `T × 3×10⁸ = 4.013×10¹⁶`; gcse_016 l.274 `2x² = 15 + 3`; gcse_021/022 l.279-280 `40²+55²
+    − 70² = 2×40×55×cosC`; l4_005 l.305 `kt + ln(P₀) = ln(2P₀)`. Side swaps (`360 = 3V ÷ 8`, `76.50 = 0.9P`, `0
+    = (3−λ)(4−λ) − 2`) are also marked wrong (58 of the 110 machine-checked questions offer one). Counts per question
+    are in `enum.out` (EQUIV / SWAP lines).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. '
+  status: fixed
+  pr: 49
+- id: equation-builder-r-004
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: level4
+  where: 'level4, line 324 (l4_023): "Write the sum 1 + 4 + 9 + 16 + 25 in sigma notation." Key `Σ r² r=1 to 5`;
+    the tiles also build `Σ r² r=0 to 5`, whose value is the same 55 (the r = 0 term is 0), marked wrong. Whether
+    the extra zero term counts as wrong is a ruling.'
+  summary: 'level4, line 324 (l4_023): "Write the sum 1 + 4 + 9 + 16 + 25 in sigma notation." Key `Σ r² r=1 to 5`;
+    the tiles also build `Σ r² r=0 to 5`, whose value is the same 55 (the r = 0 term is 0), marked wrong. Whether
+    the extra zero term counts as wrong is a ruling.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F4. '
+  status: fixed
+  pr: 49
+- id: equation-builder-r-005
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: gcse
+  where: 'gcse, line 268 (gcse_010): the distractor tiles 5/9 and 4/10 build `P = 5/9 × 4/10`, which equals the
+    key 5/10 × 4/9 = 2/9 in value but is the wrong method; marked wrong. A value-equal distractor arrangement (canon
+    7.1 sense). Similar LOW cases: l4_004 l.304 `det(A) = 3×1 + 2×1` (= 5, equal to 2×4 −'
+  summary: 'gcse, line 268 (gcse_010): the distractor tiles 5/9 and 4/10 build `P = 5/9 × 4/10`, which equals the
+    key 5/10 × 4/9 = 2/9 in value but is the wrong method; marked wrong. A value-equal distractor arrangement (canon
+    7.1 sense). Similar LOW cases: l4_004 l.304 `det(A) = 3×1 + 2×1` (= 5, equal to 2×4 − 3×1 by coincidence); l4_012
+    l.312 `|z| = √18 + √(−9+9)`.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F5. '
+  status: fixed
+  pr: 49

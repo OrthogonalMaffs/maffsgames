@@ -1,0 +1,30 @@
+# Findings register for core-maths-paper2b (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: core-maths-paper2b
+audited:
+  tranche: 2
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    core: '36'
+findings:
+- id: core-maths-paper2b-t2-001
+  severity: HIGH
+  jc: true
+  class: 2
+  level: core
+  where: games/core-maths-paper2b/index.html:383-387 (Q28)
+  summary: Option D 'Data breach - larger potential loss' picks the same policy as the key, for the risk-aversion
+    reason Q27 and Q34 teach
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: core-maths-paper2b-t2-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:convention-unstated
+  level: core
+  where: games/core-maths-paper2b/index.html (Q23)
+  summary: Monty Hall never says the host knows where the car is (SR-17)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct; changes the marking: a possible HIGH, for Project Claude to rule'
+  status: open

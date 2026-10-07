@@ -1,0 +1,62 @@
+# Findings register for constructions-lab (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: constructions-lab
+audited:
+  tranche: 3
+  head: 4be3342
+  date: 2026-10-06
+  served:
+    all: 10/10
+    ks3: 10/10
+    gcse: 10/10
+findings:
+- id: constructions-lab-t3-001
+  severity: MEDIUM
+  jc: true
+  class: NEW:no-construction-check
+  level: all
+  where: 'games/constructions-lab/index.html:149 (all 10 tasks; #feedback at :151 never written)'
+  summary: No task checks the construction; correct and wrong constructions get identical (no) feedback
+  evidence: 'Task 0: textbook arcs r=200 + snapped intersections + ruler line; line by eye with no arcs; arcs r=100
+    < AB/2: all three leave #feedback display none; nothing in the source writes #feedback'
+  status: open
+- id: constructions-lab-t3-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:snap-misses-given-geometry
+  level: all
+  where: games/constructions-lab/index.html:381 (snapToIntersection; tutorial claim :160)
+  summary: Snap ignores given lines and points (A, B, P, V), so 'mark where the arc crosses the line' steps in tasks
+    1-4 and 8 and compass-at-A are hand-placed
+  evidence: 'Task 1: tap at (255,352) stays (254.5,351.8), true crossing (250,350); task 4: compass tap at (153,348)
+    not snapped to A (150,350); at 390, 1 CSS px = 1.97 canvas px'
+  status: open
+- id: constructions-lab-t3-003
+  severity: MEDIUM
+  jc: true
+  class: 5
+  level: all
+  where: games/constructions-lab/index.html:192 (TASKS)
+  summary: 10 tasks at every level (labelled a learning tool); no ?level handling, same set for ks3/gcse/any query
+  evidence: 10 task cards for '', ks3, gcse, constructor, __proto__, nonsense; no errors
+  status: open
+- id: constructions-lab-t3-004
+  severity: MEDIUM
+  jc: true
+  class: NEW:locus-segment-ends
+  level: all
+  where: games/constructions-lab/index.html:229 (task 9; task 6 at :217)
+  summary: Task 9 draws a segment with visible ends but states the locus is only two parallel lines and gives no
+    construction method; task 6 says measure 120px by 'grid lines' that are 50px dots
+  evidence: Segment drawn x=100..600 on a 700 canvas, ends visible at 390; the ruler has no scale
+  status: open
+- id: constructions-lab-t3-005
+  severity: LOW
+  jc: false
+  class: NEW:minor-text-ui
+  level: all
+  where: games/constructions-lab/index.html:199,203,225,454 (+ toolbar CSS :56,:71)
+  summary: Task 8 calls rays 'lines'; tasks 1-2 omit radius > half PQ/XY; buttons 31/26px tall at 390; canvas labels
+    ~7 CSS px at 390; 'video coming soon' on all tasks; analytics level hard-coded 'gcse' and abandon on every exit
+  evidence: Measured in Chromium at 390x844 touch; :454 read at source
+  status: open

@@ -1,0 +1,178 @@
+# Findings register for factor-theorem (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: factor-theorem
+audited:
+  tranche: 5
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    alevel: practice 40 + test 10
+    level4: practice 40 + test 10 (identical, logged alevel)
+findings:
+- id: factor-theorem-t5-001
+  severity: CRITICAL
+  jc: false
+  class: NEW:order-insensitive positional blanks
+  level: all
+  where: games/factor-theorem/index.html:876-880 (practice Q4,Q6,Q7,Q9,Q11,Q12,Q14,Q15,Q16,Q17,Q18,Q19,Q20)
+  summary: 'Comma blanks matched with every/includes, ignoring position: 13/40 practice items accept wrong answers'
+  evidence: Q6 '(x − ___)(x + ___)' key '3, 2'; '2, 3' -> (x-2)(x+3) = x²+x-6 ≠ x²-x-6, full marks (Chromium); Q11
+    '4, 9' accepted for '4, 4'; Q16 'a=1,b=4' accepted (a=4,b=1)
+  status: open
+- id: factor-theorem-t5-002
+  severity: CRITICAL
+  jc: false
+  class: 7
+  level: all
+  where: games/factor-theorem/index.html:873,982,1094 (practice Q4,Q6,Q7,Q21-Q40; test T1,T3-T10)
+  summary: Exact-string marking of typed algebra rejects correct equivalent forms (factor/root order, ^2 vs ², Greek
+    letters, 'x=' after an 'x =' label)
+  evidence: 'Chromium: Q21 ''(x-2)(x-3)(x+4)'' wrong; Q29 ''x=-3, x=1, x=2'' wrong; Q4 ''x^2'' wrong (key ''x²'');
+    T1 ''(x+1)(x+1)(x-2)'' wrong. 23/40 practice, 9/10 test'
+  status: open
+- id: factor-theorem-t5-003
+  severity: HIGH
+  jc: false
+  class: 3
+  level: all
+  where: games/factor-theorem/index.html:551 (T4(b))
+  summary: Key (x-3)(x+7)(x-2) is not p(x) = x³-23x+42; true (x-3)(x²+3x-14), no integer factorisation
+  evidence: p(3)=0, p(1)=20 -> a=-23, b=42 (SymPy); key expands to x³+2x²-29x+42; p(2)=4; disc 65
+  status: open
+- id: factor-theorem-t5-004
+  severity: HIGH
+  jc: false
+  class: NEW:unmarkable free text
+  level: all
+  where: games/factor-theorem/index.html:511 (practice Q33)
+  summary: Proof question marked by exact string 'f(2) = 2^n - 2^n = 0'
+  evidence: 'Chromium: ''(x-2) is a factor since f(2)=2^n-2^n=0'' marked wrong'
+  status: open
+- id: factor-theorem-t5-005
+  severity: HIGH
+  jc: false
+  class: NEW:unmarkable free text
+  level: all
+  where: games/factor-theorem/index.html:578 (T9(c))
+  summary: '''Interpret physically'' marked by exact string ''object crosses origin at t=2, 3, 4'''
+  evidence: any other wording fails userVal === expected (:1094)
+  status: open
+- id: factor-theorem-t5-006
+  severity: HIGH
+  jc: true
+  class: NEW:key-ask mismatch
+  level: all
+  where: games/factor-theorem/index.html:483-484 (practice Q24)
+  summary: Asks 'factorise and state all roots'; key is the factorisation only
+  evidence: finalAnswer '(x-1)(x+1)(x+2)'; roots 1, -1, -2
+  status: open
+- id: factor-theorem-t5-007
+  severity: HIGH
+  jc: true
+  class: NEW:key-ask mismatch
+  level: all
+  where: games/factor-theorem/index.html:520-521 (practice Q38)
+  summary: Asks 'fully factorise and solve f(x)=0'; key is the factorisation only
+  evidence: finalAnswer '(x-1)(x-3)(x+4)'; roots 1, 3, -4
+  status: open
+- id: factor-theorem-t5-008
+  severity: MEDIUM
+  jc: false
+  class: 10
+  level: all
+  where: schools/assets/exam-vocab.js:109-117; shown at games/factor-theorem/index.html:404,425,533,571,583
+  summary: wrapExamVocab re-wraps its own output, injecting <span> into aria-label; garbage visible on Q10, Q13,
+    T1b, T8b, T10b
+  evidence: T1b renders "(b) Hence? fully factorise? Hence ? fully factorise?' mean?">? f(x)."
+  status: open
+- id: factor-theorem-t5-009
+  severity: MEDIUM
+  jc: true
+  class: NEW:wrong explanation
+  level: all
+  where: schools/assets/exam-vocab.js:19
+  summary: '''Show that'' tooltip says you can''t verify with numbers; this game''s ''show that'' is f(a) = 0'
+  evidence: appears on Q3, Q4, T1a, T3b, T7a, T10a
+  status: open
+- id: factor-theorem-t5-010
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong text
+  level: all
+  where: games/factor-theorem/index.html:466 (practice Q20)
+  summary: Prompt says 'Find k' but x³+4x²+x-6 has no k
+  evidence: prompt text
+  status: open
+- id: factor-theorem-t5-011
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong hint
+  level: all
+  where: games/factor-theorem/index.html:479 (practice Q22)
+  summary: Hint 1 says try x = ½; f(½) = -7/2 (roots 1, -½, -⅔)
+  evidence: SymPy f(1/2) = -7/2
+  status: open
+- id: factor-theorem-t5-012
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong explanation
+  level: all
+  where: games/factor-theorem/index.html:314 (Learn example 4, step 1)
+  summary: Candidate list includes ±⅓ and omits ±3/2
+  evidence: ±(1,2,3,6)/(1,2) = ±1, ±2, ±3, ±6, ±1/2, ±3/2
+  status: open
+- id: factor-theorem-t5-013
+  severity: MEDIUM
+  jc: true
+  class: 4
+  level: all
+  where: games/factor-theorem/index.html:177,625,780,1046
+  summary: ?level never read; level4 and unknown keys silently serve A-Level and log/board as 'alevel'
+  evidence: 'Chromium: six URLs, no pageerror, game_started level ''alevel'''
+  status: open
+- id: factor-theorem-t5-014
+  severity: MEDIUM
+  jc: true
+  class: 8
+  level: all
+  where: games/factor-theorem/index.html:898-900,991-993,780
+  summary: Practice awards 2/1 marks for retries and hints and submits that to the leaderboard
+  evidence: qScore 3/2/1; submitScore(slug,'alevel',practiceState.score,40)
+  status: open
+- id: factor-theorem-t5-015
+  severity: MEDIUM
+  jc: true
+  class: NEW:mixed-mode board
+  level: all
+  where: games/factor-theorem/index.html:780,1046
+  summary: Practice (max 120) and Test (max 41) submit to the same 'alevel' board
+  evidence: submitScore ['factor-theorem','alevel',120,40] and ['factor-theorem','alevel',40,10]
+  status: open
+- id: factor-theorem-t5-016
+  severity: MEDIUM
+  jc: true
+  class: 5
+  level: all
+  where: games/factor-theorem/index.html:529-587
+  summary: 'Test serves the same fixed 10 questions every attempt (practice: fixed 40)'
+  evidence: CONTENT.test.questions.length = 10, no shuffle
+  status: open
+- id: factor-theorem-t5-017
+  severity: MEDIUM
+  jc: true
+  class: NEW:test repeats taught items
+  level: all
+  where: games/factor-theorem/index.html:580,562,557,553
+  summary: T10 is Learn example 4 verbatim; T7 = practice Q31; T6 = Q29's cubic; T5 = Q3/Q10/Q23's cubic
+  evidence: polynomial comparison
+  status: open
+- id: factor-theorem-t5-018
+  severity: LOW
+  jc: false
+  class: NEW:cosmetic
+  level: all
+  where: games/factor-theorem/index.html:553,818-822,912,936,1009,1122
+  summary: T5 overflows 390px (421); Learn lines wider than panel; literal '___ ___' labels; question_index 0-based;
+    hint button live after marking; Enter does not submit; wrong-answer advance not MaffsNext (class 11 note)
+  evidence: Chromium 390x844 measurements
+  status: open

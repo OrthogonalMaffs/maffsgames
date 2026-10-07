@@ -1,0 +1,143 @@
+# Findings register for component-crusher (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: component-crusher
+audited:
+  tranche: 4
+  head: fc20f8c
+  date: '2026-10-06'
+  served:
+    gcse: 38
+    alevel: 32
+    level4: 34
+findings:
+- id: component-crusher-t4-001
+  severity: CRITICAL
+  jc: false
+  class: NEW:data-not-shown
+  level: level4
+  where: games/component-crusher/index.html:563,618-623 (L1-L6, L8, L11, L12, L14)
+  summary: 10 of 15 Level 4 scenarios (24 of 34 sub-questions) never show their vectors or points
+  evidence: Scenario box shows only desc (:563); prompts e.g. L2 'Find a . b.'; 3D drawn on 2D axes as (x+0.8z cos30,
+    y+0.8z sin30), labels only (:647).
+  status: open
+- id: component-crusher-t4-002
+  severity: HIGH
+  jc: false
+  class: '3'
+  level: alevel
+  where: games/component-crusher/index.html:365 (AL11.2)
+  summary: Bearing of v = (4, -3) keyed 143.1; true 126.9
+  evidence: '180 - atan(4/3) = 126.87. 143.13 is the bearing of (3, -4). Chromium: 126.9 and 127 marked incorrect.'
+  status: open
+- id: component-crusher-t4-003
+  severity: HIGH
+  jc: false
+  class: '3'
+  level: level4
+  where: games/component-crusher/index.html:411 (L2.2)
+  summary: Angle keyed 79.6; true 79.7 to 1 d.p. (tol 0.3 also accepts 79.4-79.9)
+  evidence: 'a=(2,1,-2), b=(3,-2,1): a.b = 2, cos = 2/(3 sqrt14), 79.737 deg.'
+  status: open
+- id: component-crusher-t4-004
+  severity: HIGH
+  jc: false
+  class: '2'
+  level: alevel
+  where: games/component-crusher/index.html:297 (AL2.3)
+  summary: '''C is on the perpendicular bisector'' is true of the midpoint and marked wrong'
+  evidence: AC = 1/2 AB makes C the midpoint of AB, which lies on AB's perpendicular bisector.
+  status: open
+- id: component-crusher-t4-005
+  severity: HIGH
+  jc: false
+  class: '1'
+  level: all
+  where: games/component-crusher/index.html:704-745,770
+  summary: 'No marking lock: re-checking scores again, double-click scores twice and skips; inflated score and attempt
+    count submitted'
+  evidence: 'After ''Incorrect. Answer: 3, 4'', typing 3, 4 and Check: score 0 -> 15; double-click Check: 30 for
+    one item; submitScore(…, G.score, G.total).'
+  status: open
+- id: component-crusher-t4-006
+  severity: HIGH
+  jc: true
+  class: '7'
+  level: alevel, level4
+  where: games/component-crusher/index.html:710,724
+  summary: parseFloat plus tolerance wider than the stated precision accepts wrong final digits on about a fifth
+    of sub-questions
+  evidence: tol 0.3 on 1 d.p. answers (AL1.2 accepts 116.3 for 116.6); tol 0.02 on 2 d.p. answers.
+  status: open
+- id: component-crusher-t4-007
+  severity: HIGH
+  jc: true
+  class: NEW:precision-not-stated
+  level: alevel
+  where: games/component-crusher/index.html:322 (AL5.2)
+  summary: '''Give as simplified surd or decimal'': a surd cannot be typed; no precision; 4.5 rejected'
+  evidence: type=number input; sqrt20 = 4.472; tol 0.02 rejects 4.5.
+  status: open
+- id: component-crusher-t4-008
+  severity: MEDIUM
+  jc: false
+  class: '6'
+  level: alevel
+  where: games/component-crusher/index.html:368 (AL12)
+  summary: v = i + 2j drawn as (3, -2)
+  evidence: Arrow from (2,3) to (5,1); key (7,13) correct.
+  status: open
+- id: component-crusher-t4-009
+  severity: MEDIUM
+  jc: false
+  class: '6'
+  level: level4
+  where: games/component-crusher/index.html:398 (L1)
+  summary: Arrow labelled AB starts at the origin, not at A
+  evidence: A (1,2,3) and B (4,6,7) plotted elsewhere.
+  status: open
+- id: component-crusher-t4-010
+  severity: MEDIUM
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: alevel
+  where: games/component-crusher/index.html:305,698 (AL3.1)
+  summary: All four options shown as raw LaTeX
+  evidence: o.text inserted without KaTeX; Chromium innerText shows '\mathbf{r} = …'.
+  status: open
+- id: component-crusher-t4-011
+  severity: MEDIUM
+  jc: false
+  class: '5'
+  level: all
+  where: games/component-crusher/index.html
+  summary: Sub-question pools 38, 32, 34 (15 scenarios per level)
+  evidence: Measured over 40 sessions per level.
+  status: open
+- id: component-crusher-t4-012
+  severity: MEDIUM
+  jc: true
+  class: NEW:precision-not-stated
+  level: alevel, level4
+  where: games/component-crusher/index.html:357,385,445,446 (AL10.1, AL14.1, L7.1, L7.2)
+  summary: No precision stated on component answers; 9 rejected for 8.66
+  evidence: tol 0.1.
+  status: open
+- id: component-crusher-t4-013
+  severity: MEDIUM
+  jc: true
+  class: '6'
+  level: gcse, alevel
+  where: games/component-crusher/index.html (G1, G5, G7, G10, G13, G14, AL2, AL8)
+  summary: Components read only from a faint grid; endpoints fall between grid lines
+  evidence: Grid rgba(255,255,255,.05), step 2.
+  status: open
+- id: component-crusher-t4-014
+  severity: LOW
+  jc: false
+  class: '6'
+  level: all
+  where: games/component-crusher/index.html:190,535
+  summary: 'G4 ''unit vector'' never asked; ?level=a"b throws; ''Answer: 6.4'' for a 2 d.p. answer; B7 lost spaces
+    still live (known §1.10); wrong answers auto-advance (class 11)'
+  evidence: Agent's evidence.
+  status: open

@@ -1,0 +1,39 @@
+# Findings register for the-perfect-prank (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: the-perfect-prank
+audited:
+  tranche: 6
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    ks3: 4
+findings:
+- id: the-perfect-prank-t6-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:hand-typed explanation figure
+  level: ks3
+  where: games/the-perfect-prank/index.html:551 (SOLVE_TEXT.chair)
+  summary: Says the chair goes '7 cm lower'; 52 → 42 is 10 cm
+  evidence: 52 − 42 = 10
+  status: open
+- id: the-perfect-prank-t6-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:hand-typed explanation figure
+  level: ks3
+  where: games/the-perfect-prank/index.html:271 (aftermath)
+  summary: Says the chair is '15% lower'; it is 19.2% lower
+  evidence: 10/52 = 0.192
+  status: open
+- id: the-perfect-prank-t6-003
+  severity: LOW
+  jc: true
+  class: 1
+  level: ks3
+  where: games/the-perfect-prank/index.html:639, :563, :645-660; escape-rooms/index.html:179
+  summary: Leaderboard call is dead (firebase-leaderboard.js not loaded); re-solving an open lock logs another correct
+    question_answered; reload restores timer from last 15 s save; page indexable and linked from /escape-rooms/
+    while 'unlisted'; prank-on-a-teacher theme (JC)
+  evidence: typeof MaffsLeaderboard 'undefined'; drawer solved twice -> two correct events; no noindex, not in sitemap
+  status: open

@@ -1,0 +1,63 @@
+# Findings register for four-quadrant-explorer (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: four-quadrant-explorer
+audited:
+- tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: '45'
+- tranche: 3
+  head: 4be3342
+  date: 2026-10-06
+  served:
+    year6: 10|20|30/45
+findings:
+- id: four-quadrant-explorer-r-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:phone-layout
+  level: year6
+  where: 'year6, all three modes, `drawGrid` lines 389-392: on phone widths the origin label "(0,0)" is printed
+    over the -1 tick labels of both axes, so the -1 on the x-axis and the -1 on the y-axis cannot be read.'
+  summary: 'year6, all three modes, `drawGrid` lines 389-392: on phone widths the origin label "(0,0)" is printed
+    over the -1 tick labels of both axes, so the -1 on the x-axis and the -1 on the y-axis cannot be read.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: "(0,0)" is drawn right-aligned 6px left of
+    the origin and 6px below the x-axis, 12px font, about 26px wide; the grid spacing is 20px at 320 wide and 27px
+    at 390 wide, so the -1 labels (centred 20-27px left of the origin, and right-aligned 6px left of the y-axis
+    20-27px below it) sit under it. Close-up `origin_320.png`: the x-axis "-1" is printed inside "(0,0)" and the
+    y-axis "-1" overlaps its lower edge; at 1280 (`origin_1280.png`, spacing 48px) the labels are clear. Share affected:
+    every question on screens up to roughly 430px wide; the scale is what the student counts from.'
+  status: open
+- id: four-quadrant-explorer-t3-001
+  severity: HIGH
+  jc: true
+  class: 1
+  level: year6
+  where: games/four-quadrant-explorer/index.html:156,191 (Start / Play Again), :484
+  summary: 'Double-click on Start or Play Again: the second click lands on the canvas and answers Q1 (Plot It),
+    marked wrong'
+  evidence: '1280x800: dblclick Start -> question_answered index 1 correct:false (reproduced twice); Play Again
+    at 375x667 and 1280 (3/3 each); not at 390x844'
+  status: open
+- id: four-quadrant-explorer-t3-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:board-mixes-session-lengths
+  level: year6
+  where: games/four-quadrant-explorer/index.html:748
+  summary: 10/20/30-question sessions submit raw score to one year6 board; a longer session always outranks (canon
+    §9 class, game not in its list)
+  evidence: submitScore('four-quadrant-explorer','year6',score,total) with total 10/20/30; personal-best key is
+    per length, the board is not
+  status: open
+- id: four-quadrant-explorer-t3-003
+  severity: LOW
+  jc: true
+  class: 6
+  level: year6
+  where: games/four-quadrant-explorer/index.html:343,404,484,507
+  summary: 'Bundle: axes not named x/y, no (x, y) order wording; 3 given corners drawn as a dashed triangle; margin
+    taps clamp onto edge points; Plot It marked on touchstart with touch-action:none; canvas width fixed after resize'
+  evidence: fillText set = numbers, '(0,0)', Q1-Q4 only; snapToGrid(x=-6.4) -> -5; all 45 keys, dots and ticks verified
+  status: open

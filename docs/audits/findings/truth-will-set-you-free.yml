@@ -1,0 +1,57 @@
+# Findings register for truth-will-set-you-free (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: truth-will-set-you-free
+audited:
+  tranche: 6
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    level4: 10
+findings:
+- id: truth-will-set-you-free-t6-001
+  severity: CRITICAL
+  jc: true
+  class: 8
+  level: level4
+  where: games/truth-will-set-you-free/index.html:791 (submitTruthTable), :901
+  summary: Every truth-table cell scores a point whether right or wrong; leaderboard and Final Score use it
+  evidence: 'all-zero tables, every expression wrong: totalPoints 232, Final Score 89%, submitScore 232; accuracy
+    card 75%'
+  status: open
+- id: truth-will-set-you-free-t6-002
+  severity: HIGH
+  jc: false
+  class: 3
+  level: level4
+  where: games/truth-will-set-you-free/index.html:434 (library [12], packaging-line PLC)
+  summary: Stored outputs are B·D̄, not the key (AB + C)·D̄; a correct table is marked 13/16 and 'corrected' wrongly
+  evidence: 'rows 0010 and 1010 should be 1, row 0100 should be 0; Chromium: correct table -> ''13 / 16 correct
+    (81%)'''
+  status: open
+- id: truth-will-set-you-free-t6-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:hand-typed explanation figure
+  level: level4
+  where: games/truth-will-set-you-free/index.html:588, :861 (library [27])
+  summary: bbLink set without 'simplified'; shows 'This expression simplifies to undefined.'
+  evidence: rendered in Chromium
+  status: open
+- id: truth-will-set-you-free-t6-004
+  severity: MEDIUM
+  jc: false
+  class: 5
+  level: level4
+  where: games/truth-will-set-you-free/index.html:300-648
+  summary: Library of 32, 10 served per play
+  evidence: tiers 10/10/10/2, quota 3/3/3/1 (B4 ledgered)
+  status: open
+- id: truth-will-set-you-free-t6-005
+  severity: LOW
+  jc: false
+  class: NEW:a11y state
+  level: level4
+  where: games/truth-will-set-you-free/index.html:905
+  summary: Aa toggle never saved to mfg_accessible
+  evidence: toggleAa touches only the class list
+  status: open
