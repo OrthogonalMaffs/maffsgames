@@ -102,6 +102,8 @@ hypotenuse sloping one way only; the box ignoring the figure's width; the triang
 USAGE
     python scripts/verify-just-pythag-it-bruv.py
     python scripts/verify-just-pythag-it-bruv.py --no-selftest --seeds 50
+    python scripts/verify-just-pythag-it-bruv.py --part 1         # CI job C1 (C2, C3: --part 2, 3)
+    python scripts/verify-just-pythag-it-bruv.py --part-selftest  # the parts are the whole run
 """
 import argparse
 import math
@@ -1562,8 +1564,90 @@ async def selftest(browser):
     return ok, lines
 
 
+# ---------------------------------------------------------------- parts (CI runs three in parallel)
+#
+# Since 7 Oct 2026 CI runs this script as three jobs, `--part 1` .. `--part 3` (one job took 9m41s on
+# main, the critical path of every full run). Every check is a task in exactly one part, dealt by
+# measured cost (7 Oct 2026, about 2.5 to 3 minutes each): the fit pass at 320 and 375 in part 1, at 390
+# and 412 in part 2, at the three desktop sizes in part 3; the planted layout faults dealt in turn
+# across parts 1, 2, 3 in list order; the sessions, WebKit, the play-through and the fault-injection
+# self-test in part 3. Every part first reads the page's scale and compact heights, which the checks
+# are held to. With no --part, every task runs, as before. --part-selftest proves that the parts
+# together are exactly the unsplit task list, nothing twice, and that the workflow runs every part.
+PARTS = ("1", "2", "3")
+FIT_PART = {(320, 568): "1", (375, 667): "1", (390, 844): "2", (412, 915): "2",
+            (1280, 720): "3", (1366, 768): "3", (1920, 1080): "3"}
+WORKFLOW = os.path.join(ROOT, ".github", "workflows", "check-site.yml")
+
+
+def plan(no_phone=False, no_selftest=False):
+    """[(task, part)] in the order the unsplit script ran them."""
+    tasks = [("sessions", "3"), ("webkit", "3"), ("play-through", "3")]
+    if not no_phone:
+        tasks += [("fit %dx%d" % sz, FIT_PART[sz]) for sz in PHONES + DESKTOPS]
+    if not no_selftest and not no_phone:
+        tasks += [("layout fault: " + name, PARTS[i % len(PARTS)]) for i, (name, _, _) in enumerate(UI_FAULTS)]
+    if not no_selftest:
+        tasks += [("fault-injection self-test", "3")]
+    return tasks
+
+
+def split_faults(every, parts):
+    """What is wrong with `parts` ({part: [task]}) as a split of `every` ([(task, part)]): [] if nothing."""
+    fails, seen = [], {}
+    for p, tasks in sorted(parts.items()):
+        for t in tasks:
+            if t in seen:
+                fails.append("%s is in part %s and part %s" % (t, seen[t], p))
+            seen[t] = p
+    dropped = [t for t, _ in every if t not in seen]
+    if dropped:
+        fails.append("in no part: %s" % ", ".join(dropped))
+    extra = [t for t in seen if t not in {t for t, _ in every}]
+    if extra:
+        fails.append("not in the unsplit run: %s" % ", ".join(extra))
+    if len({t for t, _ in every}) != len(every):
+        fails.append("a task is listed twice in the unsplit run")
+    return fails
+
+
+def part_selftest():
+    fails = []
+    for flags in ((False, False), (True, False), (False, True), (True, True)):
+        every = plan(*flags)
+        for f in split_faults(every, {p: [t for t, q in every if q == p] for p in PARTS}):
+            fails.append("with --no-phone %s --no-selftest %s: %s" % (flags + (f,)))
+    every = plan()
+    parts = {p: [t for t, q in every if q == p] for p in PARTS}
+    print("Parts: %s" % "; ".join("part %s %d tasks" % (p, len(parts[p])) for p in PARTS))
+    # Planted faults, each must be caught: a task dropped from part 1, a part-1 task copied into part 2.
+    for name, bad in (("a task dropped", dict(parts, **{"1": parts["1"][1:]})),
+                      ("a task in two parts", dict(parts, **{"2": parts["2"] + parts["1"][:1]}))):
+        caught = bool(split_faults(every, bad))
+        print("  planted: %-22s %s" % (name, "caught" if caught else "*** MISSED ***"))
+        if not caught:
+            fails.append("self-test: %s was not caught" % name)
+    if os.path.exists(WORKFLOW):
+        with open(WORKFLOW, encoding="utf-8") as fh:
+            runs = re.findall(r"python scripts/verify-just-pythag-it-bruv\.py\b([^\n|&]*)", fh.read())
+        got = sorted(m.group(1) for m in (re.search(r"--part (\w+)", r) for r in runs) if m)
+        whole = [r.strip() for r in runs if "--part" not in r]
+        if got != sorted(PARTS):
+            fails.append("the workflow runs parts %s, not %s" % (got, sorted(PARTS)))
+        if whole:
+            fails.append("the workflow also runs the unsplit script: %s" % whole)
+        print("  workflow runs parts: %s" % (", ".join(got) or "none"))
+    for f in fails:
+        print("FAIL  " + f)
+    print("Part self-test: %s" % ("FAILED" if fails else "PASS"))
+    return 1 if fails else 0
+
+
 async def run_all(args):
     from playwright.async_api import async_playwright
+    todo = [t for t, q in plan(args.no_phone, args.no_selftest) if args.part in (None, q)]
+    if args.part:
+        print("Part %s: %d of %d tasks" % (args.part, len(todo), len(plan(args.no_phone, args.no_selftest))))
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
         global SCALE_320
@@ -1575,42 +1659,47 @@ async def run_all(args):
             fail("the page's compact triangle heights %r differ from this script's COMPACT_H %r: update both" % (page_h, COMPACT_H))
         print("Round-1 triangle at 320px: %.3f px per unit (tap target: the middle %dpx of each side, 6px in to 22px out)"
               % (SCALE_320, 2 * TAP_RADIUS_PX))
-        ctx, page, errors = await new_page(browser)
-        found, data = await collect_and_check(page, seeds=args.seeds)
-        await ctx.close()
-        for f in found:
-            fail(f)
-        for e in errors:
-            fail("page error: " + e)
-        nq = sum(len(s["questions"]) for s in data)
-        ns = sum(1 for s in data for q in s["questions"] if q["type"] == "short")
-        print("Sessions: %d   questions: %d (%d find-a-shorter-side, %.1f%%)" % (len(data), nq, ns, 100.0 * ns / nq))
+        if "sessions" in todo:
+            ctx, page, errors = await new_page(browser)
+            found, data = await collect_and_check(page, seeds=args.seeds)
+            await ctx.close()
+            for f in found:
+                fail(f)
+            for e in errors:
+                fail("page error: " + e)
+            nq = sum(len(s["questions"]) for s in data)
+            ns = sum(1 for s in data for q in s["questions"] if q["type"] == "short")
+            print("Sessions: %d   questions: %d (%d find-a-shorter-side, %.1f%%)" % (len(data), nq, ns, 100.0 * ns / nq))
 
-        wk_out = []
-        await webkit_answer_box(pw, wk_out)
-        for f in wk_out:
-            fail(f)
-        print("WebKit: the answer box on a touch phone (keypad only, never focused) and on a desktop (ordinary input)")
+        if "webkit" in todo:
+            wk_out = []
+            await webkit_answer_box(pw, wk_out)
+            for f in wk_out:
+                fail(f)
+            print("WebKit: the answer box on a touch phone (keypad only, never focused) and on a desktop (ordinary input)")
 
-        ui_out = []
-        n_add = await ui_playthrough(browser, ui_out)
-        for f in ui_out:
-            fail(f)
-        print("UI play-through (Firebase SDK blocked): 20 questions, %d add errors (3 worked examples, then "
-              "the nudge); format and unreadable answers not marked; events and one score to %s" % (n_add, LEVEL))
+        if "play-through" in todo:
+            ui_out = []
+            n_add = await ui_playthrough(browser, ui_out)
+            for f in ui_out:
+                fail(f)
+            print("UI play-through (Firebase SDK blocked): 20 questions, %d add errors (3 worked examples, then "
+                  "the nudge); format and unreadable answers not marked; events and one score to %s" % (n_add, LEVEL))
 
-        if not args.no_phone:
+        sizes = [sz for sz in PHONES + DESKTOPS if "fit %dx%d" % sz in todo]
+        if sizes:
             ph_out = []
-            n = await phone_fit(browser, ph_out)
+            n = await phone_fit(browser, ph_out, sizes=sizes)
             for f in ph_out:
                 fail(f)
             print("Fit: %d feedback screens (wrong, quick tick, Spotted it?; calculator open and closed) at %s"
-                  % (n, ", ".join("%dx%d" % p for p in PHONES + DESKTOPS)))
+                  % (n, ", ".join("%dx%d" % p for p in sizes)))
 
-        if not args.no_selftest and not args.no_phone:
+        faults = [(name, sizes, patch) for name, sizes, patch in UI_FAULTS if "layout fault: " + name in todo]
+        if faults:
             print()
             print("Layout faults (a short run at the size each concerns, each patched into a fresh page):")
-            for name, sizes, patch in UI_FAULTS:
+            for name, sizes, patch in faults:
                 found = []
                 try:
                     await phone_fit(browser, found, sizes=sizes, only=UI_FAULT_ONLY, patch=patch, report=False)
@@ -1620,7 +1709,7 @@ async def run_all(args):
                 if not found:
                     fail("layout fault not caught: " + name)
 
-        if not args.no_selftest:
+        if "fault-injection self-test" in todo:
             ok, lines = await selftest(browser)
             print()
             print("Fault-injection self-test (patched into a fresh page; the file is never touched):")
@@ -1637,7 +1726,12 @@ def main():
     ap.add_argument("--no-selftest", action="store_true", help="skip the fault-injection self-test")
     ap.add_argument("--no-phone", action="store_true", help="skip the phone-fit measurement")
     ap.add_argument("--seeds", type=int, default=300, help="sessions to check (default 300)")
+    ap.add_argument("--part", choices=PARTS, help="run one of the three parts CI runs in parallel (default: all)")
+    ap.add_argument("--part-selftest", action="store_true",
+                    help="prove the parts together run every task once, and the workflow runs every part; no browser")
     args = ap.parse_args()
+    if args.part_selftest:
+        return part_selftest()
     global PORT
     try:
         server, base = bc.start_stub_server()

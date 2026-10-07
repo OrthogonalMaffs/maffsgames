@@ -25,8 +25,8 @@ Check canon §0.3 first. If a standing ruling (SR-1 …) covers the question, ap
 No contract stops at "context passes 60%": that line is removed from every STOP IF, in current and future
 contracts. A session cannot measure its own context; Jon can, and clears when needed. Instead:
 - **Commit and push at every milestone** (a verifier passing, a bank written, a UI change working, docs done).
-- **Keep the CLAUDE.md handover on the branch current as you go**, so a clear at any moment loses nothing:
-  what is done, what is next, and anything learned that the next session needs.
+- **Keep your lane's handover (`docs/handover/home.md` or `docs/handover/cloud.md`) on the branch current as you go**,
+  so a clear at any moment loses nothing: what is done, what is next, and anything learned that the next session needs.
 
 ## Before pushing: `python scripts/check-changed.py`, not the full local suite (canon §7.8, 4 Oct 2026)
 
@@ -49,7 +49,30 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-07 (home, latest): QUOTED-FIGURES contract DONE (#91-#94); NEXT = contract B
+## Handover: read `docs/handover/` (fixed pointer; fix PRs do not edit this section)
+
+Each lane keeps its own handover, and a session edits only its own (7 Oct 2026, canon §7.8.2):
+- **`docs/handover/home.md`**: the home lane (shared code and assets, CI, canon, docs PRs).
+- **`docs/handover/cloud.md`**: the cloud lane (per-game fixes in unlisted games).
+
+Read both at the start of a session: yours for what to do next, the other for what is in flight. The
+"Handover" sections below are the history up to 7 Oct 2026; nobody adds to them.
+
+## Two lanes: who edits what (Jon, 7 Oct 2026; canon §7.8.2)
+
+Two sessions may run side by side. They stay out of each other's files:
+- **Home lane:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and
+  every docs PR (`docs/todo.md`, the roster's listed section, relisting fixed games, batched).
+- **Cloud lane:** per-game fixes in games that are currently unlisted, one game per PR, each with its verifier,
+  closing its entries in its own `docs/audits/findings/<slug>.yml`. It never edits `schools/assets/`, the
+  shared modules in `scripts/`, the workflow, canon, the roster's listed section or `docs/todo.md`.
+- **No PR edits `docs/audits/REGISTER.md`:** CI regenerates and commits it on main after every merge (canon §0.4).
+  **A per-game fix PR does not edit `docs/todo.md`:** the register records the fix.
+- **Neither lane merges while main's last full run is red.**
+- **Before the first push of every PR: `python scripts/check-changed.py`** (one PR on 7 Oct 2026 cost three runs).
+- **Relisting a fixed game** is a home-lane docs PR, batched.
+
+## Handover — 2026-10-07 (home): QUOTED-FIGURES contract DONE (#91-#94); NEXT = contract B
 
 - **#91 Fermi Lab:** every real-world figure a `FIG` entry with source + figures; hints/notes built from it. Jon's ruling
   (7 Oct): 19 of 65 chains never multiplied to their own key (unit changes), all fixed by data; molecules-swimming-pool's key

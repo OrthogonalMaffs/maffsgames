@@ -55,7 +55,8 @@ Outputs flow: Project Claude → Jon reviews → Code Claude implements.
 
 - **Repo:** `https://github.com/OrthogonalMaffs/maffsgames`. Live site: maffsgames.co.uk (GitHub Pages).
 - **`docs/canon.md`** — platform facts, mission and priorities (§0), policies and backlog.
-- **`CLAUDE.md`** — current state and the lessons behind it. Its opening block is the latest handover.
+- **`CLAUDE.md`** — current state and the lessons behind it. The latest handover is per lane, in
+  `docs/handover/home.md` and `docs/handover/cloud.md` (canon §7.8.2); CLAUDE.md points to them.
 - **`docs/todo.md`** — the running to-do list.
 - **`.claude/rules/game-roster.md`** — the per-game roster. The only copy; never reproduce it elsewhere.
 - **Project docs:** `claude/snagging-list.md` (small bugs found in play-testing) and `claude/analytics-notes.md` (GA4 baseline and open questions).

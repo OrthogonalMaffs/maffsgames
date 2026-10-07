@@ -113,11 +113,16 @@ and the change is dated in its row.
 Every audit finding lives in `docs/audits/findings/<slug>.yml`, one file per game (so parallel fix PRs never edit the
 same file), in the audits' own schema (`scripts/audit-register.py` holds it). `docs/audits/REGISTER.md` is generated
 from them: counts by severity, status, class and game; open CRITICAL and HIGH by game, Year 6/KS3/GCSE/Core first; the
-exit-bar dashboard for §0.2's freeze; and the live games no audit has covered. CI (tier 1) fails if a file breaks the
-schema, a `fixed` entry names no PR, a roster-Unlisted game has no file, or REGISTER.md is stale.
+exit-bar dashboard for §0.2's freeze; and the live games no audit has covered. CI (the site-wide checks) fails if a
+file breaks the schema, a `fixed` entry names no PR, or a roster-Unlisted game has no file.
 
-**A fix PR closes its entries in the same PR:** set `status: fixed` and `pr: <n>` on each entry it fixes, run
-`python scripts/audit-register.py`, and commit the regenerated REGISTER.md. An entry closed by a ruling, not a code
+**No PR edits REGISTER.md** (7 Oct 2026). Every fix PR used to regenerate it, so any two PRs open at once conflicted
+on it. The workflow's `register` job regenerates it on every push to main, after the Gate, and commits it as the
+workflow (`Regenerate REGISTER.md [skip ci]`) if it changed; on a PR, `audit-register.py --check` validates the
+per-game files only and never reads REGISTER.md. So the file on main can lag a merge by a minute, never more.
+
+**A fix PR closes its entries in the same PR, in its own game's file only:** set `status: fixed` and `pr: <n>` on
+each entry it fixes in `docs/audits/findings/<slug>.yml`, and edit no other register file. An entry closed by a ruling, not a code
 change, is `status: ruled` with `ruling:` naming the SR. A new audit adds its findings to the game's file (a second
 `audited` entry when the game was audited before); ids are `<slug>-t<n>-NNN` (tranche n) or `<slug>-r-NNN` (resit audit).
 Exit-bar points 3 and 6 are stated in the script (`SHARED_CHECKS_GREEN`, `SWEEP_DONE`): the PR that meets one sets it.
@@ -1133,7 +1138,7 @@ grew with the number of games, not with the size of the change.
 
 | **Run** | **What runs** |
 | --- | --- |
-| Pull request | Every site-wide check (tiers 1-2, links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /resit/, calculator; tier 4 bank extraction and lint; the shared-asset tests; leaderboard coverage), plus the content verifiers `scripts/ci-deps.py` selects for the files the PR changes |
+| Pull request | Every site-wide check (tiers 1-2 in four shards, links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /resit/, calculator; tier 4 bank extraction and lint; the shared-asset tests; leaderboard coverage), plus the content verifiers `scripts/ci-deps.py` selects for the files the PR changes |
 | Push to main (every merge) | **Everything**, every verifier: the safety net |
 | Weekly (Mondays 05:17 UTC) and manual (`workflow_dispatch`) | **Everything** |
 
@@ -1160,6 +1165,53 @@ grew with the number of games, not with the size of the change.
   branch, the fast site-wide checks, and the shared-asset tests when `schools/` changed; CI runs the rest.
   `--full` still runs everything locally, but is not required. Known Windows-only differences from CI:
   todo §4 item 18.
+
+### 7.8.1 The CI layout: shards and parts (7 Oct 2026)
+
+**Why.** Measured on 7 Oct 2026, runs started within seconds (no queue): the time went on run length. A PR
+took about 8 minutes, because tier 1 and 14 more checks ran one after another in one job ("Tiers 1 + 2",
+6.5 minutes). Main's full run took about 10.5 minutes, because Just Pythag It, Bruv's verifier ran alone
+for 9m41s, and group B for 8 minutes. Nothing a check checks changed; only where it runs.
+
+| Job | What it runs |
+| --- | --- |
+| Tiers 1 + 2 (shard 1/4 .. 4/4) | `check-site.py --shard i/4`: page k of its stable page order goes to shard (k mod 4) + 1, with all its level loads, level controls and phone-width checks. Tier 2, the roster-gap notes and the phone-overflow entries that name no page run once, in shard 1. Each shard first runs `--shard-selftest 4`: the four shards together are the unsharded page list, no page in two, and the workflow runs all four. |
+| Site-wide checks | links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /resit/, calculator, content safety, teacher line, search titles, findings register, quoted figures |
+| Tier 4 layer A | bank extraction and its lint (together: the lint reads what the extraction wrote) |
+| Shared asset tests | Next control, section clicks, answer.js, calculator, keypad |
+| Content verifiers A, B1, B2, C1, C2, C3, D, E | the per-game verifiers, selected on a PR (above). C1-C3 are Just Pythag It, Bruv's `--part 1`, `2`, `3`, dealt by measured cost (the contract asked for two, phone and desktop; measured, the heavier half alone would have kept main near 7 minutes); each first runs `--part-selftest` (the parts are exactly the unsplit task list, nothing twice, and the workflow runs every part). B1 and B2 are group B cut in two in its own order. |
+| Regenerate REGISTER.md | push to main only, after the Gate (§0.4) |
+
+**Timings** (GitHub-hosted `ubuntu-24.04`, 4 CPUs):
+
+| Run | Before (7 Oct 2026) | After |
+| --- | --- | --- |
+| One-game PR, longest job | Tiers 1 + 2, 6m34s (run 8m13s) | 3m03s, Tier 4 layer A (every site-wide job 1m40s-3m03s; a selected verifier adds its own job: most under 4m, Equation Builder 4m48s, B1 4m51s); run about 4-5m |
+| Main's full run | 10m42s (C 9m41s, B 8m03s, Tiers 1 + 2 6m15s) | 5m45s (PR #95, which ran everything: B1 4m51s, D 4m48s, B2 4m30s; shards 1m40s-2m18s) |
+
+**Rules that keep it fast.** Every job still fails at 75% of its timeout ("time budget: … split it"). A group
+that becomes the critical path is split the same way: by an option on its script (`--shard`, `--part`) with a
+self-test proving the parts are the whole, or by cutting its list of lines in two. A new content verifier goes
+into the lightest "Content verifiers" group (each job's summary lists every check's duration).
+
+### 7.8.2 Two lanes: home and cloud (7 Oct 2026)
+
+Two sessions may work at once, one per lane. Each lane keeps its own handover: `docs/handover/home.md` and
+`docs/handover/cloud.md`; a session edits only its own. CLAUDE.md's opening block is a fixed pointer to both
+and is not edited by fix PRs.
+
+- **Home lane:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and
+  every docs PR: `docs/todo.md`, relisting fixed games (batched), the roster's listed section.
+- **Cloud lane:** per-game fixes in games that are currently unlisted, one game per PR, each with its
+  verifier, closing its register entries in its own `docs/audits/findings/<slug>.yml`. It never edits
+  `schools/assets/`, the shared modules in `scripts/`, the workflow, canon, the roster's listed section or
+  `docs/todo.md`.
+- **A per-game fix PR edits neither `docs/todo.md` nor `docs/audits/REGISTER.md`:** the register file records
+  the fix, and the `register` job regenerates REGISTER.md on main.
+- **Neither lane merges while main's last full run is red.**
+- **Before the first push of every PR:** `python scripts/check-changed.py` (one PR on 7 Oct 2026 cost three
+  runs without it).
+- **Relisting a fixed game** is a home-lane docs PR, batched with others.
 
 ---
 
