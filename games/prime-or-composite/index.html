@@ -162,6 +162,7 @@ body.accessible{background-color:#12141f!important}
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -319,6 +320,7 @@ const SCORE_BASE=100;
 let questions,qIdx,score,streak,maxStreak,correct,total;
 let qTimer,timerStart,animFrame;
 let gameActive=false;
+const ansEl=document.getElementById('answer-btns');   // MaffsLock's container (canon 7.6.0)
 
 function initQuestions(){
   // 2026/27 opener: lead with 6 then 7 so the mnemonic lands before anything else.
@@ -332,6 +334,7 @@ function startGame(){
   initQuestions();
   qIdx=0;score=0;streak=0;maxStreak=0;correct=0;total=0;
   gameActive=true;
+  MaffsLock.newSession();
   document.getElementById('start-btn').style.display='none';
   document.getElementById('explain-box').style.display='none';
   const introBox=document.getElementById('intro-box');
@@ -357,12 +360,14 @@ function nextQuestion(){
   document.getElementById('btn-composite').disabled=false;
   document.getElementById('btn-prime').className='ans-btn ans-prime';
   document.getElementById('btn-composite').className='ans-btn ans-composite';
+  // A new number: input on it is ignored for MaffsLock.FRESH_MS (a double-click on Start or Next).
+  MaffsLock.fresh(ansEl);
   timerStart=Date.now();
   startTimerBar();
 }
 
 function startTimerBar(){
-  clearTimeout(qTimer);cancelAnimationFrame(animFrame);
+  MaffsLock.cancel(qTimer);cancelAnimationFrame(animFrame);
   function tick(){
     const elapsed=Date.now()-timerStart;
     const pct=Math.max(0,100-(elapsed/TIME_PER_Q)*100);
@@ -372,14 +377,15 @@ function startTimerBar(){
     if(pct>0&&gameActive)animFrame=requestAnimationFrame(tick);
   }
   tick();
-  qTimer=setTimeout(()=>timeOut(),TIME_PER_Q);
+  qTimer=MaffsLock.timer(()=>timeOut(),TIME_PER_Q);
 }
 
-function timeOut(){cancelAnimationFrame(animFrame);markResult(false,true);}
+function timeOut(){if(!MaffsLock.lock(ansEl))return;cancelAnimationFrame(animFrame);markResult(false,true);}
 
 function answer(isPrimeAnswer){
-  if(!gameActive)return;
-  clearTimeout(qTimer);cancelAnimationFrame(animFrame);
+  // The P and C keys reach here too: once this number is marked they change nothing (the lock).
+  if(!gameActive||!MaffsLock.lock(ansEl))return;
+  MaffsLock.cancel(qTimer);cancelAnimationFrame(animFrame);
   const q=questions[qIdx];
   markResult(isPrimeAnswer===isPrime(q.n),false);
 }
@@ -411,7 +417,7 @@ function markResult(wasCorrect,timedOut){
   updateStatus();
   qIdx++;
   // canon 7.6: correct advances briskly, wrong waits for the student.
-  if(wasCorrect){ setTimeout(nextQuestion,1800); }
+  if(wasCorrect){ MaffsLock.timer(nextQuestion,1800); }
   else { MaffsNext.wrong({mount:document.getElementById('explain-box'), onAdvance:nextQuestion}); }
 }
 
@@ -459,10 +465,11 @@ function updateStatus(){
   document.getElementById('sv-acc').textContent=total?Math.round(correct/total*100)+'%':'—';
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){
   window._ggAbandoned=false;
   gameActive=false;
-  cancelAnimationFrame(animFrame);clearTimeout(qTimer);
+  cancelAnimationFrame(animFrame);MaffsLock.clearTimers();
   const _acc=total>0?Math.round(correct/total*100):0;
   mfg('game_completed',{game_slug:'prime-or-composite',level:'all',score:score,questions_answered:total,questions_correct:correct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('prime-or-composite','all',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('prime-or-composite','all',score);}}
@@ -474,11 +481,12 @@ function endGame(){
   document.getElementById('number-hint').textContent='';
   document.getElementById('timer-fill').style.width='100%';
   document.getElementById('explain-box').style.display='none';
-  setTimeout(()=>showModal(),600);
-}
+  MaffsLock.timer(()=>showModal(),600);
+});
 
 function showModal(){
   document.getElementById('modal').classList.remove('hidden');
+  MaffsLock.fresh(document.getElementById('modal'));
   document.getElementById('modal-result').textContent=score>1200?'Exceptional.':score>800?'Well Played.':'Keep Practising.';
   document.getElementById('modal-score').innerHTML=`
     <div class="ms-item"><span class="ms-val">${score.toLocaleString()}</span><span class="ms-lbl">Final Score</span></div>

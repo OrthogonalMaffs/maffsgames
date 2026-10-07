@@ -105,6 +105,8 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -141,7 +143,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     <br>
     <div class="question-text">Which number has MORE FACTORS?</div>
     <div class="question-sub" id="questionNum">Question 1</div>
-    <div class="cards-row">
+    <div class="cards-row" id="cardsRow">
       <div class="num-card" id="cardA" onclick="guess(0)">
         <div class="num-big" id="numA">12</div>
         <div class="factors-reveal" id="factorsA"></div>
@@ -152,6 +154,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       </div>
     </div>
     <div class="feedback" id="feedback"></div>
+    <div id="nextMount"></div>
   </div>
 
   <!-- Game over -->
@@ -204,7 +207,8 @@ const YEAR6_BANK = [
 const urlLevel = new URLSearchParams(window.location.search).get('level');
 const gameLevel = urlLevel === 'year6' ? 'year6' : 'ks3';
 
-let score = 0, streak = 0, qNum = 0, answered = false, timer = null, timerStart = null;
+let score = 0, streak = 0, qNum = 0, timer = null, timerStart = null;
+const cardsRow = document.getElementById('cardsRow');   // MaffsLock's container (canon 7.6.0)
 
 function getFactors(n) {
   const f = [];
@@ -261,6 +265,7 @@ let currentPair = null;
 
 function startGame() {
   score = 0; streak = 0; qNum = 0; window._frCorrect = 0;
+  MaffsLock.newSession();
   if (gameLevel === 'year6') { year6Questions = shuffle(YEAR6_BANK); year6Index = 0; }
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('gameOver').classList.remove('visible');
@@ -272,9 +277,10 @@ function startGame() {
 }
 
 function nextQuestion() {
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('nextMount'));
   if(qNum >= QUESTIONS) { endGame(); return; }
   qNum++;
-  answered = false;
+  MaffsLock.fresh(cardsRow);   // a new pair: a double-click on Start or Play again cannot answer it
   currentPair = generatePair();
 
   document.getElementById('numA').textContent = currentPair.a;
@@ -306,20 +312,19 @@ function updateTimer() {
 }
 
 function timeOut() {
-  if(answered) return;
-  answered = true;
+  if(!MaffsLock.lock(cardsRow)) return;
   streak = 0;
   revealCards(-1);
   const fb = document.getElementById('feedback');
-  fb.textContent = "TOO SLOW!";
+  fb.textContent = `TOO SLOW! ${factorCounts()}`;
   fb.className = 'feedback wrong';
   updateDisplay();
-  setTimeout(nextQuestion, 1800);
+  // canon §7.6: a wrong answer (or none) shows the factor counts and waits for Next.
+  MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextQuestion });
 }
 
 function guess(choice) {
-  if(answered) return;
-  answered = true;
+  if(!MaffsLock.lock(cardsRow)) return;
   clearInterval(timer);
 
   const aMore = currentPair.fa.length > currentPair.fb.length;
@@ -339,14 +344,21 @@ function guess(choice) {
     document.getElementById(choice === 0 ? 'cardB' : 'cardA').classList.add('reveal');
   } else {
     streak = 0;
-    fb.textContent = 'WRONG!';
+    fb.textContent = `WRONG! ${factorCounts()}`;
     fb.className = 'feedback wrong';
     document.getElementById(choice === 0 ? 'cardA' : 'cardB').classList.add('wrong');
     document.getElementById(choice === 0 ? 'cardB' : 'cardA').classList.add('correct');
   }
 
   updateDisplay();
-  setTimeout(nextQuestion, 1600);
+  // canon §7.6: a right answer moves on briskly; a wrong one shows the factor counts and waits for Next.
+  if(correct) MaffsLock.timer(nextQuestion, 1600);
+  else MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextQuestion });
+}
+
+function factorCounts() {
+  const p = currentPair;
+  return `${p.a} has ${p.fa.length} factors; ${p.b} has ${p.fb.length}.`;
 }
 
 function revealCards(choice) {
@@ -363,9 +375,12 @@ function updateDisplay() {
   document.getElementById('best').textContent = best;
 }
 
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame = MaffsLock.finishOnce(function () {
+  clearInterval(timer);
   document.getElementById('questionArea').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
+  MaffsLock.screen(document.getElementById('gameOver'));
   document.getElementById('finalScore').textContent = score;
 
   const accuracy = Math.round(((window._frCorrect||0) / QUESTIONS) * 100);
@@ -377,7 +392,7 @@ function endGame() {
   var _pbOld=getBest();if(score>_pbOld){mfg('personal_best_set',{game_slug:'factor-race',level:gameLevel,score:score,previous_best:_pbOld});}
   saveBest(score);
   renderLB();
-}
+});
 
 function getBest() { return parseInt(localStorage.getItem('fr_best') || '0'); }
 function saveBest(s) { if(s > getBest()) localStorage.setItem('fr_best', s); }

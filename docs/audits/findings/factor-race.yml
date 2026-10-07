@@ -54,5 +54,5 @@ findings:
     timeout fires no question_answered and does not show the right card; game_completed lacks questions_correct;
     fr_best shared across levels; biased sort shuffle
   evidence: 'Chromium: qa indices [1,3,4,...,10] after a forced timeout on Q2; nonsense/constructor/__proto__ ->
-    ks3, no errors'
+    ks3, no errors (the fixed 1600ms wrong advance is replaced by MaffsNext in #132; the rest is open)'
   status: open

@@ -504,6 +504,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -595,7 +596,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <div class="result-panel" id="resultPanel">
         <div class="result-grade" id="resultGrade"></div>
         <div class="result-detail" id="resultDetail"></div>
-        <button class="next-btn" id="nextBtn" onclick="nextHole()">Next Hole →</button>
+        <button class="next-btn" id="nextBtn" data-maffs-lock-skip onclick="nextHole()">Next Hole →</button>
       </div>
     </div>
 
@@ -748,8 +749,11 @@ function setLevel(l) {
   startGame();
 }
 
+const holeEl = document.getElementById('holeCard');   // MaffsLock's container (canon 7.6.0)
+
 function startGame() {
   hole = 0; scores = []; hintUsed = Array(9).fill(false);
+  MaffsLock.newSession();
   // For banks with more than 9 questions, shuffle and pick 9
   const bank = QUESTIONS[level];
   roundQuestions = bank.length > 9 ? _shuffleArr(bank).slice(0, 9) : bank;
@@ -795,6 +799,7 @@ function loadHole() {
   document.getElementById('submitBtn').disabled = false;
   document.getElementById('resultPanel').classList.remove('show');
   document.getElementById('answerInput').focus();
+  MaffsLock.fresh(holeEl);   // a new hole: a double-click on Next Hole cannot skip it or swing at it
 
   // Ball position — leftmost
   moveBall(0);
@@ -817,6 +822,7 @@ function submitAnswer() {
   if (raw === '') return;
   const guess = parseFloat(raw);
   if (isNaN(guess)) return;
+  if (!MaffsLock.lock(holeEl)) return;
 
   document.getElementById('answerInput').disabled = true;
   document.getElementById('submitBtn').disabled = true;
@@ -904,7 +910,8 @@ function updateTotals() {
   document.getElementById('totalVsPar').textContent = scores.length ? vsStr : '—';
 }
 
-function showSummary() {
+// Once per session (MaffsLock.finishOnce): game_completed and the score history can never be recorded twice.
+const showSummary = MaffsLock.finishOnce(function () {
   document.getElementById('holeCard').style.display = 'none';
   const total = scores.reduce((a, b) => a + b, 0);
   const vs = total - 36;
@@ -919,6 +926,7 @@ function showSummary() {
   document.getElementById('summaryVsPar').textContent = vsStr;
   document.getElementById('summaryRank').textContent  = `"${rank}"`;
   document.getElementById('summaryCard').classList.add('show');
+  MaffsLock.screen(document.getElementById('summaryCard'));
   window._ggAbandoned=false;
   var _egAcc=Math.round((scores.filter(s=>s<=3).length/9)*100);
   mfg('game_completed',{game_slug:'estimation-golf',level:level,score:total,questions_answered:9,accuracy:_egAcc});
@@ -929,7 +937,7 @@ function showSummary() {
   var LEADERBOARD_MODE_READY=false;
   if(window.MaffsLeaderboard){if(LEADERBOARD_MODE_READY){MaffsLeaderboard.submitScore('estimation-golf',level,total,9).catch(function(){});}if(window.MaffsScoreHistory){MaffsScoreHistory.record('estimation-golf',level,total);}}
   var _pbKey='estgolf_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'999');if(total<_pbOld){mfg('personal_best_set',{game_slug:'estimation-golf',level:level,score:total,previous_best:_pbOld});localStorage.setItem(_pbKey,total);}
-}
+});
 
 // Enter key submits
 document.getElementById('answerInput').addEventListener('keydown', e => {

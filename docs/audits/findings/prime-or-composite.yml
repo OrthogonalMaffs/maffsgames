@@ -18,7 +18,8 @@ findings:
     feedback answers the next question unseen; a key after the last question throws'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. Reproduced: question 2 (7) marked wrong without
     being shown'
-  status: open
+  status: fixed
+  pr: 132
 - id: prime-or-composite-t1-002
   severity: MEDIUM
   jc: true
