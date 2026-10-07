@@ -682,6 +682,96 @@ def tier2_targets():
 
 
 # ---------------------------------------------------------------------------
+# Shards (canon §7.8, 7 Oct 2026)
+# ---------------------------------------------------------------------------
+#
+# CI runs tier 1 as four parallel jobs, `--shard 1/4` .. `--shard 4/4`. Each page (with all its
+# ?level= loads, its level controls and its phone-width measurements) goes to exactly one shard:
+# page k of build_page_list()'s order to shard (k mod n) + 1. That order is stable (games sorted by
+# folder, then rooms, then every other served page, sorted), so dealing round-robin spreads the
+# games, which cost the most, evenly. Whatever cannot be split runs once, in shard 1 only: tier 2
+# (a static scan of every page), the roster-gap notes, and the tier1_phone_overflow entries that
+# name no page at all. Every other verdict belongs to one page, so it fails in that page's shard
+# exactly as it failed in the unsharded run. One message moves: a redirect stub whose target is in
+# another shard is not re-checked from the stub's shard; the target is measured in its own shard,
+# and fails there if it does not load.
+
+def parse_shard(text):
+    """'i/n' -> (i, n) with 1 <= i <= n."""
+    m = re.match(r"^\s*(\d+)\s*/\s*(\d+)\s*$", text or "")
+    if not m or not 1 <= int(m.group(1)) <= int(m.group(2)):
+        raise ValueError("--shard wants i/n with 1 <= i <= n, got %r" % text)
+    return int(m.group(1)), int(m.group(2))
+
+
+def shard_pages(pages, shard):
+    """The pages one shard loads. shard None (unsharded) keeps them all."""
+    if shard is None:
+        return list(pages)
+    i, n = shard
+    return [p for k, p in enumerate(pages) if k % n == i - 1]
+
+
+def site_wide_here(shard):
+    """True where the parts that cannot be split run: unsharded, or shard 1."""
+    return shard is None or shard[0] == 1
+
+
+def shard_union_faults(full, parts):
+    """What is wrong with `parts` (one page list per shard) as a split of `full`: [] if nothing."""
+    fails, seen = [], {}
+    want = {(label, rel): q for label, rel, q in full}
+    for i, part in enumerate(parts, 1):
+        if not part:
+            fails.append("shard %d loads no page" % i)
+        for label, rel, queries in part:
+            if (label, rel) in seen:
+                fails.append("%s is in shard %d and shard %d" % (label, seen[(label, rel)], i))
+            seen[(label, rel)] = i
+            if want.get((label, rel)) != queries:
+                fails.append("%s: shard %d's level loads differ from the unsharded run's" % (label, i))
+    dropped = [label for label, rel, _ in full if (label, rel) not in seen]
+    if dropped:
+        fails.append("%d page(s) in no shard: %s" % (len(dropped), ", ".join(dropped[:8])))
+    return fails
+
+
+def shard_selftest(n, workflow=os.path.join(ROOT, ".github", "workflows", "check-site.yml")):
+    """The n shards together load every page exactly once, and the workflow runs all n of them."""
+    full = build_page_list()
+    parts = [shard_pages(full, (i, n)) for i in range(1, n + 1)]
+    fails = shard_union_faults(full, parts)
+    print("  shard self-test: %d pages (%d loads) in %d shards: %s"
+          % (len(full), sum(len(q) for _, _, q in full), n,
+             ", ".join("%d/%d: %d pages, %d loads" % (i, n, len(p), sum(len(q) for _, _, q in p))
+                       for i, p in enumerate(parts, 1))))
+    # The workflow must run every shard once, and no unsharded copy alongside them.
+    if os.path.exists(workflow):
+        with open(workflow, encoding="utf-8") as fh:
+            runs = re.findall(r"python scripts/check-site\.py\b([^\n|&]*)", fh.read())
+        shards = sorted(m.group(1) for m in (re.search(r"--shard (\d+/\d+)", r) for r in runs) if m)
+        unsharded = [r.strip() for r in runs if "--shard" not in r]
+        want = sorted("%d/%d" % (i, n) for i in range(1, n + 1))
+        if shards != want:
+            fails.append("the workflow runs shards %s, not %s" % (shards, want))
+        if unsharded:
+            fails.append("the workflow also runs check-site.py unsharded: %s" % unsharded)
+        print("  workflow runs shards: %s" % (", ".join(shards) or "none"))
+    # Planted faults, each must be caught: a page dropped, a page in two shards.
+    caught_drop = bool(shard_union_faults(full, [parts[0][1:]] + parts[1:]))
+    caught_dup = bool(shard_union_faults(full, [parts[0] + parts[-1][:1]] + parts[1:]))
+    for name, caught in (("a page dropped from shard 1", caught_drop),
+                         ("a page in two shards", caught_dup)):
+        print("  planted: %-30s %s" % (name, "caught" if caught else "*** MISSED ***"))
+        if not caught:
+            fails.append("self-test: %s was not caught" % name)
+    for f in fails:
+        print("  FAIL  " + f)
+    print("  shard self-test: %s" % ("FAILED" if fails else "PASS"))
+    return 1 if fails else 0
+
+
+# ---------------------------------------------------------------------------
 # Tier 1 -- load every page in a real browser
 # ---------------------------------------------------------------------------
 
@@ -792,7 +882,7 @@ async def check_one(context, base, label, rel, query, live, timeout_ms):
     }
 
 
-async def tier1(pages, live, workers, timeout_ms):
+async def tier1(pages, live, workers, timeout_ms, site_wide=True):
     from playwright.async_api import async_playwright
 
     base = LIVE_ORIGIN if live else None
@@ -810,7 +900,7 @@ async def tier1(pages, live, workers, timeout_ms):
           % ("LIVE " + LIVE_ORIGIN if live else "local stub server", len(jobs), len(pages)))
     print("=" * 78)
 
-    expected, unexpected, known = roster_gaps()
+    expected, unexpected, known = roster_gaps() if site_wide else ([], [], {})
     for path in expected:
         print("  bare-load only  %s  (declared roster exception)" % path)
         print("                  %s" % known[path])
@@ -870,7 +960,7 @@ async def tier1(pages, live, workers, timeout_ms):
                 all_blocked.extend(res["blocked"])
                 all_escaped.extend(res["escaped"])
 
-            pw_res = await phone_width(browser, base, pages, workers, timeout_ms)
+            pw_res = await phone_width(browser, base, pages, workers, timeout_ms, site_wide)
             results.extend(pw_res)
             for res in pw_res:
                 all_blocked.extend(res["blocked"])
@@ -1328,7 +1418,7 @@ def phone_known():
             for e in load_config().get("tier1_phone_overflow", [])}
 
 
-async def phone_width(browser, base, pages, workers, timeout_ms):
+async def phone_width(browser, base, pages, workers, timeout_ms, site_wide=True):
     """One result per page at load and one per game start, at PHONE_SIZE."""
     t_start = time.time()
     known = phone_known()
@@ -1494,7 +1584,8 @@ async def phone_width(browser, base, pages, workers, timeout_ms):
         if (rel, at) in judged:
             continue
         gone = not os.path.isfile(os.path.join(ROOT, rel.replace("/", os.sep)))
-        if gone or (rel in in_run and rel in loaded):
+        # An entry naming no page belongs to no shard: reported once, where site-wide parts run.
+        if (gone and site_wide) or (rel in in_run and rel in loaded):
             results.append({"label": "phone-known:" + rel, "url": "%s [%s]" % (rel, at),
                             "status": "FAIL", "blocked": [], "escaped": [],
                             "detail": "stale: tier1_phone_overflow entry (%s) %s; remove it"
@@ -2391,16 +2482,32 @@ def main():
     ap.add_argument("--advance-ms", type=int, default=6000,
                     help="tier 3: how long to wait for a question to change after "
                          "answering (default 6000)")
+    ap.add_argument("--shard", metavar="I/N",
+                    help="tiers 1+2: load only shard I of N (each page in exactly one shard; tier 2 "
+                         "and the other site-wide parts in shard 1 only). CI runs 1/4 .. 4/4")
+    ap.add_argument("--shard-selftest", type=int, metavar="N",
+                    help="prove that N shards load every page exactly once and that the workflow "
+                         "runs all N; loads nothing")
     args = ap.parse_args()
+    if args.shard_selftest:
+        return shard_selftest(args.shard_selftest)
+    try:
+        shard = parse_shard(args.shard) if args.shard else None
+    except ValueError as exc:
+        ap.error(str(exc))
+    site_wide = site_wide_here(shard)
 
     t0 = time.time()
     fails = 0
     t1_results, blocked, escaped = [], [], []
 
     if args.tier in ("1", "all"):
-        pages = build_page_list(args.only)
+        pages = shard_pages(build_page_list(args.only), shard)
+        if shard:
+            print("shard %d/%d: %d pages, %d loads%s" % (shard[0], shard[1], len(pages),
+                  sum(len(q) for _, _, q in pages), "; the site-wide parts run here" if site_wide else ""))
         t1_results, blocked, escaped = asyncio.run(
-            tier1(pages, args.live, args.workers, args.timeout))
+            tier1(pages, args.live, args.workers, args.timeout, site_wide))
         if args.phone_widths:
             with open(args.phone_widths, "w", encoding="utf-8") as fh:
                 json.dump(sorted(({"label": r["label"], "url": r["url"], "width": r["width"]}
@@ -2412,7 +2519,7 @@ def main():
         print("\n  tier 1: %d PASS, %d FAIL, %d WARN (of %d loads)"
               % (len(t1_results) - len(f) - len(w), len(f), len(w), len(t1_results)))
 
-    if args.tier in ("2", "all") and not args.live:
+    if args.tier in ("2", "all") and not args.live and site_wide:
         flagged, _ = tier2(tier2_targets())
         fails += len(flagged)
 

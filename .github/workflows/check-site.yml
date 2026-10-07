@@ -21,7 +21,10 @@ name: check-site
 #     bump them together.
 #   - the checks are split into parallel jobs, each with its own timeout. Nothing a
 #     check checks has changed; only where it runs.
-# Adding a content verifier: append it to the lighter of the two verifier groups.
+# SPLIT AGAIN (7 Oct 2026, canon §7.8): tier 1 runs as four shards, the site-wide checks in a job of their
+# own, tier 4 apart from the shared-asset tests, content group B in two parts and C in three.
+# Adding a content verifier: append it to the lightest "Content verifiers" group (each job's summary
+# lists every check's duration).
 # scripts/check-verifier-coverage.py fails the run if any scripts/verify-*.py or
 # scripts/test-*.py is not listed here (or declared held in that script, with a reason).
 #
@@ -98,6 +101,53 @@ jobs:
           bad=$(echo "$RESULTS" | jq -r '[to_entries[] | select(.value.result != "success")] | length')
           if [ "$bad" != "0" ]; then echo "::error::$bad job(s) did not pass"; exit 1; fi
 
+  # docs/audits/REGISTER.md is generated from docs/audits/findings/<slug>.yml, and no PR edits it (7 Oct 2026,
+  # canon §0.4): every fix PR used to regenerate it, so any two PRs conflicted. On a push to main, once the Gate
+  # has passed, this job regenerates it from the newest main and commits it as the workflow's GITHUB_TOKEN if it
+  # changed ("[skip ci]": a push by GITHUB_TOKEN starts no workflow anyway). If main moves between the fetch and
+  # the push, it fetches and regenerates again. Never runs on a PR, the schedule or a manual run.
+  register:
+    name: Regenerate REGISTER.md (main only)
+    needs: gate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.gate.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    concurrency:
+      group: regenerate-register
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check -q "pyyaml==6.0.3"
+      - name: Regenerate and commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            python scripts/audit-register.py
+            if git diff --quiet -- docs/audits/REGISTER.md; then
+              echo "REGISTER.md unchanged at $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            git add docs/audits/REGISTER.md
+            git commit -q -m "Regenerate REGISTER.md [skip ci]"
+            if git push -q origin HEAD:main; then
+              echo "REGISTER.md regenerated and committed: $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "main moved during attempt $attempt; fetching again"
+            sleep 5
+          done
+          echo "::error::could not push the regenerated REGISTER.md after 3 attempts"
+          exit 1
+
   # Runs on the bare runner because it takes about a second and needs only node,
   # which the runner ships, so a coverage break is reported before any image is pulled.
   #
@@ -155,6 +205,31 @@ jobs:
           # Tier 1 loads every page and level (KaTeX and fonts allowed, every write
           # aborted and counted by the network guard); tier 2 scans for hang loops.
           # Every index.html outside games/ and escape-rooms/ is discovered, not listed.
+          # SHARDS (7 Oct 2026, canon §7.8): tier 1 is split four ways. Page k of check-site.py's stable page
+          # order goes to shard (k mod 4) + 1, with all its level loads, level controls and phone-width checks;
+          # tier 2 and the other parts that cannot be split run once, in shard 1. Each shard first runs
+          # --shard-selftest 4: the four shards together are the unsharded page list, no page in two, and this
+          # file runs all four. Until then tier 1 and the 15 checks below ran one after another in one job
+          # (6.5 minutes, the critical path of every PR).
+          - name: Tiers 1 + 2 (shard 1/4)
+            timeout: 10
+            checks: |
+              Tier 1 (page load) shard 1/4 + Tier 2 (hang-loop scan)|python scripts/check-site.py --shard-selftest 4 && python scripts/check-site.py --workers 4 --shard 1/4
+          - name: Tiers 1 + 2 (shard 2/4)
+            timeout: 10
+            checks: |
+              Tier 1 (page load) shard 2/4|python scripts/check-site.py --shard-selftest 4 && python scripts/check-site.py --workers 4 --shard 2/4
+          - name: Tiers 1 + 2 (shard 3/4)
+            timeout: 10
+            checks: |
+              Tier 1 (page load) shard 3/4|python scripts/check-site.py --shard-selftest 4 && python scripts/check-site.py --workers 4 --shard 3/4
+          - name: Tiers 1 + 2 (shard 4/4)
+            timeout: 10
+            checks: |
+              Tier 1 (page load) shard 4/4|python scripts/check-site.py --shard-selftest 4 && python scripts/check-site.py --workers 4 --shard 4/4
+
+          # The site-wide checks, each over the whole site, one after another (until 7 Oct 2026 they ran after
+          # tier 1, in the same job).
           # The link check is stdlib-only and takes about a second.
           # The footer check (stdlib, about a second): every page carries the one canonical
           # footer and links schools/assets/site-footer.css; no page styles it privately.
@@ -188,15 +263,15 @@ jobs:
           # /leaderboards/ mounts it with no game; the link text is Jon's exact wording (4 Oct 2026).
           # The findings register (PyYAML, about a second; Jon, 6 Oct 2026): docs/audits/findings/<slug>.yml, one file per
           # audited game, each valid against the audits' schema; a fixed entry names its PR, a ruled one its ruling; every
-          # roster-Unlisted game has a file; docs/audits/REGISTER.md equals a fresh regeneration. Self-test: a fixed entry
-          # with no PR, and a stale REGISTER.md, each fail.
+          # roster-Unlisted game has a file. It does not read docs/audits/REGISTER.md: no PR edits that file; the
+          # "register" job below regenerates and commits it on main (7 Oct 2026). Self-test: a fixed entry with no PR,
+          # and a schema fault, each fail.
           # The search-titles check (stdlib, about a second): every game page's and /resit/'s <title>, meta
           # description and og:/twitter: copies equal what data/games.json generates under Jon's rules of
           # 5 Oct 2026 (titles <= 60, descriptions <= 155, no "Year 6"); edit games.json, run apply-meta.py.
-          - name: Tiers 1 + 2 (page load, hang-loop scan)
-            timeout: 15
+          - name: Site-wide checks
+            timeout: 10
             checks: |
-              Tier 1 (page load) + Tier 2 (hang-loop scan)|python scripts/check-site.py --workers 4
               Links (no /schools/ redirects; every link on /updates/ resolves)|python scripts/check-canonical-links.py
               Site footer (one canonical footer, one stylesheet)|python scripts/check-footer.py
               Theme (canon 7.5: one register, palette from the roster)|python scripts/check-theme.py
@@ -210,7 +285,7 @@ jobs:
               Content safety (canon SR-14 tiers: no new banned wording, no illness or injury in humour)|python scripts/check-content-safety.py
               Teacher feedback line (on every results screen, played in Chromium; own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
               Search titles (every game page and /resit/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
-              Findings register (every audit finding filed per game, schema valid; fixed entries name their PR; REGISTER.md current)|python scripts/audit-register.py --check --selftest
+              Findings register (every audit finding filed per game, schema valid; fixed entries name their PR)|python scripts/audit-register.py --check --selftest
               Quoted figures (no figure the quoted-statistics audit found CONTRADICTED is still on its page)|python scripts/check-quoted-figures.py && python scripts/check-quoted-figures.py --selftest
 
           # Checker tier 4, layer A: does every game's question bank still look like the
@@ -234,11 +309,17 @@ jobs:
           # answer mode composes: 1, 2 and 4 answer boxes on touch phones at 320/375/390 (keys reach the active
           # box only, DEL and C act on it alone, nothing editable is focused, the length limit holds, the active
           # box is marked and its tag lies over no other box), ordinary inputs with a mouse; six planted faults (~40s).
-          - name: Tier 4 layer A + shared Next control
-            timeout: 12
+          # Split in two on 7 Oct 2026 (4m38s as one job): the bank extraction and its lint stay together, since
+          # the lint reads what the extraction wrote.
+          - name: Tier 4 layer A (bank extraction and lint)
+            timeout: 8
             checks: |
               Tier 4 layer A (bank extraction)|python scripts/extract-banks.py --workers 4
               Tier 4 layer A (lint against the ledger)|python scripts/check-banks.py --ci
+
+          - name: Shared asset tests (Next control, section clicks, answer, calculator, keypad)
+            timeout: 8
+            checks: |
               Shared Next control (schools/assets/next-control.js)|python scripts/test-next-control.py
               Portal section clicks (analytics.js section_clicked)|python scripts/test-section-clicks.py
               Shared answer checker (schools/assets/answer.js, every outcome)|python scripts/test-answer-js.py
@@ -258,13 +339,26 @@ jobs:
             checks: |
               Free Daily Pizza (independent recomputation + daily seed + phone fit)|python scripts/verify-free-daily-pizza.py --require-katex
 
-          # Just Pythag It, Bruv on its own (~5 min): since the wide-screen calculator dock (4 Oct 2026) it plays
-          # every question shape at three phone and three desktop sizes, with the calculator open and closed,
-          # plus seven planted layout faults, which would push group B towards its limit.
-          - name: Content verifiers C (Just Pythag It, Bruv)
-            timeout: 20
+          # Just Pythag It, Bruv on its own: since the wide-screen calculator dock (4 Oct 2026) it plays every
+          # question shape at four phone and three desktop sizes, with the calculator open and closed, plus the
+          # planted faults. As one job it took 9m41s on main (7 Oct 2026), the critical path of every full run,
+          # so it runs in three parts (--part, 7 Oct 2026; dealt by measured cost, see the script). Each part
+          # first runs --part-selftest: the parts together run everything the unsplit script ran, nothing
+          # twice, and this file runs every part.
+          - name: Content verifiers C1 (Just Pythag It, Bruv, part 1)
+            timeout: 8
             checks: |
-              Just Pythag It, Bruv (every key and triangle recomputed + sessions + phone and desktop fit)|python scripts/verify-just-pythag-it-bruv.py
+              Just Pythag It, Bruv, part 1 (fit at 320 and 375px; a third of the planted layout faults)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 1
+
+          - name: Content verifiers C2 (Just Pythag It, Bruv, part 2)
+            timeout: 8
+            checks: |
+              Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a third of the planted layout faults)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 2
+
+          - name: Content verifiers C3 (Just Pythag It, Bruv, part 3)
+            timeout: 8
+            checks: |
+              Just Pythag It, Bruv, part 3 (every key and triangle recomputed over 300 sessions, WebKit, play-through, three desktop sizes, a third of the layout faults, fault-injection self-test)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 3
 
           # Equation Builder on its own (279s on 5 Oct 2026): it enumerates every grammar-valid tile arrangement
           # of all 120 questions and classifies each with SymPy (PR #49). In group B it took the group past its
@@ -377,7 +471,9 @@ jobs:
           #    per session and tap targets at 320px; every question shape's feedback and tap step measured
           #    at three phone sizes, the asking screen with the calculator closed and open; the diagram
           #    full width at 1:1; the standard header, Aa clear of everything. Runs in its own job (C, above).
-          - name: Content verifiers B (all others)
+          # B was split in two on 7 Oct 2026 (8m03s as one job on main, the next critical path once C was split),
+          # in its own order: B1 runs Log Laws Solve to Growth and Decay (about 4 minutes of checks), B2 the rest.
+          - name: Content verifiers B1 (Log Laws Solve to Growth and Decay)
             timeout: 12
             checks: |
               Log Laws Solve (layers C + D, SymPy)|python scripts/verify-log-laws.py --require-katex
@@ -393,6 +489,10 @@ jobs:
               Stat Attack (keys recomputed from each question's table)|python scripts/verify-stat-attack.py
               Graph Sketcher (keys recomputed from each printed equation)|python scripts/verify-graph-sketcher.py
               Growth and Decay (keys recomputed from each printed model)|python scripts/verify-growth-and-decay.py
+
+          - name: Content verifiers B2 (Quadratic Factoriser to Decimal Detective)
+            timeout: 12
+            checks: |
               Quadratic Factoriser (every pooled item recomputed, SymPy)|python scripts/verify-quadratic-factoriser.py
               Parent guides (every stated figure recomputed from the page)|python scripts/verify-parent-guides.py
               Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)|python scripts/verify-tax-theft.py
@@ -490,6 +590,7 @@ jobs:
         if: steps.lines.outputs.any == 'true'
         run: |
           python --version
+          echo "CPUs: $(nproc)"
           python -m pip install --disable-pip-version-check -q -r requirements-ci.txt
           # node for verify-test-the-claim.py: the Playwright package ships its own.
           dirname "$(python -c 'import playwright, os; print(os.path.join(os.path.dirname(playwright.__file__), "driver", "node"))')" >> "$GITHUB_PATH"
