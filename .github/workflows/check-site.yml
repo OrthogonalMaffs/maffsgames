@@ -24,10 +24,14 @@ name: check-site
 # SPLIT AGAIN (7 Oct 2026, canon §7.8): tier 1 runs as four shards, the site-wide checks in a job of their
 # own, tier 4 apart from the shared-asset tests; later that day content group B in four, C in four parts
 # and D in two, so that no content job runs past 4 minutes (canon §7.8.1).
-# Adding a content verifier: put it in whichever "Content verifiers" group keeps every group under
-# 4 minutes as a job (each job's summary lists every check's duration); split a group that would pass it.
-# scripts/check-verifier-coverage.py fails the run if any scripts/verify-*.py or
-# scripts/test-*.py is not listed here (or declared held in that script, with a reason).
+# VERIFIERS DECLARE THEIR OWN GROUP (contract V, 7 Oct 2026, canon §7.8.2). The "Content verifiers" groups are
+# no longer listed here: each script carries "# ci-line: <group> | <label> | <args>" headers, and
+# scripts/ci-groups.py builds the "content" job's matrix from them in the plan job. Adding a content verifier
+# never edits this file: put its ci-line in whichever group keeps every group under 4 minutes as a job (each
+# job's summary lists every check's duration). The groups' names and timeouts are GROUPS in ci-groups.py.
+# Until then every new verifier edited this shared file, and two of the cloud lane's PRs conflicted here.
+# scripts/check-verifier-coverage.py fails the run if any scripts/verify-*.py declares no ci-line and no
+# ci-held reason, or any scripts/test-*.py is neither declared nor listed here.
 #
 # SELECTIVE RUNS (4 Oct 2026, canon §7.8). The repo is public, so Actions minutes are free; what a PR
 # costs is wall-clock. On a pull request the "plan" job asks scripts/ci-deps.py which content verifiers
@@ -55,7 +59,8 @@ jobs:
   # Which content verifiers does this run need? All of them, except on a pull request, where
   # scripts/ci-deps.py selects from the files the PR changes. Its selftest proves the selection rules
   # on every run first (one game -> its verifier; a shared asset -> every verifier whose pages load it;
-  # CI or an unknown path -> everything; every verifier reachable).
+  # CI or an unknown path -> everything; every verifier reachable). It also builds the content groups from
+  # the verifiers' ci-line headers (scripts/ci-groups.py; a malformed header or an unknown group fails here).
   plan:
     name: Plan (which content verifiers this change needs)
     runs-on: ubuntu-24.04          # pinned: see the coverage job
@@ -63,6 +68,7 @@ jobs:
     outputs:
       run_all: ${{ steps.select.outputs.run_all }}
       selected: ${{ steps.select.outputs.selected }}
+      groups: ${{ steps.groups.outputs.groups }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -73,8 +79,9 @@ jobs:
       - run: python -m pip install --disable-pip-version-check -q "pyyaml==6.0.3"
       - name: Selection rules (self-test)
         run: python scripts/ci-deps.py --selftest
-      - name: "Contract V proof: the ci-line headers give exactly this file's static content lines"
-        run: python scripts/ci-groups.py --selftest && python scripts/ci-groups.py --compare .github/workflows/check-site.yml
+      - name: Content groups (from each verifier's ci-line headers)
+        id: groups
+        run: python scripts/ci-groups.py --selftest && python scripts/ci-groups.py && python scripts/ci-groups.py --github-output "$GITHUB_OUTPUT"
       - name: Select
         id: select
         env:
@@ -92,7 +99,7 @@ jobs:
   gate:
     name: Gate (every job passed)
     if: always()
-    needs: [plan, coverage, check-site]
+    needs: [plan, coverage, check-site, content]
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     steps:
@@ -181,12 +188,14 @@ jobs:
       - name: Fallback fonts on the bare runner
         run: fc-match sans-serif; fc-match monospace
 
+  # The site-wide jobs: their lines are listed here. The content groups run in the "content" job (at the end),
+  # which shares this job's container and steps (the YAML anchors check-container and check-steps).
   check-site:
     name: ${{ matrix.name }}
     needs: plan
     runs-on: ubuntu-24.04          # pinned: see the coverage job
     timeout-minutes: ${{ matrix.timeout }}
-    container:
+    container: &check-container
       # Pinned to the Playwright version in requirements-ci.txt (its browsers are built for it).
       image: mcr.microsoft.com/playwright/python:v1.63.0-noble
       # --ipc=host: Chromium's shared memory, as Playwright's Docker docs advise.
@@ -330,223 +339,7 @@ jobs:
               Shared on-screen calculator (schools/assets/calculator.js, MaffsCalc)|python scripts/test-calculator-js.py
               Shared phone keypad (schools/assets/keypad.js, MaffsKeypad)|python scripts/check-keypad.py
 
-          # free-daily-pizza: reads each item's PARAMETERS and DISPLAYED strings from
-          # window.FDP and recomputes everything else here with fractions.Fraction -- every
-          # answer, every distractor from its misconception tag, value-equivalence, and the
-          # daily pizza from a Python port of its seeded PRNG (the engine's own values are
-          # never trusted). Plays practice and the daily pizza against a Firebase stub, and
-          # again with Firebase and KaTeX blocked; measures every item's wrong-answer screen
-          # at 320x568, 375x667 and 390x844. Nine injected faults, each must FAIL.
-          # Its own group: at about 3 minutes it is the longest single verifier.
-          - name: Content verifiers A (Free Daily Pizza)
-            timeout: 12
-            checks: |
-              Free Daily Pizza (independent recomputation + daily seed + phone fit)|python scripts/verify-free-daily-pizza.py --require-katex
-
-          # Just Pythag It, Bruv on its own: since the wide-screen calculator dock (4 Oct 2026) it plays every
-          # question shape at four phone and three desktop sizes, with the calculator open and closed, plus the
-          # planted faults. As one job it took 9m41s on main (7 Oct 2026), so it runs in parts (--part, dealt by
-          # measured cost, see the script): three that day, four the same evening, when three still came to
-          # about 4 minutes a job. Each part first runs --part-selftest: the parts together run everything the
-          # unsplit script ran, nothing twice, and this file runs every part.
-          - name: Content verifiers C1 (Just Pythag It, Bruv, part 1)
-            timeout: 6
-            checks: |
-              Just Pythag It, Bruv, part 1 (fit at 320px; a quarter of the planted layout faults)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 1
-
-          - name: Content verifiers C2 (Just Pythag It, Bruv, part 2)
-            timeout: 6
-            checks: |
-              Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a quarter of the planted layout faults)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 2
-
-          - name: Content verifiers C3 (Just Pythag It, Bruv, part 3)
-            timeout: 6
-            checks: |
-              Just Pythag It, Bruv, part 3 (fit at 375px and the three desktop sizes; a quarter of the planted layout faults)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 3
-
-          - name: Content verifiers C4 (Just Pythag It, Bruv, part 4)
-            timeout: 6
-            checks: |
-              Just Pythag It, Bruv, part 4 (every key and triangle recomputed over 300 sessions, WebKit, play-through, a quarter of the layout faults, fault-injection self-test)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 4
-
-          # Equation Builder on its own (279s on 5 Oct 2026): it enumerates every grammar-valid tile arrangement
-          # of all 120 questions and classifies each with SymPy (PR #49). In group B it took the group past its
-          # 12-minute limit, so every full run from #68 to #71 (main, and any PR touching every game) was cancelled.
-          # In two parts since 7 Oct 2026 (one job, 5m23s): part i classifies every 2nd candidate arrangement of
-          # every question, since one question (eb_ks3_012, 31,032 candidates) is 60% of the time. The checks about
-          # a question as a whole run in part 1, with the planted-fault self-test, which also proves that the two
-          # parts together fail exactly where the whole run does. --part-selftest: every candidate in one part.
-          - name: Content verifiers D1 (Equation Builder, part 1)
-            timeout: 6
-            checks: |
-              Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test)|python scripts/verify-equation-builder.py --part-selftest && python scripts/verify-equation-builder.py --part 1/2 && python scripts/verify-equation-builder.py --selftest
-
-          - name: Content verifiers D2 (Equation Builder, part 2)
-            timeout: 6
-            checks: |
-              Equation Builder, part 2 (the other half of every question's tile arrangements, classified by SymPy)|python scripts/verify-equation-builder.py --part-selftest && python scripts/verify-equation-builder.py --part 2/2
-
-          # Estimation Engine on its own (Jon, 6 Oct 2026: group B is near its 75% budget). SR-12 rebuild, 5 Oct
-          # 2026: every 1 s.f. rounding, estimate and calculator answer recomputed from the stored numbers (Decimal,
-          # SymPy), no exact halves, three planted faults; then the page in Chromium: D01 and F02 marked as Jon's
-          # contract states, every item's calculator and % lines, a full game (A-F, no timer, 20/20, Next every
-          # question), phones at 320/375/390 typing on MaffsKeypad (~2 min).
-          # Angle Ace joins it (6 Oct 2026, ~1 min; E had used about 1 minute of 12): every diagram's canvas calls
-          # recorded at 320/390/1280px and measured (label vs the angle it sits in, x vs the key, the drawn
-          # relationship vs the keyed reason, every valid reason accepted), every option and reason marked.
-          # Simultaneous Solver joins it (6 Oct 2026, ~1 min): every Foundation solution and bank rule recomputed
-          # (Fraction), the A-Level keys solved with SymPy, all 144 Stage 1 multiplier pairs marked on every
-          # problem, the wrong-step feedback and a full game of every stage played, and a Stage 4 problem typed on
-          # MaffsKeypad at three phone sizes (and in Aa mode), the step and its keys in the window together.
-          # Like Terms Collector joins it (6 Oct 2026, ~30s; tranche 3 audit, like-terms-collector-t3-001): all 45 keys
-          # recomputed with SymPy (Stage 3: no distractor equal to the key, SR-16), then at 390px item 1 typed 8.9/6.5
-          # must be marked wrong (with the reason) and 8/6 right, and every typed item's key right and key+0.9 wrong
-          # (MaffsAnswer.exact, not parseInt). The self-test plants the parseInt marking back.
-          # Fermi Lab joins it (7 Oct 2026, ~10s with its self-test; quoted-statistics audit, PR #68): every item's
-          # model chain recomputed with exact fractions and played in Chromium (every reference typed in must rate
-          # Brilliant; 19 of 65 once rated Poor or Good), and every stored real-world figure (FIG) has a source,
-          # scores green at its step for each source figure, and is stated in words built from FIG, never typed.
-          # Screening Room joins it (7 Oct 2026, ~10s with its self-test; tranche 4 audit + quoted-statistics audit): every
-          # count, answer, band, precision and key recomputed with exact fractions from the stated rates; every displayed
-          # figure traced to the data; all 70 items played in Chromium (bands, icon arrays, MaffsAnswer marking).
-          - name: Content verifiers E (Estimation Engine, Angle Ace, Simultaneous Solver, Like Terms Collector, Fermi Lab, Screening Room)
-            timeout: 12
-            checks: |
-              Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)|python scripts/verify-estimation-engine.py
-              Angle Ace (every diagram measured against its words and key; every option and reason marked in Chromium)|python scripts/verify-angle-ace.py
-              Simultaneous Solver (staged elimination: every solution and bank rule recomputed; SR-13 step marking and a Stage 4 problem on the phone keypad in Chromium)|python scripts/verify-simultaneous-solver.py
-              Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px)|python scripts/verify-like-terms-collector.py
-              Fermi Lab (every chain multiplies to its key, Brilliant in Chromium; every stored figure sourced and green at its step)|python scripts/verify-fermi-lab.py && python scripts/verify-fermi-lab.py --selftest
-              Screening Room (every count, band and key from the stated rates; every figure from the data; all 70 items marked in Chromium)|python scripts/verify-screening-room.py && python scripts/verify-screening-room.py --selftest
-
-          # Every other content verifier. Each reads the live page's data and recomputes
-          # its answers independently; each includes a fault-injection self-test.
-          #  - log-laws Solve: every line checked with SymPy against the law its step is
-          #    named after, every answer against SymPy's solution, every TeX string
-          #    against KaTeX (docs/next-contract-log-laws-solve.md, step 6).
-          #  - distinctly-average: every mean/median/mode/range from stored parameters.
-          #  - graph-transformer: BFS with the tier's ACTUAL buttons and curve-match check,
-          #    so an unreachable or mis-parred puzzle fails here.
-          #  - test-the-claim: recomputes from raw parameters (exact binomial, 60-digit
-          #    Poisson, NormalDist, the exact null distribution of r) against the booklet's
-          #    Table 8; 16 of 48 items were once wrong (todo 1.14). Needs node: the
-          #    Playwright package's own, put on PATH below.
-          #  - normal-navigator: 47 questions recomputed with NormalDist (9 were wrong),
-          #    then every question rendered: no answer in the labels before answering.
-          #  - six-sevens-bruv: every answer recomputed, 1,200 sessions simulated, a real
-          #    session played with the Firebase SDK blocked and again with storage blocked.
-          #  - stats_common: the shared statistics module's unit tests (todo 1.26).
-          #  - core-maths-paper2a, maths-court: recomputed from their stems; nothing shown
-          #    before it is answered. (verify-regression-rumble.py is NOT here: 37 of 40
-          #    scenarios fail, held for Jon's data ruling, todo 1.26.)
-          #  - chart-interrogator: every key and tolerance in exact arithmetic, marked
-          #    through submitPhase1(); canon 7.1.2 caps; histogram classes whole numbers.
-          #  - stat-attack, graph-sketcher, growth-and-decay (wrong-keys batch 1): every key
-          #    recomputed from the question's own table, printed equation or printed model,
-          #    then marked through the page; each failed on the uncorrected game.
-          #  - quadratic-factoriser: every pooled item's factorisation and formula answer (SymPy).
-          #  - parent-guides: every figure a guide states, recomputed from the page's operands.
-          #  - uk_rates: the teaching year's tax/NI figures (canon 7.1.4), unit tests against gov.uk.
-          #  - core-maths-paper1 tax/NI: its income tax, NI and budget items recomputed with uk_rates;
-          #    each NI distractor must be a named error. Failed on the 12% NI file (todo 1.41).
-          #    Since todo 1.44/1.45 also the student loan item (plan named, 2025/26 threshold) and Q21.
-          #  - core-maths-paper1 (all 36): every computable key recomputed from its stem, table and chart data;
-          #    exactly one option equal to the key in value, no two equal; the box plot's lines visible on the
-          #    card; every key clicked through selectAnswer(). Failed on Q32, Q9, Q7, Q1 (tranche 2 audit).
-          #  - better-value tax: its tax-and-NI rule of thumb within 2 points of the true share at each
-          #    salary, and the right answer the same under the rule and the true rates (todo 1.43).
-          #  - circle-theorem-spotter: every calculation key solved again from the stated values by
-          #    the figure's theorem (SymPy); options distinct in value; "major/minor arc" wording must
-          #    match the figure. Failed on the uncorrected Q48 and Q19 (todo 1.3).
-          #  - split-it: every generator at both levels, 18,000 questions, keys recomputed exactly at
-          #    the precision each prompt states; every marking rule probed through checkAnswer() (to
-          #    the penny, 0.1 off, unrounded, £/€). Failed on the ±0.05 / ±0.15 file (todo 1.36).
-          #  - correlation-or-coincidence (rebuilt 4 Oct 2026): 40+ items, three kinds a third each, a
-          #    lurking variable on every 'both' and a joke on every coincidence, SR-14 words; every graph's r
-          #    recomputed against its stated direction and strength; 300 deals; a full session with both
-          #    variable names on screen BEFORE every answer (the audit's F1); every item fitted at three phone
-          #    sizes. Thirteen planted faults.
-          #  - probability-pioneer: every Stage 2 key recomputed exactly from its stem, four options with
-          #    no two equal in value; Stage 1 and 3 keys pinned to a reviewed table; every answer to all
-          #    45 items clicked in Chromium. Failed on the pre-fix bank (resit audit F2-F6, F8).
-          #  - expected-damage: every track's probabilities read as exact fractions, summing to at most 1;
-          #    each E(X), ev and evDifference recomputed; higherEVOption the strictly higher track, a tie FAILS
-          #    (SR-5); story percentages match the stored outcomes; every outcome line read back from the page.
-          #    Failed on the two ties (resit audit F1: ed_gcse_011, ed_gcse_018).
-          #  - negative-number-line: Order Them and Calculate keys recomputed; the shared MaffsNumberLine rule
-          #    (exact match when snapped; continuous throws pending audit DD F4); every target clicked on all 41
-          #    positions; arrow keys; at 320, 375 and 390 on a touch profile every target reached with one tap
-          #    and the step buttons (44px+, below the line, the value shown above it). Its self-test plants a
-          #    0.5 tolerance in the helper (resit audit F1, F2).
-          #  - decimal-detective: Line-Up rows re-sorted with Decimal, no identical cards in a row, equal-value
-          #    cards differ only by zeros on the end; Round Up keys recomputed half up, four options distinct
-          #    in value (SR-4) unless the ask names the form; Place It starts with the marker off the line and
-          #    Check disabled; every answer marked in Chromium. Failed on the pre-fix game (audit F1, F6, F7).
-          #  - just-pythag-it-bruv: 300 sessions; every triangle, key (exact or 1 d.p. half up),
-          #    "Spotted it?" line and add-instead-of-subtract probe recomputed with exact fractions;
-          #    round order, >=60% shorter-side, no run of three, plausible contexts; a session played
-          #    with Firebase blocked (round 1's hypotenuse tapped with real clicks); hypotenuse positions
-          #    per session and tap targets at 320px; every question shape's feedback and tap step measured
-          #    at three phone sizes, the asking screen with the calculator closed and open; the diagram
-          #    full width at 1:1; the standard header, Aa clear of everything. Runs in its own job (C, above).
-          # B was split in two on 7 Oct 2026 (8m03s as one job on main, the next critical path once C was split),
-          # and in four the same evening (B2 had reached 4m33s; one job may not pass 4 minutes, canon §7.8.1): cut
-          # by the slowest time each line has taken on main (runners vary up to 1.8x), about 2 minutes of checks each.
-          - name: Content verifiers B1 (Log Laws Solve, Maths Court, Six Sevens and two more)
-            timeout: 8
-            checks: |
-              Log Laws Solve (layers C + D, SymPy)|python scripts/verify-log-laws.py --require-katex
-              Maths Court (independent recomputation + rendered page)|python scripts/verify-maths-court.py
-              Six Sevens, Bruv (independent recomputation + session simulation)|python scripts/verify-six-sevens.py
-              Test the Claim (independent recomputation of every key)|python scripts/verify-test-the-claim.py
-              Graph Transformer (BFS reachability + par verification)|python scripts/verify-graph-transformer.py
-
-          - name: Content verifiers B2 (Growth and Decay and nine quick ones)
-            timeout: 8
-            checks: |
-              Growth and Decay (keys recomputed from each printed model)|python scripts/verify-growth-and-decay.py
-              Expectation Station (every table, E(X) and explanation figure exact; all 180 Stage 3 cards reviewed against the distribution; every stage played in Chromium)|python scripts/verify-expectation-station.py
-              Truth Buster (every key reviewed against its statement's own words, SR-18; every reveal figure recomputed; all 60 played in Chromium)|python scripts/verify-truth-buster.py
-              Graph Sketcher (keys recomputed from each printed equation)|python scripts/verify-graph-sketcher.py
-              Chart Interrogator (independent recomputation of every key and tolerance)|python scripts/verify-chart-interrogator.py
-              Core Maths Paper 2A (independent recomputation + rendered page)|python scripts/verify-core-maths-paper2a.py
-              Normal Navigator (independent recomputation + rendered labels)|python scripts/verify-normal-navigator.py
-              Distinctly Average (independent recomputation)|python scripts/verify-distinctly-average.py
-              Stat Attack (keys recomputed from each question's table)|python scripts/verify-stat-attack.py
-              Shared statistics module (unit tests against textbook values)|python scripts/stats_common.py --selftest
-
-          - name: Content verifiers B3 (Decimal Detective, Quadratic Factoriser and three more)
-            timeout: 8
-            checks: |
-              Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)|python scripts/verify-decimal-detective.py
-              Quadratic Factoriser (every pooled item recomputed, SymPy)|python scripts/verify-quadratic-factoriser.py
-              Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)|python scripts/verify-correlation-or-coincidence.py
-              Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)|python scripts/verify-tax-theft.py
-              Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 110 played in Chromium)|python scripts/verify-spot-the-error.py
-
-          - name: Content verifiers B4 (Negative Number Line, Trig Worms and the rest)
-            timeout: 8
-            checks: |
-              Parent guides (every stated figure recomputed from the page)|python scripts/verify-parent-guides.py
-              UK rates module (unit tests against the gov.uk 2025/26 figures)|python scripts/uk_rates.py --selftest
-              Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)|python scripts/verify-core-maths-paper1-tax.py
-              Core Maths Paper 1 (every key recomputed from its stem and charts; options distinct in value; every key marked in Chromium)|python scripts/verify-core-maths-paper1.py
-              Better Value tax-and-NI rule of thumb (checked with uk_rates)|python scripts/verify-better-value-tax.py
-              Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure)|python scripts/verify-circle-theorem-spotter.py
-              Split It (every generator's keys recomputed + marking at the stated precision)|python scripts/verify-split-it.py
-              Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)|python scripts/check-resit-fixes.py
-              Probability Pioneer (Stage 2 keys recomputed, Stages 1 and 3 pinned, every answer marked in Chromium)|python scripts/verify-probability-pioneer.py
-              Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)|python scripts/verify-expected-damage.py
-              Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)|python scripts/verify-negative-number-line.py
-              Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)|python scripts/verify-trig-worms.py
-              Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium)|python scripts/verify-component-crusher.py
-              Trig Identity Duel (every option read into SymPy: exactly one equals the key, compound-angle and triangle keys recomputed, marking in Chromium)|python scripts/verify-trig-identity-duel.py
-              Binomial Blaster (every key and option evaluated with SymPy, every item marked in Chromium)|python scripts/verify-binomial-blaster.py
-              Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)|python scripts/verify-partial-fractions-duel.py
-              Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)|python scripts/verify-differentiation-duel.py
-              Integration Duel (every key and option checked with SymPy, explanations checked, every option marked in Chromium)|python scripts/verify-integration-duel.py
-
-    steps:
+    steps: &check-steps
       - uses: actions/checkout@v4
       # Any check may call git. In the container job the checkout belongs to the runner's user, not
       # the container's root, and git refuses a repository it does not own (exit 128). Mark this
@@ -679,3 +472,21 @@ jobs:
             echo "**Over the time budget:** $over" >> "$GITHUB_STEP_SUMMARY"
           fi
           [ ${#failed[@]} -eq 0 ] && [ -z "$over" ]
+
+  # The "Content verifiers" groups (contract V, 7 Oct 2026). The matrix is built by the plan job from each
+  # verifier's own "# ci-line:" headers (scripts/ci-groups.py; group names and timeouts in its GROUPS), so a new
+  # verifier never edits this file. Same container, same steps, same job names as when the groups were listed
+  # in check-site's matrix: "Lines to run" still runs only the lines the plan selected on a PR, everything on
+  # main, the schedule and a manual run. The Gate needs this job, so a group that fails, is cancelled or is
+  # skipped (a plan failure) fails the run.
+  content:
+    name: ${{ matrix.name }}
+    needs: plan
+    runs-on: ubuntu-24.04          # pinned: see the coverage job
+    timeout-minutes: ${{ matrix.timeout }}
+    container: *check-container
+    strategy:
+      fail-fast: false             # one group's failure must not hide another's
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.groups) }}
+    steps: *check-steps

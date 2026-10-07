@@ -183,7 +183,13 @@ def validate(files, games, unlisted, root):
 
 def verifiers(root):
     """{slug: script} for games with a whole-game verifier that CI runs; and the partial ones."""
-    run = set(re.findall(r'python3? scripts/([A-Za-z0-9_.-]+\.py)', read(root, WORKFLOW)))
+    # What CI runs: the workflow's site-wide lines and every script's ci-line header (contract V), as
+    # scripts/ci-groups.py in this tree reads them.
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('ci_groups', os.path.join(root, 'scripts', 'ci-groups.py'))
+    cg = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cg)
+    run = set(re.findall(r'python3? scripts/([A-Za-z0-9_.-]+\.py)', cg.ci_text()))
     full, partial = {}, {}
     for name in sorted(os.listdir(os.path.join(root, 'scripts'))):
         if not re.match(r'^verify-.+\.py$', name) or name not in run or name in NOT_A_GAME:

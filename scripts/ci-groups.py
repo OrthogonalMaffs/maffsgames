@@ -6,6 +6,7 @@
     python scripts/ci-groups.py --github-output FILE  # plan job: writes groups=<that JSON>
     python scripts/ci-groups.py --compare FILE        # equal, line for line, to FILE's static content groups?
     python scripts/ci-groups.py --selftest            # header parsing proofs
+    python scripts/ci-groups.py --record-timings ID   # scripts/ci-timings.json from a main full run (gh CLI)
 
 Why. Until 7 Oct 2026 each content group listed its lines inside .github/workflows/check-site.yml, so every
 new verifier edited that shared file: the cloud lane's #96, #97 and #100-#102 each did, and two of them
@@ -33,6 +34,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, "scripts")
 WORKFLOW = os.path.join(ROOT, ".github", "workflows", "check-site.yml")
 PREFIX = "Content verifiers"
+TIMINGS = "scripts/ci-timings.json"     # each content line's seconds on a main full run (--record-timings)
 
 # (id, job name, timeout in minutes). The job name is what GitHub shows; keep it stable. Canon §7.8.1: no
 # content job may run past 4 minutes; each fails at 75% of its timeout.
@@ -198,6 +200,30 @@ def compare(path):
     return 0 if not gone and not extra else 1
 
 
+def record_timings(run_id):
+    """Write TIMINGS from a finished run's content jobs (needs the gh CLI): each line's seconds, read from the
+    job log's 'ok  <label>  (Ns; group at ...)' lines. scripts/check-verifier-coverage.py reports any group
+    whose lines add up past 4 minutes."""
+    import subprocess
+    gh = lambda *a: subprocess.run(["gh", "api", *a], cwd=ROOT, capture_output=True, text=True,
+                                   encoding="utf-8", errors="replace", check=True).stdout
+    run = json.loads(gh("repos/{owner}/{repo}/actions/runs/%s" % run_id))
+    jobs = json.loads(gh("repos/{owner}/{repo}/actions/runs/%s/jobs?per_page=100" % run_id))["jobs"]
+    secs = {}
+    for job in jobs:
+        if not job["name"].startswith(PREFIX):
+            continue
+        for m in re.finditer(r"(?:ok|FAILED)  (.+?)  \((\d+)s; group at", gh("repos/{owner}/{repo}/actions/jobs/%s/logs" % job["id"])):
+            secs[m.group(1)] = int(m.group(2))
+    rec = {"run": int(run_id), "date": run["created_at"][:10], "branch": run["head_branch"],
+           "event": run["event"], "lines": dict(sorted(secs.items()))}
+    with open(os.path.join(ROOT, TIMINGS), "w", encoding="utf-8", newline="\n") as f:
+        json.dump(rec, f, indent=1, ensure_ascii=False)
+        f.write("\n")
+    print("%s: %d line(s) from run %s (%s, %s)" % (TIMINGS, len(secs), run_id, rec["event"], rec["date"]))
+    return 0
+
+
 def selftest():
     fails = []
 
@@ -239,9 +265,12 @@ def main():
     ap.add_argument("--github-output")
     ap.add_argument("--compare")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--record-timings", metavar="RUN_ID")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.record_timings:
+        return record_timings(a.record_timings)
     if a.compare:
         return compare(a.compare)
     errs = errors()

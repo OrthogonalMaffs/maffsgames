@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-held: regression-rumble is withdrawn; 37 of 40 scenarios fail, held for the data ruling (todo 1.26)
 """Independent verification of regression-rumble's statistics (todo §1.26).
 
 NOT IN CI YET, and the game is WITHDRAWN (30 Sep 2026): it reads the kept game at
