@@ -678,7 +678,7 @@ const QUESTIONS = {
   ],
   alevel: [
     { q: "Give the value of e to 4 significant figures.", answer: 2.718, hint: "e ≈ 2.71828...", unit: "" },
-    { q: "Estimate the gradient of y = x³ at x = 3 using first principles with h = 0.001.", answer: 27, hint: "dy/dx of x³ = 3x². At x=3 that's 27.", unit: "" },
+    { q: "Estimate the gradient of y = x³ at x = 3 by first principles: (f(3 + h) − f(3)) ÷ h with h = 0.001. Give your answer to 3 decimal places.", answer: 27.009, hint: "f(3.001) = 3.001³ = 27.027009001. Subtract f(3) = 27, then divide by 0.001.", unit: "" },
     { q: "Estimate ∫₀¹ x² dx using the trapezium rule with 2 strips.", answer: 0.375, hint: "Strips at x = 0, 0.5, 1. Values: 0, 0.25, 1.", unit: "" },
     { q: "Give ln(10) to 2 decimal places.", answer: 2.30, hint: "ln(10) = ln(2) + ln(5). ln(2)≈0.693, ln(5)≈1.609", unit: "" },
     { q: "Estimate the speed (m/s) of sound in air at 20°C (≈ 343 m/s).", answer: 343, hint: "A standard value worth knowing.", unit: "m/s" },
@@ -695,7 +695,7 @@ const QUESTIONS = {
     { q: "Estimate the capacitive reactance (Ω) of a 100μF capacitor at 50 Hz.", answer: 31.8, hint: "Xc = 1 / (2πfC). Use π ≈ 3.14", unit: "Ω" },
     { q: "An object falls from rest. Estimate the velocity (m/s) after 3 seconds (g = 9.81 m/s²).", answer: 29.43, hint: "v = u + at, u = 0", unit: "m/s" },
     { q: "Estimate the efficiency (%) of a motor with input power 500 W and output power 375 W.", answer: 75, hint: "η = (P_out / P_in) × 100", unit: "%" },
-    { q: "A cylinder has diameter 60 mm and length 200 mm. Estimate its volume in cm³.", answer: 565.2, hint: "V = π × r² × h. r = 3 cm, h = 20 cm", unit: "cm³" },
+    { q: "A cylinder has diameter 60 mm and length 200 mm. Estimate its volume in cm³.", answer: 565.49, hint: "V = π × r² × h. r = 3 cm, h = 20 cm", unit: "cm³" },
     { q: "Estimate the thermal resistance (K/W) of a 0.1 m thick brick wall, area 2 m², thermal conductivity 0.6 W/mK.", answer: 0.0833, hint: "R = thickness / (k × A)", unit: "K/W" },
   ]
 };

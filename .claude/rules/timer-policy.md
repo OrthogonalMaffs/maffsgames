@@ -20,6 +20,10 @@ Timer runs silently, no score multiplier, time shown on results screen only.
 
 Games: Differentiation Duel, Integration Duel, SUVAT Selector, Complex Converter, Log Laws, Quadratic Factoriser, Sequence Solver, Surd Simplifier, Proportion Blaster, Trig Identity Duel, Standard Form Blitz, Binomial Blaster, Partial Fractions Duel, Circle Theorem Spotter, Simultaneous Solver, Curling Friction, Force Resolver, Moments Master, Matrix Crunch, Proof Builder, Coordinate Geometry Dash, Angle Ace, Formula Unlocked, Prime Sprint, Chart Interrogator, Estimation Golf, Dimension Checker, Bearing Blitz, Scale Factor Scaling, Unit Converter, Formula Forge, Regression Rumble, Test the Claim, Stat Attack, Growth and Decay, Graph Sketcher, Glorious Gantt Game, Split It, Component Crusher.
 
+**Confirmed 7 Oct 2026 (canon SR-23, Jon's timer ruling):** Trig Identity Duel and Glorious Gantt Game follow this
+section. Both show a timer now, and Trig Identity Duel's feeds the score: those are fixes still to make
+(trig-identity-duel-t2-010; glorious-gantt's :783/:968 entry).
+
 ## No Timer
 Interactive/exploratory/reasoning games.
 

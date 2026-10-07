@@ -9,7 +9,7 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
-**QUEUE (home lane, Jon 7 Oct):**
+**QUEUE (home lane, Jon 7 Oct):** (V #108 and C #111-#118 done; see the newest entries)
 1. **V: each verifier declares its own CI group** (#108, this entry).
 2. **C (revised 7 Oct): audit batch 3**, one game per PR in this order: proportion-blaster, better-value,
    given-that, formula-unlocked, sequence-solver, estimation-golf. The contract text is in Jon's 7 Oct paste;
@@ -20,6 +20,68 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-07 (home): queue item 0c, canon SR-22 and SR-23 (docs only, this PR)
+
+- **#120 (0b) merged** on a green Gate.
+- **Numbering (decision taken, for Jon to see):** Jon called the leaderboard ruling "R15", but §0.3 numbers by SR-n
+  and F1 names its relist rule SR-21. So SR-21 is reserved for F1 (a placeholder row), the leaderboard ruling is
+  **SR-22** (its source column says "his ruling R15") and the timer ruling **SR-23**.
+- **SR-22:** one board per mode or session length; Prime Sprint's board key on the hub; Prisoner's Dilemma ranks
+  the tournament total only. proof-builder-t5-023 and prisoners-dilemma-t4-001 set `jc: false` (ruled), still open:
+  the code is not changed (new level keys in `firebase-leaderboard.js` and the hub: shared code, home lane, not yet
+  queued). Prime Sprint has no register entry.
+- **SR-23:** timer-policy's Hidden Count-Up applies; Trig Identity Duel and Glorious Gantt follow it (both already
+  listed there; a dated note added). trig-identity-duel-t2-010 and the timer part of glorious-gantt's :783/:968
+  entry stay open until their code changes (TID is the cloud lane's game; Gantt is unlisted).
+
+## 2026-10-07 (home): queue item 0b, regex .test() guards in bank_common (#120)
+
+- **Jon's new queue (7 Oct, after the clear):** 0b this; 0c canon §0.3 R15 + the timer ruling (docs only);
+  0d shared fraction answers (MaffsAnswer, then Given That); then F1 (MaffsLock, pasted).
+- **0b:** `_SiteEval.call()`'s `.test` branch called `.search` on `regex()`'s `(pattern, glob)` tuple, so any
+  render site guarded by `/re/.test(x)` crashed extraction (the cloud lane's note, #102/#105/#115). It now unpacks
+  the tuple. `test-bank-common.py` gains REGEX_GUARDS: Proof Builder's `if (/[\\^_{}]/.test(q.a))` (in JS source) shape and
+  Component Crusher's template-literal ternary; both raise on main, both pass now, and each guard is decided per
+  value (`x^2` reaches KaTeX, `seven` does not). The cloud lane may go back to regex guards at render sites.
+
+## 2026-10-07 (home): item 0, Like Terms Collector's flaky read (this PR); STOP for a clear before F1
+
+- **Contract C is complete:** #111, #113, #114, #116, #117, #118 all merged on green Gates (#118's main run:
+  watch it if not yet reported below). Contract V (#108) merged earlier.
+- **Item 0 (Jon, 7 Oct):** `verify-like-terms-collector.py` failed once on main (run 37626794263, #109, attempt 1:
+  "item 1: typed 8.9/6.5, marked correct=None") and passed on rerun. It read MARK() straight after
+  `page.click('#checkBtn')`. Now `read_mark()` waits for the game's own mark to land (up to 5 s), and the in-page
+  sweep polls the same way. New self-test: a copy whose showFeedback() marks 300 ms late; the waiting read must
+  see every mark and a read straight off the click must see none. With the old immediate read put back, the
+  self-test fails with main's exact message. Not traced: why the real page was ever late (the check no longer
+  depends on it).
+- **Then STOP (Jon):** he clears the session before contract F1. Next session: read this file and the memory's
+  LATEST block; F1 starts when Jon pastes it.
+- **Open for Jon (carried):** eigenvector-engine-f0-005 set jc: false (done in #108); the cloud lane's #112 and
+  #115 already declare their verifiers by ci-line header, so V is working as intended. B3 now carries 11
+  lines: check its time on the next full main run; re-record `scripts/ci-timings.json` with
+  `python scripts/ci-groups.py --record-timings <run id>` if it grows.
+
+## 2026-10-07 (home): contract C game 6, Estimation Golf (#118); contract C complete once it merges
+
+- **#117 (Sequence Solver) merged.** Slip to note: the cloud lane merged #115 seconds before, and #117 went in
+  while main's run for #115 was still in progress (not red, but not yet green, against "main green, then the
+  next"). Both main runs were watched to the end.
+- **#118:** level4[7] keyed 565.49 (r-001; choice recorded: the true value, not "use pi = 3.14"); alevel[1] states
+  the forward difference and 3 d.p. and keys 27.009, hint reworked (r-002). `verify-estimation-golf.py` (B3). On
+  main it failed on exactly r-001 and r-002. Open: r-003, r-004, r-005.
+- **Contract C summary (#111, #113, #114, #116, #117, #118):** six verifiers, all in B3 by ci-line header. No
+  verifier found a wrong key the register did not list, so no STOP IF. Value-equal option pairs fixed along the way
+  and their ledger entries cleared: proportion-blaster x5, given-that x2, formula-unlocked x2 (+B2, B10),
+  sequence-solver x1; plus formula-unlocked F4 (sqrt(u^2), not caught by B11). B3 now carries 11 lines; check its
+  time on main's next full run (the timing file was recorded before contract C).
+- **Item 0 (Jon, 7 Oct), ON HOLD, Jon to confirm:** Like Terms Collector flaked on main once since #89: run
+  37626794263 (#109), attempt 1, group E: "item 1: typed 8.9/6.5, marked correct=None", passed on rerun.
+  `None` means MARK() found the feedback panel unmarked straight after `page.click('#checkBtn')` (the real-UI path
+  in play(), scripts/verify-like-terms-collector.py ~:153-156); the cause is not yet traced. Jon said this may
+  belong to a contract he has not sent yet, so no fix has been started.
+- **Queue after #118:** F1 (Jon pastes it); item 0 if Jon confirms.
 
 ## 2026-10-07 (home): contract C game 5, Sequence Solver (#117)
 

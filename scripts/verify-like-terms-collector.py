@@ -102,6 +102,8 @@ SWEEP_JS = """async (attempts) => {
     document.getElementById('ans0').value = a.v[0];
     document.getElementById('ans1').value = a.v[1];
     document.getElementById('checkBtn').click();
+    // Wait for the game's own mark to land (up to 5 s) before reading it; never read it straight off the click.
+    for (let t = 0; MARK() === null && t < 250; t++) await new Promise(r => setTimeout(r, 20));
     out.push(MARK());
   }
   return out;
@@ -115,9 +117,37 @@ MARK_JS = """() => { window.MARK = () => {
   return icon.classList.contains('correct'); }; }"""
 
 
-def play(fails, against=None, planted=False):
+# Reading the mark: a check run on main once read it straight after page.click('#checkBtn') and saw nothing
+# ("marked correct=None", run 37626794263, attempt 1; the rerun passed). A flaky check is a test fault: wait for the
+# game's own marking to land, as the 6 Oct fix did for the analytics event. The self-test serves a copy whose
+# showFeedback() marks DEFER ms late: the waiting read must still see every mark, and a read straight off the
+# click must see none (proof the plant exercises the early read).
+DEFER = 300
+SHOW_FEEDBACK = 'function showFeedback(correct,detail){'
+DEFERRED = ('function showFeedback(correct,detail){setTimeout(function(){_showFeedbackNow(correct,detail)},%d)}'
+            'function _showFeedbackNow(correct,detail){' % DEFER)
+
+
+def read_mark(page, timeout=5000):
+    """The game's mark once it has landed; None if Check marked nothing within the timeout."""
+    from playwright.sync_api import TimeoutError as PlaywrightTimeout
+    try:
+        page.wait_for_function('() => MARK() !== null', timeout=timeout)
+    except PlaywrightTimeout:
+        return None
+    return page.evaluate('() => MARK()')
+
+
+def play(fails, against=None, planted=False, deferred=None):
+    """deferred: a list; when given, showFeedback is served DEFER ms late and each item-1 read made straight
+    off the click is appended to it."""
     from playwright.sync_api import sync_playwright
     html = open(against or GAME, encoding='utf-8').read()
+    if deferred is not None:
+        if html.count(SHOW_FEEDBACK) != 1:
+            fails.append('self-test: %s is not in the page once, so the late mark could not be planted' % SHOW_FEEDBACK)
+            return None
+        html = html.replace(SHOW_FEEDBACK, DEFERRED)
     if planted:
         if FIXED not in html:
             fails.append('self-test: the marking call %s is not in the page, so nothing could be planted' % FIXED)
@@ -153,7 +183,9 @@ def play(fails, against=None, planted=False):
                 page.fill('#ans0', typed[0])
                 page.fill('#ans1', typed[1])
                 page.click('#checkBtn')
-                got = page.evaluate('() => MARK()')
+                if deferred is not None:
+                    deferred.append(page.evaluate('() => MARK()'))
+                got = read_mark(page)
                 fb = page.evaluate("() => document.getElementById('feedbackDetail').textContent")
                 if got is not want:
                     fails.append('item 1: typed %s/%s, marked correct=%s, expected %s'
@@ -207,6 +239,13 @@ def main():
         ok = caught
         print('  self-test %-40s %s' % ('parseInt marking planted back',
                                         ('caught: ' + planted[0][:100]) if caught else '*** MISSED ***'))
+        late, early = [], []
+        play(late, deferred=early)
+        held = not late and early and all(e is None for e in early)
+        ok = ok and held
+        print('  self-test %-40s %s' % ('mark landing %d ms after Check' % DEFER,
+                                        'read only once it landed' if held else
+                                        '*** %s ***' % ('early read: ' + str(early) if late == [] else late[0][:100])))
         bad = dict(bank['STAGE2'][0]) if bank else None
         if bad:
             rep = []

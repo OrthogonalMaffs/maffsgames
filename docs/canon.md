@@ -89,6 +89,9 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 | SR-18 | **Game-specific rulings.** Probability Paradox states assumptions; Sleeping Beauty accepts 1/2 and 1/3; the envelope item is "can't tell". Word Problem Decoder: one category scheme, both accepted where both fit. Spot the Error: a strategy choice is not an error. Truth Buster's statements are worded so the key holds as written. | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
 | SR-19 | **Bank size alone never unlists a game.** | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
 | SR-20 | **When a game is unlisted.** A game is unlisted until its verifier merges when a level reaches CRITICAL (10%+ of its items mark a correct answer wrong or a wrong one right) or 3+ items mark a correct answer wrong. Jon may unlist beyond this (tranche 5: all eleven). | 6 Oct 2026 | Jon, 6 Oct 2026 (20:30), rulings on audit tranches 3-6 |
+| SR-21 | *Reserved for the relist rule (Jon, 7 Oct 2026), recorded with contract F1.* | | |
+| SR-22 | **One leaderboard per mode or session length.** Where a game's modes or session lengths have different maxima or measure different things, each has its own board (its own level key in the leaderboard name); runs never share a board with a mode they cannot be compared to. Prime Sprint's board key (its session length) is shown on the hub, so a student sees which board a score is on. Prisoner's Dilemma ranks the tournament total only: single matches against one opponent are not submitted. New level keys are added; existing keys never change (SR-11). Open entries it decides: proof-builder-t5-023 and prisoners-dilemma-t4-001 (code still to change). | 7 Oct 2026 | Jon, 7 Oct 2026, his ruling R15 |
+| SR-23 | **Timers follow `.claude/rules/timer-policy.md`.** A game listed under Hidden Count-Up runs a silent clock with no score multiplier, its time shown on the results screen only. Trig Identity Duel and Glorious Gantt Game follow it, as listed (their timers are visible now and Trig Identity Duel's feeds the score); scores before the change will not compare with scores after it, and that is accepted. Open entries it decides: trig-identity-duel-t2-010 and the timer part of glorious-gantt's entry at :783/:968 (code still to change). | 7 Oct 2026 | Jon, 7 Oct 2026, timer ruling |
 
 **Also recorded with SR-16 to SR-20** (Jon, 6 Oct 2026, 20:30):
 - Start screens and cards state what the code does (timers, scoring claims).
@@ -812,6 +815,13 @@ separately, and a wrong form is never a mark.**
     and resubmit." (with the student's own figure). Anything else is wrong.
   - `exact(raw, key)`: an answer that needs no rounding (whole-number ratios, integer scale factors).
     Equal in value or wrong; nothing is `'format'`, since no precision was asked for.
+  - `fractionOrDecimal(raw, num, den, dp)` (7 Oct 2026): the key is the exact fraction num/den, and the
+    question accepts it as a fraction or as a decimal to its stated precision. A typed fraction (a/b, a
+    sign on either part, any equivalent form: 3/7, 15/35) is read exactly by `fraction(raw)` and is
+    correct or wrong, never `'format'`. Anything else goes to `decimal()` against num/den rounded half up,
+    in integers, to dp places. `decimal()` and `exact()` still read no fractions.
+  - `message(..., {sf: n})` names significant figures where the question states them (the marking is
+    still at its dp places); `{fraction: true}` asks for "a fraction or a decimal" when unreadable.
   - **A question whose exact answer doesn't terminate must state its precision.** An unstated
     rounding is a key bug, not a marking choice.
   - Users: `tax-theft` (keys in pence; `moneyResult()` is now a one-line adapter, kept so its

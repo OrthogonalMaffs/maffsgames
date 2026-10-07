@@ -13,7 +13,7 @@ audited:
 findings:
 - id: prisoners-dilemma-t4-001
   severity: HIGH
-  jc: true
+  jc: false
   class: '8'
   level: all
   where: games/prisoners-dilemma/index.html:781
