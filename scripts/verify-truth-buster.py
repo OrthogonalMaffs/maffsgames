@@ -400,6 +400,7 @@ def check_bank(fails, bank, verbose=False):
 
 SWEEP_JS = r"""() => {
   window.setTimeout = () => 0;   // the Next button's pause: nothing is advanced here
+  if (window.MaffsLock) MaffsLock.FRESH_MS = 0;
   const out = [];
   const items = [...QUESTIONS.tier1, ...QUESTIONS.tier2, ...QUESTIONS.tier3];
   for (const q of items) {
@@ -423,6 +424,74 @@ SWEEP_JS = r"""() => {
 }"""
 
 
+# canon 7.6.1, Jon (7 Oct 2026): on a phone, after an answer, Next is above the fold (the fixed 40px footer) and the
+# whole reveal is on screen, for every item, without the student scrolling. Next's place is measured as soon as the
+# answer is given (it keeps its place while it waits out its 3 s).
+FIT_JS = r"""() => {
+  if (window.MaffsLock) MaffsLock.FRESH_MS = 0;
+  const out = [];
+  for (const q of [...QUESTIONS.tier1, ...QUESTIONS.tier2, ...QUESTIONS.tier3]) {
+    S.session = [q]; S.qIdx = 0;
+    renderQuestion(); window.scrollTo(0, 0);
+    document.getElementById('btnTrue').click();
+    document.getElementById('nextBtn').classList.add('visible');   // where Next is once its 3 s are up
+    const nb = document.getElementById('nextBtn').getBoundingClientRect();
+    const rp = document.getElementById('revealPanel').getBoundingClientRect();
+    out.push([q.id, Math.round(nb.bottom), Math.round(rp.top), window.innerHeight - 40, nb.height > 0]);
+  }
+  return out;
+}"""
+# Answer once (MaffsLock; truth-buster-t3-013): both answers pressed counts the first only; at a tier boundary two Enter
+# presses on Next move one question.
+LOCK_JS = r"""() => {
+  if (window.MaffsLock) MaffsLock.FRESH_MS = 0;   // the student has read the reveal; the window is not under test here
+  startGame();
+  S.qIdx = 6; renderQuestion();
+  const before = S.correct;
+  const q = S.session[6];
+  document.getElementById(q.answer ? 'btnFalse' : 'btnTrue').click();
+  document.getElementById(q.answer ? 'btnTrue' : 'btnFalse').click();
+  const res = { counted: S.correct - before };
+  S.revealTime = Date.now() - 4000;
+  const nb = document.getElementById('nextBtn');
+  nb.classList.add('visible'); nb.focus();
+  return res;
+}"""
+
+
+def fit(fails, html, sizes=((390, 844),), strict=True):
+    from playwright.sync_api import sync_playwright
+    proc, base = bc.start_stub_server()
+    report = {}
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            for vw, vh in sizes:
+                ctx = browser.new_context(viewport={'width': vw, 'height': vh}, has_touch=True, is_mobile=True)
+                page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+                ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
+                ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+                    status=200, content_type='text/html; charset=utf-8', body=html))
+                page = ctx.new_page()
+                page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
+                page.wait_for_function('typeof QUESTIONS !== "undefined"', timeout=8000)
+                page.click('.start-btn')
+                rows = page.evaluate(FIT_JS)
+                bad = [r for r in rows if r[1] > r[3] or r[2] < 0]
+                report[(vw, vh)] = (len(rows), bad, max(r[1] for r in rows), min(r[2] for r in rows), rows[0][3])
+                if strict and (vw, vh) == (390, 844):
+                    for qid, bottom, top, foldline, _ in bad:
+                        fails.append('%s at 390x844: after an answer %s (canon 7.6.1)' % (where(qid), (
+                            'Next is under the fold (%dpx > %dpx)' % (bottom, foldline)) if bottom > foldline else
+                            'the reveal starts above the screen (%dpx)' % top))
+                ctx.close()
+            browser.close()
+    finally:
+        proc.terminate()
+        proc.wait()
+    return report
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -440,6 +509,18 @@ def play(fails, html):
             page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof renderQuestion === "function"', timeout=8000)
             bank = page.evaluate('() => QUESTIONS')
+            page.click('.start-btn')
+            lk = page.evaluate(LOCK_JS)
+            page.keyboard.press('Enter')
+            page.keyboard.press('Enter')
+            page.wait_for_timeout(1500)
+            moved = page.evaluate('S.qIdx') - 6
+            if lk['counted'] > 0:
+                fails.append('both answers pressed: the second was counted (truth-buster-t3-013)')
+            if moved != 1:
+                fails.append('two Enter presses on Next at the tier boundary moved %d questions (truth-buster-t3-013)' % moved)
+            page.reload(wait_until='load')
+            page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof renderQuestion === "function"', timeout=8000)
             page.click('.start-btn')
             for r in page.evaluate(SWEEP_JS):
                 for p in r['problems']:
@@ -489,6 +570,11 @@ def main():
         return 0
     if bank is not None:
         check_bank(fails, bank, args.verbose)
+    measured = fit(fails, html, sizes=((390, 844), (375, 667), (320, 568)))
+    for (vw, vh), (n, bad, lowest, top, foldline) in sorted(measured.items(), reverse=True):
+        print('  phone fit %dx%d: %d items, Next above the fold (%dpx) on %d; lowest Next bottom %dpx; highest reveal '
+              'top %dpx%s' % (vw, vh, n, foldline, n - len(bad), lowest, top, '' if (vw, vh) == (390, 844) else
+                               ' (reported; Jon asked for 390x844)'))
     print('%s: %d statements, keys reviewed and pinned, %d figures recomputed, every item played in Chromium at 390px'
           % (SLUG, sum(len(bank[t]) for t in COUNTS) if bank else 0, sum(len(v) for v in FIGURES.values())))
 
