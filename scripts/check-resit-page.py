@@ -42,7 +42,7 @@ SUITE = [
     ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
         "estimation-engine", "estimation-golf", "unit-converter"]),
-    ("algebra", "Algebra", ["formula-plug-in", "like-terms-collector",
+    ("algebra", "Algebra", ["formula-plug-in", "like-terms-collector", "linear-equation-solver",
         "equation-builder", "four-quadrant-explorer", "formula-unlocked", "formula-forge", "sequence-solver"]),
     ("ratio", "Ratio, proportion and percentages", ["split-it", "proportion-blaster",
         "better-value", "percentage-flip"]),
@@ -62,8 +62,9 @@ EXCLUDED = {"prime-or-composite": "numbers up to 9,973; needs a Foundation-range
 WITHDRAWN = {}
 # Jon, 6 Oct 2026 (20:30, rulings on audit tranches 3-6, canon SR-20): unlisted from the whole site (roster
 # "Unlisted" section), so off this page and off the portal. A game returns by moving it back into SUITE, at its
-# old place, in the PR that relists it. linear-equation-solver sat in "algebra" after like-terms-collector.
-UNLISTED = {"linear-equation-solver": "tranche 4 audit; relist when its verifier merges and its register entries are fixed"}
+# old place, in the PR that relists it. linear-equation-solver relisted 7 Oct 2026 (canon SR-21), back in "algebra"
+# after like-terms-collector. None unlisted now.
+UNLISTED = {}
 # Jon, 4 Oct 2026 (resit audit, decision 8): cards whose opening level Jon has ruled. A card for one of
 # these games must carry this level key. estimation-golf's Starter is 8 of 20 general-knowledge items.
 RULED_LEVEL = {"estimation-golf": "ks3"}
