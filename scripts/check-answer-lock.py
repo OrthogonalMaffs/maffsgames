@@ -7,7 +7,9 @@
 Every roster game that records question_answered is either MIGRATED (its own guards replaced by
 schools/assets/answer-lock.js) or on NOT_YET. NOT_YET is reported, never failed, and may only shrink:
 it must be a subset of NOT_YET_AT_START (the games when contract F1 began), so a new game cannot be put on
-it, and a game on it that already loads answer-lock.js fails as stale (take it off).
+it, and a game on it that already loads answer-lock.js fails as stale (take it off). A cloud-lane game
+(CLOUD_LANE) is the exception: that lane adopts the lock in its own PRs, so it is reported, and the home
+lane moves it to MIGRATED once it passes (suvat, #128, 7 Oct 2026).
 
 A migrated game must, statically:
   - load answer-lock.js once (after next-control.js where it loads that) and call MaffsLock.lock(,
@@ -698,10 +700,13 @@ def main():
     for s in sorted(NOT_YET - slugs):
         fails.append('%s: on NOT_YET but not a roster game that records question_answered' % s)
     migrated = [(s, l) for s, l in games if s not in NOT_YET]
+    adopted = []
     for s, _ in games:
         html = open(os.path.join(ROOT, 'games', s, 'index.html'), encoding='utf-8').read()
         if s in NOT_YET and not args.against:
-            if INCLUDE.search(html):
+            if INCLUDE.search(html) and s in CLOUD_LANE:
+                adopted.append(s)       # the cloud lane adopts the lock in its own PRs; the home lane lists it
+            elif INCLUDE.search(html):
                 fails.append('%s: loads answer-lock.js but is still on NOT_YET (stale: take it off)' % s)
             continue
         if args.game and s not in args.game:
@@ -729,6 +734,9 @@ def main():
             print('  %-8s %s%s' % (tag, s, ('' if not res else ': ' + '; '.join(res))))
             if res and (s not in NOT_YET or args.against):
                 fails += ['%s: %s' % (s, r) for r in res]
+    if adopted:
+        print('  note: the cloud lane\'s %s load answer-lock.js and are still on NOT_YET: the home lane moves each to'
+              ' MIGRATED once it passes here' % ', '.join(sorted(adopted)))
     if NOT_YET & slugs:
         print('  NOT_YET (%d): %s' % (len(NOT_YET & slugs), ', '.join(sorted(NOT_YET & slugs))))
     for f in fails:
