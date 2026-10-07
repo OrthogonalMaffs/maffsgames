@@ -84,6 +84,8 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 think-of-a-number decimal-detective
+prime-or-composite probability-pioneer factor-race prime-factorisation
+percentage-flip fraction-equivalence equatle estimation-golf
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -91,7 +93,11 @@ NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 # that reaches the first question), 'ready' (JS: true when a question is on screen), 'answer' (JS that submits
 # an answer; gets `i`, the attempt), 'surface' (a selector for an answer surface that is not an option
 # group, such as a canvas: the repeat phase really clicks its centre and corners too), 'start_sel' (the
-# control that starts a run, when it is not a Start button: double-clicked for real).
+# control that starts a run, when it is not a Start button: double-clicked for real), 'keys' (the game's
+# own answer keys: pressed on the page in the repeat phase, inside MaffsNext's floor), 'each' (JS run before
+# each step of the tap-through: a wait the game measures on the real clock, which TIME_SCALE cannot shorten),
+# 'mark_any' (the game logs only right answers, as a built answer does: the repeat phase follows any mark),
+# 'repeat' (JS that presses every answer control of the marked question, where they are not an option group).
 HINTS = {
     'four-quadrant-explorer': {
         'ready': "document.getElementById('gameScreen').style.display !== 'none'",
@@ -137,6 +143,45 @@ HINTS = {
                    "  if (b.length) b[i % b.length].click(); }"
                    "if (q.type === 'placeit') setMarkerPosition(i % 2 ? 0.1 : 0.9);"
                    "document.getElementById('checkBtn').click();"),
+    },
+    'probability-pioneer': {
+        'ready': "['stage1Screen', 'stage2Screen', 'stage3Screen'].some(id => document.getElementById(id).classList.contains('active'))",
+        'answer': ("const on = id => document.getElementById(id).classList.contains('active');"
+                   "if (on('stage1Screen')) { const l = [...document.querySelectorAll('#scaleLabels .scale-label')];"
+                   "  l[i % l.length].click(); document.getElementById('scaleConfirmBtn').click(); return; }"
+                   "if (on('stage2Screen')) { const b = [...document.querySelectorAll('#mcqGrid .mcq-btn')];"
+                   "  if (b.length) b[i % b.length].click(); return; }"
+                   "if (on('stage3Screen')) document.getElementById(i % 2 ? 'btnTrue' : 'btnFalse').click();"),
+        'each': 'revealStartTime = 0;',
+    },
+    'prime-factorisation': {
+        'mark_any': True,
+        'ready': "document.getElementById('mainGame').classList.contains('visible')",
+        'answer': ("if (!document.getElementById('mainGame').classList.contains('visible')) return;"
+                   "let r = currentTarget / product;"
+                   "for (const p of [2, 3, 5, 7, 11, 13]) while (r % p === 0) {"
+                   "  document.querySelector('#primeBtns [data-p=\"' + p + '\"]').click(); r /= p; }"),
+        'repeat': "document.querySelectorAll('#primeBtns .prime-btn').forEach(b => { b.click(); b.click(); });",
+    },
+    'equatle': {
+        'ready': "!!document.getElementById('t00')",
+        'answer': ("if (G.status !== 'playing') return;"
+                   "const eqs = ['12+34=46', '10+20=30', '11+22=33', '40+15=55', '25+25=50', '13+14=27', '30+31=61'];"
+                   # a wrong guess is not a finished question (the next row is the same puzzle): lose it, so
+                   # the wrong path ends on MaffsNext (canon 7.6) as a lost puzzle does
+                   "for (let k = 0; k < 6 && G.status === 'playing'; k++) {"
+                   "  for (const ch of eqs[(i + k) % eqs.length]) key(ch); key('ENTER'); }"),
+        'keys': ['Enter'],
+    },
+    'estimation-golf': {
+        'ready': "document.getElementById('holeCard').style.display !== 'none' && !!currentQ",
+        'answer': ("if (document.getElementById('holeCard').style.display === 'none') return;"
+                   "const inp = document.getElementById('answerInput'); inp.value = String(currentQ.answer * 9 + i);"
+                   "document.getElementById('submitBtn').click();"),
+        'keys': ['Enter'],
+    },
+    'prime-or-composite': {
+        'keys': ['p', 'c', 'P', 'C'],
     },
     'like-terms-collector': {
         'ready': "document.getElementById('gameScreen').classList.contains('active')",
@@ -269,7 +314,7 @@ INIT = r"""
   window.__lockGroupRects = function () {
     return (window.__mfgGroup || []).map(e => window.__lockRect(e));
   };
-  const CONTINUE_RE = /^(got it|next|continue|carry on|onward|ok|okay|keep going|see (your )?results|show results|finish)\b/;
+  const CONTINUE_RE = /^(got it|next|continue|carry on|onward|ok|okay|keep going|see (your )?(results|scorecard)|show results|finish)\b/;
   window.__lockContinue = function () {
     const mn = document.querySelector('.maffs-next');
     window.__lockContEl = mn;
@@ -332,6 +377,13 @@ INIT = r"""
     const el = [...document.querySelectorAll('button, a, [role="button"]')].find(e => visible(e) &&
       /^(play again|restart|try again|new game|start again)/.test((e.textContent || '').trim().toLowerCase()));
     return el ? window.__lockRect(el) : null;
+  };
+  // Something to do: an enabled option of the probed group, a ready continue control, or the end.
+  window.__lockActionable = function () {
+    const p = window.__mfgProbe();
+    const free = (window.__mfgGroup || []).some(e => !e.disabled && e.getAttribute('aria-disabled') !== 'true');
+    const c = window.__lockContinue();
+    return free || !!(c && c.ready) || p.atEnd || p.n < 2;
   };
   // Synthetic Enter and Space on every option of the answered question (listeners on the option itself).
   window.__lockKeyOptions = function () {
@@ -457,7 +509,7 @@ class Driver:
             s = await self.answer(k + 1, touch)
             if s is None:
                 return None
-            if s['lastCorrect'] is False:
+            if s['lastCorrect'] is False or self.hint.get('mark_any'):
                 return s
             await self.to_next(touch)
             await self.page.wait_for_timeout(350)
@@ -482,7 +534,10 @@ async def play(browser, base, slug, level, page_html):
                 status=200, content_type='text/html; charset=utf-8', body=page_html))
         page = await ctx.new_page()
         errs = []
-        page.on('pageerror', lambda e: errs.append(str(e)[:120]))
+        # Reading el.onclick (the tier 3 probe) compiles an inline handler; a malformed one throws here and is the
+        # page's markup fault, not a marking fault (equatle :337 had one until F1 batch 2 restored it).
+        page.on('pageerror', lambda e: errs.append(str(e)[:120])
+                if "Failed to read the 'onclick' property" not in str(e) else None)
         await page.goto(url, wait_until='load', timeout=20000)
         await page.wait_for_timeout(300)
         return ctx, page, errs
@@ -509,6 +564,10 @@ async def play(browser, base, slug, level, page_html):
     for r in rects:
         if r:
             await page.mouse.click(r['x'], r['y'])
+    for k in hint.get('keys', []):
+        await page.keyboard.press(k)
+    if hint.get('repeat'):
+        await d.ev('() => { %s }' % hint['repeat'])
     await d.ev('() => __lockKeyOptions()')   # Enter and Space on the options themselves (a page-level Enter
                                              # may be the game's own Next: it is pressed in the tap-through)
     await page.wait_for_timeout(250)
@@ -529,11 +588,22 @@ async def play(browser, base, slug, level, page_html):
         after = await d.snap()
         if after['answered'] != before['answered'] or after['completed'] != before['completed']:
             faults.append('dblclick on %s: its second click marked %s' % (c['kind'], diff(before, after)))
+    elif await d.ev('() => __lockActionable()') and (await d.snap())['answered'] == s0['answered']:
+        if s0['lastCorrect'] is False:        # (a mark_any game's right answer moves on by itself, as it should)
+            AUTO_ADVANCE.add(slug)            # moved on by itself after a wrong answer: no Next to double-click
     else:
-        faults.append('no continue control after a wrong answer (MaffsNext expected)')
+        faults.append('no continue control after a wrong answer, and the game did not move on')
     # 4: tap through to the end; each continue pressed with two Enters and no gap (shape-shifter-t3-005)
     mark = len(await d.ev('() => __lockEvents'))
-    for _ in range(120):
+    t_end = asyncio.get_event_loop().time() + 180
+    while asyncio.get_event_loop().time() < t_end:
+        for _ in range(40):                  # wait until the game offers something (a right answer moves on itself)
+            if await d.ev('() => __lockActionable()'):
+                break
+            await page.wait_for_timeout(50)
+        await page.wait_for_timeout(320)     # past MaffsLock's 300 ms window on what just rendered
+        if hint.get('each'):
+            await d.ev('() => { %s }' % hint['each'])
         s = await d.snap()
         if s['completed'] or (await d.probe())['atEnd']:
             break
@@ -635,6 +705,7 @@ async def play_all(games, against):
 
 CHECK_SITE = None
 VERBOSE = False
+AUTO_ADVANCE = set()   # games that moved on by themselves after a wrong answer (no Next): reported
 
 
 def main():
@@ -698,6 +769,9 @@ def main():
     if adopted:
         print('  note: the cloud lane\'s %s load answer-lock.js and are still on NOT_YET: the home lane moves each to'
               ' MIGRATED once it passes here' % ', '.join(sorted(adopted)))
+    if AUTO_ADVANCE:
+        print('  note: no Next after a wrong answer (the game moves on by itself; canon 7.6 asks for Next): %s'
+              % ', '.join(sorted(AUTO_ADVANCE)))
     if NOT_YET & slugs:
         print('  NOT_YET (%d): %s' % (len(NOT_YET & slugs), ', '.join(sorted(NOT_YET & slugs))))
     for f in fails:
