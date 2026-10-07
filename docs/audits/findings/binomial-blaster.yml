@@ -17,7 +17,8 @@ findings:
   where: games/binomial-blaster/index.html:134,160,161,163,164,174
   summary: 6 of 50 alevel items (12%) mark a correct answer wrong or key a wrong value (t5-002..007)
   evidence: P(20-question session contains >=1) = 1 - C(44,20)/C(50,20) = 0.963
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-002
   severity: HIGH
   jc: false
@@ -26,7 +27,8 @@ findings:
   where: games/binomial-blaster/index.html:134 (C(5,2)+C(5,3), Pascal rule)
   summary: Distractor \binom{6}{3} equals the key 20 and is the Pascal-rule answer the ask names
   evidence: C(6,3) = 20 = 10 + 10
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-003
   severity: HIGH
   jc: false
@@ -35,7 +37,8 @@ findings:
   where: games/binomial-blaster/index.html:160 ((1.01)^5, first 3 terms)
   summary: Key 1.05101 is the 4-term sum; the 3-term value 1.051 is a distractor
   evidence: 1 + 5(0.01) + 10(0.0001) = 1.051
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-004
   severity: HIGH
   jc: false
@@ -44,7 +47,8 @@ findings:
   where: games/binomial-blaster/index.html:161 ((0.98)^4, first 3 terms)
   summary: Key 0.92237 is the exact value; the 3-term value 0.9224 is a distractor
   evidence: 1 - 0.08 + 6(0.0004) = 0.9224; exact 0.92236816
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-005
   severity: HIGH
   jc: false
@@ -53,7 +57,8 @@ findings:
   where: games/binomial-blaster/index.html:163 ((0.99)^10, first 3 terms)
   summary: Key 0.90438 is the 4-term sum; the 3-term value 0.9045 is not offered
   evidence: 1 - 0.1 + 45(0.0001) = 0.9045
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-006
   severity: HIGH
   jc: false
@@ -62,7 +67,8 @@ findings:
   where: games/binomial-blaster/index.html:164 ((1.05)^3, first 3 terms)
   summary: Key 1.15763 is the exact value; the 3-term value 1.1575 is not offered
   evidence: 1 + 0.15 + 3(0.0025) = 1.1575; exact 1.157625
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-007
   severity: HIGH
   jc: false
@@ -71,7 +77,8 @@ findings:
   where: games/binomial-blaster/index.html:174 ((2x+3)^3, coefficient of x^2)
   summary: Key 54 is the coefficient of x; the correct 36 is a distractor
   evidence: (2x+3)^3 = 8x^3 + 36x^2 + 54x + 27 (SymPy)
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-008
   severity: HIGH
   jc: true
@@ -80,7 +87,8 @@ findings:
   where: games/binomial-blaster/index.html:162 ((2.01)^3, Estimate)
   summary: No method or precision stated (SR-1); 8.121 and 8.12 are true values at other precisions, marked wrong
   evidence: (2.01)^3 = 8.120601 exactly; key 8.1206
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-009
   severity: HIGH
   jc: true
@@ -89,7 +97,8 @@ findings:
   where: games/binomial-blaster/index.html:165 (Row 6 of Pascal's triangle, middle)
   summary: Row numbering not stated; counting from row 1 the middle is 10, offered and marked wrong
   evidence: 'row 0-indexed 6: 1 6 15 20 15 6 1; 1-indexed: 1 5 10 10 5 1'
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-010
   severity: CRITICAL
   jc: false
@@ -98,7 +107,8 @@ findings:
   where: games/binomial-blaster/index.html:209,216,218,219,222
   summary: 5 of 50 alevel2 items (10%) have wrong keys (t5-011..015)
   evidence: P(20-question session contains >=1) = 0.933
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-011
   severity: HIGH
   jc: false
@@ -107,7 +117,8 @@ findings:
   where: games/binomial-blaster/index.html:209 (sqrt(1.1) from 1 + x/2 - x^2/8)
   summary: Key 1.04881 is the true sqrt(1.1), not the stated approximation 1.04875 (not offered)
   evidence: 1 + 0.05 - 0.00125 = 1.04875
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-012
   severity: HIGH
   jc: false
@@ -116,7 +127,8 @@ findings:
   where: games/binomial-blaster/index.html:216 (3/((1-x)(1+2x)), coefficient of x)
   summary: Key 5; true coefficient -3, not offered
   evidence: SymPy series 3 - 3x + 9x^2 + O(x^3)
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-013
   severity: HIGH
   jc: false
@@ -125,7 +137,8 @@ findings:
   where: games/binomial-blaster/index.html:218 ((1+ax)^n = 1 + 6x + 16x^2, find n)
   summary: Key n = -2; true n = 9, not offered
   evidence: an = 6, n(n-1)a^2/2 = 16 -> a = 2/3, n = 9 (SymPy unique); keyed pair gives x^2 coefficient 27
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-014
   severity: HIGH
   jc: false
@@ -134,7 +147,8 @@ findings:
   where: games/binomial-blaster/index.html:219 (same, find a)
   summary: Key a = -3; true a = 2/3, not offered
   evidence: 9*8/2*(2/3)^2 = 16
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-015
   severity: HIGH
   jc: false
@@ -143,7 +157,8 @@ findings:
   where: games/binomial-blaster/index.html:222 (why nCr formula fails for negative n)
   summary: Key '(-n)! is undefined' is false; the undefined factorials are n! and (n-r)!
   evidence: 'n = -2: (-n)! = 2! = 2'
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-016
   severity: HIGH
   jc: true
@@ -152,7 +167,8 @@ findings:
   where: games/binomial-blaster/index.html:205 (sqrt(4.08), Estimate)
   summary: No method or precision stated (SR-1); 2.02 (2-term value, and exact to 3 s.f.) marked wrong
   evidence: 3 terms 2.0199; exact 2.019901
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-017
   severity: HIGH
   jc: false
@@ -161,7 +177,7 @@ findings:
   where: games/binomial-blaster/index.html:240 (handle), :48 (.disabled is pointer-events only)
   summary: 'Enter on a focused option re-marks after answering: re-scores, skips questions, repeats end()/submitScore'
   evidence: 'wrong click, Tab to correct, Enter x25: score 2410, ''25/20 correct (125%)'', game_completed x7, submitScore
-    x7'
+    x7 Left open by the cloud-lane fix PR: class 1, owned by the shared answer lock (contract F1).'
   status: open
 - id: binomial-blaster-t5-018
   severity: MEDIUM
@@ -170,7 +186,8 @@ findings:
   level: all
   where: games/binomial-blaster/index.html:236-237
   summary: ?level=constructor/__proto__ crash on Start; nonsense falls back silently to alevel
-  evidence: pageerror 'QUESTIONS[level] is not iterable'
+  evidence: 'pageerror ''QUESTIONS[level] is not iterable'' Left open by the cloud-lane fix PR: class 4, owned by the shared
+    level resolver (contract F2).'
   status: open
 - id: binomial-blaster-t5-019
   severity: MEDIUM
@@ -180,7 +197,8 @@ findings:
   where: games/binomial-blaster/index.html:210 (1/1.1 from 1 - x + x^2)
   summary: Keys the approximation 0.91 while 0.909 (true, 3 d.p.) is marked wrong; opposite policy to :209
   evidence: 1 - 0.1 + 0.01 = 0.91; 1/1.1 = 0.90909
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-020
   severity: MEDIUM
   jc: true
@@ -189,7 +207,8 @@ findings:
   where: games/binomial-blaster/index.html:223
   summary: '''n not in Z+ -> infinite series'' is false for n = 0'
   evidence: (1+x)^0 = 1; :226 itself expands it
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-021
   severity: MEDIUM
   jc: false
@@ -198,7 +217,8 @@ findings:
   where: games/binomial-blaster/index.html:214 (ask), set by textContent at :238
   summary: Ask shows the literal '\binom{n}{r} for non-integer n'
   evidence: document.getElementById('prompt').textContent = q.ask
-  status: open
+  status: fixed
+  pr: 104
 - id: binomial-blaster-t5-022
   severity: LOW
   jc: false
@@ -206,5 +226,7 @@ findings:
   level: all
   where: games/binomial-blaster/index.html:217,207,238; index.html:3002
   summary: '''Find an'' ambiguous; ''Estimate coefficient''; options not via MaffsOptions; portal card claims l4'
-  evidence: read from source
+  evidence: 'read from source Partly fixed by the cloud-lane fix PR: the asks are reworded and the options are now built
+    by MaffsOptions.build. Still open: the portal card''s l4 claim is a listing surface, for the home lane''s relisting
+    PR.'
   status: open

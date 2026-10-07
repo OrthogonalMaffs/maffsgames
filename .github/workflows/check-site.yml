@@ -539,6 +539,7 @@ jobs:
               Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)|python scripts/verify-trig-worms.py
               Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium)|python scripts/verify-component-crusher.py
               Trig Identity Duel (every option read into SymPy: exactly one equals the key, compound-angle and triangle keys recomputed, marking in Chromium)|python scripts/verify-trig-identity-duel.py
+              Binomial Blaster (every key and option evaluated with SymPy, every item marked in Chromium)|python scripts/verify-binomial-blaster.py
 
     steps:
       - uses: actions/checkout@v4
