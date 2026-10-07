@@ -45,6 +45,12 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   verifier listed in the workflow, or declared AND listed, fails. Reports each group's check seconds from
   `scripts/ci-timings.json` (recorded from main's run 37625188261 after #107 by `ci-groups.py --record-timings`;
   B4 164s is the largest, setup excluded) and flags any over 240s.
+- **Success proof:** throwaway PR #110 (based on this branch) added only `scripts/verify-zz-v-probe.py` with a
+  `B3` ci-line: the plan selected just it, and B3 ran it (1 line run, 5 skipped; run 37626296241); closed and
+  deleted. #108's own full run (CI changed, so everything): 51 of 51 content lines ran, Gate green, 4m39s.
+- **The cloud lane merged twice while this was open** (#107 Integration Duel, #109 Curling Friction), each adding a
+  workflow line; each time main was merged in, the verifier given its header, and `--compare` against main's
+  workflow re-run: 52 = 52, EQUAL, before the merge.
 - **For the cloud lane:** add the verifier's `# ci-line:` header in its own file; never edit the workflow for it.
   Canon §7.8.2 says so (the cloud handover is the cloud lane's to update).
 
