@@ -102,7 +102,7 @@ ex.innerHTML=`<h2>Worked Example</h2>
 <div class="ex-step"><strong>Step 3:</strong> Let y = 1 (free variable):<br>${rkI('\\mathbf{v} = \\begin{pmatrix} 2 \\\\ 1 \\end{pmatrix}')}</div>
 <div class="ex-note"><strong>Key insight:</strong> The rows of (A − λI) are always linearly dependent — that's WHY λ is an eigenvalue. You only need ONE row. Let one variable = 1 and solve for the other. Any scalar multiple is also a valid eigenvector.</div>`;
 }
-window.addEventListener('DOMContentLoaded',()=>{setTimeout(buildExample,300)});
+window.addEventListener('DOMContentLoaded',()=>{setTimeout(buildExample,300)});  // lock-ok: draws the start screen's worked example, it marks nothing
 
 const QS=[
 {m:[[2,1],[0,3]],lam:2,c:'\\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}',d:['\\begin{pmatrix} 0 \\\\ 1 \\end{pmatrix}','\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}','\\begin{pmatrix} -1 \\\\ 1 \\end{pmatrix}'],s:['\\(A - 2I = \\begin{pmatrix} 0 & 1 \\\\ 0 & 1 \\end{pmatrix}\\)','Row 1: \\(y = 0\\)','Let \\(x = 1\\): \\(\\mathbf{v} = \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}\\)']},
