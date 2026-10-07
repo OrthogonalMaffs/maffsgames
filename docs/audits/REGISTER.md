@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 40 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 68 open (3 CRITICAL, 65 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 67 open (3 CRITICAL, 64 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -22,10 +22,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 3 | 21 | 0 | 24 |
-| HIGH | 65 | 141 | 0 | 206 |
-| MEDIUM | 166 | 101 | 0 | 267 |
+| HIGH | 64 | 142 | 0 | 206 |
+| MEDIUM | 165 | 102 | 0 | 267 |
 | LOW | 34 | 25 | 0 | 59 |
-| **All** | 268 | 288 | 0 | 556 |
+| **All** | 266 | 290 | 0 | 556 |
 
 ### By class
 
@@ -34,7 +34,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 33 | 103 |
 | 3 | 10 | 85 |
 | 6 | 31 | 56 |
-| 1 | 29 | 35 |
+| 1 | 28 | 35 |
 | NEW:wrong-explanation-text | 18 | 34 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
@@ -65,7 +65,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:phone-fold | 2 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
-| NEW:timer-policy | 2 | 2 |
+| NEW:timer-policy | 1 | 2 |
 | NEW:unmarkable free text | 2 | 2 |
 | NEW:wording | 1 | 2 |
 | 10 | 1 | 1 |
@@ -191,7 +191,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `terrible-advice` | yes | none | 0 | 4 | 4 | 0 | 8 | 0 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
 | `think-of-a-number` | yes | none | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| `trig-identity-duel` | unlisted | verify-trig-identity-duel.py | 0 | 7 | 4 | 0 | 2 | 9 | 0 |
+| `trig-identity-duel` | unlisted | verify-trig-identity-duel.py | 0 | 7 | 4 | 0 | 0 | 11 | 0 |
 | `trig-wars` | yes | none | 1 | 1 | 4 | 0 | 6 | 0 | 0 |
 | `trig-worms` | unlisted | verify-trig-worms.py | 1 | 0 | 3 | 0 | 0 | 4 | 0 |
 | `truth-buster` | unlisted | verify-truth-buster.py | 0 | 3 | 11 | 1 | 3 | 12 | 0 |
@@ -283,10 +283,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 - **HIGH** surd-simplifier-t1-001, `games/surd-simplifier/index.html:174`: 8/sqrt(32), 'Rationalise and simplify': the key 'sqrt2 . sqrt2' equals 2; the answer is sqrt2, and the only option equal to it, 8sqrt32/32, is marked wrong
 - **HIGH** surd-simplifier-t1-002, `games/surd-simplifier/index.html:233`: 0.41616... = 206/495; the key 137/330 is 0.41515..., and none of the four options is correct
-
-### `trig-identity-duel` (GCSE, A-Level, L4; unlisted)
-
-- **HIGH** trig-identity-duel-t2-007, `games/trig-identity-duel/index.html:285 (handle())`: Buttons disabled only by CSS class, no answered guard: Enter on the revealed correct option re-scores it; repeated presses during the 1 s pause skip questions unseen
 
 ### `trig-wars` (GCSE, A-Level)
 
