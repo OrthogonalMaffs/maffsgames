@@ -4372,7 +4372,7 @@
  "partial-fractions-duel": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -4396,14 +4396,8 @@
     "status": "pass"
    },
    "B3": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.alevel[22]: exact duplicate of partial-fractions-duel::QUESTIONS.alevel[21]: '\\\\dfrac{1}{x(x+1)(x-1)} = \\\\dfrac{A}{x} + \\\\dfrac{B}{x+1} + \\\\dfrac{C}{x-1} :: \\\\dfrac{1}{2}'",
-      "id": "partial-fractions-duel::B3::3f8d92d01000#1+d1466d72a13d#1",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B4": {
     "entries": [],

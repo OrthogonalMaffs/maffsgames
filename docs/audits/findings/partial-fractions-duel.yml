@@ -77,8 +77,10 @@ findings:
   where: games/partial-fractions-duel/index.html:159 (handle)
   summary: 'Enter on a focused option re-marks: re-scores, skips questions, repeats end()/submitScore'
   evidence: 'wrong click, Tab to correct, Enter x25: score 2367, ''25/20 correct (125%)'', submitScore x7 Left open by
-    the cloud-lane fix PR: class 1, owned by the shared answer lock (contract F1).'
-  status: open
+    the cloud-lane fix PR: class 1, owned by the shared answer lock (contract F1). Fixed by adopting MaffsLock
+    (lock, fresh, timer, finishOnce, newSession); scripts/verify-partial-fractions-duel.py tests it.'
+  status: fixed
+  pr: 139
 - id: partial-fractions-duel-t5-008
   severity: MEDIUM
   jc: true
@@ -109,3 +111,15 @@ findings:
   evidence: 6x^2+5x+1 = (2x+1)(3x+1)
   status: fixed
   pr: 105
+- id: partial-fractions-duel-t5-011
+  severity: MEDIUM
+  jc: false
+  class: 1
+  level: all
+  where: games/partial-fractions-duel/index.html (showMenu)
+  summary: A double click on Play Again lands its second click on the menu, where at 1280x900 the leaderboard link
+    sits under the button, opening /leaderboards/
+  evidence: scripts/check-answer-lock.py ('dblclick on Play again', then 'firebase is not defined' from /leaderboards/);
+    found by the cloud lane's fix (PR 139)
+  status: fixed
+  pr: 139
