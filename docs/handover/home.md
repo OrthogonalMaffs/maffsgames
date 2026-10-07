@@ -25,11 +25,11 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
 - **Jon's F1 checkpoint rule (7 Oct):** after the shared lock PR, stop after every 2 roll-out batches (each merged,
   main green); at each stop update this file (batches, PRs, NOT_YET, next batch, lessons) and stop. Also stop at the
   next batch boundary when Jon says "checkpoint".
-- **STATE AT THE PAUSE (nothing of batches 1-2 is on GitHub yet):** both branches are committed locally only;
-  `git push` returned GitHub "Internal Server Error" (remote rejected) three times at 17:00, githubstatus green.
+- **STATE AT THE PAUSE:** both branches pushed (after GitHub returned "Internal Server Error" on push three times
+  at 17:00; the fourth went through). No PR open for either yet.
   - `claude/f1-batch1` in worktree `E:/jon/mg-b1` (rebased on main after #125): batch 1 + check-answer-lock.py.
   - `claude/f1-batch2` in worktree `E:/jon/mg-b2` (stacked on batch 1, not yet rebased).
-- **NEXT SESSION, in order:** (1) push `claude/f1-batch1`; open its PR (body drafted: games, faults fixed, check);
+- **NEXT SESSION, in order:** (1) open the PR for `claude/f1-batch1` (body drafted: games, faults fixed, check);
   run `python scripts/close_entries`-style edit: set status fixed + pr on formula-plug-in-t3-001, new-shapes-t3-001,
   four-quadrant-explorer-t3-001, like-terms-collector-t3-002 (shape-shifter-t3-005 stays open: bundle; note its
   class-1 part fixed). (2) Local check-changed on batch 1: 82 ok, 3 FAILED: Negative Number Line (320px fold, also
