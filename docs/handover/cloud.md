@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: partial-fractions-duel truth-buster`
+`cloud-remaining: truth-buster`
 
 **Resume rule, MaffsLock (Jon, contract LH):** adopting MaffsLock includes the game's lock-hint declaration
 (`<!-- maffs-lock-hint ... -->`, canon §7.6.0), and the game passes `check-answer-lock.py`. Hints live in the
@@ -22,6 +22,32 @@ game's page, never in the shared script.
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-07 (cloud): partial-fractions-duel (queue 5 of 6); #138 binomial-blaster merged; NEXT = truth-buster
+
+- **#138 merged** at 20:53 on a green Gate; main's full run on b10d3db green.
+- **partial-fractions-duel:** the old session's commit (9a19235) cherry-picked onto main (Jon's alevel[22]:
+  1/(x(x+1)(x-2)), find C, keyed 1/6; distractors -1/2 = A, 1/3 = B, -1/6 the sign slip; MaffsLock; the B3 duplicate
+  cleared), plus its maffs-lock-hint (`{}`) and off the remaining list.
+- **The two lock-check reports were one fault, in the game:** Play Again calls `showMenu()`, and at 1280x900 the menu's
+  "Global leaderboard" link sits under the button, so the second click of a double click opened /leaderboards/.
+  That page then threw "firebase is not defined" (the check blocks the Firebase CDN). `showMenu()` now calls
+  `MaffsLock.screen()` on the menu (the shared API's own screen-change call; nothing shared edited). The verifier tests
+  a real double click and Play Again then the link and Start; a fourth plant (the old showMenu) is caught.
+  `check-answer-lock.py --game partial-fractions-duel` passes, twice. Filed as t5-011 (class 1), fixed.
+- **For the home lane, two findings outside this lane:**
+  - **The same Play Again shape is in 25 games** (`function showMenu(){show('menu')}` with a `/leaderboards/` link on
+    the menu): angle-ace, bearing-blitz, binomial-blaster, characteristic-quest, circle-theorem-spotter,
+    coordinate-geometry-dash, curling-friction, dimension-checker, eigenvalue-extractor, eigenvector-engine,
+    force-resolver, formula-forge, formula-unlocked, graph-transformer, matrix-crunch, moments-master,
+    normal-navigator, probability-paradox, proportion-blaster, scale-factor-scaling, sequence-solver,
+    standard-form-blitz, surd-simplifier, trig-identity-duel, unit-converter. The check's Play Again test is a
+    double click at one point, so it catches the fault only where a control happens to sit under the button
+    (binomial-blaster and trig-identity-duel pass it with the same code). A layout-independent test (Play Again,
+    then a click on every menu control within the window) would find all of them.
+  - **/leaderboards/ throws when the Firebase SDK does not load** (a school network that blocks gstatic.com):
+    `leaderboards/index.html:159` calls `firebase.database()` unguarded, so the whole script stops, including the
+    device-local "Your Scores" section. firebase-leaderboard.js guards the same case (`typeof firebase`).
 
 ## 2026-10-07 (cloud): binomial-blaster (queue 4 of 6); #137 trig-identity-duel merged; NEXT = partial-fractions-duel
 
