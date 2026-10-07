@@ -33,8 +33,8 @@ re-reviewed):
   Q18 correlation and causation (which criticism is "most appropriate")
 Q7's classification of each variable comes from a reviewed table (CLASSIFY), the definitions taught at GCSE.
 Q21, Q30, Q31 and Q36 are recomputed here from the figures their stems state; whether those figures are the
-teaching year's rates is verify-core-maths-paper1-tax.py's job (uk_rates). Q27's CPI figures are taken as
-stated (whether they are true is the quoted-statistics audit's, todo).
+teaching year's rates is verify-core-maths-paper1-tax.py's job (uk_rates). Q27's CPI figures must be the ONS
+annual averages (ONS_CPI, quoted-statistics audit); the page stores them in SOURCES and builds the stem from them.
 
 Pictures (SR-6): each histogram's and the box plot's data are read from the page's own renderers and the keys
 are computed from them; the box plot's five numbers must equal the stem's; every chart line not drawn over a
@@ -43,7 +43,7 @@ filled shape must contrast at least 3:1 with the question card (WCAG 1.4.11), wh
 Marking: every key is clicked through the page's own selectAnswer() and must be marked correct.
 
 A fault-injection self-test (Q32's old options and key, Q7's old option C, Q1 with no method named, Q9's old
-key, Q9's old whisker colour, a wrong key on a computed item) must FAIL each time; it runs unless
+key, Q9's old whisker colour, a wrong key on a computed item, Q27's old CPI pair) must FAIL each time; it runs unless
 --no-selftest.
 
     python scripts/verify-core-maths-paper1.py [--verbose] [--no-selftest]
@@ -380,7 +380,17 @@ def r_priya(rep, qid, q, ctx):
         verdict(rep, qid, q, 'No')
 
 
+# ONS CPI annual average rates (quoted-statistics audit, PR #68): the stem's real-year figures must be these.
+# https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/december2023
+ONS_CPI = {'2022': F('9.1'), '2023': F('7.3')}
+
+
 def r_cpi(rep, qid, q, ctx):
+    for rate, year in re.findall(r'([\d.]+)% in (\d{4})', q['stem']):
+        if year not in ONS_CPI:
+            rep.fail(qid, 'CPI figure', 'CPI for %s is not in the verifier\'s ONS table: add it with its source' % year)
+        elif num(rate) != ONS_CPI[year]:
+            rep.fail(qid, 'CPI figure', 'CPI %s stated as %s%%; ONS annual average is %s%%' % (year, rate, float(ONS_CPI[year])))
     base = money_all(q['stem'])[0]
     rates = [num(x) / 100 for x in re.findall(r'([\d.]+)% in \d{4}', q['stem'])]
     v = base
@@ -749,6 +759,11 @@ def selftest(bank, ctx):
         q = find(b, r'compound interest per annum')
         q['correct'] = (q['correct'] + 1) % len(q['options'])
     expect('wrong key (Q20)', wrong_key)
+
+    def cpi_old(b, c):
+        q = find(b, r'CPI inflation')
+        q['stem'] = re.sub(r'[\d.]+% in 2022, [\d.]+% in 2023', '8.7% in 2022, 6.3% in 2023', q['stem'])
+    expect("Q27's old CPI pair (8.7%, 6.3%)", cpi_old)
 
     def q4_chart(b, c):
         q = find(b, r'How many patients waited between')

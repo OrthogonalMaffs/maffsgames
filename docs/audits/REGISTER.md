@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 18 | 6 | 0 | 24 |
 | HIGH | 180 | 22 | 0 | 202 |
-| MEDIUM | 232 | 27 | 0 | 259 |
+| MEDIUM | 231 | 28 | 0 | 259 |
 | LOW | 38 | 0 | 0 | 38 |
-| **All** | 468 | 55 | 0 | 523 |
+| **All** | 467 | 56 | 0 | 523 |
 
 ### By class
 
@@ -35,7 +35,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 3 | 70 | 82 |
 | 6 | 38 | 56 |
 | 1 | 35 | 35 |
-| NEW:wrong-explanation-text | 32 | 32 |
+| NEW:wrong-explanation-text | 31 | 32 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
 | 7 | 12 | 15 |
@@ -131,7 +131,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `component-crusher` | unlisted | none | 1 | 6 | 6 | 1 | 14 | 0 | 0 |
 | `constructions-lab` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `coordinate-geometry-dash` | yes | none | 0 | 1 | 3 | 0 | 4 | 0 | 0 |
-| `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 2 | 0 | 1 | 5 | 0 |
+| `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 2 | 0 | 0 | 6 | 0 |
 | `core-maths-paper2b` | yes | none | 0 | 1 | 1 | 0 | 2 | 0 | 0 |
 | `core-maths-paper2c` | yes | none | 0 | 3 | 5 | 1 | 9 | 0 | 0 |
 | `correlation-or-coincidence` | yes | verify-correlation-or-coincidence.py | 1 | 0 | 2 | 0 | 0 | 3 | 0 |

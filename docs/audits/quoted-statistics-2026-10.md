@@ -47,6 +47,9 @@ against a factor band around its `reference` (`withinFactor`). The final estimat
   every count, answer and figure is computed from the stated rates (`scripts/verify-screening-room.py`). Rows marked
   **Fixed (PR #92)**.
 
+- **PR #93 (Core Maths Paper 1, 7 Oct 2026)** fixes the CPI pair: 9.1% (2022) and 7.3% (2023), the ONS annual averages,
+  stored with the source; key £111.21. `verify-core-maths-paper1.py` checks the rates against ONS.
+
 ## 1. Contradicted keyed figures: a student with the true figure loses marks
 
 | Item | Keyed figure (wording) | Source figure | Effect of entering the true figure |
@@ -185,7 +188,7 @@ with it).
 | `screening-room` `alevel_15` **Fixed (PR #92)** | NHS AAA: "About **1.5%** have an aneurysm" | NHS detection 1.12% (2015-16), 0.92% (2019-20), ~0.74% (2023-24) ([AAA standards report](https://www.gov.uk/government/statistics/abdominal-aortic-aneurysm-screening-standards-report-2023-to-2024/aaa-standards-report-2023-to-2024--2)) | **CONTRADICTED** (about 2x) |
 | `screening-room` `gcse_03` **Fixed (PR #92)** | colour blindness **8%** of 200 students | 8% of **males**, 0.5% of females; 4.5% of the UK overall ([Colour Blind Awareness](https://www.colourblindawareness.org/?p=21)) | **CONTRADICTED** for a mixed group (true only for boys) |
 | `screening-room` `gcse_05` **Fixed (PR #92)** | **10%** of Year 7 "actually need glasses" | NICER: 14.6-17.7% of 12-13-year-olds are myopic alone ([PMC4718680](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4718680/)) | **CONTRADICTED** (low) |
-| `core-maths-paper1` (3.2, AO2) | "CPI inflation: **8.7% in 2022, 6.3% in 2023**" | ONS CPI: annual average 9.1% (2022), 7.3% (2023); to December 10.5%, 4.0%. 8.7% was the April/May **2023** rate; no 2023 measure was 6.3% ([ONS](https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/december2023), [CIPP](https://www.cipp.org.uk/resources/news/uk-inflation-falls-to-8-7.html)) | **CONTRADICTED** (real years, wrong rates) |
+| `core-maths-paper1` (3.2, AO2) **Fixed (PR #93)** | "CPI inflation: **8.7% in 2022, 6.3% in 2023**" | ONS CPI: annual average 9.1% (2022), 7.3% (2023); to December 10.5%, 4.0%. 8.7% was the April/May **2023** rate; no 2023 measure was 6.3% ([ONS](https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/december2023), [CIPP](https://www.cipp.org.uk/resources/news/uk-inflation-falls-to-8-7.html)) | **CONTRADICTED** (real years, wrong rates) |
 | `wrong-on-the-internet` `woti_core_005` | "UK inflation in 2023 was 7.3%" | ONS annual average 2023: 7.3% | VERIFIED |
 | `screening-room` `alevel_13` | NHS cervical screening: "The Pap smear" (sensitivity 70%, specificity 95%) | The accuracy figures match cytology meta-analyses; but **England's programme has used HPV primary testing since 2019** | VERIFIED but DATED |
 
