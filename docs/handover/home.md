@@ -36,6 +36,23 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-07 (home, night 3): batch 4 (#140); the SR-21 relist PR; CHECKPOINT STOP
+
+- **Batch 4 = #140** (see its entry below). It also filed **expectation-station-pc-001** (Jon's paste: CRITICAL,
+  jc, Stage 1 underdetermined on ~33 of 45 items; fix design awaits his ruling A/B), and the self-test now
+  plants decimal-detective by name (binomial-blaster, first in MIGRATED once the cloud games joined, guards
+  itself, so its no-lock plant played clean).
+- **Relist PR (SR-21):** 16 games back, **listed 74 -> 90**. Still unlisted (7): expectation-station (Jon's hold,
+  pc-001), factor-theorem, partial-fractions-duel, screening-room, glorious-gantt (open CRITICAL/HIGH),
+  truth-buster (on `cloud-remaining:`), just-pythag-it-bruv (Jon's play-test). Canon SR-21 written. The todo
+  checklists' "every entry fixed" item was read as superseded by SR-21's bar (open MEDIUM/LOW stay in the
+  register): flagged in the PR for Jon.
+- **How:** scratchpad `relist.py` re-inserts each game's exact removed block (from #82/#85/#87's diffs) after its
+  old neighbour, bottom-up; spec-map links are merged into today's rows. Hand-done: roster, NOT_ON_HUB,
+  check-resit-page.py, the guide's "two free games" line, Component Crusher's Coverage Status row, the hub's last
+  comma. A later relist of the seven can reuse the same approach.
+- **Next session:** contract DET first (QUEUE above), then ESSENTIALS (get its text from Jon).
+
 ## 2026-10-07 (home, night 2): #136 (batch 3) merged; F1 batch 4 PR; relist PR next
 
 - **#136 merged** on a green Gate after one fix: CI's answer lock L2 failed it with spot-the-error UNPLAYABLE.
