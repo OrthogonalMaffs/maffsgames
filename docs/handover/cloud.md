@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-07 (cloud): game 17 SUVAT Selector (PR pending); #127 Force Resolver merged; NEXT = factor-theorem
+## 2026-10-07 (cloud): game 17 SUVAT Selector (PR #128); #127 Force Resolver merged; NEXT = factor-theorem
 
 - **Force Resolver (PR #127) merged** at 16:15 on a green Gate; main green after #126 before it.
 - **SUVAT Selector:** every typed step marked by MaffsAnswer (`exact`, or `decimal` at the step's stated `dp`; the

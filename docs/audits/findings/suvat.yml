@@ -17,7 +17,8 @@ findings:
   where: games/suvat/index.html:260-261 (QUESTIONS_LEVEL4[7], sprinter)
   summary: No real solution (u² = −256) but keyed u = 4 ± 1; served in every level4 session (1 of 8)
   evidence: 144 = u² + 2·2·100 -> u² = −256; 4² + 400 = 416 ≠ 144
-  status: open
+  status: fixed
+  pr: 128
 - id: suvat-t5-002
   severity: HIGH
   jc: false
@@ -26,7 +27,8 @@ findings:
   where: games/suvat/index.html:446 (QUESTIONS_ALEVEL[34], step 1 'Find v_y')
   summary: Keyed +0.32 with tol 0.3; the correct signed v_y = −0.32 (the game's own working) is marked wrong
   evidence: '30 sin 40° − 9.8×2 = −0.316; |−0.32 − 0.32| = 0.64 > 0.3; Chromium feedback ''Answer: 0.32 m/s'''
-  status: open
+  status: fixed
+  pr: 128
 - id: suvat-t5-003
   severity: HIGH
   jc: true
@@ -35,7 +37,8 @@ findings:
   where: games/suvat/index.html:475 (QUESTIONS_ALEVEL[39], speed at max height)
   summary: find 'v' is also a known; only u and a given, so no equation fits, yet Phase 1 marks v = u + at right
   evidence: v = u + at needs t, v² = u² + 2as needs s; answer 19.8 = u_x needs no SUVAT equation
-  status: open
+  status: fixed
+  pr: 128
 - id: suvat-t5-004
   severity: HIGH
   jc: false
@@ -65,7 +68,8 @@ findings:
   where: games/suvat/index.html:663-668, 790-793, 907-909
   summary: Local parseFloat + tolerance marking; no prompt states a precision (SR-1); tolerances inconsistent
   evidence: 2 s.f. rejected on ALEVEL[25] s2 (27 vs 26.6) and [37] s2 (130 vs 125.1), accepted on [17] (40 vs 39.6)
-  status: open
+  status: fixed
+  pr: 128
 - id: suvat-t5-007
   severity: MEDIUM
   jc: false
@@ -75,7 +79,8 @@ findings:
   summary: 'Displayed answers rounded early: 14.9 (14.849), 38.3 (38.355), 103.5 with working 103.4 (103.316); tolerances
     accept the exact'
   evidence: 30/√(40/9.8) = 14.849; 400 sin110°/9.8 = 38.355; 2025 sin30°/9.8 = 103.316
-  status: open
+  status: fixed
+  pr: 128
 - id: suvat-t5-008
   severity: MEDIUM
   jc: false
@@ -84,7 +89,8 @@ findings:
   where: games/suvat/index.html:378 (ALEVEL[22])
   summary: '''Find the height of the launch point'' after 3 s, but nothing says it lands at 3 s'
   evidence: 44.1 m is the drop in 3 s
-  status: open
+  status: fixed
+  pr: 128
 - id: suvat-t5-009
   severity: MEDIUM
   jc: false
@@ -93,7 +99,8 @@ findings:
   where: games/suvat/index.html:813-814
   summary: Multi-step items log correct/accuracy from the last step only
   evidence: if(correct) _svCorrectCount++ uses only the final step
-  status: open
+  status: fixed
+  pr: 128
 - id: suvat-t5-010
   severity: MEDIUM
   jc: false
@@ -112,4 +119,5 @@ findings:
   summary: Wrong Phase 0/2 answers advance on fixed timers (note); Section B mixes a = −9.8 and +9.8 (each stated);
     ALEVEL[3] drops root t = 8 without a reason
   evidence: code read
-  status: open
+  status: fixed
+  pr: 128
