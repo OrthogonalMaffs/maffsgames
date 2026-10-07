@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium) |
 """Dimension Checker: every key and option checked by dimension algebra; every worked step recomputed; every item
 marked in Chromium.
 
