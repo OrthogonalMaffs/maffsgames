@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | Trig Identity Duel (every option read into SymPy: exactly one equals the key, compound-angle and triangle keys recomputed, marking in Chromium) |
 """Trig Identity Duel: every key and every option evaluated with SymPy; every item marked in Chromium.
 
 The game (99 multiple-choice items: gcse 50, alevel 49) asks for exact values, sine and cosine rule results,

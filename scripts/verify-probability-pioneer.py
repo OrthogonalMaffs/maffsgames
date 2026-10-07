@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | Probability Pioneer (Stage 2 keys recomputed, Stages 1 and 3 pinned, every answer marked in Chromium) |
 """Probability Pioneer: every key checked, and every answer marked through the real page.
 
 The bank (45 items, one level, played in full and in fixed order every session) was keyed by hand

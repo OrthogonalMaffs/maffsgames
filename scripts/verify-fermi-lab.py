@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: E | Fermi Lab (every chain multiplies to its key, Brilliant in Chromium; every stored figure sourced and green at its step) |  && --selftest
 """Independent verification of Fermi Lab's chains and its stored real-world figures.
 
 Until Oct 2026, 19 of Fermi Lab's 65 items had a model chain that did not multiply to the item's own key: a

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code) |
 """Regression checks for the resit-safety fixes of 4 Oct 2026 (resit correctness audit, PR #35).
 
     python scripts/check-resit-fixes.py                    # CI

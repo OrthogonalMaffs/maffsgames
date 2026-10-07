@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B3 | Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium) |
 """Decimal Detective: every key recomputed, and every answer marked through the real page.
 
 The bank (45 items, one level: 15 Line-Up, 15 Round Up, 15 Place It) was keyed by hand and never

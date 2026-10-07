@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | Better Value tax-and-NI rule of thumb (checked with uk_rates) |
 """Independent verification of better-value's tax-and-NI rule of thumb (canon §7.1.4, todo §1.43).
 
 Until 3 Oct 2026 bv_core_046 told students "Tax and NI are approximately 25% of gross salary";

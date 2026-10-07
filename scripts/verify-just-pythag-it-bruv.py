@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# ci-line: C1 | Just Pythag It, Bruv, part 1 (fit at 320px; a quarter of the planted layout faults) | --part-selftest && --part 1
+# ci-line: C2 | Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a quarter of the planted layout faults) | --part-selftest && --part 2
+# ci-line: C3 | Just Pythag It, Bruv, part 3 (fit at 375px and the three desktop sizes; a quarter of the planted layout faults) | --part-selftest && --part 3
+# ci-line: C4 | Just Pythag It, Bruv, part 4 (every key and triangle recomputed over 300 sessions, WebKit, play-through, a quarter of the layout faults, fault-injection self-test) | --part-selftest && --part 4
 """Independent verification for Just Pythag It, Bruv (games/just-pythag-it-bruv/), built 4 Oct 2026.
 
 WHY THIS READS THE LIVE PAGE
@@ -1579,7 +1583,15 @@ async def selftest(browser):
 PARTS = ("1", "2", "3", "4")
 FIT_PART = {(320, 568): "1", (375, 667): "3", (390, 844): "2", (412, 915): "2",
             (1280, 720): "3", (1366, 768): "3", (1920, 1080): "3"}
-WORKFLOW = os.path.join(ROOT, ".github", "workflows", "check-site.yml")
+
+
+def ci_commands():
+    """Every command CI runs: the workflow's static lines and every script's ci-line header (scripts/ci-groups.py)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("ci_groups", os.path.join(ROOT, "scripts", "ci-groups.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.ci_text()
 
 
 def plan(no_phone=False, no_selftest=False):
@@ -1629,16 +1641,14 @@ def part_selftest():
         print("  planted: %-22s %s" % (name, "caught" if caught else "*** MISSED ***"))
         if not caught:
             fails.append("self-test: %s was not caught" % name)
-    if os.path.exists(WORKFLOW):
-        with open(WORKFLOW, encoding="utf-8") as fh:
-            runs = re.findall(r"python scripts/verify-just-pythag-it-bruv\.py\b([^\n|&]*)", fh.read())
-        got = sorted(m.group(1) for m in (re.search(r"--part (\w+)", r) for r in runs) if m)
-        whole = [r.strip() for r in runs if "--part" not in r]
-        if got != sorted(PARTS):
-            fails.append("the workflow runs parts %s, not %s" % (got, sorted(PARTS)))
-        if whole:
-            fails.append("the workflow also runs the unsplit script: %s" % whole)
-        print("  workflow runs parts: %s" % (", ".join(got) or "none"))
+    runs = re.findall(r"python scripts/verify-just-pythag-it-bruv\.py\b([^\n|&]*)", ci_commands())
+    got = sorted(m.group(1) for m in (re.search(r"--part (\w+)", r) for r in runs) if m)
+    whole = [r.strip() for r in runs if "--part" not in r]
+    if got != sorted(PARTS):
+        fails.append("CI runs parts %s, not %s" % (got, sorted(PARTS)))
+    if whole:
+        fails.append("CI also runs the unsplit script: %s" % whole)
+    print("  CI runs parts: %s" % (", ".join(got) or "none"))
     for f in fails:
         print("FAIL  " + f)
     print("Part self-test: %s" % ("FAILED" if fails else "PASS"))

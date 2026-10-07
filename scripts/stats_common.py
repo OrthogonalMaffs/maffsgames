@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B2 | Shared statistics module (unit tests against textbook values) | --selftest
 """Shared statistics for the answer-key verifiers (todo §1.26, 30 Sep 2026).
 
 Every stats verifier used to carry its own copy of the same maths: exact binomial

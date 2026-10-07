@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B1 | Maths Court (independent recomputation + rendered page) |
 """Independent verification of maths-court's statistics (todo §1.26).
 
 Each case is a problem and three arguments, one correct. The Core Maths cases on

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | Split It (every generator's keys recomputed + marking at the stated precision) |
 """Independent verification of split-it's keys and its marking (todo §1.36, canon §7.1.3).
 
 Until Oct 2026 split-it marked single and share answers to ±0.05 (so £12.30 and £12.38 both

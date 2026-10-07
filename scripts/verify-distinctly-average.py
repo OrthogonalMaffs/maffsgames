@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B2 | Distinctly Average (independent recomputation) |
 """Independent verification for distinctly-average (docs/todo.md, 29 Sep 2026 build; extended 29 Sep 2026).
 
 WHY THIS READS THE LIVE PAGE, NOT A HAND-COPY OF THE GENERATOR

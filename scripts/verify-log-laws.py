@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B1 | Log Laws Solve (layers C + D, SymPy) | --require-katex
 """Layers C + D verification for log-laws Solve mode
 (docs/next-contract-log-laws-solve.md, step 6; design in docs/log-laws-solve-build-notes.md).
 
