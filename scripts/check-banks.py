@@ -1002,6 +1002,17 @@ def count_entries(record):
     return sum(len(r.get("entries", [])) for r in record.get("rules", {}).values())
 
 
+def keep_register_links(record, old):
+    """An entry's "register" field (the findings-register id it is filed under, F0, 7 Oct 2026)
+    is not something a run finds: carry it over from the old entry with the same id."""
+    links = {e["id"]: e["register"] for r in (old or {}).get("rules", {}).values()
+             for e in r.get("entries", []) if e.get("register")}
+    for r in record["rules"].values():
+        for e in r["entries"]:
+            if e["id"] in links:
+                e["register"] = links[e["id"]]
+
+
 def merge_ledger(old_ledger, findings_by_game, roster, only=None):
     """What --write-ledger writes: the old ledger, with only the games this run
     actually read replaced (to-do §4 item 10, 2 Oct 2026). Rebuilding from this
@@ -1027,6 +1038,7 @@ def merge_ledger(old_ledger, findings_by_game, roster, only=None):
         if status == "linted" or (status == "generator" and old is not None
                                    and old.get("generator") is True):
             merged[slug] = fresh[slug]
+            keep_register_links(merged[slug], old)
             continue
         reason = "bank missing" if status == "missing" else "bank not read"
         if old is None:

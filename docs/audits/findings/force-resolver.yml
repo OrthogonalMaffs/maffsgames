@@ -136,3 +136,12 @@ findings:
     -> 49.8); 390px overflow :180 (421) and :189 (466); fixed 1000 ms advance, no explanation (class 11 note)
   evidence: see report section 3
   status: open
+- id: force-resolver-f0-001
+  severity: LOW
+  jc: false
+  class: 2
+  level: alevel
+  where: games/force-resolver/index.html:119 (QUESTIONS.alevel[6])
+  summary: Wrong options '12 N' and '12 sin 90° N' are equal (12 N force at 90°, horizontal component; key 0 N)
+  evidence: 'B11 parser, F0 (7 Oct 2026): 12 \text{ N} = 12\sin 90° \text{ N}, exact (scripts/bank_common.py); ledger force-resolver::8c466d96e9b4#1::B11::["12 \\text{ N}", "12\\sin 90° \\text{ N}"]'
+  status: open

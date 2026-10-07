@@ -301,8 +301,15 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [],
-    "status": "pass"
+    "entries": [
+     {
+      "detail": "QUESTIONS.alevel[9]: '20' = '\\\\binom{6}{3}' (the marked answer is one of them)",
+      "id": "binomial-blaster::757c8c724a4f#1::B11::[\"20\", \"\\\\binom{6}{3}\"]",
+      "line": null,
+      "register": "binomial-blaster-t5-002"
+     }
+    ],
+    "status": "fail"
    },
    "B2": {
     "entries": [],
@@ -347,7 +354,7 @@
  "boolean-blitz": {
   "generator": false,
   "layers": {
-   "A": "verified",
+   "A": "violations",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -363,8 +370,69 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [],
-    "status": "pass"
+    "entries": [
+     {
+      "detail": "QUESTIONS[2]: 'A' = 'A \\\\cdot B + A' (the marked answer is one of them)",
+      "id": "boolean-blitz::4e9e43db412f#1::B11::[\"A\", \"A \\\\cdot B + A\"]",
+      "line": null,
+      "register": "boolean-blitz-t6-004"
+     },
+     {
+      "detail": "QUESTIONS[4]: '\\\\overline{AB}' = '\\\\overline{A} + \\\\overline{B}' (both wrong options)",
+      "id": "boolean-blitz::82d3407dfa3d#1::B11::[\"\\\\overline{AB}\", \"\\\\overline{A} + \\\\overline{B}\"]",
+      "line": null,
+      "register": "boolean-blitz-f0-001"
+     },
+     {
+      "detail": "QUESTIONS[10]: 'A' = 'AB + A\\\\overline{B}' (the marked answer is one of them)",
+      "id": "boolean-blitz::77ca89043b06#1::B11::[\"A\", \"AB + A\\\\overline{B}\"]",
+      "line": null,
+      "register": "boolean-blitz-t6-004"
+     },
+     {
+      "detail": "QUESTIONS[12]: 'B' = '\\\\overline{A}B + AB' (the marked answer is one of them)",
+      "id": "boolean-blitz::bdf5294ac6ae#1::B11::[\"B\", \"\\\\overline{A}B + AB\"]",
+      "line": null,
+      "register": "boolean-blitz-t6-004"
+     },
+     {
+      "detail": "QUESTIONS[15]: '1' = '\\\\overline{A} + A' (both wrong options)",
+      "id": "boolean-blitz::a19c0a7c7cb5#1::B11::[\"1\", \"\\\\overline{A} + A\"]",
+      "line": null,
+      "register": "boolean-blitz-f0-002"
+     },
+     {
+      "detail": "QUESTIONS[17]: 'A \\\\cdot BC' = 'ABC' (both wrong options)",
+      "id": "boolean-blitz::fe2ae0c222c4#1::B11::[\"A \\\\cdot BC\", \"ABC\"]",
+      "line": null,
+      "register": "boolean-blitz-f0-003"
+     },
+     {
+      "detail": "QUESTIONS[19]: 'A' = 'A\\\\overline{B} + AB' (the marked answer is one of them)",
+      "id": "boolean-blitz::4cf478bc7f89#1::B11::[\"A\", \"A\\\\overline{B} + AB\"]",
+      "line": null,
+      "register": "boolean-blitz-t6-004"
+     },
+     {
+      "detail": "QUESTIONS[24]: 'AB + BC' = 'B(A + C)' (the marked answer is one of them)",
+      "id": "boolean-blitz::82b1e6f7b4af#1::B11::[\"AB + BC\", \"B(A + C)\"]",
+      "line": null,
+      "register": "boolean-blitz-t6-002"
+     },
+     {
+      "detail": "QUESTIONS[40]: 'AB(C+D)' = 'ABC + ABD' (both wrong options)",
+      "id": "boolean-blitz::9f0b149c442e#1::B11::[\"AB(C+D)\", \"ABC + ABD\"]",
+      "line": null,
+      "register": "boolean-blitz-f0-004"
+     },
+     {
+      "detail": "QUESTIONS[41]: 'A(B + C)' = 'AB + AC' (the marked answer is one of them)",
+      "id": "boolean-blitz::8346a457b883#1::B11::[\"A(B + C)\", \"AB + AC\"]",
+      "line": null,
+      "register": "boolean-blitz-t6-003"
+     }
+    ],
+    "status": "fail"
    },
    "B2": {
     "entries": [],
@@ -644,6 +712,54 @@
       "detail": "QUESTIONS.further[42]: '0 + 7j' = '7j' (both wrong options)",
       "id": "complex-converter::a3da44438c57#2::B11::[\"0 + 7j\", \"7j\"]",
       "line": null
+     },
+     {
+      "detail": "QUESTIONS.level4[14]: '3\\\\angle 30°' = '3\\\\angle \\\\pi/6' (the marked answer is one of them)",
+      "id": "complex-converter::c1e7f5fc4803#1::B11::[\"3\\\\angle 30°\", \"3\\\\angle \\\\pi/6\"]",
+      "line": null,
+      "register": "complex-converter-t6-007"
+     },
+     {
+      "detail": "QUESTIONS.level4[20]: '5\\\\angle -53.13°' = '5\\\\angle 306.87°' (the marked answer is one of them)",
+      "id": "complex-converter::6c05eea5f3d5#1::B11::[\"5\\\\angle -53.13°\", \"5\\\\angle 306.87°\"]",
+      "line": null,
+      "register": "complex-converter-t6-001"
+     },
+     {
+      "detail": "QUESTIONS.level4[39]: '-8e^{j\\\\pi/2}' = '8e^{-j\\\\pi/2}' (the marked answer is one of them)",
+      "id": "complex-converter::1192c2154279#1::B11::[\"-8e^{j\\\\pi/2}\", \"8e^{-j\\\\pi/2}\"]",
+      "line": null,
+      "register": "complex-converter-t6-002"
+     },
+     {
+      "detail": "QUESTIONS.level4[47]: '-6e^{j\\\\pi/2}' = '6e^{-j\\\\pi/2}' (the marked answer is one of them)",
+      "id": "complex-converter::4e6d2e5cc6e4#1::B11::[\"-6e^{j\\\\pi/2}\", \"6e^{-j\\\\pi/2}\"]",
+      "line": null,
+      "register": "complex-converter-t6-003"
+     },
+     {
+      "detail": "QUESTIONS.further[14]: '3\\\\angle 30°' = '3\\\\angle \\\\pi/6' (the marked answer is one of them)",
+      "id": "complex-converter::c1e7f5fc4803#2::B11::[\"3\\\\angle 30°\", \"3\\\\angle \\\\pi/6\"]",
+      "line": null,
+      "register": "complex-converter-t6-007"
+     },
+     {
+      "detail": "QUESTIONS.further[20]: '5\\\\angle -53.13°' = '5\\\\angle 306.87°' (the marked answer is one of them)",
+      "id": "complex-converter::6c05eea5f3d5#2::B11::[\"5\\\\angle -53.13°\", \"5\\\\angle 306.87°\"]",
+      "line": null,
+      "register": "complex-converter-t6-001"
+     },
+     {
+      "detail": "QUESTIONS.further[39]: '-8e^{j\\\\pi/2}' = '8e^{-j\\\\pi/2}' (the marked answer is one of them)",
+      "id": "complex-converter::1192c2154279#2::B11::[\"-8e^{j\\\\pi/2}\", \"8e^{-j\\\\pi/2}\"]",
+      "line": null,
+      "register": "complex-converter-t6-002"
+     },
+     {
+      "detail": "QUESTIONS.further[47]: '-6e^{j\\\\pi/2}' = '6e^{-j\\\\pi/2}' (the marked answer is one of them)",
+      "id": "complex-converter::4e6d2e5cc6e4#2::B11::[\"-6e^{j\\\\pi/2}\", \"6e^{-j\\\\pi/2}\"]",
+      "line": null,
+      "register": "complex-converter-t6-003"
      }
     ],
     "status": "fail"
@@ -1500,6 +1616,36 @@
       "detail": "QUESTIONS.level4[49]: '\\\\dfrac{e^{2t}}{e^t}' = 'e^t' (both wrong options)",
       "id": "differentiation-duel::19b2c58b6920#1::B11::[\"\\\\dfrac{e^{2t}}{e^t}\", \"e^t\"]",
       "line": null
+     },
+     {
+      "detail": "QUESTIONS.level4[26]: 'e^x \\\\cos(x) + e^x \\\\sin(x)' = 'e^x(\\\\cos(x) + \\\\sin(x))' (both wrong options)",
+      "id": "differentiation-duel::0fc217367364#1::B11::[\"e^x \\\\cos(x) + e^x \\\\sin(x)\", \"e^x(\\\\cos(x) + \\\\sin(x))\"]",
+      "line": null,
+      "register": "differentiation-duel-t5-003"
+     },
+     {
+      "detail": "QUESTIONS.level4[31]: '\\\\dfrac{\\\\cos(x)}{x}' = '\\\\dfrac{x\\\\cos(x)}{x^2}' (both wrong options)",
+      "id": "differentiation-duel::2b304af99693#1::B11::[\"\\\\dfrac{\\\\cos(x)}{x}\", \"\\\\dfrac{x\\\\cos(x)}{x^2}\"]",
+      "line": null,
+      "register": "differentiation-duel-t5-004"
+     },
+     {
+      "detail": "QUESTIONS.level4[32]: '\\\\dfrac{e^x(x - 2)}{x^3}' = '\\\\dfrac{x^2 e^x - 2xe^x}{x^4}' (the marked answer is one of them)",
+      "id": "differentiation-duel::f7219b5c9aa8#1::B11::[\"\\\\dfrac{e^x(x - 2)}{x^3}\", \"\\\\dfrac{x^2 e^x - 2xe^x}{x^4}\"]",
+      "line": null,
+      "register": "differentiation-duel-t5-001"
+     },
+     {
+      "detail": "QUESTIONS.level4[44]: '\\\\cos(y)' = '\\\\dfrac{\\\\cos(y)}{1}' (both wrong options)",
+      "id": "differentiation-duel::e08161f25c16#1::B11::[\"\\\\cos(y)\", \"\\\\dfrac{\\\\cos(y)}{1}\"]",
+      "line": null,
+      "register": "differentiation-duel-t5-005"
+     },
+     {
+      "detail": "QUESTIONS.level4[45]: '2xe^{-y}' = '\\\\dfrac{2x}{e^y}' (the marked answer is one of them)",
+      "id": "differentiation-duel::50d2f0e5754c#1::B11::[\"2xe^{-y}\", \"\\\\dfrac{2x}{e^y}\"]",
+      "line": null,
+      "register": "differentiation-duel-t5-002"
      }
     ],
     "status": "fail"
@@ -1789,8 +1935,75 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [],
-    "status": "pass"
+    "entries": [
+     {
+      "detail": "QS[7]: '\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}' (both wrong options)",
+      "id": "eigenvector-engine::c43e021fe39f#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-f0-001"
+     },
+     {
+      "detail": "QS[9]: '\\\\begin{pmatrix} -2 \\\\\\\\ 1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 4 \\\\\\\\ -2 \\\\end{pmatrix}' (the marked answer is one of them)",
+      "id": "eigenvector-engine::1aa97471ada3#1::B11::[\"\\\\begin{pmatrix} -2 \\\\\\\\ 1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 4 \\\\\\\\ -2 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-t6-005"
+     },
+     {
+      "detail": "QS[11]: '\\\\begin{pmatrix} -1 \\\\\\\\ 2 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ -2 \\\\end{pmatrix}' (the marked answer is one of them)",
+      "id": "eigenvector-engine::e9943d645c46#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ 2 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ -2 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-t6-001"
+     },
+     {
+      "detail": "QS[12]: '\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}' (both wrong options)",
+      "id": "eigenvector-engine::ff74f2039e95#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-f0-002"
+     },
+     {
+      "detail": "QS[13]: '\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}' (both wrong options)",
+      "id": "eigenvector-engine::24205f0049d2#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-f0-003"
+     },
+     {
+      "detail": "QS[15]: '\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}' (both wrong options)",
+      "id": "eigenvector-engine::332c982c1d8a#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-f0-004"
+     },
+     {
+      "detail": "QS[16]: '\\\\begin{pmatrix} 2 \\\\\\\\ 1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 6 \\\\\\\\ 3 \\\\end{pmatrix}' (the marked answer is one of them)",
+      "id": "eigenvector-engine::0e70b936c929#1::B11::[\"\\\\begin{pmatrix} 2 \\\\\\\\ 1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 6 \\\\\\\\ 3 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-f0-005"
+     },
+     {
+      "detail": "QS[20]: '\\\\begin{pmatrix} -2 \\\\\\\\ 2 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}' (the marked answer is one of them)",
+      "id": "eigenvector-engine::311a97126e89#1::B11::[\"\\\\begin{pmatrix} -2 \\\\\\\\ 2 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-t6-005"
+     },
+     {
+      "detail": "QS[22]: '\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}' (the marked answer is one of them)",
+      "id": "eigenvector-engine::de73e1635e94#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-t6-001"
+     },
+     {
+      "detail": "QS[23]: '\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}' (both wrong options)",
+      "id": "eigenvector-engine::411aa11cdb3e#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-f0-006"
+     },
+     {
+      "detail": "QS[24]: '\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}' (both wrong options)",
+      "id": "eigenvector-engine::8ec70fba8b56#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}\"]",
+      "line": null,
+      "register": "eigenvector-engine-f0-007"
+     }
+    ],
+    "status": "fail"
    },
    "B2": {
     "entries": [],
@@ -2558,8 +2771,33 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [],
-    "status": "pass"
+    "entries": [
+     {
+      "detail": "QUESTIONS.alevel[4]: '25 \\\\text{ N}' = '50\\\\cos 60° \\\\text{ N}' (both wrong options)",
+      "id": "force-resolver::c4c1a91abbd8#1::B11::[\"25 \\\\text{ N}\", \"50\\\\cos 60° \\\\text{ N}\"]",
+      "line": null,
+      "register": "force-resolver-t5-014"
+     },
+     {
+      "detail": "QUESTIONS.alevel[5]: '12 \\\\text{ N}' = '12\\\\cos 0° \\\\text{ N}' (the marked answer is one of them)",
+      "id": "force-resolver::b3c4567f7c43#1::B11::[\"12 \\\\text{ N}\", \"12\\\\cos 0° \\\\text{ N}\"]",
+      "line": null,
+      "register": "force-resolver-t5-006"
+     },
+     {
+      "detail": "QUESTIONS.alevel[6]: '12 \\\\text{ N}' = '12\\\\sin 90° \\\\text{ N}' (both wrong options)",
+      "id": "force-resolver::8c466d96e9b4#1::B11::[\"12 \\\\text{ N}\", \"12\\\\sin 90° \\\\text{ N}\"]",
+      "line": null,
+      "register": "force-resolver-f0-001"
+     },
+     {
+      "detail": "QUESTIONS.alevel[23]: '25\\\\sqrt{3} \\\\approx 43.3 \\\\text{ N}' = '50\\\\cos 30° \\\\text{ N}' (the marked answer is one of them)",
+      "id": "force-resolver::5cf149c15356#1::B11::[\"25\\\\sqrt{3} \\\\approx 43.3 \\\\text{ N}\", \"50\\\\cos 30° \\\\text{ N}\"]",
+      "line": null,
+      "register": "force-resolver-t5-005"
+     }
+    ],
+    "status": "fail"
    },
    "B2": {
     "entries": [],
@@ -2925,6 +3163,12 @@
       "detail": "Q_GCSE[22]: 'r = \\\\dfrac{3V}{4\\\\pi}' = 'r = \\\\dfrac{V}{\\\\frac{4}{3}\\\\pi}' (both wrong options)",
       "id": "formula-unlocked::43097f019703#1::B11::[\"r = \\\\dfrac{3V}{4\\\\pi}\", \"r = \\\\dfrac{V}{\\\\frac{4}{3}\\\\pi}\"]",
       "line": null
+     },
+     {
+      "detail": "Q_LEVEL4[10]: 'L = \\\\dfrac{gT}{2\\\\pi}' = 'L = g\\\\left(\\\\dfrac{T}{2\\\\pi}\\\\right)' (both wrong options)",
+      "id": "formula-unlocked::e2cccd4c65ca#1::B11::[\"L = \\\\dfrac{gT}{2\\\\pi}\", \"L = g\\\\left(\\\\dfrac{T}{2\\\\pi}\\\\right)\"]",
+      "line": null,
+      "register": "formula-unlocked-f0-001"
      }
     ],
     "status": "fail"
@@ -3915,7 +4159,7 @@
  "log-laws": {
   "generator": false,
   "layers": {
-   "A": "verified",
+   "A": "violations",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -3931,8 +4175,15 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [],
-    "status": "pass"
+    "entries": [
+     {
+      "detail": "QUESTIONS[18]: '\\\\log 4.5' = '\\\\log\\\\tfrac{9}{2}' (both wrong options)",
+      "id": "log-laws::8e6dc1f3e423#1::B11::[\"\\\\log 4.5\", \"\\\\log\\\\tfrac{9}{2}\"]",
+      "line": null,
+      "register": "log-laws-f0-001"
+     }
+    ],
+    "status": "fail"
    },
    "B2": {
     "entries": [],
@@ -4355,8 +4606,15 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [],
-    "status": "pass"
+    "entries": [
+     {
+      "detail": "QUESTIONS.level4[14]: '5 \\\\text{ kW}' = '5000 \\\\text{ W}' (the marked answer is one of them)",
+      "id": "moments-master::a599c4da793b#1::B11::[\"5 \\\\text{ kW}\", \"5000 \\\\text{ W}\"]",
+      "line": null,
+      "register": "moments-master-t5-004"
+     }
+    ],
+    "status": "fail"
    },
    "B2": {
     "entries": [],

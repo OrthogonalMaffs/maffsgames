@@ -57,3 +57,66 @@ findings:
     always have orthogonal eigenvectors' holds only for distinct eigenvalues
   evidence: A(4,−2)=1·(4,−2) at :115; (A+2I)(−2,2)=0 at :126
   status: open
+- id: eigenvector-engine-f0-001
+  severity: LOW
+  jc: false
+  class: 2
+  level: further
+  where: games/eigenvector-engine/index.html:113 (QS[7])
+  summary: Wrong options are sign twins of one vector (equal up to the scalar -1), both offered as wrong
+  evidence: 'B11 parser, F0 (7 Oct 2026): \begin{pmatrix} -1 \\ -1 \end{pmatrix} = \begin{pmatrix} 1 \\ 1 \end{pmatrix}, exact (scripts/bank_common.py); ledger eigenvector-engine::c43e021fe39f#1::B11::["\\begin{pmatrix} -1 \\\\ -1 \\end{pmatrix}", "\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}"]'
+  status: open
+- id: eigenvector-engine-f0-002
+  severity: LOW
+  jc: false
+  class: 2
+  level: further
+  where: games/eigenvector-engine/index.html:118 (QS[12])
+  summary: Wrong options are sign twins of one vector (equal up to the scalar -1), both offered as wrong
+  evidence: 'B11 parser, F0 (7 Oct 2026): \begin{pmatrix} -1 \\ 1 \end{pmatrix} = \begin{pmatrix} 1 \\ -1 \end{pmatrix}, exact (scripts/bank_common.py); ledger eigenvector-engine::ff74f2039e95#1::B11::["\\begin{pmatrix} -1 \\\\ 1 \\end{pmatrix}", "\\begin{pmatrix} 1 \\\\ -1 \\end{pmatrix}"]'
+  status: open
+- id: eigenvector-engine-f0-003
+  severity: LOW
+  jc: false
+  class: 2
+  level: further
+  where: games/eigenvector-engine/index.html:119 (QS[13])
+  summary: Wrong options are sign twins of one vector (equal up to the scalar -1), both offered as wrong
+  evidence: 'B11 parser, F0 (7 Oct 2026): \begin{pmatrix} -1 \\ -1 \end{pmatrix} = \begin{pmatrix} 1 \\ 1 \end{pmatrix}, exact (scripts/bank_common.py); ledger eigenvector-engine::24205f0049d2#1::B11::["\\begin{pmatrix} -1 \\\\ -1 \\end{pmatrix}", "\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}"]'
+  status: open
+- id: eigenvector-engine-f0-004
+  severity: LOW
+  jc: false
+  class: 2
+  level: further
+  where: games/eigenvector-engine/index.html:121 (QS[15])
+  summary: Wrong options are sign twins of one vector (equal up to the scalar -1), both offered as wrong
+  evidence: 'B11 parser, F0 (7 Oct 2026): \begin{pmatrix} -1 \\ -1 \end{pmatrix} = \begin{pmatrix} 1 \\ 1 \end{pmatrix}, exact (scripts/bank_common.py); ledger eigenvector-engine::332c982c1d8a#1::B11::["\\begin{pmatrix} -1 \\\\ -1 \\end{pmatrix}", "\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}"]'
+  status: open
+- id: eigenvector-engine-f0-005
+  severity: LOW
+  jc: true
+  class: 2
+  level: further
+  where: games/eigenvector-engine/index.html:122 (QS[16])
+  summary: Wrong option (6, 3) is a multiple of the key (2, 1); the prompt asks for the simplest integer eigenvector (see t6-001 for :122)
+  evidence: 'B11 parser, F0 (7 Oct 2026): \begin{pmatrix} 2 \\ 1 \end{pmatrix} = \begin{pmatrix} 6 \\ 3 \end{pmatrix}, exact (scripts/bank_common.py); ledger eigenvector-engine::0e70b936c929#1::B11::["\\begin{pmatrix} 2 \\\\ 1 \\end{pmatrix}", "\\begin{pmatrix} 6 \\\\ 3 \\end{pmatrix}"]'
+  status: open
+- id: eigenvector-engine-f0-006
+  severity: LOW
+  jc: false
+  class: 2
+  level: further
+  where: games/eigenvector-engine/index.html:129 (QS[23])
+  summary: Wrong options are sign twins of one vector (equal up to the scalar -1), both offered as wrong
+  evidence: 'B11 parser, F0 (7 Oct 2026): \begin{pmatrix} -1 \\ 1 \end{pmatrix} = \begin{pmatrix} 1 \\ -1 \end{pmatrix}, exact (scripts/bank_common.py); ledger eigenvector-engine::411aa11cdb3e#1::B11::["\\begin{pmatrix} -1 \\\\ 1 \\end{pmatrix}", "\\begin{pmatrix} 1 \\\\ -1 \\end{pmatrix}"]'
+  status: open
+- id: eigenvector-engine-f0-007
+  severity: LOW
+  jc: false
+  class: 2
+  level: further
+  where: games/eigenvector-engine/index.html:130 (QS[24])
+  summary: Wrong options are sign twins of one vector (equal up to the scalar -1), both offered as wrong
+  evidence: 'B11 parser, F0 (7 Oct 2026): \begin{pmatrix} -1 \\ -1 \end{pmatrix} = \begin{pmatrix} 1 \\ 1 \end{pmatrix}, exact (scripts/bank_common.py); ledger eigenvector-engine::8ec70fba8b56#1::B11::["\\begin{pmatrix} -1 \\\\ -1 \\end{pmatrix}", "\\begin{pmatrix} 1 \\\\ 1 \\end{pmatrix}"]'
+  status: open
