@@ -45,3 +45,39 @@ findings:
     step labels; mfg_accessible stored as '1' not 'true'
   evidence: A·B + A = A; AB + AB̄ = A; ĀB + AB = B; AB̄ + AB = A
   status: open
+- id: boolean-blitz-f0-001
+  severity: LOW
+  jc: false
+  class: 2
+  level: l4
+  where: games/boolean-blitz/index.html:397 (QUESTIONS[4])
+  summary: Wrong options NOT(AB) and NOT A + NOT B are equal (De Morgan), both offered as wrong
+  evidence: 'B11 parser, F0 (7 Oct 2026): \overline{AB} = \overline{A} + \overline{B}, exact (scripts/bank_common.py); ledger boolean-blitz::82d3407dfa3d#1::B11::["\\overline{AB}", "\\overline{A} + \\overline{B}"]'
+  status: open
+- id: boolean-blitz-f0-002
+  severity: LOW
+  jc: false
+  class: 2
+  level: l4
+  where: games/boolean-blitz/index.html:503 (QUESTIONS[15])
+  summary: Wrong options 1 and NOT A + A are equal, both offered as wrong
+  evidence: 'B11 parser, F0 (7 Oct 2026): 1 = \overline{A} + A, exact (scripts/bank_common.py); ledger boolean-blitz::a19c0a7c7cb5#1::B11::["1", "\\overline{A} + A"]'
+  status: open
+- id: boolean-blitz-f0-003
+  severity: LOW
+  jc: false
+  class: 2
+  level: l4
+  where: games/boolean-blitz/index.html:521 (QUESTIONS[17])
+  summary: Wrong options A·BC and ABC are the same product, both offered as wrong
+  evidence: 'B11 parser, F0 (7 Oct 2026): A \cdot BC = ABC, exact (scripts/bank_common.py); ledger boolean-blitz::fe2ae0c222c4#1::B11::["A \\cdot BC", "ABC"]'
+  status: open
+- id: boolean-blitz-f0-004
+  severity: LOW
+  jc: false
+  class: 2
+  level: l4
+  where: games/boolean-blitz/index.html:733 (QUESTIONS[40])
+  summary: Wrong options AB(C+D) and ABC + ABD are equal, both offered as wrong
+  evidence: 'B11 parser, F0 (7 Oct 2026): AB(C+D) = ABC + ABD, exact (scripts/bank_common.py); ledger boolean-blitz::9f0b149c442e#1::B11::["AB(C+D)", "ABC + ABD"]'
+  status: open

@@ -1094,7 +1094,8 @@ def _sympy_env():
                                                 convert_xor)
         syms = {c: sp.Symbol(c) for c in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"}
         syms.update({"pi": sp.pi, "e": sp.E, "sqrt": sp.sqrt, "sin": sp.sin, "cos": sp.cos,
-                     "tan": sp.tan, "ln": sp.log, "log": sp.log, "exp": sp.exp, "i": sp.I})
+                     "tan": sp.tan, "ln": sp.log, "log": sp.log, "exp": sp.exp, "i": sp.I,
+                     "binomial": sp.binomial})
         _SYMPY.update(sp=sp, parse_expr=parse_expr, syms=syms,
                       trans=standard_transformations + (implicit_multiplication_application,
                                                         convert_xor))
@@ -1106,12 +1107,44 @@ VULGAR = {"½": "(1/2)", "⅓": "(1/3)", "⅔": "(2/3)", "¼": "(1/4)", "¾": "(
           "⅜": "(3/8)", "⅝": "(5/8)", "⅞": "(7/8)"}
 _SUP = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺⁽⁾ⁿˣʸ", "0123456789-+()nxy")
 _SUPCHARS = "⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺⁽⁾ⁿˣʸ"
-_ALLOWED_WORDS = {"sqrt", "pi", "sin", "cos", "tan", "ln", "log", "exp"}
+_ALLOWED_WORDS = {"sqrt", "pi", "sin", "cos", "tan", "ln", "log", "exp", "binomial"}
+# Juxtaposition (F0, 7 Oct 2026): a run of letters in a mathematical option is a product of
+# one-letter names (2xe^{-y} is 2*x*e**(-y)), read greedily so a function name inside it stays
+# whole (xsin(x) is x*sin(x)). Never in prose: the option must hold mathematical notation
+# (_MATH_CONTEXT), a run may hold at most 3 single letters, and a run that is a common word or
+# names a function the parser does not model leaves the option unparsed, as before.
+_MATH_CONTEXT = re.compile(r"[\\^_{}()+\-*/=×÷·√]|\d\s*[A-Za-z]|[A-Za-z]\s*\d")
+_JUXT_MAX_LETTERS = 3
+# A word standing on its own ("22.5 m vs 22.5 m"; "AB + BC" outside a Boolean game) is prose or
+# a name: such an option is never juxtaposed. LaTeX commands are removed before looking.
+_STANDALONE_WORD = re.compile(r"(?:^|[\s,;])(?!(?:sqrt|pi|sin|cos|tan|ln|log|exp)(?:[\s(]|$))[A-Za-z]{2,}(?=[\s,;.]|$)")
+_LATEX_CMD = re.compile(r"\\[A-Za-z]+")
+_STOPWORDS = {"or", "and", "the", "is", "of", "to", "in", "on", "at", "by", "no", "yes", "not",
+              "per", "are", "as", "be", "it", "an", "if", "so", "all", "any", "can", "has", "was",
+              "for", "but", "nor", "its", "one", "two", "ten", "set", "let", "use", "get", "add",
+              "sum", "max", "min", "mod", "gcd", "lcm", "det", "lim", "int", "and", "out", "off"}
+_UNMODELLED = ("sec", "csc", "cosec", "cot", "arc", "sinh", "cosh", "tanh", "lim", "det", "max",
+               "min", "mod", "gcd", "lcm", "int", "sum", "deg", "rad", "var", "abs")
+
+
+# A trig function of an angle in degrees ("12\\cos 0°", "\\sin(30^\\circ)"): the argument becomes
+# exact radians, angle*pi/180 (F0, 7 Oct 2026). Only where the text says degrees; a bare
+# "cos 30" is radians, as written.
+_TRIG_DEG = re.compile(r"\\?(sin|cos|tan)\s*(\()?\s*(-?\d+(?:\.\d+)?)\s*(?:°|\^\s*\{?\s*\\circ\s*\}?)\s*(?(2)\))")
+
+
+def _trig_degrees(m):
+    from fractions import Fraction
+    f = Fraction(m.group(3))
+    return "%s(pi*(%d)/(%d))" % (m.group(1), f.numerator, f.denominator * 180)
 
 
 def strip_latex(s):
     s = s.replace("$", "")
     s = re.sub(r"\\[()\[\]]", "", s)
+    s = _TRIG_DEG.sub(_trig_degrees, s)
+    s = re.sub(r"\\(sin|cos|tan|ln|log|exp)(?![A-Za-z])", r" \1 ", s)
+    s = re.sub(r"\\binom\{([^{}]*)\}\{([^{}]*)\}", r"binomial((\1),(\2))", s)
     s = re.sub(r"\\(left|right|displaystyle|,|;|!|quad|qquad)", " ", s)
     # A mixed number: an integer written straight before \frac{p}{q} or \dfrac{p}{q}
     # (p, q integers) is n + p/q, so x^{4\frac{1}{2}} is x^4.5, not x^2 (index-laws [21],
@@ -1147,11 +1180,52 @@ def to_expr_text(raw):
     # literal, so "1 + 0x + 0x^2" parsed on 3.11 and not on 3.12+ (re-run, 1 Oct 2026).
     # Scientific notation (2e5, 1.5E-3) is left alone.
     s = re.sub(r"(\d)\s*(?=[A-Za-z(])(?![eE][+-]?\d)", r"\1*", s)
+    if _MATH_CONTEXT.search(raw) and not _STANDALONE_WORD.search(_LATEX_CMD.sub(" ", raw)):
+        s = _juxtapose(s)
     s = re.sub(r"(?<![A-Za-z])e\*\*\(([^()]*)\)", _phasor_exponent, s)
     return s.strip()
 
 
-_LONE_J = r"(?<![A-Za-z])j(?![A-Za-z])"
+_FUNCS_LONGEST_FIRST = sorted(_ALLOWED_WORDS, key=len, reverse=True)
+
+
+def _split_run(run):
+    """'xe' -> ['x', 'e']; 'xsin' -> ['x', 'sin']; None if the run is prose."""
+    low = run.lower()
+    if low in _STOPWORDS or any(u in low for u in _UNMODELLED):
+        return None
+    out, i, singles = [], 0, 0
+    while i < len(run):
+        f = next((f for f in _FUNCS_LONGEST_FIRST if run.startswith(f, i)), None)
+        if f:
+            out.append(f)
+            i += len(f)
+        else:
+            out.append(run[i])
+            singles += 1
+            i += 1
+    return out if singles <= _JUXT_MAX_LETTERS else None
+
+
+def _juxtapose(s):
+    """Every run of letters that is not one function name becomes a product (F0, 7 Oct 2026).
+    A run that is prose is left whole, so parse_value rejects the option as before."""
+    def one(m):
+        run = m.group(0)
+        if run in _ALLOWED_WORDS:
+            return run
+        parts = _split_run(run)
+        if parts is None:
+            return run
+        out = parts[0]
+        for prev, cur in zip(parts, parts[1:]):
+            # a function name applies to what follows it ("sinx" is sin x); anything else multiplies
+            out += (" " if prev in _ALLOWED_WORDS and prev != "pi" else "*") + cur
+        return out
+    return re.sub(r"[A-Za-z]{2,}", one, s)
+
+
+_LONE_J = r"(?<![A-Za-z])j(?=pi|[^A-Za-z]|$)"   # j, also before pi: e^{-j\\pi/2} (F0)
 
 
 def _phasor_exponent(m):
@@ -1186,17 +1260,258 @@ def tokenizer_safe(t):
     return all(ord(c) < 128 or c.isidentifier() for c in t)
 
 
-def parse_value(raw):
-    """-> (kind, value) or None. kinds: num, expr, tuple, ratio, eq, interval, and
-    text: ((the \\text{} parts, trimmed), the parsed rest)."""
+# ---- F0 (7 Oct 2026): the item's context, and the kinds B11 could not see.
+#
+# Some comparisons depend on what the item asks, so value_equal_pairs and parse_value take an
+# item context, item_context(slug, question): the game, and the question's own text.
+#   vector   \begin{pmatrix}..\end{pmatrix}: equal up to a non-zero scalar when the item asks for
+#            an eigenvector or a direction (its text says so, or the game asks it of every item in
+#            code: VECTOR_DIRECTION_GAMES); otherwise entry by entry.
+#   polar    r\angle θ (° = degrees, else radians): equal as complex numbers, so θ mod 360° and a
+#            negative r with θ + 180°, unless the item states a range for the angle
+#            (ANGLE_RANGE_STATED); then r and θ must both match exactly.
+#   bool     in a Boolean-algebra game (BOOLEAN_GAMES): juxtaposition is AND, + is OR, an
+#            overline, ' or ¬ is NOT; equal when the full truth tables match.
+# Everything is exact: Fractions and SymPy, no floating tolerance in any new comparison.
+
+# Games that ask for "an eigenvector" or "a direction" of every item in code, not in the bank
+# item: slug -> where the game says so.
+VECTOR_DIRECTION_GAMES = {
+    "eigenvector-engine": "games/eigenvector-engine/index.html:147 'Find the eigenvector for λ = ...'",
+}
+_DIRECTION_TEXT = re.compile(r"eigenvector|direction", re.I)
+# Games whose options are Boolean expressions (a + b is OR, ab is AND): slug -> why.
+BOOLEAN_GAMES = {
+    "boolean-blitz": "Boolean algebra simplification; options in A, B, C with + for OR",
+}
+# An item that states a range for its angle ("Give angle as positive", "-180° < θ ≤ 180°",
+# "principal") wants that one form: its angles are compared exactly.
+ANGLE_RANGE_STATED = re.compile(r"positive|negative angle|principal|range|between|180|360|[<>≤≥]|\\le|\\ge", re.I)
+
+_TEXT_FIELDS = ("q", "question", "prompt", "ask", "context", "ctx", "text", "stem", "scenario")
+
+
+def item_context(slug, q):
+    """{'slug', 'text'} for one bank item: the game, and every text field it shows."""
+    q = q if isinstance(q, dict) else {}
+    text = " ".join(str(q[k]) for k in _TEXT_FIELDS if isinstance(q.get(k), str))
+    return {"slug": slug, "text": text}
+
+
+_PMATRIX = re.compile(r"^\s*\\begin\{[pb]matrix\}(.*)\\end\{[pb]matrix\}\s*$", re.S)
+_ANGLE = re.compile(r"^(.*?)(?:\\angle|∠)\s*(.+?)\s*(°|\^\s*\{?\s*\\circ\s*\}?)?\s*$", re.S)
+_DECIMAL = re.compile(r"^\s*[-−]?\d+(?:\.\d+)?\s*$")
+
+
+def _exact_number(raw):
+    """A plain decimal as an exact Rational; anything else through parse_value; None if not a number."""
+    sp = _sympy_env()["sp"]
+    if _DECIMAL.match(raw):
+        return sp.Rational(raw.replace("−", "-").strip())
+    v = parse_value(raw)
+    return v[1] if v and v[0] == "num" else None
+
+
+def _parse_vector(raw, ctx):
+    m = _PMATRIX.match(raw)
+    if not m:
+        return None
+    cells = [c.strip() for c in re.split(r"\\\\", m.group(1)) if c.strip()]
+    if len(cells) < 2 or any("&" in c for c in cells):
+        return None
+    vals = []
+    for c in cells:
+        v = _exact_number(c)
+        if v is None:
+            pv = parse_value(c)
+            if not pv or pv[0] not in ("num", "expr"):
+                return None
+            v = pv[1]
+        vals.append(v)
+    ctx = ctx or {}
+    direction = (ctx.get("slug") in VECTOR_DIRECTION_GAMES
+                 or bool(_DIRECTION_TEXT.search(ctx.get("text", ""))))
+    return ("vector", (tuple(vals), "direction" if direction else "exact"))
+
+
+def _parse_polar(raw, ctx):
+    m = _ANGLE.match(raw.replace("$", "").replace("\\(", "").replace("\\)", ""))
+    if not m:
+        return None
+    sp = _sympy_env()["sp"]
+    r = _exact_number(m.group(1)) if m.group(1).strip() else sp.Integer(1)
+    a = _exact_number(m.group(2))
+    if r is None or a is None:
+        return None
+    theta = a * sp.pi / 180 if m.group(3) else a
+    stated = bool(ANGLE_RANGE_STATED.search((ctx or {}).get("text", "")))
+    return ("polar", (r, theta, stated))
+
+
+# Boolean expressions: a small exact parser, evaluated over every assignment.
+def _bool_tokens(raw):
+    s = raw.replace("$", "")
+    s = re.sub(r"\\[()\[\]]", "", s)
+    for _ in range(4):        # innermost first
+        s = re.sub(r"\\(?:overline|bar)\{([^{}]*)\}", r"~(\1)", s)
+    s = re.sub(r"([A-Za-z01])\u0304", r"~\1", s)               # Ā (combining macron)
+    s = s.replace("\\cdot", "·").replace("\\oplus", "⊕").replace("\\lnot", "~").replace("\\neg", "~")
+    s = s.replace("¬", "~").replace("’", "'").replace("·", "&").replace("*", "&").replace(".", "&")
+    s = s.replace("⊕", "^").replace("\\,", "").replace(" ", "")
+    if not s or re.search(r"[^A-Za-z01()+&^~']", s):
+        return None
+    return list(s)
+
+
+def _parse_boolean(raw):
+    toks = _bool_tokens(raw)
+    if toks is None:
+        return None
+    pos = [0]
+
+    def peek():
+        return toks[pos[0]] if pos[0] < len(toks) else None
+
+    def take():
+        pos[0] += 1
+        return toks[pos[0] - 1]
+
+    def p_or():
+        n = p_xor()
+        while peek() == "+":
+            take()
+            n = ("or", n, p_xor())
+        return n
+
+    def p_xor():
+        n = p_and()
+        while peek() == "^":
+            take()
+            n = ("xor", n, p_and())
+        return n
+
+    def p_and():
+        n = p_not()
+        while peek() is not None and (peek() == "&" or peek() == "~" or peek() == "("
+                                      or peek().isalpha() or peek() in "01"):
+            if peek() == "&":
+                take()
+            n = ("and", n, p_not())
+        return n
+
+    def p_not():
+        if peek() == "~":
+            take()
+            return ("not", p_not())
+        n = p_atom()
+        while peek() == "'":
+            take()
+            n = ("not", n)
+        return n
+
+    def p_atom():
+        t = peek()
+        if t is None:
+            raise ValueError("end")
+        if t == "(":
+            take()
+            n = p_or()
+            if take() != ")":
+                raise ValueError(")")
+            return n
+        if t.isalpha() or t in "01":
+            take()
+            return ("var", t) if t.isalpha() else ("const", t == "1")
+        raise ValueError(t)
+
+    try:
+        node = p_or()
+    except (ValueError, IndexError):
+        return None
+    if pos[0] != len(toks):
+        return None
+    names = set()
+
+    def collect(n):
+        if n[0] == "var":
+            names.add(n[1])
+        for c in n[1:]:
+            if isinstance(c, tuple):
+                collect(c)
+    collect(node)
+    return ("bool", (frozenset(names), node))
+
+
+def _bool_eval(n, env):
+    k = n[0]
+    if k == "var":
+        return env[n[1]]
+    if k == "const":
+        return n[1]
+    if k == "not":
+        return not _bool_eval(n[1], env)
+    a, b = _bool_eval(n[1], env), _bool_eval(n[2], env)
+    return (a and b) if k == "and" else (a or b) if k == "or" else (a != b)
+
+
+def _bool_equal(va, vb):
+    import itertools
+    names = sorted(va[0] | vb[0])
+    if len(names) > 12:
+        return False
+    for bits in itertools.product((False, True), repeat=len(names)):
+        env = dict(zip(names, bits))
+        if _bool_eval(va[1], env) != _bool_eval(vb[1], env):
+            return False
+    return True
+
+
+# SI prefixes on a unit written in \text{} ("5 \text{ kW}" is 5000 W). Only these units, and only
+# a \text{} part that is exactly one unit: "Nm clockwise" is left as words.
+_SI_PREFIX = {"G": 9, "M": 6, "k": 3, "c": -2, "m": -3, "μ": -6, "µ": -6, "n": -9, "p": -12}
+_SI_UNITS = {"W", "N", "J", "V", "A", "Ω", "g", "m", "s", "Hz", "Pa", "Nm", "C", "F", "H", "L", "Wh", "VA", "eV"}
+
+
+def _unit_scale(part):
+    """(base unit, power of ten) for a \\text{} part that is one unit, maybe prefixed; else None."""
+    u = part.strip()
+    if u in _SI_UNITS:
+        return u, 0
+    if len(u) > 1 and u[0] in _SI_PREFIX and u[1:] in _SI_UNITS:
+        return u[1:], _SI_PREFIX[u[0]]
+    return None
+
+
+def parse_value(raw, ctx=None, _worked=False):
+    """-> (kind, value) or None. kinds: num, expr, tuple, ratio, eq, interval, vector, polar,
+    bool, and text: ((the \\text{} parts, trimmed), the parsed rest). ctx is item_context():
+    without one, vectors compare exactly, angles mod 360°, and nothing is read as Boolean."""
     if not isinstance(raw, str) or not raw.strip():
         return None
+    if ctx and ctx.get("slug") in BOOLEAN_GAMES:
+        b = _parse_boolean(raw)
+        if b is not None:
+            return b
+    if "\\begin{" in raw:
+        return _parse_vector(raw, ctx)
+    if "\\angle" in raw or "∠" in raw:
+        return _parse_polar(raw, ctx)
+    # "25\sqrt{3} \approx 43.3": the exact value is what comes before the rounding.
+    if "\\approx" in raw or "≈" in raw:
+        units = _TEXT_PART.findall(raw)
+        head = re.split(r"\\approx|≈", _TEXT_PART.sub(" ", raw), 1)[0]
+        return parse_value(head + "".join("\\text{%s}" % u for u in units), ctx, _worked=True)
     parts = _TEXT_PART.findall(raw)
     if parts:
-        rest = parse_value(_TEXT_PART.sub(" ", raw))
+        rest = parse_value(_TEXT_PART.sub(" ", raw), ctx, _worked)
         if rest is None:
             return None
-        return ("text", (tuple(p.strip() for p in parts), rest))
+        parts = tuple(p.strip() for p in parts)
+        scaled = _unit_scale(parts[0]) if len(parts) == 1 else None
+        if scaled and scaled[1] and rest[0] == "num":
+            sp = _sympy_env()["sp"]
+            return ("text", ((scaled[0],), ("num", rest[1] * sp.Integer(10) ** scaled[1])))
+        return ("text", (parts, rest))
     m = _INTERVAL.fullmatch(raw)
     if m:
         from fractions import Fraction
@@ -1214,9 +1529,14 @@ def parse_value(raw):
     try:
         if t.count("=") == 1:
             l, r = t.split("=")
-            e = (parse_expr(l, local_dict=syms, transformations=trans)
-                 - parse_expr(r, local_dict=syms, transformations=trans))
-            return ("eq", sp.expand(e))
+            lv = parse_expr(l, local_dict=syms, transformations=trans)
+            rv = parse_expr(r, local_dict=syms, transformations=trans)
+            # A worked value shown with its rounding, "10\cos 30° = 5\sqrt{3} \approx 8.66" (F0):
+            # both sides constants. It is that value when they agree exactly; when they do not, it
+            # is not B11's to read. Without the rounding ("1! = 1") it is a statement, as before.
+            if _worked and getattr(lv, "is_number", False) and getattr(rv, "is_number", False):
+                return ("num", lv) if sp.simplify(lv - rv) == 0 else None
+            return ("eq", sp.expand(lv - rv))
         if "=" in t or "<" in t or ">" in t:
             return None
         v = parse_expr(t, local_dict=syms, transformations=trans)
@@ -1279,14 +1599,16 @@ def option_units(q):
     return units
 
 
-def value_equal_pairs(pool):
+def value_equal_pairs(pool, ctx=None):
     """Sorted pairs of DISTINCT option strings in pool that are equal in value,
-    each pair once. Identical strings are B2's business, not this."""
+    each pair once. Identical strings are B2's business, not this. ctx is the
+    item's item_context() (F0): what it asks decides how vectors, angles and
+    Boolean expressions compare."""
     import itertools
     distinct = list(dict.fromkeys(p for p in pool if isinstance(p, str)))
     parsed = {}
     for p in distinct:
-        v = parse_value(p)
+        v = parse_value(p, ctx)
         if v is not None:
             parsed[p] = v
     out = []
@@ -1301,6 +1623,8 @@ def equal(a, b):
     sp = _sympy_env()["sp"]
     ka, va = a
     kb, vb = b
+    if "polar" in (ka, kb):
+        return _polar_equal(a, b)
     if {ka, kb} <= {"num", "expr"}:
         try:
             d = sp.simplify(va - vb)
@@ -1330,7 +1654,58 @@ def equal(a, b):
             return q.is_number and q != 0
         except Exception:
             return False
+    if ka == "bool":
+        return _bool_equal(va, vb)
+    if ka == "vector":
+        return _vector_equal(va, vb)
     return False
+
+
+def _zero(x):
+    sp = _sympy_env()["sp"]
+    try:
+        return sp.simplify(x) == 0
+    except Exception:
+        return False
+
+
+def _vector_equal(va, vb):
+    """Exactly, entry by entry; or, when both items ask for a direction, up to a non-zero scalar."""
+    (xa, mode_a), (xb, mode_b) = va, vb
+    if len(xa) != len(xb):
+        return False
+    if mode_a == mode_b == "direction":
+        if all(_zero(x) for x in xa) or all(_zero(y) for y in xb):
+            return False
+        # parallel: every 2x2 cross term vanishes
+        return all(_zero(xa[i] * xb[j] - xa[j] * xb[i])
+                   for i in range(len(xa)) for j in range(i + 1, len(xa)))
+    return all(_zero(x - y) for x, y in zip(xa, xb))
+
+
+def _polar_equal(a, b):
+    """Two polar forms: exactly (r and θ) when either item states a range; otherwise as complex
+    numbers, which is θ mod 360° and a negative r at θ + 180°. A polar form against a number is
+    compared as complex numbers, never when a range is stated. All exact."""
+    sp = _sympy_env()["sp"]
+    (ka, va), (kb, vb) = a, b
+    if ka == kb == "polar":
+        (ra, ta, sa), (rb, tb, sb) = va, vb
+        if sa or sb:
+            return _zero(ra - rb) and _zero(ta - tb)
+        if _zero(ra) or _zero(rb):
+            return _zero(ra) and _zero(rb)
+        for rr, shift in ((rb, 0), (-rb, sp.pi)):
+            if _zero(ra - rr):
+                k = sp.simplify((ta - tb - shift) / (2 * sp.pi))
+                if k.is_integer:
+                    return True
+        return False
+    polar, other = (va, b) if ka == "polar" else (vb, a)
+    if polar[2] or other[0] != "num":
+        return False
+    r, t, _ = polar
+    return _zero(sp.expand_complex(r * sp.exp(sp.I * t) - other[1]))
 
 
 # ---------------------------------------------------------------------------

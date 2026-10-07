@@ -3,10 +3,39 @@
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
 `docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
 
+**STANDING RULE (Jon, 7 Oct 2026):** when a contract finishes and the next queued contract's start condition is
+met, start it without asking. Stop only for a STOP IF, a decision no standing ruling covers, or an empty queue.
+
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
-## 2026-10-07 (home): CI split for speed + two lanes (this PR); NEXT = contract B
+**QUEUE (home lane):**
+1. ~~F0: B11 value comparison~~ (this PR).
+2. **CI split:** give Equation Builder's group D a `--part` split as Just Pythag's, and split B1, so no content group
+   exceeds 4 min on a PR; one PR, timings before/after in it; add to canon §7.8 that a new verifier goes into
+   whichever group keeps every group under 4 min. START: when F0 is merged and main is green.
+3. Contract C (audit batch 3): Jon pastes it.
+
+## 2026-10-07 (home): contract F0, B11 sees the value-equal shapes it skipped
+
+- **Fixtures first:** `scripts/test-bank-common.py` (CI, Tier 4 layer A job), 13 equal pairs from the tranche 5-6 items
+  (differentiation-duel :820/:848, binomial-blaster :134, force-resolver :118/:138, moments-master :180,
+  eigenvector-engine :117/:128, complex-converter ids 21/40, boolean-blitz :584/:744, plus a Boolean distributive law)
+  and 14 look-alikes that must stay unequal. All 13 failed on main's parser (commit 630ff40), all pass now.
+- **`bank_common.py`:** `parse_value(raw, ctx)` / `value_equal_pairs(pool, ctx)` with `item_context(slug, q)`;
+  juxtaposition, `\binom`, trig of constants in degrees, ≈ chains, SI prefixes, `vector`, `polar`, `bool` kinds
+  (canon §7.1, the B11 paragraph). Exact throughout. `VECTOR_DIRECTION_GAMES` and `BOOLEAN_GAMES` tag the two games
+  whose ask is in code, not in the item.
+- **First run: 42 new pairs in 9 games** (eigenvector-engine 11, boolean-blitz 10, complex-converter 8,
+  differentiation-duel 5, force-resolver 4, formula-unlocked, log-laws, moments-master, binomial-blaster 1 each).
+  28 were already in the register: each ledger entry carries `"register": "<id>"`. 14 are new findings
+  `<slug>-f0-NNN` (eigenvector-engine 7, boolean-blitz 4, force-resolver, formula-unlocked, log-laws 1 each;
+  log-laws had no register file, so F0 opened one, its `audited` entry saying it is a B11 run, not an audit).
+  Two misreads found on the way and fixed with fixtures: "vs" read as v·s; "1! = 1" read as a value.
+- `check-banks.py --write-ledger` now carries each entry's `register` link over (`keep_register_links`).
+- Planted `12\cos 90° N` beside the key `0 N` in a scratch copy of force-resolver's bank: `--ci` fails on it as NEW.
+
+## 2026-10-07 (home): CI split for speed + two lanes (#95, merged); NEXT = contract F0
 
 **State of play.**
 - main `a041590` (#94) green before this PR. Build freeze in force (canon §0.2).

@@ -668,6 +668,26 @@ closed them had shipped. The four, and what closed them, are in §8.1.
   value, so "1 Nm clockwise" ≠ "1 Nm anticlockwise" while √50 cm = 5√2 cm. A deliberate form
   question is listed in `scripts/checker-allowlist.json` (`b11_form_questions`) with its ask
   quoted (2 Oct 2026).
+  **What B11 compares since contract F0 (7 Oct 2026).** Before it, `parse_value` returned None for
+  several shapes and B11 skipped the pair, so tranches 5 and 6 found key-equal options it had passed.
+  All of these are exact (Fractions and SymPy; no floating tolerance in any of them), and each is a
+  fixture in `scripts/test-bank-common.py` (CI, Tier 4 layer A) taken from the audit item that showed it:
+  - **juxtaposition** is multiplication in a mathematical option (2xe^{-y}, x^2 e^x, gT); never in
+    prose: a word standing on its own ("22.5 m vs 22.5 m"), a common word, or a function the parser
+    does not model leaves the option unparsed;
+  - **`\binom{n}{r}`**; **trig, log and exp of constants**, in degrees where the text says ° (12 cos 0° = 12);
+    a value shown with its rounding ("10 cos 30° = 5√3 ≈ 8.66 N") is its exact part; an equation of
+    constants without one ("1! = 1") is a statement, not a value;
+  - **SI prefixes** on a unit in `\text{}` (5 kW = 5000 W; 5 kW ≠ 5 kN);
+  - **vectors** (`pmatrix`) are compared up to a non-zero scalar when the item asks for an eigenvector or
+    a direction (its text says so, or the game asks it of every item: `VECTOR_DIRECTION_GAMES` in
+    `bank_common.py`), otherwise entry by entry;
+  - **angles** (r∠θ) are compared as complex numbers, so θ mod 360° and −r at θ + 180°, unless the item
+    states a range ("positive", "principal", "−180° < θ ≤ 180°"): then r and θ exactly;
+  - **Boolean expressions**, in a game listed in `BOOLEAN_GAMES`, by their full truth tables
+    (juxtaposition AND, + OR, overline/′/¬ NOT), so AB + BC = B(A + C).
+  Its first run flagged 42 new pairs in 9 games: 28 already in the findings register (each ledger entry
+  carries its `register` id), 14 filed as `<slug>-f0-NNN`. All are ledgered as known; a new one fails CI.
 
 ### 7.1.1 Scope of the KaTeX rule — expressions, not unit symbols
 

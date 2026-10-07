@@ -1,0 +1,19 @@
+# Findings register for log-laws (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# Opened by contract F0 (7 Oct 2026): B11 found value-equal options here. No audit has covered
+# this game; the audited entry records the B11 run, not an audit.
+game: log-laws
+audited:
+  tranche: F0 (B11 parser, not an audit)
+  head: 2389eba
+  date: '2026-10-07'
+  served: {}
+findings:
+- id: log-laws-f0-001
+  severity: LOW
+  jc: false
+  class: 2
+  level: all
+  where: games/log-laws/index.html:837 (QUESTIONS[18])
+  summary: Wrong options log 4.5 and log(9/2) are equal (½ log 9, Power Rule)
+  evidence: 'B11 parser, F0 (7 Oct 2026): \log 4.5 = \log\tfrac{9}{2}, exact (scripts/bank_common.py); ledger log-laws::8e6dc1f3e423#1::B11::["\\log 4.5", "\\log\\tfrac{9}{2}"]'
+  status: open

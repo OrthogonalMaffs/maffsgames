@@ -29,3 +29,12 @@ findings:
     (5 of 10 drawn) and in the extra `shuffle(Q_ALEVEL).slice(0,5)` (:409), so it appears in about 92% of A-level
     sessions (1 − 0.5 × 1/6) and twice in about 42%.'
   status: open
+- id: formula-unlocked-f0-001
+  severity: LOW
+  jc: false
+  class: 2
+  level: level4
+  where: games/formula-unlocked/index.html:369 (Q_LEVEL4[10])
+  summary: Wrong options 'L = gT/(2π)' and 'L = g(T/(2π))' are equal (pendulum, make L the subject)
+  evidence: 'B11 parser, F0 (7 Oct 2026): L = \dfrac{gT}{2\pi} = L = g\left(\dfrac{T}{2\pi}\right), exact (scripts/bank_common.py); ledger formula-unlocked::e2cccd4c65ca#1::B11::["L = \\dfrac{gT}{2\\pi}", "L = g\\left(\\dfrac{T}{2\\pi}\\right)"]'
+  status: open
