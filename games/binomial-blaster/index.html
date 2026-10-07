@@ -22,6 +22,9 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
 <script src="../../schools/assets/analytics.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{}
+-->
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -250,7 +253,7 @@ function showMenu(){show('menu')}
 
 // Render method reference content once KaTeX is ready
 (function renderMethodRef(){
-  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}  // lock-ok: waits for KaTeX to draw the method reference, it marks nothing
   var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
   var k=function(t){return katex.renderToString(t,{throwOnError:false});};
 
