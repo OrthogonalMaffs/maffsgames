@@ -76,14 +76,15 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 # Migrated games, added in the PR that migrates each. NOT_YET is the rest: reported, never failed, and it
 # may only shrink.
 MIGRATED = set('''
-formula-plug-in new-shapes four-quadrant-explorer like-terms-collector
+formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
 # Per-game driving hints, where the generic driver needs one: 'level' (the level key to load), 'start' (JS
 # that reaches the first question), 'ready' (JS: true when a question is on screen), 'answer' (JS that submits
 # an answer; gets `i`, the attempt), 'surface' (a selector for an answer surface that is not an option
-# group, such as a canvas: the repeat phase really clicks its centre and corners too).
+# group, such as a canvas: the repeat phase really clicks its centre and corners too), 'start_sel' (the
+# control that starts a run, when it is not a Start button: double-clicked for real).
 HINTS = {
     'four-quadrant-explorer': {
         'ready': "document.getElementById('gameScreen').style.display !== 'none'",
@@ -91,6 +92,16 @@ HINTS = {
                    "if (row.style.display !== 'none' && row.children.length) { row.children[i % row.children.length].click(); return; }"
                    "const c = document.getElementById('gridCanvas'), r = c.getBoundingClientRect();"
                    "for (let k = 0; k < 2; k++) c.dispatchEvent(new MouseEvent('click', {bubbles: true, clientX: r.left + 4, clientY: r.top + 4}));"),
+        'surface': '#gridCanvas',
+    },
+    'shape-shifter': {
+        'start_sel': "[onclick=\"startGame('rotation')\"]",
+        'ready': "document.getElementById('gameScreen').classList.contains('active')",
+        'answer': ("if (!document.getElementById('gameScreen').classList.contains('active') || !rotationOptions.length) return;"
+                   "const o = rotationOptions[i % rotationOptions.length], p = gridToPixel(o.at[0], o.at[1]);"
+                   "const r = canvas.getBoundingClientRect();"
+                   "canvas.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true,"
+                   "  clientX: r.left + p[0], clientY: r.top + p[1]}));"),
         'surface': '#gridCanvas',
     },
     'like-terms-collector': {
@@ -227,6 +238,7 @@ INIT = r"""
   const CONTINUE_RE = /^(got it|next|continue|carry on|onward|ok|okay|keep going|see (your )?results|show results|finish)\b/;
   window.__lockContinue = function () {
     const mn = document.querySelector('.maffs-next');
+    window.__lockContEl = mn;
     if (mn && visible(mn)) return { rect: window.__lockRect(mn), ready: !mn.disabled, kind: 'maffs-next' };
     const grp = window.__mfgGroup || [];
     const els = [...document.querySelectorAll('button, [role="button"], a')].filter(e =>
@@ -235,6 +247,7 @@ INIT = r"""
         /^(continue|keep going)\b/.test((e.textContent || '').trim().toLowerCase())));
     const hit = els.find(e => { const t = (e.textContent || '').trim().toLowerCase();
       return CONTINUE_RE.test(t) || t.indexOf('next question') !== -1; });
+    window.__lockContEl = hit;
     return hit ? { rect: window.__lockRect(hit), ready: true, kind: (hit.textContent || '').trim().slice(0, 30) } : null;
   };
   // A keypad: its submit key is one of the group (formula-plug-in's numpad Enter). Its index, or -1.
@@ -320,11 +333,16 @@ class Driver:
 
     async def start(self, dbl=False):
         """Reach the first question; with dbl, the start control is double-clicked for real."""
-        if dbl and not self.hint.get('start'):
-            r = await self.ev('() => __lockStartRect()')
-            if r:
+        if (dbl or self.hint.get('start_sel')) and not self.hint.get('start'):
+            if self.hint.get('start_sel'):
+                r = await self.ev('(sel) => __lockRect(document.querySelector(sel))', self.hint['start_sel'])
+            else:
+                r = await self.ev('() => __lockStartRect()')
+            if r and dbl:
                 await self.page.mouse.dblclick(r['x'], r['y'])
-                await self.page.wait_for_timeout(500)
+            elif r:
+                await self.page.mouse.click(r['x'], r['y'])
+            await self.page.wait_for_timeout(500)
         if self.hint.get('start'):
             await self.ev(self.hint['start'])
             await self.page.wait_for_timeout(500)
@@ -480,7 +498,8 @@ async def play(browser, base, slug, level, page_html):
             faults.append('dblclick on %s: its second click marked %s' % (c['kind'], diff(before, after)))
     else:
         faults.append('no continue control after a wrong answer (MaffsNext expected)')
-    # 4: tap through to the end
+    # 4: tap through to the end; each continue pressed with two Enters and no gap (shape-shifter-t3-005)
+    mark = len(await d.ev('() => __lockEvents'))
     for _ in range(120):
         s = await d.snap()
         if s['completed'] or (await d.probe())['atEnd']:
@@ -492,7 +511,11 @@ async def play(browser, base, slug, level, page_html):
             await page.wait_for_timeout(int(1000 * TIME_SCALE))
         c = await d.ev('() => __lockContinue()')
         if c and c['ready']:
-            await page.mouse.dblclick(c['rect']['x'], c['rect']['y'])
+            await d.ev('() => { try { __lockContEl.focus(); } catch (x) {} }')
+            await page.keyboard.press('Enter')
+            await page.keyboard.press('Enter')
+            if (await d.ev('() => !!(__lockContEl && __lockContEl.isConnected && __lockContEl.offsetParent && !__lockContEl.disabled)')):
+                await page.mouse.dblclick(c['rect']['x'], c['rect']['y'])     # Enter did not reach it: click
         await page.wait_for_timeout(60)
     for _ in range(12):                      # tap the end screen, as a student does
         pt = await d.ev('() => __lockBlankPoint()')
@@ -501,6 +524,12 @@ async def play(browser, base, slug, level, page_html):
         await page.wait_for_timeout(int(1000 * TIME_SCALE))
     await page.wait_for_timeout(int(9000 * TIME_SCALE) + 500)
     end = await d.snap()
+    idx = [r['i'] for r in (await d.ev('() => __lockEvents'))[mark:]
+           if r['e'] == 'question_answered' and isinstance(r.get('i'), int)]
+    gaps = [(a, b) for a, b in zip(idx, idx[1:]) if b - a > 1]
+    if gaps:
+        faults.append('skip: question_index jumped %s during the tap-through (a question skipped unseen)'
+                      % ', '.join('%d -> %d' % g for g in gaps[:3]))
     if VERBOSE:
         print('    [%s] end of run: %s; probe %s' % (slug, end, await d.probe()))
     if end['completed'] != 1:

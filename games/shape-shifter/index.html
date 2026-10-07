@@ -118,6 +118,7 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -172,7 +173,7 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
   <div class="feedback-bar" id="feedbackBar"></div>
   <div class="btn-row" id="btnRow">
     <button class="game-btn secondary" id="undoBtn" onclick="undoVertex()" style="display:none">Undo</button>
-    <button class="game-btn primary" id="nextBtn" onclick="nextQuestion()" style="display:none">Next</button>
+    <button class="game-btn primary" id="nextBtn" data-maffs-lock-skip onclick="nextQuestion()" style="display:none">Next</button>
   </div>
 </div>
 
@@ -393,7 +394,7 @@ let selectedMode = 'translation'; // mode chosen on start screen
 let totalAnswered = 0;
 let totalCorrect = 0;
 let questionIndex = 0; // 1-based across entire session
-let answered = false;
+const gameEl = document.getElementById('gameScreen');   // MaffsLock's container (canon 7.6.0)
 let rotationOptions = []; // [{shape, label, correct}]
 let hoveredOption = -1;
 let selectedOption = -1;
@@ -436,6 +437,7 @@ function startGame(chosenMode) {
   questionIndex = 0;
   qIndex = 0;
   mixModes = [];
+  MaffsLock.newSession();
 
   if (chosenMode === 'translation') {
     mode = 'translation';
@@ -497,7 +499,9 @@ function updateModePill() {
 
 // ── LOAD QUESTION ──
 function loadQuestion() {
-  answered = false;
+  // A new question: input on it is ignored for MaffsLock.FRESH_MS, so the second click of a double-click on a
+  // mode card or Next, or a second Enter, cannot answer it (shape-shifter-t3-005).
+  MaffsLock.fresh(gameEl);
   placedVertices = [];
   selectedOption = -1;
   hoveredOption = -1;
@@ -648,18 +652,18 @@ function drawGrid() {
   if (mode === 'rotation') {
     for (let i = 0; i < rotationOptions.length; i++) {
       const opt = rotationOptions[i];
-      if (answered && opt.correct) {
+      if (MaffsLock.isLocked(gameEl) && opt.correct) {
         drawShape(opt.shape, '#1a2744', 'rgba(26,39,68,0.3)', 2);
-      } else if (answered && selectedOption === i && !opt.correct) {
+      } else if (MaffsLock.isLocked(gameEl) && selectedOption === i && !opt.correct) {
         drawShape(opt.shape, '#ef4444', 'rgba(239,68,68,0.2)', 2);
-      } else if (i === hoveredOption && !answered) {
+      } else if (i === hoveredOption && !MaffsLock.isLocked(gameEl)) {
         drawShape(opt.shape, 'rgba(255,255,255,0.5)', 'rgba(255,255,255,0.15)', 2);
       } else {
         drawShape(opt.shape, 'rgba(255,255,255,0.2)', 'rgba(255,255,255,0.05)', 1);
       }
       // Label
       const [lx, ly] = gridToPixel(opt.at[0], opt.at[1]);
-      ctx.fillStyle = (i === hoveredOption && !answered) ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.4)';
+      ctx.fillStyle = (i === hoveredOption && !MaffsLock.isLocked(gameEl)) ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.4)';
       ctx.font = '700 16px Outfit';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -698,7 +702,7 @@ function drawGrid() {
   }
 
   // After answering: show correct shape in navy
-  if (answered && mode !== 'rotation') {
+  if (MaffsLock.isLocked(gameEl) && mode !== 'rotation') {
     const target = expectedVertices;
     drawShape(target, '#1a2744', 'rgba(26,39,68,0.3)', 2);
   }
@@ -754,7 +758,7 @@ function getCanvasCoords(e) {
 
 function handleCanvasClick(e) {
   e.preventDefault();
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   const [px, py] = getCanvasCoords(e);
   const [gx, gy] = pixelToGrid(px, py);
 
@@ -778,7 +782,7 @@ function handleCanvasClick(e) {
 }
 
 function handleCanvasMove(e) {
-  if (answered || mode !== 'rotation') return;
+  if (MaffsLock.isLocked(gameEl) || mode !== 'rotation') return;
   const [px, py] = getCanvasCoords(e);
   const newHover = optionAt(...pixelToGridExact(px, py));
   if (newHover !== hoveredOption) {
@@ -828,14 +832,14 @@ canvas.addEventListener('mousemove', handleCanvasMove);
 
 // ── UNDO ──
 function undoVertex() {
-  if (answered || placedVertices.length === 0) return;
+  if (MaffsLock.isLocked(gameEl) || placedVertices.length === 0) return;
   placedVertices.pop();
   drawGrid();
 }
 
 // ── CHECK ANSWERS ──
 function checkVertexAnswer() {
-  answered = true;
+  if (!MaffsLock.lock(gameEl)) return;
   // Order-independent check: each placed vertex must match a unique expected vertex
   const used = new Array(expectedVertices.length).fill(false);
   let allCorrect = true;
@@ -876,8 +880,7 @@ function checkVertexAnswer() {
 }
 
 function selectRotationOption(i) {
-  if (answered) return;
-  answered = true;
+  if (!MaffsLock.lock(gameEl)) return;
   selectedOption = i;
   totalAnswered++;
 
@@ -915,7 +918,8 @@ function nextQuestion() {
 }
 
 // ── RESULTS ──
-function showResults() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const showResults = MaffsLock.finishOnce(function () {
   const total = totalCorrect;
   const maxQ = 10;
   const pct = Math.round(100 * total / maxQ);
@@ -948,7 +952,7 @@ function showResults() {
 
   // Show reveal first
   showReveal();
-}
+});
 
 function showReveal() {
   const revealData = {
@@ -975,10 +979,12 @@ function showReveal() {
   document.getElementById('revealNextBtn').disabled = false;
   document.getElementById('revealNextBtn').textContent = 'Continue';
   showScreen('revealScreen');
+  MaffsLock.screen(document.getElementById('revealScreen'));
 }
 
 function continueAfterReveal() {
   showScreen('resultsScreen');
+  MaffsLock.screen(document.getElementById('resultsScreen'));
 }
 
 // ── RESIZE ──
