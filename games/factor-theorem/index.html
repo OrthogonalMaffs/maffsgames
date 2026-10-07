@@ -27,6 +27,7 @@
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
 <script src="../../schools/assets/answer.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -930,6 +931,15 @@ function scrollToStep() {
 }
 
 // ── PRACTICE ──────────────────────────────────────────────────────
+// The end of a run is sent once (MaffsLock.finishOnce); Try Again starts a new session.
+const finishPractice = MaffsLock.finishOnce(() => {
+  const questions = CONTENT.practice.questions;
+  if (typeof mfg === 'function') {
+    mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: practiceState.score, questions_answered: questions.length, questions_correct: practiceState.answers.filter(a => a).length, mode: 'practice' });
+  }
+  if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', practiceState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',practiceState.score);} }
+});
+
 function renderPractice() {
   const questions = CONTENT.practice.questions;
   const area = document.getElementById('practice-area');
@@ -945,10 +955,7 @@ function renderPractice() {
       <div class="stats">${practiceState.score} / ${practiceState.maxScore} marks &middot; ${practiceState.hintsTotal} hints used</div>
       <button class="play-again" onclick="resetPractice()">Try Again</button>`;
     if (window.MaffsInvite) MaffsInvite.place(resultsEl);
-    if (typeof mfg === 'function') {
-      mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: practiceState.score, questions_answered: questions.length, questions_correct: practiceState.answers.filter(a => a).length, mode: 'practice' });
-    }
-    if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', practiceState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',practiceState.score);} }
+    finishPractice();
     return;
   }
 
@@ -969,8 +976,9 @@ function renderPractice() {
     return `<div class="${cls}"></div>`;
   }).join('');
 
+  // Answer once (canon 7.6.0): the question is locked through MaffsLock when it is marked for the last time (a
+  // scaffold has three attempts), never by a local flag. Next is outside the lock (data-maffs-lock-skip).
   let hintsUsed = 0;
-  let answered = false;
   let attempts = 0;
   const scaffoldSteps = q.scaffoldSteps || [];
   const hasScaffold = scaffoldSteps.length > 0;
@@ -1004,8 +1012,9 @@ function renderPractice() {
     <div id="hint-area"></div>
     <div id="feedback" class="feedback-msg"></div>
     <button class="submit-btn" id="checkBtn">Check</button>
-    <button class="next-q-btn" id="nextQBtn" style="display:none">Next Question →</button>
+    <button class="next-q-btn" id="nextQBtn" style="display:none" data-maffs-lock-skip>Next Question →</button>
   </div>`;
+  MaffsLock.fresh(area);
 
   // Apply exam vocabulary tooltips to question prompt
   if (hasScaffold && window.MaffsVocab) {
@@ -1017,7 +1026,7 @@ function renderPractice() {
   const hintArea = document.getElementById('hint-area');
   if (!q.hints.length) hintBtn.disabled = true;
   hintBtn.addEventListener('click', () => {
-    if (answered || hintsUsed >= q.hints.length) return;
+    if (MaffsLock.isLocked(area) || hintsUsed >= q.hints.length) return;
     hintArea.innerHTML += `<div class="hint-text">${q.hints[hintsUsed]}</div>`;
     hintsUsed++;
     practiceState.hintsTotal++;
@@ -1027,8 +1036,7 @@ function renderPractice() {
   });
 
   const finish = (correct) => {
-    answered = true;
-    hintBtn.disabled = true;
+    MaffsLock.lock(area);
     let qScore = 0;
     if (correct) qScore = hasScaffold
       ? (hintsUsed === 0 && attempts === 1 ? 3 : hintsUsed <= 1 && attempts <= 2 ? 2 : 1)
@@ -1039,6 +1047,7 @@ function renderPractice() {
     document.getElementById('p-score').textContent = `${practiceState.score} / ${practiceState.maxScore}`;
     document.getElementById('checkBtn').style.display = 'none';
     document.getElementById('nextQBtn').style.display = 'block';
+    document.getElementById('nextQBtn').focus();
     if (typeof mfg === 'function') {
       mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: practiceState.qIdx + 1, correct, attempts, hints_used: hintsUsed, mode: 'practice' });
     }
@@ -1046,7 +1055,7 @@ function renderPractice() {
   };
 
   document.getElementById('checkBtn').addEventListener('click', () => {
-    if (answered) return;
+    if (MaffsLock.isLocked(area)) return;
     const feedback = document.getElementById('feedback');
     const open = units.filter(u => !u.done);
     if (open.some(u => u.boxes.some(b => !document.getElementById(b).value.trim()))) {
@@ -1101,12 +1110,21 @@ function enterSubmits(area, checkId, nextId) {
 }
 
 function resetPractice() {
+  MaffsLock.newSession();
   practiceState = { qIdx: 0, score: 0, maxScore: 0, hintsTotal: 0, answers: [], started: false };
   renderPractice();
   if (currentSection === 'practice') beginRun('practice');
 }
 
 // ── TEST ──────────────────────────────────────────────────────────
+const finishTest = MaffsLock.finishOnce(() => {
+  const questions = CONTENT.test.questions;
+  if (typeof mfg === 'function') {
+    mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: testState.score, questions_answered: questions.length, questions_correct: testState.answers.filter(a => a.correct).length, mode: 'test' });
+  }
+  if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', testState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',testState.score);} }
+});
+
 function renderTest() {
   const questions = CONTENT.test.questions;
   const area = document.getElementById('test-area');
@@ -1126,10 +1144,7 @@ function renderTest() {
       ${testState.answers.some(a => !a.correct) ? '<div class="review-link" onclick="switchToLearn()">Review the worked examples for topics you found tricky</div>' : ''}
       <br><button class="play-again" onclick="resetTest()">Try Again</button>`;
     if (window.MaffsInvite) MaffsInvite.place(resultsEl);
-    if (typeof mfg === 'function') {
-      mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: testState.score, questions_answered: questions.length, questions_correct: testState.answers.filter(a => a.correct).length, mode: 'test' });
-    }
-    if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', testState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',testState.score);} }
+    finishTest();
     return;
   }
 
@@ -1155,10 +1170,11 @@ function renderTest() {
 
   html += `<div id="t-feedback" class="feedback-msg"></div>
     <button class="submit-btn" id="tCheckBtn">Submit Answer</button>
-    <button class="next-q-btn" id="tNextBtn" style="display:none">Next Question →</button>
+    <button class="next-q-btn" id="tNextBtn" style="display:none" data-maffs-lock-skip>Next Question →</button>
   </div>`;
 
   area.innerHTML = html;
+  MaffsLock.fresh(area);
 
   // Apply exam vocabulary tooltips to question labels
   if (window.MaffsVocab) {
@@ -1166,16 +1182,16 @@ function renderTest() {
     MaffsVocab.applyExamVocabTooltips('.vocab-target');
   }
 
-  let testAnswered = false;
   document.getElementById('tCheckBtn').addEventListener('click', () => {
-    if (testAnswered) return;
+    if (MaffsLock.isLocked(area)) return;
     const feedback = document.getElementById('t-feedback');
     if (q.parts.some((p, i) => !document.getElementById('tpart-' + i).value.trim())) {
       feedback.className = 'feedback-msg';
       feedback.textContent = 'Fill in every box first.';
       return;
     }
-    testAnswered = true;
+    // answer once (canon 7.6.0): a test question is marked a single time
+    if (!MaffsLock.lock(area)) return;
     let qScore = 0;
     let allCorrect = true;
 
@@ -1206,6 +1222,7 @@ function renderTest() {
 
     document.getElementById('tCheckBtn').style.display = 'none';
     document.getElementById('tNextBtn').style.display = 'block';
+    document.getElementById('tNextBtn').focus();
 
     if (typeof mfg === 'function') {
       mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: testState.qIdx + 1, correct: allCorrect, attempts: 1, hints_used: 0, mode: 'test' });
@@ -1217,6 +1234,7 @@ function renderTest() {
 }
 
 function resetTest() {
+  MaffsLock.newSession();
   if (testState.timerInterval) clearInterval(testState.timerInterval);
   testState = { qIdx: 0, score: 0, maxScore: 0, startTime: null, timerInterval: null, answers: [], started: false };
   renderTest();

@@ -627,6 +627,7 @@ SWEEP_JS = r"""(cases) => {
     document.querySelectorAll('.section').forEach(e => e.classList.remove('active'));
     document.getElementById('sec-' + sec).classList.add('active');
   };
+  if (window.MaffsLock) MaffsLock.FRESH_MS = 0;   // each case renders and clicks at once; LOCK_JS keeps the real window
   for (const cs of cases) {
     show(cs.mode);
     if (cs.mode === 'practice') {
@@ -676,6 +677,58 @@ ENTER_JS = r"""() => {
   box.value = CONTENT.practice.questions[qi].finalAnswer;
   box.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
   return document.getElementById('feedback').textContent;
+}"""
+
+# Answer once (canon 7.6.0, MaffsLock), with the real 300 ms window: Check clicked twice and Enter mark once; Next
+# clicked twice moves one question; a test question submitted twice scores once; each end screen submits once.
+LOCK_JS = r"""async () => {
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const settle = () => wait((window.MaffsLock ? MaffsLock.FRESH_MS : 0) + 50);
+  const show = (sec) => {
+    document.querySelectorAll('.section').forEach(e => e.classList.remove('active'));
+    document.getElementById('sec-' + sec).classList.add('active');
+  };
+  let submits = 0;
+  window.MaffsLeaderboard = { submitScore: () => { submits++; return Promise.resolve(); } };
+  const res = {};
+  show('practice');
+  const qs = CONTENT.practice.questions, qi = qs.findIndex(q => q.id === 21);
+  practiceState = { qIdx: qi, score: 0, maxScore: 0, hintsTotal: 0, answers: [], started: true };
+  renderPractice();
+  await settle();
+  const box = document.getElementById('final-answer');
+  box.value = qs[qi].finalAnswer;
+  const check = document.getElementById('checkBtn');
+  check.click(); check.click();
+  box.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+  res.practice = [practiceState.score, practiceState.maxScore, practiceState.answers.length];
+  res.qi = qi;
+  return res;
+}"""
+# part 2, after a real double click on Next (the mouse, at the button: the second click lands on the new question)
+LOCK2_JS = r"""async () => {
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const settle = () => wait((window.MaffsLock ? MaffsLock.FRESH_MS : 0) + 50);
+  const show = (sec) => {
+    document.querySelectorAll('.section').forEach(e => e.classList.remove('active'));
+    document.getElementById('sec-' + sec).classList.add('active');
+  };
+  let submits = 0;
+  window.MaffsLeaderboard = { submitScore: () => { submits++; return Promise.resolve(); } };
+  const res = {};
+  const qs = CONTENT.practice.questions;
+  show('test');
+  testState = { qIdx: 0, score: 0, maxScore: 0, startTime: Date.now(), answers: [], started: true };
+  renderTest();
+  await settle();
+  CONTENT.test.questions[0].parts.forEach((pt, i) => { document.getElementById('tpart-' + i).value = pt.answer; });
+  const sub = document.getElementById('tCheckBtn');
+  sub.click(); sub.click();
+  res.test = [testState.score, testState.maxScore, testState.answers.length, CONTENT.test.questions[0].marks];
+  practiceState.qIdx = qs.length; renderPractice(); renderPractice();
+  testState.qIdx = CONTENT.test.questions.length; renderTest(); renderTest();
+  res.submits = submits;
+  return res;
 }"""
 
 KATEX_DIR = None
@@ -855,6 +908,24 @@ def play(fails, html, accepted, sweep=True):
                 ent = page.evaluate(ENTER_JS)
                 if not ent.startswith('Correct'):
                     fails.append('p21: Enter in the answer box does not check it (%r; factor-theorem-t5-018)' % ent)
+            lk = page.evaluate(LOCK_JS)
+            nxt = page.locator('#nextQBtn')
+            nxt.scroll_into_view_if_needed()
+            bb = nxt.bounding_box()
+            page.mouse.click(bb['x'] + bb['width'] / 2, bb['y'] + bb['height'] / 2)
+            page.mouse.click(bb['x'] + bb['width'] / 2, bb['y'] + bb['height'] / 2)
+            lk['moved'] = page.evaluate('practiceState.qIdx') - lk['qi']
+            lk.update(page.evaluate(LOCK2_JS))
+            if lk['practice'] != [3, 3, 1]:
+                fails.append('p21: Check clicked twice and Enter: score, out of, answers = %s, not [3, 3, 1] (MaffsLock)' % (
+                    lk['practice'],))
+            if lk['moved'] != 1:
+                fails.append('p21: Next clicked twice moved %d questions (MaffsLock)' % lk['moved'])
+            m = lk['test']
+            if m[:3] != [m[3], m[3], 1]:
+                fails.append('T1: submitted twice: score, out of, answers = %s, not [%d, %d, 1] (MaffsLock)' % (m[:3], m[3], m[3]))
+            if lk['submits'] != 2:
+                fails.append('the two end screens, each shown twice, submitted %d scores, not 2 (MaffsLock)' % lk['submits'])
             for i, sw in page.evaluate(LEARN_JS):
                 if sw > 390:
                     fails.append('Learn example %d at 390px: the page scrolls sideways (%dpx; factor-theorem-t5-018)' % (
