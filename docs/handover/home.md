@@ -21,7 +21,21 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-07 (home): queue item 0b, regex .test() guards in bank_common (this PR)
+## 2026-10-07 (home): queue item 0c, canon SR-22 and SR-23 (docs only, this PR)
+
+- **#120 (0b) merged** on a green Gate.
+- **Numbering (decision taken, for Jon to see):** Jon called the leaderboard ruling "R15", but §0.3 numbers by SR-n
+  and F1 names its relist rule SR-21. So SR-21 is reserved for F1 (a placeholder row), the leaderboard ruling is
+  **SR-22** (its source column says "his ruling R15") and the timer ruling **SR-23**.
+- **SR-22:** one board per mode or session length; Prime Sprint's board key on the hub; Prisoner's Dilemma ranks
+  the tournament total only. proof-builder-t5-023 and prisoners-dilemma-t4-001 set `jc: false` (ruled), still open:
+  the code is not changed (new level keys in `firebase-leaderboard.js` and the hub: shared code, home lane, not yet
+  queued). Prime Sprint has no register entry.
+- **SR-23:** timer-policy's Hidden Count-Up applies; Trig Identity Duel and Glorious Gantt follow it (both already
+  listed there; a dated note added). trig-identity-duel-t2-010 and the timer part of glorious-gantt's :783/:968
+  entry stay open until their code changes (TID is the cloud lane's game; Gantt is unlisted).
+
+## 2026-10-07 (home): queue item 0b, regex .test() guards in bank_common (#120)
 
 - **Jon's new queue (7 Oct, after the clear):** 0b this; 0c canon §0.3 R15 + the timer ruling (docs only);
   0d shared fraction answers (MaffsAnswer, then Given That); then F1 (MaffsLock, pasted).
