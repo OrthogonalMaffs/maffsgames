@@ -24,8 +24,13 @@ main's last full run is red; watch main's run after merging.
   numbers, al[49] 1 d.p.; t5-007). Project Claude's sprinter (u = 8; t5-001) and ALEVEL[39] (2.02 s, 19.8 m/s;
   t5-003). v_y keyed -0.32 (t5-002); ALEVEL[22] says it lands at 3 s (t5-008); a question counts correct only if
   every typed step is (t5-009); wrong answers show the answer and wait for MaffsNext; ALEVEL[3]'s second root
-  explained (t5-011). `scripts/verify-suvat.py` (E). Open: t5-004 (1; the CHECK button is disabled while feedback
-  shows, but the full guard waits for MaffsLock), t5-005 (4), t5-010 (5).
+  explained (t5-011). **MaffsLock (#125) adopted (Jon, 7 Oct 17:30):** lock first in every answer handler,
+  fresh() on every render, MaffsLock.timer for every delay, endGame through finishOnce, newSession on Start;
+  t5-004 closed. `scripts/verify-suvat.py` (E) adds the class-1 test (double click + Enter on CHECK mark once,
+  two equation choices count once, one submit). Open: t5-005 (4), t5-010 (5).
+- **Standing rule from Jon (7 Oct 17:30): MaffsLock is on main; every game fixed from now on adopts it and closes
+  its class-1 entries in the same PR.** `check-answer-lock.py` (F1 part b) is not on main yet, so each verifier
+  tests the lock itself.
 - **Next: factor-theorem** (worktree `/home/user/ft-work`, branch claude/ft-prep, findings read, no edits):
   ACCEPTED-list typed answers (R12) and Project Claude's T4 (a = -19, b = 30; (x - 3)(x - 2)(x + 5) any order);
   t5-004/-005 (free text) and t5-008/-009 (exam-vocab.js, shared) stay open and get listed.

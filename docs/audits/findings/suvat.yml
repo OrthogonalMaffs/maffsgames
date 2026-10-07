@@ -49,7 +49,8 @@ findings:
     or throws'
   evidence: L4 CHECK x3 -> score 5->35, qNum 1->4; Phase 0 x4 -> +20; AL single-step 2nd Enter -> pageerror; two-step
     double Enter marks step-1 value as step 2
-  status: open
+  status: fixed
+  pr: 128
 - id: suvat-t5-005
   severity: MEDIUM
   jc: true

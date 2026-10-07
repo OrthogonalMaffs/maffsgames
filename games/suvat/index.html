@@ -132,6 +132,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -609,7 +610,9 @@ if(isALevel){
     'A-Level SUVAT: straight-line kinematics, horizontal projectiles, and projectiles at an angle. Resolve components, pick the equation, then calculate.';
 }
 
+// The end screen runs once per session (MaffsLock.finishOnce): game_completed and submitScore are never sent twice.
 function startGame(){
+  MaffsLock.newSession();
   score = 0; qNum = 0; currentStep = 0; _svCorrectCount = 0; sessionStart = Date.now();
   questions = shuffle(POOL).slice(0, GAME_SIZE);
   document.getElementById('startScreen').style.display = 'none';
@@ -655,6 +658,7 @@ function showPhase0(){
   document.getElementById('fb0').textContent = '';
   document.getElementById('fb0').className = 'feedback';
   document.getElementById('phase0').style.display = 'block';
+  MaffsLock.fresh(document.getElementById('phase0'));
   document.getElementById('p0ux').focus();
   startTimer();
 }
@@ -675,11 +679,11 @@ function submitPhase0(){
   var ry = markTyped(document.getElementById('p0uy').value, p0.uy, 2);
   var bad = [rx, ry].indexOf('unreadable') >= 0 ? 'unreadable' : [rx, ry].indexOf('format') >= 0 ? 'format' : null;
   if(bad){ fb.textContent = MaffsAnswer.message(bad, '', {dp: 2}); fb.className = 'feedback'; return; }
+  // answer once: the first marked answer locks the boxes and CHECK until the next question (canon 7.6.0)
+  if(!MaffsLock.lock(document.getElementById('phase0'))) return;
   stopTimer();
-  document.querySelector('#phase0 .calc-btn').disabled = true;
   var shown = 'u_x = ' + p0.ux.toFixed(2) + ', u_y = ' + p0.uy.toFixed(2);
   var go = function(){
-    document.querySelector('#phase0 .calc-btn').disabled = false;
     document.getElementById('phase0').style.display = 'none';
     showPhase1AL();
   };
@@ -688,7 +692,7 @@ function submitPhase0(){
     fb.textContent = 'CORRECT! ' + shown;
     fb.className = 'feedback correct';
     document.getElementById('score').textContent = score;
-    setTimeout(go, 1800);
+    MaffsLock.timer(go, 1800);
   } else {
     _svQOk = false;
     fb.textContent = 'Not quite: ' + shown;
@@ -732,6 +736,7 @@ function showPhase1AL(){
     btn.onclick = function(){ pickEqAL(c, btn, div); };
     div.appendChild(btn);
   });
+  MaffsLock.fresh(div);
 
   document.getElementById('fb1').textContent = '';
   document.getElementById('fb1').className = 'feedback';
@@ -740,22 +745,21 @@ function showPhase1AL(){
 }
 
 function pickEqAL(val, btn, div){
+  if(!MaffsLock.lock(div)) return;
   var correct = val === currentQ.equation;
   var fb = document.getElementById('fb1');
   if(correct){
     btn.classList.add('correct');
     fb.textContent = 'CORRECT EQUATION! Now calculate...';
     fb.className = 'feedback correct';
-    Array.from(div.children).forEach(function(b){ b.onclick = null; });
     stopTimer();
     score += logScore(BASE_SCORE_EQ, elapsedSeconds);
     document.getElementById('score').textContent = score;
-    setTimeout(function(){ showPhase2AL(); }, 1200);
+    MaffsLock.timer(showPhase2AL, 1200);
   } else {
     btn.classList.add('wrong');
     Array.from(div.children).forEach(function(b){
       if(b.dataset.val === currentQ.equation) b.classList.add('correct');
-      b.onclick = null;
     });
     fb.textContent = 'WRONG — the equation in green is the one that fits. Look at which variables it uses.';
     fb.className = 'feedback wrong';
@@ -785,6 +789,7 @@ function loadStep(){
   document.getElementById('phaseTitle').textContent = '— PHASE 2: CALCULATE —';
   document.getElementById('calcQ').textContent = step.prompt + ' (' + step.unit + ')' + precisionText(step.dp);
   document.getElementById('calcInput').value = '';
+  MaffsLock.fresh(document.getElementById('phase2'));
   document.getElementById('calcInput').focus();
   document.getElementById('fb2').textContent = '';
   document.getElementById('fb2').className = 'feedback';
@@ -793,8 +798,8 @@ function loadStep(){
 }
 
 function submitCalc(){
-  // Enter in the box while a marked answer waits for Next must not mark it again (the button is disabled then)
-  if(document.querySelector('#phase2 .calc-btn').disabled) return;
+  // a marked answer waits for its next step: Enter or CHECK again does nothing (MaffsLock, canon 7.6.0)
+  if(MaffsLock.isLocked(document.getElementById('phase2'))) return;
   // Route to correct handler
   if(isALevel && currentQ.steps){
     submitCalcAL();
@@ -814,9 +819,10 @@ function submitCalcAL(){
   if(res === 'format' || res === 'unreadable'){
     fb.textContent = MaffsAnswer.message(res, raw, {dp: step.dp}); fb.className = 'feedback'; return;
   }
+  // answer once: the box and CHECK stay locked until the next step renders (canon 7.6.0)
+  if(!MaffsLock.lock(document.getElementById('phase2'))) return;
   var correct = res === 'correct';
   stopTimer();
-  document.querySelector('#phase2 .calc-btn').disabled = true;
   if(correct){
     score += logScore(BASE_SCORE_CALC, elapsedSeconds);
     fb.textContent = 'CORRECT! ' + step.prompt + ' = ' + shownKey(step.answer, step.dp) + ' ' + step.unit;
@@ -836,8 +842,8 @@ function submitCalcAL(){
     mfg('question_answered',{game_slug:'suvat',level:level,correct:_svQOk,question_index:qNum});
     document.getElementById('exp2').textContent = currentQ.working;
   }
-  var next = function(){ document.querySelector('#phase2 .calc-btn').disabled = false; (last ? loadQ : loadStep)(); };
-  if(correct) setTimeout(next, last ? 2400 : 1800);
+  var next = function(){ (last ? loadQ : loadStep)(); };
+  if(correct) MaffsLock.timer(next, last ? 2400 : 1800);
   else MaffsNext.wrong({mount: document.getElementById('exp2'), onAdvance: function(){
     MaffsNext.clear(document.getElementById('exp2')); next(); }});
 }
@@ -873,6 +879,7 @@ function showPhase1L4(){
     btn.onclick = function(){ pickEqL4(c, btn, div); };
     div.appendChild(btn);
   });
+  MaffsLock.fresh(div);
 
   document.getElementById('fb1').textContent = '';
   document.getElementById('fb1').className = 'feedback';
@@ -882,19 +889,18 @@ function showPhase1L4(){
 }
 
 function pickEqL4(val, btn, div){
+  if(!MaffsLock.lock(div)) return;
   var correct = val === currentQ.equation;
   var fb = document.getElementById('fb1');
   if(correct){
     btn.classList.add('correct');
     fb.textContent = 'CORRECT EQUATION! Now calculate...';
     fb.className = 'feedback correct';
-    Array.from(div.children).forEach(function(b){ b.onclick = null; });
-    setTimeout(function(){ showPhase2L4(true); }, 1200);
+    MaffsLock.timer(function(){ showPhase2L4(true); }, 1200);
   } else {
     btn.classList.add('wrong');
     Array.from(div.children).forEach(function(b){
       if(b.dataset.val === currentQ.equation) b.classList.add('correct');
-      b.onclick = null;
     });
     fb.textContent = 'WRONG — the equation in green is the one that fits. Look at which variables it uses.';
     fb.className = 'feedback wrong';
@@ -923,6 +929,7 @@ function showPhase2L4(earnedEqPoints){
     calcQ.appendChild(document.createTextNode(', find ' + currentQ.find + ' = ?' + precisionText(currentQ.dp)));
   }
   document.getElementById('calcInput').value = '';
+  MaffsLock.fresh(document.getElementById('phase2'));
   document.getElementById('calcInput').focus();
   document.getElementById('fb2').textContent = '';
   document.getElementById('exp2').textContent = '';
@@ -935,9 +942,9 @@ function submitCalcL4(){
   if(res === 'format' || res === 'unreadable'){
     fb.textContent = MaffsAnswer.message(res, raw, {dp: currentQ.dp}); fb.className = 'feedback'; return;
   }
+  if(!MaffsLock.lock(document.getElementById('phase2'))) return;
   var correct = res === 'correct';
   stopTimer();
-  document.querySelector('#phase2 .calc-btn').disabled = true;
   if(correct){
     score += logScore(BASE_SCORE_CALC, elapsedSeconds);
     _svCorrectCount++;
@@ -950,14 +957,14 @@ function submitCalcL4(){
   mfg('question_answered',{game_slug:'suvat',level:level,correct:correct,question_index:qNum});
   document.getElementById('exp2').textContent = currentQ.working;
   document.getElementById('score').textContent = score;
-  var next = function(){ document.querySelector('#phase2 .calc-btn').disabled = false; loadQ(); };
-  if(correct) setTimeout(next, 2200);
+  var next = loadQ;
+  if(correct) MaffsLock.timer(next, 2200);
   else MaffsNext.wrong({mount: document.getElementById('exp2'), onAdvance: function(){
     MaffsNext.clear(document.getElementById('exp2')); next(); }});
 }
 
 /* ── End game ── */
-function endGame(){
+var endGame = MaffsLock.finishOnce(function(){
   var _elapsed=Math.floor((Date.now()-(sessionStart||Date.now()))/1000),_m=Math.floor(_elapsed/60),_s=_elapsed%60;if(document.getElementById('timeStat'))document.getElementById('timeStat').textContent=(_m>0?_m+'m '+_s+'s':_s+'s');
   stopTimer();
   document.getElementById('mainGame').classList.remove('visible');
@@ -972,7 +979,7 @@ function endGame(){
   saveBest(score);
   if(score>_svOldBest){mfg('personal_best_set',{game_slug:'suvat',level:level,score:score,previous_best:_svOldBest});}
   renderLB();
-}
+});
 function getBest(){ return parseInt(localStorage.getItem(STORAGE_PREFIX + '_best') || '0'); }
 function saveBest(s){
   if(s > getBest()) localStorage.setItem(STORAGE_PREFIX + '_best', s);

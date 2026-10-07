@@ -212,6 +212,41 @@ SWEEP_JS = r"""(lvl) => {
   return out;
 }"""
 
+# Answer once (canon 7.6.0, MaffsLock; suvat-t5-004): a double click and an Enter on CHECK, and a direct second call,
+# mark once; two choices clicked in phase 1 count once; the end screen submits once.
+LOCK_JS = r"""async (lvl) => {
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const freshMs = () => (window.MaffsLock ? MaffsLock.FRESH_MS : 0) + 50;
+  const res = {};
+  let submits = 0;
+  window.MaffsLeaderboard = { submitScore: () => { submits++; return Promise.resolve(); } };
+  startGame();
+  const pool = lvl === 'al' ? QUESTIONS_ALEVEL : QUESTIONS_LEVEL4;
+  const q = lvl === 'al' ? pool.find(x => !x.phase0 && x.steps.length === 1) : pool[0];
+  currentQ = q; questions = [q, q]; qNum = 1; currentStep = 0;
+  if (lvl === 'al') showPhase2AL(); else showPhase2L4(false);
+  await wait(freshMs());
+  const st = lvl === 'al' ? q.steps[0] : { answer: q.answer, dp: q.dp };
+  const box = document.getElementById('calcInput'), btn = document.querySelector('#phase2 .calc-btn');
+  box.value = st.dp === undefined ? String(st.answer) : Number(st.answer).toFixed(st.dp);
+  const before = score;
+  btn.click(); btn.click();
+  box.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+  submitCalc();
+  res.gain = score - before;
+  res.base = BASE_SCORE_CALC;
+  if (lvl === 'al') showPhase1AL(); else showPhase1L4();
+  await wait(freshMs());
+  const btns = [...document.querySelectorAll('#eqChoices .eq-btn')];
+  btns.find(b => b.dataset.val !== currentQ.equation).click();
+  btns.find(b => b.dataset.val === currentQ.equation).click();
+  res.eq = document.getElementById('fb1').className;
+  if (window.MaffsLock) MaffsLock.clearTimers();
+  endGame(); endGame();
+  res.submits = submits;
+  return res;
+}"""
+
 KATEX_DIR = None
 
 
@@ -243,6 +278,14 @@ def play(fails, html):
                     ctx.close()
                     continue
                 rows = page.evaluate(SWEEP_JS, lvl)
+                lk = page.evaluate(LOCK_JS, lvl)
+                if lk['gain'] != lk['base']:
+                    fails.append('%s: a double click and Enter on CHECK scored %d, not %d (suvat-t5-004)' % (
+                        lvl, lk['gain'], lk['base']))
+                if 'wrong' not in lk['eq']:
+                    fails.append('%s: a second equation clicked after a wrong one was marked (suvat-t5-004)' % lvl)
+                if lk['submits'] != 1:
+                    fails.append('%s: the end screen submitted %d scores (suvat-t5-004)' % (lvl, lk['submits']))
                 for i, j, kind, typed, cls, text, nxt, gained, prompt in rows:
                     w = where(lvl, i, j if j >= 0 else None) + (' phase 0' if j < 0 else '')
                     item = bank[lvl][i]
