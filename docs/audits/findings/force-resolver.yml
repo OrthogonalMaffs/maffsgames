@@ -17,7 +17,8 @@ findings:
   where: games/force-resolver/index.html:179,189
   summary: 2 of 20 level4 items (10%) keyed to a value that is not the answer; every session serves both
   evidence: see t5-002, t5-003
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-t5-002
   severity: HIGH
   jc: false
@@ -26,7 +27,8 @@ findings:
   where: games/force-resolver/index.html:179
   summary: 'Rope at 35°: key 1.79 m/s²; correct 1.40 m/s² not offered'
   evidence: R = 490.5 − 114.715 = 375.785; F = 93.946; (163.830 − 93.946)/50 = 1.398
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-t5-003
   severity: HIGH
   jc: false
@@ -35,7 +37,8 @@ findings:
   where: games/force-resolver/index.html:189
   summary: Truss joint 10 kN@0°, 8 kN@120°, F@240° has no equilibrium F; key '10 kN by symmetry'
   evidence: 'y: 8 sin120 + F sin240 = 0 -> F = 8; x: 10 − 4 − F/2 = 0 -> F = 12'
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-t5-004
   severity: HIGH
   jc: false
@@ -44,7 +47,8 @@ findings:
   where: games/force-resolver/index.html:164
   summary: Tension in the 30° string keyed 5√3; correct 5 N is a distractor
   evidence: T1 cos30 = T2 cos60, T1 sin30 + T2 sin60 = 10 -> T1 = 5, T2 = 5√3
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-t5-005
   severity: HIGH
   jc: false
@@ -53,7 +57,8 @@ findings:
   where: games/force-resolver/index.html:138
   summary: Distractor '50 cos 30° N' equals the key 25√3 N
   evidence: 50 cos 30 = 43.301 = 25√3
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-t5-006
   severity: HIGH
   jc: false
@@ -62,7 +67,8 @@ findings:
   where: games/force-resolver/index.html:118
   summary: Distractor '12 cos 0° N' equals the key 12 N
   evidence: 12 cos 0 = 12
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-t5-007
   severity: HIGH
   jc: false
@@ -71,7 +77,8 @@ findings:
   where: games/force-resolver/index.html:147
   summary: Does it slide? True answer 'Yes' is a distractor; key text begins 'No' and ends 'it slides'
   evidence: mg sin30 = 25 N > μmg cos30 = 17.3 N
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-t5-008
   severity: HIGH
   jc: false
@@ -107,7 +114,8 @@ findings:
   where: games/force-resolver/index.html:178
   summary: Key 1222 N and distractors worked with g = 9.8; stem states 9.81 (1224 N); marking unaffected
   evidence: 1962(sin20 + 0.3 cos20) = 1224.1
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-t5-012
   severity: MEDIUM
   jc: true
@@ -116,7 +124,8 @@ findings:
   where: games/force-resolver/index.html:146
   summary: 'Key ''Equilibrium (about to move)'': equal forces do not imply limiting friction'
   evidence: limiting only when F = μR
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-t5-013
   severity: MEDIUM
   jc: true
@@ -125,7 +134,8 @@ findings:
   where: games/force-resolver/index.html:151
   summary: Pulley acceleration keyed 2 assumes g = 10; g not stated
   evidence: g = 9.8 gives 1.96
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-t5-014
   severity: LOW
   jc: false
@@ -135,7 +145,8 @@ findings:
   summary: Duplicate-value wrong options (:117, :137, :184); rounding at :124 (60.2), :172 (211.3), :186 (49.75
     -> 49.8); 390px overflow :180 (421) and :189 (466); fixed 1000 ms advance, no explanation (class 11 note)
   evidence: see report section 3
-  status: open
+  status: fixed
+  pr: 127
 - id: force-resolver-f0-001
   severity: LOW
   jc: false
@@ -144,4 +155,5 @@ findings:
   where: games/force-resolver/index.html:119 (QUESTIONS.alevel[6])
   summary: Wrong options '12 N' and '12 sin 90° N' are equal (12 N force at 90°, horizontal component; key 0 N)
   evidence: 'B11 parser, F0 (7 Oct 2026): 12 \text{ N} = 12\sin 90° \text{ N}, exact (scripts/bank_common.py); ledger force-resolver::8c466d96e9b4#1::B11::["12 \\text{ N}", "12\\sin 90° \\text{ N}"]'
-  status: open
+  status: fixed
+  pr: 127
