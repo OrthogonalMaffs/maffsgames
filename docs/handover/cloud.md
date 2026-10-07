@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: binomial-blaster partial-fractions-duel truth-buster`
+`cloud-remaining: partial-fractions-duel truth-buster`
 
 **Resume rule, MaffsLock (Jon, contract LH):** adopting MaffsLock includes the game's lock-hint declaration
 (`<!-- maffs-lock-hint ... -->`, canon §7.6.0), and the game passes `check-answer-lock.py`. Hints live in the
@@ -22,6 +22,19 @@ game's page, never in the shared script.
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-07 (cloud): binomial-blaster (queue 4 of 6); #137 trig-identity-duel merged; NEXT = partial-fractions-duel
+
+- **#137 merged** at 20:21 on a green Gate. Its first L1 run failed on fraction-equivalence, the second home-lane
+  two-option game to do so (prime-or-composite on #134): the shared check's wrong-answer search is not deterministic
+  for a two-option game. Passed on the one re-run; commented on #137 with the architectural fix (pick the wrong option
+  from the game's data, or seed Math.random as tier 1's PHONE_SEED does). **For the home lane: it will keep failing
+  PRs at random until fixed.**
+- **binomial-blaster:** the old session's commit (67bf685) cherry-picked onto main, plus its maffs-lock-hint (`{}`), the
+  method reference's KaTeX wait (:253) marked `// lock-ok:`, and off the remaining list. Jon's alevel2[36]:
+  3/((1+x)(1-2x)) = A/(1+x) + B/(1-2x), find B, keyed 2 (distractors 1, -2, 3); the old item (1/((1+x)(1-x)), B = 1/2)
+  was right but duplicated another (B3 ledger entry cleared, no register entry). MaffsLock in full.
+- **Register:** t5-017 (class 1) fixed. t5-018 (class 4, shared level resolver) and t5-022 (wording) stay open.
 
 ## 2026-10-07 (cloud): trig-identity-duel (queue 3 of 6); #135 truth-will-set-you-free merged; NEXT = binomial-blaster
 
