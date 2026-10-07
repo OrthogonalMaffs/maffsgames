@@ -14,6 +14,18 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-07 (cloud): game 10 Integration Duel (PR #107); #106 Differentiation Duel merged; NEXT = Curling Friction
+
+- **Differentiation Duel (PR #106) merged** on a green Gate; main's full run after it green.
+- **Integration Duel (PR #107):** `scripts/verify-integration-duel.py` (B4): antiderivatives checked by differentiating, c held as a symbol, ln x + c sampled where it is right. Missing + c named in feedback (Jon may rule it right). B11 (5) cleared. Open: t5-010 in part (class 4).
+- **Like Terms Collector's verifier flaked once on #106** (group E; item 1 typed 8.9/6.5, `MARK()` null, empty feedback;
+  it passed 5 of 5 locally and on the one re-run). Same item and shape as #88's first-run flake. Home lane: after
+  `page.fill`, wait for the boxes to read the typed values and for the feedback panel's class before reading the mark.
+- **#103 split content group B into B1-B4**; the cloud lane's verifiers go at the end of B4, where #103 put them.
+  A branch prepared before a ledger change on main conflicts on `data/check-ledger.json`: take main's ledger and
+  replace only that game's record (the scratch helper did this per commit).
+- **Next:** Curling Friction, Dimension Checker, Proof Builder (prepared on local worktrees /home/user/*-work, not pushed).
+
 ## 2026-10-07 (cloud): game 9 Differentiation Duel (PR #106); #105 Partial Fractions Duel merged; NEXT = Integration Duel
 
 - **Partial Fractions Duel (PR #105) merged** on a green Gate; main's full run after it green.
