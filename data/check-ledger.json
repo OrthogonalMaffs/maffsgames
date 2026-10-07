@@ -2551,33 +2551,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.alevel[4]: '25 \\\\text{ N}' = '50\\\\cos 60° \\\\text{ N}' (both wrong options)",
-      "id": "force-resolver::c4c1a91abbd8#1::B11::[\"25 \\\\text{ N}\", \"50\\\\cos 60° \\\\text{ N}\"]",
-      "line": null,
-      "register": "force-resolver-t5-014"
-     },
-     {
-      "detail": "QUESTIONS.alevel[5]: '12 \\\\text{ N}' = '12\\\\cos 0° \\\\text{ N}' (the marked answer is one of them)",
-      "id": "force-resolver::b3c4567f7c43#1::B11::[\"12 \\\\text{ N}\", \"12\\\\cos 0° \\\\text{ N}\"]",
-      "line": null,
-      "register": "force-resolver-t5-006"
-     },
-     {
-      "detail": "QUESTIONS.alevel[6]: '12 \\\\text{ N}' = '12\\\\sin 90° \\\\text{ N}' (both wrong options)",
-      "id": "force-resolver::8c466d96e9b4#1::B11::[\"12 \\\\text{ N}\", \"12\\\\sin 90° \\\\text{ N}\"]",
-      "line": null,
-      "register": "force-resolver-f0-001"
-     },
-     {
-      "detail": "QUESTIONS.alevel[23]: '25\\\\sqrt{3} \\\\approx 43.3 \\\\text{ N}' = '50\\\\cos 30° \\\\text{ N}' (the marked answer is one of them)",
-      "id": "force-resolver::5cf149c15356#1::B11::[\"25\\\\sqrt{3} \\\\approx 43.3 \\\\text{ N}\", \"50\\\\cos 30° \\\\text{ N}\"]",
-      "line": null,
-      "register": "force-resolver-t5-005"
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
