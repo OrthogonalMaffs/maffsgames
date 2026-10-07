@@ -5810,7 +5810,7 @@
  "proportion-blaster": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -5826,34 +5826,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.gcse[16]: '10' = '\\\\sqrt{100}' (both wrong options)",
-      "id": "proportion-blaster::3683fb6c9354#1::B11::[\"10\", \"\\\\sqrt{100}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.gcse[44]: '3 : 4 : 5' = '6 : 8 : 10' (both wrong options)",
-      "id": "proportion-blaster::1e98107ac211#1::B11::[\"3 : 4 : 5\", \"6 : 8 : 10\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.gcse[45]: '10 : 8 : 6' = '5 : 4 : 3' (both wrong options)",
-      "id": "proportion-blaster::012c4c4901c0#1::B11::[\"10 : 8 : 6\", \"5 : 4 : 3\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.alevel[30]: '2 : 5 : 7' = '6 : 15 : 21' (both wrong options)",
-      "id": "proportion-blaster::a701c699afcd#1::B11::[\"2 : 5 : 7\", \"6 : 15 : 21\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.alevel[47]: '50' = '\\\\dfrac{150}{3}' (both wrong options)",
-      "id": "proportion-blaster::2aa3e681862f#1::B11::[\"50\", \"\\\\dfrac{150}{3}\"]",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
