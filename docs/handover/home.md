@@ -36,6 +36,31 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-07 (home, night 2): #136 (batch 3) merged; F1 batch 4 PR; relist PR next
+
+- **#136 merged** on a green Gate after one fix: CI's answer lock L2 failed it with spot-the-error UNPLAYABLE.
+  Cause, found by instrumenting the driver: 36 of the game's 110 questions have ONE step (it is the error), and
+  the declaration returned without answering when it drew one (about 1 run in 4-6). The declaration now picks
+  that step and misses in stage 2. It is not a retry: 2 picks, as before. **For Jon:** on those 36 questions
+  stage 1 is a free pick (a content point, not F1's; not filed yet).
+- **Batch 4 (this PR):** proof-builder, linear-equation-solver, moments-master, force-resolver on MaffsLock.
+  MIGRATED also gains the four the cloud lane finished: eigenvector-engine, truth-will-set-you-free,
+  trig-identity-duel, binomial-blaster (all pass). `cloud-remaining:` is now partial-fractions-duel and
+  truth-buster. **NOT_YET: 62.**
+  - linear-equation-solver's worked-solution Next was a plain onclick (a second Enter skipped a question): now
+    MaffsNext. Its hint is refused once the step is answered.
+  - proof-builder loads answer-lock.js BEFORE its game script: `const endGame = MaffsLock.finishOnce(...)`
+    runs at parse time. **Lesson:** check where the game's inline script sits before putting the include
+    beside next-control.js.
+  - Register: closed proof-builder-t5-014, -t5-016, moments-master-t5-009, force-resolver-t5-008;
+    linear-equation-solver-t4-003 notes its fixed class-1 part (stays open: fold, accuracy field).
+- **No Node on this machine:** a JS syntax slip (an unclosed `finishOnce(`) shows only as a driver
+  "ReferenceError" in the browser check. Read the error that way.
+- **Relist (next):** the scratchpad script `relist.py` (session 9093ec13) puts back exactly what #82/#85/#87
+  removed, per game: portal cards, FACTS links, sitemap, hub rows, spec-map links (merged into the current
+  rows), /resit/ and the trig parent guide. Roster rows, NOT_ON_HUB, check-resit-page.py and the todo
+  checklists are done by hand.
+
 ## 2026-10-07 (home, late night): F1 batch 3 BUILT, NOT YET A PR; STOPPED for Jon's context clear
 
 - **State at the stop:** all 8 games and the handover are committed and pushed on `claude/f1-batch3` (worktree
