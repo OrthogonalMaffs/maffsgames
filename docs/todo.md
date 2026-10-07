@@ -169,6 +169,9 @@ section.
 If one applies, apply it and list "SR-n applied: …" in the PR; stop only for what none covers, or for
 §0.3's "Still stops for Jon" list.
 
+- **7 Oct (home): QUOTED-FIGURES contract DONE, PRs #91-#94** (Fermi Lab chains + sourced FIG; Screening Room computed
+  from its rates, still unlisted pending contract F; Core Maths Paper 1 CPI; `scripts/check-quoted-figures.py`). Open from
+  the audit: §3, §4, §8 (Goldbach in truth-buster). Next: contract B.
 - **6 Oct night (home): BUILD FREEZE (canon §0.2). No new builds (games, modes, stages) until the exit bar is met:**
   (1) every live game has a verifier in CI; (2) every CRITICAL and HIGH in the findings register fixed; (3) shared
   checks green site-wide (answer lock, level resolver, served bank size, SR-14 fields, B11 parser); (4) every level

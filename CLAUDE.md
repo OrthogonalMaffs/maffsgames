@@ -49,7 +49,23 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover — 2026-10-07 (home, latest): FINDINGS REGISTER (PR 3 of Jon's tranche 3-6 contract); NEXT = contract B
+## Handover — 2026-10-07 (home, latest): QUOTED-FIGURES contract DONE (#91-#94); NEXT = contract B
+
+- **#91 Fermi Lab:** every real-world figure a `FIG` entry with source + figures; hints/notes built from it. Jon's ruling
+  (7 Oct): 19 of 65 chains never multiplied to their own key (unit changes), all fixed by data; molecules-swimming-pool's key
+  was 1000x too small. `scripts/verify-fermi-lab.py` (CI E) plays every item in Chromium.
+- **#92 Screening Room:** six rates corrected via `SOURCES`; items store only N, base, test rates; counts, band, keys, text,
+  Bayes working all computed. Marking: `MaffsAnswer.decimal` at the stated d.p. (Jon's ruling; answer.js untouched).
+  Register t4-001..004, 007, 009..012 fixed; t4-005 (contract F), 006, 008, 013-016 open. **Stays unlisted (SR-20).**
+  `scripts/verify-screening-room.py` (CI E).
+- **#93 Core Maths Paper 1:** CPI 9.1%/7.3% (ONS), `SOURCES`, key £111.21; t2-006 fixed.
+- **#94:** `scripts/check-quoted-figures.py` (Tiers 1+2): every CONTRADICTED ledger line carries a "| check: (old literal) in path#item" annotation;
+  a new CONTRADICTED line without one fails.
+- **Still open from the audit (not in this contract):** §3 keys vs their own notes, §4 unverifiable, §8 Goldbach
+  (truth-buster) and two note details. CI flake seen once: Simultaneous Solver 320x568 keypad 1px.
+- **Next: contract B** (Jon pastes it). Build freeze in force.
+
+## Handover — 2026-10-07 (home): FINDINGS REGISTER (PR 3 of Jon's tranche 3-6 contract); NEXT = contract B
 
 - **#87, #88 merged; #89 fixed #88's verifier flake** (read the page's feedback, never a wrapped `mfg`). Main green.
 - **PR 3 = the findings register.** One file per audited game in `docs/audits/findings/<slug>.yml`. `scripts/audit-register.py`
