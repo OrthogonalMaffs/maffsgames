@@ -285,7 +285,7 @@
  "binomial-blaster": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -309,14 +309,8 @@
     "status": "pass"
    },
    "B3": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.alevel2[36]: exact duplicate of binomial-blaster::QUESTIONS.alevel2[35]: '\\\\dfrac{1}{(1+x)(1-x)} = \\\\dfrac{A}{1+x} + \\\\dfrac{B}{1-x} :: \\\\dfrac{1}{2}'",
-      "id": "binomial-blaster::B3::50b0f67fd32f#1+bc00deb577aa#1",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B4": {
     "entries": [],
