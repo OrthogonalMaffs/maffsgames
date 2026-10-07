@@ -537,6 +537,7 @@ jobs:
               Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)|python scripts/verify-expected-damage.py
               Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)|python scripts/verify-negative-number-line.py
               Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)|python scripts/verify-trig-worms.py
+              Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium)|python scripts/verify-component-crusher.py
 
     steps:
       - uses: actions/checkout@v4
