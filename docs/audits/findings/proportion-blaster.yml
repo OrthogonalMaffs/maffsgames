@@ -22,4 +22,5 @@ findings:
     the scaled total of 11. **No option is correct**, so every student is marked wrong on this question. Also, two
     distractors are equal in value: 50 and 150/3. Share affected: 1 of 50 alevel questions. It appears in 40% of
     alevel sessions (20 drawn from 50).'
-  status: open
+  status: fixed
+  pr: 111
