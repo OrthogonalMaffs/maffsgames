@@ -40,7 +40,8 @@ findings:
     submitScore twice; a game restarted within the window is ended with 0 submitted'
   evidence: game_completed x2, submits [[new-shapes,year6,7,20],[new-shapes,year6,7,20]] (reproduced twice); tap,
     Play Again, Start -> submit [...,0,10]; no tap -> one submit
-  status: open
+  status: fixed
+  pr: 129
 - id: new-shapes-t3-002
   severity: MEDIUM
   jc: true

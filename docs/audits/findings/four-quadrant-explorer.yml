@@ -39,7 +39,8 @@ findings:
     marked wrong'
   evidence: '1280x800: dblclick Start -> question_answered index 1 correct:false (reproduced twice); Play Again
     at 375x667 and 1280 (3/3 each); not at 390x844'
-  status: open
+  status: fixed
+  pr: 129
 - id: four-quadrant-explorer-t3-002
   severity: MEDIUM
   jc: true

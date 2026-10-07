@@ -111,6 +111,7 @@ body.accessible p,body.accessible .prompt-bar,body.accessible .confidence-text,b
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -158,14 +159,14 @@ body.accessible p,body.accessible .prompt-bar,body.accessible .confidence-text,b
 
 <!-- GAME SCREEN -->
 <div id="gameScreen" style="display:none">
-  <div class="game-area">
+  <div class="game-area" id="gameArea">
     <div class="prompt-bar" id="promptBar"></div>
     <div class="canvas-wrap">
       <canvas id="gridCanvas" width="560" height="560"></canvas>
     </div>
     <div class="options-row" id="optionsRow" style="display:none"></div>
     <div class="feedback-bar" id="feedbackBar"></div>
-    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+    <button class="next-btn" id="nextBtn" data-maffs-lock-skip onclick="nextQuestion()">Next</button>
   </div>
 </div>
 
@@ -244,7 +245,7 @@ let sessionLength = 20;
 let questions = [];
 let currentQ = 0;
 let score = 0;
-let answered = false;
+const gameArea = document.getElementById('gameArea');   // MaffsLock's container (canon 7.6.0)
 let plotCount = 0, plotCorrect = 0;
 let readCount = 0, readCorrect = 0;
 let shapeCount = 0, shapeCorrect = 0;
@@ -450,6 +451,7 @@ function startGame() {
   document.getElementById('gameHeader').style.display = 'flex';
   document.getElementById('gameScreen').style.display = 'block';
 
+  MaffsLock.newSession();
   updateScoreDisplay();
   initCanvas();
 
@@ -459,7 +461,9 @@ function startGame() {
 }
 
 function showQuestion() {
-  answered = false;
+  // A new question: input on it is ignored for MaffsLock.FRESH_MS, so the second click of a double-click on
+  // Start, Play Again or Next cannot answer it (four-quadrant-explorer-t3-001).
+  MaffsLock.fresh(gameArea);
   shapeAttempt = 0;
   const q = questions[currentQ];
   const promptBar = document.getElementById('promptBar');
@@ -514,7 +518,7 @@ function showQuestion() {
 
 function updateScoreDisplay() {
   document.getElementById('scoreNum').textContent = score;
-  document.getElementById('scoreTotal').textContent = currentQ + (answered ? 1 : 0);
+  document.getElementById('scoreTotal').textContent = currentQ + (MaffsLock.isLocked(gameArea) ? 1 : 0);
 }
 
 // ============================================================
@@ -531,13 +535,13 @@ function getCanvasCoords(e) {
 }
 
 function handlePlotClick(e) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameArea)) return;
   const { cx, cy } = getCanvasCoords(e);
   processPlotAnswer(cx, cy);
 }
 
 function handlePlotTouch(e) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameArea)) return;
   e.preventDefault();
   const touch = e.touches[0];
   const { cx, cy } = getCanvasCoords(touch);
@@ -547,7 +551,7 @@ function handlePlotTouch(e) {
 function processPlotAnswer(cx, cy) {
   const q = questions[currentQ];
   const snapped = snapToGrid(cx, cy);
-  answered = true;
+  if (!MaffsLock.lock(gameArea)) return;
   plotCount++;
   canvas.onclick = null;
   canvas.ontouchstart = null;
@@ -584,8 +588,7 @@ function processPlotAnswer(cx, cy) {
 //  HANDLERS — Read It
 // ============================================================
 function handleReadAnswer(btn, correct) {
-  if (answered) return;
-  answered = true;
+  if (!MaffsLock.lock(gameArea)) return;
   readCount++;
 
   document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
@@ -612,13 +615,13 @@ function handleReadAnswer(btn, correct) {
 //  HANDLERS — Complete the Shape
 // ============================================================
 function handleShapeClick(e) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameArea)) return;
   const { cx, cy } = getCanvasCoords(e);
   processShapeAnswer(cx, cy);
 }
 
 function handleShapeTouch(e) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameArea)) return;
   e.preventDefault();
   const touch = e.touches[0];
   const { cx, cy } = getCanvasCoords(touch);
@@ -636,7 +639,7 @@ function processShapeAnswer(cx, cy) {
   const correct = dx <= tolerance && dy <= tolerance;
 
   if (correct) {
-    answered = true;
+    if (!MaffsLock.lock(gameArea)) return;
     shapeCount++;
     canvas.onclick = null;
     canvas.ontouchstart = null;
@@ -656,7 +659,7 @@ function processShapeAnswer(cx, cy) {
     drawPoint(snapped.x, snapped.y, 'rgba(239,68,68,0.5)', 5);
     if (shapeAttempt >= 2) {
       // Show the answer
-      answered = true;
+      if (!MaffsLock.lock(gameArea)) return;
       shapeCount++;
       canvas.onclick = null;
       canvas.ontouchstart = null;
@@ -705,10 +708,12 @@ function nextQuestion() {
 // ============================================================
 //  END GAME
 // ============================================================
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame = MaffsLock.finishOnce(function () {
   document.getElementById('gameHeader').style.display = 'none';
   document.getElementById('gameScreen').style.display = 'none';
   document.getElementById('resultsScreen').classList.add('active');
+  MaffsLock.screen(document.getElementById('resultsScreen'));
 
   const total = questions.length;
   const pct = Math.round((score / total) * 100);
@@ -746,13 +751,13 @@ function endGame() {
     questions_correct: score
   });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('four-quadrant-explorer',LEVEL,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('four-quadrant-explorer',LEVEL,score);}}
-}
+});
 
 // ============================================================
 //  WINDOW RESIZE
 // ============================================================
 window.addEventListener('resize', () => {
-  if (document.getElementById('gameScreen').style.display !== 'none' && !answered) {
+  if (document.getElementById('gameScreen').style.display !== 'none' && !MaffsLock.isLocked(gameArea)) {
     // Redraw current state
     initCanvas();
     drawGrid();

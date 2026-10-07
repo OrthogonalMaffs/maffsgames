@@ -193,6 +193,21 @@ async def no_next_floor(context):
     """Opt a Playwright browser context out of the Next control's 3s floor (see above)."""
     await context.add_init_script(NO_NEXT_FLOOR_INIT)
 
+
+# MaffsLock (schools/assets/answer-lock.js, canon 7.6.0) ignores all input on a new question for
+# FRESH_MS (300ms), so a double-click cannot answer it. A content verifier that loads a question and
+# answers it in the same breath (loadQuestion(); click Check) would be ignored. This init script sets
+# MaffsLock.FRESH_MS to 0 as the helper defines MaffsLock. Content verifiers only: test-answer-lock.py
+# and check-answer-lock.py keep the real window on purpose.
+NO_LOCK_FRESH_INIT = """(() => {
+  let api;
+  Object.defineProperty(window, 'MaffsLock', {
+    configurable: true,
+    get() { return api; },
+    set(v) { if (v && typeof v === 'object') v.FRESH_MS = 0; api = v; },
+  });
+})();"""
+
 # A dict is "question-like" if it carries an answer key at its own top level.
 # correct_override appears without `correct` in normal-navigator:222/:241
 # (canon, todo 1.12), so either key alone must qualify. `answer` and `ans`

@@ -29,6 +29,8 @@ Full per-game verifiers follow in the audit's fix batches (docs/audit-resit-corr
 import argparse, asyncio, json, math, mimetypes, pathlib, re, sys
 from fractions import Fraction
 
+import bank_common as bc
+
 BASE = pathlib.Path(__file__).resolve().parent.parent
 HOST = "http://resit-fixes.test/"
 
@@ -117,6 +119,7 @@ def check_correlation(root, patches):
 # ---------- browser checks ----------
 async def open_game(browser, root, slug, patches, viewport=(1000, 900)):
     ctx = await browser.new_context(viewport={"width": viewport[0], "height": viewport[1]})
+    await ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the checks answer at once
 
     async def route(r):
         url = r.request.url
@@ -197,7 +200,7 @@ async def check_shape_shifter(browser, root, patches, orders=6):
                 errs.append("%s: two option letters are drawn %.2f grid units apart (one over the other)" % (where, close))
                 break
             for i, (x, y, _, _) in enumerate(got):
-                await page.evaluate("() => { answered = false; selectedOption = -1; }")
+                await page.evaluate("() => { MaffsLock.fresh(gameEl); selectedOption = -1; }")
                 await page.mouse.click(x, y)
                 sel = await page.evaluate("selectedOption")
                 if sel != i:

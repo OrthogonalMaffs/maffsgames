@@ -180,6 +180,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/number-line.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -262,7 +263,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   </div>
 
   <div class="feedback-bar" id="feedbackBar"></div>
-  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+  <button class="next-btn" id="nextBtn" data-maffs-lock-skip onclick="nextQuestion()">Next</button>
 </div>
 
 <!-- REVEAL OVERLAY -->
@@ -349,7 +350,7 @@ let totalAnswered = 0;
 let totalCorrect = 0;
 let placedValue = null;
 let currentType = ''; // 'place','order','calc'
-let answered = false;
+const gameEl = document.getElementById('gameScreen');   // MaffsLock's container (canon 7.6.0)
 let orderedTiles = [];
 let dragState = null;
 
@@ -497,7 +498,7 @@ function startGame() {
   score = 0;
   totalAnswered = 0;
   totalCorrect = 0;
-  answered = false;
+  MaffsLock.newSession();
 
   document.getElementById('startScreen').classList.remove('active');
   document.getElementById('resultsScreen').classList.remove('active');
@@ -518,7 +519,8 @@ function startGame() {
 //  SHOW QUESTION
 // ============================================================
 function showQuestion() {
-  answered = false;
+  // A new question: input on it is ignored for MaffsLock.FRESH_MS (a double-click on Start or Next).
+  MaffsLock.fresh(gameEl);
   placedValue = null;
   orderedTiles = [];
   const q = questions[qIndex];
@@ -579,7 +581,7 @@ function setPlaced(val) {
 // The readout and the step buttons follow the marker: blank and disabled until it is placed, and
 // after the answer; an end of the line disables the button that would leave it.
 function setStepButtons() {
-  const live = placedValue !== null && !answered && currentType === 'place';
+  const live = placedValue !== null && !MaffsLock.isLocked(gameEl) && currentType === 'place';
   document.getElementById('placeReadout').innerHTML = placedValue === null ? '' : `Marker: <b>${formatNum(placedValue)}</b>`;
   document.getElementById('stepLeft').disabled = !live || placedValue <= -10;
   document.getElementById('stepRight').disabled = !live || placedValue >= 10;
@@ -588,13 +590,13 @@ function setStepButtons() {
 // One snap step left (-1) or right (+1): a tap on a phone lands within a few pixels, and a step is
 // only 7.4px wide at 390px, so the buttons (and the arrow keys) make every position reachable.
 function stepMarker(dir) {
-  if (answered || currentType !== 'place' || placedValue === null) return;
+  if (MaffsLock.isLocked(gameEl) || currentType !== 'place' || placedValue === null) return;
   setPlaced(placedValue + dir * 0.5);
 }
 
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-  if (answered || currentType !== 'place' || placedValue === null) return;
+  if (MaffsLock.isLocked(gameEl) || currentType !== 'place' || placedValue === null) return;
   e.preventDefault();
   stepMarker(e.key === 'ArrowLeft' ? -1 : 1);
 });
@@ -604,7 +606,7 @@ function setupPlaceInteraction(target) {
   const wrap = document.getElementById('placeNLWrap');
 
   function handlePointer(e) {
-    if (answered) return;
+    if (MaffsLock.isLocked(gameEl)) return;
     e.preventDefault();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     setPlaced(xToValue(clientX, svg));
@@ -619,8 +621,7 @@ function setupPlaceInteraction(target) {
 }
 
 function confirmPlace() {
-  if (placedValue === null || answered) return;
-  answered = true;
+  if (placedValue === null || !MaffsLock.lock(gameEl)) return;
   const q = questions[qIndex];
   const target = q.data;
   // The marker snaps to the nearest 0.5 and shows its value, and the step buttons reach every position,
@@ -678,7 +679,7 @@ function createTile(n) {
 
   // Click to move between zones
   tile.addEventListener('click', () => {
-    if (answered) return;
+    if (MaffsLock.isLocked(gameEl)) return;
     const inTarget = tile.classList.contains('in-target');
     if (inTarget) {
       // Move back to source
@@ -710,7 +711,7 @@ let dragStartZone = null;
 let touchMoved = false;
 
 function handleTileTouchStart(e) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   touchMoved = false;
   dragTile = e.currentTarget;
   dragStartZone = dragTile.parentElement.id;
@@ -808,7 +809,7 @@ function handleTileTouchStart(e) {
 }
 
 function resetOrder() {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   const sourceZone = document.getElementById('sourceZone');
   const targetZone = document.getElementById('targetZone');
   const tiles = [...targetZone.querySelectorAll('.order-tile')];
@@ -820,8 +821,7 @@ function resetOrder() {
 }
 
 function checkOrder() {
-  if (answered) return;
-  answered = true;
+  if (!MaffsLock.lock(gameEl)) return;
   const q = questions[qIndex];
   const targetZone = document.getElementById('targetZone');
   const tiles = [...targetZone.querySelectorAll('.order-tile')];
@@ -901,8 +901,7 @@ function showCalculate(data) {
 }
 
 function selectCalcOption(btn, selected, data) {
-  if (answered) return;
-  answered = true;
+  if (!MaffsLock.lock(gameEl)) return;
   const correct = data.answer;
   const isCorrect = selected === correct;
 
@@ -970,7 +969,8 @@ function nextQuestion() {
 // ============================================================
 //  END GAME
 // ============================================================
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame = MaffsLock.finishOnce(function () {
   document.getElementById('gameScreen').classList.remove('active');
 
   // Fire completed event
@@ -988,12 +988,13 @@ function endGame() {
   // Show reveal overlay
   const overlay = document.getElementById('revealOverlay');
   overlay.classList.add('active');
+  MaffsLock.screen(overlay);
   const dismissBtn = document.getElementById('revealDismiss');
   dismissBtn.classList.remove('ready');
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     dismissBtn.classList.add('ready');
   }, 5000);
-}
+});
 
 function dismissReveal() {
   document.getElementById('revealOverlay').classList.remove('active');
@@ -1003,6 +1004,7 @@ function dismissReveal() {
 function showResults() {
   document.getElementById('gameHeader').style.display = 'none';
   document.getElementById('resultsScreen').classList.add('active');
+  MaffsLock.screen(document.getElementById('resultsScreen'));
 
   const pct = Math.round((score / sessionLength) * 100);
   document.getElementById('finalScore').textContent = `${score}/${sessionLength}`;

@@ -235,6 +235,7 @@ def open_page(pw, base, chromium, viewport, touch, patch):
     browser = pw.chromium.launch(**({'executable_path': chromium} if chromium else {}))
     ctx = browser.new_context(viewport={'width': viewport[0], 'height': viewport[1]},
                               has_touch=touch, is_mobile=touch)
+    ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
     page = ctx.new_page()
     errors = []
     page.on('pageerror', lambda e: errors.append(str(e)))

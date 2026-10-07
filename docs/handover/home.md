@@ -18,7 +18,45 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-07 (home): F1 part a, the MaffsLock asset (this PR)
+## 2026-10-07 (home, evening): F1 batches 1 and 2 built; PAUSED for a context clear (Jon, at 55%)
+
+- **#125 (F1 part a, MaffsLock) MERGED** on a green Gate. Its group E run failed once on a 1px fold in Simultaneous
+  Solver (320x568, s4_01: 529 vs 528) and passed on rerun: flaky, not this change.
+- **Jon's F1 checkpoint rule (7 Oct):** after the shared lock PR, stop after every 2 roll-out batches (each merged,
+  main green); at each stop update this file (batches, PRs, NOT_YET, next batch, lessons) and stop. Also stop at the
+  next batch boundary when Jon says "checkpoint".
+- **STATE AT THE PAUSE:** both branches pushed (after GitHub returned "Internal Server Error" on push three times
+  at 17:00; the fourth went through). No PR open for either yet.
+  - `claude/f1-batch1` in worktree `E:/jon/mg-b1` (rebased on main after #125): batch 1 + check-answer-lock.py.
+  - `claude/f1-batch2` in worktree `E:/jon/mg-b2` (stacked on batch 1, not yet rebased).
+- **NEXT SESSION, in order:** (1) open the PR for `claude/f1-batch1` (body drafted: games, faults fixed, check);
+  run `python scripts/close_entries`-style edit: set status fixed + pr on formula-plug-in-t3-001, new-shapes-t3-001,
+  four-quadrant-explorer-t3-001, like-terms-collector-t3-002 (shape-shifter-t3-005 stays open: bundle; note its
+  class-1 part fixed). (2) Local check-changed on batch 1: 82 ok, 3 FAILED: Negative Number Line (320px fold, also
+  fails on main locally: fonts), **Test the Claim** and **Resit fixes** (not yet compared with main: check first;
+  CI is the judge). (3) Merge on green, watch main. (4) Rebase batch 2, its PR, register entries, merge. (5) That is
+  2 batches: STOP per Jon's rule.
+- **Batch 1 (Year 6):** formula-plug-in, new-shapes, four-quadrant-explorer, like-terms-collector, shape-shifter,
+  negative-number-line, think-of-a-number, decimal-detective.
+- **Batch 2:** probability-pioneer (5 s Wait retries queued one per click: now one pending), prime-or-composite
+  (P/C keys re-marked: fixed), factor-race, prime-factorisation, percentage-flip (Skip after Check skipped a second
+  card: fixed), fraction-equivalence, equatle (one lock per guess, released at once; finish once), estimation-golf.
+  All 16 pass check-answer-lock.py both parts locally (about 3 min per 8 games).
+- **NOT_YET after batch 2:** 80 (73 home + 7 cloud). **Next batch 3 (KS3/GCSE):** 52dle, split-it,
+  word-problem-decoder, equation-builder, spot-the-muppet, terrible-advice, wrong-on-the-internet, maths-court.
+  Re-read docs/handover/cloud.md first: the cloud lane merged #124 (linear-equation-solver), #126 (moments-master),
+  #127 (force-resolver) today.
+- **Lessons (check-answer-lock.py):** the generic tier-3 driver needs per-game HINTS for most games (ready, answer,
+  surface, start_sel, keys, each, mark_any, repeat); write the hint while migrating. Auto-advance games (no Next on
+  a wrong answer: factor-race, fraction-equivalence, percentage-flip, prime-factorisation, equatle) are noted, not
+  failed (canon 7.6's Next is logged for Jon, not F1's). `fresh()` must cover skip-marked Next buttons (fixed in
+  #125 before merge). Verifiers that load and answer in one breath need `bc.NO_LOCK_FRESH_INIT`. Game-wide regex
+  replacement of `answered` also hits CSS comments: check. Heredocs eat backslashes: write patch scripts with the
+  Write tool (scratchpad mig_*.py / patch_cal*.py are this session's).
+- **For Jon:** equatle :337 has a malformed `onclick="<div ...` (logged, not fixed, SR-9). STOP IF (c): 89 games to
+  migrate, carrying on in batches.
+
+## 2026-10-07 (home): F1 part a, the MaffsLock asset (#125)
 
 - **#123 (0d, Given That) merged** on a green Gate after main's rerun of #122 went green. Main's first runs
   after #121 and #122 were marked failed with every job green: the run never created its Gate job (the two
