@@ -543,6 +543,7 @@ jobs:
               Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)|python scripts/verify-partial-fractions-duel.py
               Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)|python scripts/verify-differentiation-duel.py
               Integration Duel (every key and option checked with SymPy, explanations checked, every option marked in Chromium)|python scripts/verify-integration-duel.py
+              Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium)|python scripts/verify-curling-friction.py
 
     steps:
       - uses: actions/checkout@v4
