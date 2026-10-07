@@ -31,8 +31,8 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
 - **State at the stop:** all 8 games and the handover are committed and pushed on `claude/f1-batch3` (worktree
   `E:/jon/mg-b3`). There is **no PR yet**. A local `check-changed.py` was running when Jon stopped the session,
   so its result is unknown. **Next session, before the new contract or after it as Jon says:** rerun
-  `python scripts/check-changed.py` on the branch (rebase on main first). Open the PR with the body drafted
-  below. Set `status: fixed, pr: <n>` on the four entries named below, then merge on green (staggered from
+  `python scripts/check-changed.py` on the branch (rebase on main first). Open the PR with the body in `docs/handover/pr-b3-draft.md` (delete that file in the PR)
+  . Set `status: fixed, pr: <n>` on the four entries named below, then merge on green (staggered from
   cloud merges).
 - **#133 (contract LH) merged** on a green Gate, 22 min after the cloud lane's #130, with no cloud PR in CI.
   Main is green.
