@@ -14,6 +14,30 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-07 (cloud): game 18 Factor Theorem (PR pending); #128 SUVAT merged; NEXT = eigenvector-engine
+
+- **SUVAT Selector (PR #128) merged** at 17:12 on a green Gate (its first run lost its Gate job in GitHub's 500s; one
+  re-run); main green after #125 before it.
+- **Factor Theorem:** typed answers looked up in ACCEPTED (canon 7.1 pattern, R12), written by
+  `scripts/verify-factor-theorem.py --write` (E): one box per blank, matched by position; numbers via MaffsAnswer;
+  algebra through canon() (case, spaces, minus sign, superscripts, Greek names, a leading "f(x) ="). Every scaffold line
+  accepts every value of its blanks that makes it true (my call, listed in the PR). Project Claude's T4 (a = -19,
+  b = 30; (x - 3)(x - 2)(x + 5)). Q24/Q38/Q20 asks, Q22 hint, Learn ex. 4 candidates, test prompts' raw TeX (t5-019,
+  new). MaffsLock (no class-1 entries in its register). Open: t5-004/-005 (free text), -008/-009 (exam-vocab.js),
+  -013 (4), -014/-015 (design), -016/-017 (5), -018 (MaffsNext advance: check-teacher-invite's FT_STEP clicks only
+  `.next-q-btn`, home lane).
+- **Committed locally, waiting their turn (one PR at a time), each verifier passing and failing on main:**
+  - eigenvector-engine (`/home/user/ee-work`, claude/ee-prep): Project Claude's QS[16]; SR-17 (no option a multiple of
+    an eigenvector or of another option); working through MaffsText (B7, 16 ledger entries cleared); MaffsLock.
+  - truth-will-set-you-free (`/home/user/tw-work`): tables computed from each key (no stored outputs); correct cells
+    only score; [27] simplified; [6]'s distributive-law twin distractor (new t6-006); Aa saved; MaffsLock.
+  - Jon's 15:27 follow-ups: trig-identity-duel (`/home/user/tid-work`: gcse[16] 12.2, hidden count-up, MaffsLock),
+    binomial-blaster (`bb-work`: alevel2[36] B = 2, MaffsLock), partial-fractions-duel (`pfd-work`: alevel[22]
+    C = 1/6, MaffsLock), truth-buster (`tb-work`: Next above the fold at 390x844 on all 60, MaffsLock).
+- **Gotcha:** MaffsLock's 300 ms fresh window drops clicks a sweep makes right after a render: set
+  `MaffsLock.FRESH_MS = 0` in sweeps and keep the real window in the lock test. A double click must be tested with
+  `page.mouse` at the control (clicking a detached element twice fires its old listener).
+
 ## 2026-10-07 (cloud): game 17 SUVAT Selector (PR #128); #127 Force Resolver merged; NEXT = factor-theorem
 
 - **Force Resolver (PR #127) merged** at 16:15 on a green Gate; main green after #126 before it.
