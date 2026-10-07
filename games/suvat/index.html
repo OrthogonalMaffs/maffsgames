@@ -133,6 +133,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -184,17 +185,17 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 
     <!-- Phase 0 — component resolution -->
     <div class="p0-box" id="phase0" style="display:none">
-      <div class="phase-label" style="margin-bottom:10px">PHASE 0: RESOLVE COMPONENTS</div>
+      <div class="phase-label" style="margin-bottom:10px">PHASE 0: RESOLVE COMPONENTS (TO 2 D.P.)</div>
       <div class="p0-launch" id="p0Launch"></div>
       <div class="p0-inputs">
         <div class="p0-field">
           <span class="p0-label">u_x =</span>
-          <input type="number" class="p0-input" id="p0ux" step="any" placeholder="?">
+          <input type="text" inputmode="decimal" autocomplete="off" class="p0-input" id="p0ux" placeholder="?">
           <span class="p0-unit">m/s</span>
         </div>
         <div class="p0-field">
           <span class="p0-label">u_y =</span>
-          <input type="number" class="p0-input" id="p0uy" step="any" placeholder="?">
+          <input type="text" inputmode="decimal" autocomplete="off" class="p0-input" id="p0uy" placeholder="?">
           <span class="p0-unit">m/s</span>
         </div>
       </div>
@@ -213,7 +214,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
     <div class="calc-box" id="phase2" style="display:none">
       <div class="step-label" id="stepLabel" style="display:none"></div>
       <div class="calc-q" id="calcQ"></div>
-      <input type="number" class="calc-input" id="calcInput" placeholder="?" step="any" onkeydown="if(event.key==='Enter')submitCalc()">
+      <input type="text" inputmode="decimal" autocomplete="off" class="calc-input" id="calcInput" placeholder="?" onkeydown="if(event.key==='Enter')submitCalc()">
       <br>
       <button class="calc-btn" onclick="submitCalc()">CHECK ANSWER</button>
       <div class="feedback" id="fb2"></div>
@@ -244,21 +245,21 @@ const g = 9.8;
 /* ── Level 4 questions (existing, unchanged) ── */
 const QUESTIONS_LEVEL4 = [
   {scenario:"A car accelerates from rest to 20 m/s in 5 seconds. Find the acceleration.",
-   known:{u:0,v:20,t:5},find:'a',equation:'v = u + at',answer:4,tol:0.1,working:'v=u+at → 20=0+a×5 → a=4 m/s²'},
+   known:{u:0,v:20,t:5},find:'a',equation:'v = u + at',answer:4,working:'v=u+at → 20=0+a×5 → a=4 m/s²'},
   {scenario:"A ball is thrown upward at 15 m/s and decelerates at 10 m/s². Find how far it travels before stopping.",
-   known:{u:15,v:0,a:-10},find:'s',equation:'v² = u² + 2as',answer:11.25,tol:0.5,working:'v²=u²+2as → 0=225+2(−10)s → s=11.25 m'},
+   known:{u:15,v:0,a:-10},find:'s',equation:'v² = u² + 2as',answer:11.25,working:'v²=u²+2as → 0=225+2(−10)s → s=11.25 m'},
   {scenario:"A train travels for 8 seconds, starting at 5 m/s with acceleration 2 m/s². Find displacement.",
-   known:{u:5,a:2,t:8},find:'s',equation:'s = ut + ½at²',answer:104,tol:1,working:'s=ut+½at² = 5×8+½×2×64 = 40+64 = 104 m'},
+   known:{u:5,a:2,t:8},find:'s',equation:'s = ut + ½at²',answer:104,working:'s=ut+½at² = 5×8+½×2×64 = 40+64 = 104 m'},
   {scenario:"An object moves from 10 m/s to 30 m/s over 40 metres. Find acceleration.",
-   known:{u:10,v:30,s:40},find:'a',equation:'v² = u² + 2as',answer:10,tol:0.5,working:'v²=u²+2as → 900=100+80a → a=10 m/s²'},
+   known:{u:10,v:30,s:40},find:'a',equation:'v² = u² + 2as',answer:10,working:'v²=u²+2as → 900=100+80a → a=10 m/s²'},
   {scenario:"A bus travels 200 m in 20 seconds. Initial velocity is 5 m/s. Find final velocity.",
-   known:{s:200,u:5,t:20},find:'v',equation:'s = ½(u+v)t',answer:15,tol:0.5,working:'s=½(u+v)t → 200=½(5+v)×20 → v=15 m/s'},
+   known:{s:200,u:5,t:20},find:'v',equation:'s = ½(u+v)t',answer:15,working:'s=½(u+v)t → 200=½(5+v)×20 → v=15 m/s'},
   {scenario:"A stone is dropped from rest and falls for 3 seconds (g=10). Find the distance fallen.",
-   known:{u:0,a:10,t:3},find:'s',equation:'s = ut + ½at²',answer:45,tol:1,working:'s=0+½×10×9 = 45 m'},
+   known:{u:0,a:10,t:3},find:'s',equation:'s = ut + ½at²',answer:45,working:'s=0+½×10×9 = 45 m'},
   {scenario:"A rocket decelerates from 500 m/s at −20 m/s². Find time to stop.",
-   known:{v:0,u:500,a:-20},find:'t',equation:'v = u + at',answer:25,tol:0.5,working:'0=500+(−20)t → t=25 s'},
-  {scenario:"A sprinter covers 100 m, finishing at 12 m/s with acceleration 2 m/s². Find starting velocity.",
-   known:{s:100,v:12,a:2},find:'u',equation:'v² = u² + 2as',answer:4,tol:1,working:'144=u²+400 → u²=144−400... v²=u²+2as'}
+   known:{v:0,u:500,a:-20},find:'t',equation:'v = u + at',answer:25,working:'0=500+(−20)t → t=25 s'},
+  {scenario:"A sprinter covers 100 m with constant acceleration 0.4 m/s², finishing at 12 m/s. Find the starting velocity.",
+   known:{s:100,v:12,a:0.4},find:'u',equation:'v² = u² + 2as',answer:8,working:'v²=u²+2as → 144=u²+2(0.4)(100)=u²+80 → u²=64 → u=8 m/s'}
 ];
 
 /* ── A-Level questions (50) ── */
@@ -266,273 +267,273 @@ const QUESTIONS_ALEVEL = [
   // ─── Section A: Constant acceleration, straight line (15) ───
   {scenario:"A particle moves in a straight line with initial velocity 5 m/s and constant acceleration 3 m/s². Find the velocity after 4 seconds.",
    known:{u:5,a:3,t:4},find:'v',equation:'v = u + at',
-   steps:[{prompt:"Find v",answer:17,tol:0.1,unit:"m/s"}],
+   steps:[{prompt:"Find v",answer:17,unit:"m/s"}],
    working:"v = u + at = 5 + 3(4) = 17 m/s"},
 
   {scenario:"A particle decelerates uniformly from 20 m/s to rest. The deceleration is 4 m/s². Find the distance travelled.",
    known:{u:20,v:0,a:-4},find:'s',equation:'v² = u² + 2as',
-   steps:[{prompt:"Find s",answer:50,tol:0.5,unit:"m"}],
+   steps:[{prompt:"Find s",answer:50,unit:"m"}],
    working:"0 = 400 + 2(−4)s → s = 50 m"},
 
   {scenario:"A particle starts from rest and travels 36 m in 3 seconds under constant acceleration. Find the acceleration.",
    known:{u:0,s:36,t:3},find:'a',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find a",answer:8,tol:0.1,unit:"m/s²"}],
+   steps:[{prompt:"Find a",answer:8,unit:"m/s²"}],
    working:"36 = 0 + ½a(9) → a = 8 m/s²"},
 
   {scenario:"A particle has initial velocity 12 m/s and decelerates at 2 m/s². Find the time taken to travel 32 m.",
    known:{u:12,a:-2,s:32},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find t",answer:4,tol:0.1,unit:"s"}],
-   working:"32 = 12t − t² → t² − 12t + 32 = 0 → (t−4)(t−8) = 0 → t = 4 s"},
+   steps:[{prompt:"Find t",answer:4,unit:"s"}],
+   working:"32 = 12t − t² → t² − 12t + 32 = 0 → (t−4)(t−8) = 0 → t = 4 s (it first reaches 32 m at t = 4 s; it stops at t = 6 s and passes 32 m again, coming back, at t = 8 s)"},
 
   {scenario:"A particle travels 60 m in 6 seconds. Its final velocity is 14 m/s. Find the initial velocity.",
    known:{s:60,t:6,v:14},find:'u',equation:'s = ½(u+v)t',
-   steps:[{prompt:"Find u",answer:6,tol:0.1,unit:"m/s"}],
+   steps:[{prompt:"Find u",answer:6,unit:"m/s"}],
    working:"60 = ½(u + 14)(6) → u + 14 = 20 → u = 6 m/s"},
 
   {scenario:"A particle moving at 8 m/s accelerates at 1.5 m/s². Find the distance covered in the first 6 seconds.",
    known:{u:8,a:1.5,t:6},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find s",answer:75,tol:0.5,unit:"m"}],
+   steps:[{prompt:"Find s",answer:75,unit:"m"}],
    working:"s = 48 + ½(1.5)(36) = 48 + 27 = 75 m"},
 
   {scenario:"A particle decelerates from 30 m/s at 5 m/s². Find the time taken to come to rest.",
    known:{u:30,v:0,a:-5},find:'t',equation:'v = u + at',
-   steps:[{prompt:"Find t",answer:6,tol:0.1,unit:"s"}],
+   steps:[{prompt:"Find t",answer:6,unit:"s"}],
    working:"0 = 30 − 5t → t = 6 s"},
 
   {scenario:"A particle starts from rest and reaches 24 m/s with constant acceleration. It travels 144 m. Find the acceleration.",
    known:{u:0,v:24,s:144},find:'a',equation:'v² = u² + 2as',
-   steps:[{prompt:"Find a",answer:2,tol:0.1,unit:"m/s²"}],
+   steps:[{prompt:"Find a",answer:2,unit:"m/s²"}],
    working:"576 = 2a(144) → a = 2 m/s²"},
 
   {scenario:"A particle has velocity 18 m/s and decelerates at 3 m/s². Find the distance travelled in the first 4 seconds.",
    known:{u:18,a:-3,t:4},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find s",answer:48,tol:0.5,unit:"m"}],
+   steps:[{prompt:"Find s",answer:48,unit:"m"}],
    working:"s = 72 − ½(3)(16) = 72 − 24 = 48 m"},
 
   {scenario:"A particle travels 100 m from rest under constant acceleration and reaches 20 m/s. Find the time taken.",
    known:{u:0,v:20,s:100},find:'t',equation:'s = ½(u+v)t',
-   steps:[{prompt:"Find t",answer:10,tol:0.1,unit:"s"}],
+   steps:[{prompt:"Find t",answer:10,unit:"s"}],
    working:"100 = ½(20)t → t = 10 s"},
 
   {scenario:"A particle moving at 15 m/s accelerates at 2 m/s² for 5 seconds. Find the final velocity.",
    known:{u:15,a:2,t:5},find:'v',equation:'v = u + at',
-   steps:[{prompt:"Find v",answer:25,tol:0.1,unit:"m/s"}],
+   steps:[{prompt:"Find v",answer:25,unit:"m/s"}],
    working:"v = 15 + 2(5) = 25 m/s"},
 
   {scenario:"A particle decelerates uniformly from 25 m/s to 10 m/s over 6 seconds. Find the distance travelled.",
    known:{u:25,v:10,t:6},find:'s',equation:'s = ½(u+v)t',
-   steps:[{prompt:"Find s",answer:105,tol:0.5,unit:"m"}],
+   steps:[{prompt:"Find s",answer:105,unit:"m"}],
    working:"s = ½(35)(6) = 105 m"},
 
   {scenario:"A particle starts from rest and travels 80 m with constant acceleration. Its final velocity is 16 m/s. Find the acceleration.",
    known:{u:0,v:16,s:80},find:'a',equation:'v² = u² + 2as',
-   steps:[{prompt:"Find a",answer:1.6,tol:0.05,unit:"m/s²"}],
+   steps:[{prompt:"Find a",answer:1.6,unit:"m/s²"}],
    working:"256 = 2a(80) → a = 1.6 m/s²"},
 
   {scenario:"A particle moving at 6 m/s decelerates at 2 m/s². Find the total distance travelled before coming to rest.",
    known:{u:6,v:0,a:-2},find:'s',equation:'v² = u² + 2as',
-   steps:[{prompt:"Find s",answer:9,tol:0.1,unit:"m"}],
+   steps:[{prompt:"Find s",answer:9,unit:"m"}],
    working:"0 = 36 − 4s → s = 9 m"},
 
   {scenario:"A particle has final velocity 22 m/s after accelerating at 4 m/s² for 3 seconds. Find the initial velocity.",
    known:{v:22,a:4,t:3},find:'u',equation:'v = u + at',
-   steps:[{prompt:"Find u",answer:10,tol:0.1,unit:"m/s"}],
+   steps:[{prompt:"Find u",answer:10,unit:"m/s"}],
    working:"22 = u + 12 → u = 10 m/s"},
 
   // ─── Section B: Horizontal projectiles (15) ───
   {scenario:"A ball is projected horizontally at 15 m/s from a cliff 45 m high. Taking downward as negative, use the vertical motion to find the time to reach the ground. (u_y = 0, a = −9.8, s = −45)",
    known:{u:0,a:-9.8,s:-45},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find t",answer:3.03,tol:0.05,unit:"s"}],
+   steps:[{prompt:"Find t",answer:3.03,dp:2,unit:"s"}],
    working:"−45 = −4.9t² → t² = 9.18 → t = 3.03 s"},
 
   {scenario:"A ball projected horizontally at 15 m/s from a cliff takes 3.03 s to reach the ground. Find the horizontal distance travelled. (u_x = 15, a = 0)",
    known:{u:15,a:0,t:3.03},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find s",answer:45.5,tol:0.5,unit:"m"}],
+   steps:[{prompt:"Find s",answer:45.5,dp:1,unit:"m"}],
    working:"s = 15 × 3.03 = 45.5 m"},
 
   {scenario:"A stone is thrown horizontally at 20 m/s from a height of 80 m. Find the vertical speed on impact. (u_y = 0, a = −9.8, s = −80). Give your answer as a magnitude.",
    known:{u:0,a:-9.8,s:-80},find:'v',equation:'v² = u² + 2as',
-   steps:[{prompt:"Find |v_y|",answer:39.6,tol:0.5,unit:"m/s"}],
+   steps:[{prompt:"Find |v_y|",answer:39.6,dp:1,unit:"m/s"}],
    working:"v² = 2(9.8)(80) = 1568 → v = 39.6 m/s"},
 
   {scenario:"A particle is projected horizontally from a platform 20 m above the ground. It lands 30 m away horizontally. First find the time of flight (vertical: u_y = 0, a = −9.8, s = −20), then find the launch speed.",
    known:{u:0,a:-9.8,s:-20},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find t (from vertical)",answer:2.02,tol:0.05,unit:"s"},{prompt:"Find launch speed u_x = 30 ÷ t",answer:14.9,tol:0.3,unit:"m/s"}],
-   working:"Vertical: t = √(40/9.8) = 2.02 s. Horizontal: u = 30/2.02 = 14.9 m/s"},
+   steps:[{prompt:"Find t (from vertical)",answer:2.02,dp:2,unit:"s"},{prompt:"Find launch speed u_x = 30 ÷ t",answer:14.85,dp:2,unit:"m/s"}],
+   working:"Vertical: t = √(40/9.8) = 2.02 s. Horizontal: u = 30/2.02 = 14.85 m/s"},
 
   {scenario:"A ball is projected horizontally at 12 m/s. After 2 seconds, find the vertical displacement. (u_y = 0, a = −9.8, t = 2). Give magnitude.",
    known:{u:0,a:-9.8,t:2},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find |s|",answer:19.6,tol:0.2,unit:"m"}],
+   steps:[{prompt:"Find |s|",answer:19.6,unit:"m"}],
    working:"s = ½(9.8)(4) = 19.6 m"},
 
   {scenario:"A projectile is launched horizontally at 25 m/s from 122.5 m above the ground. Find the time of flight. (Vertical: u_y = 0, a = −9.8, s = −122.5)",
    known:{u:0,a:-9.8,s:-122.5},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find t",answer:5,tol:0.1,unit:"s"}],
+   steps:[{prompt:"Find t",answer:5,unit:"s"}],
    working:"−122.5 = −4.9t² → t² = 25 → t = 5 s"},
 
   {scenario:"A projectile launched horizontally at 25 m/s has a time of flight of 5 s. Find the horizontal range. (u_x = 25, a = 0)",
    known:{u:25,a:0,t:5},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find s",answer:125,tol:0.5,unit:"m"}],
+   steps:[{prompt:"Find s",answer:125,unit:"m"}],
    working:"s = 25 × 5 = 125 m"},
 
-  {scenario:"A particle is projected horizontally. After 3 seconds the vertical speed is 29.4 m/s. Find the height of the launch point. (u_y = 0, a = −9.8, t = 3). Give magnitude.",
+  {scenario:"A particle is projected horizontally and lands 3 seconds later, when its vertical speed is 29.4 m/s. Find the height of the launch point. (u_y = 0, a = −9.8, t = 3). Give magnitude.",
    known:{u:0,a:-9.8,t:3},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find height",answer:44.1,tol:0.5,unit:"m"}],
+   steps:[{prompt:"Find height",answer:44.1,unit:"m"}],
    working:"s = ½(9.8)(9) = 44.1 m"},
 
   {scenario:"A ball is projected horizontally at 8 m/s from height h. It lands 24 m away. First find t from horizontal (s = 24, u = 8, a = 0), then find h.",
    known:{u:8,a:0,s:24},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find t (from horizontal)",answer:3,tol:0.1,unit:"s"},{prompt:"Find h = ½(9.8)t²",answer:44.1,tol:0.5,unit:"m"}],
+   steps:[{prompt:"Find t (from horizontal)",answer:3,unit:"s"},{prompt:"Find h = ½(9.8)t²",answer:44.1,unit:"m"}],
    working:"Horizontal: t = 24/8 = 3 s. Vertical: h = ½(9.8)(9) = 44.1 m"},
 
   {scenario:"A stone leaves a horizontal surface at 10 m/s from a table 5 m high. Find the speed on impact. First find v_y (vertical: u = 0, a = 9.8, s = 5), then combine with v_x = 10 m/s.",
    known:{u:0,a:9.8,s:5},find:'v',equation:'v² = u² + 2as',
-   steps:[{prompt:"Find v_y",answer:9.9,tol:0.2,unit:"m/s"},{prompt:"Find speed √(v_x² + v_y²)",answer:14.1,tol:0.2,unit:"m/s"}],
+   steps:[{prompt:"Find v_y",answer:9.9,dp:1,unit:"m/s"},{prompt:"Find speed √(v_x² + v_y²)",answer:14.1,dp:1,unit:"m/s"}],
    working:"v_y² = 2(9.8)(5) = 98 → v_y = 9.9. Speed = √(100+98) = 14.1 m/s"},
 
   {scenario:"A projectile is launched horizontally at 18 m/s. Find the resultant speed after 2 seconds. First find v_y (vertical: u = 0, a = 9.8, t = 2), then combine with v_x = 18.",
    known:{u:0,a:9.8,t:2},find:'v',equation:'v = u + at',
-   steps:[{prompt:"Find v_y",answer:19.6,tol:0.2,unit:"m/s"},{prompt:"Find speed √(18² + v_y²)",answer:26.6,tol:0.3,unit:"m/s"}],
+   steps:[{prompt:"Find v_y",answer:19.6,unit:"m/s"},{prompt:"Find speed √(18² + v_y²)",answer:26.6,dp:1,unit:"m/s"}],
    working:"v_y = 9.8 × 2 = 19.6. Speed = √(324+384.16) = 26.6 m/s"},
 
   {scenario:"A ball is projected horizontally from a cliff. It strikes the ground 4 seconds later. Find the height of the cliff. (u_y = 0, a = 9.8, t = 4)",
    known:{u:0,a:9.8,t:4},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find height",answer:78.4,tol:0.5,unit:"m"}],
+   steps:[{prompt:"Find height",answer:78.4,unit:"m"}],
    working:"s = ½(9.8)(16) = 78.4 m"},
 
   {scenario:"A particle is projected horizontally at speed u from height 19.6 m. It lands 40 m away. First find t (vertical: u = 0, a = 9.8, s = 19.6), then find u.",
    known:{u:0,a:9.8,s:19.6},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find t",answer:2,tol:0.1,unit:"s"},{prompt:"Find launch speed u = 40 ÷ t",answer:20,tol:0.2,unit:"m/s"}],
+   steps:[{prompt:"Find t",answer:2,unit:"s"},{prompt:"Find launch speed u = 40 ÷ t",answer:20,unit:"m/s"}],
    working:"t = √(2×19.6/9.8) = 2 s. u = 40/2 = 20 m/s"},
 
   {scenario:"A horizontal projectile is launched at 30 m/s. Find the vertical displacement after 1.5 seconds. (u_y = 0, a = 9.8, t = 1.5). Give magnitude.",
    known:{u:0,a:9.8,t:1.5},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find |s|",answer:11.03,tol:0.2,unit:"m"}],
-   working:"s = ½(9.8)(2.25) = 11.025 m"},
+   steps:[{prompt:"Find |s|",answer:11.03,dp:2,unit:"m"}],
+   working:"s = ½(9.8)(2.25) = 11.025 ≈ 11.03 m"},
 
   {scenario:"A ball is projected horizontally. The vertical speed on landing is 24.5 m/s downward. Find the time of flight. (u_y = 0, a = 9.8, v = 24.5)",
    known:{u:0,v:24.5,a:9.8},find:'t',equation:'v = u + at',
-   steps:[{prompt:"Find t",answer:2.5,tol:0.1,unit:"s"}],
+   steps:[{prompt:"Find t",answer:2.5,unit:"s"}],
    working:"24.5 = 9.8t → t = 2.5 s"},
 
   // ─── Section C: Projectiles at an angle (20) ───
   {scenario:"A particle is projected at 20 m/s at 30° above the horizontal. Find the time to reach maximum height. (Vertical: v = 0 at max height, a = −9.8)",
-   phase0:{speed:20,angle:30,ux:17.32,uy:10,tol:0.1},
+   phase0:{speed:20,angle:30,ux:17.32,uy:10},
    known:{u:10,v:0,a:-9.8},find:'t',equation:'v = u + at',
-   steps:[{prompt:"Find t",answer:1.02,tol:0.05,unit:"s"}],
+   steps:[{prompt:"Find t",answer:1.02,dp:2,unit:"s"}],
    working:"0 = 10 − 9.8t → t = 1.02 s"},
 
   {scenario:"A ball is projected at 25 m/s at 60° above the horizontal. Find the maximum height reached. (Vertical: v = 0 at max height, a = −9.8)",
-   phase0:{speed:25,angle:60,ux:12.5,uy:21.65,tol:0.1},
+   phase0:{speed:25,angle:60,ux:12.5,uy:21.65},
    known:{u:21.65,v:0,a:-9.8},find:'s',equation:'v² = u² + 2as',
-   steps:[{prompt:"Find max height",answer:23.9,tol:0.3,unit:"m"}],
+   steps:[{prompt:"Find max height",answer:23.9,dp:1,unit:"m"}],
    working:"0 = 21.65² − 19.6s → s = 468.7/19.6 = 23.9 m"},
 
   {scenario:"A particle is projected at 15 m/s at 45° above the horizontal from ground level. Find the time of flight. (Vertical: s = 0 on landing, a = −9.8)",
-   phase0:{speed:15,angle:45,ux:10.61,uy:10.61,tol:0.1},
+   phase0:{speed:15,angle:45,ux:10.61,uy:10.61},
    known:{u:10.61,s:0,a:-9.8},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find t (time of flight)",answer:2.16,tol:0.05,unit:"s"}],
-   working:"0 = 10.61t − 4.9t² → t(10.61 − 4.9t) = 0 → t = 2.16 s"},
+   steps:[{prompt:"Find t (time of flight)",answer:2.2,dp:1,unit:"s"}],
+   working:"0 = 10.61t − 4.9t² → t(10.61 − 4.9t) = 0 → t = 10.61/4.9 ≈ 2.2 s (to 1 d.p.)"},
 
   {scenario:"A particle projected at 15 m/s at 45° has a time of flight of 2.16 s. Find the horizontal range.",
-   phase0:{speed:15,angle:45,ux:10.61,uy:10.61,tol:0.1},
+   phase0:{speed:15,angle:45,ux:10.61,uy:10.61},
    known:{u:10.61,a:0,t:2.16},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find range",answer:22.9,tol:0.3,unit:"m"}],
+   steps:[{prompt:"Find range",answer:22.9,dp:1,unit:"m"}],
    working:"s = 10.61 × 2.16 = 22.9 m"},
 
   {scenario:"A particle is projected at 30 m/s at 40° above the horizontal. Find the speed at t = 2 s. First find v_y (vertical: a = −9.8), then combine with u_x.",
-   phase0:{speed:30,angle:40,ux:22.98,uy:19.28,tol:0.1},
+   phase0:{speed:30,angle:40,ux:22.98,uy:19.28},
    known:{u:19.28,a:-9.8,t:2},find:'v',equation:'v = u + at',
-   steps:[{prompt:"Find v_y",answer:0.32,tol:0.3,unit:"m/s"},{prompt:"Find speed √(u_x² + v_y²)",answer:23.0,tol:0.3,unit:"m/s"}],
-   working:"v_y = 19.28 − 19.6 = −0.32. Speed = √(22.98² + 0.32²) = 23.0 m/s"},
+   steps:[{prompt:"Find v_y",answer:-0.32,dp:2,unit:"m/s"},{prompt:"Find speed √(u_x² + v_y²)",answer:23.0,dp:1,unit:"m/s"}],
+   working:"v_y = 19.28 − 19.6 = −0.32. Speed = √(22.98² + (−0.32)²) = 23.0 m/s"},
 
   {scenario:"A ball is projected at 18 m/s at 50° above the horizontal. Find the maximum height. (Vertical: v = 0 at max height, a = −9.8)",
-   phase0:{speed:18,angle:50,ux:11.57,uy:13.79,tol:0.1},
+   phase0:{speed:18,angle:50,ux:11.57,uy:13.79},
    known:{u:13.79,v:0,a:-9.8},find:'s',equation:'v² = u² + 2as',
-   steps:[{prompt:"Find max height",answer:9.7,tol:0.2,unit:"m"}],
+   steps:[{prompt:"Find max height",answer:9.7,dp:1,unit:"m"}],
    working:"0 = 190.2 − 19.6s → s = 9.7 m"},
 
   {scenario:"A particle is projected from the ground at 22 m/s at 35° above the horizontal. Find the time to reach maximum height. (Vertical: v = 0, a = −9.8)",
-   phase0:{speed:22,angle:35,ux:18.02,uy:12.62,tol:0.1},
+   phase0:{speed:22,angle:35,ux:18.02,uy:12.62},
    known:{u:12.62,v:0,a:-9.8},find:'t',equation:'v = u + at',
-   steps:[{prompt:"Find t",answer:1.29,tol:0.05,unit:"s"}],
+   steps:[{prompt:"Find t",answer:1.29,dp:2,unit:"s"}],
    working:"0 = 12.62 − 9.8t → t = 1.29 s"},
 
   {scenario:"A stone is projected at 40 m/s at 25° above the horizontal. Find the horizontal distance when it returns to the same height. First find time of flight (vertical: s = 0), then find range.",
-   phase0:{speed:40,angle:25,ux:36.25,uy:16.90,tol:0.1},
+   phase0:{speed:40,angle:25,ux:36.25,uy:16.90},
    known:{u:16.90,s:0,a:-9.8},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find time of flight",answer:3.45,tol:0.1,unit:"s"},{prompt:"Find range = u_x × t",answer:125.1,tol:1.0,unit:"m"}],
+   steps:[{prompt:"Find time of flight",answer:3.45,dp:2,unit:"s"},{prompt:"Find range = u_x × t",answer:125.1,dp:1,unit:"m"}],
    working:"0 = 16.90t − 4.9t² → t = 3.45 s. Range = 36.25 × 3.45 = 125.1 m"},
 
   {scenario:"A particle is projected at 14 m/s at 60° to the horizontal. Find the vertical displacement at t = 1 s. (Vertical: a = −9.8)",
-   phase0:{speed:14,angle:60,ux:7,uy:12.12,tol:0.1},
+   phase0:{speed:14,angle:60,ux:7,uy:12.12},
    known:{u:12.12,a:-9.8,t:1},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find s (vertical)",answer:7.22,tol:0.2,unit:"m"}],
+   steps:[{prompt:"Find s (vertical)",answer:7.22,dp:2,unit:"m"}],
    working:"s = 12.12(1) − 4.9(1) = 7.22 m"},
 
-  {scenario:"A ball is projected at 28 m/s at 45° above the horizontal. At maximum height, v_y = 0. What is the speed at maximum height?",
-   phase0:{speed:28,angle:45,ux:19.80,uy:19.80,tol:0.1},
-   known:{u:19.80,v:0,a:-9.8},find:'v',equation:'v = u + at',
-   steps:[{prompt:"Find speed at max height",answer:19.8,tol:0.2,unit:"m/s"}],
-   working:"At max height v_y = 0, so speed = u_x = 19.8 m/s"},
+  {scenario:"A ball is projected at 28 m/s at 45° above the horizontal. Take g = 9.8 m/s². (a) Find the time to reach maximum height, to 2 d.p. (b) What is the speed at maximum height, to 1 d.p.?",
+   phase0:{speed:28,angle:45,ux:19.80,uy:19.80},
+   known:{u:19.80,v:0,a:-9.8},find:'t',equation:'v = u + at',
+   steps:[{prompt:"(a) Find t, the time to reach maximum height",answer:2.02,dp:2,unit:"s"},{prompt:"(b) Find the speed at maximum height",answer:19.8,dp:1,unit:"m/s"}],
+   working:"(a) 0 = 19.80 − 9.8t → t = 2.02 s. (b) At maximum height v_y = 0, so the speed is u_x = 19.8 m/s"},
 
   {scenario:"A particle is projected at 35 m/s at 30° above the horizontal. Find the time of flight (lands at same level). (Vertical: s = 0, a = −9.8)",
-   phase0:{speed:35,angle:30,ux:30.31,uy:17.5,tol:0.1},
+   phase0:{speed:35,angle:30,ux:30.31,uy:17.5},
    known:{u:17.5,s:0,a:-9.8},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find time of flight",answer:3.57,tol:0.05,unit:"s"}],
+   steps:[{prompt:"Find time of flight",answer:3.57,dp:2,unit:"s"}],
    working:"0 = 17.5t − 4.9t² → t = 3.57 s"},
 
   {scenario:"A particle is projected at 20 m/s at 55° above the horizontal. Find the horizontal range (lands at same level). First find time of flight (vertical: s = 0), then find range.",
-   phase0:{speed:20,angle:55,ux:11.47,uy:16.38,tol:0.1},
+   phase0:{speed:20,angle:55,ux:11.47,uy:16.38},
    known:{u:16.38,s:0,a:-9.8},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find time of flight",answer:3.34,tol:0.05,unit:"s"},{prompt:"Find range = u_x × t",answer:38.3,tol:0.5,unit:"m"}],
-   working:"t = 2(16.38)/9.8 = 3.34 s. Range = 11.47 × 3.34 = 38.3 m"},
+   steps:[{prompt:"Find time of flight",answer:3.34,dp:2,unit:"s"},{prompt:"Find range = u_x × t",answer:38,dp:0,unit:"m"}],
+   working:"t = 2(16.38)/9.8 = 3.34 s. Range = 11.47 × 3.34 ≈ 38 m"},
 
   {scenario:"A particle projected at angle θ has initial speed 24 m/s. At t = 1.5 s, the vertical velocity is zero. First find u_y, then find θ. (Vertical: v = 0, a = −9.8, t = 1.5)",
    known:{v:0,a:-9.8,t:1.5},find:'u',equation:'v = u + at',
-   steps:[{prompt:"Find u_y",answer:14.7,tol:0.1,unit:"m/s"},{prompt:"Find θ = arcsin(u_y ÷ 24)",answer:37.8,tol:0.5,unit:"°"}],
+   steps:[{prompt:"Find u_y",answer:14.7,unit:"m/s"},{prompt:"Find θ = arcsin(u_y ÷ 24)",answer:37.8,dp:1,unit:"°"}],
    working:"u_y = 9.8 × 1.5 = 14.7. sin θ = 14.7/24 → θ = 37.8°"},
 
   {scenario:"A ball is projected at 16 m/s at 70° above the horizontal. Find the vertical velocity at t = 2 s. (Vertical: a = −9.8). Give as a magnitude.",
-   phase0:{speed:16,angle:70,ux:5.47,uy:15.04,tol:0.1},
+   phase0:{speed:16,angle:70,ux:5.47,uy:15.04},
    known:{u:15.04,a:-9.8,t:2},find:'v',equation:'v = u + at',
-   steps:[{prompt:"Find |v_y|",answer:4.56,tol:0.2,unit:"m/s"}],
+   steps:[{prompt:"Find |v_y|",answer:4.56,dp:2,unit:"m/s"}],
    working:"v = 15.04 − 19.6 = −4.56 m/s (downward). Magnitude = 4.56 m/s"},
 
   {scenario:"A particle is projected at 50 m/s at 20° above the horizontal. Find the height at t = 3 s. (Vertical: a = −9.8)",
-   phase0:{speed:50,angle:20,ux:46.98,uy:17.10,tol:0.1},
+   phase0:{speed:50,angle:20,ux:46.98,uy:17.10},
    known:{u:17.10,a:-9.8,t:3},find:'s',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find height",answer:7.2,tol:0.3,unit:"m"}],
+   steps:[{prompt:"Find height",answer:7.2,dp:1,unit:"m"}],
    working:"s = 17.10(3) − 4.9(9) = 51.3 − 44.1 = 7.2 m"},
 
   {scenario:"A particle is projected at 12 m/s at 45° above the horizontal. Find the speed at t = 1 s. First find v_y (vertical: a = −9.8), then combine with u_x.",
-   phase0:{speed:12,angle:45,ux:8.49,uy:8.49,tol:0.1},
+   phase0:{speed:12,angle:45,ux:8.49,uy:8.49},
    known:{u:8.49,a:-9.8,t:1},find:'v',equation:'v = u + at',
-   steps:[{prompt:"Find |v_y|",answer:1.31,tol:0.2,unit:"m/s"},{prompt:"Find speed √(u_x² + v_y²)",answer:8.59,tol:0.2,unit:"m/s"}],
+   steps:[{prompt:"Find |v_y|",answer:1.31,dp:2,unit:"m/s"},{prompt:"Find speed √(u_x² + v_y²)",answer:8.59,dp:2,unit:"m/s"}],
    working:"v_y = 8.49 − 9.8 = −1.31. Speed = √(8.49² + 1.31²) = 8.59 m/s"},
 
   {scenario:"A particle is projected at 32 m/s at 30° above the horizontal from a cliff 20 m above the sea. Find the time when it hits the sea. (Vertical: s = −20, a = −9.8)",
-   phase0:{speed:32,angle:30,ux:27.71,uy:16,tol:0.1},
+   phase0:{speed:32,angle:30,ux:27.71,uy:16},
    known:{u:16,s:-20,a:-9.8},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find t",answer:4.23,tol:0.1,unit:"s"}],
+   steps:[{prompt:"Find t",answer:4.23,dp:2,unit:"s"}],
    working:"−20 = 16t − 4.9t² → 4.9t² − 16t − 20 = 0 → t = (16+25.46)/9.8 = 4.23 s"},
 
   {scenario:"A ball is projected at 10 m/s at 30° above the horizontal. Find the maximum height above the point of projection. (Vertical: v = 0, a = −9.8)",
-   phase0:{speed:10,angle:30,ux:8.66,uy:5,tol:0.1},
+   phase0:{speed:10,angle:30,ux:8.66,uy:5},
    known:{u:5,v:0,a:-9.8},find:'s',equation:'v² = u² + 2as',
-   steps:[{prompt:"Find max height",answer:1.28,tol:0.05,unit:"m"}],
+   steps:[{prompt:"Find max height",answer:1.28,dp:2,unit:"m"}],
    working:"0 = 25 − 19.6s → s = 1.28 m"},
 
   {scenario:"A particle is projected at 45 m/s at 15° above the horizontal. Find the horizontal range (lands at same level). First find time of flight (vertical: s = 0), then find range.",
-   phase0:{speed:45,angle:15,ux:43.47,uy:11.65,tol:0.1},
+   phase0:{speed:45,angle:15,ux:43.47,uy:11.65},
    known:{u:11.65,s:0,a:-9.8},find:'t',equation:'s = ut + ½at²',
-   steps:[{prompt:"Find time of flight",answer:2.38,tol:0.05,unit:"s"},{prompt:"Find range = u_x × t",answer:103.5,tol:1.0,unit:"m"}],
-   working:"t = 2(11.65)/9.8 = 2.378 s. Range = 43.47 × 2.378 = 103.4 m"},
+   steps:[{prompt:"Find time of flight",answer:2.38,dp:2,unit:"s"},{prompt:"Find range = u_x × t",answer:103,dp:0,unit:"m"}],
+   working:"t = 2(11.65)/9.8 = 2.378 s. Range = 43.47 × 2.38 ≈ 103 m"},
 
   {scenario:"A particle is projected at speed u at 60° above the horizontal. It reaches a maximum height of 30 m. Find u. (Vertical: v = 0, a = −9.8, s = 30, u_y = u sin 60°)",
    known:{v:0,a:-9.8,s:30},find:'u',equation:'v² = u² + 2as',
-   steps:[{prompt:"Find u_y = √(2 × 9.8 × 30)",answer:24.25,tol:0.2,unit:"m/s"},{prompt:"Find u = u_y ÷ sin 60°",answer:28,tol:0.2,unit:"m/s"}],
-   working:"u_y² = 2(9.8)(30) = 588 → u_y = 24.25. u = 24.25/sin60° = 28 m/s"}
+   steps:[{prompt:"Find u_y = √(2 × 9.8 × 30)",answer:24.25,dp:2,unit:"m/s"},{prompt:"Find u = u_y ÷ sin 60°",answer:28.0,dp:1,unit:"m/s"}],
+   working:"u_y² = 2(9.8)(30) = 588 → u_y = 24.25. u = 24.25/sin60° = 28.0 m/s"}
 ];
 
 const ALL_EQS = ['v = u + at','s = ut + ½at²','v² = u² + 2as','s = ½(u+v)t','s = vt − ½at²'];
@@ -581,7 +582,7 @@ const STORAGE_PREFIX = 'sv_' + level;
 
 let score = 0, qNum = 0, questions = [], currentQ = null, currentStep = 0;
 let timerStart = null, timerInterval = null, elapsedSeconds = 0, sessionStart = null;
-let _svCorrectCount = 0;
+let _svCorrectCount = 0, _svQOk = true;
 const BASE_SCORE_P0 = 5, BASE_SCORE_EQ = 5, BASE_SCORE_CALC = 10, T_K = 0.15;
 
 function startTimer(){
@@ -623,7 +624,7 @@ function startGame(){
 
 function loadQ(){
   if(qNum >= questions.length){ endGame(); return; }
-  currentQ = questions[qNum]; qNum++; currentStep = 0;
+  currentQ = questions[qNum]; qNum++; currentStep = 0; _svQOk = true;
   document.getElementById('qcount').textContent = qNum + '/' + GAME_SIZE;
   document.getElementById('scenario').textContent = currentQ.scenario;
 
@@ -658,29 +659,43 @@ function showPhase0(){
   startTimer();
 }
 
+// A typed answer, marked by MaffsAnswer (canon 7.1.3): at the precision the step states (dp), or exactly when the
+// answer needs no rounding. 'format' and 'unreadable' are never marked: the message shows and the student retries.
+function markTyped(raw, key, dp){
+  return dp === undefined ? MaffsAnswer.exact(raw, key) : MaffsAnswer.decimal(raw, key, dp);
+}
+function precisionText(dp){
+  return dp === undefined ? '' : dp === 0 ? ', to the nearest whole number' : ', to ' + dp + ' d.p.';
+}
+
 function submitPhase0(){
   var p0 = currentQ.phase0;
-  var ux = parseFloat(document.getElementById('p0ux').value);
-  var uy = parseFloat(document.getElementById('p0uy').value);
-  if(isNaN(ux) || isNaN(uy)) return;
   var fb = document.getElementById('fb0');
-  var uxOk = Math.abs(ux - p0.ux) <= p0.tol;
-  var uyOk = Math.abs(uy - p0.uy) <= p0.tol;
+  var rx = markTyped(document.getElementById('p0ux').value, p0.ux, 2);
+  var ry = markTyped(document.getElementById('p0uy').value, p0.uy, 2);
+  var bad = [rx, ry].indexOf('unreadable') >= 0 ? 'unreadable' : [rx, ry].indexOf('format') >= 0 ? 'format' : null;
+  if(bad){ fb.textContent = MaffsAnswer.message(bad, '', {dp: 2}); fb.className = 'feedback'; return; }
   stopTimer();
-
-  if(uxOk && uyOk){
-    score += logScore(BASE_SCORE_P0, elapsedSeconds);
-    fb.textContent = 'CORRECT! u_x = ' + p0.ux.toFixed(2) + ', u_y = ' + p0.uy.toFixed(2);
-    fb.className = 'feedback correct';
-  } else {
-    fb.textContent = 'u_x = ' + p0.ux.toFixed(2) + ', u_y = ' + p0.uy.toFixed(2);
-    fb.className = 'feedback wrong';
-  }
-  document.getElementById('score').textContent = score;
-  setTimeout(function(){
+  document.querySelector('#phase0 .calc-btn').disabled = true;
+  var shown = 'u_x = ' + p0.ux.toFixed(2) + ', u_y = ' + p0.uy.toFixed(2);
+  var go = function(){
+    document.querySelector('#phase0 .calc-btn').disabled = false;
     document.getElementById('phase0').style.display = 'none';
     showPhase1AL();
-  }, 1800);
+  };
+  if(rx === 'correct' && ry === 'correct'){
+    score += logScore(BASE_SCORE_P0, elapsedSeconds);
+    fb.textContent = 'CORRECT! ' + shown;
+    fb.className = 'feedback correct';
+    document.getElementById('score').textContent = score;
+    setTimeout(go, 1800);
+  } else {
+    _svQOk = false;
+    fb.textContent = 'Not quite: ' + shown;
+    fb.className = 'feedback wrong';
+    MaffsNext.wrong({mount: document.getElementById('phase0'), onAdvance: function(){
+      MaffsNext.clear(document.getElementById('phase0')); go(); }});
+  }
 }
 
 /* ── Phase 1: Equation selection (A-Level) ── */
@@ -768,7 +783,7 @@ function loadStep(){
     stepLabel.style.display = 'none';
   }
   document.getElementById('phaseTitle').textContent = '— PHASE 2: CALCULATE —';
-  document.getElementById('calcQ').textContent = step.prompt + ' (' + step.unit + ')';
+  document.getElementById('calcQ').textContent = step.prompt + ' (' + step.unit + ')' + precisionText(step.dp);
   document.getElementById('calcInput').value = '';
   document.getElementById('calcInput').focus();
   document.getElementById('fb2').textContent = '';
@@ -778,6 +793,8 @@ function loadStep(){
 }
 
 function submitCalc(){
+  // Enter in the box while a marked answer waits for Next must not mark it again (the button is disabled then)
+  if(document.querySelector('#phase2 .calc-btn').disabled) return;
   // Route to correct handler
   if(isALevel && currentQ.steps){
     submitCalcAL();
@@ -786,35 +803,43 @@ function submitCalc(){
   }
 }
 
-function submitCalcAL(){
-  var val = parseFloat(document.getElementById('calcInput').value);
-  if(isNaN(val)) return;
-  var step = currentQ.steps[currentStep];
-  var correct = Math.abs(val - step.answer) <= step.tol;
-  var fb = document.getElementById('fb2');
-  stopTimer();
+// The answer as the key states it (the step's precision): 14.85, 23.0, 2.20 never 2.2 at 2 d.p.
+function shownKey(key, dp){ return dp === undefined ? String(key) : Number(key).toFixed(dp); }
 
+function submitCalcAL(){
+  var step = currentQ.steps[currentStep];
+  var fb = document.getElementById('fb2');
+  var raw = document.getElementById('calcInput').value;
+  var res = markTyped(raw, step.answer, step.dp);
+  if(res === 'format' || res === 'unreadable'){
+    fb.textContent = MaffsAnswer.message(res, raw, {dp: step.dp}); fb.className = 'feedback'; return;
+  }
+  var correct = res === 'correct';
+  stopTimer();
+  document.querySelector('#phase2 .calc-btn').disabled = true;
   if(correct){
     score += logScore(BASE_SCORE_CALC, elapsedSeconds);
-    fb.textContent = 'CORRECT! ' + step.prompt + ' = ' + step.answer + ' ' + step.unit;
+    fb.textContent = 'CORRECT! ' + step.prompt + ' = ' + shownKey(step.answer, step.dp) + ' ' + step.unit;
     fb.className = 'feedback correct';
   } else {
-    fb.textContent = 'Answer: ' + step.answer + ' ' + step.unit;
+    _svQOk = false;
+    fb.textContent = 'Answer: ' + shownKey(step.answer, step.dp) + ' ' + step.unit;
     fb.className = 'feedback wrong';
   }
   document.getElementById('score').textContent = score;
 
   currentStep++;
-  if(currentStep < currentQ.steps.length){
-    // More steps
-    setTimeout(loadStep, 1800);
-  } else {
-    // All steps done — fire question_answered for the whole question
-    if(correct) _svCorrectCount++;
-    mfg('question_answered',{game_slug:'suvat',level:level,correct:correct,question_index:qNum});
+  var last = currentStep >= currentQ.steps.length;
+  if(last){
+    // the whole question is correct only if every typed answer in it was
+    if(_svQOk) _svCorrectCount++;
+    mfg('question_answered',{game_slug:'suvat',level:level,correct:_svQOk,question_index:qNum});
     document.getElementById('exp2').textContent = currentQ.working;
-    setTimeout(loadQ, 2400);
   }
+  var next = function(){ document.querySelector('#phase2 .calc-btn').disabled = false; (last ? loadQ : loadStep)(); };
+  if(correct) setTimeout(next, last ? 2400 : 1800);
+  else MaffsNext.wrong({mount: document.getElementById('exp2'), onAdvance: function(){
+    MaffsNext.clear(document.getElementById('exp2')); next(); }});
 }
 
 /* ── Level 4 flow (original) ── */
@@ -895,7 +920,7 @@ function showPhase2L4(earnedEqPoints){
     calcQ.appendChild(document.createTextNode('Using '));
     var span = document.createElement('span'); span.innerHTML = eq;
     calcQ.appendChild(span);
-    calcQ.appendChild(document.createTextNode(', find ' + currentQ.find + ' = ?'));
+    calcQ.appendChild(document.createTextNode(', find ' + currentQ.find + ' = ?' + precisionText(currentQ.dp)));
   }
   document.getElementById('calcInput').value = '';
   document.getElementById('calcInput').focus();
@@ -904,24 +929,31 @@ function showPhase2L4(earnedEqPoints){
 }
 
 function submitCalcL4(){
-  var val = parseFloat(document.getElementById('calcInput').value);
-  if(isNaN(val)) return;
-  var correct = Math.abs(val - currentQ.answer) <= currentQ.tol;
   var fb = document.getElementById('fb2');
+  var raw = document.getElementById('calcInput').value;
+  var res = markTyped(raw, currentQ.answer, currentQ.dp);
+  if(res === 'format' || res === 'unreadable'){
+    fb.textContent = MaffsAnswer.message(res, raw, {dp: currentQ.dp}); fb.className = 'feedback'; return;
+  }
+  var correct = res === 'correct';
   stopTimer();
+  document.querySelector('#phase2 .calc-btn').disabled = true;
   if(correct){
     score += logScore(BASE_SCORE_CALC, elapsedSeconds);
     _svCorrectCount++;
-    fb.textContent = 'CORRECT! ' + currentQ.find + ' = ' + currentQ.answer;
+    fb.textContent = 'CORRECT! ' + currentQ.find + ' = ' + shownKey(currentQ.answer, currentQ.dp);
     fb.className = 'feedback correct';
   } else {
-    fb.textContent = 'WRONG — answer is ' + currentQ.answer;
+    fb.textContent = 'Not quite: the answer is ' + shownKey(currentQ.answer, currentQ.dp);
     fb.className = 'feedback wrong';
   }
   mfg('question_answered',{game_slug:'suvat',level:level,correct:correct,question_index:qNum});
   document.getElementById('exp2').textContent = currentQ.working;
   document.getElementById('score').textContent = score;
-  setTimeout(loadQ, 2200);
+  var next = function(){ document.querySelector('#phase2 .calc-btn').disabled = false; loadQ(); };
+  if(correct) setTimeout(next, 2200);
+  else MaffsNext.wrong({mount: document.getElementById('exp2'), onAdvance: function(){
+    MaffsNext.clear(document.getElementById('exp2')); next(); }});
 }
 
 /* ── End game ── */
