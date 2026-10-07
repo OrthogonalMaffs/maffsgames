@@ -22,9 +22,10 @@ name: check-site
 #   - the checks are split into parallel jobs, each with its own timeout. Nothing a
 #     check checks has changed; only where it runs.
 # SPLIT AGAIN (7 Oct 2026, canon §7.8): tier 1 runs as four shards, the site-wide checks in a job of their
-# own, tier 4 apart from the shared-asset tests, content group B in two parts and C in three.
-# Adding a content verifier: append it to the lightest "Content verifiers" group (each job's summary
-# lists every check's duration).
+# own, tier 4 apart from the shared-asset tests; later that day content group B in four, C in four parts
+# and D in two, so that no content job runs past 4 minutes (canon §7.8.1).
+# Adding a content verifier: put it in whichever "Content verifiers" group keeps every group under
+# 4 minutes as a job (each job's summary lists every check's duration); split a group that would pass it.
 # scripts/check-verifier-coverage.py fails the run if any scripts/verify-*.py or
 # scripts/test-*.py is not listed here (or declared held in that script, with a reason).
 #
@@ -342,32 +343,46 @@ jobs:
 
           # Just Pythag It, Bruv on its own: since the wide-screen calculator dock (4 Oct 2026) it plays every
           # question shape at four phone and three desktop sizes, with the calculator open and closed, plus the
-          # planted faults. As one job it took 9m41s on main (7 Oct 2026), the critical path of every full run,
-          # so it runs in three parts (--part, 7 Oct 2026; dealt by measured cost, see the script). Each part
-          # first runs --part-selftest: the parts together run everything the unsplit script ran, nothing
-          # twice, and this file runs every part.
+          # planted faults. As one job it took 9m41s on main (7 Oct 2026), so it runs in parts (--part, dealt by
+          # measured cost, see the script): three that day, four the same evening, when three still came to
+          # about 4 minutes a job. Each part first runs --part-selftest: the parts together run everything the
+          # unsplit script ran, nothing twice, and this file runs every part.
           - name: Content verifiers C1 (Just Pythag It, Bruv, part 1)
-            timeout: 8
+            timeout: 6
             checks: |
-              Just Pythag It, Bruv, part 1 (fit at 320 and 375px; a third of the planted layout faults)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 1
+              Just Pythag It, Bruv, part 1 (fit at 320px; a quarter of the planted layout faults)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 1
 
           - name: Content verifiers C2 (Just Pythag It, Bruv, part 2)
-            timeout: 8
+            timeout: 6
             checks: |
-              Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a third of the planted layout faults)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 2
+              Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a quarter of the planted layout faults)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 2
 
           - name: Content verifiers C3 (Just Pythag It, Bruv, part 3)
-            timeout: 8
+            timeout: 6
             checks: |
-              Just Pythag It, Bruv, part 3 (every key and triangle recomputed over 300 sessions, WebKit, play-through, three desktop sizes, a third of the layout faults, fault-injection self-test)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 3
+              Just Pythag It, Bruv, part 3 (fit at 375px and the three desktop sizes; a quarter of the planted layout faults)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 3
+
+          - name: Content verifiers C4 (Just Pythag It, Bruv, part 4)
+            timeout: 6
+            checks: |
+              Just Pythag It, Bruv, part 4 (every key and triangle recomputed over 300 sessions, WebKit, play-through, a quarter of the layout faults, fault-injection self-test)|python scripts/verify-just-pythag-it-bruv.py --part-selftest && python scripts/verify-just-pythag-it-bruv.py --part 4
 
           # Equation Builder on its own (279s on 5 Oct 2026): it enumerates every grammar-valid tile arrangement
           # of all 120 questions and classifies each with SymPy (PR #49). In group B it took the group past its
           # 12-minute limit, so every full run from #68 to #71 (main, and any PR touching every game) was cancelled.
-          - name: Content verifiers D (Equation Builder)
-            timeout: 12
+          # In two parts since 7 Oct 2026 (one job, 5m23s): part i classifies every 2nd candidate arrangement of
+          # every question, since one question (eb_ks3_012, 31,032 candidates) is 60% of the time. The checks about
+          # a question as a whole run in part 1, with the planted-fault self-test, which also proves that the two
+          # parts together fail exactly where the whole run does. --part-selftest: every candidate in one part.
+          - name: Content verifiers D1 (Equation Builder, part 1)
+            timeout: 6
             checks: |
-              Equation Builder (every tile arrangement classified by SymPy; the page's ACCEPTED lists match)|python scripts/verify-equation-builder.py && python scripts/verify-equation-builder.py --selftest
+              Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test)|python scripts/verify-equation-builder.py --part-selftest && python scripts/verify-equation-builder.py --part 1/2 && python scripts/verify-equation-builder.py --selftest
+
+          - name: Content verifiers D2 (Equation Builder, part 2)
+            timeout: 6
+            checks: |
+              Equation Builder, part 2 (the other half of every question's tile arrangements, classified by SymPy)|python scripts/verify-equation-builder.py --part-selftest && python scripts/verify-equation-builder.py --part 2/2
 
           # Estimation Engine on its own (Jon, 6 Oct 2026: group B is near its 75% budget). SR-12 rebuild, 5 Oct
           # 2026: every 1 s.f. rounding, estimate and calculator answer recomputed from the stored numbers (Decimal,
@@ -473,46 +488,55 @@ jobs:
           #    at three phone sizes, the asking screen with the calculator closed and open; the diagram
           #    full width at 1:1; the standard header, Aa clear of everything. Runs in its own job (C, above).
           # B was split in two on 7 Oct 2026 (8m03s as one job on main, the next critical path once C was split),
-          # in its own order: B1 runs Log Laws Solve to Growth and Decay (about 4 minutes of checks), B2 the rest.
-          - name: Content verifiers B1 (Log Laws Solve to Growth and Decay)
-            timeout: 12
+          # and in four the same evening (B2 had reached 4m33s; one job may not pass 4 minutes, canon §7.8.1): cut
+          # by the slowest time each line has taken on main (runners vary up to 1.8x), about 2 minutes of checks each.
+          - name: Content verifiers B1 (Log Laws Solve, Maths Court, Six Sevens and two more)
+            timeout: 8
             checks: |
               Log Laws Solve (layers C + D, SymPy)|python scripts/verify-log-laws.py --require-katex
-              Distinctly Average (independent recomputation)|python scripts/verify-distinctly-average.py
-              Graph Transformer (BFS reachability + par verification)|python scripts/verify-graph-transformer.py
-              Test the Claim (independent recomputation of every key)|python scripts/verify-test-the-claim.py
-              Normal Navigator (independent recomputation + rendered labels)|python scripts/verify-normal-navigator.py
-              Six Sevens, Bruv (independent recomputation + session simulation)|python scripts/verify-six-sevens.py
-              Shared statistics module (unit tests against textbook values)|python scripts/stats_common.py --selftest
-              Core Maths Paper 2A (independent recomputation + rendered page)|python scripts/verify-core-maths-paper2a.py
               Maths Court (independent recomputation + rendered page)|python scripts/verify-maths-court.py
-              Chart Interrogator (independent recomputation of every key and tolerance)|python scripts/verify-chart-interrogator.py
-              Stat Attack (keys recomputed from each question's table)|python scripts/verify-stat-attack.py
-              Graph Sketcher (keys recomputed from each printed equation)|python scripts/verify-graph-sketcher.py
-              Truth Buster (every key reviewed against its statement's own words, SR-18; every reveal figure recomputed; all 60 played in Chromium)|python scripts/verify-truth-buster.py
-              Expectation Station (every table, E(X) and explanation figure exact; all 180 Stage 3 cards reviewed against the distribution; every stage played in Chromium)|python scripts/verify-expectation-station.py
-              Growth and Decay (keys recomputed from each printed model)|python scripts/verify-growth-and-decay.py
+              Six Sevens, Bruv (independent recomputation + session simulation)|python scripts/verify-six-sevens.py
+              Test the Claim (independent recomputation of every key)|python scripts/verify-test-the-claim.py
+              Graph Transformer (BFS reachability + par verification)|python scripts/verify-graph-transformer.py
 
-          - name: Content verifiers B2 (Quadratic Factoriser to Decimal Detective)
-            timeout: 12
+          - name: Content verifiers B2 (Growth and Decay and nine quick ones)
+            timeout: 8
             checks: |
+              Growth and Decay (keys recomputed from each printed model)|python scripts/verify-growth-and-decay.py
+              Expectation Station (every table, E(X) and explanation figure exact; all 180 Stage 3 cards reviewed against the distribution; every stage played in Chromium)|python scripts/verify-expectation-station.py
+              Truth Buster (every key reviewed against its statement's own words, SR-18; every reveal figure recomputed; all 60 played in Chromium)|python scripts/verify-truth-buster.py
+              Graph Sketcher (keys recomputed from each printed equation)|python scripts/verify-graph-sketcher.py
+              Chart Interrogator (independent recomputation of every key and tolerance)|python scripts/verify-chart-interrogator.py
+              Core Maths Paper 2A (independent recomputation + rendered page)|python scripts/verify-core-maths-paper2a.py
+              Normal Navigator (independent recomputation + rendered labels)|python scripts/verify-normal-navigator.py
+              Distinctly Average (independent recomputation)|python scripts/verify-distinctly-average.py
+              Stat Attack (keys recomputed from each question's table)|python scripts/verify-stat-attack.py
+              Shared statistics module (unit tests against textbook values)|python scripts/stats_common.py --selftest
+
+          - name: Content verifiers B3 (Decimal Detective, Quadratic Factoriser and three more)
+            timeout: 8
+            checks: |
+              Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)|python scripts/verify-decimal-detective.py
               Quadratic Factoriser (every pooled item recomputed, SymPy)|python scripts/verify-quadratic-factoriser.py
-              Parent guides (every stated figure recomputed from the page)|python scripts/verify-parent-guides.py
+              Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)|python scripts/verify-correlation-or-coincidence.py
               Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)|python scripts/verify-tax-theft.py
+              Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 110 played in Chromium)|python scripts/verify-spot-the-error.py
+
+          - name: Content verifiers B4 (Negative Number Line, Trig Worms and the rest)
+            timeout: 8
+            checks: |
+              Parent guides (every stated figure recomputed from the page)|python scripts/verify-parent-guides.py
               UK rates module (unit tests against the gov.uk 2025/26 figures)|python scripts/uk_rates.py --selftest
               Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates)|python scripts/verify-core-maths-paper1-tax.py
               Core Maths Paper 1 (every key recomputed from its stem and charts; options distinct in value; every key marked in Chromium)|python scripts/verify-core-maths-paper1.py
               Better Value tax-and-NI rule of thumb (checked with uk_rates)|python scripts/verify-better-value-tax.py
               Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure)|python scripts/verify-circle-theorem-spotter.py
               Split It (every generator's keys recomputed + marking at the stated precision)|python scripts/verify-split-it.py
-              Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)|python scripts/verify-correlation-or-coincidence.py
               Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)|python scripts/check-resit-fixes.py
               Probability Pioneer (Stage 2 keys recomputed, Stages 1 and 3 pinned, every answer marked in Chromium)|python scripts/verify-probability-pioneer.py
               Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)|python scripts/verify-expected-damage.py
               Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)|python scripts/verify-negative-number-line.py
               Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)|python scripts/verify-trig-worms.py
-              Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 110 played in Chromium)|python scripts/verify-spot-the-error.py
-              Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)|python scripts/verify-decimal-detective.py
 
     steps:
       - uses: actions/checkout@v4

@@ -10,11 +10,24 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
 **QUEUE (home lane):**
-1. ~~F0: B11 value comparison~~ (this PR).
-2. **CI split:** give Equation Builder's group D a `--part` split as Just Pythag's, and split B1, so no content group
-   exceeds 4 min on a PR; one PR, timings before/after in it; add to canon §7.8 that a new verifier goes into
-   whichever group keeps every group under 4 min. START: when F0 is merged and main is green.
-3. Contract C (audit batch 3): Jon pastes it.
+1. ~~F0: B11 value comparison~~ (#99, merged, main green).
+2. ~~**CI split:** D in two (`--part`), B and C re-cut so no content job passes 4 min; canon §7.8.1 rule~~ (this PR).
+3. Contract C (audit batch 3): Jon pastes it. **The queue is empty after item 2 until he does.**
+
+## 2026-10-07 (home): queue item 2, every content job under 4 minutes
+
+- Main's full run after #99 (before): D 5m23s, B2 4m33s (the cloud lane had added three verifiers to it),
+  C3 4m04s, C2 3m57s, A 3m34s, B1 3m32s.
+- **D:** `verify-equation-builder.py --part i/n` splits by candidate arrangement, not by question: eb_ks3_012 alone
+  has 31,032 candidates and is 60% of the time. Whole-question checks run in part 1; the planted-fault self-test now
+  also runs each fault through both parts and requires them to fail exactly where the whole run does;
+  `--part-selftest` proves every candidate is in one part. Locally: 121 s and 124 s against 185 s whole.
+- **C:** four parts (C4 added); **B:** four groups, cut by the slowest time each line has taken on main (runners vary up to 1.8x: Log Laws 30-55 s, Growth and Decay 58-93 s). Timeouts 6-8 min (budget 75%). 19 matrix entries now (was 16): more runner pressure when both lanes run.
+- Canon §7.8.1: no content job past 4 minutes; a new verifier goes where that holds.
+- **For Jon:** the cloud lane's #96, #97 and #100 each edited `.github/workflows/check-site.yml` (adding their
+  verifier to a B group). Canon §7.8.2 reserves the workflow for the home lane. It did no harm (the lines were
+  needed and CI passed), but either the rule should allow "add my verifier's line to a content group" or the cloud
+  lane should hand those lines to the home lane. Your call.
 
 ## 2026-10-07 (home): contract F0, B11 sees the value-equal shapes it skipped
 

@@ -102,7 +102,7 @@ hypotenuse sloping one way only; the box ignoring the figure's width; the triang
 USAGE
     python scripts/verify-just-pythag-it-bruv.py
     python scripts/verify-just-pythag-it-bruv.py --no-selftest --seeds 50
-    python scripts/verify-just-pythag-it-bruv.py --part 1         # CI job C1 (C2, C3: --part 2, 3)
+    python scripts/verify-just-pythag-it-bruv.py --part 1         # CI job C1 (C2-C4: --part 2, 3, 4)
     python scripts/verify-just-pythag-it-bruv.py --part-selftest  # the parts are the whole run
 """
 import argparse
@@ -1564,31 +1564,33 @@ async def selftest(browser):
     return ok, lines
 
 
-# ---------------------------------------------------------------- parts (CI runs three in parallel)
+# ---------------------------------------------------------------- parts (CI runs four in parallel)
 #
-# Since 7 Oct 2026 CI runs this script as three jobs, `--part 1` .. `--part 3` (one job took 9m41s on
-# main, the critical path of every full run). Every check is a task in exactly one part, dealt by
-# measured cost (7 Oct 2026, about 2.5 to 3 minutes each): the fit pass at 320 and 375 in part 1, at 390
-# and 412 in part 2, at the three desktop sizes in part 3; the planted layout faults dealt in turn
-# across parts 1, 2, 3 in list order; the sessions, WebKit, the play-through and the fault-injection
-# self-test in part 3. Every part first reads the page's scale and compact heights, which the checks
-# are held to. With no --part, every task runs, as before. --part-selftest proves that the parts
-# together are exactly the unsplit task list, nothing twice, and that the workflow runs every part.
-PARTS = ("1", "2", "3")
-FIT_PART = {(320, 568): "1", (375, 667): "1", (390, 844): "2", (412, 915): "2",
+# Since 7 Oct 2026 CI runs this script as parallel jobs, `--part 1` .. `--part 4` (one job took 9m41s
+# on main, the critical path of every full run; three parts still came to about 4 minutes a job, so a
+# fourth was added the same day, to keep every content job under 4 minutes). Every check is a task in
+# exactly one part, dealt by measured cost (local seconds, 7 Oct 2026; about 2 minutes each): the fit
+# pass at 320 in part 1, at 390 and 412 in part 2, at 375 and the three desktop sizes in part 3; the
+# planted layout faults dealt in turn across parts 1-4 in list order; the sessions, WebKit, the
+# play-through and the fault-injection self-test in part 4. Every part first reads the page's scale
+# and compact heights, which the checks are held to. With no --part, every task runs, as before.
+# --part-selftest proves that the parts together are exactly the unsplit task list, nothing twice,
+# and that the workflow runs every part.
+PARTS = ("1", "2", "3", "4")
+FIT_PART = {(320, 568): "1", (375, 667): "3", (390, 844): "2", (412, 915): "2",
             (1280, 720): "3", (1366, 768): "3", (1920, 1080): "3"}
 WORKFLOW = os.path.join(ROOT, ".github", "workflows", "check-site.yml")
 
 
 def plan(no_phone=False, no_selftest=False):
     """[(task, part)] in the order the unsplit script ran them."""
-    tasks = [("sessions", "3"), ("webkit", "3"), ("play-through", "3")]
+    tasks = [("sessions", "4"), ("webkit", "4"), ("play-through", "4")]
     if not no_phone:
         tasks += [("fit %dx%d" % sz, FIT_PART[sz]) for sz in PHONES + DESKTOPS]
     if not no_selftest and not no_phone:
         tasks += [("layout fault: " + name, PARTS[i % len(PARTS)]) for i, (name, _, _) in enumerate(UI_FAULTS)]
     if not no_selftest:
-        tasks += [("fault-injection self-test", "3")]
+        tasks += [("fault-injection self-test", "4")]
     return tasks
 
 
@@ -1726,7 +1728,7 @@ def main():
     ap.add_argument("--no-selftest", action="store_true", help="skip the fault-injection self-test")
     ap.add_argument("--no-phone", action="store_true", help="skip the phone-fit measurement")
     ap.add_argument("--seeds", type=int, default=300, help="sessions to check (default 300)")
-    ap.add_argument("--part", choices=PARTS, help="run one of the three parts CI runs in parallel (default: all)")
+    ap.add_argument("--part", choices=PARTS, help="run one of the four parts CI runs in parallel (default: all)")
     ap.add_argument("--part-selftest", action="store_true",
                     help="prove the parts together run every task once, and the workflow runs every part; no browser")
     args = ap.parse_args()
