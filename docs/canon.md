@@ -812,6 +812,13 @@ separately, and a wrong form is never a mark.**
     and resubmit." (with the student's own figure). Anything else is wrong.
   - `exact(raw, key)`: an answer that needs no rounding (whole-number ratios, integer scale factors).
     Equal in value or wrong; nothing is `'format'`, since no precision was asked for.
+  - `fractionOrDecimal(raw, num, den, dp)` (7 Oct 2026): the key is the exact fraction num/den, and the
+    question accepts it as a fraction or as a decimal to its stated precision. A typed fraction (a/b, a
+    sign on either part, any equivalent form: 3/7, 15/35) is read exactly by `fraction(raw)` and is
+    correct or wrong, never `'format'`. Anything else goes to `decimal()` against num/den rounded half up,
+    in integers, to dp places. `decimal()` and `exact()` still read no fractions.
+  - `message(..., {sf: n})` names significant figures where the question states them (the marking is
+    still at its dp places); `{fraction: true}` asks for "a fraction or a decimal" when unreadable.
   - **A question whose exact answer doesn't terminate must state its precision.** An unstated
     rounding is a key bug, not a marking choice.
   - Users: `tax-theft` (keys in pence; `moneyResult()` is now a one-line adapter, kept so its

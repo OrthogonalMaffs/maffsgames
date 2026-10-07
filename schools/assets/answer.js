@@ -21,9 +21,22 @@
  *   MaffsAnswer.exact(raw, key)        an answer that needs no rounding (whole-number ratios, an
  *                                      integer scale factor): equal in value or 'wrong'. Nothing is
  *                                      'format', since no precision was asked for.
+ *   MaffsAnswer.fraction(raw)          the exact reading of a typed fraction a/b (a sign on either
+ *                                      part, spaces round the slash) or a whole number: {num, den}
+ *                                      in lowest terms with den > 0, or null (a decimal, b = 0,
+ *                                      anything else). Exact: no float is formed.
+ *   MaffsAnswer.fractionOrDecimal(raw, num, den, dp)  the key is the exact fraction num/den. An
+ *                                      answer with a slash is read by fraction(): equal in value
+ *                                      (3/7, 6/14, -3/-7) is 'correct', any other fraction 'wrong'.
+ *                                      Anything else goes to decimal() against num/den rounded
+ *                                      half up, exactly, to dp places: 0.429 'correct', 0.4286
+ *                                      'format', 0.43 'wrong' for 3/7 at 3 d.p.
  *   MaffsAnswer.parse(raw)             the typed value as a Number, or null if unreadable.
  *   MaffsAnswer.message(result, raw, opts)  the words to show for 'format' / 'unreadable';
- *                                      opts.currency ('£' or '€') for money, opts.dp for decimal.
+ *                                      opts.currency ('£' or '€') for money, opts.dp for decimal,
+ *                                      opts.sf when the question states significant figures (the
+ *                                      marking is still at opts.dp places), opts.fraction when a
+ *                                      fraction is accepted too.
  *
  * scripts/test-answer-js.py runs every outcome in a browser, in CI.
  */
@@ -101,19 +114,53 @@
     return scaledExact(d, dp) === Math.round(k) && Math.abs(k - Math.round(k)) < 1e-6 ? 'correct' : 'wrong';
   }
 
+  var FRACTION = /^([+-]?)(\d+)(?:\s*\/\s*([+-]?)(\d+))?$/;
+  function gcd(a, b) { while (b) { var t = a % b; a = b; b = t; } return a; }
+
+  function fraction(raw) {
+    var m = FRACTION.exec(strip(raw, false));
+    if (!m) return null;
+    var num = Number(m[2]), den = m[4] === undefined ? 1 : Number(m[4]);
+    if (!den || !Number.isSafeInteger(num) || !Number.isSafeInteger(den)) return null;
+    var g = gcd(num, den);
+    num /= g; den /= g;
+    return { num: num && (m[1] === '-') !== (m[3] === '-') ? -num : num, den: den };
+  }
+
+  // num/den rounded half up (away from zero on the magnitude) to dp places, as a decimal string,
+  // worked in integers.
+  function fractionAt(num, den, dp) {
+    if (den < 0) { num = -num; den = -den; }
+    var p = Math.pow(10, dp), n = Math.abs(num) * p;
+    var q = Math.floor((2 * n + den) / (2 * den));
+    return (num < 0 && q ? '-' : '') + (q / p).toFixed(dp);
+  }
+
+  function fractionOrDecimal(raw, num, den, dp) {
+    var s = strip(raw, false);
+    if (s.indexOf('/') === -1) return decimal(s, fractionAt(num, den, dp), dp);
+    var f = fraction(s);
+    if (!f) return 'unreadable';
+    return f.num * den === num * f.den ? 'correct' : 'wrong';
+  }
+
   function message(result, raw, opts) {
     opts = opts || {};
-    if (result === 'unreadable') return 'Type just the number, e.g. 12.34';
+    if (result === 'unreadable') {
+      return opts.fraction ? 'Type a fraction or a decimal, e.g. 3/7 or 0.429' : 'Type just the number, e.g. 12.34';
+    }
     if (result !== 'format') return '';
     var fig = strip(raw, !!opts.currency);
     if (opts.currency) {
       return 'Right amount, but money always has two decimal places. In the exam, ' + opts.currency +
         fig + ' loses the mark. Fix it and resubmit.';
     }
-    var dp = opts.dp;
-    return 'Right value, but the question asks for ' + dp + ' decimal place' + (dp === 1 ? '' : 's') +
+    var asked = opts.sf ? opts.sf + ' significant figure' + (opts.sf === 1 ? '' : 's')
+      : opts.dp + ' decimal place' + (opts.dp === 1 ? '' : 's');
+    return 'Right value, but the question asks for ' + asked +
       '. In the exam, ' + fig + ' loses the mark. Fix it and resubmit.';
   }
 
-  window.MaffsAnswer = { money: money, decimal: decimal, exact: exact, parse: parse, message: message };
+  window.MaffsAnswer = { money: money, decimal: decimal, exact: exact, fraction: fraction,
+    fractionOrDecimal: fractionOrDecimal, parse: parse, message: message };
 })();
