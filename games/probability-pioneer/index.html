@@ -164,6 +164,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -236,7 +237,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div class="feedback-panel" id="scaleFeedback">
     <div class="feedback-indicator" id="scaleFeedbackInd"></div>
     <div class="feedback-text" id="scaleFeedbackText"></div>
-    <button class="next-btn" id="scaleNextBtn" onclick="nextQuestion()">Next</button>
+    <button class="next-btn" id="scaleNextBtn" data-maffs-lock-skip onclick="nextQuestion()">Next</button>
   </div>
 </div>
 
@@ -249,7 +250,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div class="feedback-panel" id="mcqFeedback">
     <div class="feedback-indicator" id="mcqFeedbackInd"></div>
     <div class="feedback-text" id="mcqFeedbackText"></div>
-    <button class="next-btn" id="mcqNextBtn" onclick="nextQuestion()">Next</button>
+    <button class="next-btn" id="mcqNextBtn" data-maffs-lock-skip onclick="nextQuestion()">Next</button>
   </div>
 </div>
 
@@ -265,7 +266,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div class="feedback-panel" id="tfFeedback">
     <div class="feedback-indicator" id="tfFeedbackInd"></div>
     <div class="feedback-text" id="tfFeedbackText"></div>
-    <button class="next-btn" id="tfNextBtn" onclick="nextQuestion()">Next</button>
+    <button class="next-btn" id="tfNextBtn" data-maffs-lock-skip onclick="nextQuestion()">Next</button>
   </div>
 </div>
 
@@ -363,7 +364,9 @@ let globalIndex = 0;   // across all stages (1-based for analytics)
 let totalCorrect = 0;
 let stageCorrect = [0, 0, 0]; // index 0=stage1, 1=stage2, 2=stage3
 let selectedScaleValue = null;
-let answered = false;
+let waitTimer = null;   // the one pending 'Wait Ns...' retry of nextQuestion (MaffsLock.timer)
+// MaffsLock's container (canon 7.6.0): the screen of the stage being played.
+function stageEl() { return document.getElementById('stage' + currentStage + 'Screen'); }
 let revealStartTime = 0;
 
 // ============================================================
@@ -407,6 +410,7 @@ function startGame() {
   globalIndex = 0;
   totalCorrect = 0;
   stageCorrect = [0, 0, 0];
+  MaffsLock.newSession();
 
   document.getElementById('gameHeader').style.display = 'flex';
   document.getElementById('scoreNum').textContent = '0';
@@ -425,7 +429,7 @@ function startGame() {
 // ============================================================
 function showStage1Question() {
   showScreen('stage1Screen');
-  answered = false;
+  MaffsLock.fresh(stageEl());   // a double-click on Next or Start cannot answer the new question
   selectedScaleValue = null;
 
   const q = STAGE1[questionIndex];
@@ -448,7 +452,7 @@ function showStage1Question() {
 }
 
 function selectScale(val) {
-  if (answered) return;
+  if (MaffsLock.isLocked(stageEl())) return;
   selectedScaleValue = val;
   document.querySelectorAll('#scaleLabels .scale-label').forEach(l => {
     l.classList.toggle('selected', parseFloat(l.dataset.value) === val);
@@ -467,8 +471,7 @@ document.querySelectorAll('#scaleLabels .scale-label').forEach(l => {
 });
 
 function confirmScale() {
-  if (answered || selectedScaleValue === null) return;
-  answered = true;
+  if (selectedScaleValue === null || !MaffsLock.lock(stageEl())) return;
   globalIndex++;
 
   const q = STAGE1[questionIndex];
@@ -528,7 +531,7 @@ function confirmScale() {
 // ============================================================
 function showStage2Question() {
   showScreen('stage2Screen');
-  answered = false;
+  MaffsLock.fresh(stageEl());   // a double-click on Next or Start cannot answer the new question
 
   const q = STAGE2[questionIndex];
   document.getElementById('mcqQuestionText').textContent = q.q;
@@ -555,8 +558,7 @@ function showStage2Question() {
 }
 
 function pickMCQ(btn, picked, q) {
-  if (answered) return;
-  answered = true;
+  if (!MaffsLock.lock(stageEl())) return;
   globalIndex++;
 
   const isCorrect = picked === q.answer;
@@ -607,7 +609,7 @@ function pickMCQ(btn, picked, q) {
 // ============================================================
 function showStage3Question() {
   showScreen('stage3Screen');
-  answered = false;
+  MaffsLock.fresh(stageEl());   // a double-click on Next or Start cannot answer the new question
 
   const q = STAGE3[questionIndex];
   document.getElementById('tfStatementText').textContent = q.statement;
@@ -628,8 +630,7 @@ function showStage3Question() {
 }
 
 function answerTF(picked) {
-  if (answered) return;
-  answered = true;
+  if (!MaffsLock.lock(stageEl())) return;
   globalIndex++;
 
   const q = STAGE3[questionIndex];
@@ -689,7 +690,9 @@ function nextQuestion() {
     const activeNextBtn = document.querySelector('.next-btn.visible');
     if (activeNextBtn) {
       activeNextBtn.textContent = 'Wait ' + remaining + 's...';
-      setTimeout(() => nextQuestion(), 500);
+      // One retry at a time: every click during the wait used to queue another, and each advanced a question.
+      MaffsLock.cancel(waitTimer);
+      waitTimer = MaffsLock.timer(() => nextQuestion(), 500);
       return;
     }
   }
@@ -736,12 +739,13 @@ function transitionToStage(stage) {
   document.getElementById('stagePill').textContent = 'Stage ' + stage;
 
   showScreen('stageTransition');
+  MaffsLock.screen(document.getElementById('stageTransition'));
 
   if (typeof mfg === 'function') {
     mfg('game_started', {game_slug: GAME_SLUG, level: LEVEL, mode: modes[stage]});
   }
 
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     if (stage === 2) showStage2Question();
     else if (stage === 3) showStage3Question();
   }, 1800);
@@ -755,9 +759,11 @@ function updateScore() {
 // ============================================================
 //  RESULTS
 // ============================================================
-function showResults() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const showResults = MaffsLock.finishOnce(function () {
   document.getElementById('gameHeader').style.display = 'none';
   showScreen('resultsScreen');
+  MaffsLock.screen(document.getElementById('resultsScreen'));
 
   const total = STAGE1.length + STAGE2.length + STAGE3.length;
   const pct = Math.round((totalCorrect / total) * 100);
@@ -809,7 +815,7 @@ function showResults() {
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('probability-pioneer',LEVEL,totalCorrect,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('probability-pioneer',LEVEL,totalCorrect);}}
     window._mfgCompleted = true;
   }
-}
+});
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'probability-pioneer');</script>

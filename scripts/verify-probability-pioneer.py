@@ -310,6 +310,7 @@ def run_page(rep, chromium=None, verbose=False):
         with sync_playwright() as pw:
             browser = pw.chromium.launch(**({'executable_path': chromium} if chromium else {}))
             page = browser.new_page()
+            page.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
             page.route('**/*', lambda r: r.continue_() if r.request.url.startswith(base) else r.abort())

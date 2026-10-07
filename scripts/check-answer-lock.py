@@ -84,7 +84,7 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 think-of-a-number decimal-detective
-prime-or-composite
+prime-or-composite probability-pioneer
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -93,7 +93,8 @@ NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 # an answer; gets `i`, the attempt), 'surface' (a selector for an answer surface that is not an option
 # group, such as a canvas: the repeat phase really clicks its centre and corners too), 'start_sel' (the
 # control that starts a run, when it is not a Start button: double-clicked for real), 'keys' (the game's
-# own answer keys: pressed on the page in the repeat phase, inside MaffsNext's floor).
+# own answer keys: pressed on the page in the repeat phase, inside MaffsNext's floor), 'each' (JS run before
+# each step of the tap-through: a wait the game measures on the real clock, which TIME_SCALE cannot shorten).
 HINTS = {
     'four-quadrant-explorer': {
         'ready': "document.getElementById('gameScreen').style.display !== 'none'",
@@ -139,6 +140,16 @@ HINTS = {
                    "  if (b.length) b[i % b.length].click(); }"
                    "if (q.type === 'placeit') setMarkerPosition(i % 2 ? 0.1 : 0.9);"
                    "document.getElementById('checkBtn').click();"),
+    },
+    'probability-pioneer': {
+        'ready': "['stage1Screen', 'stage2Screen', 'stage3Screen'].some(id => document.getElementById(id).classList.contains('active'))",
+        'answer': ("const on = id => document.getElementById(id).classList.contains('active');"
+                   "if (on('stage1Screen')) { const l = [...document.querySelectorAll('#scaleLabels .scale-label')];"
+                   "  l[i % l.length].click(); document.getElementById('scaleConfirmBtn').click(); return; }"
+                   "if (on('stage2Screen')) { const b = [...document.querySelectorAll('#mcqGrid .mcq-btn')];"
+                   "  if (b.length) b[i % b.length].click(); return; }"
+                   "if (on('stage3Screen')) document.getElementById(i % 2 ? 'btnTrue' : 'btnFalse').click();"),
+        'each': 'revealStartTime = 0;',
     },
     'prime-or-composite': {
         'keys': ['p', 'c', 'P', 'C'],
@@ -554,6 +565,8 @@ async def play(browser, base, slug, level, page_html):
                 break
             await page.wait_for_timeout(50)
         await page.wait_for_timeout(320)     # past MaffsLock's 300 ms window on what just rendered
+        if hint.get('each'):
+            await d.ev('() => { %s }' % hint['each'])
         s = await d.snap()
         if s['completed'] or (await d.probe())['atEnd']:
             break
