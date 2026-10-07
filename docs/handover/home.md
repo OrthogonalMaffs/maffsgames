@@ -21,6 +21,23 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-07 (home): contract C game 3, Given That (#114)
+
+- **#113 (Better Value) merged** on a green Gate, after main's run on the cloud lane's #112 (Dimension Checker,
+  which declared its verifier by ci-line header: no workflow edit) was green.
+- **#114:** alevel_18's Venn regions from its stored totals (r-001); free entry on `MaffsAnswer.decimal` with the
+  precision stated on every free-entry question (r-002, r-003); F4/F5's value-equal options replaced, two B11
+  ledger entries cleared. `verify-given-that.py` (B3) has a reviewed SPEC for all 180 keys. On main it failed on
+  exactly r-001, r-002, r-003 and F4/F5: no other wrong key.
+- **Decision taken (for Jon to see):** one precision for all free entry would not do. At 3 d.p. two small keys
+  (core_06 0.0518, alevel_25 0.0297) round the same as another ratio on their own diagram, and a 4 d.p. stored
+  value rounded again gives the wrong 3 d.p. key for 6/11 and 136/228 (the verifier caught both in my first
+  version). So N keeps three significant figures: 3 d.p. from 0.1 up, 4 from 0.01, 5 below, stated per
+  question; the two stored values carry more places. Fractions and percentages are no longer accepted (MaffsAnswer
+  reads plain decimals): the placeholder says "e.g. 0.429".
+- Not in scope, still open: audit F6 (no phase 1 explanation at the typed levels); Given That's typed answers are
+  not yet on MaffsKeypad (canon 4.4 rollout).
+
 ## 2026-10-07 (home): contract C game 2, Better Value (#113)
 
 - **#111 (Proportion Blaster) merged** on a green Gate (B3 ran its verifier by its header alone).
