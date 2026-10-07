@@ -103,6 +103,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -149,7 +150,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
           <div class="frac-den" id="d2">6</div>
         </div>
       </div>
-      <div class="btn-row">
+      <div class="btn-row" id="ynRow">
         <button class="yn-btn yes" id="btnYes" onclick="guess(true)">YES ✓</button>
         <button class="yn-btn no" id="btnNo" onclick="guess(false)">NO ✗</button>
       </div>
@@ -208,7 +209,8 @@ const YEAR6_BANK = [
 const urlLevel = new URLSearchParams(window.location.search).get('level');
 const gameLevel = urlLevel === 'year6' ? 'year6' : 'all';
 
-let score=0, streak=0, qNum=0, answered=false, timerInt=null, timerStart=null;
+let score=0, streak=0, qNum=0, timerInt=null, timerStart=null;
+const ynRow=document.getElementById('ynRow');   // MaffsLock's container (canon 7.6.0)
 let cur={n1:1,d1:2,n2:2,d2:4,equiv:true};
 
 function gcd(a,b){return b===0?a:gcd(b,a%b);}
@@ -249,6 +251,7 @@ function generateQ() {
 
 function startGame(){
   score=0;streak=0;qNum=0;window._feCorrect=0;
+  MaffsLock.newSession();
   if(gameLevel==='year6'){year6Questions=shuffle(YEAR6_BANK);year6Index=0;}
   document.getElementById('startScreen').style.display='none';
   document.getElementById('gameOver').classList.remove('visible');
@@ -260,7 +263,8 @@ function startGame(){
 
 function nextQ(){
   if(qNum>=QUESTIONS){endGame();return;}
-  qNum++; answered=false;
+  qNum++;
+  MaffsLock.fresh(ynRow);   // a new pair: a double-click on Start or Play again cannot answer it
   cur=generateQ();
   document.getElementById('n1').textContent=cur.n1;
   document.getElementById('d1').textContent=cur.d1;
@@ -285,17 +289,16 @@ function tickTimer(){
 }
 
 function timeOut(){
-  if(answered)return;
-  answered=true;streak=0;
+  if(!MaffsLock.lock(ynRow))return;
+  streak=0;
   document.getElementById('feedback').textContent='TOO SLOW!';
   document.getElementById('feedback').className='feedback wrong';
   showHint();
-  setTimeout(nextQ,1800);
+  MaffsLock.timer(nextQ,1800);
 }
 
 function guess(val){
-  if(answered)return;
-  answered=true;
+  if(!MaffsLock.lock(ynRow))return;
   clearInterval(timerInt);
   const correct=val===cur.equiv;
   mfg('question_answered',{game_slug:'fraction-equivalence',level:gameLevel,correct:correct,question_index:qNum});
@@ -315,7 +318,7 @@ function guess(val){
   showHint();
   document.getElementById('score').textContent=score;
   document.getElementById('streak').textContent=streak;
-  setTimeout(nextQ,1800);
+  MaffsLock.timer(nextQ,1800);
 }
 
 function showHint(){
@@ -324,9 +327,12 @@ function showHint(){
   document.getElementById('hint').textContent=`${cur.n1}×${cur.d2}=${cross} vs ${cur.n2}×${cur.d1}=${cross2} → ${cross===cross2?'EQUAL':'NOT EQUAL'}`;
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){
+  clearInterval(timerInt);
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
+  MaffsLock.screen(document.getElementById('gameOver'));
   document.getElementById('finalScore').textContent=score;
   document.getElementById('goDetail').textContent=`${QUESTIONS} questions, max streak was ${streak}`;
   window._ggAbandoned=false;
@@ -335,7 +341,7 @@ function endGame(){
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('fraction-equivalence',gameLevel,score,QUESTIONS).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('fraction-equivalence',gameLevel,score);}}
   var _pbOld=getBest();if(score>_pbOld){mfg('personal_best_set',{game_slug:'fraction-equivalence',level:gameLevel,score:score,previous_best:_pbOld});}
   saveBest(score);renderLB();
-}
+});
 
 function getBest(){return parseInt(localStorage.getItem('fs_best')||'0');}
 function saveBest(s){if(s>getBest())localStorage.setItem('fs_best',s);document.getElementById('best').textContent=getBest();}
