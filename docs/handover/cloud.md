@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: truth-will-set-you-free trig-identity-duel binomial-blaster partial-fractions-duel truth-buster`
+`cloud-remaining: trig-identity-duel binomial-blaster partial-fractions-duel truth-buster`
 
 **Resume rule, MaffsLock (Jon, contract LH):** adopting MaffsLock includes the game's lock-hint declaration
 (`<!-- maffs-lock-hint ... -->`, canon §7.6.0), and the game passes `check-answer-lock.py`. Hints live in the
@@ -22,6 +22,33 @@ game's page, never in the shared script.
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-07 (cloud): truth-will-set-you-free (queue 2 of 6); #134 eigenvector-engine merged; NEXT = trig-identity-duel
+
+- **#134 merged** at 19:16 on a green Gate. Its first L1 run failed on prime-or-composite, a home-lane game the PR
+  did not touch: `answer_wrong()` taps option (k+1) % 2 on 8 unseeded draws, and after a right answer `to_next()`
+  waits a fixed 350 ms ('auto'), so a tap can land in the next question's 300 ms fresh window and be dropped. It
+  passed 5 of 5 locally and on the one re-run. Commented on #134; the fix is the home lane's (shared check, or an
+  `answer` in prime-or-composite's declaration). **For the home lane.**
+- **Old branches:** this session's git proxy refuses any push but its own branch, deletes included, so the
+  `claude/keen-cray-ypsime-<game>` branches cannot be deleted from here. Jon (or the old session) deletes them.
+- **truth-will-set-you-free:** the old session's commit (7b07e09) cherry-picked onto main, plus:
+  - [27], approved by Project Claude (7 Oct): "This expression can be written (A ⊕ B)·C·D·Ē, where A ⊕ B = A·B̄ + Ā·B
+    (XOR: one or the other, but not both). Play Boolean Blitz →", in KaTeX. XOR is introduced nowhere else in the
+    game, so a form using it carries `identity` and `gloss`; the verifier checks the identity is true, the gloss, and
+    the rendered line (a third plant, XOR with no definition, is caught).
+  - Contract LH: its maffs-lock-hint (a wrong table, every cell the opposite of its key, then Submit; on the
+    expression step the first option) and off the remaining list. `check-answer-lock.py --game` passes in full, twice.
+    Its Next is replaced on each render (btnRow), so the hidden-button double advance eigenvector-engine had is absent.
+- **Register:** t6-001, -002, -003, -005 fixed; t6-006 filed and fixed ([6]'s distractors A + B·C and (A + B)·(A + C)
+  are equal by the distributive law; class 2, LOW); t6-004 (class 5, bank size) stays open.
+- **Queue state (each prepared in a worktree, verifier passing on its branch and failing on main):**
+  trig-identity-duel (`/home/user/tid-wt`, hint `{}` committed), binomial-blaster (`bb-wt`, hint `{}` and :253's KaTeX
+  wait `// lock-ok:` committed), partial-fractions-duel (`pfd-wt`: needs a hint; the lock check here also reported
+  "dblclick on Play again: its second click answered the first question" and "firebase is not defined", neither of
+  which reproduces in a direct Chromium probe without the KaTeX shim: settle on CI, where it is judged in full),
+  truth-buster (`tb-wt`: needs a hint with an `answer`; the generic driver finds no wrong answer; plus the MEDIUM
+  320x568 entry, canon 7.6.1).
 
 ## 2026-10-07 (cloud): eigenvector-engine (queue 1 of 6); #130 Factor Theorem merged; NEXT = truth-will-set-you-free
 
