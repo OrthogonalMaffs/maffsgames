@@ -194,6 +194,33 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active')",
+  "answer": [
+    "return (async () => {",
+    " const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    " const on = id => document.getElementById(id).style.display !== 'none';",
+    " await real(350);",
+    " if (!document.getElementById('gameScreen').classList.contains('active')) return;",
+    " if (on('stage1Wrap') && document.getElementById('checkStage1').style.display !== 'none') {",
+    " currentQ.table.forEach((r, i) => { if (!r.given) filledCells[i] = currentQ.stage1Tiles.find(t =>",
+    " ratKey(ratFromString(t)) !== ratKey(completedTable[i].pr)) || currentQ.stage1Tiles[0]; });",
+    " renderStage1(); document.getElementById('checkStage1').click(); return; }",
+    " if (on('stage2Wrap') && document.getElementById('checkStage2').style.display !== 'none') {",
+    " completedTable.forEach((r, i) => { filledSlots[i] = '999/1'; });",
+    " renderStage2(); document.getElementById('checkStage2').click(); return; }",
+    " if (on('stage3Wrap') && document.getElementById('checkStage3').style.display !== 'none') {",
+    " const open = currentQ._shuffledInterps.map((x, k) => k).filter(k => !document.getElementById('interp_' + k).classList.contains('disabled-interp'));",
+    " const k = open.find(k => !currentQ._shuffledInterps[k].correct) ?? open[0]; if (k === undefined) return;",
+    " const c = document.getElementById('interp_' + k);",
+    " c.click(); document.getElementById('checkStage3').click(); }",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -321,7 +348,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </div>
 
 <script>
-function _addDismiss(el,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;el.appendChild(b);},2000);}
+function _addDismiss(el,cb){MaffsLock.timer(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;el.appendChild(b);},2000);}
 // ============================================================
 //  QUESTION BANK
 // ============================================================
@@ -462,6 +489,7 @@ function setPB(pct) {
 function startGame() {
   const bank = QUESTIONS[currentLevel];
   if (!bank || bank.length === 0) return;
+  MaffsLock.newSession();
   questionQueue = shuffle([...bank]).slice(0, Math.min(sessionLength, bank.length));
   currentQIndex = 0;
   totalScore = 0;
@@ -547,6 +575,8 @@ function loadQuestion() {
   document.getElementById('stage2Wrap').style.display = 'none';
   document.getElementById('stage3Wrap').style.display = 'none';
 
+  MaffsLock.fresh(document.getElementById('stage1Wrap'));   // a new question: a double-click on Start or Next cannot place a tile (canon 7.6.0)
+  MaffsLock.fresh(document.getElementById('gameScreen'));   // and a second Enter on Next cannot skip the question it loaded
   renderStage1();
   updateProgress();
 }
@@ -662,6 +692,8 @@ function allCellsFilled() {
 }
 
 function checkStage1() {
+  // each Check is one marked attempt: a double-click or second Enter marks it once (canon 7.6.0)
+  if (!MaffsLock.lock(document.getElementById('stage1Wrap'))) return;
   stage1Attempts++;
   // Check sum to 1
   let sum = 0;
@@ -708,7 +740,7 @@ function checkStage1() {
     document.getElementById('sumWarning').classList.remove('show');
     document.getElementById('stage1Tiles').innerHTML = '';
     document.getElementById('checkStage1').style.display = 'none';
-    setTimeout(() => transitionToStage2(), 800);
+    MaffsLock.timer(() => transitionToStage2(), 800);
   } else if (stage1Attempts >= 2) {
     // Reveal correct answers
     stage1Perfect = false;
@@ -726,12 +758,13 @@ function checkStage1() {
     document.getElementById('sumWarning').classList.remove('show');
     document.getElementById('stage1Tiles').innerHTML = '';
     document.getElementById('checkStage1').style.display = 'none';
-    setTimeout(() => transitionToStage2(), 1200);
+    MaffsLock.timer(() => transitionToStage2(), 1200);
   } else {
     stage1Perfect = false;
     showStageFeedback('Some values are incorrect. Try again.', 'bad');
     // Allow retry: reset incorrect cells
-    setTimeout(() => {
+    MaffsLock.timer(() => {
+      MaffsLock.fresh(document.getElementById('stage1Wrap'));   // the retry is a new attempt
       currentQ.table.forEach((r, i) => {
         if (!r.given) {
           const cell = document.getElementById('cell_' + i);
@@ -759,6 +792,7 @@ function transitionToStage2() {
   hideFeedback();
   document.getElementById('stage1Wrap').style.display = 'none';
   document.getElementById('stage2Wrap').style.display = '';
+  MaffsLock.fresh(document.getElementById('stage2Wrap'));
   renderStage2();
 }
 
@@ -850,6 +884,7 @@ function allSlotsFilled() {
 }
 
 function checkStage2() {
+  if (!MaffsLock.lock(document.getElementById('stage2Wrap'))) return;
   stage2Attempts++;
   const products = productRats();
   let allCorrect = true;
@@ -882,7 +917,7 @@ function checkStage2() {
     showStageFeedback('E(X) calculated correctly!', 'good');
     document.getElementById('stage2Tiles').innerHTML = '';
     document.getElementById('checkStage2').style.display = 'none';
-    setTimeout(() => transitionToStage3(), 800);
+    MaffsLock.timer(() => transitionToStage3(), 800);
   } else if (stage2Attempts >= 2) {
     stage2Perfect = false;
     completedTable.forEach((r, i) => {
@@ -894,11 +929,12 @@ function checkStage2() {
     showStageFeedback('Correct products revealed', 'bad');
     document.getElementById('stage2Tiles').innerHTML = '';
     document.getElementById('checkStage2').style.display = 'none';
-    setTimeout(() => transitionToStage3(), 1200);
+    MaffsLock.timer(() => transitionToStage3(), 1200);
   } else {
     stage2Perfect = false;
     showStageFeedback('Some products are incorrect. Try again.', 'bad');
-    setTimeout(() => {
+    MaffsLock.timer(() => {
+      MaffsLock.fresh(document.getElementById('stage2Wrap'));   // the retry is a new attempt
       completedTable.forEach((r, i) => {
         const slot = document.getElementById('slot_' + i);
         if (slot && slot.classList.contains('incorrect-slot')) {
@@ -923,6 +959,7 @@ function transitionToStage3() {
   hideFeedback();
   document.getElementById('stage2Wrap').style.display = 'none';
   document.getElementById('stage3Wrap').style.display = '';
+  MaffsLock.fresh(document.getElementById('stage3Wrap'));
   renderStage3();
 }
 
@@ -957,6 +994,7 @@ function renderStage3() {
 }
 
 function checkStage3() {
+  if (!MaffsLock.lock(document.getElementById('stage3Wrap'))) return;
   stage3Attempts++;
   const chosen = currentQ._shuffledInterps[selectedInterp];
   const correct = chosen.correct;
@@ -996,6 +1034,7 @@ function checkStage3() {
     document.getElementById('interp_' + selectedInterp).classList.add('incorrect-interp');
     document.getElementById('interp_' + selectedInterp).classList.add('disabled-interp');
     showStageFeedback('Not quite. Try again.', 'bad');
+    MaffsLock.fresh(document.getElementById('stage3Wrap'));   // a second pick is a new attempt
     selectedInterp = null;
     document.getElementById('checkStage3').disabled = true;
     _addDismiss(document.getElementById('stageFeedback'), () => hideFeedback());
@@ -1024,7 +1063,7 @@ function finishQuestion() {
 
   // Show explanation
   document.getElementById('explanationText').textContent = currentQ.explanation;
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     document.getElementById('explanationPanel').classList.add('show');
     document.getElementById('nextBtn').style.display = '';
   }, 500);
@@ -1043,9 +1082,11 @@ function nextQuestion() {
 // ============================================================
 //  RESULTS
 // ============================================================
-function showResults() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const showResults = MaffsLock.finishOnce(function () {
   document.getElementById('gameHeader').style.display = 'none';
   showScreen('resultsScreen');
+  MaffsLock.screen(document.getElementById('resultsScreen'));
 
   const pct = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
   document.getElementById('finalScore').textContent = totalScore + ' / ' + maxScore;
@@ -1082,7 +1123,7 @@ function showResults() {
     });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('expectation-station',currentLevel,totalScore,questionQueue.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('expectation-station',currentLevel,totalScore);}}
   }
-}
+});
 
 // ============================================================
 //  HELPERS
@@ -1382,7 +1423,7 @@ function hideFeedback() {
 
 
 (function renderMethodRef(){
-  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}   // lock-ok: waits for KaTeX at load, marks nothing
   var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
   var k=function(t){return katex.renderToString(t,{throwOnError:false});};
 

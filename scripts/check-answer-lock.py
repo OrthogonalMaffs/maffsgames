@@ -108,7 +108,7 @@ prime-or-composite probability-pioneer factor-race prime-factorisation
 percentage-flip fraction-equivalence equatle estimation-golf
 suvat factor-theorem
 dimension-checker curling-friction trig-worms component-crusher
-differentiation-duel integration-duel spot-the-error
+differentiation-duel integration-duel spot-the-error expectation-station
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
