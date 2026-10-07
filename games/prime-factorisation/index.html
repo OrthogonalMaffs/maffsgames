@@ -123,6 +123,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -204,7 +205,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 </div>
 
 <script>
-function _addDismiss(fb,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Dismiss';b.onclick=cb;fb.appendChild(b);},2000);}
+function _addDismiss(fb,cb){MaffsLock.timer(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Dismiss';b.onclick=cb;fb.appendChild(b);},2000);}
 var NUMBERS_DEFAULT = [12,18,24,30,36,48,60,72,84,96,100,120,56,45,42,28,40,66,90,75,80,54,70,132,150,180,210,126];
 var NUMBERS_YEAR6 = [12,18,20,24,28,30,36,40,42,45,8,16,15,32,48,50,10,14,22,26];
 
@@ -220,13 +221,15 @@ var T_K = 0.12;
 var LIFE_BONUS = 50;
 
 var score = 0, qNum = 0, questions = [], currentTarget = 1, product = 1, chosenFactors = [];
-var lives = 3, locked = false;
+var lives = 3;
+var primeEl = document.getElementById('primeBtns');   // MaffsLock's container (canon 7.6.0)
 var qStartTime = 0, timerInterval = null, elapsedSeconds = 0;
 
 function shuffle(arr) { return arr.slice().sort(function() { return Math.random() - 0.5; }); }
 
 function startGame() {
   score = 0; qNum = 0; chosenFactors = []; lives = 3; product = 1;
+  MaffsLock.newSession();
   questions = shuffle(NUMBERS).slice(0, TOTAL_QS);
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('gameOver').classList.remove('visible');
@@ -246,7 +249,7 @@ function loadQ() {
   currentTarget = questions[qNum];
   product = 1;
   chosenFactors = [];
-  locked = false;
+  MaffsLock.fresh(primeEl);   // a new number: a double-click on Start or Play again cannot tap a prime
 
   document.getElementById('targetNum').textContent = currentTarget;
   document.getElementById('targetNum').className = 'target-num';
@@ -288,11 +291,11 @@ function showTransitionMsg(text) {
   var msg = document.getElementById('transitionMsg');
   msg.querySelector('span').textContent = text;
   msg.classList.add('visible');
-  setTimeout(function() { msg.classList.remove('visible'); }, 1500);
+  MaffsLock.timer(function() { msg.classList.remove('visible'); }, 1500);
 }
 
 function pressPrime(p) {
-  if (locked) return;
+  if (MaffsLock.isLocked(primeEl)) return;
 
   var remaining = currentTarget / product;
 
@@ -311,9 +314,9 @@ function pressPrime(p) {
     });
 
     if (lives <= 0) {
-      locked = true;
+      MaffsLock.lock(primeEl);
       clearInterval(timerInterval);
-      setTimeout(function() { endGame(false); }, 800);
+      MaffsLock.timer(function() { endGame(false); }, 800);
     }
     return;
   }
@@ -326,7 +329,7 @@ function pressPrime(p) {
 
   // Check for completion
   if (product === currentTarget) {
-    locked = true;
+    if (!MaffsLock.lock(primeEl)) return;
     clearInterval(timerInterval);
     var seconds = (Date.now() - qStartTime) / 1000;
     // multiplier removed — time no longer affects score
@@ -344,7 +347,7 @@ var multiplier = 1;
     fb.className = 'feedback correct';
     mfg('question_answered',{game_slug:'prime-factorisation',level:gameLevel,correct:true,question_index:qNum+1});
 
-    setTimeout(function() {
+    MaffsLock.timer(function() {
       qNum++;
       loadQ();
     }, 1500);
@@ -355,7 +358,7 @@ function shakeBtn(p) {
   var btn = document.querySelector('[data-p="' + p + '"]');
   if (!btn) return;
   btn.classList.add('wrong-shake');
-  setTimeout(function() { btn.classList.remove('wrong-shake'); }, 400);
+  MaffsLock.timer(function() { btn.classList.remove('wrong-shake'); }, 400);
 }
 
 function updateLivesDisplay() {
@@ -383,11 +386,13 @@ function renderFactors() {
   div.innerHTML = html;
 }
 
-function endGame(completed) {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+var endGame = MaffsLock.finishOnce(function (completed) {
   window._ggAbandoned=false;
   clearInterval(timerInterval);
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
+  MaffsLock.screen(document.getElementById('gameOver'));
 
   if (completed) {
     var lifeBonus = lives * LIFE_BONUS;
@@ -408,7 +413,7 @@ function endGame(completed) {
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('prime-factorisation',gameLevel,score,qNum).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('prime-factorisation',gameLevel,score);}}
   saveBest(score);
   renderLB();
-}
+});
 
 function getBest() { return parseInt(localStorage.getItem('ps_best') || '0'); }
 function saveBest(s) {

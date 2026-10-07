@@ -84,7 +84,7 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 think-of-a-number decimal-detective
-prime-or-composite probability-pioneer factor-race
+prime-or-composite probability-pioneer factor-race prime-factorisation
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -94,7 +94,9 @@ NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 # group, such as a canvas: the repeat phase really clicks its centre and corners too), 'start_sel' (the
 # control that starts a run, when it is not a Start button: double-clicked for real), 'keys' (the game's
 # own answer keys: pressed on the page in the repeat phase, inside MaffsNext's floor), 'each' (JS run before
-# each step of the tap-through: a wait the game measures on the real clock, which TIME_SCALE cannot shorten).
+# each step of the tap-through: a wait the game measures on the real clock, which TIME_SCALE cannot shorten),
+# 'mark_any' (the game logs only right answers, as a built answer does: the repeat phase follows any mark),
+# 'repeat' (JS that presses every answer control of the marked question, where they are not an option group).
 HINTS = {
     'four-quadrant-explorer': {
         'ready': "document.getElementById('gameScreen').style.display !== 'none'",
@@ -150,6 +152,15 @@ HINTS = {
                    "  if (b.length) b[i % b.length].click(); return; }"
                    "if (on('stage3Screen')) document.getElementById(i % 2 ? 'btnTrue' : 'btnFalse').click();"),
         'each': 'revealStartTime = 0;',
+    },
+    'prime-factorisation': {
+        'mark_any': True,
+        'ready': "document.getElementById('mainGame').classList.contains('visible')",
+        'answer': ("if (!document.getElementById('mainGame').classList.contains('visible')) return;"
+                   "let r = currentTarget / product;"
+                   "for (const p of [2, 3, 5, 7, 11, 13]) while (r % p === 0) {"
+                   "  document.querySelector('#primeBtns [data-p=\"' + p + '\"]').click(); r /= p; }"),
+        'repeat': "document.querySelectorAll('#primeBtns .prime-btn').forEach(b => { b.click(); b.click(); });",
     },
     'prime-or-composite': {
         'keys': ['p', 'c', 'P', 'C'],
@@ -480,7 +491,7 @@ class Driver:
             s = await self.answer(k + 1, touch)
             if s is None:
                 return None
-            if s['lastCorrect'] is False:
+            if s['lastCorrect'] is False or self.hint.get('mark_any'):
                 return s
             await self.to_next(touch)
             await self.page.wait_for_timeout(350)
@@ -534,6 +545,8 @@ async def play(browser, base, slug, level, page_html):
             await page.mouse.click(r['x'], r['y'])
     for k in hint.get('keys', []):
         await page.keyboard.press(k)
+    if hint.get('repeat'):
+        await d.ev('() => { %s }' % hint['repeat'])
     await d.ev('() => __lockKeyOptions()')   # Enter and Space on the options themselves (a page-level Enter
                                              # may be the game's own Next: it is pressed in the tap-through)
     await page.wait_for_timeout(250)
