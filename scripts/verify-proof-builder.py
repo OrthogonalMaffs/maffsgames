@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ci-line: B4 | Proof Builder (every counter-example checked, every induction stage by SymPy, every sorter order and rendered string in Chromium) |
 """Proof Builder: every counter-example checked against its statement, every induction stage by SymPy, every sorter
 order and every rendered string in Chromium.
 
