@@ -357,16 +357,16 @@ explanation:'Tariff A: 350 \u00d7 \u00a30.28 = \u00a398/month. Tariff B: (350 \u
 
 // === Hidden Cost (8) ===
 {id:'bv_core_009',level:'core',type:'hidden',
-scenario:'Tom wants to borrow \u00a32,000 for 2 years. He compares two loan options.',
-optionA:{label:'Bank Loan',details:[{key:'Amount',value:'\u00a32,000'},{key:'APR',value:'8%'},{key:'Term',value:'2 years'}]},
+scenario:'Tom wants to borrow \u00a32,000 for 2 years, repaid monthly. He compares two loan options.',
+optionA:{label:'Bank Loan',details:[{key:'Amount',value:'\u00a32,000'},{key:'APR',value:'8%'},{key:'Term',value:'2 years'},{key:'Repayment',value:'\u00a390.20/month'}]},
 optionB:{label:'Credit Union',details:[{key:'Repayment',value:'\u00a395/month'},{key:'Term',value:'24 months'}]},
 conclusions:[
-{text:'The bank loan is cheaper \u2014 8% APR sounds low',correct:false},
-{text:'The credit union is cheaper \u2014 total repayment \u00a32,280 vs approximately \u00a32,332 for the bank loan',correct:true},
+{text:'The credit union is cheaper \u2014 total repayment \u00a32,280 vs approximately \u00a32,332 for the bank loan',correct:false},
+{text:'The bank loan is cheaper \u2014 total repayment \u00a32,164.80 vs \u00a32,280 for the credit union',correct:true},
 {text:'They cost the same \u2014 both around \u00a32,300',correct:false},
-{text:'The bank loan is better because it has a fixed rate',correct:false}
+{text:'The credit union is cheaper because it charges no interest',correct:false}
 ],
-explanation:'Credit union: 24 \u00d7 \u00a395 = \u00a32,280. Bank loan at 8% APR over 2 years: approximately \u00a32,332 total repayment. Always calculate total repayment, not just the rate.'},
+explanation:'Bank loan: 24 \u00d7 \u00a390.20 = \u00a32,164.80. Credit union: 24 \u00d7 \u00a395 = \u00a32,280. The bank loan is \u00a3115.20 cheaper. (\u00a32,000 \u00d7 1.08\u00b2 = \u00a32,332.80 is what Tom would owe after 2 years with no repayments at all; repaying monthly, he pays interest only on what he still owes.) Always calculate total repayment, not just the rate.'},
 
 {id:'bv_core_010',level:'core',type:'hidden',
 scenario:'A phone contract advertises \u201c\u00a325/month \u2014 the cheapest on the market!\u201d The contract runs for 24 months and has a \u00a330 upfront cost. A SIM-only deal costs \u00a312/month with a handset purchased outright for \u00a3280.',
@@ -631,7 +631,7 @@ optionB:{label:'Rival Deal',details:[{key:'Monthly cost',value:'\u00a332 (all-in
 conclusions:[
 {text:'The advertised deal is cheaper \u2014 \u00a318/month beats \u00a332/month',correct:false},
 {text:'The rival deal is better value over its contract \u2014 \u00a3384 for 12 months vs \u00a3564 for 18 months on the advertised deal',correct:false},
-{text:'The advertised deal costs \u00a3564 over 18 months; the rival costs \u00a3384 over 12 months. Per month, the rival is cheaper at \u00a332 vs \u00a331.33 \u2014 but the advertised deal locks you in for 6 extra months',correct:true},
+{text:'The advertised deal costs \u00a3564 over 18 months; the rival costs \u00a3384 over 12 months. Per month the advertised deal is cheaper, at \u00a331.33 vs \u00a332 \u2014 but it locks you in for 6 extra months',correct:true},
 {text:'They cost the same per month once you add line rental',correct:false}
 ],
 explanation:'Advertised: (18 \u00d7 \u00a328) + \u00a360 = \u00a3504 + \u00a360 = \u00a3564, i.e. \u00a331.33/month. Rival: 12 \u00d7 \u00a332 = \u00a3384, i.e. \u00a332/month. Per month the advertised deal is marginally cheaper, but it commits you for 18 months. The headline \u00a318 is misleading \u2014 the true cost is \u00a331.33/month.'},
@@ -658,7 +658,7 @@ conclusions:[
 {text:'The new tariff is better value above 10 kWh per day',correct:false},
 {text:'They cost the same at 12 kWh per day',correct:false}
 ],
-explanation:'Set equal: 0.28d + 25 = 0.24d + 42 \u2192 0.04d = 17 \u2192 d = 4.25 kWh. Above 4.25 kWh/day the new tariff is cheaper. At 12 kWh: current = 336p + 25p = 361p/day. New = 288p + 42p = 330p/day. Saving: 31p/day \u2248 \u00a3113/year.'},
+explanation:'Set equal: 28d + 25 = 24d + 42 \u2192 4d = 17 \u2192 d = 4.25 kWh (both sides in pence per day). Above 4.25 kWh/day the new tariff is cheaper. At 12 kWh: current = 336p + 25p = 361p/day. New = 288p + 42p = 330p/day. Saving: 31p/day \u2248 \u00a3113/year.'},
 
 {id:'bv_core_034',level:'core',type:'hidden',
 scenario:'An online retailer offers \u201cfree next-day delivery\u201d on a \u00a389.99 laptop bag. The same bag on a rival site costs \u00a374.99 with \u00a34.99 standard delivery (3\u20135 days) or \u00a39.99 next-day delivery.',
@@ -689,12 +689,12 @@ scenario:'A student is choosing between two train ticket options for a 40-week u
 optionA:{label:'Anytime Returns',details:[{key:'Price',value:'\u00a348 per return'},{key:'Flexibility',value:'Any train'}]},
 optionB:{label:'Advance Returns',details:[{key:'Price',value:'\u00a322 per return'},{key:'Missed trains',value:'3 per year'},{key:'Replacement cost',value:'\u00a348 each'}]},
 conclusions:[
-{text:'Advance tickets are better value \u2014 total \u00a3518 vs \u00a3960 for Anytime, even with 3 missed trains',correct:true},
+{text:'Advance tickets are better value \u2014 total \u00a3584 vs \u00a3960 for Anytime, even with 3 missed trains',correct:true},
 {text:'Anytime tickets are better value because you never waste money on missed trains',correct:false},
 {text:'They cost about the same once missed trains are factored in',correct:false},
 {text:'Advance tickets are only cheaper if she never misses a train',correct:false}
 ],
-explanation:'Anytime: 20 \u00d7 \u00a348 = \u00a3960. Advance: (20 \u00d7 \u00a322) + (3 \u00d7 \u00a322 wasted) + (3 \u00d7 \u00a348 replacements) = \u00a3440 + \u00a366 + \u00a3144 = \u00a3518. Risk-adjusted, Advance still saves \u00a3442.'},
+explanation:'Anytime: 20 \u00d7 \u00a348 = \u00a3960. Advance: (20 \u00d7 \u00a322) + (3 \u00d7 \u00a348 replacements) = \u00a3440 + \u00a3144 = \u00a3584. The 3 missed tickets are among the 20 she has already paid for, so only the replacements are extra. Risk-adjusted, Advance still saves \u00a3376.'},
 
 {id:'bv_core_037',level:'core',type:'direct',
 scenario:'A small business needs 10,000 flyers printed. Printer A charges \u00a3180 for 10,000 on standard 130gsm paper. Printer B charges \u00a3260 for 10,000 on premium 250gsm card with a gloss finish. The business owner estimates that premium flyers get a 40% higher response rate. Standard flyers typically generate \u00a3800 in sales from 10,000.',
@@ -702,7 +702,7 @@ optionA:{label:'Standard Flyers',details:[{key:'Cost',value:'\u00a3180'},{key:'E
 optionB:{label:'Premium Flyers',details:[{key:'Cost',value:'\u00a3260'},{key:'Expected sales',value:'\u00a31,120 (40% more)'}]},
 conclusions:[
 {text:'Standard flyers are better value \u2014 they cost \u00a380 less',correct:false},
-{text:'Premium flyers give better return on investment \u2014 net profit \u00a3860 vs \u00a3620 for standard',correct:true},
+{text:'Premium flyers give more net profit \u2014 \u00a3860 vs \u00a3620 for standard, though standard has the higher return on investment (344% vs 331%)',correct:true},
 {text:'Standard flyers have the same ROI as premium',correct:false},
 {text:'Premium flyers are only worth it if response rate doubles',correct:false}
 ],
@@ -845,12 +845,12 @@ scenario:'A small business is choosing between hiring a part-time employee or ou
 optionA:{label:'Hire Employee',details:[{key:'Hourly rate',value:'\u00a315/hour'},{key:'Hours/week',value:'20'},{key:'Employer costs',value:'\u00a3180/month'}]},
 optionB:{label:'Outsource',details:[{key:'Hourly rate',value:'\u00a340/hour'},{key:'Hours/week',value:'Variable'}]},
 conclusions:[
-{text:'Hiring becomes cheaper above approximately 8.8 hours per week of outsourced work',correct:true},
+{text:'Hiring becomes cheaper above approximately 8.5 hours per week of outsourced work',correct:true},
 {text:'Outsourcing is always cheaper because you only pay for hours needed',correct:false},
 {text:'Hiring is always cheaper because the hourly rate is lower',correct:false},
 {text:'Hiring becomes cheaper above 15 hours per week',correct:false}
 ],
-explanation:'Weekly employee cost: (20 \u00d7 \u00a315) + (\u00a3180 \u00f7 4.33) = \u00a3300 + \u00a341.57 = \u00a3341.57. Weekly outsource cost: 40h. Set equal: 40h = 341.57 \u2192 h = 8.54 hours. Above about 8.8 hours/week of outsourced work, hiring a part-time employee is cheaper (and you get 20 hours of capacity).'},
+explanation:'Weekly employee cost: (20 \u00d7 \u00a315) + (\u00a3180 \u00f7 4.33) = \u00a3300 + \u00a341.57 = \u00a3341.57. Weekly outsource cost: 40h. Set equal: 40h = 341.57 \u2192 h = 8.54 hours. Above about 8.5 hours/week of outsourced work, hiring a part-time employee is cheaper (and you get 20 hours of capacity).'},
 
 {id:'bv_core_050',level:'core',type:'direct',
 scenario:'A student can buy lunch at university or meal-prep at home. Buying: average \u00a35.50/meal, 5 days/week. Meal prep: \u00a325/week for ingredients (makes 5 lunches), plus a one-off \u00a340 for containers. Compare the cost over a 30-week academic year, and consider the 45 minutes/week spent meal-prepping (the student could work a part-time job at \u00a311.44/hour instead).',
