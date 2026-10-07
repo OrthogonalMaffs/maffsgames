@@ -85,7 +85,7 @@ MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 think-of-a-number decimal-detective
 prime-or-composite probability-pioneer factor-race prime-factorisation
-percentage-flip fraction-equivalence equatle
+percentage-flip fraction-equivalence equatle estimation-golf
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -168,6 +168,13 @@ HINTS = {
         'answer': ("if (G.status !== 'playing') return;"
                    "const eqs = ['12+34=46', '10+20=30', '11+22=33', '40+15=55', '25+25=50', '13+14=27', '30+31=61'];"
                    "for (const ch of eqs[i % eqs.length]) key(ch); key('ENTER');"),
+        'keys': ['Enter'],
+    },
+    'estimation-golf': {
+        'ready': "document.getElementById('holeCard').style.display !== 'none' && !!currentQ",
+        'answer': ("if (document.getElementById('holeCard').style.display === 'none') return;"
+                   "const inp = document.getElementById('answerInput'); inp.value = String(currentQ.answer * 9 + i);"
+                   "document.getElementById('submitBtn').click();"),
         'keys': ['Enter'],
     },
     'prime-or-composite': {
@@ -304,7 +311,7 @@ INIT = r"""
   window.__lockGroupRects = function () {
     return (window.__mfgGroup || []).map(e => window.__lockRect(e));
   };
-  const CONTINUE_RE = /^(got it|next|continue|carry on|onward|ok|okay|keep going|see (your )?results|show results|finish)\b/;
+  const CONTINUE_RE = /^(got it|next|continue|carry on|onward|ok|okay|keep going|see (your )?(results|scorecard)|show results|finish)\b/;
   window.__lockContinue = function () {
     const mn = document.querySelector('.maffs-next');
     window.__lockContEl = mn;
