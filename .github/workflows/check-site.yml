@@ -542,6 +542,7 @@ jobs:
               Binomial Blaster (every key and option evaluated with SymPy, every item marked in Chromium)|python scripts/verify-binomial-blaster.py
               Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)|python scripts/verify-partial-fractions-duel.py
               Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)|python scripts/verify-differentiation-duel.py
+              Integration Duel (every key and option checked with SymPy, explanations checked, every option marked in Chromium)|python scripts/verify-integration-duel.py
 
     steps:
       - uses: actions/checkout@v4

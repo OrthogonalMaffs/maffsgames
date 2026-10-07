@@ -577,6 +577,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/options.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -601,7 +602,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
   <div class="start-screen" id="startScreen">
     <div class="start-glyph">&int;</div>
     <div class="start-title">Integration Duel</div>
-    <div class="start-desc">Standard forms, substitution, by parts, definite integrals. Take your time — faster answers score higher.</div>
+    <div class="start-desc">Standard forms, substitution, by parts, definite integrals. Take your time: every correct answer scores 100.</div>
     <div class="how-to" id="howTo"></div>
     <div class="level-select">
       <button class="level-btn alevel active" onclick="setLevel('alevel')">A-Level</button>
@@ -657,7 +658,7 @@ function tex(latex) {
 
 // ─── Reference rules ────────────────────────────────────────────────
 const RULES = [
-  {latex: '\\int x^n\\,dx = \\frac{x^{n+1}}{n+1} + c', note: 'power rule'},
+  {latex: '\\int x^n\\,dx = \\frac{x^{n+1}}{n+1} + c', note: 'power rule, n ≠ −1'},
   {latex: '\\int \\sin x\\,dx = -\\cos x + c', note: 'sine'},
   {latex: '\\int \\cos x\\,dx = \\sin x + c', note: 'cosine'},
   {latex: '\\int e^x\\,dx = e^x + c', note: 'exponential'},
@@ -722,11 +723,11 @@ const QUESTIONS = {
 
     // ── Exponential (6) ──────────────────────────────────────────────
     {rule:'Exponential', q:'\\int e^x\\,dx', correct:'e^x + c',
-      wrong:['e^x','xe^x + c','\\frac{e^x}{x} + c'], exp:'e^x integrates to itself + c'},
+      wrong:['e^x','xe^x + c','\\frac{e^x}{x} + c'], exp:'eˣ integrates to itself: eˣ + c'},
     {rule:'Exponential', q:'\\int e^{2x}\\,dx', correct:'\\frac{e^{2x}}{2} + c',
       wrong:['\\frac{e^{2x}}{2}','e^{2x} + c','2e^{2x} + c'], exp:'Reverse chain: e^(2x)/2 + c'},
     {rule:'Exponential', q:'\\int 4e^{2x}\\,dx', correct:'2e^{2x} + c',
-      wrong:['2e^{2x}','4e^{2x} + c','\\frac{4e^{2x}}{2}'], exp:'4 × e^(2x)/2 + c = 2e^(2x) + c'},
+      wrong:['2e^{2x}','4e^{2x} + c','8e^{2x} + c'], exp:'4 × e^(2x)/2 + c = 2e^(2x) + c'},
     {rule:'Exponential', q:'\\int e^{3x}\\,dx', correct:'\\frac{e^{3x}}{3} + c',
       wrong:['\\frac{e^{3x}}{3}','e^{3x} + c','3e^{3x} + c'], exp:'e^(3x)/3 + c'},
     {rule:'Exponential', q:'\\int 6e^{3x}\\,dx', correct:'2e^{3x} + c',
@@ -736,7 +737,7 @@ const QUESTIONS = {
 
     // ── Logarithm (4) ────────────────────────────────────────────────
     {rule:'Logarithm', q:'\\int \\frac{1}{x}\\,dx', correct:'\\ln|x| + c',
-      wrong:['\\ln|x|','\\ln x + c','x^{-1} + c'], exp:'Standard: ln|x| + c'},
+      wrong:['\\ln|x|','-x^{-2} + c','x^{-1} + c'], exp:'Standard: ln|x| + c'},
     {rule:'Logarithm', q:'\\int \\frac{3}{x}\\,dx', correct:'3\\ln|x| + c',
       wrong:['3\\ln|x|','\\ln|3x| + c','\\frac{3}{x^2} + c'], exp:'3 × ln|x| + c = 3ln|x| + c'},
     {rule:'Logarithm', q:'\\int \\frac{5}{x}\\,dx', correct:'5\\ln|x| + c',
@@ -762,59 +763,59 @@ const QUESTIONS = {
 
     // ── Reverse Chain Rule (5) ───────────────────────────────────────
     {rule:'Reverse Chain', q:'\\int 2x(x^2+1)^3\\,dx', correct:'\\frac{(x^2+1)^4}{4} + c',
-      wrong:['\\frac{(x^2+1)^4}{4}','(x^2+1)^4 + c','2x(x^2+1)^4 + c'], exp:'u = x²+1, du = 2x dx'},
+      wrong:['\\frac{(x^2+1)^4}{4}','(x^2+1)^4 + c','2x(x^2+1)^4 + c'], exp:'u = x² + 1, du = 2x dx, so ∫u³ du = u⁴/4 + c = (x² + 1)⁴/4 + c'},
     {rule:'Reverse Chain', q:'\\int \\cos(2x)\\,dx', correct:'\\frac{\\sin(2x)}{2} + c',
       wrong:['\\frac{\\sin(2x)}{2}','\\sin(2x) + c','2\\sin(2x) + c'], exp:'Reverse chain: sin(2x)/2 + c'},
     {rule:'Reverse Chain', q:'\\int xe^{x^2}\\,dx', correct:'\\frac{e^{x^2}}{2} + c',
-      wrong:['\\frac{e^{x^2}}{2}','e^{x^2} + c','xe^{x^2} + c'], exp:'u = x², du = 2x dx → ½e^(x²) + c'},
+      wrong:['\\frac{e^{x^2}}{2}','e^{x^2} + c','xe^{x^2} + c'], exp:'u = x², du = 2x dx, so ½∫eᵘ du = ½e^(x²) + c'},
     {rule:'Reverse Chain', q:'\\int \\sin(3x)\\,dx', correct:'-\\frac{\\cos(3x)}{3} + c',
       wrong:['-\\frac{\\cos(3x)}{3}','-\\cos(3x) + c','\\frac{\\cos(3x)}{3} + c'], exp:'−cos(3x)/3 + c'},
     {rule:'Reverse Chain', q:'\\int 3x^2(x^3+5)^2\\,dx', correct:'\\frac{(x^3+5)^3}{3} + c',
-      wrong:['\\frac{(x^3+5)^3}{3}','(x^3+5)^3 + c','3x^2(x^3+5)^3 + c'], exp:'u = x³+5, du = 3x² dx'},
+      wrong:['\\frac{(x^3+5)^3}{3}','(x^3+5)^3 + c','3x^2(x^3+5)^3 + c'], exp:'u = x³ + 5, du = 3x² dx, so ∫u² du = u³/3 + c = (x³ + 5)³/3 + c'},
 
     // ── By Parts (3) ────────────────────────────────────────────────
     {rule:'By Parts', q:'\\int xe^x\\,dx', correct:'xe^x - e^x + c',
-      wrong:['xe^x - e^x','xe^x + c','\\frac{x^2 e^x}{2} + c'], exp:'u=x, dv=eˣdx → xeˣ − eˣ + c'},
+      wrong:['xe^x - e^x','xe^x + c','\\frac{x^2 e^x}{2} + c'], exp:'u = x, dv = eˣ dx, so xeˣ − ∫eˣ dx = xeˣ − eˣ + c'},
     {rule:'By Parts', q:'\\int x\\cos x\\,dx', correct:'x\\sin x + \\cos x + c',
-      wrong:['x\\sin x + \\cos x','x\\sin x + c','x\\cos x - \\sin x + c'], exp:'u=x, dv=cos x dx'},
+      wrong:['x\\sin x + \\cos x','x\\sin x + c','x\\cos x - \\sin x + c'], exp:'u = x, dv = cos x dx: x sin x − ∫sin x dx = x sin x + cos x + c'},
     {rule:'By Parts', q:'\\int \\ln x\\,dx', correct:'x\\ln x - x + c',
-      wrong:['x\\ln x - x','\\frac{1}{x} + c','x\\ln x + c'], exp:'u=ln x, dv=dx → x ln x − x + c'},
+      wrong:['x\\ln x - x','\\frac{1}{x} + c','x\\ln x + c'], exp:'u = ln x, dv = dx, so x ln x − ∫1 dx = x ln x − x + c'},
 
     // ── Partial Fractions (2) ────────────────────────────────────────
     {rule:'Partial Fractions', q:'\\int \\frac{1}{(x+1)(x+2)}\\,dx', correct:'\\ln|x+1| - \\ln|x+2| + c',
-      wrong:['\\ln|x+1| - \\ln|x+2|','\\ln|(x+1)(x+2)| + c','\\frac{1}{x+1} - \\frac{1}{x+2} + c'], exp:'Decompose then integrate each term'},
+      wrong:['\\ln|x+1| - \\ln|x+2|','\\ln|(x+1)(x+2)| + c','\\frac{1}{x+1} - \\frac{1}{x+2} + c'], exp:'1/((x+1)(x+2)) = 1/(x+1) − 1/(x+2), so ln|x+1| − ln|x+2| + c'},
     {rule:'Partial Fractions', q:'\\int \\frac{3}{(x-1)(x+2)}\\,dx', correct:'\\ln|x-1| - \\ln|x+2| + c',
-      wrong:['\\ln|x-1| - \\ln|x+2|','3\\ln|(x-1)(x+2)| + c','\\frac{3}{x-1} - \\frac{3}{x+2} + c'], exp:'3/((x−1)(x+2)) = 1/(x−1) − 1/(x+2)'},
+      wrong:['\\ln|x-1| - \\ln|x+2|','3\\ln|(x-1)(x+2)| + c','\\frac{3}{x-1} - \\frac{3}{x+2} + c'], exp:'3/((x−1)(x+2)) = 1/(x−1) − 1/(x+2), so ln|x−1| − ln|x+2| + c'},
   ],
 
   level4: [
     // ── Kinematics (8) ───────────────────────────────────────────────
     {rule:'Kinematics', q:'\\int 3t^2\\,dt', correct:'t^3 + c',
-      wrong:['t^3','6t + c','3t^3 + c'], exp:'v(t)=3t² → s = t³ + c'},
+      wrong:['t^3','6t + c','3t^3 + c'], exp:'3t³/3 + c = t³ + c'},
     {rule:'Kinematics', q:'\\int 4t\\,dt', correct:'2t^2 + c',
-      wrong:['2t^2','4t^2 + c','\\frac{4t^2}{2}'], exp:'a(t)=4t → v = 2t² + c'},
+      wrong:['2t^2','4t^2 + c','4 + c'], exp:'4t²/2 + c = 2t² + c'},
     {rule:'Kinematics', q:'\\int (6t^2 + 2t)\\,dt', correct:'2t^3 + t^2 + c',
       wrong:['2t^3 + t^2','12t + 2 + c','6t^3 + 2t^2 + c'], exp:'6t³/3 + 2t²/2 + c'},
     {rule:'Kinematics', q:'\\int 9.81\\,dt', correct:'9.81t + c',
-      wrong:['9.81t','9.81','0 + c'], exp:'Constant acceleration: 9.81t + c'},
+      wrong:['9.81t','9.81','0 + c'], exp:'A constant integrates to a multiple of t: 9.81t + c'},
     {rule:'Kinematics', q:'\\int (10 - 2t)\\,dt', correct:'10t - t^2 + c',
-      wrong:['10t - t^2','10 - 2t^2 + c','10t - 2t^2 + c'], exp:'v(t) → s(t): 10t − t² + c'},
+      wrong:['10t - t^2','10 - 2t^2 + c','10t - 2t^2 + c'], exp:'10t − 2t²/2 + c = 10t − t² + c'},
     {rule:'Kinematics', q:'\\int_0^3 6t\\,dt', correct:'27',
-      wrong:['-27','18','9'], exp:'[3t²]₀³ = 27 m/s'},
+      wrong:['-27','18','9'], exp:'[3t²]₀³ = 27'},
     {rule:'Kinematics', q:'\\int_0^4 (8 - 2t)\\,dt', correct:'16',
-      wrong:['-16','24','32'], exp:'[8t − t²]₀⁴ = 32 − 16 = 16 m'},
+      wrong:['-16','24','32'], exp:'[8t − t²]₀⁴ = 32 − 16 = 16'},
     {rule:'Kinematics', q:'\\int 5t^4\\,dt', correct:'t^5 + c',
-      wrong:['t^5','5t^5 + c','20t^3 + c'], exp:'a(t)=5t⁴ → v = t⁵ + c'},
+      wrong:['t^5','5t^5 + c','20t^3 + c'], exp:'5t⁵/5 + c = t⁵ + c'},
 
     // ── Structural (4) ───────────────────────────────────────────────
     {rule:'Structural', q:'\\int 12x\\,dx', correct:'6x^2 + c',
-      wrong:['6x^2','12x^2 + c','\\frac{12x^2}{2}'], exp:'Load → shear: 12x²/2 + c = 6x² + c'},
+      wrong:['6x^2','12x^2 + c','12 + c'], exp:'12x²/2 + c = 6x² + c'},
     {rule:'Structural', q:'\\int 6x^2\\,dx', correct:'2x^3 + c',
-      wrong:['2x^3','6x^3 + c','12x + c'], exp:'Shear → moment: 6x³/3 + c = 2x³ + c'},
+      wrong:['2x^3','6x^3 + c','12x + c'], exp:'6x³/3 + c = 2x³ + c'},
     {rule:'Structural', q:'\\int (8 - 4x)\\,dx', correct:'8x - 2x^2 + c',
-      wrong:['8x - 2x^2','8x - 4x^2 + c','8 - 2x^2 + c'], exp:'Load → shear: 8x − 2x² + c'},
+      wrong:['8x - 2x^2','8x - 4x^2 + c','8 - 2x^2 + c'], exp:'8x − 4x²/2 + c = 8x − 2x² + c'},
     {rule:'Structural', q:'\\int_0^2 10x\\,dx', correct:'20',
-      wrong:['-20','10','40'], exp:'[5x²]₀² = 20 kN·m'},
+      wrong:['-20','10','40'], exp:'[5x²]₀² = 20'},
 
     // ── AC Circuits (5) ──────────────────────────────────────────────
     {rule:'AC Circuits', q:'\\int 5\\cos(\\omega t)\\,dt', correct:'\\frac{5\\sin(\\omega t)}{\\omega} + c',
@@ -830,53 +831,53 @@ const QUESTIONS = {
 
     // ── Decay / Thermal (4) ──────────────────────────────────────────
     {rule:'Decay', q:'\\int_0^{\\infty} 200e^{-0.1t}\\,dt', correct:'2000',
-      wrong:['-2000','200','20'], exp:'200/0.1 = 2000'},
+      wrong:['-2000','200','20'], exp:'[−2000e⁻⁰·¹ᵗ]₀^∞ = 0 − (−2000) = 2000'},
     {rule:'Thermal', q:'\\int 50e^{-2t}\\,dt', correct:'-25e^{-2t} + c',
-      wrong:['-25e^{-2t}','50e^{-2t} + c','-\\frac{50e^{-2t}}{2}'], exp:'50 × e^(−2t)/(−2) + c'},
+      wrong:['-25e^{-2t}','50e^{-2t} + c','-100e^{-2t} + c'], exp:'50 × e^(−2t)/(−2) + c'},
     {rule:'Decay', q:'\\int 100e^{-5t}\\,dt', correct:'-20e^{-5t} + c',
       wrong:['-20e^{-5t}','100e^{-5t} + c','-500e^{-5t} + c'], exp:'100/(−5) = −20e^(−5t) + c'},
     {rule:'Thermal', q:'\\int_0^{\\infty} 80e^{-4t}\\,dt', correct:'20',
-      wrong:['-20','80','320'], exp:'80/4 = 20'},
+      wrong:['-20','80','320'], exp:'[−20e⁻⁴ᵗ]₀^∞ = 0 − (−20) = 20'},
 
     // ── Work / Impulse / Energy (8) ──────────────────────────────────
-    {rule:'Impulse', q:'\\int_0^2 (4t - t^2)\\,dt', correct:'\\frac{8}{3}',
-      wrong:['-\\frac{8}{3}','4','2'], exp:'[2t² − t³/3]₀² = 8 − 8/3 = 8/3'},
+    {rule:'Impulse', q:'\\int_0^2 (4t - t^2)\\,dt', correct:'\\frac{16}{3}',
+      wrong:['-\\frac{16}{3}','8','\\frac{32}{3}'], exp:'[2t² − t³/3]₀² = 8 − 8/3 = 16/3'},
     {rule:'Work Done', q:'\\int_0^3 6x\\,dx', correct:'27',
-      wrong:['-27','18','9'], exp:'[3x²]₀³ = 27 J'},
+      wrong:['-27','18','9'], exp:'[3x²]₀³ = 27'},
     {rule:'Work Done', q:'\\int_0^5 (10 - 2x)\\,dx', correct:'25',
-      wrong:['-25','50','0'], exp:'[10x − x²]₀⁵ = 50−25 = 25 J'},
+      wrong:['-25','50','0'], exp:'[10x − x²]₀⁵ = 50 − 25 = 25'},
     {rule:'Electrical', q:'\\int_0^4 3t^2\\,dt', correct:'64',
-      wrong:['-64','48','36'], exp:'[t³]₀⁴ = 64 J'},
+      wrong:['-64','48','36'], exp:'[t³]₀⁴ = 64'},
     {rule:'Work Done', q:'\\int_0^2 (5 + 3x)\\,dx', correct:'16',
-      wrong:['-16','10','14'], exp:'[5x + 3x²/2]₀² = 10 + 6 = 16 J'},
+      wrong:['-16','10','14'], exp:'[5x + 3x²/2]₀² = 10 + 6 = 16'},
     {rule:'Impulse', q:'\\int_0^3 2t\\,dt', correct:'9',
-      wrong:['-9','6','3'], exp:'[t²]₀³ = 9 N·s'},
+      wrong:['-9','6','3'], exp:'[t²]₀³ = 9'},
     {rule:'Work Done', q:'\\int_1^3 4x\\,dx', correct:'16',
-      wrong:['-16','12','8'], exp:'[2x²]₁³ = 18 − 2 = 16 J'},
+      wrong:['-16','12','8'], exp:'[2x²]₁³ = 18 − 2 = 16'},
     {rule:'Electrical', q:'\\int_0^2 (6t^2 + 4t)\\,dt', correct:'24',
-      wrong:['-24','16','20'], exp:'[2t³ + 2t²]₀² = 16 + 8 = 24 J'},
+      wrong:['-24','16','20'], exp:'[2t³ + 2t²]₀² = 16 + 8 = 24'},
 
     // ── Substitution (5) ─────────────────────────────────────────────
     {rule:'Substitution', q:'\\int 2te^{t^2}\\,dt', correct:'e^{t^2} + c',
-      wrong:['e^{t^2}','2e^{t^2} + c','t^2 e^{t^2} + c'], exp:'u=t², du=2t dt → e^(t²) + c'},
+      wrong:['e^{t^2}','2e^{t^2} + c','t^2 e^{t^2} + c'], exp:'u = t², du = 2t dt, so ∫eᵘ du = e^(t²) + c'},
     {rule:'Substitution', q:'\\int \\omega\\cos(\\omega t)\\,dt', correct:'\\sin(\\omega t) + c',
-      wrong:['\\sin(\\omega t)','\\omega\\sin(\\omega t) + c','-\\sin(\\omega t) + c'], exp:'u=ωt → sin(ωt) + c'},
+      wrong:['\\sin(\\omega t)','\\omega\\sin(\\omega t) + c','-\\sin(\\omega t) + c'], exp:'u = ωt, du = ω dt, so ∫cos u du = sin(ωt) + c'},
     {rule:'Substitution', q:'\\int 6t^2\\cos(t^3)\\,dt', correct:'2\\sin(t^3) + c',
-      wrong:['2\\sin(t^3)','6\\sin(t^3) + c','\\sin(t^3) + c'], exp:'u=t³, du=3t² dt, (6/3)sin(t³) + c'},
+      wrong:['2\\sin(t^3)','6\\sin(t^3) + c','\\sin(t^3) + c'], exp:'u = t³, du = 3t² dt, so 2∫cos u du = 2sin(t³) + c'},
     {rule:'Substitution', q:'\\int \\frac{2t}{t^2+1}\\,dt', correct:'\\ln(t^2+1) + c',
-      wrong:['\\ln(t^2+1)','2\\ln(t^2+1) + c','\\frac{1}{t^2+1} + c'], exp:'u=t²+1, du=2t dt → ln|u| + c'},
+      wrong:['\\ln(t^2+1)','2\\ln(t^2+1) + c','\\frac{1}{t^2+1} + c'], exp:'u = t² + 1, du = 2t dt, so ln|u| + c = ln(t² + 1) + c'},
     {rule:'Substitution', q:'\\int 4t(t^2+3)^5\\,dt', correct:'\\frac{(t^2+3)^6}{3} + c',
-      wrong:['\\frac{(t^2+3)^6}{3}','(t^2+3)^6 + c','4t(t^2+3)^6 + c'], exp:'u=t²+3, du=2t dt, 4/(2)×u⁶/6 + c'},
+      wrong:['\\frac{(t^2+3)^6}{3}','(t^2+3)^6 + c','4t(t^2+3)^6 + c'], exp:'u = t² + 3, du = 2t dt, so 2∫u⁵ du = 2u⁶/6 + c = (t² + 3)⁶/3 + c'},
 
     // ── By Parts (4) ────────────────────────────────────────────────
     {rule:'By Parts', q:'\\int te^{-t}\\,dt', correct:'-te^{-t} - e^{-t} + c',
-      wrong:['-te^{-t} - e^{-t}','te^{-t} + c','-te^{-t} + c'], exp:'u=t, dv=e^(−t)dt'},
+      wrong:['-te^{-t} - e^{-t}','te^{-t} + c','-te^{-t} + c'], exp:'u = t, dv = e⁻ᵗ dt: −te⁻ᵗ − ∫(−e⁻ᵗ) dt = −te⁻ᵗ − e⁻ᵗ + c'},
     {rule:'By Parts', q:'\\int t\\cos t\\,dt', correct:'t\\sin t + \\cos t + c',
-      wrong:['t\\sin t + \\cos t','t\\sin t + c','t\\cos t - \\sin t + c'], exp:'u=t, dv=cos t dt'},
+      wrong:['t\\sin t + \\cos t','t\\sin t + c','t\\cos t - \\sin t + c'], exp:'u = t, dv = cos t dt: t sin t − ∫sin t dt = t sin t + cos t + c'},
     {rule:'By Parts', q:'\\int t\\sin t\\,dt', correct:'-t\\cos t + \\sin t + c',
-      wrong:['-t\\cos t + \\sin t','t\\sin t + c','-t\\cos t + c'], exp:'u=t, dv=sin t dt → −t cos t + sin t + c'},
+      wrong:['-t\\cos t + \\sin t','t\\sin t + c','-t\\cos t + c'], exp:'u = t, dv = sin t dt, so −t cos t + ∫cos t dt = −t cos t + sin t + c'},
     {rule:'By Parts', q:'\\int t^2 e^t\\,dt', correct:'t^2 e^t - 2te^t + 2e^t + c',
-      wrong:['t^2 e^t - 2te^t + 2e^t','t^2 e^t + c','t^2 e^t - 2te^t + c'], exp:'Apply by parts twice'},
+      wrong:['t^2 e^t - 2te^t + 2e^t','t^2 e^t + c','t^2 e^t - 2te^t + c'], exp:'By parts twice: t²eᵗ − ∫2teᵗ dt = t²eᵗ − 2teᵗ + 2eᵗ + c'},
 
     // ── Area Under Curve (4) ────────────────────────────────────────
     {rule:'Area', q:'\\int_0^3 t^2\\,dt', correct:'9',
@@ -886,7 +887,7 @@ const QUESTIONS = {
     {rule:'Area', q:'\\int_0^4 (3x^2 + 1)\\,dx', correct:'68',
       wrong:['-68','64','48'], exp:'[x³ + x]₀⁴ = 64 + 4 = 68'},
     {rule:'Area', q:'\\int_1^2 x^3\\,dx', correct:'\\frac{15}{4}',
-      wrong:['\\frac{15}{4} + c','4','\\frac{16}{4}'], exp:'[x⁴/4]₁² = 16/4 − 1/4 = 15/4'},
+      wrong:['\\frac{15}{4} + c','4','\\frac{17}{4}'], exp:'[x⁴/4]₁² = 16/4 − 1/4 = 15/4'},
 
     // ── Logarithmic (3) ─────────────────────────────────────────────
     {rule:'Logarithm', q:'\\int_1^4 \\frac{8}{t}\\,dt', correct:'8\\ln 4',
@@ -904,10 +905,9 @@ let currentLevel = (urlLevel === 'level4') ? 'level4' : 'alevel';
 
 let score=0, streak=0, qNum=0, answered=false, timerInt=null, timerStart=null, questions=[], sessionStart=null;
 
-function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 function makeChoices(correct, wrong){
-  const w = wrong.filter(x => x !== correct);
-  return shuffle([correct, ...shuffle(w).slice(0,3)]);
+  return MaffsOptions.build(correct, wrong);
 }
 
 function setLevel(level){
@@ -997,7 +997,8 @@ function guess(val, q, btn, div){
     streak = 0;
     btn.classList.add('wrong');
     [...div.children].forEach(b => {if(b.dataset.val === q.correct) b.classList.add('correct');});
-    fb.textContent = 'WRONG!';
+    fb.textContent = (/\+ c$/.test(q.correct) && val === q.correct.replace(/ \+ c$/, ''))
+      ? 'WRONG: the + c is missing. An indefinite integral needs its constant.' : 'WRONG!';
     fb.className = 'feedback wrong';
   }
   document.getElementById('score').textContent = score;
