@@ -232,7 +232,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ### `prisoners-dilemma` (KS3, GCSE, A-Level, Core)
 
-- **HIGH** prisoners-dilemma-t4-001 (JC), `games/prisoners-dilemma/index.html:781`: One board per level ranks the opponent picked: 100 only by choosing Always-Cooperate and defecting 20 times
+- **HIGH** prisoners-dilemma-t4-001, `games/prisoners-dilemma/index.html:781`: One board per level ranks the opponent picked: 100 only by choosing Always-Cooperate and defecting 20 times
 - **HIGH** prisoners-dilemma-t4-002, `games/prisoners-dilemma/index.html:789,1033`: Initials typed into the leaderboard overlay play moves in the next tournament match
 
 ### `seven-bridges` (KS3, GCSE, A-Level)
