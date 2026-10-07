@@ -62,7 +62,8 @@ findings:
   evidence: 'After ''Incorrect. Answer: 3, 4'', typing 3, 4 and Check: score 0 -> 15; double-click Check: 30 for one item;
     submitScore(…, G.score, G.total). Left open by the cloud-lane fix PR: class 1, owned by the shared answer lock (contract
     F1).'
-  status: open
+  status: fixed
+  pr: 136
 - id: component-crusher-t4-006
   severity: HIGH
   jc: true
