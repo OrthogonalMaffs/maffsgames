@@ -97,6 +97,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -129,7 +130,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   <div class="main-game" id="mainGame">
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
 
-    <div class="card-scene" onclick="flipCard()">
+    <div class="card-scene" data-maffs-lock-skip onclick="flipCard()">
       <div class="card" id="card">
         <div class="card-face card-front">
           <div class="hint">TAP TO REVEAL</div>
@@ -217,12 +218,14 @@ const _pfUrlLevel = new URLSearchParams(window.location.search).get('level');
 const gameLevel = _pfUrlLevel === 'year6' ? 'year6' : 'all';
 const QUESTIONS = gameLevel === 'year6' ? QUESTIONS_YEAR6 : QUESTIONS_DEFAULT;
 
-let score = 0, qNum = 0, correct = 0, flipped = false, questions = [], answered = false;
+let score = 0, qNum = 0, correct = 0, flipped = false, questions = [];
+const mainEl = document.getElementById('mainGame');   // MaffsLock's container (canon 7.6.0); the card stays tappable
 
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 
 function startGame() {
-  score = 0; qNum = 0; correct = 0; answered = false;
+  score = 0; qNum = 0; correct = 0;
+  MaffsLock.newSession();
   questions = shuffle(QUESTIONS).slice(0, 10);
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('gameOver').classList.remove('visible');
@@ -237,7 +240,8 @@ function startGame() {
 
 function loadQuestion() {
   if(qNum >= questions.length) { endGame(); return; }
-  flipped = false; answered = false;
+  flipped = false;
+  MaffsLock.fresh(mainEl);   // a new card: a double-click on Start or Play again cannot answer it
   const q = questions[qNum];
   document.getElementById('questionText').textContent = q.q;
   document.getElementById('answerText').textContent = q.a;
@@ -255,8 +259,8 @@ function loadQuestion() {
 function flipCard() {
   document.getElementById('card').classList.toggle('flipped');
   flipped = !flipped;
-  if(flipped && !answered) {
-    answered = true;
+  if(flipped && !MaffsLock.isLocked(mainEl)) {
+    MaffsLock.lock(mainEl);
     const userVal = parseFloat(document.getElementById('answerInput').value);
     const correctVal = questions[qNum].a;
     const fb = document.getElementById('feedback');
@@ -274,15 +278,15 @@ function flipCard() {
       fb.className = 'feedback wrong';
     }
     document.getElementById('score').textContent = score;
-    setTimeout(() => { qNum++; loadQuestion(); }, 2000);
+    MaffsLock.timer(() => { qNum++; loadQuestion(); }, 2000);
   }
 }
 
 function checkAnswer() {
-  if(answered) return;
+  if(MaffsLock.isLocked(mainEl)) return;
   const userVal = parseFloat(document.getElementById('answerInput').value);
   if(isNaN(userVal)) { document.getElementById('feedback').textContent = 'Enter a number first!'; return; }
-  answered = true;
+  if(!MaffsLock.lock(mainEl)) return;
   const correctVal = questions[qNum].a;
   const fb = document.getElementById('feedback');
   const _isOk = Math.abs(userVal - correctVal) < 0.01;
@@ -297,23 +301,26 @@ function checkAnswer() {
   }
   document.getElementById('score').textContent = score;
   document.getElementById('tapHint').textContent = '👆 Tap the card to reveal!';
-  setTimeout(() => { if(!flipped) flipCard(); }, 1500);
-  setTimeout(() => { qNum++; loadQuestion(); }, 3000);
+  MaffsLock.timer(() => { if(!flipped) flipCard(); }, 1500);
+  MaffsLock.timer(() => { qNum++; loadQuestion(); }, 3000);
 }
 
-function skipQ() { answered = true; qNum++; loadQuestion(); }
+// Skip moves on now: no timer of this card may move on again after it (it skipped a second card until 7 Oct 2026).
+function skipQ() { MaffsLock.clearTimers(); qNum++; loadQuestion(); }
 
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame = MaffsLock.finishOnce(function () {
   window._ggAbandoned=false;
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
+  MaffsLock.screen(document.getElementById('gameOver'));
   document.getElementById('finalScore').textContent = score;
   document.getElementById('goDetail').textContent = `${correct}/10 correct`;
   const _acc=10>0?Math.round(correct/10*100):0;
   mfg('game_completed',{game_slug:'percentage-flip',level:gameLevel,score:score,questions_answered:10,accuracy:_acc});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('percentage-flip',gameLevel,score,10).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('percentage-flip',gameLevel,score);}}
   saveBest(score); renderLB();
-}
+});
 
 function getBest() { return parseInt(localStorage.getItem('pf_best') || '0'); }
 function saveBest(s) { const prev=getBest();if(s > prev){localStorage.setItem('pf_best', s);mfg('personal_best_set',{game_slug:'percentage-flip',level:gameLevel,score:s,previous_best:prev});} document.getElementById('best').textContent = getBest(); }

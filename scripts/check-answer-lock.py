@@ -85,6 +85,7 @@ MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 think-of-a-number decimal-detective
 prime-or-composite probability-pioneer factor-race prime-factorisation
+percentage-flip
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
