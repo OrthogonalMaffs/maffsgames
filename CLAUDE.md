@@ -59,7 +59,7 @@ every verifier's duration.
   Register t4-001..004, 007, 009..012 fixed; t4-005 (contract F), 006, 008, 013-016 open. **Stays unlisted (SR-20).**
   `scripts/verify-screening-room.py` (CI E).
 - **#93 Core Maths Paper 1:** CPI 9.1%/7.3% (ONS), `SOURCES`, key £111.21; t2-006 fixed.
-- **#94:** `scripts/check-quoted-figures.py` (Tiers 1+2): every CONTRADICTED ledger line carries `| check: \`old\` in path#item`;
+- **#94:** `scripts/check-quoted-figures.py` (Tiers 1+2): every CONTRADICTED ledger line carries a "| check: (old literal) in path#item" annotation;
   a new CONTRADICTED line without one fails.
 - **Still open from the audit (not in this contract):** §3 keys vs their own notes, §4 unverifiable, §8 Goldbach
   (truth-buster) and two note details. CI flake seen once: Simultaneous Solver 320x568 keypad 1px.
