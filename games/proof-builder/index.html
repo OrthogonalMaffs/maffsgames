@@ -198,10 +198,10 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function rkd(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:true})}
 function rkStr(tex){const s=document.createElement('span');katex.render(tex,s,{throwOnError:false});return s.innerHTML}
-// A string with any TeX marker (backslash, ^, _ or a brace).
-function isTeX(t){return ['\\','^','_','{','}'].some(c=>t.indexOf(c)>=0)}
+// A string is TeX when it holds a backslash, ^, _ or a brace. Tested with includes() at each call site, not
+// a helper or a regex, so tier 4's bank extraction can decide the test per string.
 // Mixed prose and maths: maths inside \\( \\) (MaffsText); a string with TeX but no delimiters is whole maths.
-function M(str){if(MaffsText.hasMaths(str))return MaffsText.html(str);if(isTeX(str))return rkStr(str);return MaffsText.html(str)}
+function M(str){if(MaffsText.hasMaths(str))return MaffsText.html(str);if(str.includes('\\')||str.includes('^')||str.includes('_')||str.includes('{')||str.includes('}'))return rkStr(str);return MaffsText.html(str)}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 
 // ============================================================
@@ -400,7 +400,7 @@ function renderCounter(q){
 
   opts.forEach(v=>{
     const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
-    if(isTeX(v)){
+    if(v.includes('\\')||v.includes('^')||v.includes('_')||v.includes('{')||v.includes('}')){
       const sp=document.createElement('span');
       katex.render(v,sp,{throwOnError:false});
       b.appendChild(sp);
@@ -569,7 +569,7 @@ function renderIndStage(q){
   const opts=MaffsOptions.build(stage.correct,stage.d);
   opts.forEach(v=>{
     const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
-    if(isTeX(v)){const sp=document.createElement('span');katex.render(v,sp,{throwOnError:false});b.appendChild(sp)}
+    if(v.includes('\\')||v.includes('^')||v.includes('_')||v.includes('{')||v.includes('}')){const sp=document.createElement('span');katex.render(v,sp,{throwOnError:false});b.appendChild(sp)}
     else{b.textContent=v}
     b.addEventListener('click',()=>handleIndAnswer(b,stage,q));
     optDiv.appendChild(b);
