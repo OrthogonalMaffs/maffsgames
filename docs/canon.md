@@ -1199,7 +1199,7 @@ for 9m41s, and group B for 8 minutes. Nothing a check checks changed; only where
 | Site-wide checks | links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /resit/, calculator, content safety, teacher line, search titles, findings register, quoted figures |
 | Tier 4 layer A | bank extraction and its lint (together: the lint reads what the extraction wrote) |
 | Shared asset tests | Next control, section clicks, answer.js, calculator, keypad |
-| Content verifiers A, B1, B2, C1, C2, C3, D, E | the per-game verifiers, selected on a PR (above). C1-C3 are Just Pythag It, Bruv's `--part 1`, `2`, `3`, dealt by measured cost (the contract asked for two, phone and desktop; measured, the heavier half alone would have kept main near 7 minutes); each first runs `--part-selftest` (the parts are exactly the unsplit task list, nothing twice, and the workflow runs every part). B1 and B2 are group B cut in two in its own order. |
+| Content verifiers A, B1-B4, C1-C4, D1-D2, E | the per-game verifiers, selected on a PR (above). C1-C4 are Just Pythag It, Bruv's `--part 1` .. `4`, dealt by measured cost; each first runs `--part-selftest` (the parts are exactly the unsplit task list, nothing twice, and the workflow runs every part). D1-D2 are Equation Builder's `--part 1/2` and `2/2`: each classifies every second candidate arrangement of every question (one question is 60% of the time, so it is split by candidate, not by question); the whole-question checks and the planted-fault self-test run in D1, and the self-test proves the two parts together fail exactly where the whole run does. B1-B4 are group B cut by the slowest time each line has taken (runners vary up to 1.8x). |
 | Regenerate REGISTER.md | push to main only, after the Gate (§0.4) |
 
 **Timings** (GitHub-hosted `ubuntu-24.04`, 4 CPUs):
@@ -1209,10 +1209,14 @@ for 9m41s, and group B for 8 minutes. Nothing a check checks changed; only where
 | One-game PR, longest job | Tiers 1 + 2, 6m34s (run 8m13s) | 3m03s, Tier 4 layer A (every site-wide job 1m40s-3m03s; a selected verifier adds its own job: most under 4m, Equation Builder 4m48s, B1 4m51s); run about 4-5m |
 | Main's full run | 10m42s (C 9m41s, B 8m03s, Tiers 1 + 2 6m15s) | 5m45s (PR #95, which ran everything: B1 4m51s, D 4m48s, B2 4m30s; shards 1m40s-2m18s) |
 
-**Rules that keep it fast.** Every job still fails at 75% of its timeout ("time budget: … split it"). A group
-that becomes the critical path is split the same way: by an option on its script (`--shard`, `--part`) with a
-self-test proving the parts are the whole, or by cutting its list of lines in two. A new content verifier goes
-into the lightest "Content verifiers" group (each job's summary lists every check's duration).
+The same evening (queue item 2) every content job was brought under 4 minutes: B in four, C in four, D in two.
+Measured on the full run of the PR that did it (#103): every job 3m38s or less (A 3m38s, B2 3m29s, C4 3m10s, D1/D2 1m56s/2m03s); the whole run 4m47s (main after #99: 6m19s, with D 5m23s and B2 4m33s).
+
+**Rules that keep it fast.** Every job still fails at 75% of its timeout ("time budget: … split it"). **No
+"Content verifiers" job may run past 4 minutes** (Jon, 7 Oct 2026): a new content verifier goes into whichever
+group keeps every group under 4 minutes as a job (each job's summary lists every check's duration), and a group
+that would pass 4 minutes is split, by an option on its script (`--shard`, `--part`) with a self-test proving the
+parts are the whole, or by cutting its list of lines.
 
 ### 7.8.2 Two lanes: home and cloud (7 Oct 2026)
 

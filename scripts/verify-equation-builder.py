@@ -7,6 +7,17 @@ script computes every such list from the tiles, and fails if the bank's lists ev
     python scripts/verify-equation-builder.py              # the check (CI)
     python scripts/verify-equation-builder.py --report     # accepted-list sizes, distractor builds, unclassifiable
     python scripts/verify-equation-builder.py --selftest   # planted faults must fail
+    python scripts/verify-equation-builder.py --part 1/2   # CI job D1 (D2: --part 2/2)
+    python scripts/verify-equation-builder.py --part-selftest
+
+PARTS (7 Oct 2026, canon §7.8.1). One job took 5m23s on main, and one question (eb_ks3_012, 31,032 candidate
+arrangements) is 60% of it, so CI splits by candidate, not by question: part i of n classifies candidate k of
+every question when k mod n = i - 1 (the candidates in their own sorted order), and checks that slice against
+the page's ACCEPTED list cut to the same candidates. A check that is about a question as a whole (the key is
+among the candidates; no accepted arrangement; the page's stored arrangements that are not candidates at all;
+a valid tile not among the tiles; eb_gcse_013's geometry; ids the bank does not have) runs in part 1 only.
+So the parts together fail on exactly what the whole run failed on; --part-selftest proves they cover every
+candidate of every question once, and that the workflow runs every part.
 
 How (contract, 4 Oct 2026):
   a. every well-formed arrangement of the tiles, any length from the shortest that parses up to the slot count,
@@ -413,13 +424,31 @@ def extra_tiles(q, seq):
     return extra
 
 
-def accepted_for(q):
+def accepted_for(q, part=None):
+    """(sorted accepted arrangements, candidate count). With part (i, n): only the candidates in that
+    part's slice are classified, and the accepted ones among them come back."""
     sp_rule = SPECIAL.get(q['id'], {})
     if 'fixed' in sp_rule:
-        return sorted(fixed_variants(q, sp_rule['fixed'])), None
+        fixed = sorted(fixed_variants(q, sp_rule['fixed']))
+        return (fixed if part is None or part[0] == 1 else []), None
     c = Classifier(q)
-    cands = candidates(q)
+    cands = in_part(candidates(q), part)
     return sorted(s for s in cands if c.accepts(s)), len(cands)
+
+
+def in_part(cands, part):
+    """The candidates part (i, n) classifies: every n-th, from the (i-1)-th. part None: all of them."""
+    if part is None:
+        return list(cands)
+    i, n = part
+    return [c for k, c in enumerate(cands) if k % n == i - 1]
+
+
+def parse_part(text):
+    m = re.match(r'^(\d+)/(\d+)$', text or '')
+    if not m or not 1 <= int(m.group(1)) <= int(m.group(2)):
+        raise ValueError('--part wants i/n with 1 <= i <= n, got %r' % text)
+    return int(m.group(1)), int(m.group(2))
 
 
 def tile_kind(t):
@@ -467,8 +496,10 @@ def gcse_013_geometry(q):
         {sp.Symbol('a'): a, sp.Symbol('c'): c}) - om) == 0
 
 
-def check(page=PAGE, only=None, verbose=False):
+def check(page=PAGE, only=None, verbose=False, part=None):
+    """part (i, n): see PARTS in the docstring. part None is the whole check, as before."""
     fails, report = [], []
+    whole = part is None or part[0] == 1          # the question-as-a-whole checks run here
     src = page.read_text(encoding='utf-8')
     bank = load_bank(page)
     stored = page_accepted(src)
@@ -478,32 +509,53 @@ def check(page=PAGE, only=None, verbose=False):
     for q in bank:
         if only and q['id'] not in only:
             continue
-        acc, n = accepted_for(q)
+        acc, n = accepted_for(q, part)
         computed[q['id']] = acc
         valid = q.get('valid', [])
         dis = [(s, [t for t in extra_tiles(q, s) if t not in valid]) for s in acc]
         dis = [(s, x) for s, x in dis if x]
         report.append((q['id'], n, len(acc), SPECIAL.get(q['id'], {}).get('why')))
-        if not acc:
-            fails.append('%s: no accepted arrangement' % q['id'])
-        if tuple(q['slots']) not in set(acc):
-            fails.append('%s: the key %r cannot be built from its tiles or is not accepted' % (q['id'], ' '.join(q['slots'])))
+        mine = set(stored.get(q['id'], []))
+        key = tuple(q['slots'])
+        if part is not None and 'fixed' not in SPECIAL.get(q['id'], {}):
+            cands = candidates(q)
+            slice_ = set(in_part(cands, part))
+            mine &= slice_
+            if whole:
+                every = set(cands)
+                stray = set(stored.get(q['id'], [])) - every
+                if not stored.get(q['id']):
+                    fails.append('%s: no accepted arrangement' % q['id'])
+                if key not in every:
+                    fails.append('%s: the key %r cannot be built from its tiles or is not accepted' % (q['id'], ' '.join(key)))
+                if stray:
+                    fails.append('%s: the page\'s ACCEPTED list differs from the computed one (missing 0, extra %d): %s'
+                                 % (q['id'], len(stray), ' | '.join(' '.join(x) for x in list(stray)[:3])))
+            if key in slice_ and key not in set(acc):
+                fails.append('%s: the key %r cannot be built from its tiles or is not accepted' % (q['id'], ' '.join(key)))
+        elif whole:
+            if not acc:
+                fails.append('%s: no accepted arrangement' % q['id'])
+            if key not in set(acc):
+                fails.append('%s: the key %r cannot be built from its tiles or is not accepted' % (q['id'], ' '.join(key)))
         for s, x in dis:
             fails.append('%s: accepted %r uses distractor tile(s) %s' % (q['id'], ' '.join(s), x))
-        for t in valid:
-            if t not in q['tiles']:
-                fails.append('%s: valid tile %r is not one of its tiles' % (q['id'], t))
-        if stored.get(q['id']) != acc:
-            miss = set(acc) - set(stored.get(q['id'], []))
-            more = set(stored.get(q['id'], [])) - set(acc)
+        if whole:
+            for t in valid:
+                if t not in q['tiles']:
+                    fails.append('%s: valid tile %r is not one of its tiles' % (q['id'], t))
+        differs = (stored.get(q['id']) != acc) if part is None else (mine != set(acc))
+        if (part is None or 'fixed' not in SPECIAL.get(q['id'], {}) or whole) and differs:
+            miss = set(acc) - mine
+            more = mine - set(acc)
             fails.append('%s: the page\'s ACCEPTED list differs from the computed one (missing %d, extra %d)%s'
                          % (q['id'], len(miss), len(more), (': ' + ' | '.join(' '.join(x) for x in list(miss | more)[:3]))))
-        if q['id'] == 'eb_gcse_013' and not gcse_013_geometry(q):
+        if whole and q['id'] == 'eb_gcse_013' and not gcse_013_geometry(q):
             fails.append('eb_gcse_013: the key is not the midpoint the question names')
         if verbose:
             for s in acc:
                 print('      ACC  ' + ' '.join(s))
-    if not only:
+    if not only and whole:
         extra_ids = set(stored) - set(computed)
         if extra_ids:
             fails.append('ACCEPTED block has ids not in the bank: %s' % sorted(extra_ids))
@@ -552,13 +604,47 @@ def selftest():
                 src = new
             page.write_text(src, encoding='utf-8')
             fails, _, _ = check(page, only=set(only))
+            # the two CI parts together must fail exactly when the whole run does
+            parted = [f for i in (1, 2) for f in check(page, only=set(only), part=(i, 2))[0]]
         finally:
             shutil.rmtree(d, ignore_errors=True)
-        ok = bool(fails) == should_fail
-        print('  %s  %-66s %s' % ('PASS' if ok else 'FAIL', name, fails[0][:110] if fails else '(no failures)'))
+        ok = bool(fails) == should_fail and bool(parted) == should_fail
+        print('  %s  %-66s %s%s' % ('PASS' if ok else 'FAIL', name, fails[0][:110] if fails else '(no failures)',
+                                   '' if bool(parted) == bool(fails) else '  [the parts disagree]'))
         if not ok:
             bad.append(name)
     print('selftest: %s' % ('FAILED: ' + ', '.join(bad) if bad else 'PASS'))
+    return 1 if bad else 0
+
+
+WORKFLOW = BASE / ".github" / "workflows" / "check-site.yml"
+
+
+def part_selftest(n=2):
+    """Every candidate of every question is in exactly one of the n parts; the workflow runs every part."""
+    bad = []
+    for q in load_bank():
+        if 'fixed' in SPECIAL.get(q['id'], {}):
+            continue
+        cands = candidates(q)
+        parts = [in_part(cands, (i, n)) for i in range(1, n + 1)]
+        flat = [c for p_ in parts for c in p_]
+        if sorted(flat) != sorted(cands):
+            bad.append('%s: the parts are not its candidate list' % q['id'])
+    # planted: drop one candidate, double one; each must be noticed by the comparison above
+    cands = candidates(load_bank()[0])
+    if sorted(cands[1:]) == sorted(cands) or sorted(cands + cands[:1]) == sorted(cands):
+        bad.append('self-test: a dropped or doubled candidate was not noticed')
+    runs = re.findall(r'python scripts/verify-equation-builder\.py\b([^\n|&]*)', WORKFLOW.read_text(encoding='utf-8'))
+    got = sorted(m.group(1) for m in (re.search(r'--part (\d+/\d+)', r) for r in runs) if m)
+    want = sorted('%d/%d' % (i, n) for i in range(1, n + 1))
+    if got != want:
+        bad.append('the workflow runs parts %s, not %s' % (got, want))
+    if [r for r in runs if '--part' not in r and '--selftest' not in r]:
+        bad.append('the workflow also runs the unsplit check')
+    for b in bad:
+        print('FAIL', b)
+    print('part self-test (%d parts, workflow %s): %s' % (n, ', '.join(got) or 'none', 'FAILED' if bad else 'PASS'))
     return 1 if bad else 0
 
 
@@ -568,22 +654,31 @@ def main():
     ap.add_argument('--report', action='store_true', help='print every accepted arrangement')
     ap.add_argument('--selftest', action='store_true')
     ap.add_argument('--only', nargs='*')
+    ap.add_argument('--part', help='i/n: classify only part i of n of every question\'s candidates (CI runs 1/2 and 2/2)')
+    ap.add_argument('--part-selftest', action='store_true', help='prove the parts cover every candidate once')
     a = ap.parse_args()
+    if a.part_selftest:
+        return part_selftest()
     if a.selftest:
         return selftest()
+    try:
+        part = parse_part(a.part) if a.part else None
+    except ValueError as exc:
+        ap.error(str(exc))
     if a.write:
         acc = write()
         print('wrote ACCEPTED for %d questions (%d arrangements)' % (len(acc), sum(len(v) for v in acc.values())))
     only = None
     if a.only:
         only = {q['id'] for q in load_bank() if any(o in q['id'] for o in a.only)}
-    fails, report, _ = check(only=only, verbose=a.report)
+    fails, report, _ = check(only=only, verbose=a.report, part=part)
     for qid, n, k, why in report:
         print('%-12s accepted=%-3d of %s arrangements%s' % (qid, k, n if n is not None else 'fixed',
                                                            ('  [special: %s]' % why) if why else ''))
     for f in fails:
         print('FAIL', f)
-    print('equation-builder accepted lists: %s (%d questions)' % ('FAIL' if fails else 'PASS', len(report)))
+    print('equation-builder accepted lists%s: %s (%d questions)' % (' (part %d/%d)' % part if part else '',
+                                                                 'FAIL' if fails else 'PASS', len(report)))
     return 1 if fails else 0
 
 
