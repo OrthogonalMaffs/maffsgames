@@ -11,6 +11,33 @@ modules in `scripts/`, the workflow, canon, the roster's listed section, `docs/t
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-07 (cloud): unlisted-games contract, game 1 Spot the Error (PR #96); NEXT = Truth Buster
+
+Jon's contract of 7 Oct (cloud lane): fix the unlisted games one per PR, each under a new verifier, in this order:
+spot-the-error, truth-buster, trig-worms, expectation-station, component-crusher, trig-identity-duel,
+binomial-blaster, partial-fractions-duel, differentiation-duel, integration-duel, curling-friction,
+dimension-checker, proof-builder. Shared classes stay open: 1 (answer lock, F1), 4 (?level resolver, F2),
+5 (bank size), B11 parser gaps (F0). Skipped until Project Claude supplies data: moments-master, force-resolver,
+suvat, factor-theorem, eigenvector-engine, truth-will-set-you-free. Other owners: linear-equation-solver,
+screening-room, glorious-gantt.
+
+- **Spot the Error (PR #96):** `scripts/verify-spot-the-error.py` (group B2, ~9 s). All 19 register entries
+  fixed (t1-001..014 plus the re-audit's t1-015..019); nothing left open. 16 items reworded (listed in the PR
+  for Project Claude). Model: the key is the first step that departs from correct working; later steps carry it.
+- **Prepared on local branches, not pushed** (worktrees under /home/user/*-work, gone with this container): the
+  next games are rebuilt from their audit entries in the same order. If this container is lost, redo from the
+  register; the PR descriptions list the content choices.
+- **Gotchas:**
+  - A reviewed verdict (a step judged an error, a statement judged true) reads no text, so each verifier that
+    holds verdicts pins each item's content hash (`REVIEWED`, `--print-pins`): any edit fails until re-reviewed.
+  - The self-tests count a plant as caught only by a check other than that pin.
+  - Locally, the KaTeX CDN is refused: KaTeX games' verifiers take `--katex-dir` (the npm tarball's dist/).
+    `check-changed.py` here always fails seven checks for environment reasons (PR #96 lists them).
+  - `extract-banks.py` through the sandbox wrapper reports component-crusher's 34 B7 entries stale even on main:
+    do not trust a local tier 4 run for B7; read CI's.
+  - A shared TeX-to-SymPy reader would serve several of these verifiers (each carries its own small one, since
+    the cloud lane does not add shared modules): a home-lane candidate.
+
 ## 2026-10-07: the lane starts (written by the home lane, which set up the lanes)
 
 - No cloud session has run since the lanes were split. The last cloud work was 6 Oct 2026 (#85 audit tranches 1-2
