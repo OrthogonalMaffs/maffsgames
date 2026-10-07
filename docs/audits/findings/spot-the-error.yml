@@ -19,7 +19,8 @@ findings:
   summary: 600 g of oats is 4 parts, so butter is 150 g; the explanation teaches (1/5) x 600 = 120 g and step 3,
     (4/5) x 600, makes the same error and is marked correct
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-002
   severity: HIGH
   jc: false
@@ -29,7 +30,8 @@ findings:
   summary: 'The keyed error step is right but the Stage 2 key is wrong: the phrase ''30 deg more than s'' (the real
     misreading) is isError:false, so tapping it is marked wrong'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-003
   severity: HIGH
   jc: true
@@ -38,7 +40,8 @@ findings:
   where: games/spot-the-error/index.html:229 (ks3_016)
   summary: 'No error in the working: 72 is a valid common denominator and 522/72 = 29/4 is the true total'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. SR-18: a strategy choice is not an error'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-004
   severity: HIGH
   jc: false
@@ -48,7 +51,8 @@ findings:
   summary: 'The only step, (72/180) x pi x 10, is keyed as the error, but theta/180 x pi r = theta/360 x 2 pi r:
     the student must click a correct step to be marked right'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-005
   severity: HIGH
   jc: false
@@ -58,7 +62,8 @@ findings:
   summary: The keyed step 'g(2) = 4' is true; step 2 'gf(2) = f(4) = 11' is false (gf(2) = g(7) = 49) and is marked
     correct
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-006
   severity: HIGH
   jc: true
@@ -68,7 +73,8 @@ findings:
   summary: Reverse-percentage mistake keyed at the addition step (76.50 + 7.65); the same mistake is keyed at the
     other step in gcse_027, so the item has a second valid step
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2 (with gcse_027)'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-007
   severity: HIGH
   jc: true
@@ -78,7 +84,8 @@ findings:
   summary: Reverse-percentage mistake keyed at the '17% of current' step; gcse_001 keys the same mistake at the
     other step, so the item has a second valid step
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2 (with gcse_001)'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-008
   severity: HIGH
   jc: false
@@ -88,7 +95,8 @@ findings:
   summary: Step 3 is marked correct but 80 x tan 34 = 53.96, not 53.97; the explanation's 80 / tan 34 = 118.6, not
     118.5 (low practical risk)
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-009
   severity: HIGH
   jc: false
@@ -97,7 +105,8 @@ findings:
   where: games/spot-the-error/index.html:307 (l4_002)
   summary: 'Step 2 ''log 12 - log 2 = log 10'' is marked correct but equals log 6: a second erroneous step'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-010
   severity: HIGH
   jc: true
@@ -107,7 +116,8 @@ findings:
   summary: 'Choosing u = cos x is unhelpful but legitimate and step 3 is a true identity: no step contains false
     maths'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. SR-18: a strategy choice is not an error'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-011
   severity: MEDIUM
   jc: false
@@ -115,8 +125,9 @@ findings:
   level: gcse
   where: games/spot-the-error/index.html(gcse_028)
   summary: Rounds money without saying so (c = 69/19)
-  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
-  status: open
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3. Fixed: the totals are now £47 and £53, so c = £4 and a = £9 exactly.'
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-012
   severity: MEDIUM
   jc: false
@@ -125,7 +136,8 @@ findings:
   where: games/spot-the-error/index.html(gcse_031)
   summary: The explanation is false
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-013
   severity: MEDIUM
   jc: false
@@ -134,7 +146,8 @@ findings:
   where: games/spot-the-error/index.html(ks3_025)
   summary: Uses 'of 400', a number not in the question
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
-  status: open
+  status: fixed
+  pr: 96
 - id: spot-the-error-t1-014
   severity: MEDIUM
   jc: false
@@ -144,5 +157,56 @@ findings:
   summary: tranche 1 counted 1 MEDIUM finding it never described
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 1 counts more MEDIUMs for this game than section
     3 describes. Placeholder (Jon, 7 Oct 2026): this game''s contract F fix PR re-audits the whole game, files what
-    it finds with real ids, and closes this entry with its PR number'
-  status: open
+    it finds with real ids, and closes this entry with its PR number. Closed by the re-audit in this PR: scripts/verify-spot-the-error.py holds all 110 items to a reviewed table; its new findings are t1-015 to t1-019.'
+  status: fixed
+  pr: 96
+- id: spot-the-error-t1-015
+  severity: HIGH
+  jc: false
+  class: 3
+  level: ks3
+  where: games/spot-the-error/index.html:225 (ks3_012)
+  summary: "The keyed step 4 ('4% compound interest would give £250 x 1.04^3 = £281.22') is a true statement and steps 1-3 are correct: no step contains false maths, so the student must tap a correct step"
+  evidence: 'Found by the re-audit in the fix PR (scripts/verify-spot-the-error.py, 7 Oct 2026), closing t1-014.'
+  status: fixed
+  pr: 96
+- id: spot-the-error-t1-016
+  severity: HIGH
+  jc: false
+  class: 3
+  level: gcse
+  where: games/spot-the-error/index.html:285 (gcse_028)
+  summary: "The keyed step 'Add equations: 30a + 31c = 381' is a true consequence of the two equations (adding is valid; it does not eliminate a), so the key is a true statement"
+  evidence: 'Found by the re-audit in the fix PR (scripts/verify-spot-the-error.py, 7 Oct 2026), closing t1-014.'
+  status: fixed
+  pr: 96
+- id: spot-the-error-t1-017
+  severity: HIGH
+  jc: false
+  class: 3
+  level: gcse
+  where: games/spot-the-error/index.html:288 (gcse_031)
+  summary: "The keyed step 'sin(theta) = 15/26.6' is a valid route: theta = 34.3 deg from the east-west line at the ship, and the return bearing is 270 - 34.3 = 235.7 deg (SR-18: a strategy choice is not an error)"
+  evidence: 'Found by the re-audit in the fix PR (scripts/verify-spot-the-error.py, 7 Oct 2026), closing t1-014.'
+  status: fixed
+  pr: 96
+- id: spot-the-error-t1-018
+  severity: LOW
+  jc: false
+  class: 'NEW:wrong-explanation-text'
+  level: level4
+  where: games/spot-the-error/index.html:332 (l4_024)
+  summary: "The error step also writes 6C3 = 15 (it is 20), a second slip the explanation never names"
+  evidence: 'Found by the re-audit in the fix PR (scripts/verify-spot-the-error.py, 7 Oct 2026), closing t1-014.'
+  status: fixed
+  pr: 96
+- id: spot-the-error-t1-019
+  severity: LOW
+  jc: false
+  class: 'NEW:text-contradicts-content'
+  level: gcse
+  where: games/spot-the-error/index.html:263 (gcse_009)
+  summary: "The problem asks for the price of one tin, but the working goes on to the roll and the error is there"
+  evidence: 'Found by the re-audit in the fix PR (scripts/verify-spot-the-error.py, 7 Oct 2026), closing t1-014.'
+  status: fixed
+  pr: 96
