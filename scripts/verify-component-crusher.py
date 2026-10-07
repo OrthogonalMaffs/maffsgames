@@ -291,6 +291,7 @@ def check_page(fails, html):
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+            ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
             page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
             # every request off the stub server is aborted, except KaTeX (options and the given data render with it)
             ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
