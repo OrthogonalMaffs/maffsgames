@@ -87,7 +87,8 @@ findings:
   where: games/force-resolver/index.html:219, 221
   summary: 'No answered guard: Enter on a disabled option re-marks, re-scores, skips questions and submits repeatedly'
   evidence: 'wrong then Enter x2: 3 question_answered, score 0->189, qIdx 0->3; Enter x4 on Q20: submitScore x4'
-  status: open
+  status: fixed
+  pr: 140
 - id: force-resolver-t5-009
   severity: MEDIUM
   jc: true
