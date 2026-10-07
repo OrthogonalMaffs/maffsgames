@@ -2,7 +2,8 @@
 """Self-tests for schools/assets/answer.js (MaffsAnswer, canon §7.1.3).
 
 Runs the real file in Chromium and checks every outcome of every function: correct, wrong,
-format and unreadable for money(), decimal() and exact(), the accepted £/€ prefix, parse(),
+format and unreadable for money(), decimal(), exact() and fractionOrDecimal(), the exact
+reading of a typed fraction (fraction(), 7 Oct 2026: a/b, negatives, whole numbers), the accepted £/€ prefix, parse(),
 and the words message() returns. Then an equivalence check: on every string a type="number"
 input can hand a game (signs, leading dots, trailing dots, exponents, 0-4 decimal places) and
 a spread of keys, money() returns exactly what tax-theft's old moneyResult() returned. That is
@@ -83,6 +84,66 @@ CASES = [
     ("exact('2', 2.5)", 'wrong'),
     ("exact('x', 24)", 'unreadable'),
     ("exact('', 24)", 'unreadable'),
+    # fraction: the exact reading of a/b or a whole number, in lowest terms, den > 0
+    ("JSON.stringify(fraction('3/7'))", '{"num":3,"den":7}'),
+    ("JSON.stringify(fraction('6/14'))", '{"num":3,"den":7}'),
+    ("JSON.stringify(fraction(' 15 / 35 '))", '{"num":3,"den":7}'),
+    ("JSON.stringify(fraction('-3/7'))", '{"num":-3,"den":7}'),
+    ("JSON.stringify(fraction('3/-7'))", '{"num":-3,"den":7}'),
+    ("JSON.stringify(fraction('-3/-7'))", '{"num":3,"den":7}'),
+    ("JSON.stringify(fraction('+3/7'))", '{"num":3,"den":7}'),
+    ("JSON.stringify(fraction('5'))", '{"num":5,"den":1}'),
+    ("JSON.stringify(fraction('-5'))", '{"num":-5,"den":1}'),
+    ("JSON.stringify(fraction('0'))", '{"num":0,"den":1}'),
+    ("JSON.stringify(fraction('-0/4'))", '{"num":0,"den":1}'),
+    ("JSON.stringify(fraction('10/5'))", '{"num":2,"den":1}'),
+    ("JSON.stringify(fraction('3/0'))", 'null'),
+    ("JSON.stringify(fraction('0.5'))", 'null'),
+    ("JSON.stringify(fraction('1.5/3'))", 'null'),
+    ("JSON.stringify(fraction('3//7'))", 'null'),
+    ("JSON.stringify(fraction('3/7/2'))", 'null'),
+    ("JSON.stringify(fraction('--3/7'))", 'null'),
+    ("JSON.stringify(fraction('3/7x'))", 'null'),
+    ("JSON.stringify(fraction(''))", 'null'),
+    ("JSON.stringify(fraction('/7'))", 'null'),
+    ("JSON.stringify(fraction('99999999999999999/2'))", 'null'),
+    # fractionOrDecimal: 3/7 at 3 d.p. (Given That's case: 3/7 and 0.429 right, 0.43 not)
+    ("fractionOrDecimal('3/7', 3, 7, 3)", 'correct'),
+    ("fractionOrDecimal('15/35', 3, 7, 3)", 'correct'),
+    ("fractionOrDecimal('-3/-7', 3, 7, 3)", 'correct'),
+    ("fractionOrDecimal('0.429', 3, 7, 3)", 'correct'),
+    ("fractionOrDecimal('.429', 3, 7, 3)", 'correct'),
+    ("fractionOrDecimal('0.4290', 3, 7, 3)", 'correct'),
+    ("fractionOrDecimal('0.4286', 3, 7, 3)", 'format'),
+    ("fractionOrDecimal('0.43', 3, 7, 3)", 'wrong'),
+    ("fractionOrDecimal('0.428', 3, 7, 3)", 'wrong'),
+    ("fractionOrDecimal('4/7', 3, 7, 3)", 'wrong'),
+    ("fractionOrDecimal('-3/7', 3, 7, 3)", 'wrong'),
+    ("fractionOrDecimal('3/0', 3, 7, 3)", 'unreadable'),
+    ("fractionOrDecimal('0.4/1', 3, 7, 3)", 'unreadable'),
+    ("fractionOrDecimal('3/7ths', 3, 7, 3)", 'unreadable'),
+    ("fractionOrDecimal('43%', 3, 7, 3)", 'unreadable'),
+    # the key is rounded half up exactly: 5/8 = 0.625 at 2 d.p. is 0.63; 1/8 = 0.125 is 0.13
+    ("fractionOrDecimal('0.63', 5, 8, 2)", 'correct'),
+    ("fractionOrDecimal('0.62', 5, 8, 2)", 'wrong'),
+    ("fractionOrDecimal('0.13', 1, 8, 2)", 'correct'),
+    ("fractionOrDecimal('0.125', 1, 8, 2)", 'format'),
+    ("fractionOrDecimal('0.0518', 259, 5000, 4)", 'correct'),
+    ("fractionOrDecimal('0.05', 259, 5000, 4)", 'wrong'),
+    ("fractionOrDecimal('-0.429', -3, 7, 3)", 'correct'),
+    ("fractionOrDecimal('-0.429', 3, -7, 3)", 'correct'),
+    ("fractionOrDecimal('-3/7', 3, -7, 3)", 'correct'),
+    # whole numbers
+    ("fractionOrDecimal('1', 7, 7, 3)", 'correct'),
+    ("fractionOrDecimal('1.00', 7, 7, 3)", 'correct'),
+    ("fractionOrDecimal('7/7', 7, 7, 3)", 'correct'),
+    ("fractionOrDecimal('0', 0, 9, 3)", 'correct'),
+    ("fractionOrDecimal('0/9', 0, 9, 3)", 'correct'),
+    ("fractionOrDecimal('2', 3, 7, 3)", 'wrong'),
+    # decimal() and exact() are unchanged: a fraction is still unreadable to them
+    ("decimal('3/7', 0.429, 3)", 'unreadable'),
+    ("decimal('6/2', 3, 1)", 'unreadable'),
+    ("exact('3/7', 0.429)", 'unreadable'),
     # parse
     ("String(parse('£12.34'))", '12.34'),
     ("String(parse('2.5'))", '2.5'),
@@ -99,6 +160,9 @@ CASES = [
     ("message('format', '1.234', {dp: 2})",
      'Right value, but the question asks for 2 decimal places. In the exam, 1.234 loses the mark. Fix it and resubmit.'),
     ("message('unreadable', 'abc')", 'Type just the number, e.g. 12.34'),
+    ("message('unreadable', 'abc', {fraction: true})", 'Type a fraction or a decimal, e.g. 3/7 or 0.429'),
+    ("message('format', '0.4286', {dp: 3, sf: 3})",
+     'Right value, but the question asks for 3 significant figures. In the exam, 0.4286 loses the mark. Fix it and resubmit.'),
     ("message('correct', '5')", ''),
 ]
 
