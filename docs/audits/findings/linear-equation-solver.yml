@@ -82,7 +82,7 @@ findings:
   where: games/linear-equation-solver/index.html:371-373,454,475
   summary: Hint usable by keyboard after a phase is answered; two activations of Next in one frame skip a question
     or submit twice; 320x568 Next under the footer; game_completed sends accuracy
-  evidence: Agent's Chromium reproductions; not reached by a real double-click. Class-1 parts fixed in #140 (F1 batch 4:
-    the hint is refused once the step is answered; the worked solution's Next is MaffsNext). Open for the 320x568 Next
-    under the footer and game_completed's accuracy field.
+  evidence: "Agent's Chromium reproductions; not reached by a real double-click. Class-1 parts fixed in #140 (F1 batch
+    4: the hint is refused once the step is answered; the worked solution's Next is MaffsNext). Open for the 320x568
+    Next under the footer and game_completed's accuracy field."
   status: open
