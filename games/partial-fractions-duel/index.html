@@ -63,6 +63,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/options.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -103,11 +104,11 @@ alevel:[
   {q:'\\dfrac{7x+1}{(x+1)(x-2)} = \\dfrac{A}{x+1} + \\dfrac{B}{x-2}',ask:'Find B',correct:'5',d:['2','-5','7']},
   {q:'\\dfrac{4x-1}{(x-1)(x+3)} = \\dfrac{A}{x-1} + \\dfrac{B}{x+3}',ask:'Find A',correct:'\\dfrac{3}{4}',d:['3','1','\\dfrac{1}{4}']},
   {q:'\\dfrac{4x-1}{(x-1)(x+3)} = \\dfrac{A}{x-1} + \\dfrac{B}{x+3}',ask:'Find B',correct:'\\dfrac{13}{4}',d:['4','3','\\dfrac{3}{4}']},
-  {q:'\\dfrac{2x+3}{(x+1)(x-1)} = \\dfrac{A}{x+1} + \\dfrac{B}{x-1}',ask:'Find A',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','\\dfrac{5}{2}']},
+  {q:'\\dfrac{2x+3}{(x+1)(x-1)} = \\dfrac{A}{x+1} + \\dfrac{B}{x-1}',ask:'Find A',correct:'-\\dfrac{1}{2}',d:['\\dfrac{1}{2}','1','\\dfrac{5}{2}']},
   {q:'\\dfrac{2x+3}{(x+1)(x-1)} = \\dfrac{A}{x+1} + \\dfrac{B}{x-1}',ask:'Find B',correct:'\\dfrac{5}{2}',d:['\\dfrac{1}{2}','3','-\\dfrac{5}{2}']},
   {q:'\\dfrac{1}{x(x+1)} = \\dfrac{A}{x} + \\dfrac{B}{x+1}',ask:'Find A',correct:'1',d:['-1','0','\\dfrac{1}{2}']},
   {q:'\\dfrac{1}{x(x+1)} = \\dfrac{A}{x} + \\dfrac{B}{x+1}',ask:'Find B',correct:'-1',d:['1','0','\\dfrac{1}{2}']},
-  {q:'\\dfrac{3x-1}{(2x+1)(x-3)} = \\dfrac{A}{2x+1} + \\dfrac{B}{x-3}',ask:'Find A',correct:'1',d:['-1','\\dfrac{1}{2}','3']},
+  {q:'\\dfrac{3x-1}{(2x+1)(x-3)} = \\dfrac{A}{2x+1} + \\dfrac{B}{x-3}',ask:'Find A',correct:'\\dfrac{5}{7}',d:['-\\dfrac{5}{7}','1','\\dfrac{5}{14}']},
   {q:'\\dfrac{3x-1}{(2x+1)(x-3)} = \\dfrac{A}{2x+1} + \\dfrac{B}{x-3}',ask:'Find B',correct:'\\dfrac{8}{7}',d:['1','8','\\dfrac{1}{7}']},
   {q:'\\dfrac{6}{(3x-1)(x+2)} = \\dfrac{A}{3x-1} + \\dfrac{B}{x+2}',ask:'Find A',correct:'\\dfrac{18}{7}',d:['6','\\dfrac{6}{7}','3']},
   {q:'\\dfrac{x+5}{(x+1)(x+3)} = \\dfrac{A}{x+1} + \\dfrac{B}{x+3}',ask:'Find A',correct:'2',d:['-2','3','1']},
@@ -116,35 +117,35 @@ alevel:[
   {q:'\\dfrac{2}{(x+3)(x-5)} = \\dfrac{A}{x+3} + \\dfrac{B}{x-5}',ask:'Find A',correct:'-\\dfrac{1}{4}',d:['\\dfrac{1}{4}','2','-2']},
   {q:'\\dfrac{2}{(x+3)(x-5)} = \\dfrac{A}{x+3} + \\dfrac{B}{x-5}',ask:'Find B',correct:'\\dfrac{1}{4}',d:['-\\dfrac{1}{4}','2','-2']},
   {q:'\\dfrac{1}{x(x+1)(x-1)} = \\dfrac{A}{x} + \\dfrac{B}{x+1} + \\dfrac{C}{x-1}',ask:'Find A',correct:'-1',d:['1','0','\\dfrac{1}{2}']},
-  {q:'\\dfrac{1}{x(x+1)(x-1)}',ask:'Find B',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','-1']},
-  {q:'\\dfrac{1}{x(x+1)(x-1)}',ask:'Find C',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','-1']},
+  {q:'\\dfrac{1}{x(x+1)(x-1)} = \\dfrac{A}{x} + \\dfrac{B}{x+1} + \\dfrac{C}{x-1}',ask:'Find B',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','-1']},
+  {q:'\\dfrac{1}{x(x+1)(x-1)} = \\dfrac{A}{x} + \\dfrac{B}{x+1} + \\dfrac{C}{x-1}',ask:'Find C',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','-1']},
   {q:'\\dfrac{2x+1}{(x-1)(x+1)(x+2)} = \\dfrac{A}{x-1}+\\dfrac{B}{x+1}+\\dfrac{C}{x+2}',ask:'Find A',correct:'\\dfrac{1}{2}',d:['1','-\\dfrac{1}{2}','\\dfrac{3}{2}']},
   {q:'\\dfrac{x^2}{(x+1)(x-1)(x+2)}',ask:'Form of decomposition',correct:'\\dfrac{A}{x+1}+\\dfrac{B}{x-1}+\\dfrac{C}{x+2}',d:['\\dfrac{Ax+B}{x+1}+\\dfrac{C}{x-1}','\\dfrac{A}{x+1}+\\dfrac{B}{x-1}','Ax+B+\\dfrac{C}{x+2}']},
-  {q:'\\dfrac{5x-1}{(x)(x-1)(x+2)} = \\dfrac{A}{x}+\\dfrac{B}{x-1}+\\dfrac{C}{x+2}',ask:'Find A (set x = 0)',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','5']},
-  {q:'\\dfrac{5x-1}{(x)(x-1)(x+2)}',ask:'Find B (set x = 1)',correct:'\\dfrac{4}{3}',d:['4','\\dfrac{1}{3}','\\dfrac{5}{3}']},
-  {q:'\\dfrac{5x-1}{(x)(x-1)(x+2)}',ask:'Find C (set x = −2)',correct:'\\dfrac{11}{6}',d:['-\\dfrac{11}{6}','\\dfrac{5}{6}','2']},
-  {q:'\\dfrac{6x^2+5x+1}{(x+1)(2x+1)(x-1)}',ask:'What method to find A, B, C?',correct:'Substitution or comparing coefficients',d:['Long division','Differentiation','Integration']},
-  {q:'\\dfrac{1}{(x-1)(x-2)(x-3)}',ask:'Find A (coefficient of 1/(x−1))',correct:'\\dfrac{1}{2}',d:['1','-\\dfrac{1}{2}','\\dfrac{1}{3}']},
+  {q:'\\dfrac{5x-1}{x(x-1)(x+2)} = \\dfrac{A}{x}+\\dfrac{B}{x-1}+\\dfrac{C}{x+2}',ask:'Find A (set x = 0)',correct:'\\dfrac{1}{2}',d:['-\\dfrac{1}{2}','1','5']},
+  {q:'\\dfrac{5x-1}{x(x-1)(x+2)} = \\dfrac{A}{x}+\\dfrac{B}{x-1}+\\dfrac{C}{x+2}',ask:'Find B (set x = 1)',correct:'\\dfrac{4}{3}',d:['4','\\dfrac{1}{3}','\\dfrac{5}{3}']},
+  {q:'\\dfrac{5x-1}{x(x-1)(x+2)} = \\dfrac{A}{x}+\\dfrac{B}{x-1}+\\dfrac{C}{x+2}',ask:'Find C (set x = −2)',correct:'-\\dfrac{11}{6}',d:['\\dfrac{11}{6}','\\dfrac{5}{6}','2']},
+  {q:'\\dfrac{6x^2+5x+3}{(x+1)(2x+1)(x-1)}',ask:'What method to find A, B, C?',correct:'Substitution or comparing coefficients',d:['Long division','Differentiation','Integration']},
+  {q:'\\dfrac{1}{(x-1)(x-2)(x-3)} = \\dfrac{A}{x-1}+\\dfrac{B}{x-2}+\\dfrac{C}{x-3}',ask:'Find A',correct:'\\dfrac{1}{2}',d:['1','-\\dfrac{1}{2}','\\dfrac{1}{3}']},
   {q:'\\dfrac{3x+5}{(x+1)^2} = \\dfrac{A}{x+1} + \\dfrac{B}{(x+1)^2}',ask:'Find A',correct:'3',d:['5','1','-3']},
   {q:'\\dfrac{3x+5}{(x+1)^2} = \\dfrac{A}{x+1} + \\dfrac{B}{(x+1)^2}',ask:'Find B',correct:'2',d:['5','8','-2']},
   {q:'\\dfrac{x+3}{(x-2)^2} = \\dfrac{A}{x-2} + \\dfrac{B}{(x-2)^2}',ask:'Find A',correct:'1',d:['3','-1','2']},
-  {q:'\\dfrac{x+3}{(x-2)^2}',ask:'Find B',correct:'5',d:['3','1','-5']},
+  {q:'\\dfrac{x+3}{(x-2)^2} = \\dfrac{A}{x-2} + \\dfrac{B}{(x-2)^2}',ask:'Find B',correct:'5',d:['3','1','-5']},
   {q:'\\dfrac{4x}{(x+1)^2(x-1)} = \\dfrac{A}{x+1}+\\dfrac{B}{(x+1)^2}+\\dfrac{C}{x-1}',ask:'Find C (set x = 1)',correct:'1',d:['4','2','-1']},
-  {q:'\\dfrac{4x}{(x+1)^2(x-1)}',ask:'Find B (set x = −1)',correct:'2',d:['-2','4','-4']},
+  {q:'\\dfrac{4x}{(x+1)^2(x-1)} = \\dfrac{A}{x+1}+\\dfrac{B}{(x+1)^2}+\\dfrac{C}{x-1}',ask:'Find B (set x = −1)',correct:'2',d:['-2','4','-4']},
   {q:'\\dfrac{2x+1}{x^2(x+1)} = \\dfrac{A}{x}+\\dfrac{B}{x^2}+\\dfrac{C}{x+1}',ask:'Find B (set x = 0)',correct:'1',d:['2','0','-1']},
-  {q:'\\dfrac{2x+1}{x^2(x+1)}',ask:'Find C (set x = −1)',correct:'-1',d:['1','3','-3']},
-  {q:'\\dfrac{5}{(x-1)^2(x+2)}',ask:'Form of decomposition',correct:'\\dfrac{A}{x-1}+\\dfrac{B}{(x-1)^2}+\\dfrac{C}{x+2}',d:['\\dfrac{A}{x-1}+\\dfrac{B}{x+2}','\\dfrac{Ax+B}{(x-1)^2}+\\dfrac{C}{x+2}','\\dfrac{A}{(x-1)^2}+\\dfrac{B}{x+2}']},
-  {q:'\\dfrac{x^2+1}{(x+1)^2(x-1)}',ask:'Form of decomposition',correct:'\\dfrac{A}{x+1}+\\dfrac{B}{(x+1)^2}+\\dfrac{C}{x-1}',d:['\\dfrac{Ax+B}{(x+1)^2}+\\dfrac{C}{x-1}','\\dfrac{A}{x+1}+\\dfrac{B}{x-1}','1+\\dfrac{A}{x+1}+\\dfrac{B}{x-1}']},
+  {q:'\\dfrac{2x+1}{x^2(x+1)} = \\dfrac{A}{x}+\\dfrac{B}{x^2}+\\dfrac{C}{x+1}',ask:'Find C (set x = −1)',correct:'-1',d:['1','3','-3']},
+  {q:'\\dfrac{5}{(x-1)^2(x+2)}',ask:'Form of decomposition',correct:'\\dfrac{A}{x-1}+\\dfrac{B}{(x-1)^2}+\\dfrac{C}{x+2}',d:['\\dfrac{A}{x-1}+\\dfrac{B}{x+2}','\\dfrac{A}{x-1}+\\dfrac{B}{x-1}+\\dfrac{C}{x+2}','\\dfrac{A}{(x-1)^2}+\\dfrac{B}{x+2}']},
+  {q:'\\dfrac{x^2+1}{(x+1)^2(x-1)}',ask:'Form of decomposition',correct:'\\dfrac{A}{x+1}+\\dfrac{B}{(x+1)^2}+\\dfrac{C}{x-1}',d:['\\dfrac{A}{x+1}+\\dfrac{B}{x+1}+\\dfrac{C}{x-1}','\\dfrac{A}{x+1}+\\dfrac{B}{x-1}','1+\\dfrac{A}{x+1}+\\dfrac{B}{x-1}']},
   {q:'\\dfrac{x^2+1}{(x+1)(x-1)}',ask:'Is this proper or improper?',correct:'Improper',d:['Proper','Neither','Undefined']},
   {q:'\\dfrac{x^2+1}{x^2-1}',ask:'Perform long division first. Quotient?',correct:'1',d:['x','x+1','0']},
   {q:'\\dfrac{x^2+1}{x^2-1} = 1 + \\dfrac{?}{x^2-1}',ask:'Find the remainder',correct:'2',d:['1','-2','0']},
   {q:'\\dfrac{x^2+1}{(x+1)(x-1)} = 1 + \\dfrac{A}{x+1} + \\dfrac{B}{x-1}',ask:'Find A',correct:'-1',d:['1','\\dfrac{1}{2}','-\\dfrac{1}{2}']},
   {q:'\\dfrac{x^2+1}{(x+1)(x-1)} = 1 + \\dfrac{A}{x+1} + \\dfrac{B}{x-1}',ask:'Find B',correct:'1',d:['-1','\\dfrac{1}{2}','2']},
   {q:'\\dfrac{x^2+3x+5}{(x+1)(x+2)}',ask:'Quotient from long division',correct:'1',d:['x','x+1','0']},
-  {q:'\\dfrac{x^2+3x+5}{(x+1)(x+2)} = 1 + \\dfrac{?}{(x+1)(x+2)}',ask:'Find the remainder (numerator)',correct:'2',d:['3','5','0']},
+  {q:'\\dfrac{x^2+3x+5}{(x+1)(x+2)} = 1 + \\dfrac{?}{(x+1)(x+2)}',ask:'Find the remainder (numerator)',correct:'3',d:['2','5','0']},
   {q:'\\dfrac{2x^2+x+1}{(x-1)(x+2)}',ask:'Is this proper or improper?',correct:'Improper',d:['Proper','Cannot tell','Undefined']},
   {q:'\\dfrac{3x+2}{x+1}',ask:'Perform long division',correct:'3 - \\dfrac{1}{x+1}',d:['3 + \\dfrac{1}{x+1}','3 + \\dfrac{2}{x+1}','3x + \\dfrac{2}{x+1}']},
-  {q:'\\dfrac{x^2}{(x+1)(x-2)}',ask:'After long division, the integer part is',correct:'1',d:['0','x','2']},
+  {q:'\\dfrac{x^2}{(x+1)(x-2)}',ask:'After long division, the quotient is',correct:'1',d:['0','x','2']},
 ]
 };
 
@@ -154,7 +155,7 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function startGame(){questions=shuffle([...QUESTIONS.alevel]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}window._ggAbandoned=true;if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'partial-fractions-duel',level:'alevel',questions_answered:qIdx});});}mfg('game_started',{game_slug:'partial-fractions-duel',level:'alevel'});show('game');showQ()}
-function showQ(){const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;const qEl=document.getElementById('question');qEl.innerHTML='';rk(qEl,q.q);document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
+function showQ(){const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;const qEl=document.getElementById('question');qEl.innerHTML='';rk(qEl,q.q);document.getElementById('prompt').textContent=q.ask;const opts=MaffsOptions.build(q.correct,q.d);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
 function tick(){const e=Math.floor((Date.now()-qStartTime)/1000);document.getElementById('timer').textContent=e+'s'}
 function handle(btn,q){clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});mfg('question_answered',{game_slug:'partial-fractions-duel',level:'alevel',correct:ok,question_index:qIdx+1});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)}
 function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
