@@ -24,7 +24,9 @@
  *                                Answer controls: buttons, inputs, selects, textareas, anything
  *                                with role="button"/"option"/"radio", a tabindex, an onclick, or a
  *                                pointer cursor. A MaffsNext control, and anything inside an
- *                                element marked data-maffs-lock-skip, is never locked.
+ *                                element marked data-maffs-lock-skip (a game's own Next button
+ *                                inside the container), is never locked; fresh() still covers it,
+ *                                so a second Enter on Next cannot skip the question it loaded.
  *   MaffsLock.isLocked(container)  true from lock() until the next question (fresh(), or its
  *                                controls gone): what a game asks instead of keeping an "answered"
  *                                flag (a keypad that must stop typing, an Enter that must advance).
@@ -156,7 +158,7 @@
       var st = states[i];
       if (!st.c.isConnected) { states.splice(i, 1); continue; }
       var inside = st.c.contains(t);
-      if (st.until > t0 && (inside || bare) && !skipped(t)) return true;
+      if (st.until > t0 && (inside || bare)) return true;
       if (st.locked && inside && !stale(st)) {
         for (var n = t; n && n !== st.c; n = n.parentNode) {
           if (st.els.indexOf(n) !== -1) return true;

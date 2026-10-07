@@ -19,6 +19,7 @@ is played in headless Chromium against the real next-control.js and answer-lock.
               question (the option under it)
   double-tap  the same with two taps at 390px on a touch screen
   keys        two Enter presses on a focused option mark once
+  own-next    a game's own Next marked data-maffs-lock-skip is never locked, but fresh() covers it
   timer       a right answer's advance timer does not fire after a screen change (screen()), and a
               timer set on the wrong path does not fire after MaffsNext's advance
   finish      finishOnce() runs once per session, and again after newSession()
@@ -149,6 +150,7 @@ async def suite(browser, lock_js, next_js):
 
     # re-mark: the answered option, Enter, Space and the game's own keys change nothing
     ctx, page, errors = await fresh_page()
+    await page.evaluate('() => { MaffsNext.FLOOR_MS = 3000; }')   # the real floor: no key may advance
     await page.focus('#area .tile')
     await page.keyboard.press('Enter')              # answers via the tile (wrong: index 3)
     before = await S(page)
@@ -208,11 +210,32 @@ async def suite(browser, lock_js, next_js):
 
     # keys: two quick Enters on a focused option mark once
     ctx, page, errors = await fresh_page()
+    await page.evaluate('() => { MaffsNext.FLOOR_MS = 3000; }')
     await page.focus('#area .tile')
     await page.keyboard.press('Enter')
     await page.keyboard.press('Enter')
     s = await S(page)
     check('keys', s['answered'] == 1, 'two Enters on a focused option: answered %d' % s['answered'])
+    await ctx.close()
+
+    # own-next: a game's own Next inside the container, marked data-maffs-lock-skip, is never locked, but the
+    # fresh window covers it (a second Enter on it must not load the question after the one it just loaded)
+    ctx, page, errors = await fresh_page()
+    r = await page.evaluate("""async () => {
+        let n = 0;
+        const own = document.createElement('button');
+        own.setAttribute('data-maffs-lock-skip', ''); own.textContent = 'Next';
+        own.addEventListener('click', () => { n++; });
+        render(); area.appendChild(own);
+        own.click();
+        const early = n;
+        await new Promise(res => setTimeout(res, 350));
+        MaffsLock.lock(area); own.click();
+        return { early, late: n, disabled: own.disabled };
+    }""")
+    check('own-next', r['early'] == 0 and r['late'] == 1 and not r['disabled'],
+          'skip-marked Next: %d click(s) in the fresh window, %d after the lock; disabled %s'
+          % (r['early'], r['late'], r['disabled']))
     await ctx.close()
 
     # timer: a right answer's advance does not fire after a screen change; a wrong path's timer does not
