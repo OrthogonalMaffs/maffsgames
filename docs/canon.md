@@ -1210,7 +1210,7 @@ for 9m41s, and group B for 8 minutes. Nothing a check checks changed; only where
 | Main's full run | 10m42s (C 9m41s, B 8m03s, Tiers 1 + 2 6m15s) | 5m45s (PR #95, which ran everything: B1 4m51s, D 4m48s, B2 4m30s; shards 1m40s-2m18s) |
 
 The same evening (queue item 2) every content job was brought under 4 minutes: B in four, C in four, D in two.
-TIMINGS_ITEM2
+Measured on the full run of the PR that did it (#103): every job 3m38s or less (A 3m38s, B2 3m29s, C4 3m10s, D1/D2 1m56s/2m03s); the whole run 4m47s (main after #99: 6m19s, with D 5m23s and B2 4m33s).
 
 **Rules that keep it fast.** Every job still fails at 75% of its timeout ("time budget: … split it"). **No
 "Content verifiers" job may run past 4 minutes** (Jon, 7 Oct 2026): a new content verifier goes into whichever

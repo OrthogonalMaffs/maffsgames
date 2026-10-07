@@ -24,6 +24,8 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
   `--part-selftest` proves every candidate is in one part. Locally: 121 s and 124 s against 185 s whole.
 - **C:** four parts (C4 added); **B:** four groups, cut by the slowest time each line has taken on main (runners vary up to 1.8x: Log Laws 30-55 s, Growth and Decay 58-93 s). Timeouts 6-8 min (budget 75%). 19 matrix entries now (was 16): more runner pressure when both lanes run.
 - Canon §7.8.1: no content job past 4 minutes; a new verifier goes where that holds.
+- **After (#103's full run):** every job 3m38s or less (A 3m38s, B2 3m29s, C4 3m10s, C1-C3 2m50s-3m06s, B1/B3/B4 2m47s-2m50s,
+  D1 1m56s, D2 2m03s); the whole run 4m47s (main after #99: 6m19s).
 - **For Jon:** the cloud lane's #96, #97 and #100 each edited `.github/workflows/check-site.yml` (adding their
   verifier to a B group). Canon §7.8.2 reserves the workflow for the home lane. It did no harm (the lines were
   needed and CI passed), but either the rule should allow "add my verifier's line to a content group" or the cloud
