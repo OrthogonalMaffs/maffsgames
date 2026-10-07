@@ -16,6 +16,27 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="/schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game (a wrong table: every cell the opposite of its key, then Submit; on the expression step, the first option).
+{
+  "ready": "document.getElementById('questionArea').style.display !== 'none' && !!document.getElementById('submitTT')",
+  "answer": [
+    "return (async () => {",
+    "  const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    "  await real(350);",
+    "  const tt = document.getElementById('truthTableSection'), sub = document.getElementById('submitTT');",
+    "  if (sub && !MaffsLock.isLocked(tt)) {",
+    "    QUESTIONS[qIndex].outputs.forEach((v, k) => { for (let n = 0; n <= 1 - v; n++) toggleOutput(k); });",
+    "    sub.click(); return; }",
+    "  const es = document.getElementById('expressionSection');",
+    "  if (es && es.style.display !== 'none' && !MaffsLock.isLocked(es)) {",
+    "    const b = es.querySelector('.opt-btn'); if (b) b.click(); }",
+    "})();"
+  ],
+  "surface": "#truthTableSection"
+}
+-->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="/schools/assets/firebase-leaderboard.js"></script>
@@ -284,20 +305,45 @@ function genInputRows(n) {
   return rows;
 }
 
-// Compute truth table from expression for boss questions
-function evalBoolExpr(expr, vars, vals) {
-  // Build context: A=0/1, B=0/1, etc.
-  var ctx = {};
-  for (var i = 0; i < vars.length; i++) ctx[vars[i]] = vals[i];
-
-  // Simple recursive evaluator for our expression format
-  // Preprocess: replace variable names with 0/1
-  var s = expr;
-  // Replace NOT(X) patterns and overline
-  // We'll use a stack-based approach instead
-
-  // Actually, for reliability, let's just use the pre-computed truth tables
-  return null;
+// Truth tables are computed from each item's key expression, never typed by hand (library [12] once stored the
+// outputs of B·D̄ under the key (A·B + C)·D̄, so a correct table was marked 13/16). The expressions in this file use
+// OR '+', XOR '\oplus', AND '\cdot' or juxtaposition, NOT '\overline{...}', brackets and single-letter inputs.
+// scripts/verify-truth-will-set-you-free.py evaluates every expression independently and compares.
+function boolFn(expr) {
+  var toks = expr.replace(/\\overline\{/g, ' ~ { ').replace(/\\cdot/g, ' * ').replace(/\\oplus/g, ' ^ ')
+    .replace(/([A-Z()+{}])/g, ' $1 ').trim().split(/\s+/);
+  var i = 0;
+  function fail(what) { throw new Error('Boolean expression ' + expr + ': ' + what); }
+  function expect(c) { if (toks[i++] !== c) fail('expected ' + c); }
+  function bin(x, y, op) { return function (e) { return op(x(e), y(e)); }; }
+  function or() { var a = xor(); while (toks[i] === '+') { i++; a = bin(a, xor(), function (p, q) { return p | q; }); } return a; }
+  function xor() { var a = and(); while (toks[i] === '^') { i++; a = bin(a, and(), function (p, q) { return p ^ q; }); } return a; }
+  function and() {
+    var a = unary();
+    while (toks[i] === '*' || /^[A-Z~(]$/.test(toks[i] || '')) {
+      if (toks[i] === '*') i++;
+      a = bin(a, unary(), function (p, q) { return p & q; });
+    }
+    return a;
+  }
+  function unary() {
+    var t = toks[i++], a;
+    if (t === '~') { expect('{'); a = or(); expect('}'); return function (e) { return 1 - a(e); }; }
+    if (t === '(') { a = or(); expect(')'); return a; }
+    if (/^[A-Z]$/.test(t || '')) return function (e) { if (!(t in e)) fail('no input ' + t); return e[t]; };
+    fail('unexpected ' + t);
+  }
+  var f = or();
+  if (i !== toks.length) fail('unexpected ' + toks[i]);
+  return f;
+}
+function truthTable(expr, inputs) {
+  var f = boolFn(expr);
+  return genInputRows(inputs.length).map(function (row) {
+    var e = {};
+    inputs.forEach(function (v, k) { e[v] = row[k]; });
+    return f(e);
+  });
 }
 
 // ── QUESTION BANK ──────────────────────────────────────────────────────────────
@@ -309,7 +355,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Power switch (1 = on)', 'B = Safety guard (1 = in place)', 'C = Dust sensor (1 = dust detected) — not used in output logic'],
     logic: 'The fan runs when the power switch is on AND the safety guard is in place.',
     expr: 'A \\cdot B',
-    outputs: [0,0,0,0,0,0,1,1],
     distractors: ['A + B', 'A \\cdot \\overline{B}', 'A \\cdot B \\cdot C'],
     bbLink: null
   },
@@ -319,7 +364,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Start button (1 = pressed)', 'B = Auto-run signal (1 = active)', 'C = Emergency stop (1 = pressed)'],
     logic: 'The conveyor runs when start OR auto-run is active, AND emergency stop is NOT pressed.',
     expr: '(A + B) \\cdot \\overline{C}',
-    outputs: [0,0,1,0,1,0,1,0],
     distractors: ['A + B + \\overline{C}', 'A \\cdot B \\cdot \\overline{C}', '(A + B) \\cdot C'],
     bbLink: null
   },
@@ -329,7 +373,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Temperature below threshold (1 = below)', 'B = Day-shift timer (1 = active)', 'C = Manual override (1 = active)'],
     logic: 'The heater activates when temperature is below threshold AND either the day-shift timer OR manual override is active.',
     expr: 'A \\cdot (B + C)',
-    outputs: [0,0,0,0,0,1,1,1],
     distractors: ['A + B \\cdot C', 'A \\cdot B + C', '(A + B) \\cdot C'],
     bbLink: null
   },
@@ -339,7 +382,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Forward switch (1 = pressed)', 'B = Reverse switch (1 = pressed)', 'C = Vibration sensor (1 = vibration detected) — not used'],
     logic: 'The motor runs when forward is on AND reverse is off, OR when reverse is on AND forward is off.',
     expr: 'A \\cdot \\overline{B} + \\overline{A} \\cdot B',
-    outputs: [0,0,1,1,1,1,0,0],
     distractors: ['A + B', 'A \\cdot B', '\\overline{A} \\cdot \\overline{B}'],
     bbLink: null
   },
@@ -349,7 +391,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Tank level low (1 = low)', 'B = Supply valve open (1 = open)', 'C = Manual flush (1 = pressed)'],
     logic: 'The pump runs when tank is low AND valve is open, OR when manual flush is pressed.',
     expr: 'A \\cdot B + C',
-    outputs: [0,1,0,1,0,1,1,1],
     distractors: ['(A + B) \\cdot C', 'A \\cdot (B + C)', 'A + B \\cdot C'],
     bbLink: null
   },
@@ -359,7 +400,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Spindle running (1 = running)', 'B = Coolant flowing (1 = flowing)', 'C = Guard door open (1 = open)'],
     logic: 'Warning sounds when spindle is running AND coolant is NOT flowing, OR when spindle is running AND guard door is open.',
     expr: 'A \\cdot \\overline{B} + A \\cdot C',
-    outputs: [0,0,0,0,1,1,0,1],
     distractors: ['A \\cdot (\\overline{B} \\cdot C)', '\\overline{A} \\cdot B + A \\cdot C', 'A + \\overline{B} + C'],
     bbLink: 'BB Q17', simplified: 'A(\\overline{B} + C)'
   },
@@ -369,8 +409,7 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Movement detected (1 = detected)', 'B = Internal light low (1 = low)', 'C = External light low (1 = low)'],
     logic: 'Lights turn on when movement is detected AND internal light is low, OR when movement is detected AND external light is low.',
     expr: 'A \\cdot B + A \\cdot C',
-    outputs: [0,0,0,0,0,1,1,1],
-    distractors: ['A + B \\cdot C', '(A + B) \\cdot (A + C)', 'A \\cdot B \\cdot C'],
+    distractors: ['A + B \\cdot C', 'A \\cdot B + C', 'A \\cdot B \\cdot C'],
     bbLink: 'BB Q17', simplified: 'A(B + C)'
   },
   {
@@ -379,7 +418,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Valid keycard (1 = valid)', 'B = PIN correct (1 = correct)', 'C = Biometric pass (1 = pass)'],
     logic: 'Door unlocks when keycard is valid AND PIN is correct, OR when keycard is valid AND biometric passes.',
     expr: 'A \\cdot B + A \\cdot C',
-    outputs: [0,0,0,0,0,1,1,1],
     distractors: ['A \\cdot (B \\cdot C)', '(A + B) \\cdot C', 'A + B + C'],
     bbLink: 'BB Q17', simplified: 'A(B + C)'
   },
@@ -389,7 +427,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Smoke detector (1 = triggered)', 'B = Heat detector (1 = triggered)', 'C = Manual pull station (1 = activated)'],
     logic: 'Sprinklers activate when smoke AND heat are both detected, OR when the manual pull station is activated.',
     expr: 'A \\cdot B + C',
-    outputs: [0,1,0,1,0,1,1,1],
     distractors: ['(A + B) \\cdot C', 'A \\cdot B \\cdot C', 'A + B + C'],
     bbLink: null
   },
@@ -399,7 +436,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Pressure low (1 = low)', 'B = Motor temp below limit (1 = below)', 'C = Oil level adequate (1 = adequate)'],
     logic: 'The compressor runs when pressure is low AND temperature is below limit AND oil level is adequate.',
     expr: 'A \\cdot B \\cdot C',
-    outputs: [0,0,0,0,0,0,0,1],
     distractors: ['A + B + C', 'A \\cdot B + C', 'A \\cdot (B + C)'],
     bbLink: null
   },
@@ -411,7 +447,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Primary temp high (1 = high)', 'B = Secondary temp high (1 = high)', 'C = Pressure high (1 = high)', 'D = Flow rate low (1 = low)'],
     logic: 'Alarm triggers when both temperature sensors read high, OR when pressure is high AND flow rate is low.',
     expr: 'A \\cdot B + C \\cdot D',
-    outputs: [0,0,0,1,0,0,0,1,0,0,0,1,1,1,1,1],
     distractors: ['(A + B) \\cdot (C + D)', 'A \\cdot B \\cdot C \\cdot D', 'A \\cdot C + B \\cdot D'],
     bbLink: null
   },
@@ -421,7 +456,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Forward (1 = selected)', 'B = Reverse (1 = selected)', 'C = Enable (1 = active)', 'D = Fault (1 = present)'],
     logic: 'Motor runs when exactly one of forward/reverse is selected, AND enable is active, AND no fault is present.',
     expr: '(A \\cdot \\overline{B} + \\overline{A} \\cdot B) \\cdot C \\cdot \\overline{D}',
-    outputs: [0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0],
     distractors: ['(A + B) \\cdot C \\cdot \\overline{D}', '(A \\cdot B) \\cdot C \\cdot \\overline{D}', '(A \\cdot \\overline{B} + \\overline{A} \\cdot B) \\cdot C \\cdot D'],
     bbLink: null
   },
@@ -431,7 +465,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Conveyor running (1 = running)', 'B = Product detected (1 = detected)', 'C = Cleaning mode (1 = active)', 'D = Master lockout (1 = locked out)'],
     logic: 'Valve opens when (conveyor running AND product detected, OR cleaning mode active) AND master lockout is NOT engaged.',
     expr: '(A \\cdot B + C) \\cdot \\overline{D}',
-    outputs: [0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0],
     distractors: ['A \\cdot B + C \\cdot \\overline{D}', '(A + B) \\cdot C \\cdot \\overline{D}', 'A \\cdot B \\cdot C \\cdot \\overline{D}'],
     bbLink: null
   },
@@ -441,7 +474,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Correct key inserted (1 = yes)', 'B = Transponder match (1 = match)', 'C = Backup code correct (1 = correct)', 'D = Tamper alarm (1 = triggered)'],
     logic: 'Engine starts when key is correct AND (transponder matches OR backup code is correct) AND tamper alarm is NOT triggered.',
     expr: 'A \\cdot (B + C) \\cdot \\overline{D}',
-    outputs: [0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0],
     distractors: ['A \\cdot B \\cdot C \\cdot \\overline{D}', '(A + B + C) \\cdot \\overline{D}', 'A \\cdot (B + C) \\cdot D'],
     bbLink: null
   },
@@ -451,7 +483,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Tank level low (1 = low)', 'B = Primary flow sensor (1 = active)', 'C = Secondary flow sensor (1 = active)', 'D = Isolation valve open (1 = open)'],
     logic: 'Pump runs when tank is low AND primary flow is active AND valve is open, OR when tank is low AND secondary flow is active AND valve is open.',
     expr: 'A \\cdot B \\cdot D + A \\cdot C \\cdot D',
-    outputs: [0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1],
     distractors: ['(A + B) \\cdot (C + D)', 'A \\cdot (B + C + D)', 'A \\cdot B \\cdot C \\cdot D'],
     bbLink: 'BB Q18', simplified: 'A \\cdot D \\cdot (B + C)'
   },
@@ -461,7 +492,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Main road\'s turn (1 = yes)', 'B = Pedestrians crossing (1 = crossing)', 'C = Emergency vehicle (1 = active)', 'D = Night mode (1 = active) — not used'],
     logic: 'Green is on when it\'s the main road turn AND no pedestrians AND no emergency, OR when it\'s the main road turn AND emergency is active.',
     expr: 'A \\cdot \\overline{B} \\cdot \\overline{C} + A \\cdot C',
-    outputs: [0,0,0,0,0,0,0,0,1,1,1,1,0,0,1,1],
     distractors: ['A \\cdot (\\overline{B} + \\overline{C})', 'A \\cdot \\overline{B} + \\overline{C}', '(A + \\overline{B}) \\cdot \\overline{C}'],
     bbLink: 'BB Q26', simplified: 'A(\\overline{B} + C)'
   },
@@ -471,7 +501,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Target reached (1 = reached)', 'B = Door closed (1 = closed)', 'C = Timer running (1 = running)', 'D = Boost mode (1 = selected)'],
     logic: 'Heater activates when target NOT reached AND door closed AND timer running, OR when target NOT reached AND door closed AND boost mode selected.',
     expr: '\\overline{A} \\cdot B \\cdot C + \\overline{A} \\cdot B \\cdot D',
-    outputs: [0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0],
     distractors: ['\\overline{A} \\cdot B \\cdot C \\cdot D', 'A \\cdot B \\cdot (C + D)', '\\overline{A} + B \\cdot C + B \\cdot D'],
     bbLink: 'BB Q18', simplified: '\\overline{A} \\cdot B \\cdot (C + D)'
   },
@@ -481,7 +510,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Internal temp high (1 = high)', 'B = Building occupied (1 = occupied)', 'C = Humidity high (1 = high)', 'D = Maintenance mode (1 = active)'],
     logic: 'AC runs when (temp is high AND occupied, OR humidity is high AND occupied) AND maintenance mode is NOT active.',
     expr: '(A \\cdot B + C \\cdot B) \\cdot \\overline{D}',
-    outputs: [0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0],
     distractors: ['(A + C) \\cdot B \\cdot D', 'A \\cdot B \\cdot C \\cdot \\overline{D}', '(A \\cdot B + C) \\cdot \\overline{D}'],
     bbLink: 'BB Q6', simplified: 'B(A + C) \\cdot \\overline{D}'
   },
@@ -491,7 +519,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Sunlight detected (1 = yes)', 'B = Angle matches target (1 = matches)', 'C = Calibration active (1 = active)', 'D = Wind lockout (1 = locked)'],
     logic: 'Motor moves when (sunlight AND angle not matching, OR calibration active AND angle not matching) AND wind lockout is NOT active.',
     expr: '(A \\cdot \\overline{B} + C \\cdot \\overline{B}) \\cdot \\overline{D}',
-    outputs: [0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0],
     distractors: ['(A + C) \\cdot B \\cdot \\overline{D}', 'A \\cdot \\overline{B} \\cdot C \\cdot \\overline{D}', '(A \\cdot \\overline{B} + C \\cdot \\overline{B}) \\cdot D'],
     bbLink: 'BB Q8', simplified: '\\overline{B}(A + C) \\cdot \\overline{D}'
   },
@@ -501,7 +528,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Part clamped (1 = clamped)', 'B = Robot in position (1 = in position)', 'C = Gas flowing (1 = flowing)', 'D = Test signal (1 = active)'],
     logic: 'Torch fires when part clamped AND robot in position AND gas flowing, OR when test signal active AND gas flowing.',
     expr: 'A \\cdot B \\cdot C + D \\cdot C',
-    outputs: [0,0,0,1,0,0,0,1,0,0,0,1,0,0,1,1],
     distractors: ['A \\cdot B + C \\cdot D', '(A + B) \\cdot C \\cdot D', 'A \\cdot B \\cdot C \\cdot D'],
     bbLink: null, simplified: 'C(AB + D)'
   },
@@ -513,7 +539,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Grid supply live (1 = live)', 'B = Generator running (1 = running)', 'C = Transfer switch in generator position (1 = yes)', 'D = Load within limits (1 = within)', 'E = Master trip (1 = tripped)'],
     logic: 'Breaker closes when (grid live AND generator NOT running AND load within limits, OR grid NOT live AND generator running AND transfer in generator position AND load within limits) AND master trip NOT active.',
     expr: '(A \\cdot \\overline{B} \\cdot D + \\overline{A} \\cdot B \\cdot C \\cdot D) \\cdot \\overline{E}',
-    outputs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0],
     distractors: ['(A \\cdot \\overline{B} + \\overline{A} \\cdot B \\cdot C) \\cdot D \\cdot E', 'A \\cdot \\overline{B} \\cdot D + \\overline{A} \\cdot B \\cdot C \\cdot D', '(A + B) \\cdot C \\cdot D \\cdot \\overline{E}'],
     bbLink: null
   },
@@ -523,7 +548,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Temperature above setpoint (1 = above)', 'B = Fermentation active (1 = active)', 'C = Batch timer expired (1 = expired)', 'D = Manual cool request (1 = requested)', 'E = System lockout (1 = locked)'],
     logic: 'Valve opens when (temp above AND fermentation active AND timer NOT expired, OR temp above AND manual cool) AND system lockout NOT active.',
     expr: '(A \\cdot B \\cdot \\overline{C} + A \\cdot D) \\cdot \\overline{E}',
-    outputs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0],
     distractors: ['(A \\cdot B + A \\cdot D) \\cdot \\overline{C} \\cdot \\overline{E}', 'A \\cdot (B \\cdot \\overline{C} + D) \\cdot E', 'A \\cdot B \\cdot \\overline{C} \\cdot D \\cdot \\overline{E}'],
     bbLink: 'BB Q9', simplified: 'A(\\overline{C} \\cdot B + D) \\cdot \\overline{E}'
   },
@@ -533,7 +557,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Lift at floor (1 = yes)', 'B = Motor stopped (1 = stopped)', 'C = Door-open button (1 = pressed)', 'D = Passenger in doorway (1 = detected)', 'E = Door lock engaged (1 = engaged)'],
     logic: 'Doors open when at floor AND motor stopped AND (button pressed OR passenger detected) AND door lock NOT engaged.',
     expr: 'A \\cdot B \\cdot (C + D) \\cdot \\overline{E}',
-    outputs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,0],
     distractors: ['A \\cdot B \\cdot C \\cdot D \\cdot \\overline{E}', '(A + B) \\cdot (C + D) \\cdot \\overline{E}', 'A \\cdot B \\cdot (C + D) \\cdot E'],
     bbLink: null
   },
@@ -543,7 +566,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Program tool change request (1 = requested)', 'B = Spindle stopped (1 = stopped)', 'C = Current tool = requested tool (1 = same)', 'D = Jog mode (1 = active)', 'E = Coolant flowing (1 = flowing)'],
     logic: 'Tool change initiates when (program requests AND spindle stopped AND tools NOT same, OR jog mode AND spindle stopped) AND coolant NOT flowing.',
     expr: '(A \\cdot B \\cdot \\overline{C} + D \\cdot B) \\cdot \\overline{E}',
-    outputs: [0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0],
     distractors: ['(A \\cdot B + D \\cdot B) \\cdot \\overline{C} \\cdot \\overline{E}', 'A \\cdot B \\cdot \\overline{C} \\cdot D \\cdot \\overline{E}', '(A \\cdot \\overline{C} + D) \\cdot B \\cdot E'],
     bbLink: 'BB Q6', simplified: 'B(A\\overline{C} + D) \\cdot \\overline{E}'
   },
@@ -553,7 +575,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Temperature high (1 = high)', 'B = Humidity high (1 = high)', 'C = CO2 above threshold (1 = above)', 'D = Storm conditions (1 = storm)', 'E = Economy mode (1 = active)'],
     logic: 'Fans run when (any two of temp/humidity/CO2 are triggered) AND no storm AND no economy mode.',
     expr: '(A \\cdot B + A \\cdot C + B \\cdot C) \\cdot \\overline{D} \\cdot \\overline{E}',
-    outputs: [0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0],
     distractors: ['(A + B + C) \\cdot \\overline{D} \\cdot \\overline{E}', 'A \\cdot B \\cdot C \\cdot \\overline{D} \\cdot \\overline{E}', '(A \\cdot B + C) \\cdot \\overline{D} \\cdot \\overline{E}'],
     bbLink: null
   },
@@ -563,7 +584,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Line detected (1 = detected)', 'B = Obstacle ahead (1 = obstacle)', 'C = Battery low (1 = low)', 'D = Remote command (1 = active)', 'E = Emergency zone (1 = in zone)'],
     logic: 'AGV moves when (line detected OR remote command) AND no obstacle AND battery NOT low AND NOT in emergency zone.',
     expr: '(A + D) \\cdot \\overline{B} \\cdot \\overline{C} \\cdot \\overline{E}',
-    outputs: [0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
     distractors: ['(A \\cdot D) \\cdot \\overline{B} \\cdot \\overline{C} \\cdot \\overline{E}', '(A + D) \\cdot B \\cdot C \\cdot E', 'A \\cdot \\overline{B} \\cdot \\overline{C} + D \\cdot \\overline{E}'],
     bbLink: null
   },
@@ -573,7 +593,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Temp sensor 1 high (1 = high)', 'B = Temp sensor 2 high (1 = high)', 'C = Temp sensor 3 high (1 = high)', 'D = Manual shutdown (1 = pressed)', 'E = Key-switch bypass (1 = active)'],
     logic: 'Shutdown activates when (at least 2 of 3 sensors read high AND bypass NOT active) OR manual shutdown is pressed.',
     expr: '(A \\cdot B + A \\cdot C + B \\cdot C) \\cdot \\overline{E} + D',
-    outputs: [0,0,1,1,0,0,1,1,0,0,1,1,1,0,1,1,0,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1],
     distractors: ['(A + B + C) \\cdot \\overline{E} + D', 'A \\cdot B \\cdot C \\cdot \\overline{E} + D', '(A \\cdot B + A \\cdot C + B \\cdot C) \\cdot \\overline{E} \\cdot \\overline{D}'],
     bbLink: null
   },
@@ -583,9 +602,9 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Forward (1 = active)', 'B = Reverse (1 = active)', 'C = Guard closed (1 = closed)', 'D = Power enable (1 = enabled)', 'E = Fault detected (1 = fault)'],
     logic: 'Motor runs when (forward XOR reverse) AND guard closed AND power enabled AND no fault.',
     expr: '(A \\cdot \\overline{B} + \\overline{A} \\cdot B) \\cdot C \\cdot D \\cdot \\overline{E}',
-    outputs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
     distractors: ['(A + B) \\cdot C \\cdot D \\cdot \\overline{E}', '(A \\cdot B) \\cdot C \\cdot D \\cdot \\overline{E}', '(A \\cdot \\overline{B} + \\overline{A} \\cdot B) \\cdot C \\cdot D \\cdot E'],
-    bbLink: 'BB Q12'
+    bbLink: 'BB Q12', simplified: '(A \\oplus B) \\cdot C \\cdot D \\cdot \\overline{E}',
+    identity: ['A \\oplus B', 'A \\cdot \\overline{B} + \\overline{A} \\cdot B'], gloss: 'XOR: one or the other, but not both'
   },
   {
     tier: 'Tier 3 — Advanced', inputs: ['A','B','C','D','E'],
@@ -593,7 +612,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Server load high (1 = high)', 'B = Ambient temp above threshold (1 = above)', 'C = Primary unit failed (1 = failed)', 'D = Water supply active (1 = active)', 'E = Fire suppression active (1 = active)'],
     logic: 'Cooling runs when (server load high AND ambient above threshold, OR primary failed AND server load high) AND water supply active AND fire suppression NOT active.',
     expr: '(A \\cdot B + C \\cdot A) \\cdot D \\cdot \\overline{E}',
-    outputs: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0],
     distractors: ['(A + B) \\cdot C \\cdot D \\cdot \\overline{E}', 'A \\cdot B \\cdot C \\cdot D \\cdot \\overline{E}', '(A \\cdot B + C \\cdot A) \\cdot D \\cdot E'],
     bbLink: 'BB Q17', simplified: 'A(B + C) \\cdot D \\cdot \\overline{E}'
   },
@@ -603,7 +621,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Valid ticket scanned (1 = valid)', 'B = Vehicle detected (1 = detected)', 'C = Barrier fully down (1 = down)', 'D = Emergency transponder (1 = detected)', 'E = Lockout/maintenance (1 = active)'],
     logic: 'Barrier raises when (valid ticket AND vehicle detected AND barrier down, OR emergency transponder AND barrier down) AND lockout NOT active.',
     expr: '(A \\cdot B \\cdot C + D \\cdot C) \\cdot \\overline{E}',
-    outputs: [0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0],
     distractors: ['(A + B) \\cdot C \\cdot D \\cdot \\overline{E}', 'A \\cdot B \\cdot C + D \\cdot C', '(A \\cdot B + D) \\cdot C \\cdot E'],
     bbLink: 'BB Q20', simplified: 'C(AB + D) \\cdot \\overline{E}'
   },
@@ -615,15 +632,6 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Outer door closed (1 = closed)', 'B = Pressure differential correct (1 = correct)', 'C = Valid clearance (1 = valid)', 'D = Gowning sensor pass (1 = pass)', 'E = Maintenance override (1 = active)', 'F = Emergency lockdown/contamination (1 = active)'],
     logic: 'Inner door opens when (outer closed AND pressure correct AND clearance AND gowning, OR outer closed AND maintenance override AND clearance) AND no emergency/contamination.',
     expr: '(A \\cdot B \\cdot C \\cdot D + A \\cdot E \\cdot C) \\cdot \\overline{F}',
-    outputs: (function() {
-      // Compute: (ABCD + AEC)·F̄, 6 inputs ABCDEF, 64 rows
-      var out = [];
-      for (var i = 0; i < 64; i++) {
-        var A=(i>>5)&1, B=(i>>4)&1, C=(i>>3)&1, D=(i>>2)&1, E=(i>>1)&1, F=i&1;
-        out.push(((A&B&C&D) | (A&E&C)) & (1-F) ? 1 : 0);
-      }
-      return out;
-    })(),
     distractors: ['A \\cdot B \\cdot C \\cdot D \\cdot E \\cdot \\overline{F}', '(A \\cdot B \\cdot C + D \\cdot E) \\cdot \\overline{F}', '(A \\cdot B \\cdot C \\cdot D + A \\cdot E) \\cdot \\overline{F}'],
     bbLink: null
   },
@@ -633,19 +641,11 @@ var QUESTION_LIBRARY = [
     inputDescs: ['A = Cell door closed (1 = closed)', 'B = Light curtain clear (1 = clear)', 'C = Enable switch held (1 = held)', 'D = Program running (1 = running)', 'E = Teach pendant active (1 = active)', 'F = Emergency stop active (1 = active)'],
     logic: 'Robot operates when (door closed AND curtain clear AND enable AND program running, OR teach pendant AND enable) AND e-stop NOT active.',
     expr: '(A \\cdot B \\cdot C \\cdot D + E \\cdot C) \\cdot \\overline{F}',
-    outputs: (function() {
-      // Compute: (ABCD + EC)·F̄
-      var out = [];
-      for (var i = 0; i < 64; i++) {
-        var A=(i>>5)&1, B=(i>>4)&1, C=(i>>3)&1, D=(i>>2)&1, E=(i>>1)&1, F=i&1;
-        out.push(((A&B&C&D) | (E&C)) & (1-F) ? 1 : 0);
-      }
-      return out;
-    })(),
     distractors: ['(A + B) \\cdot C \\cdot (D + E) \\cdot \\overline{F}', 'A \\cdot B \\cdot C \\cdot D \\cdot E \\cdot \\overline{F}', '(A \\cdot B \\cdot C \\cdot D + E \\cdot C) \\cdot F'],
     bbLink: null
   }
 ];
+QUESTION_LIBRARY.forEach(function (q) { q.outputs = truthTable(q.expr, q.inputs); });
 
 // ── QUESTION SELECTION ─────────────────────────────────────────────────────────
 // Each play draws a random 10 from the library above, spread across the tiers so
@@ -677,12 +677,15 @@ var totalTTCorrect = 0;
 var totalTTCells = 0;
 var exprCorrect = 0;
 var userOutputs = [];
-var phase = 'table'; // 'table', 'correction', 'expression', 'exprResult'
+// Answer once (canon 7.6.0): MaffsLock locks the table on Submit and the options on the first click; every render
+// starts a fresh window, so a double click on Submit, Continue or Next never lands on what replaces it.
+function freshRow() { MaffsLock.fresh(document.getElementById('btnRow')); }
 
 function shuffle(arr) { return arr.slice().sort(function() { return Math.random() - 0.5; }); }
 
 // ── GAME FLOW ─────────────────────────────────────────────────────────────────
 function startGame() {
+  MaffsLock.newSession();
   QUESTIONS = pickQuestions();
   qIndex = 0; totalPoints = 0; totalTTCorrect = 0; totalTTCells = 0; exprCorrect = 0;
 
@@ -703,7 +706,6 @@ function startGame() {
 }
 
 function loadQuestion() {
-  phase = 'table';
   var q = QUESTIONS[qIndex];
   var numRows = q.outputs.length;
 
@@ -749,10 +751,12 @@ function loadQuestion() {
 
   // Buttons
   document.getElementById('btnRow').innerHTML = '<button class="btn btn-primary" id="submitTT" onclick="submitTruthTable()" disabled>Submit Truth Table</button>';
+  MaffsLock.fresh(document.getElementById('truthTableSection'));
+  freshRow();
 }
 
 function toggleOutput(idx) {
-  if (phase !== 'table') return;
+  if (MaffsLock.isLocked(document.getElementById('truthTableSection'))) return;
   var cell = document.getElementById('out_' + idx);
   if (userOutputs[idx] === null) { userOutputs[idx] = 0; }
   else if (userOutputs[idx] === 0) { userOutputs[idx] = 1; }
@@ -772,8 +776,8 @@ function toggleOutput(idx) {
 }
 
 function submitTruthTable() {
-  if (phase !== 'table') return;
-  phase = 'correction';
+  if (userOutputs.some(function (v) { return v === null; })) return;
+  if (!MaffsLock.lock(document.getElementById('truthTableSection'))) return;
   var q = QUESTIONS[qIndex];
   var correct = 0;
 
@@ -784,11 +788,11 @@ function submitTruthTable() {
       cell.classList.add('correct-cell');
       cell.innerHTML = q.outputs[i] + ' <span style="font-size:0.75rem">✓</span>';
       correct++;
+      totalPoints++;
     } else {
       cell.classList.add('incorrect-cell');
       cell.innerHTML = userOutputs[i] + '<span class="correction-val">' + q.outputs[i] + '</span> <span style="font-size:0.75rem">✗</span>';
     }
-    totalPoints++;
     totalTTCells++;
   }
   totalTTCorrect += correct;
@@ -799,6 +803,7 @@ function submitTruthTable() {
 
   document.getElementById('truthTableSection').innerHTML += scoreLine;
   document.getElementById('btnRow').innerHTML = '<button class="btn btn-primary" onclick="showExpression()">Continue to Expression →</button>';
+  freshRow();
 
   mfg('question_answered', {
     game_slug: 'truth-will-set-you-free', level: 'level4',
@@ -807,7 +812,7 @@ function submitTruthTable() {
 }
 
 function showExpression() {
-  phase = 'expression';
+  if (document.getElementById('expressionSection').style.display !== 'none') return;
   var q = QUESTIONS[qIndex];
 
   var html = '<div class="scenario-card" style="text-align:center">';
@@ -826,6 +831,7 @@ function showExpression() {
 
   document.getElementById('expressionSection').innerHTML = html;
   document.getElementById('expressionSection').style.display = '';
+  MaffsLock.fresh(document.getElementById('expressionSection'));
   document.getElementById('btnRow').innerHTML = '';
 
   // Scroll to expression
@@ -833,8 +839,7 @@ function showExpression() {
 }
 
 function handleExprAnswer(btn, idx) {
-  if (phase !== 'expression') return;
-  phase = 'exprResult';
+  if (!MaffsLock.lock(document.getElementById('expressionSection'))) return;
   var q = QUESTIONS[qIndex];
   var selected = window._exprOpts[idx];
   var correct = selected === window._exprAnswer;
@@ -857,7 +862,12 @@ function handleExprAnswer(btn, idx) {
 
   // BB link
   var linkHtml = '';
-  if (q.bbLink) {
+  // A form using an operator the game has not introduced ([27]'s XOR) is "written", with the identity that defines it
+  // and a gloss in words, not "simplified" (approved by Project Claude, 7 Oct 2026).
+  if (q.bbLink && q.simplified && q.identity) {
+    linkHtml = '<div class="bb-link">This expression can be written ' + K(q.simplified) + ', where ' +
+      K(q.identity[0] + ' = ' + q.identity[1]) + ' (' + q.gloss + '). <a href="/games/boolean-blitz/" target="_blank">Play Boolean Blitz →</a></div>';
+  } else if (q.bbLink && q.simplified) {
     linkHtml = '<div class="bb-link">This expression simplifies to ' + K(q.simplified) + '. <a href="/games/boolean-blitz/" target="_blank">Play Boolean Blitz →</a></div>';
   } else {
     linkHtml = '<div class="bb-link" style="font-style:italic">To practise your Boolean algebra skills, try <a href="/games/boolean-blitz/" target="_blank">Boolean Blitz</a>.</div>';
@@ -866,6 +876,7 @@ function handleExprAnswer(btn, idx) {
 
   var nextLabel = qIndex < QUESTIONS.length - 1 ? 'Next Question →' : 'See Results →';
   document.getElementById('btnRow').innerHTML = '<button class="btn btn-primary" onclick="nextQuestion()">' + nextLabel + '</button>';
+  freshRow();
 }
 
 function nextQuestion() {
@@ -878,7 +889,7 @@ function nextQuestion() {
   }
 }
 
-function showResults() {
+var showResults = MaffsLock.finishOnce(function () {
   window._ggAbandoned = false;
   document.getElementById('questionArea').style.display = 'none';
   document.getElementById('resultsScreen').style.display = 'flex';
@@ -899,13 +910,19 @@ function showResults() {
     score: totalPoints, questions_answered: QUESTIONS.length, questions_correct: exprCorrect
   });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('truth-will-set-you-free','level4',totalPoints,QUESTIONS.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('truth-will-set-you-free','level4',totalPoints);}}
-}
+});
 
 // ── ACCESSIBILITY ─────────────────────────────────────────────────────────────
 function toggleAa() {
-  document.body.classList.toggle('accessible-mode');
-  document.getElementById('aaBtn').classList.toggle('active');
+  var on = document.body.classList.toggle('accessible-mode');
+  document.getElementById('aaBtn').classList.toggle('active', on);
+  try { localStorage.setItem('mfg_accessible', String(on)); } catch (e) {}
 }
+(function () {
+  var on = false;
+  try { on = localStorage.getItem('mfg_accessible') === 'true'; } catch (e) {}
+  if (on) { document.body.classList.add('accessible-mode'); document.getElementById('aaBtn').classList.add('active'); }
+})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'truth-will-set-you-free');</script>
