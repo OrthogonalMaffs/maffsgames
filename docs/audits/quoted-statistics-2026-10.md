@@ -35,25 +35,33 @@ against a factor band around its `reference` (`withinFactor`). The final estimat
 - **52-dle:** "52! … more than atoms in the observable universe" is fixed by **PR #64** (now "more than the number of
   atoms in the Earth (about 10⁵⁰)").
 
+- **PR #91 (Fermi Lab, 7 Oct 2026)** fixes every Fermi Lab item in §1 and §2 except `m25-concrete`'s depth hint (its
+  key is VERIFIED), plus the cohort strings. Each corrected figure is a `FIG` entry with its source, and the hint or
+  note that states it is built from the stored value. The same PR found that **19 of 65 Fermi chains never multiplied
+  to their own key** (a step changed unit), so typing every reference rated Poor or Good. All 19 are fixed by data
+  (Jon, 7 Oct 2026), including `molecules-swimming-pool`, which was keyed 1,000 times too small.
+  `scripts/verify-fermi-lab.py` checks every chain in Chromium and every figure against its source. Rows below
+  marked **Fixed (PR #91)**.
+
 ## 1. Contradicted keyed figures: a student with the true figure loses marks
 
 | Item | Keyed figure (wording) | Source figure | Effect of entering the true figure |
 |---|---|---|---|
-| `fermi-lab` `eq_school_trip` s2 | 12.8 L per coach for 160 km. Hint: "A coach uses about 8 litres per 100 km" | Diesel coaches use 19-24 L/100 km; a Scania Touring did 18.2 in a test ([Scania](https://scania.com/group/en/home/newsroom/news/2017/scania-touring-excels-in-fuel-consumption.html), [IRU](https://www.iru.org/sites/default/files/2016-06/Factsheet_-_environment.pdf)). True: 29-38 L | Step: **amber, not green** (ratio 2.3-3.0). Final estimate with true fuel and the Sept 2026 diesel price (£174-£229) rates **Good, not Brilliant** against the key £61.44 |
-| `fermi-lab` `uk-texts-per-day` answer | 120,000,000 SMS a day ("Ofcom: roughly 100-150 million SMS/day in recent years") | 6.4 billion SMS in 2023 = 17.5 million a day person-to-person ([Statista, Ofcom data](https://www.statista.com/statistics/288581/uk-mobile-network-quarterly-sms-and-mms-message-volumes)); plus about 55 million a day of business (A2P) texts ([ISPreview](https://www.ispreview.co.uk/index.php/2025/01/ofcom-uk-propose-to-cap-the-wholesale-price-of-bulk-business-texts.html)) | Person-to-person figure: **Reasonable (5 points), not Brilliant (20)**, factor 6.9. Counting business texts as well: Brilliant (1.67). The question says "text messages (SMS) sent", so which count it means needs Jon's call |
-| `fermi-lab` `uk-energy-daily` s2 | 5 kW per person | UK final energy consumption 2024: 128.1 mtoe = 1,490 TWh ([DESNZ ECUK 2025](https://www.gov.uk/government/statistics/energy-consumption-in-the-uk-2025/energy-consumption-in-the-uk-ecuk-2025)) / 69.3M people / 8,760 h = **2.45 kW** | Step: **amber, not green** (ratio 2.04 against a green band of 2). The answer 8 billion kWh a day is 1.96x the source's 4.08 (still Brilliant, just) and 1.8x the item's own note ("~4.4 TWh/day") |
-| `fermi-lab` `eq_packed_lunch` s1 | 500 of 1,000 bring a packed lunch ("About half") | England secondary 2023: **17%** packed lunch, 57% school meals 4+ days a week, 26% a mixture ([ParentPay report](https://www.parentpay.com/cypad/wp-content/uploads/sites/7/2023/02/ParentPay-School-Meals-Report-England-DIGITAL-FINAL.pdf)) | 17%: step **amber**, answer **Good, not Brilliant**. Counting half the mixed group (~30%): green. Contradicted either way: half is not the figure |
+| `fermi-lab` `eq_school_trip` s2 **Fixed (PR #91)** | 12.8 L per coach for 160 km. Hint: "A coach uses about 8 litres per 100 km" | Diesel coaches use 19-24 L/100 km; a Scania Touring did 18.2 in a test ([Scania](https://scania.com/group/en/home/newsroom/news/2017/scania-touring-excels-in-fuel-consumption.html), [IRU](https://www.iru.org/sites/default/files/2016-06/Factsheet_-_environment.pdf)). True: 29-38 L | Step: **amber, not green** (ratio 2.3-3.0). Final estimate with true fuel and the Sept 2026 diesel price (£174-£229) rates **Good, not Brilliant** against the key £61.44 |
+| `fermi-lab` `uk-texts-per-day` answer **Fixed (PR #91)** | 120,000,000 SMS a day ("Ofcom: roughly 100-150 million SMS/day in recent years") | 6.4 billion SMS in 2023 = 17.5 million a day person-to-person ([Statista, Ofcom data](https://www.statista.com/statistics/288581/uk-mobile-network-quarterly-sms-and-mms-message-volumes)); plus about 55 million a day of business (A2P) texts ([ISPreview](https://www.ispreview.co.uk/index.php/2025/01/ofcom-uk-propose-to-cap-the-wholesale-price-of-bulk-business-texts.html)) | Person-to-person figure: **Reasonable (5 points), not Brilliant (20)**, factor 6.9. Counting business texts as well: Brilliant (1.67). The question says "text messages (SMS) sent", so which count it means needs Jon's call |
+| `fermi-lab` `uk-energy-daily` s2 **Fixed (PR #91)** | 5 kW per person | UK final energy consumption 2024: 128.1 mtoe = 1,490 TWh ([DESNZ ECUK 2025](https://www.gov.uk/government/statistics/energy-consumption-in-the-uk-2025/energy-consumption-in-the-uk-ecuk-2025)) / 69.3M people / 8,760 h = **2.45 kW** | Step: **amber, not green** (ratio 2.04 against a green band of 2). The answer 8 billion kWh a day is 1.96x the source's 4.08 (still Brilliant, just) and 1.8x the item's own note ("~4.4 TWh/day") |
+| `fermi-lab` `eq_packed_lunch` s1 **Fixed (PR #91)** | 500 of 1,000 bring a packed lunch ("About half") | England secondary 2023: **17%** packed lunch, 57% school meals 4+ days a week, 26% a mixture ([ParentPay report](https://www.parentpay.com/cypad/wp-content/uploads/sites/7/2023/02/ParentPay-School-Meals-Report-England-DIGITAL-FINAL.pdf)) | 17%: step **amber**, answer **Good, not Brilliant**. Counting half the mixed group (~30%): green. Contradicted either way: half is not the figure |
 
 ## 2. Wrong figures in hints and notes, key unaffected (within the band)
 
 | Item | Stated as fact | Source | Why the score is unaffected |
 |---|---|---|---|
-| `football-pitches-m25` s1 hint | "a rough circle about 30-40 km across" | Circumference 195.5 km, greatest radius from central London 20 miles ([Wikipedia](https://en.wikipedia.org/wiki/M25_motorway)): about 60 km across | The key (2,500 km²) is plausible. **The hint misleads**: a 35 km circle is 962 km², which scores **amber** |
-| `lego-bricks-year` note | "Lego Group reports producing approximately 60 billion bricks per year" | About 36 billion elements a year ([Wikipedia](https://en.wikipedia.org/wiki/Lego)) | 36bn rates Brilliant (factor 1.67) |
-| `aircraft-rivets` note | "Boeing states a 747 contains approximately 3 million rivets" | 3 million **fasteners**, about half of them rivets ([CS Monitor](https://www.csmonitor.com/1997/1029/102997.us.us.2.html)) | 1.5M rates Brilliant (factor 2.0, on the boundary) |
-| `eq_coffee_cups` s1 hint | "About 65% of 300,000 are adults" | Under-18s are about 22% of the population, so adults about 78% ([UNICEF](https://data.unicef.org/how-many/how-many-children-under-18-are-there-in-the-uk/)) | 234,000 vs 195,000 is ratio 1.2: green |
-| `ball-bearings-global` s2 hint | "A car has 20-30 bearings" | 100-150 in a conventional car, at least 36 ([NTN-SNR](https://www.ntn-snr.com/pt/blog/how-many-bearings-are-there-car)) | The step's key (10 per device across all devices) is a modelling guess, out of scope |
-| `london-bus-annual-km` s3 hint | "London buses run every day of the year" | No TfL buses on Christmas Day ([Time Out](https://www.timeout.com/london/travel/everything-you-need-to-know-about-public-transport-in-london-over-the-festive-period)) | 364 vs 365 |
+| `football-pitches-m25` s1 hint **Fixed (PR #91)** | "a rough circle about 30-40 km across" | Circumference 195.5 km, greatest radius from central London 20 miles ([Wikipedia](https://en.wikipedia.org/wiki/M25_motorway)): about 60 km across | The key (2,500 km²) is plausible. **The hint misleads**: a 35 km circle is 962 km², which scores **amber** |
+| `lego-bricks-year` note **Fixed (PR #91)** | "Lego Group reports producing approximately 60 billion bricks per year" | About 36 billion elements a year ([Wikipedia](https://en.wikipedia.org/wiki/Lego)) | 36bn rates Brilliant (factor 1.67) |
+| `aircraft-rivets` note **Fixed (PR #91)** | "Boeing states a 747 contains approximately 3 million rivets" | 3 million **fasteners**, about half of them rivets ([CS Monitor](https://www.csmonitor.com/1997/1029/102997.us.us.2.html)) | 1.5M rates Brilliant (factor 2.0, on the boundary) |
+| `eq_coffee_cups` s1 hint **Fixed (PR #91)** | "About 65% of 300,000 are adults" | Under-18s are about 22% of the population, so adults about 78% ([UNICEF](https://data.unicef.org/how-many/how-many-children-under-18-are-there-in-the-uk/)) | 234,000 vs 195,000 is ratio 1.2: green |
+| `ball-bearings-global` s2 hint **Fixed (PR #91)** | "A car has 20-30 bearings" | 100-150 in a conventional car, at least 36 ([NTN-SNR](https://www.ntn-snr.com/pt/blog/how-many-bearings-are-there-car)) | The step's key (10 per device across all devices) is a modelling guess, out of scope |
+| `london-bus-annual-km` s3 hint **Fixed (PR #91)** | "London buses run every day of the year" | No TfL buses on Christmas Day ([Time Out](https://www.timeout.com/london/travel/everything-you-need-to-know-about-public-transport-in-london-over-the-festive-period)) | 364 vs 365 |
 | `m25-concrete` s3 hint | "Motorway surfacing is typically 0.3-0.5m deep" | Heavy-traffic asphalt 180-360 mm ([spec](https://www.contractsfinder.service.gov.uk/Notice/Attachment/2828a5fe-a4e9-4538-ab73-5ce435a17794)) | Key 0.3 m is right; only the 0.5 m upper end overstates |
 
 ## 3. Keys that disagree with their own note (all inside the Brilliant band)
@@ -63,7 +71,7 @@ figure still rates Brilliant, but only just in two cases:
 
 | Item | Key | Note's figure (verified) | Factor |
 |---|---|---|---|
-| `uk-energy-daily` | 8.0 billion kWh/day | 4.4 TWh/day (source: 4.08) | 1.8-1.96 |
+| `uk-energy-daily` **Fixed (PR #91)** | 8.0 billion kWh/day | 4.4 TWh/day (source: 4.08) | 1.8-1.96 |
 | `internet-data-daily` | 25 billion GB/day | Cisco 396 EB/month = 13.2 billion GB/day (a 2018 forecast for 2022) | 1.89 |
 | `food-lifetime-kg` | 58,000 kg | "~35 tonnes" ([Scientific American](https://www.scientificamerican.com/article/the-amount-of-food-consumed-by-a-ma/)) | 1.66 |
 | `london-bus-annual-km` | 90,000 km | ~55,000 km (TfL: 490M bus-km / 8,776 buses = 56,000) | 1.61 |
