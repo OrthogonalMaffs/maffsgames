@@ -14,6 +14,23 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-07 (cloud): game 15 Moments Master (PR pending); #124 Linear Equation Solver merged; NEXT = Force Resolver
+
+- **Linear Equation Solver (PR #124) merged** at 15:47 on a green Gate, after main's runs following #122 (re-run;
+  the first attempt lost its Gate job in GitHub's 15:05-15:17 write errors) and #123 were green.
+- **Moments Master:** `scripts/verify-moments-master.py` (E): every numeric key from the item's own data (SymPy;
+  KEYS), distractors equal in value to the key (5 kW = 5000 W) or to each other, named-error REASONS for the items
+  rewritten, numeric claims in keys and working lines, "Same beam" items quoting their predecessor, text keys pinned
+  (REVIEWED, --print-pins); Chromium at 390 and 320: every option clicked, no raw TeX, no sideways scroll. Project
+  Claude's data for :128, :134, :147, :172/:173 exactly; :141 rekeyed 75 N; :180's 5 kW replaced by 524 W
+  (P = 2 pi N T / 60 with 100 taken as rpm; for review). Filed and fixed: t5-014 (premises: the trapdoor uniform,
+  the level4 cable beam light with a vertical cable), t5-015 (R_B, T_A shown raw by textContent: ctx and ask now
+  through MaffsText). Wrong answers show the answer and the item's working line, then MaffsNext (no stored
+  explanations exist: fuller ones would be Project Claude content). Open: t5-009 (1), t5-010 (4), t5-011 (5),
+  t5-012 (the gate premise: Jon).
+- **Prepared locally, not pushed:** Force Resolver (`/home/user/fr-work`, branch claude/fr-prep). suvat is planned
+  (typed answers onto MaffsAnswer with a stated precision per step; keys from the values the student is shown).
+
 ## 2026-10-07 (cloud): Linear Equation Solver, Jon's "optimal move" contract (PR #124); #115 Proof Builder merged; NEXT = moments-master
 
 - **Proof Builder (PR #115) merged**; main's full run after it green (and after #117).
