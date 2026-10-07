@@ -8,8 +8,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | # | Point | Status |
 |---|---|---|
-| 1 | Every live game has a verifier in CI | NOT MET: 66 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 198 open (18 CRITICAL, 180 HIGH) |
+| 1 | Every live game has a verifier in CI | NOT MET: 65 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 188 open (18 CRITICAL, 170 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -17,38 +17,38 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-523 findings in 78 games.
+528 findings in 78 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 18 | 6 | 0 | 24 |
-| HIGH | 180 | 22 | 0 | 202 |
-| MEDIUM | 231 | 28 | 0 | 259 |
-| LOW | 38 | 0 | 0 | 38 |
-| **All** | 467 | 56 | 0 | 523 |
+| HIGH | 170 | 35 | 0 | 205 |
+| MEDIUM | 227 | 32 | 0 | 259 |
+| LOW | 38 | 2 | 0 | 40 |
+| **All** | 453 | 75 | 0 | 528 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| 2 | 81 | 87 |
-| 3 | 70 | 82 |
+| 2 | 78 | 87 |
+| 3 | 63 | 85 |
 | 6 | 38 | 56 |
 | 1 | 35 | 35 |
-| NEW:wrong-explanation-text | 31 | 32 |
+| NEW:wrong-explanation-text | 29 | 33 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
 | 7 | 12 | 15 |
 | NEW:value-equal distractors | 12 | 12 |
 | 8 | 10 | 10 |
 | NEW:convention-unstated | 9 | 10 |
-| NEW:precision-not-stated | 8 | 8 |
+| NEW:precision-not-stated | 7 | 8 |
 | NEW:hand-typed explanation figure | 7 | 7 |
+| NEW:text-contradicts-content | 5 | 6 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:ill-posed wording | 5 | 5 |
 | NEW:marking-by-structure | 2 | 5 |
 | NEW:raw-tex-on-screen | 4 | 5 |
-| NEW:text-contradicts-content | 5 | 5 |
 | 11 | 4 | 4 |
 | B7 (ledgered) | 4 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
@@ -56,7 +56,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:sr14-content | 2 | 3 |
 | NEW:wrong explanation | 3 | 3 |
-| uncounted | 3 | 3 |
+| uncounted | 2 | 3 |
 | NEW:board-key-mismatch | 2 | 2 |
 | NEW:cosmetic | 2 | 2 |
 | NEW:double-finish | 2 | 2 |
@@ -182,7 +182,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `sequence-solver` | yes | none | 0 | 1 | 2 | 0 | 3 | 0 | 0 |
 | `seven-bridges` | yes | none | 0 | 2 | 6 | 1 | 9 | 0 | 0 |
 | `shape-shifter` | yes | none | 2 | 1 | 5 | 1 | 5 | 4 | 0 |
-| `spot-the-error` | unlisted | none | 0 | 10 | 4 | 0 | 14 | 0 | 0 |
+| `spot-the-error` | unlisted | verify-spot-the-error.py | 0 | 13 | 4 | 2 | 0 | 19 | 0 |
 | `spot-the-muppet` | yes | none | 0 | 5 | 3 | 0 | 8 | 0 | 0 |
 | `standard-form-blitz` | yes | none | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `surd-simplifier` | yes | none | 0 | 2 | 0 | 0 | 2 | 0 | 0 |
@@ -247,19 +247,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 - **HIGH** seven-bridges-t4-001, `games/seven-bridges/index.html:682-683,708,343`: The solution animation after a wrong 'Impossible' is never cancelled and traces onto the next puzzle, making it unsolvable
 - **HIGH** seven-bridges-t4-002, `games/seven-bridges/index.html:261 (al_15)`: E is the midpoint of AC and BD, so edges A-C and B-D are drawn over A-E-C and B-E-D
-
-### `spot-the-error` (KS3, GCSE, L4; unlisted)
-
-- **HIGH** spot-the-error-t1-001, `games/spot-the-error/index.html:235 (ks3_019)`: 600 g of oats is 4 parts, so butter is 150 g; the explanation teaches (1/5) x 600 = 120 g and step 3, (4/5) x 600, makes the same error and is marked correct
-- **HIGH** spot-the-error-t1-002, `games/spot-the-error/index.html:240 (ks3_024)`: The keyed error step is right but the Stage 2 key is wrong: the phrase '30 deg more than s' (the real misreading) is isError:false, so tapping it is marked wrong
-- **HIGH** spot-the-error-t1-003 (JC), `games/spot-the-error/index.html:229 (ks3_016)`: No error in the working: 72 is a valid common denominator and 522/72 = 29/4 is the true total
-- **HIGH** spot-the-error-t1-004, `games/spot-the-error/index.html:301 (gcse_044)`: The only step, (72/180) x pi x 10, is keyed as the error, but theta/180 x pi r = theta/360 x 2 pi r: the student must click a correct step to be marked right
-- **HIGH** spot-the-error-t1-005, `games/spot-the-error/index.html:274 (gcse_020)`: The keyed step 'g(2) = 4' is true; step 2 'gf(2) = f(4) = 11' is false (gf(2) = g(7) = 49) and is marked correct
-- **HIGH** spot-the-error-t1-006 (JC), `games/spot-the-error/index.html:255 (gcse_001)`: Reverse-percentage mistake keyed at the addition step (76.50 + 7.65); the same mistake is keyed at the other step in gcse_027, so the item has a second valid step
-- **HIGH** spot-the-error-t1-007 (JC), `games/spot-the-error/index.html:284 (gcse_027)`: Reverse-percentage mistake keyed at the '17% of current' step; gcse_001 keys the same mistake at the other step, so the item has a second valid step
-- **HIGH** spot-the-error-t1-008, `games/spot-the-error/index.html:260 (gcse_006)`: Step 3 is marked correct but 80 x tan 34 = 53.96, not 53.97; the explanation's 80 / tan 34 = 118.6, not 118.5 (low practical risk)
-- **HIGH** spot-the-error-t1-009, `games/spot-the-error/index.html:307 (l4_002)`: Step 2 'log 12 - log 2 = log 10' is marked correct but equals log 6: a second erroneous step
-- **HIGH** spot-the-error-t1-010 (JC), `games/spot-the-error/index.html:331 (l4_023)`: Choosing u = cos x is unhelpful but legitimate and step 3 is a true identity: no step contains false maths
 
 ### `spot-the-muppet` (KS3, GCSE, Core)
 
@@ -573,7 +560,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Exit bar detail
 
-**1. No verifier in CI (66):** `52dle`, `bearing-blitz`, `better-value` (partial: verify-better-value-tax.py), `binomial-blaster`, `boolean-blitz`, `characteristic-quest`, `complex-converter`, `component-crusher`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `curling-friction`, `differentiation-duel`, `dimension-checker`, `eigenvalue-extractor`, `eigenvector-engine`, `equatle`, `estimation-golf`, `expectation-station`, `factor-race`, `factor-theorem`, `force-resolver`, `formula-forge`, `formula-plug-in`, `formula-unlocked`, `four-quadrant-explorer`, `fraction-equivalence`, `given-that`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `integration-duel`, `linear-equation-solver`, `matrix-crunch`, `modular-battle`, `moments-master`, `new-shapes`, `partial-fractions-duel`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `proof-builder`, `proportion-blaster`, `scale-factor-scaling`, `sequence-solver`, `seven-bridges`, `shape-shifter`, `spot-the-error`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `suvat`, `terrible-advice`, `think-of-a-number`, `trig-identity-duel`, `trig-wars`, `trig-worms`, `truth-buster`, `truth-will-set-you-free`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
+**1. No verifier in CI (65):** `52dle`, `bearing-blitz`, `better-value` (partial: verify-better-value-tax.py), `binomial-blaster`, `boolean-blitz`, `characteristic-quest`, `complex-converter`, `component-crusher`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `curling-friction`, `differentiation-duel`, `dimension-checker`, `eigenvalue-extractor`, `eigenvector-engine`, `equatle`, `estimation-golf`, `expectation-station`, `factor-race`, `factor-theorem`, `force-resolver`, `formula-forge`, `formula-plug-in`, `formula-unlocked`, `four-quadrant-explorer`, `fraction-equivalence`, `given-that`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `integration-duel`, `linear-equation-solver`, `matrix-crunch`, `modular-battle`, `moments-master`, `new-shapes`, `partial-fractions-duel`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `proof-builder`, `proportion-blaster`, `scale-factor-scaling`, `sequence-solver`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `suvat`, `terrible-advice`, `think-of-a-number`, `trig-identity-duel`, `trig-wars`, `trig-worms`, `truth-buster`, `truth-will-set-you-free`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
 
 **4. Audited levels serving under 40 (106):** 52dle all (20 in rotation), angle-ace gcse (35), better-value gcse (20), binomial-blaster alevel (20), binomial-blaster alevel2 (20), characteristic-quest further (15), complex-converter further (20), complex-converter level4 (20), component-crusher gcse (38), component-crusher alevel (32), component-crusher level4 (34), constructions-lab all (10/10), constructions-lab ks3 (10/10), constructions-lab gcse (10/10), coordinate-geometry-dash gcse (24), coordinate-geometry-dash alevel (21), core-maths-paper1 core (36), core-maths-paper2b core (36), core-maths-paper2c core (36), correlation-or-coincidence all (13), curling-friction alevel (20), curling-friction level4 (20), differentiation-duel alevel (14), differentiation-duel level4 (14), dimension-checker level4 (20), dimension-checker alevel (20), eigenvalue-extractor further (15), eigenvector-engine further (15), estimation-golf year6 (9/20), estimation-golf ks3 (9/9), estimation-golf gcse (9/9), estimation-golf alevel (9/9), estimation-golf level4 (9/9), expectation-station core (20), expectation-station gcse (15), expectation-station alevel (10), expected-damage ks3 (15), expected-damage gcse (20), expected-damage core (15), factor-race year6 (10/20), force-resolver alevel (20), force-resolver level4 (20), formula-forge gcse (29), formula-forge alevel (29), formula-forge level4 (16), formula-unlocked gcse (29), formula-unlocked alevel (25), formula-unlocked level4 (14), fraction-equivalence year6 (20), given-that gcse (25), given-that alevel (25), given-that core (20), given-that level4 (20), glorious-gantt core-a (4), glorious-gantt level4-a (4), glorious-gantt core-b (3), glorious-gantt level4-b (4), gradient-hunter gcse (15), gradient-hunter core (20), gradient-hunter alevel (10), integration-duel alevel (14), integration-duel level4 (14), matrix-crunch further (20), matrix-crunch level4 (20), moments-master alevel (20), moments-master level4 (20), partial-fractions-duel alevel (20), partial-fractions-duel level4 (20), percentage-flip year6 (20), percentage-flip default (12), prime-factorisation all (8/28), prime-factorisation year6 (8/20), prisoners-dilemma ks3 (5), prisoners-dilemma gcse (7), prisoners-dilemma alevel (9), prisoners-dilemma core (7), probability-paradox all (38 (3 modes; Paradox mode 12)), proof-builder alevel (counter 15/25, sorter 8/8), proof-builder further (counter 15/35, sorter 8/11, induction 4/4), scale-factor-scaling gcse (38), scale-factor-scaling level4 (31), screening-room gcse (20), screening-room alevel (20), screening-room core (15), screening-room level4 (15), seven-bridges ks3 (25), seven-bridges gcse (25), seven-bridges alevel (25), shape-shifter year6-translation (10/15), shape-shifter year6-reflection (10/15), shape-shifter year6-rotation (10/15), spot-the-error ks3 (35), spot-the-error level4 (30), spot-the-muppet gcse (20), spot-the-muppet core (12), spot-the-muppet ks3 (18), suvat alevel (10), suvat level4 (8), terrible-advice gcse (20), terrible-advice core (12), terrible-advice ks3 (18), truth-will-set-you-free level4 (10), unit-converter alevel (38), wrong-on-the-internet gcse (20), wrong-on-the-internet core (10), wrong-on-the-internet ks3 (15)
 
