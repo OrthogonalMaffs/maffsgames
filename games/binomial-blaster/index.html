@@ -75,6 +75,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/options.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -131,7 +132,7 @@ alevel:[
   {q:'\\binom{n}{n}',ask:'Always equals',correct:'1',d:['n','0','n!']},
   {q:'\\binom{n}{1}',ask:'Always equals',correct:'n',d:['1','n-1','n!']},
   {q:'\\binom{6}{4}',ask:'Evaluate',correct:'15',d:['24','6','360']},
-  {q:'\\binom{5}{2} + \\binom{5}{3}',ask:'Evaluate (Pascal rule)',correct:'20',d:['15','25','\\binom{6}{3}']},
+  {q:'\\binom{5}{2} + \\binom{5}{3}',ask:'Evaluate (Pascal rule)',correct:'20',d:['15','25','\\binom{10}{5}']},
   {q:'(1+x)^3',ask:'Expand fully',correct:'1 + 3x + 3x^2 + x^3',d:['1 + 3x + x^3','1 + x + x^2 + x^3','1 + x^3']},
   {q:'(1+x)^4',ask:'Coefficient of x²',correct:'6',d:['4','1','10']},
   {q:'(1+x)^5',ask:'Coefficient of x³',correct:'10',d:['5','20','15']},
@@ -157,12 +158,12 @@ alevel:[
   {q:'(3-x)^4',ask:'Constant term',correct:'81',d:['12','27','1']},
   {q:'(1+x)^n,\\; \\text{coeff of } x^2 = 15',ask:'Find n',correct:'6',d:['5','10','15']},
   {q:'(1+x)^n,\\; \\text{coeff of } x^3 = 84',ask:'Find n',correct:'9',d:['7','12','84']},
-  {q:'(1.01)^5 \\approx (1+0.01)^5',ask:'Estimate using first 3 terms',correct:'1.05101',d:['1.051','1.0501','1.05']},
-  {q:'(0.98)^4 \\approx (1-0.02)^4',ask:'Estimate using first 3 terms',correct:'0.92237',d:['0.9224','0.922','0.92']},
-  {q:'(2.01)^3 = (2+0.01)^3',ask:'Estimate',correct:'8.1206',d:['8.12','8.121','8.06']},
-  {q:'(0.99)^{10} \\approx (1-0.01)^{10}',ask:'Estimate using first 3 terms',correct:'0.90438',d:['0.9044','0.904','0.9']},
-  {q:'(1.05)^3',ask:'Estimate using first 3 terms',correct:'1.15763',d:['1.158','1.15','1.1576']},
-  {q:'\\text{Row 6 of Pascal\'s triangle}',ask:'What is the middle number?',correct:'20',d:['15','6','10']},
+  {q:'(1.01)^5 \\approx (1+0.01)^5',ask:'Estimate using first 3 terms',correct:'1.051',d:['1.05101','1.0501','0.951']},
+  {q:'(0.98)^4 \\approx (1-0.02)^4',ask:'Estimate using first 3 terms',correct:'0.9224',d:['0.92236816','1.0824','0.9208']},
+  {q:'(2.01)^3 = (2+0.01)^3',ask:'Estimate using first 3 terms',correct:'8.1206',d:['8.120601','7.8806','8.0303']},
+  {q:'(0.99)^{10} \\approx (1-0.01)^{10}',ask:'Estimate using first 3 terms',correct:'0.9045',d:['0.90438','1.1045','0.901']},
+  {q:'(1.05)^3',ask:'Estimate using first 3 terms',correct:'1.1575',d:['1.157625','0.8575','1.1525']},
+  {q:'\\text{Row 6 of Pascal\'s triangle (the top row, 1, is row 0)}',ask:'What is the middle number?',correct:'20',d:['15','6','10']},
   {q:'(a+b)^n',ask:'How many terms in the expansion?',correct:'n+1',d:['n','2n','n-1']},
   {q:'(1+x)^n',ask:'General term formula',correct:'\\binom{n}{r}x^r',d:['n \\cdot x^r','\\dfrac{n!}{r!}x^r','n^r x^r']},
   {q:'\\binom{n}{r} = \\binom{n}{n-r}',ask:'This property is called',correct:'Symmetry',d:['Pascal rule','Combination formula','Factorial rule']},
@@ -171,7 +172,7 @@ alevel:[
   {q:'(1+x)^6',ask:'Sum of coefficients',correct:'64',d:['6','32','720']},
   {q:'\\text{In } (1+x)^{20}, \\text{ which } x^r \\text{ has largest coefficient?}',ask:'Value of r',correct:'10',d:['20','1','19']},
   {q:'(x-1)^4',ask:'Expand fully',correct:'x^4 - 4x^3 + 6x^2 - 4x + 1',d:['x^4 + 4x^3 + 6x^2 + 4x + 1','x^4 - 4x^3 - 6x^2 + 4x - 1','x^4 - x^3 + x^2 - x + 1']},
-  {q:'(2x+3)^3',ask:'Coefficient of x²',correct:'54',d:['36','108','18']},
+  {q:'(2x+3)^3',ask:'Coefficient of x²',correct:'36',d:['54','108','18']},
 ],
 alevel2:[
   {q:'(1+x)^{1/2}',ask:'First 3 terms',correct:'1 + \\tfrac{1}{2}x - \\tfrac{1}{8}x^2',d:['1 + \\tfrac{1}{2}x + \\tfrac{1}{4}x^2','1 + \\tfrac{1}{2}x + \\tfrac{1}{8}x^2','1 + x - \\tfrac{1}{2}x^2']},
@@ -199,28 +200,28 @@ alevel2:[
   {q:'(9+x)^{1/2} = 3(1+\\tfrac{x}{9})^{1/2}',ask:'Valid for',correct:'|x| < 9',d:['|x| < 1','|x| < 3','|x| < 81']},
   {q:'(1-x)^{-1}',ask:'This equals the sum of which series?',correct:'1 + x + x^2 + x^3 + \\cdots',d:['1 - x + x^2 - \\cdots','1 + 2x + 3x^2 + \\cdots','x + x^2 + x^3 + \\cdots']},
   {q:'(1+x)^{-1}',ask:'This is a GP with common ratio',correct:'-x',d:['x','-1','\\dfrac{1}{x}']},
-  {q:'\\sqrt{1.02} \\approx (1+0.02)^{1/2}',ask:'Estimate using first 3 terms',correct:'1.00995',d:['1.01','1.0099','1.0001']},
-  {q:'\\dfrac{1}{1.03} \\approx (1+0.03)^{-1}',ask:'Estimate using first 3 terms',correct:'0.9709',d:['0.971','0.97','0.9691']},
-  {q:'\\dfrac{1}{0.98} \\approx (1-0.02)^{-1}',ask:'Estimate using first 3 terms',correct:'1.0204',d:['1.02','0.9804','1.021']},
-  {q:'\\sqrt{4.08} \\approx 2(1+0.02)^{1/2}',ask:'Estimate',correct:'2.0199',d:['2.02','2.0198','2.01']},
-  {q:'(0.97)^{-2} \\approx (1-0.03)^{-2}',ask:'Estimate using first 3 terms',correct:'1.0627',d:['1.063','1.06','1.0654']},
-  {q:'\\sqrt[3]{1.06} \\approx (1+0.06)^{1/3}',ask:'Estimate coefficient of x in expansion',correct:'\\dfrac{1}{3}',d:['\\dfrac{1}{6}','3','\\dfrac{2}{3}']},
+  {q:'\\sqrt{1.02} \\approx (1+0.02)^{1/2}',ask:'Estimate using first 3 terms',correct:'1.00995',d:['1.01005','1.0099','1.0001']},
+  {q:'\\dfrac{1}{1.03} \\approx (1+0.03)^{-1}',ask:'Estimate using first 3 terms',correct:'0.9709',d:['1.0309','0.970874','0.9691']},
+  {q:'\\dfrac{1}{0.98} \\approx (1-0.02)^{-1}',ask:'Estimate using first 3 terms',correct:'1.0204',d:['1.020408','0.9804','1.0196']},
+  {q:'\\sqrt{4.08} \\approx 2(1+0.02)^{1/2}',ask:'Estimate using first 3 terms',correct:'2.0199',d:['2.0201','2.0198','1.00995']},
+  {q:'(0.97)^{-2} \\approx (1-0.03)^{-2}',ask:'Estimate using first 3 terms',correct:'1.0627',d:['0.9427','1.062812','1.0654']},
+  {q:'\\sqrt[3]{1.06} \\approx (1+0.06)^{1/3}',ask:'Coefficient of x in the expansion',correct:'\\dfrac{1}{3}',d:['\\dfrac{1}{6}','3','\\dfrac{2}{3}']},
   {q:'\\dfrac{1}{\\sqrt{1-x}} \\approx (1-x)^{-1/2}',ask:'Coefficient of x²',correct:'\\dfrac{3}{8}',d:['\\dfrac{1}{8}','\\dfrac{1}{4}','\\dfrac{3}{4}']},
-  {q:'\\sqrt{1+x} \\approx 1 + \\tfrac{1}{2}x - \\tfrac{1}{8}x^2.\\; x = 0.1.',ask:'Estimate √1.1',correct:'1.04881',d:['1.049','1.0488','1.05']},
-  {q:'(1+x)^{-1} \\approx 1 - x + x^2.\\; x = 0.1.',ask:'Estimate 1/1.1',correct:'0.91',d:['0.909','0.9','0.919']},
+  {q:'\\sqrt{1+x} \\approx 1 + \\tfrac{1}{2}x - \\tfrac{1}{8}x^2.\\; x = 0.1.',ask:'Estimate √1.1 with these three terms',correct:'1.04875',d:['1.04881','1.05125','1.0975']},
+  {q:'(1+x)^{-1} \\approx 1 - x + x^2.\\; x = 0.1.',ask:'Estimate 1/1.1 with these three terms',correct:'0.91',d:['0.909','1.11','0.89']},
   {q:'\\dfrac{1}{(1+x)^2}.\\; x = 0.05.',ask:'Estimate using first 2 terms',correct:'0.9',d:['0.95','0.9025','0.85']},
   {q:'\\dfrac{1}{(1+x)(1-x)} = \\dfrac{A}{1+x} + \\dfrac{B}{1-x}',ask:'Find A',correct:'\\dfrac{1}{2}',d:['1','-\\dfrac{1}{2}','2']},
   {q:'\\dfrac{1}{(1+x)(1-x)} = \\dfrac{A}{1+x} + \\dfrac{B}{1-x}',ask:'Find B',correct:'\\dfrac{1}{2}',d:['1','-\\dfrac{1}{2}','-1']},
-  {q:'(1+x)^{n}\\; \\text{general term}',ask:'\\binom{n}{r} for non-integer n',correct:'\\dfrac{n(n-1)\\cdots(n-r+1)}{r!}',d:['\\dfrac{n!}{r!(n-r)!}','n^r','\\dfrac{n!}{r!}']},
+  {q:'(1+x)^{n}\\; \\text{general term}',ask:'Coefficient of xʳ when n is not a whole number',correct:'\\dfrac{n(n-1)\\cdots(n-r+1)}{r!}',d:['\\dfrac{n!}{r!(n-r)!}','n^r','\\dfrac{n!}{r!}']},
   {q:'(1+x)^{-1}\\text{ is valid only if convergent}',ask:'Why |x| < 1?',correct:'It is a GP with ratio -x',d:['n must be positive','x must be positive','The factorial requires it']},
-  {q:'\\dfrac{3}{(1-x)(1+2x)}',ask:'Coefficient of x in the expansion',correct:'5',d:['3','1','7']},
-  {q:'\\text{The expansion of } (1+ax)^n \\text{ begins } 1 + 6x + \\cdots',ask:'Find an',correct:'6',d:['a+n','6a','n']},
-  {q:'(1+ax)^n = 1 + 6x + 16x^2 + \\cdots',ask:'Find n',correct:'-2',d:['2','6','3']},
-  {q:'(1+ax)^n = 1 + 6x + 16x^2 + \\cdots',ask:'Find a',correct:'-3',d:['3','2','-2']},
+  {q:'\\dfrac{3}{(1-x)(1+2x)}',ask:'Coefficient of x in the expansion',correct:'-3',d:['3','9','-6']},
+  {q:'\\text{The expansion of } (1+ax)^n \\text{ begins } 1 + 6x + \\cdots',ask:'Find the product a \u00d7 n',correct:'6',d:['a+n','6a','n']},
+  {q:'(1+ax)^n = 1 + 6x + 27x^2 + \\cdots',ask:'Find n',correct:'-2',d:['2','6','3']},
+  {q:'(1+ax)^n = 1 + 6x + 27x^2 + \\cdots',ask:'Find a',correct:'-3',d:['3','2','-2']},
   {q:'\\sqrt{\\dfrac{1+x}{1-x}} = (1+x)^{1/2}(1-x)^{-1/2}',ask:'Coefficient of x',correct:'1',d:['\\dfrac{1}{2}','0','2']},
   {q:'(1+x)^{1/2}(1-x)^{-1/2}',ask:'Coefficient of x²',correct:'\\dfrac{1}{2}',d:['\\dfrac{1}{4}','0','\\dfrac{3}{8}']},
-  {q:'\\text{Why can\'t we use } \\binom{n}{r} = \\dfrac{n!}{r!(n-r)!} \\text{ when n is negative?}',ask:'Because',correct:'(-n)! \\text{ is undefined}',d:['n \\text{ must be even}','r > n','\\text{It still works}']},
-  {q:'(1+x)^n \\text{ for } n \\notin \\mathbb{Z}^+',ask:'The expansion is',correct:'An infinite series',d:['A finite polynomial','Undefined','Always divergent']},
+  {q:'\\text{Why can\'t we use } \\binom{n}{r} = \\dfrac{n!}{r!(n-r)!} \\text{ when n is negative?}',ask:'Because',correct:'n! \\text{ is undefined for negative } n',d:['n \\text{ must be even}','r > n','\\text{It still works}']},
+  {q:'(1+x)^n \\text{ for } n \\notin \\{0, 1, 2, \\ldots\\}',ask:'The expansion is',correct:'An infinite series',d:['A finite polynomial','Undefined','Always divergent']},
   {q:'\\text{If } |x| = 1 \\text{ in } (1+x)^{-1}',ask:'The series',correct:'Diverges',d:['Converges to 0','Converges to 1','Is undefined']},
   {q:'\\dfrac{1}{1-x} = 1 + x + x^2 + \\cdots',ask:'This is the sum of a GP with a = 1, r = ',correct:'x',d:['-x','\\dfrac{1}{x}','1-x']},
   {q:'(1+x)^0',ask:'Expansion',correct:'1',d:['1 + x','0','2']},
@@ -235,7 +236,7 @@ function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.re
 document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
 const pa=new URLSearchParams(location.search);if(pa.get('level')&&QUESTIONS[pa.get('level')]){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
 function startGame(){questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}show('game');showQ();window._ggAbandoned=true;mfg('game_started',{game_slug:'binomial-blaster',level:level});if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'binomial-blaster',level:level,questions_answered:qIdx})})}}
-function showQ(){const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;const qEl=document.getElementById('question');qEl.innerHTML='';rk(qEl,q.q);document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
+function showQ(){const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;const qEl=document.getElementById('question');qEl.innerHTML='';rk(qEl,q.q);document.getElementById('prompt').textContent=q.ask;const opts=MaffsOptions.build(q.correct,q.d);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
 function tick(){const e=Math.floor((Date.now()-qStartTime)/1000);document.getElementById('timer').textContent=e+'s'}
 function handle(btn,q){clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});mfg('question_answered',{game_slug:'binomial-blaster',level:level,correct:ok,question_index:qIdx+1});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)}
 function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
