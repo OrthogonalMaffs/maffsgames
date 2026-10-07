@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: eigenvector-engine truth-will-set-you-free trig-identity-duel binomial-blaster partial-fractions-duel truth-buster`
+`cloud-remaining: truth-will-set-you-free trig-identity-duel binomial-blaster partial-fractions-duel truth-buster`
 
 **Resume rule, MaffsLock (Jon, contract LH):** adopting MaffsLock includes the game's lock-hint declaration
 (`<!-- maffs-lock-hint ... -->`, canon §7.6.0), and the game passes `check-answer-lock.py`. Hints live in the
@@ -45,6 +45,9 @@ main's last full run is red; watch main's run after merging.
   "This expression can be written (A ⊕ B)·C·D·Ē, where A ⊕ B = A·B̄ + Ā·B (XOR: one or the other, but not both). Play
   Boolean Blitz →", in KaTeX. XOR is introduced nowhere else in the game; the verifier checks the identity, the gloss
   and the rendered line, and a third plant (XOR with no definition) is caught.
+- **Contract LH (#133, home lane, merged 18:44) landed while this was being prepared:** eigenvector-engine declares
+  its maffs-lock-hint (`{}`: the generic driver plays it) and comes off the remaining list above, so CI now judges it
+  in full. Each later game does the same in its own PR.
 - **Delete each `claude/keen-cray-ypsime-<game>` branch once its game has merged (Jon).**
 
 ## 2026-10-07 (cloud): game 18 Factor Theorem (PR #130, merged); NEXT = merge #130, then the six queued games
