@@ -76,7 +76,7 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 # Migrated games, added in the PR that migrates each. NOT_YET is the rest: reported, never failed, and it
 # may only shrink.
 MIGRATED = set('''
-formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter
+formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -103,6 +103,17 @@ HINTS = {
                    "canvas.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true,"
                    "  clientX: r.left + p[0], clientY: r.top + p[1]}));"),
         'surface': '#gridCanvas',
+    },
+    'negative-number-line': {
+        'ready': "document.getElementById('gameScreen').classList.contains('active')",
+        'answer': ("if (!document.getElementById('gameScreen').classList.contains('active')) return;"
+                   "const q = questions[qIndex];"
+                   "if (q.type === 'place') { setPlaced(q.data >= 0 ? q.data - 1 : q.data + 1);"
+                   "  document.getElementById('placeConfirm').click(); return; }"
+                   "if (q.type === 'order') { [...document.querySelectorAll('#sourceZone .order-tile')].reverse()"
+                   "  .forEach(t => t.click()); document.getElementById('orderCheck').click(); return; }"
+                   "const b = [...document.querySelectorAll('#calcOptions .calc-option')]; if (b.length) b[i % b.length].click();"),
+        'surface': '#placeNLWrap',
     },
     'like-terms-collector': {
         'ready': "document.getElementById('gameScreen').classList.contains('active')",
