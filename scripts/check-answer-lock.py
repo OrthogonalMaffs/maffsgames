@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# ci-line: L | Answer lock in play (canon 7.6.0: every migrated game played in Chromium; repeats change no mark, one finish) |
+# ci-line: L1 | Answer lock in play, part 1 (canon 7.6.0: static rules; migrated games played in Chromium) | --part 1/2
+# ci-line: L2 | Answer lock in play, part 2 (canon 7.6.0: migrated games played in Chromium) | --part 2/2
 # ci-deps: schools/assets/answer-lock.js schools/assets/next-control.js scripts/check-site.py
 """Does every game mark through MaffsLock (canon §7.6.0), so that no repeat marks twice or finishes twice?
 
@@ -31,6 +32,9 @@ A game the driver cannot play (no option group, no input) is reported UNPLAYABLE
     python scripts/check-answer-lock.py                    # every migrated game
     python scripts/check-answer-lock.py --game formula-plug-in [--against FILE]
     python scripts/check-answer-lock.py --not-yet          # play the NOT_YET games too (a report, never fails)
+    python scripts/check-answer-lock.py --part 1/2         # CI: every other migrated game (by slug); part 1 also
+                                                           # runs the static rules. Add a part (and a group,
+                                                           # L1-L4 in ci-groups.py) when a part passes 3 minutes.
 """
 import argparse
 import asyncio
@@ -638,6 +642,7 @@ def main():
     ap.add_argument('--against', help='play this file as the (single) --game page')
     ap.add_argument('--not-yet', action='store_true', help='play the NOT_YET games too (reported only)')
     ap.add_argument('--static', action='store_true', help='static rules only, no browser')
+    ap.add_argument('--part', help='i/n: play only the i-th of n slices of the migrated games (CI)')
     ap.add_argument('-v', '--verbose', action='store_true')
     args = ap.parse_args()
     VERBOSE = args.verbose
@@ -665,6 +670,11 @@ def main():
         for f in static_faults(s, open(args.against, encoding='utf-8').read() if args.against else html):
             fails.append('%s: %s' % (s, f))
     to_play = [(s, l) for s, l in migrated if not args.game or s in args.game]
+    if args.part:
+        i, n = (int(x) for x in args.part.split('/'))
+        to_play = [g for k, g in enumerate(sorted(to_play)) if k % n == i - 1]
+        if i != 1:
+            fails = []          # the static rules and NOT_YET are part 1's (one report, not n)
     if args.not_yet:
         to_play += [(s, l) for s, l in games if s in NOT_YET and (not args.game or s in args.game)]
     if args.game and args.against and len(args.game) == 1:
