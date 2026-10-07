@@ -123,6 +123,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -186,6 +187,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     </div>
 
     <div class="feedback" id="feedback"></div>
+    <div id="nextMount"></div>
   </div>
 
   <div class="game-over" id="gameOver">
@@ -205,7 +207,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 </div>
 
 <script>
-function _addDismiss(fb,cb){MaffsLock.timer(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Dismiss';b.onclick=cb;fb.appendChild(b);},2000);}
+function _addDismiss(fb,cb){MaffsLock.timer(function(){if(MaffsLock.isLocked(primeEl))return;var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Dismiss';b.onclick=cb;fb.appendChild(b);},2000);}
 var NUMBERS_DEFAULT = [12,18,24,30,36,48,60,72,84,96,100,120,56,45,42,28,40,66,90,75,80,54,70,132,150,180,210,126];
 var NUMBERS_YEAR6 = [12,18,20,24,28,30,36,40,42,45,8,16,15,32,48,50,10,14,22,26];
 
@@ -245,6 +247,7 @@ function startGame() {
 }
 
 function loadQ() {
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('nextMount'));
   if (qNum >= questions.length) { endGame(true); return; }
   currentTarget = questions[qNum];
   product = 1;
@@ -307,17 +310,21 @@ function pressPrime(p) {
     shakeBtn(p);
 
     var fb = document.getElementById('feedback');
+    if (lives <= 0) {
+      // canon §7.6: the last life shows the whole factorisation and waits for Next before Game Over.
+      MaffsLock.lock(primeEl);
+      clearInterval(timerInterval);
+      fb.textContent = p + ' is not a factor here. Out of lives: ' + currentTarget + ' = ' +
+        primeFactors(currentTarget).join(' \u00d7 ');
+      fb.className = 'feedback wrong';
+      MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: function() { endGame(false); } });
+      return;
+    }
     fb.textContent = p + ' is not a factor here!';
     fb.className = 'feedback wrong';
     _addDismiss(fb, function() {
       fb.textContent = ''; fb.className = 'feedback';
     });
-
-    if (lives <= 0) {
-      MaffsLock.lock(primeEl);
-      clearInterval(timerInterval);
-      MaffsLock.timer(function() { endGame(false); }, 800);
-    }
     return;
   }
 
@@ -352,6 +359,12 @@ var multiplier = 1;
       loadQ();
     }, 1500);
   }
+}
+
+function primeFactors(n) {
+  var out = [];
+  for (var d = 2; n > 1; d++) while (n % d === 0) { out.push(d); n /= d; }
+  return out;
 }
 
 function shakeBtn(p) {

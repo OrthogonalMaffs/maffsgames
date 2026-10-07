@@ -167,7 +167,10 @@ HINTS = {
         'ready': "!!document.getElementById('t00')",
         'answer': ("if (G.status !== 'playing') return;"
                    "const eqs = ['12+34=46', '10+20=30', '11+22=33', '40+15=55', '25+25=50', '13+14=27', '30+31=61'];"
-                   "for (const ch of eqs[i % eqs.length]) key(ch); key('ENTER');"),
+                   # a wrong guess is not a finished question (the next row is the same puzzle): lose it, so
+                   # the wrong path ends on MaffsNext (canon 7.6) as a lost puzzle does
+                   "for (let k = 0; k < 6 && G.status === 'playing'; k++) {"
+                   "  for (const ch of eqs[(i + k) % eqs.length]) key(ch); key('ENTER'); }"),
         'keys': ['Enter'],
     },
     'estimation-golf': {
@@ -532,7 +535,7 @@ async def play(browser, base, slug, level, page_html):
         page = await ctx.new_page()
         errs = []
         # Reading el.onclick (the tier 3 probe) compiles an inline handler; a malformed one throws here and is the
-        # page's markup fault, not a marking fault (equatle :337 on 7 Oct 2026, logged for Jon).
+        # page's markup fault, not a marking fault (equatle :337 had one until F1 batch 2 restored it).
         page.on('pageerror', lambda e: errs.append(str(e)[:120])
                 if "Failed to read the 'onclick' property" not in str(e) else None)
         await page.goto(url, wait_until='load', timeout=20000)
@@ -586,7 +589,8 @@ async def play(browser, base, slug, level, page_html):
         if after['answered'] != before['answered'] or after['completed'] != before['completed']:
             faults.append('dblclick on %s: its second click marked %s' % (c['kind'], diff(before, after)))
     elif await d.ev('() => __lockActionable()') and (await d.snap())['answered'] == s0['answered']:
-        AUTO_ADVANCE.add(slug)                # moved on by itself: no Next to double-click
+        if s0['lastCorrect'] is False:        # (a mark_any game's right answer moves on by itself, as it should)
+            AUTO_ADVANCE.add(slug)            # moved on by itself after a wrong answer: no Next to double-click
     else:
         faults.append('no continue control after a wrong answer, and the game did not move on')
     # 4: tap through to the end; each continue pressed with two Enters and no gap (shape-shifter-t3-005)

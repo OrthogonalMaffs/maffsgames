@@ -103,6 +103,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -156,6 +157,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       </div>
       <div class="feedback" id="feedback"></div>
       <div class="hint" id="hint"></div>
+      <div id="nextMount"></div>
     </div>
   </div>
 
@@ -262,6 +264,7 @@ function startGame(){
 }
 
 function nextQ(){
+  if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));
   if(qNum>=QUESTIONS){endGame();return;}
   qNum++;
   MaffsLock.fresh(ynRow);   // a new pair: a double-click on Start or Play again cannot answer it
@@ -294,7 +297,8 @@ function timeOut(){
   document.getElementById('feedback').textContent='TOO SLOW!';
   document.getElementById('feedback').className='feedback wrong';
   showHint();
-  MaffsLock.timer(nextQ,1800);
+  // canon §7.6: no answer shows the cross-multiplication and waits for Next.
+  MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:nextQ});
 }
 
 function guess(val){
@@ -318,7 +322,9 @@ function guess(val){
   showHint();
   document.getElementById('score').textContent=score;
   document.getElementById('streak').textContent=streak;
-  MaffsLock.timer(nextQ,1800);
+  // canon §7.6: a right answer moves on briskly; a wrong one shows the cross-multiplication and waits for Next.
+  if(correct)MaffsLock.timer(nextQ,1800);
+  else MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:nextQ});
 }
 
 function showHint(){

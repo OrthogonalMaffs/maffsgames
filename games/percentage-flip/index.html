@@ -97,6 +97,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -152,6 +153,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
         <button class="btn btn-skip" onclick="skipQ()">SKIP</button>
       </div>
       <div class="feedback" id="feedback"></div>
+      <div id="nextMount"></div>
     </div>
   </div>
 
@@ -239,6 +241,7 @@ function startGame() {
 }
 
 function loadQuestion() {
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('nextMount'));
   if(qNum >= questions.length) { endGame(); return; }
   flipped = false;
   MaffsLock.fresh(mainEl);   // a new card: a double-click on Start or Play again cannot answer it
@@ -278,7 +281,9 @@ function flipCard() {
       fb.className = 'feedback wrong';
     }
     document.getElementById('score').textContent = score;
-    MaffsLock.timer(() => { qNum++; loadQuestion(); }, 2000);
+    // canon §7.6: a right answer moves on briskly; otherwise the working stays up until Next.
+    if(_isCorrect) MaffsLock.timer(nextCard, 2000);
+    else MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextCard });
   }
 }
 
@@ -302,8 +307,12 @@ function checkAnswer() {
   document.getElementById('score').textContent = score;
   document.getElementById('tapHint').textContent = '👆 Tap the card to reveal!';
   MaffsLock.timer(() => { if(!flipped) flipCard(); }, 1500);
-  MaffsLock.timer(() => { qNum++; loadQuestion(); }, 3000);
+  // canon §7.6: a right answer moves on briskly; a wrong one shows the working (the card) and waits for Next.
+  if(_isOk) MaffsLock.timer(nextCard, 3000);
+  else MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextCard });
 }
+
+function nextCard() { qNum++; loadQuestion(); }
 
 // Skip moves on now: no timer of this card may move on again after it (it skipped a second card until 7 Oct 2026).
 function skipQ() { MaffsLock.clearTimers(); qNum++; loadQuestion(); }
