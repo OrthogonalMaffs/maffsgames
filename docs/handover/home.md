@@ -21,6 +21,17 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-07 (home): contract C game 4, Formula Unlocked (#116)
+
+- **#114 (Given That) merged** on a green Gate, main green after #113.
+- **#116:** Q_ALEVEL[0]'s value-equal option replaced by named slips, override and duplicate dropped (r-001);
+  value-equal wrong options replaced in Q_LEVEL4[10] (f0-001, closed), Q_GCSE[22] and Q_GCSE[23] (audit F3, F4:
+  not register entries; F3 was a B11 ledger entry). `verify-formula-unlocked.py` (B3, SymPy). On main it failed on
+  exactly those four items: every key satisfies its formula, no other wrong key.
+- **Next:** game 5, Sequence Solver (r-001: "0.999..." beside 1; the replacement is 10, the sum taken with first
+  term 9). Its B11 ledger pair (gcse[6] -3n + 10 = 10 - 3n) is fixed in the same PR. r-002 (raw TeX on screen) and
+  r-003 (jc) stay open.
+
 ## 2026-10-07 (home): contract C game 3, Given That (#114)
 
 - **#113 (Better Value) merged** on a green Gate, after main's run on the cloud lane's #112 (Dimension Checker,
