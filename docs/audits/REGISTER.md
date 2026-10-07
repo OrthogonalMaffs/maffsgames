@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 40 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 62 open (3 CRITICAL, 59 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 59 open (4 CRITICAL, 55 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -17,24 +17,24 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-557 findings in 79 games.
+558 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 3 | 21 | 0 | 24 |
-| HIGH | 59 | 147 | 0 | 206 |
+| CRITICAL | 4 | 21 | 0 | 25 |
+| HIGH | 55 | 151 | 0 | 206 |
 | MEDIUM | 164 | 104 | 0 | 268 |
 | LOW | 34 | 25 | 0 | 59 |
-| **All** | 260 | 297 | 0 | 557 |
+| **All** | 257 | 301 | 0 | 558 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| 2 | 33 | 103 |
+| 2 | 34 | 104 |
 | 3 | 10 | 85 |
 | 6 | 31 | 56 |
-| 1 | 22 | 36 |
+| 1 | 18 | 36 |
 | NEW:wrong-explanation-text | 18 | 34 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
@@ -145,11 +145,11 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `equatle` | yes | none | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 3 | 0 | 0 | 4 | 0 |
 | `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 3 | 0 | 3 | 2 | 0 |
-| `expectation-station` | unlisted | verify-expectation-station.py | 1 | 12 | 5 | 1 | 0 | 19 | 0 |
+| `expectation-station` | unlisted | verify-expectation-station.py | 2 | 12 | 5 | 1 | 1 | 19 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `factor-race` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 10 | 9 | 0 |
-| `force-resolver` | unlisted | verify-force-resolver.py | 1 | 7 | 5 | 2 | 3 | 12 | 0 |
+| `force-resolver` | unlisted | verify-force-resolver.py | 1 | 7 | 5 | 2 | 2 | 13 | 0 |
 | `formula-forge` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
 | `formula-plug-in` | yes | none | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 0 | 1 | 0 | 2 | 0 |
@@ -166,7 +166,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `log-laws` | yes | verify-log-laws.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `matrix-crunch` | yes | none | 0 | 2 | 3 | 1 | 6 | 0 | 0 |
 | `modular-battle` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
-| `moments-master` | unlisted | verify-moments-master.py | 1 | 8 | 4 | 2 | 4 | 11 | 0 |
+| `moments-master` | unlisted | verify-moments-master.py | 1 | 8 | 4 | 2 | 3 | 12 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | none | 0 | 1 | 7 | 1 | 8 | 1 | 0 |
 | `partial-fractions-duel` | unlisted | verify-partial-fractions-duel.py | 0 | 7 | 3 | 1 | 1 | 10 | 0 |
@@ -176,7 +176,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `prisoners-dilemma` | yes | none | 0 | 2 | 4 | 1 | 7 | 0 | 0 |
 | `probability-paradox` | yes | none | 0 | 4 | 4 | 0 | 8 | 0 | 0 |
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
-| `proof-builder` | unlisted | verify-proof-builder.py | 2 | 14 | 7 | 1 | 5 | 19 | 0 |
+| `proof-builder` | unlisted | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
 | `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 0 | 0 | 0 | 1 | 0 |
 | `scale-factor-scaling` | yes | none | 0 | 1 | 0 | 0 | 1 | 0 | 0 |
 | `screening-room` | unlisted | verify-screening-room.py | 1 | 4 | 10 | 1 | 7 | 9 | 0 |
@@ -252,6 +252,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 - **HIGH** coordinate-geometry-dash-t1-001, `games/coordinate-geometry-dash/index.html:287`: x = 3t, y = 4/t: xy = 12, y = 12/x and x = 12/y are each correct and marked wrong; only 'All equivalent' is accepted
 
+### `expectation-station` (GCSE, Core, A-Level; unlisted)
+
+- **CRITICAL** expectation-station-pc-001 (JC), `games/expectation-station/index.html Stage 1 (checkStage1, exact per-cell match)`: Stage 1 is underdetermined: on ~33 of 45 items two missing cells take different values and only sum-to-1 is stated, so the swapped completion (equally consistent with the item) is marked wrong
+
 ### `formula-forge` (GCSE, A-Level, L4)
 
 - **HIGH** formula-forge-t4-001, `games/formula-forge/index.html:78,440,454,484`: No answered guard: Enter re-marks, scores again, skips questions and submits more than once
@@ -314,19 +318,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 - **HIGH** factor-theorem-t5-004, `games/factor-theorem/index.html:511 (practice Q33)`: Proof question marked by exact string 'f(2) = 2^n - 2^n = 0'
 - **HIGH** factor-theorem-t5-005, `games/factor-theorem/index.html:578 (T9(c))`: 'Interpret physically' marked by exact string 'object crosses origin at t=2, 3, 4'
-
-### `force-resolver` (A-Level, L4; unlisted)
-
-- **HIGH** force-resolver-t5-008, `games/force-resolver/index.html:219, 221`: No answered guard: Enter on a disabled option re-marks, re-scores, skips questions and submits repeatedly
-
-### `moments-master` (A-Level, L4; unlisted)
-
-- **HIGH** moments-master-t5-009, `games/moments-master/index.html:199, 201`: No answered guard: Enter re-marks, re-scores, skips questions and submits repeatedly
-
-### `proof-builder` (A-Level, Further; unlisted)
-
-- **HIGH** proof-builder-t5-014, `games/proof-builder/index.html:419-433`: Counter: Enter on the focused (class-disabled) option re-marks; correct + Enter x2 scores 3 and skips 2 questions
-- **HIGH** proof-builder-t5-016, `games/proof-builder/index.html:577-584`: Induction: Enter re-fires a stage (skips one unseen); after a wrong stage, Enter on correct scores 3xBASE
 
 ### `characteristic-quest` (Further, L4)
 
