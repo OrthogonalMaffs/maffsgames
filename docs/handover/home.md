@@ -23,13 +23,17 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
   - REGISTER.md is no longer edited by PRs: `audit-register.py --check` validates the yml files only; the
     `register` job regenerates and commits it on main after the Gate (canon §0.4).
   - Handover by lane (this file and `cloud.md`); CLAUDE.md's opening block is a fixed pointer; canon §7.8.1-§7.8.2.
-- **Before/after timings:** in the PR description and canon §7.8.1.
+- **Before/after timings** (canon §7.8.1): full run 10m42s -> 5m45s; site-wide critical path 6m34s -> 3m03s
+  (Tier 4 layer A); shards 1m40s-2m18s at --workers 4 on 4 CPUs (not the critical path, so more workers were not
+  tried). Still over 4 min as single verifiers: Equation Builder (D, 4m48s) and B1 (4m51s); a PR touching those
+  games waits on them. Split them next if it matters (Equation Builder needs a --part like JPIB's).
+- Planted page error in `parents/fractions` (a shard-3 page) on a throwaway branch: only shard 3 failed, Gate red.
 
 **Next.**
 1. Watch this PR's merge run on main: every job green, and the `register` job either commits
    `Regenerate REGISTER.md [skip ci]` or reports "unchanged". (It should commit: the generated header's wording
    changed in this PR, and REGISTER.md was deliberately left unregenerated here.)
-2. **Contract B** (Jon pastes it; the text is not in the repo), then C, F (revised, Jon pastes), D, E.
+2. **Contract F0** (Jon pasted it 7 Oct: B11 value comparison in bank_common.py; START only after this PR is merged and main is green), then contract C (audit batch 3) when Jon pastes it.
 
 **Gotchas learned today.**
 - On the GitHub runner the "Content verifiers" jobs still pull the Playwright image even when the plan selects

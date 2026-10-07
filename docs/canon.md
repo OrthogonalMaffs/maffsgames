@@ -1186,8 +1186,8 @@ for 9m41s, and group B for 8 minutes. Nothing a check checks changed; only where
 
 | Run | Before (7 Oct 2026) | After |
 | --- | --- | --- |
-| One-game PR, longest job | Tiers 1 + 2, 6m34s (run 8m13s) | AFTER_PR |
-| Main's full run | 10m42s (C 9m41s, B 8m03s, Tiers 1 + 2 6m15s) | AFTER_MAIN |
+| One-game PR, longest job | Tiers 1 + 2, 6m34s (run 8m13s) | 3m03s, Tier 4 layer A (every site-wide job 1m40s-3m03s; a selected verifier adds its own job: most under 4m, Equation Builder 4m48s, B1 4m51s); run about 4-5m |
+| Main's full run | 10m42s (C 9m41s, B 8m03s, Tiers 1 + 2 6m15s) | 5m45s (PR #95, which ran everything: B1 4m51s, D 4m48s, B2 4m30s; shards 1m40s-2m18s) |
 
 **Rules that keep it fast.** Every job still fails at 75% of its timeout ("time budget: … split it"). A group
 that becomes the critical path is split the same way: by an option on its script (`--shard`, `--part`) with a
