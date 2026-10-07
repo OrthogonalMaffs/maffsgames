@@ -17,7 +17,8 @@ findings:
   where: games/proof-builder/index.html:231,237,239,241
   summary: 4 of 25 counter items (16%) offer a valid counterexample as a wrong option (5 with :232)
   evidence: see t5-003..006
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-002
   severity: CRITICAL
   jc: false
@@ -26,7 +27,8 @@ findings:
   where: games/proof-builder/index.html:231,237,239,241,249,254,302,314,319
   summary: 6 of 35 counter items and 3 of 4 induction items key a valid, equal or true answer wrong
   evidence: see t5-003..011
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-003
   severity: HIGH
   jc: false
@@ -35,7 +37,8 @@ findings:
   where: games/proof-builder/index.html:231
   summary: 'sqrt(a+b) item: distractor a=4, b=9 is a valid counterexample'
   evidence: sqrt13 = 3.606 vs 2 + 3 = 5
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-004
   severity: HIGH
   jc: false
@@ -44,7 +47,8 @@ findings:
   where: games/proof-builder/index.html:237
   summary: 'log(a+b) item: distractors a=10,b=100 and a=e,b=e both refute'
   evidence: 'lg110 = 2.041 vs 3; ln2e = 1.693 vs 2 (lg: 0.735 vs 0.869)'
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-005
   severity: HIGH
   jc: false
@@ -53,7 +57,8 @@ findings:
   where: games/proof-builder/index.html:239
   summary: '(a+b)^2 item: distractor a=-2, b=2 refutes'
   evidence: 0 vs 8
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-006
   severity: HIGH
   jc: false
@@ -62,7 +67,8 @@ findings:
   where: games/proof-builder/index.html:241
   summary: 'a/(b+c) item: distractor a=6, b=2, c=3 refutes'
   evidence: 6/5 = 1.2 vs 3 + 2 = 5
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-007
   severity: HIGH
   jc: false
@@ -71,7 +77,8 @@ findings:
   where: games/proof-builder/index.html:249
   summary: 'Sum 1..n always even: distractor n=9 refutes'
   evidence: 9*10/2 = 45, odd
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-008
   severity: HIGH
   jc: false
@@ -80,7 +87,8 @@ findings:
   where: games/proof-builder/index.html:254
   summary: 'arg(z1z2) = arg z1 * arg z2: distractors (1, i) and (i, -i) both refute'
   evidence: pi/2 vs 0; arg(1) = 0 vs (pi/2)(-pi/2) = -pi^2/4
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-009
   severity: HIGH
   jc: false
@@ -89,7 +97,8 @@ findings:
   where: games/proof-builder/index.html:302 (INDUCTION[0] stage 4)
   summary: (k^2+3k+2)/2 equals key (k+1)(k+2)/2; form not named
   evidence: SymPy difference 0; in B11 ledger
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-010
   severity: HIGH
   jc: false
@@ -98,7 +107,8 @@ findings:
   where: games/proof-builder/index.html:314 (INDUCTION[2] stage 3)
   summary: Distractor '56m + 8 - 1 = 56m + 7' is a true statement and what 8(7m+1)-1 becomes
   evidence: 8(7m+1) - 1 = 56m + 8 - 1 = 56m + 7; not caught by B11
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-011
   severity: HIGH
   jc: false
@@ -107,7 +117,8 @@ findings:
   where: games/proof-builder/index.html:319 (INDUCTION[3] stage 2)
   summary: (k+1)!(k+2) - 1 equals key (k+2)! - 1 under a prompt that says 'Factor'
   evidence: (k+2)! = (k+2)(k+1)!; in B11 ledger
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-012
   severity: HIGH
   jc: true
@@ -116,7 +127,8 @@ findings:
   where: games/proof-builder/index.html:232
   summary: Exterior-angle statement is true under exterior = 180 - interior; the keyed 'reflex angle' is not a counterexample
   evidence: interior in (0,360) -> exterior in (-180,180) < 180; the item's own step says it 'would be negative'
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-013
   severity: HIGH
   jc: true
@@ -124,9 +136,12 @@ findings:
   level: all
   where: games/proof-builder/index.html:272-273, :504
   summary: n^2+n even sorter rejects valid alternative orders
-  evidence: '''One of any two consecutive integers must be even'' before ''n and n+1 are consecutive'' is valid;
-    marking requires one sequence'
-  status: open
+  evidence: '''One of any two consecutive integers must be even'' before ''n and n+1 are consecutive'' is valid; marking
+    requires one sequence Fixed by the cloud-lane fix PR: a sorter proof may list, per line, the lines it needs before
+    it (`after`); the n^2 + n proof accepts every valid order. The other proofs keep their exact order: whether any of
+    them has another valid order is for Project Claude to review.'
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-014
   severity: HIGH
   jc: false
@@ -135,8 +150,8 @@ findings:
   where: games/proof-builder/index.html:419-433
   summary: 'Counter: Enter on the focused (class-disabled) option re-marks; correct + Enter x2 scores 3 and skips
     2 questions'
-  evidence: 'score 0->285, qIdx 0->3, 3 question_answered idx 1; wrong then Enter on correct: +90, second event
-    correct:true'
+  evidence: 'score 0->285, qIdx 0->3, 3 question_answered idx 1; wrong then Enter on correct: +90, second event correct:true
+    Left open by the cloud-lane fix PR: class 1, owned by the shared answer lock (contract F1).'
   status: open
 - id: proof-builder-t5-015
   severity: HIGH
@@ -146,7 +161,8 @@ findings:
   where: games/proof-builder/index.html:460-471, :494
   summary: 'Sorter: after a wrong Check, reselecting lines re-enables Check and scores full marks'
   evidence: 'swap last two, Check (wrong), reselect per shown solution, Check: +177, second question_answered true'
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-016
   severity: HIGH
   jc: false
@@ -154,7 +170,8 @@ findings:
   level: further
   where: games/proof-builder/index.html:577-584
   summary: 'Induction: Enter re-fires a stage (skips one unseen); after a wrong stage, Enter on correct scores 3xBASE'
-  evidence: 'indStageIdx 0->2 from one answer; wrong then Enter: +254, events correct:false then correct:true'
+  evidence: 'indStageIdx 0->2 from one answer; wrong then Enter: +254, events correct:false then correct:true Left open
+    by the cloud-lane fix PR: class 1, owned by the shared answer lock (contract F1).'
   status: open
 - id: proof-builder-t5-017
   severity: MEDIUM
@@ -164,7 +181,8 @@ findings:
   where: games/proof-builder/index.html:223, :249
   summary: 'Steps state false facts: n^2+n+41 prime for n=1..40; triangular-number parity ''alternates'''
   evidence: 'n=40: 1681 = 41^2; parities 1,1,0,0,1,1,0,0'
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-018
   severity: MEDIUM
   jc: false
@@ -173,7 +191,8 @@ findings:
   where: games/proof-builder/index.html:196-198, :459, :562, :597
   summary: Every sorter line, worked step and induction prompt loses its spaces (todo 1.30, 132 B7 entries)
   evidence: rendered '2isprime(itsonlyfactorsare1and2)'
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-019
   severity: MEDIUM
   jc: false
@@ -182,7 +201,8 @@ findings:
   where: games/proof-builder/index.html:239, :252 (statement); :237, :238, :252, :254 (misconception at :598)
   summary: Raw ^, _ and backslash LaTeX displayed as text
   evidence: '''(a+b)^2 = a^2 + b^2'', ''z_1'', ''\log(ab) = ...'''
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-020
   severity: MEDIUM
   jc: true
@@ -192,7 +212,8 @@ findings:
   summary: True-statement items told 'Find a counter-example that disproves this statement'; mode card says 'The
     statement is false'
   evidence: only :221 sets 'Is this statement true or false?'
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-021
   severity: MEDIUM
   jc: false
@@ -200,7 +221,8 @@ findings:
   level: all
   where: games/proof-builder/index.html:341-353
   summary: Every mode-level pool under 40; B4 ledger miscounts further as 10
-  evidence: counter 15/25 and 15/35; sorter 8/8 and 8/11; induction 4/4
+  evidence: 'counter 15/25 and 15/35; sorter 8/8 and 8/11; induction 4/4 Left open by the cloud-lane fix PR: class 5 (bank
+    size), owned by Project Claude''s expansions.'
   status: open
 - id: proof-builder-t5-022
   severity: MEDIUM
@@ -210,7 +232,8 @@ findings:
   where: games/proof-builder/index.html:267,270,276,278 (sorter); :232,:234,:243,:253 (solution)
   summary: Sideways scroll at 390px from unwrappable KaTeX lines
   evidence: scrollWidth 421-525 on sorter screens; 417-612 on counter solution panels
-  status: open
+  status: fixed
+  pr: 115
 - id: proof-builder-t5-023
   severity: MEDIUM
   jc: true
@@ -218,7 +241,9 @@ findings:
   level: all
   where: games/proof-builder/index.html:335, :622
   summary: Three modes with different maxima (1500/1600/1200) rank on one board per level; no event carries mode
-  evidence: submitScore('proof-builder', level, score, n) for every mode
+  evidence: 'submitScore(''proof-builder'', level, score, n) for every mode Left open by the cloud-lane fix PR: a design
+    decision. Giving each mode its own board needs new level keys in the leaderboard names (schools/assets/firebase-leaderboard.js)
+    and the hub registry, which the cloud lane does not edit; Jon to rule on per-mode boards.'
   status: open
 - id: proof-builder-t5-024
   severity: LOW
@@ -230,5 +255,10 @@ findings:
   summary: Silent alevel fallback for unknown ?level; duplicate identity-matrix option; domains unstated; acute-only
     cos^2+sin^2 proof; open-problem distractors; undefined instances; true equations in I4 s1; 'only when a is prime';
     missing induction conclusion; 'Sniper' name; dead code; hand-rolled Next (class 11)
-  evidence: ?level=constructor/__proto__/nonsense -> alevel, no error
+  evidence: '?level=constructor/__proto__/nonsense -> alevel, no error Partly fixed by the cloud-lane fix PR: the duplicate
+    identity option replaced; "n is an integer" stated; the cos^2 + sin^2 proof titled for 0 < theta < 90 degrees; the
+    open-problem options (pi + e, pi x e) and the undefined instances (log 0, b + c = 0) replaced; the base-case options
+    are values, not true equations; "it always holds when a is prime (Euclid''s lemma)"; the induction sorter ends with
+    its conclusion; "Counter-Example Finder"; the dead branch removed; MaffsNext on every wrong answer. Still open: the
+    silent alevel fallback for an unknown ?level is class 4 (the shared resolver, F2).'
   status: open
