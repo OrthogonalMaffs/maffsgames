@@ -424,22 +424,25 @@ let phase2Attempt = 0;
 let repStats = {table:{score:0,max:0},venn:{score:0,max:0},tree:{score:0,max:0}};
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* Free entry (A-Level, Core Maths, Level 4): every question states its precision, and the answer is
-   marked by MaffsAnswer.decimal against the key rounded half up to it (canon 7.1.3, SR-1). Until
-   7 Oct 2026 it was marked within 0.005 of the stored value with no precision stated: correctly rounded
-   answers were rejected and named wrong answers on small probabilities accepted (given-that-r-002, r-003).
-   The precision keeps three significant figures: 3 d.p. from 0.1 up, 4 d.p. from 0.01, 5 d.p. below. */
+/* Free entry (A-Level, Core Maths, Level 4): the answer is the exact fraction or a decimal to 3 significant
+   figures, marked by MaffsAnswer.fractionOrDecimal (canon 7.1.3, SR-1): any fraction equal in value is right,
+   and a decimal is marked to the decimal places that keep three significant figures: 3 d.p. from 0.1 up, 4
+   d.p. from 0.01, 5 d.p. below. Until 7 Oct 2026 (#114) it was marked within 0.005 of the stored value with
+   no precision stated (given-that-r-002, r-003); #114 to the morning of 7 Oct, decimals only (r-004). */
 function dpFor(answer){return !(answer>0)||answer>=0.1?3:answer>=0.01?4:5}
 function isFreeEntry(phaseData){return !(currentLevel==='gcse'&&phaseData.options)}
 function askText(phaseData){
   if(!isFreeEntry(phaseData))return phaseData.question;
-  return phaseData.question+' Give your answer as a decimal to '+dpFor(phaseData.answer)+' decimal places.';
+  return phaseData.question+' Give your answer as a fraction, or as a decimal to 3 significant figures.';
 }
-/* The key: the stored answer (at least 4 d.p., more where 4 would round it across a half) rounded half up
-   to the stated places, worked in whole millionths so no float rounding creeps in. */
-function keyAt(answer){
-  const dp=dpFor(answer),n=Math.round(answer*1e6),unit=Math.pow(10,6-dp);
-  return (Math.floor((n+unit/2)/unit)/Math.pow(10,dp)).toFixed(dp);
+/* The exact key [num, den] from answerDisplay: \tfrac{a}{b}, where a and b may be decimals (0.30/0.70 is
+   3/7), or a plain decimal. verify-given-that.py checks it against every item's own diagram. */
+function wholeOf(t){const m=/^(\d+)(?:\.(\d+))?$/.exec(t),f=m[2]||'';return [Number(m[1]+f),Math.pow(10,f.length)]}
+function exactOf(phaseData){
+  const s=phaseData.answerDisplay.trim(),m=/^\\tfrac\{([\d.]+)\}\{([\d.]+)\}/.exec(s);
+  if(!m)return wholeOf(s);
+  const a=wholeOf(m[1]),b=wholeOf(m[2]);
+  return [a[0]*b[1],a[1]*b[0]];
 }
 
 /* ---------- DOM refs ---------- */
@@ -784,7 +787,7 @@ function renderAnswerArea(q,phase){
     div.className='free-entry';
     const input=document.createElement('input');
     input.type='text';input.className='free-input';
-    input.placeholder='e.g. 0.429';
+    input.placeholder='e.g. 3/7 or 0.429';
     input.setAttribute('aria-label','Your answer');
     input.id='freeInput';
     const btn=document.createElement('button');
@@ -857,8 +860,8 @@ function handleMCQ(btn,chosen,correctLatex,phaseData,q,phase,grid){
 function handleFreeEntry(input,phaseData,q,phase){
   const raw=input.value.trim();
   if(!raw)return;
-  const dp=dpFor(phaseData.answer),result=MaffsAnswer.decimal(raw,keyAt(phaseData.answer),dp);
-  if(result==='format'||result==='unreadable'){showFeedback(false,MaffsAnswer.message(result,raw,{dp:dp}));return}
+  const dp=dpFor(phaseData.answer),ex=exactOf(phaseData),result=MaffsAnswer.fractionOrDecimal(raw,ex[0],ex[1],dp);
+  if(result==='format'||result==='unreadable'){showFeedback(false,MaffsAnswer.message(result,raw,{dp:dp,sf:3,fraction:true}));return}
   const isCorrect=result==='correct';
 
   input.disabled=true;

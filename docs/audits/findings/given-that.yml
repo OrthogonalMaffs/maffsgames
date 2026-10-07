@@ -68,3 +68,16 @@ findings:
     level4 1 of 40.'
   status: fixed
   pr: 114
+- id: given-that-r-004
+  severity: MEDIUM
+  jc: false
+  class: 7
+  level: core, alevel, level4
+  where: games/given-that/index.html (handleFreeEntry, free entry)
+  summary: 'Since #114 free entry read plain decimals only (MaffsAnswer.decimal): the exact answer typed as a
+    fraction (3/7) was "unreadable", never marked right, and the placeholder showed only "e.g. 0.429".'
+  evidence: 'Recorded by the home lane, 7 Oct 2026 (queue item 0d, Jon): the #114 handover noted that fractions
+    were no longer accepted. Fixed by MaffsAnswer.fractionOrDecimal (#122): the exact fraction or a decimal to 3
+    s.f.; verify-given-that.py types every key as a fraction (lowest terms and unreduced) and plants r-004 back.'
+  status: fixed
+  pr: PRNUM

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer at its stated precision in Chromium) |
+# ci-line: B3 | Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium) |
 """Given That: every diagram checked against its own totals, every key recomputed, every answer marked in Chromium.
 
 The game (90 questions, two phases each: gcse 25 multiple choice, alevel 25, core 20, level4 20 typed) shows a
@@ -18,18 +18,18 @@ words; a Yes/No table's headers are pinned, so the meaning of "Yes" cannot drift
   - each phase's key (answerDisplay) equals the SPEC fraction exactly, and the stored decimal is it to 4 d.p.;
   - multiple choice: four distinct options, the key first, no wrong option equal in value to the key or to
     another option (SR-4, SR-16);
-  - free entry: the question states its precision, chosen to keep three significant figures (3 d.p. from 0.1
-    up, 4 d.p. from 0.01, 5 d.p. below); the game's key (the stored answer rounded half up to that, keyAt())
-    equals the exact key rounded half up (no double rounding: 6/11 stored as 0.5455 once rounded to 0.546), and
-    no other ratio of two of the diagram's own counts rounds to it unless it is equal in value (a wrong answer
-    must not be accepted: r-003);
+  - free entry: the answer is the exact fraction or a decimal to 3 significant figures, marked at the decimal
+    places that keep three (3 d.p. from 0.1 up, 4 d.p. from 0.01, 5 d.p. below); no other ratio of two of the
+    diagram's own counts rounds to the key unless it is equal in value (a wrong answer must not be accepted:
+    r-003); at least one free-entry item is 3/7 (Jon's case: 3/7 and 0.429 right, 0.43 wrong);
   - the phase 2 explanation states the key's fraction.
 In Chromium (390x844), through the game's own functions: every multiple-choice option clicked (the key right,
-the others wrong); every free-entry question states its precision, its key typed is right, each other
-ratio from the diagram typed at 3 d.p. is wrong, the exact value typed unrounded is not marked ("format"), and a
-fraction is not marked ("unreadable").
+the others wrong); every free-entry question says "as a fraction, or as a decimal to 3 significant figures"; its
+key typed as a decimal is right, and as the fraction in lowest terms and unreduced (so the game's exact key,
+exactOf(), is checked against the diagram); each other ratio from the diagram, typed as a decimal and as a
+fraction, is wrong; the exact value typed unrounded is not marked ("format"); on a 3/7 item, 0.43 is wrong.
 A self-test plants the audit's faults back into a copy of the page (r-001's Venn; F4's 30/90; r-002's 0.005
-rule); each must FAIL naming its item.
+rule; r-004's decimals only); each must FAIL naming its item.
 
     python scripts/verify-given-that.py [--no-selftest] [--against FILE]
 """
@@ -246,14 +246,6 @@ def dp_for(answer):
     return 3 if not a > 0 or a >= F(1, 10) else 4 if a >= F(1, 100) else 5
 
 
-def key_from_stored(answer):
-    """The game's keyAt(): the stored answer in whole millionths, rounded half up to dp_for() places."""
-    dp = dp_for(answer)
-    n = int((D(str(answer)) * 1000000).to_integral_value(rounding=ROUND_HALF_UP))
-    unit = 10 ** (6 - dp)
-    return (D((n + unit // 2) // unit) / D(10 ** dp)).quantize(D(1).scaleb(-dp))
-
-
 def ratios(qs):
     """Every ratio a/b of two of the diagram's quantities with 0 < b and a <= b: the probabilities a student
     could read off it by a slip (the wrong total, the wrong cell, the reverse condition)."""
@@ -328,10 +320,6 @@ def check_bank(fails, bank):
                 DP = dp_for(pd['answer'])
                 if DP != dp_for(target):
                     fails.append('%s: the stored %s asks for %d d.p., the exact key needs %d' % (w, pd['answer'], DP, dp_for(target)))
-                key3 = key_from_stored(pd['answer'])
-                if key3 != half_up(target, DP):
-                    fails.append('%s: the key from the stored %s is %s at %d d.p., the exact key rounds to %s'
-                                 % (w, pd['answer'], key3, DP, half_up(target, DP)))
                 slips = sorted(r for r in ratios(qs) if r != target and half_up(r, DP) == half_up(target, DP))
                 for r in slips:
                     fails.append('%s: %s (another ratio from the diagram) also rounds to the key %s at %d d.p.'
@@ -342,8 +330,15 @@ def check_bank(fails, bank):
                 exact4 = half_up(target, 4).normalize()
                 want4 = 'right' if F(str(exact4)) == F(str(half_up(target, DP))) else \
                     'unmarked' if half_up(F(str(exact4)), DP) == half_up(target, DP) else 'wrong'
+                wrong_fracs = sorted(r for r in ratios(qs) if r != target)
                 free[(lv, q['id'], ph)] = {'key': str(half_up(target, DP)), 'dp': DP, 'want4': want4,
-                                           'exact4': format(exact4, 'f'), 'others': [str(o) for o in others]}
+                                           'exact4': format(exact4, 'f'), 'others': [str(o) for o in others],
+                                           'fracs': ['%d/%d' % (target.numerator, target.denominator),
+                                                     '%d/%d' % (3 * target.numerator, 3 * target.denominator)],
+                                           'wrong_fracs': ['%d/%d' % (r.numerator, r.denominator) for r in wrong_fracs],
+                                           'is37': target == F(3, 7)}
+    if not any(f['is37'] for f in free.values()):
+        fails.append('bank: no free-entry item is 3/7 (the 3/7, 0.429, 0.43 check has nothing to run on)')
     return free
 
 
@@ -372,11 +367,15 @@ SWEEP_JS = r"""(free) => {
       }
       const f = free[lv + '|' + q.id + '|' + ph];
       if (!f) { out.push([q.id, ph, '', 'free entry the bank check did not see']); continue; }
-      const tries = [[f.key, 'right'], [f.exact4, f.want4], ['3/7', 'unmarked']]
-        .concat(f.others.map(o => [o, 'wrong']));
+      const tries = [[f.key, 'right'], [f.exact4, f.want4]]
+        .concat(f.fracs.map(o => [o, 'right']), f.others.map(o => [o, 'wrong']), f.wrong_fracs.map(o => [o, 'wrong']),
+                f.is37 ? [['3/7', 'right'], ['0.429', 'right'], ['0.43', 'wrong']] : []);
       open(lv, q, ph);
-      if (!document.getElementById('questionText').textContent.endsWith(' to ' + f.dp + ' decimal places.'))
-        out.push([q.id, ph, '', 'the question does not state its precision (' + f.dp + ' d.p.)']);
+      if (!document.getElementById('questionText').textContent.endsWith(
+          ' Give your answer as a fraction, or as a decimal to 3 significant figures.'))
+        out.push([q.id, ph, '', 'the question does not state its precision (a fraction, or 3 s.f.)']);
+      if (document.getElementById('freeInput').placeholder !== 'e.g. 3/7 or 0.429')
+        out.push([q.id, ph, '', 'the placeholder does not show both forms']);
       for (const [typed, want] of tries) {
         open(lv, q, ph);
         const input = document.getElementById('freeInput');
@@ -463,8 +462,11 @@ PLANTS = [
     ('gcse_14 p2', 'F4: 30/90 beside 60/180',
      '"\\\\tfrac{60}{180}","\\\\tfrac{30}{180}","\\\\tfrac{90}{180}"', '"\\\\tfrac{60}{180}","\\\\tfrac{30}{90}","\\\\tfrac{90}{180}"'),
     ('core_04 p1', "r-002/r-003: marked within 0.005, no precision",
-     "  const dp=dpFor(phaseData.answer),result=MaffsAnswer.decimal(raw,keyAt(phaseData.answer),dp);",
-     "  const dp=dpFor(phaseData.answer),result=Math.abs(parseFloat(raw)-phaseData.answer)<=0.005?'correct':'wrong';"),
+     "result=MaffsAnswer.fractionOrDecimal(raw,ex[0],ex[1],dp);",
+     "result=Math.abs(parseFloat(raw)-phaseData.answer)<=0.005?'correct':'wrong';"),
+    ('alevel_01 p1', "r-004: decimals only, the fraction unreadable",
+     "result=MaffsAnswer.fractionOrDecimal(raw,ex[0],ex[1],dp);",
+     "result=MaffsAnswer.decimal(raw,(ex[0]/ex[1]).toFixed(dp),dp);"),
 ]
 
 
