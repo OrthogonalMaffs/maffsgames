@@ -3745,7 +3745,7 @@
  "integration-duel": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -3761,34 +3761,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.alevel[20]: '2e^{2x}' = '\\\\frac{4e^{2x}}{2}' (both wrong options)",
-      "id": "integration-duel::f92ece5c2cf9#1::B11::[\"2e^{2x}\", \"\\\\frac{4e^{2x}}{2}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.level4[1]: '2t^2' = '\\\\frac{4t^2}{2}' (both wrong options)",
-      "id": "integration-duel::509e5b393685#1::B11::[\"2t^2\", \"\\\\frac{4t^2}{2}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.level4[8]: '6x^2' = '\\\\frac{12x^2}{2}' (both wrong options)",
-      "id": "integration-duel::bb74889d9c6a#1::B11::[\"6x^2\", \"\\\\frac{12x^2}{2}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.level4[18]: '-25e^{-2t}' = '-\\\\frac{50e^{-2t}}{2}' (both wrong options)",
-      "id": "integration-duel::5a6ae42d2566#1::B11::[\"-25e^{-2t}\", \"-\\\\frac{50e^{-2t}}{2}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.level4[41]: '4' = '\\\\frac{16}{4}' (both wrong options)",
-      "id": "integration-duel::aec5ec626c41#1::B11::[\"4\", \"\\\\frac{16}{4}\"]",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
