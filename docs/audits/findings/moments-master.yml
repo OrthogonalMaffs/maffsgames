@@ -17,7 +17,8 @@ findings:
   where: games/moments-master/index.html:172,173,180
   summary: 3 of 20 level4 items (15%) mark the right answer wrong or offer none; every session serves all three
   evidence: see t5-002..004
-  status: open
+  status: fixed
+  pr: 126
 - id: moments-master-t5-002
   severity: HIGH
   jc: false
@@ -26,7 +27,8 @@ findings:
   where: games/moments-master/index.html:172
   summary: R_B keyed 6.5 kN; its own expression (2+20+21)/8 = 5.375 kN; not offered
   evidence: 43/8 = 5.375
-  status: open
+  status: fixed
+  pr: 126
 - id: moments-master-t5-003
   severity: HIGH
   jc: false
@@ -35,7 +37,8 @@ findings:
   where: games/moments-master/index.html:173
   summary: R_A keyed 3.5 kN; correct 4.625 kN not offered
   evidence: 10 − 5.375 = 4.625
-  status: open
+  status: fixed
+  pr: 126
 - id: moments-master-t5-004
   severity: HIGH
   jc: false
@@ -44,7 +47,8 @@ findings:
   where: games/moments-master/index.html:180
   summary: Distractor '5 kW' equals the key 5000 W
   evidence: 50 × 100 = 5000 W = 5 kW
-  status: open
+  status: fixed
+  pr: 126
 - id: moments-master-t5-005
   severity: HIGH
   jc: false
@@ -53,7 +57,8 @@ findings:
   where: games/moments-master/index.html:128
   summary: 'Plank weight and load W both right of the support: no tilting W exists; key 22.5 N is a sign error'
   evidence: support 1 m; G 2.5 m; W 5 m
-  status: open
+  status: fixed
+  pr: 126
 - id: moments-master-t5-006
   severity: HIGH
   jc: false
@@ -62,7 +67,8 @@ findings:
   where: games/moments-master/index.html:134
   summary: 'Beam weight and P both on the B side of C: no balancing P; key 142.9 N is a sign error'
   evidence: C 3 m; G 5 m; P 10 m
-  status: open
+  status: fixed
+  pr: 126
 - id: moments-master-t5-007
   severity: HIGH
   jc: false
@@ -71,7 +77,8 @@ findings:
   where: games/moments-master/index.html:147
   summary: Walking-plank key 4 m matches no reading of the data
   evidence: G 1 m beyond C; 60(2 − x) = 90 -> x = 0.5
-  status: open
+  status: fixed
+  pr: 126
 - id: moments-master-t5-008
   severity: HIGH
   jc: false
@@ -80,7 +87,8 @@ findings:
   where: games/moments-master/index.html:141
   summary: R_B keyed 50 N; correct 75 N offered as a distractor
   evidence: 4R_B = 100×1 + 50×4 = 300
-  status: open
+  status: fixed
+  pr: 126
 - id: moments-master-t5-009
   severity: HIGH
   jc: false
@@ -127,4 +135,28 @@ findings:
     rod not said uniform; :148 rope direction not given; ledger B3 :130/:142 false positive; fixed 1000 ms advance
     (class 11 note)
   evidence: 320px scrollWidth 369 and 353; 390px no overflow
-  status: open
+  status: fixed
+  pr: 126
+- id: moments-master-t5-014
+  severity: LOW
+  jc: false
+  class: 11
+  level: all
+  where: games/moments-master/index.html:153,184
+  summary: 'Premises not stated: the trapdoor not said uniform (its key takes the weight at 0.6 m); the level4 cable
+    beam not said light, nor its cable vertical (its key ignores the beam weight)'
+  evidence: 'Found by the fix PR''s verifier work (7 Oct 2026), the same kind as t5-013''s :148 and :150'
+  status: fixed
+  pr: 126
+- id: moments-master-t5-015
+  severity: MEDIUM
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: all
+  where: games/moments-master/index.html:197
+  summary: 'Contexts and asks show subscripted names raw: "Find R_B", "R_A = 80 N", "T_A" (20 places, written by
+    textContent)'
+  evidence: 'verify-moments-master.py on main''s page: raw TeX on screen in alevel[13], [14], [15], [23]-[25], [27],
+    [28], [30] ... (Chromium, 390px)'
+  status: fixed
+  pr: 126

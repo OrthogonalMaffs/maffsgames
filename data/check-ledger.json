@@ -4325,15 +4325,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.level4[14]: '5 \\\\text{ kW}' = '5000 \\\\text{ W}' (the marked answer is one of them)",
-      "id": "moments-master::a599c4da793b#1::B11::[\"5 \\\\text{ kW}\", \"5000 \\\\text{ W}\"]",
-      "line": null,
-      "register": "moments-master-t5-004"
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
@@ -4368,14 +4361,8 @@
     "status": "pass"
    },
    "B7": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.correct at rk:196: 'No — net moment about midpoint \\\\neq 0' renders as 'No—netmomentaboutmidpoint \\ue020= 0' (lost a space beside: No, about, midpoint, moment, net)",
-      "id": "moments-master::B7::katex[QUESTIONS.correct]::38552fb410b7#1",
-      "line": 196
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B8": {
     "entries": [],
