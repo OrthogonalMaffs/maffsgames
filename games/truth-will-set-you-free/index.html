@@ -17,6 +17,26 @@
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="/schools/assets/analytics.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game (a wrong table: every cell the opposite of its key, then Submit; on the expression step, the first option).
+{
+  "ready": "document.getElementById('questionArea').style.display !== 'none' && !!document.getElementById('submitTT')",
+  "answer": [
+    "return (async () => {",
+    "  const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    "  await real(350);",
+    "  const tt = document.getElementById('truthTableSection'), sub = document.getElementById('submitTT');",
+    "  if (sub && !MaffsLock.isLocked(tt)) {",
+    "    QUESTIONS[qIndex].outputs.forEach((v, k) => { for (let n = 0; n <= 1 - v; n++) toggleOutput(k); });",
+    "    sub.click(); return; }",
+    "  const es = document.getElementById('expressionSection');",
+    "  if (es && es.style.display !== 'none' && !MaffsLock.isLocked(es)) {",
+    "    const b = es.querySelector('.opt-btn'); if (b) b.click(); }",
+    "})();"
+  ],
+  "surface": "#truthTableSection"
+}
+-->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="/schools/assets/firebase-leaderboard.js"></script>
