@@ -85,7 +85,7 @@ MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 think-of-a-number decimal-detective
 prime-or-composite probability-pioneer factor-race prime-factorisation
-percentage-flip fraction-equivalence
+percentage-flip fraction-equivalence equatle
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -162,6 +162,13 @@ HINTS = {
                    "for (const p of [2, 3, 5, 7, 11, 13]) while (r % p === 0) {"
                    "  document.querySelector('#primeBtns [data-p=\"' + p + '\"]').click(); r /= p; }"),
         'repeat': "document.querySelectorAll('#primeBtns .prime-btn').forEach(b => { b.click(); b.click(); });",
+    },
+    'equatle': {
+        'ready': "!!document.getElementById('t00')",
+        'answer': ("if (G.status !== 'playing') return;"
+                   "const eqs = ['12+34=46', '10+20=30', '11+22=33', '40+15=55', '25+25=50', '13+14=27', '30+31=61'];"
+                   "for (const ch of eqs[i % eqs.length]) key(ch); key('ENTER');"),
+        'keys': ['Enter'],
     },
     'prime-or-composite': {
         'keys': ['p', 'c', 'P', 'C'],
@@ -517,7 +524,10 @@ async def play(browser, base, slug, level, page_html):
                 status=200, content_type='text/html; charset=utf-8', body=page_html))
         page = await ctx.new_page()
         errs = []
-        page.on('pageerror', lambda e: errs.append(str(e)[:120]))
+        # Reading el.onclick (the tier 3 probe) compiles an inline handler; a malformed one throws here and is the
+        # page's markup fault, not a marking fault (equatle :337 on 7 Oct 2026, logged for Jon).
+        page.on('pageerror', lambda e: errs.append(str(e)[:120])
+                if "Failed to read the 'onclick' property" not in str(e) else None)
         await page.goto(url, wait_until='load', timeout=20000)
         await page.wait_for_timeout(300)
         return ctx, page, errs
