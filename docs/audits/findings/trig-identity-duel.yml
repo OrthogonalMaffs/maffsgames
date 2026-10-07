@@ -19,7 +19,8 @@ findings:
   summary: 'Largest angle of the 7, 9, 11 triangle: cos C = 9/126 gives 85.9 deg; the key is 86.2 deg and 85.9 is
     not offered'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 102
 - id: trig-identity-duel-t2-002
   severity: HIGH
   jc: false
@@ -29,7 +30,8 @@ findings:
   summary: 'sin A = 3/5, cos B = 5/13: sin(A+B) = 63/65; the key is 56/65 and the correct value is a distractor
     marked wrong'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2 (keys look as if sin B and cos B were swapped)'
-  status: open
+  status: fixed
+  pr: 102
 - id: trig-identity-duel-t2-003
   severity: HIGH
   jc: false
@@ -38,7 +40,8 @@ findings:
   where: games/trig-identity-duel/index.html:228
   summary: cos(A+B) = -16/65; the key is -33/65 and the correct value is a distractor marked wrong
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 102
 - id: trig-identity-duel-t2-004
   severity: HIGH
   jc: false
@@ -47,7 +50,8 @@ findings:
   where: games/trig-identity-duel/index.html:229
   summary: cos(A-B) = 56/65; the key is 63/65 and the correct value is a distractor marked wrong
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 102
 - id: trig-identity-duel-t2-005
   severity: HIGH
   jc: true
@@ -56,7 +60,8 @@ findings:
   where: games/trig-identity-duel/index.html:243
   summary: '''Expand and simplify'' keys 1 + sin 2x; the distractor 1 + 2 sin x cos x is identical in value'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. SR-17: ''simplify'' names the form'
-  status: open
+  status: fixed
+  pr: 102
 - id: trig-identity-duel-t2-006
   severity: HIGH
   jc: true
@@ -65,7 +70,8 @@ findings:
   where: games/trig-identity-duel/index.html:244
   summary: '''Expand and simplify'' keys 1 - sin 2x; the distractor 1 - 2 sin x cos x is identical in value'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. SR-17: ''simplify'' names the form'
-  status: open
+  status: fixed
+  pr: 102
 - id: trig-identity-duel-t2-007
   severity: HIGH
   jc: false
@@ -74,7 +80,8 @@ findings:
   where: games/trig-identity-duel/index.html:285 (handle())
   summary: 'Buttons disabled only by CSS class, no answered guard: Enter on the revealed correct option re-scores
     it; repeated presses during the 1 s pause skip questions unseen'
-  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2 Left open by the cloud-lane fix PR: class 1, owned by
+    the shared answer lock (contract F1).'
   status: open
 - id: trig-identity-duel-t2-008
   severity: MEDIUM
@@ -85,7 +92,8 @@ findings:
   summary: Keyed 30 deg; 150 deg is also valid but not offered
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct'
-  status: open
+  status: fixed
+  pr: 102
 - id: trig-identity-duel-t2-009
   severity: MEDIUM
   jc: true
@@ -95,7 +103,8 @@ findings:
   summary: The kite is under-specified
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct; changes the marking: a possible HIGH, for Project Claude to rule'
-  status: open
+  status: fixed
+  pr: 102
 - id: trig-identity-duel-t2-010
   severity: MEDIUM
   jc: false
@@ -103,6 +112,18 @@ findings:
   level: all
   where: games/trig-identity-duel/index.html (timer)
   summary: The 'hidden' timer is visible and feeds the score, against timer-policy.md
-  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
-    7 Oct'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition, 7 Oct
+    Left open by the cloud-lane fix PR: a design decision for Jon. Moving the game to a hidden count-up changes how its
+    scores are computed, so its leaderboard boards would no longer compare with past scores.'
   status: open
+- id: trig-identity-duel-t2-011
+  severity: MEDIUM
+  jc: false
+  class: NEW:value-equal distractors
+  level: alevel
+  where: 'games/trig-identity-duel/index.html (sin 2θ: Which identity?)'
+  summary: Wrong options 2cos^2θ - 1 and 1 - 2sin^2θ are equal (both cos 2θ)
+  evidence: 'Found by the re-audit in the fix PR (scripts/verify-trig-identity-duel.py); 2cos^2θ - 1 replaced by 2 sin
+    θ (doubling the angle doubles the sine: the misconception the item tests).'
+  status: fixed
+  pr: 102
