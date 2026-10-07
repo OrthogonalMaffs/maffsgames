@@ -3196,19 +3196,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.gcse[13].phase2: '\\\\tfrac{30}{90}' = '\\\\tfrac{60}{180}' (both wrong options)",
-      "id": "given-that::813265ec7540#1::B11::[\"\\\\tfrac{30}{90}\", \"\\\\tfrac{60}{180}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.gcse[22].phase2: '\\\\tfrac{20}{30}' = '\\\\tfrac{50}{75}' (both wrong options)",
-      "id": "given-that::ab02ec338382#1::B11::[\"\\\\tfrac{20}{30}\", \"\\\\tfrac{50}{75}\"]",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
