@@ -1417,7 +1417,7 @@
  "differentiation-duel": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -1433,59 +1433,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.level4[2]: '2x^{-3}' = '\\\\tfrac{2}{x^3}' (both wrong options)",
-      "id": "differentiation-duel::645ed83b8d17#1::B11::[\"2x^{-3}\", \"\\\\tfrac{2}{x^3}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.level4[4]: '-3x^{-2}' = '\\\\tfrac{-3}{x^2}' (both wrong options)",
-      "id": "differentiation-duel::e7a8ffe23842#1::B11::[\"-3x^{-2}\", \"\\\\tfrac{-3}{x^2}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.level4[38]: '\\\\dfrac{2x}{2y}' = '\\\\dfrac{x}{y}' (both wrong options)",
-      "id": "differentiation-duel::aced1e310186#1::B11::[\"\\\\dfrac{2x}{2y}\", \"\\\\dfrac{x}{y}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.level4[49]: '\\\\dfrac{e^{2t}}{e^t}' = 'e^t' (both wrong options)",
-      "id": "differentiation-duel::19b2c58b6920#1::B11::[\"\\\\dfrac{e^{2t}}{e^t}\", \"e^t\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.level4[26]: 'e^x \\\\cos(x) + e^x \\\\sin(x)' = 'e^x(\\\\cos(x) + \\\\sin(x))' (both wrong options)",
-      "id": "differentiation-duel::0fc217367364#1::B11::[\"e^x \\\\cos(x) + e^x \\\\sin(x)\", \"e^x(\\\\cos(x) + \\\\sin(x))\"]",
-      "line": null,
-      "register": "differentiation-duel-t5-003"
-     },
-     {
-      "detail": "QUESTIONS.level4[31]: '\\\\dfrac{\\\\cos(x)}{x}' = '\\\\dfrac{x\\\\cos(x)}{x^2}' (both wrong options)",
-      "id": "differentiation-duel::2b304af99693#1::B11::[\"\\\\dfrac{\\\\cos(x)}{x}\", \"\\\\dfrac{x\\\\cos(x)}{x^2}\"]",
-      "line": null,
-      "register": "differentiation-duel-t5-004"
-     },
-     {
-      "detail": "QUESTIONS.level4[32]: '\\\\dfrac{e^x(x - 2)}{x^3}' = '\\\\dfrac{x^2 e^x - 2xe^x}{x^4}' (the marked answer is one of them)",
-      "id": "differentiation-duel::f7219b5c9aa8#1::B11::[\"\\\\dfrac{e^x(x - 2)}{x^3}\", \"\\\\dfrac{x^2 e^x - 2xe^x}{x^4}\"]",
-      "line": null,
-      "register": "differentiation-duel-t5-001"
-     },
-     {
-      "detail": "QUESTIONS.level4[44]: '\\\\cos(y)' = '\\\\dfrac{\\\\cos(y)}{1}' (both wrong options)",
-      "id": "differentiation-duel::e08161f25c16#1::B11::[\"\\\\cos(y)\", \"\\\\dfrac{\\\\cos(y)}{1}\"]",
-      "line": null,
-      "register": "differentiation-duel-t5-005"
-     },
-     {
-      "detail": "QUESTIONS.level4[45]: '2xe^{-y}' = '\\\\dfrac{2x}{e^y}' (the marked answer is one of them)",
-      "id": "differentiation-duel::50d2f0e5754c#1::B11::[\"2xe^{-y}\", \"\\\\dfrac{2x}{e^y}\"]",
-      "line": null,
-      "register": "differentiation-duel-t5-002"
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
@@ -1508,14 +1457,8 @@
     "status": "pass"
    },
    "B7": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.prompt at tex:925: 'Find \\\\dfrac{dy}{dx}' renders as 'Finddxdy' (lost a space beside: Find)",
-      "id": "differentiation-duel::B7::katex[QUESTIONS.prompt]::ffcf6180e39b#1",
-      "line": 925
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B8": {
     "entries": [],

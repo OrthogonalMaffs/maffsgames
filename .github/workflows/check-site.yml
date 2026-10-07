@@ -541,6 +541,7 @@ jobs:
               Trig Identity Duel (every option read into SymPy: exactly one equals the key, compound-angle and triangle keys recomputed, marking in Chromium)|python scripts/verify-trig-identity-duel.py
               Binomial Blaster (every key and option evaluated with SymPy, every item marked in Chromium)|python scripts/verify-binomial-blaster.py
               Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)|python scripts/verify-partial-fractions-duel.py
+              Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)|python scripts/verify-differentiation-duel.py
 
     steps:
       - uses: actions/checkout@v4

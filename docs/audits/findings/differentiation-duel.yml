@@ -17,7 +17,8 @@ findings:
   where: games/differentiation-duel/index.html:820 (Quotient Rule, e^x/x^2)
   summary: Wrong option e^x(x-2)/x^3 equals the key (x^2e^x-2xe^x)/x^4
   evidence: 'SymPy simplify(key - option) = 0; Chromium: clicking it shows WRONG!'
-  status: open
+  status: fixed
+  pr: 106
 - id: differentiation-duel-t5-002
   severity: HIGH
   jc: false
@@ -26,7 +27,8 @@ findings:
   where: games/differentiation-duel/index.html:848 (Implicit, e^y = x^2 + 1)
   summary: 2xe^{-y} is identical to key 2x/e^y, and 2x/(x^2+1) equals it on the curve; 3 of 4 buttons correct
   evidence: 2x/e^y = 2x e^{-y}; e^y = x^2+1 -> 2x/(x^2+1) = d/dx ln(x^2+1)
-  status: open
+  status: fixed
+  pr: 106
 - id: differentiation-duel-t5-003
   severity: MEDIUM
   jc: true
@@ -35,7 +37,8 @@ findings:
   where: games/differentiation-duel/index.html:806 (e^x cos x)
   summary: Wrong options e^x cos x + e^x sin x and e^x(cos x + sin x) equal (not in B11 ledger)
   evidence: SymPy difference 0
-  status: open
+  status: fixed
+  pr: 106
 - id: differentiation-duel-t5-004
   severity: MEDIUM
   jc: true
@@ -44,7 +47,8 @@ findings:
   where: games/differentiation-duel/index.html:818 (sin x / x)
   summary: Wrong options cos x/x and x cos x/x^2 equal (not in B11 ledger)
   evidence: x cos x / x^2 = cos x / x
-  status: open
+  status: fixed
+  pr: 106
 - id: differentiation-duel-t5-005
   severity: MEDIUM
   jc: true
@@ -53,7 +57,8 @@ findings:
   where: games/differentiation-duel/index.html:846 (sin y = x)
   summary: Wrong options cos(y) and cos(y)/1 equal (not in B11 ledger)
   evidence: cos(y)/1 = cos(y)
-  status: open
+  status: fixed
+  pr: 106
 - id: differentiation-duel-t5-006
   severity: MEDIUM
   jc: true
@@ -62,7 +67,8 @@ findings:
   where: games/differentiation-duel/index.html:754 (x^{-2})
   summary: Wrong options 2x^{-3} and 2/x^3 equal (B11 ledger)
   evidence: 2x^{-3} = 2/x^3
-  status: open
+  status: fixed
+  pr: 106
 - id: differentiation-duel-t5-007
   severity: MEDIUM
   jc: true
@@ -71,7 +77,8 @@ findings:
   where: games/differentiation-duel/index.html:758 (1/x^3)
   summary: Wrong options -3x^{-2} and -3/x^2 equal (B11 ledger)
   evidence: -3x^{-2} = -3/x^2
-  status: open
+  status: fixed
+  pr: 106
 - id: differentiation-duel-t5-008
   severity: MEDIUM
   jc: true
@@ -80,7 +87,8 @@ findings:
   where: games/differentiation-duel/index.html:834 (x^2 + y^2 = 25)
   summary: Wrong options x/y and 2x/2y equal (B11 ledger)
   evidence: 2x/2y = x/y
-  status: open
+  status: fixed
+  pr: 106
 - id: differentiation-duel-t5-009
   severity: MEDIUM
   jc: true
@@ -89,7 +97,8 @@ findings:
   where: games/differentiation-duel/index.html:858 (x = e^t, y = e^{2t})
   summary: Wrong options e^t and e^{2t}/e^t equal (B11 ledger)
   evidence: e^{2t}/e^t = e^t
-  status: open
+  status: fixed
+  pr: 106
 - id: differentiation-duel-t5-010
   severity: MEDIUM
   jc: true
@@ -97,7 +106,8 @@ findings:
   level: all
   where: games/differentiation-duel/index.html:870,877
   summary: '?level=constructor/__proto__: nonsense badge text, Start throws, game cannot start'
-  evidence: pool = QUESTIONS[LEVEL] || QUESTIONS.alevel takes Object; pageerror 'a is not iterable'
+  evidence: 'pool = QUESTIONS[LEVEL] || QUESTIONS.alevel takes Object; pageerror ''a is not iterable'' Left open by the
+    cloud-lane fix PR: class 4, owned by the shared level resolver (contract F2).'
   status: open
 - id: differentiation-duel-t5-011
   severity: MEDIUM
@@ -106,7 +116,8 @@ findings:
   level: all
   where: games/differentiation-duel/index.html:627,870
   summary: ?level=nonsense serves alevel but logs and submits under 'nonsense' (stray board)
-  evidence: game_started level 'nonsense'; board differentiation_duel_nonsense matches the rules regex
+  evidence: 'game_started level ''nonsense''; board differentiation_duel_nonsense matches the rules regex Left open by
+    the cloud-lane fix PR: class 4, owned by the shared level resolver (contract F2).'
   status: open
 - id: differentiation-duel-t5-012
   severity: LOW
@@ -116,5 +127,32 @@ findings:
   where: games/differentiation-duel/index.html:563,570,614-626,881,925,950-953,1000-1001
   summary: '''Finddxdy'' (B7 ledger); visible timer vs hidden in timer-policy; quick reference lacks product/tan/implicit;
     start text names 3 rules; caret notation in exp; biased sort-shuffle; dd_best shared across levels'
-  evidence: read from source; 390px scrollWidth 390 throughout
-  status: open
+  evidence: 'read from source; 390px scrollWidth 390 throughout Fixed by the cloud-lane fix PR: the prompt delimits its
+    maths (MaffsText), so "Find dy/dx" keeps its space; the timer is a hidden count-up (time on the results screen only);
+    the quick reference adds tan, the product rule (A-Level) and implicit differentiation (Level 4); the start text names
+    what each level asks; explanations are KaTeX, not caret notation; options come from MaffsOptions.build and the question
+    order from a Fisher-Yates shuffle; the device best score and top-five are kept per level.'
+  status: fixed
+  pr: 106
+- id: differentiation-duel-t5-013
+  severity: MEDIUM
+  jc: false
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/differentiation-duel/index.html (Implicit, xy = 6)
+  summary: Wrong options y/x and 6/x^2 are equal on the curve (y = 6/x)
+  evidence: Found by the re-audit in the fix PR (scripts/verify-differentiation-duel.py compares options on the curve);
+    6/x^2 replaced by -6/x (multiplied by the power without reducing it).
+  status: fixed
+  pr: 106
+- id: differentiation-duel-t5-014
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/differentiation-duel/index.html (alevel -sin x + 3cos x; Implicit x^2 + xy + y^2 = 7, 2xy + y^2 = 10;
+    Parametric x = cos t, y = sin t)
+  summary: Four explanations stop before the answer (at "= 0", or at one term of two)
+  evidence: Found by the re-audit in the fix PR; each now ends with dy/dx.
+  status: fixed
+  pr: 106
