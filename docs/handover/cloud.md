@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: trig-identity-duel binomial-blaster partial-fractions-duel truth-buster`
+`cloud-remaining: binomial-blaster partial-fractions-duel truth-buster`
 
 **Resume rule, MaffsLock (Jon, contract LH):** adopting MaffsLock includes the game's lock-hint declaration
 (`<!-- maffs-lock-hint ... -->`, canon §7.6.0), and the game passes `check-answer-lock.py`. Hints live in the
@@ -22,6 +22,18 @@ game's page, never in the shared script.
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-07 (cloud): trig-identity-duel (queue 3 of 6); #135 truth-will-set-you-free merged; NEXT = binomial-blaster
+
+- **#135 merged** at 19:47 on a green Gate (main green on 571bb60; last home merge 18:44).
+- **trig-identity-duel:** the old session's commit (03c34eb) cherry-picked onto main, plus its maffs-lock-hint (`{}`)
+  and off the remaining list. Jon's gcse[16]: A = 45°, a = 10 cm, B = 60°, b = 12.2 (the old item, B = 30° keyed 7.1,
+  was right but duplicated another question: the B3 ledger entry is cleared, no register entry). Hidden count-up
+  (timer-policy, SR-23): no HUD timer, a right answer scores BASE whatever the time, time on the results only.
+  MaffsLock in full.
+- **Register:** t2-007 (class 1) and t2-010 fixed. Every other entry was already fixed by #102.
+- **Not in its register, not fixed here:** a wrong answer still moves on by itself after 1 s (MaffsLock.timer), with
+  no Next (canon 7.6). The lock check notes it ("no Next after a wrong answer"); it does not fail.
 
 ## 2026-10-07 (cloud): truth-will-set-you-free (queue 2 of 6); #134 eigenvector-engine merged; NEXT = trig-identity-duel
 
