@@ -577,6 +577,10 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{}
+-->
 <script src="../../schools/assets/options.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -903,7 +907,7 @@ const QUESTIONS = {
 const urlLevel = new URLSearchParams(location.search).get('level');
 let currentLevel = (urlLevel === 'level4') ? 'level4' : 'alevel';
 
-let score=0, streak=0, qNum=0, answered=false, timerInt=null, timerStart=null, questions=[], sessionStart=null;
+let score=0, streak=0, qNum=0, timerInt=null, timerStart=null, questions=[], sessionStart=null;
 
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 function makeChoices(correct, wrong){
@@ -924,6 +928,7 @@ if(currentLevel === 'level4'){
 
 let _ggCorrectCount=0;
 function startGame(){
+  MaffsLock.newSession();
   score=0; streak=0; qNum=0; _ggCorrectCount=0; sessionStart=Date.now();
   const bank = QUESTIONS[currentLevel];
   questions = shuffle(bank).slice(0, Math.min(TOTAL, bank.length));
@@ -943,7 +948,6 @@ function startGame(){
 function nextQ(){
   if(window.MaffsNext) MaffsNext.clear(document.getElementById('explanation').parentNode);
   if(qNum >= questions.length){endGame(); return;}
-  answered = false;
   const q = questions[qNum]; qNum++;
   document.getElementById('ruleBadge').textContent = q.rule;
   document.getElementById('qText').innerHTML = tex(q.q);
@@ -962,6 +966,7 @@ function nextQ(){
     btn.onclick = () => guess(c, q, btn, div);
     div.appendChild(btn);
   });
+  MaffsLock.fresh(div);   // a new question: a double-click on Start or Next cannot answer it (canon 7.6.0)
 
   clearInterval(timerInt);
   timerStart = Date.now();
@@ -977,8 +982,7 @@ function nextQ(){
 }
 
 function guess(val, q, btn, div){
-  if(answered) return;
-  answered=true;
+  if(!MaffsLock.lock(div)) return;
   clearInterval(timerInt);
   const seconds = (Date.now()-timerStart)/1000;
   const correct = val === q.correct;
@@ -1004,23 +1008,25 @@ function guess(val, q, btn, div){
   document.getElementById('score').textContent = score;
   document.getElementById('streak').textContent = streak;
   // canon 7.6: correct advances briskly, wrong waits for the student.
-  if(correct){ setTimeout(nextQ,1800); }
+  if(correct){ MaffsLock.timer(nextQ,1800); }
   else { MaffsNext.wrong({mount:document.getElementById('explanation').parentNode, onAdvance:nextQ}); }
 }
 
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){
   var _elapsed=Math.floor((Date.now()-(sessionStart||Date.now()))/1000),_m=Math.floor(_elapsed/60),_s=_elapsed%60;if(document.getElementById('timeStat'))document.getElementById('timeStat').textContent=(_m>0?_m+'m '+_s+'s':_s+'s');
   window._ggAbandoned=false;
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
+  MaffsLock.screen(document.getElementById('gameOver'));
   document.getElementById('finalScore').textContent = score;
   document.getElementById('goDetail').textContent = `${questions.length} integrals attempted`;
   const _acc=questions.length>0?Math.round(_ggCorrectCount/questions.length*100):0;
   mfg('game_completed',{game_slug:'integration-duel',level:currentLevel,score:score,questions_answered:questions.length,accuracy:_acc});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('integration-duel',currentLevel,score,questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('integration-duel',currentLevel,score);}}
   saveBest(score); renderLB();
-}
+});
 
 const LB_KEY = 'id_' + currentLevel;
 function getBest(){return parseInt(localStorage.getItem('id_best_'+currentLevel)||'0');}

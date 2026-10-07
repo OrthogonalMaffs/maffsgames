@@ -9,18 +9,25 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
-**QUEUE (home lane, F1, Jon's re-ordering of 7 Oct 18:05; contract LH inserted before batch 3):** MaffsLock #125,
-batch 1 #129, batch 2 #132 and contract LH (this entry's PR) are done. Next:
-1. **Batches 3-4:** the unlisted games the cloud lane has finished and merged: spot-the-error, truth-buster,
-   trig-worms, expectation-station, component-crusher, trig-identity-duel, binomial-blaster,
-   partial-fractions-duel, differentiation-duel, integration-duel, curling-friction, dimension-checker,
-   proof-builder, linear-equation-solver, moments-master, force-resolver. Skip any game still on the cloud
-   lane's list: since LH that is the `cloud-remaining:` line in `docs/handover/cloud.md`. As of 7 Oct night it
-   holds **trig-identity-duel, binomial-blaster, partial-fractions-duel and truth-buster** (Jon's 15:27
-   follow-ups), so those four are skipped: 12 games left. Each migrated game gets its `maffs-lock-hint`
-   declaration (`{}` if none is needed). (factor-theorem: #130 merged during LH; its declaration is in LH.)
-2. **Straight after batch 4:** the relist PR for every game in REGISTER.md's "Ready to relist" (SR-21). Give
-   the listed-game count before and after.
+**QUEUE (home lane; Jon, 7 Oct evening session):** MaffsLock #125, batches 1 (#129), 2 (#132), contract LH (#133)
+and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then stops at the checkpoint. Then:
+1. **FIRST in the next session: contract DET, check-answer-lock.py made deterministic** (Jon, 7 Oct). Two
+   causes fail a PR at random: (a) after a right answer `to_next()` waits a fixed 350 ms and returns 'auto', so the
+   next tap can land in MaffsLock's 300 ms fresh window (UNPLAYABLE; #134 prime-or-composite, #137
+   fraction-equivalence); (b) with no answer hint the driver taps option (k+1) % 2 on 8 unseeded questions, all
+   right ~1/2^8 of the time in a two-option game. Fix in the driver, never with retries: wait for game state (next
+   question rendered AND its fresh window over; a read-only `MaffsLock.isFresh(container)` in answer-lock.js if
+   needed, documented, no behaviour change); two-option games declare an answer that picks the option differing
+   from the key; a seeded default (seed printed) for games with no hint; no new declaration key (else STOP IF).
+   Proofs: same seed, identical event log; a forced all-right draw and a tap inside the fresh window both handled
+   every time; no Math.random and no fixed delay on the path to a wrong answer; a planted lock removal still caught
+   every run; then 20 consecutive passes on prime-or-composite and fraction-equivalence (smoke test only). Canon
+   §7.6, this file, and one line in cloud.md (two-option games declare the differing-from-key answer). DO NOT
+   TOUCH: answer-lock.js behaviour, what the check tests, scoring, cloud-remaining games, CI retry settings.
+   STOP IF: the fresh window can't be observed without changing answer-lock.js behaviour; a two-option game's
+   wrong answer can't be expressed with the existing key; determinism would stop it testing something it tests now.
+2. **Contract ESSENTIALS** (Jon's paste, 7 Oct 20:03): after the relist PR merges and main is green. **Its text
+   was not in the paste this session received (a placeholder line only): get it from Jon.**
 3. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty.
 - **Checkpoint rule:** stop after every 2 batches merged (main green), or at the next batch boundary when Jon
   says "checkpoint". At each stop, update this file.
@@ -29,7 +36,42 @@ batch 1 #129, batch 2 #132 and contract LH (this entry's PR) are done. Next:
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-07 (home, night): contract LH, lock hints declared by each game (this PR)
+## 2026-10-07 (home, late night): F1 batch 3 BUILT, NOT YET A PR; STOPPED for Jon's context clear
+
+- **State at the stop:** all 8 games and the handover are committed and pushed on `claude/f1-batch3` (worktree
+  `E:/jon/mg-b3`). There is **no PR yet**. A local `check-changed.py` was running when Jon stopped the session,
+  so its result is unknown. **Next session, before the new contract or after it as Jon says:** rerun
+  `python scripts/check-changed.py` on the branch (rebase on main first). Open the PR with the body in `docs/handover/pr-b3-draft.md` (delete that file in the PR)
+  . Set `status: fixed, pr: <n>` on the four entries named below, then merge on green (staggered from
+  cloud merges).
+- **#133 (contract LH) merged** on a green Gate, 22 min after the cloud lane's #130, with no cloud PR in CI.
+  Main is green.
+- **Batch 3, eight games on MaffsLock:** dimension-checker, curling-friction, trig-worms, component-crusher,
+  differentiation-duel, integration-duel, spot-the-error and expectation-station. Each has its declaration;
+  four needed a real one:
+  - trig-worms: start_sel, because "FIRE!" is its Start.
+  - component-crusher: a typed key + 1000 at the stated precision, or the first wrong option.
+  - spot-the-error: picks a level, then the same wrong step twice.
+  - expectation-station: wrong tiles, wrong products, then a wrong card still open.
+  All 26 migrated games pass.
+- **Faults fixed beyond swapping in the lock:**
+  - spot-the-error: a double-click on a wrong step spent both attempts. A first wrong pick now opens a fresh
+    window (stage 1 and stage 2).
+  - expectation-station: each Check is one attempt (a double-click spent the retry, t2-017). The game's own
+    Next was outside every container, so a second Enter skipped a question. `fresh(gameScreen)` on load.
+- **Register:** closed component-crusher-t4-005, curling-friction-t5-003 and dimension-checker-t5-003 (all
+  HIGH, class 1), and expectation-station-t2-017.
+- **Verifiers:** each sweep that answers at once now has `bc.NO_LOCK_FRESH_INIT`. Two sweeps replace
+  `window.setTimeout` (spot-the-error runs callbacks at once; expectation-station queues them with id 0), and
+  that silently drops `MaffsLock.timer` callbacks: the asset records the id only after `setTimeout`
+  returns. Both sweeps now override `MaffsLock.timer` the same way. expectation-station's sweep also calls
+  `MaffsLock.fresh(stage3Wrap)` when it re-renders stage 3 by hand. **Lesson for the next batches:** any
+  sweep that stubs setTimeout must stub `MaffsLock.timer` too.
+- **Note, not a fault:** expectation-station shows "no Next after a wrong answer". A first wrong attempt
+  resets the stage for a retry, so the classifier sees an auto-advance. Its stages keep the game's own Next.
+- **NOT_YET: 70.**
+
+## 2026-10-07 (home, night): contract LH, lock hints declared by each game (#133)
 
 - **Jon's contract LH (before batch 3).** The root cause: per-game facts sat in a shared script, so each cloud
   migration needed a home-lane edit (suvat #128, factor-theorem #130). The fix is at that layer, the same

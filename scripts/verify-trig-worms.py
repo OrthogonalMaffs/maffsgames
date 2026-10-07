@@ -173,6 +173,7 @@ def check(fails, html, label=''):
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+            ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
             page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
             ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
@@ -263,6 +264,7 @@ def check_legacy(fails, html):
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             ctx = browser.new_context()
+            ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
             ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
             ctx.route(lambda url: url.split('?')[0].endswith('/games/%s/' % SLUG), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))

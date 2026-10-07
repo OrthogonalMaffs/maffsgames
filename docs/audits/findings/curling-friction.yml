@@ -38,7 +38,8 @@ findings:
   summary: 'No answered guard: Enter re-marks, re-scores, skips questions and submits repeatedly'
   evidence: 'wrong then Enter x2: 3 question_answered, score 0->189; Enter x4 on Q20: submitScore x4 Left open by the cloud-lane
     fix PR: class 1, owned by the shared answer lock (contract F1).'
-  status: open
+  status: fixed
+  pr: 136
 - id: curling-friction-t5-004
   severity: MEDIUM
   jc: true

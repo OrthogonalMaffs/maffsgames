@@ -463,6 +463,7 @@ SWEEP_JS = r"""() => {
   // The game's pauses run when drain() is called, a bounded number of rounds (a timer that re-arms itself, such
   // as the KaTeX wait, is never run into a loop).
   const queue = []; window.setTimeout = (f) => { queue.push(f); return 0; };
+  MaffsLock.timer = (f) => { queue.push(f); return 0; };   // MaffsLock's timers too (they go through setTimeout)
   const drain = () => { for (let n = 0; n < 3; n++) queue.splice(0).forEach(f => { try { f(); } catch (e) {} }); };
   const out = [];
   const items = [...QUESTIONS.core, ...QUESTIONS.gcse, ...QUESTIONS.alevel];
@@ -498,7 +499,7 @@ SWEEP_JS = r"""() => {
     r.exShown = document.getElementById('exResultValue').textContent;
     // every card: the wrong ones marked wrong, the true one right (two attempts per question, so re-render)
     for (let j = 0; j < q.interpretations.length; j++) {
-      stage3Attempts = 0; renderStage3();
+      stage3Attempts = 0; MaffsLock.fresh(document.getElementById('stage3Wrap')); renderStage3();   // a new attempt, so a fresh lock
       const k = currentQ._shuffledInterps.findIndex(c => c.text === q.interpretations[j].text);
       document.getElementById('interp_' + k).click();
       checkStage3(); drain();
@@ -520,6 +521,7 @@ def play(fails, html):
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+            ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
             page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
             ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
