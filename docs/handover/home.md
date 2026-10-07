@@ -9,19 +9,42 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
-**QUEUE (home lane, Jon 7 Oct):** (V #108 and C #111-#118 done; see the newest entries)
-1. **V: each verifier declares its own CI group** (#108, this entry).
-2. **C (revised 7 Oct): audit batch 3**, one game per PR in this order: proportion-blaster, better-value,
-   given-that, formula-unlocked, sequence-solver, estimation-golf. The contract text is in Jon's 7 Oct paste;
-   its rules are summarised in the next entry when it starts. Each verifier declares its own ci-line (no
-   workflow edit).
-3. F1, when Jon pastes it.
+**QUEUE (home lane, Jon 7 Oct, after the clear):** 0b #120, 0c #121, 0d #122 + #123 all merged. Now:
+1. **F1: MaffsLock, one shared "answer once" lock**, then the roll-out (89 games, batches of up to 8) and the
+   relist. Contract text in Jon's 7 Oct paste; summarised in the newest entry. STOP IF (c) applies and is
+   reported: **89 games need migrating** (over 40): carry on in batches.
 
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-07 (home): queue item 0d, shared fraction answers (#122) and Given That (this PR)
+## 2026-10-07 (home): F1 part a, the MaffsLock asset (this PR)
+
+- **#123 (0d, Given That) merged** on a green Gate after main's rerun of #122 went green. Main's first runs
+  after #121 and #122 were marked failed with every job green: the run never created its Gate job (the two
+  pushes were 5 s apart). A rerun of #122's run created it: green.
+- **F1 (Jon, 7 Oct):** one shared lock every game uses, so no click, key, double-click or double-tap marks
+  twice, answers unseen, or finishes twice; then roll it out (no game keeps a local guard) and relist every
+  unlisted game that is ready (SR-21: verifier merged, no open CRITICAL/HIGH). Do not touch scoring, keys,
+  banks, MaffsAnswer/Options/Keypad internals, or the cloud lane's remaining games
+  (linear-equation-solver, moments-master, force-resolver, suvat, factor-theorem, eigenvector-engine,
+  truth-will-set-you-free: it adopts the lock itself). STOP IF a game cannot adopt it without a scoring change,
+  or a CRITICAL/HIGH game would have to be relisted.
+- **Count (STOP IF c, reported, carrying on):** 96 roster games record question_answered; 7 are the cloud
+  lane's, so **89 to migrate** here, in batches of 8 by audience (Year 6 first).
+- **This PR:** `schools/assets/answer-lock.js` (MaffsLock: `lock`, `isLocked`, `fresh`, `screen`, `timer`,
+  `cancel`, `clearTimers`, `finishOnce`, `newSession`; header documents it); MaffsNext's advance calls
+  `MaffsLock.clearTimers()`; canon §7.6.0 ("every game marks through MaffsLock; no local answered flags");
+  `scripts/test-answer-lock.py` (B3 by ci-line): nine behaviours on a fixture game in Chromium, and the four
+  planted faults (CSS-only lock, no fresh delay, uncleared timers, double finish) each caught. `isLocked()` is
+  an addition to the contract's API: a keypad that must stop typing, or an Enter that must advance rather
+  than mark, asks it instead of keeping a flag.
+- **Next (part b):** `scripts/check-answer-lock.py` with batch 1 (the Year 6 games: formula-plug-in,
+  new-shapes, four-quadrant-explorer, like-terms-collector, shape-shifter, negative-number-line,
+  think-of-a-number, decimal-detective). Drafted on the f1 worktree (stashed): a generic driver on check-site's
+  tier 3 probes; on main's formula-plug-in it already finds the double finish (game_completed x2, submitScore x2).
+
+## 2026-10-07 (home): queue item 0d, shared fraction answers (#122) and Given That (#123)
 
 - **#121 (0c) and #122 merged** on green Gates. Slip: #122 merged while main's run for #121 was still in
   progress (both green as PRs, disjoint files); both main runs watched to the end.
