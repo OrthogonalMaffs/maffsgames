@@ -8,8 +8,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | # | Point | Status |
 |---|---|---|
-| 1 | Every live game has a verifier in CI | NOT MET: 46 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 101 open (10 CRITICAL, 91 HIGH) |
+| 1 | Every live game has a verifier in CI | NOT MET: 45 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 93 open (9 CRITICAL, 84 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -17,22 +17,22 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-549 findings in 79 games.
+551 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 10 | 14 | 0 | 24 |
-| HIGH | 91 | 115 | 0 | 206 |
-| MEDIUM | 176 | 86 | 0 | 262 |
-| LOW | 47 | 10 | 0 | 57 |
-| **All** | 324 | 225 | 0 | 549 |
+| CRITICAL | 9 | 15 | 0 | 24 |
+| HIGH | 84 | 122 | 0 | 206 |
+| MEDIUM | 176 | 87 | 0 | 263 |
+| LOW | 46 | 12 | 0 | 58 |
+| **All** | 315 | 236 | 0 | 551 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| 2 | 46 | 102 |
-| 3 | 27 | 85 |
+| 2 | 45 | 102 |
+| 3 | 20 | 85 |
 | 6 | 32 | 56 |
 | 1 | 35 | 35 |
 | NEW:wrong-explanation-text | 18 | 34 |
@@ -45,11 +45,11 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:precision-not-stated | 4 | 9 |
 | NEW:hand-typed explanation figure | 7 | 7 |
 | NEW:text-contradicts-content | 5 | 7 |
+| NEW:raw-tex-on-screen | 2 | 6 |
+| 11 | 2 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:ill-posed wording | 4 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
-| NEW:raw-tex-on-screen | 2 | 5 |
-| 11 | 3 | 4 |
 | B7 (ledgered) | 4 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 3 | 3 |
@@ -166,7 +166,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `log-laws` | yes | verify-log-laws.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `matrix-crunch` | yes | none | 0 | 2 | 3 | 1 | 6 | 0 | 0 |
 | `modular-battle` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
-| `moments-master` | unlisted | none | 1 | 8 | 3 | 1 | 13 | 0 | 0 |
+| `moments-master` | unlisted | verify-moments-master.py | 1 | 8 | 4 | 2 | 4 | 11 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | none | 0 | 1 | 7 | 1 | 9 | 0 | 0 |
 | `partial-fractions-duel` | unlisted | verify-partial-fractions-duel.py | 0 | 7 | 2 | 1 | 2 | 8 | 0 |
@@ -373,14 +373,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ### `moments-master` (A-Level, L4; unlisted)
 
-- **CRITICAL** moments-master-t5-001, `games/moments-master/index.html:172,173,180`: 3 of 20 level4 items (15%) mark the right answer wrong or offer none; every session serves all three
-- **HIGH** moments-master-t5-002, `games/moments-master/index.html:172`: R_B keyed 6.5 kN; its own expression (2+20+21)/8 = 5.375 kN; not offered
-- **HIGH** moments-master-t5-003, `games/moments-master/index.html:173`: R_A keyed 3.5 kN; correct 4.625 kN not offered
-- **HIGH** moments-master-t5-004, `games/moments-master/index.html:180`: Distractor '5 kW' equals the key 5000 W
-- **HIGH** moments-master-t5-005, `games/moments-master/index.html:128`: Plank weight and load W both right of the support: no tilting W exists; key 22.5 N is a sign error
-- **HIGH** moments-master-t5-006, `games/moments-master/index.html:134`: Beam weight and P both on the B side of C: no balancing P; key 142.9 N is a sign error
-- **HIGH** moments-master-t5-007, `games/moments-master/index.html:147`: Walking-plank key 4 m matches no reading of the data
-- **HIGH** moments-master-t5-008, `games/moments-master/index.html:141`: R_B keyed 50 N; correct 75 N offered as a distractor
 - **HIGH** moments-master-t5-009, `games/moments-master/index.html:199, 201`: No answered guard: Enter re-marks, re-scores, skips questions and submits repeatedly
 
 ### `partial-fractions-duel` (A-Level, L4; unlisted)
@@ -438,7 +430,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Exit bar detail
 
-**1. No verifier in CI (46):** `52dle`, `bearing-blitz`, `boolean-blitz`, `characteristic-quest`, `complex-converter`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `eigenvalue-extractor`, `eigenvector-engine`, `equatle`, `factor-race`, `factor-theorem`, `force-resolver`, `formula-forge`, `formula-plug-in`, `four-quadrant-explorer`, `fraction-equivalence`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `matrix-crunch`, `modular-battle`, `moments-master`, `new-shapes`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `scale-factor-scaling`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `suvat`, `terrible-advice`, `think-of-a-number`, `trig-wars`, `truth-will-set-you-free`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
+**1. No verifier in CI (45):** `52dle`, `bearing-blitz`, `boolean-blitz`, `characteristic-quest`, `complex-converter`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `eigenvalue-extractor`, `eigenvector-engine`, `equatle`, `factor-race`, `factor-theorem`, `force-resolver`, `formula-forge`, `formula-plug-in`, `four-quadrant-explorer`, `fraction-equivalence`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `matrix-crunch`, `modular-battle`, `new-shapes`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `scale-factor-scaling`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `suvat`, `terrible-advice`, `think-of-a-number`, `trig-wars`, `truth-will-set-you-free`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
 
 **4. Audited levels serving under 40 (106):** 52dle all (20 in rotation), angle-ace gcse (35), better-value gcse (20), binomial-blaster alevel (20), binomial-blaster alevel2 (20), characteristic-quest further (15), complex-converter further (20), complex-converter level4 (20), component-crusher gcse (38), component-crusher alevel (32), component-crusher level4 (34), constructions-lab all (10/10), constructions-lab ks3 (10/10), constructions-lab gcse (10/10), coordinate-geometry-dash gcse (24), coordinate-geometry-dash alevel (21), core-maths-paper1 core (36), core-maths-paper2b core (36), core-maths-paper2c core (36), correlation-or-coincidence all (13), curling-friction alevel (20), curling-friction level4 (20), differentiation-duel alevel (14), differentiation-duel level4 (14), dimension-checker level4 (20), dimension-checker alevel (20), eigenvalue-extractor further (15), eigenvector-engine further (15), estimation-golf year6 (9/20), estimation-golf ks3 (9/9), estimation-golf gcse (9/9), estimation-golf alevel (9/9), estimation-golf level4 (9/9), expectation-station core (20), expectation-station gcse (15), expectation-station alevel (10), expected-damage ks3 (15), expected-damage gcse (20), expected-damage core (15), factor-race year6 (10/20), force-resolver alevel (20), force-resolver level4 (20), formula-forge gcse (29), formula-forge alevel (29), formula-forge level4 (16), formula-unlocked gcse (29), formula-unlocked alevel (25), formula-unlocked level4 (14), fraction-equivalence year6 (20), given-that gcse (25), given-that alevel (25), given-that core (20), given-that level4 (20), glorious-gantt core-a (4), glorious-gantt level4-a (4), glorious-gantt core-b (3), glorious-gantt level4-b (4), gradient-hunter gcse (15), gradient-hunter core (20), gradient-hunter alevel (10), integration-duel alevel (14), integration-duel level4 (14), matrix-crunch further (20), matrix-crunch level4 (20), moments-master alevel (20), moments-master level4 (20), partial-fractions-duel alevel (20), partial-fractions-duel level4 (20), percentage-flip year6 (20), percentage-flip default (12), prime-factorisation all (8/28), prime-factorisation year6 (8/20), prisoners-dilemma ks3 (5), prisoners-dilemma gcse (7), prisoners-dilemma alevel (9), prisoners-dilemma core (7), probability-paradox all (38 (3 modes; Paradox mode 12)), proof-builder alevel (counter 15/25, sorter 8/8), proof-builder further (counter 15/35, sorter 8/11, induction 4/4), scale-factor-scaling gcse (38), scale-factor-scaling level4 (31), screening-room gcse (20), screening-room alevel (20), screening-room core (15), screening-room level4 (15), seven-bridges ks3 (25), seven-bridges gcse (25), seven-bridges alevel (25), shape-shifter year6-translation (10/15), shape-shifter year6-reflection (10/15), shape-shifter year6-rotation (10/15), spot-the-error ks3 (35), spot-the-error level4 (30), spot-the-muppet gcse (20), spot-the-muppet core (12), spot-the-muppet ks3 (18), suvat alevel (10), suvat level4 (8), terrible-advice gcse (20), terrible-advice core (12), terrible-advice ks3 (18), truth-will-set-you-free level4 (10), unit-converter alevel (38), wrong-on-the-internet gcse (20), wrong-on-the-internet core (10), wrong-on-the-internet ks3 (15)
 
