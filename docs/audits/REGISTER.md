@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 40 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 67 open (3 CRITICAL, 64 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 66 open (3 CRITICAL, 63 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -22,10 +22,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 3 | 21 | 0 | 24 |
-| HIGH | 64 | 142 | 0 | 206 |
+| HIGH | 63 | 143 | 0 | 206 |
 | MEDIUM | 165 | 102 | 0 | 267 |
 | LOW | 34 | 25 | 0 | 59 |
-| **All** | 266 | 290 | 0 | 556 |
+| **All** | 265 | 291 | 0 | 556 |
 
 ### By class
 
@@ -34,7 +34,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 33 | 103 |
 | 3 | 10 | 85 |
 | 6 | 31 | 56 |
-| 1 | 28 | 35 |
+| 1 | 27 | 35 |
 | NEW:wrong-explanation-text | 18 | 34 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
@@ -124,7 +124,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 0 | 0 | 13 | 0 |
 | `bearing-blitz` | yes | none | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `better-value` | yes | verify-better-value.py | 0 | 5 | 4 | 0 | 3 | 6 | 0 |
-| `binomial-blaster` | unlisted | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 3 | 19 | 0 |
+| `binomial-blaster` | unlisted | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 2 | 20 | 0 |
 | `boolean-blitz` | yes | none | 0 | 3 | 0 | 5 | 8 | 0 | 0 |
 | `characteristic-quest` | yes | none | 0 | 1 | 3 | 1 | 5 | 0 | 0 |
 | `complex-converter` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
@@ -313,10 +313,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 - **HIGH** glorious-gantt-t4-006, `games/glorious-gantt/index.html:684 (L4_B2)`: Floats of C and E wrong (keys 5 and 4; true 8 and 1); node 4 late keyed 12, LF(C) = 15
 - **HIGH** glorious-gantt-t4-007, `games/glorious-gantt/index.html:541 (CM_B2)`: Node 3 late keyed 6; LF(B) = 9 by the table, and node 3 is a dead end in the drawing
 - **HIGH** glorious-gantt-t4-008, `games/glorious-gantt/index.html:968,1003,1089,1188,1236`: Retries score full marks; double-clicking Check scores twice and skips items; inflated score submitted
-
-### `binomial-blaster` (A-Level, A-Level Year 2; unlisted)
-
-- **HIGH** binomial-blaster-t5-017, `games/binomial-blaster/index.html:240 (handle), :48 (.disabled is pointer-events only)`: Enter on a focused option re-marks after answering: re-scores, skips questions, repeats end()/submitScore
 
 ### `curling-friction` (A-Level, L4; unlisted)
 
