@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-07 (cloud): Linear Equation Solver, Jon's "optimal move" contract (PR pending); #115 Proof Builder merged; NEXT = moments-master
+## 2026-10-07 (cloud): Linear Equation Solver, Jon's "optimal move" contract (PR #124); #115 Proof Builder merged; NEXT = moments-master
 
 - **Proof Builder (PR #115) merged**; main's full run after it green (and after #117).
 - **Jon's list (7 Oct, this session):** proof-builder (done), linear-equation-solver, then with Project Claude's
