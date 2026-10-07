@@ -22,7 +22,8 @@ findings:
     0.999... is 0.9̇ = 1. Marking "0.999..." wrong is a value-equal distractor, and it tells the student that 0.999...
     ≠ 1, the opposite of the point the question makes. (0.999... is also the left-hand side of the question as written.)
     Share affected: 1 of 54 A-level questions (drawn in about 37% of A-level sessions: 20 of 54).'
-  status: open
+  status: fixed
+  pr: 117
 - id: sequence-solver-r-002
   severity: MEDIUM
   jc: false

@@ -21,6 +21,16 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-07 (home): contract C game 5, Sequence Solver
+
+- **#116 (Formula Unlocked) merged** on a green Gate, main green after #114.
+- **This PR:** alevel[49]'s "0.999..." replaced by 10 (r-001); gcse[6]'s B11 pair replaced by 3n + 7.
+  `verify-sequence-solver.py` (B3) recomputes all 154 keys; on main it failed on exactly r-001 and the B11 pair: no
+  other wrong key. r-002 and r-003 stay open.
+- **Next:** game 6, Estimation Golf (committed locally on claude/c-estimation-golf in worktree ../mg-eg): :680
+  keyed 565.49 (choice recorded: the true value, not "use pi = 3.14"), :663 states the forward difference and
+  3 d.p. and keys 27.009.
+
 ## 2026-10-07 (home): contract C game 4, Formula Unlocked (#116)
 
 - **#114 (Given That) merged** on a green Gate, main green after #113.
