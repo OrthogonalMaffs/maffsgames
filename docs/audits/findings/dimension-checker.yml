@@ -18,7 +18,8 @@ findings:
   summary: Keyed 'No — should be ½at², but dimensions still check'; the true 'Yes — all terms are [L]' is marked
     wrong
   evidence: s:[L]; ut:[LT⁻¹][T] = [L]; at²:[LT⁻²][T²] = [L]; the game's own solution says homogeneous
-  status: open
+  status: fixed
+  pr: 112
 - id: dimension-checker-t5-002
   severity: HIGH
   jc: true
@@ -27,7 +28,8 @@ findings:
   where: games/dimension-checker/index.html:137 (Stokes' law F = 6πμrv)
   summary: μ's dimensions not given; 'Cannot check without μ dimensions' is true for the item as written
   evidence: the check needs μ = [ML⁻¹T⁻¹], given only in the Reynolds item (:132)
-  status: open
+  status: fixed
+  pr: 112
 - id: dimension-checker-t5-003
   severity: HIGH
   jc: false
@@ -36,8 +38,8 @@ findings:
   where: games/dimension-checker/index.html:50, 148-150 (handleAnswer)
   summary: 'Options disabled only by pointer-events:none; Enter re-marks: extra score, skipped questions, a correct
     mark after a wrong first answer'
-  evidence: correct + Enter x3 -> 3 question_answered, score 297, total 1->4; wrong then Enter on correct -> +98,
-    correct:true
+  evidence: 'correct + Enter x3 -> 3 question_answered, score 297, total 1->4; wrong then Enter on correct -> +98, correct:true
+    Left open by the cloud-lane fix PR: class 1, owned by the shared answer lock (contract F1).'
   status: open
 - id: dimension-checker-t5-004
   severity: MEDIUM
@@ -47,7 +49,8 @@ findings:
   where: games/dimension-checker/index.html:111 (Is P = I²R homogeneous?)
   summary: Needs [A] and R's dimensions, neither given (page says M, L, T)
   evidence: 'key correct: [A²][ML²T⁻³A⁻²] = [ML²T⁻³]'
-  status: open
+  status: fixed
+  pr: 112
 - id: dimension-checker-t5-005
   severity: MEDIUM
   jc: false
@@ -55,7 +58,8 @@ findings:
   level: all
   where: games/dimension-checker/index.html:143
   summary: Serves 20 of a 28-question pool at every level
-  evidence: MAX_Q = 20; QS has 28
+  evidence: 'MAX_Q = 20; QS has 28 Left open by the cloud-lane fix PR: class 5 (bank size), owned by Project Claude''s
+    expansions.'
   status: open
 - id: dimension-checker-t5-006
   severity: MEDIUM
@@ -64,7 +68,8 @@ findings:
   level: all
   where: games/dimension-checker/index.html:147, 155
   summary: ?level ignored; every URL (incl. alevel) plays and submits as 'level4'
-  evidence: submitScore('dimension-checker','level4',…) for ?level=alevel
+  evidence: 'submitScore(''dimension-checker'',''level4'',…) for ?level=alevel Left open by the cloud-lane fix PR: class
+    4, owned by the shared level resolver (contract F2).'
   status: open
 - id: dimension-checker-t5-007
   severity: LOW
@@ -73,5 +78,7 @@ findings:
   level: all
   where: games/dimension-checker/index.html:148, 151
   summary: Hand-rolled 'Got it — next' (note); local shuffle not MaffsOptions; KaTeX loaded but unused
-  evidence: code read; double-click advanced once
-  status: open
+  evidence: 'code read; double-click advanced once Fixed by the cloud-lane fix PR: a wrong answer shows the worked solution
+    and the shared MaffsNext control; options come from MaffsOptions.build; the unused KaTeX include and rkI() are removed.'
+  status: fixed
+  pr: 112

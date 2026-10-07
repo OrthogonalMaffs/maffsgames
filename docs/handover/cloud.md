@@ -14,6 +14,12 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-07 (cloud): game 12 Dimension Checker (PR #112); #109 Curling Friction merged; NEXT = Proof Builder
+
+- **Curling Friction (PR #109) merged** on a green Gate; main's full run after it green.
+- **Dimension Checker (PR #112):** `scripts/verify-dimension-checker.py` (B4, declared by its own `# ci-line:` header; no workflow edit): dimension algebra for keys, options and every worked step; MaffsOptions, MaffsNext. Open: t5-003 (1), t5-005 (5), t5-006 (4).
+- **Next:** Proof Builder (prepared on local worktrees /home/user/*-work, not pushed).
+
 ## 2026-10-07 (cloud): game 11 Curling Friction (PR #109); #107 Integration Duel merged; NEXT = Dimension Checker
 
 - **Integration Duel (PR #107) merged** on a green Gate; main's full run after it green.
