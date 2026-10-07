@@ -21,7 +21,7 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-07 (home): contract C game 5, Sequence Solver
+## 2026-10-07 (home): contract C game 5, Sequence Solver (#117)
 
 - **#116 (Formula Unlocked) merged** on a green Gate, main green after #114.
 - **This PR:** alevel[49]'s "0.999..." replaced by 10 (r-001); gcse[6]'s B11 pair replaced by 3n + 7.
