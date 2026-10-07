@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 40 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 63 open (3 CRITICAL, 60 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 62 open (3 CRITICAL, 59 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-556 findings in 79 games.
+557 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 3 | 21 | 0 | 24 |
-| HIGH | 60 | 146 | 0 | 206 |
-| MEDIUM | 164 | 103 | 0 | 267 |
+| HIGH | 59 | 147 | 0 | 206 |
+| MEDIUM | 164 | 104 | 0 | 268 |
 | LOW | 34 | 25 | 0 | 59 |
-| **All** | 261 | 295 | 0 | 556 |
+| **All** | 260 | 297 | 0 | 557 |
 
 ### By class
 
@@ -34,7 +34,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 33 | 103 |
 | 3 | 10 | 85 |
 | 6 | 31 | 56 |
-| 1 | 23 | 35 |
+| 1 | 22 | 36 |
 | NEW:wrong-explanation-text | 18 | 34 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
@@ -169,7 +169,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `moments-master` | unlisted | verify-moments-master.py | 1 | 8 | 4 | 2 | 4 | 11 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | none | 0 | 1 | 7 | 1 | 8 | 1 | 0 |
-| `partial-fractions-duel` | unlisted | verify-partial-fractions-duel.py | 0 | 7 | 2 | 1 | 2 | 8 | 0 |
+| `partial-fractions-duel` | unlisted | verify-partial-fractions-duel.py | 0 | 7 | 3 | 1 | 1 | 10 | 0 |
 | `percentage-flip` | yes | none | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `prime-or-composite` | yes | none | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
@@ -322,10 +322,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `moments-master` (A-Level, L4; unlisted)
 
 - **HIGH** moments-master-t5-009, `games/moments-master/index.html:199, 201`: No answered guard: Enter re-marks, re-scores, skips questions and submits repeatedly
-
-### `partial-fractions-duel` (A-Level, L4; unlisted)
-
-- **HIGH** partial-fractions-duel-t5-007, `games/partial-fractions-duel/index.html:159 (handle)`: Enter on a focused option re-marks: re-scores, skips questions, repeats end()/submitScore
 
 ### `proof-builder` (A-Level, Further; unlisted)
 
