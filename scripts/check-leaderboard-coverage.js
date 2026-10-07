@@ -161,34 +161,16 @@ const NOT_ON_HUB = {
   // /updates/) until he has played it. It submits to 'ks3' as built; the hub row is added with the
   // listing, and this entry removed in the same PR.
   'just-pythag-it-bruv': 'unlisted until Jon approves it (todo START); hub row added at listing',
-  // Jon, 6 Oct 2026: unlisted (off the portal, sitemap, spec map and hub) until each game's fix
-  // for the 6 Oct audit merges; the hub row is restored, and this entry removed, in that PR.
-  'spot-the-error': 'unlisted pending its 6 Oct audit fix; hub row restored at relisting',
-  'trig-worms': 'unlisted pending its 6 Oct audit fix; hub row restored at relisting',
-  // Jon, 6 Oct 2026 (19:15): unlisted the same way for the tranche 2 audit's faults until contract F's
-  // verifier for each game merges; the hub row is restored, and this entry removed, in that PR.
+  // Jon, 6 Oct 2026 (19:15): unlisted for the tranche 2 audit's faults; the hub row is restored, and this entry
+  // removed, in the PR that relists it. Held by expectation-station-pc-001 (Jon, 7 Oct 2026).
   'expectation-station': 'unlisted pending its tranche 2 audit fix; hub row restored at relisting',
-  'trig-identity-duel': 'unlisted pending its tranche 2 audit fix; hub row restored at relisting',
   // Jon, 6 Oct 2026 (20:30): unlisted the same way for the tranche 3-6 audits' faults (canon SR-20) until
   // each game's verifier merges and its register entries are fixed; the hub row is restored, and this
   // entry removed, in that PR.
-  'binomial-blaster': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
-  'moments-master': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
-  'force-resolver': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
-  'proof-builder': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
   'factor-theorem': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
   'partial-fractions-duel': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
-  'suvat': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
-  'curling-friction': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
-  'dimension-checker': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
-  'differentiation-duel': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
-  'integration-duel': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
-  'eigenvector-engine': 'unlisted pending its tranche 6 audit fix; hub row restored at relisting',
-  'truth-will-set-you-free': 'unlisted pending its tranche 6 audit fix; hub row restored at relisting',
   'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
   'screening-room': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
-  'component-crusher': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
-  'linear-equation-solver': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
   'truth-buster': 'unlisted pending its tranche 3 audit fix; hub row restored at relisting'
 };
 
