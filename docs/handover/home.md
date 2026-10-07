@@ -21,6 +21,25 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-07 (home): contract C game 1, Proportion Blaster (#111)
+
+- **V (#108) merged** on a green Gate (51/51 content lines ran); main's full run after it: see the next entry.
+- **Contract C (Jon, 7 Oct, revised):** audit batch 3, one game per PR, in order: proportion-blaster, better-value,
+  given-that, formula-unlocked, sequence-solver, estimation-golf. Each: a verifier that recomputes every key
+  (SR-4/SR-16 option checks, explanation figures), declaring its own ci-line; the game's register entries
+  set fixed with the PR; other open entries the verifier proves are one-line data fixes may be closed too;
+  shared-class entries (classes 1, 4, 5) stay open. STOP IF a verifier finds more wrong keys than the register
+  lists (file them, stop) or a fix would change wording beyond the named item. Do not touch engines, scoring,
+  levels, leaderboard keys, other games, estimation-golf's proximity scoring, or the workflow.
+- **#111:** alevel[47] keyed 900/11 (r-001 fixed); F2-F5's value-equal wrong options replaced by named errors,
+  five B11 ledger entries cleared; `verify-proportion-blaster.py` in B3. On main it failed on exactly r-001
+  and F2-F5: no other wrong key. Not fixed (beyond the named items): gcse[16] and gcse[21] ask "Find x" from x^2
+  without "positive" (SR-17); -5 is not offered, so nothing is mis-marked. Audit F6 (raw TeX in the context
+  line) and F7 (no explanation, auto-advance) are not register entries and were left.
+- **Next:** game 2, Better Value (r-001..r-005; r-009 too, since the verifier proves its explanation's equation
+  solves to 425). Verifier drafted: every keyed and explanation figure must be a given or a recomputed value at
+  its printed precision; on main it flags exactly r-001..r-005 and r-009.
+
 ## 2026-10-07 (home): contract V, verifiers declare their own CI group (#108)
 
 - **Why:** each new verifier edited `.github/workflows/check-site.yml` (the cloud lane's #96, #97, #100-#102), two
