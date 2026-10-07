@@ -328,7 +328,7 @@ def lint_value_equal(slug, groups, findings, allowed, allowed_seen):
     for (g, idx, q), cid in zip(qs, cids):
         where = loc_string(slug, g, idx).split("::", 1)[1]
         for label, pool, correct in bc.option_units(q):
-            for a, b in bc.value_equal_pairs(pool):
+            for a, b in bc.value_equal_pairs(pool, bc.item_context(slug, q)):
                 eid = "%s::B11::%s" % (cid, json.dumps([a, b], ensure_ascii=False))
                 if eid in allowed:
                     allowed_seen.add(eid)

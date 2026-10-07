@@ -91,6 +91,9 @@ UNEQUAL = [
     # Prose is never a product of letters.
     ("any-game", "", "Yes", "sYe", "prose"),
     ("any-game", "", "AB", "BA", "line names, no operator"),
+    # Found by the first full run of the new parser (7 Oct 2026), both misreads:
+    ("curling-friction", "", "22.5 m vs 22.5 m", "45 m vs 11.25 m", "'vs' is a word, not v times s"),
+    ("proof-builder", "", "1! = 1", "2! - 1 = 1", "statements, not values"),
 ]
 # The one UNEQUAL row with why=None is in fact an EQUAL Boolean identity; move it.
 EQUAL += [(g, t, a, b, "Boolean distributive law over AND (distinct from ring algebra)")
