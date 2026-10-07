@@ -26,4 +26,5 @@ findings:
     Q2 was marked wrong unanswered and Q3 was never shown. The same double advance (without the auto-mark) follows
     SKIP after a card-tap answer (:276). Share affected: any question where the student presses SKIP during feedback.
     This needs a student action; it is not tied to particular questions.'
-  status: open
+  status: fixed
+  pr: 132
