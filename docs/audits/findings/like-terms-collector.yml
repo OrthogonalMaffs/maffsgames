@@ -57,7 +57,8 @@ findings:
     under the pointer'
   evidence: '390x844: Q16 arrived answered ''3a + b'' (wrong), Q26 ''6m + 4n'' (wrong), Q36 ''4x + 2y'' (wrong);
     all-correct script finished 43/45; also at 1280x800'
-  status: open
+  status: fixed
+  pr: 129
 - id: like-terms-collector-t3-003
   severity: MEDIUM
   jc: false

@@ -143,6 +143,7 @@ body.accessible p,body.accessible .question-text,body.accessible .feedback-detai
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -215,7 +216,7 @@ body.accessible p,body.accessible .question-text,body.accessible .feedback-detai
     <div class="feedback-icon" id="feedbackIcon"></div>
     <div class="feedback-detail" id="feedbackDetail"></div>
   </div>
-  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next</button>
+  <button class="next-btn" id="nextBtn" data-maffs-lock-skip onclick="nextQuestion()">Next</button>
 </div>
 
 <!-- RESULTS SCREEN -->
@@ -309,7 +310,7 @@ let currentStage=0, currentQ=0, totalCorrect=0, stageCorrect=[0,0,0];
 let stage3Round=0;              // 0,1,2 - Stage 3 runs as 3 rounds of 10
 const STAGE3_ROUND_LEN=10;
 let questionIndex=0; // 1-based across all stages
-let answered=false;
+const gameEl=document.getElementById('gameScreen');   // MaffsLock's container (canon 7.6.0)
 
 // ============================================================
 //  A11Y
@@ -334,7 +335,8 @@ function showScreen(id){
 }
 
 function startGame(){
-  currentStage=0;currentQ=0;totalCorrect=0;stageCorrect=[0,0,0];questionIndex=0;answered=false;stage3Round=0;
+  currentStage=0;currentQ=0;totalCorrect=0;stageCorrect=[0,0,0];questionIndex=0;stage3Round=0;
+  MaffsLock.newSession();
   document.getElementById('gameHeader').style.display='flex';
   document.getElementById('scoreNum').textContent='0';
   document.getElementById('scoreTotal').textContent='0';
@@ -356,7 +358,9 @@ function updateStagePill(){
 //  LOAD QUESTION
 // ============================================================
 function loadQuestion(){
-  answered=false;
+  // A new question: input on it is ignored for MaffsLock.FRESH_MS, so the second click of a double-click on
+  // Next, Continue or Keep going cannot answer it (like-terms-collector-t3-002).
+  MaffsLock.fresh(gameEl);
   const fp=document.getElementById('feedbackPanel');
   fp.classList.remove('show','correct-fb','incorrect-fb');
   document.getElementById('nextBtn').classList.remove('visible');
@@ -381,7 +385,7 @@ function loadInputQuestion(q){
     const lbl=document.createElement('span');lbl.className='input-label';lbl.textContent=label;
     g.appendChild(inp);g.appendChild(lbl);
     row.appendChild(g);
-    if(i===0) setTimeout(()=>inp.focus(),50);
+    if(i===0) MaffsLock.timer(()=>inp.focus(),50);
   });
   // Enter key support
   row.querySelectorAll('input').forEach(inp=>{
@@ -410,7 +414,7 @@ function loadMCQ(q){
 //  CHECK ANSWERS
 // ============================================================
 function checkInputAnswer(){
-  if(answered) return;
+  if(MaffsLock.isLocked(gameEl)) return;
   const bank=currentStage===0?STAGE1:STAGE2;
   const q=bank[currentQ];
   const inputs=[document.getElementById('ans0'),document.getElementById('ans1')];
@@ -420,7 +424,7 @@ function checkInputAnswer(){
 
   if(res[0]==='unreadable'||res[1]==='unreadable') return;
 
-  answered=true;
+  if(!MaffsLock.lock(gameEl)) return;
   questionIndex++;
   document.getElementById('checkBtn').disabled=true;
   inputs.forEach(i=>i.disabled=true);
@@ -440,8 +444,7 @@ function checkInputAnswer(){
 }
 
 function checkMCQ(btn,chosen,answer){
-  if(answered) return;
-  answered=true;
+  if(!MaffsLock.lock(gameEl)) return;
   questionIndex++;
 
   const correct=chosen===answer;
@@ -550,7 +553,8 @@ function continueToNextStage(){
 // ============================================================
 //  RESULTS
 // ============================================================
-function showResults(early){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const showResults=MaffsLock.finishOnce(function(early){
   // questionIndex is the real number answered - 45 on a full run, or 25/35 if
   // the player banked out at a Stage 3 checkpoint.
   const answeredTotal=questionIndex;
@@ -574,16 +578,17 @@ function showResults(early){
   pab.style.display='none';
 
   showScreen('resultsScreen');
+  MaffsLock.screen(document.getElementById('resultsScreen'));
 
   // Fade in reveal card after a beat
-  setTimeout(()=>{rc.style.opacity='1';rc.style.transform='translateY(0)'},400);
+  MaffsLock.timer(()=>{rc.style.opacity='1';rc.style.transform='translateY(0)'},400);
   // Show play again after 5s minimum
-  setTimeout(()=>{pab.style.display='block'},5000);
+  MaffsLock.timer(()=>{pab.style.display='block'},5000);
 
   window._mfgCompleted=true;
   if(typeof mfg==='function') mfg('game_completed',{game_slug:'like-terms-collector',level:'year6',score:totalCorrect,questions_answered:answeredTotal,questions_correct:totalCorrect});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('like-terms-collector','year6',totalCorrect,answeredTotal).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('like-terms-collector','year6',totalCorrect);}}
-}
+});
 
 // ============================================================
 //  UTILS

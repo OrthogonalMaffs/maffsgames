@@ -235,6 +235,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -427,7 +428,7 @@ let sessionQuestions = [];
 let currentIndex = 0;
 let correctCount = 0;
 let inputValue = '';
-let answered = false;
+const numpadEl = document.getElementById('numpad');   // MaffsLock's container (canon 7.6.0)
 let nextCtl = null;   // the wrong-answer Next control, so Enter goes through it (canon §7.6)
 let revealShown = false;
 
@@ -731,6 +732,7 @@ function startGame() {
   currentIndex = 0;
   correctCount = 0;
   revealShown = false;
+  MaffsLock.newSession();
 
   showScreen('gameScreen');
   document.getElementById('scoreTotal').textContent = sessionQuestions.length;
@@ -744,7 +746,6 @@ function startGame() {
 
 function loadQuestion() {
   var q = sessionQuestions[currentIndex];
-  answered = false;
   inputValue = '';
 
   // Update header
@@ -796,6 +797,7 @@ function loadQuestion() {
 
   // Enable numpad
   enableNumpad(true);
+  MaffsLock.fresh(numpadEl);
 }
 
 function updateAnswerDisplay() {
@@ -803,12 +805,12 @@ function updateAnswerDisplay() {
   if (inputValue === '') {
     ad.innerHTML = '<span class="cursor"></span>';
   } else {
-    ad.innerHTML = inputValue + (answered ? '' : '<span class="cursor"></span>');
+    ad.innerHTML = inputValue + (MaffsLock.isLocked(numpadEl) ? '' : '<span class="cursor"></span>');
   }
 }
 
 function numInput(char) {
-  if (answered) return;
+  if (MaffsLock.isLocked(numpadEl)) return;
   if (char === '.' && inputValue.includes('.')) return;
   if (inputValue.length >= 8) return;
   inputValue += char;
@@ -816,7 +818,7 @@ function numInput(char) {
 }
 
 function numBackspace() {
-  if (answered) return;
+  if (MaffsLock.isLocked(numpadEl)) return;
   inputValue = inputValue.slice(0, -1);
   updateAnswerDisplay();
 }
@@ -826,8 +828,7 @@ function enableNumpad(enabled) {
 }
 
 function submitAnswer() {
-  if (answered || inputValue === '') return;
-  answered = true;
+  if (inputValue === '' || !MaffsLock.lock(numpadEl)) return;
 
   var q = sessionQuestions[currentIndex];
   var userAnswer = parseFloat(inputValue);
@@ -884,7 +885,7 @@ function submitAnswer() {
 
   // canon §7.6: a right answer moves on briskly; a wrong one shows the working and waits.
   if (isCorrect) {
-    setTimeout(nextQuestion, 1200);
+    MaffsLock.timer(nextQuestion, 1200);
   } else {
     nextCtl = MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextQuestion });
   }
@@ -909,19 +910,21 @@ function nextQuestion() {
 function showRevealScreen() {
   revealShown = true;
   showScreen('revealScreen');
+  MaffsLock.screen(document.getElementById('revealScreen'));
   var revealEl = document.getElementById('revealScreen');
   revealEl.style.cursor = 'pointer';
   var canAdvance = false;
-  setTimeout(function() { canAdvance = true; }, 5000);
+  MaffsLock.timer(function() { canAdvance = true; }, 5000);
   var handler = function() {
     if (canAdvance) {
       revealEl.removeEventListener('click', handler);
       revealEl.style.cursor = '';
+      MaffsLock.clearTimers();   // the 8 s auto-advance below must not end the game a second time
       showResults();
     }
   };
   revealEl.addEventListener('click', handler);
-  setTimeout(function() {
+  MaffsLock.timer(function() {
     revealEl.removeEventListener('click', handler);
     revealEl.style.cursor = '';
     showResults();
@@ -931,7 +934,8 @@ function showRevealScreen() {
 // ============================================================
 //  RESULTS
 // ============================================================
-function showResults() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const showResults = MaffsLock.finishOnce(function () {
   showScreen('resultsScreen');
   var total = sessionQuestions.length;
   var pct = Math.round((correctCount / total) * 100);
@@ -972,9 +976,10 @@ function showResults() {
     });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('new-shapes',LEVEL,correctCount,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('new-shapes',LEVEL,correctCount);}}
   }
-}
+});
 
 function resetToStart() {
+  MaffsLock.clearTimers();
   showScreen('startScreen');
   initStartScreen();
 }
@@ -994,7 +999,7 @@ document.addEventListener('keydown', function(e) {
     numBackspace();
   } else if (e.key === 'Enter') {
     e.preventDefault();
-    if (answered) {
+    if (MaffsLock.isLocked(numpadEl)) {
       // A right answer is already moving on; a wrong one advances through its Next control,
       // which cancels its own fallback timer, so the question can never be skipped twice.
       if (nextCtl) nextCtl.advance();
