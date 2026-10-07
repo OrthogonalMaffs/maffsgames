@@ -22,3 +22,4 @@ exclude:
   - docs/screens
   - docs/screenshots
   - docs/sources
+  - docs/audits/findings
