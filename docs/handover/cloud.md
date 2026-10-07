@@ -14,8 +14,20 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-07 (cloud): game 18 Factor Theorem (PR #130); #128 SUVAT merged; NEXT = eigenvector-engine
+## 2026-10-07 (cloud): game 18 Factor Theorem (PR #130, open, paused for a new instance); NEXT = merge #130, then eigenvector-engine
 
+- **Where it stopped (17:45 UTC):** #130's CI was green on c015325. main then took the home lane's #131
+  (check-answer-lock: a CLOUD_LANE game that loads answer-lock.js while on NOT_YET is reported, not failed; "the home
+  lane moves it to MIGRATED once it passes"). Merged main into the branch (clean); both answer-lock parts pass locally
+  with KaTeX served (all 10 migrated). Pushed; wait for CI on the new head, then merge on a green Gate (main green
+  after #131; no home-lane merge in the last 10 minutes).
+- **Lane question for Jon:** #130 itself moves suvat and factor-theorem to MIGRATED, with a driving HINT each, and
+  fixes the two faults the check found (suvat loaded answer-lock.js before next-control.js; factor-theorem's resize
+  debounce needed `// lock-ok:`). #131's comment says the home lane does the MIGRATED move. Both are now on the same
+  lines of `scripts/check-answer-lock.py`: keep #130's entries, or drop them and leave the move to the home lane.
+- **Each later game in the queue loads answer-lock.js:** under #131 it is reported, not failed, so it no longer needs a
+  MIGRATED edit to pass CI. Run `check-answer-lock.py --game <slug>` (with KaTeX served) before each PR anyway and
+  give the home lane what it finds.
 - **SUVAT Selector (PR #128) merged** at 17:12 on a green Gate (its first run lost its Gate job in GitHub's 500s; one
   re-run); main green after #125 before it.
 - **Factor Theorem:** typed answers looked up in ACCEPTED (canon 7.1 pattern, R12), written by
