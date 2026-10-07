@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-07 (cloud): game 16 Force Resolver (PR pending); #126 Moments Master merged; NEXT = suvat
+## 2026-10-07 (cloud): game 16 Force Resolver (PR #127); #126 Moments Master merged; NEXT = suvat
 
 - **Moments Master (PR #126) merged** at 16:01 on a green Gate; main green after #124 before it.
 - **Force Resolver:** `scripts/verify-force-resolver.py` (E), the Moments Master verifier's shape plus: options written
