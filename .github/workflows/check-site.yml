@@ -316,6 +316,7 @@ jobs:
             checks: |
               Tier 4 layer A (bank extraction)|python scripts/extract-banks.py --workers 4
               Tier 4 layer A (lint against the ledger)|python scripts/check-banks.py --ci
+              B11 value comparison (bank_common: the audits' value-equal shapes, contract F0)|python scripts/test-bank-common.py
 
           - name: Shared asset tests (Next control, section clicks, answer, calculator, keypad)
             timeout: 8
