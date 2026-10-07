@@ -27,7 +27,7 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   0d shared fraction answers (MaffsAnswer, then Given That); then F1 (MaffsLock, pasted).
 - **0b:** `_SiteEval.call()`'s `.test` branch called `.search` on `regex()`'s `(pattern, glob)` tuple, so any
   render site guarded by `/re/.test(x)` crashed extraction (the cloud lane's note, #102/#105/#115). It now unpacks
-  the tuple. `test-bank-common.py` gains REGEX_GUARDS: Proof Builder's `if (/[\^_{}]/.test(q.a))` shape and
+  the tuple. `test-bank-common.py` gains REGEX_GUARDS: Proof Builder's `if (/[\\^_{}]/.test(q.a))` (in JS source) shape and
   Component Crusher's template-literal ternary; both raise on main, both pass now, and each guard is decided per
   value (`x^2` reaches KaTeX, `seven` does not). The cloud lane may go back to regex guards at render sites.
 
