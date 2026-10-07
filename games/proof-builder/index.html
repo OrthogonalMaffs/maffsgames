@@ -92,6 +92,8 @@ a.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoratio
 .solution.show{display:block;animation:fadeIn .3s}
 .solution h3{color:var(--accent);font-size:.88rem;margin-bottom:.5rem;font-weight:600}
 .solution .step{margin-bottom:.4rem;padding-left:.8rem;border-left:2px solid var(--border)}
+.sort-slot,.solution .step,.ind-prompt,.misconception,#statement{overflow-wrap:anywhere;max-width:100%}
+.sort-slot .katex,.solution .katex,.ind-prompt .katex,#statement .katex{display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle}
 .solution .step .katex{font-size:1.05em!important}
 .solution .misconception{margin-top:.7rem;padding:.5rem .7rem;background:rgba(251,191,36,.08);border-radius:8px;border-left:3px solid var(--highlight);font-size:.8rem;color:var(--highlight)}
 .solution .next-btn{display:inline-block;margin-top:.7rem;padding:.45rem 1.4rem;border:none;border-radius:8px;background:var(--primary);color:#000;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer}
@@ -135,8 +137,8 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <div class="mode-card" onclick="launchMode('counter')">
         <div class="mode-icon">🎯</div>
         <div class="mode-info">
-          <h3>Counter-Example Sniper</h3>
-          <p>The statement is false. Find the value that disproves it. Fast-paced, four options, one kills the claim.</p>
+          <h3>Counter-Example Finder</h3>
+          <p>Is the statement true? If not, find the value that disproves it. Four options: one disproves the claim, or says it is true.</p>
         </div>
         <div class="mode-tag">A-Level +</div>
       </div>
@@ -196,6 +198,10 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function rkd(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:true})}
 function rkStr(tex){const s=document.createElement('span');katex.render(tex,s,{throwOnError:false});return s.innerHTML}
+// A string is TeX when it holds a backslash, ^, _ or a brace. Tested with includes() at each call site, not
+// a helper or a regex, so tier 4's bank extraction can decide the test per string.
+// Mixed prose and maths: maths inside \\( \\) (MaffsText); a string with TeX but no delimiters is whole maths.
+function M(str){if(MaffsText.hasMaths(str))return MaffsText.html(str);if(str.includes('\\')||str.includes('^')||str.includes('_')||str.includes('{')||str.includes('}'))return rkStr(str);return MaffsText.html(str)}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 
 // ============================================================
@@ -218,41 +224,41 @@ const COUNTER={
 alevel:[
   {s:'"All prime numbers are odd"',correct:'2',d:['3','7','11'],steps:['2 is prime (its only factors are 1 and 2)','But 2 is even','Therefore the statement is false']},
   {s:'"The square of any number is greater than the number itself"',correct:'0.5',d:['2','3','10'],steps:['0.5^2 = 0.25','0.25 < 0.5','So squaring made the number smaller'],misconception:'Students often forget to test fractions between 0 and 1'},
-  {s:'"If n² is even, then n is even"',correct:'This statement is actually TRUE — no counter-example exists',d:['3','5','7'],isTrue:true,steps:['If n were odd, then n = 2k+1','n² = (2k+1)² = 4k²+4k+1 = 2(2k²+2k)+1, which is odd','So if n² is even, n must be even — no counter-example is possible'],prompt:'Is this statement true or false?'},
-  {s:'"The sum of two irrational numbers is always irrational"',correct:'\\sqrt{2} + (-\\sqrt{2}) = 0',d:['\\pi + e','\\sqrt{2}+\\sqrt{3}','\\sqrt{5}+\\sqrt{7}'],steps:['\\sqrt{2} is irrational and -\\sqrt{2} is irrational','Their sum is 0, which is rational','The statement is disproved']},
-  {s:'"n² + n + 41 is prime for all positive integers n"',correct:'n = 41',d:['n = 1','n = 5','n = 10'],steps:['When n = 41: 41² + 41 + 41 = 41(41 + 1 + 1) = 41 \\times 43','This is clearly not prime — it has factors 41 and 43','For n = 1 to 40 it actually IS prime — a famous example']},
-  {s:'"If a > b then a² > b²"',correct:'a = -1, b = -2',d:['a = 3, b = 2','a = 5, b = 1','a = 10, b = 3'],steps:['-1 > -2 \\text{ (true)}','(-1)^2 = 1 \\text{ and } (-2)^2 = 4','1 < 4, \\text{ so } a^2 < b^2'],misconception:'Negative numbers reverse the inequality when squared'},
-  {s:'"The product of two irrational numbers is always irrational"',correct:'\\sqrt{2} \\times \\sqrt{2} = 2',d:['\\pi \\times e','\\sqrt{3}\\times\\sqrt{5}','\\sqrt{2}\\times\\sqrt{3}'],steps:['\\sqrt{2} is irrational','\\sqrt{2} \\times \\sqrt{2} = 2','2 is rational — statement disproved']},
-  {s:'"If n is not divisible by 2 or 3, then n is prime"',correct:'25',d:['7','11','13'],steps:['25 is not divisible by 2 or 3','But 25 = 5 \\times 5','So 25 is composite, not prime']},
-  {s:'"For all integers n, n³ > n²"',correct:'n = 0',d:['n = 2','n = 3','n = 5'],steps:['0^3 = 0 \\text{ and } 0^2 = 0','0 is not greater than 0','Also works for n = 1: 1^3 = 1^2 = 1'],misconception:'n = -1 also works: (-1)³ = -1 < (-1)² = 1'},
+  {s:'"If n is an integer and n² is even, then n is even"',correct:'This statement is actually TRUE — no counter-example exists',d:['3','5','7'],isTrue:true,steps:['If n were odd, then n = 2k+1','n² = (2k+1)² = 4k²+4k+1 = 2(2k²+2k)+1, which is odd','So if n² is even, n must be even — no counter-example is possible']},
+  {s:'"The sum of two irrational numbers is always irrational"',correct:'\\sqrt{2} + (-\\sqrt{2}) = 0',d:['\\sqrt{2}+\\sqrt{8}','\\sqrt{2}+\\sqrt{3}','\\sqrt{5}+\\sqrt{7}'],steps:['\\(\\sqrt{2}\\) is irrational and \\(-\\sqrt{2}\\) is irrational','Their sum is 0, which is rational','The statement is disproved']},
+  {s:'"n² + n + 41 is prime for all positive integers n"',correct:'n = 41',d:['n = 1','n = 5','n = 10'],steps:['When \\(n = 41: 41² + 41 + 41 = 41(41 + 1 + 1) = 41 \\times 43\\)','This is clearly not prime — it has factors 41 and 43','For \\(n = 1\\) to \\(39\\) it is prime (\\(n = 40\\) gives \\(1681 = 41 \\times 41\\)) — a famous example']},
+  {s:'"If a > b then a² > b²"',correct:'a = -1, b = -2',d:['a = 3, b = 2','a = 5, b = 1','a = 10, b = 3'],steps:['\\(-1 > -2\\) (true)','\\((-1)^2 = 1\\) and \\((-2)^2 = 4\\)','\\(1 < 4\\), so \\(a^2 < b^2\\)'],misconception:'Negative numbers reverse the inequality when squared'},
+  {s:'"The product of two irrational numbers is always irrational"',correct:'\\sqrt{2} \\times \\sqrt{2} = 2',d:['\\sqrt{2}\\times\\sqrt{5}','\\sqrt{3}\\times\\sqrt{5}','\\sqrt{2}\\times\\sqrt{3}'],steps:['\\(\\sqrt{2}\\) is irrational','\\sqrt{2} \\times \\sqrt{2} = 2','2 is rational — statement disproved']},
+  {s:'"If n is not divisible by 2 or 3, then n is prime"',correct:'25',d:['7','11','13'],steps:['25 is not divisible by 2 or 3','But \\(25 = 5 \\times 5\\)','So 25 is composite, not prime']},
+  {s:'"For all integers n, n³ > n²"',correct:'n = 0',d:['n = 2','n = 3','n = 5'],steps:['\\(0^3 = 0\\) and \\(0^2 = 0\\)','0 is not greater than 0','Also works for \\(n = 1: 1^3 = 1^2 = 1\\)'],misconception:'n = -1 also works: (-1)³ = -1 < (-1)² = 1'},
   {s:'"An even number plus an even number is always even"',correct:'This statement is actually TRUE',d:['2 + 2 = 4','4 + 6 = 10','8 + 8 = 16'],isTrue:true,steps:['Let the two even numbers be 2a and 2b','Their sum is 2a + 2b = 2(a+b)','This is always even — the statement is true']},
   {s:'"A quadratic equation always has two distinct real roots"',correct:'x² + 1 = 0',d:['x² - 4 = 0','x² - 5x + 6 = 0','x² + 3x + 2 = 0'],steps:['x² + 1 = 0 gives x² = -1','No real solutions exist','The discriminant is 0 - 4 = -4 < 0']},
   {s:'"If the sum of two numbers is even, both numbers must be even"',correct:'3 + 5 = 8',d:['2 + 4 = 6','6 + 8 = 14','10 + 12 = 22'],steps:['3 and 5 are both odd','3 + 5 = 8, which is even','Odd + odd = even, so the statement is false']},
-  {s:'"\\sqrt{a+b} = \\sqrt{a} + \\sqrt{b} \\text{ for all positive } a, b"',correct:'a=1, b=1',d:['a=4, b=9','a=0, b=4','a=16, b=0'],steps:['\\sqrt{1+1} = \\sqrt{2} \\approx 1.414','\\sqrt{1}+\\sqrt{1} = 1 + 1 = 2','1.414 \\neq 2'],misconception:'The square root does NOT distribute over addition'},
-  {s:'"The exterior angle of any polygon is always less than 180°"',correct:'A reflex angle in a non-convex polygon',d:['A regular hexagon','An equilateral triangle','A square'],steps:['In a non-convex (concave) polygon, an interior angle can exceed 180°','The corresponding exterior angle would be negative or the reflex exterior would exceed 180°','This only holds for convex polygons'],isConceptual:true},
-  {s:'"If f(a) = f(b) then a = b"',correct:'f(x) = x², a = 1, b = -1',d:['f(x)=x, a=2, b=2','f(x)=2x, a=3, b=3','f(x)=x+1, a=0, b=0'],steps:['f(1) = 1 \\text{ and } f(-1) = 1','f(a) = f(b) \\text{ but } a \\neq b','This works for any non-injective (many-to-one) function']},
+  {s:'"\\(\\sqrt{a+b} = \\sqrt{a} + \\sqrt{b}\\) for all positive \\(a, b\\)"',correct:'a=1, b=1',d:['a=0, b=9','a=0, b=4','a=16, b=0'],steps:['\\sqrt{1+1} = \\sqrt{2} \\approx 1.414','\\sqrt{1}+\\sqrt{1} = 1 + 1 = 2','1.414 \\neq 2'],misconception:'The square root does NOT distribute over addition'},
+  {s:'"Every exterior angle of a polygon (180° minus the interior angle) is less than 180°"',correct:'This statement is actually TRUE',d:['A regular hexagon','An equilateral triangle','A square'],isTrue:true,steps:['Each interior angle is between 0° and 360°','So each exterior angle, 180° minus the interior angle, is between -180° and 180°','In a concave polygon an exterior angle can be negative, but it is never 180° or more']},
+  {s:'"If f(a) = f(b) then a = b"',correct:'f(x) = x², a = 1, b = -1',d:['f(x)=x, a=2, b=2','f(x)=2x, a=3, b=3','f(x)=x+1, a=0, b=0'],steps:['\\(f(1) = 1\\) and \\(f(-1) = 1\\)','\\(f(a) = f(b)\\) but \\(a \\neq b\\)','This works for any non-injective (many-to-one) function']},
   {s:'"n² - n + 11 is prime for all positive integers n"',correct:'n = 11',d:['n = 1','n = 3','n = 7'],steps:['When n = 11: 11² - 11 + 11 = 121','121 = 11 \\times 11','Not prime — the formula factors when n equals the constant term']},
   {s:'"The sum of any three consecutive integers is divisible by 6"',correct:'2+3+4=9',d:['1+2+3=6','3+4+5=12','5+6+7=18'],steps:['Three consecutive integers: n + (n+1) + (n+2) = 3n + 3 = 3(n+1)','This is always divisible by 3','But NOT always by 6: e.g. 2+3+4 = 9, which is not divisible by 6']},
-  {s:'"If a divides bc, then a divides b or a divides c"',correct:'a = 6, b = 4, c = 3',d:['a=2, b=4, c=3','a=3, b=6, c=5','a=5, b=10, c=7'],steps:['6 divides 4 \\times 3 = 12 ✓','But 6 does not divide 4, and 6 does not divide 3','The statement fails — it only holds when a is prime']},
-  {s:'"\\log(a + b) = \\log(a) + \\log(b)"',correct:'a = b = 10',d:['a=1, b=0','a=10, b=100','a=e, b=e'],steps:['\\log(10 + 10) = \\log(20) \\approx 1.301','\\log(10) + \\log(10) = 1 + 1 = 2','1.301 \\neq 2'],misconception:'\\log(ab) = \\log(a) + \\log(b), but NOT \\log(a+b)'},
-  {s:'"\\sin(2x) = 2\\sin(x)"',correct:'x = 60°',d:['x = 0°','x = 180°','x = 360°'],steps:['\\sin(120°) = \\frac{\\sqrt{3}}{2} \\approx 0.866','2\\sin(60°) = 2 \\times \\frac{\\sqrt{3}}{2} = \\sqrt{3} \\approx 1.732','These are not equal'],misconception:'\\sin(2x) = 2\\sin(x)\\cos(x) — the double angle formula'},
-  {s:'"(a+b)^2 = a^2 + b^2"',correct:'a=1, b=1',d:['a=0, b=3','a=5, b=0','a=-2, b=2'],steps:['(1+1)^2 = 4','1^2 + 1^2 = 2','4 \\neq 2'],misconception:'(a+b)^2 = a^2 + 2ab + b^2 — the middle term is missing'},
+  {s:'"If a divides bc, then a divides b or a divides c"',correct:'a = 6, b = 4, c = 3',d:['a=2, b=4, c=3','a=3, b=6, c=5','a=5, b=10, c=7'],steps:['\\(6\\) divides \\(4 \\times 3 = 12\\) ✓','But 6 does not divide 4, and 6 does not divide 3','The statement fails here; it always holds when a is prime (Euclid\'s lemma)']},
+  {s:'"\\log(a + b) = \\log(a) + \\log(b)"',correct:'a = b = 10',d:['a=2, b=2','a=3, b=1.5','a=6, b=1.2'],steps:['\\log(10 + 10) = \\log(20) \\approx 1.301','\\log(10) + \\log(10) = 1 + 1 = 2','1.301 \\neq 2'],misconception:'\\(\\log(ab) = \\log(a) + \\log(b)\\), but NOT \\(\\log(a+b)\\)'},
+  {s:'"\\sin(2x) = 2\\sin(x)"',correct:'x = 60°',d:['x = 0°','x = 180°','x = 360°'],steps:['\\sin(120°) = \\frac{\\sqrt{3}}{2} \\approx 0.866','2\\sin(60°) = 2 \\times \\frac{\\sqrt{3}}{2} = \\sqrt{3} \\approx 1.732','These are not equal'],misconception:'\\(\\sin(2x) = 2\\sin(x)\\cos(x)\\) — the double angle formula'},
+  {s:'"(a+b)^2 = a^2 + b^2"',correct:'a=1, b=1',d:['a=0, b=3','a=5, b=0','a=0, b=-2'],steps:['(1+1)^2 = 4','1^2 + 1^2 = 2','4 \\neq 2'],misconception:'\\((a+b)^2 = a^2 + 2ab + b^2\\) — the middle term is missing'},
   {s:'"If the derivative f\'(a) = 0 then f has a maximum at x = a"',correct:'f(x) = x^3 \\text{ at } x = 0',d:['f(x)=-x^2 \\text{ at } x=0','f(x)=-(x-1)^2 \\text{ at } x=1','f(x)=4-x^2 \\text{ at } x=0'],steps:['f(x) = x^3, f\'(x) = 3x^2','f\'(0) = 0, but x = 0 is a point of inflection','It is neither a maximum nor a minimum']},
-  {s:'"\\dfrac{a}{b+c} = \\dfrac{a}{b} + \\dfrac{a}{c}"',correct:'a=1, b=1, c=1',d:['a=0, b=1, c=1','a=2, b=1, c=-1','a=6, b=2, c=3'],steps:['\\dfrac{1}{1+1} = \\dfrac{1}{2}','\\dfrac{1}{1} + \\dfrac{1}{1} = 2','\\dfrac{1}{2} \\neq 2'],misconception:'You CANNOT split a fraction over addition in the denominator'},
-  {s:'"A number is divisible by 6 if it is divisible by 2 and 3"',correct:'This statement is actually TRUE',d:['12','18','24'],isTrue:true,steps:['6 = 2 \\times 3 and \\gcd(2,3) = 1','If n is divisible by both 2 and 3, then n is divisible by 6','This is a correct application of coprime factors']},
+  {s:'"\\dfrac{a}{b+c} = \\dfrac{a}{b} + \\dfrac{a}{c}"',correct:'a=1, b=1, c=1',d:['a=0, b=1, c=1','a=0, b=2, c=5','a=0, b=3, c=-1'],steps:['\\dfrac{1}{1+1} = \\dfrac{1}{2}','\\dfrac{1}{1} + \\dfrac{1}{1} = 2','\\dfrac{1}{2} \\neq 2'],misconception:'You CANNOT split a fraction over addition in the denominator'},
+  {s:'"A number is divisible by 6 if it is divisible by 2 and 3"',correct:'This statement is actually TRUE',d:['12','18','24'],isTrue:true,steps:['\\(6 = 2 \\times 3\\) and \\(\\gcd(2,3) = 1\\)','If n is divisible by both 2 and 3, then n is divisible by 6','This is a correct application of coprime factors']},
   {s:'"The reciprocal of an irrational number is always irrational"',correct:'This statement is actually TRUE',d:['1/\\pi','1/\\sqrt{2}','1/e'],isTrue:true,steps:['Suppose 1/x is rational, i.e. 1/x = p/q','Then x = q/p, which is rational','Contradiction — so if x is irrational, 1/x must be irrational']},
 ],
 further:[
   {s:'"The determinant of any matrix is positive"',correct:'\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}',d:['\\begin{pmatrix}2&0\\\\0&3\\end{pmatrix}','\\begin{pmatrix}1&0\\\\0&1\\end{pmatrix}','\\begin{pmatrix}3&1\\\\1&2\\end{pmatrix}'],steps:['\\det = (1)(4)-(2)(3) = 4-6 = -2','The determinant is negative','Determinants can be positive, negative, or zero']},
-  {s:'"If A and B are matrices, then AB = BA"',correct:'A=\\begin{pmatrix}1&0\\\\0&0\\end{pmatrix}, B=\\begin{pmatrix}0&1\\\\0&0\\end{pmatrix}',d:['A=I, B=I','A=2I, B=3I','A=0, B=0'],steps:['AB = \\begin{pmatrix}0&1\\\\0&0\\end{pmatrix}','BA = \\begin{pmatrix}0&0\\\\0&0\\end{pmatrix}','AB \\neq BA — matrix multiplication is NOT commutative']},
-  {s:'"All eigenvalues of a real matrix are real"',correct:'\\begin{pmatrix}0&-1\\\\1&0\\end{pmatrix}',d:['\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}','\\begin{pmatrix}2&1\\\\0&3\\end{pmatrix}','I'],steps:['This is a 90° rotation matrix','\\text{det}(A-\\lambda I) = \\lambda^2 + 1 = 0','\\lambda = \\pm i — complex eigenvalues']},
-  {s:'"The sum of the first n natural numbers is always even"',correct:'n = 1',d:['n = 3','n = 7','n = 9'],steps:['\\sum_{k=1}^{1} k = 1','1 is odd, not even','Also: n=2 gives 3, n=4 gives 10 (even) — it alternates']},
-  {s:'"e^{i\\theta} = \\cos\\theta + \\sin\\theta \\text{ for all } \\theta"',correct:'\\theta = \\pi/2',d:['\\theta = 0','\\theta = 2\\pi','\\theta = \\pi'],steps:['e^{i\\pi/2} = \\cos(\\pi/2) + i\\sin(\\pi/2) = i','\\cos(\\pi/2) + \\sin(\\pi/2) = 0 + 1 = 1','i \\neq 1 — the i is missing from the claim'],misconception:'Euler\'s formula is e^{iθ} = cosθ + isinθ — note the i before sin'},
-  {s:'"If \\det(A) = \\det(B) then A = B"',correct:'A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}, B=\\begin{pmatrix}2&0\\\\0&1\\end{pmatrix}',d:['A=I, B=I','A=0, B=0','A=2I, B=2I'],steps:['\\det(A) = 2, \\det(B) = 2','But the matrices are clearly different','Equal determinants do not imply equal matrices']},
-  {s:'"If z_1 and z_2 are complex, then |z_1 + z_2| = |z_1| + |z_2|"',correct:'z_1 = 1, z_2 = i',d:['z_1=1, z_2=1','z_1=2, z_2=3','z_1=0, z_2=5'],steps:['|1 + i| = \\sqrt{2} \\approx 1.414','|1| + |i| = 1 + 1 = 2','\\sqrt{2} \\neq 2'],misconception:'The triangle inequality states |z_1+z_2| \\leq |z_1|+|z_2|, with equality only when z_1 and z_2 point in the same direction'},
-  {s:'"A singular matrix has no eigenvalues"',correct:'\\begin{pmatrix}0&0\\\\0&0\\end{pmatrix}',d:['I','\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}','\\begin{pmatrix}3&1\\\\0&3\\end{pmatrix}'],steps:['The zero matrix is singular (det = 0)','\\det(0 - \\lambda I) = \\lambda^2 = 0','\\lambda = 0 is an eigenvalue — singular matrices always have 0 as an eigenvalue'],isTrue:false},
-  {s:'"\\arg(z_1 z_2) = \\arg(z_1) \\times \\arg(z_2)"',correct:'z_1 = z_2 = e^{i\\pi/4}',d:['z_1=1, z_2=1','z_1=1, z_2=i','z_1=i, z_2=-i'],steps:['\\arg(z_1) = \\arg(z_2) = \\pi/4','\\arg(z_1 z_2) = \\pi/4 + \\pi/4 = \\pi/2','But \\pi/4 \\times \\pi/4 = \\pi^2/16 \\neq \\pi/2'],misconception:'Arguments ADD when multiplying: \\arg(z_1 z_2) = \\arg(z_1) + \\arg(z_2)'},
-  {s:'"Every square matrix has an inverse"',correct:'\\begin{pmatrix}1&2\\\\2&4\\end{pmatrix}',d:['I','\\begin{pmatrix}1&0\\\\0&1\\end{pmatrix}','\\begin{pmatrix}2&1\\\\1&3\\end{pmatrix}'],steps:['\\det = 4 - 4 = 0','Singular matrices have no inverse','Row 2 = 2 × Row 1']},
+  {s:'"If A and B are matrices, then AB = BA"',correct:'A=\\begin{pmatrix}1&0\\\\0&0\\end{pmatrix}, B=\\begin{pmatrix}0&1\\\\0&0\\end{pmatrix}',d:['A=I, B=I','A=2I, B=3I','A=0, B=0'],steps:['AB = \\begin{pmatrix}0&1\\\\0&0\\end{pmatrix}','BA = \\begin{pmatrix}0&0\\\\0&0\\end{pmatrix}','\\(AB \\neq BA\\) — matrix multiplication is NOT commutative']},
+  {s:'"All eigenvalues of a real matrix are real"',correct:'\\begin{pmatrix}0&-1\\\\1&0\\end{pmatrix}',d:['\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}','\\begin{pmatrix}2&1\\\\0&3\\end{pmatrix}','I'],steps:['This is a 90° rotation matrix','\\text{det}(A-\\lambda I) = \\lambda^2 + 1 = 0','\\(\\lambda = \\pm i\\) — complex eigenvalues']},
+  {s:'"The sum of the first n natural numbers is always even"',correct:'n = 1',d:['n = 3','n = 7','n = 8'],steps:['\\sum_{k=1}^{1} k = 1','1 is odd, not even','The sums run 1, 3, 6, 10, 15, 21, ...: odd, odd, even, even, repeating']},
+  {s:'"\\(e^{i\\theta} = \\cos\\theta + \\sin\\theta\\) for all \\(\\theta\\)"',correct:'\\theta = \\pi/2',d:['\\theta = 0','\\theta = 2\\pi','\\theta = \\pi'],steps:['e^{i\\pi/2} = \\cos(\\pi/2) + i\\sin(\\pi/2) = i','\\cos(\\pi/2) + \\sin(\\pi/2) = 0 + 1 = 1','\\(i \\neq 1\\) — the \\(i\\) is missing from the claim'],misconception:'Euler\'s formula is \\(e^{i\\theta} = \\cos\\theta + i\\sin\\theta\\) — note the \\(i\\) before \\(\\sin\\theta\\)'},
+  {s:'"If \\(\\det(A) = \\det(B)\\) then \\(A = B\\)"',correct:'A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}, B=\\begin{pmatrix}2&0\\\\0&1\\end{pmatrix}',d:['A=I, B=I','A=0, B=0','A=2I, B=2I'],steps:['\\det(A) = 2, \\det(B) = 2','But the matrices are clearly different','Equal determinants do not imply equal matrices']},
+  {s:'"If \\(z_1\\) and \\(z_2\\) are complex, then \\(|z_1 + z_2| = |z_1| + |z_2|\\)"',correct:'z_1 = 1, z_2 = i',d:['z_1=1, z_2=1','z_1=2, z_2=3','z_1=0, z_2=5'],steps:['|1 + i| = \\sqrt{2} \\approx 1.414','|1| + |i| = 1 + 1 = 2','\\sqrt{2} \\neq 2'],misconception:'The triangle inequality states \\(|z_1+z_2| \\leq |z_1|+|z_2|\\), with equality only when \\(z_1\\) and \\(z_2\\) point in the same direction'},
+  {s:'"A singular matrix has no eigenvalues"',correct:'\\begin{pmatrix}0&0\\\\0&0\\end{pmatrix}',d:['I','\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}','\\begin{pmatrix}3&1\\\\0&3\\end{pmatrix}'],steps:['The zero matrix is singular (det = 0)','\\det(0 - \\lambda I) = \\lambda^2 = 0','\\(\\lambda = 0\\) is an eigenvalue — singular matrices always have \\(0\\) as an eigenvalue'],isTrue:false},
+  {s:'"\\arg(z_1 z_2) = \\arg(z_1) \\times \\arg(z_2)"',correct:'z_1 = z_2 = e^{i\\pi/4}',d:['z_1=1, z_2=1','z_1=2, z_2=3','z_1=1, z_2=5'],steps:['\\arg(z_1) = \\arg(z_2) = \\pi/4','\\arg(z_1 z_2) = \\pi/4 + \\pi/4 = \\pi/2','But \\(\\pi/4 \\times \\pi/4 = \\pi^2/16 \\neq \\pi/2\\)'],misconception:'Arguments ADD when multiplying: \\(\\arg(z_1 z_2) = \\arg(z_1) + \\arg(z_2)\\)'},
+  {s:'"Every square matrix has an inverse"',correct:'\\begin{pmatrix}1&2\\\\2&4\\end{pmatrix}',d:['I','\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}','\\begin{pmatrix}2&1\\\\1&3\\end{pmatrix}'],steps:['\\det = 4 - 4 = 0','Singular matrices have no inverse','Row 2 = 2 × Row 1']},
 ]
 };
 
@@ -262,31 +268,32 @@ further:[
 const SORTER={
 alevel:[
   {title:'Prove that the sum of two odd numbers is even',
-   lines:['Let the two odd numbers be 2a+1 and 2b+1, where a,b are integers','Their sum is (2a+1)+(2b+1)','= 2a + 2b + 2','= 2(a+b+1)','Since a+b+1 is an integer, this is even','Therefore the sum of two odd numbers is always even \\quad\\square'],
+   lines:['Let the two odd numbers be 2a+1 and 2b+1, where a,b are integers','Their sum is (2a+1)+(2b+1)','= 2a + 2b + 2','= 2(a+b+1)','Since a+b+1 is an integer, this is even','Therefore the sum of two odd numbers is always even \\(\\quad\\square\\)'],
    misconception:'The key is expressing odd numbers in the form 2k+1 and factoring out 2'},
   {title:'Prove that the product of two even numbers is divisible by 4',
-   lines:['Let the two even numbers be 2a and 2b, where a,b are integers','Their product is 2a \\times 2b','= 4ab','Since ab is an integer, 4ab is divisible by 4','Therefore the product of two even numbers is always divisible by 4 \\quad\\square'],
+   lines:['Let the two even numbers be 2a and 2b, where a,b are integers','Their product is \\(2a \\times 2b\\)','= 4ab','Since ab is an integer, 4ab is divisible by 4','Therefore the product of two even numbers is always divisible by \\(4 \\quad\\square\\)'],
    misconception:'Not just divisible by 2 — the factor of 4 comes from 2×2'},
-  {title:'Prove by contradiction that \\sqrt{2} is irrational',
-   lines:['Assume \\sqrt{2} is rational, i.e. \\sqrt{2} = \\frac{a}{b} where a,b are integers with no common factors','Then 2 = \\frac{a^2}{b^2}, so a^2 = 2b^2','Since a^2 is even, a must be even. Write a = 2k','Then (2k)^2 = 2b^2, so 4k^2 = 2b^2, giving b^2 = 2k^2','Since b^2 is even, b must be even','But a and b are both even — this contradicts our assumption they share no common factors','Therefore \\sqrt{2} is irrational \\quad\\square']},
-  {title:'Prove that n^2 + n is even for all positive integers n',
-   lines:['n^2 + n = n(n+1)','n and n+1 are consecutive integers','One of any two consecutive integers must be even','Therefore their product n(n+1) is even','So n^2 + n is even for all positive integers n \\quad\\square']},
-  {title:'Prove that if n^2 is odd, then n is odd',
-   lines:['We prove the contrapositive: if n is even, then n^2 is even','Let n be even, so n = 2k for some integer k','Then n^2 = (2k)^2 = 4k^2 = 2(2k^2)','Since 2k^2 is an integer, n^2 is even','We have shown: n even \\Rightarrow n^2 even','By contrapositive: n^2 odd \\Rightarrow n odd \\quad\\square']},
+  {title:'Prove by contradiction that \\(\\sqrt{2}\\) is irrational',
+   lines:['Assume \\(\\sqrt{2}\\) is rational, i.e. \\(\\sqrt{2} = \\frac{a}{b}\\) where \\(a,b\\) are integers with no common factors','Then \\(2 = \\frac{a^2}{b^2}\\), so \\(a^2 = 2b^2\\)','Since \\(a^2\\) is even, \\(a\\) must be even. Write \\(a = 2k\\)','Then \\((2k)^2 = 2b^2\\), so \\(4k^2 = 2b^2\\), giving \\(b^2 = 2k^2\\)','Since \\(b^2\\) is even, \\(b\\) must be even','But a and b are both even — this contradicts our assumption they share no common factors','Therefore \\(\\sqrt{2}\\) is irrational \\(\\quad\\square\\)']},
+  {title:'Prove that \\(n^2 + n\\) is even for all positive integers \\(n\\)',
+   lines:['n^2 + n = n(n+1)','n and n+1 are consecutive integers','One of any two consecutive integers must be even','Therefore their product n(n+1) is even','So \\(n^2 + n\\) is even for all positive integers \\(n \\quad\\square\\)'],
+   after:{3:[1,2],4:[0,3]}},
+  {title:'Prove that if \\(n^2\\) is odd, then \\(n\\) is odd',
+   lines:['We prove the contrapositive: if \\(n\\) is even, then \\(n^2\\) is even','Let n be even, so n = 2k for some integer k','Then \\(n^2 = (2k)^2 = 4k^2 = 2(2k^2)\\)','Since \\(2k^2\\) is an integer, \\(n^2\\) is even','We have shown: \\(n\\) even \\(\\Rightarrow n^2\\) even','By contrapositive: \\(n^2\\) odd \\(\\Rightarrow n\\) odd \\(\\quad\\square\\)']},
   {title:'Prove that the sum of three consecutive integers is divisible by 3',
-   lines:['Let the three consecutive integers be n, n+1, n+2','Their sum is n + (n+1) + (n+2)','= 3n + 3','= 3(n+1)','Since n+1 is an integer, 3(n+1) is divisible by 3','Therefore the sum of three consecutive integers is always divisible by 3 \\quad\\square']},
+   lines:['Let the three consecutive integers be n, n+1, n+2','Their sum is n + (n+1) + (n+2)','= 3n + 3','= 3(n+1)','Since n+1 is an integer, 3(n+1) is divisible by 3','Therefore the sum of three consecutive integers is always divisible by \\(3 \\quad\\square\\)']},
   {title:'Prove that there are infinitely many prime numbers',
-   lines:['Assume there are finitely many primes: p_1, p_2, \\ldots, p_n','Consider the number N = p_1 \\times p_2 \\times \\cdots \\times p_n + 1','N is not divisible by any of p_1, p_2, \\ldots, p_n (it leaves remainder 1)','So either N is prime, or N has a prime factor not in our list','In both cases, there is a prime not in our assumed complete list','This contradicts our assumption — therefore there are infinitely many primes \\quad\\square']},
-  {title:'Prove that \\cos^2\\theta + \\sin^2\\theta = 1',
-   lines:['Consider a right-angled triangle with hypotenuse 1','Let the adjacent side be \\cos\\theta and the opposite side be \\sin\\theta','By Pythagoras: (\\text{adjacent})^2 + (\\text{opposite})^2 = (\\text{hypotenuse})^2','So \\cos^2\\theta + \\sin^2\\theta = 1^2 = 1 \\quad\\square']},
+   lines:['Assume there are finitely many primes: \\(p_1, p_2, \\ldots, p_n\\)','Consider the number \\(N = p_1 \\times p_2 \\times \\cdots \\times p_n + 1\\)','\\(N\\) is not divisible by any of \\(p_1, p_2, \\ldots, p_n\\) (it leaves remainder \\(1\\))','So either N is prime, or N has a prime factor not in our list','In both cases, there is a prime not in our assumed complete list','This contradicts our assumption — therefore there are infinitely many primes \\(\\quad\\square\\)']},
+  {title:'Prove that \\(\\cos^2\\theta + \\sin^2\\theta = 1\\) for \\(0^\\circ < \\theta < 90^\\circ\\)',
+   lines:['Consider a right-angled triangle with hypotenuse 1','Let the adjacent side be \\(\\cos\\theta\\) and the opposite side be \\(\\sin\\theta\\)','By Pythagoras: \\((\\text{adjacent})^2 + (\\text{opposite})^2 = (\\text{hypotenuse})^2\\)','So \\(\\cos^2\\theta + \\sin^2\\theta = 1^2 = 1 \\quad\\square\\)']},
 ],
 further:[
-  {title:'Prove by induction that \\sum_{r=1}^{n} r = \\frac{n(n+1)}{2}',
-   lines:['Base case: n=1. LHS = 1. RHS = \\frac{1(2)}{2} = 1. True.','Assume true for n=k: \\sum_{r=1}^{k} r = \\frac{k(k+1)}{2}','For n=k+1: \\sum_{r=1}^{k+1} r = \\frac{k(k+1)}{2} + (k+1)','= \\frac{k(k+1) + 2(k+1)}{2} = \\frac{(k+1)(k+2)}{2}','This is the formula with n=k+1, so the statement holds for n=k+1','By mathematical induction, the result holds for all n \\geq 1 \\quad\\square']},
-  {title:'Prove that A^n = \\begin{pmatrix}1&n\\\\0&1\\end{pmatrix} where A = \\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}',
-   lines:['Base case: n=1. A^1 = A = \\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}. True.','Assume A^k = \\begin{pmatrix}1&k\\\\0&1\\end{pmatrix}','A^{k+1} = A^k \\cdot A = \\begin{pmatrix}1&k\\\\0&1\\end{pmatrix}\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}','= \\begin{pmatrix}1&k+1\\\\0&1\\end{pmatrix}','This is the formula with n=k+1','By induction, A^n = \\begin{pmatrix}1&n\\\\0&1\\end{pmatrix} for all n \\geq 1 \\quad\\square']},
-  {title:'Prove that 3^n > 2n+1 for all n \\geq 2',
-   lines:['Base case: n=2. LHS = 9. RHS = 5. 9 > 5. True.','Assume 3^k > 2k + 1 for some k \\geq 2','3^{k+1} = 3 \\times 3^k > 3(2k+1) = 6k+3','6k + 3 = (2k+3) + 4k = 2(k+1)+1 + 4k','Since k \\geq 2, we have 4k > 0, so 6k+3 > 2(k+1)+1','Therefore 3^{k+1} > 2(k+1)+1, completing the inductive step \\quad\\square']},
+  {title:'Prove by induction that \\(\\sum_{r=1}^{n} r = \\frac{n(n+1)}{2}\\)',
+   lines:['Base case: \\(n=1\\). LHS \\(= 1\\). RHS \\(= \\frac{1(2)}{2} = 1\\). True.','Assume true for \\(n=k: \\sum_{r=1}^{k} r = \\frac{k(k+1)}{2}\\)','For \\(n=k+1: \\sum_{r=1}^{k+1} r = \\frac{k(k+1)}{2} + (k+1)\\)','= \\frac{k(k+1) + 2(k+1)}{2} = \\frac{(k+1)(k+2)}{2}','This is the formula with n=k+1, so the statement holds for n=k+1','By mathematical induction, the result holds for all \\(n \\geq 1 \\quad\\square\\)']},
+  {title:'Prove that \\(A^n = \\begin{pmatrix}1&n\\\\0&1\\end{pmatrix}\\) where \\(A = \\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}\\)',
+   lines:['Base case: \\(n=1\\). \\(A^1 = A = \\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}\\). True.','Assume \\(A^k = \\begin{pmatrix}1&k\\\\0&1\\end{pmatrix}\\)','A^{k+1} = A^k \\cdot A = \\begin{pmatrix}1&k\\\\0&1\\end{pmatrix}\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}','= \\begin{pmatrix}1&k+1\\\\0&1\\end{pmatrix}','This is the formula with n=k+1','By induction, \\(A^n = \\begin{pmatrix}1&n\\\\0&1\\end{pmatrix}\\) for all \\(n \\geq 1 \\quad\\square\\)']},
+  {title:'Prove that \\(3^n > 2n+1\\) for all \\(n \\geq 2\\)',
+   lines:['Base case: n=2. LHS = 9. RHS = 5. 9 > 5. True.','Assume \\(3^k > 2k + 1\\) for some \\(k \\geq 2\\)','3^{k+1} = 3 \\times 3^k > 3(2k+1) = 6k+3','6k + 3 = (2k+3) + 4k = 2(k+1)+1 + 4k','Since \\(k \\geq 2\\), we have \\(4k > 0\\), so \\(6k+3 > 2(k+1)+1\\)','Therefore \\(3^{k+1} > 2(k+1)+1\\), completing the inductive step','By mathematical induction, \\(3^n > 2n+1\\) for all \\(n \\geq 2 \\quad\\square\\)']},
 ]
 };
 
@@ -297,26 +304,26 @@ const INDUCTION=[
   {prop:'\\sum_{r=1}^{n} r = \\frac{n(n+1)}{2}',
    stages:[
      {prompt:'What value of n should we use for the base case?',correct:'n = 1',d:['n = 0','n = 2','n = k'],steps:['Induction starts at the lowest valid value','Here, the sum starts at r=1, so n=1 is the base case']},
-     {prompt:'Verify the base case: when n = 1, what does the LHS equal?',correct:'1',d:['0','2','\\frac{1}{2}'],steps:['\\sum_{r=1}^{1} r = 1','The RHS: \\frac{1(2)}{2} = 1','LHS = RHS ✓']},
+     {prompt:'Verify the base case: when n = 1, what does the LHS equal?',correct:'1',d:['0','2','\\frac{1}{2}'],steps:['\\sum_{r=1}^{1} r = 1','The RHS: \\(\\frac{1(2)}{2} = 1\\)','LHS = RHS ✓']},
      {prompt:'What do we assume for the inductive hypothesis?',correct:'\\sum_{r=1}^{k} r = \\frac{k(k+1)}{2}',d:['\\sum_{r=1}^{k+1} r = \\frac{(k+1)(k+2)}{2}','\\sum_{r=1}^{n} r = \\frac{n(n+1)}{2}','\\sum_{r=1}^{k} r = \\frac{k^2}{2}'],steps:['Assume the formula holds for some arbitrary integer n = k','We write the assumption using k specifically']},
-     {prompt:'In the inductive step, \\sum_{r=1}^{k+1} r = \\frac{k(k+1)}{2} + (k+1). This simplifies to:',correct:'\\frac{(k+1)(k+2)}{2}',d:['\\frac{k(k+2)}{2}','\\frac{(k+1)^2}{2}','\\frac{k^2+3k+2}{2}'],steps:['\\frac{k(k+1)}{2} + (k+1) = \\frac{k(k+1)+2(k+1)}{2}','= \\frac{(k+1)(k+2)}{2}','This matches the formula with n = k+1 ✓']},
+     {prompt:'In the inductive step, \\(\\sum_{r=1}^{k+1} r = \\frac{k(k+1)}{2} + (k+1)\\). This simplifies to:',correct:'\\frac{(k+1)(k+2)}{2}',d:['\\frac{k(k+2)}{2}','\\frac{(k+1)^2}{2}','\\frac{k^2+3k}{2}'],steps:['\\frac{k(k+1)}{2} + (k+1) = \\frac{k(k+1)+2(k+1)}{2}','= \\frac{(k+1)(k+2)}{2}','This matches the formula with n = k+1 ✓']},
    ]},
   {prop:'\\sum_{r=1}^{n} r^2 = \\frac{n(n+1)(2n+1)}{6}',
    stages:[
-     {prompt:'Verify base case n=1. What is the RHS?',correct:'1',d:['\\frac{1}{6}','\\frac{1}{3}','3'],steps:['\\frac{1 \\times 2 \\times 3}{6} = \\frac{6}{6} = 1','LHS = 1^2 = 1 ✓']},
-     {prompt:'In the inductive step, what do we add to both sides?',correct:'(k+1)^2',d:['k^2','(k+1)','2k+1'],steps:['\\sum_{r=1}^{k+1} r^2 = \\sum_{r=1}^{k} r^2 + (k+1)^2','We add the next term (k+1)^2 to the assumed formula']},
-     {prompt:'After adding (k+1)^2 to \\frac{k(k+1)(2k+1)}{6}, the result factors as:',correct:'\\frac{(k+1)(k+2)(2k+3)}{6}',d:['\\frac{(k+1)(2k+1)(2k+3)}{6}','\\frac{k(k+1)(2k+3)}{6}','\\frac{(k+1)^2(2k+1)}{6}'],steps:['\\frac{k(k+1)(2k+1)}{6} + (k+1)^2 = \\frac{k(k+1)(2k+1) + 6(k+1)^2}{6}','= \\frac{(k+1)[k(2k+1) + 6(k+1)]}{6}','= \\frac{(k+1)(2k^2+7k+6)}{6} = \\frac{(k+1)(k+2)(2k+3)}{6}']},
+     {prompt:'Verify base case n=1. What is the RHS?',correct:'1',d:['\\frac{1}{6}','\\frac{1}{3}','3'],steps:['\\frac{1 \\times 2 \\times 3}{6} = \\frac{6}{6} = 1','LHS \\(= 1^2 = 1\\) ✓']},
+     {prompt:'In the inductive step, what do we add to both sides?',correct:'(k+1)^2',d:['k^2','(k+1)','2k+1'],steps:['\\sum_{r=1}^{k+1} r^2 = \\sum_{r=1}^{k} r^2 + (k+1)^2','We add the next term \\((k+1)^2\\) to the assumed formula']},
+     {prompt:'After adding \\((k+1)^2\\) to \\(\\frac{k(k+1)(2k+1)}{6}\\), the result factors as:',correct:'\\frac{(k+1)(k+2)(2k+3)}{6}',d:['\\frac{(k+1)(2k+1)(2k+3)}{6}','\\frac{k(k+1)(2k+3)}{6}','\\frac{(k+1)^2(2k+1)}{6}'],steps:['\\frac{k(k+1)(2k+1)}{6} + (k+1)^2 = \\frac{k(k+1)(2k+1) + 6(k+1)^2}{6}','= \\frac{(k+1)[k(2k+1) + 6(k+1)]}{6}','= \\frac{(k+1)(2k^2+7k+6)}{6} = \\frac{(k+1)(k+2)(2k+3)}{6}']},
    ]},
   {prop:'8^n - 1 \\text{ is divisible by 7 for all } n \\geq 1',
    stages:[
-     {prompt:'Base case n=1: 8^1 - 1 = ?',correct:'7',d:['1','8','0'],steps:['8^1 - 1 = 7','7 is divisible by 7 ✓']},
-     {prompt:'What is the inductive hypothesis?',correct:'8^k - 1 = 7m \\text{ for some integer } m',d:['8^k = 7m','8^{k+1} - 1 = 7m','8^k - 1 = 7'],steps:['Assume 8^k - 1 is divisible by 7','Write this as 8^k - 1 = 7m, so 8^k = 7m + 1']},
-     {prompt:'8^{k+1} - 1 = 8 \\cdot 8^k - 1. Using 8^k = 7m + 1, this becomes:',correct:'8(7m+1) - 1 = 56m + 7 = 7(8m+1)',d:['56m + 8 - 1 = 56m + 7','7m + 8 - 1 = 7m + 7','8 \\cdot 7m - 1 = 56m - 1'],steps:['8^{k+1} - 1 = 8(7m+1) - 1 = 56m + 8 - 1 = 56m + 7','= 7(8m + 1)','Since 8m+1 is an integer, this is divisible by 7 ✓']},
+     {prompt:'Base case \\(n=1: 8^1 - 1 = ?\\)',correct:'7',d:['1','8','0'],steps:['8^1 - 1 = 7','7 is divisible by 7 ✓']},
+     {prompt:'What is the inductive hypothesis?',correct:'8^k - 1 = 7m \\text{ for some integer } m',d:['8^k = 7m','8^{k+1} - 1 = 7m','8^k - 1 = 7'],steps:['Assume \\(8^k - 1\\) is divisible by \\(7\\)','Write this as \\(8^k - 1 = 7m\\), so \\(8^k = 7m + 1\\)']},
+     {prompt:'\\(8^{k+1} - 1 = 8 \\cdot 8^k - 1\\). Using \\(8^k = 7m + 1\\), this becomes:',correct:'8(7m+1) - 1 = 56m + 7 = 7(8m+1)',d:['8(7m+1) - 1 = 56m + 1 - 1 = 56m','7m + 8 - 1 = 7m + 7','8 \\cdot 7m - 1 = 56m - 1'],steps:['8^{k+1} - 1 = 8(7m+1) - 1 = 56m + 8 - 1 = 56m + 7','= 7(8m + 1)','Since 8m+1 is an integer, this is divisible by 7 ✓']},
    ]},
   {prop:'\\sum_{r=1}^{n} r \\cdot r! = (n+1)! - 1',
    stages:[
-     {prompt:'Base case n=1. LHS = 1 \\times 1! = 1. What is RHS?',correct:'2! - 1 = 1',d:['1! - 1 = 0','2! = 2','1! = 1'],steps:['(1+1)! - 1 = 2! - 1 = 2 - 1 = 1','LHS = RHS ✓']},
-     {prompt:'In the inductive step, add (k+1)(k+1)! to both sides. RHS becomes (k+1)!-1+(k+1)(k+1)!. Factor:',correct:'(k+2)! - 1',d:['(k+1)! \\cdot (k+2) - 1','(k+1)!(k+2) + 1','(k+2)!'],steps:['(k+1)! + (k+1)(k+1)! = (k+1)![1 + (k+1)] = (k+1)!(k+2) = (k+2)!','So RHS = (k+2)! - 1','This matches the formula with n = k+1 ✓']},
+     {prompt:'Base case \\(n=1\\). LHS \\(= 1 \\times 1! = 1\\). What is RHS?',correct:'1',d:['0','2','3'],steps:['(1+1)! - 1 = 2! - 1 = 2 - 1 = 1','LHS = RHS ✓']},
+     {prompt:'In the inductive step, add (k+1)(k+1)! to both sides. RHS becomes (k+1)!-1+(k+1)(k+1)!. Factor:',correct:'(k+2)! - 1',d:['(k+1)! \\cdot (k+1) - 1','(k+1)!(k+2) + 1','(k+2)!'],steps:['(k+1)! + (k+1)(k+1)! = (k+1)![1 + (k+1)] = (k+1)!(k+2) = (k+2)!','So RHS = (k+2)! - 1','This matches the formula with n = k+1 ✓']},
    ]},
 ];
 
@@ -383,27 +390,17 @@ function nextQ(){
 function renderCounter(q){
   const st=document.getElementById('statement');
   st.innerHTML='';
-  if(q.s.includes('\\')){
-    const d=document.createElement('div');d.innerHTML=rkStr(q.s.replace(/^"|"$/g,''));
-    st.appendChild(d);
-  } else {
-    st.textContent=q.s.replace(/^"|"$/g,'');
-  }
-  document.getElementById('prompt').textContent=q.prompt||'Find a counter-example that disproves this statement';
+  const d=document.createElement('div');d.innerHTML=M(q.s.replace(/^"|"$/g,''));st.appendChild(d);
+  document.getElementById('prompt').textContent='Pick a counter-example that disproves this statement, or say that it is true';
 
   const area=document.getElementById('gameArea');area.innerHTML='';
   const optDiv=document.createElement('div');optDiv.className='options';
 
-  let opts;
-  if(q.isTrue){
-    opts=MaffsOptions.build(q.correct,q.d);
-  } else {
-    opts=MaffsOptions.build(q.correct,q.d);
-  }
+  const opts=MaffsOptions.build(q.correct,q.d);
 
   opts.forEach(v=>{
     const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
-    if(v.includes('\\')){
+    if(v.includes('\\')||v.includes('^')||v.includes('_')||v.includes('{')||v.includes('}')){
       const sp=document.createElement('span');
       katex.render(v,sp,{throwOnError:false});
       b.appendChild(sp);
@@ -441,8 +438,7 @@ function handleCounterAnswer(btn,q){
 // ─── PROOF SORTER ───
 function renderSorter(q){
   const st=document.getElementById('statement');
-  st.innerHTML='<strong>'+q.title+'</strong>';
-  if(q.title.includes('\\')){st.innerHTML='';const d=document.createElement('div');d.innerHTML='<strong>'+rkStr(q.title)+'</strong>';st.appendChild(d)}
+  st.innerHTML='<strong>'+M(q.title)+'</strong>';
   document.getElementById('prompt').textContent='Tap lines in order to build the proof (tap again to deselect)';
 
   const area=document.getElementById('gameArea');area.innerHTML='';
@@ -456,9 +452,9 @@ function renderSorter(q){
 
   jumbled.forEach((line,i)=>{
     const slot=document.createElement('div');slot.className='sort-slot';slot.dataset.idx=i;slot.dataset.origLine=line;
-    slot.innerHTML=rkStr(line);
+    slot.innerHTML=M(line);
     slot.addEventListener('click',()=>{
-      if(slot.classList.contains('placed'))return;
+      if(sortArea.dataset.done||slot.classList.contains('placed'))return;
       if(slot.classList.contains('selected')){
         slot.classList.remove('selected');
         selectedOrder=selectedOrder.filter(x=>x!==i);
@@ -492,6 +488,8 @@ function renderSorter(q){
 }
 
 function checkSorterAnswer(jumbled,selectedOrder,q,sortArea,checkBtn){
+  if(sortArea.dataset.done)return;
+  sortArea.dataset.done='1';
   const s=(Date.now()-qStartTime)/1000;
   checkBtn.disabled=true;
 
@@ -499,9 +497,14 @@ function checkSorterAnswer(jumbled,selectedOrder,q,sortArea,checkBtn){
   let allCorrect=true;
   const slots=sortArea.querySelectorAll('.sort-slot');
 
+  // A proof may allow more than one order: q.after[i] lists the lines line i needs before it (default: every
+  // earlier line, so the order is exact). A line is placed right when everything it needs comes before it.
+  const posOf={};selectedOrder.forEach((origIdx,pos)=>{posOf[q.lines.indexOf(jumbled[origIdx])]=pos});
+  const needs=i=>q.after?(q.after[i]||[]):[...Array(i).keys()];
   selectedOrder.forEach((origIdx,pos)=>{
     const slot=[...slots].find(s=>parseInt(s.dataset.idx)===origIdx);
-    if(jumbled[origIdx]===q.lines[pos]){
+    const li=q.lines.indexOf(jumbled[origIdx]);
+    if(q.after?needs(li).every(j=>posOf[j]<pos):jumbled[origIdx]===q.lines[pos]){
       slot.classList.add('placed');
     } else {
       slot.classList.add('wrong-pos');
@@ -522,10 +525,10 @@ function checkSorterAnswer(jumbled,selectedOrder,q,sortArea,checkBtn){
     streak=0;updateHUD();
     const sol=document.getElementById('solution');
     let html='<h3>Correct order</h3>';
-    q.lines.forEach((line,i)=>{html+=`<div class="step">${i+1}. ${rkStr(line)}</div>`});
-    if(q.misconception)html+=`<div class="misconception">⚠ ${q.misconception}</div>`;
-    html+=`<button class="next-btn" onclick="closeSolutionAndNext()">Got it — next question</button>`;
+    q.lines.forEach((line,i)=>{html+=`<div class="step">${i+1}. ${M(line)}</div>`});
+    if(q.misconception)html+=`<div class="misconception">⚠ ${M(q.misconception)}</div>`;
     sol.innerHTML=html;sol.className='solution show';
+    MaffsNext.wrong({mount:sol,onAdvance:closeSolutionAndNext});
   }
 }
 
@@ -559,14 +562,14 @@ function renderIndStage(q){
 
   const area=document.getElementById('gameArea');area.innerHTML='';
   const promptDiv=document.createElement('div');promptDiv.className='ind-prompt';
-  promptDiv.innerHTML=rkStr(stage.prompt);
+  promptDiv.innerHTML=M(stage.prompt);
   area.appendChild(promptDiv);
 
   const optDiv=document.createElement('div');optDiv.className='options';
   const opts=MaffsOptions.build(stage.correct,stage.d);
   opts.forEach(v=>{
     const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
-    if(v.includes('\\')){const sp=document.createElement('span');katex.render(v,sp,{throwOnError:false});b.appendChild(sp)}
+    if(v.includes('\\')||v.includes('^')||v.includes('_')||v.includes('{')||v.includes('}')){const sp=document.createElement('span');katex.render(v,sp,{throwOnError:false});b.appendChild(sp)}
     else{b.textContent=v}
     b.addEventListener('click',()=>handleIndAnswer(b,stage,q));
     optDiv.appendChild(b);
@@ -594,22 +597,20 @@ function handleIndAnswer(btn,stage,q){
 function showSolutionPanel(q,isIndStage){
   const sol=document.getElementById('solution');
   let html='<h3>Worked solution</h3>';
-  if(q.steps){q.steps.forEach(step=>{html+=`<div class="step">${rkStr(step)}</div>`})}
-  if(q.misconception){html+=`<div class="misconception">⚠ ${q.misconception}</div>`}
-  if(isIndStage){
-    html+=`<button class="next-btn" onclick="closeSolutionIndFail()">Got it — next question</button>`;
-  } else {
-    html+=`<button class="next-btn" onclick="closeSolutionAndNext()">Got it — next question</button>`;
-  }
+  if(q.steps){q.steps.forEach(step=>{html+=`<div class="step">${M(step)}</div>`})}
+  if(q.misconception){html+=`<div class="misconception">⚠ ${M(q.misconception)}</div>`}
   sol.innerHTML=html;sol.className='solution show';
+  MaffsNext.wrong({mount:sol,onAdvance:isIndStage?closeSolutionIndFail:closeSolutionAndNext});
 }
 
 function closeSolutionAndNext(){
+  MaffsNext.clear(document.getElementById('solution'));
   document.getElementById('solution').className='solution';
   qIdx++;nextQ();
 }
 function closeSolutionIndFail(){
   // On induction fail, skip to next question entirely
+  MaffsNext.clear(document.getElementById('solution'));
   document.getElementById('solution').className='solution';
   qIdx++;nextQ();
 }
@@ -626,12 +627,14 @@ function endGame(){
   else if(pct>=50)t='Good Effort!';
   document.getElementById('resultTitle').textContent=t;
   document.getElementById('finalScore').textContent=score;
-  const modeNames={counter:'Counter-Example Sniper',sorter:'Proof Sorter',induction:'Induction Builder'};
+  const modeNames={counter:'Counter-Example Finder',sorter:'Proof Sorter',induction:'Induction Builder'};
   document.getElementById('statsLine').innerHTML=`Mode: ${modeNames[mode]}<br>${correctCount}/${totalAnswered} correct (${pct}%)<br>Best streak: ${bestStreak}`;
   showScreen('results');
 }
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
+<script src="../../schools/assets/mathtext.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'proof-builder');</script>
 <footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
