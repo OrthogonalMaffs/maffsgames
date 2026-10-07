@@ -151,8 +151,10 @@ findings:
     hidden button for 1s); results still claim 20 answered
   evidence: 'Chromium: at qIdx 6, Enter, Enter -> qIdx 8; question_index 8 never sent; game_completed questions_answered
     20; same at qIdx 13; a 100ms gap, dblclick or double tap: no skip Left open by the cloud-lane fix PR: class 1, owned
-    by the shared answer lock (contract F1).'
-  status: open
+    by the shared answer lock (contract F1). Fixed by adopting MaffsLock (Next locked at its first press; the tier
+    transition through MaffsLock.timer); scripts/verify-truth-buster.py tests it.'
+  status: fixed
+  pr: 141
 - id: truth-buster-t3-014
   severity: MEDIUM
   jc: true
@@ -180,5 +182,17 @@ findings:
     and t3_017, t2_020 (1874 result, 1891 diagonal argument), t3_008 title, t3_009 coastline figures (2,800 km at 100 km,
     3,400 km at 50 km, OS 17,820 km named as such), t3_012 (i defined by i^2 = -1). Still open: the 21 Learn More video
     IDs cannot be checked from the cloud sandbox (YouTube refused), and Next below the fold (canon 7.6.1) needs shorter
-    reveal text (content) or a layout ruling, not a key fix.'
+    reveal text (content) or a layout ruling, not a key fix. The fold is fixed at 390x844 on all 60 items by PR 141; the
+    smaller phones are truth-buster-t3-016.'
+  status: open
+- id: truth-buster-t3-016
+  severity: MEDIUM
+  jc: true
+  class: NEW:phone-fold
+  level: all
+  where: games/truth-buster/index.html (reveal panel and Next, placeReveal)
+  summary: After an answer Next is under the fold at 320x568 on 28 of 60 items and at 375x667 on 2 of 60 (canon 7.6.1)
+  evidence: 'scripts/verify-truth-buster.py phone fit: 320x568 Next above the fold (528px) on 32 of 60, lowest Next bottom
+    790px; 375x667 on 58 of 60, lowest 671px against 627px. 390x844 passes on all 60 (PR 141). Needs shorter reveal text
+    (content) or a layout ruling. Filed open on Jon''s ruling of 7 Oct 2026.'
   status: open
