@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-548 findings in 79 games.
+549 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 11 | 13 | 0 | 24 |
 | HIGH | 92 | 114 | 0 | 206 |
-| MEDIUM | 178 | 83 | 0 | 261 |
+| MEDIUM | 178 | 84 | 0 | 262 |
 | LOW | 47 | 10 | 0 | 57 |
-| **All** | 328 | 220 | 0 | 548 |
+| **All** | 328 | 221 | 0 | 549 |
 
 ### By class
 
@@ -38,7 +38,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:wrong-explanation-text | 18 | 34 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
-| 7 | 8 | 15 |
+| 7 | 8 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 9 | 10 |
 | NEW:convention-unstated | 8 | 10 |
@@ -155,7 +155,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 0 | 1 | 0 | 2 | 0 |
 | `four-quadrant-explorer` | yes | none | 0 | 1 | 2 | 1 | 4 | 0 | 0 |
 | `fraction-equivalence` | yes | none | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
-| `given-that` | yes | verify-given-that.py | 0 | 3 | 0 | 0 | 0 | 3 | 0 |
+| `given-that` | yes | verify-given-that.py | 0 | 3 | 1 | 0 | 0 | 4 | 0 |
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
 | `gradient-hunter` | yes | none | 1 | 0 | 1 | 0 | 2 | 0 | 0 |
 | `higher-power` | yes | none | 0 | 1 | 4 | 0 | 5 | 0 | 0 |
