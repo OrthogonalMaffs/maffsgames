@@ -93,6 +93,10 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -239,7 +243,7 @@ function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.re
 document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
 const pa=new URLSearchParams(location.search);if(pa.get('level')&&QUESTIONS[pa.get('level')]){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
 
-function startGame(){questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}show('game');showQ();window._ggAbandoned=true;mfg('game_started',{game_slug:'curling-friction',level:level});if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'curling-friction',level:level,questions_answered:qIdx})})}}
+function startGame(){MaffsLock.newSession();questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}show('game');showQ();window._ggAbandoned=true;mfg('game_started',{game_slug:'curling-friction',level:level});if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'curling-friction',level:level,questions_answered:qIdx})})}}
 
 function animateStone(q,correct){
   const sa=document.getElementById('stoneA');const sb=document.getElementById('stoneB');
@@ -250,12 +254,12 @@ function animateStone(q,correct){
     sb.style.display='block';sb.style.left='60%';sb.style.transition='none';
     void sb.offsetWidth;
     sa.style.left='55%';
-    setTimeout(()=>{sb.style.transition='left 1s ease-out';sb.style.left='85%';sa.style.left='55%'},800);
+    MaffsLock.timer(()=>{sb.style.transition='left 1s ease-out';sb.style.left='85%';sa.style.left='55%'},800);
   } else if(cat==='friction'||cat==='suvat'){
     sa.style.left='60%';
   } else {sa.style.left='60%'}
   const sw=document.getElementById('sweepInd');
-  if(q.ctx&&q.ctx.toLowerCase().includes('sweep')){sw.classList.add('active');setTimeout(()=>sw.classList.remove('active'),2000)}
+  if(q.ctx&&q.ctx.toLowerCase().includes('sweep')){sw.classList.add('active');MaffsLock.timer(()=>sw.classList.remove('active'),2000)}
 }
 
 function showQ(){
@@ -270,6 +274,7 @@ function showQ(){
   opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
     if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}
     b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});
+  MaffsLock.fresh(oEl);   // a new question: a double-click on Start or Next cannot answer it (canon 7.6.0)
   qStartTime=Date.now();updateTimer();
   // Reset rink
   const sa=document.getElementById('stoneA');sa.style.transition='none';sa.style.left='20px';
@@ -279,12 +284,13 @@ function showQ(){
 function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){const s=Math.floor((Date.now()-qStartTime)/1000);el.textContent=s;requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
 
 function handle(btn,q){
+  if(!MaffsLock.lock(document.getElementById('options')))return;
   const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});
   mfg('question_answered',{game_slug:'curling-friction',level:level,correct:ok,question_index:qIdx+1});
   animateStone(q,ok);
   if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done');
-    document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1800)}
+    document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;MaffsLock.timer(adv,1800)}
   else{btn.classList.add('wrong');streak=0;pip('fail');
     document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;showSolution(q)}
 }
@@ -315,8 +321,9 @@ function closeSolution(){
   document.getElementById('solution').className='solution';
   adv();
 }
-function end(){const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'curling-friction',level:level,score:score,questions_answered:totalQ,accuracy:pct});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('curling-friction',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('curling-friction',level,score);}}show('results')}
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const end=MaffsLock.finishOnce(function(){const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'curling-friction',level:level,score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('curling-friction',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('curling-friction',level,score);}}show('results');MaffsLock.screen(document.getElementById('results'))});
 function showMenu(){show('menu')}
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>

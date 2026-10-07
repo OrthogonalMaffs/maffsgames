@@ -107,6 +107,7 @@ think-of-a-number decimal-detective
 prime-or-composite probability-pioneer factor-race prime-factorisation
 percentage-flip fraction-equivalence equatle estimation-golf
 suvat factor-theorem
+dimension-checker curling-friction
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
