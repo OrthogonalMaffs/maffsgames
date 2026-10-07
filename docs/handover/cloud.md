@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: eigenvector-engine truth-will-set-you-free trig-identity-duel binomial-blaster partial-fractions-duel truth-buster`
+`cloud-remaining: truth-will-set-you-free trig-identity-duel binomial-blaster partial-fractions-duel truth-buster`
 
 **Resume rule, MaffsLock (Jon, contract LH):** adopting MaffsLock includes the game's lock-hint declaration
 (`<!-- maffs-lock-hint ... -->`, canon §7.6.0), and the game passes `check-answer-lock.py`. Hints live in the
@@ -23,7 +23,34 @@ game's page, never in the shared script.
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-07 (cloud): game 18 Factor Theorem (PR #130); NEXT = merge #130, then the six queued games
+## 2026-10-07 (cloud): eigenvector-engine (queue 1 of 6); #130 Factor Theorem merged; NEXT = truth-will-set-you-free
+
+- **#130 merged** at 18:22 on a green Gate (main green on b7e634b; last home merge 17:43). Main's run on d337b0b watched.
+- **eigenvector-engine:** the old session's commit (3394734, from `claude/keen-cray-ypsime-eigenvector-engine`)
+  cherry-picked onto main. It already adopts MaffsLock in full (newSession, lock, fresh, timer, finishOnce; no local
+  flags), so the class-1 entry t6-002 closes. One addition here: `check-answer-lock.py` (on main since #129, after the
+  commit was written) found a raw `setTimeout(buildExample, 300)` on load; it draws the start screen's worked example
+  and marks nothing, so it carries `// lock-ok:`. Static rules pass.
+- **Found here, fixed (class 1, part of t6-002):** `check-answer-lock.py --game eigenvector-engine --not-yet` (KaTeX
+  served) reported "question_index jumped" on the old page every run. Instrumented: the worked solution's "Got it —
+  next" was a plain onclick, only hidden after use, so a second Enter in the same frame (about 10 ms apart in the
+  tap-through) ran closeSol() twice and skipped a question unseen. Now MaffsNext.wrong (canon 7.6; next-control.js
+  loads before answer-lock.js), label kept. The verifier checks a real double click and two activations in one task
+  (two Enters in one frame); a third plant (the old onclick) is caught. Python's separate key presses never land in
+  one frame, so a keyboard test of this needs the in-page double activation.
+- Verifier passes on the branch, fails on main's page (QS[22], [23], [24]); all three plants caught. The tap-through
+  passes on the fixed page.
+- **Register:** t6-001, -002, -004, -005, f0-001..007 fixed; t6-003 (class 5) stays open.
+- **TWSYF is ready in `/home/user/tw-wt` (branch tw-local):** [27] uses Project Claude's approved wording (7 Oct):
+  "This expression can be written (A ⊕ B)·C·D·Ē, where A ⊕ B = A·B̄ + Ā·B (XOR: one or the other, but not both). Play
+  Boolean Blitz →", in KaTeX. XOR is introduced nowhere else in the game; the verifier checks the identity, the gloss
+  and the rendered line, and a third plant (XOR with no definition) is caught.
+- **Contract LH (#133, home lane, merged 18:44) landed while this was being prepared:** eigenvector-engine declares
+  its maffs-lock-hint (`{}`: the generic driver plays it) and comes off the remaining list above, so CI now judges it
+  in full. Each later game does the same in its own PR.
+- **Delete each `claude/keen-cray-ypsime-<game>` branch once its game has merged (Jon).**
+
+## 2026-10-07 (cloud): game 18 Factor Theorem (PR #130, merged); NEXT = merge #130, then the six queued games
 
 - **New instance, fresh container (18:00 UTC).** The old worktrees and `/home/user/queue-patches/` were gone. Jon
   approved the old session pushing the six queued games to their own branches; this lane picks each up from its

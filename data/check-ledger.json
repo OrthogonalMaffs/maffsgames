@@ -1715,75 +1715,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QS[7]: '\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}' (both wrong options)",
-      "id": "eigenvector-engine::c43e021fe39f#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-f0-001"
-     },
-     {
-      "detail": "QS[9]: '\\\\begin{pmatrix} -2 \\\\\\\\ 1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 4 \\\\\\\\ -2 \\\\end{pmatrix}' (the marked answer is one of them)",
-      "id": "eigenvector-engine::1aa97471ada3#1::B11::[\"\\\\begin{pmatrix} -2 \\\\\\\\ 1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 4 \\\\\\\\ -2 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-t6-005"
-     },
-     {
-      "detail": "QS[11]: '\\\\begin{pmatrix} -1 \\\\\\\\ 2 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ -2 \\\\end{pmatrix}' (the marked answer is one of them)",
-      "id": "eigenvector-engine::e9943d645c46#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ 2 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ -2 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-t6-001"
-     },
-     {
-      "detail": "QS[12]: '\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}' (both wrong options)",
-      "id": "eigenvector-engine::ff74f2039e95#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-f0-002"
-     },
-     {
-      "detail": "QS[13]: '\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}' (both wrong options)",
-      "id": "eigenvector-engine::24205f0049d2#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-f0-003"
-     },
-     {
-      "detail": "QS[15]: '\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}' (both wrong options)",
-      "id": "eigenvector-engine::332c982c1d8a#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-f0-004"
-     },
-     {
-      "detail": "QS[16]: '\\\\begin{pmatrix} 2 \\\\\\\\ 1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 6 \\\\\\\\ 3 \\\\end{pmatrix}' (the marked answer is one of them)",
-      "id": "eigenvector-engine::0e70b936c929#1::B11::[\"\\\\begin{pmatrix} 2 \\\\\\\\ 1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 6 \\\\\\\\ 3 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-f0-005"
-     },
-     {
-      "detail": "QS[20]: '\\\\begin{pmatrix} -2 \\\\\\\\ 2 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}' (the marked answer is one of them)",
-      "id": "eigenvector-engine::311a97126e89#1::B11::[\"\\\\begin{pmatrix} -2 \\\\\\\\ 2 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-t6-005"
-     },
-     {
-      "detail": "QS[22]: '\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}' (the marked answer is one of them)",
-      "id": "eigenvector-engine::de73e1635e94#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-t6-001"
-     },
-     {
-      "detail": "QS[23]: '\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}' (both wrong options)",
-      "id": "eigenvector-engine::411aa11cdb3e#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ 1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ -1 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-f0-006"
-     },
-     {
-      "detail": "QS[24]: '\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}' = '\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}' (both wrong options)",
-      "id": "eigenvector-engine::8ec70fba8b56#1::B11::[\"\\\\begin{pmatrix} -1 \\\\\\\\ -1 \\\\end{pmatrix}\", \"\\\\begin{pmatrix} 1 \\\\\\\\ 1 \\\\end{pmatrix}\"]",
-      "line": null,
-      "register": "eigenvector-engine-f0-007"
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
@@ -1817,89 +1750,8 @@
     "status": "pass"
    },
    "B7": {
-    "entries": [
-     {
-      "detail": "QS.s[] at rkI:154: 'Let x = 1: \\\\mathbf{v} = \\\\begin{pmatrix} 1 \\\\\\\\ 0 \\\\end{pmatrix}' renders as 'Letx = 1 : v = (10)' (lost a space beside: Let)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::5ba29ca5edf9#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Let x = 1: y = -2' renders as 'Letx = 1 : y = −2' (lost a space beside: Let)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::cbaaa250de6d#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: -2x + y = 0 \\\\Rightarrow y = 2x' renders as 'Row1 : −2x + y = 0 ⇒ y = 2x' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::70f397042348#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: -4x + 4y = 0 \\\\Rightarrow x = y' renders as 'Row1 : −4x + 4y = 0 ⇒ x = y' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::5f6bf80926c5#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: -x + y = 0 \\\\Rightarrow x = y' renders as 'Row1 : −x + y = 0 ⇒ x = y' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::4f81b347adfd#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: 2x + 2y = 0 \\\\Rightarrow x = -y' renders as 'Row1 : 2x + 2y = 0 ⇒ x = −y' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::341c2fbee616#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: 2x + 4y = 0 \\\\Rightarrow x = -2y' renders as 'Row1 : 2x + 4y = 0 ⇒ x = −2y' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::4ac20bcf3acb#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: 2x + y = 0 \\\\Rightarrow y = -2x' renders as 'Row1 : 2x + y = 0 ⇒ y = −2x' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::de903311f2ac#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: 2x - 2y = 0 \\\\Rightarrow x = y' renders as 'Row1 : 2x − 2y = 0 ⇒ x = y' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::e552a20972cb#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: 3x = 0 \\\\Rightarrow x = 0' renders as 'Row1 : 3x = 0 ⇒ x = 0' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::20ba601a0e30#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: x + y = 0 \\\\Rightarrow x = -y' renders as 'Row1 : x + y = 0 ⇒ x = −y' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::718b18199abf#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: x = 2y' renders as 'Row1 : x = 2y' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::dd792263fe21#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: x = y' renders as 'Row1 : x = y' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::f5e82837cb61#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 1: y = 0' renders as 'Row1 : y = 0' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::b171d65aa138#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 2: -3y = 0 \\\\Rightarrow y = 0' renders as 'Row2 : −3y = 0 ⇒ y = 0' (lost a space beside: Row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::da4e4dbecff9#1",
-      "line": 154
-     },
-     {
-      "detail": "QS.s[] at rkI:154: 'Row 2: x + y = 0... but row 1: 4x + 2y = 0 \\\\Rightarrow 2x + y = 0' renders as 'Row2 : x + y = 0...butrow1 : 4x + 2y = 0 ⇒ 2x + y = 0' (lost a space beside: Row, but, row)",
-      "id": "eigenvector-engine::B7::katex[QS.s[]]::4fd7486c77f6#1",
-      "line": 154
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B8": {
     "entries": [],
