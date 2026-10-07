@@ -169,6 +169,7 @@ def check_bank(fails, bank):
 
 SWEEP_JS = r"""() => {
   window.setTimeout = () => 0; window.setInterval = () => 0;
+  if (window.MaffsLock) MaffsLock.FRESH_MS = 0;
   const out = [];
   QUESTIONS.alevel.forEach((q, i) => {
     for (const pick of [q.correct, ...q.d]) {
@@ -186,6 +187,27 @@ SWEEP_JS = r"""() => {
   });
   return out;
 }"""
+# Answer once (canon 7.6.0, MaffsLock; partial-fractions-duel-t5-007): with the real 300 ms window, the key clicked and then Enter three times
+# on it counts once, and the results screen submits once.
+LOCK_JS = r"""async () => {
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  let submits = 0;
+  window.MaffsLeaderboard = { submitScore: () => { submits++; return Promise.resolve(); } };
+  const q = QUESTIONS.alevel[22];
+  startGame();
+  questions = [q, q]; qIdx = 0; totalQ = 2; score = 0; correctCount = 0;
+  showQ();
+  await wait((window.MaffsLock ? MaffsLock.FRESH_MS : 0) + 50);
+  const key = [...document.querySelectorAll('#options .opt-btn')].find(b => b.dataset.val === q.correct);
+  key.click(); key.focus();
+  for (let k = 0; k < 3; k++) { key.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); key.click(); }
+  const res = { correct: correctCount };
+  if (window.MaffsLock) MaffsLock.clearTimers();
+  end(); end();
+  res.submits = submits;
+  return res;
+}"""
+
 KATEX_DIR = None
 
 
@@ -209,6 +231,13 @@ def play(fails, html):
             page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             bank = page.evaluate('() => QUESTIONS.alevel')
+            lk = page.evaluate(LOCK_JS)
+            if lk['correct'] != 1:
+                fails.append('the key clicked, then Enter three times on it, counted %d times (partial-fractions-duel-t5-007)' % lk['correct'])
+            if lk['submits'] != 1:
+                fails.append('the results screen submitted %d scores (MaffsLock.finishOnce)' % lk['submits'])
+            page.reload(wait_until='load')
+            page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             for i, pick, what in page.evaluate(SWEEP_JS):
                 fails.append('item %d in Chromium: option %s %s' % (i, pick, what))
             browser.close()
