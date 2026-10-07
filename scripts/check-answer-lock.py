@@ -84,7 +84,7 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
 think-of-a-number decimal-detective
-prime-or-composite probability-pioneer
+prime-or-composite probability-pioneer factor-race
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -554,8 +554,10 @@ async def play(browser, base, slug, level, page_html):
         after = await d.snap()
         if after['answered'] != before['answered'] or after['completed'] != before['completed']:
             faults.append('dblclick on %s: its second click marked %s' % (c['kind'], diff(before, after)))
+    elif await d.ev('() => __lockActionable()') and (await d.snap())['answered'] == s0['answered']:
+        AUTO_ADVANCE.add(slug)                # moved on by itself: no Next to double-click
     else:
-        faults.append('no continue control after a wrong answer (MaffsNext expected)')
+        faults.append('no continue control after a wrong answer, and the game did not move on')
     # 4: tap through to the end; each continue pressed with two Enters and no gap (shape-shifter-t3-005)
     mark = len(await d.ev('() => __lockEvents'))
     t_end = asyncio.get_event_loop().time() + 180
@@ -668,6 +670,7 @@ async def play_all(games, against):
 
 CHECK_SITE = None
 VERBOSE = False
+AUTO_ADVANCE = set()   # games that moved on by themselves after a wrong answer (no Next): reported
 
 
 def main():
@@ -731,6 +734,9 @@ def main():
     if adopted:
         print('  note: the cloud lane\'s %s load answer-lock.js and are still on NOT_YET: the home lane moves each to'
               ' MIGRATED once it passes here' % ', '.join(sorted(adopted)))
+    if AUTO_ADVANCE:
+        print('  note: no Next after a wrong answer (the game moves on by itself; canon 7.6 asks for Next): %s'
+              % ', '.join(sorted(AUTO_ADVANCE)))
     if NOT_YET & slugs:
         print('  NOT_YET (%d): %s' % (len(NOT_YET & slugs), ', '.join(sorted(NOT_YET & slugs))))
     for f in fails:
