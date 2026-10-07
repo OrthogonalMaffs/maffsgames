@@ -536,6 +536,8 @@ function K(l,d){try{return katex.renderToString(l,{throwOnError:false,displayMod
 // between them to 1 d.p." class, which has nothing to delimit) -- goes
 // through MaffsText.html, which correctly returns plain escaped text when
 // there is nothing to render as maths.
+// An option: whole-LaTeX through K(), otherwise MaffsText (plain text, or prose with \\( \\) maths).
+function OPT(t){return /\\[A-Za-z]/.test(t)?K(t):MaffsText.html(t)}
 function PQ(s){return(/\\[A-Za-z]/.test(s)&&!MaffsText.hasMaths(s))?K(s):MaffsText.html(s)}
 
 // A point (capital letter or a word) is written as coordinates; a vector in i, j, k form.
@@ -723,7 +725,7 @@ function loadSQ(q){
     const opts=[{text:sq.correct,c:true},...sq.wrong.map(w=>({text:w,c:false}))];
     for(let i=opts.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[opts[i],opts[j]]=[opts[j],opts[i]];}
     let html=`<div class="sq-label">${label}</div><div class="sq-prompt">${PQ(sq.prompt)}</div><div class="mcq-grid">`;
-    opts.forEach((o,i)=>{html+=`<button class="mcq-btn" id="mc${i}" onclick="checkMCQ(${i},${o.c})">${/\\[A-Za-z]/.test(o.text)?K(o.text):MaffsText.html(o.text)}</button>`;});
+    opts.forEach((o,i)=>{html+=`<button class="mcq-btn" id="mc${i}" onclick="checkMCQ(${i},${o.c})">${OPT(o.text)}</button>`;});
     html+=`</div><div id="sqFb"></div>`;
     box.innerHTML=html;box._opts=opts;
   }
