@@ -236,14 +236,14 @@ findings:
   pr: 115
 - id: proof-builder-t5-023
   severity: MEDIUM
-  jc: true
+  jc: false
   class: NEW:modes share a board
   level: all
   where: games/proof-builder/index.html:335, :622
   summary: Three modes with different maxima (1500/1600/1200) rank on one board per level; no event carries mode
   evidence: 'submitScore(''proof-builder'', level, score, n) for every mode Left open by the cloud-lane fix PR: a design
     decision. Giving each mode its own board needs new level keys in the leaderboard names (schools/assets/firebase-leaderboard.js)
-    and the hub registry, which the cloud lane does not edit; Jon to rule on per-mode boards.'
+    and the hub registry, which the cloud lane does not edit; Jon to rule on per-mode boards. Ruled 7 Oct 2026: canon SR-22, one board per mode (code still to change).'
   status: open
 - id: proof-builder-t5-024
   severity: LOW
