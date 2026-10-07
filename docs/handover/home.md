@@ -19,7 +19,8 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
    question rendered AND its fresh window over; a read-only `MaffsLock.isFresh(container)` in answer-lock.js if
    needed, documented, no behaviour change); two-option games declare an answer that picks the option differing
    from the key; a seeded default (seed printed) for games with no hint; no new declaration key (else STOP IF).
-   Proofs: same seed, identical event log; a forced all-right draw and a tap inside the fresh window both handled
+   Also seen 7 Oct: `start()` waits a fixed 8 x 400 ms for an option group (eigenvector-engine UNPLAYABLE once
+   under local load, then 3/3 alone). Proofs: same seed, identical event log; a forced all-right draw and a tap inside the fresh window both handled
    every time; no Math.random and no fixed delay on the path to a wrong answer; a planted lock removal still caught
    every run; then 20 consecutive passes on prime-or-composite and fraction-equivalence (smoke test only). Canon
    §7.6, this file, and one line in cloud.md (two-option games declare the differing-from-key answer). DO NOT
