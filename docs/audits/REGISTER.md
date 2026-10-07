@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 43 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 78 open (7 CRITICAL, 71 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 77 open (7 CRITICAL, 70 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -22,10 +22,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 7 | 17 | 0 | 24 |
-| HIGH | 71 | 135 | 0 | 206 |
-| MEDIUM | 169 | 94 | 0 | 263 |
+| HIGH | 70 | 136 | 0 | 206 |
+| MEDIUM | 168 | 95 | 0 | 263 |
 | LOW | 43 | 15 | 0 | 58 |
-| **All** | 290 | 261 | 0 | 551 |
+| **All** | 288 | 263 | 0 | 551 |
 
 ### By class
 
@@ -34,7 +34,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 41 | 102 |
 | 3 | 13 | 85 |
 | 6 | 31 | 56 |
-| 1 | 32 | 35 |
+| 1 | 30 | 35 |
 | NEW:wrong-explanation-text | 18 | 34 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
@@ -170,9 +170,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | none | 0 | 1 | 7 | 1 | 8 | 1 | 0 |
 | `partial-fractions-duel` | unlisted | verify-partial-fractions-duel.py | 0 | 7 | 2 | 1 | 2 | 8 | 0 |
-| `percentage-flip` | yes | none | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| `percentage-flip` | yes | none | 0 | 0 | 1 | 0 | 0 | 1 | 0 |
 | `prime-factorisation` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
-| `prime-or-composite` | yes | none | 0 | 1 | 1 | 0 | 2 | 0 | 0 |
+| `prime-or-composite` | yes | none | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `prisoners-dilemma` | yes | none | 0 | 2 | 4 | 1 | 7 | 0 | 0 |
 | `probability-paradox` | yes | none | 0 | 4 | 4 | 0 | 8 | 0 | 0 |
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
@@ -209,10 +209,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `higher-power` (KS3, GCSE, A-Level)
 
 - **HIGH** higher-power-t2-001, `games/higher-power/index.html:724`: Pairs mode matches by pairId, not value: matching 2^8 to the '256' card that belongs to 4^4 is rejected, and the two '256' cards look identical (also phi/phi, 0/0, pi^2/6)
-
-### `prime-or-composite` (KS3, GCSE)
-
-- **HIGH** prime-or-composite-t1-001, `games/prime-or-composite/index.html:529-533`: The keyboard handler checks only gameActive and qIdx++ runs before the feedback pause: P or C during feedback answers the next question unseen; a key after the last question throws
 
 ### `prisoners-dilemma` (KS3, GCSE, A-Level, Core)
 
