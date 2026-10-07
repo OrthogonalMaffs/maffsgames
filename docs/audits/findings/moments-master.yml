@@ -97,7 +97,8 @@ findings:
   where: games/moments-master/index.html:199, 201
   summary: 'No answered guard: Enter re-marks, re-scores, skips questions and submits repeatedly'
   evidence: 'wrong then Enter x2: 3 question_answered, score 0->189; Enter x4 on Q20: submitScore x4'
-  status: open
+  status: fixed
+  pr: 140
 - id: moments-master-t5-010
   severity: MEDIUM
   jc: true

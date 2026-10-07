@@ -113,6 +113,27 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "ready": "document.getElementById('game').classList.contains('active')",
+  "answer": [
+    "return (async () => {",
+    " const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    " const btns = () => [...document.querySelectorAll('#options .opt-btn')];",
+    " await real(350);",
+    " for (let k = 0; k < 12 && phase === 'op'; k++) {",
+    "  const key = optionsAt(si).find(o => o.key), b = btns().find(x => x.dataset.val === key.show);",
+    "  if (!b) return; b.click();",
+    "  for (let w = 0; w < 100 && b.isConnected; w++) await real(30);",
+    "  await real(350);",
+    " }",
+    " const b = btns().find(x => x.dataset.val !== currentQ.ans.correct); if (b) b.click();",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -470,7 +491,7 @@ const TOTAL = 12, BASE = 100, H_COST = 15, W_COST = 25, A_COST = W_COST / 2;
 
 let level = 'gcse', pool = [], qIdx = 0, score = 0, cleanN = 0, streak = 0,
     hintsTotal = 0, currentQ = null, moves = null, si = 0, phase = 'op',
-    qPenalty = 0, qMissed = false, hintShownThisPhase = false, locked = false;
+    qPenalty = 0, qMissed = false, hintShownThisPhase = false;
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function $(id){return document.getElementById(id);}
@@ -479,6 +500,7 @@ function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.re
 function setLevel(l){level=l;}
 
 function startGame(){
+  MaffsLock.newSession();
   pool = shuffle([...QUESTIONS[level]]).slice(0, TOTAL);
   qIdx = 0; score = 0; cleanN = 0; streak = 0; hintsTotal = 0;
   updateHUD();
@@ -553,7 +575,6 @@ function clearFeedback(){
 
 function renderPhase(){
   hintShownThisPhase = false;
-  locked = false;
   clearFeedback();
   $('hintPanel').className = 'hint-panel';
   $('hintPanel').innerHTML = '';
@@ -587,10 +608,12 @@ function renderPhase(){
       div.appendChild(b);
     });
   }
+  MaffsLock.fresh(div);   // a new step: a double-click on Next cannot answer it (canon 7.6.0)
 }
 
 function useHint(){
-  if(phase !== 'op' || hintShownThisPhase) return;
+  // Not once the move is made: the hint would be charged, and shown, for the next line.
+  if(phase !== 'op' || hintShownThisPhase || MaffsLock.isLocked($('options'))) return;
   hintShownThisPhase = true;
   hintsTotal++; qPenalty += H_COST;
   $('hintsUsed').textContent = hintsTotal;
@@ -603,10 +626,8 @@ function useHint(){
 // Marked by the chosen option's class: 'b' (an optimal move: full marks), 's' (valid, but it leaves fractions:
 // half the points at stake, streak kept) or 'e' (an invalid move, named in the feedback).
 function handleMove(btn){
-  // One answer per phase. The disabled class stops a second mouse click, but a
-  // scripted or very fast double click would otherwise score the phase twice.
-  if(locked) return;
-  locked = true;
+  // One answer per phase (MaffsLock): a double click or a second Enter cannot score the phase twice.
+  if(!MaffsLock.lock($('options'))) return;
   const opts = optionsAt(si), eq = lineAt(si).eq;
   const o = opts.find(x=>x.show === btn.dataset.val);
   document.querySelectorAll('.opt-btn').forEach(b=>{
@@ -633,7 +654,7 @@ function handleMove(btn){
   $('workCard').appendChild(l);
   if(follow.to >= 0) si = follow.to; else phase = 'ans';
 
-  if(o.cls === 'b'){ setTimeout(renderPhase, 700); return; }
+  if(o.cls === 'b'){ MaffsLock.timer(renderPhase, 700); return; }
   const fb = $('moveFb');
   fb.className = 'move-fb show' + (o.cls === 's' ? ' slow' : '');
   fb.innerHTML = '<div>' + MaffsText.html(feedback(o, opts, eq)) + '</div>';
@@ -641,8 +662,7 @@ function handleMove(btn){
 }
 
 function handleAnswer(btn){
-  if(locked) return;
-  locked = true;
+  if(!MaffsLock.lock($('options'))) return;
   const correctVal = currentQ.ans.correct;
   const ok = btn.dataset.val === correctVal;
   document.querySelectorAll('.opt-btn').forEach(b=>{
@@ -656,7 +676,7 @@ function handleAnswer(btn){
   l.className = 'work-line';
   l.innerHTML = rk(correctVal);
   $('workCard').appendChild(l);
-  setTimeout(finishQuestion, ok ? 700 : 1100);
+  MaffsLock.timer(finishQuestion, ok ? 700 : 1100);
 }
 
 function finishQuestion(){
@@ -671,7 +691,7 @@ function finishQuestion(){
   mfg('question_answered',{game_slug:SLUG,level:level,correct:!qMissed,question_index:qIdx+1});
   $('askLine').textContent = '';
   $('options').innerHTML = '';
-  if(qMissed) showSolution(); else setTimeout(nextQuestion, 800);
+  if(qMissed) showSolution(); else MaffsLock.timer(nextQuestion, 800);
 }
 
 function showSolution(){
@@ -683,10 +703,13 @@ function showSolution(){
     html += '<div class="step">' + rk(currentQ.eq) + '</div>';
     r.forEach(([op, line])=>{ html += '<div class="step">' + rk(op) + '</div><div class="step">' + rk(line) + '</div>'; });
   });
-  html += '<button class="next-btn" onclick="nextQuestion()">Got it — next question</button>';
+  html += '<div id="nextMount"></div>';
   const sol = $('solution');
   sol.innerHTML = html;
   sol.className = 'solution show';
+  // The advance goes through MaffsNext (canon 7.6), which moves on once however it is triggered: a plain
+  // onclick here was only hidden after use, so a second Enter skipped the next question unseen.
+  MaffsNext.wrong({mount: $('nextMount'), onAdvance: nextQuestion, label: 'Got it — next question'});
 }
 
 function nextQuestion(){
@@ -703,7 +726,8 @@ function updateHUD(){
   $('hintsUsed').textContent = hintsTotal;
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame = MaffsLock.finishOnce(function(){
   const pct = pool.length ? Math.round(cleanN / pool.length * 100) : 0;
   let t = 'Keep Practising!';
   if(pct >= 90) t = 'Outstanding!'; else if(pct >= 70) t = 'Well Done!'; else if(pct >= 50) t = 'Good Effort!';
@@ -717,7 +741,8 @@ function endGame(){
   var _pbKey='leqs_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');
   if(score>_pbOld){mfg('personal_best_set',{game_slug:SLUG,level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}
   show('results');
-}
+  MaffsLock.screen($('results'));
+});
 
 function showMenu(){ show('menu'); }
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();

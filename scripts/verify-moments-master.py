@@ -317,6 +317,7 @@ def play(fails, html):
                 ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                     status=200, content_type='text/html; charset=utf-8', body=html))
                 ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+                ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
                 page = ctx.new_page()
                 errors = []
                 page.on('pageerror', lambda e: errors.append(str(e)))

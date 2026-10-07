@@ -109,6 +109,8 @@ percentage-flip fraction-equivalence equatle estimation-golf
 suvat factor-theorem
 dimension-checker curling-friction trig-worms component-crusher
 differentiation-duel integration-duel spot-the-error expectation-station
+eigenvector-engine proof-builder linear-equation-solver moments-master force-resolver
+truth-will-set-you-free trig-identity-duel binomial-blaster
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -674,6 +676,9 @@ PLANT = ('<script>MaffsLock.lock = function () { return true; }; MaffsLock.isLoc
          ' MaffsLock.fresh = function () {}; MaffsLock.screen = function () { MaffsLock.clearTimers(); };</script>\n')
 
 
+PLANT_GAME = 'decimal-detective'   # the self-test's planted game (#133's): it needs MaffsLock to pass
+
+
 def selftest(games):
     """The reported state is bounded: a planted failing game off the cloud lane's list is caught, on it reported."""
     import tempfile
@@ -697,9 +702,11 @@ def selftest(games):
             errs.append('a maffs-lock-hint with %s passed' % why)
     if read_hint('<!-- maffs-lock-hint x\n{"answer": ["a;", " b"], "keys": ["p"]}\n-->') != ({'answer': 'a; b', 'keys': ['p']}, []):
         errs.append('read_hint() misreads a declaration')
-    # The plant: the first migrated game, its MaffsLock.lock never refusing, played as a game the cloud lane
-    # adopted and has taken off its list.
-    slug, level = sorted((g for g in games if g[0] in MIGRATED))[0]
+    # The plant: one named migrated game, its MaffsLock.lock never refusing, played as a game the cloud lane
+    # adopted and has taken off its list. Named, not "the first in MIGRATED": a game that also guards itself
+    # (binomial-blaster, first once the cloud lane's games joined) plays clean without the lock, and a plant
+    # that cannot fail proves nothing.
+    slug, level = next(g for g in games if g[0] == PLANT_GAME)
     html = open(os.path.join(ROOT, 'games', slug, 'index.html'), encoding='utf-8').read()
     m = INCLUDE.search(html)
     end = html.index('\n', m.end()) + 1

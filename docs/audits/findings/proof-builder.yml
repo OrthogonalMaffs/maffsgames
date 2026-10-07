@@ -152,7 +152,8 @@ findings:
     2 questions'
   evidence: 'score 0->285, qIdx 0->3, 3 question_answered idx 1; wrong then Enter on correct: +90, second event correct:true
     Left open by the cloud-lane fix PR: class 1, owned by the shared answer lock (contract F1).'
-  status: open
+  status: fixed
+  pr: 140
 - id: proof-builder-t5-015
   severity: HIGH
   jc: false
@@ -172,7 +173,8 @@ findings:
   summary: 'Induction: Enter re-fires a stage (skips one unseen); after a wrong stage, Enter on correct scores 3xBASE'
   evidence: 'indStageIdx 0->2 from one answer; wrong then Enter: +254, events correct:false then correct:true Left open
     by the cloud-lane fix PR: class 1, owned by the shared answer lock (contract F1).'
-  status: open
+  status: fixed
+  pr: 140
 - id: proof-builder-t5-017
   severity: MEDIUM
   jc: false
