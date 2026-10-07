@@ -185,92 +185,108 @@ let score=0, qNum=0, answered=false, questions=[], shotAnimating=false;
 let cannonAngle=45, currentQ=null;
 
 // --- Question generation ---
-function round1(n){return Math.round(n*10)/10;}
+// Half up, exactly: 4.5 × sin 30° is 2.25, but in floating point it is 2.2499999..., which Math.round would take
+// down. The nudge is far below any value this game shows and far above floating-point error.
+function round1(n){return Math.round(n*10+1e-9)/10;}
 function round2(n){return Math.round(n*100)/100;}
 function toRad(d){return d*Math.PI/180;}
 function toDeg(r){return r*180/Math.PI;}
 function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
 
-function generateQuestion(difficulty){
-  const type=difficulty<4?'angle':difficulty<7?'opposite':'hypotenuse';
-  // 15 to 85 in steps of 5. The other two angles of a right-angled triangle are acute,
-  // so 90 and 95 are excluded -- *17 used to include both, which produced a negative
-  // adjacent (hyp*cos(95) < 0) and an impossible 95 degree answer.
-  const angle=5*Math.floor(Math.random()*15)+15;
-  const hyp=Math.floor(Math.random()*15)+8; // 8-22
+// Angles 15 to 85 in steps of 5, except 45. The other two angles of a right-angled triangle are acute, so 90
+// and 95 are out (they gave a negative adjacent and an impossible answer). 45 is out because sin 45 = cos 45 and
+// tan 45 = 1: every "used the wrong ratio" distractor would equal the key there.
+const ANGLES = [15,20,25,30,35,40,50,55,60,65,70,75,80,85];
+
+// One question from its parameters (the verifier calls this for every outcome). type: 'angle', 'side' or
+// 'hypotenuse'; ratio: 'SOH', 'CAH' or 'TOA' ('side' uses SOH for the opposite, CAH for the adjacent;
+// 'hypotenuse' always SOH). The sides a student is given are shown to 1 d.p., and every key is computed from
+// exactly those shown values. Only the given sides are labelled on the diagram, plus "?" on the side asked
+// for: a third labelled side would give a second, slightly different, valid answer. Every distractor is a
+// named error, rounded the same way as the key.
+function questionFrom(type, angle, hyp, ratio){
   const opp=round1(hyp*Math.sin(toRad(angle)));
   const adj=round1(hyp*Math.cos(toRad(angle)));
-
-  let qType,qText,correct,wrong,exp,findSide,ratio;
-
-  // Pick ratio randomly from SOH/CAH/TOA
-  const ratioType=['SOH','CAH','TOA'][Math.floor(Math.random()*3)];
-
+  const deg=v=>Math.round(v+1e-9)+'°';        // to the nearest degree, half up
+  const dp1=v=>round1(v).toFixed(1);          // to 1 decimal place
+  let qType,qText,correct,named,exp,labels,findSide;
   if(type==='angle'){
-    // Find the angle
     qType='FIND THE ANGLE θ';
-    if(ratioType==='SOH'){
-      correct=angle+'°';
-      wrong=shuffle([round1(toDeg(Math.acos(opp/hyp)))+'°',round1(toDeg(Math.atan(opp/adj)))+'°',(angle+10)+'°']).slice(0,3);
-      qText=`The opposite = ${opp}, hypotenuse = ${hyp}.\nFind angle θ.`;
-      exp=`sin θ = O/H = ${opp}/${hyp} → θ = sin⁻¹(${opp}/${hyp}) = ${angle}°`;
-      ratio='SOH';
-    } else if(ratioType==='CAH'){
-      correct=angle+'°';
-      wrong=shuffle([round1(toDeg(Math.asin(adj/hyp)))+'°',round1(toDeg(Math.atan(adj/opp)))+'°',(angle+15)+'°']).slice(0,3);
-      qText=`The adjacent = ${adj}, hypotenuse = ${hyp}.\nFind angle θ.`;
-      exp=`cos θ = A/H = ${adj}/${hyp} → θ = cos⁻¹(${adj}/${hyp}) = ${angle}°`;
-      ratio='CAH';
-    } else {
-      correct=angle+'°';
-      wrong=shuffle([round1(toDeg(Math.asin(opp/hyp)))+'°',(angle+10)+'°',(angle-10>0?(angle-10)+'°':'85°')]).slice(0,3);
-      qText=`The opposite = ${opp}, adjacent = ${adj}.\nFind angle θ.`;
-      exp=`tan θ = O/A = ${opp}/${adj} → θ = tan⁻¹(${opp}/${adj}) = ${angle}°`;
-      ratio='TOA';
-    }
+    let g1,g2,n1,n2,fn,inv,theta,lab;
+    if(ratio==='SOH'){ g1=opp; g2=hyp; n1='opposite'; n2='hypotenuse'; fn='sin'; theta=toDeg(Math.asin(opp/hyp)); labels={O:'O='+opp,H:'H='+hyp}; }
+    else if(ratio==='CAH'){ g1=adj; g2=hyp; n1='adjacent'; n2='hypotenuse'; fn='cos'; theta=toDeg(Math.acos(adj/hyp)); labels={A:'A='+adj,H:'H='+hyp}; }
+    else { g1=opp; g2=adj; n1='opposite'; n2='adjacent'; fn='tan'; theta=toDeg(Math.atan(opp/adj)); labels={O:'O='+opp,A:'A='+adj}; }
+    correct=deg(theta);
+    const r=g1/g2, small=Math.min(g1,g2)/Math.max(g1,g2);
+    named = ratio==='TOA'
+      ? [['ratio upside down: tan⁻¹(A/O)', toDeg(Math.atan(g2/g1))],
+         ['sin⁻¹ instead of tan⁻¹', toDeg(Math.asin(small))],
+         ['cos⁻¹ instead of tan⁻¹', toDeg(Math.acos(small))]]
+      : [[(fn==='sin'?'cos':'sin')+'⁻¹ instead of '+fn+'⁻¹', toDeg(fn==='sin'?Math.acos(r):Math.asin(r))],
+         ['tan⁻¹ instead of '+fn+'⁻¹', toDeg(Math.atan(r))],
+         ['tan⁻¹ of the ratio upside down', toDeg(Math.atan(1/r))]];
+    // Two more named errors, used only when one above coincides with the key or another option.
+    const rr=Math.round(r*10)/10, rs=Math.round(small*10)/10;
+    named.push(ratio==='TOA'
+      ? ['ratio rounded to 1 d.p. before tan⁻¹', toDeg(Math.atan(rr))]
+      : ['ratio rounded to 1 d.p. before '+fn+'⁻¹', toDeg(fn==='sin'?Math.asin(rr):Math.acos(rr))]);
+    named.push(['the other acute angle: 90° − θ', 90-theta]);
+    named=named.map(([why,v])=>[why,deg(v)]).filter(([why,v])=>v!=='0°'&&v!=='90°');
+    // Last of all: the calculator left in radians (the inverse returns radians, read as degrees).
+    named.push(['calculator in radians', round2(theta*Math.PI/180).toFixed(2)+'°']);
+    qText=`The ${n1} = ${g1}, ${n2} = ${g2}.\nFind angle θ to the nearest degree.`;
+    exp=`${fn} θ = ${g1}/${g2} → θ = ${fn}⁻¹(${g1}/${g2}) = ${round1(theta).toFixed(1)}° = ${correct} to the nearest degree`;
     findSide=null;
-  } else if(type==='opposite'){
-    qType='FIND THE OPPOSITE SIDE';
-    if(ratioType==='SOH'){
-      correct=opp+'';
-      wrong=shuffle([round1(hyp*Math.sin(toRad(angle+5)))+'',adj+'',round1(opp*1.2)+'']);
-      qText=`Angle θ = ${angle}°, hypotenuse = ${hyp}.\nFind the opposite side.`;
-      exp=`sin ${angle}° = O/${hyp} → O = ${hyp}×sin(${angle}°) = ${opp}`;
-      ratio='SOH';
+  } else if(type==='side'){
+    if(ratio==='SOH'){
+      qType='FIND THE OPPOSITE SIDE';
+      const v=hyp*Math.sin(toRad(angle)); correct=dp1(v);
+      named=[['cos instead of sin', hyp*Math.cos(toRad(angle))],['tan instead of sin', hyp*Math.tan(toRad(angle))],
+             ['divided by sin instead of multiplying', hyp/Math.sin(toRad(angle))]];
+      qText=`Angle θ = ${angle}°, hypotenuse = ${hyp}.\nFind the opposite side to 1 decimal place.`;
+      exp=`sin ${angle}° = O/${hyp} → O = ${hyp}×sin(${angle}°) = ${correct}`;
+      labels={H:'H='+hyp,O:'O=?'}; findSide='opposite';
     } else {
-      correct=adj+'';
-      wrong=shuffle([opp+'',round1(adj*1.15)+'',round1(hyp*0.9)+'']);
-      qText=`Angle θ = ${angle}°, hypotenuse = ${hyp}.\nFind the adjacent side.`;
-      exp=`cos ${angle}° = A/${hyp} → A = ${hyp}×cos(${angle}°) = ${adj}`;
-      ratio='CAH';
+      qType='FIND THE ADJACENT SIDE';
+      const v=hyp*Math.cos(toRad(angle)); correct=dp1(v);
+      named=[['sin instead of cos', hyp*Math.sin(toRad(angle))],['tan instead of cos', hyp*Math.tan(toRad(angle))],
+             ['divided by cos instead of multiplying', hyp/Math.cos(toRad(angle))]];
+      qText=`Angle θ = ${angle}°, hypotenuse = ${hyp}.\nFind the adjacent side to 1 decimal place.`;
+      exp=`cos ${angle}° = A/${hyp} → A = ${hyp}×cos(${angle}°) = ${correct}`;
+      labels={H:'H='+hyp,A:'A=?'}; findSide='adjacent';
     }
-    findSide='opposite';
+    named=named.map(([why,v])=>[why,dp1(v)]);
   } else {
     qType='FIND THE HYPOTENUSE';
-    correct=hyp+'';
-    wrong=shuffle([round1(hyp*0.85)+'',round1(hyp*1.15)+'',round1(opp/Math.sin(toRad(angle+10)))+'']);
-    qText=`Angle θ = ${angle}°, opposite = ${opp}.\nFind the hypotenuse.`;
-    exp=`sin ${angle}° = ${opp}/H → H = ${opp}/sin(${angle}°) = ${hyp}`;
-    ratio='SOH';
-    findSide='hypotenuse';
+    const v=opp/Math.sin(toRad(angle)); correct=dp1(v);
+    named=[['multiplied by sin instead of dividing', opp*Math.sin(toRad(angle))],
+           ['cos instead of sin', opp/Math.cos(toRad(angle))],['tan instead of sin', opp/Math.tan(toRad(angle))]]
+      .map(([why,v])=>[why,dp1(v)]);
+    qText=`Angle θ = ${angle}°, opposite = ${opp}.\nFind the hypotenuse to 1 decimal place.`;
+    exp=`sin ${angle}° = ${opp}/H → H = ${opp}/sin(${angle}°) = ${correct}`;
+    labels={O:'O='+opp,H:'H=?'}; findSide='hypotenuse'; ratio='SOH';
   }
+  // Three named errors, kept only if they differ from the key and from each other as shown (never by retry).
+  const wrong=[], why=[], seen=new Set([correct]);
+  for(const [w,v] of named){ if(wrong.length<3&&!seen.has(v)){ seen.add(v); wrong.push(v); why.push(w); } }
+  return {qType,qText,correct,wrong,why,exp,angle,hyp,opp,adj,ratio,findSide,labels};
+}
 
-  // Distractors are built by construction, never by retry. The candidate lists above can
-  // collide -- asin and atan of the same near-zero ratio both gave -5.1, shipping a
-  // question with the same option twice. Top up from a deterministic ladder if needed.
-  const isAngleQ = (type==='angle');
-  const num = parseFloat(correct);
-  const ladder = isAngleQ
-    ? [num+5,num-5,num+10,num-10,num+20,num-20].filter(v=>v>=15&&v<=85).map(v=>v+'°')
-    : [round1(num*1.1),round1(num*0.9),round1(num*1.25),round1(num*0.75)].filter(v=>v>0).map(String);
-  const wrongSet=[]; const seen=new Set([String(correct)]);
-  for(const c of wrong.concat(ladder)){
-    if(wrongSet.length>=3) break;
-    const k=String(c);
-    if(seen.has(k)) continue;
-    seen.add(k); wrongSet.push(k);
-  }
-  return {qType,qText,correct,wrong:wrongSet,exp,angle,hyp,opp,adj,ratio,findSide};
+// Every outcome the generator can serve, enumerated once: the (angle, hypotenuse, ratio) sets of each type whose
+// three named errors are distinct from the key and each other as shown. At a few angles they collapse (tan⁻¹ of
+// a small ratio is close to sin⁻¹ of it), and those sets are left out here rather than padded with an
+// unnamed option. A question is drawn from this pool, never by retry.
+const POOL={angle:[],side:[],hypotenuse:[]};
+for(const type of ['angle','side','hypotenuse'])
+  for(const angle of ANGLES)
+    for(let hyp=8;hyp<=22;hyp++)
+      for(const ratio of (type==='angle'?['SOH','CAH','TOA']:type==='side'?['SOH','CAH']:['SOH']))
+        if(questionFrom(type,angle,hyp,ratio).wrong.length===3) POOL[type].push([angle,hyp,ratio]);
+
+function generateQuestion(difficulty){
+  const type=difficulty<4?'angle':difficulty<7?'side':'hypotenuse';
+  const [angle,hyp,ratio]=POOL[type][Math.floor(Math.random()*POOL[type].length)];
+  return questionFrom(type, angle, hyp, ratio);
 }
 
 // --- Canvas rendering ---
@@ -349,8 +365,10 @@ function drawScene(q, shotProgress=0, hit=false, miss=false){
 
   // Right angle and triangle diagram
   const triX=W*0.45, triY=H*0.72;
-  const triAdj=Math.min(q.adj*8,160);
-  const triOpp=Math.min(q.opp*8,120);
+  // One scale for both legs, so the drawn angle is the triangle's own angle (two separate caps distorted it).
+  const triScale=Math.min(8,160/q.adj,120/q.opp);
+  const triAdj=q.adj*triScale;
+  const triOpp=q.opp*triScale;
   const triHyp=Math.sqrt(triAdj*triAdj+triOpp*triOpp);
 
   // Triangle
@@ -380,16 +398,16 @@ function drawScene(q, shotProgress=0, hit=false, miss=false){
   ctx.translate(midHX,midHY);
   ctx.rotate(hAngle);
   ctx.font='bold 13px Outfit';
-  labelText(q.findSide==='hypotenuse'?'H=?':`H=${q.hyp}`,5,-6,'#ff6b8a');
+  if(q.labels.H) labelText(q.labels.H,5,-6,'#ff6b8a');
   ctx.restore();
 
   // Opposite label
   ctx.font='bold 13px Outfit';
-  labelText(q.findSide==='opposite'?'O=?':`O=${q.opp}`,triX+triAdj+5,triY-triOpp/2,'#60a5fa');
+  if(q.labels.O) labelText(q.labels.O,triX+triAdj+5,triY-triOpp/2,'#60a5fa');
 
   // Adjacent label
   ctx.font='bold 13px Outfit';
-  labelText(`A=${q.adj}`,triX+triAdj/2-10,triY+16,'#fbbf24');
+  if(q.labels.A) labelText(q.labels.A,triX+triAdj/2-10,triY+16,'#fbbf24');
 
   // Angle arc and theta
   ctx.strokeStyle='#ec4899';
@@ -515,7 +533,9 @@ function guess(val,btn,div){
   if(answered)return;answered=true;
   const correct=val===currentQ.correct;
   const fb=document.getElementById('feedback');
-  document.getElementById('expText').textContent=currentQ.exp;
+  // A wrong pick also names the error that gives it (each distractor is one).
+  const wi=currentQ.wrong.indexOf(val);
+  document.getElementById('expText').textContent=currentQ.exp+(val!==currentQ.correct&&wi>=0?` (${val} comes from ${currentQ.why[wi]}.)`:'');
   [...div.children].forEach(b=>b.onclick=null);
 
   if(correct){
