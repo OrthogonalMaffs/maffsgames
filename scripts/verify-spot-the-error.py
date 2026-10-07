@@ -690,6 +690,7 @@ def check_bank(fails, bank, verbose=False):
 # ---------------------------------------------------------------------------------------------------------
 SWEEP_JS = r"""() => {
   window.setTimeout = (f) => { f(); return 0; };   // the game's pauses, run at once
+  MaffsLock.timer = (f) => { f(); return 0; };   // MaffsLock's timers too (they go through setTimeout)
   const out = [];
   const cards = () => [...document.querySelectorAll('#stageContent .step-card')];
   const taps = () => [...document.querySelectorAll('#stageContent .phrase-tap')];
@@ -744,6 +745,7 @@ def play(fails, html):
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+            ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
             page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
             ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(

@@ -141,6 +141,26 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "start": "document.querySelector('.level-btn').click()",
+  "ready": "document.getElementById('gameScreen').classList.contains('active')",
+  "answer": [
+    "return (async () => {",
+    " const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    " await real(350);",
+    " if (!document.getElementById('gameScreen').classList.contains('active')) return;",
+    " const cards = [...document.querySelectorAll('#stageContent .step-card')];",
+    " if (cards.length) { const w = cards.find((c, k) => currentQ.steps[k] && currentQ.steps[k].id !== currentQ.errorStepId);",
+    " if (!w) return; w.click(); await real(350); w.click(); return; }",
+    " const p = [...document.querySelectorAll('#stageContent .phrase-tap')].find(e => e.dataset.error !== 'true');",
+    " if (p) { p.click(); await real(350); p.click(); }",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -205,7 +225,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </div>
 
 <script>
-function _addDismiss(el,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Next';b.onclick=cb;el.appendChild(b);},2000);}
+function _addDismiss(el,cb){MaffsLock.timer(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Next';b.onclick=cb;el.appendChild(b);},2000);}
 /* ===== QUESTION BANK v2 ===== */
 const Q=[
 // =============================================
@@ -374,6 +394,7 @@ function showScreen(name){
 }
 
 function startGame(){
+  MaffsLock.newSession();
   let pool=Q.filter(q=>q.level===currentLevel);
   pool=shuffle(pool).slice(0,sessionLength);
   questionQueue=pool;totalQ=pool.length;qIndex=0;
@@ -408,21 +429,26 @@ function showStage1(){
     list.appendChild(card);
   });
   sc.appendChild(list);
+  MaffsLock.fresh(sc);   // a new question: a double-click on Start or Next cannot pick a step (canon 7.6.0)
 }
 
 function handleStage1(card,step){
-  if(card.classList.contains('disabled'))return;
+  if(card.classList.contains('disabled')||MaffsLock.isLocked($('stageContent')))return;
   s1Attempts++;
   const isCorrect=step.id===currentQ.errorStepId;
   if(isCorrect){
+    if(!MaffsLock.lock($('stageContent')))return;   // stage 1 is marked: no further pick counts
     card.classList.add('correct-pick');
     document.querySelectorAll('.step-card').forEach(c=>c.classList.add('disabled'));
     if(typeof mfg==='function')mfg('question_answered',{game_slug:'spot-the-error',level:currentLevel,question_index:qIndex+1,correct:true,attempts:s1Attempts,mode:'stage1'});
-    setTimeout(()=>showStage2(),600);
+    MaffsLock.timer(()=>showStage2(),600);
   }else{
     card.classList.add('incorrect-pick');
-    setTimeout(()=>card.classList.remove('incorrect-pick'),300);
+    MaffsLock.timer(()=>card.classList.remove('incorrect-pick'),300);
+    // the second pick is a new decision: the second click of a double-click must not spend it (canon 7.6.0)
+    if(s1Attempts<2)MaffsLock.fresh($('stageContent'));
     if(s1Attempts>=2){
+      if(!MaffsLock.lock($('stageContent')))return;
       // Reveal correct step
       document.querySelectorAll('.step-card').forEach(c=>c.classList.add('disabled'));
       const steps=document.querySelectorAll('.step-card');
@@ -454,13 +480,15 @@ function showStage2(){
     el.addEventListener('click',()=>handleStage2(el));
   });
   sc.appendChild(zone);
+  MaffsLock.fresh(sc);   // stage 2: the click that ended stage 1 cannot tap a phrase
 }
 
 function handleStage2(el){
-  if(el.classList.contains('disabled'))return;
+  if(el.classList.contains('disabled')||MaffsLock.isLocked($('stageContent')))return;
   s2Attempts++;
   const isError=el.dataset.error==='true';
   if(isError){
+    if(!MaffsLock.lock($('stageContent')))return;   // stage 2 is marked
     el.classList.add('correct-pick');
     document.querySelectorAll('.phrase-tap').forEach(p=>p.classList.add('disabled'));
     if(s1Attempts<=1&&s2Attempts<=1){questionPoints=2;fullMarksCount++;}
@@ -470,8 +498,10 @@ function handleStage2(el){
     showExplanation(()=>nextQuestion());
   }else{
     el.classList.add('incorrect-pick');
-    setTimeout(()=>el.classList.remove('incorrect-pick'),300);
+    MaffsLock.timer(()=>el.classList.remove('incorrect-pick'),300);
+    if(s2Attempts<2)MaffsLock.fresh($('stageContent'));
     if(s2Attempts>=2){
+      if(!MaffsLock.lock($('stageContent')))return;
       document.querySelectorAll('.phrase-tap').forEach(p=>{
         p.classList.add('disabled');
         if(p.dataset.error==='true')p.classList.add('reveal');
@@ -497,14 +527,15 @@ function nextQuestion(){
   $('questionCard').classList.add('fade-out');
   $('stageContent').classList.add('fade-out');
   $('explanationBox').innerHTML='';
-  setTimeout(()=>{
+  MaffsLock.timer(()=>{
     $('questionCard').classList.remove('fade-out');
     $('stageContent').classList.remove('fade-out');
     showQuestion();
   },200);
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){
   const pct=maxPoints>0?Math.round(totalPoints/maxPoints*100):0;
   const pbKey='ste_pb_'+currentLevel;
   const oldPB=parseInt(localStorage.getItem(pbKey)||'0');
@@ -524,7 +555,8 @@ function endGame(){
   if(isNewPB){pb.textContent='New personal best! Previous: '+oldPB+' pts';pb.style.display='';}
   else pb.style.display='none';
   showScreen('results');
-}
+  MaffsLock.screen($('resultsScreen'));
+});
 
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
