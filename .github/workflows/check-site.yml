@@ -289,13 +289,18 @@ jobs:
           # recomputed with SymPy (Stage 3: no distractor equal to the key, SR-16), then at 390px item 1 typed 8.9/6.5
           # must be marked wrong (with the reason) and 8/6 right, and every typed item's key right and key+0.9 wrong
           # (MaffsAnswer.exact, not parseInt). The self-test plants the parseInt marking back.
-          - name: Content verifiers E (Estimation Engine, Angle Ace, Simultaneous Solver, Like Terms Collector)
+          # Fermi Lab joins it (7 Oct 2026, ~10s with its self-test; quoted-statistics audit, PR #68): every item's
+          # model chain recomputed with exact fractions and played in Chromium (every reference typed in must rate
+          # Brilliant; 19 of 65 once rated Poor or Good), and every stored real-world figure (FIG) has a source,
+          # scores green at its step for each source figure, and is stated in words built from FIG, never typed.
+          - name: Content verifiers E (Estimation Engine, Angle Ace, Simultaneous Solver, Like Terms Collector, Fermi Lab)
             timeout: 12
             checks: |
               Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)|python scripts/verify-estimation-engine.py
               Angle Ace (every diagram measured against its words and key; every option and reason marked in Chromium)|python scripts/verify-angle-ace.py
               Simultaneous Solver (staged elimination: every solution and bank rule recomputed; SR-13 step marking and a Stage 4 problem on the phone keypad in Chromium)|python scripts/verify-simultaneous-solver.py
               Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px)|python scripts/verify-like-terms-collector.py
+              Fermi Lab (every chain multiplies to its key, Brilliant in Chromium; every stored figure sourced and green at its step)|python scripts/verify-fermi-lab.py && python scripts/verify-fermi-lab.py --selftest
 
           # Every other content verifier. Each reads the live page's data and recomputes
           # its answers independently; each includes a fault-injection self-test.
