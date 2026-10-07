@@ -293,7 +293,10 @@ jobs:
           # model chain recomputed with exact fractions and played in Chromium (every reference typed in must rate
           # Brilliant; 19 of 65 once rated Poor or Good), and every stored real-world figure (FIG) has a source,
           # scores green at its step for each source figure, and is stated in words built from FIG, never typed.
-          - name: Content verifiers E (Estimation Engine, Angle Ace, Simultaneous Solver, Like Terms Collector, Fermi Lab)
+          # Screening Room joins it (7 Oct 2026, ~10s with its self-test; tranche 4 audit + quoted-statistics audit): every
+          # count, answer, band, precision and key recomputed with exact fractions from the stated rates; every displayed
+          # figure traced to the data; all 70 items played in Chromium (bands, icon arrays, MaffsAnswer marking).
+          - name: Content verifiers E (Estimation Engine, Angle Ace, Simultaneous Solver, Like Terms Collector, Fermi Lab, Screening Room)
             timeout: 12
             checks: |
               Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)|python scripts/verify-estimation-engine.py
@@ -301,6 +304,7 @@ jobs:
               Simultaneous Solver (staged elimination: every solution and bank rule recomputed; SR-13 step marking and a Stage 4 problem on the phone keypad in Chromium)|python scripts/verify-simultaneous-solver.py
               Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px)|python scripts/verify-like-terms-collector.py
               Fermi Lab (every chain multiplies to its key, Brilliant in Chromium; every stored figure sourced and green at its step)|python scripts/verify-fermi-lab.py && python scripts/verify-fermi-lab.py --selftest
+              Screening Room (every count, band and key from the stated rates; every figure from the data; all 70 items marked in Chromium)|python scripts/verify-screening-room.py && python scripts/verify-screening-room.py --selftest
 
           # Every other content verifier. Each reads the live page's data and recomputes
           # its answers independently; each includes a fault-injection self-test.
