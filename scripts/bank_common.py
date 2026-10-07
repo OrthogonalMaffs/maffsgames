@@ -2914,7 +2914,7 @@ class _SiteEval:
             args = n.arguments
             if m == "test" and c.object.type == "Literal" and getattr(c.object, "regex", None) \
                     and len(args) == 1:
-                rx = self.regex(c.object)
+                rx, _g = self.regex(c.object)
                 return [(bool(rx.search(_js_str(v))), None) for v, _p in self.ev(args[0], d, dpath)]
             if m in ("map", "flatMap") and len(args) == 1 and args[0].type in _FN_TYPES \
                     and _param_names(args[0]) and _param_names(args[0])[0]:
