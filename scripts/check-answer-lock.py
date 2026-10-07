@@ -76,13 +76,23 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 # Migrated games, added in the PR that migrates each. NOT_YET is the rest: reported, never failed, and it
 # may only shrink.
 MIGRATED = set('''
-formula-plug-in new-shapes
+formula-plug-in new-shapes four-quadrant-explorer
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
-# Per-game driving hints, where the generic driver needs one: {'level': key to load, 'answer': JS run to
-# submit an answer (gets `i`, the attempt), 'start': JS that reaches the first question}.
+# Per-game driving hints, where the generic driver needs one: 'level' (the level key to load), 'start' (JS
+# that reaches the first question), 'ready' (JS: true when a question is on screen), 'answer' (JS that submits
+# an answer; gets `i`, the attempt), 'surface' (a selector for an answer surface that is not an option
+# group, such as a canvas: the repeat phase really clicks its centre and corners too).
 HINTS = {
+    'four-quadrant-explorer': {
+        'ready': "document.getElementById('gameScreen').style.display !== 'none'",
+        'answer': ("const row = document.getElementById('optionsRow');"
+                   "if (row.style.display !== 'none' && row.children.length) { row.children[i % row.children.length].click(); return; }"
+                   "const c = document.getElementById('gridCanvas'), r = c.getBoundingClientRect();"
+                   "for (let k = 0; k < 2; k++) c.dispatchEvent(new MouseEvent('click', {bubbles: true, clientX: r.left + 4, clientY: r.top + 4}));"),
+        'surface': '#gridCanvas',
+    },
 }
 
 INCLUDE = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/answer-lock\.js"', re.I)
@@ -206,7 +216,7 @@ INIT = r"""
   window.__lockGroupRects = function () {
     return (window.__mfgGroup || []).map(e => window.__lockRect(e));
   };
-  const CONTINUE_RE = /^(got it|next|continue|carry on|onward|ok|okay)\b/;
+  const CONTINUE_RE = /^(got it|next|continue|carry on|onward|ok|okay|see (your )?results|show results|finish)\b/;
   window.__lockContinue = function () {
     const mn = document.querySelector('.maffs-next');
     if (mn && visible(mn)) return { rect: window.__lockRect(mn), ready: !mn.disabled, kind: 'maffs-next' };
@@ -249,6 +259,23 @@ INIT = r"""
     }
     return null;
   };
+  // The start control (check-site's startEls rule) and the play-again control, for a real double-click.
+  window.__lockStartRect = function () {
+    const words = ['start', 'start game', 'play', 'begin', "let's go", 'go'];
+    const el = [...document.querySelectorAll('button, a, [role="button"]')].find(function (e) {
+      if (!visible(e)) return false;
+      const t = (e.textContent || '').trim().toLowerCase().replace(/\s+/g, ' ');
+      if (/^(play again|restart|try again|again|new game|start again|back to start)/.test(t)) return false;
+      const marker = (e.id + ' ' + String(e.className || '')).toLowerCase();
+      return /\bstart|start-?btn|btn-?start/.test(marker) || words.indexOf(t) !== -1 || /^start\b/.test(t) || /^play\b/.test(t);
+    });
+    return el ? window.__lockRect(el) : null;
+  };
+  window.__lockAgainRect = function () {
+    const el = [...document.querySelectorAll('button, a, [role="button"]')].find(e => visible(e) &&
+      /^(play again|restart|try again|new game|start again)/.test((e.textContent || '').trim().toLowerCase()));
+    return el ? window.__lockRect(el) : null;
+  };
   // Synthetic Enter and Space on every option of the answered question (listeners on the option itself).
   window.__lockKeyOptions = function () {
     (window.__mfgGroup || []).forEach(function (el) {
@@ -281,7 +308,13 @@ class Driver:
     async def probe(self):
         return await self.ev('() => __mfgProbe()')
 
-    async def start(self):
+    async def start(self, dbl=False):
+        """Reach the first question; with dbl, the start control is double-clicked for real."""
+        if dbl and not self.hint.get('start'):
+            r = await self.ev('() => __lockStartRect()')
+            if r:
+                await self.page.mouse.dblclick(r['x'], r['y'])
+                await self.page.wait_for_timeout(500)
         if self.hint.get('start'):
             await self.ev(self.hint['start'])
             await self.page.wait_for_timeout(500)
@@ -292,6 +325,8 @@ class Driver:
                 await self.ev('() => __mfgClickStart()')
                 await self.page.wait_for_timeout(400)
                 continue
+            if self.hint.get('ready') and await self.ev('() => !!(%s)' % self.hint['ready']):
+                return True
             p = await self.probe()
             if p['n'] >= 2 or await self.ev('() => __mfgHasInput()'):
                 return True
@@ -393,14 +428,22 @@ async def play(browser, base, slug, level, page_html):
     # 1 and 2: desktop
     ctx, page, errs = await new_page(viewport={'width': 1280, 'height': 900})
     d = Driver(page, slug, hint)
-    if not await d.start():
+    if not await d.start(dbl=True):
         await ctx.close()
         return ['UNPLAYABLE: no option group or input after Start (give it a HINT)']
+    s = await d.snap()
+    if s['answered']:
+        faults.append('dblclick on Start: its second click answered the first question')
     s0 = await d.answer_wrong()
     if s0 is None:
         await ctx.close()
-        return ['UNPLAYABLE: no wrong answer marked in 8 questions (give it a HINT)']
+        return faults + ['UNPLAYABLE: no wrong answer marked in 8 questions (give it a HINT)']
     rects = await d.ev('() => __lockGroupRects()')
+    if hint.get('surface'):
+        rects += await d.ev('''(sel) => { const e = document.querySelector(sel); if (!e) return [];
+            e.scrollIntoView({block: 'center'}); const r = e.getBoundingClientRect();
+            return [[0.5, 0.5], [0.1, 0.1], [0.9, 0.9], [0.1, 0.9]].map(f => ({x: r.left + r.width * f[0], y: r.top + r.height * f[1]})); }''',
+                            hint['surface'])
     for r in rects:
         if r:
             await page.mouse.click(r['x'], r['y'])
@@ -454,6 +497,13 @@ async def play(browser, base, slug, level, page_html):
         faults.append('finish: game_completed %d time(s) (once)' % end['completed'])
     if end['submits'] > 1:
         faults.append('finish: submitScore %d times (at most once)' % end['submits'])
+    r = await d.ev('() => __lockAgainRect()')
+    if r:
+        await page.mouse.dblclick(r['x'], r['y'])
+        await page.wait_for_timeout(600)
+        again = await d.snap()
+        if again['answered'] != end['answered']:
+            faults.append('dblclick on Play again: its second click answered the first question')
     faults += ['page error: %s' % e for e in errs[:2]]
     await ctx.close()
 
