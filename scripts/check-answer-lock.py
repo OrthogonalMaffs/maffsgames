@@ -77,7 +77,7 @@ truth-will-set-you-free unit-converter word-problem-decoder wrong-on-the-interne
 # may only shrink.
 MIGRATED = set('''
 formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shifter negative-number-line
-think-of-a-number
+think-of-a-number decimal-detective
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
@@ -122,6 +122,15 @@ HINTS = {
                    "document.querySelector('#numpad [data-val=\"' + ((i % 9) + 1) + '\"]').click();"
                    "document.querySelector('#numpad [data-val=\"enter\"]').click();"),
         'surface': '#numpad',
+    },
+    'decimal-detective': {
+        'ready': "document.getElementById('gameScreen').classList.contains('active')",
+        'answer': ("if (!document.getElementById('gameScreen').classList.contains('active')) return;"
+                   "const q = questions[currentQ]; if (!q) return;"
+                   "if (q.type === 'roundup') { const b = [...document.querySelectorAll('.option-btn')];"
+                   "  if (b.length) b[i % b.length].click(); }"
+                   "if (q.type === 'placeit') setMarkerPosition(i % 2 ? 0.1 : 0.9);"
+                   "document.getElementById('checkBtn').click();"),
     },
     'like-terms-collector': {
         'ready': "document.getElementById('gameScreen').classList.contains('active')",

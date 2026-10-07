@@ -172,6 +172,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/number-line.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -227,7 +228,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div id="gameArea"></div>
   <div class="feedback" id="feedback" style="display:none"></div>
   <button class="check-btn" id="checkBtn" onclick="checkAnswer()" style="display:none">Check</button>
-  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Case</button>
+  <button class="next-btn" id="nextBtn" data-maffs-lock-skip onclick="nextQuestion()">Next Case</button>
 </div>
 
 <!-- REVEAL SCREEN -->
@@ -328,7 +329,7 @@ let currentQ = 0;
 let correctCount = 0;
 let typeCorrect = {lineup:0,roundup:0,placeit:0};
 let typeTotal = {lineup:0,roundup:0,placeit:0};
-let answered = false;
+const gameEl = document.getElementById('gameScreen');   // MaffsLock's container (canon 7.6.0)
 let markerPos = null; // for Place It: null until the student places the marker
 let revealShown = false;
 
@@ -404,7 +405,7 @@ function startGame() {
   correctCount = 0;
   typeCorrect = {lineup:0,roundup:0,placeit:0};
   typeTotal = {lineup:0,roundup:0,placeit:0};
-  answered = false;
+  MaffsLock.newSession();
   revealShown = false;
 
   document.getElementById('gameHeader').style.display = 'flex';
@@ -426,7 +427,8 @@ function loadQuestion() {
     showReveal();
     return;
   }
-  answered = false;
+  // A new case: input on it is ignored for MaffsLock.FRESH_MS (a double-click on Start or Next Case).
+  MaffsLock.fresh(gameEl);
   const q = questions[currentQ];
   const progress = ((currentQ) / questions.length) * 100;
   document.getElementById('progressFill').style.width = progress + '%';
@@ -486,7 +488,7 @@ function setupDragHandlers() {
 }
 
 function onDragStart(e) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   dragState = e.target;
   e.target.classList.add('dragging');
   e.dataTransfer.effectAllowed = 'move';
@@ -499,7 +501,7 @@ function onDragEnd(e) {
 
 function onDragOver(e) {
   e.preventDefault();
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   if (!dragState || e.target === dragState) return;
   const target = e.target.closest('.suspect-card');
   if (!target || target === dragState) return;
@@ -526,7 +528,7 @@ let touchCard = null;
 let touchStartX, touchStartY;
 
 function onTouchStart(e) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   const card = e.target.closest('.suspect-card');
   if (!card) return;
   e.preventDefault();
@@ -609,7 +611,7 @@ function renderRoundup(data) {
 }
 
 function selectOption(btn) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   selectedOption = btn.dataset.option;
@@ -701,7 +703,7 @@ function setupNumberLine() {
 }
 
 function onLineClick(e) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   const line = document.getElementById('numberLine');
   const rect = line.getBoundingClientRect();
   const x = (e.clientX - rect.left) / rect.width;
@@ -709,7 +711,7 @@ function onLineClick(e) {
 }
 
 function onLineTouchEnd(e) {
-  if (answered || markerDragging) return;
+  if (MaffsLock.isLocked(gameEl) || markerDragging) return;
   const line = document.getElementById('numberLine');
   const rect = line.getBoundingClientRect();
   const touch = e.changedTouches[0];
@@ -718,20 +720,20 @@ function onLineTouchEnd(e) {
 }
 
 function onMarkerDown(e) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   e.preventDefault();
   markerDragging = true;
 }
 
 function onMarkerTouchStart(e) {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   e.preventDefault();
   e.stopPropagation();
   markerDragging = true;
 }
 
 function onMarkerMove(e) {
-  if (!markerDragging || answered) return;
+  if (!markerDragging || MaffsLock.isLocked(gameEl)) return;
   const line = document.getElementById('numberLine');
   const rect = line.getBoundingClientRect();
   const x = (e.clientX - rect.left) / rect.width;
@@ -743,7 +745,7 @@ function onMarkerUp() {
 }
 
 function onMarkerTouchMove(e) {
-  if (!markerDragging || answered) return;
+  if (!markerDragging || MaffsLock.isLocked(gameEl)) return;
   e.preventDefault();
   const line = document.getElementById('numberLine');
   const rect = line.getBoundingClientRect();
@@ -783,14 +785,14 @@ function placeitValue(data, pos) {
 function setStepButtons() {
   const left = document.getElementById('stepLeft'), right = document.getElementById('stepRight');
   if (!left || !right) return;
-  const live = markerPos !== null && !answered;
+  const live = markerPos !== null && !MaffsLock.isLocked(gameEl);
   left.disabled = !live || markerPos <= 0;
   right.disabled = !live || markerPos >= 1;
 }
 
 function placingNow() {
   const q = questions[currentQ];
-  return !answered && markerPos !== null && q && q.type === 'placeit' && document.getElementById('lineMarker');
+  return !MaffsLock.isLocked(gameEl) && markerPos !== null && q && q.type === 'placeit' && document.getElementById('lineMarker');
 }
 
 // One grid step left (-1) or right (+1): a step is a few pixels on a phone, so the buttons (and the
@@ -811,7 +813,7 @@ document.addEventListener('keydown', (e) => {
 //  CHECK ANSWER
 // ============================================================
 function checkAnswer() {
-  if (answered) return;
+  if (MaffsLock.isLocked(gameEl)) return;
   const q = questions[currentQ];
 
   if (q.type === 'lineup') checkLineup(q.data);
@@ -904,7 +906,7 @@ function checkPlaceit(data) {
 }
 
 function recordAnswer(type, isCorrect, note) {
-  answered = true;
+  if (!MaffsLock.lock(gameEl)) return;
 
   typeTotal[type]++;
   if (isCorrect) {
@@ -957,8 +959,9 @@ function showReveal() {
 
   document.getElementById('progressFill').style.width = '100%';
   document.getElementById('revealOverlay').classList.add('active');
+  MaffsLock.screen(document.getElementById('revealOverlay'));
 
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     document.getElementById('revealOverlay').addEventListener('click', dismissReveal, {once: true});
   }, 5000);
 }
@@ -968,7 +971,8 @@ function dismissReveal() {
   showResults();
 }
 
-function showResults() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const showResults = MaffsLock.finishOnce(function () {
   document.getElementById('gameHeader').style.display = 'none';
   document.getElementById('progressBar').style.display = 'none';
 
@@ -1019,7 +1023,8 @@ function showResults() {
   }
 
   showScreen('resultsScreen');
-}
+  MaffsLock.screen(document.getElementById('resultsScreen'));
+});
 
 // ============================================================
 //  INIT
