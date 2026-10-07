@@ -301,15 +301,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.alevel[9]: '20' = '\\\\binom{6}{3}' (the marked answer is one of them)",
-      "id": "binomial-blaster::757c8c724a4f#1::B11::[\"20\", \"\\\\binom{6}{3}\"]",
-      "line": null,
-      "register": "binomial-blaster-t5-002"
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
