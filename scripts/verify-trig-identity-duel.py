@@ -165,7 +165,7 @@ TARGETS = {
     'gcse': [('value',)] * 12 + [
         ('num', 5 * sp.sin(D(45)) / sp.sin(D(30)), 1, ''), ('num', 8 * sp.sin(D(60)) / sp.sin(D(40)), 1, ''),
         ('num', 10 * sp.Rational(8, 10) / sp.Rational(1, 2), None, ''), ('num', 6 * sp.sin(D(90)) / sp.sin(D(30)), None, ''),
-        ('num', 10 * sp.sin(D(30)) / sp.sin(D(45)), 1, ''), ('num', deg(sp.asin(8 * sp.sin(D(50)) / 12)), 1, '°'),
+        ('num', 10 * sp.sin(D(60)) / sp.sin(D(45)), 1, ''), ('num', deg(sp.asin(8 * sp.sin(D(50)) / 12)), 1, '°'),
         ('num', 7 * sp.sin(D(80)) / sp.sin(D(60)), 1, ''), ('num', 9 * sp.sin(D(70)) / sp.sin(D(35)), 1, ''),
         ('num', 15 * sp.sin(D(55)) / sp.sin(D(40)), 1, ''), ('num', 20 * sp.sin(D(45)) / sp.sin(D(65)), 1, ''),
         ('num', 40, None, '°'), ('num', 30, None, '°'),
@@ -200,7 +200,7 @@ TARGETS = {
 }
 # What the context of a context item must say (so the table above reads the numbers the student is given).
 CONTEXT = {
-    ('gcse', 28): 'a = 7, b = 9, c = 11', ('gcse', 44): 'angle C is acute', ('gcse', 49): 'each with sides 8 and 8',
+    ('gcse', 16): 'A = 45°, a = 10 cm, B = 60°', ('gcse', 28): 'a = 7, b = 9, c = 11', ('gcse', 44): 'angle C is acute', ('gcse', 49): 'each with sides 8 and 8',
     ('alevel', 31): 'sin A = 3/5, cos B = 5/13', ('alevel', 32): 'sin A = 3/5, cos B = 5/13', ('alevel', 33): 'sin A = 3/5, cos B = 5/13',
 }
 AUDIT = {('gcse', 28): 't2-001', ('alevel', 31): 't2-002', ('alevel', 32): 't2-003', ('alevel', 33): 't2-004',
@@ -276,6 +276,7 @@ def check_bank(fails, bank):
 
 SWEEP_JS = r"""() => {
   window.setTimeout = () => 0; window.setInterval = () => 0;
+  if (window.MaffsLock) MaffsLock.FRESH_MS = 0;
   const out = [];
   for (const lv of ['gcse', 'alevel']) QUESTIONS[lv].forEach((q, i) => {
     for (const pick of [q.correct, ...q.d]) {
@@ -313,6 +314,21 @@ def play(fails, html):
             page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             bank = page.evaluate('() => QUESTIONS')
+            tm = page.evaluate(TIMER_JS)
+            if tm['clock']:
+                fails.append('a clock shows during play (trig-identity-duel-t2-010; timer-policy: hidden count-up)')
+            if tm['score'] != 100:
+                fails.append('a key clicked after 60 s scores %d, not 100: time feeds the score (trig-identity-duel-t2-010)'
+                             % tm['score'])
+            if 'Time' not in tm['stats']:
+                fails.append('the results do not show the time (%r; trig-identity-duel-t2-010)' % tm['stats'])
+            if tm['correct'] != 1:
+                fails.append('the key clicked, then Enter three times on it, counted %d times (trig-identity-duel-t2-007)'
+                             % tm['correct'])
+            if tm['submits'] != 1:
+                fails.append('the results screen submitted %d scores (MaffsLock.finishOnce)' % tm['submits'])
+            page.reload(wait_until='load')
+            page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             for lv, i, pick, what in page.evaluate(SWEEP_JS):
                 fails.append('%s[%d] in Chromium: option %s %s' % (lv, i, pick, what))
             browser.close()
@@ -323,6 +339,32 @@ def play(fails, html):
         proc.terminate()
         proc.wait()
 
+
+# A hidden count-up with no marks for speed (timer-policy.md, canon SR-23; trig-identity-duel-t2-010): a key clicked a
+# minute after the question appears scores 100, no clock shows during play, and the results show the time. Answer
+# once (MaffsLock; t2-007): the key clicked, then Enter three times on it, counts once; the results submit once.
+TIMER_JS = r"""async () => {
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  let submits = 0;
+  window.MaffsLeaderboard = { submitScore: () => { submits++; return Promise.resolve(); } };
+  const q = QUESTIONS.gcse[16];
+  startGame();
+  questions = [q, q]; qIdx = 0; totalQ = 2; score = 0; correctCount = 0;
+  showQ();
+  const clock = [...document.querySelectorAll('#game .hud-label')].map(e => e.textContent).filter(t => /time/i.test(t)).length;
+  await wait((window.MaffsLock ? MaffsLock.FRESH_MS : 0) + 50);
+  const realNow = Date.now; Date.now = () => realNow() + 60000;
+  const key = [...document.querySelectorAll('#options .opt-btn')].find(b => b.dataset.val === q.correct);
+  key.click(); key.focus();
+  for (let k = 0; k < 3; k++) { key.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); key.click(); }
+  const res = { clock, score, correct: correctCount };
+  Date.now = realNow;
+  if (window.MaffsLock) MaffsLock.clearTimers();
+  end(); end();
+  res.submits = submits;
+  res.stats = document.getElementById('statsLine').textContent;
+  return res;
+}"""
 
 KATEX_DIR = None
 
