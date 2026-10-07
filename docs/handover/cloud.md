@@ -14,6 +14,19 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-07 (cloud): game 3 Trig Worms (PR #98); #97 Truth Buster merged; NEXT = Expectation Station
+
+- **Truth Buster (PR #97) merged** on a green Gate; main's full run after it green.
+- **Trig Worms (PR #98):** `scripts/verify-trig-worms.py` (group B2, ~20 s). The generator is rebuilt from a
+  `POOL` of servable outcomes (1,204; no retry); every outcome is recomputed with mpmath from the values shown,
+  at the stated precision ("to the nearest degree", "to 1 decimal place"); every distractor is a named error and
+  the feedback names it; only the two given sides are labelled and the triangle is drawn at one scale.
+  t1-001..t1-004 fixed; nothing left open.
+- **Next:** Expectation Station, then component-crusher, trig-identity-duel, binomial-blaster,
+  partial-fractions-duel, differentiation-duel, integration-duel, curling-friction, dimension-checker,
+  proof-builder (all prepared on local worktrees /home/user/*-work, not pushed; their PR texts and register
+  specs are in this session's scratchpad).
+
 ## 2026-10-07 (cloud): game 2 Truth Buster (PR #97); #96 Spot the Error merged; NEXT = Trig Worms
 
 - **Spot the Error (PR #96) merged** on a green Gate; main's full run after it green.
