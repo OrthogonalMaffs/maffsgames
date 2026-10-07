@@ -94,7 +94,10 @@ main's last full run is red; watch main's run after merging.
 - **Gotchas:** MaffsLock's 300 ms fresh window drops clicks a sweep makes right after a render: set
   `MaffsLock.FRESH_MS = 0` in sweeps and keep the real window in the lock test. A double click must be tested with
   `page.mouse` at the control (clicking a detached element twice fires its old listener). A fresh container has no
-  KaTeX: fetch `registry.npmjs.org/katex/-/katex-0.16.9.tgz` and route the CDN to its `package/dist`.
+  KaTeX: fetch `registry.npmjs.org/katex/-/katex-0.16.9.tgz` (its `package/dist`). A `sitecustomize.py` on
+  PYTHONPATH that adds a KaTeX route to every new context lets the teacher-line and answer-lock checks pass, but it
+  makes every verifier that routes for itself (sync API: suvat, factor-theorem, check-resit-page) time out on `load`.
+  Run those bare, with `--katex-dir` where the verifier has it.
 
 ## 2026-10-07 (cloud): game 17 SUVAT Selector (PR #128); #127 Force Resolver merged; NEXT = factor-theorem
 
