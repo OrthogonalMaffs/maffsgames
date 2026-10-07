@@ -8,8 +8,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | # | Point | Status |
 |---|---|---|
-| 1 | Every live game has a verifier in CI | NOT MET: 64 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 185 open (18 CRITICAL, 167 HIGH) |
+| 1 | Every live game has a verifier in CI | NOT MET: 63 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 184 open (17 CRITICAL, 167 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -17,32 +17,32 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-528 findings in 78 games.
+542 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 18 | 6 | 0 | 24 |
+| CRITICAL | 17 | 7 | 0 | 24 |
 | HIGH | 167 | 38 | 0 | 205 |
-| MEDIUM | 218 | 41 | 0 | 259 |
-| LOW | 38 | 2 | 0 | 40 |
-| **All** | 441 | 87 | 0 | 528 |
+| MEDIUM | 215 | 44 | 0 | 259 |
+| LOW | 52 | 2 | 0 | 54 |
+| **All** | 451 | 91 | 0 | 542 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| 2 | 74 | 87 |
+| 2 | 87 | 101 |
 | 3 | 62 | 85 |
-| 6 | 38 | 56 |
+| 6 | 37 | 56 |
 | 1 | 35 | 35 |
-| NEW:wrong-explanation-text | 22 | 33 |
+| NEW:wrong-explanation-text | 21 | 33 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
 | 7 | 12 | 15 |
 | NEW:value-equal distractors | 12 | 12 |
 | 8 | 10 | 10 |
 | NEW:convention-unstated | 9 | 10 |
-| NEW:precision-not-stated | 7 | 8 |
+| NEW:precision-not-stated | 6 | 8 |
 | NEW:hand-typed explanation figure | 7 | 7 |
 | NEW:text-contradicts-content | 5 | 6 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
@@ -125,7 +125,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `bearing-blitz` | yes | none | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `better-value` | yes | partial: verify-better-value-tax.py | 0 | 5 | 4 | 0 | 9 | 0 | 0 |
 | `binomial-blaster` | unlisted | none | 2 | 15 | 4 | 1 | 22 | 0 | 0 |
-| `boolean-blitz` | yes | none | 0 | 3 | 0 | 1 | 4 | 0 | 0 |
+| `boolean-blitz` | yes | none | 0 | 3 | 0 | 5 | 8 | 0 | 0 |
 | `characteristic-quest` | yes | none | 0 | 1 | 3 | 1 | 5 | 0 | 0 |
 | `complex-converter` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
 | `component-crusher` | unlisted | none | 1 | 6 | 6 | 1 | 14 | 0 | 0 |
@@ -140,7 +140,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `differentiation-duel` | unlisted | none | 0 | 2 | 9 | 1 | 12 | 0 | 0 |
 | `dimension-checker` | unlisted | none | 0 | 3 | 3 | 1 | 7 | 0 | 0 |
 | `eigenvalue-extractor` | yes | none | 0 | 1 | 3 | 1 | 5 | 0 | 0 |
-| `eigenvector-engine` | unlisted | none | 1 | 1 | 2 | 1 | 5 | 0 | 0 |
+| `eigenvector-engine` | unlisted | none | 1 | 1 | 2 | 8 | 12 | 0 | 0 |
 | `equation-builder` | yes | verify-equation-builder.py | 1 | 1 | 3 | 0 | 0 | 5 | 0 |
 | `equatle` | yes | none | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 3 | 0 | 0 | 4 | 0 |
@@ -149,10 +149,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `factor-race` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `factor-theorem` | unlisted | none | 2 | 5 | 10 | 1 | 18 | 0 | 0 |
-| `force-resolver` | unlisted | none | 1 | 7 | 5 | 1 | 14 | 0 | 0 |
+| `force-resolver` | unlisted | none | 1 | 7 | 5 | 2 | 15 | 0 | 0 |
 | `formula-forge` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
 | `formula-plug-in` | yes | none | 0 | 1 | 4 | 1 | 6 | 0 | 0 |
-| `formula-unlocked` | yes | none | 0 | 1 | 0 | 0 | 1 | 0 | 0 |
+| `formula-unlocked` | yes | none | 0 | 1 | 0 | 1 | 2 | 0 | 0 |
 | `four-quadrant-explorer` | yes | none | 0 | 1 | 2 | 1 | 4 | 0 | 0 |
 | `fraction-equivalence` | yes | none | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
 | `given-that` | yes | none | 0 | 3 | 0 | 0 | 3 | 0 | 0 |
@@ -163,6 +163,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `integration-duel` | unlisted | none | 0 | 2 | 7 | 1 | 10 | 0 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 5 | 1 | 0 |
 | `linear-equation-solver` | unlisted | none | 1 | 1 | 2 | 1 | 5 | 0 | 0 |
+| `log-laws` | yes | verify-log-laws.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
 | `matrix-crunch` | yes | none | 0 | 2 | 3 | 1 | 6 | 0 | 0 |
 | `modular-battle` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `moments-master` | unlisted | none | 1 | 8 | 3 | 1 | 13 | 0 | 0 |
@@ -192,7 +193,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `think-of-a-number` | yes | none | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `trig-identity-duel` | unlisted | none | 0 | 7 | 3 | 0 | 10 | 0 | 0 |
 | `trig-wars` | yes | none | 1 | 1 | 4 | 0 | 6 | 0 | 0 |
-| `trig-worms` | unlisted | none | 1 | 0 | 3 | 0 | 4 | 0 | 0 |
+| `trig-worms` | unlisted | verify-trig-worms.py | 1 | 0 | 3 | 0 | 0 | 4 | 0 |
 | `truth-buster` | unlisted | verify-truth-buster.py | 0 | 3 | 11 | 1 | 3 | 12 | 0 |
 | `truth-will-set-you-free` | unlisted | none | 1 | 1 | 2 | 1 | 5 | 0 | 0 |
 | `unit-converter` | yes | none | 0 | 1 | 6 | 1 | 8 | 0 | 0 |
@@ -375,10 +376,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 - **CRITICAL** trig-wars-t2-001 (JC), `games/trig-wars/index.html:888-903`: Every hit by either side runs _twHits++, logs correct:true and feeds submitScore: a player who never hit lost 3-0 and submitted 3
 - **HIGH** trig-wars-t2-002 (JC), `games/trig-wars/index.html:968`: The trig panel shows Vx = power . cos theta . 0.28 while labelling V as the power: at V = 60, 45 deg it shows Vx = 11.9 beside cos 45 = Vx/V = 0.707
 
-### `trig-worms` (GCSE, A-Level; unlisted)
-
-- **CRITICAL** trig-worms-t1-001, `games/trig-worms/index.html:212-228`: In 333 of 675 angle questions (49%) a wrong option is theta worked out correctly from two other sides labelled on the diagram; 170 of 675 have a wrong option nearer the true angle than the key
-
 ### `unit-converter` (GCSE, A-Level, L4)
 
 - **HIGH** unit-converter-t4-001, `games/unit-converter/index.html:52,211`: No answered guard: Enter re-marks; unbounded score and repeated submits
@@ -550,11 +547,11 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Live games no audit has covered
 
-20 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `distinctly-average`, `fermi-lab`, `free-daily-pizza`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `log-laws`, `maths-court`, `normal-navigator`, `quadratic-factoriser`, `simultaneous-solver`, `six-sevens-bruv`, `split-it`, `stat-attack`, `tax-theft`, `test-the-claim`
+19 of 97 live games: `chart-interrogator`, `circle-theorem-spotter`, `core-maths-paper2a`, `distinctly-average`, `fermi-lab`, `free-daily-pizza`, `graph-sketcher`, `graph-transformer`, `growth-and-decay`, `just-pythag-it-bruv`, `maths-court`, `normal-navigator`, `quadratic-factoriser`, `simultaneous-solver`, `six-sevens-bruv`, `split-it`, `stat-attack`, `tax-theft`, `test-the-claim`
 
 ## Exit bar detail
 
-**1. No verifier in CI (64):** `52dle`, `bearing-blitz`, `better-value` (partial: verify-better-value-tax.py), `binomial-blaster`, `boolean-blitz`, `characteristic-quest`, `complex-converter`, `component-crusher`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `curling-friction`, `differentiation-duel`, `dimension-checker`, `eigenvalue-extractor`, `eigenvector-engine`, `equatle`, `estimation-golf`, `expectation-station`, `factor-race`, `factor-theorem`, `force-resolver`, `formula-forge`, `formula-plug-in`, `formula-unlocked`, `four-quadrant-explorer`, `fraction-equivalence`, `given-that`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `integration-duel`, `linear-equation-solver`, `matrix-crunch`, `modular-battle`, `moments-master`, `new-shapes`, `partial-fractions-duel`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `proof-builder`, `proportion-blaster`, `scale-factor-scaling`, `sequence-solver`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `suvat`, `terrible-advice`, `think-of-a-number`, `trig-identity-duel`, `trig-wars`, `trig-worms`, `truth-will-set-you-free`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
+**1. No verifier in CI (63):** `52dle`, `bearing-blitz`, `better-value` (partial: verify-better-value-tax.py), `binomial-blaster`, `boolean-blitz`, `characteristic-quest`, `complex-converter`, `component-crusher`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `curling-friction`, `differentiation-duel`, `dimension-checker`, `eigenvalue-extractor`, `eigenvector-engine`, `equatle`, `estimation-golf`, `expectation-station`, `factor-race`, `factor-theorem`, `force-resolver`, `formula-forge`, `formula-plug-in`, `formula-unlocked`, `four-quadrant-explorer`, `fraction-equivalence`, `given-that`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `integration-duel`, `linear-equation-solver`, `matrix-crunch`, `modular-battle`, `moments-master`, `new-shapes`, `partial-fractions-duel`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `proof-builder`, `proportion-blaster`, `scale-factor-scaling`, `sequence-solver`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `suvat`, `terrible-advice`, `think-of-a-number`, `trig-identity-duel`, `trig-wars`, `truth-will-set-you-free`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
 
 **4. Audited levels serving under 40 (106):** 52dle all (20 in rotation), angle-ace gcse (35), better-value gcse (20), binomial-blaster alevel (20), binomial-blaster alevel2 (20), characteristic-quest further (15), complex-converter further (20), complex-converter level4 (20), component-crusher gcse (38), component-crusher alevel (32), component-crusher level4 (34), constructions-lab all (10/10), constructions-lab ks3 (10/10), constructions-lab gcse (10/10), coordinate-geometry-dash gcse (24), coordinate-geometry-dash alevel (21), core-maths-paper1 core (36), core-maths-paper2b core (36), core-maths-paper2c core (36), correlation-or-coincidence all (13), curling-friction alevel (20), curling-friction level4 (20), differentiation-duel alevel (14), differentiation-duel level4 (14), dimension-checker level4 (20), dimension-checker alevel (20), eigenvalue-extractor further (15), eigenvector-engine further (15), estimation-golf year6 (9/20), estimation-golf ks3 (9/9), estimation-golf gcse (9/9), estimation-golf alevel (9/9), estimation-golf level4 (9/9), expectation-station core (20), expectation-station gcse (15), expectation-station alevel (10), expected-damage ks3 (15), expected-damage gcse (20), expected-damage core (15), factor-race year6 (10/20), force-resolver alevel (20), force-resolver level4 (20), formula-forge gcse (29), formula-forge alevel (29), formula-forge level4 (16), formula-unlocked gcse (29), formula-unlocked alevel (25), formula-unlocked level4 (14), fraction-equivalence year6 (20), given-that gcse (25), given-that alevel (25), given-that core (20), given-that level4 (20), glorious-gantt core-a (4), glorious-gantt level4-a (4), glorious-gantt core-b (3), glorious-gantt level4-b (4), gradient-hunter gcse (15), gradient-hunter core (20), gradient-hunter alevel (10), integration-duel alevel (14), integration-duel level4 (14), matrix-crunch further (20), matrix-crunch level4 (20), moments-master alevel (20), moments-master level4 (20), partial-fractions-duel alevel (20), partial-fractions-duel level4 (20), percentage-flip year6 (20), percentage-flip default (12), prime-factorisation all (8/28), prime-factorisation year6 (8/20), prisoners-dilemma ks3 (5), prisoners-dilemma gcse (7), prisoners-dilemma alevel (9), prisoners-dilemma core (7), probability-paradox all (38 (3 modes; Paradox mode 12)), proof-builder alevel (counter 15/25, sorter 8/8), proof-builder further (counter 15/35, sorter 8/11, induction 4/4), scale-factor-scaling gcse (38), scale-factor-scaling level4 (31), screening-room gcse (20), screening-room alevel (20), screening-room core (15), screening-room level4 (15), seven-bridges ks3 (25), seven-bridges gcse (25), seven-bridges alevel (25), shape-shifter year6-translation (10/15), shape-shifter year6-reflection (10/15), shape-shifter year6-rotation (10/15), spot-the-error ks3 (35), spot-the-error level4 (30), spot-the-muppet gcse (20), spot-the-muppet core (12), spot-the-muppet ks3 (18), suvat alevel (10), suvat level4 (8), terrible-advice gcse (20), terrible-advice core (12), terrible-advice ks3 (18), truth-will-set-you-free level4 (10), unit-converter alevel (38), wrong-on-the-internet gcse (20), wrong-on-the-internet core (10), wrong-on-the-internet ks3 (15)
 
