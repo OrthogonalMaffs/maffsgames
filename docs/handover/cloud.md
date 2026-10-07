@@ -14,6 +14,62 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-07 (cloud): Linear Equation Solver STOPPED part-way (Jon, 15:22); work in progress on `wip/linear-equation-solver` (no PR)
+
+Jon's contract of 7 Oct (the optimal-move rebuild) was started after Proof Builder (#115). At 15:22 Jon stopped
+it: a fresh session takes over from here. **Branch `wip/linear-equation-solver`** (based on main after #117,
+one commit) holds everything; nothing of it is on main.
+
+**Jon's ruling during the work (7 Oct, on Code Claude's question):** the "wrong inverse" error is written as the
+carry-across slip students actually make (x − 7 = 5 → x = 5 − 7, sign not changed), marked red with that
+reason. Legal but useless both-sides moves (adding 7 to both sides of x + 7 = 12) are never offered. SR-13
+stands unchanged: the contract's item 4 wording was the error. So the canon SR-13 note the contract asks for
+must say this, not that a both-sides move can be red.
+
+**Done (on the branch):**
+- `scripts/gen-linear-moves.py` (new; stdlib). Parses each question's shipped `eq`; searches valid moves
+  (inverses of operations present, applied to both whole sides) to depth 3; optimal = fewest further steps,
+  ties broken by not introducing a non-integer number absent from the starting equation (so x2 on
+  x/2 + 5 = 11 ties with -5, and /3 on 3x + 7 = 22 is slower); one slower move where one exists; genuine errors
+  (carry-across, one side only, x-term only, constant not divided/multiplied) fill to four, each with its
+  reason; states for every line a valid option reaches; "Also optimal" routes per question. Options are the
+  move written out (`3x + 7 - 7 = 22 - 7`). Writes `const MOVES` between `// >>> GENERATED MOVES START/END`
+  (after the bank). `--write`, check mode, `--report`.
+- **Its STOP IF checks ran clean:** at every keyed phase of all 141 questions the keyed move is optimal and
+  leads to the bank's own `line` (asserted; the bank, keys, lines and worked steps are untouched), and every
+  phase has a genuine error. 322 states; 16 questions have a second optimal route (M1-M6, U1-U4, V1-V3, Y1,
+  S3, S5). `python scripts/gen-linear-moves.py` reports the page's block matches.
+- `games/linear-equation-solver/index.html`: the MOVES block; the engine from `loadQuestion` to
+  `showSolution` rewritten (state walk over MOVES; ask "What is the optimal move here?"; green brisk, amber
+  `A_COST = W_COST / 2` streak kept with "This works, but it's slower" + reason + the optimal move(s), red with
+  its reason + the optimal move(s), both on `MaffsNext` "Next step →"; after a red the trail follows the first
+  optimal move; the worked solution adds "Also optimal" routes and ends on MaffsNext; hints render `\frac`
+  through KaTeX (t4-002)); `next-control.js` included; options one column with `overflow-x:auto`; a
+  `#feedback` box in Simultaneous Solver's shape; menu text says what optimal means.
+- `scripts/verify-linear-equation-solver.py` (new, `# ci-line: B4`): re-derives every class with SymPy from
+  the TeX (valid = keeps the solution; steps = [q != 0] + [p != 1]; the fraction tie from the two shortest
+  routes), checks 4 options / >=1 optimal / <=1 slower / >=1 error / no two equal, next lines, reachability,
+  keyed route, "Also optimal" routes; marks every option of every state in Chromium at 390px; the contract's
+  four named behaviours; hints; no sideways scroll; self-test plants the old single-key marking and a
+  mislabelled error (L1's carry-across as optimal).
+
+**Not verified (do this first):**
+- **The verifier has never been run**, and the engine has never been loaded in a browser. Expect fixes in both.
+  Run `python scripts/verify-linear-equation-solver.py` (needs KaTeX: in this sandbox serve the npm copy, see
+  older handovers) and fix what it finds; check the self-test catches both plants.
+- Known risks to look at: the verifier's `check_alt` route comparison (it compares (p, q, c) lists; the keyed
+  route's last element comes from `ans.correct`); `PLAY_JS` replaces `setTimeout` for the whole page (hint
+  focus, MaffsNext's floor) — check it does not mask a real path; option widths at 320px for the longest
+  multiply forms (Y1's `\frac{3}{2} \times ...`); B4's time budget (B4 was 164s; measure this verifier).
+
+**Next, in order:**
+1. Run and fix the verifier and engine; `--against` main's file must fail naming t4-001, r-001, r-002.
+2. Canon: the SR-13 note (Jon's 7 Oct design + the ruling above). CLAUDE.md/todo untouched (contract).
+3. Register: close t4-001, t4-002, r-001, r-002 in `docs/audits/findings/linear-equation-solver.yml`
+   (t4-003 is class 1: open).
+4. `check-changed.py`, local tier 4 (the page's render sites changed), PR, merge on a green Gate, watch main.
+5. Relisting is the home lane's PR afterwards.
+
 ## 2026-10-07 (cloud): game 13 Proof Builder (PR #115); #112 Dimension Checker merged; NEXT = Linear Equation Solver (Jon's 7 Oct contract)
 
 - **Dimension Checker (PR #112) merged** on a green Gate; main's full run after it green.
