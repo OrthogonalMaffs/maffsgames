@@ -2916,7 +2916,7 @@
  "formula-unlocked": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -2928,40 +2928,16 @@
     "status": "pass"
    },
    "B10": {
-    "entries": [
-     {
-      "detail": "Q_ALEVEL[0]: correct_override='u = \\\\dfrac{2s - at^2}{2t}'",
-      "id": "formula-unlocked::95ee8e555231#1::B10",
-      "line": 297
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "Q_GCSE[22]: 'r = \\\\dfrac{3V}{4\\\\pi}' = 'r = \\\\dfrac{V}{\\\\frac{4}{3}\\\\pi}' (both wrong options)",
-      "id": "formula-unlocked::43097f019703#1::B11::[\"r = \\\\dfrac{3V}{4\\\\pi}\", \"r = \\\\dfrac{V}{\\\\frac{4}{3}\\\\pi}\"]",
-      "line": null
-     },
-     {
-      "detail": "Q_LEVEL4[10]: 'L = \\\\dfrac{gT}{2\\\\pi}' = 'L = g\\\\left(\\\\dfrac{T}{2\\\\pi}\\\\right)' (both wrong options)",
-      "id": "formula-unlocked::e2cccd4c65ca#1::B11::[\"L = \\\\dfrac{gT}{2\\\\pi}\", \"L = g\\\\left(\\\\dfrac{T}{2\\\\pi}\\\\right)\"]",
-      "line": null,
-      "register": "formula-unlocked-f0-001"
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
-    "entries": [
-     {
-      "detail": "Q_ALEVEL[0]: duplicate option(s): ['u = \\\\dfrac{2s - at^2}{2t}'] in ['u = \\\\dfrac{2s - at^2}{2t}', 'u = \\\\dfrac{s}{t} - \\\\dfrac{1}{2}at', 'u = st - \\\\dfrac{1}{2}at^2', 'u = \\\\dfrac{2s - at^2}{2t}']",
-      "id": "formula-unlocked::95ee8e555231#1::B2",
-      "line": 297
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B3": {
     "entries": [],
