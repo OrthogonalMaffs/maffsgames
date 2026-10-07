@@ -1,0 +1,11 @@
+# Findings register for standard-form-blitz (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: standard-form-blitz
+audited:
+  tranche: 1
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    gcse: '50'
+    alevel: '50'
+findings: []

@@ -1,0 +1,31 @@
+# Findings register for formula-unlocked (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: formula-unlocked
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    gcse: '29'
+    alevel: '25'
+    level4: '14'
+findings:
+- id: formula-unlocked-r-001
+  severity: HIGH
+  jc: false
+  class: 2
+  level: alevel
+  where: alevel, games/formula-unlocked/index.html:297 (Q_ALEVEL[0])
+  summary: 'Question: s = ut + ½at², "Make u the subject". Options as rendered (confirmed in Chromium): `u = (2s
+    − at²)/(2t)`, `u = s/t − ½at`, `u = st − ½at²` (three options: the bank''s `d[2]` is string-identical to `correct_override`
+    and `MaffsOptions.build` drops it, known todo §1.4). Keyed answer: `u = \dfrac{2s - at^2}{2t}` (the `correct_override`).
+    Correct answer: both `u = (2s − at²)/(2t)` AND `u = s/t − ½at`.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: s/t − ½at = (2s − at²)/(2t) identically (SymPy
+    simplify of the difference = 0). Clicking `u = s/t − ½at` in the live page (render check) gives class `opt-btn
+    disabled wrong`, correctN stays 0 and the worked solution is shown. So a student who divides each term by t
+    (a correct method) is marked wrong. Two of the three options are correct in value. Not caught by B11 (its ledger
+    entry for this game is only Q_GCSE[22]); todo §1.4/§1.12 record only the missing fourth distractor and the override,
+    not this. Share affected: 1 of 25 A-level questions, but it is drawn twice over: it sits in the stage-2 pool
+    (5 of 10 drawn) and in the extra `shuffle(Q_ALEVEL).slice(0,5)` (:409), so it appears in about 92% of A-level
+    sessions (1 − 0.5 × 1/6) and twice in about 42%.'
+  status: open

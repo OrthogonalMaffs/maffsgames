@@ -1,0 +1,55 @@
+# Findings register for eigenvalue-extractor (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: eigenvalue-extractor
+audited:
+  tranche: 6
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    further: 15
+findings:
+- id: eigenvalue-extractor-t6-001
+  severity: HIGH
+  jc: false
+  class: 1
+  level: all
+  where: games/eigenvalue-extractor/index.html:140 (handleAnswer)
+  summary: CSS-only lock; Enter re-scores, Tab+Enter on revealed key converts a wrong answer
+  evidence: key click then Enter x3 -> score 96->383, correctN 4; wrong click, Tab x3, Enter -> 0->96
+  status: open
+- id: eigenvalue-extractor-t6-002
+  severity: MEDIUM
+  jc: false
+  class: 5
+  level: further
+  where: games/eigenvalue-extractor/index.html:104-130 (QS)
+  summary: Bank of 25, 15 served per play
+  evidence: QS.length 25 (B4 ledgered)
+  status: open
+- id: eigenvalue-extractor-t6-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:hand-typed explanation figure
+  level: further
+  where: games/eigenvalue-extractor/index.html:108 (λ²−6λ+9 mc)
+  summary: Misconception box says a repeated eigenvalue means the matrix 'scales in one direction only'; false (3I)
+  evidence: 3I has eigenvalue 3 repeated and scales every direction; characteristic-quest itself uses [[3,0],[0,3]]
+  status: open
+- id: eigenvalue-extractor-t6-004
+  severity: MEDIUM
+  jc: false
+  class: B7 (ledgered)
+  level: further
+  where: games/eigenvalue-extractor/index.html:142 (showExplain via rkI)
+  summary: Prose steps lose their spaces in KaTeX
+  evidence: '''Cannot factorise — use the quadratic formula'' renders ''Cannotfactorise—usethequadraticformula'''
+  status: open
+- id: eigenvalue-extractor-t6-005
+  severity: LOW
+  jc: false
+  class: NEW:hand-typed explanation figure
+  level: further
+  where: games/eigenvalue-extractor/index.html:116 (λ²+1)
+  summary: '''the matrix represents a rotation'' is loose for eigenvalues ±i'
+  evidence: '[[1,-2],[1,-1]] has λ²+1 and is not a rotation'
+  status: open

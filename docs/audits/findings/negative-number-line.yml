@@ -1,0 +1,45 @@
+# Findings register for negative-number-line (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: negative-number-line
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: '45'
+findings:
+- id: negative-number-line-r-001
+  severity: HIGH
+  jc: false
+  class: NEW:number-line-tolerance
+  level: year6
+  where: year6 / Place It, :282 (targets `0.5` and `-0.5`); marking at :550 and :583
+  summary: 'Question: "Place 0.5 on the number line" (and "Place -0.5 …"). The line has a labelled tick at every
+    integer from -10 to 10. Keyed answer: 0.5. But the game also marks the whole-number ticks 0 and 1 correct (for
+    -0.5, it marks -1 and 0 correct).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: a placement snaps to a multiple of 0.5, and
+    the game accepts a placement within 0.5 of the target. For 0.5 that accepts {0, 0.5, 1}. Reproduced in Chromium:
+    tapping 1 shows the marker label "1" and the feedback "Correct!", and the score goes up. The same happens at
+    0 for 0.5, and at -1 and at 0 for -0.5. So putting -0.5 at -1 or at 0, the misconception this item tests, is
+    marked right. Share affected: 2 of 15 Place It items (2 of 45 items).'
+  status: fixed
+  pr:
+  - 36
+  - 54
+- id: negative-number-line-r-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:number-line-tolerance
+  level: year6
+  where: year6 / Place It, all integer targets (:282), same marking (:550, :583)
+  summary: 'Question: e.g. "Place -3 on the number line". Keyed answer: -3. Also accepted: -3.5 and -2.5. The marker''s
+    own label shows "-2.5" when the game says "Correct!".'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Evidence: `|−2.5 − (−3)| = 0.5 <= 0.5`. Reproduced:
+    tapping -2.5 shows the label "-2.5" and "Correct!"; tapping -2 is rejected. The half-unit band is probably meant
+    to forgive a slightly-off tap. But the placement is snapped and labelled, so the student sees a wrong value
+    accepted. Judgement call: a tolerance of 0.25 would still forgive the tap and reject the half-way points. Share
+    affected: 13 of 15 Place It items, whenever the student places on a half-way point.'
+  status: fixed
+  pr:
+  - 36
+  - 54

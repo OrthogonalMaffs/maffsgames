@@ -1,0 +1,66 @@
+# Findings register for decimal-detective (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: decimal-detective
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: '45'
+findings:
+- id: decimal-detective-r-001
+  severity: HIGH
+  jc: false
+  class: NEW:number-line-starts-on-answer
+  level: year6
+  where: year6 / Place It, :301 (`{value:4.5,min:4,max:5}`) and :305 (`{value:5.5,min:5,max:6}`); start state :630-641,
+    Check enabled :425
+  summary: 'Question: "Place 4.5 on the number line from 4 to 5" (and 5.5, from 5 to 6). Keyed answer: 4.5 / 5.5.
+    The marker starts at 50% of the line, which is exactly the answer, already labelled "4.5" / "5.5". The Check
+    button is enabled on load (:425; `renderPlaceit` never disables it).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: pressing Check with no input gives "Correct!
+    Case solved." in Chromium for both items. So a free mark, and the starting picture pre-announces the answer.
+    Share affected: 2 of 15 Place It items.'
+  status: fixed
+  pr: 50
+- id: decimal-detective-r-002
+  severity: HIGH
+  jc: false
+  class: NEW:number-line-tolerance
+  level: year6
+  where: year6 / Place It on the 0 to 0.5 line, :299 (`0.15`) and :300 (`0.45`); tolerance :803
+  summary: 'Question: "Place 0.15 on the number line from 0 to 0.5" (and 0.45). Keyed answer: 0.15 / 0.45. The fixed
+    ±0.05 tolerance is a whole tick on this line (ticks every 0.05), so the neighbouring ticks are accepted as well.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Evidence (Chromium, `repro2-out.json`): for 0.15, the
+    marker reading "0.10" and the marker reading "0.20" are both "Correct! Case solved.". For 0.45, "0.40" and "0.50"
+    are both correct. 0.4 and 0.5 are exactly the truncate/round-up confusions the item tests. Share affected: 2
+    of 15 Place It items.'
+  status: fixed
+  pr: 65
+- id: decimal-detective-r-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:number-line-tolerance
+  level: year6
+  where: 'year6 / Place It, hundredths targets on a 0.1-tick line: :293 (`0.25`), :294 (`0.75`), :302 (`1.25`),
+    :303 (`2.75`); also every other 0-1 item'
+  summary: 'Question: e.g. "Place 0.25 on the number line from 0 to 1". Keyed answer: 0.25. The ±0.05 band reaches
+    both neighbouring tenths ticks, so a marker reading "0.20" or "0.30" is accepted. For 0.3, the band accepts
+    the reading "0.25".'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. Evidence: reproduced in Chromium (`repro2-out.json`):
+    0.25 with the marker at "0.20" and at "0.30" are correct; 0.3 at "0.25" is correct. Share affected: 4 of 15
+    Place It items at the tick boundaries (the half-tick band on the other 0.1-tick items is a judgement call).'
+  status: fixed
+  pr: 65
+- id: decimal-detective-r-004
+  severity: MEDIUM
+  jc: true
+  class: NEW:number-line-readout
+  level: year6
+  where: year6 / Place It, all 15; `setMarkerPosition` :738-748
+  summary: The marker shows its exact value to 2 d.p. as it moves. Only 3 ticks are labelled (min, middle, max).
+    So any item can be solved by dragging until the label reads the target, without reading the scale. That breaks
+    "a visual aid must never give the answer away" (CLAUDE.md, Scaffolds).
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F4. '
+  status: fixed
+  pr: 65

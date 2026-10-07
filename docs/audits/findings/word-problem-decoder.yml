@@ -1,0 +1,101 @@
+# Findings register for word-problem-decoder (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: word-problem-decoder
+audited:
+  tranche: 1
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    ks3: '50'
+    gcse: '60'
+findings:
+- id: word-problem-decoder-t1-001
+  severity: HIGH
+  jc: false
+  class: 2
+  level: ks3
+  where: games/word-problem-decoder/index.html:262 (ks3_006)
+  summary: '''£2.50 per 100g'' keyed Number & Place Value; Ratio & Proportion (a unit rate), always on screen, is
+    defensible and marked wrong'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2, H1'
+  status: open
+- id: word-problem-decoder-t1-002
+  severity: HIGH
+  jc: false
+  class: 2
+  level: gcse
+  where: games/word-problem-decoder/index.html:347 (gcse_017)
+  summary: Two unknowns and two conditions keyed Equations; gcse_021 (:353), the same shape, is keyed Simultaneous
+    Equations, an option shown 58% of the time
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2, H2'
+  status: open
+- id: word-problem-decoder-t1-003
+  severity: HIGH
+  jc: true
+  class: 2
+  level: ks3, gcse
+  where: games/word-problem-decoder/index.html:271 (ks3_013); gcse_001-005
+  summary: gcse_001-005 key '10% off' as Reverse Percentage but ks3_013 keys the same shape as Percentages (offered
+    about 50% of the time)
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2, H3. SR-18: one category scheme, both accepted
+    where both fit'
+  status: open
+- id: word-problem-decoder-t1-004
+  severity: HIGH
+  jc: true
+  class: 2
+  level: ks3, gcse
+  where: games/word-problem-decoder/index.html:285 (ks3_023); gcse_006-009
+  summary: gcse_006-009 key Standard Form but ks3_023 keys the phrase 'standard form' itself as Number & Place Value
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2, H4. SR-18 as H3'
+  status: open
+- id: word-problem-decoder-t1-005
+  severity: HIGH
+  jc: false
+  class: 1
+  level: all
+  where: games/word-problem-decoder/index.html:115
+  summary: Answered buttons disabled only by CSS (pointer-events:none), so a second Enter credits the next phrase
+    unseen
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2, H5. Reproduced: 2/2 phrases credited with only
+    one shown'
+  status: open
+- id: word-problem-decoder-t1-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:ill-posed wording
+  level: gcse
+  where: games/word-problem-decoder/index.html(gcse_017, gcse_021)
+  summary: gcse_017 has no whole-number answer (c = 71/19), and neither does gcse_021
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open
+- id: word-problem-decoder-t1-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse
+  where: games/word-problem-decoder/index.html(gcse_059)
+  summary: The tins are 72000 / (pi x 25 x 15) = 61.1 by volume, not 48; 48 is exactly how many physically fit,
+    so it is not 'too high'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open
+- id: word-problem-decoder-t1-008
+  severity: MEDIUM
+  jc: false
+  class: NEW:ill-posed wording
+  level: gcse
+  where: games/word-problem-decoder/index.html(gcse_022)
+  summary: The lap count is ambiguous
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open
+- id: word-problem-decoder-t1-009
+  severity: MEDIUM
+  jc: false
+  class: uncounted
+  level: all
+  where: games/word-problem-decoder/index.html
+  summary: tranche 1 counted 3 MEDIUM findings it never described
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 1 counts more MEDIUMs for this game than section
+    3 describes. Placeholder (Jon, 7 Oct 2026): this game''s contract F fix PR re-audits the whole game, files what
+    it finds with real ids, and closes this entry with its PR number'
+  status: open

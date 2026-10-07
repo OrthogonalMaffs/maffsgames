@@ -107,6 +107,21 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 dated, with its source, in the same PR as the work that prompted it. A ruling is changed only by Jon,
 and the change is dated in its row.
 
+
+## 0.4 Findings register
+
+Every audit finding lives in `docs/audits/findings/<slug>.yml`, one file per game (so parallel fix PRs never edit the
+same file), in the audits' own schema (`scripts/audit-register.py` holds it). `docs/audits/REGISTER.md` is generated
+from them: counts by severity, status, class and game; open CRITICAL and HIGH by game, Year 6/KS3/GCSE/Core first; the
+exit-bar dashboard for §0.2's freeze; and the live games no audit has covered. CI (tier 1) fails if a file breaks the
+schema, a `fixed` entry names no PR, a roster-Unlisted game has no file, or REGISTER.md is stale.
+
+**A fix PR closes its entries in the same PR:** set `status: fixed` and `pr: <n>` on each entry it fixes, run
+`python scripts/audit-register.py`, and commit the regenerated REGISTER.md. An entry closed by a ruling, not a code
+change, is `status: ruled` with `ruling:` naming the SR. A new audit adds its findings to the game's file (a second
+`audited` entry when the game was audited before); ids are `<slug>-t<n>-NNN` (tranche n) or `<slug>-r-NNN` (resit audit).
+Exit-bar points 3 and 6 are stated in the script (`SHARED_CHECKS_GREEN`, `SWEEP_DONE`): the PR that meets one sets it.
+
 ---
 
 # 1. Analytics — Dual Logging (GA4 + Google Sheets)

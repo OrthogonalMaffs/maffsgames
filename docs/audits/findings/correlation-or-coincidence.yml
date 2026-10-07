@@ -1,0 +1,63 @@
+# Findings register for correlation-or-coincidence (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: correlation-or-coincidence
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    all: '13'
+findings:
+- id: correlation-or-coincidence-r-001
+  severity: CRITICAL
+  jc: false
+  class: NEW:hidden-data
+  level: all
+  where: 'every question, index.html:114 (markup) and index.html:46, 280-281 (CSS and reset): Phase 1 cannot be
+    answered from what is on screen.'
+  summary: 'When the student must choose real or coincidence, the two chart labels are present but painted invisible
+    (`.chart-label.hidden{color:transparent}`). The canvases draw no axis titles, tick values or units (`drawChart`,
+    index.html:210-251). The dataset names (`reveal`) and `r` appear only after the click (`handlePhase1`, index.html:305-321).
+    The prompt asks "These two datasets appear to correlate. Is there a real causal relationship?" (index.html:287)
+    about two unlabelled, auto-scaled line shapes, so whether a causal mechanism exists cannot be judged. Every
+    pair is drawn rising (or falling) together, so the shapes carry no cue, and the answer is a coin toss. The marking
+    is consistent with `type`, but the student is scored, and ranked on the leaderboard, on a guess. The game''s
+    stated lesson ("Always ask: what is the causal mechanism?", index.html:360) cannot be applied, because the variables
+    are hidden.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Share affected: 13 of 13 questions (100%). Fix: show
+    the two variable names (and axes) before the choice; reveal `r` and the explanation after.'
+  status: fixed
+  pr: 43
+- id: correlation-or-coincidence-r-002
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: all
+  where: '11 of 13 questions: the stated correlation coefficient disagrees with the data plotted. "Correlation coefficient:
+    r = …" is shown after each answer (index.html:312); computed values to 2 d.p. (label lines):'
+  summary: 'L132 Nicolas Cage films vs pool drownings: stated 0.87, data 0.99. L138 US science spending vs suicides
+    by hanging: stated 0.92, data 1.00 (0.9987). L144 Cheese vs bedsheet deaths: stated 0.95, data 0.98. L150 Robot
+    films vs ski revenue: stated 0.91, data 1.00 (0.9967). L156 Organic food vs autism diagnoses: stated 0.88, data
+    0.95. L164 Height vs weight: stated 0.94, data 1.00 (0.9977). L169 Study hours vs exam score: stated 0.97, data
+    1.00 (0.9967). L184 Cigarettes vs lung capacity: stated −0.98, data −1.00 (−0.9976). L190 Devon maths teachers
+    vs shark attacks: stated 0.89, data 1.00 (0.9960). L196 UK butter vs Maine divorce: stated 0.99, data exactly
+    1. The plotted series is perfectly linear: divorce = butter/5 − 12. L202 Renewables vs pirates: stated 0.85,
+    data 0.88. Only L174 (ice cream, 0.92) and L179 (house price, −0.96) agree.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. '
+  status: fixed
+  pr: 43
+- id: correlation-or-coincidence-r-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:sr14-content
+  level: all
+  where: 'L138: "Suicides by hanging per year" is played for laughs. The Phase 2 "conspiracies" include "The peer
+    review process is so brutal it drives people to desperate measures" and "Government science labs are secretly
+    powered by the souls of the despondent" (index.html:140). For a resit audience this is'
+  summary: 'L138: "Suicides by hanging per year" is played for laughs. The Phase 2 "conspiracies" include "The peer
+    review process is so brutal it drives people to desperate measures" and "Government science labs are secretly
+    powered by the souls of the despondent" (index.html:140). For a resit audience this is a safeguarding risk worth
+    Jon''s review; the other death-themed pairs (drownings, bedsheet deaths) are milder.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. '
+  status: fixed
+  pr: 36

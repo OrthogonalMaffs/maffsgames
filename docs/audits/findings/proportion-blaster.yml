@@ -1,0 +1,25 @@
+# Findings register for proportion-blaster (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: proportion-blaster
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    gcse: '50'
+    alevel: '50'
+findings:
+- id: proportion-blaster-r-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: alevel
+  where: alevel, index.html:242
+  summary: 'Question: "a : b = 1 : 4. b : c = 2 : 3. a + b + c = 150." / "Find c". Options: 450/11, 50, 60, 150/3
+    Keyed answer: 450/11 Correct answer: 900/11 (≈ 81.8)'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: b : c = 2 : 3 = 4 : 6, so a : b : c = 1 :
+    4 : 6. That is 11 parts, so c = 150 × 6/11 = 900/11. The key 450/11 is 150 × 3/11: it uses c''s unscaled 3 over
+    the scaled total of 11. **No option is correct**, so every student is marked wrong on this question. Also, two
+    distractors are equal in value: 50 and 150/3. Share affected: 1 of 50 alevel questions. It appears in 40% of
+    alevel sessions (20 drawn from 50).'
+  status: open

@@ -1,0 +1,68 @@
+# Findings register for probability-pioneer (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: probability-pioneer
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: '45'
+findings:
+- id: probability-pioneer-r-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: year6
+  where: year6 / Stage 2 Q20, index.html:333
+  summary: 'Question: "P(letter in MATHS also in GAMES)" Options: 2/5, 3/5, 1/5, 4/5 Keyed answer: 2/5 Correct answer:
+    3/5'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: MATHS = {M, A, T, H, S}; GAMES = {G, A, M,
+    E, S}; common letters M, A, S = 3 of 5. 3/5 is offered and marked wrong; feedback says "The correct answer is
+    2/5". Share affected: 1 of 20 Stage 2 questions; every session (fixed order).'
+  status: fixed
+  pr:
+  - 36
+  - 45
+- id: probability-pioneer-r-002
+  severity: HIGH
+  jc: false
+  class: 3
+  level: year6
+  where: year6 / Stage 3 Q7, index.html:343
+  summary: 'Statement: "If two outcomes are equally likely, each has probability 0.5" Keyed: True As worded this
+    is false in general: rolling a 1 and rolling a 2 on a die are two equally likely outcomes, each 1/6. It is only
+    true if the experiment has exactly two outcomes, a condition the explanation adds ("If there are exactly two
+    equally likely outcomes...") but the statement does not. A student who answers False for the right reason is
+    marked wrong, and the True key reinforces the "it either happens or it doesn''t, so 50-50" equiprobability misconception
+    that probability teaching targets. Fix is a wording change ("If an experiment has exactly two outcomes and they
+    are equally likely...").'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Share affected: 1 of 15 Stage 3 statements.'
+  status: fixed
+  pr: 45
+- id: probability-pioneer-r-003
+  severity: MEDIUM
+  jc: false
+  class: 3
+  level: year6
+  where: year6 / Stage 1 Q8, index.html:308
+  summary: 'Event: "You win the lottery with one ticket" Keyed: Impossible (0), Unlikely (0.25) also accepted. Marking
+    is safe (Unlikely is accepted), but the feedback states a false fact: on any answer the text reads ''"You win
+    the lottery with one ticket" is Impossible.'' (index.html:500/505), and the Impossible label is the one highlighted
+    as correct (index.html:484). Winning with one ticket is possible (about 1 in 45 million for UK Lotto), so the
+    right label is Unlikely; Impossible should not be the headline key, and the scale has no "very unlikely" point
+    so 0.25 Unlikely is the best fit. Wrong explanation.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. '
+  status: fixed
+  pr: 45
+- id: probability-pioneer-r-004
+  severity: MEDIUM
+  jc: true
+  class: 3
+  level: year6
+  where: year6 / Stage 1 Q3, index.html:303
+  summary: 'Event: "It will rain somewhere in Britain this week" Keyed: Certain (1) only. Not certain in the probability
+    sense (P = 1); it is very likely. A student who picks Likely (0.75), arguably the more defensible answer, is
+    marked wrong. Either accept Likely or reword (e.g. something genuinely certain).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F4. '
+  status: fixed
+  pr: 45

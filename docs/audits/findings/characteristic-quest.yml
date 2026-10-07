@@ -1,0 +1,58 @@
+# Findings register for characteristic-quest (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: characteristic-quest
+audited:
+  tranche: 6
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    further: 15
+findings:
+- id: characteristic-quest-t6-001
+  severity: HIGH
+  jc: false
+  class: 1
+  level: all
+  where: games/characteristic-quest/index.html:141 (handleAnswer)
+  summary: Answered buttons are locked by CSS only; Enter re-scores, and Tab+Enter on the revealed key turns a wrong
+    answer right
+  evidence: 'Chromium, real mouse: key click then Enter x3 -> score 96->382, correctN 1->4, 4 question_answered
+    events; wrong click, Tab x2, Enter -> score 0->96'
+  status: open
+- id: characteristic-quest-t6-002
+  severity: MEDIUM
+  jc: false
+  class: 5
+  level: further
+  where: games/characteristic-quest/index.html:104-131 (QS)
+  summary: Bank of 26, 15 served per play
+  evidence: QS.length 26; pool 15 in Chromium (B4 ledgered)
+  status: open
+- id: characteristic-quest-t6-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:hand-typed explanation figure
+  level: further
+  where: games/characteristic-quest/index.html:126 (m [[0,2],[2,0]])
+  summary: Worked step 'λ² − (0) − (0 − 4)' evaluates to λ² + 4; the char. eq. is λ² − 4
+  evidence: 'SymPy: λ² − 0 − (−4) = λ² + 4'
+  status: open
+- id: characteristic-quest-t6-004
+  severity: MEDIUM
+  jc: false
+  class: B7 (ledgered)
+  level: further
+  where: games/characteristic-quest/index.html:142 (showExplain via rkI)
+  summary: Prose steps rendered through KaTeX lose their spaces
+  evidence: '''Repeated eigenvalue λ = 3 (scalar matrix)'' renders ''Repeatedeigenvalueλ=3(scalarmatrix)''; 7 B7
+    entries in ledger'
+  status: open
+- id: characteristic-quest-t6-005
+  severity: LOW
+  jc: false
+  class: 4
+  level: all
+  where: games/characteristic-quest/index.html:138; :117 mc
+  summary: ?level ignored (always 'further'; roster lists L4); 'Complex eigenvalues indicate a rotation' is loose
+  evidence: bare, level4, constructor, __proto__, nonsense all log level 'further'
+  status: open

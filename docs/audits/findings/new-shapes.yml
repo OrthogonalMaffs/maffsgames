@@ -1,0 +1,109 @@
+# Findings register for new-shapes (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: new-shapes
+audited:
+- tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    year6: '50'
+- tranche: 3
+  head: 4be3342
+  date: 2026-10-06
+  served:
+    year6: 10|20|30/50
+findings:
+- id: new-shapes-r-001
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: year6
+  where: year6 / prism, all 15 prism questions (index.html:398-412; drawing index.html:653-681)
+  summary: 'Question (e.g. ns_v13): "VOLUME OF A PRISM", diagram, "V = A × l", "A = 30, l = 2", "What is V?" Keyed
+    answer: 60. Correct answer: 60 (key is right).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence (picture vs words, SR-6): the prism''s length
+    l is the distance between the two cross-section faces, i.e. along the receding edges (drawn from (20,130) to
+    (60,100) etc.). The `l` dimension arrow is instead drawn horizontally under the drawing from x=22 to x=148 (index.html:655-658),
+    spanning the front face''s width (x 20-110) plus the depth offset. On screen it reads as the width of the front
+    (cross-section) face, which is a dimension of A, not of the prism''s length. The cross-section is also always
+    drawn as a square, so the solid is a cube whatever A and l are (A = 30, l = 2 is drawn as a cube). The key is
+    unaffected; the picture labels the wrong dimension for the formula it teaches. Share affected: 15 of 50 questions
+    (30%), every prism question.'
+  status: open
+- id: new-shapes-t3-001
+  severity: HIGH
+  jc: false
+  class: NEW:double-finish
+  level: year6
+  where: games/new-shapes/index.html:909-929 (showRevealScreen)
+  summary: 'Tap on reveal after 5s runs showResults(); the uncancelled 8s timer runs it again: game_completed +
+    submitScore twice; a game restarted within the window is ended with 0 submitted'
+  evidence: game_completed x2, submits [[new-shapes,year6,7,20],[new-shapes,year6,7,20]] (reproduced twice); tap,
+    Play Again, Start -> submit [...,0,10]; no tap -> one submit
+  status: open
+- id: new-shapes-t3-002
+  severity: MEDIUM
+  jc: true
+  class: 7
+  level: year6
+  where: games/new-shapes/index.html:833 (submitAnswer)
+  summary: Game-local parseFloat marking instead of MaffsAnswer.exact; a lone '.' is marked wrong and logged
+  evidence: Typed '.' + Enter -> 'Not quite', question_answered correct:false; all 50 keys accepted (060, 60.0 also)
+  status: open
+- id: new-shapes-t3-003
+  severity: MEDIUM
+  jc: true
+  class: 6
+  level: year6
+  where: games/new-shapes/index.html:80,469 (renderParallelogram)
+  summary: Parallelogram drawn at a fixed 180x100 whatever b and h; proportions contradict labels
+  evidence: ns_p12 b=3, h=10 drawn with base ~1.8x height; perpendicular height labelled correctly, no slant side
+  status: open
+- id: new-shapes-t3-004
+  severity: MEDIUM
+  jc: true
+  class: 6
+  level: year6
+  where: games/new-shapes/index.html:525 (renderTrapezium)
+  summary: Trapezium always drawn with top = half the base, regardless of a and b
+  evidence: ns_t16 (a=1,b=7) and ns_t09 (a=6,b=8) render identical shapes
+  status: open
+- id: new-shapes-t3-005
+  severity: MEDIUM
+  jc: true
+  class: 6
+  level: year6
+  where: games/new-shapes/index.html:650-675 (renderPrism)
+  summary: The l arrow spans front width + depth, not the depth edge; label overlaps the arrowhead
+  evidence: lenLine x1=22 to x2=148; front face x 20-110, depth offset +40; screenshot ns_v13
+  status: open
+- id: new-shapes-t3-006
+  severity: MEDIUM
+  jc: true
+  class: NEW:board-mixes-session-lengths
+  level: year6
+  where: games/new-shapes/index.html:707,944,961,973
+  summary: One PB key and one leaderboard level hold raw scores from 10/20/30-question sessions; PB shown over the
+    wrong denominator (canon §9 class, game not in its list)
+  evidence: 'PB 9 from a 10-q session shows ''Personal Best: 9/20''; submitScore(''new-shapes'',''year6'',correctCount,total)
+    for every length'
+  status: open
+- id: new-shapes-t3-007
+  severity: MEDIUM
+  jc: true
+  class: NEW:wrong-explanation-text
+  level: year6
+  where: games/new-shapes/index.html:326 (reveal screen)
+  summary: '''You now know five area formulae'' - the game names four (rectangle, triangle, parallelogram, trapezium)'
+  evidence: Start screen :259 names rectangles + triangles, then adds two shapes
+  status: open
+- id: new-shapes-t3-008
+  severity: LOW
+  jc: true
+  class: NEW:cosmetic
+  level: year6
+  where: games/new-shapes/index.html:751,967
+  summary: Header score slot shows questions done; no units on any answer (cm2 vs cm3 never practised); game_completed/personal_best_set
+    lack mode
+  evidence: After 3 wrong answers the header reads 3/20; prompts are 'What is A?'/'What is V?'
+  status: open

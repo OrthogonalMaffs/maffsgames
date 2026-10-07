@@ -1,0 +1,88 @@
+# Findings register for probability-paradox (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: probability-paradox
+audited:
+  tranche: 1
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    all: 38 (3 modes; Paradox mode 12)
+findings:
+- id: probability-paradox-t1-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: all
+  where: games/probability-paradox/index.html:194-200 (envelope)
+  summary: Given £20, E(switch) needs a prior the scenario does not give (the game's own text :200 says so); 'Cannot
+    determine' is marked wrong
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. Under the game''s simulation prior (:449) E(switch)
+    = £24.91. SR-18: the envelope item is ''can''t tell'''
+  status: open
+- id: probability-paradox-t1-002
+  severity: HIGH
+  jc: false
+  class: NEW:convention-unstated
+  level: all
+  where: games/probability-paradox/index.html:210-216 (inspection paradox)
+  summary: '''Every 10 minutes on average'' does not say arrivals are random; E(wait) = E[G^2]/2E[G], so ''Depends
+    on the schedule'' is literally correct and marked wrong'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. SR-18: Probability Paradox states assumptions'
+  status: open
+- id: probability-paradox-t1-003
+  severity: HIGH
+  jc: true
+  class: NEW:convention-unstated
+  level: all
+  where: games/probability-paradox/index.html:226 (Sleeping Beauty)
+  summary: Keyed 1/3 only while the game's own text calls the question 'genuinely debated'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. SR-18: Sleeping Beauty accepts 1/2 and 1/3'
+  status: open
+- id: probability-paradox-t1-004
+  severity: HIGH
+  jc: true
+  class: 2
+  level: all
+  where: games/probability-paradox/index.html:354 (fallacy, 95% after 60%)
+  summary: '''The test was easier'' is also an alternative explanation that should be considered'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. 2-3 of the 12 Paradox-mode items faulty (16.7-25%)'
+  status: open
+- id: probability-paradox-t1-005
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: all
+  where: games/probability-paradox/index.html(simulations)
+  summary: 'The simulations contradict the keys: Sleeping Beauty''s bars show 50/50, and the bus simulation shows
+    a 5-minute mean wait'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open
+- id: probability-paradox-t1-006
+  severity: MEDIUM
+  jc: true
+  class: NEW:convention-unstated
+  level: all
+  where: games/probability-paradox/index.html(Two-Child, Tuesday)
+  summary: Two-Child and Tuesday hold only under the 'asked' reading
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3. SR-18: Probability Paradox states assumptions'
+  status: open
+- id: probability-paradox-t1-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: all
+  where: games/probability-paradox/index.html(p-value)
+  summary: The p-value given is one-sided (0.29); the usual two-sided value is 0.58
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open
+- id: probability-paradox-t1-008
+  severity: MEDIUM
+  jc: false
+  class: uncounted
+  level: all
+  where: games/probability-paradox/index.html
+  summary: tranche 1 counted 1 MEDIUM finding it never described
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 1 counts more MEDIUMs for this game than section
+    3 describes. Placeholder (Jon, 7 Oct 2026): this game''s contract F fix PR re-audits the whole game, files what
+    it finds with real ids, and closes this entry with its PR number'
+  status: open

@@ -1,0 +1,47 @@
+# Findings register for boolean-blitz (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: boolean-blitz
+audited:
+  tranche: 6
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    level4: 42
+findings:
+- id: boolean-blitz-t6-001
+  severity: HIGH
+  jc: false
+  class: 1
+  level: level4
+  where: games/boolean-blitz/index.html:809 (handleAnswer)
+  summary: CSS-only lock; Enter adds +3 per press without limit; Tab+Enter converts a wrong answer
+  evidence: key click then Enter x3 -> points 3->12; wrong click, Tab, Enter -> 0->3
+  status: open
+- id: boolean-blitz-t6-002
+  severity: HIGH
+  jc: true
+  class: 2
+  level: level4
+  where: games/boolean-blitz/index.html:584
+  summary: Key B(A + C); 'AB + BC' (minimal sum of products, same function) marked wrong
+  evidence: truth tables equal over A,B,C; 'Simplify fully' names no form
+  status: open
+- id: boolean-blitz-t6-003
+  severity: HIGH
+  jc: true
+  class: 2
+  level: level4
+  where: games/boolean-blitz/index.html:744
+  summary: Key A(B + C); 'AB + AC' marked wrong although the walkthrough (:747) passes through it
+  evidence: NOT(NOT(AB)·NOT(AC)) = AB + AC = A(B+C)
+  status: open
+- id: boolean-blitz-t6-004
+  severity: LOW
+  jc: true
+  class: 2
+  level: level4
+  where: games/boolean-blitz/index.html:387, :458, :477, :541, :346, :589, :719, :323
+  summary: Unsimplified equal forms as wrong options (form stated); cheat sheet labels De Morgan 'NAND'; inaccurate
+    step labels; mfg_accessible stored as '1' not 'true'
+  evidence: A·B + A = A; AB + AB̄ = A; ĀB + AB = B; AB̄ + AB = A
+  status: open

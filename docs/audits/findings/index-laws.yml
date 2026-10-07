@@ -1,0 +1,10 @@
+# Findings register for index-laws (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: index-laws
+audited:
+  tranche: 1
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    gcse: '45'
+findings: []

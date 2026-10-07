@@ -1,0 +1,90 @@
+# Findings register for formula-forge (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: formula-forge
+audited:
+- tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    gcse: '29'
+    alevel: 29 (the gcse bank)
+    level4: '16'
+- tranche: 4
+  head: fc20f8c
+  date: '2026-10-06'
+  served:
+    gcse: 29
+    alevel: 29
+    level4: 16
+findings:
+- id: formula-forge-r-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:prose-through-katex
+  level: all
+  where: 'all levels, index.html:433: `hint2` is rendered with `rkStr()` (KaTeX maths mode), so prose hints lose
+    their spaces, e.g. "Divide both sides by 4" shows as "Dividebothsidesby4", "y − c = mx. Now divide by m." as
+    "y − c = mx.Nowdividebym." 33 hint2 strings affected; already in the B7 ledger and todo '
+  summary: 'all levels, index.html:433: `hint2` is rendered with `rkStr()` (KaTeX maths mode), so prose hints lose
+    their spaces, e.g. "Divide both sides by 4" shows as "Dividebothsidesby4", "y − c = mx. Now divide by m." as
+    "y − c = mx.Nowdividebym." 33 hint2 strings affected; already in the B7 ledger and todo §1.31 counts. Listed
+    because the hint is the scaffold a resit student relies on.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. '
+  status: open
+- id: formula-forge-t4-001
+  severity: HIGH
+  jc: false
+  class: '1'
+  level: all
+  where: games/formula-forge/index.html:78,440,454,484
+  summary: 'No answered guard: Enter re-marks, scores again, skips questions and submits more than once'
+  evidence: 'Click right then Enter x3: score 0 -> 397, four question_answered index 1, three questions skipped.
+    L4 last question click + Enter x2: ''18/16 correct (113%)'', submitScore(''formula-forge'',''level4'',1778,16)
+    x3.'
+  status: open
+- id: formula-forge-t4-002
+  severity: MEDIUM
+  jc: false
+  class: '6'
+  level: all
+  where: games/formula-forge/index.html:424-437
+  summary: Hint 2 alone shows the previous question's hints
+  evidence: Panel never cleared; useHint(2) appends. Q2 showed Q1's 'x has 7 added to it'.
+  status: open
+- id: formula-forge-t4-003
+  severity: MEDIUM
+  jc: false
+  class: '5'
+  level: all
+  where: games/formula-forge/index.html:353
+  summary: Pools 29 (gcse), 29 (alevel = GCSE's items), 16 (level4)
+  evidence: Q.alevel={s1:[...Q.gcse.s1],…}.
+  status: open
+- id: formula-forge-t4-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:prose-through-katex
+  level: all
+  where: games/formula-forge/index.html:433
+  summary: Prose hint2 lines lose their spaces in KaTeX (known, B7 ledger)
+  evidence: '''Divide both sides by 4'' renders ''Dividebothsidesby4''.'
+  status: open
+- id: formula-forge-t4-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: gcse, level4
+  where: games/formula-forge/index.html
+  summary: Stage labels do not match their items
+  evidence: 'GCSE Stage 4 ''subject more than once'': 4 of 6 have it once; L4 ''two steps'' holds 3 one-step items.'
+  status: open
+- id: formula-forge-t4-006
+  severity: LOW
+  jc: true
+  class: '6'
+  level: all
+  where: games/formula-forge/index.html
+  summary: Positive root taken unstated (8 items); five Hint 2s give the answer; raw 'P_in', '1/R_T' in hint1; s4[0]
+    needs a != c; 'Got it' below the fold at 320x568; timer shown and scored against policy, rAF loops never stopped
+  evidence: Agent's evidence.
+  status: open

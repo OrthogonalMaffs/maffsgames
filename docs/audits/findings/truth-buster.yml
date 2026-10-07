@@ -1,0 +1,164 @@
+# Findings register for truth-buster (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: truth-buster
+audited:
+  tranche: 3
+  head: 4be3342
+  date: 2026-10-06
+  served:
+    all: 20/60
+findings:
+- id: truth-buster-t3-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: all
+  where: games/truth-buster/index.html:268 (tb_t2_018)
+  summary: Open problem (pi contains every finite digit sequence) keyed FALSE; same 'unproven is not false' fault
+    fixed for Goldbach in e153859; text says 123456789 is unproved yet gives its position, and misdefines normal
+  evidence: Truth value unknown; own revealTitle 'We don't know'; 'Always True' marked Incorrect; line re-read at
+    source
+  status: open
+- id: truth-buster-t3-002
+  severity: HIGH
+  jc: true
+  class: 2
+  level: all
+  where: games/truth-buster/index.html:274,275,285 (tb_t3_001, tb_t3_002, tb_t3_012); :235 (tb_t1_008)
+  summary: 'Keys depend on an unstated setting: t3_001/t3_002 keyed false by leaving the Euclidean plane, t3_012
+    by leaving the reals, while t1_008 is keyed by assuming the flat plane'
+  evidence: 'Euclidean: parallel lines never meet by definition, angle sum 180, so ''Always True'' is correct but
+    marked Incorrect; on a sphere t1_008''s key fails; one session can deal both; under either convention <10% of
+    60 items mismark'
+  status: open
+- id: truth-buster-t3-003
+  severity: HIGH
+  jc: true
+  class: 2
+  level: all
+  where: games/truth-buster/index.html:277 (tb_t3_004)
+  summary: Sphere eversion keyed TRUE, but the statement omits 'allowed to pass through itself', the condition the
+    result needs
+  evidence: No isotopy of an embedded sphere in R^3 everts it; only the reveal adds 'if you allow it to pass through
+    itself'
+  status: open
+- id: truth-buster-t3-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/truth-buster/index.html:229 (tb_t1_002)
+  summary: '''Multiplication only makes numbers bigger when both numbers are greater than 1'' is false'
+  evidence: (-2)x(-3)=6 > both
+  status: open
+- id: truth-buster-t3-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/truth-buster/index.html:242 (tb_t1_015)
+  summary: Title 'Not for numbers between -1 and 1' and '(-0.3)^2=0.09, smaller than 0.3' wrong; negatives get bigger
+    when squared
+  evidence: 'SymPy: x^2 <= x  <=>  0 <= x <= 1; (-0.3)^2 = 0.09 > -0.3'
+  status: open
+- id: truth-buster-t3-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/truth-buster/index.html:244 (tb_t1_017)
+  summary: Title 'Only for numbers greater than 1' wrong
+  evidence: 'SymPy: x > 1/x  <=>  x > 1 or -1 < x < 0; e.g. -0.5 > -2'
+  status: open
+- id: truth-buster-t3-007
+  severity: MEDIUM
+  jc: true
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/truth-buster/index.html:241 (tb_t1_014)
+  summary: Title 'Larger denominator means smaller fraction' false for negative or zero numerators
+  evidence: -1/8 > -1/3; 0/8 = 0/3
+  status: open
+- id: truth-buster-t3-008
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/truth-buster/index.html:256 (tb_t2_006)
+  summary: Title 'Skew lines - parallel but in different planes'; skew lines are not parallel (its own text says
+    non-parallel)
+  evidence: 'Counterexample directions (1,0,0) and (0,1,0): not parallel; z=0 vs z=1: no intersection'
+  status: open
+- id: truth-buster-t3-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/truth-buster/index.html:267 (tb_t2_017)
+  summary: Counterexample '1/0=2/0 so 1=2' uses the invalid cancellation tb_t2_002 refutes; 'limit of 10/x as x->0
+    approaches infinity' is wrong
+  evidence: Two-sided limit of 10/x at 0 does not exist (+inf right, -inf left)
+  status: open
+- id: truth-buster-t3-010
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/truth-buster/index.html:286 (tb_t3_013)
+  summary: Zero vector described as hair that 'sticks straight up or lies flat'; 'lies flat' is the non-zero case
+  evidence: 'Hairy ball theorem: zero tangential component = hair standing straight up'
+  status: open
+- id: truth-buster-t3-011
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: all
+  where: games/truth-buster/index.html:276 (tb_t3_003)
+  summary: Statement garbled ('A line that divides a closed curve...'); Jordan curve theorem needs a simple closed
+    curve in the plane; key TRUE arguable
+  evidence: A figure-eight, or a curve around a torus, gives no single inside/outside; the reveal says 'simple closed
+    curve'
+  status: open
+- id: truth-buster-t3-012
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: all
+  where: games/truth-buster/index.html:263 (tb_t2_013)
+  summary: '''The derivative gives exact rate of change at a point'' keyed TRUE assumes the derivative exists (tb_t2_003
+    shows |x| at 0); Newton/Leibniz credited with the limit definition'
+  evidence: '|x| has no derivative at 0; the epsilon-delta limit is Cauchy/Weierstrass, 19th century'
+  status: open
+- id: truth-buster-t3-013
+  severity: MEDIUM
+  jc: true
+  class: 1
+  level: all
+  where: games/truth-buster/index.html:472-482 (nextQuestion), :357-365 (tier transition)
+  summary: Two Enter presses on Next at a tier boundary skip a question (stale S.revealTime guard; focus on the
+    hidden button for 1s); results still claim 20 answered
+  evidence: 'Chromium: at qIdx 6, Enter, Enter -> qIdx 8; question_index 8 never sent; game_completed questions_answered
+    20; same at qIdx 13; a 100ms gap, dblclick or double tap: no skip'
+  status: open
+- id: truth-buster-t3-014
+  severity: MEDIUM
+  jc: true
+  class: 5
+  level: all
+  where: index.html:1484 (portal card, ks3 gcse alevel); games/truth-buster/index.html:333-337
+  summary: Listed for KS3 and GCSE but only tier 1 (20 items, 7 a session) is KS3/GCSE content; no levels, ?level
+    ignored (todo §3.14)
+  evidence: QUESTIONS tier1/2/3 = 20/20/20; session 7+7+6; every ?level value serves level 'all'
+  status: open
+- id: truth-buster-t3-015
+  severity: LOW
+  jc: true
+  class: NEW:phone-fold
+  level: all
+  where: games/truth-buster/index.html:229-293 (various), :449 (links)
+  summary: 'Bundle: t1_007 density wording; t1_013 ''independent properties''; omitted conditions t2_009/t2_014/t3_007/t3_010/t3_017;
+    t2_020 1874 vs 1891; t3_008 title; t3_009 17,820 km attribution; t3_012 ''i defined as sqrt(-1)''; 21 Learn
+    More IDs unverified (T647CGsuOVU likely Welch Labs, not Numberphile); Next below the fold on 56/60 items at
+    390x844, 60/60 at 320x568 (canon §7.6.1)'
+  evidence: Read by hand; fold measured in Chromium per item
+  status: open

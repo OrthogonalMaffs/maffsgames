@@ -1,0 +1,50 @@
+# Findings register for coordinate-geometry-dash (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: coordinate-geometry-dash
+audited:
+  tranche: 1
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    gcse: '24'
+    alevel: '21'
+findings:
+- id: coordinate-geometry-dash-t1-001
+  severity: HIGH
+  jc: false
+  class: 2
+  level: alevel
+  where: games/coordinate-geometry-dash/index.html:287
+  summary: 'x = 3t, y = 4/t: xy = 12, y = 12/x and x = 12/y are each correct and marked wrong; only ''All equivalent''
+    is accepted'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. The game''s own working says ''xy = 12, or equivalently
+    y = 12/x'''
+  status: open
+- id: coordinate-geometry-dash-t1-002
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: all
+  where: games/coordinate-geometry-dash/index.htmldrawCircle
+  summary: drawCircle scales the radius by x only, so every circle is 1.25-1.5 times too tall; at :273 the point
+    'on' the circle is drawn inside it
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open
+- id: coordinate-geometry-dash-t1-003
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: all
+  where: games/coordinate-geometry-dash/index.html:210
+  summary: The point is drawn off the canvas
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open
+- id: coordinate-geometry-dash-t1-004
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: all
+  where: games/coordinate-geometry-dash/index.html:224
+  summary: The perpendicular lines are drawn meeting at 72 deg
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open

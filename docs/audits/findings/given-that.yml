@@ -1,0 +1,67 @@
+# Findings register for given-that (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: given-that
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    gcse: '25'
+    alevel: '25'
+    core: '20'
+    level4: '20'
+findings:
+- id: given-that-r-001
+  severity: HIGH
+  jc: false
+  class: 6
+  level: alevel
+  where: 'alevel, index.html:356 (`alevel_18`): the Venn diagram contradicts the key.'
+  summary: 'Data drawn: M only 35, M∩P 45, P only 20, neither 50, Total 150 (the set totals are not drawn). Stored
+    `setB.total: 60`, but 20 + 45 = 65. Phase 2 question: "Find P(takes Maths | takes Physics)." Keyed: 45/60 =
+    0.75. Correct from the diagram: 45/65 = 9/13 ≈ 0.692. A student who reads the diagram correctly (0.692) is marked
+    wrong (|0.692 − 0.75| = 0.058 > 0.005), and the worked answer says "60 students take Physics". Phase 1 (45/150)
+    is unaffected.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Share affected: 1 of 25 A-level questions (phase 2).'
+  status: open
+- id: given-that-r-002
+  severity: HIGH
+  jc: false
+  class: 7
+  level: core, alevel, level4
+  where: 'alevel/core/level4, index.html:842 (the free-entry rule): no precision is stated, and a correctly rounded
+    answer is rejected.'
+  summary: 'The rule accepts within ±0.005 of a value that is itself stored rounded. No question or screen states
+    a precision (the placeholder only shows "e.g. 3/7 or 0.429 or 42.9%"), against SR-1. Two decimal places, rounded
+    half up, is rejected wherever the exact answer ends in 5 in the third decimal place. Both neighbours sit exactly
+    0.005 away, and the float difference exceeds 0.005: alevel_12 phase 1 (346/400 = 0.865): 0.87 and 0.86 both
+    rejected, also "87%". alevel_19 phase 2 (0.625): 0.63 rejected. alevel_20 phase 1 (45/1000 = 0.045): 0.05 and
+    "5%" rejected. core_03 phase 1 (0.375): 0.38 rejected. core_08 phase 1 (0.325): 0.33 rejected. core_15 phase
+    2 (0.625): 0.63 rejected. core_16 phase 1 (0.175): 0.18 rejected. l4_02 phase 2 (0.175): 0.18 rejected. l4_10
+    phase 2 (0.625): 0.63 rejected. l4_14 phase 2 (0.625): 0.63 rejected. Any 1 d.p. answer is rejected on 89 of
+    the 130 free-entry items (e.g. 3/7 typed as 0.4).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Share affected (2 d.p.): alevel 3 of 50 items, core
+    4 of 40, level4 3 of 40. Fix: state the precision on each question (or accept exact fractions only) and mark
+    through `MaffsAnswer.decimal`.'
+  status: open
+- id: given-that-r-003
+  severity: HIGH
+  jc: false
+  class: 7
+  level: core, alevel, level4
+  where: 'core/alevel/level4, index.html:842: the absolute ±0.005 tolerance accepts named wrong answers on small
+    probabilities (canon 7.1.2).'
+  summary: 'core_04 phase 1 (index.html:369), "What proportion of people test positive?" Key 448/10000 = 0.0448.
+    Accepts 0.04 = 400/10000, the true positives only (forgetting the 48 false positives): the classic screening
+    error. core_06 phase 1 (index.html:371), "What proportion of bags trigger an alert?" Key 2590/50000 = 0.0518.
+    Accepts 0.0499 = 2495/50000 (false alerts only) and 0.05 (the 5% false-alert rate). core_12 phase 1 (index.html:377),
+    "What proportion of the time does the alarm go off?" Key 2088/20000 = 0.1044. Accepts 0.0995 = 1990/20000 (false
+    alarms only). It also accepts 0.1, which is both the false-alarm rate and a 1 d.p. rounding of the key. alevel_22
+    phase 2 (index.html:360), "Using P(A ∩ B) = 0.3 and P(A) = 0.55, find P(B|A)." Key 6/11 ≈ 0.5455. Accepts 0.55,
+    i.e. typing P(A) from the question. l4_04 phase 1 (index.html:391), "Find P(major defect)." Key 380/3000 = 0.1267.
+    Accepts P(minor defect) = 370/3000 = 0.1233, the adjacent row. The tolerance also accepts contrived combinations
+    elsewhere, not named errors and not counted here (core_03 phase 1, l4_02 phases 1 and 2, l4_04 phase 2, l4_08
+    phase 2; see near.py output).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. Share affected: core 3 of 40 items, alevel 1 of 50,
+    level4 1 of 40.'
+  status: open

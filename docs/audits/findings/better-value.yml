@@ -1,0 +1,135 @@
+# Findings register for better-value (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: better-value
+audited:
+  tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    gcse: '20'
+    core: '50'
+findings:
+- id: better-value-r-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: core
+  where: core, bv_core_009, index.html:358 (keyed line :364, explanation :368)
+  summary: 'Question: "Tom wants to borrow £2,000 for 2 years." The bank loan is £2,000 at 8% APR over 2 years;
+    the credit union is £95/month for 24 months. Options: "The bank loan is cheaper — 8% APR sounds low" / "The
+    credit union is cheaper — total repayment £2,280 vs approximately £2,332 for the bank loan" / "They cost the
+    same — both around £2,300" / "The bank loan is better because it has a fixed rate". Keyed answer: the credit
+    union is cheaper (£2,280 vs about £2,332). Correct answer: the bank loan is cheaper, at about £2,165 in total.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: £2,332 is 2000 × 1.08² = £2,332.80, which
+    is the debt with **no repayments at all for 2 years** (and £2,332.80 rounds to £2,333 anyway). A 2-year loan
+    at 8% APR repaid monthly costs £90.20/month, £2,164.80 in total (`recompute.py`). The credit union''s £95 ×
+    24 on £2,000 works out at an APR of about 13.7%. Under the usual monthly-repayment reading the key is reversed.
+    The scenario never states how the bank loan is repaid, so the question is at best unanswerable as worded. The
+    explanation teaches the wrong model. Share affected: 1 of 50 core questions.'
+  status: open
+- id: better-value-r-002
+  severity: HIGH
+  jc: false
+  class: 3
+  level: core
+  where: core, bv_core_031, index.html:626 (keyed line :633)
+  summary: 'Question: the advertised deal is £18/month + £10/month line rental + £60 installation over 18 months;
+    the rival is £32/month all-in over 12 months. Keyed conclusion: "The advertised deal costs £564 over 18 months;
+    the rival costs £384 over 12 months. Per month, the rival is cheaper at £32 vs £31.33 — but the advertised deal
+    locks you in for 6 extra months". Keyed answer states "the rival is cheaper at £32 vs £31.33". Correct: £31.33
+    < £32, so the **advertised** deal is cheaper per month. The game''s own explanation (:636) says "Per month the
+    advertised deal is marginally cheaper".'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Evidence: (28 × 18 + 60)/18 = 564/18 = £31.33 < £32.
+    The keyed text is false as written, and no other option is correct: one claims £18 beats £32, and another compares
+    totals over different terms. Share affected: 1 of 50 core.'
+  status: open
+- id: better-value-r-003
+  severity: HIGH
+  jc: false
+  class: 3
+  level: core
+  where: core, bv_core_036, index.html:686 (keyed line :691, explanation :696)
+  summary: 'Question: 20 return trips; Anytime £48; Advance £22, with 3 missed trains replaced at £48. Keyed: "Advance
+    tickets are better value — total £518 vs £960 for Anytime, even with 3 missed trains". Keyed answer: £518. Correct:
+    £584 (20 × £22 + 3 × £48). The explanation''s own sum, £440 + £66 + £144, is £650, not £518.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. Evidence: 440 + 66 + 144 = 650, and the key printed
+    518. The verdict (Advance is cheaper) holds, but the keyed figure and the "saves £442" in the explanation are
+    wrong arithmetic. Share affected: 1 of 50 core.'
+  status: open
+- id: better-value-r-004
+  severity: HIGH
+  jc: false
+  class: 3
+  level: core
+  where: core, bv_core_037, index.html:698 (keyed line :704)
+  summary: 'Question: standard flyers cost £180 and bring £800 of sales; premium flyers cost £260 and bring £1,120.
+    Keyed: "Premium flyers give better return on investment — net profit £860 vs £620 for standard". Keyed answer:
+    premium has the better ROI. Correct: standard has the better ROI, 344% against 331%. Premium has the higher
+    net **profit**.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F4. Evidence: 620/180 = 344.4% and 860/260 = 330.8%. The
+    game''s own explanation says "Although premium has slightly lower ROI…". The keyed claim is false as worded.
+    A student who computes ROI finds no true option. Share affected: 1 of 50 core.'
+  status: open
+- id: better-value-r-005
+  severity: HIGH
+  jc: false
+  class: 3
+  level: core
+  where: core, bv_core_049, index.html:842 (keyed line :847, explanation :852)
+  summary: 'Question: an employee costs £15/h × 20 h/week plus £180/month employer costs; outsourcing costs £40/h.
+    "At what weekly outsourcing hours does hiring become cheaper?" Keyed: "Hiring becomes cheaper above approximately
+    8.8 hours per week". Keyed answer: 8.8 hours. Correct answer: about 8.5 hours. The explanation itself computes
+    "h = 8.54 hours", then says "Above about 8.8 hours".'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F5. Evidence: (300 + 180 × 12/52)/40 = 8.538. With the game''s
+    ÷4.33 it is 8.539. Share affected: 1 of 50 core.'
+  status: open
+- id: better-value-r-006
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: gcse
+  where: gcse, bv_gcse_020, index.html:1100 (distractor :1105)
+  summary: 'Question: a £15 reusable bottle against £1 bottled water. The distractor "The reusable bottle saves
+    money after 15 bottles" is marked wrong. The keyed answer is "…saves money after more than 15 bottles — from
+    bottle 16 onwards".'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F6. Evidence: "after 15 bottles" naturally means once 15
+    have been bought, which is the same as "from bottle 16". The game itself keys exactly this "after N = break-even
+    N" wording as correct in bv_core_024 (:545, "After 34 coffees the machine becomes better value — break-even
+    at 34 cups", where 85/2.50 = 34 exactly). A student can be marked wrong for the game''s own accepted phrasing.
+    This is in the resit card''s level. Share affected: 1 of 20 gcse.'
+  status: open
+- id: better-value-r-007
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: core
+  where: core, bv_core_007, index.html:333 (distractor :341)
+  summary: The distractor "Lease B is better if the business makes fewer than 1,000 copies" is marked wrong, but
+    it is **true**. Lease B costs £85 + 0.02n per month, which is below £120 whenever n < 1,750. It is irrelevant
+    to this business (2,000 copies), but as a statement it is correct.
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F7. '
+  status: open
+- id: better-value-r-008
+  severity: MEDIUM
+  jc: true
+  class: 2
+  level: core
+  where: core, bv_core_019, index.html:479 (distractor :484)
+  summary: The distractor "Contract B pays more in total — £18,000 vs £11,520" is marked wrong. It is true if Contract
+    A also runs 12 weeks (320 × 3 × 12 = 11,520). The scenario gives no length for Contract A and never says whether
+    "pays better" means the day rate or the total.
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F8. '
+  status: open
+- id: better-value-r-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: core
+  where: core, bv_core_033, index.html:650 (explanation :660). The keyed 4.25 kWh/day is right (28d + 25 = 24d +
+    42 in pence). The explanation mixes pounds and pence, writing "0.28d + 25 = 0.24d + 42 → 0.04d = 17 → d = 4.25".
+    In that form 0.04d = 17 gives d = 425.
+  summary: core, bv_core_033, index.html:650 (explanation :660). The keyed 4.25 kWh/day is right (28d + 25 = 24d
+    + 42 in pence). The explanation mixes pounds and pence, writing "0.28d + 25 = 0.24d + 42 → 0.04d = 17 → d =
+    4.25". In that form 0.04d = 17 gives d = 425.
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F9. '
+  status: open

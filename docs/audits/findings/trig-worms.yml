@@ -1,0 +1,50 @@
+# Findings register for trig-worms (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: trig-worms
+audited:
+  tranche: 1
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    gcse: generator (1,575 outcomes)
+findings:
+- id: trig-worms-t1-001
+  severity: CRITICAL
+  jc: false
+  class: 2
+  level: gcse
+  where: games/trig-worms/index.html:212-228
+  summary: In 333 of 675 angle questions (49%) a wrong option is theta worked out correctly from two other sides
+    labelled on the diagram; 170 of 675 have a wrong option nearer the true angle than the key
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. Hypotenuse 8, angle 15 deg: options 25, 15 (key),
+    15.3, 74.8; 15.3 = atan(2.1/7.7) from the diagram; clicking 15.3 in Chromium gave MISSED. Root cause: whole-degree
+    keys, givens at 1 d.p., no precision stated (SR-1)'
+  status: open
+- id: trig-worms-t1-002
+  severity: MEDIUM
+  jc: false
+  class: 6
+  level: gcse
+  where: games/trig-worms/index.html:247
+  summary: '''Find the adjacent side'' sets findSide=''opposite'': the diagram shows O=? and prints A=<the answer>
+    (450 of 1,575 outcomes; arguably HIGH)'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open
+- id: trig-worms-t1-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:precision-not-stated
+  level: gcse
+  where: games/trig-worms/index.html:212-228
+  summary: In 48 of 675 angle outcomes the stated method rounds to a different whole degree from the key
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open
+- id: trig-worms-t1-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: gcse
+  where: games/trig-worms/index.html:212-228
+  summary: The explanation '= 15 deg' is false at 1 d.p. in 517 of 675 angle outcomes
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open

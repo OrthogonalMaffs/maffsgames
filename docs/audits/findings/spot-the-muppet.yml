@@ -1,0 +1,90 @@
+# Findings register for spot-the-muppet (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: spot-the-muppet
+audited:
+  tranche: 2
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    gcse: '20'
+    core: '12'
+    ks3: '18'
+findings:
+- id: spot-the-muppet-t2-001
+  severity: HIGH
+  jc: false
+  class: 2
+  level: core
+  where: games/spot-the-muppet/index.html:317 (core_004)
+  summary: The stem never says compound (the topic field is never shown), so 'simple interest gives £2,000' is true
+    and marked wrong
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: spot-the-muppet-t2-002
+  severity: HIGH
+  jc: true
+  class: 2
+  level: core
+  where: games/spot-the-muppet/index.html:325 (core_008)
+  summary: 'Distractor with the right value by an invalid method: ''£120 - £20 = £100'' (the key is £120 / 1.2 =
+    £100)'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. SR-16'
+  status: open
+- id: spot-the-muppet-t2-003
+  severity: HIGH
+  jc: true
+  class: 2
+  level: ks3
+  where: games/spot-the-muppet/index.html:241 (ks3_005)
+  summary: 'Distractor with the right value by an invalid method: ''mean = (2 + 10) / 2 = 6'' (the true mean is
+    30 / 5 = 6)'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. SR-16'
+  status: open
+- id: spot-the-muppet-t2-004
+  severity: HIGH
+  jc: true
+  class: 3
+  level: core
+  where: games/spot-the-muppet/index.html:313 (core_002)
+  summary: 'The key condemns a valid marginal-cost argument: £1.30 for 250 ml is 0.52 p/ml, below 0.70 p/ml'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
+  status: open
+- id: spot-the-muppet-t2-005
+  severity: HIGH
+  jc: false
+  class: 1
+  level: all
+  where: games/spot-the-muppet/index.htmlnextQuestion()
+  summary: 'No guard: a double-click on Next lands on the new question''s options, which is answered unseen'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. Reproduced in Chromium'
+  status: open
+- id: spot-the-muppet-t2-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/spot-the-muppet/index.html (loan item)
+  summary: The loan item's figures are wrong (the real repayment is about £364/month)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct; the report groups Spot the Muppet and Terrible Advice, so filed against both'
+  status: open
+- id: spot-the-muppet-t2-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/spot-the-muppet/index.html (562.45 vs 562.43)
+  summary: The 562.45 vs 562.43 slip
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct; the report groups Spot the Muppet and Terrible Advice, so filed against both'
+  status: open
+- id: spot-the-muppet-t2-008
+  severity: MEDIUM
+  jc: false
+  class: 9
+  level: all
+  where: games/spot-the-muppet/index.html (humour fields)
+  summary: 'SR-14: the ''patients'' joke, which the scanner cannot see'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct; the report groups Spot the Muppet and Terrible Advice, so filed against both'
+  status: open

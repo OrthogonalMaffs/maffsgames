@@ -1,0 +1,31 @@
+# Findings register for surd-simplifier (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: surd-simplifier
+audited:
+  tranche: 1
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    gcse: '50'
+    alevel: '50'
+findings:
+- id: surd-simplifier-t1-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: gcse
+  where: games/surd-simplifier/index.html:174
+  summary: '8/sqrt(32), ''Rationalise and simplify'': the key ''sqrt2 . sqrt2'' equals 2; the answer is sqrt2, and
+    the only option equal to it, 8sqrt32/32, is marked wrong'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. Reproduced in Chromium; :175, the same stem, is
+    keyed sqrt2'
+  status: open
+- id: surd-simplifier-t1-002
+  severity: HIGH
+  jc: false
+  class: 3
+  level: gcse
+  where: games/surd-simplifier/index.html:233
+  summary: 0.41616... = 206/495; the key 137/330 is 0.41515..., and none of the four options is correct
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2'
+  status: open

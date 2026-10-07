@@ -1,0 +1,143 @@
+# Findings register for glorious-gantt (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: glorious-gantt
+audited:
+  tranche: 4
+  head: fc20f8c
+  date: '2026-10-06'
+  served:
+    core-a: 4
+    level4-a: 4
+    core-b: 3
+    level4-b: 4
+findings:
+- id: glorious-gantt-t4-001
+  severity: CRITICAL
+  jc: true
+  class: '6'
+  level: level4 (mode a)
+  where: games/glorious-gantt/index.html:353,390,428 (L4_A1, L4_A2, L4_A3)
+  summary: 'Node-time keys contradict the drawn network the prompt names: 10+ of 82 marked entries in L4 mode A'
+  evidence: 'L4_A1: H self-loop 6->6; F, G enter node 6 from node 5 (early 22) so node 6 early = 25, key 28; node
+    5 late key 22, arcs 25. L4_A2: node 5 early key 4 (arcs 3), node 8 early key 9 (arcs and table 7), node 7 late
+    key 6 (arcs 8), node 6 dead end. L4_A3: node 6 late key 20, arcs 24. Plus L4_A2 critical path and L4_A3 float
+    E (2 places). 5 of 82 if only keys wrong under every reading (hence JC).'
+  status: open
+- id: glorious-gantt-t4-002
+  severity: HIGH
+  jc: false
+  class: '3'
+  level: core (mode a)
+  where: games/glorious-gantt/index.html:311 (CM_A3)
+  summary: Float of C keyed 7; true 4 (F, which depends on C, is drawn as a self-loop)
+  evidence: F runs 4-7, LS(F) = 8, so LF(C) = 8, float(C) = 8 - 0 - 4 = 4. Gantt draws F at 11-14, past the 13-day
+    axis.
+  status: open
+- id: glorious-gantt-t4-003
+  severity: HIGH
+  jc: false
+  class: '2'
+  level: level4 (mode a)
+  where: games/glorious-gantt/index.html:460,464 (L4_A3)
+  summary: Float of E keyed 15; true 10, and '10 days' is offered as a wrong option
+  evidence: T = 28, LS(G) = 23, LF(F) = 23, LS(F) = 20, LF(E) = 20, float(E) = 20 - 5 - 5 = 10. Step 5 floats {E:15}
+    and the Gantt MCQ correct:'15 days', wrong:[...'10 days'].
+  status: open
+- id: glorious-gantt-t4-004
+  severity: HIGH
+  jc: false
+  class: '3'
+  level: core (mode b)
+  where: games/glorious-gantt/index.html:534 (CM_B1)
+  summary: Two critical paths; selecting all critical activities is marked wrong
+  evidence: A-B-D-G = 1+4+5+1 = 11 = A-E-F-G (1+6+3+1). Key ['A','B','D','G']; selecting A,B,D,E,F,G gives 'E, F
+    have float - not critical'. :535 keys floats E, F as 0.
+  status: open
+- id: glorious-gantt-t4-005
+  severity: HIGH
+  jc: false
+  class: '3'
+  level: level4 (mode a)
+  where: games/glorious-gantt/index.html:421 (L4_A2)
+  summary: Two critical paths; the key omits E and F
+  evidence: A-B-C-D-G-H = 9 = A-E-F-G-H (1+3+2+1+2); all 8 activities are critical; key ['A','B','C','D','G','H'];
+    :422 floats E:0, F:0.
+  status: open
+- id: glorious-gantt-t4-006
+  severity: HIGH
+  jc: false
+  class: '3'
+  level: level4 (mode b)
+  where: games/glorious-gantt/index.html:684 (L4_B2)
+  summary: Floats of C and E wrong (keys 5 and 4; true 8 and 1); node 4 late keyed 12, LF(C) = 15
+  evidence: 'T = 25; I 24-25, H 21-24, G 17-21, so LS(E) = 15: float(C) = 15 - 3 - 4 = 8; E 14-16, LF(E) = LS(G)
+    = 17: float(E) = 1. Node 4 (end of C) is a dead end.'
+  status: open
+- id: glorious-gantt-t4-007
+  severity: HIGH
+  jc: false
+  class: '3'
+  level: core (mode b)
+  where: games/glorious-gantt/index.html:541 (CM_B2)
+  summary: Node 3 late keyed 6; LF(B) = 9 by the table, and node 3 is a dead end in the drawing
+  evidence: B ends at node 3 (no outgoing arc); F depends on B and E; T = 10, LS(F) = 9, so LF(B) = 9.
+  status: open
+- id: glorious-gantt-t4-008
+  severity: HIGH
+  jc: false
+  class: '8'
+  level: all
+  where: games/glorious-gantt/index.html:968,1003,1089,1188,1236
+  summary: Retries score full marks; double-clicking Check scores twice and skips items; inflated score submitted
+  evidence: 'Wrong then right typed entry: +5 (penalty only changes the title). Double-click: node +10 not +5, critical
+    path +40 not +20, float +16 and floatIdx 0->2. submitScore(…, G.score, …) at :1236; modes A and B share one
+    board per level.'
+  status: open
+- id: glorious-gantt-t4-009
+  severity: MEDIUM
+  jc: false
+  class: '6'
+  level: all
+  where: games/glorious-gantt/index.html (CM_A1, CM_A2, CM_A3, L4_A1, CM_B1, CM_B3, L4_B1)
+  summary: Parallel arcs overprinted, self-loops invisible, dead-end nodes, Gantt bars from the faulty arcs
+  evidence: 'Overlaps: CM_A1 E/F, CM_A2 B/C, CM_A3 D/E, L4_A1 B/C and F/G, CM_B1 B/C, CM_B3 E/F, L4_B1 D/E. Dead
+    ends: CM_B3 n5, L4_B1 n4, L4_B3 n4, L4_B4 n4, n5. Bars: L4_A1 H at 28, L4_A2 H at 9, off the chart.'
+  status: open
+- id: glorious-gantt-t4-010
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: all (mode b)
+  where: games/glorious-gantt/index.html:166,922
+  summary: Mode B 'Build the network first' does nothing different from mode A
+  evidence: ':922 comment: ''in this simplified version, we show network and proceed''.'
+  status: open
+- id: glorious-gantt-t4-011
+  severity: MEDIUM
+  jc: true
+  class: '2'
+  level: core (mode a)
+  where: games/glorious-gantt/index.html:246 (CM_A1)
+  summary: '''Which activities can run simultaneously during days 5-9?'' keys ''C, D, and B''; B runs 0-2 on the
+    chart shown'
+  evidence: B can only run then by using its float; 'C and D' is not offered.
+  status: open
+- id: glorious-gantt-t4-012
+  severity: MEDIUM
+  jc: false
+  class: '5'
+  level: all
+  where: games/glorious-gantt/index.html:791-794
+  summary: 3-4 scenarios per level and mode; the ledger's B4 counts the unfiltered 15
+  evidence: 'Measured in Chromium: core A 4, L4 A 4, core B 3, L4 B 4.'
+  status: open
+- id: glorious-gantt-t4-013
+  severity: LOW
+  jc: false
+  class: '7'
+  level: all
+  where: games/glorious-gantt/index.html:783,968
+  summary: parseInt marking (0.9 -> 0); ?level=a"] throws in parseURL; 392px at the Gantt step on a 390 phone; question_answered
+    only for node entries; game_started lacks mode; timer shown though policy says hidden
+  evidence: Agent's Chromium measurements.
+  status: open

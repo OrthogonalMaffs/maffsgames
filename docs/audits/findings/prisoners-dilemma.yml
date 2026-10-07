@@ -1,0 +1,79 @@
+# Findings register for prisoners-dilemma (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: prisoners-dilemma
+audited:
+  tranche: 4
+  head: fc20f8c
+  date: '2026-10-06'
+  served:
+    ks3: 5
+    gcse: 7
+    alevel: 9
+    core: 7
+findings:
+- id: prisoners-dilemma-t4-001
+  severity: HIGH
+  jc: true
+  class: '8'
+  level: all
+  where: games/prisoners-dilemma/index.html:781
+  summary: 'One board per level ranks the opponent picked: 100 only by choosing Always-Cooperate and defecting 20
+    times'
+  evidence: 'Max per opponent: nora 100, marcus 20, others 56-80; tournament submits each match to the same board.'
+  status: open
+- id: prisoners-dilemma-t4-002
+  severity: HIGH
+  jc: false
+  class: NEW:keys-under-overlay
+  level: all (tournament)
+  where: games/prisoners-dilemma/index.html:789,1033
+  summary: Initials typed into the leaderboard overlay play moves in the next tournament match
+  evidence: 'keydown checks only choiceLocked and the active screen. Typing ''CDX'': roundNum 0 -> 1, history [''cooperate''].
+    An unresolved overlay is removed by the next askInitials, losing that score.'
+  status: open
+- id: prisoners-dilemma-t4-003
+  severity: MEDIUM
+  jc: false
+  class: '4'
+  level: all
+  where: games/prisoners-dilemma/index.html:1019
+  summary: Prototype ?level= keys empty the menu and throw
+  evidence: TypeError opps.map is not a function; recoverable via level button.
+  status: open
+- id: prisoners-dilemma-t4-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:text-contradicts-content
+  level: alevel
+  where: games/prisoners-dilemma/index.html:443
+  summary: '''Two-Tits-for-Tat (TF2T)'' names a different strategy; the rule coded is Tit-for-Two-Tats'
+  evidence: 2TFT defects twice after each defection.
+  status: open
+- id: prisoners-dilemma-t4-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:text-contradicts-content
+  level: core
+  where: games/prisoners-dilemma/index.html:473
+  summary: The Discount Store's hint 'Always undercuts' describes defecting; it always cooperates
+  evidence: Core screens define undercutting as defecting.
+  status: open
+- id: prisoners-dilemma-t4-006
+  severity: MEDIUM
+  jc: true
+  class: '9'
+  level: alevel
+  where: games/prisoners-dilemma/index.html:442,711
+  summary: '''Two-Tit Tara'' and ''Can you spot Two-Tit''s pattern?'': a crude double entendre on a female character'
+  evidence: Not an SR-14 tier; a decency call.
+  status: open
+- id: prisoners-dilemma-t4-007
+  severity: LOW
+  jc: false
+  class: '6'
+  level: all
+  where: games/prisoners-dilemma/index.html:711
+  summary: name.split(' ')[0] gives 'The's pattern'; Core insight says 'points' not £k; ASCII '0.5 x 3'; card says
+    9 opponents, link opens 5; no how-to
+  evidence: Agent's evidence.
+  status: open

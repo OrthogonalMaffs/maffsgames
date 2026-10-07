@@ -1,0 +1,30 @@
+# Findings register for prime-or-composite (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: prime-or-composite
+audited:
+  tranche: 1
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    ks3: '66'
+findings:
+- id: prime-or-composite-t1-001
+  severity: HIGH
+  jc: false
+  class: 1
+  level: ks3
+  where: games/prime-or-composite/index.html:529-533
+  summary: 'The keyboard handler checks only gameActive and qIdx++ runs before the feedback pause: P or C during
+    feedback answers the next question unseen; a key after the last question throws'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. Reproduced: question 2 (7) marked wrong without
+    being shown'
+  status: open
+- id: prime-or-composite-t1-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:hint-gives-answer
+  level: ks3
+  where: games/prime-or-composite/index.html(hints)
+  summary: 'Every hint gives the answer away: a rule that reads only the hint classifies all 66 items correctly'
+  evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
+  status: open

@@ -1,0 +1,82 @@
+# Findings register for linear-equation-solver (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: linear-equation-solver
+audited:
+- tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    gcse: '141'
+- tranche: 4
+  head: fc20f8c
+  date: '2026-10-06'
+  served:
+    gcse: 141
+findings:
+- id: linear-equation-solver-r-001
+  severity: HIGH
+  jc: true
+  class: NEW:marking-by-structure
+  level: gcse
+  where: 'gcse, two-step shapes M, U, V and Y1 (lines 227-232, 274-280, 295): a second valid first move is offered
+    and marked wrong, and it gives a clean integer equation.'
+  summary: 'Example (M1, line 227): `x/2 + 5 = 11`, "What do you do to both sides?" Options `-5`, `+5`, `×2`, `÷2`.
+    Keyed: `-5`. Also correct: `×2` (multiply both whole sides by 2) gives `x + 10 = 22`, then `-10` gives x = 12.
+    U1 (line 274): `-x + 6 = 10`, options `-6`, `+6`, `×(-1)`, `÷(-1)`. Keyed `-6`. Both `×(-1)` and `÷(-1)` give
+    `x - 6 = -10`, a standard valid move: two valid moves marked wrong in each of U1-U4. V1 (line 278): `x/4 + 9
+    = 5`, `×4` gives `x + 36 = 20`. Y1 (line 295): `(2/3)x + 4 = 10`, `×3/2` gives `x + 6 = 15`.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: check.py applies each offered move to both
+    sides and finds the equation one step from solved (structure a·x+b=c with a=1) with integer coefficients. Share
+    affected: 14 of 141 questions (M1-M6, V1-V3, U1-U4, Y1), ~10% of the level. The hint ("Clear the 5 first") shows
+    the convention is intended (the generator offers the swapped order as the "wrong order" misconception, `gen-linear-equations.py:187-204`),
+    but the ask does not say "first step in the usual order", and a student who multiplies through first is doing
+    correct algebra and is penalised 25 points and loses the clean streak.'
+  status: open
+- id: linear-equation-solver-r-002
+  severity: MEDIUM
+  jc: true
+  class: NEW:marking-by-structure
+  level: gcse
+  where: 'gcse, two-step shapes L, P, Q, R, T, X, Y2-Y6 (lines 215-226, 247-265, 271-273, 285-300): the same "other
+    order" move is offered and marked wrong; it is valid algebra but gives fractions. Example L1 (line 215): `3x
+    + 7 = 22`, options `-7`, `+7`, `÷3`, `×3`; keyed `-7`; `÷3` (every term) gives `x + 7'
+  summary: 'gcse, two-step shapes L, P, Q, R, T, X, Y2-Y6 (lines 215-226, 247-265, 271-273, 285-300): the same "other
+    order" move is offered and marked wrong; it is valid algebra but gives fractions. Example L1 (line 215): `3x
+    + 7 = 22`, options `-7`, `+7`, `÷3`, `×3`; keyed `-7`; `÷3` (every term) gives `x + 7/3 = 22/3`, which still
+    solves to x = 5. Share: 49 of 141 questions. Whether "divide first" counts as a correct move is Jon''s ruling;
+    if it is ruled correct, F1+F2 together are 63 of 141 questions (45%, 63 of the 86 two-step questions), which
+    is over the CRITICAL threshold. A fix that keeps the misconception would be an ask that names the convention,
+    or replacing that distractor with an invalid move (e.g. `÷3` applied to the x-term only is the real misconception,
+    but the button cannot show that).'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. '
+  status: open
+- id: linear-equation-solver-t4-001
+  severity: CRITICAL
+  jc: false
+  class: NEW:sr13-single-move-key
+  level: gcse
+  where: games/linear-equation-solver/index.html:390 (L1 :216, M1 :228, U1 :275)
+  summary: 'SR-13 not built: every valid alternative move is marked wrong (known; todo START batch 1)'
+  evidence: '681/681 non-key options are valid both-side operations; 67 in 63 questions make progress; 14/141 (10%)
+    narrowest reading, 63/141 progress moves. L1 3x+7=22: /3 marked wrong (-25). U1: x(-1) and /(-1) both offered
+    and both wrong.'
+  status: open
+- id: linear-equation-solver-t4-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: gcse
+  where: games/linear-equation-solver/index.html:379 (J1-J5, Y1-Y6)
+  summary: 11 hints show raw TeX
+  evidence: 'useHint writes innerHTML without rk(): ''Multiplying by \frac{3}{2} undoes …''.'
+  status: open
+- id: linear-equation-solver-t4-003
+  severity: LOW
+  jc: false
+  class: '1'
+  level: gcse
+  where: games/linear-equation-solver/index.html:371-373,454,475
+  summary: Hint usable by keyboard after a phase is answered; two activations of Next in one frame skip a question
+    or submit twice; 320x568 Next under the footer; game_completed sends accuracy
+  evidence: Agent's Chromium reproductions; not reached by a real double-click.
+  status: open

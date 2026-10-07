@@ -1,0 +1,103 @@
+# Findings register for integration-duel (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: integration-duel
+audited:
+  tranche: 5
+  head: fc20f8c
+  date: 2026-10-06
+  served:
+    alevel: 14
+    level4: 14
+findings:
+- id: integration-duel-t5-001
+  severity: HIGH
+  jc: false
+  class: 3
+  level: level4
+  where: games/integration-duel/index.html:842 (Impulse, ∫₀²(4t − t²)dt)
+  summary: Keyed 8/3; true value 16/3, not offered; exp shows 8 − 8/3 = 8/3
+  evidence: '[2t² − t³/3]₀² = 8 − 8/3 = 16/3 (SymPy 16/3); options 8/3, −8/3, 4, 2'
+  status: open
+- id: integration-duel-t5-002
+  severity: HIGH
+  jc: true
+  class: 2
+  level: alevel
+  where: games/integration-duel/index.html:738 (∫1/x dx)
+  summary: '''ln x + c'' marked wrong; valid for x>0 and the modulus convention is not stated'
+  evidence: d/dx ln x = 1/x (x>0)
+  status: open
+- id: integration-duel-t5-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:missing-+c distractor
+  level: all
+  where: games/integration-duel/index.html:684-898 (all 64 indefinite items)
+  summary: Every indefinite item offers the key without +c as wrong; feedback never names the missing constant (CRITICAL
+    if ruled 'right value, wrong method')
+  evidence: 38/38 alevel and 26/26 level4 indefinite items; wrong pick shows only 'WRONG!' + exp
+  status: open
+- id: integration-duel-t5-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:value-equal distractors
+  level: alevel
+  where: games/integration-duel/index.html:729 (∫4e^{2x}dx)
+  summary: Wrong options 2e^{2x} and 4e^{2x}/2 equal (B11 ledger)
+  evidence: 4e^{2x}/2 = 2e^{2x}
+  status: open
+- id: integration-duel-t5-005
+  severity: MEDIUM
+  jc: false
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/integration-duel/index.html:795 (∫4t dt)
+  summary: Wrong options 2t^2 and 4t^2/2 equal (B11 ledger)
+  evidence: 4t²/2 = 2t²
+  status: open
+- id: integration-duel-t5-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/integration-duel/index.html:811 (∫12x dx)
+  summary: Wrong options 6x^2 and 12x^2/2 equal (B11 ledger)
+  evidence: 12x²/2 = 6x²
+  status: open
+- id: integration-duel-t5-007
+  severity: MEDIUM
+  jc: false
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/integration-duel/index.html:835 (∫50e^{-2t}dt)
+  summary: Wrong options -25e^{-2t} and -50e^{-2t}/2 equal (B11 ledger)
+  evidence: −50e^{−2t}/2 = −25e^{−2t}
+  status: open
+- id: integration-duel-t5-008
+  severity: MEDIUM
+  jc: false
+  class: NEW:value-equal distractors
+  level: level4
+  where: games/integration-duel/index.html:889 (∫₁²x³dx)
+  summary: Wrong options 4 and 16/4 equal (B11 ledger)
+  evidence: 16/4 = 4
+  status: open
+- id: integration-duel-t5-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:false scoring claim
+  level: all
+  where: games/integration-duel/index.html:604, :990
+  summary: Start screen says 'faster answers score higher'; every correct answer earns a flat 100 (T_K unused)
+  evidence: earned = Math.max(1, Math.round(BASE)) = 100; 13/14 correct -> 1300
+  status: open
+- id: integration-duel-t5-010
+  severity: LOW
+  jc: false
+  class: 4
+  level: all
+  where: games/integration-duel/index.html:903, :660, :803/817/845-857, :907-911
+  summary: Unknown ?level silently serves alevel; power rule omits n ≠ −1; exp adds units the stems never state;
+    biased shuffle and local makeChoices
+  evidence: 'Chromium: currentLevel ''alevel'', no pageerror, for constructor/__proto__/nonsense/LEVEL4'
+  status: open

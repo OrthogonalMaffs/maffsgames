@@ -1,0 +1,170 @@
+# Findings register for screening-room (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: screening-room
+audited:
+  tranche: 4
+  head: fc20f8c
+  date: '2026-10-06'
+  served:
+    gcse: 20
+    alevel: 20
+    core: 15
+    level4: 15
+findings:
+- id: screening-room-t4-001
+  severity: CRITICAL
+  jc: false
+  class: '3'
+  level: all
+  where: games/screening-room/index.html:340-415 (20 items), buttons :266-269
+  summary: 20 of 70 gut-check keys name a band that excludes the item's own answer (GCSE 5/20, A-Level 4/20, Core
+    5/15, L4 6/15)
+  evidence: 'Bands: Over 75 / 25-75 / 5-25 / Under 5. Keyed ''unlikely'': gcse_01 25.7%, gcse_08 36.9%, gcse_13
+    28.1%, gcse_14 37.5%, gcse_19 39.6%, alevel_06 44.4%, alevel_09 27.9%, alevel_10 28.2%, alevel_17 45.7%, core_01
+    27.3%, core_07 39.2%, core_09 25.8%, core_14 29.1%, l4_01 41.6%, l4_03 37.8%, l4_04 29.6%, l4_06 36.8%, l4_12
+    36.0%, l4_15 39.0%; core_13 5.0% keyed very_unlikely. Chromium: gcse_01 ''Likely'' marked wrong.'
+  status: open
+- id: screening-room-t4-002
+  severity: HIGH
+  jc: false
+  class: '3'
+  level: alevel
+  where: games/screening-room/index.html:377 (alevel_16)
+  summary: Key 171/301 = 0.568; the stated rates give 171/318 = 0.538, which the game's own Bayes box shows and
+    the marker rejects
+  evidence: '200 x 0.9 x 0.95 = 171 TP; 9,800 x 0.15 x 0.10 = 147 FP; data has FP 130, total 301. Chromium: 0.537,
+    53.8% incorrect; 0.568 correct.'
+  status: open
+- id: screening-room-t4-003
+  severity: HIGH
+  jc: false
+  class: '7'
+  level: alevel
+  where: games/screening-room/index.html:777 (alevel_12, alevel_19)
+  summary: Absolute tolerance 0.005 marks 0 correct on small probabilities
+  evidence: 'diff <= 0.005 || diff/correct <= 0.015. alevel_12 key 0.0005: 0, 0.5%, 0.0054 accepted. alevel_19 key
+    0.0028: 0 and 0.7% accepted.'
+  status: open
+- id: screening-room-t4-004
+  severity: HIGH
+  jc: true
+  class: '3'
+  level: gcse, alevel, core
+  where: games/screening-room/index.html:341,349,367,393 (gcse_02, gcse_10, alevel_06, core_10)
+  summary: 'Unstated rounding of counts: the exact Bayes answer from the stated rates is rejected'
+  evidence: alevel_06 exact 0.4571 vs key 0.4444 (own Bayes box 0.457); gcse_02 9.5 rounded down to 9, exact 0.2442
+    rejected; core_10 exact 0.7185 rejected; gcse_10 0.7385 rejected.
+  status: open
+- id: screening-room-t4-005
+  severity: HIGH
+  jc: false
+  class: '1'
+  level: all
+  where: games/screening-room/index.html:523,827
+  summary: A double-click on Next Question answers the next gut check unseen
+  evidence: 'nextQuestion draws phase 1 at once; handleGut has no answered guard. Real dblclick: 7/7 at 1280x800,
+    6/7 at 390x844 recorded in phase1Scores and question_answered.'
+  status: open
+- id: screening-room-t4-006
+  severity: MEDIUM
+  jc: false
+  class: '4'
+  level: all
+  where: games/screening-room/index.html:432
+  summary: Prototype keys accepted as levels; Start then throws
+  evidence: '?level=constructor/__proto__/toString: TypeError arr.slice is not a function; recoverable via level
+    button. nonsense and l4 fall back to gcse silently.'
+  status: open
+- id: screening-room-t4-007
+  severity: MEDIUM
+  jc: false
+  class: '7'
+  level: all
+  where: games/screening-room/index.html:760
+  summary: Unreadable input marked wrong; '1' read as 100%; no precision stated
+  evidence: Empty, 'abc', '0.25.7' scored -3 (canon 7.1.3 says never marked); '10/1,009' parsed as 10.
+  status: open
+- id: screening-room-t4-008
+  severity: MEDIUM
+  jc: false
+  class: '6'
+  level: alevel, core
+  where: games/screening-room/index.html:570 (alevel_01, _03, _04, _10, _12, _19, core_04, core_12)
+  summary: 8 icon arrays scaled for N > 10,000 with no '1 icon = k' note; three draw no condition icon
+  evidence: alevel_04 0/0/0 drawn vs 1/1/10; alevel_12 0/0/100 vs 5/5/10,000; alevel_19 0/0/50 vs 20/14/5,000.
+  status: open
+- id: screening-room-t4-009
+  severity: MEDIUM
+  jc: false
+  class: '6'
+  level: all
+  where: games/screening-room/index.html:369 (alevel_08) and most items
+  summary: Rounded counts never stated as rounded; alevel_08 data 29/76 vs its own Bayes box 30/77
+  evidence: 995 x 0.03 = 29.85; gcse_01 77.6 shown as 78; alevel_12 4.5 TP shown as 5.
+  status: open
+- id: screening-room-t4-010
+  severity: MEDIUM
+  jc: false
+  class: NEW:raw-tex-on-screen
+  level: all
+  where: games/screening-room/index.html:810
+  summary: Every explanation shows a literal '\approx'
+  evidence: explHTML += ' \\approx ' + … outside kRender; confirmed for all 70 items.
+  status: open
+- id: screening-room-t4-011
+  severity: MEDIUM
+  jc: false
+  class: '6'
+  level: alevel, core
+  where: games/screening-room/index.html:371,380,389 (alevel_10, alevel_19, core_06)
+  summary: Non-equal simplifications shown as equalities
+  evidence: 196/695 = 28/99 (0.2820 vs 0.2828); 14/5014 = 1/358; 495/543 = 55/60 (0.9116 vs 0.9167).
+  status: open
+- id: screening-room-t4-012
+  severity: MEDIUM
+  jc: false
+  class: '6'
+  level: alevel, core
+  where: games/screening-room/index.html:375,397,365 (alevel_14, core_14, alevel_04)
+  summary: Wrong or unsupported explanation figures
+  evidence: alevel_14 '2% base rate … P = 13.8%' is 0.018/0.165 = 10.9%; core_14 '70% would struggle' is 1,375/2,000
+    = 68.75%; alevel_04 never states sensitivity (JC).
+  status: open
+- id: screening-room-t4-013
+  severity: MEDIUM
+  jc: false
+  class: NEW:phone-layout
+  level: all
+  where: games/screening-room/index.html:459
+  summary: At 390x844 phase 2 scrolls sideways on 37/70 items and phase 3's Next sits off the right edge
+  evidence: showPhase sets display:flex with row direction; scrollWidth 395-585 (phase 2), 437 (phase 3).
+  status: open
+- id: screening-room-t4-014
+  severity: MEDIUM
+  jc: false
+  class: '5'
+  level: all
+  where: games/screening-room/index.html
+  summary: Pools 20, 20, 15, 15 (8 served per session)
+  evidence: Measured in Chromium over 30 sessions per level.
+  status: open
+- id: screening-room-t4-015
+  severity: MEDIUM
+  jc: true
+  class: NEW:hidden-data
+  level: all
+  where: games/screening-room/index.html:459
+  summary: Phase 3 hides the scenario and array; the true-positive count must be remembered
+  evidence: Prompt gives only total positives.
+  status: open
+- id: screening-room-t4-016
+  severity: LOW
+  jc: false
+  class: '6'
+  level: all
+  where: games/screening-room/index.html
+  summary: Double-rounded percentages (alevel_09, alevel_20, l4_07, l4_14); 'Out of N people' for welds and emails;
+    input hint is gcse_01's answer; PPV called 'true positive rate'; two question_answered rows per question with
+    one index; alevel_01 Bayes box 0.0098 vs 0.99%
+  evidence: Agent's evidence.
+  status: open

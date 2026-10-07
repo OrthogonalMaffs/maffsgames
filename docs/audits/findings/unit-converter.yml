@@ -1,0 +1,99 @@
+# Findings register for unit-converter (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: unit-converter
+audited:
+- tranche: resit
+  head: 6ee0bd6
+  date: 2026-10-04
+  served:
+    gcse: '48'
+    alevel: '38'
+    level4: '42'
+- tranche: 4
+  head: fc20f8c
+  date: '2026-10-06'
+  served:
+    gcse: 48
+    alevel: 38
+    level4: 42
+findings:
+- id: unit-converter-r-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: gcse, alevel, level4
+  where: gcse and alevel and level4 (T bank), `:166`
+  summary: 'Question: "Cylinder: radius 10 cm, height 0.5 m. Volume in cm³?" Options 15,700 cm³ / 1570 cm³ / 157,000
+    cm³ / 157 cm³ Keyed answer: 15,700 cm³. Correct answer: π·10²·50 = 15,707.96… cm³ (15,708 to the nearest cm³).
+    15,700 is only exact with π ≈ 3.14.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. Evidence: the worked solution uses 3.14, but the question
+    does not say so. Its two neighbours (`:165`, `:168`) do say "(π ≈ 3.14)". A student using the π key gets 15,708,
+    which is not offered. 15,700 is still clearly the closest option, so they are not marked wrong, but words and
+    key disagree. Share affected: 1 of 48 (gcse), 1 of 38 (alevel), 1 of 42 (level4).'
+  status: open
+- id: unit-converter-r-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:precision-not-stated
+  level: level4
+  where: level4 only (E bank), `:183`
+  summary: 'Question: "A shaft has diameter 25 mm. Cross-sectional area in m²?" Options 0.000491 / 0.491 / 0.00491
+    / 4.91 m² Keyed answer: 0.000491 m². Exact: π·0.0125² = 0.00049087… m². The key is right to 3 s.f., but neither
+    the precision nor π is stated.'
+  evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Share affected: 1 of 42 (level4).'
+  status: open
+- id: unit-converter-t4-001
+  severity: HIGH
+  jc: false
+  class: '1'
+  level: all
+  where: games/unit-converter/index.html:52,211
+  summary: 'No answered guard: Enter re-marks; unbounded score and repeated submits'
+  evidence: 'Wrong then Enter on revealed key: 0 -> 99, second question_answered correct:true. Enter held on last
+    question: 4,399 points, ''45/20 correct (225%)'', submitScore x26.'
+  status: open
+- id: unit-converter-t4-002
+  severity: MEDIUM
+  jc: false
+  class: '5'
+  level: alevel
+  where: games/unit-converter/index.html:189
+  summary: A-Level pool 38, a subset of GCSE's
+  evidence: bank=[...A,...V,...T].
+  status: open
+- id: unit-converter-t4-003
+  severity: MEDIUM
+  jc: false
+  class: '4'
+  level: all
+  where: games/unit-converter/index.html:108,190,215
+  summary: Any unknown ?level= plays Level 4, shows 'undefined' or 'function Object()', and submits to a new board
+  evidence: unit_converter_nonsense, unit_converter___proto__, unit_converter_l4 all match the rules' key pattern.
+  status: open
+- id: unit-converter-t4-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:precision-not-stated
+  level: all
+  where: games/unit-converter/index.html:167,179,184
+  summary: Rounded keys with no precision or pi stated (cylinder, 60 mph, shaft)
+  evidence: 5000 pi = 15,707.96 keyed 15,700; 26.8166 keyed 26.8; 0.00049087 keyed 0.000491.
+  status: open
+- id: unit-converter-t4-005
+  severity: MEDIUM
+  jc: true
+  class: NEW:timer-policy
+  level: all
+  where: games/unit-converter/index.html:92,210,211
+  summary: Timer policy says hidden count-up; the HUD shows it and the score uses it
+  evidence: 'CSS hides .timer, not #timer.'
+  status: open
+- id: unit-converter-t4-006
+  severity: LOW
+  jc: false
+  class: '6'
+  level: all
+  where: games/unit-converter/index.html:119
+  summary: '''1 inch ≈ 2.54 cm'' is exact; thousands separators inconsistent'
+  evidence: Agent's evidence.
+  status: open

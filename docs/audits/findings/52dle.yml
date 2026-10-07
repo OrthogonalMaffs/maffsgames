@@ -1,0 +1,50 @@
+# Findings register for 52dle (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# A fix PR sets status: fixed and pr: <n> on the entries it closes, in the same PR.
+game: 52dle
+audited:
+  tranche: 2
+  head: 3e46400
+  date: 2026-10-06
+  served:
+    all: 20 in rotation
+findings:
+- id: 52dle-t2-001
+  severity: HIGH
+  jc: false
+  class: 7
+  level: all
+  where: games/52dle/index.html:900
+  summary: 'parseInt(input.value) cuts a decimal before the exact-match check on all 20 puzzles: 23.9 is accepted
+    as 23 and wins; 314.16 wins the pi puzzle'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. Reproduced'
+  status: open
+- id: 52dle-t2-002
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/52dle/index.html (text)
+  summary: '''emirp twins/cousins'' misuse those terms'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open
+- id: 52dle-t2-003
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/52dle/index.html (text)
+  summary: '''100 is the basis of our decimal system'' is wrong (the base is 10)'
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open
+- id: 52dle-t2-004
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: games/52dle/index.html (puzzle number)
+  summary: UTC/BST off-by-one in the puzzle number (as Equatle)
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
+    7 Oct'
+  status: open
