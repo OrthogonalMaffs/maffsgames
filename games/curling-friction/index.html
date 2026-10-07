@@ -144,10 +144,10 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 const QUESTIONS={
 alevel:[
   // === FRICTION BASICS (Q1-12) ===
-  {ctx:'A 20 kg curling stone sits on ice. μ = 0.04. Take g = 9.8 m/s².',q:'F = \\mu R',ask:'Find the friction force',correct:'7.84 N',d:['0.8 N','19.6 N','0.784 N'],cat:'friction'},
-  {ctx:'A 19 kg stone on ice. μ = 0.03. g = 9.8 m/s².',q:'F = \\mu mg',ask:'Find the friction force',correct:'5.586 N',d:['5.7 N','0.588 N','57 N'],cat:'friction'},
+  {ctx:'A 20 kg curling stone slides across the ice. μ = 0.04. Take g = 9.8 m/s².',q:'F = \\mu R',ask:'Find the friction force',correct:'7.84 N',d:['0.8 N','19.6 N','0.784 N'],cat:'friction'},
+  {ctx:'A 19 kg stone slides across the ice. μ = 0.03. g = 9.8 m/s².',q:'F = \\mu mg',ask:'Find the friction force',correct:'5.586 N',d:['5.7 N','0.588 N','57 N'],cat:'friction'},
   {ctx:'A 20 kg stone experiences a friction force of 5.88 N. g = 9.8 m/s².',q:'F = \\mu R',ask:'Find μ',correct:'0.03',d:['0.3','0.003','3'],cat:'friction'},
-  {ctx:'A stone on ice. μ = 0.05. The normal reaction is 196 N.',q:'',ask:'Find the friction force',correct:'9.8 N',d:['10 N','3.92 N','19.6 N'],cat:'friction'},
+  {ctx:'A stone slides across the ice. μ = 0.05. The normal reaction is 196 N.',q:'',ask:'Find the friction force',correct:'9.8 N',d:['10 N','3.92 N','19.6 N'],cat:'friction'},
   {ctx:'A 20 kg stone. μ = 0.04. g = 9.8 m/s².',q:'a = \\mu g',ask:'Find the deceleration',correct:'0.392 \\text{ m/s}^2',d:['0.04 \\text{ m/s}^2','3.92 \\text{ m/s}^2','0.0392 \\text{ m/s}^2'],cat:'friction'},
   {ctx:'A stone decelerates at 0.294 m/s². g = 9.8 m/s².',q:'a = \\mu g',ask:'Find μ',correct:'0.03',d:['0.3','0.003','2.94'],cat:'friction'},
   {ctx:'The team sweeps the ice, reducing μ from 0.04 to 0.02. Stone mass 20 kg. g = 9.8.',q:'',ask:'By how much does the friction force decrease?',correct:'3.92 N',d:['1.96 N','7.84 N','0.392 N'],cat:'friction'},
@@ -166,7 +166,7 @@ alevel:[
   {ctx:'Without sweeping: μ = 0.04, u = 4 m/s, g = 10. With sweeping: μ = 0.02.',q:'',ask:'How much further does the stone travel with sweeping?',correct:'20 m',d:['10 m','40 m','5 m'],cat:'suvat'},
   {ctx:'The target is 25 m away. μ = 0.05. g = 10. (a = 0.5)',q:'s = 25, a = 0.5',ask:'Required launch speed',correct:'5 \\text{ m/s}',d:['25 \\text{ m/s}','\\sqrt{50} \\text{ m/s}','10 \\text{ m/s}'],cat:'suvat'},
   {ctx:'A stone launched at 3 m/s travels 22.5 m. g = 10.',q:'',ask:'Find μ',correct:'0.02',d:['0.04','0.03','0.01'],cat:'suvat'},
-  {ctx:'A stone is at 2 m/s after sliding 12 m. μ = 0.04, g = 10.',q:'v^2 = u^2 - 2as',ask:'Find the initial speed',correct:'\\sqrt{4.96} \\approx 2.23 \\text{ m/s}',d:['4 \\text{ m/s}','3 \\text{ m/s}','2.5 \\text{ m/s}'],cat:'suvat'},
+  {ctx:'A stone is at 2 m/s after sliding 12 m. μ = 0.04, g = 10.',q:'v^2 = u^2 - 2as',ask:'Find the initial speed',correct:'\\sqrt{13.6} \\approx 3.69 \\text{ m/s}',d:['\\sqrt{4.96} \\approx 2.23 \\text{ m/s}','\\sqrt{8.8} \\approx 2.97 \\text{ m/s}','\\sqrt{9.6} \\approx 3.10 \\text{ m/s}'],cat:'suvat'},
   {ctx:'Stone slides 40 m in 10 seconds before stopping.',q:'s = \\dfrac{(u+v)}{2} \\times t',ask:'Find the initial speed',correct:'8 \\text{ m/s}',d:['4 \\text{ m/s}','10 \\text{ m/s}','16 \\text{ m/s}'],cat:'suvat'},
   {ctx:'A stone decelerates from 5 m/s at 0.5 m/s². After 6 seconds...',q:'v = u - at',ask:'What is the velocity?',correct:'2 \\text{ m/s}',d:['0 \\text{ m/s}','-1 \\text{ m/s}','3 \\text{ m/s}'],cat:'suvat'},
   // === MOMENTUM (Q26-38) ===
@@ -199,7 +199,7 @@ alevel:[
   {ctx:'Stone A reaches B at 3 m/s. Equal masses. Elastic collision.',q:'',ask:'Speed of B after collision',correct:'3 \\text{ m/s}',d:['1.5 \\text{ m/s}','6 \\text{ m/s}','0 \\text{ m/s}'],cat:'collision'},
   {ctx:'After collision, stone B moves at 3 m/s on ice with μ = 0.04, g = 10.',q:'',ask:'How far does B travel?',correct:'11.25 \\text{ m}',d:['22.5 \\text{ m}','9 \\text{ m}','15 \\text{ m}'],cat:'suvat'},
   {ctx:'The house centre is 30 m from launch. μ = 0.04, g = 10.',q:'v^2 = u^2 - 2as, \\; a = 0.4',ask:'Required launch speed to stop at 30 m',correct:'\\sqrt{24} \\approx 4.90 \\text{ m/s}',d:['6 \\text{ m/s}','3 \\text{ m/s}','\\sqrt{30} \\text{ m/s}'],cat:'suvat'},
-  {ctx:'Team sweeps from 15 m onwards, reducing μ from 0.04 to 0.02. Stone at 3 m/s at the 15 m mark. g = 10.',q:'',ask:'Additional distance with sweeping vs without',correct:'22.5 \\text{ m vs } 11.25 \\text{ m}',d:['Both 11.25 m','22.5 m vs 22.5 m','45 m vs 11.25 m'],cat:'friction'},
+  {ctx:'Team sweeps from 15 m onwards, reducing μ from 0.04 to 0.02. Stone at 3 m/s at the 15 m mark. g = 10.',q:'',ask:'How far beyond the 15 m mark does it travel with sweeping, and without?',correct:'22.5 m with, 11.25 m without',d:['11.25 m with, 11.25 m without','11.25 m with, 22.5 m without','45 m with, 11.25 m without'],cat:'friction'},
   {ctx:'A stone has KE = 200 J. Mass = 20 kg. It slides until KE = 0. μ = 0.04, g = 10.',q:'\\text{Work done by friction} = Fd',ask:'Find the stopping distance',correct:'25 \\text{ m}',d:['50 \\text{ m}','10 \\text{ m}','200 \\text{ m}'],cat:'friction'},
   {ctx:'Work done by friction = friction force × distance = μmgd.',q:'',ask:'This equals the...',correct:'Loss in kinetic energy',d:['Gain in potential energy','Momentum change','Impulse'],cat:'friction'},
   {ctx:'A stone (20 kg, 4 m/s) collides with a stationary stone (20 kg). Elastic. The target stone then decelerates at 0.3 m/s².',q:'',ask:'How far does the target stone travel?',correct:'\\dfrac{16}{0.6} \\approx 26.7 \\text{ m}',d:['13.3 \\text{ m}','40 \\text{ m}','53.3 \\text{ m}'],cat:'collision'},
@@ -207,14 +207,14 @@ alevel:[
 ],
 level4:[
   // Level 4 — same physics, engineering context framing
-  {ctx:'A 20 kg stone on ice (μ = 0.04, g = 9.81 m/s²). Calculate the friction force to 3 significant figures.',q:'F = \\mu mg',ask:'Find F',correct:'7.85 N',d:['7.84 N','7.8 N','0.785 N'],cat:'friction'},
+  {ctx:'A 20 kg stone slides on ice (μ = 0.04, g = 9.81 m/s²). Calculate the friction force to 3 significant figures.',q:'F = \\mu mg',ask:'Find F',correct:'7.85 N',d:['7.84 N','7.8 N','0.785 N'],cat:'friction'},
   {ctx:'Deceleration of a body on a surface with μ = 0.035, g = 9.81.',q:'a = \\mu g',ask:'Find the deceleration (3 s.f.)',correct:'0.343 \\text{ m/s}^2',d:['0.35 \\text{ m/s}^2','3.43 \\text{ m/s}^2','0.0343 \\text{ m/s}^2'],cat:'friction'},
   {ctx:'A component slides along a surface at 6 m/s. μ = 0.04, g = 9.81.',q:'v^2 = u^2 - 2as',ask:'Stopping distance (3 s.f.)',correct:'45.9 \\text{ m}',d:['45.0 \\text{ m}','91.7 \\text{ m}','22.9 \\text{ m}'],cat:'suvat'},
   {ctx:'A trolley (50 kg) moving at 2 m/s on a factory floor. μ = 0.1, g = 9.81.',q:'',ask:'Friction force',correct:'49.05 N',d:['9.81 N','4.905 N','490.5 N'],cat:'friction'},
-  {ctx:'A 50 kg trolley. F_friction = 49.05 N. u = 2 m/s.',q:'F = ma, \\; v^2 = u^2 - 2as',ask:'Stopping distance',correct:'2.04 \\text{ m}',d:['4.08 \\text{ m}','1.02 \\text{ m}','20.4 \\text{ m}'],cat:'suvat'},
+  {ctx:'A 50 kg trolley. F_friction = 49.05 N. u = 2 m/s.',q:'F = ma, \\; v^2 = u^2 - 2as',ask:'Stopping distance (3 s.f.)',correct:'2.04 \\text{ m}',d:['4.08 \\text{ m}','1.02 \\text{ m}','20.4 \\text{ m}'],cat:'suvat'},
   {ctx:'A 20 kg stone at 5 m/s collides with a 20 kg stationary stone. They stick together.',q:'',ask:'Common velocity (3 s.f.)',correct:'2.50 \\text{ m/s}',d:['5.00 \\text{ m/s}','1.25 \\text{ m/s}','10.0 \\text{ m/s}'],cat:'collision'},
   {ctx:'A 1500 kg car at 20 m/s rear-ends a 1000 kg car at 10 m/s. They lock together.',q:'m_1 u_1 + m_2 u_2 = (m_1+m_2)v',ask:'Find the common speed',correct:'16 \\text{ m/s}',d:['15 \\text{ m/s}','30 \\text{ m/s}','12 \\text{ m/s}'],cat:'collision'},
-  {ctx:'A 2 kg hammer at 8 m/s strikes a 6 kg anvil at rest. Elastic collision.',q:'',ask:'Speed of hammer after (equal mass formula not valid here)',correct:'-4 \\text{ m/s (bounces back)}',d:['0 \\text{ m/s}','4 \\text{ m/s}','8 \\text{ m/s}'],cat:'collision'},
+  {ctx:'A 2 kg hammer at 8 m/s strikes a 6 kg anvil at rest. Elastic collision.',q:'',ask:'Velocity of the hammer after the collision (take its original direction as positive)',correct:'-4 \\text{ m/s (it bounces back)}',d:['0 \\text{ m/s}','4 \\text{ m/s}','8 \\text{ m/s}'],cat:'collision'},
   {ctx:'A 0.5 kg ball at 10 m/s bounces off a wall. It returns at 8 m/s.',q:'I = m(v - u)',ask:'Impulse (take original direction as positive)',correct:'-9 \\text{ Ns}',d:['9 \\text{ Ns}','1 \\text{ Ns}','-1 \\text{ Ns}'],cat:'momentum'},
   {ctx:'An impulse of 120 Ns acts on a 20 kg stone initially at rest.',q:'I = mv - mu',ask:'Final speed',correct:'6 \\text{ m/s}',d:['120 \\text{ m/s}','2400 \\text{ m/s}','0.167 \\text{ m/s}'],cat:'momentum'},
   {ctx:'A 20 kg stone at 4 m/s. KE = ½mv². After collision with equal stationary stone (inelastic, stick).',q:'',ask:'Percentage of KE lost',correct:'50\\%',d:['0\\%','25\\%','75\\%'],cat:'collision'},
@@ -226,7 +226,7 @@ level4:[
   {ctx:'Work done against friction = F × d. A 20 kg stone slides 30 m. μ = 0.04, g = 10.',q:'',ask:'Work done against friction',correct:'240 \\text{ J}',d:['24 \\text{ J}','2400 \\text{ J}','120 \\text{ J}'],cat:'friction'},
   {ctx:'The work-energy theorem: work done by friction = loss in KE. Stone: 20 kg, slides from 5 m/s to rest.',q:'',ask:'Work done against friction',correct:'250 \\text{ J}',d:['100 \\text{ J}','500 \\text{ J}','50 \\text{ J}'],cat:'friction'},
   {ctx:'A 30 kg crate is pushed with 60 N on a surface where μ = 0.15, g = 10.',q:'F_{net} = F_{applied} - F_{friction}',ask:'Find the acceleration',correct:'0.5 \\text{ m/s}^2',d:['2 \\text{ m/s}^2','1.5 \\text{ m/s}^2','0.15 \\text{ m/s}^2'],cat:'friction'},
-  {ctx:'A 20 kg stone launched at u = 6 m/s. It must stop between 28 m and 32 m (the house). g = 10.',q:'',ask:'What range of μ achieves this?',correct:'0.0563 \\leq \\mu \\leq 0.0643',d:['0.03 to 0.04','0.1 to 0.2','0.04 to 0.05'],cat:'suvat'},
+  {ctx:'A 20 kg stone launched at u = 6 m/s. It must stop between 28 m and 32 m (the house). g = 10.',q:'',ask:'What range of μ achieves this? (3 s.f.)',correct:'0.0563 \\leq \\mu \\leq 0.0643',d:['0.03 to 0.04','0.1 to 0.2','0.04 to 0.05'],cat:'suvat'},
 ]
 };
 
@@ -250,9 +250,9 @@ function animateStone(q,correct){
     sb.style.display='block';sb.style.left='60%';sb.style.transition='none';
     void sb.offsetWidth;
     sa.style.left='55%';
-    if(correct){setTimeout(()=>{sb.style.transition='left 1s ease-out';sb.style.left='85%';sa.style.left='55%'},800)}
+    setTimeout(()=>{sb.style.transition='left 1s ease-out';sb.style.left='85%';sa.style.left='55%'},800);
   } else if(cat==='friction'||cat==='suvat'){
-    const dist=correct?'70%':'45%';sa.style.left=dist;
+    sa.style.left='60%';
   } else {sa.style.left='60%'}
   const sw=document.getElementById('sweepInd');
   if(q.ctx&&q.ctx.toLowerCase().includes('sweep')){sw.classList.add('active');setTimeout(()=>sw.classList.remove('active'),2000)}
@@ -305,12 +305,13 @@ function showSolution(q){
   if(q.misconception){
     html+=`<div class="misconception">\u26a0 ${q.misconception}</div>`;
   }
-  html+=`<button class="next-btn" onclick="closeSolution()">Got it \u2014 next question</button>`;
   sol.innerHTML=html;
   sol.className='solution show';
+  MaffsNext.wrong({mount:sol, onAdvance:closeSolution});
 }
 
 function closeSolution(){
+  MaffsNext.clear(document.getElementById('solution'));
   document.getElementById('solution').className='solution';
   adv();
 }
@@ -319,6 +320,7 @@ function end(){const pct=Math.round(correctCount/totalQ*100);let t='Keep Practis
 function showMenu(){show('menu')}
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
+<script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'curling-friction');</script>
 <footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
