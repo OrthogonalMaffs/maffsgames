@@ -962,6 +962,28 @@ not one distinguished a right answer from a wrong one. No single number fits eve
 too short and a slower reader never learns why they were wrong, too long and a quicker one is held
 against their will. The fix is to stop picking a number.
 
+### 7.6.0 Answer once — MaffsLock (7 Oct 2026, contract F1)
+
+**Every game marks through MaffsLock; no local answered flags.** `schools/assets/answer-lock.js`
+(`MaffsLock`, loaded with `next-control.js`) is the one guard on input. The audits found the same faults
+in 30+ games (register class 1): an option "locked" by a CSS class only, so Enter or Space still fired it;
+a double-click on Next whose second click answered the next question; Check live during the pause;
+stale timers that fired after the student moved on (two games finished and submitted twice).
+
+- **`if (!MaffsLock.lock(container)) return;` first in every answer handler.** The first call for a
+  question disables every answer control in the container (`disabled` and `aria-disabled`) and drops any
+  later click, key or touch on them before the game's listeners see it; a second call returns false.
+- **`MaffsLock.fresh(container)` when a question or screen renders:** all input on it is ignored for
+  `FRESH_MS` (300ms), so the second click of a double-click, a second Enter or a double-tap lands on
+  nothing. `MaffsLock.screen(container)` is a screen change: timers cleared, then fresh.
+- **Every per-question and per-screen timer is `MaffsLock.timer(fn, ms)`.** `MaffsNext`'s advance and
+  `screen()` clear them all, so a stale timer can never fire.
+- **The end-of-game handler is `MaffsLock.finishOnce(fn)`**: `game_completed` and `submitScore` run at
+  most once per session; `MaffsLock.newSession()` starts the next run.
+- A control MaffsNext mounts, or anything inside `data-maffs-lock-skip`, is never locked.
+- Checked by `scripts/test-answer-lock.py` (the asset, with planted faults) and
+  `scripts/check-answer-lock.py` (every migrated game played in Chromium; `NOT_YET` may only shrink).
+
 ### 7.6.1 The phone rule — the reason and the control both above the fold
 
 Added 30 Sep 2026 (Jon's contract; first built in `six-sevens-bruv`).

@@ -27,6 +27,8 @@
  *   - clear() cancels: removing a control also cancels its timers and listeners, so
  *     nothing it scheduled can fire after the game has moved on.
  *   - A 44px target: the control is at least 44px tall and wide.
+ *   - Advancing clears every MaffsLock.timer() (schools/assets/answer-lock.js), so no timer
+ *     set for the question just left can fire on the next one.
  *
  * USAGE
  * -----
@@ -126,6 +128,8 @@
       state.done = true;
       cancel(state);
       if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+      // Advancing ends the question: no timer it set (MaffsLock.timer) may fire after this.
+      if (window.MaffsLock) window.MaffsLock.clearTimers();
       onAdvance();
     }
 
