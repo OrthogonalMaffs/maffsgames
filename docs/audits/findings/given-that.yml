@@ -80,4 +80,4 @@ findings:
     were no longer accepted. Fixed by MaffsAnswer.fractionOrDecimal (#122): the exact fraction or a decimal to 3
     s.f.; verify-given-that.py types every key as a fraction (lowest terms and unreduced) and plants r-004 back.'
   status: fixed
-  pr: PRNUM
+  pr: 123
