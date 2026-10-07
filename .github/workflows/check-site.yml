@@ -211,6 +211,7 @@ jobs:
               Teacher feedback line (on every results screen, played in Chromium; own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
               Search titles (every game page and /resit/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
               Findings register (every audit finding filed per game, schema valid; fixed entries name their PR; REGISTER.md current)|python scripts/audit-register.py --check --selftest
+              Quoted figures (no figure the quoted-statistics audit found CONTRADICTED is still on its page)|python scripts/check-quoted-figures.py && python scripts/check-quoted-figures.py --selftest
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any

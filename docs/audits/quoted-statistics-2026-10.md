@@ -1,6 +1,6 @@
 # Quoted real-world statistics audit (October 2026)
 
-**Status: phases 1 and 2 done, report only.** No game, bank, check script or canon was changed. Phase 1 (below) is
+**Status: phases 1 and 2 done; fixes merged 7 Oct 2026 (PRs #91 Fermi Lab, #92 Screening Room, #93 Core Maths Paper 1); `scripts/check-quoted-figures.py` (PR #94, CI) fails if any CONTRADICTED old value returns to its page.** The original report follows. No game, bank, check script or canon was changed. Phase 1 (below) is
 every real-world figure a student is marked against; phase 2 (the last section) is Screening Room's real-world rates
 and the real-year CPI/inflation figures, which are stated, not keyed.
 
