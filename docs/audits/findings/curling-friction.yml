@@ -17,7 +17,8 @@ findings:
   where: games/curling-friction/index.html:169
   summary: Initial speed keyed √4.96 = 2.23 (g dropped); correct √13.6 = 3.69 not offered
   evidence: u² = 2² + 2(0.04×10)(12) = 13.6 -> 3.688
-  status: open
+  status: fixed
+  pr: 109
 - id: curling-friction-t5-002
   severity: HIGH
   jc: false
@@ -26,7 +27,8 @@ findings:
   where: games/curling-friction/index.html:217
   summary: Asks the hammer's speed; key −4 m/s, the true speed '4 m/s' is marked wrong
   evidence: v1 = (2−6)/8 × 8 = −4 -> speed 4
-  status: open
+  status: fixed
+  pr: 109
 - id: curling-friction-t5-003
   severity: HIGH
   jc: false
@@ -34,7 +36,8 @@ findings:
   level: all
   where: games/curling-friction/index.html:281-290, 292
   summary: 'No answered guard: Enter re-marks, re-scores, skips questions and submits repeatedly'
-  evidence: 'wrong then Enter x2: 3 question_answered, score 0->189; Enter x4 on Q20: submitScore x4'
+  evidence: 'wrong then Enter x2: 3 question_answered, score 0->189; Enter x4 on Q20: submitScore x4 Left open by the cloud-lane
+    fix PR: class 1, owned by the shared answer lock (contract F1).'
   status: open
 - id: curling-friction-t5-004
   severity: MEDIUM
@@ -43,7 +46,8 @@ findings:
   level: all
   where: games/curling-friction/index.html:240
   summary: ?level=constructor/__proto__ throw on Start; nonsense silently falls back to alevel
-  evidence: pageerror 'QUESTIONS[level] is not iterable'
+  evidence: 'pageerror ''QUESTIONS[level] is not iterable'' Left open by the cloud-lane fix PR: class 4, owned by the shared
+    level resolver (contract F2).'
   status: open
 - id: curling-friction-t5-005
   severity: MEDIUM
@@ -52,7 +56,7 @@ findings:
   level: level4
   where: games/curling-friction/index.html:208-230
   summary: level4 pool 20 (ledger B4)
-  evidence: 20 items
+  evidence: '20 items Left open by the cloud-lane fix PR: class 5 (bank size), owned by Project Claude''s expansions.'
   status: open
 - id: curling-friction-t5-006
   severity: MEDIUM
@@ -61,8 +65,10 @@ findings:
   level: alevel
   where: games/curling-friction/index.html:147
   summary: 'Stone ''sits on ice'' with no applied force: friction is 0; key 7.84 N is limiting friction'
-  evidence: μR = 0.04 × 196 = 7.84 is a maximum
-  status: open
+  evidence: 'μR = 0.04 × 196 = 7.84 is a maximum Fixed by the cloud-lane fix PR, with the three other items of the same
+    shape (alevel 19 kg stone, alevel normal reaction 196 N, level4 20 kg stone): each now says the stone slides.'
+  status: fixed
+  pr: 109
 - id: curling-friction-t5-007
   severity: LOW
   jc: false
@@ -71,5 +77,19 @@ findings:
   where: games/curling-friction/index.html:244-259, 202, 294-316
   summary: Stone animation not from the data (70% if right, 45% if wrong); :202 key wording; hand-rolled wrong-answer
     panel with no MaffsNext floor (class 11 note)
-  evidence: animateStone uses only correct/cat
-  status: open
+  evidence: 'animateStone uses only correct/cat Fixed by the cloud-lane fix PR: the stone slides the same distance whatever
+    the answer (the animation is not drawn from the data, so it no longer implies one); the sweeping item asks how far
+    beyond the 15 m mark the stone travels with and without sweeping; a wrong answer shows the worked solution and the
+    shared MaffsNext control.'
+  status: fixed
+  pr: 109
+- id: curling-friction-t5-008
+  severity: LOW
+  jc: false
+  class: NEW:precision-not-stated
+  level: level4
+  where: games/curling-friction/index.html (50 kg trolley stopping distance; the range of mu)
+  summary: Two keys rounded to 3 s.f. (2.04 m; 0.0563 to 0.0643) with no precision in the item (SR-1)
+  evidence: Found by the re-audit in the fix PR (scripts/verify-curling-friction.py); each ask now says (3 s.f.).
+  status: fixed
+  pr: 109
