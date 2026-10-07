@@ -133,4 +133,5 @@ findings:
     reproducible with any >=5ms gap); four modes share board ''year6''; no keyboard path to answer; dark palette
     on a Year 6 game'
   evidence: Playwright press('Enter') x2 with no wait at Q10 -> 2 game_completed; 5/10/16/25ms gaps -> 1 each
+    (the double-Enter part is fixed by MaffsLock in #129; the board, keyboard and palette parts are open)
   status: open

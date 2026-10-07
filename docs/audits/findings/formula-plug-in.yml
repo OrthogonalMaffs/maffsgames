@@ -23,7 +23,8 @@ findings:
     and can end the next game after Play Again
   evidence: Tap at 5.3s -> game_completed x2, submits [[fpi,year6,7,20],[fpi,year6,7,20]] (reproduced twice); tap,
     Play Again, Start -> Results 0/10 mid-question, submit [fpi,year6,0,10]
-  status: open
+  status: fixed
+  pr: 129
 - id: formula-plug-in-t3-002
   severity: MEDIUM
   jc: true
