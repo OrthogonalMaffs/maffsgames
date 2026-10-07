@@ -230,6 +230,15 @@ body.accessible p,body.accessible .q-stem,body.accessible .option-text{line-heig
 </div>
 
 <script>
+// ── SOURCED REAL-WORLD FIGURES ──
+// Every real-year figure a question states, stored once with its source (quoted-statistics audit,
+// docs/audits/quoted-statistics-2026-10.md). Stems and working read the value from here.
+const SOURCES = {
+  cpi2022: { value: 9.1, text: 'ONS: CPI annual average rate, 2022', url: 'https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/december2023' },
+  cpi2023: { value: 7.3, text: 'ONS: CPI annual average rate, 2023', url: 'https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/december2023' }
+};
+const CPI_STEP1 = (95 * (100 + SOURCES.cpi2022.value) / 100).toFixed(3);   // the first year's cost, to 3 d.p.
+
 // ── QUESTION BANK ──
 const QUESTIONS = [
   // ═══ §3.1 Analysis of Data — Q1 to Q18 ═══
@@ -424,10 +433,10 @@ const QUESTIONS = [
   },
   {
     section: '3.2', ao: 'AO2',
-    stem: 'A weekly food shop costs \u00a395 in January 2022. CPI inflation: 8.7% in 2022, 6.3% in 2023. What is the estimated cost in January 2024?',
-    options: ['\u00a3104.27', '\u00a3109.77', '\u00a3112.40', '\u00a3115.63'],
-    correct: 1,
-    working: '95 \u00d7 1.087 = \u00a3103.265. \u00a3103.265 \u00d7 1.063 = \u00a3109.77.'
+    stem: 'A weekly food shop costs \u00a395 in January 2022. CPI inflation (ONS, annual average): ' + SOURCES.cpi2022.value + '% in 2022, ' + SOURCES.cpi2023.value + '% in 2023. What is the estimated cost in January 2024?',
+    options: ['\u00a3103.65', '\u00a3110.58', '\u00a3111.21', '\u00a3113.07'],
+    correct: 2,
+    working: '95 \u00d7 ' + (1 + SOURCES.cpi2022.value / 100).toFixed(3) + ' = \u00a3' + CPI_STEP1 + '. \u00a3' + CPI_STEP1 + ' \u00d7 ' + (1 + SOURCES.cpi2023.value / 100).toFixed(3) + ' = \u00a3' + (CPI_STEP1 * (100 + SOURCES.cpi2023.value) / 100).toFixed(2) + '.'
   },
   {
     section: '3.2', ao: 'AO2',
