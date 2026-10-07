@@ -17,8 +17,12 @@ Chromium (390x844, KaTeX). Every item is played through the game's own handlers:
   MaffsLock's real window: a double click on Submit never also clicks Continue; a second option clicked after the
   first is ignored; the results screen submits once. Aa is saved to mfg_accessible and restored on reload.
 
-A self-test plants two of the audit's own faults back (t6-001: a point for every cell; t6-003: [27] without its
-simplified form); each must FAIL naming its audit item.
+A self-test plants three of the audit's own faults back (t6-001: a point for every cell; t6-003: [27] without its
+simplified form, and [27] written in XOR with no definition); each must FAIL naming its audit item.
+
+[27]'s line after the answer (approved by Project Claude, 7 Oct 2026): XOR is introduced nowhere else in the game, so
+the form is "written", not "simplified", with the identity that defines XOR and a gloss: "This expression can be
+written (A ⊕ B)·C·D·Ē, where A ⊕ B = A·B̄ + Ā·B (XOR: one or the other, but not both). Play Boolean Blitz →".
 
     python scripts/verify-truth-will-set-you-free.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
@@ -114,6 +118,18 @@ def check_bank(fails, lib):
             e, extra = parse(q['simplified'], inputs)
             if extra or not equivalent(e, key):
                 fails.append('%s: the simplified form %s is not the key %s' % (where(i), q['simplified'], q['expr']))
+            # No item's key uses XOR, so a form written with it must define it where it is shown (approved by
+            # Project Claude, 7 Oct 2026): an identity whose left side uses XOR, true for every input, and a gloss.
+            if '\\oplus' in q['simplified'] and not (q.get('identity') and '\\oplus' in q['identity'][0]):
+                fails.append('%s: the form %s uses XOR, which the game never introduces, and does not define it '
+                             '(truth-will-set-you-free-t6-003)' % (where(i), q['simplified']))
+        if q.get('identity'):
+            lhs, x1 = parse(q['identity'][0], inputs)
+            rhs, x2 = parse(q['identity'][1], inputs)
+            if x1 or x2 or not equivalent(lhs, rhs):
+                fails.append('%s: the identity %s = %s is not true' % (where(i), q['identity'][0], q['identity'][1]))
+            if not q.get('gloss'):
+                fails.append('%s: the identity %s has no gloss in words' % (where(i), q['identity'][0]))
 
 
 PLAY_JS = r"""() => {
@@ -231,6 +247,12 @@ def play(fails, html):
                         w, key[2], [zeros[2]] + others))
                 if 'undefined' in key[3]:
                     fails.append('%s: %r (truth-will-set-you-free-t6-003)' % (w, key[3].strip()))
+                q = lib[i]
+                if q.get('bbLink') and q.get('identity'):
+                    want = ('This expression can be written', ', where', '(%s). Play Boolean Blitz →' % q.get('gloss'))
+                    if not (key[3].strip().startswith(want[0]) and all(s in key[3] for s in want[1:])):
+                        fails.append('%s: the line after the answer reads %r, not the approved "This expression can '
+                                     'be written ..., where ... (%s). Play Boolean Blitz →"' % (w, key[3].strip(), q.get('gloss')))
                 if key[4] > 390:
                     fails.append('%s at 390px: the page scrolls sideways (%dpx)' % (w, key[4]))
             if page.evaluate('typeof MaffsLock') != 'undefined':
@@ -264,6 +286,9 @@ PLANTS = [
       totalPoints++;"""),
     ('library[27]', 't6-003: [27] without its simplified form',
      "bbLink: 'BB Q12', simplified: '(A \\\\oplus B) \\\\cdot C \\\\cdot D \\\\cdot \\\\overline{E}'", "bbLink: 'BB Q12'"),
+    ('library[27]', 't6-003: [27] in XOR with no definition',
+     ",\n    identity: ['A \\\\oplus B', 'A \\\\cdot \\\\overline{B} + \\\\overline{A} \\\\cdot B'], gloss: 'XOR: one or the other, but not both'",
+     ""),
 ]
 
 

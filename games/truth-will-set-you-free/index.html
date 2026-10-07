@@ -583,7 +583,8 @@ var QUESTION_LIBRARY = [
     logic: 'Motor runs when (forward XOR reverse) AND guard closed AND power enabled AND no fault.',
     expr: '(A \\cdot \\overline{B} + \\overline{A} \\cdot B) \\cdot C \\cdot D \\cdot \\overline{E}',
     distractors: ['(A + B) \\cdot C \\cdot D \\cdot \\overline{E}', '(A \\cdot B) \\cdot C \\cdot D \\cdot \\overline{E}', '(A \\cdot \\overline{B} + \\overline{A} \\cdot B) \\cdot C \\cdot D \\cdot E'],
-    bbLink: 'BB Q12', simplified: '(A \\oplus B) \\cdot C \\cdot D \\cdot \\overline{E}'
+    bbLink: 'BB Q12', simplified: '(A \\oplus B) \\cdot C \\cdot D \\cdot \\overline{E}',
+    identity: ['A \\oplus B', 'A \\cdot \\overline{B} + \\overline{A} \\cdot B'], gloss: 'XOR: one or the other, but not both'
   },
   {
     tier: 'Tier 3 — Advanced', inputs: ['A','B','C','D','E'],
@@ -841,7 +842,12 @@ function handleExprAnswer(btn, idx) {
 
   // BB link
   var linkHtml = '';
-  if (q.bbLink && q.simplified) {
+  // A form using an operator the game has not introduced ([27]'s XOR) is "written", with the identity that defines it
+  // and a gloss in words, not "simplified" (approved by Project Claude, 7 Oct 2026).
+  if (q.bbLink && q.simplified && q.identity) {
+    linkHtml = '<div class="bb-link">This expression can be written ' + K(q.simplified) + ', where ' +
+      K(q.identity[0] + ' = ' + q.identity[1]) + ' (' + q.gloss + '). <a href="/games/boolean-blitz/" target="_blank">Play Boolean Blitz →</a></div>';
+  } else if (q.bbLink && q.simplified) {
     linkHtml = '<div class="bb-link">This expression simplifies to ' + K(q.simplified) + '. <a href="/games/boolean-blitz/" target="_blank">Play Boolean Blitz →</a></div>';
   } else {
     linkHtml = '<div class="bb-link" style="font-style:italic">To practise your Boolean algebra skills, try <a href="/games/boolean-blitz/" target="_blank">Boolean Blitz</a>.</div>';
