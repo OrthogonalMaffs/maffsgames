@@ -82,7 +82,8 @@ findings:
     it; repeated presses during the 1 s pause skip questions unseen'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2 Left open by the cloud-lane fix PR: class 1, owned by
     the shared answer lock (contract F1).'
-  status: open
+  status: fixed
+  pr: 137
 - id: trig-identity-duel-t2-008
   severity: MEDIUM
   jc: false
@@ -115,7 +116,8 @@ findings:
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition, 7 Oct
     Left open by the cloud-lane fix PR: a design decision for Jon. Moving the game to a hidden count-up changes how its
     scores are computed, so its leaderboard boards would no longer compare with past scores.'
-  status: open
+  status: fixed
+  pr: 137
 - id: trig-identity-duel-t2-011
   severity: MEDIUM
   jc: false
