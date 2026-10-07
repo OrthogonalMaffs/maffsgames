@@ -109,6 +109,13 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
+{
+  "start_sel": "#startScreen [onclick=\"startGame()\"]",
+  "ready": "document.getElementById('mainGame').classList.contains('visible')"
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -181,7 +188,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 
 <script>
 const TOTAL = 10;
-let score=0, qNum=0, answered=false, questions=[], shotAnimating=false;
+let score=0, qNum=0, questions=[], shotAnimating=false;
 let cannonAngle=45, currentQ=null;
 
 // --- Question generation ---
@@ -474,7 +481,8 @@ function drawScene(q, shotProgress=0, hit=false, miss=false){
 
 // --- Game logic ---
 function startGame(){
-  score=0;qNum=0;answered=false;_twCorrectCount=0;
+  MaffsLock.newSession();
+  score=0;qNum=0;_twCorrectCount=0;
   questions=Array.from({length:TOTAL},(_,i)=>generateQuestion(i));
   document.getElementById('startScreen').style.display='none';
   document.getElementById('gameOver').classList.remove('visible');
@@ -506,7 +514,6 @@ function loadQ(){
   if(window.MaffsNext) MaffsNext.clear(document.getElementById('expText').parentNode);
   if(qNum>=TOTAL){endGame();return;}
   currentQ=questions[qNum];
-  answered=false;
   document.getElementById('level').textContent=qNum+1;
   document.getElementById('qType').textContent=currentQ.qType;
   document.getElementById('qText').textContent=currentQ.qText;
@@ -527,10 +534,11 @@ function loadQ(){
     btn.onclick=()=>guess(c,btn,div);
     div.appendChild(btn);
   });
+  MaffsLock.fresh(div);   // a new question: a double-click on FIRE or Next cannot answer it (canon 7.6.0)
 }
 
 function guess(val,btn,div){
-  if(answered)return;answered=true;
+  if(!MaffsLock.lock(div))return;
   const correct=val===currentQ.correct;
   const fb=document.getElementById('feedback');
   // A wrong pick also names the error that gives it (each distractor is one).
@@ -562,7 +570,7 @@ function animateShot(hit,cb){
       clearInterval(interval);
       // A hit moves on briskly. A miss waits for the student -- the working is on
       // screen and they decide when they have read it (canon 7.6).
-      if(hit){ setTimeout(cb,400); }
+      if(hit){ MaffsLock.timer(cb,400); }
       else { MaffsNext.wrong({mount: document.getElementById('expText').parentNode, onAdvance: cb}); }
       return;
     }
@@ -570,9 +578,11 @@ function animateShot(hit,cb){
   },30);
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
+  MaffsLock.screen(document.getElementById('gameOver'));
   document.getElementById('finalScore').textContent=score;
   document.getElementById('goDetail').textContent=`${TOTAL} shots fired • ${score/10} hits`;
   window._ggAbandoned=false;
@@ -583,7 +593,7 @@ function endGame(){
   saveBest(score);
   if(score>_twOldBest){mfg('personal_best_set',{game_slug:'trig-worms',level:'gcse',score:score,previous_best:_twOldBest});}
   renderLB();
-}
+});
 function getBest(){return parseInt(localStorage.getItem('tw_best')||'0');}
 function saveBest(s){if(s>getBest())localStorage.setItem('tw_best',s);document.getElementById('best').textContent=getBest();}
 function renderLB(){
