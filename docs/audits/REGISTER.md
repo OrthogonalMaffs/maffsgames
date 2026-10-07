@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-552 findings in 79 games.
+555 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 5 | 19 | 0 | 24 |
 | HIGH | 67 | 139 | 0 | 206 |
-| MEDIUM | 165 | 99 | 0 | 264 |
+| MEDIUM | 168 | 99 | 0 | 267 |
 | LOW | 43 | 15 | 0 | 58 |
-| **All** | 280 | 272 | 0 | 552 |
+| **All** | 283 | 272 | 0 | 555 |
 
 ### By class
 
@@ -50,6 +50,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:ill-posed wording | 3 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
+| NEW:phone-layout | 5 | 5 |
 | B7 (ledgered) | 4 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 3 | 3 |
@@ -63,7 +64,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:hidden-data | 1 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:phone-fold | 2 | 2 |
-| NEW:phone-layout | 2 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:timer-policy | 2 | 2 |
 | NEW:unmarkable free text | 2 | 2 |
@@ -147,14 +147,14 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 3 | 0 | 3 | 2 | 0 |
 | `expectation-station` | unlisted | verify-expectation-station.py | 1 | 12 | 5 | 1 | 1 | 18 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
-| `factor-race` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
+| `factor-race` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 10 | 9 | 0 |
 | `force-resolver` | unlisted | verify-force-resolver.py | 1 | 7 | 5 | 2 | 3 | 12 | 0 |
 | `formula-forge` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
 | `formula-plug-in` | yes | none | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 0 | 1 | 0 | 2 | 0 |
 | `four-quadrant-explorer` | yes | none | 0 | 1 | 2 | 1 | 3 | 1 | 0 |
-| `fraction-equivalence` | yes | none | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| `fraction-equivalence` | yes | none | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
 | `given-that` | yes | verify-given-that.py | 0 | 3 | 1 | 0 | 0 | 4 | 0 |
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
 | `gradient-hunter` | yes | none | 1 | 0 | 1 | 0 | 2 | 0 | 0 |
@@ -170,7 +170,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | none | 0 | 1 | 7 | 1 | 8 | 1 | 0 |
 | `partial-fractions-duel` | unlisted | verify-partial-fractions-duel.py | 0 | 7 | 2 | 1 | 2 | 8 | 0 |
-| `percentage-flip` | yes | none | 0 | 0 | 1 | 0 | 0 | 1 | 0 |
+| `percentage-flip` | yes | none | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `prime-or-composite` | yes | none | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `prisoners-dilemma` | yes | none | 0 | 2 | 4 | 1 | 7 | 0 | 0 |
