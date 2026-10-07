@@ -658,6 +658,7 @@ def page_context(pw, base, html):
     ctx.route(lambda url: bool(bc_page.search(url)), lambda route: route.fulfill(
         status=200, content_type='text/html; charset=utf-8', body=html))
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+    ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
     return browser, ctx
 
 
@@ -702,7 +703,7 @@ def play_cases(fails, ctx, base):
             if box['y'] + box['height'] > 844 - 40:
                 fails.append('%s (%s): Next is below the fold at 390x844' % (qid, what))
             nxt.tap()
-        sol = page.locator('#solution.show .next-btn')
+        sol = page.locator('#solution.show .maffs-next-wrap button')   # the worked solution's Next is MaffsNext (canon 7.6)
         if want_streak == 0:
             sol.wait_for(state='visible', timeout=8000)
         else:
