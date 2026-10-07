@@ -27,6 +27,7 @@
   gtag('config', 'G-992JLHLP2D', {send_page_view:true,storage:'none',anonymize_ip:true});
 </script>
 <script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -118,7 +119,6 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
       <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="qNum">1/20</div></div>
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
       <div class="hud-item"><div class="hud-label">Streak</div><div class="hud-val" id="streak">0</div></div>
-      <div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0s</div></div>
     </div>
     <div class="progress" id="progress"></div>
     <div class="q-card">
@@ -157,7 +157,7 @@ gcse:[
   {ctx:'Triangle: A = 40\u00b0, a = 8 cm, B = 60\u00b0.',q:'\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B}',ask:'Find b (to 1 d.p.)',correct:'10.8',d:['6.9','12.4','9.2']},
   {ctx:'Triangle: a = 10, sin A = 0.5, sin B = 0.8.',q:'\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B}',ask:'Find b',correct:'16',d:['12.5','8','20']},
   {ctx:'Triangle: A = 30\u00b0, B = 90\u00b0, a = 6.',q:'\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B}',ask:'Find b',correct:'12',d:['6','3','6\\sqrt{3}']},
-  {ctx:'Triangle: A = 45\u00b0, a = 10, B = 30\u00b0.',q:'\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B}',ask:'Find b (to 1 d.p.)',correct:'7.1',d:['5.0','14.1','8.7']},
+  {ctx:'Triangle: A = 45\u00b0, a = 10 cm, B = 60\u00b0.',q:'\\dfrac{a}{\\sin A} = \\dfrac{b}{\\sin B}',ask:'Find b (to 1 d.p.)',correct:'12.2',d:['8.2','14.1','10.0']},
   {ctx:'Triangle: a = 12, b = 8, A = 50\u00b0.',q:'\\dfrac{\\sin B}{b} = \\dfrac{\\sin A}{a}',ask:'Find angle B (to 1 d.p.)',correct:'30.7\u00b0',d:['40.0\u00b0','25.3\u00b0','60.0\u00b0']},
   {ctx:'Triangle: A = 60\u00b0, a = 7, B = 80\u00b0.',q:'',ask:'Find b (to 1 d.p.)',correct:'8.0',d:['6.1','9.2','7.5']},
   {ctx:'Triangle: B = 35\u00b0, b = 9, C = 70\u00b0.',q:'',ask:'Find c (to 1 d.p.)',correct:'14.7',d:['11.3','18.0','12.5']},
@@ -245,8 +245,10 @@ alevel:[
 ]
 };
 
-let level='gcse',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,timerInterval=null,qStartTime=0;
-const BASE=100,T_K=0.15;
+// Hidden count-up (timer-policy.md, canon SR-23): the session is timed silently and the time shown on the results only;
+// a correct answer scores BASE whatever the time taken.
+let level='gcse',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,sessionStart=0;
+const BASE=100;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
@@ -254,6 +256,7 @@ document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',(
 const p=new URLSearchParams(location.search);if(p.get('level')&&QUESTIONS[p.get('level')]){level=p.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
 
 function startGame(){
+  MaffsLock.newSession();sessionStart=Date.now();
   questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;
   document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';
   const pr=document.getElementById('progress');pr.innerHTML='';
@@ -274,26 +277,23 @@ function showQ(){
   opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;
     if(v.includes('\\')||v.includes('^')||v.includes('{')||v.includes('\u221a')){rk(b,v)}else{b.textContent=v}
     b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});
-  qStartTime=Date.now();
-  document.getElementById('timer').textContent='0s';
-  clearInterval(timerInterval);
-  timerInterval=setInterval(()=>{
-    const s=Math.floor((Date.now()-qStartTime)/1000);
-    document.getElementById('timer').textContent=s+'s';
-  },200);
+  MaffsLock.fresh(oEl);
 }
+// Answer once (canon 7.6.0): MaffsLock disables every option on the first answer, so Enter on the revealed key or
+// a press during the pause can never mark again or skip a question.
 function handle(btn,q){
-  clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;
+  if(!MaffsLock.lock(document.getElementById('options')))return;
+  const ok=btn.dataset.val===q.correct;
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});
-  if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}
+  if(ok){btn.classList.add('correct');score+=BASE;streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}
   else{btn.classList.add('wrong');streak=0;pip('fail')}
   mfg('question_answered',{game_slug:'trig-identity-duel',level:level,correct:ok,question_index:qIdx+1});
-  document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)
+  document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;MaffsLock.timer(adv,1000)
 }
 function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
 function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
-function end(){clearInterval(timerInterval);const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) \u00b7 Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'trig-identity-duel',level:level,score:score,questions_answered:totalQ,accuracy:pct});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('trig-identity-duel',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('trig-identity-duel',level,score);}}var _pbKey='trig-identity-duel_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'trig-identity-duel',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}show('results')}
+const end=MaffsLock.finishOnce(function(){const el=Math.round((Date.now()-sessionStart)/1000);const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) \u00b7 Best streak: ${bestStreak} \u00b7 Time: ${el>=60?Math.floor(el/60)+'m ':''}${el%60}s`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'trig-identity-duel',level:level,score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('trig-identity-duel',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('trig-identity-duel',level,score);}}var _pbKey='trig-identity-duel_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'trig-identity-duel',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}show('results')});
 function showMenu(){show('menu')}
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
