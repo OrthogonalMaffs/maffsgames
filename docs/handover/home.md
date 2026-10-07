@@ -21,6 +21,20 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-07 (home): contract C game 2, Better Value (#113)
+
+- **#111 (Proportion Blaster) merged** on a green Gate (B3 ran its verifier by its header alone).
+- **#113:** five Core conclusions corrected from the recomputed figures (r-001..r-005) and core_033's working put
+  in pence (r-009, closed too: the verifier proves its equation solved to 425). core_009 needed its repayment
+  stated (GBP 90.20/month, 8% APR effective over 24 months) to be answerable; the old key is now a wrong card,
+  explained. `verify-better-value.py` (B3): every figure in a keyed card or explanation must be a given or a
+  recomputed value at its printed precision. On main it failed on exactly r-001..r-005 and r-009: no other wrong
+  figure in the 70 items. Open (jc: true): r-006, r-007, r-008.
+- **Next:** game 3, Given That. Spec reviewed for all 180 keys (num/den by named quantity, Yes/No tables'
+  headers pinned); plan: alevel_18's Venn regions from its stored totals (onlyB 15, neither 55), free entry on
+  `MaffsAnswer.decimal` at 3 d.p. stated on every free-entry question, gcse_14/gcse_23 value-equal options
+  replaced (audit F4/F5).
+
 ## 2026-10-07 (home): contract C game 1, Proportion Blaster (#111)
 
 - **V (#108) merged** on a green Gate (51/51 content lines ran); main's full run after it: see the next entry.

@@ -26,7 +26,8 @@ findings:
     24 on £2,000 works out at an APR of about 13.7%. Under the usual monthly-repayment reading the key is reversed.
     The scenario never states how the bank loan is repaid, so the question is at best unanswerable as worded. The
     explanation teaches the wrong model. Share affected: 1 of 50 core questions.'
-  status: open
+  status: fixed
+  pr: 113
 - id: better-value-r-002
   severity: HIGH
   jc: false
@@ -42,7 +43,8 @@ findings:
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Evidence: (28 × 18 + 60)/18 = 564/18 = £31.33 < £32.
     The keyed text is false as written, and no other option is correct: one claims £18 beats £32, and another compares
     totals over different terms. Share affected: 1 of 50 core.'
-  status: open
+  status: fixed
+  pr: 113
 - id: better-value-r-003
   severity: HIGH
   jc: false
@@ -55,7 +57,8 @@ findings:
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. Evidence: 440 + 66 + 144 = 650, and the key printed
     518. The verdict (Advance is cheaper) holds, but the keyed figure and the "saves £442" in the explanation are
     wrong arithmetic. Share affected: 1 of 50 core.'
-  status: open
+  status: fixed
+  pr: 113
 - id: better-value-r-004
   severity: HIGH
   jc: false
@@ -69,7 +72,8 @@ findings:
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F4. Evidence: 620/180 = 344.4% and 860/260 = 330.8%. The
     game''s own explanation says "Although premium has slightly lower ROI…". The keyed claim is false as worded.
     A student who computes ROI finds no true option. Share affected: 1 of 50 core.'
-  status: open
+  status: fixed
+  pr: 113
 - id: better-value-r-005
   severity: HIGH
   jc: false
@@ -82,7 +86,8 @@ findings:
     "h = 8.54 hours", then says "Above about 8.8 hours".'
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F5. Evidence: (300 + 180 × 12/52)/40 = 8.538. With the game''s
     ÷4.33 it is 8.539. Share affected: 1 of 50 core.'
-  status: open
+  status: fixed
+  pr: 113
 - id: better-value-r-006
   severity: MEDIUM
   jc: true
@@ -132,4 +137,5 @@ findings:
     + 42 in pence). The explanation mixes pounds and pence, writing "0.28d + 25 = 0.24d + 42 → 0.04d = 17 → d =
     4.25". In that form 0.04d = 17 gives d = 425.
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F9. '
-  status: open
+  status: fixed
+  pr: 113
