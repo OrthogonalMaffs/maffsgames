@@ -8,8 +8,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | # | Point | Status |
 |---|---|---|
-| 1 | Every live game has a verifier in CI | NOT MET: 59 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 144 open (13 CRITICAL, 131 HIGH) |
+| 1 | Every live game has a verifier in CI | NOT MET: 58 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 138 open (13 CRITICAL, 125 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 23 in the roster's Unlisted section |
@@ -22,17 +22,17 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 13 | 11 | 0 | 24 |
-| HIGH | 131 | 75 | 0 | 206 |
-| MEDIUM | 201 | 59 | 0 | 260 |
-| LOW | 52 | 3 | 0 | 55 |
-| **All** | 397 | 148 | 0 | 545 |
+| HIGH | 125 | 81 | 0 | 206 |
+| MEDIUM | 200 | 60 | 0 | 260 |
+| LOW | 51 | 4 | 0 | 55 |
+| **All** | 389 | 156 | 0 | 545 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| 2 | 67 | 102 |
-| 3 | 43 | 85 |
+| 2 | 65 | 102 |
+| 3 | 39 | 85 |
 | 6 | 34 | 56 |
 | 1 | 35 | 35 |
 | NEW:wrong-explanation-text | 19 | 33 |
@@ -67,7 +67,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:timer-policy | 2 | 2 |
 | NEW:unmarkable free text | 2 | 2 |
-| NEW:wording | 2 | 2 |
+| NEW:wording | 1 | 2 |
 | 10 | 1 | 1 |
 | NEW:a11y state | 1 | 1 |
 | NEW:answer-reveal-invisible | 1 | 1 |
@@ -77,7 +77,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:exact-order sorter marking | 1 | 1 |
 | NEW:false scoring claim | 1 | 1 |
 | NEW:false-general-statement | 0 | 1 |
-| NEW:form-omitted-in-stem | 1 | 1 |
+| NEW:form-omitted-in-stem | 0 | 1 |
 | NEW:g not stated | 1 | 1 |
 | NEW:generator-drops-items | 1 | 1 |
 | NEW:hint-gives-answer | 1 | 1 |
@@ -169,7 +169,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `moments-master` | unlisted | none | 1 | 8 | 3 | 1 | 13 | 0 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | none | 0 | 1 | 7 | 1 | 9 | 0 | 0 |
-| `partial-fractions-duel` | unlisted | none | 0 | 7 | 2 | 1 | 10 | 0 | 0 |
+| `partial-fractions-duel` | unlisted | verify-partial-fractions-duel.py | 0 | 7 | 2 | 1 | 2 | 8 | 0 |
 | `percentage-flip` | yes | none | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
 | `prime-factorisation` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `prime-or-composite` | yes | none | 0 | 1 | 1 | 0 | 2 | 0 | 0 |
@@ -435,12 +435,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ### `partial-fractions-duel` (A-Level, L4; unlisted)
 
-- **HIGH** partial-fractions-duel-t5-001, `games/partial-fractions-duel/index.html:106 ((2x+3)/((x+1)(x-1)), Find A)`: Key 1/2; true A = -1/2, which is a distractor
-- **HIGH** partial-fractions-duel-t5-002, `games/partial-fractions-duel/index.html:110 ((3x-1)/((2x+1)(x-3)), Find A)`: Key 1; true A = 5/7, not offered
-- **HIGH** partial-fractions-duel-t5-003, `games/partial-fractions-duel/index.html:125 ((5x-1)/(x(x-1)(x+2)), Find C)`: Key 11/6; true C = -11/6, which is a distractor
-- **HIGH** partial-fractions-duel-t5-004, `games/partial-fractions-duel/index.html:144 ((x^2+3x+5)/((x+1)(x+2)), remainder)`: Key 2; true remainder 3, which is a distractor
-- **HIGH** partial-fractions-duel-t5-005 (JC), `games/partial-fractions-duel/index.html:136 (form of 5/((x-1)^2(x+2)))`: Distractor (Ax+B)/(x-1)^2 + C/(x+2) is a valid equivalent form, marked wrong
-- **HIGH** partial-fractions-duel-t5-006 (JC), `games/partial-fractions-duel/index.html:137 (form of (x^2+1)/((x+1)^2(x-1)))`: Distractor (Ax+B)/(x+1)^2 + C/(x-1) is a valid equivalent form, marked wrong
 - **HIGH** partial-fractions-duel-t5-007, `games/partial-fractions-duel/index.html:159 (handle)`: Enter on a focused option re-marks: re-scores, skips questions, repeats end()/submitScore
 
 ### `proof-builder` (A-Level, Further; unlisted)
@@ -508,7 +502,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Exit bar detail
 
-**1. No verifier in CI (59):** `52dle`, `bearing-blitz`, `better-value` (partial: verify-better-value-tax.py), `boolean-blitz`, `characteristic-quest`, `complex-converter`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `curling-friction`, `differentiation-duel`, `dimension-checker`, `eigenvalue-extractor`, `eigenvector-engine`, `equatle`, `estimation-golf`, `factor-race`, `factor-theorem`, `force-resolver`, `formula-forge`, `formula-plug-in`, `formula-unlocked`, `four-quadrant-explorer`, `fraction-equivalence`, `given-that`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `integration-duel`, `linear-equation-solver`, `matrix-crunch`, `modular-battle`, `moments-master`, `new-shapes`, `partial-fractions-duel`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `proof-builder`, `proportion-blaster`, `scale-factor-scaling`, `sequence-solver`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `suvat`, `terrible-advice`, `think-of-a-number`, `trig-wars`, `truth-will-set-you-free`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
+**1. No verifier in CI (58):** `52dle`, `bearing-blitz`, `better-value` (partial: verify-better-value-tax.py), `boolean-blitz`, `characteristic-quest`, `complex-converter`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `curling-friction`, `differentiation-duel`, `dimension-checker`, `eigenvalue-extractor`, `eigenvector-engine`, `equatle`, `estimation-golf`, `factor-race`, `factor-theorem`, `force-resolver`, `formula-forge`, `formula-plug-in`, `formula-unlocked`, `four-quadrant-explorer`, `fraction-equivalence`, `given-that`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `integration-duel`, `linear-equation-solver`, `matrix-crunch`, `modular-battle`, `moments-master`, `new-shapes`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `proof-builder`, `proportion-blaster`, `scale-factor-scaling`, `sequence-solver`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `suvat`, `terrible-advice`, `think-of-a-number`, `trig-wars`, `truth-will-set-you-free`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
 
 **4. Audited levels serving under 40 (106):** 52dle all (20 in rotation), angle-ace gcse (35), better-value gcse (20), binomial-blaster alevel (20), binomial-blaster alevel2 (20), characteristic-quest further (15), complex-converter further (20), complex-converter level4 (20), component-crusher gcse (38), component-crusher alevel (32), component-crusher level4 (34), constructions-lab all (10/10), constructions-lab ks3 (10/10), constructions-lab gcse (10/10), coordinate-geometry-dash gcse (24), coordinate-geometry-dash alevel (21), core-maths-paper1 core (36), core-maths-paper2b core (36), core-maths-paper2c core (36), correlation-or-coincidence all (13), curling-friction alevel (20), curling-friction level4 (20), differentiation-duel alevel (14), differentiation-duel level4 (14), dimension-checker level4 (20), dimension-checker alevel (20), eigenvalue-extractor further (15), eigenvector-engine further (15), estimation-golf year6 (9/20), estimation-golf ks3 (9/9), estimation-golf gcse (9/9), estimation-golf alevel (9/9), estimation-golf level4 (9/9), expectation-station core (20), expectation-station gcse (15), expectation-station alevel (10), expected-damage ks3 (15), expected-damage gcse (20), expected-damage core (15), factor-race year6 (10/20), force-resolver alevel (20), force-resolver level4 (20), formula-forge gcse (29), formula-forge alevel (29), formula-forge level4 (16), formula-unlocked gcse (29), formula-unlocked alevel (25), formula-unlocked level4 (14), fraction-equivalence year6 (20), given-that gcse (25), given-that alevel (25), given-that core (20), given-that level4 (20), glorious-gantt core-a (4), glorious-gantt level4-a (4), glorious-gantt core-b (3), glorious-gantt level4-b (4), gradient-hunter gcse (15), gradient-hunter core (20), gradient-hunter alevel (10), integration-duel alevel (14), integration-duel level4 (14), matrix-crunch further (20), matrix-crunch level4 (20), moments-master alevel (20), moments-master level4 (20), partial-fractions-duel alevel (20), partial-fractions-duel level4 (20), percentage-flip year6 (20), percentage-flip default (12), prime-factorisation all (8/28), prime-factorisation year6 (8/20), prisoners-dilemma ks3 (5), prisoners-dilemma gcse (7), prisoners-dilemma alevel (9), prisoners-dilemma core (7), probability-paradox all (38 (3 modes; Paradox mode 12)), proof-builder alevel (counter 15/25, sorter 8/8), proof-builder further (counter 15/35, sorter 8/11, induction 4/4), scale-factor-scaling gcse (38), scale-factor-scaling level4 (31), screening-room gcse (20), screening-room alevel (20), screening-room core (15), screening-room level4 (15), seven-bridges ks3 (25), seven-bridges gcse (25), seven-bridges alevel (25), shape-shifter year6-translation (10/15), shape-shifter year6-reflection (10/15), shape-shifter year6-rotation (10/15), spot-the-error ks3 (35), spot-the-error level4 (30), spot-the-muppet gcse (20), spot-the-muppet core (12), spot-the-muppet ks3 (18), suvat alevel (10), suvat level4 (8), terrible-advice gcse (20), terrible-advice core (12), terrible-advice ks3 (18), truth-will-set-you-free level4 (10), unit-converter alevel (38), wrong-on-the-internet gcse (20), wrong-on-the-internet core (10), wrong-on-the-internet ks3 (15)
 
