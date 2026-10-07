@@ -17,7 +17,8 @@ findings:
   where: games/partial-fractions-duel/index.html:106 ((2x+3)/((x+1)(x-1)), Find A)
   summary: Key 1/2; true A = -1/2, which is a distractor
   evidence: 'x = -1: 1 = -2A; apart: -1/(2(x+1)) + 5/(2(x-1))'
-  status: open
+  status: fixed
+  pr: 105
 - id: partial-fractions-duel-t5-002
   severity: HIGH
   jc: false
@@ -26,7 +27,8 @@ findings:
   where: games/partial-fractions-duel/index.html:110 ((3x-1)/((2x+1)(x-3)), Find A)
   summary: Key 1; true A = 5/7, not offered
   evidence: 'x = -1/2: -5/2 = A(-7/2); apart: 5/(7(2x+1)) + 8/(7(x-3))'
-  status: open
+  status: fixed
+  pr: 105
 - id: partial-fractions-duel-t5-003
   severity: HIGH
   jc: false
@@ -35,7 +37,8 @@ findings:
   where: games/partial-fractions-duel/index.html:125 ((5x-1)/(x(x-1)(x+2)), Find C)
   summary: Key 11/6; true C = -11/6, which is a distractor
   evidence: 'x = -2: -11 = 6C; apart: -11/(6(x+2)) + 4/(3(x-1)) + 1/(2x)'
-  status: open
+  status: fixed
+  pr: 105
 - id: partial-fractions-duel-t5-004
   severity: HIGH
   jc: false
@@ -44,7 +47,8 @@ findings:
   where: games/partial-fractions-duel/index.html:144 ((x^2+3x+5)/((x+1)(x+2)), remainder)
   summary: Key 2; true remainder 3, which is a distractor
   evidence: x^2+3x+5 - (x^2+3x+2) = 3; SymPy div -> (1, 3)
-  status: open
+  status: fixed
+  pr: 105
 - id: partial-fractions-duel-t5-005
   severity: HIGH
   jc: true
@@ -53,7 +57,8 @@ findings:
   where: games/partial-fractions-duel/index.html:136 (form of 5/((x-1)^2(x+2)))
   summary: Distractor (Ax+B)/(x-1)^2 + C/(x+2) is a valid equivalent form, marked wrong
   evidence: A = -5/9, B = 20/9, C = 5/9 (exact solve)
-  status: open
+  status: fixed
+  pr: 105
 - id: partial-fractions-duel-t5-006
   severity: HIGH
   jc: true
@@ -62,7 +67,8 @@ findings:
   where: games/partial-fractions-duel/index.html:137 (form of (x^2+1)/((x+1)^2(x-1)))
   summary: Distractor (Ax+B)/(x+1)^2 + C/(x-1) is a valid equivalent form, marked wrong
   evidence: A = 1/2, B = -1/2, C = 1/2 (exact solve)
-  status: open
+  status: fixed
+  pr: 105
 - id: partial-fractions-duel-t5-007
   severity: HIGH
   jc: false
@@ -70,7 +76,8 @@ findings:
   level: all
   where: games/partial-fractions-duel/index.html:159 (handle)
   summary: 'Enter on a focused option re-marks: re-scores, skips questions, repeats end()/submitScore'
-  evidence: 'wrong click, Tab to correct, Enter x25: score 2367, ''25/20 correct (125%)'', submitScore x7'
+  evidence: 'wrong click, Tab to correct, Enter x25: score 2367, ''25/20 correct (125%)'', submitScore x7 Left open by
+    the cloud-lane fix PR: class 1, owned by the shared answer lock (contract F1).'
   status: open
 - id: partial-fractions-duel-t5-008
   severity: MEDIUM
@@ -80,7 +87,8 @@ findings:
   where: games/partial-fractions-duel/index.html:119,120,124,125,131,133,135
   summary: Find B/C asked without the decomposition form; items shuffled
   evidence: e.g. :131 (x+3)/(x-2)^2 'Find B' with no form
-  status: open
+  status: fixed
+  pr: 105
 - id: partial-fractions-duel-t5-009
   severity: MEDIUM
   jc: true
@@ -88,7 +96,8 @@ findings:
   level: level4
   where: games/partial-fractions-duel/index.html:156,162-163; index.html:3020
   summary: ?level never read; level4 (roster, portal l4) silently serves alevel and submits 'alevel'
-  evidence: 'Chromium: level4/constructor/__proto__/nonsense all play alevel, submitScore(''alevel'')'
+  evidence: 'Chromium: level4/constructor/__proto__/nonsense all play alevel, submitScore(''alevel'') Left open by the
+    cloud-lane fix PR: class 4, owned by the shared level resolver (contract F2).'
   status: open
 - id: partial-fractions-duel-t5-010
   severity: LOW
@@ -98,4 +107,5 @@ findings:
   where: games/partial-fractions-duel/index.html:126,147,157
   summary: :126 not in lowest terms; 'integer part' should be 'quotient'; options not via MaffsOptions
   evidence: 6x^2+5x+1 = (2x+1)(3x+1)
-  status: open
+  status: fixed
+  pr: 105
