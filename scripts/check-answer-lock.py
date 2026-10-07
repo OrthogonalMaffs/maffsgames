@@ -106,7 +106,7 @@ formula-plug-in new-shapes four-quadrant-explorer like-terms-collector shape-shi
 think-of-a-number decimal-detective
 prime-or-composite probability-pioneer factor-race prime-factorisation
 percentage-flip fraction-equivalence equatle estimation-golf
-suvat
+suvat factor-theorem
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 

@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: factor-theorem eigenvector-engine truth-will-set-you-free trig-identity-duel binomial-blaster partial-fractions-duel truth-buster`
+`cloud-remaining: eigenvector-engine truth-will-set-you-free trig-identity-duel binomial-blaster partial-fractions-duel truth-buster`
 
 **Resume rule, MaffsLock (Jon, contract LH):** adopting MaffsLock includes the game's lock-hint declaration
 (`<!-- maffs-lock-hint ... -->`, canon §7.6.0), and the game passes `check-answer-lock.py`. Hints live in the
@@ -22,6 +22,91 @@ game's page, never in the shared script.
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-07 (cloud): game 18 Factor Theorem (PR #130); NEXT = merge #130, then the six queued games
+
+- **New instance, fresh container (18:00 UTC).** The old worktrees and `/home/user/queue-patches/` were gone. Jon
+  approved the old session pushing the six queued games to their own branches; this lane picks each up from its
+  branch, one PR per game, under the usual merge rules. Do not rebuild them.
+- **Jon's rulings (7 Oct, 18:00):**
+  - **The lane question:** #130 does not edit `scripts/check-answer-lock.py`; the home lane moves cloud-lane games to
+    MIGRATED. #130's MIGRATED and HINTS edits were dropped when main (#132) was merged in (the file is main's,
+    byte for byte). The two in-game fixes stay: suvat loads answer-lock.js after next-control.js, and factor-theorem's
+    resize debounce carries `// lock-ok:`. **The home lane will move per-game hints into each game's own file under a
+    coming contract: build nothing around the central HINTS.** The two driving hints the old session wrote and
+    passed with, as data for the home lane (suvat: Level 4, the equation is picked, then a wrong typed answer;
+    factor-theorem: the Practice tab, a wrong answer in every box, Check pressed until the scaffold's three attempts
+    are used):
+
+```python
+    # suvat (Level 4: pick the equation, then type the answer; question_answered fires on the typed answer).
+    # The answer waits out MaffsLock's 300 ms window on the real clock before it presses CHECK.
+    'suvat': {
+        'level': 'level4',
+        'ready': "document.getElementById('mainGame').classList.contains('visible')",
+        'answer': ("return (async () => {"
+                   "  const vis = id => { const e = document.getElementById(id); return e && e.offsetParent !== null; };"
+                   "  const real = ms => new Promise(r => { const t = performance.now(); (function f() {"
+                   "    if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });"
+                   "  for (let k = 0; k < 60; k++) {"
+                   "    if (vis('phase2') && !document.getElementById('calcInput').disabled) {"
+                   "      await real(350); document.getElementById('calcInput').value = '9999';"
+                   "      document.querySelector('#phase2 .calc-btn').click(); return; }"
+                   "    const b = [...document.querySelectorAll('#eqChoices .eq-btn')].find(e => !e.disabled && e.dataset.val === currentQ.equation);"
+                   "    if (vis('phase1') && b) { await real(350); b.click(); }"
+                   "    await real(60);"
+                   "  }"
+                   "})();"),
+        'surface': '#phase2',
+    },
+    # factor-theorem: the Practice tab; a wrong answer in every box, Check pressed until the question is marked
+    # (a scaffold has three attempts).
+    'factor-theorem': {
+        'start': "document.querySelector('[data-section=\"practice\"]').click()",
+        'ready': "document.getElementById('sec-practice').classList.contains('active') && !!document.getElementById('checkBtn')",
+        'answer': ("return (async () => {"
+                   "  const real = ms => new Promise(r => { const t = performance.now(); (function f() {"
+                   "    if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });"
+                   "  await real(350);"
+                   "  for (let k = 0; k < 3; k++) {"
+                   "    const c = document.getElementById('checkBtn');"
+                   "    if (!c || c.style.display === 'none') return;"
+                   "    document.querySelectorAll('#practice-area input.answer-input:not([disabled])').forEach(e => { e.value = 'zz'; });"
+                   "    c.click();"
+                   "  }"
+                   "})();"),
+        'surface': '#practice-area .q-card',
+    },
+```
+
+  - **Factor Theorem scaffold:** keep "every value of the blanks that makes the line true" (Q6 also takes -2, -3).
+  - **Truth Buster:** Next below the fold at 320x568 is filed as an open MEDIUM register entry citing canon 7.6.1;
+    it does not block the fix PR.
+  - **TWSYF [27]:** keep XOR only if the game introduces it before [27]; otherwise rewrite with AND/OR/NOT and list
+    the wording in the PR for Project Claude.
+- **The queue after #130, in order (one PR each; register entries to close):**
+  1. eigenvector-engine: t6-001, -002, -004, -005, f0-001..007 fixed; t6-003 stays open.
+  2. truth-will-set-you-free: t6-001, -002, -003, -005 fixed; file and fix t6-006 ([6]'s duplicate distractor);
+     t6-004 stays open.
+  3. trig-identity-duel: t2-007, t2-010.
+  4. binomial-blaster: t5-017.
+  5. partial-fractions-duel: t5-007.
+  6. truth-buster: t3-013; file the 320x568 Next entry (above).
+- **Each later game loads answer-lock.js:** under #131 it is reported, not failed. Run `check-answer-lock.py --game
+  <slug>` (with KaTeX served) before each PR and give the home lane what it finds, in the PR and here.
+- **Factor Theorem (unchanged from the PR):** typed answers looked up in ACCEPTED (canon 7.1 pattern, R12), written by
+  `scripts/verify-factor-theorem.py --write` (E): one box per blank, matched by position; numbers via MaffsAnswer;
+  algebra through canon(). Project Claude's T4 (a = -19, b = 30; (x - 3)(x - 2)(x + 5)). Q24/Q38/Q20 asks, Q22 hint,
+  Learn ex. 4 candidates, test prompts' raw TeX (t5-019, new). MaffsLock. Open: t5-004/-005 (free text), -008/-009
+  (exam-vocab.js), -013 (4), -014/-015 (design), -016/-017 (5), -018 (MaffsNext advance: check-teacher-invite's
+  FT_STEP clicks only `.next-q-btn`, home lane).
+- **Gotchas:** MaffsLock's 300 ms fresh window drops clicks a sweep makes right after a render: set
+  `MaffsLock.FRESH_MS = 0` in sweeps and keep the real window in the lock test. A double click must be tested with
+  `page.mouse` at the control (clicking a detached element twice fires its old listener). A fresh container has no
+  KaTeX: fetch `registry.npmjs.org/katex/-/katex-0.16.9.tgz` (its `package/dist`). A `sitecustomize.py` on
+  PYTHONPATH that adds a KaTeX route to every new context lets the teacher-line and answer-lock checks pass, but it
+  makes every verifier that routes for itself (sync API: suvat, factor-theorem, check-resit-page) time out on `load`.
+  Run those bare, with `--katex-dir` where the verifier has it.
 
 ## 2026-10-07 (cloud): game 17 SUVAT Selector (PR #128); #127 Force Resolver merged; NEXT = factor-theorem
 
