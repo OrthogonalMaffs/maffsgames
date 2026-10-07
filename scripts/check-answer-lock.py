@@ -109,6 +109,7 @@ percentage-flip fraction-equivalence equatle estimation-golf
 suvat factor-theorem
 dimension-checker curling-friction trig-worms component-crusher
 differentiation-duel integration-duel spot-the-error expectation-station
+eigenvector-engine proof-builder linear-equation-solver moments-master force-resolver
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
