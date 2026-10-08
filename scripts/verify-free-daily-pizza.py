@@ -721,6 +721,7 @@ EVENTS_JS = r"""() => { window.__events = []; window.mfg = function (n, p) { win
 async def new_page(browser, firebase=False, when=None, viewport=None, katex=True, boards=None):
     ctx = await browser.new_context(viewport=viewport or {"width": 1100, "height": 900})
     await bc.no_next_floor(ctx)      # content checks; the floor is tested in test-next-control.py
+    await ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # it clicks as soon as a question is asking
 
     async def route(r):
         u = r.request.url

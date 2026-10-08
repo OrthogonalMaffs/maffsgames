@@ -175,6 +175,20 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Start makes a grid (initials ABC) and presses Start. The answer is typed on the keypad: i = 0 the product, i >= 1 the product + 1 (wrong), then Enter.
+{
+  "start": "document.getElementById('newGridBtn').click(); document.getElementById('iniInput').value = 'ABC'; document.getElementById('iniCreate').click(); document.getElementById('startBtn').click();",
+  "ready": "document.getElementById('game').classList.contains('active') && !!SSB.ui.question()",
+  "keys": ["7", "Enter"],
+  "answer": [
+    "const a = SSB.ui.question().answer;",
+    "const key = k => document.querySelector('#keypad .key[data-k=\"' + k + '\"]');",
+    "for (const ch of String(i === 0 ? a : a + 1)) key(ch).click();",
+    "key('enter').click();"
+  ]
+}
+-->
 <script src="../../schools/assets/progress.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -741,6 +755,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     if (!grid) return;
     var pool = SSB.poolOf(grid.gold).length;
     if (!pool) return;
+    MaffsLock.newSession();
     S = SSB.createSession({ gold: grid.gold, length: sessionLength === pool ? 'clear' : sessionLength });
     board = SSB.boardFor(S);
     score = 0; correctCount = 0; missed = {};
@@ -784,6 +799,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     $('hudScore').textContent = score;
     $('hudGold').textContent = SSB.goldCount(S.gold) + '/' + SSB.FACTS.length;
     renderQuestion();
+    MaffsLock.fresh($('keypad'));   // a new question: a second Enter or a double-tap on Next cannot answer it
     // Highlight only the headers the question itself shows, so the grid gives nothing away.
     renderGameGrid(S.gold, {
       hlRow: q.form === 'left' ? null : q.x,
@@ -792,8 +808,9 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     qStart = Date.now();
   }
 
+  // Typing stops once the answer is in (MaffsLock.isLocked: canon 7.6.0, no local answered flag).
   function press(k) {
-    if (state !== 'asking') return;
+    if (state !== 'asking' || MaffsLock.isLocked($('keypad'))) return;
     if (k === 'back') typed = typed.slice(0, -1);
     else if (k === 'enter') { if (typed) submit(); return; }
     else if (/^[0-9]$/.test(k) && typed.length < 3) typed = (typed === '0' ? '' : typed) + k;
@@ -801,6 +818,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   }
 
   function submit() {
+    if (!MaffsLock.lock($('keypad'))) return;   // one answer per question
     var given = parseInt(typed, 10);
     var ok = given === q.answer;
     var secs = (Date.now() - qStart) / 1000;
@@ -821,7 +839,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       flashCells($('gameGridWrap'), q.key);
       var bar = $('gridBar'); bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash');
       $('feedback').innerHTML = '<div class="fb-right">✓ ' + q.x + ' × ' + q.y + ' = ' + q.c + '</div>';
-      setTimeout(nextQuestion, CORRECT_DELAY);
+      MaffsLock.timer(nextQuestion, CORRECT_DELAY);
     } else {
       missed[q.key] = true;
       showWrong(given);
@@ -852,7 +870,8 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     MaffsNext.wrong({ mount: fb, onAdvance: nextQuestion });
   }
 
-  function finish() {
+  // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
     state = 'done';
     clearInterval(clockTimer);
     var secs = Math.floor((Date.now() - t0) / 1000);
@@ -882,7 +901,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     }).join('') : '';
     renderGrid($('resGridWrap'), S.gold);
     show('results');
-  }
+  });
 
   /* ---------- wiring ---------- */
   var keys = $('keypad').querySelectorAll('.key');

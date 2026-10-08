@@ -164,6 +164,17 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/session-length.js"></script>
 <script src="../../schools/assets/options.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 presses the first option; i >= 1 presses the first option that is not the key (FDP.ui.question()).
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#options .opt')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const key = FDP.ui.question().answer;",
+    "(bs.find(b => b.dataset.val !== key) || bs[0]).click();"
+  ]
+}
+-->
 <script src="../../schools/assets/mathtext.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -975,6 +986,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   function start(list) {
     ids = list;
     runId++;
+    MaffsLock.newSession();
     board = FDP.boardFor(mode, playStage, ids.length, playDate);   // null: this run ranks nowhere
     evMode = FDP.modeFor(mode, playStage, ids.length);
     histKey = board || evMode;
@@ -1017,12 +1029,13 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       b.addEventListener('click', function () { answer(b, byKey[k]); });
       box.appendChild(b);
     });
+    MaffsLock.fresh(box);   // a new question: a double-click on Start or Next cannot answer it
     state = 'asking';
     qStart = Date.now();
   }
 
   function answer(btn, chosen) {
-    if (state !== 'asking') return;
+    if (!MaffsLock.lock($('options'))) return;   // one answer per question (canon 7.6.0)
     var ok = btn.dataset.val === item.answer.key;
     var secs = (Date.now() - qStart) / 1000;
     state = ok ? 'right' : 'wrong';
@@ -1035,7 +1048,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       $('hudScore').textContent = score;
       btn.classList.add('correct');
       $('feedback').innerHTML = '<div class="fb-right">✓ ' + FDP.mathHtml(item.equation) + '</div>';
-      setTimeout(advanceFor(runId), CORRECT_DELAY);
+      MaffsLock.timer(advanceFor(runId), CORRECT_DELAY);
     } else {
       missed.push(item.id);
       showWrong(chosen);
@@ -1056,7 +1069,8 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     MaffsNext.wrong({ mount: fb, onAdvance: advanceFor(runId) });
   }
 
-  function finish() {
+  // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
     state = 'done';
     clearInterval(clockTimer);
     var secs = Math.floor((Date.now() - t0) / 1000);
@@ -1086,7 +1100,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       return '<li>' + FDP.mathHtml(FDP.item(id).equation) + '</li>';
     }).join('') + '</ul>' : '';
     show('results');
-  }
+  });
   /* One personal-best key per day would pile up for ever; only today's is kept. */
   function pruneOldDaily(keep) {
     try {

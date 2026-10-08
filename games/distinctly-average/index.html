@@ -191,6 +191,16 @@
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 presses the first option; i >= 1 presses the first option that is not the key (some items have two or three options).
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#optionsGrid .opt-btn')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "(bs.find(b => b.dataset.val !== currentItem.correct) || bs[0]).click();"
+  ]
+}
+-->
 <script src="../../schools/assets/options.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
@@ -1202,7 +1212,7 @@ function renderScaffoldArea(item) {
    Game state / flow (canon §7.6)
    ---------------------------------------------------------------------------- */
 let score = 0, correctCount = 0, qIndex = 0, sessionQuestions = [];
-let currentItem = null, currentDistMap = null, locked = false;
+let currentItem = null, currentDistMap = null;
 
 const CAT_LABEL = {
   mean: 'Mean', median: 'Median', modeUnique: 'Mode', modeBimodal: 'Mode',
@@ -1243,6 +1253,7 @@ function promptFor(item) {
 window.DA_PROMPTS = { ks3: KS3_POOL.map(it => promptFor(it)), gcse: GCSE_POOL.map(it => promptFor(it)) };
 
 function startGame() {
+  MaffsLock.newSession();
   const pool = poolFor(currentLevel);
   sessionQuestions = MaffsOptions.shuffle(pool.slice()).slice(0, sessionLength);
   score = 0; correctCount = 0; qIndex = 0;
@@ -1261,7 +1272,6 @@ function loadQuestion() {
   if (qIndex >= sessionQuestions.length) { endGame(); return; }
   currentItem = sessionQuestions[qIndex];
   qIndex++;
-  locked = false;
   document.getElementById('qcount').textContent = qIndex + '/' + sessionQuestions.length;
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
@@ -1324,6 +1334,7 @@ function renderQuestionBody(item) {
     btn.addEventListener('click', () => checkAnswer(v, btn));
     grid.appendChild(btn);
   });
+  MaffsLock.fresh(grid);   // a new question: a double-click on Start or Next cannot answer it
 }
 
 function explainHTML(item) {
@@ -1403,8 +1414,7 @@ function explainHTML(item) {
 }
 
 function checkAnswer(selectedVal, btnEl) {
-  if (locked) return;
-  locked = true;
+  if (!MaffsLock.lock(document.getElementById('optionsGrid'))) return;   // one answer per question (canon 7.6.0)
   const isCorrect = selectedVal === currentItem.correct;
   document.querySelectorAll('.opt-btn').forEach(b => {
     b.disabled = true;
@@ -1421,7 +1431,7 @@ function checkAnswer(selectedVal, btnEl) {
     document.getElementById('score').textContent = String(score);
     feedback.textContent = 'CORRECT! ✓ ' + optionLabel(currentItem, currentItem.correct);
     feedback.className = 'feedback correct';
-    setTimeout(loadQuestion, 1200); // canon §7.6: brisk, capped well under 1.5s
+    MaffsLock.timer(loadQuestion, 1200); // canon §7.6: brisk, capped well under 1.5s
   } else {
     feedback.textContent = 'WRONG';
     feedback.className = 'feedback wrong';
@@ -1435,7 +1445,9 @@ function checkAnswer(selectedVal, btnEl) {
   }
 }
 
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame() { finishGame(); }
+const finishGame = MaffsLock.finishOnce(function () {
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').style.display = 'block';
   document.getElementById('finalScore').textContent = String(score);
@@ -1465,7 +1477,7 @@ function endGame() {
     }
     if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, currentLevel, score);
   }
-}
+});
 
 /* Aa toggle — canon §7.1, shared localStorage key so the choice carries
    across games. .light-theme keeps a readable light background in Aa mode

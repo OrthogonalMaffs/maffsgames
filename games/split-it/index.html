@@ -128,6 +128,27 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Simplify mode, Foundation. A wrong attempt keeps the question locked until Try Again (the game's retry, not a Next), so "each" presses Try Again when it is up (the check reads a visible "Try Again" as an end screen) and the answer waits for the question to reopen. i = 0 types the key; i >= 1 types the key + 1 in every box (wrong). Best value is never served in Simplify.
+{
+  "start": "pickMode('simplify'); startGame('ks3');",
+  "ready": "!!document.querySelector('#qCard .check-btn')",
+  "each": "const d = document.querySelector('#fbArea .dismiss-btn'); if (d) d.click();",
+  "answer": [
+    "return (async () => {",
+    " const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    " const card = document.getElementById('qCard');",
+    " for (let t = 0; t < 200 && (MaffsLock.isLocked(card) || MaffsLock.isFresh(card)); t++) {",
+    " const d = document.querySelector('#fbArea .dismiss-btn'); if (d) d.click(); await real(30); }",
+    " const q = S._currentQ; if (!q || !document.querySelector('#qCard .check-btn')) return;",
+    " q.answers.forEach((a, k) => { document.getElementById('in' + k).value = String(i === 0 ? a : a + 1); });",
+    " document.querySelector('#qCard .check-btn').click();",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -187,7 +208,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 </div>
 
 <script>
-function _addDismiss(fb,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
+function _addDismiss(fb,cb){MaffsLock.timer(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
 // ============================================================
 //  STATE
 // ============================================================
@@ -219,6 +240,7 @@ function parseURL(){
 //  START
 // ============================================================
 function startGame(level){
+  MaffsLock.newSession();
   S.level=level;S.qIdx=0;S.score=0;S.correct=0;S.penalties=0;S.used=new Set();
   S.timerStart=Date.now();S.timerInterval=setInterval(updateTimer,1000);S.timerElapsed=0;
   $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');
@@ -245,6 +267,7 @@ function loadQuestion(){
   $('hudQ').textContent=`${S.qIdx+1}/${S.total}`;
   $('hudScore').textContent=S.score;
   $('hudCorrect').textContent=S.correct;
+  MaffsNext.clear($('fbArea'));
   $('fbArea').innerHTML='';
 
   const q=generateQ();
@@ -503,10 +526,11 @@ function renderQ(q){
     html+=`<button class="check-btn" onclick="checkAnswer()">Check</button>`;
   }
   card.innerHTML=html;
+  MaffsLock.fresh(card);   // a new question: a double-click on Start, or a second Enter, cannot answer it
 
   // Focus first input
   const first=card.querySelector('input');
-  if(first)setTimeout(()=>first.focus(),50);
+  if(first)MaffsLock.timer(()=>first.focus(),50);
 }
 
 // ============================================================
@@ -530,8 +554,11 @@ function showNotice(cls,msg){
   $('fbArea').firstChild.textContent=msg;
 }
 
+// One mark per attempt (canon 7.6.0): the lock is taken once the answer is readable (a format or unreadable
+// notice is never marked, so it never takes it), and a wrong attempt keeps Check locked until Try Again.
 function checkAnswer(){
-  const q=S._currentQ;
+  const q=S._currentQ,card=$('qCard');
+  if(MaffsLock.isLocked(card))return;
   let correct=false;
 
   if(q.type==='ratio2'||q.type==='ratio3'||q.type==='divide2'||q.type==='divide3'||q.type==='scale'||q.type==='single'){
@@ -542,6 +569,7 @@ function checkAnswer(){
       showNotice('format',MaffsAnswer.message('format',$('in'+f).value,q.money?{currency:q.money}:{dp:q.dp}));
       return;
     }
+    if(!MaffsLock.lock(card))return;
     S.attempts++;
     correct=results.every(r=>r==='correct');
     results.forEach((r,i)=>{$('in'+i).classList.add(r==='wrong'?'wrong':'correct');});
@@ -550,6 +578,7 @@ function checkAnswer(){
     const num=MaffsAnswer.parse($('in0').value),den=MaffsAnswer.parse($('in1').value);
     if(num===null||den===null){showNotice('notice',MaffsAnswer.message('unreadable'));return;}
     if(den===0)return;
+    if(!MaffsLock.lock(card))return;
     S.attempts++;
     correct=num===q.answers[0]&&den===q.answers[1];
     if(!correct&&num/den===q.answers[0]/q.answers[1]){
@@ -557,6 +586,7 @@ function checkAnswer(){
       showFeedback(false,'Correct value, but simplify your fraction! '+q.answers[0]+'/'+q.answers[1]);
       S.penalties++;
       mfg('question_answered',{game_slug:'split-it',level:S.level,mode:S.mode,question_index:S.qIdx+1,correct:false});
+      MaffsLock.fresh(card);   // the student simplifies and checks again
       return;
     }
     $('in0').classList.add(correct?'correct':'wrong');
@@ -572,7 +602,7 @@ function checkAnswer(){
     $('hudScore').textContent=S.score;$('hudCorrect').textContent=S.correct;
     showFeedback(true,q.working);
     mfg('question_answered',{game_slug:'split-it',level:S.level,mode:S.mode,question_index:S.qIdx+1,correct:true});
-    setTimeout(()=>{S.qIdx++;loadQuestion();},1200);
+    MaffsLock.timer(nextQuestion,1200);
   } else {
     S.penalties++;
     showFeedback(false,q.hint);
@@ -581,11 +611,13 @@ function checkAnswer(){
     _addDismiss($('fbArea'),()=>{
       $('fbArea').innerHTML='';
       document.querySelectorAll('.ratio-input').forEach(inp=>{inp.classList.remove('wrong');});
+      MaffsLock.fresh(card);   // the next attempt: Check and the boxes are live again
     });
   }
 }
 
 function checkBestValue(choice){
+  if(!MaffsLock.lock($('qCard')))return;   // one answer per question (canon 7.6.0)
   const q=S._currentQ;
   S.attempts++;
   const correct=choice===q.answers[0];
@@ -601,8 +633,12 @@ function checkBestValue(choice){
   }
   showFeedback(correct,q.working);
   mfg('question_answered',{game_slug:'split-it',level:S.level,mode:S.mode,question_index:S.qIdx+1,correct:correct});
-  setTimeout(()=>{S.qIdx++;loadQuestion();},1800);
+  // canon 7.6: a right answer moves on briskly; a wrong one leaves the working up until Next.
+  if(correct)MaffsLock.timer(nextQuestion,1800);
+  else MaffsNext.wrong({mount:$('fbArea'),onAdvance:nextQuestion});
 }
+
+function nextQuestion(){S.qIdx++;loadQuestion();}
 
 // ============================================================
 //  VISUAL
@@ -624,7 +660,9 @@ function showFeedback(ok,msg){
 // ============================================================
 //  END GAME
 // ============================================================
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame(){finishGame()}
+const finishGame=MaffsLock.finishOnce(function(){
   clearInterval(S.timerInterval);
   $('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
 
@@ -652,7 +690,7 @@ function endGame(){
   window._mfgCompleted=true;
   mfg('game_completed',{game_slug:'split-it',level:S.level,mode:S.mode,score:S.score,questions_answered:S.total,questions_correct:S.correct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('split-it',S.level,S.score,S.total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('split-it',S.level,S.score);}}
-}
+});
 
 function showMenu(){
   $('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');

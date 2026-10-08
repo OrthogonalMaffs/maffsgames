@@ -581,6 +581,16 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. One puzzle a day, up to six guesses, each guess one mark. i = 0 types the answer; i >= 1 types the answer + 1 (wrong); then Guess.
+{
+  "ready": "!state.done && !MaffsLock.isLocked(document.getElementById('input-area'))",
+  "answer": [
+    "document.getElementById('guess-input').value = String(i === 0 ? puzzle.a : puzzle.a + 1);",
+    "document.getElementById('submit-btn').click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -882,7 +892,7 @@ function shareResult() {
     navigator.clipboard.writeText(txt).then(() => {
       const btn = document.querySelector('.modal-acts .btn-ghost');
       btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Share', 2000);
+      MaffsLock.timer(() => btn.textContent = 'Share', 2000);
     });
   }
 }
@@ -901,9 +911,12 @@ function submitGuess() {
   if (isNaN(val) || val < 0) {
     setMsg('Enter a valid positive number.');
     input.classList.add('shake');
-    setTimeout(() => input.classList.remove('shake'), 400);
+    MaffsLock.timer(() => input.classList.remove('shake'), 400);
     return;
   }
+  // One mark per guess (canon 7.6.0): an unreadable entry above is never marked, so it takes no lock.
+  const area = document.getElementById('input-area');
+  if (!MaffsLock.lock(area)) return;
   setMsg('');
   state.guesses.push(val);
   const won = val === puzzle.a;
@@ -915,6 +928,7 @@ function submitGuess() {
   renderStatus();
   saveState();
   input.value = '';
+  if (!state.done) MaffsLock.fresh(area);   // the next guess: a second Enter on this one lands on nothing
   input.focus();
 }
 
@@ -926,7 +940,9 @@ function useHint() {
   saveState();
 }
 
-function endGame(won) {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame(won) { finishGame(won); }
+const finishGame = MaffsLock.finishOnce(function (won) {
   state.done = true;
   state.won = won;
   state.endTime = Date.now();
@@ -945,8 +961,8 @@ function endGame(won) {
   mfg('game_completed',{game_slug:'52dle',level:'all',score:sc,questions_answered:state.guesses.length,accuracy:won?100:0});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('52dle','all',sc,state.guesses.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('52dle','all',sc);}}
 
-  setTimeout(() => showModal(won, sc, secs), 500);
-}
+  MaffsLock.timer(() => showModal(won, sc, secs), 500);
+});
 
 function showModal(won, sc, secs) {
   const m = document.getElementById('modal');
@@ -1015,6 +1031,7 @@ function init() {
     })();
     document.getElementById('sv-s').textContent = state.finalScore || 0;
   } else {
+    MaffsLock.fresh(document.getElementById('input-area'));
     timerInterval = setInterval(renderTimer, 1000);
     window._ggAbandoned=true;
     mfg('game_started',{game_slug:'52dle',level:'all'});

@@ -690,6 +690,7 @@ def run_page(chromium=None, against=None, patches=None):
                 errors = []
                 page.on('pageerror', lambda e: errors.append(str(e)))
                 page.add_init_script(RECORDER)
+                page.add_init_script(bc.NO_LOCK_FRESH_INIT)   # the sweep answers at once after nextQ's fresh()
 
                 def route(r):
                     u = r.request.url.split('?')[0]
