@@ -27,7 +27,7 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
    TOUCH: answer-lock.js behaviour, what the check tests, scoring, cloud-remaining games, CI retry settings.
    STOP IF: the fresh window can't be observed without changing answer-lock.js behaviour; a two-option game's
    wrong answer can't be expressed with the existing key; determinism would stop it testing something it tests now.
-2. **Contract ESSENTIALS** (Jon's paste, received in full 8 Oct): after DET merges and main is green. Verbatim:
+2. **Contract ESSENTIALS: DONE, #150 merged 8 Oct, main green (69d05df).** (Jon's paste, received in full 8 Oct): after DET merges and main is green. Verbatim:
    > TASK: Rename the resit section to "Essentials", stop any student-facing page naming the student's status,
    > and correct the homepage title and description so they're accurate and name who the site is for.
    > ROOT CAUSE: Status labels and site facts are hand-typed into individual pages. The two resit escape rooms'
@@ -67,7 +67,7 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
    > green; handover current.
    > STOP IF: a generated count needs a new field in the metadata source; the redirect breaks a check that
    > assumes /resit/ is a real page; any analytics event name (not just a value) would have to change.
-2b. **Contract CLAIM: BUILT, PR on `claude/claim` (8 Oct).** Its STOP IF hit (no time bound); Jon's ruling (8 Oct):
+2b. **Contract CLAIM: DONE, #145 merged 8 Oct (c752d9a).** Its STOP IF hit (no time bound); Jon's ruling (8 Oct):
    option 3, for listed games a claim is a process lock only, the check judges them as unclaimed, the exemption
    stays for unlisted games only, no time bound. Verbatim (Jon, 8 Oct; a separate PR, after DET):
    > TASK: Record the cloud lane's widened remit in canon and make the F1 rollout skip any game the cloud lane
@@ -91,7 +91,7 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
    > (propose a bound, e.g. it fails once off the line or after its PR merges).
    - Note for that session (8 Oct, from DET): today `counts()` returns True for any MIGRATED game, so a MIGRATED
      game put on the line is FAILED, not reported: item 3 needs a change. Also check the STOP IF before changing it.
-2c. **Contract UPDATES** (Jon, 8 Oct): after ESSENTIALS merges and main is green. Verbatim:
+2c. **Contract UPDATES: PR on `claude/updates` (8 Oct); item 3 reworded per Project Claude's ruling (see entry).** (Jon, 8 Oct): after ESSENTIALS merges and main is green. Verbatim:
    > TASK: Add Jon's approved October quality entries to /updates/. ROOT CAUSE: The 6-8 Oct clean-up (audit,
    > per-game verifiers, SR-16/17 fixes, the shared answer lock, 17 games relisted) is not on /updates/, the page
    > that shows teachers the site is maintained. Jon approved wording on 8 Oct: honest, no fault counts. CLASS
@@ -133,10 +133,23 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-08 (home): contract ESSENTIALS, BUILT on `claude/essentials` (worktree E:/jon/mg-ess), rebased, PR next
+## 2026-10-08 (home): contract UPDATES, the October quality entries on /updates/ (branch `claude/updates`)
 
-**State (8 Oct, next session):** rebased onto main after CLAIM #145 and #147 (home.md conflict only: CLAIM's
-entry kept below). Re-run `python scripts/check-changed.py`, open the PR, merge on a green Gate, then UPDATES (QUEUE 2c).
+- **STOP IF hit (item 5's fact check, before committing):** item 3's American-wheel example was not true on main.
+  No game names the wheel; wrong-on-the-internet (listed) still keys roulette `P(black) = 18/38` with no wheel
+  stated (audit tranche 2's open fix: "say 'American wheel', or key 18/37"). **Ruling (Project Claude, 8 Oct):**
+  drop it; item 3 now ends "for example, which method to use for quartiles." Items 1, 2 and 4 unchanged.
+  wrong-on-the-internet's roulette item is still an open SR-17 fix for a later batch.
+- **Claims confirmed on main:** Linear Equation Solver marks `b` (every optimal move) full, `s` (valid but slower)
+  half the points at stake with the quickest route shown, `e` named (154 one-side ÷ errors, "Whatever you do to
+  one side, do to the other side too"). core-maths-paper1 (listed) states "Using the (n + 1)/4 method".
+- **Page:** the "Every answer checked again" note after "Which tax year?", then first items under New, Clarified
+  and Improved in the October section. No existing entry touched; the /resit/ history links stay (they redirect).
+## 2026-10-08 (home): contract ESSENTIALS, BUILT on `claude/essentials` (worktree E:/jon/mg-ess), MERGED (#150, 69d05df)
+
+**MERGED 8 Oct (#150, 69d05df) on a green Gate.** Locally, Test the Claim (`generateWrongContexts is not defined`
+under Playwright's Node v24 `node -e`) and Negative Number Line (320x568 fold, 536 vs 528) fail on main too: local
+environment only, CI green. Worth a look if a local run must be clean.
 - **/resit/ -> /essentials/**: page moved (git mv), heading "Essentials" plus the teacher line, analytics section
   `essentials`; /resit/ is a meta-refresh stub (spec-map pattern, registered in check-footer.py). games.json key,
   apply-meta/check-meta, check-resit-page.py (PAGE; filename kept), check-canonical-links RESOLVE/LEVEL pages,
