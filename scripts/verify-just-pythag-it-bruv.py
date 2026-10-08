@@ -65,7 +65,7 @@ WHAT IT ASSERTS (Jon's contract, docs/next-contract-just-pythag-it-bruv.md, poin
   UI          a full session played with the Firebase SDK blocked (round 1 tapped with real pointer
               clicks: a leg first, which gets the message and no event, then the hypotenuse; once by
               keyboard); the start screen shows
-              "Foundation" and "Calculator required"; the page is noindex; a format answer is not
+              "Foundation" and "Calculator required"; the page is not noindex (listed 8 Oct 2026); a format answer is not
               marked and sends no event; the first three add errors show the worked example (with
               the Next control's fallback timer off), the fourth and fifth the nudge; other wrong
               answers show the worked solution; the four canon 1.3 events carry their parameters
@@ -896,8 +896,8 @@ async def ui_playthrough(browser, out, seed=4242):
     ctx, page, errors = await new_page(browser)
     try:
         html = await page.content()
-        if not re.search(r'<meta name="robots" content="noindex', html):
-            out.append("UI: the page is not noindex")
+        if re.search(r'<meta name="robots" content="noindex', html):   # listed 8 Oct 2026 (Jon approved it; RELIST-3)
+            out.append("UI: the page is noindex, but the game is listed")
         if await page.evaluate("typeof window.firebase") != "undefined":
             out.append("UI: the Firebase SDK was meant to be blocked but loaded")
         badge = await page.evaluate("(() => { const b = document.querySelector('.calc-badge'); return b ? "
