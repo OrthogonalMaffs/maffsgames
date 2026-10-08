@@ -178,6 +178,21 @@ Every HTML page must include the following snippet in the `<head>`. Cookieless m
 | Daily email report | 7am UK time to Jon (owner) |
 | Row limit protection | Auto-deletes oldest 10% at 9M rows |
 
+### 1.2.1 GA4 country tabs (8 Oct 2026, Jon's ruling)
+
+Two tabs in the **MaffsGames Events** spreadsheet hold GA4's daily figures by country, read from the Google Analytics Data API (advanced service `AnalyticsData`, property `properties/528531831`, the property of stream 13898555479). They are aggregates GA4 already holds. Nothing new is collected, and the site, `analytics.js`, the events endpoint and the privacy page are unchanged. **Live only once Jon has installed it** (`docs/ga4-country-setup.md`).
+
+| Tab | Columns |
+| --- | --- |
+| GA4 country daily | date, country, activeUsers, sessions, engagedSessions, eventCount |
+| GA4 country events | date, country, eventName, activeUsers, eventCount, for page_view, game_started, question_answered, game_completed |
+
+- **Code:** `docs/apps-script-ga4-country.js`, a script file in the Sheet's bound Apps Script project beside the endpoint's `Code.gs`. Its names are prefixed `GA4C_`/`ga4c`/`ga4Country` so the two cannot clash. It is not part of the web app deployment. Setup is in `docs/ga4-country-setup.md`; the test is `scripts/test-ga4-country.py` (CI, B3).
+- **Schedule:** `ga4CountryDaily`, between 06:00 and 07:00 UK time, before the 07:00 report.
+- **The 48-hour settle window:** GA4 revises a day's figures for about 48 hours. So each run fetches the last **three** complete days and **replaces** those dates' rows. Re-runs never duplicate, and no other date changes. `ga4CountryBackfill` replaces 1 Sep 2026 to yesterday and is safe to re-run.
+- **The events tab is never read or written.** Sheets are reached only by the two tab names, and new tabs are added at the end.
+- **Reading: "users" are not people here.** GA4 runs cookieless, so activeUsers and sessions count visits, not people. Real use is the game events and engagedSessions. A crawler shows page_view with no question_answered. GA4 sees less than the Sheet (blockers), so the country split is a share, not a full count.
+
 ## 1.3 Events — Required on ALL Games
 
 Use `mfg()` not `gtag('event',...)`. The wrapper sends to both GA4 and Sheets.
