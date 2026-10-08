@@ -68,7 +68,8 @@ findings:
   summary: A double-click on Next Question answers the next gut check unseen
   evidence: 'nextQuestion draws phase 1 at once; handleGut has no answered guard. Real dblclick: 7/7 at 1280x800,
     6/7 at 390x844 recorded in phase1Scores and question_answered.'
-  status: open
+  status: fixed
+  pr: 183
 - id: screening-room-t4-006
   severity: MEDIUM
   jc: false
@@ -78,7 +79,8 @@ findings:
   summary: Prototype keys accepted as levels; Start then throws
   evidence: '?level=constructor/__proto__/toString: TypeError arr.slice is not a function; recoverable via level
     button. nonsense and l4 fall back to gcse silently.'
-  status: open
+  status: fixed
+  pr: 183
 - id: screening-room-t4-007
   severity: MEDIUM
   jc: false
@@ -97,7 +99,8 @@ findings:
   where: games/screening-room/index.html:570 (alevel_01, _03, _04, _10, _12, _19, core_04, core_12)
   summary: 8 icon arrays scaled for N > 10,000 with no '1 icon = k' note; three draw no condition icon
   evidence: alevel_04 0/0/0 drawn vs 1/1/10; alevel_12 0/0/100 vs 5/5/10,000; alevel_19 0/0/50 vs 20/14/5,000.
-  status: open
+  status: fixed
+  pr: 183
 - id: screening-room-t4-009
   severity: MEDIUM
   jc: false
@@ -147,7 +150,8 @@ findings:
   where: games/screening-room/index.html:459
   summary: At 390x844 phase 2 scrolls sideways on 37/70 items and phase 3's Next sits off the right edge
   evidence: showPhase sets display:flex with row direction; scrollWidth 395-585 (phase 2), 437 (phase 3).
-  status: open
+  status: fixed
+  pr: 183
 - id: screening-room-t4-014
   severity: MEDIUM
   jc: false
@@ -165,7 +169,8 @@ findings:
   where: games/screening-room/index.html:459
   summary: Phase 3 hides the scenario and array; the true-positive count must be remembered
   evidence: Prompt gives only total positives.
-  status: open
+  status: fixed
+  pr: 183
 - id: screening-room-t4-016
   severity: LOW
   jc: false
@@ -175,5 +180,26 @@ findings:
   summary: Double-rounded percentages (alevel_09, alevel_20, l4_07, l4_14); 'Out of N people' for welds and emails;
     input hint is gcse_01's answer; PPV called 'true positive rate'; two question_answered rows per question with
     one index; alevel_01 Bayes box 0.0098 vs 0.99%
-  evidence: Agent's evidence.
+  evidence: 'Agent''s evidence. Closed (cloud lane, 8 Oct 2026). Each part on main before this PR (PR #92, head bf3aa90, which rebuilt every figure from the stated
+    rates): the double-rounded percentages (alevel_09, alevel_20, l4_07, l4_14) are computed once from exact counts
+    (halfUpPct); "Out of N people" is now "Of the N positive results" (no unit to get wrong); the input hint''s examples
+    (12.5%, 1.25%, 0.125%) are no item''s answer; the end screen no longer calls the PPV the true positive rate;
+    alevel_01''s Bayes box and percentage both come from the same key (0.0098, 0.98%). This PR pins each in
+    scripts/verify-screening-room.py with a self-test plant (Project Claude, 8 Oct 2026) and gives each scaled array
+    its unit (profiles, claims, vehicles, notes, castings). The two question_answered rows per question are
+    filed as t4-017.'
+  status: fixed
+  pr: [92, 183]
+- id: screening-room-t4-017
+  severity: LOW
+  jc: false
+  class: NEW:analytics
+  level: all
+  where: games/screening-room/index.html (handleGut, showCalcResult)
+  summary: Two question_answered rows per question, with one question_index (phase 1 and phase 3)
+  evidence: 'Split from t4-016 when it closed (cloud lane, 8 Oct 2026): each carries phase: 1 or 3, but a count of
+    question_answered counts every question twice. The source is this game''s own code (handleGut and showCalcResult),
+    one row per answer: a question has two answers (the gut check and the calculation), so "each answer logs exactly
+    one" (Project Claude, 8 Oct) already holds. One row per question would drop the gut-check result or change what a
+    field means: a data change, for Jon.'
   status: open
