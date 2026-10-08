@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write every game page's and /resit/'s search title and description from data/games.json.
+"""Write every game page's and /essentials/'s search title and description from data/games.json.
 
     python scripts/apply-meta.py            # write
     python scripts/apply-meta.py --dry-run  # report what would change

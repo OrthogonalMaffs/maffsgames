@@ -43,9 +43,9 @@ REDIRECTS = {
     "/games/sequence-solver/index-original.html": "/games/sequence-solver/",
 }
 EXEMPT = {p.strip("/") + "/index.html" for p in REDIRECTS}
-RESOLVE_PAGES = {"updates/index.html", "resit/index.html"}
+RESOLVE_PAGES = {"updates/index.html", "essentials/index.html"}
 # Resolve pages whose ?level= links another check guards: page -> that check.
-LEVEL_LINKS_GUARDED = {"resit/index.html": "scripts/check-resit-page.py (every card's ?level= key is read by its game)"}
+LEVEL_LINKS_GUARDED = {"essentials/index.html": "scripts/check-resit-page.py (every card's ?level= key is read by its game)"}
 NOINDEX = re.compile(r'''<meta\s+name\s*=\s*["']robots["'][^>]*noindex''', re.I)
 LINK = re.compile(
     r'''(?:href|src)\s*=\s*["']([^"']*)["']'''

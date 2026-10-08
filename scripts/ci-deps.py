@@ -38,7 +38,7 @@ SELECTIVE_PREFIX = "Content verifiers"
 ALL_PREFIXES = (".github/", "scripts/ci-", "requirements")
 # Top-level areas whose files are classified (not "unknown"): the published site, docs and the checks.
 KNOWN_TOP = {"games", "escape-rooms", "schools", "parents", "about", "feedback", "leaderboards", "privacy",
-             "resit", "spec-map", "updates", "year6", "op", "6-7", "data", "docs", ".claude", "scripts"}
+             "essentials", "resit", "spec-map", "updates", "year6", "op", "6-7", "data", "docs", ".claude", "scripts"}
 KNOWN_ROOT_FILES = {"index.html", "sitemap.xml", "robots.txt", "CNAME", "_config.yml", "CLAUDE.md",
                     ".gitignore", ".gitleaks.toml"}
 # Folders too wide to be a dependency: a literal naming one is a URL prefix or a search root, not a file

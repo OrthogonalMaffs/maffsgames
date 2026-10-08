@@ -252,8 +252,16 @@ opening (read in the capture phase, before the page flips it), as `fact_expanded
 `.game-card`: one click would then fire both events. Sheet columns (the endpoint keeps a fixed list):
 `item` → `game_slug`, `section` → `filter_type`, and `v1|pos=<position>;action=<action>` →
 `filter_value`. Labels on the portal: `escape-rooms` (12 items), `parent-guides` (1), `new-2026-27`
-(its "Show them" toggle). `scripts/test-section-clicks.py` (CI) clicks every labelled element and
-checks the payload, and that game cards and `fact_expanded` are unchanged.
+(its "Show them" toggle), `essentials-link` (the homepage badge, item `open-essentials`).
+`scripts/test-section-clicks.py` (CI) clicks every labelled element and checks the payload, and that game
+cards and `fact_expanded` are unchanged.
+
+**Renamed values, 8 Oct 2026 (contract ESSENTIALS: /resit/ became /essentials/).** The event (`section_clicked`)
+and its parameters are unchanged; only these values changed, so the Sheet and GA4 read across the date by
+mapping old to new: section `resit-link` -> `essentials-link` (homepage badge), item `open-resit` ->
+`open-essentials`, section `resit` -> `essentials` (the page itself; its items, the game slugs, `contact`
+and `spec-map`, are unchanged). Page views: `/resit/` before 8 Oct 2026 is `/essentials/` after; `/resit/`
+after that date is the redirect stub (a hop, not a visit).
 
 ## 1.4 Dashboard Charts (auto-updating)
 
@@ -269,8 +277,8 @@ checks the payload, and that game cards and `fact_expanded` are unchanged.
 
 ## 2.1 Required Tags
 
-**Every game page's and /resit/'s title and description are generated, never hand-written (Jon, 5 Oct 2026,
-PR #72).** `data/games.json` holds one search phrase and one description per roster game (plus /resit/'s
+**Every game page's and /essentials/'s title and description are generated, never hand-written (Jon, 5 Oct 2026,
+PR #72; /resit/ until 8 Oct 2026).** `data/games.json` holds one search phrase and one description per roster game (plus /essentials/'s
 stated pair); the levels come from the roster's Levels column. `scripts/apply-meta.py` writes `<title>`, the
 meta description and their og:/twitter: copies; `scripts/check-meta.py` (CI) holds every page to it and is
 the authority on the rules:
@@ -1185,6 +1193,29 @@ stylesheet, run `apply-footer.py`, then `check-footer.py`. A new page needs only
 `<footer class="site-footer"></footer>` before `</body>`; a page gaining the bar for the first
 time needs `padding-bottom: 40px` (or equivalent) so the bar covers nothing.
 
+### 7.5.3 Name the maths, never the student (Jon, 7 Oct 2026; contract ESSENTIALS, 8 Oct)
+
+**Student surfaces describe the topic and level only; only teacher surfaces may say resit or post-16.** A link
+posted in Google Classroom or Teams shows its page's description and og/twitter tags to the whole class. Until
+8 Oct 2026 the two rooms built for a resit class opened "A GCSE resit escape room on...", and the portal's
+cards said "for a GCSE resit class".
+
+- **Student surfaces:** every game and escape-room page, including its description, og and twitter tags; the
+  portal and /escape-rooms/ cards. They say, e.g., "A GCSE escape room on factors, primes and HCF".
+- **Teacher surfaces:** /essentials/ and its metadata, each room's teacher.html, the teacher and parent
+  guides. They may say resit or post-16.
+- **Checked by `scripts/check-student-labels.py`** (CI, site-wide checks): "resit", "retake" or "post-16" in a
+  student surface's visible text, script strings or description/og/twitter tags fails. Code comments and docs
+  are exempt. A page whose label is maths content rather than a label on the player is in its `KNOWN`, with
+  the reason: reported, never failed, and stale once the label is gone (given-that's tree-diagram question
+  about students re-sitting, 8 Oct 2026, awaiting Jon's view).
+- **/essentials/** (until 8 Oct 2026 /resit/, which now redirects there, as /schools/spec-map/ does) is headed
+  "Essentials", with the teacher line "GCSE Foundation maths for students working at grades 1–3, including
+  post-16 resit classes."
+- **A site fact is never hand-typed beside its data.** The homepage title and description carry no game or
+  room count (each was stale within a week: "96 games" while the portal listed 91); the range reads "KS3 to
+  Further Maths" everywhere on the homepage.
+
 ## 7.7 What the site publishes — SITE and INTERNAL
 
 GitHub Pages builds `main` with Jekyll and publishes every tracked file except dot-paths
@@ -1213,7 +1244,7 @@ grew with the number of games, not with the size of the change.
 
 | **Run** | **What runs** |
 | --- | --- |
-| Pull request | Every site-wide check (tiers 1-2 in four shards, links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /resit/, calculator; tier 4 bank extraction and lint; the shared-asset tests; leaderboard coverage), plus the content verifiers `scripts/ci-deps.py` selects for the files the PR changes |
+| Pull request | Every site-wide check (tiers 1-2 in four shards, links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /essentials/, student labels, calculator; tier 4 bank extraction and lint; the shared-asset tests; leaderboard coverage), plus the content verifiers `scripts/ci-deps.py` selects for the files the PR changes |
 | Push to main (every merge) | **Everything**, every verifier: the safety net |
 | Weekly (Mondays 05:17 UTC) and manual (`workflow_dispatch`) | **Everything** |
 
@@ -1252,7 +1283,7 @@ for 9m41s, and group B for 8 minutes. Nothing a check checks changed; only where
 | Job | What it runs |
 | --- | --- |
 | Tiers 1 + 2 (shard 1/4 .. 4/4) | `check-site.py --shard i/4`: page k of its stable page order goes to shard (k mod 4) + 1, with all its level loads, level controls and phone-width checks. Tier 2, the roster-gap notes and the phone-overflow entries that name no page run once, in shard 1. Each shard first runs `--shard-selftest 4`: the four shards together are the unsharded page list, no page in two, and the workflow runs all four. |
-| Site-wide checks | links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /resit/, calculator, content safety, teacher line, search titles, findings register, quoted figures |
+| Site-wide checks | links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /essentials/, student labels, calculator, content safety, teacher line, search titles, findings register, quoted figures |
 | Tier 4 layer A | bank extraction and its lint (together: the lint reads what the extraction wrote) |
 | Shared asset tests | Next control, section clicks, answer.js, calculator, keypad |
 | Content verifiers A, B1-B4, C1-C4, D1-D2, E (the `content` job) | the per-game verifiers, selected on a PR (above); since contract V the matrix is built in the plan job from each script's `# ci-line:` header (§7.8.2), not listed in the workflow. C1-C4 are Just Pythag It, Bruv's `--part 1` .. `4`, dealt by measured cost; each first runs `--part-selftest` (the parts are exactly the unsplit task list, nothing twice, and CI runs every part). D1-D2 are Equation Builder's `--part 1/2` and `2/2`: each classifies every second candidate arrangement of every question (one question is 60% of the time, so it is split by candidate, not by question); the whole-question checks and the planted-fault self-test run in D1, and the self-test proves the two parts together fail exactly where the whole run does. B1-B4 are group B cut by the slowest time each line has taken (runners vary up to 1.8x). |
