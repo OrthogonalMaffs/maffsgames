@@ -29,10 +29,23 @@ rates, and computes everything else; this script recomputes it all with exact fr
     no event, the input stays open, the message is shown); the explanation shows the data's text, and the Bayes
     box shows at A-Level.
 
+  - SR-21 (Jon's contract and rulings, 8 Oct 2026):
+    t4-005: with MaffsLock's real window, Next then a click on the new question's gut check, and a double click on
+      Next, after a right and a wrong answer: one advance, the new gut check unanswered; the session ends once.
+    t4-006: ?level=constructor, __proto__, toString, xyz, l4: the start screen at the default level, nothing thrown,
+      served or logged.
+    t4-008 (Project Claude's rule): over 10,000, k = gcd(N, condition, true and false positives) if N / k fits 10,000
+      icons, else the least whole k that fits; each group drawn as exactly count / k (whole icons and one part-icon);
+      the note says "1 icon = k <unit>" and gives every exact count.
+    t4-013: at 390x844 (touch), every item's phases 1-3 and its answer scroll no wider than 390 px; Next wholly on screen.
+    t4-015: phase 3 keeps the scenario and the icon array above the question, Continue gone.
+    t4-016 (fixed on main by #92, pinned): the prompt counts no "people"; the hint's examples are no item's answer.
+
     python scripts/verify-screening-room.py [--file PATH] [--selftest]
 
---selftest plants faults in copies of the page (a hand-keyed band, alevel_16's old 130 false positives in the
-engine and typed into its explanation, marking that accepts 0) and requires each to be caught.
+--selftest plants 13 faults in copies of the page (a hand-keyed band, alevel_16's old 130 false positives in the
+engine and typed into its explanation, marking that accepts 0, and one or two for each SR-21 entry) and requires each
+to be caught.
 """
 import argparse
 import math
