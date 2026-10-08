@@ -45,7 +45,7 @@ main's last full run is red; watch main's run after merging.
   states the rate, the payment and the total to the penny; one distractor per named figure with its method word), the
   joke check, two plants (8 in all). Main's page fails t2-006 and t2-008 by name. Fits 320px (no sideways scroll).
 - **spot-the-muppet #168 merged** 14:16 UTC; main's full run on 7252c9d green.
-- **terrible-advice (claim #170; fix PR this branch):** "6% per year" -> "6% APR"; the same key working (opening "the 6%
+- **terrible-advice (claim #170; fix #171):** "6% per year" -> "6% APR"; the same key working (opening "the 6%
   is interest, not an arrangement fee", which this item's muppet claims) and the same three distractors; the joke as
   spot-the-muppet's. Verifier: `stm.check_loan` (the one copy, in verify-spot-the-muppet.py) on ta_core_012, the joke
   check, three plants (9 in all). Main's page fails t2-005 and t2-007 by name.

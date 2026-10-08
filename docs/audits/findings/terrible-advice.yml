@@ -62,7 +62,7 @@ findings:
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct; the report groups Spot the Muppet and Terrible Advice, so filed against both'
   status: fixed
-  pr: PRNUM
+  pr: 171
 - id: terrible-advice-t2-006
   severity: MEDIUM
   jc: false
@@ -84,7 +84,7 @@ findings:
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct; the report groups Spot the Muppet and Terrible Advice, so filed against both'
   status: fixed
-  pr: PRNUM
+  pr: 171
 - id: terrible-advice-t2-008
   severity: MEDIUM
   jc: false
