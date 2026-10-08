@@ -34,7 +34,7 @@ network by `scripts/test-ga4-country.py` (in CI).
    click **Run**. The first run asks for authorisation: choose your account, click **Advanced**, then
    **Go to … (unsafe)** (this is your own script), then **Allow**. The new permission is "See and
    download your Google Analytics data". The log (View → Logs, or the panel at the bottom) should end with
-   `OK: properties/528531831 holds stream 13898555479 (maffsgames.co.uk).` If it throws an error
+   `OK: properties/528531831 holds stream 13911036386 (maffsgames.co.uk).` If it throws an error
    instead, stop: the property ID is wrong (see "If something fails").
 5. **Backfill once.** Choose `ga4CountryBackfill` and click **Run**. It fills both tabs from
    1 Sep 2026 to yesterday and logs how many rows it wrote. The two tabs, **GA4 country daily** and
@@ -79,12 +79,13 @@ time on the same terms: it replaces 1 Sep to yesterday.)
 
 ## How to read it
 
-**"Users" are not people here.** The site runs GA4 cookieless (`storage: 'none'`, canon §1.1), so GA4
-has no stored ID to recognise a returning browser. It should therefore treat each page load as a new
-user and a new session. Then a student who plays three games counts as about three users. Check this
-yourself: if a country's `activeUsers` in the daily tab is close to its `page_view` eventCount in the
-events tab, that is what is happening. Read `activeUsers` and `sessions` as **visits**, not
-**visitors**.
+**"Users" are GA4's estimate, not a head count.** The site runs GA4 cookieless (`storage: 'none'`,
+canon §1.1), so you might expect every page load to count as a new user. The backfill of 8 Oct 2026 says
+otherwise: from 1 Sep to 7 Oct the United Kingdom had 1,116 sessions from 763 users, and sessions
+exceed users in 59 of 262 rows. So GA4 links some page loads within a day. How it does that without
+cookies is not documented here. Also, `activeUsers` can be 0 on a row that has a session. Two safe
+rules: never add daily `activeUsers` across days and call it people, and use `engagedSessions` as the
+main measure.
 
 **Separating real play from crawlers.** A crawler loads a page and leaves: it fires `page_view`, never
 a game event, and its session is not engaged. So:
@@ -123,7 +124,7 @@ error. The usual ones:
 | `AnalyticsData is not defined` | step 2 was missed | add the service (step 2), save, run again |
 | "Authorization is required" or a permissions prompt | a new permission has not been granted | run `ga4CountryCheckProperty` from the editor and allow it (step 4) |
 | "User does not have sufficient permissions for this property" | wrong property ID, or your account cannot read it | GA4 → Admin → Property details shows the property ID; it must be 528531831. If it is different, tell Code Claude: do not edit the file by hand |
-| `… has no maffsgames.co.uk events from stream 13898555479` | `ga4CountryCheckProperty` found the property, but it is not the site's | the same: stop, report the ID GA4 Admin shows |
+| `… has no maffsgames.co.uk events from stream 13911036386` | `ga4CountryCheckProperty` found the property, but it is not the site's | the same: stop, report the ID GA4 Admin shows |
 | "Google Analytics Data API has not been used in project … or it is disabled" | the project uses its own Cloud project, not the default one | open the link in the message, click **Enable**, wait five minutes, run again |
 | "Exhausted property tokens" / quota | GA4's daily request allowance (200,000 tokens; one run uses a few dozen) is spent | wait: it resets daily (Pacific time). The next run re-fetches three days, so one missed day fills itself. If more than three days were missed, run `ga4CountryBackfill` once |
 | `GA4 returned no rows … Not replacing them` | GA4 sent nothing at all for the three days, though the tab has rows for them | a GA4 delay or fault; the tab is unchanged. Run `ga4CountryDaily` later |
