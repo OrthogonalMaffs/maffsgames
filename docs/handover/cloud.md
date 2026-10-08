@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: correlation-or-coincidence`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -30,6 +30,23 @@ A two-option game declares an `answer` that picks the option differing from its 
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-08 (cloud, afternoon): correlation-or-coincidence, 84 items (Jon's contract, 8 Oct)
+
+- **#160 (terrible-advice) merged** 12:46 UTC, after main's red run on #158 (five KaTeX games in answer lock L1; #158's
+  own PR run had passed) went green on the home lane's re-run. Claim #162.
+- **The 42 items** (A15-A28, B15-B28, C15-C28; Project Claude's and Jon's, the jokes Jon's) appended exactly as
+  pasted, each block with its own header comment after A14, B14 and C14; every pasted line is in the page byte for
+  byte. 84 items, 28 of each kind. `MIN_BANK = 84` in the verifier, nothing else changed there (a copy with C28
+  removed fails "bank has 83 items, the minimum is 84").
+- **Every new graph's r inside its band** at its n and whole-number settings (the PR lists all 42). Closest to an
+  edge: C27 (strong, n = 8, x whole 0-4) r = 0.928 of [0.80, 0.94]. No STOP IF fired: phone fit at 320/375/390 for
+  every item (asking screen and wrong-answer feedback); SR-14 clean; a session of 10 played at 390x844 by real taps,
+  the real MaffsNext floor (no sideways scroll, Next above the footer every time, one game_completed).
+- **Register:** no bank-size entry exists for this game; nothing to close.
+- **For the home lane:** Jon may want an /updates/ line ("Correlation or Coincidence now has 84 questions"): his
+  call, not this PR. The home lane's F1 batch 5 (#161) holds 52dle and seven-bridges, both on the listed-games list:
+  the cloud lane skips them.
 
 ## 2026-10-08 (cloud, afternoon): terrible-advice (listed-games contract, 5 of 23)
 
