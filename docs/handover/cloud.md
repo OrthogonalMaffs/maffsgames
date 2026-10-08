@@ -33,7 +33,9 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** FT-FIX: contracts/2026-10-08-ft-fix.md (next). Done: PP-T1-004 (#189; its contract is now in
+**Queue:** UC-FIX (next; the contract file `cloud-contract-uc-fix-2026-10-08.md` is not yet received: ask Jon).
+FT-FIX: contracts/2026-10-08-ft-fix.md as amended by contracts/2026-10-08-ft-fix-amendment.md (no step 3; t5-008
+stays open for the home lane). Done: PP-T1-004 (#189; its contract is now in
 `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
@@ -53,9 +55,9 @@ main's last full run is red; watch main's run after merging.
   its longest wrong option, and measures scrollWidth 390 both times. The old item is planted back whole (nine plants,
   all caught). Main's page fails naming t1-004 (and FALLACY, which no longer reviews it).
 - **Next: FT-FIX.** Merge main first. factor-theorem is in check-answer-lock's MIGRATED, so it must still pass.
-  **Waiting on Jon before step 3:** `wrapExamVocab` is not the game's helper. It is defined in the shared
-  `schools/assets/exam-vocab.js:109` (register t5-008 says so too), which the contract's DO NOT TOUCH and the lane
-  rule both exclude. Step 4 to check: on main, both `question_index` calls already send `qIdx + 1` (:1072, :1248).
+  **Step 3 answered (Jon, 21:30; the amendment is saved):** `wrapExamVocab` is shared (`exam-vocab.js:109`), so
+  t5-008 goes to the home lane (VOCAB-IDEMPOTENT) and stays open in FT-FIX. Unit Converter t4-005 (speed-scored)
+  stays open in UC-FIX: no change to the timer or the scoring. Step 4 to check: on main, both `question_index` calls already send `qIdx + 1` (:1072, :1248).
   The contract's line numbers (177, 625, 780, 1046) are stale (now :817, 958, 1143, 1145); Q33 (:702) and T9 (:766)
   match the quoted text.
 
