@@ -89,7 +89,8 @@ findings:
   summary: wrapExamVocab re-wraps its own output, injecting <span> into aria-label; garbage visible on Q10, Q13,
     T1b, T8b, T10b
   evidence: T1b renders "(b) Hence? fully factorise? Hence ? fully factorise?' mean?">? f(x)."
-  status: open
+  status: fixed
+  pr: 193
 - id: factor-theorem-t5-009
   severity: MEDIUM
   jc: true

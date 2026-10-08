@@ -106,19 +106,57 @@ function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function wrapExamVocab(html) {
-  let result = html;
+function vocabMarkup(match, plain) {
+  return `<span class="exam-vocab-wrap">` +
+    `<span class="exam-vocab-term">${match}</span>` +
+    `<span class="exam-vocab-bubble" role="button" aria-label="What does '${match}' mean?">?</span>` +
+    `<span class="exam-vocab-tooltip">${plain}</span>` +
+    `</span>`;
+}
+
+// Wraps the terms in one run of text. Terms are tried in list order, as before, but every match is found in
+// the original text and none may overlap an earlier one, so a later term never matches inside markup an
+// earlier term wrote (factor-theorem-t5-008: "verify" inside the aria-label that "verify that" wrote).
+function wrapVocabText(text) {
+  const claims = [];
   EXAM_VOCAB.forEach(({ term, plain }) => {
     const regex = new RegExp(`(?<![\\w-])(${escapeRegex(term)})(?![\\w-])`, 'gi');
-    result = result.replace(regex, (match) => {
-      return `<span class="exam-vocab-wrap">` +
-        `<span class="exam-vocab-term">${match}</span>` +
-        `<span class="exam-vocab-bubble" role="button" aria-label="What does '${match}' mean?">?</span>` +
-        `<span class="exam-vocab-tooltip">${plain}</span>` +
-        `</span>`;
-    });
+    let m;
+    while ((m = regex.exec(text))) {
+      const start = m.index, end = start + m[0].length;
+      if (!claims.some(c => start < c.end && c.start < end)) claims.push({ start, end, plain });
+    }
   });
-  return result;
+  if (!claims.length) return text;
+  claims.sort((a, b) => a.start - b.start);
+  let out = '', at = 0;
+  claims.forEach(c => {
+    out += text.slice(at, c.start) + vocabMarkup(text.slice(c.start, c.end), c.plain);
+    at = c.end;
+  });
+  return out + text.slice(at);
+}
+
+// Idempotent: only text outside tags is matched, never a tag or an attribute, and text already inside an
+// exam-vocab-wrap span is left alone, so wrapExamVocab(wrapExamVocab(x)) === wrapExamVocab(x).
+function wrapExamVocab(html) {
+  const parts = html.split(/(<\/?[A-Za-z][^>]*>)/);
+  const open = [];        // for each open span: is it an exam-vocab-wrap?
+  let inWrap = 0;
+  return parts.map((part, i) => {
+    if (i % 2 === 0) return inWrap ? part : wrapVocabText(part);
+    const tag = /^<(\/?)([A-Za-z][\w-]*)/.exec(part);
+    if (tag[2].toLowerCase() === 'span') {
+      if (tag[1]) {
+        if (open.pop()) inWrap--;
+      } else if (!/\/>$/.test(part)) {
+        const isWrap = /\bclass\s*=\s*["'][^"']*\bexam-vocab-wrap\b/.test(part);
+        open.push(isWrap);
+        if (isWrap) inWrap++;
+      }
+    }
+    return part;
+  }).join('');
 }
 
 function processTextNodes(container) {

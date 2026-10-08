@@ -9,6 +9,10 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
+**OVERNIGHT RUN (Project Claude for Jon, 8 Oct 2026, 23:45):** `docs/handover/contracts/2026-10-08-overnight.md`
+(verbatim; its rules override the checkpoint rule for this run). Items: 1 VOCAB-IDEMPOTENT (#193, in progress),
+2 CONTRACTS-FOLDER, 3 RELIST-SR, 4+ F1 batches 9-11.
+
 **QUEUE (home lane), Jon, 8 Oct 2026 (night)**, replacing the checkpoint's "ask Jon for that queue" note. Run in
 order; the standing rule applies (start the next item when one finishes; stop only for a STOP IF, an unruled
 decision, or a checkpoint). Each contract's verbatim text is below the list; move it to the archive when it merges.
@@ -40,6 +44,22 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-09 (home): VOCAB-IDEMPOTENT (overnight item 1, branch `claude/vocab-idempotent`, #193)
+
+- **Cause, more exactly than the contract's:** the game calls the helper once per text node, and the re-wrapping
+  happened inside that one call: wrapExamVocab ran term after term over its own growing output, so a later term
+  matched inside markup an earlier one wrote ("verify" in the aria-label "Verify that" wrote, Q10; "hence" after
+  "hence find", Q13; "State" inside the "Write down" tooltip, T8(c)). Calling the DOM pass twice was already safe.
+- **Fix (exam-vocab.js only):** each term is matched in the original text, never overlapping an earlier term's
+  match (list order kept, so "hence find" still beats "hence"); only text outside tags is matched; text inside an
+  existing exam-vocab-wrap is left alone. wrap(wrap(x)) == wrap(x).
+- **STOP IF checked, not met:** of 509 Factor Theorem strings, 42 hold a term; 7 change on a first application and
+  every one of the 7 is the fault (Q10, Q13, Q33, T1b, T8b, T8c, T10b). The other 35 are byte-identical.
+  Only factor-theorem loads exam-vocab.js.
+- **Test:** `scripts/test-exam-vocab.py` (B3): every CONTENT string wrapped twice, attributes clean, no nested
+  wraps, and the game's own render with the tooltips applied twice; the old function planted fails naming Q10.
+- **factor-theorem-t5-008 closed** in this PR (factor-theorem was not on `cloud-remaining:` and had no open PR).
 
 ## 2026-10-09 (home): F1 batch 8 (branch `claude/f1-batch8`, worktree E:/jon/mg-b8)
 
