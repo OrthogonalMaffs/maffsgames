@@ -28,8 +28,36 @@ game's page, never in the shared script.
 A two-option game declares an `answer` that picks the option differing from its key for `i >= 1` (canon
 §7.6.0, contract DET, 8 Oct; prime-or-composite is the pattern).
 
+**Contracts (Jon, 8 Oct 2026, corrected 20:00):** each contract is saved verbatim as
+`docs/handover/contracts/<yyyy-mm-dd>-<name>.md` in its claim commit (or the PR's first commit), with one line
+in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
+start-up load). When the work merges, move the file to `docs/history/`.
+
+**Queue:** FT-FIX: contracts/2026-10-08-ft-fix.md (next). Done: PP-T1-004 (#189; its contract is now in
+`docs/history/contracts/`).
+
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-08 (cloud, night): probability-paradox t1-004 (contract PP-T1-004)
+
+- **Claim #187** (with both contracts saved, first in this section, then in `docs/handover/contracts/` after Jon's
+  20:00 correction). Nothing loads that folder at session start: `check-context-size.py` measures only its three
+  files, and CLAUDE.md names `home.md` and `cloud.md`. The home lane was told that the heading reads "read
+  `docs/handover/`".
+- **The item (#189):** Jon's text exactly, in the same place (fallacy bank, after the horoscope item), with no id.
+  Analytics logs only `question_index`, and the B6 ledger keys only the bus item (`ca42ff7e8e2f`), so neither
+  STOP IF fired. Tier 4 `--ci` matches the ledger exactly.
+- **Verifier:** `PINNED_RTM` (the one item keyed "Regression to the mean": the scenario says "the lowest scores" and "of
+  the same difficulty", the four options exactly, the key). `phone()` shows the item at 390x844, asking and after
+  its longest wrong option, and measures scrollWidth 390 both times. The old item is planted back whole (nine plants,
+  all caught). Main's page fails naming t1-004 (and FALLACY, which no longer reviews it).
+- **Next: FT-FIX.** Merge main first. factor-theorem is in check-answer-lock's MIGRATED, so it must still pass.
+  **Waiting on Jon before step 3:** `wrapExamVocab` is not the game's helper. It is defined in the shared
+  `schools/assets/exam-vocab.js:109` (register t5-008 says so too), which the contract's DO NOT TOUCH and the lane
+  rule both exclude. Step 4 to check: on main, both `question_index` calls already send `qIdx + 1` (:1072, :1248).
+  The contract's line numbers (177, 625, 780, 1046) are stale (now :817, 958, 1143, 1145); Q33 (:702) and T9 (:766)
+  match the quoted text.
 
 ## 2026-10-08 (cloud, evening): Jon's rulings on the open items (spot-the-muppet, terrible-advice, word-problem-decoder)
 
@@ -98,22 +126,9 @@ main's last full run is red; watch main's run after merging.
   2m50 of 6m). **A new cloud verifier: pick a B group with room, not E.**
 - **CHECKPOINT (Jon, 8 Oct ~19:00, context over 60%): STOP once main is green after the group fix.** Nothing claimed
   after it. The next session starts with probability-paradox t1-004.
-- **probability-paradox t1-004 (Jon's contract, 8 Oct, verbatim in the session; key points):** claim first; replace
-  the item at games/probability-paradox/index.html:364 ("A student scores 95% ... claims credit") with: scenario "A
-  teacher picks the ten students with the lowest scores on a test (average 41%) for a new revision method. On a
-  second paper of the same difficulty, the group's average rises to 57%. The teacher says the method worked."; q
-  "What else could explain the rise?"; opts ["Regression to the mean", "The method must have worked: a 16-point rise
-  is too big to be anything else", "The second paper was easier", "The highest scorers would have risen by the same
-  amount"]; correct "Regression to the mean"; explain "Students picked for scoring lowest include some who had an
-  unlucky day. On the next paper their luck evens out, so the group's average rises even if nothing changed. The top
-  scorers would tend to fall back for the same reason. To know whether the method worked, compare with similar low
-  scorers who did not get it." The item has no id. Verifier: pin it (selection on the lowest scores, same difficulty,
-  the four options exactly, the key) and plant the old item; close t1-004 citing Jon's ruling; fit at 390px; check the
-  B6 ledger (content ids). STOP IF the longer option cannot fit 390px, or a ledger/analytics key breaks.
-- **Then: factor-theorem.** Two contracts from Jon (8 Oct) were pasted into the session, not the repo: ask Jon to
-  paste them again (the SR-21 contract: t5-004, t5-005 HIGH, t5-008, t5-018; and the rulings contract: t5-013 read
-  ?level, t5-014/015 Practice submits nothing, Test submits under the level). Settled: level4 needs no hub change while
-  unlisted (NOT_ON_HUB skips the level check); the alevel board is empty (above). #180 closed t5-009: merge main first.
+- **Both contracts are now saved in the repo** (Project Claude, 19:55; queue above): PP-T1-004, then FT-FIX, which
+  replaces the two lost Factor Theorem contracts. #180 closed t5-009, so merge main first. The alevel board is
+  empty and level4 needs no hub change (both above).
 
 ## 2026-10-08 (cloud, afternoon): CHECKPOINT STOP (Jon's queue done): listed-games contract at 5 of 23; nothing claimed
 
@@ -139,47 +154,3 @@ main's last full run is red; watch main's run after merging.
   (exit 144). Kill a background run by its task id, or match a pattern your command does not contain. In this
   sandbox, `check-changed.py` fails the teacher line (and, when `cloud.md` changes, the answer lock parts) only on
   KaTeX games, because the KaTeX CDN is refused. CI has KaTeX.
-
-## 2026-10-08 (cloud, afternoon): correlation-or-coincidence, 84 items (Jon's contract, 8 Oct)
-
-- **#160 (terrible-advice) merged** 12:46 UTC, after main's red run on #158 (five KaTeX games in answer lock L1; #158's
-  own PR run had passed) went green on the home lane's re-run. Claim #162.
-- **The 42 items** (A15-A28, B15-B28, C15-C28; Project Claude's and Jon's, the jokes Jon's) appended exactly as
-  pasted, each block with its own header comment after A14, B14 and C14; every pasted line is in the page byte for
-  byte. 84 items, 28 of each kind. `MIN_BANK = 84` in the verifier, nothing else changed there (a copy with C28
-  removed fails "bank has 83 items, the minimum is 84").
-- **Every new graph's r inside its band** at its n and whole-number settings (the PR lists all 42). Closest to an
-  edge: C27 (strong, n = 8, x whole 0-4) r = 0.928 of [0.80, 0.94]. No STOP IF fired: phone fit at 320/375/390 for
-  every item (asking screen and wrong-answer feedback); SR-14 clean; a session of 10 played at 390x844 by real taps,
-  the real MaffsNext floor (no sideways scroll, Next above the footer every time, one game_completed).
-- **Register:** no bank-size entry exists for this game; nothing to close.
-- **For the home lane:** Jon may want an /updates/ line ("Correlation or Coincidence now has 84 questions"): his
-  call, not this PR. The home lane's F1 batch 5 (#161) holds 52dle and seven-bridges, both on the listed-games list:
-  the cloud lane skips them.
-
-## 2026-10-08 (cloud, afternoon): terrible-advice (listed-games contract, 5 of 23)
-
-- **#157 (word-problem-decoder) merged** 12:18 UTC; main's full run on 2c846ac green. Claim #159 merged 12:26.
-- **The same format as spot-the-muppet, its own engine** (a point for a right first pick only; kept). MaffsLock as
-  spot-the-muppet: a first wrong pick marks and logs nothing; the question is marked and logged once; finishOnce;
-  Play Again a screen change; the same two-wrong-picks hint (seeds 1, 2, 7 pass).
-- **Fixed:** t2-001 gcse_006's "Prudence is correct — upper bound is 2.45m" (true, keyed wrong) -> "Prudence is wrong
-  — upper bound is 2.49m"; t2-002 core_002 as spot-the-muppet's; t2-003 core_007 (the weighted mean is 70% too): the
-  key says she got the right answer this time but her method is wrong, the distractor is "Wendy is correct in both
-  method and answer" (the pattern of gcse_008 and gcse_012); t2-006 the key's "£500 × 1.1249 = £562.43" -> "× 1.124864";
-  t2-008 the key's "Square roots always have a positive and negative solution" -> "because (−5)² = 25 as well"; filed
-  and fixed t2-009 (core_004's working: 1.05 × 20 = 21.05) and t2-010 (HIGH: core_004's simple-interest option true as
-  written, as spot-the-muppet-t2-001).
-- **Verifier** `scripts/verify-terrible-advice.py` (group E, ~70 s with the self-test) imports spot-the-muppet's
-  arithmetic (`# ci-deps: scripts/verify-spot-the-muppet.py`), which this PR extends: every vulgar fraction (⅖ was read
-  as a whole number at 0 d.p. and matched ⅚); pounds against pence ("£4.80 ÷ 400 = 1.2p/g"); a rounded intermediate
-  ("1,000 × 1.05²⁰ = 1,000 × 2.653") passes only between two expressions and only for a decimal not in the advice, so
-  a slip on a given (t2-009) or at the last step (t2-006) still fails. Main's page fails t2-001..004, 006, 008, 009, 010
-  by name; six plants.
-- **Left open (for Jon):** t2-005 the loan key (simple interest on the whole £12,000 for 3 years, about £393/month; a
-  repayment loan is about £364.20/month), with spot-the-muppet-t2-006: both need a stated convention (APR effective
-  monthly, or a flat-rate loan). t2-007 the "patients" joke (SR-14 tier (c) vs a joke).
-- **spot-the-muppet-t2-007** (562.45 vs 562.43, filed against both games) is terrible-advice's slip only; spot-the-
-  muppet's key was always right. The register has no status for "not in this game": Jon's call (ruled, or removed).
-- **For the home lane:** terrible-advice passes the lock check: add it to MIGRATED. The two games share one engine
-  shape in two copies; a shared module would be the architectural fix (not this lane's).

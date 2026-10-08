@@ -16,6 +16,10 @@ banks are read from the live page, then:
   SR-18 rulings: the envelope, having seen £20, is "Cannot determine" (t1-001); Sleeping Beauty accepts 1/3 and 1/2
     (t1-003).
   The p-value (t1-007): the drug trial's Fisher exact p is stated two-sided, recomputed here.
+  Regression to the mean (t1-004, Jon's ruling 8 Oct 2026): the one item keyed "Regression to the mean" is pinned
+    (PINNED_RTM): its scenario selects on the lowest scores and gives a second paper of the same difficulty, its options
+    are exactly the four ruled, and the key is the ruled one. In Chromium at 390px it fits with no sideways scroll,
+    asking and after a wrong answer.
   Simulations (t1-005): each paradox item's simulate(type) run 20,000 times in the page (Math.random seeded); the share
     of its first outcome must be within 0.015 of the item's exact answer (EXACT) and of the expected bar it declares.
   Chromium: every item played with each option: an accepted answer is marked right on the page, any other wrong; after
@@ -23,7 +27,7 @@ banks are read from the live page, then:
     at once by a click on the new question marks nothing, and a double click on Next moves on once (t1-010: the old
     "Got it" button called nextQ twice, skipping a question); the session ends once.
 KNOWN_OPEN holds register entries this script detects and this PR leaves open (reported, never failed; a stale one fails).
-A self-test plants eight faults back into a copy of the page; each must FAIL naming its entry.
+A self-test plants nine faults back into a copy of the page; each must FAIL naming its entry.
 
     python scripts/verify-probability-paradox.py [--no-selftest] [--against FILE]
 """
@@ -124,7 +128,7 @@ FALLACY = {
     '60 hours a week': 'confusion of the inverse',
     'eat chocolate daily': 'correlation is not causation',
     'horoscope': 'confirmation bias',
-    'scores 95%': 'regression to the mean (t1-004 open: Jon\'s call)',
+    'the lowest scores on a test': 'regression to the mean: picked on the lowest scores (t1-004, pinned: PINNED_RTM)',
     'smoked all their life': 'one anecdote',
     'drug trial': 'a small sample; Fisher two-sided p checked below',
     'eat breakfast': 'causation from correlation',
@@ -141,6 +145,18 @@ ASSUMED = {
 }
 
 KNOWN_OPEN = {}
+
+# probability-paradox-t1-004 (Jon's ruling, 8 Oct 2026): regression to the mean needs selection on an extreme score,
+# and "the test was easier" must be ruled out by the scenario, so exactly one option is defensible.
+PINNED_RTM = {
+    'words': ['the lowest scores', 'of the same difficulty'],
+    'q': 'What else could explain the rise?',
+    'opts': ['Regression to the mean',
+             'The method must have worked: a 16-point rise is too big to be anything else',
+             'The second paper was easier',
+             'The highest scorers would have risen by the same amount'],
+    'correct': 'Regression to the mean',
+}
 
 
 def find(bank, phrase):
@@ -239,6 +255,19 @@ def check_bank(fails, opens, banks):
         if not m or abs(float(m.group(1)) - p) > 0.005 or 'two-sided' not in drug[0]['explain']:
             fails.append('%s drug trial: the explanation gives p ≈ %s; Fisher\'s exact test, two-sided, is %.2f'
                          % (TAG + 't1-007', m.group(1) if m else '?', p))
+    # t1-004: the regression item, pinned
+    rtm = [q for q in banks['fallacy'] if q['correct'].startswith('Regression to')]
+    if len(rtm) != 1:
+        fails.append('%s %d fallacy items keyed regression to the mean (exactly one, as ruled)' % (TAG + 't1-004', len(rtm)))
+    else:
+        q, p = rtm[0], PINNED_RTM
+        missing = [w for w in p['words'] if w not in q['scenario']]
+        if missing or q['q'] != p['q'] or q['opts'] != p['opts'] or q['correct'] != p['correct'] or q.get('accept'):
+            fails.append('%s the regression item "%s": %s (Jon\'s ruling, 8 Oct 2026: selection on the lowest scores, a '
+                         'paper of the same difficulty, the four ruled options, keyed "%s")' % (
+                             TAG + 't1-004', q['scenario'][:60],
+                             'the scenario does not say %s' % ' / '.join(missing) if missing else
+                             'question "%s", options %s, key "%s"' % (q['q'], q['opts'], q['correct']), p['correct']))
     for k, v in KNOWN_OPEN.items():
         opens.append('%s: %s' % (k, v))
 
@@ -280,8 +309,8 @@ AGAIN = """() => { document.querySelectorAll('#options .opt-btn').forEach(b => {
 NEXT_SEL = '#solution .next-btn, #solution .maffs-next'
 
 
-def new_page(browser, base, html, fresh_zero):
-    ctx = browser.new_context(viewport={'width': 1280, 'height': 900})
+def new_page(browser, base, html, fresh_zero, width=1280):
+    ctx = browser.new_context(viewport={'width': width, 'height': 900 if width > 600 else 844})
     ctx.add_init_script(SEED)
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
     if fresh_zero:
@@ -384,6 +413,23 @@ def next_once(fails, page):
         fails.append('%s the session ended %d times (once: game_completed and submitScore)' % (tag, n))
 
 
+def phone(fails, page, banks):
+    """t1-004: the regression item at 390px, asking and after a wrong answer (its explanation shown): no sideways scroll."""
+    idx = [i for i, q in enumerate(banks['fallacy']) if q['correct'].startswith('Regression to')]
+    if len(idx) != 1:
+        return
+    wide = "() => document.documentElement.scrollWidth"
+    page.evaluate(SHOW, ['fallacy', idx[0]])
+    w1 = page.evaluate(wide)
+    q = banks['fallacy'][idx[0]]
+    page.evaluate(CLICK, max((o for o in q['opts'] if o != q['correct']), key=len))  # the longest wrong option
+    page.wait_for_function("() => document.getElementById('solution').classList.contains('show')", timeout=5000)
+    w2 = page.evaluate(wide)
+    if max(w1, w2) > 390:
+        fails.append('%s the regression item at 390px: the page is %d px wide asking, %d px after a wrong answer (390)'
+                     % (TAG + 't1-004', w1, w2))
+
+
 def run(html):
     from playwright.sync_api import sync_playwright
     fails, opens = [], []
@@ -400,7 +446,10 @@ def run(html):
             ctx, page, errors2 = new_page(browser, base, html, False)
             next_once(fails, page)
             ctx.close()
-            errs = [e for e in errors + errors2 if 'firebase' not in e.lower()]
+            ctx, page, errors3 = new_page(browser, base, html, True, width=390)
+            phone(fails, page, banks)
+            ctx.close()
+            errs = [e for e in errors + errors2 + errors3 if 'firebase' not in e.lower()]
             if errs:
                 fails.append('page errors: %s' % '; '.join(errs[:3]))
             browser.close()
@@ -409,6 +458,22 @@ def run(html):
         proc.wait()
     return fails, opens, banks
 
+
+# t1-004's item as ruled, and as it was before the ruling (planted back whole)
+RTM_NEW = ('{scenario:"A teacher picks the ten students with the lowest scores on a test (average 41%) for a new revision '
+           'method. On a second paper of the same difficulty, the group\'s average rises to 57%. The teacher says the '
+           'method worked.",\nq:"What else could explain the rise?",\nopts:["Regression to the mean","The method must '
+           'have worked: a 16-point rise is too big to be anything else","The second paper was easier","The highest '
+           'scorers would have risen by the same amount"],correct:"Regression to the mean",\nexplain:"Students picked for '
+           'scoring lowest include some who had an unlucky day. On the next paper their luck evens out, so the group\'s '
+           'average rises even if nothing changed. The top scorers would tend to fall back for the same reason. To know '
+           'whether the method worked, compare with similar low scorers who did not get it."},')
+RTM_OLD = ('{scenario:"A student scores 95% on a test after scoring 60%. The teacher implements a new method and claims '
+           'credit.",\nq:"What alternative explanation should be considered?",\nopts:["Regression to the mean","The '
+           'method definitely worked","The test was easier","Random chance only"],correct:"Regression to the mean",\nexplain:'
+           '"Extreme scores tend to be followed by more typical ones, even without any intervention. A student scoring '
+           '60% was probably having a bad day — their next score would likely be higher regardless of the teaching '
+           'method."},')
 
 PLANTS = [
     (TAG + 't1-001', 't1-001: the envelope keyed £20',
@@ -426,6 +491,7 @@ PLANTS = [
      'You ask the parent, \\"Is at least one of them a boy?\\" The answer is yes.', 'You learn that at least one of them is a boy.'),
     (TAG + 't1-007', 't1-007: the one-sided p',
      "(p ≈ 0.58 by Fisher's exact test, two-sided)", "(p ≈ 0.29 by Fisher's exact test)"),
+    (TAG + 't1-004', 't1-004: the old regression item', RTM_NEW, RTM_OLD),
     (TAG + 't1-010', 't1-010: no lock on the options',
      "  if(!MaffsLock.lock(document.getElementById('options')))return;\n", ''),
 ]
