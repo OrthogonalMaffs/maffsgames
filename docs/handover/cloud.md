@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: spot-the-muppet`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -30,6 +30,40 @@ A two-option game declares an `answer` that picks the option differing from its 
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-08 (cloud, afternoon): spot-the-muppet (listed-games contract, 3 of 23); session queue
+
+- **Jon's queue for this session (8 Oct):** spot-the-muppet, word-problem-decoder, terrible-advice; then the
+  Correlation or Coincidence contract (42 new items, 42 -> 84, MIN_BANK = 84; Jon's text and items arrived 8 Oct, the
+  items verbatim in `docs/handover/cloud-coc-items-2026-10-08.js` until that PR appends them and deletes the file);
+  then CHECKPOINT: next game probability-paradox, not claimed.
+- **Claim #154** (merged 11:3x UTC, main green).
+- **spot-the-muppet (this PR):** t2-001 core_004's advice says "compound interest" and the simple-interest option
+  claims to be the answer (£1,000 + 20 × £50 = £2,000, false for compound); t2-002 core_008's "£120 − £20 = £100" ->
+  "£120 × 1.20 = £144"; t2-003 ks3_005's "(2+10) ÷ 2 = 6" -> "(3+7+8+2+10) ÷ 4 = 7.5"; t2-004 core_002's advice no
+  longer makes the valid marginal argument (it compares the extra £1.30 with the whole £3.50, which proves nothing);
+  t2-009 (filed here) core_004's working said 1,000 × 1.05 × 20 = 21,050 (it is 21,000).
+- **t2-005, MaffsLock:** the two-pick retry is kept (score unchanged: a right second pick still scores 1). A first
+  wrong pick marks and logs nothing (the card is disabled, a fresh window opens); the question is marked and logged
+  once, when right or at the second wrong pick (spot-the-error's pattern). So question_answered is now one row per
+  question (before: a first wrong pick logged its own row). Every timer through MaffsLock.timer; finishOnce; Play
+  Again is a screen change. Lock hint: two different wrong picks. `check-answer-lock.py --game spot-the-muppet`
+  passes at seeds 1, 2, 7.
+- **Verifier** `scripts/verify-spot-the-muppet.py` (group E, ~70 s with the self-test): every equation chain in the
+  advice and the keys evaluated (a muppet's deliberate wrong sum is in MUPPET_SUMS); every key recomputed (KEYS) or
+  reviewed (CONCEPT), so a new item cannot skip review; no distractor ends on the key's value as the key writes it
+  (SR-16); every item played three ways; Next's second click, a real double click, a double click on a first wrong
+  pick, the end once. Main's page fails t2-001..005 and t2-009 by name; six plants caught. **Gotchas:** a whole
+  number under 10 in a key never stands for a non-whole value ("not 1" is not 0.665); the first piece of an
+  equation chain after "of" / "year" or glued to a word ("cos⁻¹(") is a fragment, not a value.
+- **Left open (MEDIUM; for Jon):** t2-006 core_012 (the loan key's £14,292.19 total and ≈ £397/month are compound
+  growth, not a repayment loan: about £364.20/month at 6% APR; the verifier reports it as KNOWN_OPEN and fails once
+  it is fixed and not removed), t2-008 (the "patients" joke, SR-14 tier (c) vs a joke: Jon's call).
+- **Seen, not filed (for Project Claude):** gcse_006 Prudence's method "add 5 to the last digit" is keyed correct by
+  the key's own reasoning "adding half the degree of accuracy"; the words don't say the same thing.
+- **For the home lane:** spot-the-muppet passes the lock check: add it to MIGRATED.
+- **check-changed.py:** all green but the teacher line, which fails only on factor-theorem and log-laws (KaTeX CDN
+  refused in this sandbox, the known gotcha), not on this game.
 
 ## 2026-10-08 (cloud): CHECKPOINT STOP (Jon): listed-games contract at 2 of 23; nothing claimed
 
