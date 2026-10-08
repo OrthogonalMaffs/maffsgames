@@ -1,4 +1,4 @@
-# MaffsGames — Complete Game Roster (74 games on the portal, 23 unlisted, 1 withdrawn)
+# MaffsGames — Complete Game Roster
 
 **Calculator** (last column, canon §4.4): `required`, `not allowed`, `optional` or `untagged`. A game's
 tag shows as the shared `.calc-badge` (`schools/assets/theme.css`) on its start screen; `untagged`

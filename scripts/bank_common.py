@@ -1034,7 +1034,7 @@ def locate_array_node(tree, name, path):
 
     Used only to recover source LINE NUMBERS for a live-read question
     (check-banks.py) -- this project references every defect by file:line
-    (CLAUDE.md, todo.md: "formula-unlocked:295"), and a live JSON snapshot
+    (canon §12, todo.md: "formula-unlocked:295"), and a live JSON snapshot
     has no such thing. Positional: element i of the live array is assumed to
     be element i of this node's `.elements` -- true unless a QUESTIONS[n]=
     patch inserted or removed an element outright, which no known game does

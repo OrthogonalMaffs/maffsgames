@@ -7,7 +7,7 @@ WHY A LIVE PAGE, NOT JUST THE SOURCE FILE
 A static read of the source sees an object literal as authored. It cannot see
 what the page actually ends up holding once init code has run -- and this
 project's history is exactly the gap between those two: normal-navigator's
-`QUESTIONS[n] = {...}` patches (canon, CLAUDE.md "the lesson of the last
+`QUESTIONS[n] = {...}` patches (canon, docs/history/claude-md-archive.md "the lesson of the last
 session") land AFTER the literal and change what a student is served, but a
 source read of the literal alone would miss them entirely. Reading the bank
 back from the page under Playwright, after the game's own script has run,

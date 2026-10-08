@@ -95,7 +95,7 @@ NOT_YET = [
 ]
 # Folders under games/ that are not roster games, each with its reason.
 NOT_ROSTER = {
-    "the-perfect-prank": "the original prototype, unlisted and off the roster (CLAUDE.md); "
+    "the-perfect-prank": "the original prototype, unlisted and off the roster (docs/history/claude-md-archive.md, Escape Rooms); "
                          "its own long-form design, like the escape rooms",
 }
 

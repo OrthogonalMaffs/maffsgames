@@ -23,7 +23,7 @@ method, not just the answer:
     first: subtracting a negative, adding two negatives, a negative result (a quarter each), and a
     quarter with no negative anywhere. scripts/verify-simultaneous-solver.py holds every rule.
 
-No rejection sampling (CLAUDE.md): the candidate pool is enumerated, shuffled with a fixed seed by a bounded
+No rejection sampling (canon §12): the candidate pool is enumerated, shuffled with a fixed seed by a bounded
 Fisher-Yates, and sliced into quotas. The output is the same on every run.
 """
 import argparse

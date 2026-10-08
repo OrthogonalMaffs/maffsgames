@@ -73,7 +73,7 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 | SR-2 | **Money** follows §7.1.3 through `MaffsAnswer.money()`: pence answers to exactly 2 d.p.; a whole-pound key needs no .00; a leading £ or € is optional. A typed answer that needs no rounding is marked with `MaffsAnswer.exact()`. | 3 Oct 2026 | §7.1.3; PR #4, PR #12 |
 | SR-3 | **A right value in the wrong form** (1250.7; 333.33 when 1 d.p. is asked) gets the format message and is never marked right or wrong: no score, no penalty, no event. `MaffsAnswer.exact()` has no wrong form (nothing was asked to be rounded). | 3 Oct 2026 | §7.1.3; PR #12 |
 | SR-4 | **Distractors.** Each comes from a nameable student error. Four distinct options wherever the student chooses from a list; a two-way comparison (Pack A / Pack B) keeps its two. None is equal in value to the key, unless the ask names the form that tells them apart (§7.1). Don't reuse one error type across a paper where an alternative exists. | 3 Oct 2026 | §7.1 (B11); §7.1.2; PR #7 (paper1 NI distractors), PR #11 |
-| SR-5 | **Comparison questions never tie.** The options differ by at least the smallest unit shown (1p, 0.1, …). Draw from the values that qualify, never a redraw loop (no rejection sampling: CLAUDE.md, tier 2). | 3 Oct 2026 | PR #12 (split-it Best Value) |
+| SR-5 | **Comparison questions never tie.** The options differ by at least the smallest unit shown (1p, 0.1, …). Draw from the values that qualify, never a redraw loop (no rejection sampling: §12, "No rejection sampling"; tier 2). | 3 Oct 2026 | PR #12 (split-it Best Value) |
 | SR-6 | **Wording, picture and key agree.** Where one disagrees, change it to match the other two. | 3 Oct 2026 | PR #11 (Circle Theorem Spotter Q19) |
 | SR-7 | **Tax, NI and student loan figures** in a game are the teaching year's, as in `scripts/uk_rates.py`, and the game is registered in `scripts/check-tax-year.py`. Scripts never restate a rate. | 3 Oct 2026 | §7.1.4; PR #7, PR #8 |
 | SR-8 | **When a key changes,** recompute every dependent answer, distractor and worked line. | 3 Oct 2026 | PR #4 (tax-theft), PR #11 |
@@ -1035,7 +1035,7 @@ never finds the button. Measure against the viewport minus the site footer, whic
 - **Order: the fact → the hint → the picture → Next.** The reason to read always comes before the
   control.
 - **Shrink a picture without changing what it says.** Smaller dots on a narrow screen, but every
-  dot drawn (see "Scaffolds fade" in CLAUDE.md: a count is never scaled).
+  dot drawn (see "Scaffolds fade" in §12: a count is never scaled).
 - **When the picture still cannot fit on a short screen (600px tall or less), it moves below Next.**
   This is a fixed CSS rule, not a per-question measurement, so the same phone always gets the same
   layout. It changes the visual order only; the reading order stays fact, hint, picture, Next.
@@ -1410,7 +1410,7 @@ here in the same commit.
 `formula-unlocked:295` build their options array (`matrix-crunch:306`,
 `formula-unlocked:447`) as `shuffle([correct, ...currentQ.d])` with no check that a
 distractor doesn't equal the correct answer. This is a different root cause from the
-Trig Worms fix (CLAUDE.md:577, "No rejection sampling") — Trig Worms had a dedupe step
+Trig Worms fix (§12, "No rejection sampling") — Trig Worms had a dedupe step
 that was too narrow (distractor↔distractor only); these two have no dedupe step of any
 kind (correct↔distractor collision). The Trig Worms fix pattern would have caught both,
 but there is nowhere to apply it: **no shared option-assembly helper exists on this
@@ -1476,7 +1476,7 @@ platform** — 32 games hand-roll `shuffle([correct, ...distractors])` independe
 - [x] **`MaffsOptions.build(correct, distractors)` built 23 September 2026** —
   `schools/assets/options.js`. Guarantees the correct answer appears exactly once, no
   two options share a key, bounded Fisher-Yates, no rejection sampling (per
-  CLAUDE.md:577). Wired into `matrix-crunch:306`, `formula-unlocked:447` and
+  §12, "No rejection sampling"). Wired into `matrix-crunch:306`, `formula-unlocked:447` and
   `proof-builder` (3 call sites: the two identical branches at :396/:398 and the
   induction stage at :563) — **scope deliberately held to the confirmed-broken sites
   plus the one repaired alongside them, not a platform sweep.** Emits `console.warn`
@@ -1929,3 +1929,354 @@ under thresholding and is rejected for not being star-shaped. **Look at the corn
 the thresholds; an earlier version flagged 30 of 53 clean images. Marks on plain ground take `--at X,Y`;
 marks on an edge or a line must be cropped out, because the fill smears. **JPG downloads carry no mark at
 all — ask for JPGs.**
+
+---
+
+# 12. Engineering reference (moved from CLAUDE.md, 8 Oct 2026, contract CTX)
+
+These sections were in `CLAUDE.md`, which loads into every session, and existed nowhere else. They moved here
+verbatim (contract CTX: a rule that exists nowhere else moves into canon, listed in its PR). Their own words
+still say "this file", "above" or "below" where they meant CLAUDE.md.
+
+## Does it actually run? — `scripts/check-site.py`
+
+```
+python scripts/check-site.py            # tiers 1 + 2, local stub server
+python scripts/check-site.py --tier 2   # static scan only, no browser
+python scripts/check-site.py --tier 3   # PLAY every game (opt-in, ~16 min)
+python scripts/check-site.py --live     # tier 1 against maffsgames.co.uk
+python scripts/check-site.py --only modular-battle
+```
+One-time setup: `pip install playwright && python -m playwright install chromium`.
+**In a Claude Code cloud sandbox** the CDNs are unreachable and the installed Chromium is not the one pip's
+Playwright expects, so tiers 1 and 3 fail there identically on `main`: follow `docs/sandbox-checks.md`.
+
+`check-leaderboard-coverage.js` verifies that code **exists**. It cannot tell you whether that
+code **runs** — `chart-interrogator` and `modular-battle` were dead for six months after the
+2026-03-22 sweeps (`96381d74`, `76514c70`) and passed the coverage check every time. `check-site.py`
+is the missing layer:
+
+- **Tier 1** loads every game, room, teacher page and portal page in headless Chromium — bare and
+  once per `?level=` the game declares in `.claude/rules/game-roster.md` (a roster label becomes a
+  level key in `scripts/roster-levels.json`, the one table; an unlisted label is an error). FAIL on an uncaught
+  exception, a `console.error`, a 404 on a local asset, or a main thread that stops answering
+  (an infinite loop). External-CDN trouble is WARN, not FAIL. **Tier 1 also presses every level
+  button** (30 Sep 2026): each game's every level control, in a fresh page, must reach
+  `game_started` with no uncaught exception. Loading `?level=` URLs never presses a button, which is
+  how `regression-rumble`'s Level 4 button sat dead: it set `l4`, a key its bank did not have.
+  125 controls across 47 games; the method is commented in `check-site.py` at "Tier 1, level controls"
+  (122 across 46 since `regression-rumble` was withdrawn).
+- **Tier 1 loads every page the site serves** (2 Oct 2026, to-do §4 item 12), not only files named
+  `index.html`. "Served" is GitHub Pages' Jekyll rule, encoded once in `jekyll_serves()`: there is no
+  `.nojekyll`, so a file or folder whose name starts with `_`, `.`, `#` or `~` is not published, nor is
+  anything in Jekyll's default exclude list; everything else is, `docs/` and `scripts/` included. So
+  `games/sequence-solver/index-original.html` (a redirect stub) is loaded and
+  `games/regression-rumble/_withdrawn.html` is not.
+- **Tier 1 fails any page that scrolls sideways on a 320px phone** (2 Oct 2026, to-do §1.34). Every
+  page is loaded again at 320×568, and every game is started through its first level control or Start
+  button and measured again; `scrollWidth` 1px past the viewport is a FAIL naming the outermost
+  elements past the edge. Measured with **Google's web fonts blocked**, so in the fallback font CI pins
+  to DejaVu, the same every run (Jon's ruling: in Outfit 12 of the 44 overflows fit, and a gate must
+  not depend on a third-party fetch; to-do §4 item 14 is self-hosting Outfit). No fixed pause: load
+  event, KaTeX, `document.fonts.ready`, two animation frames. **Known overflows live in
+  `scripts/checker-allowlist.json` under `tier1_phone_overflow`**, one entry per path and `at`
+  (`load` or `start`) with its width and owning to-do item; CI fails on a new overflow and on a stale
+  entry (one that now fits), so **the PR that fixes an overflow removes its entry**. Redirect stubs
+  are not measured themselves; the check asserts each stub's target is. A game that starts at desktop
+  size but not at 320×568 FAILs as "phone start unreachable". Four games start at neither by this
+  method and are noted, not measured (`factor-theorem`, `six-sevens-bruv`, `trig-worms`,
+  `test-the-claim`; reasons in the to-do's §1.34). Commented in `check-site.py` at "Tier 1, phone
+  width". **The phone pass is seeded** (3 Oct 2026, to-do §4 item 16): `PHONE_SEED` replaces
+  `Math.random` before any page script runs with mulberry32 seeded by the FNV-1a hash of the page's own
+  `location.pathname` (e.g. `/games/moments-master/`), so every run draws the same first question and
+  option order and the verdict cannot flip between runs of one commit. Only the phone pass is seeded.
+  A seed measures one draw, not a game's worst question: a game whose width depends on the draw is
+  recorded in the to-do with its question ids (`moments-master`, §1.40), because a
+  `tier1_phone_overflow` entry for a draw that fits fails as stale. **Never add retry or re-run
+  logic to CI**; make the check deterministic instead. `--phone-widths FILE` writes every phone
+  measurement to JSON so two runs can be compared.
+- **Tier 2** scans every inline `<script>` and every `room.js` for the loop shape that froze
+  modular-battle. Unlisted hits FAIL. Reviewed-safe loops live in `scripts/checker-allowlist.json`,
+  keyed on **file + enclosing function name** (not line number), each with a written reason.
+- **Tier 3 plays the games** — finds the options, clicks one, waits for the question to turn over,
+  repeats. It is what tier 1 cannot be: modular-battle's freeze was on the *second* question, and a
+  page load never gets there. Baseline 2026-09-23: **190 PASS, 0 FAIL, 6 WARN, 115 UNSUPPORTED**
+  across 311 runs, 1544 questions played, ~16 min. Opt-in (`--tier 3`); `--tier all` is still 1+2.
+
+**Three things about tier 3 that are load-bearing:**
+
+- **UNSUPPORTED is not a failure, and the distinction is the whole point.** Tier 3 drives pick-one
+  options and typed answers. A drag game, a canvas, a build-the-answer keypad or a second phase it
+  cannot complete comes back UNSUPPORTED and never fails the run. The first draft called 118 of
+  those FAIL — noise on that scale is how a checker gets ignored, and the one real failure inside it
+  goes too. FAIL now means a crashed tab, a frozen main thread, a mid-play throw, or an option that
+  cannot be clicked. The UNSUPPORTED list is the coverage ledger: record a game in
+  `checker-allowlist.json` under `tier3_exceptions` **only once you have read it**, because what
+  makes the ledger useful is that a game *newly* arriving on it is a change worth chasing.
+- **Progress is read from the game, not the DOM.** 95 of 96 games fire `question_answered` with a
+  `question_index` and 95 fire `game_completed`, so tier 3 hooks `window.mfg` through an accessor
+  and counts events. Watching the options for a change instead is simply wrong for a binary game:
+  `prime-or-composite` renders the same two buttons, PRIME and COMPOSITE, for every question it ever
+  asks.
+- **Options are found by behaviour, never by markup.** 27 games use `id="options"`, 8 use a class
+  containing `option`, and **60 use neither**. Tier 3 takes every visible element carrying a click
+  handler — as an `onclick` property (index-laws, suvat) or via `addEventListener` (angle-ace,
+  matrix-crunch) — and groups by **parent alone**. Adding the class to that key splits
+  prime-or-composite's `ans-prime`/`ans-composite` pair into two groups of one.
+
+**Duplicate options are a WARN, deliberately.** A repeat in a pick-one group is a real defect —
+Trig Worms shipped `-5.1` twice — but `expectation-station`'s stage 1 is a *tile bank* filling
+several blanks, so `es_gcse_001`'s `['0.25','0.25','0.50','0.10']` is authored on purpose. Nothing
+in the DOM tells the two apart, so the run reports it and a person judges.
+
+**Timers are NOT throttled in headless Playwright.** `docs/game-integrity-2026-09-21.md` §5 says an
+automation tab reports `document.hidden`, throttling timers to ~1.5/sec, and recommends draining
+`setTimeout` callbacks by hand. That is true of the **Chrome-extension** tab and false here:
+measured 2026-09-23, `document.hidden` is `false` and three chained 200ms timeouts finish in ~620ms.
+Tier 3 waits on the game's real timers, so it sits through the delays a student sits through.
+
+**When to run it:**
+
+- **Before every commit touching `games/` or `escape-rooms/`.** No exceptions.
+- **Any site-wide sweep runs it before committing** — a sweep is exactly what killed those two
+  games, and the damage is invisible until someone opens the page.
+- **Live verification uses `--live`, never a plain reload.** It cache-busts every page load.
+  Chrome will happily replay the previous build and hand you a clean pass that means nothing.
+- A **network guard is mandatory in every mode**, `--live` included: requests to the Apps Script
+  endpoint, GA/gtag collect and Firebase are aborted over both HTTP and WebSocket, and the run
+  fails if one completes. Checking a page must never write a row into the production Events
+  sheet or a score into the live leaderboard.
+
+`.github/workflows/check-site.yml` runs **tiers 1 and 2** on every push and PR. No secrets, free
+runner. **Tier 3 is not in CI** — it takes ~16 minutes against ~85s for the other two, and it is new.
+Putting it in CI is Jon's call once he has seen a few runs.
+
+**Tier 3 is regression-proven, the same way tiers 1 and 2 were.** Restoring `1a407fe`'s
+`while (choices.size < 4)` to modular-battle's `generateChoices` fails all three runs of
+`--tier 3 --only modular-battle`; restoring the fixed version passes 24 questions. Note what that
+proves and how: the loop does **not** hang politely enough for the watchdog — it allocates until
+Chromium kills the tab, and Playwright reports "Target crashed". That is reported as *the page
+crashed the browser tab*, not as a driver error, because blaming the checker for the one bug this
+tier exists to find is how the tier stops being believed.
+
+### Tier 4, layer A — bank extraction + lint (`scripts/extract-banks.py`, `scripts/check-banks.py`)
+
+Tiers 1–3 prove a page runs and can be played. None of them inspects the *question
+data* — matrix-crunch's duplicated determinant option, formula-unlocked's
+`correct_override` collision, and normal-navigator's index patches all survived every
+green checker run this repo has had, and were each found only by Jon playing the games.
+
+Layer A closes that gap for **static data defects**: `extract-banks.py` reads every
+game's question bank back from the live page under Playwright (post any runtime
+patch), and `check-banks.py` lints it against eleven rules (B1–B11 — missing/duplicate
+answers, duplicate questions, bank size, session-length overpromise, draft-prose
+leaks, text that loses its spaces on render, duplicate object keys, hand-written index patches,
+`correct_override` usage, options equal in value). **`data/check-ledger.json`** tracks every known violation
+per game; CI (`.github/workflows/check-site.yml`) fails only on a violation not yet in
+the ledger, or a ledger entry that no longer reproduces — a tracked, unfixed defect is
+not a failure.
+
+**B7, text that loses its spaces on render (rebuilt 2 Oct 2026, to-do §1.31).** Its KaTeX half used
+to match two call shapes, `K(x.field)` and `katex.renderToString(x.field)`, and so never saw the 50
+games that render through `rk`, `rkStr`, `tex`, `kx` and the rest (`docs/audit-katex-wrappers.md`).
+Now, with no per-game list: **render sites are found by behaviour** (a function whose parameter, or
+a local derived from it, reaches `katex.render`/`renderToString`/`MaffsText.html`, to a fixed point);
+**what reaches each site is rebuilt per question** (locals, ternaries both ways, `||`, callbacks,
+`shuffle`-like selectors), with **its guards evaluated per string**, so an option the game shows by
+`textContent` is never counted; a game function on bank data is **computed in the page**, after
+putting the page in the state that question sets where the function reads game state; and every
+string is **rendered in the page through the site's own callee** (`extract-banks.py`), read as the
+student sees it (`.katex-html`, a positive-width `.mspace` as a space). **The test**
+(`bank_common.katex_lost_word_spaces`): a space the source has between two tokens is gone and one
+of them is a word, 3+ letters or a 2-letter function word from a fixed list (`to of is as or an in
+on at by if so no be do up it we he me my us am`), so maths products (`mg`, `bx`) never count and
+units (`13 cm`) are out of scope. A site that cannot be rebuilt is listed by `--ci` as
+`unresolved`, one fed only by a generator as `runtime-only` (log-laws Solve, free-daily-pizza,
+graph-transformer, quadratic-factoriser; to-do §4 has the runtime-hook candidate), never a failure.
+First run: 277 strings in 12 games, all of them in the audit's second count, 30 of 30 hand-read
+hits genuine; the audit's other 246 strings were guarded (217), two-letter products (13) or other
+(16). B7 alone has `RULE_MAX` 800. Fixtures: `check-banks.py --selftest`, and `--selftest-live`
+renders them in a real page. Extraction takes about 40s longer for it.
+
+**B11, options equal in value (2 Oct 2026, PR 51).** Two options that are different strings but
+the same value (√50 beside 5√2) are invisible to B2 and to `MaffsOptions.build()`, which compare
+strings. B11 parses every option with `bank_common.parse_value()`/`equal()` (SymPy; the one copy,
+shared with `scripts/scan-value-equivalent-options.py`) and compares the distinct options within
+each answer unit. An option it cannot read is never guessed at. A question whose ask names the form
+("Write in standard form", "Simplify") is listed in `scripts/checker-allowlist.json` under
+`b11_form_questions`, with a reason quoting the ask. **B11 findings are identified by content, not
+position:** `bank_common.content_id()` is the SHA-1 of the whole question's canonical JSON, plus an
+ordinal over exact copies, so inserting or reordering questions never turns a known pair into one
+new + one stale entry. The whole question is hashed because a narrower hash (stem + ask + options)
+gave one id to 74 groups of different questions in 21 games: simultaneous-solver's "Find x"
+questions differ only in `sys`. The cost: editing any field of a question gives it a new id. `--ci` also fails in two cases beyond the
+ledger diff: a bank the ledger knows as readable extracts as a generator (with the KaTeX CDN
+unreachable, three games come back empty and every rule would pass them quietly), and a
+`b11_form_questions` entry that matches nothing (the question changed; re-read it).
+
+**Every finding is identified by content, not by bank index or line (to-do item 7, PR 52, 2 Oct
+2026).** On 28 Sep the OpenDyslexic change moved `test-the-claim`'s known B8 entry from line 527 to
+526, and CI failed on a defect it already tracked until the entry was moved by hand: a position-based
+id turns any edit above a known defect into one new + one stale entry. B1, B2, B6, B7 and B10 now use
+the question's `content_id()`. B3 is named after every copy in its group, sorted, so it survives
+swaps too. B7's KaTeX and MaffsText halves, which carry no question, use the SHA-1 of the string plus
+an ordinal. B8 uses the enclosing function (else top-level variable, else `(top level)`), the
+duplicate keys and the SHA-1 of the object's text. B9 uses the target as written and the SHA-1 of
+the right-hand side. B4, B5 and B11 are unchanged. The location goes in the detail and the line in
+`line`. **Three things now change an id, all expected:** editing the content itself (a question's
+fields, or a comment inside a B8 object), renaming a B8 object's enclosing function or variable, and
+changing either syntax rewrite in `bank_common._shim_for_parser`, which B8 and B9 hash through and
+which changes every B8/B9 id at once.
+
+**`--write-ledger` merges; it never rebuilds (to-do §4 item 10, PR 53, 2 Oct 2026).** Only games this
+run actually linted, or true generators the ledger already records as such, are replaced. Every other
+game keeps its record byte for byte and is reported as carried, with its reason (withdrawn/off-roster,
+not selected by `--only`, bank missing, bank not read) and entry count. So regression-rumble's three
+B4 entries survive every write, and `--only=x --write-ledger` touches only `x`. **It refuses (exit 1,
+nothing written)** when a bank the ledger knows as read (`generator: false`) came back missing or as a
+generator, the KaTeX-CDN-unreachable case: a partial extraction is never the basis of a full ledger
+write. A game new to the ledger that did not read is reported, not written; that includes a new
+true generator, which has to be added deliberately.
+
+Layer A is one of five designed layers, A–E; only A is built. **Full design, what each
+layer catches, what none of them can (wording and pedagogy stay Jon's call), and the
+proposed new-game gate: `docs/checker-tier4-design.md`.**
+
+### No rejection sampling
+
+**Build the candidate pool, dedupe on the same representation the answer check uses, shuffle,
+slice.** Never draw at random and retry until the set happens to be big enough.
+
+`while (choices.size < 4) { choices.add(randInt(0, mod - 1)) }` froze the tab on ~25% of
+modular-battle's questions, because a modulus below 4 can never yield 4 distinct remainders.
+Expectation Station had the same shape latent in its distractors. A loop that terminates only
+when the dice cooperate is a hang waiting for the right question.
+
+The test that separates a safe loop from a hanging one: **does a counter advance on every pass,
+whatever the draw returns?** A Fisher-Yates shuffle reads `arr.length` and calls `Math.random`
+just like the loop above, but its `i--` runs every time, so it is bounded. Rejection sampling
+advances only when the draw happens to be new.
+
+Constraints on distractors — sign, form, denominator — are **per-scenario properties, not global
+rules**. Model them on the scenario that needs them rather than filtering a global pool until
+what survives fits.
+
+**Dedupe the distractors against each other, not just against the correct answer.** Trig Worms
+filtered out candidates equal to the correct answer and nothing else, so when `asin` and `atan` of
+the same near-zero ratio both returned -5.1 it shipped a question with **the same option twice**.
+Where the candidate list can collide, top it up from a deterministic ladder (correct ±5, ±10, ±20,
+clamped to the valid range) rather than redrawing. Finite list, no retry, always terminates.
+
+### Assembling a question's options — `MaffsOptions.build()`
+
+**Any new game assembles its options with `schools/assets/options.js`. Do not hand-roll it.**
+
+```html
+<script src="../../schools/assets/options.js"></script>
+```
+```js
+const opts = MaffsOptions.build(q.correct, q.d);   // replaces shuffle([q.correct, ...q.d])
+```
+
+It guarantees the correct answer appears exactly once, that no two options share a key, and that
+the order is shuffled by a bounded Fisher-Yates — never by retrying a draw. Options are compared on
+`String(value)`, which is exactly what `dataset.val = v` stores and what the marking code compares
+(canon §7.1). Deduping on any other representation would let through a pair the answer check cannot
+tell apart, which is the whole failure being prevented.
+
+**Why this exists rather than the rule above alone.** The Trig Worms lesson was written down as a
+rule for authors and could not be applied platform-wide, because there was nowhere to apply it —
+**32 games each hand-roll `shuffle([correct, ...d])` and not one checks for a collision.** Two more
+shipped one, in shapes the Trig Worms rule does not describe:
+
+- `matrix-crunch:171` **authored** it — `det([[6,2],[3,1]])` is 0 and `'0'` was listed in its own
+  distractor array, so the question rendered **0, 0, 12, 6** with two buttons both marking correct.
+- `formula-unlocked:295` **drifted** into it — a late `correct_override` was set to a string
+  identical to the question's third distractor, so the override and that distractor became twins
+  and the bank's real `correct` form never reached the screen at all.
+
+**It cannot invent a replacement for what it drops.** A bank that authored a collision has one
+fewer real option than its author intended, so those two questions now render **three** options,
+honestly short — the same call modular-battle makes when a modulus of 2 has only 2 residues. It
+warns to the console when it drops one (`console.warn`, never `console.error`, which would fail
+tier 1). **Fixing the bank is still a teaching call**; this only guarantees the collision never
+reaches a student.
+
+**It cannot see two options that are equal in value.** To `String(value)`, √50 and 5√2 are different.
+`coordinate-geometry-dash:233` shipped both, with only 5√2 marked right: a student who picked √50 was
+marked wrong for a correct answer (fixed 28 Sep, to-do §1.24). A scan of every bank found the same
+shape in 10 more games (`docs/scan-value-equivalent-options.md`). The guard belongs in the checker,
+not here, because marking compares strings. Checker rule B11 (tier 4, layer A, 2 Oct 2026) now
+fails CI on any new value-equal pair. **Never offer the answer in a second form unless the
+question's ask names the form**; when it does, list the question in `checker-allowlist.json`'s
+`b11_form_questions` with the ask quoted.
+
+**Wired into `matrix-crunch`, `formula-unlocked` and `proof-builder` only.** The other ~28 games
+hand-rolling this were deliberately left alone — that retrofit is a separate pass, and sweeps are
+what killed `chart-interrogator` and `modular-battle` for six months.
+
+### Check the generator's own range
+
+Trig Worms picked its angle from `5*Math.floor(Math.random()*17)+15`, which is 15..**95**, with a
+comment claiming it avoided 90. Neither 90 nor 95 can be the non-right angle of a right-angled
+triangle; at 95 the adjacent goes negative and the game asked for a side of **-0.8**. It had been
+doing that to 11.8% of questions, at every difficulty, since the game shipped.
+
+**A comment saying a range is safe is not evidence that it is.** When a generator picks from a
+range, enumerate the endpoints and ask what the game does at each one.
+
+## Level Colours
+| Level | Colour | CSS Var |
+|-------|--------|---------|
+| Year 6 | Indigo | #6366f1 |
+| KS3 | Green | #22c55e |
+| GCSE | Blue | #3b82f6 |
+| A-Level | Orange | #f97316 |
+| Further | Purple | #8b5cf6 |
+| Level 4 | Red | #ef4444 |
+| Core Maths | Sky | #0ea5e9 |
+
+## Scaffolds fade, and never pre-announce the answer
+
+Jon's rule, 22 Sep 2026. A visual aid earns its place by building the model, and then by getting
+out of the way.
+
+- **A scaffold is withdrawn once the student can work without it.** Modular Battle's dot grid now
+  hides after 2 correct and returns after 2 wrong in a row. Showing it on every question turns
+  "46 mod 7" into "count the red circles" — the student never divides. The picture teaches the
+  model; **removing it is what embeds it.**
+- **A visual aid must never give the answer away before the student has thought.** If it can only
+  be made useful by pre-marking the answer, prefer showing it *after* they answer, as the reason.
+- **If it cannot be drawn honestly, do not draw it.** Modular Battle scaled its dots to fit a
+  40-dot cap, and scaling a count cannot preserve a remainder — it displayed 3 for an answer of 4.
+  Draw it in full or omit it; never a lossy version of something that has to be exact.
+
+## Accessibility
+- **Aa toggle** on every game — OpenDyslexic font, increased spacing
+- State persists in localStorage (`mfg_accessible`)
+- Colour feedback: tick/cross symbols alongside colour
+- `prefers-reduced-motion` respected
+
+## Tiered Question Banks
+Games load level-keyed banks via URL param: `/games/{slug}/?level=level4`
+```js
+const QUESTIONS = { ks3: [...], gcse: [...], alevel: [...], further: [...], level4: [...], year6: [...] }
+```
+
+## Firebase Leaderboard (LIVE)
+- A status that depends on other records is computed at display time, never stored — see `docs/canon.md` §9 "Architecture".
+- Firebase Realtime Database (europe-west1, project `maffsgames-c1c9f`)
+- Anonymous score submission — `MaffsLeaderboard.submitScore(slug, level, score, questionsAnswered)`
+- 3-letter arcade initials (profanity filter, ~50 blocked combos, localStorage persistence)
+- High score detection: gold trophy (all-time), blue star (weekly best)
+- All-time best shown as target on each ticker entry
+- `recent_scores` feed powers the portal ticker (reads the latest 20). The client no longer prunes it: the database rules in `firebase/database.rules.json` (source of truth, create-only; emulator tests in `firebase/rules.test.mjs`) refuse every delete and overwrite; **deployed and verified live 30 Sep 2026**, so a score can now only be deleted in the Firebase console. Deploy, verify, roll back and the manual prune: `docs/firebase-rules-deploy.md`
+- **Eligibility is completion, not a question count** (23 Sep 2026). A run that reaches the game's own end ranks; `submitScore()` must only ever be called there. Every unsubmitted score is logged with its reason. The old 10-question gate silently kept 13 games (Prime Sprint, Estimation Golf, Equatle, Gantt, Chart Interrogator …) off the leaderboards since launch
+- Wired into 94 of the 96 live games (`constructions-lab`, `given-that` excluded — non-scored; `regression-rumble` withdrawn 30 Sep 2026, declared `WITHDRAWN` in the coverage check, its boards kept); recounted from the repo 29 Sep 2026, plus `six-sevens-bruv` and `free-daily-pizza` on 30 Sep. Four of the 94 carry a call-site gate declared in `HELD`: `estimation-golf`, `equatle` and `distinctly-average` submit nothing today, `log-laws` submits its Laws drill only — so 90 submit unconditionally. `six-sevens-bruv` submits its 20- and 40-question sessions to levels `q20`/`q40` and its clear-the-grid sessions to no board. `free-daily-pizza` submits mixed-stage practice to `practice-q20`/`practice-q40` (single-stage practice ranks nowhere: history only, under `stage-s1-q20` etc.) and each UK day's pizza to `daily-YYYY-MM-DD`, a pattern declared off the hub in the coverage check's `OFF_HUB_LEVEL_PATTERNS`. Coverage enforced by `scripts/check-leaderboard-coverage.js`, which since 30 Sep 2026 also fails if a submitting game is missing from the hub registry (`leaderboards/index.html` `GAMES`) or listed with levels other than the ones it submits under (canon §9)
+- Device-local score history alongside it: `schools/assets/score-history.js` (`MaffsScoreHistory`) — last 10 runs per game+level, `localStorage` only, no server call
+- Public hub page: `/leaderboards/index.html` — rolling 7-day top scores + all-time-high per game, plus a "Your Scores" device-local section. See `docs/canon.md` §9 for full detail
+- Certificates planned for Phase 1b (still not built)
+- **Lesson from the retrofit:** the July rollout shipped the feature to every game but left the
+  old *"Global leaderboard coming soon"* copy in place — 78 games told students the leaderboard
+  did not exist while submitting their scores to it. Fixed 2026-08-26. When rolling a feature out
+  site-wide, grep for the placeholder copy it is meant to replace.
