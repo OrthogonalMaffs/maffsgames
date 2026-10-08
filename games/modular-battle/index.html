@@ -105,6 +105,16 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first choice; i >= 1 the first that is not the key.
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#answerRow .choice-btn')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "(bs.find(b => parseInt(b.textContent) !== currentAns) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -160,7 +170,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 </div>
 
 <script>
-let score = 0, timeLeft = 90, gameTimer = null, answered = false;
+let score = 0, timeLeft = 90, gameTimer = null;
 let currentA, currentB, currentAns;
 
 function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
@@ -259,7 +269,6 @@ function renderDots(a, b) {
 
 function loadQuestion() {
   if(window.MaffsNext) MaffsNext.clear(document.getElementById('feedback').parentNode);
-  answered = false;
   const q = generateQ();
   currentA = q.a; currentB = q.b; currentAns = q.ans;
 
@@ -276,14 +285,14 @@ function loadQuestion() {
     btn.onclick = () => guess(c, btn, choices);
     row.appendChild(btn);
   });
+  MaffsLock.fresh(row);   // a new question: a double-click on Start or Next cannot pick a choice
 
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
 }
 
 function guess(val, btn, choices) {
-  if(answered) return;
-  answered = true;
+  if(!MaffsLock.lock(document.getElementById('answerRow'))) return;   // one answer per question (canon 7.6.0)
   const fb = document.getElementById('feedback');
   const btns = document.querySelectorAll('.choice-btn');
 
@@ -310,7 +319,7 @@ function guess(val, btn, choices) {
   // A correct answer can move on briskly; a wrong one has to stay up long enough to
   // read the division that produced the remainder.
   if(val === currentAns) {
-    setTimeout(loadQuestion, 1200);
+    MaffsLock.timer(loadQuestion, 1200);
   } else {
     MaffsNext.wrong({mount: document.getElementById('feedback').parentNode, onAdvance: loadQuestion});
   }
@@ -318,6 +327,7 @@ function guess(val, btn, choices) {
 
 let _ggQCount = 0, _ggCorrectCount = 0;
 function startGame() {
+  MaffsLock.newSession();
   scaffoldOn = true; scaffoldCorrect = 0; scaffoldWrongStreak = 0;
   score = 0; timeLeft = 90; _ggQCount = 0; _ggCorrectCount = 0;
   document.getElementById('startScreen').style.display = 'none';
@@ -339,7 +349,12 @@ function startGame() {
   loadQuestion();
 }
 
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice. The clock can run
+// out during a question's timer or a wrong answer's Next: both are stopped, so nothing loads after the end.
+function endGame() { finishGame(); }
+const finishGame = MaffsLock.finishOnce(function () {
+  MaffsLock.clearTimers();
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('feedback').parentNode);
   window._ggAbandoned = false;
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
@@ -349,7 +364,7 @@ function endGame() {
   mfg('game_completed',{game_slug:'modular-battle',level:'gcse',score:score,questions_answered:_ggQCount,accuracy:_acc});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('modular-battle','gcse',score,_ggQCount).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('modular-battle','gcse',score);}}
   saveBest(score); renderLB();
-}
+});
 
 function getBest(){return parseInt(localStorage.getItem('mb_best')||'0');}
 function saveBest(s){const prev=getBest();if(s>prev){localStorage.setItem('mb_best',s);mfg('personal_best_set',{game_slug:'modular-battle',level:'gcse',score:s,previous_best:prev});}document.getElementById('best').textContent=getBest();}

@@ -325,7 +325,10 @@ INIT = r"""
   window.__lockSnap = function () {
     const ev = window.__lockEvents;
     const scores = [...document.querySelectorAll('[id*="score" i], [class*="score" i]')]
-      .filter(e => e.offsetParent !== null && e.children.length === 0).map(e => e.textContent.trim()).join('|');
+      .filter(e => e.offsetParent !== null && e.children.length === 0)
+      // A countdown in the score bar (modular-battle's #timer is a .score-val) ticks on its own: not a score.
+      .filter(e => !/time|clock/i.test(e.id + ' ' + (typeof e.className === 'string' ? e.className : '')))
+      .map(e => e.textContent.trim()).join('|');
     return {
       answered: ev.filter(r => r.e === 'question_answered').length,
       correct: ev.filter(r => r.e === 'question_answered' && r.correct === true).length,
