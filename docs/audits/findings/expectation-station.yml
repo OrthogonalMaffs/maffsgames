@@ -232,4 +232,4 @@ findings:
     scripts/verify-expectation-station.py now tries every placement of the tiles on every item: exactly one may sum
     to 1 and satisfy what the item states (CLUES), and it must be the keyed one; main''s page fails it on 38 items.'
   status: fixed
-  pr: PRNUM
+  pr: 146
