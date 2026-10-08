@@ -294,6 +294,16 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Two tracks: i = 0 picks Track A; i >= 1 picks the track that is not the higher-EV one (the key), so the wrong answer comes first time.
+{
+  "answer": [
+    "const q = sessionQuestions[questionIndex];",
+    "const c = i === 0 ? 'A' : (q.higherEVOption === 'A' ? 'B' : 'A');",
+    "document.getElementById('option' + c).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -551,7 +561,6 @@ let sessionQuestions = [];
 let totalScore = 0;
 let optimalScore = 0;
 let optimalChoices = 0;
-let answered = false;
 let firstPlay = true;
 
 /* ======== INIT ======== */
@@ -599,6 +608,7 @@ function setPB(score, stars) {
 
 /* ======== START ======== */
 function startGame() {
+  MaffsLock.newSession();
   const bank = QUESTIONS[currentLevel];
   if (!bank || bank.length === 0) return;
   sessionQuestions = shuffle([...bank]).slice(0, Math.min(sessionLength, bank.length));
@@ -606,7 +616,6 @@ function startGame() {
   totalScore = 0;
   optimalScore = 0;
   optimalChoices = 0;
-  answered = false;
 
   document.getElementById('startScreen').classList.remove('active');
   document.getElementById('resultsScreen').classList.remove('active');
@@ -632,7 +641,6 @@ function restartGame() {
 /* ======== LOAD QUESTION ======== */
 function loadQuestion() {
   const q = sessionQuestions[questionIndex];
-  answered = false;
   document.getElementById('gameScreen').classList.remove('answered');
   window.scrollTo(0, 0);
 
@@ -681,6 +689,7 @@ function loadQuestion() {
 
   // Update trolley display
   document.getElementById('trolleyDisplay').textContent = 'E(X)=?';
+  MaffsLock.fresh(document.getElementById('optionsRow'));   // a new question: a double-click on Start or Next cannot pick a track
 }
 
 function renderOption(side, opt) {
@@ -740,8 +749,7 @@ function renderMuppets(side, count) {
 
 /* ======== SELECT OPTION ======== */
 function selectOption(choice) {
-  if (answered) return;
-  answered = true;
+  if (!MaffsLock.lock(document.getElementById('optionsRow'))) return;   // one track per question (canon 7.6.0)
   document.getElementById('gameScreen').classList.add('answered');
 
   const q = sessionQuestions[questionIndex];
@@ -762,12 +770,12 @@ function selectOption(choice) {
   trolley.classList.remove('rolling');
 
   const moveClass = choice === 'A' ? 'move-left' : 'move-right';
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     trolley.classList.add(moveClass);
   }, 100);
 
   // Resolve outcome after trolley animation
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     resolveOutcome(q, choice, chosen, chosenSide);
   }, 700);
 }
@@ -849,7 +857,7 @@ function showOutcome(muppetsHit, escaped, q, side, pSum) {
     const figures = groupEl.querySelectorAll('.muppet-figure');
     const hitCount = Math.min(muppetsHit, figures.length);
     for (let i = 0; i < hitCount; i++) {
-      setTimeout(() => {
+      MaffsLock.timer(() => {
         figures[i].classList.add('hit');
       }, i * 60);
     }
@@ -857,9 +865,9 @@ function showOutcome(muppetsHit, escaped, q, side, pSum) {
     // Impact flash on trolley
     const trolley = document.getElementById('trolley');
     const impactClass = side === 'left' ? 'impact' : 'impact-right';
-    setTimeout(() => {
+    MaffsLock.timer(() => {
       trolley.classList.add(impactClass);
-      setTimeout(() => {
+      MaffsLock.timer(() => {
         trolley.classList.remove(impactClass);
       }, 150);
     }, 50);
@@ -869,7 +877,7 @@ function showOutcome(muppetsHit, escaped, q, side, pSum) {
   const outcomeEl = document.getElementById('outcomeDisplay');
   const textEl = document.getElementById('outcomeText');
 
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     if (muppetsHit > 0) {
       textEl.className = 'outcome-text hit';
       textEl.textContent = muppetsHit + ' Muppet' + (muppetsHit !== 1 ? 's' : '') + ' hit!';
@@ -896,10 +904,10 @@ function showEscapeEvent(q, pSum, side) {
   const groupEl = document.getElementById(side === 'left' ? 'muppetsLeft' : 'muppetsRight');
   const figures = groupEl.querySelectorAll('.muppet-figure');
   figures.forEach((f, i) => {
-    setTimeout(() => f.classList.add('hit'), i * 40);
+    MaffsLock.timer(() => f.classList.add('hit'), i * 40);
   });
 
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     overlay.classList.remove('show');
 
     // Show tooltip
@@ -918,7 +926,11 @@ function showEscapeEvent(q, pSum, side) {
 }
 
 /* ======== NEXT QUESTION ======== */
+// The game's own Next (shown after every outcome). It acts only on an answered question, so the second click of a
+// double-click lands on the next, unanswered one and does nothing (it skipped a question before).
 function nextQuestion() {
+  if (!MaffsLock.isLocked(document.getElementById('optionsRow'))) return;
+  MaffsLock.clearTimers();
   questionIndex++;
   if (questionIndex >= sessionQuestions.length) {
     endSession();
@@ -928,7 +940,9 @@ function nextQuestion() {
 }
 
 /* ======== END SESSION ======== */
-function endSession() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endSession() { finishSession(); }
+const finishSession = MaffsLock.finishOnce(function () {
   const total = sessionQuestions.length;
   const pct = total > 0 ? Math.round((optimalChoices / total) * 100) : 0;
   let stars = 0;
@@ -972,7 +986,7 @@ function endSession() {
   revealBtn.classList.remove('enabled');
 
   const minDelay = firstPlay ? 5000 : 2000;
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     revealBtn.classList.add('enabled');
   }, minDelay);
 
@@ -982,7 +996,7 @@ function endSession() {
 
   // Prepare results data
   window._edResults = { totalScore, optimalScore, pct, stars, total };
-}
+});
 
 function showResults() {
   const r = window._edResults;
