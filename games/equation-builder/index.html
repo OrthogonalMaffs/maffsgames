@@ -149,6 +149,29 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. The slots are filled directly from data, then Check: i = 0 with the key (currentQ.slots); i >= 1 with the key's first two filled tiles swapped (an arrangement that does not match), twice, so the retry is spent and the key is shown.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && !!currentQ && !MaffsLock.isLocked(document.getElementById('gameScreen'))",
+  "answer": [
+    "return (async () => {",
+    " const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    " const g = document.getElementById('gameScreen');",
+    " const fill = wrong => { const s = currentQ.slots.slice(); const pf = currentQ.prefilled || [];",
+    "  if (wrong) { const free = s.map((t, k) => k).filter(k => !pf.includes(k) && s.filter(x => x === s[k]).length === 1);",
+    "   if (free.length >= 2) { const a = free[0], b = free.find(k => s[k] !== s[free[0]]); if (b !== undefined) [s[a], s[b]] = [s[b], s[a]]; } }",
+    "  slotValues = s.map((t, k) => pf.includes(k) ? null : t); renderSlots(); updateCheck(); };",
+    " const q0 = currentQ; fill(i >= 1); document.getElementById('checkBtn').click();",
+    " if (i === 0) return;",
+    " for (let t = 0; t < 100 && (MaffsLock.isLocked(g) || MaffsLock.isFresh(g)); t++) await real(30);",
+    " if (currentQ !== q0) return;",
+    " fill(true); document.getElementById('checkBtn').click();",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -193,6 +216,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div class="question-card" id="questionCard"></div>
   <div class="equation-zone" id="equationZone"></div>
   <div class="eb-msg" id="ebMsg" role="status" aria-live="polite"></div>
+  <div id="nextMount"></div>
   <div class="tile-bank" id="tileBank"></div>
   <button class="check-btn" id="checkBtn">Check</button>
 </div>
@@ -414,6 +438,7 @@ function showScreen(name){
 
 /* ===== GAME ===== */
 function startGame(){
+  MaffsLock.newSession();
   let pool=QUESTIONS.filter(q=>q.level===currentLevel);
   pool=shuffle(pool).slice(0,sessionLength);
   questionQueue=pool;totalQ=pool.length;qIndex=0;
@@ -443,6 +468,8 @@ function showQuestion(){
   renderSlots();renderTiles();
   setMsg('','');
   $('checkBtn').classList.remove('visible');
+  MaffsNext.clear($('nextMount'));
+  MaffsLock.fresh($('gameScreen'));   // a new question: a double-click on Start cannot place a tile or Check
 }
 
 function renderSlots(){
@@ -505,7 +532,7 @@ function placeTile(tile){
   // Snap animation on the filled slot
   const slots=document.querySelectorAll('#equationZone .slot');
   const filledEl=slots[selectedSlot];
-  if(filledEl){filledEl.classList.add('snap');setTimeout(()=>filledEl.classList.remove('snap'),100);}
+  if(filledEl){filledEl.classList.add('snap');MaffsLock.timer(()=>filledEl.classList.remove('snap'),100);}
 
   // Move to next empty slot
   const pf=currentQ.prefilled||[];
@@ -569,9 +596,11 @@ function setMsg(text,cls){const m=$('ebMsg');m.textContent=text;m.className='eb-
 
 function sameSeq(a,b){return a.length===b.length&&a.every((t,i)=>t===b[i]);}
 
+// One mark per Check (canon 7.6.0): a double-click on Check used to spend the retry too.
 function checkAnswer(){
   const seq=builtSeq();
   if(!seq)return;
+  if(!MaffsLock.lock($('gameScreen')))return;
   attempts++;
   const correct=(ACCEPTED[currentQ.id]||[]).some(a=>sameSeq(a,seq));
   if(correct){
@@ -584,7 +613,7 @@ function checkAnswer(){
     qIndex++;
     if(typeof mfg==='function')mfg('question_answered',{game_slug:'equation-builder',level:currentLevel,question_index:qIndex,correct:true,attempts:attempts});
     updateHUD();
-    setTimeout(()=>nextQuestion(),asKey?900:2600);
+    MaffsLock.timer(()=>nextQuestion(),asKey?900:2600);
   }else if(attempts>=2){
     // Second wrong: show the key, scored wrong.
     $('checkBtn').classList.remove('visible');
@@ -594,10 +623,12 @@ function checkAnswer(){
     qIndex++;
     if(typeof mfg==='function')mfg('question_answered',{game_slug:'equation-builder',level:currentLevel,question_index:qIndex,correct:false,attempts:attempts});
     updateHUD();
-    setTimeout(()=>nextQuestion(),2600);
+    // canon 7.6: the key stays up until Next.
+    MaffsNext.wrong({mount:$('nextMount'),onAdvance:nextQuestion});
   }else{
     // First wrong: keep the student's tiles; one retry for half a point.
     setMsg("That doesn't match the question yet.",'no');
+    MaffsLock.fresh($('gameScreen'));   // the retry: a double-click's second Check lands on nothing
   }
 }
 
@@ -606,7 +637,7 @@ function nextQuestion(){
   $('equationZone').classList.add('fade-out');
   $('tileBank').classList.add('fade-out');
   $('checkBtn').classList.remove('visible');
-  setTimeout(()=>{
+  MaffsLock.timer(()=>{
     $('questionCard').classList.remove('fade-out');
     $('equationZone').classList.remove('fade-out');
     $('tileBank').classList.remove('fade-out');
@@ -614,7 +645,9 @@ function nextQuestion(){
   },200);
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame(){finishGame();}
+const finishGame=MaffsLock.finishOnce(function(){
   const pct=totalQ>0?Math.round(score/totalQ*100):0;
   const pbKey='eb_pb_'+currentLevel;
   const oldPB=parseInt(localStorage.getItem(pbKey)||'0');
@@ -633,7 +666,7 @@ function endGame(){
   if(isNewPB){pb.textContent='New personal best! Previous: '+oldPB+'%';pb.style.display='';}
   else pb.style.display='none';
   showScreen('results');
-}
+});
 
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}

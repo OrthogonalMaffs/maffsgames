@@ -167,6 +167,18 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Three arguments, two attempts. i = 0 picks the first argument still open; i >= 1 picks the first open argument that is not correct.
+{
+  "answer": [
+    "const q = sessionQuestions[qIndex];",
+    "const open = [...document.querySelectorAll('#argumentsRow .argument-card')].filter(c => !c.classList.contains('disabled'));",
+    "if (!open.length) return;",
+    "const pick = i === 0 ? open[0] : (open.find(c => !q.arguments[parseInt(c.dataset.idx)].correct) || open[0]);",
+    "pick.click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -595,7 +607,6 @@ let sessionQuestions = [];
 let qIndex = 0;
 let score = 0;
 let attempts = 0;
-let answered = false;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ============================================================
@@ -629,6 +640,7 @@ function shuffle(arr){
 }
 
 function startGame(){
+  MaffsLock.newSession();
   const bank = QUESTIONS[currentLevel];
   if(!bank||!bank.length) return;
   const shuffled = shuffle(bank);
@@ -662,7 +674,6 @@ function loadQuestion(){
     return;
   }
   const q = sessionQuestions[qIndex];
-  answered = false;
   attempts = 0;
 
   document.getElementById('scoreNum').textContent = score;
@@ -720,10 +731,15 @@ function loadQuestion(){
     card.addEventListener('click',()=>handleTap(card,argIdx));
     row.appendChild(card);
   });
+  MaffsLock.fresh(row);   // a new case: a double-click on Start or Next Case cannot pick an argument
 }
 
+// One mark per attempt (canon 7.6.0). A card already tapped was 'disabled' by a CSS class only, so a click that
+// reached it (a script, assistive tech) marked it again: it is ignored here.
 function handleTap(card, argIdx){
-  if(answered) return;
+  if(card.classList.contains('disabled')) return;
+  const row = document.getElementById('argumentsRow');
+  if(!MaffsLock.lock(row)) return;
   const q = sessionQuestions[qIndex];
   const arg = q.arguments[argIdx];
 
@@ -731,12 +747,11 @@ function handleTap(card, argIdx){
   const gavel = document.getElementById('gavelIcon');
   if(!reducedMotion){
     gavel.classList.add('strike');
-    setTimeout(()=>gavel.classList.remove('strike'),300);
+    MaffsLock.timer(()=>gavel.classList.remove('strike'),300);
   }
 
   if(arg.correct){
     // Correct
-    answered = true;
     attempts++;
     if(attempts === 1) score++;
 
@@ -759,7 +774,7 @@ function handleTap(card, argIdx){
 
     // Show judge's summary
     document.getElementById('judgesText').textContent = q.judgesSummary;
-    setTimeout(()=>{
+    MaffsLock.timer(()=>{
       document.getElementById('judgesSummary').classList.add('show');
       const nb = document.getElementById('nextBtn');
       nb.classList.add('visible');
@@ -783,9 +798,10 @@ function handleTap(card, argIdx){
     // Analytics
     mfg('question_answered',{game_slug:'maths-court',level:currentLevel,question_index:qIndex+1,correct:false,attempts:attempts});
 
-    if(attempts >= 2){
+    if(attempts < 2){
+      MaffsLock.fresh(row);   // the second attempt: a double-click on the wrong card cannot spend it
+    } else {
       // No more retries
-      answered = true;
       // Reveal correct card(s)
       document.querySelectorAll('.argument-card').forEach(c=>{
         const idx = parseInt(c.dataset.idx);
@@ -798,7 +814,7 @@ function handleTap(card, argIdx){
 
       document.getElementById('judgesText').textContent = q.judgesSummary;
       document.getElementById('scoreTotal').textContent = qIndex + 1;
-      setTimeout(()=>{
+      MaffsLock.timer(()=>{
         document.getElementById('judgesSummary').classList.add('show');
         const nb = document.getElementById('nextBtn');
         nb.classList.add('visible');
@@ -808,7 +824,10 @@ function handleTap(card, argIdx){
   }
 }
 
+// The game's own Next Case acts only on a finished case, so a double-click's second click does nothing.
 function nextQuestion(){
+  if(!MaffsLock.isLocked(document.getElementById('argumentsRow'))) return;
+  MaffsLock.clearTimers();
   qIndex++;
   loadQuestion();
 }
@@ -816,7 +835,9 @@ function nextQuestion(){
 // ============================================================
 //  END GAME
 // ============================================================
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame(){ finishGame(); }
+const finishGame = MaffsLock.finishOnce(function(){
   document.getElementById('gameHeader').style.display='none';
   showScreen('resultsScreen');
 
@@ -841,7 +862,7 @@ function endGame(){
 
   mfg('game_completed',{game_slug:'maths-court',level:currentLevel,score:score,questions_answered:sessionLength,questions_correct:score});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('maths-court',currentLevel,score,sessionLength).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('maths-court',currentLevel,score);}}
-}
+});
 
 function resetToStart(){
   document.getElementById('gameHeader').style.display='none';

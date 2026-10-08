@@ -153,6 +153,23 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. The game logs only right answers (a wrong reading gets a hint and another try), so mark_any: every answer is the right one. Phase 1 types the expected value (or picks the expected option); phase 2 sets every dropdown and box to its key and submits. repeat presses Check and the options of the answered question again.
+{
+  "mark_any": true,
+  "start": "selectType(document.querySelector('.sel-btn[data-type=\"boxplot\"]')); selectLevel(document.querySelector('.level-btn[data-level=\"gcse\"]')); beginGame();",
+  "ready": "document.getElementById('gameContainer').style.display !== 'none' && !!document.querySelector('#activeQuestion .q-submit, #activeQuestion .mc-btn') && !MaffsLock.isLocked(document.getElementById('activeQuestion'))",
+  "answer": [
+    "if (currentPhase === 1) { const q = phase1Questions[currentQIndex]; if (!q) return;",
+    " if (q.type === 'mc') { [...document.querySelectorAll('#activeQuestion .mc-btn')].find(b => b.textContent === String(q.expected)).click(); return; }",
+    " document.getElementById('qInput').value = String(q.expected); document.querySelector('#activeQuestion .q-submit').click(); return; }",
+    "phase2Dropdowns.forEach(sel => { sel.value = sel.dataset.correct; });",
+    "document.querySelectorAll('.scaffold-text input').forEach(inp => { inp.value = inp.dataset.expected; });",
+    "document.querySelector('#activeQuestion .q-submit').click();"
+  ],
+  "repeat": "document.querySelectorAll('#activeQuestion .q-submit, #activeQuestion .mc-btn').forEach(b => { b.click(); b.click(); });"
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -408,6 +425,7 @@ function pickScenario(){
 }
 
 function beginGame(){
+  MaffsLock.newSession();
   currentScenario=pickScenario();
   if(!currentScenario){alert('No scenarios available for this combination.');return;}
   currentPhase=1;currentQIndex=0;sessionAnswers={};
@@ -847,6 +865,7 @@ function showCurrentQuestion(){
 
     html+='<div class="q-feedback" id="qFeedback"></div></div>';
     aq.innerHTML=html;
+    MaffsLock.fresh(aq);   // a new question: a double Enter or double-click on the last one cannot answer it
 
     var inp=document.getElementById('qInput');
     if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitPhase1();});}
@@ -860,20 +879,26 @@ function submitPhase1(){
   var fb=document.getElementById('qFeedback');
 
   if(isNaN(val)){fb.textContent='Please enter a number.';fb.className='q-feedback wrong';return;}
+  // One mark per question (canon 7.6.0): a second Enter inside the 600 ms advance marked a right answer twice.
+  var aq=document.getElementById('activeQuestion');
+  if(!MaffsLock.lock(aq))return;
 
   if(Math.abs(val-q.expected)<=q.tolerance){
     sessionAnswers[q.key]=q.expected;window._ciQAnswered=(window._ciQAnswered||0)+1;
     mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:true,question_index:currentQIndex+1});
     fb.textContent='Correct \u2014 '+(q.shown!==undefined?q.shown:q.expected)+(q.suffix||'');fb.className='q-feedback correct';
-    setTimeout(function(){currentQIndex++;showCurrentQuestion();},600);
+    MaffsLock.timer(function(){currentQIndex++;showCurrentQuestion();},600);
   }else{
     var hint=q.hint||'Check your reading of the diagram.';
     fb.textContent=hint;fb.className='q-feedback wrong';
+    MaffsLock.fresh(aq);   // another try (a wrong reading is not marked)
     inp.value='';inp.focus();
   }
 }
 
 function submitMC(btn,answer){
+  var aq=document.getElementById('activeQuestion');
+  if(!MaffsLock.lock(aq))return;   // one mark per question (canon 7.6.0)
   var q=phase1Questions[currentQIndex];
   var fb=document.getElementById('qFeedback');
   if(answer===q.expected){
@@ -881,9 +906,10 @@ function submitMC(btn,answer){
     mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:true,question_index:currentQIndex+1});
     btn.style.borderColor='var(--green)';btn.style.background='var(--green-dim)';btn.style.color='var(--green)';
     fb.textContent='Correct!';fb.className='q-feedback correct';
-    setTimeout(function(){currentQIndex++;showCurrentQuestion();},600);
+    MaffsLock.timer(function(){currentQIndex++;showCurrentQuestion();},600);
   }else{
     btn.style.borderColor='var(--red)';btn.style.background='var(--red-dim)';btn.style.color='var(--red)';
+    MaffsLock.fresh(aq);   // another try; the option just ruled out stays disabled
     btn.disabled=true;
     fb.textContent='Not quite \u2014 remember, frequency = density \u00d7 width.';fb.className='q-feedback wrong';
   }
@@ -910,6 +936,7 @@ function showPhase2(){
   html+='</div><div class="scaffold-submit"><button class="q-submit" onclick="submitPhase2()">Submit Comparison</button></div>';
   html+='<div class="q-feedback" id="p2Feedback"></div></div>';
   aq.innerHTML=html;
+  MaffsLock.fresh(aq);
 
   phase2Dropdowns=document.querySelectorAll('.scaffold-text select');
 }
@@ -1073,6 +1100,8 @@ function buildHistScaffold(s){
 }
 
 function submitPhase2(){
+  var aq=document.getElementById('activeQuestion');
+  if(!MaffsLock.lock(aq))return;   // one submission at a time: a double-click on a right comparison finished the game twice
   var fb=document.getElementById('p2Feedback');
   var allCorrect=true;
   var inputs=document.querySelectorAll('.scaffold-text input');
@@ -1109,6 +1138,7 @@ function submitPhase2(){
     fb.textContent=near?'Right answer, wrong reason. '+near.dataset.why
       :'Some answers are incorrect \u2014 check the highlighted '+(inputs.length?'answers':'dropdowns')+'.';
     fb.className='q-feedback wrong';
+    MaffsLock.fresh(aq);   // another try
   }
 }
 
@@ -1136,7 +1166,9 @@ function showModelAnswer(){
   document.getElementById('activeQuestion').appendChild(div);
 }
 
-function showScore(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function showScore(){ finishScore(); }
+var finishScore=MaffsLock.finishOnce(function(){
   var BASE=100;
   var TK=0.015;
   // multiplier removed — time no longer affects score
@@ -1154,13 +1186,14 @@ var multiplier = 1;
 
   var bar=document.createElement('div');
   bar.className='score-bar';
+  bar.setAttribute('data-maffs-lock-skip','');   // its Next and Menu sit inside the locked question area
   bar.innerHTML='<div><div class="score-val">'+score+'</div><div class="score-label">Score</div></div>'+
     '<div><div class="pb-val">PB: '+pb+'</div></div>'+
     '<div style="display:flex;gap:8px;"><button class="next-btn" onclick="nextScenario()">Next</button>'+
     '<button class="menu-btn" onclick="backToMenu()">Menu</button></div>';
   document.getElementById('activeQuestion').appendChild(bar);
   if(window.MaffsInvite)MaffsInvite.place(document.getElementById('activeQuestion'));
-}
+});
 
 function nextScenario(){
   beginGame();

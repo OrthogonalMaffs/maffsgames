@@ -175,6 +175,16 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first conclusion; i >= 1 picks the first conclusion that is not correct.
+{
+  "answer": [
+    "const cs = [...document.querySelectorAll('#conclusionsGrid .conclusion-card')];",
+    "if (i === 0) { cs[0].click(); return; }",
+    "(cs.find(c => c.dataset.correct !== 'true') || cs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -1123,7 +1133,6 @@ let sessionLength = 10;
 let currentQuestions = [];
 let qIndex = 0;
 let score = 0;
-let answered = false;
 
 // ============================================================
 //  INIT
@@ -1192,7 +1201,7 @@ function startGame() {
   currentQuestions = shuffle(pool).slice(0, Math.min(sessionLength, pool.length));
   qIndex = 0;
   score = 0;
-  answered = false;
+  MaffsLock.newSession();
 
   showScreen('gameScreen');
   document.getElementById('gameHeader').style.display = 'flex';
@@ -1209,7 +1218,6 @@ function startGame() {
 // ============================================================
 function renderQuestion() {
   const q = currentQuestions[qIndex];
-  answered = false;
 
   // Scenario
   document.getElementById('scenarioText').textContent = q.scenario;
@@ -1240,6 +1248,7 @@ function renderQuestion() {
 
   // Progress
   updateProgress();
+  MaffsLock.fresh(grid);   // a new question: a double-click on Start or Next cannot pick a conclusion
 }
 
 function buildOptionCard(opt, cls) {
@@ -1253,8 +1262,7 @@ function buildOptionCard(opt, cls) {
 //  PICK CONCLUSION
 // ============================================================
 function pickConclusion(el) {
-  if (answered) return;
-  answered = true;
+  if (!MaffsLock.lock(document.getElementById('conclusionsGrid'))) return;   // one answer per question (canon 7.6.0)
 
   const isCorrect = el.dataset.correct === 'true';
   const q = currentQuestions[qIndex];
@@ -1296,14 +1304,14 @@ function pickConclusion(el) {
 
   // canon §7.6: a right answer moves on briskly; a wrong one shows the working and waits.
   if (isCorrect) {
-    setTimeout(nextQuestion, 1200);
+    MaffsLock.timer(nextQuestion, 1200);
     return;
   }
   document.getElementById('gameScreen').classList.add('show-working');
   window.scrollTo(0, 0);
   const panel = document.getElementById('explanationPanel');
   document.getElementById('explanationText').textContent = q.explanation;
-  setTimeout(() => panel.classList.add('show'), 100);
+  MaffsLock.timer(() => panel.classList.add('show'), 100);
   MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextQuestion });
 }
 
@@ -1322,7 +1330,9 @@ function nextQuestion() {
 // ============================================================
 //  END GAME
 // ============================================================
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame() { finishGame(); }
+const finishGame = MaffsLock.finishOnce(function () {
   const total = currentQuestions.length;
   const pct = Math.round((score / total) * 100);
 
@@ -1360,7 +1370,7 @@ function endGame() {
   showScreen('resultsScreen');
   document.getElementById('gameHeader').style.display = 'none';
   document.getElementById('progressWrap').style.display = 'none';
-}
+});
 
 // ============================================================
 //  UI HELPERS
@@ -1388,7 +1398,7 @@ function resetToStart() {
 
 
 (function renderMethodRef(){
-  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}   // lock-ok: a page-load wait for KaTeX, not a question's timer
   var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
   var k=function(t){return katex.renderToString(t,{throwOnError:false});};
 
