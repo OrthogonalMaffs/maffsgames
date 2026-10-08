@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 34 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 37 open (1 CRITICAL, 36 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 36 open (1 CRITICAL, 35 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 3 in the roster's Unlisted section |
@@ -22,16 +22,16 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 25 | 0 | 26 |
-| HIGH | 36 | 172 | 0 | 208 |
+| HIGH | 35 | 173 | 0 | 208 |
 | MEDIUM | 139 | 133 | 1 | 273 |
 | LOW | 36 | 27 | 0 | 63 |
-| **All** | 212 | 357 | 1 | 570 |
+| **All** | 211 | 358 | 1 | 570 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| 2 | 24 | 106 |
+| 2 | 23 | 106 |
 | 3 | 7 | 85 |
 | 6 | 26 | 56 |
 | 1 | 13 | 37 |
@@ -176,7 +176,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `prime-factorisation` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `prime-or-composite` | yes | none | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `prisoners-dilemma` | yes | none | 0 | 2 | 4 | 1 | 7 | 0 | 0 |
-| `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 5 | 1 | 1 | 10 | 0 |
+| `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 5 | 1 | 0 | 11 | 0 |
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
 | `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 0 | 0 | 0 | 1 | 0 |
@@ -234,10 +234,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `formula-forge` (GCSE, A-Level, L4)
 
 - **HIGH** formula-forge-t4-001, `games/formula-forge/index.html:78,440,454,484`: No answered guard: Enter re-marks, scores again, skips questions and submits more than once
-
-### `probability-paradox` (GCSE, Core)
-
-- **HIGH** probability-paradox-t1-004 (JC), `games/probability-paradox/index.html:354 (fallacy, 95% after 60%)`: 'The test was easier' is also an alternative explanation that should be considered
 
 ### `scale-factor-scaling` (GCSE, A-Level, L4)
 
