@@ -28,7 +28,11 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
    just-pythag-it-bruv's row "20 per session, generated (round 1 from 15 triples and their sizes; rounds 2 and 3
    generated)"; list other generator rows noticed. (b) /updates/ 8 Oct, Updated badge: "Correlation or Coincidence:
    now 84 questions, twice as many as before." STOP IF its bank on main is not 84, or the roster parser reads the count.
-- **F1 batch 7: in progress, draft #182, branch `claude/f1-batch7`, worktree E:/jon/mg-b7.**
+- **F1 batch 7: in progress, draft #182, branch `claude/f1-batch7`, worktree E:/jon/mg-b7.** All 8 games migrated and pass check-answer-lock seeds
+  1-3; **still to do before the PR leaves draft:** verify-estimation-engine, verify-correlation-or-coincidence and
+  verify-core-maths-paper1 FAIL in check-changed (likely the fresh window: add `bc.NO_LOCK_FRESH_INIT`, as given-that).
+- **MAIN-RED (Jon, 8 Oct, now, before batch 7 continues):** main red after #180 (47ee9b9): verify-like-terms-collector.
+  Contract text in Jon's message; steps: read the log, re-run once, reproduce with a forced 200 ms gap, fix the reads.
 - **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
 - **Standing F1 item:** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty
   (NOT_YET: 40). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
@@ -74,6 +78,25 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-08 (home): F1 batch 7 (#182, branch `claude/f1-batch7`, worktree E:/jon/mg-b7)
+
+- **On MaffsLock, each with its declaration, seeds 1-3 passing:** circle-theorem-spotter, index-laws, modular-battle,
+  correlation-or-coincidence, estimation-engine, given-that, core-maths-paper1, core-maths-paper2a. probability-paradox
+  (the cloud lane's #177) also to MIGRATED. **NOT_YET: 31.** Chosen from Year 6/KS3/GCSE/Core games NOT next in the cloud
+  lane's listed-games order (core-maths-paper2b/2c, wrong-on-the-internet, higher-power, ... left to it).
+- **Faults fixed beyond the swap:** circle-theorem-spotter moved on 1 s after a wrong answer with nothing to read: it now
+  names the theorem and waits on Next; Play Again's double-click pressed Start. given-that: phase 1 wrong moved on by
+  itself (now waits on Next); its own Next fired twice on two quick Enters (the hidden button keeps focus) and skipped a
+  question; phase 2's two tries survive a double-click. The Core Maths papers' own Next could be pressed twice (a second
+  press during the section banner skipped a question): it now acts once, only on an answered question. modular-battle:
+  the 90 s clock running out during a question's timer or Next now stops both.
+- **Shared fixes (home lane):** `check-answer-lock.py` reads no clock as a score (modular-battle's #timer is a .score-val,
+  so the countdown looked like a re-mark); `check-site.py`'s start finder never follows a link to another page (the Core
+  Maths papers' "Play Fermi Lab" signpost took the driver away).
+- **Declarations:** estimation-engine declares `ready` from its own state (on a phone the keypad makes its boxes
+  read-only, so nothing looked typeable); the Core Maths papers declare `start_sel` (".start-btn"). given-that gains a
+  read-only `window.GT.ui` (its game is an IIFE), as EE.ui and COC.ui. verify-given-that adds `bc.NO_LOCK_FRESH_INIT`.
+
 ## 2026-10-08 (home): VOCAB-SHOWTHAT (#180, branch `claude/vocab-showthat`)
 
 - `schools/assets/exam-vocab.js`: two strings only, "show that" (Jon's exact text) and "hence show" ("prove" -> "reach").
@@ -90,15 +113,4 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   does not exist in canon; #153's own reading bullet says it, so that bullet now opens "'users' are not people here".
 - STOP IF checked: #153's description and `docs/ga4-country-setup.md` agree on what is collected (aggregates GA4
   already holds; nothing new; site, analytics.js, endpoint and privacy page unchanged).
-
-## 2026-10-08 (home): CHANGED-UTF8 (#178, merged d73d3b6)
-
-- `check-changed.py` reconfigures its own stdout and stderr to UTF-8 (errors="replace") at the top of `main()`. Python
-  here 3.14.6, CI 3.12: `reconfigure` exists on both. **Proof:** with a planted failing check printing "£5 → ✓",
-  `python scripts/check-changed.py > out.txt` on main crashes (`UnicodeEncodeError` on "→"); this version completes,
-  writes the failing check's tail and the summary. The `PYTHONIOENCODING` follow-up note is removed. **Still true for
-  the verifiers themselves:** a verifier run on its own with output redirected can crash the same way (seen on
-  verify-truth-buster and verify-just-pythag-it-bruv, 8 Oct); run those with `PYTHONIOENCODING=utf-8`.
-- **Windows-only false failure seen:** verify-negative-number-line fails locally on main too (320x568: Confirm 536, fold
-  528) while CI is green. Not a regression; ignore it in local check-changed runs.
 
