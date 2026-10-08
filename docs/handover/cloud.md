@@ -50,8 +50,9 @@ main's last full run is red; watch main's run after merging.
   0.35 -> 0.40, 0.3 -> 0.4, 0.30 -> 0.35, 0.25 -> 0.30). No new wording.
 - **Added here, not in the bundle:** ten definition-only FIGURES entries ("Let P(X = a) = p and P(X = b) = q",
   es_alevel_021-030), like the existing "k + 2k + ... = 1" entries.
-- **For Project Claude:** es_alevel_006's context says only "a batch of 4"; its CLUES Bin(4, 0.1) (the contract's)
-  rests on the student reading p = 0.1 from P(X = 0) = 0.6561. Without it the two missing tiles swap.
+- **es_alevel_006** (approved by Project Claude, 8 Oct): its context said only "a batch of 4", so x = 1 and x = 4
+  could swap (0.2916 and 0.0001 both fit the sum). It now ends "Each item is defective independently with probability
+  0.1."; CONTEXT requires those words and the table to be exactly B(4, 0.1). Cards and explanation unchanged.
 - **Phone:** the context is `.context-text` (textContent, no clamp); every one of the 120 measured unclipped at 390x844.
 - **Register:** pc-001 fixed; no other entry open. **Ready to relist (SR-21, home lane): no CRITICAL or HIGH open.**
 - **Ledger:** 40/40/40 made the three B4 (bank size) entries stale, which failed Tier 4 on the first CI run.

@@ -1871,7 +1871,8 @@ CONTEXT = {
     'es_gcse_003': ('standard die', lambda s: all(p == F(1, 3) for _, p in s.d)),
     'es_alevel_005': ('Let X be your winnings in pounds', lambda s: [x for x, _ in s.d] == list(range(6))
                       and all(p == F(1, 6) for _, p in s.d)),
-    'es_alevel_006': ('defective items in a batch of 4', lambda s: True),
+    'es_alevel_006': ('Each item is defective independently with probability 0.1',   # approved by Project Claude, 8 Oct
+                      lambda s: all(p == math.comb(4, int(x)) * F(1, 10) ** int(x) * F(9, 10) ** (4 - int(x)) for x, p in s.d)),
     'es_alevel_009': ('P(X = x) = x/10 for x = 1, 2, 3, 4', lambda s: all(p == x / 10 for x, p in s.d)),
 }
 
