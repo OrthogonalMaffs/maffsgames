@@ -12,8 +12,8 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 **QUEUE (home lane), Jon, 8 Oct 2026 (night)**, replacing the checkpoint's "ask Jon for that queue" note. Run in
 order; the standing rule applies (start the next item when one finishes; stop only for a STOP IF, an unruled
 decision, or a checkpoint). Each contract's verbatim text is below the list; move it to the archive when it merges.
-1. **ESSENTIALS-WORDING.** In progress: branch `claude/essentials-wording`, worktree E:/jon/mg-ew.
-2. **RELIST-3** (Jon, 8 Oct, sent after the queue; run after ESSENTIALS-WORDING, before CHANGED-UTF8). It
+1. **ESSENTIALS-WORDING: DONE, #172 merged 8 Oct (c1fc37a).** Its verbatim text was in Jon's queue message only.
+2. **RELIST-3: in progress, branch `claude/relist-3`, worktree E:/jon/mg-r3** (Jon, 8 Oct, sent after the queue). It
    supersedes RELIST-ES-TB, sent minutes earlier: same relists, plus listing Just Pythag It, Bruv (Jon approved it).
 3. **CHANGED-UTF8.**
 4. **GA4-COUNTRY-CANON.**
@@ -120,7 +120,24 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-08 (home): ESSENTIALS-WORDING, "resit" off every public page (branch `claude/essentials-wording`)
+## 2026-10-08 (home): RELIST-3 (branch `claude/relist-3`, worktree E:/jon/mg-r3)
+
+- **Start state, main c8e1b91 (neither game nor its findings file changed by c1fc37a):** verify-expectation-station and verify-truth-buster pass; findings:
+  expectation-station none open, truth-buster t3-014 MEDIUM, t3-015 LOW, t3-016 MEDIUM (stay open, SR-21).
+  Neither is on `cloud-remaining:` (terrible-advice only). On Windows a verifier run redirected to a file crashes on
+  cp1252 (same as CHANGED-UTF8): run with `PYTHONIOENCODING=utf-8`.
+- **Done:** Pythag listed (noindex off, head comment, portal KS3 card with New badge, /essentials/ Geometry, spec map
+  G20 as its own row, sitemap, hub row, NOT_ON_HUB dropped, SUITE, roster KS3 #98, canon §1 and §4.2); ES and TB
+  relisted from their unlisting commits (059b2ec, e419439): portal cards (ES Updated badge, both its cards), sitemap,
+  spec map (ES §3.9 rows), hub rows, NOT_ON_HUB, TB's spec-mapping EXCEPTIONS entry back; roster #59 (GCSE), #17 (KS3).
+  /updates/: Jon's Pythag line under October New; his suggested ES line under October Improved. TB: no badge, no line
+  (its changes since unlisting are SR-18 rewording, corrected figures, the lock, phone fit and a test-only lock-hint
+  declaration: none meets §3.4). todo: listing item closed with Jon's approval recorded; iPhone check a separate
+  open follow-up; §1.55 and §1.75 closed.
+- **Deviation, for Jon:** the /essentials/ card says "One level", not "Choose: Foundation": the game has one level and no
+  picker and reads no `?level=`, so a Choose card fails check-resit-page.py (and would promise a choice that isn't there).
+
+## 2026-10-08 (home): ESSENTIALS-WORDING, "resit" off every public page (#172, merged c1fc37a)
 
 - /updates/ (four lines) and /essentials/ (description, og:description, teacher line, intro) no longer say resit or
   post-16; games.json's /essentials/ description matches. The /updates/ link now goes to /essentials/.
@@ -130,19 +147,6 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
 - Remaining site-wide hits (all exempt): the two rooms' teacher.html notes (teacher surface); given-that (KNOWN); code
   and HTML comments in room.js, schools/assets, games and the /essentials/ head comment (history of /resit/ and the
   script name check-resit-page.py).
-
-## 2026-10-08 (home): LTC flake, like-terms-collector's late-mark self-test (#167, merged)
-
-- **Cause:** the self-test serves a copy whose showFeedback() marks DEFER (300) ms late, then reads the mark "straight off
-  the click" to prove the plant bites, expecting none. That read was a second Playwright call after `page.click`; on a
-  slow runner more than 300 ms passed between the two and the mark had landed, so the self-test failed. (DEFER only
-  equals MaffsLock's 300 ms window by coincidence: the race is the gap between two Playwright calls.)
-- **Fix:** in the deferred plant only, the click and the early read are one page task
-  (`checkBtn.click(); return MARK();`). A timer cannot fire inside one synchronous task, so the early read sees no mark
-  on any runner; the waiting read (`read_mark`) must still see every mark land. Real typing and clicking elsewhere are
-  unchanged.
-- **Proof:** with a 200 ms gap forced after each click (a slow runner, DEFER 50), main's version reads `[False, True]`
-  early and fails; this one reads `[None, None]` and holds. Plain runs: 3/3 pass.
 
 ## 2026-10-08 (home): F1 batch 6 (#165, branch `claude/f1-batch6`, worktree E:/jon/mg-b6)
 
