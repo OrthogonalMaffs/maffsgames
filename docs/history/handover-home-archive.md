@@ -3,6 +3,33 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## QUEUE item GA4-COUNTRY-CANON, verbatim (Jon, 8 Oct; moved when done)
+
+> TASK (GA4-COUNTRY-CANON): Record the GA4 country figures in canon.
+> ROOT CAUSE: #153 merged the Apps Script and setup steps (docs/ga4-country-setup.md), but canon's analytics
+> section does not say the events Sheet now gains country tabs from GA4's Data API, so the next reader of canon
+> cannot tell where those figures come from.
+> CLASS CHECK: Local: one missing canon line for one merged feature.
+> EXACT CHANGE: docs/canon.md, the analytics section beside the "'Users' are not people here" note: add the line
+> proposed in #153's PR description (read it with gh); if it proposed none, write: "Country figures (Jon, 8 Oct
+> 2026): two tabs in the events Sheet, copied daily from GA4's Data API by docs/apps-script-ga4-country.js (setup:
+> docs/ga4-country-setup.md). Aggregates only: nothing new is collected, and the site, analytics.js, the events
+> endpoint and the privacy page are unchanged. Live only once Jon has installed it." Handover updated.
+> DO NOT TOUCH: the script, its test, the setup doc, the privacy page.
+> SUCCESS CONDITION: canon carries the line; merged on a green Gate.
+> STOP IF: #153's description says anything that contradicts the setup doc on what is collected (quote both).
+
+## 2026-10-08 (home): ESSENTIALS-WORDING, "resit" off every public page (#172, merged c1fc37a)
+
+- /updates/ (four lines) and /essentials/ (description, og:description, teacher line, intro) no longer say resit or
+  post-16; games.json's /essentials/ description matches. The /updates/ link now goes to /essentials/.
+- `check-student-labels.py` now scans essentials/index.html and updates/index.html (PORTALS); /essentials/ is no
+  longer exempt; the self-test plants a label on each and requires it caught. Against main's copies the widened check
+  finds 10 labels (5 per page). Canon §7.5.3 records Jon's rule.
+- Remaining site-wide hits (all exempt): the two rooms' teacher.html notes (teacher surface); given-that (KNOWN); code
+  and HTML comments in room.js, schools/assets, games and the /essentials/ head comment (history of /resit/ and the
+  script name check-resit-page.py).
+
 ## QUEUE items RELIST-3 and CHANGED-UTF8, verbatim (Jon, 8 Oct; moved when done)
 
 > TASK (home lane, RELIST-3; run after ESSENTIALS-WORDING, before CHANGED-UTF8): List Just Pythag It, Bruv (Jon's
