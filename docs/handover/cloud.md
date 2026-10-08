@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: gradient-hunter`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -30,6 +30,55 @@ A two-option game declares an `answer` that picks the option differing from its 
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-08 (cloud): CHECKPOINT STOP (Jon): listed-games contract at 2 of 23; nothing claimed
+
+- **Where the contract stands (Jon's listed-games contract, 8 Oct):** both listed CRITICALs are closed.
+  trig-wars (#148, merged, main green) and gradient-hunter (#152; its entry below). The remaining list above is
+  empty: **no game is claimed.** The session stopped at Jon's checkpoint without claiming the next game.
+- **Next game: spot-the-muppet.** Start with a claim PR on main (canon 7.8.2, #145): check the open PRs and the home
+  handover first, claim one game at a time, the fix PR takes it off the line.
+- **The rest of the order, after spot-the-muppet:** word-problem-decoder, terrible-advice, probability-paradox,
+  core-maths-paper2c, core-maths-paper2b, wrong-on-the-internet, 52dle, higher-power, prisoners-dilemma,
+  seven-bridges, coordinate-geometry-dash, surd-simplifier, scale-factor-scaling, unit-converter, formula-forge;
+  then boolean-blitz, matrix-crunch, complex-converter, eigenvalue-extractor, characteristic-quest.
+- **Per game, as done for the first two:** claim PR; read its open register entries and the game; a verifier
+  that fails on main naming the entries (group E has room: trig-wars ~45 s, gradient-hunter ~15 s); MaffsLock with
+  its lock hint; a scoring change beyond the named fault, or new data, goes to Jon (gradient-hunter t2-003 did);
+  `check-changed.py`; PR; fill the register's PR number; merge on green, 10 min clear of a home merge; watch main.
+- **Earlier today (all merged, main green):** truth-buster #143; expectation-station #146 (Stage 1 one completion,
+  40/40/40; ready to relist under SR-21).
+
+## 2026-10-08 (cloud): gradient-hunter (listed-games contract, 2 of 23; the second CRITICAL); #148 merged
+
+- **#148 (trig-wars) merged** 09:50 UTC; main's full run on b8691f8 green. Claim through main: #149 (merged 09:58).
+- **t2-001 (CRITICAL):** MaffsLock locks the options at the first pick (the revealed correct option re-scored without
+  limit). A wrong answer now waits for MaffsNext (canon 7.6; it moved on at once before); a right answer keeps its
+  own Next, locked at the press; every question opens a fresh window on the game screen (the canvas included);
+  `finishOnce`; Play Again opens the menu with `MaffsLock.screen` (the menu has the leaderboard link, as
+  partial-fractions-duel's did). The KaTeX wait for the method reference is `// lock-ok:`.
+- **t2-002:** the three stated tangents are the DRAWN curve's: a cardinal spline's slope at a plotted point is its
+  neighbours' gradient, whatever the tension: 4.5 (was 5), 110 (was "a steeper gradient of 150"; the audit's 98.0 is
+  the ideal exponential, not what is drawn, and 110 is LESS steep than the 116.7 chord) and 3.25 (was 4).
+- **t2-003, filed and fixed (Jon's ruling, 8 Oct, option A):** a Calculate item scored a point for the gradient
+  whatever the student did (the game showed it once the two points were clicked). Now the student types it after
+  the two points: `MaffsAnswer.fractionOrDecimal` against the chord through the points clicked (`chordGradient`:
+  exact rise/run; "to 2 decimal places" only when it recurs, so -9/80 is asked as -0.1125); that earns the point,
+  clicking scores nothing, the working (rise / run) follows, the interpretation is unchanged. One question_answered
+  per item, as before (the interpretation's). A text keyboard on phones (`inputmode="text"`: iOS's decimal pad has
+  no minus): the shared MaffsKeypad is styled by theme.css, which this game has not migrated to, so it joins the
+  todo 3.21 list (home lane: the keypad comes with its theme migration).
+- **Verifier** `scripts/verify-gradient-hunter.py` (group E, ~9 s): chords from their points, stated tangents from the
+  spline, one true interpretation (an "instantaneous/marginal ... is V" option is keyed right exactly when V is the
+  tangent; a plain "is V" claims V to the hundredth, "about V" at V's places), every item played, the typed gradient
+  on all 27 Calculate items, answer once and Next once (~15 s). Main's page fails t2-001 on six items, t2-002 on four
+  claims and t2-003 on all 27; three plants caught.
+  **Gotchas:** read numbers with thousands separators; a fall's interpretation gives its size; MaffsNext takes focus,
+  so an Enter after a wrong pick advances (test the option with clicks, not the keyboard). **Never write a shared
+  asset's file name (theme.css, keypad.js ...) in a game page, even in a comment:** `ci-deps.py --selftest` (b) reads
+  a page that mentions it as one that loads it, and the PR's Plan job fails (#152's first run).
+- **For the home lane:** gradient-hunter passes the lock check: add it to MIGRATED.
+- **Next:** spot-the-muppet (the first of the audience order): claim PR first (not claimed: checkpoint stop).
 
 ## 2026-10-08 (cloud): trig-wars (listed-games contract, 1 of 23; first CRITICAL); #146 merged
 

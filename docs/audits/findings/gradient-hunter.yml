@@ -19,8 +19,11 @@ findings:
   summary: 'Buttons get only a ''locked'' class and onclick stays live: clicking the revealed correct option after
     a wrong pick re-scores it, unlimited, onto the leaderboard'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. Reproduced: 38/16 over 10 questions, 30 question_answered
-    events'
-  status: open
+    events. Fixed: MaffsLock locks the options at the first pick; a wrong answer waits for MaffsNext (canon 7.6), a
+    right one keeps its Next, locked at the press; Play Again opens the menu fresh. scripts/verify-gradient-hunter.py
+    picks wrong, then clicks the revealed option twice (main: 0/2 -> 2/2, three question_answered).'
+  status: fixed
+  pr: 152
 - id: gradient-hunter-t2-002
   severity: MEDIUM
   jc: false
@@ -29,5 +32,25 @@ findings:
   where: games/gradient-hunter/index.html (alevel_007, 009, 010)
   summary: State tangent gradients (150, 4, 5) that disagree with the model or the drawn curve (98.0, 3.25, 4.5)
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
-    7 Oct'
-  status: open
+    7 Oct. Fixed: the contexts now state the DRAWN curve''s tangent (a cardinal spline''s slope at a plotted point is
+    its neighbours'' gradient): 4.5, 110 (less steep than the 116.7 chord, not steeper) and 3.25. The verifier
+    recomputes every stated tangent and chord from the points.'
+  status: fixed
+  pr: 152
+- id: gradient-hunter-t2-003
+  severity: MEDIUM
+  jc: true
+  class: 8
+  level: all
+  where: games/gradient-hunter/index.html (onBothPointsClicked)
+  summary: A Calculate item scores 1 point for the gradient whatever the student does; the game computes and shows it
+    once the two points are clicked, and the student never calculates it
+  evidence: 'Found by the cloud lane while fixing t2-001 (8 Oct 2026): onBothPointsClicked adds G.score += 1 for "gradient
+    was correct (they clicked both points)", and clicking the two marked points is the only input. Jon''s ruling (8
+    Oct 2026, option A), fixed: after the two points the student types the gradient (MaffsAnswer.fractionOrDecimal
+    against the chord through the points clicked; 2 decimal places asked only where it recurs, a terminating one at
+    its own places); that answer earns the point, clicking scores nothing; the working (rise / run) follows. The
+    interpretation step is unchanged. The verifier types right and wrong gradients on all 27 Calculate items and
+    plants the old point-on-click.'
+  status: fixed
+  pr: 152
