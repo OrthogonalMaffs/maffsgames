@@ -98,7 +98,11 @@ findings:
   where: schools/assets/exam-vocab.js:19
   summary: '''Show that'' tooltip says you can''t verify with numbers; this game''s ''show that'' is f(a) = 0'
   evidence: appears on Q3, Q4, T1a, T3b, T7a, T10a
-  status: open
+  status: fixed
+  pr: 180
+  ruling: 'Jon 8 Oct 2026: "show that" means the result is given and the student shows the working that reaches it,
+    often numerically (f(2) = 0); "prove" is the general argument. Fixed once in the shared exam-vocab.js (contract
+    VOCAB-SHOWTHAT); "hence show" now says "reach", not "prove"'
 - id: factor-theorem-t5-010
   severity: MEDIUM
   jc: false
