@@ -671,6 +671,17 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. GCSE: both brackets picked, then Check; i = 0 the key's pair, i >= 1 the second number moved by one (never the key).
+{
+  "ready": "document.getElementById('mainGame').classList.contains('visible') && document.getElementById('gcsePanel').style.display !== 'none' && !document.getElementById('checkBtn').disabled",
+  "answer": [
+    "const p = currentQ.p, q = currentQ.q, w = i === 0 ? q : (q === -1 || q === 12 ? q - 1 : q + 1);",
+    "startEditing(1); selectNum(p); startEditing(2); selectNum(w);",
+    "document.getElementById('checkBtn').click();"
+  ]
+}
+-->
 <script src="../../schools/assets/mathtext.js"></script>
 <script src="../../schools/assets/options.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -1151,7 +1162,8 @@ renderSessionButtons();
    Game state / flow
    ---------------------------------------------------------------------------- */
 let score = 0, correctCount = 0, qIndex = 0, sessionQuestions = [];
-let val1 = null, val2 = null, editingSlot = null, currentQ = null, locked = false;
+let val1 = null, val2 = null, editingSlot = null, currentQ = null;
+function gcsePanel() { return document.getElementById('gcsePanel'); }   // MaffsLock's container (canon 7.6.0)
 
 function buildNumGrid() {
   const grid = document.getElementById('numGrid');
@@ -1173,13 +1185,13 @@ function setGridEnabled(on) {
 }
 
 function startEditing(slot) {
-  if (locked) return;
+  if (MaffsLock.isLocked(gcsePanel())) return;
   editingSlot = slot;
   document.getElementById('pickerEditing').textContent = `Selecting number for bracket ${slot}...`;
 }
 
 function selectNum(n) {
-  if (locked || !editingSlot) return;
+  if (MaffsLock.isLocked(gcsePanel()) || !editingSlot) return;
   if (editingSlot === 1) {
     val1 = n;
     document.getElementById('sign1').textContent = n >= 0 ? '+' : '−';
@@ -1194,6 +1206,7 @@ function selectNum(n) {
 }
 
 function startGame() {
+  MaffsLock.newSession();
   score = 0; correctCount = 0; qIndex = 0;
   const pool = levelPool(currentLevel);
   sessionQuestions = MaffsOptions.shuffle(pool.slice()).slice(0, Math.min(sessionLength, pool.length));
@@ -1233,7 +1246,7 @@ function loadQ() {
   if (qIndex >= sessionQuestions.length) { endGame(); return; }
   currentQ = sessionQuestions[qIndex];
   qIndex++;
-  val1 = null; val2 = null; editingSlot = null; locked = false;
+  val1 = null; val2 = null; editingSlot = null;
   document.getElementById('quadratic').innerHTML = tex(formatQuadratic(currentQ.b, currentQ.c));
   document.getElementById('qcount').textContent = `${qIndex}/${sessionQuestions.length}`;
   document.getElementById('num1').textContent = '?';
@@ -1247,16 +1260,17 @@ function loadQ() {
   const chips = document.getElementById('hintChips');
   chips.innerHTML = `<span class="hint-chip">${tex('p + q = ' + currentQ.b)}</span><span class="hint-chip">${tex('p \\times q = ' + currentQ.c)}</span>`;
   setGridEnabled(true);
+  MaffsLock.fresh(gcsePanel());   // a new question: a double-click on Next cannot pick or check
 }
 
 function checkAnswer() {
-  if (locked) return;
+  if (MaffsLock.isLocked(gcsePanel())) return;
   if (val1 === null || val2 === null) {
     document.getElementById('feedback').textContent = 'Select both numbers first!';
     document.getElementById('feedback').className = 'feedback wrong';
     return;
   }
-  locked = true;
+  if (!MaffsLock.lock(gcsePanel())) return;   // one answer per question
   setGridEnabled(false);
   const correct = (val1 === currentQ.p && val2 === currentQ.q) || (val1 === currentQ.q && val2 === currentQ.p);
   const fb = document.getElementById('feedback');
@@ -1267,7 +1281,7 @@ function checkAnswer() {
     fb.textContent = 'CORRECT! 🎉';
     fb.className = 'feedback correct';
     document.getElementById('hintText').innerHTML = tex(bracketLatex(currentQ.p, currentQ.q));
-    setTimeout(loadQ, 1400); // correct answers advance briskly (canon 7.6)
+    MaffsLock.timer(loadQ, 1400); // correct answers advance briskly (canon 7.6)
   } else {
     fb.textContent = 'WRONG';
     fb.className = 'feedback wrong';
@@ -1340,7 +1354,7 @@ function hfDisableChoices() {
 function hfWrongRetry(msg) {
   const fb = document.getElementById('hfFeedback');
   if (fb) { fb.textContent = msg || 'Not quite — try again.'; fb.className = 'hf-feedback wrong'; }
-  setTimeout(hfRenderStep, 900);
+  MaffsLock.timer(hfRenderStep, 900);
 }
 function hfShowMisconception(name, mixedMsg) {
   const body = document.getElementById('hfStepBody');
@@ -1370,6 +1384,7 @@ function hfRenderStep() {
       <div class="hf-feedback" id="hfFeedback"></div>
       <div class="next-mount" id="hfNextMount"></div>
     </div>`;
+  MaffsLock.fresh(hfPanel());   // a new step: a double-click on the last one cannot pick here
 }
 
 function hfDistinctTriples(correct, candidates, want) {
@@ -1471,20 +1486,23 @@ function hfStepCorrectAdvance(nextStep) {
   const fb = document.getElementById('hfFeedback');
   fb.textContent = 'Correct!'; fb.className = 'hf-feedback correct';
   hfDisableChoices();
-  setTimeout(() => { hfStep = nextStep; hfRenderStep(); }, 700);
+  MaffsLock.timer(() => { hfStep = nextStep; hfRenderStep(); }, 700);
 }
 
 function hfStep1Pick(a, b, c) {
+  if (!MaffsLock.lock(hfPanel())) return;   // one pick per step (canon 7.6.0)
   hfDisableChoices();
   if (a === currentQ.a && b === currentQ.b && c === currentQ.c) hfStepCorrectAdvance(2);
   else hfWrongRetry();
 }
 function hfStep2Pick(v) {
+  if (!MaffsLock.lock(hfPanel())) return;   // one pick per step (canon 7.6.0)
   hfDisableChoices();
   if (v === currentQ.a * currentQ.c) hfStepCorrectAdvance(3);
   else hfWrongRetry();
 }
 function hfStep3Pick(m, n) {
+  if (!MaffsLock.lock(hfPanel())) return;   // one pick per step (canon 7.6.0)
   hfDisableChoices();
   const split = hfCorrectSplit(currentQ);
   if (pairsEqual([m, n], [split.m, split.n])) { hfStepCorrectAdvance(4); return; }
@@ -1498,6 +1516,7 @@ function hfStep3Pick(m, n) {
 }
 function hfStep4Continue() { hfStep = 5; hfRenderStep(); }
 function hfStep5Pick(v) {
+  if (!MaffsLock.lock(hfPanel())) return;   // one pick per step (canon 7.6.0)
   hfDisableChoices();
   const { q, r, s } = currentQ;
   if (v === q) { hfStepCorrectAdvance(6); return; }
@@ -1508,12 +1527,13 @@ function hfStep5Pick(v) {
     `sign of the number you took out.`);
 }
 function hfStep6Pick(chosenLatex) {
+  if (!MaffsLock.lock(hfPanel())) return;   // one pick per step (canon 7.6.0)
   hfDisableChoices();
   const correctLatex = hfBracketLatex(currentQ.p, currentQ.q, currentQ.r, currentQ.s, currentQ.k);
   if (chosenLatex === correctLatex) {
     const fb = document.getElementById('hfFeedback');
     fb.textContent = 'Correct!'; fb.className = 'hf-feedback correct';
-    setTimeout(hfCompleteStepFlow, 700);
+    MaffsLock.timer(hfCompleteStepFlow, 700);
   } else {
     hfWrongRetry();
   }
@@ -1529,14 +1549,14 @@ function hfCompleteStepFlow() {
     hfViaShowMethod = false;
     mfg('question_answered', { game_slug: SLUG, level: 'higher', correct: true, question_index: qIndex });
     score += 15; correctCount++; document.getElementById('score').textContent = score;
-    setTimeout(hfBeginRealQuestion, 1200);
+    MaffsLock.timer(hfBeginRealQuestion, 1200);
     return;
   }
   mfg('question_answered', { game_slug: SLUG, level: 'higher', correct: true, question_index: qIndex });
   score += 15; correctCount++; document.getElementById('score').textContent = score;
   hfConsecCorrect++;
   if (hfConsecCorrect >= 2) { hfMode = 'independent'; hfConsecCorrect = 0; hfConsecWrong = 0; }
-  setTimeout(hfBeginRealQuestion, 1200);
+  MaffsLock.timer(hfBeginRealQuestion, 1200);
 }
 
 function hfRenderIndependent() {
@@ -1562,6 +1582,7 @@ function hfRenderIndependent() {
       <div class="next-mount" id="hfNextMount"></div>
     </div>`;
   hfBuildIndepGrid();
+  MaffsLock.fresh(hfPanel());
 }
 
 function hfBuildIndepGrid() {
@@ -1579,11 +1600,12 @@ function hfBuildIndepGrid() {
   });
 }
 function hfIndepEdit(slot) {
+  if (MaffsLock.isLocked(hfPanel())) return;
   hfEditingSlot = slot;
   document.getElementById('hfIndepEditing').textContent = `Selecting a value for ${slot}...`;
 }
 function hfIndepSelect(n) {
-  if (!hfEditingSlot) return;
+  if (MaffsLock.isLocked(hfPanel()) || !hfEditingSlot) return;
   hfIndependentPicks[hfEditingSlot] = n;
   const el = document.querySelector(`.hf-slot[data-slot="${hfEditingSlot}"]`);
   if (el) el.textContent = (hfEditingSlot === 'p' || hfEditingSlot === 'r' || hfEditingSlot === 'k') ? n : (n >= 0 ? `+${n}` : n);
@@ -1599,6 +1621,7 @@ function hfIndepCheck() {
     fb.textContent = 'Fill in every slot first.'; fb.className = 'hf-feedback wrong';
     return;
   }
+  if (!MaffsLock.lock(hfPanel())) return;   // one answer per question
   const k = isHcf ? picks.k : 1;
   const sa = k * picks.p * picks.r, sb = k * (picks.p * picks.s + picks.q * picks.r), sc = k * picks.q * picks.s;
   const correct = (sa === currentQ.a && sb === currentQ.b && sc === currentQ.c);
@@ -1609,7 +1632,7 @@ function hfIndepCheck() {
     hfConsecWrong = 0;
     score += 15; correctCount++; document.getElementById('score').textContent = score;
     fb.textContent = 'CORRECT! 🎉'; fb.className = 'hf-feedback correct';
-    setTimeout(hfBeginRealQuestion, 1400);
+    MaffsLock.timer(hfBeginRealQuestion, 1400);
   } else {
     hfConsecWrong++;
     fb.textContent = 'WRONG'; fb.className = 'hf-feedback wrong';
@@ -1652,6 +1675,7 @@ function renderFormulaQuestion() {
     </div>
     <button class="check-btn" id="fCheckBtn" onclick="checkFormulaAnswer()">Check Answer</button>
   `;
+  MaffsLock.fresh(formulaPanel());   // a new question: a double-click on Next cannot answer it
 }
 
 function loadFormulaQ() {
@@ -1694,6 +1718,7 @@ function submitNoReal() {
 }
 
 function submitFormulaAnswer(n1, n2, saidNoReal) {
+  if (!MaffsLock.lock(formulaPanel())) return;   // one answer per question (canon 7.6.0)
   const { a, b, c, noReal, root1, root2 } = currentQ;
   let correct;
   if (noReal) correct = saidNoReal === true;
@@ -1709,7 +1734,7 @@ function submitFormulaAnswer(n1, n2, saidNoReal) {
     document.getElementById('score').textContent = score;
     fb.textContent = 'CORRECT! 🎉';
     fb.className = 'feedback correct';
-    setTimeout(loadFormulaQ, 1400); // correct answers advance briskly (canon 7.6)
+    MaffsLock.timer(loadFormulaQ, 1400); // correct answers advance briskly (canon 7.6)
   } else {
     fb.textContent = 'WRONG';
     fb.className = 'feedback wrong';
@@ -1728,7 +1753,9 @@ function submitFormulaAnswer(n1, n2, saidNoReal) {
   }
 }
 
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame() { finishGame(); }
+const finishGame = MaffsLock.finishOnce(function () {
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
   document.getElementById('finalScore').textContent = score;
@@ -1748,7 +1775,7 @@ function endGame() {
   saveBest(currentLevel, score);
   if (score > oldBest) mfg('personal_best_set', { game_slug: SLUG, level: currentLevel, score: score, previous_best: oldBest });
   renderLB();
-}
+});
 
 /* Local best/history is now kept per level (qf_best_<level>) so 'gcse',
    'higher' and 'formula' don't overwrite each other's device-local box. A

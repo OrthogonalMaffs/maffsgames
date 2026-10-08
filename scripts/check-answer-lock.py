@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-# ci-line: L1 | Answer lock in play, part 1 (canon 7.6.0: self-test, static rules; migrated games played in Chromium) | --selftest && --part 1/3
-# ci-line: L2 | Answer lock in play, part 2 (canon 7.6.0: migrated games played in Chromium) | --part 2/3
-# ci-line: L3 | Answer lock in play, part 3 (canon 7.6.0: migrated games played in Chromium) | --part 3/3
+# ci-line: L1 | Answer lock in play, part 1 (canon 7.6.0: self-test, static rules; migrated games played in Chromium) | --selftest && --part 1/4
+# ci-line: L2 | Answer lock in play, part 2 (canon 7.6.0: migrated games played in Chromium) | --part 2/4
+# ci-line: L3 | Answer lock in play, part 3 (canon 7.6.0: migrated games played in Chromium) | --part 3/4
+# ci-line: L4 | Answer lock in play, part 4 (canon 7.6.0: migrated games played in Chromium) | --part 4/4
 # ci-deps: schools/assets/answer-lock.js schools/assets/next-control.js scripts/check-site.py
 """Does every game mark through MaffsLock (canon §7.6.0), so that no repeat marks twice or finishes twice?
 
@@ -54,7 +55,7 @@ the window closes. A two-option game declares the answer that differs from its k
     python scripts/check-answer-lock.py --not-yet          # play the NOT_YET games too (a report, never fails)
     python scripts/check-answer-lock.py --selftest         # a planted failing game off the cloud list is caught
     python scripts/check-answer-lock.py --seed 7           # another draw (default 1)
-    python scripts/check-answer-lock.py --part 1/3         # CI: every third migrated game (by slug); part 1 also
+    python scripts/check-answer-lock.py --part 1/4         # CI: every fourth migrated game (by slug); part 1 also
                                                            # runs the static rules. Add a part (and a group,
                                                            # L1-L4 in ci-groups.py) when a part passes 3 minutes.
 """
@@ -150,7 +151,7 @@ sequence-solver bearing-blitz expected-damage maths-court equation-builder fermi
 probability-paradox circle-theorem-spotter core-maths-paper1 core-maths-paper2a correlation-or-coincidence
 estimation-engine given-that index-laws modular-battle
 standard-form-blitz proportion-blaster formula-unlocked graph-transformer
-simultaneous-solver tax-theft stat-attack
+simultaneous-solver tax-theft stat-attack quadratic-factoriser screening-room
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
