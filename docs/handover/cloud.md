@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: gradient-hunter`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -30,6 +30,28 @@ A two-option game declares an `answer` that picks the option differing from its 
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-08 (cloud): gradient-hunter (listed-games contract, 2 of 23; the second CRITICAL); #148 merged
+
+- **#148 (trig-wars) merged** 09:50 UTC; main's full run on b8691f8 green. Claim through main: #149 (merged 09:58).
+- **t2-001 (CRITICAL):** MaffsLock locks the options at the first pick (the revealed correct option re-scored without
+  limit). A wrong answer now waits for MaffsNext (canon 7.6; it moved on at once before); a right answer keeps its
+  own Next, locked at the press; every question opens a fresh window on the game screen (the canvas included);
+  `finishOnce`; Play Again opens the menu with `MaffsLock.screen` (the menu has the leaderboard link, as
+  partial-fractions-duel's did). The KaTeX wait for the method reference is `// lock-ok:`.
+- **t2-002:** the three stated tangents are the DRAWN curve's: a cardinal spline's slope at a plotted point is its
+  neighbours' gradient, whatever the tension: 4.5 (was 5), 110 (was "a steeper gradient of 150"; the audit's 98.0 is
+  the ideal exponential, not what is drawn, and 110 is LESS steep than the 116.7 chord) and 3.25 (was 4).
+- **Filed, open: t2-003** (MEDIUM, jc): a Calculate item scores a point for the gradient whatever the student does
+  (the game computes it after the two point clicks). Changing it changes the scoring rules: Jon decides.
+- **Verifier** `scripts/verify-gradient-hunter.py` (group E, ~9 s): chords from their points, stated tangents from the
+  spline, one true interpretation (an "instantaneous/marginal ... is V" option is keyed right exactly when V is the
+  tangent; a plain "is V" claims V to the hundredth, "about V" at V's places), every item played, answer once and
+  Next once. Main's page fails t2-001 on six items and t2-002 on four claims; two plants caught.
+  **Gotchas:** read numbers with thousands separators; a fall's interpretation gives its size; MaffsNext takes focus,
+  so an Enter after a wrong pick advances (test the option with clicks, not the keyboard).
+- **For the home lane:** gradient-hunter passes the lock check: add it to MIGRATED.
+- **Next:** spot-the-muppet (the first of the audience order): claim PR first.
 
 ## 2026-10-08 (cloud): trig-wars (listed-games contract, 1 of 23; first CRITICAL); #146 merged
 

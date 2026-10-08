@@ -123,6 +123,20 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. A Calculate item first takes its two points (as clicking A then B does), then every item picks an interpretation: i = 0 the keyed one, i >= 1 the first one that is not.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && !!document.querySelector('#optionsGrid .opt-btn, #graphCanvas')",
+  "answer": [
+    "const q = G.questions[G.qIdx]; if (!q) return;",
+    "if (q.type === 'calculate' && (G.phase === 'clickA' || G.phase === 'clickB')) { G.phase = 'interpret'; stopPulse(); disableCanvas(); onBothPointsClicked(q); }",
+    "const want = i === 0;",
+    "const b = [...document.querySelectorAll('#optionsGrid .opt-btn')].find(b => q.interpretations.find(o => o.text === b.textContent).correct === want);",
+    "if (b) b.click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -584,7 +598,7 @@ alevel: [
      {text:'The capacitor stores 0.29 joules of energy',correct:false}
    ]},
   // Reading (4)
-  {id:'gh_alevel_007',type:'reading',context:'A displacement-time graph for a particle is shown. A chord is drawn between (1, 3) and (5, 19). The tangent at t=3 has gradient 5. The chord gradient is 4.',
+  {id:'gh_alevel_007',type:'reading',context:'A displacement-time graph for a particle is shown. A chord is drawn between (1, 3) and (5, 19). The tangent at t=3 has gradient 4.5. The chord gradient is 4.',
    xLabel:'Time (s)',yLabel:'Displacement (m)',xMin:0,xMax:6,yMin:0,yMax:25,
    points:[[0,0],[1,3],[2,6],[3,11],[4,15],[5,19],[6,22]],curveType:'smooth',
    chordA:{x:1,y:3,label:'A'},chordB:{x:5,y:19,label:'B'},gradientShown:4,
@@ -604,7 +618,7 @@ alevel: [
      {text:'The particle travels 4 metres',correct:false},
      {text:'Acceleration is constant at 4 m/s squared throughout',correct:false}
    ]},
-  {id:'gh_alevel_009',type:'reading',context:'An exponential growth model shows bacteria count. The chord from (0, 100) to (6, 800) has gradient 116.7. The tangent at t=3 has a steeper gradient of 150.',
+  {id:'gh_alevel_009',type:'reading',context:'An exponential growth model shows bacteria count. The chord from (0, 100) to (6, 800) has gradient 116.7. The tangent at t=3 has a gradient of 110, a little less steep than the chord.',
    xLabel:'Time (hours)',yLabel:'Bacteria count',xMin:0,xMax:8,yMin:0,yMax:1500,
    points:[[0,100],[1,130],[2,180],[3,270],[4,400],[5,580],[6,800],[7,1100],[8,1400]],curveType:'smooth',
    chordA:{x:0,y:100,label:'A'},chordB:{x:6,y:800,label:'B'},gradientShown:116.7,
@@ -614,7 +628,7 @@ alevel: [
      {text:'116.7 bacteria are alive at each hour',correct:false},
      {text:'The population doubles every 116.7 hours',correct:false}
    ]},
-  {id:'gh_alevel_010',type:'reading',context:'A cost function is plotted. The chord from (10, 50) to (50, 170) has gradient 3. The tangent at x=30 has gradient 4, which is the marginal cost.',
+  {id:'gh_alevel_010',type:'reading',context:'A cost function is plotted. The chord from (10, 50) to (50, 170) has gradient 3. The tangent at x=30 has gradient 3.25, which is the marginal cost.',
    xLabel:'Output (units)',yLabel:'Total cost (pounds)',xMin:0,xMax:60,yMin:0,yMax:220,
    points:[[0,20],[10,50],[20,75],[30,105],[40,140],[50,170],[60,210]],curveType:'smooth',
    chordA:{x:10,y:50,label:'A'},chordB:{x:50,y:170,label:'B'},gradientShown:3,
@@ -698,6 +712,7 @@ function startGame() {
       G.questions = G.questions.concat(extra.slice(0, G.sessionLen - G.questions.length));
     }
   }
+  MaffsLock.newSession();
   G.qIdx = 0; G.score = 0; G.maxScore = 0; G.correct = 0; G.total = 0;
   $('menuScreen').classList.remove('active');
   $('gameScreen').classList.add('active');
@@ -926,6 +941,7 @@ function loadQuestion() {
       </div>
       <div id="calcFeedback"></div>`;
     enableCanvasClick(q);
+    MaffsLock.fresh($('gameScreen'));   // a new question: a double click on Next cannot click its first point
   } else {
     // Reading type
     G.phase = 'reading';
@@ -936,6 +952,7 @@ function loadQuestion() {
       <div class="instruction">What does this gradient mean in context?</div>
       <div class="options-grid" id="optionsGrid"></div>
       <div id="readFeedback"></div>`;
+    MaffsLock.fresh($('gameScreen'));   // a new question: a double click on Next cannot answer it (canon 7.6.0)
     renderInterpretations(q, 'readFeedback', function(correct) {
       G.total++;
       if (correct) { G.correct++; G.score++; }
@@ -944,7 +961,7 @@ function loadQuestion() {
         game_slug: 'gradient-hunter', level: G.level,
         question_index: G.qIdx + 1, correct: correct, mode: 'reading'
       });
-      showNextBtn();
+      showNextBtn(correct);
     });
   }
 }
@@ -1022,7 +1039,7 @@ function onBothPointsClicked(q) {
       game_slug: 'gradient-hunter', level: G.level,
       question_index: G.qIdx + 1, correct: correct, mode: 'calculate'
     });
-    showNextBtn();
+    showNextBtn(correct);
   });
 }
 
@@ -1044,7 +1061,9 @@ function renderInterpretations(q, feedbackId, callback) {
     btn.className = 'opt-btn';
     btn.textContent = opt.text;
     btn.onclick = function() {
-      // Lock all buttons
+      // Answer once (canon 7.6.0, gradient-hunter-t2-001): MaffsLock disables every option at the first pick, so the
+      // revealed correct option cannot be clicked (or pressed with Enter) to score again.
+      if (!MaffsLock.lock(grid)) return;
       grid.querySelectorAll('.opt-btn').forEach(b => {
         b.classList.add('locked');
         const isCorrect = interps[Array.from(grid.children).indexOf(b)].correct;
@@ -1065,22 +1084,31 @@ function renderInterpretations(q, feedbackId, callback) {
   });
 }
 
-function showNextBtn() {
+function showNextBtn(correct) {
   const container = $('interactionArea');
+  const label = G.qIdx < G.sessionLen - 1 ? 'Next Question \u2192' : 'See Results';
+  function advance() { G.qIdx++; loadQuestion(); }
+  if (!correct) {
+    // A wrong answer: the correct interpretation is on screen; Next waits out MaffsNext's floor, then advances once
+    MaffsNext.wrong({ mount: container, onAdvance: advance, label: label });
+    return;
+  }
+  const wrap = document.createElement('div');
   const btn = document.createElement('button');
   btn.className = 'next-btn';
-  btn.textContent = G.qIdx < G.sessionLen - 1 ? 'Next Question \u2192' : 'See Results';
+  btn.textContent = label;
   btn.onclick = function() {
-    G.qIdx++;
-    loadQuestion();
+    if (!MaffsLock.lock(wrap)) return;   // Next moves on once, however often it is pressed
+    advance();
   };
-  container.appendChild(btn);
+  wrap.appendChild(btn);
+  container.appendChild(wrap);
 }
 
 // ============================================================
 //  END GAME
 // ============================================================
-function endGame() {
+const endGame = MaffsLock.finishOnce(function () {
   stopPulse(); disableCanvas();
   $('gameScreen').classList.remove('active');
   $('resultsScreen').classList.add('active');
@@ -1127,12 +1155,13 @@ function endGame() {
   if (window.MaffsLeaderboard) {
     MaffsLeaderboard.submitScore('gradient-hunter', G.level, G.score, G.sessionLen).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('gradient-hunter',G.level,G.score);}
   }
-}
+});
 
 function showMenu() {
   $('resultsScreen').classList.remove('active');
   $('gameScreen').classList.remove('active');
   $('menuScreen').classList.add('active');
+  MaffsLock.screen($('menuScreen'));   // Play Again's second click cannot land on the menu's link or Start
   $('pbLine').style.display = 'none';
   stopPulse();
 }
@@ -1141,7 +1170,7 @@ window.addEventListener('DOMContentLoaded', () => { parseURL(); });
 
 
 (function renderMethodRef(){
-  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}   // lock-ok: waits for KaTeX to draw the method reference; marks nothing
   var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
   var k=function(t){return katex.renderToString(t,{throwOnError:false});};
 
