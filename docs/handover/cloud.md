@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: terrible-advice`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -44,8 +44,12 @@ main's last full run is red; watch main's run after merging.
   "Lenny is wrong — " opening; Jon's em dash after the figure became a colon. Verifier: LOAN check (APR said; the key
   states the rate, the payment and the total to the penny; one distractor per named figure with its method word), the
   joke check, two plants (8 in all). Main's page fails t2-006 and t2-008 by name. Fits 320px (no sideways scroll).
-- **Next:** terrible-advice (the same key and distractors; its verifier imports spot-the-muppet's arithmetic), then
-  word-problem-decoder, then probability-paradox per the checkpoint below.
+- **spot-the-muppet #168 merged** 14:16 UTC; main's full run on 7252c9d green.
+- **terrible-advice (claim #170; fix PR this branch):** "6% per year" -> "6% APR"; the same key working (opening "the 6%
+  is interest, not an arrangement fee", which this item's muppet claims) and the same three distractors; the joke as
+  spot-the-muppet's. Verifier: `stm.check_loan` (the one copy, in verify-spot-the-muppet.py) on ta_core_012, the joke
+  check, three plants (9 in all). Main's page fails t2-005 and t2-007 by name.
+- **Next:** word-problem-decoder, then probability-paradox per the checkpoint below.
 
 ## 2026-10-08 (cloud, afternoon): CHECKPOINT STOP (Jon's queue done): listed-games contract at 5 of 23; nothing claimed
 
