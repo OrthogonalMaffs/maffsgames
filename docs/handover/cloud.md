@@ -58,6 +58,9 @@ main's last full run is red; watch main's run after merging.
   sandbox cannot reach Firebase: Jon checks in the console.
 - **Dock:** docks at 1366 and 1920, not at 1280: this game's column is 760 px (canon's reference is 720), and by
   canon's formula it docks from 1292 px. The column width is design, so left as it is.
+- **For Jon and the home lane, the timer list:** `.claude/rules/timer-policy.md` lists Unit Converter under Hidden
+  Count-Up ("time shown on results screen only"); the amendment takes time off the results screen too, so it now has
+  no timer at all (the No Timer list). Either the list moves it (home lane's file) or Jon wants the time on results.
 - **Filed, open, for Jon:** t4-007 (LOW): "1 mile = 1609 m" is not exact (1609.344); the key is 26.8 either way.
   The verifier reports it as a NOTE. The bank is **58** items (I said 59 to Jon in the session; corrected).
 - **Verifier** `scripts/verify-unit-converter.py`, group B3 (about 35 s; self-test 10 plants, about 1 min). Reads
