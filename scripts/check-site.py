@@ -2016,6 +2016,10 @@ TIER3_INIT = r"""
     const els = [];
     document.querySelectorAll('button, a, [role="button"]').forEach(function (el) {
       if (!visible(el)) return;
+      // A link to another page is never this game's start: the Core Maths papers' "Play Fermi Lab" signpost
+      // reads "Play ..." and took the driver away from the game (F1 batch 7, 8 Oct 2026).
+      if (el.tagName === 'A' && el.getAttribute('href') && !/^(#|javascript:)/i.test(el.getAttribute('href')) &&
+          new URL(el.href, location.href).pathname !== location.pathname) return;
       const t = (el.textContent || '').trim().toLowerCase().replace(/\s+/g, ' ');
       if (END_TEXT.indexOf(t) !== -1) return;
       const marker = (el.id + ' ' + String(el.className || '')).toLowerCase();

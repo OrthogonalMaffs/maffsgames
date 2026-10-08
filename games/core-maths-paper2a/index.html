@@ -24,6 +24,18 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option; i >= 1 the first that is not the key. Start is "Begin Practice".
+{
+  "start_sel": ".start-btn",
+  "answer": [
+    "const bs = [...document.querySelectorAll('#optionsContainer .option-btn')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const k = String(QUESTIONS[currentQ].correct);",
+    "(bs.find(b => b.dataset.val !== k) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -491,7 +503,7 @@ function renderBarChart() {
 }
 
 // ── GAME STATE ──
-var currentQ = 0, score = 0, answers = [], answered = false;
+var currentQ = 0, score = 0, answers = [];
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
@@ -499,7 +511,7 @@ function showScreen(id) {
 }
 
 function startGame() {
-  currentQ = 0; score = 0; answers = []; answered = false;
+  currentQ = 0; score = 0; answers = []; MaffsLock.newSession();
   mfg('game_started',{game_slug:'core-maths-paper2a',level:'core'});
   showScreen('gameScreen');
   showSectionBanner(0);
@@ -513,12 +525,11 @@ function showSectionBanner(qIndex) {
   var sIdx = SECTION_STARTS.indexOf(qIndex);
   document.getElementById('sectionTitle').textContent = SECTIONS[sIdx].title;
   document.getElementById('sectionRange').textContent = SECTIONS[sIdx].range;
-  setTimeout(function(){banner.style.display='none';qArea.style.display='block';showQuestion();},2000);
+  MaffsLock.timer(function(){banner.style.display='none';qArea.style.display='block';showQuestion();},2000);
 }
 
 function showQuestion() {
   var q = QUESTIONS[currentQ];
-  answered = false;
   document.getElementById('progressFill').style.width = (currentQ/36*100)+'%';
   document.getElementById('qCounter').textContent = 'Q'+(currentQ+1)+' of 36';
   document.getElementById('qTag').textContent = '\u00a7'+q.section+' \u00b7 '+q.ao;
@@ -546,13 +557,13 @@ function showQuestion() {
     btn.addEventListener('click',function(){selectAnswer(i);});
     container.appendChild(btn);
   });
+  MaffsLock.fresh(container);   // a new question: a double-click on Next cannot pick an option
   document.getElementById('workingNote').classList.remove('visible');
   document.getElementById('nextBtn').classList.remove('visible');
 }
 
 function selectAnswer(idx) {
-  if (answered) return;
-  answered = true;
+  if (!MaffsLock.lock(document.getElementById('optionsContainer'))) return;   // one answer per question (canon 7.6.0)
   var q = QUESTIONS[currentQ];
   var isCorrect = idx === q.correct;
   answers.push(isCorrect);
@@ -568,17 +579,25 @@ function selectAnswer(idx) {
   note.textContent = q.working;
   note.classList.add('visible');
   mfg('question_answered',{game_slug:'core-maths-paper2a',level:'core',question_index:currentQ+1,correct:isCorrect,section:q.section});
-  setTimeout(function(){document.getElementById('nextBtn').classList.add('visible');},1500);
+  MaffsLock.timer(function(){document.getElementById('nextBtn').classList.add('visible');},1500);
 }
 
 function nextQuestion() {
+  // Next acts once, and only on an answered question: a second click or Enter (during the section banner too) is
+  // dropped, so no question is skipped unseen.
+  var oc = document.getElementById('optionsContainer');
+  if (!MaffsLock.isLocked(oc)) return;
+  document.getElementById('nextBtn').classList.remove('visible');
+  MaffsLock.fresh(oc);
   currentQ++;
   if (currentQ >= 36) { showResults(); return; }
   if (SECTION_STARTS.indexOf(currentQ) !== -1) { showSectionBanner(currentQ); }
   else { showQuestion(); }
 }
 
-function showResults() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function showResults() { finishGame(); }
+var finishGame = MaffsLock.finishOnce(function () {
   document.getElementById('progressFill').style.width = '100%';
   var counts = [0,0,0,0];
   SECTIONS.forEach(function(sec,si){
@@ -604,7 +623,7 @@ function showResults() {
   mfg('game_completed',{game_slug:'core-maths-paper2a',level:'core',score:score,questions_answered:36,questions_correct:score});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('core-maths-paper2a','core',score,36).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('core-maths-paper2a','core',score);}}
   showScreen('resultsScreen');
-}
+});
 
 function restartGame(){startGame();}
 
