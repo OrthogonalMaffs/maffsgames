@@ -11,7 +11,10 @@ it. A game on NOT_YET that already loads answer-lock.js (the cloud lane adopts t
 played and judged like a migrated one: its failures fail, and when it passes the home lane moves it to
 MIGRATED. The one exception: while the game is on the cloud lane's remaining list (the `cloud-remaining:`
 line in docs/handover/cloud.md), its failures are reported, not failed. That state ends when the cloud lane
-takes the game off its list (contract LH, 7 Oct 2026). A missing list fails the check.
+takes the game off its list (contract LH, 7 Oct 2026). A missing list fails the check. The exemption holds only
+for a game in the roster's Unlisted section: a listed game on the line is claimed for the cloud lane's work
+(the home lane's batches skip it), but this check judges it exactly as if unclaimed (contract CLAIM, Jon, 8 Oct
+2026; canon 7.8.2).
 
 How the check produces a wrong answer is the game's own declaration, never this script's (contract LH): a
 `<!-- maffs-lock-hint ... -->` comment in the game's page, holding JSON (canon §7.6.0; answer-lock.js's
@@ -85,6 +88,26 @@ def cloud_remaining(text=None):
     if len(found) != 1:
         raise ValueError('docs/handover/cloud.md has %d `cloud-remaining:` lines (exactly one)' % len(found))
     return set(found[0].split())
+
+def unlisted_games(text=None):
+    """The slugs in the roster's Unlisted section (.claude/rules/game-roster.md; audit-register.py reads it the
+    same way). Only these may be exempted by the cloud lane's line (contract CLAIM)."""
+    if text is None:
+        text = open(bc.ROSTER_PATH, encoding='utf-8').read()
+    out, section = set(), None
+    for ln in text.split('\n'):
+        if ln.startswith('## '):
+            section = ln[3:].split(' (')[0]
+        m = re.match(r'^\| (\d+) \| [^|]+ \| `([a-z0-9-]+)` \|', ln)
+        if m and section == 'Unlisted':
+            out.add(m.group(2))
+    return out
+
+
+def exempt(claimed, unlisted):
+    """The games whose failures are reported, not failed: on the cloud lane's line AND unlisted. A listed game on
+    the line is a process lock only (Jon, 8 Oct 2026): judged as if it were not there."""
+    return set(claimed) & set(unlisted)
 
 # Every roster game that recorded question_answered when contract F1 began (7 Oct 2026). Frozen: never add
 # to it. NOT_YET must stay a subset, so a new game is migrated from the start.
@@ -809,6 +832,14 @@ def selftest(games):
         cloud_remaining()
     except ValueError as e:
         errs.append(str(e))
+    roster = ('## GCSE Games (2)\n| 1 | A | `listed-a` | GCSE |\n## Unlisted (1)\n- note\n\n| 2 | B | `unl-b` | GCSE |\n'
+              '## Withdrawn (0)\n| \u2014 | C | `gone-c` | GCSE |\n')
+    if unlisted_games(roster) != {'unl-b'}:
+        errs.append('unlisted_games() misreads the roster: %r' % unlisted_games(roster))
+    if exempt({'listed-a', 'unl-b'}, unlisted_games(roster)) != {'unl-b'}:
+        errs.append('a listed game on the cloud line is exempted (it must be judged as unclaimed)')
+    if not unlisted_games():
+        errs.append('the roster has no Unlisted rows: unlisted_games() found none')
     for page, why in (('<!-- maffs-lock-hint\n{"answer": \n-->', 'not JSON'),
                       ('<!-- maffs-lock-hint\n{"anwser": "x"}\n-->', 'an unknown key'),
                       ('<p>no declaration</p>', 'no declaration')):
@@ -877,10 +908,11 @@ def main():
     slugs = {s for s, _ in games}
     fails = []
     try:
-        remaining = cloud_remaining()
+        claimed = cloud_remaining()
     except ValueError as e:
         fails.append(str(e))
-        remaining = set()
+        claimed = set()
+    remaining = exempt(claimed, unlisted_games())     # what the line exempts: its unlisted games only
     for s in sorted(NOT_YET - NOT_YET_AT_START):
         fails.append('%s: on NOT_YET but not in NOT_YET_AT_START (a new game is migrated from the start)' % s)
     for s in sorted(NOT_YET - slugs):
@@ -908,7 +940,10 @@ def main():
     print('Answer lock (canon 7.6.0): %d roster games record question_answered; %d migrated, %d adopted by the '
           'cloud lane, %d on NOT_YET; the cloud lane\'s remaining list: %s'
           % (len(games), len(slugs - NOT_YET), len(adopted), len(NOT_YET & slugs - adopted),
-             ' '.join(sorted(remaining)) or '(empty)') + '; seed %d' % SEED)
+             ' '.join(sorted(claimed)) or '(empty)') + '; seed %d' % SEED)
+    if claimed - remaining:
+        print('  note: claimed by the cloud lane but listed, so judged as unclaimed (a process lock only, canon 7.8.2): %s'
+              % ', '.join(sorted(claimed - remaining)))
     if not args.static and to_play:
         results = asyncio.run(play_all(to_play, args.against))
         for s, _ in to_play:

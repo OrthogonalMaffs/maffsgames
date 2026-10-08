@@ -1283,10 +1283,17 @@ and is not edited by fix PRs.
 
 - **Home lane:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and
   every docs PR: `docs/todo.md`, relisting fixed games (batched), the roster's listed section.
-- **Cloud lane:** per-game fixes in games that are currently unlisted, one game per PR, each with its
+- **Cloud lane:** per-game fixes in games that are currently unlisted (and listed games it has claimed: below), one game per PR, each with its
   verifier, closing its register entries in its own `docs/audits/findings/<slug>.yml`. It never edits
   `schools/assets/`, the shared modules in `scripts/`, the workflow, canon, the roster's listed section or
   `docs/todo.md`.
+- **The cloud lane may fix listed games it has claimed on the `cloud-remaining:` line in
+  `docs/handover/cloud.md`** (Jon, 8 Oct 2026, contract CLAIM). It claims one game at a time, before starting
+  it, in a handover commit of its own, and removes the game in the PR that fixes it. The home lane never claims
+  or edits a game on that line: before building each batch it reads the line on main and drops any claimed
+  game. **For a listed game the claim is a process lock only** (Jon's ruling, 8 Oct): `check-answer-lock.py`
+  judges it exactly as if unclaimed (a migrated game must pass; a NOT_YET game is reported). The
+  reported-not-failed exemption holds only for games in the roster's Unlisted section, so no time bound is needed.
 - **A new verifier never edits the workflow** (contract V, Jon, 7 Oct 2026). It declares its CI lines in its
   own file, `# ci-line: <group> | <label> | <args>` (one per line it contributes; `&&` in `<args>` runs the
   script again, as `--part-selftest && --part 1`), plus `# ci-deps: <paths>` if it depends on something the
