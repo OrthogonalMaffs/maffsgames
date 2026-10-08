@@ -622,6 +622,19 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. A wrong amount gets a hint and the same step again; i = 0 types the key, i >= 1 an amount that is never it.
+{
+  "start": "startGame('easy')",
+  "ready": "document.getElementById('gameContainer').style.display === 'block'",
+  "answer": [
+    "const inp = document.getElementById('stepInput');",
+    "inp.value = i === 0 ? (steps[currentStepIndex].key / 100).toFixed(2) : '987654';",
+    "document.getElementById('submitBtn').click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -979,6 +992,7 @@ function buildSteps(gross, diff) {
 
 var _ttStepCount=0,_ttCorrectCount=0;
 function startGame(diff) {
+  MaffsLock.newSession();
   currentDifficulty = diff;
   currentSalary = pickSalary(diff);
   steps = buildSteps(currentSalary, diff);
@@ -1027,6 +1041,7 @@ function showStep() {
   }
 
   document.getElementById('stepInput').value = '';
+  MaffsLock.fresh(document.getElementById('stepArea'));   // a new step: a second Enter or click cannot answer it
   document.getElementById('stepInput').focus();
 
   var fb = document.getElementById('feedback');
@@ -1043,6 +1058,8 @@ function moneyResult(raw, keyPence) {
 }
 
 function checkAnswer() {
+  var area = document.getElementById('stepArea');
+  if (MaffsLock.isLocked(area)) return;   // this step is answered (canon 7.6.0)
   var input = document.getElementById('stepInput');
   var raw = String(input.value).trim();
   var val = parseFloat(raw);
@@ -1065,6 +1082,9 @@ function checkAnswer() {
     return;
   }
 
+  // A readable amount: this attempt is marked once. Right locks the step until the next one; wrong reopens it
+  // for another try after the fresh window, so a second Enter cannot mark the same attempt twice.
+  if (!MaffsLock.lock(area)) return;
   if (result === 'correct') {
     // Correct
     _ttCorrectCount++;
@@ -1096,7 +1116,7 @@ function checkAnswer() {
 
     document.getElementById('submitBtn').disabled = true;
 
-    setTimeout(function() {
+    MaffsLock.timer(function() {
       currentStepIndex++;
       if (currentStepIndex < steps.length) {
         showStep();
@@ -1111,6 +1131,7 @@ function checkAnswer() {
     fb.textContent = hint;
     fb.className = 'feedback wrong';
     input.value = '';
+    MaffsLock.fresh(area);
     input.focus();
   }
 }
@@ -1150,7 +1171,9 @@ function getHint(val, expected, step) {
   return "Check your calculation \u2014 use the table above.";
 }
 
-function showCompletion() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function showCompletion() { finishGame(); }
+const finishGame = MaffsLock.finishOnce(function () {
   window._ggAbandoned=false;
   var _ttPct=_ttStepCount>0?Math.round(_ttCorrectCount/_ttStepCount*100):0;
   mfg('game_completed',{game_slug:'tax-theft',level:'core',score:_ttCorrectCount,questions_answered:_ttStepCount,accuracy:_ttPct});
@@ -1179,7 +1202,7 @@ function showCompletion() {
     wry = WRY_LINES.hardReduced.replace('{pa}', fmtPence(answers.pa));
   }
   document.getElementById('wryLine').textContent = wry;
-}
+});
 
 function nextQuestion() {
   startGame(currentDifficulty);
