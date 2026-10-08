@@ -9,6 +9,10 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
+**OVERNIGHT RUN (Project Claude for Jon, 8 Oct 2026, 23:45):** `docs/handover/contracts/2026-10-08-overnight.md`
+(verbatim; its rules override the checkpoint rule for this run). Items: 1 VOCAB-IDEMPOTENT (in progress),
+2 CONTRACTS-FOLDER, 3 RELIST-SR, 4+ F1 batches 9-11.
+
 **QUEUE (home lane), Jon, 8 Oct 2026 (night)**, replacing the checkpoint's "ask Jon for that queue" note. Run in
 order; the standing rule applies (start the next item when one finishes; stop only for a STOP IF, an unruled
 decision, or a checkpoint). Each contract's verbatim text is below the list; move it to the archive when it merges.
