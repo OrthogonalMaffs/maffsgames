@@ -19,21 +19,22 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 4. **GA4-COUNTRY-CANON: DONE, #179 merged 8 Oct (3c3217c).**
 4a. **VOCAB-SHOWTHAT: DONE, #180 merged 8 Oct (47ee9b9)** (Jon, 8 Oct, sent later: run after GA4-COUNTRY-CANON, before F1 batch 7). The "show
    that" tooltip in `schools/assets/exam-vocab.js`; closes factor-theorem-t5-009 unless the cloud lane holds that game.
-5. **F1 batch 7, then F1 batch 8**, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
+5. **F1 batch 7: DONE, #182 merged 8 Oct (259c143), main green. F1 batch 8: NOT STARTED** (Jon said "checkpoint" at
+   the batch 7 boundary). Then F1 batch 8, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
    Core first; read `cloud-remaining:` in `docs/handover/cloud.md` on main before building each batch and drop
    every game on it).
 6. **CHECKPOINT after batch 8 merges with main green:** update this file and stop. Do not start batch 9 in that session.
-7. **DOCS-SMALL: first item NEXT session, after the batch 8 checkpoint** (Jon, 8 Oct). Verbatim below. (a) Roster
+7. **DOCS-SMALL: first item NEXT session** (Jon, 8 Oct; sent for "after the batch 8 checkpoint", and the checkpoint came
+   at batch 7, so it runs first next session, then batch 8). Verbatim below. (a) Roster
    convention: a generated game's row says "N per session, generated", a bank game's gives its bank size;
    just-pythag-it-bruv's row "20 per session, generated (round 1 from 15 triples and their sizes; rounds 2 and 3
    generated)"; list other generator rows noticed. (b) /updates/ 8 Oct, Updated badge: "Correlation or Coincidence:
    now 84 questions, twice as many as before." STOP IF its bank on main is not 84, or the roster parser reads the count.
-- **F1 batch 7: in progress, draft #182, branch `claude/f1-batch7`, worktree E:/jon/mg-b7.** All 8 games migrated and pass check-answer-lock seeds
-  1-3 and their verifiers.
+- **CHECKPOINT STOP (Jon, 8 Oct, late):** batch 7 merged, main green; this session stopped at that boundary.
 - **MAIN-RED: DONE, #184 merged 8 Oct (f1a097d), main green** (see its entry).
 - **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
 - **Standing F1 item:** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty
-  (NOT_YET: 40). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
+  (NOT_YET: 31). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
   `docs/handover/cloud.md` on main and drop every game on it from the batch. Never claim or edit a game on that
   line. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
 - **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
@@ -76,7 +77,7 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-08 (home): F1 batch 7 (#182, branch `claude/f1-batch7`, worktree E:/jon/mg-b7)
+## 2026-10-08 (home): F1 batch 7 (#182, merged 259c143, main green)
 
 - **On MaffsLock, each with its declaration, seeds 1-3 passing:** circle-theorem-spotter, index-laws, modular-battle,
   correlation-or-coincidence, estimation-engine, given-that, core-maths-paper1, core-maths-paper2a. probability-paradox
@@ -96,6 +97,11 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   read-only `window.GT.ui` (its game is an IIFE), as EE.ui and COC.ui. verify-given-that adds `bc.NO_LOCK_FRESH_INIT`.
 - **Answer lock split into three CI parts** (L1-L3, `--part i/3`): L2 ran 6m43s of its 8 min (75% budget 6m) on the
   first push. ci-groups.py already listed L3 and L4; a part is added only by its ci-line. Add L4 when a part nears 6 min.
+- **Next session:** DOCS-SMALL (item 7) first, then F1 batch 8. **Batch 8 also needs L4** (`--part i/4`): with batch 7
+  L1 ran 5m31s against its 6 min budget. Candidates (GCSE/Core, not next in the cloud lane's order; read
+  `cloud-remaining:` first): proportion-blaster, quadratic-factoriser, simultaneous-solver, standard-form-blitz,
+  stat-attack, tax-theft, formula-unlocked, graph-transformer. NOT_YET: 31 (30 once screening-room, which now loads the
+  lock, passes).
 
 ## 2026-10-08 (home): MAIN-RED, like-terms-collector's verifier typed before the question settled (#184, merged f1a097d, main green)
 
