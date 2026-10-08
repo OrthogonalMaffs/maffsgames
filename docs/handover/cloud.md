@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: expectation-station`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -30,6 +30,31 @@ A two-option game declares an `answer` that picks the option differing from its 
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-08 (cloud): expectation-station, Stage 1 one completion and 40/40/40 (Jon's bundle contract); #143 merged
+
+- **#143 (truth-buster) merged** 08:10 UTC on a green Gate, after merging main (#144, contract DET, landed 07:58 while
+  #143's CI ran: truth-buster's hint passes DET's lock check, seed 1, twice). #141 closed as superseded.
+- **Claimed** in its own commit (58e19a0), off the line in this PR.
+- **The bundle** (Project Claude, 7 Oct; Jon's ruling B), applied by script, verbatim: the 33 items get their sentence
+  appended to the context and prepended to the explanation; 75 new items (core 021-040, gcse 016-040, alevel 011-040).
+  Each level serves min(session length, bank), so 40 each.
+- **Verifier:** `COUNTS` 40/40/40; the bundle's CARDS and FIGURES; `FIGURES_ADDED` (the 33 items' new opening claims);
+  `CLUES` for all 120; **Stage 1 uniqueness**: every placement of the tiles into the missing cells is tried, and exactly
+  one may sum to 1 and satisfy the CLUES entry, the keyed one. A CLUES ratio, difference or E(X) must also be in the
+  context's own words (so a CLUES entry cannot claim what the student is not told). Fourth plant: es_core_001 without
+  its sentence, CLUES ('none',): caught. Main's page fails 38 items on Stage 1, plus the counts. Runs in about 10 s.
+- **Found by the uniqueness check, not in the bundle:** es_gcse_006, es_gcse_014, es_alevel_003, es_alevel_008 and
+  es_alevel_010 have equal keyed values, so the bundle gave them ('none',), but a second pair of tiles also summed to
+  the gap. **Jon's ruling (8 Oct, approved by Project Claude):** one stray tile changed on each (1/6 -> 1/8,
+  0.35 -> 0.40, 0.3 -> 0.4, 0.30 -> 0.35, 0.25 -> 0.30). No new wording.
+- **Added here, not in the bundle:** ten definition-only FIGURES entries ("Let P(X = a) = p and P(X = b) = q",
+  es_alevel_021-030), like the existing "k + 2k + ... = 1" entries.
+- **For Project Claude:** es_alevel_006's context says only "a batch of 4"; its CLUES Bin(4, 0.1) (the contract's)
+  rests on the student reading p = 0.1 from P(X = 0) = 0.6561. Without it the two missing tiles swap.
+- **Phone:** the context is `.context-text` (textContent, no clamp); every one of the 120 measured unclipped at 390x844.
+- **Register:** pc-001 fixed; no other entry open. **Ready to relist (SR-21, home lane): no CRITICAL or HIGH open.**
+- **Next:** Jon's listed-games contract (8 Oct): trig-wars first, then gradient-hunter.
 
 ## 2026-10-08 (cloud): truth-buster (queue 6 of 6, the last); the remaining list is empty
 
