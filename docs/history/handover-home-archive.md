@@ -3,6 +3,38 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## QUEUE item DOCS-SMALL, verbatim (Jon, 8 Oct; moved when done, #188)
+
+<details><summary>Queue item 7 (DOCS-SMALL), verbatim (Jon, 8 Oct)</summary>
+
+> TASK (home lane, DOCS-SMALL; first item next session, after the batch 8 checkpoint): Two docs fixes from 8 Oct 2026,
+> in one docs PR.
+> ROOT CAUSE: (a) The roster row for just-pythag-it-bruv says "20 questions in three rounds". Project Claude read that
+> as a 20-item bank and wrongly told Jon the game was below the 40-50 minimum. The game generates every question each
+> session (15 triples with sizes, orientation and side varied in round 1; fresh non-square lengths in round 2; five
+> contexts with large number pools in round 3), so 20 is the session length, not the bank. (b) correlation-or-
+> coincidence's bank went from 42 to 84 items on 8 Oct (cloud lane, Jon's contract), with no /updates/ entry. Twice
+> the questions is a change a returning student notices in what they meet, so it earns the Updated badge under canon
+> §3.4.
+> CLASS CHECK: (a) is an instance of a pattern: a roster count that does not say whether it is a bank or a session.
+> Fix it at the roster's convention. Canon or the roster's header states that a generated game's row says "N per
+> session, generated", and a bank game's row gives its bank size. Apply that to just-pythag-it-bruv, and to any other
+> generator rows you find while editing. Do not audit every row in this PR; list any you notice. (b) is local: one
+> missing entry.
+> EXACT CHANGE: 1. .claude/rules/game-roster.md: add the convention line to the roster's header notes.
+> just-pythag-it-bruv's row says "20 per session, generated (round 1 from 15 triples and their sizes; rounds 2 and 3
+> generated)". Keep the rest of the row. 2. /updates/, a new entry dated 8 Oct, Updated badge: "Correlation or
+> Coincidence: now 84 questions, twice as many as before." If an 8 Oct entry already exists, add the line to it.
+> 3. docs/handover/home.md updated.
+> DO NOT TOUCH: any game page; other roster rows' content, beyond rows you confirm are generators (list them in the
+> PR; only change those if the change is just the count wording); canon §3.4.
+> SUCCESS CONDITION: the roster checks pass; /updates/ shows the line with the badge; merged on a green Gate; main
+> green; handover current.
+> STOP IF: correlation-or-coincidence's bank on main is not 84 (report the count, and don't write the line); the
+> roster parser reads the count field so that new wording breaks it.
+
+</details>
+
 ## 2026-10-08 (home): GA4-COUNTRY-CANON (#179, merged 3c3217c)
 
 - Canon §1.2.1 "GA4 country tabs" added after §1.2 (the analytics section), in #153's proposed text, plus "Live only once
