@@ -198,6 +198,20 @@ body.accessible p,body.accessible .question-text,body.accessible .condition-bann
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Two phases per question; options or a typed fraction. i = 0 gives the key; i >= 1 the first option that is not the key, or a wrong number.
+{
+  "answer": [
+    "const pd = GT.ui.phaseData(); if (!pd) return;",
+    "const bs = [...document.querySelectorAll('#answerArea .mcq-btn')].filter(b => !b.disabled);",
+    "if (bs.length) { (i === 0 ? bs.find(b => b.dataset.latex === pd.options[0]) || bs[0] : bs.find(b => b.dataset.latex !== pd.options[0]) || bs[0]).click(); return; }",
+    "const inp = document.getElementById('freeInput'); if (!inp) return;",
+    "const ex = GT.ui.exact(); inp.value = i === 0 ? ex[0] + '/' + ex[1] : '987654';",
+    "document.querySelector('#answerArea .submit-btn').click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -484,6 +498,7 @@ if(urlLevel&&QUESTIONS[urlLevel]){
 /* ---------- START GAME ---------- */
 $('startBtn').addEventListener('click',startGame);
 function startGame(){
+  MaffsLock.newSession();
   const pool=QUESTIONS[currentLevel];
   sessionQuestions=shuffle([...pool]).slice(0,10);
   currentQIndex=0;currentPhase=1;totalScore=0;
@@ -798,6 +813,7 @@ function renderAnswerArea(q,phase){
     answerArea.appendChild(div);
     input.focus();
   }
+  MaffsLock.fresh(answerArea);   // a new phase: a double-click on Start, Next or the last answer cannot answer it
 }
 
 /* ---------- HANDLE ANSWERS ---------- */
@@ -810,6 +826,7 @@ function handleMCQ(btn,chosen,correctLatex,phaseData,q,phase,grid){
   }
 
   if(phase===1){
+    if(!MaffsLock.lock(answerArea))return;   // one answer per phase (canon 7.6.0)
     phase1Total++;
     btns.forEach(b=>b.classList.add('disabled'));
     if(isCorrect){
@@ -824,8 +841,11 @@ function handleMCQ(btn,chosen,correctLatex,phaseData,q,phase,grid){
     repStats[q.representation].max+=1;
     if(isCorrect)repStats[q.representation].score+=1;
     mfg('question_answered',{game_slug:'given-that',level:currentLevel,question_index:currentQIndex+1,correct:isCorrect,phase:1,representation:q.representation});
-    setTimeout(()=>transitionToPhase2(q),1200);
+    toPhase2(q,isCorrect);
   } else {
+    // Phase 2 has two tries: the second, or a right answer, ends it; a first wrong try disables that option only.
+    if(isCorrect||phase2Attempt>=1){if(!MaffsLock.lock(answerArea))return;}
+    else if(MaffsLock.isLocked(answerArea))return;
     phase2Attempt++;
     if(isCorrect){
       btns.forEach(b=>b.classList.add('disabled'));
@@ -842,6 +862,8 @@ function handleMCQ(btn,chosen,correctLatex,phaseData,q,phase,grid){
     } else {
       btn.classList.add('wrong');
       btn.classList.add('disabled');
+      btn.disabled=true;
+      if(phase2Attempt<2)MaffsLock.fresh(grid);   // a double-click cannot spend the second try
       if(phase2Attempt>=2){
         revealCorrect();
         btns.forEach(b=>b.classList.add('disabled'));
@@ -863,6 +885,7 @@ function handleFreeEntry(input,phaseData,q,phase){
   const dp=dpFor(phaseData.answer),ex=exactOf(phaseData),result=MaffsAnswer.fractionOrDecimal(raw,ex[0],ex[1],dp);
   if(result==='format'||result==='unreadable'){showFeedback(false,MaffsAnswer.message(result,raw,{dp:dp,sf:3,fraction:true}));return}
   const isCorrect=result==='correct';
+  if(!MaffsLock.lock(answerArea))return;   // one answer per phase (canon 7.6.0); an unreadable entry is not an answer
 
   input.disabled=true;
   const submitBtn=answerArea.querySelector('.submit-btn');
@@ -879,7 +902,7 @@ function handleFreeEntry(input,phaseData,q,phase){
     repStats[q.representation].max+=1;
     if(isCorrect)repStats[q.representation].score+=1;
     mfg('question_answered',{game_slug:'given-that',level:currentLevel,question_index:currentQIndex+1,correct:isCorrect,phase:1,representation:q.representation});
-    setTimeout(()=>transitionToPhase2(q),1200);
+    toPhase2(q,isCorrect);
   } else {
     phase2Total++;phase2Attempt++;
     repStats[q.representation].max+=3;
@@ -900,7 +923,13 @@ function handleFreeEntry(input,phaseData,q,phase){
 }
 
 /* ---------- PHASE TRANSITION ---------- */
+// canon §7.6: a right phase-1 answer moves on briskly; a wrong one keeps "The answer was ..." up and waits on Next.
+function toPhase2(q,correct){
+  if(correct)MaffsLock.timer(()=>transitionToPhase2(q),1200);
+  else MaffsNext.wrong({mount:feedbackEl,onAdvance:()=>transitionToPhase2(q)});
+}
 function transitionToPhase2(q){
+  if(window.MaffsNext)MaffsNext.clear(feedbackEl);
   currentPhase=2;
   phasePill.textContent='Phase 2';
   feedbackEl.className='feedback';feedbackEl.style.display='none';
@@ -940,6 +969,8 @@ function showNextBtn(){
   nextBtn.style.display='';
   nextBtn.textContent=currentQIndex<9?'Next Question':'See Results';
   nextBtn.onclick=()=>{
+    // Once: a second Enter or click (the button is still focused as it hides) would skip a question unseen.
+    nextBtn.onclick=null;nextBtn.style.display='none';
     if(currentQIndex<9){
       currentQIndex++;
       showQuestion();
@@ -950,7 +981,9 @@ function showNextBtn(){
 }
 
 /* ---------- RESULTS ---------- */
-function showResults(){
+// Once per session (MaffsLock.finishOnce): game_completed can never be sent twice.
+function showResults(){finishGame()}
+const finishGame=MaffsLock.finishOnce(function(){
   gameScreen.classList.remove('active');
   resultsScreen.classList.add('active');
   gameHeader.style.display='none';
@@ -980,7 +1013,7 @@ function showResults(){
   }
 
   mfg('game_completed',{game_slug:'given-that',level:currentLevel,score:totalScore,questions_answered:10,questions_correct:phase1Correct+phase2Correct});
-}
+});
 
 $('playAgainBtn').addEventListener('click',()=>{
   resultsScreen.classList.remove('active');
@@ -993,7 +1026,14 @@ $('changeLevelBtn').addEventListener('click',()=>{
   resultsScreen.classList.remove('active');
   startScreen.classList.add('active');
   gameHeader.style.display='none';
+  MaffsLock.screen(startScreen);   // a double-click cannot press a level or Start
 });
+
+/* Read-only views of live state for scripts/check-answer-lock.py's declaration (above, in the head). */
+window.GT={ui:{
+  phaseData:function(){const q=sessionQuestions[currentQIndex];return q?(currentPhase===1?q.phase1:q.phase2):null},
+  exact:function(){const q=sessionQuestions[currentQIndex];return q?exactOf(currentPhase===1?q.phase1:q.phase2):null}
+}};
 
 /* ---------- ACCESSIBILITY TOGGLE ---------- */
 (function(){
