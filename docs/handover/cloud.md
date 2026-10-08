@@ -50,7 +50,7 @@ main's last full run is red; watch main's run after merging.
   spot-the-muppet's. Verifier: `stm.check_loan` (the one copy, in verify-spot-the-muppet.py) on ta_core_012, the joke
   check, three plants (9 in all). Main's page fails t2-005 and t2-007 by name.
 - **terrible-advice #171 merged** 14:54 UTC; main's full run on 6386a07 green.
-- **word-problem-decoder (claim #173; fix PR this branch):** Jon's numbers and wording, each highlight phrase matching
+- **word-problem-decoder (claim #173; fix #174):** Jon's numbers and wording, each highlight phrase matching
   its text. gcse_059 keeps "in the box" (Jon's quote left it out; only the number changed). Verifier `check_numbers`:
   gcse_017 and 021 solved from their text (whole and positive), gcse_022 read as 3x + 4y = 33 with y = 2x, gcse_059's
   estimate = round(box / tin volume) and more than the 48 that fit; two plants (5 in all). t1-011, t1-012 (LOW) open.
