@@ -144,6 +144,7 @@ eigenvector-engine proof-builder linear-equation-solver moments-master force-res
 truth-will-set-you-free trig-identity-duel binomial-blaster partial-fractions-duel
 trig-wars truth-buster
 angle-ace free-daily-pizza split-it six-sevens-bruv 52dle distinctly-average seven-bridges word-problem-decoder
+gradient-hunter spot-the-muppet
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 

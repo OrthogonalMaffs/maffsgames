@@ -3,6 +3,62 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## QUEUE items CTX and F1 batch 5, as of 8 Oct (moved when CTX merged, #158)
+
+1. **Contract CTX: PR on `claude/ctx` (8 Oct; see its entry below).** Merge on a green Gate once Jon has answered
+   the PR's "For Jon" list (its STOP IF). Verbatim (Jon, 8 Oct):
+   > TASK (home lane, after UPDATES merges and main is green): Cut what every Claude Code session loads before it
+   > starts work: CLAUDE.md down to standing rules and pointers, each handover down to current state plus its last
+   > three entries, history moved to archives nobody loads by default, and a CI size limit so it can't creep back.
+   > ROOT CAUSE: Measured 8 Oct on main: CLAUDE.md is 159 KB and loads automatically into every session in both
+   > lanes; most of it is dated "## Handover —" sections back to 3 Oct. docs/handover/cloud.md (56 KB) and
+   > docs/handover/home.md (64 KB) are read first by instruction and hold every entry since 7 Oct.
+   > .claude/rules/*.md add about 40 KB. A fresh cloud session starts at 16% context before reading its task,
+   > which forces checkpoints after two or three games.
+   > CLASS CHECK: Yes: shared infrastructure every session loads, and the absence of any limit on it. Fix at that
+   > layer: restructure once, move history out of the load path, and add a CI check with a size limit. Not by
+   > trimming individual pastes or by asking sessions to skim.
+   > EXACT CHANGE: 1. Inventory first (in the PR description): every standing rule, ruling and lesson in
+   > CLAUDE.md, each mapped to where it now lives: CLAUDE.md (still needed every session), canon (already there:
+   > cite the section), or docs/history/claude-md-archive.md (history only). Nothing is deleted; everything is
+   > moved or kept. 2. CLAUDE.md, target <= 15 KB: project overview (short); the standing rules sections that
+   > apply every session (checkpoint discipline, check-changed before pushing, watch main after merging, two
+   > lanes and who edits what, the cloud-claim rule, Jon never amends contracts: PC sends complete pastes);
+   > pointers to canon, the handovers, the register, the roster, the archive. Every dated "## Handover —" section
+   > moves verbatim to docs/history/claude-md-archive.md (newest first). 3. Handovers, target <= 15 KB each:
+   > docs/handover/home.md keeps its header (rules, queue, standing rulings) and its newest three dated entries;
+   > older entries move verbatim to docs/history/handover-home-archive.md. docs/handover/cloud.md: the same, to
+   > docs/history/handover-cloud-archive.md, BUT only when the cloud lane has no open PR and its cloud-remaining
+   > line is empty (it is at a checkpoint). If it isn't, skip cloud.md in this PR and leave a one-line note in
+   > home.md to do it at the next cloud checkpoint. 4. Scripts that read CLAUDE.md (on main 8 Oct:
+   > bank_common.py, check-theme.py, ci-deps.py, extract-banks.py, gen-simultaneous.py, verify-log-laws.py,
+   > verify-quadratic-factoriser.py): find what each reads. If it needs content that moves, point it at the
+   > content's new home (canon or the archive) in this PR; prove each still passes. 5.
+   > scripts/check-context-size.py (CI, own ci-line header): fails if CLAUDE.md > 20 KB or either handover >
+   > 20 KB (limits a little above the targets so a normal entry fits); prints each file's size. Self-test: a
+   > planted 25 KB CLAUDE.md fails. 6. Roster header: .claude/rules/game-roster.md's title still says "74 games
+   > on the portal, 23 unlisted" (91 and 6 after #142): a hand-typed count beside the data. Drop the counts from
+   > the title or generate them; don't hand-type new ones. 7. Report in the PR: bytes before and after for
+   > CLAUDE.md, both handovers and .claude/rules/ total.
+   > DO NOT TOUCH: canon's content (cite it, don't move things into it unless the inventory shows a rule exists
+   > nowhere else, and then list it); the roster's rows (the only copy); .claude/rules/ files other than the
+   > roster title; any game; the workflow beyond what the new check's ci-line header gives; the meaning of any
+   > rule (move text verbatim; reword nothing except pointers).
+   > SUCCESS CONDITION: CLAUDE.md <= 15 KB with every every-session rule present; each handover <= 15 KB
+   > (cloud.md may be deferred per step 3); archives hold the moved text verbatim; every script that read
+   > CLAUDE.md passes; the size check passes and catches its planted file; the inventory and before/after sizes
+   > are in the PR; merged on a green Gate; main green; home.md handover current.
+   > STOP IF: a rule appears only in a dated handover section and it is unclear whether it still stands (list it
+   > for Jon; don't guess); a script depends on CLAUDE.md content in a way that can't be repointed without
+   > changing what it checks; the cloud lane has an open PR touching docs/handover/cloud.md (skip cloud.md, per
+   > step 3).
+2. **F1 batch 5: PARKED on `claude/f1-batch5` (worktree E:/jon/mg-b5), pushed, no PR.** Done and committed:
+   angle-ace, word-problem-decoder, free-daily-pizza, split-it, six-sevens-bruv on MaffsLock (each passes
+   check-answer-lock on seeds 1-3 and its own verifier), trig-wars (tap-through now also aims above 45 degrees;
+   seeds 1-12 pass) and truth-buster added to MIGRATED. Still to do: 52dle, distinctly-average, seven-bridges.
+   Then rebase on main, check-changed, PR. Lesson: a sweep that answers at once needs `bc.NO_LOCK_FRESH_INIT`;
+   a top-level `const endGame` cannot be stubbed by `window.endGame =`: keep `function endGame(){finishGame()}`.
+
 ## QUEUE as of 8 Oct (moved from the header by contract CTX)
 
 **QUEUE (home lane; Jon, 7 Oct evening session):** MaffsLock #125, batches 1 (#129), 2 (#132), contract LH (#133)
@@ -118,6 +174,38 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
    > existing checks at 320/390/1280; merged on a green Gate; main green; handover current.
    > STOP IF: a claim in items 2-3 is not true on main (report which; do not reword it yourself); the page's
    > checks require a format the text doesn't fit.
+
+## 2026-10-08 (home): contract ESSENTIALS, BUILT on `claude/essentials` (worktree E:/jon/mg-ess), MERGED (#150, 69d05df)
+
+**MERGED 8 Oct (#150, 69d05df) on a green Gate.** Locally, Test the Claim (`generateWrongContexts is not defined`
+under Playwright's Node v24 `node -e`) and Negative Number Line (320x568 fold, 536 vs 528) fail on main too: local
+environment only, CI green. Worth a look if a local run must be clean.
+- **/resit/ -> /essentials/**: page moved (git mv), heading "Essentials" plus the teacher line, analytics section
+  `essentials`; /resit/ is a meta-refresh stub (spec-map pattern, registered in check-footer.py). games.json key,
+  apply-meta/check-meta, check-resit-page.py (PAGE; filename kept), check-canonical-links RESOLVE/LEVEL pages,
+  publish scope, ci-deps KNOWN_TOP, sitemap, homepage badge ("Essentials", section `essentials-link`, item
+  `open-essentials`), test-section-clicks, workflow labels all follow. Title: "Essentials: GCSE Foundation
+  Maths Games | MaffsGames" (description kept: teacher metadata).
+- **Not done on purpose:** /resit/ is NOT in check-canonical-links' REDIRECTS: that would fail the /updates/
+  history links to /resit/, which contract UPDATES says stay as written (they redirect). Say so in the PR.
+- **Student surfaces:** comic-caper and kiln-disaster description/og/twitter now "A GCSE escape room on ...";
+  the four "for a GCSE resit class" card notes (homepage, /escape-rooms/) now "Built from a site user's
+  request. Want something built?".
+- **scripts/check-student-labels.py:** visible text, alt/title/aria-label/placeholder, script strings (comments
+  stripped) and description/og/twitter meta of games/**/index.html, escape-rooms/*/index.html and the portals
+  (index, escape-rooms, op). Self-test: the old comic-caper description and three more plants caught; comments
+  not flagged. **In the workflow's site-wide list, NOT a ci-line** (a ci-line is selected per named page on PRs;
+  this must see every page): a departure from the contract's wording, say so in the PR. **given-that** has a
+  tree-diagram question about students re-sitting (6 hits): a KNOWN exception, reported not failed, flagged
+  for Jon (game content is DO NOT TOUCH).
+- **Homepage:** title "MaffsGames — Free Maths Games for KS3, GCSE, Core Maths and A-Level"; description (also
+  og, new twitter tags) "Free maths games and 15-minute escape rooms for UK schools, KS3 to Further Maths,
+  including GCSE Foundation and Core Maths. No sign-up, no personal data." No game count AND no room count
+  ("eight" vs 8 cards / 11 room folders: same class); subtitle and JSON-LD now "KS3 to Further Maths". Draft
+  wording for Project Claude to review in the PR. Choice recorded: the number is dropped, not generated.
+- **Canon:** new §7.5.3 (the rule, the check, KNOWN, the teacher line, no hand-typed counts); analytics mapping
+  (resit-link->essentials-link, open-resit->open-essentials, resit->essentials, page views) in §1.3; §2.1 and the
+  CI tables follow the new address.
 
 ## 2026-10-08 (home): contract CLAIM (branch `claude/claim`)
 
