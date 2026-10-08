@@ -30,7 +30,8 @@ findings:
     does not say so. Its two neighbours (`:165`, `:168`) do say "(π ≈ 3.14)". A student using the π key gets 15,708,
     which is not offered. 15,700 is still clearly the closest option, so they are not marked wrong, but words and
     key disagree. Share affected: 1 of 48 (gcse), 1 of 38 (alevel), 1 of 42 (level4).'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: unit-converter-r-002
   severity: MEDIUM
   jc: false
@@ -41,7 +42,8 @@ findings:
     / 4.91 m² Keyed answer: 0.000491 m². Exact: π·0.0125² = 0.00049087… m². The key is right to 3 s.f., but neither
     the precision nor π is stated.'
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F2. Share affected: 1 of 42 (level4).'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: unit-converter-t4-001
   severity: HIGH
   jc: false
@@ -51,7 +53,8 @@ findings:
   summary: 'No answered guard: Enter re-marks; unbounded score and repeated submits'
   evidence: 'Wrong then Enter on revealed key: 0 -> 99, second question_answered correct:true. Enter held on last
     question: 4,399 points, ''45/20 correct (225%)'', submitScore x26.'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: unit-converter-t4-002
   severity: MEDIUM
   jc: false
@@ -69,7 +72,8 @@ findings:
   where: games/unit-converter/index.html:108,190,215
   summary: Any unknown ?level= plays Level 4, shows 'undefined' or 'function Object()', and submits to a new board
   evidence: unit_converter_nonsense, unit_converter___proto__, unit_converter_l4 all match the rules' key pattern.
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: unit-converter-t4-004
   severity: MEDIUM
   jc: false
@@ -78,7 +82,8 @@ findings:
   where: games/unit-converter/index.html:167,179,184
   summary: Rounded keys with no precision or pi stated (cylinder, 60 mph, shaft)
   evidence: 5000 pi = 15,707.96 keyed 15,700; 26.8166 keyed 26.8; 0.00049087 keyed 0.000491.
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: unit-converter-t4-005
   severity: MEDIUM
   jc: true
@@ -87,7 +92,11 @@ findings:
   where: games/unit-converter/index.html:92,210,211
   summary: Timer policy says hidden count-up; the HUD shows it and the score uses it
   evidence: 'CSS hides .timer, not #timer.'
-  status: open
+  status: fixed
+  ruling: 'Jon, 8 Oct 2026 23:39 (UC-FIX amendment, item 2): the score depends on correct answers only (100 each, no
+    time) and the timer is hidden, as the timer policy says. Nothing showed, logged or scored a clock after that, so none
+    runs.'
+  pr: PRNUM
 - id: unit-converter-t4-006
   severity: LOW
   jc: false
@@ -96,4 +105,17 @@ findings:
   where: games/unit-converter/index.html:119
   summary: '''1 inch ≈ 2.54 cm'' is exact; thousands separators inconsistent'
   evidence: Agent's evidence.
+  status: fixed
+  pr: PRNUM
+- id: unit-converter-t4-007
+  severity: LOW
+  jc: true
+  class: NEW:convention-unstated
+  level: level4
+  where: games/unit-converter/index.html (E bank, 60 mph)
+  summary: '"1 mile = 1609 m" is stated as exact; 1 mile = 1609.344 m exactly'
+  evidence: 'Found by verify-unit-converter.py (UC-FIX, cloud lane, 9 Oct 2026; reported, never failed). The mirror of
+    t4-006: "=" before an approximation. The key holds either way (60 × 1609 ÷ 3600 = 26.816..., 60 × 1609.344 ÷ 3600
+    = 26.822..., both 26.8 to 3 s.f.). A wording change ("≈", or 1609.344) is content: for Jon (UC-FIX keeps the
+    questions apart from the precision lines).'
   status: open

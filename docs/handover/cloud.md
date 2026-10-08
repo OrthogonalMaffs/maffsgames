@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: unit-converter`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -33,7 +33,8 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** UC-FIX: contracts/2026-10-08-uc-fix.md and its amendment -uc-fix-amend.md (in progress, claimed 9 Oct).
+**Queue:** UC-FIX: contracts/2026-10-08-uc-fix.md and its amendment -uc-fix-amend.md (fix PR open; move both to
+`docs/history/contracts/` once it merges).
 Then SIM-S5: contracts/2026-10-09-sim-s5.md (Simultaneous Solver Stage 5; Jon's named freeze exception,
 9 Oct 00:25; claim simultaneous-solver first). Then FT-FIX: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
@@ -41,8 +42,30 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): UC-FIX, unit-converter (claimed; listed game)
+## 2026-10-09 (cloud): UC-FIX, unit-converter (claim #195; fix PR next; listed game)
 
+- **The fix:** MaffsLock + MaffsNext ("Got it — next", in the worked solution) with its lock hint; ?level only from
+  the game's own LEVELS (hasOwnProperty); 3 s.f. stated on the cylinder, 60 mph and shaft, working as the contract
+  quotes (5000π, no 3.14); "1 inch = 2.54 cm"; one `fmt()` for every displayed number (options keep their stored
+  `dataset.val`), the start screen's static "1000 cm³" now "1,000"; the calculator (theme.css before the page style,
+  which is neutral here; `--surface-alt` and `--hint` added to :root; "Use a calculator." on every question; badge;
+  roster field `required`). t4-005: 100 per correct answer, the HUD Time item and its clock removed (nothing logged it).
+- **unit-converter has migrated: the home lane can move it from NOT_YET to MIGRATED** (check-answer-lock seeds 1-3 pass).
+- **For Jon, the boards (amendment's STOP IF; never delete or move scores):** `unit_converter_gcse`,
+  `unit_converter_alevel`, `unit_converter_level4`; the new maximum is **2,000** (20 questions × 100). The old
+  speed-weighted score also topped out at 2,000 (100 a question only at 0 s), so honest old scores sit at or below
+  what is now possible; scores inflated by the t4-001 re-mark (the audit made 4,399) sit above it. t4-003 may also
+  have made junk boards (`unit_converter_nonsense`, `unit_converter___proto__`, `unit_converter_l4`, ...). The
+  sandbox cannot reach Firebase: Jon checks in the console.
+- **Dock:** docks at 1366 and 1920, not at 1280: this game's column is 760 px (canon's reference is 720), and by
+  canon's formula it docks from 1292 px. The column width is design, so left as it is.
+- **Filed, open, for Jon:** t4-007 (LOW): "1 mile = 1609 m" is not exact (1609.344); the key is 26.8 either way.
+  The verifier reports it as a NOTE. The bank is **58** items (I said 59 to Jon in the session; corrected).
+- **Verifier** `scripts/verify-unit-converter.py`, group B3 (about 30 s; self-test 10 plants, about 4 min). Reads
+  marks from page classes, events through the defineProperty hook (canon §7.9), speed by Playwright's clock.
+- **Sandbox gotchas (this container):** pip's newest Playwright wants a browser build not in /opt/pw-browsers: pin
+  `playwright==1.56.0` (matches chromium-1194). `esprima` will not build here: download its sdist and put the source
+  on PYTHONPATH for extract-banks/check-banks.
 - **Claimed** in its own commit, with three contracts saved verbatim: UC-FIX (21:05), its amendment (23:45: t4-005 joins,
   score on correct answers only, timer hidden; Screening Room t4-017 ruled "one row per answer is correct") and the
   FT-FIX amendment (21:30, Part A). Nothing open held unit-converter (only #193, the home lane's VOCAB-IDEMPOTENT).
