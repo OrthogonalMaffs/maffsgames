@@ -67,6 +67,9 @@ main's last full run is red; watch main's run after merging.
   MaffsLock, MaffsNext on a wrong answer, hint (starts Paradox Predictor); t1-010 CRITICAL (score again on the revealed
   key) and t1-011 (mode on every event) filed and fixed. **t1-004 (HIGH, jc: "the test was easier") left open for
   Jon.** Verifier `scripts/verify-probability-paradox.py` (group E, ~1 min; ~8 min with the self-test, 8 plants).
+- **Gotcha (again):** editing an item's text changes its content id, so a ledger entry on it (here B6's "wait"
+  false positive on the bus item) goes stale and Tier 4 fails; `check-changed.py` does not run Tier 4. After any bank
+  edit: `extract-banks.py --only <slug>` then `check-banks.py --only <slug> --write-ledger`.
 - **Next:** screening-room (Jon's contract + his t4-015 ruling), then factor-theorem (contract + t5-013/014/015
   rulings). factor-theorem's level4 board may need the hub registry (check-leaderboard-coverage.js): a STOP IF.
 

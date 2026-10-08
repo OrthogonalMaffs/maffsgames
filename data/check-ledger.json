@@ -4723,28 +4723,28 @@
     "entries": [
      {
       "detail": "PARADOX_QUESTIONS[9]: 'wait' in \"What's the average time you'll wait?\"",
-      "id": "probability-paradox::53512d499c68#1::B6",
-      "line": 209
+      "id": "probability-paradox::ca42ff7e8e2f#1::B6",
+      "line": 219
      },
      {
       "detail": "PARADOX_QUESTIONS[9]: 'wait' in 'Wait < 10 min'",
-      "id": "probability-paradox::53512d499c68#1::B6",
-      "line": 209
+      "id": "probability-paradox::ca42ff7e8e2f#1::B6",
+      "line": 219
      },
      {
       "detail": "PARADOX_QUESTIONS[9]: 'wait' in 'Wait ≥ 10 min'",
-      "id": "probability-paradox::53512d499c68#1::B6",
-      "line": 209
+      "id": "probability-paradox::ca42ff7e8e2f#1::B6",
+      "line": 219
      },
      {
       "detail": "PARADOX_QUESTIONS[9]: 'wait' in \"If buses arrived exactly every 10 minutes, you'd wait 5 on average\"",
-      "id": "probability-paradox::53512d499c68#1::B6",
-      "line": 209
+      "id": "probability-paradox::ca42ff7e8e2f#1::B6",
+      "line": 219
      },
      {
       "detail": "PARADOX_QUESTIONS[9]: 'wait' in 'For exponential arrivals, E(wait) = E(gap) = 10 minutes'",
-      "id": "probability-paradox::53512d499c68#1::B6",
-      "line": 209
+      "id": "probability-paradox::ca42ff7e8e2f#1::B6",
+      "line": 219
      }
     ],
     "status": "fail"
