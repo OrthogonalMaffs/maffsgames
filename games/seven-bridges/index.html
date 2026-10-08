@@ -141,6 +141,19 @@ body.accessible p,body.accessible .status-msg,body.accessible .hint-bar{line-hei
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. KS3. A puzzle is answered by tracing every edge (its sampleSolution, vertex by vertex) or by pressing Impossible. i = 0 answers right; i >= 1 presses Impossible on a possible graph (the one wrong answer the game has); an impossible graph cannot be answered wrong, so it is answered right.
+{
+  "start": "selectLevel('ks3'); startGame();",
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && !MaffsLock.isLocked(document.getElementById('gameScreen'))",
+  "answer": [
+    "const p = S.puzzle;",
+    "if (!p.hasEulerianPath || i >= 1) { document.getElementById('btnImpossible').click(); return; }",
+    "p.sampleSolution.forEach(v => clickVertex(v));"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -207,7 +220,8 @@ body.accessible p,body.accessible .status-msg,body.accessible .hint-bar{line-hei
       <button class="hint-btn" id="hintBtn" onclick="showHint()">Show Hint</button>
     </div>
     <div class="status-msg" id="statusMsg"></div>
-    <button class="next-puzzle-btn" id="nextPuzzleBtn" onclick="nextPuzzle()">Next Puzzle</button>
+    <button class="next-puzzle-btn" id="nextPuzzleBtn" onclick="nextPuzzle()" data-maffs-lock-skip>Next Puzzle</button>
+    <div id="nextMount"></div>
   </div>
 </div>
 
@@ -245,7 +259,7 @@ body.accessible p,body.accessible .status-msg,body.accessible .hint-bar{line-hei
     <p>4 or more odd-degree vertices = impossible.</p>
   </div>
   <div class="sub" id="pbLine" style="text-align:center;margin-bottom:16px;color:var(--muted)"></div>
-  <button class="play-again-btn" onclick="location.reload()">Play Again</button>
+  <button class="play-again-btn" onclick="playAgain()">Play Again</button>
   <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">Back to Games</a>
   <p id="teacherInvite"></p>
 </div>
@@ -281,7 +295,6 @@ const S = {
   resetCount: 0,
   hintsUsed: 0,
   hintLevel: 0,
-  finished: false,
   startTime: 0,
   puzzleStartTime: 0,
   solvedCount: 0,
@@ -316,6 +329,7 @@ function shuffle(arr) {
 
 function startGame() {
   if (!S.level) return;
+  MaffsLock.newSession();
   var bank = PUZZLE_BANKS[S.level];
   S.session = shuffle(bank.slice()).slice(0, 10);
   S.puzzleIdx = 0;
@@ -340,7 +354,13 @@ function startGame() {
 // ============================================================
 //  PUZZLE LOADING & RENDERING
 // ============================================================
+// MaffsLock (canon 7.6.0) on the game screen: tracing the last edge or pressing Impossible marks the puzzle once.
+function gameEl() { return document.getElementById('gameScreen'); }
+
 function loadPuzzle() {
+  // First, so the controls this function disables stay disabled: fresh() re-enables what lock() disabled.
+  MaffsNext.clear(document.getElementById('nextMount'));
+  MaffsLock.fresh(gameEl());   // a new puzzle: the second click of a double-click on Next lands on nothing
   var p = S.session[S.puzzleIdx];
   S.puzzle = p;
   S.path = [];
@@ -348,7 +368,6 @@ function loadPuzzle() {
   S.resetCount = 0;
   S.hintsUsed = 0;
   S.hintLevel = 0;
-  S.finished = false;
   S.puzzleStartTime = Date.now();
 
   document.getElementById('puzzleCounter').textContent = (S.puzzleIdx + 1) + '/10';
@@ -443,7 +462,7 @@ function renderGraph() {
 }
 
 function highlightAvailable() {
-  if (S.path.length === 0 || S.finished) return;
+  if (S.path.length === 0 || MaffsLock.isLocked(gameEl())) return;
   var current = S.path[S.path.length - 1];
   var p = S.puzzle;
 
@@ -468,7 +487,7 @@ function updateEdgeProgress() {
 //  INTERACTION
 // ============================================================
 function clickVertex(vid) {
-  if (S.finished) return;
+  if (MaffsLock.isLocked(gameEl())) return;
 
   if (S.path.length === 0) {
     S.path.push(vid);
@@ -506,7 +525,7 @@ function clickVertex(vid) {
 }
 
 function clickEdge(edgeIdx) {
-  if (S.finished) return;
+  if (MaffsLock.isLocked(gameEl())) return;
   if (S.path.length === 0) return;
   if (S.traversedEdges.indexOf(edgeIdx) !== -1) return;
 
@@ -518,7 +537,7 @@ function clickEdge(edgeIdx) {
 }
 
 function undoMove() {
-  if (S.finished || S.path.length <= 1) return;
+  if (MaffsLock.isLocked(gameEl()) || S.path.length <= 1) return;
   S.path.pop();
   S.traversedEdges.pop();
   if (S.path.length <= 1) {
@@ -529,7 +548,7 @@ function undoMove() {
 }
 
 function resetPuzzle() {
-  if (S.finished) return;
+  if (MaffsLock.isLocked(gameEl())) return;
   S.path = [];
   S.traversedEdges = [];
   S.resetCount++;
@@ -611,7 +630,7 @@ function renderDegreeLabels() {
 //  PUZZLE COMPLETION
 // ============================================================
 function puzzleSolved() {
-  S.finished = true;
+  if (!MaffsLock.lock(gameEl())) return;
   var score;
   if (S.hintsUsed > 0) score = 1;
   else if (S.resetCount > 0) score = 3;
@@ -643,14 +662,13 @@ function animateSuccess(callback) {
     if (i >= edges.length) { callback(); return; }
     edges[i].classList.add('edge-flash');
     i++;
-    setTimeout(flashNext, 100);
+    MaffsLock.timer(flashNext, 100);
   }
   flashNext();
 }
 
 function declareImpossible() {
-  if (S.finished) return;
-  S.finished = true;
+  if (!MaffsLock.lock(gameEl())) return;
   var p = S.puzzle;
 
   document.getElementById('btnUndo').disabled = true;
@@ -680,8 +698,12 @@ function declareImpossible() {
     logAnswer(false);
 
     if (p.sampleSolution) {
-      setTimeout(function() { animateSolution(p.sampleSolution); }, 1000);
+      MaffsLock.timer(function() { animateSolution(p.sampleSolution); }, 1000);
     }
+    // canon 7.6: the working (odd vertices, then the solution drawn) stays up until Next.
+    MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextPuzzle,
+                      label: S.puzzleIdx >= 9 ? 'See Results' : 'Next Puzzle' });
+    return;
   }
 
   showNextButton();
@@ -720,7 +742,7 @@ function animateSolution(solution) {
       S.path.push(solution[0]);
       renderGraph();
       step++;
-      setTimeout(nextStep, delay);
+      MaffsLock.timer(nextStep, delay);
       return;
     }
 
@@ -741,7 +763,7 @@ function animateSolution(solution) {
     updateEdgeProgress();
     step++;
     if (step < solution.length) {
-      setTimeout(nextStep, delay);
+      MaffsLock.timer(nextStep, delay);
     }
   }
 
@@ -796,7 +818,18 @@ function logAnswer(correct) {
 // ============================================================
 //  RESULTS
 // ============================================================
-function finishGame() {
+// Play Again returns to the start screen in the page (it reloaded the page until F1 batch 5): the same screen the student
+// saw, and a new MaffsLock session, so a double-click on it cannot reach a puzzle.
+function playAgain() {
+  MaffsLock.newSession();
+  document.getElementById('resultsScreen').classList.remove('active');
+  document.getElementById('startScreen').classList.add('active');
+  MaffsLock.fresh(document.getElementById('startScreen'));
+}
+
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function finishGame() { finishOnceGame(); }
+const finishOnceGame = MaffsLock.finishOnce(function () {
   document.getElementById('gameScreen').classList.remove('active');
   document.getElementById('gameHeader').style.display = 'none';
   document.getElementById('resultsScreen').classList.add('active');
@@ -842,7 +875,7 @@ function finishGame() {
   if (window.MaffsLeaderboard) {
     MaffsLeaderboard.submitScore('seven-bridges', S.level, totalScore, 50).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('seven-bridges',S.level,totalScore);}
   }
-}
+});
 
 // ============================================================
 //  ACCESSIBILITY TOGGLE
