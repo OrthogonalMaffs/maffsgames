@@ -42,10 +42,12 @@ UNMAPPED = []
 
 # Live games Jon has ruled have no honest curriculum mapping: slug -> the reason, which the check
 # prints. Never fails while the game is live and unmapped.
-# truth-buster (enrichment by design: every session mixes KS3/GCSE, A-Level and 'beyond the curriculum'
-# statements; Jon, 3 Oct 2026) is unlisted from 6 Oct 2026 (tranche 3 audit, canon SR-20), so its entry
-# would be stale; the PR that relists it puts the entry back (todo, its relist checklist).
-EXCEPTIONS = {}
+# truth-buster: unlisted 6 Oct 2026 (tranche 3 audit, canon SR-20) and relisted 8 Oct 2026 (canon SR-21,
+# contract RELIST-3), its entry back as its relist checklist says.
+EXCEPTIONS = {
+    "truth-buster": "enrichment by design: every session mixes KS3/GCSE, A-Level and 'beyond the "
+                    "curriculum' statements (Jon, 3 Oct 2026)",
+}
 
 PORTAL_GAME = re.compile(r"""href\s*=\s*["'](?:\./|/)?games/([a-z0-9-]+)/?""", re.I)
 SECTION = re.compile(r'<span class="spec-label">(.*?)</span>|<tr\b[^>]*>(.*?)</tr>', re.S | re.I)

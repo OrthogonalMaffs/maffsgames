@@ -157,20 +157,12 @@ if (gatedButUndeclared.length) {
 // Games that submit but are deliberately not on the hub.
 const NOT_ON_HUB = {
   'the-perfect-prank': 'unlisted escape-room prototype, never on the portal (canon §4)',
-  // Jon's contract, 4 Oct 2026: unlisted (noindex, off the portal, /essentials/, sitemap, spec map,
-  // /updates/) until he has played it. It submits to 'ks3' as built; the hub row is added with the
-  // listing, and this entry removed in the same PR.
-  'just-pythag-it-bruv': 'unlisted until Jon approves it (todo START); hub row added at listing',
-  // Jon, 6 Oct 2026 (19:15): unlisted for the tranche 2 audit's faults; the hub row is restored, and this entry
-  // removed, in the PR that relists it. Held by expectation-station-pc-001 (Jon, 7 Oct 2026).
-  'expectation-station': 'unlisted pending its tranche 2 audit fix; hub row restored at relisting',
-  // Jon, 6 Oct 2026 (20:30): unlisted the same way for the tranche 3-6 audits' faults (canon SR-20) until
+  // Jon, 6 Oct 2026 (20:30): unlisted for the tranche 3-6 audits' faults (canon SR-20) until
   // each game's verifier merges and its register entries are fixed; the hub row is restored, and this
   // entry removed, in that PR.
   'factor-theorem': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
   'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
-  'screening-room': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
-  'truth-buster': 'unlisted pending its tranche 3 audit fix; hub row restored at relisting'
+  'screening-room': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting'
 };
 
 // The levels a game submits under are read from its source: the level argument of
