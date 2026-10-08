@@ -19,7 +19,8 @@ findings:
   summary: The stem never says compound (the topic field is never shown), so 'simple interest gives £2,000' is true
     and marked wrong
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 155
 - id: spot-the-muppet-t2-002
   severity: HIGH
   jc: true
@@ -29,7 +30,8 @@ findings:
   summary: 'Distractor with the right value by an invalid method: ''£120 - £20 = £100'' (the key is £120 / 1.2 =
     £100)'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. SR-16'
-  status: open
+  status: fixed
+  pr: 155
 - id: spot-the-muppet-t2-003
   severity: HIGH
   jc: true
@@ -39,7 +41,8 @@ findings:
   summary: 'Distractor with the right value by an invalid method: ''mean = (2 + 10) / 2 = 6'' (the true mean is
     30 / 5 = 6)'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. SR-16'
-  status: open
+  status: fixed
+  pr: 155
 - id: spot-the-muppet-t2-004
   severity: HIGH
   jc: true
@@ -48,7 +51,8 @@ findings:
   where: games/spot-the-muppet/index.html:313 (core_002)
   summary: 'The key condemns a valid marginal-cost argument: £1.30 for 250 ml is 0.52 p/ml, below 0.70 p/ml'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 155
 - id: spot-the-muppet-t2-005
   severity: HIGH
   jc: false
@@ -57,7 +61,8 @@ findings:
   where: games/spot-the-muppet/index.htmlnextQuestion()
   summary: 'No guard: a double-click on Next lands on the new question''s options, which is answered unseen'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. Reproduced in Chromium'
-  status: open
+  status: fixed
+  pr: 155
 - id: spot-the-muppet-t2-006
   severity: MEDIUM
   jc: false
@@ -88,3 +93,15 @@ findings:
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct; the report groups Spot the Muppet and Terrible Advice, so filed against both'
   status: open
+- id: spot-the-muppet-t2-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: core
+  where: games/spot-the-muppet/index.html (core_004)
+  summary: 'The advice''s own working was wrong: £1,000 × 1.05 × 20 is £21,000, and the advice and the "Penny is
+    correct" option said £21,050'
+  evidence: 'Found by the cloud lane''s verifier (8 Oct 2026; scripts/verify-spot-the-muppet.py recomputes every
+    equation in the advice and the keys). Fixed: £21,000 in the advice and the option'
+  status: fixed
+  pr: 155
