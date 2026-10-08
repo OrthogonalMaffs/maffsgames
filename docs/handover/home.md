@@ -17,8 +17,6 @@ contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as 
 3. **F1 batch 6: PR #165 on `claude/f1-batch6` (8 Oct; see its entry below).** Merge on a green Gate, watch main, then
    **CHECKPOINT STOP** (2 batches merged since the last stop: 5 and 6). Next batch: re-read `cloud-remaining:` and the
    cloud lane's order in cloud.md first; NOT_YET is 40.
-- **cloud.md not trimmed (contract CTX step 3):** the cloud lane had PR #154 open on it. Trim it to its header and
-  newest three entries (to `docs/history/handover-cloud-archive.md`) at the next cloud checkpoint.
 - **Follow-up (home lane, small):** `check-changed.py` crashes (`UnicodeEncodeError`, cp1252) printing a failure when
   its output is redirected to a file on Windows. Until fixed: `PYTHONIOENCODING=utf-8 python scripts/check-changed.py`.
 - **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
