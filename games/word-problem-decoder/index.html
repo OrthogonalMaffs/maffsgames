@@ -166,6 +166,10 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game: the generic driver, unaided.
+{}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -259,7 +263,7 @@ const QUESTIONS = [
 {id:'wpd_ks3_003',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'A map of a national park uses a scale of 1:50,000. On the map, the distance between the visitor centre and the waterfall is 6.4 cm. A hiker wants to know the real distance between the two locations. What is the actual distance in kilometres?',highlights:[{phrase:'a scale of 1:50,000',topic:'Ratio & Proportion',distractorGroup:'number'}]},
 {id:'wpd_ks3_004',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'A builder mixes sand and cement to make mortar. He uses sand and cement in the ratio 5:1. He has a 30 kg bag of cement. He wants to use all of the cement. How much sand does he need?',highlights:[{phrase:'sand and cement in the ratio 5:1',topic:'Ratio & Proportion',distractorGroup:'number'}]},
 {id:'wpd_ks3_005',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'Three friends win a prize on a scratch card. They agree to share the winnings in the ratio of the number of cards they each bought. Amy bought 2 cards, Ben bought 3 and Chloe bought 5. The total prize is £180. How much does Amy receive?',highlights:[{phrase:'share the winnings in the ratio',topic:'Ratio & Proportion',distractorGroup:'number'}]},
-{id:'wpd_ks3_006',level:'ks3',topic:'mixed',distractorGroup:'number',multi:true,text:'A recipe for flapjacks uses oats and butter in the ratio 4:1 by mass. A chef wants to make a large batch using 600g of oats. How much butter does she need? If butter costs £2.50 per 100g, what will the butter cost?',highlights:[{phrase:'oats and butter in the ratio 4:1',topic:'Ratio & Proportion',distractorGroup:'number'},{phrase:'butter costs £2.50 per 100g',topic:'Number & Place Value',distractorGroup:'number'}]},
+{id:'wpd_ks3_006',level:'ks3',topic:'mixed',distractorGroup:'number',multi:true,text:'A recipe for flapjacks uses oats and butter in the ratio 4:1 by mass. A chef wants to make a large batch using 600g of oats. How much butter does she need? If butter costs £2.50 per 100g, what will the butter cost?',highlights:[{phrase:'oats and butter in the ratio 4:1',topic:'Ratio & Proportion',distractorGroup:'number'},{phrase:'butter costs £2.50 per 100g',topic:'Number & Place Value',also:['Ratio & Proportion'],distractorGroup:'number'}]},
 {id:'wpd_ks3_007',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'A car uses petrol at a constant rate. It travels 240 miles on a full tank of 30 litres. The driver is planning a journey of 180 miles. How many litres of petrol will she need for the journey?',highlights:[{phrase:'travels 240 miles on a full tank of 30 litres',topic:'Ratio & Proportion',distractorGroup:'number'}]},
 {id:'wpd_ks3_008',level:'ks3',topic:'Ratio & Proportion',distractorGroup:'number',multi:false,text:'In a jar of mixed sweets, the ratio of red to green to yellow sweets is 2:3:5. There are 40 yellow sweets in the jar. A child picks a sweet at random without looking. How many sweets are in the jar altogether?',highlights:[{phrase:'ratio of red to green to yellow sweets is 2:3:5',topic:'Ratio & Proportion',distractorGroup:'number'}]},
 
@@ -279,7 +283,7 @@ const QUESTIONS = [
 {id:'wpd_ks3_019',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'In a school, two-fifths of the students study French and one-quarter study Spanish. The rest study German. What fraction of students study German? If there are 400 students in the school, how many study German?',highlights:[{phrase:'two-fifths of the students study French and one-quarter study Spanish',topic:'Fractions',distractorGroup:'number'}]},
 {id:'wpd_ks3_020',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'A water tank is three-eighths full. It contains 360 litres of water. The tank springs a leak and loses 45 litres. What fraction of the full tank capacity remains?',highlights:[{phrase:'three-eighths full',topic:'Fractions',distractorGroup:'number'}]},
 {id:'wpd_ks3_021',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'Freya is training for a sponsored walk. On Monday she walks 2\u2153 miles. On Wednesday she walks 1\u00be miles. On Friday she walks 3\u2159 miles. What is the total distance she walks across the three days?',highlights:[{phrase:'2\u2153 miles',topic:'Fractions',distractorGroup:'number'}]},
-{id:'wpd_ks3_022',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'A recipe for 12 biscuits requires \u00be of a cup of sugar. Leo wants to make 20 biscuits. How many cups of sugar does he need? Give your answer as a fraction.',highlights:[{phrase:'\u00be of a cup of sugar',topic:'Fractions',distractorGroup:'number'}]},
+{id:'wpd_ks3_022',level:'ks3',topic:'Fractions',distractorGroup:'number',multi:false,text:'A recipe for 12 biscuits requires \u00be of a cup of sugar. Leo wants to make 20 biscuits. How many cups of sugar does he need? Give your answer as a fraction.',highlights:[{phrase:'\u00be of a cup of sugar',topic:'Fractions',also:['Ratio & Proportion'],distractorGroup:'number'}]},
 
 // ─── KS3: Number & Place Value (4) ───
 {id:'wpd_ks3_023',level:'ks3',topic:'Number & Place Value',distractorGroup:'number',multi:false,text:'A scientist measures a bacterial cell under a microscope. The cell is 0.000043 metres long. She wants to write this measurement in a form that is easier to communicate in a scientific paper. Write the length in standard form.',highlights:[{phrase:'standard form',topic:'Number & Place Value',distractorGroup:'number'}]},
@@ -313,7 +317,7 @@ const QUESTIONS = [
 // ─── KS3: Geometry — Angles (4) ───
 {id:'wpd_ks3_044',level:'ks3',topic:'Geometry — Angles',distractorGroup:'geometry',multi:false,text:'Two roads meet at a junction. The angle between them on one side is 47\u00b0. A surveyor needs to know the angle on the other side of the junction where the roads meet. What is the size of the other angle, and what geometric reason justifies your answer?',highlights:[{phrase:'angle on the other side of the junction',topic:'Geometry — Angles',distractorGroup:'geometry'}]},
 {id:'wpd_ks3_045',level:'ks3',topic:'Geometry — Angles',distractorGroup:'geometry',multi:false,text:'A regular hexagonal tile is used to design a mosaic floor. An interior designer wants to know the interior angle of the tile to ensure the tiles fit together without gaps. Find the interior angle of a regular hexagon.',highlights:[{phrase:'interior angle of a regular hexagon',topic:'Geometry — Angles',distractorGroup:'geometry'}]},
-{id:'wpd_ks3_046',level:'ks3',topic:'Geometry — Angles',distractorGroup:'geometry',multi:false,text:'In a triangle, one angle is twice the size of the smallest angle. The third angle is 30\u00b0 more than the smallest angle. An architect is checking the angles in a triangular roof truss. Find the size of each angle in the triangle.',highlights:[{phrase:'one angle is twice the size of the smallest angle',topic:'Geometry — Angles',distractorGroup:'geometry'}]},
+{id:'wpd_ks3_046',level:'ks3',topic:'Geometry — Angles',distractorGroup:'geometry',multi:false,text:'In a triangle, one angle is twice the size of the smallest angle. The third angle is 30\u00b0 more than the smallest angle. An architect is checking the angles in a triangular roof truss. Find the size of each angle in the triangle.',highlights:[{phrase:'one angle is twice the size of the smallest angle',topic:'Geometry — Angles',also:['Algebra — Forming Expressions'],distractorGroup:'geometry'}]},
 {id:'wpd_ks3_047',level:'ks3',topic:'Geometry — Angles',distractorGroup:'geometry',multi:false,text:'A straight road crosses a pair of parallel railway lines. At the first crossing, the angle between the road and the track is 68\u00b0. A rail engineer wants to know all the angles formed at both crossings. Find the co-interior angle at the second crossing.',highlights:[{phrase:'co-interior angle at the second crossing',topic:'Geometry — Angles',distractorGroup:'geometry'}]},
 
 // ─── KS3: Statistics & Averages (3) ───
@@ -338,20 +342,20 @@ const QUESTIONS = [
 {id:'wpd_gcse_010',level:'gcse',topic:'Surds & Bounds',distractorGroup:'number',multi:false,text:'A square patio has an area of 45 m\u00b2. A landscape gardener wants to order edging strip to go around the perimeter of the patio. Find the exact length of one side of the patio in simplified surd form, and hence find the exact perimeter.',highlights:[{phrase:'exact length of one side of the patio in simplified surd form',topic:'Surds & Bounds',distractorGroup:'number'}]},
 {id:'wpd_gcse_011',level:'gcse',topic:'Surds & Bounds',distractorGroup:'number',multi:false,text:'A rectangular room measures 4.8 m by 3.6 m, each measurement given to the nearest 10 cm. A flooring company is ordering tiles for the room. They want to use the upper bound of the room\'s area to make sure they order enough tiles. Find the upper bound of the area of the room.',highlights:[{phrase:'upper bound of the area',topic:'Surds & Bounds',distractorGroup:'number'}]},
 {id:'wpd_gcse_012',level:'gcse',topic:'Surds & Bounds',distractorGroup:'number',multi:false,text:'A cylindrical pipe has a diameter of 5.4 cm, measured to the nearest millimetre. An engineer needs to calculate the upper and lower bounds for the cross-sectional area of the pipe. Find both bounds, giving your answers to 3 significant figures.',highlights:[{phrase:'upper and lower bounds for the cross-sectional area',topic:'Surds & Bounds',distractorGroup:'number'}]},
-{id:'wpd_gcse_013',level:'gcse',topic:'Surds & Bounds',distractorGroup:'number',multi:false,text:'A triangle has two shorter sides of length \u221a7 cm and \u221a28 cm and a right angle between them. A student claims the hypotenuse is exactly \u221a35 cm. Without using a calculator, show whether the student is correct and find the exact length of the hypotenuse in simplified surd form.',highlights:[{phrase:'exact length of the hypotenuse in simplified surd form',topic:'Surds & Bounds',distractorGroup:'number'}]},
+{id:'wpd_gcse_013',level:'gcse',topic:'Surds & Bounds',distractorGroup:'number',multi:false,text:'A triangle has two shorter sides of length \u221a7 cm and \u221a28 cm and a right angle between them. A student claims the hypotenuse is exactly \u221a35 cm. Without using a calculator, show whether the student is correct and find the exact length of the hypotenuse in simplified surd form.',highlights:[{phrase:'exact length of the hypotenuse in simplified surd form',topic:'Surds & Bounds',also:['Geometry — Pythagoras & Trigonometry'],distractorGroup:'number'}]},
 
 // ─── GCSE: Algebra — Equations & Inequalities (6) ───
 {id:'wpd_gcse_014',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'Two friends are comparing their ages. Kira is 3 years older than twice Marcus\'s age. The sum of their ages is 39. Set up and solve an equation to find both their ages.',highlights:[{phrase:'Set up and solve an equation',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
 {id:'wpd_gcse_015',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'A parking metre charges 80p for the first hour and 50p for each additional hour. Tom has £4.30 in his pocket. He wants to know the maximum number of whole hours he can park. Form and solve an inequality to find the answer.',highlights:[{phrase:'Form and solve an inequality',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
 {id:'wpd_gcse_016',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'A rectangle has a length of (3x + 4) cm and a width of (x \u2212 1) cm. The perimeter of the rectangle is 46 cm. A student needs to find the value of x and hence find the area of the rectangle. Form an equation and solve it.',highlights:[{phrase:'Form an equation and solve it',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
-{id:'wpd_gcse_017',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'Tickets for a concert cost £12 for adults and £7 for children. A group of adults and children buy tickets. There are 5 more adults than children in the group. The total cost of the tickets is £131. How many of each type of ticket were bought?',highlights:[{phrase:'total cost of the tickets is £131',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_017',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'Tickets for a concert cost £12 for adults and £7 for children. A group of adults and children buy tickets. There are 5 more adults than children in the group. The total cost of the tickets is £131. How many of each type of ticket were bought?',highlights:[{phrase:'total cost of the tickets is £131',topic:'Algebra — Equations & Inequalities',also:['Algebra — Simultaneous Equations'],distractorGroup:'algebra'}]},
 {id:'wpd_gcse_018',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'A delivery driver is paid £9.50 per hour for a standard shift. Overtime hours are paid at 1.5 times the standard rate. In one week she works h hours of overtime on top of her standard 35-hour week. She wants to earn at least £400 in total. Find the minimum number of overtime hours she needs to work.',highlights:[{phrase:'earn at least £400 in total',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
 {id:'wpd_gcse_019',level:'gcse',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra',multi:false,text:'A number is chosen. When you double it and subtract 7, the result is greater than when you add 11 to the number. Find the set of values the number could take. Represent your answer on a number line.',highlights:[{phrase:'Find the set of values the number could take',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]},
 
 // ─── GCSE: Algebra — Simultaneous Equations (4) ───
 {id:'wpd_gcse_020',level:'gcse',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra',multi:false,text:'Mr Jones buys 5 tins of paint and 4 rolls of decorating tape. The total cost is £167. The next day he returns 1 tin and 1 roll of tape and receives a refund of £33.75. Find the cost of one tin of paint and one roll of tape.',highlights:[{phrase:'5 tins of paint and 4 rolls',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra'}]},
 {id:'wpd_gcse_021',level:'gcse',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra',multi:false,text:'A cinema sells adult tickets and child tickets. On Monday, 3 adult tickets and 5 child tickets are sold for a total of £45. On Tuesday, 5 adult tickets and 2 child tickets are sold for a total of £52. Find the price of each type of ticket.',highlights:[{phrase:'3 adult tickets and 5 child tickets',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra'}]},
-{id:'wpd_gcse_022',level:'gcse',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra',multi:false,text:'Two friends run laps around a track. Isla runs at a constant speed and completes one lap in x minutes. Jacob runs at a constant speed and completes one lap in y minutes. Together they complete 7 laps in 28 minutes if they alternate. If Isla runs twice as fast as Jacob, find each of their lap times.',highlights:[{phrase:'Together they complete 7 laps',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra'}]},
+{id:'wpd_gcse_022',level:'gcse',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra',multi:false,text:'Two friends run laps around a track. Isla runs at a constant speed and completes one lap in x minutes. Jacob runs at a constant speed and completes one lap in y minutes. Together they complete 7 laps in 28 minutes if they alternate. If Isla runs twice as fast as Jacob, find each of their lap times.',highlights:[{phrase:'Together they complete 7 laps',topic:'Algebra — Simultaneous Equations',also:['Algebra — Equations & Inequalities'],distractorGroup:'algebra'}]},
 {id:'wpd_gcse_023',level:'gcse',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra',multi:false,text:'The sum of two numbers is 41 and their difference is 13. A student sets up two equations and solves them to find both numbers. Set up and solve the simultaneous equations.',highlights:[{phrase:'sum of two numbers is 41 and their difference is 13',topic:'Algebra — Simultaneous Equations',distractorGroup:'algebra'}]},
 
 // ─── GCSE: Algebra — Quadratics (5) ───
@@ -376,7 +380,7 @@ const QUESTIONS = [
 
 // ─── GCSE: Geometry — Similarity & Congruence (3) ───
 {id:'wpd_gcse_038',level:'gcse',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry',multi:false,text:'Two similar triangles are used in a design. The smaller triangle has sides of 6 cm, 8 cm and 10 cm. The longest side of the larger triangle is 25 cm. An engineer needs to find the lengths of the other two sides of the larger triangle and also the ratio of their areas.',highlights:[{phrase:'Two similar triangles',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry'}]},
-{id:'wpd_gcse_039',level:'gcse',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry',multi:false,text:'A model of a building is made to a scale of 1:200. The model has a floor area of 18 cm\u00b2. An architect wants to know the actual floor area of the building in square metres. Find the actual floor area.',highlights:[{phrase:'scale of 1:200',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry'}]},
+{id:'wpd_gcse_039',level:'gcse',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry',multi:false,text:'A model of a building is made to a scale of 1:200. The model has a floor area of 18 cm\u00b2. An architect wants to know the actual floor area of the building in square metres. Find the actual floor area.',highlights:[{phrase:'scale of 1:200',topic:'Geometry — Similarity & Congruence',also:['Ratio & Proportion'],distractorGroup:'geometry'}]},
 {id:'wpd_gcse_040',level:'gcse',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry',multi:false,text:'Two bottles of perfume are similar in shape. The smaller bottle is 8 cm tall and holds 50 ml. The larger bottle is 12 cm tall. A student wants to know how much perfume the larger bottle holds. Find the capacity of the larger bottle.',highlights:[{phrase:'similar in shape',topic:'Geometry — Similarity & Congruence',distractorGroup:'geometry'}]},
 
 // ─── GCSE: Geometry — Circle Theorems (4) ───
@@ -409,12 +413,23 @@ const QUESTIONS = [
 
 // ─── GCSE: Multi-topic (2) ───
 {id:'wpd_gcse_059',level:'gcse',topic:'mixed',distractorGroup:'geometry',multi:true,text:'A storage box is a cuboid with length 60 cm, width 40 cm and height 30 cm. A shopkeeper wants to fill the box with cylindrical tins, each with a diameter of 10 cm and a height of 15 cm. He estimates he can fit 48 tins in the box by dividing the volume of the box by the volume of a tin. Explain why his estimate is likely to be too high.',highlights:[{phrase:'volume of the box by the volume of a tin',topic:'Geometry — Area & Perimeter',distractorGroup:'geometry'},{phrase:'He estimates he can fit 48 tins',topic:'Number & Place Value',distractorGroup:'number'}]},
-{id:'wpd_gcse_060',level:'gcse',topic:'mixed',distractorGroup:'number',multi:true,text:'Jodie is competing in a triathlon. The course consists of a 1.5 km swim, a 40 km cycle and a 10 km run. She swims at 2 km/h and cycles at 32 km/h. She has 3 hours and 45 minutes to complete the whole course. What speed must she average on the run to finish exactly on time?',highlights:[{phrase:'She swims at 2 km/h and cycles at 32 km/h',topic:'Ratio & Proportion',distractorGroup:'number'},{phrase:'speed must she average on the run',topic:'Algebra — Equations & Inequalities',distractorGroup:'algebra'}]}
+{id:'wpd_gcse_060',level:'gcse',topic:'mixed',distractorGroup:'number',multi:true,text:'Jodie is competing in a triathlon. The course consists of a 1.5 km swim, a 40 km cycle and a 10 km run. She swims at 2 km/h and cycles at 32 km/h. She has 3 hours and 45 minutes to complete the whole course. What speed must she average on the run to finish exactly on time?',highlights:[{phrase:'She swims at 2 km/h and cycles at 32 km/h',topic:'Ratio & Proportion',distractorGroup:'number'},{phrase:'speed must she average on the run',topic:'Algebra — Equations & Inequalities',also:['Ratio & Proportion'],distractorGroup:'algebra'}]}
 ];
 
 /* ===== TOPIC DEFINITIONS ===== */
 const KS3_TOPICS = ['Ratio & Proportion','Percentages','Fractions','Number & Place Value','Algebra — Forming Expressions','Algebra — Sequences','Geometry — Area & Perimeter','Geometry — Angles','Statistics & Averages'];
 const GCSE_EXTRA_TOPICS = ['Reverse Percentage','Standard Form','Surds & Bounds','Algebra — Equations & Inequalities','Algebra — Simultaneous Equations','Algebra — Quadratics','Algebra — Functions','Geometry — Pythagoras & Trigonometry','Geometry — Similarity & Congruence','Geometry — Circle Theorems','Geometry — Vectors','Probability','Statistics — Scatter Graphs & Correlation','Statistics — Cumulative Frequency & Box Plots'];
+
+// One category scheme (SR-18, Jon 6 Oct 2026): a phrase is right under its topic and under every topic that genuinely
+// fits it as well. A topic in PARENT_TOPIC is a kind of its parent, so a phrase keyed the kind also fits the parent (a
+// reverse percentage is a percentage problem; standard form is number and place value, as the KS3 bank keys it, where
+// the kind is not offered). A phrase's own `also` lists any other topic that fits it.
+const PARENT_TOPIC = {'Reverse Percentage': 'Percentages', 'Standard Form': 'Number & Place Value'};
+function acceptedTopics(hl) {
+  const out = [hl.topic].concat(hl.also || []);
+  if (PARENT_TOPIC[hl.topic]) out.push(PARENT_TOPIC[hl.topic]);
+  return out;
+}
 
 const DISTRACTOR_MAP = {
 'Ratio & Proportion':'number','Percentages':'number','Reverse Percentage':'number','Fractions':'number','Number & Place Value':'number','Standard Form':'number','Surds & Bounds':'number',
@@ -479,7 +494,7 @@ function init() {
   startBtn.addEventListener('click', startGame);
 
   // Play again
-  $('playAgain').addEventListener('click', () => showScreen('start'));
+  $('playAgain').addEventListener('click', () => { showScreen('start'); MaffsLock.screen(startScreen); });   // its second click cannot press Start
 
   // Settings mid-game
   $('settingsBtn').addEventListener('click', openTopicModal);
@@ -604,6 +619,7 @@ function showScreen(name) {
 
 /* ===== GAME LOGIC ===== */
 function startGame() {
+  MaffsLock.newSession();
   // Filter questions by level and active topics
   let pool = QUESTIONS.filter(q => {
     if (q.level !== currentLevel) return false;
@@ -712,9 +728,10 @@ function showPhrase() {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
     btn.textContent = opt;
-    btn.addEventListener('click', () => handleAnswer(btn, opt, correctTopic));
+    btn.addEventListener('click', () => handleAnswer(btn, opt, hl));
     optionsGrid.appendChild(btn);
   });
+  MaffsLock.fresh(optionsGrid);   // a new phrase: a second click or Enter cannot answer it (canon 7.6.0)
 
   // Fade in
   questionCard.classList.remove('fade-in');
@@ -752,22 +769,25 @@ function getDistractors(correctTopic, group) {
   return pool.slice(0, 3);
 }
 
-function handleAnswer(btn, chosen, correct) {
+// Answer once (canon 7.6.0): the phrase is marked through MaffsLock, never by a CSS class alone.
+function handleAnswer(btn, chosen, hl) {
+  if (!MaffsLock.lock(optionsGrid)) return;
   // Disable all
   optionsGrid.querySelectorAll('.option-btn').forEach(b => b.classList.add('disabled'));
 
-  const isCorrect = chosen === correct;
+  const accepted = acceptedTopics(hl);
+  const isCorrect = accepted.includes(chosen);
 
   if (isCorrect) {
     btn.classList.add('correct');
     correctCount++;
   } else {
     btn.classList.add('incorrect');
-    // Reveal correct
-    optionsGrid.querySelectorAll('.option-btn').forEach(b => {
-      if (b.textContent === correct) b.classList.add('reveal');
-    });
   }
+  // Reveal every topic that fits (both, where both fit: SR-18)
+  optionsGrid.querySelectorAll('.option-btn').forEach(b => {
+    if (b !== btn && accepted.includes(b.textContent)) b.classList.add('reveal');
+  });
 
   phraseIndex++;
 
@@ -783,10 +803,10 @@ function handleAnswer(btn, chosen, correct) {
 
   updateHUD();
 
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     questionCard.classList.add('fade-out');
     optionsGrid.classList.add('fade-out');
-    setTimeout(() => {
+    MaffsLock.timer(() => {
       questionCard.classList.remove('fade-out');
       optionsGrid.classList.remove('fade-out');
       showPhrase();
@@ -794,7 +814,8 @@ function handleAnswer(btn, chosen, correct) {
   }, 800);
 }
 
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame = MaffsLock.finishOnce(function () {
   const pct = totalPhrases > 0 ? Math.round(correctCount / totalPhrases * 100) : 0;
 
   // PB check
@@ -841,7 +862,8 @@ function endGame() {
   }
 
   showScreen('results');
-}
+  MaffsLock.screen(resultsScreen);
+});
 
 /* ===== UTILS ===== */
 function shuffle(arr) {
