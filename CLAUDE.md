@@ -49,13 +49,14 @@ Each verifier group now also fails at 75% of its timeout ("time budget: … spli
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
 
-## Handover: read `docs/handover/` (fixed pointer; fix PRs do not edit this section)
+## Handover: read `docs/handover/home.md` and `docs/handover/cloud.md` (fixed pointer; fix PRs do not edit this section)
 
 Each lane keeps its own handover, and a session edits only its own (7 Oct 2026, canon §7.8.2):
 - **`docs/handover/home.md`**: the home lane (shared code and assets, CI, canon, docs PRs).
 - **`docs/handover/cloud.md`**: the cloud lane (per-game fixes in unlisted games).
 
-Read both at the start of a session: yours for what to do next, the other for what is in flight. CLAUDE.md's
+Read both at the start of a session: yours for what to do next, the other for what is in flight.
+`docs/handover/contracts/` is read only when starting the item it names, never at session start (canon §7.8.2). CLAUDE.md's
 old "Handover" sections, the history up to 7 Oct 2026, are in `docs/history/claude-md-archive.md`; nobody adds to them.
 
 ## Two lanes: who edits what (Jon, 7 Oct 2026; canon §7.8.2)

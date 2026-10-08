@@ -10,29 +10,18 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
 **OVERNIGHT RUN (Project Claude for Jon, 8 Oct 2026, 23:45):** `docs/handover/contracts/2026-10-08-overnight.md`
-(verbatim; its rules override the checkpoint rule for this run). Items: 1 VOCAB-IDEMPOTENT (#193, in progress),
-2 CONTRACTS-FOLDER, 3 RELIST-SR, 4+ F1 batches 9-11.
+(verbatim; its rules override the checkpoint rule for this run). Items: 1 VOCAB-IDEMPOTENT (DONE, #193 merged 9 Oct,
+fce8721, main green), 2 CONTRACTS-FOLDER (in progress), 3 RELIST-SR, 4+ F1 batches 9-11.
 
-**QUEUE (home lane), Jon, 8 Oct 2026 (night)**, replacing the checkpoint's "ask Jon for that queue" note. Run in
-order; the standing rule applies (start the next item when one finishes; stop only for a STOP IF, an unruled
-decision, or a checkpoint). Each contract's verbatim text is below the list; move it to the archive when it merges.
-1. **ESSENTIALS-WORDING: DONE, #172 merged 8 Oct (c1fc37a).** Its verbatim text was in Jon's queue message only.
-2. **RELIST-3: DONE, #176 merged 8 Oct (c0c825b).** (Jon, 8 Oct, sent after the queue.) It
-   supersedes RELIST-ES-TB, sent minutes earlier: same relists, plus listing Just Pythag It, Bruv (Jon approved it).
-3. **CHANGED-UTF8: DONE, #178 merged 8 Oct (d73d3b6).**
-4. **GA4-COUNTRY-CANON: DONE, #179 merged 8 Oct (3c3217c).**
-4a. **VOCAB-SHOWTHAT: DONE, #180 merged 8 Oct (47ee9b9)** (Jon, 8 Oct, sent later: run after GA4-COUNTRY-CANON, before F1 batch 7). The "show
-   that" tooltip in `schools/assets/exam-vocab.js`; closes factor-theorem-t5-009 unless the cloud lane holds that game.
-5. **F1 batch 7: DONE, #182 merged 8 Oct (259c143). F1 batch 8: DONE, #190 merged 9 Oct (d7aa0de), main green**
-   (see its entry).
-6. **CHECKPOINT: reached 9 Oct.** Batch 8 merged, main green; this session stopped here. Next session: ask Jon for the
-   queue, or run F1 batch 9 under the standing item (candidates in the batch 8 entry).
-7. **DOCS-SMALL: DONE, #188 merged 9 Oct (883a638), main green.** Its verbatim text is in the archive.
-- **CHECKPOINT STOP (Jon, 8 Oct, late):** batch 7 merged, main green; this session stopped at that boundary.
-- **MAIN-RED: DONE, #184 merged 8 Oct (f1a097d), main green** (see its entry).
+**Contracts (canon §7.8.2, contract CONTRACTS-FOLDER):** each is saved verbatim as
+`docs/handover/contracts/<yyyy-mm-dd>-<name>.md`; the queue below holds a one-line pointer; the file moves to
+`docs/history/contracts/` when the work merges. Read a contract when its item starts, never at session start.
+
+**QUEUE (home lane):** the overnight run above. The 8 Oct queue (ESSENTIALS-WORDING to DOCS-SMALL, F1 batches 7-8,
+the checkpoint) is all merged; its list is in the archive.
 - **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
 - **Standing F1 item:** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty
-  (NOT_YET: 22 once batch 8 merges). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
+  (NOT_YET: 22). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
   `docs/handover/cloud.md` on main and drop every game on it from the batch. Never claim or edit a game on that
   line. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
 - **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
@@ -45,7 +34,20 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-09 (home): VOCAB-IDEMPOTENT (overnight item 1, branch `claude/vocab-idempotent`, #193)
+## 2026-10-09 (home): CONTRACTS-FOLDER (overnight item 2, branch `claude/contracts-folder`)
+
+- **CLAUDE.md** names the two handover files in its heading and says `docs/handover/contracts/` is read only when
+  its item starts. **Canon §7.8.2** records the convention (verbatim file on receipt, one-line pointer in the queue,
+  moved to `docs/history/contracts/` on merge). **check-context-size.py** never measured the folder (its FILES are
+  CLAUDE.md and the two handovers); its docstring now says so. Nothing else at start-up reads the folder (no
+  hook; `.claude/rules/` holds no handover pointer to it).
+- **home.md** held no live contract text (DOCS-SMALL's was archived in #188); the finished 8 Oct queue list and the
+  three oldest entries (F1 batch 7, MAIN-RED, VOCAB-SHOWTHAT) moved to the archive. The overnight contract is the
+  first file in `contracts/`; it moves to history when the run ends.
+- **STOP IF checked, not met:** start-up load (LF bytes) before 42,222 (CLAUDE.md 12,246, home.md 15,416, cloud.md
+  14,560); after 36,287 (12,395, 9,332, 14,560).
+
+## 2026-10-09 (home): VOCAB-IDEMPOTENT (overnight item 1, #193, merged fce8721, main green)
 
 - **Cause, more exactly than the contract's:** the game calls the helper once per text node, and the re-wrapping
   happened inside that one call: wrapExamVocab ran term after term over its own growing output, so a later term
@@ -113,57 +115,3 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   stage are generated offline by `scripts/gen-simultaneous.py`, so a fixed bank: the size is right as it stands).
 - **For Jon:** correlation-or-coincidence's own roster row still says "42 items"; the contract's DO NOT TOUCH covers
   it. The October /updates/ "New" line also says 42; it was true when written.
-
-## 2026-10-08 (home): F1 batch 7 (#182, merged 259c143, main green)
-
-- **On MaffsLock, each with its declaration, seeds 1-3 passing:** circle-theorem-spotter, index-laws, modular-battle,
-  correlation-or-coincidence, estimation-engine, given-that, core-maths-paper1, core-maths-paper2a. probability-paradox
-  (the cloud lane's #177) also to MIGRATED. **NOT_YET: 31.** Chosen from Year 6/KS3/GCSE/Core games NOT next in the cloud
-  lane's listed-games order (core-maths-paper2b/2c, wrong-on-the-internet, higher-power, ... left to it).
-- **Faults fixed beyond the swap:** circle-theorem-spotter moved on 1 s after a wrong answer with nothing to read: it now
-  names the theorem and waits on Next; Play Again's double-click pressed Start. given-that: phase 1 wrong moved on by
-  itself (now waits on Next); its own Next fired twice on two quick Enters (the hidden button keeps focus) and skipped a
-  question; phase 2's two tries survive a double-click. The Core Maths papers' own Next could be pressed twice (a second
-  press during the section banner skipped a question): it now acts once, only on an answered question. modular-battle:
-  the 90 s clock running out during a question's timer or Next now stops both.
-- **Shared fixes (home lane):** `check-answer-lock.py` reads no clock as a score (modular-battle's #timer is a .score-val,
-  so the countdown looked like a re-mark); `check-site.py`'s start finder never follows a link to another page (the Core
-  Maths papers' "Play Fermi Lab" signpost took the driver away).
-- **Declarations:** estimation-engine declares `ready` from its own state (on a phone the keypad makes its boxes
-  read-only, so nothing looked typeable); the Core Maths papers declare `start_sel` (".start-btn"). given-that gains a
-  read-only `window.GT.ui` (its game is an IIFE), as EE.ui and COC.ui. verify-given-that adds `bc.NO_LOCK_FRESH_INIT`.
-- **Answer lock split into three CI parts** (L1-L3, `--part i/3`): L2 ran 6m43s of its 8 min (75% budget 6m) on the
-  first push. ci-groups.py already listed L3 and L4; a part is added only by its ci-line. Add L4 when a part nears 6 min.
-- **Next session:** DOCS-SMALL (item 7) first, then F1 batch 8. **Batch 8 also needs L4** (`--part i/4`): with batch 7
-  L1 ran 5m31s against its 6 min budget. Candidates (GCSE/Core, not next in the cloud lane's order; read
-  `cloud-remaining:` first): proportion-blaster, quadratic-factoriser, simultaneous-solver, standard-form-blitz,
-  stat-attack, tax-theft, formula-unlocked, graph-transformer. NOT_YET: 31 (30 once screening-room, which now loads the
-  lock, passes).
-
-## 2026-10-08 (home): MAIN-RED, like-terms-collector's verifier typed before the question settled (#184, merged f1a097d, main green)
-
-- **Main red after #180** (47ee9b9, run 37811456669 attempt 1), Content verifiers E: `FAIL item 1: typed 8.9/6.5,
-  marked correct=None, expected False` and `the feedback does not say why: ''`. **The re-run (attempt 2) passed: main
-  green again, Jon told.**
-- **Cause (in the verifier, not the page):** `loadInputQuestion()` focuses `#ans0` on a 50 ms MaffsLock timer. The
-  verifier typed as soon as `#ans0` was visible; Playwright's `fill('#ans1')` selects the box and inserts the text in a
-  second step, and when the timer fired between the two, "6.5" went into `#ans0` ("8.965", `#ans1` empty), so Check
-  marked nothing (an unreadable box is not an answer). Shown directly: interleaving the two steps leaves
-  `['8.965', '']` and no mark. The same "marked correct=None" as run 37626794263 (6 Oct), which the 6 Oct and #167
-  fixes did not touch: likely the cause after #89 and #109 too.
-- **Fix:** type only once the page's own focus is on `#ans0` (its signal that the question has settled); `read_mark`
-  takes the mark from the same call that saw it land. Local: the other verifiers that `page.fill` (just-pythag-it-bruv,
-  six-sevens) fill one box, so a focus timer cannot redirect their text; component-crusher's and split-it's (the
-  other 50 ms focus timers) set values in the page.
-- **Proof:** a 100 ms runner stall inside `fill('#ans1')` (select, stall, insert): main's verifier fails 3/3 with main's
-  exact message; this one passes 3/3. A 200 ms gap after every Playwright action: passes 3/3. Plain: 20/20.
-
-## 2026-10-08 (home): VOCAB-SHOWTHAT (#180, branch `claude/vocab-showthat`)
-
-- `schools/assets/exam-vocab.js`: two strings only, "show that" (Jon's exact text) and "hence show" ("prove" -> "reach").
-  Only factor-theorem loads the file (STOP IF clear); its "show that" questions are all numerical (f(a) = 0).
-- Proof: on the stub server in Chromium, factor-theorem practice Q3's tooltip reads the new text.
-- factor-theorem-t5-009 closed here (`status: fixed`, `pr: 180`, `ruling:` Jon's 8 Oct ruling): nothing claimed on
-  `cloud-remaining:`, no open PR touched factor-theorem or exam-vocab.js. The cloud lane's factor-theorem queue already
-  left t5-009 out.
-
