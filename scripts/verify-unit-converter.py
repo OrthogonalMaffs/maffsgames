@@ -28,7 +28,7 @@ The bank is read from the served page (L, A, V, T, E: 58 items; GCSE serves 48, 
     only Level 4's items and logs and submits level4.
   - TIMER AND SCORE (t4-005, Jon's ruling, 8 Oct 2026): nothing on screen changes while a question waits 3 s (no
     visible clock); two sessions on the same questions with the same answers, one answered at once and one after
-    25 s a question (Playwright's clock), score the same, and the score is 100 per correct answer.
+    25 s a question (the page's clock skewed), score the same, and the score is 100 per correct answer.
   - CALCULATOR (Jon, 8 Oct 2026; canon §4.4): at 390x844 on a touch phone the badge shows; the calculator opens,
     works 2500 ÷ 1000 = 2.5 and closes, and while it is open the prompt and all four options are in the window and
     nothing scrolls sideways; at 1366x768 and 1920x1080 it docks beside the card.
@@ -488,24 +488,29 @@ def check_level(rep, browser, base, src):
     ctx.close()
 
 
+# The page's clock, skewed: Date.now() and performance.now() run ahead by window.__skew ms, while timers run in real
+# time. (Playwright's fake clock replays every animation frame of a long wait, so a page with a visible clock ticking on
+# requestAnimationFrame, main's, took minutes per session.)
+SKEW = """(() => { const dn = Date.now.bind(Date), pn = performance.now.bind(performance); window.__skew = 0;
+  Date.now = () => dn() + window.__skew; performance.now = () => pn() + window.__skew; })();"""
+NEXT = "#solution .maffs-next, #solution .next-btn"
+
+
 def play_session(page, pattern, wait_ms):
-    """Answer the session's questions per pattern (True right), wait_ms of clock before each answer; the score."""
-    page.evaluate("() => { level = 'gcse'; startGame(); }")
-    for right in pattern:
-        page.clock.run_for(wait_ms)
+    """Answer len(pattern) questions (True right), each wait_ms later by the page's clock; the score."""
+    page.evaluate("(n) => { level = 'gcse'; startGame(); pool = pool.slice(0, n); }", len(pattern))
+    for k, right in enumerate(pattern):
+        page.wait_for_function("(k) => total === k + 1 && !document.querySelector('#options .opt-btn.disabled')", arg=k)
+        page.evaluate("(ms) => { window.__skew += ms; }", wait_ms)
         page.evaluate("""(r) => { const k = currentQ.c; [...document.querySelectorAll('#options .opt-btn')]
           .find(b => r ? b.dataset.val === k : b.dataset.val !== k).click(); }""", right)
-        if right:
-            page.clock.run_for(1100)
-        else:
-            # Next's floor runs on the page's (fake) clock: let it pass, then press Next and let the advance land
-            page.clock.run_for(3100)
-            page.evaluate("() => { const b = document.querySelector('#solution .maffs-next, #solution .next-btn'); "
-                          "b.click(); }")
-            page.clock.run_for(100)
-    page.clock.run_for(1100)
-    return page.evaluate("() => ({score: score, correct: correctN, done: "
-                         "document.getElementById('results').classList.contains('active')})")
+        if not right:
+            page.wait_for_selector(NEXT)
+            page.wait_for_function("(sel) => { const b = document.querySelector(sel); return b && !b.disabled; }",
+                                   arg=NEXT)
+            page.click(NEXT)
+    page.wait_for_function("document.getElementById('results').classList.contains('active')")
+    return page.evaluate("() => ({score: score, correct: correctN})")
 
 
 def check_timer_and_score(rep, browser, base, src):
@@ -523,17 +528,17 @@ def check_timer_and_score(rep, browser, base, src):
         rep[('t4-005', 'visible clock')].append('the question screen changes while it waits (%r -> %r), or shows a Time '
                                                 'item %s: the timer is to be hidden' % (before[:80], after[:80], labels))
     ctx.close()
-    pattern = [i % 3 != 1 for i in range(20)]
+    pattern = [True, False, True, True, False, True]
     scores = []
     for wait in (0, 25000):
         ctx = new_context(browser, seed=True)
-        ctx_page, errs = open_page(ctx, base, src)
-        ctx_page.clock.install()
-        scores.append(play_session(ctx_page, pattern, wait))
+        ctx.add_init_script(SKEW)
+        pg, errs = open_page(ctx, base, src)
+        scores.append(play_session(pg, pattern, wait))
         ctx.close()
-    want = {'score': PER_CORRECT * sum(pattern), 'correct': sum(pattern), 'done': True}
+    want = {'score': PER_CORRECT * sum(pattern), 'correct': sum(pattern)}
     if scores[0] != scores[1] or scores[0] != want:
-        rep[('t4-005', 'score')].append('the same answers scored %s answered at once and %s after 25 s each (both %s: '
+        rep[('t4-005', 'score')].append('the same answers scored %s answered at once and %s 25 s later each (both %s: '
                                         '%d per correct answer, no time)' % (scores[0], scores[1], want, PER_CORRECT))
 
 
@@ -615,7 +620,7 @@ def verify(src, only=ALL, verbose=False):
 
 def show(rep):
     for (finding, where), msgs in sorted(rep.items()):
-        for m in msgs:
+        for m in dict.fromkeys(msgs):          # a number shown in several places is reported once
             print('FAIL  %s  %s: %s' % (finding, where, m))
 
 

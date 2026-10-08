@@ -61,8 +61,9 @@ main's last full run is red; watch main's run after merging.
   canon's formula it docks from 1292 px. The column width is design, so left as it is.
 - **Filed, open, for Jon:** t4-007 (LOW): "1 mile = 1609 m" is not exact (1609.344); the key is 26.8 either way.
   The verifier reports it as a NOTE. The bank is **58** items (I said 59 to Jon in the session; corrected).
-- **Verifier** `scripts/verify-unit-converter.py`, group B3 (about 30 s; self-test 10 plants, about 4 min). Reads
-  marks from page classes, events through the defineProperty hook (canon §7.9), speed by Playwright's clock.
+- **Verifier** `scripts/verify-unit-converter.py`, group B3 (about 35 s; self-test 10 plants, about 1 min). Reads
+  marks from page classes, events through the defineProperty hook (canon §7.9), speed by a skewed Date.now (not
+  Playwright's clock: it replays every animation frame, so main's rAF clock took minutes).
 - **Sandbox gotchas (this container):** pip's newest Playwright wants a browser build not in /opt/pw-browsers: pin
   `playwright==1.56.0` (matches chromium-1194). `esprima` will not build here: download its sdist and put the source
   on PYTHONPATH for extract-banks/check-banks.
