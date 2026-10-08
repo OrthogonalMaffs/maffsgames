@@ -34,7 +34,7 @@ main's last full run is red; watch main's run after merging.
 ## 2026-10-08 (cloud): CHECKPOINT STOP (Jon): listed-games contract at 2 of 23; nothing claimed
 
 - **Where the contract stands (Jon's listed-games contract, 8 Oct):** both listed CRITICALs are closed.
-  trig-wars (#148, merged, main green) and gradient-hunter (#152; its entry below). The `cloud-remaining:` line is
+  trig-wars (#148, merged, main green) and gradient-hunter (#152; its entry below). The remaining list above is
   empty: **no game is claimed.** The session stopped at Jon's checkpoint without claiming the next game.
 - **Next game: spot-the-muppet.** Start with a claim PR on main (canon 7.8.2, #145): check the open PRs and the home
   handover first, claim one game at a time, the fix PR takes it off the line.
