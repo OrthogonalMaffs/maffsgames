@@ -163,8 +163,16 @@ body.accessible{background-color:#12141f!important}
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- Its check-answer-lock declaration, below. Two options (contract DET): attempt i>=1 picks the option that differs from the key, so the wrong
+answer comes first time on every draw; i=0 (the tap-through) presses the first option, as the generic
+driver did, so the tap-through still meets right and wrong answers. -->
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
 {
+  "answer": [
+    "const q = gameActive && questions[qIdx]; if (!q) return;",
+    "const prime = i === 0 ? true : !isPrime(q.n);",
+    "document.getElementById(prime ? 'btn-prime' : 'btn-composite').click();"
+  ],
   "keys": [
     "p",
     "c",

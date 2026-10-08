@@ -25,6 +25,8 @@ in the PR that fixes it. One game claimed at a time; never claim a game already 
 **Resume rule, MaffsLock (Jon, contract LH):** adopting MaffsLock includes the game's lock-hint declaration
 (`<!-- maffs-lock-hint ... -->`, canon §7.6.0), and the game passes `check-answer-lock.py`. Hints live in the
 game's page, never in the shared script.
+A two-option game declares an `answer` that picks the option differing from its key for `i >= 1` (canon
+§7.6.0, contract DET, 8 Oct; prime-or-composite is the pattern).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.

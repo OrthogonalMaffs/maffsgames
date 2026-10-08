@@ -40,10 +40,16 @@ the real clock), at its first roster level:
 A game the driver cannot play (no option group, no input) is reported UNPLAYABLE and fails: its declaration
 needs an "answer" (and whatever else it takes to reach a question).
 
+Deterministic (contract DET, 8 Oct 2026): every page's Math.random is seeded (--seed, printed), and the driver
+never waits a fixed time on the path to a wrong answer. It waits on the game's state: no fresh window open
+(MaffsLock.isFresh), the next question rendered. A tap the page sees land in a fresh window is made again once
+the window closes. A two-option game declares the answer that differs from its key (canon 7.6.0).
+
     python scripts/check-answer-lock.py                    # every migrated game
     python scripts/check-answer-lock.py --game formula-plug-in [--against FILE]
     python scripts/check-answer-lock.py --not-yet          # play the NOT_YET games too (a report, never fails)
     python scripts/check-answer-lock.py --selftest         # a planted failing game off the cloud list is caught
+    python scripts/check-answer-lock.py --seed 7           # another draw (default 1)
     python scripts/check-answer-lock.py --part 1/2         # CI: every other migrated game (by slug); part 1 also
                                                            # runs the static rules. Add a part (and a group,
                                                            # L1-L4 in ci-groups.py) when a part passes 3 minutes.
@@ -62,6 +68,8 @@ import bank_common as bc  # noqa: E402
 
 TIME_SCALE = 0.25
 WORKERS = 4
+SEED = 1           # the run's seed (--seed): every page's Math.random is seeded with it, and it is printed
+WAIT_MS = 15000    # the longest any wait on the game's state runs (real clock) before the driver gives up on it
 
 # The cloud lane's remaining list: the one `cloud-remaining: <slug> <slug> ...` line in its own handover. While a
 # game is on it, a failure here is reported, not failed; the cloud lane takes a game off in the PR that finishes it.
@@ -218,12 +226,57 @@ INIT = r"""
   window.setTimeout = function (fn, ms, ...a) { return st.call(window, fn, (Number(ms) || 0) * S, ...a); };
   window.setInterval = function (fn, ms, ...a) { return si.call(window, fn, Math.max(1, (Number(ms) || 0) * S), ...a); };
 
-  // Every analytics event, in full.
+  // A seeded Math.random (contract DET): one seed draws the same questions in the same order every run, so the
+  // wrong answer the driver finds, and the whole event log, repeat exactly. check-site.py's PHONE_SEED
+  // (mulberry32 on the FNV-1a hash of the page's path), with the run's seed mixed in.
+  (function () {
+    let h = (0x811c9dc5 ^ %(seed)d) >>> 0;
+    const p = location.pathname;
+    for (let i = 0; i < p.length; i++) { h ^= p.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    let s = h;
+    Math.random = function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      let t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  })();
+
+  // Every fresh() and screen() the game makes, counted (they call through unchanged): a new count after a mark is
+  // the next question (or screen) rendered. And whether a tap landed in a fresh window: this listener is added
+  // before answer-lock.js's guard, so it sees each event first, and it only reads (MaffsLock.isFresh).
+  window.__lockFreshCalls = 0;
+  let ml;
+  Object.defineProperty(window, 'MaffsLock', { configurable: true,
+    get() { return ml; },
+    set(v) {
+      if (v && typeof v === 'object') ['fresh', 'screen'].forEach(function (k) {
+        const f = v[k];
+        if (typeof f === 'function') v[k] = function () { window.__lockFreshCalls++; return f.apply(this, arguments); };
+      });
+      ml = v;
+    } });
+  window.__lockSettled = function () {
+    return !(ml && typeof ml.isFresh === 'function' && ml.isFresh());
+  };
+  window.__lockTap = { fresh: false };
+  ['pointerdown', 'mousedown', 'touchstart', 'click', 'keydown', 'input'].forEach(function (type) {
+    window.addEventListener(type, function (e) {
+      if (!ml || typeof ml.isFresh !== 'function') return;
+      let t = e.target;
+      if (!t || t.nodeType !== 1) t = document.body;
+      const bare = type === 'keydown' && (t === document.body || t === document.documentElement);
+      if (bare ? ml.isFresh() : ml.isFresh(t)) window.__lockTap.fresh = true;
+    }, true);
+  });
+
+  // Every analytics event, in full (f: the fresh() count when it was sent).
   window.__lockEvents = [];
   let real = null;
   Object.defineProperty(window, 'mfg', { configurable: true,
     get() { return function (e, p) {
-      try { window.__lockEvents.push({ e: e, correct: p && p.correct, i: p && p.question_index }); } catch (x) {}
+      try { window.__lockEvents.push({ e: e, correct: p && p.correct, i: p && p.question_index, f: window.__lockFreshCalls }); } catch (x) {}
       if (typeof real === 'function') { try { return real.apply(this, arguments); } catch (x) {} }
     }; },
     set(v) { real = v; } });
@@ -248,6 +301,7 @@ INIT = r"""
       answered: ev.filter(r => r.e === 'question_answered').length,
       correct: ev.filter(r => r.e === 'question_answered' && r.correct === true).length,
       lastCorrect: (ev.filter(r => r.e === 'question_answered').slice(-1)[0] || {}).correct,
+      lastFresh: (ev.filter(r => r.e === 'question_answered').slice(-1)[0] || { f: -1 }).f,
       completed: ev.filter(r => r.e === 'game_completed').length,
       submits: window.__lockSubmits,
       scores: scores
@@ -317,6 +371,11 @@ INIT = r"""
     }
     return null;
   };
+  // The visible controls' text: it changes when a press moves the game to another screen.
+  window.__lockScreenSig = function () {
+    return [...document.querySelectorAll('button, a, [role="button"], input')].filter(visible)
+      .map(e => (e.textContent || e.value || '').trim()).join('|');
+  };
   // The start control (check-site's startEls rule) and the play-again control, for a real double-click.
   window.__lockStartRect = function () {
     const words = ['start', 'start game', 'play', 'begin', "let's go", 'go'];
@@ -361,11 +420,38 @@ def same(a, b):
 
 
 class Driver:
+    """Plays one page. Every wait on the path to a wrong answer is on the game's state, never a fixed delay
+    (contract DET): a tap is made only when no fresh window is open (MaffsLock.isFresh), the next question is
+    taken as up only when it has rendered (a new fresh() call, or an enabled option group) and its window is
+    over, and a tap that still lands in a window (the game opened one between the check and the tap) is seen
+    by the page's own listener and made again once the window closes."""
+
     def __init__(self, page, slug, hint):
         self.page, self.slug, self.hint = page, slug, hint
+        # Answerable: the declaration's 'ready' if it has one, else an option group or an input on screen; and
+        # no fresh window open. Up, after a mark made at fresh() count f: answerable, and either a fresh() call
+        # since the mark or an enabled option group (MaffsLock's lock disabled the answered one).
+        opts = '(__mfgHasInput() || __mfgProbe().n >= 2)'
+        ready = '(%s)' % hint['ready'] if hint.get('ready') else opts
+        self.answerable = '() => __lockSettled() && !!%s' % ready
+        # Nothing to answer now (a right answer's pause, a reveal screen): no option group and no input. Only
+        # where the declaration has no 'ready': a declared 'ready' may describe the first question alone, and
+        # its 'answer' then handles the other screens itself (truth-will-set-you-free).
+        self.idle = None if hint.get('ready') else '() => !%s' % opts
+        self.up = '(f) => __lockSettled() && !!%s && (__lockFreshCalls > f || %s)' % (ready, opts)
 
     async def ev(self, js, arg=None):
         return await self.page.evaluate(js, arg) if arg is not None else await self.page.evaluate(js)
+
+    async def until(self, js, arg=None, ms=None):
+        """Poll a condition on the page (real clock) until it holds: True, or False if it never did in ms."""
+        t_end = asyncio.get_event_loop().time() + (ms or WAIT_MS) / 1000
+        while True:
+            if await self.ev(js, arg):
+                return True
+            if asyncio.get_event_loop().time() >= t_end:
+                return False
+            await self.page.wait_for_timeout(25)
 
     async def snap(self):
         return await self.ev('() => __lockSnap()')
@@ -384,43 +470,66 @@ class Driver:
                 await self.page.mouse.dblclick(r['x'], r['y'])
             elif r:
                 await self.page.mouse.click(r['x'], r['y'])
-            await self.page.wait_for_timeout(500)
         if self.hint.get('start'):
             await self.ev(self.hint['start'])
-            await self.page.wait_for_timeout(500)
         # A visible start control is pressed before anything is read as an option group: a start screen's
         # level or session-length buttons are not answers (check-site.py's tier 3 learnt this on angle-ace).
-        for _ in range(8):
+        # After each press the driver waits for the screen to change, not for a fixed time.
+        t_end = asyncio.get_event_loop().time() + 2 * WAIT_MS / 1000
+        while asyncio.get_event_loop().time() < t_end:
             if await self.ev('() => __mfgHasStart()'):
+                sig = await self.ev('() => __lockScreenSig()')
                 await self.ev('() => __mfgClickStart()')
-                await self.page.wait_for_timeout(400)
+                await self.until('(s) => __lockScreenSig() !== s', sig)
                 continue
-            if self.hint.get('ready') and await self.ev('() => !!(%s)' % self.hint['ready']):
+            if await self.ev(self.answerable):
                 return True
-            p = await self.probe()
-            if p['n'] >= 2 or await self.ev('() => __mfgHasInput()'):
-                return True
-            await self.page.wait_for_timeout(400)
+            await self.page.wait_for_timeout(25)
         return False
 
-    async def wait_answered(self, before, ms=1500):
-        for _ in range(ms // 50):
+    async def wait_answered(self, before, ms=5000):
+        """The snapshot once a question_answered beyond `before` is recorded, or None within ms (real clock), or
+        None at once when the tap landed in a fresh window (it can never mark: answer() makes it again)."""
+        t_end = asyncio.get_event_loop().time() + ms / 1000
+        while True:
             s = await self.snap()
             if s['answered'] > before:
                 return s
-            await self.page.wait_for_timeout(50)
+            if asyncio.get_event_loop().time() >= t_end or await self.swallowed():
+                return None
+            await self.page.wait_for_timeout(25)
+
+    async def settle(self):
+        """Wait until no fresh window is open (a tap now reaches the game), and clear the tap record."""
+        await self.until('() => __lockSettled()')
+        await self.ev('() => { __lockTap.fresh = false; }')
+
+    async def swallowed(self):
+        """Did a tap (or a declared answer's click) since settle() land in a fresh window?"""
+        return await self.ev('() => __lockTap.fresh')
+
+    async def answer(self, i, touch=False, ms=5000):
+        """Submit one answer (option i, or a typed wrong value); the snapshot after it, or None if no mark came
+        within ms. The tap-through passes its old 1.5 s: it often answers in a pause where nothing can mark."""
+        before = (await self.snap())['answered']
+        for _ in range(3):          # again only when the page saw the tap land in a fresh window
+            await self.settle()
+            if self.idle and await self.ev(self.idle):
+                return None
+            s = await self.answer_once(i, touch, before, ms)
+            if s or not await self.swallowed():
+                return s
+            SWALLOWED.add(self.slug)
         return None
 
-    async def answer(self, i, touch=False):
-        """Submit one answer (option i, or a typed wrong value); the snapshot after it, or None."""
-        before = (await self.snap())['answered']
+    async def answer_once(self, i, touch, before, ms):
         if self.hint.get('answer'):
             await self.ev('(i) => { %s }' % self.hint['answer'], i)
-            return await self.wait_answered(before)
+            return await self.wait_answered(before, ms)
         p = await self.probe()
         if await self.ev('() => __mfgHasInput()') and p['n'] < 2:
             await self.ev("() => __mfgTypeAnswer('987654')")
-            return await self.wait_answered(before)
+            return await self.wait_answered(before, ms)
         if p['n'] < 2:
             return None
         rects = await self.ev('() => __lockGroupRects()')
@@ -428,13 +537,13 @@ class Driver:
         keys = [k for k in range(len(rects)) if k != sub_i]
         await self.tap(rects[keys[i % len(keys)]], touch)
         s = await self.wait_answered(before, 600)
-        if s:
+        if s or await self.swallowed():
             return s
         if sub_i >= 0:
             await self.tap((await self.ev('() => __lockGroupRects()'))[sub_i], touch)
         else:
             await self.ev('() => __mfgClickSubmit()')
-        return await self.wait_answered(before)
+        return await self.wait_answered(before, ms)
 
     async def tap(self, r, touch):
         if touch:
@@ -442,22 +551,18 @@ class Driver:
         else:
             await self.page.mouse.click(r['x'], r['y'])
 
-    async def to_next(self, touch=False):
-        """Press the continue control once (or wait for the game to move on by itself)."""
-        for _ in range(60):
+    async def to_next(self, f, touch=False):
+        """After a mark made at fresh() count f: press the continue control once, or let the game move on by
+        itself; return when the next question is up (the control's kind, 'auto', or None if it never came)."""
+        t_end = asyncio.get_event_loop().time() + WAIT_MS / 1000
+        while asyncio.get_event_loop().time() < t_end:
             c = await self.ev('() => __lockContinue()')
             if c and c['ready']:
-                r = c['rect']
-                if touch:
-                    await self.page.touchscreen.tap(r['x'], r['y'])
-                else:
-                    await self.page.mouse.click(r['x'], r['y'])
-                await self.page.wait_for_timeout(400)
-                return c['kind']
-            if not c and (await self.probe())['n'] >= 2:
-                await self.page.wait_for_timeout(350)
+                await self.tap(c['rect'], touch)
+                return c['kind'] if await self.until(self.up, f) else None
+            if await self.ev(self.up, f):
                 return 'auto'
-            await self.page.wait_for_timeout(50)
+            await self.page.wait_for_timeout(25)
         return None
 
     async def answer_wrong(self, touch=False):
@@ -467,8 +572,7 @@ class Driver:
                 return None
             if s['lastCorrect'] is False or self.hint.get('mark_any'):
                 return s
-            await self.to_next(touch)
-            await self.page.wait_for_timeout(350)
+            await self.to_next(s['lastFresh'], touch)
         return None
 
 
@@ -483,7 +587,7 @@ async def play(browser, base, slug, level, page_html):
     async def new_page(**kw):
         ctx = await browser.new_context(**kw)
         await ctx.add_init_script(CHECK_SITE.TIER3_INIT)
-        await ctx.add_init_script(INIT % {'scale': TIME_SCALE})   # after: its mfg recorder wins
+        await ctx.add_init_script(INIT % {'scale': TIME_SCALE, 'seed': SEED})   # after: its mfg recorder wins
         await ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())
         if page_html is not None:
             pat = re.compile(r'/games/%s/(\?[^/]*)?$' % re.escape(slug))
@@ -511,7 +615,8 @@ async def play(browser, base, slug, level, page_html):
     s0 = await d.answer_wrong()
     if s0 is None:
         await ctx.close()
-        return faults + ['UNPLAYABLE: no wrong answer marked in 8 questions (declare it in the page: maffs-lock-hint, canon 7.6.0)']
+        return faults + ['UNPLAYABLE: no wrong answer marked in 8 questions with seed %d (declare it in the page: '
+                         'maffs-lock-hint, canon 7.6.0; a two-option game picks the option that differs from the key)' % SEED]
     rects = await d.ev('() => __lockGroupRects()')
     if hint.get('surface'):
         rects += await d.ev('''(sel) => { const e = document.querySelector(sel); if (!e) return [];
@@ -558,13 +663,13 @@ async def play(browser, base, slug, level, page_html):
             if await d.ev('() => __lockActionable()'):
                 break
             await page.wait_for_timeout(50)
-        await page.wait_for_timeout(320)     # past MaffsLock's 300 ms window on what just rendered
+        await d.until('() => __lockSettled()')   # past MaffsLock's fresh window on what just rendered
         if hint.get('each'):
             await d.ev('() => { %s }' % hint['each'])
         s = await d.snap()
         if s['completed'] or (await d.probe())['atEnd']:
             break
-        if await d.answer(0) is None and not (await d.snap())['completed']:
+        if await d.answer(0, ms=1500) is None and not (await d.snap())['completed']:
             pt = await d.ev('() => __lockBlankPoint()')      # a reveal or interstitial screen: tap it
             if pt:
                 await page.mouse.click(pt['x'], pt['y'])
@@ -604,6 +709,7 @@ async def play(browser, base, slug, level, page_html):
         if again['answered'] != end['answered']:
             faults.append('dblclick on Play again: its second click answered the first question')
     faults += ['page error: %s' % e for e in errs[:2]]
+    LOGS[slug] = {'desktop': await event_log(d)}
     await ctx.close()
 
     # 3: double-tap at 390px
@@ -627,8 +733,14 @@ async def play(browser, base, slug, level, page_html):
                 faults.append('double-tap on %s at 390px: the second tap marked %s' % (c['kind'], diff(before, after)))
     else:
         faults.append('390px: could not reach a wrong answer by touch')
+    LOGS.setdefault(slug, {})['touch'] = await event_log(d)
     await ctx.close()
     return faults
+
+
+async def event_log(d):
+    """The run's events as (event, correct, question_index): one seed gives the same log every run."""
+    return [(r['e'], r.get('correct'), r.get('i')) for r in await d.ev('() => __lockEvents')]
 
 
 def diff(a, b):
@@ -663,6 +775,8 @@ async def play_all(games, against):
 CHECK_SITE = None
 VERBOSE = False
 AUTO_ADVANCE = set()   # games that moved on by themselves after a wrong answer (no Next): reported
+LOGS = {}              # slug -> {'desktop': [...], 'touch': [...]}: each play's event log (contract DET's proof)
+SWALLOWED = set()      # games where a driver tap landed in a fresh window and was made again: reported
 
 
 def counts(slug, remaining):
@@ -737,7 +851,7 @@ def selftest(games):
 
 
 def main():
-    global CHECK_SITE, VERBOSE
+    global CHECK_SITE, VERBOSE, SEED
     ap = argparse.ArgumentParser()
     ap.add_argument('--game', action='append', help='only this game (repeatable)')
     ap.add_argument('--against', help='play this file as the (single) --game page')
@@ -745,9 +859,11 @@ def main():
     ap.add_argument('--static', action='store_true', help='static rules only, no browser')
     ap.add_argument('--part', help='i/n: play only the i-th of n slices of the migrated games (CI)')
     ap.add_argument('--selftest', action='store_true', help='a planted failing game off the cloud list is caught')
+    ap.add_argument('--seed', type=int, default=SEED, help="seeds every page's Math.random (default %d)" % SEED)
     ap.add_argument('-v', '--verbose', action='store_true')
     args = ap.parse_args()
     VERBOSE = args.verbose
+    SEED = args.seed
     try:
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
@@ -792,7 +908,7 @@ def main():
     print('Answer lock (canon 7.6.0): %d roster games record question_answered; %d migrated, %d adopted by the '
           'cloud lane, %d on NOT_YET; the cloud lane\'s remaining list: %s'
           % (len(games), len(slugs - NOT_YET), len(adopted), len(NOT_YET & slugs - adopted),
-             ' '.join(sorted(remaining)) or '(empty)'))
+             ' '.join(sorted(remaining)) or '(empty)') + '; seed %d' % SEED)
     if not args.static and to_play:
         results = asyncio.run(play_all(to_play, args.against))
         for s, _ in to_play:
@@ -810,6 +926,8 @@ def main():
             'off the cloud lane\'s list, so it is judged in full; the home lane adds it to MIGRATED once it passes')))
     for r in reported:
         print('  REPORTED (on the cloud lane\'s list) ' + r)
+    if SWALLOWED:
+        print('  note: a tap landed in a fresh window and was made again once it closed: %s' % ', '.join(sorted(SWALLOWED)))
     if AUTO_ADVANCE:
         print('  note: no Next after a wrong answer (the game moves on by itself; canon 7.6 asks for Next): %s'
               % ', '.join(sorted(AUTO_ADVANCE)))

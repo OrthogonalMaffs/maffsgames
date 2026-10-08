@@ -105,8 +105,17 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- Its check-answer-lock declaration, below. Two options (contract DET): attempt i>=1 picks the option that differs from the key, so the wrong
+answer comes first time on every draw; i=0 (the tap-through) presses the first option, as the generic
+driver did, so the tap-through still meets right and wrong answers. -->
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
-{}
+{
+  "answer": [
+    "if (!document.getElementById('mainGame').classList.contains('visible')) return;",
+    "const yes = i === 0 ? true : !cur.equiv;",
+    "document.getElementById(yes ? 'btnYes' : 'btnNo').click();"
+  ]
+}
 -->
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
