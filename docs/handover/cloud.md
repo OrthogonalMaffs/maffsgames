@@ -33,6 +33,9 @@ main's last full run is red; watch main's run after merging.
 
 - **State found:** the previous session's closing note (partial-fractions-duel next) predated #139; #139 and the relist
   (#142) had merged and main's full run on a99efa5 was green. Only truth-buster was left.
+  **Missed at the start: #141** (the previous session's truth-buster PR, the same cherry-pick) was already open. #143
+  duplicated it; #143 was merged (its lock hint has no fixed wait, the cause contract DET names) with #141's fuller
+  t3-016 (375x667 too), and #141 closed as superseded. **Check the open PRs, not only main and this file, at the start.**
 - **truth-buster:** the old session's commit (fcc5e4c, `claude/keen-cray-ypsime-truth-buster`) cherry-picked onto main
   cleanly: MaffsLock in full (no `S.answered`; Next locks at its first press; the tier transition and the Next delay
   through MaffsLock.timer; finishOnce), and on a phone the answer buttons fold away during the reveal and the page moves
@@ -44,7 +47,7 @@ main's last full run is red; watch main's run after merging.
   four times with the list empty (judged in full; 20 answered, 0 right, the same every run); `--selftest` passes.
 - **Register:** t3-013 fixed. t3-015 stays open (the 21 Learn More video IDs: YouTube is refused here); its fold part is
   fixed at 390x844, and 320x568 is filed as **t3-016** (MEDIUM, open: 32 of 60 fit; the reveal is taller than the
-  screen, so it needs shorter reveal text or a layout ruling). t3-014 (levels, class 4/5) stays open.
+  screen, so it needs shorter reveal text or a layout ruling; 375x667: 58 of 60). t3-014 (levels, class 4/5) stays open.
 - **For the home lane:** truth-buster passes the lock check: add it to MIGRATED.
 - **Next:** Jon's contract of 8 Oct (listed games' CRITICAL/HIGH, trig-wars first) runs after the **Expectation Station
   bundle contract**, whose text this session has not received.

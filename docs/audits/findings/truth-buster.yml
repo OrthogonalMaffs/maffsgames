@@ -191,9 +191,10 @@ findings:
   class: NEW:phone-fold
   level: all
   where: games/truth-buster/index.html (placeReveal, the reveal panel)
-  summary: At 320x568 Next is still below the fold after an answer on 28 of 60 items (canon 7.6.1)
+  summary: After an answer Next is under the fold at 320x568 on 28 of 60 items and at 375x667 on 2 of 60 (canon 7.6.1)
   evidence: 'scripts/verify-truth-buster.py measures every item after an answer: 390x844 Next above the fold on 60/60
-    (fixed, PR 143); 375x667 58/60; 320x568 32/60, lowest Next bottom 790px against a 528px fold. placeReveal() never
+    (fixed, PR 143); 375x667 58/60, lowest Next bottom 671px against a 627px fold; 320x568 32/60, lowest Next bottom 790px
+    against a 528px fold. placeReveal() never
     scrolls past the reveal''s top, so a reveal taller than the screen keeps Next under it. Needs shorter reveal text
     (content, Project Claude) or a layout ruling (collapse the counterexample or Learn More); filed open per Jon''s
     ruling (7 Oct: the 320x568 entry does not block the fix PR).'
