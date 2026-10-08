@@ -11,7 +11,8 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 
 **QUEUE (home lane; Jon, 7 Oct evening session):** MaffsLock #125, batches 1 (#129), 2 (#132), contract LH (#133)
 and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then stops at the checkpoint. Then:
-1. **FIRST in the next session: contract DET, check-answer-lock.py made deterministic** (Jon, 7 Oct). Two
+1. **Contract DET: BUILT, PR on `claude/det` (8 Oct; see its entry below). Merge on a green Gate, then the
+   queue moves on.** check-answer-lock.py made deterministic (Jon, 7 Oct). Two
    causes fail a PR at random: (a) after a right answer `to_next()` waits a fixed 350 ms and returns 'auto', so the
    next tap can land in MaffsLock's 300 ms fresh window (UNPLAYABLE; #134 prime-or-composite, #137
    fraction-equivalence); (b) with no answer hint the driver taps option (k+1) % 2 on 8 unseeded questions, all
@@ -27,8 +28,99 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
    TOUCH: answer-lock.js behaviour, what the check tests, scoring, cloud-remaining games, CI retry settings.
    STOP IF: the fresh window can't be observed without changing answer-lock.js behaviour; a two-option game's
    wrong answer can't be expressed with the existing key; determinism would stop it testing something it tests now.
-2. **Contract ESSENTIALS** (Jon's paste, 7 Oct 20:03): after the relist PR merges and main is green. **Its text
-   was not in the paste this session received (a placeholder line only): get it from Jon.**
+2. **Contract ESSENTIALS** (Jon's paste, received in full 8 Oct): after DET merges and main is green. Verbatim:
+   > TASK: Rename the resit section to "Essentials", stop any student-facing page naming the student's status,
+   > and correct the homepage title and description so they're accurate and name who the site is for.
+   > ROOT CAUSE: Status labels and site facts are hand-typed into individual pages. The two resit escape rooms'
+   > description, og and twitter tags open "A GCSE resit escape room on…", so a link posted in Google Classroom or
+   > Teams shows that label to the whole class; homepage and /escape-rooms/ cards say "for a GCSE resit class". The
+   > homepage meta/og description says "96 free curriculum-aligned maths games" although the portal lists 91, and
+   > says "KS3 through Further Maths" while the page subtitle says "KS3 through A-Level". Neither names the
+   > priority audience or Core Maths.
+   > CLASS CHECK: two classes. (1) Status labels on student surfaces: fix at the layer, a canon rule plus a CI
+   > check, not just edits. (2) A site fact (the game count) typed by hand beside the data it should come from:
+   > generate it from the single metadata source, or remove the number.
+   > EXACT CHANGE: 1. Canon rule (Jon, 7 Oct): "Name the maths, never the student." Teacher surfaces
+   > (/essentials/, its metadata, each room's teacher.html, teacher guides) may say resit or post-16. Student
+   > surfaces (every game and escape-room page, including description, og and twitter tags; portal and
+   > /escape-rooms/ cards) describe the topic and level only (e.g. "A GCSE escape room on factors, primes and HCF").
+   > 2. Rename /resit/ to /essentials/: heading "Essentials", with the teacher line under it: "GCSE Foundation
+   > maths for students working at grades 1–3, including post-16 resit classes." /resit/ becomes a meta-refresh
+   > redirect to /essentials/ (the /schools/spec-map/ pattern) so existing Classroom links keep working. Homepage
+   > badge, nav, sitemap, check-resit-page.py and every internal link follow the new address. Analytics:
+   > section/item values for this page change to essentials; canon's analytics section records the rename date
+   > and the old-to-new mapping so the Sheet and GA4 read across it. 3. Fix the student surfaces: comic-caper and
+   > kiln-disaster description, og and twitter tags; the "for a GCSE resit class" card notes on the homepage and
+   > /escape-rooms/ (keep the "built from a request, want something built?" invitation without the status label).
+   > 4. scripts/check-student-labels.py (CI, declares its ci-line): fails if "resit", "retake" or "post-16" appear
+   > in visible text or in description/og/twitter tags of any games/**/index.html, escape-rooms/*/index.html or
+   > portal card; teacher.html, /essentials/, docs and code comments exempt. Self-test plants the old comic-caper
+   > description; caught. 5. Homepage title, description, og and twitter: no hand-typed game count (generate it
+   > from the listed games in the single metadata source, or drop the number: your choice, recorded in the PR);
+   > one consistent range; name GCSE Foundation and Core Maths alongside the existing levels. Draft wording for
+   > Project Claude to review in the PR. 6. Docs: canon (rule, analytics mapping), handover in home.md.
+   > DO NOT TOUCH: game content, keys, scoring; game-page titles (topic-first titles are a later job); Core Maths
+   > landing page (build freeze); the escape rooms' gameplay and teacher pages beyond links; Firebase and
+   > leaderboard keys; games on the cloud lane's remaining list.
+   > SUCCESS CONDITION: /essentials/ live with the teacher line; /resit/ redirects to it; no student surface names
+   > the student's status and the check catches the planted label; homepage metadata carries no stale count and
+   > one consistent range; listing and resit-page checks pass under the new name; merged on a green Gate; main
+   > green; handover current.
+   > STOP IF: a generated count needs a new field in the metadata source; the redirect breaks a check that
+   > assumes /resit/ is a real page; any analytics event name (not just a value) would have to change.
+2b. **Contract CLAIM** (Jon, 8 Oct; a separate PR, after DET, before or alongside ESSENTIALS). Verbatim:
+   > TASK: Record the cloud lane's widened remit in canon and make the F1 rollout skip any game the cloud lane
+   > has claimed. ROOT CAUSE: From 8 Oct the cloud lane also fixes listed games (Jon's ruling; its contract tells
+   > it to claim each game by adding it to the `cloud-remaining:` line in docs/handover/cloud.md before
+   > starting). Canon §7.8 still says the cloud lane works only on unlisted games, and the F1 batch plan lists
+   > games without checking that line, so both lanes could edit the same game. CLASS CHECK: shared process rule
+   > (canon) and shared CI behaviour (check-answer-lock.py already reads `cloud-remaining:`). One canon edit and
+   > one rule in the F1 batch procedure; no game files.
+   > EXACT CHANGE: 1. Canon §7.8: "The cloud lane may fix listed games it has claimed on the `cloud-remaining:`
+   > line in docs/handover/cloud.md (Jon, 8 Oct). It claims one game at a time, before starting it, in a handover
+   > commit of its own, and removes the game in the PR that fixes it." 2. docs/handover/home.md and the F1 batch
+   > procedure: before building each batch, read `cloud-remaining:` on main and drop any claimed game from the
+   > batch. Never claim or edit a game on that line. 3. Confirm check-answer-lock.py treats a claimed listed game
+   > the same way as a claimed unlisted one (reported, not failed, while on the line). If it doesn't, make it so
+   > in this PR.
+   > DO NOT TOUCH: game files; answer-lock.js; the cloud handover file; what check-answer-lock.py tests.
+   > SUCCESS CONDITION: canon carries the rule; the batch procedure skips claimed games; a listed game placed on
+   > the line in a scratch copy is reported, not failed; merged on a green Gate; main green; handover current.
+   > STOP IF: honouring the line for listed games would let a game sit on it indefinitely without failing
+   > (propose a bound, e.g. it fails once off the line or after its PR merges).
+   - Note for that session (8 Oct, from DET): today `counts()` returns True for any MIGRATED game, so a MIGRATED
+     game put on the line is FAILED, not reported: item 3 needs a change. Also check the STOP IF before changing it.
+2c. **Contract UPDATES** (Jon, 8 Oct): after ESSENTIALS merges and main is green. Verbatim:
+   > TASK: Add Jon's approved October quality entries to /updates/. ROOT CAUSE: The 6-8 Oct clean-up (audit,
+   > per-game verifiers, SR-16/17 fixes, the shared answer lock, 17 games relisted) is not on /updates/, the page
+   > that shows teachers the site is maintained. Jon approved wording on 8 Oct: honest, no fault counts. CLASS
+   > CHECK: Local: content on one docs page, in its existing format. No shared code.
+   > EXACT CHANGE: In updates/index.html, October 2026 section, in the page's existing markup and style (links to
+   > games as the page does): 1. After the "Which tax year?" note, a second note: <strong>Every answer checked
+   > again.</strong> This month we went back through the games and worked out every answer again from each
+   > question's own data, by script, rather than relying on the answers typed in when the games were written.
+   > Where we found a wrong answer, a true statement offered as a wrong option, or a question using a rule it
+   > didn't state, we fixed it. Some games were taken off the home page while that happened; they're back, apart
+   > from a handful still being worked on. Every game that has been through this now has its own check that runs
+   > whenever the site changes, so a fault can't quietly come back. We're working through the rest of the
+   > library in the same way. 2. Under New, first item: <a href="/games/linear-equation-solver/">Linear Equation
+   > Solver</a> now asks "What is the optimal move here?" Every move that is equally quick scores full marks, and
+   > a move that works but takes longer scores half, with the quicker route shown. A wrong move tells you what
+   > went wrong, such as dividing only one side. 3. Under Clarified, first item: <strong>Questions say which rule
+   > they use.</strong> Where maths has more than one convention, the games checked so far now say which one: for
+   > example which quartile method, or that a roulette wheel is the American kind. 4. Under Improved, first item:
+   > <strong>One answer per question.</strong> In some games a second tap, a double-click or the Enter key could
+   > mark an answer twice or skip a question. The games updated so far accept exactly one answer per question;
+   > the rest are following. 5. Before committing, confirm each claim against the repo: Linear Equation Solver's
+   > live marking matches item 2 (full / half / named error); at least one listed game states a quartile method
+   > and one names the American wheel (item 3). If either is not true on main, STOP IF.
+   > DO NOT TOUCH: existing entries (history stays as written, including the September and earlier October items
+   > and the /resit/ link, which redirects); any game file; the portal's New & updated badges (Jon, 8 Oct:
+   > correctness fixes do not earn the Updated badge; only student-visible changes do).
+   > SUCCESS CONDITION: the four items appear in the October section in the page's style; page passes its
+   > existing checks at 320/390/1280; merged on a green Gate; main green; handover current.
+   > STOP IF: a claim in items 2-3 is not true on main (report which; do not reword it yourself); the page's
+   > checks require a format the text doesn't fit.
 3. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty.
 - **Checkpoint rule:** stop after every 2 batches merged (main green), or at the next batch boundary when Jon
   says "checkpoint". At each stop, update this file.
@@ -36,6 +128,40 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-08 (home): contract DET, check-answer-lock.py deterministic (branch `claude/det`)
+
+- **Driver:** every page's `Math.random` is seeded (`--seed`, default 1, printed in the first line; check-site's
+  PHONE_SEED with the run's seed mixed in). The path to a wrong answer has no fixed delay: `start()` waits for
+  the screen to change after each Start press and then for an answerable, settled question; `answer()` taps
+  only once no fresh window is open; `to_next()` waits for the next question (a new `fresh()`/`screen()` call
+  since the mark, or an enabled option group) and its window to close. The only sleeps left in Driver are
+  25 ms polls inside those waits. A tap the page sees land in a fresh window (a capture listener added before
+  the guard, reading `MaffsLock.isFresh`) is made again once the window closes, and the game goes on the
+  note line. The tap-through's 320 ms sleep is now the same settled wait.
+- **answer-lock.js:** `MaffsLock.isFresh([target])` added, read-only, documented; test-answer-lock.py's
+  `fresh` check covers it. No behaviour change.
+- **Declarations:** the two-option games played generically were prime-or-composite, fraction-equivalence and
+  factor-race (a scan of every migrated game's option group; spot-the-error is two-option but already
+  declared). Each now declares `answer`: for `i >= 1` the option that differs from its key; for `i = 0`
+  (the tap-through) the first option, as the generic driver did, so the tap-through still meets right and
+  wrong answers. Canon §7.6.0 and one line in cloud.md record the rule.
+- **Two snags found and fixed on the way:** (1) a declared answer in a right-answer pause cannot mark, so
+  it waited out the deadline: `answer()` now returns at once when no option group or input is on screen,
+  but only where the declaration has no `ready` (truth-will-set-you-free's `ready` describes its first
+  question only, and the shortcut stalled it). (2) The tap-through keeps its old 1.5 s mark deadline; the
+  wrong-answer search waits up to 5 s (load).
+- **Proofs (scratchpad `prove_det.py`, results in the PR):** same seed gives an identical event log
+  (5 games, desktop + touch); a forced all-right draw gives the same named UNPLAYABLE (seed printed) 3/3
+  runs; a fresh window opened before the first tap is caught and re-tapped 5/5 on 7 games, mouse and touch;
+  the declared games are wrong on the first answer for 20/20 seeds, both ways; the planted no-lock
+  decimal-detective is caught every run (same single fault as the old driver); then 20 passes in a row of
+  the two named games.
+- **Timing:** local part 1 3m05s, part 2 4m23s (CI's last main run took 5m04s and 5m56s with the old driver).
+- **Not changed (out of scope, flagged):** several declarations (component-crusher, linear-equation-solver,
+  proof-builder, spot-the-error, suvat, truth-will-set-you-free, expectation-station, factor-theorem) wait a
+  fixed `real(350)` inside their own `answer` JS. That wait starts after the driver has already found no
+  window open, so it cannot race the window; it is just redundant. Removing it is game-file work for a batch.
 
 ## 2026-10-07 (home, night 3): batch 4 (#140); the SR-21 relist PR; CHECKPOINT STOP
 
@@ -53,7 +179,7 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   old neighbour, bottom-up; spec-map links are merged into today's rows. Hand-done: roster, NOT_ON_HUB,
   check-resit-page.py, the guide's "two free games" line, Component Crusher's Coverage Status row, the hub's last
   comma. A later relist of the seven can reuse the same approach.
-- **Next session:** contract DET first (QUEUE above), then ESSENTIALS (get its text from Jon).
+- **Next session:** contract DET first (QUEUE above), then ESSENTIALS (its text is now in the QUEUE).
 
 ## 2026-10-07 (home, night 2): #136 (batch 3) merged; F1 batch 4 PR; relist PR next
 
