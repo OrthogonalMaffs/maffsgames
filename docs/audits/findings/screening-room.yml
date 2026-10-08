@@ -69,7 +69,7 @@ findings:
   evidence: 'nextQuestion draws phase 1 at once; handleGut has no answered guard. Real dblclick: 7/7 at 1280x800,
     6/7 at 390x844 recorded in phase1Scores and question_answered.'
   status: fixed
-  pr: PRNUM
+  pr: 183
 - id: screening-room-t4-006
   severity: MEDIUM
   jc: false
@@ -80,7 +80,7 @@ findings:
   evidence: '?level=constructor/__proto__/toString: TypeError arr.slice is not a function; recoverable via level
     button. nonsense and l4 fall back to gcse silently.'
   status: fixed
-  pr: PRNUM
+  pr: 183
 - id: screening-room-t4-007
   severity: MEDIUM
   jc: false
@@ -100,7 +100,7 @@ findings:
   summary: 8 icon arrays scaled for N > 10,000 with no '1 icon = k' note; three draw no condition icon
   evidence: alevel_04 0/0/0 drawn vs 1/1/10; alevel_12 0/0/100 vs 5/5/10,000; alevel_19 0/0/50 vs 20/14/5,000.
   status: fixed
-  pr: PRNUM
+  pr: 183
 - id: screening-room-t4-009
   severity: MEDIUM
   jc: false
@@ -151,7 +151,7 @@ findings:
   summary: At 390x844 phase 2 scrolls sideways on 37/70 items and phase 3's Next sits off the right edge
   evidence: showPhase sets display:flex with row direction; scrollWidth 395-585 (phase 2), 437 (phase 3).
   status: fixed
-  pr: PRNUM
+  pr: 183
 - id: screening-room-t4-014
   severity: MEDIUM
   jc: false
@@ -170,7 +170,7 @@ findings:
   summary: Phase 3 hides the scenario and array; the true-positive count must be remembered
   evidence: Prompt gives only total positives.
   status: fixed
-  pr: PRNUM
+  pr: 183
 - id: screening-room-t4-016
   severity: LOW
   jc: false
@@ -189,7 +189,7 @@ findings:
     its unit (profiles, claims, vehicles, notes, castings). The two question_answered rows per question are
     filed as t4-017.'
   status: fixed
-  pr: [92, PRNUM]
+  pr: [92, 183]
 - id: screening-room-t4-017
   severity: LOW
   jc: false

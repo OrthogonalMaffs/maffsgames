@@ -71,7 +71,7 @@ main's last full run is red; watch main's run after merging.
   false positive on the bus item) goes stale and Tier 4 fails; `check-changed.py` does not run Tier 4. After any bank
   edit: `extract-banks.py --only <slug>` then `check-banks.py --only <slug> --write-ledger`.
 - **probability-paradox #177 merged** 16:30 UTC; main's full run on dc0f22c green.
-- **screening-room (claim #181; fix PR this branch; unlisted, Jon's SR-21 contract + t4-015 ruling + Project
+- **screening-room (claim #181; fix #183; unlisted, Jon's SR-21 contract + t4-015 ruling + Project
   Claude's note, 8 Oct).** MaffsLock and MaffsNext, hint (plays all three phases). **Gotcha: `fresh(gameScreen)` does
   not undo a lock held by a container inside it** (the gut options, the answer row, Next): fresh each locked container
   when it renders, or the second question's gut check is ignored. t4-006 own levels only (`hasOwnProperty`). t4-008
