@@ -88,12 +88,28 @@ main's last full run is red; watch main's run after merging.
 - **Main went red at 16:46 (home #180: verify-like-terms-collector, "item 1: typed 8.9/6.5, marked correct=None";
   Check marked nothing within 5 s, so the click itself, not the read); the failed job's re-run passed (17:40). Not
   reproduced with a 200 ms gap after every Playwright action (3 runs). The home lane holds contract MAIN-RED for it.
-- **Factor Theorem (Project Claude, 18:35):** go ahead; report the alevel board (scores above 41?) as unchecked from
-  the sandbox (Firebase is refused); Jon checks leaderboards/factor_theorem_alevel himself. level4: no hub change
+- **Factor Theorem (Project Claude, 18:35):** go ahead. **The alevel board: checked by Jon, 8 Oct 18:52:
+  leaderboards/factor_theorem_alevel is null (nothing ever submitted): record "checked: empty" in the PR; that STOP IF
+  cannot trigger.** (The sandbox cannot reach Firebase.) level4: no hub change
   while unlisted (NOT_ON_HUB skips the level check); the home lane's relist adds both levels.
-- **Next:** probability-paradox t1-004 (Jon's contract, 8 Oct: the regression item rewritten; claim first), then
-  factor-theorem (contract + t5-013/014/015 rulings). factor-theorem's level4 board may need the hub registry
-  (check-leaderboard-coverage.js): a STOP IF. The home lane's #180 closes factor-theorem-t5-009: merge main first.
+- **CHECKPOINT (Jon, 8 Oct ~19:00, context over 60%): STOP after #183 merges and main is green.** Nothing claimed
+  after it. The next session starts with probability-paradox t1-004.
+- **probability-paradox t1-004 (Jon's contract, 8 Oct, verbatim in the session; key points):** claim first; replace
+  the item at games/probability-paradox/index.html:364 ("A student scores 95% ... claims credit") with: scenario "A
+  teacher picks the ten students with the lowest scores on a test (average 41%) for a new revision method. On a
+  second paper of the same difficulty, the group's average rises to 57%. The teacher says the method worked."; q
+  "What else could explain the rise?"; opts ["Regression to the mean", "The method must have worked: a 16-point rise
+  is too big to be anything else", "The second paper was easier", "The highest scorers would have risen by the same
+  amount"]; correct "Regression to the mean"; explain "Students picked for scoring lowest include some who had an
+  unlucky day. On the next paper their luck evens out, so the group's average rises even if nothing changed. The top
+  scorers would tend to fall back for the same reason. To know whether the method worked, compare with similar low
+  scorers who did not get it." The item has no id. Verifier: pin it (selection on the lowest scores, same difficulty,
+  the four options exactly, the key) and plant the old item; close t1-004 citing Jon's ruling; fit at 390px; check the
+  B6 ledger (content ids). STOP IF the longer option cannot fit 390px, or a ledger/analytics key breaks.
+- **Then: factor-theorem.** Two contracts from Jon (8 Oct) were pasted into the session, not the repo: ask Jon to
+  paste them again (the SR-21 contract: t5-004, t5-005 HIGH, t5-008, t5-018; and the rulings contract: t5-013 read
+  ?level, t5-014/015 Practice submits nothing, Test submits under the level). Settled: level4 needs no hub change while
+  unlisted (NOT_ON_HUB skips the level check); the alevel board is empty (above). #180 closed t5-009: merge main first.
 
 ## 2026-10-08 (cloud, afternoon): CHECKPOINT STOP (Jon's queue done): listed-games contract at 5 of 23; nothing claimed
 
