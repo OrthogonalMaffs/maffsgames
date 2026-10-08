@@ -378,6 +378,38 @@ they last looked. That is a real gap, and it should be reopened as a deliberate 
 than by quietly restoring this form: whatever replaces it needs a sender, a schedule someone will
 actually keep, and a processor disclosed only once it is genuinely in use.
 
+## 3.4 New & updated badges (Jon, 8 Oct 2026)
+
+**NEW** = a genuinely new game, first added to the portal in the window (27 Sep 2026, unchanged).
+
+**UPDATED** (Jon's ruling, 8 Oct 2026, verbatim): The Updated badge marks a change a returning student would notice in
+what they learn or how they're marked: new questions or levels, a new mode, new help or worked explanations, or
+marking that changes what earns credit (for example, Linear Equation Solver's optimal-move scoring, or Gradient
+Hunter's typed gradient). It is not earned by correctness fixes, the answer lock, Next-button behaviour, phone fit
+or visual restyling, however visible those are.
+
+This replaces the 27 Sep 2026 definition (in `docs/history/claude-md-archive.md`, "Previous state — 2026-09-21").
+The mechanism, as built 27 Sep 2026 (copied verbatim from there; the archive keeps the history):
+
+- Each qualifying card carries `data-badge="new"` or `data-badge="updated"` plus
+  `data-badge-date="YYYY-MM-DD"` (the day the qualifying work went live), on **every** occurrence
+  of that game's card — a game can repeat across several level-filtered sections, and the
+  attribute has to be on all of them for the toggle to work regardless of which section is
+  showing. There is no hand-placed ribbon in the HTML any more.
+- One function, `applyBadges()` (top of the portal's `<script>`, run once via `applyBadges();`
+  right before the first `filter('all')` — i.e. before `applyFilters()` ever runs), computes
+  whether each badge is still live: `BADGE_DAYS = 56` (half a term) since `data-badge-date`. If
+  live, it sets `card.dataset.fresh = '1'` (the flag `applyFilters()` already reads — that
+  function itself was never touched) and renders the `.fresh-badge` / `.fresh-badge.updated`
+  ribbon on that game's *first* card only. If nothing is live, it also hides `#freshBtn` entirely,
+  so the toggle can never be clicked into an empty result — there is never a state where "New &
+  updated" is selectable and shows nothing.
+- "Today" is read through a single function, `mfgToday()`, purely so a test can temporarily
+  replace its body to simulate a later date without touching the badge data — never committed.
+- When a game next qualifies, add or refresh `data-badge`/`data-badge-date` on every occurrence of
+  its card; nothing else to update, no list to keep in sync, nothing to remember to remove later.
+
+
 ---
 
 # 4. Complete Game Roster
