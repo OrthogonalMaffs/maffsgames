@@ -225,5 +225,11 @@ findings:
   summary: 'Stage 1 is underdetermined: on ~33 of 45 items two missing cells take different values and only sum-to-1
     is stated, so the swapped completion (equally consistent with the item) is marked wrong'
   evidence: 'Project Claude 7 Oct; e.g. es_core_001 (x=2: 0.30, x=4: 0.25, no clue in context). Fix design awaits
-    Jon''s ruling (A/B). Do not relist expectation-station until it is fixed (Jon, 7 Oct).'
-  status: open
+    Jon''s ruling (A/B). Do not relist expectation-station until it is fixed (Jon, 7 Oct). Fixed under ruling B:
+    the 33 items each state a relation between the two missing cells (Project Claude''s bundle); five more items the
+    count missed (es_gcse_006, es_gcse_014, es_alevel_003, es_alevel_008, es_alevel_010: equal keyed values, but a
+    second pair of tiles also summed) had one stray tile changed (approved by Project Claude, 8 Oct).
+    scripts/verify-expectation-station.py now tries every placement of the tiles on every item: exactly one may sum
+    to 1 and satisfy what the item states (CLUES), and it must be the keyed one; main''s page fails it on 38 items.'
+  status: fixed
+  pr: PRNUM
