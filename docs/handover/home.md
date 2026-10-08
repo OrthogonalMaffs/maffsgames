@@ -15,9 +15,10 @@ contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as 
    ("QUEUE items CTX and F1 batch 5"); its notes: the CTX entry below.
 2. **F1 batch 5: DONE, #161 merged 8 Oct (8216ff4), main green.**
 3. **F1 batch 6: DONE, #165 merged 8 Oct (7844d10).**
-4. **LTC flake (the cloud lane, relayed by Jon, 8 Oct; queued after CTX):** main went red once on like-terms-collector's
-   self-test "mark landing 300 ms after Check" (passed 4/4 locally and on a rerun). Same shape as DET: make it wait on
-   state, not time. **PR on `claude/ltc-flake` (see its entry).** Then **CHECKPOINT STOP** (batches 5 and 6 merged).
+4. **LTC flake: DONE, #167 merged 8 Oct (7d442e1), main green.** (The cloud lane, relayed by Jon, 8 Oct.)
+- **CHECKPOINT STOP (Jon, 8 Oct, evening):** items 1-4 done, main green; this session stopped here, as told ("do not
+  start the next item in this session"). **Jon's checkpoint message said to record "the queue below", but no queue came
+  with it.** Next session: ask Jon for that queue first. Without it, the standing queue is item 5 (F1 batch 7).
 - **Follow-up (home lane, small):** `check-changed.py` crashes (`UnicodeEncodeError`, cp1252) printing a failure when
   its output is redirected to a file on Windows. Until fixed: `PYTHONIOENCODING=utf-8 python scripts/check-changed.py`.
 - **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
@@ -25,7 +26,7 @@ contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as 
   UNPLAYABLE after Start). The same slice passed 20/20 locally on that commit, the parallel run (3878582) was green, and
   a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
   driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
-3. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty.
+5. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty (NOT_YET: 40).
    **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
    `docs/handover/cloud.md` on main and drop every game on it from the batch. Never claim or edit a game on that
    line. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
@@ -36,7 +37,7 @@ contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as 
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-08 (home): LTC flake, like-terms-collector's late-mark self-test (branch `claude/ltc-flake`)
+## 2026-10-08 (home): LTC flake, like-terms-collector's late-mark self-test (#167, merged)
 
 - **Cause:** the self-test serves a copy whose showFeedback() marks DEFER (300) ms late, then reads the mark "straight off
   the click" to prove the plant bites, expecting none. That read was a second Playwright call after `page.click`; on a
