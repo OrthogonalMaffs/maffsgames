@@ -8,8 +8,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | # | Point | Status |
 |---|---|---|
-| 1 | Every live game has a verifier in CI | NOT MET: 40 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 58 open (3 CRITICAL, 55 HIGH) |
+| 1 | Every live game has a verifier in CI | NOT MET: 39 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 56 open (2 CRITICAL, 54 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 6 in the roster's Unlisted section |
@@ -21,11 +21,11 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 3 | 22 | 0 | 25 |
-| HIGH | 55 | 151 | 0 | 206 |
-| MEDIUM | 164 | 105 | 0 | 269 |
+| CRITICAL | 2 | 23 | 0 | 25 |
+| HIGH | 54 | 152 | 0 | 206 |
+| MEDIUM | 160 | 109 | 0 | 269 |
 | LOW | 34 | 25 | 0 | 59 |
-| **All** | 256 | 303 | 0 | 559 |
+| **All** | 250 | 309 | 0 | 559 |
 
 ### By class
 
@@ -33,14 +33,14 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|
 | 2 | 33 | 104 |
 | 3 | 10 | 85 |
-| 6 | 31 | 56 |
+| 6 | 30 | 56 |
 | 1 | 17 | 36 |
-| NEW:wrong-explanation-text | 18 | 34 |
+| NEW:wrong-explanation-text | 16 | 34 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
 | 7 | 6 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
-| 8 | 7 | 10 |
+| 8 | 6 | 10 |
 | NEW:convention-unstated | 8 | 10 |
 | NEW:precision-not-stated | 4 | 9 |
 | NEW:hand-typed explanation figure | 6 | 7 |
@@ -56,7 +56,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 9 | 3 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
-| NEW:sr14-content | 2 | 3 |
+| NEW:sr14-content | 1 | 3 |
 | NEW:wrong explanation | 1 | 3 |
 | uncounted | 2 | 3 |
 | NEW:board-key-mismatch | 2 | 2 |
@@ -81,7 +81,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:g not stated | 0 | 1 |
 | NEW:generator-drops-items | 1 | 1 |
 | NEW:hint-gives-answer | 1 | 1 |
-| NEW:hit-detection | 1 | 1 |
+| NEW:hit-detection | 0 | 1 |
 | NEW:inconsistent premise | 1 | 1 |
 | NEW:keys-under-overlay | 1 | 1 |
 | NEW:locus-segment-ends | 1 | 1 |
@@ -192,7 +192,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
 | `think-of-a-number` | yes | none | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `trig-identity-duel` | yes | verify-trig-identity-duel.py | 0 | 7 | 4 | 0 | 0 | 11 | 0 |
-| `trig-wars` | yes | none | 1 | 1 | 4 | 0 | 6 | 0 | 0 |
+| `trig-wars` | yes | verify-trig-wars.py | 1 | 1 | 4 | 0 | 0 | 6 | 0 |
 | `trig-worms` | yes | verify-trig-worms.py | 1 | 0 | 3 | 0 | 0 | 4 | 0 |
 | `truth-buster` | unlisted | verify-truth-buster.py | 0 | 3 | 12 | 1 | 3 | 13 | 0 |
 | `truth-will-set-you-free` | yes | verify-truth-will-set-you-free.py | 1 | 1 | 2 | 2 | 1 | 5 | 0 |
@@ -280,11 +280,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 - **HIGH** surd-simplifier-t1-001, `games/surd-simplifier/index.html:174`: 8/sqrt(32), 'Rationalise and simplify': the key 'sqrt2 . sqrt2' equals 2; the answer is sqrt2, and the only option equal to it, 8sqrt32/32, is marked wrong
 - **HIGH** surd-simplifier-t1-002, `games/surd-simplifier/index.html:233`: 0.41616... = 206/495; the key 137/330 is 0.41515..., and none of the four options is correct
 
-### `trig-wars` (GCSE, A-Level)
-
-- **CRITICAL** trig-wars-t2-001 (JC), `games/trig-wars/index.html:888-903`: Every hit by either side runs _twHits++, logs correct:true and feeds submitScore: a player who never hit lost 3-0 and submitted 3
-- **HIGH** trig-wars-t2-002 (JC), `games/trig-wars/index.html:968`: The trig panel shows Vx = power . cos theta . 0.28 while labelling V as the power: at V = 60, 45 deg it shows Vx = 11.9 beside cos 45 = Vx/V = 0.707
-
 ### `unit-converter` (GCSE, A-Level, L4)
 
 - **HIGH** unit-converter-t4-001, `games/unit-converter/index.html:52,211`: No answered guard: Enter re-marks; unbounded score and repeated submits
@@ -344,7 +339,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Exit bar detail
 
-**1. No verifier in CI (40):** `52dle`, `bearing-blitz`, `boolean-blitz`, `characteristic-quest`, `complex-converter`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `eigenvalue-extractor`, `equatle`, `factor-race`, `formula-forge`, `formula-plug-in`, `four-quadrant-explorer`, `fraction-equivalence`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `matrix-crunch`, `modular-battle`, `new-shapes`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `scale-factor-scaling`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `terrible-advice`, `think-of-a-number`, `trig-wars`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
+**1. No verifier in CI (39):** `52dle`, `bearing-blitz`, `boolean-blitz`, `characteristic-quest`, `complex-converter`, `constructions-lab`, `coordinate-geometry-dash`, `core-maths-paper2b`, `core-maths-paper2c`, `eigenvalue-extractor`, `equatle`, `factor-race`, `formula-forge`, `formula-plug-in`, `four-quadrant-explorer`, `fraction-equivalence`, `glorious-gantt`, `gradient-hunter`, `higher-power`, `index-laws`, `matrix-crunch`, `modular-battle`, `new-shapes`, `percentage-flip`, `prime-factorisation`, `prime-or-composite`, `prisoners-dilemma`, `probability-paradox`, `scale-factor-scaling`, `seven-bridges`, `shape-shifter`, `spot-the-muppet`, `standard-form-blitz`, `surd-simplifier`, `terrible-advice`, `think-of-a-number`, `unit-converter`, `word-problem-decoder`, `wrong-on-the-internet`
 
 **4. Audited levels serving under 40 (106):** 52dle all (20 in rotation), angle-ace gcse (35), better-value gcse (20), binomial-blaster alevel (20), binomial-blaster alevel2 (20), characteristic-quest further (15), complex-converter further (20), complex-converter level4 (20), component-crusher gcse (38), component-crusher alevel (32), component-crusher level4 (34), constructions-lab all (10/10), constructions-lab ks3 (10/10), constructions-lab gcse (10/10), coordinate-geometry-dash gcse (24), coordinate-geometry-dash alevel (21), core-maths-paper1 core (36), core-maths-paper2b core (36), core-maths-paper2c core (36), correlation-or-coincidence all (13), curling-friction alevel (20), curling-friction level4 (20), differentiation-duel alevel (14), differentiation-duel level4 (14), dimension-checker level4 (20), dimension-checker alevel (20), eigenvalue-extractor further (15), eigenvector-engine further (15), estimation-golf year6 (9/20), estimation-golf ks3 (9/9), estimation-golf gcse (9/9), estimation-golf alevel (9/9), estimation-golf level4 (9/9), expectation-station core (20), expectation-station gcse (15), expectation-station alevel (10), expected-damage ks3 (15), expected-damage gcse (20), expected-damage core (15), factor-race year6 (10/20), force-resolver alevel (20), force-resolver level4 (20), formula-forge gcse (29), formula-forge alevel (29), formula-forge level4 (16), formula-unlocked gcse (29), formula-unlocked alevel (25), formula-unlocked level4 (14), fraction-equivalence year6 (20), given-that gcse (25), given-that alevel (25), given-that core (20), given-that level4 (20), glorious-gantt core-a (4), glorious-gantt level4-a (4), glorious-gantt core-b (3), glorious-gantt level4-b (4), gradient-hunter gcse (15), gradient-hunter core (20), gradient-hunter alevel (10), integration-duel alevel (14), integration-duel level4 (14), matrix-crunch further (20), matrix-crunch level4 (20), moments-master alevel (20), moments-master level4 (20), partial-fractions-duel alevel (20), partial-fractions-duel level4 (20), percentage-flip year6 (20), percentage-flip default (12), prime-factorisation all (8/28), prime-factorisation year6 (8/20), prisoners-dilemma ks3 (5), prisoners-dilemma gcse (7), prisoners-dilemma alevel (9), prisoners-dilemma core (7), probability-paradox all (38 (3 modes; Paradox mode 12)), proof-builder alevel (counter 15/25, sorter 8/8), proof-builder further (counter 15/35, sorter 8/11, induction 4/4), scale-factor-scaling gcse (38), scale-factor-scaling level4 (31), screening-room gcse (20), screening-room alevel (20), screening-room core (15), screening-room level4 (15), seven-bridges ks3 (25), seven-bridges gcse (25), seven-bridges alevel (25), shape-shifter year6-translation (10/15), shape-shifter year6-reflection (10/15), shape-shifter year6-rotation (10/15), spot-the-error ks3 (35), spot-the-error level4 (30), spot-the-muppet gcse (20), spot-the-muppet core (12), spot-the-muppet ks3 (18), suvat alevel (10), suvat level4 (8), terrible-advice gcse (20), terrible-advice core (12), terrible-advice ks3 (18), truth-will-set-you-free level4 (10), unit-converter alevel (38), wrong-on-the-internet gcse (20), wrong-on-the-internet core (10), wrong-on-the-internet ks3 (15)
 
