@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 24 | 0 | 25 |
 | HIGH | 40 | 168 | 0 | 208 |
-| MEDIUM | 156 | 116 | 0 | 272 |
+| MEDIUM | 153 | 118 | 1 | 272 |
 | LOW | 36 | 25 | 0 | 61 |
-| **All** | 233 | 333 | 0 | 566 |
+| **All** | 230 | 335 | 1 | 566 |
 
 ### By class
 
@@ -35,7 +35,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 3 | 8 | 85 |
 | 6 | 29 | 56 |
 | 1 | 14 | 36 |
-| NEW:wrong-explanation-text | 14 | 36 |
+| NEW:wrong-explanation-text | 12 | 36 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
 | 7 | 6 | 16 |
@@ -53,7 +53,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:phone-layout | 5 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
-| 9 | 3 | 3 |
+| 9 | 2 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
 | NEW:sr14-content | 1 | 3 |
@@ -185,7 +185,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `seven-bridges` | yes | none | 0 | 2 | 6 | 1 | 9 | 0 | 0 |
 | `shape-shifter` | yes | none | 2 | 1 | 5 | 1 | 5 | 4 | 0 |
 | `spot-the-error` | yes | verify-spot-the-error.py | 0 | 13 | 4 | 2 | 0 | 19 | 0 |
-| `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 4 | 0 | 3 | 6 | 0 |
+| `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 4 | 0 | 0 | 8 | 1 |
 | `standard-form-blitz` | yes | none | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `surd-simplifier` | yes | none | 0 | 2 | 0 | 0 | 2 | 0 | 0 |
 | `suvat` | yes | verify-suvat.py | 1 | 3 | 6 | 1 | 2 | 9 | 0 |
