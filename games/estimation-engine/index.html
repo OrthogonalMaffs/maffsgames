@@ -134,6 +134,25 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Two typed steps: i = 0 types the keys, i >= 1 a wrong value in every box; step 2 is typed once step 1 has marked and its window is over. 'ready' is the game's own state: on a phone the boxes are read-only (the keypad types into them), so no input looks typeable.
+{
+  "ready": "window.EE && EE.ui && (EE.ui.state() === 'round' || EE.ui.state() === 'estimate')",
+  "answer": [
+    "return (async () => {",
+    "  const it = EE.ui.item(), btn = document.getElementById('checkBtn');",
+    "  const until = async f => { for (let n = 0; n < 200 && !f(); n++) await new Promise(r => setTimeout(r, 20)); };",
+    "  if (EE.ui.state() === 'round') {",
+    "    EE.ui.typeRounding(i === 0 ? it.rounded : it.rounded.map(() => '999999'));",
+    "    btn.click();",
+    "    await until(() => EE.ui.state() === 'estimate' && !MaffsLock.isFresh());",
+    "  }",
+    "  EE.ui.typeEstimate(i === 0 ? String(it.estimate) : '999999');",
+    "  btn.click();",
+    "})();"
+  ]
+}
+-->
 <script src="../../schools/assets/answer.js"></script>
 <!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): a non-calculator game, so the keypad
      only, never the calculator (roster Calculator field: not allowed). -->
@@ -333,6 +352,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
   }
 
   function startGame(items) {
+    MaffsLock.newSession();
     pool = items || EE.deal();
     qIdx = 0; marks = 0; total = 0; firstRight = 0; secondRight = 0; bothRight = 0;
     $('marks').textContent = '0';
@@ -373,6 +393,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     });
     body.appendChild(row);
     keypadFor(inputs);
+    MaffsLock.fresh($('qcard'));   // a new question: a double-click on Start or Next cannot press Check
   }
 
   function checkRounding() {
@@ -419,11 +440,13 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     var old = $('stepBody').querySelector('.est-row'); if (old) old.remove();
     $('stepBody').appendChild(row);
     keypadFor([inp]);
+    MaffsLock.fresh($('qcard'));   // step 2: a double-click on step 1's Check cannot mark an empty estimate
   }
 
   function checkEstimate() {
     var raw = $('estimate').value, r = mark(raw, q.estimate);
     if (r === 'unreadable') { $('msg').textContent = MaffsAnswer.message('unreadable'); return; }
+    if (!MaffsLock.lock($('qcard'))) return;   // one answer per question (canon 7.6.0); an unreadable entry is not an answer
     var ok = r === 'correct';
     qMarks[1] = ok;
     if (ok) { marks++; secondRight++; $('marks').textContent = marks; }
@@ -460,7 +483,9 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     else if (state === 'estimate') checkEstimate();
   }
 
-  function endGame() {
+  // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  function endGame() { finishGame(); }
+  var finishGame = MaffsLock.finishOnce(function () {
     state = 'done';
     var t = 'Keep practising'; if (marks >= 18) t = 'Excellent'; else if (marks >= 14) t = 'Good estimating'; else if (marks >= 10) t = 'Getting there';
     $('resultTitle').textContent = t;
@@ -476,10 +501,10 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     }
     if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(SLUG, LEVEL, marks, total).catch(function () {}); if (window.MaffsScoreHistory) { MaffsScoreHistory.record(SLUG, LEVEL, marks); } }
     showS('results');
-  }
+  });
 
   $('startBtn').addEventListener('click', function () { startGame(); });
-  $('againBtn').addEventListener('click', function () { state = 'menu'; showS('menu'); });
+  $('againBtn').addEventListener('click', function () { state = 'menu'; showS('menu'); MaffsLock.screen($('menu')); });   // a double-click cannot press Start
   $('checkBtn').addEventListener('click', check);
   $('stepForm').addEventListener('submit', function (e) { e.preventDefault(); check(); });
   math($('exampleA'), '48 \\times 21 \\approx 50 \\times 20', '48 × 21 ≈ 50 × 20');
