@@ -16,6 +16,11 @@ from the live page, then:
     t2-003: the right value by a wrong method).
   Stated conventions: the topic field is never shown, so an item whose key depends on a convention says it in the
     advice (CONVENTIONS; spot-the-muppet-t2-001: core_004 never said compound, so simple interest was true).
+  The loan (Jon, 8 Oct 2026; spot-the-muppet-t2-006): the advice says APR; the key states the monthly rate, the
+    payment and the total to the penny, recomputed as a repayment loan (APR the effective annual rate, interest only on
+    what is still owed); the distractors are the muppet's £333.33 and the two old keys, each with its method named
+    (compound or simple interest on the whole sum for 3 years).
+  Jokes: core_003 no longer prescribes televisions to patients (spot-the-muppet-t2-008, SR-14 tier (c)).
   Arguments: a muppet's argument the key condemns must be invalid. core_002 (spot-the-muppet-t2-004): the advice may
     not compare the extra volume's price with the small bottle's price for its volume (a valid marginal argument).
   Chromium: every item played three ways: the key first (scores 1, logged once, attempts 1); a wrong pick then the key
@@ -24,7 +29,7 @@ from the live page, then:
     (spot-the-muppet-t2-005): Next's second click landing on the new question's option marks nothing; a double click on
     Next moves on once; a double click on a first wrong pick spends one pick; the session ends once.
 KNOWN_OPEN holds register entries this script detects but this PR does not fix (reported, never failed; a stale one fails).
-A self-test plants six faults back into a copy of the page; each must FAIL naming its entry.
+A self-test plants eight faults back into a copy of the page; each must FAIL naming its entry.
 
     python scripts/verify-spot-the-muppet.py [--no-selftest] [--against FILE]
 """
@@ -125,10 +130,40 @@ CONVENTIONS = {
 SR16_ENTRY = {'stm_core_008': TAG + 't2-002', 'stm_ks3_005': TAG + 't2-003'}
 
 # Register entries detected here and left open by this PR (Jon's call): reported, never failed. Stale fails.
-KNOWN_OPEN = {
-    'stm_core_012': (TAG + 't2-006', 'the key says the total repayable is £12,000 × 1.06³ and about £397 a month; a '
-                     'repayment loan at 6%% APR over 36 months is about £%.2f a month' % amortised(12000, 0.06, 36)),
-}
+KNOWN_OPEN = {}
+
+# The loan (Jon, 8 Oct 2026; spot-the-muppet-t2-006): APR is the effective annual rate, repaid monthly on the shrinking
+# balance. The key states the payment and the total to the penny; each distractor is one named figure, with its method.
+LOAN = {'stm_core_012': (12000, 0.06, 36, TAG + 't2-006')}
+
+
+def loan_distractors(p, apr, months):
+    """(figure, the word naming its method, places as written): the old keys and the muppet's own figure."""
+    return [(F(p) / months, 'is correct', 2),                                   # Lenny: no interest
+            (F(p) * (1 + F(apr).limit_denominator()) ** 3 / months, 'compound', 0),  # the whole sum, compounded 3 years
+            (F(p) * (1 + F(apr).limit_denominator() * 3) / months, 'simple', 2)]     # the whole sum, simple, 3 years
+
+
+def check_loan(fails, q, p, apr, months, tag):
+    pay = amortised(p, apr, months)
+    key = next(o['text'] for o in q['options'] if o['correct'])
+    if 'apr' not in q['advice'].lower():
+        fails.append('%s %s: the advice does not say APR, the convention the key\'s repayment depends on: "%s"'
+                     % (tag, q['id'], q['advice']))
+    got = numbers(key)
+    for what, v in (('the monthly payment', pay), ('the total repaid', pay * months)):
+        if not any(g[1] == 2 and same(g, v) for g in got):
+            fails.append('%s %s: the key does not state %s, %.2f to the penny (APR %g%%, %d months, on the shrinking '
+                         'balance): "%s"' % (tag, q['id'], what, v, apr * 100, months, key))
+    rate = (1 + apr) ** (1 / 12) - 1
+    if not any(same(g, rate * 100) for g in got if g[1] == 3):
+        fails.append('%s %s: the key does not state the monthly rate, %.3f%%: "%s"' % (tag, q['id'], rate * 100, key))
+    wrong = [o['text'] for o in q['options'] if not o['correct']]
+    for v, word, places in loan_distractors(p, apr, months):
+        hit = [t for t in wrong if word in t and any(g[1] == places and same(g, v) for g in numbers(t))]
+        if len(hit) != 1:
+            fails.append('%s %s: no single distractor gives %s a month (%s) with its method named: %s'
+                         % (tag, q['id'], round(float(v), places), word, wrong))
 
 # ---------------------------------------------------------------------------------------------------- arithmetic
 SUPS = dict(zip('⁰¹²³⁴⁵⁶⁷⁸⁹', '0123456789'))
@@ -415,6 +450,14 @@ def check_bank(fails, opens, bank):
                 for g in numbers(o['text']):
                     if not any(same(a, g[0]) and a[1] == g[1] for a in adv):
                         fails.append('%s: "%s" states %s, which the advice never says' % (qid, o['text'], float(g[0])))
+    for q in bank:
+        if q['id'] in LOAN:
+            check_loan(fails, q, *LOAN[q['id']])
+    # core_003 (Jon, 8 Oct 2026; spot-the-muppet-t2-008, SR-14 tier (c)): the joke is a bigger telly, not patients
+    for q in bank:
+        if q['id'] == 'stm_core_003' and re.search(r'patient|prescrib', q['advice'], re.I):
+            fails.append('%s stm_core_003: the advice still prescribes televisions to patients (SR-14 tier (c)): "%s"'
+                         % (TAG + 't2-008', q['advice']))
     # core_002: the muppet's argument must be invalid (spot-the-muppet-t2-004)
     for q in bank:
         if q['id'] != 'stm_core_002':
@@ -619,6 +662,10 @@ PLANTS = [
      'Difference: \\u00a31.30 for 250ml extra. That\\\'s better than paying \\u00a33.50 for 500ml so obviously big bottle wins.'),
     (TAG + 't2-009', 't2-009: core_004 1,000 x 1.05 x 20 = 21,050',
      '\\u00d7 1.05 \\u00d7 20 = \\u00a321,000.', '\\u00d7 1.05 \\u00d7 20 = \\u00a321,050.'),
+    (TAG + 't2-006', 't2-006: core_012 the key gives about £397 a month',
+     '\\u2248 \\u00a3364.20 a month (total \\u00a313,111.19)', '\\u2248 \\u00a3397 a month (total \\u00a314,292.19)'),
+    (TAG + 't2-008', 't2-008: core_003 prescribing televisions',
+     "I\\'m telling everyone I know to buy a bigger telly.", "I\\'m prescribing televisions to all my patients."),
 ]
 
 

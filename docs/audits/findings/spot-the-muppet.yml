@@ -72,7 +72,8 @@ findings:
   summary: The loan item's figures are wrong (the real repayment is about £364/month)
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct; the report groups Spot the Muppet and Terrible Advice, so filed against both'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: spot-the-muppet-t2-007
   severity: MEDIUM
   jc: false
@@ -82,7 +83,9 @@ findings:
   summary: The 562.45 vs 562.43 slip
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct; the report groups Spot the Muppet and Terrible Advice, so filed against both'
-  status: open
+  status: ruled
+  ruling: 'Jon 8 Oct: the 562.45 vs 562.43 slip is not present in this game (filed against both by the audit''s
+    grouping; fixed in terrible-advice)'
 - id: spot-the-muppet-t2-008
   severity: MEDIUM
   jc: false
@@ -92,7 +95,8 @@ findings:
   summary: 'SR-14: the ''patients'' joke, which the scanner cannot see'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct; the report groups Spot the Muppet and Terrible Advice, so filed against both'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: spot-the-muppet-t2-009
   severity: MEDIUM
   jc: false
