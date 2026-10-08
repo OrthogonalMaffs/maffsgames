@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 25 | 0 | 26 |
 | HIGH | 35 | 173 | 0 | 208 |
-| MEDIUM | 139 | 133 | 1 | 273 |
+| MEDIUM | 138 | 134 | 1 | 273 |
 | LOW | 36 | 27 | 0 | 63 |
-| **All** | 211 | 358 | 1 | 570 |
+| **All** | 210 | 359 | 1 | 570 |
 
 ### By class
 
@@ -69,7 +69,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:timer-policy | 1 | 2 |
 | NEW:unmarkable free text | 2 | 2 |
 | NEW:wording | 1 | 2 |
-| 10 | 1 | 1 |
+| 10 | 0 | 1 |
 | NEW:a11y state | 0 | 1 |
 | NEW:answer-reveal-invisible | 1 | 1 |
 | NEW:data-not-shown | 0 | 1 |
@@ -150,7 +150,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `expectation-station` | yes | verify-expectation-station.py | 2 | 12 | 5 | 1 | 0 | 20 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `factor-race` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
-| `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 9 | 10 | 0 |
+| `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 8 | 11 | 0 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 2 | 13 | 0 |
 | `formula-forge` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
 | `formula-plug-in` | yes | none | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
