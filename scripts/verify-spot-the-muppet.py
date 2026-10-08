@@ -132,7 +132,8 @@ KNOWN_OPEN = {
 
 # ---------------------------------------------------------------------------------------------------- arithmetic
 SUPS = dict(zip('⁰¹²³⁴⁵⁶⁷⁸⁹', '0123456789'))
-VULGAR = {'½': F(1, 2), '⅓': F(1, 3), '¼': F(1, 4), '¾': F(3, 4), '⅔': F(2, 3)}
+VULGAR = {'½': F(1, 2), '⅓': F(1, 3), '⅔': F(2, 3), '¼': F(1, 4), '¾': F(3, 4), '⅕': F(1, 5), '⅖': F(2, 5),
+          '⅗': F(3, 5), '⅘': F(4, 5), '⅙': F(1, 6), '⅚': F(5, 6), '⅛': F(1, 8), '⅜': F(3, 8), '⅝': F(5, 8), '⅞': F(7, 8)}
 UNITS = {'cm', 'm', 'km', 'ml', 'g', 'kg', 'p', 'mph', 'kWh'}
 NUM_RE = re.compile(r'\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?')
 
@@ -241,8 +242,10 @@ class Parse:
         raise ValueError('atom')
 
 
-def evaluate(toks):
-    """(value, places) of a piece: places is the written decimal places when the piece is one literal, else None."""
+def evaluate(toks, givens=''):
+    """(value, places, rel) of a piece: places is the written decimal places when the piece is one written decimal
+    (a vulgar fraction is exact: None), else None; rel is the relative rounding a decimal in the piece carries when
+    that decimal is not one of the item's givens (an intermediate rounded by the writer, as 1.05²⁰ = 2.653)."""
     if not toks or any(t[0] in ('ALG',) for t in toks):
         return None
     body = [t for t in toks if t[0] != 'UNIT']
@@ -257,15 +260,22 @@ def evaluate(toks):
     places = None
     if len(lit) == 1 and lit[0][0] == 'NUM' and all(t[0] == 'OP' and t[1] in '-−' for t in body[:-1]):
         s = NUM_RE.match(TEXT[0], lit[0][2])
-        places = len(s.group().split('.')[1]) if s and '.' in s.group() else 0
-    return v, places
+        places = (len(s.group().split('.')[1]) if '.' in s.group() else 0) if s else None
+    rel = 0.0
+    for t in body:
+        w = TEXT[0][t[2]:t[3]] if t[0] == 'NUM' else ''
+        if '.' in w and w not in givens and t[1]:
+            rel = max(rel, 0.5 / 10 ** len(w.split('.')[1]) / abs(float(t[1])))
+    return v, places, rel
 
 
 TEXT = ['']   # the text being parsed, for a literal's written places
 
 
-def equations(text):
-    """[(written, [pieces as (value, places) or None])]: every chain of pieces joined by = or ≈ in text."""
+def equations(text, givens=None):
+    """[(written, [pieces as (value, places, rel) or None])]: every chain of pieces joined by = or ≈ in text. givens is
+    the item's own text (the advice): a decimal in it is a given, never a rounded intermediate (default: text)."""
+    givens = text if givens is None else givens
     TEXT[0] = text
     toks = tokens(text)
     out, run = [], []
@@ -290,7 +300,12 @@ def equations(text):
                 cur.append(t)
         pieces.append(cur)
         before = text[:run[0][2]].rstrip('£')
-        vals = [evaluate(p) for p in pieces]
+        vals = [evaluate(p, givens) for p in pieces]
+        # money: a piece written in pounds (£) equal to one in pence (a glued "p") compares in pence
+        pounds = ['£' in text[max(0, p[0][2] - 1):p[-1][3]] if p else False for p in pieces]
+        pence = [any(t[0] == 'UNIT' and t[1] == 'p' for t in p) for p in pieces]
+        if any(pounds) and any(pence):
+            vals = [(v[0] * 100,) + tuple(v[1:]) if v and pd else v for v, pd in zip(vals, pounds)]
         glued = before and (before[-1].isalpha() or before[-1] in SUPS or before[-1] in '⁻')
         if glued or re.search(r'\b(of|year)\s*$', before):
             vals[0] = None                       # "cos⁻¹(0.6) = ...", "10% of £440 = £44": the first piece is a fragment
@@ -299,14 +314,18 @@ def equations(text):
 
 
 def holds(a, b):
-    tol = max([F(1, 2 * 10 ** p) for _, p in (a, b) if p is not None] or [0])
+    """a = b as written: a written decimal to its own places; two expressions within the rounding of an intermediate
+    decimal the writer rounded (rel), else exactly."""
+    tol = max([F(1, 2 * 10 ** x[1]) for x in (a, b) if x[1] is not None] or [0])
+    if a[1] is None and b[1] is None:
+        tol = max(a[2], b[2]) * abs(float(b[0]))
     return abs(float(a[0]) - float(b[0])) <= float(tol) + 1e-9 * max(1, abs(float(b[0])))
 
 
 def numbers(text):
     """Every number written in text, in order: £ and units dropped, a minus glued to it kept, a/b and ½ read."""
     out = []
-    for m in re.finditer(r'([−-])?£?(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?:/(\d+))?|([½⅓¼¾⅔])', text):
+    for m in re.finditer(r'([−-])?£?(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?:/(\d+))?|([%s])' % ''.join(VULGAR), text):
         if m.group(4):
             out.append((VULGAR[m.group(4)], None)); continue
         if m.start() and text[m.start() - 1].isalpha():
@@ -347,7 +366,7 @@ def check_bank(fails, opens, bank):
         key = keys[0]['text']
         # arithmetic in the advice and the key
         for where, text in (('advice', q['advice']), ('key', key)):
-            for written, vals in equations(text):
+            for written, vals in equations(text, q['advice']):
                 for a, b in zip(vals, vals[1:]):
                     if a is None or b is None or holds(a, b):
                         continue
@@ -391,7 +410,7 @@ def check_bank(fails, opens, bank):
                              % (tag + ' ' if tag else '', qid, word, q['advice']))
         # a muppet's "is correct — V" repeats the advice's own V
         for o in opts:
-            if not o['correct'] and ' is correct' in o['text']:
+            if not o['correct'] and re.search(r' is correct \u2014', o['text']):
                 adv = numbers(q['advice'])
                 for g in numbers(o['text']):
                     if not any(same(a, g[0]) and a[1] == g[1] for a in adv):
