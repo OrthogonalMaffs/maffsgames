@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining:`
+`cloud-remaining: unit-converter`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -33,11 +33,23 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** FT-FIX: contracts/2026-10-08-ft-fix.md (next). Done: PP-T1-004 (#189; its contract is now in
-`docs/history/contracts/`).
+**Queue:** UC-FIX: contracts/2026-10-08-uc-fix.md and its amendment -uc-fix-amend.md (in progress, claimed 9 Oct).
+Then FT-FIX: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
+Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-09 (cloud): UC-FIX, unit-converter (claimed; listed game)
+
+- **Claimed** in its own commit, with three contracts saved verbatim: UC-FIX (21:05), its amendment (23:45: t4-005 joins,
+  score on correct answers only, timer hidden; Screening Room t4-017 ruled "one row per answer is correct") and the
+  FT-FIX amendment (21:30, Part A). Nothing open held unit-converter (only #193, the home lane's VOCAB-IDEMPOTENT).
+- **STOP IF fired, step 5 (separators), and Jon ruled (9 Oct, this session):** marking compares `dataset.val`, which is
+  the displayed string itself ('1570 cm³'). Ruling: "One formatter function for all displayed numbers. Verifier proves
+  marking unchanged on all 59 items and that every displayed number of 1,000 or more has a comma." Stored strings stay.
+- **Keys recomputed: none wrong.** Rounded with nothing stated: cylinder, 60 mph, shaft only. Circle and pipe are exact
+  under their stated "π ≈ 3.14".
 
 ## 2026-10-08 (cloud, night): probability-paradox t1-004 (contract PP-T1-004)
 
