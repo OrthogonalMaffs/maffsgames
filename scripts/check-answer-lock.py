@@ -142,6 +142,7 @@ dimension-checker curling-friction trig-worms component-crusher
 differentiation-duel integration-duel spot-the-error expectation-station
 eigenvector-engine proof-builder linear-equation-solver moments-master force-resolver
 truth-will-set-you-free trig-identity-duel binomial-blaster partial-fractions-duel
+trig-wars truth-buster
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 

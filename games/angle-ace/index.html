@@ -81,6 +81,19 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 presses the first option; i >= 1 presses the first option the game itself marks wrong (phase 1: not the angle; recognition: not the pair; phase 2: not a valid reason).
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#options .opt-btn')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const ok = b => phase === 2 ? validReasons(currentQ).includes(b.dataset.val)",
+    "  : currentQ.isRecognition ? b.dataset.val === currentQ.answer : parseInt(b.dataset.val) === currentQ.answer;",
+    "(bs.find(b => !ok(b)) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -653,6 +666,7 @@ function selectLevel(lvl){
 //  GAME ENGINE
 // ============================================================
 function startGame(){
+  MaffsLock.newSession();
   const bank=QUESTIONS_BY_LEVEL[currentLevel]||QUESTIONS_BY_LEVEL.gcse;
   pool=shuffle([...bank]).slice(0,MAX_Q);
   qIdx=0;score=0;fullMarks=0;total=0;
@@ -669,6 +683,7 @@ function nextQ(){
   currentQ=pool[qIdx];qIdx++;total++;phase=1;angleCorrect=false;
   document.getElementById('qNum').textContent=total;
   document.getElementById('solution').className='solution';
+  MaffsNext.clear(document.getElementById('solution'));
   qStart=Date.now();updateTimer();
   // Draw diagram
   drawFig(currentQ);
@@ -686,6 +701,7 @@ function showPhase1(){
       const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;
       b.addEventListener('click',()=>handleRecognition(b));oEl.appendChild(b);
     });
+    MaffsLock.fresh(oEl);   // a new question: a double-click on Start or Next cannot answer it
     return;
   }
   document.getElementById('phaseLabel').textContent='Phase 1: Find the angle';
@@ -695,9 +711,11 @@ function showPhase1(){
     const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v+'°';
     b.addEventListener('click',()=>handlePhase1(b));oEl.appendChild(b);
   });
+  MaffsLock.fresh(oEl);
 }
 
 function handleRecognition(btn){
+  if(!MaffsLock.lock(document.getElementById('options')))return;   // one answer per phase (canon 7.6.0)
   const correct=btn.dataset.val===currentQ.answer;
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===currentQ.answer)b.classList.add('correct')});
   mfg('question_answered',{game_slug:'angle-ace',level:currentLevel,correct:correct,question_index:total});
@@ -705,7 +723,7 @@ function handleRecognition(btn){
     btn.classList.add('correct');
     const s=(Date.now()-qStart)/1000;const m=1/(1+T_K*Math.log(1+s));
     score+=Math.max(1,Math.round(BASE*m));fullMarks++;
-    updateHUD();setTimeout(nextQ,1000);
+    updateHUD();MaffsLock.timer(nextQ,1000);
   } else {
     btn.classList.add('wrong');
     showExplain(2);
@@ -713,9 +731,10 @@ function handleRecognition(btn){
 }
 
 function handlePhase1(btn){
+  if(!MaffsLock.lock(document.getElementById('options')))return;   // one answer per phase (canon 7.6.0)
   const correct=parseInt(btn.dataset.val)===currentQ.answer;
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(parseInt(b.dataset.val)===currentQ.answer)b.classList.add('correct')});
-  if(correct){btn.classList.add('correct');angleCorrect=true;setTimeout(showPhase2,800)}
+  if(correct){btn.classList.add('correct');angleCorrect=true;MaffsLock.timer(showPhase2,800)}
   else{btn.classList.add('wrong');angleCorrect=false;mfg('question_answered',{game_slug:'angle-ace',level:currentLevel,correct:false,question_index:total});showExplain(0)}
 }
 
@@ -733,6 +752,7 @@ function showPhase2(){
     const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.textContent=v;
     b.addEventListener('click',()=>handlePhase2(b));oEl.appendChild(b);
   });
+  MaffsLock.fresh(oEl);   // phase 2's options: a double-click on phase 1 cannot answer them
 }
 
 // Every reason that validly gives the angle is accepted: multiReason where more than one does
@@ -740,6 +760,7 @@ function showPhase2(){
 function validReasons(q){return q.multiReason||[q.reason]}
 
 function handlePhase2(btn){
+  if(!MaffsLock.lock(document.getElementById('options')))return;   // one answer per phase (canon 7.6.0)
   const ok=validReasons(currentQ),correct=ok.includes(btn.dataset.val);
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(ok.includes(b.dataset.val))b.classList.add('correct')});
   mfg('question_answered',{game_slug:'angle-ace',level:currentLevel,correct:correct,question_index:total});
@@ -747,7 +768,7 @@ function handlePhase2(btn){
     btn.classList.add('correct');
     const s=(Date.now()-qStart)/1000;const m=1/(1+T_K*Math.log(1+s));
     score+=Math.max(1,Math.round(BASE*m));fullMarks++;
-    updateHUD();setTimeout(nextQ,1000);
+    updateHUD();MaffsLock.timer(nextQ,1000);
   } else {
     btn.classList.add('wrong');
     // Partial credit for angle only
@@ -768,8 +789,9 @@ function showExplain(type){
   const also=validReasons(currentQ).filter(r=>r!==currentQ.reason);
   if(also.length)html+='<div class="step" style="border-left-color:var(--correct)"><strong>Also accepted:</strong> '+also.join('; ')+'</div>';
   if(currentQ.misconception)html+='<div class="misconception">⚠ '+currentQ.misconception+'</div>';
-  html+='<button class="next-btn" onclick="closeSol()">Got it — next question</button>';
   sol.innerHTML=html;sol.className='solution show';
+  // canon 7.6: the working is up; Next waits for the student (and advances once).
+  MaffsNext.wrong({mount:sol,onAdvance:closeSol,label:'Got it — next question'});
 }
 
 window.addEventListener('resize',()=>{if(currentQ&&document.getElementById('game').classList.contains('active'))drawFig(currentQ)});
@@ -783,7 +805,9 @@ function updateTimer(){
   requestAnimationFrame(tick);
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame(){finishGame()}
+const finishGame=MaffsLock.finishOnce(function(){
   const pct=total>0?Math.round(fullMarks/total*100):0;
   let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
   document.getElementById('resultTitle').textContent=t;
@@ -799,7 +823,7 @@ function endGame(){
   mfg('game_completed',{game_slug:'angle-ace',level:currentLevel,score:score,questions_answered:total,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('angle-ace',currentLevel,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('angle-ace',currentLevel,score);}}
   show('results');
-}
+});
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>

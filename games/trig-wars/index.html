@@ -931,8 +931,12 @@ function simulateShot(p, ang, pwr, scatter){
   return {hit:null, x:s.x, y:s.y};
 }
 // A shot side p could fire that hits, found by the game's own physics, or null (the check's tap-through uses it).
+// 45 down to 5 first, then 46 up to 85: some terrains leave no robust shot at 45 or below (a lob over the hill).
 function aimAtEnemy(p){
-  for(let ang=45;ang>=5;ang--) for(let pwr=20;pwr<=100;pwr++){
+  const angs = [];
+  for(let ang=45;ang>=5;ang--) angs.push(ang);
+  for(let ang=46;ang<=85;ang++) angs.push(ang);
+  for(const ang of angs) for(let pwr=20;pwr<=100;pwr++){
     if(simulateShot(p, ang, pwr, -0.009).hit && simulateShot(p, ang, pwr, 0).hit && simulateShot(p, ang, pwr, 0.009).hit)
       return {ang, pwr};
   }
