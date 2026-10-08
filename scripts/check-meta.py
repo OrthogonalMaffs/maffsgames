@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Every game page and /resit/ carries the search title and description data/games.json generates.
+"""Every game page and /essentials/ carries the search title and description data/games.json generates.
 
     python scripts/check-meta.py              # CI
     python scripts/check-meta.py --selftest   # plant faults in a copy of the tree; all must be caught
@@ -24,7 +24,7 @@ The rules (Jon, 5 Oct 2026):
     levels, "<description> Free, no sign-up."
   - og:title and twitter:title carry the title; og:description and twitter:description carry the
     description. Twitter tags are held wherever a page has them; og: tags are required.
-  - /resit/'s title and description are stated in games.json's "pages" and held the same way.
+  - /essentials/'s title and description are stated in games.json's "pages" and held the same way.
 
 It fails when:
   - games.json's slugs differ from the roster's numbered rows (a withdrawn game, numbered "—", is

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Launched Oct 2026 as /resit/ (Jon's resit section contract); renamed Essentials 8 Oct 2026 (contract
+     ESSENTIALS; /resit/ redirects here). A teacher surface: it may say resit or post-16 (canon §7.5.3).
+     The suite, its order and every card's level
+     are checked by scripts/check-resit-page.py: each game live on the portal, mapped on the spec
+     map with the references its card shows, and offering the level its card names. -->
+<meta name="description" content="Maths games for GCSE Foundation resit classes aiming for grade 4: number, algebra, ratio, geometry, probability and statistics. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/essentials/">
+<meta property="og:title" content="Essentials: GCSE Foundation Maths Games | MaffsGames">
+<meta property="og:description" content="Maths games for GCSE Foundation resit classes aiming for grade 4: number, algebra, ratio, geometry, probability and statistics. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/essentials/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<title>Essentials: GCSE Foundation Maths Games | MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-992JLHLP2D', {
+    send_page_view: true,
+    storage: 'none',
+    anonymize_ip: true
+  });
+</script>
+<script src="/schools/assets/analytics.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Canon 7.5's portal row, as /updates/ uses it: Outfit, white, navy, teal, adult register. */
+  :root {
+    --navy: #1a2744;
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #526077;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Outfit', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
+  .nav {
+    background: var(--navy);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .nav a { color: #fff; text-decoration: none; font-weight: 600; }
+  .nav .back { opacity: 0.8; font-size: 0.85rem; font-weight: 400; }
+  .nav .back:hover { opacity: 1; }
+  .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+  h1 { color: var(--navy); font-size: 2rem; line-height: 1.2; margin-bottom: 0.4rem; }
+  .teacher-line { max-width: 760px; font-size: 1.1rem; font-weight: 600; color: var(--navy); margin-bottom: 1rem; }
+  .intro { max-width: 760px; font-size: 1.05rem; margin-bottom: 1rem; }
+  .how { max-width: 760px; color: var(--muted); font-size: 0.95rem; margin-bottom: 2rem; }
+  a { color: var(--teal-dark); }
+  a:hover { color: var(--navy); }
+  .topic { margin-bottom: 2.25rem; }
+  .topic > h2 {
+    color: var(--navy);
+    font-size: 1.4rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 3px solid var(--teal);
+    margin-bottom: 1rem;
+  }
+  .note {
+    background: #f0fdfa;
+    border-left: 4px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+  }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.9rem; }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--teal);
+    border-radius: 10px;
+    padding: 0.9rem 1rem 1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .card:hover, .card:focus-visible { border-color: var(--teal); color: var(--text); }
+  .card-name { color: var(--navy); font-weight: 700; font-size: 1.08rem; }
+  .card-line { font-size: 0.95rem; }
+  .card-spec { color: var(--muted); font-size: 0.85rem; }
+  .card-level { margin-top: auto; padding-top: 0.25rem; color: var(--teal-dark); font-weight: 600; font-size: 0.9rem; }
+  @media (max-width: 480px) {
+    .nav { padding: 0.85rem 1rem; }
+    .container { padding: 1.5rem 1rem 2.5rem; }
+    h1 { font-size: 1.6rem; }
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/">MaffsGames</a>
+  <a href="/" class="back">&larr; Back to games</a>
+</nav>
+
+<main class="container" data-mfg-section="essentials">
+
+<h1>Essentials</h1>
+<p class="teacher-line">GCSE Foundation maths for students working at grades 1–3, including post-16 resit classes.</p>
+
+<p class="intro">When your teaching mentor from your first teaching job asks you for resources for a GCSE resit class, you jump to it. That's why this section exists: to support students who are working hard for that magical grade 4, and the many doors it opens. If you'd like another game added, just <a href="mailto:contact@maffsgames.co.uk" data-mfg-item="contact">drop us a line</a>. We're here to help.</p>
+
+<p class="how">Each card says what the game practises, its references on our <a href="/spec-map/" data-mfg-item="spec-map">spec map</a>, and which level to choose for Foundation content.</p>
+
+<section class="topic" id="number">
+<h2>Number</h2>
+<div class="cards">
+<a class="card" href="/games/six-sevens-bruv/" data-mfg-item="six-sevens-bruv" data-slug="six-sevens-bruv" data-kind="one">
+  <span class="card-name">Six Sevens, Bruv</span>
+  <span class="card-line">Times tables to 12 × 12, typed answers, with a grid that lights up as each fact is learned.</span>
+  <span class="card-spec">GCSE spec: N2</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/free-daily-pizza/" data-mfg-item="free-daily-pizza" data-slug="free-daily-pizza" data-kind="one">
+  <span class="card-name">Free Daily Pizza</span>
+  <span class="card-line">Converting between fractions, decimals and percentages, with a new round every day.</span>
+  <span class="card-spec">GCSE spec: N10–N11, N12, R9, R3</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/negative-number-line/" data-mfg-item="negative-number-line" data-slug="negative-number-line" data-kind="one">
+  <span class="card-name">Negative Number Line</span>
+  <span class="card-line">Placing, ordering and calculating with negative numbers on a number line.</span>
+  <span class="card-spec">GCSE spec: N2, N1</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/decimal-detective/" data-mfg-item="decimal-detective" data-slug="decimal-detective" data-kind="one">
+  <span class="card-name">Decimal Detective</span>
+  <span class="card-line">Ordering, rounding and placing decimals on a number line.</span>
+  <span class="card-spec">GCSE spec: N14–N16, N1</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/think-of-a-number/" data-mfg-item="think-of-a-number" data-slug="think-of-a-number" data-kind="one">
+  <span class="card-name">Think of a Number</span>
+  <span class="card-line">“I think of a number” puzzles, solved by undoing each step.</span>
+  <span class="card-spec">GCSE spec: N3</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/factor-race/?level=year6" data-mfg-item="factor-race" data-slug="factor-race" data-kind="link" data-label="Starter" data-key="year6">
+  <span class="card-name">Factor Race</span>
+  <span class="card-line">Two numbers: pick the one with more factors.</span>
+  <span class="card-spec">GCSE spec: N4</span>
+  <span class="card-level">Opens at: Starter</span>
+</a>
+<a class="card" href="/games/prime-factorisation/?level=year6" data-mfg-item="prime-factorisation" data-slug="prime-factorisation" data-kind="link" data-label="Starter" data-key="year6">
+  <span class="card-name">Prime Sprint</span>
+  <span class="card-line">Building a number’s prime factorisation, one prime at a time.</span>
+  <span class="card-spec">GCSE spec: N4</span>
+  <span class="card-level">Opens at: Starter</span>
+</a>
+<a class="card" href="/games/estimation-engine/" data-mfg-item="estimation-engine" data-slug="estimation-engine" data-kind="one">
+  <span class="card-name">Estimation Engine</span>
+  <span class="card-line">Rounding each number to 1 significant figure, then estimating: a mark for each step.</span>
+  <span class="card-spec">GCSE spec: N14–N16</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/estimation-golf/?level=ks3" data-mfg-item="estimation-golf" data-slug="estimation-golf" data-kind="choose" data-label="Foundation" data-key="ks3">
+  <span class="card-name">Estimation Golf</span>
+  <span class="card-line">Estimating answers: the closer the estimate, the nearer the hole.</span>
+  <span class="card-spec">GCSE spec: N14–N16</span>
+  <span class="card-level">Choose: Foundation</span>
+</a>
+<a class="card" href="/games/unit-converter/?level=gcse" data-mfg-item="unit-converter" data-slug="unit-converter" data-kind="choose" data-label="GCSE" data-key="gcse">
+  <span class="card-name">Unit Converter</span>
+  <span class="card-line">Converting units of length, area and volume.</span>
+  <span class="card-spec">GCSE spec: N13</span>
+  <span class="card-level">Choose: GCSE</span>
+</a>
+</div>
+</section>
+
+<section class="topic" id="algebra">
+<h2>Algebra</h2>
+<div class="cards">
+<a class="card" href="/games/formula-plug-in/" data-mfg-item="formula-plug-in" data-slug="formula-plug-in" data-kind="one">
+  <span class="card-name">Formula Plug-In</span>
+  <span class="card-line">Substituting values into formulae.</span>
+  <span class="card-spec">GCSE spec: R11, A2, G16</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/like-terms-collector/" data-mfg-item="like-terms-collector" data-slug="like-terms-collector" data-kind="one">
+  <span class="card-name">Like Terms Collector</span>
+  <span class="card-line">Collecting like terms, building up to full simplification.</span>
+  <span class="card-spec">GCSE spec: A4</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/linear-equation-solver/" data-mfg-item="linear-equation-solver" data-slug="linear-equation-solver" data-kind="choose" data-label="GCSE">
+  <span class="card-name">Linear Equation Solver</span>
+  <span class="card-line">Solving one- and two-step equations by choosing the inverse operation at each step.</span>
+  <span class="card-spec">GCSE spec: A17</span>
+  <span class="card-level">Choose: GCSE</span>
+</a>
+<a class="card" href="/games/equation-builder/?level=ks3" data-mfg-item="equation-builder" data-slug="equation-builder" data-kind="choose" data-label="Foundation" data-key="ks3">
+  <span class="card-name">Equation Builder</span>
+  <span class="card-line">Turning a word problem into an equation or formula.</span>
+  <span class="card-spec">GCSE spec: A21</span>
+  <span class="card-level">Choose: Foundation</span>
+</a>
+<a class="card" href="/games/four-quadrant-explorer/" data-mfg-item="four-quadrant-explorer" data-slug="four-quadrant-explorer" data-kind="one">
+  <span class="card-name">Four Quadrant Explorer</span>
+  <span class="card-line">Plotting and reading coordinates in all four quadrants.</span>
+  <span class="card-spec">GCSE spec: A8</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/formula-unlocked/?level=gcse" data-mfg-item="formula-unlocked" data-slug="formula-unlocked" data-kind="choose" data-label="GCSE" data-key="gcse">
+  <span class="card-name">Formula Unlocked</span>
+  <span class="card-line">Changing the subject of a formula, with hints when needed.</span>
+  <span class="card-spec">GCSE spec: A5</span>
+  <span class="card-level">Choose: GCSE</span>
+</a>
+<a class="card" href="/games/formula-forge/?level=gcse" data-mfg-item="formula-forge" data-slug="formula-forge" data-kind="choose" data-label="GCSE" data-key="gcse">
+  <span class="card-name">Formula Forge</span>
+  <span class="card-line">Rearranging formulae, step by step.</span>
+  <span class="card-spec">GCSE spec: A5</span>
+  <span class="card-level">Choose: GCSE</span>
+</a>
+<a class="card" href="/games/sequence-solver/?level=ks3" data-mfg-item="sequence-solver" data-slug="sequence-solver" data-kind="choose" data-label="Foundation" data-key="ks3">
+  <span class="card-name">Sequence Solver</span>
+  <span class="card-line">Next terms, term-to-term rules and the nth term.</span>
+  <span class="card-spec">GCSE spec: A23–A25</span>
+  <span class="card-level">Choose: Foundation</span>
+</a>
+</div>
+</section>
+
+<section class="topic" id="ratio">
+<h2>Ratio, proportion and percentages</h2>
+<div class="cards">
+<a class="card" href="/games/split-it/" data-mfg-item="split-it" data-slug="split-it" data-kind="choose" data-label="Foundation">
+  <span class="card-name">Split It</span>
+  <span class="card-line">Ratio: simplifying, sharing, scaling recipes and unit pricing. Pick a mode first.</span>
+  <span class="card-spec">GCSE spec: R9</span>
+  <span class="card-level">Choose: Foundation</span>
+</a>
+<a class="card" href="/games/proportion-blaster/?level=gcse" data-mfg-item="proportion-blaster" data-slug="proportion-blaster" data-kind="choose" data-label="GCSE" data-key="gcse">
+  <span class="card-name">Proportion Blaster</span>
+  <span class="card-line">Direct and inverse proportion, and sharing in a ratio.</span>
+  <span class="card-spec">GCSE spec: R9</span>
+  <span class="card-level">Choose: GCSE</span>
+</a>
+<a class="card" href="/games/better-value/?level=gcse" data-mfg-item="better-value" data-slug="better-value" data-kind="choose" data-label="GCSE" data-key="gcse">
+  <span class="card-name">Better Value</span>
+  <span class="card-line">Comparing deals to find the better value.</span>
+  <span class="card-spec">GCSE spec: R11</span>
+  <span class="card-level">Choose: GCSE</span>
+</a>
+<a class="card" href="/games/percentage-flip/?level=year6" data-mfg-item="percentage-flip" data-slug="percentage-flip" data-kind="link" data-label="Starter" data-key="year6">
+  <span class="card-name">Percentage Flip</span>
+  <span class="card-line">Percentages of amounts, worked out mentally.</span>
+  <span class="card-spec">GCSE spec: N10–N11, N12</span>
+  <span class="card-level">Opens at: Starter</span>
+</a>
+</div>
+</section>
+
+<section class="topic" id="geometry">
+<h2>Geometry and measures</h2>
+<p class="note">Geometry is the thinnest section for now. More games are on the way before the June 2027 exams.</p>
+<div class="cards">
+<a class="card" href="/games/new-shapes/" data-mfg-item="new-shapes" data-slug="new-shapes" data-kind="one">
+  <span class="card-name">New Shapes</span>
+  <span class="card-line">Area of parallelograms and trapezia, and volume of prisms.</span>
+  <span class="card-spec">GCSE spec: G16</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/angle-ace/?level=year6" data-mfg-item="angle-ace" data-slug="angle-ace" data-kind="choose" data-label="Starter" data-key="year6">
+  <span class="card-name">Angle Ace</span>
+  <span class="card-line">Finding missing angles and giving the reason.</span>
+  <span class="card-spec">GCSE spec: G1–G3</span>
+  <span class="card-level">Choose: Starter</span>
+</a>
+<a class="card" href="/games/shape-shifter/" data-mfg-item="shape-shifter" data-slug="shape-shifter" data-kind="one">
+  <span class="card-name">Shape Shifter</span>
+  <span class="card-line">Translating, reflecting and rotating shapes on a coordinate grid. Pick a mode first.</span>
+  <span class="card-spec">GCSE spec: G7</span>
+  <span class="card-level">One level</span>
+</a>
+</div>
+</section>
+
+<section class="topic" id="probability">
+<h2>Probability</h2>
+<div class="cards">
+<a class="card" href="/games/probability-pioneer/" data-mfg-item="probability-pioneer" data-slug="probability-pioneer" data-kind="one">
+  <span class="card-name">Probability Pioneer</span>
+  <span class="card-line">The probability scale, simple probabilities, and true-or-false statements.</span>
+  <span class="card-spec">GCSE spec: P3–P4, P7</span>
+  <span class="card-level">One level</span>
+</a>
+<a class="card" href="/games/expected-damage/?level=ks3" data-mfg-item="expected-damage" data-slug="expected-damage" data-kind="link" data-label="Foundation" data-key="ks3">
+  <span class="card-name">Expected Damage</span>
+  <span class="card-line">Using probabilities to work out expected outcomes and pick the better option.</span>
+  <span class="card-spec">GCSE spec: P2</span>
+  <span class="card-level">Opens at: Foundation</span>
+</a>
+<a class="card" href="/games/given-that/?level=gcse" data-mfg-item="given-that" data-slug="given-that" data-kind="choose" data-label="GCSE" data-key="gcse">
+  <span class="card-name">Given That</span>
+  <span class="card-line">Probabilities from two-way tables, Venn diagrams and frequency trees.</span>
+  <span class="card-spec">GCSE spec: P6, P9</span>
+  <span class="card-level">Choose: GCSE</span>
+</a>
+</div>
+</section>
+
+<section class="topic" id="statistics">
+<h2>Statistics</h2>
+<div class="cards">
+<a class="card" href="/games/distinctly-average/?level=ks3" data-mfg-item="distinctly-average" data-slug="distinctly-average" data-kind="choose" data-label="Foundation" data-key="ks3">
+  <span class="card-name">Distinctly Average</span>
+  <span class="card-line">Mean, median, mode and range.</span>
+  <span class="card-spec">GCSE spec: S1–S4</span>
+  <span class="card-level">Choose: Foundation</span>
+</a>
+<a class="card" href="/games/stat-attack/?level=gcse" data-mfg-item="stat-attack" data-slug="stat-attack" data-kind="choose" data-label="GCSE" data-key="gcse">
+  <span class="card-name">Stat Attack</span>
+  <span class="card-line">Grouped frequency tables: modal class, median class and estimated mean.</span>
+  <span class="card-spec">GCSE spec: S1–S4</span>
+  <span class="card-level">Choose: GCSE</span>
+</a>
+<a class="card" href="/games/chart-interrogator/?level=gcse" data-mfg-item="chart-interrogator" data-slug="chart-interrogator" data-kind="choose" data-label="GCSE" data-key="gcse">
+  <span class="card-name">Chart Interrogator</span>
+  <span class="card-line">Reading and comparing statistical diagrams. Pick a diagram type too.</span>
+  <span class="card-spec">GCSE spec: S1–S4</span>
+  <span class="card-level">Choose: GCSE</span>
+</a>
+<a class="card" href="/games/correlation-or-coincidence/" data-mfg-item="correlation-or-coincidence" data-slug="correlation-or-coincidence" data-kind="one">
+  <span class="card-name">Correlation or Coincidence?</span>
+  <span class="card-line">Correlation and causation: does one cause the other, does something else cause both, or is it chance?</span>
+  <span class="card-spec">GCSE spec: S6</span>
+  <span class="card-level">One level</span>
+</a>
+</div>
+</section>
+
+</main>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>

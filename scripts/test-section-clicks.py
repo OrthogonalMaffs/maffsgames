@@ -33,7 +33,7 @@ ORIGIN = "https://maffsgames.co.uk"
 
 # (section, item, position) in page order: the markup's contract.
 EXPECTED_LINKS = [
-    ("resit-link", "open-resit", 1),
+    ("essentials-link", "open-essentials", 1),
     ("escape-rooms", "summary", 1),
     ("escape-rooms", "hamster-heist", 3),
     ("escape-rooms", "pe-shed-rebellion", 4),

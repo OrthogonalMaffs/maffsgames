@@ -278,7 +278,7 @@ jobs:
           # roster-Unlisted game has a file. It does not read docs/audits/REGISTER.md: no PR edits that file; the
           # "register" job below regenerates and commits it on main (7 Oct 2026). Self-test: a fixed entry with no PR,
           # and a schema fault, each fail.
-          # The search-titles check (stdlib, about a second): every game page's and /resit/'s <title>, meta
+          # The search-titles check (stdlib, about a second): every game page's and /essentials/'s <title>, meta
           # description and og:/twitter: copies equal what data/games.json generates under Jon's rules of
           # 5 Oct 2026 (titles <= 60, descriptions <= 155, no "Year 6"); edit games.json, run apply-meta.py.
           - name: Site-wide checks
@@ -292,11 +292,12 @@ jobs:
               Spec mapping (every live game is on the spec map, or in UNMAPPED)|python scripts/check-spec-mapping.py
               Public claims (no page says no data is collected)|python scripts/check-public-claims.py
               Tax year (canon 7.1.4: every tax game registered, states only the teaching year)|python scripts/check-tax-year.py
-              GCSE Resit page (every game live, mapped, offering the level its card names; SR-11)|python scripts/check-resit-page.py
+              Essentials page (every game live, mapped, offering the level its card names; SR-11)|python scripts/check-resit-page.py
               Calculator (canon 4.4: the on-screen calculator loads exactly where the roster says required)|python scripts/check-calculator.py
+              Student labels (canon 7.5.3: no game, escape-room or portal page names the student's status)|python scripts/check-student-labels.py && python scripts/check-student-labels.py --selftest
               Content safety (canon SR-14 tiers: no new banned wording, no illness or injury in humour)|python scripts/check-content-safety.py
               Teacher feedback line (on every results screen, played in Chromium; own slug; exact wording)|python scripts/check-teacher-invite.py && python scripts/check-teacher-invite.py --selftest
-              Search titles (every game page and /resit/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
+              Search titles (every game page and /essentials/ carries the title and description data/games.json generates)|python scripts/check-meta.py && python scripts/check-meta.py --selftest
               Findings register (every audit finding filed per game, schema valid; fixed entries name their PR)|python scripts/audit-register.py --check --selftest
               Quoted figures (no figure the quoted-statistics audit found CONTRADICTED is still on its page)|python scripts/check-quoted-figures.py && python scripts/check-quoted-figures.py --selftest
 

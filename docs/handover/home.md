@@ -133,6 +133,37 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-08 (home): contract ESSENTIALS, BUILT on `claude/essentials` (worktree E:/jon/mg-ess), rebased, PR next
+
+**State (8 Oct, next session):** rebased onto main after CLAIM #145 and #147 (home.md conflict only: CLAIM's
+entry kept below). Re-run `python scripts/check-changed.py`, open the PR, merge on a green Gate, then UPDATES (QUEUE 2c).
+- **/resit/ -> /essentials/**: page moved (git mv), heading "Essentials" plus the teacher line, analytics section
+  `essentials`; /resit/ is a meta-refresh stub (spec-map pattern, registered in check-footer.py). games.json key,
+  apply-meta/check-meta, check-resit-page.py (PAGE; filename kept), check-canonical-links RESOLVE/LEVEL pages,
+  publish scope, ci-deps KNOWN_TOP, sitemap, homepage badge ("Essentials", section `essentials-link`, item
+  `open-essentials`), test-section-clicks, workflow labels all follow. Title: "Essentials: GCSE Foundation
+  Maths Games | MaffsGames" (description kept: teacher metadata).
+- **Not done on purpose:** /resit/ is NOT in check-canonical-links' REDIRECTS: that would fail the /updates/
+  history links to /resit/, which contract UPDATES says stay as written (they redirect). Say so in the PR.
+- **Student surfaces:** comic-caper and kiln-disaster description/og/twitter now "A GCSE escape room on ...";
+  the four "for a GCSE resit class" card notes (homepage, /escape-rooms/) now "Built from a site user's
+  request. Want something built?".
+- **scripts/check-student-labels.py:** visible text, alt/title/aria-label/placeholder, script strings (comments
+  stripped) and description/og/twitter meta of games/**/index.html, escape-rooms/*/index.html and the portals
+  (index, escape-rooms, op). Self-test: the old comic-caper description and three more plants caught; comments
+  not flagged. **In the workflow's site-wide list, NOT a ci-line** (a ci-line is selected per named page on PRs;
+  this must see every page): a departure from the contract's wording, say so in the PR. **given-that** has a
+  tree-diagram question about students re-sitting (6 hits): a KNOWN exception, reported not failed, flagged
+  for Jon (game content is DO NOT TOUCH).
+- **Homepage:** title "MaffsGames — Free Maths Games for KS3, GCSE, Core Maths and A-Level"; description (also
+  og, new twitter tags) "Free maths games and 15-minute escape rooms for UK schools, KS3 to Further Maths,
+  including GCSE Foundation and Core Maths. No sign-up, no personal data." No game count AND no room count
+  ("eight" vs 8 cards / 11 room folders: same class); subtitle and JSON-LD now "KS3 to Further Maths". Draft
+  wording for Project Claude to review in the PR. Choice recorded: the number is dropped, not generated.
+- **Canon:** new §7.5.3 (the rule, the check, KNOWN, the teacher line, no hand-typed counts); analytics mapping
+  (resit-link->essentials-link, open-resit->open-essentials, resit->essentials, page views) in §1.3; §2.1 and the
+  CI tables follow the new address.
+
 ## 2026-10-08 (home): contract CLAIM (branch `claude/claim`)
 
 - **STOP IF hit:** honouring the line for listed games would have exempted a claimed game with no time bound.

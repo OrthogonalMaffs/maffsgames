@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Does /resit/ still tell the truth about every game on it?
+"""Does /essentials/ (until 8 Oct 2026 /resit/, which now redirects there) still tell the truth about every game on it?
 
     python scripts/check-resit-page.py              # CI
     python scripts/check-resit-page.py --static     # the static half only (no browser)
     python scripts/check-resit-page.py --root <copy of the repo>   # testing
 
-/resit/ (launched Oct 2026) is a hand-curated list of games for GCSE resit classes, with one card
+/essentials/ (launched Oct 2026 as /resit/; renamed 8 Oct, contract ESSENTIALS) is a hand-curated list of games for GCSE resit classes, with one card
 per game naming its spec references and the level to choose. A hand-maintained list drifts, so it is
 guarded the way the footer and the spec map are: one source (the page), one check.
 
@@ -16,7 +16,7 @@ Static half (stdlib), fails on:
   - a topic section missing, renamed or out of order, or a card out of SUITE's order;
   - a game on the page that is not in SUITE, or a SUITE game with no card;
   - an EXCLUDED, WITHDRAWN or UNLISTED game linked anywhere on the page, a WITHDRAWN game the
-    portal no longer links (withdrawn from /resit/ only, pending a rebuild), or an UNLISTED game the
+    portal no longer links (withdrawn from /essentials/ only, pending a rebuild), or an UNLISTED game the
     portal still links (unlisted everywhere, roster "Unlisted" section);
   - a card whose game the portal (index.html) does not link (not live);
   - a card whose game is not on the spec map, or whose spec line differs from the spec map's
@@ -32,7 +32,7 @@ A self-test of the static half runs first on every run.
 import argparse, html, importlib.util, pathlib, re, sys
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
-PAGE = "resit/index.html"
+PAGE = "essentials/index.html"
 
 # Jon, 3 Oct 2026: the suite, by topic, in this order. shape-shifter added 4 Oct 2026 (Jon: G7
 # transformations banded STRETCH). Three withdrawn 4 Oct 2026 (WITHDRAWN below); correlation-or-coincidence
@@ -124,7 +124,7 @@ def static_check(page, portal, refs, game_src):
         if re.search(r"games/%s/" % re.escape(slug), page):
             errors.append("%s is on the page but WITHDRAWN pending rebuild (%s)" % (slug, why))
         if slug not in live:
-            errors.append("%s: WITHDRAWN from /resit/ only, but the portal no longer links it" % slug)
+            errors.append("%s: WITHDRAWN from /essentials/ only, but the portal no longer links it" % slug)
     for slug, why in UNLISTED.items():
         if re.search(r"games/%s/" % re.escape(slug), page):
             errors.append("%s is on the page but UNLISTED (%s)" % (slug, why))
@@ -268,7 +268,7 @@ def main():
         errors += rendered_check(root, sections)
     for e in errors:
         print("FAIL  " + e)
-    print("/resit/: %d sections, %d cards; EXCLUDED checked: %s" % (len(sections), n, ", ".join(EXCLUDED)))
+    print("/essentials/: %d sections, %d cards; EXCLUDED checked: %s" % (len(sections), n, ", ".join(EXCLUDED)))
     print("WITHDRAWN pending rebuild (checked off the page, still live): %s" % (", ".join(WITHDRAWN) or "none"))
     print("UNLISTED (checked off the page and off the portal): %s" % (", ".join(UNLISTED) or "none"))
     print("FAILED" if errors else "OK")

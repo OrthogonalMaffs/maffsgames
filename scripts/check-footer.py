@@ -59,6 +59,7 @@ EXEMPT = {
     "schools/privacy/index.html": ("redirect", "Redirect stub to /privacy/."),
     "schools/spec-map/index.html": ("redirect", "Redirect stub to /spec-map/."),
     "year6/index.html": ("redirect", "Redirect stub to /op/."),
+    "resit/index.html": ("redirect", "Redirect stub to /essentials/ (renamed 8 Oct 2026; keeps Classroom links working)."),
     "6-7/index.html": ("redirect", "Redirect stub to /games/prime-or-composite/."),
     "games/sequence-solver/index-original.html": ("redirect",
         "Redirect stub to /games/sequence-solver/: the March 2026 single-mode game it replaced "
