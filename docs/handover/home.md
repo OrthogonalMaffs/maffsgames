@@ -14,9 +14,10 @@ contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as 
 1. **Contract CTX: DONE, #158 merged 8 Oct (b66ccde).** Its verbatim text: `docs/history/handover-home-archive.md`
    ("QUEUE items CTX and F1 batch 5"); its notes: the CTX entry below.
 2. **F1 batch 5: DONE, #161 merged 8 Oct (8216ff4), main green.**
-3. **F1 batch 6: PR #165 on `claude/f1-batch6` (8 Oct; see its entry below).** Merge on a green Gate, watch main, then
-   **CHECKPOINT STOP** (2 batches merged since the last stop: 5 and 6). Next batch: re-read `cloud-remaining:` and the
-   cloud lane's order in cloud.md first; NOT_YET is 40.
+3. **F1 batch 6: DONE, #165 merged 8 Oct (7844d10).**
+4. **LTC flake (the cloud lane, relayed by Jon, 8 Oct; queued after CTX):** main went red once on like-terms-collector's
+   self-test "mark landing 300 ms after Check" (passed 4/4 locally and on a rerun). Same shape as DET: make it wait on
+   state, not time. **PR on `claude/ltc-flake` (see its entry).** Then **CHECKPOINT STOP** (batches 5 and 6 merged).
 - **Follow-up (home lane, small):** `check-changed.py` crashes (`UnicodeEncodeError`, cp1252) printing a failure when
   its output is redirected to a file on Windows. Until fixed: `PYTHONIOENCODING=utf-8 python scripts/check-changed.py`.
 - **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
@@ -34,6 +35,19 @@ contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as 
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-08 (home): LTC flake, like-terms-collector's late-mark self-test (branch `claude/ltc-flake`)
+
+- **Cause:** the self-test serves a copy whose showFeedback() marks DEFER (300) ms late, then reads the mark "straight off
+  the click" to prove the plant bites, expecting none. That read was a second Playwright call after `page.click`; on a
+  slow runner more than 300 ms passed between the two and the mark had landed, so the self-test failed. (DEFER only
+  equals MaffsLock's 300 ms window by coincidence: the race is the gap between two Playwright calls.)
+- **Fix:** in the deferred plant only, the click and the early read are one page task
+  (`checkBtn.click(); return MARK();`). A timer cannot fire inside one synchronous task, so the early read sees no mark
+  on any runner; the waiting read (`read_mark`) must still see every mark land. Real typing and clicking elsewhere are
+  unchanged.
+- **Proof:** with a 200 ms gap forced after each click (a slow runner, DEFER 50), main's version reads `[False, True]`
+  early and fails; this one reads `[None, None]` and holds. Plain runs: 3/3 pass.
 
 ## 2026-10-08 (home): F1 batch 6 (#165, branch `claude/f1-batch6`, worktree E:/jon/mg-b6)
 
@@ -73,25 +87,3 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
 - **Verifier lessons:** a sweep that answers at once needs `bc.NO_LOCK_FRESH_INIT` (angle-ace, free-daily-pizza,
   six-sevens). A top-level `const endGame` cannot be stubbed by `window.endGame =`: keep `function endGame(){finishGame()}`.
 - **NOT_YET: 47.**
-
-## 2026-10-08 (home): contract CTX, what every session loads (branch `claude/ctx`, worktree E:/jon/mg-ctx)
-
-- **Sizes (bytes, before -> after):** CLAUDE.md 159,172 -> 12,246; home.md 63,666 -> ~13,300;
-  cloud.md 55,721 (deferred); .claude/rules/ 42,011 -> 41,960. Canon 148,526 -> 175,803 (§12).
-- **CLAUDE.md** keeps the every-session rules, the cloud-claim rule (copied verbatim from canon §7.8.2), "Jon never
-  amends contracts: PC sends complete pastes" (new: it existed nowhere; wording from the contract) and a "Where
-  things live" pointer block. Every other section moved verbatim (proof: every non-blank old line is in the new
-  file, the archive or canon §12, except the one reworded pointer sentence).
-- **Canon §12 (new):** the sections that existed only in CLAUDE.md: check-site tiers 1-4, no rejection sampling,
-  `MaffsOptions.build()`, generator ranges, scaffolds fade, accessibility, tiered banks, level colours, the Firebase
-  leaderboard. Four canon pointers to "CLAUDE.md" now say §12.
-- **Archives:** `docs/history/claude-md-archive.md` (dated handovers, state sections, and reference sections canon
-  already holds, each headed with where it lives), `docs/history/handover-home-archive.md` (the done contracts'
-  queue text and every entry before UPDATES). cloud.md deferred (cloud PR #154 open on it).
-- **`scripts/check-context-size.py`** (site-wide ci-line): CLAUDE.md and both handovers <= 20 KB; self-test plants
-  a 25 KB CLAUDE.md. Roster title no longer carries hand-typed counts.
-- **STOP IF hit, answered (Jon, 8 Oct):** seven rules lived only in dated sections; all stand. Placed as he named:
-  canon §3.4 (New & updated badges, his Updated definition verbatim), §3.5 (/updates/: describe a false claim, never
-  quote it), SR-24 (counterexample refutes the statement as written), SR-25 (words, figure and key agree), §0.4 (register
-  files edited by hand), §7.9 (verifiers read the page's feedback, not a wrapped mfg; pointer in CLAUDE.md), CLAUDE.md
-  "Session practice" (`--against` scratch copy; never `| tail` under a timeout). Then merge on a green Gate.

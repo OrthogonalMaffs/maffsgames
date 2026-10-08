@@ -175,6 +175,28 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
    > STOP IF: a claim in items 2-3 is not true on main (report which; do not reword it yourself); the page's
    > checks require a format the text doesn't fit.
 
+## 2026-10-08 (home): contract CTX, what every session loads (branch `claude/ctx`, worktree E:/jon/mg-ctx)
+
+- **Sizes (bytes, before -> after):** CLAUDE.md 159,172 -> 12,246; home.md 63,666 -> ~13,300;
+  cloud.md 55,721 (deferred); .claude/rules/ 42,011 -> 41,960. Canon 148,526 -> 175,803 (§12).
+- **CLAUDE.md** keeps the every-session rules, the cloud-claim rule (copied verbatim from canon §7.8.2), "Jon never
+  amends contracts: PC sends complete pastes" (new: it existed nowhere; wording from the contract) and a "Where
+  things live" pointer block. Every other section moved verbatim (proof: every non-blank old line is in the new
+  file, the archive or canon §12, except the one reworded pointer sentence).
+- **Canon §12 (new):** the sections that existed only in CLAUDE.md: check-site tiers 1-4, no rejection sampling,
+  `MaffsOptions.build()`, generator ranges, scaffolds fade, accessibility, tiered banks, level colours, the Firebase
+  leaderboard. Four canon pointers to "CLAUDE.md" now say §12.
+- **Archives:** `docs/history/claude-md-archive.md` (dated handovers, state sections, and reference sections canon
+  already holds, each headed with where it lives), `docs/history/handover-home-archive.md` (the done contracts'
+  queue text and every entry before UPDATES). cloud.md deferred (cloud PR #154 open on it).
+- **`scripts/check-context-size.py`** (site-wide ci-line): CLAUDE.md and both handovers <= 20 KB; self-test plants
+  a 25 KB CLAUDE.md. Roster title no longer carries hand-typed counts.
+- **STOP IF hit, answered (Jon, 8 Oct):** seven rules lived only in dated sections; all stand. Placed as he named:
+  canon §3.4 (New & updated badges, his Updated definition verbatim), §3.5 (/updates/: describe a false claim, never
+  quote it), SR-24 (counterexample refutes the statement as written), SR-25 (words, figure and key agree), §0.4 (register
+  files edited by hand), §7.9 (verifiers read the page's feedback, not a wrapped mfg; pointer in CLAUDE.md), CLAUDE.md
+  "Session practice" (`--against` scratch copy; never `| tail` under a timeout). Then merge on a green Gate.
+
 ## 2026-10-08 (home): contract UPDATES, the October quality entries on /updates/ (branch `claude/updates`)
 
 - **STOP IF hit (item 5's fact check, before committing):** item 3's American-wheel example was not true on main.
