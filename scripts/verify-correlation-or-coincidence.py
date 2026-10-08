@@ -43,7 +43,7 @@ CATS = ("cause", "both", "chance")
 BUTTONS = {"cause": "One causes the other", "both": "Something else causes both", "chance": "Coincidence"}
 # The strength bands, stated here independently of the page.
 BANDS = {"very strong": (0.94, 1.0), "strong": (0.80, 0.94), "moderate": (0.50, 0.80)}
-MIN_BANK = 40
+MIN_BANK = 84
 PHONES = [(320, 568), (375, 667), (390, 844)]
 PORT = None
 _FAILURES = []
