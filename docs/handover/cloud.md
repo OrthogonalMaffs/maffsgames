@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining:`
+`cloud-remaining: probability-paradox`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -27,6 +27,13 @@ in the PR that fixes it. One game claimed at a time; never claim a game already 
 game's page, never in the shared script.
 A two-option game declares an `answer` that picks the option differing from its key for `i >= 1` (canon
 §7.6.0, contract DET, 8 Oct; prime-or-composite is the pattern).
+
+**Contracts (Jon, 8 Oct 2026, corrected 20:00):** each contract is saved verbatim as
+`docs/handover/contracts/<yyyy-mm-dd>-<name>.md` in its claim commit (or the PR's first commit), with one line
+in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
+start-up load). When the work merges, move the file to `docs/history/`.
+
+**Queue:** PP-T1-004: contracts/2026-10-08-pp-t1-004.md (claimed). FT-FIX: contracts/2026-10-08-ft-fix.md.
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
@@ -98,22 +105,9 @@ main's last full run is red; watch main's run after merging.
   2m50 of 6m). **A new cloud verifier: pick a B group with room, not E.**
 - **CHECKPOINT (Jon, 8 Oct ~19:00, context over 60%): STOP once main is green after the group fix.** Nothing claimed
   after it. The next session starts with probability-paradox t1-004.
-- **probability-paradox t1-004 (Jon's contract, 8 Oct, verbatim in the session; key points):** claim first; replace
-  the item at games/probability-paradox/index.html:364 ("A student scores 95% ... claims credit") with: scenario "A
-  teacher picks the ten students with the lowest scores on a test (average 41%) for a new revision method. On a
-  second paper of the same difficulty, the group's average rises to 57%. The teacher says the method worked."; q
-  "What else could explain the rise?"; opts ["Regression to the mean", "The method must have worked: a 16-point rise
-  is too big to be anything else", "The second paper was easier", "The highest scorers would have risen by the same
-  amount"]; correct "Regression to the mean"; explain "Students picked for scoring lowest include some who had an
-  unlucky day. On the next paper their luck evens out, so the group's average rises even if nothing changed. The top
-  scorers would tend to fall back for the same reason. To know whether the method worked, compare with similar low
-  scorers who did not get it." The item has no id. Verifier: pin it (selection on the lowest scores, same difficulty,
-  the four options exactly, the key) and plant the old item; close t1-004 citing Jon's ruling; fit at 390px; check the
-  B6 ledger (content ids). STOP IF the longer option cannot fit 390px, or a ledger/analytics key breaks.
-- **Then: factor-theorem.** Two contracts from Jon (8 Oct) were pasted into the session, not the repo: ask Jon to
-  paste them again (the SR-21 contract: t5-004, t5-005 HIGH, t5-008, t5-018; and the rulings contract: t5-013 read
-  ?level, t5-014/015 Practice submits nothing, Test submits under the level). Settled: level4 needs no hub change while
-  unlisted (NOT_ON_HUB skips the level check); the alevel board is empty (above). #180 closed t5-009: merge main first.
+- **Both contracts are now saved in the repo** (Project Claude, 19:55; queue above): PP-T1-004, then FT-FIX, which
+  replaces the two lost Factor Theorem contracts. #180 closed t5-009, so merge main first. The alevel board is
+  empty and level4 needs no hub change (both above).
 
 ## 2026-10-08 (cloud, afternoon): CHECKPOINT STOP (Jon's queue done): listed-games contract at 5 of 23; nothing claimed
 
