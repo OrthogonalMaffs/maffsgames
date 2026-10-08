@@ -79,7 +79,7 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
 
 ## 2026-10-08 (home): contract CTX, what every session loads (branch `claude/ctx`, worktree E:/jon/mg-ctx)
 
-- **Sizes (bytes, before -> after):** CLAUDE.md 159,172 -> 11,849; home.md 63,666 -> ~13,300;
+- **Sizes (bytes, before -> after):** CLAUDE.md 159,172 -> 12,246; home.md 63,666 -> ~13,300;
   cloud.md 55,721 (deferred); .claude/rules/ 42,011 -> 41,960. Canon 148,526 -> 175,803 (§12).
 - **CLAUDE.md** keeps the every-session rules, the cloud-claim rule (copied verbatim from canon §7.8.2), "Jon never
   amends contracts: PC sends complete pastes" (new: it existed nowhere; wording from the contract) and a "Where
@@ -93,8 +93,11 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   queue text and every entry before UPDATES). cloud.md deferred (cloud PR #154 open on it).
 - **`scripts/check-context-size.py`** (site-wide ci-line): CLAUDE.md and both handovers <= 20 KB; self-test plants
   a 25 KB CLAUDE.md. Roster title no longer carries hand-typed counts.
-- **STOP IF hit:** rules found only in dated sections, unclear whether they stand: listed in the PR's "For Jon".
-  Merge waits for his answer.
+- **STOP IF hit, answered (Jon, 8 Oct):** seven rules lived only in dated sections; all stand. Placed as he named:
+  canon §3.4 (New & updated badges, his Updated definition verbatim), §3.5 (/updates/: describe a false claim, never
+  quote it), SR-24 (counterexample refutes the statement as written), SR-25 (words, figure and key agree), §0.4 (register
+  files edited by hand), §7.9 (verifiers read the page's feedback, not a wrapped mfg; pointer in CLAUDE.md), CLAUDE.md
+  "Session practice" (`--against` scratch copy; never `| tail` under a timeout). Then merge on a green Gate.
 ## 2026-10-08 (home): contract UPDATES, the October quality entries on /updates/ (branch `claude/updates`)
 
 - **STOP IF hit (item 5's fact check, before committing):** item 3's American-wheel example was not true on main.
