@@ -33,8 +33,7 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** UC-FIX: contracts/2026-10-08-uc-fix.md and its amendment -uc-fix-amend.md (fix PR open; move both to
-`docs/history/contracts/` once it merges).
+**Queue:** UC-FIX: done by the fix PR (its contract and amendment move to `docs/history/contracts/` in it).
 Then SIM-S5: contracts/2026-10-09-sim-s5.md (Simultaneous Solver Stage 5; Jon's named freeze exception,
 9 Oct 00:25; claim simultaneous-solver first). Then FT-FIX: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
@@ -42,7 +41,7 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): UC-FIX, unit-converter (claim #195; fix PR next; listed game)
+## 2026-10-09 (cloud): UC-FIX, unit-converter (claim #195 merged 1c30b28; fix PR; listed game)
 
 - **The fix:** MaffsLock + MaffsNext ("Got it — next", in the worked solution) with its lock hint; ?level only from
   the game's own LEVELS (hasOwnProperty); 3 s.f. stated on the cylinder, 60 mph and shaft, working as the contract
