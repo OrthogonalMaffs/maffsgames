@@ -149,6 +149,8 @@ gradient-hunter spot-the-muppet terrible-advice
 sequence-solver bearing-blitz expected-damage maths-court equation-builder fermi-lab better-value chart-interrogator
 probability-paradox circle-theorem-spotter core-maths-paper1 core-maths-paper2a correlation-or-coincidence
 estimation-engine given-that index-laws modular-battle
+standard-form-blitz proportion-blaster formula-unlocked graph-transformer
+simultaneous-solver
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 

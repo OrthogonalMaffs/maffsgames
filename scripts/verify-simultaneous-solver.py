@@ -352,6 +352,7 @@ def play(fails, bank, alevel, katex_dir=None, shots=None):
             async def fresh(w, h, touch=False, aa=False):
                 ctx = await browser.new_context(viewport={"width": w, "height": h}, has_touch=touch, is_mobile=touch)
                 await bc.no_next_floor(ctx)
+                await ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the driver answers at once (F1 batch 8)
                 if aa:
                     await ctx.add_init_script("try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}")
                 await ctx.route("**/*", route)
@@ -359,6 +360,10 @@ def play(fails, bank, alevel, katex_dir=None, shots=None):
                 errors = []
                 page.on("pageerror", lambda e: errors.append(str(e)))
                 await page.goto(base + "/games/%s/" % SLUG, wait_until="load")
+                # Every font face the page declares (KaTeX's come from the CDN), loaded before anything is played:
+                # a face arriving after stepInView() has scrolled grows the step by ~25px at 320x568, so the fit
+                # verdict depended on network timing (F1 batch 8; main showed it 4 runs in 8).
+                await page.evaluate("() => Promise.all([...document.fonts].map(f => f.load().catch(() => 0))).then(() => document.fonts.ready).then(() => 0)")
                 await page.wait_for_function("!!window.SS && !!window.SS.ui")
                 await page.evaluate("""() => { window.__events = []; window.__submits = [];
                   window.mfg = function (n, p) { window.__events.push([n, p]); };
