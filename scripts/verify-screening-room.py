@@ -29,12 +29,26 @@ rates, and computes everything else; this script recomputes it all with exact fr
     no event, the input stays open, the message is shown); the explanation shows the data's text, and the Bayes
     box shows at A-Level.
 
+  - SR-21 (Jon's contract and rulings, 8 Oct 2026):
+    t4-005: with MaffsLock's real window, Next then a click on the new question's gut check, and a double click on
+      Next, after a right and a wrong answer: one advance, the new gut check unanswered; the session ends once.
+    t4-006: ?level=constructor, __proto__, toString, xyz, l4: the start screen at the default level, nothing thrown,
+      served or logged.
+    t4-008 (Project Claude's rule): over 10,000, k = gcd(N, condition, true and false positives) if N / k fits 10,000
+      icons, else the least whole k that fits; each group drawn as exactly count / k (whole icons and one part-icon);
+      the note says "1 icon = k <unit>" and gives every exact count.
+    t4-013: at 390x844 (touch), every item's phases 1-3 and its answer scroll no wider than 390 px; Next wholly on screen.
+    t4-015: phase 3 keeps the scenario and the icon array above the question, Continue gone.
+    t4-016 (fixed on main by #92, pinned): the prompt counts no "people"; the hint's examples are no item's answer.
+
     python scripts/verify-screening-room.py [--file PATH] [--selftest]
 
---selftest plants faults in copies of the page (a hand-keyed band, alevel_16's old 130 false positives in the
-engine and typed into its explanation, marking that accepts 0) and requires each to be caught.
+--selftest plants 13 faults in copies of the page (a hand-keyed band, alevel_16's old 130 false positives in the
+engine and typed into its explanation, marking that accepts 0, and one or two for each SR-21 entry) and requires each
+to be caught.
 """
 import argparse
+import math
 import os
 import re
 import sys
@@ -60,7 +74,7 @@ READ = """() => {
     scenario: q.scenario, explanation: q.explanation, scenarioText: q.scenarioText, explanationText: q.explanationText,
     answerTex: q.answerTex, bayesTex: q.bayesTex, population: q.population, count: q.condition.count,
     tp: q.testPositive.truePositive, fp: q.testPositive.falsePositive, pos: q.testPositive.total,
-    gut: q.gutCheckCorrect, dp: q.dp, keys: q.keys }));
+    gut: q.gutCheckCorrect, dp: q.dp, keys: q.keys, unit: q.unit || null, answerText: q.answerText }));
   return out;
 }"""
 
@@ -85,12 +99,25 @@ PLAY = """([lv, id, gutRight, gutWrong, probes]) => {
       document.querySelector('.gut-btn[data-gut="' + key + '"]').click();
       out.gut[which] = { text: document.getElementById('gutResult').textContent, gained: totalScore - before };
     }
+    showPhase2();   // the game moves on through MaffsLock.timer, which a synchronous setTimeout cannot run
     const grid = document.getElementById('iconGrid');
+    const note = document.getElementById('iconScale');
+    out.note = note && note.style.display !== 'none' ? note.textContent : '';
+    // each group's drawn share: a whole icon is 1, a part-icon its data-part (rem/k)
+    out.shares = {};
+    [...grid.children].forEach(el => { const c = ['true-positive', 'condition', 'false-positive'].find(x => el.classList.contains(x)) || 'neither';
+      const p = el.dataset.part; out.shares[c] = out.shares[c] || []; out.shares[c].push(p || '1'); });
     out.icons = { tp: grid.querySelectorAll('.true-positive').length, fp: grid.querySelectorAll('.false-positive').length,
                   cond: grid.querySelectorAll('.condition').length, all: grid.children.length };
     out.summary = document.getElementById('iconSummary').textContent;
     for (const raw of probes) {
       showPhase3();
+      const p2 = document.getElementById('phase2'), p3 = document.getElementById('phase3');
+      out.phase3 = { p2shown: p2.style.display !== 'none' && p2.getBoundingClientRect().height > 0,
+        scenario: document.getElementById('qScenario2').textContent, icons: document.getElementById('iconGrid').children.length,
+        above: p2.getBoundingClientRect().top < p3.getBoundingClientRect().top,
+        cont: getComputedStyle(document.getElementById('continueBtn')).display !== 'none' &&
+              document.getElementById('continueBtn').classList.contains('visible') };
       out.prompt = document.getElementById('calcPrompt').textContent;
       out.hint = document.getElementById('calcHint').textContent;
       const before = totalScore, ev = events.length;
@@ -276,6 +303,35 @@ def check_play(page, lv, q, e, rep):
         want = {'tp': e['tpi'], 'fp': e['fpi'], 'cond': e['ci'] - e['tpi'], 'all': q['N']}
         if r['icons'] != want:
             rep[('icon array', iid)].append(f"drawn {r['icons']}, data {want}")
+    # t4-008 (Project Claude's rule, 8 Oct 2026): over 10,000, one icon stands for k: the largest k dividing N and every
+    # count drawn that keeps the array within 10,000 icons, else the least whole k that fits; each group is drawn as its
+    # count / k exactly (whole icons, and one part-icon for a remainder), never rounded; a note gives k in the
+    # scenario's unit and each group's exact count
+    if q['N'] > 10000:
+        groups = {'true-positive': e['tpi'], 'condition': e['ci'] - e['tpi'], 'false-positive': e['fpi'],
+                  'neither': q['N'] - e['ci'] - e['fpi']}
+        g = q['N']
+        for v in (e['ci'], e['tpi'], e['fpi']):
+            g = math.gcd(g, v)
+        k = g if q['N'] // g <= 10000 else -(-q['N'] // 10000)
+        unit = q.get('unit') or 'people'
+        if f'1 icon = {k:,} {unit}.' not in r['note'] or not all(f'{v:,}' in r['note'] for v in groups.values()):
+            rep[('screening-room-t4-008', iid)].append(f"N = {q['N']:,} is drawn scaled, but the note does not say '1 icon = "
+                                                       f"{k:,} {unit}' and give every group's count {sorted(groups.values())}: {r['note']!r}")
+        for cls, count in groups.items():
+            drawn = sum((F(x) for x in r['shares'].get(cls, [])), F(0))
+            if drawn != F(count, k):
+                rep[('screening-room-t4-008', iid)].append(f"{cls}: drawn {drawn} icons, {count:,} / {k:,} = {F(count, k)}")
+    elif r['note']:
+        rep[('screening-room-t4-008', iid)].append(f"N = {q['N']:,} is drawn in full, but a scale note shows: {r['note']!r}")
+    # t4-015 (Jon, 8 Oct 2026): phase 3 keeps the scenario and the array, above the question; Continue gone
+    p3 = r.get('phase3') or {}
+    if not (p3.get('p2shown') and p3.get('scenario') == q['scenarioText'] and p3.get('icons') and p3.get('above')) or p3.get('cont'):
+        rep[('screening-room-t4-015', iid)].append(f'phase 3 does not show the scenario and the icon array above the '
+                                                   f'question (Continue gone): {p3}')
+    # t4-016 (fixed on main by #92; pinned): the prompt names no unit, and says nothing of "people"
+    if re.search(r'\bpeople\b|Out of', r['prompt']):
+        rep[('screening-room-t4-016', iid)].append(f"the prompt counts people: {r['prompt']!r}")
     for n, want in zip(numbers_in(r['summary']), (e['tpi'], e['fpi'], e['pos'])):
         if n != want:
             rep[('icon array', iid)].append(f"summary shows {n}, data {want}")
@@ -300,6 +356,140 @@ def check_play(page, lv, q, e, rep):
     return r
 
 
+def open_page(browser, base, src, path, query='', viewport=(1280, 900), fresh=False, mobile=False):
+    """A page of the game (the file at path), with MaffsLock's real fresh window if fresh, else answering at once."""
+    ctx = browser.new_context(reduced_motion='reduce', viewport={'width': viewport[0], 'height': viewport[1]},
+                              is_mobile=mobile, has_touch=mobile)
+    if not fresh:
+        ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+    ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+    ctx.add_init_script("""(() => { window.__ev = []; let inner; Object.defineProperty(window, 'mfg', { configurable: true,
+      get() { return function (e, p) { window.__ev.push([e, p]); return inner && inner.apply(this, arguments); }; },
+      set(v) { inner = v; } }); })();""")
+    page = ctx.new_page()
+    errors = []
+    page.on('pageerror', lambda e: errors.append(str(e)))
+    page.route(f'**/games/{SLUG}/**', lambda route: route.fulfill(status=200, content_type='text/html; charset=utf-8', body=src))
+    page.goto(f'{base.rstrip("/")}/games/{SLUG}/{query}')
+    page.wait_for_function("typeof QUESTIONS !== 'undefined' && typeof startGame === 'function'")
+    return ctx, page, errors
+
+
+# Play the current question to its result: a gut band, phase 2 drawn, a typed answer (key, or key + 1 unit).
+TO_RESULT = """(right) => {
+  const q = currentQ, order = ['very_likely', 'likely', 'unlikely', 'very_unlikely'];
+  document.querySelector('.gut-btn[data-gut="' + (right ? q.gutCheckCorrect : order[(order.indexOf(q.gutCheckCorrect) + 1) % 4]) + '"]').click();
+  showPhase2(); showPhase3();
+}"""
+
+SUBMIT = """(right) => {
+  const q = currentQ;
+  document.getElementById('calcInput').value = ((q.keys[0] + (right ? 0 : 1)) / Math.pow(10, q.dp)).toFixed(q.dp) + '%';
+  document.getElementById('calcSubmit').click();
+}"""
+
+
+def extra_checks(browser, base, src, path, data, rep, only):
+    items = [(lv, q) for lv in LEVELS for q in data.get(lv, []) if only is None or q['id'] in only]
+    # t4-006: a level key that is not one of the game's own levels is ignored: the start screen, the default level,
+    # nothing thrown, served or logged
+    for bad in ('constructor', '__proto__', 'toString', 'xyz', 'l4'):
+        ctx, page, errors = open_page(browser, base, src, path, '?level=' + bad)
+        st = page.evaluate("""() => ({start: document.getElementById('startScreen').classList.contains('active'),
+          level: currentLevel, logged: window.__ev.filter(e => e[0] === 'game_started').length})""")
+        served = None
+        try:
+            page.evaluate("() => startGame()")
+        except Exception as ex:          # main's page threw here (t4-006)
+            errors.append(str(ex).splitlines()[0])
+        if not errors:
+            served = page.evaluate("""() => ({level: (window.__ev.find(e => e[0] === 'game_started') || [0, {}])[1].level,
+              gcse: sessionQuestions.every(q => QUESTIONS.gcse.indexOf(q) >= 0)})""")
+        if errors or not st['start'] or st['level'] != 'gcse' or st['logged'] or served != {'level': 'gcse', 'gcse': True}:
+            rep[('screening-room-t4-006', '?level=' + bad)].append(
+                f"start screen {st['start']}, level {st['level']!r}, logged on load {st['logged']}; Start served {served}; "
+                f"errors {errors[:1]} (the default level, nothing thrown or logged)")
+        ctx.close()
+    # t4-013: at 390x844 no phase scrolls sideways, and Next is wholly on screen
+    ctx, page, errors = open_page(browser, base, src, path, '', (390, 844), mobile=True)
+    for lv, q in items:
+        page.evaluate("([lv, id]) => { currentLevel = lv; startGame(); const q = QUESTIONS[lv].find(x => x.id === id); "
+                      "sessionQuestions = [q, q, q, q, q, q, q, q]; qIdx = 0; showQuestion(); }", [lv, q['id']])
+        widths = [page.evaluate('document.documentElement.scrollWidth')]
+        page.evaluate("() => { const q = currentQ; document.querySelector('.gut-btn[data-gut=\"' + q.gutCheckCorrect + '\"]').click(); showPhase2(); }")
+        widths.append(page.evaluate('document.documentElement.scrollWidth'))
+        page.evaluate("() => { showPhase3(); }")
+        widths.append(page.evaluate('document.documentElement.scrollWidth'))
+        page.evaluate("() => { const q = currentQ; document.getElementById('calcInput').value = ((q.keys[0] + 1) / Math.pow(10, q.dp)).toFixed(q.dp) + '%'; document.getElementById('calcSubmit').click(); }")
+        widths.append(page.evaluate('document.documentElement.scrollWidth'))
+        nx = page.evaluate("""() => { const b = document.querySelector('#nextWrap .maffs-next') || document.getElementById('nextQuestionBtn');
+          const r = b.getBoundingClientRect(); return [r.left, r.right, r.width]; }""")
+        if max(widths) > 390 or nx[0] < 0 or nx[1] > 390 or not nx[2]:
+            rep[('screening-room-t4-013', q['id'])].append(
+                f'at 390x844 the page is {widths} px wide in phases 1, 2, 3 and after the answer (390), Next spans '
+                f'{nx[0]:.0f}-{nx[1]:.0f} px')
+    ctx.close()
+    # t4-005: with MaffsLock's real window, a double click on Next moves on once and answers nothing on the new
+    # question; a right and a wrong answer alike; the session ends once
+    ctx, page, errors = open_page(browser, base, src, path, '', fresh=True)
+    settle = "() => !window.MaffsLock || !MaffsLock.isFresh()"
+    for right in (True, False):
+        page.evaluate("() => { currentLevel = 'gcse'; startGame(); }")
+        page.wait_for_function(settle)
+        page.evaluate(TO_RESULT, right)
+        page.wait_for_function(settle)
+        page.evaluate(SUBMIT, right)
+        page.wait_for_function("() => { const b = document.querySelector('#nextWrap .maffs-next') || document.getElementById('nextQuestionBtn'); "
+                               "return b && b.offsetParent && !b.disabled; }")
+        before = page.evaluate("() => ({qIdx: qIdx, gut: phase1Scores.length})")
+        # Next, then at once a click on the new question's gut check: it must not be answered unseen
+        nsel = '#nextWrap .maffs-next' if not right and page.query_selector('#nextWrap .maffs-next') else '#nextQuestionBtn'
+        page.evaluate("(s) => { document.querySelector(s).click(); document.querySelector('.gut-btn').click(); }", nsel)
+        once_ = page.evaluate("() => ({qIdx: qIdx, gut: phase1Scores.length, marked: document.querySelectorAll('.gut-btn.correct, .gut-btn.incorrect').length})")
+        if once_['qIdx'] != before['qIdx'] + 1 or once_['gut'] != before['gut'] or once_['marked']:
+            rep[('screening-room-t4-005', ('right' if right else 'wrong') + ', click')].append(
+                f"Next, then a click on the new question's gut check: question {before['qIdx']} -> {once_['qIdx']}, "
+                f"gut checks {before['gut']} -> {once_['gut']} (the new gut check answered unseen)")
+        # and a real double click on Next, from a fresh start
+        page.evaluate("() => { currentLevel = 'gcse'; startGame(); }")
+        page.wait_for_function(settle)
+        page.evaluate(TO_RESULT, right)
+        page.wait_for_function(settle)
+        page.evaluate(SUBMIT, right)
+        page.wait_for_function("() => { const b = document.querySelector('#nextWrap .maffs-next') || document.getElementById('nextQuestionBtn'); "
+                               "return b && b.offsetParent && !b.disabled; }")
+        before = page.evaluate("() => ({qIdx: qIdx, gut: phase1Scores.length})")
+        sel = '#nextWrap .maffs-next' if not right and page.query_selector('#nextWrap .maffs-next') else '#nextQuestionBtn'
+        page.dblclick(sel)
+        page.wait_for_timeout(150)
+        after = page.evaluate("() => ({qIdx: qIdx, gut: phase1Scores.length, marked: document.querySelectorAll('.gut-btn.correct, .gut-btn.incorrect').length})")
+        if after['qIdx'] != before['qIdx'] + 1 or after['gut'] != before['gut'] or after['marked']:
+            rep[('screening-room-t4-005', 'right' if right else 'wrong')].append(
+                f"a double click on Next after a {'right' if right else 'wrong'} answer: question {before['qIdx']} -> "
+                f"{after['qIdx']}, gut checks {before['gut']} -> {after['gut']}, {after['marked']} gut buttons marked "
+                f"(one advance; the new gut check unanswered)")
+    page.evaluate("() => { window.__ev.length = 0; endGame(); endGame(); }")
+    n = page.evaluate("() => window.__ev.filter(e => e[0] === 'game_completed').length")
+    if n != 1:
+        rep[('screening-room-t4-005', 'end')].append(f'the session ended {n} times (once)')
+    ctx.close()
+    # t4-016 (fixed on main by #92; pinned): the hint's examples, as the page shows them at each precision, are no
+    # item's answer
+    answers = {q['answerText'] for lv in LEVELS for q in data.get(lv, [])}
+    ctx, page, errors = open_page(browser, base, src, path)
+    for dp in (1, 2, 3):
+        hit = next(((lv, q) for lv in LEVELS for q in data.get(lv, []) if q['dp'] == dp), None)
+        if not hit:
+            continue
+        hint = page.evaluate("([lv, id]) => { currentLevel = lv; startGame(); const q = QUESTIONS[lv].find(x => x.id === id); "
+                             "sessionQuestions = [q, q, q, q, q, q, q, q]; qIdx = 0; showQuestion(); showPhase3(); "
+                             "return document.getElementById('calcHint').textContent; }", [hit[0], hit[1]['id']])
+        for ex in re.findall(r'e\.g\. ([\d.]+%)', hint):
+            if ex in answers:
+                rep[('screening-room-t4-016', 'hint')].append(f'the input hint gives {ex}, which is an item\'s answer: {hint!r}')
+    ctx.close()
+
+
 def run(path, play=True, only=None):
     from playwright.sync_api import sync_playwright
     rep = defaultdict(list)
@@ -316,6 +506,8 @@ def run(path, play=True, only=None):
         with sync_playwright() as p:
             browser = p.chromium.launch()
             ctx = browser.new_context(reduced_motion='reduce', viewport={'width': 1280, 'height': 900})
+            ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+            ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
             page = ctx.new_page()
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
@@ -339,6 +531,8 @@ def run(path, play=True, only=None):
                     if play and (only is None or q['id'] in only):
                         check_play(page, lv, q, expected(q), rep)
                         counts['played'] += 1
+            if play:
+                extra_checks(browser, base, src, path, data, rep, only)
             browser.close()
             for e in errors:
                 rep[('page', 'script error')].append(e)
@@ -377,6 +571,27 @@ def selftest():
         ('marking that accepts 0 (the old absolute tolerance)', 'alevel_12', {'alevel_12'},
          lambda s: plant(s, "  if (v === null) return { result: 'unreadable', msg: hint };",
                          "  if (v === null) return { result: 'unreadable', msg: hint };\n  if (v === 0) return { result: 'correct' };")),
+        ('t4-006: prototype keys accepted as levels', 'screening-room-t4-006', {'gcse_01'},
+         lambda s: plant(s, "if (Object.prototype.hasOwnProperty.call(QUESTIONS, pa.get('level') || '')) {",
+                         "if (pa.get('level') && QUESTIONS[pa.get('level')]) {")),
+        ('t4-008: a remainder rounded to whole icons', 'screening-room-t4-008', {'alevel_04'},
+         lambda s: plant(s, '    if (g[1] % k) plan.push([g[0], g[1] % k]);', '    if (2 * (g[1] % k) >= k) plan.push([g[0], 0]);')),
+        ('t4-008: no scale note', 'screening-room-t4-008', {'alevel_01'},
+         lambda s: plant(s, "    note.style.display = 'block';", "    note.style.display = 'none';")),
+        ('t4-015: phase 3 hides the array', 'screening-room-t4-015', {'gcse_01'},
+         lambda s: plant(s, "  document.getElementById('phase2').style.display = 'flex';\n", '')),
+        ('t4-013: the phone CSS removed', 'screening-room-t4-013', {'gcse_01', 'alevel_01'},
+         lambda s: plant(plant(plant(s, '#phase1,#phase2,#phase3{flex-direction:column;gap:16px;width:100%}\n.icon-grid{max-width:100%}\n', ''),
+                               '@media(max-width:500px){\n  .icon-grid.grid-25{width:100%}\n  .icon-array-container,.question-card,.calc-card{padding:16px}\n  .calc-input{min-width:0;width:100%}\n}\n', ''),
+                         '<div id="nextWrap" style="align-self:center">', '<div id="nextWrap" style="flex:0 0 auto">')),
+        ('t4-005: no fresh window on a new question', 'screening-room-t4-005', {'gcse_01'},
+         lambda s: plant(s, "  MaffsLock.fresh(document.getElementById('gutOptions'));\n  MaffsLock.fresh(document.getElementById('gameScreen'));\n}",
+                         "  MaffsLock.fresh(document.getElementById('gutOptions'), 0);\n}")),
+        ('t4-016 (pinned): the prompt counts people', 'screening-room-t4-016', {'gcse_01'},
+         lambda s: plant(s, "'Of the <strong>' + numFmt(q.testPositive.total) + '</strong> positive results",
+                         "'Out of <strong>' + numFmt(q.testPositive.total) + '</strong> people who tested positive")),
+        ("t4-016 (pinned): the hint's example is an item's answer", 'screening-room-t4-016', {'gcse_01'},
+         lambda s: plant(s, "['12.5%', '0.125']", "['25.8%', '0.258']")),
     ]
     failed = 0
     for label, where, only, mutate in cases:

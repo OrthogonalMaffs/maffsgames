@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 25 | 0 | 26 |
 | HIGH | 37 | 171 | 0 | 208 |
-| MEDIUM | 144 | 128 | 1 | 273 |
+| MEDIUM | 143 | 129 | 1 | 273 |
 | LOW | 36 | 26 | 0 | 62 |
-| **All** | 218 | 350 | 1 | 569 |
+| **All** | 217 | 351 | 1 | 569 |
 
 ### By class
 
@@ -57,7 +57,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
 | NEW:sr14-content | 1 | 3 |
-| NEW:wrong explanation | 1 | 3 |
+| NEW:wrong explanation | 0 | 3 |
 | uncounted | 0 | 3 |
 | NEW:board-key-mismatch | 2 | 2 |
 | NEW:cosmetic | 2 | 2 |
@@ -150,7 +150,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `expectation-station` | yes | verify-expectation-station.py | 2 | 12 | 5 | 1 | 0 | 20 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `factor-race` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
-| `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 10 | 9 | 0 |
+| `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 9 | 10 | 0 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 2 | 13 | 0 |
 | `formula-forge` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
 | `formula-plug-in` | yes | none | 0 | 1 | 4 | 1 | 5 | 1 | 0 |

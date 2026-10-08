@@ -70,8 +70,46 @@ main's last full run is red; watch main's run after merging.
 - **Gotcha (again):** editing an item's text changes its content id, so a ledger entry on it (here B6's "wait"
   false positive on the bus item) goes stale and Tier 4 fails; `check-changed.py` does not run Tier 4. After any bank
   edit: `extract-banks.py --only <slug>` then `check-banks.py --only <slug> --write-ledger`.
-- **Next:** screening-room (Jon's contract + his t4-015 ruling), then factor-theorem (contract + t5-013/014/015
-  rulings). factor-theorem's level4 board may need the hub registry (check-leaderboard-coverage.js): a STOP IF.
+- **probability-paradox #177 merged** 16:30 UTC; main's full run on dc0f22c green.
+- **screening-room (claim #181; fix #183; unlisted, Jon's SR-21 contract + t4-015 ruling + Project
+  Claude's note, 8 Oct).** MaffsLock and MaffsNext, hint (plays all three phases). **Gotcha: `fresh(gameScreen)` does
+  not undo a lock held by a container inside it** (the gut options, the answer row, Next): fresh each locked container
+  when it renders, or the second question's gut check is ignored. t4-006 own levels only (`hasOwnProperty`). t4-008
+  (PC's rule): over 10,000, k = gcd(N, condition, TP, FP) if N / k fits 10,000, else the least whole k that fits with
+  a group's remainder as one part-icon (`data-part`, CSS gradient); a note gives k in the item's `unit` and every exact
+  count. t4-013 phases stack (column). t4-015 phase 3 keeps phase 2 on screen (Continue hidden). t4-016: fixed on main
+  by #92 (bf3aa90); pinned with plants; its analytics part filed as t4-017 (LOW, open: own code, one row per answer,
+  two answers a question; one row a question is a data change for Jon). t4-014 open (pools).
+  **screening-room has migrated: the home lane can take it off NOT_YET** (passes check-answer-lock seeds 1-3; the
+  cloud lane does not edit that script). Verifier gains open_page/extra_checks; run it WITHOUT the KaTeX shim (its
+  async route handler hangs this verifier's sync page loads). **Without KaTeX the sandbox missed a real phone fault**
+  (CI caught it: the A-Level Bayes formula, rendered, is up to 519 px wide); measure phone fit with KaTeX routed by a
+  sync handler (`page.route(... lambda r: r.fulfill(path=...))`). Fixed: KaTeX lines scroll inside their box.
+- **Main went red at 16:46 (home #180: verify-like-terms-collector, "item 1: typed 8.9/6.5, marked correct=None";
+  Check marked nothing within 5 s, so the click itself, not the read); the failed job's re-run passed (17:40). Not
+  reproduced with a 200 ms gap after every Playwright action (3 runs). The home lane holds contract MAIN-RED for it.
+- **Factor Theorem (Project Claude, 18:35):** go ahead. **The alevel board: checked by Jon, 8 Oct 18:52:
+  leaderboards/factor_theorem_alevel is null (nothing ever submitted): record "checked: empty" in the PR; that STOP IF
+  cannot trigger.** (The sandbox cannot reach Firebase.) level4: no hub change
+  while unlisted (NOT_ON_HUB skips the level check); the home lane's relist adds both levels.
+- **CHECKPOINT (Jon, 8 Oct ~19:00, context over 60%): STOP after #183 merges and main is green.** Nothing claimed
+  after it. The next session starts with probability-paradox t1-004.
+- **probability-paradox t1-004 (Jon's contract, 8 Oct, verbatim in the session; key points):** claim first; replace
+  the item at games/probability-paradox/index.html:364 ("A student scores 95% ... claims credit") with: scenario "A
+  teacher picks the ten students with the lowest scores on a test (average 41%) for a new revision method. On a
+  second paper of the same difficulty, the group's average rises to 57%. The teacher says the method worked."; q
+  "What else could explain the rise?"; opts ["Regression to the mean", "The method must have worked: a 16-point rise
+  is too big to be anything else", "The second paper was easier", "The highest scorers would have risen by the same
+  amount"]; correct "Regression to the mean"; explain "Students picked for scoring lowest include some who had an
+  unlucky day. On the next paper their luck evens out, so the group's average rises even if nothing changed. The top
+  scorers would tend to fall back for the same reason. To know whether the method worked, compare with similar low
+  scorers who did not get it." The item has no id. Verifier: pin it (selection on the lowest scores, same difficulty,
+  the four options exactly, the key) and plant the old item; close t1-004 citing Jon's ruling; fit at 390px; check the
+  B6 ledger (content ids). STOP IF the longer option cannot fit 390px, or a ledger/analytics key breaks.
+- **Then: factor-theorem.** Two contracts from Jon (8 Oct) were pasted into the session, not the repo: ask Jon to
+  paste them again (the SR-21 contract: t5-004, t5-005 HIGH, t5-008, t5-018; and the rulings contract: t5-013 read
+  ?level, t5-014/015 Practice submits nothing, Test submits under the level). Settled: level4 needs no hub change while
+  unlisted (NOT_ON_HUB skips the level check); the alevel board is empty (above). #180 closed t5-009: merge main first.
 
 ## 2026-10-08 (cloud, afternoon): CHECKPOINT STOP (Jon's queue done): listed-games contract at 5 of 23; nothing claimed
 
