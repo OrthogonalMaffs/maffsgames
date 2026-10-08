@@ -204,6 +204,18 @@ gtag('config', 'G-992JLHLP2D', { send_page_view:true, storage:'none', anonymize_
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Every step is typed and locked, then Calculate Estimate marks the chain: i = 0 types each step's model value (on the accepted answer); i >= 1 types the first step 1000 times too big (out by a factor of 1000: wrong).
+{
+  "start_sel": ".session-btn",
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && !MaffsLock.isLocked(document.getElementById('gameScreen'))",
+  "answer": [
+    "currentQ.chain.forEach((s, k) => { document.getElementById('input-' + k).value = String(k === 0 && i >= 1 ? s.reference * 1000 : s.reference);",
+    " document.getElementById('submitBtn-' + k).click(); });",
+    "document.getElementById('chainSubmitBtn').click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -495,6 +507,7 @@ function getFinalRating(estimate, accepted) {
 
 // ─── START GAME ───
 function startGame(count) {
+  MaffsLock.newSession();
   var pool = QUESTIONS[currentTier] || [];
   if (!pool.length) return;
   var shuffled = pool.slice().sort(function() { return Math.random() - 0.5; });
@@ -551,6 +564,7 @@ function loadQuestion() {
   var submitBtn = document.getElementById('chainSubmitBtn');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Calculate Estimate';
+  MaffsLock.fresh(document.getElementById('gameScreen'));   // a new question: a double-click on Start or Next cannot type or lock a step
 }
 
 function handleStepKey(e, idx) {
@@ -570,6 +584,7 @@ function toggleHint(idx) {
 }
 
 function submitStep(idx) {
+  if (stepValues[idx] !== null) return;   // a step is locked once: Enter and a click on Lock no longer count it twice
   var input = document.getElementById('input-' + idx);
   var val = parseInput(input.value);
   if (isNaN(val)) { input.style.borderColor = '#ef4444'; return; }
@@ -593,6 +608,7 @@ function submitStep(idx) {
 }
 
 function skipStep(idx) {
+  if (stepValues[idx] !== null) return;
   var step = currentQ.chain[idx];
   stepValues[idx] = step.reference;
   stepStatuses[idx] = 'skipped';
@@ -619,7 +635,10 @@ function checkAllSubmitted() {
 }
 
 // ─── SUBMIT CHAIN → CASCADE ───
+// One mark per question (canon 7.6.0): a double-click on Calculate Estimate marked and scored the chain twice.
 function submitChain() {
+  if (stepsSubmitted < currentQ.chain.length) return;
+  if (!MaffsLock.lock(document.getElementById('gameScreen'))) return;
   // Calculate player's chain product
   var estimate = stepValues[0];
   for (var i = 1; i < stepValues.length; i++) {
@@ -688,10 +707,10 @@ function submitChain() {
   var rows = document.querySelectorAll('.cascade-row');
   for (var i = 0; i < rows.length; i++) {
     (function(row, delay) {
-      setTimeout(function() { row.classList.add('visible'); }, delay);
+      MaffsLock.timer(function() { row.classList.add('visible'); }, delay);
     })(rows[i], (i + 1) * 350);
   }
-  setTimeout(function() {
+  MaffsLock.timer(function() {
     document.getElementById('cascadeFinal').classList.add('visible');
   }, (rows.length + 1) * 350);
 
@@ -720,7 +739,10 @@ function submitChain() {
   }
 }
 
+// The results screen's Next acts only on a marked question, so a double-click's second click does nothing.
 function nextQuestion() {
+  if (!MaffsLock.isLocked(document.getElementById('gameScreen'))) return;
+  MaffsLock.clearTimers();
   qIndex++;
   if (qIndex >= sessionLength) {
     endSession();
@@ -731,7 +753,9 @@ function nextQuestion() {
 }
 
 // ─── END SESSION ───
-function endSession() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endSession() { finishSession(); }
+var finishSession = MaffsLock.finishOnce(function () {
   showScreen('endScreen');
   document.getElementById('endScore').textContent = totalScore;
 
@@ -750,7 +774,7 @@ function endSession() {
   var _pbScores=JSON.parse(localStorage.getItem(getLBKey())||'[]');var _pbOld=_pbScores.length?_pbScores[0].score:0;if(totalScore>_pbOld){mfg('personal_best_set',{game_slug:'fermi-lab',level:currentTier,score:totalScore,previous_best:_pbOld});}
   saveBest(totalScore);
   renderLB('lbList2');
-}
+});
 
 function backToStart() {
   showScreen('startScreen');
