@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 34 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 38 open (1 CRITICAL, 37 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 37 open (1 CRITICAL, 36 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 3 in the roster's Unlisted section |
@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-569 findings in 79 games.
+570 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 25 | 0 | 26 |
-| HIGH | 37 | 171 | 0 | 208 |
-| MEDIUM | 143 | 129 | 1 | 273 |
-| LOW | 36 | 26 | 0 | 62 |
-| **All** | 217 | 351 | 1 | 569 |
+| HIGH | 36 | 172 | 0 | 208 |
+| MEDIUM | 139 | 133 | 1 | 273 |
+| LOW | 36 | 27 | 0 | 63 |
+| **All** | 212 | 357 | 1 | 570 |
 
 ### By class
 
@@ -33,11 +33,11 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|
 | 2 | 24 | 106 |
 | 3 | 7 | 85 |
-| 6 | 28 | 56 |
-| 1 | 14 | 37 |
+| 6 | 26 | 56 |
+| 1 | 13 | 37 |
 | NEW:wrong-explanation-text | 10 | 36 |
 | 5 | 26 | 26 |
-| 4 | 22 | 22 |
+| 4 | 21 | 22 |
 | 7 | 6 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
 | 8 | 5 | 11 |
@@ -50,7 +50,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
-| NEW:phone-layout | 5 | 5 |
+| NEW:phone-layout | 4 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
@@ -59,10 +59,11 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:sr14-content | 1 | 3 |
 | NEW:wrong explanation | 0 | 3 |
 | uncounted | 0 | 3 |
+| NEW:analytics | 1 | 2 |
 | NEW:board-key-mismatch | 2 | 2 |
 | NEW:cosmetic | 2 | 2 |
 | NEW:double-finish | 0 | 2 |
-| NEW:hidden-data | 1 | 2 |
+| NEW:hidden-data | 0 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:timer-policy | 1 | 2 |
@@ -70,7 +71,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:wording | 1 | 2 |
 | 10 | 1 | 1 |
 | NEW:a11y state | 0 | 1 |
-| NEW:analytics | 0 | 1 |
 | NEW:answer-reveal-invisible | 1 | 1 |
 | NEW:data-not-shown | 0 | 1 |
 | NEW:degenerate-item | 1 | 1 |
@@ -181,7 +181,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
 | `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 0 | 0 | 0 | 1 | 0 |
 | `scale-factor-scaling` | yes | none | 0 | 1 | 0 | 0 | 1 | 0 | 0 |
-| `screening-room` | unlisted | verify-screening-room.py | 1 | 4 | 10 | 1 | 7 | 9 | 0 |
+| `screening-room` | unlisted | verify-screening-room.py | 1 | 4 | 10 | 2 | 2 | 15 | 0 |
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 2 | 0 | 2 | 1 | 0 |
 | `seven-bridges` | yes | none | 0 | 2 | 6 | 1 | 9 | 0 | 0 |
 | `shape-shifter` | yes | none | 2 | 1 | 5 | 1 | 5 | 4 | 0 |
@@ -242,10 +242,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `scale-factor-scaling` (GCSE, A-Level, L4)
 
 - **HIGH** scale-factor-scaling-t1-001, `games/scale-factor-scaling/index.html:165`: 'Paint covers 10 m^2 per litre. If dimensions double, how many litres?' gives no original area or amount, so it cannot be answered; the key '4 litres per 10 m^2' contradicts the stem's own rate
-
-### `screening-room` (GCSE, A-Level, Core, L4; unlisted)
-
-- **HIGH** screening-room-t4-005, `games/screening-room/index.html:523,827`: A double-click on Next Question answers the next gut check unseen
 
 ### `surd-simplifier` (GCSE, A-Level)
 
