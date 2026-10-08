@@ -133,13 +133,14 @@ DEFERRED = ('function showFeedback(correct,detail){setTimeout(function(){_showFe
 
 
 def read_mark(page, timeout=5000):
-    """The game's mark once it has landed; None if Check marked nothing within the timeout."""
+    """The game's mark once it has landed; None if Check marked nothing within the timeout. The mark is taken
+    from the same page task that saw it land (MAIN-RED, 8 Oct 2026), never from a second call after it."""
     from playwright.sync_api import TimeoutError as PlaywrightTimeout
     try:
-        page.wait_for_function('() => MARK() !== null', timeout=timeout)
+        h = page.wait_for_function('() => { const m = MARK(); return m === null ? null : { m: m }; }', timeout=timeout)
     except PlaywrightTimeout:
         return None
-    return page.evaluate('() => MARK()')
+    return h.json_value()['m']
 
 
 def play(fails, against=None, planted=False, deferred=None):
@@ -177,6 +178,13 @@ def play(fails, against=None, planted=False, deferred=None):
                 page.evaluate(MARK_JS)
                 page.click('.start-btn')
                 page.wait_for_selector('#ans0', state='visible')
+                # Type only once the question has settled: loadInputQuestion() focuses #ans0 on a 50 ms timer. Typed
+                # earlier, that timer could fire inside fill('#ans1') (fill selects the box, then inserts the text
+                # in a second step), so "6.5" went into #ans0 ("8.965", #ans1 empty) and Check marked nothing:
+                # main red after #180 (47ee9b9, run 37811456669 attempt 1, "marked correct=None"), and likely the
+                # earlier one-off failures after #89 and #109. The page's own focus is the signal, not a delay.
+                page.wait_for_function("() => document.activeElement && document.activeElement.id === 'ans0'",
+                                       timeout=8000)
                 return page
 
             bank = None
