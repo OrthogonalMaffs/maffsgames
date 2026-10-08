@@ -18,7 +18,8 @@ findings:
   summary: '''£2.50 per 100g'' keyed Number & Place Value; Ratio & Proportion (a unit rate), always on screen, is
     defensible and marked wrong'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2, H1'
-  status: open
+  status: fixed
+  pr: 157
 - id: word-problem-decoder-t1-002
   severity: HIGH
   jc: false
@@ -28,7 +29,8 @@ findings:
   summary: Two unknowns and two conditions keyed Equations; gcse_021 (:353), the same shape, is keyed Simultaneous
     Equations, an option shown 58% of the time
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2, H2'
-  status: open
+  status: fixed
+  pr: 157
 - id: word-problem-decoder-t1-003
   severity: HIGH
   jc: true
@@ -39,7 +41,8 @@ findings:
     about 50% of the time)
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2, H3. SR-18: one category scheme, both accepted
     where both fit'
-  status: open
+  status: fixed
+  pr: 157
 - id: word-problem-decoder-t1-004
   severity: HIGH
   jc: true
@@ -48,7 +51,8 @@ findings:
   where: games/word-problem-decoder/index.html:285 (ks3_023); gcse_006-009
   summary: gcse_006-009 key Standard Form but ks3_023 keys the phrase 'standard form' itself as Number & Place Value
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2, H4. SR-18 as H3'
-  status: open
+  status: fixed
+  pr: 157
 - id: word-problem-decoder-t1-005
   severity: HIGH
   jc: false
@@ -59,7 +63,8 @@ findings:
     unseen
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2, H5. Reproduced: 2/2 phrases credited with only
     one shown'
-  status: open
+  status: fixed
+  pr: 157
 - id: word-problem-decoder-t1-006
   severity: MEDIUM
   jc: false
@@ -97,5 +102,43 @@ findings:
   summary: tranche 1 counted 3 MEDIUM findings it never described
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 1 counts more MEDIUMs for this game than section
     3 describes. Placeholder (Jon, 7 Oct 2026): this game''s contract F fix PR re-audits the whole game, files what
-    it finds with real ids, and closes this entry with its PR number'
+    it finds with real ids, and closes this entry with its PR number Re-audited by the cloud lane (8 Oct 2026): every phrase of the 110 items read against the 23 topics; filed as t1-010 (HIGH, fixed), t1-011 and t1-012 (LOW, open).'
+  status: fixed
+  pr: 157
+- id: word-problem-decoder-t1-010
+  severity: HIGH
+  jc: true
+  class: 2
+  level: ks3, gcse
+  where: games/word-problem-decoder/index.html (ks3_022, ks3_046, gcse_013, gcse_022, gcse_039, gcse_060 phrase 2)
+  summary: Six more phrases where a second offered topic genuinely fits and was marked wrong (SR-18)
+  evidence: 'Found by the cloud lane''s re-audit (8 Oct 2026; t1-009). ks3_022 "¾ of a cup of sugar" (12 to 20
+    biscuits: Ratio & Proportion); ks3_046 "one angle is twice the size of the smallest angle" (x, 2x, x + 30: Forming
+    Expressions); gcse_013 "exact length of the hypotenuse in simplified surd form" (Pythagoras); gcse_022 "Together
+    they complete 7 laps" ("twice as fast" gives y = 2x: Equations & Inequalities); gcse_039 "scale of 1:200" (a ratio,
+    as ks3_003''s map scale is keyed); gcse_060 "speed must she average on the run" (distance ÷ time: Ratio &
+    Proportion). Fixed: each phrase lists the topic in `also`; scripts/verify-word-problem-decoder.py holds every
+    accepted set (ACCEPT) with its reason.'
+  status: fixed
+  pr: 157
+- id: word-problem-decoder-t1-011
+  severity: LOW
+  jc: false
+  class: NEW:ill-posed wording
+  level: ks3, gcse
+  where: games/word-problem-decoder/index.html (ks3_041, gcse_056, gcse_058)
+  summary: Three items refer to a figure the game never shows ("shown below", "The box plots show", "A cumulative
+    frequency graph shows")
+  evidence: 'Found by the cloud lane''s re-audit (8 Oct 2026; t1-009; the tranche 1 report''s LOW note). The phrase
+    is still decodable from the words, so nothing is marked wrong; the wording is Project Claude''s to change.'
+  status: open
+- id: word-problem-decoder-t1-012
+  severity: LOW
+  jc: false
+  class: NEW:ui
+  level: all
+  where: games/word-problem-decoder/index.html:182, :184
+  summary: Two Aa (dyslexia-friendly) buttons in the header (a11yToggle and a11yBtn)
+  evidence: 'Found by the cloud lane''s re-audit (8 Oct 2026; t1-009; the tranche 1 report''s LOW note). Not
+    changed in #157 (no marking effect).'
   status: open
