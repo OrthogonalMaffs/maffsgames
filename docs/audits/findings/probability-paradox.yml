@@ -19,7 +19,7 @@ findings:
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. Under the game''s simulation prior (:449) E(switch)
     = £24.91. SR-18: the envelope item is ''can''t tell'''
   status: fixed
-  pr: PRNUM
+  pr: 177
 - id: probability-paradox-t1-002
   severity: HIGH
   jc: false
@@ -30,7 +30,7 @@ findings:
     on the schedule'' is literally correct and marked wrong'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. SR-18: Probability Paradox states assumptions'
   status: fixed
-  pr: PRNUM
+  pr: 177
 - id: probability-paradox-t1-003
   severity: HIGH
   jc: true
@@ -40,7 +40,7 @@ findings:
   summary: Keyed 1/3 only while the game's own text calls the question 'genuinely debated'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. SR-18: Sleeping Beauty accepts 1/2 and 1/3'
   status: fixed
-  pr: PRNUM
+  pr: 177
 - id: probability-paradox-t1-004
   severity: HIGH
   jc: true
@@ -60,7 +60,7 @@ findings:
     a 5-minute mean wait'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
   status: fixed
-  pr: PRNUM
+  pr: 177
 - id: probability-paradox-t1-006
   severity: MEDIUM
   jc: true
@@ -70,7 +70,7 @@ findings:
   summary: Two-Child and Tuesday hold only under the 'asked' reading
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3. SR-18: Probability Paradox states assumptions'
   status: fixed
-  pr: PRNUM
+  pr: 177
 - id: probability-paradox-t1-007
   severity: MEDIUM
   jc: false
@@ -80,7 +80,7 @@ findings:
   summary: The p-value given is one-sided (0.29); the usual two-sided value is 0.58
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
   status: fixed
-  pr: PRNUM
+  pr: 177
 - id: probability-paradox-t1-008
   severity: MEDIUM
   jc: false
@@ -95,7 +95,7 @@ findings:
     simulation measured, the game played in Chromium; filed as t1-009 (MEDIUM), t1-010 (CRITICAL) and t1-011 (LOW),
     all fixed'
   status: fixed
-  pr: PRNUM
+  pr: 177
 - id: probability-paradox-t1-009
   severity: MEDIUM
   jc: false
@@ -108,7 +108,7 @@ findings:
     "Can''t determine" is an option. The Conditional test "is 95% accurate" without saying 95% of whom: the key 0.28
     needs both rates at 95%. Fixed: each scenario states it; the verifier''s ASSUMED table holds every such phrase.'
   status: fixed
-  pr: PRNUM
+  pr: 177
 - id: probability-paradox-t1-010
   severity: CRITICAL
   jc: false
@@ -123,7 +123,7 @@ findings:
     gradient-hunter-t2-001 and component-crusher''s no-marking-lock entry. Fixed: MaffsLock (lock, fresh, finishOnce, newSession, screen, timer) and MaffsNext after
     a wrong answer, with the game''s lock-hint declaration; check-answer-lock.py passes on seeds 1-3.'
   status: fixed
-  pr: PRNUM
+  pr: 177
 - id: probability-paradox-t1-011
   severity: LOW
   jc: false
@@ -134,4 +134,4 @@ findings:
   evidence: 'Found by the cloud lane''s re-audit (8 Oct 2026; t1-008): .claude/rules/analytics.md requires mode on all
     events of a multi-mode game and questions_correct on game_completed. Fixed: both added (no other field).'
   status: fixed
-  pr: PRNUM
+  pr: 177

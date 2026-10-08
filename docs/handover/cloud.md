@@ -58,7 +58,7 @@ main's last full run is red; watch main's run after merging.
   leave t4-014, 015), then factor-theorem (t5-004, 005 HIGH, 008, 018; leave t5-009, 013-017). Both verbatim in the
   session; each claimed first; relisting is the home lane's.
 - **word-problem-decoder #174 merged** 15:29 UTC; main's full run on 7eaff03 green. Jon's three ruling games done.
-- **probability-paradox (claim #175; fix PR this branch; listed-games contract 6 of 23).** SR-18 applied: the
+- **probability-paradox (claim #175; fix #177; listed-games contract 6 of 23).** SR-18 applied: the
   envelope keyed "Cannot determine — it depends on how the amounts were chosen" (t1-001); the bus states random
   (Poisson) arrivals, no timetable (t1-002); Sleeping Beauty accepts 1/3 and 1/2 through an `accept` list and
   `accepted(q)` (t1-003); Two-Child and Tuesday are asked questions with equally likely outcomes (t1-006); Monty's host
