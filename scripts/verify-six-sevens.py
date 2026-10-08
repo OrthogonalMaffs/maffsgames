@@ -369,6 +369,7 @@ def scenarios(seeds):
 async def new_page(browser, block_storage=False):
     ctx = await browser.new_context(viewport={"width": 1200, "height": 1000})
     await bc.no_next_floor(ctx)      # content checks; the floor is tested in test-next-control.py
+    await ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # it types as soon as a question is asking
 
     async def route(r):
         url = r.request.url
