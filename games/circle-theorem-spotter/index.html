@@ -38,6 +38,8 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .q-card .context{font-size:.92rem;color:var(--text);line-height:1.6;max-width:640px}
 .q-card .prompt{font-size:.85rem;color:var(--accent);font-weight:600;margin-top:.3rem}
 .options{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.feedback{font-size:.9rem;font-weight:600;color:var(--text);margin:0 0 .6rem;min-height:0}.feedback:empty{display:none}
+#nextMount{text-align:center}
 .opt-btn{padding:1rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;cursor:pointer;transition:all .15s;text-align:center;min-height:56px;display:flex;align-items:center;justify-content:center;line-height:1.3}
 .opt-btn:hover{border-color:var(--primary);box-shadow:0 0 16px rgba(88,166,255,.2)}
 .opt-btn.correct{border-color:var(--accent);background:rgba(63,185,80,.1);animation:pop .3s}
@@ -65,6 +67,18 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option; i >= 1 the first that is not the key.
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#options .opt-btn')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const k = questions[qIdx].correct;",
+    "(bs.find(b => b.dataset.val !== k) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -94,6 +108,8 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <div class="prompt" id="prompt"></div>
     </div>
     <div class="options" id="options"></div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div id="nextMount"></div>
   </div>
   <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button>
   <p id="teacherInvite"></p></div></div>
@@ -440,15 +456,21 @@ const BASE=100,T_K=0.15;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
-function startGame(){questions=shuffle([...QUESTIONS.gcse]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}show('game');showQ();window._ggAbandoned=true;mfg('game_started',{game_slug:'circle-theorem-spotter',level:'gcse'});if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'circle-theorem-spotter',level:'gcse',questions_answered:qIdx})})}}
-function showQ(){const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;document.getElementById('figure').innerHTML=FIG.render(q.fig);document.getElementById('context').textContent=q.ctx;document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
+function startGame(){MaffsLock.newSession();questions=shuffle([...QUESTIONS.gcse]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}show('game');showQ();window._ggAbandoned=true;mfg('game_started',{game_slug:'circle-theorem-spotter',level:'gcse'});if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'circle-theorem-spotter',level:'gcse',questions_answered:qIdx})})}}
+function showQ(){const q=questions[qIdx];if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));document.getElementById('feedback').textContent='';document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;document.getElementById('figure').innerHTML=FIG.render(q.fig);document.getElementById('context').textContent=q.ctx;document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});MaffsLock.fresh(oEl);qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
 function tick(){const e=Math.floor((Date.now()-qStartTime)/1000);document.getElementById('timer').textContent=e+'s'}
-function handle(btn,q){clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});mfg('question_answered',{game_slug:'circle-theorem-spotter',level:'gcse',correct:ok,question_index:qIdx+1});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;setTimeout(adv,1000)}
+function handle(btn,q){if(!MaffsLock.lock(document.getElementById('options')))return;clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});mfg('question_answered',{game_slug:'circle-theorem-spotter',level:'gcse',correct:ok,question_index:qIdx+1});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;
+  // canon §7.6: a right answer moves on briskly; a wrong one names the theorem and waits on Next.
+  if(ok){MaffsLock.timer(adv,1000);return}
+  document.getElementById('feedback').textContent='The answer: '+q.correct+'.';
+  MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv})}
 function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
 function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
-function end(){clearInterval(timerInterval);const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'circle-theorem-spotter',level:'gcse',score:score,questions_answered:totalQ,accuracy:pct});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('circle-theorem-spotter','gcse',score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('circle-theorem-spotter','gcse',score);}}show('results')}
-function showMenu(){show('menu')}
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function end(){finishGame()}
+const finishGame=MaffsLock.finishOnce(function(){clearInterval(timerInterval);const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'circle-theorem-spotter',level:'gcse',score:score,questions_answered:totalQ,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('circle-theorem-spotter','gcse',score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('circle-theorem-spotter','gcse',score);}}show('results')});
+function showMenu(){show('menu');MaffsLock.screen(document.getElementById('menu'))}   // a double-click on Play Again cannot press Start
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
