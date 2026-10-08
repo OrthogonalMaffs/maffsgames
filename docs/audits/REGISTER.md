@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 24 | 0 | 25 |
 | HIGH | 40 | 168 | 0 | 208 |
-| MEDIUM | 153 | 118 | 1 | 272 |
+| MEDIUM | 151 | 120 | 1 | 272 |
 | LOW | 36 | 25 | 0 | 61 |
-| **All** | 230 | 335 | 1 | 566 |
+| **All** | 228 | 337 | 1 | 566 |
 
 ### By class
 
@@ -35,7 +35,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 3 | 8 | 85 |
 | 6 | 29 | 56 |
 | 1 | 14 | 36 |
-| NEW:wrong-explanation-text | 12 | 36 |
+| NEW:wrong-explanation-text | 11 | 36 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
 | 7 | 6 | 16 |
@@ -53,7 +53,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:phone-layout | 5 | 5 |
 | B7 (ledgered) | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
-| 9 | 2 | 3 |
+| 9 | 1 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
 | NEW:sr14-content | 1 | 3 |
@@ -189,7 +189,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `standard-form-blitz` | yes | none | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `surd-simplifier` | yes | none | 0 | 2 | 0 | 0 | 2 | 0 | 0 |
 | `suvat` | yes | verify-suvat.py | 1 | 3 | 6 | 1 | 2 | 9 | 0 |
-| `terrible-advice` | yes | verify-terrible-advice.py | 0 | 5 | 5 | 0 | 2 | 8 | 0 |
+| `terrible-advice` | yes | verify-terrible-advice.py | 0 | 5 | 5 | 0 | 0 | 10 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
 | `think-of-a-number` | yes | none | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `trig-identity-duel` | yes | verify-trig-identity-duel.py | 0 | 7 | 4 | 0 | 0 | 11 | 0 |
