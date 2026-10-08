@@ -60,6 +60,10 @@ def plan(full):
 
 
 def main():
+    # A failing check's tail is printed here; on Windows a redirected stdout is cp1252, and a £, → or ✓ in it
+    # raised UnicodeEncodeError and lost the summary (contract CHANGED-UTF8, 8 Oct 2026).
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--full", action="store_true")
     ap.add_argument("--list", action="store_true")
