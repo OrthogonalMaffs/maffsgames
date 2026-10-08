@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 40 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 59 open (4 CRITICAL, 55 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 58 open (3 CRITICAL, 55 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 6 in the roster's Unlisted section |
@@ -21,17 +21,17 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 4 | 21 | 0 | 25 |
+| CRITICAL | 3 | 22 | 0 | 25 |
 | HIGH | 55 | 151 | 0 | 206 |
 | MEDIUM | 164 | 105 | 0 | 269 |
 | LOW | 34 | 25 | 0 | 59 |
-| **All** | 257 | 302 | 0 | 559 |
+| **All** | 256 | 303 | 0 | 559 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| 2 | 34 | 104 |
+| 2 | 33 | 104 |
 | 3 | 10 | 85 |
 | 6 | 31 | 56 |
 | 1 | 17 | 36 |
@@ -145,7 +145,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `equatle` | yes | none | 0 | 0 | 2 | 0 | 2 | 0 | 0 |
 | `estimation-engine` | yes | verify-estimation-engine.py | 0 | 1 | 3 | 0 | 0 | 4 | 0 |
 | `estimation-golf` | yes | verify-estimation-golf.py | 0 | 2 | 3 | 0 | 3 | 2 | 0 |
-| `expectation-station` | unlisted | verify-expectation-station.py | 2 | 12 | 5 | 1 | 1 | 19 | 0 |
+| `expectation-station` | unlisted | verify-expectation-station.py | 2 | 12 | 5 | 1 | 0 | 20 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `factor-race` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 10 | 9 | 0 |
@@ -251,10 +251,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `coordinate-geometry-dash` (GCSE, A-Level)
 
 - **HIGH** coordinate-geometry-dash-t1-001, `games/coordinate-geometry-dash/index.html:287`: x = 3t, y = 4/t: xy = 12, y = 12/x and x = 12/y are each correct and marked wrong; only 'All equivalent' is accepted
-
-### `expectation-station` (GCSE, Core, A-Level; unlisted)
-
-- **CRITICAL** expectation-station-pc-001 (JC), `games/expectation-station/index.html Stage 1 (checkStage1, exact per-cell match)`: Stage 1 is underdetermined: on ~33 of 45 items two missing cells take different values and only sum-to-1 is stated, so the swapped completion (equally consistent with the item) is marked wrong
 
 ### `formula-forge` (GCSE, A-Level, L4)
 
