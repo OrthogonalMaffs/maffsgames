@@ -10,14 +10,17 @@ class. Until 8 Oct 2026 the two escape rooms built for a resit class opened "A G
 on...", and the portal's cards said "for a GCSE resit class": a label on the student, typed by hand into
 several pages, with nothing to stop it coming back. Student surfaces describe the topic and level only.
 
-Student surfaces, scanned: every games/**/index.html, every escape-rooms/*/index.html, and the portal pages
-whose cards students see (PORTALS). In each: the visible text (text nodes outside script, style and
+Student surfaces, scanned: every games/**/index.html, every escape-rooms/*/index.html, and the portal,
+section and updates pages a student can reach (PORTALS: the home page, the escape-rooms and op portals,
+/essentials/ and /updates/). In each: the visible text (text nodes outside script, style and
 comments, plus alt, title, aria-label and placeholder), the strings in its scripts (questions and feedback
 built in JavaScript are visible too; comments are not), and the description, og: and twitter: meta tags.
 LABEL fails anywhere there.
 
-Exempt: teacher surfaces, which may say resit or post-16 (each room's teacher.html, /essentials/ and its
-metadata, the parent and teacher guides), docs, and code comments.
+Exempt: teacher surfaces, which may say resit or post-16 (each room's teacher.html, the parent and teacher
+guides), docs, and code comments. Until 8 Oct 2026 /essentials/ was exempt too and /updates/ was not scanned,
+so both still said resit; Jon, 8 Oct 2026: the section is "Essentials" everywhere public, and no public page
+labels a student as a resitter (contract ESSENTIALS-WORDING).
 
 Runs in CI's site-wide checks (.github/workflows/check-site.yml), not as a content line: a content line runs
 on a pull request only when a page it names changes, and this check must see every page on every change.
@@ -34,7 +37,7 @@ from html.parser import HTMLParser
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 LABEL = re.compile(r'\b(re-?sits?|re-?takes?|post-?16)\b', re.I)
-PORTALS = ['index.html', 'escape-rooms/index.html', 'op/index.html']
+PORTALS = ['index.html', 'escape-rooms/index.html', 'op/index.html', 'essentials/index.html', 'updates/index.html']
 SURFACES = ['games/**/index.html', 'escape-rooms/*/index.html']
 META = re.compile(r'^(description|og:.*|twitter:.*)$', re.I)
 SHOWN_ATTRS = ('alt', 'title', 'aria-label', 'placeholder')
@@ -166,11 +169,22 @@ def selftest():
     for name, page in exempt:
         if faults_in(room, page):
             errs.append('%s was flagged (comments are exempt): %s' % (name, faults_in(room, page)[0]))
+    for page, needle in (('essentials/index.html', '<p class="teacher-line">'),
+                         ('updates/index.html', '<ul>')):
+        src = open(os.path.join(ROOT, page), encoding='utf-8').read()
+        if needle not in src:
+            errs.append('%s no longer contains %s to plant beside' % (page, needle))
+            continue
+        planted = src.replace(needle, needle + 'Built for GCSE resit students. ', 1)
+        if not faults_in(page, planted):
+            errs.append('planted a label on %s: NOT caught' % page)
+        else:
+            print('  self-test: planted a label on %s: caught (%s)' % (page, faults_in(page, planted)[0][:110]))
     pages = surfaces(ROOT)
-    for must in ('index.html', room, 'escape-rooms/index.html'):
+    for must in ('index.html', room, 'escape-rooms/index.html', 'essentials/index.html', 'updates/index.html'):
         if must not in pages:
             errs.append('%s is not scanned' % must)
-    for never in ('escape-rooms/comic-caper/teacher.html', 'essentials/index.html'):
+    for never in ('escape-rooms/comic-caper/teacher.html',):
         if never in pages:
             errs.append('%s is scanned (a teacher surface is exempt)' % never)
     if not any(p.startswith('games/') for p in pages):

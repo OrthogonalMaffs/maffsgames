@@ -9,33 +9,127 @@ met, start it without asking. Stop only for a STOP IF, a decision no standing ru
 **Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
 docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
 
-**QUEUE (home lane):** done 8 Oct: DET (#144), CLAIM (#145), ESSENTIALS (#150), UPDATES (#151). Their verbatim
-contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as of 8 Oct") in contract CTX. Then:
-1. **Contract CTX: DONE, #158 merged 8 Oct (b66ccde).** Its verbatim text: `docs/history/handover-home-archive.md`
-   ("QUEUE items CTX and F1 batch 5"); its notes: the CTX entry below.
-2. **F1 batch 5: DONE, #161 merged 8 Oct (8216ff4), main green.**
-3. **F1 batch 6: DONE, #165 merged 8 Oct (7844d10).**
-4. **LTC flake: DONE, #167 merged 8 Oct (7d442e1), main green.** (The cloud lane, relayed by Jon, 8 Oct.)
-- **CHECKPOINT STOP (Jon, 8 Oct, evening):** items 1-4 done, main green; this session stopped here, as told ("do not
-  start the next item in this session"). **Jon's checkpoint message said to record "the queue below", but no queue came
-  with it.** Next session: ask Jon for that queue first. Without it, the standing queue is item 5 (F1 batch 7).
+**QUEUE (home lane), Jon, 8 Oct 2026 (night)**, replacing the checkpoint's "ask Jon for that queue" note. Run in
+order; the standing rule applies (start the next item when one finishes; stop only for a STOP IF, an unruled
+decision, or a checkpoint). Each contract's verbatim text is below the list; move it to the archive when it merges.
+1. **ESSENTIALS-WORDING.** In progress: branch `claude/essentials-wording`, worktree E:/jon/mg-ew.
+2. **RELIST-3** (Jon, 8 Oct, sent after the queue; run after ESSENTIALS-WORDING, before CHANGED-UTF8). It
+   supersedes RELIST-ES-TB, sent minutes earlier: same relists, plus listing Just Pythag It, Bruv (Jon approved it).
+3. **CHANGED-UTF8.**
+4. **GA4-COUNTRY-CANON.**
+5. **F1 batch 7, then F1 batch 8**, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
+   Core first; read `cloud-remaining:` in `docs/handover/cloud.md` on main before building each batch and drop
+   every game on it).
+6. **CHECKPOINT after batch 8 merges with main green:** update this file and stop. Do not start batch 9 in that session.
+- **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
+- **Standing F1 item:** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty
+  (NOT_YET: 40). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
+  `docs/handover/cloud.md` on main and drop every game on it from the batch. Never claim or edit a game on that
+  line. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
 - **Follow-up (home lane, small):** `check-changed.py` crashes (`UnicodeEncodeError`, cp1252) printing a failure when
   its output is redirected to a file on Windows. Until fixed: `PYTHONIOENCODING=utf-8 python scripts/check-changed.py`.
+  (Queue item 3 fixes it; remove this note when it merges.)
 - **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
   once (binomial-blaster, curling-friction, differentiation-duel by touch at 390px; force-resolver, moments-master
   UNPLAYABLE after Start). The same slice passed 20/20 locally on that commit, the parallel run (3878582) was green, and
   a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
   driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
-5. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty (NOT_YET: 40).
-   **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
-   `docs/handover/cloud.md` on main and drop every game on it from the batch. Never claim or edit a game on that
-   line. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
-- **Checkpoint rule:** stop after every 2 batches merged (main green), or at the next batch boundary when Jon
-  says "checkpoint". At each stop, update this file.
+
+<details><summary>Queue items 2 (RELIST-3), 3 and 4, verbatim (Jon, 8 Oct)</summary>
+
+> TASK (home lane, RELIST-3; run after ESSENTIALS-WORDING, before CHANGED-UTF8): List Just Pythag It, Bruv (Jon's
+> approval) and relist Expectation Station and Truth Buster (canon SR-21), in one batched docs PR.
+> ROOT CAUSE: just-pythag-it-bruv was merged unlisted on 4 Oct 2026 for Jon to play first. Jon played it and approved
+> it, but the approval was never recorded, so it is still noindex and off every listing surface (Jon, 8 Oct 2026: "I
+> approved it days ago"). expectation-station and truth-buster were unlisted on 6 Oct (SR-20) and now meet SR-21:
+> verifier in CI with ci-line headers, and no open CRITICAL or HIGH in docs/audits/findings/<slug>.yml (checked on
+> main c8e1b91: expectation-station none open; truth-buster t3-014 MEDIUM, t3-015 LOW, t3-016 MEDIUM). The roster's
+> Unlisted section is stale on expectation-station: it says pc-001 awaits Jon's A/B ruling, but Jon ruled B, and the
+> fix and the 40/40/40 bank are merged.
+> CLASS CHECK: Not a bug in code: it is the existing listing and SR-21 processes, batched through the home lane as
+> canon says. The approval going unrecorded is a process gap, not code. Record it in the handover and to-do as a Jon
+> ruling with its date, so no later session asks again. No shared code changes.
+> EXACT CHANGE:
+> 1. Re-run all three verifiers and confirm each register state on main at the time of the PR.
+> 2. just-pythag-it-bruv, as docs/todo.md's listing item states (the "Jon to play /games/just-pythag-it-bruv/; on
+>    approval" item, about line 545), reading /resit/ as /essentials/:
+>    - remove the noindex line, and update the page's head comment to say it is listed;
+>    - portal; /essentials/ (Geometry and measures; Choose: Foundation; Calculator required); spec map G20; sitemap;
+>    - leaderboard hub row, with its NOT_ON_HUB entry dropped (check-leaderboard-coverage.js);
+>    - add it to SUITE in check-resit-page.py;
+>    - move the roster row to its listed section;
+>    - update canon §4.2 and canon §1's game total.
+>    The /updates/ entry, under 8 Oct, New badge, in exactly these words (Jon's approved line):
+>    "Just Pythag It, Bruv: Pythagoras' theorem in three rounds, starting with whole-number triangles. In the
+>    Essentials section."
+> 3. expectation-station and truth-buster: relist on every surface SR-21 and the to-do relist checklists name
+>    (expectation-station: todo §1.55; truth-buster: its row in §1.58-§1.75). That covers the roster rows, back in
+>    their listed sections at their old numbers (#59, #17); the portal; the sitemap; the spec map; and the
+>    leaderboard hub (remove each from NOT_ON_HUB). Add either to /essentials/ only if it was there before unlisting.
+> 4. Roster descriptions current: Expectation Station "120 questions (40 per level); Stage 1 states a relation, so
+>    every table has one completion"; Truth Buster's count as its bank now stands.
+> 5. /updates/, same 8 Oct entry as step 2. Expectation Station gets the Updated badge (canon §3.4: three times the
+>    questions, and Stage 1 now always has one right answer, which changes what a student meets and how they are
+>    marked). Suggested line: "Expectation Station: now 40 questions at each level, and every probability table has
+>    exactly one right completion." Truth Buster gets a badge and a line only if its changes since unlisting meet
+>    §3.4. Wording honest, no alarming numbers; name the maths, never the student.
+> 6. docs/todo.md: close the listing item and the two relist rows, and record "Jon approved Just Pythag It, Bruv
+>    after playing it (recorded 8 Oct 2026)". Keep the real-iPhone check open as a separate follow-up; it does not
+>    block listing. Handover updated.
+> DO NOT TOUCH: any game's page or bank, apart from the noindex line and head comment of just-pythag-it-bruv; the
+> findings files (MEDIUM and LOW entries stay open, cloud lane's); screening-room, factor-theorem, glorious-gantt; any
+> game on cloud-remaining:.
+> SUCCESS CONDITION: all three are on the portal and the sitemap; just-pythag-it-bruv is on /essentials/ and has no
+> noindex; the roster lists three unlisted games (screening-room, glorious-gantt, factor-theorem); the roster,
+> coverage, theme, meta, label and essentials-page checks pass; merged on a green Gate; main green; handover current.
+> STOP IF: any of the three verifiers fails on main; expectation-station or truth-buster has an open CRITICAL or HIGH
+> by the time you start; a listing surface named here no longer exists; Truth Buster's §3.4 call is unclear (quote
+> the change and ask Jon).
+
+> TASK (CHANGED-UTF8): Stop scripts/check-changed.py crashing on Windows when its output is redirected.
+> ROOT CAUSE: check-changed.py already runs each check with PYTHONIOENCODING=utf-8 and decodes its output as UTF-8,
+> but it prints the failing check's last 15 lines to its own stdout. On Windows with output redirected to a file,
+> that stream is cp1252, so a non-ASCII character (£, →, ✓) raises UnicodeEncodeError and the summary is lost.
+> CLASS CHECK: Local. check-changed.py is the one Windows entry point that wraps the other checks, and it already
+> sets the child encoding; the gap is its own stdout only. Eight scripts already reconfigure stdout the same way;
+> CI (Linux, UTF-8) is unaffected.
+> EXACT CHANGE: scripts/check-changed.py: at start-up, sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+> and the same for sys.stderr. Remove the PYTHONIOENCODING workaround note from home.md's follow-ups once merged.
+> DO NOT TOUCH: the other scripts; the check selection logic; CI.
+> SUCCESS CONDITION: on Windows, `python scripts/check-changed.py > out.txt` with a failing check whose output
+> contains £ completes and writes the summary; merged on a green Gate; handover current.
+> STOP IF: reconfigure is unavailable on the Python version CI or Jon's machine runs (report the version).
+
+> TASK (GA4-COUNTRY-CANON): Record the GA4 country figures in canon.
+> ROOT CAUSE: #153 merged the Apps Script and setup steps (docs/ga4-country-setup.md), but canon's analytics
+> section does not say the events Sheet now gains country tabs from GA4's Data API, so the next reader of canon
+> cannot tell where those figures come from.
+> CLASS CHECK: Local: one missing canon line for one merged feature.
+> EXACT CHANGE: docs/canon.md, the analytics section beside the "'Users' are not people here" note: add the line
+> proposed in #153's PR description (read it with gh); if it proposed none, write: "Country figures (Jon, 8 Oct
+> 2026): two tabs in the events Sheet, copied daily from GA4's Data API by docs/apps-script-ga4-country.js (setup:
+> docs/ga4-country-setup.md). Aggregates only: nothing new is collected, and the site, analytics.js, the events
+> endpoint and the privacy page are unchanged. Live only once Jon has installed it." Handover updated.
+> DO NOT TOUCH: the script, its test, the setup doc, the privacy page.
+> SUCCESS CONDITION: canon carries the line; merged on a green Gate.
+> STOP IF: #153's description says anything that contradicts the setup doc on what is collected (quote both).
+
+</details>
 
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-08 (home): ESSENTIALS-WORDING, "resit" off every public page (branch `claude/essentials-wording`)
+
+- /updates/ (four lines) and /essentials/ (description, og:description, teacher line, intro) no longer say resit or
+  post-16; games.json's /essentials/ description matches. The /updates/ link now goes to /essentials/.
+- `check-student-labels.py` now scans essentials/index.html and updates/index.html (PORTALS); /essentials/ is no
+  longer exempt; the self-test plants a label on each and requires it caught. Against main's copies the widened check
+  finds 10 labels (5 per page). Canon §7.5.3 records Jon's rule.
+- Remaining site-wide hits (all exempt): the two rooms' teacher.html notes (teacher surface); given-that (KNOWN); code
+  and HTML comments in room.js, schools/assets, games and the /essentials/ head comment (history of /resit/ and the
+  script name check-resit-page.py).
 
 ## 2026-10-08 (home): LTC flake, like-terms-collector's late-mark self-test (#167, merged)
 
@@ -68,23 +162,3 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
 - **Verifiers:** sequence-solver and fermi-lab get `bc.NO_LOCK_FRESH_INIT` (they answer as soon as a question renders).
   better-value's page-load KaTeX poll keeps a raw timer, marked `// lock-ok:`.
 
-## 2026-10-08 (home): F1 batch 5 (branch `claude/f1-batch5`, worktree E:/jon/mg-b5)
-
-- **On MaffsLock, each with its declaration:** angle-ace, free-daily-pizza, split-it, six-sevens-bruv, 52dle,
-  distinctly-average, seven-bridges. Each passes check-answer-lock on seeds 1-3 and its own verifier where it has one.
-  **MIGRATED also gains** trig-wars, truth-buster, gradient-hunter, spot-the-muppet and word-problem-decoder (the cloud
-  lane's; each passes seeds 1-3 here). trig-wars: its tap-through (`aimAtEnemy`, used only by the declaration) also
-  searches 46-85 degrees, since some terrains leave no robust shot at 45 or below (seeds 2, 3, 8 failed; 1-12 pass).
-- **word-problem-decoder dropped from the batch:** the cloud lane claimed and fixed it (#156, #157) while this batch was
-  parked unseen (no PR; its queue note was only on the unmerged CTX branch). Main's version is kept. **Lesson: a parked
-  batch must be visible on main (a draft PR, or its games in home.md on main) before a pause, or the cloud lane cannot
-  skip its games.**
-- **Fixes beyond the swap:** angle-ace's own "Got it" button is now `MaffsNext.wrong` (same label); split-it keeps its
-  retry, Check stays locked until Try Again, Best value waits on Next after a wrong pick; free-daily-pizza and
-  distinctly-average lose their local guards (`state`, `locked`) to the lock; 52dle locks per guess and reopens for the
-  next; seven-bridges: a wrong Impossible waits on Next, the solution animation's timers are MaffsLock timers (they
-  could draw onto the next puzzle), and Play Again returns to the start screen in the page (it reloaded, which the
-  check's Play-again probe misreads).
-- **Verifier lessons:** a sweep that answers at once needs `bc.NO_LOCK_FRESH_INIT` (angle-ace, free-daily-pizza,
-  six-sevens). A top-level `const endGame` cannot be stubbed by `window.endGame =`: keep `function endGame(){finishGame()}`.
-- **NOT_YET: 47.**

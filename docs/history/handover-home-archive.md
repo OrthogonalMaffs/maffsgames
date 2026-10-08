@@ -3,6 +3,53 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## QUEUE as of the 8 Oct evening checkpoint (moved when Jon sent the next queue, 8 Oct night)
+
+**QUEUE (home lane):** done 8 Oct: DET (#144), CLAIM (#145), ESSENTIALS (#150), UPDATES (#151). Their verbatim
+contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as of 8 Oct") in contract CTX. Then:
+1. **Contract CTX: DONE, #158 merged 8 Oct (b66ccde).** Its verbatim text: `docs/history/handover-home-archive.md`
+   ("QUEUE items CTX and F1 batch 5"); its notes: the CTX entry below.
+2. **F1 batch 5: DONE, #161 merged 8 Oct (8216ff4), main green.**
+3. **F1 batch 6: DONE, #165 merged 8 Oct (7844d10).**
+4. **LTC flake: DONE, #167 merged 8 Oct (7d442e1), main green.** (The cloud lane, relayed by Jon, 8 Oct.)
+- **CHECKPOINT STOP (Jon, 8 Oct, evening):** items 1-4 done, main green; this session stopped here, as told ("do not
+  start the next item in this session"). **Jon's checkpoint message said to record "the queue below", but no queue came
+  with it.** Next session: ask Jon for that queue first. Without it, the standing queue is item 5 (F1 batch 7).
+- **Follow-up (home lane, small):** `check-changed.py` crashes (`UnicodeEncodeError`, cp1252) printing a failure when
+  its output is redirected to a file on Windows. Until fixed: `PYTHONIOENCODING=utf-8 python scripts/check-changed.py`.
+- **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
+  once (binomial-blaster, curling-friction, differentiation-duel by touch at 390px; force-resolver, moments-master
+  UNPLAYABLE after Start). The same slice passed 20/20 locally on that commit, the parallel run (3878582) was green, and
+  a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
+  driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
+5. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty (NOT_YET: 40).
+   **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
+   `docs/handover/cloud.md` on main and drop every game on it from the batch. Never claim or edit a game on that
+   line. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
+- **Checkpoint rule:** stop after every 2 batches merged (main green), or at the next batch boundary when Jon
+  says "checkpoint". At each stop, update this file.
+
+## 2026-10-08 (home): F1 batch 5 (branch `claude/f1-batch5`, worktree E:/jon/mg-b5)
+
+- **On MaffsLock, each with its declaration:** angle-ace, free-daily-pizza, split-it, six-sevens-bruv, 52dle,
+  distinctly-average, seven-bridges. Each passes check-answer-lock on seeds 1-3 and its own verifier where it has one.
+  **MIGRATED also gains** trig-wars, truth-buster, gradient-hunter, spot-the-muppet and word-problem-decoder (the cloud
+  lane's; each passes seeds 1-3 here). trig-wars: its tap-through (`aimAtEnemy`, used only by the declaration) also
+  searches 46-85 degrees, since some terrains leave no robust shot at 45 or below (seeds 2, 3, 8 failed; 1-12 pass).
+- **word-problem-decoder dropped from the batch:** the cloud lane claimed and fixed it (#156, #157) while this batch was
+  parked unseen (no PR; its queue note was only on the unmerged CTX branch). Main's version is kept. **Lesson: a parked
+  batch must be visible on main (a draft PR, or its games in home.md on main) before a pause, or the cloud lane cannot
+  skip its games.**
+- **Fixes beyond the swap:** angle-ace's own "Got it" button is now `MaffsNext.wrong` (same label); split-it keeps its
+  retry, Check stays locked until Try Again, Best value waits on Next after a wrong pick; free-daily-pizza and
+  distinctly-average lose their local guards (`state`, `locked`) to the lock; 52dle locks per guess and reopens for the
+  next; seven-bridges: a wrong Impossible waits on Next, the solution animation's timers are MaffsLock timers (they
+  could draw onto the next puzzle), and Play Again returns to the start screen in the page (it reloaded, which the
+  check's Play-again probe misreads).
+- **Verifier lessons:** a sweep that answers at once needs `bc.NO_LOCK_FRESH_INIT` (angle-ace, free-daily-pizza,
+  six-sevens). A top-level `const endGame` cannot be stubbed by `window.endGame =`: keep `function endGame(){finishGame()}`.
+- **NOT_YET: 47.**
+
 ## QUEUE items CTX and F1 batch 5, as of 8 Oct (moved when CTX merged, #158)
 
 1. **Contract CTX: PR on `claude/ctx` (8 Oct; see its entry below).** Merge on a green Gate once Jon has answered
