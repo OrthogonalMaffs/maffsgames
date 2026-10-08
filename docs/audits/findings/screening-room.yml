@@ -198,5 +198,8 @@ findings:
   where: games/screening-room/index.html (handleGut, showCalcResult)
   summary: Two question_answered rows per question, with one question_index (phase 1 and phase 3)
   evidence: 'Split from t4-016 when it closed (cloud lane, 8 Oct 2026): each carries phase: 1 or 3, but a count of
-    question_answered counts every question twice. An analytics change, not in the SR-21 contract: for Jon.'
+    question_answered counts every question twice. The source is this game''s own code (handleGut and showCalcResult),
+    one row per answer: a question has two answers (the gut check and the calculation), so "each answer logs exactly
+    one" (Project Claude, 8 Oct) already holds. One row per question would drop the gut-check result or change what a
+    field means: a data change, for Jon.'
   status: open

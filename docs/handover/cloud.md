@@ -78,10 +78,17 @@ main's last full run is red; watch main's run after merging.
   (PC's rule): over 10,000, k = gcd(N, condition, TP, FP) if N / k fits 10,000, else the least whole k that fits with
   a group's remainder as one part-icon (`data-part`, CSS gradient); a note gives k in the item's `unit` and every exact
   count. t4-013 phases stack (column). t4-015 phase 3 keeps phase 2 on screen (Continue hidden). t4-016: fixed on main
-  by #92 (bf3aa90); pinned with plants; its analytics part filed as t4-017 (LOW, open). t4-014 open (pools).
+  by #92 (bf3aa90); pinned with plants; its analytics part filed as t4-017 (LOW, open: own code, one row per answer,
+  two answers a question; one row a question is a data change for Jon). t4-014 open (pools).
   **screening-room has migrated: the home lane can take it off NOT_YET** (passes check-answer-lock seeds 1-3; the
   cloud lane does not edit that script). Verifier gains open_page/extra_checks; run it WITHOUT the KaTeX shim (its
   async route handler hangs this verifier's sync page loads).
+- **Main went red at 16:46 (home #180: verify-like-terms-collector, "item 1: typed 8.9/6.5, marked correct=None";
+  Check marked nothing within 5 s, so the click itself, not the read); the failed job's re-run passed (17:40). Not
+  reproduced with a 200 ms gap after every Playwright action (3 runs). The home lane holds contract MAIN-RED for it.
+- **Factor Theorem (Project Claude, 18:35):** go ahead; report the alevel board (scores above 41?) as unchecked from
+  the sandbox (Firebase is refused); Jon checks leaderboards/factor_theorem_alevel himself. level4: no hub change
+  while unlisted (NOT_ON_HUB skips the level check); the home lane's relist adds both levels.
 - **Next:** probability-paradox t1-004 (Jon's contract, 8 Oct: the regression item rewritten; claim first), then
   factor-theorem (contract + t5-013/014/015 rulings). factor-theorem's level4 board may need the hub registry
   (check-leaderboard-coverage.js): a STOP IF. The home lane's #180 closes factor-theorem-t5-009: merge main first.
