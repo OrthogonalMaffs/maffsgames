@@ -92,6 +92,8 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 | SR-21 | **Relisting an unlisted game.** A game unlisted for audit faults is ready to relist when its verifier runs in CI and the findings register has no open CRITICAL or HIGH entry for it. The home lane relists every ready game in one batched docs PR. That PR puts back everything the unlisting removed: the roster row in its old section, the portal cards and weekly-fact links, the sitemap, the spec map, the leaderboard hub row (out of `NOT_ON_HUB`), and `/resit/` and parent-guide links. Open MEDIUM and LOW entries do not hold a game back; they stay in the register. A game still on the cloud lane's `cloud-remaining:` list waits until it comes off it, and Jon may hold a named game (expectation-station, 7 Oct). | 7 Oct 2026 | Jon, 7 Oct 2026, contract F1 |
 | SR-22 | **One leaderboard per mode or session length.** Where a game's modes or session lengths have different maxima or measure different things, each has its own board (its own level key in the leaderboard name); runs never share a board with a mode they cannot be compared to. Prime Sprint's board key (its session length) is shown on the hub, so a student sees which board a score is on. Prisoner's Dilemma ranks the tournament total only: single matches against one opponent are not submitted. New level keys are added; existing keys never change (SR-11). Open entries it decides: proof-builder-t5-023 and prisoners-dilemma-t4-001 (code still to change). | 7 Oct 2026 | Jon, 7 Oct 2026, his ruling R15 |
 | SR-23 | **Timers follow `.claude/rules/timer-policy.md`.** A game listed under Hidden Count-Up runs a silent clock with no score multiplier, its time shown on the results screen only. Trig Identity Duel and Glorious Gantt Game follow it, as listed (their timers are visible now and Trig Identity Duel's feeds the score); scores before the change will not compare with scores after it, and that is accepted. Open entries it decides: trig-identity-duel-t2-010 and the timer part of glorious-gantt's entry at :783/:968 (code still to change). | 7 Oct 2026 | Jon, 7 Oct 2026, timer ruling |
+| SR-24 | **A counterexample must refute the statement as written, not a softer one.** For Spot the Error-type games; read with SR-16 and SR-18. | 8 Oct 2026 | Jon, 8 Oct 2026 (contract CTX's "For Jon" list; first written in a CLAUDE.md handover, 5 Oct 2026, SR-14 fix batch) |
+| SR-25 | **Words, figure and key must agree.** A question's text, its drawn figure and its key describe the same thing (Circle Theorem Spotter Q19: the figure drew the point on the minor arc while the text said major; a centreCirc `inside` flag puts C inside the marked angle). SR-8 covers what follows a changed key; this covers text against figure. | 8 Oct 2026 | Jon, 8 Oct 2026 (contract CTX's "For Jon" list; first written in a CLAUDE.md handover, 3 Oct 2026, PR #11) |
 
 **Also recorded with SR-16 to SR-20** (Jon, 6 Oct 2026, 20:30):
 - Start screens and cards state what the code does (timers, scoring claims).
@@ -129,6 +131,9 @@ each entry it fixes in `docs/audits/findings/<slug>.yml`, and edit no other regi
 change, is `status: ruled` with `ruling:` naming the SR. A new audit adds its findings to the game's file (a second
 `audited` entry when the game was audited before); ids are `<slug>-t<n>-NNN` (tranche n) or `<slug>-r-NNN` (resit audit).
 Exit-bar points 3 and 6 are stated in the script (`SHARED_CHECKS_GREEN`, `SWEEP_DONE`): the PR that meets one sets it.
+
+**The per-game files are edited by hand** (Jon, 8 Oct 2026; since 7 Oct, when the one-off builders were retired to
+`~/.maffsgames-local/register-build/`), one game's file per PR; REGISTER.md never (above).
 
 ---
 
@@ -409,6 +414,14 @@ The mechanism, as built 27 Sep 2026 (copied verbatim from there; the archive kee
 - When a game next qualifies, add or refresh `data-badge`/`data-badge-date` on every occurrence of
   its card; nothing else to update, no list to keep in sync, nothing to remember to remove later.
 
+
+## 3.5 The /updates/ page
+
+Entries are in Jon's voice (§0.3, "Still stops for Jon").
+
+- **Writing an entry about a false claim:** describe it, don't quote it (Jon, 8 Oct 2026: quoting a wrong figure
+  repeats it). `check-public-claims.py` blocks the literal "No data collected" on /updates/ like any other live page.
+  (First written 3 Oct 2026 in a CLAUDE.md handover; contract CTX.)
 
 ---
 
@@ -1372,6 +1385,14 @@ and is not edited by fix PRs.
 - **Before the first push of every PR:** `python scripts/check-changed.py` (one PR on 7 Oct 2026 cost three
   runs without it).
 - **Relisting a fixed game** is a home-lane docs PR, batched with others.
+
+## 7.9 Verifier conventions (Jon, 8 Oct 2026)
+
+- **Read a mark from what the page shows, never from a wrapped `mfg`.** analytics.js can replace `window.mfg` after a
+  hook is installed, so a verifier that reads the analytics event can see no mark at all (#88's flake, fixed in #89,
+  7 Oct 2026, by reading the feedback icon's class, which `showFeedback()` sets synchronously). First written in a
+  CLAUDE.md handover; contract CTX.
+- Verifiers recompute explanation and hint figures, not just keys (§0.3, "Also recorded with SR-16 to SR-20").
 
 ---
 

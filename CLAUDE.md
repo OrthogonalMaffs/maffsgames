@@ -122,6 +122,13 @@ Three things that cost time on 21/09, local or live:
 - Firebase Realtime Database for leaderboard
 - GA4 + Google Sheets dual analytics via `mfg()` wrapper
 
+## Session practice (Jon, 8 Oct 2026, contract CTX)
+
+- **Preview from a scratch copy:** never swap the repo's game file to preview; serve a scratch copy (`--against`).
+- **Never run a verifier through `| tail` under a timeout** (the output is lost): run a long one in the background
+  to a log file.
+- **Verifiers read a mark from the page's feedback, never from a wrapped `mfg`** (canon §7.9).
+
 ## Contracts arrive whole (Jon, 8 Oct 2026, contract CTX)
 
 Jon never amends contracts: PC sends complete pastes.
