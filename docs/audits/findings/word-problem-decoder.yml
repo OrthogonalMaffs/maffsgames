@@ -73,7 +73,8 @@ findings:
   where: games/word-problem-decoder/index.html(gcse_017, gcse_021)
   summary: gcse_017 has no whole-number answer (c = 71/19), and neither does gcse_021
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: word-problem-decoder-t1-007
   severity: MEDIUM
   jc: false
@@ -83,7 +84,8 @@ findings:
   summary: The tins are 72000 / (pi x 25 x 15) = 61.1 by volume, not 48; 48 is exactly how many physically fit,
     so it is not 'too high'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: word-problem-decoder-t1-008
   severity: MEDIUM
   jc: false
@@ -92,7 +94,8 @@ findings:
   where: games/word-problem-decoder/index.html(gcse_022)
   summary: The lap count is ambiguous
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: word-problem-decoder-t1-009
   severity: MEDIUM
   jc: false
