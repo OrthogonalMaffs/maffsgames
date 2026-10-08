@@ -13,7 +13,12 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as of 8 Oct") in contract CTX. Then:
 1. **Contract CTX: DONE, #158 merged 8 Oct (b66ccde).** Its verbatim text: `docs/history/handover-home-archive.md`
    ("QUEUE items CTX and F1 batch 5"); its notes: the CTX entry below.
-2. **F1 batch 5: PR on `claude/f1-batch5` (8 Oct; see its entry below).** Merge on a green Gate.
+2. **F1 batch 5: DONE, #161 merged 8 Oct (8216ff4), main green.**
+3. **F1 batch 6: IN PROGRESS on `claude/f1-batch6` (draft PR; worktree E:/jon/mg-b6).** equation-builder, expected-damage,
+   fermi-lab, maths-court, sequence-solver, bearing-blitz, better-value, chart-interrogator; terrible-advice (the cloud
+   lane's) to MIGRATED. Chosen off the cloud lane's listed-games order (cloud.md, "The rest of the order"), which
+   overlaps F1's remaining games: that order still names 52dle and seven-bridges, migrated in batch 5 (their register
+   entries are still the cloud lane's). **Checkpoint after batch 6 merges** (2 batches since the last stop).
 - **cloud.md not trimmed (contract CTX step 3):** the cloud lane had PR #154 open on it. Trim it to its header and
   newest three entries (to `docs/history/handover-cloud-archive.md`) at the next cloud checkpoint.
 - **Follow-up (home lane, small):** `check-changed.py` crashes (`UnicodeEncodeError`, cp1252) printing a failure when
