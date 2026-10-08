@@ -189,7 +189,7 @@ const ctx = {
 vm.createContext(ctx);
 vm.runInContext(SRC, ctx, { filename: 'apps-script-ga4-country.js' });
 global.__BOUND = false;
-global.__STREAM = '13898555479';
+global.__STREAM = '13911036386';
 
 function setNow(iso) { vm.runInContext('ga4cNow_ = function () { return new Date(' + JSON.stringify(iso) + '); };', ctx); }
 function run(fn) { try { vm.runInContext(fn + '()', ctx); return null; } catch (e) { return String(e && e.message || e); } }
@@ -451,7 +451,7 @@ def checks(R):
     f = []
     if s["checkOk"]["error"]:
         f.append("the property check failed on the right stream: %s" % s["checkOk"]["error"])
-    if not s["checkWrong"]["error"] or "13898555479" not in s["checkWrong"]["error"]:
+    if not s["checkWrong"]["error"] or "13911036386" not in s["checkWrong"]["error"]:
         f.append("the property check passed on another stream")
     want = [{"fn": "sendDailyReport", "hour": 7, "tz": "Europe/London"},
             {"fn": "ga4CountryDaily", "hour": 6, "tz": "Europe/London"}]

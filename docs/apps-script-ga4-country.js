@@ -30,7 +30,8 @@
 //  Functions ending in _ are helpers: Apps Script hides them from the Run menu.
 
 const GA4C_PROPERTY = 'properties/528531831';
-const GA4C_STREAM_ID = '13898555479';           // canon §1.1: the maffsgames.co.uk web stream
+const GA4C_STREAM_ID = '13911036386';           // the maffsgames.co.uk web stream, as the Data API reports it
+                                                 // (8 Oct 2026; canon §1.1's 13898555479 is not in the property)
 const GA4C_SPREADSHEET_NAME = 'MaffsGames Events';
 const GA4C_TIMEZONE = 'Europe/London';
 const GA4C_SETTLE_DAYS = 3;                      // the last three complete days are fetched and replaced
