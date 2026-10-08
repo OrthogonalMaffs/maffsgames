@@ -145,6 +145,23 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game (two picks a question; a first wrong pick marks nothing, so a wrong answer is two wrong options, past the fresh window between).
+{
+  "answer": [
+    "return (async () => {",
+    " const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    " if (!document.getElementById('gameScreen').classList.contains('active')) return;",
+    " const q = sessionQuestions[currentIndex];",
+    " const wrong = () => [...document.querySelectorAll('#optionsGrid .option-card')].filter(c => !c.disabled",
+    " && !q.options.find(o => o.text === c.textContent).correct);",
+    " const w = wrong(); if (!w.length) return; w[0].click(); await real(400);",
+    " const v = wrong(); if (v.length) v[0].click();",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -238,7 +255,7 @@ const QUESTIONS = [
 
 {id:'stm_ks3_004',level:'ks3',topic:'Percentages \u2014 Double Change',character:{name:'Rod Blundell',title:'Chief Discount Analyst, Rod\'s Deals & Steals',huffyResponse:'Symmetry. It\'s a universal law.'},advice:'A TV costs \u00a3400. It goes up by 10% then comes down by 10%. So you\'re back to \u00a3400. What goes up must come down.',options:[{text:'Rod is wrong \u2014 up 10%: \u00a3440. Down 10% of \u00a3440 = \u00a344. Final price: \u00a3396, not \u00a3400',correct:true},{text:'Rod is correct \u2014 \u00a3400',correct:false},{text:'Rod is wrong \u2014 final price is \u00a3420',correct:false},{text:'Rod is wrong \u2014 final price is \u00a3380',correct:false}]},
 
-{id:'stm_ks3_005',level:'ks3',topic:'Mean vs Median',character:{name:'Dr Patricia Venn',title:'Statistical Wellness Practitioner (Honorary Doctorate, Unaccredited)',huffyResponse:'Mean, median \u2014 they\'re basically the same thing. I have a doctorate.'},advice:'To find the mean of 3, 7, 8, 2 and 10 \u2014 find the middle number when sorted: 2, 3, 7, 8, 10. Middle value is 7. Mean = 7.',options:[{text:'Dr Venn found the median, not the mean. Mean = (3+7+8+2+10) \u00f7 5 = 30 \u00f7 5 = 6',correct:true},{text:'Dr Venn is correct \u2014 mean = 7',correct:false},{text:'Dr Venn is wrong \u2014 mean = 10 (largest value)',correct:false},{text:'Dr Venn is wrong \u2014 mean = (2+10) \u00f7 2 = 6, same answer, different method',correct:false}]},
+{id:'stm_ks3_005',level:'ks3',topic:'Mean vs Median',character:{name:'Dr Patricia Venn',title:'Statistical Wellness Practitioner (Honorary Doctorate, Unaccredited)',huffyResponse:'Mean, median \u2014 they\'re basically the same thing. I have a doctorate.'},advice:'To find the mean of 3, 7, 8, 2 and 10 \u2014 find the middle number when sorted: 2, 3, 7, 8, 10. Middle value is 7. Mean = 7.',options:[{text:'Dr Venn found the median, not the mean. Mean = (3+7+8+2+10) \u00f7 5 = 30 \u00f7 5 = 6',correct:true},{text:'Dr Venn is correct \u2014 mean = 7',correct:false},{text:'Dr Venn is wrong \u2014 mean = 10 (largest value)',correct:false},{text:'Dr Venn is wrong \u2014 mean = (3+7+8+2+10) \u00f7 4 = 7.5',correct:false}]},
 
 {id:'stm_ks3_006',level:'ks3',topic:'Proportion',character:{name:'Clive Natter',title:'Scale and Proportion Evangelist',huffyResponse:'It\'s an approximation. Close enough.'},advice:'A recipe for 4 serves uses 300g of flour. For 7 people, add 3 extra portions: 300 + 3 = 303g. Cooking is basically maths.',options:[{text:'Clive is wrong \u2014 scale proportionally: 300 \u00f7 4 \u00d7 7 = 525g',correct:true},{text:'Clive is correct \u2014 303g',correct:false},{text:'Clive is wrong \u2014 double the recipe to 600g',correct:false},{text:'Clive is wrong \u2014 300 + 7 = 307g',correct:false}]},
 
@@ -310,11 +327,11 @@ const QUESTIONS = [
 // ============ CORE MATHS (12) ============
 {id:'stm_core_001',level:'core',topic:'Expected Value',character:{name:'Monte Carlo',title:'Casino Mathematician and Expectation Specialist (Formerly of Las Vegas)',huffyResponse:'I used to run a casino. The casino always wins, which proves my point.'},advice:'Game costs \u00a32. Win \u00a310 with P=0.1, nothing otherwise. Expected profit = \u00a310 \u00d7 0.1 = \u00a31. You expect to win \u00a31 each game. Play forever.',options:[{text:'Monte is wrong \u2014 expected WINNINGS = \u00a31, but game costs \u00a32. Expected PROFIT = \u00a31 \u2212 \u00a32 = \u2212\u00a31 per game. You lose on average',correct:true},{text:'Monte is correct \u2014 expected profit is \u00a31',correct:false},{text:'Monte is wrong \u2014 expected profit = \u00a310 \u2212 \u00a32 = \u00a38',correct:false},{text:'Monte is wrong \u2014 you cannot calculate expected profit without knowing number of plays',correct:false}]},
 
-{id:'stm_core_002',level:'core',topic:'Best Value',character:{name:'Bulk Buy Barry',title:'Unit Price Philosopher',huffyResponse:'Big bottle. Always. Non-negotiable.'},advice:'500ml shampoo \u00a33.50, 750ml \u00a34.80. Difference: \u00a31.30 for 250ml extra. That\'s better than paying \u00a33.50 for 500ml so obviously big bottle wins. Obvious.',options:[{text:'Barry is right in conclusion but wrong in method. Calculate price per ml: 500ml = 0.70p/ml, 750ml = 0.64p/ml. Always use unit price, not price differences',correct:true},{text:'Barry is correct in both method and conclusion',correct:false},{text:'Barry is wrong \u2014 500ml is better value',correct:false},{text:'Barry is wrong \u2014 they are equal value',correct:false}]},
+{id:'stm_core_002',level:'core',topic:'Best Value',character:{name:'Bulk Buy Barry',title:'Unit Price Philosopher',huffyResponse:'Big bottle. Always. Non-negotiable.'},advice:'500ml shampoo \u00a33.50, 750ml \u00a34.80. The big one only costs \u00a31.30 more, and \u00a31.30 is less than \u00a33.50, so obviously the big bottle wins. Obvious.',options:[{text:'Barry is right in conclusion but wrong in method. Calculate price per ml: 500ml = 0.70p/ml, 750ml = 0.64p/ml. Always use unit price, not price differences',correct:true},{text:'Barry is correct in both method and conclusion',correct:false},{text:'Barry is wrong \u2014 500ml is better value',correct:false},{text:'Barry is wrong \u2014 they are equal value',correct:false}]},
 
 {id:'stm_core_003',level:'core',topic:'Correlation',character:{name:'Dr Corrie Lation',title:'Correlation Scientist and Causation Denier',huffyResponse:'The data supports me. Correlation is basically causation with extra steps.'},advice:'Countries with more TVs have longer life expectancy. Therefore TVs increase lifespan. I\'m prescribing televisions to all my patients.',options:[{text:'Dr Lation is wrong \u2014 wealth is the confounding variable. It independently causes both more TVs and longer life. Correlation does not imply causation',correct:true},{text:'Dr Lation is correct \u2014 more TVs cause longer life',correct:false},{text:'Dr Lation is wrong \u2014 the correlation is probably negative',correct:false},{text:'Dr Lation is wrong \u2014 you need 30+ data points first',correct:false}]},
 
-{id:'stm_core_004',level:'core',topic:'Compound Interest',character:{name:'Penny Wise',title:'Savings Maximisation Guru (No Relation to the Clown)',huffyResponse:'I meant multiply 1.05 by 20. That\'s still a lot of money.'},advice:'\u00a31,000 at 5% for 20 years: \u00a31,000 \u00d7 1.05 \u00d7 20 = \u00a321,050. Retirement sorted.',options:[{text:'Penny is wrong \u2014 compound raises 1.05 to the POWER of 20: \u00a31,000 \u00d7 1.05\u00b2\u2070 = \u00a32,653. Not multiplied by 20',correct:true},{text:'Penny is correct \u2014 \u00a321,050',correct:false},{text:'Penny is wrong \u2014 simple interest gives \u00a32,000',correct:false},{text:'Penny is wrong \u2014 \u00a31,000 \u00d7 1.05\u00b2\u2070 = \u00a310,000',correct:false}]},
+{id:'stm_core_004',level:'core',topic:'Compound Interest',character:{name:'Penny Wise',title:'Savings Maximisation Guru (No Relation to the Clown)',huffyResponse:'I meant multiply 1.05 by 20. That\'s still a lot of money.'},advice:'\u00a31,000 at 5% compound interest for 20 years: \u00a31,000 \u00d7 1.05 \u00d7 20 = \u00a321,000. Retirement sorted.',options:[{text:'Penny is wrong \u2014 compound raises 1.05 to the POWER of 20: \u00a31,000 \u00d7 1.05\u00b2\u2070 = \u00a32,653. Not multiplied by 20',correct:true},{text:'Penny is correct \u2014 \u00a321,000',correct:false},{text:'Penny is wrong \u2014 the answer is \u00a31,000 + 20 \u00d7 \u00a350 = \u00a32,000',correct:false},{text:'Penny is wrong \u2014 \u00a31,000 \u00d7 1.05\u00b2\u2070 = \u00a310,000',correct:false}]},
 
 {id:'stm_core_005',level:'core',topic:'Normal Distribution',character:{name:'Norman Bell',title:'Normal Distribution Enthusiast',huffyResponse:'I was close. 68 is right. The direction is a detail.'},advice:'Normal distribution, mean 50, SD 10. 68% of data falls between 40 and 50. One side.',options:[{text:'Norman is wrong \u2014 68% falls within one SD on BOTH sides: between 40 and 60. Normal distribution is symmetric',correct:true},{text:'Norman is correct \u2014 68% between 40 and 50',correct:false},{text:'Norman is wrong \u2014 95% falls within one standard deviation',correct:false},{text:'Norman is wrong \u2014 68% falls between 45 and 55',correct:false}]},
 
@@ -322,7 +339,7 @@ const QUESTIONS = [
 
 {id:'stm_core_007',level:'core',topic:'Weighted Average',character:{name:'Wayne Tedd',title:'Averaging Consultant, Equal Weights for All Foundation',huffyResponse:'All data deserves equal representation. That\'s democracy.'},advice:'Module A: 60% (worth 25 credits). Module B: 80% (worth 75 credits). Overall average = (60 + 80) \u00f7 2 = 70%. Averages are straightforward.',options:[{text:'Wayne is wrong \u2014 must weight by credits: (60\u00d725 + 80\u00d775) \u00f7 100 = (1500 + 6000) \u00f7 100 = 75%. Module B counts three times as much',correct:true},{text:'Wayne is correct \u2014 70%',correct:false},{text:'Wayne is wrong \u2014 overall = 80% (use the higher module only)',correct:false},{text:'Wayne is wrong \u2014 overall = 60% (use the lower module only)',correct:false}]},
 
-{id:'stm_core_008',level:'core',topic:'Reverse Percentage',character:{name:'Roxanne Markup',title:'VAT Recovery Specialist and Receipt Archaeologist',huffyResponse:'VAT is 20%. I added 20%. What more do you want from me?'},advice:'Receipt says \u00a3120 including 20% VAT. To find the pre-VAT price, take off 20%: \u00a3120 \u2212 \u00a324 = \u00a396.',options:[{text:'Roxanne is wrong \u2014 the 20% was added to the original price, not \u00a3120. Pre-VAT = \u00a3120 \u00f7 1.20 = \u00a3100',correct:true},{text:'Roxanne is correct \u2014 \u00a396',correct:false},{text:'Roxanne is wrong \u2014 pre-VAT = \u00a3120 \u00d7 0.80 = \u00a396',correct:false},{text:'Roxanne is wrong \u2014 pre-VAT = \u00a3120 \u2212 \u00a320 = \u00a3100',correct:false}]},
+{id:'stm_core_008',level:'core',topic:'Reverse Percentage',character:{name:'Roxanne Markup',title:'VAT Recovery Specialist and Receipt Archaeologist',huffyResponse:'VAT is 20%. I added 20%. What more do you want from me?'},advice:'Receipt says \u00a3120 including 20% VAT. To find the pre-VAT price, take off 20%: \u00a3120 \u2212 \u00a324 = \u00a396.',options:[{text:'Roxanne is wrong \u2014 the 20% was added to the original price, not \u00a3120. Pre-VAT = \u00a3120 \u00f7 1.20 = \u00a3100',correct:true},{text:'Roxanne is correct \u2014 \u00a396',correct:false},{text:'Roxanne is wrong \u2014 pre-VAT = \u00a3120 \u00d7 0.80 = \u00a396',correct:false},{text:'Roxanne is wrong \u2014 pre-VAT = \u00a3120 \u00d7 1.20 = \u00a3144',correct:false}]},
 
 {id:'stm_core_009',level:'core',topic:'Break-Even',character:{name:'Benny Even',title:'Break-Even Analyst and Fixed Cost Denier',huffyResponse:'Fixed costs fix themselves eventually. That\'s why they\'re called fixed.'},advice:'Fixed costs \u00a32,000. Each unit costs \u00a35 to make and sells for \u00a315. Break-even = \u00a32,000 \u00f7 \u00a315 = 133.3, so 134 units. Just divide by selling price.',options:[{text:'Benny is wrong \u2014 break-even uses contribution per unit: \u00a315 \u2212 \u00a35 = \u00a310. Break-even = \u00a32,000 \u00f7 \u00a310 = 200 units',correct:true},{text:'Benny is correct \u2014 134 units',correct:false},{text:'Benny is wrong \u2014 break-even = \u00a32,000 \u00f7 \u00a35 = 400 units',correct:false},{text:'Benny is wrong \u2014 break-even = (\u00a32,000 + \u00a35) \u00f7 \u00a315 = 134 units',correct:false}]},
 
@@ -369,6 +386,7 @@ let colourIndex = 0;
   document.getElementById('startBtn').addEventListener('click', startGame);
   document.getElementById('playAgainBtn').addEventListener('click', () => {
     showScreen('startScreen');
+    MaffsLock.screen(document.getElementById('startScreen'));   // its second click cannot press Start
     document.getElementById('gameHeader').style.display = 'none';
   });
 })();
@@ -399,6 +417,7 @@ function renderSessionButtons() {
 }
 
 function startGame() {
+  MaffsLock.newSession();
   const pool = QUESTIONS.filter(q => q.level === currentLevel);
   sessionQuestions = shuffleArray(pool).slice(0, Math.min(sessionLength, pool.length));
   currentIndex = 0;
@@ -468,6 +487,8 @@ function showQuestion() {
   // Options (shuffled)
   const grid = document.getElementById('optionsGrid');
   grid.innerHTML = '';
+  // A new question: a double-click on Start or Next cannot answer it (canon 7.6.0)
+  MaffsLock.fresh(document.getElementById('gameScreen'));
   const shuffledOptions = shuffleArray(q.options);
   shuffledOptions.forEach(opt => {
     const card = document.createElement('button');
@@ -481,12 +502,16 @@ function showQuestion() {
   document.getElementById('progressFill').style.width = ((currentIndex / sessionQuestions.length) * 100) + '%';
 }
 
+// Answer once (canon 7.6.0): a question has two picks. A first wrong pick is a retry, marked nothing; the question
+// is marked once, through MaffsLock, when it is right or at the second wrong pick, and logged once (question_answered).
 function handleAnswer(card, opt, q, allOptions) {
-  if (card.classList.contains('disabled') || card.classList.contains('correct') || card.classList.contains('incorrect')) return;
+  const grid = document.getElementById('optionsGrid');
+  if (card.disabled || MaffsLock.isLocked(grid)) return;
 
   attempts++;
 
   if (opt.correct) {
+    if (!MaffsLock.lock(grid)) return;
     // Correct
     card.classList.add('correct');
     disableAllOptions();
@@ -510,27 +535,34 @@ function handleAnswer(card, opt, q, allOptions) {
     void banner.offsetWidth;
     banner.classList.add('show');
     // Auto-hide after animation (covers reduced-motion case too)
-    setTimeout(() => banner.classList.remove('show'), 700);
+    MaffsLock.timer(() => banner.classList.remove('show'), 700);
 
     // Shake character card
     const charCard = document.getElementById('characterCard');
-    setTimeout(() => {
+    MaffsLock.timer(() => {
       charCard.classList.add('shake');
     }, 200);
 
     // Show huffy response then Next button
-    setTimeout(() => {
+    MaffsLock.timer(() => {
       const huffy = document.getElementById('huffyResponse');
       huffy.textContent = '"' + q.character.huffyResponse + '"';
       huffy.classList.add('show');
       // Show Next button after huffy appears
-      setTimeout(() => {
+      MaffsLock.timer(() => {
         document.getElementById('nextBtn').style.display = 'block';
       }, 800);
     }, 500);
 
+  } else if (attempts < 2) {
+    // One retry: this card is out, and the second pick is a new decision, so the second click of a
+    // double-click cannot spend it (canon 7.6.0)
+    card.classList.add('incorrect', 'disabled');
+    card.disabled = true;
+    MaffsLock.fresh(grid);
   } else {
-    // Incorrect
+    if (!MaffsLock.lock(grid)) return;
+    // Incorrect: no more retries, reveal the correct answer
     card.classList.add('incorrect');
 
     // Analytics
@@ -544,31 +576,23 @@ function handleAnswer(card, opt, q, allOptions) {
       });
     }
 
-    if (attempts >= 2) {
-      // No more retries — reveal correct answer
-      disableAllOptions();
-      const grid = document.getElementById('optionsGrid');
-      const cards = grid.querySelectorAll('.option-card');
-      const shuffledOptions = allOptions;
-      cards.forEach((c, i) => {
-        if (shuffledOptions[i].correct) {
-          c.classList.add('correct');
-        }
-      });
+    disableAllOptions();
+    const cards = grid.querySelectorAll('.option-card');
+    cards.forEach((c, i) => {
+      if (allOptions[i].correct) {
+        c.classList.add('correct');
+      }
+    });
 
-      // Show huffy response then Next button
-      setTimeout(() => {
-        const huffy = document.getElementById('huffyResponse');
-        huffy.textContent = '"' + q.character.huffyResponse + '"';
-        huffy.classList.add('show');
-        setTimeout(() => {
-          document.getElementById('nextBtn').style.display = 'block';
-        }, 800);
-      }, 400);
-    } else {
-      // One retry — disable just this card
-      card.classList.add('disabled');
-    }
+    // Show huffy response then Next button
+    MaffsLock.timer(() => {
+      const huffy = document.getElementById('huffyResponse');
+      huffy.textContent = '"' + q.character.huffyResponse + '"';
+      huffy.classList.add('show');
+      MaffsLock.timer(() => {
+        document.getElementById('nextBtn').style.display = 'block';
+      }, 800);
+    }, 400);
   }
 }
 
@@ -583,7 +607,8 @@ function disableAllOptions() {
   });
 }
 
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame = MaffsLock.finishOnce(function () {
   // Progress to 100%
   document.getElementById('progressFill').style.width = '100%';
 
@@ -640,7 +665,8 @@ function endGame() {
   }
 
   showScreen('resultsScreen');
-}
+  MaffsLock.screen(document.getElementById('resultsScreen'));
+});
 
 
 (function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();
