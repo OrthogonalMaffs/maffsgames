@@ -79,12 +79,13 @@ time on the same terms: it replaces 1 Sep to yesterday.)
 
 ## How to read it
 
-**"Users" are not people here.** The site runs GA4 cookieless (`storage: 'none'`, canon §1.1), so GA4
-has no stored ID to recognise a returning browser. It should therefore treat each page load as a new
-user and a new session. Then a student who plays three games counts as about three users. Check this
-yourself: if a country's `activeUsers` in the daily tab is close to its `page_view` eventCount in the
-events tab, that is what is happening. Read `activeUsers` and `sessions` as **visits**, not
-**visitors**.
+**"Users" are GA4's estimate, not a head count.** The site runs GA4 cookieless (`storage: 'none'`,
+canon §1.1), so you might expect every page load to count as a new user. The backfill of 8 Oct 2026 says
+otherwise: from 1 Sep to 7 Oct the United Kingdom had 1,116 sessions from 763 users, and sessions
+exceed users in 59 of 262 rows. So GA4 links some page loads within a day. How it does that without
+cookies is not documented here. Also, `activeUsers` can be 0 on a row that has a session. Two safe
+rules: never add daily `activeUsers` across days and call it people, and use `engagedSessions` as the
+main measure.
 
 **Separating real play from crawlers.** A crawler loads a page and leaves: it fires `page_view`, never
 a game event, and its session is not engaged. So:
