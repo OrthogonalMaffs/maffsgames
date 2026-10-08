@@ -3,6 +3,19 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-08 (home): LTC flake, like-terms-collector's late-mark self-test (#167, merged)
+
+- **Cause:** the self-test serves a copy whose showFeedback() marks DEFER (300) ms late, then reads the mark "straight off
+  the click" to prove the plant bites, expecting none. That read was a second Playwright call after `page.click`; on a
+  slow runner more than 300 ms passed between the two and the mark had landed, so the self-test failed. (DEFER only
+  equals MaffsLock's 300 ms window by coincidence: the race is the gap between two Playwright calls.)
+- **Fix:** in the deferred plant only, the click and the early read are one page task
+  (`checkBtn.click(); return MARK();`). A timer cannot fire inside one synchronous task, so the early read sees no mark
+  on any runner; the waiting read (`read_mark`) must still see every mark land. Real typing and clicking elsewhere are
+  unchanged.
+- **Proof:** with a 200 ms gap forced after each click (a slow runner, DEFER 50), main's version reads `[False, True]`
+  early and fails; this one reads `[None, None]` and holds. Plain runs: 3/3 pass.
+
 ## QUEUE as of the 8 Oct evening checkpoint (moved when Jon sent the next queue, 8 Oct night)
 
 **QUEUE (home lane):** done 8 Oct: DET (#144), CLAIM (#145), ESSENTIALS (#150), UPDATES (#151). Their verbatim

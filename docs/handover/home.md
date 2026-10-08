@@ -12,11 +12,13 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 **QUEUE (home lane), Jon, 8 Oct 2026 (night)**, replacing the checkpoint's "ask Jon for that queue" note. Run in
 order; the standing rule applies (start the next item when one finishes; stop only for a STOP IF, an unruled
 decision, or a checkpoint). Each contract's verbatim text is below the list; move it to the archive when it merges.
-1. **ESSENTIALS-WORDING.** In progress: branch `claude/essentials-wording`, worktree E:/jon/mg-ew.
-2. **RELIST-3** (Jon, 8 Oct, sent after the queue; run after ESSENTIALS-WORDING, before CHANGED-UTF8). It
+1. **ESSENTIALS-WORDING: DONE, #172 merged 8 Oct (c1fc37a).** Its verbatim text was in Jon's queue message only.
+2. **RELIST-3: in progress, branch `claude/relist-3`, worktree E:/jon/mg-r3** (Jon, 8 Oct, sent after the queue). It
    supersedes RELIST-ES-TB, sent minutes earlier: same relists, plus listing Just Pythag It, Bruv (Jon approved it).
 3. **CHANGED-UTF8.**
 4. **GA4-COUNTRY-CANON.**
+4a. **VOCAB-SHOWTHAT** (Jon, 8 Oct, sent later: run after GA4-COUNTRY-CANON, before F1 batch 7). The "show
+   that" tooltip in `schools/assets/exam-vocab.js`; closes factor-theorem-t5-009 unless the cloud lane holds that game.
 5. **F1 batch 7, then F1 batch 8**, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
    Core first; read `cloud-remaining:` in `docs/handover/cloud.md` on main before building each batch and drop
    every game on it).
@@ -35,7 +37,7 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
   a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
   driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
 
-<details><summary>Queue items 2 (RELIST-3), 3 and 4, verbatim (Jon, 8 Oct)</summary>
+<details><summary>Queue items 2 (RELIST-3), 3, 4 and 4a, verbatim (Jon, 8 Oct)</summary>
 
 > TASK (home lane, RELIST-3; run after ESSENTIALS-WORDING, before CHANGED-UTF8): List Just Pythag It, Bruv (Jon's
 > approval) and relist Expectation Station and Truth Buster (canon SR-21), in one batched docs PR.
@@ -86,6 +88,36 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 > by the time you start; a listing surface named here no longer exists; Truth Buster's §3.4 call is unclear (quote
 > the change and ask Jon).
 
+> TASK (home lane, VOCAB-SHOWTHAT; run after GA4-COUNTRY-CANON, before F1 batch 7): Correct the "show that" tooltip
+> in the shared exam vocabulary file.
+> ROOT CAUSE: schools/assets/exam-vocab.js gives "show that" the definition "Prove this is true. Show every step of
+> your working — you can't just verify it with numbers, you must derive it algebraically." That merges two different
+> command words. "Show that" means the result is given and the student shows the working that reaches it. The
+> working is often numerical: f(2) = 0 to show (x − 2) is a factor; a change of sign to show a root lies in an
+> interval; "show that 3/4 of 60 is 45" at Foundation. "Prove" is the general argument. The rule the tooltip
+> half-remembers is narrower: do not start from the given answer and work backwards. Found as factor-theorem-t5-009
+> (shows on Q3, Q4, T1a, T3b, T7a, T10a, where the expected method is numerical). Ruled by Jon, 8 Oct 2026.
+> CLASS CHECK: Shared infrastructure. The definition lives in a shared asset that any game can load, so it is fixed
+> once, there, and every current and future user is corrected. Today only factor-theorem loads it; the fix is still
+> made in the shared file, never as an override in the game.
+> EXACT CHANGE: 1. schools/assets/exam-vocab.js, the 'show that' entry's plain text, exactly: "The answer is given
+> to you. Write out every step that gets there. Working with numbers is fine when that is the method, such as
+> showing f(2) = 0. You must not start from the given answer and work backwards." 2. Check the 'hence show' entry
+> ("Use your previous answer to prove this result — show every step.") and change "prove" to "reach": "Use your
+> previous answer to reach this result — show every step." The 'prove that', 'prove', 'verify that' and 'verify'
+> entries stay as they are. 3. Close factor-theorem-t5-009 in docs/audits/findings/factor-theorem.yml in this PR,
+> with a resolution line citing Jon's ruling. This is the one cloud-lane findings file the home lane edits here;
+> check cloud-remaining: and the open PRs first, and if factor-theorem is claimed or has an open PR, leave the
+> findings file to that PR and say so in the handover. 4. docs/handover/home.md updated.
+> DO NOT TOUCH: every other entry in exam-vocab.js; the tooltip mechanism (wrapExamVocab's re-wrapping bug, t5-008,
+> is in the cloud lane's factor-theorem contract); any game page.
+> SUCCESS CONDITION: the 'show that' tooltip on factor-theorem Q3 shows the new text in Chromium; no other tooltip
+> text changes (diff shows two strings); t5-009 closed (or handed to the cloud PR as above); merged on a green Gate;
+> main green; handover current.
+> STOP IF: exam-vocab.js is loaded by more pages than factor-theorem and any of them uses "show that" for a genuine
+> proof (quote the question and ask Jon); the factor-theorem cloud PR has changed how the tooltip text is read so
+> that this edit does not show.
+
 > TASK (CHANGED-UTF8): Stop scripts/check-changed.py crashing on Windows when its output is redirected.
 > ROOT CAUSE: check-changed.py already runs each check with PYTHONIOENCODING=utf-8 and decodes its output as UTF-8,
 > but it prints the failing check's last 15 lines to its own stdout. On Windows with output redirected to a file,
@@ -120,7 +152,24 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-08 (home): ESSENTIALS-WORDING, "resit" off every public page (branch `claude/essentials-wording`)
+## 2026-10-08 (home): RELIST-3 (branch `claude/relist-3`, worktree E:/jon/mg-r3)
+
+- **Start state, main c8e1b91 (neither game nor its findings file changed by c1fc37a):** verify-expectation-station and verify-truth-buster pass; findings:
+  expectation-station none open, truth-buster t3-014 MEDIUM, t3-015 LOW, t3-016 MEDIUM (stay open, SR-21).
+  Neither is on `cloud-remaining:` (terrible-advice only). On Windows a verifier run redirected to a file crashes on
+  cp1252 (same as CHANGED-UTF8): run with `PYTHONIOENCODING=utf-8`.
+- **Done:** Pythag listed (noindex off, head comment, portal KS3 card with New badge, /essentials/ Geometry, spec map
+  G20 as its own row, sitemap, hub row, NOT_ON_HUB dropped, SUITE, roster KS3 #98, canon §1 and §4.2); ES and TB
+  relisted from their unlisting commits (059b2ec, e419439): portal cards (ES Updated badge, both its cards), sitemap,
+  spec map (ES §3.9 rows), hub rows, NOT_ON_HUB, TB's spec-mapping EXCEPTIONS entry back; roster #59 (GCSE), #17 (KS3).
+  /updates/: Jon's Pythag line under October New; his suggested ES line under October Improved. TB: no badge, no line
+  (its changes since unlisting are SR-18 rewording, corrected figures, the lock, phone fit and a test-only lock-hint
+  declaration: none meets §3.4). todo: listing item closed with Jon's approval recorded; iPhone check a separate
+  open follow-up; §1.55 and §1.75 closed.
+- **Deviation, for Jon:** the /essentials/ card says "One level", not "Choose: Foundation": the game has one level and no
+  picker and reads no `?level=`, so a Choose card fails check-resit-page.py (and would promise a choice that isn't there).
+
+## 2026-10-08 (home): ESSENTIALS-WORDING, "resit" off every public page (#172, merged c1fc37a)
 
 - /updates/ (four lines) and /essentials/ (description, og:description, teacher line, intro) no longer say resit or
   post-16; games.json's /essentials/ description matches. The /updates/ link now goes to /essentials/.
@@ -130,19 +179,6 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
 - Remaining site-wide hits (all exempt): the two rooms' teacher.html notes (teacher surface); given-that (KNOWN); code
   and HTML comments in room.js, schools/assets, games and the /essentials/ head comment (history of /resit/ and the
   script name check-resit-page.py).
-
-## 2026-10-08 (home): LTC flake, like-terms-collector's late-mark self-test (#167, merged)
-
-- **Cause:** the self-test serves a copy whose showFeedback() marks DEFER (300) ms late, then reads the mark "straight off
-  the click" to prove the plant bites, expecting none. That read was a second Playwright call after `page.click`; on a
-  slow runner more than 300 ms passed between the two and the mark had landed, so the self-test failed. (DEFER only
-  equals MaffsLock's 300 ms window by coincidence: the race is the gap between two Playwright calls.)
-- **Fix:** in the deferred plant only, the click and the early read are one page task
-  (`checkBtn.click(); return MARK();`). A timer cannot fire inside one synchronous task, so the early read sees no mark
-  on any runner; the waiting read (`read_mark`) must still see every mark land. Real typing and clicking elsewhere are
-  unchanged.
-- **Proof:** with a 200 ms gap forced after each click (a slow runner, DEFER 50), main's version reads `[False, True]`
-  early and fails; this one reads `[None, None]` and holds. Plain runs: 3/3 pass.
 
 ## 2026-10-08 (home): F1 batch 6 (#165, branch `claude/f1-batch6`, worktree E:/jon/mg-b6)
 
