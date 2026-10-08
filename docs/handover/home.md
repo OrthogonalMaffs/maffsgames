@@ -19,11 +19,10 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 4. **GA4-COUNTRY-CANON: DONE, #179 merged 8 Oct (3c3217c).**
 4a. **VOCAB-SHOWTHAT: DONE, #180 merged 8 Oct (47ee9b9)** (Jon, 8 Oct, sent later: run after GA4-COUNTRY-CANON, before F1 batch 7). The "show
    that" tooltip in `schools/assets/exam-vocab.js`; closes factor-theorem-t5-009 unless the cloud lane holds that game.
-5. **F1 batch 7: DONE, #182 merged 8 Oct (259c143), main green. F1 batch 8: PR #190, branch `claude/f1-batch8`
-   (9 Oct; see its entry).** Was: not started (Jon said "checkpoint" at the batch 7 boundary). Then F1 batch 8, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
-   Core first; read `cloud-remaining:` in `docs/handover/cloud.md` on main before building each batch and drop
-   every game on it).
-6. **CHECKPOINT after batch 8 merges with main green:** update this file and stop. Do not start batch 9 in that session.
+5. **F1 batch 7: DONE, #182 merged 8 Oct (259c143). F1 batch 8: DONE, #190 merged 9 Oct (d7aa0de), main green**
+   (see its entry).
+6. **CHECKPOINT: reached 9 Oct.** Batch 8 merged, main green; this session stopped here. Next session: ask Jon for the
+   queue, or run F1 batch 9 under the standing item (candidates in the batch 8 entry).
 7. **DOCS-SMALL: DONE, #188 merged 9 Oct (883a638), main green.** Its verbatim text is in the archive.
 - **CHECKPOINT STOP (Jon, 8 Oct, late):** batch 7 merged, main green; this session stopped at that boundary.
 - **MAIN-RED: DONE, #184 merged 8 Oct (f1a097d), main green** (see its entry).
@@ -56,7 +55,8 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   - graph-transformer: after a match the moves were locked by a CSS class only, so moving away and back re-matched and
     scored the puzzle again; Skip after a match marked it wrong as well; a double-click on Skip skipped two puzzles.
     Now a match or Skip locks the moves; **Skip is the puzzle's wrong answer and now names the target transformation
-    and waits on Next** (canon 7.6), where it used to move straight on. For Jon: say if Skip should stay instant.
+    and waits on Next** (canon 7.6), where it used to move straight on. **Jon's ruling (9 Oct): keep it, "the learning
+    needs to be shown not skipped".**
   - tax-theft (retry-until-right kept): a double Enter on a right amount marked it twice **and skipped the next step**
     (two 800 ms timers both advanced; shown on main: step index 2 after one answer). Each readable attempt now locks;
     a wrong one reopens the step after the fresh window.
