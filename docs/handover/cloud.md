@@ -54,6 +54,9 @@ main's last full run is red; watch main's run after merging.
   rests on the student reading p = 0.1 from P(X = 0) = 0.6561. Without it the two missing tiles swap.
 - **Phone:** the context is `.context-text` (textContent, no clamp); every one of the 120 measured unclipped at 390x844.
 - **Register:** pc-001 fixed; no other entry open. **Ready to relist (SR-21, home lane): no CRITICAL or HIGH open.**
+- **Ledger:** 40/40/40 made the three B4 (bank size) entries stale, which failed Tier 4 on the first CI run.
+  `extract-banks.py --only <slug>` then `check-banks.py --only <slug> --write-ledger` cleared them (no other rule
+  fired on the 75 new items). **Any bank change: run both before the first push** (`check-changed.py` does not run Tier 4).
 - **Next:** Jon's listed-games contract (8 Oct): trig-wars first, then gradient-hunter.
 
 ## 2026-10-08 (cloud): truth-buster (queue 6 of 6, the last); the remaining list is empty
