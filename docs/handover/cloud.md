@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: probability-paradox`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -57,8 +57,21 @@ main's last full run is red; watch main's run after merging.
 - **Jon's queue after probability-paradox (8 Oct, two contracts):** screening-room (t4-005 HIGH, 006, 008, 013, 016;
   leave t4-014, 015), then factor-theorem (t5-004, 005 HIGH, 008, 018; leave t5-009, 013-017). Both verbatim in the
   session; each claimed first; relisting is the home lane's.
-- **Next:** probability-paradox. Its two non-jc HIGHs (t1-001 the £20 envelope, t1-002 the bus wait) are SR-16 cases
-  where the fix is a wording or key choice; t1-003, t1-004 are jc.
+- **word-problem-decoder #174 merged** 15:29 UTC; main's full run on 7eaff03 green. Jon's three ruling games done.
+- **probability-paradox (claim #175; fix #177; listed-games contract 6 of 23).** SR-18 applied: the
+  envelope keyed "Cannot determine — it depends on how the amounts were chosen" (t1-001); the bus states random
+  (Poisson) arrivals, no timetable (t1-002); Sleeping Beauty accepts 1/3 and 1/2 through an `accept` list and
+  `accepted(q)` (t1-003); Two-Child and Tuesday are asked questions with equally likely outcomes (t1-006); Monty's host
+  rule and the 95% test's two rates stated (t1-009, re-audit). Simulations (t1-005): Beauty counts wakings (a trial may
+  return several outcomes); the bus waits for the next bus of a Poisson stream. Fisher two-sided p 0.58 (t1-007).
+  MaffsLock, MaffsNext on a wrong answer, hint (starts Paradox Predictor); t1-010 CRITICAL (score again on the revealed
+  key) and t1-011 (mode on every event) filed and fixed. **t1-004 (HIGH, jc: "the test was easier") left open for
+  Jon.** Verifier `scripts/verify-probability-paradox.py` (group E, ~1 min; ~8 min with the self-test, 8 plants).
+- **Gotcha (again):** editing an item's text changes its content id, so a ledger entry on it (here B6's "wait"
+  false positive on the bus item) goes stale and Tier 4 fails; `check-changed.py` does not run Tier 4. After any bank
+  edit: `extract-banks.py --only <slug>` then `check-banks.py --only <slug> --write-ledger`.
+- **Next:** screening-room (Jon's contract + his t4-015 ruling), then factor-theorem (contract + t5-013/014/015
+  rulings). factor-theorem's level4 board may need the hub registry (check-leaderboard-coverage.js): a STOP IF.
 
 ## 2026-10-08 (cloud, afternoon): CHECKPOINT STOP (Jon's queue done): listed-games contract at 5 of 23; nothing claimed
 
