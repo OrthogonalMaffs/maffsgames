@@ -122,6 +122,10 @@ MARK_JS = """() => { window.MARK = () => {
 # game's own marking to land, as the 6 Oct fix did for the analytics event. The self-test serves a copy whose
 # showFeedback() marks DEFER ms late: the waiting read must still see every mark, and a read straight off the
 # click must see none (proof the plant exercises the early read).
+# The early read is made in the same page task as the click (8 Oct 2026): a timer cannot fire inside one
+# synchronous task, so it sees no mark on any runner. As a separate Playwright call after page.click it raced the
+# DEFER timer, and a slow runner let the mark land first (main went red once on this self-test; contract DET's rule:
+# a verdict never depends on timing).
 DEFER = 300
 SHOW_FEEDBACK = 'function showFeedback(correct,detail){'
 DEFERRED = ('function showFeedback(correct,detail){setTimeout(function(){_showFeedbackNow(correct,detail)},%d)}'
@@ -183,9 +187,11 @@ def play(fails, against=None, planted=False, deferred=None):
                     bank = page.evaluate('() => ({STAGE1, STAGE2, STAGE3})')
                 page.fill('#ans0', typed[0])
                 page.fill('#ans1', typed[1])
-                page.click('#checkBtn')
                 if deferred is not None:
-                    deferred.append(page.evaluate('() => MARK()'))
+                    # Click and read in one task: the deferred mark cannot have landed yet, however slow the runner.
+                    deferred.append(page.evaluate("() => { document.getElementById('checkBtn').click(); return MARK(); }"))
+                else:
+                    page.click('#checkBtn')
                 got = read_mark(page)
                 fb = page.evaluate("() => document.getElementById('feedbackDetail').textContent")
                 if got is not want:
