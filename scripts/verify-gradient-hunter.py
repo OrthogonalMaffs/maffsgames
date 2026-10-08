@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; answer once and Next once, played in Chromium) |
+# ci-line: E | Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; the typed gradient marked, clicking scores nothing; answer once and Next once, played in Chromium) |
 """Gradient Hunter: every gradient a student is shown or told, against the points the game plots; answer once.
 
 The game draws each item's points as a cardinal spline (drawSmoothCurve, tension 0.3) and asks either for the gradient
@@ -19,8 +19,12 @@ of the chord between two plotted points (Calculate: the student clicks A then B)
     pick on a Reading and a Calculate item, the revealed correct option clicked and pressed with Enter changes
     nothing (gradient-hunter-t2-001: it re-scored, without limit, onto the leaderboard), and Next double-clicked
     moves on once.
-A self-test plants two of the audit's faults back into a copy of the page (t2-001: no lock on the options; t2-002:
-gh_alevel_009's "steeper gradient of 150"); each must FAIL naming its entry.
+  Typed gradient (gradient-hunter-t2-003; Jon's ruling, 8 Oct 2026, option A), every Calculate item: clicking the two
+    points scores nothing; the prompt asks for 2 decimal places exactly when the gradient recurs (a terminating one,
+    such as -0.1125, is asked at its own places); an unrounded answer is explained and never marked; a right typed
+    gradient scores 1, a wrong one 0, marked once; the working shows rise / run with the answer.
+A self-test plants three faults back into a copy of the page (t2-001: no lock on the options; t2-003: a point for
+clicking the points; t2-002: gh_alevel_009's "steeper gradient of 150"); each must FAIL naming its entry.
 
     python scripts/verify-gradient-hunter.py [--no-selftest] [--against FILE]
 """
@@ -133,6 +137,9 @@ INIT = r"""(() => {
 PICK = """(want) => { const q = G.questions[G.qIdx];
   if (q.type === 'calculate' && (G.phase === 'clickA' || G.phase === 'clickB')) {
     G.phase = 'interpret'; stopPulse(); disableCanvas(); onBothPointsClicked(q); }
+  const box = document.getElementById('gradInput');
+  if (box && !document.getElementById('gradWorking').textContent) {
+    box.value = chordGradient(q).text; document.getElementById('gradCheck').click(); }
   const b = [...document.querySelectorAll('#optionsGrid .opt-btn')].find(b => q.interpretations.find(o => o.text === b.textContent).correct === want);
   b.click(); return b.textContent; }"""
 
@@ -208,6 +215,7 @@ def play(fails, html):
                             fails.append('%s: a double click on Next moved %d questions (once)' % (item['id'], q))
                     else:
                         fails.append('%s: no Next after a wrong answer' % item['id'])
+            check_typed(fails, page, bank)
             errs = [e for e in errors if 'firebase' not in e.lower() and 'katex' not in e.lower()]
             if errs:
                 fails.append('page errors: %s' % '; '.join(errs[:3]))
@@ -218,8 +226,74 @@ def play(fails, html):
         proc.wait()
 
 
+POINTS = """() => { const q = G.questions[G.qIdx]; G.phase = 'interpret'; stopPulse(); disableCanvas(); onBothPointsClicked(q); }"""
+
+
+def key_text(v, exact_dp):
+    """The gradient at the places asked: its own when it terminates, else 2, half up on the magnitude."""
+    p = 10 ** exact_dp
+    r = (abs(v) * p * 2 + 1) // 2
+    return ('-' if v < 0 and r else '') + ('%d.%0*d' % (r // p, exact_dp, r % p) if exact_dp else '%d' % r)
+
+
+def asked(v):
+    """(exact?, places) for a gradient: a terminating decimal is asked at its own places, a recurring one at 2."""
+    d, two, five = v.denominator, 0, 0
+    while d % 2 == 0:
+        d //= 2; two += 1
+    while d % 5 == 0:
+        d //= 5; five += 1
+    return (d == 1, max(two, five) if d == 1 else 2)
+
+
+def check_typed(fails, page, bank):
+    """gradient-hunter-t2-003 (Jon, 8 Oct 2026, option A): clicking the points scores nothing; the typed gradient
+    scores, marked against the chord through the clicked points; an unrounded answer is never marked; the working shows."""
+    tag = 'gradient-hunter-t2-003'
+    for lv in COUNTS:
+        calc = [q for q in bank[lv] if q['type'] == 'calculate']
+        for n, q in enumerate(calc):
+            other = next(x['id'] for x in bank[lv] if x['id'] != q['id'])
+            a, b = q['pointA'], q['pointB']
+            v = (F(str(b['y'])) - F(str(a['y']))) / (F(str(b['x'])) - F(str(a['x'])))
+            exact, dp = asked(v)
+            key = key_text(v, dp)
+            start(page, lv, [q['id'], other])
+            page.evaluate(POINTS)
+            s0 = page.evaluate('() => G.score')
+            if not page.evaluate("() => !!document.getElementById('gradInput')"):
+                fails.append('%s %s: no gradient to type: the game works it out and shows it once the points are clicked '
+                             '(scored %d for the clicks)' % (tag, q['id'], s0))
+                continue
+            if s0 != 0:
+                fails.append('%s %s: clicking the two points scored %d (the gradient is the student\'s to type)' % (tag, q['id'], s0))
+            prompt = page.evaluate("() => document.querySelector('#calcFeedback .instruction').textContent")
+            if ('2 decimal places' in prompt) == exact:
+                fails.append('%s %s: the gradient is %s; the prompt %s "2 decimal places": %r'
+                             % (tag, q['id'], v, 'says' if exact else 'does not say', prompt))
+            if not exact:               # an unrounded answer is never marked, and the box stays open
+                page.evaluate("(t) => { document.getElementById('gradInput').value = t; document.getElementById('gradCheck').click(); }",
+                              '%.6f' % float(v))
+                st = page.evaluate("() => [G.score, document.getElementById('gradMsg').textContent, document.getElementById('gradWorking').textContent]")
+                if st[0] != 0 or not st[1] or st[2]:
+                    fails.append('%s %s: an unrounded %.6f was %s' % (tag, q['id'], float(v), 'marked' if st[2] else 'not explained'))
+            right = n % 2 == 0          # half the items typed right, half wrong (key + 1)
+            typed = key if right else key_text(v + 1, dp)
+            page.evaluate("(t) => { document.getElementById('gradInput').value = t; document.getElementById('gradCheck').click(); "
+                          "document.getElementById('gradCheck').click(); }", typed)
+            st = page.evaluate("() => [G.score, document.getElementById('gradWorking').textContent]")
+            if st[0] != (1 if right else 0):
+                fails.append('%s %s: typed %s (the gradient is %s): scored %d, expected %d'
+                             % (tag, q['id'], typed, key, st[0], 1 if right else 0))
+            if '\u00f7' not in st[1] or key not in st[1]:
+                fails.append('%s %s: the working after the answer does not show rise \u00f7 run = %s: %r' % (tag, q['id'], key, st[1]))
+
+
 PLANTS = [
     ('gradient-hunter-t2-001', 't2-001: no lock on the options', '      if (!MaffsLock.lock(grid)) return;\n', ''),
+    ('gradient-hunter-t2-003', 't2-003: a point for clicking the points',
+     '  G.maxScore += 2;   // one for the gradient the student types, one for the interpretation\n',
+     '  G.maxScore += 2; G.score += 1;\n'),
     ('gradient-hunter-t2-002', 't2-002: "a steeper gradient of 150"',
      'The tangent at t=3 has a gradient of 110, a little less steep than the chord.',
      'The tangent at t=3 has a steeper gradient of 150.'),

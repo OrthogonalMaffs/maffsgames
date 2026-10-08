@@ -46,6 +46,11 @@ findings:
   summary: A Calculate item scores 1 point for the gradient whatever the student does; the game computes and shows it
     once the two points are clicked, and the student never calculates it
   evidence: 'Found by the cloud lane while fixing t2-001 (8 Oct 2026): onBothPointsClicked adds G.score += 1 for "gradient
-    was correct (they clicked both points)", and clicking the two marked points is the only input. Left open: changing
-    it changes the scoring rules (Jon decides).'
-  status: open
+    was correct (they clicked both points)", and clicking the two marked points is the only input. Jon''s ruling (8
+    Oct 2026, option A), fixed: after the two points the student types the gradient (MaffsAnswer.fractionOrDecimal
+    against the chord through the points clicked; 2 decimal places asked only where it recurs, a terminating one at
+    its own places); that answer earns the point, clicking scores nothing; the working (rise / run) follows. The
+    interpretation step is unchanged. The verifier types right and wrong gradients on all 27 Calculate items and
+    plants the old point-on-click.'
+  status: fixed
+  pr: PRNUM

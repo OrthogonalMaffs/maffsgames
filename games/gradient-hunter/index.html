@@ -83,6 +83,10 @@ a.back-link:hover{color:var(--text)}
 .click-status .pt{padding:.25rem .6rem;border-radius:6px;background:var(--surface2);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.75rem}
 .click-status .pt.done{border-color:var(--correct);color:var(--correct)}
 
+.grad-row{display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;margin:.6rem 0}
+.grad-row input{width:7.5rem;padding:.45rem .6rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:1rem;text-align:center}
+.grad-row .check-btn{padding:.5rem 1.2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer}
+.grad-msg{text-align:center;font-size:.82rem;min-height:1.1em}
 .next-btn{display:block;margin:.6rem auto 0;padding:.5rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer}
 .next-btn:hover{transform:scale(1.03)}
 
@@ -124,6 +128,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. A Calculate item first takes its two points (as clicking A then B does), then every item picks an interpretation: i = 0 the keyed one, i >= 1 the first one that is not.
 {
@@ -132,6 +137,8 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     "const q = G.questions[G.qIdx]; if (!q) return;",
     "if (q.type === 'calculate' && (G.phase === 'clickA' || G.phase === 'clickB')) { G.phase = 'interpret'; stopPulse(); disableCanvas(); onBothPointsClicked(q); }",
     "const want = i === 0;",
+    "const box = document.getElementById('gradInput');",
+    "if (box && !document.getElementById('gradWorking').textContent) { const k = chordGradient(q); box.value = want ? k.text : String(Number(k.text) + 1000); document.getElementById('gradCheck').click(); }",
     "const b = [...document.querySelectorAll('#optionsGrid .opt-btn')].find(b => q.interpretations.find(o => o.text === b.textContent).correct === want);",
     "if (b) b.click();"
   ]
@@ -1014,33 +1021,83 @@ function disableCanvas() {
   c.onclick = null; c.ontouchstart = null;
 }
 
+// The gradient of the chord between the two points the student clicked (a click counts only within 20px of A,
+// then of B, so these are the points they clicked), as an exact fraction rise/run, and the places it is asked to:
+// its own when it terminates (-9/80 is -0.1125), 2 when it recurs (32/3), stated in the prompt (Jon, 8 Oct 2026).
+function chordGradient(q) {
+  function frac(v) { const t = String(v), i = t.indexOf('.'); const d = i < 0 ? 0 : t.length - i - 1;
+                     return [Math.round(v * Math.pow(10, d)), Math.pow(10, d)]; }
+  function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { const t = a % b; a = b; b = t; } return a || 1; }
+  const [ay, ady] = frac(q.pointA.y), [by, bdy] = frac(q.pointB.y), [ax, adx] = frac(q.pointA.x), [bx, bdx] = frac(q.pointB.x);
+  const sy = Math.max(ady, bdy), sx = Math.max(adx, bdx);
+  let num = (by * sy / bdy - ay * sy / ady) * sx, den = (bx * sx / bdx - ax * sx / adx) * sy;
+  if (den < 0) { num = -num; den = -den; }
+  const g = gcd(num, den); num /= g; den /= g;
+  let d = den, two = 0, five = 0;
+  while (d % 2 === 0) { d /= 2; two++; }
+  while (d % 5 === 0) { d /= 5; five++; }
+  const exact = d === 1, dp = exact ? Math.max(two, five) : 2;
+  // the value at dp places, rounded half up on the magnitude exactly as MaffsAnswer marks it
+  const p = Math.pow(10, dp), n = Math.abs(num) * p, r = Math.floor((2 * n + den) / (2 * den));
+  const text = (num < 0 && r ? '-' : '') + (r / p).toFixed(dp);
+  return { num, den, dp, exact, text };
+}
+
 function onBothPointsClicked(q) {
-  // Calculate gradient
-  const grad = (q.pointB.y - q.pointA.y) / (q.pointB.x - q.pointA.x);
-  G.maxScore += 2;
+  G.maxScore += 2;   // one for the gradient the student types, one for the interpretation
 
   // Redraw with chord
   drawGraph(q, { showChord: true });
 
-  const gradDisplay = Math.abs(grad - Math.round(grad)) < 0.001 ? Math.round(grad) : parseFloat(grad.toFixed(2));
+  // Clicking the points scores nothing: the student works out the gradient and types it (gradient-hunter-t2-003,
+  // Jon's ruling of 8 Oct 2026, option A), marked by MaffsAnswer against the chord through the points they clicked.
+  const k = chordGradient(q);
+  const A = q.pointA, B = q.pointB;
   $('calcFeedback').innerHTML = `
-    <div class="gradient-display">Gradient = (${fmtN(q.pointB.y)} - ${fmtN(q.pointA.y)}) / (${fmtN(q.pointB.x)} - ${fmtN(q.pointA.x)}) = ${gradDisplay}</div>
-    <div class="instruction">What does this gradient mean in context?</div>
-    <div class="options-grid" id="optionsGrid"></div>
-    <div id="interpFeedback"></div>`;
+    <div class="instruction">Work out the gradient of the chord from ${A.label} (${fmtN(A.x)}, ${fmtN(A.y)}) to ${B.label} (${fmtN(B.x)}, ${fmtN(B.y)})${k.exact ? '.' : '. Give your answer to 2 decimal places.'}</div>
+    <div class="grad-row" id="gradRow"><label for="gradInput">Gradient =</label>
+      <input id="gradInput" type="text" inputmode="text" autocomplete="off" aria-label="Gradient">
+      <button class="check-btn" id="gradCheck">Check</button></div>
+    <div class="grad-msg" id="gradMsg"></div>
+    <div id="gradWorking"></div>
+    <div id="interpArea"></div>`;
+  // A text keyboard on phones, not the decimal pad: many gradients are negative and iOS's decimal pad has no minus.
+  // (The shared phone keypad, MaffsKeypad, is styled by theme.css, which this game has not migrated to yet: todo 3.21.)
+  const box = $('gradInput');
 
-  renderInterpretations(q, 'interpFeedback', function(correct) {
-    G.total++;
-    // Calculate type: 2pts for gradient + interpretation, 1pt for gradient only
-    if (correct) { G.correct++; G.score += 2; }
-    else { G.score += 1; } // gradient was correct (they clicked both points)
+  function check() {
+    const raw = box.value;
+    const res = MaffsAnswer.fractionOrDecimal(raw, k.num, k.den, k.dp);
+    if (res === 'format' || res === 'unreadable') {   // never marked: say why and let the student type again
+      $('gradMsg').textContent = MaffsAnswer.message(res, raw, { dp: k.dp, fraction: true });
+      return;
+    }
+    if (!MaffsLock.lock($('gradRow'))) return;   // the gradient is marked once
+    const right = res === 'correct';
+    if (right) G.score += 1;
     $('hudScore').textContent = `${G.score}/${G.maxScore}`;
-    mfg('question_answered', {
-      game_slug: 'gradient-hunter', level: G.level,
-      question_index: G.qIdx + 1, correct: correct, mode: 'calculate'
+    $('gradMsg').textContent = '';
+    // The working, with the student's own two points: rise divided by run
+    $('gradWorking').innerHTML = `
+      <div class="feedback ${right ? 'correct' : 'wrong'}">${right ? '\u2713 Correct.' : '\u2717 Not quite.'}</div>
+      <div class="gradient-display">Gradient = (${fmtN(B.y)} \u2212 ${fmtN(A.y)}) \u00f7 (${fmtN(B.x)} \u2212 ${fmtN(A.x)}) = ${fmtN(B.y - A.y)} \u00f7 ${fmtN(B.x - A.x)} = ${k.exact ? '' : '\u2248 '}${k.text}</div>`;
+    $('interpArea').innerHTML = `
+      <div class="instruction">What does this gradient mean in context?</div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div id="interpFeedback"></div>`;
+    renderInterpretations(q, 'interpFeedback', function(correct) {
+      G.total++;
+      if (correct) { G.correct++; G.score += 1; }
+      $('hudScore').textContent = `${G.score}/${G.maxScore}`;
+      mfg('question_answered', {
+        game_slug: 'gradient-hunter', level: G.level,
+        question_index: G.qIdx + 1, correct: correct, mode: 'calculate'
+      });
+      showNextBtn(correct);
     });
-    showNextBtn(correct);
-  });
+  }
+  $('gradCheck').onclick = check;
+  box.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); check(); } });
 }
 
 // ============================================================

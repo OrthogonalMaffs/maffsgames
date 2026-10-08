@@ -42,12 +42,19 @@ main's last full run is red; watch main's run after merging.
 - **t2-002:** the three stated tangents are the DRAWN curve's: a cardinal spline's slope at a plotted point is its
   neighbours' gradient, whatever the tension: 4.5 (was 5), 110 (was "a steeper gradient of 150"; the audit's 98.0 is
   the ideal exponential, not what is drawn, and 110 is LESS steep than the 116.7 chord) and 3.25 (was 4).
-- **Filed, open: t2-003** (MEDIUM, jc): a Calculate item scores a point for the gradient whatever the student does
-  (the game computes it after the two point clicks). Changing it changes the scoring rules: Jon decides.
+- **t2-003, filed and fixed (Jon's ruling, 8 Oct, option A):** a Calculate item scored a point for the gradient
+  whatever the student did (the game showed it once the two points were clicked). Now the student types it after
+  the two points: `MaffsAnswer.fractionOrDecimal` against the chord through the points clicked (`chordGradient`:
+  exact rise/run; "to 2 decimal places" only when it recurs, so -9/80 is asked as -0.1125); that earns the point,
+  clicking scores nothing, the working (rise / run) follows, the interpretation is unchanged. One question_answered
+  per item, as before (the interpretation's). A text keyboard on phones (`inputmode="text"`: iOS's decimal pad has
+  no minus): the shared MaffsKeypad is styled by theme.css, which this game has not migrated to, so it joins the
+  todo 3.21 list (home lane: the keypad comes with its theme migration).
 - **Verifier** `scripts/verify-gradient-hunter.py` (group E, ~9 s): chords from their points, stated tangents from the
   spline, one true interpretation (an "instantaneous/marginal ... is V" option is keyed right exactly when V is the
-  tangent; a plain "is V" claims V to the hundredth, "about V" at V's places), every item played, answer once and
-  Next once. Main's page fails t2-001 on six items and t2-002 on four claims; two plants caught.
+  tangent; a plain "is V" claims V to the hundredth, "about V" at V's places), every item played, the typed gradient
+  on all 27 Calculate items, answer once and Next once (~15 s). Main's page fails t2-001 on six items, t2-002 on four
+  claims and t2-003 on all 27; three plants caught.
   **Gotchas:** read numbers with thousands separators; a fall's interpretation gives its size; MaffsNext takes focus,
   so an Enter after a wrong pick advances (test the option with clicks, not the keyboard).
 - **For the home lane:** gradient-hunter passes the lock check: add it to MIGRATED.
