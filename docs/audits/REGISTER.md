@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-558 findings in 79 games.
+559 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 4 | 21 | 0 | 25 |
 | HIGH | 55 | 151 | 0 | 206 |
-| MEDIUM | 164 | 104 | 0 | 268 |
+| MEDIUM | 164 | 105 | 0 | 269 |
 | LOW | 34 | 25 | 0 | 59 |
-| **All** | 257 | 301 | 0 | 558 |
+| **All** | 257 | 302 | 0 | 559 |
 
 ### By class
 
@@ -34,7 +34,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 34 | 104 |
 | 3 | 10 | 85 |
 | 6 | 31 | 56 |
-| 1 | 18 | 36 |
+| 1 | 17 | 36 |
 | NEW:wrong-explanation-text | 18 | 34 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
@@ -55,6 +55,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 3 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
+| NEW:phone-fold | 3 | 3 |
 | NEW:sr14-content | 2 | 3 |
 | NEW:wrong explanation | 1 | 3 |
 | uncounted | 2 | 3 |
@@ -63,7 +64,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:double-finish | 0 | 2 |
 | NEW:hidden-data | 1 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
-| NEW:phone-fold | 2 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:timer-policy | 1 | 2 |
 | NEW:unmarkable free text | 2 | 2 |
@@ -194,7 +194,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `trig-identity-duel` | yes | verify-trig-identity-duel.py | 0 | 7 | 4 | 0 | 0 | 11 | 0 |
 | `trig-wars` | yes | none | 1 | 1 | 4 | 0 | 6 | 0 | 0 |
 | `trig-worms` | yes | verify-trig-worms.py | 1 | 0 | 3 | 0 | 0 | 4 | 0 |
-| `truth-buster` | unlisted | verify-truth-buster.py | 0 | 3 | 11 | 1 | 3 | 12 | 0 |
+| `truth-buster` | unlisted | verify-truth-buster.py | 0 | 3 | 12 | 1 | 3 | 13 | 0 |
 | `truth-will-set-you-free` | yes | verify-truth-will-set-you-free.py | 1 | 1 | 2 | 2 | 1 | 5 | 0 |
 | `unit-converter` | yes | none | 0 | 1 | 6 | 1 | 8 | 0 | 0 |
 | `word-problem-decoder` | yes | none | 0 | 5 | 4 | 0 | 9 | 0 | 0 |
