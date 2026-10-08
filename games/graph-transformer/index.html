@@ -109,6 +109,14 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. A match marks right, Skip marks wrong: the check skips.
+{
+  "ready": "document.getElementById('game').classList.contains('active') && !document.getElementById('successMsg').classList.contains('show')",
+  "answer": "document.querySelector('.ctrl-skip').click();"
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -148,6 +156,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
       <div class="legend"><span><span class="dot" style="background:var(--current)"></span>Your curve</span><span><span class="dot" style="background:var(--target)"></span>Target</span></div>
     </div>
     <div class="step-caption" id="stepCaption"></div>
+    <div id="playArea" style="display:contents">
     <div class="transforms" id="transforms"></div>
     <div class="controls">
       <button class="ctrl-btn ctrl-undo" onclick="undoMove()">↩ Undo</button>
@@ -155,10 +164,12 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
       <button class="ctrl-btn ctrl-steps" id="stepsBtn" onclick="stepThrough()">◆ Show steps</button>
       <button class="ctrl-btn ctrl-skip" onclick="skipPuzzle()">Skip →</button>
     </div>
+    </div>
     <div class="success-msg" id="successMsg">
       <h3 id="successTitle">Matched!</h3>
       <p id="successText"></p>
-      <button class="next-btn" onclick="nextPuzzle()">Next Puzzle →</button>
+      <button class="next-btn" id="matchNext" onclick="nextFromMatch()">Next Puzzle →</button>
+      <div id="skipNext"></div>
     </div>
   </div>
 
@@ -668,6 +679,7 @@ window.GT_VERIFY={bfsCheck:gtBfsCheck,curveDupPairs:gtCurveKeyPairs,
 let moveCount=0;
 
 function startGame(){
+  MaffsLock.newSession();
   puzzles=shuffle(generatePuzzles()).slice(0,12);
   pIdx=0;score=0;totalMoves=0;totalPar=0;solved=0;
   document.getElementById('score').textContent='0';
@@ -689,6 +701,7 @@ function loadPuzzle(){
   document.getElementById('successMsg').className='success-msg';
   qStart=Date.now();updateTimer();
   updateDisplay();
+  MaffsLock.fresh(document.getElementById('playArea'));   // a new puzzle: a double-click on Next cannot make a move or skip
 }
 
 function updateDisplay(){
@@ -707,7 +720,8 @@ function checkMatch(){
   const t=currentPuzzle.target;
   const base=BASES[currentPuzzle.base];
   if(curvesMatch(base.fn,state,t)){
-    // Matched!
+    // Matched! One mark per puzzle (canon 7.6.0): the moves and Skip are locked until the next one.
+    if(!MaffsLock.lock(document.getElementById('playArea')))return;
     const par=currentPuzzle.par;
     let pts=100;
     if(moveCount<=par)pts=150;
@@ -725,6 +739,7 @@ function checkMatch(){
     else if(moveCount===par+1)rating='One over par. Close!';
     else rating=moveCount+' moves (par was '+par+').';
 
+    document.getElementById('matchNext').style.display='';
     document.getElementById('successTitle').textContent='✓ Matched!';
     document.getElementById('successText').innerHTML=rating+'<br>'+currentPuzzle.desc+'<br>+'+pts+' points';
     document.getElementById('successMsg').className='success-msg show';
@@ -748,19 +763,35 @@ function resetPuzzle(){
   updateDisplay();
 }
 
+// A skip is the puzzle's wrong answer (canon 7.6): it names the transformation and waits on Next.
 function skipPuzzle(){
+  if(!MaffsLock.lock(document.getElementById('playArea')))return;
   mfg('question_answered',{game_slug:'graph-transformer',level:level,correct:false,question_index:pIdx+1});
+  document.querySelectorAll('.t-btn').forEach(b=>b.classList.add('disabled'));
+  document.getElementById('successTitle').textContent='Skipped';
+  document.getElementById('successText').textContent='The target was: '+currentPuzzle.desc+'.';
+  document.getElementById('matchNext').style.display='none';
+  document.getElementById('successMsg').className='success-msg show';
+  MaffsNext.wrong({mount:document.getElementById('skipNext'),label:'Next Puzzle →',onAdvance:nextPuzzle});
+}
+
+// The match panel's own Next: once per puzzle (a second click of a double-click finds the panel gone).
+function nextFromMatch(){
+  if(!document.getElementById('successMsg').classList.contains('show'))return;
   nextPuzzle();
 }
 
 function nextPuzzle(){
+  if(window.MaffsNext)MaffsNext.clear(document.getElementById('skipNext'));
   pIdx++;
   if(pIdx>=puzzles.length){endGame();return}
   document.querySelectorAll('.t-btn').forEach(b=>b.classList.remove('disabled'));
   loadPuzzle();
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame(){finishGame()}
+const finishGame=MaffsLock.finishOnce(function(){
   const pct=puzzles.length>0?Math.round(solved/puzzles.length*100):0;
   let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
   document.getElementById('resultTitle').textContent=t;
@@ -773,7 +804,7 @@ function endGame(){
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('graph-transformer',level,score,puzzles.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('graph-transformer',level,score);}}
   var _pbKey='gt_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'graph-transformer',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}
   show('results');
-}
+});
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 

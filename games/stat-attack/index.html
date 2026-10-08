@@ -157,6 +157,36 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. A scenario is marked when its last step is done (right only with no slips): i >= 1 gives one wrong modal class, then every key; i = 0 every key.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && !!document.querySelector('#qArea .check-btn, #qArea .mcq-btn')",
+  "answer": [
+    "const q = G.questions[G.qIdx], area = document.getElementById('qArea'), n0 = G.qIdx;",
+    "let slip = i >= 1;",
+    "const set = (id, v) => { const e = document.getElementById(id); if (e) e.value = v; };",
+    "const fill = () => {",
+    " if (G.currentQ === 0) set('modalInput', slip ? '0 to 1' : q.modalClass);",
+    " else if (G.currentQ === 1) set('medianInput', q.medianClass);",
+    " else if (G.currentQ === 2) set('meanInput', q.mean);",
+    " else if (G.sdStep === 0) q.midpoints.forEach((v, k) => set('mp' + k, v));",
+    " else if (G.sdStep === 1) q.fx.forEach((v, k) => set('fx' + k, v));",
+    " else if (G.sdStep === 2) q.x2.forEach((v, k) => set('x2_' + k, v));",
+    " else if (G.sdStep === 3) q.fx2.forEach((v, k) => set('fx2_' + k, v));",
+    " else if (G.sdStep === 4) set('varInput', q.variance);",
+    " else if (G.sdStep === 5) set('sdInput', q.sd);",
+    " slip = false; };",
+    "return new Promise(res => { const t0 = Date.now(); let last = null; (function w() {",
+    " if (G.qIdx !== n0 || area.querySelector('.next-btn') || Date.now() - t0 > 15000) { res(); return; }",
+    " const b = area.querySelector('.check-btn, .mcq-btn');",
+    " if (b && b !== last && !MaffsLock.isFresh(area) && !MaffsLock.isLocked(area)) {",
+    "  if (b.classList.contains('mcq-btn')) { const k = q._interpShuffle.findIndex(o => o.correct); document.getElementById('interp' + k).click(); last = b; }",
+    "  else { const wrong = slip; fill(); b.click(); if (!wrong) last = b; } }",
+    " requestAnimationFrame(w); })(); });"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -228,7 +258,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </div>
 
 <script>
-function _addDismiss(fb,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
+function _addDismiss(fb,cb){MaffsLock.timer(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
 // ============================================================
 //  QUESTION BANK — 36 scenarios
 // ============================================================
@@ -788,6 +818,7 @@ function parseURL(){
 // ============================================================
 function startGame(){
   if(!G.level) return;
+  MaffsLock.newSession();
   const pool=[...SCENARIOS[G.level]];
   // Shuffle
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
@@ -887,6 +918,7 @@ function renderQuestion(q){
   else if(G.currentQ===1) renderMedianQ(q,area);
   else if(G.currentQ===2) renderMeanQ(q,area);
   else if(G.currentQ===3) renderSDQ(q,area);
+  MaffsLock.fresh(area);
 }
 
 // Q1: Modal class
@@ -905,14 +937,16 @@ function checkModal(){
   const val=$('modalInput').value.trim();
   if(!val) return;
   const correct=parseInterval(val)===parseInterval(q.modalClass);
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('modalFb');
   if(correct){
     fb.innerHTML='<div class="feedback correct">Correct! The modal class has the highest frequency.</div>';
-    setTimeout(()=>{G.currentQ=1;renderQuestion(q);},1000);
+    MaffsLock.timer(()=>{G.currentQ=1;renderQuestion(q);},1000);
   } else {
     G.penalties++;G.qPenalties++;
     fb.innerHTML='<div class="feedback wrong">Incorrect. Look for the class interval with the highest frequency.</div>';
     _addDismiss(fb,()=>{fb.innerHTML='';});
+    MaffsLock.fresh($('qArea'));   // another try, after the fresh window: a double-click cannot cost two slips
   }
 }
 
@@ -933,16 +967,18 @@ function checkMedian(){
   const val=$('medianInput').value.trim();
   if(!val) return;
   const correct=parseInterval(val)===parseInterval(q.medianClass);
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('medianFb');
   if(correct){
     fb.innerHTML='<div class="feedback correct">Correct!</div>';
-    setTimeout(()=>{G.currentQ=2;renderQuestion(q);},1000);
+    MaffsLock.timer(()=>{G.currentQ=2;renderQuestion(q);},1000);
   } else {
     G.penalties++;G.qPenalties++;
     const n=q.freqs.reduce((a,b)=>a+b,0);
     const medPos=n/2;
     fb.innerHTML=`<div class="feedback wrong">Incorrect. The median is the ${medPos}th value. Count through cumulative frequencies to find which class it falls in.</div>`;
     _addDismiss(fb,()=>{fb.innerHTML='';});
+    MaffsLock.fresh($('qArea'));   // another try, after the fresh window: a double-click cannot cost two slips
   }
 }
 
@@ -963,14 +999,16 @@ function checkMean(){
   const val=parseFloat($('meanInput').value);
   if(isNaN(val)) return;
   const correct=Math.abs(val-q.mean)<=0.15;
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('meanFb');
   if(correct){
     fb.innerHTML=`<div class="feedback correct">Correct! Mean = ${q.mean}</div>`;
-    setTimeout(()=>{G.currentQ=3;G.sdStep=0;renderQuestion(q);},1000);
+    MaffsLock.timer(()=>{G.currentQ=3;G.sdStep=0;renderQuestion(q);},1000);
   } else {
     G.penalties++;G.qPenalties++;
     fb.innerHTML='<div class="feedback wrong">Incorrect. Use the midpoint of each class interval. Multiply each midpoint by its frequency, sum these products, then divide by the total frequency.</div>';
     _addDismiss(fb,()=>{fb.innerHTML='';});
+    MaffsLock.fresh($('qArea'));   // another try, after the fresh window: a double-click cannot cost two slips
   }
 }
 
@@ -983,6 +1021,7 @@ function renderSDQ(q,area){
   else if(G.sdStep===4) renderSD_variance(q,area);
   else if(G.sdStep===5) renderSD_final(q,area);
   else if(G.sdStep===6) renderSD_interpret(q,area);
+  MaffsLock.fresh(area);
 }
 
 // Step 4a: Midpoints
@@ -1009,15 +1048,17 @@ function checkMidpoints(){
     const val=parseFloat($('mp'+i).value);
     if(isNaN(val)||Math.abs(val-q.midpoints[i])>0.01){allCorrect=false;break;}
   }
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(allCorrect){
     G.showX=true;renderTable(q);
     fb.innerHTML='<div class="feedback correct">Midpoints correct!</div>';
-    setTimeout(()=>{G.sdStep=1;renderSDQ(q,$('qArea'));},1000);
+    MaffsLock.timer(()=>{G.sdStep=1;renderSDQ(q,$('qArea'));},1000);
   } else {
     G.penalties++;G.qPenalties++;
     fb.innerHTML='<div class="feedback wrong">Check your midpoints. Each midpoint = (lower + upper) / 2.</div>';
     _addDismiss(fb,()=>{fb.innerHTML='';});
+    MaffsLock.fresh($('qArea'));   // another try, after the fresh window: a double-click cannot cost two slips
   }
 }
 
@@ -1045,15 +1086,17 @@ function checkFx(){
     const val=parseFloat($('fx'+i).value);
     if(isNaN(val)||Math.abs(val-q.fx[i])>0.5){allCorrect=false;break;}
   }
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(allCorrect){
     G.showFx=true;renderTable(q);
     fb.innerHTML=`<div class="feedback correct">fx column correct! Σfx = ${fmt(q.sumFx)}</div>`;
-    setTimeout(()=>{G.sdStep=2;renderSDQ(q,$('qArea'));},1000);
+    MaffsLock.timer(()=>{G.sdStep=2;renderSDQ(q,$('qArea'));},1000);
   } else {
     G.penalties++;G.qPenalties++;
     fb.innerHTML='<div class="feedback wrong">Check your multiplication. fx = frequency × midpoint.</div>';
     _addDismiss(fb,()=>{fb.innerHTML='';});
+    MaffsLock.fresh($('qArea'));   // another try, after the fresh window: a double-click cannot cost two slips
   }
 }
 
@@ -1081,15 +1124,17 @@ function checkX2(){
     const val=parseFloat($('x2_'+i).value);
     if(isNaN(val)||Math.abs(val-q.x2[i])>0.5){allCorrect=false;break;}
   }
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(allCorrect){
     G.showX2=true;renderTable(q);
     fb.innerHTML='<div class="feedback correct">x² column correct!</div>';
-    setTimeout(()=>{G.sdStep=3;renderSDQ(q,$('qArea'));},1000);
+    MaffsLock.timer(()=>{G.sdStep=3;renderSDQ(q,$('qArea'));},1000);
   } else {
     G.penalties++;G.qPenalties++;
     fb.innerHTML='<div class="feedback wrong">Check your squares. x² = midpoint × midpoint.</div>';
     _addDismiss(fb,()=>{fb.innerHTML='';});
+    MaffsLock.fresh($('qArea'));   // another try, after the fresh window: a double-click cannot cost two slips
   }
 }
 
@@ -1117,15 +1162,17 @@ function checkFx2(){
     const val=parseFloat($('fx2_'+i).value);
     if(isNaN(val)||Math.abs(val-q.fx2[i])>Math.max(1,q.fx2[i]*0.001)){allCorrect=false;break;}
   }
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(allCorrect){
     G.showFx2=true;renderTable(q);
     fb.innerHTML=`<div class="feedback correct">fx² column correct! Σfx² = ${fmt(q.sumFx2)}</div>`;
-    setTimeout(()=>{G.sdStep=4;renderSDQ(q,$('qArea'));},1000);
+    MaffsLock.timer(()=>{G.sdStep=4;renderSDQ(q,$('qArea'));},1000);
   } else {
     G.penalties++;G.qPenalties++;
     fb.innerHTML='<div class="feedback wrong">Check your multiplication. fx² = frequency × x².</div>';
     _addDismiss(fb,()=>{fb.innerHTML='';});
+    MaffsLock.fresh($('qArea'));   // another try, after the fresh window: a double-click cannot cost two slips
   }
 }
 
@@ -1151,14 +1198,16 @@ function checkVariance(){
   const val=parseFloat($('varInput').value);
   if(isNaN(val)) return;
   const correct=Math.abs(val-q.variance)<=Math.max(0.5,q.variance*0.005);
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(correct){
     fb.innerHTML=`<div class="feedback correct">Correct! Variance = ${q.variance}</div>`;
-    setTimeout(()=>{G.sdStep=5;renderSDQ(q,$('qArea'));},1000);
+    MaffsLock.timer(()=>{G.sdStep=5;renderSDQ(q,$('qArea'));},1000);
   } else {
     G.penalties++;G.qPenalties++;
     fb.innerHTML='<div class="feedback wrong">Check your arithmetic. Compute Σfx²/Σf first, then subtract (Σfx/Σf)².</div>';
     _addDismiss(fb,()=>{fb.innerHTML='';});
+    MaffsLock.fresh($('qArea'));   // another try, after the fresh window: a double-click cannot cost two slips
   }
 }
 
@@ -1179,19 +1228,21 @@ function checkSD(){
   const val=parseFloat($('sdInput').value);
   if(isNaN(val)) return;
   const correct=Math.abs(val-q.sd)<=Math.max(0.1,q.sd*0.01);
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(correct){
     fb.innerHTML=`<div class="feedback correct">Correct! σ = ${q.sd}</div>`;
     // Check if interpretation step needed
     if((G.level==='core'||G.level==='level4')&&q.interpretOptions){
-      setTimeout(()=>{G.sdStep=6;renderSDQ(q,$('qArea'));},1000);
+      MaffsLock.timer(()=>{G.sdStep=6;renderSDQ(q,$('qArea'));},1000);
     } else {
-      setTimeout(()=>showCompletion(q),1200);
+      MaffsLock.timer(()=>showCompletion(q),1200);
     }
   } else {
     G.penalties++;G.qPenalties++;
     fb.innerHTML=`<div class="feedback wrong">Incorrect. σ = √(variance). Check your square root.</div>`;
     _addDismiss(fb,()=>{fb.innerHTML='';});
+    MaffsLock.fresh($('qArea'));   // another try, after the fresh window: a double-click cannot cost two slips
   }
 }
 
@@ -1216,6 +1267,7 @@ function renderSD_interpret(q,area){
 function checkInterp(idx){
   const q=G.questions[G.qIdx];
   const opt=q._interpShuffle[idx];
+  if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   document.querySelectorAll('.mcq-btn').forEach(b=>b.classList.add('disabled'));
 
@@ -1229,7 +1281,7 @@ function checkInterp(idx){
     q._interpShuffle.forEach((o,i)=>{if(o.correct) $('interp'+i).classList.add('correct');});
     fb.innerHTML='<div class="feedback wrong">Not quite. The correct interpretation references both the SD value and the mean in context.</div>';
   }
-  setTimeout(()=>showCompletion(q),1500);
+  MaffsLock.timer(()=>showCompletion(q),1500);
 }
 
 // ============================================================
@@ -1267,6 +1319,7 @@ const multiplier = 1;
       ${G.qIdx<G.totalScenarios-1?'Next Scenario →':'See Results'}
     </button>
   `;
+  MaffsLock.fresh(area);   // a second click on the last Check cannot press Next
 }
 
 function nextScenario(){
@@ -1278,7 +1331,9 @@ function nextScenario(){
 // ============================================================
 //  END GAME
 // ============================================================
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame(){ finishGame(); }
+const finishGame=MaffsLock.finishOnce(function(){
   clearInterval(G.timerInterval);
   $('gameScreen').classList.remove('active');
   $('resultsScreen').classList.add('active');
@@ -1316,7 +1371,7 @@ function endGame(){
   window._ggAbandoned=false;
   mfg('game_completed',{game_slug:'stat-attack',level:G.level,score:G.score,questions_answered:G.totalScenarios,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('stat-attack',G.level,G.score,G.totalScenarios).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('stat-attack',G.level,G.score);}}
-}
+});
 
 function showMenu(){
   $('resultsScreen').classList.remove('active');
@@ -1341,7 +1396,7 @@ window.addEventListener('DOMContentLoaded',()=>{parseURL();});
 
 
 (function renderMethodRef(){
-  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}  // lock-ok: waits for KaTeX to draw the worked example; marks nothing
   var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
   var k=function(t){return katex.renderToString(t,{throwOnError:false});};
 

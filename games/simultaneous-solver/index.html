@@ -153,6 +153,20 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Stage 1: multipliers that do not match, Check, then the step's Next (the problem is marked when it closes); ready from the game's state, as on a phone the keypad makes the boxes read-only.
+{
+  "ready": "!!window.SS && SS.ui.state() === 'mult'",
+  "answer": [
+    "const q = SS.ui.item(), li = SS.ui.plan().letter === 'x' ? 0 : 1, a = Math.abs(q.e[0][li]), b = Math.abs(q.e[1][li]);",
+    "const m = [[1, 2], [2, 1], [1, 3]].find(p => a * p[0] !== b * p[1]);",
+    "SS.ui.type([String(m[0]), String(m[1])]); document.getElementById('checkBtn').click();",
+    "return new Promise(res => { const t0 = Date.now(); (function w() {",
+    " const n = document.querySelector('#feedback .maffs-next');",
+    " if (n && !n.disabled) { n.click(); res(); } else if (Date.now() - t0 < 8000) requestAnimationFrame(w); else res(); })(); });"
+  ]
+}
+-->
 <script src="../../schools/assets/options.js"></script>
 <script src="../../schools/assets/answer.js"></script>
 <!-- The phone keypad for typed answers (MaffsKeypad, canon §4.4): a non-calculator game, so the keypad
@@ -642,6 +656,7 @@ var ALEVEL = [
     if (level === 'alevel') { startMC(items); return; }
     st = STAGES[stageKey];
     pool = items || shuffle(BANK[stageKey].slice()).slice(0, st.rounds);
+    MaffsLock.newSession();
     qIdx = 0; total = 0; marks = 0; allRight = 0; maxMarks = pool.length * scored(st.steps);
     $('marks').textContent = '0';
     $('hudStageVal').textContent = st.n;
@@ -719,6 +734,7 @@ var ALEVEL = [
         '<span class="sub-eqs">' + mathHtml(lines[0]) + '<br>' + mathHtml(lines[1]) + '</span>';
       boxes([[t + ' =', t + ' equals']]);
     }
+    MaffsLock.fresh($('step'));   // a new step: a second Enter or a double-click on Check cannot answer it
     stepInView();
   }
   // Row r with the found letter f = v put in, then tidied: 2x + 3(-2) = 7, then 2x - 6 = 7.
@@ -764,6 +780,7 @@ var ALEVEL = [
   function lockInputs() { $('stepBody').querySelectorAll('input').forEach(function (i) { i.readOnly = true; }); if (kp) kp.select(-1); }
 
   function check() {
+    if (MaffsLock.isLocked($('step'))) return;   // this step is answered (canon 7.6.0)
     if (state === 'mult') checkMult();
     else if (state === 'combine') checkCombine();
     else if (state === 'solve') checkSolve();
@@ -795,6 +812,7 @@ var ALEVEL = [
   }
 
   function chooseLetter(letter) {
+    if (!MaffsLock.lock($('step'))) return;
     P.letter = letter;
     var n = q.neat;
     var cost = function (l) { var m = l === 'x' ? q.mx : q.my; return mathHtml(mulsTex(m)) + ' (' + mathHtml(mono(Math.abs(q.e[0][idx(l)]) * m[0], l)) + ')'; };
@@ -810,6 +828,7 @@ var ALEVEL = [
     if (r.result === 'unreadable') { $('msg').textContent = unreadableMsg(); return; }
     if (r.result === 'whole') { $('msg').textContent = 'Use whole-number multipliers.'; return; }
     if (r.result === 'blocked') { $('msg').textContent = '× 0 turns an equation into 0 = 0, and the equation is lost. Use a number that is not 0.'; return; }
+    if (!MaffsLock.lock($('step'))) return;   // readable: this is the step's one answer
     var ok = r.result === 'correct', p = Math.abs(q.e[0][i]), qq = Math.abs(q.e[1][i]);
     gain(ok);
     P.m = ok ? r.m : r.neat;
@@ -829,6 +848,7 @@ var ALEVEL = [
   }
 
   function chooseOp(op) {
+    if (!MaffsLock.lock($('step'))) return;
     var need = SS.opFor(P.s, P.letter), ok = op === need, i = idx(P.letter), a = P.s[0][i], b = P.s[1][i];
     gain(ok);
     P.op = need;
@@ -861,6 +881,7 @@ var ALEVEL = [
   function checkCombine() {
     var v = typed(), r = SS.markCombine(P.comb, v[0], v[1]), o = other(P.letter);
     if (r.result === 'unreadable') { $('msg').textContent = unreadableMsg(); return; }
+    if (!MaffsLock.lock($('step'))) return;
     var ok = r.result === 'correct', html, fb = null;
     gain(ok);
     if (ok) {
@@ -878,6 +899,7 @@ var ALEVEL = [
   function checkSolve() {
     var o = other(P.letter), key = q[o], v = typed()[0], r = SS.markValue(v, key);
     if (r.result === 'unreadable') { $('msg').textContent = unreadableMsg(); return; }
+    if (!MaffsLock.lock($('step'))) return;
     var ok = r.result === 'correct';
     gain(ok);
     var work = o + ' = ' + P.comb.C + ' \\div ' + br(P.comb.K) + ' = ' + key;
@@ -889,6 +911,7 @@ var ALEVEL = [
   function checkSub() {
     var t = P.letter, f = other(t), key = q[t], v = typed()[0], r = SS.markValue(v, key);
     if (r.result === 'unreadable') { $('msg').textContent = unreadableMsg(); return; }
+    if (!MaffsLock.lock($('step'))) return;
     var ok = r.result === 'correct';
     gain(ok);
     var row = q.e[P.subJ], p = row[idx(f)] * q[f], a = row[idx(t)], rest = row[2] - p;
@@ -933,7 +956,8 @@ var ALEVEL = [
     $('statsLine').innerHTML = 'Stage ' + st.n + ' · Problems with every step right: <b>' + allRight + '/' + total + '</b>';
     finish(marks, allRight);
   }
-  function finish(score, correct) {
+  // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function (score, correct) {
     window._ggAbandoned = false;
     mfg('game_completed', { game_slug: SLUG, level: level, mode: mode(), score: score, questions_answered: total, questions_correct: correct });
     var BOARD = board(), key = SLUG + '_best_' + BOARD, old = null;
@@ -945,11 +969,12 @@ var ALEVEL = [
     }
     if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(SLUG, BOARD, score, total).catch(function () {}); if (window.MaffsScoreHistory) { MaffsScoreHistory.record(SLUG, BOARD, score); } }
     showS('results');
-  }
+  });
 
   // ---- A-Level: four options per question ----
-  var mcPool = [], mcQ = null, mcScore = 0, mcCorrect = 0, mcLocked = false, mcTimer = null;
+  var mcPool = [], mcQ = null, mcScore = 0, mcCorrect = 0, mcTimer = null;
   function startMC(items) {
+    MaffsLock.newSession();
     mcPool = items || shuffle(ALEVEL.slice()).slice(0, MC_ROUNDS);
     qIdx = 0; total = 0; mcScore = 0; mcCorrect = 0;
     $('mcScore').textContent = '0';
@@ -959,11 +984,11 @@ var ALEVEL = [
     bindUnload();
   }
   function nextMC() {
-    clearTimeout(mcTimer);
+    MaffsLock.cancel(mcTimer);
     if (window.MaffsNext) MaffsNext.clear($('mcFeedback'));
     $('mcFeedback').innerHTML = '';
     if (qIdx >= mcPool.length) { endMC(); return; }
-    mcQ = mcPool[qIdx]; qIdx++; total++; mcLocked = false;
+    mcQ = mcPool[qIdx]; qIdx++; total++;
     state = 'mc';
     $('mcNum').textContent = total + '/' + mcPool.length;
     $('mcSystem').innerHTML = mcQ.sys.map(function (t, k) { return '<span class="lab">(' + (k + 1) + ')</span><span class="eq">' + mathHtml(t) + '</span>'; }).join('');
@@ -976,10 +1001,10 @@ var ALEVEL = [
       b.addEventListener('click', function () { answerMC(b); });
       box.appendChild(b);
     });
+    MaffsLock.fresh(box);   // a new question: a double-click on Next cannot pick an option
   }
   function answerMC(btn) {
-    if (mcLocked) return;
-    mcLocked = true;
+    if (!MaffsLock.lock($('mcOptions'))) return;   // one answer per question (canon 7.6.0)
     var ok = btn.dataset.val === mcQ.correct;
     document.querySelectorAll('#mcOptions .opt-btn').forEach(function (b) {
       b.disabled = true;
@@ -988,7 +1013,7 @@ var ALEVEL = [
     if (ok) { mcScore += MC_BASE; mcCorrect++; } else btn.classList.add('wrong');
     $('mcScore').textContent = mcScore;
     mfg('question_answered', { game_slug: SLUG, level: level, mode: mode(), question_index: total, correct: ok });
-    if (ok) { mcTimer = setTimeout(nextMC, 900); return; }
+    if (ok) { mcTimer = MaffsLock.timer(nextMC, 900); return; }
     var fb = $('mcFeedback');
     fb.innerHTML = '<div class="fb wrong"><div class="fb-verdict">✗ The answer is ' + mathHtml(mcQ.correct) + '.</div></div>';
     if (window.MaffsNext) MaffsNext.wrong({ mount: fb.firstChild, onAdvance: nextMC });
@@ -1036,7 +1061,7 @@ var ALEVEL = [
 
   // Views and drivers for scripts/verify-simultaneous-solver.py.
   function byId(list, ids) { return ids.map(function (id) { return list.filter(function (x) { return x.id === id; })[0]; }); }
-  function clearAll() { if (window.MaffsNext) { MaffsNext.clear($('feedback')); MaffsNext.clear($('mcFeedback')); } clearTimeout(mcTimer); }
+  function clearAll() { if (window.MaffsNext) { MaffsNext.clear($('feedback')); MaffsNext.clear($('mcFeedback')); } MaffsLock.clearTimers(); }
   SS.ui = {
     state: function () { return state; },
     item: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },

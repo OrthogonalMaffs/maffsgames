@@ -19,22 +19,17 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 4. **GA4-COUNTRY-CANON: DONE, #179 merged 8 Oct (3c3217c).**
 4a. **VOCAB-SHOWTHAT: DONE, #180 merged 8 Oct (47ee9b9)** (Jon, 8 Oct, sent later: run after GA4-COUNTRY-CANON, before F1 batch 7). The "show
    that" tooltip in `schools/assets/exam-vocab.js`; closes factor-theorem-t5-009 unless the cloud lane holds that game.
-5. **F1 batch 7: DONE, #182 merged 8 Oct (259c143), main green. F1 batch 8: NOT STARTED** (Jon said "checkpoint" at
-   the batch 7 boundary). Then F1 batch 8, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
+5. **F1 batch 7: DONE, #182 merged 8 Oct (259c143), main green. F1 batch 8: PR #190, branch `claude/f1-batch8`
+   (9 Oct; see its entry).** Was: not started (Jon said "checkpoint" at the batch 7 boundary). Then F1 batch 8, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
    Core first; read `cloud-remaining:` in `docs/handover/cloud.md` on main before building each batch and drop
    every game on it).
 6. **CHECKPOINT after batch 8 merges with main green:** update this file and stop. Do not start batch 9 in that session.
-7. **DOCS-SMALL: IN PROGRESS, branch `claude/docs-small` (9 Oct).** Was: first item next session (Jon, 8 Oct; sent for "after the batch 8 checkpoint", and the checkpoint came
-   at batch 7, so it runs first next session, then batch 8). Verbatim below. (a) Roster
-   convention: a generated game's row says "N per session, generated", a bank game's gives its bank size;
-   just-pythag-it-bruv's row "20 per session, generated (round 1 from 15 triples and their sizes; rounds 2 and 3
-   generated)"; list other generator rows noticed. (b) /updates/ 8 Oct, Updated badge: "Correlation or Coincidence:
-   now 84 questions, twice as many as before." STOP IF its bank on main is not 84, or the roster parser reads the count.
+7. **DOCS-SMALL: DONE, #188 merged 9 Oct (883a638), main green.** Its verbatim text is in the archive.
 - **CHECKPOINT STOP (Jon, 8 Oct, late):** batch 7 merged, main green; this session stopped at that boundary.
 - **MAIN-RED: DONE, #184 merged 8 Oct (f1a097d), main green** (see its entry).
 - **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
 - **Standing F1 item:** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty
-  (NOT_YET: 31). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
+  (NOT_YET: 22 once batch 8 merges). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
   `docs/handover/cloud.md` on main and drop every game on it from the batch. Never claim or edit a game on that
   line. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
 - **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
@@ -43,41 +38,47 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
   a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
   driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
 
-<details><summary>Queue item 7 (DOCS-SMALL), verbatim (Jon, 8 Oct)</summary>
-
-> TASK (home lane, DOCS-SMALL; first item next session, after the batch 8 checkpoint): Two docs fixes from 8 Oct 2026,
-> in one docs PR.
-> ROOT CAUSE: (a) The roster row for just-pythag-it-bruv says "20 questions in three rounds". Project Claude read that
-> as a 20-item bank and wrongly told Jon the game was below the 40-50 minimum. The game generates every question each
-> session (15 triples with sizes, orientation and side varied in round 1; fresh non-square lengths in round 2; five
-> contexts with large number pools in round 3), so 20 is the session length, not the bank. (b) correlation-or-
-> coincidence's bank went from 42 to 84 items on 8 Oct (cloud lane, Jon's contract), with no /updates/ entry. Twice
-> the questions is a change a returning student notices in what they meet, so it earns the Updated badge under canon
-> §3.4.
-> CLASS CHECK: (a) is an instance of a pattern: a roster count that does not say whether it is a bank or a session.
-> Fix it at the roster's convention. Canon or the roster's header states that a generated game's row says "N per
-> session, generated", and a bank game's row gives its bank size. Apply that to just-pythag-it-bruv, and to any other
-> generator rows you find while editing. Do not audit every row in this PR; list any you notice. (b) is local: one
-> missing entry.
-> EXACT CHANGE: 1. .claude/rules/game-roster.md: add the convention line to the roster's header notes.
-> just-pythag-it-bruv's row says "20 per session, generated (round 1 from 15 triples and their sizes; rounds 2 and 3
-> generated)". Keep the rest of the row. 2. /updates/, a new entry dated 8 Oct, Updated badge: "Correlation or
-> Coincidence: now 84 questions, twice as many as before." If an 8 Oct entry already exists, add the line to it.
-> 3. docs/handover/home.md updated.
-> DO NOT TOUCH: any game page; other roster rows' content, beyond rows you confirm are generators (list them in the
-> PR; only change those if the change is just the count wording); canon §3.4.
-> SUCCESS CONDITION: the roster checks pass; /updates/ shows the line with the badge; merged on a green Gate; main
-> green; handover current.
-> STOP IF: correlation-or-coincidence's bank on main is not 84 (report the count, and don't write the line); the
-> roster parser reads the count field so that new wording breaks it.
-
-</details>
-
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-09 (home): DOCS-SMALL (branch `claude/docs-small`)
+## 2026-10-09 (home): F1 batch 8 (branch `claude/f1-batch8`, worktree E:/jon/mg-b8)
+
+- **On MaffsLock, each with its declaration, seeds 1-3 passing:** standard-form-blitz, proportion-blaster,
+  formula-unlocked, graph-transformer, simultaneous-solver, tax-theft, stat-attack, quadratic-factoriser. screening-room
+  (it already loaded the lock) passes seeds 1-3 and joins MIGRATED. **NOT_YET: 22.** `cloud-remaining:` was empty;
+  the only open cloud PR (#187, merged during the batch) claimed probability-paradox, already migrated.
+- **Faults fixed beyond the swap:**
+  - standard-form-blitz, proportion-blaster: no answer guard at all (a CSS class only); a wrong answer moved on after 1 s.
+    Wrong now waits on MaffsNext with the right option shown.
+  - formula-unlocked: the wrong path's own "Got it — next question" button ran nextQ twice on a double-click (a
+    question skipped); now MaffsNext with the same label, under the worked solution.
+  - graph-transformer: after a match the moves were locked by a CSS class only, so moving away and back re-matched and
+    scored the puzzle again; Skip after a match marked it wrong as well; a double-click on Skip skipped two puzzles.
+    Now a match or Skip locks the moves; **Skip is the puzzle's wrong answer and now names the target transformation
+    and waits on Next** (canon 7.6), where it used to move straight on. For Jon: say if Skip should stay instant.
+  - tax-theft (retry-until-right kept): a double Enter on a right amount marked it twice **and skipped the next step**
+    (two 800 ms timers both advanced; shown on main: step index 2 after one answer). Each readable attempt now locks;
+    a wrong one reopens the step after the fresh window.
+  - stat-attack: a double-click on the last step's Check (or an interpretation option) ran showCompletion twice: two
+    marks, the scenario scored twice; a double-click on a wrong step cost two slips. Each attempt now locks; a wrong
+    one reopens the step.
+  - simultaneous-solver: the A-Level mode's own flag and raw timer replaced; the Foundation stages (already guarded by
+    their state machine) lock each step once its entry is readable.
+  - quadratic-factoriser: the GCSE `locked` flag replaced; Higher's step picks and Independent check, and Formula's
+    answer, lock their panel; every render opens a fresh window. Higher and Formula (not played by the check, which
+    plays GCSE) were double-clicked through a whole session in Chromium: 4 marks, indexes 1-4, one game_completed.
+- **Verifiers:** proportion-blaster, formula-unlocked and simultaneous-solver add `bc.NO_LOCK_FRESH_INIT` (as batch 7).
+  **simultaneous-solver's phone-fit check was timing-dependent on main too:** KaTeX's fonts (from the CDN) arriving
+  after stepInView() has scrolled grow the Stage 4 step by ~25px at 320x568 (shown 4 runs in 8 on main's page). The
+  verifier now loads every font face before playing: 6/6. (A first-visit student can meet the same 25px; the page's
+  own fix, re-running stepInView when fonts land, is not in this batch.)
+- **Answer lock split into four CI parts** (L1-L4, `--part i/4`; ci-groups.py already listed L4).
+- **Next:** CHECKPOINT (queue item 6) once this merges with main green. Batch 9 candidates for the next session:
+  just-pythag-it-bruv, surd-simplifier, unit-converter, scale-factor-scaling, growth-and-decay, log-laws,
+  graph-sketcher, normal-navigator (read `cloud-remaining:` first).
+
+## 2026-10-09 (home): DOCS-SMALL (#188, merged 883a638, main green)
 
 - **STOP IFs clear:** correlation-or-coincidence's `QUESTIONS` on main has 84 items (28 cause, 28 both, 28 chance).
   Every roster parser (bank_common, check-banks, check-leaderboard-coverage, audit-katex/gen_tables, check-calculator)
