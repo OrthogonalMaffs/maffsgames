@@ -49,7 +49,11 @@ findings:
   where: games/probability-paradox/index.html:354 (fallacy, 95% after 60%)
   summary: '''The test was easier'' is also an alternative explanation that should be considered'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. 2-3 of the 12 Paradox-mode items faulty (16.7-25%)'
-  status: open
+  status: fixed
+  pr: 189
+  ruling: 'Jon 8 Oct 2026 (contract PP-T1-004): the item is rewritten so one option is defensible. Ten students are picked
+    for the lowest scores, and the second paper is of the same difficulty. The options are the four ruled, keyed
+    "Regression to the mean". Pinned by scripts/verify-probability-paradox.py (PINNED_RTM), with the old item planted.'
 - id: probability-paradox-t1-005
   severity: MEDIUM
   jc: false
