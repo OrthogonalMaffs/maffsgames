@@ -342,6 +342,19 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 fires the shot the game's own physics says hits (the tap-through ends the battle); i >= 1 fires 85 degrees at power 20, which always falls short (a miss).
+{
+  "start": "closeBriefing();",
+  "ready": "!over && !MaffsLock.isLocked(firePanel(turn)) && !document.getElementById('p' + turn + 'fire').disabled",
+  "answer": [
+    "if (over) return; const p = turn;",
+    "const s = i === 0 ? aimAtEnemy(p) : {ang: 85, pwr: 20};",
+    "document.getElementById('p' + p + 'ang').value = s.ang; document.getElementById('p' + p + 'pwr').value = s.pwr;",
+    "document.getElementById('p' + p + 'fire').click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -421,12 +434,12 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <div class="tank-dot p1" id="p1d1"></div>
       <div class="tank-dot p1" id="p1d2"></div>
     </div>
-    <div class="ctrl-row">
+    <div class="ctrl-row" data-maffs-lock-skip>
       <span class="ctrl-lbl">ANGLE</span>
       <input type="range" id="p1ang" min="5" max="85" value="45">
       <span class="ctrl-val" id="p1angV">45°</span>
     </div>
-    <div class="ctrl-row">
+    <div class="ctrl-row" data-maffs-lock-skip>
       <span class="ctrl-lbl">POWER</span>
       <input type="range" id="p1pwr" min="20" max="100" value="60">
       <span class="ctrl-val" id="p1pwrV">60</span>
@@ -454,12 +467,12 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <div class="tank-dot p2" id="p2d1"></div>
       <div class="tank-dot p2" id="p2d2"></div>
     </div>
-    <div class="ctrl-row">
+    <div class="ctrl-row" data-maffs-lock-skip>
       <span class="ctrl-lbl">ANGLE</span>
       <input type="range" id="p2ang" min="5" max="85" value="45">
       <span class="ctrl-val" id="p2angV">45°</span>
     </div>
-    <div class="ctrl-row">
+    <div class="ctrl-row" data-maffs-lock-skip>
       <span class="ctrl-lbl">POWER</span>
       <input type="range" id="p2pwr" min="20" max="100" value="60">
       <span class="ctrl-val" id="p2pwrV">60</span>
@@ -479,9 +492,9 @@ const HIT_R = 22;
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let mode = 'cpu';
 let turn = 1;
-let firing = false;
 let over = false;
 let tanks = {};
+let shotId = 0;   // the shot in flight; a reset makes any animation still running for an old shot stop
 
 // ── TERRAIN ───────────────────────────────────────────────────────────────────
 function ty(x) {
@@ -495,13 +508,19 @@ function ty(x) {
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-let _twShotsFired=0,_twHits=0;
+// Shots and hits for each side (trig-wars-t2-001: a hit counts only for the side that fired it).
+// _twLogged numbers the shots a person fired: in VS CPU, Player 1's only; in 2 PLAYER, both sides'.
+let _twShots={1:0,2:0},_twHits={1:0,2:0},_twLogged=0;
+function personFires(p){ return mode==='human' || p===1; }
+function firePanel(p){ return document.querySelector(p===1?'.p1-panel':'.p2-panel'); }
 function resetGame() {
-  over = false; turn = 1; firing = false;
-  _twShotsFired=0;_twHits=0;
-  mfg('game_started',{game_slug:'trig-wars',level:'gcse'});
+  MaffsLock.newSession();
+  over = false; turn = 1; shotId++;
+  _twShots={1:0,2:0};_twHits={1:0,2:0};_twLogged=0;
+  mfg('game_started',{game_slug:'trig-wars',level:'gcse',mode:mode});
   window._ggAbandoned=true;
-  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'trig-wars',level:'gcse',questions_answered:_twShotsFired})});}
+  if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'trig-wars',level:'gcse',mode:mode,questions_answered:_twLogged})});}
+  MaffsLock.fresh(firePanel(1)); MaffsLock.fresh(firePanel(2));
 
   // Randomise army positions each game
   const p1base = 30 + Math.floor(Math.random()*80);   // 30–110
@@ -765,43 +784,43 @@ function explodeGround(x,y){
 }
 
 // ── MISS COMMENTARY ───────────────────────────────────────────────────────────
+// A quip says how the shot missed (long, short, on the hill, near your own tanks) and makes no claim about the fix.
+// The fix is told separately by missAdvice(), from the game's own physics: only a change that really brings the
+// landing nearer the target is suggested (trig-wars-t2-004; above 45 degrees a shallower angle goes FURTHER).
 const MISS_LINES = {
   wayLong: [
     "...that's not even on this planet 🚀",
-    "GPS called — your shell is in orbit",
-    "Scientists are tracking that one from NASA",
-    "Congrats, you've just started a war with a different country",
-    "Aim for the enemy, not the moon",
+    "GPS called — your shell is in orbit.",
+    "Aim for the enemy, not the moon.",
   ],
   long: [
-    "Too long — sin(θ) is doing too much heavy lifting there",
-    "Overshot. Try less power or a shallower angle",
-    "Your Vy was very ambitious. Bold. Wrong, but bold.",
-    "Long by a bit — nudge that angle down",
+    "Long — it sailed past them.",
+    "Overshot.",
     "Nice arc. Wrong address.",
   ],
   short: [
-    "Short! Your cos(θ) needs more to work with — try more power",
+    "Short!",
+    "Fell short of the target.",
+    "Not far enough.",
+  ],
+  hill: [
+    "The hill stopped it.",
     "Fell short. The hill ate it.",
-    "Under-powered. V was too low — the physics don't lie.",
-    "Short by a stretch — bump the angle or the power up",
-    "Didn't make it over the ridge. Trig tried its best.",
+    "Didn't make it over the ridge.",
   ],
   wayShort: [
-    "Are you... shooting yourself? 🫡",
     "That barely left the barrel. Did you whisper 'fire'?",
     "The hill is laughing at you.",
-    "Your own troops are filing a complaint",
-    "Incredible range. A full 30 pixels.",
+    "Your own troops are filing a complaint.",
   ],
   blueon1: [
     "BLUE ON BLUE! You nearly hit your own lads! 😬",
     "Friendly fire! Your teammates are NOT impressed.",
     "That landed in YOUR camp. Smooth.",
-    "General to command: 'Our idiot is shooting at us again'",
+    "General to command: 'Our idiot is shooting at us again.'",
   ],
   blueon2: [
-    "BLUE ON BLUE! Omega battalion nearly did themselves in 😬",
+    "BLUE ON BLUE! Omega battalion nearly shelled their own camp 😬",
     "Friendly fire! The enemy is laughing.",
     "That shell nearly took out your own tank. Yikes.",
   ],
@@ -809,120 +828,212 @@ const MISS_LINES = {
 
 function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-function getMissQuip(p, landX, landY){
+// The nearest live enemy to where a shot landed, and how far past (+) or short of (-) it, for side p.
+function nearestEnemy(p, landX){
   const enemy = p===1 ? 2 : 1;
-  const ally  = p;
+  let best=null;
+  for(const t of tanks[enemy]) if(t.alive && (!best || Math.abs(landX-t.x) < Math.abs(landX-best.x))) best=t;
+  return best;
+}
 
-  // Check if landed near own tanks (blue on blue)
-  for(const t of tanks[ally]){
+function getMissQuip(p, landX, landY){
+  // Near own tanks: blue on blue
+  for(const t of tanks[p]){
     if(t.alive && Math.hypot(landX-t.x, landY-t.y) < 55){
       return pick(p===1 ? MISS_LINES.blueon1 : MISS_LINES.blueon2);
     }
   }
+  const tgt = nearestEnemy(p, landX);
+  if(!tgt) return '';
+  const signed = (landX - tgt.x) * (p===1 ? 1 : -1);    // + overshot, - short
+  const dist = Math.abs(signed);
+  if(signed > 0) return pick(dist > 200 ? MISS_LINES.wayLong : MISS_LINES.long);
+  if(landX > 170 && landX < 730) return pick(dist > 200 ? MISS_LINES.wayShort : MISS_LINES.hill);
+  return pick(dist > 200 ? MISS_LINES.wayShort : MISS_LINES.short);
+}
 
-  // Find closest enemy, measure horizontal miss distance
-  let closestDist = Infinity;
-  for(const t of tanks[enemy]){
-    if(t.alive){
-      const d = landX - t.x; // signed: positive = overshot for p1
-      if(Math.abs(d) < Math.abs(closestDist)) closestDist = d;
+// Which changes to the shot just fired bring the landing nearer the target, by the game's own physics (no scatter).
+// A direction counts when a change of 1 to 8 (degrees, or power) that way lands at least 1px nearer, or hits.
+function missAdvice(p, ang, pwr, landX){
+  const tgt = nearestEnemy(p, landX);
+  if(!tgt) return '';
+  const base = Math.abs(landX - tgt.x);
+  function gain(dAng, dPwr){
+    let best = 0;
+    for(let k=1;k<=8;k++){
+      const a = ang + dAng*k, w = pwr + dPwr*k;
+      if(a<5||a>85||w<20||w>100) break;
+      const r = simulateShot(p, a, w, 0);
+      const d = r.hit ? 0 : Math.abs(r.x - tgt.x);
+      if(base - d > Math.max(best, 1)) best = base - d;   // at least 1px: never floating-point noise
     }
+    return best;
   }
+  const up = gain(1,0), down = gain(-1,0), more = gain(0,1), less = gain(0,-1);
+  const tips = [];
+  if(up > 0 || down > 0) tips.push(up >= down ? 'a steeper angle' : 'a shallower angle');
+  if(more > 0 || less > 0) tips.push(more >= less ? 'more power' : 'less power');
+  return tips.length ? 'Try ' + tips.join(' or ') + '.' : '';
+}
 
-  const over = p===1 ? closestDist > 0 : closestDist < 0;
-  const dist  = Math.abs(closestDist);
-
-  if(over){
-    return dist > 200 ? pick(MISS_LINES.wayLong) : pick(MISS_LINES.long);
-  } else {
-    return dist > 200 ? pick(MISS_LINES.wayShort) : pick(MISS_LINES.short);
+// ── FLIGHT ────────────────────────────────────────────────────────────────────
+// One copy of the physics, used by the shot on screen, the miss advice and the CPU (trig-wars-t2-003).
+// Euler per frame: x += vx; vy += g; y += vy. Each frame the shell moves along a segment, and a hit is tested
+// along that whole segment BEFORE the ground: a shell that enters an enemy tank's hit circle on its way down is a
+// hit, even when the same frame ends below the ground or the shell is fast enough to cross the circle between frames.
+function shotSource(p){
+  return p===1 ? [...tanks[1]].reverse().find(t=>t.alive) : tanks[2].find(t=>t.alive);
+}
+function newShell(p, ang, pwr, scatter){
+  const src = shotSource(p);
+  if(!src) return null;
+  const rad = ang*Math.PI/180, dir = p===1 ? 1 : -1;
+  return {p, x:src.x+dir*22, y:src.y-13,
+          vx:dir*pwr*Math.cos(rad+scatter)*0.28, vy:-pwr*Math.sin(rad+scatter)*0.28};
+}
+function offField(x, y){ return y>=ty(x) || x<-10 || x>BW+10; }
+// The first t in [0,1] at which the segment (ax,ay)->(bx,by) is within r of (cx,cy), or -1.
+function segEnter(ax, ay, bx, by, cx, cy, r){
+  const dx=bx-ax, dy=by-ay, fx=ax-cx, fy=ay-cy;
+  const c=fx*fx+fy*fy-r*r;
+  if(c<0) return 0;
+  const a=dx*dx+dy*dy, b=2*(fx*dx+fy*dy), disc=b*b-4*a*c;
+  if(a===0||disc<0) return -1;
+  const t=(-b-Math.sqrt(disc))/(2*a);
+  return t>=0&&t<=1 ? t : -1;
+}
+// Advance the shell one frame. Returns null while it flies, or {hit: tank|null, x, y} where it ended.
+function stepShell(s){
+  const ax=s.x, ay=s.y;
+  s.x+=s.vx; s.vy+=GRAVITY; s.y+=s.vy;
+  const enemy = s.p===1 ? 2 : 1;
+  let hit=null, tHit=2;
+  for(const t of tanks[enemy]){
+    if(!t.alive) continue;
+    const u=segEnter(ax, ay, s.x, s.y, t.x, t.y-10, HIT_R);
+    if(u>=0 && u<tHit){ tHit=u; hit=t; }
   }
+  let tGround=2;
+  if(offField(s.x, s.y)){
+    let lo=0, hi=1;
+    for(let k=0;k<30;k++){ const m=(lo+hi)/2; if(offField(ax+(s.x-ax)*m, ay+(s.y-ay)*m)) hi=m; else lo=m; }
+    tGround=hi;
+  }
+  if(hit && tHit<=tGround) return {hit, x:ax+(s.x-ax)*tHit, y:ay+(s.y-ay)*tHit};
+  if(tGround<=1) return {hit:null, x:ax+(s.x-ax)*tGround, y:ay+(s.y-ay)*tGround};
+  return null;
+}
+// Where a shot would end, without drawing (the advice and the CPU use it).
+function simulateShot(p, ang, pwr, scatter){
+  const s=newShell(p, ang, pwr, scatter||0);
+  if(!s) return {hit:null, x:0, y:0};
+  for(let n=0;n<4000;n++){ const r=stepShell(s); if(r) return r; }
+  return {hit:null, x:s.x, y:s.y};
+}
+// A shot side p could fire that hits, found by the game's own physics, or null (the check's tap-through uses it).
+function aimAtEnemy(p){
+  for(let ang=45;ang>=5;ang--) for(let pwr=20;pwr<=100;pwr++){
+    if(simulateShot(p, ang, pwr, -0.009).hit && simulateShot(p, ang, pwr, 0).hit && simulateShot(p, ang, pwr, 0.009).hit)
+      return {ang, pwr};
+  }
+  return null;
 }
 
 // ── FIRE ──────────────────────────────────────────────────────────────────────
+// Each shot is marked once: MaffsLock locks the side's panel at the first press (a double-click on FIRE, or Enter on
+// it, cannot fire twice) until that side's next turn.
 function fire(p){
-  if(firing||over||p!==turn) return;
-  firing=true; setButtons(false);
+  if(over||p!==turn) return;
+  if(!MaffsLock.lock(firePanel(p))) return;
+  setButtons(false);
 
   const ang = +document.getElementById(`p${p}ang`).value;
   const pwr = +document.getElementById(`p${p}pwr`).value;
-  const rad = ang*Math.PI/180;
-  const dir = p===1 ? 1 : -1;
 
   // Tiny random scatter — same angle/power won't fly identically every shot
   const scatter = (Math.random()-0.5)*0.018;
-
-  const src = p===1
-    ? [...tanks[1]].reverse().find(t=>t.alive)
-    : tanks[2].find(t=>t.alive);
-  if(!src){ firing=false; return; }
-
-  let px=src.x+dir*22, py=src.y-13;
-  let vx=dir*pwr*Math.cos(rad+scatter)*0.28;
-  let vy=-pwr*Math.sin(rad+scatter)*0.28;
+  const shell = newShell(p, ang, pwr, scatter);
+  if(!shell) return;
+  const me = ++shotId;
   const trail=[];
 
-  function step(){
-    trail.push({x:px,y:py});
-    if(trail.length>20) trail.shift();
-    px+=vx; vy+=GRAVITY; py+=vy;
-    draw({x:px,y:py}, trail);
+  // A shot is marked for the side that fired it; only a person's shots are logged (VS CPU: Player 1's).
+  function mark(hit){
+    _twShots[p]++; if(hit) _twHits[p]++;
+    if(personFires(p)){
+      _twLogged++;
+      mfg('question_answered',{game_slug:'trig-wars',level:'gcse',mode:mode,correct:hit,question_index:_twLogged});
+    }
+  }
 
-    if(py>=ty(px)||px<-10||px>BW+10){
-      _twShotsFired++;
-      mfg('question_answered',{game_slug:'trig-wars',level:'gcse',correct:false,question_index:_twShotsFired});
-      const quip = getMissQuip(p, px, py);
-      msg(p, quip);
-      // clamp to ground for explosion position
-      const ex = Math.max(0, Math.min(BW, px));
-      const ey = ty(ex);
-      explodeGround(ex, ey).then(()=>{
-        setTimeout(()=>{ clearMsgs(); nextTurn(); }, 2800);
+  function step(){
+    if(me!==shotId) return;   // the game was reset mid-flight
+    trail.push({x:shell.x,y:shell.y});
+    if(trail.length>20) trail.shift();
+    const end = stepShell(shell);
+    draw({x:shell.x,y:shell.y}, trail);
+    if(!end){ requestAnimationFrame(step); return; }
+
+    const enemy=p===1?2:1;
+    if(!end.hit){
+      mark(false);
+      const quip = getMissQuip(p, end.x, end.y);
+      const tip = missAdvice(p, ang, pwr, end.x);
+      msg(p, tip ? quip + ' ' + tip : quip);
+      const ex = Math.max(0, Math.min(BW, end.x));
+      explodeGround(ex, ty(ex)).then(()=>{
+        if(me!==shotId) return;
+        MaffsLock.timer(()=>{ clearMsgs(); nextTurn(); }, 2800);
       });
       return;
     }
-    const enemy=p===1?2:1;
-    for(const t of tanks[enemy]){
-      if(!t.alive) continue;
-      if(Math.hypot(px-t.x, py-(t.y-10))<HIT_R){
-        _twShotsFired++;_twHits++;
-        mfg('question_answered',{game_slug:'trig-wars',level:'gcse',correct:true,question_index:_twShotsFired});
-        explode(t.x,t.y-10).then(()=>{
-          t.alive=false;
-          const hitLines=['⚡ DIRECT HIT!','☠ ELIMINATED!','💥 GOT ONE!','🎯 BULLSEYE!'];
-          const dieLines=['▼ TANK DESTROYED','☠ WE LOST ONE','💀 DOWN!'];
-          msg(p, pick(hitLines));
-          msg(enemy, pick(dieLines));
-          updateTankDots();
-          const rem=tanks[enemy].filter(t=>t.alive).length;
-          if(rem===0){
-            over=true;
-            window._ggAbandoned=false;
-            var _twPct=_twShotsFired>0?Math.round(_twHits/_twShotsFired*100):0;
-            mfg('game_completed',{game_slug:'trig-wars',level:'gcse',score:_twHits,questions_answered:_twShotsFired,accuracy:_twPct});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('trig-wars','gcse',_twHits,_twShotsFired).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('trig-wars','gcse',_twHits);}}
-            setTurnBar(`⚔  PLAYER ${p} WINS — ${p===1?'ALPHA':'OMEGA'} BATTALION VICTORIOUS  ⚔`);
-            firing=false;
-          } else {
-            setTimeout(()=>{ clearMsgs(); nextTurn(); },1400);
-          }
-        });
-        return;
+    const t = end.hit;
+    mark(true);
+    explode(t.x,t.y-10).then(()=>{
+      if(me!==shotId) return;
+      t.alive=false;
+      const hitLines=['⚡ DIRECT HIT!','☠ ELIMINATED!','💥 GOT ONE!','🎯 BULLSEYE!'];
+      const dieLines=['▼ TANK DESTROYED','▼ TANK DISABLED','▼ TANK KNOCKED OUT'];
+      msg(p, pick(hitLines));
+      msg(enemy, pick(dieLines));
+      updateTankDots();
+      const rem=tanks[enemy].filter(t=>t.alive).length;
+      if(rem===0){
+        over=true;
+        finishGame(p);
+        setTurnBar(`⚔  PLAYER ${p} WINS — ${p===1?'ALPHA':'OMEGA'} BATTALION VICTORIOUS  ⚔`);
+      } else {
+        MaffsLock.timer(()=>{ clearMsgs(); nextTurn(); },1400);
       }
-    }
-    requestAnimationFrame(step);
+    });
   }
   step();
 }
 
+// The battle's end, once per game (MaffsLock.finishOnce). VS CPU: Player 1's own hits and shots are the score,
+// submitted win or lose. 2 PLAYER: two people on one device, neither is "the player", so nothing is submitted to
+// the leaderboard or the device history (Jon, 8 Oct 2026; SR-22: a mode that cannot be compared has no shared board).
+const finishGame = MaffsLock.finishOnce(function(winner){
+  window._ggAbandoned=false;
+  if(mode==='cpu'){
+    const sc=_twHits[1], n=_twShots[1];
+    mfg('game_completed',{game_slug:'trig-wars',level:'gcse',mode:'cpu',score:sc,questions_answered:n,accuracy:n>0?Math.round(sc/n*100):0});
+    if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('trig-wars','gcse',sc,n).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('trig-wars','gcse',sc);}}
+  } else {
+    const n=_twShots[1]+_twShots[2], h=_twHits[1]+_twHits[2];
+    mfg('game_completed',{game_slug:'trig-wars',level:'gcse',mode:'human',score:_twHits[winner],questions_answered:n,accuracy:n>0?Math.round(h/n*100):0});
+  }
+});
+
 // ── TURN ──────────────────────────────────────────────────────────────────────
 function nextTurn(){
-  firing=false;
   if(over) return;
   turn = turn===1 ? 2 : 1;
+  MaffsLock.fresh(firePanel(turn));   // the next side's turn: its FIRE works again, after the fresh window
   if(mode==='cpu'&&turn===2){
+    setButtons(false);                 // fresh() re-enabled Player 2's FIRE: in VS CPU only the CPU fires it
     setTurnBar('CPU CALCULATING TRAJECTORY...');
-    setTimeout(cpuShot,900);
+    MaffsLock.timer(cpuShot,900);
   } else {
     const lbl=turn===1?'PLAYER 1 — TAKE AIM':(mode==='cpu'?'CPU TURN':'PLAYER 2 — TAKE AIM');
     setTurnBar(lbl);
@@ -952,7 +1063,7 @@ function cpuShot(){
   document.getElementById('p2pwrV').textContent=pwr;
   refreshTrig();
 
-  setTimeout(()=>{
+  MaffsLock.timer(()=>{
     setTurnBar(`CPU FIRES — θ:${ang}° · V:${pwr}`);
     fire(2);
   },500);
@@ -965,8 +1076,10 @@ function refreshTrig(){
   const pwr=+document.getElementById(`p${p}pwr`).value;
   const rad=ang*Math.PI/180;
   const sinV=Math.sin(rad), cosV=Math.cos(rad), tanV=Math.tan(rad);
-  const vxV=(pwr*cosV*0.28).toFixed(1);
-  const vyV=(pwr*sinV*0.28).toFixed(1);
+  // Vx and Vy are in V's own units, so the table's cos(θ) = Vx/V and sin(θ) = Vy/V hold for the numbers shown
+  // (trig-wars-t2-002). The flight scales all three by the same factor (0.28) into pixels per frame.
+  const vxV=(pwr*cosV).toFixed(1);
+  const vyV=(pwr*sinV).toFixed(1);
 
   // Triangle canvas
   const tc=document.getElementById('trigCanvas');
@@ -1031,8 +1144,8 @@ function refreshTrig(){
     <tr><td class="fn">sin(${ang}°) = Vy/V</td><td class="val">${sinV.toFixed(3)}</td></tr>
     <tr><td class="fn">cos(${ang}°) = Vx/V</td><td class="val">${cosV.toFixed(3)}</td></tr>
     <tr><td class="fn">tan(${ang}°) = Vy/Vx</td><td class="val">${tanStr}</td></tr>
-    <tr class="trig-divider"><td class="fn vx">Vx (horizontal)</td><td class="val vx">${vxV} u/s</td></tr>
-    <tr><td class="fn vy">Vy (vertical)</td><td class="val vy">${vyV} u/s</td></tr>
+    <tr class="trig-divider"><td class="fn vx">Vx (horizontal)</td><td class="val vx">${vxV}</td></tr>
+    <tr><td class="fn vy">Vy (vertical)</td><td class="val vy">${vyV}</td></tr>
   `;
 }
 
