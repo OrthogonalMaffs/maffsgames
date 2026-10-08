@@ -222,6 +222,7 @@ def run(path, browser_play=True):
         with sync_playwright() as p:
             browser = p.chromium.launch()
             page = browser.new_page()
+            page.add_init_script(bc.NO_LOCK_FRESH_INIT)   # PLAY presses Lock as soon as loadQuestion() renders
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
             if os.path.abspath(path) != os.path.abspath(PAGE):

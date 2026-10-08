@@ -72,6 +72,18 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Start is double-clicked for real. A shot sets the needle and presses Fire: i = 0 on the target bearing (a hit); i >= 1 on the opposite bearing (a miss).
+{
+  "start_sel": ".start-btn",
+  "ready": "gameActive && !MaffsLock.isLocked(document.getElementById('game'))",
+  "answer": [
+    "currentAngle = i === 0 ? targetBearing : (targetBearing + 180) % 360; drawCompass();",
+    "document.getElementById('fireBtn').click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -99,6 +111,7 @@ Drag the needle to the target bearing. You have <strong>no readout</strong> — 
 <div class="compass-wrap"><canvas id="compassCanvas" width="320" height="320"></canvas></div>
 <button class="fire-btn" id="fireBtn" onclick="fire()">🎯 Fire Torpedo</button>
 <div class="message" id="message"></div>
+<div id="nextMount"></div>
 </div>
 
 <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button>
@@ -212,6 +225,7 @@ function updateLives(){
 }
 
 function startGame(){
+  MaffsLock.newSession();
   generateBearings();
   livesLeft=3;sunkCount=0;score=0;totalShots=0;currentAngle=0;gameActive=true;showTarget=false;
   document.getElementById('sunk').textContent='0';
@@ -232,10 +246,13 @@ function nextTarget(){
   document.getElementById('message').className='message';
   showTarget=false;
   drawCompass();
+  MaffsNext.clear(document.getElementById('nextMount'));
+  MaffsLock.fresh(document.getElementById('game'));   // a new target: a double-click on Fire or Next cannot shoot at it
 }
 
 function fire(){
   if(!gameActive)return;
+  if(!MaffsLock.lock(document.getElementById('game')))return;   // one shot per target (canon 7.6.0): Enter or Space on Fire no longer shoots twice
   document.getElementById('fireBtn').classList.add('disabled');
   totalShots++;
 
@@ -256,28 +273,31 @@ function fire(){
     msg.className='message show hit';
     msg.textContent='💥 HIT! Target was '+pad3(targetBearing)+'° — you were '+diff+'° off. +'+pts+' points';
     mfg('question_answered',{game_slug:'bearing-blitz',level:'all',correct:true,question_index:totalShots});
-    setTimeout(nextTarget,1800);
+    MaffsLock.timer(nextTarget,1800);
   } else {
     livesLeft--;
     updateLives();
     document.getElementById('gameContainer').classList.add('shaking');
-    setTimeout(()=>document.getElementById('gameContainer').classList.remove('shaking'),600);
+    MaffsLock.timer(()=>document.getElementById('gameContainer').classList.remove('shaking'),600);
 
     mfg('question_answered',{game_slug:'bearing-blitz',level:'all',correct:false,question_index:totalShots});
     msg.className='message show miss';
     if(livesLeft>0){
       const warnings=['Depth charge dropped nearby!','They\'re getting closer!','Hull integrity compromised!'];
       msg.textContent='💣 '+warnings[2-livesLeft]+' You were '+diff+'° off. Target was '+pad3(targetBearing)+'°. '+livesLeft+' '+(livesLeft===1?'life':'lives')+' left!';
-      setTimeout(nextTarget,2500);
+      // canon 7.6: the miss (how far off, and the true bearing) stays up until Next.
+      MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:nextTarget});
     } else {
       msg.textContent='💀 DESTROYED! Surface ships locked onto your position. You were '+diff+'° off the final bearing.';
       gameActive=false;
-      setTimeout(endGame,2500);
+      MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:endGame});
     }
   }
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame(){finishGame()}
+const finishGame=MaffsLock.finishOnce(function(){
   gameActive=false;
   const accuracy=totalShots>0?Math.round(sunkCount/totalShots*100):0;
   let title='';
@@ -294,7 +314,7 @@ function endGame(){
   mfg('game_completed',{game_slug:'bearing-blitz',level:'all',score:score,questions_answered:totalShots,accuracy:accuracy});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('bearing-blitz','all',score,totalShots).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('bearing-blitz','all',score);}}
   show('results');
-}
+});
 
 drawCompass();
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();

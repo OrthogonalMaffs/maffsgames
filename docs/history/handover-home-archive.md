@@ -175,6 +175,19 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
    > STOP IF: a claim in items 2-3 is not true on main (report which; do not reword it yourself); the page's
    > checks require a format the text doesn't fit.
 
+## 2026-10-08 (home): contract UPDATES, the October quality entries on /updates/ (branch `claude/updates`)
+
+- **STOP IF hit (item 5's fact check, before committing):** item 3's American-wheel example was not true on main.
+  No game names the wheel; wrong-on-the-internet (listed) still keys roulette `P(black) = 18/38` with no wheel
+  stated (audit tranche 2's open fix: "say 'American wheel', or key 18/37"). **Ruling (Project Claude, 8 Oct):**
+  drop it; item 3 now ends "for example, which method to use for quartiles." Items 1, 2 and 4 unchanged.
+  wrong-on-the-internet's roulette item is still an open SR-17 fix for a later batch.
+- **Claims confirmed on main:** Linear Equation Solver marks `b` (every optimal move) full, `s` (valid but slower)
+  half the points at stake with the quickest route shown, `e` named (154 one-side ÷ errors, "Whatever you do to
+  one side, do to the other side too"). core-maths-paper1 (listed) states "Using the (n + 1)/4 method".
+- **Page:** the "Every answer checked again" note after "Which tax year?", then first items under New, Clarified
+  and Improved in the October section. No existing entry touched; the /resit/ history links stay (they redirect).
+
 ## 2026-10-08 (home): contract ESSENTIALS, BUILT on `claude/essentials` (worktree E:/jon/mg-ess), MERGED (#150, 69d05df)
 
 **MERGED 8 Oct (#150, 69d05df) on a green Gate.** Locally, Test the Claim (`generateWrongContexts is not defined`

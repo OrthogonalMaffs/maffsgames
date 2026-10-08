@@ -13,9 +13,10 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as of 8 Oct") in contract CTX. Then:
 1. **Contract CTX: DONE, #158 merged 8 Oct (b66ccde).** Its verbatim text: `docs/history/handover-home-archive.md`
    ("QUEUE items CTX and F1 batch 5"); its notes: the CTX entry below.
-2. **F1 batch 5: PR on `claude/f1-batch5` (8 Oct; see its entry below).** Merge on a green Gate.
-- **cloud.md not trimmed (contract CTX step 3):** the cloud lane had PR #154 open on it. Trim it to its header and
-  newest three entries (to `docs/history/handover-cloud-archive.md`) at the next cloud checkpoint.
+2. **F1 batch 5: DONE, #161 merged 8 Oct (8216ff4), main green.**
+3. **F1 batch 6: PR #165 on `claude/f1-batch6` (8 Oct; see its entry below).** Merge on a green Gate, watch main, then
+   **CHECKPOINT STOP** (2 batches merged since the last stop: 5 and 6). Next batch: re-read `cloud-remaining:` and the
+   cloud lane's order in cloud.md first; NOT_YET is 40.
 - **Follow-up (home lane, small):** `check-changed.py` crashes (`UnicodeEncodeError`, cp1252) printing a failure when
   its output is redirected to a file on Windows. Until fixed: `PYTHONIOENCODING=utf-8 python scripts/check-changed.py`.
 - **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
@@ -33,6 +34,24 @@ contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as 
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-08 (home): F1 batch 6 (#165, branch `claude/f1-batch6`, worktree E:/jon/mg-b6)
+
+- **On MaffsLock, each with its declaration, seeds 1-3 and its own verifier passing:** sequence-solver, bearing-blitz,
+  expected-damage, maths-court, equation-builder, fermi-lab, better-value, chart-interrogator. terrible-advice (the cloud
+  lane's #160) also to MIGRATED. **NOT_YET: 40.** Chosen off the cloud lane's listed-games order; opened as a draft PR
+  at the start so the cloud lane could see it.
+- **Faults fixed beyond the swap:** sequence-solver and bearing-blitz wait on Next after a wrong answer (bearing-blitz's
+  Fire was "disabled" by a CSS class only; the last life's miss waits too); expected-damage, maths-court and fermi-lab
+  keep their own Next, which now acts only on an answered question (a double-click skipped one); maths-court's two
+  attempts survive a double-click and a tapped card cannot re-mark; equation-builder's double Check no longer spends the
+  retry and the shown key waits on Next; fermi-lab's Calculate Estimate marked and scored twice on a double-click, and a
+  step could count twice; chart-interrogator (logs right answers only, so `mark_any`) marked a right answer twice on a
+  second Enter inside its 600 ms advance, and a double Submit Comparison finished the game twice.
+- **Declarations:** bearing-blitz and fermi-lab declare `start_sel` (no Start button), so the double-click on Start is
+  real; equation-builder fills its slots from data and checks twice to spend the retry, stopping if the question moved on.
+- **Verifiers:** sequence-solver and fermi-lab get `bc.NO_LOCK_FRESH_INIT` (they answer as soon as a question renders).
+  better-value's page-load KaTeX poll keeps a raw timer, marked `// lock-ok:`.
 
 ## 2026-10-08 (home): F1 batch 5 (branch `claude/f1-batch5`, worktree E:/jon/mg-b5)
 
@@ -76,15 +95,3 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   quote it), SR-24 (counterexample refutes the statement as written), SR-25 (words, figure and key agree), §0.4 (register
   files edited by hand), §7.9 (verifiers read the page's feedback, not a wrapped mfg; pointer in CLAUDE.md), CLAUDE.md
   "Session practice" (`--against` scratch copy; never `| tail` under a timeout). Then merge on a green Gate.
-## 2026-10-08 (home): contract UPDATES, the October quality entries on /updates/ (branch `claude/updates`)
-
-- **STOP IF hit (item 5's fact check, before committing):** item 3's American-wheel example was not true on main.
-  No game names the wheel; wrong-on-the-internet (listed) still keys roulette `P(black) = 18/38` with no wheel
-  stated (audit tranche 2's open fix: "say 'American wheel', or key 18/37"). **Ruling (Project Claude, 8 Oct):**
-  drop it; item 3 now ends "for example, which method to use for quartiles." Items 1, 2 and 4 unchanged.
-  wrong-on-the-internet's roulette item is still an open SR-17 fix for a later batch.
-- **Claims confirmed on main:** Linear Equation Solver marks `b` (every optimal move) full, `s` (valid but slower)
-  half the points at stake with the quickest route shown, `e` named (154 one-side ÷ errors, "Whatever you do to
-  one side, do to the other side too"). core-maths-paper1 (listed) states "Using the (n + 1)/4 method".
-- **Page:** the "Every answer checked again" note after "Which tax year?", then first items under New, Clarified
-  and Improved in the October section. No existing entry touched; the /resit/ history links stay (they redirect).
