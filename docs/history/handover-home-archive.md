@@ -3,6 +3,59 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## QUEUE item VOCAB-SHOWTHAT, verbatim (Jon, 8 Oct; moved when done)
+
+<details><summary>Queue item 4a, verbatim (2, 3 and 4 moved to the archive when done) (Jon, 8 Oct)</summary>
+
+> TASK (home lane, VOCAB-SHOWTHAT; run after GA4-COUNTRY-CANON, before F1 batch 7): Correct the "show that" tooltip
+> in the shared exam vocabulary file.
+> ROOT CAUSE: schools/assets/exam-vocab.js gives "show that" the definition "Prove this is true. Show every step of
+> your working — you can't just verify it with numbers, you must derive it algebraically." That merges two different
+> command words. "Show that" means the result is given and the student shows the working that reaches it. The
+> working is often numerical: f(2) = 0 to show (x − 2) is a factor; a change of sign to show a root lies in an
+> interval; "show that 3/4 of 60 is 45" at Foundation. "Prove" is the general argument. The rule the tooltip
+> half-remembers is narrower: do not start from the given answer and work backwards. Found as factor-theorem-t5-009
+> (shows on Q3, Q4, T1a, T3b, T7a, T10a, where the expected method is numerical). Ruled by Jon, 8 Oct 2026.
+> CLASS CHECK: Shared infrastructure. The definition lives in a shared asset that any game can load, so it is fixed
+> once, there, and every current and future user is corrected. Today only factor-theorem loads it; the fix is still
+> made in the shared file, never as an override in the game.
+> EXACT CHANGE: 1. schools/assets/exam-vocab.js, the 'show that' entry's plain text, exactly: "The answer is given
+> to you. Write out every step that gets there. Working with numbers is fine when that is the method, such as
+> showing f(2) = 0. You must not start from the given answer and work backwards." 2. Check the 'hence show' entry
+> ("Use your previous answer to prove this result — show every step.") and change "prove" to "reach": "Use your
+> previous answer to reach this result — show every step." The 'prove that', 'prove', 'verify that' and 'verify'
+> entries stay as they are. 3. Close factor-theorem-t5-009 in docs/audits/findings/factor-theorem.yml in this PR,
+> with a resolution line citing Jon's ruling. This is the one cloud-lane findings file the home lane edits here;
+> check cloud-remaining: and the open PRs first, and if factor-theorem is claimed or has an open PR, leave the
+> findings file to that PR and say so in the handover. 4. docs/handover/home.md updated.
+> DO NOT TOUCH: every other entry in exam-vocab.js; the tooltip mechanism (wrapExamVocab's re-wrapping bug, t5-008,
+> is in the cloud lane's factor-theorem contract); any game page.
+> SUCCESS CONDITION: the 'show that' tooltip on factor-theorem Q3 shows the new text in Chromium; no other tooltip
+> text changes (diff shows two strings); t5-009 closed (or handed to the cloud PR as above); merged on a green Gate;
+> main green; handover current.
+> STOP IF: exam-vocab.js is loaded by more pages than factor-theorem and any of them uses "show that" for a genuine
+> proof (quote the question and ask Jon); the factor-theorem cloud PR has changed how the tooltip text is read so
+> that this edit does not show.
+
+</details>
+
+## 2026-10-08 (home): RELIST-3 (#176, merged c0c825b)
+
+- **Start state, main c8e1b91 (neither game nor its findings file changed by c1fc37a):** verify-expectation-station and verify-truth-buster pass; findings:
+  expectation-station none open, truth-buster t3-014 MEDIUM, t3-015 LOW, t3-016 MEDIUM (stay open, SR-21).
+  Neither is on `cloud-remaining:` (terrible-advice only). On Windows a verifier run redirected to a file crashes on
+  cp1252 (same as CHANGED-UTF8): run with `PYTHONIOENCODING=utf-8`.
+- **Done:** Pythag listed (noindex off, head comment, portal KS3 card with New badge, /essentials/ Geometry, spec map
+  G20 as its own row, sitemap, hub row, NOT_ON_HUB dropped, SUITE, roster KS3 #98, canon §1 and §4.2); ES and TB
+  relisted from their unlisting commits (059b2ec, e419439): portal cards (ES Updated badge, both its cards), sitemap,
+  spec map (ES §3.9 rows), hub rows, NOT_ON_HUB, TB's spec-mapping EXCEPTIONS entry back; roster #59 (GCSE), #17 (KS3).
+  /updates/: Jon's Pythag line under October New; his suggested ES line under October Improved. TB: no badge, no line
+  (its changes since unlisting are SR-18 rewording, corrected figures, the lock, phone fit and a test-only lock-hint
+  declaration: none meets §3.4). todo: listing item closed with Jon's approval recorded; iPhone check a separate
+  open follow-up; §1.55 and §1.75 closed.
+- **Deviation, for Jon:** the /essentials/ card says "One level", not "Choose: Foundation": the game has one level and no
+  picker and reads no `?level=`, so a Choose card fails check-resit-page.py (and would promise a choice that isn't there).
+
 ## QUEUE item GA4-COUNTRY-CANON, verbatim (Jon, 8 Oct; moved when done)
 
 > TASK (GA4-COUNTRY-CANON): Record the GA4 country figures in canon.
