@@ -192,6 +192,19 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',sans-serif;co
   .icon-grid.grid-100{width:100%}
 }
 
+/* Phases stack (t4-013: a row of cards scrolled sideways on a phone); the icon grid never exceeds its card */
+#phase1,#phase2,#phase3{flex-direction:column;gap:16px;width:100%}
+.icon-grid{max-width:100%}
+.icon-scale{font-size:12px;color:var(--text-dim);margin:-4px 0 10px}
+.person-icon.partial{background:linear-gradient(90deg,var(--pc,var(--icon-grey)) var(--f),transparent var(--f));outline:1px solid var(--icon-grey);outline-offset:-1px}
+.person-icon.partial.condition{--pc:var(--icon-condition)}
+.person-icon.partial.true-positive{--pc:var(--icon-tp)}
+.person-icon.partial.false-positive{--pc:var(--icon-fp)}
+@media(max-width:500px){
+  .icon-grid.grid-25{width:100%}
+  .icon-array-container,.question-card,.calc-card{padding:16px}
+  .calc-input{min-width:0;width:100%}
+}
 /* Accessibility */
 body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
 body.accessible p,body.accessible .q-scenario,body.accessible .calc-prompt,body.accessible .calc-explanation{line-height:2.0;max-width:65ch}
@@ -208,6 +221,28 @@ body.accessible{background-color:#12141f !important}
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. A question is a gut check (phase 1), the icon array (phase 2, Continue) and a typed answer (phase 3); "answer" plays all three: i = 0 the keyed band and the key, i >= 1 the next band and the key plus one unit (both wrong).
+{
+  "start": "startGame()",
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && document.getElementById('phase1').style.display !== 'none' && !document.querySelector('.gut-btn').disabled",
+  "answer": [
+    "return (async () => {",
+    " const q = currentQ, order = ['very_likely', 'likely', 'unlikely', 'very_unlikely'];",
+    " const band = i === 0 ? q.gutCheckCorrect : order[(order.indexOf(q.gutCheckCorrect) + 1) % 4];",
+    " document.querySelector('.gut-btn[data-gut=\"' + band + '\"]').click();",
+    " const until = f => new Promise(r => { (function w() { if (f()) r(); else requestAnimationFrame(w); })(); });",
+    " await until(() => document.getElementById('continueBtn').classList.contains('visible') && document.getElementById('phase1').style.display === 'none');",
+    " document.getElementById('continueBtn').click();",
+    " await until(() => document.getElementById('phase3').style.display !== 'none' && !document.getElementById('calcInput').disabled && !MaffsLock.isFresh());",
+    " const k = q.keys[0] + (i === 0 ? 0 : 1);",
+    " document.getElementById('calcInput').value = (k / Math.pow(10, q.dp)).toFixed(q.dp) + '%';",
+    " document.getElementById('calcSubmit').click();",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -280,6 +315,7 @@ body.accessible{background-color:#12141f !important}
       </div>
       <div class="icon-array-container">
         <div class="icon-array-title">Natural Frequency Visualisation</div>
+        <div class="icon-scale" id="iconScale" style="display:none"></div>
         <div class="icon-grid" id="iconGrid"></div>
         <div class="icon-legend" id="iconLegend">
           <div class="icon-legend-item"><div class="legend-dot" style="background:var(--icon-grey)"></div>No condition, not flagged</div>
@@ -311,7 +347,7 @@ body.accessible{background-color:#12141f !important}
           </div>
         </div>
       </div>
-      <button class="next-phase-btn" id="nextQuestionBtn" onclick="nextQuestion()" style="display:none">Next Question</button>
+      <div id="nextWrap" style="align-self:center"><button class="next-phase-btn" id="nextQuestionBtn" onclick="nextOnce()" style="display:none">Next Question</button></div>
     </div>
   </div>
 
@@ -376,7 +412,7 @@ alevel: [
 {id:"alevel_01",context:"Rare genetic condition screening",label:"Has condition",N:1000000,base:0.0001,tests:[[0.99,0.99]],scenario:"A blood test screens for a rare genetic condition that affects {baseOneIn} people. The test has {sens} sensitivity and {spec} specificity. Consider {N} people screened.",explanation:"{pos} people test positive. Only {tp} actually have the condition.",sym:"D"},
 {id:"alevel_02",context:"Breast cancer mammogram screening",label:"Has breast cancer",N:50000,base:0.008,tests:[[0.87,0.91]],scenario:"In the NHS breast screening programme, about {base} of women aged 50-70 have breast cancer at any given time. Mammography has a sensitivity of {sens} and a specificity of {spec}. Consider {N} women screened.",explanation:"{pos} women get positive mammograms. Only {tp} actually have breast cancer.",textNumbers:[50, 70],sym:"C"},
 {id:"alevel_03",context:"HIV testing",label:"HIV positive",N:625000,base:0.0016,tests:[[0.997,SOURCES.hivTestSpecificity.value]],scenario:"In the general UK population, about {base} of people are HIV positive. A modern laboratory HIV test has a sensitivity of {sens} and a specificity of {spec}. Consider {N} people tested.",explanation:"{pos} people test positive. Only {tp} are truly HIV positive: {fp} of the positives are false, even with a test this accurate. (Figures: UK HIV statistics and published evaluations of modern HIV tests.)",sym:"H"},
-{id:"alevel_04",context:"Forensic DNA database search",label:"Is the perpetrator",N:1000000,base:1e-06,tests:[[1.0,0.99999]],scenario:"Police search a DNA database of {N} profiles for a match to crime scene DNA. One person in the database is the actual perpetrator, and their profile always matches. For anyone else, the chance of a false match is {fprOneIn}.",explanation:"About {pos} profiles match: {tp} real match and about {fp} false matches (rounded to the nearest whole number). Only {tp} is the real perpetrator. This is the 'prosecutor's fallacy'.",rounded:true,sym:"G"},
+{id:"alevel_04",context:"Forensic DNA database search",label:"Is the perpetrator",unit:"profiles",N:1000000,base:1e-06,tests:[[1.0,0.99999]],scenario:"Police search a DNA database of {N} profiles for a match to crime scene DNA. One person in the database is the actual perpetrator, and their profile always matches. For anyone else, the chance of a false match is {fprOneIn}.",explanation:"About {pos} profiles match: {tp} real match and about {fp} false matches (rounded to the nearest whole number). Only {tp} is the real perpetrator. This is the 'prosecutor's fallacy'.",rounded:true,sym:"G"},
 {id:"alevel_05",context:"NHS bowel cancer screening (FIT test)",label:"Has bowel cancer",N:100000,base:0.003,tests:[[SOURCES.fitSensitivity.value,0.95]],scenario:"The NHS sends FIT kits to adults aged 60-74. About {base} of this age group have bowel cancer. At the programme's threshold, the FIT test has a sensitivity of about {sens} and a specificity of {spec}. Consider {N} people screened.",explanation:"{pos} people get a positive FIT result. Only {tp} have bowel cancer. (Sensitivity from a study of the NHS bowel screening programme in England.)",textNumbers:[60, 74],sym:"C"},
 {id:"alevel_06",context:"Statistical hypothesis testing \u2014 false discovery rate",label:"Drug actually works",N:400,base:0.05,tests:[[0.8,0.95]],scenario:"A research team tests {N} potential drug compounds. Only {c} ({base}) actually work. Their statistical test uses a {fpr} significance level with {sens} power. Consider all {N} tests.",explanation:"{pos} drugs show 'significant' results. Only {tp} actually work. This is the replication crisis.",sym:"W"},
 {id:"alevel_07",context:"Prostate cancer PSA blood test",label:"Has prostate cancer",N:5000,base:0.04,tests:[[0.8,0.7]],scenario:"The PSA blood test screens men over 50 for prostate cancer. About {base} have prostate cancer. The PSA test has sensitivity {sens} and specificity {spec}. Consider {N} men screened.",explanation:"{pos} men get elevated PSA results. Only {tp} have cancer.",textNumbers:[50],sym:"C"},
@@ -398,15 +434,15 @@ core: [
 {id:"core_01",context:"NHS diabetes screening",label:"Has undiagnosed diabetes",N:10000,base:0.03,tests:[[SOURCES.hba1cSensitivity.value,0.93]],scenario:"The NHS Health Check programme tests adults aged 40-74 for Type 2 diabetes risk. About {base} have undiagnosed diabetes. The HbA1c blood test correctly identifies about {sens} of people with diabetes, but flags {fpr} of people without it. Consider {N} people.",explanation:"{pos} people are flagged. {tp} have diabetes. (Sensitivity from a UK study of HbA1c screening.)",textNumbers:[40, 74, 2, 1]},
 {id:"core_02",context:"Pre-employment drug screening",label:"Used drugs recently",N:10000,base:0.08,tests:[[0.96,0.95]],scenario:"Over a year, a large company drug-tests {N} job applicants. About {base} have recently used drugs. The urine test correctly detects {sens} of drug users, but gives a false positive for {fpr} of non-users.",explanation:"{pos} applicants test positive. {tp} are genuine users."},
 {id:"core_03",context:"MOT emissions test",label:"Genuinely fails emissions",N:5000,base:0.12,tests:[[0.88,0.96]],scenario:"During MOT testing, about {base} of cars genuinely fail emissions. The equipment correctly fails {sens} of polluting cars, but also incorrectly fails {fpr} of clean cars. Consider {N} cars.",explanation:"{pos} cars fail. {tp} genuinely exceed limits."},
-{id:"core_04",context:"Benefits fraud detection",label:"Fraudulent claim",N:100000,base:0.02,tests:[[0.75,0.95]],scenario:"The DWP screens {N} Universal Credit claims for fraud. About {base} involve genuine fraud. The system correctly flags {sens} of fraudulent claims, but also flags {fpr} of legitimate claims.",explanation:"{pos} claims are flagged. {tp} are genuinely fraudulent."},
+{id:"core_04",context:"Benefits fraud detection",label:"Fraudulent claim",unit:"claims",N:100000,base:0.02,tests:[[0.75,0.95]],scenario:"The DWP screens {N} Universal Credit claims for fraud. About {base} involve genuine fraud. The system correctly flags {sens} of fraudulent claims, but also flags {fpr} of legitimate claims.",explanation:"{pos} claims are flagged. {tp} are genuinely fraudulent."},
 {id:"core_05",context:"Building asbestos survey",label:"Contains asbestos",N:5000,base:0.06,tests:[[0.93,0.97]],scenario:"Over a year, a surveying firm takes {N} material samples from buildings. About {base} actually contain asbestos. The lab analysis correctly identifies {sens} of asbestos-containing samples, but gives a false positive on {fpr} of non-asbestos samples.",explanation:"{pos} samples test positive. {tp} contain asbestos."},
-{id:"core_06",context:"Speed camera accuracy",label:"Genuinely speeding",N:20000,base:0.05,tests:[[0.99,0.995]],scenario:"A speed camera photographs {N} vehicles. {c} ({base}) are genuinely speeding. The camera correctly identifies {sens} of speeders, but has a {fpr} false reading rate on vehicles within the limit.",explanation:"{pos} vehicles are flagged. {tp} were genuinely speeding."},
+{id:"core_06",context:"Speed camera accuracy",label:"Genuinely speeding",unit:"vehicles",N:20000,base:0.05,tests:[[0.99,0.995]],scenario:"A speed camera photographs {N} vehicles. {c} ({base}) are genuinely speeding. The camera correctly identifies {sens} of speeders, but has a {fpr} false reading rate on vehicles within the limit.",explanation:"{pos} vehicles are flagged. {tp} were genuinely speeding."},
 {id:"core_07",context:"Household radon testing",label:"Dangerous radon level",N:2000,base:0.07,tests:[[0.85,0.9]],scenario:"In certain parts of the UK, {base} of homes have dangerous radon levels. A passive detector correctly identifies {sens} of high-radon homes, but gives a false alarm for {fpr} of safe homes. {N} homes are tested.",explanation:"{pos} homes test high. {tp} actually have dangerous levels."},
 {id:"core_08",context:"Food allergy IgE blood test",label:"Has food allergy",N:200,base:0.2,tests:[[0.85,0.85]],scenario:"A GP orders IgE blood tests for {N} patients who suspect food allergy. About {base} actually have a clinically significant allergy. The IgE test detects {sens} of allergies, but shows elevated levels in {fpr} of non-allergic patients.",explanation:"{pos} patients test positive. {tp} have genuine allergies."},
 {id:"core_09",context:"University plagiarism detection",label:"Contains plagiarism",N:5000,base:0.03,tests:[[0.9,0.92]],scenario:"A university runs {N} essays through Turnitin. About {base} contain genuine plagiarism. The software flags {sens} of plagiarised work, but also flags {fpr} of original work.",explanation:"{pos} essays are flagged. Only {tp} contain genuine plagiarism."},
 {id:"core_10",context:"In-car alcohol interlock device",label:"Over limit",N:2000,base:0.05,tests:[[0.97,0.98]],scenario:"{N} drink-drive offenders use an alcohol interlock device. On any given morning, {base} attempt to drive over the limit. The device correctly blocks {sens} of over-limit attempts, but also blocks {fpr} of sober attempts.",explanation:"{pos} lock-outs. {tp} are genuine over-limit attempts."},
 {id:"core_11",context:"Earthquake early warning system",label:"Damaging earthquake",N:10000,base:0.005,tests:[[0.96,0.98]],scenario:"An earthquake early warning system monitors {N} seismic events per year. Only {c} ({base}) are genuine damaging earthquakes. The system correctly alerts for {sens}, but triggers false alarms for {fpr} of non-damaging events.",explanation:"{pos} alerts per year. Only {tp} are for real earthquakes."},
-{id:"core_12",context:"Counterfeit banknote detector",label:"Counterfeit",N:400000,base:0.0005,tests:[[0.9,0.995]],scenario:"A cash centre's UV banknote checkers process {N} notes a week. About {c} notes ({base}) are counterfeit. The checkers correctly identify {sens} of fakes, but falsely reject {fpr} of genuine notes.",explanation:"{pos} notes are rejected. Only {tp} are actually fake."},
+{id:"core_12",context:"Counterfeit banknote detector",label:"Counterfeit",unit:"notes",N:400000,base:0.0005,tests:[[0.9,0.995]],scenario:"A cash centre's UV banknote checkers process {N} notes a week. About {c} notes ({base}) are counterfeit. The checkers correctly identify {sens} of fakes, but falsely reject {fpr} of genuine notes.",explanation:"{pos} notes are rejected. Only {tp} are actually fake."},
 {id:"core_13",context:"Home carbon monoxide alarm",label:"Genuine CO leak",N:20,base:0.05,tests:[[1.0,0.0]],scenario:"Over a 5-year period, a CO alarm activates {N} times. Only {c} event is a genuine CO leak ({base}). The alarm detects every real CO event but triggers false alarms from steam, cooking, and battery issues.",explanation:"Every activation is a positive. Only {tp} in {pos} is real.",textNumbers:[5]},
 {id:"core_14",context:"Clearing admission \u2014 predicted grades as a 'test'",label:"Actually fails first year",N:2000,base:0.25,tests:[[0.8,0.35]],scenario:"{N} students enter university through Clearing. Predicted grades suggested about {posPct} would struggle. In reality, {base} actually fail. The prediction correctly identified {sens} who would fail, but wrongly predicted failure for {fpr} who actually passed.",explanation:"{pos} students were predicted to struggle. Only {tp} actually failed."},
 {id:"core_15",context:"Smoke detector low-battery warning",label:"Battery genuinely low",N:50,base:0.1,tests:[[1.0,0.0]],scenario:"A smoke detector chirps {N} times over 2 years. On {c} occasions ({base}), the battery was genuinely low. The other {nc} times were caused by temperature changes, humidity, or insects.",explanation:"Every chirp is a 'positive'. Only {tp} in {pos} means a low battery.",textNumbers:[2]}
@@ -421,7 +457,7 @@ level4: [
 {id:"l4_07",context:"Radiographic weld inspection \u2014 pipeline",label:"Weld defect exceeds standard",N:10000,base:0.06,tests:[[0.9,0.97]],scenario:"A pipeline contractor radiographs {N} girth welds. {c} ({base}) contain defects exceeding the standard. The radiographic interpretation correctly identifies {sens} of defective welds, but reports false defects in {fpr} of acceptable welds.",explanation:"{pos} welds flagged. {tp} have genuine defects."},
 {id:"l4_08",context:"Shaft alignment \u2014 laser measurement",label:"Genuinely misaligned",N:6000,base:0.15,tests:[[0.93,0.93]],scenario:"A maintenance team laser-aligns {N} pump-motor sets. {c} ({base}) are genuinely misaligned. The laser system correctly identifies {sens}, but reports {fpr} of properly aligned sets as out of tolerance.",explanation:"{pos} sets flagged. {tp} genuinely misaligned."},
 {id:"l4_09",context:"Rockwell hardness testing",label:"Outside hardness spec",N:5000,base:0.07,tests:[[0.9,0.96]],scenario:"A heat treatment shop tests {N} parts for hardness. {c} ({base}) are genuinely outside the specified range. The Rockwell tester correctly identifies {sens} of out-of-spec parts, but gives false readings on {fpr} of good parts.",explanation:"{pos} parts fail. {tp} are genuinely out of spec."},
-{id:"l4_10",context:"Dye penetrant inspection \u2014 surface crack detection",label:"Surface crack exceeds criteria",N:15000,base:0.06,tests:[[0.88,0.95]],scenario:"A foundry inspects {N} castings using DPI. {c} ({base}) have surface cracks exceeding criteria. DPI correctly reveals {sens} of cracked castings, but shows false indications on {fpr} of crack-free castings.",explanation:"{pos} castings flagged. {tp} have genuine cracks."},
+{id:"l4_10",context:"Dye penetrant inspection \u2014 surface crack detection",label:"Surface crack exceeds criteria",unit:"castings",N:15000,base:0.06,tests:[[0.88,0.95]],scenario:"A foundry inspects {N} castings using DPI. {c} ({base}) have surface cracks exceeding criteria. DPI correctly reveals {sens} of cracked castings, but shows false indications on {fpr} of crack-free castings.",explanation:"{pos} castings flagged. {tp} have genuine cracks."},
 {id:"l4_11",context:"Critical bolt torque verification",label:"Undertorqued",N:10000,base:0.03,tests:[[0.95,0.98]],scenario:"An inspector verifies {N} critical flange bolts. {c} ({base}) are genuinely undertorqued. The verification wrench correctly identifies {sens} of undertorqued bolts, but gives a false low reading on {fpr} of properly torqued bolts.",explanation:"{pos} bolts flagged. {tp} genuinely undertorqued."},
 {id:"l4_12",context:"Oil analysis \u2014 wear metal detection",label:"Abnormal wear developing",N:6000,base:0.05,tests:[[0.85,0.92]],scenario:"A condition monitoring programme analyses {N} oil samples from gearboxes. {c} ({base}) have abnormal wear. Oil analysis correctly identifies {sens}, but flags {fpr} of healthy gearboxes.",explanation:"{pos} gearboxes flagged. {tp} have genuine wear."},
 {id:"l4_13",context:"Hydrostatic pressure test",label:"Structural weakness",N:5000,base:0.02,tests:[[1.0,0.99]],scenario:"A manufacturer pressure-tests {N} vessels at 1.5\u00d7 design pressure. {c} ({base}) have genuine structural weaknesses. The test correctly fails {sens} of weak vessels, but also fails {fpr} of sound vessels.",explanation:"{pos} vessels fail. {tp} have genuine weaknesses. {sens} sensitivity = no weak vessel passes.",textNumbers:[1.5]},
@@ -540,7 +576,9 @@ var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matche
 
 // ─── LEVEL SELECT ───
 var pa = new URLSearchParams(location.search);
-if (pa.get('level') && QUESTIONS[pa.get('level')]) {
+// Only the game's own levels (t4-006: 'constructor', '__proto__' and 'toString' are on every object); anything else
+// leaves the default level on the start screen, unserved and unlogged.
+if (Object.prototype.hasOwnProperty.call(QUESTIONS, pa.get('level') || '')) {
   currentLevel = pa.get('level');
 }
 document.querySelectorAll('.level-btn').forEach(function(b) {
@@ -592,6 +630,7 @@ function escapeText(s) {
 
 // ─── START GAME ───
 function startGame() {
+  MaffsLock.newSession();
   var bank = QUESTIONS[currentLevel];
   sessionQuestions = shuffle(bank).slice(0, 8);
   qIdx = 0;
@@ -631,10 +670,14 @@ function showQuestion() {
     b.disabled = false;
   });
   showPhase(1);
+  // a new question: its gut check answerable once more, and a double click on Next cannot answer it unseen (t4-005)
+  MaffsLock.fresh(document.getElementById('gutOptions'));
+  MaffsLock.fresh(document.getElementById('gameScreen'));
 }
 
 // ─── PHASE 1: GUT CHECK ───
 function handleGut(btn) {
+  if (!MaffsLock.lock(document.getElementById('gutOptions'))) return;   // the gut check is marked once
   var selected = btn.dataset.gut;
   var correct = currentQ.gutCheckCorrect;
   var isCorrect = (selected === correct);
@@ -677,10 +720,18 @@ function handleGut(btn) {
   mfg('question_answered', { game_slug: 'screening-room', level: currentLevel, question_index: qIdx + 1, correct: isCorrect, phase: 1 });
 
   // Move to phase 2 after a brief pause
-  setTimeout(function() { showPhase2(); }, 1200);
+  MaffsLock.timer(function() { showPhase2(); }, 1200);
 }
 
 // ─── PHASE 2: ICON ARRAY ───
+// How many of the population one icon stands for: 1 up to 10,000 icons; above that, the largest k dividing N and every
+// count drawn that keeps it within 10,000 (gcd(N, counts) if N / gcd fits), else the least whole k that fits.
+function iconScale(pop, counts) {
+  if (pop <= 10000) return 1;
+  var g = counts.reduce(function (a, b) { return gcd(a, b); }, pop);
+  return pop / g <= 10000 ? g : Math.ceil(pop / 10000);
+}
+
 function showPhase2() {
   var q = currentQ;
   document.getElementById('qContext2').textContent = q.context;
@@ -694,6 +745,7 @@ function showPhase2() {
   summary.innerHTML = '';
   var contBtn = document.getElementById('continueBtn');
   contBtn.className = 'continue-btn';
+  contBtn.style.display = '';
 
   var pop = q.population;
   var condCount = q.condition.count;
@@ -716,29 +768,38 @@ function showPhase2() {
     grid.className = 'icon-grid grid-100';
   }
 
-  // For very large populations, show a representative sample
-  var displayPop = pop;
-  var scale = 1;
-  if (pop > 10000) {
-    // Scale down to 10000 icons max
-    scale = 10000 / pop;
-    displayPop = 10000;
+  // Over 10,000 (t4-008; Project Claude's rule, 8 Oct 2026): one icon stands for k. k divides every count the array
+  // draws (N, the condition, true and false positives), the largest such k that keeps it within 10,000 icons, so every
+  // group is whole icons; when no k above 1 does, k is the least that fits and a group's remainder is one icon cut to
+  // its share. Never rounded. A note gives k in the scenario's own unit, and each group's exact count.
+  var k = iconScale(pop, [condCount, tp, fp]);
+  var groups = [['true-positive', tp], ['condition', condCount - tp], ['false-positive', fp], ['', pop - condCount - fp]];
+  var plan = [];                        // one entry an icon: [class, the share of k it stands for, as rem / k, or 0 if whole]
+  groups.forEach(function (g) {
+    for (var j = 0; j < Math.floor(g[1] / k); j++) plan.push([g[0], 0]);
+    if (g[1] % k) plan.push([g[0], g[1] % k]);
+  });
+  var displayPop = plan.length;
+  var scaledTp = plan.filter(function (x) { return x[0] === 'true-positive'; }).length;
+  var scaledCond = scaledTp + plan.filter(function (x) { return x[0] === 'condition'; }).length;
+  var scaledFp = plan.filter(function (x) { return x[0] === 'false-positive'; }).length;
+  var note = document.getElementById('iconScale');
+  if (k > 1) {
+    note.textContent = '1 icon = ' + numFmt(k) + ' ' + (q.unit || 'people') + '.' +
+      (plan.some(function (x) { return x[1]; }) ? ' A part-icon shows a group\'s remainder.' : '') +
+      ' Exact counts: ' + numFmt(tp) + ' true positives, ' + numFmt(condCount - tp) + ' missed, ' + numFmt(fp) +
+      ' false positives, ' + numFmt(pop - condCount - fp) + ' neither.';
+    note.style.display = 'block';
+  } else {
+    note.textContent = '';
+    note.style.display = 'none';
   }
 
-  var scaledCond = Math.round(condCount * scale);
-  var scaledTp = Math.round(tp * scale);
-  var scaledFp = Math.round(fp * scale);
-  // Ensure scaledTp <= scaledCond
-  if (scaledTp > scaledCond) scaledTp = scaledCond;
-
-  // Build icon indices
+  // Build icon indices: the condition (true positives first, then the missed), then the false positives
   var conditionIndices = [];
   var fpIndices = [];
-  // Place condition cases at start for clarity
   for (var i = 0; i < scaledCond; i++) conditionIndices.push(i);
-  // FP are among the non-condition group
-  var nonCondStart = scaledCond;
-  for (var i = 0; i < scaledFp; i++) fpIndices.push(nonCondStart + i);
+  for (var i = 0; i < scaledFp; i++) fpIndices.push(scaledCond + i);
 
   // Create icons
   var icons = [];
@@ -746,6 +807,11 @@ function showPhase2() {
     var el = document.createElement('div');
     el.className = 'person-icon ' + sizeClass;
     el.dataset.idx = i;
+    if (plan[i][1]) {                   // a part-icon: coloured for its share of k
+      el.classList.add('partial');
+      el.dataset.part = plan[i][1] + '/' + k;
+      el.style.setProperty('--f', (plan[i][1] / k * 100) + '%');
+    }
     if (sizeClass === 'size-large') {
       // Show mark space for large icons
       var mark = document.createElement('span');
@@ -783,14 +849,14 @@ function showPhase2() {
   // Animated sequence
   // Step 1: All grey (already done)
   // Step 2: Highlight condition in blue
-  setTimeout(function() {
+  MaffsLock.timer(function() {
     conditionIndices.forEach(function(idx) {
       icons[idx].classList.add('condition');
     });
   }, 500);
 
   // Step 3: True positives turn green with checkmark
-  setTimeout(function() {
+  MaffsLock.timer(function() {
     for (var i = 0; i < scaledTp; i++) {
       var idx = conditionIndices[i];
       icons[idx].classList.remove('condition');
@@ -801,7 +867,7 @@ function showPhase2() {
   }, 1500);
 
   // Step 4: False positives turn red with X
-  setTimeout(function() {
+  MaffsLock.timer(function() {
     fpIndices.forEach(function(idx) {
       icons[idx].classList.add('false-positive');
       var m = icons[idx].querySelector('.mark');
@@ -810,13 +876,13 @@ function showPhase2() {
   }, 2300);
 
   // Step 5: Summary label
-  setTimeout(function() {
+  MaffsLock.timer(function() {
     summary.innerHTML = '<strong>' + numFmt(tp) + '</strong> true positives + <strong>' + numFmt(fp) + '</strong> false positives = <strong>' + numFmt(q.testPositive.total) + '</strong> total positive results';
     summary.classList.add('visible');
   }, 3100);
 
   // Step 6: Continue button
-  setTimeout(function() {
+  MaffsLock.timer(function() {
     contBtn.classList.add('visible');
   }, 3800);
 }
@@ -836,13 +902,22 @@ function showPhase3() {
   document.getElementById('calcResult').style.display = 'none';
   document.getElementById('nextQuestionBtn').style.display = 'none';
   document.getElementById('bayesBox').style.display = 'none';
+  MaffsNext.clear(document.getElementById('nextWrap'));
   showPhase(3);
-  document.getElementById('calcInput').focus();
+  // Jon, 8 Oct 2026 (t4-015): "we're teaching maths not memorisation". The scenario and the icon array, as drawn
+  // (its note included), stay above the question; only Continue goes.
+  document.getElementById('phase2').style.display = 'flex';
+  document.getElementById('continueBtn').style.display = 'none';
+  // a new answer and Next for this question; a double click on Continue cannot submit
+  MaffsLock.fresh(document.getElementById('calcInput').parentNode);
+  MaffsLock.fresh(document.getElementById('nextWrap'));
+  MaffsLock.fresh(document.getElementById('gameScreen'));
+  document.getElementById('calcInput').focus({ preventScroll: true });   // lock-ok: focus only
 }
 
 // Handle Enter key on input
 document.getElementById('calcInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') handleCalc();
+  if (e.key === 'Enter') { e.preventDefault(); handleCalc(); }
 });
 
 // The answer is marked at the precision the question states (SR-1, SR-17): a percentage to q.dp decimal places
@@ -887,6 +962,7 @@ function handleCalc() {
     msg.style.display = 'block';
     return;
   }
+  if (!MaffsLock.lock(input.parentNode)) return;   // marked once (Enter and Submit alike)
   msg.style.display = 'none';
   input.disabled = true;
   document.getElementById('calcSubmit').disabled = true;
@@ -922,12 +998,22 @@ function showCalcResult(isCorrect, q) {
 
   result.style.display = 'block';
   document.getElementById('scoreDisplay').textContent = totalScore;
-  document.getElementById('nextQuestionBtn').style.display = 'block';
+  if (isCorrect) {
+    document.getElementById('nextQuestionBtn').style.display = 'block';
+  } else {
+    MaffsNext.wrong({ mount: document.getElementById('nextWrap'), onAdvance: nextQuestion, label: 'Next Question' });
+  }
+  result.scrollIntoView({ block: 'nearest' });
 
   mfg('question_answered', { game_slug: 'screening-room', level: currentLevel, question_index: qIdx + 1, correct: isCorrect, phase: 3 });
 }
 
 // ─── NEXT QUESTION ───
+// The game's own Next (after a right answer): one advance however often it is pressed
+function nextOnce() {
+  if (MaffsLock.lock(document.getElementById('nextWrap'))) nextQuestion();
+}
+
 function nextQuestion() {
   // Update pip
   var pips = document.querySelectorAll('.pip');
@@ -949,7 +1035,7 @@ function nextQuestion() {
 }
 
 // ─── END GAME ───
-function endGame() {
+var endGame = MaffsLock.finishOnce(function () {
   var totalCorrectPhase1 = phase1Scores.filter(function(s) { return s > 0; }).length;
   var totalCorrectPhase3 = phase3Scores.filter(function(s) { return s > 0; }).length;
   var pct = Math.round((totalCorrectPhase1 + totalCorrectPhase3) / 16 * 100);
@@ -1000,10 +1086,11 @@ function endGame() {
   }
 
   show('endScreen');
-}
+});
 
 function backToStart() {
   show('startScreen');
+  MaffsLock.screen(document.getElementById('startScreen'));   // Play Again's second click cannot start a run
 }
 
 // ─── ACCESSIBILITY TOGGLE ───

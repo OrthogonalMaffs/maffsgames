@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: screening-room`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -70,8 +70,21 @@ main's last full run is red; watch main's run after merging.
 - **Gotcha (again):** editing an item's text changes its content id, so a ledger entry on it (here B6's "wait"
   false positive on the bus item) goes stale and Tier 4 fails; `check-changed.py` does not run Tier 4. After any bank
   edit: `extract-banks.py --only <slug>` then `check-banks.py --only <slug> --write-ledger`.
-- **Next:** screening-room (Jon's contract + his t4-015 ruling), then factor-theorem (contract + t5-013/014/015
-  rulings). factor-theorem's level4 board may need the hub registry (check-leaderboard-coverage.js): a STOP IF.
+- **probability-paradox #177 merged** 16:30 UTC; main's full run on dc0f22c green.
+- **screening-room (claim #181; fix PR this branch; unlisted, Jon's SR-21 contract + t4-015 ruling + Project
+  Claude's note, 8 Oct).** MaffsLock and MaffsNext, hint (plays all three phases). **Gotcha: `fresh(gameScreen)` does
+  not undo a lock held by a container inside it** (the gut options, the answer row, Next): fresh each locked container
+  when it renders, or the second question's gut check is ignored. t4-006 own levels only (`hasOwnProperty`). t4-008
+  (PC's rule): over 10,000, k = gcd(N, condition, TP, FP) if N / k fits 10,000, else the least whole k that fits with
+  a group's remainder as one part-icon (`data-part`, CSS gradient); a note gives k in the item's `unit` and every exact
+  count. t4-013 phases stack (column). t4-015 phase 3 keeps phase 2 on screen (Continue hidden). t4-016: fixed on main
+  by #92 (bf3aa90); pinned with plants; its analytics part filed as t4-017 (LOW, open). t4-014 open (pools).
+  **screening-room has migrated: the home lane can take it off NOT_YET** (passes check-answer-lock seeds 1-3; the
+  cloud lane does not edit that script). Verifier gains open_page/extra_checks; run it WITHOUT the KaTeX shim (its
+  async route handler hangs this verifier's sync page loads).
+- **Next:** probability-paradox t1-004 (Jon's contract, 8 Oct: the regression item rewritten; claim first), then
+  factor-theorem (contract + t5-013/014/015 rulings). factor-theorem's level4 board may need the hub registry
+  (check-leaderboard-coverage.js): a STOP IF. The home lane's #180 closes factor-theorem-t5-009: merge main first.
 
 ## 2026-10-08 (cloud, afternoon): CHECKPOINT STOP (Jon's queue done): listed-games contract at 5 of 23; nothing claimed
 
