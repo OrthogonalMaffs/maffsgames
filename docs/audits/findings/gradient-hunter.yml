@@ -23,7 +23,7 @@ findings:
     right one keeps its Next, locked at the press; Play Again opens the menu fresh. scripts/verify-gradient-hunter.py
     picks wrong, then clicks the revealed option twice (main: 0/2 -> 2/2, three question_answered).'
   status: fixed
-  pr: PRNUM
+  pr: 152
 - id: gradient-hunter-t2-002
   severity: MEDIUM
   jc: false
@@ -36,7 +36,7 @@ findings:
     its neighbours'' gradient): 4.5, 110 (less steep than the 116.7 chord, not steeper) and 3.25. The verifier
     recomputes every stated tangent and chord from the points.'
   status: fixed
-  pr: PRNUM
+  pr: 152
 - id: gradient-hunter-t2-003
   severity: MEDIUM
   jc: true
@@ -53,4 +53,4 @@ findings:
     interpretation step is unchanged. The verifier types right and wrong gradients on all 27 Calculate items and
     plants the old point-on-click.'
   status: fixed
-  pr: PRNUM
+  pr: 152
