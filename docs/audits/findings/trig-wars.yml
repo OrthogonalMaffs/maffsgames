@@ -16,8 +16,12 @@ findings:
   where: games/trig-wars/index.html:888-903
   summary: 'Every hit by either side runs _twHits++, logs correct:true and feeds submitScore: a player who never
     hit lost 3-0 and submitted 3'
-  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. Fixed (Jon''s ruling, 8 Oct: 2 PLAYER submits
+    nothing): hits and shots are counted per side; VS CPU logs and scores only Player 1''s shots, submitted win or
+    lose; 2 PLAYER logs both sides''shots and submits nothing (no leaderboard, no device history).
+    scripts/verify-trig-wars.py plays three battles; main''s page submits 3 for a player who never hit.'
+  status: fixed
+  pr: 148
 - id: trig-wars-t2-002
   severity: HIGH
   jc: true
@@ -26,8 +30,11 @@ findings:
   where: games/trig-wars/index.html:968
   summary: 'The trig panel shows Vx = power . cos theta . 0.28 while labelling V as the power: at V = 60, 45 deg
     it shows Vx = 11.9 beside cos 45 = Vx/V = 0.707'
-  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. Fixed: the panel shows Vx = V cos(theta) and Vy = V
+    sin(theta) in V''s own units (the 0.28 that turns all three into pixels per frame is internal); the verifier
+    checks 252 angle/power settings.'
+  status: fixed
+  pr: 148
 - id: trig-wars-t2-003
   severity: MEDIUM
   jc: true
@@ -35,9 +42,14 @@ findings:
   level: all
   where: games/trig-wars/index.html (hit check)
   summary: 'Shells that land on a tank miss 9-12% of the time: the ground check runs before the hit check'
-  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
-    7 Oct; changes the marking: a possible HIGH, for Project Claude to rule'
-  status: open
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition, 7
+    Oct; changes the marking: a possible HIGH, for Project Claude to rule. Fixed: a hit is tested along each frame''s
+    path segment, before the ground. Measured over every layout, angle and power: the old test missed 3.4% of shots
+    whose path goes through a tank, half because the ground was tested first and half because a fast shell crossed the
+    22px hit circle between frames; both are hits now. The verifier fires both kinds (and true misses) through the
+    page.'
+  status: fixed
+  pr: 148
 - id: trig-wars-t2-004
   severity: MEDIUM
   jc: false
@@ -45,9 +57,12 @@ findings:
   level: all
   where: games/trig-wars/index.html (miss advice)
   summary: The miss advice is backwards above 45 deg
-  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
-    7 Oct'
-  status: open
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition, 7
+    Oct. Fixed: the quip says only how the shot missed; the advice comes from the game''s own physics (a change of 1-8
+    degrees or power that lands at least 1px nearer). A plain 45-degree rule was wrong on 38% of misses (the hill).
+    The verifier checks every advised change by its own copy of the physics.'
+  status: fixed
+  pr: 148
 - id: trig-wars-t2-005
   severity: MEDIUM
   jc: false
@@ -55,9 +70,10 @@ findings:
   level: all
   where: games/trig-wars/index.html (trig panel)
   summary: Vx and Vy are labelled 'u/s' but are pixels per frame
-  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
-    7 Oct'
-  status: open
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition, 7
+    Oct. Fixed with t2-002: no ''u/s''; Vx and Vy are in V''s units.'
+  status: fixed
+  pr: 148
 - id: trig-wars-t2-006
   severity: MEDIUM
   jc: true
@@ -66,6 +82,9 @@ findings:
   where: games/trig-wars/index.html :791, :804, :893
   summary: 'SR-14 (report: JC): ''Are you... shooting yourself?'', ''nearly did themselves in'', ''WE LOST ONE'',
     ''DOWN!'''
-  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
-    7 Oct'
-  status: open
+  evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition, 7
+    Oct. Fixed: ''Are you... shooting yourself?''removed; ''nearly did themselves in''-> ''nearly shelled their own
+    camp''; ''WE LOST ONE''and ''DOWN!''-> ''TANK DISABLED'', ''TANK KNOCKED OUT''(listed in the PR for Project
+    Claude).'
+  status: fixed
+  pr: 148

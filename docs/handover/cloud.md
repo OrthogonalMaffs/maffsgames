@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: trig-wars`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -30,6 +30,36 @@ A two-option game declares an `answer` that picks the option differing from its 
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-08 (cloud): trig-wars (listed-games contract, 1 of 23; first CRITICAL); #146 merged
+
+- **#146 (expectation-station) merged** 08:56 UTC; main's full run green. **The claim went through main** (#147,
+  merged 09:03): under #145 the home lane reads the line on main, so a listed game's claim is its own small PR.
+- **Jon's ruling (8 Oct):** 2 PLAYER submits nothing (two people on one device; SR-22). VS CPU scores Player 1 only.
+- **Fixed, all six entries (t2-001 CRITICAL, t2-002 HIGH, t2-003..006 MEDIUM):**
+  - t2-001: hits and shots per side; VS CPU logs and scores Player 1's shots only, submitted win or lose;
+    2 PLAYER logs both sides and submits nothing. Events carry `mode` (analytics rule for multi-mode games).
+  - t2-002/005: the panel's Vx, Vy are V cos/sin in V's own units (no "u/s"; 0.28 stays internal).
+  - t2-003: one physics (`newShell`/`stepShell`/`simulateShot`) for the flight, the advice and the check's aim; a hit
+    is tested along each frame's segment before the ground. The old test missed 3.4% of true hits, half
+    ground-first, half a fast shell crossing the circle between frames.
+  - t2-004: the quip says only how it missed; `missAdvice()` suggests a change only if the physics says it lands
+    at least 1px nearer (a 45-degree rule was wrong on 38% of misses: the hill; a 0-px gain was floating-point
+    noise at the field's edge).
+  - t2-006: four lines replaced (new wording in the PR for Project Claude).
+- **MaffsLock:** FIRE locks per side (the slider rows are `data-maffs-lock-skip`, so a player can aim during the
+  other turn); every timer through `MaffsLock.timer`; `finishOnce`; `shotId` stops a flight still animating after a
+  reset. Lock hint: i = 0 fires `aimAtEnemy()` (a sure hit), i >= 1 fires 85 deg / 20 (a sure miss).
+  `check-answer-lock.py --game trig-wars` passes (judged in full). Its note "no Next after a wrong answer" stands:
+  after a miss the turn passes to the opponent (not in the register).
+- **Verifier** `scripts/verify-trig-wars.py` (group E, ~45 s with the self-test): its own copy of the physics in
+  Python; plays three battles, 252 panel settings, both kinds of missed hit, and near misses either side of 45 deg.
+  Main's page fails on all six entries; three plants caught. **Harness gotchas:** run animation frames
+  synchronously (a flight is ~150 chained frames; `setTimeout(0)` clamps to 4 ms); read the miss message by
+  wrapping the page's `msg()` (the game clears it before a poll sees it); wrap `mfg` once per page.
+- **Not changed:** the phone width (711px at load in CI's font, allowlisted, todo §3.9 batch 19).
+- **For the home lane:** trig-wars passes the lock check: add it to MIGRATED.
+- **Next:** gradient-hunter (the second CRITICAL): claim PR first.
 
 ## 2026-10-08 (cloud): expectation-station, Stage 1 one completion and 40/40/40 (Jon's bundle contract); #143 merged
 
