@@ -3,6 +3,17 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-08 (home): CHANGED-UTF8 (#178, merged d73d3b6)
+
+- `check-changed.py` reconfigures its own stdout and stderr to UTF-8 (errors="replace") at the top of `main()`. Python
+  here 3.14.6, CI 3.12: `reconfigure` exists on both. **Proof:** with a planted failing check printing "£5 → ✓",
+  `python scripts/check-changed.py > out.txt` on main crashes (`UnicodeEncodeError` on "→"); this version completes,
+  writes the failing check's tail and the summary. The `PYTHONIOENCODING` follow-up note is removed. **Still true for
+  the verifiers themselves:** a verifier run on its own with output redirected can crash the same way (seen on
+  verify-truth-buster and verify-just-pythag-it-bruv, 8 Oct); run those with `PYTHONIOENCODING=utf-8`.
+- **Windows-only false failure seen:** verify-negative-number-line fails locally on main too (320x568: Confirm 536, fold
+  528) while CI is green. Not a regression; ignore it in local check-changed runs.
+
 ## QUEUE item VOCAB-SHOWTHAT, verbatim (Jon, 8 Oct; moved when done)
 
 <details><summary>Queue item 4a, verbatim (2, 3 and 4 moved to the archive when done) (Jon, 8 Oct)</summary>
