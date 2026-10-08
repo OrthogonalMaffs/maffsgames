@@ -176,6 +176,7 @@ async def new_page(browser, viewport=(1200, 900)):
     ctx = await browser.new_context(viewport={"width": viewport[0], "height": viewport[1]},
                                     has_touch=viewport[0] < 500)
     await bc.no_next_floor(ctx)
+    await ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)  # MaffsLock's 300 ms window: the sweep answers at once (F1 batch 7)
 
     async def route(r):
         if r.request.url.startswith("http://127.0.0.1:%d/" % PORT):

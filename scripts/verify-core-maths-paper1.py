@@ -679,6 +679,7 @@ def load_bank():
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             page = browser.new_page()
+            page.context.add_init_script(bc.NO_LOCK_FRESH_INIT)  # MaffsLock's 300 ms window: the sweep answers at once (F1 batch 7)
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
             page.goto(base + '/games/' + SLUG + '/?cb=verify', wait_until='load', timeout=20000)
