@@ -22,10 +22,7 @@ import tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIMIT = 20 * 1024
 FILES = ["CLAUDE.md", "docs/handover/home.md", "docs/handover/cloud.md"]
-DEFERRED = {
-    "docs/handover/cloud.md": "contract CTX step 3: the cloud lane had a PR open on it (#154); "
-                              "trim it at the next cloud checkpoint, then remove this entry",
-}
+DEFERRED = {}
 
 
 def check(root, deferred):
