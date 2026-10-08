@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 24 | 0 | 25 |
 | HIGH | 40 | 168 | 0 | 208 |
-| MEDIUM | 151 | 120 | 1 | 272 |
+| MEDIUM | 148 | 123 | 1 | 272 |
 | LOW | 36 | 25 | 0 | 61 |
-| **All** | 228 | 337 | 1 | 566 |
+| **All** | 225 | 340 | 1 | 566 |
 
 ### By class
 
@@ -35,7 +35,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 3 | 8 | 85 |
 | 6 | 29 | 56 |
 | 1 | 14 | 36 |
-| NEW:wrong-explanation-text | 11 | 36 |
+| NEW:wrong-explanation-text | 10 | 36 |
 | 5 | 26 | 26 |
 | 4 | 22 | 22 |
 | 7 | 6 | 16 |
@@ -46,7 +46,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:hand-typed explanation figure | 6 | 7 |
 | NEW:raw-tex-on-screen | 2 | 7 |
 | NEW:text-contradicts-content | 5 | 7 |
-| NEW:ill-posed wording | 4 | 6 |
+| NEW:ill-posed wording | 2 | 6 |
 | 11 | 0 | 5 |
 | NEW:board-mixes-session-lengths | 5 | 5 |
 | NEW:marking-by-structure | 0 | 5 |
@@ -198,7 +198,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `truth-buster` | unlisted | verify-truth-buster.py | 0 | 3 | 12 | 1 | 3 | 13 | 0 |
 | `truth-will-set-you-free` | yes | verify-truth-will-set-you-free.py | 1 | 1 | 2 | 2 | 1 | 5 | 0 |
 | `unit-converter` | yes | none | 0 | 1 | 6 | 1 | 8 | 0 | 0 |
-| `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 6 | 4 | 2 | 5 | 7 | 0 |
+| `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 6 | 4 | 2 | 2 | 10 | 0 |
 | `wrong-on-the-internet` | yes | none | 0 | 2 | 4 | 0 | 6 | 0 | 0 |
 
 ## Open CRITICAL and HIGH, by game (Year 6, KS3, GCSE and Core first)
