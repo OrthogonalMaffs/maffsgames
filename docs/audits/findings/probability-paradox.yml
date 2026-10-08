@@ -18,7 +18,8 @@ findings:
     determine' is marked wrong
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. Under the game''s simulation prior (:449) E(switch)
     = £24.91. SR-18: the envelope item is ''can''t tell'''
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: probability-paradox-t1-002
   severity: HIGH
   jc: false
@@ -28,7 +29,8 @@ findings:
   summary: '''Every 10 minutes on average'' does not say arrivals are random; E(wait) = E[G^2]/2E[G], so ''Depends
     on the schedule'' is literally correct and marked wrong'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. SR-18: Probability Paradox states assumptions'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: probability-paradox-t1-003
   severity: HIGH
   jc: true
@@ -37,7 +39,8 @@ findings:
   where: games/probability-paradox/index.html:226 (Sleeping Beauty)
   summary: Keyed 1/3 only while the game's own text calls the question 'genuinely debated'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. SR-18: Sleeping Beauty accepts 1/2 and 1/3'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: probability-paradox-t1-004
   severity: HIGH
   jc: true
@@ -56,7 +59,8 @@ findings:
   summary: 'The simulations contradict the keys: Sleeping Beauty''s bars show 50/50, and the bus simulation shows
     a 5-minute mean wait'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: probability-paradox-t1-006
   severity: MEDIUM
   jc: true
@@ -65,7 +69,8 @@ findings:
   where: games/probability-paradox/index.html(Two-Child, Tuesday)
   summary: Two-Child and Tuesday hold only under the 'asked' reading
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3. SR-18: Probability Paradox states assumptions'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: probability-paradox-t1-007
   severity: MEDIUM
   jc: false
@@ -74,7 +79,8 @@ findings:
   where: games/probability-paradox/index.html(p-value)
   summary: The p-value given is one-sided (0.29); the usual two-sided value is 0.58
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
-  status: open
+  status: fixed
+  pr: PRNUM
 - id: probability-paradox-t1-008
   severity: MEDIUM
   jc: false
@@ -84,5 +90,48 @@ findings:
   summary: tranche 1 counted 1 MEDIUM finding it never described
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 1 counts more MEDIUMs for this game than section
     3 describes. Placeholder (Jon, 7 Oct 2026): this game''s contract F fix PR re-audits the whole game, files what
-    it finds with real ids, and closes this entry with its PR number'
-  status: open
+    it finds with real ids, and closes this entry with its PR number. Re-audited by the cloud lane (8 Oct 2026): all 38
+    items read and every paradox and conditional key recomputed (scripts/verify-probability-paradox.py), every
+    simulation measured, the game played in Chromium; filed as t1-009 (MEDIUM), t1-010 (CRITICAL) and t1-011 (LOW),
+    all fixed'
+  status: fixed
+  pr: PRNUM
+- id: probability-paradox-t1-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:convention-unstated
+  level: all
+  where: games/probability-paradox/index.html (Monty Hall; Conditional "A test is 95% accurate")
+  summary: Two more keys that hold only under an unstated assumption (SR-18)
+  evidence: 'Found by the cloud lane''s re-audit (8 Oct 2026; t1-008). Monty Hall said only that the host knows where
+    the car is: the 2/3 needs a host who always opens a goat door you did not pick and always offers the switch, and
+    "Can''t determine" is an option. The Conditional test "is 95% accurate" without saying 95% of whom: the key 0.28
+    needs both rates at 95%. Fixed: each scenario states it; the verifier''s ASSUMED table holds every such phrase.'
+  status: fixed
+  pr: PRNUM
+- id: probability-paradox-t1-010
+  severity: CRITICAL
+  jc: false
+  class: '1'
+  level: all
+  where: games/probability-paradox/index.html (handleAnswer, closeSol, endGame)
+  summary: No answer lock. After a wrong pick the revealed key could be clicked to score again; Next followed by a
+    click answered the next question unseen; the session could end twice
+  evidence: 'Found by the cloud lane''s re-audit (8 Oct 2026; t1-008), in Chromium on main: after a mark, clicking
+    and pressing Enter on every option counted 3 right on one question (Conditional and Fallacy, where the options stay
+    up); Next then a click landed an answer on the new question; endGame twice sent game_completed twice. The class of
+    gradient-hunter-t2-001 and component-crusher''s no-marking-lock entry. Fixed: MaffsLock (lock, fresh, finishOnce, newSession, screen, timer) and MaffsNext after
+    a wrong answer, with the game''s lock-hint declaration; check-answer-lock.py passes on seeds 1-3.'
+  status: fixed
+  pr: PRNUM
+- id: probability-paradox-t1-011
+  severity: LOW
+  jc: false
+  class: NEW:analytics
+  level: all
+  where: games/probability-paradox/index.html (mfg calls)
+  summary: A three-mode game sent no mode on any event, and game_completed had no questions_correct
+  evidence: 'Found by the cloud lane''s re-audit (8 Oct 2026; t1-008): .claude/rules/analytics.md requires mode on all
+    events of a multi-mode game and questions_correct on game_completed. Fixed: both added (no other field).'
+  status: fixed
+  pr: PRNUM

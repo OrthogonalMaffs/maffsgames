@@ -93,6 +93,15 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. It starts Paradox Predictor (the mode with the simulations and an item accepting two answers); i = 0 picks an accepted answer, i >= 1 the first option that is not.
+{
+  "start": "startMode('paradox')",
+  "ready": "document.getElementById('game').classList.contains('active') && document.getElementById('options').style.display !== 'none' && !!document.querySelector('#options .opt-btn')",
+  "answer": "const q = currentQ; if (!q) return; const ok = accepted(q); const b = [...document.querySelectorAll('#options .opt-btn')].find(b => ok.includes(b.dataset.val) === (i === 0)); if (b) b.click();"
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -135,7 +144,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 // ============================================================
 
 const PARADOX_QUESTIONS = [
-{scenario:"<strong>The Monty Hall Problem.</strong> You're on a game show. There are 3 doors — behind one is a car, behind the other two are goats. You pick Door 1. The host (who knows what's behind the doors) opens Door 3, revealing a goat. He offers you the chance to switch to Door 2.",
+{scenario:"<strong>The Monty Hall Problem.</strong> You're on a game show. There are 3 doors — behind one is a car, behind the other two are goats. You pick Door 1. The host knows where the car is, and he always opens a door you did not pick that hides a goat, then always offers you the chance to switch. He opens Door 3, revealing a goat, and offers you Door 2.",
 q:"Should you switch? What's the probability of winning if you do?",
 opts:["2/3 — always switch","1/2 — doesn't matter","1/3 — stick with Door 1","Can't determine"],
 correct:"2/3 — always switch",
@@ -159,7 +168,7 @@ sim:{type:'coin',labels:['Heads','Tails'],expected:[0.5,0.5]},
 steps:["Each coin flip is independent of all previous flips","The coin has no memory — it doesn't 'know' it landed Heads 9 times","P(Tails) = 1/2 regardless of history","The law of large numbers says proportions converge over MANY trials — it doesn't 'correct' short-term streaks"],
 misconception:"The gambler's fallacy: believing past random events affect future independent events. Casinos profit from this error."},
 
-{scenario:"<strong>The Two-Child Problem.</strong> A family has two children. You learn that at least one of them is a boy.",
+{scenario:"<strong>The Two-Child Problem.</strong> A family has two children, each equally likely to be a boy or a girl, independently. You ask the parent, \"Is at least one of them a boy?\" The answer is yes.",
 q:"What is the probability that both children are boys?",
 opts:["1/3","1/2","1/4","2/3"],
 correct:"1/3",
@@ -183,7 +192,7 @@ sim:{type:'falsepos',labels:['True positive','False positive'],expected:[0.09,0.
 steps:["In 100,000 people: 100 have the disease, 99,900 don't","Of the 100 with disease: 99 test positive (true positive)","Of the 99,900 without: 999 test positive (false positive)","Total positives: 99 + 999 = 1,098","P(disease | positive) = 99/1,098 ≈ 9%"],
 misconception:"Base rate neglect: people anchor on '99% accurate' and ignore how rare the disease is. When the condition is rare, most positives are false positives."},
 
-{scenario:"<strong>The Boy or Girl Paradox (Tuesday variant).</strong> A family has two children. One of them is a boy born on a Tuesday.",
+{scenario:"<strong>The Boy or Girl Paradox (Tuesday variant).</strong> A family has two children, each equally likely to be a boy or a girl and to be born on any day of the week, independently. You ask the parent, \"Is at least one of them a boy born on a Tuesday?\" The answer is yes.",
 q:"What is the probability both children are boys?",
 opts:["13/27","1/3","1/2","1/4"],
 correct:"13/27",
@@ -193,10 +202,10 @@ misconception:"The specific day matters! Without 'Tuesday', the answer is 1/3. A
 
 {scenario:"<strong>The Envelope Problem.</strong> Two envelopes each contain money. One has twice as much as the other. You pick one and find £20 inside. You're offered the chance to switch.",
 q:"What's the expected value if you switch?",
-opts:["£20 — switching doesn't help","£25 — you should always switch","£15 — you should never switch","Cannot determine — the problem is a paradox"],
-correct:"£20 — switching doesn't help",
+opts:["£20 — switching doesn't help","£25 — you should always switch","£15 — you should never switch","Cannot determine — it depends on how the amounts were chosen"],
+correct:"Cannot determine — it depends on how the amounts were chosen",
 sim:{type:'envelope',labels:['Switch wins more','Switch wins less'],expected:[0.5,0.5]},
-steps:["The other envelope contains either £10 or £40, each with probability 1/2","E(switch) = 0.5 × £10 + 0.5 × £40 = £25... but this logic is flawed!","The paradox: this argument seems to say you should always switch — but then you'd switch forever","The error is in assuming the two cases are equally likely given what you see","If the amounts are (X, 2X), seeing £20 means X = 10 or X = 20, but these have different prior probabilities","With no prior information, switching has expected value = £20. No advantage."],
+steps:["The other envelope contains either £10 or £40","The tempting argument: each is equally likely, so E(switch) = 0.5 × £10 + 0.5 × £40 = £25. But nothing in the scenario says the two are equally likely","If the amounts are (X, 2X), seeing £20 means X = 10 or X = 20. Which is more likely depends on how the amounts were chosen, and the scenario does not say","Different choices give different answers: if the pairs (£10, £20) and (£20, £40) were equally likely to be used, switching is worth £25; if the larger amount is never more than £30, the other envelope holds £10","So, having seen £20, E(switch) cannot be determined. Before you open either envelope, switching makes no difference: by symmetry the two envelopes have the same expected value"],
 misconception:"This is a genuine paradox that confused mathematicians for decades. The resolution depends on the prior distribution of amounts."},
 
 {scenario:"<strong>Simpson's Paradox.</strong> Hospital A has a higher recovery rate than Hospital B for mild cases AND for severe cases. But Hospital B has a higher overall recovery rate.",
@@ -207,12 +216,12 @@ sim:{type:'simpson',labels:['Paradox occurs','No paradox'],expected:[1.0,0.0]},
 steps:["Hospital A: mild 19/20 = 95%, severe 60/200 = 30%","Hospital B: mild 180/200 = 90%, severe 5/20 = 25%","A is better in BOTH groups","Overall: A 79/220 = 36%, B 185/220 = 84% — B is better overall","A treats mostly severe cases (low recovery); B treats mostly mild ones. The mix, not the quality of care, drives the overall rate"],
 misconception:"Aggregated data can reverse trends visible in subgroups. Always check for lurking variables when comparing rates."},
 
-{scenario:"<strong>The Inspection Paradox.</strong> Buses arrive every 10 minutes on average. You arrive at the bus stop at a random time.",
+{scenario:"<strong>The Inspection Paradox.</strong> Buses arrive at random, independently of each other, at an average rate of one every 10 minutes (a Poisson process): there is no timetable. You arrive at the bus stop at a random time.",
 q:"What's the average time you'll wait?",
 opts:["10 minutes, not 5","5 minutes","7.5 minutes","Depends on the schedule"],
 correct:"10 minutes, not 5",
 sim:{type:'bus',labels:['Wait < 10 min','Wait ≥ 10 min'],expected:[0.63,0.37]},
-steps:["If buses arrived exactly every 10 minutes, you'd wait 5 on average","But 'every 10 minutes on average' means random (Poisson) arrivals","With random arrivals, gaps between buses follow an exponential distribution","You're more likely to arrive during a LONG gap than a short one","This is the inspection paradox: the average gap you land in is larger than the average gap","For exponential arrivals, E(wait) = E(gap) = 10 minutes"],
+steps:["If buses arrived exactly every 10 minutes, you'd wait 5 on average","But these buses arrive at random (a Poisson process), not on a timetable","With random arrivals, gaps between buses follow an exponential distribution","You're more likely to arrive during a LONG gap than a short one","This is the inspection paradox: the average gap you land in is larger than the average gap","For exponential arrivals, E(wait) = E(gap) = 10 minutes"],
 misconception:"The 'renewal paradox' or 'bus waiting time paradox'. Random ≠ uniform spacing. This is why buses feel like they're never on time."},
 
 {scenario:"<strong>Non-transitive Dice.</strong> Die A beats Die B more than half the time. Die B beats Die C more than half the time.",
@@ -227,9 +236,10 @@ misconception:"We assume 'better than' is transitive because it is for numbers. 
 q:"What should Sleeping Beauty answer?",
 opts:["1/3 — she's woken more often on Tails","1/2 — the coin is fair","2/3 — she should bet on Tails","Cannot determine"],
 correct:"1/3 — she's woken more often on Tails",
+accept:["1/3 — she's woken more often on Tails","1/2 — the coin is fair"],
 sim:{type:'beauty',labels:['Heads waking','Tails waking'],expected:[0.333,0.667]},
-steps:["There are three possible waking events:","Monday-Heads (1 waking), Monday-Tails (1 waking), Tuesday-Tails (1 waking)","Each waking is equally likely from Beauty's perspective","Only 1 out of 3 wakings corresponds to Heads","P(Heads | I am awake) = 1/3"],
-misconception:"This is genuinely debated in philosophy! 'Halfers' say 1/2 (the coin is fair), 'Thirders' say 1/3 (there are more Tails-wakings). Most probability theorists are Thirders."},
+steps:["Both 1/3 and 1/2 are accepted: the question is genuinely debated, and each answer counts something different","Thirders count wakings. There are three possible waking events: Monday-Heads, Monday-Tails, Tuesday-Tails","Each waking is equally likely from Beauty's point of view, and only 1 of the 3 is a Heads waking: P(Heads | I am awake) = 1/3","Halfers count experiments. The coin is fair, and Beauty knew she would be woken whatever happened, so waking tells her nothing new: P(Heads) = 1/2","The simulation counts wakings over 1,000 experiments, so it shows the thirders' 1/3; counted per experiment, Heads comes up half the time"],
+misconception:"This is genuinely debated in philosophy! 'Halfers' say 1/2 (the coin is fair), 'Thirders' say 1/3 (there are more Tails-wakings). Many probability theorists are Thirders."},
 ];
 
 const CONDITIONAL_QUESTIONS = [
@@ -265,7 +275,7 @@ q:"Find P(Traffic) using the law of total probability",
 opts:["0.38","0.80","0.50","0.24"],correct:"0.38",
 steps:["P(T) = P(T|R)P(R) + P(T|R')P(R')","= 0.8 × 0.3 + 0.2 × 0.7","= 0.24 + 0.14 = 0.38"]},
 
-{scenario:"A test is 95% accurate. The disease affects 2% of the population. You test positive.",
+{scenario:"A test is 95% accurate: 95% of people with the disease test positive, and 95% of people without it test negative. The disease affects 2% of the population. You test positive.",
 q:"Find P(Disease | Positive) to 2 decimal places",
 opts:["0.28","0.95","0.02","0.50"],correct:"0.28",
 steps:["P(+|D) = 0.95, P(+|D') = 0.05, P(D) = 0.02","P(+) = 0.95×0.02 + 0.05×0.98 = 0.019 + 0.049 = 0.068","P(D|+) = 0.019/0.068 ≈ 0.28"],
@@ -364,7 +374,7 @@ explain:"One person's experience doesn't negate population-level statistics. Smo
 {scenario:"In a drug trial, 3 out of 10 patients improved on the drug vs 1 out of 10 on placebo. A headline reads: 'Drug triples recovery rate!'",
 q:"What's misleading about this?",
 opts:["Small sample — could easily be chance","The drug is 3× better, that's accurate","The placebo effect is irrelevant","Nothing — relative risk is correct"],correct:"Small sample — could easily be chance",
-explain:"With only 10 per group, the difference of 3/10 vs 1/10 is not statistically significant (p ≈ 0.29 by Fisher's exact test). The relative risk of 3× is technically correct but deeply misleading without considering sample size and statistical significance."},
+explain:"With only 10 per group, the difference of 3/10 vs 1/10 is not statistically significant (p ≈ 0.58 by Fisher's exact test, two-sided). The relative risk of 3× is technically correct but deeply misleading without considering sample size and statistical significance."},
 
 {scenario:"A school finds that students who eat breakfast score higher on tests. They mandate breakfast for all students.",
 q:"What assumption are they making?",
@@ -390,17 +400,18 @@ function runSim(simDef, callback){
   function step(){
     const batch=Math.min(20,N-i);
     for(let j=0;j<batch;j++){
-      const result=simulate(simDef.type);
-      counts[result]++;i++;
+      // one trial; a trial with several outcomes (Sleeping Beauty's two Tails wakings) counts each
+      [].concat(simulate(simDef.type)).forEach(result=>{counts[result]++;});i++;
     }
     document.getElementById('simCount').textContent=i+' / '+N;
-    const pcts=counts.map(c=>((c/i)*100));
+    const all=counts[0]+counts[1];
+    const pcts=counts.map(c=>((c/all)*100));
     pcts.forEach((p,idx)=>{
       document.getElementById('sb'+idx).style.height=p+'%';
       document.getElementById('sv'+idx).textContent=Math.round(p)+'%';
     });
     if(i<N)requestAnimationFrame(step);
-    else setTimeout(callback,600);
+    else MaffsLock.timer(callback,600);
   }
   requestAnimationFrame(step);
 }
@@ -453,9 +464,11 @@ function simulate(type){
     }
     case 'simpson':return 0;// always occurs when constructed
     case 'bus':{
-      const gap=-10*Math.log(1-r());// exponential, mean 10
-      const arrival=r()*gap;
-      return(gap-arrival)<10?0:1;
+      // A Poisson stream of buses (gaps exponential, mean 10 min) ; you arrive at a random time in the first 100
+      // minutes and wait for the next bus. Long gaps are more likely to hold your arrival: the wait is not 5.
+      const arrive=r()*100;let t=-10*Math.log(1-r());
+      while(t<=arrive)t+=-10*Math.log(1-r());// t grows by a positive gap every pass
+      return(t-arrive)<10?0:1;
     }
     case 'dice':{
       const A=[2,2,4,4,9,9],C=[3,3,5,5,7,7];
@@ -463,11 +476,8 @@ function simulate(type){
       return a>c?0:1;
     }
     case 'beauty':{
-      const heads=r()<0.5;
-      if(heads)return 0;// 1 waking
-      return r()<0.5?1:1;// 2 wakings, both tails
-      // Actually: simulate a random waking. P(heads waking) = 1/3
-      // Better: pick from 3 equal wakings
+      // One experiment: Heads wakes her once (Monday), Tails twice (Monday and Tuesday). Each waking is counted.
+      return r()<0.5?[0]:[1,1];
     }
     default:return r()<0.5?0:1;
   }
@@ -481,9 +491,10 @@ const BASE=100,T_K=0.15;
 
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
-function showMenu(){show('menu')}
+function showMenu(){show('menu');MaffsLock.screen(document.getElementById('menu'))}
 
 function startMode(m){
+  MaffsLock.newSession();
   mode=m;qIdx=0;score=0;correctN=0;total=0;
   document.getElementById('score').textContent='0';
   document.getElementById('correctCount').textContent='0';
@@ -492,10 +503,11 @@ function startMode(m){
   else if(mode==='fallacy')pool=shuffle([...FALLACY_QUESTIONS]).slice(0,12);
 
   window._ggAbandoned=true;
-  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'probability-paradox',level:'gcse',questions_answered:total});});}
-  mfg('game_started',{game_slug:'probability-paradox',level:'gcse'});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'probability-paradox',level:'gcse',mode:mode,questions_answered:total});});}
+  mfg('game_started',{game_slug:'probability-paradox',level:'gcse',mode:mode});
 
   show('game');nextQ();
+  MaffsLock.fresh(document.getElementById('game'));
 }
 
 function nextQ(){
@@ -521,12 +533,16 @@ function updateTimer(){
   requestAnimationFrame(tick);
 }
 
+// Every answer an item accepts: its key, or its accept list where a standing ruling accepts more than one (SR-18).
+function accepted(q){return q.accept||[q.correct_override||q.correct]}
+
 function handleAnswer(btn){
+  // Answer once (canon 7.6.0): MaffsLock disables every option at the first pick
+  if(!MaffsLock.lock(document.getElementById('options')))return;
   const q=currentQ,s=(Date.now()-qStart)/1000;
-  const correctVal=q.correct_override||q.correct;
-  const ok=btn.dataset.val===correctVal;
-  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===correctVal)b.classList.add('correct')});
-  mfg('question_answered',{game_slug:'probability-paradox',level:'gcse',correct:ok,question_index:total});
+  const ok=accepted(q).includes(btn.dataset.val);
+  document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(accepted(q).includes(b.dataset.val))b.classList.add('correct')});
+  mfg('question_answered',{game_slug:'probability-paradox',level:'gcse',mode:mode,correct:ok,question_index:total});
 
   if(ok){
     btn.classList.add('correct');
@@ -541,21 +557,25 @@ function handleAnswer(btn){
   // If paradox mode, run simulation before showing explanation
   if(mode==='paradox'&&q.sim){
     document.getElementById('options').style.display='none';
-    runSim(q.sim,()=>showExplain(q));
+    runSim(q.sim,()=>showExplain(q,ok));
   } else {
-    setTimeout(()=>showExplain(q),600);
+    MaffsLock.timer(()=>showExplain(q,ok),600);
   }
 }
 
-function showExplain(q){
+function showExplain(q,ok){
   const sol=document.getElementById('solution');
   let html='<h3>Explanation</h3>';
   const steps=q.steps||[];
   if(steps.length){steps.forEach(st=>{html+='<div class="step">'+st+'</div>'})}
   if(q.explain){html+='<div class="step">'+q.explain+'</div>'}
   if(q.misconception){html+='<div class="misconception">⚠ '+q.misconception+'</div>'}
-  html+='<button class="next-btn" onclick="closeSol()">Got it — next question</button>';
   sol.innerHTML=html;sol.className='solution show';
+  const wrap=document.createElement('div');sol.appendChild(wrap);
+  if(!ok){MaffsNext.wrong({mount:wrap,onAdvance:closeSol,label:'Got it — next question'});return;}
+  const b=document.createElement('button');b.className='next-btn';b.textContent='Got it — next question';
+  b.addEventListener('click',()=>{if(MaffsLock.lock(wrap))closeSol();});   // Next moves on once
+  wrap.appendChild(b);
 }
 
 function closeSol(){
@@ -563,14 +583,15 @@ function closeSol(){
   document.getElementById('simPanel').className='sim-panel';
   document.getElementById('options').style.display='grid';
   nextQ();
+  MaffsLock.fresh(document.getElementById('game'));   // a new question: a double click on Next cannot answer it
 }
 
 function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
 
-function endGame(){
+const endGame=MaffsLock.finishOnce(function(){
   window._ggAbandoned=false;
   const pct=total>0?Math.round(correctN/total*100):0;
-  mfg('game_completed',{game_slug:'probability-paradox',level:'gcse',score:score,questions_answered:total,accuracy:pct});
+  mfg('game_completed',{game_slug:'probability-paradox',level:'gcse',mode:mode,score:score,questions_answered:total,questions_correct:correctN,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('probability-paradox','gcse',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('probability-paradox','gcse',score);}}
   let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
   const names={paradox:'Paradox Predictor',conditional:'Conditional Calculator',fallacy:'Fallacy Spotter'};
@@ -578,7 +599,7 @@ function endGame(){
   document.getElementById('finalScore').textContent=score;
   document.getElementById('statsLine').innerHTML=names[mode]+'<br>'+correctN+'/'+total+' correct ('+pct+'%)';
   show('results');
-}
+});
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
