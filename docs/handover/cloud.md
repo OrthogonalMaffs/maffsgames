@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: word-problem-decoder`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -30,6 +30,33 @@ A two-option game declares an `answer` that picks the option differing from its 
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-08 (cloud, afternoon): word-problem-decoder (listed-games contract, 4 of 23)
+
+- **#155 (spot-the-muppet) merged** 11:51 UTC; main's full run on 6232248 green. Claim #156 merged 12:00.
+- **The category scheme (SR-18: one scheme, both accepted where both fit):** `PARENT_TOPIC` in the game: Reverse
+  Percentage is a kind of Percentages, Standard Form a kind of Number & Place Value (the KS3 bank, which offers
+  neither kind, keys ks3_013, ks3_015 and ks3_023 under the parent), so a phrase keyed the kind is right under the
+  parent too (t1-003, t1-004). A phrase's own `also` lists any other topic that genuinely fits: ks3_006 phrase 2
+  (t1-001) and gcse_017 (t1-002), plus six found on the re-audit (t1-010: ks3_022, ks3_046, gcse_013, gcse_022,
+  gcse_039, gcse_060 phrase 2). `acceptedTopics(hl)` marks; after a pick, every topic that fits and is on the buttons is
+  revealed. **The judgement on each `also` is listed in the PR for Project Claude** (it is content).
+- **t1-005, MaffsLock:** `lock(optionsGrid)` first in handleAnswer; `fresh(optionsGrid)` per phrase; the advance
+  timers through MaffsLock.timer (the ~1 s auto-advance after a wrong answer is kept: the audit's class 7, "not counted
+  as a fault"); finishOnce; Play Again a screen change. Hint `{}`: the generic driver plays it (seeds 1, 2, 7).
+- **t1-009 (the 3 uncounted MEDIUMs) closed by the re-audit:** every phrase read against the 23 topics; filed t1-010
+  (HIGH, fixed), t1-011 (LOW, open: three items refer to a figure the game never shows) and t1-012 (LOW, open: two Aa
+  buttons).
+- **Verifier** `scripts/verify-word-problem-decoder.py` (group E, ~5 s; ~15 s with the self-test): bank shape; every
+  phrase played in Chromium with each topic it accepts and three it does not on the buttons (getDistractors replaced
+  for the test), so the marking is tested whatever the page's code; `ACCEPT` holds every second topic with its reason;
+  answer once; the session ends once. Main's page fails t1-001..005 and every t1-010 phrase by name; three plants.
+  **Gotcha:** the sweep renders each phrase itself, so it drops the game's own setTimeout advances (they would fire
+  mid-sweep and move it on).
+- **Left open (MEDIUM, wording or numbers: for Jon / Project Claude):** t1-006 gcse_017 and gcse_021 have no
+  whole-number answers (c = 71/19; a = 170/19); t1-007 gcse_059 says 48 tins is "too high" but 48 fit exactly
+  (6 × 4 × 2), and 72000 ÷ (π × 25 × 15) is 61.1, not 48; t1-008 gcse_022's lap count is ambiguous.
+- **For the home lane:** word-problem-decoder passes the lock check: add it to MIGRATED.
 
 ## 2026-10-08 (cloud, afternoon): spot-the-muppet (listed-games contract, 3 of 23); session queue
 
