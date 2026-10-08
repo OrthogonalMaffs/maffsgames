@@ -36,6 +36,12 @@
  *                                ALL input on it for FRESH_MS (300 ms): the second click of a
  *                                double-click, a second Enter, a double-tap. A key press with no
  *                                focused control (document.body) counts as input on it.
+ *   MaffsLock.isFresh([target])  Read-only: true while a fresh() window would ignore input on
+ *                                target (it is inside a container whose window is open); with no
+ *                                target, while any window is open (a key press with no focused
+ *                                control is then ignored too). It changes nothing. Games do not
+ *                                need it: scripts/check-answer-lock.py waits on it, so its taps
+ *                                never land in a window by chance (contract DET, 8 Oct 2026).
  *   MaffsLock.screen(container)  A screen change: clearTimers(), then fresh(container).
  *   MaffsLock.timer(fn, ms)      setTimeout for every per-question and per-screen timer. Returns
  *                                an id for MaffsLock.cancel(id).
@@ -159,6 +165,16 @@
     st.until = now() + (typeof ms === 'number' && ms >= 0 ? ms : freshMs());
   }
 
+  // Read-only (the header): no state is created, undone or dropped here.
+  function isFresh(target) {
+    var t0 = now();
+    for (var i = 0; i < states.length; i++) {
+      var st = states[i];
+      if (st.until > t0 && st.c.isConnected && (!target || st.c.contains(target))) return true;
+    }
+    return false;
+  }
+
   // Does this event land on something the locks or fresh windows cover?
   function blocked(e) {
     var t = e.target, t0 = now();
@@ -229,7 +245,7 @@
   }
 
   api = {
-    lock: lock, isLocked: isLocked, fresh: fresh, screen: screen, timer: timer, cancel: cancel, clearTimers: clearTimers,
+    lock: lock, isLocked: isLocked, fresh: fresh, isFresh: isFresh, screen: screen, timer: timer, cancel: cancel, clearTimers: clearTimers,
     finishOnce: finishOnce, newSession: newSession, FRESH_MS: FRESH_MS
   };
   window.MaffsLock = api;

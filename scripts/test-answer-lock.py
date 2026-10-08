@@ -14,7 +14,8 @@ is played in headless Chromium against the real next-control.js and answer-lock.
               (where it has one) and aria-disabled
   capture     after the lock, a click on the tile and Enter/Space on it never reach its own listeners
   re-mark     clicking the answered option again, Enter, Space and the game's 1-4 keys change nothing
-  fresh       a click within FRESH_MS of a new question is ignored; one after it is marked
+  fresh       a click within FRESH_MS of a new question is ignored; one after it is marked; isFresh()
+              says so for the container and for no target, never for an element outside it
   dblclick    a double-click on Next advances once and its second click does not answer the next
               question (the option under it)
   double-tap  the same with two taps at 390px on a touch screen
@@ -170,14 +171,19 @@ async def suite(browser, lock_js, next_js):
     ctx, page, errors = await fresh_page()
     r = await page.evaluate("""async () => {
         render();
+        const seen = () => [MaffsLock.isFresh(area), MaffsLock.isFresh(), MaffsLock.isFresh(fb)];
+        const during = seen();
         document.querySelector('#area .opt').click();
         const early = S.answered;
         await new Promise(res => setTimeout(res, 350));
+        const after = seen();
         document.querySelector('#area .opt').click();
-        return { early, late: S.answered };
+        return { early, late: S.answered, during, after };
     }""")
-    check('fresh', r['early'] == 0 and r['late'] == 1,
-          'answered %d straight after render, %d after 350 ms' % (r['early'], r['late']))
+    check('fresh', r['early'] == 0 and r['late'] == 1
+          and r['during'] == [True, True, False] and r['after'] == [False, False, False],
+          'answered %d straight after render, %d after 350 ms; isFresh(area, none, outside) %s then %s'
+          % (r['early'], r['late'], r['during'], r['after']))
     await ctx.close()
 
     # dblclick on Next: one advance, and the second click does not answer the option under it

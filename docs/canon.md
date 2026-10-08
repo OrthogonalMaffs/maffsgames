@@ -990,6 +990,16 @@ stale timers that fired after the student moved on (two games finished and submi
   answer, given `i`; it may return a promise), `ready`, `start`, `start_sel`, `level`, `surface`, `keys`,
   `each`, `mark_any` and `repeat` (check-answer-lock.py's `HINT_KEYS` documents each). A JS value may be a
   list of strings, joined with nothing between them. `{}` declares a game the generic driver plays unaided.
+- **The check is deterministic: a verdict never depends on a draw or on timing** (contract DET, 8 Oct 2026).
+  Every page's `Math.random` is seeded (`--seed`, default 1, printed in the check's first line), so a seed
+  plays the same questions and gives the same event log every run. The driver never waits a fixed time on
+  the path to a wrong answer: it taps only when no fresh window is open (`MaffsLock.isFresh()`, read-only),
+  takes the next question as up only once it has rendered (a new `fresh()` call, or an enabled option
+  group) and its window is over, and a tap the page sees land in a window is made again once it closes.
+  A failure is fixed in the driver or the declaration, never with a retry. **A two-option game declares an
+  `answer` that picks the option differing from its own key** for attempts `i >= 1` (the wrong answer then
+  comes first time on every draw); for `i = 0` (the tap-through) it presses the first option, as the
+  generic driver does. prime-or-composite, fraction-equivalence and factor-race are the pattern.
 - **Script order is free.** answer-lock.js and next-control.js do not read each other at load (MaffsNext
   asks for `window.MaffsLock` only when it advances), so either may load first.
 - **The home lane adds a game to `MIGRATED`.** A game the cloud lane migrates is judged in full as soon
