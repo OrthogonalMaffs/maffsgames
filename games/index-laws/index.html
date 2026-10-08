@@ -508,6 +508,17 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first choice; i >= 1 the first that is not the key.
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#choices .choice')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const k = questions[qNum - 1].correct;",
+    "(bs.find(b => b.dataset.val !== k) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -709,7 +720,7 @@ const QUESTIONS = [
     wrong:['12','64','4'], exp:'Fourth root of 16 is 2, then 2³=8'},
 ];
 
-let score=0,streak=0,qNum=0,answered=false,questions=[],_ggCorrectCount=0;
+let score=0,streak=0,qNum=0,questions=[],_ggCorrectCount=0;
 
 function shuffle(a){return [...a].sort(()=>Math.random()-0.5);}
 
@@ -719,6 +730,7 @@ function makeChoices(correct,wrong){
 }
 
 function startGame(){
+  MaffsLock.newSession();
   score=0;streak=0;qNum=0;_ggCorrectCount=0;
   questions=shuffle(QUESTIONS).slice(0,TOTAL);
   document.getElementById('startScreen').style.display='none';
@@ -735,7 +747,6 @@ function startGame(){
 function nextQ(){
   if(window.MaffsNext) MaffsNext.clear(document.getElementById('explanation').parentNode);
   if(qNum>=TOTAL){endGame();return;}
-  answered=false;
   const q=questions[qNum]; qNum++;
   document.getElementById('ruleLabel').textContent=q.rule;
   document.getElementById('qText').innerHTML=tex(q.q + ' = \\; ?');
@@ -756,6 +767,7 @@ function nextQ(){
     btn.onclick=()=>guess(c,q,btn,div);
     div.appendChild(btn);
   });
+  MaffsLock.fresh(div);   // a new question: a double-click on Start or Next cannot pick a choice
 
   // No timer. Jon, 22 Sep 2026: students are using this in class and do not need
   // the time pressure. It used to run a 7s countdown bar that failed the question
@@ -765,8 +777,7 @@ function nextQ(){
 }
 
 function guess(val,q,btn,div){
-  if(answered)return;
-  answered=true;
+  if(!MaffsLock.lock(div))return;   // one answer per question (canon 7.6.0)
   const correct=val===q.correct;
   const fb=document.getElementById('feedback');
   document.getElementById('explanation').textContent=q.exp;
@@ -787,11 +798,13 @@ function guess(val,q,btn,div){
   document.getElementById('score').textContent=score;
   document.getElementById('streak').textContent=streak;
   // canon 7.6: correct advances briskly, wrong waits for the student.
-  if(correct){ setTimeout(nextQ,1800); }
+  if(correct){ MaffsLock.timer(nextQ,1800); }
   else { MaffsNext.wrong({mount:document.getElementById('explanation').parentNode, onAdvance:nextQ}); }
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+function endGame(){ finishGame(); }
+const finishGame=MaffsLock.finishOnce(function(){
   window._ggAbandoned=false;
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
@@ -801,7 +814,7 @@ function endGame(){
   mfg('game_completed',{game_slug:'index-laws',level:'gcse',score:score,questions_answered:TOTAL,accuracy:_acc});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('index-laws','gcse',score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('index-laws','gcse',score);}}
   saveBest(score);renderLB();
-}
+});
 
 function getBest(){return parseInt(localStorage.getItem('il_best')||'0');}
 function saveBest(s){const prev=getBest();if(s>prev){localStorage.setItem('il_best',s);mfg('personal_best_set',{game_slug:'index-laws',level:'gcse',score:s,previous_best:prev});}document.getElementById('best').textContent=getBest();}

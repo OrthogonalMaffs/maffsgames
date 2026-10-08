@@ -3,6 +3,14 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-08 (home): GA4-COUNTRY-CANON (#179, merged 3c3217c)
+
+- Canon §1.2.1 "GA4 country tabs" added after §1.2 (the analytics section), in #153's proposed text, plus "Live only once
+  Jon has installed it" from the contract's fallback line. The contract's anchor, a "'Users' are not people here" note,
+  does not exist in canon; #153's own reading bullet says it, so that bullet now opens "'users' are not people here".
+- STOP IF checked: #153's description and `docs/ga4-country-setup.md` agree on what is collected (aggregates GA4
+  already holds; nothing new; site, analytics.js, endpoint and privacy page unchanged).
+
 ## 2026-10-08 (home): CHANGED-UTF8 (#178, merged d73d3b6)
 
 - `check-changed.py` reconfigures its own stdout and stderr to UTF-8 (errors="replace") at the top of `main()`. Python

@@ -245,6 +245,7 @@ def play(fails, shots=None, katex_dir=None):
             browser = await p.chromium.launch()
             ctx = await browser.new_context(viewport={"width": 390, "height": 844})
             await bc.no_next_floor(ctx)
+            await ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)  # MaffsLock's 300 ms window: the sweep answers at once (F1 batch 7)
 
             async def route(r):
                 u = r.request.url
@@ -333,6 +334,7 @@ def play(fails, shots=None, katex_dir=None):
             for (w, h), aa in [(p, False) for p in PHONES] + [(p, True) for p in PHONES]:
                 ctx = await browser.new_context(viewport={"width": w, "height": h}, has_touch=True, is_mobile=True)
                 await bc.no_next_floor(ctx)
+                await ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)  # MaffsLock's 300 ms window: the sweep answers at once (F1 batch 7)
                 if aa:      # the Aa (dyslexia-friendly) mode, which every phone fit is also measured in (canon §7.5.1)
                     await ctx.add_init_script("try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}")
                 await ctx.route("**/*", route)

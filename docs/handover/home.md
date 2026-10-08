@@ -17,12 +17,20 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
    supersedes RELIST-ES-TB, sent minutes earlier: same relists, plus listing Just Pythag It, Bruv (Jon approved it).
 3. **CHANGED-UTF8: DONE, #178 merged 8 Oct (d73d3b6).**
 4. **GA4-COUNTRY-CANON: DONE, #179 merged 8 Oct (3c3217c).**
-4a. **VOCAB-SHOWTHAT: DONE in #180** (Jon, 8 Oct, sent later: run after GA4-COUNTRY-CANON, before F1 batch 7). The "show
+4a. **VOCAB-SHOWTHAT: DONE, #180 merged 8 Oct (47ee9b9)** (Jon, 8 Oct, sent later: run after GA4-COUNTRY-CANON, before F1 batch 7). The "show
    that" tooltip in `schools/assets/exam-vocab.js`; closes factor-theorem-t5-009 unless the cloud lane holds that game.
 5. **F1 batch 7, then F1 batch 8**, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
    Core first; read `cloud-remaining:` in `docs/handover/cloud.md` on main before building each batch and drop
    every game on it).
 6. **CHECKPOINT after batch 8 merges with main green:** update this file and stop. Do not start batch 9 in that session.
+7. **DOCS-SMALL: first item NEXT session, after the batch 8 checkpoint** (Jon, 8 Oct). Verbatim below. (a) Roster
+   convention: a generated game's row says "N per session, generated", a bank game's gives its bank size;
+   just-pythag-it-bruv's row "20 per session, generated (round 1 from 15 triples and their sizes; rounds 2 and 3
+   generated)"; list other generator rows noticed. (b) /updates/ 8 Oct, Updated badge: "Correlation or Coincidence:
+   now 84 questions, twice as many as before." STOP IF its bank on main is not 84, or the roster parser reads the count.
+- **F1 batch 7: in progress, draft #182, branch `claude/f1-batch7`, worktree E:/jon/mg-b7.** All 8 games migrated and pass check-answer-lock seeds
+  1-3 and their verifiers.
+- **MAIN-RED: DONE, #184 merged 8 Oct (f1a097d), main green** (see its entry).
 - **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
 - **Standing F1 item:** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty
   (NOT_YET: 40). **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
@@ -34,11 +42,62 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
   a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
   driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
 
+<details><summary>Queue item 7 (DOCS-SMALL), verbatim (Jon, 8 Oct)</summary>
+
+> TASK (home lane, DOCS-SMALL; first item next session, after the batch 8 checkpoint): Two docs fixes from 8 Oct 2026,
+> in one docs PR.
+> ROOT CAUSE: (a) The roster row for just-pythag-it-bruv says "20 questions in three rounds". Project Claude read that
+> as a 20-item bank and wrongly told Jon the game was below the 40-50 minimum. The game generates every question each
+> session (15 triples with sizes, orientation and side varied in round 1; fresh non-square lengths in round 2; five
+> contexts with large number pools in round 3), so 20 is the session length, not the bank. (b) correlation-or-
+> coincidence's bank went from 42 to 84 items on 8 Oct (cloud lane, Jon's contract), with no /updates/ entry. Twice
+> the questions is a change a returning student notices in what they meet, so it earns the Updated badge under canon
+> §3.4.
+> CLASS CHECK: (a) is an instance of a pattern: a roster count that does not say whether it is a bank or a session.
+> Fix it at the roster's convention. Canon or the roster's header states that a generated game's row says "N per
+> session, generated", and a bank game's row gives its bank size. Apply that to just-pythag-it-bruv, and to any other
+> generator rows you find while editing. Do not audit every row in this PR; list any you notice. (b) is local: one
+> missing entry.
+> EXACT CHANGE: 1. .claude/rules/game-roster.md: add the convention line to the roster's header notes.
+> just-pythag-it-bruv's row says "20 per session, generated (round 1 from 15 triples and their sizes; rounds 2 and 3
+> generated)". Keep the rest of the row. 2. /updates/, a new entry dated 8 Oct, Updated badge: "Correlation or
+> Coincidence: now 84 questions, twice as many as before." If an 8 Oct entry already exists, add the line to it.
+> 3. docs/handover/home.md updated.
+> DO NOT TOUCH: any game page; other roster rows' content, beyond rows you confirm are generators (list them in the
+> PR; only change those if the change is just the count wording); canon §3.4.
+> SUCCESS CONDITION: the roster checks pass; /updates/ shows the line with the badge; merged on a green Gate; main
+> green; handover current.
+> STOP IF: correlation-or-coincidence's bank on main is not 84 (report the count, and don't write the line); the
+> roster parser reads the count field so that new wording breaks it.
+
+</details>
+
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-08 (home): MAIN-RED, like-terms-collector's verifier typed before the question settled (branch `claude/ltc-focus-race`)
+## 2026-10-08 (home): F1 batch 7 (#182, branch `claude/f1-batch7`, worktree E:/jon/mg-b7)
+
+- **On MaffsLock, each with its declaration, seeds 1-3 passing:** circle-theorem-spotter, index-laws, modular-battle,
+  correlation-or-coincidence, estimation-engine, given-that, core-maths-paper1, core-maths-paper2a. probability-paradox
+  (the cloud lane's #177) also to MIGRATED. **NOT_YET: 31.** Chosen from Year 6/KS3/GCSE/Core games NOT next in the cloud
+  lane's listed-games order (core-maths-paper2b/2c, wrong-on-the-internet, higher-power, ... left to it).
+- **Faults fixed beyond the swap:** circle-theorem-spotter moved on 1 s after a wrong answer with nothing to read: it now
+  names the theorem and waits on Next; Play Again's double-click pressed Start. given-that: phase 1 wrong moved on by
+  itself (now waits on Next); its own Next fired twice on two quick Enters (the hidden button keeps focus) and skipped a
+  question; phase 2's two tries survive a double-click. The Core Maths papers' own Next could be pressed twice (a second
+  press during the section banner skipped a question): it now acts once, only on an answered question. modular-battle:
+  the 90 s clock running out during a question's timer or Next now stops both.
+- **Shared fixes (home lane):** `check-answer-lock.py` reads no clock as a score (modular-battle's #timer is a .score-val,
+  so the countdown looked like a re-mark); `check-site.py`'s start finder never follows a link to another page (the Core
+  Maths papers' "Play Fermi Lab" signpost took the driver away).
+- **Declarations:** estimation-engine declares `ready` from its own state (on a phone the keypad makes its boxes
+  read-only, so nothing looked typeable); the Core Maths papers declare `start_sel` (".start-btn"). given-that gains a
+  read-only `window.GT.ui` (its game is an IIFE), as EE.ui and COC.ui. verify-given-that adds `bc.NO_LOCK_FRESH_INIT`.
+- **Answer lock split into three CI parts** (L1-L3, `--part i/3`): L2 ran 6m43s of its 8 min (75% budget 6m) on the
+  first push. ci-groups.py already listed L3 and L4; a part is added only by its ci-line. Add L4 when a part nears 6 min.
+
+## 2026-10-08 (home): MAIN-RED, like-terms-collector's verifier typed before the question settled (#184, merged f1a097d, main green)
 
 - **Main red after #180** (47ee9b9, run 37811456669 attempt 1), Content verifiers E: `FAIL item 1: typed 8.9/6.5,
   marked correct=None, expected False` and `the feedback does not say why: ''`. **The re-run (attempt 2) passed: main
@@ -65,10 +124,3 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   `cloud-remaining:`, no open PR touched factor-theorem or exam-vocab.js. The cloud lane's factor-theorem queue already
   left t5-009 out.
 
-## 2026-10-08 (home): GA4-COUNTRY-CANON (#179, merged 3c3217c)
-
-- Canon §1.2.1 "GA4 country tabs" added after §1.2 (the analytics section), in #153's proposed text, plus "Live only once
-  Jon has installed it" from the contract's fallback line. The contract's anchor, a "'Users' are not people here" note,
-  does not exist in canon; #153's own reading bullet says it, so that bullet now opens "'users' are not people here".
-- STOP IF checked: #153's description and `docs/ga4-country-setup.md` agree on what is collected (aggregates GA4
-  already holds; nothing new; site, analytics.js, endpoint and privacy page unchanged).

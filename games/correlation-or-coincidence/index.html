@@ -142,6 +142,17 @@ body.accessible p,body.accessible .prompt,body.accessible .fb{line-height:2;max-
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first answer; i >= 1 the first that is not the key.
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#choices .choice')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const q = COC.BANK.find(x => x.id === COC.ui.current());",
+    "(bs.find(b => !q || b.dataset.cat !== q.cat) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -534,11 +545,12 @@ const QUESTIONS = [
   };
 
   // ---- Game ----
-  var pool = [], qIdx = 0, score = 0, correctN = 0, total = 0, currentQ = null, answered = false, sessionLength = 10;
+  var pool = [], qIdx = 0, score = 0, correctN = 0, total = 0, currentQ = null, sessionLength = 10;
   function mfg() { if (typeof window.mfg === 'function') window.mfg.apply(null, arguments); }
   function showS(id) { document.querySelectorAll('.screen').forEach(function (s) { s.classList.remove('active'); }); $(id).classList.add('active'); }
 
   function startGame() {
+    MaffsLock.newSession();
     pool = COC.deal(sessionLength);
     qIdx = 0; score = 0; correctN = 0; total = 0;
     $('score').textContent = '0'; $('correctCount').textContent = '0';
@@ -553,7 +565,7 @@ const QUESTIONS = [
     $('feedback').innerHTML = ''; $('feedback').className = 'feedback';
     $('qcard').classList.remove('fb-open'); document.body.classList.remove('fb-open');
     if (qIdx >= pool.length) { endGame(); return; }
-    currentQ = pool[qIdx]; qIdx++; total++; answered = false;
+    currentQ = pool[qIdx]; qIdx++; total++;
     window.scrollTo(0, 0);
     $('qNum').textContent = total + '/' + pool.length;
     COC.renderLabels(currentQ);
@@ -565,11 +577,11 @@ const QUESTIONS = [
       b.addEventListener('click', function () { answer(c); });
       box.appendChild(b);
     });
+    MaffsLock.fresh(box);   // a new question: a double-click on Start or Next cannot pick an answer
   }
 
   function answer(cat) {
-    if (answered) return;
-    answered = true;
+    if (!MaffsLock.lock($('choices'))) return;   // one answer per question (canon 7.6.0)
     var q = currentQ, ok = cat === q.cat;
     document.querySelectorAll('.choice').forEach(function (b) {
       b.disabled = true;
@@ -585,10 +597,12 @@ const QUESTIONS = [
     // The explanation, and for a coincidence the joke, is the point of every question (Jon's
     // contract, 4 Oct 2026), so a right answer waits for Next too.
     if (window.MaffsNext) MaffsNext.wrong({ mount: fb, onAdvance: nextQ });
-    else setTimeout(nextQ, 4000);
+    else MaffsLock.timer(nextQ, 4000);
   }
 
-  function endGame() {
+  // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  function endGame() { finishGame(); }
+  var finishGame = MaffsLock.finishOnce(function () {
     var pct = total > 0 ? Math.round(correctN / total * 100) : 0;
     var t = 'Keep practising'; if (pct >= 90) t = 'Excellent'; else if (pct >= 70) t = 'Good instincts'; else if (pct >= 50) t = 'Getting there';
     $('resultTitle').textContent = t;
@@ -598,10 +612,10 @@ const QUESTIONS = [
     mfg('game_completed', { game_slug: SLUG, level: LEVEL, score: score, questions_answered: total, accuracy: pct });
     if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(SLUG, LEVEL, score, total).catch(function () {}); if (window.MaffsScoreHistory) { MaffsScoreHistory.record(SLUG, LEVEL, score); } }
     showS('results');
-  }
+  });
 
   $('startBtn').addEventListener('click', startGame);
-  $('againBtn').addEventListener('click', function () { showS('menu'); });
+  $('againBtn').addEventListener('click', function () { showS('menu'); MaffsLock.screen($('menu')); });   // a double-click cannot press Start
   MaffsSession.render({ mount: $('sessionSelect'), poolSize: QUESTIONS.length, preferred: [10, 20],
     selected: sessionLength, onChange: function (n) { sessionLength = n; } });
 
@@ -617,7 +631,7 @@ const QUESTIONS = [
   // Read-only views of live state for scripts/verify-correlation-or-coincidence.py.
   COC.ui = {
     current: function () { return currentQ ? currentQ.id : null; },
-    answered: function () { return answered; },
+    answered: function () { return MaffsLock.isLocked($('choices')); },
     pool: function () { return pool.map(function (q) { return q.id; }); },
     score: function () { return score; }
   };
