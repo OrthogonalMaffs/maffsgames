@@ -19,7 +19,8 @@ findings:
   summary: '''Prudence is correct - upper bound is 2.45m'' is marked wrong; the key is ''Prudence is correct this
     time - ... 2.45m'''
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 160
 - id: terrible-advice-t2-002
   severity: HIGH
   jc: true
@@ -28,7 +29,8 @@ findings:
   where: games/terrible-advice/index.html(core_002)
   summary: The same valid marginal-cost argument as Spot the Muppet core_002 is condemned by the key
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 160
 - id: terrible-advice-t2-003
   severity: HIGH
   jc: true
@@ -38,7 +40,8 @@ findings:
   summary: Wendy's unweighted mean 70% equals the weighted mean (600 + 2100 + 800) / 50 = 70%, so 'Wendy is correct
     - the overall average is 70%' is true and marked wrong
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 160
 - id: terrible-advice-t2-004
   severity: HIGH
   jc: false
@@ -47,7 +50,8 @@ findings:
   where: games/terrible-advice/index.htmlnextQuestion()
   summary: Double-click on Next answers the next question unseen (same mechanism as Spot the Muppet)
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 160
 - id: terrible-advice-t2-005
   severity: MEDIUM
   jc: false
@@ -67,7 +71,8 @@ findings:
   summary: The 562.45 vs 562.43 slip
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct; the report groups Spot the Muppet and Terrible Advice, so filed against both'
-  status: open
+  status: fixed
+  pr: 160
 - id: terrible-advice-t2-007
   severity: MEDIUM
   jc: false
@@ -87,4 +92,29 @@ findings:
   summary: '''Square roots always have +/- solutions'' is false'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition,
     7 Oct'
-  status: open
+  status: fixed
+  pr: 160
+- id: terrible-advice-t2-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: core
+  where: games/terrible-advice/index.html (core_004)
+  summary: 'The advice''s own working was wrong: £1,000 × 1.05 × 20 = £1,000 × 21.05 = £21,050 (1.05 × 20 is 21, so
+    £21,000); the "Penny is correct" option repeated it'
+  evidence: 'Found by the cloud lane''s verifier (8 Oct 2026; the same slip as spot-the-muppet-t2-009). Fixed: £1,000 ×
+    21 = £21,000 in the advice and the option'
+  status: fixed
+  pr: 160
+- id: terrible-advice-t2-010
+  severity: HIGH
+  jc: false
+  class: 2
+  level: core
+  where: games/terrible-advice/index.html (core_004)
+  summary: '"Penny is wrong — £1,000 × 5% × 20 = £1,000 (simple interest, the original amount doubles)" is true as
+    written and keyed wrong (SR-16)'
+  evidence: 'Found by the cloud lane (8 Oct 2026; the shape of spot-the-muppet-t2-001). Fixed as Spot the Muppet''s:
+    "Penny is wrong — the answer is £1,000 + 20 × £50 = £2,000", false for the compound interest the advice states'
+  status: fixed
+  pr: 160
