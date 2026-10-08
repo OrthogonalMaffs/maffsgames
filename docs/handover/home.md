@@ -17,6 +17,8 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
    supersedes RELIST-ES-TB, sent minutes earlier: same relists, plus listing Just Pythag It, Bruv (Jon approved it).
 3. **CHANGED-UTF8.**
 4. **GA4-COUNTRY-CANON.**
+4a. **VOCAB-SHOWTHAT** (Jon, 8 Oct, sent later: run after GA4-COUNTRY-CANON, before F1 batch 7). The "show
+   that" tooltip in `schools/assets/exam-vocab.js`; closes factor-theorem-t5-009 unless the cloud lane holds that game.
 5. **F1 batch 7, then F1 batch 8**, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
    Core first; read `cloud-remaining:` in `docs/handover/cloud.md` on main before building each batch and drop
    every game on it).
@@ -35,7 +37,7 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
   a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
   driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
 
-<details><summary>Queue items 2 (RELIST-3), 3 and 4, verbatim (Jon, 8 Oct)</summary>
+<details><summary>Queue items 2 (RELIST-3), 3, 4 and 4a, verbatim (Jon, 8 Oct)</summary>
 
 > TASK (home lane, RELIST-3; run after ESSENTIALS-WORDING, before CHANGED-UTF8): List Just Pythag It, Bruv (Jon's
 > approval) and relist Expectation Station and Truth Buster (canon SR-21), in one batched docs PR.
@@ -85,6 +87,36 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 > STOP IF: any of the three verifiers fails on main; expectation-station or truth-buster has an open CRITICAL or HIGH
 > by the time you start; a listing surface named here no longer exists; Truth Buster's §3.4 call is unclear (quote
 > the change and ask Jon).
+
+> TASK (home lane, VOCAB-SHOWTHAT; run after GA4-COUNTRY-CANON, before F1 batch 7): Correct the "show that" tooltip
+> in the shared exam vocabulary file.
+> ROOT CAUSE: schools/assets/exam-vocab.js gives "show that" the definition "Prove this is true. Show every step of
+> your working — you can't just verify it with numbers, you must derive it algebraically." That merges two different
+> command words. "Show that" means the result is given and the student shows the working that reaches it. The
+> working is often numerical: f(2) = 0 to show (x − 2) is a factor; a change of sign to show a root lies in an
+> interval; "show that 3/4 of 60 is 45" at Foundation. "Prove" is the general argument. The rule the tooltip
+> half-remembers is narrower: do not start from the given answer and work backwards. Found as factor-theorem-t5-009
+> (shows on Q3, Q4, T1a, T3b, T7a, T10a, where the expected method is numerical). Ruled by Jon, 8 Oct 2026.
+> CLASS CHECK: Shared infrastructure. The definition lives in a shared asset that any game can load, so it is fixed
+> once, there, and every current and future user is corrected. Today only factor-theorem loads it; the fix is still
+> made in the shared file, never as an override in the game.
+> EXACT CHANGE: 1. schools/assets/exam-vocab.js, the 'show that' entry's plain text, exactly: "The answer is given
+> to you. Write out every step that gets there. Working with numbers is fine when that is the method, such as
+> showing f(2) = 0. You must not start from the given answer and work backwards." 2. Check the 'hence show' entry
+> ("Use your previous answer to prove this result — show every step.") and change "prove" to "reach": "Use your
+> previous answer to reach this result — show every step." The 'prove that', 'prove', 'verify that' and 'verify'
+> entries stay as they are. 3. Close factor-theorem-t5-009 in docs/audits/findings/factor-theorem.yml in this PR,
+> with a resolution line citing Jon's ruling. This is the one cloud-lane findings file the home lane edits here;
+> check cloud-remaining: and the open PRs first, and if factor-theorem is claimed or has an open PR, leave the
+> findings file to that PR and say so in the handover. 4. docs/handover/home.md updated.
+> DO NOT TOUCH: every other entry in exam-vocab.js; the tooltip mechanism (wrapExamVocab's re-wrapping bug, t5-008,
+> is in the cloud lane's factor-theorem contract); any game page.
+> SUCCESS CONDITION: the 'show that' tooltip on factor-theorem Q3 shows the new text in Chromium; no other tooltip
+> text changes (diff shows two strings); t5-009 closed (or handed to the cloud PR as above); merged on a green Gate;
+> main green; handover current.
+> STOP IF: exam-vocab.js is loaded by more pages than factor-theorem and any of them uses "show that" for a genuine
+> proof (quote the question and ask Jon); the factor-theorem cloud PR has changed how the tooltip text is read so
+> that this edit does not show.
 
 > TASK (CHANGED-UTF8): Stop scripts/check-changed.py crashing on Windows when its output is redirected.
 > ROOT CAUSE: check-changed.py already runs each check with PYTHONIOENCODING=utf-8 and decodes its output as UTF-8,
