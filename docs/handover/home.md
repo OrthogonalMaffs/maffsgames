@@ -18,6 +18,11 @@ contracts and notes moved to `docs/history/handover-home-archive.md` ("QUEUE as 
   newest three entries (to `docs/history/handover-cloud-archive.md`) at the next cloud checkpoint.
 - **Follow-up (home lane, small):** `check-changed.py` crashes (`UnicodeEncodeError`, cp1252) printing a failure when
   its output is redirected to a file on Windows. Until fixed: `PYTHONIOENCODING=utf-8 python scripts/check-changed.py`.
+- **Follow-up (home lane, CI): Answer lock L1 failed on main once (b66ccde, run 37776985917)** with five games at
+  once (binomial-blaster, curling-friction, differentiation-duel by touch at 390px; force-resolver, moments-master
+  UNPLAYABLE after Start). The same slice passed 20/20 locally on that commit, the parallel run (3878582) was green, and
+  a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
+  driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
 3. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty.
    **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
    `docs/handover/cloud.md` on main and drop every game on it from the batch. Never claim or edit a game on that
