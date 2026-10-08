@@ -139,6 +139,12 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Two options: it presses the one that differs from the key, so every attempt is wrong.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && !document.getElementById('gameScreen').classList.contains('revealed')",
+  "answer": "const q = S.session[S.qIdx]; if (!q) return; document.getElementById(q.answer ? 'btnFalse' : 'btnTrue').click();"
+}
+-->
 </head>
 <body>
 
