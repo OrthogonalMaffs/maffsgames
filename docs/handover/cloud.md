@@ -34,7 +34,8 @@ in the queue below pointing to it. Read it when the item starts, not at session 
 start-up load). When the work merges, move the file to `docs/history/`.
 
 **Queue:** UC-FIX: contracts/2026-10-08-uc-fix.md and its amendment -uc-fix-amend.md (in progress, claimed 9 Oct).
-Then FT-FIX: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
+Then SIM-S5: contracts/2026-10-09-sim-s5.md (Simultaneous Solver Stage 5; Jon's named freeze exception,
+9 Oct 00:25; claim simultaneous-solver first). Then FT-FIX: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
