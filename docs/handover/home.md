@@ -144,6 +144,11 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   the rule. Before this PR, a MIGRATED game on the line already failed (`counts()`), but an adopted NOT_YET
   game that was listed would have been reported: now it is judged in full.
 - **Canon §7.8.2** carries the claim rule and the ruling; the QUEUE's batch item carries the skip rule.
+- **Proof (scratch worktree):** line `cloud-remaining: prime-or-composite truth-buster`, prime-or-composite
+  planted with no lock: it FAILS (re-mark, no continue) with the process-lock note; truth-buster (unlisted,
+  adopted) stays on the reported path.
+- **Follow-up (home lane, next batch):** #143 took truth-buster off the cloud line, and it now passes the check in
+  full. Add it to MIGRATED (and consider relisting it under SR-21) in the next batch.
 
 ## 2026-10-08 (home): contract DET, check-answer-lock.py deterministic (branch `claude/det`)
 
