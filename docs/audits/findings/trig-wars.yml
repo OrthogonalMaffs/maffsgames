@@ -21,7 +21,7 @@ findings:
     lose; 2 PLAYER logs both sides''shots and submits nothing (no leaderboard, no device history).
     scripts/verify-trig-wars.py plays three battles; main''s page submits 3 for a player who never hit.'
   status: fixed
-  pr: PRNUM
+  pr: 148
 - id: trig-wars-t2-002
   severity: HIGH
   jc: true
@@ -34,7 +34,7 @@ findings:
     sin(theta) in V''s own units (the 0.28 that turns all three into pixels per frame is internal); the verifier
     checks 252 angle/power settings.'
   status: fixed
-  pr: PRNUM
+  pr: 148
 - id: trig-wars-t2-003
   severity: MEDIUM
   jc: true
@@ -49,7 +49,7 @@ findings:
     22px hit circle between frames; both are hits now. The verifier fires both kinds (and true misses) through the
     page.'
   status: fixed
-  pr: PRNUM
+  pr: 148
 - id: trig-wars-t2-004
   severity: MEDIUM
   jc: false
@@ -62,7 +62,7 @@ findings:
     degrees or power that lands at least 1px nearer). A plain 45-degree rule was wrong on 38% of misses (the hill).
     The verifier checks every advised change by its own copy of the physics.'
   status: fixed
-  pr: PRNUM
+  pr: 148
 - id: trig-wars-t2-005
   severity: MEDIUM
   jc: false
@@ -73,7 +73,7 @@ findings:
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 3. severity classified by the brief''s definition, 7
     Oct. Fixed with t2-002: no ''u/s''; Vx and Vy are in V''s units.'
   status: fixed
-  pr: PRNUM
+  pr: 148
 - id: trig-wars-t2-006
   severity: MEDIUM
   jc: true
@@ -87,4 +87,4 @@ findings:
     camp''; ''WE LOST ONE''and ''DOWN!''-> ''TANK DISABLED'', ''TANK KNOCKED OUT''(listed in the PR for Project
     Claude).'
   status: fixed
-  pr: PRNUM
+  pr: 148
