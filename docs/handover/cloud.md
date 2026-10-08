@@ -92,7 +92,11 @@ main's last full run is red; watch main's run after merging.
   leaderboards/factor_theorem_alevel is null (nothing ever submitted): record "checked: empty" in the PR; that STOP IF
   cannot trigger.** (The sandbox cannot reach Firebase.) level4: no hub change
   while unlisted (NOT_ON_HUB skips the level check); the home lane's relist adds both levels.
-- **CHECKPOINT (Jon, 8 Oct ~19:00, context over 60%): STOP after #183 merges and main is green.** Nothing claimed
+- **#183 merged 18:13; main's run on 8ead626 red on group E's time budget** (10m03s of 12m, budget 9m; every
+  verifier passed: today's joiners Probability Paradox 105 s, Screening Room 84 s, Spot the Muppet 69 s, Terrible
+  Advice 56 s). Fixed by each verifier's own header: Probability Paradox to B1, Spot the Muppet to B2 (both ran about
+  2m50 of 6m). **A new cloud verifier: pick a B group with room, not E.**
+- **CHECKPOINT (Jon, 8 Oct ~19:00, context over 60%): STOP once main is green after the group fix.** Nothing claimed
   after it. The next session starts with probability-paradox t1-004.
 - **probability-paradox t1-004 (Jon's contract, 8 Oct, verbatim in the session; key points):** claim first; replace
   the item at games/probability-paradox/index.html:364 ("A student scores 95% ... claims credit") with: scenario "A
