@@ -195,6 +195,8 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',sans-serif;co
 /* Phases stack (t4-013: a row of cards scrolled sideways on a phone); the icon grid never exceeds its card */
 #phase1,#phase2,#phase3{flex-direction:column;gap:16px;width:100%}
 .icon-grid{max-width:100%}
+/* KaTeX lines wider than a phone (the Bayes working at A-Level) scroll inside their box, never the page */
+.bayes-formula,.calc-explanation p{max-width:100%;overflow-x:auto;overflow-y:hidden}
 .icon-scale{font-size:12px;color:var(--text-dim);margin:-4px 0 10px}
 .person-icon.partial{background:linear-gradient(90deg,var(--pc,var(--icon-grey)) var(--f),transparent var(--f));outline:1px solid var(--icon-grey);outline-offset:-1px}
 .person-icon.partial.condition{--pc:var(--icon-condition)}

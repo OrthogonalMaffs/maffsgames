@@ -82,7 +82,9 @@ main's last full run is red; watch main's run after merging.
   two answers a question; one row a question is a data change for Jon). t4-014 open (pools).
   **screening-room has migrated: the home lane can take it off NOT_YET** (passes check-answer-lock seeds 1-3; the
   cloud lane does not edit that script). Verifier gains open_page/extra_checks; run it WITHOUT the KaTeX shim (its
-  async route handler hangs this verifier's sync page loads).
+  async route handler hangs this verifier's sync page loads). **Without KaTeX the sandbox missed a real phone fault**
+  (CI caught it: the A-Level Bayes formula, rendered, is up to 519 px wide); measure phone fit with KaTeX routed by a
+  sync handler (`page.route(... lambda r: r.fulfill(path=...))`). Fixed: KaTeX lines scroll inside their box.
 - **Main went red at 16:46 (home #180: verify-like-terms-collector, "item 1: typed 8.9/6.5, marked correct=None";
   Check marked nothing within 5 s, so the click itself, not the read); the failed job's re-run passed (17:40). Not
   reproduced with a 200 ms gap after every Playwright action (3 runs). The home lane holds contract MAIN-RED for it.
