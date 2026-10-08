@@ -13,19 +13,26 @@ it signals from four options. Jon's ruling (SR-18, 6 Oct 2026): one category sch
     (word-problem-decoder-t1-003, t1-004).
   ACCEPT (reviewed, 8 Oct 2026): every phrase with a second topic that genuinely fits, with its reason. Every other
     phrase fits its keyed topic only.
+  Numbers (Jon's rulings, 8 Oct 2026): the problems a student is asked to solve have whole-number answers, read from
+    the text and solved here: gcse_017 and gcse_021 (word-problem-decoder-t1-006), gcse_022 (t1-008: Isla's 3 laps then
+    Jacob's 4, he twice her lap time); gcse_059's estimate is the box's volume over a tin's, rounded, and more than the
+    tins that fit (t1-007).
   Chromium: every phrase played with each topic it accepts on the buttons, and with three that it does not: the page
     marks each accepted topic right and each other one wrong (so the marking is tested, whatever the page's code).
     After a mark, every option clicked again and pressed with Enter changes nothing (word-problem-decoder-t1-005: a
     second Enter credited the next phrase unseen); the session ends once.
-A self-test plants three faults back into a copy of the page (no lock; the scheme off; gcse_017's second topic off);
+A self-test plants five faults back into a copy of the page (no lock; the scheme off; gcse_017's second topic off;
+gcse_017's old total; gcse_059's old estimate);
 each must FAIL naming its entry.
 
     python scripts/verify-word-problem-decoder.py [--no-selftest] [--against FILE]
 """
 import argparse
+import math
 import os
 import re
 import sys
+from fractions import Fraction as F
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -86,6 +93,62 @@ def check_bank(fails, data):
                 fails.append('%s: keyed %s; the scheme files this shape under %s at KS3' % (q['id'], h['topic'], KS3_PARENT[key]))
     for key in set(ACCEPT) - seen:
         fails.append('ACCEPT %s phrase %d: no such phrase (re-review the table)' % (key[0], key[1] + 1))
+
+
+def check_numbers(fails, bank):
+    """The numbers in the problems a student is asked to solve (Jon's rulings, 8 Oct 2026)."""
+    text = {q['id']: q['text'] for q in bank}
+
+    def whole(*vs):
+        return all(v.denominator == 1 and v > 0 for v in vs)
+
+    t = text.get('wpd_gcse_017', '')
+    m = re.search(r'cost £(\d+) for adults and £(\d+) for children.*?(\d+) more adults than children.*?'
+                  r'total cost of the tickets is £(\d+)', t)
+    if not m:
+        fails.append('%st1-006 wpd_gcse_017: cannot read the prices, the difference and the total: "%s"' % (TAG, t))
+    else:
+        a, c, d, total = (int(g) for g in m.groups())
+        kids = F(total - a * d, a + c)
+        if not whole(kids):
+            fails.append('%st1-006 wpd_gcse_017: %d(c + %d) + %dc = %d gives c = %s children, not a whole number'
+                         % (TAG, a, d, c, total, kids))
+    t = text.get('wpd_gcse_021', '')
+    eqs = re.findall(r'(\d+) adult tickets and (\d+) child tickets are sold for a total of £(\d+)', t)
+    if len(eqs) != 2:
+        fails.append('%st1-006 wpd_gcse_021: cannot read two days\' sales: "%s"' % (TAG, t))
+    else:
+        (p, q, r), (u, v, w) = [tuple(int(g) for g in e) for e in eqs]
+        det = p * v - q * u
+        x, y = F(r * v - q * w, det), F(p * w - r * u, det)
+        if not whole(x, y):
+            fails.append('%st1-006 wpd_gcse_021: %da + %dc = %d and %da + %dc = %d give a = %s, c = %s, not whole pounds'
+                         % (TAG, p, q, r, u, v, w, x, y))
+    t = text.get('wpd_gcse_022', '')
+    m = re.search(r'Isla runs (\d+) laps and then Jacob runs (\d+) laps, taking (\d+) minutes in total', t)
+    if not m or 'Isla runs twice as fast as Jacob' not in t:
+        fails.append('%st1-008 wpd_gcse_022: the laps each runs and the time are not stated unambiguously: "%s"' % (TAG, t))
+    else:
+        p, q, total = (int(g) for g in m.groups())
+        x = F(total, p + 2 * q)                  # Jacob's lap takes twice Isla's: y = 2x
+        if not whole(x):
+            fails.append('%st1-008 wpd_gcse_022: %dx + %dy = %d with y = 2x gives x = %s, not whole minutes'
+                         % (TAG, p, q, total, x))
+    t = text.get('wpd_gcse_059', '')
+    box = re.search(r'length (\d+) cm, width (\d+) cm and height (\d+) cm', t)
+    tin = re.search(r'diameter of (\d+) cm and a height of (\d+) cm', t)
+    est = re.search(r'He estimates he can fit about (\d+) tins', t)
+    if not (box and tin and est):
+        fails.append('%st1-007 wpd_gcse_059: cannot read the box, the tin and an estimate "about N tins": "%s"' % (TAG, t))
+    else:
+        L, W, H = (int(g) for g in box.groups())
+        dia, h = (int(g) for g in tin.groups())
+        by_volume = L * W * H / (math.pi * (dia / 2) ** 2 * h)
+        fit = (L // dia) * (W // dia) * (H // h)
+        if int(est.group(1)) != round(by_volume) or not fit < int(est.group(1)) or fit != 48:
+            fails.append('%st1-007 wpd_gcse_059: the estimate is %s tins; the box\'s volume over a tin\'s is %.1f, and %d '
+                         'fit (48 expected), so the estimate must be %d and more than %d'
+                         % (TAG, est.group(1), by_volume, fit, round(by_volume), fit))
 
 
 INIT = r"""(() => {
@@ -186,6 +249,7 @@ def run(html):
             page.wait_for_function("typeof QUESTIONS !== 'undefined' && typeof showPhrase === 'function'", timeout=8000)
             data = page.evaluate(DATA)
             check_bank(fails, data)
+            check_numbers(fails, data['bank'])
             play(fails, page, data)
             errs = [e for e in errors if 'firebase' not in e.lower()]
             if errs:
@@ -205,6 +269,10 @@ PLANTS = [
     (TAG + 't1-002', "t1-002: gcse_017's second topic off",
      "topic:'Algebra — Equations & Inequalities',also:['Algebra — Simultaneous Equations'],",
      "topic:'Algebra — Equations & Inequalities',"),
+    (TAG + 't1-006', "t1-006: gcse_017's old total (£131)",
+     'The total cost of the tickets is £136.', 'The total cost of the tickets is £131.'),
+    (TAG + 't1-007', "t1-007: gcse_059's old estimate (48)",
+     'He estimates he can fit about 61 tins in the box', 'He estimates he can fit about 48 tins in the box'),
 ]
 
 

@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: word-problem-decoder`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -49,7 +49,16 @@ main's last full run is red; watch main's run after merging.
   is interest, not an arrangement fee", which this item's muppet claims) and the same three distractors; the joke as
   spot-the-muppet's. Verifier: `stm.check_loan` (the one copy, in verify-spot-the-muppet.py) on ta_core_012, the joke
   check, three plants (9 in all). Main's page fails t2-005 and t2-007 by name.
-- **Next:** word-problem-decoder, then probability-paradox per the checkpoint below.
+- **terrible-advice #171 merged** 14:54 UTC; main's full run on 6386a07 green.
+- **word-problem-decoder (claim #173; fix #174):** Jon's numbers and wording, each highlight phrase matching
+  its text. gcse_059 keeps "in the box" (Jon's quote left it out; only the number changed). Verifier `check_numbers`:
+  gcse_017 and 021 solved from their text (whole and positive), gcse_022 read as 3x + 4y = 33 with y = 2x, gcse_059's
+  estimate = round(box / tin volume) and more than the 48 that fit; two plants (5 in all). t1-011, t1-012 (LOW) open.
+- **Jon's queue after probability-paradox (8 Oct, two contracts):** screening-room (t4-005 HIGH, 006, 008, 013, 016;
+  leave t4-014, 015), then factor-theorem (t5-004, 005 HIGH, 008, 018; leave t5-009, 013-017). Both verbatim in the
+  session; each claimed first; relisting is the home lane's.
+- **Next:** probability-paradox. Its two non-jc HIGHs (t1-001 the £20 envelope, t1-002 the bus wait) are SR-16 cases
+  where the fix is a wording or key choice; t1-003, t1-004 are jc.
 
 ## 2026-10-08 (cloud, afternoon): CHECKPOINT STOP (Jon's queue done): listed-games contract at 5 of 23; nothing claimed
 
