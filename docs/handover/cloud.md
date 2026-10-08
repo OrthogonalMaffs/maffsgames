@@ -31,6 +31,24 @@ A two-option game declares an `answer` that picks the option differing from its 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-08 (cloud): CHECKPOINT STOP (Jon): listed-games contract at 2 of 23; nothing claimed
+
+- **Where the contract stands (Jon's listed-games contract, 8 Oct):** both listed CRITICALs are closed.
+  trig-wars (#148, merged, main green) and gradient-hunter (#152; its entry below). The `cloud-remaining:` line is
+  empty: **no game is claimed.** The session stopped at Jon's checkpoint without claiming the next game.
+- **Next game: spot-the-muppet.** Start with a claim PR on main (canon 7.8.2, #145): check the open PRs and the home
+  handover first, claim one game at a time, the fix PR takes it off the line.
+- **The rest of the order, after spot-the-muppet:** word-problem-decoder, terrible-advice, probability-paradox,
+  core-maths-paper2c, core-maths-paper2b, wrong-on-the-internet, 52dle, higher-power, prisoners-dilemma,
+  seven-bridges, coordinate-geometry-dash, surd-simplifier, scale-factor-scaling, unit-converter, formula-forge;
+  then boolean-blitz, matrix-crunch, complex-converter, eigenvalue-extractor, characteristic-quest.
+- **Per game, as done for the first two:** claim PR; read its open register entries and the game; a verifier
+  that fails on main naming the entries (group E has room: trig-wars ~45 s, gradient-hunter ~15 s); MaffsLock with
+  its lock hint; a scoring change beyond the named fault, or new data, goes to Jon (gradient-hunter t2-003 did);
+  `check-changed.py`; PR; fill the register's PR number; merge on green, 10 min clear of a home merge; watch main.
+- **Earlier today (all merged, main green):** truth-buster #143; expectation-station #146 (Stage 1 one completion,
+  40/40/40; ready to relist under SR-21).
+
 ## 2026-10-08 (cloud): gradient-hunter (listed-games contract, 2 of 23; the second CRITICAL); #148 merged
 
 - **#148 (trig-wars) merged** 09:50 UTC; main's full run on b8691f8 green. Claim through main: #149 (merged 09:58).
@@ -60,7 +78,7 @@ main's last full run is red; watch main's run after merging.
   asset's file name (theme.css, keypad.js ...) in a game page, even in a comment:** `ci-deps.py --selftest` (b) reads
   a page that mentions it as one that loads it, and the PR's Plan job fails (#152's first run).
 - **For the home lane:** gradient-hunter passes the lock check: add it to MIGRATED.
-- **Next:** spot-the-muppet (the first of the audience order): claim PR first.
+- **Next:** spot-the-muppet (the first of the audience order): claim PR first (not claimed: checkpoint stop).
 
 ## 2026-10-08 (cloud): trig-wars (listed-games contract, 1 of 23; first CRITICAL); #146 merged
 
