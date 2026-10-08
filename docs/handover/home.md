@@ -19,7 +19,7 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 4. **GA4-COUNTRY-CANON: DONE, #179 merged 8 Oct (3c3217c).**
 4a. **VOCAB-SHOWTHAT: DONE, #180 merged 8 Oct (47ee9b9)** (Jon, 8 Oct, sent later: run after GA4-COUNTRY-CANON, before F1 batch 7). The "show
    that" tooltip in `schools/assets/exam-vocab.js`; closes factor-theorem-t5-009 unless the cloud lane holds that game.
-5. **F1 batch 7: DONE, #182 merged 8 Oct (259c143), main green. F1 batch 8: PR open, branch `claude/f1-batch8`
+5. **F1 batch 7: DONE, #182 merged 8 Oct (259c143), main green. F1 batch 8: PR #190, branch `claude/f1-batch8`
    (9 Oct; see its entry).** Was: not started (Jon said "checkpoint" at the batch 7 boundary). Then F1 batch 8, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
    Core first; read `cloud-remaining:` in `docs/handover/cloud.md` on main before building each batch and drop
    every game on it).
