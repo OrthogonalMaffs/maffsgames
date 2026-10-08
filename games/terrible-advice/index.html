@@ -161,6 +161,23 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game (two picks a question; a first wrong pick marks nothing, so a wrong answer is two wrong options, past the fresh window between).
+{
+  "answer": [
+    "return (async () => {",
+    " const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    " if (!document.getElementById('gameScreen').classList.contains('active')) return;",
+    " const q = sessionQuestions[currentIndex];",
+    " const wrong = () => [...document.querySelectorAll('#optionsGrid .option-card')].filter(c => !c.disabled",
+    " && !q.options.find(o => o.text === c.textContent).correct);",
+    " const w = wrong(); if (!w.length) return; w[0].click(); await real(400);",
+    " const v = wrong(); if (v.length) v[0].click();",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -286,12 +303,12 @@ ks3: [
 ],
 gcse: [
 {id:'ta_gcse_001',level:'gcse',topic:'Reverse Percentage',character:{name:'Derek Plunkett',title:'Senior Wealth Optimisation Consultant, Derek\'s Financial Solutions (Est. 2023)',huffyResponse:'I have a certificate in this, you know.'},advice:'Your jacket was \u00a385 in the sale after a 15% discount. To find the original price, add 15% of \u00a385: \u00a385 + \u00a312.75 = \u00a397.75. You\'re welcome.',options:[{text:'Derek is correct \u2014 \u00a397.75',correct:false},{text:'Derek is wrong \u2014 the 15% was taken off the original price, not \u00a385. Original price = \u00a385 \u00f7 0.85 = \u00a3100',correct:true},{text:'Derek is wrong \u2014 subtract 15%: \u00a385 \u2212 \u00a312.75 = \u00a372.25',correct:false},{text:'Derek is wrong \u2014 multiply by 1.85: \u00a385 \u00d7 1.85 = \u00a3157.25',correct:false}]},
-{id:'ta_gcse_002',level:'gcse',topic:'Compound Interest',character:{name:'Felicity Compound',title:'Interest Rate Whisperer and Savings Architect',huffyResponse:'I named myself Compound for a reason.'},advice:'You invest \u00a3500 at 4% compound interest for 3 years. That\'s \u00a3500 \u00d7 0.04 \u00d7 3 = \u00a360 interest. Total: \u00a3560. Compounding is just a fancy word for multiplying.',options:[{text:'Felicity is correct \u2014 \u00a3560',correct:false},{text:'Felicity is wrong \u2014 she calculated simple interest. Compound: \u00a3500 \u00d7 1.04\u00b3 = \u00a3500 \u00d7 1.1249 = \u00a3562.43',correct:true},{text:'Felicity is wrong \u2014 compound interest means double the interest: \u00a3620',correct:false},{text:'Felicity is wrong \u2014 4% for 3 years means 4\u00b3 = 64% interest, giving \u00a3820',correct:false}]},
+{id:'ta_gcse_002',level:'gcse',topic:'Compound Interest',character:{name:'Felicity Compound',title:'Interest Rate Whisperer and Savings Architect',huffyResponse:'I named myself Compound for a reason.'},advice:'You invest \u00a3500 at 4% compound interest for 3 years. That\'s \u00a3500 \u00d7 0.04 \u00d7 3 = \u00a360 interest. Total: \u00a3560. Compounding is just a fancy word for multiplying.',options:[{text:'Felicity is correct \u2014 \u00a3560',correct:false},{text:'Felicity is wrong \u2014 she calculated simple interest. Compound: \u00a3500 \u00d7 1.04\u00b3 = \u00a3500 \u00d7 1.124864 = \u00a3562.43',correct:true},{text:'Felicity is wrong \u2014 compound interest means double the interest: \u00a3620',correct:false},{text:'Felicity is wrong \u2014 4% for 3 years means 4\u00b3 = 64% interest, giving \u00a3820',correct:false}]},
 {id:'ta_gcse_003',level:'gcse',topic:'Simultaneous Equations',character:{name:'Maxwell Tangle',title:'Equation Untangler, Maxwell\'s Maths Massage',huffyResponse:'I was right. I deserve an apology.'},advice:'2x + y = 10 and x + y = 7. To solve, subtract the second from the first: x = 3. Then substitute: 3 + y = 7, so y = 4. Wait, let me check: 2(3) + 4 = 10 \u2713 and 3 + 4 = 7 \u2713. Both check out \u2014 but I\'ll still charge you for the consultation.',options:[{text:'Maxwell is actually correct this time \u2014 x = 3 and y = 4. Both equations check out',correct:true},{text:'Maxwell is wrong \u2014 x = 3 but y = 3',correct:false},{text:'Maxwell is wrong \u2014 you cannot subtract simultaneous equations',correct:false},{text:'Maxwell is wrong \u2014 x = 4 and y = 3',correct:false}]},
 {id:'ta_gcse_004',level:'gcse',topic:'Percentage Change',character:{name:'Cynthia Rise',title:'Growth Mindset and Percentage Change Consultant',huffyResponse:'I have a 50% success rate on stock tips. That\'s basically a coin flip but in finance that\'s considered good.'},advice:'A share price rises from \u00a32.00 to \u00a32.50. Percentage increase = (2.50 \u2212 2.00) \u00f7 2.50 \u00d7 100 = 20%. Strong growth. Buy, buy, buy.',options:[{text:'Cynthia is correct \u2014 20% increase',correct:false},{text:'Cynthia is wrong \u2014 percentage change uses the original value as denominator: (0.50 \u00f7 2.00) \u00d7 100 = 25%',correct:true},{text:'Cynthia is wrong \u2014 percentage increase = 2.50 \u00f7 2.00 \u00d7 100 = 125%',correct:false},{text:'Cynthia is wrong \u2014 percentage increase = 0.50 \u00d7 100 = 50%',correct:false}]},
 {id:'ta_gcse_005',level:'gcse',topic:'Probability',character:{name:'Lucky Larry Dobbs',title:'Professional Gambler and Probability Coach (Currently Bankrupt)',huffyResponse:'This is why I went bankrupt. But theoretically I\'m right.'},advice:'The probability of rolling a 6 on a fair die is \u2159. I roll it 6 times \u2014 so I\'m guaranteed to get exactly one 6. That\'s just how averages work.',options:[{text:'Larry is correct \u2014 rolling 6 times guarantees exactly one 6',correct:false},{text:'Larry is wrong \u2014 expected value of 1 six does not mean it is guaranteed. P(at least one 6 in 6 rolls) = 1 \u2212 (5/6)\u2076 \u2248 0.665, not 1',correct:true},{text:'Larry is wrong \u2014 the probability of getting a 6 increases with each failed roll',correct:false},{text:'Larry is wrong \u2014 rolling 6 times means you definitely get no sixes',correct:false}]},
-{id:'ta_gcse_006',level:'gcse',topic:'Bounds',character:{name:'Prudence Vague',title:'Measurement Acceptance Coach',huffyResponse:'5 is half of 10. I stand by this.'},advice:'A plank is measured as 2.4m to the nearest 10cm. The upper bound is 2.45m \u2014 just add 5 to the last digit. Easy.',options:[{text:'Prudence is correct \u2014 upper bound is 2.45m',correct:false},{text:'Prudence is correct this time \u2014 upper bound is 2.40 + 0.05 = 2.45m. Adding half the degree of accuracy is the right method',correct:true},{text:'Prudence is wrong \u2014 upper bound is 2.50m',correct:false},{text:'Prudence is wrong \u2014 upper bound is 2.44m',correct:false}]},
-{id:'ta_gcse_007',level:'gcse',topic:'Quadratics',character:{name:'Victor Squared',title:'Quadratic Equation Life Coach',huffyResponse:'I prefer positive numbers. They\'re more optimistic.'},advice:'To solve x\u00b2 = 25, take the square root: x = 5. One answer. Clean. Elegant. Done.',options:[{text:'Victor is correct \u2014 x = 5',correct:false},{text:'Victor is wrong \u2014 x\u00b2 = 25 has two solutions: x = 5 and x = \u22125. Square roots always have a positive and negative solution',correct:true},{text:'Victor is wrong \u2014 x = \u221a25 = 12.5',correct:false},{text:'Victor is wrong \u2014 x = 25 \u00f7 2 = 12.5',correct:false}]},
+{id:'ta_gcse_006',level:'gcse',topic:'Bounds',character:{name:'Prudence Vague',title:'Measurement Acceptance Coach',huffyResponse:'5 is half of 10. I stand by this.'},advice:'A plank is measured as 2.4m to the nearest 10cm. The upper bound is 2.45m \u2014 just add 5 to the last digit. Easy.',options:[{text:'Prudence is wrong \u2014 upper bound is 2.49m',correct:false},{text:'Prudence is correct this time \u2014 upper bound is 2.40 + 0.05 = 2.45m. Adding half the degree of accuracy is the right method',correct:true},{text:'Prudence is wrong \u2014 upper bound is 2.50m',correct:false},{text:'Prudence is wrong \u2014 upper bound is 2.44m',correct:false}]},
+{id:'ta_gcse_007',level:'gcse',topic:'Quadratics',character:{name:'Victor Squared',title:'Quadratic Equation Life Coach',huffyResponse:'I prefer positive numbers. They\'re more optimistic.'},advice:'To solve x\u00b2 = 25, take the square root: x = 5. One answer. Clean. Elegant. Done.',options:[{text:'Victor is correct \u2014 x = 5',correct:false},{text:'Victor is wrong \u2014 x\u00b2 = 25 has two solutions: x = 5 and x = \u22125, because (\u22125)\u00b2 = 25 as well',correct:true},{text:'Victor is wrong \u2014 x = \u221a25 = 12.5',correct:false},{text:'Victor is wrong \u2014 x = 25 \u00f7 2 = 12.5',correct:false}]},
 {id:'ta_gcse_008',level:'gcse',topic:'Ratio Best Value',character:{name:'Sharon Bulk',title:'Bulk Buying Strategist and Warehouse Club Evangelist',huffyResponse:'The big one is ALWAYS better value. This is not up for debate.'},advice:'400g of coffee costs \u00a34.80 or 650g costs \u00a37.15. The big one is better value \u2014 it\'s always the big one. I\'ve built my entire life philosophy on this.',options:[{text:'Sharon is correct \u2014 the 650g is better value',correct:false},{text:'Sharon is wrong this time \u2014 400g: \u00a34.80\u00f7400 = 1.2p/g. 650g: \u00a37.15\u00f7650 = 1.1p/g. The 650g is actually better value, so Sharon got lucky but her reasoning is wrong',correct:true},{text:'Sharon is wrong \u2014 the 400g is better value at 1.2p/g vs 1.1p/g',correct:false},{text:'Sharon is wrong \u2014 they are identical value',correct:false}]},
 {id:'ta_gcse_009',level:'gcse',topic:'Indices',character:{name:'Professor Xavier Cubed',title:'Index Law Expert (Self-Certified)',huffyResponse:'It felt right. Powers are multiplicative by nature.'},advice:'x\u00b3 \u00d7 x\u2074 = x\u00b9\u00b2. Everyone knows you multiply the powers when you multiply the same base. Multiplication all the way down.',options:[{text:'Professor Cubed is correct \u2014 x\u00b3 \u00d7 x\u2074 = x\u00b9\u00b2',correct:false},{text:'Professor Cubed is wrong \u2014 when multiplying same base, add the powers: x\u00b3 \u00d7 x\u2074 = x\u2077. Multiplying powers applies to (x\u00b3)\u2074 = x\u00b9\u00b2',correct:true},{text:'Professor Cubed is wrong \u2014 x\u00b3 \u00d7 x\u2074 = x\u00b3\u2074',correct:false},{text:'Professor Cubed is wrong \u2014 x\u00b3 \u00d7 x\u2074 = 2x\u2077',correct:false}]},
 {id:'ta_gcse_010',level:'gcse',topic:'Vectors',character:{name:'Veronica Arrow',title:'Vector Navigator and Directional Wellness Guide',huffyResponse:'Pythagoras is overcomplicating it.'},advice:'Vector a = (3, 4). The magnitude is 3 + 4 = 7. It\'s a vector \u2014 you just add the components. Vectors are just fancy arrows.',options:[{text:'Veronica is correct \u2014 magnitude = 7',correct:false},{text:'Veronica is wrong \u2014 magnitude = \u221a(3\u00b2 + 4\u00b2) = \u221a(9+16) = \u221a25 = 5. You use Pythagoras, not addition',correct:true},{text:'Veronica is wrong \u2014 magnitude = 3 \u00d7 4 = 12',correct:false},{text:'Veronica is wrong \u2014 magnitude = (3+4)\u00b2 = 49',correct:false}]},
@@ -308,12 +325,12 @@ gcse: [
 ],
 core: [
 {id:'ta_core_001',level:'core',topic:'Expected Value',character:{name:'Monte Carlo',title:'Casino Mathematician and Expectation Specialist (Formerly of Las Vegas)',huffyResponse:'I used to run a casino. This is correct. The casino always wins, which proves my point.'},advice:'A game costs \u00a32 to play. You win \u00a310 with probability 0.1 and nothing otherwise. Expected profit = \u00a310 \u00d7 0.1 = \u00a31. You expect to win \u00a31 each game. Play forever \u2014 you\'ll make a fortune.',options:[{text:'Monte is correct \u2014 expected profit is \u00a31 per game',correct:false},{text:'Monte is wrong \u2014 expected winnings = \u00a310 \u00d7 0.1 + \u00a30 \u00d7 0.9 = \u00a31. But the game costs \u00a32. Expected profit = \u00a31 \u2212 \u00a32 = \u2212\u00a31. You lose \u00a31 per game on average',correct:true},{text:'Monte is wrong \u2014 expected profit = \u00a310 \u2212 \u00a32 = \u00a38',correct:false},{text:'Monte is wrong \u2014 you cannot calculate expected profit without knowing how many times you play',correct:false}]},
-{id:'ta_core_002',level:'core',topic:'Best Value',character:{name:'Bulk Buy Barry',title:'Unit Price Philosopher',huffyResponse:'Big bottle. Always. This is non-negotiable.'},advice:'500ml of shampoo costs \u00a33.50 and 750ml costs \u00a34.80. The difference in price is \u00a31.30 for 250ml extra. That\'s better than paying \u00a33.50 for 500ml so obviously the big bottle is better value. Obvious.',options:[{text:'Barry is correct \u2014 750ml is better value',correct:false},{text:'Barry is correct in conclusion but wrong in method. 500ml: \u00a33.50\u00f7500 = 0.70p/ml. 750ml: \u00a34.80\u00f7750 = 0.64p/ml. The 750ml is better value but you must calculate price per ml, not compare price differences',correct:true},{text:'Barry is wrong \u2014 the 500ml is better value',correct:false},{text:'Barry is wrong \u2014 they are equal value',correct:false}]},
+{id:'ta_core_002',level:'core',topic:'Best Value',character:{name:'Bulk Buy Barry',title:'Unit Price Philosopher',huffyResponse:'Big bottle. Always. This is non-negotiable.'},advice:'500ml of shampoo costs \u00a33.50 and 750ml costs \u00a34.80. The big one only costs \u00a31.30 more, and \u00a31.30 is less than \u00a33.50, so obviously the big bottle is better value. Obvious.',options:[{text:'Barry is correct \u2014 750ml is better value',correct:false},{text:'Barry is correct in conclusion but wrong in method. 500ml: \u00a33.50\u00f7500 = 0.70p/ml. 750ml: \u00a34.80\u00f7750 = 0.64p/ml. The 750ml is better value but you must calculate price per ml, not compare price differences',correct:true},{text:'Barry is wrong \u2014 the 500ml is better value',correct:false},{text:'Barry is wrong \u2014 they are equal value',correct:false}]},
 {id:'ta_core_003',level:'core',topic:'Correlation',character:{name:'Dr Corrie Lation',title:'Correlation Scientist and Causation Denier',huffyResponse:'The data supports me. Correlation is basically causation with extra steps.'},advice:'I found that countries with more TVs per household have longer life expectancy. Therefore, buying a TV increases your lifespan. I\'m prescribing televisions to all my patients.',options:[{text:'Dr Lation is correct \u2014 more TVs cause longer life expectancy',correct:false},{text:'Dr Lation is wrong \u2014 correlation does not imply causation. Both TVs and life expectancy are linked to wealth, which is the confounding variable. Buying a TV will not make you live longer',correct:true},{text:'Dr Lation is wrong \u2014 the correlation is probably negative',correct:false},{text:'Dr Lation is wrong \u2014 you need at least 30 data points before drawing any conclusion',correct:false}]},
-{id:'ta_core_004',level:'core',topic:'Compound Interest',character:{name:'Penny Wise',title:'Savings Maximisation Guru, PennyWise Financial (No Relation to the Clown)',huffyResponse:'I meant multiply 1.05 by 20. That\'s still a lot of money.'},advice:'Invest \u00a31,000 at 5% for 20 years. Using compound interest: \u00a31,000 \u00d7 1.05 \u00d7 20 = \u00a31,000 \u00d7 21.05 = \u00a321,050. Retirement sorted.',options:[{text:'Penny is correct \u2014 \u00a321,050',correct:false},{text:'Penny is wrong \u2014 compound interest raises 1.05 to the power of 20, not multiplied by 20: \u00a31,000 \u00d7 1.05\u00b2\u2070 = \u00a31,000 \u00d7 2.653 = \u00a32,653',correct:true},{text:'Penny is wrong \u2014 \u00a31,000 \u00d7 5% \u00d7 20 = \u00a31,000 (simple interest, the original amount doubles)',correct:false},{text:'Penny is wrong \u2014 \u00a31,000 \u00d7 1.05\u00b2\u2070 = \u00a310,000',correct:false}]},
+{id:'ta_core_004',level:'core',topic:'Compound Interest',character:{name:'Penny Wise',title:'Savings Maximisation Guru, PennyWise Financial (No Relation to the Clown)',huffyResponse:'I meant multiply 1.05 by 20. That\'s still a lot of money.'},advice:'Invest \u00a31,000 at 5% for 20 years. Using compound interest: \u00a31,000 \u00d7 1.05 \u00d7 20 = \u00a31,000 \u00d7 21 = \u00a321,000. Retirement sorted.',options:[{text:'Penny is correct \u2014 \u00a321,000',correct:false},{text:'Penny is wrong \u2014 compound interest raises 1.05 to the power of 20, not multiplied by 20: \u00a31,000 \u00d7 1.05\u00b2\u2070 = \u00a31,000 \u00d7 2.653 = \u00a32,653',correct:true},{text:'Penny is wrong \u2014 the answer is \u00a31,000 + 20 \u00d7 \u00a350 = \u00a32,000',correct:false},{text:'Penny is wrong \u2014 \u00a31,000 \u00d7 1.05\u00b2\u2070 = \u00a310,000',correct:false}]},
 {id:'ta_core_005',level:'core',topic:'Normal Distribution',character:{name:'Norman Bell',title:'Normal Distribution Enthusiast',huffyResponse:'I was close. 68 is right. The direction is a detail.'},advice:'In a normal distribution, 68% of data falls within one standard deviation of the mean. So if the mean is 50 and SD is 10, then 68% of data is between 40 and 50. One side.',options:[{text:'Norman is correct \u2014 68% falls between 40 and 50',correct:false},{text:'Norman is wrong \u2014 68% falls within one SD on both sides: between 40 and 60. The normal distribution is symmetric about the mean',correct:true},{text:'Norman is wrong \u2014 68% falls between 45 and 55',correct:false},{text:'Norman is wrong \u2014 95% falls within one standard deviation',correct:false}]},
 {id:'ta_core_006',level:'core',topic:'Index Numbers',character:{name:'Basil Year',title:'Index Number Historian and Economics Podcaster',huffyResponse:'The base year is whichever year I choose. That\'s the beauty of indices.'},advice:'In 2020, a basket of goods cost \u00a3120. In 2023 it costs \u00a3150. The index number for 2023 is (150 \u2212 120) \u00f7 120 \u00d7 100 = 25. So inflation is 25 index points. Simple.',options:[{text:'Basil is correct \u2014 the index number is 25',correct:false},{text:'Basil is wrong \u2014 the index number = (current \u00f7 base) \u00d7 100 = (150 \u00f7 120) \u00d7 100 = 125. He calculated percentage change (25%) but an index number uses 100 as the base year value',correct:true},{text:'Basil is wrong \u2014 the index number = 150 \u2212 120 = 30',correct:false},{text:'Basil is wrong \u2014 you cannot calculate an index number from just two years',correct:false}]},
-{id:'ta_core_007',level:'core',topic:'Weighted Averages',character:{name:'Wendy Weight',title:'Average Enthusiast and Fairness Advocate',huffyResponse:'All groups deserve equal representation. That\'s just democracy.'},advice:'Three classes scored averages of 60%, 70%, and 80%. The overall average is (60 + 70 + 80) \u00f7 3 = 70%. Fair and balanced. The classes had 10, 30, and 10 students but that doesn\'t matter \u2014 an average is an average.',options:[{text:'Wendy is correct \u2014 the overall average is 70%',correct:false},{text:'Wendy is wrong \u2014 you must weight by class size: (60\u00d710 + 70\u00d730 + 80\u00d710) \u00f7 50 = (600 + 2100 + 800) \u00f7 50 = 3500 \u00f7 50 = 70%. She got lucky \u2014 but her method is wrong because it ignores class sizes, and usually gives the wrong answer',correct:true},{text:'Wendy is wrong \u2014 you should use the median of the three averages',correct:false},{text:'Wendy is wrong \u2014 you cannot combine averages from different groups',correct:false}]},
+{id:'ta_core_007',level:'core',topic:'Weighted Averages',character:{name:'Wendy Weight',title:'Average Enthusiast and Fairness Advocate',huffyResponse:'All groups deserve equal representation. That\'s just democracy.'},advice:'Three classes scored averages of 60%, 70%, and 80%. The overall average is (60 + 70 + 80) \u00f7 3 = 70%. Fair and balanced. The classes had 10, 30, and 10 students but that doesn\'t matter \u2014 an average is an average.',options:[{text:'Wendy is correct in both method and answer',correct:false},{text:'Wendy got the right answer this time but her method is wrong \u2014 you must weight by class size: (60\u00d710 + 70\u00d730 + 80\u00d710) \u00f7 50 = (600 + 2100 + 800) \u00f7 50 = 3500 \u00f7 50 = 70%. Ignoring class sizes usually gives the wrong answer',correct:true},{text:'Wendy is wrong \u2014 you should use the median of the three averages',correct:false},{text:'Wendy is wrong \u2014 you cannot combine averages from different groups',correct:false}]},
 {id:'ta_core_008',level:'core',topic:'Reverse Percentage',character:{name:'Rex Backwards',title:'Reverse Calculation Specialist and Tax Return Expert',huffyResponse:'VAT is already confusing enough without making the maths harder.'},advice:'A TV costs \u00a3360 including 20% VAT. To find the pre-VAT price, just subtract 20%: \u00a3360 \u2212 \u00a372 = \u00a3288. That\'s \u00a372 of tax. Outrageous, but mathematically sound.',options:[{text:'Rex is correct \u2014 pre-VAT price is \u00a3288',correct:false},{text:'Rex is wrong \u2014 the 20% VAT was added to the original price, so \u00a3360 = 1.20 \u00d7 original. Original = \u00a3360 \u00f7 1.20 = \u00a3300. Taking 20% off the final price gives the wrong answer',correct:true},{text:'Rex is wrong \u2014 pre-VAT price = \u00a3360 \u00d7 0.20 = \u00a372',correct:false},{text:'Rex is wrong \u2014 pre-VAT price = \u00a3360 \u00d7 1.20 = \u00a3432',correct:false}]},
 {id:'ta_core_009',level:'core',topic:'Break-Even',character:{name:'Brenda Breakeven',title:'Business Viability Coach and Former Dragon (Self-Appointed)',huffyResponse:'Revenue equals profit in my world. Costs are a mindset.'},advice:'Fixed costs are \u00a32,000. Each unit costs \u00a35 to make and sells for \u00a315. Break-even = fixed costs \u00f7 selling price = \u00a32,000 \u00f7 \u00a315 = 133.3 units. Round up to 134.',options:[{text:'Brenda is correct \u2014 break-even at 134 units',correct:false},{text:'Brenda is wrong \u2014 break-even = fixed costs \u00f7 contribution per unit = \u00a32,000 \u00f7 (\u00a315 \u2212 \u00a35) = \u00a32,000 \u00f7 \u00a310 = 200 units. She divided by selling price instead of profit per unit',correct:true},{text:'Brenda is wrong \u2014 break-even = \u00a32,000 \u00f7 \u00a35 = 400 units',correct:false},{text:'Brenda is wrong \u2014 break-even = (\u00a315 \u2212 \u00a35) \u00d7 \u00a32,000 = \u00a320,000 units',correct:false}]},
 {id:'ta_core_010',level:'core',topic:'Scatter Graphs',character:{name:'Trendline Trevor',title:'Line of Best Fit Artist and Data Visualisation Poet',huffyResponse:'Through the origin is more elegant. Science starts at zero.'},advice:'I\'ve plotted height against shoe size for 30 adults. The line of best fit should always pass through the origin (0,0) \u2014 because a person with zero height would have zero shoe size. Logic.',options:[{text:'Trevor is correct \u2014 the line of best fit must pass through the origin',correct:false},{text:'Trevor is wrong \u2014 the line of best fit passes through the mean point (\u0078\u0304, \u0079\u0304), not the origin. It only goes through the origin if the data genuinely supports it. A height of 0 is nonsensical for adults \u2014 the model only applies within the data range',correct:true},{text:'Trevor is wrong \u2014 the line of best fit must pass through every data point',correct:false},{text:'Trevor is wrong \u2014 you cannot draw a line of best fit with only 30 data points',correct:false}]},
@@ -440,6 +457,7 @@ function updatePBDisplay() {
 
 /* ── Start game ── */
 function startGame() {
+  MaffsLock.newSession();
   const bank = QUESTIONS[currentLevel];
   const shuffled = shuffle(bank);
   const count = Math.min(sessionLength, shuffled.length);
@@ -509,16 +527,23 @@ function showQuestion() {
     btn.onclick = () => handleAnswer(btn, opt.correct, q, shuffledOpts);
     grid.appendChild(btn);
   });
+  // A new question: a double-click on Start or Next cannot answer it (canon 7.6.0)
+  MaffsLock.fresh(document.getElementById('gameScreen'));
 }
 
 /* ── Handle answer ── */
+// Answer once (canon 7.6.0): a question has two picks. A first wrong pick is a retry, marked nothing; the question is
+// marked once, through MaffsLock, when it is right or at the second wrong pick, and logged once (question_answered).
+// Scoring is unchanged: a point for a right first pick only.
 function handleAnswer(btn, isCorrect, q, shuffledOpts) {
-  if (btn.classList.contains('disabled')) return;
+  const grid = document.getElementById('optionsGrid');
+  if (btn.disabled || MaffsLock.isLocked(grid)) return;
   attempts++;
 
   const allBtns = document.querySelectorAll('.option-card');
 
   if (isCorrect) {
+    if (!MaffsLock.lock(grid)) return;
     btn.classList.add('correct');
     allBtns.forEach(b => b.classList.add('disabled'));
 
@@ -540,7 +565,7 @@ function handleAnswer(btn, isCorrect, q, shuffledOpts) {
     // Huffy response
     const huffy = document.getElementById('huffyBubble');
     huffy.textContent = '"' + q.character.huffyResponse + '"';
-    setTimeout(() => huffy.classList.add('show'), 100);
+    MaffsLock.timer(() => huffy.classList.add('show'), 100);
 
     // Analytics
     if (typeof mfg === 'function') {
@@ -554,9 +579,16 @@ function handleAnswer(btn, isCorrect, q, shuffledOpts) {
     }
 
     // Show next button after huffy response appears
-    setTimeout(() => { document.getElementById('nextBtn').style.display = 'block'; }, 800);
+    MaffsLock.timer(() => { document.getElementById('nextBtn').style.display = 'block'; }, 800);
 
+  } else if (attempts < 2) {
+    // One retry: this option is out, and the second pick is a new decision, so the second click of a double-click
+    // cannot spend it (canon 7.6.0)
+    btn.classList.add('incorrect', 'disabled');
+    btn.disabled = true;
+    MaffsLock.fresh(grid);
   } else {
+    if (!MaffsLock.lock(grid)) return;
     btn.classList.add('incorrect');
 
     if (typeof mfg === 'function') {
@@ -569,28 +601,23 @@ function handleAnswer(btn, isCorrect, q, shuffledOpts) {
       });
     }
 
-    if (attempts >= 2) {
-      // Show correct answer, move on
-      allBtns.forEach(b => {
-        b.classList.add('disabled');
-        const opt = shuffledOpts.find(o => o.text === b.textContent);
-        if (opt && opt.correct) b.classList.add('reveal-correct');
-      });
+    // Show correct answer, move on
+    allBtns.forEach(b => {
+      b.classList.add('disabled');
+      const opt = shuffledOpts.find(o => o.text === b.textContent);
+      if (opt && opt.correct) b.classList.add('reveal-correct');
+    });
 
-      document.getElementById('scoreDen').textContent = currentIndex + 1;
+    document.getElementById('scoreDen').textContent = currentIndex + 1;
 
-      // Still show huffy
-      const card = document.getElementById('characterCard');
-      card.classList.add('shake');
-      const huffy = document.getElementById('huffyBubble');
-      huffy.textContent = '"' + q.character.huffyResponse + '"';
-      setTimeout(() => huffy.classList.add('show'), 100);
+    // Still show huffy
+    const card = document.getElementById('characterCard');
+    card.classList.add('shake');
+    const huffy = document.getElementById('huffyBubble');
+    huffy.textContent = '"' + q.character.huffyResponse + '"';
+    MaffsLock.timer(() => huffy.classList.add('show'), 100);
 
-      setTimeout(() => { document.getElementById('nextBtn').style.display = 'block'; }, 800);
-    } else {
-      // One retry — disable this wrong option
-      btn.classList.add('disabled');
-    }
+    MaffsLock.timer(() => { document.getElementById('nextBtn').style.display = 'block'; }, 800);
   }
 }
 
@@ -605,9 +632,11 @@ function advanceQuestion() {
 }
 
 /* ── Results ── */
-function showResults() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const showResults = MaffsLock.finishOnce(function () {
   document.getElementById('gameScreen').classList.remove('active');
   document.getElementById('resultsScreen').classList.add('active');
+  MaffsLock.screen(document.getElementById('resultsScreen'));
 
   const total = sessionQuestions.length;
   const pct = Math.round((score / total) * 100);
@@ -653,13 +682,14 @@ function showResults() {
     });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('terrible-advice',currentLevel,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('terrible-advice',currentLevel,score);}}
   }
-}
+});
 
 /* ── Reset ── */
 function resetGame() {
   document.getElementById('resultsScreen').classList.remove('active');
   document.getElementById('gameHeader').style.display = 'none';
   document.getElementById('startScreen').classList.add('active');
+  MaffsLock.screen(document.getElementById('startScreen'));   // Play Again's second click cannot press Start
   document.getElementById('pbBadge').style.display = 'none';
   updatePBDisplay();
 }
