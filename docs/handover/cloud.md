@@ -56,7 +56,9 @@ main's last full run is red; watch main's run after merging.
   on all 27 Calculate items, answer once and Next once (~15 s). Main's page fails t2-001 on six items, t2-002 on four
   claims and t2-003 on all 27; three plants caught.
   **Gotchas:** read numbers with thousands separators; a fall's interpretation gives its size; MaffsNext takes focus,
-  so an Enter after a wrong pick advances (test the option with clicks, not the keyboard).
+  so an Enter after a wrong pick advances (test the option with clicks, not the keyboard). **Never write a shared
+  asset's file name (theme.css, keypad.js ...) in a game page, even in a comment:** `ci-deps.py --selftest` (b) reads
+  a page that mentions it as one that loads it, and the PR's Plan job fails (#152's first run).
 - **For the home lane:** gradient-hunter passes the lock check: add it to MIGRATED.
 - **Next:** spot-the-muppet (the first of the audience order): claim PR first.
 

@@ -1062,7 +1062,8 @@ function onBothPointsClicked(q) {
     <div id="gradWorking"></div>
     <div id="interpArea"></div>`;
   // A text keyboard on phones, not the decimal pad: many gradients are negative and iOS's decimal pad has no minus.
-  // (The shared phone keypad, MaffsKeypad, is styled by theme.css, which this game has not migrated to yet: todo 3.21.)
+  // (The shared phone keypad, MaffsKeypad, takes its look from the shared theme, which this game has not migrated to yet:
+  // todo 3.21.)
   const box = $('gradInput');
 
   function check() {
