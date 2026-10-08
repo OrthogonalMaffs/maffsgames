@@ -15,8 +15,8 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 1. **ESSENTIALS-WORDING: DONE, #172 merged 8 Oct (c1fc37a).** Its verbatim text was in Jon's queue message only.
 2. **RELIST-3: DONE, #176 merged 8 Oct (c0c825b).** (Jon, 8 Oct, sent after the queue.) It
    supersedes RELIST-ES-TB, sent minutes earlier: same relists, plus listing Just Pythag It, Bruv (Jon approved it).
-3. **CHANGED-UTF8: DONE in this PR** (branch `claude/changed-utf8`, worktree E:/jon/mg-cu).
-4. **GA4-COUNTRY-CANON.**
+3. **CHANGED-UTF8: DONE, #178 merged 8 Oct (d73d3b6).**
+4. **GA4-COUNTRY-CANON: DONE in this PR** (branch `claude/ga4-country-canon`, worktree E:/jon/mg-ga).
 4a. **VOCAB-SHOWTHAT** (Jon, 8 Oct, sent later: run after GA4-COUNTRY-CANON, before F1 batch 7). The "show
    that" tooltip in `schools/assets/exam-vocab.js`; closes factor-theorem-t5-009 unless the cloud lane holds that game.
 5. **F1 batch 7, then F1 batch 8**, exactly as the standing F1 item below states (8 per batch, Year 6/KS3/GCSE/
@@ -34,7 +34,7 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
   a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
   driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
 
-<details><summary>Queue items 4 and 4a, verbatim (2 and 3 moved to the archive when done) (Jon, 8 Oct)</summary>
+<details><summary>Queue item 4a, verbatim (2, 3 and 4 moved to the archive when done) (Jon, 8 Oct)</summary>
 
 > TASK (home lane, VOCAB-SHOWTHAT; run after GA4-COUNTRY-CANON, before F1 batch 7): Correct the "show that" tooltip
 > in the shared exam vocabulary file.
@@ -66,27 +66,21 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 > proof (quote the question and ask Jon); the factor-theorem cloud PR has changed how the tooltip text is read so
 > that this edit does not show.
 
-> TASK (GA4-COUNTRY-CANON): Record the GA4 country figures in canon.
-> ROOT CAUSE: #153 merged the Apps Script and setup steps (docs/ga4-country-setup.md), but canon's analytics
-> section does not say the events Sheet now gains country tabs from GA4's Data API, so the next reader of canon
-> cannot tell where those figures come from.
-> CLASS CHECK: Local: one missing canon line for one merged feature.
-> EXACT CHANGE: docs/canon.md, the analytics section beside the "'Users' are not people here" note: add the line
-> proposed in #153's PR description (read it with gh); if it proposed none, write: "Country figures (Jon, 8 Oct
-> 2026): two tabs in the events Sheet, copied daily from GA4's Data API by docs/apps-script-ga4-country.js (setup:
-> docs/ga4-country-setup.md). Aggregates only: nothing new is collected, and the site, analytics.js, the events
-> endpoint and the privacy page are unchanged. Live only once Jon has installed it." Handover updated.
-> DO NOT TOUCH: the script, its test, the setup doc, the privacy page.
-> SUCCESS CONDITION: canon carries the line; merged on a green Gate.
-> STOP IF: #153's description says anything that contradicts the setup doc on what is collected (quote both).
-
 </details>
 
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-08 (home): CHANGED-UTF8 (branch `claude/changed-utf8`)
+## 2026-10-08 (home): GA4-COUNTRY-CANON (branch `claude/ga4-country-canon`)
+
+- Canon §1.2.1 "GA4 country tabs" added after §1.2 (the analytics section), in #153's proposed text, plus "Live only once
+  Jon has installed it" from the contract's fallback line. The contract's anchor, a "'Users' are not people here" note,
+  does not exist in canon; #153's own reading bullet says it, so that bullet now opens "'users' are not people here".
+- STOP IF checked: #153's description and `docs/ga4-country-setup.md` agree on what is collected (aggregates GA4
+  already holds; nothing new; site, analytics.js, endpoint and privacy page unchanged).
+
+## 2026-10-08 (home): CHANGED-UTF8 (#178, merged d73d3b6)
 
 - `check-changed.py` reconfigures its own stdout and stderr to UTF-8 (errors="replace") at the top of `main()`. Python
   here 3.14.6, CI 3.12: `reconfigure` exists on both. **Proof:** with a planted failing check printing "£5 → ✓",
@@ -113,15 +107,4 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   open follow-up; §1.55 and §1.75 closed.
 - **Deviation, for Jon:** the /essentials/ card says "One level", not "Choose: Foundation": the game has one level and no
   picker and reads no `?level=`, so a Choose card fails check-resit-page.py (and would promise a choice that isn't there).
-
-## 2026-10-08 (home): ESSENTIALS-WORDING, "resit" off every public page (#172, merged c1fc37a)
-
-- /updates/ (four lines) and /essentials/ (description, og:description, teacher line, intro) no longer say resit or
-  post-16; games.json's /essentials/ description matches. The /updates/ link now goes to /essentials/.
-- `check-student-labels.py` now scans essentials/index.html and updates/index.html (PORTALS); /essentials/ is no
-  longer exempt; the self-test plants a label on each and requires it caught. Against main's copies the widened check
-  finds 10 labels (5 per page). Canon §7.5.3 records Jon's rule.
-- Remaining site-wide hits (all exempt): the two rooms' teacher.html notes (teacher surface); given-that (KNOWN); code
-  and HTML comments in room.js, schools/assets, games and the /essentials/ head comment (history of /resit/ and the
-  script name check-resit-page.py).
 
