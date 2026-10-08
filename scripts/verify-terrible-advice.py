@@ -15,11 +15,16 @@ its own bank and engine: a point for a right first pick only. The arithmetic, ke
     second "Prudence is correct"; t2-003: core_007's "Wendy is correct — 70%", the weighted mean being 70% too;
     t2-010: core_004's simple-interest figure offered as a correction). The key states no false rule (t2-008).
   Arguments: core_002's argument must be invalid (t2-002, the valid marginal argument).
+  The loan (Jon, 8 Oct 2026; t2-005): Spot the Muppet's LOAN check: the advice says APR; the key states the monthly
+    rate, the payment and the total to the penny (a repayment loan, APR the effective annual rate); the distractors are
+    the muppet's £333.33 and the two old keys (compound and simple interest on the whole sum), each with its method.
+  Jokes: core_003 no longer prescribes televisions to patients (t2-007, SR-14 tier (c)).
   Chromium: every item played three ways: the key first (scores 1, logged once); a wrong pick then the key (the first
     pick marks nothing; scores 0, logged once, attempts 2); two wrong picks (scores 0, logged once; then every option
     clicked and pressed with Enter changes nothing). With MaffsLock's real fresh window (t2-004): Next's second click
     landing on the new question's option marks nothing; a double click on Next moves on once; the session ends once.
 KNOWN_OPEN: register entries detected here and left open (reported, never failed; a stale one fails).
+A self-test plants nine faults back into a copy of the page; each must FAIL naming its entry.
 
     python scripts/verify-terrible-advice.py [--no-selftest] [--against FILE]
 """
@@ -116,11 +121,10 @@ FALSE_RULES = {'ta_gcse_007': ('always have a positive and negative solution', T
 SR16_REVIEWED = {'ta_gcse_008': 'quotes the right unit prices (1.2p/g, 1.1p/g) with the wrong conclusion (the 400g)'}
 ARITH_ENTRY = {'ta_gcse_002': TAG + 't2-006', 'ta_core_004': TAG + 't2-009'}
 
-KNOWN_OPEN = {
-    'ta_core_012': (TAG + 't2-005', 'the key charges simple interest on the whole £12,000 for 3 years (£14,160, about '
-                    '£393.33 a month); a repayment loan at 6%% a year over 36 months is about £%.2f a month'
-                    % stm.amortised(12000, 0.06, 36)),
-}
+KNOWN_OPEN = {}
+
+# The loan (Jon, 8 Oct 2026; terrible-advice-t2-005): Spot the Muppet's check (stm.check_loan), on this bank's item.
+LOAN = {'ta_core_012': (12000, 0.06, 36, TAG + 't2-005')}
 
 
 def check_bank(fails, opens, bank):
@@ -185,6 +189,13 @@ def check_bank(fails, opens, bank):
                 for g in stm.numbers(o['text']):
                     if not any(stm.same(a, g[0]) and a[1] == g[1] for a in adv):
                         fails.append('%s: "%s" states %s, which the advice never says' % (qid, o['text'], float(g[0])))
+    for q in items:
+        if q['id'] in LOAN:
+            stm.check_loan(fails, q, *LOAN[q['id']])
+        # core_003 (Jon, 8 Oct 2026; terrible-advice-t2-007, SR-14 tier (c)): the joke is a bigger telly, not patients
+        if q['id'] == 'ta_core_003' and re.search(r'patient|prescrib', q['advice'], re.I):
+            fails.append('%s ta_core_003: the advice still prescribes televisions to patients (SR-14 tier (c)): "%s"'
+                         % (TAG + 't2-007', q['advice']))
     for q in items:
         if q['id'] != 'ta_core_002':
             continue
@@ -342,6 +353,12 @@ PLANTS = [
      '\\u00a3500 \\u00d7 1.124864 = \\u00a3562.43', '\\u00a3500 \\u00d7 1.1249 = \\u00a3562.43'),
     (TAG + 't2-009', 't2-009: core_004 1.05 x 20 = 21.05',
      '\\u00d7 1.05 \\u00d7 20 = \\u00a31,000 \\u00d7 21 = \\u00a321,000.', '\\u00d7 1.05 \\u00d7 20 = \\u00a31,000 \\u00d7 21.05 = \\u00a321,050.'),
+    (TAG + 't2-005', 't2-005: core_012 the key gives about £397 a month',
+     '\\u2248 \\u00a3364.20 a month (total \\u00a313,111.19)', '\\u2248 \\u00a3397 a month (total \\u00a314,292.19)'),
+    (TAG + 't2-005', "t2-005: core_012's advice says 6% per year",
+     'over 3 years at 6% APR.', 'over 3 years at 6% per year.'),
+    (TAG + 't2-007', 't2-007: core_003 prescribing televisions',
+     "I\\'m telling everyone I know to buy a bigger telly.", "I\\'m prescribing televisions to all my patients."),
 ]
 
 
