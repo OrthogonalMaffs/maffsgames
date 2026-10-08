@@ -24,7 +24,7 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
    Core first; read `cloud-remaining:` in `docs/handover/cloud.md` on main before building each batch and drop
    every game on it).
 6. **CHECKPOINT after batch 8 merges with main green:** update this file and stop. Do not start batch 9 in that session.
-7. **DOCS-SMALL: first item NEXT session** (Jon, 8 Oct; sent for "after the batch 8 checkpoint", and the checkpoint came
+7. **DOCS-SMALL: IN PROGRESS, branch `claude/docs-small` (9 Oct).** Was: first item next session (Jon, 8 Oct; sent for "after the batch 8 checkpoint", and the checkpoint came
    at batch 7, so it runs first next session, then batch 8). Verbatim below. (a) Roster
    convention: a generated game's row says "N per session, generated", a bank game's gives its bank size;
    just-pythag-it-bruv's row "20 per session, generated (round 1 from 15 triples and their sizes; rounds 2 and 3
@@ -76,6 +76,22 @@ decision, or a checkpoint). Each contract's verbatim text is below the list; mov
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-09 (home): DOCS-SMALL (branch `claude/docs-small`)
+
+- **STOP IFs clear:** correlation-or-coincidence's `QUESTIONS` on main has 84 items (28 cause, 28 both, 28 chance).
+  Every roster parser (bank_common, check-banks, check-leaderboard-coverage, audit-katex/gen_tables, check-calculator)
+  reads only the #, slug, levels and calculator cells, never the description, so the count wording is free text.
+- **Roster:** the header gains the convention ("N per session, generated" vs bank size); just-pythag-it-bruv's row
+  reads "20 per session, generated (round 1 from 15 triples and their sizes; rounds 2 and 3 generated)".
+- **/updates/:** October, Improved: "Correlation or Coincidence: now 84 questions, twice as many as before." The
+  page is monthly, so the line sits in October beside Expectation Station's 8 Oct line. Updated badge: both home
+  cards carry `data-badge="updated" data-badge-date="2026-10-08"` (canon §3.4, every occurrence).
+- **Generator rows noticed, not changed** (none is just the count wording): split-it ("Procedural generation", no
+  count); free-daily-pizza (90/206/138/84 are each stage's generated pool, not a session); simultaneous-solver (48 per
+  stage are generated offline by `scripts/gen-simultaneous.py`, so a fixed bank: the size is right as it stands).
+- **For Jon:** correlation-or-coincidence's own roster row still says "42 items"; the contract's DO NOT TOUCH covers
+  it. The October /updates/ "New" line also says 42; it was true when written.
 
 ## 2026-10-08 (home): F1 batch 7 (#182, merged 259c143, main green)
 
