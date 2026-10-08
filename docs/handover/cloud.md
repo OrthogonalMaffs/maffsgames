@@ -14,7 +14,13 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: truth-buster`
+`cloud-remaining:`
+
+**Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
+canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
+remaining list above and push that handover commit on its own, so the home lane's F1 batches skip it; take it off
+in the PR that fixes it. One game claimed at a time; never claim a game already in an open home-lane F1 batch branch
+(check `docs/handover/home.md` and the open PRs first; if it is, skip to the next and note it).
 
 **Resume rule, MaffsLock (Jon, contract LH):** adopting MaffsLock includes the game's lock-hint declaration
 (`<!-- maffs-lock-hint ... -->`, canon §7.6.0), and the game passes `check-answer-lock.py`. Hints live in the
@@ -24,6 +30,29 @@ A two-option game declares an `answer` that picks the option differing from its 
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-08 (cloud): truth-buster (queue 6 of 6, the last); the remaining list is empty
+
+- **State found:** the previous session's closing note (partial-fractions-duel next) predated #139; #139 and the relist
+  (#142) had merged and main's full run on a99efa5 was green. Only truth-buster was left.
+  **Missed at the start: #141** (the previous session's truth-buster PR, the same cherry-pick) was already open. #143
+  duplicated it; #143 was merged (its lock hint has no fixed wait, the cause contract DET names) with #141's fuller
+  t3-016 (375x667 too), and #141 closed as superseded. **Check the open PRs, not only main and this file, at the start.**
+- **truth-buster:** the old session's commit (fcc5e4c, `claude/keen-cray-ypsime-truth-buster`) cherry-picked onto main
+  cleanly: MaffsLock in full (no `S.answered`; Next locks at its first press; the tier transition and the Next delay
+  through MaffsLock.timer; finishOnce), and on a phone the answer buttons fold away during the reveal and the page moves
+  Next above the footer. Added here: its maffs-lock-hint. **Two options: it presses the button that differs from the
+  key, so every attempt is wrong.** Without it the generic driver came out all right on 8 draws in 1 run of 3 here
+  (UNPLAYABLE), the fault contract DET names. Off the remaining list.
+- **Proofs:** `verify-truth-buster.py` passes; against main's page it fails 62 times (the double Enter at the tier
+  boundary, t3-013; Next under the fold at 390x844 on all 60 items). `check-answer-lock.py --game truth-buster` passes
+  four times with the list empty (judged in full; 20 answered, 0 right, the same every run); `--selftest` passes.
+- **Register:** t3-013 fixed. t3-015 stays open (the 21 Learn More video IDs: YouTube is refused here); its fold part is
+  fixed at 390x844, and 320x568 is filed as **t3-016** (MEDIUM, open: 32 of 60 fit; the reveal is taller than the
+  screen, so it needs shorter reveal text or a layout ruling; 375x667: 58 of 60). t3-014 (levels, class 4/5) stays open.
+- **For the home lane:** truth-buster passes the lock check: add it to MIGRATED.
+- **Next:** Jon's contract of 8 Oct (listed games' CRITICAL/HIGH, trig-wars first) runs after the **Expectation Station
+  bundle contract**, whose text this session has not received.
 
 ## 2026-10-07 (cloud): partial-fractions-duel (queue 5 of 6); #138 binomial-blaster merged; NEXT = truth-buster
 

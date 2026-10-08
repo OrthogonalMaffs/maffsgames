@@ -150,9 +150,11 @@ findings:
   summary: Two Enter presses on Next at a tier boundary skip a question (stale S.revealTime guard; focus on the
     hidden button for 1s); results still claim 20 answered
   evidence: 'Chromium: at qIdx 6, Enter, Enter -> qIdx 8; question_index 8 never sent; game_completed questions_answered
-    20; same at qIdx 13; a 100ms gap, dblclick or double tap: no skip Left open by the cloud-lane fix PR: class 1, owned
-    by the shared answer lock (contract F1).'
-  status: open
+    20; same at qIdx 13; a 100ms gap, dblclick or double tap: no skip. Fixed by adopting MaffsLock (Next locks at its
+    first press; the tier transition through MaffsLock.timer); scripts/verify-truth-buster.py presses Enter twice at the
+    tier boundary (fails on the old page) and check-answer-lock.py passes.'
+  status: fixed
+  pr: 143
 - id: truth-buster-t3-014
   severity: MEDIUM
   jc: true
@@ -179,6 +181,21 @@ findings:
     t1_007 density wording, t1_013 ''independent properties'', the omitted conditions in t2_009, t2_014, t3_007, t3_010
     and t3_017, t2_020 (1874 result, 1891 diagonal argument), t3_008 title, t3_009 coastline figures (2,800 km at 100 km,
     3,400 km at 50 km, OS 17,820 km named as such), t3_012 (i defined by i^2 = -1). Still open: the 21 Learn More video
-    IDs cannot be checked from the cloud sandbox (YouTube refused), and Next below the fold (canon 7.6.1) needs shorter
-    reveal text (content) or a layout ruling, not a key fix.'
+    IDs cannot be checked from the cloud sandbox (YouTube refused). Next below the fold: fixed at 390x844 on all 60 items
+    (PR 143: the answer buttons fold away during the reveal and the page moves Next above the footer); 320x568 is
+    truth-buster-t3-016.'
+  status: open
+- id: truth-buster-t3-016
+  severity: MEDIUM
+  jc: false
+  class: NEW:phone-fold
+  level: all
+  where: games/truth-buster/index.html (placeReveal, the reveal panel)
+  summary: After an answer Next is under the fold at 320x568 on 28 of 60 items and at 375x667 on 2 of 60 (canon 7.6.1)
+  evidence: 'scripts/verify-truth-buster.py measures every item after an answer: 390x844 Next above the fold on 60/60
+    (fixed, PR 143); 375x667 58/60, lowest Next bottom 671px against a 627px fold; 320x568 32/60, lowest Next bottom 790px
+    against a 528px fold. placeReveal() never
+    scrolls past the reveal''s top, so a reveal taller than the screen keeps Next under it. Needs shorter reveal text
+    (content, Project Claude) or a layout ruling (collapse the counterexample or Learn More); filed open per Jon''s
+    ruling (7 Oct: the 320x568 entry does not block the fix PR).'
   status: open
