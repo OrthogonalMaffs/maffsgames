@@ -11,8 +11,7 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 
 **QUEUE (home lane; Jon, 7 Oct evening session):** MaffsLock #125, batches 1 (#129), 2 (#132), contract LH (#133)
 and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then stops at the checkpoint. Then:
-1. **Contract DET: BUILT, PR on `claude/det` (8 Oct; see its entry below). Merge on a green Gate, then the
-   queue moves on.** check-answer-lock.py made deterministic (Jon, 7 Oct). Two
+1. **Contract DET: DONE, #144 merged 8 Oct, main green (fedb2ce).** check-answer-lock.py made deterministic (Jon, 7 Oct). Two
    causes fail a PR at random: (a) after a right answer `to_next()` waits a fixed 350 ms and returns 'auto', so the
    next tap can land in MaffsLock's 300 ms fresh window (UNPLAYABLE; #134 prime-or-composite, #137
    fraction-equivalence); (b) with no answer hint the driver taps option (k+1) % 2 on 8 unseeded questions, all
@@ -68,7 +67,9 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
    > green; handover current.
    > STOP IF: a generated count needs a new field in the metadata source; the redirect breaks a check that
    > assumes /resit/ is a real page; any analytics event name (not just a value) would have to change.
-2b. **Contract CLAIM** (Jon, 8 Oct; a separate PR, after DET, before or alongside ESSENTIALS). Verbatim:
+2b. **Contract CLAIM: BUILT, PR on `claude/claim` (8 Oct).** Its STOP IF hit (no time bound); Jon's ruling (8 Oct):
+   option 3, for listed games a claim is a process lock only, the check judges them as unclaimed, the exemption
+   stays for unlisted games only, no time bound. Verbatim (Jon, 8 Oct; a separate PR, after DET):
    > TASK: Record the cloud lane's widened remit in canon and make the F1 rollout skip any game the cloud lane
    > has claimed. ROOT CAUSE: From 8 Oct the cloud lane also fixes listed games (Jon's ruling; its contract tells
    > it to claim each game by adding it to the `cloud-remaining:` line in docs/handover/cloud.md before
@@ -122,12 +123,27 @@ and batch 3 (#136) are done. This session runs batch 4 and the relist PR, then s
    > STOP IF: a claim in items 2-3 is not true on main (report which; do not reword it yourself); the page's
    > checks require a format the text doesn't fit.
 3. **Then** the remaining listed games, Year 6/KS3/GCSE/Core first, 8 per batch, until NOT_YET is empty.
+   **Before building each batch** (contract CLAIM, canon §7.8.2): read `cloud-remaining:` in
+   `docs/handover/cloud.md` on main and drop every game on it from the batch. Never claim or edit a game on that
+   line. For a listed game the claim is a process lock only: check-answer-lock.py still judges it as unclaimed.
 - **Checkpoint rule:** stop after every 2 batches merged (main green), or at the next batch boundary when Jon
   says "checkpoint". At each stop, update this file.
 
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-08 (home): contract CLAIM (branch `claude/claim`)
+
+- **STOP IF hit:** honouring the line for listed games would have exempted a claimed game with no time bound.
+  Jon's ruling (8 Oct): option 3. For a listed game a claim is a process lock only: the F1 batches skip it, the
+  check judges it as unclaimed. The reported-not-failed exemption stays for unlisted games only.
+- **Check:** `exempt(claimed, unlisted)` = the line's games that are in the roster's Unlisted section
+  (`unlisted_games()`, the same section parse as audit-register.py). Only those are reported, not failed; a
+  listed game on the line gets a `note:` line saying it is judged as unclaimed. Self-test covers the parse and
+  the rule. Before this PR, a MIGRATED game on the line already failed (`counts()`), but an adopted NOT_YET
+  game that was listed would have been reported: now it is judged in full.
+- **Canon §7.8.2** carries the claim rule and the ruling; the QUEUE's batch item carries the skip rule.
 
 ## 2026-10-08 (home): contract DET, check-answer-lock.py deterministic (branch `claude/det`)
 
