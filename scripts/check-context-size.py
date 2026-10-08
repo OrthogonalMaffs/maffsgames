@@ -6,6 +6,8 @@ CLAUDE.md loads into every session in both lanes, and each lane reads its handov
 were 159 KB, 64 KB and 56 KB, so a fresh session started at 16% context before reading its task. History now
 lives in docs/history/ (never loaded by default) and this check holds the three files to LIMIT bytes each, a
 little above the 15 KB target so a normal entry fits. Prints every file's size.
+docs/handover/contracts/ is deliberately not measured: it is read only when an item starts, never at session
+start (canon §7.8.2, contract CONTRACTS-FOLDER).
 
 DEFERRED: a file whose trim the contract itself put off. It is reported, not failed, and it fails once it is
 under the limit while still listed, so the exemption cannot outlive the trim.

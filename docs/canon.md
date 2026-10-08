@@ -1406,6 +1406,13 @@ and is not edited by fix PRs.
 - **Before the first push of every PR:** `python scripts/check-changed.py` (one PR on 7 Oct 2026 cost three
   runs without it).
 - **Relisting a fixed game** is a home-lane docs PR, batched with others.
+- **Contracts are kept verbatim, outside the start-up load** (Jon, 8 Oct 2026, contract CONTRACTS-FOLDER; after a
+  `/clear` wiped the cloud lane's only copy of three contracts, and the repo held summaries only). On receipt, each
+  contract is saved verbatim as `docs/handover/contracts/<yyyy-mm-dd>-<name>.md`, in its claim commit or its PR's
+  first commit; the lane's handover queue holds a one-line pointer to it, never the text; when the work merges the
+  file moves to `docs/history/contracts/`. The folder is read only when starting the item it names, never at
+  session start: CLAUDE.md names the two handover files, and `scripts/check-context-size.py` measures only those
+  and CLAUDE.md.
 
 ## 7.9 Verifier conventions (Jon, 8 Oct 2026)
 
