@@ -65,6 +65,7 @@
   "Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)": "16",
   "SUVAT Selector (every key from the data both ways, at its stated precision; marking through MaffsAnswer in Chromium)": "7",
   "Scale Factor Scaling (every key recomputed from the quantities its question states; every option marked in Chromium)": "16",
+  "Scores offline (no page but firebase-leaderboard.js calls the Firebase SDK; /leaderboards/ and the portal with Firebase blocked and with a fake SDK; planted faults caught)": "9",
   "Screening Room (every count, band and key from the stated rates; every figure from the data; all 70 items marked in Chromium)": "11",
   "Sequence Solver (every key recomputed from its own terms or formula, exactly; options distinct in value; every option marked in Chromium)": "16",
   "Seven Bridges (every puzzle's answer recomputed from its edges, no edge drawn through a vertex it does not join, the solution animation stops at Next; Chromium)": "16",
