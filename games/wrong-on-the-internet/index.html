@@ -469,14 +469,14 @@ gcse: [
 },
 {
   id:'woti_gcse_004',level:'gcse',topic:'Gambler\'s Fallacy',postType:'viral',
-  post:{username:'@NotAGambler',text:'12 reds in a row at roulette. I\'m putting everything on black. MATHEMATICALLY CERTAIN.',likes:'31.2k',reshares:'8.9k',comments:'5,678',
+  post:{username:'@NotAGambler',text:'12 reds in a row on a European roulette wheel (one green zero). I\'m putting everything on black. MATHEMATICALLY CERTAIN.',likes:'31.2k',reshares:'8.9k',comments:'5,678',
     replies:[{username:'@CasinoDealer',text:'Sir, the wheel doesn\'t remember.'},{username:'@NotAGambler',text:'MATHEMATICS. CERTAIN.'}]},
-  stage1CorrectAnswer:'P(black) = 18/38 every spin',stage1Options:['P(black) = 18/38 every spin','P(black) > 0.5 after 12 reds','P(black) = 1 now','Depends on wheel'],
+  stage1CorrectAnswer:'P(black) = 18/37 every spin',stage1Options:['P(black) = 18/37 every spin','P(black) > 0.5 after 12 reds','P(black) = 1 now','P(black) = 1/2 every spin'],
   stage2Options:[
-    {text:'Gambler\'s fallacy \u2014 roulette wheel has no memory. P(black) = 18/38 \u2248 47.4% on every spin regardless of history. Previous results never affect independent events',correct:true},
+    {text:'Gambler\'s fallacy \u2014 the wheel has no memory. P(black) = 18/37 \u2248 48.6% on every spin regardless of history. Previous results never affect independent events',correct:true},
     {text:'Probability does even out so black is slightly more likely',correct:false},
-    {text:'The error is ignoring the green pockets',correct:false}],
-  explanation:'The gambler\'s fallacy: roulette spins are independent. P(black) = 18/38 every time, regardless of history.'
+    {text:'The error is ignoring the green zero',correct:false}],
+  explanation:'The gambler\'s fallacy: roulette spins are independent. On a single-zero wheel, P(black) = 18/37 every time, regardless of history.'
 },
 {
   id:'woti_gcse_005',level:'gcse',topic:'Percentage Reductions',postType:'poll',
@@ -548,14 +548,14 @@ gcse: [
 },
 {
   id:'woti_gcse_011',level:'gcse',topic:'Probability AND',postType:'viral',
-  post:{username:'@ProbMaster',text:'P(A)=0.4, P(B)=0.3. P(A and B) = 0.4+0.3 = 0.7. Add them together \u2014 AND means more!',likes:'6.8k',reshares:'2.1k',comments:'1,567',
+  post:{username:'@ProbMaster',text:'A and B are independent. P(A)=0.4, P(B)=0.3. P(A and B) = 0.4+0.3 = 0.7. Add them together \u2014 AND means more!',likes:'6.8k',reshares:'2.1k',comments:'1,567',
     replies:[{username:'@TreeDiagrammer',text:'AND means multiply, not add...'},{username:'@ProbMaster',text:'More events = more probability. Logic.'}]},
-  stage1CorrectAnswer:'0.12 (if independent)',stage1Options:['0.12 (if independent)','0.7','0.1','Need more information'],
+  stage1CorrectAnswer:'0.12',stage1Options:['0.12','0.7','0.1','Need more information'],
   stage2Options:[
-    {text:'P(A AND B) for independent events = multiply: 0.4\u00d70.3=0.12. Addition gives P(A OR B). "AND" means both occur simultaneously \u2014 use multiplication',correct:true},
+    {text:'A and B are independent, so P(A AND B) = P(A)\u00d7P(B) = 0.4\u00d70.3 = 0.12. Both happening is less likely than either one alone, so it can never be the sum',correct:true},
     {text:'P(A AND B) = P(A) \u2212 P(B) = 0.1',correct:false},
     {text:'The poster is correct that AND means addition',correct:false}],
-  explanation:'P(A AND B) for independent events = P(A) \u00d7 P(B) = 0.4 \u00d7 0.3 = 0.12. AND = multiply, OR = add.'
+  explanation:'A and B are independent, so P(A AND B) = P(A) \u00d7 P(B) = 0.4 \u00d7 0.3 = 0.12. Both happening is less likely than either one alone: 0.7 is bigger than both P(A) and P(B).'
 },
 {
   id:'woti_gcse_012',level:'gcse',topic:'Negative Indices',postType:'poll',
