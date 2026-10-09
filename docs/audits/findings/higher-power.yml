@@ -18,7 +18,12 @@ findings:
     and the two ''256'' cards look identical (also phi/phi, 0/0, pi^2/6)'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. About 6% of KS3/GCSE and 11% of A-Level Pairs
     games deal such a pair'
-  status: open
+  status: fixed
+  pr: 217
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 6: Pairs matches two cards worth the same (sameValue: value cards
+    that look the same, or equal finite stored values; a googolplex and infinity, both stored as Infinity, do not
+    match). scripts/verify-higher-power.py turns over every equal-value pair and each card''s nearest other value in
+    Chromium and fails main''s page here.'
 - id: higher-power-t2-002
   severity: MEDIUM
   jc: true
