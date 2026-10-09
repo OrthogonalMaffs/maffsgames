@@ -57,6 +57,9 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
 - **Jon's ruling (17:59): 70% / 80% are of the BUDGET, not of the job timeout.** Recorded in the contract.
 - **Before / after:** 18 groups, 3900 job-s, worst group 85% -> 21 groups, ~4010 job-s (+2.8%), content max 189 s.
 - **New main-only job "CI timings and pack"** records timings and repacks.
+  Its first main run (b7d5038) failed: one content job's log fetch returned an error in the runner (it reads
+  fine minutes later). Fixed in #222: each log fetch retries (4 x 15 s) and reports why; a job whose log still
+  can't be read keeps its last timings with a warning; no log readable at all still fails.
 - **Lock parts are not packed:** add a part as the roll-out grows. L1 reached 6m40s on #218 (graph-sketcher on the
   lock, after higher-power in #217), so #218 adds part 6.
 

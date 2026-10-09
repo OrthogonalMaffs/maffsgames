@@ -366,21 +366,42 @@ def record_timings(run_id):
     """Write TIMINGS from a finished run's content jobs (needs the gh CLI): each line's seconds, read from the
     job log's 'ok  <label>  (Ns; group at ...)' lines, and the longest setup (a group's total less its lines).
     Run by the "CI timings" job after every full run on main; --write-pack then repacks from it."""
-    import subprocess
-    gh = lambda *a: subprocess.run(["gh", "api", *a], cwd=ROOT, capture_output=True, text=True,
-                                   encoding="utf-8", errors="replace", check=True).stdout
+    import subprocess, time
+
+    def gh(path, tries=1):
+        # A job's log can 404 for a while after the job ends (first main run, 9 Oct): retry, and say why it failed.
+        for i in range(tries):
+            r = subprocess.run(["gh", "api", path], cwd=ROOT, capture_output=True, text=True,
+                               encoding="utf-8", errors="replace")
+            if r.returncode == 0:
+                return r.stdout
+            if i < tries - 1:
+                time.sleep(15)
+        raise RuntimeError("gh api %s: %s" % (path, (r.stderr or r.stdout).strip()[:300]))
     run = json.loads(gh("repos/{owner}/{repo}/actions/runs/%s" % run_id))
     jobs = json.loads(gh("repos/{owner}/{repo}/actions/runs/%s/jobs?per_page=100" % run_id))["jobs"]
-    secs, setups = {}, []
+    secs, setups, read, missed = {}, [], 0, []
     for job in jobs:
         if not (job["name"].startswith(PREFIX) or job["name"].startswith(LOCK_PREFIX)):
             continue
-        log = gh("repos/{owner}/{repo}/actions/jobs/%s/logs" % job["id"])
+        try:
+            log = gh("repos/{owner}/{repo}/actions/jobs/%s/logs" % job["id"], tries=4)
+        except RuntimeError as e:
+            missed.append(job["name"])
+            print("::warning::%s: its lines keep their last timing (%s)" % (job["name"], e))
+            continue
+        read += 1
         mine = [(m.group(1), int(m.group(2))) for m in re.finditer(r"(?:ok|FAILED)  (.+?)  \((\d+)s; group at", log)]
         secs.update(mine)
         tot = re.findall(r"group total: (\d+)m(\d+)s of", log)
         if tot and mine:
             setups.append(int(tot[-1][0]) * 60 + int(tot[-1][1]) - sum(t for _, t in mine))
+    if missed and not read:
+        print("record-timings: no job log could be read from run %s" % run_id)
+        return 1
+    if missed:  # the jobs whose logs failed keep their last recorded seconds
+        prev = (read_json(TIMINGS) or {}).get("lines", {})
+        secs = {**{k: v for k, v in prev.items() if k not in secs}, **secs}
     rec = {"run": int(run_id), "date": run["created_at"][:10], "branch": run["head_branch"],
            "event": run["event"], "setup": max(setups) if setups else SETUP, "lines": dict(sorted(secs.items()))}
     with open(os.path.join(ROOT, TIMINGS), "w", encoding="utf-8", newline="\n") as f:
