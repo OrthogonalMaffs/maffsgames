@@ -70,6 +70,9 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   the list, are blocked. It passes on the new list and fails the fiction case on the old one.
 - **Gap to know about:** an unnamed "his daughter" about Jon's own family is no longer caught; only the named form
   and the other patterns are.
+- **The HOOK-FIX contract** (`docs/handover/contracts/2026-10-09-hook-fix.md`, verbatim) has one line that matches a
+  standalone real-detail pattern by coincidence (an everyday word). Jon ruled: allow that exact line
+  (`allowed-lines.txt`); the pattern is unchanged.
 - **The Car Trap contract is in the repo:** `docs/handover/contracts/2026-10-09-car-trap-draft.md`, verbatim
   (committed through the hook, no bypass). It is queued after the checkpoint, as before.
 
