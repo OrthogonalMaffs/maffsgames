@@ -32,7 +32,7 @@
   "Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)": "16",
   "Factor Theorem (every key from its item's polynomial; ACCEPTED lists = page; every form marked in Chromium; answer buttons; A-Level only; no Practice submit)": "10",
   "Fermi Lab (every chain multiplies to its key, Brilliant in Chromium; every stored figure sourced and green at its step)": "16",
-  "Force Resolver (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "9",
+  "Force Resolver (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "18",
   "Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium)": "5",
   "Free Daily Pizza (independent recomputation + daily seed + phone fit)": "2",
   "GA4 country Apps Script (mocked API and Sheet: replace-by-date is idempotent, other dates untouched, events tab never referenced; planted faults caught)": "16",
