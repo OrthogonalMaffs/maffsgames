@@ -1,9 +1,14 @@
 # Handover: home lane
 
-**HOME LANE, 9 OCT EVENING (Project Claude's queue for Jon, 16:10): IN PROGRESS.** Contracts in
-`docs/handover/contracts/2026-10-09-home-queue.md` (items 1, 2, 4, 5) and `...-home-queue-addendum.md` (the order,
-items 3 and 7); SCI-CALC is saved when it starts. Main went red after #211 (group E 9m04s of 9m): nothing merges
-until the cloud lane's one-off E2 PR is merged and main is green.
+**MAIN GREEN (for the cloud lane: #223 may merge):** main's full run on 5cea89b (#224) passed every job, run
+37969653160, and its timings job recorded and repacked (760ef9a). Main had been red since #220 (CI-BALANCE) on its
+main-only "CI timings and pack" job alone: the job-log API refused the workflow's token; #224 reads the timings from
+artifacts instead. Every content group is now at most 69% of its budget. Watch main's run on #218 (18f5da8).
+
+**HOME LANE, 9 OCT EVENING (Jon's 16:10 queue, reordered 18:00 and 19:00): IN PROGRESS.** Done: RULINGS-9OCT (#215),
+CI-BALANCE (#220, then #222 and #224 to fix its timings job; merged ahead of #218 because #218's L1 went over
+budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). Next: HOOK-FIX (#221), OVERLAY-KEYS (19:00
+addendum), PLAY-AGAIN-SCREEN (32 games incl. higher-power), SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint.
 
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
 `docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
