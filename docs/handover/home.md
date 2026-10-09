@@ -13,7 +13,7 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 (verbatim; its rules override the checkpoint rule for this run). Items: 1 VOCAB-IDEMPOTENT (DONE, #193 merged 9 Oct,
 fce8721, main green), 2 CONTRACTS-FOLDER (DONE, #194 merged 9 Oct,
 7b7b7e2, main green), 3 RELIST-SR (DONE, #197 merged 9 Oct, d1e03ec, main green),
-4+ F1 batches 9-11 (batch 9 in progress).
+4+ F1 batches 9-11: batch 9 DONE (#198 merged 9 Oct, 2712f54, main green); batch 10 in progress.
 
 **Contracts (canon §7.8.2, contract CONTRACTS-FOLDER):** each is saved verbatim as
 `docs/handover/contracts/<yyyy-mm-dd>-<name>.md`; the queue below holds a one-line pointer; the file moves to
@@ -36,7 +36,14 @@ the checkpoint) is all merged; its list is in the archive.
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-09 (home): F1 batch 9 (overnight item 4, branch `claude/f1-batch9`)
+## 2026-10-09 (home): F1 batch 10 (overnight item 4, branch `claude/f1-batch10`)
+
+- **Claims read on main:** `cloud-remaining:` empty (UC-FIX merged). unit-converter dropped anyway (the overnight
+  contract: the cloud lane's), factor-theorem already migrated.
+- **Batch (Core, then A-Level, then one Further):** core-maths-paper2b, core-maths-paper2c, graph-sketcher,
+  growth-and-decay, normal-navigator, log-laws, test-the-claim, characteristic-quest.
+
+## 2026-10-09 (home): F1 batch 9 (overnight item 4, #198, merged 2712f54, main green)
 
 - **Claims read on main:** `cloud-remaining: unit-converter` (UC-FIX, #196 open); factor-theorem is already migrated.
 - **On MaffsLock, each with its declaration, seeds 1-3 passing (KS3, then GCSE):** just-pythag-it-bruv,
