@@ -7,11 +7,12 @@ artifacts instead. Every content group is now at most 69% of its budget. Main gr
 
 **HOME LANE, 9 OCT EVENING (Jon's 16:10 queue, reordered 18:00 and 19:00): IN PROGRESS.** Done: RULINGS-9OCT (#215),
 CI-BALANCE (#220, then #222 and #224 to fix its timings job; merged ahead of #218 because #218's L1 went over
-budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). HOOK-FIX (#221), OVERLAY-KEYS (19:00 addendum,
-this PR). Next: PLAY-AGAIN-SCREEN (32 games incl. higher-power), SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint.
-After it: CAR-TRAP-DRAFT. **Queued, not started: LIBRARY-DRAFT** (Jon, 19:35; new ★ room, Mrs Barb Phile's library;
-either lane; starts after The Rightful King and Car Trap drafts; the contract is with Jon's 19:35 paste and is saved
-verbatim under contracts/ when it starts).
+budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). HOOK-FIX (#221), OVERLAY-KEYS (#232).
+Next: PLAY-AGAIN-SCREEN (32 games incl. higher-power), SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint, PREPUSH-SCOPE,
+LIBRARY-DRAFT. **CAR-TRAP-DRAFT moved to the CLOUD LANE (Jon, 20:17); the home lane does not start it.** Its
+contract is on main, verbatim: `docs/handover/contracts/2026-10-09-car-trap-draft.md` (committed dc43926, merged in
+#221). LIBRARY-DRAFT (Jon, 19:35; new ★ room, Mrs Barb Phile's library) starts after The Rightful King and Car
+Trap drafts; its contract is saved verbatim under contracts/ when it starts.
 
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
 `docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
@@ -34,8 +35,8 @@ failed jobs passed (run 37875059753, attempt 2).
 
 **QUEUE (home lane, Jon 9 Oct 16:10):** 1 RULINGS-9OCT (#215, merged), 2 GRAPH-SKETCHER-FIT, 3 CI-BALANCE, 4 PLAY-AGAIN-SCREEN,
 5 SCORES-OFFLINE, 6 SCI-CALC, 7 DOCS-9OCT, then CHECKPOINT. (E2 merged as #213; main green.)
-After the checkpoint: CAR-TRAP-DRAFT (Jon's amended contract, 9 Oct 16:45; the Head is prom-budget's vain
-Head; verbatim at ~/.maffsgames-local/2026-10-09-car-trap-draft.md on the home machine: the personal-details hook blocks its word "daughter", fiction about Strictman; Jon to rule how it is stored). Jon also sent the
+CAR-TRAP-DRAFT: the cloud lane's (Jon, 20:17); contract at
+`docs/handover/contracts/2026-10-09-car-trap-draft.md` on main (HOOK-FIX let it through the hook). Jon also sent the
 IT room rewrite brief (Narry, secret ballot; 3 open rulings): a brief, not yet a contract, saved as
 contracts/2026-10-09-it-room-brief.md. SCI-CALC (item 6) is saved as contracts/2026-10-09-sci-calc.md.
 - **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
