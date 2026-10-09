@@ -16,7 +16,9 @@ findings:
   where: games/boolean-blitz/index.html:809 (handleAnswer)
   summary: CSS-only lock; Enter adds +3 per press without limit; Tab+Enter converts a wrong answer
   evidence: key click then Enter x3 -> points 3->12; wrong click, Tab, Enter -> 0->3
-  status: open
+  status: fixed
+  pr: 227
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 11. Already fixed on main by F1 batch 11 (MaffsLock): after a mark, Enter x3 and Tab+Enter on another option change neither the points nor the marks. Kept by verify-boolean-blitz.py.'
 - id: boolean-blitz-t6-002
   severity: HIGH
   jc: true
@@ -25,7 +27,9 @@ findings:
   where: games/boolean-blitz/index.html:584
   summary: Key B(A + C); 'AB + BC' (minimal sum of products, same function) marked wrong
   evidence: truth tables equal over A,B,C; 'Simplify fully' names no form
-  status: open
+  status: fixed
+  pr: 227
+  ruling: 'Contract LISTED-HIGH and Jon''s rulings of 9 Oct 2026 (truth table; then no longer than the minimal sum of products): the game marks an option right when it has the key''s truth table over every input AND no more literals than the longer of the key and the function''s minimal SOP, so AB + BC is right beside B(A + C); unsimplified forms (t6-004) stay wrong. Only Q24''s and Q41''s second forms are accepted; the verifier fails any other (Jon, 18:56).'
 - id: boolean-blitz-t6-003
   severity: HIGH
   jc: true
@@ -34,7 +38,9 @@ findings:
   where: games/boolean-blitz/index.html:744
   summary: Key A(B + C); 'AB + AC' marked wrong although the walkthrough (:747) passes through it
   evidence: NOT(NOT(AB)·NOT(AC)) = AB + AC = A(B+C)
-  status: open
+  status: fixed
+  pr: 227
+  ruling: 'As t6-002 (same rule, in the game): AB + AC is right beside A(B + C).'
 - id: boolean-blitz-t6-004
   severity: LOW
   jc: true
