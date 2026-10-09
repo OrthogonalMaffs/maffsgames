@@ -44,7 +44,7 @@ TIMINGS = "scripts/ci-timings.json"     # each content line's seconds on a main 
 #          checks and the planted-fault self-test).
 #   E   Estimation Engine and the 6 Oct 2026 joiners.
 #   B1-B4  every other content verifier, cut by the slowest time each line has taken on main.
-#   L1-L4  check-answer-lock.py --part i/n (canon 7.6.0): the games migrated to MaffsLock, played in Chromium.
+#   L1-L5  check-answer-lock.py --part i/n (canon 7.6.0): the games migrated to MaffsLock, played in Chromium.
 #          A group with no line is not in the matrix: add a part as the roll-out grows.
 GROUPS = [
     ("A", "Content verifiers A (Free Daily Pizza)", 12),
@@ -63,6 +63,7 @@ GROUPS = [
     ("L2", "Answer lock L2 (migrated games, part 2)", 8),
     ("L3", "Answer lock L3 (migrated games, part 3)", 8),
     ("L4", "Answer lock L4 (migrated games, part 4)", 8),
+    ("L5", "Answer lock L5 (migrated games, part 5)", 8),
 ]
 GROUP_IDS = [g for g, _, _ in GROUPS]
 

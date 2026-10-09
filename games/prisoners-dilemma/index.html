@@ -26,6 +26,16 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Twenty rounds of Cooperate or Defect against an opponent; no choice is right or wrong (correct: null), so every mark is followed. Starts against the first opponent.
+{
+  "start": "selectOpponent(OPPONENTS[currentLevel][0].id)",
+  "ready": "document.getElementById('game').classList.contains('active') && !document.getElementById('btnCoop').disabled && document.getElementById('choiceArea').style.display !== 'none'",
+  "answer": "document.getElementById(i % 2 ? 'btnDefect' : 'btnCoop').click();",
+  "mark_any": true
+}
+-->
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -302,7 +312,6 @@ const TOTAL_ROUNDS = 20;
 let playerScore = 0;
 let opponentScore = 0;
 let history = []; // [{player:'cooperate'|'defect', opponent:'cooperate'|'defect', pPts, oPts}]
-let choiceLocked = false;
 let gameMode = 'single'; // 'single' | 'tournament'
 let tournamentOpponents = [];
 let tournamentIdx = 0;
@@ -565,7 +574,7 @@ function startGame() {
   playerScore = 0;
   opponentScore = 0;
   history = [];
-  choiceLocked = false;
+  MaffsLock.newSession();   // each game (every opponent of a tournament) is one session
 
   // Update game opponent header
   const goEl = document.getElementById('gameOpponent');
@@ -599,8 +608,7 @@ function startGame() {
   document.getElementById('roundTooltip').style.display = currentLevel === 'ks3' ? 'block' : 'none';
   if (currentLevel === 'ks3') document.getElementById('roundTooltip').textContent = 'Choose to cooperate or defect!';
   document.getElementById('choiceArea').style.display = 'flex';
-  document.getElementById('btnCoop').disabled = false;
-  document.getElementById('btnDefect').disabled = false;
+  MaffsLock.fresh(document.getElementById('choiceArea'));
 
   // Tournament progress
   if (gameMode === 'tournament') {
@@ -622,11 +630,7 @@ function startGame() {
 
 // ---- Make choice ----
 function makeChoice(choice) {
-  if (choiceLocked) return;
-  choiceLocked = true;
-
-  document.getElementById('btnCoop').disabled = true;
-  document.getElementById('btnDefect').disabled = true;
+  if (!MaffsLock.lock(document.getElementById('choiceArea'))) return;   // one choice per round (canon 7.6.0)
 
   // Get opponent choice
   const oppChoice = currentOpponent.play(history);
@@ -650,7 +654,7 @@ function makeChoice(choice) {
 
   // Suspense delay
   const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 50 : 500;
-  setTimeout(function() {
+  MaffsLock.timer(function() {
     // Reveal opponent
     revOpp.className = 'rc-choice ' + (oppChoice === 'cooperate' ? 'coop' : 'defect');
     revOpp.textContent = oppChoice === 'cooperate' ? '\u2713' : '\u2717';
@@ -702,7 +706,7 @@ function makeChoice(choice) {
     roundNum++;
 
     // Advance after delay
-    setTimeout(function() {
+    MaffsLock.timer(function() {
       if (roundNum >= TOTAL_ROUNDS) {
         endGame();
       } else {
@@ -717,9 +721,7 @@ function makeChoice(choice) {
         document.getElementById('hudRound').textContent = (roundNum + 1) + '/' + TOTAL_ROUNDS;
         document.getElementById('revealArea').style.display = 'none';
         document.getElementById('choiceArea').style.display = 'flex';
-        document.getElementById('btnCoop').disabled = false;
-        document.getElementById('btnDefect').disabled = false;
-        choiceLocked = false;
+        MaffsLock.fresh(document.getElementById('choiceArea'));   // the next round: a second press cannot choose it
       }
     }, 1200);
   }, delay);
@@ -750,7 +752,8 @@ function updateHistory() {
 }
 
 // ---- End game ----
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame = MaffsLock.finishOnce(function () {
   firstGameDone = true;
 
   // Count categories
@@ -787,7 +790,7 @@ function endGame() {
     if (tournamentIdx < tournamentOpponents.length) {
       // Next opponent
       currentOpponent = tournamentOpponents[tournamentIdx];
-      setTimeout(function() { startGame(); }, 500);
+      MaffsLock.timer(function() { startGame(); }, 500);
       return;
     } else {
       // Tournament complete
@@ -866,7 +869,7 @@ function endGame() {
   rc.innerHTML = html;
   placeInvite(rc);
   showScreen('results');
-}
+});
 
 // ---- Insight messages ----
 function getInsight(mc, md, yb, tb) {
@@ -1031,7 +1034,7 @@ document.querySelectorAll('.level-btn').forEach(function(b) {
 
 // ---- Keyboard controls ----
 document.addEventListener('keydown', function(e) {
-  if (choiceLocked) return;
+  if (MaffsLock.isLocked(document.getElementById('choiceArea'))) return;
   if (!document.getElementById('game').classList.contains('active')) return;
   if (e.key === 'c' || e.key === 'C') { e.preventDefault(); makeChoice('cooperate'); }
   if (e.key === 'd' || e.key === 'D') { e.preventDefault(); makeChoice('defect'); }

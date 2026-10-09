@@ -167,6 +167,18 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Two stages per post, each retried until right: a wrong attempt waits on Try again (MaffsNext). i = 0 picks the right option; i >= 1 the first that is not.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && !!document.querySelector('#optionsGrid .option-btn:not([disabled])')",
+  "answer": [
+    "const q = S.session[S.qIdx], bs = [...document.querySelectorAll('#optionsGrid .option-btn')].filter(b => !b.disabled); if (!bs.length) return;",
+    "const right = S.stage === 1 ? (t => t === q.stage1CorrectAnswer) : (t => !!(q.stage2Options.find(o => o.text === t) || {}).correct);",
+    "((i === 0 ? bs.find(b => right(b.textContent)) : bs.find(b => !right(b.textContent))) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -216,6 +228,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div class="stage-indicator" id="stageIndicator">Stage 1 of 2</div>
   <div id="bannerArea"></div>
   <div class="options-grid" id="optionsGrid"></div>
+  <div id="retryMount"></div>
   <div class="explanation-panel" id="explanationPanel">
     <div class="explanation-title">Explanation</div>
     <div class="explanation-text" id="explanationText"></div>
@@ -918,6 +931,7 @@ function startGame() {
   S.questionNum = 0;
   S.stage1Failed = false;
   S.stage2Failed = false;
+  MaffsLock.newSession();
 
   document.getElementById('startScreen').classList.remove('active');
   document.getElementById('resultsScreen').classList.remove('active');
@@ -953,9 +967,9 @@ function animateEngagement() {
     s.style.transform = 'translateY(6px)';
     s.style.transition = 'opacity 0.3s, transform 0.3s';
   });
-  setTimeout(() => {
+  setTimeout(() => {   // lock-ok: the post's engagement numbers fade in; marks nothing
     spans.forEach((s, i) => {
-      setTimeout(() => {
+      setTimeout(() => {   // lock-ok: as above
         s.style.opacity = '1';
         s.style.transform = 'translateY(0)';
       }, i * 100);
@@ -991,9 +1005,12 @@ function renderStage1() {
     btn.addEventListener('click', () => handleStage1(btn, opt, q));
     grid.appendChild(btn);
   });
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('retryMount'));
+  MaffsLock.fresh(grid);
 }
 
 function handleStage1(btn, chosen, q) {
+  if (!MaffsLock.lock(document.getElementById('optionsGrid'))) return;   // one mark per attempt (canon 7.6.0)
   const correct = chosen === q.stage1CorrectAnswer;
   const grid = document.getElementById('optionsGrid');
   const allBtns = grid.querySelectorAll('.option-btn');
@@ -1013,7 +1030,7 @@ function handleStage1(btn, chosen, q) {
     mfg('question_answered', { game_slug: GAME_SLUG, level: S.level, question_index: S.questionNum, correct: true, mode: 'stage1' });
 
     // Move to stage 2 after brief pause
-    setTimeout(() => renderStage2(), 1200);
+    MaffsLock.timer(() => renderStage2(), 1200);
   } else {
     S.stage1Failed = true;
     btn.classList.add('incorrect');
@@ -1025,6 +1042,7 @@ function handleStage1(btn, chosen, q) {
 
     // Analytics
     mfg('question_answered', { game_slug: GAME_SLUG, level: S.level, question_index: S.questionNum, correct: false, mode: 'stage1' });
+    waitRetry();
   }
 }
 
@@ -1051,9 +1069,22 @@ function renderStage2() {
     btn.addEventListener('click', () => handleStage2(btn, opt, q));
     grid.appendChild(btn);
   });
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('retryMount'));
+  MaffsLock.fresh(grid);
+}
+
+// A wrong attempt is marked once and waits on Try again (canon 7.6): then the options not yet tried reopen.
+function waitRetry() {
+  const grid = document.getElementById('optionsGrid');
+  MaffsNext.wrong({ mount: document.getElementById('retryMount'), label: 'Try again', onAdvance: () => {
+    MaffsLock.fresh(grid);
+    grid.querySelectorAll('.option-btn.incorrect').forEach(b => { b.disabled = true; });
+    document.getElementById('bannerArea').innerHTML = '';
+  } });
 }
 
 function handleStage2(btn, chosen, q) {
+  if (!MaffsLock.lock(document.getElementById('optionsGrid'))) return;   // one mark per attempt (canon 7.6.0)
   const grid = document.getElementById('optionsGrid');
   const allBtns = grid.querySelectorAll('.option-btn');
 
@@ -1093,6 +1124,7 @@ function handleStage2(btn, chosen, q) {
 
     // Analytics
     mfg('question_answered', { game_slug: GAME_SLUG, level: S.level, question_index: S.questionNum, correct: false, mode: 'stage2' });
+    waitRetry();
   }
 }
 
@@ -1103,12 +1135,15 @@ function showExplanation(q) {
 
   // Show next button
   const nextBtn = document.getElementById('nextBtn');
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     nextBtn.classList.add('visible');
   }, 1500);
 }
 
 function nextQuestion() {
+  // Only from a shown Next: a double-click's second click (or a second Enter) cannot skip a post.
+  if (!document.getElementById('nextBtn').classList.contains('visible')) return;
+  document.getElementById('nextBtn').classList.remove('visible');
   S.qIdx++;
   if (S.qIdx >= S.session.length) {
     finishGame();
@@ -1117,7 +1152,8 @@ function nextQuestion() {
   }
 }
 
-function finishGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const finishGame = MaffsLock.finishOnce(function () {
   document.getElementById('gameScreen').classList.remove('active');
   document.getElementById('gameHeader').style.display = 'none';
   document.getElementById('resultsScreen').classList.add('active');
@@ -1144,7 +1180,7 @@ function finishGame() {
 
   mfg('game_completed', { game_slug: GAME_SLUG, level: S.level, score: S.score, questions_answered: S.session.length, questions_correct: S.score });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('wrong-on-the-internet',S.level,S.score,S.session.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('wrong-on-the-internet',S.level,S.score);}}
-}
+});
 
 function resetToStart() {
   document.getElementById('resultsScreen').classList.remove('active');
