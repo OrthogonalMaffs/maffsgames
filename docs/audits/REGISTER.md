@@ -24,8 +24,8 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | CRITICAL | 1 | 25 | 0 | 26 |
 | HIGH | 34 | 174 | 0 | 208 |
 | MEDIUM | 133 | 139 | 1 | 273 |
-| LOW | 35 | 28 | 1 | 64 |
-| **All** | 203 | 366 | 2 | 571 |
+| LOW | 34 | 29 | 1 | 64 |
+| **All** | 202 | 367 | 2 | 571 |
 
 ### By class
 
@@ -40,7 +40,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 4 | 20 | 22 |
 | 7 | 6 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
-| NEW:convention-unstated | 4 | 12 |
+| NEW:convention-unstated | 3 | 12 |
 | 8 | 5 | 11 |
 | NEW:precision-not-stated | 2 | 9 |
 | NEW:hand-typed explanation figure | 6 | 7 |
@@ -198,7 +198,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `trig-worms` | yes | verify-trig-worms.py | 1 | 0 | 3 | 0 | 0 | 4 | 0 |
 | `truth-buster` | yes | verify-truth-buster.py | 0 | 3 | 12 | 1 | 3 | 13 | 0 |
 | `truth-will-set-you-free` | yes | verify-truth-will-set-you-free.py | 1 | 1 | 2 | 2 | 1 | 5 | 0 |
-| `unit-converter` | yes | verify-unit-converter.py | 0 | 1 | 6 | 2 | 2 | 7 | 0 |
+| `unit-converter` | yes | verify-unit-converter.py | 0 | 1 | 6 | 2 | 1 | 8 | 0 |
 | `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 6 | 4 | 2 | 2 | 10 | 0 |
 | `wrong-on-the-internet` | yes | none | 0 | 2 | 4 | 0 | 6 | 0 | 0 |
 
