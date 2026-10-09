@@ -14,8 +14,8 @@
   live      a fake SDK in its place: /leaderboards/ renders its game cards, the portal ticker shows the fake
             recent score; neither shows the offline line (everything behaves as before)
 
-Plants: a page that calls firebase.database() itself (the rule must name it); main's /leaderboards/ from before
-the contract, under "blocked" (its Your Scores must be caught never rendering).
+Plants: a page that calls firebase.database() itself (the rule must name it); /leaderboards/ with the direct SDK
+call put back at load, under "blocked" (its Your Scores must be caught never rendering).
 """
 import argparse
 import asyncio
@@ -158,10 +158,13 @@ def main():
         print('  plant: a page calling firebase.database() itself: %s' % ('CAUGHT' if planted else 'MISSED'))
         if not planted:
             fails.append('plant: the rule missed a direct firebase.database() call')
-        old = subprocess.run(['git', 'show', 'a2b745f:leaderboards/index.html'], cwd=ROOT, capture_output=True,
-                             text=True, encoding='utf-8').stdout
+        # The page as it was before the contract: the SDK called directly at load (built from today's page, so
+        # it needs no history; CI's checkout is shallow).
+        cur = open(os.path.join(ROOT, 'leaderboards', 'index.html'), encoding='utf-8').read()
+        live = "var LIVE = !!(window.MaffsLeaderboard && MaffsLeaderboard.available());"
+        old = cur.replace(live, "firebase.initializeApp({}); var db = firebase.database(); " + live, 1) if live in cur else ''
         if not old:
-            fails.append('plant: could not read the pre-contract /leaderboards/ (a2b745f)')
+            fails.append('plant: /leaderboards/ no longer has its LIVE line to plant before')
         else:
             (_, _, f), = asyncio.run(run([('/leaderboards/', 'blocked', old)]))
             caught = any('Your Scores did not render' in x or 'page error' in x for x in f)
