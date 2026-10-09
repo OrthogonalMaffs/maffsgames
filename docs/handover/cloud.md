@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: boolean-blitz`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -97,6 +97,11 @@ budget; E is at 491 s and takes nothing new).
 - **10 core-maths-paper2b: #226** (stacked on #225, on its own branch so CI runs while #225 waits; Jon, 18:56: one
   PR each). Q28 option D is "Neither — both premiums cost more than the expected loss" (false: the data breach
   premium, £900, is below its expected loss, £1,000). New `verify-core-maths-paper2b.py` (~5 s).
+- **11 boolean-blitz: #227** (stacked on #226). Marked in the game (boolParse, minSopLiterals, sameAnswer): right =
+  the key's truth table AND literals <= max(the key's, the minimal SOP's) (Jon's two answers of 9 Oct). Only Q24's
+  AB + BC and Q41's AB + AC are accepted beside a key; the verifier fails any other (Jon, 18:56). t6-001 fixed by F1
+  batch 11. The B11 ledger entries stay (options unchanged; Jon agrees). Locally the bank lint cannot extract this
+  bank (KaTeX CDN; main's page fails the same way): CI judges it.
 - **CI (CI-BALANCE, #220):** groups are packed now. A new verifier's header is `# ci-line: <label> | <args>` (no
   group id); untimed lines get a group each until main's timings job records them. `ci-groups.py --check` locally.
 - **Local checks used for each PR** (the sandbox cannot reach the KaTeX CDN): check-changed's plan, the answer lock for
@@ -106,9 +111,6 @@ budget; E is at 491 s and takes nothing new).
 - **Remaining, in order.** Drafts (page edits, verifiers, item-13 evidence) survive a clear in the session scratchpads
   under `/tmp/claude-0/-home-user-maffsgames/` (5dd7a927.../scratchpad and 8451d901.../scratchpad); each was checked
   9 Oct: passes the fixed page, fails main's (or the pre-batch) page.
-  - 11 boolean-blitz: in-game boolParse/minSopLiterals/sameAnswer; right = the key's truth table AND literals <=
-    max(key's, the minimal SOP's) (Jon's two answers of 9 Oct); accepts exactly AB + BC (Q24) and AB + AC (Q41);
-    t6-001 fixed by F1 batch 11; clear the t6-002/003 B11 ledger entries.
   - 12 prisoners-dilemma t4-002: **HOLD (Jon, 18:56; note saved as `contracts/2026-10-09-listed-high-note-1900.md`).**
     The drafted in-game keydown guard is **discarded**, in no PR: it was the defensive-patch shape (a guard in one
     caller round a fault in the shared initials overlay, which lets typed keys reach page shortcuts in every game with
