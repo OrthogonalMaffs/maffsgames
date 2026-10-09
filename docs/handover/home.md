@@ -8,7 +8,7 @@ artifacts instead. Every content group is now at most 69% of its budget. Main gr
 **HOME LANE, 9 OCT EVENING (Jon's 16:10 queue, reordered 18:00 and 19:00): IN PROGRESS.** Done: RULINGS-9OCT (#215),
 CI-BALANCE (#220, then #222 and #224 to fix its timings job; merged ahead of #218 because #218's L1 went over
 budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). HOOK-FIX (#221), OVERLAY-KEYS (#232).
-PLAY-AGAIN-SCREEN (#234 + batch 2). Next: SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint, PREPUSH-SCOPE,
+PLAY-AGAIN-SCREEN (#234, #237), SCORES-OFFLINE (#238). Next: SCI-CALC, DOCS-9OCT, checkpoint, PREPUSH-SCOPE,
 LIBRARY-DRAFT. **CAR-TRAP-DRAFT moved to the CLOUD LANE (Jon, 20:17); the home lane does not start it.** Its
 contract is on main, verbatim: `docs/handover/contracts/2026-10-09-car-trap-draft.md` (committed dc43926, merged in
 #221). LIBRARY-DRAFT (Jon, 19:35; new ★ room, Mrs Barb Phile's library) starts after The Rightful King and Car
