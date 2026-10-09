@@ -787,6 +787,7 @@ function showScreen(id) {
   for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
+  MaffsLock.screen(document.getElementById(id));
 }
 
 // ─── LEADERBOARD ───

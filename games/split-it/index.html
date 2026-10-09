@@ -243,7 +243,7 @@ function startGame(level){
   MaffsLock.newSession();
   S.level=level;S.qIdx=0;S.score=0;S.correct=0;S.penalties=0;S.used=new Set();
   S.timerStart=Date.now();S.timerInterval=setInterval(updateTimer,1000);S.timerElapsed=0;
-  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');
+  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active'); MaffsLock.screen($('gameScreen'));
 
   mfg('game_started',{game_slug:'split-it',level:S.level,mode:S.mode});
   mfg('mode_selected',{game_slug:'split-it',mode:S.mode});
@@ -664,7 +664,7 @@ function showFeedback(ok,msg){
 function endGame(){finishGame()}
 const finishGame=MaffsLock.finishOnce(function(){
   clearInterval(S.timerInterval);
-  $('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
+  $('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active'); MaffsLock.screen($('resultsScreen'));
 
   const pct=S.total>0?Math.round(100*S.correct/S.total):0;
   let title='WELL DONE!';
@@ -694,7 +694,7 @@ const finishGame=MaffsLock.finishOnce(function(){
 
 function showMenu(){
   $('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');
-  $('menuScreen').classList.add('active');$('pbLine').style.display='none';
+  $('menuScreen').classList.add('active'); MaffsLock.screen($('menuScreen'));$('pbLine').style.display='none';
 }
 
 window.addEventListener('DOMContentLoaded',()=>{parseURL();});

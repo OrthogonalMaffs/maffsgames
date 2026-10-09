@@ -407,6 +407,7 @@ function showScreen(id) {
   document.querySelectorAll('.screen, .stage-transition').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
   if (el) el.classList.add('active');
+  if (el) MaffsLock.screen(el);
 }
 
 function shuffleArray(arr) {
@@ -428,7 +429,7 @@ function startGame() {
   stageCorrect = [0, 0, 0];
   MaffsLock.newSession();
 
-  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('gameHeader').style.display = 'flex'; MaffsLock.fresh(document.getElementById('gameHeader'));
   document.getElementById('scoreNum').textContent = '0';
   document.getElementById('scoreTotal').textContent = '0';
   document.getElementById('stagePill').textContent = 'Stage 1';

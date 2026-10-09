@@ -828,7 +828,7 @@ function startGame(){
   G.timerInterval=setInterval(updateTimer,1000);
 
   $('menuScreen').classList.remove('active');
-  $('gameScreen').classList.add('active');
+  $('gameScreen').classList.add('active'); MaffsLock.screen($('gameScreen'));
   const labels={gcse:'GCSE',core:'Core Maths',level4:'Level 4'};
   $('hudLevel').textContent=labels[G.level];
 
@@ -1336,7 +1336,7 @@ function endGame(){ finishGame(); }
 const finishGame=MaffsLock.finishOnce(function(){
   clearInterval(G.timerInterval);
   $('gameScreen').classList.remove('active');
-  $('resultsScreen').classList.add('active');
+  $('resultsScreen').classList.add('active'); MaffsLock.screen($('resultsScreen'));
 
   const pct=G.totalScenarios>0?Math.round(100*G.scenariosCorrect/G.totalScenarios):0;
   let title='Well done!';
@@ -1376,7 +1376,7 @@ const finishGame=MaffsLock.finishOnce(function(){
 function showMenu(){
   $('resultsScreen').classList.remove('active');
   $('gameScreen').classList.remove('active');
-  $('menuScreen').classList.add('active');
+  $('menuScreen').classList.add('active'); MaffsLock.screen($('menuScreen'));
 }
 
 // ============================================================

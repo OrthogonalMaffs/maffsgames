@@ -505,8 +505,8 @@ function startGame(){
   phase1Correct=0;phase2Correct=0;phase1Total=0;phase2Total=0;phase2Attempt=0;
   repStats={table:{score:0,max:0},venn:{score:0,max:0},tree:{score:0,max:0}};
   startScreen.classList.remove('active');
-  gameScreen.classList.add('active');
-  gameHeader.style.display='';
+  gameScreen.classList.add('active'); MaffsLock.screen(gameScreen);
+  gameHeader.style.display=''; MaffsLock.fresh(gameHeader);
   const pillClass=currentLevel==='alevel'?'alevel':currentLevel==='level4'?'level4':currentLevel;
   levelPill.className='level-pill '+pillClass;
   levelPill.textContent={gcse:'GCSE',alevel:'A-Level',core:'Core Maths',level4:'Level 4'}[currentLevel];
@@ -985,7 +985,7 @@ function showNextBtn(){
 function showResults(){finishGame()}
 const finishGame=MaffsLock.finishOnce(function(){
   gameScreen.classList.remove('active');
-  resultsScreen.classList.add('active');
+  resultsScreen.classList.add('active'); MaffsLock.screen(resultsScreen);
   gameHeader.style.display='none';
   progressBar.style.width='100%';
 
@@ -1017,14 +1017,14 @@ const finishGame=MaffsLock.finishOnce(function(){
 
 $('playAgainBtn').addEventListener('click',()=>{
   resultsScreen.classList.remove('active');
-  gameScreen.classList.add('active');
-  gameHeader.style.display='';
+  gameScreen.classList.add('active'); MaffsLock.screen(gameScreen);
+  gameHeader.style.display=''; MaffsLock.fresh(gameHeader);
   startGame();
 });
 
 $('changeLevelBtn').addEventListener('click',()=>{
   resultsScreen.classList.remove('active');
-  startScreen.classList.add('active');
+  startScreen.classList.add('active'); MaffsLock.screen(startScreen);
   gameHeader.style.display='none';
   MaffsLock.screen(startScreen);   // a double-click cannot press a level or Start
 });

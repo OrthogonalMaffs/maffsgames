@@ -936,7 +936,7 @@ function startGame() {
   document.getElementById('startScreen').classList.remove('active');
   document.getElementById('resultsScreen').classList.remove('active');
   document.getElementById('gameHeader').style.display = 'flex';
-  document.getElementById('gameScreen').classList.add('active');
+  document.getElementById('gameScreen').classList.add('active'); MaffsLock.screen(document.getElementById('gameScreen'));
 
   mfg('game_started', { game_slug: GAME_SLUG, level: S.level });
 
@@ -1156,7 +1156,7 @@ function nextQuestion() {
 const finishGame = MaffsLock.finishOnce(function () {
   document.getElementById('gameScreen').classList.remove('active');
   document.getElementById('gameHeader').style.display = 'none';
-  document.getElementById('resultsScreen').classList.add('active');
+  document.getElementById('resultsScreen').classList.add('active'); MaffsLock.screen(document.getElementById('resultsScreen'));
 
   const maxPts = S.session.length * 2;
   const pct = Math.round((S.score / maxPts) * 100);
@@ -1184,7 +1184,7 @@ const finishGame = MaffsLock.finishOnce(function () {
 
 function resetToStart() {
   document.getElementById('resultsScreen').classList.remove('active');
-  document.getElementById('startScreen').classList.add('active');
+  document.getElementById('startScreen').classList.add('active'); MaffsLock.screen(document.getElementById('startScreen'));
   showPB();
 }
 

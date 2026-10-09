@@ -8,7 +8,7 @@ artifacts instead. Every content group is now at most 69% of its budget. Main gr
 **HOME LANE, 9 OCT EVENING (Jon's 16:10 queue, reordered 18:00 and 19:00): IN PROGRESS.** Done: RULINGS-9OCT (#215),
 CI-BALANCE (#220, then #222 and #224 to fix its timings job; merged ahead of #218 because #218's L1 went over
 budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). HOOK-FIX (#221), OVERLAY-KEYS (#232).
-Next: PLAY-AGAIN-SCREEN (32 games incl. higher-power), SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint, PREPUSH-SCOPE,
+PLAY-AGAIN-SCREEN (#234 + batch 2). Next: SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint, PREPUSH-SCOPE,
 LIBRARY-DRAFT. **CAR-TRAP-DRAFT moved to the CLOUD LANE (Jon, 20:17); the home lane does not start it.** Its
 contract is on main, verbatim: `docs/handover/contracts/2026-10-09-car-trap-draft.md` (committed dc43926, merged in
 #221). LIBRARY-DRAFT (Jon, 19:35; new ★ room, Mrs Barb Phile's library) starts after The Rightful King and Car
@@ -59,6 +59,23 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-09 (home): PLAY-AGAIN-SCREEN batch 2 (item 4 done but for characteristic-quest)
+
+- **The 21 games batch 1 left on `SCREEN_NOT_YET` now change every screen through `MaffsLock.screen()`:**
+  - their own screen helper ends with it: better-value, expectation-station, fermi-lab, formula-plug-in,
+    like-terms-collector, new-shapes, probability-pioneer, think-of-a-number (`showScreen(id)`); equation-builder,
+    spot-the-error (`showScreen(name)`: the active screen); simultaneous-solver (`showS`);
+  - no helper: each line that makes a `...Screen` active is followed by `MaffsLock.screen(<it>)`: component-crusher,
+    four-quadrant-explorer, given-that, growth-and-decay, split-it, stat-attack, test-the-claim, truth-buster,
+    wrong-on-the-internet;
+  - prime-or-composite: `showModal()` opens the window on the modal, `closeModal()` (its Play Again) on `.page`,
+    where its Start button sits;
+  - six games reveal a header with "← Back to Games" outside the screens when a run starts (truth-buster,
+    think-of-a-number, four-quadrant-explorer, like-terms-collector, probability-pioneer, given-that): that line now
+    also calls `MaffsLock.fresh(gameHeader)`.
+- `SCREEN_NOT_YET` is down to characteristic-quest (the cloud lane's; it comes off when the claim ends). All 21 pass
+  check-answer-lock.py locally (seed 1).
 
 ## 2026-10-09 (home): PLAY-AGAIN-SCREEN (item 4)
 
@@ -172,47 +189,3 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
 - Seen, not touched: on a phone the table's typed values are clipped by the cell width (608.3 of 608.33 shows);
   the table scrolls, the value is kept. Checking a curve with fewer than three points uses `alert()`.
 
-## 2026-10-09 (home): CI-BALANCE (item 3)
-
-- **Content groups are packed from measured times** (`scripts/ci-groups.py`, `scripts/ci-pack.json`): a ci-line
-  names only its tier (`label | args`, or `lock | label | args`); `pack()` fills content groups to 70% of each
-  group's BUDGET (75% of its timeout) and keeps lines where they are unless they must move. `--check` fails in the
-  plan job past 80% of the budget. Content jobs 6 min, lock jobs 10 min. Old group ids still parse (DOCS-9OCT drops
-  that once the cloud lane's open branches merge).
-- **Jon's ruling (17:59): 70% / 80% are of the BUDGET, not of the job timeout.** Recorded in the contract.
-- **Before / after:** 18 groups, 3900 job-s, worst group 85% -> 21 groups, ~4010 job-s (+2.8%), content max 189 s.
-- **New main-only job "CI timings and pack"** records timings and repacks.
-  It failed on its first three main runs (b7d5038, 5926c24, 1850e7e): the job-log API refused every fetch with the
-  workflow's own token (the same calls work with a user token, mid-run too; #222's retries ran it into its 5-minute
-  timeout). Fixed in the next PR: each group saves its timing lines as an artifact (ci-timing-*, 3 days), and the
-  job reads them with download-artifact (`ci-groups.py --record-timings RUN --from-dir DIR`). Without --from-dir it
-  still reads job logs through gh, for use from a workstation; both paths give identical timings for run 37966843652.
-- **Lock parts are not packed:** add a part as the roll-out grows. L1 reached 6m40s on #218 (graph-sketcher on the
-  lock, after higher-power in #217), so #218 adds part 6.
-
-## 2026-10-09 (home): RULINGS-9OCT (item 1, #215)
-
-- **unit-converter into MIGRATED** (`check-answer-lock.py`): seeds 1, 2 and 3 pass. NOT_YET: glorious-gantt,
-  graph-sketcher.
-- **complex-converter, end screen to menu in one tap: yes, no change.** In Chromium at 390x844 (touch), each mode
-  (roulette, triples, sniper) was ended through its own finishOnce handler; one tap on the end screen's Menu button
-  showed the mode menu each time, with no page error. So no "Choose mode" button is added. (Its screen changes
-  call `showScreen`, not `MaffsLock.screen`: item 4, PLAY-AGAIN-SCREEN, converts them.)
-- **Rulings recorded:** canon §7.6 (feedback shown, not skipped, with wrong-on-the-internet's pause; Play Again
-  may replay the mode while the menu is one tap away) and the rulings paragraph above.
-
-## 2026-10-09 (home): F1 batch 11 (overnight item 4, #200, merged 2782d17, main green after one flake rerun)
-
-- **Claims read on main:** `cloud-remaining:` empty. **Batch: the last three listed games on NOT_YET:**
-  eigenvalue-extractor, matrix-crunch, boolean-blitz. After it NOT_YET holds glorious-gantt (unlisted, the cloud
-  lane's) and graph-sketcher (held back, batch 10), with unit-converter outside it on the cloud lane's lock.
-- **On MaffsLock, each with its declaration, seeds 1-3 passing.** NOT_YET: 2 (glorious-gantt, graph-sketcher).
-- **Faults fixed beyond the swap:**
-  - boolean-blitz: options marked by a CSS class only; on main one wrong answer then Enter on each option gave 5
-    marks and 3 points the student never earned (now 1 mark, 0 points). A wrong answer waits on MaffsNext under the
-    walkthrough; a right one keeps its own Next, which acts once.
-  - matrix-crunch: after an option was marked, the Flag as Singular button stayed live (a CSS class): on main a
-    wrong option then the flag gave 2 marks. One lock now covers the options and the flag. A wrong answer or a wrong
-    flag waits on MaffsNext under the worked solution. The flag path (not pressed by the check) double-clicked in
-    Chromium at stage 2: one mark per question, game over after three lives, one game_completed.
-  - eigenvalue-extractor: the characteristic-quest shape (batch 10).

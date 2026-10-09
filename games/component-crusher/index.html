@@ -586,7 +586,7 @@ function startGame(){
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
   G.questions=pool.slice(0,6);G.qIdx=0;G.score=0;G.correct=0;G.total=0;G.penalties=0;
   G.timerStart=Date.now();G.timerInterval=setInterval(updateTimer,1000);
-  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');
+  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active'); MaffsLock.screen($('gameScreen'));
   mfg('game_started',{game_slug:'component-crusher',level:G.level});
   loadScenario();
 }
@@ -824,7 +824,7 @@ function nextScenario(){G.qIdx++;loadScenario();}
 
 // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
 const endGame=MaffsLock.finishOnce(function(){
-  clearInterval(G.timerInterval);$('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
+  clearInterval(G.timerInterval);$('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active'); MaffsLock.screen($('resultsScreen'));
   MaffsLock.screen($('resultsScreen'));
   const pct=G.total>0?Math.round(100*G.correct/G.total):0;
   let title=pct>=90?'Outstanding!':pct>=70?'Great work!':pct>=50?'Good effort!':'Keep practising!';
@@ -842,7 +842,7 @@ const endGame=MaffsLock.finishOnce(function(){
   mfg('game_completed',{game_slug:'component-crusher',level:G.level,score:G.score,questions_answered:G.total,questions_correct:G.correct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('component-crusher',G.level,G.score,G.total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('component-crusher',G.level,G.score);}}
 });
-function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active');$('pbLine').style.display='none';}
+function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active'); MaffsLock.screen($('menuScreen'));$('pbLine').style.display='none';}
 window.addEventListener('DOMContentLoaded',()=>{parseURL();});
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>

@@ -351,7 +351,7 @@ function startGame() {
 
   document.getElementById('startScreen').classList.remove('active');
   document.getElementById('resultsScreen').classList.remove('active');
-  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('gameHeader').style.display = 'flex'; MaffsLock.fresh(document.getElementById('gameHeader'));
 
   mfg('game_started', { game_slug: 'truth-buster', level: 'all' });
 
@@ -411,7 +411,7 @@ function renderQuestion() {
   MaffsLock.fresh(panel);
 
   // Show game screen
-  screen.classList.add('active');
+  screen.classList.add('active'); MaffsLock.screen(screen);
   window.scrollTo(0, 0);
 }
 
@@ -510,7 +510,7 @@ function nextQuestion() {
 const finishGame = MaffsLock.finishOnce(function () {
   document.getElementById('gameScreen').classList.remove('active');
   document.getElementById('gameHeader').style.display = 'none';
-  document.getElementById('resultsScreen').classList.add('active');
+  document.getElementById('resultsScreen').classList.add('active'); MaffsLock.screen(document.getElementById('resultsScreen'));
 
   const pct = Math.round((S.correct / 20) * 100);
   document.getElementById('finalScore').textContent = S.correct + '/20';

@@ -512,6 +512,7 @@ function showModal(){
     <div class="ms-item"><span class="ms-val">${Math.round(correct/questions.length*100)}%</span><span class="ms-lbl">Accuracy</span></div>
     <div class="ms-item"><span class="ms-val">${maxStreak}</span><span class="ms-lbl">Best Streak</span></div>
   `;
+  MaffsLock.screen(document.getElementById('modal'));
 }
 
 function closeModal(){
@@ -524,6 +525,7 @@ function closeModal(){
   document.getElementById('number-hint').textContent='Press Start to play';
   document.getElementById('timer-fill').style.width='100%';
   buildStreakBar();
+  MaffsLock.screen(document.querySelector('.page'));
 }
 
 function loadLB(){try{return JSON.parse(localStorage.getItem(LKEY()))||[];}catch{return[]}}

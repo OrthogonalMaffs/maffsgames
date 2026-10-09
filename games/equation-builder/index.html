@@ -434,6 +434,7 @@ function showScreen(name){
     $('levelPill').textContent=currentLevel==='level4'?'LEVEL 4':currentLevel==='ks3'?'FOUNDATION':currentLevel.toUpperCase();
     $('levelPill').className='level-pill '+(currentLevel==='level4'?'l4':currentLevel);
   }else $('resultsScreen').classList.add('active');
+  MaffsLock.screen(document.querySelector('#startScreen.active, #gameScreen.active, #resultsScreen.active'));
 }
 
 /* ===== GAME ===== */

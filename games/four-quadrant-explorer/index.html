@@ -462,7 +462,7 @@ function startGame() {
 
   document.getElementById('startScreen').classList.remove('active');
   document.getElementById('resultsScreen').classList.remove('active');
-  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('gameHeader').style.display = 'flex'; MaffsLock.fresh(document.getElementById('gameHeader'));
   document.getElementById('gameScreen').style.display = 'block';
 
   MaffsLock.newSession();
@@ -726,7 +726,7 @@ function nextQuestion() {
 const endGame = MaffsLock.finishOnce(function () {
   document.getElementById('gameHeader').style.display = 'none';
   document.getElementById('gameScreen').style.display = 'none';
-  document.getElementById('resultsScreen').classList.add('active');
+  document.getElementById('resultsScreen').classList.add('active'); MaffsLock.screen(document.getElementById('resultsScreen'));
   MaffsLock.screen(document.getElementById('resultsScreen'));
 
   const total = questions.length;
