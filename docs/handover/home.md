@@ -86,9 +86,9 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   characteristic-quest, cloud-claimed). They are on `SCREEN_NOT_YET` in check-answer-lock.py: reported, not failed;
   a listed game that passes fails, so the list only shrinks. Batch 2 empties it.
 - **Two drivers clicked inside the new fresh windows** (a student's click comes after them): check-teacher-invite.py
-  clicked prisoners-dilemma's Tournament button within 60 ms of `showScreen('menu')`, so the tournament never
-  started; verify-partial-fractions-duel.py double-clicked Play again the moment its results screen appeared. Both
-  now wait for `MaffsLock.isFresh()` to clear, as canon 7.6.0 (DET) asks of drivers. partial-fractions-duel's own
+  moved while the menu's fresh window was open: PD_UNLOCK's opponent counter advanced on clicks the page dropped,
+  so it kept landing on the same opponent and never won the three games that unlock the tournament; verify-partial-fractions-duel.py double-clicked Play again the moment its results screen appeared. Both
+  now wait for `MaffsLock.isFresh()` to clear (check-teacher-invite.py before every move and click), as canon 7.6.0 (DET) asks of drivers. partial-fractions-duel's own
   extra `MaffsLock.screen` in showMenu went (show() does it); its verifier's plant now strips it from show().
 - **Canon §7.6.0:** "every screen change goes through MaffsLock.screen()".
 

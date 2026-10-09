@@ -525,7 +525,10 @@ async def _play(page, steps, limit=1500):
             if await page.evaluate(js_done):
                 break
             await page.evaluate(SKIP_INITIALS)
-            await page.evaluate(js_step)
+            # No move while a MaffsLock fresh window is open (canon 7.6.0): the page drops it, and a step that
+            # counts its own moves (PD_UNLOCK's next opponent) would count one the page never saw.
+            if not await page.evaluate("!!(window.MaffsLock && MaffsLock.isFresh())"):
+                await page.evaluate(js_step)
             await page.wait_for_timeout(60)
         else:
             return "never reached its end in %d moves" % limit
