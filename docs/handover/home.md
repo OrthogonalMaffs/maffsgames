@@ -1,10 +1,9 @@
 # Handover: home lane
 
-**OVERNIGHT RUN ENDED (9 Oct 2026), for Jon:** merged, main green: #193 VOCAB-IDEMPOTENT, #194 CONTRACTS-FOLDER,
-#197 RELIST-SR (Screening Room listed), #198/#199/#200 F1 batches 9-11 (19 games on MaffsLock). Open: none.
-Stopped because no F1 game is left to build: NOT_YET is glorious-gantt (unlisted, the cloud lane's) and graph-sketcher
-(blocked by its known phone overflow, todo §3.9). Questions: add unit-converter (on MaffsLock since #196) to MIGRATED?
-Keep wrong-on-the-internet's Try again pause and complex-converter's Play Again replaying the mode? Schedule §3.9 for graph-sketcher?
+**HOME LANE, 9 OCT EVENING (Project Claude's queue for Jon, 16:10): IN PROGRESS.** Contracts in
+`docs/handover/contracts/2026-10-09-home-queue.md` (items 1, 2, 4, 5) and `...-home-queue-addendum.md` (the order,
+items 3 and 7); SCI-CALC is saved when it starts. Main went red after #211 (group E 9m04s of 9m): nothing merges
+until the cloud lane's one-off E2 PR is merged and main is green.
 
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
 `docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
@@ -25,7 +24,8 @@ failed jobs passed (run 37875059753, attempt 2).
 `docs/handover/contracts/<yyyy-mm-dd>-<name>.md`; the queue below holds a one-line pointer; the file moves to
 `docs/history/contracts/` when the work merges. Read a contract when its item starts, never at session start.
 
-**QUEUE (home lane):** empty: ask Jon. The 8 Oct queue and the overnight run are merged.
+**QUEUE (home lane, Jon 9 Oct 16:10):** 1 RULINGS-9OCT, 2 GRAPH-SKETCHER-FIT, 3 CI-BALANCE, 4 PLAY-AGAIN-SCREEN,
+5 SCORES-OFFLINE, 6 SCI-CALC, 7 DOCS-9OCT, then CHECKPOINT. First: wait for the E2 PR to merge and main to go green.
 - **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
 - **Standing F1 item: done for every listed game but graph-sketcher** (NOT_YET: glorious-gantt, unlisted and the cloud
   lane's; graph-sketcher, blocked by its phone overflow, batch 10 entry). unit-converter loads the lock (cloud lane,
@@ -38,9 +38,25 @@ failed jobs passed (run 37875059753, attempt 2).
   a rerun of the failed job passed. Canon 7.6.0 says a verdict never depends on timing: if it recurs, find what the
   driver waits on that a slow runner breaks (start(), the touch path), and fix it there, not with retries.
 
+**Jon's rulings, 9 Oct (on the overnight questions; RULINGS-9OCT):** unit-converter moves to MIGRATED (done,
+seeds 1-3 pass). wrong-on-the-internet keeps its 3 s pause before Try again: feedback on a wrong answer is shown, not
+skipped (Jon, 8 Oct). complex-converter's Play Again keeps replaying the mode, as its Menu is one tap from the end
+screen. graph-sketcher: fix its phone overflow now, then put it on the lock (item 2). The first two are in canon §7.6.
+
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-09 (home): RULINGS-9OCT (item 1, PR #PR)
+
+- **unit-converter into MIGRATED** (`check-answer-lock.py`): seeds 1, 2 and 3 pass. NOT_YET: glorious-gantt,
+  graph-sketcher.
+- **complex-converter, end screen to menu in one tap: yes, no change.** In Chromium at 390x844 (touch), each mode
+  (roulette, triples, sniper) was ended through its own finishOnce handler; one tap on the end screen's Menu button
+  showed the mode menu each time, with no page error. So no "Choose mode" button is added. (Its screen changes
+  call `showScreen`, not `MaffsLock.screen`: item 4, PLAY-AGAIN-SCREEN, converts them.)
+- **Rulings recorded:** canon §7.6 (feedback shown, not skipped, with wrong-on-the-internet's pause; Play Again
+  may replay the mode while the menu is one tap away) and the rulings paragraph above.
 
 ## 2026-10-09 (home): F1 batch 11 (overnight item 4, #200, merged 2782d17, main green after one flake rerun)
 
@@ -93,27 +109,3 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
     shots, double-tapped: 15 marks, one completion) and Triples (5 rounds, one completion) played in Chromium.
 - **Verifier:** normal-navigator adds `NO_LOCK_FRESH_INIT` (it answers at once after each render).
 - **CI fix in the PR:** check-teacher-invite.py's Laws-mode driver read log-laws' removed `answered`; it asks MaffsLock.
-
-## 2026-10-09 (home): F1 batch 9 (overnight item 4, #198, merged 2712f54, main green)
-
-- **Claims read on main:** `cloud-remaining: unit-converter` (UC-FIX, #196 open); factor-theorem is already migrated.
-- **On MaffsLock, each with its declaration, seeds 1-3 passing (KS3, then GCSE):** just-pythag-it-bruv,
-  wrong-on-the-internet, higher-power, prisoners-dilemma, surd-simplifier, coordinate-geometry-dash, formula-forge,
-  scale-factor-scaling. **NOT_YET: 14** (13 listed, unit-converter claimed; glorious-gantt unlisted, the cloud's).
-- **Faults fixed beyond the swap:**
-  - surd-simplifier, coordinate-geometry-dash, formula-forge, scale-factor-scaling: options "locked" by a CSS class
-    only, so Enter re-marked (shown on main: one wrong answer, then Enter on each option, = 5 marks; now 1). A wrong
-    answer now waits on MaffsNext: surd-simplifier's used to move on after 1 s; the other three keep their "Got it"
-    label, now MaffsNext under the worked solution. coordinate-geometry-dash's right answer still shows the
-    solution and its own button, which now advances only from a shown solution.
-  - wrong-on-the-internet (retry until right, kept): **each wrong attempt now waits on Try again (MaffsNext, 3 s
-    floor), then the options not yet tried reopen.** It used to reopen at once; the answer-once rule (one mark per
-    attempt, canon 7.6/7.6.0) needs the pause, as split-it's Try Again. For Jon: say if the pause is too long here.
-  - higher-power: `holAnswered` and `pairsLocked` flags replaced (lock/fresh); Pairs locks the grid while two cards
-    are up. Pairs is not played by the check: double-clicked through a whole run in Chromium, one attempt per pair,
-    one game_completed, one submit. A wrong call still ends the run after 2 s (a MaffsNext there would make its
-    double-click count as a second completion in the check).
-  - prisoners-dilemma: `choiceLocked` replaced, C/D keys too; each tournament game is one session. Tournament
-    double-clicked through in Chromium: 7 opponents, 140 rounds, 7 game_completed, 7 submits.
-  - just-pythag-it-bruv: already guarded by its own state; swap only. Its verifier adds `NO_LOCK_FRESH_INIT`.
-- **Answer lock now five CI parts** (L5 added; main's last run had L1 at 254 s with 74 games, budget 360 s).

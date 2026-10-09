@@ -3,6 +3,30 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-09 (home): F1 batch 9 (overnight item 4, #198, merged 2712f54, main green)
+
+- **Claims read on main:** `cloud-remaining: unit-converter` (UC-FIX, #196 open); factor-theorem is already migrated.
+- **On MaffsLock, each with its declaration, seeds 1-3 passing (KS3, then GCSE):** just-pythag-it-bruv,
+  wrong-on-the-internet, higher-power, prisoners-dilemma, surd-simplifier, coordinate-geometry-dash, formula-forge,
+  scale-factor-scaling. **NOT_YET: 14** (13 listed, unit-converter claimed; glorious-gantt unlisted, the cloud's).
+- **Faults fixed beyond the swap:**
+  - surd-simplifier, coordinate-geometry-dash, formula-forge, scale-factor-scaling: options "locked" by a CSS class
+    only, so Enter re-marked (shown on main: one wrong answer, then Enter on each option, = 5 marks; now 1). A wrong
+    answer now waits on MaffsNext: surd-simplifier's used to move on after 1 s; the other three keep their "Got it"
+    label, now MaffsNext under the worked solution. coordinate-geometry-dash's right answer still shows the
+    solution and its own button, which now advances only from a shown solution.
+  - wrong-on-the-internet (retry until right, kept): **each wrong attempt now waits on Try again (MaffsNext, 3 s
+    floor), then the options not yet tried reopen.** It used to reopen at once; the answer-once rule (one mark per
+    attempt, canon 7.6/7.6.0) needs the pause, as split-it's Try Again. For Jon: say if the pause is too long here.
+  - higher-power: `holAnswered` and `pairsLocked` flags replaced (lock/fresh); Pairs locks the grid while two cards
+    are up. Pairs is not played by the check: double-clicked through a whole run in Chromium, one attempt per pair,
+    one game_completed, one submit. A wrong call still ends the run after 2 s (a MaffsNext there would make its
+    double-click count as a second completion in the check).
+  - prisoners-dilemma: `choiceLocked` replaced, C/D keys too; each tournament game is one session. Tournament
+    double-clicked through in Chromium: 7 opponents, 140 rounds, 7 game_completed, 7 submits.
+  - just-pythag-it-bruv: already guarded by its own state; swap only. Its verifier adds `NO_LOCK_FRESH_INIT`.
+- **Answer lock now five CI parts** (L5 added; main's last run had L1 at 254 s with 74 games, budget 360 s).
+
 ## 2026-10-09 (home): RELIST-SR (overnight item 3, #197, merged d1e03ec, main green)
 
 - **Step 1 on main, all met:** verify-screening-room.py runs in CI (ci-line, group E); the register has no open
