@@ -1663,14 +1663,6 @@
       "where": "canvas#graphCanvas"
     },
     {
-      "path": "games/graph-sketcher/index.html",
-      "at": "start",
-      "width": 463,
-      "todo": "§3.9, in no batch yet",
-      "where": "div.canvas-panel; div.right-panel",
-      "note": "width varies with the scenario drawn (361 to 567px across 8 runs); overflows on every one"
-    },
-    {
       "path": "games/like-terms-collector/index.html",
       "at": "start",
       "width": 336,

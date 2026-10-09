@@ -24,8 +24,12 @@ failed jobs passed (run 37875059753, attempt 2).
 `docs/handover/contracts/<yyyy-mm-dd>-<name>.md`; the queue below holds a one-line pointer; the file moves to
 `docs/history/contracts/` when the work merges. Read a contract when its item starts, never at session start.
 
-**QUEUE (home lane, Jon 9 Oct 16:10):** 1 RULINGS-9OCT, 2 GRAPH-SKETCHER-FIT, 3 CI-BALANCE, 4 PLAY-AGAIN-SCREEN,
-5 SCORES-OFFLINE, 6 SCI-CALC, 7 DOCS-9OCT, then CHECKPOINT. First: wait for the E2 PR to merge and main to go green.
+**QUEUE (home lane, Jon 9 Oct 16:10):** 1 RULINGS-9OCT (#215, merged), 2 GRAPH-SKETCHER-FIT, 3 CI-BALANCE, 4 PLAY-AGAIN-SCREEN,
+5 SCORES-OFFLINE, 6 SCI-CALC, 7 DOCS-9OCT, then CHECKPOINT. (E2 merged as #213; main green.)
+After the checkpoint: CAR-TRAP-DRAFT (Jon's amended contract, 9 Oct 16:45; the Head is prom-budget's vain
+Head; verbatim at ~/.maffsgames-local/2026-10-09-car-trap-draft.md on the home machine: the personal-details hook blocks its word "daughter", fiction about Strictman; Jon to rule how it is stored). Jon also sent the
+IT room rewrite brief (Narry, secret ballot; 3 open rulings): a brief, not yet a contract, saved as
+contracts/2026-10-09-it-room-brief.md. SCI-CALC (item 6) is saved as contracts/2026-10-09-sci-calc.md.
 - **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
 - **Standing F1 item: done for every listed game but graph-sketcher** (NOT_YET: glorious-gantt, unlisted and the cloud
   lane's; graph-sketcher, blocked by its phone overflow, batch 10 entry). unit-converter loads the lock (cloud lane,
@@ -46,6 +50,35 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-09 (home): GRAPH-SKETCHER-FIT (item 2, #218)
+
+- **Overflow, measured at 320x568, 390x844, 412x915 on all 45 scenarios** (main: every one overflowed, the page
+  growing ~9px per scenario loaded, up to 881px). Causes, all in the page (CLASS CHECK: local; the same
+  `Math.max(320, ...)` canvas floor appears only in glorious-gantt, unlisted and the cloud lane's: not touched):
+  `getCanvasCtx` sized the canvas to the panel's width less 12px, but the panel's padding and border are ~21px, so
+  the canvas pushed its grid track wider on every draw, with a 320px floor; and the tracks were `fr` (min-width
+  auto), so the value table widened its column instead of scrolling in `.table-box`. Fixed: `minmax(0,..)` tracks;
+  the canvas takes the panel's content box. After: no overflow at any size for any scenario, in the table, draw,
+  question and results phases; the table scrolls in its own box. `tier1_phone_overflow` entry removed.
+- **Touch drawing at 390x844:** canvas 336x225 CSS px; eleven real touch taps placed eleven control points on the
+  curve, Check Curve passed into the questions (screenshot checked). Next is tappable: the check's 390px double-tap
+  phase passes.
+- **On MaffsLock** (declaration: the answer completes the table, draws the true curve at Core, then answers the
+  question on screen); seeds 1-3 pass; **NOT_YET: glorious-gantt only.** verify-graph-sketcher.py passes.
+- **Faults fixed beyond the swap:**
+  - CM15 (Core, the Ferris wheel) gives every table value, so there was no cell to fill, and the table only
+    completed from a cell's change: the scenario never moved on, and a Core run (6 of 15 scenarios) drew it about
+    40% of the time, so the game could not be finished. Its table now completes as it loads. Scenario data untouched.
+  - Check Curve: a double-click on a passing curve scored it twice (+20 then +10) and restarted the questions. One
+    check per attempt now (the draw tools lock; a failed check reopens them).
+  - Every question's answer went on by a timer, right or wrong (1-2 s): a wrong one now waits on MaffsNext under its
+    feedback (canon 7.6). Next Scenario acts once; the end runs once (finishOnce).
+- **Answer lock split into six parts** (contract CI-BALANCE: lock parts grow by hand). L1 ran 6m40s on this PR's
+  first run (6m budget then); `ci-groups.py --check` passes with part 6 counted at the 300 s default until main
+  records it.
+- Seen, not touched: on a phone the table's typed values are clipped by the cell width (608.3 of 608.33 shows);
+  the table scrolls, the value is kept. Checking a curve with fewer than three points uses `alert()`.
 
 ## 2026-10-09 (home): CI-BALANCE (item 3)
 
@@ -91,39 +124,3 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
     flag waits on MaffsNext under the worked solution. The flag path (not pressed by the check) double-clicked in
     Chromium at stage 2: one mark per question, game over after three lives, one game_completed.
   - eigenvalue-extractor: the characteristic-quest shape (batch 10).
-
-## 2026-10-09 (home): F1 batch 10 (overnight item 4, #199, merged ebc91e0, main green)
-
-- **Claims read on main:** `cloud-remaining:` empty (UC-FIX merged). unit-converter dropped anyway (the overnight
-  contract: the cloud lane's), factor-theorem already migrated.
-- **On MaffsLock, each with its declaration, seeds 1-3 passing:** core-maths-paper2b, core-maths-paper2c,
-  growth-and-decay, normal-navigator, log-laws, test-the-claim, characteristic-quest, complex-converter.
-  **NOT_YET: 5** (boolean-blitz, eigenvalue-extractor, matrix-crunch; glorious-gantt unlisted; graph-sketcher, below).
-- **graph-sketcher taken out of the batch (blocked, not decided):** its known phone overflow (checker-allowlist,
-  361-567px, todo §3.9 "in no batch yet") zooms the page out at 390px, and the check's tap on Next lands on the site
-  footer ("Parent guides"). A student's would too. The overflow is §3.9's work, not F1's; the migration is easy once
-  the page fits. complex-converter took its place.
-- **unit-converter (for Jon):** the cloud lane's UC-FIX (#196) put it on MaffsLock and took it off
-  `cloud-remaining:`; the check now judges it in full and says the home lane adds it to MIGRATED. The overnight
-  contract says leave it to the cloud lane, so it is not added here.
-- **Faults fixed beyond the swap:**
-  - test-the-claim: no guard anywhere. On main a double-click on Step 6's Check marked the test twice and scored it
-    twice (shown: 2 marks, 155 points; now 1 and 85); every step's Check could count twice, Next Question could skip
-    a test. Each Check now locks the step panel until the next step renders or the step reopens (Try Again, or at
-    once where there is none); a wrong conclusion waits on MaffsNext under the model answer; a right one keeps its
-    own Next, which acts once. Functions its verifier runs in node are untouched.
-  - growth-and-decay: a double-click on Check with a wrong value marked twice (shown on main); now one mark per
-    attempt, the sub-question reopening on Try Again (split-it's pattern); a wrong interpretation option waits on
-    MaffsNext (it moved on after 1.5 s); Next Scenario acts once.
-  - log-laws: Laws mode's `answered` flag and Solve mode's `busy` flag replaced. Solve is not played by the check:
-    double-clicked through a 10-question run in Chromium, 10 marks, one game_completed.
-  - normal-navigator, characteristic-quest, core-maths-paper2b/2c: options guarded by a CSS class or a flag only;
-    wrong answers now wait on MaffsNext under the worked solution (normal-navigator's right answers keep their own
-    "Got it", which acts once). paper2b/2c follow paper1/2a (batch 7).
-  - complex-converter: Roulette's wrong answer waits on MaffsNext (it moved on after 1.2 s); Sniper's `sWaiting`
-    flag replaced by a lock on the diagram (the SVG gets tabindex="-1" so the lock has a control to hold: locking the
-    bare SVG held nothing, a first try marked every double-tap twice); a miss waits on MaffsNext. **Play Again now
-    replays the mode just played; it reloaded the page to the menu** (the reload also defeated the check). Sniper (15
-    shots, double-tapped: 15 marks, one completion) and Triples (5 rounds, one completion) played in Chromium.
-- **Verifier:** normal-navigator adds `NO_LOCK_FRESH_INIT` (it answers at once after each render).
-- **CI fix in the PR:** check-teacher-invite.py's Laws-mode driver read log-laws' removed `answered`; it asks MaffsLock.

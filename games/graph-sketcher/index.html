@@ -58,8 +58,10 @@ a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decorati
 .hud-val{font-family:'JetBrains Mono',monospace;font-size:.88rem;font-weight:700}
 
 /* Game layout */
-.game-layout{display:grid;grid-template-columns:3fr 2fr;gap:.7rem;align-items:start}
-@media(max-width:780px){.game-layout{grid-template-columns:1fr}}
+/* minmax(0,..): a track never grows to fit its content, so the value table scrolls inside .table-box and the
+   canvas follows its panel; the page itself never scrolls sideways on a phone (todo 3.9). */
+.game-layout{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:.7rem;align-items:start}
+@media(max-width:780px){.game-layout{grid-template-columns:minmax(0,1fr)}}
 
 /* Canvas panel */
 .canvas-panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.6rem;position:relative}
@@ -143,6 +145,40 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Each scenario opens with a table of values (and, at Core, a curve to draw) before its interpretation questions, which are the only marked answers. "answer" completes the table with its keys and, at Core, draws the true curve through Check Curve, then answers the question on screen: i = 0 the key, i >= 1 a wrong value or option. A wrong answer waits on Next under its feedback.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && G.phase !== 'done'",
+  "answer": [
+    "return (async () => {",
+    " const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    " const box = document.getElementById('qBox'), tools = document.getElementById('drawTools');",
+    " const q = G.questions[G.qIdx], screen = document.getElementById('gameScreen');",
+    " for (let t = 0; t < 200 && MaffsLock.isFresh(screen); t++) await real(30);",
+    " for (const inp of document.querySelectorAll('#tableBox input:not([disabled])')) {",
+    " inp.value = String(q.answers[inp.dataset.x]); inp.dispatchEvent(new Event('change')); }",
+    " if (G.phase === 'draw') {",
+    " for (let t = 0; t < 200 && (MaffsLock.isLocked(tools) || MaffsLock.isFresh(tools)); t++) await real(30);",
+    " G.controlPoints = []; for (let k = 0; k <= 12; k++) { const x = q.xRange[0] + k * (q.xRange[1] - q.xRange[0]) / 12;",
+    " G.controlPoints.push({x: x, y: q.fn(x)}); }",
+    " tools.querySelector('.accent').click();",
+    " for (let t = 0; t < 200 && G.phase === 'draw'; t++) await real(30); }",
+    " for (let t = 0; t < 200 && !(box.querySelector('.check-btn, .mcq-btn') && !MaffsLock.isLocked(box) && !MaffsLock.isFresh(box)); t++) await real(30);",
+    " const iq = q.iqs[G.iqIdx]; if (!iq) return;",
+    " if (iq.type === 'mcq') { const o = box._opts, k = o.findIndex(x => i === 0 ? x.correct : !x.correct);",
+    " const b = document.getElementById('iqm' + k); if (b) b.click(); return; }",
+    " const set = (id, v) => { const e = document.getElementById(id); if (e) e.value = String(v); };",
+    " if (iq.type === 'tp') { set('iqTpX', i === 0 ? iq.answer.x : iq.answer.x + 999); set('iqTpY', iq.answer.y); }",
+    " else if (iq.type === 'roots') set('iqInput', i === 0 ? iq.answers.join(', ') : '999');",
+    " else set('iqInput', i === 0 ? iq.answer : iq.answer + 999);",
+    " if (iq.type === 'extrap') set('iqReliable', iq.reliable ? 'yes' : 'no');",
+    " const c = box.querySelector('.check-btn'); if (c) c.click();",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -605,7 +641,8 @@ function startGame(){
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
   G.questions=pool.slice(0,6);G.qIdx=0;G.score=0;G.correctIQs=0;G.totalIQs=0;G._qaIdx=0;
   G.timerStart=Date.now();G.timerInterval=setInterval(updateTimer,1000);
-  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');
+  MaffsLock.newSession();
+  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');MaffsLock.screen($('gameScreen'));
   mfg('game_started',{game_slug:'graph-sketcher',level:G.level});
   window._ggAbandoned=true;
   window.addEventListener('beforeunload',function(){
@@ -637,6 +674,10 @@ function loadScenario(){
 
   // Canvas — blank grid
   drawGrid(q);
+  MaffsLock.fresh($('gameScreen'));
+  // A table with every value given (CM15) has nothing to fill: it is complete now. checkTableComplete ran only
+  // from a cell's change, so such a scenario never moved on and the game could not be finished.
+  if(!Object.keys(q.answers).length)checkTableComplete(q);
 }
 
 // ============================================================
@@ -682,7 +723,7 @@ function checkCell(input){
   } else {
     cell.classList.add('wrong-cell');cell.classList.remove('correct-cell');
     G.qPenalties++;
-    setTimeout(()=>{cell.classList.remove('wrong-cell');input.value='';input.focus();},800);
+    MaffsLock.timer(()=>{cell.classList.remove('wrong-cell');input.value='';input.focus();},800);
   }
 }
 
@@ -702,7 +743,7 @@ function checkTableComplete(q){
     drawGrid(q);plotPoints(q);
     $('hudPhase').textContent='Draw';
     G.phase='draw';
-    $('drawTools').style.display='flex';
+    $('drawTools').style.display='flex';MaffsLock.fresh($('drawTools'));   // reopened: the last scenario's pass locked it
     enableDrawing(q);
   } else {
     // Show curve directly, go to IQs
@@ -717,8 +758,9 @@ function checkTableComplete(q){
 function getCanvasCtx(){
   const c=$('graphCanvas');
   // Resize for retina
-  const rect=c.parentElement.getBoundingClientRect();
-  const w=Math.max(320,rect.width-12);
+  // The panel's content box (its width less padding and border), so the canvas never pushes the panel wider.
+  const panel=c.parentElement,cs=getComputedStyle(panel);
+  const w=Math.floor(panel.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight));
   const h=Math.round(w*0.67);
   c.width=w*2;c.height=h*2;c.style.width=w+'px';c.style.height=h+'px';
   const ctx=c.getContext('2d');ctx.scale(2,2);
@@ -921,6 +963,7 @@ function checkCurve(){
   const q=G.questions[G.qIdx];
   const all=[...getDataPoints(q),...G.controlPoints].sort((a,b)=>a.x-b.x);
   if(all.length<3){alert('Add more control points to shape your curve.');return;}
+  if(!MaffsLock.lock($('drawTools')))return;   // one check per attempt (canon 7.6.0)
 
   // Sample 20 points, interpolate drawn curve via simple linear between sorted points
   const samples=20;let passes=0;
@@ -953,7 +996,8 @@ function checkCurve(){
     const fb=document.createElement('div');fb.className='feedback wrong';
     fb.textContent=`Curve doesn't match — check around ${q.xLabel.split(' ')[0]} = ${fmtAxis(worstX)}. ${passes}/20 points passed.`;
     $('qBox').style.display='block';$('qBox').innerHTML='';$('qBox').appendChild(fb);
-    setTimeout(()=>{$('qBox').style.display='none';},3000);
+    MaffsLock.fresh($('drawTools'));   // another attempt: the tools reopen, and a double-click cannot check twice
+    MaffsLock.timer(()=>{$('qBox').style.display='none';},3000);
   }
 }
 
@@ -1016,6 +1060,7 @@ function loadIQ(q){
       </div>
       <button class="check-btn" onclick="checkTPIQ()">Check</button><div id="iqFb"></div>`;
   }
+  MaffsLock.fresh(box);   // a new question: a double-click on Check cannot answer it
 }
 
 function _trackIQ(ok){G._qaIdx++;mfg('question_answered',{game_slug:'graph-sketcher',level:G.level,correct:ok,question_index:G._qaIdx});}
@@ -1023,16 +1068,17 @@ function _trackIQ(ok){G._qaIdx++;mfg('question_answered',{game_slug:'graph-sketc
 function checkReadIQ(){
   const q=G.questions[G.qIdx],iq=q.iqs[G.iqIdx];
   const val=parseFloat($('iqInput').value);if(isNaN(val))return;
+  if(!MaffsLock.lock($('qBox')))return;   // one mark per question (canon 7.6.0)
   G.totalIQs++;const fb=$('iqFb');
   const tol=iq.tol||Math.abs(iq.answer)*0.05;
   if(Math.abs(val-iq.answer)<=tol){
     G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
     fb.innerHTML=`<div class="feedback correct">Correct! ${iq.answer}</div>`;_trackIQ(true);
-    setTimeout(()=>{G.iqIdx++;loadIQ(q);},1000);
+    iqNext(q,fb,true,1000);
   } else {
     G.qPenalties++;
     fb.innerHTML=`<div class="feedback wrong">Incorrect. Answer: ${iq.answer}</div>`;_trackIQ(false);
-    setTimeout(()=>{G.iqIdx++;loadIQ(q);},2000);
+    iqNext(q,fb,false);
   }
 }
 
@@ -1040,6 +1086,7 @@ function checkExtrapIQ(){
   const q=G.questions[G.qIdx],iq=q.iqs[G.iqIdx];
   const val=parseFloat($('iqInput').value);const rel=$('iqReliable').value;
   if(isNaN(val)||!rel)return;
+  if(!MaffsLock.lock($('qBox')))return;   // one mark per question (canon 7.6.0)
   G.totalIQs++;const fb=$('iqFb');
   const tol=iq.tol||Math.abs(iq.answer)*0.05;
   const valOk=Math.abs(val-iq.answer)<=tol;
@@ -1051,10 +1098,11 @@ function checkExtrapIQ(){
     G.qPenalties++;
     fb.innerHTML=`<div class="feedback wrong">Answer: ${iq.answer}. ${iq.reliable?'Reliable':'Unreliable — '+iq.reason}</div>`;_trackIQ(false);
   }
-  setTimeout(()=>{G.iqIdx++;loadIQ(q);},2000);
+  iqNext(q,fb,valOk&&relOk,2000);
 }
 
 function checkMCQIQ(idx,correct){
+  if(!MaffsLock.lock($('qBox')))return;   // one answer per question (canon 7.6.0)
   const q=G.questions[G.qIdx];G.totalIQs++;const fb=$('iqFb');
   document.querySelectorAll('.mcq-btn').forEach(b=>b.classList.add('disabled'));
   if(correct){G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;$('iqm'+idx).classList.add('correct');
@@ -1062,41 +1110,51 @@ function checkMCQIQ(idx,correct){
   else{G.qPenalties++;$('iqm'+idx).classList.add('wrong');
     const opts=$('qBox')._opts;opts.forEach((o,i)=>{if(o.correct)$('iqm'+i).classList.add('correct');});
     fb.innerHTML='<div class="feedback wrong">Incorrect.</div>';_trackIQ(false);}
-  setTimeout(()=>{G.iqIdx++;loadIQ(q);},1500);
+  iqNext(q,fb,correct,1500);
 }
 
 function checkRootsIQ(){
   const q=G.questions[G.qIdx],iq=q.iqs[G.iqIdx];
   const raw=$('iqInput').value;if(!raw.trim())return;
+  if(!MaffsLock.lock($('qBox')))return;   // one mark per question (canon 7.6.0)
   const vals=raw.split(',').map(s=>parseFloat(s.trim())).filter(v=>!isNaN(v));
   G.totalIQs++;const fb=$('iqFb');
   const tol=iq.tol||0.15;
   let allFound=true;
   iq.answers.forEach(a=>{if(!vals.some(v=>Math.abs(v-a)<=tol))allFound=false;});
-  if(allFound&&vals.length<=iq.answers.length+1){
+  const ok=allFound&&vals.length<=iq.answers.length+1;
+  if(ok){
     G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
     fb.innerHTML=`<div class="feedback correct">Correct! Roots: ${iq.answers.join(', ')}</div>`;_trackIQ(true);
   } else {
     G.qPenalties++;
     fb.innerHTML=`<div class="feedback wrong">Expected: ${iq.answers.join(', ')}</div>`;_trackIQ(false);
   }
-  setTimeout(()=>{G.iqIdx++;loadIQ(q);},2000);
+  iqNext(q,fb,ok,2000);
 }
 
 function checkTPIQ(){
   const q=G.questions[G.qIdx],iq=q.iqs[G.iqIdx];
   const vx=parseFloat($('iqTpX').value),vy=parseFloat($('iqTpY').value);
   if(isNaN(vx)||isNaN(vy))return;
+  if(!MaffsLock.lock($('qBox')))return;   // one mark per question (canon 7.6.0)
   G.totalIQs++;const fb=$('iqFb');
   const tol=iq.tol||0.15;
-  if(Math.abs(vx-iq.answer.x)<=tol&&Math.abs(vy-iq.answer.y)<=Math.max(tol,Math.abs(iq.answer.y)*0.05)){
+  const ok=Math.abs(vx-iq.answer.x)<=tol&&Math.abs(vy-iq.answer.y)<=Math.max(tol,Math.abs(iq.answer.y)*0.05);
+  if(ok){
     G.correctIQs++;G.score+=15;$('hudScore').textContent=G.score;
     fb.innerHTML=`<div class="feedback correct">Correct! (${iq.answer.x}, ${iq.answer.y})</div>`;_trackIQ(true);
   } else {
     G.qPenalties++;
     fb.innerHTML=`<div class="feedback wrong">Expected: (${iq.answer.x}, ${iq.answer.y})</div>`;_trackIQ(false);
   }
-  setTimeout(()=>{G.iqIdx++;loadIQ(q);},2000);
+  iqNext(q,fb,ok,2000);
+}
+
+// After a mark: a right answer moves on after its pause; a wrong one waits on Next under its feedback (canon 7.6).
+function iqNext(q,fb,ok,ms){
+  const go=()=>{G.iqIdx++;loadIQ(q);};
+  if(ok)MaffsLock.timer(go,ms);else MaffsNext.wrong({mount:fb,onAdvance:go});
 }
 
 // ============================================================
@@ -1106,12 +1164,16 @@ function finishScenario(q){
   const box=$('qBox');
   box.innerHTML=`<div style="text-align:center;padding:.5rem"><div style="font-size:.8rem;color:var(--correct);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem">Scenario Complete</div>
     <button class="next-btn" onclick="nextScenario()">${G.qIdx<G.questions.length-1?'Next Scenario →':'See Results'}</button></div>`;
+  MaffsLock.fresh(box);
 }
 
-function nextScenario(){G.qIdx++;if(G.qIdx>=G.questions.length)endGame();else loadScenario();}
+// Once: a double-click on Next Scenario cannot skip a scenario.
+function nextScenario(){if(!MaffsLock.lock($('qBox')))return;G.qIdx++;if(G.qIdx>=G.questions.length)endGame();else loadScenario();}
 
-function endGame(){
-  clearInterval(G.timerInterval);$('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){
+  G.phase='done';
+  clearInterval(G.timerInterval);$('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');MaffsLock.screen($('resultsScreen'));
   const pct=G.totalIQs>0?Math.round(100*G.correctIQs/G.totalIQs):0;
   let title='Well done!';if(pct>=90)title='Outstanding!';else if(pct>=70)title='Great work!';
   else if(pct>=50)title='Good effort!';else title='Keep practising!';
@@ -1127,13 +1189,13 @@ function endGame(){
   window._ggAbandoned=false;
   mfg('game_completed',{game_slug:'graph-sketcher',level:G.level,score:G.score,questions_answered:G.totalIQs,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('graph-sketcher',G.level,G.score,G.totalIQs).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('graph-sketcher',G.level,G.score);}}
-}
-function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active');}
+});
+function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active');MaffsLock.screen($('menuScreen'));}
 window.addEventListener('DOMContentLoaded',()=>{parseURL();});
 
 
 (function renderMethodRef(){
-  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}   // lock-ok: waits for KaTeX to load, marks nothing
   var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
   var k=function(t){return katex.renderToString(t,{throwOnError:false});};
 

@@ -3,6 +3,42 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-09 (home): F1 batch 10 (overnight item 4, #199, merged ebc91e0, main green)
+
+- **Claims read on main:** `cloud-remaining:` empty (UC-FIX merged). unit-converter dropped anyway (the overnight
+  contract: the cloud lane's), factor-theorem already migrated.
+- **On MaffsLock, each with its declaration, seeds 1-3 passing:** core-maths-paper2b, core-maths-paper2c,
+  growth-and-decay, normal-navigator, log-laws, test-the-claim, characteristic-quest, complex-converter.
+  **NOT_YET: 5** (boolean-blitz, eigenvalue-extractor, matrix-crunch; glorious-gantt unlisted; graph-sketcher, below).
+- **graph-sketcher taken out of the batch (blocked, not decided):** its known phone overflow (checker-allowlist,
+  361-567px, todo §3.9 "in no batch yet") zooms the page out at 390px, and the check's tap on Next lands on the site
+  footer ("Parent guides"). A student's would too. The overflow is §3.9's work, not F1's; the migration is easy once
+  the page fits. complex-converter took its place.
+- **unit-converter (for Jon):** the cloud lane's UC-FIX (#196) put it on MaffsLock and took it off
+  `cloud-remaining:`; the check now judges it in full and says the home lane adds it to MIGRATED. The overnight
+  contract says leave it to the cloud lane, so it is not added here.
+- **Faults fixed beyond the swap:**
+  - test-the-claim: no guard anywhere. On main a double-click on Step 6's Check marked the test twice and scored it
+    twice (shown: 2 marks, 155 points; now 1 and 85); every step's Check could count twice, Next Question could skip
+    a test. Each Check now locks the step panel until the next step renders or the step reopens (Try Again, or at
+    once where there is none); a wrong conclusion waits on MaffsNext under the model answer; a right one keeps its
+    own Next, which acts once. Functions its verifier runs in node are untouched.
+  - growth-and-decay: a double-click on Check with a wrong value marked twice (shown on main); now one mark per
+    attempt, the sub-question reopening on Try Again (split-it's pattern); a wrong interpretation option waits on
+    MaffsNext (it moved on after 1.5 s); Next Scenario acts once.
+  - log-laws: Laws mode's `answered` flag and Solve mode's `busy` flag replaced. Solve is not played by the check:
+    double-clicked through a 10-question run in Chromium, 10 marks, one game_completed.
+  - normal-navigator, characteristic-quest, core-maths-paper2b/2c: options guarded by a CSS class or a flag only;
+    wrong answers now wait on MaffsNext under the worked solution (normal-navigator's right answers keep their own
+    "Got it", which acts once). paper2b/2c follow paper1/2a (batch 7).
+  - complex-converter: Roulette's wrong answer waits on MaffsNext (it moved on after 1.2 s); Sniper's `sWaiting`
+    flag replaced by a lock on the diagram (the SVG gets tabindex="-1" so the lock has a control to hold: locking the
+    bare SVG held nothing, a first try marked every double-tap twice); a miss waits on MaffsNext. **Play Again now
+    replays the mode just played; it reloaded the page to the menu** (the reload also defeated the check). Sniper (15
+    shots, double-tapped: 15 marks, one completion) and Triples (5 rounds, one completion) played in Chromium.
+- **Verifier:** normal-navigator adds `NO_LOCK_FRESH_INIT` (it answers at once after each render).
+- **CI fix in the PR:** check-teacher-invite.py's Laws-mode driver read log-laws' removed `answered`; it asks MaffsLock.
+
 ## 2026-10-09 (home): F1 batch 9 (overnight item 4, #198, merged 2712f54, main green)
 
 - **Claims read on main:** `cloud-remaining: unit-converter` (UC-FIX, #196 open); factor-theorem is already migrated.

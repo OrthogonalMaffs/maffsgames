@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-# ci-line: lock | Answer lock in play, part 1 (canon 7.6.0: self-test, static rules; migrated games played in Chromium) | --selftest && --part 1/5
-# ci-line: lock | Answer lock in play, part 2 (canon 7.6.0: migrated games played in Chromium) | --part 2/5
-# ci-line: lock | Answer lock in play, part 3 (canon 7.6.0: migrated games played in Chromium) | --part 3/5
-# ci-line: lock | Answer lock in play, part 4 (canon 7.6.0: migrated games played in Chromium) | --part 4/5
-# ci-line: lock | Answer lock in play, part 5 (canon 7.6.0: migrated games played in Chromium) | --part 5/5
+# ci-line: lock | Answer lock in play, part 1 (canon 7.6.0: self-test, static rules; migrated games played in Chromium) | --selftest && --part 1/6
+# ci-line: lock | Answer lock in play, part 2 (canon 7.6.0: migrated games played in Chromium) | --part 2/6
+# ci-line: lock | Answer lock in play, part 3 (canon 7.6.0: migrated games played in Chromium) | --part 3/6
+# ci-line: lock | Answer lock in play, part 4 (canon 7.6.0: migrated games played in Chromium) | --part 4/6
+# ci-line: lock | Answer lock in play, part 5 (canon 7.6.0: migrated games played in Chromium) | --part 5/6
+# ci-line: lock | Answer lock in play, part 6 (canon 7.6.0: migrated games played in Chromium) | --part 6/6
 # ci-deps: schools/assets/answer-lock.js schools/assets/next-control.js scripts/check-site.py
 """Does every game mark through MaffsLock (canon §7.6.0), so that no repeat marks twice or finishes twice?
 
@@ -56,7 +57,7 @@ the window closes. A two-option game declares the answer that differs from its k
     python scripts/check-answer-lock.py --not-yet          # play the NOT_YET games too (a report, never fails)
     python scripts/check-answer-lock.py --selftest         # a planted failing game off the cloud list is caught
     python scripts/check-answer-lock.py --seed 7           # another draw (default 1)
-    python scripts/check-answer-lock.py --part 1/5         # CI: every fifth migrated game (by slug); part 1 also
+    python scripts/check-answer-lock.py --part 1/6         # CI: every sixth migrated game (by slug); part 1 also
                                                            # runs the static rules. Add a part (a "lock |"
                                                            # ci-line; ci-groups.py packs it) when one passes 3 minutes.
 """
@@ -158,7 +159,8 @@ formula-forge scale-factor-scaling
 core-maths-paper2b core-maths-paper2c growth-and-decay normal-navigator log-laws test-the-claim
 characteristic-quest complex-converter
 eigenvalue-extractor matrix-crunch boolean-blitz
-unit-converter
+eigenvalue-extractor matrix-crunch boolean-blitz
+unit-converter graph-sketcher
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 
