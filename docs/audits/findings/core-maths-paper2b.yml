@@ -17,7 +17,9 @@ findings:
   summary: Option D 'Data breach - larger potential loss' picks the same policy as the key, for the risk-aversion
     reason Q27 and Q34 teach
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 226
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 10, and Jon''s ruling of 9 Oct 16:21 (option D rewritten): Q28''s option D is now ''Neither — both premiums cost more than the expected loss'', false (the data breach premium, £900, is below its expected loss, £1,000), so no wrong option picks the key''s policy. Key unchanged. Kept by verify-core-maths-paper2b.py.'
 - id: core-maths-paper2b-t2-002
   severity: MEDIUM
   jc: true
