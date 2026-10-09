@@ -32,6 +32,9 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KEYPAD_JS = os.path.join(ROOT, 'schools', 'assets', 'keypad.js')
 THEME_CSS = os.path.join(ROOT, 'schools', 'assets', 'theme.css')
+# theme.css imports calculator.css (the calculator and keypad styles, SCI-CALC); the tests drop @import
+# lines (no network), so they add it themselves.
+CALC_CSS = os.path.join(ROOT, 'schools', 'assets', 'calculator.css')
 TOUCH = [(320, 568), (375, 667), (390, 844)]
 MOUSE = [(1280, 720), (390, 844)]
 COUNTS = [1, 2, 4]
@@ -77,7 +80,7 @@ FAULTS = [
 
 def theme_css():
     # theme.css less its Google Fonts @import (no network here; the fallback fonts are wider, the harder case)
-    return ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import'))
+    return ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import')) + open(CALC_CSS, encoding='utf-8').read()
 
 
 def keypad_src(fault):

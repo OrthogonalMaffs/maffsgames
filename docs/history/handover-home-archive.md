@@ -3,6 +3,60 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-09 (home): HOOK-FIX (Jon, 18:00) and the Car Trap contract
+
+- **The block:** the local pre-commit guard (`.git/hooks/pre-commit`, a copy of `~/.maffsgames-local/pre-commit`;
+  patterns in `~/.maffsgames-local/personal-patterns.txt`, also read by `scan-personal.sh`; no other repo uses it;
+  not gitleaks, not CI) has no bare relationship words. Its one relationship pattern was
+  "possessive + relation word", with three possessives: Jon's name, "his" and "my". "his daughter" in the draft
+  (fiction) matched it.
+- **Ruling (Jon, 9 Oct):** "the word daughter should not be blocked, that's taking the rule too far"; name-only
+  chosen. The pattern now matches only "<Jon's name>'s <relation>". "his/my <relation>" in prose or room dialogue
+  commits.
+- **What it matches now (16 patterns, by category):** 1 email/phone pattern; 14 standalone words or short phrases for
+  real names, places and identifiers (unchanged); 1 "Jon's name + relation word" combination. The hook's allowlist
+  for the project's own addresses is unchanged. Backup of the old list: `personal-patterns.txt.bak-2026-10-09`
+  (local only).
+- **Self-test:** `~/.maffsgames-local/test-pre-commit.sh` runs the real hook in a throwaway repo. "his daughter's
+  first car" passes; a "<name>'s daughter" fixture and a standalone-pattern fixture, both built at test time from
+  the list, are blocked. It passes on the new list and fails the fiction case on the old one.
+- **Gap to know about:** an unnamed "his daughter" about Jon's own family is no longer caught; only the named form
+  and the other patterns are.
+- **The HOOK-FIX contract** (`docs/handover/contracts/2026-10-09-hook-fix.md`, verbatim) has one line that matches a
+  standalone real-detail pattern by coincidence (an everyday word). Jon ruled: allow that exact line
+  (`allowed-lines.txt`); the pattern is unchanged.
+- **The Car Trap contract is in the repo:** `docs/handover/contracts/2026-10-09-car-trap-draft.md`, verbatim
+  (committed through the hook, no bypass). It is queued after the checkpoint, as before.
+
+## 2026-10-09 (home): GRAPH-SKETCHER-FIT (item 2, #218)
+
+- **Overflow, measured at 320x568, 390x844, 412x915 on all 45 scenarios** (main: every one overflowed, the page
+  growing ~9px per scenario loaded, up to 881px). Causes, all in the page (CLASS CHECK: local; the same
+  `Math.max(320, ...)` canvas floor appears only in glorious-gantt, unlisted and the cloud lane's: not touched):
+  `getCanvasCtx` sized the canvas to the panel's width less 12px, but the panel's padding and border are ~21px, so
+  the canvas pushed its grid track wider on every draw, with a 320px floor; and the tracks were `fr` (min-width
+  auto), so the value table widened its column instead of scrolling in `.table-box`. Fixed: `minmax(0,..)` tracks;
+  the canvas takes the panel's content box. After: no overflow at any size for any scenario, in the table, draw,
+  question and results phases; the table scrolls in its own box. `tier1_phone_overflow` entry removed.
+- **Touch drawing at 390x844:** canvas 336x225 CSS px; eleven real touch taps placed eleven control points on the
+  curve, Check Curve passed into the questions (screenshot checked). Next is tappable: the check's 390px double-tap
+  phase passes.
+- **On MaffsLock** (declaration: the answer completes the table, draws the true curve at Core, then answers the
+  question on screen); seeds 1-3 pass; **NOT_YET: glorious-gantt only.** verify-graph-sketcher.py passes.
+- **Faults fixed beyond the swap:**
+  - CM15 (Core, the Ferris wheel) gives every table value, so there was no cell to fill, and the table only
+    completed from a cell's change: the scenario never moved on, and a Core run (6 of 15 scenarios) drew it about
+    40% of the time, so the game could not be finished. Its table now completes as it loads. Scenario data untouched.
+  - Check Curve: a double-click on a passing curve scored it twice (+20 then +10) and restarted the questions. One
+    check per attempt now (the draw tools lock; a failed check reopens them).
+  - Every question's answer went on by a timer, right or wrong (1-2 s): a wrong one now waits on MaffsNext under its
+    feedback (canon 7.6). Next Scenario acts once; the end runs once (finishOnce).
+- **Answer lock split into six parts** (contract CI-BALANCE: lock parts grow by hand). L1 ran 6m40s on this PR's
+  first run (6m budget then); `ci-groups.py --check` passes with part 6 counted at the 300 s default until main
+  records it.
+- Seen, not touched: on a phone the table's typed values are clipped by the cell width (608.3 of 608.33 shows);
+  the table scrolls, the value is kept. Checking a curve with fewer than three points uses `alert()`.
+
 ## 2026-10-09 (home): CI-BALANCE (item 3)
 
 - **Content groups are packed from measured times** (`scripts/ci-groups.py`, `scripts/ci-pack.json`): a ci-line

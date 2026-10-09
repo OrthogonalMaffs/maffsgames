@@ -1,9 +1,9 @@
 # MaffsGames — Complete Game Roster
 
-**Calculator** (last column, canon §4.4): `required`, `not allowed`, `optional` or `untagged`. A game's
+**Calculator** (last column, canon §4.4): `required`, `scientific`, `not allowed`, `optional` or `untagged`. A game's
 tag shows as the shared `.calc-badge` (`schools/assets/theme.css`) on its start screen; `untagged`
-shows nothing. Every game is `untagged` until it is tagged in its own PR. A `required` game also loads the
-shared on-screen calculator (`schools/assets/calculator.js`); `scripts/check-calculator.py` keeps the two in step.
+shows nothing. Every game is `untagged` until it is tagged in its own PR. A `required` or `scientific` game also loads the
+shared on-screen calculator (`scientific`: with its scientific keys) (`schools/assets/calculator.js`); `scripts/check-calculator.py` keeps the two in step.
 
 **Question counts** (DOCS-SMALL, Jon, 8 Oct 2026): a game that generates its questions each session says "N per
 session, generated"; a game with a fixed bank gives its bank size. A count that says neither is read as a bank.
@@ -89,7 +89,7 @@ session, generated"; a game with a fixed bank gives its bank size. A count that 
 | 67 | Core Maths Paper 2C Practice | `core-maths-paper2c` | Core | Statistics, Applied | 36 exam-style MC questions. S3.4 Critical Analysis, S3.11 Graphical Methods, S3.12 Rates of Change, S3.13 Exponential Functions | untagged |
 | 68 | Tax Theft | `tax-theft` | Core | Applied | Guided payslip calculator. Income tax, NI, take-home pay. AQA 1350 S3.2 | untagged |
 | 69 | Stat Attack | `stat-attack` | GCSE, Core, L4 | Statistics | Grouped frequency tables: modal class, median class, mean, SD. 36 scenarios | untagged |
-| 70 | Growth and Decay | `growth-and-decay` | Core, A-Level, L4 | Statistics, Applied | Exponential modelling. 45 scenarios | untagged |
+| 70 | Growth and Decay | `growth-and-decay` | Core, A-Level, L4 | Statistics, Applied | Exponential modelling. 45 scenarios | scientific |
 | 71 | Graph Sketcher | `graph-sketcher` | Core, A-Level, L4 | Statistics, Applied | Table completion, curve drawing, graph interpretation. 45 scenarios | untagged |
 | 73 | Test the Claim | `test-the-claim` | A-Level, L4 | Statistics | Six-step hypothesis testing: Binomial, Poisson, Normal, Correlation. 48 questions | untagged |
 

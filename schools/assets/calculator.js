@@ -23,8 +23,16 @@
  *   expr    := term (('+' | '−') term)*
  *   term    := unary (('×' | '÷') unary | <implicit ×> unary)*
  *   unary   := ('−' | '+') unary | power
- *   power   := primary '²'*
- *   primary := number | Ans | '(' expr ')' | '√(' expr ')'
+ *   power   := primary '²'* ('^' unary)?           ^ is right-associative and binds tighter than a minus
+ *                                                  on its left: 2^3^2 = 512, -2^2 = -4, 2^-1 = 0.5
+ *   primary := number | Ans | π | e | '(' expr ')' | '√(' expr ')' | fn '(' expr ')'
+ *   fn      := ln | log | e^ | sin | cos | tan | sin⁻¹ | cos⁻¹ | tan⁻¹
+ *
+ * The scientific keys (contract SCI-CALC, 9 Oct 2026; canon §4.4 "scientific") are the ^, function,
+ * π and e keys, shown only by mount(el, {keys: 'scientific'}); the basic panel is unchanged, key for key.
+ * Trig takes and returns angles in the panel's mode, DEG unless the student switches it to RAD
+ * (evaluate(expr, ans, 'rad')). Error, as for ÷0: ln or log of 0 or less; sin⁻¹ or cos⁻¹ outside
+ * [−1, 1]; tan at an odd multiple of 90° (exact for whole degrees) or of π/2; anything not finite.
  *
  * On a phone (a touch screen below the dock breakpoint) the panel is compact: its close key sits in the
  * display, keys are 48px. mount(el, {answer: input}) makes the keypad type the game's answer too, so the
@@ -41,16 +49,51 @@
   'use strict';
 
   var MUL = '×', DIV = '÷', MINUS = '−', SQ = '²', ROOT = '√', ANS = 'A';
+  // Scientific symbols. Each function is one private-use character followed by '(' in the expression, so
+  // the parser reads it as it reads √; FN_NAMES is how the display shows it.
+  var POW = '^', PI = 'π', E = 'e', INV = '\u207b\u00b9';
+  var LN = '\uE001', LOG = '\uE002', EXP = '\uE003', SIN = '\uE004', COS = '\uE005', TAN = '\uE006',
+    ASIN = '\uE007', ACOS = '\uE008', ATAN = '\uE009';
+  var FN_NAMES = {};
+  FN_NAMES[LN] = 'ln'; FN_NAMES[LOG] = 'log'; FN_NAMES[EXP] = 'e^'; FN_NAMES[SIN] = 'sin'; FN_NAMES[COS] = 'cos';
+  FN_NAMES[TAN] = 'tan'; FN_NAMES[ASIN] = 'sin' + INV; FN_NAMES[ACOS] = 'cos' + INV; FN_NAMES[ATAN] = 'tan' + INV;
   var MAX_LEN = 80;
 
   /* ---------- engine ---------- */
-  // Accepts the key symbols and their ASCII forms (* / - ^2 sqrt), so tests can be written plainly.
+  // Accepts the key symbols and their ASCII forms (* / - ^2 sqrt; ln( log( e^( sin( asin( or sin⁻¹( pi), so
+  // tests can be written plainly. ^2 is ² only when no digit follows it (x^25 is a power).
   function normalise(s) {
-    return String(s).replace(/\s+/g, '').replace(/\*/g, MUL).replace(/\//g, DIV).replace(/-/g, MINUS)
-      .replace(/\^2/g, SQ).replace(/sqrt\(/g, ROOT + '(').replace(/Ans/g, ANS);
+    s = String(s).replace(/\s+/g, '').replace(/\*/g, MUL).replace(/\//g, DIV).replace(/-/g, MINUS)
+      .replace(/\^2(?![0-9.])/g, SQ).replace(/sqrt\(/g, ROOT + '(').replace(/Ans/g, ANS).replace(/pi/g, PI);
+    [['asin', ASIN], ['acos', ACOS], ['atan', ATAN], ['sin' + INV, ASIN], ['cos' + INV, ACOS], ['tan' + INV, ATAN],
+     ['sin', SIN], ['cos', COS], ['tan', TAN], ['ln', LN], ['log', LOG], ['e^', EXP]].forEach(function (f) {
+      s = s.split(f[0] + '(').join(f[1] + '(');
+    });
+    return s;
+  }
+  function isFn(c) { return c !== undefined && Object.prototype.hasOwnProperty.call(FN_NAMES, c); }
+
+  // Trig in the panel's angle mode. Whole-degree multiples of 90° are exact (sin 180 = 0, not 1.2e-16), and
+  // tan at an odd multiple of 90° is an error rather than 1.6e16; elsewhere a value within 1e-12 of 0 is 0,
+  // as on a calculator's screen.
+  function trig(fn, x, rad) {
+    if (!rad && x === Math.round(x)) {
+      var q = ((x % 360) + 360) % 360;
+      if (q % 90 === 0) {
+        var k = q / 90;                      // 0, 1, 2, 3: 0°, 90°, 180°, 270°
+        if (fn === SIN) return [0, 1, 0, -1][k];
+        if (fn === COS) return [1, 0, -1, 0][k];
+        return k % 2 ? NaN : 0;              // tan 90° and 270° are errors
+      }
+    }
+    var r = rad ? x : x * Math.PI / 180;
+    if (fn === TAN && Math.abs(Math.cos(r)) < 1e-12) return NaN;
+    var v = fn === SIN ? Math.sin(r) : fn === COS ? Math.cos(r) : Math.tan(r);
+    return Math.abs(v) < 1e-12 ? 0 : v;
   }
 
-  function evaluate(expr, ans) {
+  function evaluate(expr, ans, mode) {
+    var rad = mode === 'rad';
     var s = normalise(expr), i = 0;
     if (!s) return null;
     // Close any brackets left open (as a calculator does on =); more ')' than '(' is an error.
@@ -63,7 +106,9 @@
 
     function fail() { throw new Error('calc'); }
     function peek() { return s[i]; }
-    function startsValue(c) { return c !== undefined && (/[0-9.(]/.test(c) || c === ROOT || c === ANS); }
+    function startsValue(c) {
+      return c !== undefined && (/[0-9.(]/.test(c) || c === ROOT || c === ANS || c === PI || c === E || isFn(c));
+    }
 
     function number() {
       var m = /^(\d+\.?\d*|\.\d+)/.exec(s.slice(i));
@@ -82,12 +127,34 @@
         return Math.sqrt(r);
       }
       if (c === ANS) { i++; if (typeof ans !== 'number' || !isFinite(ans)) fail(); return ans; }
+      if (c === PI) { i++; return Math.PI; }
+      if (c === E) { i++; return Math.E; }
+      if (isFn(c)) {
+        i++; if (peek() !== '(') fail(); i++;
+        var x = expr0(); if (peek() !== ')') fail(); i++;
+        var y;
+        if (c === LN || c === LOG) { if (x <= 0) fail(); y = c === LN ? Math.log(x) : Math.log10(x); }
+        else if (c === EXP) y = Math.exp(x);
+        else if (c === ASIN || c === ACOS) {
+          if (x < -1 || x > 1) fail();
+          y = c === ASIN ? Math.asin(x) : Math.acos(x);
+          if (!rad) y = y * 180 / Math.PI;
+        } else if (c === ATAN) { y = Math.atan(x); if (!rad) y = y * 180 / Math.PI; }
+        else y = trig(c, x, rad);
+        if (!isFinite(y)) fail();
+        return y;
+      }
       if (c !== undefined && /[0-9.]/.test(c)) return number();
       return fail();
     }
     function power() {
       var v = primary();
       while (peek() === SQ) { i++; v = v * v; }
+      if (peek() === POW) {
+        i++;
+        v = Math.pow(v, unary());            // right-associative: unary() comes back through power()
+        if (!isFinite(v)) fail();            // 0^-1, (-8)^(1/3)
+      }
       return v;
     }
     function unary() {
@@ -136,7 +203,7 @@
     return t.replace('-', MINUS);
   }
 
-  function calc(expr, ans) { return format(evaluate(expr, ans)); }
+  function calc(expr, ans, mode) { return format(evaluate(expr, ans, mode)); }
 
   /* ---------- UI ---------- */
   // Five columns, so every key is at least 44px wide in a 278px card (a 320px phone).
@@ -147,6 +214,15 @@
     ['4', 'in', '4'], ['5', 'in', '5'], ['6', 'in', '6'], ['x' + SQ, 'in', SQ, 'Squared'], [MINUS, 'in', MINUS, 'Minus'],
     ['1', 'in', '1'], ['2', 'in', '2'], ['3', 'in', '3'], ['.', 'in', '.', 'Decimal point'], ['+', 'in', '+', 'Plus'],
     ['0', 'in', '0', null, 'wide'], ['=', 'eq', '=', 'Equals', 'eq']
+  ];
+  // The scientific block (mount(el, {keys: 'scientific'})), below the basic keys. 'mode' switches DEG / RAD.
+  var SCI_KEYS = [
+    ['x\u02b8', 'in', POW, 'To the power'], ['ln', 'in', LN + '(', 'Natural log'], ['log', 'in', LOG + '(', 'Log base 10'],
+    ['e\u02e3', 'in', EXP + '(', 'e to the power'], [PI, 'in', PI, 'Pi'],
+    ['sin', 'in', SIN + '(', 'Sine'], ['cos', 'in', COS + '(', 'Cosine'], ['tan', 'in', TAN + '(', 'Tangent'],
+    [E, 'in', E, 'e'], ['DEG', 'mode', '', 'Angle mode: degrees or radians'],
+    ['sin' + INV, 'in', ASIN + '(', 'Inverse sine'], ['cos' + INV, 'in', ACOS + '(', 'Inverse cosine'],
+    ['tan' + INV, 'in', ATAN + '(', 'Inverse tangent']
   ];
   var KEYBOARD = {
     '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
@@ -173,19 +249,30 @@
   function mount(el, opts) {
     opts = opts || {};
     var id = 'maffsCalc' + (++uid);
+    var sci = opts.keys === 'scientific', mode = 'deg';
     el.classList.add('maffs-calc');
+    if (sci) el.classList.add('scientific');
     var h = '<button type="button" class="maffs-calc-toggle" aria-expanded="false" aria-controls="' + id + '">' +
       'Calculator</button><div class="maffs-calc-rail" hidden>' +
       '<div class="maffs-calc-panel" id="' + id + '" role="group" aria-label="Calculator" tabindex="-1" hidden>' +
       '<div class="maffs-calc-screen"><button type="button" class="maffs-calc-close" aria-label="Close the calculator">' +
       '\u00d7</button><div class="maffs-calc-lines"><div class="maffs-calc-expr" aria-hidden="true">&nbsp;</div>' +
       '<div class="maffs-calc-result" aria-live="polite">0</div></div>' +
+      (sci ? '<span class="maffs-calc-mode" aria-live="polite">DEG</span>' : '') +
       '<span class="maffs-calc-cue" aria-hidden="true">typing here</span></div><div class="maffs-calc-keys">';
-    KEYS.forEach(function (k) {
-      h += '<button type="button" class="maffs-calc-key' + (k[4] ? ' ' + k[4] : '') + (k[1] !== 'in' || /[^0-9.]/.test(k[0]) ? ' op' : '') +
+    function keyHtml(k) {
+      return '<button type="button" class="maffs-calc-key' + (k[4] ? ' ' + k[4] : '') + (k[1] !== 'in' || /[^0-9.]/.test(k[0]) ? ' op' : '') +
         '" data-act="' + k[1] + '" data-val="' + k[2] + '"' + (k[3] ? ' aria-label="' + k[3] + '"' : '') + '>' + k[0] + '</button>';
-    });
+    }
+    if (sci) h += '</div><div class="maffs-calc-keys maffs-calc-sci">' + SCI_KEYS.map(keyHtml).join('') + '</div><div class="maffs-calc-keys">';
+    KEYS.forEach(function (k) { h += keyHtml(k); });
     el.innerHTML = h + '</div></div></div>';
+    if (sci) {
+      // The scientific block sits above the basic keys; the empty first block the template opened is dropped.
+      var blocks = el.querySelectorAll('.maffs-calc-keys');
+      if (blocks.length === 3 && !blocks[0].children.length) blocks[0].parentNode.removeChild(blocks[0]);
+    }
+    var modeEl = el.querySelector('.maffs-calc-mode');
 
     var toggle = el.querySelector('.maffs-calc-toggle'), panel = el.querySelector('.maffs-calc-panel');
     var rail = el.querySelector('.maffs-calc-rail'), host = opts.dock || null;
@@ -206,7 +293,13 @@
         onTap: function () { if (panel.hidden) setOpen(true); select('answer'); } });
     }
 
-    function shown(e) { return e.split(ANS).join('Ans'); }
+    function shown(e) {
+      e = e.split(ANS).join('Ans');
+      Object.keys(FN_NAMES).forEach(function (f) { e = e.split(f).join(FN_NAMES[f]); });
+      return e;
+    }
+    var keyboard = sci ? Object.assign({}, KEYBOARD, { '^': POW }) : KEYBOARD;
+    var operators = sci ? OPERATORS.concat([POW]) : OPERATORS;
     function render(result) {
       exprEl.textContent = (done ? shown(expr) + ' =' : shown(expr)) || ' ';
       resEl.textContent = result;
@@ -215,14 +308,22 @@
       // Typing the answer: MaffsKeypad takes digits, the point, DEL and C only.
       if (target === 'answer' && answerMode() && window.MaffsCalc.ANSWER.route) { kp.type(act, val); return; }
       if (act === 'clear') { expr = ''; done = false; ok = false; render('0'); return; }
+      if (act === 'mode') {
+        mode = mode === 'deg' ? 'rad' : 'deg';
+        var label = mode.toUpperCase();
+        if (modeEl) modeEl.textContent = label;
+        keys.forEach(function (b) { if (b.getAttribute('data-act') === 'mode') b.textContent = label; });
+        return;
+      }
       if (act === 'del') {
         if (done) { done = false; render(''); return; }
-        expr = expr.slice(-2) === ROOT + '(' ? expr.slice(0, -2) : expr.slice(0, -1);
+        var two = expr.slice(-2);              // √( and ln( sin( ... delete as one key
+        expr = two.length === 2 && two[1] === '(' && (two[0] === ROOT || isFn(two[0])) ? expr.slice(0, -2) : expr.slice(0, -1);
         render(''); return;
       }
       if (act === 'eq') {
         if (!expr) return;
-        var v = evaluate(expr, ans);
+        var v = evaluate(expr, ans, mode);
         done = true;
         ok = v !== null;
         if (ok) ans = v;
@@ -231,7 +332,7 @@
       }
       if (done) {
         // After =, an operator carries the answer on (as "Ans"); anything else starts afresh.
-        expr = OPERATORS.indexOf(val) !== -1 && ok ? ANS : '';
+        expr = operators.indexOf(val) !== -1 && ok ? ANS : '';
         done = false;
       }
       if (expr.length + val.length > MAX_LEN) return;
@@ -321,7 +422,7 @@
       else if (k === 'Backspace') press('del', '');
       else if (k === 'Delete') press('clear', '');
       else if (k === 'Escape') { setOpen(false); toggle.focus(); }
-      else if (KEYBOARD[k]) press('in', KEYBOARD[k]);
+      else if (keyboard[k]) press('in', keyboard[k]);
       else return;
       e.preventDefault();
     });
@@ -339,14 +440,17 @@
       redock: function () { var d = dock(); applyMode(); return d; },
       // A new question: the calculator display clears and is selected again.
       clear: function () { select('calc'); press('clear', ''); },
-      // For tests: press keys by their labels ('7', '×', 'x²', '√', 'DEL', 'C', '=').
+      // For tests: press keys by their labels ('7', '×', 'x²', '√', 'DEL', 'C', '=', and on a scientific
+      // panel 'xʸ', 'ln', 'sin⁻¹', 'π', 'DEG' ...).
       press: function (label) {
-        var k = KEYS.filter(function (x) { return x[0] === label; })[0];
+        var k = KEYS.concat(sci ? SCI_KEYS : []).filter(function (x) { return x[0] === label; })[0];
         if (k) press(k[1], k[2]);
       },
+      mode: function () { return mode; },
       display: function () { return { expr: exprEl.textContent, result: resEl.textContent }; }
     };
   }
 
-  window.MaffsCalc = { evaluate: evaluate, format: format, calc: calc, mount: mount, KEYS: KEYS, DOCK: DOCK, ANSWER: ANSWER };
+  window.MaffsCalc = { evaluate: evaluate, format: format, calc: calc, mount: mount, KEYS: KEYS, SCI_KEYS: SCI_KEYS,
+    DOCK: DOCK, ANSWER: ANSWER };
 })();
