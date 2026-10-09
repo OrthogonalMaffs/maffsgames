@@ -155,6 +155,8 @@ standard-form-blitz proportion-blaster formula-unlocked graph-transformer
 simultaneous-solver tax-theft stat-attack quadratic-factoriser screening-room
 just-pythag-it-bruv wrong-on-the-internet higher-power prisoners-dilemma surd-simplifier coordinate-geometry-dash
 formula-forge scale-factor-scaling
+core-maths-paper2b core-maths-paper2c growth-and-decay normal-navigator log-laws test-the-claim
+characteristic-quest complex-converter
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 

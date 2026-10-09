@@ -945,6 +945,7 @@ def render_all(n):
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             page = browser.new_page()
+            page.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: each render answers at once
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
             page.goto(base + '/games/' + SLUG + '/?cb=verify', wait_until='load', timeout=20000)

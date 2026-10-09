@@ -593,6 +593,17 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Laws mode (the default): i = 0 picks the first option; i >= 1 the first that is not the key.
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#choices .choice')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const k = questions[qNum - 1].correct;",
+    "(bs.find(b => b.dataset.val !== k) || bs[0]).click();"
+  ]
+}
+-->
 <script src="../../schools/assets/session-length.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -979,10 +990,11 @@ function buildRefPanels() {
 
 // ── Game state ────────────────────────────────────────────────────────────
 const TOTAL = 12, BASE = 10, T_K = 0.3;
-let score = 0, streak = 0, qNum = 0, answered = false, _ggCorrectCount = 0;
+let score = 0, streak = 0, qNum = 0, _ggCorrectCount = 0;
 let timerInt = null, timerStart = null, questions = [];
 
 function startGame() {
+  MaffsLock.newSession();
   if (mode === 'solve') { startSolve(); return; }
   score = 0; streak = 0; qNum = 0; _ggCorrectCount = 0;
   const skipCob = document.getElementById('skipCob').checked;
@@ -1008,7 +1020,6 @@ function updateScorebar() {
 function nextQ() {
   if(window.MaffsNext) MaffsNext.clear(document.getElementById('explanation').parentNode);
   if (qNum >= TOTAL) { endGame(); return; }
-  answered = false;
 
   const q = questions[qNum++];
   document.getElementById('ruleLabel').textContent = q.rule;
@@ -1028,6 +1039,7 @@ function nextQ() {
     btn.addEventListener('click', () => guess(c, q, btn, div));
     div.appendChild(btn);
   });
+  MaffsLock.fresh(div);   // a new question: a double-click on Start or Next cannot pick an option
 
   clearInterval(timerInt);
   timerStart = Date.now();
@@ -1039,8 +1051,7 @@ function nextQ() {
 }
 
 function guess(val, q, btn, div) {
-  if (answered) return;
-  answered = true;
+  if (!MaffsLock.lock(div)) return;   // one answer per question (canon 7.6.0)
   clearInterval(timerInt);
 
   const correct = val === q.correct;
@@ -1072,11 +1083,12 @@ const multiplier = 1;
 
   updateScorebar();
   // canon 7.6: correct advances briskly, wrong waits for the student.
-  if(correct){ setTimeout(nextQ,2000); }
+  if(correct){ MaffsLock.timer(nextQ,2000); }
   else { MaffsNext.wrong({mount:document.getElementById('explanation').parentNode, onAdvance:nextQ}); }
 }
 
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame = MaffsLock.finishOnce(function () {
   window._ggAbandoned=false;
   document.getElementById('mainGame').classList.remove('visible');
   document.getElementById('gameOver').classList.add('visible');
@@ -1088,7 +1100,7 @@ function endGame() {
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('log-laws',LEVEL,score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('log-laws',LEVEL,score);}}
   saveBest(score);
   renderLB();
-}
+});
 
 // ── Persistence ───────────────────────────────────────────────────────────
 function getBest() { return parseInt(localStorage.getItem('ll_best') || '0'); }
@@ -1678,7 +1690,7 @@ waitForKaTeX(buildRefPanels);
   const $ = id => document.getElementById(id);
   const MT = s => MaffsText.html(s);
   let sStage = 1, sLen = 10, sQueue = [], sIdx = 0, sAnswered = 0, sScore = 0, sStreak = 0, sCorrect = 0;
-  let cur = null, curState = 0, wrongMoves = 0, busy = false, lawsSkip = false, unloadBound = false;
+  let cur = null, curState = 0, wrongMoves = 0, lawsSkip = false, unloadBound = false;
 
   function getSolveBest() { try { return parseInt(localStorage.getItem('ll_best_solve') || '0', 10); } catch (e) { return 0; } }
   function saveSolveBest(s) {
@@ -1788,6 +1800,7 @@ waitForKaTeX(buildRefPanels);
   function startSolve() {
     sQueue = buildQueue(sStage, sLen);
     sIdx = 0; sAnswered = 0; sScore = 0; sStreak = 0; sCorrect = 0;
+    MaffsLock.newSession();
     $('startScreen').style.display = 'none';
     ['mainGame', 'gameOver', 'solveOver'].forEach(id => $(id).classList.remove('visible'));
     $('solveGame').classList.add('visible');
@@ -1806,7 +1819,8 @@ waitForKaTeX(buildRefPanels);
   function nextSolveQ() {
     MaffsNext.clear($('solveBox'));
     if (sIdx >= sQueue.length) { endSolve(); return; }
-    cur = sQueue[sIdx++]; curState = 0; wrongMoves = 0; busy = false;
+    cur = sQueue[sIdx++]; curState = 0; wrongMoves = 0;
+    MaffsLock.fresh($('solveBox'));   // a new question: a second Enter or click cannot answer it
     const fam = famById[cur.fam];
     $('solveStageLabel').textContent = 'Stage ' + fam.stage + ' · ' + fam.name + (fam.stage !== sStage ? ' · review' : '');
     $('solveCount').textContent = 'Question ' + sIdx + ' of ' + sQueue.length;
@@ -1820,7 +1834,7 @@ waitForKaTeX(buildRefPanels);
   }
 
   function onMove(m, btn) {
-    if (!cur || busy) return;
+    if (!cur || MaffsLock.isLocked($('solveBox'))) return;
     const st = cur.states[curState];
     if (st.kind === 'final' || st.kind === 'choose') return;
     const to = (cur.go[curState] || {})[m];
@@ -1859,14 +1873,14 @@ waitForKaTeX(buildRefPanels);
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'move-btn choose-btn'; b.dataset.val = String(o.val);
       b.innerHTML = K(o.tex);
-      b.addEventListener('click', () => { if (!busy) finishQ(o.val === cur.states[curState].choose.keep, { choice: o.val }, b); });
+      b.addEventListener('click', () => { finishQ(o.val === cur.states[curState].choose.keep, { choice: o.val }, b); });
       g.appendChild(b);
     });
     $('solveChoose').hidden = false;
   }
 
   function checkAnswer() {
-    if (!cur || busy || $('solveAnswer').hidden) return;
+    if (!cur || MaffsLock.isLocked($('solveBox')) || $('solveAnswer').hidden) return;
     const raw = $('solveInput').value.trim().replace(/[−–]/g, '-').replace(/\s+/g, '');
     if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(raw)) { setMsg('ok', 'Type a number, like \\(2.73\\).', 'format'); return; }
     const v = Number(raw), target = r3(cur.answer);
@@ -1876,7 +1890,7 @@ waitForKaTeX(buildRefPanels);
   }
 
   function finishQ(correct, info, btn) {
-    busy = true;
+    if (!MaffsLock.lock($('solveBox'))) return;   // one mark per question (canon 7.6.0)
     sAnswered++;
     mfg('question_answered', { game_slug: 'log-laws', level: LEVEL, mode: 'solve', question_index: sIdx, correct: correct });
     $('solveInput').disabled = true; $('solveCheck').disabled = true;
@@ -1893,7 +1907,7 @@ waitForKaTeX(buildRefPanels);
       if (!choose) addLine(ansTex, '3 s.f.');
       setMsg('good', '✓ Correct! (+' + gain + ')' + (choose ? ' ' + choose.okMsg : ''), 'correct');
       updateBar();
-      setTimeout(nextSolveQ, 2000);
+      MaffsLock.timer(nextSolveQ, 2000);
       return;
     }
     sStreak = 0;
@@ -1909,7 +1923,8 @@ waitForKaTeX(buildRefPanels);
     MaffsNext.wrong({ mount: $('solveBox'), onAdvance: nextSolveQ });
   }
 
-  function endSolve() {
+  // Once per session (MaffsLock.finishOnce).
+  const endSolve = MaffsLock.finishOnce(function () {
     window._ggAbandoned = false;
     cur = null;
     $('solveGame').classList.remove('visible');
@@ -1930,7 +1945,7 @@ waitForKaTeX(buildRefPanels);
     updateBar();
     renderSolveLB();
     $('solveNextStage').hidden = sStage >= FAMILIES.length;
-  }
+  });
 
   // ── Wiring ─────────────────────────────────────────────────────────────
   document.querySelectorAll('#modePick .mode-btn').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
@@ -1950,7 +1965,7 @@ waitForKaTeX(buildRefPanels);
     menu: showMenu,
     // Read-only view of the question in play, for scripted checks.
     state: () => ({ item: cur ? cur.id : null, state: curState, stage: sStage, length: sLen,
-      index: sIdx, total: sQueue.length, busy: busy }),
+      index: sIdx, total: sQueue.length, busy: MaffsLock.isLocked($('solveBox')) }),
   };
 })();
 </script>
