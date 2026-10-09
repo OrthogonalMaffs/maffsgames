@@ -51,6 +51,7 @@
   "Linear Equation Solver (every move's class re-derived with SymPy, every option clicked in Chromium)": "14",
   "Log Laws Solve (layers C + D, SymPy)": "14",
   "Maths Court (independent recomputation + rendered page)": "10",
+  "Matrix Crunch (one answer per question, an option or the singular flag: Enter and Tab+Enter never mark again; both levels; Chromium)": "9",
   "Moments Master (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "18",
   "Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)": "14",
   "Normal Navigator (independent recomputation + rendered labels)": "16",
