@@ -438,6 +438,26 @@ INIT = r"""
       /^(play again|restart|try again|new game|start again)/.test((e.textContent || '').trim().toLowerCase()));
     return el ? window.__lockRect(el) : null;
   };
+  // What a second click at (x, y) would land on (contract PLAY-AGAIN-SCREEN): the clickable control now under the
+  // pointer, and whether a MaffsLock fresh window covers it (the screen change went through MaffsLock.screen()).
+  window.__lockUnder = function (x, y) {
+    const el = document.elementFromPoint(x, y);
+    const c = el && el.closest('a[href], button, [role="button"], input, select, [onclick], [tabindex]');
+    if (!c || !visible(c)) return { clickable: false };
+    return { clickable: true, covered: !!(window.MaffsLock && MaffsLock.isFresh(c)),
+             desc: c.tagName.toLowerCase() + ' "' + (c.textContent || c.value || '').trim().replace(/\s+/g, ' ').slice(0, 30) + '"' };
+  };
+  // The screen a click revealed must be fresh, whatever the layout: every visible clickable control that was not
+  // visible before the click must sit in an open fresh window. __lockMarkShown() records what is shown now.
+  const CLICKABLE = 'a[href], button, [role="button"], input, select, [onclick]';
+  window.__lockMarkShown = function () {
+    window.__lockShown = new Set([...document.querySelectorAll(CLICKABLE)].filter(visible));
+  };
+  window.__lockNewUncovered = function () {
+    return [...document.querySelectorAll(CLICKABLE)].filter(e => visible(e) && !window.__lockShown.has(e) &&
+      !(window.MaffsLock && MaffsLock.isFresh(e)))
+      .map(c => c.tagName.toLowerCase() + ' "' + (c.textContent || c.value || '').trim().replace(/\s+/g, ' ').slice(0, 30) + '"');
+  };
   // Something to do: an enabled option of the probed group, a ready continue control, or the end.
   window.__lockActionable = function () {
     const p = window.__mfgProbe();
@@ -748,8 +768,27 @@ async def play(browser, base, slug, level, page_html):
         faults.append('finish: submitScore %d times (at most once)' % end['submits'])
     r = await d.ev('() => __lockAgainRect()')
     if r:
-        await page.mouse.dblclick(r['x'], r['y'])
+        # A double-click on Play again (contract PLAY-AGAIN-SCREEN): its second click must land in a fresh window
+        # on the screen the first one showed, never on that screen's controls (the /leaderboards/ link took
+        # students off the page). The fresh window is stretched for the probe, so the verdict never depends on
+        # how fast the runner is (canon 7.6.0); the two clicks are made apart, with the probe between them.
+        url0 = page.url
+        fresh0 = await d.ev('() => { const f = MaffsLock.FRESH_MS; MaffsLock.FRESH_MS = 5000; return f; }')
+        await d.ev('() => __lockMarkShown()')
+        await page.mouse.click(r['x'], r['y'])
+        under = await d.ev('() => __lockUnder(%d, %d)' % (r['x'], r['y']))
+        bare = await d.ev('() => __lockNewUncovered()')
+        await page.mouse.click(r['x'], r['y'])
+        await d.ev('() => { MaffsLock.FRESH_MS = %s; }' % fresh0)
         await page.wait_for_timeout(600)
+        if page.url != url0:
+            faults.append('dblclick on Play again: the second click left the game for %s' % page.url)
+        elif under.get('clickable') and not under.get('covered'):
+            faults.append('dblclick on Play again: the screen it shows is not fresh (not MaffsLock.screen): '
+                          'the second click lands on %s' % under['desc'])
+        elif bare:
+            faults.append('Play again: the screen it shows is not fresh (not MaffsLock.screen): %d control(s) '
+                          'open to a second click, e.g. %s' % (len(bare), ', '.join(bare[:2])))
         again = await d.snap()
         if again['answered'] != end['answered']:
             faults.append('dblclick on Play again: its second click answered the first question')
@@ -898,6 +937,24 @@ def selftest(games):
     finally:
         MIGRATED.clear()
         MIGRATED.update(saved)
+    # The PLAY-AGAIN-SCREEN plant: angle-ace with its show() a bare screen change again (no MaffsLock.screen), as
+    # 24 games were before 9 Oct. Its Play again shows the menu, whose controls must then be caught uncovered.
+    pslug, pcall = 'angle-ace', ';MaffsLock.screen(document.getElementById(id))}'
+    phtml = open(os.path.join(ROOT, 'games', pslug, 'index.html'), encoding='utf-8').read()
+    if pcall not in phtml:
+        errs.append('play-again plant: %s show() no longer ends with %r' % (pslug, pcall))
+    else:
+        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8') as f:
+            f.write(phtml.replace(pcall, '}', 1))
+        try:
+            pres = asyncio.run(play_all([(pslug, dict(games).get(pslug))], f.name)).get(pslug, [])
+        finally:
+            os.unlink(f.name)
+        hit = [x for x in pres if 'is not fresh (not MaffsLock.screen)' in x]
+        if not hit:
+            errs.append('planted %s (bare show(), no MaffsLock.screen) passed the Play again check: %s' % (pslug, pres or 'clean'))
+        else:
+            print('  self-test: planted %s (a bare show(): no MaffsLock.screen): CAUGHT (%s)' % (pslug, hit[0][:110]))
     for e in errs:
         print('FAIL  self-test: ' + e)
     return errs

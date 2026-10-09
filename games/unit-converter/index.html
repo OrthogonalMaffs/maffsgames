@@ -124,7 +124,7 @@ const PER_CORRECT=100,MAX_Q=20;
 const LEVELS={gcse:'GCSE',alevel:'A-Level',level4:'Level 4'};
 const CALC_NOTE='Use a calculator.';
 function setLevel(l){level=l;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===l))}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 function showMenu(){show('menu');MaffsLock.screen(document.getElementById('menu'))}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 // One formatter for every number shown (t4-006; Jon's ruling, 9 Oct 2026): 1,000 or more gets thousands commas.

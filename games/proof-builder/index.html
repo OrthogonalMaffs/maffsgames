@@ -218,7 +218,7 @@ function rkStr(tex){const s=document.createElement('span');katex.render(tex,s,{t
 // a helper or a regex, so tier 4's bank extraction can decide the test per string.
 // Mixed prose and maths: maths inside \\( \\) (MaffsText); a string with TeX but no delimiters is whole maths.
 function M(str){if(MaffsText.hasMaths(str))return MaffsText.html(str);if(str.includes('\\')||str.includes('^')||str.includes('_')||str.includes('{')||str.includes('}'))return rkStr(str);return MaffsText.html(str)}
-function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 
 // ============================================================
 //  STATE

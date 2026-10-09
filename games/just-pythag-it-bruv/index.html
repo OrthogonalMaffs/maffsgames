@@ -955,6 +955,8 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   function show(id) {
     ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
     document.body.classList.toggle('playing', id !== 'menu');
+
+    MaffsLock.screen($(id));
   }
   // The clock counts only time spent on a question, not time reading feedback.
   function elapsed() { return askedMs + (state === 'asking' || state === 'tap' ? Date.now() - askStart : 0); }

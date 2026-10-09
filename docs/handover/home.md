@@ -59,6 +59,27 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-09 (home): PLAY-AGAIN-SCREEN (item 4)
+
+- **Every listed game's screen change goes through `MaffsLock.screen()`**: 33 pages' `show(id)` / `showScreen(id)`
+  now end with `MaffsLock.screen(<the screen shown>)` (27 shared one exact one-liner; the rest small variants).
+  So Play Again, back to menu, mode select and results all open the 300 ms fresh window on the new screen; a
+  double-click's second click lands on nothing. characteristic-quest is cloud-claimed (`cloud-remaining:`): left
+  for a later batch. constructions-lab (a compass tool, not on the lock) also loads answer-lock.js now, for
+  `screen()`; it is not played by the lock check (it records no question_answered).
+- **Check (`check-answer-lock.py`, every migrated game, its existing Play again double-click):** before the first
+  click it records the visible controls; after it, every newly visible control must sit in an open fresh window,
+  whatever the layout, and the control under the pointer too; the second click must leave the URL unchanged. The
+  fresh window is stretched to 5 s for the probe, so no verdict depends on runner speed (canon 7.6.0, DET).
+  **Against main's pages 24 of the 32 fail** (angle-ace, bearing-blitz, binomial-blaster, coordinate-geometry-dash,
+  curling-friction, dimension-checker, eigenvector-engine, force-resolver, formula-forge, formula-unlocked,
+  graph-transformer, higher-power, just-pythag-it-bruv, linear-equation-solver, matrix-crunch, moments-master,
+  normal-navigator, proof-builder, proportion-blaster, scale-factor-scaling, sequence-solver, standard-form-blitz,
+  surd-simplifier, trig-identity-duel; typically the menu's level buttons and its "Global leaderboard" link open
+  to the second click); the other 8 go from Play again straight into a new game whose question is already fresh.
+  With the change all 32 pass. Self-test plant: angle-ace with a bare `show()`: caught.
+- **Canon §7.6.0:** "every screen change goes through MaffsLock.screen()".
+
 ## 2026-10-09 (home): OVERLAY-KEYS (19:00 addendum; for the cloud lane: re-check item 12)
 
 - **The overlay is shared:** `askInitials()` in `schools/assets/firebase-leaderboard.js`, loaded by all 97 games; no

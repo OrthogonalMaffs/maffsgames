@@ -192,7 +192,7 @@ const canvas=document.getElementById('graphCanvas');
 const ctx=canvas.getContext('2d');
 
 function setLevel(l){level=l;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===l))}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 function showMenu(){show('menu')}
 
 // ============================================================
