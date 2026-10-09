@@ -1033,6 +1033,15 @@ not one distinguished a right answer from a wrong one. No single number fits eve
 too short and a slower reader never learns why they were wrong, too long and a quicker one is held
 against their will. The fix is to stop picking a number.
 
+**Rulings on feedback and replay (Jon, 8-9 Oct 2026; contract RULINGS-9OCT):**
+
+- **Feedback on a wrong answer is shown, not skipped** (Jon, 8 Oct). A pause that holds the feedback on
+  screen before the student can move on is allowed, and is the game's own: wrong-on-the-internet keeps its
+  3 s pause before Try again (9 Oct). Do not shorten or remove it to speed play up.
+- **Play Again may replay the mode just played, in the page** (complex-converter, 9 Oct), provided the
+  game's mode menu is still one tap away from the end screen (complex-converter's end screen has Menu
+  beside Play Again). A game whose end screen offers only Play Again adds a "Choose mode" control there.
+
 ### 7.6.0 Answer once — MaffsLock (7 Oct 2026, contract F1)
 
 **Every game marks through MaffsLock; no local answered flags.** `schools/assets/answer-lock.js`
