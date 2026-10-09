@@ -173,7 +173,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: write
-      actions: read
+      actions: read                # download-artifact from this run
     concurrency:
       group: ci-timings
       cancel-in-progress: false
@@ -184,16 +184,21 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: The groups' timing files
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ci-timing-*
+          path: ${{ runner.temp }}/ci-timings
       - name: Record, repack and commit if changed
         env:
-          GH_TOKEN: ${{ github.token }}
           RUN_ID: ${{ github.run_id }}
+          TIMING_DIR: ${{ runner.temp }}/ci-timings
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for attempt in 1 2 3; do
             git fetch -q origin main && git reset -q --hard origin/main
-            python scripts/ci-groups.py --record-timings "$RUN_ID"
+            python scripts/ci-groups.py --record-timings "$RUN_ID" --from-dir "$TIMING_DIR"
             python scripts/ci-groups.py --write-pack
             python scripts/ci-groups.py --check | tee -a "$GITHUB_STEP_SUMMARY" || true
             if git diff --quiet -- scripts/ci-timings.json scripts/ci-pack.json; then
@@ -499,6 +504,7 @@ jobs:
           node --version
           mmss() { printf '%dm%02ds' $(($1 / 60)) $(($1 % 60)); }
           budget=$((TIMEOUT_MIN * 60 * 3 / 4)); over=""
+          timing="$RUNNER_TEMP/ci-timing/timing.txt"; mkdir -p "$(dirname "$timing")"; echo "$GROUP" > "$timing"
           { echo "### $GROUP"; echo; echo "Time budget: $(mmss $budget) (75% of ${TIMEOUT_MIN}m)"; echo
             echo "| Check | Result | Duration | Group elapsed |"; echo "|---|---|---|---|"; } >> "$GITHUB_STEP_SUMMARY"
           failed=()
@@ -509,7 +515,7 @@ jobs:
             if bash -c "$cmd"; then status=ok; else status=FAILED; failed+=("$label"); fi
             echo "::endgroup::"
             took=$((SECONDS - start)); elapsed=$(( $(date +%s) - JOB_T0 ))
-            echo "$status  $label  (${took}s; group at $(mmss $elapsed) of ${TIMEOUT_MIN}m)"
+            echo "$status  $label  (${took}s; group at $(mmss $elapsed) of ${TIMEOUT_MIN}m)" | tee -a "$timing"
             echo "| $label | $status | ${took}s | $(mmss $elapsed) |" >> "$GITHUB_STEP_SUMMARY"
             if [ -z "$over" ] && [ $elapsed -gt $budget ]; then
               over="$GROUP at $(mmss $elapsed) of ${TIMEOUT_MIN}m (budget $(mmss $budget), 75%): split it"
@@ -517,7 +523,7 @@ jobs:
             fi
           done <<< "$CHECKS"
           elapsed=$(( $(date +%s) - JOB_T0 ))
-          echo; echo "group total: $(mmss $elapsed) of ${TIMEOUT_MIN}m (budget $(mmss $budget))"
+          echo; echo "group total: $(mmss $elapsed) of ${TIMEOUT_MIN}m (budget $(mmss $budget))" | tee -a "$timing"
           { echo; echo "Group total: $(mmss $elapsed) of ${TIMEOUT_MIN}m"; } >> "$GITHUB_STEP_SUMMARY"
           if [ ${#failed[@]} -gt 0 ]; then
             printf '::error::FAILED: %s\n' "${failed[@]}"
@@ -527,6 +533,17 @@ jobs:
             echo "**Over the time budget:** $over" >> "$GITHUB_STEP_SUMMARY"
           fi
           [ ${#failed[@]} -eq 0 ] && [ -z "$over" ]
+
+      # The group's timing lines, for the main-only "CI timings and pack" job (ci-groups.py --from-dir): the
+      # job-log API failed for the workflow's own token on every fetch (9 Oct), so the timings travel as artifacts.
+      - name: Save this group's timings
+        if: always() && steps.lines.outputs.any == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-timing-${{ github.job }}-${{ strategy.job-index }}
+          path: ${{ runner.temp }}/ci-timing/timing.txt
+          retention-days: 3
+          if-no-files-found: ignore
 
   # The "Content verifiers" groups (contract V, 7 Oct 2026). The matrix is built by the plan job from each
   # verifier's own "# ci-line:" headers (scripts/ci-groups.py; group names and timeouts in its GROUPS), so a new
