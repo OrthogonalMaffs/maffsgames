@@ -251,7 +251,7 @@ const BASE=100,T_K=0.15,SINGULAR_BONUS=25,MAX_QUESTIONS=20;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function rkStr(tex){const span=document.createElement('span');katex.render(tex,span,{throwOnError:false,displayMode:false});return span.innerHTML}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 
 document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
 const pa=new URLSearchParams(location.search);if(pa.get('level')&&QUESTIONS[pa.get('level')]){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}

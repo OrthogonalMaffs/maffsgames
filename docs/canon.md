@@ -1056,6 +1056,12 @@ stale timers that fired after the student moved on (two games finished and submi
 - **`MaffsLock.fresh(container)` when a question or screen renders:** all input on it is ignored for
   `FRESH_MS` (300ms), so the second click of a double-click, a second Enter or a double-tap lands on
   nothing. `MaffsLock.screen(container)` is a screen change: timers cleared, then fresh.
+- **Every screen change goes through `MaffsLock.screen()`** (contract PLAY-AGAIN-SCREEN, 9 Oct 2026): a
+  game's `show(id)` ends with `MaffsLock.screen(<the screen shown>)`, so Play Again, back to menu, mode select
+  and results all open the fresh window on the new screen. A bare screen change put the menu under the
+  pointer at once, and a double-click's second click took the student to `/leaderboards/`.
+  `check-answer-lock.py` double-clicks Play Again in every migrated game: the second click must leave the
+  page where it is and land on nothing the new screen has not covered.
 - **Every per-question and per-screen timer is `MaffsLock.timer(fn, ms)`.** `MaffsNext`'s advance and
   `screen()` clear them all, so a stale timer can never fire.
 - **The end-of-game handler is `MaffsLock.finishOnce(fn)`**: `game_completed` and `submitScore` run at

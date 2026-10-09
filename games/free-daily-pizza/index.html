@@ -923,6 +923,8 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   function show(id) {
     ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
     document.body.classList.toggle('playing', id !== 'menu');
+
+    MaffsLock.screen($(id));
   }
   function clock() {
     var s = Math.floor((Date.now() - t0) / 1000);

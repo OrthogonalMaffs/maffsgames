@@ -139,7 +139,7 @@ const QS=[
 let pool=[],qIdx=0,score=0,correctN=0,total=0,currentQ=null,qStart=0;
 const BASE=100,T_K=0.15,MAX_Q=15;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 function showMenu(){show('menu')}
 function startGame(){MaffsLock.newSession();pool=shuffle([...QS]).slice(0,MAX_Q);qIdx=0;score=0;correctN=0;total=0;document.getElementById('score').textContent='0';document.getElementById('correctCount').textContent='0';show('game');nextQ();mfg('game_started',{game_slug:'eigenvector-engine',level:'further'});window._ggAbandoned=true;if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'eigenvector-engine',level:'further',questions_answered:total})})}}
 function nextQ(){

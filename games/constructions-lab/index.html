@@ -98,6 +98,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -473,7 +474,7 @@ function backToMenu(){show('menu')}
 // ============================================================
 function showTutorial(){document.getElementById('tutorialOverlay').classList.add('show')}
 function hideTutorial(){document.getElementById('tutorialOverlay').classList.remove('show')}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 
 
 (function(){var K='mfg_accessible',b=document.getElementById('a11yToggle');if(!b)return;function a(o){document.body.classList.toggle('accessible',o);b.classList.toggle('active',o);b.setAttribute('aria-pressed',String(o))}a(localStorage.getItem(K)==='true');b.addEventListener('click',function(){var o=!document.body.classList.contains('accessible');localStorage.setItem(K,String(o));a(o)})})();

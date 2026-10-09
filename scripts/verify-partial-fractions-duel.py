@@ -234,6 +234,9 @@ def check_play_again(fails, page, url):
         page.goto(url, wait_until='load', timeout=20000)
         page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
         r = page.evaluate(TO_RESULTS_JS)
+        # The results screen opens its own fresh window (every screen change does, canon 7.6.0): the student's
+        # double click comes after it, as here; the window Play Again opens on the menu is the one under test.
+        page.wait_for_function('!(window.MaffsLock && MaffsLock.isFresh())', timeout=5000)
         if how.startswith('a double'):
             page.mouse.dblclick(r['x'], r['y'])
         else:
@@ -298,8 +301,8 @@ PLANTS = [
     ('item 38 ', 't5-005: a valid equivalent form as a wrong option',
      "'\\\\dfrac{A}{x-1}+\\\\dfrac{B}{x-1}+\\\\dfrac{C}{x+2}'", "'\\\\dfrac{Ax+B}{(x-1)^2}+\\\\dfrac{C}{x+2}'"),
     ('Play Again: ', 't5-007: Play Again without MaffsLock.screen',
-     "function showMenu(){show('menu');MaffsLock.screen(document.getElementById('menu'))}",
-     "function showMenu(){show('menu')}"),
+     "document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}",
+     "document.getElementById(id).classList.add('active')}"),
 ]
 
 
