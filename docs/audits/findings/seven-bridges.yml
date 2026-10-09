@@ -20,7 +20,13 @@ findings:
     making it unsolvable
   evidence: 'No clearTimeout in the file. ks3_16 -> ks3_11 opens at 3/4 edges, Undo/Reset disabled. Simulated: KS3
     147/380, GCSE 67/110, A-Level 47/132 next puzzles unsolvable.'
-  status: open
+  status: fixed
+  pr: 219
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 7. Already fixed on main by F1 batch 9 (#198): the animation runs
+    on MaffsLock.timer and the Next control''s advance cancels those timers. Measured in Chromium on main, 9 Oct: Next
+    pressed mid-solution (3 vertices traced), the next puzzle opened with nothing traced and stayed so for 4 s, every
+    level. scripts/verify-seven-bridges.py keeps it: no redraw without input after Next; a raw setTimeout planted is
+    caught.'
 - id: seven-bridges-t4-002
   severity: HIGH
   jc: false
@@ -30,7 +36,15 @@ findings:
   summary: E is the midpoint of AC and BD, so edges A-C and B-D are drawn over A-E-C and B-E-D
   evidence: E (300,200), A (150,100), C (450,300), B (450,100), D (150,300). Screen shows 4 odd vertices; data all
     degree 4, circuit exists; Impossible scores 0.
-  status: open
+  status: fixed
+  pr: 219
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 7: al_15''s E moved from (300,200), the midpoint of AC and BD, to
+    (300,150), 42 px off both diagonals; edges, degrees and the answer unchanged. scripts/verify-seven-bridges.py
+    measures every edge as drawn in every puzzle. Jon''s ruling (9 Oct 2026, 18:03): the same fault in al_10 (A-C by
+    B, B-D by C), al_18 (E-G by F) and al_21 (K-O by B, B-W by O), edges 19.8-21.1 px from a vertex centre, fixed in
+    this PR: each layout mirrors its own other half (al_10 B and C, al_21 B and O to y 40; al_18 F to y 420), clearances
+    29.4, 50.0 and 31.4 px. The verifier''s clearance is 28 px (the current vertex''s 24 px disc and 2 px of stroke, and
+    half a 4 px edge), with no exemptions; the nearest other edge on main was 28.1 px (gcse_10).'
 - id: seven-bridges-t4-003
   severity: MEDIUM
   jc: true
