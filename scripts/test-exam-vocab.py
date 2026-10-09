@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Shared exam vocabulary tooltips (schools/assets/exam-vocab.js: idempotent on every Factor Theorem string, no markup in an attribute, the old function planted and caught) |
+# ci-line: Shared exam vocabulary tooltips (schools/assets/exam-vocab.js: idempotent on every Factor Theorem string, no markup in an attribute, the old function planted and caught) |
 """Test for the shared exam vocabulary tooltips, schools/assets/exam-vocab.js (factor-theorem-t5-008).
 
     python scripts/test-exam-vocab.py                  # the repo's helper, then the planted old one

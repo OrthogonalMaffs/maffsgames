@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | Growth and Decay (keys recomputed from each printed model) |
+# ci-line: Growth and Decay (keys recomputed from each printed model) |
 """Independent verification of growth-and-decay's keys (todo §1.36; audit §1.2 items 1-4).
 
 Each scenario prints its model (modelLatex). That equation, not the game's graphFn, is

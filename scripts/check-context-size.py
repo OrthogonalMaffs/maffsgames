@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | Context size (CLAUDE.md and both handovers at most 20 KB; contract CTX) | --selftest && --check
+# ci-line: Context size (CLAUDE.md and both handovers at most 20 KB; contract CTX) | --selftest && --check
 """What every Claude Code session loads before it starts work stays small (contract CTX, 8 Oct 2026).
 
 CLAUDE.md loads into every session in both lanes, and each lane reads its handover first. On 8 Oct 2026 they

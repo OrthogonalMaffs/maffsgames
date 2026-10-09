@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B4 | Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium) |
+# ci-line: Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium) |
 """Component Crusher: every key recomputed from what the student is shown, every diagram measured, every answer marked.
 
 The game (45 scenarios: gcse, alevel, level4, 15 each) shows a vector diagram and asks typed or multiple-choice

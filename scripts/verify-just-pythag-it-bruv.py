@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# ci-line: C1 | Just Pythag It, Bruv, part 1 (fit at 320px; a quarter of the planted layout faults) | --part-selftest && --part 1
-# ci-line: C2 | Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a quarter of the planted layout faults) | --part-selftest && --part 2
-# ci-line: C3 | Just Pythag It, Bruv, part 3 (fit at 375px and the three desktop sizes; a quarter of the planted layout faults) | --part-selftest && --part 3
-# ci-line: C4 | Just Pythag It, Bruv, part 4 (every key and triangle recomputed over 300 sessions, WebKit, play-through, a quarter of the layout faults, fault-injection self-test) | --part-selftest && --part 4
+# ci-line: Just Pythag It, Bruv, part 1 (fit at 320px; a quarter of the planted layout faults) | --part-selftest && --part 1
+# ci-line: Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a quarter of the planted layout faults) | --part-selftest && --part 2
+# ci-line: Just Pythag It, Bruv, part 3 (fit at 375px and the three desktop sizes; a quarter of the planted layout faults) | --part-selftest && --part 3
+# ci-line: Just Pythag It, Bruv, part 4 (every key and triangle recomputed over 300 sessions, WebKit, play-through, a quarter of the layout faults, fault-injection self-test) | --part-selftest && --part 4
 """Independent verification for Just Pythag It, Bruv (games/just-pythag-it-bruv/), built 4 Oct 2026.
 
 WHY THIS READS THE LIVE PAGE

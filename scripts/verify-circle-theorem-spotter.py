@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B4 | Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure) |
+# ci-line: Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure) |
 """Independent verification of every calculation question in circle-theorem-spotter (todo §1.3).
 
 Until 3 Oct 2026 two keys were wrong and nothing caught them: Q48 ("centre = 2x, circumference

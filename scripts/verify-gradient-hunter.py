@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; the typed gradient marked, clicking scores nothing; answer once and Next once, played in Chromium) |
+# ci-line: Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; the typed gradient marked, clicking scores nothing; answer once and Next once, played in Chromium) |
 """Gradient Hunter: every gradient a student is shown or told, against the points the game plots; answer once.
 
 The game draws each item's points as a cardinal spline (drawSmoothCurve, tension 0.3) and asks either for the gradient

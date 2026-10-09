@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Shared answer lock (schools/assets/answer-lock.js, MaffsLock: every behaviour in Chromium, four planted faults) |
+# ci-line: Shared answer lock (schools/assets/answer-lock.js, MaffsLock: every behaviour in Chromium, four planted faults) |
 # ci-deps: schools/assets/answer-lock.js schools/assets/next-control.js
 """Browser test for the shared answer lock, schools/assets/answer-lock.js (MaffsLock, canon §7.6).
 

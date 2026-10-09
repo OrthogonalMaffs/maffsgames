@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium) |
+# ci-line: Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium) |
 """Formula Unlocked: every rearrangement checked with SymPy; every option clicked in Chromium.
 
 The game (49 questions: Q_GCSE 29, Q_ALEVEL 6, Q_LEVEL4 14) shows a formula and asks to make one variable the

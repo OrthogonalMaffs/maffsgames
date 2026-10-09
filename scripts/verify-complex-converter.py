@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium) |
+# ci-line: Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium) |
 """Complex Converter: every Form Roulette key is the given number, in the one form the question asks for.
 
 Form Roulette (55 items, Level 4 and Further Maths share one bank) shows a complex number in one form and asks

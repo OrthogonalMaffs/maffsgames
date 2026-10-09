@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B4 | Integration Duel (every key and option checked with SymPy, explanations checked, every option marked in Chromium) |
+# ci-line: Integration Duel (every key and option checked with SymPy, explanations checked, every option marked in Chromium) |
 """Integration Duel: every key and option checked with SymPy; every explanation's answer checked; every option
 marked in Chromium.
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B4 | Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates) |
+# ci-line: Core Maths Paper 1 tax, NI and student loan (recomputed with uk_rates) |
 """Independent verification of core-maths-paper1's income tax, NI and student loan questions (canon §7.1.4).
 
 Until 3 Oct 2026 two of these questions charged employee NI at 12%, the rate before January

@@ -74,6 +74,10 @@ STOP IF: the workflow can't take a variable number of content groups
 without a change GitHub's matrix doesn't support (describe it); the
 total CI time would rise by more than 20% (report the figures).
 
+RULING (Jon, 9 Oct 2026, 17:59): the 70% and 80% are of each group's
+BUDGET (75% of its timeout), not of the job timeout. The build on
+claude/ci-balance stands as built.
+
 ======================================================================
 ITEM 7
 

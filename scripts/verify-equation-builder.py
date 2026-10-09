@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# ci-line: D1 | Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test) | --part-selftest && --part 1/2 && --selftest
-# ci-line: D2 | Equation Builder, part 2 (the other half of every question's tile arrangements, classified by SymPy) | --part-selftest && --part 2/2
+# ci-line: Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test) | --part-selftest && --part 1/2 && --selftest
+# ci-line: Equation Builder, part 2 (the other half of every question's tile arrangements, classified by SymPy) | --part-selftest && --part 2/2
 """Equation Builder: which tile arrangements are correct? Decided here, once, by SymPy (SR-13; audit 2026-10-04 F1-F8).
 
 The game marks a built answer correct only if its token sequence is in that question's ACCEPTED list. This

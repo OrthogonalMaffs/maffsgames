@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit) |
+# ci-line: Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit) |
 """Correlation or Coincidence: the bank, the graphs, the labels before the answer, and the phone fit.
 
     python scripts/verify-correlation-or-coincidence.py

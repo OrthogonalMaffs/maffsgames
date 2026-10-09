@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | SUVAT Selector (every key from the data both ways, at its stated precision; marking through MaffsAnswer in Chromium) |
+# ci-line: SUVAT Selector (every key from the data both ways, at its stated precision; marking through MaffsAnswer in Chromium) |
 """SUVAT Selector: every typed key recomputed from the data, at the precision the step states, marked by MaffsAnswer.
 
 The tranche 5 audit (6 Oct 2026) found a sprinter with no real solution keyed u = 4 (level4[7]), a signed v_y keyed

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium) |
+# ci-line: Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium) |
 """Given That: every diagram checked against its own totals, every key recomputed, every answer marked in Chromium.
 
 The game (90 questions, two phases each: gcse 25 multiple choice, alevel 25, core 20, level4 20 typed) shows a

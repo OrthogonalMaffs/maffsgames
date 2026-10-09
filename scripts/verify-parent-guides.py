@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B4 | Parent guides (every stated figure recomputed from the page) |
+# ci-line: Parent guides (every stated figure recomputed from the page) |
 """Recompute the numeric claims in the /parents/ guides, reading every value FROM THE PAGES.
 
 WHY IT READS THE PAGES

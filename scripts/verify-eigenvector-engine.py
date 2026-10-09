@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Eigenvector Engine (every key an eigenvector, no option a multiple of one or of another; working recomputed; every option clicked) |
+# ci-line: Eigenvector Engine (every key an eigenvector, no option a multiple of one or of another; working recomputed; every option clicked) |
 """Eigenvector Engine: every key recomputed, every option checked against SR-17, every worked solution recomputed.
 
 The tranche 6 audit (6 Oct 2026) found QS[16] (:122) with a lambda that is not an eigenvalue of its matrix and a

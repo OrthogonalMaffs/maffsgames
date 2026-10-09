@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Better Value (every keyed figure and explanation figure recomputed, one true card in four, every card marked in Chromium) |
+# ci-line: Better Value (every keyed figure and explanation figure recomputed, one true card in four, every card marked in Chromium) |
 """Better Value: every figure in every keyed conclusion and explanation recomputed; every card marked in Chromium.
 
 The game (70 items: gcse 20, core 50) shows two deals and four conclusion cards, one keyed correct, and on a

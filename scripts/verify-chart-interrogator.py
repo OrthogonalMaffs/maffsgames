@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | Chart Interrogator (independent recomputation of every key and tolerance) |
+# ci-line: Chart Interrogator (independent recomputation of every key and tolerance) |
 """Verify Chart Interrogator's marking: box plots, stem and leaf, and the histogram modal-class item.
 
 Reads the scenario data off the live page under Playwright, recomputes every key independently

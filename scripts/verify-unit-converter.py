@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B4 | Unit Converter (every key recomputed from its prompt, exact pi; precision stated; displayed numbers comma-grouped, marking unchanged; answer once; level key; score by correct answers only; calculator on a phone) |  && --selftest
+# ci-line: Unit Converter (every key recomputed from its prompt, exact pi; precision stated; displayed numbers comma-grouped, marking unchanged; answer once; level key; score by correct answers only; calculator on a phone) |  && --selftest
 """Independent verification of Unit Converter (contract UC-FIX and its amendment, 8 Oct 2026; tranche 4 and resit audits,
 docs/audits/findings/unit-converter.yml).
 

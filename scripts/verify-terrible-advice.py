@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E2 | Terrible Advice (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium) |
+# ci-line: Terrible Advice (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium) |
 # ci-deps: scripts/verify-spot-the-muppet.py
 """Terrible Advice: the maths every item shows, recomputed; one mark per question; Next once.
 

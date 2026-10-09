@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Word Problem Decoder (one category scheme, SR-18: every phrase marked right under exactly the topics that fit it, played in Chromium; answer once) |
+# ci-line: Word Problem Decoder (one category scheme, SR-18: every phrase marked right under exactly the topics that fit it, played in Chromium; answer once) |
 """Word Problem Decoder: each highlighted phrase is right under exactly the topics that fit it; answer once.
 
 A student reads a word problem with one phrase highlighted (or two or three, one at a time) and picks the maths topic

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | Stat Attack (keys recomputed from each question's table) |
+# ci-line: Stat Attack (keys recomputed from each question's table) |
 """Independent verification of stat-attack's keys (todo §1.36; audit §1.2 items 6-8, 22).
 
 Every key in every scenario is recomputed from the scenario's own classes and

@@ -47,6 +47,19 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-09 (home): CI-BALANCE (item 3)
+
+- **Content groups are packed from measured times** (`scripts/ci-groups.py`, `scripts/ci-pack.json`): a ci-line
+  names only its tier (`label | args`, or `lock | label | args`); `pack()` fills content groups to 70% of each
+  group's BUDGET (75% of its timeout) and keeps lines where they are unless they must move. `--check` fails in the
+  plan job past 80% of the budget. Content jobs 6 min, lock jobs 10 min. Old group ids still parse (DOCS-9OCT drops
+  that once the cloud lane's open branches merge).
+- **Jon's ruling (17:59): 70% / 80% are of the BUDGET, not of the job timeout.** Recorded in the contract.
+- **Before / after:** 18 groups, 3900 job-s, worst group 85% -> 21 groups, ~4010 job-s (+2.8%), content max 189 s.
+- **New main-only job "CI timings and pack"** records timings and repacks.
+- **Lock parts are not packed:** add a part as the roll-out grows. L1 reached 6m40s on #218 (graph-sketcher on the
+  lock, after higher-power in #217), so #218 adds part 6.
+
 ## 2026-10-09 (home): RULINGS-9OCT (item 1, #215)
 
 - **unit-converter into MIGRATED** (`check-answer-lock.py`): seeds 1, 2 and 3 pass. NOT_YET: glorious-gantt,

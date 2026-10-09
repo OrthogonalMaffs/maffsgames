@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | 52-dle (every puzzle's number recomputed from its clue and hints; every guess marked exactly in Chromium) |
+# ci-line: 52-dle (every puzzle's number recomputed from its clue and hints; every guess marked exactly in Chromium) |
 """52-dle: a guess wins only when it IS the day's number, and every puzzle's number is what its words say.
 
 The game shows one of 20 puzzles a day (a clue, three hints, a category) and gives six guesses at a whole number.

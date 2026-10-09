@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Force Resolver (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium) |
+# ci-line: Force Resolver (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium) |
 """Force Resolver: every key recomputed with SymPy, options distinct in value, every option clicked in Chromium.
 
 The tranche 5 audit (6 Oct 2026) found keys that their own data contradicts (level4 :179 keyed 1.79 m/s^2 for 1.40;

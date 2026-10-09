@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Sequence Solver (every key recomputed from its own terms or formula, exactly; options distinct in value; every option marked in Chromium) |
+# ci-line: Sequence Solver (every key recomputed from its own terms or formula, exactly; options distinct in value; every option marked in Chromium) |
 """Sequence Solver: every key recomputed from the sequence or formula in its own question; every option clicked.
 
 The game (154 multiple-choice items: ks3 50, gcse 50, alevel 54) covers next terms, common differences and
