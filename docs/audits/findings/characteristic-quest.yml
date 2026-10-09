@@ -18,7 +18,13 @@ findings:
     answer right
   evidence: 'Chromium, real mouse: key click then Enter x3 -> score 96->382, correctN 1->4, 4 question_answered
     events; wrong click, Tab x2, Enter -> score 0->96'
-  status: open
+  status: fixed
+  pr: 228
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 13: already fixed on main by F1 batch 10 (#199, MaffsLock).
+    Measured in Chromium, 9 Oct, the finding''s own reproduction: on main the key clicked then Enter x3 scores once (0
+    -> 93 -> 93, one question_answered), and a wrong answer then Tab+Enter on the key leaves the score at 0; on the
+    page before the batch, 0 -> 93 -> 372 (four question_answered) and 0 -> 93. scripts/check-answer-lock.py (in CI)
+    passes main and fails that page (a question skipped unseen; no MaffsLock.lock).'
 - id: characteristic-quest-t6-002
   severity: MEDIUM
   jc: false
