@@ -10,16 +10,23 @@ on-screen calculator, schools/assets/calculator.js (MaffsCalc), because many res
 own a scientific calculator. The roster is not served, so a page cannot read it at run time: each
 game includes the script itself, and this check keeps the three in step, either way.
 
+A `scientific` game (contract SCI-CALC, 9 Oct 2026) needs the scientific keys (xʸ, ln, log, eˣ, trig,
+π): it loads the same two scripts, shows "Scientific calculator required" and mounts the calculator with
+{keys: 'scientific'}.
+
 Fails on:
   - a `required` game whose page does not include calculator.js, or does not show
     <span class="calc-badge" data-calc="required">Calculator required</span>;
+  - a `scientific` game whose page does not include calculator.js, does not show
+    <span class="calc-badge" data-calc="scientific">Scientific calculator required</span>, or never mounts
+    MaffsCalc with keys: 'scientific'; either badge on a game whose value is the other one;
   - a game that includes calculator.js, or shows a "required" badge, when its roster field is
     anything else (the calculator never appears on a game that does not need it);
   - any other published page (not a roster game) that includes calculator.js;
   - a page that includes calculator.js without schools/assets/keypad.js (MaffsKeypad, the phone
     keypad its answer mode composes). keypad.js itself may load on any page, whatever the roster says:
     it is the keypad for typed answers, with no calculator in it;
-  - a roster value outside required / not allowed / optional / untagged; a roster with no rows at
+  - a roster value outside required / scientific / not allowed / optional / untagged; a roster with no rows at
     all (the table changed shape; this check is blind).
 
 Stdlib only; about a second. A self-test runs first on every run.
@@ -28,12 +35,15 @@ import argparse, pathlib, re, shutil, sys, tempfile
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
 ROSTER = ".claude/rules/game-roster.md"
-VALUES = {"required", "not allowed", "optional", "untagged"}
+VALUES = {"required", "scientific", "not allowed", "optional", "untagged"}
+CALC_VALUES = {"required", "scientific"}            # the two values that load the on-screen calculator
 INCLUDE = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/calculator\.js"', re.I)
 # The phone keypad (MaffsKeypad) may load on any page; the calculator composes it, so every page that
 # loads calculator.js loads keypad.js too.
 KEYPAD = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/keypad\.js"', re.I)
 BADGE = re.compile(r'<span class="calc-badge" data-calc="required"[^>]*>Calculator required</span>')
+SCI_BADGE = re.compile(r'<span class="calc-badge" data-calc="scientific"[^>]*>Scientific calculator required</span>')
+SCI_MOUNT = re.compile(r"""keys\s*:\s*['"]scientific['"]""")
 # A game row: | 12 | Name | `slug` | ... | calculator |   (a withdrawn game is numbered "—")
 ROW = re.compile("^\\|\\s*(?:\\d+|—)\\s*\\|[^|]*\\|\\s*`([a-z0-9-]+)`\\s*\\|.*\\|\\s*([^|]*?)\\s*\\|\\s*$")
 SKIP_DIRS = {".git", ".github", ".claude", "node_modules", "scripts", "docs", "tools"}
@@ -62,20 +72,30 @@ def check(root):
         if not page.exists():
             continue
         src = page.read_text(encoding="utf-8")
-        inc, badge = bool(INCLUDE.search(src)), bool(BADGE.search(src))
+        inc, badge, sbadge = bool(INCLUDE.search(src)), bool(BADGE.search(src)), bool(SCI_BADGE.search(src))
         if inc and not KEYPAD.search(src):
             fails.append("%s: loads the on-screen calculator without schools/assets/keypad.js, which its answer "
                          "mode needs" % slug)
+        if val in CALC_VALUES and not inc:
+            fails.append("%s: roster says %s, but the page does not load schools/assets/calculator.js" % (slug, val))
         if val == "required":
-            if not inc:
-                fails.append("%s: roster says required, but the page does not load schools/assets/calculator.js" % slug)
             if not badge:
                 fails.append("%s: roster says required, but the start screen has no 'Calculator required' badge" % slug)
+            if sbadge:
+                fails.append("%s: shows 'Scientific calculator required', but its roster field is 'required'" % slug)
+        elif val == "scientific":
+            if not sbadge:
+                fails.append("%s: roster says scientific, but the start screen has no 'Scientific calculator required' "
+                             "badge" % slug)
+            if badge:
+                fails.append("%s: shows 'Calculator required', but its roster field is 'scientific'" % slug)
+            if not SCI_MOUNT.search(src):
+                fails.append("%s: roster says scientific, but the page never mounts MaffsCalc with keys: 'scientific'" % slug)
         else:
             if inc:
                 fails.append("%s: loads the on-screen calculator, but its roster field is %r" % (slug, val))
-            if badge:
-                fails.append("%s: shows 'Calculator required', but its roster field is %r" % (slug, val))
+            if badge or sbadge:
+                fails.append("%s: shows a calculator badge, but its roster field is %r" % (slug, val))
     games = {(root / "games" / s / "index.html").resolve() for s in tags}
     for page in root.rglob("*.html"):
         rel = page.relative_to(root)
@@ -128,6 +148,16 @@ def selftest():
                         lambda s: s.replace("</head>", '<script src="../../schools/assets/keypad.js"></script></head>', 1)), False),
         ("required game without the keypad",
          lambda d: edit(d / "games" / r / "index.html", lambda s: KEYPAD.sub("<script data-x", s)), True),
+        ("required game shows the scientific badge",
+         lambda d: edit(d / "games" / r / "index.html", lambda s: BADGE.sub(
+             '<span class="calc-badge" data-calc="scientific">Scientific calculator required</span>', s)), True),
+        ("required game retagged scientific without its badge or keys",
+         lambda d: edit(d / ROSTER, retag(r, "required", "scientific")), True),
+        ("required game retagged scientific with its badge and keys",
+         lambda d: (edit(d / ROSTER, retag(r, "required", "scientific")),
+                    edit(d / "games" / r / "index.html", lambda s: BADGE.sub(
+                        '<span class="calc-badge" data-calc="scientific">Scientific calculator required</span>', s)
+                        .replace("</body>", "<script>/* keys: 'scientific' */</script></body>", 1))), False),
         ("a non-game page loads it",
          lambda d: (d / "about").mkdir() or (d / "about" / "index.html").write_text(
              '<script src="/schools/assets/calculator.js"></script>', encoding="utf-8"), True),
@@ -165,8 +195,10 @@ def main():
         return 1
     tags = roster(root)
     req = sorted(s for s, v in tags.items() if v == "required")
-    print("PASS: %d roster games; the on-screen calculator loads on exactly the 'required' ones (%s); "
-          "self-test %d cases" % (len(tags), ", ".join(req) or "none", ncases))
+    sci = sorted(s for s, v in tags.items() if v == "scientific")
+    print("PASS: %d roster games; the on-screen calculator loads on exactly the 'required' ones (%s) and the "
+          "'scientific' ones (%s); self-test %d cases" % (len(tags), ", ".join(req) or "none", ", ".join(sci) or "none",
+                                                         ncases))
     return 0
 
 

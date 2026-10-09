@@ -23,6 +23,13 @@ Runs the real file in Chromium, with theme.css for its styles, and checks:
             scrolled 600px it stays in view (sticky). At 1240px and 390px it does not dock: it opens in
             the flow under its toggle. Five planted faults (no dock, not sticky, over the column, docking
             below the breakpoint, never docking) must each fail.
+  Scientific (contract SCI-CALC, 9 Oct 2026) the engine's ^ (right-associative, tighter than a minus on its
+            left), ln, log, e^, trig and its inverses in DEG and RAD, π and e, each exact to 10 s.f., and the
+            errors (ln 0, log of a negative, sin⁻¹ 2, tan 90 in DEG); two planted engine faults (a
+            left-associative ^, no tan 90 guard) must each fail. mount() without {keys} renders exactly
+            the basic key set; mount(el, {keys: 'scientific'}) adds the scientific block, fits a touch phone
+            at 320, 390 and 412px (48px keys, nothing sideways), and its DEG/RAD key switches the mode shown
+            in the display and used by sin.
   Answer    (Jon, 4 Oct 2026) mounted with {answer: input}, on a touch phone (390x844 and 320x568), in
   target    Chromium AND WebKit: the answer box is read-only with inputmode="none"; a tap on it never
             focuses it (no system keyboard) and opens the keypad on it, marked by a heavier border and a
@@ -43,6 +50,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CALC_JS = os.path.join(ROOT, 'schools', 'assets', 'calculator.js')
 KEYPAD_JS = os.path.join(ROOT, 'schools', 'assets', 'keypad.js')   # MaffsCalc's answer mode composes MaffsKeypad
 THEME_CSS = os.path.join(ROOT, 'schools', 'assets', 'theme.css')
+# theme.css imports calculator.css (the calculator and keypad styles, SCI-CALC); the tests drop @import
+# lines (no network), so they add it themselves.
+CALC_CSS = os.path.join(ROOT, 'schools', 'assets', 'calculator.css')
 
 # (expression, expected display). ASCII forms: * / - ^2 sqrt( are the keys × ÷ − x² √(.
 CASES = [
@@ -63,6 +73,27 @@ CASES = [
     ('1/0', 'Error'), ('5/(3-3)', 'Error'), ('sqrt(-4)', 'Error'), ('1.2.3', 'Error'), ('3+', 'Error'),
     ('*3', 'Error'), ('(1+2))', 'Error'), (')(', 'Error'), ('', 'Error'), ('()', 'Error'), ('sqrt()', 'Error'),
     ('^2', 'Error'), ('.', 'Error'),
+]
+
+# (expression, angle mode, expected display): the scientific engine (contract SCI-CALC). ASCII: ^ is xʸ,
+# asin( is sin⁻¹(, pi is π.
+SCI_CASES = [
+    ('1.05^10', 'deg', '1.628894627'), ('2^3^2', 'deg', '512'), ('-2^2', 'deg', '−4'), ('2^-1', 'deg', '0.5'),
+    ('ln(e)', 'deg', '1'), ('log(1000)', 'deg', '3'), ('e^(ln(5))', 'deg', '5'), ('2pi', 'deg', '6.283185307'),
+    ('3e^(1)', 'deg', '8.154845485'), ('sin(30)', 'deg', '0.5'), ('tan(45)', 'deg', '1'), ('asin(0.5)', 'deg', '30'),
+    ('cos(180)', 'deg', '−1'), ('sin(180)', 'deg', '0'), ('acos(0)', 'deg', '90'), ('atan(1)', 'deg', '45'),
+    ('sin(pi/6)', 'rad', '0.5'), ('asin(1)', 'rad', '1.570796327'), ('2^25', 'deg', '33554432'),
+    ('ln(0)', 'deg', 'Error'), ('log(-1)', 'deg', 'Error'), ('asin(2)', 'deg', 'Error'), ('tan(90)', 'deg', 'Error'),
+    ('tan(270)', 'deg', 'Error'), ('tan(pi/2)', 'rad', 'Error'), ('0^-1', 'deg', 'Error'), ('(-8)^(1/3)', 'deg', 'Error'),
+]
+# The basic panel, label for label, as it was before the scientific keys: mount() without {keys} must not change.
+BASIC_LABELS = ['C', 'DEL', '(', ')', '÷', '7', '8', '9', '√', '×', '4', '5', '6', 'x²', '−',
+                '1', '2', '3', '.', '+', '0', '=']
+# Planted engine faults: each must make a SCI_CASES case fail.
+SCI_PLANTS = [
+    ('a left-associative ^', 'v = Math.pow(v, unary());',
+     'v = Math.pow(v, primary()); while (peek() === POW) { i++; v = Math.pow(v, primary()); }'),
+    ('no tan 90 guard', 'return k % 2 ? NaN : 0;', 'return Math.tan(x * Math.PI / 180);'),
 ]
 
 # Sequences of button labels, and what the screen shows after them: [expression line, result line].
@@ -289,7 +320,7 @@ async def run():
             page = await ctx.new_page()
             await page.set_content(PAGE)
             # theme.css less its Google Fonts @import (no network here; the fallback fonts are wider, the harder case)
-            css = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import'))
+            css = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import')) + open(CALC_CSS, encoding='utf-8').read()
             await page.add_style_tag(content=css)
             await page.add_script_tag(path=KEYPAD_JS)
             await page.add_script_tag(path=CALC_JS)
@@ -310,6 +341,29 @@ async def run():
             fails.append('format(0.1 + 0.2) is not 0.3')
         if await page.evaluate("MaffsCalc.evaluate('2+3*4')") != 14:
             fails.append('evaluate() does not return a number')
+        # Scientific engine
+        got = await page.evaluate("cs => cs.map(c => MaffsCalc.calc(c[0], null, c[1]))", SCI_CASES)
+        for (expr, mode, want), g in zip(SCI_CASES, got):
+            if g != want:
+                fails.append('calc(%r, %s): shows %r, expected %r' % (expr, mode, g, want))
+        labels = await page.evaluate("[...document.querySelectorAll('#calc .maffs-calc-key')].map(k => k.textContent)")
+        if labels != BASIC_LABELS:
+            fails.append('mount() without {keys}: the basic panel changed: %r' % labels)
+        # Planted engine faults, each in its own copy of calculator.js
+        src = open(CALC_JS, encoding='utf-8').read()
+        for name, old, new in SCI_PLANTS:
+            if src.count(old) != 1:
+                fails.append('scientific plant %r: its line is no longer in calculator.js' % name)
+                continue
+            pg = await ctx.new_page()
+            await pg.set_content('<html><body></body></html>')
+            await pg.add_script_tag(content=src.replace(old, new))
+            pgot = await pg.evaluate("cs => cs.map(c => MaffsCalc.calc(c[0], null, c[1]))", SCI_CASES)
+            bad = [c[0] for c, g in zip(SCI_CASES, pgot) if g != c[2]]
+            print('  scientific fault %-28s %s' % (name, ('caught (%s)' % ', '.join(bad[:3])) if bad else 'NOT CAUGHT'))
+            if not bad:
+                fails.append('scientific plant not caught: ' + name)
+            await pg.close()
         # Toggle
         st = await page.evaluate("""() => { const t = document.querySelector('.maffs-calc-toggle'),
             p = document.querySelector('.maffs-calc-panel'); const a = [p.hidden, t.getAttribute('aria-expanded')];
@@ -394,7 +448,7 @@ async def run():
                 fails.append('%dpx: %d key labels overflow their key' % (w, m['overflow']))
             await ctx.close()
         # The wide-screen dock, and each planted fault must fail somewhere
-        css = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import'))
+        css = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import')) + open(CALC_CSS, encoding='utf-8').read()
         for w, h, want in DOCK_SIZES:
             fails.extend(await dock_check(browser, css, w, h, want))
         # The answer target: Chromium and WebKit, touch phones and mouse
@@ -423,6 +477,44 @@ async def run():
             print('  fault %-40s %s' % (fault[0], ('caught (%s)' % caught[0][:70]) if caught else '*** MISSED ***'))
             if not caught:
                 fails.append('planted fault not caught: ' + fault[0])
+        # The scientific panel: a touch phone at 320, 390 and 412px; at 390 the keys themselves
+        css = ''.join(l for l in open(THEME_CSS, encoding='utf-8').read().splitlines(True) if not l.startswith('@import')) + open(CALC_CSS, encoding='utf-8').read()
+        for w in (320, 390, 412):
+            sctx = await browser.new_context(viewport={'width': w, 'height': 844}, has_touch=True, is_mobile=True)
+            await sctx.route('**/*', lambda r: r.abort())
+            sp = await sctx.new_page()
+            await sp.set_content(PAGE)
+            await sp.add_style_tag(content=css)
+            await sp.add_script_tag(path=KEYPAD_JS)
+            await sp.add_script_tag(path=CALC_JS)
+            st = await sp.evaluate('''() => { window.__s = MaffsCalc.mount(document.getElementById('calc'), {keys: 'scientific'});
+                __s.open(); const ks = [...document.querySelectorAll('.maffs-calc-key')].map(k => k.getBoundingClientRect());
+                const p = document.querySelector('.maffs-calc-panel').getBoundingClientRect();
+                return { n: ks.length, sci: document.querySelectorAll('.maffs-calc-sci .maffs-calc-key').length,
+                  w: Math.min(...ks.map(k => k.width)), h: Math.min(...ks.map(k => k.height)), right: p.right,
+                  sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth,
+                  compact: __s.isCompact(), mode: document.querySelector('.maffs-calc-mode').textContent }; }''')
+            if st['sci'] != 13 or st['n'] != 35:
+                fails.append('scientific panel at %dpx: %d keys, %d scientific (expected 35, 13)' % (w, st['n'], st['sci']))
+            if st['w'] < 44 or st['h'] < 48 or not st['compact']:
+                fails.append('scientific panel at %dpx: smallest key %.0fx%.0f (want 44x48, compact %s)'
+                             % (w, st['w'], st['h'], st['compact']))
+            if st['sw'] > st['cw'] or st['right'] > st['cw']:
+                fails.append('scientific panel at %dpx: the page scrolls sideways (%d > %d) or the panel overflows'
+                             % (w, st['sw'], st['cw']))
+            if st['mode'] != 'DEG':
+                fails.append('scientific panel: starts in %r, expected DEG' % st['mode'])
+            if w == 390:
+                seq = await sp.evaluate('''() => { const r = [], P = k => __s.press(k);
+                    ['sin', '3', '0', '='].forEach(P); r.push(__s.display().result);
+                    P('DEG'); r.push(__s.mode(), document.querySelector('.maffs-calc-mode').textContent);
+                    ['C', 'sin', 'π', '÷', '6', '='].forEach(P); r.push(__s.display().result, __s.display().expr);
+                    ['C', '1', '.', '0', '5', 'xʸ', '1', '0', '='].forEach(P); r.push(__s.display().result);
+                    ['C', 'ln', 'DEL'].forEach(P); r.push(__s.display().expr); return r; }''')
+                want = ['0.5', 'rad', 'RAD', '0.5', 'sin(π÷6 =', '1.628894627', '\xa0']
+                if seq != want:
+                    fails.append('scientific keys (sin 30, RAD, sin(π÷6), 1.05ʸ10, ln DEL) went %r, expected %r' % (seq, want))
+            await sctx.close()
         await browser.close()
     return fails
 
@@ -439,11 +531,13 @@ def main():
         print('\nFAILED: %d problem(s)' % len(fails))
         return 1
     print('PASS: %d expressions (arithmetic, precedence, x², √, brackets, errors, 10 s.f. display); '
+          '%d scientific expressions (^, ln, log, e^, trig DEG/RAD, π, e, errors), %d scientific plants caught, '
+          'basic panel unchanged, scientific panel fits 320/390/412px; '
           '%d key sequences; keyboard, toggle, privacy; keys >= 44px at 320/375/390px; docked beside a 720px '
           'column at 1280/1366/1920 (sticky, never over it), in the flow at 1240 and 390; %d planted dock faults caught; '
           'answer target on touch phones in Chromium and WebKit (read-only, inputmode none, never focused, '
           'operators disabled, display switching, 48px keys), unchanged with a mouse; %d planted answer faults caught'
-          % (len(CASES), len(SEQS), len(DOCK_FAULTS), len(ANSWER_FAULTS)))
+          % (len(CASES), len(SCI_CASES), len(SCI_PLANTS), len(SEQS), len(DOCK_FAULTS), len(ANSWER_FAULTS)))
     return 0
 
 

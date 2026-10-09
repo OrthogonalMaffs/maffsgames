@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="../../schools/assets/calculator.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
@@ -25,6 +26,8 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#070b14;--surface:#0e1424;--surface2:#131b2e;--border:#1a2440;
+  /* for the shared calculator (calculator.css, tokens only) */
+  --surface-alt:var(--surface2);--font-text:'Outfit',sans-serif;--font-num:'JetBrains Mono',monospace;--on-accent:#000;
   --primary:#0ea5e9;--primary-dim:rgba(14,165,233,.15);--primary-glow:rgba(14,165,233,.25);
   --accent:#38bdf8;--correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
   --wrong:#f43f5e;--wrong-dim:rgba(244,63,94,.12);
@@ -32,6 +35,8 @@
 }
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .mono{font-family:'JetBrains Mono',monospace}
+.badges{display:flex;justify-content:center;margin-top:.6rem}
+.gd-calc{width:100%;max-width:420px;margin:1rem auto 0}
 .container{max-width:1100px;width:100%;padding:1rem}
 a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
 .header{text-align:center;padding:1.2rem 0 .5rem}
@@ -137,6 +142,9 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- The on-screen calculator with its scientific keys (canon §4.4 "scientific"); keypad.js first, as MaffsCalc composes it. -->
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Core: three sub-questions per scenario. A wrong typed value keeps the sub-question locked until Try Again (the game's retry, not a Next), so "each" presses Try Again when it is up and the answer waits for the sub-question to reopen; a wrong option waits on Next. i = 0 gives the key; i >= 1 a wrong value or option.
 {
   "ready": "document.getElementById('gameScreen').classList.contains('active') && !!document.querySelector('#qPanel .check-btn, #qPanel .mcq-btn')",
@@ -169,6 +177,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div class="header">
     <h1>Growth and Decay</h1>
     <div class="sub">What does the model tell you — and what can you find from it?</div>
+    <div class="badges"><span class="calc-badge" data-calc="scientific" id="calcBadge">Scientific calculator required</span></div>
     <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
 </div>
   <div class="menu-info">
@@ -207,6 +216,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     <div class="sc-panel" id="scPanel"></div>
     <div class="q-panel" id="qPanel"></div>
   </div>
+  <div class="gd-calc" id="calc"></div>
 </div>
 
 <!-- RESULTS -->
@@ -899,6 +909,9 @@ const endGame=MaffsLock.finishOnce(function(){
 function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active'); MaffsLock.screen($('menuScreen'));}
 
 window.addEventListener('DOMContentLoaded',()=>{parseURL();});
+// The scientific calculator (powers, ln, e^x): answers stay typed in each sub-question's own box, which is
+// rebuilt per sub-question, so the calculator is not given it as {answer} (contract SCI-CALC).
+const calc=window.MaffsCalc?MaffsCalc.mount($('calc'),{keys:'scientific'}):null;
 
 
 (function renderMethodRef(){

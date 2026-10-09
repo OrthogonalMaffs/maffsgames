@@ -487,6 +487,7 @@ exam has a non-calculator paper and calculator papers.
 | **Value** | **Means** | **Start screen** |
 | --- | --- | --- |
 | `required` | The questions need a calculator (Pythagoras to 1 d.p.) | "Calculator required" |
+| `scientific` | The questions need a scientific calculator (powers beyond ², ln/log, eˣ, trig, π); the on-screen calculator shows its scientific keys (contract SCI-CALC, 9 Oct 2026) | "Scientific calculator required" |
 | `not allowed` | Practice for a non-calculator paper; the numbers are chosen to be done by hand | "Non-calculator" (Jon, 6 Oct 2026) |
 | `optional` | Either works | worded when the first game is tagged |
 | `untagged` | Not yet decided. Every game starts here and is tagged in its own PR | nothing |
@@ -552,7 +553,14 @@ styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours 
     cancels `touchend`, which stops that click.
   - **Not yet tried on a real iPhone** (Playwright WebKit with touch passes; Jon tests on Android).
 - **Nothing is sent:** no analytics event, no storage, no request.
-- **Where it loads:** only on games whose roster field is `required`. The roster is not served, so each
+- **Scientific keys (contract SCI-CALC, 9 Oct 2026):** `mount(el, {keys: 'scientific'})` adds a block above the
+  basic keys: xʸ (right-associative, binding tighter than a minus on its left: 2^3^2 = 512, −2^2 = −4), ln,
+  log (base 10), eˣ, sin, cos, tan and their inverses (each opens a bracket, like √), π and e (2π multiplies),
+  and a DEG/RAD key whose mode the display shows (DEG by default). Errors: ln or log of 0 or less, sin⁻¹ or
+  cos⁻¹ outside [−1, 1], tan at an odd multiple of 90° (exact for whole degrees) or of π/2, anything not
+  finite. `mount()` without it is the basic panel, key for key. A `scientific` game loads the same scripts,
+  shows "Scientific calculator required" and mounts with `{keys: 'scientific'}`.
+- **Where it loads:** only on games whose roster field is `required` or `scientific`. The roster is not served, so each
   such game includes the script itself; `scripts/check-calculator.py` (CI) fails if a game's include, its
   badge and its roster field disagree, either way, or if any other page loads it.
 - **Checked by** `scripts/test-calculator-js.py` (CI): 65 expressions (arithmetic, precedence, x², √,
