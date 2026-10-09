@@ -3,6 +3,18 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-09 (cloud): SIM-S5 claimed (Jon's answers, 08:10)
+
+- **Option A, approved:** a Stage 5 tile builder in simultaneous-solver, marked as a non-zero multiple of a key; the
+  builder is a self-contained object (build, read, mark; no reach into Stages 1-4) so it can become a shared module.
+- **Jon (9 Oct, in session): the `foundation-s5` board's three shared lines land in the SIM-S5 PR** (as the roster's
+  Calculator field did in UC-FIX): its label in `schools/assets/firebase-leaderboard.js`, its entry in
+  `scripts/check-leaderboard-coverage.js`'s simultaneous-solver list, its hub row in `leaderboards/index.html`.
+  Additive, nothing else in those files.
+- **For the home lane (answers 3b):** `.claude/rules/timer-policy.md`: move Unit Converter from "Hidden Count-Up" to
+  "No Timer" (since #196 it shows, logs and scores no clock). A shared rules file, so the cloud lane does not edit it.
+- **For the home lane:** unit-converter passes check-answer-lock on seeds 1-3: move it to MIGRATED (your question).
+
 ## 2026-10-09 (cloud): SIM-S5 stopped before its claim (step 3 STOP IF; answered 08:10, above)
 
 - **simultaneous-solver has no tile UI:** Stages 1-4 are typed boxes on MaffsKeypad (`readInt` whole numbers only;
