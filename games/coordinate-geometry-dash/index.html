@@ -296,7 +296,7 @@ ctx:"x = 2cos t, y = 2sin t",q:"Cartesian equation?",opts:["x² + y² = 4","y = 
 {draw:q=>{setView(-2,8,-2,12);drawGrid();drawParaCurve(t=>t+1,t=>t*t-2,-3,4)},
 ctx:"x = t + 1, y = t² − 2",q:"Express y in terms of x",opts:["y = (x−1)² − 2","y = x² − 2","y = (x+1)² − 2","y = x² − 3"],correct:"y = (x−1)² − 2",steps:["x = t + 1 → t = x − 1","y = t² − 2 = (x−1)² − 2"]},
 {draw:q=>{setView(-2,12,-2,10);drawGrid();drawParaCurve(t=>3*t,t=>4/t,0.3,6,'#3b82f6')},
-ctx:"x = 3t, y = 4/t, t > 0",q:"Cartesian equation?",opts:["xy = 12","y = 12/x","x = 12/y","All equivalent"],correct:"All equivalent",steps:["x = 3t → t = x/3","y = 4/t = 4/(x/3) = 12/x","So xy = 12, or equivalently y = 12/x"]},
+ctx:"x = 3t, y = 4/t, t > 0",q:"Cartesian equation?",opts:["xy = 12","xy = 7","y = 12x","x = 3y/4"],correct:"xy = 12",steps:["x = 3t → t = x/3","y = 4/t = 4/(x/3) = 12/x","So xy = 12, or equivalently y = 12/x"]},
 // dy/dx for parametric
 {draw:q=>{setView(-4,8,-2,20);drawGrid();drawParaCurve(t=>t,t=>t*t*t,-2,3)},
 ctx:"x = t, y = t³",q:"Find dy/dx at t = 2",opts:["12","6","8","3"],correct:"12",steps:["dx/dt = 1, dy/dt = 3t²","dy/dx = (dy/dt)/(dx/dt) = 3t²","At t = 2: dy/dx = 3(4) = 12"]},
