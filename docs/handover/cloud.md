@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: formula-forge`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -106,6 +106,8 @@ budget; E is at 491 s and takes nothing new).
 - **13b eigenvalue-extractor t6-001: #229** (stacked on #228): closed with measurements, no code change.
 - **13c matrix-crunch t6-001, t6-002: #230** (stacked on #229): new `verify-matrix-crunch.py` (~40 s, both levels,
   the flag path check-answer-lock never presses); fails the pre-batch page with the audit's numbers.
+- **13d formula-forge t4-001: #231** (stacked on #230): closed with measurements, no code change. **LISTED-HIGH is done
+  but item 12** (held for OVERLAY-KEYS); the remaining list is empty.
 - **CI (CI-BALANCE, #220):** groups are packed now. A new verifier's header is `# ci-line: <label> | <args>` (no
   group id); untimed lines get a group each until main's timings job records them. `ci-groups.py --check` locally.
 - **Local checks used for each PR** (the sandbox cannot reach the KaTeX CDN): check-changed's plan, the answer lock for
@@ -124,11 +126,6 @@ budget; E is at 491 s and takes nothing new).
     (Jon's design).
   - **Merging (Jon, 18:56):** #223 and every later PR wait for a green main run; the workflow and `ci-groups.py` are
     the home lane's. With no green main this session, the PRs stay open, green on their own checks.
-  - 13 stale locks: characteristic-quest t6-001, eigenvalue-extractor t6-001, matrix-crunch t6-001 and t6-002,
-    formula-forge t4-001: all fixed on main (measured 9 Oct: key + Enter x3 = one mark, wrong + Tab+Enter = no change;
-    the pre-batch pages give the audits' numbers, e.g. 93 -> 369; matrix-crunch flag 25 -> 100, lives 3 -> 0) and
-    check-answer-lock passes on main, fails each pre-batch page. matrix-crunch's flag path is not played by
-    check-answer-lock: give it a small verifier.
 
 ## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #207 merged cf96929; main run 593 green)
 
