@@ -19,7 +19,11 @@ findings:
     the only option equal to it, 8sqrt32/32, is marked wrong'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. Reproduced in Chromium; :175, the same stem, is
     keyed sqrt2'
-  status: open
+  status: fixed
+  pr: 210
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 1: keyed sqrt2; sqrt2 . sqrt2 kept as a distractor whose
+    value is 2 (8sqrt32/32, equal to the key, removed). scripts/verify-surd-simplifier.py recomputes every key from its
+    stem with SymPy and fails main''s page here.'
 - id: surd-simplifier-t1-002
   severity: HIGH
   jc: false
@@ -28,4 +32,7 @@ findings:
   where: games/surd-simplifier/index.html:233
   summary: 0.41616... = 206/495; the key 137/330 is 0.41515..., and none of the four options is correct
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 210
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 1: keyed 206/495 (412/990), the only option equal to it.
+    scripts/verify-surd-simplifier.py reads the recurring decimal exactly and fails main''s page here.'
