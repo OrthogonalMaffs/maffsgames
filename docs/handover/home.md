@@ -47,7 +47,7 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-09 (home): RULINGS-9OCT (item 1, PR #PR)
+## 2026-10-09 (home): RULINGS-9OCT (item 1, #215)
 
 - **unit-converter into MIGRATED** (`check-answer-lock.py`): seeds 1, 2 and 3 pass. NOT_YET: glorious-gantt,
   graph-sketcher.
