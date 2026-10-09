@@ -117,6 +117,7 @@ FT_STEP = r"""((area) => {
   const nx = document.querySelector('#' + area + ' .next-q-btn');
   if (vis(nx)) { nx.click(); return; }
   document.querySelectorAll('#' + area + ' input.answer-input:not([disabled])').forEach(i => { if (vis(i)) i.value = '0'; });
+  document.querySelectorAll('#' + area + ' .opt-group').forEach(g => { const b = g.querySelector('.opt-btn:not([disabled])'); if (vis(g) && b && !g.querySelector('.opt-btn.chosen')) b.click(); });
   const ck = document.querySelector('#' + area + ' .submit-btn');
   if (vis(ck)) ck.click();
 })"""

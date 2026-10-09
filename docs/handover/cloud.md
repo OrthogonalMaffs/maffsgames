@@ -35,14 +35,34 @@ start-up load). When the work merges, move the file to `docs/history/`.
 
 **Queue:** UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
-`docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX (contracts/2026-10-08-ft-fix.md as amended by
--ft-fix-amend.md; step 3 and t5-008 go to the home lane): STOPPED before building, waiting on Jon (entry below).
+`docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: fix PR #207 (contract, amendment and Jon's answers
+of 9 Oct, 11:00, now in `docs/history/contracts/2026-10-0[89]-ft-fix*.md`). The queue is then empty: stop for Jon.
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): FT-FIX stopped before building (contract STOP IF; nothing changed)
+## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #207; Jon's answers 11:00; unlisted, so no claim)
+
+- **Answer buttons (answers 1):** Q33 ("Which line proves it?") and T9(c) are four shuffled buttons each, the
+  contract's lines, marked by `dataset.val` on Check or Submit (with T9's other parts); the explanation shows after
+  marking. All in the game (`fillOptions`, `chosenValue`, `markOptions`, `.opt-*` CSS); the lock hint picks a button.
+- **A-Level only (answers 2):** the page never reads `?level` (a comment says so); every URL logs and submits
+  `alevel`. No start screen, no level4 board. **For the home lane, at relisting: remove L4 from Factor Theorem's
+  roster row, the portal filter and the spec map.** With no open CRITICAL or HIGH after this PR, it is ready (SR-21).
+- **Practice submits nothing** (t5-014, t5-015); its device-local score-history record went with it (nothing reads
+  `MaffsScoreHistory.get`). The Test alone submits, once, to `factor_theorem_alevel`.
+- **A wrong answer waits on `MaffsNext`** (t5-018's note; next-control.js loaded); a right one keeps Next Question.
+  t5-018's other parts were already fixed on main: closed with the measurements.
+- **`scripts/check-teacher-invite.py` (answers 3):** one line added to FT_STEP (choose a button in any unanswered
+  `.opt-group`); nothing else changed. Its factor-theorem routes reach both end screens at 390 and 1280 (KaTeX served
+  locally: the sandbox cannot reach the CDN). check-answer-lock seeds 1-3 PASS the same way.
+- **Verifier** (group E): the option checks (Q33's working for every n; T9(c) from s, v and a), prose keys, the five
+  ?level URLs, no Practice submit, MaffsNext on a wrong answer; 8 plants, all caught. About 80 s with its self-test.
+- **Still open, not this lane's:** t5-008 (home lane, VOCAB-IDEMPOTENT), t5-016 and t5-017 (a Test bank of 40 from
+  Project Claude, a separate contract).
+
+## 2026-10-09 (cloud): FT-FIX stopped before building (contract STOP IF; answered 11:00, above)
 
 - **STOP IF fired: "the game's selection pattern can't serve a 4-option item inside a multi-part test question
   without engine changes".** factor-theorem has no selection pattern at all: every Practice item and every Test part
@@ -80,25 +100,9 @@ main's last full run is red; watch main's run after merging.
   group before the next verifier lands in B (main's run on c9fbf4b had B4 at 5m17s of its 6m budget); move Unit Converter
   from "Hidden Count-Up" to "No Timer" in `.claude/rules/timer-policy.md` (answers 3b; it shows, logs and scores no
   clock since #196); move unit-converter to check-answer-lock's MIGRATED (it passes seeds 1-3).
+  From SIM-S5 (#203): record the build freeze's one named exception (Jon, 9 Oct, 00:25: Simultaneous Solver Stage 5
+  only) in canon §0.2 and the todo; the roster row could mention Stage 5.
 - **Next: FT-FIX** (`contracts/2026-10-08-ft-fix.md` as amended). From the PP-T1-004 entry: merge main first;
   factor-theorem is in check-answer-lock's MIGRATED, so it must still pass; `wrapExamVocab` is the shared
   `schools/assets/exam-vocab.js:109` (step 3 and t5-008 go to the home lane, per the amendment); both
   `question_index` calls already send `qIdx + 1`; the contract's line numbers are stale (re-find by quoted text).
-
-## 2026-10-09 (cloud): SIM-S5 built (claim #202; fix #203 takes the game off the remaining list)
-
-- **Stage 5** in simultaneous-solver: its own screen and flow (`startForm`, beside the A-Level one); Stages 1-4
-  untouched (four existing lines widened: a trailing comma, a third `MaffsNext.clear`, two test hooks). `WORDS`
-  bank between markers, worded as the contract (the verifier compares it); 8 a session, 3 W and 3 E at least;
-  a mark per line (16); board `foundation-s5` with its label, coverage entry and hub row (Jon's authorisation).
-- **EqTiles**, the builder: self-contained (build, read, parse, mark, markAll, tokens, text; `.eqt-*` CSS), exact
-  fractions; tiles are whole terms (letters, the keys' numbers, + − =, distractors); Delete and Clear line.
-- **Distractors (no invention):** a spare number in the text (not 1) or a pounds amount in pence (SR-4, the
-  partly-scaled error). 35 of 40 have fewer than two: for Project Claude to supply if wanted (list in the PR).
-- **Feedback notes** (one line each, where the key needs a fact the words leave out): W07, W11, W12, W13, W15,
-  E05, E09, E11; listed in the PR for Jon.
-- **Verifier** (group E): solutions held only there; every key's forms marked by the page's own EqTiles; tiles
-  build every key; 60 draws; sessions tapped at 390x844 and 1280x900; MaffsLock; 3 plants. Stage 5 adds ~30 s.
-  check-answer-lock seeds 1-3 PASS. **For the home lane:** the roster row could mention Stage 5 (yours).
-- **For the home lane (SIM-S5 item 9): the build freeze has one named exception, Jon, 9 Oct 2026 (00:25): Simultaneous
-  Solver Stage 5 only. Record it in canon §0.2 and the todo ("Stage 5 is parked under it" no longer holds).**
