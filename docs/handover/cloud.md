@@ -83,14 +83,38 @@ budget; E is at 491 s and takes nothing new).
 - **Jon, 9 Oct (answer to a question, item 11): Boolean Blitz marks an option right when it has the key's truth
   table AND no more literals than the key** (AB + BC, AB + AC accepted; the t6-004 unsimplified forms such as
   A·B + A for A stay wrong; t6-004 untouched). Boolean-blitz has B11 ledger entries for t6-002/003: clear them.
-- **Next: seven-bridges** (t4-001, t4-002). Drafts ready in the scratchpad (`verify-*.py`, `tools/*-edit.py`; scratch is lost
-  on a new session, so a fresh session rebuilds from these notes) for items 6-10: higher-power (match when the
-  value cards look alike or the stored values are equal and finite: googolplex and infinity are both stored as
-  Infinity); seven-bridges (t4-001 already fixed on main by F1 batch 9; al_15's E to (300,150); al_10, al_18, al_21
-  have edges grazing a vertex's disc at 20-21 px: not named, kept as KNOWN_GRAZES, reported to Jon);
-  wrong-on-the-internet (as ruled); paper2c (t4-001 fixed on main by F1 batch 10; Q12 "f is a quadratic"; Q35
-  accept:[1,3] per Jon's 16:21 ruling, marked in selectAnswer, lock hint picks outside the set); paper2b (Q28 D:
-  "Neither - both premiums cost more than the expected loss", false since £900 < £1,000).
+- **7 seven-bridges: committed on the branch, PR not yet opened (checkpoint 9 Oct ~17:00).** al_15's E to (300,150);
+  t4-001 already fixed by F1 batch 9 (closed with measurements). `verify-seven-bridges.py` in **E2** (~12 s).
+  Findings closed with pr: 218: **check the real PR number when opening it** (#215 was taken by the home lane once).
+  Before opening: run the local checks below; then merge, watch main, continue.
+- **CI notes:** E split into E/E2 by #213. On main, B2 ~230 s and B1 ~260 s of 360; E ~330 and E2 ~265 of 540.
+  Put heavy new verifiers in E2. Answer-lock L1-L5 sit at 290-345 s of 360 since #215 added unit-converter: #217's
+  first run went over (L2/L4/L5), one re-run passed; the home lane's CI-BALANCE item covers it.
+- **Local checks used for each PR** (the sandbox cannot reach the KaTeX CDN): check-changed's plan, the answer lock for
+  the changed game with KaTeX served locally, and `extract-banks.py --only <slug>` + `check-banks.py --ci --only
+  <slug>` (stale B11 ledger entries must leave `data/check-ledger.json` with the fix). esprima: unpack its sdist on
+  PYTHONPATH. The scratchpad tools are lost on a new session; rebuild from these notes.
+- **Remaining, in order, each ready as a draft in the old scratchpad (lost on clear; re-derive):**
+  - 8 wrong-on-the-internet: gcse_004 post states "a European roulette wheel (one green zero)", key 18/37 (48.6%),
+    "Depends on wheel" -> "P(black) = 1/2 every spin"; gcse_011 post opens "A and B are independent.", key "0.12",
+    stage-2 key and explanation no longer say addition gives P(A OR B). Page writes non-ASCII as \u escapes (the
+    tool turns typed \u escapes into characters: build them in code).
+  - 9 core-maths-paper2c: Q12 stem starts "f is a quadratic."; Q35 `accept:[1,3]` (Jon 16:21), selectAnswer marks
+    against `q.accept || [q.correct]`, lock hint picks outside it, working says why both "Yes" are right; t4-001
+    fixed by F1 batch 10 (a Next tap then an option tap inside the fresh window marks nothing). Verifier ~26 s: E2.
+  - 10 core-maths-paper2b: Q28 option D -> "Neither — both premiums cost more than the expected loss" (false:
+    £900 < £1,000 for the data breach).
+  - 11 boolean-blitz: in-game boolParse/minSopLiterals/sameAnswer; right = the key's truth table AND literals <=
+    max(key's, the minimal SOP's) (Jon's two answers of 9 Oct); accepts exactly AB + BC (Q24) and AB + AC (Q41);
+    t6-001 fixed by F1 batch 11; clear the t6-002/003 B11 ledger entries.
+  - 12 prisoners-dilemma t4-002: keydown ignores keys while `#mfg-initials-overlay` exists or focus is in a text
+    field. **For the home lane:** the same class (page shortcuts under the shared initials overlay) exists in other
+    games with document keydown handlers; the architectural fix is the overlay stopping key events (shared module).
+  - 13 stale locks: characteristic-quest t6-001, eigenvalue-extractor t6-001, matrix-crunch t6-001 and t6-002,
+    formula-forge t4-001: all fixed on main (measured 9 Oct: key + Enter x3 = one mark, wrong + Tab+Enter = no change;
+    the pre-batch pages give the audits' numbers, e.g. 93 -> 369; matrix-crunch flag 25 -> 100, lives 3 -> 0) and
+    check-answer-lock passes on main, fails each pre-batch page. matrix-crunch's flag path is not played by
+    check-answer-lock: give it a small verifier.
 
 ## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #207 merged cf96929; main run 593 green)
 
