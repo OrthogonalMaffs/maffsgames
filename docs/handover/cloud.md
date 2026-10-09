@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: simultaneous-solver`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -34,12 +34,28 @@ in the queue below pointing to it. Read it when the item starts, not at session 
 start-up load). When the work merges, move the file to `docs/history/`.
 
 **Queue:** UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
-SIM-S5 (in progress, claimed 9 Oct): contracts/2026-10-09-sim-s5.md with the answers in -sim-s5-answers.md
-(option A, a self-contained builder object). Then UC-T4-007 (a small PR, the answers' item 3c), then FT-FIX without asking. Then FT-FIX: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
+SIM-S5: done by its PR (claim #202 merged 7de7e73; its contract and the answers move to `docs/history/contracts/`
+in it). Then UC-T4-007 (a small PR, the answers' item 3c), then FT-FIX without asking. Then FT-FIX: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-09 (cloud): SIM-S5 built (claim #202; the fix PR off `cloud-remaining:`)
+
+- **Stage 5** in simultaneous-solver: its own screen and flow (`startForm`, beside the A-Level one); Stages 1-4
+  untouched (four existing lines widened: a trailing comma, a third `MaffsNext.clear`, two test hooks). `WORDS`
+  bank between markers, worded as the contract (the verifier compares it); 8 a session, 3 W and 3 E at least;
+  a mark per line (16); board `foundation-s5` with its label, coverage entry and hub row (Jon's authorisation).
+- **EqTiles**, the builder: self-contained (build, read, parse, mark, markAll, tokens, text; `.eqt-*` CSS), exact
+  fractions; tiles are whole terms (letters, the keys' numbers, + − =, distractors); Delete and Clear line.
+- **Distractors (no invention):** a spare number in the text (not 1) or a pounds amount in pence (SR-4, the
+  partly-scaled error). 35 of 40 have fewer than two: for Project Claude to supply if wanted (list in the PR).
+- **Feedback notes** (one line each, where the key needs a fact the words leave out): W07, W11, W12, W13, W15,
+  E05, E09, E11; listed in the PR for Jon.
+- **Verifier** (group E): solutions held only there; every key's forms marked by the page's own EqTiles; tiles
+  build every key; 60 draws; sessions tapped at 390x844 and 1280x900; MaffsLock; 3 plants. Stage 5 adds ~30 s.
+  check-answer-lock seeds 1-3 PASS. **For the home lane:** the roster row could mention Stage 5 (yours).
 
 ## 2026-10-09 (cloud): SIM-S5 claimed (Jon's answers, 08:10)
 
