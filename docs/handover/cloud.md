@@ -75,7 +75,10 @@ budget; E is at 491 s and takes nothing new).
   the range on every polar and exponential question; ids 20, 28, 30, 38, 53 keyed principal (same numbers; ids 20,
   28 and 53 said "positive angle", which went); a second form of the key removed from ids 20, 21, 28, 40, 48 (40
   and 48 had a negative-modulus twin); argDeg/argRad principal everywhere (Triples' cards). New
-  `verify-complex-converter.py` (B2, ~5 s, KaTeX from the CDN): every option read as a complex number.
+  `verify-complex-converter.py` (B2, ~5 s, KaTeX from the CDN): every option read as a complex number. Also closes
+  t6-002 and t6-003 (the ids 40/48 twins, MEDIUM jc). **Lesson (CI red once on #216): a fixed B11 pair must leave
+  `data/check-ledger.json` in the same PR** (tier 4 fails a stale entry); run `extract-banks.py --only <slug>` then
+  `check-banks.py --ci --only <slug>` before pushing (esprima: pip build fails here; unpack its sdist on PYTHONPATH).
 - **Next: higher-power** (t2-001). Drafts ready in the scratchpad (`verify-*.py`, `tools/*-edit.py`; scratch is lost
   on a new session, so a fresh session rebuilds from these notes) for items 6-10: higher-power (match when the
   value cards look alike or the stored values are equal and finite: googolplex and infinity are both stored as
