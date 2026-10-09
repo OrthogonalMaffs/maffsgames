@@ -91,7 +91,9 @@ budget; E is at 491 s and takes nothing new).
   in B4 and L2 (no test failed); one re-run passed.
 - **8 wrong-on-the-internet: #223** (open; #220-#222 are the home lane's). Not merged while main is red: main's runs
   on #220 and #219 failed only "CI timings and pack (main only)" (`gh api .../jobs/<id>/logs` exit 1; CI-BALANCE's
-  job, the home lane's fix is #222). Merge #223 once main is green.
+  job, the home lane's fix is #222). #222's own main run (37966843652): Gate green, the timings step hung silently
+  until the job's 5-minute timeout (cancelled). **For the home lane:** the log fetch still fails with the retries;
+  a guess, unverified: jobs of the same, still-running run may not serve logs yet. Merge #223 once main is green.
 - **CI (CI-BALANCE, #220):** groups are packed now. A new verifier's header is `# ci-line: <label> | <args>` (no
   group id); untimed lines get a group each until main's timings job records them. `ci-groups.py --check` locally.
 - **Local checks used for each PR** (the sandbox cannot reach the KaTeX CDN): check-changed's plan, the answer lock for
