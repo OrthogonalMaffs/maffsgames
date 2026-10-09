@@ -17,7 +17,9 @@ findings:
   summary: A double-tap on Next answers the next question unseen
   evidence: 'No guard on nextQuestion; options live at once. 375x667: 16 of 36 answered by the second tap, all recorded
     wrong.'
-  status: open
+  status: fixed
+  pr: 225
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 9. Already fixed on main by F1 batch 10 (MaffsLock: Next acts once, on an answered question, and the next question''s options are fresh-locked): a Next tap then an option tap at once leaves the next question on screen, unanswered. Kept by verify-core-maths-paper2c.py.'
 - id: core-maths-paper2c-t4-002
   severity: HIGH
   jc: true
@@ -27,7 +29,9 @@ findings:
   summary: Minimum of f between (2,7) and (6,7) keyed 4 'by symmetry'; f is not said to be quadratic, so 3 and 5
     are possible
   evidence: Stem never states symmetry.
-  status: open
+  status: fixed
+  pr: 225
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 9: the stem now opens ''f is a quadratic.'', so the minimum is halfway by symmetry and 4 is the only answer; the working says why. Key unchanged.'
 - id: core-maths-paper2c-t4-003
   severity: HIGH
   jc: true
@@ -36,7 +40,9 @@ findings:
   where: games/core-maths-paper2c/index.html:435 (Q35)
   summary: Option D 'Yes - but only when k > 0' is a true statement marked wrong
   evidence: A doubling time exists only for growth.
-  status: open
+  status: fixed
+  pr: 225
+  ruling: 'Jon''s ruling, 9 Oct 2026 16:21 (contracts/2026-10-09-listed-high-rulings.md): option D is not rewritten; it is accepted alongside the key (accept: [1, 3], marked in the game by dataset.val), and the working says why both ''Yes'' answers are right. The other two options stay wrong.'
 - id: core-maths-paper2c-t4-004
   severity: MEDIUM
   jc: false
