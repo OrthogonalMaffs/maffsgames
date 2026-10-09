@@ -19,4 +19,10 @@ findings:
   summary: '''Paint covers 10 m^2 per litre. If dimensions double, how many litres?'' gives no original area or
     amount, so it cannot be answered; the key ''4 litres per 10 m^2'' contradicts the stem''s own rate'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 212
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 3: the prompt states the original surface, 10 m² (1 litre),
+    so doubling the dimensions needs 4 litres; the key''s value is kept, its text "4 litres per 10 m²" (which
+    contradicted the stated rate) is now "4 litres", with worked steps. scripts/verify-scale-factor-scaling.py
+    recomputes all 46 keys from the quantities each prompt states (no other item depended on an unstated one) and
+    fails main''s page here.'
