@@ -71,12 +71,12 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   click it records the visible controls; after it, every newly visible control must sit in an open fresh window,
   whatever the layout, and the control under the pointer too; the second click must leave the URL unchanged. The
   fresh window is stretched to 5 s for the probe, so no verdict depends on runner speed (canon 7.6.0, DET).
-  **Against main's pages 24 of the 32 fail** (angle-ace, bearing-blitz, binomial-blaster, coordinate-geometry-dash,
-  curling-friction, dimension-checker, eigenvector-engine, force-resolver, formula-forge, formula-unlocked,
+  **Against main's pages 25 of the 32 fail** (angle-ace, bearing-blitz, binomial-blaster, coordinate-geometry-dash,
+  curling-friction, dimension-checker, eigenvalue-extractor, eigenvector-engine, force-resolver, formula-forge, formula-unlocked,
   graph-transformer, higher-power, just-pythag-it-bruv, linear-equation-solver, matrix-crunch, moments-master,
   normal-navigator, proof-builder, proportion-blaster, scale-factor-scaling, sequence-solver, standard-form-blitz,
   surd-simplifier, trig-identity-duel; typically the menu's level buttons and its "Global leaderboard" link open
-  to the second click); the other 8 go from Play again straight into a new game whose question is already fresh.
+  to the second click); the other 7 go from Play again straight into a new game whose question is already fresh.
   With the change all 32 pass. Self-test plant: angle-ace with a bare `show()`: caught.
 - **Canon §7.6.0:** "every screen change goes through MaffsLock.screen()".
 
