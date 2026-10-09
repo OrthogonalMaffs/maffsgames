@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B4 | Binomial Blaster (every key and option evaluated with SymPy, every item marked in Chromium) |
+# ci-line: Binomial Blaster (every key and option evaluated with SymPy, every item marked in Chromium) |
 """Binomial Blaster: every key and option evaluated with SymPy; every item marked in Chromium.
 
 The game (100 multiple-choice items: alevel 50, alevel2 50) covers nCr, binomial coefficients and expansions,

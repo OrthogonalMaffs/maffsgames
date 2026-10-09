@@ -60,7 +60,9 @@ jobs:
   # scripts/ci-deps.py selects from the files the PR changes. Its selftest proves the selection rules
   # on every run first (one game -> its verifier; a shared asset -> every verifier whose pages load it;
   # CI or an unknown path -> everything; every verifier reachable). It also builds the content groups from
-  # the verifiers' ci-line headers (scripts/ci-groups.py; a malformed header or an unknown group fails here).
+  # the verifiers' ci-line headers (scripts/ci-groups.py; a malformed header or an unknown tier fails here),
+  # packed from main's measured times (contract CI-BALANCE, canon §7.8.1), and runs the budget check: a group
+  # estimated past 80% of its budget fails here, on every PR, before any runner is spent on it.
   plan:
     name: Plan (which content verifiers this change needs)
     runs-on: ubuntu-24.04          # pinned: see the coverage job
@@ -79,9 +81,9 @@ jobs:
       - run: python -m pip install --disable-pip-version-check -q "pyyaml==6.0.3"
       - name: Selection rules (self-test)
         run: python scripts/ci-deps.py --selftest
-      - name: Content groups (from each verifier's ci-line headers)
+      - name: Content groups (packed from each verifier's ci-line headers and main's measured times)
         id: groups
-        run: python scripts/ci-groups.py --selftest && python scripts/ci-groups.py && python scripts/ci-groups.py --github-output "$GITHUB_OUTPUT"
+        run: python scripts/ci-groups.py --selftest && python scripts/ci-groups.py --check && python scripts/ci-groups.py && python scripts/ci-groups.py --github-output "$GITHUB_OUTPUT"
       - name: Select
         id: select
         env:
@@ -156,6 +158,58 @@ jobs:
             sleep 5
           done
           echo "::error::could not push the regenerated REGISTER.md after 3 attempts"
+          exit 1
+
+  # The content groups are packed from each line's measured time (contract CI-BALANCE, 9 Oct 2026; canon
+  # §7.8.1). After every full run on main, once the Gate has passed, this job records that run's times
+  # (scripts/ci-timings.json: each line's seconds and the longest setup, read from the job logs) and repacks
+  # (scripts/ci-pack.json: a line moves only when its group would pass 70% of its budget), and commits both if
+  # they changed, as the register job does ("[skip ci]"; retried if main moves).
+  timings:
+    name: CI timings and pack (main only)
+    needs: gate
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.gate.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: read
+    concurrency:
+      group: ci-timings
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Record, repack and commit if changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch -q origin main && git reset -q --hard origin/main
+            python scripts/ci-groups.py --record-timings "$RUN_ID"
+            python scripts/ci-groups.py --write-pack
+            python scripts/ci-groups.py --check | tee -a "$GITHUB_STEP_SUMMARY" || true
+            if git diff --quiet -- scripts/ci-timings.json scripts/ci-pack.json; then
+              echo "timings and pack unchanged at $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            git add scripts/ci-timings.json scripts/ci-pack.json
+            git commit -q -m "Record CI timings and repack (run $RUN_ID) [skip ci]"
+            if git push -q origin HEAD:main; then
+              echo "timings and pack committed: $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            echo "main moved during attempt $attempt; fetching again"
+            sleep 5
+          done
+          echo "::error::could not push the timings and pack after 3 attempts"
           exit 1
 
   # Runs on the bare runner because it takes about a second and needs only node,

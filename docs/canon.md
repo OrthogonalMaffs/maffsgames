@@ -1361,7 +1361,7 @@ for 9m41s, and group B for 8 minutes. Nothing a check checks changed; only where
 | Site-wide checks | links, footer, theme, publish scope, verifier coverage, spec map, public claims, tax year, /essentials/, student labels, calculator, content safety, teacher line, search titles, findings register, quoted figures |
 | Tier 4 layer A | bank extraction and its lint (together: the lint reads what the extraction wrote) |
 | Shared asset tests | Next control, section clicks, answer.js, calculator, keypad |
-| Content verifiers A, B1-B4, C1-C4, D1-D2, E (the `content` job) | the per-game verifiers, selected on a PR (above); since contract V the matrix is built in the plan job from each script's `# ci-line:` header (§7.8.2), not listed in the workflow. C1-C4 are Just Pythag It, Bruv's `--part 1` .. `4`, dealt by measured cost; each first runs `--part-selftest` (the parts are exactly the unsplit task list, nothing twice, and CI runs every part). D1-D2 are Equation Builder's `--part 1/2` and `2/2`: each classifies every second candidate arrangement of every question (one question is 60% of the time, so it is split by candidate, not by question); the whole-question checks and the planted-fault self-test run in D1, and the self-test proves the two parts together fail exactly where the whole run does. B1-B4 are group B cut by the slowest time each line has taken (runners vary up to 1.8x). |
+| Content verifiers 1..n and Answer lock L1..Ln (the `content` job) | the per-game verifiers and the answer-lock parts, selected on a PR (above); since contract V the matrix is built in the plan job from each script's `# ci-line:` header (§7.8.2), not listed in the workflow, and since CI-BALANCE (9 Oct 2026) packed from measured times (below), not named by hand: the A, B1-B4, C1-C4, D1-D2, E and E2 groups this row described are gone, though their scripts' parts are as described here. C1-C4 are Just Pythag It, Bruv's `--part 1` .. `4`, dealt by measured cost; each first runs `--part-selftest` (the parts are exactly the unsplit task list, nothing twice, and CI runs every part). D1-D2 are Equation Builder's `--part 1/2` and `2/2`: each classifies every second candidate arrangement of every question (one question is 60% of the time, so it is split by candidate, not by question); the whole-question checks and the planted-fault self-test run in D1, and the self-test proves the two parts together fail exactly where the whole run does. B1-B4 were group B cut by the slowest time each line had taken (runners vary up to 1.8x). |
 | Regenerate REGISTER.md | push to main only, after the Gate (§0.4) |
 
 **Timings** (GitHub-hosted `ubuntu-24.04`, 4 CPUs):
@@ -1374,12 +1374,38 @@ for 9m41s, and group B for 8 minutes. Nothing a check checks changed; only where
 The same evening (queue item 2) every content job was brought under 4 minutes: B in four, C in four, D in two.
 Measured on the full run of the PR that did it (#103): every job 3m38s or less (A 3m38s, B2 3m29s, C4 3m10s, D1/D2 1m56s/2m03s); the whole run 4m47s (main after #99: 6m19s, with D 5m23s and B2 4m33s).
 
+**Groups are packed from measured times (contract CI-BALANCE, Jon, 9 Oct 2026).** Until then each verifier
+named its group by hand, and groups filled and drifted as verifiers were added and pages grew: on 9 Oct group E
+reached 9m04s of its 9m budget and turned main red after #211 though no verifier in it had changed, and B4 stood
+at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought time. Now:
+
+- **A ci-line names only its tier** (content, or `lock` for the answer-lock parts). `scripts/ci-groups.py` packs
+  each tier's lines into as many groups as it takes, from each line's seconds on main's last full run
+  (`scripts/ci-timings.json`) plus the job's setup, so that **every group is estimated at most 70% of its
+  budget** (the budget is 75% of the timeout: where the workflow fails a group). Content groups have a 6-minute
+  timeout: packed to 3m09s, failed past 3m36s, so every content job stays inside 4 minutes. Answer-lock parts
+  are one `check-answer-lock.py --part i/n` line each, too long to share a job, on a 10-minute timeout; add a part
+  when one passes 70%.
+- **A line with no recorded time counts as its tier's default** (content 120 s, lock 300 s) and is flagged
+  (`ci-groups.py --check` lists it) until a main run times it.
+- **The pack is stable.** `scripts/ci-pack.json` holds each line's group; a line moves only when its group would
+  pass 70% (the fewest, smallest moves) or it is new (it joins the group with the most room), so job names do
+  not churn.
+- **CI fails, on every PR, when any group is estimated past 80% of its budget** (`ci-groups.py --check` in the
+  plan job), naming the group and its largest lines. Packing keeps every group under 70%, so only a single line
+  too long for any group can fail it: split its script (`--part`, `--shard`).
+- **After every full run on main the "CI timings and pack" job** records that run's times and repacks, and
+  commits both files if they changed (`[skip ci]`, as the register job does).
+- "70%" and "80%" are of the budget, not the timeout (Jon's own wording, 9 Oct: "kept to 70% of the budget,
+  CI fails at 80%"). Of the timeout they would sit either side of the 75% at which the workflow already fails a
+  job, and the 80% check could never fire before the job had failed.
+
 **Rules that keep it fast.** Every job still fails at 75% of its timeout ("time budget: … split it"). **No
-"Content verifiers" job may run past 4 minutes** (Jon, 7 Oct 2026): a new content verifier's ci-line names whichever
-group keeps every group under 4 minutes as a job (each job's summary lists every check's duration;
-`check-verifier-coverage.py` reports any group whose lines took more than 4 minutes on the main run recorded in
-`scripts/ci-timings.json`), and a group that would pass 4 minutes is split, by an option on its script (`--shard`, `--part`) with a self-test proving the
-parts are the whole, or by cutting its list of lines.
+"Content verifiers" job may run past 4 minutes** (Jon, 7 Oct 2026): the packer keeps every content group under it (below; each job's summary lists every check's duration;
+`check-verifier-coverage.py` reports any content group estimated past 4 minutes from the main run recorded in
+`scripts/ci-timings.json`). Since CI-BALANCE the packer cuts the lists of lines; a single line too long for any
+group is split by an option on its script (`--shard`, `--part`) with a self-test proving the parts are the
+whole.
 
 ### 7.8.2 Two lanes: home and cloud (7 Oct 2026)
 
@@ -1401,12 +1427,14 @@ and is not edited by fix PRs.
   judges it exactly as if unclaimed (a migrated game must pass; a NOT_YET game is reported). The
   reported-not-failed exemption holds only for games in the roster's Unlisted section, so no time bound is needed.
 - **A new verifier never edits the workflow** (contract V, Jon, 7 Oct 2026). It declares its CI lines in its
-  own file, `# ci-line: <group> | <label> | <args>` (one per line it contributes; `&&` in `<args>` runs the
-  script again, as `--part-selftest && --part 1`), plus `# ci-deps: <paths>` if it depends on something the
-  derivation cannot see, or `# ci-held: <reason>` if it is deliberately not run. `scripts/ci-groups.py` builds the
-  content groups from those headers in the plan job; the groups' names and timeouts are its `GROUPS`. Either lane
-  adds a verifier this way; neither edits `.github/workflows/check-site.yml` for it. A new group, a change to a
-  group's timeout and every site-wide job stay home-lane CI work. (Until then canon reserved the workflow for the
+  own file, `# ci-line: <label> | <args>` (one per line it contributes; `&&` in `<args>` runs the
+  script again, as `--part-selftest && --part 1`; an answer-lock part is `# ci-line: lock | <label> | <args>`),
+  plus `# ci-deps: <paths>` if it depends on something the derivation cannot see, or `# ci-held: <reason>` if it
+  is deliberately not run. A line names no group: `scripts/ci-groups.py` packs the groups (§7.8.1). Either lane
+  adds a verifier this way; neither edits `.github/workflows/check-site.yml` for it, nor `scripts/ci-pack.json`
+  or `scripts/ci-timings.json` (main's "CI timings" job writes both). A tier, a tier's timeout or the packing
+  rule, and every site-wide job, stay home-lane CI work. (A hand-made group id from before CI-BALANCE, such as
+  `B4 |`, is still read as its tier, so an older branch passes.) (Until then canon reserved the workflow for the
   home lane while the cloud contract had the cloud lane add its verifier's line there: #96, #97 and #100-#102 did,
   and two conflicted with home-lane PRs. Both lanes now follow this rule.)
 - **A per-game fix PR edits neither `docs/todo.md` nor `docs/audits/REGISTER.md`:** the register file records

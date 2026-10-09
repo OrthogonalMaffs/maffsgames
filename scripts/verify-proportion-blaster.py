@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Proportion Blaster (every key recomputed from its stem, options distinct in value, every option marked in Chromium) |
+# ci-line: Proportion Blaster (every key recomputed from its stem, options distinct in value, every option marked in Chromium) |
 """Proportion Blaster: every key recomputed from the question's own numbers; every option clicked in Chromium.
 
 The game (100 multiple-choice items: gcse 50, alevel 50) covers direct and inverse proportion, sharing in a

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | Graph Sketcher (keys recomputed from each printed equation) |
+# ci-line: Graph Sketcher (keys recomputed from each printed equation) |
 """Independent verification of graph-sketcher's keys (todo §1.36; audit §1.2 items 13-14).
 
 Every scenario prints its model as an equation (eqLatex). That equation, not the game's

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check) |
+# ci-line: Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check) |
 """Independent verification of tax-theft (todo START item 4; canon §7.1.3).
 
 Every key is recomputed here from HMRC's 2025/26 rules, never asked of the game:

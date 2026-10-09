@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Linear Equation Solver (every move's class re-derived with SymPy, every option clicked in Chromium) |
+# ci-line: Linear Equation Solver (every move's class re-derived with SymPy, every option clicked in Chromium) |
 """Linear Equation Solver: every move's class re-derived with SymPy, every option clicked in Chromium.
 
 Jon's design of 7 Oct 2026: the game asks "What is the optimal move here?" at each line of the working. An optimal

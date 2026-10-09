@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B1 | Test the Claim (independent recomputation of every key) |
+# ci-line: Test the Claim (independent recomputation of every key) |
 """Independent verification for test-the-claim (docs/todo.md §1.14, §1.26).
 
 WHY THIS IS NOT LIKE verify-graph-transformer.py

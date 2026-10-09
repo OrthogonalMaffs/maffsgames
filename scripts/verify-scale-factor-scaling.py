@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | Scale Factor Scaling (every key recomputed from the quantities its question states; every option marked in Chromium) |
+# ci-line: Scale Factor Scaling (every key recomputed from the quantities its question states; every option marked in Chromium) |
 """Scale Factor Scaling: every key recomputed from what its question states, and nothing it does not state.
 
 The game (46 multiple-choice items in four tiers: area, volume, reverse and context; gcse serves T1-T3, alevel

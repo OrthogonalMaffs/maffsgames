@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Trig Wars (each side scores its own hits; the trig panel's numbers agree; hits found along the path; miss advice true by the physics) |
+# ci-line: Trig Wars (each side scores its own hits; the trig panel's numbers agree; hits found along the path; miss advice true by the physics) |
 """Trig Wars: scoring by side, the trig panel, hit detection and the miss advice, against the game's own physics.
 
 Trig Wars is an artillery game (canvas, two sides of three tanks, turns). It has no question bank; what a student is

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B4 | Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium) |
+# ci-line: Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium) |
 """Trig Worms: every outcome of the generator recomputed exactly, its diagram measured, every option marked.
 
 The game generates its questions: find an angle (SOH, CAH or TOA), the opposite or adjacent side, or the

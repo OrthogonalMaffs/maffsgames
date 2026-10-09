@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | Spot the Muppet (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium) |
+# ci-line: Spot the Muppet (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium) |
 """Spot the Muppet: the maths every item shows, recomputed; one mark per question; Next once.
 
 Each item is a character's advice and four options, one keyed correct. A question has two picks: a first wrong pick is a

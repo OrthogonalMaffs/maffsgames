@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Moments Master (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium) |
+# ci-line: Moments Master (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium) |
 """Moments Master: every key recomputed with SymPy, options distinct in value, every option clicked in Chromium.
 
 The tranche 5 audit (6 Oct 2026) found five keys that their own data contradicts (alevel :128, :134, :147 had no

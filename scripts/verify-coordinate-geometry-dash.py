@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | Coordinate Geometry Dash (every key recomputed from its question; exactly one correct option, equations compared as curves; every option marked in Chromium) |
+# ci-line: Coordinate Geometry Dash (every key recomputed from its question; exactly one correct option, equations compared as curves; every option marked in Chromium) |
 """Coordinate Geometry Dash: every key recomputed from its question, and exactly one option correct.
 
 The game (45 multiple-choice items: gcse 24, alevel 21) asks for midpoints, gradients, lines, distances,

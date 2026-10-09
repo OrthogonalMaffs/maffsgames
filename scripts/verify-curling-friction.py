@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B4 | Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium) |
+# ci-line: Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium) |
 """Curling Friction: every numerical key recomputed exactly from its own context; every option checked; every item
 marked in Chromium.
 

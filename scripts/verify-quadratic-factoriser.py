@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Quadratic Factoriser (every pooled item recomputed, SymPy) |
+# ci-line: Quadratic Factoriser (every pooled item recomputed, SymPy) |
 """Layers C + D verification for quadratic-factoriser (docs/quadratic-factoriser-spec.md,
 item 5). Grows with each build phase; this version covers Phase 1 ('gcse'), Phase 2
 ('higher') and Phase 3 ('formula').

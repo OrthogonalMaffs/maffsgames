@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B2 | Surd Simplifier (every key recomputed from its stem with SymPy, in simplest form; every option marked in Chromium) |
+# ci-line: Surd Simplifier (every key recomputed from its stem with SymPy, in simplest form; every option marked in Chromium) |
 """Surd Simplifier: every key recomputed exactly from the expression the student is shown; every option clicked.
 
 The game (100 multiple-choice items: gcse 50, alevel 50) asks the student to simplify a surd, rationalise a

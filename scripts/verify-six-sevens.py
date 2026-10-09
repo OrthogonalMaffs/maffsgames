@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B1 | Six Sevens, Bruv (independent recomputation + session simulation) |
+# ci-line: Six Sevens, Bruv (independent recomputation + session simulation) |
 """Independent verification for Six Sevens, Bruv (games/six-sevens-bruv/), built 30 Sep 2026.
 
 WHY THIS READS THE LIVE PAGE

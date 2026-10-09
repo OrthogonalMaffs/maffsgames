@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B4 | Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back) |
+# ci-line: Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back) |
 """Expected Damage: every expected value recomputed exactly, every key checked, every shown
 probability read back from the page.
 

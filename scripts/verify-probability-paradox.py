@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B1 | Probability Paradox (every key recomputed exactly; the assumptions each key needs stated (SR-18); every simulation measured against its item's exact answer; answer once and Next once, played in Chromium) |
+# ci-line: Probability Paradox (every key recomputed exactly; the assumptions each key needs stated (SR-18); every simulation measured against its item's exact answer; answer once and Next once, played in Chromium) |
 """Probability Paradox: every key recomputed, every assumption it needs stated, every simulation honest; answer once.
 
 Three modes (Paradox Predictor, Conditional Calculator, Fallacy Spotter), each item a scenario and four options. The

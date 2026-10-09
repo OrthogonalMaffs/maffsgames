@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Factor Theorem (every key from its item's polynomial; ACCEPTED lists = page; every form marked in Chromium; answer buttons; A-Level only; no Practice submit) |
+# ci-line: Factor Theorem (every key from its item's polynomial; ACCEPTED lists = page; every form marked in Chromium; answer buttons; A-Level only; no Practice submit) |
 """Factor Theorem: every key recomputed from its item's own polynomial; every typed answer marked by look-up.
 
 The tranche 5 audit (6 Oct 2026) found comma blanks matched in any order, so (x - 2)(x + 3) passed for

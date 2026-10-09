@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: B3 | Estimation Golf (every key recomputed from its question, exactly, at its own precision; every key scores a Hole in One in Chromium) |
+# ci-line: Estimation Golf (every key recomputed from its question, exactly, at its own precision; every key scores a Hole in One in Chromium) |
 """Estimation Golf: every key recomputed from its own question; every key typed scores a Hole in One in Chromium.
 
 The game (56 items: year6 20, ks3 9, gcse 9, alevel 9, level4 9) asks for an estimate and scores it by how close

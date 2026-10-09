@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | The Truth Will Set You Free (every truth table from its key, distractors not equivalent, scoring by correct cells, MaffsLock) |
+# ci-line: The Truth Will Set You Free (every truth table from its key, distractors not equivalent, scoring by correct cells, MaffsLock) |
 """The Truth Will Set You Free: every truth table recomputed from its key expression; scoring credits correct cells only.
 
 The tranche 6 audit (6 Oct 2026) found every truth-table cell scoring a point whether right or wrong, so an all-zero
