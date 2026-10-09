@@ -83,28 +83,24 @@ budget; E is at 491 s and takes nothing new).
 - **Jon, 9 Oct (answer to a question, item 11): Boolean Blitz marks an option right when it has the key's truth
   table AND no more literals than the key** (AB + BC, AB + AC accepted; the t6-004 unsimplified forms such as
   A·B + A for A stay wrong; t6-004 untouched). Boolean-blitz has B11 ledger entries for t6-002/003: clear them.
-- **7 seven-bridges: #219** (#218 is the home lane's GRAPH-SKETCHER-FIT). al_15's E to (300,150); t4-001 already
-  fixed by F1 batch 9 (closed with measurements). `verify-seven-bridges.py` in **E2** (~12 s); fails main's page on
-  al_15 A-C and B-D. Main's run on #217 (37960745833): B4 6m39s and L2 6m36s over their 6m budgets, no test failed
-  (B4 was 340 s wall on #216's run, nothing in it changed: a slow runner on a group near budget); failed jobs re-run
-  once; it passed (main green). **For the home lane (CI-BALANCE): B4 and B3 now sit near budget, as L1-L5 do.**
-  **Jon's rulings, 9 Oct 18:03 (addendum, folded into #219):** al_10, al_18 and al_21's grazing edges FIXED: each
-  layout mirrors its own other half (al_10 B, C and al_21 B, O to y 40; al_18 F to y 420), edges unchanged;
-  `CLEAR` 28 px (current vertex r 24 + 2 px stroke + half a 4 px edge; grazes were 19.8-21.1 px, next edge 28.1 px),
-  KNOWN_GRAZES deleted. **complex-converter ids 20, 28, 53 stay on the principal range (-pi < arg z <= pi), as
-  merged in #216: no change.**
-- **CI notes:** E split into E/E2 by #213. On main, B2 ~230 s and B1 ~260 s of 360; E ~330 and E2 ~265 of 540.
-  Put heavy new verifiers in E2. Answer-lock L1-L5 sit at 290-345 s of 360 since #215 added unit-converter: #217's
-  first run went over (L2/L4/L5), one re-run passed; the home lane's CI-BALANCE item covers it.
+- **7 seven-bridges: #219, merged 5926c24.** al_15's E to (300,150); t4-001 fixed by F1 batch 9 (closed with
+  measurements). **Jon's rulings, 9 Oct 18:03 (addendum, folded into #219):** al_10, al_18, al_21's grazing edges
+  fixed (each layout mirrors its own other half; edges unchanged); `CLEAR` 28 px (current vertex r 24 + 2 px stroke
+  + half a 4 px edge; grazes were 19.8-21.1 px, next edge 28.1 px), no exemptions. **complex-converter ids 20, 28, 53
+  stay on the principal range (-pi < arg z <= pi), as merged in #216: no change.** Main's #217 run went over budget
+  in B4 and L2 (no test failed); one re-run passed.
+- **8 wrong-on-the-internet: #223** (open; #220-#222 are the home lane's). Not merged while main is red: main's runs
+  on #220 and #219 failed only "CI timings and pack (main only)" (`gh api .../jobs/<id>/logs` exit 1; CI-BALANCE's
+  job, the home lane's fix is #222). Merge #223 once main is green.
+- **CI (CI-BALANCE, #220):** groups are packed now. A new verifier's header is `# ci-line: <label> | <args>` (no
+  group id); untimed lines get a group each until main's timings job records them. `ci-groups.py --check` locally.
 - **Local checks used for each PR** (the sandbox cannot reach the KaTeX CDN): check-changed's plan, the answer lock for
   the changed game with KaTeX served locally, and `extract-banks.py --only <slug>` + `check-banks.py --ci --only
   <slug>` (stale B11 ledger entries must leave `data/check-ledger.json` with the fix). esprima: unpack its sdist on
-  PYTHONPATH. The scratchpad tools are lost on a new session; rebuild from these notes.
-- **Remaining, in order, each ready as a draft in the old scratchpad (lost on clear; re-derive):**
-  - 8 wrong-on-the-internet: gcse_004 post states "a European roulette wheel (one green zero)", key 18/37 (48.6%),
-    "Depends on wheel" -> "P(black) = 1/2 every spin"; gcse_011 post opens "A and B are independent.", key "0.12",
-    stage-2 key and explanation no longer say addition gives P(A OR B). Page writes non-ASCII as \u escapes (the
-    tool turns typed \u escapes into characters: build them in code).
+  PYTHONPATH. Teacher-line fails locally on factor-theorem and log-laws only (KaTeX CDN): not a change's fault.
+- **Remaining, in order.** Drafts (page edits, verifiers, item-13 evidence) survive a clear in the session scratchpads
+  under `/tmp/claude-0/-home-user-maffsgames/` (5dd7a927.../scratchpad and 8451d901.../scratchpad); each was checked
+  9 Oct: passes the fixed page, fails main's (or the pre-batch) page.
   - 9 core-maths-paper2c: Q12 stem starts "f is a quadratic."; Q35 `accept:[1,3]` (Jon 16:21), selectAnswer marks
     against `q.accept || [q.correct]`, lock hint picks outside it, working says why both "Yes" are right; t4-001
     fixed by F1 batch 10 (a Next tap then an option tap inside the fresh window marks nothing). Verifier ~26 s: E2.

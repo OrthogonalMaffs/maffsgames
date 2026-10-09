@@ -19,7 +19,12 @@ findings:
   summary: Keyed 18/38 (American wheel); a UK or European wheel gives 18/37, so the distractor 'Depends on wheel'
     is correct
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. SR-17: wheel type stated'
-  status: open
+  status: fixed
+  pr: 223
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 8, Jon''s ruling: gcse_004''s post states a European roulette
+    wheel (one green zero) and the key is 18/37 (48.6%); ''Depends on wheel'', plainly wrong once the wheel is stated,
+    is replaced by ''P(black) = 1/2 every spin''. scripts/verify-wrong-on-the-internet.py checks every roulette post
+    states its wheel and uses its P(black), and fails main''s page here.'
 - id: wrong-on-the-internet-t2-002
   severity: HIGH
   jc: true
@@ -29,7 +34,12 @@ findings:
   summary: Keyed '0.12 (if independent)' but the post never says A and B are independent, so 'Need more information'
     is correct; the stage-2 key's 'Addition gives P(A OR B)' is false unless mutually exclusive
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2'
-  status: open
+  status: fixed
+  pr: 223
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 8, Jon''s ruling: gcse_011''s post states that A and B are
+    independent, so the key is 0.12 and ''Need more information'' is wrong; the stage-2 key and explanation no longer
+    say addition gives P(A OR B). scripts/verify-wrong-on-the-internet.py fails any key carrying its own ''(if ...)''
+    condition, and main''s page here.'
 - id: wrong-on-the-internet-t2-003
   severity: MEDIUM
   jc: false
