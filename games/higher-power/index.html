@@ -710,6 +710,13 @@ function waitForKatex(fn){
   else setTimeout(()=>waitForKatex(fn),100);   // lock-ok: waits for KaTeX to load; marks nothing
 }
 
+// Two cards match when they are worth the same (higher-power-t2-001): 2^8 goes with any card worth 256, not only
+// its own. Cards that look the same are worth the same; otherwise the stored values decide, but only when finite:
+// a googolplex is stored as Infinity (too big for a number here) and is not the harmonic series' infinity.
+function sameValue(a,b){
+  return a.valueDisplay===b.valueDisplay||(isFinite(a.value)&&a.value===b.value);
+}
+
 function pairsFlip(idx){
   const grid=document.getElementById('pairsGrid');
   if(MaffsLock.isLocked(grid)) return;   // two cards are up: wait for them to settle
@@ -730,7 +737,7 @@ function pairsFlip(idx){
     const second=idx;
     pairsFirst=null;
 
-    if(pairsCards[first].pairId===pairsCards[second].pairId&&first!==second){
+    if(first!==second&&sameValue(pairsCards[first].card,pairsCards[second].card)){
       // Match
       pairsState[first].matched=true;
       pairsState[second].matched=true;
