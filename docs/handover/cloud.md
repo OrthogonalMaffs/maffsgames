@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: complex-converter`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -71,12 +71,19 @@ budget; E is at 491 s and takes nothing new).
   the game), the explanation says why both are right; the rest as written.
 - **4 coordinate-geometry-dash: #214.** x = 3t, y = 4/t: options xy = 12 (key), xy = 7, y = 12x, x = 3y/4. New
   `verify-coordinate-geometry-dash.py` (B2, ~4 s): all 45 keys recomputed, equations compared as curves.
-- **Next: complex-converter** (t6-001). Drafts ready in the scratchpad for items 4-7: complex-converter
-  (every item to the principal argument: ids 20, 28, 30, 38, 53 change key form; 21, 20, 28, 40, 48 had a second
-  form of the key among the options), higher-power (match when the value cards look alike or the stored values
-  are equal and finite: googolplex and infinity are both stored as Infinity), seven-bridges (t4-001 already fixed
-  on main by F1 batch 9; al_15's E moved to (300,150); al_10, al_18, al_21 have edges grazing a vertex's disc at
-  20-21 px: not named, kept, reported to Jon).
+- **5 complex-converter: #215.** The contract's "apply it to every item" taken literally: the target line states
+  the range on every polar and exponential question; ids 20, 28, 30, 38, 53 keyed principal (same numbers; ids 20,
+  28 and 53 said "positive angle", which went); a second form of the key removed from ids 20, 21, 28, 40, 48 (40
+  and 48 had a negative-modulus twin); argDeg/argRad principal everywhere (Triples' cards). New
+  `verify-complex-converter.py` (B2, ~5 s, KaTeX from the CDN): every option read as a complex number.
+- **Next: higher-power** (t2-001). Drafts ready in the scratchpad (`verify-*.py`, `tools/*-edit.py`; scratch is lost
+  on a new session, so a fresh session rebuilds from these notes) for items 6-10: higher-power (match when the
+  value cards look alike or the stored values are equal and finite: googolplex and infinity are both stored as
+  Infinity); seven-bridges (t4-001 already fixed on main by F1 batch 9; al_15's E to (300,150); al_10, al_18, al_21
+  have edges grazing a vertex's disc at 20-21 px: not named, kept as KNOWN_GRAZES, reported to Jon);
+  wrong-on-the-internet (as ruled); paper2c (t4-001 fixed on main by F1 batch 10; Q12 "f is a quadratic"; Q35
+  accept:[1,3] per Jon's 16:21 ruling, marked in selectAnswer, lock hint picks outside the set); paper2b (Q28 D:
+  "Neither - both premiums cost more than the expected loss", false since £900 < £1,000).
 
 ## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #207 merged cf96929; main run 593 green)
 
