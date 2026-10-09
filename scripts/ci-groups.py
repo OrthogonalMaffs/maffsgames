@@ -45,7 +45,7 @@ site-wide jobs (tiers 1-2, site-wide checks, tier 4, shared assets) stay listed 
 
 Stdlib only.
 """
-import argparse, json, os, re, sys
+import argparse, json, os, re, sys, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCRIPTS = os.path.join(ROOT, "scripts")
@@ -362,46 +362,51 @@ def compare(path):
     return 0 if not gone and not extra else 1
 
 
-def record_timings(run_id):
-    """Write TIMINGS from a finished run's content jobs (needs the gh CLI): each line's seconds, read from the
-    job log's 'ok  <label>  (Ns; group at ...)' lines, and the longest setup (a group's total less its lines).
-    Run by the "CI timings" job after every full run on main; --write-pack then repacks from it."""
-    import subprocess, time
+def record_timings(run_id, from_dir=None):
+    """Write TIMINGS from a finished run's content and lock jobs: each line's seconds, read from the
+    'ok  <label>  (Ns; group at ...)' lines, and the longest setup (a group's total less its lines).
+    On main the "CI timings" job passes --from-dir: each group job saves those lines as an artifact
+    (ci-timing-*), downloaded into one folder, because the job-log API failed for the workflow's own token
+    on every fetch (9 Oct, runs 37964707421, 37965228268, 37966843652). From a workstation, without
+    --from-dir, the logs are read through the gh CLI instead."""
+    def parse(text):
+        mine = [(m.group(1), int(m.group(2))) for m in re.finditer(r"(?:ok|FAILED)  (.+?)  \((\d+)s; group at", text)]
+        tot = re.findall(r"group total: (\d+)m(\d+)s of", text)
+        return mine, (int(tot[-1][0]) * 60 + int(tot[-1][1]) - sum(t for _, t in mine)) if tot and mine else None
 
-    def gh(path, tries=1):
-        # A job's log can 404 for a while after the job ends (first main run, 9 Oct): retry, and say why it failed.
-        for i in range(tries):
+    texts = []
+    if from_dir:
+        for dirpath, _, files in os.walk(from_dir):
+            for fn in sorted(files):
+                with open(os.path.join(dirpath, fn), encoding="utf-8", errors="replace") as f:
+                    text = f.read()
+                job = text.split("\n", 1)[0].strip()
+                if job.startswith(PREFIX) or job.startswith(LOCK_PREFIX):
+                    texts.append(text)
+        run = {"created_at": os.environ.get("RUN_DATE", time.strftime("%Y-%m-%d")),
+               "head_branch": os.environ.get("GITHUB_REF_NAME", ""), "event": os.environ.get("GITHUB_EVENT_NAME", "")}
+        if not texts:
+            print("record-timings: no content or lock timing files under %s" % from_dir)
+            return 1
+    else:
+        import subprocess
+
+        def gh(path):
             r = subprocess.run(["gh", "api", path], cwd=ROOT, capture_output=True, text=True,
                                encoding="utf-8", errors="replace")
-            if r.returncode == 0:
-                return r.stdout
-            if i < tries - 1:
-                time.sleep(15)
-        raise RuntimeError("gh api %s: %s" % (path, (r.stderr or r.stdout).strip()[:300]))
-    run = json.loads(gh("repos/{owner}/{repo}/actions/runs/%s" % run_id))
-    jobs = json.loads(gh("repos/{owner}/{repo}/actions/runs/%s/jobs?per_page=100" % run_id))["jobs"]
-    secs, setups, read, missed = {}, [], 0, []
-    for job in jobs:
-        if not (job["name"].startswith(PREFIX) or job["name"].startswith(LOCK_PREFIX)):
-            continue
-        try:
-            log = gh("repos/{owner}/{repo}/actions/jobs/%s/logs" % job["id"], tries=4)
-        except RuntimeError as e:
-            missed.append(job["name"])
-            print("::warning::%s: its lines keep their last timing (%s)" % (job["name"], e))
-            continue
-        read += 1
-        mine = [(m.group(1), int(m.group(2))) for m in re.finditer(r"(?:ok|FAILED)  (.+?)  \((\d+)s; group at", log)]
+            if r.returncode:
+                raise RuntimeError("gh api %s: %s" % (path, (r.stderr or r.stdout).strip()[:300]))
+            return r.stdout
+        run = json.loads(gh("repos/{owner}/{repo}/actions/runs/%s" % run_id))
+        jobs = json.loads(gh("repos/{owner}/{repo}/actions/runs/%s/jobs?per_page=100" % run_id))["jobs"]
+        texts = [gh("repos/{owner}/{repo}/actions/jobs/%s/logs" % j["id"]) for j in jobs
+                 if j["name"].startswith(PREFIX) or j["name"].startswith(LOCK_PREFIX)]
+    secs, setups = {}, []
+    for text in texts:
+        mine, setup = parse(text)
         secs.update(mine)
-        tot = re.findall(r"group total: (\d+)m(\d+)s of", log)
-        if tot and mine:
-            setups.append(int(tot[-1][0]) * 60 + int(tot[-1][1]) - sum(t for _, t in mine))
-    if missed and not read:
-        print("record-timings: no job log could be read from run %s" % run_id)
-        return 1
-    if missed:  # the jobs whose logs failed keep their last recorded seconds
-        prev = (read_json(TIMINGS) or {}).get("lines", {})
-        secs = {**{k: v for k, v in prev.items() if k not in secs}, **secs}
+        if setup is not None:
+            setups.append(setup)
     rec = {"run": int(run_id), "date": run["created_at"][:10], "branch": run["head_branch"],
            "event": run["event"], "setup": max(setups) if setups else SETUP, "lines": dict(sorted(secs.items()))}
     with open(os.path.join(ROOT, TIMINGS), "w", encoding="utf-8", newline="\n") as f:
@@ -492,13 +497,14 @@ def main():
     ap.add_argument("--compare")
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--record-timings", metavar="RUN_ID")
+    ap.add_argument("--from-dir", metavar="DIR", help="with --record-timings: the run's ci-timing-* artifacts")
     ap.add_argument("--write-pack", action="store_true")
     ap.add_argument("--check", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     if a.record_timings:
-        return record_timings(a.record_timings)
+        return record_timings(a.record_timings, a.from_dir)
     if a.write_pack:
         return write_pack()
     if a.check:
