@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 22 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 15 open (1 CRITICAL, 14 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 14 open (1 CRITICAL, 13 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 2 in the roster's Unlisted section |
@@ -22,10 +22,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 25 | 0 | 26 |
-| HIGH | 14 | 194 | 0 | 208 |
+| HIGH | 13 | 195 | 0 | 208 |
 | MEDIUM | 128 | 143 | 2 | 273 |
 | LOW | 33 | 30 | 1 | 64 |
-| **All** | 176 | 392 | 3 | 571 |
+| **All** | 175 | 393 | 3 | 571 |
 
 ### By class
 
@@ -34,7 +34,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 13 | 106 |
 | 3 | 5 | 85 |
 | 6 | 24 | 56 |
-| 1 | 10 | 37 |
+| 1 | 9 | 37 |
 | NEW:wrong-explanation-text | 10 | 36 |
 | 5 | 26 | 26 |
 | 4 | 19 | 22 |
@@ -128,7 +128,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `better-value` | yes | verify-better-value.py | 0 | 5 | 4 | 0 | 3 | 6 | 0 |
 | `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 2 | 20 | 0 |
 | `boolean-blitz` | yes | verify-boolean-blitz.py | 0 | 3 | 0 | 5 | 5 | 3 | 0 |
-| `characteristic-quest` | yes | none | 0 | 1 | 3 | 1 | 5 | 0 | 0 |
+| `characteristic-quest` | yes | none | 0 | 1 | 3 | 1 | 4 | 1 | 0 |
 | `complex-converter` | yes | verify-complex-converter.py | 0 | 1 | 5 | 1 | 4 | 3 | 0 |
 | `component-crusher` | yes | verify-component-crusher.py | 1 | 6 | 6 | 1 | 2 | 12 | 0 |
 | `constructions-lab` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
@@ -223,10 +223,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 - **HIGH** glorious-gantt-t4-006, `games/glorious-gantt/index.html:684 (L4_B2)`: Floats of C and E wrong (keys 5 and 4; true 8 and 1); node 4 late keyed 12, LF(C) = 15
 - **HIGH** glorious-gantt-t4-007, `games/glorious-gantt/index.html:541 (CM_B2)`: Node 3 late keyed 6; LF(B) = 9 by the table, and node 3 is a dead end in the drawing
 - **HIGH** glorious-gantt-t4-008, `games/glorious-gantt/index.html:968,1003,1089,1188,1236`: Retries score full marks; double-clicking Check scores twice and skips items; inflated score submitted
-
-### `characteristic-quest` (Further, L4)
-
-- **HIGH** characteristic-quest-t6-001, `games/characteristic-quest/index.html:141 (handleAnswer)`: Answered buttons are locked by CSS only; Enter re-scores, and Tab+Enter on the revealed key turns a wrong answer right
 
 ### `eigenvalue-extractor` (Further, L4)
 
