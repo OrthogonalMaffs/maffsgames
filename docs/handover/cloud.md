@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: higher-power`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -79,7 +79,11 @@ budget; E is at 491 s and takes nothing new).
   t6-002 and t6-003 (the ids 40/48 twins, MEDIUM jc). **Lesson (CI red once on #216): a fixed B11 pair must leave
   `data/check-ledger.json` in the same PR** (tier 4 fails a stale entry); run `extract-banks.py --only <slug>` then
   `check-banks.py --ci --only <slug>` before pushing (esprima: pip build fails here; unpack its sdist on PYTHONPATH).
-- **Next: higher-power** (t2-001). Drafts ready in the scratchpad (`verify-*.py`, `tools/*-edit.py`; scratch is lost
+- **6 higher-power: #217.** Pairs matches by value (`sameValue`). New `verify-higher-power.py` (B2, ~2 s).
+- **Jon, 9 Oct (answer to a question, item 11): Boolean Blitz marks an option right when it has the key's truth
+  table AND no more literals than the key** (AB + BC, AB + AC accepted; the t6-004 unsimplified forms such as
+  A·B + A for A stay wrong; t6-004 untouched). Boolean-blitz has B11 ledger entries for t6-002/003: clear them.
+- **Next: seven-bridges** (t4-001, t4-002). Drafts ready in the scratchpad (`verify-*.py`, `tools/*-edit.py`; scratch is lost
   on a new session, so a fresh session rebuilds from these notes) for items 6-10: higher-power (match when the
   value cards look alike or the stored values are equal and finite: googolplex and infinity are both stored as
   Infinity); seven-bridges (t4-001 already fixed on main by F1 batch 9; al_15's E to (300,150); al_10, al_18, al_21
