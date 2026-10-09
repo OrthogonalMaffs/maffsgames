@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 33 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 35 open (1 CRITICAL, 34 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 33 open (1 CRITICAL, 32 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 2 in the roster's Unlisted section |
@@ -22,10 +22,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 25 | 0 | 26 |
-| HIGH | 34 | 174 | 0 | 208 |
-| MEDIUM | 133 | 139 | 1 | 273 |
-| LOW | 34 | 29 | 1 | 64 |
-| **All** | 202 | 367 | 2 | 571 |
+| HIGH | 32 | 176 | 0 | 208 |
+| MEDIUM | 130 | 141 | 2 | 273 |
+| LOW | 33 | 30 | 1 | 64 |
+| **All** | 196 | 372 | 3 | 571 |
 
 ### By class
 
@@ -37,11 +37,11 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 1 | 12 | 37 |
 | NEW:wrong-explanation-text | 10 | 36 |
 | 5 | 26 | 26 |
-| 4 | 20 | 22 |
+| 4 | 19 | 22 |
 | 7 | 6 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
 | NEW:convention-unstated | 3 | 12 |
-| 8 | 5 | 11 |
+| 8 | 4 | 11 |
 | NEW:precision-not-stated | 2 | 9 |
 | NEW:hand-typed explanation figure | 6 | 7 |
 | NEW:raw-tex-on-screen | 2 | 7 |
@@ -61,13 +61,13 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | uncounted | 0 | 3 |
 | NEW:analytics | 0 | 2 |
 | NEW:board-key-mismatch | 2 | 2 |
-| NEW:cosmetic | 2 | 2 |
+| NEW:cosmetic | 1 | 2 |
 | NEW:double-finish | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
 | NEW:timer-policy | 0 | 2 |
-| NEW:unmarkable free text | 2 | 2 |
+| NEW:unmarkable free text | 0 | 2 |
 | NEW:wording | 1 | 2 |
 | 10 | 0 | 1 |
 | NEW:a11y state | 0 | 1 |
@@ -91,7 +91,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:misc cosmetic | 0 | 1 |
 | NEW:misleading prompt | 0 | 1 |
 | NEW:missing-+c distractor | 0 | 1 |
-| NEW:mixed-mode board | 1 | 1 |
+| NEW:mixed-mode board | 0 | 1 |
 | NEW:modes share a board | 1 | 1 |
 | NEW:no-construction-check | 1 | 1 |
 | NEW:notation-puzzle | 1 | 1 |
@@ -150,7 +150,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `expectation-station` | yes | verify-expectation-station.py | 2 | 12 | 5 | 1 | 0 | 20 | 0 |
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `factor-race` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
-| `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 8 | 11 | 0 |
+| `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 2 | 16 | 1 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 2 | 13 | 0 |
 | `formula-forge` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
 | `formula-plug-in` | yes | none | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
@@ -264,11 +264,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 - **HIGH** glorious-gantt-t4-006, `games/glorious-gantt/index.html:684 (L4_B2)`: Floats of C and E wrong (keys 5 and 4; true 8 and 1); node 4 late keyed 12, LF(C) = 15
 - **HIGH** glorious-gantt-t4-007, `games/glorious-gantt/index.html:541 (CM_B2)`: Node 3 late keyed 6; LF(B) = 9 by the table, and node 3 is a dead end in the drawing
 - **HIGH** glorious-gantt-t4-008, `games/glorious-gantt/index.html:968,1003,1089,1188,1236`: Retries score full marks; double-clicking Check scores twice and skips items; inflated score submitted
-
-### `factor-theorem` (A-Level, L4; unlisted)
-
-- **HIGH** factor-theorem-t5-004, `games/factor-theorem/index.html:511 (practice Q33)`: Proof question marked by exact string 'f(2) = 2^n - 2^n = 0'
-- **HIGH** factor-theorem-t5-005, `games/factor-theorem/index.html:578 (T9(c))`: 'Interpret physically' marked by exact string 'object crosses origin at t=2, 3, 4'
 
 ### `characteristic-quest` (Further, L4)
 
