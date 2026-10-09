@@ -51,6 +51,28 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-09 (home): HOOK-FIX (Jon, 18:00) and the Car Trap contract
+
+- **The block:** the local pre-commit guard (`.git/hooks/pre-commit`, a copy of `~/.maffsgames-local/pre-commit`;
+  patterns in `~/.maffsgames-local/personal-patterns.txt`, also read by `scan-personal.sh`; no other repo uses it;
+  not gitleaks, not CI) has no bare relationship words. Its one relationship pattern was
+  "possessive + relation word", with three possessives: Jon's name, "his" and "my". "his daughter" in the draft
+  (fiction) matched it.
+- **Ruling (Jon, 9 Oct):** "the word daughter should not be blocked, that's taking the rule too far"; name-only
+  chosen. The pattern now matches only "<Jon's name>'s <relation>". "his/my <relation>" in prose or room dialogue
+  commits.
+- **What it matches now (16 patterns, by category):** 1 email/phone pattern; 14 standalone words or short phrases for
+  real names, places and identifiers (unchanged); 1 "Jon's name + relation word" combination. The hook's allowlist
+  for the project's own addresses is unchanged. Backup of the old list: `personal-patterns.txt.bak-2026-10-09`
+  (local only).
+- **Self-test:** `~/.maffsgames-local/test-pre-commit.sh` runs the real hook in a throwaway repo. "his daughter's
+  first car" passes; a "<name>'s daughter" fixture and a standalone-pattern fixture, both built at test time from
+  the list, are blocked. It passes on the new list and fails the fiction case on the old one.
+- **Gap to know about:** an unnamed "his daughter" about Jon's own family is no longer caught; only the named form
+  and the other patterns are.
+- **The Car Trap contract is in the repo:** `docs/handover/contracts/2026-10-09-car-trap-draft.md`, verbatim
+  (committed through the hook, no bypass). It is queued after the checkpoint, as before.
+
 ## 2026-10-09 (home): GRAPH-SKETCHER-FIT (item 2, #218)
 
 - **Overflow, measured at 320x568, 390x844, 412x915 on all 45 scenarios** (main: every one overflowed, the page
