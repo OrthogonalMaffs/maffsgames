@@ -37,14 +37,61 @@ start-up load). When the work merges, move the file to `docs/history/`.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
 of 9 Oct, 11:00, in `docs/history/contracts/2026-10-0[89]-ft-fix*.md`).
-LISTED-HIGH (in progress, `contracts/2026-10-09-listed-high.md`): 13 items, one game per PR, in the contract's order;
-each next game is claimed in a commit of its own, riding the previous game's PR. Progress in the LISTED-HIGH entry below.
+LISTED-HIGH: COMPLETE but item 12 (`contracts/2026-10-09-listed-high.md`): #210-#212, #214, #216, #217, #219, #223,
+#225-#231 merged; main green (run 654, 37978742832). **Item 12 (PD-CHECK) STOPPED, 9 Oct 20:40: Jon's call, see the
+PD-CHECK entry below.** CAR-TRAP-DRAFT (moved from the home lane, Jon 20:17; contract on main,
+`contracts/2026-10-09-car-trap-draft.md`): **Car Trap draft for Jon's review**, PR below; see its entry.
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): LISTED-HIGH (in progress; contract in `contracts/2026-10-09-listed-high.md`)
+## 2026-10-09 (cloud): CAR-TRAP-DRAFT, Car Trap draft for Jon's review (phase 1; no live file touched)
+
+- **Contract:** the repo copy on main, `contracts/2026-10-09-car-trap-draft.md` (Jon's amended text of 16:45, saved
+  verbatim by the home lane in dc43926 and merged in #221). It is left where it is, because the home lane's handover
+  points to that path; it moves to `docs/history/contracts/` with phase 2.
+- **The draft:** `docs/escape-room-drafts/car-trap-draft.md`. It has every slot `room.js` needs, the three art
+  prompts, lock 1's variant proposal and bank entry, and the checklist (all pass; two figure exceptions in words,
+  both flagged). Its "For Jon" list has 11 decisions, including:
+  - **There is no `fail` slot.** The engine shows `stakes` after "If you get it wrong." (`engine.js:238`) and after
+    "And so:" on time-out (`:791`), so the Fail is written into `stakes`.
+  - **`hook`, `brief` and `stakes` are written raw**, so they can't hold tokens.
+- **Lock 1 (`head-bay-lower-bound`, proposed):**
+  - W 2.2 to 2.9 m to the nearest ten centimetres; slider 2.00 to 3.00 m, step 0.01; answer W - 0.05; miss the
+    stated W.
+  - Scratch checks, not committed: `check-lock-bank.py` "unique (2.35)", and all 8 variants pass the generator's
+    `keep()` rules.
+  - Joint draws by the checker's collision rules: 352 of 512 VALID with the precision in words, 184 with a numeral
+    10.
+- **Next (phase 2, a separate contract after Jon approves):** the generator block, a lock-bank batch entry,
+  `room.js`, `teacher.html`, the art and the release. STOP IF did not fire: no brief/rule clash the draft couldn't
+  resolve, and lock 1 has exactly one settable answer in every variant.
+
+## 2026-10-09 (cloud): PD-CHECK (LISTED-HIGH item 12) STOPPED for Jon: #232 fixes t4-002; the saved check is wrong
+
+- **#232 (OVERLAY-KEYS) is on main** (9a0830f, merged 18:46 UTC, before #229; main green, run 654). The pd-check
+  branch already contained it: no rebase needed.
+- **The saved check FAILS on main** (both cases): STOP IF fired. **But the cause is the check, not the game:** it builds
+  its own `<div id="mfg-initials-overlay">`, which #232's listeners (bound to the overlay that `askInitials()` creates)
+  never touch; and its "dd typed into a text field" case has no counterpart in this game (prisoners-dilemma has no
+  input, textarea or contenteditable; the overlay's inputs are the only text fields it ever shows). Both were written
+  for the discarded in-game guard.
+- **Measured, real path (scratch probe, not committed; no game code changed):** a tournament in Chromium, match 1
+  played to its end with C, the real overlay opened by `submitScore`, match 2 ready, "CDC" typed into the overlay.
+  Main's overlay: round 0 -> 0, nothing played, the overlay holds "CDC"; C plays a move after Skip. The pre-#232 overlay
+  (`6642c82~1`): round 0 -> 1, a move played, the overlay holds "DC" (the first initial went to the game).
+- **Already in CI:** #232's `scripts/test-initials-overlay.py` opens the real overlay in prisoners-dilemma, types a-z
+  (so C and D), and fails if any game key listener sees a key: stronger than "no move played". It names
+  prisoners-dilemma among the 11 games whose shortcuts fired before the fix.
+- **For Jon (recommendation A):** close t4-002 citing #232 and `test-initials-overlay.py`; retire the saved check (no
+  PR, no new CI line). The bug was a shared-layer bug, fixed and tested there across 97 games; a per-game copy would test
+  a weaker property of the same code. **B:** rewrite the check on the real path above (the probe, as a verifier;
+  self-test serves the pre-#232 overlay and must FAIL), drop the text-field case, wire it in, close t4-002. Either way
+  the text-field case goes: no such field exists in this game. **t4-001** stays open (SR-22, Jon's leaderboard).
+- Branch `claude/youthful-feynman-anpxuq-pd-check` left as it was (its check unchanged, no PR).
+
+## 2026-10-09 (cloud): LISTED-HIGH (complete but item 12; contract in `contracts/2026-10-09-listed-high.md`)
 
 One PR per game, in the contract's order; each next game's claim is a commit of its own at the end of the previous
 game's PR (so it reaches main before that game starts). New verifiers go in **B2** (main run 595: 249 s of its 360 s
@@ -114,67 +161,19 @@ budget; E is at 491 s and takes nothing new).
   the changed game with KaTeX served locally, and `extract-banks.py --only <slug>` + `check-banks.py --ci --only
   <slug>` (stale B11 ledger entries must leave `data/check-ledger.json` with the fix). esprima: unpack its sdist on
   PYTHONPATH. Teacher-line fails locally on factor-theorem and log-laws only (KaTeX CDN): not a change's fault.
-- **Remaining, in order.** Drafts (page edits, verifiers, item-13 evidence) survive a clear in the session scratchpads
-  under `/tmp/claude-0/-home-user-maffsgames/` (5dd7a927.../scratchpad and 8451d901.../scratchpad); each was checked
-  9 Oct: passes the fixed page, fails main's (or the pre-batch) page.
-  - 12 prisoners-dilemma t4-002: **HOLD (Jon, 18:56; note saved as `contracts/2026-10-09-listed-high-note-1900.md`).**
-    The drafted in-game keydown guard is **discarded**, in no PR: it was the defensive-patch shape (a guard in one
-    caller round a fault in the shared initials overlay, which lets typed keys reach page shortcuts in every game with
-    a document keydown handler). The home lane fixes the overlay (contract OVERLAY-KEYS). When its handover records
-    that fix, re-run item 12's check (drafted `verify-prisoners-dilemma.py`: C plays; "CDC" typed in the overlay and
-    "dd" in a field play nothing) against prisoners-dilemma with no change to the game's code. t4-001 stays open
-    (Jon's design).
-  - **Merging (Jon, 18:56):** #223 and every later PR wait for a green main run; the workflow and `ci-groups.py` are
-    the home lane's. With no green main this session, the PRs stay open, green on their own checks.
-
-## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #207 merged cf96929; main run 593 green)
-
-- **For the home lane, CI, before the next E verifier lands:** main's run 593 put group E at **8m39s of its 9m00s
-  budget** (12 min timeout). Factor Theorem now takes 69 s there (its option, level and Next checks and 8 plants);
-  Screening Room 89 s, Simultaneous Solver 73 s, Terrible Advice 57 s, Linear Equation Solver 52 s. The B1, B3 and B4 jobs
-  took 5m00s to 5m23s (setup included; their budget is 6 min), so moving one verifier only moves the pressure: a new group (E2 or B5) in
-  `scripts/ci-groups.py`. The cloud lane left E as it is.
-- **Answer buttons (answers 1):** Q33 ("Which line proves it?") and T9(c) are four shuffled buttons each, the
-  contract's lines, marked by `dataset.val` on Check or Submit (with T9's other parts); the explanation shows after
-  marking. All in the game (`fillOptions`, `chosenValue`, `markOptions`, `.opt-*` CSS); the lock hint picks a button.
-- **A-Level only (answers 2):** the page never reads `?level` (a comment says so); every URL logs and submits
-  `alevel`. No start screen, no level4 board. **For the home lane, at relisting: remove L4 from Factor Theorem's
-  roster row, the portal filter and the spec map.** With no open CRITICAL or HIGH after this PR, it is ready (SR-21).
-- **Practice submits nothing** (t5-014, t5-015); its device-local score-history record went with it (nothing reads
-  `MaffsScoreHistory.get`). The Test alone submits, once, to `factor_theorem_alevel`.
-- **A wrong answer waits on `MaffsNext`** (t5-018's note; next-control.js loaded); a right one keeps Next Question.
-  t5-018's other parts were already fixed on main: closed with the measurements.
-- **`scripts/check-teacher-invite.py` (answers 3):** one line added to FT_STEP (choose a button in any unanswered
-  `.opt-group`); nothing else changed. Its factor-theorem routes reach both end screens at 390 and 1280 (KaTeX served
-  locally: the sandbox cannot reach the CDN). check-answer-lock seeds 1-3 PASS the same way.
-- **Verifier** (group E): the option checks (Q33's working for every n; T9(c) from s, v and a), prose keys, the five
-  ?level URLs, no Practice submit, MaffsNext on a wrong answer; 8 plants, all caught. About 80 s with its self-test.
-- **Still open, not this lane's:** t5-008 (home lane, VOCAB-IDEMPOTENT), t5-016 and t5-017 (a Test bank of 40 from
-  Project Claude, a separate contract).
-
-## 2026-10-09 (cloud): FT-FIX stopped before building (contract STOP IF; answered 11:00, above)
-
-- **STOP IF fired: "the game's selection pattern can't serve a 4-option item inside a multi-part test question
-  without engine changes".** factor-theorem has no selection pattern at all: every Practice item and every Test part
-  is a typed box (no options, no `dataset.val` anywhere). Engine changes needed, all in the game: an item or part
-  with `options` renders four buttons (shuffled, `data-val` the option's text) in place of its box; choosing one
-  marks it chosen; Check (Practice) or Submit Answer (Test, with the other parts) marks `dataset.val` against the
-  key; one attempt, as the typed tier-5 items. Self-contained, about 40 lines. Recommended.
-- **Also unexpected, for Jon:** the game has **no start screen**. It opens on Learn, with Practice and Test as
-  tabs. Step 5's "an absent or unknown key shows the start screen (level choice)" needs a new one. Proposal: a
-  level choice (A-Level, Level 4) shown instead of the tabs until a level is chosen; a valid `?level` skips it;
-  the top bar's badge shows the chosen level. Design addition (canon §0.3 "still stops").
-- **Both changes break a shared check the cloud lane may not edit:** `scripts/check-teacher-invite.py` (site-wide,
-  every PR) plays factor-theorem with no `?level`, clicks the Practice tab and fills `input.answer-input` boxes
-  (FUNCTION_ROUTE, FT_STEP). Additive fix: a `("click", '[data-level="alevel"]')` step first in both routes, and
-  FT_STEP choosing the first option in any unanswered option group. Jon authorises it in the FT-FIX PR (as the
-  foundation-s5 lines), or the home lane lands it first. check-answer-lock needs nothing shared: the game's own
-  lock hint can name `"level": "alevel"`.
-- **t5-018 is fixed on main already** (Chromium, 390x844, this session): T5 and every Test question 390 px wide;
-  Learn at 390 and 320 px; no literal `___` and no `<span` in any attribute; `question_index` is `qIdx + 1` in
-  both modes; hint button off after marking; Enter checks. Left: its "wrong-answer advance not MaffsNext" note.
-- **For Jon (the rule recorded with SR-16 to SR-20):** "a level that serves another level's items is not listed as
-  that level". Step 5 has Level 4 serve A-Level's content (the page has no separate Level 4 content); relisting it
-  at L4 would fall under that rule. The home lane's relisting decides.
-- **Did not fire:** Q33 and T9(c) match the quoted text; `question_index` needs no change; a `level4` board needs
-  no hub or coverage change (factor-theorem is in NOT_ON_HUB; the module labels `level4` "Level 4").
+- **Item 12, prisoners-dilemma t4-002: waiting on the home lane's OVERLAY-KEYS (#232)** (Jon, 18:56; note in
+  `contracts/2026-10-09-listed-high-note-1900.md`). The drafted in-game keydown guard was **discarded**, in no PR: it
+  was the defensive-patch shape (the shared initials overlay lets typed keys reach page shortcuts in every game with a
+  document keydown handler; the overlay is the fix). **The check is saved on branch
+  `claude/youthful-feynman-anpxuq-pd-check`** (`scripts/verify-prisoners-dilemma.py`, verbatim from the scratchpad;
+  no PR, not in CI: it fails main until #232 is on main). It asserts, on a tournament's first match in Chromium: C
+  pressed on the game screen plays a move; "CDC" typed into the initials overlay (`#mfg-initials-overlay`, an input
+  focused in it) plays nothing; "dd" typed into any other text field plays nothing. **When #232 is on main:** run it
+  against prisoners-dilemma with no change to the game's code; it must pass. Its self-test plants the discarded
+  in-game guard, so it reports CANNOT PLANT: rewrite the plant to serve main's pre-#232 overlay module (the shared
+  file's old content) and confirm it FAILs, update the `ci-line` header to the packed form (`# ci-line: <label> |`),
+  then open the PR (claim prisoners-dilemma first), closing t4-002. **t4-001** (the board ranks whichever opponent is
+  chosen) stays open: Jon's leaderboard design, not this lane's.
+- **Stacked PRs (Jon's ruling, 9 Oct 20:20): one branch per PR, stacked, is fine.** #226-#231 were each on
+  `claude/youthful-feynman-anpxuq-<game>`, opened together so CI ran in parallel, merged strictly in order, each on a
+  green Gate with main green on the previous merge.
