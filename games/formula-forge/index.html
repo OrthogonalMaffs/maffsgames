@@ -99,6 +99,18 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option; i >= 1 the first that is not the key.
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#options .opt-btn')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const k = currentQ.correct;",
+    "(bs.find(b => b.dataset.val !== k) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -366,6 +378,7 @@ function buildPool(){
 }
 
 function startGame(){
+  MaffsLock.newSession();
   pool=buildPool();
   qIdx=0;score=0;correctN=0;total=0;stage=1;streak=0;
   document.getElementById('score').textContent='0';
@@ -376,6 +389,7 @@ function startGame(){
 }
 
 function nextQ(){
+  if(window.MaffsNext)MaffsNext.clear(document.getElementById('solution'));
   if(qIdx>=pool.length){endGame();return}
   currentQ=pool[qIdx];qIdx++;total++;hintsUsed=0;
   stage=currentQ.stage;
@@ -409,6 +423,7 @@ function nextQ(){
     b.appendChild(inner);
     b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b);
   });
+  MaffsLock.fresh(oEl);   // a new question: a double-click on Start or Next cannot pick an option
 }
 
 function updateStagePills(){
@@ -438,6 +453,7 @@ function useHint(n){
 }
 
 function handleAnswer(btn){
+  if(!MaffsLock.lock(document.getElementById('options')))return;   // one answer per question (canon 7.6.0)
   const q=currentQ,s=(Date.now()-qStart)/1000;
   const ok=btn.dataset.val===q.correct;
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});
@@ -451,7 +467,7 @@ function handleAnswer(btn){
     score+=Math.max(1,Math.round((BASE-penalty)*m));
     correctN++;streak++;
     updateHUD();
-    setTimeout(nextQ,1000);
+    MaffsLock.timer(nextQ,1000);
   } else {
     btn.classList.add('wrong');streak=0;
     updateHUD();showExplain(q);
@@ -463,14 +479,14 @@ function showExplain(q){
   let html='<h3>Worked solution</h3>';
   (q.steps||[]).forEach(st=>{html+='<div class="step">'+rkStr(st)+'</div>'});
   if(q.misconception)html+='<div class="misconception">⚠ '+q.misconception+'</div>';
-  html+='<button class="next-btn" onclick="closeSol()">Got it — next question</button>';
   sol.innerHTML=html;sol.className='solution show';
+  // A wrong answer waits on Next under the worked solution (canon 7.6): one advance however it is pressed
+  MaffsNext.wrong({mount:sol,label:'Got it — next question',onAdvance:()=>{sol.className='solution';nextQ()}});
 }
-
-function closeSol(){document.getElementById('solution').className='solution';nextQ()}
 function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){
   const pct=total>0?Math.round(correctN/total*100):0;
   let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
   document.getElementById('resultTitle').textContent=t;
@@ -484,7 +500,7 @@ function endGame(){
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('formula-forge',level,score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('formula-forge',level,score);}}
   var _pbKey='fforge_best_'+level;var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'formula-forge',level:level,score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score);}
   show('results');
-}
+});
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>

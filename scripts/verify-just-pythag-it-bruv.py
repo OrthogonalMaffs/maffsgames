@@ -737,6 +737,7 @@ async def new_page(browser, viewport=(1200, 1000), touch=False):
     ctx = await browser.new_context(viewport={"width": viewport[0], "height": viewport[1]},
                                     has_touch=touch, is_mobile=touch)
     await bc.no_next_floor(ctx)
+    await ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # its answers are typed at once; MaffsLock's window is off here
 
     async def route(r):
         url = r.request.url

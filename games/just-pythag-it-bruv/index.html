@@ -175,6 +175,22 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Round 1 taps the hypotenuse first; i = 0 types the key, i >= 1 the key plus 7 to the same places. 'ready' is the game's own state: on a phone the keypad makes the box read-only.
+{
+  "start": "document.getElementById('startBtn').click()",
+  "ready": "!!window.JPIB && !!JPIB.ui && (JPIB.ui.state() === 'tap' || JPIB.ui.state() === 'asking')",
+  "answer": [
+    "return (async () => {",
+    "  const until = async f => { for (let n = 0; n < 200 && !f(); n++) await new Promise(r => setTimeout(r, 20)); };",
+    "  if (JPIB.ui.state() === 'tap') { JPIB.ui.tap('r'); await until(() => JPIB.ui.state() === 'asking'); }",
+    "  const q = JPIB.ui.question();",
+    "  document.getElementById('answer').value = i === 0 ? q.keyText : (parseFloat(q.keyText) + 7).toFixed(q.dp === 0 ? 0 : 1);",
+    "  document.getElementById('answerForm').requestSubmit();",
+    "})();"
+  ]
+}
+-->
 <script src="../../schools/assets/answer.js"></script>
 <!-- Calculator required (roster, canon §4.4): the shared on-screen calculator. scripts/check-calculator.py
      keeps this include, the badge and the roster field in step. Its answer mode types through the shared
@@ -948,6 +964,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   }
 
   function startGame() {
+    MaffsLock.newSession();
     session = J.buildSession(J.newSeed());
     idx = 0; score = 0; correctCount = 0; addCount = 0; askedMs = 0; byStage = { a: 0, b: 0, c: 0 };
     show('game');
@@ -974,6 +991,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     $('unit').textContent = q.unit;
     $('answerLabel').textContent = J.sym(q) + ' =';
     $('answer').value = '';
+    MaffsLock.fresh($('answerForm'));
     askStart = Date.now();
     window.scrollTo(0, 0);
     if (q.stage === 'a') {
@@ -1030,7 +1048,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   var resizeTimer = null;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () {
+    resizeTimer = setTimeout(function () {   // lock-ok: redraws the triangle at the new width; marks nothing
       if (q && (state === 'tap' || state === 'asking') && Math.abs($('fig').getBoundingClientRect().width - drawnW) > 1) draw();
     }, 150);
   });
@@ -1059,6 +1077,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     var res = J.mark(q, raw);
     if (res === 'unreadable') { $('msg').textContent = MaffsAnswer.message('unreadable'); return; }
     if (res === 'format') { $('msg').textContent = MaffsAnswer.message('format', raw, { dp: 1 }); return; }
+    if (!MaffsLock.lock($('answerForm'))) return;
     var ok = res === 'correct';
     var secs = (Date.now() - scoreStart) / 1000;
     askedMs += Date.now() - askStart;
@@ -1072,7 +1091,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       if (!q.spot) {
         $('feedback').innerHTML = '<div class="fb-quick">✓ ' + J.sym(q) + ' = ' + esc(q.keyText) + ' ' + esc(q.unit) + '</div>';
         feedbackInView();
-        setTimeout(function () { if (state === 'right') nextQuestion(); }, CORRECT_DELAY);
+        MaffsLock.timer(function () { if (state === 'right') nextQuestion(); }, CORRECT_DELAY);
         return;
       }
       showFeedback(true, raw, null);
@@ -1117,7 +1136,8 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     feedbackInView();
   }
 
-  function finish() {
+  // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
     state = 'done';
     clearInterval(clockTimer);
     var n = session.questions.length, secs = Math.floor(elapsed() / 1000);
@@ -1135,7 +1155,7 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
       (addCount ? '<br>Added instead of subtracting: <b>' + addCount + '</b>' + (addCount === 1 ? ' time' : ' times') : '') +
       (pb ? '<br>New personal best' : '');
     show('results');
-  }
+  });
 
   /* ---------- wiring ---------- */
   $('answerForm').addEventListener('submit', function (e) { e.preventDefault(); submit(); });

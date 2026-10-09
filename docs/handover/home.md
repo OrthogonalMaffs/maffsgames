@@ -12,7 +12,8 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 **OVERNIGHT RUN (Project Claude for Jon, 8 Oct 2026, 23:45):** `docs/handover/contracts/2026-10-08-overnight.md`
 (verbatim; its rules override the checkpoint rule for this run). Items: 1 VOCAB-IDEMPOTENT (DONE, #193 merged 9 Oct,
 fce8721, main green), 2 CONTRACTS-FOLDER (DONE, #194 merged 9 Oct,
-7b7b7e2, main green), 3 RELIST-SR (in progress), 4+ F1 batches 9-11.
+7b7b7e2, main green), 3 RELIST-SR (DONE, #197 merged 9 Oct, d1e03ec, main green),
+4+ F1 batches 9-11 (batch 9 in progress).
 
 **Contracts (canon §7.8.2, contract CONTRACTS-FOLDER):** each is saved verbatim as
 `docs/handover/contracts/<yyyy-mm-dd>-<name>.md`; the queue below holds a one-line pointer; the file moves to
@@ -35,7 +36,31 @@ the checkpoint) is all merged; its list is in the archive.
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-09 (home): RELIST-SR (overnight item 3, branch `claude/relist-sr`)
+## 2026-10-09 (home): F1 batch 9 (overnight item 4, branch `claude/f1-batch9`)
+
+- **Claims read on main:** `cloud-remaining: unit-converter` (UC-FIX, #196 open); factor-theorem is already migrated.
+- **On MaffsLock, each with its declaration, seeds 1-3 passing (KS3, then GCSE):** just-pythag-it-bruv,
+  wrong-on-the-internet, higher-power, prisoners-dilemma, surd-simplifier, coordinate-geometry-dash, formula-forge,
+  scale-factor-scaling. **NOT_YET: 14** (13 listed, unit-converter claimed; glorious-gantt unlisted, the cloud's).
+- **Faults fixed beyond the swap:**
+  - surd-simplifier, coordinate-geometry-dash, formula-forge, scale-factor-scaling: options "locked" by a CSS class
+    only, so Enter re-marked (shown on main: one wrong answer, then Enter on each option, = 5 marks; now 1). A wrong
+    answer now waits on MaffsNext: surd-simplifier's used to move on after 1 s; the other three keep their "Got it"
+    label, now MaffsNext under the worked solution. coordinate-geometry-dash's right answer still shows the
+    solution and its own button, which now advances only from a shown solution.
+  - wrong-on-the-internet (retry until right, kept): **each wrong attempt now waits on Try again (MaffsNext, 3 s
+    floor), then the options not yet tried reopen.** It used to reopen at once; the answer-once rule (one mark per
+    attempt, canon 7.6/7.6.0) needs the pause, as split-it's Try Again. For Jon: say if the pause is too long here.
+  - higher-power: `holAnswered` and `pairsLocked` flags replaced (lock/fresh); Pairs locks the grid while two cards
+    are up. Pairs is not played by the check: double-clicked through a whole run in Chromium, one attempt per pair,
+    one game_completed, one submit. A wrong call still ends the run after 2 s (a MaffsNext there would make its
+    double-click count as a second completion in the check).
+  - prisoners-dilemma: `choiceLocked` replaced, C/D keys too; each tournament game is one session. Tournament
+    double-clicked through in Chromium: 7 opponents, 140 rounds, 7 game_completed, 7 submits.
+  - just-pythag-it-bruv: already guarded by its own state; swap only. Its verifier adds `NO_LOCK_FRESH_INIT`.
+- **Answer lock now five CI parts** (L5 added; main's last run had L1 at 254 s with 74 games, budget 360 s).
+
+## 2026-10-09 (home): RELIST-SR (overnight item 3, #197, merged d1e03ec, main green)
 
 - **Step 1 on main, all met:** verify-screening-room.py runs in CI (ci-line, group E); the register has no open
   CRITICAL or HIGH (t4-014 MEDIUM and t4-017 LOW open); `check-answer-lock.py --game screening-room` PASS.

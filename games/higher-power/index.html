@@ -134,6 +134,17 @@ body.accessible{background-color:#12141f!important}
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Higher or Lower (the default mode): a wrong call ends the run (results after 2 s, as before). i = 0 calls it right; i >= 1 wrong (an equal pair is always right, so it may take more than one).
+{
+  "ready": "document.getElementById('holGame').classList.contains('active') && !document.getElementById('btnHigher').disabled",
+  "answer": [
+    "const c = compareCards(holRight, holLeft), right = c > 0 ? 'higher' : 'lower';",
+    "document.getElementById(((i === 0) === (right === 'higher')) ? 'btnHigher' : 'btnLower').click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -193,7 +204,7 @@ body.accessible{background-color:#12141f!important}
         </div>
       </div>
     </div>
-    <div class="hol-buttons">
+    <div class="hol-buttons" id="holButtons">
       <button class="hol-btn btn-higher" id="btnHigher" onclick="holAnswer('higher')">Higher</button>
       <button class="hol-btn btn-lower" id="btnLower" onclick="holAnswer('lower')">Lower</button>
     </div>
@@ -377,8 +388,8 @@ function katexStr(tex){if(typeof katex!=='undefined')return katex.renderToString
 
 /* ===== STATE ===== */
 let currentLevel='ks3', currentMode='hol';
-let holStreak=0, holBest=0, holLeft=null, holRight=null, holAnswered=false, holQuestionIndex=0;
-let pairsAttempts=0, pairsMatched=0, pairsFirst=null, pairsLocked=false, pairsTimerStart=0, pairsTimerInterval=null;
+let holStreak=0, holBest=0, holLeft=null, holRight=null, holQuestionIndex=0;
+let pairsAttempts=0, pairsMatched=0, pairsFirst=null, pairsTimerStart=0, pairsTimerInterval=null;
 
 /* ===== MODE / LEVEL SELECTORS ===== */
 document.querySelectorAll('.mode-btn').forEach(b=>{
@@ -447,6 +458,7 @@ function compareCards(a,b){
 
 /* ===== START GAME ===== */
 function startGame(){
+  MaffsLock.newSession();
   if(currentMode==='hol') startHOL();
   else startPairs();
 }
@@ -480,7 +492,7 @@ function pickRazorPair(){
 }
 
 function startHOL(){
-  holStreak=0;holBest=0;holQuestionIndex=0;holAnswered=false;
+  holStreak=0;holBest=0;holQuestionIndex=0;
   const pbKey='mfg_higher_power_streak_'+currentLevel;
   const stored=parseInt(localStorage.getItem(pbKey))||0;
   holBest=stored;
@@ -523,9 +535,7 @@ function renderLeftCard(){
 }
 
 function renderHOLCards(){
-  holAnswered=false;
-  document.getElementById('btnHigher').disabled=false;
-  document.getElementById('btnLower').disabled=false;
+  MaffsLock.fresh(document.getElementById('holButtons'));   // a new pair: a double-click cannot answer it
   document.getElementById('factText').textContent='';
 
   // Left card (revealed)
@@ -547,12 +557,8 @@ function renderHOLCards(){
 }
 
 function holAnswer(choice){
-  if(holAnswered) return;
-  holAnswered=true;
+  if(!MaffsLock.lock(document.getElementById('holButtons'))) return;   // one call per pair (canon 7.6.0)
   holQuestionIndex++;
-
-  document.getElementById('btnHigher').disabled=true;
-  document.getElementById('btnLower').disabled=true;
 
   // Reveal right card
   const rightInner=document.getElementById('rightInner');
@@ -589,20 +595,21 @@ function holAnswer(choice){
     }
 
     // After delay, slide cards
-    setTimeout(()=>{
+    MaffsLock.timer(()=>{
       holLeft=holRight;
       holRight=pickNextRight();
       renderHOLCards();
     },1800);
   } else {
     // Game over
-    setTimeout(()=>{
+    MaffsLock.timer(()=>{
       endHOL();
     },2000);
   }
 }
 
-function endHOL(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endHOL=MaffsLock.finishOnce(function(){
   const pbKey='mfg_higher_power_streak_'+currentLevel;
   const oldPB=parseInt(localStorage.getItem(pbKey))||0;
   const newPB=holStreak>oldPB;
@@ -624,7 +631,7 @@ function endHOL(){
 
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('higher-power',currentLevel,holStreak,holQuestionIndex).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('higher-power',currentLevel,holStreak);}}
   show('results');
-}
+});
 
 /* ============================================================
    PAIRS MODE
@@ -633,7 +640,7 @@ let pairsCards=[];
 let pairsState=[];
 
 function startPairs(){
-  pairsAttempts=0;pairsMatched=0;pairsFirst=null;pairsLocked=false;
+  pairsAttempts=0;pairsMatched=0;pairsFirst=null;
   document.getElementById('pairsAttempts').textContent='0';
   document.getElementById('pairsMatched').textContent='0/10';
   document.getElementById('pairsTimer').textContent='0s';
@@ -695,15 +702,17 @@ function renderPairsGrid(){
     // Render KaTeX after DOM
     waitForKatex(()=>{renderKatex(contentSpan,pc.content);});
   });
+  MaffsLock.fresh(grid);
 }
 
 function waitForKatex(fn){
   if(typeof katex!=='undefined') fn();
-  else setTimeout(()=>waitForKatex(fn),100);
+  else setTimeout(()=>waitForKatex(fn),100);   // lock-ok: waits for KaTeX to load; marks nothing
 }
 
 function pairsFlip(idx){
-  if(pairsLocked) return;
+  const grid=document.getElementById('pairsGrid');
+  if(MaffsLock.isLocked(grid)) return;   // two cards are up: wait for them to settle
   if(pairsState[idx].flipped||pairsState[idx].matched) return;
 
   pairsState[idx].flipped=true;
@@ -715,7 +724,7 @@ function pairsFlip(idx){
   } else {
     pairsAttempts++;
     document.getElementById('pairsAttempts').textContent=String(pairsAttempts);
-    pairsLocked=true;
+    MaffsLock.lock(grid);   // one attempt per pair of flips (canon 7.6.0)
 
     const first=pairsFirst;
     const second=idx;
@@ -727,26 +736,26 @@ function pairsFlip(idx){
       pairsState[second].matched=true;
       pairsMatched++;
       document.getElementById('pairsMatched').textContent=pairsMatched+'/10';
-      setTimeout(()=>{
+      MaffsLock.timer(()=>{
         cards[first].classList.add('matched','disabled');
         cards[second].classList.add('matched','disabled');
-        pairsLocked=false;
+        MaffsLock.fresh(grid);
         if(pairsMatched===10) endPairs();
       },500);
     } else {
       // No match
-      setTimeout(()=>{
+      MaffsLock.timer(()=>{
         pairsState[first].flipped=false;
         pairsState[second].flipped=false;
         cards[first].querySelector('.pair-card-inner').classList.remove('flipped');
         cards[second].querySelector('.pair-card-inner').classList.remove('flipped');
-        pairsLocked=false;
+        MaffsLock.fresh(grid);
       },1200);
     }
   }
 }
 
-function endPairs(){
+const endPairs=MaffsLock.finishOnce(function(){
   clearInterval(pairsTimerInterval);
   const elapsed=Math.floor((Date.now()-pairsTimerStart)/1000);
   const pbKey='mfg_higher_power_pairs_'+currentLevel;
@@ -775,8 +784,8 @@ function endPairs(){
 
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('higher-power',currentLevel,pairsAttempts,10).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('higher-power',currentLevel,pairsAttempts);}}
 
-  setTimeout(()=>show('results'),800);
-}
+  MaffsLock.timer(()=>show('results'),800);
+});
 
 /* ===== MENU ===== */
 function showMenu(){
