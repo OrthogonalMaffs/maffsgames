@@ -1,9 +1,14 @@
 # Handover: home lane
 
-**HOME LANE, 9 OCT EVENING (Project Claude's queue for Jon, 16:10): IN PROGRESS.** Contracts in
-`docs/handover/contracts/2026-10-09-home-queue.md` (items 1, 2, 4, 5) and `...-home-queue-addendum.md` (the order,
-items 3 and 7); SCI-CALC is saved when it starts. Main went red after #211 (group E 9m04s of 9m): nothing merges
-until the cloud lane's one-off E2 PR is merged and main is green.
+**MAIN GREEN (for the cloud lane: #223 may merge):** main's full run on 5cea89b (#224) passed every job, run
+37969653160, and its timings job recorded and repacked (760ef9a). Main had been red since #220 (CI-BALANCE) on its
+main-only "CI timings and pack" job alone: the job-log API refused the workflow's token; #224 reads the timings from
+artifacts instead. Every content group is now at most 69% of its budget. Watch main's run on #218 (18f5da8).
+
+**HOME LANE, 9 OCT EVENING (Jon's 16:10 queue, reordered 18:00 and 19:00): IN PROGRESS.** Done: RULINGS-9OCT (#215),
+CI-BALANCE (#220, then #222 and #224 to fix its timings job; merged ahead of #218 because #218's L1 went over
+budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). Next: HOOK-FIX (#221), OVERLAY-KEYS (19:00
+addendum), PLAY-AGAIN-SCREEN (32 games incl. higher-power), SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint.
 
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
 `docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
@@ -50,6 +55,31 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-09 (home): HOOK-FIX (Jon, 18:00) and the Car Trap contract
+
+- **The block:** the local pre-commit guard (`.git/hooks/pre-commit`, a copy of `~/.maffsgames-local/pre-commit`;
+  patterns in `~/.maffsgames-local/personal-patterns.txt`, also read by `scan-personal.sh`; no other repo uses it;
+  not gitleaks, not CI) has no bare relationship words. Its one relationship pattern was
+  "possessive + relation word", with three possessives: Jon's name, "his" and "my". "his daughter" in the draft
+  (fiction) matched it.
+- **Ruling (Jon, 9 Oct):** "the word daughter should not be blocked, that's taking the rule too far"; name-only
+  chosen. The pattern now matches only "<Jon's name>'s <relation>". "his/my <relation>" in prose or room dialogue
+  commits.
+- **What it matches now (16 patterns, by category):** 1 email/phone pattern; 14 standalone words or short phrases for
+  real names, places and identifiers (unchanged); 1 "Jon's name + relation word" combination. The hook's allowlist
+  for the project's own addresses is unchanged. Backup of the old list: `personal-patterns.txt.bak-2026-10-09`
+  (local only).
+- **Self-test:** `~/.maffsgames-local/test-pre-commit.sh` runs the real hook in a throwaway repo. "his daughter's
+  first car" passes; a "<name>'s daughter" fixture and a standalone-pattern fixture, both built at test time from
+  the list, are blocked. It passes on the new list and fails the fiction case on the old one.
+- **Gap to know about:** an unnamed "his daughter" about Jon's own family is no longer caught; only the named form
+  and the other patterns are.
+- **The HOOK-FIX contract** (`docs/handover/contracts/2026-10-09-hook-fix.md`, verbatim) has one line that matches a
+  standalone real-detail pattern by coincidence (an everyday word). Jon ruled: allow that exact line
+  (`allowed-lines.txt`); the pattern is unchanged.
+- **The Car Trap contract is in the repo:** `docs/handover/contracts/2026-10-09-car-trap-draft.md`, verbatim
+  (committed through the hook, no bypass). It is queued after the checkpoint, as before.
 
 ## 2026-10-09 (home): GRAPH-SKETCHER-FIT (item 2, #218)
 
