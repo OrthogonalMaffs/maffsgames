@@ -643,7 +643,7 @@ function startGame(){
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
   G.questions=pool.slice(0,6);G.qIdx=0;G.score=0;G.correctSQs=0;G.totalSQs=0;
   G.timerStart=Date.now();G.timerInterval=setInterval(updateTimer,1000);
-  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active');
+  $('menuScreen').classList.remove('active');$('gameScreen').classList.add('active'); MaffsLock.screen($('gameScreen'));
   const labels={core:'Core Maths',alevel:'A-Level',level4:'Level 4'};
   $('hudLevel').textContent=labels[G.level];
   mfg('game_started',{game_slug:'growth-and-decay',level:G.level});
@@ -877,7 +877,7 @@ function nextScenario(){if(!MaffsLock.lock($('qPanel')))return;G.qIdx++;if(G.qId
 // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
 const endGame=MaffsLock.finishOnce(function(){
   clearInterval(G.timerInterval);
-  $('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
+  $('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active'); MaffsLock.screen($('resultsScreen'));
   const pct=G.totalSQs>0?Math.round(100*G.correctSQs/G.totalSQs):0;
   let title='Well done!';
   if(pct>=90)title='Outstanding!';else if(pct>=70)title='Great work!';
@@ -896,7 +896,7 @@ const endGame=MaffsLock.finishOnce(function(){
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('growth-and-decay',G.level,G.score,G.totalSQs).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('growth-and-decay',G.level,G.score);}}
 });
 
-function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active');}
+function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active'); MaffsLock.screen($('menuScreen'));}
 
 window.addEventListener('DOMContentLoaded',()=>{parseURL();});
 

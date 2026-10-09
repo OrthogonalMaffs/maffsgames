@@ -465,7 +465,7 @@ function startGame() {
   currentQuestions = buildQuestionSet(sessionLength);
 
   showScreen('gameScreen');
-  document.getElementById('gameHeader').style.display = 'flex';
+  document.getElementById('gameHeader').style.display = 'flex'; MaffsLock.fresh(document.getElementById('gameHeader'));
   updateScore();
   showQuestion();
 
@@ -760,6 +760,7 @@ function showScreen(id) {
   if (id === 'startScreen') {
     document.getElementById('gameHeader').style.display = 'none';
   }
+  MaffsLock.screen(document.getElementById(id));
 }
 
 

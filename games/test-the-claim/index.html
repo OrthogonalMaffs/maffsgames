@@ -1343,7 +1343,7 @@ function startGame() {
   state.method = 'cr';
 
   $('menuScreen').classList.remove('active');
-  $('gameScreen').classList.add('active');
+  $('gameScreen').classList.add('active'); MaffsLock.screen($('gameScreen'));
 
   const modeLabels = {binomial:'Binomial',poisson:'Poisson',normal:'Z-test',correlation:'Correlation'};
   $('hudMode').textContent = modeLabels[state.mode];
@@ -2101,7 +2101,7 @@ function nextQuestion() {
 const endGame = MaffsLock.finishOnce(function () {
   clearInterval(state.timerInterval);
   $('gameScreen').classList.remove('active');
-  $('resultsScreen').classList.add('active');
+  $('resultsScreen').classList.add('active'); MaffsLock.screen($('resultsScreen'));
 
   const pct = state.totalSteps > 0 ? Math.round(100 * state.correctSteps / state.totalSteps) : 0;
   let title = 'Well done!';
@@ -2147,7 +2147,7 @@ const endGame = MaffsLock.finishOnce(function () {
 function showMenu() {
   $('resultsScreen').classList.remove('active');
   $('gameScreen').classList.remove('active');
-  $('menuScreen').classList.add('active');
+  $('menuScreen').classList.add('active'); MaffsLock.screen($('menuScreen'));
 }
 
 // ============================================================

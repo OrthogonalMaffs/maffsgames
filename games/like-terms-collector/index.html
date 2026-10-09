@@ -346,12 +346,13 @@ function showScreen(id){
   const el=document.getElementById(id);
   el.style.display='block';
   el.classList.add('active');
+  MaffsLock.screen(document.getElementById(id));
 }
 
 function startGame(){
   currentStage=0;currentQ=0;totalCorrect=0;stageCorrect=[0,0,0];questionIndex=0;stage3Round=0;
   MaffsLock.newSession();
-  document.getElementById('gameHeader').style.display='flex';
+  document.getElementById('gameHeader').style.display='flex'; MaffsLock.fresh(document.getElementById('gameHeader'));
   document.getElementById('scoreNum').textContent='0';
   document.getElementById('scoreTotal').textContent='0';
   updateStagePill();

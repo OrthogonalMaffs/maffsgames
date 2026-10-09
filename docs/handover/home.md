@@ -8,7 +8,7 @@ artifacts instead. Every content group is now at most 69% of its budget. Main gr
 **HOME LANE, 9 OCT EVENING (Jon's 16:10 queue, reordered 18:00 and 19:00): IN PROGRESS.** Done: RULINGS-9OCT (#215),
 CI-BALANCE (#220, then #222 and #224 to fix its timings job; merged ahead of #218 because #218's L1 went over
 budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). HOOK-FIX (#221), OVERLAY-KEYS (#232).
-Next: PLAY-AGAIN-SCREEN (32 games incl. higher-power), SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint, PREPUSH-SCOPE,
+PLAY-AGAIN-SCREEN (#234 + batch 2). Next: SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint, PREPUSH-SCOPE,
 LIBRARY-DRAFT. **CAR-TRAP-DRAFT moved to the CLOUD LANE (Jon, 20:17); the home lane does not start it.** Its
 contract is on main, verbatim: `docs/handover/contracts/2026-10-09-car-trap-draft.md` (committed dc43926, merged in
 #221). LIBRARY-DRAFT (Jon, 19:35; new ★ room, Mrs Barb Phile's library) starts after The Rightful King and Car
@@ -59,6 +59,23 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-09 (home): PLAY-AGAIN-SCREEN batch 2 (item 4 done but for characteristic-quest)
+
+- **The 21 games batch 1 left on `SCREEN_NOT_YET` now change every screen through `MaffsLock.screen()`:**
+  - their own screen helper ends with it: better-value, expectation-station, fermi-lab, formula-plug-in,
+    like-terms-collector, new-shapes, probability-pioneer, think-of-a-number (`showScreen(id)`); equation-builder,
+    spot-the-error (`showScreen(name)`: the active screen); simultaneous-solver (`showS`);
+  - no helper: each line that makes a `...Screen` active is followed by `MaffsLock.screen(<it>)`: component-crusher,
+    four-quadrant-explorer, given-that, growth-and-decay, split-it, stat-attack, test-the-claim, truth-buster,
+    wrong-on-the-internet;
+  - prime-or-composite: `showModal()` opens the window on the modal, `closeModal()` (its Play Again) on `.page`,
+    where its Start button sits;
+  - six games reveal a header with "← Back to Games" outside the screens when a run starts (truth-buster,
+    think-of-a-number, four-quadrant-explorer, like-terms-collector, probability-pioneer, given-that): that line now
+    also calls `MaffsLock.fresh(gameHeader)`.
+- `SCREEN_NOT_YET` is down to characteristic-quest (the cloud lane's; it comes off when the claim ends). All 21 pass
+  check-answer-lock.py locally (seed 1).
 
 ## 2026-10-09 (home): PLAY-AGAIN-SCREEN (item 4)
 

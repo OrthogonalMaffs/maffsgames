@@ -874,10 +874,7 @@ SWALLOWED = set()      # games where a driver tap landed in a fresh window and w
 # "not fresh" fault is reported, not failed, until batch 2 converts them; a listed game that passes fails, so the
 # list cannot go stale. characteristic-quest is the cloud lane's (cloud-remaining:) until it comes off that list.
 SCREEN_NOT_YET = set('''
-better-value characteristic-quest component-crusher equation-builder expectation-station fermi-lab formula-plug-in
-four-quadrant-explorer given-that growth-and-decay like-terms-collector new-shapes prime-or-composite
-probability-pioneer simultaneous-solver split-it spot-the-error stat-attack test-the-claim think-of-a-number
-truth-buster wrong-on-the-internet
+characteristic-quest
 '''.split())
 SCREEN_REPORTED = {}   # slug -> the not-fresh fault, for a game on SCREEN_NOT_YET
 

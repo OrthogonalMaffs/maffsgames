@@ -456,6 +456,7 @@ function showScreen(id) {
   const el = document.getElementById(id);
   if (el) el.classList.add('active');
   document.getElementById('gameHeader').style.display = (id === 'gameScreen') ? 'flex' : 'none';
+  if (el) MaffsLock.screen(el);
 }
 
 function getPB() {
