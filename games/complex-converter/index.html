@@ -174,6 +174,19 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Form Roulette: i = 0 picks the first option; i >= 1 the first that is not the key.
+{
+  "start": "startMode('roulette')",
+  "answer": [
+    "const bs = [...document.querySelectorAll('#rOptions .opt-btn')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const k = rQuestions[rIndex].correctLatex;",
+    "(bs.find(b => b.dataset.val !== k) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -219,6 +232,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
       <div class="given-display" id="rGiven"></div>
       <div class="target-label" id="rTarget">Convert to polar form</div>
       <div class="options-grid" id="rOptions"></div>
+      <div id="rNext"></div>
       <div class="calc-btn-wrap" id="calcBtnWrap" style="display:none"><button class="calc-btn" id="calcBtn" onclick="toggleCalc()">&#x1f522; Calculator (&minus;25 pts)</button></div>
       <div class="calc-panel" id="calcPanel"><div class="calc-mode-badge" id="calcMode">DEG</div><div class="calc-grid" id="calcGrid"></div><div class="calc-result" id="calcResult"></div></div>
       <div class="context-line" id="rContext"></div>
@@ -265,13 +279,14 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     </div>
   </div>
   <div class="sniper-main">
-    <div class="sniper-diagram">
-      <svg id="sArgand" class="argand-svg" viewBox="0 0 480 480" style="cursor:crosshair;"></svg>
+    <div class="sniper-diagram" id="sDiagram">
+      <svg id="sArgand" class="argand-svg" viewBox="0 0 480 480" style="cursor:crosshair;" tabindex="-1"></svg>
     </div>
     <div class="sniper-question">
       <div class="sniper-prompt" id="sPrompt"></div>
       <div class="sniper-feedback" id="sFeedback">Tap the Argand diagram to place this number</div>
       <button class="sniper-btn" id="sNextBtn" style="display:none;" onclick="sniperNext()">Next</button>
+      <div id="sNextMount"></div>
     </div>
   </div>
 </div>
@@ -287,7 +302,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     <div class="end-btns">
   <div style="text-align:center;color:#0d9488;font-size:13px;margin:12px 0;font-family:'Outfit',sans-serif"><a href="/leaderboards/" style="color:inherit;text-decoration:none">&#127942; Global leaderboard</a></div>
   <a href="/" style="display:block;text-align:center;color:#7a7f90;font-size:14px;font-weight:500;text-decoration:none;margin-top:12px;font-family:'Outfit',sans-serif">← Back to Games</a>
-      <button class="end-btn primary" onclick="location.reload()">Play Again</button>
+      <button class="end-btn primary" onclick="playAgain()">Play Again</button>
       <button class="end-btn secondary" onclick="showMenu()">Menu</button>
     </div>
     <p id="teacherInvite"></p>
@@ -482,13 +497,18 @@ function showMenu() { showScreen('menuScreen'); }
 // ==========================================
 let rQuestions, rIndex, rScore, rCorrect, rTimerId, rStartTime, rDirStats, rTimes, rUsedCalc, rCalcUses;
 
+// Play Again replays the mode just played, in the page (it used to reload to the menu).
+let lastMode = 'roulette';
+function playAgain() { startMode(lastMode); }
 function startMode(mode) {
+  lastMode = mode;
   if(mode === 'roulette') startRoulette();
   else if(mode === 'triples') startTriples();
   else if(mode === 'sniper') startSniper();
 }
 
 function startRoulette() {
+  MaffsLock.newSession();
   rQuestions = pickN(bank, 20);
   rIndex = 0; rScore = 0; rCorrect = 0; rTimes = []; rCalcUses = 0;
   rDirStats = {};
@@ -501,6 +521,7 @@ function startRoulette() {
 }
 
 function showRouletteQ() {
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('rNext'));
   if(rIndex >= rQuestions.length) { endRoulette(); return; }
   const q = rQuestions[rIndex];
   document.getElementById('rqNum').textContent = rIndex + 1;
@@ -526,6 +547,7 @@ function showRouletteQ() {
     btn.onclick = () => rouletteAnswer(btn, q, o);
     grid.appendChild(btn);
   });
+  MaffsLock.fresh(grid);   // a new question: a double-click cannot answer it
 
   // calculator hint
   rUsedCalc = false;
@@ -588,6 +610,7 @@ function selectCalcOpt(div, opt, grid) {
 }
 
 function rouletteAnswer(btn, q, val) {
+  if(!MaffsLock.lock(document.getElementById('rOptions'))) return;   // one answer per question (canon 7.6.0)
   clearInterval(rTimerId);
   const elapsed = (Date.now() - rStartTime) / 1000;
   const dir = `${formName[q.source]} → ${formName[q.target]}`;
@@ -616,11 +639,15 @@ function rouletteAnswer(btn, q, val) {
     rTimes.push(elapsed);
   }
   document.getElementById('rScore').textContent = rScore;
-  setTimeout(() => { rIndex++; showRouletteQ(); }, 1200);
+  // A right answer moves on; a wrong one shows the right option and waits on Next (canon 7.6)
+  const go = () => { rIndex++; showRouletteQ(); };
+  if(val === q.correctLatex) MaffsLock.timer(go, 1200);
+  else MaffsNext.wrong({mount: document.getElementById('rNext'), onAdvance: go});
 }
 
 
-function endRoulette() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endRoulette = MaffsLock.finishOnce(function () {
   window._ggAbandoned=false;
   mfg('game_completed',{game_slug:'complex-converter',level:LEVEL,score:rScore,questions_answered:rQuestions.length,accuracy:Math.round(rCorrect/rQuestions.length*100)});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('complex-converter',LEVEL,rScore,rQuestions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('complex-converter',LEVEL,rScore);}}
@@ -642,7 +669,7 @@ function endRoulette() {
   }
   bd.innerHTML = rows;
   document.getElementById('heatmapWrap').style.display = 'none';
-}
+});
 
 // ==========================================
 // MODE 2: MATCHING TRIPLES
@@ -650,6 +677,7 @@ function endRoulette() {
 let tRound, tScore, tWrong, tMatched, tRoundData, tSelected, tStartTime2, tTimerId2, tRoundStart;
 
 function startTriples() {
+  MaffsLock.newSession();
   tRound = 0; tScore = 0; tWrong = 0;
   tStartTime2 = Date.now();
   showScreen('triplesScreen');
@@ -847,9 +875,9 @@ function checkTriple() {
 
     if(tMatched >= 5) {
       clearInterval(tTimerId2);
-      setTimeout(() => nextTriplesRound(), 800);
+      MaffsLock.timer(() => nextTriplesRound(), 800);
     } else {
-      setTimeout(() => renderTriplesCols(), 600);
+      MaffsLock.timer(() => renderTriplesCols(), 600);
     }
   } else {
     // wrong
@@ -859,13 +887,13 @@ function checkTriple() {
     document.getElementById('triplesStatus').textContent = 'Not a match — try again';
     document.querySelectorAll('.triple-card.selected').forEach(c => {
       c.classList.add('wrong-flash');
-      setTimeout(() => { c.classList.remove('wrong-flash','selected'); }, 600);
+      MaffsLock.timer(() => { c.classList.remove('wrong-flash','selected'); }, 600);
     });
     tSelected = {cart:null, polar:null, exp:null};
   }
 }
 
-function endTriples() {
+const endTriples = MaffsLock.finishOnce(function () {
   clearInterval(tTimerId2);
   window._ggAbandoned=false;
   mfg('game_completed',{game_slug:'complex-converter',level:LEVEL,score:tScore,questions_answered:tRound*5,accuracy:tRound>0?Math.round(((tRound*5-tWrong)/(tRound*5))*100):0});
@@ -880,17 +908,17 @@ function endTriples() {
   `;
   document.getElementById('endBreakdown').style.display = 'none';
   document.getElementById('heatmapWrap').style.display = 'none';
-}
+});
 
 // ==========================================
 // MODE 3: ARGAND SNIPER
 // ==========================================
-let sQuestions, sIndex, sScore2, sShots, sWaiting;
+let sQuestions, sIndex, sScore2, sShots;
 
 function startSniper() {
   sQuestions = pickN(bank, 15);
   sIndex = 0; sScore2 = 0; sShots = [];
-  sWaiting = false;
+  MaffsLock.newSession();
   showScreen('sniperScreen');
   document.getElementById('sNextBtn').style.display = 'none';
 
@@ -911,16 +939,16 @@ function showSniperQ() {
   document.getElementById('sPrompt').innerHTML = K(q.givenLatex);
   document.getElementById('sFeedback').textContent = 'Tap the Argand diagram to place this number';
   document.getElementById('sNextBtn').style.display = 'none';
-  sWaiting = true;
+  if(window.MaffsNext) MaffsNext.clear(document.getElementById('sNextMount'));
 
   // draw empty argand (no point)
   drawArgand(document.getElementById('sArgand'), q.re, q.im, 480, {hidePoint:true});
+  MaffsLock.fresh(document.getElementById('sDiagram'));   // a new shot: a double-tap on Next cannot place it
 }
 
 function sniperClick(e) {
-  if(!sWaiting) return;
-  sWaiting = false;
   const svg = document.getElementById('sArgand');
+  if(!MaffsLock.lock(document.getElementById('sDiagram'))) return;   // one shot per number (canon 7.6.0)
   const rect = svg.getBoundingClientRect();
   const svgW = 480;
   const scaleRatio = svgW / rect.width;
@@ -971,15 +999,20 @@ function sniperClick(e) {
   document.getElementById('sFeedback').innerHTML = pts > 0
     ? `<span style="color:#22c55e">+${pts} points</span> — distance: ${dist.toFixed(2)}`
     : `<span style="color:#ef4444">Miss</span> — distance: ${dist.toFixed(2)}`;
-  document.getElementById('sNextBtn').style.display = '';
+  // A hit moves on from its own Next; a miss waits on Next (canon 7.6)
+  if(pts > 0) document.getElementById('sNextBtn').style.display = '';
+  else MaffsNext.wrong({mount: document.getElementById('sNextMount'), onAdvance: () => { sIndex++; showSniperQ(); }});
 }
 
+// Only from a shown Next: a double-click or a second Enter cannot skip a number.
 function sniperNext() {
+  if(document.getElementById('sNextBtn').style.display === 'none') return;
+  document.getElementById('sNextBtn').style.display = 'none';
   sIndex++;
   showSniperQ();
 }
 
-function endSniper() {
+const endSniper = MaffsLock.finishOnce(function () {
   // remove click listener
   document.getElementById('sArgand').removeEventListener('click', sniperClick);
 
@@ -1038,7 +1071,7 @@ function endSniper() {
   });
 
   hSvg.innerHTML = hsvg;
-}
+});
 
 // init
 showMenu();

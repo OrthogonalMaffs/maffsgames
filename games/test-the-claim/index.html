@@ -178,6 +178,46 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
 <script src="../../schools/assets/options.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Binomial, one-tailed, 5%. A test is marked once, at Step 6: the answer works Steps 1-5 right (each Check waits for the next step to render), then i = 0 gives the right conclusion and i >= 1 a wrong context.
+{
+  "start": "selectMode(document.querySelector('.mode-btn[data-mode=binomial]')); selectPill(document.querySelector('.pill[data-tail=one]'), 'tail'); selectPill(document.querySelector('.pill[data-sig=\"5\"]'), 'sig'); startGame();",
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && !!document.querySelector('#stepPanel .check-btn:not([disabled])')",
+  "answer": [
+    "return (async () => {",
+    " const panel = document.getElementById('stepPanel');",
+    " const until = async f => { for (let n = 0; n < 400 && !f(); n++) await new Promise(r => setTimeout(r, 20)); };",
+    " const idle = () => !MaffsLock.isFresh(panel) && !MaffsLock.isLocked(panel) && !!panel.querySelector('.check-btn');",
+    " const q = state.questions[state.qIdx], n0 = state.qIdx;",
+    " const check = () => panel.querySelector('.check-btn').click();",
+    " const set = (id, v) => { const e = document.getElementById(id); if (e) e.value = String(v); };",
+    " for (let guard = 0; guard < 12 && state.qIdx === n0; guard++) {",
+    "  await until(idle); if (state.qIdx !== n0 || !idle()) return;",
+    "  const st = state.currentStep;",
+    "  if (st === 1) { selectOption('h0Select', q._s1.correctIdx); selectOption('h1Select', q._s2.correctIdx); }",
+    "  else if (st === 2) { if (document.getElementById('scalingInput')) set('scalingInput', q.scalingAnswer); else selectOption('distSelect', q._distShuffle.correctIdx); }",
+    "  else if (st === 3) {",
+    "   if (document.getElementById('zInput')) set('zInput', q.zStatExact);",
+    "   else if (document.getElementById('crLowerInput')) { set('crLowerInput', q.crBoundaryLower === -1 ? '' : q.crBoundaryLower); set('crUpperInput', q.crBoundaryUpper); }",
+    "   else if (document.getElementById('crInput')) set('crInput', state.mode === 'correlation' ? q.criticalValue : state.mode === 'normal' ? (q.tail === 'two' ? q.cvTwoTail[q.sig] : (q.tailDir === 'lower' ? -q.cvOneTail[q.sig] : q.cvOneTail[q.sig])) : q.crBoundary);",
+    "   else if (document.getElementById('pvInput')) set('pvInput', q.pValue);",
+    "  }",
+    "  else if (st === 4) selectOption('step4Select', q._step4Correct);",
+    "  else if (st === 5) selectOption('step5Select', q._step5Correct);",
+    "  else if (st === 6) {",
+    "   selectOption('compASelect', q._compACorrect); selectOption('compBSelect', q._compBCorrect);",
+    "   const c = q._compCShuffle; selectOption('compCSelect', i === 0 ? c.correctIdx : (c.correctIdx + 1) % c.options.length);",
+    "   check(); return;",
+    "  }",
+    "  const before = st, inner = !!document.getElementById('scalingInput') || !!document.getElementById('zInput');",
+    "  check();",
+    "  await until(() => state.currentStep !== before || (inner && !document.getElementById('scalingInput') && !document.getElementById('zInput')));",
+    " }",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -264,7 +304,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </div>
 
 <script>
-function _addDismiss(fb,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
+function _addDismiss(fb,cb){MaffsLock.timer(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
 // ============================================================
 //  QUESTION BANK — 48 questions (12 per mode)
 // ============================================================
@@ -1266,6 +1306,7 @@ function parseURL() {
 // ============================================================
 function startGame() {
   if (!state.mode || !state.tail || !state.sig) return;
+  MaffsLock.newSession();
   const tailType = state.tail === 'one' ? 'one' : 'two';
   const pool = QUESTIONS[state.mode].filter(q => q.tail === tailType && q.sig === state.sig);
   if (pool.length === 0) {
@@ -1437,7 +1478,13 @@ function buildStep(q, step) {
   panel.innerHTML = html;
   // Bind custom select dropdowns
   bindRenderedSelects();
+  MaffsLock.fresh(panel);   // a new step: a double-click on Check cannot answer it
 }
+
+// Each Check marks once (canon 7.6.0): the step panel is locked until the next step renders, or until the step
+// reopens for another try (Try Again, or at once where the step offers no Try Again).
+function stepLock() { return MaffsLock.lock($('stepPanel')); }
+function stepReopen() { MaffsLock.fresh($('stepPanel')); }
 
 function stepHeader(num, title) {
   return `<div class="step-header"><div class="step-num" id="stepNum${num}">${num}</div><div class="step-title">${title}</div></div>`;
@@ -1473,6 +1520,7 @@ function checkStep1() {
   const h0Val = getRenderedSelectValue('h0Select');
   const h1Val = getRenderedSelectValue('h1Select');
   if (h0Val === -1 || h1Val === -1) return;
+  if (!stepLock()) return;
 
   const h0Correct = h0Val === q._s1.correctIdx;
   const h1Correct = h1Val === q._s2.correctIdx;
@@ -1495,10 +1543,11 @@ function checkStep1() {
     msg += 'Common errors: reversing H₀/H₁, wrong direction for the alternative, or including an inequality in H₀.';
     fb.innerHTML = `<div class="feedback wrong">${msg}</div>`;
     // Allow retry after short delay
-    setTimeout(() => {
+    MaffsLock.timer(() => {
       resetRenderedSelectState('h0Select');
       resetRenderedSelectState('h1Select');
       fb.innerHTML = '';
+      stepReopen();
     }, 2500);
   }
 }
@@ -1535,13 +1584,15 @@ function checkScaling() {
   const val = parseFloat($('scalingInput').value);
   const fb = $('step2Feedback');
   if (isNaN(val)) return;
+  if (!stepLock()) return;
   if (Math.abs(val - q.scalingAnswer) < 0.01) {
     q._scalingDone = true;
     fb.innerHTML = `<div class="feedback correct">Correct! ${K('\\lambda = ' + q.scalingAnswer)} for the observation period.</div>`;
-    setTimeout(() => buildStep(q, 2), 1200);
+    MaffsLock.timer(() => buildStep(q, 2), 1200);
   } else {
     state.penalties++;
     fb.innerHTML = `<div class="feedback wrong">Incorrect. Multiply the rate by the time period.</div>`;
+    stepReopen();
   }
 }
 
@@ -1549,6 +1600,7 @@ function checkStep2() {
   const q = state.questions[state.qIdx];
   const val = getRenderedSelectValue('distSelect');
   if (val === -1) return;
+  if (!stepLock()) return;
   state.totalSteps++;
   const fb = $('step2Feedback');
   if (val === q._distShuffle.correctIdx) {
@@ -1560,7 +1612,7 @@ function checkStep2() {
     state.penalties++;
     fb.innerHTML = '<div class="feedback wrong">Incorrect. Check the distribution family and parameters carefully.</div>';
     setRenderedSelectState('distSelect', 'wrong');
-    _addDismiss(fb, () => { resetRenderedSelectState('distSelect'); fb.innerHTML = ''; });
+    _addDismiss(fb, () => { resetRenderedSelectState('distSelect'); fb.innerHTML = ''; stepReopen(); });
   }
 }
 
@@ -1616,7 +1668,7 @@ function buildStep3(q) {
       // Given in the scenario (see buildScenario): nothing to calculate, and Step 4 is
       // the comparison with the significance level.
       html += `<div class="step-instruction">The ${pvName} is given in the question: <span class="mono-val">${q.pValue.toFixed(4)}</span>. Compare it with the significance level in the next step.</div>`;
-      html += '<button class="check-btn" onclick="advanceStep(4)">Continue</button>';
+      html += '<button class="check-btn" onclick="continueStep(4)">Continue</button>';
       return html;
     }
     html += `<div class="step-instruction">State the ${pvName}.</div>`;
@@ -1646,13 +1698,15 @@ function checkZStat() {
   const val = parseFloat($('zInput').value);
   const fb = $('step3Feedback');
   if (isNaN(val)) return;
+  if (!stepLock()) return;
   const expected = parseFloat(q.zStatExact);
   if (Math.abs(val - expected) <= 0.02) {
     q._zCalcDone = true;
     fb.innerHTML = `<div class="feedback correct">Correct! ${K(q.zFormula)}</div>`;
-    setTimeout(() => buildStep(q, 3), 1500);
+    MaffsLock.timer(() => buildStep(q, 3), 1500);
   } else {
     state.penalties++;
+    stepReopen();
     fb.innerHTML = `<div class="feedback wrong">Incorrect. Use ${K('z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}')} and round to 2 d.p.</div>`;
   }
 }
@@ -1710,6 +1764,7 @@ function checkStep3() {
     correct = Math.abs(val - q.pValue) < 0.006;
   }
 
+  if (!stepLock()) { state.totalSteps--; return; }
   if (correct) {
     state.correctSteps++;
     fb.innerHTML = '<div class="feedback correct">Correct!</div>';
@@ -1718,7 +1773,7 @@ function checkStep3() {
     state.penalties++;
     let hint = state.method === 'cr' ? q.crExplanation : ('Expected: ' + q.pValueExpr);
     fb.innerHTML = `<div class="feedback wrong">Incorrect. ${K(hint)}</div>`;
-    _addDismiss(fb, () => { fb.innerHTML = ''; });
+    _addDismiss(fb, () => { fb.innerHTML = ''; stepReopen(); });
   }
 }
 
@@ -1754,6 +1809,7 @@ function checkStep4() {
   const q = state.questions[state.qIdx];
   const val = getRenderedSelectValue('step4Select');
   if (val === -1) return;
+  if (!stepLock()) return;
   state.totalSteps++;
   const fb = $('step4Feedback');
 
@@ -1769,7 +1825,7 @@ function checkStep4() {
       : 'The observed value does not fall in the critical region — check your boundary.';
     fb.innerHTML = `<div class="feedback wrong">${hint}</div>`;
     setRenderedSelectState('step4Select', 'wrong');
-    _addDismiss(fb, () => { resetRenderedSelectState('step4Select'); fb.innerHTML = ''; });
+    _addDismiss(fb, () => { resetRenderedSelectState('step4Select'); fb.innerHTML = ''; stepReopen(); });
   }
 }
 
@@ -1789,6 +1845,7 @@ function checkStep5() {
   const q = state.questions[state.qIdx];
   const val = getRenderedSelectValue('step5Select');
   if (val === -1) return;
+  if (!stepLock()) return;
   state.totalSteps++;
   const fb = $('step5Feedback');
 
@@ -1804,7 +1861,7 @@ function checkStep5() {
       : 'The test statistic does not lie in the critical region, so we do not reject H₀.';
     fb.innerHTML = `<div class="feedback wrong">Inconsistent with Step 4. ${reason}</div>`;
     setRenderedSelectState('step5Select', 'wrong');
-    _addDismiss(fb, () => { resetRenderedSelectState('step5Select'); fb.innerHTML = ''; });
+    _addDismiss(fb, () => { resetRenderedSelectState('step5Select'); fb.innerHTML = ''; stepReopen(); });
   }
 }
 
@@ -1895,6 +1952,7 @@ function checkStep6() {
   const bVal = getRenderedSelectValue('compBSelect');
   const cVal = getRenderedSelectValue('compCSelect');
   if (aVal === -1 || bVal === -1 || cVal === -1) return;
+  if (!stepLock()) return;   // the test is marked once
 
   state.totalSteps += 3;
   const fb = $('step6Feedback');
@@ -1931,8 +1989,8 @@ const multiplier = 1;
   state.score += qScore;
   $('hudScore').textContent = state.score;
 
-  // Show model answer
-  showModelAnswer(q);
+  // Show model answer: a right conclusion moves on from its own button; a wrong one waits on Next (canon 7.6)
+  showModelAnswer(q, aOk && bOk && cOk);
 
   // Update progress
   for (let i = 1; i <= 6; i++) {
@@ -1941,7 +1999,7 @@ const multiplier = 1;
   }
 }
 
-function showModelAnswer(q) {
+function showModelAnswer(q, ok) {
   const fb = $('step6Feedback');
   const tail = q.tail === 'two' ? 'two-tailed' : 'one-tailed';
   const sOrI = q.reject ? 'sufficient' : 'insufficient';
@@ -1990,18 +2048,23 @@ function showModelAnswer(q) {
         There is <strong>${sOrI}</strong> evidence at the ${q.sig}% significance level to suggest that ${q.conclusionContext}.
       </div>
     </div>
-    <button class="next-q-btn" onclick="nextQuestion()">
+    ${ok ? `<button class="next-q-btn" onclick="nextFromButton(this)">
       ${state.qIdx < state.questionsTotal - 1 ? 'Next Question →' : 'See Results'}
-    </button>
+    </button>` : ''}
   `;
   fb.innerHTML += ma;
+  if (!ok) MaffsNext.wrong({ mount: fb, label: state.qIdx < state.questionsTotal - 1 ? 'Next Question →' : 'See Results', onAdvance: nextQuestion });
 }
+
+// Once: a double-click on Next Question cannot skip a test.
+function nextFromButton(btn) { if (btn.disabled) return; btn.disabled = true; nextQuestion(); }
+function continueStep(n) { if (!stepLock()) return; advanceStep(n); }
 
 // ============================================================
 //  STEP PROGRESSION
 // ============================================================
 function advanceStep(nextStep) {
-  setTimeout(() => {
+  MaffsLock.timer(() => {
     // Mark current step done in progress bar
     for (let i = 1; i < nextStep; i++) {
       const el = $('pStep' + i);
@@ -2016,6 +2079,7 @@ function advanceStep(nextStep) {
 }
 
 function nextQuestion() {
+  if (window.MaffsNext) MaffsNext.clear($('stepPanel'));
   state.qIdx++;
   if (state.qIdx >= state.questionsTotal) {
     endGame();
@@ -2033,7 +2097,8 @@ function nextQuestion() {
 // ============================================================
 //  END GAME
 // ============================================================
-function endGame() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame = MaffsLock.finishOnce(function () {
   clearInterval(state.timerInterval);
   $('gameScreen').classList.remove('active');
   $('resultsScreen').classList.add('active');
@@ -2077,7 +2142,7 @@ function endGame() {
   window._ggAbandoned=false;
   mfg('game_completed',{game_slug:'test-the-claim',level:'alevel',score:state.score,questions_answered:state.questionsTotal,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('test-the-claim','alevel',state.score,state.questionsTotal).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('test-the-claim','alevel',state.score);}}
-}
+});
 
 function showMenu() {
   $('resultsScreen').classList.remove('active');

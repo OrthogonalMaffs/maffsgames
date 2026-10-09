@@ -135,6 +135,29 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Core: three sub-questions per scenario. A wrong typed value keeps the sub-question locked until Try Again (the game's retry, not a Next), so "each" presses Try Again when it is up and the answer waits for the sub-question to reopen; a wrong option waits on Next. i = 0 gives the key; i >= 1 a wrong value or option.
+{
+  "ready": "document.getElementById('gameScreen').classList.contains('active') && !!document.querySelector('#qPanel .check-btn, #qPanel .mcq-btn')",
+  "each": "const d = document.querySelector('#qPanel .dismiss-btn'); if (d) d.click();",
+  "answer": [
+    "return (async () => {",
+    " const real = ms => new Promise(r => { const t = performance.now(); (function f() {",
+    " if (performance.now() - t >= ms) r(); else requestAnimationFrame(f); })(); });",
+    " const panel = document.getElementById('qPanel');",
+    " for (let t = 0; t < 200 && (MaffsLock.isLocked(panel) || MaffsLock.isFresh(panel)); t++) {",
+    " const d = document.querySelector('#qPanel .dismiss-btn'); if (d) d.click(); await real(30); }",
+    " const q = G.questions[G.qIdx], order = q.sq_order.filter(n => n <= 3 || (n === 4 && G.level !== 'core'));",
+    " const n = order[G.sqIdx], sq = q['sq' + n]; if (!sq) return;",
+    " if (n === 2) { const o = panel._opts, k = o.findIndex(x => i === 0 ? x.correct : !x.correct); document.getElementById('mcq' + k).click(); return; }",
+    " const inp = document.getElementById('sqInput'); if (!inp) return;",
+    " inp.value = String(i === 0 ? sq.answer : sq.answer + 999);",
+    " document.querySelector('#qPanel .check-btn').click();",
+    "})();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -200,7 +223,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </div>
 
 <script>
-function _addDismiss(fb,cb){setTimeout(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
+function _addDismiss(fb,cb){MaffsLock.timer(function(){var b=document.createElement('button');b.className='dismiss-btn';b.textContent='Try Again';b.onclick=cb;var el=fb.querySelector('.feedback')||fb;el.appendChild(b);},2000);}
 // ============================================================
 //  QUESTION BANK — 45 scenarios
 // ============================================================
@@ -615,6 +638,7 @@ function parseURL(){
 // ============================================================
 function startGame(){
   if(!G.level)return;
+  MaffsLock.newSession();
   const pool=[...Q[G.level]];
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
   G.questions=pool.slice(0,6);G.qIdx=0;G.score=0;G.correctSQs=0;G.totalSQs=0;
@@ -652,7 +676,7 @@ function buildScenarioPanel(q){
   html+=`<div class="sc-graph"><canvas id="graphCanvas" width="280" height="150"></canvas></div>`;
   $('scPanel').innerHTML=html;
   // Draw graph after render
-  setTimeout(()=>drawGraph(q),50);
+  setTimeout(()=>drawGraph(q),50);   // lock-ok: draws the model's graph once the panel is in the page; marks nothing
 }
 
 function drawGraph(q){
@@ -727,7 +751,12 @@ function loadSQ(q){
     html+=`<div id="sqFb"></div><div id="hintBox"></div>`;
     panel.innerHTML=html;
   }
+  MaffsLock.fresh(panel);   // a new sub-question: a double-click on Check cannot answer it
 }
+
+// A wrong typed value keeps the sub-question locked until Try Again, then it reopens (one mark per attempt,
+// canon 7.6.0).
+function retryAfter(fb){_addDismiss(fb,()=>{fb.innerHTML='';MaffsLock.fresh($('qPanel'));});}
 
 function useHint(sqNum){
   if(G.hintUsed)return;
@@ -750,6 +779,7 @@ function showHintBtn(){
 function checkNumSQ(sqNum){
   const q=G.questions[G.qIdx],sq=q['sq'+sqNum];
   const val=parseFloat($('sqInput').value);if(isNaN(val))return;
+  if(!MaffsLock.lock($('qPanel')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sqFb');G.totalSQs++;
 
   const tol=sqNum===3?Math.max(0.005*Math.abs(sq.answer),0.05):0.02*Math.abs(sq.answer)+0.01;
@@ -757,7 +787,7 @@ function checkNumSQ(sqNum){
     G.correctSQs++;
     fb.innerHTML=`<div class="feedback correct">Correct! ${sq.unit?sq.unit+' ':''}${sq.answer}</div>`;
     mfg('question_answered',{game_slug:'growth-and-decay',level:G.level,correct:true,question_index:G.totalSQs});
-    setTimeout(()=>{G.sqIdx++;loadSQ(q);},1000);
+    MaffsLock.timer(()=>{G.sqIdx++;loadSQ(q);},1000);
   } else {
     G.qPenalties++;G.penalties++;G.sqWrongAttempts++;
     let hint='Check your substitution and arithmetic.';
@@ -765,11 +795,12 @@ function checkNumSQ(sqNum){
     fb.innerHTML=`<div class="feedback wrong">Incorrect. ${hint}</div>`;
     mfg('question_answered',{game_slug:'growth-and-decay',level:G.level,correct:false,question_index:G.totalSQs});
     if(G.sqWrongAttempts>=1)showHintBtn();
-    _addDismiss(fb,()=>{fb.innerHTML='';});
+    retryAfter(fb);
   }
 }
 
 function checkMCQ(idx,correct){
+  if(!MaffsLock.lock($('qPanel')))return;   // one answer per sub-question (canon 7.6.0)
   const q=G.questions[G.qIdx];const fb=$('sqFb');G.totalSQs++;
   document.querySelectorAll('.mcq-btn').forEach(b=>b.classList.add('disabled'));
   if(correct){
@@ -783,18 +814,21 @@ function checkMCQ(idx,correct){
     fb.innerHTML='<div class="feedback wrong">Remember: state direction, magnitude, and context.</div>';
     mfg('question_answered',{game_slug:'growth-and-decay',level:G.level,correct:false,question_index:G.totalSQs});
   }
-  setTimeout(()=>{G.sqIdx++;loadSQ(q);},1500);
+  // A right option moves on; a wrong one shows the right option and waits on Next (canon 7.6)
+  const go=()=>{G.sqIdx++;loadSQ(q);};
+  if(correct)MaffsLock.timer(go,1500);else MaffsNext.wrong({mount:fb,onAdvance:go});
 }
 
 function checkSQ4(){
   const q=G.questions[G.qIdx],sq=q.sq4;
   const val=parseFloat($('sqInput').value);if(isNaN(val))return;
+  if(!MaffsLock.lock($('qPanel')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sqFb');G.totalSQs++;G.sq4Attempts++;
 
   if(Math.abs(val-sq.answer)<=0.15){
     G.correctSQs++;
     fb.innerHTML=`<div class="feedback correct">Correct! Answer: ${sq.answer}</div>`;
-    setTimeout(()=>{G.sqIdx++;loadSQ(q);},1000);
+    MaffsLock.timer(()=>{G.sqIdx++;loadSQ(q);},1000);
   } else {
     G.qPenalties++;G.penalties++;G.totalSQs--;G.sqWrongAttempts++; // Don't double-count retries
     let msg='Incorrect.';
@@ -805,7 +839,7 @@ function checkSQ4(){
     }
     fb.innerHTML=`<div class="feedback wrong">${msg}</div>`;
     if(G.sqWrongAttempts>=1)showHintBtn();
-    _addDismiss(fb,()=>{fb.innerHTML='';});
+    retryAfter(fb);
   }
 }
 
@@ -831,14 +865,17 @@ function finishScenario(q){
     </div>
     <button class="next-btn" onclick="nextScenario()">${G.qIdx<G.questions.length-1?'Next Scenario →':'See Results'}</button>
   `;
+  MaffsLock.fresh(panel);
 }
 
-function nextScenario(){G.qIdx++;if(G.qIdx>=G.questions.length)endGame();else loadScenario();}
+// Once: a double-click on Next Scenario cannot skip a scenario.
+function nextScenario(){if(!MaffsLock.lock($('qPanel')))return;G.qIdx++;if(G.qIdx>=G.questions.length)endGame();else loadScenario();}
 
 // ============================================================
 //  END GAME
 // ============================================================
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){
   clearInterval(G.timerInterval);
   $('gameScreen').classList.remove('active');$('resultsScreen').classList.add('active');
   const pct=G.totalSQs>0?Math.round(100*G.correctSQs/G.totalSQs):0;
@@ -857,7 +894,7 @@ function endGame(){
   window._ggAbandoned=false;
   mfg('game_completed',{game_slug:'growth-and-decay',level:G.level,score:G.score,questions_answered:G.totalSQs,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('growth-and-decay',G.level,G.score,G.totalSQs).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('growth-and-decay',G.level,G.score);}}
-}
+});
 
 function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen').classList.remove('active');$('menuScreen').classList.add('active');}
 
@@ -865,7 +902,7 @@ window.addEventListener('DOMContentLoaded',()=>{parseURL();});
 
 
 (function renderMethodRef(){
-  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}
+  if(typeof katex==='undefined'){setTimeout(renderMethodRef,100);return;}   // lock-ok: waits for KaTeX; marks nothing
   var K=function(t){return katex.renderToString(t,{throwOnError:false,displayMode:true});};
   var k=function(t){return katex.renderToString(t,{throwOnError:false});};
 
