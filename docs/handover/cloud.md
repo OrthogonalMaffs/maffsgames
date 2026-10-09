@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining:`
+`cloud-remaining: unit-converter`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -34,8 +34,8 @@ in the queue below pointing to it. Read it when the item starts, not at session 
 start-up load). When the work merges, move the file to `docs/history/`.
 
 **Queue:** UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
-SIM-S5: done by its PR (claim #202 merged 7de7e73; its contract and the answers move to `docs/history/contracts/`
-in it). Then UC-T4-007 (a small PR, the answers' item 3c), then FT-FIX without asking. Then FT-FIX: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
+SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007 (in progress, claimed 9 Oct; the answers' item 3c, in
+`docs/history/contracts/2026-10-09-sim-s5-answers.md`). Then FT-FIX without asking: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
