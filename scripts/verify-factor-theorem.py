@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Factor Theorem (every key from its item's polynomial; ACCEPTED lists = page; every form marked in Chromium) |
+# ci-line: E | Factor Theorem (every key from its item's polynomial; ACCEPTED lists = page; every form marked in Chromium; answer buttons; A-Level only; no Practice submit) |
 """Factor Theorem: every key recomputed from its item's own polynomial; every typed answer marked by look-up.
 
 The tranche 5 audit (6 Oct 2026) found comma blanks matched in any order, so (x - 2)(x + 3) passed for
@@ -30,11 +30,23 @@ Chromium (390x844, KaTeX). Every practice item and test question is rendered and
   "f(x) =" and upper case, are marked right; a factor or root with its sign flipped, and every order of a blank
   pair that is not a solution, are marked wrong; no item makes the page scroll sideways.
 
-Free-text answers (practice Q33, the proof; T9(c), the interpretation) are not marked by meaning: the audit's
-t5-004 and t5-005 stay open until their design is decided. Only their keys are checked to be readable.
+Answer buttons (FT-FIX, Jon 8-9 Oct 2026; t5-004, t5-005). Practice Q33 (the proof) and T9(c) (the interpretation)
+  are four buttons each, marked by dataset.val: their options must be the contract's, word for word. Q33: each line's
+  working is checked for every positive integer n, and only a line with f(a) = 0 that names (x - a) proves it; only
+  the key may. T9(c): from s(t) in the question, every wrong option is false at every t it names (v = ds/dt and
+  a = dv/dt are not 0 there, so no rest, turn or zero acceleration), and the key holds (single roots, v not 0); the
+  explanation's v and its worked value are recomputed. In Chromium each option is chosen and marked once: the key
+  right, the others wrong, the buttons off, the explanation shown, a wrong choice followed by the shared Next
+  control; shown twenty times, the buttons come in more than one order. Every typed key is maths, never prose (one-
+  letter names, Greek letters by name and "factor" only).
+A-Level only (Jon, 9 Oct 2026). With no ?level, ?level=alevel, level4, xyz and __proto__, in a fresh page each: every
+  event logs level 'alevel', the given value is never logged or submitted, Practice played to its end submits
+  nothing (t5-014, t5-015), and the Test submits once, to factor_theorem_alevel.
+A wrong answer waits on the shared Next control (canon 7.6), a right one on the Next Question button (t5-018's note).
 
-A self-test plants two of the audit's own faults back (t5-001: the pair (x - 2)(x + 3) accepted for Q6;
-t5-003: the old T4); each must FAIL naming its item.
+A self-test plants the audit's faults back (t5-001: the pair (x - 2)(x + 3) accepted for Q6; t5-003: the old T4;
+Q33's and T9(c)'s old free-text keys; a prose key; a Practice submit; ?level logged; a wrong answer advanced by the
+Next button); each must FAIL naming its item.
 
     python scripts/verify-factor-theorem.py [--write] [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
@@ -71,8 +83,8 @@ TRANSFORMS = standard_transformations + (
     implicit_multiplication, convert_xor)
 
 # Where an audit item names an answer, failures there say so.
-AUDIT = {'T4.0': 't5-003', 'T4.1': 't5-003', 'p24': 't5-006', 'p38': 't5-007', 'p20': 't5-010', 'p22': 't5-011'}
-FREE = {'p33', 'T9.2'}          # free text: t5-004, t5-005 stay open
+AUDIT = {'T4.0': 't5-003', 'T4.1': 't5-003', 'p24': 't5-006', 'p38': 't5-007', 'p20': 't5-010', 'p22': 't5-011',
+         'p33': 't5-004', 'T9.2': 't5-005'}
 
 
 def tag(uid):
@@ -461,7 +473,13 @@ def check(fails, content):
             if n not in text:
                 fails.append('%s: its condition %r is not in the question as written' % (tag(uid), n))
         if spec is None:
-            accepted[uid] = [canon(key)]
+            # an answer-button item (Jon, FT-FIX): marked by dataset.val, never as typed text; check_options
+            if not it.get('options'):
+                fails.append('%s: %r is typed and marked as a string; it must be four answer buttons' % (tag(uid), key))
+            continue
+        bad = prose(key)
+        if bad:
+            fails.append('%s: the key %r is prose (%s), which typed marking cannot mark' % (tag(uid), key, ', '.join(bad)))
             continue
         try:
             truth = spec(F)
@@ -509,6 +527,9 @@ def check(fails, content):
                     fails.append('%s: the shown line %r is not %s' % (uid, label, target(F)))
                 continue
             parts = [z.strip() for z in st['answer'].split(',')]
+            bad = prose(st['answer'])
+            if bad:
+                fails.append('%s: the key %r is prose (%s)' % (uid, st['answer'], ', '.join(bad)))
             if nblank != len(parts):
                 fails.append('%s: %d blanks but %d answers' % (uid, nblank, len(parts)))
                 continue
@@ -554,7 +575,120 @@ def check(fails, content):
                 fails.append('%s: the line %r has more than one answer' % (uid, label))
             accepted[uid] = sorted('|'.join(blank_text(val, kp) for val, kp in zip(sol, parts)) for sol in sols)
     check_learn(fails, content)
+    check_options(fails, content)
     return accepted
+
+
+# A typed key is maths: its words are only variable and function names (one letter), the Greek letters by name, and
+# this vocabulary. Any other word is prose, which a typed box cannot mark (t5-004, t5-005).
+VOCAB = {'omega', 'theta', 'lambda', 'lam', 'factor'}
+
+
+def prose(key):
+    return [w for w in re.findall(r'[A-Za-z]+', str(key)) if len(w) > 1 and w.lower() not in VOCAB]
+
+
+# ── the answer-button items, as Jon's FT-FIX contract states them (8 Oct 2026) ──
+Q33_OPTIONS = [
+    '\\(f(2) = 2^n - 2^n = 0\\), so by the factor theorem \\((x - 2)\\) is a factor.',
+    '\\(f(-2) = (-2)^n - 2^n = 0\\), so \\((x - 2)\\) is a factor.',
+    '\\(f(2) = 0\\), so \\((x + 2)\\) is a factor.',
+    '\\(f(0) = -2^n\\), so \\((x - 2)\\) is a factor.']
+T9C_OPTIONS = [
+    'The object is at the origin (displacement zero) at t = 2, 3 and 4, passing through it each time.',
+    'The object is at rest at t = 2, 3 and 4.',
+    'The object changes direction at t = 2, 3 and 4.',
+    "The object's acceleration is zero at t = 2 and 4."]
+nn = sp.Symbol('n', positive=True, integer=True)
+PROOF = re.compile(r'^f\((-?\d+)\) = (.+), so (?:by the factor theorem )?\(x ([+-]) (\d+)\) is a factor\.$')
+
+
+def proof_holds(option, poly):
+    """A Q33 line proves (x - 2) | poly for every positive integer n: each '=' in its working holds for every n, the
+    value is 0, and the factor it names is (x - a) for the a it evaluated at. (holds, why not)."""
+    m = PROOF.match(option.replace('\\(', '').replace('\\)', ''))
+    if not m:
+        return None, 'cannot read it'
+    pt = int(m.group(1))
+    val = poly.subs(x, pt)
+    for side in m.group(2).split('='):
+        e = sp.sympify(side.strip().replace('^', '**'), locals={'n': nn})
+        if sp.simplify(e - val) != 0:
+            return False, '%s is not f(%d) = %s for every n' % (side.strip(), pt, val)
+    if sp.simplify(val) != 0:
+        return False, 'f(%d) = %s is not 0' % (pt, val)
+    root = int(m.group(4)) * (1 if m.group(3) == '-' else -1)
+    if root != pt:
+        return False, 'f(%d) = 0 makes (x - %d) a factor, not the one named' % (pt, pt)
+    return True, ''
+
+
+def motion_claim(option, S, tv):
+    """A T9(c) line about s(t): (true overall, [named t where it is true])."""
+    ts = [int(z) for z in re.findall(r'\d+', option.split(' at t = ', 1)[1])] if ' at t = ' in option else []
+    V, A = sp.diff(S, tv), sp.diff(S, tv, 2)
+    if option.startswith('The object is at the origin (displacement zero)'):
+        each = [S.subs(tv, z) == 0 and V.subs(tv, z) != 0 for z in ts]       # a single root: s changes sign
+    elif option.startswith('The object is at rest'):
+        each = [V.subs(tv, z) == 0 for z in ts]
+    elif option.startswith('The object changes direction'):
+        each = [V.subs(tv, z) == 0 and V.subs(tv, z - sp.Rational(1, 100)) * V.subs(tv, z + sp.Rational(1, 100)) < 0
+                for z in ts]
+    elif option.startswith("The object's acceleration is zero"):
+        each = [A.subs(tv, z) == 0 for z in ts]
+    else:
+        return None, []
+    return bool(ts) and all(each), [z for z, ok in zip(ts, each) if ok]
+
+
+def check_options(fails, content):
+    q33 = next(q for q in content['practice']['questions'] if q['id'] == 33)
+    t9 = next(q for q in content['test']['questions'] if q['id'] == 'T9')
+    for uid, it, stated, key in (('p33', q33, Q33_OPTIONS, q33.get('finalAnswer')),
+                                 ('T9.2', t9['parts'][2], T9C_OPTIONS, t9['parts'][2].get('answer'))):
+        opts = it.get('options')
+        if not opts:
+            continue        # reported in check(): typed and marked as a string
+        if opts != stated:
+            fails.append('%s: its options are not the four the contract states: %r' % (tag(uid), opts))
+        if key not in opts:
+            fails.append('%s: the key %r is not one of its options' % (tag(uid), key))
+        if not it.get('explain'):
+            fails.append('%s: no explanation shown after marking' % tag(uid))
+    if q33.get('options'):
+        if 'Which line proves it?' not in q33['prompt']:
+            fails.append('p33 (factor-theorem-t5-004): the prompt does not ask "Which line proves it?"')
+        poly = x ** nn - 2 ** nn
+        for o in q33['options']:
+            ok, why = proof_holds(o, poly)
+            if ok is None:
+                fails.append('p33: the option %r: %s' % (o, why))
+            elif ok != (o == q33['finalAnswer']):
+                fails.append('p33 (factor-theorem-t5-004): the option %r %s' % (
+                    o, 'proves it but is not the key' if ok else 'is keyed, but %s' % why))
+        ex = q33.get('explain', '')
+        if '\\(a = 2\\)' not in ex or '\\(2^n - 2^n = 0\\)' not in ex:
+            fails.append('p33: the explanation does not name a = 2 and 2^n - 2^n = 0')
+    pc = t9['parts'][2]
+    if pc.get('options'):
+        S = cubic(t9['prompt'])
+        for o in pc['options']:
+            ok, true_at = motion_claim(o, S, t)
+            if ok is None:
+                fails.append('T9.2: the option %r: cannot check it' % o)
+            elif o == pc['answer'] and not ok:
+                fails.append('T9.2 (factor-theorem-t5-005): the key %r is not true of s(t) = %s' % (o, S))
+            elif o != pc['answer'] and true_at:
+                fails.append('T9.2 (factor-theorem-t5-005): the option %r is true at t = %s' % (
+                    o, ', '.join(map(str, true_at))))
+        V = sp.diff(S, t)
+        ex = pc.get('explain', '')
+        m = re.search(r'\\\(v = ([^\\]*?)\\\) is not zero', ex)
+        if not m or sp.expand(parse(m.group(1)) - V) != 0:
+            fails.append('T9.2: the explanation\'s v is not ds/dt = %s' % V)
+        m = re.search(r'at \\\(t = (-?\d+)\\\), \\\(v = (-?\d+)\\\)', ex)
+        if not m or V.subs(t, int(m.group(1))) != int(m.group(2)):
+            fails.append('T9.2: the explanation\'s worked v value is wrong (v = %s)' % V)
 
 
 def show(truth):
@@ -648,6 +782,7 @@ SWEEP_JS = r"""(cases) => {
       renderTest();
       const area = document.getElementById('test-area');
       cs.fill.forEach(([sel, val]) => { area.querySelector(sel).value = val[0]; });
+      (cs.pick || []).forEach(([sel, val]) => { const b = [...area.querySelectorAll(sel + ' .opt-btn')].find(e => e.dataset.val === val); if (b) b.click(); });
       document.getElementById('tCheckBtn').click();
       const marks = cs.read.map(sel => [...area.querySelectorAll(sel)].map(e => e.classList.contains('correct-input') ? 'right' : e.classList.contains('wrong-input') ? 'wrong' : 'none'));
       out.push([cs.tag, marks, document.getElementById('t-feedback').textContent, document.documentElement.scrollWidth, false, seen(area)]);
@@ -731,6 +866,105 @@ LOCK2_JS = r"""async () => {
   return res;
 }"""
 
+# The answer-button items (Q33, T9(c)), through the game's own Check and Submit: each option chosen once; the marks
+# read from the buttons' classes; the explanation and, on a wrong choice, the shared Next control (canon 7.6). And
+# the order: shown twenty times, the options come in more than one order.
+OPTIONS_JS = r"""() => {
+  const out = { cases: [], orders: {}, empty: null };
+  const seen = (el) => { const c = el.cloneNode(true); c.querySelectorAll('.katex-mathml').forEach(e => e.remove()); return c.textContent; };
+  const show = (sec) => {
+    document.querySelectorAll('.section').forEach(e => e.classList.remove('active'));
+    document.getElementById('sec-' + sec).classList.add('active');
+  };
+  const vis = e => !!e && e.offsetParent !== null;
+  const read = (group, val, area, fb, nextId) => {
+    const btn = [...group.querySelectorAll('.opt-btn')].find(e => e.dataset.val === val);
+    return { val, mark: btn.classList.contains('opt-right') ? 'right' : btn.classList.contains('opt-wrong') ? 'wrong' : 'none',
+             right: [...group.querySelectorAll('.opt-btn.opt-right')].map(e => e.dataset.val),
+             off: [...group.querySelectorAll('.opt-btn')].every(e => e.disabled),
+             explain: !!area.querySelector('.opt-explain'), fb: document.getElementById(fb).textContent,
+             next: vis(document.getElementById(nextId)), maffsNext: vis(area.querySelector('.maffs-next')),
+             text: seen(area), sw: document.documentElement.scrollWidth };
+  };
+  show('practice');
+  const qs = CONTENT.practice.questions, qi = qs.findIndex(q => q.options);
+  if (qi >= 0) {
+    const pa = document.getElementById('practice-area');
+    const order = new Set();
+    for (let k = 0; k < 20; k++) {
+      practiceState = { qIdx: qi, score: 0, maxScore: 0, hintsTotal: 0, answers: [], started: true }; renderPractice();
+      order.add([...pa.querySelectorAll('.opt-btn')].map(e => e.dataset.val).join('|'));
+    }
+    out.orders.p = order.size;
+    document.getElementById('checkBtn').click();
+    out.empty = [document.getElementById('feedback').textContent, practiceState.answers.length];
+    for (const val of qs[qi].options) {
+      practiceState = { qIdx: qi, score: 0, maxScore: 0, hintsTotal: 0, answers: [], started: true }; renderPractice();
+      const g = pa.querySelector('.opt-group');
+      [...g.querySelectorAll('.opt-btn')].find(e => e.dataset.val === val).click();
+      document.getElementById('checkBtn').click();
+      out.cases.push(Object.assign({ uid: 'p' + qs[qi].id, key: qs[qi].finalAnswer, score: practiceState.score }, read(g, val, pa, 'feedback', 'nextQBtn')));
+    }
+  }
+  show('test');
+  const ts = CONTENT.test.questions, ti = ts.findIndex(q => q.parts.some(p => p.options));
+  if (ti >= 0) {
+    const ta = document.getElementById('test-area'), tq = ts[ti], pi = tq.parts.findIndex(p => p.options);
+    const order = new Set();
+    for (let k = 0; k < 20; k++) {
+      testState = { qIdx: ti, score: 0, maxScore: 0, startTime: Date.now(), answers: [], started: true }; renderTest();
+      order.add([...ta.querySelectorAll('.opt-btn')].map(e => e.dataset.val).join('|'));
+    }
+    out.orders.t = order.size;
+    for (const val of tq.parts[pi].options) {
+      testState = { qIdx: ti, score: 0, maxScore: 0, startTime: Date.now(), answers: [], started: true }; renderTest();
+      tq.parts.forEach((p, i) => { if (!p.options) document.getElementById('tpart-' + i).value = p.answer; });
+      const g = document.getElementById('tpart-' + pi);
+      [...g.querySelectorAll('.opt-btn')].find(e => e.dataset.val === val).click();
+      document.getElementById('tCheckBtn').click();
+      out.cases.push(Object.assign({ uid: tq.id + '.' + pi, key: tq.parts[pi].answer, score: testState.score, of: tq.marks }, read(g, val, ta, 't-feedback', 'tNextBtn')));
+    }
+  }
+  return out;
+}"""
+
+# A wrong typed answer waits on the shared Next control (canon 7.6; the audit's class 11 note in t5-018).
+WRONG_NEXT_JS = r"""() => {
+  const vis = e => !!e && e.offsetParent !== null;
+  document.querySelectorAll('.section').forEach(e => e.classList.remove('active'));
+  document.getElementById('sec-practice').classList.add('active');
+  const qi = CONTENT.practice.questions.findIndex(q => q.id === 21);
+  practiceState = { qIdx: qi, score: 0, maxScore: 0, hintsTotal: 0, answers: [], started: true };
+  renderPractice();
+  document.getElementById('final-answer').value = '(x+9)';
+  document.getElementById('checkBtn').click();
+  return { next: vis(document.getElementById('nextQBtn')), maffsNext: vis(document.querySelector('#practice-area .maffs-next')) };
+}"""
+
+# ?level (Jon, 9 Oct 2026, FT-FIX answers): every URL plays A-Level. In a fresh page per URL, events and leaderboard
+# submissions recorded: Practice played to its end, then the Test (T1 answered, then its end screen).
+HOOKS = """(() => { window.__ev = []; window.__sub = []; let inner;
+  Object.defineProperty(window, 'mfg', { configurable: true,
+    get() { return function (e, p) { window.__ev.push([e, p]); return inner && inner.apply(this, arguments); }; },
+    set(v) { inner = v; } });
+  Object.defineProperty(window, 'MaffsLeaderboard', { configurable: true,
+    get() { return { submitScore() { window.__sub.push([...arguments]); return Promise.resolve(); } }; }, set(v) {} });
+})();"""
+LEVEL_JS = r"""async () => {
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const settle = () => wait((window.MaffsLock ? MaffsLock.FRESH_MS : 0) + 50);
+  document.querySelector('[data-section="practice"]').click();
+  practiceState.qIdx = CONTENT.practice.questions.length; renderPractice();
+  const practiceSubs = window.__sub.length;
+  document.querySelector('[data-section="test"]').click();
+  await settle();
+  CONTENT.test.questions[0].parts.forEach((pt, i) => { document.getElementById('tpart-' + i).value = pt.answer; });
+  document.getElementById('tCheckBtn').click();
+  testState.qIdx = CONTENT.test.questions.length; renderTest();
+  return { ev: window.__ev, sub: window.__sub, practiceSubs, badge: document.querySelector('.topbar-right .badge-lp').textContent };
+}"""
+LEVEL_URLS = ('', '?level=alevel', '?level=level4', '?level=xyz', '?level=__proto__')
+
 KATEX_DIR = None
 STATS = {}
 
@@ -763,6 +997,8 @@ def cases_for(content, accepted):
     tests = content['test']['questions']
     for qi, it in enumerate(content['practice']['questions']):
         uid = 'p%d' % it['id']
+        if it.get('options'):
+            continue        # answer buttons: OPTIONS_JS
         steps = it.get('scaffoldSteps') or []
         if steps:
             keyed = [('#scaffold-%d input' % i, [z.strip() for z in st['answer'].split(',')])
@@ -789,23 +1025,24 @@ def cases_for(content, accepted):
                 cases.append({'mode': 'practice', 'q': qi, 'tag': (uid,) + form[1:], 'fill': [('#final-answer', [form[0]])],
                               'read': ['#final-answer']})
     for qi, it in enumerate(tests):
-        per = []
-        for i, pt in enumerate(it['parts']):
+        per, typed = [], [i for i, pt in enumerate(it['parts']) if not pt.get('options')]
+        for i in typed:
             uid = '%s.%d' % (it['id'], i)
+            pt = it['parts'][i]
             per.append(typed_forms(accepted.get(uid, [canon(pt['answer'])]), pt['answer'], uid))
+        # an answer-button part is answered with its key here; OPTIONS_JS marks each of its options
+        chosen = [('#tpart-%d' % i, pt['answer']) for i, pt in enumerate(it['parts']) if pt.get('options')]
         for n in range(max(len(z) for z in per)):
             pick = [z[n % len(z)] for z in per]
-            cases.append({'mode': 'test', 'q': qi, 'tag': [('%s.%d' % (it['id'], i),) + pk[1:] for i, pk in enumerate(pick)],
-                          'fill': [('#tpart-%d' % i, [pk[0]]) for i, pk in enumerate(pick)],
-                          'read': ['#tpart-%d' % i for i in range(len(pick))]})
+            cases.append({'mode': 'test', 'q': qi, 'tag': [('%s.%d' % (it['id'], i),) + pk[1:] for i, pk in zip(typed, pick)],
+                          'fill': [('#tpart-%d' % i, [pk[0]]) for i, pk in zip(typed, pick)], 'pick': chosen,
+                          'read': ['#tpart-%d' % i for i in typed]})
     return cases
 
 
 def typed_forms(acc, key, uid):
     """(typed text, 'right'|'wrong', why) for one answer: the key, sampled accepted forms decorated, one flipped."""
     out = [(key, 'right', 'key')]
-    if uid in FREE:
-        return out
     step = max(1, len(acc) // 4)
     for f_ in acc[::step][:4]:
         for d in decorate(f_)[1:]:
@@ -924,12 +1161,18 @@ def play(fails, html, accepted, sweep=True):
             m = lk['test']
             if m[:3] != [m[3], m[3], 1]:
                 fails.append('T1: submitted twice: score, out of, answers = %s, not [%d, %d, 1] (MaffsLock)' % (m[:3], m[3], m[3]))
-            if lk['submits'] != 2:
-                fails.append('the two end screens, each shown twice, submitted %d scores, not 2 (MaffsLock)' % lk['submits'])
+            if lk['submits'] != 1:
+                fails.append('the two end screens, each shown twice, submitted %d scores, not 1: the Test once, Practice '
+                             'never (MaffsLock; factor-theorem-t5-014)' % lk['submits'])
             for i, sw in page.evaluate(LEARN_JS):
                 if sw > 390:
                     fails.append('Learn example %d at 390px: the page scrolls sideways (%dpx; factor-theorem-t5-018)' % (
                         i + 1, sw))
+            check_option_play(fails, page.evaluate(OPTIONS_JS))
+            wn = page.evaluate(WRONG_NEXT_JS)
+            if wn['next'] or not wn['maffsNext']:
+                fails.append('wrong answer (p21): advanced by %s, not the shared Next control (canon 7.6; '
+                             'factor-theorem-t5-018)' % ('the Next Question button' if wn['next'] else 'nothing'))
             # the narrowest phone: every question and Learn example, the keys typed in
             ctx.set_default_timeout(20000)
             page.set_viewport_size({'width': 320, 'height': 568})
@@ -942,6 +1185,15 @@ def play(fails, html, accepted, sweep=True):
             for i, sw in page.evaluate(LEARN_JS):
                 if sw > 320:
                     fails.append('Learn example %d at 320px: the page scrolls sideways (%dpx)' % (i + 1, sw))
+            ctx.add_init_script(HOOKS)
+            for q in LEVEL_URLS:
+                pg = ctx.new_page()
+                pg.on('pageerror', lambda e: errors.append(str(e)))
+                pg.goto(base + '/games/%s/%s' % (SLUG, q), wait_until='load', timeout=20000)
+                pg.wait_for_function('typeof katex !== "undefined" && document.getElementById("test-area").innerHTML.length > 0',
+                                     timeout=15000)
+                check_level(fails, q, pg.evaluate(LEVEL_JS))
+                pg.close()
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
             ctx.close()
@@ -950,6 +1202,61 @@ def play(fails, html, accepted, sweep=True):
         proc.terminate()
         proc.wait()
     return content
+
+
+def check_option_play(fails, res):
+    for side, n in sorted(res['orders'].items()):
+        if n < 2:
+            fails.append('%s: the answer buttons came in one order in 20 showings (not shuffled)' % (
+                'p33' if side == 'p' else 'T9.2'))
+    if res['empty'] and (res['empty'][1] or 'Choose' not in res['empty'][0]):
+        fails.append('p33: Check with no answer chosen: %r, %d marked' % tuple(res['empty']))
+    for cs in res['cases']:
+        uid, right = cs['uid'], cs['val'] == cs['key']
+        want = 'right' if right else 'wrong'
+        if cs['mark'] != want:
+            fails.append('%s: the option %r is marked %s, not %s' % (tag(uid), cs['val'], cs['mark'], want))
+        if cs['right'] != [cs['key']]:
+            fails.append('%s: after marking, the buttons shown right are %r, not the key' % (uid, cs['right']))
+        if not cs['off']:
+            fails.append('%s: the buttons are live after marking' % uid)
+        if not cs['explain']:
+            fails.append('%s: no explanation after marking' % uid)
+        if right and (cs['maffsNext'] or not cs['next']):
+            fails.append('%s: a right answer is not followed by the Next Question button' % uid)
+        if not right and (cs['next'] or not cs['maffsNext']):
+            fails.append('%s: a wrong answer is not followed by the shared Next control (canon 7.6)' % uid)
+        if uid[0] == 'p' and cs['score'] != (3 if right else 0):
+            fails.append('%s: the option %r scored %d' % (uid, cs['val'], cs['score']))
+        if uid[0] == 'T' and cs['score'] != (cs['of'] if right else cs['of'] - 1):
+            fails.append('%s: with the other parts right, the option %r scored %d of %d' % (uid, cs['val'], cs['score'], cs['of']))
+        m = re.search(r'.{0,25}(\^|\\[a-z(]|_\{).{0,25}', cs['text'])
+        if m:
+            fails.append('%s: raw TeX on screen: %r' % (uid, m.group(0)))
+        if cs['sw'] > 390:
+            fails.append('%s at 390px: the page scrolls sideways (%dpx)' % (uid, cs['sw']))
+
+
+def check_level(fails, q, res):
+    given = q.split('=', 1)[1] if '=' in q else None
+    where = 'level: %s' % (q or 'no ?level')
+    levels = sorted({str(p.get('level')) for e, p in res['ev'] if p and 'level' in p})
+    kinds = [e for e, _ in res['ev']]
+    if levels != ['alevel']:
+        fails.append('%s logged level %s, not only alevel (factor-theorem-t5-013)' % (where, levels))
+    for need in ('game_started', 'question_answered', 'game_completed'):
+        if need not in kinds:
+            fails.append('%s: no %s event (the game did not play)' % (where, need))
+    if given and given != 'alevel' and given in json.dumps(res['ev']) + json.dumps(res['sub']):
+        fails.append('%s: the value %r was logged or submitted (factor-theorem-t5-013)' % (where, given))
+    if res['practiceSubs']:
+        fails.append('Practice: finishing it submitted %r to the leaderboard (factor-theorem-t5-014, t5-015)' % (
+            res['sub'][:res['practiceSubs']],))
+    tests = [z for z in res['sub'][res['practiceSubs']:]]
+    if [z[:2] for z in tests] != [['factor-theorem', 'alevel']]:
+        fails.append('%s: the Test submitted %r, not once to factor_theorem_alevel (factor-theorem-t5-015)' % (where, tests))
+    if res['badge'].strip() != 'A-Level':
+        fails.append('%s: the badge says %r' % (where, res['badge']))
 
 
 def block(accepted):
@@ -999,6 +1306,23 @@ PLANTS = [
      "has a factor (x \\u2212 3) and leaves remainder 20 when divided by (x \\u2212 1). Find a and b.',marks:3,"
      "answer:'a=-23, b=42',answerLabel:'a, b ='},\n          {label:'(b) Fully factorise p(x).',marks:1,"
      "answer:'(x-3)(x+7)(x-2)'"),
+    ('p33', "t5-004: Q33's old free-text key",
+     r"finalAnswer:'\\(f(2) = 2^n - 2^n = 0\\), so by the factor theorem \\((x - 2)\\) is a factor.'," "\n        options:[",
+     "finalAnswer:'f(2) = 2^n - 2^n = 0',\n        _options:["),
+    ('T9.2', "t5-005: T9(c)'s old free-text key",
+     "answer:'The object is at the origin (displacement zero) at t = 2, 3 and 4, passing through it each time.',"
+     "\n            options:[",
+     "answer:'object crosses origin at t=2, 3, 4',answerLabel:'Interpretation:',\n            _options:["),
+    ('T6.0', 'a typed key that is prose', "answer:'12',answerLabel:'Remainder ='", "answer:'twelve',answerLabel:'Remainder ='"),
+    ('Practice', 't5-014: a Practice submit', "mode: 'practice' });\n  }\n});",
+     "mode: 'practice' });\n  }\n  if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', "
+     "practiceState.score, questions.length).catch(function(){});\n});"),
+    ('level', 't5-013: ?level read and logged', "mfg('game_started', { game_slug: CONTENT.slug, level: 'alevel', mode: mode });",
+     "mfg('game_started', { game_slug: CONTENT.slug, level: new URLSearchParams(location.search).get('level') || 'alevel', "
+     "mode: mode });"),
+    ('wrong answer', 't5-018: a wrong answer advanced by the Next button',
+     "    if (correct) {\n      document.getElementById('nextQBtn').style.display = 'block';",
+     "    if (true) {\n      document.getElementById('nextQBtn').style.display = 'block';"),
 ]
 
 

@@ -28,6 +28,7 @@
 <script src="../../schools/assets/mathtext.js"></script>
 <script src="../../schools/assets/answer.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
 {
   "start": "document.querySelector('[data-section=\"practice\"]').click()",
@@ -43,7 +44,10 @@
     " k++) {    const c = document.getElementById('checkBtn');",
     "    if (!c || c.style.display === 'none') return;",
     "    document.querySelectorAll('#practice-area input.answer-input:not([disabled])').forEach(e => {",
-    " e.value = 'zz'; });    c.click();  }})();"
+    " e.value = 'zz'; });",
+    "    document.querySelectorAll('#practice-area .opt-group').forEach(g => {",
+    " if (!g.querySelector('.opt-btn.chosen')) { const b = g.querySelector('.opt-btn:not([disabled])'); if (b) b.click(); } });",
+    "    c.click();  }})();"
   ],
   "surface": "#practice-area .q-card"
 }
@@ -157,6 +161,16 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .progress-pips{display:flex;gap:3px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
 .pip{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .3s}
 .pip.done{background:var(--correct)}.pip.fail{background:var(--wrong)}.pip.current{background:var(--accent);box-shadow:0 0 5px var(--accent)}
+.opt-group{display:grid;gap:.5rem;margin-top:.6rem}
+.opt-btn{text-align:left;min-height:44px;padding:.6rem .8rem;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.88rem;line-height:1.5;cursor:pointer;overflow-wrap:anywhere}
+.opt-btn:hover{border-color:var(--primary)}
+.opt-btn.chosen{border-color:var(--primary);background:var(--primary-dim)}
+.opt-btn.opt-right{border-color:var(--correct);background:rgba(34,197,94,.08)}
+.opt-btn.opt-wrong{border-color:var(--wrong);background:rgba(239,68,68,.08)}
+.opt-btn:disabled{cursor:default}
+.opt-btn.opt-right::after{content:' \2713';color:var(--correct);font-weight:700}
+.opt-btn.opt-wrong::after{content:' \2717';color:var(--wrong);font-weight:700}
+.opt-explain{margin-top:.6rem;padding:.6rem .8rem;border-left:3px solid var(--primary);background:var(--primary-dim);border-radius:0 6px 6px 0;font-size:.82rem;color:var(--body);line-height:1.5}
 
 /* ── Results ── */
 .results{text-align:center;padding:2rem 1rem}
@@ -315,7 +329,6 @@ const ACCEPTED = {
   "T8.2": ["-2,-3,2", "-2,2,-3", "-3,-2,2", "-3,2,-2", "2,-2,-3", "2,-3,-2", "x=-2,-3,2", "x=-2,2,-3", "x=-2,x=-3,x=2", "x=-2,x=2,x=-3", "x=-3,-2,2", "x=-3,2,-2", "x=-3,x=-2,x=2", "x=-3,x=2,x=-2", "x=2,-2,-3", "x=2,-3,-2", "x=2,x=-2,x=-3", "x=2,x=-3,x=-2"],
   "T9.0": ["0"],
   "T9.1": ["2,3,4", "2,4,3", "3,2,4", "3,4,2", "4,2,3", "4,3,2", "t=2,3,4", "t=2,4,3", "t=2,t=3,t=4", "t=2,t=4,t=3", "t=3,2,4", "t=3,4,2", "t=3,t=2,t=4", "t=3,t=4,t=2", "t=4,2,3", "t=4,3,2", "t=4,t=2,t=3", "t=4,t=3,t=2"],
-  "T9.2": ["objectcrossesoriginatt=2,3,4"],
   "T10.0": ["0"],
   "T10.1": ["(2x-1)(x+3)(x-2)", "(2x-1)(x-2)(x+3)", "(x+3)(2x-1)(x-2)", "(x+3)(x-2)(2x-1)", "(x-2)(2x-1)(x+3)", "(x-2)(x+3)(2x-1)"],
   "T10.2": ["-3,0.5,2", "-3,1/2,2", "-3,2,0.5", "-3,2,1/2", "0.5,-3,2", "0.5,2,-3", "1/2,-3,2", "1/2,2,-3", "2,-3,0.5", "2,-3,1/2", "2,0.5,-3", "2,1/2,-3", "x=-3,0.5,2", "x=-3,1/2,2", "x=-3,2,0.5", "x=-3,2,1/2", "x=-3,x=0.5,x=2", "x=-3,x=1/2,x=2", "x=-3,x=2,x=0.5", "x=-3,x=2,x=1/2", "x=0.5,-3,2", "x=0.5,2,-3", "x=0.5,x=-3,x=2", "x=0.5,x=2,x=-3", "x=1/2,-3,2", "x=1/2,2,-3", "x=1/2,x=-3,x=2", "x=1/2,x=2,x=-3", "x=2,-3,0.5", "x=2,-3,1/2", "x=2,0.5,-3", "x=2,1/2,-3", "x=2,x=-3,x=0.5", "x=2,x=-3,x=1/2", "x=2,x=0.5,x=-3", "x=2,x=1/2,x=-3"],
@@ -407,7 +420,6 @@ const ACCEPTED = {
   "p30": ["a=-1,b=4", "b=4,a=-1"],
   "p31": ["(2x-1)(x+3)(x-3)", "(2x-1)(x-3)(x+3)", "(x+3)(2x-1)(x-3)", "(x+3)(x-3)(2x-1)", "(x-3)(2x-1)(x+3)", "(x-3)(x+3)(2x-1)"],
   "p32": ["(x+2)(x+3)(x-3)", "(x+2)(x-3)(x+3)", "(x+3)(x+2)(x-3)", "(x+3)(x-3)(x+2)", "(x-3)(x+2)(x+3)", "(x-3)(x+3)(x+2)"],
-  "p33": ["f(2)=2^n-2^n=0"],
   "p34": ["-0.5,0.5,2", "-0.5,1/2,2", "-0.5,2,0.5", "-0.5,2,1/2", "-1/2,0.5,2", "-1/2,1/2,2", "-1/2,2,0.5", "-1/2,2,1/2", "0.5,-0.5,2", "0.5,-1/2,2", "0.5,2,-0.5", "0.5,2,-1/2", "1/2,-0.5,2", "1/2,-1/2,2", "1/2,2,-0.5", "1/2,2,-1/2", "2,-0.5,0.5", "2,-0.5,1/2", "2,-1/2,0.5", "2,-1/2,1/2", "2,0.5,-0.5", "2,0.5,-1/2", "2,1/2,-0.5", "2,1/2,-1/2", "θ=-0.5,0.5,2", "θ=-0.5,1/2,2", "θ=-0.5,2,0.5", "θ=-0.5,2,1/2", "θ=-0.5,θ=0.5,θ=2", "θ=-0.5,θ=1/2,θ=2", "θ=-0.5,θ=2,θ=0.5", "θ=-0.5,θ=2,θ=1/2", "θ=-1/2,0.5,2", "θ=-1/2,1/2,2", "θ=-1/2,2,0.5", "θ=-1/2,2,1/2", "θ=-1/2,θ=0.5,θ=2", "θ=-1/2,θ=1/2,θ=2", "θ=-1/2,θ=2,θ=0.5", "θ=-1/2,θ=2,θ=1/2", "θ=0.5,-0.5,2", "θ=0.5,-1/2,2", "θ=0.5,2,-0.5", "θ=0.5,2,-1/2", "θ=0.5,θ=-0.5,θ=2", "θ=0.5,θ=-1/2,θ=2", "θ=0.5,θ=2,θ=-0.5", "θ=0.5,θ=2,θ=-1/2", "θ=1/2,-0.5,2", "θ=1/2,-1/2,2", "θ=1/2,2,-0.5", "θ=1/2,2,-1/2", "θ=1/2,θ=-0.5,θ=2", "θ=1/2,θ=-1/2,θ=2", "θ=1/2,θ=2,θ=-0.5", "θ=1/2,θ=2,θ=-1/2", "θ=2,-0.5,0.5", "θ=2,-0.5,1/2", "θ=2,-1/2,0.5", "θ=2,-1/2,1/2", "θ=2,0.5,-0.5", "θ=2,0.5,-1/2", "θ=2,1/2,-0.5", "θ=2,1/2,-1/2", "θ=2,θ=-0.5,θ=0.5", "θ=2,θ=-0.5,θ=1/2", "θ=2,θ=-1/2,θ=0.5", "θ=2,θ=-1/2,θ=1/2", "θ=2,θ=0.5,θ=-0.5", "θ=2,θ=0.5,θ=-1/2", "θ=2,θ=1/2,θ=-0.5", "θ=2,θ=1/2,θ=-1/2"],
   "p35": ["(x+2)(x-2)(x-2)", "(x+2)(x-2)^2", "(x-2)(x+2)(x-2)", "(x-2)(x-2)(x+2)", "(x-2)^2(x+2)"],
   "p36": ["(3x+1)(x+1)(x+2)", "(3x+1)(x+2)(x+1)", "(x+1)(3x+1)(x+2)", "(x+1)(x+2)(3x+1)", "(x+2)(3x+1)(x+1)", "(x+2)(x+1)(3x+1)"],
@@ -450,6 +462,54 @@ function accepts(id, raws) {
 // A key as the student reads it: superscripts and the minus sign.
 function pretty(a) {
   return String(a).replace(/\^2/g, '²').replace(/\^3/g, '³').replace(/\^n/g, 'ⁿ').replace(/-/g, '−').replace(/,\s*/g, ', ');
+}
+
+// ── ANSWER BUTTONS ──────────────────────────────────────────────────
+// An item with options (practice Q33, T9(c)) is answered with one of four buttons, in a new shuffled order each
+// time it is shown (Jon, 9 Oct 2026, FT-FIX answers). Tapping one chooses it; Check (Practice) or Submit Answer (Test)
+// marks the chosen button's dataset.val against the key, never its rendered HTML (canon).
+function shuffled(a) {
+  const b = a.slice();
+  for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; }
+  return b;
+}
+function fillOptions(group, options) {
+  shuffled(options).forEach(o => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'opt-btn';
+    btn.dataset.val = o;
+    btn.setAttribute('aria-pressed', 'false');
+    btn.innerHTML = MaffsText.html(o);
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      group.querySelectorAll('.opt-btn').forEach(b => {
+        b.classList.toggle('chosen', b === btn);
+        b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+      });
+    });
+    group.appendChild(btn);
+  });
+}
+function chosenValue(group) {
+  const b = group.querySelector('.opt-btn.chosen');
+  return b ? b.dataset.val : null;
+}
+// Marks the group once: the key's button green, a wrong choice red, every button off. Returns whether it was right.
+function markOptions(group, key) {
+  const right = chosenValue(group) === key;
+  group.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    if (b.dataset.val === key) b.classList.add('opt-right');
+    else if (b.classList.contains('chosen')) b.classList.add('opt-wrong');
+  });
+  return right;
+}
+function showExplain(after, text) {
+  const d = document.createElement('div');
+  d.className = 'opt-explain';
+  d.innerHTML = MaffsText.html(text);
+  after.insertAdjacentElement('afterend', d);
 }
 
 // ── CONTENT ──────────────────────────────────────────────────────────
@@ -699,8 +759,15 @@ const CONTENT = {
         scaffoldSteps:[], finalAnswer:'(x-3)(x+3)(2x-1)', hints:[] },
       { id:32, tier:5, prompt:'f(x) = \\(x^3 + 2x^2 - 9x - 18\\). Fully factorise.',
         scaffoldSteps:[], finalAnswer:'(x-3)(x+2)(x+3)', hints:[] },
-      { id:33, tier:5, prompt:'Prove that \\((x - 2)\\) is a factor of \\(x^n - 2^n\\) for all positive integers n.',
-        scaffoldSteps:[], finalAnswer:'f(2) = 2^n - 2^n = 0', hints:[] },
+      // Four answer buttons, marked by dataset.val (Jon, 9 Oct 2026, FT-FIX: a proof is not machine-marked as text).
+      { id:33, tier:5, prompt:'Prove that \\((x - 2)\\) is a factor of \\(x^n - 2^n\\) for all positive integers n. Which line proves it?',
+        scaffoldSteps:[], hints:[],
+        finalAnswer:'\\(f(2) = 2^n - 2^n = 0\\), so by the factor theorem \\((x - 2)\\) is a factor.',
+        options:['\\(f(2) = 2^n - 2^n = 0\\), so by the factor theorem \\((x - 2)\\) is a factor.',
+          '\\(f(-2) = (-2)^n - 2^n = 0\\), so \\((x - 2)\\) is a factor.',
+          '\\(f(2) = 0\\), so \\((x + 2)\\) is a factor.',
+          '\\(f(0) = -2^n\\), so \\((x - 2)\\) is a factor.'],
+        explain:'The factor theorem: \\((x - a)\\) is a factor exactly when \\(f(a) = 0\\). Here \\(a = 2\\), and \\(2^n - 2^n = 0\\) for every n.' },
       { id:34, tier:5, prompt:'Torque: T(\u03B8) = \\(4\\theta^3 - 8\\theta^2 - \\theta + 2\\). Find all values of \u03B8 where torque is zero.',
         scaffoldSteps:[], finalAnswer:'\u03B8=2, \u03B8=1/2, \u03B8=-1/2', hints:[] },
       { id:35, tier:5, prompt:'f(x) = \\(x^3 - 2x^2 - 4x + 8\\). Fully factorise.',
@@ -767,7 +834,13 @@ const CONTENT = {
         parts:[
           {label:'(a) Find s(2).',marks:1,answer:'0',answerLabel:'s(2) ='},
           {label:'(b) Find all values of t where displacement is zero.',marks:2,answer:'t=2, t=3, t=4',answerLabel:'t ='},
-          {label:'(c) Interpret what these values mean physically.',marks:1,answer:'object crosses origin at t=2, 3, 4',answerLabel:'Interpretation:'}],
+          {label:'(c) Interpret what these values mean physically.',marks:1,
+            answer:'The object is at the origin (displacement zero) at t = 2, 3 and 4, passing through it each time.',
+            options:['The object is at the origin (displacement zero) at t = 2, 3 and 4, passing through it each time.',
+              'The object is at rest at t = 2, 3 and 4.',
+              'The object changes direction at t = 2, 3 and 4.',
+              'The object\'s acceleration is zero at t = 2 and 4.'],
+            explain:'\\(s(t) = 0\\) means the displacement is zero: the object is at the origin. Each root is a single root, so s changes sign and the object passes through. At rest would need \\(v = \\frac{ds}{dt} = 0\\), and \\(v = 3t^2 - 18t + 26\\) is not zero at any of them (at \\(t = 3\\), \\(v = -1\\)).'}],
         learnRef:1 },
       { id:'T10', marks:6, prompt:'f(x) = \\(2x^3 + x^2 - 13x + 6\\)',
         parts:[
@@ -796,6 +869,10 @@ function init() {
   renderPractice();
   renderTest();
 }
+
+// ── LEVEL ─────────────────────────────────────────────────────────
+// A-Level only (Jon, 9 Oct 2026, FT-FIX answers): every URL serves A-Level and logs and submits 'alevel'.
+// ?level is never read, so a level4, unknown or junk value is never logged or submitted.
 
 // ── RUN START ─────────────────────────────────────────────────────
 // init() renders question 1 of Practice and Test while both are hidden, so
@@ -952,18 +1029,20 @@ function scrollToStep() {
 
 // ── PRACTICE ──────────────────────────────────────────────────────
 // The end of a run is sent once (MaffsLock.finishOnce); Try Again starts a new session.
+// Practice, with its retries and hints, goes on no leaderboard (Jon, 8 Oct 2026, t5-014, t5-015): its score is
+// feedback on screen only. The Test alone submits.
 const finishPractice = MaffsLock.finishOnce(() => {
   const questions = CONTENT.practice.questions;
   if (typeof mfg === 'function') {
     mfg('game_completed', { game_slug: CONTENT.slug, level: 'alevel', score: practiceState.score, questions_answered: questions.length, questions_correct: practiceState.answers.filter(a => a).length, mode: 'practice' });
   }
-  if (window.MaffsLeaderboard) { MaffsLeaderboard.submitScore(CONTENT.slug, 'alevel', practiceState.score, questions.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record(CONTENT.slug,'alevel',practiceState.score);} }
 });
 
 function renderPractice() {
   const questions = CONTENT.practice.questions;
   const area = document.getElementById('practice-area');
   const resultsEl = document.getElementById('practice-results');
+  if (window.MaffsNext) MaffsNext.clear(area);
 
   if (practiceState.qIdx >= questions.length) {
     area.style.display = 'none';
@@ -1002,6 +1081,7 @@ function renderPractice() {
   let attempts = 0;
   const scaffoldSteps = q.scaffoldSteps || [];
   const hasScaffold = scaffoldSteps.length > 0;
+  const hasOptions = Array.isArray(q.options);
   const qid = 'p' + q.id;
 
   // One box per blank, marked by position (a step's boxes are matched together against its ACCEPTED entry, so
@@ -1022,6 +1102,8 @@ function renderPractice() {
       body += `<div class="scaffold-step" id="scaffold-${i}"><div class="scaffold-input">` +
         parts.map((p, j) => `<span>${p}</span>` + (j < boxes.length ? box(boxes[j], 80) : '')).join('') + `</div></div>`;
     });
+  } else if (hasOptions) {
+    body = '<div class="opt-group" id="p-options" role="group" aria-label="Answers"></div>';
   } else {
     units.push({ id: qid, boxes: ['final-answer'], key: [q.finalAnswer], done: false });
     body = `<div class="scaffold-input" style="justify-content:center;margin-top:1rem">
@@ -1034,6 +1116,7 @@ function renderPractice() {
     <button class="submit-btn" id="checkBtn">Check</button>
     <button class="next-q-btn" id="nextQBtn" style="display:none" data-maffs-lock-skip>Next Question →</button>
   </div>`;
+  if (hasOptions) fillOptions(document.getElementById('p-options'), q.options);
   MaffsLock.fresh(area);
 
   // Apply exam vocabulary tooltips to question prompt
@@ -1066,17 +1149,38 @@ function renderPractice() {
     practiceState.answers.push(correct);
     document.getElementById('p-score').textContent = `${practiceState.score} / ${practiceState.maxScore}`;
     document.getElementById('checkBtn').style.display = 'none';
-    document.getElementById('nextQBtn').style.display = 'block';
-    document.getElementById('nextQBtn').focus();
+    if (correct) {
+      document.getElementById('nextQBtn').style.display = 'block';
+      document.getElementById('nextQBtn').focus();
+    }
     if (typeof mfg === 'function') {
       mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: practiceState.qIdx + 1, correct, attempts, hints_used: hintsUsed, mode: 'practice' });
     }
     return qScore;
   };
+  // A wrong answer waits for the student (canon 7.6): called once the answer and its working are on screen.
+  const waitAfterWrong = () => MaffsNext.wrong({ mount: area.querySelector('.q-card'), label: 'Next Question →',
+    onAdvance: () => { practiceState.qIdx++; renderPractice(); } });
 
   document.getElementById('checkBtn').addEventListener('click', () => {
     if (MaffsLock.isLocked(area)) return;
     const feedback = document.getElementById('feedback');
+    if (hasOptions) {
+      const group = document.getElementById('p-options');
+      if (chosenValue(group) === null) {
+        feedback.className = 'feedback-msg';
+        feedback.textContent = 'Choose an answer first.';
+        return;
+      }
+      attempts++;
+      const right = markOptions(group, q.finalAnswer);
+      const qScore = finish(right);
+      feedback.className = 'feedback-msg ' + (right ? 'correct-msg' : 'wrong-msg');
+      feedback.textContent = right ? (qScore === 3 ? 'Correct — full marks' : `Correct — ${qScore}/3`) : 'Not this line: the one that proves it is ticked';
+      if (q.explain) showExplain(group, q.explain);
+      if (!right) waitAfterWrong();
+      return;
+    }
     const open = units.filter(u => !u.done);
     if (open.some(u => u.boxes.some(b => !document.getElementById(b).value.trim()))) {
       feedback.className = 'feedback-msg';
@@ -1108,6 +1212,7 @@ function renderPractice() {
       }));
       feedback.className = 'feedback-msg wrong-msg';
       feedback.textContent = hasScaffold ? 'Answers shown above — study these before moving on' : `Answer: ${pretty(q.finalAnswer)}`;
+      waitAfterWrong();
     } else {
       feedback.className = 'feedback-msg wrong-msg';
       feedback.textContent = `Not quite — correct your highlighted answers and try again (attempt ${attempts}/3)`;
@@ -1149,6 +1254,7 @@ function renderTest() {
   const questions = CONTENT.test.questions;
   const area = document.getElementById('test-area');
   const resultsEl = document.getElementById('test-results');
+  if (window.MaffsNext) MaffsNext.clear(area);
 
   if (testState.qIdx >= questions.length) {
     area.style.display = 'none';
@@ -1180,11 +1286,12 @@ function renderTest() {
 
   q.parts.forEach((p, i) => {
     html += `<div class="scaffold-step">
-      <div class="scaffold-label vocab-target" style="font-weight:600;color:var(--text)">${p.label} <span style="color:var(--muted);font-weight:400">[${p.marks}]</span></div>
-      <div class="scaffold-input" style="margin-top:.3rem">
+      <div class="scaffold-label vocab-target" style="font-weight:600;color:var(--text)">${p.label} <span style="color:var(--muted);font-weight:400">[${p.marks}]</span></div>` +
+      (p.options ? `<div class="opt-group" id="tpart-${i}" role="group" aria-label="Answers"></div>` :
+      `<div class="scaffold-input" style="margin-top:.3rem">
         <span style="color:var(--body);font-size:.85rem">${p.answerLabel}</span>
         <input type="text" class="answer-input" id="tpart-${i}" autocomplete="off" autocapitalize="off" spellcheck="false" style="width:200px">
-      </div>
+      </div>`) + `
     </div>`;
   });
 
@@ -1194,6 +1301,7 @@ function renderTest() {
   </div>`;
 
   area.innerHTML = html;
+  q.parts.forEach((p, i) => { if (p.options) fillOptions(document.getElementById('tpart-' + i), p.options); });
   MaffsLock.fresh(area);
 
   // Apply exam vocabulary tooltips to question labels
@@ -1205,9 +1313,10 @@ function renderTest() {
   document.getElementById('tCheckBtn').addEventListener('click', () => {
     if (MaffsLock.isLocked(area)) return;
     const feedback = document.getElementById('t-feedback');
-    if (q.parts.some((p, i) => !document.getElementById('tpart-' + i).value.trim())) {
+    if (q.parts.some((p, i) => p.options ? chosenValue(document.getElementById('tpart-' + i)) === null
+                                         : !document.getElementById('tpart-' + i).value.trim())) {
       feedback.className = 'feedback-msg';
-      feedback.textContent = 'Fill in every box first.';
+      feedback.textContent = q.parts.some(p => p.options) ? 'Answer every part first.' : 'Fill in every box first.';
       return;
     }
     // answer once (canon 7.6.0): a test question is marked a single time
@@ -1216,6 +1325,13 @@ function renderTest() {
     let allCorrect = true;
 
     q.parts.forEach((p, i) => {
+      if (p.options) {
+        const group = document.getElementById('tpart-' + i);
+        if (markOptions(group, p.answer)) qScore += p.marks;
+        else allCorrect = false;
+        if (p.explain) showExplain(group, p.explain);
+        return;
+      }
       const input = document.getElementById('tpart-' + i);
       const correct = accepts(q.id + '.' + i, [input.value]);
       input.classList.add(correct ? 'correct-input' : 'wrong-input');
@@ -1241,8 +1357,14 @@ function renderTest() {
     feedback.textContent = `${qScore} / ${q.marks} marks`;
 
     document.getElementById('tCheckBtn').style.display = 'none';
-    document.getElementById('tNextBtn').style.display = 'block';
-    document.getElementById('tNextBtn').focus();
+    if (allCorrect) {
+      document.getElementById('tNextBtn').style.display = 'block';
+      document.getElementById('tNextBtn').focus();
+    } else {
+      // a wrong answer waits for the student, the corrections on screen (canon 7.6)
+      MaffsNext.wrong({ mount: area.querySelector('.q-card'), label: 'Next Question →',
+        onAdvance: () => { testState.qIdx++; renderTest(); } });
+    }
 
     if (typeof mfg === 'function') {
       mfg('question_answered', { game_slug: CONTENT.slug, level: 'alevel', question_index: testState.qIdx + 1, correct: allCorrect, attempts: 1, hints_used: 0, mode: 'test' });
