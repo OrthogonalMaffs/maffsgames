@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: E | Screening Room (every count, band and key from the stated rates; every figure from the data; all 70 items marked in Chromium) |  && --selftest
+# ci-line: E2 | Screening Room (every count, band and key from the stated rates; every figure from the data; all 70 items marked in Chromium) |  && --selftest
 """Independent verification of Screening Room: every count, answer, band and figure from the stated rates.
 
 Until Oct 2026 every item's counts, answer and gut-check band were typed in beside its rates (tranche 4 audit,

@@ -43,6 +43,7 @@ TIMINGS = "scripts/ci-timings.json"     # each content line's seconds on a main 
 #   D1-D2  Equation Builder in two parts (--part i/2, by candidate arrangement; D1 has the whole-question
 #          checks and the planted-fault self-test).
 #   E   Estimation Engine and the 6 Oct 2026 joiners.
+#   E2  split from E (Jon, 9 Oct 2026; E reached 9m04s of its 9m budget on main): its three slowest verifiers.
 #   B1-B4  every other content verifier, cut by the slowest time each line has taken on main.
 #   L1-L5  check-answer-lock.py --part i/n (canon 7.6.0): the games migrated to MaffsLock, played in Chromium.
 #          A group with no line is not in the matrix: add a part as the roll-out grows.
@@ -55,6 +56,7 @@ GROUPS = [
     ("D1", "Content verifiers D1 (Equation Builder, part 1)", 6),
     ("D2", "Content verifiers D2 (Equation Builder, part 2)", 6),
     ("E", "Content verifiers E (Estimation Engine, Angle Ace, Simultaneous Solver, Like Terms Collector, Fermi Lab, Screening Room)", 12),
+    ("E2", "Content verifiers E2 (Screening Room, Simultaneous Solver, Terrible Advice)", 12),
     ("B1", "Content verifiers B1 (Log Laws Solve, Maths Court, Six Sevens and two more)", 8),
     ("B2", "Content verifiers B2 (Growth and Decay and nine quick ones)", 8),
     ("B3", "Content verifiers B3 (Decimal Detective, Quadratic Factoriser and three more)", 8),
