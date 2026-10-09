@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: coordinate-geometry-dash`
+`cloud-remaining:`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -61,7 +61,17 @@ budget; E is at 491 s and takes nothing new).
   text "4 litres per 10 m²" contradicted the stem's rate; the value is kept). New `verify-scale-factor-scaling.py`
   (B2, ~2 s): every key from the quantities its prompt states. Seen, not touched (B11's domain, not this finding):
   T1[8] offers 2:5 and 4:10, T1[9] 1:3 and 3:9, wrong options equal to each other.
-- **Next: coordinate-geometry-dash** (t1-001). Drafts ready in the scratchpad for items 4-7: complex-converter
+- **Main went red after #211 (run 601): group E at 9m04s of its 9m budget**, none of this lane's verifiers in it.
+  Jon (9 Oct): the cloud lane adds E2 now, on a branch of its own: **#213** (`claude/youthful-feynman-anpxuq-e2`,
+  merged 63ad521) moved Screening Room, Simultaneous Solver and Terrible Advice into E2; E 4m31s, E2 4m22s on its
+  run; main green again (run 37950120068). E's job name still lists two moved verifiers (names kept stable): the
+  home lane's call.
+- **Jon's rulings of 9 Oct, 16:21** saved beside the contract (`contracts/2026-10-09-listed-high-rulings.md`):
+  item 9 t4-003 is NOT rewritten: "Yes - but only when k > 0" is accepted alongside the key (an accepted set, in
+  the game), the explanation says why both are right; the rest as written.
+- **4 coordinate-geometry-dash: #214.** x = 3t, y = 4/t: options xy = 12 (key), xy = 7, y = 12x, x = 3y/4. New
+  `verify-coordinate-geometry-dash.py` (B2, ~4 s): all 45 keys recomputed, equations compared as curves.
+- **Next: complex-converter** (t6-001). Drafts ready in the scratchpad for items 4-7: complex-converter
   (every item to the principal argument: ids 20, 28, 30, 38, 53 change key form; 21, 20, 28, 40, 48 had a second
   form of the key among the options), higher-power (match when the value cards look alike or the stored values
   are equal and finite: googolplex and infinity are both stored as Infinity), seven-bridges (t4-001 already fixed
