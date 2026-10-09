@@ -37,14 +37,15 @@ start-up load). When the work merges, move the file to `docs/history/`.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
 of 9 Oct, 11:00, in `docs/history/contracts/2026-10-0[89]-ft-fix*.md`).
-LISTED-HIGH (in progress, `contracts/2026-10-09-listed-high.md`): 13 items, one game per PR, in the contract's order;
-each next game is claimed in a commit of its own, riding the previous game's PR. Progress in the LISTED-HIGH entry below.
+LISTED-HIGH: COMPLETE but item 12 (`contracts/2026-10-09-listed-high.md`): #210-#212, #214, #216, #217, #219, #223, #225-#231
+merged; main's full run on the #231 merge (48023d0) **passed**, run 37978742832. **Next: item 12 only**, when the home
+lane's OVERLAY-KEYS (#232) is on main (see the LISTED-HIGH entry below). Nothing else is queued for the cloud lane.
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): LISTED-HIGH (in progress; contract in `contracts/2026-10-09-listed-high.md`)
+## 2026-10-09 (cloud): LISTED-HIGH (complete but item 12; contract in `contracts/2026-10-09-listed-high.md`)
 
 One PR per game, in the contract's order; each next game's claim is a commit of its own at the end of the previous
 game's PR (so it reaches main before that game starts). New verifiers go in **B2** (main run 595: 249 s of its 360 s
@@ -114,18 +115,22 @@ budget; E is at 491 s and takes nothing new).
   the changed game with KaTeX served locally, and `extract-banks.py --only <slug>` + `check-banks.py --ci --only
   <slug>` (stale B11 ledger entries must leave `data/check-ledger.json` with the fix). esprima: unpack its sdist on
   PYTHONPATH. Teacher-line fails locally on factor-theorem and log-laws only (KaTeX CDN): not a change's fault.
-- **Remaining, in order.** Drafts (page edits, verifiers, item-13 evidence) survive a clear in the session scratchpads
-  under `/tmp/claude-0/-home-user-maffsgames/` (5dd7a927.../scratchpad and 8451d901.../scratchpad); each was checked
-  9 Oct: passes the fixed page, fails main's (or the pre-batch) page.
-  - 12 prisoners-dilemma t4-002: **HOLD (Jon, 18:56; note saved as `contracts/2026-10-09-listed-high-note-1900.md`).**
-    The drafted in-game keydown guard is **discarded**, in no PR: it was the defensive-patch shape (a guard in one
-    caller round a fault in the shared initials overlay, which lets typed keys reach page shortcuts in every game with
-    a document keydown handler). The home lane fixes the overlay (contract OVERLAY-KEYS). When its handover records
-    that fix, re-run item 12's check (drafted `verify-prisoners-dilemma.py`: C plays; "CDC" typed in the overlay and
-    "dd" in a field play nothing) against prisoners-dilemma with no change to the game's code. t4-001 stays open
-    (Jon's design).
-  - **Merging (Jon, 18:56):** #223 and every later PR wait for a green main run; the workflow and `ci-groups.py` are
-    the home lane's. With no green main this session, the PRs stay open, green on their own checks.
+- **Item 12, prisoners-dilemma t4-002: waiting on the home lane's OVERLAY-KEYS (#232)** (Jon, 18:56; note in
+  `contracts/2026-10-09-listed-high-note-1900.md`). The drafted in-game keydown guard was **discarded**, in no PR: it
+  was the defensive-patch shape (the shared initials overlay lets typed keys reach page shortcuts in every game with a
+  document keydown handler; the overlay is the fix). **The check is saved on branch
+  `claude/youthful-feynman-anpxuq-pd-check`** (`scripts/verify-prisoners-dilemma.py`, verbatim from the scratchpad;
+  no PR, not in CI: it fails main until #232 is on main). It asserts, on a tournament's first match in Chromium: C
+  pressed on the game screen plays a move; "CDC" typed into the initials overlay (`#mfg-initials-overlay`, an input
+  focused in it) plays nothing; "dd" typed into any other text field plays nothing. **When #232 is on main:** run it
+  against prisoners-dilemma with no change to the game's code; it must pass. Its self-test plants the discarded
+  in-game guard, so it reports CANNOT PLANT: rewrite the plant to serve main's pre-#232 overlay module (the shared
+  file's old content) and confirm it FAILs, update the `ci-line` header to the packed form (`# ci-line: <label> |`),
+  then open the PR (claim prisoners-dilemma first), closing t4-002. **t4-001** (the board ranks whichever opponent is
+  chosen) stays open: Jon's leaderboard design, not this lane's.
+- **Stacked PRs (Jon's ruling, 9 Oct 20:20): one branch per PR, stacked, is fine.** #226-#231 were each on
+  `claude/youthful-feynman-anpxuq-<game>`, opened together so CI ran in parallel, merged strictly in order, each on a
+  green Gate with main green on the previous merge.
 
 ## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #207 merged cf96929; main run 593 green)
 
