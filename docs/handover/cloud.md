@@ -40,13 +40,14 @@ of 9 Oct, 11:00, in `docs/history/contracts/2026-10-0[89]-ft-fix*.md`).
 LISTED-HIGH: COMPLETE but item 12 (`contracts/2026-10-09-listed-high.md`): #210-#212, #214, #216, #217, #219, #223,
 #225-#231 merged; main green (run 654, 37978742832). **Item 12 (PD-CHECK) STOPPED, 9 Oct 20:40: Jon's call, see the
 PD-CHECK entry below.** CAR-TRAP-DRAFT (moved from the home lane, Jon 20:17; contract on main,
-`contracts/2026-10-09-car-trap-draft.md`): **Car Trap draft for Jon's review**, PR below; see its entry.
+`contracts/2026-10-09-car-trap-draft.md`): **Car Trap draft for Jon's review**, #235 merged (ba5b6b2); main green
+(run 661). Phase 2 waits on Jon's review. **Nothing else is queued for the cloud lane.**
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): CAR-TRAP-DRAFT, Car Trap draft for Jon's review (phase 1; no live file touched)
+## 2026-10-09 (cloud): CAR-TRAP-DRAFT, Car Trap draft for Jon's review (#235 merged ba5b6b2; main run 661 green)
 
 - **Contract:** the repo copy on main, `contracts/2026-10-09-car-trap-draft.md` (Jon's amended text of 16:45, saved
   verbatim by the home lane in dc43926 and merged in #221). It is left where it is, because the home lane's handover
