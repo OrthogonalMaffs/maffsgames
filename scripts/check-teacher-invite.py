@@ -140,7 +140,8 @@ LL_LAWS = r"""(() => {
   const nx = document.querySelector('#mainGame .maffs-next');
   if (nx && nx.offsetParent !== null) { nx.click(); return; }
   const c = document.querySelector('#choices .choice:not(.correct):not(.wrong)');
-  if (c && !answered) c.click();
+  const ch = document.getElementById('choices');
+  if (c && !MaffsLock.isLocked(ch) && !MaffsLock.isFresh(ch)) c.click();
 })()"""
 LL_SOLVE = r"""(() => {
   const $ = id => document.getElementById(id);
