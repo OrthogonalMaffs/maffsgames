@@ -74,6 +74,9 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
     check per attempt now (the draw tools lock; a failed check reopens them).
   - Every question's answer went on by a timer, right or wrong (1-2 s): a wrong one now waits on MaffsNext under its
     feedback (canon 7.6). Next Scenario acts once; the end runs once (finishOnce).
+- **Answer lock split into six parts** (contract CI-BALANCE: lock parts grow by hand). L1 ran 6m40s on this PR's
+  first run (6m budget then); `ci-groups.py --check` passes with part 6 counted at the 300 s default until main
+  records it.
 - Seen, not touched: on a phone the table's typed values are clipped by the cell width (608.3 of 608.33 shows);
   the table scrolls, the value is kept. Checking a curve with fewer than three points uses `alert()`.
 
