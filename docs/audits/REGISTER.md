@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 21 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 11 open (1 CRITICAL, 10 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 10 open (1 CRITICAL, 9 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 2 in the roster's Unlisted section |
@@ -22,10 +22,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 25 | 0 | 26 |
-| HIGH | 10 | 198 | 0 | 208 |
+| HIGH | 9 | 199 | 0 | 208 |
 | MEDIUM | 128 | 143 | 2 | 273 |
 | LOW | 33 | 30 | 1 | 64 |
-| **All** | 172 | 396 | 3 | 571 |
+| **All** | 171 | 397 | 3 | 571 |
 
 ### By class
 
@@ -34,7 +34,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 2 | 13 | 106 |
 | 3 | 5 | 85 |
 | 6 | 24 | 56 |
-| 1 | 6 | 37 |
+| 1 | 5 | 37 |
 | NEW:wrong-explanation-text | 10 | 36 |
 | 5 | 26 | 26 |
 | 4 | 19 | 22 |
@@ -152,7 +152,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `factor-race` | yes | none | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | unlisted | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 2 | 16 | 1 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 2 | 13 | 0 |
-| `formula-forge` | yes | none | 0 | 1 | 5 | 1 | 7 | 0 | 0 |
+| `formula-forge` | yes | none | 0 | 1 | 5 | 1 | 6 | 1 | 0 |
 | `formula-plug-in` | yes | none | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 0 | 1 | 0 | 2 | 0 |
 | `four-quadrant-explorer` | yes | none | 0 | 1 | 2 | 1 | 3 | 1 | 0 |
@@ -208,10 +208,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 - **HIGH** prisoners-dilemma-t4-001, `games/prisoners-dilemma/index.html:781`: One board per level ranks the opponent picked: 100 only by choosing Always-Cooperate and defecting 20 times
 - **HIGH** prisoners-dilemma-t4-002, `games/prisoners-dilemma/index.html:789,1033`: Initials typed into the leaderboard overlay play moves in the next tournament match
-
-### `formula-forge` (GCSE, A-Level, L4)
-
-- **HIGH** formula-forge-t4-001, `games/formula-forge/index.html:78,440,454,484`: No answered guard: Enter re-marks, scores again, skips questions and submits more than once
 
 ### `glorious-gantt` (Core, L4; unlisted)
 
