@@ -41,7 +41,7 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): SIM-S5 built (claim #202; the fix PR off `cloud-remaining:`)
+## 2026-10-09 (cloud): SIM-S5 built (claim #202; fix #203 takes the game off the remaining list)
 
 - **Stage 5** in simultaneous-solver: its own screen and flow (`startForm`, beside the A-Level one); Stages 1-4
   untouched (four existing lines widened: a trailing comma, a third `MaffsNext.clear`, two test hooks). `WORDS`
