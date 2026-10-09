@@ -12,7 +12,8 @@ The bank is read from the served page (L, A, V, T, E: 58 items; GCSE serves 48, 
     to it. The key's unit is the one asked for. Every distractor is wrong (not the exact value, not the key's value),
     and the four options are distinct. A worked figure written "N..." is the exact answer cut short, and 3.14 appears
     only where the prompt says pi ≈ 3.14.
-  - "≈" (t4-006): never before an exact definition (1 inch = 2.54 cm, 1 foot = 0.3048 m, ...).
+  - "≈" (t4-006): never before an exact definition (1 inch = 2.54 cm, 1 foot = 0.3048 m, ...); and "=" never
+    before a rounded one (t4-007, Jon, 9 Oct 2026: "1 mile ≈ 1609 m", the exact mile being 1609.344 m).
   - DISPLAY (t4-006; Jon's ruling, 9 Oct 2026: "One formatter function for all displayed numbers. Verifier proves
     marking unchanged on all 59 items and that every displayed number of 1,000 or more has a comma"; the bank has 58):
     in Chromium every item is rendered by the game's own nextQ(); each option's dataset.val is exactly a stored
@@ -36,7 +37,7 @@ The bank is read from the served page (L, A, V, T, E: 58 items; GCSE serves 48, 
     python scripts/verify-unit-converter.py [--against FILE] [--selftest]
 
 --against FILE serves FILE as the game page (main's copy: it fails naming t4-001, the unstated roundings and the
-level key). --selftest plants one fault per finding in copies of the page and requires each to be caught.
+level key). --selftest plants one fault per finding (eleven) in copies of the page and requires each to be caught.
 """
 import argparse
 import os
@@ -259,15 +260,15 @@ def check_bank(rep, bank, verbose=False):
     return n
 
 
-def report_notes(bank):
-    """Reported, never failed: "=" before a value that is not the exact definition (filed as t4-007)."""
-    notes = []
+def check_rounded_defs(rep, bank):
+    """t4-007 (Jon, 9 Oct 2026): "=" never before a value that is not the exact definition; a rounded value takes
+    "≈" ("1 mile ≈ 1609 m", where 1 mile = 1609.344 m exactly)."""
     for name, i, q in items(bank):
         for unit, (val, sign, pair, given) in defined_units(q['p']).items():
             if sign == '=' and pair in EXACT_DEFS and EXACT_DEFS[pair] != given:
-                notes.append('%s[%d]: "1 %s = %s %s" is not exact (1 %s = %s %s); the key holds either way'
-                             % (name, i, unit, dec(given), pair[1], unit, dec(EXACT_DEFS[pair]), pair[1]))
-    return notes
+                rep[('t4-007', '%s[%d] %s' % (name, i, q['p'][:48]))].append(
+                    '"1 %s = %s %s" is not exact (1 %s = %s %s): "≈"' % (unit, dec(given), pair[1], unit,
+                                                                          dec(EXACT_DEFS[pair]), pair[1]))
 
 
 # --- Chromium -----------------------------------------------------------------------------------------------------
@@ -596,7 +597,7 @@ def verify(src, only=ALL, verbose=False):
             bank = read_bank(page)
             if 'bank' in only:
                 n = check_bank(rep, bank, verbose)
-                notes = report_notes(bank)
+                check_rounded_defs(rep, bank)
                 check_served(rep, page, bank)
             if 'display' in only:
                 n = check_display(rep, page, bank)
@@ -647,6 +648,8 @@ PLANTS = [
      "b.dataset.val=v;b.textContent=fmt(v);", "b.dataset.val=fmt(v);b.textContent=fmt(v);"),
     ('t4-006: "1 inch ≈ 2.54 cm" back', 't4-006', ('bank',),
      "(1 inch = 2.54 cm)", "(1 inch ≈ 2.54 cm)"),
+    ('t4-007: "1 mile = 1609 m" back', 't4-007', ('bank',),
+     "(1 mile ≈ 1609 m)", "(1 mile = 1609 m)"),
     ('a wrong key (60 mph keyed 26.9 m/s)', 'key', ('bank',),
      "c:'26.8 m/s',d:['60 m/s'", "c:'26.9 m/s',d:['60 m/s'"),
     ('the calculator not mounted', 'calculator', ('phone',),

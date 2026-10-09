@@ -118,4 +118,9 @@ findings:
     t4-006: "=" before an approximation. The key holds either way (60 × 1609 ÷ 3600 = 26.816..., 60 × 1609.344 ÷ 3600
     = 26.822..., both 26.8 to 3 s.f.). A wording change ("≈", or 1609.344) is content: for Jon (UC-FIX keeps the
     questions apart from the precision lines).'
-  status: open
+  status: fixed
+  ruling: 'Jon, 9 Oct 2026 08:10 (answers to SIM-S5, item 3c): the prompt becomes "Convert 60 mph to m/s (1 mile ≈
+    1609 m). Give your answer to 3 significant figures."; the key stays 26.8 m/s; the verifier allows "≈" here,
+    because 1609 is a rounded value, not a definition. verify-unit-converter.py now fails "=" before any stated
+    conversion that is not the exact definition.'
+  pr: 205
