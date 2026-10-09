@@ -83,10 +83,11 @@ budget; E is at 491 s and takes nothing new).
 - **Jon, 9 Oct (answer to a question, item 11): Boolean Blitz marks an option right when it has the key's truth
   table AND no more literals than the key** (AB + BC, AB + AC accepted; the t6-004 unsimplified forms such as
   A·B + A for A stay wrong; t6-004 untouched). Boolean-blitz has B11 ledger entries for t6-002/003: clear them.
-- **7 seven-bridges: committed on the branch, PR not yet opened (checkpoint 9 Oct ~17:00).** al_15's E to (300,150);
-  t4-001 already fixed by F1 batch 9 (closed with measurements). `verify-seven-bridges.py` in **E2** (~12 s).
-  Findings closed with pr: 218: **check the real PR number when opening it** (#215 was taken by the home lane once).
-  Before opening: run the local checks below; then merge, watch main, continue.
+- **7 seven-bridges: #219** (#218 is the home lane's GRAPH-SKETCHER-FIT). al_15's E to (300,150); t4-001 already
+  fixed by F1 batch 9 (closed with measurements). `verify-seven-bridges.py` in **E2** (~12 s); fails main's page on
+  al_15 A-C and B-D. Main's run on #217 (37960745833): B4 6m39s and L2 6m36s over their 6m budgets, no test failed
+  (B4 was 340 s wall on #216's run, nothing in it changed: a slow runner on a group near budget); failed jobs re-run
+  once. **For the home lane (CI-BALANCE): B4 and B3 now sit near budget, as L1-L5 do.**
 - **CI notes:** E split into E/E2 by #213. On main, B2 ~230 s and B1 ~260 s of 360; E ~330 and E2 ~265 of 540.
   Put heavy new verifiers in E2. Answer-lock L1-L5 sit at 290-345 s of 360 since #215 added unit-converter: #217's
   first run went over (L2/L4/L5), one re-run passed; the home lane's CI-BALANCE item covers it.
