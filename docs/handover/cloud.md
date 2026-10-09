@@ -111,9 +111,15 @@ budget; E is at 491 s and takes nothing new).
   - 11 boolean-blitz: in-game boolParse/minSopLiterals/sameAnswer; right = the key's truth table AND literals <=
     max(key's, the minimal SOP's) (Jon's two answers of 9 Oct); accepts exactly AB + BC (Q24) and AB + AC (Q41);
     t6-001 fixed by F1 batch 11; clear the t6-002/003 B11 ledger entries.
-  - 12 prisoners-dilemma t4-002: keydown ignores keys while `#mfg-initials-overlay` exists or focus is in a text
-    field. **For the home lane:** the same class (page shortcuts under the shared initials overlay) exists in other
-    games with document keydown handlers; the architectural fix is the overlay stopping key events (shared module).
+  - 12 prisoners-dilemma t4-002: **HOLD (Jon, 18:56; note saved as `contracts/2026-10-09-listed-high-note-1900.md`).**
+    The drafted in-game keydown guard is **discarded**, in no PR: it was the defensive-patch shape (a guard in one
+    caller round a fault in the shared initials overlay, which lets typed keys reach page shortcuts in every game with
+    a document keydown handler). The home lane fixes the overlay (contract OVERLAY-KEYS). When its handover records
+    that fix, re-run item 12's check (drafted `verify-prisoners-dilemma.py`: C plays; "CDC" typed in the overlay and
+    "dd" in a field play nothing) against prisoners-dilemma with no change to the game's code. t4-001 stays open
+    (Jon's design).
+  - **Merging (Jon, 18:56):** #223 and every later PR wait for a green main run; the workflow and `ci-groups.py` are
+    the home lane's. With no green main this session, the PRs stay open, green on their own checks.
   - 13 stale locks: characteristic-quest t6-001, eigenvalue-extractor t6-001, matrix-crunch t6-001 and t6-002,
     formula-forge t4-001: all fixed on main (measured 9 Oct: key + Enter x3 = one mark, wrong + Tab+Enter = no change;
     the pre-batch pages give the audits' numbers, e.g. 93 -> 369; matrix-crunch flag 25 -> 100, lives 3 -> 0) and

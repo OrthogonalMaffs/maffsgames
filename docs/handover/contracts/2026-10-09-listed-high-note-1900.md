@@ -1,0 +1,7 @@
+CLOUD LANE — NOTE (9 Oct 2026, 19:00). Jon's rulings (18:56).
+
+1. ITEM 12 (prisoners-dilemma) — HOLD. Do not commit or merge the in-game keydown fix. You were right: it is the defensive-patch shape, and the out-of-bounds instruction that forced it was Project Claude's error. The home lane fixes the shared initials overlay (contract OVERLAY-KEYS). When the handover records that fix, re-run item 12's check against prisoners-dilemma with no change to its own code. Its leaderboard finding (t4-001, ranking the chosen opponent) is still awaiting Jon's design and stays open. Keep any in-game fix you have written out of every PR; note in docs/handover/cloud.md that it was discarded and why.
+2. ITEMS 9–11 and 13 — proceed as you have them, one PR each, including your two changes from the drafts (Boolean Blitz verifier fails on any extra accepted option beyond Q24 AB + BC and Q41 AB + AC; Matrix Crunch Flag-as-Singular verifier). The B11 ledger entries stay (Jon agrees).
+3. MERGING — #223 and every later PR wait until main's full run is green. Do not touch the workflow or scripts/ci-groups.py; the home lane owns the fix and will record in its handover when main is green. If no green main arrives this session, leave the PRs open and green on their own checks, and say so in the handover.
+
+STOP IF: main stays red and the home handover records no route to green; any of items 9–11 or 13 turns out to touch the shared overlay.
