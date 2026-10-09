@@ -22,13 +22,13 @@
 <script src="/schools/assets/score-history.js"></script>
 <script src="/schools/assets/next-control.js"></script>
 <script src="/schools/assets/answer-lock.js"></script>
-<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option; i >= 1 the first that is not the key.
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option; i >= 1 the first that is not right (sameAnswer: the key's truth table, no longer than the key or its minimal SOP).
 {
   "answer": [
     "const bs = [...document.querySelectorAll('#optionsGrid .opt-btn')];",
     "if (i === 0) { bs[0].click(); return; }",
     "const k = QUESTIONS[order[qIndex]].answer;",
-    "(bs.find(b => b.dataset.val !== k) || bs[0]).click();"
+    "(bs.find(b => !sameAnswer(b.dataset.val, k)) || bs[0]).click();"
   ]
 }
 -->
@@ -822,14 +822,104 @@ function loadQuestion() {
   MaffsLock.fresh(grid);   // a new question: a double-click on Next cannot answer it
 }
 
+// Marking by meaning (contract LISTED-HIGH, Jon's rulings of 9 Oct 2026): an option is right when it has the key's
+// truth table over every input AND no more literals than the longer of the key and the function's minimal sum of
+// products. So AB + BC (the minimal SOP, 4 literals) is right for B(A + C), while A·B + A, the key A left
+// unsimplified, stays wrong. Options are the bank's TeX: letters, \overline{..}, \cdot or
+// juxtaposition (AND), \oplus (XOR), + (OR), brackets, 0 and 1. One that does not read is matched exactly.
+function boolParse(tex) {
+  const src = tex.replace(/\\,/g, '').replace(/\s+/g, '');
+  let i = 0;
+  function peek(w) { return src.startsWith(w, i); }
+  function or() {
+    let l = xor();
+    while (peek('+')) { i++; const a = l, b = xor(); l = e => a(e) || b(e); }
+    return l;
+  }
+  function xor() {
+    let l = and();
+    while (peek('\\oplus')) { i += 6; const a = l, b = and(); l = e => a(e) !== b(e); }
+    return l;
+  }
+  function and() {
+    let l = atom();
+    for (;;) {
+      if (peek('\\cdot')) { i += 5; }
+      else if (!(i < src.length && (/[A-Z01(]/.test(src[i]) || peek('\\overline{')))) break;
+      const a = l, b = atom(); l = e => a(e) && b(e);
+    }
+    return l;
+  }
+  function atom() {
+    if (peek('\\overline{')) {
+      i += 10; const inner = or();
+      if (src[i] !== '}') throw new Error('}');
+      i++; return e => !inner(e);
+    }
+    if (src[i] === '(') {
+      i++; const inner = or();
+      if (src[i] !== ')') throw new Error(')');
+      i++; return inner;
+    }
+    const c = src[i++];
+    if (c === '0') return () => false;
+    if (c === '1') return () => true;
+    if (c && /[A-Z]/.test(c)) return e => e[c];
+    throw new Error('unexpected ' + c);
+  }
+  try {
+    const f = or();
+    return i === src.length ? f : null;
+  } catch (err) { return null; }
+}
+function boolLiterals(tex) { return (tex.match(/[A-Z]/g) || []).length; }
+// The fewest literals any sum of products of f needs: every implicant cube, the prime ones, the cheapest cover.
+function minSopLiterals(f, vars) {
+  const n = vars.length, on = new Set();
+  for (let m = 0; m < (1 << n); m++) {
+    const env = {};
+    vars.forEach((v, k) => { env[v] = !!(m >> k & 1); });
+    if (f(env)) on.add(m);
+  }
+  if (on.size === 0 || on.size === (1 << n)) return 0;
+  const cubes = [];
+  for (let c = 0; c < Math.pow(3, n); c++) {
+    const d = []; let x = c, lits = 0;
+    for (let k = 0; k < n; k++) { d.push(x % 3); if (x % 3 !== 2) lits++; x = Math.floor(x / 3); }
+    const ms = [];
+    for (let m = 0; m < (1 << n); m++) if (d.every((t, k) => t === 2 || t === (m >> k & 1))) ms.push(m);
+    if (ms.every(m => on.has(m))) cubes.push({ lits, ms });
+  }
+  const primes = cubes.filter(a => !cubes.some(b => b.ms.length > a.ms.length && a.ms.every(m => b.ms.includes(m))));
+  let best = Infinity;
+  for (let mask = 1; mask < (1 << primes.length); mask++) {
+    let cost = 0; const cov = new Set();
+    primes.forEach((p, k) => { if (mask >> k & 1) { cost += p.lits; p.ms.forEach(m => cov.add(m)); } });
+    if (cost < best && cov.size === on.size) best = cost;
+  }
+  return best;
+}
+function sameAnswer(opt, key) {
+  if (opt === key) return true;
+  const f = boolParse(opt), g = boolParse(key);
+  if (!f || !g) return false;
+  const vars = [...new Set((opt + key).match(/[A-Z]/g) || [])];
+  for (let m = 0; m < (1 << vars.length); m++) {
+    const env = {};
+    vars.forEach((v, k) => { env[v] = !!(m >> k & 1); });
+    if (f(env) !== g(env)) return false;
+  }
+  return boolLiterals(opt) <= Math.max(boolLiterals(key), minSopLiterals(g, vars));
+}
+
 function handleAnswer(btn, selected, q) {
   if (!MaffsLock.lock(document.getElementById('optionsGrid'))) return;   // one answer per question (canon 7.6.0)
-  const correct = selected === q.answer;
+  const correct = sameAnswer(selected, q.answer);
   const allBtns = document.querySelectorAll('.opt-btn');
 
   allBtns.forEach(b => {
     b.classList.add('answered');
-    if (b.dataset.val === q.answer) {
+    if (sameAnswer(b.dataset.val, q.answer)) {
       b.classList.add('correct');
       b.innerHTML += '<span class="tick">✓</span>';
     }
