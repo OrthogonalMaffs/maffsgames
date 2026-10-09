@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining:`
+`cloud-remaining: simultaneous-solver`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -34,14 +34,22 @@ in the queue below pointing to it. Read it when the item starts, not at session 
 start-up load). When the work merges, move the file to `docs/history/`.
 
 **Queue:** UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
-Then SIM-S5: contracts/2026-10-09-sim-s5.md (Simultaneous Solver Stage 5; Jon's named freeze exception,
-9 Oct 00:25). **STOPPED on step 3's STOP IF, waiting on Jon** (entry below); not claimed. Then FT-FIX: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
+SIM-S5 (in progress, claimed 9 Oct): contracts/2026-10-09-sim-s5.md with the answers in -sim-s5-answers.md
+(option A, a self-contained builder object). Then UC-T4-007 (a small PR, the answers' item 3c), then FT-FIX without asking. Then FT-FIX: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): SIM-S5 stopped before its claim (step 3 STOP IF)
+## 2026-10-09 (cloud): SIM-S5 claimed (Jon's answers, 08:10)
+
+- **Option A, approved:** a Stage 5 tile builder in simultaneous-solver, marked as a non-zero multiple of a key; the
+  builder is a self-contained object (build, read, mark; no reach into Stages 1-4) so it can become a shared module.
+- **For the home lane (answers 3b):** `.claude/rules/timer-policy.md`: move Unit Converter from "Hidden Count-Up" to
+  "No Timer" (since #196 it shows, logs and scores no clock). A shared rules file, so the cloud lane does not edit it.
+- **For the home lane:** unit-converter passes check-answer-lock on seeds 1-3: move it to MIGRATED (your question).
+
+## 2026-10-09 (cloud): SIM-S5 stopped before its claim (step 3 STOP IF; answered 08:10, above)
 
 - **simultaneous-solver has no tile UI:** Stages 1-4 are typed boxes on MaffsKeypad (`readInt` whole numbers only;
   keys 0-9, point, minus). Equation Builder's tiles are its own code (fixed slots, arrangement matching), not shared.
