@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: surd-simplifier`
+`cloud-remaining: 52dle`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -38,11 +38,22 @@ SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (9
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
 of 9 Oct, 11:00, in `docs/history/contracts/2026-10-0[89]-ft-fix*.md`).
 LISTED-HIGH (in progress, `contracts/2026-10-09-listed-high.md`): 13 items, one game per PR, in the contract's order;
-each next game is claimed in a commit of its own, riding the previous game's PR. Now: surd-simplifier (claimed).
+each next game is claimed in a commit of its own, riding the previous game's PR. Progress in the LISTED-HIGH entry below.
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-09 (cloud): LISTED-HIGH (in progress; contract in `contracts/2026-10-09-listed-high.md`)
+
+One PR per game, in the contract's order; each next game's claim is a commit of its own at the end of the previous
+game's PR (so it reaches main before that game starts). New verifiers go in **B2** (main run 595: 249 s of its 360 s
+budget; E is at 491 s and takes nothing new).
+- **1 surd-simplifier: #210** (claim #209). t1-001 keyed sqrt2 (sqrt2.sqrt2 kept as the value-2 distractor;
+  8sqrt32/32 removed, so no B11 allowlist entry was needed), t1-002 keyed 206/495. New `verify-surd-simplifier.py`
+  (B2, ~15 s): every stem read as TeX and compared with its key in SymPy, keys in simplest form, every option
+  clicked; fails main's page on both. No other key differed.
+- **Next: 52dle** (t2-001): mark with `MaffsAnswer.exact` (shared, read-only use), not `parseInt`.
 
 ## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #207 merged cf96929; main run 593 green)
 
@@ -95,21 +106,3 @@ main's last full run is red; watch main's run after merging.
   at L4 would fall under that rule. The home lane's relisting decides.
 - **Did not fire:** Q33 and T9(c) match the quoted text; `question_index` needs no change; a `level4` board needs
   no hub or coverage change (factor-theorem is in NOT_ON_HUB; the module labels `level4` "Level 4").
-
-## 2026-10-09 (cloud): UC-T4-007, unit-converter (claim #204; fix #205 merged 920c5b1)
-
-- **The fix (Jon's answer 3c):** the 60 mph item reads "Convert 60 mph to m/s (1 mile ≈ 1609 m). Give your answer to
-  3 significant figures."; key 26.8 m/s unchanged. t4-007 closed with the ruling.
-- **Verifier:** the t4-007 NOTE is now a check: "=" before a stated conversion fails unless it is the exact
-  definition; "≈" before a rounded one passes. A plant puts "1 mile = 1609 m" back and is caught (11 plants).
-- **Main's run on 4081538 (SIM-S5) green**, run 583. #204's PR run: E 36 s, B3 1m32s (the plan ran few verifiers).
-- **Moved to the archive:** the entries before SIM-S5's claim. Still live from them: **for the home lane**, a B5
-  group before the next verifier lands in B (main's run on c9fbf4b had B4 at 5m17s of its 6m budget); move Unit Converter
-  from "Hidden Count-Up" to "No Timer" in `.claude/rules/timer-policy.md` (answers 3b; it shows, logs and scores no
-  clock since #196); move unit-converter to check-answer-lock's MIGRATED (it passes seeds 1-3).
-  From SIM-S5 (#203): record the build freeze's one named exception (Jon, 9 Oct, 00:25: Simultaneous Solver Stage 5
-  only) in canon §0.2 and the todo; the roster row could mention Stage 5.
-- **Next: FT-FIX** (`contracts/2026-10-08-ft-fix.md` as amended). From the PP-T1-004 entry: merge main first;
-  factor-theorem is in check-answer-lock's MIGRATED, so it must still pass; `wrapExamVocab` is the shared
-  `schools/assets/exam-vocab.js:109` (step 3 and t5-008 go to the home lane, per the amendment); both
-  `question_index` calls already send `qIdx + 1`; the contract's line numbers are stale (re-find by quoted text).

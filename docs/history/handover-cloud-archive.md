@@ -3,6 +3,24 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-09 (cloud): UC-T4-007, unit-converter (claim #204; fix #205 merged 920c5b1)
+
+- **The fix (Jon's answer 3c):** the 60 mph item reads "Convert 60 mph to m/s (1 mile ≈ 1609 m). Give your answer to
+  3 significant figures."; key 26.8 m/s unchanged. t4-007 closed with the ruling.
+- **Verifier:** the t4-007 NOTE is now a check: "=" before a stated conversion fails unless it is the exact
+  definition; "≈" before a rounded one passes. A plant puts "1 mile = 1609 m" back and is caught (11 plants).
+- **Main's run on 4081538 (SIM-S5) green**, run 583. #204's PR run: E 36 s, B3 1m32s (the plan ran few verifiers).
+- **Moved to the archive:** the entries before SIM-S5's claim. Still live from them: **for the home lane**, a B5
+  group before the next verifier lands in B (main's run on c9fbf4b had B4 at 5m17s of its 6m budget); move Unit Converter
+  from "Hidden Count-Up" to "No Timer" in `.claude/rules/timer-policy.md` (answers 3b; it shows, logs and scores no
+  clock since #196); move unit-converter to check-answer-lock's MIGRATED (it passes seeds 1-3).
+  From SIM-S5 (#203): record the build freeze's one named exception (Jon, 9 Oct, 00:25: Simultaneous Solver Stage 5
+  only) in canon §0.2 and the todo; the roster row could mention Stage 5.
+- **Next: FT-FIX** (`contracts/2026-10-08-ft-fix.md` as amended). From the PP-T1-004 entry: merge main first;
+  factor-theorem is in check-answer-lock's MIGRATED, so it must still pass; `wrapExamVocab` is the shared
+  `schools/assets/exam-vocab.js:109` (step 3 and t5-008 go to the home lane, per the amendment); both
+  `question_index` calls already send `qIdx + 1`; the contract's line numbers are stale (re-find by quoted text).
+
 ## 2026-10-09 (cloud): SIM-S5 built (claim #202; fix #203 takes the game off the remaining list)
 
 - **Stage 5** in simultaneous-solver: its own screen and flow (`startForm`, beside the A-Level one); Stages 1-4
