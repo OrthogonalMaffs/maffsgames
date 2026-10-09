@@ -12,7 +12,8 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 **OVERNIGHT RUN (Project Claude for Jon, 8 Oct 2026, 23:45):** `docs/handover/contracts/2026-10-08-overnight.md`
 (verbatim; its rules override the checkpoint rule for this run). Items: 1 VOCAB-IDEMPOTENT (DONE, #193 merged 9 Oct,
 fce8721, main green), 2 CONTRACTS-FOLDER (DONE, #194 merged 9 Oct,
-7b7b7e2, main green), 3 RELIST-SR (in progress), 4+ F1 batches 9-11.
+7b7b7e2, main green), 3 RELIST-SR (DONE, #197 merged 9 Oct, d1e03ec, main green),
+4+ F1 batches 9-11 (batch 9 in progress).
 
 **Contracts (canon §7.8.2, contract CONTRACTS-FOLDER):** each is saved verbatim as
 `docs/handover/contracts/<yyyy-mm-dd>-<name>.md`; the queue below holds a one-line pointer; the file moves to
@@ -35,7 +36,13 @@ the checkpoint) is all merged; its list is in the archive.
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-09 (home): RELIST-SR (overnight item 3, branch `claude/relist-sr`)
+## 2026-10-09 (home): F1 batch 9 (overnight item 4, branch `claude/f1-batch9`)
+
+- **Claims read on main:** `cloud-remaining: unit-converter` (UC-FIX, #196 open); factor-theorem is already migrated.
+- **Batch (KS3, then GCSE):** just-pythag-it-bruv, wrong-on-the-internet, higher-power, prisoners-dilemma,
+  surd-simplifier, coordinate-geometry-dash, formula-forge, scale-factor-scaling.
+
+## 2026-10-09 (home): RELIST-SR (overnight item 3, #197, merged d1e03ec, main green)
 
 - **Step 1 on main, all met:** verify-screening-room.py runs in CI (ci-line, group E); the register has no open
   CRITICAL or HIGH (t4-014 MEDIUM and t4-017 LOW open); `check-answer-lock.py --game screening-room` PASS.
