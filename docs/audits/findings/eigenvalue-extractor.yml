@@ -16,7 +16,13 @@ findings:
   where: games/eigenvalue-extractor/index.html:140 (handleAnswer)
   summary: CSS-only lock; Enter re-scores, Tab+Enter on revealed key converts a wrong answer
   evidence: key click then Enter x3 -> score 96->383, correctN 4; wrong click, Tab x3, Enter -> 0->96
-  status: open
+  status: fixed
+  pr: 229
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 13: already fixed on main by F1 batch 11 (#200, MaffsLock).
+    Measured in Chromium, 9 Oct, the finding''s own reproduction: on main the key clicked then Enter x3 scores once (0
+    -> 93 -> 93, one question_answered), and a wrong answer then Tab+Enter on the key leaves the score at 0; on the
+    page before the batch, 0 -> 93 -> 371 (four question_answered) and 0 -> 93. scripts/check-answer-lock.py (in CI)
+    passes main and fails that page (a question skipped unseen; no MaffsLock.lock).'
 - id: eigenvalue-extractor-t6-002
   severity: MEDIUM
   jc: false
