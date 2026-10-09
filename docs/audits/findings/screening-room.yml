@@ -202,4 +202,7 @@ findings:
     one row per answer: a question has two answers (the gut check and the calculation), so "each answer logs exactly
     one" (Project Claude, 8 Oct) already holds. One row per question would drop the gut-check result or change what a
     field means: a data change, for Jon.'
-  status: open
+  status: ruled
+  ruling: 'Jon, 8 Oct 2026 23:39 (UC-FIX amendment, item 1): one question_answered row per answer is correct; each
+    item asks for two answers, the gut check and the worked figure, and logging both shows where a student goes wrong.
+    Current behaviour kept, no code change.'

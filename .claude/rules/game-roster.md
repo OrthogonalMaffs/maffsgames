@@ -68,7 +68,7 @@ session, generated"; a game with a fixed bank gives its bank size. A count that 
 | 51 | Formula Unlocked | `formula-unlocked` | GCSE, A-Level, L4 | Algebra | Make the subject — four stages with hint system | untagged |
 | 52 | Bearing Blitz | `bearing-blitz` | GCSE | Geometry | Submarine game — set bearing by eye, fire at targets | untagged |
 | 53 | Scale Factor Scaling | `scale-factor-scaling` | GCSE, A-Level, L4 | Geometry, Number | Length/area/volume scaling: k, k squared, k cubed | untagged |
-| 54 | Unit Converter | `unit-converter` | GCSE, A-Level, L4 | Number | Length, area, volume unit conversions | untagged |
+| 54 | Unit Converter | `unit-converter` | GCSE, A-Level, L4 | Number | Length, area, volume unit conversions | required |
 | 55 | Formula Forge | `formula-forge` | GCSE, A-Level, L4 | Algebra | Rearrange formulae — four progressive stages | untagged |
 | 56 | Correlation or Coincidence | `correlation-or-coincidence` | GCSE, A-Level, Core | Statistics | Correlation and causation: one causes the other, something else causes both, or coincidence (42 items, rebuilt 4 Oct 2026) | untagged |
 | 57 | Chart Interrogator | `chart-interrogator` | GCSE, A-Level, Core, L4 | Statistics | Two-phase diagram reading + structured comparison. 40 scenarios. Readings marked to a scale band capped below the nearest named wrong answer (canon §7.1.2), stem and leaf exactly; histogram Phase 2 asks "Is it the modal class?". Verified by `scripts/verify-chart-interrogator.py` (in CI) | untagged |
