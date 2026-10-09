@@ -157,6 +157,7 @@ just-pythag-it-bruv wrong-on-the-internet higher-power prisoners-dilemma surd-si
 formula-forge scale-factor-scaling
 core-maths-paper2b core-maths-paper2c growth-and-decay normal-navigator log-laws test-the-claim
 characteristic-quest complex-converter
+eigenvalue-extractor matrix-crunch boolean-blitz
 '''.split())
 NOT_YET = set(NOT_YET_AT_START) - MIGRATED
 

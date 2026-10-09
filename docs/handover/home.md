@@ -13,7 +13,8 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 (verbatim; its rules override the checkpoint rule for this run). Items: 1 VOCAB-IDEMPOTENT (DONE, #193 merged 9 Oct,
 fce8721, main green), 2 CONTRACTS-FOLDER (DONE, #194 merged 9 Oct,
 7b7b7e2, main green), 3 RELIST-SR (DONE, #197 merged 9 Oct, d1e03ec, main green),
-4+ F1 batches 9-11: batch 9 DONE (#198 merged 9 Oct, 2712f54, main green); batch 10 in progress.
+4+ F1 batches 9-11: batch 9 DONE (#198 merged 9 Oct, 2712f54, main green);
+batch 10 DONE (#199, ebc91e0, main green); batch 11 in progress.
 
 **Contracts (canon §7.8.2, contract CONTRACTS-FOLDER):** each is saved verbatim as
 `docs/handover/contracts/<yyyy-mm-dd>-<name>.md`; the queue below holds a one-line pointer; the file moves to
@@ -36,7 +37,23 @@ the checkpoint) is all merged; its list is in the archive.
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-09 (home): F1 batch 10 (overnight item 4, branch `claude/f1-batch10`)
+## 2026-10-09 (home): F1 batch 11 (overnight item 4, branch `claude/f1-batch11`)
+
+- **Claims read on main:** `cloud-remaining:` empty. **Batch: the last three listed games on NOT_YET:**
+  eigenvalue-extractor, matrix-crunch, boolean-blitz. After it NOT_YET holds glorious-gantt (unlisted, the cloud
+  lane's) and graph-sketcher (held back, batch 10), with unit-converter outside it on the cloud lane's lock.
+- **On MaffsLock, each with its declaration, seeds 1-3 passing.** NOT_YET: 2 (glorious-gantt, graph-sketcher).
+- **Faults fixed beyond the swap:**
+  - boolean-blitz: options marked by a CSS class only; on main one wrong answer then Enter on each option gave 5
+    marks and 3 points the student never earned (now 1 mark, 0 points). A wrong answer waits on MaffsNext under the
+    walkthrough; a right one keeps its own Next, which acts once.
+  - matrix-crunch: after an option was marked, the Flag as Singular button stayed live (a CSS class): on main a
+    wrong option then the flag gave 2 marks. One lock now covers the options and the flag. A wrong answer or a wrong
+    flag waits on MaffsNext under the worked solution. The flag path (not pressed by the check) double-clicked in
+    Chromium at stage 2: one mark per question, game over after three lives, one game_completed.
+  - eigenvalue-extractor: the characteristic-quest shape (batch 10).
+
+## 2026-10-09 (home): F1 batch 10 (overnight item 4, #199, merged ebc91e0, main green)
 
 - **Claims read on main:** `cloud-remaining:` empty (UC-FIX merged). unit-converter dropped anyway (the overnight
   contract: the cloud lane's), factor-theorem already migrated.
@@ -70,6 +87,7 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
     replays the mode just played; it reloaded the page to the menu** (the reload also defeated the check). Sniper (15
     shots, double-tapped: 15 marks, one completion) and Triples (5 rounds, one completion) played in Chromium.
 - **Verifier:** normal-navigator adds `NO_LOCK_FRESH_INIT` (it answers at once after each render).
+- **CI fix in the PR:** check-teacher-invite.py's Laws-mode driver read log-laws' removed `answered`; it asks MaffsLock.
 
 ## 2026-10-09 (home): F1 batch 9 (overnight item 4, #198, merged 2712f54, main green)
 
