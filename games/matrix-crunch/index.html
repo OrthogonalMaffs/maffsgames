@@ -97,6 +97,18 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/options.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option; i >= 1 the first that is not the key.
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#options .opt-btn')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const k = currentQ.correct;",
+    "(bs.find(b => b.dataset.val !== k) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -254,6 +266,7 @@ function buildPool(){
 }
 
 function startGame(){
+  MaffsLock.newSession();
   stage=1;qIdx=0;score=0;streak=0;bestStreak=0;lives=3;correctCount=0;flagCount=0;totalAnswered=0;
   document.getElementById('score').textContent='0';
   document.getElementById('streak').textContent='0';
@@ -282,6 +295,7 @@ function updateLives(){
 }
 
 function nextQ(){
+  if(window.MaffsNext)MaffsNext.clear(document.getElementById('solution'));
   if(totalAnswered>=MAX_QUESTIONS||lives<=0){endGame();return}
   if(pool.length===0)buildPool();
   currentQ=pool.shift();
@@ -316,6 +330,7 @@ function nextQ(){
 
   // Flag button
   const fb=document.getElementById('flagBtn');fb.classList.remove('disabled');
+  MaffsLock.fresh(document.getElementById('game'));   // a new question: a double-click cannot answer it
 
   qStartTime=Date.now();updateTimer();
 }
@@ -326,7 +341,11 @@ function updateTimer(){
   requestAnimationFrame(tick);
 }
 
+// One answer per question, an option or the singular flag (canon 7.6.0).
+function answerLock(){return MaffsLock.lock(document.getElementById('game'));}
+
 function handleAnswer(btn){
+  if(!answerLock())return;
   const s=(Date.now()-qStartTime)/1000;
   const ok=btn.dataset.val===currentQ.correct;
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===currentQ.correct)b.classList.add('correct')});
@@ -341,7 +360,7 @@ function handleAnswer(btn){
     mfg('question_answered',{game_slug:'matrix-crunch',level:level,correct:true,question_index:totalAnswered});
     checkStageUp();
     updateHUD();
-    setTimeout(nextQ,1000);
+    MaffsLock.timer(nextQ,1000);
   } else {
     btn.classList.add('wrong');
     streak=0;
@@ -352,6 +371,7 @@ function handleAnswer(btn){
 }
 
 function flagSingular(){
+  if(!answerLock())return;
   document.querySelectorAll('.opt-btn').forEach(b=>b.classList.add('disabled'));
   document.getElementById('flagBtn').classList.add('disabled');
 
@@ -365,7 +385,7 @@ function flagSingular(){
     // Brief success indication then move on
     document.getElementById('flagBtn').style.borderColor='var(--accent)';
     document.getElementById('flagBtn').textContent='\u2713 Correct — singular matrix!';
-    setTimeout(()=>{document.getElementById('flagBtn').style.borderColor='';document.getElementById('flagBtn').textContent='\u26a0 Flag as Singular (det = 0)';nextQ()},1200);
+    MaffsLock.timer(()=>{document.getElementById('flagBtn').style.borderColor='';document.getElementById('flagBtn').textContent='\u26a0 Flag as Singular (det = 0)';nextQ()},1200);
   } else {
     lives--;
     streak=0;
@@ -391,9 +411,10 @@ function showSolution(type){
   if(type==='wrongFlag'){
     html+=`<div class="misconception">\u26a0 This matrix is not singular — its determinant is not zero. Check your calculation before flagging.</div>`;
   }
-  html+=`<button class="next-btn" onclick="closeSolution()">Got it — next question</button>`;
   sol.innerHTML=html;
   sol.className='solution show';
+  // A wrong answer waits on Next under the worked solution (canon 7.6): one advance however it is pressed
+  MaffsNext.wrong({mount:sol,label:'Got it — next question',onAdvance:closeSolution});
 }
 
 function closeSolution(){
@@ -416,7 +437,8 @@ function updateHUD(){
   document.getElementById('streak').textContent=streak;
 }
 
-function endGame(){
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){
   window._ggAbandoned=false;
   const pct=totalAnswered>0?Math.round(correctCount/totalAnswered*100):0;
   mfg('game_completed',{game_slug:'matrix-crunch',level:level,score:score,questions_answered:totalAnswered,accuracy:pct});
@@ -432,7 +454,7 @@ function endGame(){
   document.getElementById('statsLine').innerHTML=
     `${correctCount}/${totalAnswered} correct (${pct}%)<br>Best streak: ${bestStreak} \u00b7 Highest stage: ${stage}<br>Singular matrices flagged: ${flagCount}`;
   show('results');
-}
+});
 
 function showMenu(){show('menu')}
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();

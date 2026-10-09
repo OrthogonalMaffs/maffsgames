@@ -20,6 +20,18 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="/schools/assets/firebase-leaderboard.js"></script>
 <script src="/schools/assets/score-history.js"></script>
+<script src="/schools/assets/next-control.js"></script>
+<script src="/schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option; i >= 1 the first that is not the key.
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#optionsGrid .opt-btn')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const k = QUESTIONS[order[qIndex]].answer;",
+    "(bs.find(b => b.dataset.val !== k) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -762,6 +774,7 @@ function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 // ── GAME FLOW ─────────────────────────────────────────────────────────────────
 function startGame() {
   qIndex = 0; score = 0; points = 0;
+  MaffsLock.newSession();
   order = shuffle([...Array(QUESTIONS.length).keys()]);
   startTime = Date.now();
 
@@ -803,10 +816,14 @@ function loadQuestion() {
   });
 
   document.getElementById('walkthrough').classList.remove('show');
+  if (window.MaffsNext) MaffsNext.clear(document.getElementById('walkthrough'));
+  document.getElementById('nextBtn').style.display = '';
   document.getElementById('nextBtn').textContent = qIndex < QUESTIONS.length - 1 ? 'Next Question →' : 'See Results →';
+  MaffsLock.fresh(grid);   // a new question: a double-click on Next cannot answer it
 }
 
 function handleAnswer(btn, selected, q) {
+  if (!MaffsLock.lock(document.getElementById('optionsGrid'))) return;   // one answer per question (canon 7.6.0)
   const correct = selected === q.answer;
   const allBtns = document.querySelectorAll('.opt-btn');
 
@@ -843,9 +860,18 @@ function handleAnswer(btn, selected, q) {
   });
 
   document.getElementById('walkthrough').classList.add('show');
+  // A right answer moves on from its own Next; a wrong one waits on Next under the walkthrough (canon 7.6)
+  if (!correct) {
+    const nb = document.getElementById('nextBtn');
+    nb.style.display = 'none';
+    MaffsNext.wrong({ mount: document.getElementById('walkthrough'), label: nb.textContent, onAdvance: nextQuestion });
+  }
 }
 
 function nextQuestion() {
+  // Only from a shown walkthrough: a double-click's second click (or a second Enter) cannot skip a question.
+  if (!document.getElementById('walkthrough').classList.contains('show')) return;
+  document.getElementById('walkthrough').classList.remove('show');
   qIndex++;
   if (qIndex >= QUESTIONS.length) {
     showResults();
@@ -855,7 +881,8 @@ function nextQuestion() {
   }
 }
 
-function showResults() {
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const showResults = MaffsLock.finishOnce(function () {
   window._ggAbandoned = false;
   const elapsed = Math.floor((Date.now() - startTime) / 1000);
   const mins = Math.floor(elapsed / 60);
@@ -876,7 +903,7 @@ function showResults() {
     score: points, questions_answered: QUESTIONS.length, questions_correct: score
   });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('boolean-blitz','level4',points,QUESTIONS.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('boolean-blitz','level4',points);}}
-}
+});
 </script>
 </body>
 </html>

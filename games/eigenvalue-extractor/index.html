@@ -66,6 +66,18 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option; i >= 1 the first that is not the key.
+{
+  "answer": [
+    "const bs = [...document.querySelectorAll('#options .opt-btn')];",
+    "if (i === 0) { bs[0].click(); return; }",
+    "const k = currentQ.c;",
+    "(bs.find(b => b.dataset.val !== k) || bs[0]).click();"
+  ]
+}
+-->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -99,7 +111,7 @@ ex.innerHTML=`<h2>Worked Example</h2>
 <div class="ex-step"><strong>Result:</strong> The eigenvalues are ${rkI('\\lambda_1 = 2')} and ${rkI('\\lambda_2 = 5')}</div>
 <div class="ex-note"><strong>Check:</strong> Sum of eigenvalues = trace (2 + 5 = 7 ✓). Product of eigenvalues = determinant (2 × 5 = 10 ✓). Always verify your answer this way.</div>`;
 }
-window.addEventListener('DOMContentLoaded',()=>{setTimeout(buildExample,300)});
+window.addEventListener('DOMContentLoaded',()=>{setTimeout(buildExample,300)});   // lock-ok: renders the worked example on the start screen; marks nothing
 
 const QS=[
 {eq:'\\lambda^2 - 5\\lambda + 6 = 0',c:'\\lambda = 2, \\lambda = 3',d:['\\lambda = 1, \\lambda = 6','\\lambda = -2, \\lambda = -3','\\lambda = 2, \\lambda = -3'],s:['(\\lambda - 2)(\\lambda - 3) = 0','\\lambda = 2 \\text{ or } \\lambda = 3','Check: 2 + 3 = 5 ✓, 2 × 3 = 6 ✓']},
@@ -134,15 +146,17 @@ const BASE=100,T_K=0.15,MAX_Q=15;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function showMenu(){show('menu')}
-function startGame(){pool=shuffle([...QS]).slice(0,MAX_Q);qIdx=0;score=0;correctN=0;total=0;document.getElementById('score').textContent='0';document.getElementById('correctCount').textContent='0';show('game');nextQ();mfg('game_started',{game_slug:'eigenvalue-extractor',level:'further'});window._ggAbandoned=true;if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'eigenvalue-extractor',level:'further',questions_answered:total})})}}
-function nextQ(){if(qIdx>=pool.length){endGame();return}currentQ=pool[qIdx];qIdx++;total++;document.getElementById('qNum').textContent=total;document.getElementById('solution').className='solution';qStart=Date.now();updateTimer();rk(document.getElementById('eqDisplay'),currentQ.eq);const opts=shuffle([currentQ.c,...currentQ.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.innerHTML=rkI(v);b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b)})}
+function startGame(){MaffsLock.newSession();pool=shuffle([...QS]).slice(0,MAX_Q);qIdx=0;score=0;correctN=0;total=0;document.getElementById('score').textContent='0';document.getElementById('correctCount').textContent='0';show('game');nextQ();mfg('game_started',{game_slug:'eigenvalue-extractor',level:'further'});window._ggAbandoned=true;if(!window._ggBeforeUnload){window._ggBeforeUnload=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'eigenvalue-extractor',level:'further',questions_answered:total})})}}
+function nextQ(){if(window.MaffsNext)MaffsNext.clear(document.getElementById('solution'));if(qIdx>=pool.length){endGame();return}currentQ=pool[qIdx];qIdx++;total++;document.getElementById('qNum').textContent=total;document.getElementById('solution').className='solution';qStart=Date.now();updateTimer();rk(document.getElementById('eqDisplay'),currentQ.eq);const opts=shuffle([currentQ.c,...currentQ.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;b.innerHTML=rkI(v);b.addEventListener('click',()=>handleAnswer(b));oEl.appendChild(b)});MaffsLock.fresh(oEl)}
 function updateTimer(){const el=document.getElementById('timer');const tick=()=>{if(document.getElementById('game').classList.contains('active')){el.textContent=Math.floor((Date.now()-qStart)/1000);requestAnimationFrame(tick)}};requestAnimationFrame(tick)}
-function handleAnswer(btn){const q=currentQ,s=(Date.now()-qStart)/1000,ok=btn.dataset.val===q.c;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.c)b.classList.add('correct')});mfg('question_answered',{game_slug:'eigenvalue-extractor',level:'further',correct:ok,question_index:total});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++;updateHUD();setTimeout(nextQ,1000)}else{btn.classList.add('wrong');updateHUD();showExplain(q)}}
-function showExplain(q){const sol=document.getElementById('solution');let html='<h3>Worked solution</h3>';(q.s||[]).forEach(st=>{html+='<div class="step">'+rkI(st)+'</div>'});if(q.mc)html+='<div class="misconception">⚠ '+q.mc+'</div>';html+='<button class="next-btn" onclick="closeSol()">Got it — next</button>';sol.innerHTML=html;sol.className='solution show'}
-function closeSol(){document.getElementById('solution').className='solution';nextQ()}
+function handleAnswer(btn){if(!MaffsLock.lock(document.getElementById('options')))return;const q=currentQ,s=(Date.now()-qStart)/1000,ok=btn.dataset.val===q.c;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.c)b.classList.add('correct')});mfg('question_answered',{game_slug:'eigenvalue-extractor',level:'further',correct:ok,question_index:total});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++;updateHUD();MaffsLock.timer(nextQ,1000)}else{btn.classList.add('wrong');updateHUD();showExplain(q)}}
+function showExplain(q){const sol=document.getElementById('solution');let html='<h3>Worked solution</h3>';(q.s||[]).forEach(st=>{html+='<div class="step">'+rkI(st)+'</div>'});if(q.mc)html+='<div class="misconception">⚠ '+q.mc+'</div>';sol.innerHTML=html;sol.className='solution show';
+  // A wrong answer waits on Next under the worked solution (canon 7.6): one advance however it is pressed
+  MaffsNext.wrong({mount:sol,label:'Got it — next',onAdvance:()=>{sol.className='solution';nextQ()}})}
 function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('correctCount').textContent=correctN}
-function endGame(){const pct=total>0?Math.round(correctN/total*100):0;let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').innerHTML='Eigenvalue Extractor<br>Igands Gonna Get You — Part 2<br>'+correctN+'/'+total+' correct ('+pct+'%)';window._ggAbandoned=false;mfg('game_completed',{game_slug:'eigenvalue-extractor',level:'further',score:score,questions_answered:total,accuracy:pct});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('eigenvalue-extractor','further',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('eigenvalue-extractor','further',score);}}var _pbKey='ee_best';var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'eigenvalue-extractor',level:'further',score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score)}show('results')}
+// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+const endGame=MaffsLock.finishOnce(function(){const pct=total>0?Math.round(correctN/total*100):0;let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').innerHTML='Eigenvalue Extractor<br>Igands Gonna Get You — Part 2<br>'+correctN+'/'+total+' correct ('+pct+'%)';window._ggAbandoned=false;mfg('game_completed',{game_slug:'eigenvalue-extractor',level:'further',score:score,questions_answered:total,accuracy:pct});
+  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('eigenvalue-extractor','further',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('eigenvalue-extractor','further',score);}}var _pbKey='ee_best';var _pbOld=parseInt(localStorage.getItem(_pbKey)||'0');if(score>_pbOld){mfg('personal_best_set',{game_slug:'eigenvalue-extractor',level:'further',score:score,previous_best:_pbOld});localStorage.setItem(_pbKey,score)}show('results')});
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>

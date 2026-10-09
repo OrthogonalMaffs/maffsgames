@@ -42,6 +42,16 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
 - **Claims read on main:** `cloud-remaining:` empty. **Batch: the last three listed games on NOT_YET:**
   eigenvalue-extractor, matrix-crunch, boolean-blitz. After it NOT_YET holds glorious-gantt (unlisted, the cloud
   lane's) and graph-sketcher (held back, batch 10), with unit-converter outside it on the cloud lane's lock.
+- **On MaffsLock, each with its declaration, seeds 1-3 passing.** NOT_YET: 2 (glorious-gantt, graph-sketcher).
+- **Faults fixed beyond the swap:**
+  - boolean-blitz: options marked by a CSS class only; on main one wrong answer then Enter on each option gave 5
+    marks and 3 points the student never earned (now 1 mark, 0 points). A wrong answer waits on MaffsNext under the
+    walkthrough; a right one keeps its own Next, which acts once.
+  - matrix-crunch: after an option was marked, the Flag as Singular button stayed live (a CSS class): on main a
+    wrong option then the flag gave 2 marks. One lock now covers the options and the flag. A wrong answer or a wrong
+    flag waits on MaffsNext under the worked solution. The flag path (not pressed by the check) double-clicked in
+    Chromium at stage 2: one mark per question, game over after three lives, one game_completed.
+  - eigenvalue-extractor: the characteristic-quest shape (batch 10).
 
 ## 2026-10-09 (home): F1 batch 10 (overnight item 4, #199, merged ebc91e0, main green)
 
