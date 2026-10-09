@@ -34,14 +34,14 @@ in the queue below pointing to it. Read it when the item starts, not at session 
 start-up load). When the work merges, move the file to `docs/history/`.
 
 **Queue:** UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
-SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: fix PR #PRNUM (the answers' item 3c, in
+SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: fix PR #205 (the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). Then FT-FIX without asking: contracts/2026-10-08-ft-fix.md as amended by -ft-fix-amend.md (step 3 and t5-008 go to the home lane).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): UC-T4-007, unit-converter (claim #204; fix #PRNUM takes the game off the remaining list)
+## 2026-10-09 (cloud): UC-T4-007, unit-converter (claim #204; fix #205 takes the game off the remaining list)
 
 - **The fix (Jon's answer 3c):** the 60 mph item reads "Convert 60 mph to m/s (1 mile ≈ 1609 m). Give your answer to
   3 significant figures."; key 26.8 m/s unchanged. t4-007 closed with the ruling.

@@ -123,4 +123,4 @@ findings:
     1609 m). Give your answer to 3 significant figures."; the key stays 26.8 m/s; the verifier allows "≈" here,
     because 1609 is a rounded value, not a definition. verify-unit-converter.py now fails "=" before any stated
     conversion that is not the exact definition.'
-  pr: PRNUM
+  pr: 205
