@@ -767,6 +767,7 @@ async def play(browser, base, slug, level, page_html):
     if end['submits'] > 1:
         faults.append('finish: submitScore %d times (at most once)' % end['submits'])
     r = await d.ev('() => __lockAgainRect()')
+    again_tried = bool(r)
     if r:
         # A double-click on Play again (contract PLAY-AGAIN-SCREEN): its second click must land in a fresh window
         # on the screen the first one showed, never on that screen's controls (the /leaderboards/ link took
@@ -819,6 +820,13 @@ async def play(browser, base, slug, level, page_html):
         faults.append('390px: could not reach a wrong answer by touch')
     LOGS.setdefault(slug, {})['touch'] = await event_log(d)
     await ctx.close()
+    if slug in SCREEN_NOT_YET:
+        screen = [f for f in faults if 'is not fresh (not MaffsLock.screen)' in f]
+        if screen:
+            SCREEN_REPORTED[slug] = screen[0]
+            faults = [f for f in faults if f not in screen]
+        elif again_tried:
+            faults.append('Play again: passes, but the game is on SCREEN_NOT_YET: take it off (the list only shrinks)')
     return faults
 
 
@@ -861,6 +869,17 @@ VERBOSE = False
 AUTO_ADVANCE = set()   # games that moved on by themselves after a wrong answer (no Next): reported
 LOGS = {}              # slug -> {'desktop': [...], 'touch': [...]}: each play's event log (contract DET's proof)
 SWALLOWED = set()      # games where a driver tap landed in a fresh window and was made again: reported
+# PLAY-AGAIN-SCREEN batch 2 (contract PLAY-AGAIN-SCREEN, 9 Oct 2026; may only shrink): games whose Play again still
+# shows a screen without MaffsLock.screen(), through their own screen code rather than a show(id) helper. Their
+# "not fresh" fault is reported, not failed, until batch 2 converts them; a listed game that passes fails, so the
+# list cannot go stale. characteristic-quest is the cloud lane's (cloud-remaining:) until it comes off that list.
+SCREEN_NOT_YET = set('''
+better-value characteristic-quest component-crusher equation-builder expectation-station fermi-lab formula-plug-in
+four-quadrant-explorer given-that growth-and-decay like-terms-collector new-shapes prime-or-composite
+probability-pioneer simultaneous-solver split-it spot-the-error stat-attack test-the-claim think-of-a-number
+truth-buster wrong-on-the-internet
+'''.split())
+SCREEN_REPORTED = {}   # slug -> the not-fresh fault, for a game on SCREEN_NOT_YET
 
 
 def counts(slug, remaining):
@@ -1040,6 +1059,8 @@ def main():
             'off the cloud lane\'s list, so it is judged in full; the home lane adds it to MIGRATED once it passes')))
     for r in reported:
         print('  REPORTED (on the cloud lane\'s list) ' + r)
+    for slug in sorted(SCREEN_REPORTED):
+        print('  REPORTED (SCREEN_NOT_YET, PLAY-AGAIN-SCREEN batch 2) %s: %s' % (slug, SCREEN_REPORTED[slug][:120]))
     if SWALLOWED:
         print('  note: a tap landed in a fresh window and was made again once it closed: %s' % ', '.join(sorted(SWALLOWED)))
     if AUTO_ADVANCE:

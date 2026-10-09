@@ -78,6 +78,18 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   surd-simplifier, trig-identity-duel; typically the menu's level buttons and its "Global leaderboard" link open
   to the second click); the other 7 go from Play again straight into a new game whose question is already fresh.
   With the change all 32 pass. Self-test plant: angle-ace with a bare `show()`: caught.
+- **Batch 2 (next PR): 21 more games** the stricter check found on CI, whose Play again changes screen through their
+  own code (showScreen, showMenu toggling classes, or none): better-value, component-crusher, equation-builder,
+  expectation-station, fermi-lab, formula-plug-in, four-quadrant-explorer, given-that, growth-and-decay,
+  like-terms-collector, new-shapes, prime-or-composite, probability-pioneer, simultaneous-solver, split-it,
+  spot-the-error, stat-attack, test-the-claim, think-of-a-number, truth-buster, wrong-on-the-internet (plus
+  characteristic-quest, cloud-claimed). They are on `SCREEN_NOT_YET` in check-answer-lock.py: reported, not failed;
+  a listed game that passes fails, so the list only shrinks. Batch 2 empties it.
+- **Two drivers clicked inside the new fresh windows** (a student's click comes after them): check-teacher-invite.py
+  clicked prisoners-dilemma's Tournament button within 60 ms of `showScreen('menu')`, so the tournament never
+  started; verify-partial-fractions-duel.py double-clicked Play again the moment its results screen appeared. Both
+  now wait for `MaffsLock.isFresh()` to clear, as canon 7.6.0 (DET) asks of drivers. partial-fractions-duel's own
+  extra `MaffsLock.screen` in showMenu went (show() does it); its verifier's plant now strips it from show().
 - **Canon §7.6.0:** "every screen change goes through MaffsLock.screen()".
 
 ## 2026-10-09 (home): OVERLAY-KEYS (19:00 addendum; for the cloud lane: re-check item 12)

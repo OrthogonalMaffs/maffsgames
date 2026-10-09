@@ -167,9 +167,9 @@ function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx]
 function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
 const end=MaffsLock.finishOnce(function(){clearInterval(timerInterval);window._ggAbandoned=false;const pct=Math.round(correctCount/totalQ*100);mfg('game_completed',{game_slug:'partial-fractions-duel',level:'alevel',score:score,questions_answered:totalQ,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('partial-fractions-duel','alevel',score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('partial-fractions-duel','alevel',score);}}let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;show('results')})
-// Play Again shows the menu, whose leaderboard link sits under the button: MaffsLock.screen() drops the second
+// Play Again shows the menu, whose leaderboard link sits under the button: show() ends with MaffsLock.screen(), which drops the second
 // click of a double click (canon 7.6.0), so it cannot open /leaderboards/ or start a run.
-function showMenu(){show('menu');MaffsLock.screen(document.getElementById('menu'))}
+function showMenu(){show('menu')}
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>

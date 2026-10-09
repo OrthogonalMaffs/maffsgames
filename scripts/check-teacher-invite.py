@@ -514,6 +514,9 @@ async def _play(page, steps, limit=1500):
         await page.evaluate(SKIP_INITIALS)
         if step[0] == "click":
             await page.wait_for_selector(step[1], state="visible", timeout=15000)
+            # A screen change opens a MaffsLock fresh window (canon 7.6.0) that drops any click for 300 ms: a
+            # student's click lands after it, so the driver's does too (contract PLAY-AGAIN-SCREEN).
+            await page.wait_for_function("!(window.MaffsLock && MaffsLock.isFresh())", timeout=15000)
             await page.click(step[1])
             await page.wait_for_timeout(150)
             continue
