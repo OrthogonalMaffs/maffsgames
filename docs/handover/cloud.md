@@ -37,15 +37,26 @@ start-up load). When the work merges, move the file to `docs/history/`.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
 of 9 Oct, 11:00, in `docs/history/contracts/2026-10-0[89]-ft-fix*.md`).
-LISTED-HIGH: COMPLETE but item 12 (`contracts/2026-10-09-listed-high.md`): #210-#212, #214, #216, #217, #219, #223,
-#225-#231 merged; main green (run 654, 37978742832). **Item 12 (PD-CHECK) STOPPED, 9 Oct 20:40: Jon's call, see the
-PD-CHECK entry below.** CAR-TRAP-DRAFT (moved from the home lane, Jon 20:17; contract on main,
+LISTED-HIGH: COMPLETE (contract, rulings and notes now in `docs/history/contracts/2026-10-09-listed-high*.md`):
+#210-#212, #214, #216, #217, #219, #223, #225-#231 merged; main green (run 654, 37978742832). Item 12 closed on
+Jon's ruling of 22:45 (option A): see the PD-CLOSE entry below. CAR-TRAP-DRAFT (moved from the home lane, Jon 20:17; contract on main,
 `contracts/2026-10-09-car-trap-draft.md`): **Car Trap draft for Jon's review**, #235 merged (ba5b6b2); main green
-(run 661). Phase 2 waits on Jon's review. **Nothing else is queued for the cloud lane.**
+(run 661). Phase 2 waits on Jon's review. **Nothing else is queued for the cloud lane** (until Jon's planning, 10 Oct).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-09 (cloud): PD-CLOSE, LISTED-HIGH item 12 closed (Jon's ruling, 22:45, option A)
+
+- **t4-002 closed by #232 (shared-overlay fix); covered by the OVERLAY-KEYS CI check; per-game check not added
+  because the fault was in shared code.** The check is `scripts/test-initials-overlay.py` (in CI). Measured 9 Oct, with
+  `--games prisoners-dilemma`: main passes, and its plant is caught. Run `--against` the pre-#232 overlay, it fails
+  with 55 keys reaching the game's document keydown. That confirms the check covers this game, so the STOP IF did not fire.
+- `verify-prisoners-dilemma.py` is **not** in CI. Branch `claude/youthful-feynman-anpxuq-pd-check` is deleted: its
+  handover had nothing that main lacks.
+- **prisoners-dilemma-t4-001** (the leaderboard ranks the chosen opponent) stays open for Jon's design decision.
+- Jon's note is saved verbatim as `docs/history/contracts/2026-10-09-listed-high-note-2245.md`.
 
 ## 2026-10-09 (cloud): CAR-TRAP-DRAFT, Car Trap draft for Jon's review (#235 merged ba5b6b2; main run 661 green)
 
@@ -92,7 +103,7 @@ main's last full run is red; watch main's run after merging.
   the text-field case goes: no such field exists in this game. **t4-001** stays open (SR-22, Jon's leaderboard).
 - Branch `claude/youthful-feynman-anpxuq-pd-check` left as it was (its check unchanged, no PR).
 
-## 2026-10-09 (cloud): LISTED-HIGH (complete but item 12; contract in `contracts/2026-10-09-listed-high.md`)
+## 2026-10-09 (cloud): LISTED-HIGH (complete; contract in `docs/history/contracts/2026-10-09-listed-high.md`)
 
 One PR per game, in the contract's order; each next game's claim is a commit of its own at the end of the previous
 game's PR (so it reaches main before that game starts). New verifiers go in **B2** (main run 595: 249 s of its 360 s
@@ -114,7 +125,7 @@ budget; E is at 491 s and takes nothing new).
   merged 63ad521) moved Screening Room, Simultaneous Solver and Terrible Advice into E2; E 4m31s, E2 4m22s on its
   run; main green again (run 37950120068). E's job name still lists two moved verifiers (names kept stable): the
   home lane's call.
-- **Jon's rulings of 9 Oct, 16:21** saved beside the contract (`contracts/2026-10-09-listed-high-rulings.md`):
+- **Jon's rulings of 9 Oct, 16:21** saved beside the contract (`docs/history/contracts/2026-10-09-listed-high-rulings.md`):
   item 9 t4-003 is NOT rewritten: "Yes - but only when k > 0" is accepted alongside the key (an accepted set, in
   the game), the explanation says why both are right; the rest as written.
 - **4 coordinate-geometry-dash: #214.** x = 3t, y = 4/t: options xy = 12 (key), xy = 7, y = 12x, x = 3y/4. New
@@ -163,7 +174,7 @@ budget; E is at 491 s and takes nothing new).
   <slug>` (stale B11 ledger entries must leave `data/check-ledger.json` with the fix). esprima: unpack its sdist on
   PYTHONPATH. Teacher-line fails locally on factor-theorem and log-laws only (KaTeX CDN): not a change's fault.
 - **Item 12, prisoners-dilemma t4-002: waiting on the home lane's OVERLAY-KEYS (#232)** (Jon, 18:56; note in
-  `contracts/2026-10-09-listed-high-note-1900.md`). The drafted in-game keydown guard was **discarded**, in no PR: it
+  `docs/history/contracts/2026-10-09-listed-high-note-1900.md`). The drafted in-game keydown guard was **discarded**, in no PR: it
   was the defensive-patch shape (the shared initials overlay lets typed keys reach page shortcuts in every game with a
   document keydown handler; the overlay is the fix). **The check is saved on branch
   `claude/youthful-feynman-anpxuq-pd-check`** (`scripts/verify-prisoners-dilemma.py`, verbatim from the scratchpad;
