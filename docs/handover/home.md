@@ -3,12 +3,15 @@
 **MAIN GREEN (for the cloud lane: #223 may merge):** main's full run on 5cea89b (#224) passed every job, run
 37969653160, and its timings job recorded and repacked (760ef9a). Main had been red since #220 (CI-BALANCE) on its
 main-only "CI timings and pack" job alone: the job-log API refused the workflow's token; #224 reads the timings from
-artifacts instead. Every content group is now at most 69% of its budget. Watch main's run on #218 (18f5da8).
+artifacts instead. Every content group is now at most 69% of its budget. Main green again after #218 (18f5da8, run 37970610295).
 
 **HOME LANE, 9 OCT EVENING (Jon's 16:10 queue, reordered 18:00 and 19:00): IN PROGRESS.** Done: RULINGS-9OCT (#215),
 CI-BALANCE (#220, then #222 and #224 to fix its timings job; merged ahead of #218 because #218's L1 went over
-budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). Next: HOOK-FIX (#221), OVERLAY-KEYS (19:00
-addendum), PLAY-AGAIN-SCREEN (32 games incl. higher-power), SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint.
+budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). HOOK-FIX (#221), OVERLAY-KEYS (19:00 addendum,
+this PR). Next: PLAY-AGAIN-SCREEN (32 games incl. higher-power), SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint.
+After it: CAR-TRAP-DRAFT. **Queued, not started: LIBRARY-DRAFT** (Jon, 19:35; new ★ room, Mrs Barb Phile's library;
+either lane; starts after The Rightful King and Car Trap drafts; the contract is with Jon's 19:35 paste and is saved
+verbatim under contracts/ when it starts).
 
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
 `docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
@@ -55,6 +58,31 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-09 (home): OVERLAY-KEYS (19:00 addendum; for the cloud lane: re-check item 12)
+
+- **The overlay is shared:** `askInitials()` in `schools/assets/firebase-leaderboard.js`, loaded by all 97 games; no
+  game has its own copy. Key listeners at page level: 11 games, all `keydown` on document or window in the bubbling
+  phase; none in capture, no `onkeydown` properties (10 more games listen on their own elements only).
+- **Games whose shortcuts fired while initials were typed (main's overlay, every key reached the game):** 52dle,
+  decimal-detective, equatle, formula-plug-in, negative-number-line, new-shapes, prime-or-composite,
+  prisoners-dilemma, six-sevens-bruv, think-of-a-number, trig-wars.
+- **Fix (in the overlay only, no game touched):** (1) the overlay stops keydown/keypress/keyup bubbling out of it,
+  after its inputs' own handlers (Enter still submits, Backspace still steps back); bubbling is enough because no
+  game listens in capture. (2) While it is open, a window capture-phase guard stops keys aimed outside it (focus left
+  on the page by a tap on the backdrop), and it stays up through the keyup of a key held when it closes, so the
+  Enter that submits never reaches the game. It then removes itself (1 s fallback).
+- **Check:** `scripts/test-initials-overlay.py` (content tier, ci-deps on the overlay): every one of the 97 games,
+  48 keys typed (a-z, 0-9, space, arrows, Escape, punctuation) + 6 on the backdrop + Enter; asserts no game key
+  listener and no probe (its own document/window keydown, so it bites in games without shortcuts) saw a key, the page
+  did not navigate, submitScore resolved with ABC saved, and the next key after the overlay reaches the page.
+  Against main's overlay all 97 FAIL (`--against`); with the fix all 97 pass; the plant (containment removed) is
+  caught in all 11 shortcut games. ~33 s locally.
+- **prisoners-dilemma:** passes with no change to its own code; the cloud lane can re-check item 12.
+- **Escape:** the contract says "Escape closes the overlay as now", but the overlay has never handled Escape (it
+  does nothing; Skip is the way out). Not added: Jon's call. Escape no longer reaches the game either.
+- Offline, submitScore writes nothing after the overlay (not the production host, by design), so "submitted" is
+  checked at the overlay's edge.
 
 ## 2026-10-09 (home): HOOK-FIX (Jon, 18:00) and the Car Trap contract
 
