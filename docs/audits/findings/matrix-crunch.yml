@@ -17,7 +17,13 @@ findings:
   where: games/matrix-crunch/index.html:329 (handleAnswer)
   summary: CSS-only lock on options; Enter re-scores (and builds streak/stage), Tab+Enter converts a wrong answer
   evidence: key click then Enter x3 -> score 96->383, streak 4; wrong click, Tab, Enter -> 0->96
-  status: open
+  status: fixed
+  pr: 230
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 13: already fixed on main by F1 batch 11 (#200, MaffsLock).
+    Measured in Chromium, 9 Oct: on main the key clicked then Enter x3 scores once (0 -> 93 -> 93), and a wrong answer
+    then Tab+Enter on the key leaves the score at 0; on the page before the batch, 0 -> 93 -> 372 and 0 -> 93.
+    scripts/check-answer-lock.py passes main and fails that page; the new scripts/verify-matrix-crunch.py plays both
+    paths in both levels and fails the page before the batch.'
 - id: matrix-crunch-t6-002
   severity: HIGH
   jc: false
@@ -27,7 +33,14 @@ findings:
   summary: 'Flag button re-fires on Enter: +25 per press and skipped questions; on a wrong flag, all 3 lives lost
     on one question'
   evidence: singular flag + Enter x3 -> score 25->100, totalAnswered 1->5; wrong flag + Enter x2 -> lives 3->0
-  status: open
+  status: fixed
+  pr: 230
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 13: already fixed on main by F1 batch 11 (#200: one lock
+    covers the options and the flag). Measured in Chromium at stage 2, 9 Oct: on main a singular question flagged then
+    Enter x3 scores +25 once and moves on one question; a wrong flag then Enter x2 costs one life. On the page before
+    the batch: +100 and five questions on (further), and all three lives on one question. check-answer-lock.py never
+    presses the flag, so the new scripts/verify-matrix-crunch.py plays it in both levels and fails the page before the
+    batch; plants caught.'
 - id: matrix-crunch-t6-003
   severity: MEDIUM
   jc: false
