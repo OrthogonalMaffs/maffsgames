@@ -8,7 +8,7 @@ artifacts instead. Every content group is now at most 69% of its budget. Main gr
 **HOME LANE, 9 OCT EVENING (Jon's 16:10 queue, reordered 18:00 and 19:00): IN PROGRESS.** Done: RULINGS-9OCT (#215),
 CI-BALANCE (#220, then #222 and #224 to fix its timings job; merged ahead of #218 because #218's L1 went over
 budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). HOOK-FIX (#221), OVERLAY-KEYS (#232).
-PLAY-AGAIN-SCREEN (#234 + batch 2). Next: SCORES-OFFLINE, SCI-CALC, DOCS-9OCT, checkpoint, PREPUSH-SCOPE,
+PLAY-AGAIN-SCREEN (#234, #237), SCORES-OFFLINE (#238). Next: SCI-CALC, DOCS-9OCT, checkpoint, PREPUSH-SCOPE,
 LIBRARY-DRAFT. **CAR-TRAP-DRAFT moved to the CLOUD LANE (Jon, 20:17); the home lane does not start it.** Its
 contract is on main, verbatim: `docs/handover/contracts/2026-10-09-car-trap-draft.md` (committed dc43926, merged in
 #221). LIBRARY-DRAFT (Jon, 19:35; new ★ room, Mrs Barb Phile's library) starts after The Rightful King and Car
@@ -59,6 +59,21 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
+
+## 2026-10-09 (home): SCORES-OFFLINE (item 5)
+
+- **The class:** /leaderboards/ and the portal called `firebase.initializeApp` / `firebase.database()` themselves,
+  outside any guard; on a network that blocks the SDK (`firebase` undefined) the script stopped, and on
+  /leaderboards/ that killed the device-local Your Scores. No other served page did (188 .html/.js files checked).
+- **Fix:** both read through `MaffsLeaderboard`: new read paths `available()`, `readBoard(slug, level)` and
+  `watchRecent(n, cb)` (submit path untouched). Blocked: /leaderboards/ shows Your Scores and "Live leaderboards
+  can't load on this network. Your Scores above are kept on this device and still work." (search, level pills and
+  cards hidden); the portal hides its ticker quietly.
+- **Check:** `scripts/test-scores-offline.py` (ci-line): no served file but the shared module calls the SDK; both
+  pages with gstatic.com/firebasejs refused (no page error, Your Scores renders a seeded game, offline line /
+  ticker hidden) and with a fake SDK (cards render, ticker shows the score, no offline line). Plants: a page
+  calling `firebase.database()` (caught by the rule); main's old /leaderboards/ blocked (caught: "firebase is not
+  defined").
 
 ## 2026-10-09 (home): PLAY-AGAIN-SCREEN batch 2 (item 4 done but for characteristic-quest)
 
