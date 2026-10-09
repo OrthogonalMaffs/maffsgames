@@ -41,7 +41,7 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): UC-FIX, unit-converter (claim #195 merged 1c30b28; fix PR; listed game)
+## 2026-10-09 (cloud): UC-FIX, unit-converter (claim #195 merged 1c30b28; fix #196; listed game)
 
 - **The fix:** MaffsLock + MaffsNext ("Got it — next", in the worked solution) with its lock hint; ?level only from
   the game's own LEVELS (hasOwnProperty); 3 s.f. stated on the cylinder, 60 mph and shaft, working as the contract
