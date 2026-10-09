@@ -3,6 +3,58 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #207 merged cf96929; main run 593 green)
+
+- **For the home lane, CI, before the next E verifier lands:** main's run 593 put group E at **8m39s of its 9m00s
+  budget** (12 min timeout). Factor Theorem now takes 69 s there (its option, level and Next checks and 8 plants);
+  Screening Room 89 s, Simultaneous Solver 73 s, Terrible Advice 57 s, Linear Equation Solver 52 s. The B1, B3 and B4 jobs
+  took 5m00s to 5m23s (setup included; their budget is 6 min), so moving one verifier only moves the pressure: a new group (E2 or B5) in
+  `scripts/ci-groups.py`. The cloud lane left E as it is.
+- **Answer buttons (answers 1):** Q33 ("Which line proves it?") and T9(c) are four shuffled buttons each, the
+  contract's lines, marked by `dataset.val` on Check or Submit (with T9's other parts); the explanation shows after
+  marking. All in the game (`fillOptions`, `chosenValue`, `markOptions`, `.opt-*` CSS); the lock hint picks a button.
+- **A-Level only (answers 2):** the page never reads `?level` (a comment says so); every URL logs and submits
+  `alevel`. No start screen, no level4 board. **For the home lane, at relisting: remove L4 from Factor Theorem's
+  roster row, the portal filter and the spec map.** With no open CRITICAL or HIGH after this PR, it is ready (SR-21).
+- **Practice submits nothing** (t5-014, t5-015); its device-local score-history record went with it (nothing reads
+  `MaffsScoreHistory.get`). The Test alone submits, once, to `factor_theorem_alevel`.
+- **A wrong answer waits on `MaffsNext`** (t5-018's note; next-control.js loaded); a right one keeps Next Question.
+  t5-018's other parts were already fixed on main: closed with the measurements.
+- **`scripts/check-teacher-invite.py` (answers 3):** one line added to FT_STEP (choose a button in any unanswered
+  `.opt-group`); nothing else changed. Its factor-theorem routes reach both end screens at 390 and 1280 (KaTeX served
+  locally: the sandbox cannot reach the CDN). check-answer-lock seeds 1-3 PASS the same way.
+- **Verifier** (group E): the option checks (Q33's working for every n; T9(c) from s, v and a), prose keys, the five
+  ?level URLs, no Practice submit, MaffsNext on a wrong answer; 8 plants, all caught. About 80 s with its self-test.
+- **Still open, not this lane's:** t5-008 (home lane, VOCAB-IDEMPOTENT), t5-016 and t5-017 (a Test bank of 40 from
+  Project Claude, a separate contract).
+
+## 2026-10-09 (cloud): FT-FIX stopped before building (contract STOP IF; answered 11:00, above)
+
+- **STOP IF fired: "the game's selection pattern can't serve a 4-option item inside a multi-part test question
+  without engine changes".** factor-theorem has no selection pattern at all: every Practice item and every Test part
+  is a typed box (no options, no `dataset.val` anywhere). Engine changes needed, all in the game: an item or part
+  with `options` renders four buttons (shuffled, `data-val` the option's text) in place of its box; choosing one
+  marks it chosen; Check (Practice) or Submit Answer (Test, with the other parts) marks `dataset.val` against the
+  key; one attempt, as the typed tier-5 items. Self-contained, about 40 lines. Recommended.
+- **Also unexpected, for Jon:** the game has **no start screen**. It opens on Learn, with Practice and Test as
+  tabs. Step 5's "an absent or unknown key shows the start screen (level choice)" needs a new one. Proposal: a
+  level choice (A-Level, Level 4) shown instead of the tabs until a level is chosen; a valid `?level` skips it;
+  the top bar's badge shows the chosen level. Design addition (canon §0.3 "still stops").
+- **Both changes break a shared check the cloud lane may not edit:** `scripts/check-teacher-invite.py` (site-wide,
+  every PR) plays factor-theorem with no `?level`, clicks the Practice tab and fills `input.answer-input` boxes
+  (FUNCTION_ROUTE, FT_STEP). Additive fix: a `("click", '[data-level="alevel"]')` step first in both routes, and
+  FT_STEP choosing the first option in any unanswered option group. Jon authorises it in the FT-FIX PR (as the
+  foundation-s5 lines), or the home lane lands it first. check-answer-lock needs nothing shared: the game's own
+  lock hint can name `"level": "alevel"`.
+- **t5-018 is fixed on main already** (Chromium, 390x844, this session): T5 and every Test question 390 px wide;
+  Learn at 390 and 320 px; no literal `___` and no `<span` in any attribute; `question_index` is `qIdx + 1` in
+  both modes; hint button off after marking; Enter checks. Left: its "wrong-answer advance not MaffsNext" note.
+- **For Jon (the rule recorded with SR-16 to SR-20):** "a level that serves another level's items is not listed as
+  that level". Step 5 has Level 4 serve A-Level's content (the page has no separate Level 4 content); relisting it
+  at L4 would fall under that rule. The home lane's relisting decides.
+- **Did not fire:** Q33 and T9(c) match the quoted text; `question_index` needs no change; a `level4` board needs
+  no hub or coverage change (factor-theorem is in NOT_ON_HUB; the module labels `level4` "Level 4").
+
 ## 2026-10-09 (cloud): UC-T4-007, unit-converter (claim #204; fix #205 merged 920c5b1)
 
 - **The fix (Jon's answer 3c):** the 60 mph item reads "Convert 60 mph to m/s (1 mile ≈ 1609 m). Give your answer to
