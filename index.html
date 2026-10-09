@@ -3755,14 +3755,8 @@ loadFact();
 <script src="schools/assets/firebase-leaderboard.js"></script>
 <script>
 (function(){
-  var config = {
-    apiKey:"AIzaSyCvLgIk8hdHaX7nL0aZ3p_Q8zNlRuKX18g",
-    databaseURL:"https://maffsgames-c1c9f-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId:"maffsgames-c1c9f"
-  };
-  try { firebase.initializeApp(config); } catch(e) {}
-  var db = firebase.database();
-  var ref = db.ref('recent_scores');
+  // Read through MaffsLeaderboard, never the SDK directly (contract SCORES-OFFLINE): on a network that
+  // blocks Firebase the ticker is hidden quietly and the rest of the portal is untouched.
 
   function timeAgo(ts) {
     var diff = Math.floor((Date.now() - ts) / 1000);
@@ -3871,14 +3865,8 @@ loadFact();
     });
   }
 
-  ref.orderByChild('timestamp').limitToLast(20).on('value', function(snapshot) {
-    var scores = [];
-    snapshot.forEach(function(child) {
-      scores.push(child.val());
-    });
-    scores.reverse(); // newest first
-    annotateAndRender(scores);
-  });
+  var live = window.MaffsLeaderboard && MaffsLeaderboard.watchRecent(20, annotateAndRender);
+  if (!live) document.getElementById('scoreTicker').style.display = 'none';
 })();
 </script>
 </body>

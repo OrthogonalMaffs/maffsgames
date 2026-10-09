@@ -60,6 +60,21 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
+## 2026-10-09 (home): SCORES-OFFLINE (item 5)
+
+- **The class:** /leaderboards/ and the portal called `firebase.initializeApp` / `firebase.database()` themselves,
+  outside any guard; on a network that blocks the SDK (`firebase` undefined) the script stopped, and on
+  /leaderboards/ that killed the device-local Your Scores. No other served page did (188 .html/.js files checked).
+- **Fix:** both read through `MaffsLeaderboard`: new read paths `available()`, `readBoard(slug, level)` and
+  `watchRecent(n, cb)` (submit path untouched). Blocked: /leaderboards/ shows Your Scores and "Live leaderboards
+  can't load on this network. Your Scores above are kept on this device and still work." (search, level pills and
+  cards hidden); the portal hides its ticker quietly.
+- **Check:** `scripts/test-scores-offline.py` (ci-line): no served file but the shared module calls the SDK; both
+  pages with gstatic.com/firebasejs refused (no page error, Your Scores renders a seeded game, offline line /
+  ticker hidden) and with a fake SDK (cards render, ticker shows the score, no offline line). Plants: a page
+  calling `firebase.database()` (caught by the rule); main's old /leaderboards/ blocked (caught: "firebase is not
+  defined").
+
 ## 2026-10-09 (home): PLAY-AGAIN-SCREEN batch 2 (item 4 done but for characteristic-quest)
 
 - **The 21 games batch 1 left on `SCREEN_NOT_YET` now change every screen through `MaffsLock.screen()`:**

@@ -95,6 +95,7 @@
   .gc-gscore{margin-left:auto;font-weight:700;color:var(--teal);font-family:'JetBrains Mono',monospace;}
   .gc-gdate{color:var(--text-muted);font-size:11px;}
   .gc-empty, .gc-loading{font-size:12px;color:var(--text-muted);padding:6px 0;}
+  .lb-offline{font-size:14px;color:var(--text-muted);background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:32px;}
   .gc-note{font-size:11.5px;color:#92660a;background:var(--gold-dim);border-radius:6px;padding:8px 10px;line-height:1.5;}
 
   .back-link{display:inline-block;margin-top:8px;color:var(--teal);text-decoration:none;font-weight:600;font-size:14px;}
@@ -135,6 +136,8 @@
     <div class="level-pills" id="levelPills"></div>
   </div>
 
+  <div class="lb-offline" id="lbOffline" hidden>Live leaderboards can't load on this network. Your Scores above are kept on this device and still work.</div>
+
   <div class="game-grid" id="gameGrid"></div>
 
   <a href="../" class="back-link">&larr; Back to Games</a>
@@ -149,14 +152,10 @@
 (function(){
 'use strict';
 
-/* ---- Firebase ---- */
-var firebaseConfig = {
-  apiKey:"AIzaSyCvLgIk8hdHaX7nL0aZ3p_Q8zNlRuKX18g",
-  databaseURL:"https://maffsgames-c1c9f-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId:"maffsgames-c1c9f"
-};
-try { firebase.initializeApp(firebaseConfig); } catch(e) {}
-var db = firebase.database();
+/* ---- Firebase ----
+   Read through MaffsLeaderboard (firebase-leaderboard.js), never the SDK directly (contract SCORES-OFFLINE):
+   on a network that blocks Firebase, Your Scores still renders and the live boards say they can't load. */
+var LIVE = !!(window.MaffsLeaderboard && MaffsLeaderboard.available());
 
 /* ---- Level names ----
    One source: MaffsLeaderboard.levelLabel() in firebase-leaderboard.js, the same
@@ -344,13 +343,10 @@ var cache = {}; // key -> array of entries, once fetched
 function fetchLeaderboard(slug, level, cb){
   var key = (slug + '_' + level).replace(/-/g, '_');
   if (cache[key]) { cb(cache[key]); return; }
-  db.ref('leaderboards/' + key).once('value').then(function(snap){
-    var data = snap.val() || {};
-    var entries = Object.keys(data).map(function(k){ return data[k]; })
-      .filter(function(e){ return e && typeof e.score === 'number'; });
+  MaffsLeaderboard.readBoard(slug, level).then(function(entries){
     cache[key] = entries;
     cb(entries);
-  }).catch(function(){ cb([]); });
+  });
 }
 
 function renderCardBody(card, slug, level){
@@ -529,7 +525,13 @@ function initGrid(){
 }
 
 renderYourScores();
-initGrid();
+if (LIVE) {
+  initGrid();
+} else {
+  document.querySelector('.controls').style.display = 'none';
+  document.getElementById('gameGrid').style.display = 'none';
+  document.getElementById('lbOffline').hidden = false;
+}
 
 })();
 </script>

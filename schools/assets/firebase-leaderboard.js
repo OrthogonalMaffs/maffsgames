@@ -595,7 +595,47 @@
   }
 
   // Export
+  /**
+   * Read paths for pages (contract SCORES-OFFLINE, 9 Oct 2026). No page calls the SDK itself: on a network
+   * that blocks it (common on college networks) these say so instead of throwing, so nothing else on the
+   * page stops.
+   *   available()            -> true when the database can be reached through the SDK
+   *   readBoard(slug, level) -> Promise of the board's entries (an array; [] when it cannot be read)
+   *   watchRecent(n, cb)     -> cb(scores, newest first) on every change to the n latest recent_scores;
+   *                             returns false, and never calls cb, without the SDK
+   */
+  function available() {
+    init();
+    return !!db;
+  }
+
+  function readBoard(gameSlug, level) {
+    init();
+    if (!db) return Promise.resolve([]);
+    var key = (gameSlug + '_' + level).replace(/-/g, '_');
+    return db.ref('leaderboards/' + key).once('value').then(function(snap) {
+      var data = snap.val() || {};
+      return Object.keys(data).map(function(k) { return data[k]; })
+        .filter(function(e) { return e && typeof e.score === 'number'; });
+    }).catch(function() { return []; });
+  }
+
+  function watchRecent(n, cb) {
+    init();
+    if (!db) return false;
+    db.ref('recent_scores').orderByChild('timestamp').limitToLast(n).on('value', function(snapshot) {
+      var scores = [];
+      snapshot.forEach(function(child) { scores.push(child.val()); });
+      scores.reverse();
+      cb(scores);
+    });
+    return true;
+  }
+
   window.MaffsLeaderboard = {
+    available: available,
+    readBoard: readBoard,
+    watchRecent: watchRecent,
     submitScore: submitScore,
     formatPercentile: formatPercentile,
     standing: standing,
