@@ -17,7 +17,12 @@ findings:
   summary: 'parseInt(input.value) cuts a decimal before the exact-match check on all 20 puzzles: 23.9 is accepted
     as 23 and wins; 314.16 wins the pi puzzle'
   evidence: 'docs/audits/audit-tranche2-2026-10-06.md: section 2. Reproduced'
-  status: open
+  status: fixed
+  pr: 211
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 2: the raw typed text is marked by the shared MaffsAnswer.exact
+    (canon 7.1.3), never a number cut from it; 23.9 is not 23. The pi hint "100 × π rounded to 2dp" (which reads as
+    314.16) now says "100 × (π to 2 d.p.)". scripts/verify-52dle.py types the number, a decimal of it and its
+    neighbours into every puzzle in Chromium and fails main''s page on 40 decimal guesses.'
 - id: 52dle-t2-002
   severity: MEDIUM
   jc: false

@@ -582,6 +582,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. One puzzle a day, up to six guesses, each guess one mark. i = 0 types the answer; i >= 1 types the answer + 1 (wrong); then Guess.
 {
   "ready": "!state.done && !MaffsLock.isLocked(document.getElementById('input-area'))",
@@ -693,7 +694,7 @@ const PUZZLES = [
   {a:89,  cat:"Fibonacci",      clue:"I am the 11th Fibonacci number. My reverse, 98, is NOT prime. I am the largest two-digit Fibonacci.",hints:["I am a Fibonacci number","I am between 80 and 100","I am odd"]},
   {a:31,  cat:"Prime",          clue:"I am the 11th prime. Reverse me and you get 13, also prime. We are emirp twins.",hints:["I am prime","I am less than 40","My digits sum to 4"]},
   {a:271, cat:"Euler's Number", clue:"The first three digits of e are 2.71… I am those digits without the decimal. e ≈ 2.71828…",hints:["I am between 200 and 300","I contain the digit 7","I am the first three digits of e"]},
-  {a:314, cat:"Pi",             clue:"π ≈ 3.14159… I am the first three significant digits of π, without the decimal point.",hints:["I am between 300 and 320","π ≈ 3.14…","I am 100 × π rounded to 2dp"]},
+  {a:314, cat:"Pi",             clue:"π ≈ 3.14159… I am the first three significant digits of π, without the decimal point.",hints:["I am between 300 and 320","π ≈ 3.14…","I am 100 × (π to 2 d.p.)"]},
   {a:144, cat:"Fibonacci",      clue:"I am 12 squared. I am also the 12th Fibonacci number — the only Fibonacci perfect square beyond 1.",hints:["I am a perfect square","I am a Fibonacci number","12 × 12"]},
   {a:97,  cat:"Prime",          clue:"I am the largest two-digit prime. My reverse, 79, is also prime — we are emirp twins.",hints:["I am the largest two-digit prime","I am between 90 and 100","My digits sum to 16"]},
   {a:53,  cat:"Prime",          clue:"I am the 16th prime. The nearest prime greater than 52 — one more than the cards in a deck.",hints:["I am prime","I am one more than 52","I am between 50 and 55"]},
@@ -907,8 +908,10 @@ function setMsg(text, ok) {
 function submitGuess() {
   if (state.done) return;
   const input = document.getElementById('guess-input');
-  const val = parseInt(input.value.trim());
-  if (isNaN(val) || val < 0) {
+  // The raw text is marked, never a number cut from it (canon 7.1.3): 23.9 is not 23 (52dle-t2-001).
+  const raw = input.value.trim();
+  const val = MaffsAnswer.parse(raw);
+  if (val === null || val < 0) {
     setMsg('Enter a valid positive number.');
     input.classList.add('shake');
     MaffsLock.timer(() => input.classList.remove('shake'), 400);
@@ -919,7 +922,7 @@ function submitGuess() {
   if (!MaffsLock.lock(area)) return;
   setMsg('');
   state.guesses.push(val);
-  const won = val === puzzle.a;
+  const won = MaffsAnswer.exact(raw, puzzle.a) === 'correct';
   mfg('question_answered',{game_slug:'52dle',level:'all',correct:won,question_index:state.guesses.length});
   if (won || state.guesses.length >= MAX_GUESSES) {
     endGame(won);
