@@ -161,8 +161,7 @@ const NOT_ON_HUB = {
   // each game's verifier merges and its register entries are fixed; the hub row is restored, and this
   // entry removed, in that PR.
   'factor-theorem': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
-  'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
-  'screening-room': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting'
+  'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting'
 };
 
 // The levels a game submits under are read from its source: the level argument of

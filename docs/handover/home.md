@@ -11,7 +11,8 @@ docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (bat
 
 **OVERNIGHT RUN (Project Claude for Jon, 8 Oct 2026, 23:45):** `docs/handover/contracts/2026-10-08-overnight.md`
 (verbatim; its rules override the checkpoint rule for this run). Items: 1 VOCAB-IDEMPOTENT (DONE, #193 merged 9 Oct,
-fce8721, main green), 2 CONTRACTS-FOLDER (in progress), 3 RELIST-SR, 4+ F1 batches 9-11.
+fce8721, main green), 2 CONTRACTS-FOLDER (DONE, #194 merged 9 Oct,
+7b7b7e2, main green), 3 RELIST-SR (in progress), 4+ F1 batches 9-11.
 
 **Contracts (canon §7.8.2, contract CONTRACTS-FOLDER):** each is saved verbatim as
 `docs/handover/contracts/<yyyy-mm-dd>-<name>.md`; the queue below holds a one-line pointer; the file moves to
@@ -34,7 +35,21 @@ the checkpoint) is all merged; its list is in the archive.
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
 
-## 2026-10-09 (home): CONTRACTS-FOLDER (overnight item 2, branch `claude/contracts-folder`)
+## 2026-10-09 (home): RELIST-SR (overnight item 3, branch `claude/relist-sr`)
+
+- **Step 1 on main, all met:** verify-screening-room.py runs in CI (ci-line, group E); the register has no open
+  CRITICAL or HIGH (t4-014 MEDIUM and t4-017 LOW open); `check-answer-lock.py --game screening-room` PASS.
+- **NOT_YET:** already done by F1 batch 8 (#190): NOT_YET is NOT_YET_AT_START minus MIGRATED, and batch 8 added
+  screening-room to MIGRATED, so the 22 already excluded it. Nothing to edit.
+- **Relisted, everything the unlisting commit (e419439) removed:** roster row back at GCSE #62 (GCSE 29, Unlisted
+  2); three portal cards verbatim after Given That's (New for 2026/27 with its hand-placed "New", GCSE, Core); the
+  weekly fact's game link; sitemap; spec map P6/P9, J1-J3, §3.9 and the coverage row; hub row (out of NOT_ON_HUB);
+  canon: 95 live, 2 unlisted, §6.1's §3.9 row (Expectation Station's stale "(unlisted)" dropped too). Not on
+  /essentials/ before unlisting, so not added. todo §1.72 closed.
+- **/updates/: no entry, no badge.** Phase 3 showing the scenario and array again is the fix for t4-015 (class
+  "hidden data": the question needed a count it no longer showed), a correctness fix, which §3.4 excludes.
+
+## 2026-10-09 (home): CONTRACTS-FOLDER (overnight item 2, #194, merged 7b7b7e2, main green)
 
 - **CLAUDE.md** names the two handover files in its heading and says `docs/handover/contracts/` is read only when
   its item starts. **Canon §7.8.2** records the convention (verbatim file on receipt, one-line pointer in the queue,
