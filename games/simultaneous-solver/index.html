@@ -141,6 +141,34 @@ a.back-link:hover{color:var(--text)}
   .row input{width:4.1rem}
 }
 
+/* Stage 5: word problems (SIM-S5, Jon, 9 Oct 2026). The equation builder's own classes (.eqt-*), so it can
+   move to a shared stylesheet unchanged; tokens only. */
+.problem{font-size:1rem;line-height:1.55}
+.letdef{font-size:.92rem;line-height:1.5;color:var(--muted);padding:.4rem .6rem;border-left:3px solid var(--accent);border-radius:0 8px 8px 0;background:var(--surface-alt)}
+.eqt{display:flex;flex-direction:column;gap:.45rem}
+.eqt-line{display:flex;align-items:center;gap:.5rem;width:100%;min-height:48px;padding:.35rem .6rem;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:var(--font-num);font-size:1.05rem;text-align:left;cursor:pointer}
+.eqt-line[aria-pressed="true"]{border-color:var(--accent);border-width:3px}
+.eqt-n{font-size:.8rem;color:var(--muted);flex:none}
+.eqt-text{flex:1;min-width:0;overflow-wrap:anywhere}
+.eqt-empty{color:var(--muted);font-family:var(--font-text);font-size:.85rem}
+.eqt-cue{flex:none;font-family:var(--font-text);font-size:.7rem;font-weight:600;color:var(--accent);display:none}
+.eqt-line[aria-pressed="true"] .eqt-cue{display:inline}
+.eqt-line.eqt-right{border-color:var(--correct)}
+.eqt-line.eqt-wrong{border-color:var(--wrong)}
+.eqt-mark{flex:none;font-weight:700}
+.eqt-right .eqt-mark{color:var(--correct)}
+.eqt-wrong .eqt-mark{color:var(--wrong)}
+.eqt-bank{display:grid;grid-template-columns:repeat(5,1fr);gap:.4rem}
+.eqt-tile{min-height:48px;min-width:0;padding:.3rem .1rem;border-radius:8px;border:1.5px solid var(--accent);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1rem;font-weight:600;cursor:pointer}
+.eqt-tile.eqt-op{border-color:var(--border)}
+.eqt-edit{display:flex;gap:.5rem;justify-content:center}
+.eqt-edit button{min-height:44px;min-width:96px;padding:.4rem .8rem;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:.9rem;cursor:pointer}
+.eqt-eq{font-family:var(--font-num);font-weight:600;white-space:nowrap}
+.fb-why{margin-top:.15rem;color:var(--muted);font-size:.88rem}
+/* Phone rule (canon §7.6.1): with the feedback open, the tiles cannot be used, so they fold away; the two
+   lines stay, marked, above the reason and Next. */
+#formCard.fb-open .eqt-bank,#formCard.fb-open .eqt-edit,#formCard.fb-open #formCheckRow,#formCard.fb-open .eqt-cue{display:none!important}
+@media (hover:hover){.eqt-tile:hover,.eqt-line:hover{border-color:var(--accent)}}
 body.accessible{letter-spacing:.12em;word-spacing:.16em}
 body.accessible .hud-label,body.accessible .hud-val,body.accessible input,body.accessible .row .lbl{letter-spacing:0}
 body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
@@ -194,6 +222,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
         <button class="stage-btn" type="button" data-stage="stage2" aria-pressed="false"><b>Stage 2: Eliminate</b>Scale, then add or subtract to get rid of the letter. <span class="n">8 problems, 24 marks</span></button>
         <button class="stage-btn" type="button" data-stage="stage3" aria-pressed="false"><b>Stage 3: Solve</b>Eliminate, solve for one letter, substitute for the other. <span class="n">6 problems, 30 marks</span></button>
         <button class="stage-btn" type="button" data-stage="stage4" aria-pressed="false"><b>Stage 4: The whole problem</b>You choose which letter to eliminate, then solve it all. <span class="n">6 problems, 30 marks</span></button>
+        <button class="stage-btn" type="button" data-stage="stage5" aria-pressed="false"><b>Stage 5: Word problems: write the equations</b>Read the problem, then build its two equations from tiles. No solving. <span class="n">8 problems, 16 marks</span></button>
       </div>
     </div>
     <div class="panel menu-info" id="alevelPanel" hidden>
@@ -237,6 +266,25 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
       <div class="ask" id="mcAsk"></div>
       <div class="options" id="mcOptions"></div>
       <div class="mc-fb" id="mcFeedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="form" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val">5</div></div>
+      <div class="hud-item"><div class="hud-label">Problem</div><div class="hud-val" id="formNum">1/8</div></div>
+      <div class="hud-item"><div class="hud-label">Marks</div><div class="hud-val" id="formMarks">0</div></div>
+    </div>
+    <div class="qcard" id="formCard">
+      <div class="problem" id="formText"></div>
+      <div class="letdef" id="formLet"></div>
+      <div class="step-head">Write the two equations. Tap a line, then tap tiles to build it.</div>
+      <div id="formStep">
+        <div id="formBuilder"></div>
+        <div class="msg" id="formMsg" aria-live="polite"></div>
+        <div class="check-row" id="formCheckRow"><button class="btn solid" id="formCheck" type="button">Check</button></div>
+      </div>
+      <div class="feedback" id="formFeedback" aria-live="polite"></div>
     </div>
   </div>
 
@@ -524,6 +572,205 @@ var ALEVEL = [
 ];
 /* ALEVEL BANK END */
 
+// ============================================================
+//  STAGE 5 BANK (SIM-S5, Project Claude, 9 Oct 2026): 40 word problems, worded exactly as the contract gives
+//  them. keys: the two equations; src: the words each key comes from (shown when a line is wrong); why: a fact
+//  the key needs that the words leave out; extra: distractor tiles (a spare number in the text, or a pounds
+//  amount in pence). The solutions are not here: scripts/verify-simultaneous-solver.py holds them and checks
+//  that each pair of keys has exactly that one solution.
+// ============================================================
+/* WORDS BANK START */
+var WORDS = [
+{"id": "W01", "text": "3 adult tickets and 2 child tickets cost £36. 1 adult ticket and 2 child tickets cost £20.", "let": "Let a = the cost of an adult ticket and c = the cost of a child ticket, in pounds.", "keys": ["3a + 2c = 36", "a + 2c = 20"], "src": ["3 adult tickets and 2 child tickets cost £36", "1 adult ticket and 2 child tickets cost £20"], "why": [null, null], "extra": []},
+{"id": "W02", "text": "2 coffees and 3 teas cost £10.70. 4 coffees and 1 tea cost £12.90.", "let": "Let c = the cost of a coffee and t = the cost of a tea, in pounds.", "keys": ["2c + 3t = 10.7", "4c + t = 12.9"], "src": ["2 coffees and 3 teas cost £10.70", "4 coffees and 1 tea cost £12.90"], "why": [null, null], "extra": ["1070", "1290"]},
+{"id": "W03", "text": "5 pens and 2 rulers cost £3.10. 3 pens and 2 rulers cost £2.10.", "let": "Let p = the cost of a pen and r = the cost of a ruler, in pounds.", "keys": ["5p + 2r = 3.1", "3p + 2r = 2.1"], "src": ["5 pens and 2 rulers cost £3.10", "3 pens and 2 rulers cost £2.10"], "why": [null, null], "extra": ["310", "210"]},
+{"id": "W04", "text": "4 burgers and 3 portions of fries cost £22.50. 2 burgers and 3 portions of fries cost £15.30.", "let": "Let b = the cost of a burger and f = the cost of a portion of fries, in pounds.", "keys": ["4b + 3f = 22.5", "2b + 3f = 15.3"], "src": ["4 burgers and 3 portions of fries cost £22.50", "2 burgers and 3 portions of fries cost £15.30"], "why": [null, null], "extra": ["2250", "1530"]},
+{"id": "W05", "text": "A cinema sells 120 tickets. Adult tickets are £9 and child tickets £6. The takings are £930.", "let": "Let a = the number of adult tickets and c = the number of child tickets.", "keys": ["a + c = 120", "9a + 6c = 930"], "src": ["A cinema sells 120 tickets", "Adult tickets are £9 and child tickets £6. The takings are £930"], "why": [null, null], "extra": []},
+{"id": "W06", "text": "Two numbers add up to 31. Their difference is 7.", "let": "Let x = the larger number and y = the smaller number.", "keys": ["x + y = 31", "x − y = 7"], "src": ["Two numbers add up to 31", "Their difference is 7"], "why": [null, null], "extra": []},
+{"id": "W07", "text": "Two numbers add up to 48. One is three times the other.", "let": "Let x = the larger number and y = the smaller number.", "keys": ["x + y = 48", "x − 3y = 0"], "src": ["Two numbers add up to 48", "One is three times the other"], "why": [null, "One is three times the other: x = 3y, so x − 3y = 0."], "extra": []},
+{"id": "W08", "text": "A taxi charges a fixed fee plus a rate per mile. 4 miles cost £9.60. 10 miles cost £18.60.", "let": "Let f = the fixed fee and m = the rate per mile, in pounds.", "keys": ["f + 4m = 9.6", "f + 10m = 18.6"], "src": ["4 miles cost £9.60", "10 miles cost £18.60"], "why": [null, null], "extra": ["960", "1860"]},
+{"id": "W09", "text": "A plumber charges a call-out fee plus an hourly rate. 2 hours cost £110. 5 hours cost £215.", "let": "Let f = the call-out fee and h = the hourly rate, in pounds.", "keys": ["f + 2h = 110", "f + 5h = 215"], "src": ["2 hours cost £110", "5 hours cost £215"], "why": [null, null], "extra": []},
+{"id": "W10", "text": "A gym charges a joining fee plus a monthly fee. 3 months cost £95. 7 months cost £175.", "let": "Let j = the joining fee and m = the monthly fee, in pounds.", "keys": ["j + 3m = 95", "j + 7m = 175"], "src": ["3 months cost £95", "7 months cost £175"], "why": [null, null], "extra": []},
+{"id": "W11", "text": "A farm has chickens and sheep. Together they have 30 heads and 80 legs.", "let": "Let c = the number of chickens and s = the number of sheep.", "keys": ["c + s = 30", "2c + 4s = 80"], "src": ["30 heads", "80 legs"], "why": ["Each animal has one head.", "A chicken has 2 legs and a sheep has 4."], "extra": []},
+{"id": "W12", "text": "A car park holds cars and motorbikes: 40 vehicles with 130 wheels between them.", "let": "Let c = the number of cars and m = the number of motorbikes.", "keys": ["c + m = 40", "4c + 2m = 130"], "src": ["40 vehicles", "130 wheels"], "why": ["Each vehicle counts once.", "A car has 4 wheels and a motorbike has 2."], "extra": []},
+{"id": "W13", "text": "Sam has 25 coins, all 10p and 20p, worth £3.70 in total.", "let": "Let t = the number of 10p coins and w = the number of 20p coins.", "keys": ["t + w = 25", "10t + 20w = 370"], "src": ["25 coins", "all 10p and 20p, worth £3.70 in total"], "why": [null, "In pence: £3.70 is 370p, a 10p coin is 10 and a 20p coin is 20."], "extra": ["3.70"]},
+{"id": "W14", "text": "3 bags of sand and 2 bags of cement weigh 155 kg. 1 bag of sand and 4 bags of cement weigh 135 kg.", "let": "Let s = the mass of a bag of sand and c = the mass of a bag of cement, in kg.", "keys": ["3s + 2c = 155", "s + 4c = 135"], "src": ["3 bags of sand and 2 bags of cement weigh 155 kg", "1 bag of sand and 4 bags of cement weigh 135 kg"], "why": [null, null], "extra": []},
+{"id": "W15", "text": "A rectangle's perimeter is 34 cm. Its length is 5 cm more than its width.", "let": "Let l = the length and w = the width, in cm.", "keys": ["2l + 2w = 34", "l − w = 5"], "src": ["A rectangle's perimeter is 34 cm", "Its length is 5 cm more than its width"], "why": ["The perimeter is two lengths and two widths.", null], "extra": []},
+{"id": "W16", "text": "2 large boxes and 3 small boxes hold 64 items. 4 large boxes and 1 small box hold 78 items.", "let": "Let l = the number of items in a large box and s = the number in a small box.", "keys": ["2l + 3s = 64", "4l + s = 78"], "src": ["2 large boxes and 3 small boxes hold 64 items", "4 large boxes and 1 small box hold 78 items"], "why": [null, null], "extra": []},
+{"id": "W17", "text": "At a café, 3 scones and 2 cakes cost £8.30. 2 scones and 5 cakes cost £14.15.", "let": "Let s = the cost of a scone and c = the cost of a cake, in pounds.", "keys": ["3s + 2c = 8.3", "2s + 5c = 14.15"], "src": ["3 scones and 2 cakes cost £8.30", "2 scones and 5 cakes cost £14.15"], "why": [null, null], "extra": ["830", "1415"]},
+{"id": "W18", "text": "A school orders 6 footballs and 4 netballs for £94, then 3 footballs and 5 netballs for £68.", "let": "Let f = the cost of a football and n = the cost of a netball, in pounds.", "keys": ["6f + 4n = 94", "3f + 5n = 68"], "src": ["6 footballs and 4 netballs for £94", "3 footballs and 5 netballs for £68"], "why": [null, null], "extra": []},
+{"id": "W19", "text": "A theatre sells 200 tickets for £5,400. Stalls seats cost £30 and circle seats £20.", "let": "Let s = the number of stalls tickets and c = the number of circle tickets.", "keys": ["s + c = 200", "30s + 20c = 5400"], "src": ["A theatre sells 200 tickets", "for £5,400. Stalls seats cost £30 and circle seats £20"], "why": [null, null], "extra": []},
+{"id": "W20", "text": "Jo is 4 years older than Amy. Their ages add up to 36.", "let": "Let j = Jo's age and a = Amy's age, in years.", "keys": ["j − a = 4", "j + a = 36"], "src": ["Jo is 4 years older than Amy", "Their ages add up to 36"], "why": [null, null], "extra": []},
+{"id": "E01", "text": "Two resistors in series total 470 Ω. One is 130 Ω more than the other.", "let": "Let p = the larger resistance and q = the smaller, in ohms.", "keys": ["p + q = 470", "p − q = 130"], "src": ["Two resistors in series total 470 Ω", "One is 130 Ω more than the other"], "why": [null, null], "extra": []},
+{"id": "E02", "text": "4 M8 bolts and 6 M6 bolts weigh 116 g. 2 M8 bolts and 5 M6 bolts weigh 74 g.", "let": "Let e = the mass of an M8 bolt and s = the mass of an M6 bolt, in grams.", "keys": ["4e + 6s = 116", "2e + 5s = 74"], "src": ["4 M8 bolts and 6 M6 bolts weigh 116 g", "2 M8 bolts and 5 M6 bolts weigh 74 g"], "why": [null, null], "extra": ["8"]},
+{"id": "E03", "text": "One job uses 3 fitters and 2 apprentices and costs £780 a day. Another uses 2 fitters and 4 apprentices and costs £720 a day.", "let": "Let f = a fitter's day rate and a = an apprentice's day rate, in pounds.", "keys": ["3f + 2a = 780", "2f + 4a = 720"], "src": ["One job uses 3 fitters and 2 apprentices and costs £780 a day", "Another uses 2 fitters and 4 apprentices and costs £720 a day"], "why": [null, null], "extra": []},
+{"id": "E04", "text": "A machine has a fixed set-up time plus a time per part. 20 parts take 70 minutes. 50 parts take 160 minutes.", "let": "Let s = the set-up time and p = the time per part, in minutes.", "keys": ["s + 20p = 70", "s + 50p = 160"], "src": ["20 parts take 70 minutes", "50 parts take 160 minutes"], "why": [null, null], "extra": []},
+{"id": "E05", "text": "Two currents add up to 14 A. The larger is 2 A more than twice the smaller.", "let": "Let i = the larger current and j = the smaller, in amps.", "keys": ["i + j = 14", "i − 2j = 2"], "src": ["Two currents add up to 14 A", "The larger is 2 A more than twice the smaller"], "why": [null, "i = 2j + 2, so i − 2j = 2."], "extra": []},
+{"id": "E06", "text": "A spring's length is its natural length plus a stretch for each newton of load. With 4 N it is 22 cm long. With 10 N it is 34 cm long.", "let": "Let n = the natural length and s = the stretch per newton, in cm.", "keys": ["n + 4s = 22", "n + 10s = 34"], "src": ["With 4 N it is 22 cm long", "With 10 N it is 34 cm long"], "why": [null, null], "extra": []},
+{"id": "E07", "text": "3 steel plates and 2 aluminium plates weigh 46 kg. 1 steel plate and 3 aluminium plates weigh 27 kg.", "let": "Let s = the mass of a steel plate and a = the mass of an aluminium plate, in kg.", "keys": ["3s + 2a = 46", "s + 3a = 27"], "src": ["3 steel plates and 2 aluminium plates weigh 46 kg", "1 steel plate and 3 aluminium plates weigh 27 kg"], "why": [null, null], "extra": []},
+{"id": "E08", "text": "A delivery van charges a fixed fee plus a rate per kilometre. 30 km cost £85. 80 km cost £160.", "let": "Let f = the fixed fee and k = the rate per kilometre, in pounds.", "keys": ["f + 30k = 85", "f + 80k = 160"], "src": ["30 km cost £85", "80 km cost £160"], "why": [null, null], "extra": []},
+{"id": "E09", "text": "64 components are made on two machines. Machine A makes 4 more than twice as many as Machine B.", "let": "Let a = the number made on Machine A and b = the number made on Machine B.", "keys": ["a + b = 64", "a − 2b = 4"], "src": ["64 components are made on two machines", "Machine A makes 4 more than twice as many as Machine B"], "why": [null, "a = 2b + 4, so a − 2b = 4."], "extra": []},
+{"id": "E10", "text": "2 litres of oil and 5 litres of coolant cost £39. 4 litres of oil and 3 litres of coolant cost £43.", "let": "Let o = the cost of a litre of oil and c = the cost of a litre of coolant, in pounds.", "keys": ["2o + 5c = 39", "4o + 3c = 43"], "src": ["2 litres of oil and 5 litres of coolant cost £39", "4 litres of oil and 3 litres of coolant cost £43"], "why": [null, null], "extra": []},
+{"id": "E11", "text": "A beam carries two loads totalling 900 N. Load p is 300 N less than load q.", "let": "Let p and q be the two loads, in newtons.", "keys": ["p + q = 900", "q − p = 300"], "src": ["two loads totalling 900 N", "Load p is 300 N less than load q"], "why": [null, "p = q − 300, so q − p = 300."], "extra": []},
+{"id": "E12", "text": "Hiring a lift costs a daily rate plus a delivery charge. 3 days cost £410. 5 days cost £630.", "let": "Let d = the daily rate and c = the delivery charge, in pounds.", "keys": ["3d + c = 410", "5d + c = 630"], "src": ["3 days cost £410", "5 days cost £630"], "why": [null, null], "extra": []},
+{"id": "E13", "text": "5 small gears and 2 large gears weigh 1.55 kg. 3 small gears and 4 large gears weigh 2.05 kg.", "let": "Let s = the mass of a small gear and l = the mass of a large gear, in kg.", "keys": ["5s + 2l = 1.55", "3s + 4l = 2.05"], "src": ["5 small gears and 2 large gears weigh 1.55 kg", "3 small gears and 4 large gears weigh 2.05 kg"], "why": [null, null], "extra": []},
+{"id": "E14", "text": "A pump runs at two speeds. 3 hours on slow and 2 hours on fast move 3,600 litres. 1 hour on slow and 3 hours on fast move 3,300 litres.", "let": "Let s = the litres moved per hour on slow and f = the litres per hour on fast.", "keys": ["3s + 2f = 3600", "s + 3f = 3300"], "src": ["3 hours on slow and 2 hours on fast move 3,600 litres", "1 hour on slow and 3 hours on fast move 3,300 litres"], "why": [null, null], "extra": []},
+{"id": "E15", "text": "Two resistors in series total 15 Ω. If the first is replaced by one of twice its resistance, the series total becomes 21 Ω.", "let": "Let p = the first resistance and q = the second, in ohms.", "keys": ["p + q = 15", "2p + q = 21"], "src": ["Two resistors in series total 15 Ω", "If the first is replaced by one of twice its resistance, the series total becomes 21 Ω"], "why": [null, null], "extra": []},
+{"id": "E16", "text": "An electrician charges a call-out fee plus an hourly rate. 3 hours cost £170. 6 hours cost £290.", "let": "Let f = the call-out fee and h = the hourly rate, in pounds.", "keys": ["f + 3h = 170", "f + 6h = 290"], "src": ["3 hours cost £170", "6 hours cost £290"], "why": [null, null], "extra": []},
+{"id": "E17", "text": "Two tanks hold 2,600 litres in total. The larger holds 600 litres more than the smaller.", "let": "Let l = the larger tank's volume and s = the smaller's, in litres.", "keys": ["l + s = 2600", "l − s = 600"], "src": ["Two tanks hold 2,600 litres in total", "The larger holds 600 litres more than the smaller"], "why": [null, null], "extra": []},
+{"id": "E18", "text": "4 lengths of pipe and 3 elbows cost £37. 2 lengths of pipe and 5 elbows cost £29.", "let": "Let p = the cost of a length of pipe and e = the cost of an elbow, in pounds.", "keys": ["4p + 3e = 37", "2p + 5e = 29"], "src": ["4 lengths of pipe and 3 elbows cost £37", "2 lengths of pipe and 5 elbows cost £29"], "why": [null, null], "extra": []},
+{"id": "E19", "text": "A lathe job costs a set-up charge plus a cost per part. 10 parts cost £85. 25 parts cost £160.", "let": "Let s = the set-up charge and p = the cost per part, in pounds.", "keys": ["s + 10p = 85", "s + 25p = 160"], "src": ["10 parts cost £85", "25 parts cost £160"], "why": [null, null], "extra": []},
+{"id": "E20", "text": "Two forces act in the same direction with a resultant of 50 N. Their difference is 14 N.", "let": "Let p = the larger force and q = the smaller, in newtons.", "keys": ["p + q = 50", "p − q = 14"], "src": ["a resultant of 50 N", "Their difference is 14 N"], "why": [null, null], "extra": []}
+];
+/* WORDS BANK END */
+
+// ============================================================
+//  EqTiles: build a linear equation in two letters from tiles, read it back, mark it (SIM-S5, 9 Oct 2026).
+//  Self-contained (Jon's condition, 9 Oct 2026): its own state, markup and classes (.eqt-*), no reach into the
+//  staged game, so it can be lifted into a shared module if a second game needs it.
+//    build(el, {letters, numbers, lines, onChange}) -> a builder: equation lines and a tile bank
+//    read(builder)        -> each line's tokens
+//    parse(tokens, letters) -> {ok: true, vec} with vec = [A, B, C] for A·l1 + B·l2 + C = 0 (exact fractions),
+//                            or {ok: false, why}
+//    mark(vec, key)       -> true when vec is a non-zero multiple of key: swapped sides, reordered terms,
+//                            rearranged (x = 3y) and scaled (0.1t + 0.2w = 3.7) forms all are; a form with only
+//                            some terms scaled (2c + 3t = 1070 for 2c + 3t = 10.70) is not
+//    markAll(vecs, keys)  -> each line right or wrong; two lines may not use the same key
+//    tokens(s), text(tokens) -> a typed equation as tokens, and tokens as text
+// ============================================================
+var EqTiles = (function () {
+  'use strict';
+  var MINUS = '−';
+  function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = a % b; a = b; b = t; } return a || 1; }
+  function fr(n, d) { if (d < 0) { n = -n; d = -d; } var g = gcd(n, d); return [n / g, d / g]; }
+  // An exact fraction [n, d] from a written number: "36", "10.70", "5,400".
+  function num(s) {
+    var m = /^(\d+)(?:\.(\d+))?$/.exec(String(s).replace(/,/g, ''));
+    if (!m) return null;
+    return fr(parseInt(m[1] + (m[2] || ''), 10), Math.pow(10, (m[2] || '').length));
+  }
+  function add(a, b) { return fr(a[0] * b[1] + b[0] * a[1], a[1] * b[1]); }
+  function mul(a, b) { return fr(a[0] * b[0], a[1] * b[1]); }
+  function zero(a) { return a[0] === 0; }
+  function same(a, b) { return a[0] * b[1] === b[0] * a[1]; }
+
+  // One side: [+|-] term ((+|-) term)*, a term a number, a letter, or a number then a letter.
+  function side(t, letters) {
+    if (!t.length) return null;
+    var acc = [[0, 1], [0, 1], [0, 1]], i = 0, sign = 1;
+    if (t[0].k === '+' || t[0].k === '-') { sign = t[0].k === '-' ? -1 : 1; i = 1; }
+    for (;;) {
+      var c = [1, 1], has = false, at = 2;
+      if (i < t.length && t[i].k === 'n') { c = num(t[i].v); if (!c) return null; has = true; i++; }
+      if (i < t.length && t[i].k === 'l') { at = letters.indexOf(t[i].v); if (at < 0) return null; has = true; i++; }
+      if (!has) return null;
+      acc[at] = add(acc[at], mul([sign, 1], c));
+      if (i >= t.length) return acc;
+      if (t[i].k !== '+' && t[i].k !== '-') return null;
+      sign = t[i].k === '-' ? -1 : 1;
+      if (++i >= t.length) return null;
+    }
+  }
+  function parse(tokens, letters) {
+    var at = -1;
+    for (var i = 0; i < tokens.length; i++) if (tokens[i].k === '=') { if (at >= 0) return { ok: false, why: 'equals' }; at = i; }
+    if (at < 0) return { ok: false, why: 'equals' };
+    var L = side(tokens.slice(0, at), letters), R = side(tokens.slice(at + 1), letters);
+    if (!L || !R) return { ok: false, why: 'form' };
+    var vec = [0, 1, 2].map(function (j) { return add(L[j], [-R[j][0], R[j][1]]); });
+    if (zero(vec[0]) && zero(vec[1])) return { ok: false, why: 'letter' };
+    return { ok: true, vec: vec };
+  }
+  // v is λ·key with λ ≠ 0 exactly when v has a letter in it and every 2×2 minor of (v, key) is zero.
+  function mark(v, key) {
+    if (!v || (zero(v[0]) && zero(v[1]))) return false;
+    for (var a = 0; a < 3; a++) for (var b = a + 1; b < 3; b++) if (!same(mul(v[a], key[b]), mul(v[b], key[a]))) return false;
+    return true;
+  }
+  function markAll(vecs, keys) {
+    var used = {};
+    return vecs.map(function (v) {
+      var j = -1;
+      for (var k = 0; k < keys.length && j < 0; k++) if (mark(v, keys[k])) j = k;
+      if (j < 0) return { ok: false, key: -1 };
+      if (used[j]) return { ok: false, key: j, twice: true };
+      used[j] = true;
+      return { ok: true, key: j };
+    });
+  }
+  // "3a + 2c = 36", "x − 3y = 0" as tokens.
+  function tokens(s) {
+    var out = [], re = /(\d[\d,]*(?:\.\d+)?)|([a-z])|([+=])|([-−])/g, m;
+    while ((m = re.exec(s))) out.push(m[1] ? { k: 'n', v: m[1] } : m[2] ? { k: 'l', v: m[2] } : m[3] ? { k: m[3] } : { k: '-' });
+    return out;
+  }
+  function show(t) { return t.k === 'n' ? (t.label || t.v) : t.k === 'l' ? t.v : t.k === '-' ? MINUS : t.k; }
+  function text(toks) {
+    var s = '';
+    toks.forEach(function (t, i) { s += (i === 0 ? '' : (t.k === 'l' && toks[i - 1].k === 'n') ? '' : ' ') + show(t); });
+    return s;
+  }
+
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+  function build(host, opts) {
+    var b = { lines: [], active: 0, rows: [], onChange: opts.onChange || function () {} };
+    var n = opts.lines || 2, i;
+    host.innerHTML = '';
+    var wrap = el('div', 'eqt'), list = el('div', 'eqt-lines');
+    for (i = 0; i < n; i++) {
+      b.lines.push([]);
+      var row = el('button', 'eqt-line');
+      row.type = 'button'; row.dataset.line = String(i);
+      row.appendChild(el('span', 'eqt-n', '(' + (i + 1) + ')'));
+      row.appendChild(el('span', 'eqt-text'));
+      row.appendChild(el('span', 'eqt-cue', 'building'));
+      row.appendChild(el('span', 'eqt-mark'));
+      row.addEventListener('click', (function (k) { return function () { b.active = k; render(); }; })(i));
+      list.appendChild(row); b.rows.push(row);
+    }
+    var bank = el('div', 'eqt-bank');
+    var tiles = opts.letters.map(function (l) { return { k: 'l', v: l }; })
+      .concat(opts.numbers.map(function (x) { return { k: 'n', v: x.v, label: x.label }; }))
+      .concat([{ k: '+' }, { k: '-' }, { k: '=' }]);
+    tiles.forEach(function (t) {
+      var btn = el('button', 'eqt-tile' + (t.k === 'n' || t.k === 'l' ? '' : ' eqt-op'), show(t));
+      btn.type = 'button'; btn.dataset.k = t.k; if (t.v != null) btn.dataset.v = t.v;
+      btn.setAttribute('aria-label', t.k === '-' ? 'minus' : t.k === '+' ? 'plus' : t.k === '=' ? 'equals' : show(t));
+      btn.addEventListener('click', function () { b.lines[b.active].push(t); render(); });
+      bank.appendChild(btn);
+    });
+    var edit = el('div', 'eqt-edit'), del = el('button', 'eqt-del', 'Delete'), clr = el('button', 'eqt-clear', 'Clear line');
+    del.type = clr.type = 'button';
+    del.addEventListener('click', function () { b.lines[b.active].pop(); render(); });
+    clr.addEventListener('click', function () { b.lines[b.active] = []; render(); });
+    edit.appendChild(del); edit.appendChild(clr);
+    wrap.appendChild(list); wrap.appendChild(bank); wrap.appendChild(edit);
+    host.appendChild(wrap);
+    function render() {
+      b.rows.forEach(function (row, k) {
+        var tx = row.querySelector('.eqt-text'), t = b.lines[k];
+        tx.className = 'eqt-text' + (t.length ? '' : ' eqt-empty');
+        tx.textContent = t.length ? text(t) : 'tap tiles to build it';
+        row.setAttribute('aria-pressed', String(k === b.active));
+        row.setAttribute('aria-label', 'Equation ' + (k + 1) + ': ' + (t.length ? text(t) : 'empty'));
+      });
+      b.onChange(b);
+    }
+    b.render = render;
+    render();
+    return b;
+  }
+  function read(b) { return b.lines.map(function (l) { return l.slice(); }); }
+  function setMarks(b, res) {
+    b.rows.forEach(function (row, k) {
+      row.classList.toggle('eqt-right', !!res[k].ok); row.classList.toggle('eqt-wrong', !res[k].ok);
+      row.querySelector('.eqt-mark').textContent = res[k].ok ? '✓' : '✗';
+    });
+  }
+  return { build: build, read: read, parse: parse, mark: mark, markAll: markAll, setMarks: setMarks,
+    tokens: tokens, text: text, num: num };
+})();
+
 (function () {
   'use strict';
   var SS = window.SS = { BANK: BANK, ALEVEL: ALEVEL };
@@ -533,7 +780,9 @@ var ALEVEL = [
     stage1: { n: 1, rounds: 10, steps: ['mult'], board: 'foundation-s1' },
     stage2: { n: 2, rounds: 8, steps: ['mult', 'op', 'combine'], board: 'foundation-s2' },
     stage3: { n: 3, rounds: 6, steps: ['mult', 'op', 'combine', 'solve', 'sub'], board: 'foundation-s3' },
-    stage4: { n: 4, rounds: 6, steps: ['letter', 'mult', 'op', 'combine', 'solve', 'sub'], board: 'foundation-s4' }
+    stage4: { n: 4, rounds: 6, steps: ['letter', 'mult', 'op', 'combine', 'solve', 'sub'], board: 'foundation-s4' },
+    // Stage 5 (SIM-S5): its own flow below (startForm), two equations a problem, a mark each
+    stage5: { n: 5, rounds: 8, steps: [], board: 'foundation-s5' }
   };
   SS.STAGES = STAGES;
   function $(id) { return document.getElementById(id); }
@@ -654,6 +903,7 @@ var ALEVEL = [
 
   function startGame(items) {
     if (level === 'alevel') { startMC(items); return; }
+    if (stageKey === 'stage5') { startForm(items); return; }
     st = STAGES[stageKey];
     pool = items || shuffle(BANK[stageKey].slice()).slice(0, st.rounds);
     MaffsLock.newSession();
@@ -1019,6 +1269,119 @@ var ALEVEL = [
     if (window.MaffsNext) MaffsNext.wrong({ mount: fb.firstChild, onAdvance: nextMC });
     nextInView(fb);
   }
+  // ---- Stage 5: word problems, write the two equations (SIM-S5, Jon, 9 Oct 2026) ----
+  // Eight problems, at least three W and three E, none repeated; a mark for each equation (each line marked on
+  // its own, either order, never the same key twice). Marking is EqTiles.mark: a non-zero multiple of a key.
+  var FORM_ROUNDS = 8, FORM_EACH = 3, formPool = [], fq = null, fkeys = null, fletters = null, fb5 = null, formTimer = null;
+  SS.WORDS = WORDS;
+  SS.EqTiles = EqTiles;
+  function formLetters(it) {
+    var ls = [];
+    it.keys.join(' ').replace(/[a-z]/g, function (c) { if (ls.indexOf(c) < 0) ls.push(c); return c; });
+    return ls;
+  }
+  // A number as the problem writes it ("10.70", "5,400"), else as the key does.
+  function formLabel(v, it) {
+    var x = EqTiles.num(v), m, re = /\d[\d,]*(?:\.\d+)?/g;
+    while ((m = re.exec(it.text))) { var y = EqTiles.num(m[0]); if (y && y[0] === x[0] && y[1] === x[1]) return m[0]; }
+    return v;
+  }
+  // The tiles: every number the keys need (a coefficient of 1 is never written), then the distractors.
+  function formNumbers(it) {
+    var seen = {}, out = [];
+    function put(v) {
+      var x = EqTiles.num(v), id = x[0] + '/' + x[1];
+      if (seen[id]) return; seen[id] = true;
+      out.push({ v: v.replace(/,/g, ''), label: formLabel(v, it), x: x[0] / x[1] });
+    }
+    it.keys.forEach(function (k) { EqTiles.tokens(k).forEach(function (t) { if (t.k === 'n') put(t.v); }); });
+    it.extra.forEach(put);
+    return out.sort(function (a, b) { return a.x - b.x; });
+  }
+  SS.formNumbers = formNumbers;
+  SS.formLetters = formLetters;
+  function keyVec(k, letters) { return EqTiles.parse(EqTiles.tokens(k), letters).vec; }
+  function keyText(k, it) {
+    return EqTiles.text(EqTiles.tokens(k).map(function (t) { return t.k === 'n' ? { k: 'n', v: t.v, label: formLabel(t.v, it) } : t; }));
+  }
+  function drawForm() {
+    var w = shuffle(WORDS.filter(function (x) { return x.id[0] === 'W'; })), e = shuffle(WORDS.filter(function (x) { return x.id[0] === 'E'; }));
+    var pick = w.slice(0, FORM_EACH).concat(e.slice(0, FORM_EACH));
+    return shuffle(pick.concat(shuffle(w.slice(FORM_EACH).concat(e.slice(FORM_EACH))).slice(0, FORM_ROUNDS - pick.length)));
+  }
+  function startForm(items) {
+    st = STAGES.stage5;
+    formPool = items || drawForm();
+    MaffsLock.newSession();
+    qIdx = 0; total = 0; marks = 0; allRight = 0; maxMarks = formPool.length * 2;
+    $('formMarks').textContent = '0';
+    showS('form'); nextForm();
+    window._ggAbandoned = true;
+    mfg('game_started', { game_slug: SLUG, level: level, mode: mode() });
+    bindUnload();
+  }
+  function nextForm() {
+    MaffsLock.cancel(formTimer);
+    if (window.MaffsNext) MaffsNext.clear($('formFeedback'));
+    $('formFeedback').innerHTML = ''; $('formFeedback').className = 'feedback';
+    $('formCard').classList.remove('fb-open');
+    $('formMsg').textContent = '';
+    if (qIdx >= formPool.length) { endGame(); return; }
+    fq = formPool[qIdx]; qIdx++; total++;
+    state = 'form';
+    window.scrollTo(0, 0);
+    fletters = formLetters(fq);
+    fkeys = fq.keys.map(function (k) { return keyVec(k, fletters); });
+    $('formNum').textContent = total + '/' + formPool.length;
+    $('formText').textContent = fq.text;
+    $('formLet').textContent = fq.let;
+    fb5 = EqTiles.build($('formBuilder'), { letters: fletters, numbers: formNumbers(fq), lines: 2,
+      onChange: function () { $('formMsg').textContent = ''; } });
+    MaffsLock.fresh($('formStep'));   // a new problem: a double-click on Next cannot press a tile or Check
+  }
+  function checkForm() {
+    if (state !== 'form' || MaffsLock.isLocked($('formStep'))) return;
+    var lines = EqTiles.read(fb5), parsed = lines.map(function (t) { return EqTiles.parse(t, fletters); });
+    for (var i = 0; i < 2; i++) {
+      if (!lines[i].length) { $('formMsg').textContent = 'Build both equations, then Check.'; return; }
+      if (!parsed[i].ok) {
+        $('formMsg').textContent = 'Equation ' + (i + 1) + ' is not an equation yet: it needs ' +
+          (parsed[i].why === 'equals' ? 'exactly one =.' : parsed[i].why === 'letter' ? 'a letter in it.' : 'terms like 3a or 36, joined by + or −.');
+        return;
+      }
+    }
+    if (!MaffsLock.lock($('formStep'))) return;   // answered once (canon 7.6.0); not marked until both are equations
+    var res = EqTiles.markAll(parsed.map(function (p) { return p.vec; }), fkeys);
+    EqTiles.setMarks(fb5, res);
+    var right = res.filter(function (r) { return r.ok; }).length, ok = right === 2;
+    marks += right; $('formMarks').textContent = marks;
+    if (ok) allRight++;
+    mfg('question_answered', { game_slug: SLUG, level: level, mode: mode(), question_index: total, correct: ok });
+    var fb = $('formFeedback');
+    $('formCard').classList.add('fb-open');
+    state = 'formfb';
+    if (ok) {
+      fb.className = 'feedback fb right';
+      fb.innerHTML = '<div class="fb-verdict">✓ Both equations right.</div>';
+      formTimer = MaffsLock.timer(nextForm, 1400);
+      return;
+    }
+    // Wrong: each key no line got, and the words it comes from; then Next (Jon: the learning is shown, not skipped).
+    var got = {}; res.forEach(function (r) { if (r.ok) got[r.key] = true; });
+    var h = '<div class="fb-verdict">✗ ' + right + ' of 2 right.</div>';
+    res.forEach(function (r, k) { if (r.twice) h += '<div class="fb-line">(' + (k + 1) + ') is the same equation as (' + (2 - k) + ').</div>'; });
+    fq.keys.forEach(function (key, j) {
+      if (got[j]) return;
+      h += '<div class="fb-line">“' + esc(fq.src[j]) + '” → <span class="eqt-eq">' + esc(keyText(key, fq)) + '</span></div>';
+      if (fq.why[j]) h += '<div class="fb-why">' + esc(fq.why[j]) + '</div>';
+    });
+    fb.className = 'feedback fb wrong';
+    fb.innerHTML = h;
+    if (window.MaffsNext) MaffsNext.wrong({ mount: fb, onAdvance: nextForm });
+    nextInView(fb);
+  }
+  $('formCheck').addEventListener('click', checkForm);
+
   function endMC() {
     state = 'done';
     var pct = Math.round(100 * mcCorrect / mcPool.length);
@@ -1061,7 +1424,7 @@ var ALEVEL = [
 
   // Views and drivers for scripts/verify-simultaneous-solver.py.
   function byId(list, ids) { return ids.map(function (id) { return list.filter(function (x) { return x.id === id; })[0]; }); }
-  function clearAll() { if (window.MaffsNext) { MaffsNext.clear($('feedback')); MaffsNext.clear($('mcFeedback')); } MaffsLock.clearTimers(); }
+  function clearAll() { if (window.MaffsNext) { MaffsNext.clear($('feedback')); MaffsNext.clear($('mcFeedback')); MaffsNext.clear($('formFeedback')); } MaffsLock.clearTimers(); }
   SS.ui = {
     state: function () { return state; },
     item: function () { return q ? JSON.parse(JSON.stringify(q)) : null; },
@@ -1074,10 +1437,15 @@ var ALEVEL = [
     startWith: function (stage, ids) {
       clearAll();
       if (stage === 'alevel') { setLevel('alevel'); startGame(byId(ALEVEL, ids)); }
-      else { setLevel('gcse'); setStage(stage); startGame(byId(BANK[stage], ids)); }
+      else { setLevel('gcse'); setStage(stage); startGame(byId(stage === 'stage5' ? WORDS : BANK[stage], ids)); }
     },
     restart: function () { clearAll(); state = 'menu'; showS('menu'); },
-    keypad: function () { return kp; }
+    keypad: function () { return kp; },
+    // Stage 5: the problem on screen, and its two lines set directly (each a list of tokens)
+    formItem: function () { return fq ? JSON.parse(JSON.stringify(fq)) : null; },
+    formPut: function (lines) { lines.forEach(function (t, i) { fb5.lines[i] = t.slice(); }); fb5.render(); },
+    formRead: function () { return EqTiles.read(fb5); },
+    formIds: function () { return formPool.map(function (x) { return x.id; }); }
   };
 })();
 </script>

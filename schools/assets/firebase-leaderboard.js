@@ -125,7 +125,8 @@
     'higher':'GCSE Higher','formula':'Quadratic formula',
     // Simultaneous Solver: one board per Foundation stage (Jon, 6 Oct 2026).
     'foundation-s1':'Foundation · Stage 1','foundation-s2':'Foundation · Stage 2',
-    'foundation-s3':'Foundation · Stage 3','foundation-s4':'Foundation · Stage 4'
+    'foundation-s3':'Foundation · Stage 3','foundation-s4':'Foundation · Stage 4',
+    'foundation-s5':'Foundation · Stage 5'
   };
 
   // Keys that are not a fixed list. A pattern cannot be inverted, which is one
