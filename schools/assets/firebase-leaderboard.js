@@ -298,6 +298,33 @@
 
       document.body.appendChild(overlay);
 
+      // Keys typed into the overlay act on the overlay only (contract OVERLAY-KEYS, 9 Oct 2026). Games bind
+      // shortcuts on document or window (all in the bubbling phase, none in capture), so a letter typed as
+      // an initial also reached them: prisoners-dilemma restarted a finished game and lost the score.
+      // 1. The overlay stops every key event that bubbles out of it, after its inputs' own handlers have run
+      //    (Enter still submits, Backspace still steps back).
+      // 2. While it is open, a capture-phase guard on window stops keys aimed anywhere else (focus left on
+      //    the page by a tap on the backdrop), and it stays up through the keyup of a key held when the
+      //    overlay closes, so the Enter that submits never reaches the game either.
+      var KEY_EVENTS = ['keydown', 'keypress', 'keyup'];
+      var held = 0, guardOn = true;
+      function contain(e) { e.stopPropagation(); }
+      function guard(e) {
+        if (e.type === 'keydown' && !e.repeat) held++;
+        if (e.type === 'keyup' && held > 0) held--;
+        if (!overlay.isConnected || !overlay.contains(e.target)) e.stopPropagation();
+        if (!overlay.isConnected && held === 0) unguard();
+      }
+      function unguard() {
+        if (!guardOn) return;
+        guardOn = false;
+        KEY_EVENTS.forEach(function(t) { window.removeEventListener(t, guard, true); });
+      }
+      KEY_EVENTS.forEach(function(t) {
+        overlay.addEventListener(t, contain);
+        window.addEventListener(t, guard, true);
+      });
+
       var inputs = overlay.querySelectorAll('.mfg-ini-char');
       var submitBtn = overlay.querySelector('.mfg-ini-submit');
       var skipBtn = overlay.querySelector('.mfg-ini-skip');
@@ -338,7 +365,11 @@
         })(i);
       }
 
-      function cleanup() { overlay.remove(); }
+      function cleanup() {
+        overlay.remove();
+        if (held === 0) unguard();
+        else setTimeout(unguard, 1000);   // a held key's keyup normally ends the guard first
+      }
 
       submitBtn.addEventListener('click', function() {
         var ini = getInitials();
