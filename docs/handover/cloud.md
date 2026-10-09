@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: core-maths-paper2c`
+`cloud-remaining: core-maths-paper2b`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -89,11 +89,11 @@ budget; E is at 491 s and takes nothing new).
   + half a 4 px edge; grazes were 19.8-21.1 px, next edge 28.1 px), no exemptions. **complex-converter ids 20, 28, 53
   stay on the principal range (-pi < arg z <= pi), as merged in #216: no change.** Main's #217 run went over budget
   in B4 and L2 (no test failed); one re-run passed.
-- **8 wrong-on-the-internet: #223** (open; #220-#222 are the home lane's). Not merged while main is red: main's runs
-  on #220 and #219 failed only "CI timings and pack (main only)" (`gh api .../jobs/<id>/logs` exit 1; CI-BALANCE's
-  job, the home lane's fix is #222). #222's own main run (37966843652): Gate green, the timings step hung silently
-  until the job's 5-minute timeout (cancelled). **For the home lane:** the log fetch still fails with the retries;
-  a guess, unverified: jobs of the same, still-running run may not serve logs yet. Merge #223 once main is green.
+- **8 wrong-on-the-internet: #223, merged 4094b01** after main went green on #224 (run 37969653160). The wheel is
+  stated (European, single zero; key 18/37) and A and B are said to be independent in their post.
+- **9 core-maths-paper2c: #225.** Q12 stem opens "f is a quadratic."; Q35 `accept: [1, 3]` (Jon 16:21): selectAnswer
+  marks against `q.accept || [q.correct]`, the lock hint picks outside it, the working says why both "Yes" are right;
+  t4-001 fixed by F1 batch 10. New `verify-core-maths-paper2c.py` (~25 s).
 - **CI (CI-BALANCE, #220):** groups are packed now. A new verifier's header is `# ci-line: <label> | <args>` (no
   group id); untimed lines get a group each until main's timings job records them. `ci-groups.py --check` locally.
 - **Local checks used for each PR** (the sandbox cannot reach the KaTeX CDN): check-changed's plan, the answer lock for
@@ -103,9 +103,6 @@ budget; E is at 491 s and takes nothing new).
 - **Remaining, in order.** Drafts (page edits, verifiers, item-13 evidence) survive a clear in the session scratchpads
   under `/tmp/claude-0/-home-user-maffsgames/` (5dd7a927.../scratchpad and 8451d901.../scratchpad); each was checked
   9 Oct: passes the fixed page, fails main's (or the pre-batch) page.
-  - 9 core-maths-paper2c: Q12 stem starts "f is a quadratic."; Q35 `accept:[1,3]` (Jon 16:21), selectAnswer marks
-    against `q.accept || [q.correct]`, lock hint picks outside it, working says why both "Yes" are right; t4-001
-    fixed by F1 batch 10 (a Next tap then an option tap inside the fresh window marks nothing). Verifier ~26 s: E2.
   - 10 core-maths-paper2b: Q28 option D -> "Neither — both premiums cost more than the expected loss" (false:
     £900 < £1,000 for the data breach).
   - 11 boolean-blitz: in-game boolParse/minSopLiterals/sameAnswer; right = the key's truth table AND literals <=
