@@ -707,46 +707,10 @@
       "register": "complex-converter-t6-007"
      },
      {
-      "detail": "QUESTIONS.level4[20]: '5\\\\angle -53.13°' = '5\\\\angle 306.87°' (the marked answer is one of them)",
-      "id": "complex-converter::6c05eea5f3d5#1::B11::[\"5\\\\angle -53.13°\", \"5\\\\angle 306.87°\"]",
-      "line": null,
-      "register": "complex-converter-t6-001"
-     },
-     {
-      "detail": "QUESTIONS.level4[39]: '-8e^{j\\\\pi/2}' = '8e^{-j\\\\pi/2}' (the marked answer is one of them)",
-      "id": "complex-converter::1192c2154279#1::B11::[\"-8e^{j\\\\pi/2}\", \"8e^{-j\\\\pi/2}\"]",
-      "line": null,
-      "register": "complex-converter-t6-002"
-     },
-     {
-      "detail": "QUESTIONS.level4[47]: '-6e^{j\\\\pi/2}' = '6e^{-j\\\\pi/2}' (the marked answer is one of them)",
-      "id": "complex-converter::4e6d2e5cc6e4#1::B11::[\"-6e^{j\\\\pi/2}\", \"6e^{-j\\\\pi/2}\"]",
-      "line": null,
-      "register": "complex-converter-t6-003"
-     },
-     {
       "detail": "QUESTIONS.further[14]: '3\\\\angle 30°' = '3\\\\angle \\\\pi/6' (the marked answer is one of them)",
       "id": "complex-converter::c1e7f5fc4803#2::B11::[\"3\\\\angle 30°\", \"3\\\\angle \\\\pi/6\"]",
       "line": null,
       "register": "complex-converter-t6-007"
-     },
-     {
-      "detail": "QUESTIONS.further[20]: '5\\\\angle -53.13°' = '5\\\\angle 306.87°' (the marked answer is one of them)",
-      "id": "complex-converter::6c05eea5f3d5#2::B11::[\"5\\\\angle -53.13°\", \"5\\\\angle 306.87°\"]",
-      "line": null,
-      "register": "complex-converter-t6-001"
-     },
-     {
-      "detail": "QUESTIONS.further[39]: '-8e^{j\\\\pi/2}' = '8e^{-j\\\\pi/2}' (the marked answer is one of them)",
-      "id": "complex-converter::1192c2154279#2::B11::[\"-8e^{j\\\\pi/2}\", \"8e^{-j\\\\pi/2}\"]",
-      "line": null,
-      "register": "complex-converter-t6-002"
-     },
-     {
-      "detail": "QUESTIONS.further[47]: '-6e^{j\\\\pi/2}' = '6e^{-j\\\\pi/2}' (the marked answer is one of them)",
-      "id": "complex-converter::4e6d2e5cc6e4#2::B11::[\"-6e^{j\\\\pi/2}\", \"6e^{-j\\\\pi/2}\"]",
-      "line": null,
-      "register": "complex-converter-t6-003"
      }
     ],
     "status": "fail"

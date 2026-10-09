@@ -17,7 +17,13 @@ findings:
   where: games/complex-converter/index.html:331 (id 21)
   summary: 3 − 4j keyed 5∠−53.13°; 5∠306.87° is the same number and is marked wrong; no angle range stated
   evidence: −53.13 + 360 = 306.87; context 'Find polar form.' (ids 20, 28, 53 say 'positive angle')
-  status: open
+  status: fixed
+  pr: 216
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 5: every polar and exponential question states the principal
+    argument ("giving θ with −180° < θ ≤ 180°", "−π < θ ≤ π"); ids 20, 28, 30, 38 and 53 keyed in it (the same numbers),
+    their "positive angle" wording removed; a second form of the key removed from ids 20, 21, 28, 40 and 48; the stored
+    argDeg/argRad that Triples shows principal on every item. scripts/verify-complex-converter.py reads every option as a
+    number and fails main''s page here.'
 - id: complex-converter-t6-002
   severity: MEDIUM
   jc: true
@@ -26,7 +32,11 @@ findings:
   where: games/complex-converter/index.html:350 (id 40)
   summary: −8e^{jπ/2} equals 8∠−90° but is a wrong option; form requires r>0 unstated
   evidence: −8(cos90°+j sin90°) = −8j = 8∠−90°
-  status: open
+  status: fixed
+  pr: 216
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 5: "check that no item''s options contain two forms of the same
+    number". The negative-modulus option on id 40, equal to the key, is replaced by a nameable error;
+    scripts/verify-complex-converter.py fails any option equal in value to the key.'
 - id: complex-converter-t6-003
   severity: MEDIUM
   jc: true
@@ -35,7 +45,11 @@ findings:
   where: games/complex-converter/index.html:358 (id 48)
   summary: −6e^{jπ/2} equals −6j but is a wrong option
   evidence: −6·j = −6j
-  status: open
+  status: fixed
+  pr: 216
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 5: "check that no item''s options contain two forms of the same
+    number". The negative-modulus option on id 48, equal to the key, is replaced by a nameable error;
+    scripts/verify-complex-converter.py fails any option equal in value to the key.'
 - id: complex-converter-t6-004
   severity: MEDIUM
   jc: false
