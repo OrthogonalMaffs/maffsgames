@@ -35,14 +35,14 @@ start-up load). When the work merges, move the file to `docs/history/`.
 
 **Queue:** UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
-`docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: fix PR #PRNUM (contract, amendment and Jon's answers
+`docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: fix PR #207 (contract, amendment and Jon's answers
 of 9 Oct, 11:00, now in `docs/history/contracts/2026-10-0[89]-ft-fix*.md`). The queue is then empty: stop for Jon.
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #PRNUM; Jon's answers 11:00; unlisted, so no claim)
+## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #207; Jon's answers 11:00; unlisted, so no claim)
 
 - **Answer buttons (answers 1):** Q33 ("Which line proves it?") and T9(c) are four shuffled buttons each, the
   contract's lines, marked by `dataset.val` on Check or Submit (with T9's other parts); the explanation shows after

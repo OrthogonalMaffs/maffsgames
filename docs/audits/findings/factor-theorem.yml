@@ -54,7 +54,7 @@ findings:
   ruling: 'FT-FIX (Jon, 8 Oct 2026; answers 9 Oct, item 1): Q33 asks "Which line proves it?" and is four shuffled
     buttons, the contract''s lines, marked by dataset.val. verify-factor-theorem.py checks every line''s working for
     every positive integer n (only the key proves it) and marks each button in Chromium; a typed key that is prose fails.'
-  pr: PRNUM
+  pr: 207
 - id: factor-theorem-t5-005
   severity: HIGH
   jc: false
@@ -67,7 +67,7 @@ findings:
   ruling: 'FT-FIX (Jon, 8 Oct 2026; answers 9 Oct, item 1): T9(c) is four shuffled buttons inside the Test question,
     marked by dataset.val on Submit with the other parts. verify-factor-theorem.py checks from s(t) that each wrong
     option is false at every t it names (v and a are not 0 there) and that the key holds, and marks each in Chromium.'
-  pr: PRNUM
+  pr: 207
 - id: factor-theorem-t5-006
   severity: HIGH
   jc: true
@@ -156,7 +156,7 @@ findings:
     value given is never logged or submitted. The page never reads ?level (said in a comment); verify-factor-theorem.py
     proves it for no ?level, alevel, level4, xyz and __proto__. Removing L4 from the roster row, the portal filter and the
     spec map is the home lane''s, at relisting.'
-  pr: PRNUM
+  pr: 207
 - id: factor-theorem-t5-014
   severity: MEDIUM
   jc: true
@@ -168,7 +168,7 @@ findings:
   status: fixed
   ruling: 'Jon, 8 Oct 2026 (FT-FIX): Practice, with its scaffolds, does not go on the leaderboard; its 3/2/1 score stays
     on screen as feedback. Its submitScore call (and its device-local score-history record, which nothing reads) removed.'
-  pr: PRNUM
+  pr: 207
 - id: factor-theorem-t5-015
   severity: MEDIUM
   jc: true
@@ -180,7 +180,7 @@ findings:
   status: fixed
   ruling: 'Jon, 8 Oct 2026 (FT-FIX): only the Test (max 41) submits, to factor_theorem_alevel; Practice submits nothing.
     The board was empty when checked (Jon, 8 Oct, 18:52), so no mixed scores exist on it.'
-  pr: PRNUM
+  pr: 207
 - id: factor-theorem-t5-016
   severity: MEDIUM
   jc: true
@@ -214,7 +214,7 @@ findings:
     px at 390 and 320 at 320 (its lines scroll inside their card); no literal ___ in any rendered question and no <span in
     any attribute; question_index is qIdx + 1 in both modes; the hint button is off after marking; Enter checks. Fixed in
     this PR: a wrong answer now waits on the shared Next control (MaffsNext, canon 7.6), a right one on Next Question.'
-  pr: PRNUM
+  pr: 207
 - id: factor-theorem-t5-019
   severity: MEDIUM
   jc: false
