@@ -84,7 +84,8 @@
   "Truth Buster (every key reviewed against its statement's own words, SR-18; every reveal figure recomputed; all 60 played in Chromium)": "15",
   "UK rates module (unit tests against the gov.uk 2025/26 figures)": "16",
   "Unit Converter (every key recomputed from its prompt, exact pi; precision stated; displayed numbers comma-grouped, marking unchanged; answer once; level key; score by correct answers only; calculator on a phone)": "17",
-  "Word Problem Decoder (one category scheme, SR-18: every phrase marked right under exactly the topics that fit it, played in Chromium; answer once)": "15"
+  "Word Problem Decoder (one category scheme, SR-18: every phrase marked right under exactly the topics that fit it, played in Chromium; answer once)": "15",
+  "Wrong on the Internet (every convention a key needs stated in its post; Jon's rulings on the wheel and independence; every option marked in Chromium)": "12"
  },
  "lock": {
   "Answer lock in play, part 1 (canon 7.6.0: self-test, static rules; migrated games played in Chromium)": "L1",
