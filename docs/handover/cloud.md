@@ -71,7 +71,7 @@ budget; E is at 491 s and takes nothing new).
   the game), the explanation says why both are right; the rest as written.
 - **4 coordinate-geometry-dash: #214.** x = 3t, y = 4/t: options xy = 12 (key), xy = 7, y = 12x, x = 3y/4. New
   `verify-coordinate-geometry-dash.py` (B2, ~4 s): all 45 keys recomputed, equations compared as curves.
-- **5 complex-converter: #215.** The contract's "apply it to every item" taken literally: the target line states
+- **5 complex-converter: #216** (#215 was the home lane's RULINGS-9OCT). The contract's "apply it to every item" taken literally: the target line states
   the range on every polar and exponential question; ids 20, 28, 30, 38, 53 keyed principal (same numbers; ids 20,
   28 and 53 said "positive angle", which went); a second form of the key removed from ids 20, 21, 28, 40, 48 (40
   and 48 had a negative-modulus twin); argDeg/argRad principal everywhere (Triples' cards). New
