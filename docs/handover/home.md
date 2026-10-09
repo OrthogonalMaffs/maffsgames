@@ -5,14 +5,20 @@
 main-only "CI timings and pack" job alone: the job-log API refused the workflow's token; #224 reads the timings from
 artifacts instead. Every content group is now at most 69% of its budget. Main green again after #218 (18f5da8, run 37970610295).
 
-**HOME LANE, 9 OCT EVENING (Jon's 16:10 queue, reordered 18:00 and 19:00): IN PROGRESS.** Done: RULINGS-9OCT (#215),
-CI-BALANCE (#220, then #222 and #224 to fix its timings job; merged ahead of #218 because #218's L1 went over
-budget), GRAPH-SKETCHER-FIT (#218, with the answer lock in six parts). HOOK-FIX (#221), OVERLAY-KEYS (#232).
-PLAY-AGAIN-SCREEN (#234, #237), SCORES-OFFLINE (#238), SCI-CALC (this PR). Next: DOCS-9OCT, checkpoint, PREPUSH-SCOPE,
-LIBRARY-DRAFT. **CAR-TRAP-DRAFT moved to the CLOUD LANE (Jon, 20:17); the home lane does not start it.** Its
-contract is on main, verbatim: `docs/handover/contracts/2026-10-09-car-trap-draft.md` (committed dc43926, merged in
-#221). LIBRARY-DRAFT (Jon, 19:35; new ★ room, Mrs Barb Phile's library) starts after The Rightful King and Car
-Trap drafts; its contract is saved verbatim under contracts/ when it starts.
+**CHECKPOINT (Jon asked, 9 Oct late).** Main green at cfe0861. Merged tonight: #215, #220/#222/#224 (CI-BALANCE),
+#218, #221 (HOOK-FIX), #232 (OVERLAY-KEYS), #233, #234/#237 (PLAY-AGAIN-SCREEN), #238 (SCORES-OFFLINE).
+**#239 SCI-CALC merged after the checkpoint (9f51dc7, Jon: "merge in whatever order makes the most sense"); its
+contract moved to `docs/history/contracts/`. This handover (#240) merged after it.** **DOCS-9OCT: started, nothing
+applied**: its two STOP IFs are clear (factor-theorem has no open CRITICAL or HIGH;
+timer-policy.md still lists Unit Converter under the silent timer). The relist is scripted from the unlisting
+commit e419439 (roster #88 A-Level only, both portal cards, sitemap, hub row + NOT_ON_HUB, spec-map B6 rows, canon
+96, todo 1.62), kept at `~/.maffsgames-local/docs-9oct-relist-factor-theorem.py` on the home machine; then canon §0.2,
+§7.8 lane rules, timer-policy, the rulings in §7.6. **After it:** PREPUSH-SCOPE (no contract yet: Jon to paste),
+then LIBRARY-DRAFT (Jon, 19:35; new ★ room, Mrs Barb Phile's library; parked: after The Rightful King and Car Trap
+drafts; its contract is saved verbatim under contracts/ when it starts). CAR-TRAP-DRAFT is the cloud lane's
+(merged #235); its contract is `docs/handover/contracts/2026-10-09-car-trap-draft.md`.
+**Open for Jon:** Escape on the initials overlay (never handled; like Skip?); further scientific tagging (candidates
+in the SCI-CALC entry).
 
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
 `docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
@@ -38,7 +44,7 @@ failed jobs passed (run 37875059753, attempt 2).
 CAR-TRAP-DRAFT: the cloud lane's (Jon, 20:17); contract at
 `docs/handover/contracts/2026-10-09-car-trap-draft.md` on main (HOOK-FIX let it through the hook). Jon also sent the
 IT room rewrite brief (Narry, secret ballot; 3 open rulings): a brief, not yet a contract, saved as
-contracts/2026-10-09-it-room-brief.md. SCI-CALC (item 6) is saved as contracts/2026-10-09-sci-calc.md.
+contracts/2026-10-09-it-room-brief.md. SCI-CALC (item 6) is saved as docs/history/contracts/2026-10-09-sci-calc.md.
 - **Answer-lock L1 flake:** act only if it recurs (the follow-up below stands).
 - **Standing F1 item: done for every listed game but graph-sketcher** (NOT_YET: glorious-gantt, unlisted and the cloud
   lane's; graph-sketcher, blocked by its phone overflow, batch 10 entry). unit-converter loads the lock (cloud lane,
