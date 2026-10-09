@@ -56,6 +56,8 @@ main's last full run is red; watch main's run after merging.
 - **Verifier** (group E): solutions held only there; every key's forms marked by the page's own EqTiles; tiles
   build every key; 60 draws; sessions tapped at 390x844 and 1280x900; MaffsLock; 3 plants. Stage 5 adds ~30 s.
   check-answer-lock seeds 1-3 PASS. **For the home lane:** the roster row could mention Stage 5 (yours).
+- **For the home lane (SIM-S5 item 9): the build freeze has one named exception, Jon, 9 Oct 2026 (00:25): Simultaneous
+  Solver Stage 5 only. Record it in canon §0.2 and the todo ("Stage 5 is parked under it" no longer holds).**
 
 ## 2026-10-09 (cloud): SIM-S5 claimed (Jon's answers, 08:10)
 
