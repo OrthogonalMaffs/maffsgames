@@ -64,7 +64,7 @@
   "Screening Room (every count, band and key from the stated rates; every figure from the data; all 70 items marked in Chromium)": "11",
   "Sequence Solver (every key recomputed from its own terms or formula, exactly; options distinct in value; every option marked in Chromium)": "16",
   "Seven Bridges (every puzzle's answer recomputed from its edges, no edge drawn through a vertex it does not join, the solution animation stops at Next; Chromium)": "16",
-  "Shared answer lock (schools/assets/answer-lock.js, MaffsLock: every behaviour in Chromium, four planted faults)": "9",
+  "Shared answer lock (schools/assets/answer-lock.js, MaffsLock: every behaviour in Chromium, four planted faults)": "17",
   "Shared exam vocabulary tooltips (schools/assets/exam-vocab.js: idempotent on every Factor Theorem string, no markup in an attribute, the old function planted and caught)": "16",
   "Shared statistics module (unit tests against textbook values)": "16",
   "Simultaneous Solver (staged elimination: every solution and bank rule recomputed; SR-13 step marking and a Stage 4 problem on the phone keypad in Chromium; Stage 5 word problems: unique solutions, every key form marked, tiles build every key, a session played)": "7",
@@ -83,7 +83,7 @@
   "Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)": "15",
   "Truth Buster (every key reviewed against its statement's own words, SR-18; every reveal figure recomputed; all 60 played in Chromium)": "15",
   "UK rates module (unit tests against the gov.uk 2025/26 figures)": "16",
-  "Unit Converter (every key recomputed from its prompt, exact pi; precision stated; displayed numbers comma-grouped, marking unchanged; answer once; level key; score by correct answers only; calculator on a phone)": "12",
+  "Unit Converter (every key recomputed from its prompt, exact pi; precision stated; displayed numbers comma-grouped, marking unchanged; answer once; level key; score by correct answers only; calculator on a phone)": "17",
   "Word Problem Decoder (one category scheme, SR-18: every phrase marked right under exactly the topics that fit it, played in Chromium; answer once)": "15"
  },
  "lock": {
@@ -91,6 +91,7 @@
   "Answer lock in play, part 2 (canon 7.6.0: migrated games played in Chromium)": "L2",
   "Answer lock in play, part 3 (canon 7.6.0: migrated games played in Chromium)": "L3",
   "Answer lock in play, part 4 (canon 7.6.0: migrated games played in Chromium)": "L4",
-  "Answer lock in play, part 5 (canon 7.6.0: migrated games played in Chromium)": "L5"
+  "Answer lock in play, part 5 (canon 7.6.0: migrated games played in Chromium)": "L5",
+  "Answer lock in play, part 6 (canon 7.6.0: migrated games played in Chromium)": "L6"
  }
 }
