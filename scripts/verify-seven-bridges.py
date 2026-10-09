@@ -11,16 +11,19 @@ The tranche 4 audit of 6 Oct 2026 found (contract LISTED-HIGH, 9 Oct 2026):
                         timers, and the Next control's advance cancels them); this verifier keeps it fixed.
   seven-bridges-t4-002  al_15's E sat at the midpoint of AC and BD, so edges A-C and B-D were drawn through E:
                         the screen showed four odd vertices where the data has none.
+  Jon's ruling (9 Oct 2026, 18:03): the same fault, edges grazing a vertex's disc at 19.8-21.1 px, in al_10
+  (A-C by B, B-D by C), al_18 (E-G by F) and al_21 (K-O by B, B-W by O) is fixed too: CLEAR rose to 28 px and
+  each layout now mirrors its own other half (B and C, B and O up 20 px; F down 30 px). Edges unchanged.
 
 Checks:
   every puzzle: degrees from its edges give its oddVertices, hasEulerianPath (connected, 0 or 2 odd) and
   hasEulerianCircuit; its sampleSolution uses every edge exactly once (an Euler circuit when it says so);
   every edge, drawn as the page draws it (a line, or a curve for parallel edges), passes no vertex it does not
-  join by less than CLEAR px (a vertex is drawn with radius 22);
+  join by less than CLEAR px (28: the current vertex's disc and stroke, and half an edge's width);
   in Chromium (390x844, the real timers), on one level (the animation is one function for all three): a wrong
   "Impossible" on a possible puzzle, Next pressed while its solution is still being drawn, and the next puzzle
   must open with nothing traced, and stay so.
-A self-test plants al_15's old E and a raw setTimeout in the animation (main before F1 batch 9); each must FAIL.
+A self-test plants al_15's old E, al_10's, al_18's and al_21's old vertices, and a raw setTimeout in the animation (main before F1 batch 9); each must FAIL.
 
     python scripts/verify-seven-bridges.py [--no-selftest] [--against FILE]
 """
@@ -40,10 +43,11 @@ import bank_common as bc  # noqa: E402
 SLUG = 'seven-bridges'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 BANKS = {'ks3': 'KS3_PUZZLES', 'gcse': 'GCSE_PUZZLES', 'alevel': 'ALEVEL_PUZZLES'}
-CLEAR = 24          # px between an edge and a vertex it does not join: a vertex is drawn with radius 22 (24 current)
-# Edges that graze a vertex's disc (20-21 px) in puzzles t4-002 does not name. Reported to Jon with contract
-# LISTED-HIGH (9 Oct 2026); its DO NOT TOUCH keeps them as they are until he rules. (puzzle, edge, vertex).
-KNOWN_GRAZES = {('al_10', 'A-C', 'B'), ('al_10', 'B-D', 'C'), ('al_18', 'E-G', 'F'), ('al_21', 'K-O', 'B'), ('al_21', 'B-W', 'O')}
+# px between an edge and the centre of a vertex it does not join. The drawing sets it: the current vertex is a disc
+# of radius 24 with a 4 px stroke (26 px out), and an edge is at most 4 px wide (2 px each side), so an edge nearer
+# than 28 px can touch a vertex on screen (Jon, 9 Oct 2026, 18:03). Measured on main: the five grazes in al_10, al_18
+# and al_21 at 19.8-21.1 px; every other edge 28.1 px (gcse_10) or more.
+CLEAR = 28
 
 
 def banks(html):
@@ -124,7 +128,7 @@ def check_bank(fails, bk):
                     if vid in e:
                         continue
                     d = min(math.hypot(x - px, y - py) for px, py in pts)
-                    if d < CLEAR and (p['id'], '%s-%s' % tuple(e), vid) not in KNOWN_GRAZES:
+                    if d < CLEAR:
                         fails.append('%s: edge %s-%s is drawn %.0f px from %s, a vertex it does not join (t4-002)'
                                      % (w, e[0], e[1], d, vid))
 
@@ -186,6 +190,15 @@ PLANTS = [
     ('alevel al_15', "t4-002: al_15's E at the midpoint of AC and BD",
      '{"id":"E","x":300,"y":150}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["A","E"]',
      '{"id":"E","x":300,"y":200}],"edges":[["A","B"],["B","C"],["C","D"],["D","A"],["A","E"]'),
+    ('alevel al_10', "al_10's B and C at y 60 (A-C, B-D grazing them)",
+     '{"id":"B","x":250,"y":40},{"id":"C","x":400,"y":40},{"id":"D","x":550,"y":100}',
+     '{"id":"B","x":250,"y":60},{"id":"C","x":400,"y":60},{"id":"D","x":550,"y":100}'),
+    ('alevel al_18', "al_18's F at y 390 (E-G grazing it)",
+     '{"id":"E","x":450,"y":370},{"id":"F","x":300,"y":420}',
+     '{"id":"E","x":450,"y":370},{"id":"F","x":300,"y":390}'),
+    ('alevel al_21', "al_21's B and O at y 60 (K-O, B-W grazing them)",
+     '{"id":"B","x":220,"y":40},{"id":"O","x":380,"y":40}',
+     '{"id":"B","x":220,"y":60},{"id":"O","x":380,"y":60}'),
     ('ks3 (t4-001)', 't4-001: the animation on a raw setTimeout (before F1 batch 9)',
      '      MaffsLock.timer(nextStep, delay);\n    }\n  }\n\n  nextStep();',
      '      setTimeout(nextStep, delay);\n    }\n  }\n\n  nextStep();'),

@@ -87,7 +87,12 @@ budget; E is at 491 s and takes nothing new).
   fixed by F1 batch 9 (closed with measurements). `verify-seven-bridges.py` in **E2** (~12 s); fails main's page on
   al_15 A-C and B-D. Main's run on #217 (37960745833): B4 6m39s and L2 6m36s over their 6m budgets, no test failed
   (B4 was 340 s wall on #216's run, nothing in it changed: a slow runner on a group near budget); failed jobs re-run
-  once. **For the home lane (CI-BALANCE): B4 and B3 now sit near budget, as L1-L5 do.**
+  once; it passed (main green). **For the home lane (CI-BALANCE): B4 and B3 now sit near budget, as L1-L5 do.**
+  **Jon's rulings, 9 Oct 18:03 (addendum, folded into #219):** al_10, al_18 and al_21's grazing edges FIXED: each
+  layout mirrors its own other half (al_10 B, C and al_21 B, O to y 40; al_18 F to y 420), edges unchanged;
+  `CLEAR` 28 px (current vertex r 24 + 2 px stroke + half a 4 px edge; grazes were 19.8-21.1 px, next edge 28.1 px),
+  KNOWN_GRAZES deleted. **complex-converter ids 20, 28, 53 stay on the principal range (-pi < arg z <= pi), as
+  merged in #216: no change.**
 - **CI notes:** E split into E/E2 by #213. On main, B2 ~230 s and B1 ~260 s of 360; E ~330 and E2 ~265 of 540.
   Put heavy new verifiers in E2. Answer-lock L1-L5 sit at 290-345 s of 360 since #215 added unit-converter: #217's
   first run went over (L2/L4/L5), one re-run passed; the home lane's CI-BALANCE item covers it.
