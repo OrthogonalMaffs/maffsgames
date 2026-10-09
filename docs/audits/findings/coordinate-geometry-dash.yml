@@ -19,7 +19,12 @@ findings:
     is accepted'
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 2. The game''s own working says ''xy = 12, or equivalently
     y = 12/x'''
-  status: open
+  status: fixed
+  pr: 214
+  ruling: 'Contract LISTED-HIGH (Jon, 9 Oct 2026), item 4: the options are now xy = 12 (the key), xy = 7, y = 12x and
+    x = 3y/4: exactly one correct, the others genuine errors. scripts/verify-coordinate-geometry-dash.py recomputes all 45
+    keys and reads every equation as a curve (y = 12/x and xy = 12 are the same), so an unkeyed correct option fails;
+    it fails main''s page here and nowhere else.'
 - id: coordinate-geometry-dash-t1-002
   severity: MEDIUM
   jc: false
