@@ -63,7 +63,8 @@ main's last full run is red; watch main's run after merging.
   no timer at all (the No Timer list). Either the list moves it (home lane's file) or Jon wants the time on results.
 - **Filed, open, for Jon:** t4-007 (LOW): "1 mile = 1609 m" is not exact (1609.344); the key is 26.8 either way.
   The verifier reports it as a NOTE. The bank is **58** items (I said 59 to Jon in the session; corrected).
-- **Verifier** `scripts/verify-unit-converter.py`, group B3 (about 35 s; self-test 10 plants, about 1 min). Reads
+- **Verifier** `scripts/verify-unit-converter.py`, group B4 (79 s in CI with its self-test; B3 reached 5m51s of its 6m
+  budget with it, so it moved to B4, which ran 3m25s). Reads
   marks from page classes, events through the defineProperty hook (canon §7.9), speed by a skewed Date.now (not
   Playwright's clock: it replays every animation frame, so main's rAF clock took minutes).
 - **Sandbox gotchas (this container):** pip's newest Playwright wants a browser build not in /opt/pw-browsers: pin
