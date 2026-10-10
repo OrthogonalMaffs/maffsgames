@@ -1,5 +1,21 @@
 # Handover: home lane
 
+**PREPUSH-SCOPE: STOPPED on its STOP IF (10 Oct; branch `claude/prepush-scope`, not merged, no PR).**
+Cause **(b)**: `check-changed.py` already selects through `ci-deps.select` (CI's own function); a shared-asset
+change rightly selects every game, and the checks ran one at a time. There is no installed pre-push hook: the
+"pre-push check" is `check-changed.py`, run by hand. **Before** (old runner, serial, on b40a475's tree):
+docs-only 22 checks 353 s; one-game (`games/angle-ace`) 29 checks 1565 s; shared asset (#232's files) 119
+checks 4198 s (70 min). **After** (branch: 6 workers, longest first from ci-timings.json, `--files`, a
+printed "checks deferred to CI: ..." line; the shared-asset tests now always run, as CI runs them):
+docs-only 26 checks **133 s wall** (355 s of check time), all passed; one-game 33 checks 308 s wall (1592 s
+of check time) **but all six "Answer lock in play" parts FAILED** (games UNPLAYABLE after Start, one driver
+error): they play games concurrently inside themselves, and six at once overloads the machine. That is the
+STOP IF ("parallel runs make any check flaky"). The shared-asset after-run was then stopped by Claude Code
+for low system memory (not restarted, per its rule). **Needs Jon:** e.g. run the answer-lock parts (and other
+browser-heavy lines) one at a time beside the light ones, or fewer workers; then re-measure. Local-only
+failures seen in the serial before-runs, unrelated: Negative Number Line 320x568 fold (fails on main too),
+core-maths-paper1 UNPLAYABLE under load, Test the Claim ReferenceError under the local node.
+
 **ESCAPE-DIFFICULTY (10 Oct, Jon's contract 13:05, after CAR-TRAP-RELEASE; contract
 `docs/handover/contracts/2026-10-10-escape-difficulty.md`).** Every live lock has `grade: N`; a room's
 rating is its hardest lock's band (★ Warm-up 1–3, ★★ Core 4–5, ★★★ Challenge 6–9), drawn by the new
