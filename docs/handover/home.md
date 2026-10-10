@@ -51,9 +51,8 @@ sessions and the E2 one-off; timer-policy: Unit Converter to No Timer. **Escape 
 19:42): left as is, Skip stays the way out; Escape-to-close is deferred to a future accessibility pass, because an
 accidental Escape would discard a leaderboard entry** (the OVERLAY-KEYS contract's "Escape closes the overlay as now"
 was Project Claude's error; recorded on #232 too). **Next: PREPUSH-SCOPE** (contract
-`docs/handover/contracts/2026-10-09-prepush-scope.md`), then LIBRARY-DRAFT (Jon, 19:35; new ★ room, Mrs Barb Phile's
-library; parked until The Rightful King and Car Trap drafts exist; its contract is saved verbatim when it starts).
-CAR-TRAP-DRAFT is the cloud lane's (merged #235). **Open for Jon:** further scientific tagging (candidates in the
+`docs/handover/contracts/2026-10-09-prepush-scope.md`). LIBRARY-DRAFT moved to the cloud lane (Jon, 10 Oct 09:30);
+Car Trap moved the other way: the home lane owns it end to end (#242, entry above). **Open for Jon:** further scientific tagging (candidates in the
 SCI-CALC entry). Finished home-lane contracts (home-queue, its addendum, hook-fix, overlay-keys) moved to `docs/history/contracts/` in
 this PR; the cloud lane's (listed-high, car-trap) and the IT room brief stay.
 
