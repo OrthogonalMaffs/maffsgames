@@ -99,8 +99,9 @@ main's last full run is red; watch main's run after merging.
   left); rooms go before Car Trap, as #271 has them (newest first).
 - **Done:** New gains stars (#253), calculator (#239, #261, #264-#267) and scores (#238) after Car Trap; Corrected
   gains Boolean Blitz (#227), 2C (#225), 2B (#226), Wrong on the Internet (#223) at the top (newest first).
-- **Rooms:** #271 not merged, rooms noindex on main, so the approved room lines are in `home.md` (ROOMS-RELEASE-RK-LJ
-  step 7) for the home lane, word for word. Log Laws: no fix merged, item left out.
+- **Rooms:** #271 merged while #272 was open (main run 755 green), so the two room lines #271 added are replaced
+  with Jon's approved text, in #271's placement (before Car Trap). The interim home.md note is removed (the cloud
+  lane's own addition; home.md otherwise as main). Log Laws: no fix merged, item left out.
 
 ## 2026-10-10 (cloud): LIBRARY-JAM-BUILD, The Library Jam built behind its holding page (for Jon's play-test)
 

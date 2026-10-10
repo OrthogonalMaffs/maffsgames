@@ -36,15 +36,6 @@ display), winAlt unchanged; the RULE (no `missArt`) kept. **Still unreleased** (
 play.html in Chromium at 1280 and 320 px shows the scene on the brief, the win picture on a win, the fail picture at
 time-out; check-escape-rooms and test-escape-art pass.
 
-**ROOMS-RELEASE-RK-LJ step 7: Jon's approved /updates/ room lines, word for word (added by the cloud lane, contract
-UPDATES-WEEKEND, Jon 10 Oct 23:00).** Replace #271's two lines with these, keeping #271's placement (before Car Trap:
-the page runs newest first); link each name to its room; star glyphs aria-hidden, as #271 does:
-- The Library Jam: the returns machine has jammed with the whole class's books inside, and at half past three the
-  library system fines every one of them. Mrs Barb Phile, "Bibby", won't overturn a fine. Ordering decimals, angles
-  on a straight line, and money. ★ Warm-up, for students working at grades 1 to 3.
-- The Rightful King: Mr Narry let an AI build the prom king vote, and nobody asked it to keep the ballot secret.
-  Counting, repeated percentage decrease and conditional probability. ★★★ Challenge.
-
 **SCIENTIFIC TAGGING 5/5: core-maths-paper2c (10 Oct). The tagging run is done** (#261, #264, #265, #266, this;
 complex-converter stays untagged, Jon). Roster `scientific`, badge on the start card, scientific calculator under the
 question card (below Next, so Next does not move on a phone); check-calculator, verify-core-maths-paper2c and the
