@@ -161,6 +161,12 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .feedback-bar{transition:none}
 }
 @media(max-width:480px){
+/* Two rows on a phone: the back link and the title, then Aa, the pill and the score. In one row each
+   wrapped to two or three lines, and Confirm ended below the fold at 320x568 (FONT-FIT, 10 Oct 2026). */
+.header{flex-wrap:wrap;row-gap:6px;padding:10px 12px}
+.header-div{display:none}
+.back-link,.type-pill{white-space:nowrap}
+.header-right{flex-basis:100%;justify-content:flex-end}
 .place-prompt{font-size:1.15rem}
 .order-tile{width:60px;height:48px;font-size:1rem}
 .calc-options{gap:8px}

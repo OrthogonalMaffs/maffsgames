@@ -58,8 +58,9 @@ WHAT IT ASSERTS
               stage-sN-q20 / stage-sN-q40,
               and canon 1.3's parameters.
   Phone       every item, at 320x568, 375x667 and 390x844: after a wrong answer Next sits
-              above the fold (footer excluded), the working above Next, the pictures above
-              Next except on screens 600px tall or less; no horizontal scroll.
+              at least 8px above the fold (footer excluded) in the real fonts, the working
+              above Next, the pictures above Next except on screens 600px tall or less; no
+              horizontal scroll.
 
 FAULT-INJECTION SELF-TEST (every run; --no-selftest skips it)
 -------------------------------------------------------------------------------
@@ -1061,6 +1062,7 @@ async def ui_runs(browser, by_id, exp, out):
 # ------------------------------------------------------------ phone
 
 VIEWPORTS = [(320, 568), (375, 667), (390, 844)]
+MARGIN = 8   # px between Next and the fold (the footer's top), every item, every phone (FONT-FIT, Jon 10 Oct 2026)
 
 MEASURE_JS = r"""
 () => {
@@ -1093,8 +1095,9 @@ async def phone(browser, by_id, out, screens=None):
                 fold = m["vh"] - FOOTER
                 wh = "phone %dx%d %s" % (w, h, iid)
                 worst[(w, h)] = max(worst[(w, h)], m["next"]["bottom"])
-                if m["next"]["bottom"] > fold:
-                    out.append("%s: Next ends at %.0fpx, below the fold at %dpx" % (wh, m["next"]["bottom"], fold))
+                if m["next"]["bottom"] > fold - MARGIN:
+                    out.append("%s: Next ends at %.0fpx, under %dpx above the fold at %dpx"
+                               % (wh, m["next"]["bottom"], MARGIN, fold))
                 if m["work"]["bottom"] > m["next"]["top"]:
                     out.append("%s: the working is below Next" % wh)
                 if m["pics"] and h > 600 and m["pics"]["bottom"] > m["next"]["top"]:
