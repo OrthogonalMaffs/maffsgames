@@ -3,8 +3,9 @@
 **SCIENTIFIC TAGGING 3/6: formula-forge (10 Oct).** As force-resolver: roster `scientific`, badge, scientific
 calculator under the options (its own `--hint` kept: calculator.css uses it only for the "required" badge);
 check-calculator passes; sin(30) = 0.5 at 1280 and 320 px, no overflow. No verify script exists for this game.
-**complex-converter is held for Jon:** it already has a "Calculator (−25 pts)" hint (pick the right keystrokes), and a
-free scientific calculator would let a student skip that cost. Per Jon (10 Oct) the tagging PRs run only the game's
+**complex-converter stays untagged (Jon, 10 Oct, "for now"):** it already has a "Calculator (−25 pts)" hint (pick the
+right keystrokes), and a free scientific calculator would let a student skip that cost; the paid hint stays its support.
+So the tagging run is 5 games, not 6. Per Jon (10 Oct) the tagging PRs run only the game's
 own checks locally; CI is the gate (a roster change selects ~120 checks, more than this machine can sustain).
 
 **SCIENTIFIC TAGGING 2/6: moments-master (10 Oct).** As force-resolver (#261, main green): roster `scientific`, badge,
