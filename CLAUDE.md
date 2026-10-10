@@ -1,7 +1,7 @@
 # MaffsGames — CLAUDE.md
 
 ## Project Overview
-Free curriculum-aligned maths games for UK schools. 96 games and eight escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
+Free curriculum-aligned maths games for UK schools. 96 games and nine escape rooms live (Regression Rumble withdrawn 30 Sep 2026 pending a data rebuild). Separate from MathsWins (mathswins.co.uk).
 
 - **Repo:** https://github.com/OrthogonalMaffs/maffsgames
 - **Live site:** maffsgames.co.uk (GitHub Pages)

@@ -1962,9 +1962,9 @@ Narrative maths escape rooms at `/escape-rooms/`. Started 2026-08-26; reference 
 **Unlock!**. **Under 15 minutes each** — built to end a lesson, not fill one, and to be played by three or
 four students round one screen. Not counted in the 96 live games.
 
-## 11.1 Current state — 17 September 2026
+## 11.1 Current state — 10 October 2026
 
-**Eight rooms live, two withdrawn.** The site ships a room as its voice rewrite finishes (§11.5).
+**Nine rooms live, one withdrawn.** The site ships a room as its voice rewrite finishes (§11.5).
 
 | Room | Slug | Level | Antagonist | State |
 | --- | --- | --- | --- | --- |
@@ -1976,7 +1976,7 @@ four students round one screen. Not counted in the 96 live games.
 | The Rugby Mud Bath | `rugby-mud` | GCSE | Mr Mower | **Live** (15/09) |
 | The Comic Caper | `comic-caper` | GCSE | Ms Fromage | **Live** (17/09) |
 | The Kiln Disaster | `kiln-disaster` | GCSE | — (Mr Stephen Mudge, "Smudgey", Art, is an ally; the kiln is the clock) | **Live** (17/09) |
-| The Headteacher's Car Trap | `car-trap` | GCSE / Core | — | Withdrawn |
+| The Headteacher's Car Trap | `car-trap` | GCSE / Core | Mr Strictman, the deputy head | **Live** (10/10/2026, rewritten; ★★) |
 | The IT Teacher's Vengeance | `it-vengeance` | GCSE Higher | — | Withdrawn |
 
 Two further rooms, **A (Coach Trip Hijack) and B (Tuck Shop Heist)**, are narratives only. Their locks were

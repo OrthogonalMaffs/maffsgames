@@ -3,45 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
-<meta name="description" content="The Headteacher's Car Trap is being rewritten and will be back shortly.">
-<title>The Headteacher's Car Trap &mdash; back shortly &mdash; MaffsGames</title>
+<meta name="description" content="A 15-minute GCSE and Core Maths escape room. The deputy head has rigged the car park before the governors arrive. Three locks: bounds, arc length, quadratics.">
+<link rel="canonical" href="https://maffsgames.co.uk/escape-rooms/car-trap/">
+<meta property="og:title" content="The Headteacher’s Car Trap — MaffsGames">
+<meta property="og:description" content="A 15-minute GCSE and Core Maths escape room. The deputy head has rigged the car park before the governors arrive. Three locks: bounds, arc length, quadratics.">
+<meta property="og:image" content="https://maffsgames.co.uk/docs/art/car-trap-v2-scene.webp">
+<meta property="og:url" content="https://maffsgames.co.uk/escape-rooms/car-trap/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<title>The Headteacher’s Car Trap — MaffsGames</title>
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/engine.css">
-<!--
-  HOLDING PAGE, put here 2026-09-08. This room is withdrawn while its narrative
-  is rewritten; see docs/escape-room-voice-rewrite.md.
-
-  Nothing has been deleted. room.js, teacher.html's data block and every image
-  are untouched, and this room's puzzles and maths are exactly as they were.
-  Only this file and teacher.html were replaced.
-
-  TO PUT THE ROOM BACK: the rewrite session writes a fresh index.html anyway
-  (its meta, og: and Twitter copy all carry the premise), so copy the shape from
-  a live room -- escape-rooms/prom-budget/index.html -- or take the original
-  back out of git:
-
-    git show cf31887~1:escape-rooms/car-trap/index.html   > escape-rooms/car-trap/index.html
-    git show cf31887~1:escape-rooms/car-trap/teacher.html > escape-rooms/car-trap/teacher.html
-
-  Then re-add its card to escape-rooms/index.html and index.html, its <url> to
-  sitemap.xml, and bump the room counts in both pages. Grep for "three" first.
--->
 </head>
 <body>
+<button class="a11y-toggle" onclick="toggleAa()" aria-label="Toggle easier-reading text">Aa</button>
 <div class="wrap">
   <a class="back-link" href="../">&larr; All escape rooms</a>
-  <div id="app">
-    <div class="card">
-      <h1><span class="sub">Back shortly</span>The Headteacher's Car Trap</h1>
-      <p class="lede">This room is being rewritten and is not available at the moment. Its puzzles are staying
-        exactly as they are &mdash; it is the writing around them that is being redone, one room at a time.</p>
-      <p class="lede">The rooms that have already been through that are open now, and the rest will follow as they
-        are finished.</p>
-      <p><a class="esc-btn" href="../">See the rooms that are open &rarr;</a></p>
-    </div>
-  </div>
+  <div id="app"></div>
 </div>
+
+<script src="room.js"></script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script src="../assets/engine.js"></script>
 </body>
 </html>
