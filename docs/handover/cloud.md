@@ -50,9 +50,12 @@ Done 10 Oct: RIGHTFUL-KING-DRAFT (#247, aa660f7) and LIBRARY-DRAFT (#248, 8302ba
 full ("spot on"); the Library room's title is The Library Jam.
 1. **RIGHTFUL-KING-BUILD** (contract `docs/handover/contracts/2026-10-10-rightful-king-build.md`), then
 2. **LIBRARY-JAM-BUILD** (contract `docs/handover/contracts/2026-10-10-library-jam-build.md`).
-**BOTH WAIT on the home lane's KEYPAD-VARIABLE being on main** (each contract's STOP IF; ART-PENDING is merged,
-#244). Checked 10 Oct: no `maxDigits` in `escape-rooms/assets/engine.js` or the scripts, no branch for it. Before
-starting, check main for `maxDigits` and `docs/handover/home.md`. Ratings for the handover when built: The Rightful
+**BOTH WAIT on BOTH home-lane fixes, ART-PENDING and KEYPAD-VARIABLE (Jon, 10 Oct), not KEYPAD-VARIABLE alone.**
+ART-PENDING is on main (#244: `HAS_ART` in engine.js). KEYPAD-VARIABLE was not on main when checked (10 Oct): no
+`maxDigits` in `escape-rooms/assets/engine.js` or the scripts, and no branch for it. Before starting, check main for
+both and read `docs/handover/home.md`.
+**Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's
+last full run is green, without asking each time; it still watches main's run after each merge. Ratings for the handover when built: The Rightful
 King ★★★ Challenge, The Library Jam ★ Warm-up (no star field; the difficulty contract owns it).
 **Open for Jon:** delete branch `claude/youthful-feynman-anpxuq-pd-check` in GitHub (the proxy refused the remote
 delete, HTTP 403).
