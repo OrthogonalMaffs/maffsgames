@@ -555,6 +555,13 @@ styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours 
     cancels `touchend`, which stops that click.
   - **Not yet tried on a real iPhone** (Playwright WebKit with touch passes; Jon tests on Android).
 - **Nothing is sent:** no analytics event, no storage, no request.
+- **Per-mode tagging: an option for later, not built (Jon, 10 Oct 2026).** The tag is per game. Log Laws is
+  NOT tagged: its Laws mode is calculator-free multiple choice, and only Solve mode ends on a calculator ("give x
+  to 3 s.f."). Tagging one mode would need the shared calculator, badge and check-calculator.py to take a mode
+  (the roster value per mode). Higher Power is not tagged either: its answers are higher/lower calls and
+  matches, never a value evaluated (Jon's rule: tag only if a correct answer needs a scientific function
+  evaluated numerically). Not tagged by ruling: Estimation Golf (estimating is the skill), Equation Builder
+  (ln appears only in symbolic moves).
 - **Scientific keys (contract SCI-CALC, 9 Oct 2026):** `mount(el, {keys: 'scientific'})` adds a block above the
   basic keys: xʸ (right-associative, binding tighter than a minus on its left: 2^3^2 = 512, −2^2 = −4), ln,
   log (base 10), eˣ, sin, cos, tan and their inverses (each opens a bracket, like √), π and e (2π multiplies),
