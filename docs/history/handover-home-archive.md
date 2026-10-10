@@ -3,6 +3,49 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-09 (home): SCI-CALC (item 6)
+
+- **Engine (calculator.js):** xʸ as `^`, right-associative and tighter than a minus on its left (2^3^2 = 512,
+  −2^2 = −4); ln, log, eˣ, sin/cos/tan and their inverses (each opens a bracket, like √); π and e with implicit ×;
+  DEG (default) / RAD. Errors: ln/log ≤ 0, sin⁻¹/cos⁻¹ outside [−1, 1], tan at odd multiples of 90° (exact for
+  whole degrees) or π/2, non-finite. All 65 existing cases unchanged (STOP IF clear).
+- **UI:** `mount(el, {keys: 'scientific'})` adds a 13-key block above the basic keys and a DEG/RAD indicator in the
+  display; `mount()` without it is key for key the old panel (tested). Fits 320/390/412 px touch, 48 px keys.
+- **Tests (test-calculator-js.py):** 27 scientific cases (the contract's, plus inverses, RAD and errors), two
+  plants (left-associative ^, no tan 90 guard: both caught), the basic panel's labels, the fit, and the DEG/RAD
+  key driving sin.
+- **check-calculator.py:** new value `scientific` (calculator.js + keypad.js, "Scientific calculator required",
+  `keys: 'scientific'` in the page); `required` unchanged; either badge on the other value fails (12 self-test
+  cases). Canon §4.4 and the roster legend updated.
+- **CSS (Jon's ruling, 9 Oct):** the calculator, badge and keypad styles moved out of theme.css into
+  `schools/assets/calculator.css`, which theme.css imports, so the themed games get them unchanged and Growth
+  and Decay links calculator.css alone (its look is otherwise untouched; four tokens mapped to its own).
+- **Growth and Decay:** roster `scientific`; badge on the start screen; the calculator under the question,
+  `{keys: 'scientific'}`. Not `{answer}`: each sub-question rebuilds its input, so answers stay typed in the
+  game's box. AL1 worked end to end on the keys at 390x844 (touch) and 1280x800: 5000eˣ(0.03×20) = 9110.594002
+  (sq1), ln(2)÷0.03 = 23.10490602 (sq4), all four sub-questions marked correct, no page error.
+- **Report for Jon (no changes; each tagging its own PR):** games whose questions likely need scientific keys,
+  from a scan of question text, to confirm by reading: **strong** force-resolver (θ = arctan…, resolving with
+  sin/cos), moments-master (ω = 2π×1500/60 = 50π), log-laws (log 6 + log …, ln); **probable** formula-unlocked
+  (π, e^, ln), formula-forge (π, r³), complex-converter (e^{iθ}, π, tan), core-maths-paper2c (ln),
+  equation-builder (ln), higher-power (ln, π), estimation-golf (π). Games where trig/log appear only in drawing
+  or console code (angle-ace, bearing-blitz, circle-theorem-spotter and others) were not counted.
+
+## 2026-10-09 (home): SCORES-OFFLINE (item 5)
+
+- **The class:** /leaderboards/ and the portal called `firebase.initializeApp` / `firebase.database()` themselves,
+  outside any guard; on a network that blocks the SDK (`firebase` undefined) the script stopped, and on
+  /leaderboards/ that killed the device-local Your Scores. No other served page did (188 .html/.js files checked).
+- **Fix:** both read through `MaffsLeaderboard`: new read paths `available()`, `readBoard(slug, level)` and
+  `watchRecent(n, cb)` (submit path untouched). Blocked: /leaderboards/ shows Your Scores and "Live leaderboards
+  can't load on this network. Your Scores above are kept on this device and still work." (search, level pills and
+  cards hidden); the portal hides its ticker quietly.
+- **Check:** `scripts/test-scores-offline.py` (ci-line): no served file but the shared module calls the SDK; both
+  pages with gstatic.com/firebasejs refused (no page error, Your Scores renders a seeded game, offline line /
+  ticker hidden) and with a fake SDK (cards render, ticker shows the score, no offline line). Plants: a page
+  calling `firebase.database()` (caught by the rule); main's old /leaderboards/ blocked (caught: "firebase is not
+  defined").
+
 ## 2026-10-09 (home): PLAY-AGAIN-SCREEN batch 2 (item 4 done but for characteristic-quest)
 
 - **The 21 games batch 1 left on `SCREEN_NOT_YET` now change every screen through `MaffsLock.screen()`:**
