@@ -1,4 +1,4 @@
-# ci-line: Escape rooms (every lock against the audited bank and variants.json; tokens; VALID draws; each room's difficulty stars derived from its lock grades and matched on every hub and front-page card, two faults planted) |
+# ci-line: Escape rooms (every lock against the audited bank and variants.json; tokens; VALID draws; each room's difficulty stars derived from its lock grades and matched on every hub and front-page card, the star key on both pages matched to the same bands; three faults planted) |
 # ci-deps: escape-rooms/ index.html
 """Check the built escape rooms against the audited lock bank.
 
@@ -19,6 +19,10 @@ Run after any edit to escape-rooms/*/room.js. It catches:
     escape-rooms/assets/rating.js that differ from BANDS here; hub cards out of rating order
     (the hub says "Ordered easiest to hardest"). Two faults are planted on every run (Rugby
     Mud's hub card saying ★; a lock's grade removed) and must each be caught.
+  * the star key (contract STAR-KEY, 10 Oct 2026): the one line on the hub and on the front
+    page that says what the stars mean must name exactly the bands above, with the stars
+    hidden from screen readers and read as "one star, Warm-up, grades 1 to 3" and so on, and
+    must not say who a room suits. A key saying "Core, grades 4–6" is planted and must fail.
   * on a `maxDigits: N` keypad ("up to N digits, Set to submit", KEYPAD-VARIABLE),
     an answer or misconception the keypad cannot take: it must be a whole
     number of 1 to N digits with no leading zero, so a four-digit misconception
@@ -336,6 +340,35 @@ def check_ratings(room_js, live, pages, rating_js):
     return out
 
 
+WORDS = {1: "one star", 2: "two stars", 3: "three stars"}
+
+
+def check_star_key(pages):
+    """Problems with the star key (contract STAR-KEY, 10 Oct 2026): the line on the hub and the front page
+    that says what the stars mean must name exactly BANDS (already matched to rating.js above), each with
+    its stars hidden from screen readers and a readable equivalent ("one star, Warm-up, grades 1 to 3"),
+    and must say nothing about who a room suits."""
+    out = []
+    for page, html in pages.items():
+        keys = re.findall(r"<p [^>]*data-star-key[^>]*>(.*?)</p>", html, re.S)
+        if len(keys) != 1:
+            out.append(f"{page}: {len(keys)} star-key lines (want exactly one)")
+            continue
+        seen = re.findall(r'<span aria-hidden="true">(★+) ([^,<]+), grades ([^<]+)</span>'
+                          r'<span class="sr-only">([^<]*)</span>', keys[0])
+        got = [(len(st), n, g) for st, n, g, _ in seen]
+        want = [(st, n, g) for _, st, n, g in BANDS]
+        if got != want:
+            out.append(f"{page}: the star key says {got}, the bands are {want}")
+        for (st, n, g), (_, _, _, sr) in zip(got, seen):
+            a, _, b = g.partition("–")
+            if sr.rstrip(";") != f"{WORDS.get(st, '?')}, {n}, grades {a} to {b}":
+                out.append(f"{page}: the star key's screen-reader text for {n} reads {sr!r}")
+        if re.search(r"top set|resit|suits", keys[0], re.I):
+            out.append(f"{page}: the star key says who a room suits (teacher pages only)")
+    return out
+
+
 room_js = {d.name: (d / "room.js").read_text(encoding="utf-8")
            for d in ROOMS.iterdir() if d.is_dir() and (d / "room.js").exists()}
 live = {s for s in room_js if "noindex" not in (ROOMS / s / "index.html").read_text(encoding="utf-8")}
@@ -343,6 +376,7 @@ pages = {"hub": (ROOMS / "index.html").read_text(encoding="utf-8"),
          "front page": (BASE / "index.html").read_text(encoding="utf-8")}
 rating_js = (ROOMS / "assets" / "rating.js").read_text(encoding="utf-8")
 problems += check_ratings(room_js, live, pages, rating_js)
+problems += check_star_key(pages)
 star_report = {s: room_rating([g for _, g in lock_grades(room_js[s])]) for s in sorted(live)
                if all(g for _, g in lock_grades(room_js[s]))}
 
@@ -357,11 +391,16 @@ if "rugby-mud" in live:
         "a lock's grade removed": (dict(room_js, **{"rugby-mud": re.sub(r"\n      grade: \d+,", "", room_js["rugby-mud"], count=1)}),
                                    pages, "with no grade"),
     }
+    key_mismatch = check_star_key(dict(pages, hub=pages["hub"].replace(
+        "Core, grades 4–5</span>", "Core, grades 4–6</span>", 1)))
+    if not any("the star key says" in g for g in key_mismatch):
+        problems.append(f"planted fault NOT caught: the hub's star key saying grades 4–6 "
+                        f"(the star-key check found {key_mismatch or 'nothing'})")
     for what, (rj, pg, expect) in plants.items():
         got = check_ratings(rj, live, pg, rating_js)
         if not any(expect in g for g in got):
             problems.append(f"planted fault NOT caught: {what} (the rating check found {got or 'nothing'})")
-    plant_line = "planted faults caught: " + "; ".join(plants)
+    plant_line = "planted faults caught: " + "; ".join(plants) + "; the hub's star key saying grades 4–6"
 else:
     plant_line = "planted faults: skipped (rugby-mud is not live)"
 
