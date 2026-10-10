@@ -108,7 +108,7 @@
         '<th>Wrong answer to expect</th><th>Time</th></tr></thead><tbody>' +
         R.locks.map(function (l, i) {
           var m = meta[i] || {}, ins = l.instrument;
-          var insDesc = ins.kind === 'keypad' ? ins.digits + '-digit keypad'
+          var insDesc = ins.kind === 'keypad' ? (ins.maxDigits ? 'keypad, up to ' + ins.maxDigits + ' digits' : ins.digits + '-digit keypad')
             : ins.kind === 'pair' ? 'two dials'
             : ins.kind + ', ' + ins.min + '&ndash;' + ins.max + (ins.step !== 1 ? ' in ' + ins.step + 's' : '');
           return '<tr><td><b>' + esc(l.name) + '</b><br><code>' + esc(l.id) + '</code></td>' +

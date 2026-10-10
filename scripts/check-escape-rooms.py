@@ -10,6 +10,11 @@ Run after any edit to escape-rooms/*/room.js. It catches:
     literal braces in front of a class
   * a room with fewer than two empty objects
   * a room with fewer than 20 VALID draws — see "Cross-lock collisions" below
+  * on a `maxDigits: N` keypad ("up to N digits, Set to submit", KEYPAD-VARIABLE),
+    an answer or misconception the keypad cannot take: it must be a whole
+    number of 1 to N digits with no leading zero, so a four-digit misconception
+    needs maxDigits 4 or more. Fixed-length (`digits: N`) keypads are not
+    checked here, as before.
 
 Cross-lock collisions. Each lock's library is verified on its own, but a room
 serves one variant per lock together, and those can collide. A draw is VALID
@@ -78,6 +83,12 @@ def figures(text, key, var):
                   lambda m: str(var.get(m.group(1), m.group(0))), text)
     text = re.sub(r"<[^>]*>|&[#\w]+;", " ", text)
     return {float(x) for x in re.findall(r"\d+(?:\.\d+)?", text)}
+
+
+def keypad_settable(v, max_digits):
+    """A maxDigits keypad takes a whole number of 1 to N digits, no leading zero."""
+    return (isinstance(v, (int, float)) and not isinstance(v, bool) and v == int(v)
+            and 0 <= v and len(str(int(v))) <= max_digits)
 
 
 def flat(x):
@@ -193,6 +204,16 @@ for room_dir in sorted(p for p in ROOMS.iterdir() if p.is_dir() and p.name != "a
         if not in_file:
             problems.append(f"{slug}/{lid}: empty variant library")
             continue
+
+        ins_line = re.search(r"instrument:\s*\{[^\n]*\}", block)
+        md = re.search(r"\bmaxDigits:\s*(\d+)", ins_line.group(0)) if ins_line else None
+        if md:
+            n = int(md.group(1))
+            for i, var in enumerate(in_file):
+                for what in ("answer", "miss"):
+                    if what in var and var[what] is not None and not keypad_settable(var[what], n):
+                        problems.append(f"{slug}/{lid}: variant {i} {what} {var[what]} cannot be "
+                                        f"set on a keypad of up to {n} digits")
 
         # variant 0 is the audited lock and must match the bank
         b = bank[lid]

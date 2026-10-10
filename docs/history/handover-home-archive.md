@@ -3,6 +3,56 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-09 (home): PLAY-AGAIN-SCREEN batch 2 (item 4 done but for characteristic-quest)
+
+- **The 21 games batch 1 left on `SCREEN_NOT_YET` now change every screen through `MaffsLock.screen()`:**
+  - their own screen helper ends with it: better-value, expectation-station, fermi-lab, formula-plug-in,
+    like-terms-collector, new-shapes, probability-pioneer, think-of-a-number (`showScreen(id)`); equation-builder,
+    spot-the-error (`showScreen(name)`: the active screen); simultaneous-solver (`showS`);
+  - no helper: each line that makes a `...Screen` active is followed by `MaffsLock.screen(<it>)`: component-crusher,
+    four-quadrant-explorer, given-that, growth-and-decay, split-it, stat-attack, test-the-claim, truth-buster,
+    wrong-on-the-internet;
+  - prime-or-composite: `showModal()` opens the window on the modal, `closeModal()` (its Play Again) on `.page`,
+    where its Start button sits;
+  - six games reveal a header with "← Back to Games" outside the screens when a run starts (truth-buster,
+    think-of-a-number, four-quadrant-explorer, like-terms-collector, probability-pioneer, given-that): that line now
+    also calls `MaffsLock.fresh(gameHeader)`.
+- `SCREEN_NOT_YET` is down to characteristic-quest (the cloud lane's; it comes off when the claim ends). All 21 pass
+  check-answer-lock.py locally (seed 1).
+
+## 2026-10-09 (home): PLAY-AGAIN-SCREEN (item 4)
+
+- **Every listed game's screen change goes through `MaffsLock.screen()`**: 33 pages' `show(id)` / `showScreen(id)`
+  now end with `MaffsLock.screen(<the screen shown>)` (27 shared one exact one-liner; the rest small variants).
+  So Play Again, back to menu, mode select and results all open the 300 ms fresh window on the new screen; a
+  double-click's second click lands on nothing. characteristic-quest is cloud-claimed (`cloud-remaining:`): left
+  for a later batch. constructions-lab (a compass tool, not on the lock) also loads answer-lock.js now, for
+  `screen()`; it is not played by the lock check (it records no question_answered).
+- **Check (`check-answer-lock.py`, every migrated game, its existing Play again double-click):** before the first
+  click it records the visible controls; after it, every newly visible control must sit in an open fresh window,
+  whatever the layout, and the control under the pointer too; the second click must leave the URL unchanged. The
+  fresh window is stretched to 5 s for the probe, so no verdict depends on runner speed (canon 7.6.0, DET).
+  **Against main's pages 25 of the 32 fail** (angle-ace, bearing-blitz, binomial-blaster, coordinate-geometry-dash,
+  curling-friction, dimension-checker, eigenvalue-extractor, eigenvector-engine, force-resolver, formula-forge, formula-unlocked,
+  graph-transformer, higher-power, just-pythag-it-bruv, linear-equation-solver, matrix-crunch, moments-master,
+  normal-navigator, proof-builder, proportion-blaster, scale-factor-scaling, sequence-solver, standard-form-blitz,
+  surd-simplifier, trig-identity-duel; typically the menu's level buttons and its "Global leaderboard" link open
+  to the second click); the other 7 go from Play again straight into a new game whose question is already fresh.
+  With the change all 32 pass. Self-test plant: angle-ace with a bare `show()`: caught.
+- **Batch 2 (next PR): 21 more games** the stricter check found on CI, whose Play again changes screen through their
+  own code (showScreen, showMenu toggling classes, or none): better-value, component-crusher, equation-builder,
+  expectation-station, fermi-lab, formula-plug-in, four-quadrant-explorer, given-that, growth-and-decay,
+  like-terms-collector, new-shapes, prime-or-composite, probability-pioneer, simultaneous-solver, split-it,
+  spot-the-error, stat-attack, test-the-claim, think-of-a-number, truth-buster, wrong-on-the-internet (plus
+  characteristic-quest, cloud-claimed). They are on `SCREEN_NOT_YET` in check-answer-lock.py: reported, not failed;
+  a listed game that passes fails, so the list only shrinks. Batch 2 empties it.
+- **Two drivers clicked inside the new fresh windows** (a student's click comes after them): check-teacher-invite.py
+  moved while the menu's fresh window was open: PD_UNLOCK's opponent counter advanced on clicks the page dropped,
+  so it kept landing on the same opponent and never won the three games that unlock the tournament; verify-partial-fractions-duel.py double-clicked Play again the moment its results screen appeared. Both
+  now wait for `MaffsLock.isFresh()` to clear (check-teacher-invite.py before every move and click), as canon 7.6.0 (DET) asks of drivers. partial-fractions-duel's own
+  extra `MaffsLock.screen` in showMenu went (show() does it); its verifier's plant now strips it from show().
+- **Canon §7.6.0:** "every screen change goes through MaffsLock.screen()".
+
 ## 2026-10-09 (home): OVERLAY-KEYS (19:00 addendum; for the cloud lane: re-check item 12)
 
 - **The overlay is shared:** `askInitials()` in `schools/assets/firebase-leaderboard.js`, loaded by all 97 games; no

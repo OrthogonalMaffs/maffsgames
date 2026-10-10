@@ -2023,6 +2023,17 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
   and no two locks share an answer. Clue figures include numerals typed into clue text. The first two rules
   ignore figures of 2 or less. `engine.js` serves only VALID draws and `check-escape-rooms.py` fails a room
   with fewer than 20; the two implement the same rules and change together.
+- **Keypads: fixed length, or up to N digits (KEYPAD-VARIABLE, 10 Oct 2026).** `digits: N` takes exactly N
+  digits, empty slots shown (60 is entered as 060), and Set with too few says "Not enough digits." at no
+  cost. `maxDigits: N` instead is **"up to N digits, Set to submit"**: the display shows only what has
+  been typed (no empty slots), Set submits 1 to N digits and does nothing with none, and a leading zero is
+  never kept. The typed fallback follows the same rule (`upTo()` in `engine.js`). Use it where a lock's
+  answers vary in length: N fixed slots steer students to N digits, and too few slots cut a wrong answer
+  down to a right one (5400 on two digits reads as 54). The misconception must fit too, so a four-digit
+  misconception needs `maxDigits: 4`; `check-escape-rooms.py` fails a maxDigits lock whose answer or
+  misconception cannot be set. The live rooms all use `digits`. Waiting on it: the cloud lane's drafts of
+  **The Rightful King** (passcode, answers 24 to 504) and **The Library Jam** (fines lock, answer up to
+  £99, misconception up to 9900). Tested by `scripts/test-escape-keypad.py`.
 - **`wrongLines`** — a room's escalating wrong-entry lines, `{head, body}` objects, indexed by
   `st.wrongs - 1` and clamped so the last repeats. A room without the array gets the original fixed string.
   A misconception hit consumes an index without printing a line, which is intended.
@@ -2044,6 +2055,7 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
 | --- | --- |
 | `scripts/check-escape-rooms.py` | The gate. Every room against the audited bank (every `lock-bank-batch*.txt`) and `variants.json`, all tokens resolve, VALID draw count per room (fails under 20; an invalid variant 0 only warns), art present. Run before shipping |
 | `scripts/gen-escape-variants.py` | Generates and verifies the variant libraries |
+| `scripts/test-escape-keypad.py` | The keypad's maxDigits mode on a fixture lock (5,4,Set opens; 5,4,0,0,Set is the misconception; no empty slots), a fixed keypad unchanged, the old rule planted |
 | `scripts/check-lock-bank.py` | Rejects a lock with more than one settable answer |
 | `scripts/strip-gen-watermark.py` | Removes the generator's sparkle and reframes to 1600x873. **Run on every image** — it is a no-op on a clean one |
 | `scripts/serve-stubbed.py` | Serve the site locally with analytics stubbed. **Escape rooms load analytics too** — never render-test against the live endpoint |

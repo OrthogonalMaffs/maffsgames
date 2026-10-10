@@ -1,5 +1,22 @@
 # Handover: home lane
 
+**KEYPAD-VARIABLE (10 Oct, Jon's contract 10:20, ahead of PREPUSH-SCOPE: the cloud lane's Rightful King and
+Library Jam builds wait on it; contract `docs/handover/contracts/2026-10-10-keypad-variable.md`).** A keypad may
+now take `maxDigits: N` instead of `digits: N`: **"up to N digits, Set to submit"**. The display shows only what
+has been typed (no empty slots), the room's existing Set button submits 1 to N digits (nothing typed: nothing
+happens, no time lost), a leading zero is never kept (0,5,4 reads 54), and the typed fallback shares the rule
+(`upTo()` in engine.js). A keypad with `digits` is key for key as before. teacher.js describes the instrument as
+"keypad, up to N digits" (answers were never padded there). check-escape-rooms.py fails a maxDigits lock whose
+answer or misconception is not a whole number of 1 to N digits; gen-escape-variants.py has `keypad(n)` (the range
+both modes can set, so `keep()` applies the rule). check-teacher-invite's room driver handles both modes. New
+`scripts/test-escape-keypad.py` (fixture: kiln-disaster's keypad rewritten in the page to maxDigits 4, answer 54,
+misconception 5400; no room file edited): 5,4,Set opens; 5,4,0,0,Set raises the named misconception; Set on
+nothing does nothing; no empty slot ever shows; the fixed two-digit keypad is unchanged; the old fixed-length rule
+planted is caught. All 8 live rooms to a win and a loss (test-escape-art) pass; check-escape-rooms passes. STOP IFs
+clear: keypad entry is not saved state (no SAVE_V change), no live room's keypad changed, one rule for keys and
+typed fallback. Canon §11.3 and §11.4. **For the cloud lane: The Rightful King's passcode and the Library Jam's
+fines lock can use `maxDigits` in phase 2** (the misconception must fit: 9900 needs `maxDigits: 4`).
+
 **CAR-TRAP-BUILD, taken over (10 Oct, Jon 09:30, one lane: `docs/handover/contracts/2026-10-10-car-trap-one-lane.md`).**
 The home lane owns Car Trap end to end; the cloud lane has stopped and will not touch #242 or any car-trap file. On
 #242: `art: 'car-trap-v2'` (pictures merged in #246); sceneAlt corrected (the measuring wheel is at the pillar by the
@@ -60,7 +77,7 @@ Next; one log row per answer; display-only number formatting; "≈" for rounded 
 sessions and the E2 one-off; timer-policy: Unit Converter to No Timer. **Escape on the initials overlay (Jon, 9 Oct
 19:42): left as is, Skip stays the way out; Escape-to-close is deferred to a future accessibility pass, because an
 accidental Escape would discard a leaderboard entry** (the OVERLAY-KEYS contract's "Escape closes the overlay as now"
-was Project Claude's error; recorded on #232 too). **Next: PREPUSH-SCOPE** (contract
+was Project Claude's error; recorded on #232 too). **Next: KEYPAD-VARIABLE (entry at the top), then PREPUSH-SCOPE** (contract
 `docs/handover/contracts/2026-10-09-prepush-scope.md`). LIBRARY-DRAFT moved to the cloud lane (Jon, 10 Oct 09:30);
 Car Trap moved the other way: the home lane owns it end to end (#242, entry above). **Open for Jon:** further scientific tagging (candidates in the
 SCI-CALC entry). Finished home-lane contracts (home-queue, its addendum, hook-fix, overlay-keys) moved to `docs/history/contracts/` in
@@ -154,53 +171,3 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   ticker hidden) and with a fake SDK (cards render, ticker shows the score, no offline line). Plants: a page
   calling `firebase.database()` (caught by the rule); main's old /leaderboards/ blocked (caught: "firebase is not
   defined").
-
-## 2026-10-09 (home): PLAY-AGAIN-SCREEN batch 2 (item 4 done but for characteristic-quest)
-
-- **The 21 games batch 1 left on `SCREEN_NOT_YET` now change every screen through `MaffsLock.screen()`:**
-  - their own screen helper ends with it: better-value, expectation-station, fermi-lab, formula-plug-in,
-    like-terms-collector, new-shapes, probability-pioneer, think-of-a-number (`showScreen(id)`); equation-builder,
-    spot-the-error (`showScreen(name)`: the active screen); simultaneous-solver (`showS`);
-  - no helper: each line that makes a `...Screen` active is followed by `MaffsLock.screen(<it>)`: component-crusher,
-    four-quadrant-explorer, given-that, growth-and-decay, split-it, stat-attack, test-the-claim, truth-buster,
-    wrong-on-the-internet;
-  - prime-or-composite: `showModal()` opens the window on the modal, `closeModal()` (its Play Again) on `.page`,
-    where its Start button sits;
-  - six games reveal a header with "← Back to Games" outside the screens when a run starts (truth-buster,
-    think-of-a-number, four-quadrant-explorer, like-terms-collector, probability-pioneer, given-that): that line now
-    also calls `MaffsLock.fresh(gameHeader)`.
-- `SCREEN_NOT_YET` is down to characteristic-quest (the cloud lane's; it comes off when the claim ends). All 21 pass
-  check-answer-lock.py locally (seed 1).
-
-## 2026-10-09 (home): PLAY-AGAIN-SCREEN (item 4)
-
-- **Every listed game's screen change goes through `MaffsLock.screen()`**: 33 pages' `show(id)` / `showScreen(id)`
-  now end with `MaffsLock.screen(<the screen shown>)` (27 shared one exact one-liner; the rest small variants).
-  So Play Again, back to menu, mode select and results all open the 300 ms fresh window on the new screen; a
-  double-click's second click lands on nothing. characteristic-quest is cloud-claimed (`cloud-remaining:`): left
-  for a later batch. constructions-lab (a compass tool, not on the lock) also loads answer-lock.js now, for
-  `screen()`; it is not played by the lock check (it records no question_answered).
-- **Check (`check-answer-lock.py`, every migrated game, its existing Play again double-click):** before the first
-  click it records the visible controls; after it, every newly visible control must sit in an open fresh window,
-  whatever the layout, and the control under the pointer too; the second click must leave the URL unchanged. The
-  fresh window is stretched to 5 s for the probe, so no verdict depends on runner speed (canon 7.6.0, DET).
-  **Against main's pages 25 of the 32 fail** (angle-ace, bearing-blitz, binomial-blaster, coordinate-geometry-dash,
-  curling-friction, dimension-checker, eigenvalue-extractor, eigenvector-engine, force-resolver, formula-forge, formula-unlocked,
-  graph-transformer, higher-power, just-pythag-it-bruv, linear-equation-solver, matrix-crunch, moments-master,
-  normal-navigator, proof-builder, proportion-blaster, scale-factor-scaling, sequence-solver, standard-form-blitz,
-  surd-simplifier, trig-identity-duel; typically the menu's level buttons and its "Global leaderboard" link open
-  to the second click); the other 7 go from Play again straight into a new game whose question is already fresh.
-  With the change all 32 pass. Self-test plant: angle-ace with a bare `show()`: caught.
-- **Batch 2 (next PR): 21 more games** the stricter check found on CI, whose Play again changes screen through their
-  own code (showScreen, showMenu toggling classes, or none): better-value, component-crusher, equation-builder,
-  expectation-station, fermi-lab, formula-plug-in, four-quadrant-explorer, given-that, growth-and-decay,
-  like-terms-collector, new-shapes, prime-or-composite, probability-pioneer, simultaneous-solver, split-it,
-  spot-the-error, stat-attack, test-the-claim, think-of-a-number, truth-buster, wrong-on-the-internet (plus
-  characteristic-quest, cloud-claimed). They are on `SCREEN_NOT_YET` in check-answer-lock.py: reported, not failed;
-  a listed game that passes fails, so the list only shrinks. Batch 2 empties it.
-- **Two drivers clicked inside the new fresh windows** (a student's click comes after them): check-teacher-invite.py
-  moved while the menu's fresh window was open: PD_UNLOCK's opponent counter advanced on clicks the page dropped,
-  so it kept landing on the same opponent and never won the three games that unlock the tournament; verify-partial-fractions-duel.py double-clicked Play again the moment its results screen appeared. Both
-  now wait for `MaffsLock.isFresh()` to clear (check-teacher-invite.py before every move and click), as canon 7.6.0 (DET) asks of drivers. partial-fractions-duel's own
-  extra `MaffsLock.screen` in showMenu went (show() does it); its verifier's plant now strips it from show().
-- **Canon §7.6.0:** "every screen change goes through MaffsLock.screen()".

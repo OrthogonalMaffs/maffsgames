@@ -452,6 +452,17 @@
       '</div>';
   }
 
+  // A keypad is fixed-length (`digits: N`: exactly N digits, empty slots shown, 060 for 60) or, with
+  // `maxDigits: N` instead (contract KEYPAD-VARIABLE, 10 Oct 2026), "up to N digits, Set to submit": the
+  // display shows only what has been typed, Set submits 1 to N digits (nothing typed does nothing), and a
+  // leading zero is never kept. A keypad with `digits` behaves exactly as it did before maxDigits existed.
+  function keyLen(ins) { return ins.maxDigits || ins.digits; }
+
+  // The one rule the keys and the typed fallback share in maxDigits mode: digits only, no leading zero, at most N.
+  function upTo(ins, c) {
+    return c.replace(/[^0-9]/g, '').replace(/^0+(?=\d)/, '').slice(0, ins.maxDigits);
+  }
+
   function keypadHTML(l, ins) {
     pending[l.id] = '';
     var keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'clr', '0', 'del'];
@@ -464,8 +475,8 @@
       '<div class="fallback">' +
         '<label for="numK">Or type the code</label>' +
         '<div class="fallback-row">' +
-          '<input class="numin" type="text" inputmode="numeric" id="numK" maxlength="' + ins.digits + '" value="">' +
-          '<span class="count">' + ins.digits + ' digits</span>' +
+          '<input class="numin" type="text" inputmode="numeric" id="numK" maxlength="' + keyLen(ins) + '" value="">' +
+          '<span class="count">' + (ins.maxDigits ? 'up to ' + ins.maxDigits : ins.digits) + ' digits</span>' +
         '</div>' +
       '</div>';
   }
@@ -581,7 +592,8 @@
     function paint() {
       var c = pending[l.id] || '';
       var out = '';
-      for (var i = 0; i < ins.digits; i++) out += i < c.length ? c[i] : '<span class="blank">&ndash;</span>';
+      if (ins.maxDigits) out = c;
+      else for (var i = 0; i < ins.digits; i++) out += i < c.length ? c[i] : '<span class="blank">&ndash;</span>';
       disp.innerHTML = out;
       if (num.value !== c) num.value = c;
     }
@@ -590,13 +602,14 @@
         var k = b.getAttribute('data-key'), c = pending[l.id] || '';
         if (k === 'clr') c = '';
         else if (k === 'del') c = c.slice(0, -1);
+        else if (ins.maxDigits) c = upTo(ins, c + k);
         else if (c.length < ins.digits) c += k;
         pending[l.id] = c;
         paint();
       };
     });
     num.oninput = function () {
-      pending[l.id] = num.value.replace(/[^0-9]/g, '').slice(0, ins.digits);
+      pending[l.id] = ins.maxDigits ? upTo(ins, num.value) : num.value.replace(/[^0-9]/g, '').slice(0, ins.digits);
       paint();
     };
     paint();
@@ -607,7 +620,8 @@
     var ins = l.instrument, ok, value;
     if (ins.kind === 'keypad') {
       value = pending[l.id] || '';
-      if (value.length < ins.digits) { feedback('bad', 'Not enough digits.', 'The keypad wants all ' + ins.digits + ' of them.'); return; }
+      if (ins.maxDigits && !value) return;
+      if (!ins.maxDigits && value.length < ins.digits) { feedback('bad', 'Not enough digits.', 'The keypad wants all ' + ins.digits + ' of them.'); return; }
       ok = Number(value) === Number(answerOf(l));
     } else if (ins.kind === 'pair') {
       var a = pending[l.id + 'A'], b = pending[l.id + 'B'];
