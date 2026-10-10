@@ -18,7 +18,7 @@ nothing).
 ## Hidden Count-Up
 Timer runs silently, no score multiplier, time shown on results screen only.
 
-Games: Differentiation Duel, Integration Duel, SUVAT Selector, Complex Converter, Log Laws, Quadratic Factoriser, Sequence Solver, Surd Simplifier, Proportion Blaster, Trig Identity Duel, Standard Form Blitz, Binomial Blaster, Partial Fractions Duel, Circle Theorem Spotter, Simultaneous Solver, Curling Friction, Force Resolver, Moments Master, Matrix Crunch, Proof Builder, Coordinate Geometry Dash, Angle Ace, Formula Unlocked, Prime Sprint, Chart Interrogator, Estimation Golf, Dimension Checker, Bearing Blitz, Scale Factor Scaling, Unit Converter, Formula Forge, Regression Rumble, Test the Claim, Stat Attack, Growth and Decay, Graph Sketcher, Glorious Gantt Game, Split It, Component Crusher.
+Games: Differentiation Duel, Integration Duel, SUVAT Selector, Complex Converter, Log Laws, Quadratic Factoriser, Sequence Solver, Surd Simplifier, Proportion Blaster, Trig Identity Duel, Standard Form Blitz, Binomial Blaster, Partial Fractions Duel, Circle Theorem Spotter, Simultaneous Solver, Curling Friction, Force Resolver, Moments Master, Matrix Crunch, Proof Builder, Coordinate Geometry Dash, Angle Ace, Formula Unlocked, Prime Sprint, Chart Interrogator, Estimation Golf, Dimension Checker, Bearing Blitz, Scale Factor Scaling, Formula Forge, Regression Rumble, Test the Claim, Stat Attack, Growth and Decay, Graph Sketcher, Glorious Gantt Game, Split It, Component Crusher.
 
 **Confirmed 7 Oct 2026 (canon SR-23, Jon's timer ruling):** Trig Identity Duel and Glorious Gantt Game follow this
 section. Both show a timer now, and Trig Identity Duel's feeds the score: those are fixes still to make
@@ -27,7 +27,8 @@ section. Both show a timer now, and Trig Identity Duel's feeds the score: those 
 ## No Timer
 Interactive/exploratory/reasoning games.
 
-Games: **Estimation Engine** (countdown removed in its SR-12 rebuild, 5 Oct 2026, Jon's contract: no timer;
+Games: **Unit Converter** (moved from Hidden Count-Up 9 Oct 2026: since #196 it shows, logs and scores no clock;
+score on correct answers only, Jon 8 Oct), **Estimation Engine** (countdown removed in its SR-12 rebuild, 5 Oct 2026, Jon's contract: no timer;
 two marks a question, round then estimate), **Index Laws** (countdown removed 22 Sep 2026 — Jon: students use it in class and do not
 need the pressure. It had been running a 7s countdown that failed the question outright, despite
 being listed here under Hidden Count-Up; the doc and the game had disagreed since it shipped),

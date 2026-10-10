@@ -196,7 +196,7 @@ If one applies, apply it and list "SR-n applied: …" in the PR; stop only for w
   - **For Jon (PR #83's "my calls", his to overturn):** session lengths 10/8/6/6; Stage 4's letter choice
     unscored; play continues with a valid clumsier pair; decimal multipliers not marked; theme migrated with
     accent #1d4ed8; A-Level at 100 a question (old board compares); A21 dropped until Stage 5.
-  - **PARKED (build freeze, canon §0.2): Stage 5 (word problems, PR 2)**, once the exit bar is met, when Jon approves Project Claude's drafted bank: tiles, Equation
+  - **BUILT 9 Oct 2026 (#203, the freeze's one named exception, canon §0.2): Stage 5 (word problems, PR 2).** Was parked until the exit bar was met, when Jon approves Project Claude's drafted bank: tiles, Equation
     Builder's ACCEPTED lists by SymPy, any letters, equivalent forms (SR-13), forming only. Re-add A21 then.
   - **#82 relist checklists:** todo §1.53 (Trig Worms) and §1.54 (Spot the Error).
 - **6 Oct (cloud): ANGLE ACE, Jon's contract (SR-6), PRs #79 (Starter) and #80 (GCSE), each merged on a green
