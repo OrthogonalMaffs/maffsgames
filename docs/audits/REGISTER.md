@@ -9,7 +9,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | # | Point | Status |
 |---|---|---|
 | 1 | Every live game has a verifier in CI | NOT MET: 21 of 97 live games have none (computed from `games/` and the verifiers CI runs) |
-| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 10 open (1 CRITICAL, 9 HIGH) |
+| 2 | Every CRITICAL and HIGH in the register fixed | NOT MET: 9 open (1 CRITICAL, 8 HIGH) |
 | 3 | Shared checks green site-wide | NOT MET (stated): not yet: answer lock, level resolver, served bank size, SR-14 fields, B11 parser |
 | 4 | Every level serves 40+ | NOT MET: 106 audited levels serve under 40 (games no audit has covered are not measured) |
 | 5 | Every unlisted game relisted or archived | NOT MET: 2 in the roster's Unlisted section |
@@ -22,10 +22,10 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 25 | 0 | 26 |
-| HIGH | 9 | 199 | 0 | 208 |
+| HIGH | 8 | 200 | 0 | 208 |
 | MEDIUM | 128 | 143 | 2 | 273 |
 | LOW | 33 | 30 | 1 | 64 |
-| **All** | 171 | 397 | 3 | 571 |
+| **All** | 170 | 398 | 3 | 571 |
 
 ### By class
 
@@ -84,7 +84,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:hint-gives-answer | 1 | 1 |
 | NEW:hit-detection | 0 | 1 |
 | NEW:inconsistent premise | 1 | 1 |
-| NEW:keys-under-overlay | 1 | 1 |
+| NEW:keys-under-overlay | 0 | 1 |
 | NEW:locus-segment-ends | 1 | 1 |
 | NEW:low-answer-variety | 1 | 1 |
 | NEW:minor-text-ui | 1 | 1 |
@@ -175,7 +175,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `percentage-flip` | yes | none | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `prime-or-composite` | yes | none | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
-| `prisoners-dilemma` | yes | none | 0 | 2 | 4 | 1 | 7 | 0 | 0 |
+| `prisoners-dilemma` | yes | none | 0 | 2 | 4 | 1 | 6 | 1 | 0 |
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 5 | 1 | 0 | 11 | 0 |
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
@@ -207,7 +207,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 ### `prisoners-dilemma` (KS3, GCSE, A-Level, Core)
 
 - **HIGH** prisoners-dilemma-t4-001, `games/prisoners-dilemma/index.html:781`: One board per level ranks the opponent picked: 100 only by choosing Always-Cooperate and defecting 20 times
-- **HIGH** prisoners-dilemma-t4-002, `games/prisoners-dilemma/index.html:789,1033`: Initials typed into the leaderboard overlay play moves in the next tournament match
 
 ### `glorious-gantt` (Core, L4; unlisted)
 
