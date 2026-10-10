@@ -27,12 +27,14 @@
    centimetres" (wrong-entry line 1, Jon's line), "ten" and "five centimetres"
    (lock 1's constant precision), "fifteen minutes" and "eight sharp".
 
-   ART: pending. The six old pictures (car-trap-scene, -fail, -win and the three
-   carpark-* lock pictures) show the old premise and stay in docs/art/ untouched;
-   this room no longer points at them. `art` names car-trap-v2, which has no files
-   yet, so the engine drops the frame (its fallback) until Jon's three new pictures
-   are filed from the draft's prompts. The alts below are the draft's, to be checked
-   against those pictures and rewritten to match before release. No lock has art.
+   ART: pending, the ART-PENDING way (#244, 10 Oct): this room has no `art` field,
+   so the engine requests no picture at all (no scene, fail thumbnail or end-card
+   picture) and check-escape-rooms.py lists it as art pending. The six old pictures
+   (car-trap-scene, -fail, -win and the three carpark-* lock pictures) show the old
+   premise (the orange sports car, the VISITOR bay) and stay in docs/art/ untouched.
+   When Jon's three new pictures are filed, add `art:` naming them and check the
+   alts below against them (rewrite winAlt for the win picture's view). No lock has
+   art.
 
    RULE — the fail picture shows the barrier down in front of the Head's car, which
    is only true at time-out. Never set `missArt` on any lock in this room: the
@@ -45,7 +47,6 @@ window.ROOM = {
   levelLabel: 'GCSE / Core Maths',
   minutes: 15,
   penalty: 45,
-  art: 'car-trap-v2',
   sceneAlt: 'An underground staff car park under cold strip lighting, early morning, with concrete pillars and a wet floor. In a row of bays by the lift, one bay is plainly narrower than the rest, its new white line bright beside the faint ghost of the old one. A small hatchback with stick-on eyelashes on its headlights is parked in the wide bay beside it. A walk-behind line-marking machine stands by the fresh line. A charging post with its cover open is at the head of the narrow bay, a barrier arm is down at the foot of the entrance ramp, and at the far end of the row a measuring wheel leans against a bollard.',
   failAlt: 'The same car park from the foot of the ramp. A plain, sensible grey hybrid car has stopped at the barrier, its arm down across the lane just in front of the bonnet. Beyond the arm the row of bays stands waiting, the narrow bay among them, and a clipboard rests on top of the barrier post.',
   winAlt: 'The same row of bays. Every line is crisp and even. The grey hybrid is parked squarely in its bay, its charging cable plugged in and a small green light on the post. In the bay beside it, the eyelash hatchback sits across the new white line, half in one bay and half in the next. The barrier arm is up.',
