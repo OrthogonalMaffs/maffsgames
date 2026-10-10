@@ -41,13 +41,22 @@ def grid(lo, hi, step):
     return [round(lo + i * step, 6) for i in range(n + 1)]
 
 
+class Keypad(tuple):
+    """An instrument range that is a keypad: keep() skips its end-of-travel rule (see keypad())."""
+
+
 def keypad(n):
     """A keypad as an instrument range, for either mode (canon §11): `digits: n` takes exactly n
     digits (60 entered as 060), `maxDigits: n` takes 1 to n digits, no leading zero, Set to submit
     (KEYPAD-VARIABLE). Both set exactly the whole numbers 0 to 10^n - 1, so keep()'s on_grid test is the
     settable rule for both: the answer and the misconception must each fit in n digits (a four-digit
-    misconception needs n >= 4). What differs is the display, not what can be entered."""
-    return (0, 10 ** n - 1, 1)
+    misconception needs n >= 4). What differs is the display, not what can be entered.
+
+    A keypad has no travel: nothing starts at an end, and no answer is reached by pushing a needle to a
+    stop, so keep()'s end-of-travel rule does not apply to it (LIBRARY-JAM-BUILD, Jon 10 Oct 2026). Under
+    that rule a four-digit keypad rejected every answer under 400, so a two-digit answer with a four-digit
+    misconception (54 against 5400) could never be built. Lifting it changed no existing library."""
+    return Keypad((0, 10 ** n - 1, 1))
 
 
 def on_grid(v, lo, hi, step):
@@ -76,7 +85,7 @@ def keep(store, lock, var, ins, clue_numbers, solver, minsep=0.0):
     if any(abs(n - a) < 1e-9 for n in clue_numbers(var)):
         rejected.append((lock, var, "answer is printed in its own clue")); return
     edge = (hi - lo) * 0.04
-    if not (lo + edge <= a <= hi - edge):
+    if not isinstance(ins, Keypad) and not (lo + edge <= a <= hi - edge):   # a keypad has no travel
         rejected.append((lock, var, "answer sits at the end of the travel")); return
     sep = minsep or (hi - lo) * 0.05
     # the tolerance matters: 1.2 - 1.0 is 0.19999999999999996 in binary, so a
@@ -157,7 +166,7 @@ for d1, d2, d3, dT, s, c1 in cands:
 V["locker-nth-term"] = store
 
 # ---------------------------------------------------- D1 reverse percentage (keypad 4)
-ins = (0, 9999, 1)
+ins = keypad(4)
 store = []
 cands = shuffled([(2160, 20)] + [(t, p) for p in (10, 15, 20, 25, 40, 50)
                         for t in range(1100, 9000, 2)])
@@ -450,7 +459,7 @@ for a, b, c in cands:
 V["patrol-lcm-timer"] = store
 
 # ---------------------------------------------------- H2 cube SA -> V (keypad 4)
-ins = (0, 9999, 1)
+ins = keypad(4)
 store = []
 for e in [15] + list(range(10, 22)):
     sa, vol, face = 6 * e * e, e ** 3, e * e
@@ -730,7 +739,7 @@ V["chokey-hcf-bundles"] = store
 # ---------------------------------------------------- L1 largest multiple under a limit (keypad 0-99)
 # Misconception: the first multiple past the limit, so that has to fit on two digits,
 # and at most 96 so it never sits at the very top of the keypad.
-ins = (0, 99, 1)
+ins = keypad(2)
 store = []
 cands = shuffled([(9, 85)] + [(k, L) for k in range(6, 14) for L in range(30, 100)
                               if L % k and (k, L) != (9, 85)])
@@ -876,6 +885,78 @@ for N, Vv, S, nb in cands:
         break
 V["leak-audit-conditional"] = store
 
+# ---------------------------------------------------- N1 (2026-10) ordering decimals (dial 1-8)
+# The Library Jam (contract LIBRARY-JAM-BUILD; bank batch 10). Five or six books on one Dewey shelf, in the
+# order they were dropped in; the arm holds one and wants its slot, smallest first. Misconception: the digits
+# after the point read as a whole number (a longer decimal taken as bigger). The library is the draft's eight
+# shelves, in its order; each still has to pass the draft's rules below and keep(). Spread is off for this
+# lock (minsep 1e-9): the slots repeat across shelves, one variant per shelf (the draft's rule).
+ins = (1, 8, 1)
+store = []
+DEWEY = [("520", "stars and planets", ["35", "5", "15", "62", "4"], "4"),
+         ("567", "dinosaurs", ["6", "4", "07", "13", "86", "65"], "6"),
+         ("641", "cooking", ["3", "7", "8", "18", "97"], "7"),
+         ("551", "volcanoes and weather", ["9", "3", "06", "77", "76"], "9"),
+         ("942", "British history", ["4", "1", "8", "9", "63", "77"], "9"),
+         ("796", "sport", ["8", "2", "37", "61", "39"], "8"),
+         ("598", "birds", ["1", "6", "8", "63", "58", "59"], "6"),
+         ("821", "poetry", ["5", "7", "2", "8", "16", "53"], "5")]
+for shelf, subject, parts, book in DEWEY:
+    vals = [Fraction(int(d), 10 ** len(d)) for d in parts]
+    reads = [int(d) for d in parts]                      # the misconception reads .07 as 7, .4 as 4
+    lens = [len(d) for d in parts]
+    if not (5 <= len(parts) <= 6 and lens.count(1) >= 2 and lens.count(2) >= 2):
+        continue
+    if any(d.endswith("0") for d in parts) or len(set(reads)) < len(reads) or len(book) != 1:
+        continue
+    if vals in (sorted(vals), sorted(vals, reverse=True)):  # the drop order is never already sorted
+        continue
+    b = parts.index(book)
+    ans = sorted(vals).index(vals[b]) + 1
+    miss = sorted(reads).index(reads[b]) + 1
+    if ans == 1 or ans == miss:
+        continue
+    keep(store, "dewey-sort-arm",
+         {"shelf": shelf, "subject": subject, "parts": parts, "book": f"{shelf}.{book}", "answer": ans, "miss": miss},
+         ins, lambda v: [float(f"{v['shelf']}.{d}") for d in v["parts"]],
+         lambda x, v: x == 1 + sorted(Fraction(int(d), 10 ** len(d)) for d in v["parts"]).index(
+             Fraction(int(v["book"].split(".")[1]), 10 ** len(v["book"].split(".")[1]))), minsep=1e-9)
+V["dewey-sort-arm"] = store
+
+# ---------------------------------------------------- N2 (2026-10) angles on a straight line (dial 0-180)
+# answer = 180 - x; misconception: 90 - x, the angles making a right angle. x from 20 to 70, never a multiple
+# of 5. The library is the draft's eight angles, in its order, with the five-degree spread (Jon's ruling 4).
+ins = (0, 180, 1)
+store = []
+for x in [37, 46, 63, 68, 24, 56, 32, 51]:
+    if not (20 <= x <= 70) or x % 5 == 0:
+        continue
+    keep(store, "deflector-straight-line", {"x": x, "answer": 180 - x, "miss": 90 - x}, ins,
+         lambda v: [v["x"]],
+         lambda a, v: a + v["x"] == 180, minsep=5)
+V["deflector-straight-line"] = store
+
+# ---------------------------------------------------- N3 (2026-10) pence to pounds (keypad, maxDigits 4)
+# p pence a day for d days, for each of n books: p x d x n pence, entered in pounds. Misconception: the
+# pence total entered as pounds (5400 for 54), which a maxDigits 4 keypad can set (Jon's ruling 2). p in
+# {5, 10, 15, 20} (non-calculator), d 5 to 20, n 20 to 32 (a class), p, d and n all different; the answer
+# a whole number of pounds, 10 to 99. The library is the draft's ten sets, in its order (variant 0 is Jon's
+# example: 15p, 12 days, 30 books, 54). minsep 1: the answers only have to differ, as the draft rules; the
+# default spread is 5% of the keypad's 0-9999.
+ins = keypad(4)
+store = []
+for p, d, n in [(15, 12, 30), (20, 15, 26), (20, 15, 32), (20, 10, 24), (10, 20, 28), (5, 8, 30), (10, 14, 20),
+                (15, 14, 20), (10, 20, 31), (5, 15, 32)]:
+    total = p * d * n
+    if p not in (5, 10, 15, 20) or not (5 <= d <= 20 and 20 <= n <= 32) or len({p, d, n}) < 3:
+        continue
+    if total % 100 or not (10 <= total // 100 <= 99):
+        continue
+    keep(store, "fines-pence-to-pounds", {"p": p, "d": d, "n": n, "answer": total // 100, "miss": total}, ins,
+         lambda v: [v["p"], v["d"], v["n"]],
+         lambda x, v: x * 100 == v["p"] * v["d"] * v["n"], minsep=1)   # answers distinct (the draft's rule)
+V["fines-pence-to-pounds"] = store
+
 # ------------------------------------------------- derived tokens
 # Values the prose wants to quote but that are not parameters: a squared
 # radius, a reduced fraction, a prime factorisation. Deriving them here keeps
@@ -993,6 +1074,15 @@ for v in V["leak-audit-conditional"]:
     v["both"] = v["V"] + v["S"] - v["inside"]
     p = Fraction(100 * (v["V"] - v["both"]), v["N"] - v["S"])
     v["notS"] = f"{p}%" if p.denominator == 1 else f"about {round(p)}%"
+# library-jam: the trolley as dropped and as shelved, the straight line's constants, the fines' working
+for v in V["dewey-sort-arm"]:
+    v["list"] = ", ".join(f"{v['shelf']}.{d}" for d in v["parts"])
+    v["sorted"] = ", ".join(f"{v['shelf']}.{d}" for d in sorted(v["parts"], key=lambda d: Fraction(int(d), 10 ** len(d))))
+for v in V["deflector-straight-line"]:
+    v["half"], v["quarter"] = 180, 90
+for v in V["fines-pence-to-pounds"]:
+    v["each"] = v["p"] * v["d"]
+    v["hundred"] = 100
 
 # ------------------------------------------------- display tokens
 # Instruments that read to one decimal place need their numbers written the

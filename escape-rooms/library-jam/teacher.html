@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Teacher page for The Library Jam escape room: answers, hint ladder, misconceptions and timings.">
+<title>The Library Jam — teacher page — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/engine.css">
+<!--
+  Written 2026-10-10 for the new room (contract LIBRARY-JAM-BUILD): the real teacher page, noindex and
+  unlinked. The room itself is behind its holding page (index.html); Jon play-tests it at play.html.
+  Nothing links here until the room is released.
+-->
+</head>
+<body>
+<button class="a11y-toggle" onclick="toggleAa()" aria-label="Toggle easier-reading text">Aa</button>
+<div class="wrap">
+  <a class="back-link" href="../">&larr; All escape rooms</a>
+  <div id="app"></div>
+</div>
+<script src="room.js"></script>
+<!-- clueMap labels carry NO figures on purpose: teacher.js does not pass them
+     through fill(), so a number here would disagree with the drawn variant
+     (see docs/escape-room-voice-rewrite.md §8). Keys are room.js object ids. -->
+<script>
+window.TEACH = {
+  "lockMeta": [
+    {
+      "topic": "Ordering decimals",
+      "minutes": 2,
+      "curriculum": "Number &mdash; ordering decimals with different numbers of decimal places: tenths first, then hundredths."
+    },
+    {
+      "topic": "Angles on a straight line",
+      "minutes": 1,
+      "curriculum": "Geometry &mdash; angles on a straight line add up to 180&deg;."
+    },
+    {
+      "topic": "Money and units",
+      "minutes": 2,
+      "curriculum": "Number &mdash; multiplying a daily fine out over days and books, then converting pence to pounds. <b>No calculator</b>: every fine is a multiple of 5p."
+    }
+  ],
+  "clueMap": {
+    "trolley": "The sorting arm &mdash; the books on the trolley, in the order they were dropped in",
+    "jammed-book": "The sorting arm &mdash; the book it holds, and that it files smallest first",
+    "belt-plate": "The deflector arm &mdash; the angle it makes with the belt",
+    "reset-card": "The deflector arm &mdash; that it wants the angle on the other side, on a straight belt",
+    "fines-screen": "The reconciliation screen &mdash; the fine a day and the days overdue",
+    "drop-counter": "The reconciliation screen &mdash; how many books were posted"
+  },
+  "notes": "<p class='lede'>A Warm-up room: three short locks, no calculator. Every fine is a multiple of 5p, so the arithmetic stays mental.</p><p class='lede'>The sorting arm is built around reading the digits after the point as a whole number, so that a longer decimal looks bigger. A group that makes that mistake gets that response, not a plain wrong answer. The reconciliation screen wants pounds: a group that enters the total in pence gets its own response too.</p><p class='lede'>At time-out the end screen shows every lock&rsquo;s solution. For a second attempt, press Play again for fresh numbers.</p>"
+};
+</script>
+<script src="../assets/rating.js"></script>
+<script src="../assets/teacher.js"></script>
+</body>
+</html>

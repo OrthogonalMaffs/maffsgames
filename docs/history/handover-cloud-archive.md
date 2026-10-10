@@ -3,6 +3,24 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-10 (cloud): RIGHTFUL-KING-DRAFT, Rightful King draft for Jon's review
+
+- **The draft:** `docs/escape-room-drafts/rightful-king-draft.md`. It has every slot `room.js` needs, three new
+  locks with proposed libraries, bank entries, the teacher-page line, and the checklist (all pass). No art prompts.
+  Its "For Jon" list has 14 items. The ones that change the contract's maths:
+  - **Lock 1:** the example sets 60, 24, 42 can't go on a three-digit keypad (the engine wants every digit; no
+    leading zero). The only all-three-digit sets with L >= 3 are k = 6 to 9, L = 3, so the library is 4 (120, 210,
+    336, 504). Variant 0 is k = 7 (210), because 120 collides with audit set 0's 120 voters.
+  - **Lock 2:** where r divides (1 - f) x 100 exactly, a strict linear reader lands one minute later. For 25 with
+    a half that is the right answer, so the misconception scores. Proposed: reject those sets. Whole-number r from
+    5 to 40 gives 10 variants; the lock needs a calculator.
+  - **Lock 3:** the set 150, 70, 50, 60 prints its own answer (60). Proposed story rules: he has 30-60% of the
+    vote, P(him | saw it) is at least 20 points above P(him | didn't), and S is not 100. The library is 7.
+- **Measured (scratch, nothing committed):** `check-lock-bank.py` says unique on all three bank entries. The
+  checker's own `draw_is_valid()` on the draft's clue strings gives **183 of 280 VALID, variant 0 VALID**.
+- **STOP IF did not fire:** prom-budget was read in full and never mentions a vote, a king or Narry.
+- **Next:** LIBRARY-DRAFT. Phase 2 of The Rightful King is a separate contract after Jon approves.
+
 ## 2026-10-10 (cloud): CAR-TRAP-BUILD, the rewritten Car Trap built behind its holding page (awaiting Jon's play-test)
 
 - **10 Oct, after ART-PENDING (#244): rebased on main; `art` dropped.** The room requests no picture.

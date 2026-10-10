@@ -1,0 +1,51 @@
+Batch 10 - Jon and Project Claude, 2026-10-10 (contract LIBRARY-JAM-BUILD; the three locks were drafted in
+docs/escape-room-drafts/library-draft.md, merged in #248, and approved by Jon in full on 10 Oct). Three locks,
+for The Library Jam, a new Warm-up room. Hints are not held here; like batches 3-9 they live in the room's
+room.js.
+Notes on format, not touching the mathematics:
+  * The fines lock uses the keypad's maxDigits mode (contract KEYPAD-VARIABLE, Jon's ruling 2): up to four
+    digits, Set to submit, so 54 is typed as 54 and the misconception 5400 is settable.
+  * The CLUE lines quote each lock's variant 0. In the room every figure is a token, Dewey numbers included.
+
+
+Room N - The Library Jam (GCSE)
+===============================
+
+ID:          dewey-sort-arm
+LEVEL:       GCSE Foundation
+TOPIC:       Number / Ordering decimals
+INSTRUMENT:  Dial 1 to 8 (the slot on the shelf), step 1.
+CONTEXT:     Five books on the 520 shelf, in the order they were dropped in: 520.35, 520.5, 520.15, 520.62, 520.4. The arm files them smallest first along the shelf. Which slot does 520.4 go in?
+CLUE:        "In the order they were dropped in: 520.35, 520.5, 520.15, 520.62, 520.4." / "Spine label 520.4. FILES SMALLEST FIRST ALONG THE SHELF."
+ANSWER:      3
+AHA:         Compare the tenths first, then the hundredths: 520.15, 520.35, 520.4, 520.5, 520.62. More digits after the point does not make a number bigger.
+MISCONCEPTION: 1 (the digits after the point read as whole numbers: 4 is the smallest of 35, 5, 15, 62, 4).
+SOLVE:       Smallest first: 520.15, 520.35, 520.4, 520.5, 520.62. 520.4 is number 3.
+TIME:        2
+VERIFY:      [n for n in range(1, 9) if n - 1 == len([x for x in [Fraction(35, 100), Fraction(5, 10), Fraction(15, 100), Fraction(62, 100), Fraction(4, 10)] if x < Fraction(4, 10)])]
+
+ID:          deflector-straight-line
+LEVEL:       GCSE Foundation
+TOPIC:       Geometry / Angles on a straight line
+INSTRUMENT:  Dial 0 to 180 degrees, step 1.
+CONTEXT:     The deflector arm makes 37 degrees with the straight belt. What is the angle between the arm and the belt on the other side of the arm?
+CLUE:        "DEFLECTOR ARM: 37 degrees TO THE BELT." / "Set the dial to the angle between the arm and the belt on the other side of the arm. The belt is straight."
+ANSWER:      143
+AHA:         The two angles at the arm sit on a straight line, so they add up to 180 degrees.
+MISCONCEPTION: 53 (90 - 37: the angles that make a right angle, not a straight line).
+SOLVE:       180 - 37 = 143 degrees.
+TIME:        1
+VERIFY:      [n for n in range(181) if n + 37 == 180]
+
+ID:          fines-pence-to-pounds
+LEVEL:       GCSE Foundation
+TOPIC:       Number / Money and units (pence to pounds)
+INSTRUMENT:  Keypad, up to four digits (maxDigits 4).
+CONTEXT:     The fine is 15p a day for each book. The books are 12 days overdue. 30 books were posted. What is the total fine, in pounds?
+CLUE:        "Fine: 15p a day for each book. Days overdue: 12." / "30 books posted today."
+ANSWER:      54
+AHA:         One book: 15p x 12 = 180p. The class: 180p x 30 = 5400p. There are 100 pence in a pound, so 54 pounds.
+MISCONCEPTION: 5400 (the total in pence, entered as pounds).
+SOLVE:       15 x 12 = 180p each; 180 x 30 = 5400p = 54 pounds.
+TIME:        2
+VERIFY:      [n for n in range(10000) if n * 100 - 15 * 12 * 30 == 0]
