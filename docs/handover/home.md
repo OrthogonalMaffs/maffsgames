@@ -1,5 +1,19 @@
 # Handover: home lane
 
+**DASHBOARD-CHARTS (10 Oct, Jon's contract 08:35; `docs/handover/contracts/2026-10-10-dashboard-charts.md`).**
+`docs/apps-script-endpoint.js` only, SCRIPT_VERSION `2026-10-10-a`: the three percentage columns are written as
+fractions with the cell format `0%` (they show as before), the Accuracy chart's axis runs 0 to 1 as percent;
+`rowBelowChart()` moves the row counter below each chart (a 21 px default row), so no chart overlaps the next
+section; one filter, `isMarked()`, keeps rows with a blank `correct` out of Accuracy by Game and Hardest Questions.
+STOP IFs clear: prisoners-dilemma sends `correct: null` (written blank by `cellValue`), and every other
+`question_answered` call in games/ sends a boolean. The daily email is untouched (its own hardest-questions list still
+counts prisoners-dilemma: the contract left the email alone). **Jon must redeploy; the repo copy does not deploy
+itself** (runbook `docs/apps-script-redeploy.md`): paste the file into the Apps Script editor and set `REPORT_EMAIL`
+to your address before saving; Deploy, Manage deployments, edit (pencil) the existing deployment, Version: New
+version, Deploy; select `testDashboard` in the function menu and Run (it rebuilds the dashboard from the sheet;
+`rebuildDashboard` itself needs arguments), or wait for the 07:00 run; open the `/exec` URL and check `version` reads
+`2026-10-10-a`.
+
 **MAIN GREEN (for the cloud lane: #223 may merge):** main's full run on 5cea89b (#224) passed every job, run
 37969653160, and its timings job recorded and repacked (760ef9a). Main had been red since #220 (CI-BALANCE) on its
 main-only "CI timings and pack" job alone: the job-log API refused the workflow's token; #224 reads the timings from
