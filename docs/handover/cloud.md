@@ -41,7 +41,19 @@ LISTED-HIGH: COMPLETE (contract, rulings and notes now in `docs/history/contract
 #210-#212, #214, #216, #217, #219, #223, #225-#231 merged; main green (run 654, 37978742832). Item 12 closed on
 Jon's ruling of 22:45 (option A): see the PD-CLOSE entry below. CAR-TRAP-DRAFT (moved from the home lane, Jon 20:17; contract on main,
 `contracts/2026-10-09-car-trap-draft.md`): **Car Trap draft for Jon's review**, #235 merged (ba5b6b2); main green
-(run 661). Phase 2 waits on Jon's review. **Nothing else is queued for the cloud lane** (until Jon's planning, 10 Oct).
+(run 661). **CAR TRAP HAS MOVED ENTIRELY TO THE HOME LANE (Jon, 10 Oct), including #242 (CAR-TRAP-BUILD): the cloud
+lane does not push to #242 or touch any car-trap file.** #242's state at hand-over is in its branch's
+`docs/handover/cloud.md` (the CAR-TRAP-BUILD entry). It is red only on the teacher page at 320 px (§1.37). The new
+art was not on main when Jon said it was: the only `car-trap-*.webp` there are the old pictures.
+**QUEUE (Jon, 10 Oct), in order. Keep the handover current after each:**
+1. **RIGHTFUL-KING-DRAFT**: draft prose only, touches no live file.
+2. **LIBRARY-DRAFT**: draft prose only. Taken from the home lane's queue; the home lane is told to skip it.
+**Both contracts are NOT in the repo.** Jon named them as `claude/contract-rightful-king-draft-2026-10-09.md` and
+`claude/contract-library-draft-2026-10-09.md`. Neither is on main, on any remote branch, in
+`docs/handover/contracts/` or in the session uploads; it is probably Jon's Project folder. **Ask Jon to paste them
+before starting;** save each verbatim under `docs/handover/contracts/` when it starts.
+**Open for Jon:** delete branch `claude/youthful-feynman-anpxuq-pd-check` in GitHub (the proxy refused the remote
+delete, HTTP 403).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
