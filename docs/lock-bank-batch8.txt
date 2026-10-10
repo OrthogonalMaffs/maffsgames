@@ -1,0 +1,25 @@
+Batch 8 - Jon and Project Claude, 2026-10-09 (contract CAR-TRAP-BUILD; the lock was drafted in
+docs/escape-room-drafts/car-trap-draft.md and approved by Jon at 22:53). One lock, for the rewritten
+Headteacher's Car Trap. It replaces visitor-space-bounds in that room; visitor-space-bounds keeps its
+batch 5 entry. Hints are not held here; like batches 3-7 they live in the room's room.js.
+One note on format, not touching the mathematics:
+  * The precision is written "to the nearest ten centimetres" in the room's prose, in words, so that
+    the 10 is not a clue figure (check-escape-rooms.py's collision rules). The CLUE line below quotes
+    the bay specification with variant 0's width.
+
+
+Room J - The Headteacher's Car Trap (GCSE / Core)
+=================================================
+
+ID:          head-bay-lower-bound
+LEVEL:       GCSE / Core
+TOPIC:       Number / Error intervals (lower bound)
+INSTRUMENT:  Bay-width slider, 2.00 to 3.00 m, 0.01 m steps.
+CONTEXT:     The line marker re-marks a bay at whatever width it is set to, measured from the line next door. Its card says to re-mark at the smallest width the specification allows.
+CLUE:        "Bay width 2.4 m, to the nearest ten centimetres." / "Re-mark to the smallest width the specification allows."
+ANSWER:      2.35
+AHA:         A width given to the nearest ten centimetres is a range, not a number; the smallest it can be is five centimetres below the stated width, and that width really does round to it.
+MISCONCEPTION: 2.40 (the stated width, treated as exact).
+SOLVE:       2.35 m <= width < 2.45 m, so the smallest width is 2.35 m.
+TIME:        2
+VERIFY_MIN:  [c / 100 for c in range(200, 301) if (c + 5) // 10 == 24]

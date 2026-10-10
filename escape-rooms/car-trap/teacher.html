@@ -4,44 +4,60 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<meta name="description" content="The Headteacher's Car Trap is being rewritten and will be back shortly.">
-<title>The Headteacher's Car Trap &mdash; back shortly &mdash; MaffsGames</title>
+<meta name="description" content="Teacher page for The Headteacher's Car Trap escape room: answers, hint ladder, misconceptions and timings.">
+<title>The Headteacher’s Car Trap — teacher page — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/engine.css">
 <!--
-  HOLDING PAGE, put here 2026-09-08. This room is withdrawn while its narrative
-  is rewritten; see docs/escape-room-voice-rewrite.md.
-
-  Nothing has been deleted. room.js, teacher.html's data block and every image
-  are untouched, and this room's puzzles and maths are exactly as they were.
-  Only this file and teacher.html were replaced.
-
-  TO PUT THE ROOM BACK: the rewrite session writes a fresh index.html anyway
-  (its meta, og: and Twitter copy all carry the premise), so copy the shape from
-  a live room -- escape-rooms/prom-budget/index.html -- or take the original
-  back out of git:
-
-    git show cf31887~1:escape-rooms/car-trap/index.html   > escape-rooms/car-trap/index.html
-    git show cf31887~1:escape-rooms/car-trap/teacher.html > escape-rooms/car-trap/teacher.html
-
-  Then re-add its card to escape-rooms/index.html and index.html, its <url> to
-  sitemap.xml, and bump the room counts in both pages. Grep for "three" first.
+  Written 2026-10-10 for the rewritten room (contract CAR-TRAP-BUILD; Jon's answer of 10 Oct: the real
+  teacher page now, noindex and unlinked). The room itself is still behind its holding page (index.html);
+  Jon play-tests it at play.html. Nothing links here until the room is released.
 -->
 </head>
 <body>
+<button class="a11y-toggle" onclick="toggleAa()" aria-label="Toggle easier-reading text">Aa</button>
 <div class="wrap">
   <a class="back-link" href="../">&larr; All escape rooms</a>
-  <div id="app">
-    <div class="card">
-      <h1><span class="sub">Back shortly</span>The Headteacher's Car Trap</h1>
-      <p class="lede">This room is being rewritten and is not available at the moment. Its puzzles are staying
-        exactly as they are &mdash; it is the writing around them that is being redone, one room at a time.</p>
-      <p class="lede">The rooms that have already been through that are open now, and the rest will follow as they
-        are finished.</p>
-      <p><a class="esc-btn" href="../">See the rooms that are open &rarr;</a></p>
-    </div>
-  </div>
+  <div id="app"></div>
 </div>
+<script src="room.js"></script>
+<!-- clueMap labels carry NO figures on purpose: teacher.js does not pass them
+     through fill(), so a number here would disagree with the drawn variant
+     (see docs/escape-room-voice-rewrite.md §8). Keys are room.js object ids. -->
+<script>
+window.TEACH = {
+  "lockMeta": [
+    {
+      "topic": "Error intervals (lower bound)",
+      "minutes": 2,
+      "curriculum": "Number &mdash; error intervals: a width given to the nearest ten centimetres, and the smallest width it allows."
+    },
+    {
+      "topic": "Arc length",
+      "minutes": 3,
+      "curriculum": "Geometry &mdash; arc length as a fraction of the circumference, with &pi; left in so that it cancels."
+    },
+    {
+      "topic": "Quadratics with a constraint",
+      "minutes": 3,
+      "curriculum": "Algebra &mdash; solving a quadratic by factorising, then choosing the root a stated limit allows."
+    }
+  ],
+  "clueMap": {
+    "spec": "The line marker &mdash; the bay&rsquo;s stated width and its precision",
+    "botcard": "The line marker &mdash; that it wants the smallest width the specification allows",
+    "maintlog": "The barrier &mdash; the arm&rsquo;s length, pivot to tip",
+    "sensor": "The barrier &mdash; the arc the tip must travel",
+    "commission": "The charging post &mdash; the load limiter equation",
+    "alarmnote": "The charging post &mdash; the alarm limit that rules out one root"
+  },
+  "notes": "<p class='lede'>The line marker is a one-step lower bound: a width stated to the nearest ten centimetres can be up to five centimetres less. The mistake it is built around is taking the stated width as exact. A group that sets the width on the sheet gets that response, not a plain wrong answer.</p><p class='lede'>The charging post has two roots and one limit. A group that solves the quadratic but never reads the electrician&rsquo;s note lands on the other root and gets the misconception response.</p><p class='lede'>At time-out the end screen shows every lock&rsquo;s solution. For a second attempt, press Play again for fresh numbers.</p>"
+};
+</script>
+<script src="../assets/teacher.js"></script>
 </body>
 </html>
