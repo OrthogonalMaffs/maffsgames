@@ -32,9 +32,8 @@
    The only figures in the prose outside tokens are "fifteen minutes" and "half
    past three", in words.
 
-   ART: none yet (art pending; ART-PENDING, #244). Jon generates the three
-   pictures after his play-test; add `art` with them, never before. The alts
-   below are the draft's, to be checked against the pictures.
+   ART: docs/art/rightful-king-{scene,fail,win}.webp, Jon's approved pictures
+   (10 Oct, 22:20; contract RIGHTFUL-KING-ART). The alts below match them.
 
    RULE — the fail picture will show the crown already down, which is only true
    at time-out. Never set `missArt` on any lock in this room. */
@@ -44,8 +43,9 @@ window.ROOM = {
   level: 'gcse',
   minutes: 15,
   penalty: 45,
-  sceneAlt: 'A school IT suite after the last lesson. Rows of monitors are switched off except one big display at the front, glowing with a neon pop-concert stage: sparkles, a sweeping spotlight, and a crown hanging over an empty space. At the back a server cupboard stands open, its lights blinking. On the side wall a corkboard holds a single printed sheet with a gold star stuck to it, and the desk by the door has a keyboard pushed back and a mug of tea gone cold.',
-  failAlt: 'The same IT suite, the room lights off. The big display blazes: the crown lowered and glowing, the spotlight full on, sparkles frozen mid-fall. The server cupboard is shut and the chairs are pushed in.',
+  art: 'rightful-king',
+  sceneAlt: 'A school IT suite after the last lesson. Rows of monitors are switched off except one big display at the front, glowing with a neon pop-concert stage: sparkles, a sweeping spotlight, and a crown hanging over an empty space. At the back a server cupboard stands open, its lights blinking. On the side wall a corkboard holds a single printed sheet with a gold star stuck to it, and the desk by the door has a keyboard pushed back, a mug of tea gone cold, a yellow sticky note on the edge of the teacher’s monitor, and a small printer with paper in its tray.',
+  failAlt: 'The same IT suite at night, lit only by the big display. The crown is lowered and glowing, the spotlight full on, sparkles frozen mid-fall. The server cupboard is shut.',
   winAlt: 'The same IT suite in morning light. The big display is calm and dark blue, with a small plain crown in one corner and no sparkles. On the desk a printed sheet lies face down beside a pencil, and the gold star is stuck to the edge of the monitor.',
 
   hook: 'Mr Brian Narry teaches IT. He loves his job, he likes nearly all of you, and last month he built the ' +
