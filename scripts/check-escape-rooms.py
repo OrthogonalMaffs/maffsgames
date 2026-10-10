@@ -30,10 +30,13 @@ The run reports every room's VALID count. Fewer than 20 fails, live or
 withdrawn. An invalid variant-0 draw is a warning only — the engine never
 serves it — and a withdrawn (noindex) room only ever warns about it.
 
-Missing pictures are reported separately and do not fail the run. A room can be
-built and playable before its art exists — the engine drops the frame when the
-image 404s — and what is still to draw is tracked in
-docs/escape-room-image-prompts.md, not by this exit code.
+Missing pictures are reported separately and do not fail the run. A room is
+built and playable before its art exists: until then its room.js has no `art`
+field, the engine requests no scene, fail or win picture (contract ART-PENDING,
+10 Oct 2026), and this check lists it as "art pending". A room that names its art
+but is missing a file is listed too, and check-site's tier 1 fails its page on
+the 404. What is still to draw is tracked in docs/escape-room-image-prompts.md,
+not by this exit code.
 """
 import itertools, json, re, pathlib, sys
 
@@ -130,13 +133,18 @@ for room_dir in sorted(p for p in ROOMS.iterdir() if p.is_dir() and p.name != "a
     slug = room_dir.name
     js = (room_dir / "room.js").read_text(encoding="utf-8")
 
-    # images
-    art_keys = re.findall(r"art:\s*'([^']+)'", js)
-    wanted = [art_keys[0] + "-scene", art_keys[0] + "-fail"] + art_keys[1:]
-    # a room shows a victory picture only once it has a winAlt to describe it,
-    # so the two arrive together or not at all
-    if re.search(r"^  winAlt:", js, re.M):
-        wanted.append(art_keys[0] + "-win")
+    # images: the room's own `art` is its top-level field; any other art: is a lock's
+    room_art = re.search(r"^  art:\s*'([^']+)'", js, re.M)
+    lock_art = [a for a in re.findall(r"art:\s*'([^']+)'", js) if not room_art or a != room_art.group(1)]
+    if room_art:
+        wanted = [room_art.group(1) + "-scene", room_art.group(1) + "-fail"] + lock_art
+        # a room shows a victory picture only once it has a winAlt to describe it,
+        # so the two arrive together or not at all
+        if re.search(r"^  winAlt:", js, re.M):
+            wanted.append(room_art.group(1) + "-win")
+    else:
+        pending_art.append(f"{slug}: art pending (no `art` field: no scene, fail or win picture is requested)")
+        wanted = lock_art
     for name in wanted:
         if not (ART / (name + ".webp")).exists():
             pending_art.append(f"{slug}: {name}.webp not drawn yet")

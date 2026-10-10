@@ -632,6 +632,15 @@ python scripts/strip-gen-watermark.py --width 1600 "in.png" docs/art/<slug>-<kin
 
 House frame is **1600×873 WebP q80**.
 
+**No art field, no request (contract ART-PENDING, 10 Oct 2026).** Art comes after the room is settled, so a
+room is built and played before its pictures exist. Until they are filed, its `room.js` has **no top-level
+`art:` field**: the engine then emits no scene, fail or win `<img>` and requests nothing (the same rule as a lock
+with no `art`, canon §11.3), the teacher page does not mention the mid-game failure picture, and
+`check-escape-rooms.py` lists the room as "art pending". Add `art: '<slug>'` in the same PR that files the three
+pictures. Never name art that is not drawn: a named picture that is missing 404s, and check-site's tier 1 fails
+the page. The room's hub card in `escape-rooms/index.html` writes its own `<img>`: leave it out until the art lands.
+`scripts/test-escape-art.py` checks both halves.
+
 ## 7. Open decisions Jon still owns
 
 **Three of the eight new scene images do not match their room.** These need the premise

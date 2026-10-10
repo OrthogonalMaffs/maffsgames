@@ -130,6 +130,12 @@ Three things that cost time on 21/09, local or live:
   to a log file.
 - **Verifiers read a mark from the page's feedback, never from a wrapped `mfg`** (canon §7.9).
 
+## Escape rooms: no art field, no request (Jon, 10 Oct 2026, contract ART-PENDING)
+
+A room built before its pictures has no top-level `art:` in its `room.js`, so the engine requests no scene, fail
+or win picture (no 404 for check-site's tier 1). Add `art` with the pictures, never before. Never relax the 404
+rule or allowlist a missing picture. Detail: `docs/escape-room-voice-rewrite.md` §6.
+
 ## Contracts arrive whole (Jon, 8 Oct 2026, contract CTX)
 
 Jon never amends contracts: PC sends complete pastes.
