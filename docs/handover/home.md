@@ -1,5 +1,15 @@
 # Handover: home lane
 
+**CAR-TRAP-BUILD, taken over (10 Oct, Jon 09:30, one lane: `docs/handover/contracts/2026-10-10-car-trap-one-lane.md`).**
+The home lane owns Car Trap end to end; the cloud lane has stopped and will not touch #242 or any car-trap file. On
+#242: `art: 'car-trap-v2'` (pictures merged in #246); sceneAlt corrected (the measuring wheel is at the pillar by the
+yellow bollard), failAlt rewritten (the scene's own view, not from the ramp), winAlt rewritten for the high CCTV-style
+view (the barrier arm is down, not up); car-trap's teacher page allowlisted at 320 px (570, table.tt) like the other
+eight, todo §1.37 still the real fix for all nine. Played in Chromium: v2 scene, win and fail pictures load, no 404.
+The room stays behind its holding page (`index.html` unchanged). **Jon can play-test it at
+https://maffsgames.co.uk/escape-rooms/car-trap/play.html** (unlinked, noindex, analytics off). Release is a separate
+step on Jon's word: play.html's content becomes index.html and play.html is deleted in that PR.
+
 **CAR-TRAP-V2-ART (10 Oct, Jon; image work only, #242 and car-trap/room.js are the cloud lane's).** Filed for
 #242's `art: 'car-trap-v2'`: **`docs/art/car-trap-v2-scene.webp`, `docs/art/car-trap-v2-fail.webp`,
 `docs/art/car-trap-v2-win.webp`** (1600x873, through `strip-gen-watermark.py --width 1600 --frame 1600x873`; no
