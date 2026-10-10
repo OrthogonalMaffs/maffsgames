@@ -3,6 +3,28 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-09 (cloud): CAR-TRAP-DRAFT, Car Trap draft for Jon's review (#235 merged ba5b6b2; main run 661 green)
+
+- **Contract:** the repo copy on main, `contracts/2026-10-09-car-trap-draft.md` (Jon's amended text of 16:45, saved
+  verbatim by the home lane in dc43926 and merged in #221). It is left where it is, because the home lane's handover
+  points to that path; it moves to `docs/history/contracts/` with phase 2.
+- **The draft:** `docs/escape-room-drafts/car-trap-draft.md`. It has every slot `room.js` needs, the three art
+  prompts, lock 1's variant proposal and bank entry, and the checklist (all pass; two figure exceptions in words,
+  both flagged). Its "For Jon" list has 11 decisions, including:
+  - **There is no `fail` slot.** The engine shows `stakes` after "If you get it wrong." (`engine.js:238`) and after
+    "And so:" on time-out (`:791`), so the Fail is written into `stakes`.
+  - **`hook`, `brief` and `stakes` are written raw**, so they can't hold tokens.
+- **Lock 1 (`head-bay-lower-bound`, proposed):**
+  - W 2.2 to 2.9 m to the nearest ten centimetres; slider 2.00 to 3.00 m, step 0.01; answer W - 0.05; miss the
+    stated W.
+  - Scratch checks, not committed: `check-lock-bank.py` "unique (2.35)", and all 8 variants pass the generator's
+    `keep()` rules.
+  - Joint draws by the checker's collision rules: 352 of 512 VALID with the precision in words, 184 with a numeral
+    10.
+- **Next (phase 2, a separate contract after Jon approves):** the generator block, a lock-bank batch entry,
+  `room.js`, `teacher.html`, the art and the release. STOP IF did not fire: no brief/rule clash the draft couldn't
+  resolve, and lock 1 has exactly one settable answer in every variant.
+
 ## 2026-10-09 (cloud): PD-CHECK (LISTED-HIGH item 12) STOPPED for Jon: #232 fixes t4-002; the saved check is wrong
 
 - **#232 (OVERLAY-KEYS) is on main** (9a0830f, merged 18:46 UTC, before #229; main green, run 654). The pd-check

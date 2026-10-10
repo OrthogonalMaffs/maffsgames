@@ -47,16 +47,30 @@ lane does not push to #242 or touch any car-trap file.** #242's state at hand-ov
 art was not on main when Jon said it was: the only `car-trap-*.webp` there are the old pictures.
 **QUEUE (Jon, 10 Oct), in order. Keep the handover current after each:**
 1. **RIGHTFUL-KING-DRAFT**: **Rightful King draft for Jon's review**, branch
-   `claude/youthful-feynman-anpxuq-rightful-king` (stacked on #245). Contract saved verbatim:
+   `claude/youthful-feynman-anpxuq-rightful-king` (#245 merged dee6d46). Contract saved verbatim:
    `docs/handover/contracts/2026-10-09-rightful-king-draft.md`. Draft: `docs/escape-room-drafts/rightful-king-draft.md`.
-2. **LIBRARY-DRAFT**: draft prose only. Taken from the home lane's queue; the home lane is told to skip it. Jon pasted
-   the contract (10 Oct); it is saved verbatim as `docs/handover/contracts/2026-10-09-library-draft.md` when it starts.
+2. **LIBRARY-DRAFT**: **Library room draft for Jon's review**, branch `claude/youthful-feynman-anpxuq-library`
+   (stacked on the Rightful King branch). Contract saved verbatim: `docs/handover/contracts/2026-10-09-library-draft.md`.
+   Draft: `docs/escape-room-drafts/library-draft.md`. **Queue empty after this; both drafts wait on Jon.**
 **Open for Jon:** delete branch `claude/youthful-feynman-anpxuq-pd-check` in GitHub (the proxy refused the remote
 delete, HTTP 403).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-10 (cloud): LIBRARY-DRAFT, Library room draft for Jon's review
+
+- **The draft:** `docs/escape-room-drafts/library-draft.md`. It has three title options (recommended: The Library
+  Jam, `library-jam`), every slot, three locks with libraries (8, 8 and 10 variants), the alts, hub and meta lines,
+  and the checklist. Jon's line is wrong-entry line 3, verbatim. No art prompts.
+- **For Jon 1, the big one: lock C needs a keypad that takes "up to four digits", and the engine's keypad takes
+  exactly `digits`** (`engine.js:610`, and `:593` drops extra digits). A four-digit keypad shows four slots, which
+  steers a student to 5400, the misconception. A two-digit keypad turns a typed 5400 into 54, right by accident.
+  Rightful King's lock 1 hit the same limit, so the fix is shared: an opt-in variable-length keypad in `engine.js`
+  (home lane), plus the generator's `keep()` edge rule for keypads. Recommended before phase 2.
+- **Measured (scratch):** the checker's own `draw_is_valid()` on the draft's clues gives **572 of 640 VALID, variant
+  0 VALID**. Fines are multiples of 5p, to stay non-calculator (For Jon 6).
 
 ## 2026-10-10 (cloud): RIGHTFUL-KING-DRAFT, Rightful King draft for Jon's review
 
@@ -86,25 +100,3 @@ main's last full run is red; watch main's run after merging.
   handover had nothing that main lacks.
 - **prisoners-dilemma-t4-001** (the leaderboard ranks the chosen opponent) stays open for Jon's design decision.
 - Jon's note is saved verbatim as `docs/history/contracts/2026-10-09-listed-high-note-2245.md`.
-
-## 2026-10-09 (cloud): CAR-TRAP-DRAFT, Car Trap draft for Jon's review (#235 merged ba5b6b2; main run 661 green)
-
-- **Contract:** the repo copy on main, `contracts/2026-10-09-car-trap-draft.md` (Jon's amended text of 16:45, saved
-  verbatim by the home lane in dc43926 and merged in #221). It is left where it is, because the home lane's handover
-  points to that path; it moves to `docs/history/contracts/` with phase 2.
-- **The draft:** `docs/escape-room-drafts/car-trap-draft.md`. It has every slot `room.js` needs, the three art
-  prompts, lock 1's variant proposal and bank entry, and the checklist (all pass; two figure exceptions in words,
-  both flagged). Its "For Jon" list has 11 decisions, including:
-  - **There is no `fail` slot.** The engine shows `stakes` after "If you get it wrong." (`engine.js:238`) and after
-    "And so:" on time-out (`:791`), so the Fail is written into `stakes`.
-  - **`hook`, `brief` and `stakes` are written raw**, so they can't hold tokens.
-- **Lock 1 (`head-bay-lower-bound`, proposed):**
-  - W 2.2 to 2.9 m to the nearest ten centimetres; slider 2.00 to 3.00 m, step 0.01; answer W - 0.05; miss the
-    stated W.
-  - Scratch checks, not committed: `check-lock-bank.py` "unique (2.35)", and all 8 variants pass the generator's
-    `keep()` rules.
-  - Joint draws by the checker's collision rules: 352 of 512 VALID with the precision in words, 184 with a numeral
-    10.
-- **Next (phase 2, a separate contract after Jon approves):** the generator block, a lock-bank batch entry,
-  `room.js`, `teacher.html`, the art and the release. STOP IF did not fire: no brief/rule clash the draft couldn't
-  resolve, and lock 1 has exactly one settable answer in every variant.
