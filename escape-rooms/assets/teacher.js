@@ -79,7 +79,8 @@
     var when = whenText();
     // The engine shows the failure picture beside a misconception only for a
     // lock that sets missArt, so the page only says so when one does.
-    var midGameArt = R.locks.some(function (l) { return l.missArt; });
+    // A room with no `art` yet shows no failure picture at all (engine.js, HAS_ART).
+    var midGameArt = !!R.art && R.locks.some(function (l) { return l.missArt; });
 
     var banner = live
       ? '<div class="unlisted" id="liveBox"><b>These are the numbers in play right now</b> &mdash; ' + when +

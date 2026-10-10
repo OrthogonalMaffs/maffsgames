@@ -29,6 +29,12 @@
     else if (img.parentNode) { img.parentNode.remove(); }
   };
 
+  // A room with no `art` field has no pictures yet (art comes after the room is
+  // settled), so it requests none: no scene, fail or win frame, exactly as a lock
+  // with no `art` has no instrument picture (canon §11.3). The 404 fallback above
+  // is only for a room that names its art but is missing a file.
+  var HAS_ART = !!R.art;
+
   var TOTAL = (R.minutes || 15) * 60;
   var PENALTY = R.penalty || 45;
 
@@ -232,7 +238,7 @@
       '<section class="screen active" id="scrBrief">' +
         '<div class="card">' +
           '<h1><span class="sub">' + esc(R.levelLabel) + ' &middot; escape room &middot; ' + R.minutes + ' minutes</span>' + esc(R.title) + '</h1>' +
-          '<div class="artframe"><img onerror="mfgArtFallback(this)" src="' + ART + R.art + '-scene.webp" alt="' + esc(R.sceneAlt) + '" loading="eager"></div>' +
+          (HAS_ART ? '<div class="artframe"><img onerror="mfgArtFallback(this)" src="' + ART + R.art + '-scene.webp" alt="' + esc(R.sceneAlt) + '" loading="eager"></div>' : '') +
           '<div class="story">' + R.hook + '</div>' +
           '<p class="lede">' + R.brief + '</p>' +
           '<div class="stakes"><b>If you get it wrong.</b> ' + R.stakes + '</div>' +
@@ -685,7 +691,7 @@
     if (!f) return;
     f.className = 'feedback show ' + kind;
     f.innerHTML = '<b>' + head + '</b>' + body +
-      (withArt ? '<div class="failthumb"><img onerror="mfgArtFallback(this)" src="' + ART + R.art + '-fail.webp" alt="' + esc(R.failAlt) + '" loading="lazy"></div>' : '');
+      (withArt && HAS_ART ? '<div class="failthumb"><img onerror="mfgArtFallback(this)" src="' + ART + R.art + '-fail.webp" alt="' + esc(R.failAlt) + '" loading="lazy"></div>' : '');
   }
 
   function flashPenalty() {
@@ -783,10 +789,10 @@
 
     el('endCard').innerHTML =
       '<h1><span class="sub">' + (win ? 'Out, with time to spare' : 'The clock beat you') + '</span>' + esc(R.title) + '</h1>' +
-      '<div class="artframe"><img onerror="mfgArtFallback(this)"' +
+      (HAS_ART ? '<div class="artframe"><img onerror="mfgArtFallback(this)"' +
         (win && R.winAlt ? ' data-fallback="' + ART + R.art + '-scene.webp"' : '') +
         ' src="' + ART + R.art + (win ? (R.winAlt ? '-win' : '-scene') : '-fail') + '.webp" alt="' +
-        esc(win ? (R.winAlt || R.sceneAlt) : R.failAlt) + '"></div>' +
+        esc(win ? (R.winAlt || R.sceneAlt) : R.failAlt) + '"></div>' : '') +
       (win ? '<div class="story">' + R.win + '</div>'
            : '<div class="stakes"><b>And so:</b> ' + R.stakes + '</div>') +
       '<div class="end-grid">' +

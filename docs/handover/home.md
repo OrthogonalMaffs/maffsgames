@@ -1,5 +1,18 @@
 # Handover: home lane
 
+**ART-PENDING (10 Oct, Jon's contract 08:50, ahead of the queue for cloud PR #242; contract
+`docs/handover/contracts/2026-10-10-art-pending.md`).** Rule: **no `art` field, no request.** engine.js
+(`HAS_ART = !!R.art`) emits no scene, fail-thumbnail or end-card picture for a room with no top-level `art:`;
+a room with art is unchanged, data-fallback included. teacher.js mentions the mid-game failure picture only when
+the room has art. check-escape-rooms.py lists a room with no `art` as "art pending" (it crashed on one before);
+a named picture that is missing is listed as before, and check-site's tier 1 fails its 404. New
+`scripts/test-escape-art.py` (15 s): all 8 live rooms to a win and a loss, their pictures load as before; the
+fixture (canteen-hack with `art` removed, by routing) makes no /docs/art/ request through the brief, its
+misconception, the win and the loss; the old always-request engine is planted and caught. STOP IFs clear: every
+live room has all three files, so none uses the 404 path for its data-fallback; no saved field changes (SAVE_V 1).
+Recorded in CLAUDE.md and voice-rewrite §6. **For the cloud lane (#242):** drop `art` from car-trap's room.js
+(and leave the hub card's `<img>` out of `escape-rooms/index.html` until the art lands), then re-run.
+
 **DASHBOARD-CHARTS (10 Oct, Jon's contract 08:35; `docs/handover/contracts/2026-10-10-dashboard-charts.md`).**
 `docs/apps-script-endpoint.js` only, SCRIPT_VERSION `2026-10-10-a`: the three percentage columns are written as
 fractions with the cell format `0%` (they show as before), the Accuracy chart's axis runs 0 to 1 as percent;
