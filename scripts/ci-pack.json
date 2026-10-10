@@ -42,7 +42,7 @@
   "Free Daily Pizza (independent recomputation + daily seed + phone fit)": "2",
   "GA4 country Apps Script (mocked API and Sheet: replace-by-date is idempotent, other dates untouched, events tab never referenced; planted faults caught)": "16",
   "Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium)": "7",
-  "Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; the typed gradient marked, clicking scores nothing; answer once and Next once, played in Chromium)": "4",
+  "Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; the typed gradient marked, clicking scores nothing; answer once and Next once, played in Chromium)": "9",
   "Graph Sketcher (keys recomputed from each printed equation)": "16",
   "Graph Transformer (BFS reachability + par verification)": "16",
   "Growth and Decay (keys recomputed from each printed model)": "10",
