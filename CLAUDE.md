@@ -37,6 +37,12 @@ full local run was a slower second copy of CI with known Windows-only false fail
 **Safety net:** every PR runs every site-wide check; every merge to main, a weekly schedule and a manual
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
+**Two queues (PREPUSH-SCOPE, 10 Oct 2026):** heavy checks (CI time >= 60 s, or a browser check that runs its
+own work concurrently, e.g. the answer-lock parts) one at a time; light checks six at once beside them. Six
+answer-lock parts side by side all failed (UNPLAYABLE), so never run heavy ones together. Measured (serial ->
+two queues): docs-only 353 -> 167 s; one game 1565 -> 1375 s; shared asset (#232's files) 4198 -> 2907 s.
+The last line printed is the PR line "checks deferred to CI: ..." (tiers 1-2, tier 4 banks, leaderboard
+coverage). `--files a b` plans for given paths; `--workers 1` runs the light queue serially too.
 
 ## After merging: watch main's full run (Jon, 5 Oct 2026)
 

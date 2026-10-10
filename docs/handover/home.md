@@ -1,5 +1,20 @@
 # Handover: home lane
 
+**PREPUSH-SCOPE (10 Oct; Jon's ruling after the STOP: two queues).** Cause **(b)**: `check-changed.py` already
+selected through `ci-deps.select` (CI's own function); the checks ran one at a time. There is no installed
+pre-push hook: "pre-push" is `check-changed.py`, run by hand. Now two queues: **heavy** (CI time >= 60 s, or a
+browser check that runs its own work concurrently: the six answer-lock parts, teacher feedback line, initials
+overlay, escape-room tests) one at a time, longest first; **light** six at once beside them. Six answer-lock
+parts in parallel had all failed (UNPLAYABLE) and pushed the machine to low memory. Shared-asset tests now
+always run (CI always runs them); the last line is the PR line "checks deferred to CI: ..."; `--files` plans
+for given paths. **Measured** (old serial -> two queues, b40a475's tree): docs-only 22 checks 353 s -> 26
+checks **167 s**, all pass; one game (angle-ace) 29 checks 1565 s -> 33 checks **1375 s**, all pass; shared
+asset (#232's files) 119 checks 4198 s -> 120 checks **2907 s (48 min)**. **The 10-minute target is not met
+for the shared-asset case:** the heavy queue is the floor (the six answer-lock parts alone are ~20 min
+serial), and it is printed, not skipped. Both shared-asset failures are local-only and fail serially and on
+main too: Negative Number Line 320x568 fold (Confirm at 536 under 528), Test the Claim ReferenceError under the
+local node. Also seen under the old serial load: core-maths-paper1 UNPLAYABLE (passes alone).
+
 **ESCAPE-DIFFICULTY (10 Oct, Jon's contract 13:05, after CAR-TRAP-RELEASE; contract
 `docs/handover/contracts/2026-10-10-escape-difficulty.md`).** Every live lock has `grade: N`; a room's
 rating is its hardest lock's band (★ Warm-up 1–3, ★★ Core 4–5, ★★★ Challenge 6–9), drawn by the new
