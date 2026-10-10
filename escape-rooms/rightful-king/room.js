@@ -1,4 +1,4 @@
-/* Room data for "rightful-king" — shared by play.html (the game, for now) and
+/* Room data for "rightful-king" — shared by index.html (the game) and
    teacher.html (answers, hint ladder, misconceptions).
 
    Numbers are not written into the prose. Each lock carries a `variants`
@@ -15,8 +15,8 @@
    offstage, and never speaks (he speaks only in prom-budget). The bully is
    offstage, unnamed, and not in the win.
 
-   The room sits behind its holding page (index.html) until Jon has play-tested
-   it at play.html; it has no hub card until its release contract.
+   RELEASED 2026-10-10 (contract ROOMS-RELEASE-RK-LJ) after Jon's play-test:
+   index.html is the room, play.html is gone, and it has its hub and front-page cards.
 
    GRADES (canon §11.3, ESCAPE-DIFFICULTY): the passcode's product rule without
    repeats is Higher content (6); the overwrite builds powers of one multiplier,
