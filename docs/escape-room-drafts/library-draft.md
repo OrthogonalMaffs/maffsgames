@@ -70,6 +70,8 @@ How to read it:
 
 ## Title (three options; you choose)
 
+**Chosen: The Library Jam (Jon, 10 Oct 2026).** Proposed slug `library-jam`, settled in phase 2.
+
 1. **The Library Jam** *(my recommendation: says where and what in three words. Slug `library-jam`)*
 2. **Bibby’s Babies** *(her books, her word for them. Slug `bibbys-babies`)*
 3. **Overdue** *(short, and every student knows the word. Slug `overdue`)*

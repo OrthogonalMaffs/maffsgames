@@ -46,11 +46,11 @@ lane does not push to #242 or touch any car-trap file.** #242's state at hand-ov
 `docs/handover/cloud.md` (the CAR-TRAP-BUILD entry). It is red only on the teacher page at 320 px (§1.37). The new
 art was not on main when Jon said it was: the only `car-trap-*.webp` there are the old pictures.
 **QUEUE (Jon, 10 Oct), in order. Keep the handover current after each:**
-1. **RIGHTFUL-KING-DRAFT**: **Rightful King draft for Jon's review**, branch
-   `claude/youthful-feynman-anpxuq-rightful-king` (#245 merged dee6d46). Contract saved verbatim:
+1. **RIGHTFUL-KING-DRAFT**: **Rightful King draft for Jon's review**, #247 merged
+   (aa660f7). Contract saved verbatim:
    `docs/handover/contracts/2026-10-09-rightful-king-draft.md`. Draft: `docs/escape-room-drafts/rightful-king-draft.md`.
 2. **LIBRARY-DRAFT**: **Library room draft for Jon's review**, branch `claude/youthful-feynman-anpxuq-library`
-   (stacked on the Rightful King branch). Contract saved verbatim: `docs/handover/contracts/2026-10-09-library-draft.md`.
+   (#248). Contract saved verbatim: `docs/handover/contracts/2026-10-09-library-draft.md`.
    Draft: `docs/escape-room-drafts/library-draft.md`. **Queue empty after this; both drafts wait on Jon.**
 **Open for Jon:** delete branch `claude/youthful-feynman-anpxuq-pd-check` in GitHub (the proxy refused the remote
 delete, HTTP 403).
@@ -61,8 +61,8 @@ main's last full run is red; watch main's run after merging.
 
 ## 2026-10-10 (cloud): LIBRARY-DRAFT, Library room draft for Jon's review
 
-- **The draft:** `docs/escape-room-drafts/library-draft.md`. It has three title options (recommended: The Library
-  Jam, `library-jam`), every slot, three locks with libraries (8, 8 and 10 variants), the alts, hub and meta lines,
+- **The draft:** `docs/escape-room-drafts/library-draft.md`. It has three title options; **Jon chose The Library Jam
+  (10 Oct)**, slug proposed `library-jam`, every slot, three locks with libraries (8, 8 and 10 variants), the alts, hub and meta lines,
   and the checklist. Jon's line is wrong-entry line 3, verbatim. No art prompts.
 - **For Jon 1, the big one: lock C needs a keypad that takes "up to four digits", and the engine's keypad takes
   exactly `digits`** (`engine.js:610`, and `:593` drops extra digits). A four-digit keypad shows four slots, which
