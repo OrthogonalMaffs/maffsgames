@@ -17,22 +17,22 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-571 findings in 79 games.
+577 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
-| CRITICAL | 1 | 25 | 0 | 26 |
-| HIGH | 8 | 200 | 0 | 208 |
+| CRITICAL | 1 | 26 | 0 | 27 |
+| HIGH | 8 | 204 | 0 | 212 |
 | MEDIUM | 128 | 143 | 2 | 273 |
-| LOW | 33 | 30 | 1 | 64 |
-| **All** | 170 | 398 | 3 | 571 |
+| LOW | 32 | 32 | 1 | 65 |
+| **All** | 169 | 405 | 3 | 577 |
 
 ### By class
 
 | Class | open | total |
 |---|---|---|
-| 2 | 13 | 106 |
-| 3 | 5 | 85 |
+| 2 | 12 | 111 |
+| 3 | 5 | 86 |
 | 6 | 24 | 56 |
 | 1 | 5 | 37 |
 | NEW:wrong-explanation-text | 10 | 36 |
@@ -165,7 +165,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 7 | 1 | 1 | 9 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 2 | 1 | 1 | 4 | 0 |
-| `log-laws` | yes | verify-log-laws.py | 0 | 0 | 0 | 1 | 1 | 0 | 0 |
+| `log-laws` | yes | verify-log-laws.py | 1 | 4 | 0 | 2 | 0 | 7 | 0 |
 | `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 3 | 1 | 4 | 2 | 0 |
 | `modular-battle` | yes | none | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `moments-master` | yes | verify-moments-master.py | 1 | 8 | 4 | 2 | 3 | 12 | 0 |
