@@ -30,7 +30,13 @@ findings:
   summary: Initials typed into the leaderboard overlay play moves in the next tournament match
   evidence: 'keydown checks only choiceLocked and the active screen. Typing ''CDX'': roundNum 0 -> 1, history [''cooperate''].
     An unresolved overlay is removed by the next askInitials, losing that score.'
-  status: open
+  status: fixed
+  pr: 232
+  ruling: 'Jon''s ruling, 9 Oct 2026 22:45 (option A; contract LISTED-HIGH item 12): t4-002 closed by #232
+    (shared-overlay fix); covered by the OVERLAY-KEYS CI check (scripts/test-initials-overlay.py, which opens the real
+    overlay in prisoners-dilemma, types a-z and fails if any game key listener sees a key; measured 9 Oct: main
+    passes, the pre-#232 overlay fails with 55 keys reaching the game''s document keydown); per-game check not added
+    because the fault was in shared code.'
 - id: prisoners-dilemma-t4-003
   severity: MEDIUM
   jc: false
