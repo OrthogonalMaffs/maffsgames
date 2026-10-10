@@ -1,5 +1,42 @@
 # Handover: home lane
 
+**TODO-SLIM (10 Oct; Jon's option (b), 17:15).** `docs/todo.md` 481,628 -> **148,748 bytes** (3,662 -> 810 lines);
+moved word for word to new `docs/history/todo-done.md` (333,814 bytes; the two add up to the original plus the
+added headings): the session log (line 5 kept its newest three entries; lines 6-56, 88-140, 145-160 of 28-29 Sep
+notes), the whole START block (replaced by a pointer: **the live queues are the two handovers**), 27 done rows of
+§1/§3 (listed under §1's heading, so their numbers still resolve), and "Done — full history". **Kept, for Jon:**
+the 29 Sep paragraph (lines 57-87) holding a leaderboard recommendation still "pending Jon's ruling"; done-looking
+rows with open follow-ups stay whole (1.8, 1.11, 1.14, 1.16, 1.24, 1.25, 1.26, 1.33, 1.36, 1.51, 1.72, 1.75, 3.4,
+3.6-3.10, 3.18). **Cap 150 KB, not 140:** the kept content came out at 145 KB (open rows were bigger than my
+estimate); lower `TODO_LIMIT` in `check-context-size.py` as items close. canon.md is reported (194,804 bytes),
+not capped. Canon's three "todo START" citations now point at the history file. **For Jon:** update Project
+Claude's instructions to name the handovers, not todo.md's START, as the live queue.
+**LOCK-BANK-CI (10 Oct, Jon 17:15; for the cloud lane's room builds).** `scripts/check-lock-bank.py` rejected
+hamster-feeder-bounds on main: `NOTE` was not a known field, so a multi-line note's continuation lines were glued
+onto VERIFY (SyntaxError). Fixed in the parser (`NOTE` is a field), not by reflowing the entry; every other lock's
+result is unchanged (before/after diff of all 7 batches: only hamster-feeder-bounds, REJECT -> ok, 580). With no
+argument it checks every `docs/lock-bank-batch*.txt`; `--selftest` plants four entries (a sound lock with a
+two-line NOTE, two answers, a restating VERIFY, a wrong ANSWER), all caught; it is now in CI (ci-line, about a
+second). **Never run by CI (report only):** `scripts/check-feedback-options.py` (the feedback page's game menu;
+passes locally) and `scripts/check-lock-uniqueness.py` (an older one-answer checker; passes locally);
+`verify-regression-rumble.py` is declared held (game withdrawn). `check-changed.py` is the runner, not a check.
+**#255 PREPUSH-SCOPE merged** (99a0bf5).
+
+**PREPUSH-SCOPE (10 Oct; Jon's ruling after the STOP: two queues).** Cause **(b)**: `check-changed.py` already
+selected through `ci-deps.select` (CI's own function); the checks ran one at a time. There is no installed
+pre-push hook: "pre-push" is `check-changed.py`, run by hand. Now two queues: **heavy** (CI time >= 60 s, or a
+browser check that runs its own work concurrently: the six answer-lock parts, teacher feedback line, initials
+overlay, escape-room tests) one at a time, longest first; **light** six at once beside them. Six answer-lock
+parts in parallel had all failed (UNPLAYABLE) and pushed the machine to low memory. Shared-asset tests now
+always run (CI always runs them); the last line is the PR line "checks deferred to CI: ..."; `--files` plans
+for given paths. **Measured** (old serial -> two queues, b40a475's tree): docs-only 22 checks 353 s -> 26
+checks **167 s**, all pass; one game (angle-ace) 29 checks 1565 s -> 33 checks **1375 s**, all pass; shared
+asset (#232's files) 119 checks 4198 s -> 120 checks **2907 s (48 min)**. **The 10-minute target is not met
+for the shared-asset case:** the heavy queue is the floor (the six answer-lock parts alone are ~20 min
+serial), and it is printed, not skipped. Both shared-asset failures are local-only and fail serially and on
+main too: Negative Number Line 320x568 fold (Confirm at 536 under 528), Test the Claim ReferenceError under the
+local node. Also seen under the old serial load: core-maths-paper1 UNPLAYABLE (passes alone).
+
 **ESCAPE-DIFFICULTY (10 Oct, Jon's contract 13:05, after CAR-TRAP-RELEASE; contract
 `docs/handover/contracts/2026-10-10-escape-difficulty.md`).** Every live lock has `grade: N`; a room's
 rating is its hardest lock's band (★ Warm-up 1–3, ★★ Core 4–5, ★★★ Challenge 6–9), drawn by the new

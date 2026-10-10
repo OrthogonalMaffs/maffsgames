@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: Escape-room keypad, up to N digits (engine.js maxDigits on a fixture lock: 5,4,Set opens, 5,4,0,0,Set is the named misconception, no empty slots; a fixed keypad unchanged; the old fixed-length rule planted and caught) |
-# ci-deps: escape-rooms/assets/engine.js escape-rooms/kiln-disaster/room.js scripts/check-teacher-invite.py
+# ci-deps: escape-rooms/assets/engine.js escape-rooms/ scripts/check-teacher-invite.py
 """Browser test for the escape-room keypad's "up to N digits, Set to submit" mode (contract KEYPAD-VARIABLE,
 10 Oct 2026).
 
