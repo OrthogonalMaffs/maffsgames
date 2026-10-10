@@ -46,12 +46,17 @@ lane does not push to #242 or touch any car-trap file.** #242's state at hand-ov
 `docs/handover/cloud.md` (the CAR-TRAP-BUILD entry). It is red only on the teacher page at 320 px (§1.37). The new
 art was not on main when Jon said it was: the only `car-trap-*.webp` there are the old pictures.
 **QUEUE (Jon, 10 Oct), in order. Keep the handover current after each:**
-1. **RIGHTFUL-KING-DRAFT**: **Rightful King draft for Jon's review**, #247 merged
-   (aa660f7). Contract saved verbatim:
-   `docs/handover/contracts/2026-10-09-rightful-king-draft.md`. Draft: `docs/escape-room-drafts/rightful-king-draft.md`.
-2. **LIBRARY-DRAFT**: **Library room draft for Jon's review**, branch `claude/youthful-feynman-anpxuq-library`
-   (#248). Contract saved verbatim: `docs/handover/contracts/2026-10-09-library-draft.md`.
-   Draft: `docs/escape-room-drafts/library-draft.md`. **Queue empty after this; both drafts wait on Jon.**
+Done 10 Oct: RIGHTFUL-KING-DRAFT (#247, aa660f7) and LIBRARY-DRAFT (#248, 8302ba8). Jon approved both drafts in
+full ("spot on"); the Library room's title is The Library Jam.
+1. **RIGHTFUL-KING-BUILD** (contract `docs/handover/contracts/2026-10-10-rightful-king-build.md`), then
+2. **LIBRARY-JAM-BUILD** (contract `docs/handover/contracts/2026-10-10-library-jam-build.md`).
+**BOTH WAIT on BOTH home-lane fixes, ART-PENDING and KEYPAD-VARIABLE (Jon, 10 Oct), not KEYPAD-VARIABLE alone.**
+ART-PENDING is on main (#244: `HAS_ART` in engine.js). KEYPAD-VARIABLE was not on main when checked (10 Oct): no
+`maxDigits` in `escape-rooms/assets/engine.js` or the scripts, and no branch for it. Before starting, check main for
+both and read `docs/handover/home.md`.
+**Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's
+last full run is green, without asking each time; it still watches main's run after each merge. Ratings for the handover when built: The Rightful
+King ★★★ Challenge, The Library Jam ★ Warm-up (no star field; the difficulty contract owns it).
 **Open for Jon:** delete branch `claude/youthful-feynman-anpxuq-pd-check` in GitHub (the proxy refused the remote
 delete, HTTP 403).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
