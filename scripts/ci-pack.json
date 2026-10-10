@@ -70,7 +70,7 @@
   "Screening Room (every count, band and key from the stated rates; every figure from the data; all 70 items marked in Chromium)": "11",
   "Sequence Solver (every key recomputed from its own terms or formula, exactly; options distinct in value; every option marked in Chromium)": "16",
   "Seven Bridges (every puzzle's answer recomputed from its edges, no edge drawn through a vertex it does not join, the solution animation stops at Next; Chromium)": "16",
-  "Shared answer lock (schools/assets/answer-lock.js, MaffsLock: every behaviour in Chromium, four planted faults)": "4",
+  "Shared answer lock (schools/assets/answer-lock.js, MaffsLock: every behaviour in Chromium, four planted faults)": "18",
   "Shared exam vocabulary tooltips (schools/assets/exam-vocab.js: idempotent on every Factor Theorem string, no markup in an attribute, the old function planted and caught)": "16",
   "Shared initials overlay (schools/assets/firebase-leaderboard.js: no key typed into it reaches a game, in every game that loads it; the old overlay planted and caught)": "18",
   "Shared statistics module (unit tests against textbook values)": "16",
