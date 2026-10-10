@@ -1,5 +1,16 @@
 # Handover: home lane
 
+**TODO-SLIM (10 Oct; Jon's option (b), 17:15).** `docs/todo.md` 481,628 -> **148,748 bytes** (3,662 -> 810 lines);
+moved word for word to new `docs/history/todo-done.md` (333,814 bytes; the two add up to the original plus the
+added headings): the session log (line 5 kept its newest three entries; lines 6-56, 88-140, 145-160 of 28-29 Sep
+notes), the whole START block (replaced by a pointer: **the live queues are the two handovers**), 27 done rows of
+§1/§3 (listed under §1's heading, so their numbers still resolve), and "Done — full history". **Kept, for Jon:**
+the 29 Sep paragraph (lines 57-87) holding a leaderboard recommendation still "pending Jon's ruling"; done-looking
+rows with open follow-ups stay whole (1.8, 1.11, 1.14, 1.16, 1.24, 1.25, 1.26, 1.33, 1.36, 1.51, 1.72, 1.75, 3.4,
+3.6-3.10, 3.18). **Cap 150 KB, not 140:** the kept content came out at 145 KB (open rows were bigger than my
+estimate); lower `TODO_LIMIT` in `check-context-size.py` as items close. canon.md is reported (194,804 bytes),
+not capped. Canon's three "todo START" citations now point at the history file. **For Jon:** update Project
+Claude's instructions to name the handovers, not todo.md's START, as the live queue.
 **LOCK-BANK-CI (10 Oct, Jon 17:15; for the cloud lane's room builds).** `scripts/check-lock-bank.py` rejected
 hamster-feeder-bounds on main: `NOTE` was not a known field, so a multi-line note's continuation lines were glued
 onto VERIFY (SyntaxError). Fixed in the parser (`NOTE` is a field), not by reflowing the entry; every other lock's
