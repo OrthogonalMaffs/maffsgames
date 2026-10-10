@@ -47,7 +47,6 @@ window.ROOM = {
   slug: 'escape-pe-shed-rebellion',
   title: 'The P.E. Store Rebellion',
   level: 'ks3',
-  levelLabel: 'KS3 / GCSE',
   minutes: 15,
   penalty: 45,
   art: 'pe-shed-rebellion',
@@ -146,6 +145,7 @@ window.ROOM = {
     {
       id: 'sprinkler-sector-area',
       key: 'arc',
+      grade: 5,
       name: 'Sprinkler override',
       brief: 'The override sets how far round the sprinkler sweeps. Set the arc so the wet patch comes exactly ' +
              'to the limit the grounds staff are allowed on that square — no more. Short of it and he will not ' +
@@ -255,6 +255,7 @@ window.ROOM = {
     {
       id: 'dodgeball-pressure-boyle',
       key: 'psi',
+      grade: 5,
       name: 'The compressor',
       brief: 'The compressor holds whatever pressure you leave on the gauge and pumps until the arena reaches it. ' +
              'Set it for the arena fully open, not folded flat.',
@@ -346,6 +347,7 @@ window.ROOM = {
     {
       id: 'locker-nth-term',
       key: 'seq',
+      grade: 4,
       name: 'Equipment locker',
       brief: 'The code changes every day of term. He only writes one down when he has forgotten one, so the ' +
              'clipboard is patchy — and today is not on it.',

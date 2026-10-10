@@ -26,7 +26,6 @@ window.ROOM = {
   slug: 'escape-comic-caper',
   title: 'The Comic Caper',
   level: 'gcse',
-  levelLabel: 'GCSE',
   minutes: 15,
   penalty: 45,
   art: 'comic-caper',
@@ -83,6 +82,7 @@ window.ROOM = {
     {
       id: 'chokey-factor-count',
       key: 'fc',
+      grade: 2,
       name: 'Dial on the hinge side',
       brief: 'A dial on the hinge side, numbered all the way round. It opens at the number of factors of the ' +
              'cupboard&rsquo;s asset number.',
@@ -127,6 +127,7 @@ window.ROOM = {
     {
       id: 'chokey-prime-volumes',
       key: 'pv',
+      grade: 2,
       name: 'Dial on the lock plate',
       brief: 'A second dial, set into the lock plate. It opens at how many of the textbook series&rsquo; volume ' +
              'numbers are prime.',
@@ -202,6 +203,7 @@ window.ROOM = {
     {
       id: 'chokey-hcf-bundles',
       key: 'hcf',
+      grade: 3,
       name: 'Slider across the handle',
       brief: 'A brass slider across the handle. Every bundle has the same number of grammar books and ' +
              'dictionaries, and every book is used.',

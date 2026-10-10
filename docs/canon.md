@@ -1962,9 +1962,9 @@ Narrative maths escape rooms at `/escape-rooms/`. Started 2026-08-26; reference 
 **Unlock!**. **Under 15 minutes each** — built to end a lesson, not fill one, and to be played by three or
 four students round one screen. Not counted in the 96 live games.
 
-## 11.1 Current state — 17 September 2026
+## 11.1 Current state — 10 October 2026
 
-**Eight rooms live, two withdrawn.** The site ships a room as its voice rewrite finishes (§11.5).
+**Nine rooms live, one withdrawn.** The site ships a room as its voice rewrite finishes (§11.5).
 
 | Room | Slug | Level | Antagonist | State |
 | --- | --- | --- | --- | --- |
@@ -1976,7 +1976,7 @@ four students round one screen. Not counted in the 96 live games.
 | The Rugby Mud Bath | `rugby-mud` | GCSE | Mr Mower | **Live** (15/09) |
 | The Comic Caper | `comic-caper` | GCSE | Ms Fromage | **Live** (17/09) |
 | The Kiln Disaster | `kiln-disaster` | GCSE | — (Mr Stephen Mudge, "Smudgey", Art, is an ally; the kiln is the clock) | **Live** (17/09) |
-| The Headteacher's Car Trap | `car-trap` | GCSE / Core | — | Withdrawn |
+| The Headteacher's Car Trap | `car-trap` | GCSE / Core | Mr Strictman, the deputy head | **Live** (10/10/2026, rewritten; ★★) |
 | The IT Teacher's Vengeance | `it-vengeance` | GCSE Higher | — | Withdrawn |
 
 Two further rooms, **A (Coach Trip Hijack) and B (Tuck Shop Heist)**, are narratives only. Their locks were
@@ -2023,6 +2023,24 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
   and no two locks share an answer. Clue figures include numerals typed into clue text. The first two rules
   ignore figures of 2 or less. `engine.js` serves only VALID draws and `check-escape-rooms.py` fails a room
   with fewer than 20; the two implement the same rules and change together.
+- **Difficulty: one to three stars, derived from the hardest lock (ESCAPE-DIFFICULTY, 10 Oct 2026; Jon's
+  scheme, 9 Oct).** Every lock carries `grade: N`, the GCSE grade (1-9) at which its skill is typically
+  secure. A room's rating is its hardest lock's band: **★ Warm-up, grades 1–3; ★★ Core, grades 4–5; ★★★
+  Challenge, grades 6–9.** It is shown on four surfaces: the start screen and the teacher page draw it at
+  run time with `escape-rooms/assets/rating.js` (`MaffsEscapeRating.rating(ROOM)`, the one place the bands
+  live in the browser); the hub and front-page cards are static HTML carrying `data-stars`. The stars are
+  `aria-hidden`; a screen reader hears "Difficulty: 2 of 3, Core, grades 4–5" (`.sr-only`), and the star
+  count, not colour, carries the rating. **"Suits a top set" appears on ★★★ teacher pages only**, never on a
+  card or a student-facing screen. They replace the old level labels: `levelLabel` is gone from the live
+  rooms; `level` stays because analytics send it. **The CI rule:** `check-escape-rooms.py` (now in CI, a
+  content verifier on any change under `escape-rooms/` or to `index.html`) fails a live room's lock with no
+  grade, any card on either page that disagrees with the derived rating, a live room with no card, bands in
+  rating.js that differ from its own, and hub cards out of rating order (the hub says "Ordered easiest to
+  hardest"); it plants a ★ on Rugby Mud's hub card and a missing grade on every run, and fails if either
+  goes uncaught. `scripts/test-escape-rating.py` holds the start screen and teacher page to the hub card in
+  Chromium. Ratings as of 10 Oct: ★ Comic Caper, Kiln Disaster; ★★ Canteen Hack, Heatwave Mutiny, P.E.
+  Store Rebellion, Prom Budget, Hamster Heist, Car Trap; ★★★ Rugby Mud. **A new room adds `grade` to every
+  lock before release**; The Rightful King must come out ★★★ and The Library Jam ★ (Jon, 9 Oct).
 - **Keypads: fixed length, or up to N digits (KEYPAD-VARIABLE, 10 Oct 2026).** `digits: N` takes exactly N
   digits, empty slots shown (60 is entered as 060), and Set with too few says "Not enough digits." at no
   cost. `maxDigits: N` instead is **"up to N digits, Set to submit"**: the display shows only what has
@@ -2053,7 +2071,8 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
 
 | Script | What it does |
 | --- | --- |
-| `scripts/check-escape-rooms.py` | The gate. Every room against the audited bank (every `lock-bank-batch*.txt`) and `variants.json`, all tokens resolve, VALID draw count per room (fails under 20; an invalid variant 0 only warns), art present. Run before shipping |
+| `scripts/check-escape-rooms.py` | The gate, in CI since ESCAPE-DIFFICULTY (10 Oct 2026; before that it ran only by hand). Every room against the audited bank (every `lock-bank-batch*.txt`) and `variants.json`, all tokens resolve, VALID draw count per room (fails under 20; an invalid variant 0 only warns), art present, difficulty stars on every card (two faults planted). Run before shipping |
+| `scripts/test-escape-rating.py` | The start screen and teacher page show the hub card's rating; "Suits a top set" on ★★★ teacher pages only; no sideways scroll at 320 px but the teacher pages' known table overflow |
 | `scripts/gen-escape-variants.py` | Generates and verifies the variant libraries |
 | `scripts/test-escape-keypad.py` | The keypad's maxDigits mode on a fixture lock (5,4,Set opens; 5,4,0,0,Set is the misconception; no empty slots), a fixed keypad unchanged, the old rule planted |
 | `scripts/check-lock-bank.py` | Rejects a lock with more than one settable answer |

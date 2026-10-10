@@ -159,10 +159,17 @@ async def run(engine_js, with_fixed):
     try:
         async with async_playwright() as p:
             browser = await p.chromium.launch()
+            # at most three pages at once: serve-stubbed's listen backlog is small on Windows, and six
+            # pages loading together got ERR_CONNECTION_REFUSED there (test-escape-art keeps to four)
+            sem = asyncio.Semaphore(3)
+
+            async def limited(fixture, steps):
+                async with sem:
+                    return await scenario(browser, base, engine_js, fixture, steps)
             names = list(FIXTURE_RUNS)
-            jobs = [scenario(browser, base, engine_js, True, FIXTURE_RUNS[n]) for n in names]
+            jobs = [limited(True, FIXTURE_RUNS[n]) for n in names]
             if with_fixed:
-                jobs.append(scenario(browser, base, engine_js, False, FIXED_RUN))
+                jobs.append(limited(False, FIXED_RUN))
             res = await asyncio.gather(*jobs, return_exceptions=True)
             await browser.close()
     finally:

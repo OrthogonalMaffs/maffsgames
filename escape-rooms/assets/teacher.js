@@ -53,6 +53,13 @@
     });
   }
 
+  // The same rating as the start screen (rating.js); "Suits a top set" on a ★★★ teacher page only.
+  function ratingLabel() {
+    var M = window.MaffsEscapeRating, r = M && M.rating(R);
+    if (!r) return '';
+    return ' &middot; ' + M.html(r) + (r.stars === 3 ? ' &middot; <span class="topset">Suits a top set</span>' : '');
+  }
+
   function ansOf(l, v) {
     v = v || variantOf(l);
     var a = v.answer !== undefined ? v.answer : l.answer;
@@ -92,7 +99,7 @@
 
     var html = '' +
       '<div class="card">' +
-        '<h1><span class="sub">Teacher page &middot; ' + esc(R.levelLabel) + '</span>' + esc(R.title) + '</h1>' +
+        '<h1><span class="sub">Teacher page' + ratingLabel() + '</span>' + esc(R.title) + '</h1>' +
         '<p class="lede">' + fill(R.brief) + '</p>' +
         banner +
         '<div class="unlisted"><b>At a glance.</b> ' + R.locks.length + ' locks, ' +
