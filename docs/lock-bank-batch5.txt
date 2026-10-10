@@ -96,7 +96,7 @@ TIME:        3
 VERIFY:      [deg for deg in range(0, 181, 5) if Fraction(deg, 360) * 6 == Fraction(3, 4)]
 
 ID:          ev-charger-quadratic
-LEVEL:       GCSE Higher
+LEVEL:       GCSE Foundation
 TOPIC:       Algebra / Quadratics with a constraint
 INSTRUMENT:  Charging current dial, 0 to 15 amps, whole amps.
 CONTEXT:     The VIP charging bay unlocks at a current that balances its load limiter, and the same panel is wired to a network alarm that watches the upper end of the range.
@@ -109,3 +109,4 @@ SOLVE:       x^2 - 12x + 35 = 0.
              x < 6 leaves x = 5 amps.
 TIME:        3
 VERIFY:      [x for x in range(16) if x**2 - 12*x + 35 == 0 and x < 6]
+NOTE:        LEVEL corrected 2026-10-10 from GCSE Higher (Jon's ruling, after ESCAPE-DIFFICULTY): Solving x^2 + bx + c = 0 by factorising is Foundation, grade 5. The lock itself is unchanged.
