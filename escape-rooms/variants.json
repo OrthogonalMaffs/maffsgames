@@ -2540,5 +2540,253 @@
    "miss": 13,
    "quot": 3
   }
+ ],
+ "admin-passcode-product-rule": [
+  {
+   "k": 7,
+   "L": 3,
+   "answer": 210,
+   "miss": 343,
+   "prod": "7 &times; 6 &times; 5"
+  },
+  {
+   "k": 8,
+   "L": 3,
+   "answer": 336,
+   "miss": 512,
+   "prod": "8 &times; 7 &times; 6"
+  },
+  {
+   "k": 9,
+   "L": 3,
+   "answer": 504,
+   "miss": 729,
+   "prod": "9 &times; 8 &times; 7"
+  },
+  {
+   "k": 5,
+   "L": 3,
+   "answer": 60,
+   "miss": 125,
+   "prod": "5 &times; 4 &times; 3"
+  },
+  {
+   "k": 6,
+   "L": 3,
+   "answer": 120,
+   "miss": 216,
+   "prod": "6 &times; 5 &times; 4"
+  }
+ ],
+ "vote-log-overwrite": [
+  {
+   "r": 20,
+   "f": "1/2",
+   "answer": 4,
+   "miss": 3,
+   "part": "half",
+   "fdec": "0.5",
+   "keep": 80,
+   "mult": "0.8",
+   "prev": 3,
+   "prevval": "0.512",
+   "ansval": "0.410"
+  },
+  {
+   "r": 8,
+   "f": "1/4",
+   "answer": 17,
+   "miss": 10,
+   "part": "a quarter",
+   "fdec": "0.25",
+   "keep": 92,
+   "mult": "0.92",
+   "prev": 16,
+   "prevval": "0.263",
+   "ansval": "0.242"
+  },
+  {
+   "r": 29,
+   "f": "1/4",
+   "answer": 5,
+   "miss": 3,
+   "part": "a quarter",
+   "fdec": "0.25",
+   "keep": 71,
+   "mult": "0.71",
+   "prev": 4,
+   "prevval": "0.254",
+   "ansval": "0.180"
+  },
+  {
+   "r": 20,
+   "f": "1/4",
+   "answer": 7,
+   "miss": 4,
+   "part": "a quarter",
+   "fdec": "0.25",
+   "keep": 80,
+   "mult": "0.8",
+   "prev": 6,
+   "prevval": "0.262",
+   "ansval": "0.210"
+  },
+  {
+   "r": 7,
+   "f": "1/2",
+   "answer": 10,
+   "miss": 8,
+   "part": "half",
+   "fdec": "0.5",
+   "keep": 93,
+   "mult": "0.93",
+   "prev": 9,
+   "prevval": "0.520",
+   "ansval": "0.484"
+  },
+  {
+   "r": 9,
+   "f": "1/2",
+   "answer": 8,
+   "miss": 6,
+   "part": "half",
+   "fdec": "0.5",
+   "keep": 91,
+   "mult": "0.91",
+   "prev": 7,
+   "prevval": "0.517",
+   "ansval": "0.470"
+  },
+  {
+   "r": 40,
+   "f": "1/4",
+   "answer": 3,
+   "miss": 2,
+   "part": "a quarter",
+   "fdec": "0.25",
+   "keep": 60,
+   "mult": "0.6",
+   "prev": 2,
+   "prevval": "0.360",
+   "ansval": "0.216"
+  },
+  {
+   "r": 11,
+   "f": "1/4",
+   "answer": 12,
+   "miss": 7,
+   "part": "a quarter",
+   "fdec": "0.25",
+   "keep": 89,
+   "mult": "0.89",
+   "prev": 11,
+   "prevval": "0.278",
+   "ansval": "0.247"
+  },
+  {
+   "r": 12,
+   "f": "1/4",
+   "answer": 11,
+   "miss": 7,
+   "part": "a quarter",
+   "fdec": "0.25",
+   "keep": 88,
+   "mult": "0.88",
+   "prev": 10,
+   "prevval": "0.279",
+   "ansval": "0.245"
+  },
+  {
+   "r": 9,
+   "f": "1/4",
+   "answer": 15,
+   "miss": 9,
+   "part": "a quarter",
+   "fdec": "0.25",
+   "keep": 91,
+   "mult": "0.91",
+   "prev": 14,
+   "prevval": "0.267",
+   "ansval": "0.243"
+  }
+ ],
+ "leak-audit-conditional": [
+  {
+   "N": 120,
+   "V": 50,
+   "S": 40,
+   "neither": 60,
+   "answer": 75,
+   "miss": 25,
+   "inside": 60,
+   "both": 30,
+   "notS": "25%"
+  },
+  {
+   "N": 200,
+   "V": 100,
+   "S": 50,
+   "neither": 90,
+   "answer": 80,
+   "miss": 20,
+   "inside": 110,
+   "both": 40,
+   "notS": "40%"
+  },
+  {
+   "N": 240,
+   "V": 80,
+   "S": 120,
+   "neither": 100,
+   "answer": 50,
+   "miss": 25,
+   "inside": 140,
+   "both": 60,
+   "notS": "about 17%"
+  },
+  {
+   "N": 230,
+   "V": 130,
+   "S": 125,
+   "neither": 90,
+   "answer": 92,
+   "miss": 50,
+   "inside": 140,
+   "both": 115,
+   "notS": "about 14%"
+  },
+  {
+   "N": 100,
+   "V": 40,
+   "S": 50,
+   "neither": 45,
+   "answer": 70,
+   "miss": 35,
+   "inside": 55,
+   "both": 35,
+   "notS": "10%"
+  },
+  {
+   "N": 120,
+   "V": 45,
+   "S": 50,
+   "neither": 55,
+   "answer": 60,
+   "miss": 25,
+   "inside": 65,
+   "both": 30,
+   "notS": "about 21%"
+  },
+  {
+   "N": 150,
+   "V": 45,
+   "S": 75,
+   "neither": 60,
+   "answer": 40,
+   "miss": 20,
+   "inside": 90,
+   "both": 30,
+   "notS": "20%"
+  }
  ]
 }
