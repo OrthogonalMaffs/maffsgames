@@ -1,5 +1,17 @@
 # Handover: home lane
 
+**ROOM-ART-RK-LJ: The Library Jam (10 Oct, Jon's contract; pictures approved 22:20-22:42).** The Rightful King's
+half was already merged as #269 (main green, 32c2be0). Filed `docs/art/library-jam-scene/-fail/-win.webp` (1600x873,
+q80, via `strip-gen-watermark.py --width 1600 --frame 1600x873`: no watermark). **All three sources are 2752x1536, like
+the scene, so nothing was upscaled** (the contract expected ~1024 px fail and win). Arm, bin, drop-box and desk screen
+all in frame. The squiggle "writing" on the two papers pinned to the right-hand wall is blanked in all three (each
+paper refilled from a plane fitted to its clean paper, so the glow gradients stay; outlines untouched); nothing else
+retouched. The papers stacked on the desk keep a few pixel-high illegible marks. room.js: `art: 'library-jam'`, the
+"ART: none yet" note replaced; sceneAlt checked against the picture and unchanged; failAlt and winAlt as the contract
+gives them; RULE (no `missArt`) kept. **Still unreleased. Jon can play-test with pictures at
+https://maffsgames.co.uk/escape-rooms/library-jam/play.html** (and rightful-king/play.html). Checked: play.html in
+Chromium at 1280 and 320 px (scene, win, fail at time-out); check-escape-rooms (all art present) and test-escape-art pass.
+
 **RIGHTFUL-KING-ART (10 Oct, Jon's contract; pictures approved 22:20).** Filed `docs/art/rightful-king-scene.webp`,
 `-fail.webp`, `-win.webp` (1600x873, WebP q80, through `strip-gen-watermark.py --width 1600 --frame 1600x873`: no
 watermark; 2752x1536 cropped to 2752x1502, so crown, server cupboard and desk all stay in frame). Nothing readable or
@@ -69,21 +81,6 @@ passes locally) and `scripts/check-lock-uniqueness.py` (an older one-answer chec
 `verify-regression-rumble.py` is declared held (game withdrawn). `check-changed.py` is the runner, not a check.
 **#255 PREPUSH-SCOPE merged** (99a0bf5).
 
-**PREPUSH-SCOPE (10 Oct; Jon's ruling after the STOP: two queues).** Cause **(b)**: `check-changed.py` already
-selected through `ci-deps.select` (CI's own function); the checks ran one at a time. There is no installed
-pre-push hook: "pre-push" is `check-changed.py`, run by hand. Now two queues: **heavy** (CI time >= 60 s, or a
-browser check that runs its own work concurrently: the six answer-lock parts, teacher feedback line, initials
-overlay, escape-room tests) one at a time, longest first; **light** six at once beside them. Six answer-lock
-parts in parallel had all failed (UNPLAYABLE) and pushed the machine to low memory. Shared-asset tests now
-always run (CI always runs them); the last line is the PR line "checks deferred to CI: ..."; `--files` plans
-for given paths. **Measured** (old serial -> two queues, b40a475's tree): docs-only 22 checks 353 s -> 26
-checks **167 s**, all pass; one game (angle-ace) 29 checks 1565 s -> 33 checks **1375 s**, all pass; shared
-asset (#232's files) 119 checks 4198 s -> 120 checks **2907 s (48 min)**. **The 10-minute target is not met
-for the shared-asset case:** the heavy queue is the floor (the six answer-lock parts alone are ~20 min
-serial), and it is printed, not skipped. Both shared-asset failures are local-only and fail serially and on
-main too: Negative Number Line 320x568 fold (Confirm at 536 under 528), Test the Claim ReferenceError under the
-local node. Also seen under the old serial load: core-maths-paper1 UNPLAYABLE (passes alone).
-
 **ESCAPE-DIFFICULTY (10 Oct, Jon's contract 13:05, after CAR-TRAP-RELEASE; contract
 `docs/handover/contracts/2026-10-10-escape-difficulty.md`).** Every live lock has `grade: N`; a room's
 rating is its hardest lock's band (★ Warm-up 1–3, ★★ Core 4–5, ★★★ Challenge 6–9), drawn by the new
@@ -100,21 +97,6 @@ on every run. New `scripts/test-escape-rating.py` (start screen and teacher page
 Chromium; no 320 px overflow apart from the teacher pages' allowlisted tables, §1.37). **For the cloud lane:**
 The Rightful King must derive ★★★ and The Library Jam ★: add `grade` to every lock, a `data-stars` chip on
 both cards, and load `../assets/rating.js` before engine.js and teacher.js.
-
-**CAR-TRAP-RELEASE (10 Oct, Jon's contract 13:00; `docs/handover/contracts/2026-10-10-car-trap-release.md`).**
-Jon's wording in room.js: wrong lines 1 and 2 are now Mr Strictman's memos (gates at oh-seven-hundred; staffroom
-biscuits discontinued), lines 3-4 unchanged; the "two point six centimetres" line moved into the brief ("You hear him
-before you see him: ..."), in words, real quote marks. Released: `escape-rooms/car-trap/index.html` is the room
-(play.html's body; prom-budget's head: analytics on, indexable, canonical, the draft's 158-character description
-for description and og:, og:image the v2 scene), play.html deleted; card on the hub (premise line + Bounds · Arc
-length · Quadratics, chip GCSE / Core, placed last) and on the front-page band; `<url>` in sitemap.xml; "eight" →
-"nine" on the hub (description, og:description, lede) and the front page (band lede, "Open all nine rooms"),
-CLAUDE.md, canon §11.1 (Car Trap Live 10/10, Mr Strictman, **★★**; "Nine rooms live, one withdrawn"). **The
-front page's meta descriptions carry no count** (they say "15-minute escape rooms"), so the contract's "two hits"
-had nothing to change. teacher.html stays noindex; it is linked from inside the room, as every room's is. /updates/:
-one line under October's New. **For Jon:** the hub says "Ordered easiest to hardest"; Car Trap sits last until
-ESCAPE-DIFFICULTY orders the cards by stars. Checked: check-escape-rooms passes; test-escape-art plays all nine
-rooms to a win and a loss; on the real URL a wrong barrier setting shows the memo line.
 
 **DASHBOARD-CHARTS (10 Oct, Jon's contract 08:35; `docs/handover/contracts/2026-10-10-dashboard-charts.md`).**
 `docs/apps-script-endpoint.js` only, SCRIPT_VERSION `2026-10-10-a`: the three percentage columns are written as
