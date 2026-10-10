@@ -1,20 +1,19 @@
 # Handover: home lane
 
-**PREPUSH-SCOPE: STOPPED on its STOP IF (10 Oct; branch `claude/prepush-scope`, not merged, no PR).**
-Cause **(b)**: `check-changed.py` already selects through `ci-deps.select` (CI's own function); a shared-asset
-change rightly selects every game, and the checks ran one at a time. There is no installed pre-push hook: the
-"pre-push check" is `check-changed.py`, run by hand. **Before** (old runner, serial, on b40a475's tree):
-docs-only 22 checks 353 s; one-game (`games/angle-ace`) 29 checks 1565 s; shared asset (#232's files) 119
-checks 4198 s (70 min). **After** (branch: 6 workers, longest first from ci-timings.json, `--files`, a
-printed "checks deferred to CI: ..." line; the shared-asset tests now always run, as CI runs them):
-docs-only 26 checks **133 s wall** (355 s of check time), all passed; one-game 33 checks 308 s wall (1592 s
-of check time) **but all six "Answer lock in play" parts FAILED** (games UNPLAYABLE after Start, one driver
-error): they play games concurrently inside themselves, and six at once overloads the machine. That is the
-STOP IF ("parallel runs make any check flaky"). The shared-asset after-run was then stopped by Claude Code
-for low system memory (not restarted, per its rule). **Needs Jon:** e.g. run the answer-lock parts (and other
-browser-heavy lines) one at a time beside the light ones, or fewer workers; then re-measure. Local-only
-failures seen in the serial before-runs, unrelated: Negative Number Line 320x568 fold (fails on main too),
-core-maths-paper1 UNPLAYABLE under load, Test the Claim ReferenceError under the local node.
+**PREPUSH-SCOPE (10 Oct; Jon's ruling after the STOP: two queues).** Cause **(b)**: `check-changed.py` already
+selected through `ci-deps.select` (CI's own function); the checks ran one at a time. There is no installed
+pre-push hook: "pre-push" is `check-changed.py`, run by hand. Now two queues: **heavy** (CI time >= 60 s, or a
+browser check that runs its own work concurrently: the six answer-lock parts, teacher feedback line, initials
+overlay, escape-room tests) one at a time, longest first; **light** six at once beside them. Six answer-lock
+parts in parallel had all failed (UNPLAYABLE) and pushed the machine to low memory. Shared-asset tests now
+always run (CI always runs them); the last line is the PR line "checks deferred to CI: ..."; `--files` plans
+for given paths. **Measured** (old serial -> two queues, b40a475's tree): docs-only 22 checks 353 s -> 26
+checks **167 s**, all pass; one game (angle-ace) 29 checks 1565 s -> 33 checks **1375 s**, all pass; shared
+asset (#232's files) 119 checks 4198 s -> 120 checks **2907 s (48 min)**. **The 10-minute target is not met
+for the shared-asset case:** the heavy queue is the floor (the six answer-lock parts alone are ~20 min
+serial), and it is printed, not skipped. Both shared-asset failures are local-only and fail serially and on
+main too: Negative Number Line 320x568 fold (Confirm at 536 under 528), Test the Claim ReferenceError under the
+local node. Also seen under the old serial load: core-maths-paper1 UNPLAYABLE (passes alone).
 
 **ESCAPE-DIFFICULTY (10 Oct, Jon's contract 13:05, after CAR-TRAP-RELEASE; contract
 `docs/handover/contracts/2026-10-10-escape-difficulty.md`).** Every live lock has `grade: N`; a room's
