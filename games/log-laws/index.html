@@ -860,8 +860,8 @@ const QUESTIONS = [
     distractors:['\\log x','\\tfrac{1}{\\log x}','\\log(-x)'],
     exp:'\\log(x^{-1}) = -1\\cdot\\log x = -\\log x' },
   { rule:'Power Rule',
-    q:'\\tfrac{1}{3}\\log 27', correct:'1',
-    distractors:['3','\\log 9','\\log 3'],
+    q:'\\tfrac{1}{3}\\log 27', correct:'\\log 3',
+    distractors:['1','3','\\log 9'],
     exp:'\\log(27^{1/3}) = \\log 3\\text{, since }27^{1/3} = 3' },
   { rule:'Power Rule',
     q:'\\ln(e^5)', correct:'5',
@@ -869,7 +869,7 @@ const QUESTIONS = [
     exp:'\\ln(e^n) = n,\\text{ so }\\ln(e^5) = 5' },
   { rule:'Power Rule',
     q:'-2\\log x', correct:'\\log\\!\\left(\\tfrac{1}{x^2}\\right)',
-    distractors:['\\log(x^2)','\\log(-2x)','2\\log x'],
+    distractors:['\\log(x^2)','\\log(-2x)','\\log\\!\\left(\\tfrac{1}{2x}\\right)'],
     exp:'-2\\log x = \\log(x^{-2}) = \\log\\tfrac{1}{x^2}' },
 
   // ── Special Values (6) ─────────────────────────────────────────────────

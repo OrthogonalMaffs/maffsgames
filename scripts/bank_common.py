@@ -1727,6 +1727,21 @@ def value_equal_pairs(pool, ctx=None):
     return out
 
 
+def _on_log_domain(sp, va, vb):
+    """A symbol inside a log or ln is positive, on both sides alike: that is the function's domain, and
+    the only one on which the laws hold, so log(x^2) and 2 log x are the same option (contract
+    LOG-NOTATION, Jon's ruling of 10 Oct 2026, log-laws QUESTIONS[24]). -> (va, vb, any symbol made
+    positive). A symbol that appears outside any log keeps its general assumptions."""
+    inside = set()
+    for v in (va, vb):
+        for f in getattr(v, "atoms", lambda *_: ())(sp.log):
+            inside |= f.args[0].free_symbols
+    if not inside:
+        return va, vb, False
+    sub = {s: sp.Symbol(s.name, positive=True) for s in inside}
+    return va.subs(sub), vb.subs(sub), True
+
+
 def equal(a, b):
     """True if two parse_value() results are the same value."""
     sp = _sympy_env()["sp"]
@@ -1736,7 +1751,8 @@ def equal(a, b):
         return _polar_equal(a, b)
     if {ka, kb} <= {"num", "expr"}:
         try:
-            d = sp.simplify(va - vb)
+            va, vb, logged = _on_log_domain(sp, va, vb)
+            d = sp.simplify(sp.expand_log(va - vb) if logged else va - vb)
             if d == 0:
                 return True
             if d.is_number:

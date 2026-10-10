@@ -75,6 +75,9 @@ EQUAL = [
     ("log-laws", "", r"\log_2 8", "3", "log base 2, one-character base"),
     ("log-laws", "", r"\log_{2} 8", "3", "log base 2, braced base"),
     ("log-laws", "", r"\ln e^{3}", "3", "ln of a braced power of e"),
+    # A symbol inside a log is positive, the log's domain (Jon's ruling, 10 Oct: log-laws QUESTIONS[24]).
+    ("log-laws", r"-2\log x", r"\log(x^2)", r"2\log x", "log-laws QUESTIONS[24]: equal for x > 0"),
+    ("log-laws", "", r"\log x + \log y", r"\log(xy)", "product law, x and y positive"),
 ]
 
 UNEQUAL = [
@@ -113,6 +116,10 @@ UNEQUAL = [
     ("log-laws", "", "e^2", "2", "QUESTIONS[13]: same misconception"),
     ("log-laws", "", "10", "1", "QUESTIONS[39], [42]"),
     ("log-laws", "", r"\log 18", r"\log 4.5", "QUESTIONS[18]: halved vs divided by a half"),
+    ("log-laws", "", r"\log(-2x)", r"\log(x^2)", "QUESTIONS[24]: the dropped minus is still wrong"),
+    ("log-laws", "", r"\log\!\left(\tfrac{1}{2x}\right)", r"\log\!\left(\tfrac{1}{x^2}\right)",
+     "QUESTIONS[24]: the new option is not the key"),
+    ("algebra-game", "", "x^2", "x", "no log: a symbol keeps its general assumptions"),
 ]
 # The one UNEQUAL row with why=None is in fact an EQUAL Boolean identity; move it.
 EQUAL += [(g, t, a, b, "Boolean distributive law over AND (distinct from ring algebra)")
