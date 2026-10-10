@@ -1181,8 +1181,11 @@ def _sympy_env():
                                                 implicit_multiplication_application,
                                                 convert_xor)
         syms = {c: sp.Symbol(c) for c in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"}
+        # \log with no base is base 10 and \ln is base e, as in every bank on this site (contract
+        # LOG-NOTATION, 10 Oct 2026). Both were sympy's natural log, so "\log 1000" read as 6.91, not 3,
+        # and "\log x" was paired with "\ln x" as equal. \log_b is rewritten by to_expr_text().
         syms.update({"pi": sp.pi, "e": sp.E, "sqrt": sp.sqrt, "sin": sp.sin, "cos": sp.cos,
-                     "tan": sp.tan, "ln": sp.log, "log": sp.log, "exp": sp.exp, "i": sp.I,
+                     "tan": sp.tan, "ln": sp.log, "log": _log10, "exp": sp.exp, "i": sp.I,
                      "binomial": sp.binomial})
         _SYMPY.update(sp=sp, parse_expr=parse_expr, syms=syms,
                       trans=standard_transformations + (implicit_multiplication_application,
@@ -1251,7 +1254,24 @@ def strip_latex(s):
     return s
 
 
+def _log10(x):
+    """log with no base: base 10 (contract LOG-NOTATION). sympy returns 3 for log(1000, 10)."""
+    import sympy as sp
+    return sp.log(x, 10)
+
+
+# \log_{b} x and \log_b x: log base b, written as \ln x / \ln b before the LaTeX is stripped
+# (contract LOG-NOTATION). A one-character base needs no braces (\log_2 8); the argument is
+# whatever follows, read by the parser's implicit application, as for \ln.
+_LOG_BASE = re.compile(r"\\log_(?:\{([^{}]+)\}|([0-9A-Za-z]))")
+# "ln e**2" and "log x**2" are a syntax error to sympy's implicit application, which brackets only a
+# bare name or number; the argument of ln or log is the whole power, so it is bracketed here
+# (\ln e^3 is ln(e^3) = 3, contract LOG-NOTATION).
+_LOG_POWER_ARG = re.compile(r"(?<![A-Za-z])(ln|log)\s+([A-Za-z0-9.]+\*\*(?:\([^()]*\)|-?[A-Za-z0-9.]+))")
+
+
 def to_expr_text(raw):
+    raw = _LOG_BASE.sub(lambda m: r"\frac{1}{\ln (%s)}\ln " % (m.group(1) or m.group(2)), raw)
     s = strip_latex(raw.strip())
     s = s.replace("−", "-").replace("–", "-").replace("×", "*").replace("÷", "/").replace("·", "*")
     s = s.replace("⁄", "/").replace("π", "pi").replace("°", "")
@@ -1271,6 +1291,7 @@ def to_expr_text(raw):
     if _MATH_CONTEXT.search(raw) and not _STANDALONE_WORD.search(_LATEX_CMD.sub(" ", raw)):
         s = _juxtapose(s)
     s = re.sub(r"(?<![A-Za-z])e\*\*\(([^()]*)\)", _phasor_exponent, s)
+    s = _LOG_POWER_ARG.sub(r"\1(\2)", s)
     return s.strip()
 
 
@@ -1706,6 +1727,21 @@ def value_equal_pairs(pool, ctx=None):
     return out
 
 
+def _on_log_domain(sp, va, vb):
+    """A symbol inside a log or ln is positive, on both sides alike: that is the function's domain, and
+    the only one on which the laws hold, so log(x^2) and 2 log x are the same option (contract
+    LOG-NOTATION, Jon's ruling of 10 Oct 2026, log-laws QUESTIONS[24]). -> (va, vb, any symbol made
+    positive). A symbol that appears outside any log keeps its general assumptions."""
+    inside = set()
+    for v in (va, vb):
+        for f in getattr(v, "atoms", lambda *_: ())(sp.log):
+            inside |= f.args[0].free_symbols
+    if not inside:
+        return va, vb, False
+    sub = {s: sp.Symbol(s.name, positive=True) for s in inside}
+    return va.subs(sub), vb.subs(sub), True
+
+
 def equal(a, b):
     """True if two parse_value() results are the same value."""
     sp = _sympy_env()["sp"]
@@ -1715,7 +1751,8 @@ def equal(a, b):
         return _polar_equal(a, b)
     if {ka, kb} <= {"num", "expr"}:
         try:
-            d = sp.simplify(va - vb)
+            va, vb, logged = _on_log_domain(sp, va, vb)
+            d = sp.simplify(sp.expand_log(va - vb) if logged else va - vb)
             if d == 0:
                 return True
             if d.is_number:

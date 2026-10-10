@@ -3647,7 +3647,7 @@
  "log-laws": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -3663,15 +3663,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS[18]: '\\\\log 4.5' = '\\\\log\\\\tfrac{9}{2}' (both wrong options)",
-      "id": "log-laws::8e6dc1f3e423#1::B11::[\"\\\\log 4.5\", \"\\\\log\\\\tfrac{9}{2}\"]",
-      "line": null,
-      "register": "log-laws-f0-001"
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],

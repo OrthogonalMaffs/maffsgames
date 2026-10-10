@@ -1,5 +1,17 @@
 # Handover: home lane
 
+**LOG-NOTATION (10-11 Oct, Jon's contract; STOPPED on a wrong key, then Jon's rulings; PR #274).** B11's parser
+(`bank_common`): log with no base is base 10, ln base e, log_b base b; a power argument of ln/log is bracketed
+(ln e^2 parses); and, Jon's class fix, a symbol inside a log is positive when two values are compared (log(x^2) =
+2 log x). **B11 over all 97 games: no existing verdict changed; +4 pairs, all log-laws ([7], [13], [39], [42]); the
+domain rule added none anywhere**, so no other game's findings file changed. log-laws Laws bank: five distractors
+replaced ([7], [13], [18], [39], [42]); **[22] (1/3 log 27) was keyed 1, value log 3: CRITICAL (Jon), now keyed log
+3** (options log 3, 1, 3, log 9); [24]'s 2 log x (equal to the key for x > 0) replaced by log(1/(2x)).
+verify-log-laws.py now checks the Laws bank too (every key its question's value, no two options equal; the old [22]
+and [24] planted and caught). Findings log-laws-ln-001..006 (fixed, #274; f0-001 fixed); ledger cleared for log-laws
+only. Locally the banks were extracted with `extract-banks.py --workers 2` (98 s; 4 workers risks this machine's
+memory). Note: this machine's Bash heredocs eat backslashes, so regex-heavy scripts were written to files first.
+
 **ROOMS-RELEASE-RK-LJ (10 Oct, Jon 22:45: "both have been play tested, so lets just release"; contract in
 `docs/history/contracts/2026-10-10-rooms-release-rk-lj.md`).** The Rightful King (★★★) and The Library Jam (★) are
 live, released as Car Trap was: each index.html is the room (prom-budget's head: analytics on, indexable, canonical,
@@ -12,7 +24,10 @@ the eight live rooms: 199 verified number sets" is a replay statistic, not a cou
 redirects to /escape-rooms/rightful-king/ (checked in Chromium). /updates/: one line each under October's New. The
 twelve finished contracts moved from docs/handover/contracts/ to docs/history/contracts/ (the folder is empty).
 Checked: check-escape-rooms, test-escape-rating (11 rooms, no 320 px overflow), test-escape-art (both rooms to a win
-and a loss with their pictures), test-section-clicks, context size.
+and a loss with their pictures), test-section-clicks, context size. **Merged #271 (227fb0a), main green. Live site checked
+10 Oct:** /escape-rooms/rightful-king/ and /escape-rooms/library-jam/ serve 200 with their titles; in Chromium at 320 px each
+shows its scene picture and Start, no sideways scroll; /escape-rooms/it-vengeance/ lands on The Rightful King; the hub
+says "Eleven"; the old play.html is 404.
 
 **ROOM-ART-RK-LJ: The Library Jam (10 Oct, Jon's contract; pictures approved 22:20-22:42).** The Rightful King's
 half was already merged as #269 (main green, 32c2be0). Filed `docs/art/library-jam-scene/-fail/-win.webp` (1600x873,
@@ -40,28 +55,6 @@ time-out; check-escape-rooms and test-escape-art pass.
 complex-converter stays untagged, Jon). Roster `scientific`, badge on the start card, scientific calculator under the
 question card (below Next, so Next does not move on a phone); check-calculator, verify-core-maths-paper2c and the
 Chromium smoke (sin(30) = 0.5 at 1280 and 320 px, no overflow) pass; CI the gate.
-
-**SCIENTIFIC TAGGING 4/5: formula-unlocked (10 Oct).** As formula-forge (#265): roster `scientific`, badge,
-scientific calculator under the options and solution (its own `--hint` kept); check-calculator, verify-formula-unlocked
-and the Chromium smoke (sin(30) = 0.5 at 1280 and 320 px, no overflow) pass; CI the gate.
-
-**SCIENTIFIC TAGGING 3/6: formula-forge (10 Oct).** As force-resolver: roster `scientific`, badge, scientific
-calculator under the options (its own `--hint` kept: calculator.css uses it only for the "required" badge);
-check-calculator passes; sin(30) = 0.5 at 1280 and 320 px, no overflow. No verify script exists for this game.
-**complex-converter stays untagged (Jon, 10 Oct, "for now"):** it already has a "Calculator (−25 pts)" hint (pick the
-right keystrokes), and a free scientific calculator would let a student skip that cost; the paid hint stays its support.
-So the tagging run is 5 games, not 6. Per Jon (10 Oct) the tagging PRs run only the game's
-own checks locally; CI is the gate (a roster change selects ~120 checks, more than this machine can sustain).
-
-**SCIENTIFIC TAGGING 2/6: moments-master (10 Oct).** As force-resolver (#261, main green): roster `scientific`, badge,
-scientific calculator under the options; check-calculator passes; sin(30) = 0.5 at 1280 and 320 px, no overflow.
-
-**SCIENTIFIC TAGGING 1/6: force-resolver (10 Oct, Jon's ruling).** Roster tag `scientific`, badge, the scientific
-calculator mounted under the options (`{keys:'scientific'}`); check-calculator passes; sin(30) = 0.5 in Chromium, no
-320 px overflow; check-changed 119/120 pass. **The one local failure is not this PR:** `test-real-fonts.py` fails on
-every Windows checkout, main included: `core.autocrlf` rewrites the pinned text files (.css, manifest.json, LICENSE)
-to CRLF, so their SHA256s differ; CI (Linux) is unaffected. Fix: a `.gitattributes` line `scripts/fonts/** -text`.
-Next: moments-master, complex-converter, formula-forge, formula-unlocked, core-maths-paper2c (one PR each).
 
 **STAR-KEY (10 Oct, Jon's contract 17:50; `docs/handover/contracts/2026-10-10-star-key.md`).** One line saying
 what the stars mean, on the hub (under "Ordered easiest to hardest") and on the front page's escape-room band
@@ -94,23 +87,6 @@ second). **Never run by CI (report only):** `scripts/check-feedback-options.py` 
 passes locally) and `scripts/check-lock-uniqueness.py` (an older one-answer checker; passes locally);
 `verify-regression-rumble.py` is declared held (game withdrawn). `check-changed.py` is the runner, not a check.
 **#255 PREPUSH-SCOPE merged** (99a0bf5).
-
-**ESCAPE-DIFFICULTY (10 Oct, Jon's contract 13:05, after CAR-TRAP-RELEASE; contract
-`docs/handover/contracts/2026-10-10-escape-difficulty.md`).** Every live lock has `grade: N`; a room's
-rating is its hardest lock's band (★ Warm-up 1–3, ★★ Core 4–5, ★★★ Challenge 6–9), drawn by the new
-`escape-rooms/assets/rating.js` on the start screen and the teacher page (the teacher page adds "Suits a top
-set" at ★★★ only), and written as a `data-stars` chip on every hub and front-page card (the old level chips
-replaced). The derived ratings reproduce Jon's list exactly (no STOP): ★ Comic Caper, Kiln Disaster; ★★
-Canteen, Heatwave, P.E., Prom, Hamster, Car Trap; ★★★ Rugby Mud. Every lock's grade and reason is in the PR.
-Two locks the bank tags "GCSE Higher" are graded 5 (Car Trap's monic quadratic by factorising, Prom's
-compound growth by building powers): the method is Foundation's. `levelLabel` removed from the live rooms
-(display only); `level` kept (analytics send it). The hub's cards are now in rating order (it says "Ordered
-easiest to hardest"); the front page's order is unchanged. **check-escape-rooms.py was never in CI** (it ran
-only by hand): it now has a ci-line and fails a missing grade or any disagreeing card, with two plants caught
-on every run. New `scripts/test-escape-rating.py` (start screen and teacher page match the hub card in
-Chromium; no 320 px overflow apart from the teacher pages' allowlisted tables, §1.37). **For the cloud lane:**
-The Rightful King must derive ★★★ and The Library Jam ★: add `grade` to every lock, a `data-stars` chip on
-both cards, and load `../assets/rating.js` before engine.js and teacher.js.
 
 **DASHBOARD-CHARTS (10 Oct, Jon's contract 08:35; `docs/handover/contracts/2026-10-10-dashboard-charts.md`).**
 `docs/apps-script-endpoint.js` only, SCRIPT_VERSION `2026-10-10-a`: the three percentage columns are written as

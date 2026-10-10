@@ -16,4 +16,65 @@ findings:
   where: games/log-laws/index.html:837 (QUESTIONS[18])
   summary: Wrong options log 4.5 and log(9/2) are equal (½ log 9, Power Rule)
   evidence: 'B11 parser, F0 (7 Oct 2026): \log 4.5 = \log\tfrac{9}{2}, exact (scripts/bank_common.py); ledger log-laws::8e6dc1f3e423#1::B11::["\\log 4.5", "\\log\\tfrac{9}{2}"]'
-  status: open
+  status: fixed
+  pr: 274
+- id: log-laws-ln-001
+  severity: HIGH
+  jc: true
+  class: 2
+  level: all
+  where: games/log-laws/index.html (QUESTIONS[7])
+  summary: 'log 100 + log 10 is keyed 3 and offers log 1000 as wrong: they are equal, so a right answer is marked wrong'
+  evidence: 'B11 with the base-10 parser (contract LOG-NOTATION, 10 Oct 2026; scripts/bank_common.py): main''s parser read \log as the natural log, so this pair was never flagged. 4 of the Laws bank''s 45 questions (8.9%); 4 of 38 (10.5%) with Skip Change of Base on, so HIGH, as Jon ruled (10 Oct). Fixed: log 1000 replaced by 1000 (combined, then forgot to take the log).'
+  status: fixed
+  pr: 274
+- id: log-laws-ln-002
+  severity: HIGH
+  jc: true
+  class: 2
+  level: all
+  where: games/log-laws/index.html (QUESTIONS[13])
+  summary: 'ln e^3 - ln e is keyed 2 and offers ln e^2 as wrong: they are equal'
+  evidence: 'B11 with the base-10 parser (contract LOG-NOTATION, 10 Oct 2026; scripts/bank_common.py): main''s parser read \log as the natural log, so this pair was never flagged. 4 of the Laws bank''s 45 questions (8.9%); 4 of 38 (10.5%) with Skip Change of Base on, so HIGH, as Jon ruled (10 Oct). ln e^2 did not parse before at all. Fixed: replaced by e^2 (same misconception).'
+  status: fixed
+  pr: 274
+- id: log-laws-ln-003
+  severity: HIGH
+  jc: true
+  class: 2
+  level: all
+  where: games/log-laws/index.html (QUESTIONS[39])
+  summary: 'log 50 - log 5 is keyed 1 and offers log 10 as wrong: they are equal'
+  evidence: 'B11 with the base-10 parser (contract LOG-NOTATION, 10 Oct 2026; scripts/bank_common.py): main''s parser read \log as the natural log, so this pair was never flagged. 4 of the Laws bank''s 45 questions (8.9%); 4 of 38 (10.5%) with Skip Change of Base on, so HIGH, as Jon ruled (10 Oct). Fixed: log 10 replaced by 10.'
+  status: fixed
+  pr: 274
+- id: log-laws-ln-004
+  severity: HIGH
+  jc: true
+  class: 2
+  level: all
+  where: games/log-laws/index.html (QUESTIONS[42])
+  summary: 'log 4 + log 5 - log 2 is keyed 1 and offers log 10 as wrong: they are equal'
+  evidence: 'B11 with the base-10 parser (contract LOG-NOTATION, 10 Oct 2026; scripts/bank_common.py): main''s parser read \log as the natural log, so this pair was never flagged. 4 of the Laws bank''s 45 questions (8.9%); 4 of 38 (10.5%) with Skip Change of Base on, so HIGH, as Jon ruled (10 Oct). Fixed: log 10 replaced by 10.'
+  status: fixed
+  pr: 274
+- id: log-laws-ln-005
+  severity: CRITICAL
+  jc: false
+  class: 3
+  level: all
+  where: games/log-laws/index.html (QUESTIONS[22])
+  summary: '1/3 log 27 is keyed 1; its value is log 3 (about 0.477), which was offered as a wrong option, so every right answer was marked wrong'
+  evidence: 'Found by the Laws-bank key check added to scripts/verify-log-laws.py (LOG-NOTATION, 10 Oct 2026); its own explanation ends at log 3. Jon ruled CRITICAL (10 Oct). Fixed: keyed log 3; options log 3, 1 (the base-3 misreading, the old key), 3, log 9. The check plants the old item and catches it on every run.'
+  status: fixed
+  pr: 274
+- id: log-laws-ln-006
+  severity: LOW
+  jc: false
+  class: 2
+  level: all
+  where: games/log-laws/index.html (QUESTIONS[24])
+  summary: 'Wrong options log(x^2) and 2 log x are equal for x > 0, the log''s domain (-2 log x)'
+  evidence: 'Found by the same key check; B11 missed it until the parser read a symbol inside a log as positive (Jon''s class fix, 10 Oct). Fixed: 2 log x replaced by log(1/(2x)); log(x^2) (the dropped minus) and log(-2x) kept.'
+  status: fixed
+  pr: 274

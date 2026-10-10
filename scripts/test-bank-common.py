@@ -67,6 +67,17 @@ EQUAL = [
     ("boolean-blitz", "",
      "A(B + C)", "AB + AC",
      "boolean-blitz-t6-003, :744"),
+    # Log notation (contract LOG-NOTATION, 10 Oct 2026): \log is base 10, \ln base e, \log_b base b.
+    # Until then \log was sympy's natural log, so these four log-laws pairs were never flagged.
+    ("log-laws", r"\log 100 + \log 10", r"\log 1000", "3", "log-laws QUESTIONS[7]: log 1000 = 3"),
+    ("log-laws", r"\log 50 - \log 5", r"\log 10", "1", "log-laws QUESTIONS[39], [42]: log 10 = 1"),
+    ("log-laws", r"\ln e^3 - \ln e", r"\ln e^2", "2", "log-laws QUESTIONS[13]: ln e^2 = 2 (did not parse)"),
+    ("log-laws", "", r"\log_2 8", "3", "log base 2, one-character base"),
+    ("log-laws", "", r"\log_{2} 8", "3", "log base 2, braced base"),
+    ("log-laws", "", r"\ln e^{3}", "3", "ln of a braced power of e"),
+    # A symbol inside a log is positive, the log's domain (Jon's ruling, 10 Oct: log-laws QUESTIONS[24]).
+    ("log-laws", r"-2\log x", r"\log(x^2)", r"2\log x", "log-laws QUESTIONS[24]: equal for x > 0"),
+    ("log-laws", "", r"\log x + \log y", r"\log(xy)", "product law, x and y positive"),
 ]
 
 UNEQUAL = [
@@ -97,6 +108,18 @@ UNEQUAL = [
     # Found by the first full run of the new parser (7 Oct 2026), both misreads:
     ("curling-friction", "", "22.5 m vs 22.5 m", "45 m vs 11.25 m", "'vs' is a word, not v times s"),
     ("proof-builder", "", "1! = 1", "2! - 1 = 1", "statements, not values"),
+    # Log notation (LOG-NOTATION): base 10 and base e are different logs, so these were false pairs.
+    ("log-laws", "", r"\log 5", r"\ln 5", "log 5 is base 10, ln 5 base e"),
+    ("log-laws", "", r"\log x", r"\ln x", "log x is base 10, ln x base e"),
+    # The log-laws replacements: each differs from the key it sits beside.
+    ("log-laws", "", "1000", "3", "QUESTIONS[7]: combined, then forgot the log"),
+    ("log-laws", "", "e^2", "2", "QUESTIONS[13]: same misconception"),
+    ("log-laws", "", "10", "1", "QUESTIONS[39], [42]"),
+    ("log-laws", "", r"\log 18", r"\log 4.5", "QUESTIONS[18]: halved vs divided by a half"),
+    ("log-laws", "", r"\log(-2x)", r"\log(x^2)", "QUESTIONS[24]: the dropped minus is still wrong"),
+    ("log-laws", "", r"\log\!\left(\tfrac{1}{2x}\right)", r"\log\!\left(\tfrac{1}{x^2}\right)",
+     "QUESTIONS[24]: the new option is not the key"),
+    ("algebra-game", "", "x^2", "x", "no log: a symbol keeps its general assumptions"),
 ]
 # The one UNEQUAL row with why=None is in fact an EQUAL Boolean identity; move it.
 EQUAL += [(g, t, a, b, "Boolean distributive law over AND (distinct from ring algebra)")

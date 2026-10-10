@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Log Laws Solve (layers C + D, SymPy) | --require-katex
+# ci-line: Log Laws Solve (layers C + D, SymPy) and the Laws bank's keys and options (two faults planted) | --require-katex
 """Layers C + D verification for log-laws Solve mode
 (docs/next-contract-log-laws-solve.md, step 6; design in docs/log-laws-solve-build-notes.md).
 
@@ -32,6 +32,13 @@ For every item in every family:
   - no `\\log_` other than `\\log_{10}` appears in any Solve string;
   - every TeX string and every \\( \\) segment parses in KaTeX (when KaTeX loads:
     always in CI, where --require-katex makes a missing KaTeX a failure).
+
+And for the Laws bank (QUESTIONS, read from the same page; contract LOG-NOTATION, 10 Oct 2026):
+  - every key equals its question's value (\\log base 10, \\ln base e, a symbol inside a log
+    positive), read by bank_common.parse_value / equal, B11's own parser;
+  - no option equals another: no wrong option equals the key, and no two wrong options are equal.
+  Two faults are planted on every run and must each be caught: QUESTIONS[22] as it was before
+  10 Oct (1/3 log 27 keyed 1, with log 3 offered as wrong) and QUESTIONS[24]'s old 2 log x.
 
 USAGE
 -----
@@ -136,6 +143,11 @@ async def fetch(katex_dir):
             pass
         data = await page.evaluate(
             "() => window.LL_SOLVE ? JSON.parse(JSON.stringify(window.LL_SOLVE)) : null")
+        # The Laws bank: a top-level const, so reachable by name on the page (LOG-NOTATION).
+        laws = await page.evaluate(
+            "() => typeof QUESTIONS !== 'undefined' ? JSON.parse(JSON.stringify(QUESTIONS)) : null")
+        if data is not None:
+            data["laws_bank"] = laws
         katex_bad = await page.evaluate(KATEX_JS)
         await browser.close()
         return data, katex_bad, errors
@@ -451,6 +463,39 @@ def strings(data):
     return out
 
 
+def check_laws(laws):
+    """Problems in the Laws bank: a key that is not its question's value, or two equal options."""
+    out = []
+    for k, q in enumerate(laws or []):
+        opts = [q["correct"]] + list(q["distractors"])
+        vals = [bc.parse_value(o) for o in opts]
+        vq = bc.parse_value(q["q"])
+        if vq is None or vals[0] is None:
+            out.append("Laws[%d] %r: the question or its key does not parse" % (k, q["q"]))
+            continue
+        if not bc.equal(vq, vals[0]):
+            out.append("Laws[%d] %r is keyed %r, which is not its value" % (k, q["q"], q["correct"]))
+        for a in range(len(opts)):
+            for b in range(a + 1, len(opts)):
+                if vals[a] is not None and vals[b] is not None and bc.equal(vals[a], vals[b]):
+                    out.append("Laws[%d] %r: options %r and %r are equal%s" % (
+                        k, q["q"], opts[a], opts[b], " (one is the key)" if a == 0 else ""))
+    return out
+
+
+def laws_plants(laws):
+    """The two faults this check exists for, planted in a copy of the bank: each must be caught."""
+    def find(qtext):
+        return next(i for i, q in enumerate(laws) if q["q"] == qtext)
+    i22, i24 = find("\\tfrac{1}{3}\\log 27"), find("-2\\log x")
+    old22 = [dict(q) for q in laws]
+    old22[i22] = dict(old22[i22], correct="1", distractors=["3", "\\log 9", "\\log 3"])
+    old24 = [dict(q) for q in laws]
+    old24[i24] = dict(old24[i24], distractors=["\\log(x^2)", "\\log(-2x)", "2\\log x"])
+    return [("QUESTIONS[%d] keyed 1 (before 10 Oct)" % i22, old22, "is keyed '1'"),
+            ("QUESTIONS[%d] offering 2 log x (before 10 Oct)" % i24, old24, "are equal")]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--require-katex", action="store_true",
@@ -497,6 +542,21 @@ def main():
             fail("%s repeats an item id" % f["id"])
         for it in items:
             verify_item(it, move_ids, reasons)
+
+    laws = data.pop("laws_bank", None)     # out of data, so strings() below walks the Solve data only
+    if not laws:
+        fail("could not read the Laws bank (QUESTIONS) from the live page")
+    else:
+        print("Verifying the Laws bank (%d questions): every key its question's value, no two options equal..."
+              % len(laws))
+        for problem in check_laws(laws):
+            fail(problem)
+        for what, bank, expect in laws_plants(laws):
+            got = check_laws(bank)
+            if any(expect in g for g in got):
+                print("  planted fault caught: " + what)
+            else:
+                fail("planted fault NOT caught: %s (the Laws check found %s)" % (what, got or "nothing"))
 
     for s in strings(data):
         for m in re.finditer(r"\\log_(\{[^}]*\}|.)", s):

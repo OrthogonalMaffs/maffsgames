@@ -3,6 +3,47 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-11 (home): trimmed for LOG-NOTATION
+
+**SCIENTIFIC TAGGING 4/5: formula-unlocked (10 Oct).** As formula-forge (#265): roster `scientific`, badge,
+scientific calculator under the options and solution (its own `--hint` kept); check-calculator, verify-formula-unlocked
+and the Chromium smoke (sin(30) = 0.5 at 1280 and 320 px, no overflow) pass; CI the gate.
+
+**SCIENTIFIC TAGGING 3/6: formula-forge (10 Oct).** As force-resolver: roster `scientific`, badge, scientific
+calculator under the options (its own `--hint` kept: calculator.css uses it only for the "required" badge);
+check-calculator passes; sin(30) = 0.5 at 1280 and 320 px, no overflow. No verify script exists for this game.
+**complex-converter stays untagged (Jon, 10 Oct, "for now"):** it already has a "Calculator (−25 pts)" hint (pick the
+right keystrokes), and a free scientific calculator would let a student skip that cost; the paid hint stays its support.
+So the tagging run is 5 games, not 6. Per Jon (10 Oct) the tagging PRs run only the game's
+own checks locally; CI is the gate (a roster change selects ~120 checks, more than this machine can sustain).
+
+**SCIENTIFIC TAGGING 2/6: moments-master (10 Oct).** As force-resolver (#261, main green): roster `scientific`, badge,
+scientific calculator under the options; check-calculator passes; sin(30) = 0.5 at 1280 and 320 px, no overflow.
+
+**SCIENTIFIC TAGGING 1/6: force-resolver (10 Oct, Jon's ruling).** Roster tag `scientific`, badge, the scientific
+calculator mounted under the options (`{keys:'scientific'}`); check-calculator passes; sin(30) = 0.5 in Chromium, no
+320 px overflow; check-changed 119/120 pass. **The one local failure is not this PR:** `test-real-fonts.py` fails on
+every Windows checkout, main included: `core.autocrlf` rewrites the pinned text files (.css, manifest.json, LICENSE)
+to CRLF, so their SHA256s differ; CI (Linux) is unaffected. Fix: a `.gitattributes` line `scripts/fonts/** -text`.
+Next: moments-master, complex-converter, formula-forge, formula-unlocked, core-maths-paper2c (one PR each).
+
+**ESCAPE-DIFFICULTY (10 Oct, Jon's contract 13:05, after CAR-TRAP-RELEASE; contract
+`docs/handover/contracts/2026-10-10-escape-difficulty.md`).** Every live lock has `grade: N`; a room's
+rating is its hardest lock's band (★ Warm-up 1–3, ★★ Core 4–5, ★★★ Challenge 6–9), drawn by the new
+`escape-rooms/assets/rating.js` on the start screen and the teacher page (the teacher page adds "Suits a top
+set" at ★★★ only), and written as a `data-stars` chip on every hub and front-page card (the old level chips
+replaced). The derived ratings reproduce Jon's list exactly (no STOP): ★ Comic Caper, Kiln Disaster; ★★
+Canteen, Heatwave, P.E., Prom, Hamster, Car Trap; ★★★ Rugby Mud. Every lock's grade and reason is in the PR.
+Two locks the bank tags "GCSE Higher" are graded 5 (Car Trap's monic quadratic by factorising, Prom's
+compound growth by building powers): the method is Foundation's. `levelLabel` removed from the live rooms
+(display only); `level` kept (analytics send it). The hub's cards are now in rating order (it says "Ordered
+easiest to hardest"); the front page's order is unchanged. **check-escape-rooms.py was never in CI** (it ran
+only by hand): it now has a ci-line and fails a missing grade or any disagreeing card, with two plants caught
+on every run. New `scripts/test-escape-rating.py` (start screen and teacher page match the hub card in
+Chromium; no 320 px overflow apart from the teacher pages' allowlisted tables, §1.37). **For the cloud lane:**
+The Rightful King must derive ★★★ and The Library Jam ★: add `grade` to every lock, a `data-stars` chip on
+both cards, and load `../assets/rating.js` before engine.js and teacher.js.
+
 ## 2026-10-10 (home): trimmed for ROOM-ART-RK-LJ
 
 **PREPUSH-SCOPE (10 Oct; Jon's ruling after the STOP: two queues).** Cause **(b)**: `check-changed.py` already
