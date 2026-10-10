@@ -1,5 +1,16 @@
 # Handover: home lane
 
+**LOCK-BANK-CI (10 Oct, Jon 17:15; for the cloud lane's room builds).** `scripts/check-lock-bank.py` rejected
+hamster-feeder-bounds on main: `NOTE` was not a known field, so a multi-line note's continuation lines were glued
+onto VERIFY (SyntaxError). Fixed in the parser (`NOTE` is a field), not by reflowing the entry; every other lock's
+result is unchanged (before/after diff of all 7 batches: only hamster-feeder-bounds, REJECT -> ok, 580). With no
+argument it checks every `docs/lock-bank-batch*.txt`; `--selftest` plants four entries (a sound lock with a
+two-line NOTE, two answers, a restating VERIFY, a wrong ANSWER), all caught; it is now in CI (ci-line, about a
+second). **Never run by CI (report only):** `scripts/check-feedback-options.py` (the feedback page's game menu;
+passes locally) and `scripts/check-lock-uniqueness.py` (an older one-answer checker; passes locally);
+`verify-regression-rumble.py` is declared held (game withdrawn). `check-changed.py` is the runner, not a check.
+**#255 PREPUSH-SCOPE merged** (99a0bf5).
+
 **PREPUSH-SCOPE (10 Oct; Jon's ruling after the STOP: two queues).** Cause **(b)**: `check-changed.py` already
 selected through `ci-deps.select` (CI's own function); the checks ran one at a time. There is no installed
 pre-push hook: "pre-push" is `check-changed.py`, run by hand. Now two queues: **heavy** (CI time >= 60 s, or a
