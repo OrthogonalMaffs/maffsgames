@@ -1,5 +1,15 @@
 # Handover: home lane
 
+**RIGHTFUL-KING-ART (10 Oct, Jon's contract; pictures approved 22:20).** Filed `docs/art/rightful-king-scene.webp`,
+`-fail.webp`, `-win.webp` (1600x873, WebP q80, through `strip-gen-watermark.py --width 1600 --frame 1600x873`: no
+watermark; 2752x1536 cropped to 2752x1502, so crown, server cupboard and desk all stay in frame). Nothing readable or
+branded; the mug carries a pixel-high scribble under its leaf, illegible even zoomed. room.js: `art: 'rightful-king'`,
+the "ART: none yet" note replaced, sceneAlt gains the sticky note and printer, failAlt rewritten (night, lit by the
+display), winAlt unchanged; the RULE (no `missArt`) kept. **Still unreleased** (holding page, no hub card, no sitemap).
+**Jon can play-test it with its pictures at https://maffsgames.co.uk/escape-rooms/rightful-king/play.html.** Checked:
+play.html in Chromium at 1280 and 320 px shows the scene on the brief, the win picture on a win, the fail picture at
+time-out; check-escape-rooms and test-escape-art pass.
+
 **SCIENTIFIC TAGGING 5/5: core-maths-paper2c (10 Oct). The tagging run is done** (#261, #264, #265, #266, this;
 complex-converter stays untagged, Jon). Roster `scientific`, badge on the start card, scientific calculator under the
 question card (below Next, so Next does not move on a phone); check-calculator, verify-core-maths-paper2c and the
