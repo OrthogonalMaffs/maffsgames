@@ -93,7 +93,7 @@ session, generated"; a game with a fixed bank gives its bank size. A count that 
 | 71 | Graph Sketcher | `graph-sketcher` | Core, A-Level, L4 | Statistics, Applied | Table completion, curve drawing, graph interpretation. 45 scenarios | untagged |
 | 73 | Test the Claim | `test-the-claim` | A-Level, L4 | Statistics | Six-step hypothesis testing: Binomial, Poisson, Normal, Correlation. 48 questions | untagged |
 
-## A-Level Games (15)
+## A-Level Games (16)
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
 | 74 | Differentiation Duel | `differentiation-duel` | A-Level, L4 | Calculus | 45+53 questions | untagged |
@@ -109,6 +109,7 @@ session, generated"; a game with a fixed bank gives its bank size. A count that 
 | 84 | Normal Navigator | `normal-navigator` | A-Level, L4, Core | Statistics | 47 questions (one bank shared by all three levels; read from the live bank 1 Oct 2026) | untagged |
 | 85 | Fermi Lab | `fermi-lab` | KS3, GCSE, A-Level, L4, Core | Statistics, Reasoning | Chain estimation. 65 questions (50 original + 15 Core tier). Core tier: everyday social contexts with eval_question/eval_answer stored for future use | untagged |
 | 86 | Dimension Checker | `dimension-checker` | A-Level, L4 | Mechanics | Dimensional analysis | untagged |
+| 88 | Factor Theorem | `factor-theorem` | A-Level | Algebra | Learn + Practice resource. 4 examples, 40 practice, 10 test. Exam vocab tooltips | untagged |
 | 89 | Boolean Blitz | `boolean-blitz` | L4 | Algebra, Applied | Simplify Boolean algebra expressions using logic laws. Full step-by-step walkthroughs | untagged |
 | 90 | The Truth Will Set You Free | `truth-will-set-you-free` | L4 | Algebra, Applied | Build truth tables from engineering scenarios and match Boolean expressions. 32 questions | untagged |
 
@@ -129,9 +130,10 @@ Adult register, as every game now is (canon §7.5, Jon's ruling 2 Oct 2026, whic
 | 96 | Six Sevens, Bruv | `six-sevens-bruv` | KS3, GCSE | Number | Times-tables recall, 1 to 12. Typed answers, no multiple choice. 78 facts (commutative pairs are one fact), lit gold on a 12×12 grid kept per student on the device (`schools/assets/progress.js`). Misses return 3–5 questions later with a full array and a derived-fact hint. Verified by `scripts/verify-six-sevens.py` (in CI) | untagged |
 | 97 | Free Daily Pizza | `free-daily-pizza` | KS3, GCSE | Number | Fraction, decimal and percentage equivalence. Four stages, all generated from parameters: benchmarks (90), wider set and simplifying (206), fraction or percentage of an amount (138), one quantity out of another (84). Four options, each distractor a named misconception; recurring decimals shown recurring, thirds of a percent as a stacked mixed number; every fraction on screen is stacked (KaTeX, or an HTML fallback). Wrong answers show the working, then a pizza, 100-square grid or bar drawn exactly. Practice 20/40: mixed-stage runs rank on `practice-q20`/`practice-q40`, single-stage runs rank nowhere (history only); a daily pizza of 3+3+2+2 questions, easiest first, seeded from the UK date (board `daily-YYYY-MM-DD`, not on the hub). Verified by `scripts/verify-free-daily-pizza.py` (in CI) | untagged |
 
-## Unlisted (2)
+## Unlisted (1)
 Live at their URLs, and off the portal, `/resit/`, the sitemap, the spec map and the leaderboard hub (`NOT_ON_HUB` in `scripts/check-leaderboard-coverage.js`). Each is a numbered row so every roster parser reads it: the theme check, tier 1's level loads and the bank tools. On relisting a row moves back to the section it came from.
-- Unlisted 6 Oct 2026 (Jon's rulings on audit tranches 3-6, 20:30; canon SR-20) for faults found by the tranche 3-6 audits (`docs/audits/`), still unlisted: `factor-theorem` (was A-Level #88), tranche 5; `glorious-gantt` (was Core #72), tranche 4. Relisted under canon SR-21 (verifier merged, no open CRITICAL or HIGH; todo §1.58-§1.75). Their pages are unchanged (no `noindex`), so existing links, Google Classroom links and search results still work.
+- Unlisted 6 Oct 2026 (Jon's rulings on audit tranches 3-6, 20:30; canon SR-20) for faults found by the tranche 3-6 audits (`docs/audits/`), still unlisted: `glorious-gantt` (was Core #72), tranche 4. Relisted under canon SR-21 (verifier merged, no open CRITICAL or HIGH; todo §1.58-§1.75). Their pages are unchanged (no `noindex`), so existing links, Google Classroom links and search results still work.
+- **Relisted 9 Oct 2026 (contract DOCS-9OCT, canon SR-21):** `factor-theorem` back at A-Level #88, **A-Level only** (Jon, 9 Oct: a level that serves another level's items is not listed as that level; L4 removed). Its verifier is in CI and it has no open CRITICAL or HIGH (t5-016 and t5-017, MEDIUM, the test bank, stay open).
 - **Relisted 9 Oct 2026 (contract RELIST-SR, canon SR-21):** `screening-room` back at GCSE #62 (tranche 4; its verifier in CI, no open CRITICAL or HIGH; t4-014 MEDIUM and t4-017 LOW stay open in the register).
 - **Listed and relisted 8 Oct 2026 (contract RELIST-3):** `just-pythag-it-bruv` (merged unlisted 4 Oct for Jon to play; Jon approved it after playing it, recorded 8 Oct 2026), now KS3 #98; `expectation-station` back at GCSE #59 (expectation-station-pc-001 fixed under Jon's ruling B, 40/40/40 bank) and `truth-buster` back at KS3 #17, both under canon SR-21.
 - **Relisted 7 Oct 2026 (canon SR-21, contract F1):** spot-the-error, trig-worms, trig-identity-duel, component-crusher, linear-equation-solver, differentiation-duel, integration-duel, suvat, curling-friction, force-resolver, moments-master, binomial-blaster, partial-fractions-duel, proof-builder, dimension-checker, truth-will-set-you-free and eigenvector-engine, each back in the section it came from.
@@ -139,7 +141,6 @@ Live at their URLs, and off the portal, `/resit/`, the sitemap, the spec map and
 | # | Game | Slug | Levels | Topics | Description | Calculator |
 |---|------|------|--------|--------|-------------|---|
 | 72 | Glorious Gantt Game | `glorious-gantt` | Core, L4 | Applied | CPA: forward/backward pass, critical path, floats, Gantt charts. 15 scenarios | untagged |
-| 88 | Factor Theorem | `factor-theorem` | A-Level, L4 | Algebra | Learn + Practice resource. 4 examples, 40 practice, 10 test. Exam vocab tooltips | untagged |
 
 ## Withdrawn (1)
 Kept at its URL behind a `noindex` holding page, off the portal and the sitemap, nothing deleted (canon §11.5). The `—` in the # column keeps it out of every roster parser; row numbers are not reused.
