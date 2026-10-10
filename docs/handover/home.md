@@ -1,5 +1,8 @@
 # Handover: home lane
 
+**SCIENTIFIC TAGGING 2/6: moments-master (10 Oct).** As force-resolver (#261, main green): roster `scientific`, badge,
+scientific calculator under the options; check-calculator passes; sin(30) = 0.5 at 1280 and 320 px, no overflow.
+
 **SCIENTIFIC TAGGING 1/6: force-resolver (10 Oct, Jon's ruling).** Roster tag `scientific`, badge, the scientific
 calculator mounted under the options (`{keys:'scientific'}`); check-calculator passes; sin(30) = 0.5 in Chromium, no
 320 px overflow; check-changed 119/120 pass. **The one local failure is not this PR:** `test-real-fonts.py` fails on
