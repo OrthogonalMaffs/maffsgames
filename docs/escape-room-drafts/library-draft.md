@@ -1,7 +1,7 @@
 # The library room: draft for Jon’s review
 
 **Phase 1 of a new ★ Warm-up escape room, the eleventh (contract LIBRARY-DRAFT, 9 Oct 2026, 19:35; saved as
-`docs/handover/contracts/2026-10-09-library-draft.md`).** This is draft prose only. No live file is touched. Phase
+`docs/history/contracts/2026-10-09-library-draft.md`).** This is draft prose only. No live file is touched. Phase
 2 (title, slug, build, variants, teacher page, hub, release) and phase 3 (art) are separate contracts after you
 approve this.
 

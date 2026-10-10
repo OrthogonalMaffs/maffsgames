@@ -1,7 +1,7 @@
 # The Rightful King: draft for Jon’s review
 
 **Phase 1 of the replacement for the withdrawn `it-vengeance` room (contract RIGHTFUL-KING-DRAFT, 9 Oct 2026,
-18:10; saved as `docs/handover/contracts/2026-10-09-rightful-king-draft.md`).** This is draft prose only. Nothing
+18:10; saved as `docs/history/contracts/2026-10-09-rightful-king-draft.md`).** This is draft prose only. Nothing
 served is touched: `escape-rooms/it-vengeance/` stays as it is, behind its holding page. Phase 2 (slug, build,
 variants, teacher page, retiring the old six pictures, release) and phase 3 (art) are separate contracts after
 you approve this.

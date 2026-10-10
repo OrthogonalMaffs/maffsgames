@@ -1,0 +1,53 @@
+Batch 9 - Jon and Project Claude, 2026-10-10 (contract RIGHTFUL-KING-BUILD; the three locks were drafted in
+docs/escape-room-drafts/rightful-king-draft.md, merged in #247, and approved by Jon in full on 10 Oct). Three
+locks, for The Rightful King, which replaces the withdrawn it-vengeance room. The old room's three locks
+(mechanical-keyboard-perms, vault-trajectory-vertex, mat-tiling-hcf) leave the room; their bank entries and
+generator libraries stay as history. Hints are not held here; like batches 3-8 they live in the room's room.js.
+Notes on format, not touching the mathematics:
+  * The passcode lock uses the keypad's maxDigits mode (contract KEYPAD-VARIABLE, Jon's ruling 2): up to
+    three digits, Set to submit, so k = 5 (an answer of 60) is settable without a leading zero.
+  * The CLUE lines quote each lock's variant 0. In the room the figures are tokens, and the overwrite's
+    threshold is a word ("half"), so it is no clue figure.
+
+
+Room M - The Rightful King (GCSE Higher)
+========================================
+
+ID:          admin-passcode-product-rule
+LEVEL:       GCSE Higher
+TOPIC:       Number / Counting (product rule, no repeats)
+INSTRUMENT:  Keypad, up to three digits (maxDigits 3).
+CONTEXT:     The admin passcode is 3 different keys from a pad of 7, no key used twice. The brute-force guard resets only when told exactly how many passcodes it would have to try.
+CLUE:        "ADMIN PASSCODE: 3 different keys, never the same key twice." / "A pad of 7 keys."
+ANSWER:      210
+AHA:         Each key used leaves one fewer for the next position, so the choices multiply down: 7 x 6 x 5.
+MISCONCEPTION: 343 (repeats allowed, 7 x 7 x 7).
+SOLVE:       7 x 6 x 5 = 210.
+TIME:        2
+VERIFY:      [n for n in range(1000) if n - len([(a, b, c) for a in range(7) for b in range(7) for c in range(7) if len({a, b, c}) == 3]) == 0]
+
+ID:          vote-log-overwrite
+LEVEL:       GCSE Higher
+TOPIC:       Ratio / Exponential decay by iteration
+INSTRUMENT:  Dial 1 to 20 minutes, step 1.
+CONTEXT:     20% of the remaining original records are overwritten each minute. The log is unrecoverable once fewer than half survive. How many whole minutes until then?
+CLUE:        "Each minute, 20% of the original records still left are replaced." / "Once fewer than half survive, the log is unrecoverable."
+ANSWER:      4
+AHA:         Each minute takes 20% of what is left, so 0.8 of the records survive each minute: 0.8^3 = 0.512, 0.8^4 = 0.4096.
+MISCONCEPTION: 3 (linear: 20% of the original each minute, half gone after 2.5 minutes).
+SOLVE:       0.8^3 = 0.512 is not below 0.5; 0.8^4 = 0.4096 is. 4 minutes.
+TIME:        3
+VERIFY_MIN:  [n for n in range(1, 21) if Fraction(4, 5) ** n < Fraction(1, 2)]
+
+ID:          leak-audit-conditional
+LEVEL:       GCSE Higher
+TOPIC:       Probability / Venn diagrams and conditional probability
+INSTRUMENT:  Two-digit keypad.
+CONTEXT:     120 voters; 50 voted for him; 40 opened the leak page; 60 did neither. Of those who opened the page, what percentage voted for him?
+CLUE:        "Votes cast: 120. Leading: 50." / "Opened the leak page before voting: 40. Never opened it and did not vote for him: 60."
+ANSWER:      75
+AHA:         Inside the circles are 120 - 60 = 60 voters; 50 + 40 = 90 counts the overlap twice, so 30 are in both; 30 out of the 40 who saw it.
+MISCONCEPTION: 25 (30 out of all 120 voters: the wrong denominator).
+SOLVE:       Both = 50 + 40 - (120 - 60) = 30. 30 / 40 = 75%.
+TIME:        3
+VERIFY:      [n for n in range(100) if n * 40 - 100 * (50 + 40 - (120 - 60)) == 0]

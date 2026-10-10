@@ -48,59 +48,78 @@ art was not on main when Jon said it was: the only `car-trap-*.webp` there are t
 **QUEUE (Jon, 10 Oct), in order. Keep the handover current after each:**
 Done 10 Oct: RIGHTFUL-KING-DRAFT (#247, aa660f7) and LIBRARY-DRAFT (#248, 8302ba8). Jon approved both drafts in
 full ("spot on"); the Library room's title is The Library Jam.
-1. **RIGHTFUL-KING-BUILD** (contract `docs/handover/contracts/2026-10-10-rightful-king-build.md`), then
+1. **RIGHTFUL-KING-BUILD** (contract `docs/handover/contracts/2026-10-10-rightful-king-build.md`): **IN PROGRESS** on
+   `claude/compassionate-cori-3xi42y` (started 10 Oct, 14:45, after FONT-FIT's main run was green). Then
 2. **LIBRARY-JAM-BUILD** (contract `docs/handover/contracts/2026-10-10-library-jam-build.md`).
-**BOTH WAIT on BOTH home-lane fixes, ART-PENDING and KEYPAD-VARIABLE (Jon, 10 Oct), not KEYPAD-VARIABLE alone.**
-Both are on main: ART-PENDING (#244, `HAS_ART` in engine.js) and KEYPAD-VARIABLE (#251, `maxDigits`), checked
-10 Oct after 13:45. They start after FONT-FIT merges (Jon, 13:45).
+Both shared fixes they waited on are on main: ART-PENDING (#244) and KEYPAD-VARIABLE (#251, `maxDigits`).
+**Jon's ruling for both builds (10 Oct, after 13:45):**
+- **The hub is left alone.** A built room sits behind its noindex holding page, and the checker counts a room as
+  live only without `noindex`, so no card is needed. The star chip comes with the release contract.
+- **Every lock gets a `grade` in room.js**, with a one-line reason in the PR, as #253 did.
+- **The derived rating must be ★★★ (Rightful King) and ★ (Library Jam).** If honest grading gives anything else,
+  STOP and report; never adjust a grade to fit.
+- **Calibration from #253:** building powers to find the years (Prom's compound growth) is 5; a Venn overlap from
+  totals is 4.
 **Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's
-last full run is green, without asking each time; it still watches main's run after each merge. Ratings for the handover when built: The Rightful
-King ★★★ Challenge, The Library Jam ★ Warm-up (no star field; the difficulty contract owns it).
-**FONT-FIT (Jon, 10 Oct 11:05; contract `docs/handover/contracts/2026-10-10-font-fit.md`): on branch
-`claude/youthful-feynman-anpxuq-font-fit`, main merged in; PR next.** Findings: `docs/audits/font-fit-2026-10-10.md`.
-- **Jon's answers (10 Oct):** Stage 5's how-to line shows on the first problem only, and a game opens on one of the
-  25 problems that fit with it (`FORM_OPENERS`). The self-test is planted on pages where the fonts decide the verdict.
-- **Jon's ruling (10 Oct, 13:45):** fix free-daily-pizza and negative-number-line in this PR, by layout only, with at
-  least 8 px of margin in the real fonts; their own checks assert it. **DONE:**
-  - free-daily-pizza: on screens 600 px tall or less, the spacing around the HUD, the card and the feedback box is
-    tighter. Next goes from 533 to **514** against a 528 fold at 320x568, across all 518 items. 375x667 and 390x844
-    are unchanged (607 against folds of 627 and 804). The verifier passes with `MARGIN = 8`.
-  - negative-number-line: up to 480 px wide the header takes two rows. It was one row, with each item wrapping to
-    2-3 lines, 112 px tall. It is now 90 px in all three modes, with no sideways scroll. Confirm goes from 536 to
-    **514** against 528. The verifier passes with `MARGIN = 8` on Confirm, the feedback and Next, and its self-test
-    passes.
-- **Known problems, for Jon to order (not fixed, not allowlisted; listed in the findings file):**
-  - Over the fold in the real fonts: standard-form-blitz +10, surd-simplifier +9, coordinate-geometry-dash +7,
-    sequence-solver +4 and modular-battle +2 (all at 320x568); estimation-golf +12 at 390x844.
-  - Too wide: distinctly-average, +14 px at 320 (the Aa toggle).
+last full run is green, without asking each time. It still watches main's run after each merge.
+**FONT-FIT: DONE.** #256 merged 10 Oct (a2dbdeb); main's run 720 is green. The contract is now
+`docs/history/contracts/2026-10-10-font-fit.md`; the findings are in `docs/audits/font-fit-2026-10-10.md`.
+- Free Daily Pizza and Negative Number Line both fit at 320x568 with **14 px** to spare (Next and Confirm at 514
+  against 528), by layout only. Their verifiers assert `MARGIN = 8`.
+- **Known problems, for Jon to order** (in the findings file; not fixed, not allowlisted):
+  - Over the fold: standard-form-blitz +10, surd-simplifier +9, coordinate-geometry-dash +7, sequence-solver +4 and
+    modular-battle +2 (320x568); estimation-golf +12 (390x844).
+  - Too wide: distinctly-average, +14 px (its Aa toggle).
   - Within 5 px of the fold: proportion-blaster, prime-or-composite, higher-power, matrix-crunch, trig-worms and
     wrong-on-the-internet.
-- **Done earlier on the branch:**
-  - `scripts/fonts/` (KaTeX 0.16.9 and the Google Fonts files, with checksums and licences).
-  - `bank_common.real_font_response` and `serve_real_font(_async)`.
-  - Real fonts in check-site's phone pass, `measure-phone-fit.py` and the fold verifiers.
-  - 12 stale allowlist entries removed.
-  - `test-real-fonts.py`.
-  - Simultaneous Solver: `fitInView` with 8 px, and its verifier asserts it.
-- **Then:** `check-changed.py`, open the PR, merge on a green Gate, watch main's run.
-- **For the home lane:** once this merges, CI's DejaVu pin step can be retired for the phone checks (not removed here).
-- **Local runs:** `FONTCONFIG_FILE` pinning DejaVu, as CI does (scratch `fonts.conf`). The cloud container's Chromium
-  is build 1194 and Playwright 1.63 wants 1243, so a scratch symlink was used; the numbers above match the
-  handover's earlier ones exactly (533 and 536 before).
-- **Next after merge:** RIGHTFUL-KING-BUILD. KEYPAD-VARIABLE (#251) and ART-PENDING (#244) are both on main.
-- **Jon's ruling for both builds (10 Oct, after 13:45):**
-  - **The hub is left alone.** A built room sits behind its holding page and has no hub card until its release
-    contract, which brings the star chip.
-  - **Every lock gets a `grade` in room.js**, with a one-line reason in the PR, as #253 did. Since #253 the checker
-    fails a lock without one.
-  - **The derived rating must be ★★★ for The Rightful King and ★ for The Library Jam.** If honest grading gives
-    anything else, STOP and report; never adjust a grade to fit.
+- **Lesson:** the cloud container's Chromium (1194) lays out 1 px differently from CI's (1243). parents/fractions
+  measured 320 here and 321 in CI, so the allowlist keeps it at 321. **CI is the measure for a 1 px verdict.**
+  Locally, Playwright 1.63 runs through scratch symlinks to build 1194 (`/opt/pw-browsers/*-1243`), with
+  `FONTCONFIG_FILE` pinning DejaVu.
+- **For the home lane:** CI's DejaVu pin step can now be retired for the phone checks (not removed: the workflow is
+  home-lane).
 **Open for Jon:** delete branch `claude/youthful-feynman-anpxuq-pd-check` in GitHub (the proxy refused the remote
 delete, HTTP 403).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-10 (cloud): RIGHTFUL-KING-BUILD, The Rightful King built behind its holding page (for Jon's play-test)
+
+- **Jon can play-test it at `/escape-rooms/rightful-king/play.html`** (noindex, linked from nowhere, analytics off).
+  `index.html` is a noindex "coming soon" holding page; `teacher.html` is the real teacher page (noindex, unlinked).
+  There is no hub card, sitemap entry or count change: the release contract brings those, with the ★★★ chip.
+- **Art pending:** no `art` field, so no picture is requested. Jon generates the three pictures after his play-test.
+  The alts are the draft's.
+- **Locks (bank batch 9, `docs/lock-bank-batch9.txt`; check-lock-bank: unique on all three):**
+  - `admin-passcode-product-rule`, grade 6: the product rule with no repeats (Higher). maxDigits 3; k = 5 to 9 with
+    L = 3 (60, 120, 210, 336, 504); variant 0 is k = 7.
+  - `vote-log-overwrite`, grade 5: building powers of one multiplier, the method #253 graded 5 in Prom (the draft
+    said 7). The library is the draft's ten sets, each through the rules, including (1 - f) x 100 not a multiple
+    of r. The generator asserts that the 3 d.p. powers keep their comparison with the threshold.
+  - `leak-audit-conditional`, grade 7: conditional probability from a Venn diagram (Higher). The library is the
+    draft's seven sets, under its story rules.
+- **Derived rating, from check-escape-rooms' own `room_rating()`: ★★★ Challenge (grades 6–9).** No grade was fitted.
+- **check-escape-rooms:** rightful-king VALID **215 of 350**, variant 0 VALID (the draft measured 183 of 280; the
+  fifth passcode set adds draws).
+- **The old URL:** `it-vengeance/index.html` is a noindex meta-refresh to `/escape-rooms/rightful-king/` with a
+  plain link (ruling 6). `it-vengeance/room.js` and `teacher.html` stay as history. The checker reads every room
+  folder; a noindex index makes it not live, so it needs no card or grade.
+- **Played headless (scratch script, four draws, all PASS):**
+  - Start screen: the brief, ★★★ CHALLENGE · GRADES 6–9, and the stakes after "If you get it wrong."
+  - All 8 objects and all 3 lock briefs on screen, every token filled.
+  - Four wrong lines in order, then the last repeats. Each misconception gives its own response.
+  - All three locks open; k = 5's 60 opens on the up-to-three-digit keypad. Then the win screen ("It was my
+    prompt").
+  - A time-out ends on the stakes after "And so:".
+  - No page errors, no 4xx, nothing sent to analytics.
+  - The teacher page shows ★★★, "Suits a top set" and the calculator note. The old URL lands on the holding page.
+- **Generator:** run through a scratch wrapper that swaps in this checkout's paths. Before the M block went in, a run
+  reproduced every existing library byte for byte.
+- **Teacher page at 320 px:** 558 px wide (`table.tt`, the shared overflow, todo §1.37). It is allowlisted in the
+  same form as the other nine teacher pages, per Jon's CAR-TRAP-ONE-LANE contract; §1.37 (`engine.css`, home lane)
+  stays the real fix for all ten. **LIBRARY-JAM-BUILD's teacher page will need the same entry.**
 
 ## 2026-10-10 (cloud): LIBRARY-DRAFT, Library room draft for Jon's review
 
@@ -132,70 +151,3 @@ main's last full run is red; watch main's run after merging.
   checker's own `draw_is_valid()` on the draft's clue strings gives **183 of 280 VALID, variant 0 VALID**.
 - **STOP IF did not fire:** prom-budget was read in full and never mentions a vote, a king or Narry.
 - **Next:** LIBRARY-DRAFT. Phase 2 of The Rightful King is a separate contract after Jon approves.
-
-## 2026-10-10 (cloud): CAR-TRAP-BUILD, the rewritten Car Trap built behind its holding page (awaiting Jon's play-test)
-
-- **10 Oct, after ART-PENDING (#244): rebased on main; `art` dropped.** The room requests no picture.
-  check-escape-rooms lists it as art pending (VALID 352 of 512). Tier 1 passes the play page, and
-  `test-escape-art.py` passes.
-  - **Still red, one failure:** the teacher page is 545 px wide at 320 px. This is the shared `table.tt` overflow
-    (todo §1.37). **Jon (10 Oct): the home lane fixes §1.37 first; no allowlist entry.** #242 waits for that.
-  - **Jon's message of 10 Oct ("the Car Trap art is now on main; set art to those pictures; rewrite winAlt for the
-    win picture's high CCTV-style view") did not match main.** The only `car-trap-*.webp` on main are the OLD
-    pictures: an orange sports car reversing into a VISITOR bay before a crowd of staff, an eye-level view. Main is
-    unchanged in `docs/art/` since before #242, and home.md names no new files.
-    - So `art` was NOT set and winAlt was NOT rewritten: pointing at those would show the wrong premise, and an alt
-      cannot be written for a picture not seen.
-    - When the new files are on main: add `art:` naming them, check all three alts against them, and rewrite winAlt
-      for the win picture's view.
-
-- **Built from the approved draft with Jon's changes (9 Oct, 22:53).**
-  - "The dullest car in the county" appears once, in the hook (scripted count: 1).
-  - The stakes and lock 3's onOpen are as ruled.
-  - Wrong-entry line 1 carries the figure in words.
-  - The only figures in the prose outside tokens are the draft's flagged words and locks 2 and 3's unchanged method
-    constants. Mr Strictman is invented, Jon confirmed.
-- **For the difficulty contract: the room is ★★ Core** (Jon's ruling 3). No star field or label was added anywhere.
-- **Lock 1, `head-bay-lower-bound`, is bank batch 8** (`docs/lock-bank-batch8.txt`; check-lock-bank `unique (2.35)`).
-  - Its library is in `gen-escape-variants.py`: the draft's eight widths, variant 0 = 2.4, the draft's solver, all
-    eight kept.
-  - The generator also writes the room's `variants:` blocks.
-  - `visitor-space-bounds` leaves the room; its bank entry and library stay as history.
-  - Locks 2 and 3: a scripted diff shows id, key, instrument, variants, missTitle, hints and solve unchanged. Only
-    framing and missSays' last clause changed, per the draft.
-  - **check-escape-rooms: car-trap VALID 352 of 512, variant 0 VALID**, as the draft measured.
-- **The generator's paths are Jon's machine's** (`E:\jon\maffsgames\...`). The cloud lane runs it through a scratch
-  wrapper that swaps in this checkout's paths at run time; the script's paths are unchanged.
-  - Before the new library went in, a run reproduced every existing library byte for byte.
-  - Only car-trap's room.js and variants.json changed.
-- **Art pending.** `art: 'car-trap-v2'` has no files yet, so the engine drops the frame and none of the six old pictures
-  shows (they stay in docs/art/ untouched). No lock has art or missArt (the rule is in room.js's header).
-  - **Filing Jon's three pictures is a separate step:** file them as `car-trap-v2-scene`, `-fail` and `-win.webp`, or
-    file over the old names and set `art` back to `car-trap`.
-  - The three alts are the draft's, to be checked against the pictures before release.
-- **Pages (Jon's answers, 10 Oct):**
-  - `teacher.html` is the real teacher page (noindex, unlinked).
-  - `play.html` is the play-test page: noindex, linked from nowhere, analytics off (no gtag, no analytics.js, so the
-    engine sends no events).
-  - `index.html` stays the holding page.
-  - **At release, in one PR:** play.html's content becomes index.html, with prom-budget's head lines (analytics, meta,
-    og:) put back; play.html is deleted; then the §5c release steps.
-- **Played through in Chromium** on serve-stubbed, with no page errors and nothing sent off-origin.
-  - It shows every object and all three lock briefs on screen.
-  - The four wrong-entry lines arrive in order, then the last repeats.
-  - Each lock's misconception gives its own response.
-  - All three locks open on their answers; lock 1 is set by the slider's arrow keys.
-  - Then the win screen; a second play times out to the stakes after "And so:".
-  - The teacher page follows the draw. The cloud session cannot open Jon's Chrome: that is what play.html is for.
-
-## 2026-10-09 (cloud): PD-CLOSE, LISTED-HIGH item 12 closed (Jon's ruling, 22:45, option A)
-
-- **t4-002 closed by #232 (shared-overlay fix); covered by the OVERLAY-KEYS CI check; per-game check not added
-  because the fault was in shared code.** The check is `scripts/test-initials-overlay.py` (in CI). Measured 9 Oct, with
-  `--games prisoners-dilemma`: main passes, and its plant is caught. Run `--against` the pre-#232 overlay, it fails
-  with 55 keys reaching the game's document keydown. That confirms the check covers this game, so the STOP IF did not fire.
-- `verify-prisoners-dilemma.py` is **not** in CI. Its branch, `claude/youthful-feynman-anpxuq-pd-check`, had nothing in
-  its handover that main lacks. It was deleted locally, but the remote delete was refused (the sandbox proxy, HTTP
-  403), so **Jon deletes it in GitHub's branch list**.
-- **prisoners-dilemma-t4-001** (the leaderboard ranks the chosen opponent) stays open for Jon's design decision.
-- Jon's note is saved verbatim as `docs/history/contracts/2026-10-09-listed-high-note-2245.md`.

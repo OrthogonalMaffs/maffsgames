@@ -17,7 +17,7 @@ variants are found by search under the same rules.
 
 Writes escape-rooms/variants.json. Run scripts/check-escape-rooms.py after.
 """
-import json, math, pathlib, random
+import itertools, json, math, pathlib, random
 from fractions import Fraction
 from math import gcd, factorial
 
@@ -789,6 +789,93 @@ for a, b, c in cands:
         break
 V["kiln-cancel-check"] = store
 
+# ---------------------------------------------------- M1 (2026-10) product rule, no repeats (keypad, maxDigits 3)
+# The Rightful King (contract RIGHTFUL-KING-BUILD; bank batch 9). The passcode is L different keys from a
+# pad of k, so the count is k(k-1)...(L factors). Misconception: k^L, the same key allowed again. Jon's
+# ruling 2: k = 5 to 9 with L = 3 on a maxDigits keypad (k = 5 gives 60, which maxDigits makes settable);
+# variant 0 is k = 7 (210, miss 343), because 120 is printed in the audit's variant-0 clue. The solver
+# counts the passcodes outright rather than restating the formula.
+def passcodes(k, L):
+    return sum(1 for t in itertools.product(range(k), repeat=L) if len(set(t)) == L)
+
+
+ins = keypad(3)
+store = []
+for k, L in shuffled([(7, 3), (5, 3), (6, 3), (8, 3), (9, 3)]):
+    keep(store, "admin-passcode-product-rule",
+         {"k": k, "L": L, "answer": math.perm(k, L), "miss": k ** L}, ins,
+         lambda v: [v["k"], v["L"]],
+         lambda x, v: x == passcodes(v["k"], v["L"]))
+    if len(store) >= WANT:
+        break
+V["admin-passcode-product-rule"] = store
+
+# ---------------------------------------------------- M2 (2026-10) decay by iteration (dial 1-20)
+# r% of the records still left are replaced each minute, so (1 - r/100)^n survive after n minutes; the
+# answer is the first whole minute with fewer than f left, in exact fractions. Misconception: r% of the
+# ORIGINAL each minute, so fewer than f are left after (1 - f) x 100 / r minutes, rounded up. Rejected:
+# answer = miss; an exact hit (1 - r/100)^n = f; answers of 2 or less; and (Jon's ruling 3) any set where
+# r divides (1 - f) x 100, because there a strict linear reader lands one minute later, which for 25% and
+# a half is the right answer: the lock would mark the wrong method right.
+# The library is the draft's ten sets, in its order (Jon's ruling 3: "the draft's ten-set library"); each
+# still has to pass every rule below and keep(), so an edit here cannot slip a bad set in.
+ins = (1, 20, 1)
+store = []
+HALF, QUARTER = Fraction(1, 2), Fraction(1, 4)
+cands = [(20, HALF), (8, QUARTER), (29, QUARTER), (20, QUARTER), (7, HALF), (9, HALF), (40, QUARTER),
+         (11, QUARTER), (12, QUARTER), (9, QUARTER)]
+for r, f in cands:
+    m = 1 - Fraction(r, 100)
+    if any(m ** n == f for n in range(1, 41)):
+        continue
+    ans = next(n for n in range(1, 200) if m ** n < f)
+    if (1 - f) * 100 % r == 0:
+        continue
+    miss = math.ceil((1 - f) * 100 / r)
+    if ans <= 2 or ans == miss:
+        continue
+    keep(store, "vote-log-overwrite",
+         {"r": r, "f": str(f), "answer": ans, "miss": miss}, ins,
+         lambda v: [v["r"]],
+         lambda x, v: (1 - Fraction(v["r"], 100)) ** x < Fraction(v["f"])
+         <= (1 - Fraction(v["r"], 100)) ** (x - 1))
+    if len(store) >= WANT:
+        break
+V["vote-log-overwrite"] = store
+
+# ---------------------------------------------------- M3 (2026-10) Venn diagram, conditional probability (keypad, digits 2)
+# N voters, V for him, S opened the ballot page, `neither` did neither. Inside the circles: N - neither;
+# both = V + S - (N - neither). Answer: both as a percentage of S. Misconception: both out of all N (the
+# wrong denominator). Jon's ruling 4, the draft's story rules: V/N 30-60%, S/N 20-60%, P(V | S) at least
+# twenty points above P(V | not S), the four clue figures all different, S != 100 (dividing by 100 does
+# nothing). Variant 0 is 120, 50, 40, 60.
+# The library is the draft's seven sets, in its order (N in tens from 100 to 240; V, S and neither in
+# fives); each still has to pass every rule below and keep().
+ins = keypad(2)
+store = []
+cands = [(120, 50, 40, 60), (200, 100, 50, 90), (240, 80, 120, 100), (230, 130, 125, 90), (100, 40, 50, 45),
+         (120, 45, 50, 55), (150, 45, 75, 60)]
+for N, Vv, S, nb in cands:
+    both = Vv + S - (N - nb)
+    if not (0 < both < min(Vv, S)) or S == 100 or len({N, Vv, S, nb}) < 4:
+        continue
+    if (100 * both) % S or (100 * both) % N:
+        continue
+    ans, miss = 100 * both // S, 100 * both // N
+    if not (10 <= ans <= 99 and 10 <= miss <= 99):
+        continue
+    if not (Fraction(3, 10) <= Fraction(Vv, N) <= Fraction(3, 5) and Fraction(1, 5) <= Fraction(S, N) <= Fraction(3, 5)):
+        continue
+    if Fraction(both, S) - Fraction(Vv - both, N - S) < Fraction(1, 5):
+        continue
+    keep(store, "leak-audit-conditional",
+         {"N": N, "V": Vv, "S": S, "neither": nb, "answer": ans, "miss": miss}, ins,
+         lambda v: [v["N"], v["V"], v["S"], v["neither"]],
+         lambda x, v: x * v["S"] == 100 * (v["V"] + v["S"] - (v["N"] - v["neither"])))
+    if len(store) >= WANT:
+        break
+V["leak-audit-conditional"] = store
+
 # ------------------------------------------------- derived tokens
 # Values the prose wants to quote but that are not parameters: a squared
 # radius, a reduced fraction, a prime factorisation. Deriving them here keeps
@@ -887,6 +974,25 @@ for v in V["kiln-fan-restart"]:
     v["multB"] = ", ".join(str(m) for m in range(v["b"], v["answer"] + 1, v["b"]))
 for v in V["kiln-cancel-check"]:
     v["quot"] = v["b"] // v["c"]
+# rightful-king: the passcode's product, the overwrite's powers, the audit's counts
+for v in V["admin-passcode-product-rule"]:
+    v["prod"] = " &times; ".join(str(v["k"] - i) for i in range(v["L"]))
+for v in V["vote-log-overwrite"]:
+    f, m = Fraction(v["f"]), 1 - Fraction(v["r"], 100)
+    v["part"] = {"1/2": "half", "1/4": "a quarter"}[v["f"]]
+    v["fdec"] = {"1/2": "0.5", "1/4": "0.25"}[v["f"]]
+    v["keep"] = 100 - v["r"]
+    v["mult"] = f"{float(m):g}"
+    v["prev"] = v["answer"] - 1
+    v["prevval"] = f"{float(m ** v['prev']):.3f}"
+    v["ansval"] = f"{float(m ** v['answer']):.3f}"
+    # the rounded figures must say what the exact ones do: not yet below f, then below it
+    assert Fraction(v["prevval"]) >= f > Fraction(v["ansval"]), v
+for v in V["leak-audit-conditional"]:
+    v["inside"] = v["N"] - v["neither"]
+    v["both"] = v["V"] + v["S"] - v["inside"]
+    p = Fraction(100 * (v["V"] - v["both"]), v["N"] - v["S"])
+    v["notS"] = f"{p}%" if p.denominator == 1 else f"about {round(p)}%"
 
 # ------------------------------------------------- display tokens
 # Instruments that read to one decimal place need their numbers written the
