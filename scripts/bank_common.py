@@ -208,6 +208,66 @@ NO_LOCK_FRESH_INIT = """(() => {
   });
 })();"""
 
+
+# ---------------------------------------------------------------------------------------------------------------
+# The fonts students see (contract FONT-FIT, 10 Oct 2026). Pages load KaTeX 0.16.9 from cdn.jsdelivr.net and their
+# text faces (Outfit, JetBrains Mono, and a few others) from Google Fonts. A check that blocks those measures in the
+# runner's fallback font, which no student sees. These copies are pinned in scripts/fonts/ (fetch-fonts.py, licences
+# in its README): real_font_file() maps a CDN URL to its pinned file, so a check serves the real fonts with no network
+# and the same bytes every run. Pages are unchanged; they still ask the CDNs. A URL with no pinned copy (a css2 query
+# no page asked for when the fonts were fetched) returns None, and the caller decides (block it, as before).
+FONTS_DIR = os.path.join(ROOT, "scripts", "fonts")
+KATEX_CDN = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/"
+GOOGLE_CSS = "https://fonts.googleapis.com/css2?"
+GOOGLE_STATIC = "https://fonts.gstatic.com/"
+_FONT_TYPES = {".css": "text/css; charset=utf-8", ".js": "application/javascript; charset=utf-8",
+               ".woff2": "font/woff2", ".woff": "font/woff", ".ttf": "font/ttf"}
+_google_manifest = None
+
+
+def _google_css_for(query):
+    global _google_manifest
+    if _google_manifest is None:
+        import json
+        from urllib.parse import unquote
+        with open(os.path.join(FONTS_DIR, "google", "manifest.json"), encoding="utf-8") as f:
+            _google_manifest = {unquote(k): v for k, v in json.load(f).items()}
+    from urllib.parse import unquote
+    return _google_manifest.get(unquote(query))
+
+
+def real_font_file(url):
+    """The pinned local copy of a KaTeX or Google Fonts URL, or None."""
+    rel = None
+    if url.startswith(KATEX_CDN):
+        rel = os.path.join("katex", "dist", url[len(KATEX_CDN):].split("?")[0].split("#")[0])
+    elif url.startswith(GOOGLE_CSS):
+        css = _google_css_for(url[len(GOOGLE_CSS):].split("#")[0])
+        rel = css and os.path.join("google", css)
+    elif url.startswith(GOOGLE_STATIC):
+        rel = os.path.join("google", "gstatic", url[len(GOOGLE_STATIC):].split("?")[0])
+    if not rel:
+        return None
+    path = os.path.normpath(os.path.join(FONTS_DIR, rel))
+    if not path.startswith(FONTS_DIR + os.sep) or not os.path.isfile(path):
+        return None
+    return path
+
+
+def real_font_response(url):
+    """Keyword arguments for route.fulfill() serving the pinned copy of `url`, or None. Fonts are fetched in CORS
+    mode, so the response allows any origin, as the CDNs do."""
+    path = real_font_file(url)
+    if not path:
+        return None
+    return {"path": path, "content_type": _FONT_TYPES.get(os.path.splitext(path)[1], "application/octet-stream"),
+            "headers": {"Access-Control-Allow-Origin": "*"}}
+
+
+def is_font_cdn(url):
+    """True for a request a phone-fit check must not let reach the network: KaTeX's CDN or Google Fonts."""
+    return url.startswith((KATEX_CDN, GOOGLE_CSS, GOOGLE_STATIC))
+
 # A dict is "question-like" if it carries an answer key at its own top level.
 # correct_override appears without `correct` in normal-navigator:222/:241
 # (canon, todo 1.12), so either key alone must qualify. `answer` and `ans`

@@ -883,22 +883,37 @@ var EqTiles = (function () {
   function noKeypad() { $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true; kp = null; }
 
   // The step and its keys in the window together: the keys above the footer, never the step's top above the window.
-  function stepInView() {
-    var top = $('step').getBoundingClientRect().top, kpEl = $('kpHolder').querySelector('.maffs-keypad-panel');
-    var last = kpEl && kpEl.offsetParent !== null ? kpEl : ($('checkRow').hidden ? $('stepBody') : $('checkRow'));
-    var bottom = last.getBoundingClientRect().bottom, fold = window.innerHeight - FOOTER_PX;
-    var dy = Math.min(bottom - fold + 8, top - 8);
-    if (bottom > fold && dy > 0) window.scrollBy(0, dy);
+  // Scroll the least that puts `bottom` at least 8px above the fold (the footer's top), never taking `top` above 8px
+  // from the top of the window (FONT-FIT, 10 Oct 2026: it scrolled only once bottom was past the fold, so a control
+  // ending 1-7px above it stayed there).
+  function fitInView(top, bottom) {
+    var fold = window.innerHeight - FOOTER_PX, dy = Math.min(bottom - (fold - 8), top - 8);
+    if (dy > 0) window.scrollBy(0, Math.ceil(dy));   // whole pixels up: a fraction scrolled short leaves 7.x px
     else if (top < 0) window.scrollBy(0, top - 8);
+  }
+  // A first visit draws before KaTeX's and the text faces arrive, and they grow the block a few px when they do: the
+  // view in force is fitted again once, when the fonts are ready, if nothing has moved on since.
+  var lastView = null;
+  function inView(fn) {
+    lastView = fn; fn();
+    if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(function () { if (lastView === fn) fn(); });
+  }
+  function stepInView() {
+    inView(function () {
+      var kpEl = $('kpHolder').querySelector('.maffs-keypad-panel');
+      var last = kpEl && kpEl.offsetParent !== null ? kpEl : ($('checkRow').hidden ? $('stepBody') : $('checkRow'));
+      fitInView($('step').getBoundingClientRect().top, last.getBoundingClientRect().bottom);
+    });
   }
   function nextInView(box) {
     box = box || $('feedback');
     var nx = box.querySelector('.maffs-next');
     if (!nx) return;
-    var r = nx.getBoundingClientRect(), top = box.getBoundingClientRect().top, fold = window.innerHeight - FOOTER_PX;
-    var dy = Math.min(r.bottom - fold + 8, top - 8);
-    if (r.bottom > fold && dy > 0) window.scrollBy(0, dy);
-    else if (top < 0) window.scrollBy(0, top - 8);
+    inView(function () { fitInView(box.getBoundingClientRect().top, nx.getBoundingClientRect().bottom); });
+  }
+  // Stage 5: the problem's words at the top, the lines, the tiles and Check above the fold.
+  function formInView() {
+    inView(function () { fitInView($('formText').getBoundingClientRect().top, $('formCheckRow').getBoundingClientRect().bottom); });
   }
 
   function startGame(items) {
@@ -1336,8 +1351,9 @@ var EqTiles = (function () {
     $('formText').textContent = fq.text;
     $('formLet').textContent = fq.let;
     fb5 = EqTiles.build($('formBuilder'), { letters: fletters, numbers: formNumbers(fq), lines: 2,
-      onChange: function () { $('formMsg').textContent = ''; } });
+      onChange: function () { $('formMsg').textContent = ''; formInView(); } });
     MaffsLock.fresh($('formStep'));   // a new problem: a double-click on Next cannot press a tile or Check
+    formInView();
   }
   function checkForm() {
     if (state !== 'form' || MaffsLock.isLocked($('formStep'))) return;
