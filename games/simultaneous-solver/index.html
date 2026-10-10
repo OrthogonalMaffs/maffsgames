@@ -278,7 +278,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     <div class="qcard" id="formCard">
       <div class="problem" id="formText"></div>
       <div class="letdef" id="formLet"></div>
-      <div class="step-head">Write the two equations. Tap a line, then tap tiles to build it.</div>
+      <div class="step-head" id="formHow">Write the two equations. Tap a line, then tap tiles to build it.</div>
       <div id="formStep">
         <div id="formBuilder"></div>
         <div class="msg" id="formMsg" aria-live="polite"></div>
@@ -1319,11 +1319,24 @@ var EqTiles = (function () {
   function keyText(k, it) {
     return EqTiles.text(EqTiles.tokens(k).map(function (t) { return t.k === 'n' ? { k: 'n', v: t.v, label: formLabel(t.v, it) } : t; }));
   }
+  // The problems that fit a 320x568 phone with the how-to line showing (Jon, 10 Oct 2026, FONT-FIT): a game opens on
+  // one of these, since only its first problem shows the line. verify-simultaneous-solver.py measures every problem
+  // and fails if this list is not exactly the ones that fit.
+  var FORM_OPENERS = ['W01', 'W05', 'W06', 'W07', 'W09', 'W10', 'W11', 'W12', 'W13', 'W14', 'W15', 'W16', 'W19', 'W20',
+                      'E01', 'E04', 'E05', 'E07', 'E08', 'E11', 'E12', 'E16', 'E17', 'E19', 'E20'];
   function drawForm() {
     var w = shuffle(WORDS.filter(function (x) { return x.id[0] === 'W'; })), e = shuffle(WORDS.filter(function (x) { return x.id[0] === 'E'; }));
     var pick = w.slice(0, FORM_EACH).concat(e.slice(0, FORM_EACH));
-    return shuffle(pick.concat(shuffle(w.slice(FORM_EACH).concat(e.slice(FORM_EACH))).slice(0, FORM_ROUNDS - pick.length)));
+    var out = shuffle(pick.concat(shuffle(w.slice(FORM_EACH).concat(e.slice(FORM_EACH))).slice(0, FORM_ROUNDS - pick.length)));
+    var k = out.findIndex(function (x) { return FORM_OPENERS.indexOf(x.id) >= 0; });
+    if (k > 0) { var t = out[0]; out[0] = out[k]; out[k] = t; }
+    else if (k < 0) {   // no opener drawn: the first is swapped for an unused opener of its own kind (W or E)
+      var spare = shuffle(WORDS.filter(function (x) { return x.id[0] === out[0].id[0] && FORM_OPENERS.indexOf(x.id) >= 0 && out.indexOf(x) < 0; }));
+      out[0] = spare[0];
+    }
+    return out;
   }
+  SS.FORM_OPENERS = FORM_OPENERS;
   function startForm(items) {
     st = STAGES.stage5;
     formPool = items || drawForm();
@@ -1350,6 +1363,9 @@ var EqTiles = (function () {
     $('formNum').textContent = total + '/' + formPool.length;
     $('formText').textContent = fq.text;
     $('formLet').textContent = fq.let;
+    // The how-to on the first problem only (Jon, 10 Oct 2026, FONT-FIT): from the second, the problem, its lines,
+    // its tiles and Check fit a 320x568 phone together.
+    $('formHow').style.display = total > 1 ? 'none' : '';
     fb5 = EqTiles.build($('formBuilder'), { letters: fletters, numbers: formNumbers(fq), lines: 2,
       onChange: function () { $('formMsg').textContent = ''; formInView(); } });
     MaffsLock.fresh($('formStep'));   // a new problem: a double-click on Next cannot press a tile or Check
