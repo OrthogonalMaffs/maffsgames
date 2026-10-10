@@ -48,9 +48,19 @@ art was not on main when Jon said it was: the only `car-trap-*.webp` there are t
 **QUEUE (Jon, 10 Oct), in order. Keep the handover current after each:**
 Done 10 Oct: RIGHTFUL-KING-DRAFT (#247, aa660f7) and LIBRARY-DRAFT (#248, 8302ba8). Jon approved both drafts in
 full ("spot on"); the Library room's title is The Library Jam.
-1. **RIGHTFUL-KING-BUILD** (contract `docs/handover/contracts/2026-10-10-rightful-king-build.md`): **IN PROGRESS** on
-   `claude/compassionate-cori-3xi42y` (started 10 Oct, 14:45, after FONT-FIT's main run was green). Then
-2. **LIBRARY-JAM-BUILD** (contract `docs/handover/contracts/2026-10-10-library-jam-build.md`).
+1. **RIGHTFUL-KING-BUILD: DONE.** #257 merged 10 Oct (79165de); main's run 723 is green. The contract is now in
+   `docs/history/contracts/`. Jon can play-test the room at `/escape-rooms/rightful-king/play.html`.
+2. **LIBRARY-JAM-BUILD** (contract `docs/handover/contracts/2026-10-10-library-jam-build.md`): **IN PROGRESS** on
+   `claude/compassionate-cori-3xi42y` (reset to main after #257). **STOPPED FOR JON on one point; the rest is being
+   built:**
+   - `keep()` in `gen-escape-variants.py` still applies its end-of-travel rule to keypads (4% of 0-9999 = 400).
+     So every lock C answer (£12 to £99) is rejected, variant 0's 54 included.
+   - KEYPAD-VARIABLE added `keypad(n)` for the settable rule but left the edge rule alone. The contract assumed it
+     covered this; check-escape-rooms does not enforce the rule, only the generator.
+   - **Measured in scratch:** exempting every keypad from the edge rule (keypads have no travel) leaves every
+     existing library byte for byte, Prom's, Heatwave's and Kiln's keypads included.
+   - **For Jon:** may the cloud lane make that one change to `keep()` in this PR (the class fix, proven inert for
+     every live room), or does the home lane make it first?
 Both shared fixes they waited on are on main: ART-PENDING (#244) and KEYPAD-VARIABLE (#251, `maxDigits`).
 **Jon's ruling for both builds (10 Oct, after 13:45):**
 - **The hub is left alone.** A built room sits behind its noindex holding page, and the checker counts a room as
