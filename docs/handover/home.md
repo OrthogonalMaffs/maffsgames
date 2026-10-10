@@ -1,5 +1,10 @@
 # Handover: home lane
 
+**SCIENTIFIC TAGGING 5/5: core-maths-paper2c (10 Oct). The tagging run is done** (#261, #264, #265, #266, this;
+complex-converter stays untagged, Jon). Roster `scientific`, badge on the start card, scientific calculator under the
+question card (below Next, so Next does not move on a phone); check-calculator, verify-core-maths-paper2c and the
+Chromium smoke (sin(30) = 0.5 at 1280 and 320 px, no overflow) pass; CI the gate.
+
 **SCIENTIFIC TAGGING 4/5: formula-unlocked (10 Oct).** As formula-forge (#265): roster `scientific`, badge,
 scientific calculator under the options and solution (its own `--hint` kept); check-calculator, verify-formula-unlocked
 and the Chromium smoke (sin(30) = 0.5 at 1280 and 320 px, no overflow) pass; CI the gate.
