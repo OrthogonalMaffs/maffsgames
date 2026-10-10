@@ -54,9 +54,10 @@ full ("spot on"); the Library room's title is The Library Jam.
    `claude/compassionate-cori-3xi42y`; PR next.** The stop on lock C is resolved by Jon's ruling (below and in the
    dated entry).
    **NEXT AFTER THE CLEAR (10 Oct, 16:40):**
-   1. `check-changed.py`: **DONE before the clear.** The escape-room checks (Escape rooms, keypad, difficulty
-      stars, art) and context size are ok. Seven failed, all KaTeX games, as on #256 and #257: the container's
-      Chromium cannot reach the CDN.
+   1. `check-changed.py`: **DONE again after merging main (f30cb07).** The escape-room checks, the lock bank (the
+      new every-batch version) and context size are ok. The four heavy checks left at the 30-minute limit, run
+      directly, PASS. The failures are environmental: 24 KaTeX games (the proxy refuses cdn.jsdelivr.net) and the
+      calculator check (no WebKit here).
    2. Open the PR. Use the dated LIBRARY-JAM-BUILD entry for its body, with:
       - the grade table: 2, 1, 2;
       - the byte-for-byte proof: 11 other room.js files and 34 of 34 libraries identical to main;
