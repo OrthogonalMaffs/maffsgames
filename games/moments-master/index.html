@@ -22,9 +22,12 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
 <script src="../../schools/assets/analytics.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="../../schools/assets/calculator.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0d0d14;--surface:#171724;--border:#282840;--primary:#a78bfa;--accent:#34d399;--wrong:#f43f5e;--text:#e8e8f0;--muted:#8888a8}
+:root{--bg:#0d0d14;--surface:#171724;--border:#282840;--primary:#a78bfa;--accent:#34d399;--wrong:#f43f5e;--text:#e8e8f0;--muted:#8888a8;/* for the shared calculator (calculator.css, tokens only) */--surface-alt:#20203a;--font-text:'Outfit',sans-serif;--font-num:'JetBrains Mono',monospace;--hint:#a6a6c2;--on-accent:#000}
+.badges{display:flex;justify-content:center;margin-top:.6rem}
+.mm-calc{width:100%;max-width:420px;margin:1rem auto 0}
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:760px;width:100%;padding:1rem}
 .header{text-align:center;padding:1.5rem 0 1rem}
@@ -73,6 +76,10 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/mathtext.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- The on-screen calculator with its scientific keys (canon §4.4 "scientific": moments of angled forces need sin
+     and cos evaluated); keypad.js first, as MaffsCalc composes it. -->
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
 {}
 -->
@@ -87,6 +94,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <button class="level-btn active" data-level="alevel">A-Level</button>
       <button class="level-btn" data-level="level4">Level 4</button>
     </div>
+    <div class="badges"><span class="calc-badge" data-calc="scientific">Scientific calculator required</span></div>
     <p style="text-align:center;color:var(--muted);font-size:.82rem;margin:.8rem 0;line-height:1.6">
       Calculate moments about a point, find unknown forces for equilibrium,<br>
       and solve beam problems with uniform and non-uniform rods.
@@ -109,6 +117,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     </div>
     <div class="options" id="options"></div>
     <div class="mm-fb" id="fb" aria-live="polite"></div>
+    <div class="mm-calc" id="calc"></div>
   </div>
   <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button>
   <p id="teacherInvite"></p></div></div>
@@ -215,6 +224,11 @@ const end=MaffsLock.finishOnce(function(){window._ggAbandoned=false;const pct=Ma
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('moments-master',level,score,totalQ).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('moments-master',level,score);}}let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) · Best streak: ${bestStreak}`;show('results');MaffsLock.screen(document.getElementById('results'))});
 function showMenu(){show('menu')}
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+</script>
+<script>
+// The scientific calculator (sin and cos for the perpendicular distance of an angled force): a scratch pad under the
+// options, not given an {answer}, since every answer here is a choice (contract SCI-CALC; Jon's tagging ruling, 10 Oct 2026).
+if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{keys:'scientific'});
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'moments-master');</script>
