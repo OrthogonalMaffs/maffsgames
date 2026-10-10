@@ -52,20 +52,19 @@ version, Deploy; select `testDashboard` in the function menu and Run (it rebuild
 main-only "CI timings and pack" job alone: the job-log API refused the workflow's token; #224 reads the timings from
 artifacts instead. Every content group is now at most 69% of its budget. Main green again after #218 (18f5da8, run 37970610295).
 
-**CHECKPOINT (Jon asked, 9 Oct late).** Main green at cfe0861. Merged tonight: #215, #220/#222/#224 (CI-BALANCE),
-#218, #221 (HOOK-FIX), #232 (OVERLAY-KEYS), #233, #234/#237 (PLAY-AGAIN-SCREEN), #238 (SCORES-OFFLINE).
-**#239 SCI-CALC merged after the checkpoint (9f51dc7, Jon: "merge in whatever order makes the most sense"); its
-contract moved to `docs/history/contracts/`. This handover (#240) merged after it.** **DOCS-9OCT: started, nothing
-applied**: its two STOP IFs are clear (factor-theorem has no open CRITICAL or HIGH;
-timer-policy.md still lists Unit Converter under the silent timer). The relist is scripted from the unlisting
-commit e419439 (roster #88 A-Level only, both portal cards, sitemap, hub row + NOT_ON_HUB, spec-map B6 rows, canon
-96, todo 1.62), kept at `~/.maffsgames-local/docs-9oct-relist-factor-theorem.py` on the home machine; then canon §0.2,
-§7.8 lane rules, timer-policy, the rulings in §7.6. **After it:** PREPUSH-SCOPE (no contract yet: Jon to paste),
-then LIBRARY-DRAFT (Jon, 19:35; new ★ room, Mrs Barb Phile's library; parked: after The Rightful King and Car Trap
-drafts; its contract is saved verbatim under contracts/ when it starts). CAR-TRAP-DRAFT is the cloud lane's
-(merged #235); its contract is `docs/handover/contracts/2026-10-09-car-trap-draft.md`.
-**Open for Jon:** Escape on the initials overlay (never handled; like Skip?); further scientific tagging (candidates
-in the SCI-CALC entry).
+**DOCS-9OCT (10 Oct, branch `claude/docs-9oct-b`, after the checkpoint).** #239 SCI-CALC and #240 (checkpoint
+handover) merged on 9 Oct late, main green after each (9f51dc7, 302d4d2). DOCS-9OCT applied: Factor Theorem relisted
+under SR-21, **A-Level only** (roster #88, portal, sitemap, hub, spec map, canon count 96, todo 1.62); canon §0.2 the
+freeze's one exception (Simultaneous Solver Stage 5, #203); §7.6 four rulings (Skip shows the answer and waits on
+Next; one log row per answer; display-only number formatting; "≈" for rounded factors); §7.8.2 closed-not-idle cloud
+sessions and the E2 one-off; timer-policy: Unit Converter to No Timer. **Escape on the initials overlay (Jon, 9 Oct
+19:42): left as is, Skip stays the way out; Escape-to-close is deferred to a future accessibility pass, because an
+accidental Escape would discard a leaderboard entry** (the OVERLAY-KEYS contract's "Escape closes the overlay as now"
+was Project Claude's error; recorded on #232 too). **Next: PREPUSH-SCOPE** (contract
+`docs/handover/contracts/2026-10-09-prepush-scope.md`). LIBRARY-DRAFT moved to the cloud lane (Jon, 10 Oct 09:30);
+Car Trap moved the other way: the home lane owns it end to end (#242, entry above). **Open for Jon:** further scientific tagging (candidates in the
+SCI-CALC entry). Finished home-lane contracts (home-queue, its addendum, hook-fix, overlay-keys) moved to `docs/history/contracts/` in
+this PR; the cloud lane's (listed-high, car-trap) and the IT room brief stay.
 
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
 `docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).

@@ -19,7 +19,7 @@ Last updated: 3 October 2026
 | GA4 Measurement ID | G-992JLHLP2D |
 | Sheets Endpoint | Google Apps Script (see docs/apps-script-endpoint.js) |
 | Contact | contact@maffsgames.co.uk |
-| Total games | **95 live on the portal** (9 Oct 2026, contract RELIST-SR: `screening-room` relisted under SR-21; 8 Oct, contract RELIST-3: `just-pythag-it-bruv` listed on Jon's approval, `expectation-station` and `truth-buster` relisted under SR-21), plus **2 roster games live but unlisted** pending their audit fixes (`glorious-gantt`, `factor-theorem`; canon SR-20 and SR-21, the roster's "Unlisted" section). `regression-rumble` is **withdrawn** behind a `noindex` holding page pending its data rebuild (todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (97 numbered rows, plus a Withdrawn section). `games/` holds **99 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
+| Total games | **96 live on the portal** (9 Oct 2026, contract DOCS-9OCT: `factor-theorem` relisted under SR-21, A-Level only; contract RELIST-SR: `screening-room` relisted under SR-21; 8 Oct, contract RELIST-3: `just-pythag-it-bruv` listed on Jon's approval, `expectation-station` and `truth-buster` relisted under SR-21), plus **1 roster game live but unlisted** pending its audit fixes (`glorious-gantt`; canon SR-20 and SR-21, the roster's "Unlisted" section). `regression-rumble` is **withdrawn** behind a `noindex` holding page pending its data rebuild (todo §1.26). Per-game detail in `.claude/rules/game-roster.md` (97 numbered rows, plus a Withdrawn section). `games/` holds **99 directories** — the extras are `regression-rumble` (withdrawn, a holding page) and `the-perfect-prank`, the unlisted escape-room prototype, deliberately not on the portal and not in the roster. Because the roster is where `scripts/check-site.py` reads each game's levels, that game is only ever loaded bare; it is recorded under `roster_exceptions` in `scripts/checker-allowlist.json` so the gap is declared rather than silent |
 | Escape rooms | **8 live at `/escape-rooms/`**, indexed, in the sitemap and led from the front page. Not counted in the 96. **Two more are built but withdrawn** (`it-vengeance`, `car-trap`) behind `noindex` holding pages at their own URLs until each one's voice rewrite is done. Teacher pages stay `noindex` deliberately — they hold every answer. Full detail in **§11**; the live work is `docs/escape-room-voice-rewrite.md` |
 | Parent guides | **20 at `/parents/`**, plus the hub: 21 indexed URLs, in the sitemap and linked from the portal footer. Ported from MathsWins on 28 Sep 2026 and corrected again on 29 Sep against Jon's approved wording; the findings are in `docs/audit-parent-guides.md` and the fix-by-fix record is in `docs/migrate-parent-guides.md`. `averages` links Distinctly Average at `?level=ks3`. The section has one template: `parents/guide.css` and `parents/guide.js`, portal theme, adult register (the game theme, §7.5, does not apply -- the reader is the parent). **GCSE tier badge:** one component in `parents/guide.js` (its `TIERS` table, built from bold parts of `data/dfe-gcse-parts.json`) on exactly four guides and their hub cards; partly-Higher guides mark each Higher section in the body. `scripts/verify-parent-guides.py` reads every checked value back from the pages. **`scripts/check-site.py` does not discover these pages**: `build_page_list()` globs `games/` and `escape-rooms/` and otherwise walks a hard-coded list of root pages |
 
@@ -46,7 +46,9 @@ The gatekeeper is still a teacher, now typically a resit lecturer in an FE colle
 5. every unlisted game relisted or archived;
 6. one sweep of the already-verified games for true wrong options and unstated conventions.
 
-Simultaneous Solver Stage 5 is parked under it. The register's exit-bar dashboard
+**One named exception (Jon, 9 Oct 2026, 00:25): Simultaneous Solver Stage 5 only** (word problems, the two
+equations built from tiles; merged #203). No other build is excepted: a further exception needs Jon's own named
+ruling, never a contract's inference. The register's exit-bar dashboard
 (`docs/audits/REGISTER.md`) shows how far the site is from each point.
 
 When deciding what comes next:
@@ -1050,6 +1052,23 @@ against their will. The fix is to stop picking a number.
   game's mode menu is still one tap away from the end screen (complex-converter's end screen has Menu
   beside Play Again). A game whose end screen offers only Play Again adds a "Choose mode" control there.
 
+**Rulings on skipping, logging and displayed numbers (Jon, 8-9 Oct 2026; recorded by contract DOCS-9OCT):**
+
+- **Skip shows the answer and waits on Next** (Jon, 9 Oct, graph-transformer: "the learning needs to be shown not
+  skipped"). A question's Skip, Give up or Reveal control shows the answer (and the working, where the game has
+  it), then waits on Next; it never jumps straight to the next question. It holds for every such control, not one
+  game's fix. (The initials overlay's Skip, which skips a leaderboard entry, is not a question control.)
+- **A multi-part item logs one `question_answered` row per answer, not per question** (Jon, 8 Oct, Screening Room
+  t4-017). Its gut check and its worked figure are two answers, and logging both shows where a student goes wrong. An
+  analysis that counts questions groups by `question_index`; do not merge the rows in the game.
+- **Number formatting is display-only; marking reads the stored value** (Unit Converter, UC-FIX, 8 Oct). Thousands
+  separators (a comma for every number of 1,000 or more) go in prompts, options, keys and worked solutions as text;
+  `dataset.val` and every value marking compares stay as the game stores them. A change that would alter what is
+  marked right is a STOP, not a formatting fix.
+- **"≈" for a rounded conversion factor, "=" only for an exact definition** (Jon, 9 Oct, Unit Converter t4-007:
+  "1 mile ≈ 1609 m"; "1 inch = 2.54 cm" is exact). A verifier fails "=" before a stated conversion that is not
+  the exact definition.
+
 ### 7.6.0 Answer once — MaffsLock (7 Oct 2026, contract F1)
 
 **Every game marks through MaffsLock; no local answered flags.** `schools/assets/answer-lock.js`
@@ -1454,6 +1473,12 @@ and is not edited by fix PRs.
 - **A per-game fix PR edits neither `docs/todo.md` nor `docs/audits/REGISTER.md`:** the register file records
   the fix, and the `register` job regenerates REGISTER.md on main.
 - **Neither lane merges while main's last full run is red.**
+- **A finished cloud session is closed, not left idle** (Jon, 9 Oct 2026). An idle session from 6 Oct woke on a
+  GitHub event on 9 Oct and re-sent its old report as if new. When its last PR merges and its handover is written,
+  the session ends; new work starts a new session from the handover.
+- **One-off exception, 9 Oct 2026: the cloud lane edited `scripts/ci-groups.py`** to add group E2 (Jon's approval,
+  after #211 turned main red with group E at 9m04s of 9m). It set no precedent: CI-BALANCE (#220) replaced hand-made
+  groups with packing from measured times (§7.8.1), and `scripts/ci-groups.py` is home-lane CI work again.
 - **Before the first push of every PR:** `python scripts/check-changed.py` (one PR on 7 Oct 2026 cost three
   runs without it).
 - **Relisting a fixed game** is a home-lane docs PR, batched with others.

@@ -160,7 +160,6 @@ const NOT_ON_HUB = {
   // Jon, 6 Oct 2026 (20:30): unlisted for the tranche 3-6 audits' faults (canon SR-20) until
   // each game's verifier merges and its register entries are fixed; the hub row is restored, and this
   // entry removed, in that PR.
-  'factor-theorem': 'unlisted pending its tranche 5 audit fix; hub row restored at relisting',
   'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting'
 };
 
