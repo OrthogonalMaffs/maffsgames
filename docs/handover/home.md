@@ -12,7 +12,10 @@ the eight live rooms: 199 verified number sets" is a replay statistic, not a cou
 redirects to /escape-rooms/rightful-king/ (checked in Chromium). /updates/: one line each under October's New. The
 twelve finished contracts moved from docs/handover/contracts/ to docs/history/contracts/ (the folder is empty).
 Checked: check-escape-rooms, test-escape-rating (11 rooms, no 320 px overflow), test-escape-art (both rooms to a win
-and a loss with their pictures), test-section-clicks, context size.
+and a loss with their pictures), test-section-clicks, context size. **Merged #271 (227fb0a), main green. Live site checked
+10 Oct:** /escape-rooms/rightful-king/ and /escape-rooms/library-jam/ serve 200 with their titles; in Chromium at 320 px each
+shows its scene picture and Start, no sideways scroll; /escape-rooms/it-vengeance/ lands on The Rightful King; the hub
+says "Eleven"; the old play.html is 404.
 
 **ROOM-ART-RK-LJ: The Library Jam (10 Oct, Jon's contract; pictures approved 22:20-22:42).** The Rightful King's
 half was already merged as #269 (main green, 32c2be0). Filed `docs/art/library-jam-scene/-fail/-win.webp` (1600x873,
