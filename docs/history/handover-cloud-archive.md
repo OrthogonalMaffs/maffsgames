@@ -3,6 +3,116 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-09 (cloud): PD-CHECK (LISTED-HIGH item 12) STOPPED for Jon: #232 fixes t4-002; the saved check is wrong
+
+- **#232 (OVERLAY-KEYS) is on main** (9a0830f, merged 18:46 UTC, before #229; main green, run 654). The pd-check
+  branch already contained it: no rebase needed.
+- **The saved check FAILS on main** (both cases): STOP IF fired. **But the cause is the check, not the game:** it builds
+  its own `<div id="mfg-initials-overlay">`, which #232's listeners (bound to the overlay that `askInitials()` creates)
+  never touch; and its "dd typed into a text field" case has no counterpart in this game (prisoners-dilemma has no
+  input, textarea or contenteditable; the overlay's inputs are the only text fields it ever shows). Both were written
+  for the discarded in-game guard.
+- **Measured, real path (scratch probe, not committed; no game code changed):** a tournament in Chromium, match 1
+  played to its end with C, the real overlay opened by `submitScore`, match 2 ready, "CDC" typed into the overlay.
+  Main's overlay: round 0 -> 0, nothing played, the overlay holds "CDC"; C plays a move after Skip. The pre-#232 overlay
+  (`6642c82~1`): round 0 -> 1, a move played, the overlay holds "DC" (the first initial went to the game).
+- **Already in CI:** #232's `scripts/test-initials-overlay.py` opens the real overlay in prisoners-dilemma, types a-z
+  (so C and D), and fails if any game key listener sees a key: stronger than "no move played". It names
+  prisoners-dilemma among the 11 games whose shortcuts fired before the fix.
+- **For Jon (recommendation A):** close t4-002 citing #232 and `test-initials-overlay.py`; retire the saved check (no
+  PR, no new CI line). The bug was a shared-layer bug, fixed and tested there across 97 games; a per-game copy would test
+  a weaker property of the same code. **B:** rewrite the check on the real path above (the probe, as a verifier;
+  self-test serves the pre-#232 overlay and must FAIL), drop the text-field case, wire it in, close t4-002. Either way
+  the text-field case goes: no such field exists in this game. **t4-001** stays open (SR-22, Jon's leaderboard).
+- Branch `claude/youthful-feynman-anpxuq-pd-check` left as it was (its check unchanged, no PR).
+
+## 2026-10-09 (cloud): LISTED-HIGH (complete; contract in `docs/history/contracts/2026-10-09-listed-high.md`)
+
+One PR per game, in the contract's order; each next game's claim is a commit of its own at the end of the previous
+game's PR (so it reaches main before that game starts). New verifiers go in **B2** (main run 595: 249 s of its 360 s
+budget; E is at 491 s and takes nothing new).
+- **1 surd-simplifier: #210** (claim #209). t1-001 keyed sqrt2 (sqrt2.sqrt2 kept as the value-2 distractor;
+  8sqrt32/32 removed, so no B11 allowlist entry was needed), t1-002 keyed 206/495. New `verify-surd-simplifier.py`
+  (B2, ~15 s): every stem read as TeX and compared with its key in SymPy, keys in simplest form, every option
+  clicked; fails main's page on both. No other key differed.
+- **2 52dle: #211** (claim rode #210). Guesses marked by the shared `MaffsAnswer.exact` on the raw text (answer.js
+  loaded), never `parseInt`. The pi hint "100 × π rounded to 2dp" read as 314.16; it now says "100 × (π to 2 d.p.)"
+  (an unambiguous key/word clash in the finding's own puzzle: fixed here, per the STOP IF). New `verify-52dle.py`
+  (B2, ~4 s): every number recomputed from its clue and hints (FACTS), 7 guesses per puzzle typed in Chromium.
+- **3 scale-factor-scaling: #212.** The paint item states the original surface (10 m², 1 litre); key 4 litres (its
+  text "4 litres per 10 m²" contradicted the stem's rate; the value is kept). New `verify-scale-factor-scaling.py`
+  (B2, ~2 s): every key from the quantities its prompt states. Seen, not touched (B11's domain, not this finding):
+  T1[8] offers 2:5 and 4:10, T1[9] 1:3 and 3:9, wrong options equal to each other.
+- **Main went red after #211 (run 601): group E at 9m04s of its 9m budget**, none of this lane's verifiers in it.
+  Jon (9 Oct): the cloud lane adds E2 now, on a branch of its own: **#213** (`claude/youthful-feynman-anpxuq-e2`,
+  merged 63ad521) moved Screening Room, Simultaneous Solver and Terrible Advice into E2; E 4m31s, E2 4m22s on its
+  run; main green again (run 37950120068). E's job name still lists two moved verifiers (names kept stable): the
+  home lane's call.
+- **Jon's rulings of 9 Oct, 16:21** saved beside the contract (`docs/history/contracts/2026-10-09-listed-high-rulings.md`):
+  item 9 t4-003 is NOT rewritten: "Yes - but only when k > 0" is accepted alongside the key (an accepted set, in
+  the game), the explanation says why both are right; the rest as written.
+- **4 coordinate-geometry-dash: #214.** x = 3t, y = 4/t: options xy = 12 (key), xy = 7, y = 12x, x = 3y/4. New
+  `verify-coordinate-geometry-dash.py` (B2, ~4 s): all 45 keys recomputed, equations compared as curves.
+- **5 complex-converter: #216** (#215 was the home lane's RULINGS-9OCT). The contract's "apply it to every item" taken literally: the target line states
+  the range on every polar and exponential question; ids 20, 28, 30, 38, 53 keyed principal (same numbers; ids 20,
+  28 and 53 said "positive angle", which went); a second form of the key removed from ids 20, 21, 28, 40, 48 (40
+  and 48 had a negative-modulus twin); argDeg/argRad principal everywhere (Triples' cards). New
+  `verify-complex-converter.py` (B2, ~5 s, KaTeX from the CDN): every option read as a complex number. Also closes
+  t6-002 and t6-003 (the ids 40/48 twins, MEDIUM jc). **Lesson (CI red once on #216): a fixed B11 pair must leave
+  `data/check-ledger.json` in the same PR** (tier 4 fails a stale entry); run `extract-banks.py --only <slug>` then
+  `check-banks.py --ci --only <slug>` before pushing (esprima: pip build fails here; unpack its sdist on PYTHONPATH).
+- **6 higher-power: #217.** Pairs matches by value (`sameValue`). New `verify-higher-power.py` (B2, ~2 s).
+- **Jon, 9 Oct (answer to a question, item 11): Boolean Blitz marks an option right when it has the key's truth
+  table AND no more literals than the key** (AB + BC, AB + AC accepted; the t6-004 unsimplified forms such as
+  A·B + A for A stay wrong; t6-004 untouched). Boolean-blitz has B11 ledger entries for t6-002/003: clear them.
+- **7 seven-bridges: #219, merged 5926c24.** al_15's E to (300,150); t4-001 fixed by F1 batch 9 (closed with
+  measurements). **Jon's rulings, 9 Oct 18:03 (addendum, folded into #219):** al_10, al_18, al_21's grazing edges
+  fixed (each layout mirrors its own other half; edges unchanged); `CLEAR` 28 px (current vertex r 24 + 2 px stroke
+  + half a 4 px edge; grazes were 19.8-21.1 px, next edge 28.1 px), no exemptions. **complex-converter ids 20, 28, 53
+  stay on the principal range (-pi < arg z <= pi), as merged in #216: no change.** Main's #217 run went over budget
+  in B4 and L2 (no test failed); one re-run passed.
+- **8 wrong-on-the-internet: #223, merged 4094b01** after main went green on #224 (run 37969653160). The wheel is
+  stated (European, single zero; key 18/37) and A and B are said to be independent in their post.
+- **9 core-maths-paper2c: #225.** Q12 stem opens "f is a quadratic."; Q35 `accept: [1, 3]` (Jon 16:21): selectAnswer
+  marks against `q.accept || [q.correct]`, the lock hint picks outside it, the working says why both "Yes" are right;
+  t4-001 fixed by F1 batch 10. New `verify-core-maths-paper2c.py` (~25 s).
+- **10 core-maths-paper2b: #226** (stacked on #225, on its own branch so CI runs while #225 waits; Jon, 18:56: one
+  PR each). Q28 option D is "Neither — both premiums cost more than the expected loss" (false: the data breach
+  premium, £900, is below its expected loss, £1,000). New `verify-core-maths-paper2b.py` (~5 s).
+- **11 boolean-blitz: #227** (stacked on #226). Marked in the game (boolParse, minSopLiterals, sameAnswer): right =
+  the key's truth table AND literals <= max(the key's, the minimal SOP's) (Jon's two answers of 9 Oct). Only Q24's
+  AB + BC and Q41's AB + AC are accepted beside a key; the verifier fails any other (Jon, 18:56). t6-001 fixed by F1
+  batch 11. The B11 ledger entries stay (options unchanged; Jon agrees). Locally the bank lint cannot extract this
+  bank (KaTeX CDN; main's page fails the same way): CI judges it.
+- **13a characteristic-quest t6-001: #228** (stacked on #227): closed with measurements, no code change.
+- **13b eigenvalue-extractor t6-001: #229** (stacked on #228): closed with measurements, no code change.
+- **13c matrix-crunch t6-001, t6-002: #230** (stacked on #229): new `verify-matrix-crunch.py` (~40 s, both levels,
+  the flag path check-answer-lock never presses); fails the pre-batch page with the audit's numbers.
+- **13d formula-forge t4-001: #231** (stacked on #230): closed with measurements, no code change. **LISTED-HIGH is done
+  but item 12** (held for OVERLAY-KEYS); the remaining list is empty.
+- **CI (CI-BALANCE, #220):** groups are packed now. A new verifier's header is `# ci-line: <label> | <args>` (no
+  group id); untimed lines get a group each until main's timings job records them. `ci-groups.py --check` locally.
+- **Local checks used for each PR** (the sandbox cannot reach the KaTeX CDN): check-changed's plan, the answer lock for
+  the changed game with KaTeX served locally, and `extract-banks.py --only <slug>` + `check-banks.py --ci --only
+  <slug>` (stale B11 ledger entries must leave `data/check-ledger.json` with the fix). esprima: unpack its sdist on
+  PYTHONPATH. Teacher-line fails locally on factor-theorem and log-laws only (KaTeX CDN): not a change's fault.
+- **Item 12, prisoners-dilemma t4-002: waiting on the home lane's OVERLAY-KEYS (#232)** (Jon, 18:56; note in
+  `docs/history/contracts/2026-10-09-listed-high-note-1900.md`). The drafted in-game keydown guard was **discarded**, in no PR: it
+  was the defensive-patch shape (the shared initials overlay lets typed keys reach page shortcuts in every game with a
+  document keydown handler; the overlay is the fix). **The check is saved on branch
+  `claude/youthful-feynman-anpxuq-pd-check`** (`scripts/verify-prisoners-dilemma.py`, verbatim from the scratchpad;
+  no PR, not in CI: it fails main until #232 is on main). It asserts, on a tournament's first match in Chromium: C
+  pressed on the game screen plays a move; "CDC" typed into the initials overlay (`#mfg-initials-overlay`, an input
+  focused in it) plays nothing; "dd" typed into any other text field plays nothing. **When #232 is on main:** run it
+  against prisoners-dilemma with no change to the game's code; it must pass. Its self-test plants the discarded
+  in-game guard, so it reports CANNOT PLANT: rewrite the plant to serve main's pre-#232 overlay module (the shared
+  file's old content) and confirm it FAILs, update the `ci-line` header to the packed form (`# ci-line: <label> |`),
+  then open the PR (claim prisoners-dilemma first), closing t4-002. **t4-001** (the board ranks whichever opponent is
+  chosen) stays open: Jon's leaderboard design, not this lane's.
+- **Stacked PRs (Jon's ruling, 9 Oct 20:20): one branch per PR, stacked, is fine.** #226-#231 were each on
+  `claude/youthful-feynman-anpxuq-<game>`, opened together so CI ran in parallel, merged strictly in order, each on a
+  green Gate with main green on the previous merge.
+
 ## 2026-10-09 (cloud): FT-FIX, factor-theorem (fix #207 merged cf96929; main run 593 green)
 
 - **For the home lane, CI, before the next E verifier lands:** main's run 593 put group E at **8m39s of its 9m00s
