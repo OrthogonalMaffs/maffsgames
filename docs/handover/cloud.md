@@ -50,23 +50,11 @@ Done 10 Oct: RIGHTFUL-KING-DRAFT (#247, aa660f7) and LIBRARY-DRAFT (#248, 8302ba
 full ("spot on"); the Library room's title is The Library Jam.
 1. **RIGHTFUL-KING-BUILD: DONE.** #257 merged 10 Oct (79165de); main's run 723 is green. The contract is now in
    `docs/history/contracts/`. Jon can play-test the room at `/escape-rooms/rightful-king/play.html`.
-2. **LIBRARY-JAM-BUILD** (contract `docs/handover/contracts/2026-10-10-library-jam-build.md`): **built and checked on
-   `claude/compassionate-cori-3xi42y`; PR next.** The stop on lock C is resolved by Jon's ruling (below and in the
-   dated entry).
-   **NEXT AFTER THE CLEAR (10 Oct, 16:40):**
-   1. `check-changed.py`: **DONE again after merging main (f30cb07).** The escape-room checks, the lock bank (the
-      new every-batch version) and context size are ok. The four heavy checks left at the 30-minute limit, run
-      directly, PASS. The failures are environmental: 24 KaTeX games (the proxy refuses cdn.jsdelivr.net) and the
-      calculator check (no WebKit here).
-   2. Open the PR. Use the dated LIBRARY-JAM-BUILD entry for its body, with:
-      - the grade table: 2, 1, 2;
-      - the byte-for-byte proof: 11 other room.js files and 34 of 34 libraries identical to main;
-      - Jon's three rulings: keypads exempt, `minsep=1`, no `levelLabel`;
-      - the §1.37 entry.
-   3. Merge on a green Gate, with main's last full run green (723 was). If CI measures the teacher page at other
-      than 538 px, put CI's figure in the allowlist.
-   4. Watch main's full run. Mark LIBRARY-JAM-BUILD done and move its contract to `docs/history/contracts/`.
-   5. The queue is then empty: ask Jon for the next item.
+2. **LIBRARY-JAM-BUILD: DONE.** #262 merged 10 Oct (5f4f656); main's run 736 is green. The contract is now in
+   `docs/history/contracts/`. Jon can play-test the room at `/escape-rooms/library-jam/play.html`. CI passed its
+   teacher page under the §1.37 entry (recorded at 538 px, measured in the cloud container).
+**THE CLOUD QUEUE IS EMPTY (10 Oct, 18:00).** Ask Jon for the next item. Both rooms wait on his play-test, then on
+art and their release contracts (hub card with stars, sitemap, counts).
 **Jon's ruling for both builds (10 Oct, after 13:45):**
 - **The hub is left alone.** A built room sits behind its noindex holding page, and the checker counts a room as
   live only without `noindex`, so no card is needed. The star chip comes with the release contract.
@@ -163,7 +151,7 @@ main's last full run is red; watch main's run after merging.
   reproduced every existing library byte for byte.
 - **Teacher page at 320 px:** 558 px wide (`table.tt`, the shared overflow, todo §1.37). It is allowlisted in the
   same form as the other nine teacher pages, per Jon's CAR-TRAP-ONE-LANE contract; §1.37 (`engine.css`, home lane)
-  stays the real fix for all ten. **LIBRARY-JAM-BUILD's teacher page will need the same entry.**
+  stays the real fix for all ten. LIBRARY-JAM-BUILD's teacher page got the same entry (#262).
 
 ## 2026-10-10 (cloud): LIBRARY-DRAFT, Library room draft for Jon's review
 
