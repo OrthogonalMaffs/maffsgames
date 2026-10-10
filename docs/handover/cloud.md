@@ -61,6 +61,14 @@ full ("spot on"); the Library room's title is The Library Jam.
      existing library byte for byte, Prom's, Heatwave's and Kiln's keypads included.
    - **For Jon:** may the cloud lane make that one change to `keep()` in this PR (the class fix, proven inert for
      every live room), or does the home lane make it first?
+   - **Built on the branch, everything else:**
+     - bank batch 10 (unique: 3, 143, 54);
+     - the generator's N block: the draft's sets for A (8) and B (8), and C (10, `minsep=1`, answers distinct);
+     - room.js (grades 2, 1, 2: **★ Warm-up derived**; no `levelLabel`, removed by #253) and the three pages.
+   - **Lock C's library is empty until the ruling**, so check-escape-rooms crashes on the branch (`IndexError` at
+     `lib[0]`; it does not report an empty library: a note for the home lane).
+   - **Measured in a scratch copy with the keypad exemption:** library-jam VALID **572 of 640**, variant 0 VALID (the
+     draft's figure), with all ten fines sets kept. No other room's room.js changes. No PR until the ruling.
 Both shared fixes they waited on are on main: ART-PENDING (#244) and KEYPAD-VARIABLE (#251, `maxDigits`).
 **Jon's ruling for both builds (10 Oct, after 13:45):**
 - **The hub is left alone.** A built room sits behind its noindex holding page, and the checker counts a room as
