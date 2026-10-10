@@ -82,8 +82,9 @@ main's last full run is red; watch main's run after merging.
   because the fault was in shared code.** The check is `scripts/test-initials-overlay.py` (in CI). Measured 9 Oct, with
   `--games prisoners-dilemma`: main passes, and its plant is caught. Run `--against` the pre-#232 overlay, it fails
   with 55 keys reaching the game's document keydown. That confirms the check covers this game, so the STOP IF did not fire.
-- `verify-prisoners-dilemma.py` is **not** in CI. Branch `claude/youthful-feynman-anpxuq-pd-check` is deleted: its
-  handover had nothing that main lacks.
+- `verify-prisoners-dilemma.py` is **not** in CI. Its branch, `claude/youthful-feynman-anpxuq-pd-check`, had nothing in
+  its handover that main lacks. It was deleted locally, but the remote delete was refused (the sandbox proxy, HTTP
+  403), so **Jon deletes it in GitHub's branch list**.
 - **prisoners-dilemma-t4-001** (the leaderboard ranks the chosen opponent) stays open for Jon's design decision.
 - Jon's note is saved verbatim as `docs/history/contracts/2026-10-09-listed-high-note-2245.md`.
 

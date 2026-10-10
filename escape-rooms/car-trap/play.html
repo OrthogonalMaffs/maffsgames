@@ -12,8 +12,8 @@
   PLAY-TEST PAGE, added 2026-10-10 (contract CAR-TRAP-BUILD; Jon's answer of 10 Oct). The rewritten room,
   for Jon to play before release, while index.html stays the noindex holding page. Linked from nowhere.
 
-  ANALYTICS ARE OFF HERE, on purpose: no gtag and no analytics.js, so window.mfg is never defined and the
-  engine logs nothing (engine.js track() calls mfg only if it exists). Play-tests never reach the Events
+  ANALYTICS ARE OFF HERE, on purpose: no gtag and no analytics.js, so window.mfg is never defined and
+  engine.js track() never calls it (it calls mfg only if it exists). Play-tests never reach the Events
   sheet or GA4 as car-trap plays.
 
   AT RELEASE (a separate step, on Jon's word), in ONE PR: this page's content becomes index.html, with the
