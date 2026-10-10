@@ -100,7 +100,7 @@ session, generated"; a game with a fixed bank gives its bank size. A count that 
 | 75 | Integration Duel | `integration-duel` | A-Level, L4 | Calculus | 45+45 questions | untagged |
 | 76 | SUVAT Selector | `suvat` | A-Level, L4 | Mechanics | Three-phase. A-Level (50q) + L4 (8q) | untagged |
 | 77 | Curling Friction | `curling-friction` | A-Level, L4 | Mechanics | 57+20 questions | untagged |
-| 78 | Force Resolver | `force-resolver` | A-Level, L4 | Mechanics | 52+20 questions | untagged |
+| 78 | Force Resolver | `force-resolver` | A-Level, L4 | Mechanics | 52+20 questions | scientific |
 | 79 | Moments Master | `moments-master` | A-Level, L4 | Mechanics | 50+20 questions | untagged |
 | 80 | Log Laws | `log-laws` | A-Level, L3, L4 | Algebra | 45 questions across 7 categories. Solve mode — apply the laws: 501 equations solved step by step in six stages (aˣ = b; a^{kx} and a^{x+k}; base e and capacitor discharge; quotient law; product law with the invalid root rejected; two bases). SymPy-verified (`scripts/verify-log-laws.py`, in CI). L3 = EAL Level 3 Engineering | untagged |
 | 81 | Binomial Blaster | `binomial-blaster` | A-Level, A-Level Year 2 | Algebra, Statistics | 50+50 questions | untagged |
