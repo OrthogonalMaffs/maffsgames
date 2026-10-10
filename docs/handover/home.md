@@ -1,5 +1,22 @@
 # Handover: home lane
 
+**SCIENTIFIC TAGGING 1/6: force-resolver (10 Oct, Jon's ruling).** Roster tag `scientific`, badge, the scientific
+calculator mounted under the options (`{keys:'scientific'}`); check-calculator passes; sin(30) = 0.5 in Chromium, no
+320 px overflow; check-changed 119/120 pass. **The one local failure is not this PR:** `test-real-fonts.py` fails on
+every Windows checkout, main included: `core.autocrlf` rewrites the pinned text files (.css, manifest.json, LICENSE)
+to CRLF, so their SHA256s differ; CI (Linux) is unaffected. Fix: a `.gitattributes` line `scripts/fonts/** -text`.
+Next: moments-master, complex-converter, formula-forge, formula-unlocked, core-maths-paper2c (one PR each).
+
+**STAR-KEY (10 Oct, Jon's contract 17:50; `docs/handover/contracts/2026-10-10-star-key.md`).** One line saying
+what the stars mean, on the hub (under "Ordered easiest to hardest") and on the front page's escape-room band
+(`.esc-note` size, 12.5 px; placed just above the cards, so with the band compacted it sits directly under the
+summary and on desktop beside the cards it explains): "Stars show difficulty, set by each room's hardest lock: ★
+Warm-up, grades 1–3 · ★★ Core, grades 4–5 · ★★★ Challenge, grades 6–9." Glyphs aria-hidden; a screen reader reads
+"one star, Warm-up, grades 1 to 3; two stars, ..." (checked in Chromium's accessibility tree). check-escape-rooms.py
+matches each page's `data-star-key` line to BANDS (which already match rating.js), checks the spoken text, and
+plants "Core, grades 4–6" (caught). No 320 px overflow (test-escape-rating). STOP IF clear: it wraps at the band's
+own size. Older entries (CAR-TRAP-V2-ART, ART-PENDING, MAIN GREEN) moved to the archive for room.
+
 **TODO-SLIM (10 Oct; Jon's option (b), 17:15).** `docs/todo.md` 481,628 -> **148,748 bytes** (3,662 -> 810 lines);
 moved word for word to new `docs/history/todo-done.md` (333,814 bytes; the two add up to the original plus the
 added headings): the session log (line 5 kept its newest three entries; lines 6-56, 88-140, 145-160 of 28-29 Sep
@@ -96,29 +113,6 @@ The room stays behind its holding page (`index.html` unchanged). **Jon can play-
 https://maffsgames.co.uk/escape-rooms/car-trap/play.html** (unlinked, noindex, analytics off). Release is a separate
 step on Jon's word: play.html's content becomes index.html and play.html is deleted in that PR.
 
-**CAR-TRAP-V2-ART (10 Oct, Jon; image work only, #242 and car-trap/room.js are the cloud lane's).** Filed for
-#242's `art: 'car-trap-v2'`: **`docs/art/car-trap-v2-scene.webp`, `docs/art/car-trap-v2-fail.webp`,
-`docs/art/car-trap-v2-win.webp`** (1600x873, through `strip-gen-watermark.py --width 1600 --frame 1600x873`; no
-watermark found, corners checked by eye). The old `car-trap-scene/-fail/-win.webp` are left as they are (main's
-room still names `car-trap`). Badges blanked: the pale blue hatchback's front (scene, fail) and rear (win), the grey
-car's bonnet oval (fail) and grille oval (win). Every plate checked blank: hatchback front (white) and rear (yellow),
-grey car, beige car. **For the cloud lane (#242):** rebase on main and the v2 pictures resolve, so `art` can stay. The
-win is a high CCTV-style view of the bays (camera top right), so #242's `winAlt` ("The same row of bays...") needs
-rewriting to match: Jon asked for it, and it is the cloud lane's file.
-
-**ART-PENDING (10 Oct, Jon's contract 08:50, ahead of the queue for cloud PR #242; contract
-`docs/handover/contracts/2026-10-10-art-pending.md`).** Rule: **no `art` field, no request.** engine.js
-(`HAS_ART = !!R.art`) emits no scene, fail-thumbnail or end-card picture for a room with no top-level `art:`;
-a room with art is unchanged, data-fallback included. teacher.js mentions the mid-game failure picture only when
-the room has art. check-escape-rooms.py lists a room with no `art` as "art pending" (it crashed on one before);
-a named picture that is missing is listed as before, and check-site's tier 1 fails its 404. New
-`scripts/test-escape-art.py` (15 s): all 8 live rooms to a win and a loss, their pictures load as before; the
-fixture (canteen-hack with `art` removed, by routing) makes no /docs/art/ request through the brief, its
-misconception, the win and the loss; the old always-request engine is planted and caught. STOP IFs clear: every
-live room has all three files, so none uses the 404 path for its data-fallback; no saved field changes (SAVE_V 1).
-Recorded in CLAUDE.md and voice-rewrite §6. **For the cloud lane (#242):** drop `art` from car-trap's room.js
-(and leave the hub card's `<img>` out of `escape-rooms/index.html` until the art lands), then re-run.
-
 **DASHBOARD-CHARTS (10 Oct, Jon's contract 08:35; `docs/handover/contracts/2026-10-10-dashboard-charts.md`).**
 `docs/apps-script-endpoint.js` only, SCRIPT_VERSION `2026-10-10-a`: the three percentage columns are written as
 fractions with the cell format `0%` (they show as before), the Accuracy chart's axis runs 0 to 1 as percent;
@@ -132,11 +126,6 @@ to your address before saving; Deploy, Manage deployments, edit (pencil) the exi
 version, Deploy; select `testDashboard` in the function menu and Run (it rebuilds the dashboard from the sheet;
 `rebuildDashboard` itself needs arguments), or wait for the 07:00 run; open the `/exec` URL and check `version` reads
 `2026-10-10-a`.
-
-**MAIN GREEN (for the cloud lane: #223 may merge):** main's full run on 5cea89b (#224) passed every job, run
-37969653160, and its timings job recorded and repacked (760ef9a). Main had been red since #220 (CI-BALANCE) on its
-main-only "CI timings and pack" job alone: the job-log API refused the workflow's token; #224 reads the timings from
-artifacts instead. Every content group is now at most 69% of its budget. Main green again after #218 (18f5da8, run 37970610295).
 
 **DOCS-9OCT (10 Oct, branch `claude/docs-9oct-b`, after the checkpoint).** #239 SCI-CALC and #240 (checkpoint
 handover) merged on 9 Oct late, main green after each (9f51dc7, 302d4d2). DOCS-9OCT applied: Factor Theorem relisted

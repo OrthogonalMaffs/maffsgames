@@ -3,6 +3,36 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-10 (home): trimmed for STAR-KEY
+
+**CAR-TRAP-V2-ART (10 Oct, Jon; image work only, #242 and car-trap/room.js are the cloud lane's).** Filed for
+#242's `art: 'car-trap-v2'`: **`docs/art/car-trap-v2-scene.webp`, `docs/art/car-trap-v2-fail.webp`,
+`docs/art/car-trap-v2-win.webp`** (1600x873, through `strip-gen-watermark.py --width 1600 --frame 1600x873`; no
+watermark found, corners checked by eye). The old `car-trap-scene/-fail/-win.webp` are left as they are (main's
+room still names `car-trap`). Badges blanked: the pale blue hatchback's front (scene, fail) and rear (win), the grey
+car's bonnet oval (fail) and grille oval (win). Every plate checked blank: hatchback front (white) and rear (yellow),
+grey car, beige car. **For the cloud lane (#242):** rebase on main and the v2 pictures resolve, so `art` can stay. The
+win is a high CCTV-style view of the bays (camera top right), so #242's `winAlt` ("The same row of bays...") needs
+rewriting to match: Jon asked for it, and it is the cloud lane's file.
+
+**ART-PENDING (10 Oct, Jon's contract 08:50, ahead of the queue for cloud PR #242; contract
+`docs/handover/contracts/2026-10-10-art-pending.md`).** Rule: **no `art` field, no request.** engine.js
+(`HAS_ART = !!R.art`) emits no scene, fail-thumbnail or end-card picture for a room with no top-level `art:`;
+a room with art is unchanged, data-fallback included. teacher.js mentions the mid-game failure picture only when
+the room has art. check-escape-rooms.py lists a room with no `art` as "art pending" (it crashed on one before);
+a named picture that is missing is listed as before, and check-site's tier 1 fails its 404. New
+`scripts/test-escape-art.py` (15 s): all 8 live rooms to a win and a loss, their pictures load as before; the
+fixture (canteen-hack with `art` removed, by routing) makes no /docs/art/ request through the brief, its
+misconception, the win and the loss; the old always-request engine is planted and caught. STOP IFs clear: every
+live room has all three files, so none uses the 404 path for its data-fallback; no saved field changes (SAVE_V 1).
+Recorded in CLAUDE.md and voice-rewrite §6. **For the cloud lane (#242):** drop `art` from car-trap's room.js
+(and leave the hub card's `<img>` out of `escape-rooms/index.html` until the art lands), then re-run.
+
+**MAIN GREEN (for the cloud lane: #223 may merge):** main's full run on 5cea89b (#224) passed every job, run
+37969653160, and its timings job recorded and repacked (760ef9a). Main had been red since #220 (CI-BALANCE) on its
+main-only "CI timings and pack" job alone: the job-log API refused the workflow's token; #224 reads the timings from
+artifacts instead. Every content group is now at most 69% of its budget. Main green again after #218 (18f5da8, run 37970610295).
+
 ## 2026-10-09 (home): SCI-CALC (item 6)
 
 - **Engine (calculator.js):** xʸ as `^`, right-associative and tighter than a minus on its left (2^3^2 = 512,
