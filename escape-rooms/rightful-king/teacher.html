@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Teacher page for The Rightful King escape room: answers, hint ladder, misconceptions and timings.">
+<title>The Rightful King — teacher page — MaffsGames</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
+<script src="../../schools/assets/analytics.js"></script>
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/engine.css">
+<!--
+  Written 2026-10-10 for the new room (contract RIGHTFUL-KING-BUILD): the real teacher page, noindex and
+  unlinked. The room itself is behind its holding page (index.html); Jon play-tests it at play.html.
+  Nothing links here until the room is released.
+-->
+</head>
+<body>
+<button class="a11y-toggle" onclick="toggleAa()" aria-label="Toggle easier-reading text">Aa</button>
+<div class="wrap">
+  <a class="back-link" href="../">&larr; All escape rooms</a>
+  <div id="app"></div>
+</div>
+<script src="room.js"></script>
+<!-- clueMap labels carry NO figures on purpose: teacher.js does not pass them
+     through fill(), so a number here would disagree with the drawn variant
+     (see docs/escape-room-voice-rewrite.md §8). Keys are room.js object ids. -->
+<script>
+window.TEACH = {
+  "lockMeta": [
+    {
+      "topic": "Counting (the product rule)",
+      "minutes": 2,
+      "curriculum": "Number &mdash; the product rule for counting: arrangements of different keys, no key used twice."
+    },
+    {
+      "topic": "Exponential decay by iteration",
+      "minutes": 3,
+      "curriculum": "Ratio &mdash; a percentage of what is left, repeated: multiply by the same factor each minute and find the first whole minute below a threshold. <b>A calculator is needed</b> (repeated &times; works on a basic one)."
+    },
+    {
+      "topic": "Venn diagrams and conditional probability",
+      "minutes": 3,
+      "curriculum": "Probability &mdash; the overlap of a two-set Venn diagram from totals and &lsquo;neither&rsquo;, then a conditional percentage of one set."
+    }
+  ],
+  "clueMap": {
+    "sticky-note": "The admin login &mdash; how many keys, and never the same key twice",
+    "login-pad": "The admin login &mdash; how many keys there are to choose from",
+    "server-log": "The recovery tool &mdash; the share of what is left replaced each minute",
+    "audit-policy": "The recovery tool &mdash; the threshold below which the log is lost",
+    "results-page": "The audit &mdash; the votes cast and his total",
+    "access-log": "The audit &mdash; who opened the page, and who did neither"
+  },
+  "notes": "<p class='lede'>This room is about using AI as a tool, not as a replacement for thinking. Mr Narry asked for a vote that looked amazing and got exactly that; nobody asked who should see the votes. Worth asking a class: what should his prompt have said, and what should he have checked himself?</p><p class='lede'>The recovery tool needs a calculator: the multiplier has to be raised to power after power until it drops below the threshold. Repeated multiplication works on a basic calculator. The mistake it is built around is taking the same share of the original every minute, which runs out sooner.</p><p class='lede'>The audit never looks at a single ballot: it works from totals only. A group that finds the overlap but divides by every voter, not by those who saw the page, gets the misconception response.</p><p class='lede'>At time-out the end screen shows every lock&rsquo;s solution. For a second attempt, press Play again for fresh numbers.</p>"
+};
+</script>
+<script src="../assets/rating.js"></script>
+<script src="../assets/teacher.js"></script>
+</body>
+</html>
