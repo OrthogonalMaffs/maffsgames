@@ -1,5 +1,15 @@
 # Handover: home lane
 
+**CAR-TRAP-V2-ART (10 Oct, Jon; image work only, #242 and car-trap/room.js are the cloud lane's).** Filed for
+#242's `art: 'car-trap-v2'`: **`docs/art/car-trap-v2-scene.webp`, `docs/art/car-trap-v2-fail.webp`,
+`docs/art/car-trap-v2-win.webp`** (1600x873, through `strip-gen-watermark.py --width 1600 --frame 1600x873`; no
+watermark found, corners checked by eye). The old `car-trap-scene/-fail/-win.webp` are left as they are (main's
+room still names `car-trap`). Badges blanked: the pale blue hatchback's front (scene, fail) and rear (win), the grey
+car's bonnet oval (fail) and grille oval (win). Every plate checked blank: hatchback front (white) and rear (yellow),
+grey car, beige car. **For the cloud lane (#242):** rebase on main and the v2 pictures resolve, so `art` can stay. The
+win is a high CCTV-style view of the bays (camera top right), so #242's `winAlt` ("The same row of bays...") needs
+rewriting to match: Jon asked for it, and it is the cloud lane's file.
+
 **ART-PENDING (10 Oct, Jon's contract 08:50, ahead of the queue for cloud PR #242; contract
 `docs/handover/contracts/2026-10-10-art-pending.md`).** Rule: **no `art` field, no request.** engine.js
 (`HAS_ART = !!R.art`) emits no scene, fail-thumbnail or end-card picture for a room with no top-level `art:`;
@@ -185,29 +195,3 @@ verifier-lines-in-the-workflow question is answered by contract V: neither lane 
   now wait for `MaffsLock.isFresh()` to clear (check-teacher-invite.py before every move and click), as canon 7.6.0 (DET) asks of drivers. partial-fractions-duel's own
   extra `MaffsLock.screen` in showMenu went (show() does it); its verifier's plant now strips it from show().
 - **Canon §7.6.0:** "every screen change goes through MaffsLock.screen()".
-
-## 2026-10-09 (home): OVERLAY-KEYS (19:00 addendum; for the cloud lane: re-check item 12)
-
-- **The overlay is shared:** `askInitials()` in `schools/assets/firebase-leaderboard.js`, loaded by all 97 games; no
-  game has its own copy. Key listeners at page level: 11 games, all `keydown` on document or window in the bubbling
-  phase; none in capture, no `onkeydown` properties (10 more games listen on their own elements only).
-- **Games whose shortcuts fired while initials were typed (main's overlay, every key reached the game):** 52dle,
-  decimal-detective, equatle, formula-plug-in, negative-number-line, new-shapes, prime-or-composite,
-  prisoners-dilemma, six-sevens-bruv, think-of-a-number, trig-wars.
-- **Fix (in the overlay only, no game touched):** (1) the overlay stops keydown/keypress/keyup bubbling out of it,
-  after its inputs' own handlers (Enter still submits, Backspace still steps back); bubbling is enough because no
-  game listens in capture. (2) While it is open, a window capture-phase guard stops keys aimed outside it (focus left
-  on the page by a tap on the backdrop), and it stays up through the keyup of a key held when it closes, so the
-  Enter that submits never reaches the game. It then removes itself (1 s fallback).
-- **Check:** `scripts/test-initials-overlay.py` (content tier, ci-deps on the overlay): every one of the 97 games,
-  48 keys typed (a-z, 0-9, space, arrows, Escape, punctuation) + 6 on the backdrop + Enter; asserts no game key
-  listener and no probe (its own document/window keydown, so it bites in games without shortcuts) saw a key, the page
-  did not navigate, submitScore resolved with ABC saved, and the next key after the overlay reaches the page.
-  Against main's overlay all 97 FAIL (`--against`); with the fix all 97 pass; the plant (containment removed) is
-  caught in all 11 shortcut games. ~33 s locally.
-- **prisoners-dilemma:** passes with no change to its own code; the cloud lane can re-check item 12.
-- **Escape:** the contract says "Escape closes the overlay as now", but the overlay has never handled Escape (it
-  does nothing; Skip is the way out). Not added: Jon's call. Escape no longer reaches the game either.
-- Offline, submitScore writes nothing after the overlay (not the production host, by design), so "submitted" is
-  checked at the overlay's edge.
-

@@ -3,6 +3,31 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-09 (home): OVERLAY-KEYS (19:00 addendum; for the cloud lane: re-check item 12)
+
+- **The overlay is shared:** `askInitials()` in `schools/assets/firebase-leaderboard.js`, loaded by all 97 games; no
+  game has its own copy. Key listeners at page level: 11 games, all `keydown` on document or window in the bubbling
+  phase; none in capture, no `onkeydown` properties (10 more games listen on their own elements only).
+- **Games whose shortcuts fired while initials were typed (main's overlay, every key reached the game):** 52dle,
+  decimal-detective, equatle, formula-plug-in, negative-number-line, new-shapes, prime-or-composite,
+  prisoners-dilemma, six-sevens-bruv, think-of-a-number, trig-wars.
+- **Fix (in the overlay only, no game touched):** (1) the overlay stops keydown/keypress/keyup bubbling out of it,
+  after its inputs' own handlers (Enter still submits, Backspace still steps back); bubbling is enough because no
+  game listens in capture. (2) While it is open, a window capture-phase guard stops keys aimed outside it (focus left
+  on the page by a tap on the backdrop), and it stays up through the keyup of a key held when it closes, so the
+  Enter that submits never reaches the game. It then removes itself (1 s fallback).
+- **Check:** `scripts/test-initials-overlay.py` (content tier, ci-deps on the overlay): every one of the 97 games,
+  48 keys typed (a-z, 0-9, space, arrows, Escape, punctuation) + 6 on the backdrop + Enter; asserts no game key
+  listener and no probe (its own document/window keydown, so it bites in games without shortcuts) saw a key, the page
+  did not navigate, submitScore resolved with ABC saved, and the next key after the overlay reaches the page.
+  Against main's overlay all 97 FAIL (`--against`); with the fix all 97 pass; the plant (containment removed) is
+  caught in all 11 shortcut games. ~33 s locally.
+- **prisoners-dilemma:** passes with no change to its own code; the cloud lane can re-check item 12.
+- **Escape:** the contract says "Escape closes the overlay as now", but the overlay has never handled Escape (it
+  does nothing; Skip is the way out). Not added: Jon's call. Escape no longer reaches the game either.
+- Offline, submitScore writes nothing after the overlay (not the production host, by design), so "submitted" is
+  checked at the overlay's edge.
+
 ## 2026-10-09 (home): HOOK-FIX (Jon, 18:00) and the Car Trap contract
 
 - **The block:** the local pre-commit guard (`.git/hooks/pre-commit`, a copy of `~/.maffsgames-local/pre-commit`;
