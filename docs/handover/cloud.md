@@ -85,6 +85,39 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-10 (cloud): RIGHTFUL-KING-BUILD, The Rightful King built behind its holding page (for Jon's play-test)
+
+- **Jon can play-test it at `/escape-rooms/rightful-king/play.html`** (noindex, linked from nowhere, analytics off).
+  `index.html` is a noindex "coming soon" holding page; `teacher.html` is the real teacher page (noindex, unlinked).
+  There is no hub card, sitemap entry or count change: the release contract brings those, with the ★★★ chip.
+- **Art pending:** no `art` field, so no picture is requested. Jon generates the three pictures after his play-test.
+  The alts are the draft's.
+- **Locks (bank batch 9, `docs/lock-bank-batch9.txt`; check-lock-bank: unique on all three):**
+  - `admin-passcode-product-rule`, grade 6: the product rule with no repeats (Higher). maxDigits 3; k = 5 to 9 with
+    L = 3 (60, 120, 210, 336, 504); variant 0 is k = 7.
+  - `vote-log-overwrite`, grade 5: building powers of one multiplier, the method #253 graded 5 in Prom (the draft
+    said 7). The library is the draft's ten sets, each through the rules, including (1 - f) x 100 not a multiple
+    of r. The generator asserts that the 3 d.p. powers keep their comparison with the threshold.
+  - `leak-audit-conditional`, grade 7: conditional probability from a Venn diagram (Higher). The library is the
+    draft's seven sets, under its story rules.
+- **Derived rating, from check-escape-rooms' own `room_rating()`: ★★★ Challenge (grades 6–9).** No grade was fitted.
+- **check-escape-rooms:** rightful-king VALID **215 of 350**, variant 0 VALID (the draft measured 183 of 280; the
+  fifth passcode set adds draws).
+- **The old URL:** `it-vengeance/index.html` is a noindex meta-refresh to `/escape-rooms/rightful-king/` with a
+  plain link (ruling 6). `it-vengeance/room.js` and `teacher.html` stay as history. The checker reads every room
+  folder; a noindex index makes it not live, so it needs no card or grade.
+- **Played headless (scratch script, four draws, all PASS):**
+  - Start screen: the brief, ★★★ CHALLENGE · GRADES 6–9, and the stakes after "If you get it wrong."
+  - All 8 objects and all 3 lock briefs on screen, every token filled.
+  - Four wrong lines in order, then the last repeats. Each misconception gives its own response.
+  - All three locks open; k = 5's 60 opens on the up-to-three-digit keypad. Then the win screen ("It was my
+    prompt").
+  - A time-out ends on the stakes after "And so:".
+  - No page errors, no 4xx, nothing sent to analytics.
+  - The teacher page shows ★★★, "Suits a top set" and the calculator note. The old URL lands on the holding page.
+- **Generator:** run through a scratch wrapper that swaps in this checkout's paths. Before the M block went in, a run
+  reproduced every existing library byte for byte.
+
 ## 2026-10-10 (cloud): LIBRARY-DRAFT, Library room draft for Jon's review
 
 - **The draft:** `docs/escape-room-drafts/library-draft.md`. It has three title options; **Jon chose The Library Jam
@@ -115,70 +148,3 @@ main's last full run is red; watch main's run after merging.
   checker's own `draw_is_valid()` on the draft's clue strings gives **183 of 280 VALID, variant 0 VALID**.
 - **STOP IF did not fire:** prom-budget was read in full and never mentions a vote, a king or Narry.
 - **Next:** LIBRARY-DRAFT. Phase 2 of The Rightful King is a separate contract after Jon approves.
-
-## 2026-10-10 (cloud): CAR-TRAP-BUILD, the rewritten Car Trap built behind its holding page (awaiting Jon's play-test)
-
-- **10 Oct, after ART-PENDING (#244): rebased on main; `art` dropped.** The room requests no picture.
-  check-escape-rooms lists it as art pending (VALID 352 of 512). Tier 1 passes the play page, and
-  `test-escape-art.py` passes.
-  - **Still red, one failure:** the teacher page is 545 px wide at 320 px. This is the shared `table.tt` overflow
-    (todo §1.37). **Jon (10 Oct): the home lane fixes §1.37 first; no allowlist entry.** #242 waits for that.
-  - **Jon's message of 10 Oct ("the Car Trap art is now on main; set art to those pictures; rewrite winAlt for the
-    win picture's high CCTV-style view") did not match main.** The only `car-trap-*.webp` on main are the OLD
-    pictures: an orange sports car reversing into a VISITOR bay before a crowd of staff, an eye-level view. Main is
-    unchanged in `docs/art/` since before #242, and home.md names no new files.
-    - So `art` was NOT set and winAlt was NOT rewritten: pointing at those would show the wrong premise, and an alt
-      cannot be written for a picture not seen.
-    - When the new files are on main: add `art:` naming them, check all three alts against them, and rewrite winAlt
-      for the win picture's view.
-
-- **Built from the approved draft with Jon's changes (9 Oct, 22:53).**
-  - "The dullest car in the county" appears once, in the hook (scripted count: 1).
-  - The stakes and lock 3's onOpen are as ruled.
-  - Wrong-entry line 1 carries the figure in words.
-  - The only figures in the prose outside tokens are the draft's flagged words and locks 2 and 3's unchanged method
-    constants. Mr Strictman is invented, Jon confirmed.
-- **For the difficulty contract: the room is ★★ Core** (Jon's ruling 3). No star field or label was added anywhere.
-- **Lock 1, `head-bay-lower-bound`, is bank batch 8** (`docs/lock-bank-batch8.txt`; check-lock-bank `unique (2.35)`).
-  - Its library is in `gen-escape-variants.py`: the draft's eight widths, variant 0 = 2.4, the draft's solver, all
-    eight kept.
-  - The generator also writes the room's `variants:` blocks.
-  - `visitor-space-bounds` leaves the room; its bank entry and library stay as history.
-  - Locks 2 and 3: a scripted diff shows id, key, instrument, variants, missTitle, hints and solve unchanged. Only
-    framing and missSays' last clause changed, per the draft.
-  - **check-escape-rooms: car-trap VALID 352 of 512, variant 0 VALID**, as the draft measured.
-- **The generator's paths are Jon's machine's** (`E:\jon\maffsgames\...`). The cloud lane runs it through a scratch
-  wrapper that swaps in this checkout's paths at run time; the script's paths are unchanged.
-  - Before the new library went in, a run reproduced every existing library byte for byte.
-  - Only car-trap's room.js and variants.json changed.
-- **Art pending.** `art: 'car-trap-v2'` has no files yet, so the engine drops the frame and none of the six old pictures
-  shows (they stay in docs/art/ untouched). No lock has art or missArt (the rule is in room.js's header).
-  - **Filing Jon's three pictures is a separate step:** file them as `car-trap-v2-scene`, `-fail` and `-win.webp`, or
-    file over the old names and set `art` back to `car-trap`.
-  - The three alts are the draft's, to be checked against the pictures before release.
-- **Pages (Jon's answers, 10 Oct):**
-  - `teacher.html` is the real teacher page (noindex, unlinked).
-  - `play.html` is the play-test page: noindex, linked from nowhere, analytics off (no gtag, no analytics.js, so the
-    engine sends no events).
-  - `index.html` stays the holding page.
-  - **At release, in one PR:** play.html's content becomes index.html, with prom-budget's head lines (analytics, meta,
-    og:) put back; play.html is deleted; then the §5c release steps.
-- **Played through in Chromium** on serve-stubbed, with no page errors and nothing sent off-origin.
-  - It shows every object and all three lock briefs on screen.
-  - The four wrong-entry lines arrive in order, then the last repeats.
-  - Each lock's misconception gives its own response.
-  - All three locks open on their answers; lock 1 is set by the slider's arrow keys.
-  - Then the win screen; a second play times out to the stakes after "And so:".
-  - The teacher page follows the draw. The cloud session cannot open Jon's Chrome: that is what play.html is for.
-
-## 2026-10-09 (cloud): PD-CLOSE, LISTED-HIGH item 12 closed (Jon's ruling, 22:45, option A)
-
-- **t4-002 closed by #232 (shared-overlay fix); covered by the OVERLAY-KEYS CI check; per-game check not added
-  because the fault was in shared code.** The check is `scripts/test-initials-overlay.py` (in CI). Measured 9 Oct, with
-  `--games prisoners-dilemma`: main passes, and its plant is caught. Run `--against` the pre-#232 overlay, it fails
-  with 55 keys reaching the game's document keydown. That confirms the check covers this game, so the STOP IF did not fire.
-- `verify-prisoners-dilemma.py` is **not** in CI. Its branch, `claude/youthful-feynman-anpxuq-pd-check`, had nothing in
-  its handover that main lacks. It was deleted locally, but the remote delete was refused (the sandbox proxy, HTTP
-  403), so **Jon deletes it in GitHub's branch list**.
-- **prisoners-dilemma-t4-001** (the leaderboard ranks the chosen opponent) stays open for Jon's design decision.
-- Jon's note is saved verbatim as `docs/history/contracts/2026-10-09-listed-high-note-2245.md`.
