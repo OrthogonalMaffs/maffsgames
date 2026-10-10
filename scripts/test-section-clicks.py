@@ -44,8 +44,10 @@ EXPECTED_LINKS = [
     ("escape-rooms", "comic-caper", 9),
     ("escape-rooms", "kiln-disaster", 10),
     ("escape-rooms", "car-trap", 11),
-    ("escape-rooms", "open-all", 12),
-    ("escape-rooms", "start-hamster-heist", 13),
+    ("escape-rooms", "rightful-king", 12),
+    ("escape-rooms", "library-jam", 13),
+    ("escape-rooms", "open-all", 14),
+    ("escape-rooms", "start-hamster-heist", 15),
     ("parent-guides", "open-guides", 1),
 ]
 EXPECTED_TOGGLES = [
