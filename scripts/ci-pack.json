@@ -54,7 +54,7 @@
   "Just Pythag It, Bruv, part 4 (every key and triangle recomputed over 300 sessions, WebKit, play-through, a quarter of the layout faults, fault-injection self-test)": "1",
   "Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px)": "5",
   "Linear Equation Solver (every move's class re-derived with SymPy, every option clicked in Chromium)": "17",
-  "Log Laws Solve (layers C + D, SymPy)": "14",
+  "Log Laws Solve (layers C + D, SymPy) and the Laws bank's keys and options (two faults planted)": "9",
   "Maths Court (independent recomputation + rendered page)": "15",
   "Matrix Crunch (one answer per question, an option or the singular flag: Enter and Tab+Enter never mark again; both levels; Chromium)": "10",
   "Moments Master (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "7",
