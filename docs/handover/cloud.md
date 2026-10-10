@@ -57,6 +57,28 @@ both and read `docs/handover/home.md`.
 **Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's
 last full run is green, without asking each time; it still watches main's run after each merge. Ratings for the handover when built: The Rightful
 King ★★★ Challenge, The Library Jam ★ Warm-up (no star field; the difficulty contract owns it).
+**FONT-FIT (Jon, 10 Oct 11:05; contract `docs/handover/contracts/2026-10-10-font-fit.md`): STOPPED for Jon, on branch
+`claude/youthful-feynman-anpxuq-font-fit` (no PR yet).** Findings: `docs/audits/font-fit-2026-10-10.md`.
+- **Built (on the branch):**
+  - `scripts/fonts/` pins KaTeX 0.16.9 and every Google Fonts file the site requests, with checksums and licences
+    (MIT and OFL; Special Elite Apache 2.0).
+  - `bank_common.real_font_response` serves them.
+  - check-site's phone pass and `measure-phone-fit.py` measure in them; the latter is now seeded.
+  - Simultaneous Solver's Stages 1-4 sit at least 8 px above the fold at all three sizes (`fitInView`).
+- **Measured:** 7 pages newly over in the real fonts (6 fold, 1 width), all listed in the findings; 13 width
+  allowlist entries now fit (stale).
+- **Stops for Jon:**
+  1. **Stage 5 at 320x568 needs a cut.** 15 of 40 problems are up to 53 px over. The shortest version that fits:
+     the instruction line on the first problem only, saving 64 px.
+  2. **The contract's self-test cannot fail on Simultaneous Solver,** because the fonts move it by about 1 px; the
+     findings name pages where they do decide the verdict.
+  3. **The contract's premise was half right.** KaTeX was always real in CI, and the "25 px" did not reproduce.
+- **Not yet done:**
+  - the per-game fold verifiers' routing (each aborts Google Fonts: there is no common harness to switch them all);
+  - Simultaneous Solver's verifier (real fonts, 8 px, Stages 1-5);
+  - the allowlist: 13 stale entries and distinctly-average new.
+- **For the home lane, once merged:** CI's DejaVu pin step can then be retired for the phone checks (not removed
+  here).
 **Open for Jon:** delete branch `claude/youthful-feynman-anpxuq-pd-check` in GitHub (the proxy refused the remote
 delete, HTTP 403).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
