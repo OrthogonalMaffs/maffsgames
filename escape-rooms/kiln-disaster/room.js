@@ -32,7 +32,6 @@ window.ROOM = {
   slug: 'escape-kiln-disaster',
   title: 'The Kiln Disaster',
   level: 'gcse',
-  levelLabel: 'GCSE',
   minutes: 15,
   penalty: 45,
   art: 'kiln-disaster',
@@ -90,6 +89,7 @@ window.ROOM = {
     {
       id: 'kiln-sensor-limit',
       key: 'sl',
+      grade: 2,
       name: 'Keypad on the controller',
       brief: 'A keypad under the display. It opens at the highest sensor ID that still fits under the network limit.',
       instrument: { kind: 'keypad', label: 'HIGHEST SENSOR ID UNDER THE LIMIT', digits: 2, verb: 'Enter code' },
@@ -178,6 +178,7 @@ window.ROOM = {
     {
       id: 'kiln-fan-restart',
       key: 'fr',
+      grade: 3,
       name: 'Dial beside the display',
       brief: 'A dial marked in minutes. It opens at the number of minutes until both fans restart at the same moment.',
       instrument: { kind: 'dial', label: 'MINUTES UNTIL BOTH FANS RESTART TOGETHER', min: 0, max: 120, step: 1,
@@ -254,6 +255,7 @@ window.ROOM = {
     {
       id: 'kiln-cancel-check',
       key: 'cc',
+      grade: 1,
       name: 'Slider on the controller',
       brief: 'A slider beside the display. It opens at the check value printed on IT&rsquo;s instruction card.',
       instrument: { kind: 'slider', label: 'CHECK VALUE', min: 0, max: 60, step: 1, decimals: 0,

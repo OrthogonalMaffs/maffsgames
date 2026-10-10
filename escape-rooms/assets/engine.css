@@ -170,3 +170,5 @@ ol.ladder{margin:6px 0 0 20px}
 ol.ladder li{margin-bottom:6px;line-height:1.6}
 .print-note{font-size:13px;color:var(--muted);font-style:italic}
 @media print{body{background:#fff;color:#000}.card,.panel{border-color:#999}.a11y-toggle,.back-link{display:none}}
+/* ESCAPE-DIFFICULTY: the stars' text equivalent, read by screen readers, not shown */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

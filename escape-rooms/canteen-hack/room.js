@@ -66,7 +66,6 @@ window.ROOM = {
   slug: 'escape-canteen-hack',
   title: 'The Canteen Menu Hack',
   level: 'ks3',
-  levelLabel: 'KS3 / GCSE',
   minutes: 15,
   penalty: 45,
   art: 'canteen-hack',
@@ -151,6 +150,7 @@ window.ROOM = {
     {
       id: 'canteen-mean-calories',
       key: 'meal',
+      grade: 3,
       name: 'The dietary slider',
       brief: 'The menu system will not publish today&rsquo;s specials until the nutrition check passes. Four items ' +
              'are already logged. The fifth is a dummy entry, and its calorie value is yours to choose.',
@@ -287,6 +287,7 @@ window.ROOM = {
     {
       id: 'cookie-price-simultaneous',
       key: 'till',
+      grade: 5,
       name: 'The price tags',
       brief: 'The till will roll every price back to last term, but only once both baseline tags are set. It checks ' +
              'them as a pair. Whole pounds.',
@@ -557,6 +558,7 @@ window.ROOM = {
     {
       id: 'kale-fraction-drain',
       key: 'chute',
+      grade: 3,
       name: 'The disposal chute',
       brief: 'The chute destroys whatever number of portions it is set to. The inspection wants a specific amount ' +
              'still on the shelf afterwards, and an empty shelf fails it outright.',

@@ -36,7 +36,6 @@ window.ROOM = {
   slug: 'escape-hamster-heist',
   title: 'The Great Hamster Heist',
   level: 'ks3',
-  levelLabel: 'KS3 / GCSE',
   minutes: 15,
   penalty: 45,
   art: 'hamster-heist',
@@ -120,6 +119,7 @@ window.ROOM = {
     {
       id: 'hamster-wheel-rpm',
       key: 'rpm',
+      grade: 5,
       name: 'The hamster wheel',
       brief: 'The first catch runs off the dynamo, and it will not let go until the dynamo is turning at the speed ' +
              'the wheel is supposed to produce.',
@@ -182,6 +182,7 @@ window.ROOM = {
     {
       id: 'hamster-feeder-bounds',
       key: 'bnd',
+      grade: 5,
       name: 'The feeder',
       brief: 'The second catch is on the hopper, and it will not lift until it is told the smallest volume the ' +
              'hopper could possibly be holding. It is a prism, and Mr Beaker cut the cross-section exactly.',
@@ -280,6 +281,7 @@ window.ROOM = {
     {
       id: 'heat-lamp-gradient',
       key: 'grad',
+      grade: 4,
       name: 'The heat lamp',
       brief: 'The last catch is held by the thermostat. It wants to be told how fast the cage should be warming.',
       instrument: { kind: 'slider', label: 'Expected warming rate', min: 0, max: 20, step: 0.1, decimals: 1,

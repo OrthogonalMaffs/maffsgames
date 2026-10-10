@@ -42,7 +42,6 @@ window.ROOM = {
   slug: 'escape-car-trap',
   title: 'The Headteacher’s Car Trap',
   level: 'gcse',
-  levelLabel: 'GCSE / Core Maths',
   minutes: 15,
   penalty: 45,
   art: 'car-trap-v2',
@@ -142,6 +141,7 @@ window.ROOM = {
     {
       id: 'head-bay-lower-bound',
       key: 'bay',
+      grade: 4,
       name: 'The line marker',
       brief: 'Mr Strictman narrowed the Head&rsquo;s bay with this. The marker measures from the line next door and ' +
              'paints a new line at whatever width it is set to. The card on its handle says which width to give it.',
@@ -249,6 +249,7 @@ window.ROOM = {
     {
       id: 'boom-gate-sector',
       key: 'gate',
+      grade: 5,
       name: 'The barrier',
       brief: 'Mr Strictman has changed the barrier&rsquo;s swing, so the arm comes down before a car is clear of ' +
              'it. The control box goes back to its proper setting only when it is given its calibration angle.',
@@ -364,6 +365,7 @@ window.ROOM = {
     {
       id: 'ev-charger-quadratic',
       key: 'amp',
+      grade: 5,
       name: 'The charging post',
       brief: 'The Head&rsquo;s plug-in hybrid charges here, and Mr Strictman has set the post to trip the moment ' +
              'anything is plugged in. Take it back through commissioning: set a current that balances its load ' +
