@@ -88,6 +88,24 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-10 (cloud): UPDATES-WEEKEND, STOPPED before any edit (claims checked against main, 23:00)
+
+- **Nothing edited on /updates/; no PR.** The STOP IF fired: four claims in Jon's text do not match the code.
+  - **The Library Jam:** "Our first ★ Warm-up room" is false: Comic Caper and Kiln Disaster are ★ Warm-up on the hub
+    (#253). And the room has the library system fine the class at half past three; Bibby only won't overturn it.
+  - **Calculator:** six games have the scientific calculator, not five: Growth and Decay got it first (#239, 9 Oct).
+  - **Boolean Blitz (#227):** the accepted AB + BC (4 letters) is longer than the key B(A + C) (3). The rule is the
+    key's truth table and no more letters than the longer of the key and its minimal sum of products.
+  - **Wrong on the Internet (#223):** no spinner. One post now states a European wheel (one green zero), another that
+    A and B are independent.
+  - Minor: Your Scores is a section of /leaderboards/, not a page of its own (#238).
+- **Checked and matching:** The Rightful King (premise, counting / repeated % change / conditional probability,
+  ★★★; #257), difficulty stars and easiest-first hub (#253), Paper 2C Q12 and Q35 (#225), Paper 2B Q28 (#226).
+- **Log Laws:** no fix PR merged on main, so that item is left out (the contract's own condition).
+- **Rooms:** not live on main (both index.html noindex). ROOMS-RELEASE-RK-LJ is open as #271 and adds its own room
+  lines (before Car Trap; Rightful King "exponential decay"). Room text not copied to home.md: the Library Jam
+  line is one of the mismatches. Waiting on Jon's wording; then redo this item from the contract.
+
 ## 2026-10-10 (cloud): LIBRARY-JAM-BUILD, The Library Jam built behind its holding page (for Jon's play-test)
 
 - **Jon can play-test it at `/escape-rooms/library-jam/play.html`** once the PR merges (noindex, unlinked, analytics
