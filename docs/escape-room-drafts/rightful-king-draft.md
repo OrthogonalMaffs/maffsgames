@@ -39,6 +39,11 @@ How to read it:
    - **For you:** four variants (my recommendation), or allow a leading zero (adds only k = 5, L = 3 → 060; the
      rest fail the end-of-range rule), or add L = 2 on large pads (k = 11 to 31, e.g. 17 keys → 272). I
      recommend against L = 2. With two keys it is barely the product rule, and it sits below ★★★.
+   - **The cause is shared, not this lock’s.** The engine’s keypad takes exactly `digits` digits. The Library
+     draft hits the same limit harder: its fines lock needs a two-digit answer and a four-digit misconception
+     on one keypad. The fix belongs in the engine: an opt-in keypad that accepts *up to* `digits`, existing
+     rooms unchanged. That is a home-lane change to shared code, not this draft’s, and the Library draft
+     recommends it. With it, this lock could also take k = 5, L = 3 (60, miss 125).
 4. **Variant 0 had to change on lock 1.** Your lead sets for locks 1 and 3 collide. k = 6, L = 3 gives 120, and
    your first audit set has 120 voters printed in its clue, which breaks the joint-draw rule that no answer
    appears in another lock’s clue. I lead lock 1 with **k = 7, L = 3 → 210 (miss 343)**. With it the variant-0
