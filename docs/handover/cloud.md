@@ -53,6 +53,18 @@ full ("spot on"); the Library room's title is The Library Jam.
 2. **LIBRARY-JAM-BUILD** (contract `docs/handover/contracts/2026-10-10-library-jam-build.md`): **built and checked on
    `claude/compassionate-cori-3xi42y`; PR next.** The stop on lock C is resolved by Jon's ruling (below and in the
    dated entry).
+   **NEXT AFTER THE CLEAR (10 Oct, 16:40):**
+   1. Run `python scripts/check-changed.py`. The run started before the clear is lost. Expect only the usual
+      KaTeX-CDN failures in this container, none in escape rooms.
+   2. Open the PR. Use the dated LIBRARY-JAM-BUILD entry for its body, with:
+      - the grade table: 2, 1, 2;
+      - the byte-for-byte proof: 11 other room.js files and 34 of 34 libraries identical to main;
+      - Jon's three rulings: keypads exempt, `minsep=1`, no `levelLabel`;
+      - the §1.37 entry.
+   3. Merge on a green Gate, with main's last full run green (723 was). If CI measures the teacher page at other
+      than 538 px, put CI's figure in the allowlist.
+   4. Watch main's full run. Mark LIBRARY-JAM-BUILD done and move its contract to `docs/history/contracts/`.
+   5. The queue is then empty: ask Jon for the next item.
 **Jon's ruling for both builds (10 Oct, after 13:45):**
 - **The hub is left alone.** A built room sits behind its noindex holding page, and the checker counts a room as
   live only without `noindex`, so no card is needed. The star chip comes with the release contract.
