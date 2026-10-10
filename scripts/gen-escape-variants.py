@@ -597,6 +597,29 @@ for L, W in cands:
         break
 V["visitor-space-bounds"] = store
 
+# ---------------------------------------------------- J1 (2026-10) lower bound of one width (slider 2.00-3.00 by 0.01)
+# Replaces visitor-space-bounds in the rewritten car-trap room (contract CAR-TRAP-BUILD; bank batch 8);
+# the library above is kept as history. The width is stated to the nearest 0.1 m (written "ten
+# centimetres" in the prose, so the 10 is no clue figure). The answer is the smallest setting on the
+# grid that rounds, half up, to W; misconception: W itself, the stated width taken as exact.
+ins = (2, 3, 0.01)
+store = []
+
+
+def bay_sols(W):
+    """Every setting on the slider that rounds, half up, to W at 0.1 m (the draft's solver)."""
+    return [x for x in grid(2, 3, 0.01) if (round(x * 100) + 5) // 10 == round(W * 10)]
+
+
+for W in shuffled([2.4, 2.2, 2.3, 2.5, 2.6, 2.7, 2.8, 2.9]):
+    keep(store, "head-bay-lower-bound",
+         {"W": W, "answer": round(W - 0.05, 2), "miss": W}, ins,
+         lambda v: [v["W"]],
+         lambda x, v: abs(x - min(bay_sols(v["W"]))) < 1e-9)
+    if len(store) >= WANT:
+        break
+V["head-bay-lower-bound"] = store
+
 # ---------------------------------------------------- J2 arc length (dial 0-180 by 5)
 # arc = (th/360) x 2 pi r, quoted as k pi so the pi cancels. Misconception: the
 # radius used where the circumference needs the diameter, which doubles the angle.
@@ -826,6 +849,10 @@ for v in V["kale-fraction-drain"]:
 for v in V["visitor-space-bounds"]:
     v["lbL"] = f"{v['L'] - 0.5:g}"
     v["lbW"] = f"{v['W'] - 0.5:g}"
+for v in V["head-bay-lower-bound"]:
+    v["half"] = "0.05"
+    v["lb"] = f"{v['answer']:.2f}"
+    v["ub"] = f"{v['W'] + 0.05:.2f}"
 for v in V["hamster-feeder-bounds"]:
     # the prose needs "14.5", not "15" with a ".5" glued on: for D = 15 the lower
     # bound is 14.5, so the old {{bnd.D}}.5 trick does not work downwards
@@ -861,6 +888,9 @@ for lock in ("heat-lamp-gradient", "vault-trajectory-vertex", "mat-tiling-hcf"):
         if var.get("miss") is not None:
             var["mTxt"] = f"{float(var['miss']):.1f}"
 for var in V["visitor-space-bounds"]:
+    var["aTxt"] = f"{float(var['answer']):.2f}"
+    var["mTxt"] = f"{float(var['miss']):.2f}"
+for var in V["head-bay-lower-bound"]:
     var["aTxt"] = f"{float(var['answer']):.2f}"
     var["mTxt"] = f"{float(var['miss']):.2f}"
 
