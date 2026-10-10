@@ -1,4 +1,4 @@
-/* Room data for "library-jam" — shared by play.html (the game, for now) and
+/* Room data for "library-jam" — shared by index.html (the game) and
    teacher.html (answers, hint ladder, misconceptions).
 
    Numbers are not written into the prose. Each lock carries a `variants`
@@ -12,8 +12,8 @@
    character and speaks only in this room. Wrong-entry line 3 is Jon's line,
    verbatim. The three locks are bank batch 10 (docs/lock-bank-batch10.txt).
 
-   The room sits behind its holding page (index.html) until Jon has play-tested
-   it at play.html; it has no hub card until its release contract.
+   RELEASED 2026-10-10 (contract ROOMS-RELEASE-RK-LJ) after Jon's play-test:
+   index.html is the room, play.html is gone, and it has its hub and front-page cards.
 
    GRADES (canon §11.3, ESCAPE-DIFFICULTY): ordering decimals with different
    numbers of decimal places (2); angles on a straight line, one subtraction

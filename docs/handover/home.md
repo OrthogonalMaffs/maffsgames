@@ -1,5 +1,19 @@
 # Handover: home lane
 
+**ROOMS-RELEASE-RK-LJ (10 Oct, Jon 22:45: "both have been play tested, so lets just release"; contract in
+`docs/history/contracts/2026-10-10-rooms-release-rk-lj.md`).** The Rightful King (★★★) and The Library Jam (★) are
+live, released as Car Trap was: each index.html is the room (prom-budget's head: analytics on, indexable, canonical,
+the draft's meta description, 159 and 150 characters; og:image the scene), play.html deleted, teacher.html still
+noindex. Hub cards (draft hub line, topics, `data-stars` chip; Library Jam last of the ★, Rightful King after Rugby
+Mud) and front-page band cards (after Car Trap; test-section-clicks' order updated); sitemap `<url>` each; "nine" ->
+"eleven" in the hub (description, og:description, lede), the front page (band lede, "Open all eleven rooms"),
+CLAUDE.md and canon §11.1 (both rows added, Live 10/10). **Not a plain "nine", left for Jon:** canon §11.3's "Across
+the eight live rooms: 199 verified number sets" is a replay statistic, not a count to bump. it-vengeance still
+redirects to /escape-rooms/rightful-king/ (checked in Chromium). /updates/: one line each under October's New. The
+twelve finished contracts moved from docs/handover/contracts/ to docs/history/contracts/ (the folder is empty).
+Checked: check-escape-rooms, test-escape-rating (11 rooms, no 320 px overflow), test-escape-art (both rooms to a win
+and a loss with their pictures), test-section-clicks, context size.
+
 **ROOM-ART-RK-LJ: The Library Jam (10 Oct, Jon's contract; pictures approved 22:20-22:42).** The Rightful King's
 half was already merged as #269 (main green, 32c2be0). Filed `docs/art/library-jam-scene/-fail/-win.webp` (1600x873,
 q80, via `strip-gen-watermark.py --width 1600 --frame 1600x873`: no watermark). **All three sources are 2752x1536, like
