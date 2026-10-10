@@ -1530,6 +1530,13 @@
       "where": "table.tt; table.tt"
     },
     {
+      "path": "escape-rooms/car-trap/teacher.html",
+      "at": "load",
+      "width": 570,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
       "path": "escape-rooms/comic-caper/teacher.html",
       "at": "load",
       "width": 528,
