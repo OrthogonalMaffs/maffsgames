@@ -63,8 +63,9 @@ window.ROOM = {
          'narrower than the specification allows, set the barrier to come down early, and set the charging post ' +
          'to trip. When the Head arrives in front of the governors it will be a farce, and the report Mr ' +
          'Strictman has already half written will say that the school lacks discipline at the top.<br><br>' +
-         'He is at the far end of the row, measuring one bay at a time and marching towards you. That is your ' +
-         'fifteen minutes.<br><br>' +
+         'He is at the far end of the row, measuring one bay at a time and marching towards you. You hear him ' +
+         'before you see him: “Those two bays differ by two point six centimetres. This is not how it is done in ' +
+         'MY school.” That is your fifteen minutes.<br><br>' +
          'He set three machines against their own paperwork. You are setting each one back to it: the line where ' +
          'the specification puts it, the barrier to its calibration, the charger inside its limit. All the ' +
          'paperwork is down here with you. Every wrong setting makes a noise that carries in concrete, and costs ' +
@@ -95,13 +96,10 @@ window.ROOM = {
      comes down the row. None of them mentions the students. */
   wrongLines: [
     { head: 'The setting clears with a beep that carries.',
-      body: 'From the far end of the row, the tick of a measuring wheel, then a parade-ground voice dictating into ' +
-            'a phone: &ldquo;Those two bays differ by two point six centimetres. This is not how it is done in MY ' +
-            'school.&rdquo;' },
+      body: 'From the far end of the row, a parade-ground voice dictating into a phone: &ldquo;Memo. When this is ' +
+            'MY school, the gates open at oh-seven-hundred. So does the staff room.&rdquo;' },
     { head: 'Something in a control box resets with a clunk.',
-      body: 'Closer. The wheel ticks along another line. &ldquo;Paint wandering on the left-hand side. Bollard out ' +
-            'of true. Noted.&rdquo; A pen clicks. &ldquo;When this is MY car park, the lines will be inspected every ' +
-            'morning. By me.&rdquo;' },
+      body: 'Closer. &ldquo;Item four. Staffroom biscuits: discontinued. Morale is not a biscuit.&rdquo;' },
     { head: 'The setting slides back to where it was.',
       body: '&ldquo;Drill in the yard, eight sharp, every morning. Uniform inspected at the gate, top button to ' +
             'toecap. Standards start at the top.&rdquo; The wheel ticks on. &ldquo;And the top is about to ' +

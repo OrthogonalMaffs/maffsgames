@@ -1,5 +1,20 @@
 # Handover: home lane
 
+**CAR-TRAP-RELEASE (10 Oct, Jon's contract 13:00; `docs/handover/contracts/2026-10-10-car-trap-release.md`).**
+Jon's wording in room.js: wrong lines 1 and 2 are now Mr Strictman's memos (gates at oh-seven-hundred; staffroom
+biscuits discontinued), lines 3-4 unchanged; the "two point six centimetres" line moved into the brief ("You hear him
+before you see him: ..."), in words, real quote marks. Released: `escape-rooms/car-trap/index.html` is the room
+(play.html's body; prom-budget's head: analytics on, indexable, canonical, the draft's 158-character description
+for description and og:, og:image the v2 scene), play.html deleted; card on the hub (premise line + Bounds · Arc
+length · Quadratics, chip GCSE / Core, placed last) and on the front-page band; `<url>` in sitemap.xml; "eight" →
+"nine" on the hub (description, og:description, lede) and the front page (band lede, "Open all nine rooms"),
+CLAUDE.md, canon §11.1 (Car Trap Live 10/10, Mr Strictman, **★★**; "Nine rooms live, one withdrawn"). **The
+front page's meta descriptions carry no count** (they say "15-minute escape rooms"), so the contract's "two hits"
+had nothing to change. teacher.html stays noindex; it is linked from inside the room, as every room's is. /updates/:
+one line under October's New. **For Jon:** the hub says "Ordered easiest to hardest"; Car Trap sits last until
+ESCAPE-DIFFICULTY orders the cards by stars. Checked: check-escape-rooms passes; test-escape-art plays all nine
+rooms to a win and a loss; on the real URL a wrong barrier setting shows the memo line.
+
 **KEYPAD-VARIABLE (10 Oct, Jon's contract 10:20, ahead of PREPUSH-SCOPE: the cloud lane's Rightful King and
 Library Jam builds wait on it; contract `docs/handover/contracts/2026-10-10-keypad-variable.md`).** A keypad may
 now take `maxDigits: N` instead of `digits: N`: **"up to N digits, Set to submit"**. The display shows only what
