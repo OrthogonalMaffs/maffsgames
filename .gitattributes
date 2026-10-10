@@ -1,0 +1,10 @@
+# Files a check reads as bytes. Git on Windows (core.autocrlf) would otherwise check them out with CRLF, and the
+# check would see bytes the repository never holds. Nothing here changes a committed blob.
+#
+# test-real-fonts.py compares every file under scripts/fonts/ with its pinned SHA256 (SHA256SUMS).
+scripts/fonts/** -text
+# check-context-size.py caps these by size on disk (os.path.getsize): CRLF adds a byte a line.
+CLAUDE.md eol=lf
+docs/handover/home.md eol=lf
+docs/handover/cloud.md eol=lf
+docs/todo.md eol=lf
