@@ -1570,6 +1570,13 @@
       "where": "table.tt; table.tt"
     },
     {
+      "path": "escape-rooms/library-jam/teacher.html",
+      "at": "load",
+      "width": 538,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
       "path": "escape-rooms/pe-shed-rebellion/teacher.html",
       "at": "load",
       "width": 590,

@@ -50,26 +50,9 @@ Done 10 Oct: RIGHTFUL-KING-DRAFT (#247, aa660f7) and LIBRARY-DRAFT (#248, 8302ba
 full ("spot on"); the Library room's title is The Library Jam.
 1. **RIGHTFUL-KING-BUILD: DONE.** #257 merged 10 Oct (79165de); main's run 723 is green. The contract is now in
    `docs/history/contracts/`. Jon can play-test the room at `/escape-rooms/rightful-king/play.html`.
-2. **LIBRARY-JAM-BUILD** (contract `docs/handover/contracts/2026-10-10-library-jam-build.md`): **IN PROGRESS** on
-   `claude/compassionate-cori-3xi42y` (reset to main after #257). **STOPPED FOR JON on one point; the rest is being
-   built:**
-   - `keep()` in `gen-escape-variants.py` still applies its end-of-travel rule to keypads (4% of 0-9999 = 400).
-     So every lock C answer (£12 to £99) is rejected, variant 0's 54 included.
-   - KEYPAD-VARIABLE added `keypad(n)` for the settable rule but left the edge rule alone. The contract assumed it
-     covered this; check-escape-rooms does not enforce the rule, only the generator.
-   - **Measured in scratch:** exempting every keypad from the edge rule (keypads have no travel) leaves every
-     existing library byte for byte, Prom's, Heatwave's and Kiln's keypads included.
-   - **For Jon:** may the cloud lane make that one change to `keep()` in this PR (the class fix, proven inert for
-     every live room), or does the home lane make it first?
-   - **Built on the branch, everything else:**
-     - bank batch 10 (unique: 3, 143, 54);
-     - the generator's N block: the draft's sets for A (8) and B (8), and C (10, `minsep=1`, answers distinct);
-     - room.js (grades 2, 1, 2: **★ Warm-up derived**; no `levelLabel`, removed by #253) and the three pages.
-   - **Lock C's library is empty until the ruling**, so check-escape-rooms crashes on the branch (`IndexError` at
-     `lib[0]`; it does not report an empty library: a note for the home lane).
-   - **Measured in a scratch copy with the keypad exemption:** library-jam VALID **572 of 640**, variant 0 VALID (the
-     draft's figure), with all ten fines sets kept. No other room's room.js changes. No PR until the ruling.
-Both shared fixes they waited on are on main: ART-PENDING (#244) and KEYPAD-VARIABLE (#251, `maxDigits`).
+2. **LIBRARY-JAM-BUILD** (contract `docs/handover/contracts/2026-10-10-library-jam-build.md`): **built and checked on
+   `claude/compassionate-cori-3xi42y`; PR next.** The stop on lock C is resolved by Jon's ruling (below and in the
+   dated entry).
 **Jon's ruling for both builds (10 Oct, after 13:45):**
 - **The hub is left alone.** A built room sits behind its noindex holding page, and the checker counts a room as
   live only without `noindex`, so no card is needed. The star chip comes with the release contract.
@@ -102,6 +85,35 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-10 (cloud): LIBRARY-JAM-BUILD, The Library Jam built behind its holding page (for Jon's play-test)
+
+- **Jon can play-test it at `/escape-rooms/library-jam/play.html`** once the PR merges (noindex, unlinked, analytics
+  off). `index.html` is a noindex holding page and `teacher.html` the real teacher page. No hub card until release.
+- **The stop and Jon's ruling (10 Oct):**
+  - `keep()`'s end-of-travel rule rejected every keypad answer under 400.
+  - **Jon: exempt every keypad, in this PR.** `keypad(n)` now returns a `Keypad` range, and `keep()` skips that
+    rule for it. Prom's, Heatwave's and Kiln's keypads use `keypad(n)` too.
+  - **Proof:** every other room's room.js and all 34 existing libraries in variants.json are identical to main's.
+  - Lock C also has `minsep=1` (answers only have to differ, the draft's rule); the default spread of 5% of 0-9999
+    kept one set.
+- **Locks (bank batch 10; unique: 3, 143, 54).** Each library is the draft's own sets:
+  - `dewey-sort-arm`: grade 2, ordering decimals; eight shelves, spread off.
+  - `deflector-straight-line`: grade 1, angles on a straight line; eight angles, five-degree spread.
+  - `fines-pence-to-pounds`: grade 2, pence to pounds with no calculator; ten sets on maxDigits 4.
+  - **★ Warm-up derived** (grades 1–3). No `levelLabel`: Jon agreed, the stars replace it.
+- **check-escape-rooms:** library-jam VALID **572 of 640**, variant 0 VALID (the draft's figure).
+- **The teacher page at 320 px:** 538 px here (`table.tt`). It is allowlisted under §1.37 like the other ten (Jon);
+  if CI measures differently, CI's figure goes in.
+- **Played headless (three random draws and variant 0, all PASS):**
+  - The start screen shows ★ WARM-UP · GRADES 1–3.
+  - 8 objects and 3 briefs on screen, every token filled.
+  - The wrong lines come in order, then the last repeats, Jon's line 3 among them. Each misconception gives its
+    response.
+  - On variant 0, **5400 on the real keys shows "5400" with no empty slots and gives the named misconception; 54
+    opens.** Then the win screen ("They were here all along").
+  - A time-out ends on the stakes. No errors, no 4xx, nothing sent to analytics.
+  - The teacher page shows ★ only, no "Suits a top set", and the no-calculator note.
 
 ## 2026-10-10 (cloud): RIGHTFUL-KING-BUILD, The Rightful King built behind its holding page (for Jon's play-test)
 
@@ -151,21 +163,3 @@ main's last full run is red; watch main's run after merging.
   (home lane), plus the generator's `keep()` edge rule for keypads. Recommended before phase 2.
 - **Measured (scratch):** the checker's own `draw_is_valid()` on the draft's clues gives **572 of 640 VALID, variant
   0 VALID**. Fines are multiples of 5p, to stay non-calculator (For Jon 6).
-
-## 2026-10-10 (cloud): RIGHTFUL-KING-DRAFT, Rightful King draft for Jon's review
-
-- **The draft:** `docs/escape-room-drafts/rightful-king-draft.md`. It has every slot `room.js` needs, three new
-  locks with proposed libraries, bank entries, the teacher-page line, and the checklist (all pass). No art prompts.
-  Its "For Jon" list has 14 items. The ones that change the contract's maths:
-  - **Lock 1:** the example sets 60, 24, 42 can't go on a three-digit keypad (the engine wants every digit; no
-    leading zero). The only all-three-digit sets with L >= 3 are k = 6 to 9, L = 3, so the library is 4 (120, 210,
-    336, 504). Variant 0 is k = 7 (210), because 120 collides with audit set 0's 120 voters.
-  - **Lock 2:** where r divides (1 - f) x 100 exactly, a strict linear reader lands one minute later. For 25 with
-    a half that is the right answer, so the misconception scores. Proposed: reject those sets. Whole-number r from
-    5 to 40 gives 10 variants; the lock needs a calculator.
-  - **Lock 3:** the set 150, 70, 50, 60 prints its own answer (60). Proposed story rules: he has 30-60% of the
-    vote, P(him | saw it) is at least 20 points above P(him | didn't), and S is not 100. The library is 7.
-- **Measured (scratch, nothing committed):** `check-lock-bank.py` says unique on all three bank entries. The
-  checker's own `draw_is_valid()` on the draft's clue strings gives **183 of 280 VALID, variant 0 VALID**.
-- **STOP IF did not fire:** prom-budget was read in full and never mentions a vote, a king or Narry.
-- **Next:** LIBRARY-DRAFT. Phase 2 of The Rightful King is a separate contract after Jon approves.

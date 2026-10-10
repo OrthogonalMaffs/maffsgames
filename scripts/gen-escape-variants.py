@@ -41,13 +41,22 @@ def grid(lo, hi, step):
     return [round(lo + i * step, 6) for i in range(n + 1)]
 
 
+class Keypad(tuple):
+    """An instrument range that is a keypad: keep() skips its end-of-travel rule (see keypad())."""
+
+
 def keypad(n):
     """A keypad as an instrument range, for either mode (canon §11): `digits: n` takes exactly n
     digits (60 entered as 060), `maxDigits: n` takes 1 to n digits, no leading zero, Set to submit
     (KEYPAD-VARIABLE). Both set exactly the whole numbers 0 to 10^n - 1, so keep()'s on_grid test is the
     settable rule for both: the answer and the misconception must each fit in n digits (a four-digit
-    misconception needs n >= 4). What differs is the display, not what can be entered."""
-    return (0, 10 ** n - 1, 1)
+    misconception needs n >= 4). What differs is the display, not what can be entered.
+
+    A keypad has no travel: nothing starts at an end, and no answer is reached by pushing a needle to a
+    stop, so keep()'s end-of-travel rule does not apply to it (LIBRARY-JAM-BUILD, Jon 10 Oct 2026). Under
+    that rule a four-digit keypad rejected every answer under 400, so a two-digit answer with a four-digit
+    misconception (54 against 5400) could never be built. Lifting it changed no existing library."""
+    return Keypad((0, 10 ** n - 1, 1))
 
 
 def on_grid(v, lo, hi, step):
@@ -76,7 +85,7 @@ def keep(store, lock, var, ins, clue_numbers, solver, minsep=0.0):
     if any(abs(n - a) < 1e-9 for n in clue_numbers(var)):
         rejected.append((lock, var, "answer is printed in its own clue")); return
     edge = (hi - lo) * 0.04
-    if not (lo + edge <= a <= hi - edge):
+    if not isinstance(ins, Keypad) and not (lo + edge <= a <= hi - edge):   # a keypad has no travel
         rejected.append((lock, var, "answer sits at the end of the travel")); return
     sep = minsep or (hi - lo) * 0.05
     # the tolerance matters: 1.2 - 1.0 is 0.19999999999999996 in binary, so a
@@ -157,7 +166,7 @@ for d1, d2, d3, dT, s, c1 in cands:
 V["locker-nth-term"] = store
 
 # ---------------------------------------------------- D1 reverse percentage (keypad 4)
-ins = (0, 9999, 1)
+ins = keypad(4)
 store = []
 cands = shuffled([(2160, 20)] + [(t, p) for p in (10, 15, 20, 25, 40, 50)
                         for t in range(1100, 9000, 2)])
@@ -450,7 +459,7 @@ for a, b, c in cands:
 V["patrol-lcm-timer"] = store
 
 # ---------------------------------------------------- H2 cube SA -> V (keypad 4)
-ins = (0, 9999, 1)
+ins = keypad(4)
 store = []
 for e in [15] + list(range(10, 22)):
     sa, vol, face = 6 * e * e, e ** 3, e * e
@@ -730,7 +739,7 @@ V["chokey-hcf-bundles"] = store
 # ---------------------------------------------------- L1 largest multiple under a limit (keypad 0-99)
 # Misconception: the first multiple past the limit, so that has to fit on two digits,
 # and at most 96 so it never sits at the very top of the keypad.
-ins = (0, 99, 1)
+ins = keypad(2)
 store = []
 cands = shuffled([(9, 85)] + [(k, L) for k in range(6, 14) for L in range(30, 100)
                               if L % k and (k, L) != (9, 85)])

@@ -365,7 +365,98 @@ window.ROOM = {
       brief: 'Once the books are in the cleared bin, the system can reverse the fines itself. It won&rsquo;t ' +
              'cancel the half-past-three run until it is given the total it charged, in pounds.',
       instrument: { kind: 'keypad', label: 'TOTAL TO REVERSE, IN POUNDS', maxDigits: 4, verb: 'Enter total' },
-      variants: [],
+      variants: [
+        {
+          "p": 15,
+          "d": 12,
+          "n": 30,
+          "answer": 54,
+          "miss": 5400,
+          "each": 180,
+          "hundred": 100
+        },
+        {
+          "p": 20,
+          "d": 15,
+          "n": 26,
+          "answer": 78,
+          "miss": 7800,
+          "each": 300,
+          "hundred": 100
+        },
+        {
+          "p": 20,
+          "d": 15,
+          "n": 32,
+          "answer": 96,
+          "miss": 9600,
+          "each": 300,
+          "hundred": 100
+        },
+        {
+          "p": 20,
+          "d": 10,
+          "n": 24,
+          "answer": 48,
+          "miss": 4800,
+          "each": 200,
+          "hundred": 100
+        },
+        {
+          "p": 10,
+          "d": 20,
+          "n": 28,
+          "answer": 56,
+          "miss": 5600,
+          "each": 200,
+          "hundred": 100
+        },
+        {
+          "p": 5,
+          "d": 8,
+          "n": 30,
+          "answer": 12,
+          "miss": 1200,
+          "each": 40,
+          "hundred": 100
+        },
+        {
+          "p": 10,
+          "d": 14,
+          "n": 20,
+          "answer": 28,
+          "miss": 2800,
+          "each": 140,
+          "hundred": 100
+        },
+        {
+          "p": 15,
+          "d": 14,
+          "n": 20,
+          "answer": 42,
+          "miss": 4200,
+          "each": 210,
+          "hundred": 100
+        },
+        {
+          "p": 10,
+          "d": 20,
+          "n": 31,
+          "answer": 62,
+          "miss": 6200,
+          "each": 200,
+          "hundred": 100
+        },
+        {
+          "p": 5,
+          "d": 15,
+          "n": 32,
+          "answer": 24,
+          "miss": 2400,
+          "each": 75,
+          "hundred": 100
+        }
+      ],
       missTitle: 'That is the total in pence.',
       missSays: '{{fn.miss}} is how many pence the system charged. The screen wants pounds, and there are ' +
                 '{{fn.hundred}} pence in a pound.',
