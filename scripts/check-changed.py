@@ -1,22 +1,34 @@
 #!/usr/bin/env python3
 """Before pushing: run the checks this branch's changes need, then let CI run the rest (canon §7.8).
 
-    python scripts/check-changed.py            # selected verifiers + the fast site-wide checks
-    python scripts/check-changed.py --list     # say what would run, run nothing
-    python scripts/check-changed.py --full     # every check in the workflow (the old full local suite)
+    python scripts/check-changed.py              # selected verifiers + the site-wide checks, in parallel
+    python scripts/check-changed.py --list       # say what would run and what is deferred, run nothing
+    python scripts/check-changed.py --full       # every check in the workflow (the old full local suite)
+    python scripts/check-changed.py --workers 1  # one check at a time (the runner before PREPUSH-SCOPE)
+    python scripts/check-changed.py --files a b  # plan for these changed paths instead of the branch's
 
 The changes are everything on this branch since it left origin/main, plus uncommitted and untracked
-files. scripts/ci-deps.py picks the content verifiers they can affect (exactly as CI's plan job does).
-Added to those: the fast site-wide checks (the stdlib ones, about a second each), and the shared-asset
-tests (scripts/test-*.py) when anything under schools/ or the test itself changed. Not run here, because
-CI always runs them and they are slow or Windows-unreliable: tier 1-2 (check-site.py), the tier 4 bank
-extraction and lint, and the leaderboard coverage job.
+files. scripts/ci-deps.py picks the content verifiers they can affect (exactly as CI's plan job does:
+the same select(), imported, not copied). Added to those: every site-wide check CI runs on every PR,
+except the ones deferred below.
+
+Deferred to CI, and printed as such on every run (contract PREPUSH-SCOPE, 10 Oct 2026): tier 1-2
+(check-site.py), the tier 4 bank extraction and lint, and the leaderboard coverage job. CI runs them on
+every PR; locally they are slow or Windows-unreliable. The last line of the output is the PR line:
+"checks deferred to CI: ...".
+
+Speed (PREPUSH-SCOPE): the cost was never the selection (cause b): a shared-asset change rightly selects
+every game, and the checks ran one after another, each starting its own browser. They now run in
+parallel worker processes (default: half the CPUs, at most 6), longest first by CI's recorded timings
+(scripts/ci-timings.json), so the slowest check starts at once and the rest pack around it. Each check
+still starts its own browser: they are separate scripts with their own harnesses, and a browser launch
+is about a second of a check that takes tens.
 
 Why not the full suite every time: the repo is public, so CI minutes are free, and CI runs every
 site-wide check on every PR and EVERYTHING on every merge to main and weekly. A full local run was a
 second, slower copy of CI, with three known Windows-only false failures (todo §4).
 """
-import argparse, importlib.util, os, re, subprocess, sys, time
+import argparse, concurrent.futures, importlib.util, json, os, subprocess, sys, threading, time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 spec = importlib.util.spec_from_file_location("ci_deps", os.path.join(ROOT, "scripts", "ci-deps.py"))
@@ -24,6 +36,9 @@ ci = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ci)
 
 SLOW_SITE_WIDE = {"scripts/check-site.py", "scripts/extract-banks.py", "scripts/check-banks.py"}
+# Not a line in ci.checks(): its own workflow job (node), always run in CI.
+OTHER_CI_JOBS = ["Leaderboard coverage (every live game submits, or is declared)"]
+DEFER_WHY = "slow or Windows-unreliable locally; CI runs it on every PR"
 
 
 def git(*a):
@@ -37,26 +52,33 @@ def changed_files():
     return sorted(f for f in files if f.strip())
 
 
-def plan(full):
+def plan(full, files=None):
+    """(to run [(label, cmd)], deferred [label], reasons, changed)."""
     checks = ci.checks()
     if full:
-        return [(label, cmd) for _, _, label, cmd, _ in checks], ["--full: every check"], []
-    changed = changed_files()
+        return [(label, cmd) for _, _, label, cmd, _ in checks], [], ["--full: every check"], []
+    changed = sorted(files) if files is not None else changed_files()
     run_all, reasons, picked = ci.select(changed)
-    assets = any(f.startswith("schools/") for f in changed)
-    out = []
+    out, deferred = [], []
     for group, selective, label, cmd, script in checks:
         if selective:
             if run_all or script in picked:
                 out.append((label, cmd))
         elif script in SLOW_SITE_WIDE:
-            continue
-        elif os.path.basename(script or "").startswith("test-"):
-            if run_all or assets or script in changed:
-                out.append((label, cmd))
+            if label not in deferred:
+                deferred.append(label)
         else:
             out.append((label, cmd))
-    return out, reasons, changed
+    return out, deferred + OTHER_CI_JOBS, reasons, changed
+
+
+def expected_seconds():
+    """CI's last recorded time per check label, to start the longest first (unknown: 60 s)."""
+    try:
+        with open(os.path.join(ROOT, "scripts", "ci-timings.json"), encoding="utf-8") as f:
+            return json.load(f).get("lines", {})
+    except (OSError, ValueError):
+        return {}
 
 
 def main():
@@ -67,33 +89,53 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--full", action="store_true")
     ap.add_argument("--list", action="store_true")
+    ap.add_argument("--files", nargs="+", metavar="PATH", help="plan for these changed paths")
+    ap.add_argument("--workers", type=int, default=max(1, min(6, (os.cpu_count() or 2) // 2)))
     a = ap.parse_args()
-    todo, reasons, changed = plan(a.full)
+    todo, deferred, reasons, changed = plan(a.full, a.files)
     if changed:
         print("changed since origin/main (%d): %s" % (len(changed), ", ".join(changed[:12]) + (" ..." if len(changed) > 12 else "")))
     for r in reasons:
         print(r)
-    print("%d check(s) to run:" % len(todo))
+    print("%d check(s) to run, %d worker(s):" % (len(todo), a.workers))
     for label, _ in todo:
         print("  " + label)
+    if deferred:
+        print("%d deferred to CI (%s):" % (len(deferred), DEFER_WHY))
+        for label in deferred:
+            print("  " + label)
+    defer_line = "checks deferred to CI: " + ("; ".join(deferred) if deferred else "none")
     if a.list:
+        print(defer_line)
         return 0
-    env = dict(os.environ, PYTHONIOENCODING="utf-8")
+    env = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUNBUFFERED="1")
     try:                                         # node for Test the Claim: Playwright's own, as CI does
         import playwright
         env["PATH"] = os.path.join(os.path.dirname(playwright.__file__), "driver") + os.pathsep + env.get("PATH", "")
     except ImportError:
         pass
-    failed = []
-    for label, cmd in todo:
+    est = expected_seconds()
+    todo.sort(key=lambda t: -est.get(t[0], 60))
+    lock, failed, spent = threading.Lock(), [], []
+    t0 = time.time()
+
+    def one(label, cmd):
         t = time.time()
         r = subprocess.run(cmd, shell=True, cwd=ROOT, env=env, capture_output=True, text=True, encoding="utf-8", errors="replace")
-        ok = r.returncode == 0
-        print("%s  %s  (%ds)" % ("ok    " if ok else "FAILED", label, time.time() - t))
-        if not ok:
-            failed.append(label)
-            print("\n".join("      " + l for l in (r.stdout + r.stderr).strip().splitlines()[-15:]))
+        ok, took = r.returncode == 0, time.time() - t
+        with lock:
+            spent.append(took)
+            print("%s  %s  (%ds; %d/%d done at %ds)" % ("ok    " if ok else "FAILED", label, took, len(spent), len(todo), time.time() - t0))
+            if not ok:
+                failed.append(label)
+                print("\n".join("      " + l for l in (r.stdout + r.stderr).strip().splitlines()[-15:]))
+            sys.stdout.flush()
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=a.workers) as pool:
+        list(pool.map(lambda t: one(*t), todo))
+    print("%d check(s) in %ds wall, %ds of check time, %d worker(s)" % (len(todo), time.time() - t0, sum(spent), a.workers))
     print("FAILED: %s" % ", ".join(failed) if failed else "All selected checks passed. Push, and CI runs the rest.")
+    print(defer_line)
     return 1 if failed else 0
 
 
