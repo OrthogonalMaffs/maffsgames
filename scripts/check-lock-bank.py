@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
+# ci-line: Escape-room lock bank (every lock-bank-batch*.txt: each VERIFY has exactly one answer, none is a restatement; a multi-line NOTE stays out of VERIFY; bad entries planted and caught) | --selftest
+# ci-deps: docs/lock-bank-batch3.txt docs/lock-bank-batch4.txt docs/lock-bank-batch5.txt docs/lock-bank-batch6.txt docs/lock-bank-batch7.txt docs/lock-bank-batch8.txt docs/lock-bank-batch9.txt
 """Check a bank of escape-room locks for the only rule that really matters:
 exactly one answer.
 
-    python scripts/check-lock-bank.py docs/lock-bank-raw.txt
+    python scripts/check-lock-bank.py docs/lock-bank-raw.txt   # one bank
+    python scripts/check-lock-bank.py                          # every docs/lock-bank-batch*.txt
+    python scripts/check-lock-bank.py --selftest               # planted entries, then every batch (CI)
 
 Reads lock blocks in the format set out in docs/gemini-lock-brief.md, runs each
 VERIFY expression, and reports anything that must not be built.
@@ -33,9 +37,12 @@ import re
 import sys
 from fractions import Fraction  # noqa: F401 - ditto
 
+# NOTE is a field like the others (contract LOCK-BANK-CI, 10 Oct 2026): a note may span lines, and before it
+# was listed here its indented continuation lines were glued onto the field above it -- in
+# hamster-feeder-bounds, onto VERIFY, which then raised SyntaxError and rejected a sound lock.
 FIELDS = ("ID", "LEVEL", "TOPIC", "INSTRUMENT", "CONTEXT", "CLUE", "ANSWER",
           "AHA", "MISCONCEPTION", "SOLVE", "TIME", "VERIFY", "VERIFY_MIN",
-          "VERIFY_MAX")
+          "VERIFY_MAX", "NOTE")
 
 # Only what a VERIFY line legitimately needs. The bank is text from a language
 # model, not trusted code.
@@ -192,17 +199,33 @@ def check(lock):
     return ok, ("unique (%s)" % (got,)) + ("; " + "; ".join(notes) if notes else "")
 
 
-def main():
-    if len(sys.argv) < 2:
-        print(__doc__)
-        return 2
-    with open(sys.argv[1], encoding="utf-8") as f:
+# Planted entries for --selftest: (name, bank text, the IDs that must be rejected).
+_GOOD = """ID:          plant-good
+ANSWER:      5
+VERIFY:      [x for x in range(16) if x**2 - 12*x + 35 == 0 and x < 6]
+NOTE:        A note over two lines, as hamster-feeder-bounds has. Its continuation must stay
+             in NOTE and never reach VERIFY.
+"""
+PLANTS = [
+    ("a sound lock with a multi-line NOTE", _GOOD, set()),
+    ("two answers", _GOOD.replace("plant-good", "plant-two").replace(" and x < 6", ""), {"plant-two"}),
+    ("a VERIFY that only restates the answer", "ID:          plant-restate\nANSWER:      5\n"
+     "VERIFY:      [n for n in range(10) if n == 5]\n", {"plant-restate"}),
+    ("the wrong answer", _GOOD.replace("plant-good", "plant-wrong").replace("ANSWER:      5", "ANSWER:      7"),
+     {"plant-wrong"}),
+]
+
+
+def run_bank(path):
+    """Returns the IDs rejected in one bank file (or None if it has no lock blocks)."""
+    with open(path, encoding="utf-8") as f:
         locks, strays = parse(f.read())
+    print("== %s" % path)
     for line in strays:
         print("ignored (heading, not a continuation line): %s" % line.strip()[:70])
     if not locks:
         print("No lock blocks found. Check the file matches the brief's format.")
-        return 2
+        return None
 
     bad = []
     print("%-30s %-7s %s" % ("ID", "STATUS", "NOTE"))
@@ -217,7 +240,39 @@ def main():
     print("%d locks, %d usable, %d rejected." % (len(locks), len(locks) - len(bad), len(bad)))
     if bad:
         print("Rejected: " + ", ".join(bad))
-    return 1 if bad else 0
+    return bad
+
+
+def selftest():
+    ok = True
+    for name, text, want in PLANTS:
+        locks, _ = parse(text)
+        got = {l.get("ID") for l in locks if not check(l)[0]}
+        hit = got == want
+        ok = ok and hit
+        print("  %s  planted: %s" % ("caught" if hit else "MISSED", name))
+    return ok
+
+
+def main():
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    args = sys.argv[1:]
+    ok = True
+    if args[:1] == ["--selftest"]:
+        print("self-test (planted entries):")
+        ok = selftest()
+        args = args[1:]
+    if not args:
+        import glob, os
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        args = sorted(glob.glob(os.path.join(root, "docs", "lock-bank-batch*.txt")),
+                      key=lambda p: int(re.search(r"batch(\d+)", p).group(1)))
+    for path in args:
+        bad = run_bank(path)
+        if bad is None or bad:
+            ok = False
+    print("PASS" if ok else "FAIL")
+    return 0 if ok else 1
 
 
 if __name__ == "__main__":
