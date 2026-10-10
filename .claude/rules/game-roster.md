@@ -86,7 +86,7 @@ session, generated"; a game with a fixed bank gives its bank size. A count that 
 | 64 | Core Maths Paper 1 Practice | `core-maths-paper1` | Core | Statistics, Applied | 36 exam-style MC questions. S3.1 Analysis of Data + S3.2 Personal Finance. SVG histograms, box plot, stem-and-leaf | untagged |
 | 65 | Core Maths Paper 2A Practice | `core-maths-paper2a` | Core | Statistics | 36 exam-style MC questions. S3.4 Critical Analysis, S3.5 Normal Distribution, S3.6 Confidence Intervals, S3.7 Correlation & Regression | untagged |
 | 66 | Core Maths Paper 2B Practice | `core-maths-paper2b` | Core | Statistics, Applied | 36 exam-style MC questions. S3.4 Critical Analysis, S3.9 Expectation and Probability, S3.10 Cost-Benefit and Risk | untagged |
-| 67 | Core Maths Paper 2C Practice | `core-maths-paper2c` | Core | Statistics, Applied | 36 exam-style MC questions. S3.4 Critical Analysis, S3.11 Graphical Methods, S3.12 Rates of Change, S3.13 Exponential Functions | untagged |
+| 67 | Core Maths Paper 2C Practice | `core-maths-paper2c` | Core | Statistics, Applied | 36 exam-style MC questions. S3.4 Critical Analysis, S3.11 Graphical Methods, S3.12 Rates of Change, S3.13 Exponential Functions | scientific |
 | 68 | Tax Theft | `tax-theft` | Core | Applied | Guided payslip calculator. Income tax, NI, take-home pay. AQA 1350 S3.2 | untagged |
 | 69 | Stat Attack | `stat-attack` | GCSE, Core, L4 | Statistics | Grouped frequency tables: modal class, median class, mean, SD. 36 scenarios | untagged |
 | 70 | Growth and Decay | `growth-and-decay` | Core, A-Level, L4 | Statistics, Applied | Exponential modelling. 45 scenarios | scientific |

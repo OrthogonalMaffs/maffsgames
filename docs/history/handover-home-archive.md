@@ -3,6 +3,35 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-10 (home): trimmed for SCIENTIFIC TAGGING 5/5
+
+**KEYPAD-VARIABLE (10 Oct, Jon's contract 10:20, ahead of PREPUSH-SCOPE: the cloud lane's Rightful King and
+Library Jam builds wait on it; contract `docs/handover/contracts/2026-10-10-keypad-variable.md`).** A keypad may
+now take `maxDigits: N` instead of `digits: N`: **"up to N digits, Set to submit"**. The display shows only what
+has been typed (no empty slots), the room's existing Set button submits 1 to N digits (nothing typed: nothing
+happens, no time lost), a leading zero is never kept (0,5,4 reads 54), and the typed fallback shares the rule
+(`upTo()` in engine.js). A keypad with `digits` is key for key as before. teacher.js describes the instrument as
+"keypad, up to N digits" (answers were never padded there). check-escape-rooms.py fails a maxDigits lock whose
+answer or misconception is not a whole number of 1 to N digits; gen-escape-variants.py has `keypad(n)` (the range
+both modes can set, so `keep()` applies the rule). check-teacher-invite's room driver handles both modes. New
+`scripts/test-escape-keypad.py` (fixture: kiln-disaster's keypad rewritten in the page to maxDigits 4, answer 54,
+misconception 5400; no room file edited): 5,4,Set opens; 5,4,0,0,Set raises the named misconception; Set on
+nothing does nothing; no empty slot ever shows; the fixed two-digit keypad is unchanged; the old fixed-length rule
+planted is caught. All 8 live rooms to a win and a loss (test-escape-art) pass; check-escape-rooms passes. STOP IFs
+clear: keypad entry is not saved state (no SAVE_V change), no live room's keypad changed, one rule for keys and
+typed fallback. Canon §11.3 and §11.4. **For the cloud lane: The Rightful King's passcode and the Library Jam's
+fines lock can use `maxDigits` in phase 2** (the misconception must fit: 9900 needs `maxDigits: 4`).
+
+**CAR-TRAP-BUILD, taken over (10 Oct, Jon 09:30, one lane: `docs/handover/contracts/2026-10-10-car-trap-one-lane.md`).**
+The home lane owns Car Trap end to end; the cloud lane has stopped and will not touch #242 or any car-trap file. On
+#242: `art: 'car-trap-v2'` (pictures merged in #246); sceneAlt corrected (the measuring wheel is at the pillar by the
+yellow bollard), failAlt rewritten (the scene's own view, not from the ramp), winAlt rewritten for the high CCTV-style
+view (the barrier arm is down, not up); car-trap's teacher page allowlisted at 320 px (570, table.tt) like the other
+eight, todo §1.37 still the real fix for all nine. Played in Chromium: v2 scene, win and fail pictures load, no 404.
+The room stays behind its holding page (`index.html` unchanged). **Jon can play-test it at
+https://maffsgames.co.uk/escape-rooms/car-trap/play.html** (unlinked, noindex, analytics off). Release is a separate
+step on Jon's word: play.html's content becomes index.html and play.html is deleted in that PR.
+
 ## 2026-10-10 (home): trimmed for STAR-KEY
 
 **CAR-TRAP-V2-ART (10 Oct, Jon; image work only, #242 and car-trap/room.js are the cloud lane's).** Filed for
