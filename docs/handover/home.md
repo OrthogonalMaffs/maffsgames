@@ -1,5 +1,12 @@
 # Handover: home lane
 
+**SCIENTIFIC TAGGING 1/6: force-resolver (10 Oct, Jon's ruling).** Roster tag `scientific`, badge, the scientific
+calculator mounted under the options (`{keys:'scientific'}`); check-calculator passes; sin(30) = 0.5 in Chromium, no
+320 px overflow; check-changed 119/120 pass. **The one local failure is not this PR:** `test-real-fonts.py` fails on
+every Windows checkout, main included: `core.autocrlf` rewrites the pinned text files (.css, manifest.json, LICENSE)
+to CRLF, so their SHA256s differ; CI (Linux) is unaffected. Fix: a `.gitattributes` line `scripts/fonts/** -text`.
+Next: moments-master, complex-converter, formula-forge, formula-unlocked, core-maths-paper2c (one PR each).
+
 **STAR-KEY (10 Oct, Jon's contract 17:50; `docs/handover/contracts/2026-10-10-star-key.md`).** One line saying
 what the stars mean, on the hub (under "Ordered easiest to hardest") and on the front page's escape-room band
 (`.esc-note` size, 12.5 px; placed just above the cards, so with the band compacted it sits directly under the
