@@ -53,8 +53,7 @@ full ("spot on"); the Library room's title is The Library Jam.
 2. **LIBRARY-JAM-BUILD: DONE.** #262 merged 10 Oct (5f4f656); main's run 736 is green. The contract is now in
    `docs/history/contracts/`. Jon can play-test the room at `/escape-rooms/library-jam/play.html`. CI passed its
    teacher page under the §1.37 entry (recorded at 538 px, measured in the cloud container).
-**THE CLOUD QUEUE IS EMPTY (10 Oct, 22:40).** UPDATES-WEEKEND done (#272, main run 758 green). Ask Jon for the
-next item. Both rooms are live (the home lane's #271).
+**THE CLOUD QUEUE IS EMPTY (11 Oct).** RK-STICKY-NOTE done (this PR). Ask Jon for the next item.
 **Jon's ruling for both builds (10 Oct, after 13:45):**
 - **The hub is left alone.** A built room sits behind its noindex holding page, and the checker counts a room as
   live only without `noindex`, so no card is needed. The star chip comes with the release contract.
@@ -87,6 +86,17 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-11 (cloud): RK-STICKY-NOTE, The Rightful King's passcode note says no key repeats anywhere (Jon's play-test)
+
+- **Why:** "NEVER THE SAME KEY TWICE" read as "not twice in a row" gives 8 × 7 × 7 = 392, not the key 336.
+- **room.js:** the sticky note now reads "ADMIN PASSCODE: {{pc.L}} KEYS, NO KEY USED MORE THAN ONCE." (the count is
+  still the token; every variant has L = 3). The miss feedback quoted the old note ("the note says never the same key
+  twice"), so it now quotes the new one. Answer, variants and key counts unchanged.
+- **teacher.html:** the clue map's line for the note matches, and "Running it" gains the 392 misconception
+  (k × (k − 1) × (k − 1)). The teacher page has no per-lock field for a second misconception, so it goes in the notes.
+- **Left as history:** `docs/lock-bank-batch9.txt` line 21 and the draft still carry the old wording.
+- check-escape-rooms passes; the teacher page in Chromium shows the new wording and 392, none of the old.
 
 ## 2026-10-10 (cloud): UPDATES-WEEKEND, /updates/ October entries (Jon's wording, checked against main)
 
