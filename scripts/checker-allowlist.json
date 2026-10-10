@@ -1584,6 +1584,13 @@
       "where": "table.tt; table.tt"
     },
     {
+      "path": "escape-rooms/rightful-king/teacher.html",
+      "at": "load",
+      "width": 558,
+      "todo": "§1.37",
+      "where": "table.tt; table.tt"
+    },
+    {
       "path": "escape-rooms/rugby-mud/teacher.html",
       "at": "load",
       "width": 603,

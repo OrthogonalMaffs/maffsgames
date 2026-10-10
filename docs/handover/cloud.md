@@ -117,6 +117,9 @@ main's last full run is red; watch main's run after merging.
   - The teacher page shows ★★★, "Suits a top set" and the calculator note. The old URL lands on the holding page.
 - **Generator:** run through a scratch wrapper that swaps in this checkout's paths. Before the M block went in, a run
   reproduced every existing library byte for byte.
+- **Teacher page at 320 px:** 558 px wide (`table.tt`, the shared overflow, todo §1.37). It is allowlisted in the
+  same form as the other nine teacher pages, per Jon's CAR-TRAP-ONE-LANE contract; §1.37 (`engine.css`, home lane)
+  stays the real fix for all ten. **LIBRARY-JAM-BUILD's teacher page will need the same entry.**
 
 ## 2026-10-10 (cloud): LIBRARY-DRAFT, Library room draft for Jon's review
 
