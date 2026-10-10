@@ -257,6 +257,7 @@ def play(fails, shots=None, katex_dir=None):
                 else:
                     await r.abort()
             await ctx.route("**/*", route)
+            await ctx.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font_async)  # FONT-FIT: KaTeX and the text faces from scripts/fonts/, the fonts students see
             page = await ctx.new_page()
             errors = []
             page.on("pageerror", lambda e: errors.append(str(e)))

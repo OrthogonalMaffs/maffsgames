@@ -730,6 +730,8 @@ async def new_page(browser, firebase=False, when=None, viewport=None, katex=True
         else:
             await r.abort()      # GA, Apps Script, the Firebase SDK, fonts: nothing leaves the machine
     await ctx.route("**/*", route)
+    await ctx.route(lambda u: bc.is_font_cdn(u) and (katex or not u.startswith(bc.KATEX_CDN)),
+                    bc.serve_real_font_async)  # FONT-FIT: KaTeX and the text faces from scripts/fonts/, the fonts students see
     if when:
         await ctx.add_init_script(FIXED_DATE % when)
     if firebase:

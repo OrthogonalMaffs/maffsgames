@@ -268,6 +268,19 @@ def is_font_cdn(url):
     """True for a request a phone-fit check must not let reach the network: KaTeX's CDN or Google Fonts."""
     return url.startswith((KATEX_CDN, GOOGLE_CSS, GOOGLE_STATIC))
 
+
+def serve_real_font(route):
+    """A Playwright (sync) route handler: the pinned copy of a font-CDN request, or abort. Register it for
+    is_font_cdn URLs after any catch-all route (the last route registered is tried first)."""
+    got = real_font_response(route.request.url)
+    route.fulfill(**got) if got else route.abort()
+
+
+async def serve_real_font_async(route):
+    """The same for Playwright's async API."""
+    got = real_font_response(route.request.url)
+    await (route.fulfill(**got) if got else route.abort())
+
 # A dict is "question-like" if it carries an answer key at its own top level.
 # correct_override appears without `correct` in normal-navigator:222/:241
 # (canon, todo 1.12), so either key alone must qualify. `answer` and `ans`

@@ -252,6 +252,7 @@ def open_page(pw, base, chromium, viewport, touch, patch):
             return r.fulfill(status=200, content_type='text/html', body=html.replace(fixed, planted))
         return r.continue_()
     page.route('**/*', route)
+    page.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font)  # FONT-FIT: KaTeX and the text faces from scripts/fonts/, the fonts students see
     page.goto(page_url + '?cb=verify', wait_until='load', timeout=20000)
     page.wait_for_function('typeof PLACEIT_QUESTIONS !== "undefined" && window.MaffsNumberLine', timeout=8000)
     page.evaluate('startGame()')
