@@ -1096,11 +1096,15 @@ LEVEL_INIT = r"""
 """
 
 
-async def open_guarded_page(ctx, base, rel, timeout_ms, settle_ms=800, block_fonts=False):
+async def open_guarded_page(ctx, base, rel, timeout_ms, settle_ms=800, fonts=None):
     """A fresh page in `ctx` behind the network guard, loaded cache-busted and given
     `settle_ms` to settle. Returns (page, rec): rec collects blocked and escaped
-    requests and uncaught exceptions. block_fonts aborts the web-font hosts
-    (PHONE_FONT_HOSTS), which are not write hosts and so are not recorded in rec."""
+    requests and uncaught exceptions. fonts="real" serves KaTeX and Google Fonts from
+    their pinned copies in scripts/fonts/ (bank_common.real_font_response; a font URL
+    with no pinned copy is aborted), so the page is drawn in the faces students see
+    with no network; fonts="fallback" is the old way: the Google Fonts hosts
+    (PHONE_FONT_HOSTS) aborted, KaTeX still real (from its pinned copy, the same bytes
+    the CDN served). Neither is recorded in rec: font hosts are not write hosts."""
     page = await ctx.new_page()
     rec = {"blocked": [], "escaped": [], "errs": []}
     page.on("pageerror", lambda e: rec["errs"].append(str(e)))
@@ -1114,7 +1118,14 @@ async def open_guarded_page(ctx, base, rel, timeout_ms, settle_ms=800, block_fon
                 await route.abort()
             except Exception:
                 pass
-        elif block_fonts and suffix_match(host_of(route.request.url), PHONE_FONT_HOSTS):
+        elif fonts and bc.is_font_cdn(route.request.url) and not (
+                fonts == "fallback" and suffix_match(host_of(route.request.url), PHONE_FONT_HOSTS)):
+            got = bc.real_font_response(route.request.url)
+            try:
+                await (route.fulfill(**got) if got else route.abort())
+            except Exception:
+                pass
+        elif fonts == "fallback" and suffix_match(host_of(route.request.url), PHONE_FONT_HOSTS):
             try:
                 await route.abort()
             except Exception:
@@ -1267,15 +1278,15 @@ async def level_controls(browser, base, pages, live, workers, timeout_ms):
 #
 #   width    document.documentElement.scrollWidth against window.innerWidth, as
 #            measure-phone-fit.py reads it. 1px over is a FAIL.
-#   fonts    Google's web fonts are blocked (PHONE_FONT_HOSTS), so the page is
-#            measured in the machine's fallback font, which CI pins to DejaVu: the
-#            same face as todo §1.34 and measure-phone-fit.py in a sandbox, and the
-#            same every run. Loading Outfit from Google made the verdict depend on a
-#            third-party fetch: 12 of the 44 overflows found in fallback fitted in
-#            Outfit, and parents/fractions sat at +1px in it (Jon, 2 Oct 2026). Until
-#            Outfit is self-hosted (todo §4 item 14) this measures a font no student
-#            sees. KaTeX's own fonts are not blocked: they come from a pinned
-#            version, and maths drawn without them is not the maths a student sees.
+#   fonts    the faces students see (FONT-FIT, 10 Oct 2026): KaTeX 0.16.9 and every
+#            Google Fonts stylesheet and file the pages ask for are served from their
+#            pinned copies in scripts/fonts/ (bank_common.real_font_response), never
+#            the network, so the verdict is the same every run and is taken in Outfit,
+#            not the runner's fallback (DejaVu, pinned in CI). Until 10 Oct Google
+#            Fonts were blocked here, because loading Outfit live made the verdict
+#            depend on a third-party fetch (Jon, 2 Oct 2026: 12 of the 44 overflows
+#            found in fallback fitted in Outfit). --phone-fonts fallback still runs
+#            the old measure, for comparison.
 #   settle   no fixed pause: the page is measured once its load event has fired,
 #            KaTeX has arrived where the page asks for it, document.fonts.ready
 #            has resolved and two animation frames have passed (PHONE_SETTLE); the
@@ -1307,6 +1318,9 @@ async def level_controls(browser, base, pages, live, workers, timeout_ms):
 
 PHONE_SIZE = (320, 568)
 PHONE_FONT_HOSTS = ("fonts.googleapis.com", "fonts.gstatic.com")
+# "real" (FONT-FIT, 10 Oct 2026): the phone pass draws every page in KaTeX and the Google faces it asks for, served
+# from scripts/fonts/. "fallback" is the old measure (Google Fonts blocked), kept for comparison: --phone-fonts.
+PHONE_FONTS = "real"
 
 # Resolves when the page has settled enough to measure; bounded at 8s inside the
 # page so a font that never arrives cannot hold the run.
@@ -1508,7 +1522,7 @@ async def phone_width(browser, base, pages, workers, timeout_ms, site_wide=True)
         page, rec = None, {"blocked": [], "escaped": [], "errs": []}
         try:
             page, rec = await open_guarded_page(ctx, base, rel, timeout_ms,
-                                                settle_ms=0, block_fonts=True)
+                                                settle_ms=0, fonts=PHONE_FONTS)
 
             async def ev(expr):
                 return await asyncio.wait_for(page.evaluate(expr), timeout=timeout_ms / 1000.0)
@@ -1606,10 +1620,10 @@ async def phone_width(browser, base, pages, workers, timeout_ms, site_wide=True)
 
     n_start = sum(1 for r in results if r["label"].startswith("phone-start:"))
     n_measured = sum(1 for _, landed in redirects if landed in loaded)
-    print("\n  phone width (%s, web fonts blocked): %d pages, %d game starts, %.0fs; "
+    print("\n  phone width (%s, %s): %d pages, %d game starts, %.0fs; "
           "%d redirect stubs, %d with their target measured; %d known overflow(s)"
-          % (size, len(pages), n_start, time.time() - t_start, len(redirects), n_measured,
-             len(known_hits)))
+          % (size, "real fonts, pinned" if PHONE_FONTS == "real" else "web fonts blocked", len(pages), n_start,
+             time.time() - t_start, len(redirects), n_measured, len(known_hits)))
     for res in results:
         if res["status"] != "PASS":
             print("  %-5s %-34s %s" % (res["status"], res["label"], res["detail"]))
@@ -2486,6 +2500,10 @@ def main():
     ap.add_argument("--advance-ms", type=int, default=6000,
                     help="tier 3: how long to wait for a question to change after "
                          "answering (default 6000)")
+    ap.add_argument("--phone-fonts", choices=("real", "fallback"), default="real",
+                    help="tier 1 phone pass: real (default) draws pages in KaTeX and the Google faces "
+                         "they ask for, from scripts/fonts/; fallback blocks Google Fonts, the old "
+                         "measure in the runner's fallback font (for comparison only)")
     ap.add_argument("--shard", metavar="I/N",
                     help="tiers 1+2: load only shard I of N (each page in exactly one shard; tier 2 "
                          "and the other site-wide parts in shard 1 only). CI runs 1/4 .. 4/4")
@@ -2493,6 +2511,8 @@ def main():
                     help="prove that N shards load every page exactly once and that the workflow "
                          "runs all N; loads nothing")
     args = ap.parse_args()
+    global PHONE_FONTS
+    PHONE_FONTS = args.phone_fonts
     if args.shard_selftest:
         return shard_selftest(args.shard_selftest)
     try:

@@ -472,6 +472,7 @@ def fit(fails, html, sizes=((390, 844),), strict=True):
                 ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
                 ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                     status=200, content_type='text/html; charset=utf-8', body=html))
+                ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)  # FONT-FIT: KaTeX and the text faces from scripts/fonts/, the fonts students see
                 page = ctx.new_page()
                 page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
                 page.wait_for_function('typeof QUESTIONS !== "undefined"', timeout=8000)
@@ -503,6 +504,7 @@ def play(fails, html):
             ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
+            ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)  # FONT-FIT: KaTeX and the text faces from scripts/fonts/, the fonts students see
             page = ctx.new_page()
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))

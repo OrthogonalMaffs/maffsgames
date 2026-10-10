@@ -178,6 +178,9 @@ async def measure_one(browser, base, slug, size, args):
     out = {"slug": slug, "w": w, "h": h, "ask": None, "wrong": None, "note": ""}
     ctx = await browser.new_context(viewport={"width": w, "height": h},
                                     ignore_https_errors=bool(args.proxy_from_env))
+    # Seeded as tier 1's phone pass is (cs.PHONE_SEED: Math.random from the page's own path), so every run measures the
+    # same first question and two runs, such as --fonts real and --fonts fallback, compare cell by cell.
+    await ctx.add_init_script(cs.PHONE_SEED)
     await ctx.add_init_script(cs.TIER3_INIT)
     await ctx.add_init_script(CORRECT_INIT)
     if args.aa:
@@ -189,6 +192,13 @@ async def measure_one(browser, base, slug, size, args):
     async def route(r):
         url = r.request.url
         try:
+            # The fonts students see (FONT-FIT): KaTeX and Google Fonts from their pinned copies, never the network.
+            # --fonts fallback is the old way, for comparison: Google Fonts blocked, KaTeX still real.
+            if bc.is_font_cdn(url):
+                if args.fonts == "fallback" and not url.startswith(bc.KATEX_CDN):
+                    return await r.abort()
+                got = bc.real_font_response(url)
+                return await (r.fulfill(**got) if got else r.abort())
             if args.katex_dir and url.startswith(KATEX_PREFIX):
                 p = os.path.join(args.katex_dir, url[len(KATEX_PREFIX):].split("?")[0])
                 if os.path.isfile(p):
@@ -459,6 +469,9 @@ def main():
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--katex-dir", help="serve KaTeX 0.16.9 from this local dist/ (sandbox only)")
+    ap.add_argument("--fonts", choices=("real", "fallback"), default="real",
+                    help="real (default): KaTeX and Google Fonts served from scripts/fonts/, the faces students see; "
+                         "fallback: Google Fonts blocked, the old measure in the runner's fallback font")
     ap.add_argument("--proxy-from-env", action="store_true",
                     help="route Chromium through $HTTPS_PROXY (sandbox only)")
     ap.add_argument("--aa", action="store_true",

@@ -1519,7 +1519,12 @@
     "that fixes a page removes its entry. A game that starts at desktop size but not on a",
     "phone is recorded with \"reason\": \"unreachable\" instead of a width.",
     "",
-    "Recorded 2 Oct 2026: 44 entries, Jon's ruling (the contract's limit was 40)."
+    "Recorded 2 Oct 2026: 44 entries, Jon's ruling (the contract's limit was 40).",
+    "",
+    "10 Oct 2026 (FONT-FIT): the phone pass now measures in the real fonts (scripts/fonts/). 12 entries",
+    "recorded in the old fallback font fitted in them and were removed; distinctly-average (its Aa toggle) is",
+    "new in them, listed for Jon to order (docs/audits/font-fit-2026-10-10.md). parents/fractions stays: CI's",
+    "Chromium measures it 321px wide in the real fonts (the cloud container's older build measured 320)."
   ],
   "tier1_phone_overflow": [
     {
@@ -1607,24 +1612,17 @@
       "where": "div.canvas-panel; div.right-panel"
     },
     {
-      "path": "games/decimal-detective/index.html",
-      "at": "start",
-      "width": 340,
-      "todo": "§1.39; §3.9 batch 3",
-      "where": "div.header-right"
-    },
-    {
-      "path": "games/differentiation-duel/index.html",
+      "path": "games/distinctly-average/index.html",
       "at": "load",
-      "width": 321,
-      "todo": "§3.9 batch 8",
+      "width": 334,
+      "todo": "FONT-FIT findings (docs/audits/font-fit-2026-10-10.md): new in the real fonts, for Jon to order",
       "where": "button#a11yToggle.a11y-toggle"
     },
     {
-      "path": "games/differentiation-duel/index.html",
+      "path": "games/distinctly-average/index.html",
       "at": "start",
-      "width": 321,
-      "todo": "§3.9 batch 8",
+      "width": 334,
+      "todo": "FONT-FIT findings (docs/audits/font-fit-2026-10-10.md): new in the real fonts, for Jon to order",
       "where": "button#a11yToggle.a11y-toggle"
     },
     {
@@ -1649,13 +1647,6 @@
       "where": "div.nav-r; button.key"
     },
     {
-      "path": "games/four-quadrant-explorer/index.html",
-      "at": "start",
-      "width": 332,
-      "todo": "§1.39; §3.9, in no batch yet",
-      "where": "div.header-right"
-    },
-    {
       "path": "games/glorious-gantt/index.html",
       "at": "start",
       "width": 354,
@@ -1668,27 +1659,6 @@
       "width": 327,
       "todo": "§3.9, in no batch yet",
       "where": "canvas#graphCanvas"
-    },
-    {
-      "path": "games/like-terms-collector/index.html",
-      "at": "start",
-      "width": 336,
-      "todo": "§1.39; §3.9 batch 7",
-      "where": "div.header-right"
-    },
-    {
-      "path": "games/maths-court/index.html",
-      "at": "start",
-      "width": 328,
-      "todo": "§1.39; §3.9 batch 10",
-      "where": "div.header-right"
-    },
-    {
-      "path": "games/negative-number-line/index.html",
-      "at": "start",
-      "width": 345,
-      "todo": "§1.39; §3.9, in no batch yet",
-      "where": "div.header-right"
     },
     {
       "path": "games/probability-pioneer/index.html",
@@ -1726,39 +1696,11 @@
       "where": "div.top-bar; canvas#battlefield; div.game-ui"
     },
     {
-      "path": "games/word-problem-decoder/index.html",
-      "at": "start",
-      "width": 324,
-      "todo": "§1.39; §3.9 batch 13",
-      "where": "div.header-right"
-    },
-    {
-      "path": "games/wrong-on-the-internet/index.html",
-      "at": "start",
-      "width": 338,
-      "todo": "§1.39; §3.9 batch 11",
-      "where": "div.header-right"
-    },
-    {
-      "path": "parents/coordinates/index.html",
-      "at": "load",
-      "width": 324,
-      "todo": "§1.34",
-      "where": "table.quadrant-table"
-    },
-    {
       "path": "parents/fractions/index.html",
       "at": "load",
-      "width": 347,
+      "width": 321,
       "todo": "§1.34",
       "where": "table.equiv-table"
-    },
-    {
-      "path": "parents/graphs-transformations/index.html",
-      "at": "load",
-      "width": 339,
-      "todo": "§1.34",
-      "where": "table.transform-table"
     },
     {
       "path": "parents/indices-surds/index.html",

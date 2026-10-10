@@ -345,6 +345,7 @@ def open_page(ctx, base, src, query='', errors=None):
     page.on('pageerror', lambda e: errs.append(str(e).splitlines()[0]))
     page.route('**/games/%s/**' % SLUG, lambda r: r.fulfill(status=200, content_type='text/html; charset=utf-8',
                                                              body=src))
+    page.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font)  # FONT-FIT: KaTeX and the text faces from scripts/fonts/, the fonts students see
     page.goto('%s/games/%s/%s' % (base.rstrip('/'), SLUG, query))
     page.wait_for_function("typeof startGame === 'function' && typeof L !== 'undefined'")
     page.evaluate('(f) => { window.VIS = eval(f); }', VISIBLE_TEXT)

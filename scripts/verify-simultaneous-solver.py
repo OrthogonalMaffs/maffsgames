@@ -63,6 +63,8 @@ getcontext().prec = 40
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PAGE = os.path.join(ROOT, "games", "simultaneous-solver", "index.html")
 SLUG = "simultaneous-solver"
+sys.path.insert(0, os.path.join(ROOT, "scripts"))
+import bank_common as bc  # noqa: E402  (the pinned fonts, the stub server)
 STAGES = ["stage1", "stage2", "stage3", "stage4"]
 BOARDS = {"stage1": "foundation-s1", "stage2": "foundation-s2", "stage3": "foundation-s3", "stage4": "foundation-s4"}
 ROUNDS = {"stage1": 10, "stage2": 8, "stage3": 6, "stage4": 6}
@@ -315,6 +317,7 @@ def selftest(bank, alevel):
 
 # ---------------------------------------------------------------- the page in Chromium
 PHONES = [(390, 844), (375, 667), (320, 568)]
+MARGIN = 8   # px between the lowest control and the fold (the footer's top), every stage, every phone (FONT-FIT)
 FIT_JS = """() => { const R = e => e && e.offsetParent !== null ? e.getBoundingClientRect() : null;
   const step = R(document.getElementById('step')), kp = R(document.querySelector('#kpHolder .maffs-keypad-panel')),
     chk = R(document.getElementById('checkRow')), body = R(document.getElementById('stepBody')), ae = document.activeElement;
@@ -323,31 +326,32 @@ FIT_JS = """() => { const R = e => e && e.offsetParent !== null ? e.getBoundingC
     sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth }; }"""
 
 
+def right_answers(it, stage, letter=None):
+    """The answer for each step, in order: (kind, value)."""
+    L = letter or it.get("elim")
+    i = 0 if L == "x" else 1
+    m = lcm_pair(it["e"][0][i], it["e"][1][i])
+    s = [[m[0] * v for v in it["e"][0]], [m[1] * v for v in it["e"][1]]]
+    sub = (s[0][i] > 0) == (s[1][i] > 0)
+    comb = [s[0][k] - s[1][k] if sub else s[0][k] + s[1][k] for k in range(3)]
+    o = "y" if L == "x" else "x"
+    steps = []
+    if stage == "stage4":
+        steps.append(("choose", L))
+    steps.append(("type", [str(m[0]), str(m[1])]))
+    if stage != "stage1":
+        steps.append(("choose", "sub" if sub else "add"))
+        steps.append(("type", [str(comb[1 - i]), str(comb[2])]))
+    if stage in ("stage3", "stage4"):
+        steps.append(("type", [str(it[o])]))
+        steps.append(("type", [str(it[L])]))
+    return steps
+
+
 def play(fails, bank, alevel, katex_dir=None, shots=None):
     import asyncio
     sys.path.insert(0, os.path.join(ROOT, "scripts"))
     import bank_common as bc
-
-    def right_answers(it, stage, letter=None):
-        """The answer for each step, in order: (kind, value)."""
-        L = letter or it.get("elim")
-        i = 0 if L == "x" else 1
-        m = lcm_pair(it["e"][0][i], it["e"][1][i])
-        s = [[m[0] * v for v in it["e"][0]], [m[1] * v for v in it["e"][1]]]
-        sub = (s[0][i] > 0) == (s[1][i] > 0)
-        comb = [s[0][k] - s[1][k] if sub else s[0][k] + s[1][k] for k in range(3)]
-        o = "y" if L == "x" else "x"
-        steps = []
-        if stage == "stage4":
-            steps.append(("choose", L))
-        steps.append(("type", [str(m[0]), str(m[1])]))
-        if stage != "stage1":
-            steps.append(("choose", "sub" if sub else "add"))
-            steps.append(("type", [str(comb[1 - i]), str(comb[2])]))
-        if stage in ("stage3", "stage4"):
-            steps.append(("type", [str(it[o])]))
-            steps.append(("type", [str(it[L])]))
-        return steps
 
     async def run(base):
         from playwright.async_api import async_playwright
@@ -356,10 +360,10 @@ def play(fails, bank, alevel, katex_dir=None, shots=None):
 
             async def route(r):
                 u = r.request.url
-                if katex_dir and u.startswith("https://cdn.jsdelivr.net/npm/katex"):
-                    f = os.path.join(katex_dir, u.split("/dist/", 1)[1].split("?")[0])
-                    await (r.fulfill(path=f) if os.path.exists(f) else r.abort())
-                elif u.startswith(base) or u.startswith("https://cdn.jsdelivr.net/npm/katex"):
+                if bc.is_font_cdn(u):   # KaTeX and the text faces, pinned (FONT-FIT): measured in what students see
+                    got = bc.real_font_response(u)
+                    await (r.fulfill(**got) if got else r.abort())
+                elif u.startswith(base):
                     await r.continue_()
                 else:
                     await r.abort()
@@ -522,9 +526,9 @@ def play(fails, bank, alevel, katex_dir=None, shots=None):
                     await page.evaluate("id => SS.ui.startWith('stage4', [id])", it4["id"])
                     for sn, (kind, val) in enumerate(right_answers(it4, "stage4", it4["neat"])):
                         m = await page.evaluate(FIT_JS)
-                        if m["top"] < 0 or m["bottom"] > m["fold"]:
+                        if m["top"] < 0 or m["bottom"] > m["fold"] - MARGIN:
                             fails.append("%s %s step %d: the step and its keypad span y=%.0f..%.0f, the window ends at %.0f"
-                                         % (tag, it4["id"], sn + 1, m["top"], m["bottom"], m["fold"]))
+                                         " (%dpx margin wanted)" % (tag, it4["id"], sn + 1, m["top"], m["bottom"], m["fold"], MARGIN))
                         if m["sw"] > m["cw"]:
                             fails.append("%s %s step %d: the page is %dpx wide" % (tag, it4["id"], sn + 1, m["sw"]))
                         if shots and not aa:
@@ -552,7 +556,7 @@ def play(fails, bank, alevel, katex_dir=None, shots=None):
                                              "return [r.bottom, innerHeight - 40, f.top]; })()")
                     if st4 != ["feedback", 5]:
                         fails.append("%s: the Stage 4 problem played on the keypad ended %r, expected ['feedback', 5]" % (tag, st4))
-                    if nb is None or nb[0] > nb[1] or nb[2] < 0:
+                    if nb is None or nb[0] > nb[1] - MARGIN or nb[2] < 0:
                         fails.append("%s: the answer and Next are not all in the window (Next bottom, fold, feedback top: %r)" % (tag, nb))
                     if shots and not aa:
                         await page.screenshot(path=os.path.join(shots, "ss-%dx%d-end.png" % (w, h)))
@@ -824,6 +828,7 @@ def s5_page(browser, base, src, viewport=(390, 844), mobile=True, fresh=False):
     errors = []
     page.on("pageerror", lambda e: errors.append(str(e).splitlines()[0]))
     page.route("**/games/%s/**" % SLUG, lambda r: r.fulfill(status=200, content_type="text/html; charset=utf-8", body=src))
+    page.route(lambda u: bc.is_font_cdn(u), real_fonts)
     page.goto("%s/games/%s/?cb=s5" % (base.rstrip("/"), SLUG))
     page.wait_for_function("window.SS && SS.ui && SS.EqTiles")
     return ctx, page, errors
@@ -895,6 +900,9 @@ def s5_play(browser, base, src, words):
         ids = page.evaluate("""() => { SS.ui.restart(); document.querySelector('.stage-btn[data-stage="stage5"]').click();
           document.getElementById('startBtn').click(); return SS.ui.formIds(); }""")
         nw, ne = sum(i[0] == "W" for i in ids), sum(i[0] == "E" for i in ids)
+        if ids and ids[0] not in page.evaluate("SS.FORM_OPENERS || []"):
+            fails.append("stage5: a session opened on %s, which is not one of FORM_OPENERS (the first shows the how-to line)" % ids[0])
+            break
         if len(ids) != S5_ROUNDS or len(set(ids)) != S5_ROUNDS or nw < S5_EACH or ne < S5_EACH:
             fails.append("stage5: a session drew %s (eight, none repeated, three W and three E at least)" % ids)
             break
@@ -954,6 +962,106 @@ def s5_play(browser, base, src, words):
     return fails
 
 
+def real_fonts(route):
+    """KaTeX and the text faces from their pinned copies (bank_common, FONT-FIT): the fonts a phone draws."""
+    got = bc.real_font_response(route.request.url)
+    route.fulfill(**got) if got else route.abort()
+
+
+FIT_STEP_JS = """() => { const R = e => e && e.offsetParent !== null ? e.getBoundingClientRect() : null;
+  const kp = R(document.querySelector('#kpHolder .maffs-keypad-panel')), chk = R(document.getElementById('checkRow')),
+    body = R(document.getElementById('stepBody')), step = R(document.getElementById('step'));
+  return { top: step ? step.top : -1, bottom: Math.max(kp ? kp.bottom : 0, chk ? chk.bottom : 0, body ? body.bottom : 0),
+           fold: innerHeight - 40 }; }"""
+FIT_FORM_JS = """() => { const t = document.getElementById('formText').getBoundingClientRect().top,
+  b = document.getElementById('formCheckRow').getBoundingClientRect().bottom;
+  return { need: b - t, room: innerHeight - 40 - 2 * %d }; }""" % MARGIN
+FIT_PER_STAGE = 3
+
+
+def fit_check(base, src, bank, words, fonts="real", only=("steps", "form")):
+    """Every stage on every phone, in the fonts students see: the step, its keypad and Check, then Next, end at least
+    MARGIN px above the fold (Stages 1-4, FIT_PER_STAGE problems a stage, every step); and for Stage 5, every problem
+    with both lines built fits between MARGIN px from the top and MARGIN px above the fold: with the how-to line on
+    the openers (each fits at 320x568 and no other does, so FORM_OPENERS is exact), without it on every problem.
+    fonts="fallback" is the old way (Google Fonts blocked), for the self-test."""
+    from playwright.sync_api import sync_playwright
+    fails = []
+
+    def fonts_route(route):
+        if fonts == "fallback" and not route.request.url.startswith(bc.KATEX_CDN):
+            return route.abort()
+        real_fonts(route)
+
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch()
+        for (w, h) in PHONES:
+            tag = "%dx%d" % (w, h)
+            ctx = browser.new_context(viewport={"width": w, "height": h}, is_mobile=True, has_touch=True)
+            ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+            ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+            ctx.route(lambda u: not u.startswith(base) and not bc.is_font_cdn(u), lambda r: r.abort())
+            ctx.route(lambda u: bc.is_font_cdn(u), fonts_route)
+            ctx.route("**/games/%s/**" % SLUG, lambda r: r.fulfill(status=200, content_type="text/html; charset=utf-8", body=src))
+            page = ctx.new_page()
+            page.goto("%s/games/%s/?cb=fit" % (base.rstrip("/"), SLUG))
+            page.wait_for_function("window.SS && SS.ui && SS.EqTiles")
+            page.evaluate("() => Promise.all([...document.fonts].map(f => f.load().catch(() => 0))).then(() => document.fonts.ready)")
+            if "steps" in only:
+                for stage in ("stage1", "stage2", "stage3", "stage4"):
+                    items = bank[stage]
+                    for it in [items[k * len(items) // FIT_PER_STAGE] for k in range(FIT_PER_STAGE)]:
+                        letter = it.get("neat") if stage == "stage4" else None
+                        letter = "x" if letter == "either" else letter
+                        page.evaluate("([s, id]) => SS.ui.startWith(s, [id])", [stage, it["id"]])
+                        for sn, (kind, val) in enumerate(right_answers(it, stage, letter)):
+                            m = page.evaluate(FIT_STEP_JS)
+                            if m["top"] < 0 or m["bottom"] > m["fold"] - MARGIN:
+                                fails.append("fit %s %s %s step %d: the step and its controls span y=%.0f..%.0f, the fold is at"
+                                             " %.0f (%dpx margin wanted)" % (tag, stage, it["id"], sn + 1, m["top"], m["bottom"], m["fold"], MARGIN))
+                            if kind == "choose":
+                                page.evaluate("v => SS.ui.choose(v)", val)
+                            else:
+                                page.evaluate("v => SS.ui.type(v)", val)
+                                page.click("#checkBtn")
+                        nb = page.evaluate("() => { const b = document.querySelector('#feedback .maffs-next'); "
+                                           "return b ? innerHeight - 40 - b.getBoundingClientRect().bottom : null; }")
+                        if nb is not None and nb < MARGIN:
+                            fails.append("fit %s %s %s: Next ends %.0fpx above the fold (%dpx wanted)" % (tag, stage, it["id"], nb, MARGIN))
+            if "form" in only:
+                openers = set(page.evaluate("SS.FORM_OPENERS || []"))
+                for wd in words:
+                    page.evaluate("id => SS.ui.startWith('stage5', [id])", wd["id"])
+                    page.evaluate("() => SS.ui.formPut(SS.ui.formItem().keys.map(k => SS.EqTiles.tokens(k)))")
+                    with_how = page.evaluate(FIT_FORM_JS)
+                    page.evaluate("document.getElementById('formHow').style.display = 'none'")
+                    without = page.evaluate(FIT_FORM_JS)
+                    fits = with_how["need"] <= with_how["room"]
+                    if without["need"] > without["room"]:
+                        fails.append("fit %s stage5 %s: problem, lines, tiles and Check need %.0fpx, %.0fpx fit between the margins"
+                                     % (tag, wd["id"], without["need"], without["room"]))
+                    if (w, h) == (320, 568) and fits != (wd["id"] in openers):
+                        fails.append("fit %s stage5 %s: %s with the how-to line (%.0fpx of %.0fpx), but it is %s FORM_OPENERS"
+                                     % (tag, wd["id"], "fits" if fits else "does not fit", with_how["need"], with_how["room"],
+                                        "in" if wd["id"] in openers else "not in"))
+                    if (w, h) != (320, 568) and not fits:
+                        fails.append("fit %s stage5 %s: with the how-to line it needs %.0fpx, %.0fpx fit"
+                                     % (tag, wd["id"], with_how["need"], with_how["room"]))
+            ctx.close()
+        browser.close()
+    return fails
+
+
+def fit_selftest(base, src, bank, words):
+    """The fonts decide this verdict: with Google Fonts blocked (the old way), some Stage 5 openers no longer fit a
+    320x568 phone with the how-to line, so the opener list fails. Proves the fit check measures in the real fonts."""
+    hits = [f for f in fit_check(base, src, bank, words, fonts="fallback", only=("form",))
+            if f.startswith("fit 320x568 stage5") and "is in FORM_OPENERS" in f]
+    print("  self-test fit %-58s %s" % ("the old font-blocking (Google Fonts blocked) at 320x568",
+                                       ("caught: " + hits[0][:90]) if hits else "*** MISSED ***"))
+    return [] if hits else ["fit self-test: blocking the real fonts changed nothing at 320x568"]
+
+
 def s5_selftest(src, words):
     """Each planted fault must fail: a problem with two solutions, a marker that compares strings, tiles that
     cannot build a key."""
@@ -982,7 +1090,7 @@ def s5_selftest(src, words):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--static", action="store_true", help="the banks only, no browser")
-    ap.add_argument("--katex-dir", help="serve KaTeX from this copy of its dist/ folder (a sandbox where the CDN is blocked)")
+    ap.add_argument("--katex-dir", help="no longer needed: KaTeX is served from scripts/fonts/ (kept so old commands run)")
     ap.add_argument("--shots", help="save the phone screenshots of the Stage 4 problem here")
     args = ap.parse_args()
     bank, alevel = read_banks()
@@ -1001,6 +1109,13 @@ def main():
         fails += s5_selftest(src, words)
         if not fails:
             fails += check_stage5(src, words)
+    if not args.static and not fails:
+        server, fbase = bc.start_stub_server()
+        try:
+            fails += fit_selftest(fbase, src, bank, words)
+            fails += fit_check(fbase, src, bank, words)
+        finally:
+            server.terminate()
     if not args.static and not fails:
         if args.shots:
             os.makedirs(args.shots, exist_ok=True)

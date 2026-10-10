@@ -130,7 +130,9 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
    3. Order: the true statement and what was picked -> the working -> the pictures -> Next.
    4. On a short screen (<= 600px tall, e.g. 320x568) the pictures move below Next. Visually
       only: the reading order stays fact, working, pictures, Next. The working never moves.
-   5. During play the title and the Aa toggle share one line on narrow screens. */
+   5. During play the title and the Aa toggle share one line on narrow screens.
+   6. On a short screen the spacing around the HUD, the card and the feedback box is tighter, so
+      Next keeps 8px to spare in the real fonts (FONT-FIT, 10 Oct 2026). Nothing is cut or shrunk. */
 .qcard.fb-open .options{display:none}
 @media (max-width:600px){
   .container{padding:.75rem}
@@ -154,6 +156,11 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 @media (max-height:600px){
   #feedback{display:flex;flex-direction:column}
   #feedback .pics{order:1}
+  .hud{padding-top:.25rem;padding-bottom:.25rem;margin-bottom:.35rem}
+  .qcard{padding-top:.65rem}
+  .qcard.fb-open .feedback{margin-top:.4rem}
+  .fb-wrong{padding-top:.45rem;padding-bottom:.45rem}
+  .fb-said{margin-bottom:.3rem}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>

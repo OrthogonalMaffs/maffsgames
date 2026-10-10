@@ -26,8 +26,9 @@ The bank is read from the live page, then:
     marker by 0.5 (and nothing before a placement, nor past an end).
   Phones, in Chromium on a touch profile at 320x568, 375x667 and 390x844: the step buttons are at
     least 44px each way and below the line; the marker's value is shown above the line, at least
-    16px; Confirm, and after a wrong answer the feedback and Next, end above the fold (canon 7.6.1); for every target, one tap 1.5 units away and then the step buttons reach the target, and
-    Confirm marks it right.
+    16px; Confirm, and after a wrong answer the feedback and Next, end at least 8px above the fold in
+    the real fonts (canon 7.6.1; FONT-FIT); for every target, one tap 1.5 units away and then the step
+    buttons reach the target, and Confirm marks it right.
   The session is never finished, so nothing is submitted; every request off the stub server is
   aborted.
 A fault-injection self-test must FAIL each time: a 0.5 tolerance planted in the helper (a patched
@@ -52,6 +53,7 @@ COUNTS = {'PLACE': 15, 'ORDER': 15, 'CALC': 15}
 LO, HI = -10, 10
 POSITIONS = [F(k, 2) for k in range(2 * LO, 2 * HI + 1)]
 PHONES = [(320, 568), (375, 667), (390, 844)]
+MARGIN = 8   # px between Confirm, the feedback or Next and the fold (the footer's top), every phone (FONT-FIT, Jon 10 Oct 2026)
 HELPER = 'schools/assets/number-line.js'
 EXACT_RULE = 'return Math.abs(opts.placed - opts.target) < EPS;'
 PLANTED_RULE = 'return Math.abs(opts.placed - opts.target) <= 0.5;'
@@ -144,6 +146,7 @@ def open_page(pw, base, chromium, viewport, touch, patched_helper):
             return r.fulfill(status=200, content_type='application/javascript', body=js.replace(EXACT_RULE, PLANTED_RULE))
         return r.continue_()
     page.route('**/*', route)
+    page.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font)  # FONT-FIT: KaTeX and the text faces from scripts/fonts/, the fonts students see
     page.goto(base + '/games/' + SLUG + '/?cb=verify', wait_until='load', timeout=20000)
     page.wait_for_function('typeof PLACE_QUESTIONS !== "undefined" && window.MaffsNumberLine', timeout=8000)
     page.evaluate('startGame()')
@@ -223,9 +226,9 @@ def phone_pass(rep, page, targets, size, verbose):
                  % (m['readout']['b'], m['line']['t']))
     if m['font'] < 16:
         rep.fail(tag, 'readout', 'the marker value is %.1fpx, under 16px' % m['font'])
-    if m['confirm']['b'] > m['vh'] - 40:
-        rep.fail(tag, 'fold', 'with a marker placed, Confirm ends at %.0f, below the fold %.0f'
-                 % (m['confirm']['b'], m['vh'] - 40))
+    if m['confirm']['b'] > m['vh'] - 40 - MARGIN:
+        rep.fail(tag, 'fold', 'with a marker placed, Confirm ends at %.0f, under %dpx above the fold %.0f'
+                 % (m['confirm']['b'], MARGIN, m['vh'] - 40))
     print('  %s: snap step %.1fpx; step buttons %.0fx%.0fpx, %.0fpx below the line box; value %.0fpx, '
           '%.0fpx above the line; Confirm bottom %.0f of %d' % (tag, m['step'], m['left']['w'], m['left']['h'],
           m['left']['t'] - m['wrap']['b'], m['font'], m['line']['t'] - m['readout']['b'], m['confirm']['b'], m['vh']))
@@ -238,9 +241,9 @@ def phone_pass(rep, page, targets, size, verbose):
     fold = page.evaluate('''() => ({fb: document.getElementById('feedbackBar').getBoundingClientRect().bottom,
       next: document.getElementById('nextBtn').getBoundingClientRect().bottom, fold: innerHeight - 40})''')
     for name in ('fb', 'next'):
-        if fold[name] > fold['fold']:
-            rep.fail(tag, 'fold', 'after a wrong answer the %s ends at %.0f, below the fold %.0f (canon 7.6.1)'
-                     % ('feedback' if name == 'fb' else 'Next button', fold[name], fold['fold']))
+        if fold[name] > fold['fold'] - MARGIN:
+            rep.fail(tag, 'fold', 'after a wrong answer the %s ends at %.0f, under %dpx above the fold %.0f (canon 7.6.1)'
+                     % ('feedback' if name == 'fb' else 'Next button', fold[name], MARGIN, fold['fold']))
     print('  %s: after a wrong answer, feedback ends %.0f and Next %.0f; fold %.0f'
           % (tag, fold['fb'], fold['next'], fold['fold']))
 

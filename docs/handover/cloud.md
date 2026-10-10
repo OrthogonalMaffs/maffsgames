@@ -51,12 +51,50 @@ full ("spot on"); the Library room's title is The Library Jam.
 1. **RIGHTFUL-KING-BUILD** (contract `docs/handover/contracts/2026-10-10-rightful-king-build.md`), then
 2. **LIBRARY-JAM-BUILD** (contract `docs/handover/contracts/2026-10-10-library-jam-build.md`).
 **BOTH WAIT on BOTH home-lane fixes, ART-PENDING and KEYPAD-VARIABLE (Jon, 10 Oct), not KEYPAD-VARIABLE alone.**
-ART-PENDING is on main (#244: `HAS_ART` in engine.js). KEYPAD-VARIABLE was not on main when checked (10 Oct): no
-`maxDigits` in `escape-rooms/assets/engine.js` or the scripts, and no branch for it. Before starting, check main for
-both and read `docs/handover/home.md`.
+Both are on main: ART-PENDING (#244, `HAS_ART` in engine.js) and KEYPAD-VARIABLE (#251, `maxDigits`), checked
+10 Oct after 13:45. They start after FONT-FIT merges (Jon, 13:45).
 **Standing authorisation (Jon, 10 Oct):** the cloud lane merges any PR of its own once its Gate is green and main's
 last full run is green, without asking each time; it still watches main's run after each merge. Ratings for the handover when built: The Rightful
 King ★★★ Challenge, The Library Jam ★ Warm-up (no star field; the difficulty contract owns it).
+**FONT-FIT (Jon, 10 Oct 11:05; contract `docs/handover/contracts/2026-10-10-font-fit.md`): on branch
+`claude/youthful-feynman-anpxuq-font-fit`, main merged in; PR next.** Findings: `docs/audits/font-fit-2026-10-10.md`.
+- **Jon's answers (10 Oct):** Stage 5's how-to line shows on the first problem only, and a game opens on one of the
+  25 problems that fit with it (`FORM_OPENERS`). The self-test is planted on pages where the fonts decide the verdict.
+- **Jon's ruling (10 Oct, 13:45):** fix free-daily-pizza and negative-number-line in this PR, by layout only, with at
+  least 8 px of margin in the real fonts; their own checks assert it. **DONE:**
+  - free-daily-pizza: on screens 600 px tall or less, the spacing around the HUD, the card and the feedback box is
+    tighter. Next goes from 533 to **514** against a 528 fold at 320x568, across all 518 items. 375x667 and 390x844
+    are unchanged (607 against folds of 627 and 804). The verifier passes with `MARGIN = 8`.
+  - negative-number-line: up to 480 px wide the header takes two rows. It was one row, with each item wrapping to
+    2-3 lines, 112 px tall. It is now 90 px in all three modes, with no sideways scroll. Confirm goes from 536 to
+    **514** against 528. The verifier passes with `MARGIN = 8` on Confirm, the feedback and Next, and its self-test
+    passes.
+- **Known problems, for Jon to order (not fixed, not allowlisted; listed in the findings file):**
+  - Over the fold in the real fonts: standard-form-blitz +10, surd-simplifier +9, coordinate-geometry-dash +7,
+    sequence-solver +4 and modular-battle +2 (all at 320x568); estimation-golf +12 at 390x844.
+  - Too wide: distinctly-average, +14 px at 320 (the Aa toggle).
+  - Within 5 px of the fold: proportion-blaster, prime-or-composite, higher-power, matrix-crunch, trig-worms and
+    wrong-on-the-internet.
+- **Done earlier on the branch:**
+  - `scripts/fonts/` (KaTeX 0.16.9 and the Google Fonts files, with checksums and licences).
+  - `bank_common.real_font_response` and `serve_real_font(_async)`.
+  - Real fonts in check-site's phone pass, `measure-phone-fit.py` and the fold verifiers.
+  - 12 stale allowlist entries removed.
+  - `test-real-fonts.py`.
+  - Simultaneous Solver: `fitInView` with 8 px, and its verifier asserts it.
+- **Then:** `check-changed.py`, open the PR, merge on a green Gate, watch main's run.
+- **For the home lane:** once this merges, CI's DejaVu pin step can be retired for the phone checks (not removed here).
+- **Local runs:** `FONTCONFIG_FILE` pinning DejaVu, as CI does (scratch `fonts.conf`). The cloud container's Chromium
+  is build 1194 and Playwright 1.63 wants 1243, so a scratch symlink was used; the numbers above match the
+  handover's earlier ones exactly (533 and 536 before).
+- **Next after merge:** RIGHTFUL-KING-BUILD. KEYPAD-VARIABLE (#251) and ART-PENDING (#244) are both on main.
+- **Jon's ruling for both builds (10 Oct, after 13:45):**
+  - **The hub is left alone.** A built room sits behind its holding page and has no hub card until its release
+    contract, which brings the star chip.
+  - **Every lock gets a `grade` in room.js**, with a one-line reason in the PR, as #253 did. Since #253 the checker
+    fails a lock without one.
+  - **The derived rating must be ★★★ for The Rightful King and ★ for The Library Jam.** If honest grading gives
+    anything else, STOP and report; never adjust a grade to fit.
 **Open for Jon:** delete branch `claude/youthful-feynman-anpxuq-pd-check` in GitHub (the proxy refused the remote
 delete, HTTP 403).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).

@@ -278,7 +278,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     <div class="qcard" id="formCard">
       <div class="problem" id="formText"></div>
       <div class="letdef" id="formLet"></div>
-      <div class="step-head">Write the two equations. Tap a line, then tap tiles to build it.</div>
+      <div class="step-head" id="formHow">Write the two equations. Tap a line, then tap tiles to build it.</div>
       <div id="formStep">
         <div id="formBuilder"></div>
         <div class="msg" id="formMsg" aria-live="polite"></div>
@@ -883,22 +883,37 @@ var EqTiles = (function () {
   function noKeypad() { $('kpHolder').innerHTML = ''; $('kpHolder').hidden = true; kp = null; }
 
   // The step and its keys in the window together: the keys above the footer, never the step's top above the window.
-  function stepInView() {
-    var top = $('step').getBoundingClientRect().top, kpEl = $('kpHolder').querySelector('.maffs-keypad-panel');
-    var last = kpEl && kpEl.offsetParent !== null ? kpEl : ($('checkRow').hidden ? $('stepBody') : $('checkRow'));
-    var bottom = last.getBoundingClientRect().bottom, fold = window.innerHeight - FOOTER_PX;
-    var dy = Math.min(bottom - fold + 8, top - 8);
-    if (bottom > fold && dy > 0) window.scrollBy(0, dy);
+  // Scroll the least that puts `bottom` at least 8px above the fold (the footer's top), never taking `top` above 8px
+  // from the top of the window (FONT-FIT, 10 Oct 2026: it scrolled only once bottom was past the fold, so a control
+  // ending 1-7px above it stayed there).
+  function fitInView(top, bottom) {
+    var fold = window.innerHeight - FOOTER_PX, dy = Math.min(bottom - (fold - 8), top - 8);
+    if (dy > 0) window.scrollBy(0, Math.ceil(dy));   // whole pixels up: a fraction scrolled short leaves 7.x px
     else if (top < 0) window.scrollBy(0, top - 8);
+  }
+  // A first visit draws before KaTeX's and the text faces arrive, and they grow the block a few px when they do: the
+  // view in force is fitted again once, when the fonts are ready, if nothing has moved on since.
+  var lastView = null;
+  function inView(fn) {
+    lastView = fn; fn();
+    if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(function () { if (lastView === fn) fn(); });
+  }
+  function stepInView() {
+    inView(function () {
+      var kpEl = $('kpHolder').querySelector('.maffs-keypad-panel');
+      var last = kpEl && kpEl.offsetParent !== null ? kpEl : ($('checkRow').hidden ? $('stepBody') : $('checkRow'));
+      fitInView($('step').getBoundingClientRect().top, last.getBoundingClientRect().bottom);
+    });
   }
   function nextInView(box) {
     box = box || $('feedback');
     var nx = box.querySelector('.maffs-next');
     if (!nx) return;
-    var r = nx.getBoundingClientRect(), top = box.getBoundingClientRect().top, fold = window.innerHeight - FOOTER_PX;
-    var dy = Math.min(r.bottom - fold + 8, top - 8);
-    if (r.bottom > fold && dy > 0) window.scrollBy(0, dy);
-    else if (top < 0) window.scrollBy(0, top - 8);
+    inView(function () { fitInView(box.getBoundingClientRect().top, nx.getBoundingClientRect().bottom); });
+  }
+  // Stage 5: the problem's words at the top, the lines, the tiles and Check above the fold.
+  function formInView() {
+    inView(function () { fitInView($('formText').getBoundingClientRect().top, $('formCheckRow').getBoundingClientRect().bottom); });
   }
 
   function startGame(items) {
@@ -1304,11 +1319,24 @@ var EqTiles = (function () {
   function keyText(k, it) {
     return EqTiles.text(EqTiles.tokens(k).map(function (t) { return t.k === 'n' ? { k: 'n', v: t.v, label: formLabel(t.v, it) } : t; }));
   }
+  // The problems that fit a 320x568 phone with the how-to line showing (Jon, 10 Oct 2026, FONT-FIT): a game opens on
+  // one of these, since only its first problem shows the line. verify-simultaneous-solver.py measures every problem
+  // and fails if this list is not exactly the ones that fit.
+  var FORM_OPENERS = ['W01', 'W05', 'W06', 'W07', 'W09', 'W10', 'W11', 'W12', 'W13', 'W14', 'W15', 'W16', 'W19', 'W20',
+                      'E01', 'E04', 'E05', 'E07', 'E08', 'E11', 'E12', 'E16', 'E17', 'E19', 'E20'];
   function drawForm() {
     var w = shuffle(WORDS.filter(function (x) { return x.id[0] === 'W'; })), e = shuffle(WORDS.filter(function (x) { return x.id[0] === 'E'; }));
     var pick = w.slice(0, FORM_EACH).concat(e.slice(0, FORM_EACH));
-    return shuffle(pick.concat(shuffle(w.slice(FORM_EACH).concat(e.slice(FORM_EACH))).slice(0, FORM_ROUNDS - pick.length)));
+    var out = shuffle(pick.concat(shuffle(w.slice(FORM_EACH).concat(e.slice(FORM_EACH))).slice(0, FORM_ROUNDS - pick.length)));
+    var k = out.findIndex(function (x) { return FORM_OPENERS.indexOf(x.id) >= 0; });
+    if (k > 0) { var t = out[0]; out[0] = out[k]; out[k] = t; }
+    else if (k < 0) {   // no opener drawn: the first is swapped for an unused opener of its own kind (W or E)
+      var spare = shuffle(WORDS.filter(function (x) { return x.id[0] === out[0].id[0] && FORM_OPENERS.indexOf(x.id) >= 0 && out.indexOf(x) < 0; }));
+      out[0] = spare[0];
+    }
+    return out;
   }
+  SS.FORM_OPENERS = FORM_OPENERS;
   function startForm(items) {
     st = STAGES.stage5;
     formPool = items || drawForm();
@@ -1335,9 +1363,13 @@ var EqTiles = (function () {
     $('formNum').textContent = total + '/' + formPool.length;
     $('formText').textContent = fq.text;
     $('formLet').textContent = fq.let;
+    // The how-to on the first problem only (Jon, 10 Oct 2026, FONT-FIT): from the second, the problem, its lines,
+    // its tiles and Check fit a 320x568 phone together.
+    $('formHow').style.display = total > 1 ? 'none' : '';
     fb5 = EqTiles.build($('formBuilder'), { letters: fletters, numbers: formNumbers(fq), lines: 2,
-      onChange: function () { $('formMsg').textContent = ''; } });
+      onChange: function () { $('formMsg').textContent = ''; formInView(); } });
     MaffsLock.fresh($('formStep'));   // a new problem: a double-click on Next cannot press a tile or Check
+    formInView();
   }
   function checkForm() {
     if (state !== 'form' || MaffsLock.isLocked($('formStep'))) return;
