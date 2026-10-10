@@ -53,8 +53,8 @@ full ("spot on"); the Library room's title is The Library Jam.
 2. **LIBRARY-JAM-BUILD: DONE.** #262 merged 10 Oct (5f4f656); main's run 736 is green. The contract is now in
    `docs/history/contracts/`. Jon can play-test the room at `/escape-rooms/library-jam/play.html`. CI passed its
    teacher page under the §1.37 entry (recorded at 538 px, measured in the cloud container).
-**THE CLOUD QUEUE IS EMPTY (10 Oct, 18:00).** Ask Jon for the next item. Both rooms wait on his play-test, then on
-art and their release contracts (hub card with stars, sitemap, counts).
+**THE CLOUD QUEUE IS EMPTY (10 Oct, 22:40).** UPDATES-WEEKEND done (#272, main run 758 green). Ask Jon for the
+next item. Both rooms are live (the home lane's #271).
 **Jon's ruling for both builds (10 Oct, after 13:45):**
 - **The hub is left alone.** A built room sits behind its noindex holding page, and the checker counts a room as
   live only without `noindex`, so no card is needed. The star chip comes with the release contract.
@@ -90,6 +90,7 @@ main's last full run is red; watch main's run after merging.
 
 ## 2026-10-10 (cloud): UPDATES-WEEKEND, /updates/ October entries (Jon's wording, checked against main)
 
+- **DONE.** #272 merged 10 Oct (d96aeb2); main's run 758 is green.
 - **First pass stopped** (STOP IF): four claims differed from the code. Library Jam "our first ★ Warm-up room"
   (Comic Caper and Kiln Disaster already are) and Bibby fining the class (the library system does); calculator five
   games, not six (Growth and Decay, #239); Boolean Blitz "no longer than the simplest form" (AB + BC is longer than
