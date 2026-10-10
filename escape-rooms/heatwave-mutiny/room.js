@@ -43,7 +43,6 @@ window.ROOM = {
   slug: 'escape-heatwave-mutiny',
   title: 'The Heatwave Mutiny',
   level: 'ks3',
-  levelLabel: 'KS3 / GCSE',
   minutes: 15,
   penalty: 45,
   art: 'heatwave-mutiny',
@@ -123,6 +122,7 @@ window.ROOM = {
     {
       id: 'patrol-lcm-timer',
       key: 'lcm',
+      grade: 4,
       name: 'Patrol window',
       brief: 'A countdown timer wired into the corridor door release. Set it to the number of minutes after the ' +
              'Supervisors set off when it is safe to cross, and it will let you through at that moment and no other.',
@@ -196,6 +196,7 @@ window.ROOM = {
     {
       id: 'cube-surface-volume',
       key: 'cube',
+      grade: 4,
       name: 'Security door',
       brief: 'A four-digit keypad on the control-room door. Mr Banks’s company changed the code on Monday, and ' +
              'Estates have not been able to get in since.',
@@ -292,6 +293,7 @@ window.ROOM = {
     {
       id: 'canteen-freezer-inequality',
       key: 'freq',
+      grade: 5,
       name: 'The disruptor',
       brief: 'Bolted over the air-conditioning controls is Mr Banks’s disruptor, a grey box putting out a signal that ' +
              'jams the whole system. A disruptor can only be shut down by its own frequency sent straight back at ' +

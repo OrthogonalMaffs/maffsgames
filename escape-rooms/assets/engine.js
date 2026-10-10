@@ -201,6 +201,12 @@
 
   // ---------- helpers ----------
   function el(id) { return document.getElementById(id); }
+  // The room's difficulty from its locks' grades (rating.js, contract ESCAPE-DIFFICULTY), then a separator.
+  function ratingLabel() {
+    var M = window.MaffsEscapeRating, r = M && M.rating(R);
+    return r ? M.html(r) + ' &middot; ' : '';
+  }
+
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function mmss(s) {
     if (s < 0) s = 0;
@@ -237,7 +243,7 @@
     return '' +
       '<section class="screen active" id="scrBrief">' +
         '<div class="card">' +
-          '<h1><span class="sub">' + esc(R.levelLabel) + ' &middot; escape room &middot; ' + R.minutes + ' minutes</span>' + esc(R.title) + '</h1>' +
+          '<h1><span class="sub">' + ratingLabel() + 'escape room &middot; ' + R.minutes + ' minutes</span>' + esc(R.title) + '</h1>' +
           (HAS_ART ? '<div class="artframe"><img onerror="mfgArtFallback(this)" src="' + ART + R.art + '-scene.webp" alt="' + esc(R.sceneAlt) + '" loading="eager"></div>' : '') +
           '<div class="story">' + R.hook + '</div>' +
           '<p class="lede">' + R.brief + '</p>' +

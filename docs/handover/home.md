@@ -1,5 +1,22 @@
 # Handover: home lane
 
+**ESCAPE-DIFFICULTY (10 Oct, Jon's contract 13:05, after CAR-TRAP-RELEASE; contract
+`docs/handover/contracts/2026-10-10-escape-difficulty.md`).** Every live lock has `grade: N`; a room's
+rating is its hardest lock's band (★ Warm-up 1–3, ★★ Core 4–5, ★★★ Challenge 6–9), drawn by the new
+`escape-rooms/assets/rating.js` on the start screen and the teacher page (the teacher page adds "Suits a top
+set" at ★★★ only), and written as a `data-stars` chip on every hub and front-page card (the old level chips
+replaced). The derived ratings reproduce Jon's list exactly (no STOP): ★ Comic Caper, Kiln Disaster; ★★
+Canteen, Heatwave, P.E., Prom, Hamster, Car Trap; ★★★ Rugby Mud. Every lock's grade and reason is in the PR.
+Two locks the bank tags "GCSE Higher" are graded 5 (Car Trap's monic quadratic by factorising, Prom's
+compound growth by building powers): the method is Foundation's. `levelLabel` removed from the live rooms
+(display only); `level` kept (analytics send it). The hub's cards are now in rating order (it says "Ordered
+easiest to hardest"); the front page's order is unchanged. **check-escape-rooms.py was never in CI** (it ran
+only by hand): it now has a ci-line and fails a missing grade or any disagreeing card, with two plants caught
+on every run. New `scripts/test-escape-rating.py` (start screen and teacher page match the hub card in
+Chromium; no 320 px overflow apart from the teacher pages' allowlisted tables, §1.37). **For the cloud lane:**
+The Rightful King must derive ★★★ and The Library Jam ★: add `grade` to every lock, a `data-stars` chip on
+both cards, and load `../assets/rating.js` before engine.js and teacher.js.
+
 **CAR-TRAP-RELEASE (10 Oct, Jon's contract 13:00; `docs/handover/contracts/2026-10-10-car-trap-release.md`).**
 Jon's wording in room.js: wrong lines 1 and 2 are now Mr Strictman's memos (gates at oh-seven-hundred; staffroom
 biscuits discontinued), lines 3-4 unchanged; the "two point six centimetres" line moved into the brief ("You hear him
@@ -94,8 +111,10 @@ sessions and the E2 one-off; timer-policy: Unit Converter to No Timer. **Escape 
 accidental Escape would discard a leaderboard entry** (the OVERLAY-KEYS contract's "Escape closes the overlay as now"
 was Project Claude's error; recorded on #232 too). **Next: KEYPAD-VARIABLE (entry at the top), then PREPUSH-SCOPE** (contract
 `docs/handover/contracts/2026-10-09-prepush-scope.md`). LIBRARY-DRAFT moved to the cloud lane (Jon, 10 Oct 09:30);
-Car Trap moved the other way: the home lane owns it end to end (#242, entry above). **Open for Jon:** further scientific tagging (candidates in the
-SCI-CALC entry). Finished home-lane contracts (home-queue, its addendum, hook-fix, overlay-keys) moved to `docs/history/contracts/` in
+Car Trap moved the other way: the home lane owns it end to end (#242, entry above). **Scientific tagging, Jon's ruling (10 Oct):** tag force-resolver,
+moments-master, complex-converter, formula-forge, formula-unlocked, core-maths-paper2c (one PR each, after
+PREPUSH-SCOPE); not estimation-golf or equation-builder; log-laws and higher-power reported back (SCI-CALC's
+entry is archived in `docs/history/handover-home-archive.md`). Finished home-lane contracts (home-queue, its addendum, hook-fix, overlay-keys) moved to `docs/history/contracts/` in
 this PR; the cloud lane's (listed-high, car-trap) and the IT room brief stay.
 
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
@@ -143,46 +162,3 @@ screen. graph-sketcher: fix its phone overflow now, then put it on the lock (ite
 **Jon's rulings, 7 Oct:** eigenvector-engine-f0-005 is not a judgement call (SR-17: a scalar multiple of an
 eigenvector is never a wrong option, whatever the prompt says about "simplest"): `jc: false` (in #108). The
 verifier-lines-in-the-workflow question is answered by contract V: neither lane edits the workflow for a verifier.
-
-## 2026-10-09 (home): SCI-CALC (item 6)
-
-- **Engine (calculator.js):** xʸ as `^`, right-associative and tighter than a minus on its left (2^3^2 = 512,
-  −2^2 = −4); ln, log, eˣ, sin/cos/tan and their inverses (each opens a bracket, like √); π and e with implicit ×;
-  DEG (default) / RAD. Errors: ln/log ≤ 0, sin⁻¹/cos⁻¹ outside [−1, 1], tan at odd multiples of 90° (exact for
-  whole degrees) or π/2, non-finite. All 65 existing cases unchanged (STOP IF clear).
-- **UI:** `mount(el, {keys: 'scientific'})` adds a 13-key block above the basic keys and a DEG/RAD indicator in the
-  display; `mount()` without it is key for key the old panel (tested). Fits 320/390/412 px touch, 48 px keys.
-- **Tests (test-calculator-js.py):** 27 scientific cases (the contract's, plus inverses, RAD and errors), two
-  plants (left-associative ^, no tan 90 guard: both caught), the basic panel's labels, the fit, and the DEG/RAD
-  key driving sin.
-- **check-calculator.py:** new value `scientific` (calculator.js + keypad.js, "Scientific calculator required",
-  `keys: 'scientific'` in the page); `required` unchanged; either badge on the other value fails (12 self-test
-  cases). Canon §4.4 and the roster legend updated.
-- **CSS (Jon's ruling, 9 Oct):** the calculator, badge and keypad styles moved out of theme.css into
-  `schools/assets/calculator.css`, which theme.css imports, so the themed games get them unchanged and Growth
-  and Decay links calculator.css alone (its look is otherwise untouched; four tokens mapped to its own).
-- **Growth and Decay:** roster `scientific`; badge on the start screen; the calculator under the question,
-  `{keys: 'scientific'}`. Not `{answer}`: each sub-question rebuilds its input, so answers stay typed in the
-  game's box. AL1 worked end to end on the keys at 390x844 (touch) and 1280x800: 5000eˣ(0.03×20) = 9110.594002
-  (sq1), ln(2)÷0.03 = 23.10490602 (sq4), all four sub-questions marked correct, no page error.
-- **Report for Jon (no changes; each tagging its own PR):** games whose questions likely need scientific keys,
-  from a scan of question text, to confirm by reading: **strong** force-resolver (θ = arctan…, resolving with
-  sin/cos), moments-master (ω = 2π×1500/60 = 50π), log-laws (log 6 + log …, ln); **probable** formula-unlocked
-  (π, e^, ln), formula-forge (π, r³), complex-converter (e^{iθ}, π, tan), core-maths-paper2c (ln),
-  equation-builder (ln), higher-power (ln, π), estimation-golf (π). Games where trig/log appear only in drawing
-  or console code (angle-ace, bearing-blitz, circle-theorem-spotter and others) were not counted.
-
-## 2026-10-09 (home): SCORES-OFFLINE (item 5)
-
-- **The class:** /leaderboards/ and the portal called `firebase.initializeApp` / `firebase.database()` themselves,
-  outside any guard; on a network that blocks the SDK (`firebase` undefined) the script stopped, and on
-  /leaderboards/ that killed the device-local Your Scores. No other served page did (188 .html/.js files checked).
-- **Fix:** both read through `MaffsLeaderboard`: new read paths `available()`, `readBoard(slug, level)` and
-  `watchRecent(n, cb)` (submit path untouched). Blocked: /leaderboards/ shows Your Scores and "Live leaderboards
-  can't load on this network. Your Scores above are kept on this device and still work." (search, level pills and
-  cards hidden); the portal hides its ticker quietly.
-- **Check:** `scripts/test-scores-offline.py` (ci-line): no served file but the shared module calls the SDK; both
-  pages with gstatic.com/firebasejs refused (no page error, Your Scores renders a seeded game, offline line /
-  ticker hidden) and with a fake SDK (cards render, ticker shows the score, no offline line). Plants: a page
-  calling `firebase.database()` (caught by the rule); main's old /leaderboards/ blocked (caught: "firebase is not
-  defined").

@@ -57,7 +57,6 @@ window.ROOM = {
   slug: 'escape-prom-budget',
   title: 'The Prom Budget Embezzlement',
   level: 'gcse',
-  levelLabel: 'GCSE / Core Maths',
   minutes: 15,
   penalty: 45,
   art: 'prom-budget',
@@ -186,6 +185,7 @@ window.ROOM = {
     {
       id: 'finance-reverse-percentage',
       key: 'quote',
+      grade: 5,
       name: 'Tax refund',
       brief: 'The portal will reverse the commission, but only from the account that placed it and only for the ' +
              'exact amount the sculptor was quoted &mdash; not the amount he was charged. Four digits, whole ' +
@@ -294,6 +294,7 @@ window.ROOM = {
     {
       id: 'dj-deposit-compound',
       key: 'acct',
+      grade: 5,
       name: 'The prom reserve',
       brief: 'This account was never his and he has never known it was there. The bank will release it to anyone ' +
              'who can say how long the money has been sitting in it. Whole years.',
@@ -359,6 +360,7 @@ window.ROOM = {
     {
       id: 'wifi-venn-router',
       key: 'venn',
+      grade: 4,
       name: 'Network router',
       brief: 'The hall speakers are wired, powered and silent. The filter passes nothing until the router&rsquo;s ' +
              'dual-service allocation matches what the network is actually doing right now.',

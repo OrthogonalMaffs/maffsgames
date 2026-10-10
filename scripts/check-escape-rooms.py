@@ -1,3 +1,5 @@
+# ci-line: Escape rooms (every lock against the audited bank and variants.json; tokens; VALID draws; each room's difficulty stars derived from its lock grades and matched on every hub and front-page card, two faults planted) |
+# ci-deps: escape-rooms/ index.html
 """Check the built escape rooms against the audited lock bank.
 
 Run after any edit to escape-rooms/*/room.js. It catches:
@@ -10,6 +12,13 @@ Run after any edit to escape-rooms/*/room.js. It catches:
     literal braces in front of a class
   * a room with fewer than two empty objects
   * a room with fewer than 20 VALID draws — see "Cross-lock collisions" below
+  * difficulty (contract ESCAPE-DIFFICULTY, 10 Oct 2026; Jon's scheme of 9 Oct): a lock in a
+    live room with no `grade: N` (1-9); a card on the hub or the front page whose data-stars
+    or label disagrees with the rating derived from its room's hardest lock (★ Warm-up 1-3,
+    ★★ Core 4-5, ★★★ Challenge 6-9); a live room with no card on either page; bands in
+    escape-rooms/assets/rating.js that differ from BANDS here; hub cards out of rating order
+    (the hub says "Ordered easiest to hardest"). Two faults are planted on every run (Rugby
+    Mud's hub card saying ★; a lock's grade removed) and must each be caught.
   * on a `maxDigits: N` keypad ("up to N digits, Set to submit", KEYPAD-VARIABLE),
     an answer or misconception the keypad cannot take: it must be a whole
     number of 1 to N digits with no leading zero, so a four-digit misconception
@@ -44,6 +53,8 @@ the 404. What is still to draw is tracked in docs/escape-room-image-prompts.md,
 not by this exit code.
 """
 import itertools, json, re, pathlib, sys
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")   # the stars, on a cp1252 Windows console
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
 ROOMS = BASE / "escape-rooms"
@@ -263,8 +274,103 @@ for room_dir in sorted(p for p in ROOMS.iterdir() if p.is_dir() and p.name != "a
         if not v0:
             warnings.append(f"{slug}: variant-0 draw is not VALID (never served)")
 
+# ---- difficulty stars (ESCAPE-DIFFICULTY) ------------------------------------
+BANDS = [(3, 1, "Warm-up", "1–3"), (5, 2, "Core", "4–5"), (9, 3, "Challenge", "6–9")]   # (top grade, stars, name, grades)
+CARD = {"hub": (r'<a class="room-card" href="([a-z0-9-]+)/"', "chip"),
+        "front page": (r'<a class="esc-card" href="escape-rooms/([a-z0-9-]+)/"', "esc-chip")}
+
+
+def lock_grades(js):
+    """[(lock id, grade or None)] in the order the locks appear."""
+    out = []
+    for m in re.finditer(r"\n      id: '([^']+)',", js):
+        g = re.match(r"\n      key: '[^']+',\n      grade: (\d+),", js[m.end():].replace("\r\n", "\n"))
+        out.append((m.group(1), int(g.group(1)) if g else None))
+    return out
+
+
+def room_rating(grades):
+    top = max(grades)
+    return next((stars, name, gr) for t, stars, name, gr in BANDS if top <= t)
+
+
+def check_ratings(room_js, live, pages, rating_js):
+    """Problems with the difficulty stars. room_js {slug: text}; live {slug}; pages {name: html}."""
+    out, want = [], {}
+    for slug in sorted(live):
+        gs = lock_grades(room_js[slug])
+        missing = [lid for lid, g in gs if g is None or not 1 <= g <= 9]
+        if missing:
+            out.append(f"{slug}: lock(s) with no grade 1-9: {', '.join(missing)}")
+            continue
+        want[slug] = room_rating([g for _, g in gs])
+    for page, html in pages.items():
+        pat, chip = CARD[page]
+        seen = []
+        for m in re.finditer(pat + r".*?</a>", html, re.S):
+            slug = m.group(1)
+            seen.append(slug)
+            c = re.search(r'<span class="%s" data-stars="(\d)"><span aria-hidden="true">([^<]*)</span>'
+                          r'<span class="sr-only">([^<]*)</span></span>' % chip, m.group(0))
+            if slug not in want:
+                continue
+            stars, name, gr = want[slug]
+            label = "%s %s &middot; grades %s" % ("★" * stars, name, gr)
+            sr = "Difficulty: %d of 3, %s, grades %s" % (stars, name, gr)
+            if not c:
+                out.append(f"{page}: {slug}'s card has no difficulty chip (want {label})")
+            elif (int(c.group(1)), c.group(2), c.group(3)) != (stars, label, sr):
+                out.append(f"{page}: {slug}'s card says {c.group(2)} (data-stars {c.group(1)}), "
+                           f"its locks make it {label}")
+        for slug in sorted(set(want) - set(seen)):
+            out.append(f"{page}: no card for live room {slug}")
+        if page == "hub":
+            order = [want[s][0] for s in seen if s in want]
+            if order != sorted(order):
+                out.append("hub: cards are not in rating order (it says \"Ordered easiest to hardest\"): "
+                           + ", ".join(f"{s} {want[s][0]}" for s in seen if s in want))
+    js_bands = [(int(t), int(st), n, g) for st, n, g, t in re.findall(
+        r"\{ stars: (\d), name: '([^']+)', grades: '([^']+)', top: (\d) \}", rating_js)]
+    if js_bands != BANDS:
+        out.append(f"escape-rooms/assets/rating.js bands {js_bands} differ from this checker's {BANDS}")
+    return out
+
+
+room_js = {d.name: (d / "room.js").read_text(encoding="utf-8")
+           for d in ROOMS.iterdir() if d.is_dir() and (d / "room.js").exists()}
+live = {s for s in room_js if "noindex" not in (ROOMS / s / "index.html").read_text(encoding="utf-8")}
+pages = {"hub": (ROOMS / "index.html").read_text(encoding="utf-8"),
+         "front page": (BASE / "index.html").read_text(encoding="utf-8")}
+rating_js = (ROOMS / "assets" / "rating.js").read_text(encoding="utf-8")
+problems += check_ratings(room_js, live, pages, rating_js)
+star_report = {s: room_rating([g for _, g in lock_grades(room_js[s])]) for s in sorted(live)
+               if all(g for _, g in lock_grades(room_js[s]))}
+
+# Planted faults: each must be caught, or the rule has stopped working.
+if "rugby-mud" in live:
+    hub_card = re.search(r'<a class="room-card" href="rugby-mud/".*?</a>', pages["hub"], re.S).group(0)
+    one_star = re.sub(r'data-stars="\d"><span aria-hidden="true">[^<]*</span><span class="sr-only">[^<]*</span>',
+                      'data-stars="1"><span aria-hidden="true">★ Warm-up &middot; grades 1–3</span>'
+                      '<span class="sr-only">Difficulty: 1 of 3, Warm-up, grades 1–3</span>', hub_card, count=1)
+    plants = {
+        "Rugby Mud's hub card says ★": (room_js, dict(pages, hub=pages["hub"].replace(hub_card, one_star)), "rugby-mud's card says"),
+        "a lock's grade removed": (dict(room_js, **{"rugby-mud": re.sub(r"\n      grade: \d+,", "", room_js["rugby-mud"], count=1)}),
+                                   pages, "with no grade"),
+    }
+    for what, (rj, pg, expect) in plants.items():
+        got = check_ratings(rj, live, pg, rating_js)
+        if not any(expect in g for g in got):
+            problems.append(f"planted fault NOT caught: {what} (the rating check found {got or 'nothing'})")
+    plant_line = "planted faults caught: " + "; ".join(plants)
+else:
+    plant_line = "planted faults: skipped (rugby-mud is not live)"
+
 print(f"locks checked: {locks_seen}")
 print(f"variants checked: {sum(len(v) for v in verified.values())}")
+print("difficulty (hardest lock's grade):")
+for slug, (stars, name, gr) in star_report.items():
+    print(f"  {slug:<20} {'★' * stars:<3} {name} (grades {gr})")
+print(plant_line)
 print("cross-lock collisions (VALID draws per room):")
 for line in collision_report:
     print("  " + line)

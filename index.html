@@ -560,6 +560,7 @@
   .esc-card:hover{transform:translateY(-3px);border-color:rgba(255,255,255,.42);}
   .esc-card img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:#1e293b;}
   .esc-body{padding:10px 12px 12px;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   .esc-chip{display:block;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
     color:#fcd34d;margin-bottom:4px;}
   .esc-card h3{font-size:14px;margin:0 0 4px;color:#fff;font-weight:700;line-height:1.3;}
@@ -803,7 +804,7 @@
   <a class="esc-card" href="escape-rooms/hamster-heist/" data-mfg-item="hamster-heist">
     <img onerror="this.remove()" src="docs/art/hamster-heist-scene.webp" alt="" width="1600" height="873" loading="lazy">
     <div class="esc-body">
-      <span class="esc-chip">KS3 / GCSE</span>
+      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
       <h3>The Great Hamster Heist</h3>
       <p>Circumference, upper bounds, gradient.</p>
     </div>
@@ -811,7 +812,7 @@
   <a class="esc-card" href="escape-rooms/pe-shed-rebellion/" data-mfg-item="pe-shed-rebellion">
     <img onerror="this.remove()" src="docs/art/pe-shed-rebellion-scene.webp" alt="" width="1600" height="873" loading="lazy">
     <div class="esc-body">
-      <span class="esc-chip">KS3 / GCSE</span>
+      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
       <h3>The P.E. Store Rebellion</h3>
       <p>Sectors, inverse proportion, sequences.</p>
     </div>
@@ -819,7 +820,7 @@
   <a class="esc-card" href="escape-rooms/heatwave-mutiny/" data-mfg-item="heatwave-mutiny">
     <img onerror="this.remove()" src="docs/art/heatwave-mutiny-scene.webp" alt="" width="1600" height="873" loading="lazy">
     <div class="esc-body">
-      <span class="esc-chip">KS3 / GCSE</span>
+      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
       <h3>The Heatwave Mutiny</h3>
       <p>LCM, surface area to volume, inequalities.</p>
     </div>
@@ -827,7 +828,7 @@
   <a class="esc-card" href="escape-rooms/prom-budget/" data-mfg-item="prom-budget">
     <img onerror="this.remove()" src="docs/art/prom-budget-scene.webp" alt="" width="1600" height="873" loading="lazy">
     <div class="esc-body">
-      <span class="esc-chip">GCSE / Core</span>
+      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
       <h3>The Prom Budget Embezzlement</h3>
       <p>Reverse percentages, compound growth, Venn.</p>
     </div>
@@ -835,7 +836,7 @@
   <a class="esc-card" href="escape-rooms/canteen-hack/" data-mfg-item="canteen-hack">
     <img onerror="this.remove()" src="docs/art/canteen-hack-scene.webp" alt="" width="1600" height="873" loading="lazy">
     <div class="esc-body">
-      <span class="esc-chip">KS3 / GCSE</span>
+      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
       <h3>The Canteen Menu Hack</h3>
       <p>Mean averages, simultaneous equations, fractions.</p>
     </div>
@@ -843,7 +844,7 @@
   <a class="esc-card" href="escape-rooms/rugby-mud/" data-mfg-item="rugby-mud">
     <img onerror="this.remove()" src="docs/art/rugby-mud-scene.webp" alt="" width="1600" height="873" loading="lazy">
     <div class="esc-body">
-      <span class="esc-chip">GCSE</span>
+      <span class="esc-chip" data-stars="3"><span aria-hidden="true">★★★ Challenge &middot; grades 6–9</span><span class="sr-only">Difficulty: 3 of 3, Challenge, grades 6–9</span></span>
       <h3>The Rugby Mud Bath</h3>
       <p>Area scale factors, rates, index laws.</p>
     </div>
@@ -852,7 +853,7 @@
     <a class="esc-card" href="escape-rooms/comic-caper/" data-mfg-item="comic-caper" style="flex:1">
       <img onerror="this.remove()" src="docs/art/comic-caper-scene.webp" alt="" width="1600" height="873" loading="lazy">
       <div class="esc-body">
-        <span class="esc-chip">GCSE</span>
+        <span class="esc-chip" data-stars="1"><span aria-hidden="true">★ Warm-up &middot; grades 1–3</span><span class="sr-only">Difficulty: 1 of 3, Warm-up, grades 1–3</span></span>
         <h3>The Comic Caper</h3>
         <p>Factors &middot; Primes &middot; HCF</p>
       </div>
@@ -864,7 +865,7 @@
     <a class="esc-card" href="escape-rooms/kiln-disaster/" data-mfg-item="kiln-disaster" style="flex:1">
       <img onerror="this.remove()" src="docs/art/kiln-disaster-scene.webp" alt="" width="1600" height="873" loading="lazy">
       <div class="esc-body">
-        <span class="esc-chip">GCSE</span>
+        <span class="esc-chip" data-stars="1"><span aria-hidden="true">★ Warm-up &middot; grades 1–3</span><span class="sr-only">Difficulty: 1 of 3, Warm-up, grades 1–3</span></span>
         <h3>The Kiln Disaster</h3>
         <p>Multiples &middot; LCM &middot; Order of operations</p>
       </div>
@@ -875,7 +876,7 @@
   <a class="esc-card" href="escape-rooms/car-trap/" data-mfg-item="car-trap">
     <img onerror="this.remove()" src="docs/art/car-trap-v2-scene.webp" alt="" width="1600" height="873" loading="lazy">
     <div class="esc-body">
-      <span class="esc-chip">GCSE / Core</span>
+      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
       <h3>The Headteacher&rsquo;s Car Trap</h3>
       <p>Bounds &middot; Arc length &middot; Quadratics</p>
     </div>

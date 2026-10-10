@@ -59,7 +59,6 @@ window.ROOM = {
   slug: 'escape-rugby-mud',
   title: 'The Rugby Mud Bath',
   level: 'gcse',
-  levelLabel: 'GCSE',
   minutes: 15,
   penalty: 45,
   art: 'rugby-mud',
@@ -146,6 +145,7 @@ window.ROOM = {
     {
       id: 'elbow-patch-scale',
       key: 'patch',
+      grade: 7,
       name: 'The split hose',
       brief: 'The kit’s cutter takes an area and cuts a patch the same shape as its sample. Give it exactly the area ' +
              'of the split. Too big and it puckers and lets go at two in the morning; too small and it does not ' +
@@ -222,6 +222,7 @@ window.ROOM = {
     {
       id: 'sprinkler-flow-rates',
       key: 'flow',
+      grade: 6,
       name: 'The tap timer',
       brief: 'Both taps open, and the cheap timer shuts them both off when it runs out. Set it to how long the two ' +
              'together take to put one full soaking on the pitch. Short of that and his drains have it dry by ' +
@@ -306,6 +307,7 @@ window.ROOM = {
     {
       id: 'rugby-scoreboard-bases',
       key: 'score',
+      grade: 7,
       name: 'The tap-cage padlock',
       brief: 'Two dials, which the translation on the packet has labelled HOME and AWAY. Mr Mower has set them to the ' +
              'score of his favourite match, and the instructions told him to write the code down as a secret power ' +
