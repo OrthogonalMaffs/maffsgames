@@ -48,7 +48,7 @@
   "Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a quarter of the planted layout faults)": "3",
   "Just Pythag It, Bruv, part 3 (fit at 375px and the three desktop sizes; a quarter of the planted layout faults)": "5",
   "Just Pythag It, Bruv, part 4 (every key and triangle recomputed over 300 sessions, WebKit, play-through, a quarter of the layout faults, fault-injection self-test)": "1",
-  "Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px)": "18",
+  "Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px)": "4",
   "Linear Equation Solver (every move's class re-derived with SymPy, every option clicked in Chromium)": "17",
   "Log Laws Solve (layers C + D, SymPy)": "14",
   "Maths Court (independent recomputation + rendered page)": "10",
