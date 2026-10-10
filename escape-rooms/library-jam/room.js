@@ -28,9 +28,9 @@
    angle, the fine, the days and the count are tokens. The only figure in the
    prose outside tokens is "half past three", in words.
 
-   ART: none yet (art pending; ART-PENDING, #244). Jon generates the three
-   pictures after his play-test; add `art` with them, never before. The alts
-   below are the draft's, to be checked against the pictures.
+   ART: docs/art/library-jam-{scene,fail,win}.webp, Jon's approved pictures
+   (10 Oct, 22:20-22:42; contract ROOM-ART-RK-LJ), the squiggle writing on the two
+   papers pinned to the right-hand wall blanked. The alts below match them.
 
    RULE — the fail picture will show the end of the day, which is only true at
    time-out. Never set `missArt` on any lock in this room. */
@@ -40,9 +40,10 @@ window.ROOM = {
   level: 'gcse',
   minutes: 15,
   penalty: 45,
+  art: 'library-jam',
   sceneAlt: 'The backroom of a school library, seen past a loaded returns trolley. An old metal drop-box is built into the wall, and a sorting belt runs out of it towards a chute and a wire bin. A mechanical arm has stopped over the belt with one book in its grip, and a flat deflector arm sits at a slant across the belt. Shelves of books line the walls, a few sticking out at odd angles, and a small screen glows on a desk beside a date stamp and a cup of tea.',
-  failAlt: 'The same backroom at the end of the day. The belt is still, the arm frozen with its book, and the wire bin is empty. The screen on the desk glows red. The returns trolley stands where it was.',
-  winAlt: 'The same backroom. The wire bin is full of books, neatly stacked, and the arms are at rest. Every book on the shelves is pushed in level. The screen on the desk glows green.',
+  failAlt: 'The same backroom at the end of the day, nearly dark, the high window a dull orange. The belt is still, the arm frozen with its book, and the wire bin is empty. The screen on the desk glows red.',
+  winAlt: 'The same backroom. The wire bin is piled high with books and the arm is raised, its claw open and empty. The screen on the desk glows green.',
 
   hook: 'The library at St Martha&rsquo;s belongs, as far as anyone can tell, to Mrs Barb Phile. Officially she ' +
         'is the librarian. To every student in the school she is Bibby. She likes books a great deal more than ' +
