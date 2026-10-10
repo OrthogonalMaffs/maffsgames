@@ -258,7 +258,8 @@ ROOM_STEP = r"""((win) => {
     const ans = v.answer !== undefined ? v.answer : l.answer, ins = l.instrument;
     const put = (id, val) => { const n = document.getElementById(id); n.value = String(val); n.dispatchEvent(new Event('input', {bubbles: true})); };
     if (ins.kind === 'keypad') {
-      const d = ins.digits, good = String(ans).padStart(d, '0');
+      // a maxDigits keypad (KEYPAD-VARIABLE) drops the padding's leading zeros itself
+      const d = ins.digits || ins.maxDigits, good = String(ans).padStart(d, '0');
       put('numK', win ? good : (good === '0'.repeat(d) ? '1'.repeat(d) : '0'.repeat(d)));
     } else if (ins.kind === 'pair') {
       put('numA', win ? ans[0] : (Number(ans[0]) === ins.a.min ? ins.a.max : ins.a.min));

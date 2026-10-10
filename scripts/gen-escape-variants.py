@@ -41,6 +41,15 @@ def grid(lo, hi, step):
     return [round(lo + i * step, 6) for i in range(n + 1)]
 
 
+def keypad(n):
+    """A keypad as an instrument range, for either mode (canon §11): `digits: n` takes exactly n
+    digits (60 entered as 060), `maxDigits: n` takes 1 to n digits, no leading zero, Set to submit
+    (KEYPAD-VARIABLE). Both set exactly the whole numbers 0 to 10^n - 1, so keep()'s on_grid test is the
+    settable rule for both: the answer and the misconception must each fit in n digits (a four-digit
+    misconception needs n >= 4). What differs is the display, not what can be entered."""
+    return (0, 10 ** n - 1, 1)
+
+
 def on_grid(v, lo, hi, step):
     if v < lo - 1e-9 or v > hi + 1e-9:
         return False
