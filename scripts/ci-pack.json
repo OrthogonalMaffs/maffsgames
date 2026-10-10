@@ -24,7 +24,7 @@
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "16",
   "Distinctly Average (independent recomputation)": "16",
   "Eigenvector Engine (every key an eigenvector, no option a multiple of one or of another; working recomputed; every option clicked)": "11",
-  "Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test)": "9",
+  "Equation Builder, part 1 (half of every question's tile arrangements classified by SymPy; the whole-question checks; self-test)": "19",
   "Equation Builder, part 2 (the other half of every question's tile arrangements, classified by SymPy)": "4",
   "Escape rooms (every lock against the audited bank and variants.json; tokens; VALID draws; each room's difficulty stars derived from its lock grades and matched on every hub and front-page card, the star key on both pages matched to the same bands; three faults planted)": "14",
   "Escape-room art (engine.js: a room with no art field requests no picture, in a fixture room; every live room's scene, win and fail pictures load as before; the old always-request engine planted and caught)": "15",
