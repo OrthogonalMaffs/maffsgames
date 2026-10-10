@@ -87,8 +87,14 @@ King ★★★ Challenge, The Library Jam ★ Warm-up (no star field; the diffic
 - **Local runs:** `FONTCONFIG_FILE` pinning DejaVu, as CI does (scratch `fonts.conf`). The cloud container's Chromium
   is build 1194 and Playwright 1.63 wants 1243, so a scratch symlink was used; the numbers above match the
   handover's earlier ones exactly (533 and 536 before).
-- **Next after merge:** RIGHTFUL-KING-BUILD. KEYPAD-VARIABLE (#251) and ART-PENDING (#244) are both on main; read
-  ESCAPE-DIFFICULTY's note for the cloud lane in home.md (`grade` on every lock, `rating.js`, `data-stars` chips).
+- **Next after merge:** RIGHTFUL-KING-BUILD. KEYPAD-VARIABLE (#251) and ART-PENDING (#244) are both on main.
+- **Jon's ruling for both builds (10 Oct, after 13:45):**
+  - **The hub is left alone.** A built room sits behind its holding page and has no hub card until its release
+    contract, which brings the star chip.
+  - **Every lock gets a `grade` in room.js**, with a one-line reason in the PR, as #253 did. Since #253 the checker
+    fails a lock without one.
+  - **The derived rating must be ★★★ for The Rightful King and ★ for The Library Jam.** If honest grading gives
+    anything else, STOP and report; never adjust a grade to fit.
 **Open for Jon:** delete branch `claude/youthful-feynman-anpxuq-pd-check` in GitHub (the proxy refused the remote
 delete, HTTP 403).
 Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
