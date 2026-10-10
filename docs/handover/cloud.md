@@ -88,6 +88,21 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-10 (cloud): UPDATES-WEEKEND, /updates/ October entries (Jon's wording, checked against main)
+
+- **First pass stopped** (STOP IF): four claims differed from the code. Library Jam "our first ★ Warm-up room"
+  (Comic Caper and Kiln Disaster already are) and Bibby fining the class (the library system does); calculator five
+  games, not six (Growth and Decay, #239); Boolean Blitz "no longer than the simplest form" (AB + BC is longer than
+  B(A + C); #227); Wrong on the Internet "spinner" (a roulette wheel and two independent events; #223). Minor: Your
+  Scores is a section of /leaderboards/ (#238). **Jon approved the proposed wording for all five (23:00+).**
+- **Jon's rulings:** Rightful King topic "repeated percentage decrease" (each minute takes a percentage of what is
+  left); rooms go before Car Trap, as #271 has them (newest first).
+- **Done:** New gains stars (#253), calculator (#239, #261, #264-#267) and scores (#238) after Car Trap; Corrected
+  gains Boolean Blitz (#227), 2C (#225), 2B (#226), Wrong on the Internet (#223) at the top (newest first).
+- **Rooms:** #271 merged while #272 was open (main run 755 green), so the two room lines #271 added are replaced
+  with Jon's approved text, in #271's placement (before Car Trap). The interim home.md note is removed (the cloud
+  lane's own addition; home.md otherwise as main). Log Laws: no fix merged, item left out.
+
 ## 2026-10-10 (cloud): LIBRARY-JAM-BUILD, The Library Jam built behind its holding page (for Jon's play-test)
 
 - **Jon can play-test it at `/escape-rooms/library-jam/play.html`** once the PR merges (noindex, unlinked, analytics
