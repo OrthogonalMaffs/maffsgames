@@ -12,6 +12,7 @@ misconception, the win and the loss; the old always-request engine is planted an
 live room has all three files, so none uses the 404 path for its data-fallback; no saved field changes (SAVE_V 1).
 Recorded in CLAUDE.md and voice-rewrite §6. **For the cloud lane (#242):** drop `art` from car-trap's room.js
 (and leave the hub card's `<img>` out of `escape-rooms/index.html` until the art lands), then re-run.
+
 **DASHBOARD-CHARTS (10 Oct, Jon's contract 08:35; `docs/handover/contracts/2026-10-10-dashboard-charts.md`).**
 `docs/apps-script-endpoint.js` only, SCRIPT_VERSION `2026-10-10-a`: the three percentage columns are written as
 fractions with the cell format `0%` (they show as before), the Accuracy chart's axis runs 0 to 1 as percent;
