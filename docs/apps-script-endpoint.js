@@ -63,7 +63,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-09-29-c';
+const SCRIPT_VERSION = '2026-10-10-a';
 
 function doGet(e) {
   return jsonResponse({
@@ -220,10 +220,11 @@ function rebuildDashboard(weekRows, monthRows, col) {
   r++;
   topSlugs.forEach(function(slug) {
     var comp = cc[slug]||0;
-    var pct = gc[slug]>0 ? Math.round(100*comp/gc[slug]) : 0;
-    dash.getRange(r, 1, 1, 4).setValues([[slug, gc[slug], comp, pct+'%']]);
+    var frac = gc[slug]>0 ? comp/gc[slug] : 0;
+    dash.getRange(r, 1, 1, 4).setValues([[slug, gc[slug], comp, frac]]);
     r++;
   });
+  formatPercentColumn(dash, t1Start+2, topSlugs.length);
   r++;
 
   // Chart 1: Top Games bar chart
@@ -239,6 +240,7 @@ function rebuildDashboard(weekRows, monthRows, col) {
       .setOption('colors', ['#0ea5e9'])
       .build();
     dash.insertChart(chart1);
+    r = rowBelowChart(r, t1Start, 300);
   }
 
   // ══════════════════════════════════════
@@ -270,12 +272,14 @@ function rebuildDashboard(weekRows, monthRows, col) {
       .setOption('colors', ['#22c55e','#3b82f6','#f97316','#8b5cf6','#ef4444','#0ea5e9'])
       .build();
     dash.insertChart(chart2);
+    r = rowBelowChart(r, t2Start, 280);
   }
 
   // ══════════════════════════════════════
   //  TABLE 3: Accuracy by Game (7 days)
   // ══════════════════════════════════════
-  var weekAnswers = weekRows.filter(function(x){return x[col['event']]==='question_answered';});
+  // Tables 3 and 4 count only answers that can be right or wrong (see isMarked).
+  var weekAnswers = weekRows.filter(function(x){return x[col['event']]==='question_answered' && isMarked(x, col);});
   var accByGame = {};
   weekAnswers.forEach(function(x) {
     var s = x[col['game_slug']];
@@ -295,20 +299,16 @@ function rebuildDashboard(weekRows, monthRows, col) {
   r++;
   accSlugs.forEach(function(slug) {
     var d = accByGame[slug];
-    var pct = Math.round(100*d.correct/d.total);
-    dash.getRange(r, 1, 1, 4).setValues([[slug, d.total, d.correct, pct+'%']]);
+    dash.getRange(r, 1, 1, 4).setValues([[slug, d.total, d.correct, d.correct/d.total]]);
     r++;
   });
+  formatPercentColumn(dash, t3Start+2, accSlugs.length);
   r++;
 
   // Chart 3: Accuracy bar chart
   if (accSlugs.length > 0) {
-    var accData = [[' Game', 'Accuracy %']];
-    accSlugs.forEach(function(slug) {
-      accData.push([slug, Math.round(100*accByGame[slug].correct/accByGame[slug].total)]);
-    });
-    var accRange = dash.getRange(t3Start+1, 1, accSlugs.length+1, 1);
-    // Build from the table data (cols 1 and 4)
+    // Built from the table data (cols 1 and 4); col 4 holds fractions, so the axis runs 0 to 1
+
     var chart3 = dash.newChart()
       .setChartType(Charts.ChartType.BAR)
       .addRange(dash.getRange(t3Start+1, 1, accSlugs.length+1, 1))
@@ -318,9 +318,10 @@ function rebuildDashboard(weekRows, monthRows, col) {
       .setOption('legend', {position: 'none'})
       .setOption('width', 500).setOption('height', 300)
       .setOption('colors', ['#f97316'])
-      .setOption('hAxis', {minValue: 0, maxValue: 100})
+      .setOption('hAxis', {minValue: 0, maxValue: 1, format: 'percent'})
       .build();
     dash.insertChart(chart3);
+    r = rowBelowChart(r, t3Start, 300);
   }
 
   // ══════════════════════════════════════
@@ -337,15 +338,17 @@ function rebuildDashboard(weekRows, monthRows, col) {
     .sort(function(a,b){return (qStats[a].correct/qStats[a].total)-(qStats[b].correct/qStats[b].total);})
     .slice(0, 15);
 
+  var t4Start = r;
   dash.getRange(r, 1).setValue('Hardest Questions — Last 7 Days (min 5 attempts)').setFontWeight('bold').setFontSize(11);
   r++;
   dash.getRange(r, 1, 1, 4).setValues([['Game + Question', 'Attempts', 'Correct', 'Accuracy %']]).setFontWeight('bold').setBackground('#f0f0f0');
   r++;
   hardest.forEach(function(key) {
     var d = qStats[key];
-    dash.getRange(r, 1, 1, 4).setValues([[key, d.total, d.correct, Math.round(100*d.correct/d.total)+'%']]);
+    dash.getRange(r, 1, 1, 4).setValues([[key, d.total, d.correct, d.correct/d.total]]);
     r++;
   });
+  formatPercentColumn(dash, t4Start+2, hardest.length);
   r += 2;
 
   // ══════════════════════════════════════
@@ -383,6 +386,7 @@ function rebuildDashboard(weekRows, monthRows, col) {
       .setOption('curveType', 'function')
       .build();
     dash.insertChart(chart5);
+    r = rowBelowChart(r, t5Start, 280);
   }
 
   // ── Formatting ──
@@ -391,6 +395,31 @@ function rebuildDashboard(weekRows, monthRows, col) {
   dash.setColumnWidth(3, 80);
   dash.setColumnWidth(4, 100);
   dash.setTabColor('#0ea5e9');
+}
+
+// A question_answered row counts towards accuracy only when its `correct` cell
+// is true or false. A blank means the item has no right answer (prisoners-dilemma
+// sends correct: null), so counting it as wrong would put that game at the top
+// of both accuracy tables. String() matches the tables' own count of correct
+// answers (a TRUE cell reads back as the boolean true).
+function isMarked(x, col) {
+  var c = String(x[col['correct']]);
+  return c === 'true' || c === 'false';
+}
+
+// Percentages are written as fractions (0.17) and shown as 17% by the cell
+// format, so a chart reading the column gets numbers from 0 to 1.
+function formatPercentColumn(dash, firstRow, n) {
+  if (n > 0) dash.getRange(firstRow, 4, n, 1).setNumberFormat('0%');
+}
+
+// Charts are anchored at their table's first row but have a fixed pixel height,
+// while a table's height varies by day. Return the first free row below both
+// the table (r) and its chart, plus one blank row, so the next section never
+// starts underneath the chart.
+const DEFAULT_ROW_PX = 21; // a Sheets row at the default height
+function rowBelowChart(r, tStart, chartPx) {
+  return Math.max(r, tStart + Math.ceil(chartPx / DEFAULT_ROW_PX) + 1);
 }
 
 // ============================================================
