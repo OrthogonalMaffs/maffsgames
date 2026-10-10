@@ -65,7 +65,7 @@ session, generated"; a game with a fixed bank gives its bank size. A count that 
 | 48 | Angle Ace | `angle-ace` | Year 6, KS3, GCSE | Geometry | Two-phase: find the angle then name the geometric reason. Year 6 bank: 40q | untagged |
 | 49 | Coordinate Geometry Dash | `coordinate-geometry-dash` | GCSE, A-Level | Geometry | Interactive canvas with plotted points, lines, circles | untagged |
 | 50 | Graph Transformer | `graph-transformer` | GCSE, A-Level | Algebra, Geometry | Apply translations, reflections, stretches to match target curve | untagged |
-| 51 | Formula Unlocked | `formula-unlocked` | GCSE, A-Level, L4 | Algebra | Make the subject — four stages with hint system | untagged |
+| 51 | Formula Unlocked | `formula-unlocked` | GCSE, A-Level, L4 | Algebra | Make the subject — four stages with hint system | scientific |
 | 52 | Bearing Blitz | `bearing-blitz` | GCSE | Geometry | Submarine game — set bearing by eye, fire at targets | untagged |
 | 53 | Scale Factor Scaling | `scale-factor-scaling` | GCSE, A-Level, L4 | Geometry, Number | Length/area/volume scaling: k, k squared, k cubed | untagged |
 | 54 | Unit Converter | `unit-converter` | GCSE, A-Level, L4 | Number | Length, area, volume unit conversions | required |

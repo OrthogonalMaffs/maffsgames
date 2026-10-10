@@ -1,5 +1,9 @@
 # Handover: home lane
 
+**SCIENTIFIC TAGGING 4/5: formula-unlocked (10 Oct).** As formula-forge (#265): roster `scientific`, badge,
+scientific calculator under the options and solution (its own `--hint` kept); check-calculator, verify-formula-unlocked
+and the Chromium smoke (sin(30) = 0.5 at 1280 and 320 px, no overflow) pass; CI the gate.
+
 **SCIENTIFIC TAGGING 3/6: formula-forge (10 Oct).** As force-resolver: roster `scientific`, badge, scientific
 calculator under the options (its own `--hint` kept: calculator.css uses it only for the "required" badge);
 check-calculator passes; sin(30) = 0.5 at 1280 and 320 px, no overflow. No verify script exists for this game.
