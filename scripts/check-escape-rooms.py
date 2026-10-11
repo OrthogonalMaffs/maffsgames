@@ -1,4 +1,4 @@
-# ci-line: Escape rooms (every lock against the audited bank and variants.json; tokens; VALID draws; each room's difficulty stars derived from its lock grades and matched on every hub and front-page card, the star key on both pages matched to the same bands; three faults planted) |
+# ci-line: Escape rooms (every set of every live room re-checked by escape_set_checks.py: one solution, answer and misconception settable and different, answer not in its clue, off the end of the travel, broken sets planted; every lock against the audited bank and variants.json; tokens; VALID draws; maxDigits answers settable; difficulty stars from lock grades matched on every hub and front-page card and the star key, three faults planted) |
 # ci-deps: escape-rooms/ index.html
 """Check the built escape rooms against the audited lock bank.
 
