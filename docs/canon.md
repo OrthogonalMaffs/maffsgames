@@ -2059,11 +2059,12 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
   content verifier on any change under `escape-rooms/` or to `index.html`) fails a live room's lock with no
   grade, any card on either page that disagrees with the derived rating, a live room with no card, bands in
   rating.js that differ from its own, and hub cards out of rating order (the hub says "Ordered easiest to
-  hardest"); it plants a ★ on Rugby Mud's hub card and a missing grade on every run, and fails if either
-  goes uncaught. `scripts/test-escape-rating.py` holds the start screen and teacher page to the hub card in
-  Chromium. Ratings as of 10 Oct: ★ Comic Caper, Kiln Disaster; ★★ Canteen Hack, Heatwave Mutiny, P.E.
-  Store Rebellion, Prom Budget, Hamster Heist, Car Trap; ★★★ Rugby Mud. **A new room adds `grade` to every
-  lock before release**; The Rightful King must come out ★★★ and The Library Jam ★ (Jon, 9 Oct).
+  hardest"); on every run it plants a ★ on Rugby Mud's hub card, a missing grade and a star key naming the
+  wrong grades, and fails if any goes uncaught. `scripts/test-escape-rating.py` holds the start screen and
+  teacher page to the hub card in Chromium. **Each room's rating is not listed here:** it is derived from its
+  locks' `grade` fields, recorded as `data-stars` on its hub and front-page cards, and printed for every live
+  room in `check-escape-rooms.py`'s CI log. **A new room adds `grade` to every lock before release**; The
+  Rightful King and The Library Jam came out as Jon ruled on 9 Oct.
 - **Keypads: fixed length, or up to N digits (KEYPAD-VARIABLE, 10 Oct 2026).** `digits: N` takes exactly N
   digits, empty slots shown (60 is entered as 060), and Set with too few says "Not enough digits." at no
   cost. `maxDigits: N` instead is **"up to N digits, Set to submit"**: the display shows only what has
@@ -2072,9 +2073,9 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
   answers vary in length: N fixed slots steer students to N digits, and too few slots cut a wrong answer
   down to a right one (5400 on two digits reads as 54). The misconception must fit too, so a four-digit
   misconception needs `maxDigits: 4`; `check-escape-rooms.py` fails a maxDigits lock whose answer or
-  misconception cannot be set. The live rooms all use `digits`. Waiting on it: the cloud lane's drafts of
-  **The Rightful King** (passcode, answers 24 to 504) and **The Library Jam** (fines lock, answer up to
-  £99, misconception up to 9900). Tested by `scripts/test-escape-keypad.py`.
+  misconception cannot be set. It was built for The Rightful King's passcode and The Library Jam's fines
+  lock, the first `maxDigits` locks; which mode each keypad lock uses is set in its room's `room.js`
+  (`instrument`), not listed here. Tested by `scripts/test-escape-keypad.py`.
 - **`wrongLines`** — a room's escalating wrong-entry lines, `{head, body}` objects, indexed by
   `st.wrongs - 1` and clamped so the last repeats. A room without the array gets the original fixed string.
   A misconception hit consumes an index without printing a line, which is intended.
@@ -2094,9 +2095,10 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
 
 | Script | What it does |
 | --- | --- |
-| `scripts/check-escape-rooms.py` | The gate, in CI since ESCAPE-DIFFICULTY (10 Oct 2026; before that it ran only by hand). Every room against the audited bank (every `lock-bank-batch*.txt`) and `variants.json`, all tokens resolve, VALID draw count per room (fails under 20; an invalid variant 0 only warns), art present, difficulty stars on every card (two faults planted). Run before shipping |
+| `scripts/check-escape-rooms.py` | The gate, in CI since ESCAPE-DIFFICULTY (10 Oct 2026; before that it ran only by hand). Every room against the audited bank (every `lock-bank-batch*.txt`) and `variants.json`; **every set of every live room re-checked through `escape_set_checks.py`** (ESCAPE-SET-CHECKS, 11 Oct 2026), each failure named by room, lock, set and check, and a live lock with no entry there fails; all tokens resolve; VALID draw count per room (fails under 20; an invalid variant 0 only warns); `maxDigits` answers and misconceptions settable; art present; difficulty stars on every card and the star key. Planted on every run: the rating, grade and star-key faults, and the broken sets in `scripts/fixtures/escape-broken-sets.json`. Prints each live room's verified sets and the total, ratings and VALID counts. Run before shipping |
 | `scripts/test-escape-rating.py` | The start screen and teacher page show the hub card's rating; "Suits a top set" on ★★★ teacher pages only; no sideways scroll at 320 px but the teacher pages' known table overflow |
-| `scripts/gen-escape-variants.py` | Generates and verifies the variant libraries |
+| `scripts/escape_set_checks.py` | The per-set checks, one copy: exactly one setting solves the set, answer and misconception settable and different, the answer not printed in its clue, off the end of a dial's or slider's travel; each lock's instrument, clue figures and solver (`LOCKS`), and the checks for locks set on two instruments (a pair as the answer). Imported by the generator and the gate. **A new lock adds its entry here first** |
+| `scripts/gen-escape-variants.py` | Searches for each lock's sets, admits only those `escape_set_checks.py` passes and that keep the library spread; writes `variants.json` and fills each `room.js` in the checkout it runs in. Regenerating an unchanged library is byte-identical |
 | `scripts/test-escape-keypad.py` | The keypad's maxDigits mode on a fixture lock (5,4,Set opens; 5,4,0,0,Set is the misconception; no empty slots), a fixed keypad unchanged, the old rule planted |
 | `scripts/check-lock-bank.py` | Rejects a lock with more than one settable answer |
 | `scripts/strip-gen-watermark.py` | Removes the generator's sparkle and reframes to 1600x873. **Run on every image** — it is a no-op on a clean one |
@@ -2106,8 +2108,10 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
 
 A teacher found `/escape-rooms/` through the feedback form on 2026-09-08 and said the prose is visibly
 AI-written and the rooms are unusable in class. **They were right, and the diagnosis is precise: the maths
-and the puzzles are sound, the prose had no author behind it.** All eight rooms are being rewritten one at a
-time, each around a named antagonist **drawn out of Jon in an interview rather than invented for him**.
+and the puzzles are sound, the prose had no author behind it.** The rewrite takes one room at a time, each
+around a named antagonist **drawn out of Jon in an interview rather than invented for him** (or, from The
+Kiln Disaster on, an ally and a clock instead, §11.1). Which rooms are done is the working doc's per-room
+status (below), not a count here.
 
 - **Binding contract:** `docs/escape-room-voice-contract.md`
 - **Running state, per-room status and the gotchas:** `docs/escape-room-voice-rewrite.md` — **read this
@@ -2124,9 +2128,10 @@ standard, never the threat**. Characters may recur offstage but each speaks only
 to the hub and the front-page band, add its `<url>` to `sitemap.xml`, and bump the room counts. The hub has no
 sets/combinations figure to recompute. §5c of the working doc lists the files.
 
-**The two withdrawn rooms were not deleted.** They have been indexed since 2026-09-01, and an indexed path
-is not traded for tidiness while the domain is still earning trust, so each keeps its URL and serves a
-`noindex` holding page. `room.js`, the teacher data and all art are untouched.
+**A withdrawn room is not deleted.** The rooms have been indexed since 2026-09-01, and an indexed path is
+not traded for tidiness while the domain is still earning trust, so a withdrawn room keeps its URL as a
+`noindex` page (The IT Teacher's Vengeance's now redirects to The Rightful King, §11.1); a rewritten room
+goes back on its own URL, as Car Trap did. `room.js`, the teacher data and all art are untouched.
 
 ## 11.6 Art
 

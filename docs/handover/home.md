@@ -1,5 +1,22 @@
 # Handover: home lane
 
+**ESCAPE-CANON-LABEL (11 Oct, Jon's contract; branch `claude/escape-canon-label`).** Canon §11.3-11.5 brought
+up to date with the live rooms and #278, no figures derived from repo content: §11.3's ratings roster is now a
+pointer (each rating derives from lock grades, is recorded as `data-stars` on the cards, and is printed in the
+CI log; both new rooms came out as Jon ruled, hub ★★★ and ★, so no STOP); the plants sentence names all three;
+"The live rooms all use `digits`" and its "waiting on" drafts replaced (maxDigits was built for the two new
+rooms; each lock's mode is in its `room.js`). §11.4: the gate's row describes the per-set re-check, the
+fixture, the plants and the printed counts; new row for `escape_set_checks.py`; the generator's row
+corrected. §11.5: "All eight rooms" and "The two withdrawn rooms" gone (described, with The IT Teacher's
+Vengeance's redirect and Car Trap's return); "drawn out of Jon" kept, with the ally-and-clock rooms noted.
+**CI label: already single-source.** The `# ci-line:` header in `check-escape-rooms.py` is the source;
+`ci-pack.json` and `ci-timings.json` are caches that main's "CI timings" job rewrites wholesale after every
+full run (`write_pack` from the headers, `record_timings` from the run's log), so an old label drops out of
+both. Only the header changed; the JSON files were not hand-edited. Until main's next full run times it, the
+renamed line counts as 120 s and runs in a group of its own (`ci-groups.py --check` passes). **For Jon:**
+`docs/escape-room-voice-rewrite.md` §5, the per-room status §11.5 points to, has no rows for The Rightful
+King or The Library Jam and still lists Car Trap as withdrawn, not started (outside this contract: canon only).
+
 **ESCAPE-SET-CHECKS (11 Oct, Jon's contract; branch `claude/escape-set-checks`).** The per-set checks moved out
 of `gen-escape-variants.py` into **`scripts/escape_set_checks.py`** (pure, no I/O), unchanged: keep()'s tests ->
 `check_set()`; each lock's instrument, clue figures and solver -> `LOCKS` (35 entries, lifted by an AST script,
@@ -127,27 +144,6 @@ complex-converter stays untagged, Jon). Roster `scientific`, badge on the start 
 question card (below Next, so Next does not move on a phone); check-calculator, verify-core-maths-paper2c and the
 Chromium smoke (sin(30) = 0.5 at 1280 and 320 px, no overflow) pass; CI the gate.
 
-**STAR-KEY (10 Oct, Jon's contract 17:50; `docs/handover/contracts/2026-10-10-star-key.md`).** One line saying
-what the stars mean, on the hub (under "Ordered easiest to hardest") and on the front page's escape-room band
-(`.esc-note` size, 12.5 px; placed just above the cards, so with the band compacted it sits directly under the
-summary and on desktop beside the cards it explains): "Stars show difficulty, set by each room's hardest lock: ★
-Warm-up, grades 1–3 · ★★ Core, grades 4–5 · ★★★ Challenge, grades 6–9." Glyphs aria-hidden; a screen reader reads
-"one star, Warm-up, grades 1 to 3; two stars, ..." (checked in Chromium's accessibility tree). check-escape-rooms.py
-matches each page's `data-star-key` line to BANDS (which already match rating.js), checks the spoken text, and
-plants "Core, grades 4–6" (caught). No 320 px overflow (test-escape-rating). STOP IF clear: it wraps at the band's
-own size. Older entries (CAR-TRAP-V2-ART, ART-PENDING, MAIN GREEN) moved to the archive for room.
-
-**TODO-SLIM (10 Oct; Jon's option (b), 17:15).** `docs/todo.md` 481,628 -> **148,748 bytes** (3,662 -> 810 lines);
-moved word for word to new `docs/history/todo-done.md` (333,814 bytes; the two add up to the original plus the
-added headings): the session log (line 5 kept its newest three entries; lines 6-56, 88-140, 145-160 of 28-29 Sep
-notes), the whole START block (replaced by a pointer: **the live queues are the two handovers**), 27 done rows of
-§1/§3 (listed under §1's heading, so their numbers still resolve), and "Done — full history". **Kept, for Jon:**
-the 29 Sep paragraph (lines 57-87) holding a leaderboard recommendation still "pending Jon's ruling"; done-looking
-rows with open follow-ups stay whole (1.8, 1.11, 1.14, 1.16, 1.24, 1.25, 1.26, 1.33, 1.36, 1.51, 1.72, 1.75, 3.4,
-3.6-3.10, 3.18). **Cap 150 KB, not 140:** the kept content came out at 145 KB (open rows were bigger than my
-estimate); lower `TODO_LIMIT` in `check-context-size.py` as items close. canon.md is reported (194,804 bytes),
-not capped. Canon's three "todo START" citations now point at the history file. **For Jon:** update Project
-Claude's instructions to name the handovers, not todo.md's START, as the live queue.
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
 `docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
 

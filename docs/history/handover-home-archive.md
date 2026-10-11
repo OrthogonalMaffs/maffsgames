@@ -3,6 +3,30 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-11 (home): trimmed for ESCAPE-CANON-LABEL
+
+**STAR-KEY (10 Oct, Jon's contract 17:50; `docs/handover/contracts/2026-10-10-star-key.md`).** One line saying
+what the stars mean, on the hub (under "Ordered easiest to hardest") and on the front page's escape-room band
+(`.esc-note` size, 12.5 px; placed just above the cards, so with the band compacted it sits directly under the
+summary and on desktop beside the cards it explains): "Stars show difficulty, set by each room's hardest lock: ★
+Warm-up, grades 1–3 · ★★ Core, grades 4–5 · ★★★ Challenge, grades 6–9." Glyphs aria-hidden; a screen reader reads
+"one star, Warm-up, grades 1 to 3; two stars, ..." (checked in Chromium's accessibility tree). check-escape-rooms.py
+matches each page's `data-star-key` line to BANDS (which already match rating.js), checks the spoken text, and
+plants "Core, grades 4–6" (caught). No 320 px overflow (test-escape-rating). STOP IF clear: it wraps at the band's
+own size. Older entries (CAR-TRAP-V2-ART, ART-PENDING, MAIN GREEN) moved to the archive for room.
+
+**TODO-SLIM (10 Oct; Jon's option (b), 17:15).** `docs/todo.md` 481,628 -> **148,748 bytes** (3,662 -> 810 lines);
+moved word for word to new `docs/history/todo-done.md` (333,814 bytes; the two add up to the original plus the
+added headings): the session log (line 5 kept its newest three entries; lines 6-56, 88-140, 145-160 of 28-29 Sep
+notes), the whole START block (replaced by a pointer: **the live queues are the two handovers**), 27 done rows of
+§1/§3 (listed under §1's heading, so their numbers still resolve), and "Done — full history". **Kept, for Jon:**
+the 29 Sep paragraph (lines 57-87) holding a leaderboard recommendation still "pending Jon's ruling"; done-looking
+rows with open follow-ups stay whole (1.8, 1.11, 1.14, 1.16, 1.24, 1.25, 1.26, 1.33, 1.36, 1.51, 1.72, 1.75, 3.4,
+3.6-3.10, 3.18). **Cap 150 KB, not 140:** the kept content came out at 145 KB (open rows were bigger than my
+estimate); lower `TODO_LIMIT` in `check-context-size.py` as items close. canon.md is reported (194,804 bytes),
+not capped. Canon's three "todo START" citations now point at the history file. **For Jon:** update Project
+Claude's instructions to name the handovers, not todo.md's START, as the live queue.
+
 ## 2026-10-11 (home): trimmed for ESCAPE-SET-CHECKS
 
 **LOCK-BANK-CI (10 Oct, Jon 17:15; for the cloud lane's room builds).** `scripts/check-lock-bank.py` rejected
