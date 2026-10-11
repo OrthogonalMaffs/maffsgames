@@ -21,7 +21,8 @@ mfg('game_completed', { game_slug: 'slug', level: currentLevel, score: n, questi
 mfg('personal_best_set', { game_slug: 'slug', level: currentLevel, score: n, previous_best: n });
 ```
 
-Abandon tracking handled automatically by `analytics.js` via `visibilitychange`.
+Abandon tracking handled automatically by `analytics.js` on `pagehide`: a started game whose page is left
+unfinished, once; never a tab switch that comes back (Jon, 11 Oct 2026; canon §1.3 has the trade-off).
 
 ## Portal events — root `index.html` only, not games
 

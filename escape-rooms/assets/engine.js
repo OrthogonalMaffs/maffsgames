@@ -346,7 +346,6 @@
   function searchObj(id) {
     var o = R.objects.filter(function (x) { return x.id === id; })[0];
     if (!o) return;
-    var first = !st.found[o.id];
     st.found[o.id] = true;
     var out = el('searchOut');
     if (o.clue) {
@@ -356,7 +355,9 @@
       out.className = 'search-out show nowt';
       out.innerHTML = '<b>' + esc(o.name) + '</b>' + fill(o.flavour || 'Nothing useful here.');
     }
-    if (first) track('question_answered', { correct: true, question_index: 0, detail: 'searched:' + o.id });
+    // Searching sends no event: question_answered is a lock attempt only, numbered 1 to 3 (Jon, 11 Oct
+    // 2026, contract ESCAPE-ANALYTICS). Until then the first search of each object was logged as a
+    // correct answer at question_index 0.
     renderRoom();
     save();
   }

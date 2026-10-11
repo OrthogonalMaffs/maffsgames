@@ -23,6 +23,7 @@
   window._mfgCompleted = false;   // set by game_completed, guards abandon
   window._mfgActive = false;      // true only between game_started and game_completed
   window._mfgAbandonSent = false; // abandon is once-per-session, not once-per-tab-away
+  window._mfgLeaving = false;     // true only while the page is being left (beforeunload / pagehide)
   window._mfgQuestionIndex = 0;
   var _seq = 0;                   // monotonic, breaks ties when events race
 
@@ -43,11 +44,14 @@
     // of the one below, so a single tab-away can fire this two or three times.
     // mfg() is the only shared choke point, so the rules live here rather than
     // in 94 game files. Drop the event outright when it is not real:
+    //   - the page is not being left: a tab or app switch that comes back is not an abandon
+    //     (Jon, 11 Oct 2026, contract ESCAPE-ANALYTICS; canon §1.3). Many games still call this
+    //     from their own visibilitychange handlers; this is where those calls stop.
     //   - no game ever started (portal page, or player left before pressing Start)
     //   - the game was already completed
     //   - an abandon was already recorded for this session
     if (eventName === 'game_abandoned') {
-      if (!window._mfgActive || window._mfgCompleted || window._mfgAbandonSent) return;
+      if (!window._mfgLeaving || !window._mfgActive || window._mfgCompleted || window._mfgAbandonSent) return;
       window._mfgAbandonSent = true;
       window._mfgActive = false;
       // Backfill context if the caller omitted it
@@ -131,19 +135,26 @@
   };
 
   // ── ABANDON TRACKING ──
-  // Uses visibilitychange (reliable on mobile) with sendBeacon fallback.
-  // Each game sets window._mfgSlug and window._mfgLevel on start.
-  // The guards in mfg() decide whether this is a real abandon — do not
-  // duplicate those checks here, or the two will drift apart.
-  document.addEventListener('visibilitychange', function() {
-    if (document.visibilityState === 'hidden') {
-      mfg('game_abandoned', {
-        game_slug: window._mfgSlug || '',
-        level: window._mfgLevel || '',
-        question_index: window._mfgQuestionIndex || 0
-      });
-    }
+  // An abandon is a started game whose page is left unfinished (Jon, 11 Oct 2026, contract
+  // ESCAPE-ANALYTICS): pagehide, or beforeunload just before it, never a tab switch that comes back.
+  // Until then this listened for visibilitychange, so every tab or app switch mid-game logged an
+  // abandon, and a game later finished was counted both abandoned and completed. The cost, recorded
+  // in canon §1.3: a phone tab put in the background and later killed by the OS sends nothing.
+  // This file loads in the page head, so this beforeunload listener runs before any game's own,
+  // and a game's beforeunload call to mfg('game_abandoned') finds _mfgLeaving already set.
+  // The guards in mfg() decide whether this is a real abandon — do not duplicate those checks
+  // here, or the two will drift apart.
+  window.addEventListener('beforeunload', function() { window._mfgLeaving = true; });
+  window.addEventListener('pagehide', function() {
+    window._mfgLeaving = true;
+    mfg('game_abandoned', {
+      game_slug: window._mfgSlug || '',
+      level: window._mfgLevel || '',
+      question_index: window._mfgQuestionIndex || 0
+    });
   });
+  // Back from the back-forward cache: the page was not left after all.
+  window.addEventListener('pageshow', function(e) { if (e.persisted) window._mfgLeaving = false; });
 
   // ── SECTION CLICKS (1 Oct 2026) ──
   // One listener for every labelled feature section, on any page that loads this file.

@@ -206,7 +206,7 @@ Use `mfg()` not `gtag('event',...)`. The wrapper sends to both GA4 and Sheets.
 | `question_answered` | Every answer submission | game_slug, level, question_index (1-based), correct |
 | `game_completed` | Results screen reached | game_slug, level, score, questions_answered, questions_correct |
 | `personal_best_set` | New PB recorded in localStorage | game_slug, level, score, previous_best |
-| `game_abandoned` | Page hidden before completion (automatic via analytics.js) | game_slug, level, question_index |
+| `game_abandoned` | The page is left (pagehide) after `game_started` with no `game_completed`; once per game (automatic via analytics.js). **Since 11 Oct 2026; before then it fired whenever the page was hidden** | game_slug, level, question_index |
 
 **Rules:**
 - `game_slug` hardcoded to match directory name
@@ -214,7 +214,14 @@ Use `mfg()` not `gtag('event',...)`. The wrapper sends to both GA4 and Sheets.
 - `question_index` is 1-based — use existing counter variable
 - Games without levels use level `'all'`
 - Multi-mode games MUST include `mode` on all events
-- Abandon tracking handled automatically by `analytics.js` via `visibilitychange`
+- Abandon tracking handled automatically by `analytics.js` on `pagehide` (Jon, 11 Oct 2026, contract
+  ESCAPE-ANALYTICS). `mfg()` drops any `game_abandoned` sent while the page is not being left, so a game's
+  own visibilitychange call is a no-op. **Abandon figures change meaning on 11 Oct 2026:** before it, every
+  tab or app switch mid-game logged an abandon (and a game finished afterwards counted as both abandoned
+  and completed); from it, only leaving the page does. **The trade-off:** a phone tab put in the background
+  and later killed by the OS fires no pagehide, so it sends nothing; abandons on mobile are undercounted.
+- An escape room sends `question_answered` for lock attempts only, numbered 1 to 3; searching the room
+  sends nothing (until 11 Oct 2026 each first search was a correct answer at question_index 0)
 - Do not add additional data collection without explicit approval from Jon
 
 ### Portal events (root `index.html` only — not games)
