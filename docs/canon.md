@@ -2027,13 +2027,20 @@ usually six clues and two blanks (`comic-caper` has four and four); at least two
   **Never hand-edit a `variants:` block** — edit `scripts/gen-escape-variants.py` and re-run it.
 - **A hardcoded number in prose contradicts a drawn variant** and reads fine until it doesn't. Grep a room's
   prose for bare amounts before rewriting it.
-- **Replay is a designed property.** Across the eight live rooms: **199 verified number sets, of which
-  2,384 combinations are VALID and can actually be served** (per room: hamster 314, P.E. 248, heatwave 220,
-  prom 342, canteen 600, rugby 156, comic 184, kiln 320). A lock never draws the set it gave last time.
-  `check-escape-rooms.py` prints the VALID counts. **The hub quotes no totals or per-room ranges** (Jon,
-  17/09): the sentence went stale twice, and 3,600 overstated what is served by 75%. Do not put a figure
-  back. Nor may it claim no two groups get the same room — devices draw independently, and at rugby's 156
-  VALID draws ten groups have about a 1 in 4 chance that two match.
+- **Replay is a designed property.** Every lock carries a library of number sets, and a lock never draws
+  the set it gave last time. **The sets are generated and checked by `scripts/gen-escape-variants.py`**,
+  which admits a set only if it passes the per-set checks in `scripts/escape_set_checks.py`: exactly one
+  setting solves it, the answer and the misconception can both be set and differ, the clue does not print
+  the answer, and on a dial or slider the answer does not sit at the end of the travel. **CI re-checks
+  every set of every live room** through the same module, in `check-escape-rooms.py` (ESCAPE-SET-CHECKS,
+  11 Oct 2026), so a set edited or added by hand cannot pass unchecked; a live lock with no entry in the
+  module fails the run, and the broken sets in `scripts/fixtures/escape-broken-sets.json` are planted on
+  every run and must each fail. **The counts are in the CI log, not here:** the same run prints each live
+  room's verified sets and their total, and each room's VALID combinations (the draws the engine can
+  actually serve). **The hub quotes no totals or per-room ranges** (Jon, 17/09): the sentence went stale
+  twice, and its total overstated what is served. Do not put a figure back, here or on the hub. Nor may it
+  claim no two groups get the same room — devices draw independently, so in the room with the fewest
+  VALID draws, two groups in one class have a real chance of matching.
 - **Rooms are drawn jointly; no two locks may collide.** A draw is VALID when no clue figure appears in two
   locks' clues, no answer appears in another lock's clues, no answer equals another lock's misconception,
   and no two locks share an answer. Clue figures include numerals typed into clue text. The first two rules

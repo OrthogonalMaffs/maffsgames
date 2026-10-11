@@ -1,5 +1,43 @@
 # Handover: home lane
 
+**ESCAPE-SET-CHECKS (11 Oct, Jon's contract; branch `claude/escape-set-checks`).** The per-set checks moved out
+of `gen-escape-variants.py` into **`scripts/escape_set_checks.py`** (pure, no I/O), unchanged: keep()'s tests ->
+`check_set()`; each lock's instrument, clue figures and solver -> `LOCKS` (35 entries, lifted by an AST script,
+not retyped); rugby-scoreboard-bases and cookie-price-simultaneous (two instruments, checked inline before) ->
+`check_rugby_bases()` / `check_cookie_simultaneous()`, which read the answer and misconception from the set as
+served (the generator builds them from the same parameters, so its test is unchanged; CI's is stronger). The
+generator imports it, keeps only search + spread, and writes to this checkout (the E:\jon\maffsgames paths are
+gone). **Regeneration is byte-identical:** sha256 of variants.json and all 12 room.js equal before and after,
+and the generator's whole report too (299 sets, 37 locks, 2763 rejected). `check-escape-rooms.py` runs
+`check()` on every set of every live room (names room, lock, set index, check; a live lock missing from LOCKS
+fails), prints per-room verified sets and the total (11 Oct: 271 in 11 rooms, none failing; it-vengeance
+withdrawn, not checked), and plants the 10 broken sets in `scripts/fixtures/escape-broken-sets.json` (each of
+the 7 per-set checks, both two-instrument checks, an unregistered lock; every good original must pass).
+Mutation proof: with the clue test disabled the run fails, naming the uncaught plant. CLAUDE.md: new "Start of
+task" (fetch, new worktree from origin/main, never pull into the primary or an existing branch). Canon §11.3
+replay bullet rewritten: no figures. **Not changed, for Jon:** the ci-line label (it keys ci-pack.json and
+ci-timings.json); §11.3's "Ratings as of 10 Oct" (no Rightful King ★★★ or Library Jam ★) and "The live rooms
+all use `digits`" (both new rooms are live; maxDigits), stale; §11.4's rows for both scripts predate this.
+
+**Canon sweep (read-only; current-state counts derived from repo content; none changed).** Intro "What is
+authoritative where": roster "has all 93 rows". §Portal: "`escape-rooms` (12 items)". §3.2: "135 `.game-card`
+elements for 96 games". §7.5: "On 2 Oct 2026 the roster gives 67 games light and 30 dark" (dated). §8.2c and
+the shuffle note: "32 games hand-roll `shuffle(...)`", "the other ~30 games", "The other ~28 games". Coverage:
+heading "(96 live games)"; "94 of the 96 live games call `submitScore()`" (recounted 3 Oct); "Not counted in
+the 96 live games". Firebase/leaderboard: "Wired into 94 of the 96 live games". Tier 1: "125 controls across 47
+games ... (122 across 46 ...)". Tier 3: "95 of 96 games fire `question_answered`"; "27 games use
+`id="options"`, 8 use a class ... 60 use neither". §11.1: "Eleven rooms live, one withdrawn" and its 12-row
+table (accurate today). §11.3: the ratings roster above. §11.4: `check-escape-rooms.py` "(two faults planted)"
+(now three, plus the ten broken sets). §11.5: "All eight rooms are being rewritten" (eleven live now). Dated
+audit history (e.g. "17 games" 22 Sep, "125 pages", the [x] backlog's "60 games") is history, not drift: left out.
+
+**MG-PP-BEFORE (11 Oct, Jon's contract; read-only).** Worktree unchanged since the WORKTREE-CLEANUP entry
+(detached at a02d61d, the same two files, nothing else). **Both edits are already in main, byte for byte**
+(same git blob): `scripts/check-changed.py` is main's as landed by PREPUSH-SCOPE (6192382, two queues), and
+`scripts/test-escape-keypad.py`'s one-line ci-deps change (`kiln-disaster/room.js` -> `escape-rooms/`) is
+2414310. Nothing in main relies on their absence. **Recommendation: discard** (nothing to keep): Jon runs
+`git -C E:/jon/mg-pp-before checkout -- .`, then `git worktree remove E:/jon/mg-pp-before`.
+
 **WORKTREE-CLEANUP (11 Oct, Jon's contract; branch `claude/worktree-cleanup`).** `git worktree list` found 35
 beside the primary. Each checked: branch tip an ancestor of origin/main, `status --porcelain` empty, no commit
 outside origin. New end-of-task step in CLAUDE.md (Task Contract): remove the task's worktree and local branch
@@ -110,47 +148,6 @@ rows with open follow-ups stay whole (1.8, 1.11, 1.14, 1.16, 1.24, 1.25, 1.26, 1
 estimate); lower `TODO_LIMIT` in `check-context-size.py` as items close. canon.md is reported (194,804 bytes),
 not capped. Canon's three "todo START" citations now point at the history file. **For Jon:** update Project
 Claude's instructions to name the handovers, not todo.md's START, as the live queue.
-**LOCK-BANK-CI (10 Oct, Jon 17:15; for the cloud lane's room builds).** `scripts/check-lock-bank.py` rejected
-hamster-feeder-bounds on main: `NOTE` was not a known field, so a multi-line note's continuation lines were glued
-onto VERIFY (SyntaxError). Fixed in the parser (`NOTE` is a field), not by reflowing the entry; every other lock's
-result is unchanged (before/after diff of all 7 batches: only hamster-feeder-bounds, REJECT -> ok, 580). With no
-argument it checks every `docs/lock-bank-batch*.txt`; `--selftest` plants four entries (a sound lock with a
-two-line NOTE, two answers, a restating VERIFY, a wrong ANSWER), all caught; it is now in CI (ci-line, about a
-second). **Never run by CI (report only):** `scripts/check-feedback-options.py` (the feedback page's game menu;
-passes locally) and `scripts/check-lock-uniqueness.py` (an older one-answer checker; passes locally);
-`verify-regression-rumble.py` is declared held (game withdrawn). `check-changed.py` is the runner, not a check.
-**#255 PREPUSH-SCOPE merged** (99a0bf5).
-
-**DASHBOARD-CHARTS (10 Oct, Jon's contract 08:35; `docs/handover/contracts/2026-10-10-dashboard-charts.md`).**
-`docs/apps-script-endpoint.js` only, SCRIPT_VERSION `2026-10-10-a`: the three percentage columns are written as
-fractions with the cell format `0%` (they show as before), the Accuracy chart's axis runs 0 to 1 as percent;
-`rowBelowChart()` moves the row counter below each chart (a 21 px default row), so no chart overlaps the next
-section; one filter, `isMarked()`, keeps rows with a blank `correct` out of Accuracy by Game and Hardest Questions.
-STOP IFs clear: prisoners-dilemma sends `correct: null` (written blank by `cellValue`), and every other
-`question_answered` call in games/ sends a boolean. The daily email is untouched (its own hardest-questions list still
-counts prisoners-dilemma: the contract left the email alone). **Jon must redeploy; the repo copy does not deploy
-itself** (runbook `docs/apps-script-redeploy.md`): paste the file into the Apps Script editor and set `REPORT_EMAIL`
-to your address before saving; Deploy, Manage deployments, edit (pencil) the existing deployment, Version: New
-version, Deploy; select `testDashboard` in the function menu and Run (it rebuilds the dashboard from the sheet;
-`rebuildDashboard` itself needs arguments), or wait for the 07:00 run; open the `/exec` URL and check `version` reads
-`2026-10-10-a`.
-
-**DOCS-9OCT (10 Oct, branch `claude/docs-9oct-b`, after the checkpoint).** #239 SCI-CALC and #240 (checkpoint
-handover) merged on 9 Oct late, main green after each (9f51dc7, 302d4d2). DOCS-9OCT applied: Factor Theorem relisted
-under SR-21, **A-Level only** (roster #88, portal, sitemap, hub, spec map, canon count 96, todo 1.62); canon §0.2 the
-freeze's one exception (Simultaneous Solver Stage 5, #203); §7.6 four rulings (Skip shows the answer and waits on
-Next; one log row per answer; display-only number formatting; "≈" for rounded factors); §7.8.2 closed-not-idle cloud
-sessions and the E2 one-off; timer-policy: Unit Converter to No Timer. **Escape on the initials overlay (Jon, 9 Oct
-19:42): left as is, Skip stays the way out; Escape-to-close is deferred to a future accessibility pass, because an
-accidental Escape would discard a leaderboard entry** (the OVERLAY-KEYS contract's "Escape closes the overlay as now"
-was Project Claude's error; recorded on #232 too). **Next: KEYPAD-VARIABLE (entry at the top), then PREPUSH-SCOPE** (contract
-`docs/handover/contracts/2026-10-09-prepush-scope.md`). LIBRARY-DRAFT moved to the cloud lane (Jon, 10 Oct 09:30);
-Car Trap moved the other way: the home lane owns it end to end (#242, entry above). **Scientific tagging, Jon's ruling (10 Oct):** tag force-resolver,
-moments-master, complex-converter, formula-forge, formula-unlocked, core-maths-paper2c (one PR each, after
-PREPUSH-SCOPE); not estimation-golf or equation-builder; log-laws and higher-power reported back (SCI-CALC's
-entry is archived in `docs/history/handover-home-archive.md`). Finished home-lane contracts (home-queue, its addendum, hook-fix, overlay-keys) moved to `docs/history/contracts/` in
-this PR; the cloud lane's (listed-high, car-trap) and the IT room brief stay.
-
 The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
 `docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
 
