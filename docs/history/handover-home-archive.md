@@ -3,6 +3,49 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-11 (home): trimmed for ESCAPE-SET-CHECKS
+
+**LOCK-BANK-CI (10 Oct, Jon 17:15; for the cloud lane's room builds).** `scripts/check-lock-bank.py` rejected
+hamster-feeder-bounds on main: `NOTE` was not a known field, so a multi-line note's continuation lines were glued
+onto VERIFY (SyntaxError). Fixed in the parser (`NOTE` is a field), not by reflowing the entry; every other lock's
+result is unchanged (before/after diff of all 7 batches: only hamster-feeder-bounds, REJECT -> ok, 580). With no
+argument it checks every `docs/lock-bank-batch*.txt`; `--selftest` plants four entries (a sound lock with a
+two-line NOTE, two answers, a restating VERIFY, a wrong ANSWER), all caught; it is now in CI (ci-line, about a
+second). **Never run by CI (report only):** `scripts/check-feedback-options.py` (the feedback page's game menu;
+passes locally) and `scripts/check-lock-uniqueness.py` (an older one-answer checker; passes locally);
+`verify-regression-rumble.py` is declared held (game withdrawn). `check-changed.py` is the runner, not a check.
+**#255 PREPUSH-SCOPE merged** (99a0bf5).
+
+**DASHBOARD-CHARTS (10 Oct, Jon's contract 08:35; `docs/handover/contracts/2026-10-10-dashboard-charts.md`).**
+`docs/apps-script-endpoint.js` only, SCRIPT_VERSION `2026-10-10-a`: the three percentage columns are written as
+fractions with the cell format `0%` (they show as before), the Accuracy chart's axis runs 0 to 1 as percent;
+`rowBelowChart()` moves the row counter below each chart (a 21 px default row), so no chart overlaps the next
+section; one filter, `isMarked()`, keeps rows with a blank `correct` out of Accuracy by Game and Hardest Questions.
+STOP IFs clear: prisoners-dilemma sends `correct: null` (written blank by `cellValue`), and every other
+`question_answered` call in games/ sends a boolean. The daily email is untouched (its own hardest-questions list still
+counts prisoners-dilemma: the contract left the email alone). **Jon must redeploy; the repo copy does not deploy
+itself** (runbook `docs/apps-script-redeploy.md`): paste the file into the Apps Script editor and set `REPORT_EMAIL`
+to your address before saving; Deploy, Manage deployments, edit (pencil) the existing deployment, Version: New
+version, Deploy; select `testDashboard` in the function menu and Run (it rebuilds the dashboard from the sheet;
+`rebuildDashboard` itself needs arguments), or wait for the 07:00 run; open the `/exec` URL and check `version` reads
+`2026-10-10-a`.
+
+**DOCS-9OCT (10 Oct, branch `claude/docs-9oct-b`, after the checkpoint).** #239 SCI-CALC and #240 (checkpoint
+handover) merged on 9 Oct late, main green after each (9f51dc7, 302d4d2). DOCS-9OCT applied: Factor Theorem relisted
+under SR-21, **A-Level only** (roster #88, portal, sitemap, hub, spec map, canon count 96, todo 1.62); canon §0.2 the
+freeze's one exception (Simultaneous Solver Stage 5, #203); §7.6 four rulings (Skip shows the answer and waits on
+Next; one log row per answer; display-only number formatting; "≈" for rounded factors); §7.8.2 closed-not-idle cloud
+sessions and the E2 one-off; timer-policy: Unit Converter to No Timer. **Escape on the initials overlay (Jon, 9 Oct
+19:42): left as is, Skip stays the way out; Escape-to-close is deferred to a future accessibility pass, because an
+accidental Escape would discard a leaderboard entry** (the OVERLAY-KEYS contract's "Escape closes the overlay as now"
+was Project Claude's error; recorded on #232 too). **Next: KEYPAD-VARIABLE (entry at the top), then PREPUSH-SCOPE** (contract
+`docs/handover/contracts/2026-10-09-prepush-scope.md`). LIBRARY-DRAFT moved to the cloud lane (Jon, 10 Oct 09:30);
+Car Trap moved the other way: the home lane owns it end to end (#242, entry above). **Scientific tagging, Jon's ruling (10 Oct):** tag force-resolver,
+moments-master, complex-converter, formula-forge, formula-unlocked, core-maths-paper2c (one PR each, after
+PREPUSH-SCOPE); not estimation-golf or equation-builder; log-laws and higher-power reported back (SCI-CALC's
+entry is archived in `docs/history/handover-home-archive.md`). Finished home-lane contracts (home-queue, its addendum, hook-fix, overlay-keys) moved to `docs/history/contracts/` in
+this PR; the cloud lane's (listed-high, car-trap) and the IT room brief stay.
+
 ## 2026-10-11 (home): trimmed for LOG-NOTATION
 
 **SCIENTIFIC TAGGING 4/5: formula-unlocked (10 Oct).** As formula-forge (#265): roster `scientific`, badge,

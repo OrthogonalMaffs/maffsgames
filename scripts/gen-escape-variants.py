@@ -12,16 +12,25 @@ same tests the lock bank is held to:
   * no number printed in the clue equals the answer — the trap the checker
     in check-lock-bank.py explicitly cannot see
 
+Those tests, and each lock's instrument, clue figures and solver, live in
+scripts/escape_set_checks.py, which check-escape-rooms.py also runs on every
+set in CI (contract ESCAPE-SET-CHECKS, 11 Oct 2026). A new lock adds its entry
+there first. What stays here is the search, and the spread rule in keep().
+
 The first variant of every lock reproduces the audited bank exactly. Later
 variants are found by search under the same rules.
 
-Writes escape-rooms/variants.json. Run scripts/check-escape-rooms.py after.
+Writes escape-rooms/variants.json and fills each room.js, in this checkout.
+Run scripts/check-escape-rooms.py after.
 """
-import itertools, json, math, pathlib, random
+import json, math, pathlib, random
 from fractions import Fraction
 from math import gcd, factorial
 
-OUT = pathlib.Path(r"E:\jon\maffsgames\escape-rooms\variants.json")
+from escape_set_checks import LOCKS, check, is_prime, factor_count, prime_count
+
+ROOMS = pathlib.Path(__file__).resolve().parent.parent / "escape-rooms"
+OUT = ROOMS / "variants.json"
 WANT = 10         # variants per lock, where the maths allows that many
 rejected = []
 
@@ -35,58 +44,14 @@ def shuffled(cands):
     return head + tail
 
 
-def grid(lo, hi, step):
-    """Every value the instrument can actually be set to."""
-    n = int(round((hi - lo) / step))
-    return [round(lo + i * step, 6) for i in range(n + 1)]
-
-
-class Keypad(tuple):
-    """An instrument range that is a keypad: keep() skips its end-of-travel rule (see keypad())."""
-
-
-def keypad(n):
-    """A keypad as an instrument range, for either mode (canon §11): `digits: n` takes exactly n
-    digits (60 entered as 060), `maxDigits: n` takes 1 to n digits, no leading zero, Set to submit
-    (KEYPAD-VARIABLE). Both set exactly the whole numbers 0 to 10^n - 1, so keep()'s on_grid test is the
-    settable rule for both: the answer and the misconception must each fit in n digits (a four-digit
-    misconception needs n >= 4). What differs is the display, not what can be entered.
-
-    A keypad has no travel: nothing starts at an end, and no answer is reached by pushing a needle to a
-    stop, so keep()'s end-of-travel rule does not apply to it (LIBRARY-JAM-BUILD, Jon 10 Oct 2026). Under
-    that rule a four-digit keypad rejected every answer under 400, so a two-digit answer with a four-digit
-    misconception (54 against 5400) could never be built. Lifting it changed no existing library."""
-    return Keypad((0, 10 ** n - 1, 1))
-
-
-def on_grid(v, lo, hi, step):
-    if v < lo - 1e-9 or v > hi + 1e-9:
-        return False
-    return abs((v - lo) / step - round((v - lo) / step)) < 1e-6
-
-
-def unique(solutions, answer):
-    return len(solutions) == 1 and abs(solutions[0] - answer) < 1e-9
-
-
-def keep(store, lock, var, ins, clue_numbers, solver, minsep=0.0):
-    """Admit a variant only if it survives every test."""
-    lo, hi, step = ins
-    a, m = var["answer"], var.get("miss")
-    if not on_grid(a, lo, hi, step):
-        rejected.append((lock, var, "answer not settable")); return
-    if m is not None and not on_grid(m, lo, hi, step):
-        rejected.append((lock, var, "misconception not settable")); return
-    if m is not None and abs(a - m) < 1e-9:
-        rejected.append((lock, var, "misconception equals answer")); return
-    sols = [v for v in grid(lo, hi, step) if solver(v, var)]
-    if not unique(sols, a):
-        rejected.append((lock, var, f"{len(sols)} solutions")); return
-    if any(abs(n - a) < 1e-9 for n in clue_numbers(var)):
-        rejected.append((lock, var, "answer is printed in its own clue")); return
-    edge = (hi - lo) * 0.04
-    if not isinstance(ins, Keypad) and not (lo + edge <= a <= hi - edge):   # a keypad has no travel
-        rejected.append((lock, var, "answer sits at the end of the travel")); return
+def keep(store, lock, var, minsep=0.0):
+    """Admit a variant only if it survives every test (escape_set_checks.check)
+    and is not too close to one already kept."""
+    reason = check(lock, var)
+    if reason:
+        rejected.append((lock, var, reason)); return
+    lo, hi, step = LOCKS[lock].ins
+    a = var["answer"]
     sep = minsep or (hi - lo) * 0.05
     # the tolerance matters: 1.2 - 1.0 is 0.19999999999999996 in binary, so a
     # bare `< sep` throws away every answer that is exactly one gap apart
@@ -100,7 +65,6 @@ V = {}
 # ---------------------------------------------------- C1 sector area (dial 10-360/10)
 # answer = 360K/r^2. Misconception: the pi is dropped on one side only, so the
 # fraction is computed as K over the decimal area and lands one notch out.
-ins = (10, 360, 10)
 store = []
 for r, K in shuffled([(12, 48)] + [(r, K) for r in range(5, 26) for K in range(5, 301)]):
     if r * r == 0 or (360 * K) % (r * r):
@@ -110,15 +74,12 @@ for r, K in shuffled([(12, 48)] + [(r, K) for r in range(5, 26) for K in range(5
     if not (20 <= ans <= 350):
         continue
     keep(store, "sprinkler-sector-area",
-         {"r": r, "K": K, "answer": ans, "miss": miss}, ins,
-         lambda v: [v["r"], v["K"]],
-         lambda x, v: x * v["r"] * v["r"] == 360 * v["K"])
+         {"r": r, "K": K, "answer": ans, "miss": miss})
     if len(store) >= WANT:
         break
 V["sprinkler-sector-area"] = store
 
 # ---------------------------------------------------- C2 inverse proportion (dial 0-100)
-ins = (0, 100, 1)
 store = []
 cands = shuffled([(20, 60, 25)] + [(v1, p1, v2) for v1 in range(10, 61, 2)
                           for p1 in range(30, 101, 5)
@@ -130,9 +91,7 @@ for v1, p1, v2 in cands:
     if not (10 <= ans <= 90 and 0 <= miss <= 100):
         continue
     keep(store, "dodgeball-pressure-boyle",
-         {"V1": v1, "P1": p1, "V2": v2, "answer": ans, "miss": miss}, ins,
-         lambda v: [v["V1"], v["P1"], v["V2"]],
-         lambda x, v: x * v["V2"] == v["P1"] * v["V1"])
+         {"V1": v1, "P1": p1, "V2": v2, "answer": ans, "miss": miss})
     if len(store) >= WANT:
         break
 V["dodgeball-pressure-boyle"] = store
@@ -140,7 +99,6 @@ V["dodgeball-pressure-boyle"] = store
 # ---------------------------------------------------- C3 linear sequence (dial 0-99)
 # Three non-consecutive days. Misconception: treat the last written day as
 # yesterday and add the gap between the first two entries (reproduces 88).
-ins = (0, 99, 1)
 store = []
 cands = shuffled([(3, 7, 12, 15, 5, 23)] + [(d1, d2, d3, dT, s, c1)
                                    for s in range(3, 8)
@@ -157,16 +115,12 @@ for d1, d2, d3, dT, s, c1 in cands:
         continue
     keep(store, "locker-nth-term",
          {"d1": d1, "c1": c1, "d2": d2, "c2": c2, "d3": d3, "c3": c3,
-          "dT": dT, "step": s, "answer": ans, "miss": miss}, ins,
-         lambda v: [v["d1"], v["c1"], v["d2"], v["c2"], v["d3"], v["c3"], v["dT"]],
-         lambda x, v: (x - v["c1"]) * (v["d3"] - v["d1"]) ==
-                      (v["c3"] - v["c1"]) * (v["dT"] - v["d1"]))
+          "dT": dT, "step": s, "answer": ans, "miss": miss})
     if len(store) >= WANT:
         break
 V["locker-nth-term"] = store
 
 # ---------------------------------------------------- D1 reverse percentage (keypad 4)
-ins = keypad(4)
 store = []
 cands = shuffled([(2160, 20)] + [(t, p) for p in (10, 15, 20, 25, 40, 50)
                         for t in range(1100, 9000, 2)])
@@ -178,16 +132,13 @@ for total, pct in cands:
     if miss is None or not (1000 <= ans <= 9999):
         continue
     keep(store, "finance-reverse-percentage",
-         {"total": total, "pct": pct, "answer": ans, "miss": miss}, ins,
-         lambda v: [v["total"], v["pct"]],
-         lambda x, v: x * (100 + v["pct"]) == v["total"] * 100)
+         {"total": total, "pct": pct, "answer": ans, "miss": miss})
     if len(store) >= WANT:
         break
 V["finance-reverse-percentage"] = store
 
 # ---------------------------------------------------- D2 compound growth (slider 1-20)
 # Misconception: read the interest as a flat amount each year.
-ins = (1, 20, 1)
 store = []
 cands = shuffled([(1000, 10, 5)] + [(d, r, y) for d in (500, 600, 800, 1000, 1200, 1500, 2000, 2500)
                            for r in (5, 10, 15, 20, 25) for y in range(2, 13)])
@@ -202,16 +153,12 @@ for dep, rate, yrs in cands:
         continue
     keep(store, "dj-deposit-compound",
          {"dep": dep, "rate": rate,
-          "bal": f"{float(bal):.2f}", "answer": yrs, "miss": miss}, ins,
-         lambda v: [v["dep"], v["rate"], float(v["bal"])],
-         lambda x, v: Fraction(v["dep"]) * Fraction(100 + v["rate"], 100) ** int(x)
-                      == Fraction(v["bal"]), minsep=1)
+          "bal": f"{float(bal):.2f}", "answer": yrs, "miss": miss}, minsep=1)
     if len(store) >= WANT:
         break
 V["dj-deposit-compound"] = store
 
 # ---------------------------------------------------- D3 Venn overlap (dial 0-100)
-ins = (0, 100, 1)
 store = []
 cands = shuffled([(80, 48, 37, 12)] + [(t, a, b, n) for t in range(60, 101, 5)
                               for a in range(30, 90, 3)
@@ -223,15 +170,12 @@ for total, A, B, neither in cands:
         continue
     keep(store, "wifi-venn-router",
          {"total": total, "A": A, "B": B, "neither": neither,
-          "answer": both, "miss": 0}, ins,
-         lambda v: [v["total"], v["A"], v["B"], v["neither"]],
-         lambda x, v: v["A"] + v["B"] - x + v["neither"] == v["total"])
+          "answer": both, "miss": 0})
     if len(store) >= WANT:
         break
 V["wifi-venn-router"] = store
 
 # ---------------------------------------------------- E1 circumference/RPM (slider 0-500)
-ins = (0, 500, 1)
 store = []
 cands = shuffled([(20, 120)] + [(d, d * k) for d in range(10, 41, 2) for k in range(3, 9)])
 for d, K in cands:
@@ -242,9 +186,7 @@ for d, K in cands:
     if not (60 <= ans <= 500):
         continue
     keep(store, "hamster-wheel-rpm",
-         {"d": d, "K": K, "answer": ans, "miss": per_s}, ins,
-         lambda v: [v["d"], v["K"]],
-         lambda x, v: x * v["d"] == v["K"] * 60)
+         {"d": d, "K": K, "answer": ans, "miss": per_s})
     if len(store) >= WANT:
         break
 V["hamster-wheel-rpm"] = store
@@ -263,7 +205,6 @@ V["hamster-wheel-rpm"] = store
 # that is actually reached. The lock now asks for the smallest volume.
 #
 # X stays even so X * (D - 0.5) lands on the slider's whole-number grid.
-ins = (0, 1000, 1)
 store = []
 cands = shuffled([(40, 15)] + [(x, dpt) for x in range(10, 81, 2) for dpt in range(8, 25)])
 for X, D in cands:
@@ -274,15 +215,12 @@ for X, D in cands:
     if not (100 <= ans <= 1000):
         continue
     keep(store, "hamster-feeder-bounds",
-         {"X": X, "D": D, "answer": ans, "miss": miss}, ins,
-         lambda v: [v["X"], v["D"]],
-         lambda x, v: 2 * x == v["X"] * (2 * v["D"] - 1))
+         {"X": X, "D": D, "answer": ans, "miss": miss})
     if len(store) >= WANT:
         break
 V["hamster-feeder-bounds"] = store
 
 # ---------------------------------------------------- E3 gradient (slider 0-20 by 0.1)
-ins = (0, 20, 0.1)
 store = []
 cands = shuffled([(4, 21, 16, 39)] + [(t1, T1, t1 + run, T1 + rise)
                              for t1 in range(2, 8) for T1 in range(15, 26)
@@ -299,15 +237,12 @@ for t1, T1, t2, T2 in cands:
     keep(store, "heat-lamp-gradient",
          {"t1": t1, "T1": T1, "t2": t2, "T2": T2,
           "rise": rise, "run": run,
-          "answer": round(ans, 1), "miss": float(rise)}, ins,
-         lambda v: [v["t1"], v["T1"], v["t2"], v["T2"]],
-         lambda x, v: abs(x * (v["t2"] - v["t1"]) - (v["T2"] - v["T1"])) < 1e-6, minsep=0.2)
+          "answer": round(ans, 1), "miss": float(rise)}, minsep=0.2)
     if len(store) >= WANT:
         break
 V["heat-lamp-gradient"] = store
 
 # ---------------------------------------------------- F1 area scale factor (dial 1-100)
-ins = (1, 100, 1)
 store = []
 cands = shuffled([(15, 90, 5)] + [(L1, A1, L1 // k) for k in (2, 3, 4, 5)
                          for L1 in range(8, 41, 2) if L1 % k == 0
@@ -320,15 +255,12 @@ for L1, A1, L2 in cands:
     if not (2 <= ans <= 60) or miss > 100:
         continue
     keep(store, "elbow-patch-scale",
-         {"L1": L1, "A1": A1, "L2": L2, "k": k, "answer": ans, "miss": miss}, ins,
-         lambda v: [v["L1"], v["A1"], v["L2"]],
-         lambda x, v: x * v["L1"] * v["L1"] == v["A1"] * v["L2"] * v["L2"], minsep=4)
+         {"L1": L1, "A1": A1, "L2": L2, "k": k, "answer": ans, "miss": miss}, minsep=4)
     if len(store) >= WANT:
         break
 V["elbow-patch-scale"] = store
 
 # ---------------------------------------------------- F2 combined rates (dial 1-60)
-ins = (1, 60, 1)
 store = []
 cands = shuffled([(20, 30)] + [(a, b) for a in range(6, 60, 2) for b in range(8, 90, 2) if b > a])
 for a, b in cands:
@@ -338,9 +270,7 @@ for a, b in cands:
     if not (3 <= ans <= 55) or miss > 60:
         continue
     keep(store, "sprinkler-flow-rates",
-         {"a": a, "b": b, "answer": ans, "miss": miss}, ins,
-         lambda v: [v["a"], v["b"]],
-         lambda x, v: x * v["a"] + x * v["b"] == v["a"] * v["b"], minsep=2)
+         {"a": a, "b": b, "answer": ans, "miss": miss}, minsep=2)
     if len(store) >= WANT:
         break
 V["sprinkler-flow-rates"] = store
@@ -359,13 +289,9 @@ for N, diff in [(17, 4)] + [(n, d) for n in range(11, 40) for d in range(2, 9)]:
     var = {"N": N, "diff": diff, "H": H, "A": A,
            "missH": N - diff, "missA": N,
            "answer": [H, A], "miss": [N - diff, N]}
-    sols = [(h, a) for h in range(101) for a in range(101) if h + 2 * a == N and a == h + diff]
-    if len(sols) != 1 or sols[0] != (H, A):
-        rejected.append(("rugby-scoreboard-bases", var, f"{len(sols)} solutions")); continue
-    if N - diff > 100 or N > 100:
-        rejected.append(("rugby-scoreboard-bases", var, "misconception off the dials")); continue
-    if H == N - diff and A == N:
-        rejected.append(("rugby-scoreboard-bases", var, "misconception equals answer")); continue
+    reason = check("rugby-scoreboard-bases", var)      # two dials: escape_set_checks.check_rugby_bases
+    if reason:
+        rejected.append(("rugby-scoreboard-bases", var, reason)); continue
     if any(x["answer"] == [H, A] for x in store):
         continue
     store.append(var)
@@ -376,7 +302,6 @@ V["rugby-scoreboard-bases"] = store
 # ---------------------------------------------------- G1 arrangements (dial 1-100)
 # n! / repeats. n stays at 4 because the misconception (n!) has to be settable
 # on a 1-100 dial, and 5! is 120.
-ins = (1, 100, 1)
 store = []
 for keys, reps in [("A, A, B, C", [2, 1, 1]), ("A, A, B, B", [2, 2]), ("A, A, A, B", [3, 1])]:
     n = sum(reps)
@@ -385,14 +310,11 @@ for keys, reps in [("A, A, B, C", [2, 1, 1]), ("A, A, B, B", [2, 2]), ("A, A, A,
         denom *= factorial(r)
     ans = factorial(n) // denom
     var = {"keys": keys, "n": n, "denom": denom, "answer": ans, "miss": factorial(n)}
-    keep(store, "mechanical-keyboard-perms", var, ins,
-         lambda v: [v["n"]],
-         lambda x, v: x * v["denom"] == factorial(v["n"]), minsep=1)
+    keep(store, "mechanical-keyboard-perms", var, minsep=1)
 V["mechanical-keyboard-perms"] = store
 
 # ---------------------------------------------------- G2 quadratic vertex (slider 0-5 by 0.1)
 # h = -a t^2 + b t + c, peak at t = b/2a. Misconception: set the time, not the height.
-ins = (0, 5, 0.1)
 store = []
 cands = shuffled([(2, Fraction(24, 5), Fraction(3, 25))] + [
     (a, Fraction(2 * a * ts, 10), Fraction(c10, 100))
@@ -409,16 +331,13 @@ for a, b, c in cands:
         continue
     var = {"a": a, "b": f"{float(b):g}", "c": f"{float(c):g}",
            "t": round(t_f, 1), "answer": round(h_f, 1), "miss": round(t_f, 1)}
-    keep(store, "vault-trajectory-vertex", var, ins,
-         lambda v: [],       # the equation prints coefficients, not the height
-         lambda x, v: abs(x - (float(v["c"]) + float(v["b"]) ** 2 / (4 * v["a"]))) < 1e-9)
+    keep(store, "vault-trajectory-vertex", var)
     if len(store) >= WANT:
         break
 V["vault-trajectory-vertex"] = store
 
 # ---------------------------------------------------- G3 HCF tiling (slider 0.1-5 by 0.1)
 # Misconception: a common factor that tiles, but not the largest one.
-ins = (0.1, 5, 0.1)
 store = []
 cands = shuffled([(48, 72)] + [(w, l) for w in range(20, 121, 2) for l in range(24, 145, 2) if l > w])
 for w10, l10 in cands:
@@ -431,16 +350,12 @@ for w10, l10 in cands:
     keep(store, "mat-tiling-hcf",
          {"W": f"{w10/10:g}", "L": f"{l10/10:g}", "w10": w10, "l10": l10,
           "across": w10 // g, "along": l10 // g,
-          "answer": round(ans, 1), "miss": round(miss, 1)}, ins,
-         lambda v: [],
-         lambda x, v: (v["w10"] % round(x * 10) == 0 and v["l10"] % round(x * 10) == 0
-                       and round(x * 10) == gcd(v["w10"], v["l10"])))
+          "answer": round(ans, 1), "miss": round(miss, 1)})
     if len(store) >= WANT:
         break
 V["mat-tiling-hcf"] = store
 
 # ---------------------------------------------------- H1 LCM (slider 1-200)
-ins = (1, 200, 1)
 store = []
 cands = shuffled([(12, 15, 18)] + [(a, b, c) for a in range(4, 25) for b in range(a + 1, 31)
                           for c in range(b + 1, 37)])
@@ -451,35 +366,25 @@ for a, b, c in cands:
         continue
     miss = a + b + c
     keep(store, "patrol-lcm-timer",
-         {"a": a, "b": b, "c": c, "answer": l, "miss": miss}, ins,
-         lambda v: [v["a"], v["b"], v["c"]],
-         lambda x, v: x % v["a"] == 0 and x % v["b"] == 0 and x % v["c"] == 0, minsep=14)
+         {"a": a, "b": b, "c": c, "answer": l, "miss": miss}, minsep=14)
     if len(store) >= WANT:
         break
 V["patrol-lcm-timer"] = store
 
 # ---------------------------------------------------- H2 cube SA -> V (keypad 4)
-ins = keypad(4)
 store = []
 for e in [15] + list(range(10, 22)):
     sa, vol, face = 6 * e * e, e ** 3, e * e
     if not (1000 <= vol <= 9999):
         continue
     keep(store, "cube-surface-volume",
-         {"SA": sa, "edge": e, "face": face, "answer": vol, "miss": face}, ins,
-         lambda v: [v["SA"]],
-         lambda x, v: any(x == n ** 3 and 6 * n * n == v["SA"] for n in range(1, 50)))
+         {"SA": sa, "edge": e, "face": face, "answer": vol, "miss": face})
     if len(store) >= WANT:
         break
 V["cube-surface-volume"] = store
 
 # ---------------------------------------------------- H3 inequality + prime (dial 0-50)
-ins = (0, 50, 1)
 store = []
-
-
-def is_prime(n):
-    return n > 1 and all(n % d for d in range(2, int(n ** 0.5) + 1))
 
 
 cands = shuffled([(20, 3, 5, 32)] + [(lo, m, k, hi) for m in (2, 3, 4)
@@ -499,9 +404,7 @@ for lo, m, k, hi in cands:
           "band": ", ".join(str(x) for x in band),
           "low": f"{(lo+k)/m:.2f}".rstrip("0").rstrip("."),
           "high": f"{(hi+k)/m:.2f}".rstrip("0").rstrip("."),
-          "answer": ans, "miss": miss}, ins,
-         lambda v: [v["lo"], v["m"], v["k"], v["hi"]],
-         lambda x, v: v["lo"] < v["m"] * x - v["k"] < v["hi"] and is_prime(int(x)))
+          "answer": ans, "miss": miss})
     if len(store) >= WANT:
         break
 V["canteen-freezer-inequality"] = store
@@ -510,7 +413,6 @@ V["canteen-freezer-inequality"] = store
 # ---------------------------------------------------- I1 mean averages (slider 0-1000)
 # answer = 5T minus the four already entered. Misconception: the target mean itself,
 # entered as though the missing item had to be average.
-ins = (0, 1000, 1)
 store = []
 cands = [(520, 480, 550, 600, 450)]
 for T in range(350, 601, 25):
@@ -532,9 +434,7 @@ for T in range(350, 601, 25):
 for e1, e2, e3, e4, T in shuffled(cands):
     keep(store, "canteen-mean-calories",
          {"e1": e1, "e2": e2, "e3": e3, "e4": e4, "T": T,
-          "answer": 5 * T - (e1 + e2 + e3 + e4), "miss": T}, ins,
-         lambda v: [v["e1"], v["e2"], v["e3"], v["e4"], v["T"]],
-         lambda x, v: v["e1"] + v["e2"] + v["e3"] + v["e4"] + x == 5 * v["T"], minsep=40)
+          "answer": 5 * T - (e1 + e2 + e3 + e4), "miss": T}, minsep=40)
     if len(store) >= WANT:
         break
 V["canteen-mean-calories"] = store
@@ -566,12 +466,9 @@ for a1, b1, a2, b2, C, P in shuffled(cands):
     var = {"a1": a1, "b1": b1, "t1": t1, "a2": a2, "b2": b2, "t2": t2,
            "C": C, "P": P, "mult": mult,
            "answer": [C, P], "miss": [P, C]}
-    if b2 * mult - b1 <= 0 or t1 > 30 or t2 > 30 or t1 == t2:
-        rejected.append(("cookie-price-simultaneous", var, "not a tidy elimination")); continue
-    sols = [(c, p) for c in range(11) for p in range(11)
-            if a1 * c + b1 * p == t1 and a2 * c + b2 * p == t2]
-    if len(sols) != 1 or sols[0] != (C, P):
-        rejected.append(("cookie-price-simultaneous", var, f"{len(sols)} solutions")); continue
+    reason = check("cookie-price-simultaneous", var)   # two tags: escape_set_checks.check_cookie_simultaneous
+    if reason:
+        rejected.append(("cookie-price-simultaneous", var, reason)); continue
     if any(abs(C - x["answer"][0]) + abs(P - x["answer"][1]) < 2 for x in store):
         continue
     store.append(var)
@@ -582,7 +479,6 @@ V["cookie-price-simultaneous"] = store
 # ---------------------------------------------------- I3 fractions of an amount (dial 0-200)
 # The fraction names what stays; the dial wants what goes.
 # Misconception: setting the chute to the amount that was meant to remain.
-ins = (0, 200, 1)
 store = []
 cands = shuffled([(180, 2, 9)] + [(N, n, d) for N in range(40, 201, 10)
                                   for d in range(3, 13) for n in range(1, d)])
@@ -591,9 +487,7 @@ for N, n, d in cands:
         continue
     kept = N * n // d
     keep(store, "kale-fraction-drain",
-         {"N": N, "n": n, "d": d, "kept": kept, "answer": N - kept, "miss": kept}, ins,
-         lambda v: [v["N"], v["n"], v["d"]],
-         lambda x, v: v["d"] * (v["N"] - x) == v["n"] * v["N"])
+         {"N": N, "n": n, "d": d, "kept": kept, "answer": N - kept, "miss": kept})
     if len(store) >= WANT:
         break
 V["kale-fraction-drain"] = store
@@ -601,16 +495,13 @@ V["kale-fraction-drain"] = store
 # ---------------------------------------------------- J1 lower bounds (dial 0-20 by 0.25)
 # Both measurements are to the nearest metre, so both bounds end in .5 and every
 # product lands on a quarter. Misconception: multiplying the stated figures.
-ins = (0, 20, 0.25)
 store = []
 cands = shuffled([(6, 3)] + [(L, W) for L in range(3, 13) for W in range(2, 13) if L >= W])
 for L, W in cands:
     if L * W > 20:
         continue
     keep(store, "visitor-space-bounds",
-         {"L": L, "W": W, "answer": (L - 0.5) * (W - 0.5), "miss": float(L * W)}, ins,
-         lambda v: [v["L"], v["W"]],
-         lambda x, v: abs(x - (v["L"] - 0.5) * (v["W"] - 0.5)) < 1e-9)
+         {"L": L, "W": W, "answer": (L - 0.5) * (W - 0.5), "miss": float(L * W)})
     if len(store) >= WANT:
         break
 V["visitor-space-bounds"] = store
@@ -620,20 +511,12 @@ V["visitor-space-bounds"] = store
 # the library above is kept as history. The width is stated to the nearest 0.1 m (written "ten
 # centimetres" in the prose, so the 10 is no clue figure). The answer is the smallest setting on the
 # grid that rounds, half up, to W; misconception: W itself, the stated width taken as exact.
-ins = (2, 3, 0.01)
 store = []
-
-
-def bay_sols(W):
-    """Every setting on the slider that rounds, half up, to W at 0.1 m (the draft's solver)."""
-    return [x for x in grid(2, 3, 0.01) if (round(x * 100) + 5) // 10 == round(W * 10)]
 
 
 for W in shuffled([2.4, 2.2, 2.3, 2.5, 2.6, 2.7, 2.8, 2.9]):
     keep(store, "head-bay-lower-bound",
-         {"W": W, "answer": round(W - 0.05, 2), "miss": W}, ins,
-         lambda v: [v["W"]],
-         lambda x, v: abs(x - min(bay_sols(v["W"]))) < 1e-9)
+         {"W": W, "answer": round(W - 0.05, 2), "miss": W})
     if len(store) >= WANT:
         break
 V["head-bay-lower-bound"] = store
@@ -641,7 +524,6 @@ V["head-bay-lower-bound"] = store
 # ---------------------------------------------------- J2 arc length (dial 0-180 by 5)
 # arc = (th/360) x 2 pi r, quoted as k pi so the pi cancels. Misconception: the
 # radius used where the circumference needs the diameter, which doubles the angle.
-ins = (0, 180, 5)
 store = []
 cands = shuffled([(3, 45)] + [(r, th) for r in range(2, 10) for th in range(10, 91, 5)])
 for r, th in cands:
@@ -651,9 +533,7 @@ for r, th in cands:
     if not (0.25 <= k <= 5):
         continue
     keep(store, "boom-gate-sector",
-         {"r": r, "th": th, "k": f"{k:g}", "answer": th, "miss": 2 * th}, ins,
-         lambda v: [v["r"], float(v["k"])],
-         lambda x, v: abs(x * v["r"] - 180 * float(v["k"])) < 1e-9, minsep=5)
+         {"r": r, "th": th, "k": f"{k:g}", "answer": th, "miss": 2 * th}, minsep=5)
     if len(store) >= WANT:
         break
 V["boom-gate-sector"] = store
@@ -661,7 +541,6 @@ V["boom-gate-sector"] = store
 # ---------------------------------------------------- J3 quadratic with a constraint (dial 0-15)
 # Two roots, one of them above the alarm limit. Misconception: the other root,
 # taken without reading the limit - the same shape as canteen-freezer-inequality.
-ins = (0, 15, 1)
 store = []
 cands = shuffled([(5, 7, 6)] + [(p, q, lim) for p in range(1, 13)
                                 for q in range(p + 2, 16) for lim in range(p + 1, q)])
@@ -670,9 +549,7 @@ for p, q, lim in cands:
     if c > 120 or b > 24 or p < 3 or q - p > 6:
         continue
     keep(store, "ev-charger-quadratic",
-         {"p": p, "q": q, "b": b, "c": c, "lim": lim, "answer": p, "miss": q}, ins,
-         lambda v: [2, v["b"], v["c"], v["lim"]],
-         lambda x, v: x * x - v["b"] * x + v["c"] == 0 and x <= v["lim"])
+         {"p": p, "q": q, "b": b, "c": c, "lim": lim, "answer": p, "miss": q})
     if len(store) >= WANT:
         break
 V["ev-charger-quadratic"] = store
@@ -681,19 +558,12 @@ V["ev-charger-quadratic"] = store
 # Misconception: one factor pair missed. N is never square, so its factors pair
 # off exactly and the count is always even - under 100 that allows only 6, 8, 10
 # and 12, and the spread rule caps the library at four. Accepted.
-def factor_count(n):
-    return sum(1 for d in range(1, n + 1) if n % d == 0)
-
-
-ins = (0, 20, 1)
 store = []
 for N in shuffled([24] + [n for n in range(20, 100) if n != 24]):
     if is_prime(N) or math.isqrt(N) ** 2 == N or factor_count(N) < 6:
         continue
     keep(store, "chokey-factor-count",
-         {"N": N, "answer": factor_count(N), "miss": factor_count(N) - 2}, ins,
-         lambda v: [v["N"]],
-         lambda x, v: x == factor_count(v["N"]))
+         {"N": N, "answer": factor_count(N), "miss": factor_count(N) - 2})
     if len(store) >= WANT:
         break
 V["chokey-factor-count"] = store
@@ -701,17 +571,10 @@ V["chokey-factor-count"] = store
 # ---------------------------------------------------- K2 primes up to V (dial 0-30)
 # Misconception: 1 counted as prime. Answers sit one apart across the pool, so
 # this lock sets its own gap of 1 rather than the dial's default 1.5.
-def prime_count(v):
-    return sum(1 for p in range(2, v + 1) if is_prime(p))
-
-
-ins = (0, 30, 1)
 store = []
 for Vol in shuffled([30, 20, 25, 35, 40, 45, 50, 55, 60]):
     keep(store, "chokey-prime-volumes",
-         {"V": Vol, "answer": prime_count(Vol), "miss": prime_count(Vol) + 1}, ins,
-         lambda v: [1, v["V"]],
-         lambda x, v: x == prime_count(v["V"]), minsep=1)
+         {"V": Vol, "answer": prime_count(Vol), "miss": prime_count(Vol) + 1}, minsep=1)
     if len(store) >= WANT:
         break
 V["chokey-prime-volumes"] = store
@@ -719,7 +582,6 @@ V["chokey-prime-volumes"] = store
 # ---------------------------------------------------- K3 HCF bundles (slider 0-120)
 # Misconception: the LCM given for the HCF, so the LCM has to fit on the slider.
 # HCFs of 5-15 are too close for the default gap of 6 on this travel; gap of 1.
-ins = (0, 120, 1)
 store = []
 cands = shuffled([(18, 45)] + [(a, b) for b in range(2, 61) for a in range(1, b)
                                if (a, b) != (18, 45)])
@@ -729,9 +591,7 @@ for a, b in cands:
     if not (5 <= g <= 15) or g in (a, b) or lcm > 120:
         continue
     keep(store, "chokey-hcf-bundles",
-         {"a": a, "b": b, "answer": g, "miss": lcm}, ins,
-         lambda v: [v["a"], v["b"]],
-         lambda x, v: x == gcd(v["a"], v["b"]), minsep=1)
+         {"a": a, "b": b, "answer": g, "miss": lcm}, minsep=1)
     if len(store) >= WANT:
         break
 V["chokey-hcf-bundles"] = store
@@ -739,7 +599,6 @@ V["chokey-hcf-bundles"] = store
 # ---------------------------------------------------- L1 largest multiple under a limit (keypad 0-99)
 # Misconception: the first multiple past the limit, so that has to fit on two digits,
 # and at most 96 so it never sits at the very top of the keypad.
-ins = keypad(2)
 store = []
 cands = shuffled([(9, 85)] + [(k, L) for k in range(6, 14) for L in range(30, 100)
                               if L % k and (k, L) != (9, 85)])
@@ -749,9 +608,7 @@ for k, L in cands:
     if ans < 20 or miss > 96:
         continue
     keep(store, "kiln-sensor-limit",
-         {"k": k, "L": L, "answer": ans, "miss": miss}, ins,
-         lambda v: [v["k"], v["L"]],
-         lambda x, v: x < v["L"] and x % v["k"] == 0 and x + v["k"] >= v["L"])
+         {"k": k, "L": L, "answer": ans, "miss": miss})
     if len(store) >= WANT:
         break
 V["kiln-sensor-limit"] = store
@@ -760,7 +617,6 @@ V["kiln-sensor-limit"] = store
 # Misconception: the two cycles multiplied, so the product has to fit on the dial.
 # A shared factor keeps the LCM off the product; neither dividing the other keeps
 # it off the longer cycle.
-ins = (0, 120, 1)
 store = []
 cands = shuffled([(6, 14)] + [(a, b) for a in range(4, 21) for b in range(a + 1, 21)
                               if (a, b) != (6, 14)])
@@ -768,10 +624,7 @@ for a, b in cands:
     if gcd(a, b) == 1 or b % a == 0 or a * b > 120:
         continue
     keep(store, "kiln-fan-restart",
-         {"a": a, "b": b, "answer": a * b // gcd(a, b), "miss": a * b}, ins,
-         lambda v: [v["a"], v["b"]],
-         lambda x, v: (x > 0 and x % v["a"] == 0 and x % v["b"] == 0
-                       and not any(y % v["a"] == 0 and y % v["b"] == 0 for y in range(1, int(x)))))
+         {"a": a, "b": b, "answer": a * b // gcd(a, b), "miss": a * b})
     if len(store) >= WANT:
         break
 V["kiln-fan-restart"] = store
@@ -781,7 +634,6 @@ V["kiln-fan-restart"] = store
 # Non-calculator: b is capped at 60 so the division stays mental arithmetic.
 # b / c is at least 2, or the division does no work, and a != b, which reads
 # like a typo rather than a calculation.
-ins = (0, 60, 1)
 store = []
 cands = shuffled([(21, 45, 3)] + [(a, b, c) for c in range(2, 10)
                                   for a in range(c, 56, c) for b in range(c, 61, c)
@@ -791,9 +643,7 @@ for a, b, c in cands:
     if not (20 <= ans <= 55) or miss == ans or b // c < 2 or a == b:
         continue
     keep(store, "kiln-cancel-check",
-         {"a": a, "b": b, "c": c, "answer": ans, "miss": miss}, ins,
-         lambda v: [v["a"], v["b"], v["c"]],
-         lambda x, v: x == v["a"] + v["b"] // v["c"])
+         {"a": a, "b": b, "c": c, "answer": ans, "miss": miss})
     if len(store) >= WANT:
         break
 V["kiln-cancel-check"] = store
@@ -804,17 +654,10 @@ V["kiln-cancel-check"] = store
 # ruling 2: k = 5 to 9 with L = 3 on a maxDigits keypad (k = 5 gives 60, which maxDigits makes settable);
 # variant 0 is k = 7 (210, miss 343), because 120 is printed in the audit's variant-0 clue. The solver
 # counts the passcodes outright rather than restating the formula.
-def passcodes(k, L):
-    return sum(1 for t in itertools.product(range(k), repeat=L) if len(set(t)) == L)
-
-
-ins = keypad(3)
 store = []
 for k, L in shuffled([(7, 3), (5, 3), (6, 3), (8, 3), (9, 3)]):
     keep(store, "admin-passcode-product-rule",
-         {"k": k, "L": L, "answer": math.perm(k, L), "miss": k ** L}, ins,
-         lambda v: [v["k"], v["L"]],
-         lambda x, v: x == passcodes(v["k"], v["L"]))
+         {"k": k, "L": L, "answer": math.perm(k, L), "miss": k ** L})
     if len(store) >= WANT:
         break
 V["admin-passcode-product-rule"] = store
@@ -828,7 +671,6 @@ V["admin-passcode-product-rule"] = store
 # a half is the right answer: the lock would mark the wrong method right.
 # The library is the draft's ten sets, in its order (Jon's ruling 3: "the draft's ten-set library"); each
 # still has to pass every rule below and keep(), so an edit here cannot slip a bad set in.
-ins = (1, 20, 1)
 store = []
 HALF, QUARTER = Fraction(1, 2), Fraction(1, 4)
 cands = [(20, HALF), (8, QUARTER), (29, QUARTER), (20, QUARTER), (7, HALF), (9, HALF), (40, QUARTER),
@@ -844,10 +686,7 @@ for r, f in cands:
     if ans <= 2 or ans == miss:
         continue
     keep(store, "vote-log-overwrite",
-         {"r": r, "f": str(f), "answer": ans, "miss": miss}, ins,
-         lambda v: [v["r"]],
-         lambda x, v: (1 - Fraction(v["r"], 100)) ** x < Fraction(v["f"])
-         <= (1 - Fraction(v["r"], 100)) ** (x - 1))
+         {"r": r, "f": str(f), "answer": ans, "miss": miss})
     if len(store) >= WANT:
         break
 V["vote-log-overwrite"] = store
@@ -860,7 +699,6 @@ V["vote-log-overwrite"] = store
 # nothing). Variant 0 is 120, 50, 40, 60.
 # The library is the draft's seven sets, in its order (N in tens from 100 to 240; V, S and neither in
 # fives); each still has to pass every rule below and keep().
-ins = keypad(2)
 store = []
 cands = [(120, 50, 40, 60), (200, 100, 50, 90), (240, 80, 120, 100), (230, 130, 125, 90), (100, 40, 50, 45),
          (120, 45, 50, 55), (150, 45, 75, 60)]
@@ -878,9 +716,7 @@ for N, Vv, S, nb in cands:
     if Fraction(both, S) - Fraction(Vv - both, N - S) < Fraction(1, 5):
         continue
     keep(store, "leak-audit-conditional",
-         {"N": N, "V": Vv, "S": S, "neither": nb, "answer": ans, "miss": miss}, ins,
-         lambda v: [v["N"], v["V"], v["S"], v["neither"]],
-         lambda x, v: x * v["S"] == 100 * (v["V"] + v["S"] - (v["N"] - v["neither"])))
+         {"N": N, "V": Vv, "S": S, "neither": nb, "answer": ans, "miss": miss})
     if len(store) >= WANT:
         break
 V["leak-audit-conditional"] = store
@@ -891,7 +727,6 @@ V["leak-audit-conditional"] = store
 # after the point read as a whole number (a longer decimal taken as bigger). The library is the draft's eight
 # shelves, in its order; each still has to pass the draft's rules below and keep(). Spread is off for this
 # lock (minsep 1e-9): the slots repeat across shelves, one variant per shelf (the draft's rule).
-ins = (1, 8, 1)
 store = []
 DEWEY = [("520", "stars and planets", ["35", "5", "15", "62", "4"], "4"),
          ("567", "dinosaurs", ["6", "4", "07", "13", "86", "65"], "6"),
@@ -917,23 +752,17 @@ for shelf, subject, parts, book in DEWEY:
     if ans == 1 or ans == miss:
         continue
     keep(store, "dewey-sort-arm",
-         {"shelf": shelf, "subject": subject, "parts": parts, "book": f"{shelf}.{book}", "answer": ans, "miss": miss},
-         ins, lambda v: [float(f"{v['shelf']}.{d}") for d in v["parts"]],
-         lambda x, v: x == 1 + sorted(Fraction(int(d), 10 ** len(d)) for d in v["parts"]).index(
-             Fraction(int(v["book"].split(".")[1]), 10 ** len(v["book"].split(".")[1]))), minsep=1e-9)
+         {"shelf": shelf, "subject": subject, "parts": parts, "book": f"{shelf}.{book}", "answer": ans, "miss": miss}, minsep=1e-9)
 V["dewey-sort-arm"] = store
 
 # ---------------------------------------------------- N2 (2026-10) angles on a straight line (dial 0-180)
 # answer = 180 - x; misconception: 90 - x, the angles making a right angle. x from 20 to 70, never a multiple
 # of 5. The library is the draft's eight angles, in its order, with the five-degree spread (Jon's ruling 4).
-ins = (0, 180, 1)
 store = []
 for x in [37, 46, 63, 68, 24, 56, 32, 51]:
     if not (20 <= x <= 70) or x % 5 == 0:
         continue
-    keep(store, "deflector-straight-line", {"x": x, "answer": 180 - x, "miss": 90 - x}, ins,
-         lambda v: [v["x"]],
-         lambda a, v: a + v["x"] == 180, minsep=5)
+    keep(store, "deflector-straight-line", {"x": x, "answer": 180 - x, "miss": 90 - x}, minsep=5)
 V["deflector-straight-line"] = store
 
 # ---------------------------------------------------- N3 (2026-10) pence to pounds (keypad, maxDigits 4)
@@ -943,7 +772,6 @@ V["deflector-straight-line"] = store
 # a whole number of pounds, 10 to 99. The library is the draft's ten sets, in its order (variant 0 is Jon's
 # example: 15p, 12 days, 30 books, 54). minsep 1: the answers only have to differ, as the draft rules; the
 # default spread is 5% of the keypad's 0-9999.
-ins = keypad(4)
 store = []
 for p, d, n in [(15, 12, 30), (20, 15, 26), (20, 15, 32), (20, 10, 24), (10, 20, 28), (5, 8, 30), (10, 14, 20),
                 (15, 14, 20), (10, 20, 31), (5, 15, 32)]:
@@ -952,9 +780,7 @@ for p, d, n in [(15, 12, 30), (20, 15, 26), (20, 15, 32), (20, 10, 24), (10, 20,
         continue
     if total % 100 or not (10 <= total // 100 <= 99):
         continue
-    keep(store, "fines-pence-to-pounds", {"p": p, "d": d, "n": n, "answer": total // 100, "miss": total}, ins,
-         lambda v: [v["p"], v["d"], v["n"]],
-         lambda x, v: x * 100 == v["p"] * v["d"] * v["n"], minsep=1)   # answers distinct (the draft's rule)
+    keep(store, "fines-pence-to-pounds", {"p": p, "d": d, "n": n, "answer": total // 100, "miss": total}, minsep=1)   # answers distinct (the draft's rule)
 V["fines-pence-to-pounds"] = store
 
 # ------------------------------------------------- derived tokens
@@ -1132,8 +958,7 @@ def inject(path):
     return filled
 
 
-rooms = pathlib.Path(r"E:\jon\maffsgames\escape-rooms")
-for rj in sorted(rooms.glob("*/room.js")):
+for rj in sorted(ROOMS.glob("*/room.js")):
     n = inject(rj)
     print(f"   injected {n} libraries into {rj.parent.name}/room.js")
 

@@ -198,6 +198,14 @@ is always the wrong answer. If it is not, say why the bug is local and fix it lo
 - One pass. If it isn't right, stop and report — do not attempt iterative self-correction.
 - If a task arrives without this structure, ask Jon for the missing fields before proceeding.
 
+### Start of task: a new worktree from origin/main (ESCAPE-SET-CHECKS, 11 Oct 2026)
+
+Every task starts with `git fetch`, then `git worktree add -b claude/<task> <path> origin/main`, and works
+only there. **Never pull or merge into the primary worktree or into an existing branch**, a contract's "pull
+origin/main" included: that is what the fetch and the new worktree do. **Why:** on 11 Oct 2026 a session ran
+`git pull origin main` in the primary worktree, which was sitting on an old task branch, and fast-forwarded
+that branch to main; undoing it needed Jon.
+
 ### End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026)
 
 After the PR merges on green and main's run is reported (above), remove the worktree the task used and its

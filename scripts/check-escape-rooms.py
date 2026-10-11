@@ -28,6 +28,15 @@ Run after any edit to escape-rooms/*/room.js. It catches:
     number of 1 to N digits with no leading zero, so a four-digit misconception
     needs maxDigits 4 or more. Fixed-length (`digits: N`) keypads are not
     checked here, as before.
+  * every set of every live room's locks, re-checked (contract ESCAPE-SET-CHECKS,
+    11 Oct 2026) by scripts/escape_set_checks.py, the same module the generator
+    admits sets with: exactly one setting solves it, the answer and misconception
+    are settable and differ, the clue does not print the answer, the answer is off
+    the end of a dial's travel. A failure names the room, lock, set and check; a
+    live lock with no entry in the module fails too. The run prints each live
+    room's verified-set count and the total. Ten broken sets from
+    scripts/fixtures/escape-broken-sets.json are planted through the same code on
+    every run: each must fail, and its good original must pass.
 
 Cross-lock collisions. Each lock's library is verified on its own, but a room
 serves one variant per lock together, and those can collide. A draw is VALID
@@ -58,11 +67,14 @@ not by this exit code.
 """
 import itertools, json, re, pathlib, sys
 
+from escape_set_checks import NO_CHECK, check, covered
+
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")   # the stars, on a cp1252 Windows console
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
 ROOMS = BASE / "escape-rooms"
 ART = BASE / "docs" / "art"
+BROKEN_SETS = BASE / "scripts" / "fixtures" / "escape-broken-sets.json"
 
 problems = []
 warnings = []
@@ -404,12 +416,55 @@ if "rugby-mud" in live:
 else:
     plant_line = "planted faults: skipped (rugby-mud is not live)"
 
+
+# ---- every set, re-checked (ESCAPE-SET-CHECKS) -------------------------------
+def check_sets(slug, lock_ids, library):
+    """(problems, sets that passed) for one room: every set of every lock through escape_set_checks.check()."""
+    out, passed = [], 0
+    for lid in lock_ids:
+        if not covered(lid):
+            out.append(f"{slug}/{lid}: {NO_CHECK} (no entry in scripts/escape_set_checks.py), so its sets are unchecked")
+            continue
+        for i, var in enumerate(library.get(lid, [])):
+            reason = check(lid, var)
+            if reason:
+                out.append(f"{slug}/{lid}: set {i} fails the check \"{reason}\"")
+            else:
+                passed += 1
+    return out, passed
+
+
+set_counts = {}
+for slug in sorted(live):
+    got, set_counts[slug] = check_sets(slug, re.findall(r"\n      id: '([^']+)'", room_js[slug]), verified)
+    problems += got
+
+# Planted: each broken set must fail with its check, through the same function, and its good original pass.
+broken_cases = json.loads(BROKEN_SETS.read_text(encoding="utf-8"))["cases"]
+for case in broken_cases:
+    lid = case["lock"]
+    got, _ = check_sets("fixture", [lid], {lid: [case["broken"]]})
+    if not any(case["expect"] in g for g in got):
+        problems.append(f"planted fault NOT caught: {case['why']} ({lid}; expected \"{case['expect']}\", "
+                        f"the set check found {got or 'nothing'})")
+    if case["good"] is not None:
+        got, _ = check_sets("fixture", [lid], {lid: [case["good"]]})
+        if got:
+            problems.append(f"planted fault's good original fails: {lid} ({got})")
+
 print(f"locks checked: {locks_seen}")
 print(f"variants checked: {sum(len(v) for v in verified.values())}")
 print("difficulty (hardest lock's grade):")
 for slug, (stars, name, gr) in star_report.items():
     print(f"  {slug:<20} {'★' * stars:<3} {name} (grades {gr})")
 print(plant_line)
+print("verified sets per live room (every set re-checked by scripts/escape_set_checks.py):")
+for slug, n in set_counts.items():
+    print(f"  {slug:<20} {n:>4}")
+print(f"  {'total':<20} {sum(set_counts.values()):>4}  in {len(set_counts)} live rooms")
+for slug in sorted(set(room_js) - live):
+    print(f"  {slug:<20}  not checked (withdrawn)")
+print(f"broken sets planted: {len(broken_cases)}, from {BROKEN_SETS.relative_to(BASE).as_posix()}; each must fail")
 print("cross-lock collisions (VALID draws per room):")
 for line in collision_report:
     print("  " + line)

@@ -1,0 +1,224 @@
+{
+ "about": "Planted faults for scripts/check-escape-rooms.py (contract ESCAPE-SET-CHECKS, 11 Oct 2026). Never a live file: each good set is a lock's variant 0 copied out of variants.json (only the fields its check reads), and broken is the same set with one deliberate fault. check-escape-rooms.py runs both through the code that checks the live rooms: good must pass, broken must fail with expect, or the run fails.",
+ "cases": [
+  {
+   "why": "the answer moved off the dial's step of 10",
+   "lock": "sprinkler-sector-area",
+   "good": {
+    "r": 12,
+    "K": 48,
+    "answer": 120,
+    "miss": 40
+   },
+   "broken": {
+    "r": 12,
+    "K": 48,
+    "answer": 125,
+    "miss": 40
+   },
+   "expect": "answer not settable"
+  },
+  {
+   "why": "the misconception moved past the dial's top",
+   "lock": "dodgeball-pressure-boyle",
+   "good": {
+    "V1": 20,
+    "P1": 60,
+    "V2": 25,
+    "answer": 48,
+    "miss": 75
+   },
+   "broken": {
+    "V1": 20,
+    "P1": 60,
+    "V2": 25,
+    "answer": 48,
+    "miss": 150
+   },
+   "expect": "misconception not settable"
+  },
+  {
+   "why": "the misconception made equal to the answer",
+   "lock": "kiln-cancel-check",
+   "good": {
+    "a": 21,
+    "b": 45,
+    "c": 3,
+    "answer": 36,
+    "miss": 22
+   },
+   "broken": {
+    "a": 21,
+    "b": 45,
+    "c": 3,
+    "answer": 36,
+    "miss": 36
+   },
+   "expect": "misconception equals answer"
+  },
+  {
+   "why": "the answer edited to a wrong value that is still on the slider",
+   "lock": "hamster-wheel-rpm",
+   "good": {
+    "d": 20,
+    "K": 120,
+    "answer": 360,
+    "miss": 6
+   },
+   "broken": {
+    "d": 20,
+    "K": 120,
+    "answer": 300,
+    "miss": 6
+   },
+   "expect": "1 solutions"
+  },
+  {
+   "why": "the alarm limit raised above both roots, so both open the lock",
+   "lock": "ev-charger-quadratic",
+   "good": {
+    "p": 5,
+    "q": 7,
+    "b": 12,
+    "c": 35,
+    "lim": 6,
+    "answer": 5,
+    "miss": 7
+   },
+   "broken": {
+    "p": 5,
+    "q": 7,
+    "b": 12,
+    "c": 35,
+    "lim": 8,
+    "answer": 5,
+    "miss": 7
+   },
+   "expect": "2 solutions"
+  },
+  {
+   "why": "the answer is a figure the clue prints",
+   "lock": "kiln-sensor-limit",
+   "good": {
+    "k": 9,
+    "L": 85,
+    "answer": 81,
+    "miss": 90
+   },
+   "broken": {
+    "k": 9,
+    "L": 10,
+    "answer": 9,
+    "miss": 18
+   },
+   "expect": "answer is printed in its own clue"
+  },
+  {
+   "why": "the answer pushed to the end of the dial's travel",
+   "lock": "wifi-venn-router",
+   "good": {
+    "total": 80,
+    "A": 48,
+    "B": 37,
+    "neither": 12,
+    "answer": 17,
+    "miss": 0
+   },
+   "broken": {
+    "total": 80,
+    "A": 40,
+    "B": 42,
+    "neither": 0,
+    "answer": 2,
+    "miss": 0
+   },
+   "expect": "answer sits at the end of the travel"
+  },
+  {
+   "why": "two dials: the answer pair edited",
+   "lock": "rugby-scoreboard-bases",
+   "good": {
+    "N": 17,
+    "diff": 4,
+    "H": 3,
+    "A": 7,
+    "answer": [
+     3,
+     7
+    ],
+    "miss": [
+     13,
+     17
+    ]
+   },
+   "broken": {
+    "N": 17,
+    "diff": 4,
+    "H": 3,
+    "A": 7,
+    "answer": [
+     3,
+     8
+    ],
+    "miss": [
+     13,
+     17
+    ]
+   },
+   "expect": "1 solutions"
+  },
+  {
+   "why": "two tags: the answer pair swapped",
+   "lock": "cookie-price-simultaneous",
+   "good": {
+    "a1": 3,
+    "b1": 2,
+    "t1": 12,
+    "a2": 1,
+    "b2": 4,
+    "t2": 14,
+    "C": 2,
+    "P": 3,
+    "mult": 3,
+    "answer": [
+     2,
+     3
+    ],
+    "miss": [
+     3,
+     2
+    ]
+   },
+   "broken": {
+    "a1": 3,
+    "b1": 2,
+    "t1": 12,
+    "a2": 1,
+    "b2": 4,
+    "t2": 14,
+    "C": 2,
+    "P": 3,
+    "mult": 3,
+    "answer": [
+     3,
+     2
+    ],
+    "miss": [
+     3,
+     2
+    ]
+   },
+   "expect": "1 solutions"
+  },
+  {
+   "why": "a lock with no entry in escape_set_checks.py",
+   "lock": "fixture-unregistered-lock",
+   "good": null,
+   "broken": {
+    "answer": 1,
+    "miss": 2
+   },
+   "expect": "no shared check for this lock"
+  }
+ ]
+}
