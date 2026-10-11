@@ -3,6 +3,41 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-11 (home): trimmed for SPLIT-IT-KATEX
+**RIGHTFUL-KING-ART (10 Oct, Jon's contract; pictures approved 22:20).** Filed `docs/art/rightful-king-scene.webp`,
+`-fail.webp`, `-win.webp` (1600x873, WebP q80, through `strip-gen-watermark.py --width 1600 --frame 1600x873`: no
+watermark; 2752x1536 cropped to 2752x1502, so crown, server cupboard and desk all stay in frame). Nothing readable or
+branded; the mug carries a pixel-high scribble under its leaf, illegible even zoomed. room.js: `art: 'rightful-king'`,
+the "ART: none yet" note replaced, sceneAlt gains the sticky note and printer, failAlt rewritten (night, lit by the
+display), winAlt unchanged; the RULE (no `missArt`) kept. **Still unreleased** (holding page, no hub card, no sitemap).
+**Jon can play-test it with its pictures at https://maffsgames.co.uk/escape-rooms/rightful-king/play.html.** Checked:
+play.html in Chromium at 1280 and 320 px shows the scene on the brief, the win picture on a win, the fail picture at
+time-out; check-escape-rooms and test-escape-art pass.
+
+**SCIENTIFIC TAGGING 5/5: core-maths-paper2c (10 Oct). The tagging run is done** (#261, #264, #265, #266, this;
+complex-converter stays untagged, Jon). Roster `scientific`, badge on the start card, scientific calculator under the
+question card (below Next, so Next does not move on a phone); check-calculator, verify-core-maths-paper2c and the
+Chromium smoke (sin(30) = 0.5 at 1280 and 320 px, no overflow) pass; CI the gate.
+
+The home lane's running handover (canon §7.8.2). Only home-lane sessions edit this file; the cloud lane's is
+`docs/handover/cloud.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
+
+**STANDING RULE (Jon, 7 Oct 2026):** when a contract finishes and the next queued contract's start condition is
+met, start it without asking. Stop only for a STOP IF, a decision no standing ruling covers, or an empty queue.
+
+**Home lane owns:** shared code, shared assets, CI and canon (contract F's shared fixes, then contract C), and every
+docs PR: `docs/todo.md`, the roster's listed section, relisting fixed games (batched).
+
+**OVERNIGHT RUN (Project Claude for Jon, 8 Oct 2026, 23:45): DONE.** Contract verbatim in
+`docs/history/contracts/2026-10-08-overnight.md`. Every item merged (see the summary above and the entries below).
+main's run on #200 (2782d17) went red on a runner network flake (the DejaVu font fetch: curl 503s and 60 s
+timeouts pushed B4 and L4 past their budgets; tier 1 timed out loading spot-the-muppet, untouched); one rerun of the
+failed jobs passed (run 37875059753, attempt 2).
+
+**Contracts (canon §7.8.2, contract CONTRACTS-FOLDER):** each is saved verbatim as
+`docs/handover/contracts/<yyyy-mm-dd>-<name>.md`; the queue below holds a one-line pointer; the file moves to
+`docs/history/contracts/` when the work merges. Read a contract when its item starts, never at session start.
+
 ## 2026-10-11 (home): trimmed for ESCAPE-CANON-LABEL
 
 **STAR-KEY (10 Oct, Jon's contract 17:50; `docs/handover/contracts/2026-10-10-star-key.md`).** One line saying
