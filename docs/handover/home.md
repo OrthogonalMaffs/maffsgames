@@ -1,5 +1,22 @@
 # Handover: home lane
 
+**ESCAPE-ANALYTICS (11 Oct, Jon's contract; STOPPED on its shared-layer STOP IF, then Jon's rulings 11 Oct).**
+Diagnosis (Jon's Rightful King play, Sheet rows 55413-55434): (1) the eight index-0 "answers" were room searches:
+`engine.js:359` logged each first search as question_answered, correct, index 0 (the Sheet has no `detail` column,
+so the `searched:` tag never showed); (2) the mid-game abandon came from `analytics.js:138-146`, which sent
+game_abandoned on every visibilitychange to hidden, in **every game**, so a game finished after a tab switch counted
+as abandoned and completed; (3) GA4's 2 completions did not reproduce: one call site (`engine.js:805`, st.done
+guard), one analytics.js, and the test shows one play sends exactly one game_completed to GA4 and one to the Sheet,
+so it is closed as a realtime counting artefact (Jon's ruling). Fixed, shared layer: searches send nothing;
+`mfg()` drops game_abandoned unless the page is being left (beforeunload / pagehide set `_mfgLeaving`;
+analytics.js loads in the head, so its beforeunload runs before any game's), the visibilitychange listener is
+gone, pagehide sends it; once per game as before. **Abandon figures change meaning on 11 Oct 2026** (canon §1.3,
+with the trade-off: a backgrounded phone tab later killed by the OS sends nothing). New
+`scripts/test-escape-analytics.py` (in CI): Rightful King won after searching every object and a tab switch, 3/1/0
+to GA4 and the Sheet; the room left mid-game, 1 abandon; prime-or-composite (own visibilitychange handler) with a
+tab switch, 0 abandons, 1 completion; three old faults planted and caught. Both faults predate the public repo
+(2 Oct 2026), so the history cannot date them; affected Sheet rows not counted (no export here).
+
 **LOG-NOTATION (10-11 Oct, Jon's contract; STOPPED on a wrong key, then Jon's rulings; PR #274).** B11's parser
 (`bank_common`): log with no base is base 10, ln base e, log_b base b; a power argument of ln/log is bracketed
 (ln e^2 parses); and, Jon's class fix, a symbol inside a log is positive when two values are compared (log(x^2) =
@@ -11,6 +28,7 @@ verify-log-laws.py now checks the Laws bank too (every key its question's value,
 and [24] planted and caught). Findings log-laws-ln-001..006 (fixed, #274; f0-001 fixed); ledger cleared for log-laws
 only. Locally the banks were extracted with `extract-banks.py --workers 2` (98 s; 4 workers risks this machine's
 memory). Note: this machine's Bash heredocs eat backslashes, so regex-heavy scripts were written to files first.
+
 
 **ROOMS-RELEASE-RK-LJ (10 Oct, Jon 22:45: "both have been play tested, so lets just release"; contract in
 `docs/history/contracts/2026-10-10-rooms-release-rk-lj.md`).** The Rightful King (★★★) and The Library Jam (★) are

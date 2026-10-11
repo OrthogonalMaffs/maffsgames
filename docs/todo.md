@@ -742,6 +742,7 @@ Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resi
     `escape-rooms/assets/engine.js` itself (`R.locks.indexOf(l) + 1`, `activeLock + 1`). The one
     exception is the escape-room "search" event, which uses a `0` sentinel with its own `detail:
     'searched:...'` tag (`:347`) — not a real question index.
+    **Removed 11 Oct 2026 (contract ESCAPE-ANALYTICS): searching sends no event now.**
   - **Found a real bug, not yet fixed:** `docs/apps-script-endpoint.js`'s `doPost` (`:42`–`:47`)
     writes every field as `data.field || ''` — including `data.correct` and `data.question_index`.
     `false || ''` and `0 || ''` both collapse to blank, so **every genuinely wrong answer
