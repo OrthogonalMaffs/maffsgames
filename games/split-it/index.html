@@ -18,6 +18,9 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-992JLHLP2D',{send_page_view:true,storage:'none',anonymize_ip:true});</script>
 <script src="../../schools/assets/analytics.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
 <style>
 /* Theme: schools/assets/theme.css (canon §7.5). The base tokens (--bg, --surface, --text,
    --muted, --border, --correct, --wrong, --hint, the font stacks) come from there; this
@@ -218,6 +221,10 @@ let S={mode:null,level:null,qIdx:0,score:0,correct:0,total:10,penalties:0,
 function $(id){return document.getElementById(id)}
 function rInt(a,b){return a+Math.floor(Math.random()*(b-a+1))}
 function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a;}
+// Fractions in working text go through KaTeX (canon 7.1.1) via MaffsText: \( \) marks the maths.
+// F: always a stacked fraction. X: n/d exactly -- a whole number when d divides n, else lowest terms.
+function F(n,d){return `\\(\\frac{${n}}{${d}}\\)`}
+function X(n,d){const g=gcd(n,d);return d/g===1?String(n/g):F(n/g,d/g)}
 
 // ============================================================
 //  MENU
@@ -359,7 +366,7 @@ const generators={
       const g2=gcd(num,tp);
       return{prompt:`In the ratio <span class="highlight">${a} : ${b}</span>, what fraction of the total is the ${ask} part?`,
         type:'fraction',answers:[num/g2,tp/g2],
-        working:`Total parts = ${tp}. ${ask==='smaller'?'Smaller':'Larger'} = ${num}/${tp} = ${num/g2}/${tp/g2}`,
+        working:`Total parts = ${tp}. ${ask==='smaller'?'Smaller':'Larger'} = ${F(num,tp)} = ${F(num/g2,tp/g2)}`,
         hint:`Total parts = ${a}+${b} = ${tp}. Write as a fraction and simplify.`};
     } else {
       const a=rInt(1,5),b=rInt(1,5),c=rInt(1,5);const tp=a+b+c;
@@ -367,7 +374,7 @@ const generators={
       const g2=gcd(largest,tp);
       return{prompt:`In the ratio <span class="highlight">${a} : ${b} : ${c}</span>, what fraction of the total is the largest part?`,
         type:'fraction',answers:[largest/g2,tp/g2],
-        working:`Total = ${tp}. Largest = ${largest}. Fraction = ${largest}/${tp} = ${largest/g2}/${tp/g2}`,
+        working:`Total = ${tp}. Largest = ${largest}. Fraction = ${F(largest,tp)} = ${F(largest/g2,tp/g2)}`,
         hint:`Total parts = ${a}+${b}+${c} = ${tp}. The largest part is ${largest}.`};
     }
   },
@@ -394,8 +401,8 @@ const generators={
       return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${p[0]}</span> people uses the amounts below.<br>How much of each do you need for <span class="highlight">${p[1]}</span> people?<br>Give your answers to 1 decimal place.`,
         type:'scale',items:r.items,scaleFactor:sf,origServes:p[0],targetServes:p[1],dp:1,
         answers:r.items.map(i=>parseFloat((i.v*sf).toFixed(1))),
-        working:`Scale factor = ${p[1]}/${p[0]} = ${sf}. Multiply each amount by ${sf}.`,
-        hint:`Scale factor = ${p[1]} ÷ ${p[0]} = ${sf}. Multiply each ingredient by this.`};
+        working:`Scale factor = ${F(p[1],p[0])} = ${X(p[1],p[0])}. Multiply each amount by ${X(p[1],p[0])}.`,
+        hint:`Scale factor = ${p[1]} ÷ ${p[0]} = ${X(p[1],p[0])}. Multiply each ingredient by this.`};
     }
     return{prompt:`A <span class="highlight">${r.name}</span> recipe for <span class="highlight">${orig}</span> people uses the amounts below.<br>How much of each do you need for <span class="highlight">${target}</span> people?`,
       type:'scale',items:r.items,scaleFactor:sf,origServes:orig,targetServes:target,
@@ -424,12 +431,12 @@ const generators={
             working:`£${amt} × ${rate} = €${ans}`,hint:`Multiply £${amt} by the exchange rate.`};
         },
         ()=>{// Speed
-          const d=rInt(3,8)*rInt(10,30);const t=rInt(2,5);const spd=d/t;const t2=rInt(2,8);
+          const d=rInt(3,8)*rInt(10,30);const t=rInt(2,5);const t2=rInt(2,8);
           // d×t2÷t to 1 d.p., rounded half up, in whole numbers (exact: no float in the key)
           const ans=Math.floor((20*d*t2+t)/(2*t))/10;
           return{prompt:`A car travels <span class="highlight">${d} miles</span> in <span class="highlight">${t} hours</span>.<br>How far in <span class="highlight">${t2} hours</span>?<br>Give your answer to 1 decimal place.`,
             type:'single',answers:[ans],unit:'miles',dp:1,
-            working:`Speed = ${d}÷${t} = ${spd} mph. Distance = ${spd}×${t2} = ${ans} miles`,
+            working:`Speed = ${d}÷${t} = ${X(d,t)} mph. Distance = ${X(d,t)}×${t2} = ${ans} miles`,
             hint:`Find the speed first: ${d} ÷ ${t}`};
         },
         ()=>{// Best value
@@ -511,7 +518,7 @@ function renderQ(q){
     });
   } else if(q.type==='single'){
     html+=`<div class="input-row">
-      ${q.unit?`<span class="unit-label">${q.unit}</span>`:''}
+      ${q.unit==='£'||q.unit==='€'?`<span class="unit-label">${q.unit}</span>`:''}
       <input ${inputType(q)} class="ratio-input" id="in0" placeholder="?" step="any" style="width:100px">
       ${q.unit&&q.unit!=='£'&&q.unit!=='€'?`<span class="unit-label">${q.unit}</span>`:''}
     </div>`;
@@ -583,7 +590,7 @@ function checkAnswer(){
     correct=num===q.answers[0]&&den===q.answers[1];
     if(!correct&&num/den===q.answers[0]/q.answers[1]){
       // Correct value but not simplified
-      showFeedback(false,'Correct value, but simplify your fraction! '+q.answers[0]+'/'+q.answers[1]);
+      showFeedback(false,'Correct value, but simplify your fraction! '+F(q.answers[0],q.answers[1]));
       S.penalties++;
       mfg('question_answered',{game_slug:'split-it',level:S.level,mode:S.mode,question_index:S.qIdx+1,correct:false});
       MaffsLock.fresh(card);   // the student simplifies and checks again
@@ -654,7 +661,7 @@ function updateBar(){
 }
 
 function showFeedback(ok,msg){
-  $('fbArea').innerHTML=`<div class="feedback ${ok?'correct':'wrong'}">${ok?'✓ ':'✗ '}${msg}</div>`;
+  $('fbArea').innerHTML=`<div class="feedback ${ok?'correct':'wrong'}">${ok?'✓ ':'✗ '}${MaffsText.html(msg)}</div>`;
 }
 
 // ============================================================
