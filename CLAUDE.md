@@ -197,3 +197,11 @@ is always the wrong answer. If it is not, say why the bug is local and fix it lo
 - Do not refactor, rename, reformat, or tidy anything outside EXACT CHANGE.
 - One pass. If it isn't right, stop and report — do not attempt iterative self-correction.
 - If a task arrives without this structure, ask Jon for the missing fields before proceeding.
+
+### End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026)
+
+After the PR merges on green and main's run is reported (above), remove the worktree the task used and its
+local branch, from the primary checkout: `git worktree remove <path>`, then `git branch -d <branch>`, then
+`git worktree prune`. **Never `--force`, never `-D`:** if either refuses, the worktree is dirty, unmerged or
+unpushed, so leave it and name it in the handover with what is outstanding. Remote branches are not deleted
+here. **Why:** worktrees were made per task and never removed; 35 had built up by 11 Oct 2026.
