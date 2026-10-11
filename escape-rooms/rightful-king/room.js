@@ -104,7 +104,7 @@ window.ROOM = {
 
   objects: [
     { id: 'sticky-note', name: 'Sticky note', where: 'on the edge of Mr Narry’s monitor',
-      clue: 'In his handwriting: <b>ADMIN PASSCODE: {{pc.L}} DIFFERENT KEYS, NEVER THE SAME KEY TWICE.</b> Under ' +
+      clue: 'In his handwriting: <b>ADMIN PASSCODE: {{pc.L}} KEYS, NO KEY USED MORE THAN ONCE.</b> Under ' +
             'it, underlined twice: &ldquo;The AI picked it. Ask the AI.&rdquo;' },
     { id: 'login-pad', name: 'The admin login', where: 'on the big screen, under the sparkles',
       clue: 'A pad of <b>{{pc.k}} keys</b>, every one a different glittering shape. Under it, in small grey type: ' +
@@ -178,7 +178,7 @@ window.ROOM = {
       ],
       missTitle: 'That count lets a key be used twice.',
       missSays: '{{pc.miss}} is {{pc.k}} multiplied by itself {{pc.L}} times, which allows the same key again. The ' +
-                'note says never the same key twice, so every key used leaves one fewer for the next.',
+                'note says no key is used more than once, so every key used leaves one fewer for the next.',
       hints: [
         'How many keys could go first? Once one is used, how many are left to go second?',
         'No key is used twice, so each position has one fewer choice than the one before it. Multiply the ' +

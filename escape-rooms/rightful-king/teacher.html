@@ -48,14 +48,14 @@ window.TEACH = {
     }
   ],
   "clueMap": {
-    "sticky-note": "The admin login &mdash; how many keys, and never the same key twice",
+    "sticky-note": "The admin login &mdash; how many keys, and no key used more than once",
     "login-pad": "The admin login &mdash; how many keys there are to choose from",
     "server-log": "The recovery tool &mdash; the share of what is left replaced each minute",
     "audit-policy": "The recovery tool &mdash; the threshold below which the log is lost",
     "results-page": "The audit &mdash; the votes cast and his total",
     "access-log": "The audit &mdash; who opened the page, and who did neither"
   },
-  "notes": "<p class='lede'>This room is about using AI as a tool, not as a replacement for thinking. Mr Narry asked for a vote that looked amazing and got exactly that; nobody asked who should see the votes. Worth asking a class: what should his prompt have said, and what should he have checked himself?</p><p class='lede'>The recovery tool needs a calculator: the multiplier has to be raised to power after power until it drops below the threshold. Repeated multiplication works on a basic calculator. The mistake it is built around is taking the same share of the original every minute, which runs out sooner.</p><p class='lede'>The audit never looks at a single ballot: it works from totals only. A group that finds the overlap but divides by every voter, not by those who saw the page, gets the misconception response.</p><p class='lede'>At time-out the end screen shows every lock&rsquo;s solution. For a second attempt, press Play again for fresh numbers.</p>"
+  "notes": "<p class='lede'>This room is about using AI as a tool, not as a replacement for thinking. Mr Narry asked for a vote that looked amazing and got exactly that; nobody asked who should see the votes. Worth asking a class: what should his prompt have said, and what should he have checked himself?</p><p class='lede'>The admin login has a second wrong count to listen for: reading the note as &lsquo;not the same key twice in a row&rsquo;. That gives k &times; (k &minus; 1) &times; (k &minus; 1): with 8 keys, 8 &times; 7 &times; 7 = <b>392</b>, where the answer is 8 &times; 7 &times; 6 = 336. The note says no key is used more than once anywhere in the passcode, so each choice has one fewer key than the one before.</p><p class='lede'>The recovery tool needs a calculator: the multiplier has to be raised to power after power until it drops below the threshold. Repeated multiplication works on a basic calculator. The mistake it is built around is taking the same share of the original every minute, which runs out sooner.</p><p class='lede'>The audit never looks at a single ballot: it works from totals only. A group that finds the overlap but divides by every voter, not by those who saw the page, gets the misconception response.</p><p class='lede'>At time-out the end screen shows every lock&rsquo;s solution. For a second attempt, press Play again for fresh numbers.</p>"
 };
 </script>
 <script src="../assets/rating.js"></script>
