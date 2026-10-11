@@ -2110,11 +2110,11 @@ A teacher found `/escape-rooms/` through the feedback form on 2026-09-08 and sai
 AI-written and the rooms are unusable in class. **They were right, and the diagnosis is precise: the maths
 and the puzzles are sound, the prose had no author behind it.** The rewrite takes one room at a time, each
 around a named antagonist **drawn out of Jon in an interview rather than invented for him** (or, from The
-Kiln Disaster on, an ally and a clock instead, §11.1). Which rooms are done is the working doc's per-room
-status (below), not a count here.
+Kiln Disaster on, an ally and a clock instead, §11.1). Which rooms are live or withdrawn is the table in §11.1,
+the only per-room status table; the working doc holds rewrite notes only, not a count here.
 
 - **Binding contract:** `docs/escape-room-voice-contract.md`
-- **Running state, per-room status and the gotchas:** `docs/escape-room-voice-rewrite.md` — **read this
+- **Running state, per-room rewrite notes (status lives in §11.1) and the gotchas:** `docs/escape-room-voice-rewrite.md` — **read this
   first**
 - **Reference implementation:** `escape-rooms/hamster-heist/room.js`
 - **Art prompts and what went wrong:** `docs/escape-room-image-prompts.md`

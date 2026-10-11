@@ -134,20 +134,43 @@ From the contract, plus what has been settled since:
   Caught in review on `canteen-hack`, where the students work the same administrator session
   Cinnamon used; see §5e.
 
-## 5. Per-room status
+## 5. Per-room rewrite notes
 
-| Room | Slug | Antagonist | State |
-|---|---|---|---|
-| The Great Hamster Heist | `hamster-heist` | **Mr Beaker** (asleep) + Test Tube Dave (offstage) | **Done 08/09/2026**, then **reopened the same evening for five more fixes** — see §5d. All live |
-| The P.E. **Store** Rebellion | `pe-shed-rebellion` | **Mr Barry Lunge, "Lungey"** | **Done 08/09/2026** — prose, all three pictures, retitled. Reviewed by a second reader, the notes applied, and Jon moved to room three without asking for more. Slug deliberately unchanged |
-| The Prom Budget Embezzlement | `prom-budget` | **Mr D Tension** (on the phone next door) | **Done 08/09/2026** — prose, all three pictures, SEO and index card. Jon's green light is the only thing left. See §5b |
-| The Rugby Mud **Bath** (was Sabotage) | `rugby-mud` | **Mr Mower**, groundskeeper (overheard through his hut window), on Mr Lunge's orders | **WRITTEN 15/09/2026, signed off by Jon + a cold Windows-Claude read.** Prose, teacher page, hub/front cards, sitemap and counts (six; 149 sets / 3,290 combinations) done locally. Win picture filed (edited to remove brand stripes on the boots). **RELEASED 15/09/2026** (`80007d7`), all three pictures filed. See §5f |
-| The IT Teacher's Vengeance | `it-vengeance` | — | **WITHDRAWN from the live site 08/09/2026 — see §5c.** Not started. **Partial premise/image clash — see §7** |
-| The Heatwave Mutiny | `heatwave-mutiny` | **Mr Robin Banks** (energy contractor, on a replayed radio clip) | **DONE AND LIVE 13/09/2026** — prose, scene (air con added)/fail/win pictures, SEO, teacher-page fixes, released. Five rooms now live: 125 number sets, over 2,800 combinations, 300 (heatwave) to 1,000 (canteen). Full record in `docs/heatwave-mutiny-sanity-check.md`, corrections box first. **The freezer failure was dropped, and the engine work it prompted (per-lock misconception pictures, three-strikes ending) is CANCELLED, not deferred** |
-| The Canteen Menu Hack | `canteen-hack` | **Ms Cinnamon** (monologuing across the corridor) | **DONE AND LIVE 12/09/2026** — prose, all three pictures, SEO, cold review applied, released and pushed (`49c02d8`). See §5e |
-| The Comic Caper (new room, not a rewrite) | `comic-caper` | **Ms Fromage** (outside the door, about her cruise) | **LIVE 17/09/2026** (`d2b27a2`, art `9e0bf8a`, wording `f6c25da`) — see §5g. GCSE resit, batch-6 locks. Scene, fail and win pictures filed 17/09. The fail picture shows the cupboard gone, so no lock may set `missArt`. **Timing: 3:16** — author solo play-through, knows the answers' methods, not a student baseline |
-| The Kiln Disaster (new room, not a rewrite) | `kiln-disaster` | **None — Mr Stephen Mudge ("Smudgey"), who teaches Art, is an ally, and the kiln's countdown is the pressure** | **LIVE 17/09/2026** — see §5i. GCSE resit, batch-7 locks, built to a Project Claude contract rather than an interview. Scene (re-rolled for palette), fail and win pictures filed 17/09. The fail picture shows the suppression system fired, so no lock may set `missArt`. First two-digit keypad on the site. **320 VALID draws of 700** |
-| The Headteacher's Car Trap | `car-trap` | — | **WITHDRAWN from the live site 08/09/2026 — see §5c.** Not started. **Premise/image clash, and it has lost its antagonist to room three — see §7** |
+**Live or withdrawn status is not kept here.** The one per-room status table is canon §11.1
+(`docs/canon.md`); read it for which rooms are live, their antagonists and their levels. This section holds
+only what is specific to each room's rewrite. Room, slug and detail section:
+
+- **The Great Hamster Heist** (`hamster-heist`): Mr Beaker (asleep) + Test Tube Dave (offstage). Reopened the
+  evening it was finished for five more fixes — see §5d.
+- **The P.E. Store Rebellion** (`pe-shed-rebellion`): prose, all three pictures, retitled (Shed → Store). Slug
+  deliberately unchanged. Reviewed by a second reader and the notes applied; Jon moved to room three without
+  asking for more. See §5a, §5h.
+- **The Prom Budget Embezzlement** (`prom-budget`): Mr D Tension, on the phone next door. Prose, all three
+  pictures, SEO and index card. See §5b.
+- **The Rugby Mud Bath** (`rugby-mud`, was Sabotage): Mr Mower, groundskeeper, overheard through his hut
+  window, on Mr Lunge's orders. Signed off by Jon + a cold Windows-Claude read. Win picture edited to remove
+  brand stripes on the boots. Released at `80007d7`; at release six rooms, 149 sets / 3,290 combinations. See
+  §5f.
+- **The Heatwave Mutiny** (`heatwave-mutiny`): Mr Robin Banks, energy contractor, on a replayed radio clip.
+  Scene (air con added), fail and win pictures, SEO, teacher-page fixes. At release five rooms: 125 number
+  sets, over 2,800 combinations, 300 (heatwave) to 1,000 (canteen). Full record in
+  `docs/heatwave-mutiny-sanity-check.md`, corrections box first. **The freezer failure was dropped, and the
+  engine work it prompted (per-lock misconception pictures, three-strikes ending) is CANCELLED, not deferred.**
+- **The Canteen Menu Hack** (`canteen-hack`): Ms Cinnamon, monologuing across the corridor. Prose, all three
+  pictures, SEO, cold review applied; released at `49c02d8`. See §5e.
+- **The Comic Caper** (`comic-caper`, a new room, not a rewrite): Ms Fromage, outside the door, about her
+  cruise. GCSE resit, batch-6 locks. Released at `d2b27a2`, art `9e0bf8a`, wording `f6c25da`. The fail picture
+  shows the cupboard gone, so no lock may set `missArt`. Timing 3:16 — author solo play-through, who knows the
+  answers' methods; not a student baseline. See §5g.
+- **The Kiln Disaster** (`kiln-disaster`, a new room, not a rewrite): no antagonist — Mr Stephen Mudge
+  ("Smudgey"), who teaches Art, is an ally, and the kiln's countdown is the pressure. GCSE resit, batch-7
+  locks, built to a Project Claude contract rather than an interview. Scene (re-rolled for palette), fail and
+  win pictures. The fail picture shows the suppression system fired, so no lock may set `missArt`. First
+  two-digit keypad on the site. 320 VALID draws of 700. See §5i.
+- **The IT Teacher's Vengeance** (`it-vengeance`): not rewritten. Partial premise/image clash — see §7. The
+  withdrawal history is §5c.
+- **The Headteacher's Car Trap** (`car-trap`): premise/image clash, and it lost its antagonist to room three
+  — see §7. The withdrawal history is §5c.
 
 **The shared-engine job is DONE, 08/09/2026**, before room three as planned. `wrongLines` is read
 and the instrument `<img>` is guarded; 32 lines in `engine.js`, 30 of them the comment recording the
