@@ -1,5 +1,16 @@
 # Handover: home lane
 
+**ROOM-STATUS-ONE-TABLE (11 Oct, Jon's contract; branch `claude/room-status-single-table`).** Canon §11.1 is now the
+only per-room status table. `docs/escape-room-voice-rewrite.md` §5 is "Per-room rewrite notes": status columns
+removed, one bullet per room keeping everything rewrite-specific (the `missArt` rules, timing, cancelled engine
+work, release commits, art edits), and a line pointing to §11.1. No STOP: no decision lived only in a status
+column. Canon §11.5's two pointers reworded to land on it. `docs/resit-coverage-audit.md` §"live, KS3 label" rows
+are a per-lock audit, not a room status table; left alone. **SPLIT-IT-FRACTIONS (todo §1.48) STOPPED on its STOP IF:**
+`games/split-it/index.html` loads neither KaTeX nor `mathtext.js`, so a stacked KaTeX `rac` adds a page dependency.
+Nothing changed; todo §1.48 stays open, worktree removed. Awaiting Jon: add KaTeX + mathtext.js to the page, or
+use the page's existing CSS `.frac-wrap` stacked fraction (no new dependency). Still to do under §1.48: the
+duplicated unit label (index.html:514/516) and the report-only division-interpolation scan.
+
 **ESCAPE-CANON-LABEL (11 Oct, Jon's contract; branch `claude/escape-canon-label`).** Canon §11.3-11.5 brought
 up to date with the live rooms and #278, no figures derived from repo content: §11.3's ratings roster is now a
 pointer (each rating derives from lock grades, is recorded as `data-stars` on the cards, and is printed in the
@@ -13,9 +24,7 @@ Vengeance's redirect and Car Trap's return); "drawn out of Jon" kept, with the a
 `ci-pack.json` and `ci-timings.json` are caches that main's "CI timings" job rewrites wholesale after every
 full run (`write_pack` from the headers, `record_timings` from the run's log), so an old label drops out of
 both. Only the header changed; the JSON files were not hand-edited. Until main's next full run times it, the
-renamed line counts as 120 s and runs in a group of its own (`ci-groups.py --check` passes). **For Jon:**
-`docs/escape-room-voice-rewrite.md` §5, the per-room status §11.5 points to, has no rows for The Rightful
-King or The Library Jam and still lists Car Trap as withdrawn, not started (outside this contract: canon only).
+renamed line counts as 120 s and runs in a group of its own (`ci-groups.py --check` passes). (The stale voice-rewrite §5 status table is fixed by ROOM-STATUS-ONE-TABLE, above.)
 
 **ESCAPE-SET-CHECKS (11 Oct, Jon's contract; branch `claude/escape-set-checks`).** The per-set checks moved out
 of `gen-escape-variants.py` into **`scripts/escape_set_checks.py`** (pure, no I/O), unchanged: keep()'s tests ->
