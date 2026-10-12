@@ -3,6 +3,26 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-12 (cloud): VERIFIERS-20 game 19, eigenvalue-extractor (#307, merge commit 1cc99fa)
+
+- **Verifier:** `scripts/verify-eigenvalue-extractor.py` (from the parked draft): 25 items, each equation solved in SymPy and every option read as its eigenvalues; 36 worked lines and sums checked; every option
+  pressed in Chromium. Seven planted faults fail (one plant's label corrected: it plants a repeated root keyed as 3 and -3). No faults; no findings closed.
+- **Main's runs:** 38298131469 (#306) green first time; #307's Gate green first time.
+
+## 2026-10-12 (cloud): VERIFIERS-20 game 18, characteristic-quest (#306, merge commit 521c40c)
+
+- **Verifier:** `scripts/verify-characteristic-quest.py` (from the parked draft): 26 items, each det(A - lambda I) recomputed in SymPy, every option classified, 76 worked expressions and trace/det/eigenvalue claims
+  checked, every option pressed in Chromium. Eight planted faults fail, one of them the old t6-003 step put back.
+- **Fixed: t6-003 (SR-6).** [[0,2],[2,0]]'s worked step read as lambda^2 + 4; now the trace-and-determinant form. One line of the game page. Full check-changed run (SR-27): the game passes; the rest failed only on this container (esprima, WebKit, KaTeX CDN).
+- **Main's runs:** 835 (#305) green first time; #306's Gate green on its head (the first head's run was cancelled by the next push).
+
+## 2026-10-12 (cloud): VERIFIERS-20 game 17, formula-forge (#305, merge commit 7695b8e)
+
+- **Verifier:** `scripts/verify-formula-forge.py` (from the parked draft): 45 items (GCSE and Level 4; A-Level reuses GCSE); every key solved back into its formula in SymPy (its own TeX reader, Jon 12 Oct),
+  every option classified, 159 worked lines and Hint 2 equations checked, every option pressed in Chromium. Seven planted faults fail.
+- **Open for Jon: formula-forge-v20-001 (MEDIUM).** Three items have two wrong options equal in value (sqrt(u^2) = u); keys right. Suggested replacements are in the finding and #305's body (new content, SR-19).
+- **Main's runs:** 833 (#304) green first time; #305's Gate green first time. #304 (woti t2-006) merged on run 830 green.
+
 ## 2026-10-12 (cloud): VERIFIERS-20 game 16, constructions-lab (#301, merge commit 5b1307a; STOP IF: the game marks nothing)
 
 - **Verifier:** `scripts/verify-constructions-lab.py`: there is no key (t3-001: nothing marks a construction), so per the contract's STOP IF it verifies what the game states and draws. Each task's figure is recorded from

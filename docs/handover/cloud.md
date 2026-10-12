@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: scale-factor-scaling`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -89,6 +89,12 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-12 (cloud): B11-CLEAR game 1, scale-factor-scaling (#312)
+
+- **Replacements (kind a, keys unchanged):** T1[8] 4:10 -> 4:5 (squared only the first number; 2:5 kept); T1[9] 3:9 -> 1:6 (doubled the scale factor instead of squaring it; 1:3 kept).
+- **Verifier** fails on any equal pair (EQUAL_PAIRS empty; plant puts 4:10 back). **Ledger:** `extract-banks.py --only` then `check-banks.py --only <slug> --write-ledger`; only this game changed.
+- **Container:** extraction needs esprima, which will not build here; the CI pin (4.0.1) is pure Python: `pip download --no-binary :all: esprima==4.0.1`, untar into the scratchpad, put it on PYTHONPATH.
+
 ## 2026-10-12 (cloud): VERIFIERS-20 game 20, prisoners-dilemma (#309, merge commit 9b57ab9); the list is complete
 
 - **Verifier:** `scripts/verify-prisoners-dilemma.py` (from the parked draft). The game marks nothing, so (as constructions-lab) it checks what the game states and does: payoffs, every opponent
@@ -99,26 +105,6 @@ main's last full run is red; watch main's run after merging.
 - **Jon's rulings, 12 Oct:** formula-forge-v20-001: in each equal pair the sqrt(x^2) form is replaced (v = u^2 + 2as; a = sqrt(c^2 + b^2); u = sqrt(v^2 + 2as)), keys unchanged, EQUAL_PAIRS emptied, finding
   closed, in its own PR (claimed here). prisoners-dilemma is off the remaining line (#309), so the **home lane can do t4-001**.
 - **Drafts branch** `claude/verifiers-17-20-drafts` is spent (all four drafts merged); it can be deleted with the merged `claude/verifier-*` branches (the proxy refuses remote deletes).
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 19, eigenvalue-extractor (#307, merge commit 1cc99fa)
-
-- **Verifier:** `scripts/verify-eigenvalue-extractor.py` (from the parked draft): 25 items, each equation solved in SymPy and every option read as its eigenvalues; 36 worked lines and sums checked; every option
-  pressed in Chromium. Seven planted faults fail (one plant's label corrected: it plants a repeated root keyed as 3 and -3). No faults; no findings closed.
-- **Main's runs:** 38298131469 (#306) green first time; #307's Gate green first time.
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 18, characteristic-quest (#306, merge commit 521c40c)
-
-- **Verifier:** `scripts/verify-characteristic-quest.py` (from the parked draft): 26 items, each det(A - lambda I) recomputed in SymPy, every option classified, 76 worked expressions and trace/det/eigenvalue claims
-  checked, every option pressed in Chromium. Eight planted faults fail, one of them the old t6-003 step put back.
-- **Fixed: t6-003 (SR-6).** [[0,2],[2,0]]'s worked step read as lambda^2 + 4; now the trace-and-determinant form. One line of the game page. Full check-changed run (SR-27): the game passes; the rest failed only on this container (esprima, WebKit, KaTeX CDN).
-- **Main's runs:** 835 (#305) green first time; #306's Gate green on its head (the first head's run was cancelled by the next push).
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 17, formula-forge (#305, merge commit 7695b8e)
-
-- **Verifier:** `scripts/verify-formula-forge.py` (from the parked draft): 45 items (GCSE and Level 4; A-Level reuses GCSE); every key solved back into its formula in SymPy (its own TeX reader, Jon 12 Oct),
-  every option classified, 159 worked lines and Hint 2 equations checked, every option pressed in Chromium. Seven planted faults fail.
-- **Open for Jon: formula-forge-v20-001 (MEDIUM).** Three items have two wrong options equal in value (sqrt(u^2) = u); keys right. Suggested replacements are in the finding and #305's body (new content, SR-19).
-- **Main's runs:** 833 (#304) green first time; #305's Gate green first time. #304 (woti t2-006) merged on run 830 green.
 
 ## 2026-10-12 (cloud): MAIN RED, verify-modular-battle (run 826, #301's merge); fix is this lane's
 
