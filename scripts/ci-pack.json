@@ -64,6 +64,7 @@
   "Matrix Crunch (one answer per question, an option or the singular flag: Enter and Tab+Enter never mark again; both levels; Chromium)": "10",
   "Moments Master (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "7",
   "Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)": "6",
+  "New Shapes (every formula, key, substitution and working step recomputed; the figure's labels checked against the item; every item answered right and wrong in Chromium)": "33",
   "Normal Navigator (independent recomputation + rendered labels)": "16",
   "Parent guides (every stated figure recomputed from the page)": "16",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
