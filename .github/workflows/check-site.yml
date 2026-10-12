@@ -162,9 +162,12 @@ jobs:
 
   # The content groups are packed from each line's measured time (contract CI-BALANCE, 9 Oct 2026; canon
   # §7.8.1). After every full run on main, once the Gate has passed, this job records that run's times
-  # (scripts/ci-timings.json: each line's seconds and the longest setup, read from the job logs) and repacks
-  # (scripts/ci-pack.json: a line moves only when its group would pass 70% of its budget), and commits both if
-  # they changed, as the register job does ("[skip ci]"; retried if main moves).
+  # (scripts/ci-timings.json: each line's seconds and the longest setup, read from the job logs; the file keeps
+  # the last 5 runs and the estimates are their MEDIANS, so one slow run cannot move them, CI-TIMINGS-MEDIAN,
+  # 12 Oct 2026) and repacks (scripts/ci-pack.json: a line moves only when its group would pass 70% of its
+  # budget). The new pack is checked with --check BEFORE anything is written or committed: if it fails, the job
+  # fails with the check's output and commits nothing, so an overrun shows on main instead of in every PR. A pack
+  # that passes is committed as the register job does ("[skip ci]"; retried if main moves).
   timings:
     name: CI timings and pack (main only)
     needs: gate
@@ -198,9 +201,22 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for attempt in 1 2 3; do
             git fetch -q origin main && git reset -q --hard origin/main
-            python scripts/ci-groups.py --record-timings "$RUN_ID" --from-dir "$TIMING_DIR"
-            python scripts/ci-groups.py --write-pack
-            python scripts/ci-groups.py --check | tee -a "$GITHUB_STEP_SUMMARY" || true
+            # Record the run into the 5-run history, repack from the medians, and write the timings and the pack
+            # only if that pack passes --check; otherwise nothing is written and the job fails (CI-TIMINGS-MEDIAN).
+            if ! python scripts/ci-groups.py --record-and-pack "$RUN_ID" --from-dir "$TIMING_DIR" > "$RUNNER_TEMP/pack.txt" 2>&1; then
+              cat "$RUNNER_TEMP/pack.txt" | tee -a "$GITHUB_STEP_SUMMARY"
+              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json
+              echo "::error::the pack for this run's timings fails ci-groups.py --check; nothing was committed"
+              exit 1
+            fi
+            cat "$RUNNER_TEMP/pack.txt" | tee -a "$GITHUB_STEP_SUMMARY"
+            if ! python scripts/ci-groups.py --check > "$RUNNER_TEMP/check.txt" 2>&1; then
+              cat "$RUNNER_TEMP/check.txt" | tee -a "$GITHUB_STEP_SUMMARY"
+              git checkout -q -- scripts/ci-timings.json scripts/ci-pack.json
+              echo "::error::ci-groups.py --check fails on the new pack; nothing was committed"
+              exit 1
+            fi
+            cat "$RUNNER_TEMP/check.txt" >> "$GITHUB_STEP_SUMMARY"
             if git diff --quiet -- scripts/ci-timings.json scripts/ci-pack.json; then
               echo "timings and pack unchanged at $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
               exit 0
