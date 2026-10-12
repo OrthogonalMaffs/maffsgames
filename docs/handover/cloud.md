@@ -94,8 +94,8 @@ main's last full run is red; watch main's run after merging.
 - **Done:** game 1 scale-factor-scaling (#312, Gate green; main green after #311, run 38308024133; #312's own main run not yet reported).
 - **In flight, game 2 coordinate-geometry-dash** (this branch, `claude/b11-coordinate-geometry-dash`; local worktree `/home/user/wt/cgd`, built on main before #312):
   alevel[15] (x = 2t + 1, y = t^2 - 3, dy/dx at t = 1; key 1): "1/2" (= "½") -> "−2" (gave y at t = 1, not the gradient); "½" kept. Verifier guard added (EQUAL_PAIRS empty; plant puts "1/2" back):
-  PASS. Ledger regenerated for this game only (B11 empty; no other game changed). Full check-changed.py was running at checkpoint. TO DO: rebase the work onto this claim commit
-  (the ledger merges with #312's hunk), add finding coordinate-geometry-dash-b11-001 (fixed, PR n), release the claim, PR, merge on green Gate with main green.
+  PASS. Ledger regenerated for this game only (B11 empty; no other game changed). The fix is committed on this branch (not yet a PR). Full check-changed.py was running at checkpoint (log in the old container only): re-run it on this branch. TO DO:
+  add finding coordinate-geometry-dash-b11-001 (fixed, PR n), release the claim, PR, merge on green Gate with main green.
 - **Next, read but not started:** index-laws 5 (all kind a: [6] 3^{12} = 9^6; [27] 1/x^{-3} = x^3; [38] 9 = 27/3; [39] 50 = 100/2; [40] 12.5 = 25/2); standard-form-blitz 1 (alevel[35]
   2.5x10^3 = 25x10^2); then surd-simplifier 8, boolean-blitz 10 (6 kind b: check each stem names the form, else report to Jon), complex-converter 4 (2 kind b).
 - **Recipe per game:** branch from origin/main; claim commit pushed alone; edit the page (keys and stems unchanged); add the verifier guard + plant; `extract-banks.py --only <slug>` then

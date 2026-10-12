@@ -891,7 +891,7 @@
  "coordinate-geometry-dash": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -907,14 +907,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "Q_ALEVEL[15]: '1/2' = '½' (both wrong options)",
-      "id": "coordinate-geometry-dash::db40a8a4e9db#1::B11::[\"1/2\", \"½\"]",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],

@@ -13,7 +13,8 @@ TARGETS gives each item's answer as a computation on the numbers in its own ques
 numbers come from (an edited question fails until its target is reviewed), and how its options are read:
 a point, a number, an equation, a centre and radius, or a fixed phrase. Equations are compared as curves:
 two are the same when, with denominators cleared, one is a constant multiple of the other (so y = 12/x and
-xy = 12 are the same equation). Then: the key equals the target; no other option does; and in Chromium
+xy = 12 are the same equation). Then: the key equals the target; no other option does; no two options are
+equal in value (SR-4; B11-CLEAR, 12 Oct 2026: none expected, so EQUAL_PAIRS is empty); and in Chromium
 (390x844) every item is shown through nextQ() and every option clicked through handleAnswer(): the key
 marked right, the others wrong. A self-test plants the audit's item back into a copy of the page; it must
 FAIL naming alevel[13].
@@ -202,6 +203,9 @@ L = [
 ]
 TARGETS = {'gcse': G, 'alevel': L}
 AUDIT = {('alevel', 13): 'coordinate-geometry-dash-t1-001'}
+# Items allowed two options equal in value, as (level, index): only a question whose ask names the form that
+# separates them (SR-4's exception). None: B11-CLEAR (12 Oct 2026) replaced alevel[15]'s "1/2", equal to its "½".
+EQUAL_PAIRS = set()
 
 
 def check_bank(fails, bank):
@@ -220,14 +224,20 @@ def check_bank(fails, bank):
             if len(opts) != 4 or len(set(opts)) != 4 or key not in opts:
                 fails.append('%s: the options %s are not four distinct strings including the key' % (w, opts))
                 continue
-            right = []
+            right, vals = [], []
             for o in opts:
                 try:
                     v = READ[kind](o)
                 except Exception:
                     continue                         # not a reading of this kind ("Undefined", "∞"): not the target
+                vals.append((o, v))
                 if equal(kind, v, target):
                     right.append(o)
+            if (lv, i) not in EQUAL_PAIRS:
+                for a in range(len(vals)):
+                    for b in range(a + 1, len(vals)):
+                        if equal(kind, vals[a][1], vals[b][1]):
+                            fails.append('%s: the options %s and %s are equal in value (SR-4)' % (w, vals[a][0], vals[b][0]))
             if key not in right:
                 fails.append('%s: keyed %s, the answer is %s' % (w, key, target))
             for o in right:
@@ -291,6 +301,8 @@ PLANTS = [
     ('alevel[13]', 't1-001: three correct equations, keyed "All equivalent"',
      'opts:["xy = 12","xy = 7","y = 12x","x = 3y/4"],correct:"xy = 12"',
      'opts:["xy = 12","y = 12/x","x = 12/y","All equivalent"],correct:"All equivalent"'),
+    ('alevel[15]', 'SR-4: two wrong options equal in value (½ and 1/2)',
+     'opts:["1","2","½","−2"],correct:"1"', 'opts:["1","2","½","1/2"],correct:"1"'),
 ]
 
 
