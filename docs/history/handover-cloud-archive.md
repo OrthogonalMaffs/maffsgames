@@ -3,6 +3,33 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-12 (cloud): VERIFIERS-20 game 7, formula-plug-in (#290, merge commit d31a12a)
+
+- **Verifier:** `scripts/verify-formula-plug-in.py`: all 50 items against ten formulas held in the verifier (variables, result variable, rule):
+  key from the item's own values with Fraction (whole numbers); `formulaKatex` read as maths and worked with the values; every working step has the
+  formula's left-hand side and is worth exactly the key; the substitution step uses the formula's numbers plus the values only; last step is
+  "LHS = key"; sessions of 10/20/30 dealt 3 times; every item shown by `loadQuestion()` (formula TeX read from KaTeX's annotation, variables line,
+  prompt) and answered on the numpad in Chromium (key right; key +-1 and the usual slips wrong, with "the answer is K" and the item's working). KaTeX is
+  served from the pinned local copy (`bank_common.serve_real_font`), so it runs offline. Four planted faults all fail the run.
+- **Faults fixed:** none. **Expected failures left open:** none (t3-002..006 stay open as before).
+- **Main's run:** 38232674780 (the #287 merge) green.
+
+## 2026-10-12 (cloud): VERIFIERS-20 game 6, think-of-a-number (#287, merge commit 25a73bc)
+
+- **Verifier:** `scripts/verify-think-of-a-number.py`: all 50 items (10 one-step, 20 two-step, 20 three-step): each key run forwards with
+  Fraction must give the result (every intermediate a whole number from 0 up, key 1-9999) and run backwards must return the key; step
+  displays and every `undoSteps` line recomputed; sessions of 10, 20 and 30 (2/4/4, 4/8/8, 6/12/12, no repeats); every item shown and answered on the
+  numpad in Chromium (key right; result, key +-1, steps run forwards again, steps undone in the order told: wrong with the recomputed working).
+  Four planted faults all fail the run.
+- **Faults fixed:** none. **Expected failures left open:** none.
+- **Lessons:** (1) #287 was held up by CI-TIMINGS-MEDIAN (home lane #288: timings are now the median of 5 main runs and the timings job
+  commits only a pack that passes `--check`; main unblocked, run 791 green). (2) `cloud.md` must stay under 20 KB (context-size check):
+  older entries move to `docs/history/handover-cloud-archive.md`. (3) The answer-lock self-test counts the backticked remaining-list line in this
+  file: exactly one, so never write that token in backticks in an entry.
+- **Main's run:** 38231678130 (the #289 merge) green; game 6's own main run is checked in the game 7 entry.
+
+(Entries for VERIFIERS-20 games 1-5 and the CI stop of 12 Oct are in `docs/history/handover-cloud-archive.md`: #282-#286, all green; the stop was resolved by #288.)
+
 ## 2026-10-12 (cloud): VERIFIERS-20 STOPPED after game 5: main's CI is red from the generated timings pack (home-lane item) - RESOLVED
 
 - **RESOLVED 12 Oct:** the home lane's CI-TIMINGS-MEDIAN (#288, d00a818) made the timings a median of the last 5 runs; main's run 791 is green and `ci-groups.py --check` passes. This branch has main merged in; VERIFIERS-20 resumes with #287, then `formula-plug-in`.
