@@ -33,7 +33,7 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer in PR #291 (CI running); next 9 new-shapes (verifier drafted and passing on branch claude/verifier-new-shapes, unclaimed, no PR yet); then shape-shifter, equatle ... as in the contract order.
+**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes in PR; next shape-shifter, equatle ... as in the contract order.
 UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
@@ -88,6 +88,26 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-12 (cloud): New Shapes diagram findings, Jon's ruling
+
+- **Jon, 12 Oct:** New Shapes' diagram findings (r-001, t3-003, t3-004, t3-005: proportions fixed whatever the numbers, the prism's l arrow on the wrong dimension) **stay open until its SR-26 bank growth, which redraws from each question's parameters.** No cloud-lane redraw before then. The `new-shapes` verifier (#292) checks the numbers on the diagram only and prints that the geometry is not asserted; when the bank is grown and the diagrams are drawn from each item's parameters, extend the verifier to assert the geometry (drawn proportions and the l arrow along the depth edge) and close those four entries in the same PR.
+
+## 2026-10-12 (cloud): Runner cancels at "Initialize containers" (Jon's rule, 12 Oct)
+
+Rule: a job cancelled at Initialize containers is runner infrastructure; re-run only those jobs, up to 3 times per run; a green re-run counts as main green; any other failure or cancel stops the lane. Record per cancelled job, duration against timeout (content groups: 6 min = 360 s), for the home lane:
+- Main run 802 (bb79123), attempt 1: 8 jobs cancelled at Initialize containers (Site-wide checks, Content verifiers 3, 9, 12, 25, 14, 32, 24). Durations not captured; one re-run used.
+- Main run 802, attempt 2: Content verifiers 33 cancelled at Initialize containers, 10:56:22 to 11:02:41 = 379 s against a 360 s timeout (the whole timeout spent before the first step ran). Second re-run used.
+- Earlier, on PR heads: #291 Content verifiers 3; #292 Tiers 1+2 shard 3/4, Content verifiers 4, then 3, 21, 13. Durations not captured.
+Reading: 379 s is over the timeout, so the container pull is consuming the timeout, not the checks.
+
+## 2026-10-12 (cloud): VERIFIERS-20 game 8, four-quadrant-explorer (#291, merge commit bb79123)
+
+- **Verifier:** `scripts/verify-four-quadrant-explorer.py`: Plot (20), Read (15) and Shape (10) banks recomputed (grid points; read options four distinct, one equal, every
+  distractor a sign or order slip; the point drawn at exactly one of 121 grid points; shape key = the missing fourth corner), queues cycle plot/read/shape at 10/20/30, and
+  every plot and shape question tapped at all 121 grid points on the real canvas (plus 0.45/0.55-cell edge taps), every read option pressed, in Chromium. Five planted faults fail.
+- **Faults fixed:** none. **Expected failures left open:** none (r-001, t3-002, t3-003 stay open).
+- **Main's run:** 38233755799 (the #290 merge) green. A runner cancelled one job once ("Initialize containers"); one re-run of the failed job passed.
+
 ## 2026-10-12 (cloud): CHECKPOINT (Jon asked for one: context very high)
 
 - **Done and merged:** games 1-7 (#282-#287, #290); the CI-TIMINGS-MEDIAN home-lane fix (#288, #289). **In flight:** game 8 four-quadrant-explorer, PR #291
@@ -132,79 +152,4 @@ main's last full run is red; watch main's run after merging.
   file: exactly one, so never write that token in backticks in an entry.
 - **Main's run:** 38231678130 (the #289 merge) green; game 6's own main run is checked in the game 7 entry.
 
-## 2026-10-12 (cloud): VERIFIERS-20 STOPPED after game 5: main's CI is red from the generated timings pack (home-lane item) - RESOLVED
-
-- **RESOLVED 12 Oct:** the home lane's CI-TIMINGS-MEDIAN (#288, d00a818) made the timings a median of the last 5 runs; main's run 791 is green and `ci-groups.py --check` passes. This branch has main merged in; VERIFIERS-20 resumes with #287, then `formula-plug-in`.
-- **STOP IF reached:** "main's full run is red after a merge and the fault is not in this lane's files". Main's run 787 (38225600227, the
-  merge of #286) failed in 1 minute: the Plan job's `python scripts/ci-groups.py --check` fails with 12 group-budget FAILs
-  (Content verifiers 1-4, 19-24, 34, 35 and Answer lock L1, each 81-108% of its budget). The same check fails on plain `main` at
-  `ef82d88`, so every open PR is red too (#287's Plan and Gate are red for this alone).
-- **Cause:** the automatic "Record CI timings and repack (run 38224711265)" commit `25f887b` (run 785) recorded inflated timings
-  (e.g. Growth and Decay 55 s to 94 s, Formula Unlocked 17 s to 28 s, while PR #286's CI ran beside it) and repacked, leaving
-  about a dozen groups above 80%. The check passed on main at `0f2f398` (before the repack) and failed from `25f887b`. The timings job
-  only runs after a green full run, so main cannot repack itself out: it needs a home-lane commit. `scripts/ci-timings.json`
-  and `scripts/ci-pack.json` are generated files outside this lane, so none was edited.
-- **For the home lane:** restore the pack (for example revert `25f887b`, or re-record the timings from a quiet run and run
-  `python scripts/ci-groups.py --write-pack`), and consider recording the median of several runs so one slow run cannot break the
-  check. Note also that each new verifier line counts as 120 s until a main run times it.
-- **State of play:** games 1-5 done and merged (#282-#286; main runs 779, 781, 783, 785 green, 787 red for the reason above). Game 6
-  `think-of-a-number` is built and passing (`scripts/verify-think-of-a-number.py`, 50 items, four planted faults caught) in PR #287,
-  which is merged-ready except for the red Plan/Gate. Games 7-20 not started. Game 6 is off the remaining list in this PR;
-  nothing is claimed.
-- **To resume:** once main's `ci-groups.py --check` passes again, merge `main` into `claude/verifier-think-of-a-number`, push, merge #287 on
-  a green Gate, then continue with `formula-plug-in`.
-- **Open for Jon:** delete branches `claude/verifier-prime-or-composite` and the other merged `claude/verifier-*` branches on GitHub (the
-  proxy refuses remote deletes).
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 5, prime-factorisation (#286, merge commit ef82d88)
-
-- **Verifier:** `scripts/verify-prime-factorisation.py`: both target banks (28 + 20) factorised by trial division, every prime factor
-  on a button (buttons checked to be 2, 3, 5, 7, 11, 13), sessions of 8 different targets, and 4273 taps (ascending, descending,
-  one too many, every button, non-dividing taps, seeded random) replayed against a model of the rule in Chromium: lives, product,
-  hearts, product line, "T = p x q (+200)", "p is not a factor here!" and the out-of-lives factorisation. Four planted faults all fail.
-- **Faults fixed:** none. **Expected failures left open:** none (t3-001..004 stay open as before).
-- **Main's run:** 785 (game 4's merge) green.
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 4, factor-race (#285, merge commit 0f2f398)
-
-- **Verifier:** `scripts/verify-factor-race.py`: the 20 Year 6 pairs (numbers 1-50, counts differ, no repeat, sessions of 10) and the
-  KS3 table (`VALID_PAIRS`, 2694 pairs) rebuilt independently and compared as a set; 20,000 draws all inside it; every Year 6 pair and
-  539 KS3 pairs answered by both cards and by time-out in Chromium (mark, card styles, "a has X factors; b has Y.", labels). Four
-  planted faults all fail the run. Divisors are counted by the verifier's own loop, never the game's `getFactors()`.
-- **Faults fixed:** none. **Expected failures left open:** none (t3-001..004 and f1-001 stay open as before).
-- **Main's run:** 783 (game 3's merge) green.
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 3, percentage-flip (#284, merge commit c2f9d86)
-
-- **Verifier:** `scripts/verify-percentage-flip.py`: both static banks (12 default + 20 Year 6): every key from the question's own
-  P and N, every figure in every working line (seven shapes; an unknown shape fails), five deals per level, and each item
-  answered right and wrong (key, key +-1, +-0.5, a tenth, ten times, the complement) through `checkAnswer()` and `flipCard()`
-  in Chromium. Four planted faults all fail the run.
-- **Faults fixed:** none. **Expected failures left open:** none (f1-001 phone fold stays open as before).
-- **Main's run:** 781 (game 2's merge) green. Game 3's own main run is checked in the game 4 entry.
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 2, fraction-equivalence (#283, merge commit 69a2003)
-
-- **Verifier:** `scripts/verify-fraction-equivalence.py`: the Year 6 bank (20 pairs) and the generator (20,000 draws in
-  Chromium, every multiplier 2-6 and offset 1-3 reached); every key and cross-multiplication line recomputed with Fraction;
-  every bank pair and 400 draws answered YES and NO through `guess()`; Year 6 sessions checked. Four planted faults all fail.
-- **Faults fixed:** none. **Expected failure left open (for Jon):** `fraction-equivalence-v20-001` (LOW): Year 6 bank items
-  12 and 18 are one question written both ways round, so 19 different pairs; replacing one is new content (SR-19). The
-  verifier names it and fails on any other repeat. t1-001 (20 items) and f1-001 (phone fold) stay open as before.
-- **Main's run:** see the next entry.
-- Branch `claude/verifier-fraction-equivalence` deleted locally; GitHub branch `claude/verifier-prime-or-composite` is still
-  on the remote (proxy refuses deletes): listed under Open for Jon. Squash merges mean `git branch -d` refuses, so the
-  local branch was removed with `-D` after confirming the PR was merged.
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 1, prime-or-composite (#282, merge commit cdd29ff)
-
-- **Verifier:** `scripts/verify-prime-or-composite.py`, all 66 numbers: key by trial division (SymPy cross-check), every hint
-  claim, every explanation (first three divisors, ellipsis rule), each number marked both ways through the game's buttons in
-  Chromium, five deals checked (whole bank once, 6 then 7 first). Five planted faults all fail the run.
-- **Faults fixed:** none found. **Expected failures left open:** none (t1-002, hints give the answer away, MEDIUM, is not a
-  key fault and stays open as before).
-- **Main's run:** 779 (38218891574) green.
-- **Container note for the next session:** the cloud container has no `esprima`, no WebKit and no KaTeX CDN, so
-  `check-changed.py` shows environment failures (B11, calculator, answer-lock parts, teacher feedback) that CI does not.
-  Python needs `pip install playwright==1.63.0 sympy mpmath`, and Chromium 1194 through scratch symlinks named 1243.
-- **Open for Jon:** delete branch `claude/verifier-prime-or-composite` in GitHub (the proxy refused the remote delete).
+(Entries for VERIFIERS-20 games 1-5 and the CI stop of 12 Oct are in `docs/history/handover-cloud-archive.md`: #282-#286, all green; the stop was resolved by #288.)
