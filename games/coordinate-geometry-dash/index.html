@@ -299,7 +299,7 @@ ctx:"x = 3t, y = 4/t, t > 0",q:"Cartesian equation?",opts:["xy = 12","xy = 7","y
 {draw:q=>{setView(-4,8,-2,20);drawGrid();drawParaCurve(t=>t,t=>t*t*t,-2,3)},
 ctx:"x = t, y = t³",q:"Find dy/dx at t = 2",opts:["12","6","8","3"],correct:"12",steps:["dx/dt = 1, dy/dt = 3t²","dy/dx = (dy/dt)/(dx/dt) = 3t²","At t = 2: dy/dx = 3(4) = 12"]},
 {draw:q=>{setView(-4,8,-4,8);drawGrid();drawParaCurve(t=>2*t+1,t=>t*t-3,-3,4)},
-ctx:"x = 2t + 1, y = t² − 3",q:"Find dy/dx at t = 1",opts:["1","2","½","1/2"],correct:"1",steps:["dx/dt = 2, dy/dt = 2t","dy/dx = 2t/2 = t","At t = 1: dy/dx = 1"]},
+ctx:"x = 2t + 1, y = t² − 3",q:"Find dy/dx at t = 1",opts:["1","2","½","−2"],correct:"1",steps:["dx/dt = 2, dy/dt = 2t","dy/dx = 2t/2 = t","At t = 1: dy/dx = 1"]},
 // MORE CIRCLES
 {draw:q=>{setView(-6,10,-6,10);drawGrid();drawCircle(1,2,Math.sqrt(25));drawPoint(1,2);drawPoint(4,6)},
 ctx:"Centre (1, 2), point (4, 6) on the circle",q:"Find the equation",opts:["(x−1)²+(y−2)²=25","(x−1)²+(y−2)²=5","(x−4)²+(y−6)²=25","x²+y²=25"],correct:"(x−1)²+(y−2)²=25",steps:["r² = (4−1)² + (6−2)² = 9 + 16 = 25","(x−1)² + (y−2)² = 25"]},
