@@ -105,8 +105,8 @@ main's last full run is red; watch main's run after merging.
   check. Note also that each new verifier line counts as 120 s until a main run times it.
 - **State of play:** games 1-5 done and merged (#282-#286; main runs 779, 781, 783, 785 green, 787 red for the reason above). Game 6
   `think-of-a-number` is built and passing (`scripts/verify-think-of-a-number.py`, 50 items, four planted faults caught) in PR #287,
-  which is merged-ready except for the red Plan/Gate. Games 7-20 not started. The claim for game 6 is on `cloud-remaining:`... it is
-  off the line in this PR; nothing is claimed.
+  which is merged-ready except for the red Plan/Gate. Games 7-20 not started. Game 6 is off the remaining list in this PR;
+  nothing is claimed.
 - **To resume:** once main's `ci-groups.py --check` passes again, merge `main` into `claude/verifier-think-of-a-number`, push, merge #287 on
   a green Gate, then continue with `formula-plug-in`.
 - **Open for Jon:** delete branches `claude/verifier-prime-or-composite` and the other merged `claude/verifier-*` branches on GitHub (the
