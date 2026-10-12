@@ -3,6 +3,31 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-12 (cloud): CHECKPOINT (Jon asked for one: context very high)
+
+- **Done and merged:** games 1-7 (#282-#287, #290); the CI-TIMINGS-MEDIAN home-lane fix (#288, #289). **In flight:** game 8 four-quadrant-explorer, PR #291
+  (verifier passes locally, 5 planted faults caught; waiting on its Gate; merge on green with main's run green, then record it in the next entry).
+- **Game 9 draft:** `scripts/verify-new-shapes.py` is on branch `claude/verifier-new-shapes` (passes; 50 items; diagram numbers checked; 5 planted faults caught).
+  To resume: after #291 merges, make a fresh worktree from origin/main, claim `new-shapes` in a handover commit, bring the script over from that branch
+  (`git checkout claude/verifier-new-shapes -- scripts/verify-new-shapes.py`), run `ci-groups --check`, open the PR. The diagram's PROPORTIONS and the prism l arrow
+  are deliberately not asserted (open findings r-001, t3-003/004/005: a redraw is Jon's call); the verifier prints that.
+- **SR-26 (Jon, 12 Oct): growing banks.** A bank too small or with duplicates is fixed by growing it from parameters, never by swapping single items; new
+  real-world contexts stop for Jon; a bank is grown only after its verifier runs in CI. This now decides `fraction-equivalence-v20-001` (the repeated Year 6 pair) and
+  t1-001 (20 items): fix = a parameter-generated Year 6 pair bank. NOT started: the contract still says not to add questions, and the size and the named
+  misconceptions for the non-equivalent pairs need Jon (a contract).
+- **Recipe that works (games 1-8):** worktree from origin/main; claim commit (the previous game's entry + one `cloud-remaining` line) pushed alone; script; `ci-groups --check`,
+  `audit-register --check`, `check-verifier-coverage`, `check-context-size`; PR; merge on green Gate with main's last run green (the "Record CI timings" commit appears only after a
+  green main run). KaTeX games: serve it with `bc.is_font_cdn` + `bc.serve_real_font`. Never write the remaining-list token in backticks in an entry; keep this file under 20 KB (move old entries to the archive).
+- **TeX readers (Jon, 12 Oct 2026):** per-verifier TeX readers are acceptable (as in verify-formula-unlocked.py, games 12 and 13); games 17-19 carry their own. HOME-LANE ITEM: give `bank_common`
+  one exact TeX reader and move these verifiers onto it. Today `parse_value` reads `6x^7 \div 2x^2` as 3x^9 (against Jon's ruling on index-laws-v20-001), reads standard form as a float,
+  and returns None for `v = u + at` (multi-letter juxtaposition) and for anything with `\lambda`.
+- **Pre-push set for verifier-only PRs (Jon's ruling, 12 Oct 2026; the home lane records it as SR-27):** run the verifier and its self-test, `ci-groups.py --check`,
+  `audit-register.py --check`, `check-verifier-coverage.py` and `check-context-size.py`; not `check-changed.py`. A PR that also touches a game page, a shared asset or another script still runs `check-changed.py`.
+  Applies from game 12 (standard-form-blitz); games 10 and 11 ran the longer set.
+- **Container setup (each new session):** `pip install playwright==1.63.0 sympy mpmath`; Chromium 1194 via a scratch dir of symlinks named 1243 (see the container note in the game 1 entry); `PLAYWRIGHT_BROWSERS_PATH` pointing at it.
+- **Remaining after 12:** index-laws, modular-battle, bearing-blitz, constructions-lab, formula-forge, characteristic-quest, eigenvalue-extractor, prisoners-dilemma (contract order).
+- **Open for Jon:** delete the merged `claude/verifier-*` branches on GitHub (the proxy refuses remote deletes); `fraction-equivalence-v20-001` and SR-26 scope (above).
+
 ## 2026-10-12 (cloud): VERIFIERS-20 game 12, standard-form-blitz (#295, merge commit ad66122)
 
 - **Verifier:** `scripts/verify-standard-form-blitz.py`: all 100 items (50 GCSE, 50 A-Level) read from their own TeX into exact SymPy values (conversions, products and quotients, powers, roots, sums, fractions),
