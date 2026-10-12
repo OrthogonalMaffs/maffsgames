@@ -64,6 +64,7 @@
   "Normal Navigator (independent recomputation + rendered labels)": "16",
   "Parent guides (every stated figure recomputed from the page)": "16",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
+  "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "10",
   "Prime or Composite (every key, hint and explanation recomputed; every number marked both ways in Chromium)": "9",
   "Probability Paradox (every key recomputed exactly; the assumptions each key needs stated (SR-18); every simulation measured against its item's exact answer; answer once and Next once, played in Chromium)": "6",
   "Probability Pioneer (Stage 2 keys recomputed, Stages 1 and 3 pinned, every answer marked in Chromium)": "11",
