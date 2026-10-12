@@ -33,7 +33,7 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter in PR; next equatle ... as in the contract order.
+**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter DONE (#293); 11 equatle in PR; next standard-form-blitz ... as in the contract order.
 UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
@@ -100,12 +100,21 @@ Rule: a job cancelled at Initialize containers is runner infrastructure; re-run 
 - Earlier, on PR heads: #291 Content verifiers 3; #292 Tiers 1+2 shard 3/4, Content verifiers 4, then 3, 21, 13. Durations not captured.
 Reading: 379 s is over the timeout, so the container pull is consuming the timeout, not the checks.
 
-## 2026-10-12 (cloud): VERIFIERS-20 game 10, shape-shifter (PR pending)
+## 2026-10-12 (cloud): VERIFIERS-20 game 11, equatle (PR pending)
+
+- **Verifier:** `scripts/verify-equatle.py`: the generated bank (23,399) recomputed exactly (`Fraction`, BODMAS, leading zeros); all 55,825 valid 8-character equations enumerated here
+  and every one accepted by `validate()` (no float refusal); refusal figures; `states()` against Wordle's rule over 131,000+ pairs; Hard Mode over 3,000 cases; the daily pick for 34 dates;
+  played in Chromium on a stepped clock (win, six misses with every tile and key checked, refusals cost no row, Hard Mode, the 17 keys). Nine planted faults fail. About 75 s with the self-test.
+- **Faults fixed:** none. **Left open, not asserted:** equatle-t2-001 (a result of 0, for Jon) and t2-002 (puzzle number off-by-one).
+- **Container:** `check-changed.py` here fails site-wide checks only because the container lacks `esprima`, WebKit and the KaTeX CDN (as for game 10).
+
+## 2026-10-12 (cloud): VERIFIERS-20 game 10, shape-shifter (#293, merge commit 8e52e94)
 
 - **Verifier:** `scripts/verify-shape-shifter.py`: 15 translation, 15 reflection and 15 rotation items recomputed from their words (SR-25: dx/dy, axis, turn
   direction; rotation turned here, clockwise (x,y)->(y,-x)); four rotation options, one true, each other a named slip; letters inside their shapes; sessions of all four
   modes dealt 5 times; every vertex of every answer tapped at all 121 grid points and every rotation letter tapped over 8 deals on the real canvas; whole sessions played to 10/10 and 0/10.
   Seven planted faults fail (wrong dx, wrong axis, reversed turn = old r-001, second correct option, wrong feedback letter, y ignored, wrong reflection). About 2 min a run.
+- **Main's run:** 38266515892 (the #293 merge) green first time; Gate on #293 had 50 passed, 2 skipped. Local `check-changed.py` fails site-wide checks only because this container lacks `esprima`, WebKit and the KaTeX CDN.
 - **Faults fixed:** none. **Expected failure left open:** t3-003 (reflection item 15 is its own image; a replacement is content, SR-26). Not asserted: t3-001, t3-002, t3-004, t3-005.
 
 ## 2026-10-12 (cloud): VERIFIERS-20 game 9, new-shapes (#292, merge commit 12c5018)
