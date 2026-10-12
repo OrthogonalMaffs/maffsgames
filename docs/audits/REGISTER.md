@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 8 | 204 | 0 | 212 |
-| MEDIUM | 127 | 145 | 3 | 275 |
+| MEDIUM | 126 | 146 | 3 | 275 |
 | LOW | 33 | 32 | 1 | 66 |
-| **All** | 169 | 407 | 4 | 580 |
+| **All** | 168 | 408 | 4 | 580 |
 
 ### By class
 
@@ -76,7 +76,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:data-not-shown | 0 | 1 |
 | NEW:degenerate-item | 1 | 1 |
 | NEW:duplicate-item | 1 | 1 |
-| NEW:equal-value-options | 1 | 1 |
+| NEW:equal-value-options | 0 | 1 |
 | NEW:estimation-not-by-stated-method | 0 | 1 |
 | NEW:exact-order sorter marking | 0 | 1 |
 | NEW:false scoring claim | 0 | 1 |
@@ -155,7 +155,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 2 | 16 | 1 |
 | `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 2 | 13 | 0 |
-| `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 6 | 1 | 7 | 1 | 0 |
+| `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
 | `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 0 | 1 | 0 | 2 | 0 |
 | `four-quadrant-explorer` | yes | verify-four-quadrant-explorer.py | 0 | 1 | 2 | 1 | 3 | 1 | 0 |
