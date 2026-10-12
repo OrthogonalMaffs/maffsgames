@@ -109,4 +109,5 @@ findings:
     u = \sqrt{v^2 + 2as} (sign slip)'
   evidence: 'scripts/verify-formula-forge.py (VERIFIERS-20): SymPy finds each pair equal; EQUAL_PAIRS records these
     three as expected and the run fails on any other'
-  status: open
+  status: fixed
+  pr: 310
