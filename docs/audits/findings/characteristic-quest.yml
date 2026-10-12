@@ -42,7 +42,8 @@ findings:
   where: games/characteristic-quest/index.html:126 (m [[0,2],[2,0]])
   summary: Worked step 'λ² − (0) − (0 − 4)' evaluates to λ² + 4; the char. eq. is λ² − 4
   evidence: 'SymPy: λ² − 0 − (−4) = λ² + 4'
-  status: open
+  status: fixed
+  pr: 306
 - id: characteristic-quest-t6-004
   severity: MEDIUM
   jc: false
