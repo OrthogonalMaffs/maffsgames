@@ -265,7 +265,7 @@ hint1:'Divide by 2π, then square both sides.',hint2:'\\dfrac{T}{2\\pi} = \\sqrt
 steps:['T = 2\\pi\\sqrt{\\dfrac{l}{g}}','\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{l}{g}}','\\dfrac{T^2}{4\\pi^2} = \\dfrac{l}{g}','l = \\dfrac{gT^2}{4\\pi^2}'],ctx:'Period of a pendulum'},
 ],
 s3:[// Stage 3: Powers and roots
-{formula:'v^2 = u^2 + 2as',subject:'v',correct:'v = \\sqrt{u^2 + 2as}',distractors:['v = u + \\sqrt{2as}','v = \\sqrt{u^2} + \\sqrt{2as}','v = (u^2 + 2as)^2'],
+{formula:'v^2 = u^2 + 2as',subject:'v',correct:'v = \\sqrt{u^2 + 2as}',distractors:['v = u + \\sqrt{2as}','v = u^2 + 2as','v = (u^2 + 2as)^2'],
 hint1:'v is squared. What undoes squaring?',hint2:'Square root both sides: v = \\sqrt{u^2 + 2as}',
 steps:['v^2 = u^2 + 2as','v = \\sqrt{u^2 + 2as}'],
 misconception:'√(a² + b) ≠ a + √b. You cannot split a square root over addition. The WHOLE expression stays under the root.'},
@@ -283,7 +283,7 @@ misconception:'Divide by π first, THEN square root. Not the other way around.'}
 hint1:'Multiply by 2, divide by m, then square root.',hint2:'\\dfrac{2E}{m} = v^2',
 steps:['E = \\dfrac{1}{2}mv^2','2E = mv^2','\\dfrac{2E}{m} = v^2','v = \\sqrt{\\dfrac{2E}{m}}'],ctx:'Kinetic energy'},
 
-{formula:'c^2 = a^2 + b^2',subject:'a',correct:'a = \\sqrt{c^2 - b^2}',distractors:['a = c - b','a = \\sqrt{c^2} - \\sqrt{b^2}','a = (c-b)(c+b)'],
+{formula:'c^2 = a^2 + b^2',subject:'a',correct:'a = \\sqrt{c^2 - b^2}',distractors:['a = c - b','a = \\sqrt{c^2 + b^2}','a = (c-b)(c+b)'],
 hint1:'Subtract b² first.',hint2:'a^2 = c^2 - b^2. Square root.',
 steps:['c^2 = a^2 + b^2','c^2 - b^2 = a^2','a = \\sqrt{c^2 - b^2}'],ctx:'Pythagoras',
 misconception:'√(c² − b²) ≠ c − b. You CANNOT split the root over subtraction.'},
@@ -351,7 +351,7 @@ s3:[
 hint1:'Divide by R, then square root.',hint2:'I^2 = \\dfrac{P}{R}',steps:['I^2 = \\dfrac{P}{R}','I = \\sqrt{\\dfrac{P}{R}}'],ctx:'Find current from power'},
 {formula:'P = \\dfrac{V^2}{R}',subject:'V',correct:'V = \\sqrt{PR}',distractors:['V = \\dfrac{PR}{2}','V = PR','V = \\dfrac{\\sqrt{P}}{\\sqrt{R}}'],
 hint1:'Multiply by R first.',hint2:'V^2 = PR. Square root.',steps:['PR = V^2','V = \\sqrt{PR}'],ctx:'Find voltage from power'},
-{formula:'v^2 = u^2 + 2as',subject:'u',correct:'u = \\sqrt{v^2 - 2as}',distractors:['u = v - \\sqrt{2as}','u = \\sqrt{v^2} - \\sqrt{2as}','u = v^2 - 2as'],
+{formula:'v^2 = u^2 + 2as',subject:'u',correct:'u = \\sqrt{v^2 - 2as}',distractors:['u = v - \\sqrt{2as}','u = \\sqrt{v^2 + 2as}','u = v^2 - 2as'],
 hint1:'Subtract 2as, then square root.',hint2:'u^2 = v^2 - 2as',steps:['v^2 - 2as = u^2','u = \\sqrt{v^2 - 2as}'],ctx:'SUVAT — find initial velocity'},
 {formula:'T = 2\\pi\\sqrt{\\dfrac{m}{k}}',subject:'k',correct:'k = \\dfrac{4\\pi^2 m}{T^2}',distractors:['k = \\dfrac{m}{T^2}','k = \\dfrac{2\\pi m}{T}','k = \\dfrac{T^2 m}{4\\pi^2}'],
 hint1:'Divide by 2π, square, then rearrange.',hint2:'\\dfrac{T^2}{4\\pi^2} = \\dfrac{m}{k}',steps:['\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{m}{k}}','\\dfrac{T^2}{4\\pi^2} = \\dfrac{m}{k}','k = \\dfrac{4\\pi^2 m}{T^2}'],ctx:'Period of a spring-mass system'},
