@@ -1282,7 +1282,7 @@
       "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{9}{33} equals the marked answer \\dfrac{3}{11} but is not in its simplest form, which the ask names."
     },
     {
-      "id": "surd-simplifier::735bf93c496a#1::B11::[\"\\\\dfrac{45}{99}\", \"\\\\dfrac{5}{11}\"]",
+      "id": "surd-simplifier::57fe8b73b0a5#1::B11::[\"\\\\dfrac{45}{99}\", \"\\\\dfrac{5}{11}\"]",
       "where": "surd-simplifier QUESTIONS.gcse[43]",
       "pair": [
         "\\dfrac{45}{99}",
@@ -1505,6 +1505,60 @@
         "9-5"
       ],
       "reason": "The ask is \"Expand and simplify\". 9-5 equals the marked answer 4 but is not simplified, which the ask names."
+    },
+    {
+      "id": "surd-simplifier::34e8d99391ca#1::B11::[\"\\\\dfrac{27}{99}\", \"\\\\dfrac{9}{33}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[42]",
+      "pair": [
+        "\\dfrac{27}{99}",
+        "\\dfrac{9}{33}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". Neither is the marked answer \\dfrac{3}{11}: \\dfrac{27}{99} and \\dfrac{9}{33} are both its value not in its simplest form (one not cancelled, one cancelled only partly), which the ask names (SR-4; B11-CLEAR, 12 Oct 2026)."
+    },
+    {
+      "id": "surd-simplifier::9c6ee865ce87#1::B11::[\"\\\\dfrac{27}{33}\", \"\\\\dfrac{81}{99}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[44]",
+      "pair": [
+        "\\dfrac{27}{33}",
+        "\\dfrac{81}{99}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". Neither is the marked answer \\dfrac{9}{11}: \\dfrac{27}{33} and \\dfrac{81}{99} are both its value not in its simplest form (one not cancelled, one cancelled only partly), which the ask names (SR-4; B11-CLEAR, 12 Oct 2026)."
+    },
+    {
+      "id": "surd-simplifier::f0059950fe13#1::B11::[\"\\\\dfrac{12}{33}\", \"\\\\dfrac{36}{99}\"]",
+      "where": "surd-simplifier QUESTIONS.gcse[49]",
+      "pair": [
+        "\\dfrac{12}{33}",
+        "\\dfrac{36}{99}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". Neither is the marked answer \\dfrac{4}{11}: \\dfrac{12}{33} and \\dfrac{36}{99} are both its value not in its simplest form (one not cancelled, one cancelled only partly), which the ask names (SR-4; B11-CLEAR, 12 Oct 2026)."
+    },
+    {
+      "id": "surd-simplifier::4b91e7bd1c6c#1::B11::[\"\\\\dfrac{18}{99}\", \"\\\\dfrac{6}{33}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[31]",
+      "pair": [
+        "\\dfrac{18}{99}",
+        "\\dfrac{6}{33}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". Neither is the marked answer \\dfrac{2}{11}: \\dfrac{18}{99} and \\dfrac{6}{33} are both its value not in its simplest form (one not cancelled, one cancelled only partly), which the ask names (SR-4; B11-CLEAR, 12 Oct 2026)."
+    },
+    {
+      "id": "surd-simplifier::7b9eaeb2e222#1::B11::[\"\\\\dfrac{18}{33}\", \"\\\\dfrac{54}{99}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[32]",
+      "pair": [
+        "\\dfrac{18}{33}",
+        "\\dfrac{54}{99}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". Neither is the marked answer \\dfrac{6}{11}: \\dfrac{18}{33} and \\dfrac{54}{99} are both its value not in its simplest form (one not cancelled, one cancelled only partly), which the ask names (SR-4; B11-CLEAR, 12 Oct 2026)."
+    },
+    {
+      "id": "surd-simplifier::53c2f73ecc5e#1::B11::[\"\\\\dfrac{24}{33}\", \"\\\\dfrac{72}{99}\"]",
+      "where": "surd-simplifier QUESTIONS.alevel[39]",
+      "pair": [
+        "\\dfrac{24}{33}",
+        "\\dfrac{72}{99}"
+      ],
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". Neither is the marked answer \\dfrac{8}{11}: \\dfrac{24}{33} and \\dfrac{72}{99} are both its value not in its simplest form (one not cancelled, one cancelled only partly), which the ask names (SR-4; B11-CLEAR, 12 Oct 2026)."
     }
   ],
   "_tier1_phone_overflow_comment": [

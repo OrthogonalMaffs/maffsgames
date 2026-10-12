@@ -5723,7 +5723,7 @@
  "surd-simplifier": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -5739,49 +5739,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.gcse[38]: '\\\\dfrac{1}{5}' = '\\\\dfrac{2}{10}' (both wrong options)",
-      "id": "surd-simplifier::cc234a343636#1::B11::[\"\\\\dfrac{1}{5}\", \"\\\\dfrac{2}{10}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.gcse[42]: '\\\\dfrac{27}{99}' = '\\\\dfrac{9}{33}' (both wrong options)",
-      "id": "surd-simplifier::34e8d99391ca#1::B11::[\"\\\\dfrac{27}{99}\", \"\\\\dfrac{9}{33}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.gcse[43]: '\\\\dfrac{45}{100}' = '\\\\dfrac{9}{20}' (both wrong options)",
-      "id": "surd-simplifier::735bf93c496a#1::B11::[\"\\\\dfrac{45}{100}\", \"\\\\dfrac{9}{20}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.gcse[44]: '\\\\dfrac{27}{33}' = '\\\\dfrac{81}{99}' (both wrong options)",
-      "id": "surd-simplifier::9c6ee865ce87#1::B11::[\"\\\\dfrac{27}{33}\", \"\\\\dfrac{81}{99}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.gcse[49]: '\\\\dfrac{12}{33}' = '\\\\dfrac{36}{99}' (both wrong options)",
-      "id": "surd-simplifier::f0059950fe13#1::B11::[\"\\\\dfrac{12}{33}\", \"\\\\dfrac{36}{99}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.alevel[31]: '\\\\dfrac{18}{99}' = '\\\\dfrac{6}{33}' (both wrong options)",
-      "id": "surd-simplifier::4b91e7bd1c6c#1::B11::[\"\\\\dfrac{18}{99}\", \"\\\\dfrac{6}{33}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.alevel[32]: '\\\\dfrac{18}{33}' = '\\\\dfrac{54}{99}' (both wrong options)",
-      "id": "surd-simplifier::7b9eaeb2e222#1::B11::[\"\\\\dfrac{18}{33}\", \"\\\\dfrac{54}{99}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS.alevel[39]: '\\\\dfrac{24}{33}' = '\\\\dfrac{72}{99}' (both wrong options)",
-      "id": "surd-simplifier::53c2f73ecc5e#1::B11::[\"\\\\dfrac{24}{33}\", \"\\\\dfrac{72}{99}\"]",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
