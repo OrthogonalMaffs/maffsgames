@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: `
+`cloud-remaining: index-laws`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -33,7 +33,7 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter DONE (#293); 11 equatle DONE (#294); 12 standard-form-blitz in PR; next standard-form-blitz ... as in the contract order.
+**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter DONE (#293); 11 equatle DONE (#294); 12 standard-form-blitz DONE (#295); 13 index-laws CLAIMED; next standard-form-blitz ... as in the contract order.
 UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
@@ -100,12 +100,13 @@ Rule: a job cancelled at Initialize containers is runner infrastructure; re-run 
 - Earlier, on PR heads: #291 Content verifiers 3; #292 Tiers 1+2 shard 3/4, Content verifiers 4, then 3, 21, 13. Durations not captured.
 Reading: 379 s is over the timeout, so the container pull is consuming the timeout, not the checks.
 
-## 2026-10-12 (cloud): VERIFIERS-20 game 12, standard-form-blitz (PR pending)
+## 2026-10-12 (cloud): VERIFIERS-20 game 12, standard-form-blitz (#295, merge commit ad66122)
 
 - **Verifier:** `scripts/verify-standard-form-blitz.py`: all 100 items (50 GCSE, 50 A-Level) read from their own TeX into exact SymPy values (conversions, products and quotients, powers, roots, sums, fractions),
   the nine context problems from the numbers in their text, comparisons decided from the listed values, the two solve-for items tried with each option. Each key equals the value at the stated precision
   (3 s.f., 1 s.f., nearest £, whole number), is in standard form where asked, and is the only right option (an equal but non-standard distractor is legitimately wrong). KaTeX parses every question and option
   (pinned local copy); sessions dealt 3 times per level; every item shown by `showQ()` and all four options pressed in Chromium. Twelve planted faults fail (two plant SR-4/16: an option equal to the key in value where standard form is not asked). About 45 s with the self-test.
+- **Main's run:** 38277156140 (the #295 merge) green first time; Gate on #295 had 50 passed, 2 skipped. Pre-push was the short set (SR-27 note below).
 - **Faults fixed:** none; no findings to close (the register has none for this game).
 
 ## 2026-10-12 (cloud): VERIFIERS-20 game 11, equatle (#294, merge commit a20cd5d)
@@ -124,22 +125,6 @@ Reading: 379 s is over the timeout, so the container pull is consuming the timeo
   Seven planted faults fail (wrong dx, wrong axis, reversed turn = old r-001, second correct option, wrong feedback letter, y ignored, wrong reflection). About 2 min a run.
 - **Main's run:** 38266515892 (the #293 merge) green first time; Gate on #293 had 50 passed, 2 skipped. Local `check-changed.py` fails site-wide checks only because this container lacks `esprima`, WebKit and the KaTeX CDN.
 - **Faults fixed:** none. **Expected failure left open:** t3-003 (reflection item 15 is its own image; a replacement is content, SR-26). Not asserted: t3-001, t3-002, t3-004, t3-005.
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 9, new-shapes (#292, merge commit 12c5018)
-
-- **Verifier:** `scripts/verify-new-shapes.py`: all 50 items (15 parallelogram, 20 trapezium, 15 prism) against three formulas held in the verifier; key by `Fraction` from the item's values;
-  working steps checked; sessions of 10/20/30 dealt 3 times; the diagram's numbers and accessible description checked in Chromium (SR-25); every item answered on the numpad. Five planted faults fail.
-- **Faults fixed:** none. **Left open:** diagram proportions and the prism l arrow (r-001, t3-003/004/005), Jon's call.
-- **Main's run:** 38236088363 (the #291 merge) green on its third attempt after two "Initialize containers" cancels (container pull used the 360 s timeout; two of three re-runs used).
-  Run 38260101808 (the #292 merge) green first time. Gate on #292: 51 jobs passed, 2 main-only skipped.
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 8, four-quadrant-explorer (#291, merge commit bb79123)
-
-- **Verifier:** `scripts/verify-four-quadrant-explorer.py`: Plot (20), Read (15) and Shape (10) banks recomputed (grid points; read options four distinct, one equal, every
-  distractor a sign or order slip; the point drawn at exactly one of 121 grid points; shape key = the missing fourth corner), queues cycle plot/read/shape at 10/20/30, and
-  every plot and shape question tapped at all 121 grid points on the real canvas (plus 0.45/0.55-cell edge taps), every read option pressed, in Chromium. Five planted faults fail.
-- **Faults fixed:** none. **Expected failures left open:** none (r-001, t3-002, t3-003 stay open).
-- **Main's run:** 38233755799 (the #290 merge) green. A runner cancelled one job once ("Initialize containers"); one re-run of the failed job passed.
 
 ## 2026-10-12 (cloud): CHECKPOINT (Jon asked for one: context very high)
 
@@ -160,5 +145,5 @@ Reading: 379 s is over the timeout, so the container pull is consuming the timeo
   `audit-register.py --check`, `check-verifier-coverage.py` and `check-context-size.py`; not `check-changed.py`. A PR that also touches a game page, a shared asset or another script still runs `check-changed.py`.
   Applies from game 12 (standard-form-blitz); games 10 and 11 ran the longer set.
 - **Container setup (each new session):** `pip install playwright==1.63.0 sympy mpmath`; Chromium 1194 via a scratch dir of symlinks named 1243 (see the container note in the game 1 entry); `PLAYWRIGHT_BROWSERS_PATH` pointing at it.
-- **Remaining after 9:** shape-shifter, equatle, standard-form-blitz, index-laws, modular-battle, bearing-blitz, constructions-lab, formula-forge, characteristic-quest, eigenvalue-extractor, prisoners-dilemma (contract order).
+- **Remaining after 12:** index-laws, modular-battle, bearing-blitz, constructions-lab, formula-forge, characteristic-quest, eigenvalue-extractor, prisoners-dilemma (contract order).
 - **Open for Jon:** delete the merged `claude/verifier-*` branches on GitHub (the proxy refuses remote deletes); `fraction-equivalence-v20-001` and SR-26 scope (above).

@@ -3,6 +3,22 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-12 (cloud): VERIFIERS-20 game 9, new-shapes (#292, merge commit 12c5018)
+
+- **Verifier:** `scripts/verify-new-shapes.py`: all 50 items (15 parallelogram, 20 trapezium, 15 prism) against three formulas held in the verifier; key by `Fraction` from the item's values;
+  working steps checked; sessions of 10/20/30 dealt 3 times; the diagram's numbers and accessible description checked in Chromium (SR-25); every item answered on the numpad. Five planted faults fail.
+- **Faults fixed:** none. **Left open:** diagram proportions and the prism l arrow (r-001, t3-003/004/005), Jon's call.
+- **Main's run:** 38236088363 (the #291 merge) green on its third attempt after two "Initialize containers" cancels (container pull used the 360 s timeout; two of three re-runs used).
+  Run 38260101808 (the #292 merge) green first time. Gate on #292: 51 jobs passed, 2 main-only skipped.
+
+## 2026-10-12 (cloud): VERIFIERS-20 game 8, four-quadrant-explorer (#291, merge commit bb79123)
+
+- **Verifier:** `scripts/verify-four-quadrant-explorer.py`: Plot (20), Read (15) and Shape (10) banks recomputed (grid points; read options four distinct, one equal, every
+  distractor a sign or order slip; the point drawn at exactly one of 121 grid points; shape key = the missing fourth corner), queues cycle plot/read/shape at 10/20/30, and
+  every plot and shape question tapped at all 121 grid points on the real canvas (plus 0.45/0.55-cell edge taps), every read option pressed, in Chromium. Five planted faults fail.
+- **Faults fixed:** none. **Expected failures left open:** none (r-001, t3-002, t3-003 stay open).
+- **Main's run:** 38233755799 (the #290 merge) green. A runner cancelled one job once ("Initialize containers"); one re-run of the failed job passed.
+
 ## 2026-10-12 (cloud): VERIFIERS-20 game 7, formula-plug-in (#290, merge commit d31a12a)
 
 - **Verifier:** `scripts/verify-formula-plug-in.py`: all 50 items against ten formulas held in the verifier (variables, result variable, rule):
