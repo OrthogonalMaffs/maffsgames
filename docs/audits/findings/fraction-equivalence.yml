@@ -27,3 +27,13 @@ findings:
   summary: At 320x568 a wrong answer's Next sits below the fold (canon 7.6.1); the reason is above it
   evidence: 'Chromium 320x568, wrong answer, scrollY 0, fold 528: reason (#feedback) 477-501, Next 534-578 (F1 batch 2, #132)'
   status: open
+- id: fraction-equivalence-v20-001
+  severity: LOW
+  jc: false
+  class: NEW:duplicate-item
+  level: year6
+  where: games/fraction-equivalence/index.html:YEAR6_BANK
+  summary: 'Bank items 12 and 18 are the same question written the other way round (1/4 against 1/3, and 1/3 against 1/4),
+    so the Year 6 bank has 19 different pairs, not 20. Replacing one is new content (Jon''s call, SR-19)'
+  evidence: 'scripts/verify-fraction-equivalence.py (VERIFIERS-20): it records this pair as an expected repeat and fails on any other'
+  status: open
