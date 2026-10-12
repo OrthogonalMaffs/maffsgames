@@ -95,3 +95,18 @@ findings:
     needs a != c; 'Got it' below the fold at 320x568; timer shown and scored against policy, rAF loops never stopped
   evidence: Agent's evidence.
   status: open
+- id: formula-forge-v20-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:equal-value-options
+  level: all
+  where: 'games/formula-forge/index.html:268, :286 (GCSE Stage 3, so A-Level too) and :354 (L4 Stage 3)'
+  summary: 'Three items have two wrong options equal in value to each other, since every quantity is positive and
+    \sqrt{u^2} = u (SR-4, SR-16): v^2 = u^2 + 2as for v (v = u + \sqrt{2as} and v = \sqrt{u^2} + \sqrt{2as});
+    c^2 = a^2 + b^2 for a (a = c - b and a = \sqrt{c^2} - \sqrt{b^2}); v^2 = u^2 + 2as for u (u = v - \sqrt{2as} and
+    u = \sqrt{v^2} - \sqrt{2as}). The keys are right. Suggested replacements, each a named slip, for Jon (new content,
+    SR-19): v = u^2 + 2as (forgot the square root); a = \sqrt{c^2 + b^2} (added instead of subtracted);
+    u = \sqrt{v^2 + 2as} (sign slip)'
+  evidence: 'scripts/verify-formula-forge.py (VERIFIERS-20): SymPy finds each pair equal; EQUAL_PAIRS records these
+    three as expected and the run fails on any other'
+  status: open
