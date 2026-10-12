@@ -368,6 +368,7 @@ jobs:
               Site footer (one canonical footer, one stylesheet)|python scripts/check-footer.py
               Theme (canon 7.5: one register, palette from the roster)|python scripts/check-theme.py
               Publish scope (canon 7.7: every published file is SITE; no page uses an excluded one)|python scripts/check-publish-scope.py
+              GA4 tag (loaded by analytics.js on the live host only; no page carries its own copy; every page loads analytics.js once)|python scripts/check-analytics-loader.py --selftest && python scripts/check-analytics-loader.py
               Verifier coverage (every verify-*/test-* script runs in CI, or is declared held)|python scripts/check-verifier-coverage.py
               Spec mapping (every live game is on the spec map, or in UNMAPPED)|python scripts/check-spec-mapping.py
               Public claims (no page says no data is collected)|python scripts/check-public-claims.py

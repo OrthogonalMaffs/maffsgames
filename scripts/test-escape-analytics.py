@@ -63,6 +63,13 @@ TAB_SWITCH = """async () => {
   window.__vis = 'visible'; document.dispatchEvent(new Event('visibilitychange'));
   await new Promise(r => setTimeout(r, 200));
 }"""
+# GA4-LIVE-ONLY (12 Oct 2026): analytics.js now loads the real tag on this (emulated live) host, so the test must keep
+# every Google analytics host blocked itself, and show that nothing reached one. A request "reached" a host if it
+# finished (an aborted one fails); "attempted" is every request made to one.
+GA_HOSTS = ("googletagmanager.com", "google-analytics.com", "analytics.google.com")
+GTAG_URL = "https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"
+GA_CONFIG = ["G-992JLHLP2D", {"send_page_view": True, "storage": "none", "anonymize_ip": True}]
+DL_CONFIG = "() => (window.dataLayer || []).filter(a => a && a[0] === 'config').map(a => [a[1], a[2] || {}])"
 GA4 = "() => (window.dataLayer || []).filter(a => a && a[0] === 'event').map(a => [a[1], a[2] || {}])"
 
 
@@ -88,6 +95,13 @@ def plant_hidden(analytics):
 """)
 
 
+def plant_tag_twice(analytics):
+    """analytics.js that loads the GA4 tag twice per page."""
+    s = "(document.head || document.documentElement).appendChild(_gtagScript);"
+    assert s in analytics
+    return analytics.replace(s, s + " var _dup = document.createElement('script'); _dup.async = true; _dup.src = _gtagScript.src + '&dup=1'; document.head.appendChild(_dup);", 1)
+
+
 def plant_twice(engine):
     a = "    track('game_completed', {"
     assert engine.count(a) == 1, "plant twice: anchor"
@@ -104,6 +118,11 @@ async def run(served):
         async def scenario(name, body):
             posts = []
             ctx = await browser.new_context(viewport={"width": 1280, "height": 900})
+            google = {"attempted": [], "reached": []}
+            is_ga = lambda u: urlsplit(u).hostname and urlsplit(u).hostname.endswith(GA_HOSTS)
+            ctx.on("request", lambda rq: google["attempted"].append(rq.url) if is_ga(rq.url) else None)
+            ctx.on("requestfinished", lambda rq: google["reached"].append(rq.url) if is_ga(rq.url) else None)
+            navs = [0]
 
             async def route(r):
                 url = r.request.url
@@ -134,10 +153,12 @@ async def run(served):
             await ctx.route("**/*", route)
             await ctx.add_init_script(INIT)
             page = await ctx.new_page()
+            page.on("framenavigated", lambda f: navs.__setitem__(0, navs[0] + 1) if f == page.main_frame else None)
             try:
                 ga4 = await body(page)
                 await page.wait_for_timeout(400)
-                out[name] = {"sheet": posts, "ga4": ga4}
+                out[name] = {"sheet": posts, "ga4": ga4, "google": google, "navs": navs[0],
+                             "config": await page.evaluate(DL_CONFIG)}
             except Exception as exc:
                 out[name] = "%s: %s" % (name, str(exc).splitlines()[0][:200])
             finally:
@@ -224,6 +245,15 @@ def judge(res):
     if leave.count("game_abandoned") != 1:
         faults.append("room-leave, Sheet: %d game_abandoned when the page was left mid-game (want 1)"
                       % leave.count("game_abandoned"))
+    for name, r in res.items():
+        gg = r["google"]
+        if gg["reached"]:
+            faults.append("%s: %d request(s) reached Google's analytics hosts: %s" % (name, len(gg["reached"]), gg["reached"][:3]))
+        if gg["attempted"] != [GTAG_URL] * r["navs"]:
+            faults.append("%s: gtag.js attempted %d time(s) over %d page load(s), as %s (want exactly one %s per load)"
+                          % (name, len(gg["attempted"]), r["navs"], sorted(set(gg["attempted"])), GTAG_URL))
+        if r["config"] != [GA_CONFIG]:
+            faults.append("%s: the page's GA4 config is %s (want one %s: one page_view per load)" % (name, r["config"], GA_CONFIG))
     g = res["game"]
     for dest, evs in (("Sheet", [p.get("event") for p in g["sheet"]]), ("GA4", [e[0] for e in g["ga4"]])):
         if evs.count("game_abandoned"):
@@ -243,6 +273,8 @@ def summary(res):
             continue
         s = [p.get("event") for p in r["sheet"]]
         g = [e[0] for e in r["ga4"]] if r["ga4"] is not None else None
+        lines.append("  %-10s Google: %d gtag.js attempted over %d load(s), %d reached; config %s" % (
+            name, len(r["google"]["attempted"]), r["navs"], len(r["google"]["reached"]), r["config"]))
         lines.append("  %-10s Sheet: %d question_answered, %d game_completed, %d game_abandoned%s" % (
             name, count(s, "question_answered"), count(s, "game_completed"), count(s, "game_abandoned"),
             "" if g is None else "; GA4: %d, %d, %d" % (count(g, "question_answered"), count(g, "game_completed"),
@@ -261,7 +293,8 @@ def main():
     engine, analytics = read(ENGINE), read(ANALYTICS)
     plants = [("the engine logs each first search as an answer", {ENGINE: plant_search(engine)}, "room-win"),
               ("analytics.js sends game_abandoned on a hidden tab", {ANALYTICS: plant_hidden(analytics)}, "abandoned"),
-              ("the engine sends game_completed twice", {ENGINE: plant_twice(engine)}, "game_completed")]
+              ("the engine sends game_completed twice", {ENGINE: plant_twice(engine)}, "game_completed"),
+              ("analytics.js loads the GA4 tag twice", {ANALYTICS: plant_tag_twice(analytics)}, "gtag.js attempted")]
     caught = True
     for what, served, expect in plants:
         got = judge(asyncio.run(run(served)))
