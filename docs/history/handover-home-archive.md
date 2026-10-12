@@ -1736,3 +1736,17 @@ gives them; RULE (no `missArt`) kept. **Still unreleased. Jon can play-test with
 https://maffsgames.co.uk/escape-rooms/library-jam/play.html** (and rightful-king/play.html). Checked: play.html in
 Chromium at 1280 and 320 px (scene, win, fail at time-out); check-escape-rooms (all art present) and test-escape-art pass.
 
+
+## Moved from home.md on 12 Oct 2026 (GA4-LIVE-ONLY, for size)
+
+**ROOM-STATUS-ONE-TABLE (11 Oct, Jon's contract; branch `claude/room-status-single-table`).** Canon §11.1 is now the
+only per-room status table. `docs/escape-room-voice-rewrite.md` §5 is "Per-room rewrite notes": status columns
+removed, one bullet per room keeping everything rewrite-specific (the `missArt` rules, timing, cancelled engine
+work, release commits, art edits), and a line pointing to §11.1. No STOP: no decision lived only in a status
+column. Canon §11.5's two pointers reworded to land on it. `docs/resit-coverage-audit.md` §"live, KS3 label" rows
+are a per-lock audit, not a room status table; left alone. **SPLIT-IT-FRACTIONS (todo §1.48) STOPPED on its STOP IF:**
+`games/split-it/index.html` loads neither KaTeX nor `mathtext.js`, so a stacked KaTeX `rac` adds a page dependency.
+Nothing changed; todo §1.48 stays open, worktree removed. Awaiting Jon: add KaTeX + mathtext.js to the page, or
+use the page's existing CSS `.frac-wrap` stacked fraction (no new dependency). Still to do under §1.48: the
+duplicated unit label (index.html:514/516) and the report-only division-interpolation scan.
+

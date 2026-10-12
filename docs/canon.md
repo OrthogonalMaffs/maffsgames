@@ -147,22 +147,13 @@ Every game sends events to both GA4 and a Google Sheets backend via the `mfg()` 
 
 ## 1.1 GA4 Configuration
 
-Every HTML page must include the following snippet in the `<head>`. Cookieless mode — no cookies dropped, GDPR/PECR compliant.
+GA4's tag is loaded only by `schools/assets/analytics.js`, and only on the live host, `maffsgames.co.uk` and `www.maffsgames.co.uk` (Jon, 12 Oct 2026, contract GA4-LIVE-ONLY). Until then every page carried its own copy of the gtag snippet with no hostname check, so test runs, local servers and previews sent page views to GA4: the property showed 112 active users at 800×600 (headless Chrome's default screen) with 2 s average engagement and no key events, against 976 in total (12 Sep to 11 Oct 2026). A page therefore carries **no snippet**; it loads `analytics.js` exactly once, at its own relative path, and the file defines `dataLayer` and `gtag` before anything calls `mfg()` and configures the tag exactly as the snippet did (`send_page_view: true`, `storage: 'none'`, `anonymize_ip: true`). `scripts/check-analytics-loader.py` (CI) fails a page that carries the tag, a page that loads `analytics.js` other than once, and an `analytics.js` whose loader is outside the hostname gate; `scripts/test-analytics-loader.py` proves it in Chromium. Cookieless mode: no cookies dropped, GDPR/PECR compliant.
 
 ```html
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-992JLHLP2D"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-992JLHLP2D', {
-    send_page_view: true,
-    storage: 'none',
-    anonymize_ip: true
-  });
-</script>
 <script src="../../schools/assets/analytics.js"></script>
 ```
+
+Crawlers still reach GA4 from the live host; filtering them is a separate decision. **Data collected before 12 Oct 2026 still includes test traffic: exclude 800×600 in any report on dates up to the merge.**
 
 | **Property** | **Value** |
 | --- | --- |

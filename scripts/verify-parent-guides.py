@@ -811,8 +811,11 @@ def template():
     for rel in pages:
         body = read(rel)
         check("TPL", "TEXT", "no data collected" not in body, "%s: no 'no data collected'" % rel)
-        check("TPL", "TEXT", "G-992JLHLP2D" in body and "G-7GTLYCZMXN" not in body,
-              "%s: MaffsGames GA4 property, not MathsWins'" % rel)
+        # The GA4 tag is loaded by schools/assets/analytics.js on the live host only (GA4-LIVE-ONLY, 12 Oct 2026), so a
+        # guide loads analytics.js once and carries no tag of its own; the property is MaffsGames', not MathsWins'.
+        check("TPL", "TEXT", len(re.findall(r'src="[^"]*schools/assets/analytics\.js"', body)) == 1
+              and "googletagmanager.com" not in body and "gtag(" not in body and "G-7GTLYCZMXN" not in body,
+              "%s: loads analytics.js once, carries no GA4 tag of its own, and is not MathsWins' property" % rel)
         check("TPL", "TEXT", 'rel="canonical" href="https://maffsgames.co.uk/parents/' in body,
               "%s: canonical points at maffsgames.co.uk/parents/" % rel)
         check("TPL", "TEXT", "mw-auth" not in body and "mw_cookies" not in body and "cookieConsent" not in body,

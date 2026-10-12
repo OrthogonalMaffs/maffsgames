@@ -6,6 +6,7 @@ All 91 games send events to both GA4 and a Google Sheets backend via the `mfg()`
 - GA4 cookieless mode (`G-992JLHLP2D`) — no cookies, GDPR/PECR compliant
 - Google Sheets backend via Apps Script — raw event-level data, no sampling
 - Shared wrapper: `schools/assets/analytics.js` — loaded on every game via `<script>` tag
+- GA4's tag is loaded only by `analytics.js`, and only on the live host (12 Oct 2026, GA4-LIVE-ONLY): pages carry no gtag snippet. Data before that date includes test traffic (800×600); crawlers still reach GA4 (filtering them is a separate decision). Canon §1.1.
 - Apps Script code: `docs/apps-script-endpoint.js` — includes daily email report + Dashboard charts
 - Daily report emails to Jon (owner) at 7am UK time
 

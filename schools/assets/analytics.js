@@ -27,6 +27,25 @@
   window._mfgQuestionIndex = 0;
   var _seq = 0;                   // monotonic, breaks ties when events race
 
+  // ── GA4 TAG: loaded here, on the live site only (GA4-LIVE-ONLY, 12 Oct 2026) ──
+  // Every page used to carry its own copy of the gtag snippet in <head>, with no hostname check, so a test run,
+  // a local server or a preview sent a page view and a session to GA4 (the property showed 112 users at 800x600,
+  // headless Chrome's default, with 2 s engagement and no key events). The tag now comes from this one shared
+  // file, behind the same hostname gate as mfg() below, with the configuration the old snippet used.
+  // dataLayer and gtag are defined before anything can call mfg(), so an early event is queued, not lost.
+  var GA_ID = 'G-992JLHLP2D';
+  var LIVE = location.hostname === 'maffsgames.co.uk' || location.hostname === 'www.maffsgames.co.uk';
+  if (LIVE) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function() { window.dataLayer.push(arguments); };   // must push `arguments`, as Google's snippet does
+    window.gtag('js', new Date());
+    window.gtag('config', GA_ID, { send_page_view: true, storage: 'none', anonymize_ip: true });
+    var _gtagScript = document.createElement('script');
+    _gtagScript.async = true;
+    _gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    (document.head || document.documentElement).appendChild(_gtagScript);
+  }
+
   // ── MAIN FUNCTION ──
   window.mfg = function(eventName, params) {
     params = params || {};
