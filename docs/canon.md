@@ -1454,7 +1454,7 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   CI fails at 80%"). Of the timeout they would sit either side of the 75% at which the workflow already fails a
   job, and the 80% check could never fire before the job had failed.
 
-**Rules that keep it fast.** Every job still fails at 75% of its timeout ("time budget: … split it"). **No
+**Rules that keep it fast.** Every job still fails at 75% of its timeout ("time budget: … split it"). A container job's hang guard is `job_timeout` (the group's `timeout` plus a 10-minute pull allowance, `PULL_ALLOWANCE` in `ci-groups.py`, because GitHub counts the image pull inside `timeout-minutes`), and the group's budget is still 75% of `timeout`, from its own clock, which starts once the container is up (CONTAINER-PULL-TIMEOUT, 12 Oct 2026: on main run 802, Content verifiers 33 spent 379 s initialising against its 360 s timeout and was cancelled before its first step). **No
 "Content verifiers" job may run past 4 minutes** (Jon, 7 Oct 2026): the packer keeps every content group under it (below; each job's summary lists every check's duration;
 `check-verifier-coverage.py` reports any content group estimated past 4 minutes from the main run recorded in
 `scripts/ci-timings.json`). Since CI-BALANCE the packer cuts the lists of lines; a single line too long for any

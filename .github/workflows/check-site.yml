@@ -269,7 +269,7 @@ jobs:
     name: ${{ matrix.name }}
     needs: plan
     runs-on: ubuntu-24.04          # pinned: see the coverage job
-    timeout-minutes: ${{ matrix.timeout }}
+    timeout-minutes: ${{ matrix.job_timeout }}
     container: &check-container
       # Pinned to the Playwright version in requirements-ci.txt (its browsers are built for it).
       image: mcr.microsoft.com/playwright/python:v1.63.0-noble
@@ -300,18 +300,22 @@ jobs:
           # (6.5 minutes, the critical path of every PR).
           - name: Tiers 1 + 2 (shard 1/4)
             timeout: 10
+            job_timeout: 20
             checks: |
               Tier 1 (page load) shard 1/4 + Tier 2 (hang-loop scan)|python scripts/check-site.py --shard-selftest 4 && python scripts/check-site.py --workers 4 --shard 1/4
           - name: Tiers 1 + 2 (shard 2/4)
             timeout: 10
+            job_timeout: 20
             checks: |
               Tier 1 (page load) shard 2/4|python scripts/check-site.py --shard-selftest 4 && python scripts/check-site.py --workers 4 --shard 2/4
           - name: Tiers 1 + 2 (shard 3/4)
             timeout: 10
+            job_timeout: 20
             checks: |
               Tier 1 (page load) shard 3/4|python scripts/check-site.py --shard-selftest 4 && python scripts/check-site.py --workers 4 --shard 3/4
           - name: Tiers 1 + 2 (shard 4/4)
             timeout: 10
+            job_timeout: 20
             checks: |
               Tier 1 (page load) shard 4/4|python scripts/check-site.py --shard-selftest 4 && python scripts/check-site.py --workers 4 --shard 4/4
 
@@ -358,6 +362,7 @@ jobs:
           # 5 Oct 2026 (titles <= 60, descriptions <= 155, no "Year 6"); edit games.json, run apply-meta.py.
           - name: Site-wide checks
             timeout: 10
+            job_timeout: 20
             checks: |
               Links (no /schools/ redirects; every link on /updates/ resolves)|python scripts/check-canonical-links.py
               Site footer (one canonical footer, one stylesheet)|python scripts/check-footer.py
@@ -401,6 +406,7 @@ jobs:
           # the lint reads what the extraction wrote.
           - name: Tier 4 layer A (bank extraction and lint)
             timeout: 8
+            job_timeout: 18
             checks: |
               Tier 4 layer A (bank extraction)|python scripts/extract-banks.py --workers 4
               Tier 4 layer A (lint against the ledger)|python scripts/check-banks.py --ci
@@ -408,6 +414,7 @@ jobs:
 
           - name: Shared asset tests (Next control, section clicks, answer, calculator, keypad)
             timeout: 8
+            job_timeout: 18
             checks: |
               Shared Next control (schools/assets/next-control.js)|python scripts/test-next-control.py
               Portal section clicks (analytics.js section_clicked)|python scripts/test-section-clicks.py
@@ -420,8 +427,10 @@ jobs:
       # Any check may call git. In the container job the checkout belongs to the runner's user, not
       # the container's root, and git refuses a repository it does not own (exit 128). Mark this
       # workspace, and only this workspace, as safe once per job, before any check runs.
-      # It also starts the group's clock for the time budget (below): the first step after the
-      # container starts, so container start-up (about 30s) sits inside the budget's 25% headroom.
+      # It also starts the group's clock for the time budget (below), the first step after the
+      # container is up. Container start-up (the image pull) is outside the budget: GitHub counts it in
+      # the job's timeout-minutes, so that is matrix.job_timeout, the group's timeout plus a pull allowance
+      # (PULL_ALLOWANCE in ci-groups.py); the budget is still 75% of matrix.timeout, from this clock.
       - name: Mark the workspace as a safe git directory
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -571,7 +580,7 @@ jobs:
     name: ${{ matrix.name }}
     needs: plan
     runs-on: ubuntu-24.04          # pinned: see the coverage job
-    timeout-minutes: ${{ matrix.timeout }}
+    timeout-minutes: ${{ matrix.job_timeout }}
     container: *check-container
     strategy:
       fail-fast: false             # one group's failure must not hide another's
