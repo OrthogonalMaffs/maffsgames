@@ -7,6 +7,7 @@
   "Better Value tax-and-NI rule of thumb (checked with uk_rates)": "16",
   "Binomial Blaster (every key and option evaluated with SymPy, every item marked in Chromium)": "33",
   "Boolean Blitz (every key's truth table recomputed from its expression; an option right exactly when it has the key's truth table and no more literals; answer once; Chromium)": "7",
+  "Characteristic Quest (every 2x2 characteristic equation recomputed from its matrix in SymPy; every option classified; every worked line, trace, determinant and eigenvalue claim checked; every option pressed in Chromium)": "17",
   "Chart Interrogator (independent recomputation of every key and tolerance)": "16",
   "Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure)": "16",
   "Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium)": "7",
