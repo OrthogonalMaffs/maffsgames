@@ -3,6 +3,26 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-12 (cloud): VERIFIERS-20 game 14, modular-battle (#298, merge commit b220dd4)
+
+- **Verifier:** `scripts/verify-modular-battle.py`: generated game (a 10..60, b 2..9). All 408 questions are driven through the game's own `generateQ()`/`loadQuestion()` by steering the two `Math.random`
+  draws; 20,000 free draws land only on those 408 and reach all of them. Each: key = a mod b (Python divmod), min(4, b) different options from 0..b-1 with exactly one the key (SR-4/16), the dot grid
+  (floor(a/b) groups of b, then a mod b red) and its label, every option pressed (feedback figures "a÷b=q rR" / "remainder R", score, Next). Scaffold shows, withdraws after 2 right, returns after 2 wrong;
+  a session ends at 90 s with the right score. Seven planted faults fail. About 65 s with the self-test.
+- **Main's run:** 38282980872 (the #298 merge) green first time; Gate on #298 51 passed, 2 skipped.
+- **Faults fixed:** none. **Left open, not asserted:** t4-001 (says 60 s, runs 90; the portal card is outside the folder), t4-002, t4-003 (portal, spec map), t4-004 (the scaffold shows the answer: a design call).
+
+## 2026-10-12 (cloud): VERIFIERS-20 game 13, index-laws (#296, merge commit 7339c3f; ruling #297, 5cdff5c)
+
+- **Verifier:** `scripts/verify-index-laws.py`: all 45 items read from their TeX into exact SymPy expressions (positive symbols), every key worked out and the only right option (SR-4/16; the (5^2)^3 item's `ask` names a form,
+  so 25^3 is legitimately wrong); the rule labels (8/8/7/4/8/10) checked against each question; 48 sums and stated roots in the explanations recomputed; KaTeX parses everything; sessions of 12 dealt 5 times; every item shown by
+  `nextQ()` and all four options pressed in Chromium. Twelve planted faults fail after the ruling. About 35 s with the self-test.
+- **index-laws-v20-001, RULED (Jon, 12 Oct):** the convention stands: a term such as 2x^2 is one object (implied multiplication binds tighter than ÷), so `6x^7 \div 2x^2` = 3x^5; keys and stems unchanged.
+  The finding is closed as `ruled`; the verifier now reads a coefficient-and-variable term after ÷ as one term (no expected failures) and fails only a divisor that is not such a term (SR-17), in the follow-up PR.
+  The home lane records the convention as a standing ruling.
+- **Main's runs:** 38279747529 (#296) and 38281083831 (#297) green first time; both Gates 51 passed, 2 skipped.
+- **Faults fixed:** none.
+
 ## 2026-10-12 (cloud): CHECKPOINT (Jon asked for one: context very high)
 
 - **Done and merged:** games 1-7 (#282-#287, #290); the CI-TIMINGS-MEDIAN home-lane fix (#288, #289). **In flight:** game 8 four-quadrant-explorer, PR #291

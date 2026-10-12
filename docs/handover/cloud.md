@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: `
+`cloud-remaining: formula-forge`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -33,7 +33,7 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter DONE (#293); 11 equatle DONE (#294); 12 standard-form-blitz DONE (#295); 13 index-laws DONE (#296, ruling #297); 14 modular-battle DONE (#298); 15 bearing-blitz DONE (#300); 16 constructions-lab DONE (#301); between games: wrong-on-the-internet t2-006 (Jon's SR-14 ruling) #304, closes t2-006; modular-battle verifier flake fixed (#303); next formula-forge; next standard-form-blitz ... as in the contract order.
+**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter DONE (#293); 11 equatle DONE (#294); 12 standard-form-blitz DONE (#295); 13 index-laws DONE (#296, ruling #297); 14 modular-battle DONE (#298); 15 bearing-blitz DONE (#300); 16 constructions-lab DONE (#301); between games: wrong-on-the-internet t2-006 (Jon's SR-14 ruling) DONE (#304, 73478d6), closes t2-006; modular-battle verifier flake fixed (#303); 17 formula-forge claimed; then characteristic-quest, eigenvalue-extractor, prisoners-dilemma.
 UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
@@ -123,7 +123,7 @@ Reading: 379 s is over the timeout, so the container pull is consuming the timeo
 - **IN FLIGHT: wrong-on-the-internet t2-006 (Jon's SR-14 ruling, 12 Oct), branch `claude/woti-t2-006`.** Pushed: claim commit, and the one-line change in woti_core_006's correct stage-2 option
   ("At 100°C humans can't survive, let alone buy ice cream." becomes "At 100°C water boils, so nobody is queuing for ice cream."; key, options, explanation unchanged). The verify-wrong-on-the-internet.py run passed.
   **#304 open:** check-changed run (woti passes; only the container's esprima/WebKit/KaTeX failures); t2-006 set fixed with pr 304 and the ruling; the game is off the remaining line.
-  TO DO: merge on a green Gate once main's run after #303 is green, then watch main.
+  DONE: main run 830 (#303) green; #304 merged on a green Gate (73478d6).
 - **Next, games 17-20:** drafts that pass are parked on branch `claude/verifiers-17-20-drafts` in `docs/handover/drafts/`, with a README giving each one's follow-ups (formula-forge-v20-001 to file for Jon;
   characteristic-quest's t6-003 SR-6 fix as a patch; a plant label to fix in eigenvalue-extractor; prisoners-dilemma left alone on t4-001). Each game gets its own claim, PR, Gate and main run.
 - **Open for Jon:** formula-forge-v20-001 (three items with two wrong options equal in value; replacements suggested in the drafts README). Merged `claude/verifier-*` remote branches need deleting (the proxy refuses).
@@ -156,24 +156,4 @@ Reading: 379 s is over the timeout, so the container pull is consuming the timeo
   message figures, lives; sessions (24 bearings, the 16 fixed present); three misses to "Submarine Destroyed!" through the real Next; twenty hits to "All Ships Sunk!" with the score added up. Eight planted faults fail. About 95 s.
 - **Main's run:** 38285029221 (the #300 merge) green first time; Gate on #300 51 passed, 2 skipped.
 - **Faults fixed:** none; no findings for this game.
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 14, modular-battle (#298, merge commit b220dd4)
-
-- **Verifier:** `scripts/verify-modular-battle.py`: generated game (a 10..60, b 2..9). All 408 questions are driven through the game's own `generateQ()`/`loadQuestion()` by steering the two `Math.random`
-  draws; 20,000 free draws land only on those 408 and reach all of them. Each: key = a mod b (Python divmod), min(4, b) different options from 0..b-1 with exactly one the key (SR-4/16), the dot grid
-  (floor(a/b) groups of b, then a mod b red) and its label, every option pressed (feedback figures "a÷b=q rR" / "remainder R", score, Next). Scaffold shows, withdraws after 2 right, returns after 2 wrong;
-  a session ends at 90 s with the right score. Seven planted faults fail. About 65 s with the self-test.
-- **Main's run:** 38282980872 (the #298 merge) green first time; Gate on #298 51 passed, 2 skipped.
-- **Faults fixed:** none. **Left open, not asserted:** t4-001 (says 60 s, runs 90; the portal card is outside the folder), t4-002, t4-003 (portal, spec map), t4-004 (the scaffold shows the answer: a design call).
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 13, index-laws (#296, merge commit 7339c3f; ruling #297, 5cdff5c)
-
-- **Verifier:** `scripts/verify-index-laws.py`: all 45 items read from their TeX into exact SymPy expressions (positive symbols), every key worked out and the only right option (SR-4/16; the (5^2)^3 item's `ask` names a form,
-  so 25^3 is legitimately wrong); the rule labels (8/8/7/4/8/10) checked against each question; 48 sums and stated roots in the explanations recomputed; KaTeX parses everything; sessions of 12 dealt 5 times; every item shown by
-  `nextQ()` and all four options pressed in Chromium. Twelve planted faults fail after the ruling. About 35 s with the self-test.
-- **index-laws-v20-001, RULED (Jon, 12 Oct):** the convention stands: a term such as 2x^2 is one object (implied multiplication binds tighter than ÷), so `6x^7 \div 2x^2` = 3x^5; keys and stems unchanged.
-  The finding is closed as `ruled`; the verifier now reads a coefficient-and-variable term after ÷ as one term (no expected failures) and fails only a divisor that is not such a term (SR-17), in the follow-up PR.
-  The home lane records the convention as a standing ruling.
-- **Main's runs:** 38279747529 (#296) and 38281083831 (#297) green first time; both Gates 51 passed, 2 skipped.
-- **Faults fixed:** none.
 
