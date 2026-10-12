@@ -33,7 +33,7 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation in PR; next 6 think-of-a-number.
+**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number in PR #287 (verifier done; main merged in after the CI fix); next 7 formula-plug-in.
 UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
@@ -88,6 +88,39 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-12 (cloud): VERIFIERS-20 STOPPED after game 5: main's CI is red from the generated timings pack (home-lane item) - RESOLVED
+
+- **RESOLVED 12 Oct:** the home lane's CI-TIMINGS-MEDIAN (#288, d00a818) made the timings a median of the last 5 runs; main's run 791 is green and `ci-groups.py --check` passes. This branch has main merged in; VERIFIERS-20 resumes with #287, then `formula-plug-in`.
+- **STOP IF reached:** "main's full run is red after a merge and the fault is not in this lane's files". Main's run 787 (38225600227, the
+  merge of #286) failed in 1 minute: the Plan job's `python scripts/ci-groups.py --check` fails with 12 group-budget FAILs
+  (Content verifiers 1-4, 19-24, 34, 35 and Answer lock L1, each 81-108% of its budget). The same check fails on plain `main` at
+  `ef82d88`, so every open PR is red too (#287's Plan and Gate are red for this alone).
+- **Cause:** the automatic "Record CI timings and repack (run 38224711265)" commit `25f887b` (run 785) recorded inflated timings
+  (e.g. Growth and Decay 55 s to 94 s, Formula Unlocked 17 s to 28 s, while PR #286's CI ran beside it) and repacked, leaving
+  about a dozen groups above 80%. The check passed on main at `0f2f398` (before the repack) and failed from `25f887b`. The timings job
+  only runs after a green full run, so main cannot repack itself out: it needs a home-lane commit. `scripts/ci-timings.json`
+  and `scripts/ci-pack.json` are generated files outside this lane, so none was edited.
+- **For the home lane:** restore the pack (for example revert `25f887b`, or re-record the timings from a quiet run and run
+  `python scripts/ci-groups.py --write-pack`), and consider recording the median of several runs so one slow run cannot break the
+  check. Note also that each new verifier line counts as 120 s until a main run times it.
+- **State of play:** games 1-5 done and merged (#282-#286; main runs 779, 781, 783, 785 green, 787 red for the reason above). Game 6
+  `think-of-a-number` is built and passing (`scripts/verify-think-of-a-number.py`, 50 items, four planted faults caught) in PR #287,
+  which is merged-ready except for the red Plan/Gate. Games 7-20 not started. Game 6 is off the remaining list in this PR;
+  nothing is claimed.
+- **To resume:** once main's `ci-groups.py --check` passes again, merge `main` into `claude/verifier-think-of-a-number`, push, merge #287 on
+  a green Gate, then continue with `formula-plug-in`.
+- **Open for Jon:** delete branches `claude/verifier-prime-or-composite` and the other merged `claude/verifier-*` branches on GitHub (the
+  proxy refuses remote deletes).
+
+## 2026-10-12 (cloud): VERIFIERS-20 game 5, prime-factorisation (#286, merge commit ef82d88)
+
+- **Verifier:** `scripts/verify-prime-factorisation.py`: both target banks (28 + 20) factorised by trial division, every prime factor
+  on a button (buttons checked to be 2, 3, 5, 7, 11, 13), sessions of 8 different targets, and 4273 taps (ascending, descending,
+  one too many, every button, non-dividing taps, seeded random) replayed against a model of the rule in Chromium: lives, product,
+  hearts, product line, "T = p x q (+200)", "p is not a factor here!" and the out-of-lives factorisation. Four planted faults all fail.
+- **Faults fixed:** none. **Expected failures left open:** none (t3-001..004 stay open as before).
+- **Main's run:** 785 (game 4's merge) green.
+
 ## 2026-10-12 (cloud): VERIFIERS-20 game 4, factor-race (#285, merge commit 0f2f398)
 
 - **Verifier:** `scripts/verify-factor-race.py`: the 20 Year 6 pairs (numbers 1-50, counts differ, no repeat, sessions of 10) and the
@@ -131,108 +164,3 @@ main's last full run is red; watch main's run after merging.
   `check-changed.py` shows environment failures (B11, calculator, answer-lock parts, teacher feedback) that CI does not.
   Python needs `pip install playwright==1.63.0 sympy mpmath`, and Chromium 1194 through scratch symlinks named 1243.
 - **Open for Jon:** delete branch `claude/verifier-prime-or-composite` in GitHub (the proxy refused the remote delete).
-
-## 2026-10-11 (cloud): RK-STICKY-NOTE, The Rightful King's passcode note says no key repeats anywhere (Jon's play-test)
-
-- **Why:** "NEVER THE SAME KEY TWICE" read as "not twice in a row" gives 8 × 7 × 7 = 392, not the key 336.
-- **room.js:** the sticky note now reads "ADMIN PASSCODE: {{pc.L}} KEYS, NO KEY USED MORE THAN ONCE." (the count is
-  still the token; every variant has L = 3). The miss feedback quoted the old note ("the note says never the same key
-  twice"), so it now quotes the new one. Answer, variants and key counts unchanged.
-- **teacher.html:** the clue map's line for the note matches, and "Running it" gains the 392 misconception
-  (k × (k − 1) × (k − 1)). The teacher page has no per-lock field for a second misconception, so it goes in the notes.
-- **Left as history:** `docs/lock-bank-batch9.txt` line 21 and the draft still carry the old wording.
-- check-escape-rooms passes; the teacher page in Chromium shows the new wording and 392, none of the old.
-
-## 2026-10-10 (cloud): UPDATES-WEEKEND, /updates/ October entries (Jon's wording, checked against main)
-
-- **DONE.** #272 merged 10 Oct (d96aeb2); main's run 758 is green.
-- **First pass stopped** (STOP IF): four claims differed from the code. Library Jam "our first ★ Warm-up room"
-  (Comic Caper and Kiln Disaster already are) and Bibby fining the class (the library system does); calculator five
-  games, not six (Growth and Decay, #239); Boolean Blitz "no longer than the simplest form" (AB + BC is longer than
-  B(A + C); #227); Wrong on the Internet "spinner" (a roulette wheel and two independent events; #223). Minor: Your
-  Scores is a section of /leaderboards/ (#238). **Jon approved the proposed wording for all five (23:00+).**
-- **Jon's rulings:** Rightful King topic "repeated percentage decrease" (each minute takes a percentage of what is
-  left); rooms go before Car Trap, as #271 has them (newest first).
-- **Done:** New gains stars (#253), calculator (#239, #261, #264-#267) and scores (#238) after Car Trap; Corrected
-  gains Boolean Blitz (#227), 2C (#225), 2B (#226), Wrong on the Internet (#223) at the top (newest first).
-- **Rooms:** #271 merged while #272 was open (main run 755 green), so the two room lines #271 added are replaced
-  with Jon's approved text, in #271's placement (before Car Trap). The interim home.md note is removed (the cloud
-  lane's own addition; home.md otherwise as main). Log Laws: no fix merged, item left out.
-
-## 2026-10-10 (cloud): LIBRARY-JAM-BUILD, The Library Jam built behind its holding page (for Jon's play-test)
-
-- **Jon can play-test it at `/escape-rooms/library-jam/play.html`** once the PR merges (noindex, unlinked, analytics
-  off). `index.html` is a noindex holding page and `teacher.html` the real teacher page. No hub card until release.
-- **The stop and Jon's ruling (10 Oct):**
-  - `keep()`'s end-of-travel rule rejected every keypad answer under 400.
-  - **Jon: exempt every keypad, in this PR.** `keypad(n)` now returns a `Keypad` range, and `keep()` skips that
-    rule for it. Prom's, Heatwave's and Kiln's keypads use `keypad(n)` too.
-  - **Proof:** every other room's room.js and all 34 existing libraries in variants.json are identical to main's.
-  - Lock C also has `minsep=1` (answers only have to differ, the draft's rule); the default spread of 5% of 0-9999
-    kept one set.
-- **Locks (bank batch 10; unique: 3, 143, 54).** Each library is the draft's own sets:
-  - `dewey-sort-arm`: grade 2, ordering decimals; eight shelves, spread off.
-  - `deflector-straight-line`: grade 1, angles on a straight line; eight angles, five-degree spread.
-  - `fines-pence-to-pounds`: grade 2, pence to pounds with no calculator; ten sets on maxDigits 4.
-  - **★ Warm-up derived** (grades 1–3). No `levelLabel`: Jon agreed, the stars replace it.
-- **check-escape-rooms:** library-jam VALID **572 of 640**, variant 0 VALID (the draft's figure).
-- **The teacher page at 320 px:** 538 px here (`table.tt`). It is allowlisted under §1.37 like the other ten (Jon);
-  if CI measures differently, CI's figure goes in.
-- **Played headless (three random draws and variant 0, all PASS):**
-  - The start screen shows ★ WARM-UP · GRADES 1–3.
-  - 8 objects and 3 briefs on screen, every token filled.
-  - The wrong lines come in order, then the last repeats, Jon's line 3 among them. Each misconception gives its
-    response.
-  - On variant 0, **5400 on the real keys shows "5400" with no empty slots and gives the named misconception; 54
-    opens.** Then the win screen ("They were here all along").
-  - A time-out ends on the stakes. No errors, no 4xx, nothing sent to analytics.
-  - The teacher page shows ★ only, no "Suits a top set", and the no-calculator note.
-
-## 2026-10-10 (cloud): RIGHTFUL-KING-BUILD, The Rightful King built behind its holding page (for Jon's play-test)
-
-- **Jon can play-test it at `/escape-rooms/rightful-king/play.html`** (noindex, linked from nowhere, analytics off).
-  `index.html` is a noindex "coming soon" holding page; `teacher.html` is the real teacher page (noindex, unlinked).
-  There is no hub card, sitemap entry or count change: the release contract brings those, with the ★★★ chip.
-- **Art pending:** no `art` field, so no picture is requested. Jon generates the three pictures after his play-test.
-  The alts are the draft's.
-- **Locks (bank batch 9, `docs/lock-bank-batch9.txt`; check-lock-bank: unique on all three):**
-  - `admin-passcode-product-rule`, grade 6: the product rule with no repeats (Higher). maxDigits 3; k = 5 to 9 with
-    L = 3 (60, 120, 210, 336, 504); variant 0 is k = 7.
-  - `vote-log-overwrite`, grade 5: building powers of one multiplier, the method #253 graded 5 in Prom (the draft
-    said 7). The library is the draft's ten sets, each through the rules, including (1 - f) x 100 not a multiple
-    of r. The generator asserts that the 3 d.p. powers keep their comparison with the threshold.
-  - `leak-audit-conditional`, grade 7: conditional probability from a Venn diagram (Higher). The library is the
-    draft's seven sets, under its story rules.
-- **Derived rating, from check-escape-rooms' own `room_rating()`: ★★★ Challenge (grades 6–9).** No grade was fitted.
-- **check-escape-rooms:** rightful-king VALID **215 of 350**, variant 0 VALID (the draft measured 183 of 280; the
-  fifth passcode set adds draws).
-- **The old URL:** `it-vengeance/index.html` is a noindex meta-refresh to `/escape-rooms/rightful-king/` with a
-  plain link (ruling 6). `it-vengeance/room.js` and `teacher.html` stay as history. The checker reads every room
-  folder; a noindex index makes it not live, so it needs no card or grade.
-- **Played headless (scratch script, four draws, all PASS):**
-  - Start screen: the brief, ★★★ CHALLENGE · GRADES 6–9, and the stakes after "If you get it wrong."
-  - All 8 objects and all 3 lock briefs on screen, every token filled.
-  - Four wrong lines in order, then the last repeats. Each misconception gives its own response.
-  - All three locks open; k = 5's 60 opens on the up-to-three-digit keypad. Then the win screen ("It was my
-    prompt").
-  - A time-out ends on the stakes after "And so:".
-  - No page errors, no 4xx, nothing sent to analytics.
-  - The teacher page shows ★★★, "Suits a top set" and the calculator note. The old URL lands on the holding page.
-- **Generator:** run through a scratch wrapper that swaps in this checkout's paths. Before the M block went in, a run
-  reproduced every existing library byte for byte.
-- **Teacher page at 320 px:** 558 px wide (`table.tt`, the shared overflow, todo §1.37). It is allowlisted in the
-  same form as the other nine teacher pages, per Jon's CAR-TRAP-ONE-LANE contract; §1.37 (`engine.css`, home lane)
-  stays the real fix for all ten. LIBRARY-JAM-BUILD's teacher page got the same entry (#262).
-
-## 2026-10-10 (cloud): LIBRARY-DRAFT, Library room draft for Jon's review
-
-- **The draft:** `docs/escape-room-drafts/library-draft.md`. It has three title options; **Jon chose The Library Jam
-  (10 Oct)**, slug proposed `library-jam`, every slot, three locks with libraries (8, 8 and 10 variants), the alts, hub and meta lines,
-  and the checklist. Jon's line is wrong-entry line 3, verbatim. No art prompts.
-- **For Jon 1, the big one: lock C needs a keypad that takes "up to four digits", and the engine's keypad takes
-  exactly `digits`** (`engine.js:610`, and `:593` drops extra digits). A four-digit keypad shows four slots, which
-  steers a student to 5400, the misconception. A two-digit keypad turns a typed 5400 into 54, right by accident.
-  Rightful King's lock 1 hit the same limit, so the fix is shared: an opt-in variable-length keypad in `engine.js`
-  (home lane), plus the generator's `keep()` edge rule for keypads. Recommended before phase 2.
-- **Measured (scratch):** the checker's own `draw_is_valid()` on the draft's clues gives **572 of 640 VALID, variant
-  0 VALID**. Fines are multiples of 5p, to stay non-calculator (For Jon 6).
