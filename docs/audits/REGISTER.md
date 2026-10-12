@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 7 | 205 | 0 | 212 |
-| MEDIUM | 126 | 148 | 3 | 277 |
+| MEDIUM | 118 | 156 | 3 | 277 |
 | LOW | 33 | 32 | 1 | 66 |
-| **All** | 167 | 411 | 4 | 582 |
+| **All** | 159 | 419 | 4 | 582 |
 
 ### By class
 
@@ -37,7 +37,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 1 | 5 | 37 |
 | NEW:wrong-explanation-text | 10 | 36 |
 | 5 | 26 | 26 |
-| 4 | 19 | 22 |
+| 4 | 11 | 22 |
 | 7 | 5 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
 | NEW:convention-unstated | 1 | 12 |
@@ -129,7 +129,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `angle-ace` | yes | verify-angle-ace.py | 0 | 6 | 7 | 0 | 0 | 13 | 0 |
 | `bearing-blitz` | yes | verify-bearing-blitz.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `better-value` | yes | verify-better-value.py | 0 | 5 | 4 | 0 | 3 | 6 | 0 |
-| `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 2 | 20 | 0 |
+| `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 1 | 21 | 0 |
 | `boolean-blitz` | yes | verify-boolean-blitz.py | 0 | 3 | 0 | 5 | 5 | 3 | 0 |
 | `characteristic-quest` | yes | verify-characteristic-quest.py | 0 | 1 | 3 | 1 | 3 | 2 | 0 |
 | `complex-converter` | yes | verify-complex-converter.py | 0 | 1 | 5 | 1 | 4 | 3 | 0 |
@@ -140,9 +140,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `core-maths-paper2b` | yes | verify-core-maths-paper2b.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `core-maths-paper2c` | yes | verify-core-maths-paper2c.py | 0 | 3 | 5 | 1 | 6 | 3 | 0 |
 | `correlation-or-coincidence` | yes | verify-correlation-or-coincidence.py | 1 | 0 | 2 | 0 | 0 | 3 | 0 |
-| `curling-friction` | yes | verify-curling-friction.py | 0 | 3 | 3 | 2 | 2 | 6 | 0 |
+| `curling-friction` | yes | verify-curling-friction.py | 0 | 3 | 3 | 2 | 1 | 7 | 0 |
 | `decimal-detective` | yes | verify-decimal-detective.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
-| `differentiation-duel` | yes | verify-differentiation-duel.py | 0 | 2 | 10 | 2 | 2 | 12 | 0 |
+| `differentiation-duel` | yes | verify-differentiation-duel.py | 0 | 2 | 10 | 2 | 0 | 14 | 0 |
 | `dimension-checker` | yes | verify-dimension-checker.py | 0 | 3 | 3 | 1 | 2 | 5 | 0 |
 | `eigenvalue-extractor` | yes | verify-eigenvalue-extractor.py | 0 | 1 | 3 | 1 | 4 | 1 | 0 |
 | `eigenvector-engine` | yes | verify-eigenvector-engine.py | 1 | 1 | 2 | 8 | 1 | 11 | 0 |
@@ -154,7 +154,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `expected-damage` | yes | verify-expected-damage.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `factor-race` | yes | verify-factor-race.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `factor-theorem` | yes | verify-factor-theorem.py | 2 | 5 | 11 | 1 | 2 | 16 | 1 |
-| `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 2 | 13 | 0 |
+| `force-resolver` | yes | verify-force-resolver.py | 1 | 7 | 5 | 2 | 1 | 14 | 0 |
 | `formula-forge` | yes | verify-formula-forge.py | 0 | 1 | 6 | 1 | 6 | 2 | 0 |
 | `formula-plug-in` | yes | verify-formula-plug-in.py | 0 | 1 | 4 | 1 | 5 | 1 | 0 |
 | `formula-unlocked` | yes | verify-formula-unlocked.py | 0 | 1 | 0 | 1 | 0 | 2 | 0 |
@@ -171,14 +171,14 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `log-laws` | yes | verify-log-laws.py | 1 | 4 | 0 | 2 | 0 | 7 | 0 |
 | `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 3 | 1 | 4 | 2 | 0 |
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
-| `moments-master` | yes | verify-moments-master.py | 1 | 8 | 4 | 2 | 3 | 12 | 0 |
+| `moments-master` | yes | verify-moments-master.py | 1 | 8 | 4 | 2 | 2 | 13 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `new-shapes` | yes | verify-new-shapes.py | 0 | 1 | 7 | 1 | 8 | 1 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 3 | 1 | 1 | 10 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
 | `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
-| `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 4 | 1 | 5 | 2 | 0 |
+| `prisoners-dilemma` | yes | verify-prisoners-dilemma.py | 0 | 2 | 4 | 1 | 4 | 3 | 0 |
 | `probability-paradox` | yes | verify-probability-paradox.py | 1 | 4 | 5 | 1 | 0 | 11 | 0 |
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
@@ -186,7 +186,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 10 | 2 | 1 | 15 | 1 |
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 2 | 0 | 2 | 1 | 0 |
-| `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 6 | 1 | 7 | 2 | 0 |
+| `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 6 | 1 | 6 | 3 | 0 |
 | `shape-shifter` | yes | verify-shape-shifter.py | 2 | 1 | 5 | 1 | 5 | 4 | 0 |
 | `spot-the-error` | yes | verify-spot-the-error.py | 0 | 13 | 4 | 2 | 0 | 19 | 0 |
 | `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 4 | 0 | 0 | 8 | 1 |
