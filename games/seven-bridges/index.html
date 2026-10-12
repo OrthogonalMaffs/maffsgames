@@ -137,6 +137,7 @@ body.accessible p,body.accessible .status-msg,body.accessible .hint-bar{line-hei
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -890,9 +891,8 @@ const finishOnceGame = MaffsLock.finishOnce(function () {
 //  LEVEL FROM URL PARAM
 // ============================================================
 (function(){
-  var params = new URLSearchParams(window.location.search);
-  var lvl = params.get('level');
-  if (lvl && PUZZLE_BANKS[lvl]) {
+  var lvl = MaffsLevel.resolve({slug:'seven-bridges',levels:['ks3','gcse','alevel'],fallback:'ks3'});
+  if (MaffsLevel.declared('seven-bridges').fromUrl) {
     selectLevel(lvl);
   }
 })();

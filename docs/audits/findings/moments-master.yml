@@ -107,7 +107,9 @@ findings:
   where: games/moments-master/index.html:195
   summary: ?level=constructor/__proto__ throw on Start; nonsense silently falls back to alevel
   evidence: pageerror 'QUESTIONS[level] is not iterable'
-  status: open
+  status: fixed
+  pr: 317
+  ruling: 'Contract LEVEL-RESOLVER (Jon, 12 Oct 2026): the game reads ?level through MaffsLevel.resolve; an unknown key gives its default level and a stray board cannot be created (canon 4.5).'
 - id: moments-master-t5-011
   severity: MEDIUM
   jc: false

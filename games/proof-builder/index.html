@@ -111,6 +111,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/options.js"></script>
@@ -226,8 +227,7 @@ const BASE=100,T_K=0.15,MAX_Q=15;
 
 // Level buttons
 document.querySelectorAll('.lvl-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.lvl-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level;updateInductionAccess()})});
-const pa=new URLSearchParams(location.search);
-if(pa.get('level')&&['alevel','further'].includes(pa.get('level'))){level=pa.get('level');document.querySelectorAll('.lvl-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+{const lv=MaffsLevel.resolve({slug:'proof-builder',levels:['alevel','further'],fallback:'alevel'});if(lv!==level){level=lv;document.querySelectorAll('.lvl-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}}
 function updateInductionAccess(){document.getElementById('inductionCard').classList.toggle('locked',level!=='further')}
 updateInductionAccess();
 

@@ -98,7 +98,9 @@ findings:
   where: games/seven-bridges/index.html:864
   summary: ?level=constructor/__proto__ throws on load
   evidence: selectLevel reads classList of null; page stays usable.
-  status: open
+  status: fixed
+  pr: 317
+  ruling: 'Contract LEVEL-RESOLVER (Jon, 12 Oct 2026): the game reads ?level through MaffsLevel.resolve; an unknown key gives its default level and a stray board cannot be created (canon 4.5).'
 - id: seven-bridges-t4-009
   severity: LOW
   jc: false

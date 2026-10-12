@@ -1,5 +1,7 @@
 # Handover: home lane
 
+**LEVEL-RESOLVER batch 1 (12 Oct; PR #317, branch `claude/level-batch-1`).** Migrated: higher-power, prisoners-dilemma, seven-bridges, binomial-blaster, curling-friction, differentiation-duel, force-resolver, moments-master, integration-duel, proof-builder (MIGRATED in `check-levels.py`; `test-level.py --games` plays each at junk and declared keys, 4 lock-tier parts). Closed: the entries that are only the ?level fault. integration-duel-t5-010 and proof-builder-t5-024 are composite (other faults in the same entry) and stay open; higher-power-t2-002 is class 4 but a streak crash, not ?level. **Held back for Jon (roster says more levels than the game has content for; removing a listing is Jon's call, no usage data to hand):** factor-race (roster lists GCSE; game plays ks3/year6 only), modular-battle (roster/card list A-Level; the game is GCSE only; its page title also says A-Level), dimension-checker (roster lists A-Level; one L4 bank, submits as level4), partial-fractions-duel (roster lists Level 4; alevel bank only). They stay on NOT_YET. **Next batch:** the other class-4 games (suvat, characteristic-quest, complex-converter, matrix-crunch), then the rest of the 99, lowest roster level first.
+
 **LEVEL-RESOLVER (12 Oct, Jon's contract; PR 1 of the migration, branch `claude/level-resolver`).** Shared layer built: `schools/assets/level.js` (`MaffsLevel.resolve/declared/allows`, canon 4.5), a guard in `submitScore` (undeclared level = warn and no submit; undeclared pages unchanged), `scripts/check-levels.py` (declaration = roster, links/cards/sitemap, own-code reader, NOT_YET = 99 games, three plants) and `scripts/test-level.py` (Chromium; property-lookup plant caught). Listing fixes: binomial-blaster's card dropped `l4` (the game has no Level 4 content). **For Jon:** the nine Year 6-only cards also list `ks3`; I kept that as a documented alias (the portal has no Year 6 filter, so removing it would hide them from every filter but All). Decisions: an absent `?level` leaves the URL alone; matching is exact-case; `boards` is an extra declared list for session-length and tournament boards. **Next:** batches of about 10 from the 19 open class-4 findings (18 games), lowest roster level first; each moves games from NOT_YET_AT_START to MIGRATED in `check-levels.py`.
 
 **PD-TOURNAMENT-BOARD (12 Oct, Jon's contract; PR #314, branch `claude/pd-tournament-board`).** prisoners-dilemma-t4-001 fixed per SR-22: single matches submit nothing; a completed tournament submits the player's total out of 20 x opponents under `<level>-tournament`. Hub lists the four tournament boards; the old per-level boards stay in Firebase, unlisted. `check-leaderboard-coverage.js` now fails if any PD submit is not `currentLevel+'-tournament'`, and PD's score-history keys are declared in HISTORY_ONLY_KEYS. **Contract conflict, for Jon:** the contract says do not touch `firebase-leaderboard.js`, but the coverage check requires `levelLabel()` to name every submitted key, and the only way is LEVEL_NAMES; I added four label entries there (data only, no logic) rather than stop. Node is not installed on the Windows machine, so the check ran only in CI and the planted-fail was shown by a Python re-implementation of the rule.
@@ -25,31 +27,6 @@ main:** run 791 (38230011527) green, its timings job ran the new path and commit
 `--check` passes on main. Canon §7.8.1 and CLAUDE.md have a sentence each. **For the cloud lane:** merge `main` into
 `claude/verifier-think-of-a-number`, push, merge #287 on a green Gate, then continue at `formula-plug-in`. No budget,
 `TARGET`/`FAIL`, timeout, verifier or `ci-pack.json` (by hand) was touched.
-
-**SPLIT-IT-KATEX (11 Oct, Jon's contract; branch `claude/split-it-katex`): todo §1.48 CLOSED.** split-it now loads
-KaTeX (CDN, as suvat) and `mathtext.js`. Fractions in working/feedback text render via `F()` (`rac`); `X()` gives
-a whole number or lowest-terms `rac`. Fixed: speed working (13.33.. -> stacked 40/3; distance uses the same
-value), the fractions-mode working and simplify message, and the GCSE scale-factor working and hint (5/3 had
-printed 1.6666666666666667). `showFeedback` runs through `MaffsText.html`. Unit label drawn once, after the input
-(money keeps its prefix). Keys, marking and scoring untouched. Checked: 48,000 generated questions, no float
-artefact (610 stacked speeds, 730 whole); 375px render, no overflow; check-changed 28/28. **For Jon:** the
-fractions-mode answer INPUT is still two boxes with a CSS bar (`.frac-wrap`): it is a control, not a displayed
-fraction, and KaTeX cannot hold inputs, so it stays. Scans (report-only): `docs/audits/split-it-fraction-scan-2026-10-11.md`.
-
-**ESCAPE-CANON-LABEL (11 Oct, Jon's contract; branch `claude/escape-canon-label`).** Canon §11.3-11.5 brought
-up to date with the live rooms and #278, no figures derived from repo content: §11.3's ratings roster is now a
-pointer (each rating derives from lock grades, is recorded as `data-stars` on the cards, and is printed in the
-CI log; both new rooms came out as Jon ruled, hub ★★★ and ★, so no STOP); the plants sentence names all three;
-"The live rooms all use `digits`" and its "waiting on" drafts replaced (maxDigits was built for the two new
-rooms; each lock's mode is in its `room.js`). §11.4: the gate's row describes the per-set re-check, the
-fixture, the plants and the printed counts; new row for `escape_set_checks.py`; the generator's row
-corrected. §11.5: "All eight rooms" and "The two withdrawn rooms" gone (described, with The IT Teacher's
-Vengeance's redirect and Car Trap's return); "drawn out of Jon" kept, with the ally-and-clock rooms noted.
-**CI label: already single-source.** The `# ci-line:` header in `check-escape-rooms.py` is the source;
-`ci-pack.json` and `ci-timings.json` are caches that main's "CI timings" job rewrites wholesale after every
-full run (`write_pack` from the headers, `record_timings` from the run's log), so an old label drops out of
-both. Only the header changed; the JSON files were not hand-edited. Until main's next full run times it, the
-renamed line counts as 120 s and runs in a group of its own (`ci-groups.py --check` passes). (The stale voice-rewrite §5 status table is fixed by ROOM-STATUS-ONE-TABLE, above.)
 
 **ESCAPE-SET-CHECKS (11 Oct, Jon's contract; branch `claude/escape-set-checks`).** The per-set checks moved out
 of `gen-escape-variants.py` into **`scripts/escape_set_checks.py`** (pure, no I/O), unchanged: keep()'s tests ->
