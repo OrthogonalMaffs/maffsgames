@@ -3,6 +3,14 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-12 (cloud): VERIFIERS-20 game 15, bearing-blitz (#300, merge commit 3575276)
+
+- **Verifier:** `scripts/verify-bearing-blitz.py`: no option list (the key is the target bearing; the mark is the needle's error). All 360 whole-degree bearings pressed on the real compass (whole-pixel points chosen
+  here within 0.35 degrees) and read back clockwise from North, with the needle drawn along each; 798 shots through Fire for 38 targets at -10..+10 degrees (every 0/360 wrap): hit within 5, points 150/100/50,
+  message figures, lives; sessions (24 bearings, the 16 fixed present); three misses to "Submarine Destroyed!" through the real Next; twenty hits to "All Ships Sunk!" with the score added up. Eight planted faults fail. About 95 s.
+- **Main's run:** 38285029221 (the #300 merge) green first time; Gate on #300 51 passed, 2 skipped.
+- **Faults fixed:** none; no findings for this game.
+
 ## 2026-10-12 (cloud): VERIFIERS-20 game 14, modular-battle (#298, merge commit b220dd4)
 
 - **Verifier:** `scripts/verify-modular-battle.py`: generated game (a 10..60, b 2..9). All 408 questions are driven through the game's own `generateQ()`/`loadQuestion()` by steering the two `Math.random`
