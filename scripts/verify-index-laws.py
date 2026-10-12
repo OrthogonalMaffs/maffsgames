@@ -15,9 +15,11 @@ x^0 = 1 hold as the lesson teaches; nothing is floated):
     (SR-4/SR-16), so a distractor equal in value is a second right answer. The one exception is a question whose `ask` names
     a form ("a single power of 5"): there an equal option is wrong when it is not that form (25^3), and exactly one option is
     a power of that base equal to the value.
-  Ambiguity (SR-17): each stem is also read strictly left to right; a stem whose value then differs from the key is a notation
-    puzzle. Three divide stems by a coefficient-and-variable term without brackets (6x^7 ÷ 2x^2, 12x^9 ÷ 4x^3, 20a^4 ÷ 5a) are
-    listed as the expected failure index-laws-v20-001 (left open for Jon); any other fails.
+  Convention (Jon's ruling, 12 Oct 2026, index-laws-v20-001): a coefficient-and-variable term such as 2x^2 is one object;
+    implied multiplication binds tighter than ÷, so 6x^7 ÷ 2x^2 divides by the whole term (3x^5). The keys are read that way.
+  Ambiguity (SR-17): each stem is also read strictly left to right. Where the two readings differ, every divisor must be a
+    coefficient-and-variable term, so the convention gives the stem one reading; a divisor that is anything else (a number
+    juxtaposed with a bracket, 2(x^3)) reads two ways under the convention and fails.
   Rule: each item's rule label fits its question (multiply: a product; divide: a quotient; power of a power: a bracket raised
     to a power; zero: an exponent 0; negative: a negative exponent or 1 over a power; fractional: a fractional exponent), and
     the six rules hold 8, 8, 7, 4, 8 and 10 items.
@@ -47,10 +49,8 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'index-laws'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
-# Stems that divide by a coefficient-and-variable term without brackets or a fraction bar. Read strictly left to right they have a
-# different value from the key (6x^7 / 2 * x^2 = 3x^9, not 3x^5); read as printed in algebra, as the audit and the game's own
-# explanation do, they are right. SR-17 asks for conventions stated in the question. Left open as index-laws-v20-001 for Jon.
-AMBIGUOUS = {'6x^7 \\div 2x^2': 'index-laws-v20-001', '12x^9 \\div 4x^3': 'index-laws-v20-001', '20a^4 \\div 5a': 'index-laws-v20-001'}
+# A coefficient-and-variable term (Jon's ruling, 12 Oct 2026): an optional number, then letters each with an optional power.
+TERM = re.compile(r'\s*\d*(?:\.\d+)?\s*(?:[xa]\s*(?:\^\s*(?:\{(?:[^{}]|\{[^{}]*\})*\}|-?\d+))?\s*)+')
 RULES = {'Multiply Rule': 8, 'Divide Rule': 8, 'Power of a Power': 7, 'Zero Power': 4, 'Negative Power': 8, 'Fractional Power': 10}
 X, A = Symbol('x', positive=True), Symbol('a', positive=True)
 SUPER = str.maketrans('⁰¹²³⁴⁵⁶⁷⁸⁹⁻', '0123456789-')
@@ -69,6 +69,24 @@ def group(s, i, open_='{', close='}'):
                 return s[i + 1:j], j + 1
         j += 1
     raise ValueError('unbalanced %r' % s)
+
+
+def divisor_end(s, i):
+    """Where the term after a \\div that starts at s[i] ends: the next \\times, \\div, + or - outside brackets."""
+    j, depth = i, 0
+    while j < len(s):
+        if s[j] in '{(':
+            depth += 1
+        elif s[j] in '})':
+            depth -= 1
+        elif depth == 0 and (s.startswith('\\times', j) or s.startswith('\\div', j) or s[j] in '+-'):
+            break
+        j += 1
+    return j
+
+
+def divisors(s):
+    return [s[m.end():divisor_end(s, m.end())] for m in re.finditer(r'\\div', s)]
 
 
 def conv(s, strict=False):
@@ -101,16 +119,8 @@ def conv(s, strict=False):
             i += 4
             if strict:
                 out += '/'                  # strictly left to right: (6x^7 / 2) * x^2
-            else:                           # the printed convention: a division by a term divides by all of it
-                j, depth = i, 0
-                while j < len(s):
-                    if s[j] in '{(':
-                        depth += 1
-                    elif s[j] in '})':
-                        depth -= 1
-                    elif depth == 0 and (s.startswith('\\times', j) or s.startswith('\\div', j) or s[j] in '+-'):
-                        break
-                    j += 1
+            else:                           # the convention: a division by a term divides by all of it
+                j = divisor_end(s, i)
                 out += '/(%s)' % conv(s[i:j])
                 i = j
         elif s[i] == '^':
@@ -189,7 +199,7 @@ LABELS = {
 
 
 def check_bank(fails, bank):
-    counts, seen, nclaims, seen_amb = {}, set(), 0, set()
+    counts, seen, nclaims = {}, set(), 0
     for i, q in enumerate(bank, 1):
         where = 'item %d (%s)' % (i, q['q'])
         counts[q['rule']] = counts.get(q['rule'], 0) + 1
@@ -210,15 +220,12 @@ def check_bank(fails, bank):
             continue
         if not same(ov[0], v):
             fails.append('key: %s: keyed %s but the question works out to %s' % (where, q['correct'], v))
-        try:
-            strict = val(q['q'], strict=True)
-            if not same(strict, v):
-                if q['q'] in AMBIGUOUS:
-                    seen_amb.add(q['q'])
-                else:
-                    fails.append('ambiguity: %s: read strictly left to right it is %s, not %s (SR-17: state the convention or use a fraction)' % (where, strict, v))
-        except Exception:
-            pass
+        strict = val(q['q'], strict=True)
+        if not same(strict, v):
+            odd = [d for d in divisors(q['q']) if not TERM.fullmatch(d)]
+            if odd:
+                fails.append('ambiguity: %s: the divisor %r is not a coefficient-and-variable term, so the stem reads two ways (%s or %s; SR-17)' % (
+                    where, odd[0].strip(), v, strict))
         ask = q.get('ask')
         if ask:
             m = re.search(r'single power of (\d+)', ask)
@@ -232,9 +239,6 @@ def check_bank(fails, bank):
         nclaims += len(ok)
         for b in bad:
             fails.append('working: %s: the explanation %r says %s, which is false' % (where, q['exp'], b))
-    for stem in AMBIGUOUS:
-        if stem not in seen_amb:
-            fails.append('ambiguity: the expected ambiguous stem %r (%s) is no longer ambiguous: close the finding and remove it from AMBIGUOUS' % (stem, AMBIGUOUS[stem]))
     if counts != RULES:
         fails.append('rule: the rules hold %r, expected %r' % (counts, RULES))
     return nclaims
@@ -374,9 +378,11 @@ PLANTS = [
      [("exp:'Add the powers: 3+4=7'", "exp:'Add the powers: 3+4=8'")]),
     ('a wrong stated root in an explanation', 'working:',
      [("Cube root of 27 is 3 (3³=27)", "Cube root of 27 is 9 (3³=27)")]),
-    ('SR-17: a new unbracketed divide stem (8x^8 / 2x^3, key right as printed)', 'ambiguity:',
-     [("{rule:'Divide Rule', q:'x^8 \\\\div x^3', correct:'x^5',\n    wrong:['x^{11}','x^{24}','x^{-5}'], exp:'Subtract the powers: 8-3=5'}",
-       "{rule:'Divide Rule', q:'8x^8 \\\\div 2x^3', correct:'4x^5',\n    wrong:['x^{11}','x^{24}','x^{-5}'], exp:'Subtract the powers: 8-3=5'}")]),
+    ('the strict reading keyed (3x^9 for 6x^7 ÷ 2x^2; the ruling says 3x^5)', 'key:',
+     [("correct:'3x^5',\n    wrong:['4x^5','3x^9','12x^5']", "correct:'3x^9',\n    wrong:['4x^5','3x^5','12x^5']")]),
+    ('SR-17: a divisor that is not a term (6x^8 ÷ 2(x^3)) reads two ways', 'ambiguity:',
+     [("{rule:'Divide Rule', q:'x^8 \\\\div x^3', correct:'x^5',",
+       "{rule:'Divide Rule', q:'6x^8 \\\\div 2(x^3)', correct:'3x^5',")]),
     ('a divide item labelled as multiply', 'rule:',
      [("{rule:'Divide Rule', q:'x^8 \\\\div x^3'", "{rule:'Multiply Rule', q:'x^8 \\\\div x^3'")]),
     ('a misspelt TeX command', 'render:',
@@ -401,8 +407,6 @@ def main():
     st = play(fails, html)
     print('%s: %d items, every key worked out symbolically from its TeX; every option classified; %d sums and roots in the explanations '
           'recomputed; every option pressed in Chromium' % (SLUG, st.get('items', 0), st.get('claims', 0)))
-    for stem, fid in AMBIGUOUS.items():
-        print('  expected failure left open: %s (the stem %s divides by an unbracketed term; strictly left to right it has another value)' % (fid, stem))
     ok = True
     if not args.no_selftest and not args.against:
         for what, tag, edits in PLANTS:
