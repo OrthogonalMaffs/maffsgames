@@ -1435,6 +1435,13 @@ at 5m17s of 6m; each fix was another hand-made group (B5, E2), which only bought
   when one passes 70%.
 - **A line with no recorded time counts as its tier's default** (content 120 s, lock 300 s) and is flagged
   (`ci-groups.py --check` lists it) until a main run times it.
+- **The timings are the median of the last 5 main runs, and the timings job commits only a pack that passes
+  `--check`** (CI-TIMINGS-MEDIAN, 12 Oct 2026). `scripts/ci-timings.json` keeps those runs under `history` and its
+  top-level `setup` and `lines` are their medians, so one slow run moves nothing. **Why:** main run 785 had one slow
+  group, recorded a 125 s setup against 18-28 s in the eleven records before it, and the repack against that left
+  twelve groups past 80%, so `--check` failed on main and on every PR in both lanes; and because the timings job
+  runs only after a green Gate, main could not repair itself. The job now runs `ci-groups.py --record-and-pack`,
+  which works the pack out in memory, applies `--check` to it and writes neither file if it fails.
 - **The pack is stable.** `scripts/ci-pack.json` holds each line's group; a line moves only when its group would
   pass 70% (the fewest, smallest moves) or it is new (it joins the group with the most room), so job names do
   not churn.

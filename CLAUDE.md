@@ -57,6 +57,9 @@ its 12-minute limit on every main run from #68 to #71, and it was seen only when
 Each verifier group now also fails at 75% of its timeout ("time budget: … split it", in
 `.github/workflows/check-site.yml`), so a group is split before it is cut off; each job's summary lists
 every verifier's duration.
+CI timings are the median of the last 5 main runs, and the timings job commits only a pack that passes `ci-groups.py --check`
+(CI-TIMINGS-MEDIAN, 12 Oct 2026): run 785's one slow group recorded a 125 s setup against 18-28 s before it, and the
+single-run pack it produced turned `--check` red on main and on every PR.
 
 ## Handover: read `docs/handover/home.md` and `docs/handover/cloud.md` (fixed pointer; fix PRs do not edit this section)
 

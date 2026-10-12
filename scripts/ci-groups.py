@@ -8,6 +8,7 @@
     python scripts/ci-groups.py --check               # the budget check: fails past 80% (contract CI-BALANCE)
     python scripts/ci-groups.py --selftest            # header parsing and packing proofs, with planted faults
     python scripts/ci-groups.py --record-timings ID   # scripts/ci-timings.json from a main full run (gh CLI)
+    python scripts/ci-groups.py --record-and-pack ID --from-dir D  # the timings job: record, repack, check, write only if it passes
     python scripts/ci-groups.py --write-pack          # scripts/ci-pack.json: the pack, from the timings
 
 Why. Until 7 Oct 2026 each content group listed its lines inside .github/workflows/check-site.yml, so every
@@ -37,6 +38,19 @@ new; so the job names do not churn. --check fails CI, on every PR, when any grou
 its budget (only a single line too big for any group can: split it with --part), naming the group and its
 largest lines. After every full run on main, the "CI timings" job records the run's times and rewrites the
 pack (commit "[skip ci]").
+
+TIMINGS ARE A MEDIAN, AND A PACK IS COMMITTED ONLY IF IT PASSES --check (contract CI-TIMINGS-MEDIAN, 12 Oct 2026;
+canon §7.8.1). Until then ci-timings.json held ONE run's figures. Main run 785 (38224711265) had one slow group,
+so its recorded setup (the longest group's total less its lines) was 125 s against 18-28 s in the eleven records
+before it; the repack against that setup left twelve groups past 80% and turned --check, and so every PR, red.
+Now ci-timings.json keeps the last HISTORY (5) main runs under "history" (each: run, date, branch, event, setup,
+lines), and the top-level "run", "date", "setup" and "lines" that every reader uses are the MEDIANS over them:
+per line over the runs that timed it (a line timed in fewer runs takes the median of what it has), and the
+setup as the median of each run's own setup (a run's setup stays its longest group's, which is cautious within
+a run). A median of 5 takes no notice of one slow run and moves when three of five are slow. The timings job
+runs --record-and-pack, which works the new timings and pack out in memory, applies --check's test to them, and
+writes neither file if it fails (the job then fails, so a genuine overrun shows on main instead of in every PR).
+Even-sized histories round the middle pair up.
 
 Old headers ("# ci-line: B4 | ..."): a hand-made group id is still accepted and read as its tier only (L* is
 the lock tier, any other is content), so a branch made before CI-BALANCE still passes; the repo's own headers
@@ -70,6 +84,7 @@ TIERS = {
 TIER_ORDER = ["content", "lock"]
 TARGET, FAIL = 0.70, 0.80          # of a group's budget: pack to TARGET; --check fails past FAIL
 SETUP = 25                         # seconds before a group's first line, when the timings do not record it
+HISTORY = 5                        # main runs kept in ci-timings.json; the estimates are their medians
 # The hand-made group ids before CI-BALANCE: still accepted in a header, as their tier only.
 OLD_IDS = {"A", "B1", "B2", "B3", "B4", "B5", "C1", "C2", "C3", "C4", "D1", "D2", "E", "E2",
            "L1", "L2", "L3", "L4", "L5"}
@@ -362,9 +377,10 @@ def compare(path):
     return 0 if not gone and not extra else 1
 
 
-def record_timings(run_id, from_dir=None):
-    """Write TIMINGS from a finished run's content and lock jobs: each line's seconds, read from the
+def read_run(run_id, from_dir=None):
+    """One finished run's record, from its content and lock jobs: each line's seconds, read from the
     'ok  <label>  (Ns; group at ...)' lines, and the longest setup (a group's total less its lines).
+    {"run", "date", "branch", "event", "setup", "lines"}, or None when there is nothing to read.
     On main the "CI timings" job passes --from-dir: each group job saves those lines as an artifact
     (ci-timing-*), downloaded into one folder, because the job-log API failed for the workflow's own token
     on every fetch (9 Oct, runs 37964707421, 37965228268, 37966843652). From a workstation, without
@@ -387,7 +403,7 @@ def record_timings(run_id, from_dir=None):
                "head_branch": os.environ.get("GITHUB_REF_NAME", ""), "event": os.environ.get("GITHUB_EVENT_NAME", "")}
         if not texts:
             print("record-timings: no content or lock timing files under %s" % from_dir)
-            return 1
+            return None
     else:
         import subprocess
 
@@ -409,11 +425,93 @@ def record_timings(run_id, from_dir=None):
             setups.append(setup)
     rec = {"run": int(run_id), "date": run["created_at"][:10], "branch": run["head_branch"],
            "event": run["event"], "setup": max(setups) if setups else SETUP, "lines": dict(sorted(secs.items()))}
+    return rec
+
+
+def median_int(xs):
+    """The median of a non-empty list of numbers as a whole number; the middle pair of an even list rounds up."""
+    xs = sorted(xs)
+    n = len(xs)
+    return int(xs[n // 2]) if n % 2 else int((xs[n // 2 - 1] + xs[n // 2] + 1) // 2)
+
+
+def medians(history):
+    """The timings every reader sees, from a list of run records (oldest first): the newest run's id, date,
+    branch and event; the median setup; and each line's median over the runs that timed it."""
+    last = history[-1]
+    per = {}
+    for r in history:
+        for label, sec in r.get("lines", {}).items():
+            per.setdefault(label, []).append(sec)
+    return {"run": last["run"], "date": last["date"], "branch": last.get("branch", ""), "event": last.get("event", ""),
+            "setup": median_int([r.get("setup", SETUP) for r in history]),
+            "lines": {k: median_int(v) for k, v in sorted(per.items())}}
+
+
+def add_run(existing, rec, keep=HISTORY):
+    """The new ci-timings.json content: existing (the file's content) with the run record rec added to its history,
+    the last `keep` runs kept, and the top-level fields the medians. A file from before the history (one run's
+    figures at the top level) counts as one run of history; the same run twice is counted once."""
+    hist = existing.get("history")
+    if hist is None:
+        hist = [{k: existing[k] for k in ("run", "date", "branch", "event", "setup", "lines") if k in existing}] \
+            if existing.get("lines") else []
+    hist = [r for r in hist if r.get("run") != rec["run"]] + [rec]
+    hist = hist[-keep:]
+    out = medians(hist)
+    out["history"] = hist
+    return out
+
+
+def write_timings(timings):
     with open(os.path.join(ROOT, TIMINGS), "w", encoding="utf-8", newline="\n") as f:
-        json.dump(rec, f, indent=1, ensure_ascii=False)
+        json.dump(timings, f, indent=1, ensure_ascii=False)
         f.write("\n")
-    print("%s: %d line(s) from run %s (%s, %s)" % (TIMINGS, len(secs), run_id, rec["event"], rec["date"]))
+
+
+def settle(existing, rec, hdrs=None, prev=None):
+    """(timings, groups, faults): the timings with the run rec added, the groups packed from them (from prev, the
+    current pack), and --check's faults for that pack. Nothing is written."""
+    timings = add_run(existing, rec)
+    gs = groups(hdrs, timings, read_json(PACK) if prev is None else prev)
+    return timings, gs, budget_faults(gs, timings)
+
+
+def commit(timings, gs, faults, writers=None):
+    """What the timings job does with settle()'s result: with any fault, say so and write NOTHING (return 1); else
+    write the timings and the pack (return 0). writers = (write_timings, write_pack), for the self-test."""
+    wt, wp = writers or (write_timings, write_pack)
+    if faults:
+        for x in faults:
+            print("FAIL  " + x)
+        print("record-and-pack: the pack for these timings fails --check; neither %s nor %s was written" % (TIMINGS, PACK))
+        return 1
+    wt(timings)
+    wp(gs)
     return 0
+
+
+def record_timings(run_id, from_dir=None):
+    """Add a finished run to ci-timings.json (the file keeps the last HISTORY runs and their medians); no pack."""
+    rec = read_run(run_id, from_dir)
+    if rec is None:
+        return 1
+    write_timings(add_run(read_json(TIMINGS), rec))
+    print("%s: %d line(s) from run %s (%s, %s); median of the last %d run(s)"
+          % (TIMINGS, len(rec["lines"]), run_id, rec["event"], rec["date"], len(read_json(TIMINGS)["history"])))
+    return 0
+
+
+def record_and_pack(run_id, from_dir=None):
+    """The timings job: add the run, repack from the medians, apply --check's test, and write the timings and the
+    pack only if it passes."""
+    rec = read_run(run_id, from_dir)
+    if rec is None:
+        return 1
+    timings, gs, faults = settle(read_json(TIMINGS), rec)
+    print("run %s: setup %ds (median %ds of %d run(s)); %d line(s) timed" % (
+        run_id, rec["setup"], timings["setup"], len(timings["history"]), len(rec["lines"])))
+    return commit(timings, gs, faults)
 
 
 def selftest():
@@ -484,6 +582,48 @@ def selftest():
           len(f) == 1 and "Content verifiers" in f[0] and "a 400s" in f[0])
     lk = pack([("lock", "p%d" % i, "c") for i in (1, 2)], T({"p1": 280, "p2": 200}), {})["lock"]
     check("lock tier: its own L ids, one long part per group", sorted(lk) == ["L1", "L2"])
+    # Timings are the median of the last HISTORY main runs, and a pack that fails --check is not committed
+    # (contract CI-TIMINGS-MEDIAN, after run 785's one slow group recorded a 125 s setup against 18-28 s).
+    hd5 = {"verify-x.py": parse("verify-x.py", "".join("# ci-line: %s | \n" % x for x in "abcde"))}
+    rn = lambda n, setup, lines: {"run": n, "date": "2026-10-%02d" % n, "branch": "main", "event": "push",
+                                  "setup": setup, "lines": dict(lines)}
+    flat = {x: 100 for x in "abcde"}
+    check("median_int: odd, even rounds up, one", median_int([5, 1, 3]) == 3 and median_int([1, 2]) == 2
+          and median_int([1, 2, 3, 4]) == 3 and median_int([7]) == 7)
+    ex = {}
+    for n, st in enumerate([22, 20, 24, 22], 1):
+        ex = add_run(ex, rn(n, st, flat))
+    tm, gs, fl = settle(ex, rn(5, 125, flat), hd5, {})
+    alone = rn(5, 125, flat)                      # the old rule: the one run's own figures
+    check("(a) one 125 s setup in five runs: the median setup is %ds and the pack passes --check: %s"
+          % (tm["setup"], fl[:1]), tm["setup"] == 22 and len(tm["history"]) == 5 and not fl)
+    check("(a) the same run alone (the old rule) fails --check, which is what turned every PR red",
+          bool(budget_faults(groups(hd5, alone, {}), alone)))
+    check("history keeps the last %d runs, oldest dropped, the same run twice counted once" % HISTORY,
+          [h["run"] for h in add_run(tm, rn(6, 22, flat))["history"]] == [2, 3, 4, 5, 6]
+          and len(add_run(tm, rn(5, 22, flat))["history"]) == 5 and add_run(tm, rn(6, 22, flat))["run"] == 6)
+    leg = {k: v for k, v in rn(1, 30, flat).items()}      # a file from before the history: one run at the top level
+    check("a file from before the history counts as one run", len(add_run(leg, rn(2, 20, flat))["history"]) == 2)
+    check("a line timed in fewer runs takes the median of what it has",
+          add_run(add_run({}, rn(1, 22, flat)), rn(2, 22, dict(flat, f=40)))["lines"]["f"] == 40)
+    slow3 = {}
+    for n, a in enumerate([60, 300, 60, 300], 1):
+        slow3 = add_run(slow3, rn(n, 22, dict(flat, a=a)))
+    tm3, gs3, fl3 = settle(slow3, rn(5, 22, dict(flat, a=300)), hd5, {})
+    check("(b) a line slow in 3 of 5 runs moves its median to %s and is flagged: %s" % (tm3["lines"]["a"], fl3[:1]),
+          tm3["lines"]["a"] == 300 and len(fl3) == 1 and "a 300s" in fl3[0])
+    slow2 = {}
+    for n, a in enumerate([60, 300, 60, 60], 1):
+        slow2 = add_run(slow2, rn(n, 22, dict(flat, a=a)))
+    tm2, gs2, fl2 = settle(slow2, rn(5, 22, dict(flat, a=300)), hd5, {})
+    check("(b) a line slow in only 2 of 5 runs keeps its median (%s) and is not flagged" % tm2["lines"]["a"],
+          tm2["lines"]["a"] == 60 and not fl2)
+    wrote = []
+    sink = (lambda t: wrote.append("timings"), lambda g: wrote.append("pack"))
+    rc_bad = commit(tm3, gs3, fl3, sink)
+    check("(c) a pack that fails --check is refused: exit 1, neither file written (%s)" % wrote, rc_bad == 1 and not wrote)
+    rc_ok = commit(tm, gs, fl, sink)
+    check("(c) a pack that passes is written (timings, then pack)", rc_ok == 0 and wrote == ["timings", "pack"])
     check("the repo's own headers parse", not errors())
     check("the repo's pack passes --check", not budget_faults())
     print("selftest: %s" % ("FAILED: " + ", ".join(fails) if fails else "PASS"))
@@ -497,12 +637,15 @@ def main():
     ap.add_argument("--compare")
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--record-timings", metavar="RUN_ID")
-    ap.add_argument("--from-dir", metavar="DIR", help="with --record-timings: the run's ci-timing-* artifacts")
+    ap.add_argument("--record-and-pack", metavar="RUN_ID", help="record, repack, check; write only if it passes")
+    ap.add_argument("--from-dir", metavar="DIR", help="with --record-timings or --record-and-pack: the run's ci-timing-* artifacts")
     ap.add_argument("--write-pack", action="store_true")
     ap.add_argument("--check", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.record_and_pack:
+        return record_and_pack(a.record_and_pack, a.from_dir)
     if a.record_timings:
         return record_timings(a.record_timings, a.from_dir)
     if a.write_pack:
