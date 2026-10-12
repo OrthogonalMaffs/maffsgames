@@ -1,5 +1,7 @@
 # Handover: home lane
 
+**PD-TOURNAMENT-BOARD (12 Oct, Jon's contract; PR #314, branch `claude/pd-tournament-board`).** prisoners-dilemma-t4-001 fixed per SR-22: single matches submit nothing; a completed tournament submits the player's total out of 20 x opponents under `<level>-tournament`. Hub lists the four tournament boards; the old per-level boards stay in Firebase, unlisted. `check-leaderboard-coverage.js` now fails if any PD submit is not `currentLevel+'-tournament'`, and PD's score-history keys are declared in HISTORY_ONLY_KEYS. **Contract conflict, for Jon:** the contract says do not touch `firebase-leaderboard.js`, but the coverage check requires `levelLabel()` to name every submitted key, and the only way is LEVEL_NAMES; I added four label entries there (data only, no logic) rather than stop. Node is not installed on the Windows machine, so the check ran only in CI and the planted-fail was shown by a Python re-implementation of the rule.
+
 **GATE-AND-SR28 (12 Oct, Jon's contract; branch `claude/gate-and-sr28`).** Three rulings of 12 Oct recorded. (1) Bank depth (point 4, and served bank size in point 3) is out of the build-freeze gate: tracked in the register, worked on in parallel under SR-26. (2) `glorious-gantt` is excluded from points 1, 2 and 5 by name while unlisted (it stays live at its URL, as Jon accepted); `GATE_EXCLUDED` in `scripts/audit-register.py` holds it with the reason, the dashboard lists it on its own line, and the script fails if a slug in it leaves the roster's Unlisted section (self-test plants a relisted one). (3) SR-28: algebraic terms divide as a whole (6x⁷ ÷ 2x² divides by 2x²; SR-17 does not apply). Canon §0.2 and §0.3 updated. Dashboard locally: points 1 and 5 read met, 2 reads 1 HIGH open, 4 marked not gating. `index-laws-v20-001` is the cloud lane's to close, citing SR-28.
 
 **GA4-LIVE-ONLY (12 Oct, Jon's contract; branch `claude/ga4-live-only`).** GA4's tag is now loaded only by `schools/assets/analytics.js`, and only on maffsgames.co.uk / www; no page carries the snippet. `scripts/apply-analytics-loader.py` changed exactly 150 pages (the snippet's two tags removed from all; the include kept on 145; added, at its relative path, on about, feedback, leaderboards, privacy, spec-map). New `check-analytics-loader.py` (site-wide, selftest with 4+ plants) and `test-analytics-loader.py` (Chromium: stub server and a local host reach no Google host and define no gtag; the live host does one gtag.js load and one config). `test-escape-analytics.py` keeps Google blocked and now asserts zero requests reach it. `verify-parent-guides.py` TPL asserts the new arrangement; canon §1.1 and `.claude/rules/analytics.md` updated. **For Jon:** (1) data before this merge still includes test traffic: exclude 800x600 in any report up to the merge; crawlers still reach GA4 (separate decision); (2) boolean-blitz and truth-will-set-you-free load analytics.js but never had the snippet, so they now send page views too; (3) `/privacy/` still prints the measurement ID as plain text (not a tag; the check allows it); (4) the old "Google Analytics (cookieless)" HTML comment stays above the include on those pages.
@@ -98,36 +100,6 @@ after merge, never `--force` / `-D`. Remote branches untouched. Every worktree f
 
 Also, the same session: the **CANON-VERIFIED-COUNT** contract (canon §11.3's "199 verified number sets") STOPPED
 before any edit, reported to Jon in chat; nothing committed.
-
-
-**ESCAPE-ANALYTICS (11 Oct, Jon's contract; STOPPED on its shared-layer STOP IF, then Jon's rulings 11 Oct).**
-Diagnosis (Jon's Rightful King play, Sheet rows 55413-55434): (1) the eight index-0 "answers" were room searches:
-`engine.js:359` logged each first search as question_answered, correct, index 0 (the Sheet has no `detail` column,
-so the `searched:` tag never showed); (2) the mid-game abandon came from `analytics.js:138-146`, which sent
-game_abandoned on every visibilitychange to hidden, in **every game**, so a game finished after a tab switch counted
-as abandoned and completed; (3) GA4's 2 completions did not reproduce: one call site (`engine.js:805`, st.done
-guard), one analytics.js, and the test shows one play sends exactly one game_completed to GA4 and one to the Sheet,
-so it is closed as a realtime counting artefact (Jon's ruling). Fixed, shared layer: searches send nothing;
-`mfg()` drops game_abandoned unless the page is being left (beforeunload / pagehide set `_mfgLeaving`;
-analytics.js loads in the head, so its beforeunload runs before any game's), the visibilitychange listener is
-gone, pagehide sends it; once per game as before. **Abandon figures change meaning on 11 Oct 2026** (canon §1.3,
-with the trade-off: a backgrounded phone tab later killed by the OS sends nothing). New
-`scripts/test-escape-analytics.py` (in CI): Rightful King won after searching every object and a tab switch, 3/1/0
-to GA4 and the Sheet; the room left mid-game, 1 abandon; prime-or-composite (own visibilitychange handler) with a
-tab switch, 0 abandons, 1 completion; three old faults planted and caught. Both faults predate the public repo
-(2 Oct 2026), so the history cannot date them; affected Sheet rows not counted (no export here).
-
-**LOG-NOTATION (10-11 Oct, Jon's contract; STOPPED on a wrong key, then Jon's rulings; PR #274).** B11's parser
-(`bank_common`): log with no base is base 10, ln base e, log_b base b; a power argument of ln/log is bracketed
-(ln e^2 parses); and, Jon's class fix, a symbol inside a log is positive when two values are compared (log(x^2) =
-2 log x). **B11 over all 97 games: no existing verdict changed; +4 pairs, all log-laws ([7], [13], [39], [42]); the
-domain rule added none anywhere**, so no other game's findings file changed. log-laws Laws bank: five distractors
-replaced ([7], [13], [18], [39], [42]); **[22] (1/3 log 27) was keyed 1, value log 3: CRITICAL (Jon), now keyed log
-3** (options log 3, 1, 3, log 9); [24]'s 2 log x (equal to the key for x > 0) replaced by log(1/(2x)).
-verify-log-laws.py now checks the Laws bank too (every key its question's value, no two options equal; the old [22]
-and [24] planted and caught). Findings log-laws-ln-001..006 (fixed, #274; f0-001 fixed); ledger cleared for log-laws
-only. Locally the banks were extracted with `extract-banks.py --workers 2` (98 s; 4 workers risks this machine's
-memory). Note: this machine's Bash heredocs eat backslashes, so regex-heavy scripts were written to files first.
 
 
 **QUEUE (home lane, Jon 9 Oct 16:10):** 1 RULINGS-9OCT (#215, merged), 2 GRAPH-SKETCHER-FIT, 3 CI-BALANCE, 4 PLAY-AGAIN-SCREEN,

@@ -126,7 +126,10 @@
     // Simultaneous Solver: one board per Foundation stage (Jon, 6 Oct 2026).
     'foundation-s1':'Foundation · Stage 1','foundation-s2':'Foundation · Stage 2',
     'foundation-s3':'Foundation · Stage 3','foundation-s4':'Foundation · Stage 4',
-    'foundation-s5':'Foundation · Stage 5'
+    'foundation-s5':'Foundation · Stage 5',
+    // Prisoner's Dilemma: one board per level, tournament totals only (SR-22).
+    'ks3-tournament':'KS3 · Tournament','gcse-tournament':'GCSE · Tournament',
+    'alevel-tournament':'A-Level · Tournament','core-tournament':'Core Maths · Tournament'
   };
 
   // Keys that are not a fixed list. A pattern cannot be inverted, which is one

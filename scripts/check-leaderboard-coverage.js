@@ -173,11 +173,16 @@ const LEVEL_OVERRIDES = {
   'six-sevens-bruv':      [['q20', 'q40'], "board = 'q' + session length; clear-the-grid submits nothing (Jon, 30 Sep 2026)"],
   'free-daily-pizza':     [['practice-q20', 'practice-q40'], "FDP.boardFor(): mixed practice is 'practice-q' + session length (single-stage practice submits nothing); the daily pizza's keys are in OFF_HUB_LEVEL_PATTERNS"],
   'quadratic-factoriser': [['gcse', 'higher', 'formula'], 'IMPLEMENTED_LEVELS'],
+  'prisoners-dilemma':    [['ks3-tournament', 'gcse-tournament', 'alevel-tournament', 'core-tournament'], "submitScore level is currentLevel + '-tournament': only a completed tournament's total is submitted (SR-22, prisoners-dilemma-t4-001)"],
   'chart-interrogator':   [['gcse', 'alevel', 'core', 'l4'], "selectedLevel = the level button's data-level; the L4 button says 'l4'"],
   'the-perfect-prank':    [['ks3'], "const LEVEL='ks3'; no roster row (unlisted prototype), so the default rule finds nothing"],
   'correlation-or-coincidence': [['gcse'], "const LEVEL='gcse': one board, as before the rebuild (4 Oct 2026); the roster's A-Level and Core tiers play the same bank"],
   'simultaneous-solver':  [['foundation-s1', 'foundation-s2', 'foundation-s3', 'foundation-s4', 'foundation-s5', 'alevel'], "BOARD = board(): STAGES[stage].board for Foundation (one board per stage, never the old 'gcse' board), 'alevel' kept (Jon, 6 Oct 2026)"]
 };
+
+// Games that may submit only under keys ending '-tournament' (SR-22): the level argument of every submitScore()
+// call must be exactly the expression given, so a single-match submit (a bare currentLevel) fails the check.
+const TOURNAMENT_ONLY = { 'prisoners-dilemma': "currentLevel+'-tournament'" };
 
 // Level keys a game submits that follow a pattern rather than a fixed list, and that the hub
 // deliberately does not list (one board per UK day would be a new hub row every day). They are
@@ -196,7 +201,9 @@ const HISTORY_ONLY_KEYS = {
   'free-daily-pizza': [['stage-s1-q20', 'stage-s1-q40', 'stage-s4-q20', 'stage-s4-q40', 'stage-s2-q3'],
     /^stage-s\d+-q\d+$/,
     "histKey = board || FDP.modeFor(): single-stage practice ranks nowhere, so history and personal best " +
-    "go under 'stage-s' + stage + '-q' + questions played (a missed-questions replay can be any length)"]
+    "go under 'stage-s' + stage + '-q' + questions played (a missed-questions replay can be any length)"],
+  'prisoners-dilemma': [['ks3', 'gcse', 'alevel', 'core'], /^(ks3|gcse|alevel|core)$/,
+    "each single match records its score history under the level (currentLevel); only the tournament total is submitted, under currentLevel + '-tournament' (SR-22)"]
 };
 
 // The roster's level labels -> level keys. One table, shared with check-site.py and
@@ -274,6 +281,11 @@ if (!registry) {
       if (want.join() === derived.join()) hubProblems.push(`${slug}: LEVEL_OVERRIDES entry is stale (the default rule already gives ${derived.join(', ')})`);
     }
     submittedBySlug[slug] = want;
+    if (TOURNAMENT_ONLY[slug]) {
+      const bad = [...html.matchAll(/MaffsLeaderboard\.submitScore\(\s*[^,]+,\s*([^,]+),/g)]
+        .map(x => x[1].replace(/\s+/g, '')).filter(a => a !== TOURNAMENT_ONLY[slug]);
+      if (bad.length) hubProblems.push(`${slug}: submits under ${bad.join(', ')}, but may submit only under ${TOURNAMENT_ONLY[slug]} (SR-22: tournament totals only)`);
+    }
     if (NOT_ON_HUB[slug]) continue;
     const have = registry.levels[slug];
     if (!have) { hubProblems.push(`${slug}: calls submitScore() but is not in the hub registry (submits under: ${want.join(', ')})`); continue; }

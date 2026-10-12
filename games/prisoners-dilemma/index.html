@@ -210,6 +210,7 @@ body.accessible{background-color:#12141f!important}
       <button class="level-btn" data-level="core">Core Maths</button>
     </div>
     <div id="menuOpponents"></div>
+    <div style="text-align:center;font-size:.72rem;color:var(--muted);margin:.6rem 0">The leaderboard ranks Tournament Mode totals only; single matches are not ranked.</div>
     <div id="tournamentBtn" style="text-align:center;margin:.8rem 0;display:none">
       <button class="btn-secondary" onclick="startTournament()">Tournament Mode</button>
       <div style="font-size:.72rem;color:var(--muted);margin-top:.3rem">Round-robin: play all opponents at this level</div>
@@ -781,7 +782,8 @@ const endGame = MaffsLock.finishOnce(function () {
     questions_correct: mutualCoop,
     opponent: currentOpponent.id
   });
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('prisoners-dilemma',currentLevel,playerScore,TOTAL_ROUNDS).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('prisoners-dilemma',currentLevel,playerScore);}}
+  // SR-22: single matches are never submitted; only a completed tournament's total is (below).
+  if(window.MaffsLeaderboard&&window.MaffsScoreHistory){MaffsScoreHistory.record('prisoners-dilemma',currentLevel,playerScore);}
 
   // Tournament mode: record and move on
   if (gameMode === 'tournament') {
@@ -793,7 +795,10 @@ const endGame = MaffsLock.finishOnce(function () {
       MaffsLock.timer(function() { startGame(); }, 500);
       return;
     } else {
-      // Tournament complete
+      // Tournament complete: one total over every match, on the level's tournament board (SR-22)
+      let tournamentTotal = 0;
+      tournamentOpponents.forEach(function(opp) { tournamentTotal += tournamentScores[opp.id].player; });
+      if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('prisoners-dilemma',currentLevel+'-tournament',tournamentTotal,TOTAL_ROUNDS*tournamentOpponents.length).catch(function(){});}
       showTournamentResults();
       return;
     }
