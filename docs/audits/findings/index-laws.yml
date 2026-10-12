@@ -28,3 +28,18 @@ findings:
     verify-index-laws.py now reads a coefficient-and-variable term after ÷ as one term and fails only a stem that still reads
     two ways under that convention (a divisor that is not such a term). The home lane records the convention as a standing ruling.'
 
+- id: index-laws-b11-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:equal-value-options
+  level: all
+  where: 'games/index-laws/index.html: QUESTIONS[6], [27], [38], [39], [40]'
+  summary: 'Five items each had two wrong options equal in value (SR-4: four distinct options), so the student chose
+    from three: [6] 3^{12} and 9^6; [27] 1/x^{-3} and x^3; [38] 9 and 27/3; [39] 50 and 100/2; [40] 12.5 and 25/2.
+    Keys right. Fixed under B11-CLEAR and Jon''s formula-forge ruling of 12 Oct 2026 (replace one of the pair with a
+    nameable error): 3^{12} -> 3^2 (subtracted the powers); 1/x^{-3} -> -1/x^3 (made the answer negative as well);
+    27/3 -> 1/3, 100/2 -> 1/10, 25/2 -> 1/5 (took the reciprocal, as for a negative power)'
+  evidence: 'check-banks.py B11 (data/check-ledger.json, now cleared); scripts/verify-index-laws.py fails on any equal
+    pair, with a plant that puts 3^{12} back'
+  status: fixed
+  pr: 320
