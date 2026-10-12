@@ -55,10 +55,13 @@ OPTIONAL = {'pr', 'ruling'}
 SHARED_CHECKS_GREEN = {
     'answer lock': False,
     'level resolver': False,
-    'served bank size': False,
     'SR-14 fields': False,
     'B11 parser': False,
 }
+# Games left out of exit-bar points 1, 2 and 5 by Jon's named ruling: slug -> reason. Deliberately by name, not a general
+# "unlisted games don't count" rule (canon §0.2). A slug that leaves the roster's Unlisted section fails validation, so
+# the exclusion ends when the game is relisted.
+GATE_EXCLUDED = {'glorious-gantt': "Jon, 12 Oct 2026: excluded from points 1, 2 and 5 while unlisted (canon §0.2)"}
 # Exit bar point 6: one sweep of the already-verified games for true wrong options and unstated conventions.
 SWEEP_DONE = False
 
@@ -173,6 +176,10 @@ def validate(files, games, unlisted, root):
                 errors.append('%s: pr must be a PR number or a list of them, got %r' % (where, pr))
             if f.get('status') == 'ruled' and not f.get('ruling'):
                 errors.append('%s: ruled, but names no ruling' % where)
+    for slug, why in GATE_EXCLUDED.items():
+        if slug not in unlisted:
+            errors.append('%s is in GATE_EXCLUDED (%s) but is no longer in the roster\'s Unlisted section: '
+                          'the exclusion ends when the game is relisted; remove it from GATE_EXCLUDED' % (slug, why))
     have = {os.path.basename(rel)[:-4] for rel, _ in files}
     for slug in unlisted:
         if slug not in have and slug not in UNLISTED_NOT_BY_AUDIT:
@@ -214,6 +221,8 @@ def render(files, games, unlisted, root):
     open_ch = [(g, f) for g, f in every if f['status'] == 'open' and f['severity'] in ('CRITICAL', 'HIGH')]
     full, partial = verifiers(root)
     live = sorted(games)
+    gate_open_ch = [(g, f) for g, f in open_ch if g not in GATE_EXCLUDED]
+    gate_unlisted = [s for s in unlisted if s not in GATE_EXCLUDED]
     L = []
     L.append('# Findings register')
     L.append('')
@@ -228,7 +237,8 @@ def render(files, games, unlisted, root):
     L.append('')
 
     # ---- exit bar
-    no_verifier = [s for s in live if s not in full]
+    gate_live = [s for s in live if s not in GATE_EXCLUDED]
+    no_verifier = [s for s in gate_live if s not in full]
     lv_under = []
     for g, data in sorted(by_game.items()):
         if g not in games:
@@ -243,17 +253,17 @@ def render(files, games, unlisted, root):
     L.append('| # | Point | Status |')
     L.append('|---|---|---|')
     L.append('| 1 | Every live game has a verifier in CI | %s: %d of %d live games have none (computed from `games/` and the verifiers CI runs) |'
-             % ('met' if not no_verifier else 'NOT MET', len(no_verifier), len(live)))
+             % ('met' if not no_verifier else 'NOT MET', len(no_verifier), len(gate_live)))
     L.append('| 2 | Every CRITICAL and HIGH in the register fixed | %s: %d open (%d CRITICAL, %d HIGH) |'
-             % ('met' if not open_ch else 'NOT MET', len(open_ch),
-                sum(1 for _, f in open_ch if f['severity'] == 'CRITICAL'), sum(1 for _, f in open_ch if f['severity'] == 'HIGH')))
+             % ('met' if not gate_open_ch else 'NOT MET', len(gate_open_ch),
+                sum(1 for _, f in gate_open_ch if f['severity'] == 'CRITICAL'), sum(1 for _, f in gate_open_ch if f['severity'] == 'HIGH')))
     red = [k for k, v in SHARED_CHECKS_GREEN.items() if not v]
     L.append('| 3 | Shared checks green site-wide | %s (stated): %s |'
              % ('met' if not red else 'NOT MET', 'all green' if not red else 'not yet: ' + ', '.join(red)))
-    L.append('| 4 | Every level serves 40+ | %s: %d audited levels serve under 40 (games no audit has covered are not measured) |'
-             % ('met' if not lv_under else 'NOT MET', len(lv_under)))
+    L.append('| 4 | Every level serves 40+ (tracked, not part of the gate: canon §0.2, Jon 12 Oct 2026) | %s, not gating: %d audited levels serve under 40 (games no audit has covered are not measured) |'
+             % ('met' if not lv_under else 'not met', len(lv_under)))
     L.append('| 5 | Every unlisted game relisted or archived | %s: %d in the roster\'s Unlisted section |'
-             % ('met' if not unlisted else 'NOT MET', len(unlisted)))
+             % ('met' if not gate_unlisted else 'NOT MET', len(gate_unlisted)))
     L.append('| 6 | One sweep of the verified games for true wrong options and unstated conventions | %s (stated) |'
              % ('met' if SWEEP_DONE else 'NOT MET'))
     L.append('')
@@ -324,7 +334,9 @@ def render(files, games, unlisted, root):
     L.append('')
     L.append('**4. Audited levels serving under 40 (%d):** %s' % (len(lv_under), ', '.join(lv_under) or 'none'))
     L.append('')
-    L.append('**5. Unlisted (%d):** %s' % (len(unlisted), ', '.join('`%s`' % s for s in unlisted)))
+    L.append('**5. Unlisted (%d):** %s' % (len(gate_unlisted), ', '.join('`%s`' % s for s in gate_unlisted) or 'none'))
+    L.append('')
+    L.append('**Excluded from points 1, 2 and 5 (%d):** %s' % (len(GATE_EXCLUDED), '; '.join('`%s`: %s' % kv for kv in GATE_EXCLUDED.items()) or 'none'))
     L.append('')
     return '\n'.join(L)
 
@@ -379,6 +391,15 @@ def selftest(root):
         print('  self-test %-34s %s' % ('a schema fault (severity, field)', 'caught' if caught else '*** MISSED ***'))
         ok = ok and caught
         open(p, 'w', encoding='utf-8').write(src)
+        # 3. an excluded game that has been relisted
+        rp = os.path.join(tmp, ROSTER)
+        rsrc = open(rp, encoding='utf-8', newline='').read()
+        open(rp, 'w', encoding='utf-8', newline='').write(rsrc.replace('## Unlisted', '## Resit Fluency Strand', 1))
+        errs, _ = run(tmp)
+        caught = any('GATE_EXCLUDED' in e for e in errs)
+        print('  self-test %-34s %s' % ('a relisted excluded game', 'caught' if caught else '*** MISSED ***'))
+        ok = ok and caught
+        open(rp, 'w', encoding='utf-8', newline='').write(rsrc)
     return ok
 
 

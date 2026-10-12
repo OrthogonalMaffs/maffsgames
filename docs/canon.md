@@ -41,14 +41,16 @@ The gatekeeper is still a teacher, now typically a resit lecturer in an FE colle
 **BUILD FREEZE (Jon, 6 Oct 2026).** No new builds (games, modes, stages) until the exit bar is met:
 1. every live game has a verifier in CI;
 2. every CRITICAL and HIGH in the findings register fixed;
-3. shared checks green site-wide (answer lock, level resolver, served bank size, SR-14 fields, B11 parser);
-4. every level serves 40+;
+3. shared checks green site-wide (answer lock, level resolver, SR-14 fields, B11 parser);
+4. ~~every level serves 40+~~ (no longer a gate condition; see below);
 5. every unlisted game relisted or archived;
 6. one sweep of the already-verified games for true wrong options and unstated conventions.
 
+Bank depth (40+ per level, and served bank size) is tracked in the register and worked on in parallel under SR-26; it does not block new builds (Jon, 12 Oct 2026: "increasing the question banks should not stop new builds, we can have that running alongside the builds.").
+
 **One named exception (Jon, 9 Oct 2026, 00:25): Simultaneous Solver Stage 5 only** (word problems, the two
 equations built from tiles; merged #203). No other build is excepted: a further exception needs Jon's own named
-ruling, never a contract's inference. The register's exit-bar dashboard
+ruling, never a contract's inference. **Glorious Gantt Game (`glorious-gantt`) is excluded from points 1, 2 and 5 while it is in the roster's Unlisted section (Jon, 12 Oct 2026). It stays live at its URL, as Jon accepted.** The register's exit-bar dashboard
 (`docs/audits/REGISTER.md`) shows how far the site is from each point.
 
 When deciding what comes next:
@@ -98,6 +100,7 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 | SR-25 | **Words, figure and key must agree.** A question's text, its drawn figure and its key describe the same thing (Circle Theorem Spotter Q19: the figure drew the point on the minor arc while the text said major; a centreCirc `inside` flag puts C inside the marked angle). SR-8 covers what follows a changed key; this covers text against figure. | 8 Oct 2026 | Jon, 8 Oct 2026 (contract CTX's "For Jon" list; first written in a CLAUDE.md handover, 3 Oct 2026, PR #11) |
 | SR-26 | **Growing banks.** "A bank that is too small, or holds duplicates, is fixed by growing it, never by swapping single items. Growth is generated from parameters, so duplicates cannot occur and every distractor comes from a nameable student error. New real-world contexts still stop for Jon. A game's bank is grown only after its verifier runs in CI, so every new item is checked as it arrives." | 12 Oct 2026 | Jon, 12 Oct 2026 (chat, VERIFIERS-20) |
 | SR-27 | **Pre-push checks for verifier-only PRs.** "A PR whose only changes are a new or edited scripts/verify-<slug>.py, that game's findings file and the lane's handover runs, instead of check-changed.py: the verifier and its self-test; ci-groups.py --check; audit-register.py --check; check-verifier-coverage.py; check-context-size.py. CI runs the rest. A PR that also changes a game page, a shared asset or any other script runs check-changed.py as before." Why: the full run took about 30 minutes in the cloud container and reported only environment failures (missing esprima and WebKit, blocked KaTeX CDN), while CI minutes are free. | 12 Oct 2026 | Jon, 12 Oct 2026 (chat, VERIFIERS-20) |
+| SR-28 | **Algebraic terms divide as a whole.** A term such as 2x² is one object: implied multiplication binds tighter than ÷, so 6x⁷ ÷ 2x² means division by 2x². Such stems are not ambiguous and need no brackets; SR-17 does not apply. A stem is ambiguous only if it reads two ways under this convention (for example ÷ followed by a sum or a bracket). | 12 Oct 2026 | Jon, 12 Oct 2026 (chat, ruling on index-laws-v20-001) |
 
 **Also recorded with SR-16 to SR-20** (Jon, 6 Oct 2026, 20:30):
 - Start screens and cards state what the code does (timers, scoring claims).
