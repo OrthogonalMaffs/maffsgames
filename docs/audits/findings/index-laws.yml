@@ -7,4 +7,20 @@ audited:
   date: 2026-10-06
   served:
     gcse: '45'
-findings: []
+findings:
+- id: index-laws-v20-001
+  severity: MEDIUM
+  jc: true
+  class: NEW:ambiguous-notation
+  level: gcse
+  where: games/index-laws/index.html QUESTIONS (Divide Rule items 2, 5 and 8 of 8)
+  summary: 'Three stems divide by an unbracketed coefficient-and-variable term: 6x^7 ÷ 2x^2 (keyed 3x^5), 12x^9 ÷ 4x^3 (keyed 3x^6),
+    20a^4 ÷ 5a (keyed 4a^3). The keys follow the algebra convention that a division by a term divides by all of it, as the
+    tranche 1 audit and the explanations ("6÷2=3, 7-2=5") do. Read strictly left to right, as the stem is printed, they are
+    (6x^7 ÷ 2) × x^2 = 3x^9, 3x^12 and 4a^5, each of which is one of the item''s own distractors. SR-17 asks for conventions stated
+    in the question and removes notation puzzles; the stems state neither. A ruling for Jon: bracket or fraction-bar the three
+    stems (same maths, same bank size) or remove them. Under the strict reading three items mark a wrong answer right, which is SR-20''s
+    count of 3 for CRITICAL, so the call is not the cloud lane''s'
+  evidence: 'scripts/verify-index-laws.py (VERIFIERS-20) reads each stem both ways, lists these three as the expected failure and fails on any other stem whose two readings differ'
+  status: open
+
