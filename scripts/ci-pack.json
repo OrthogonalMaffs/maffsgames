@@ -95,6 +95,7 @@
   "Split It (every generator's keys recomputed + marking at the stated precision)": "16",
   "Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 110 played in Chromium)": "18",
   "Spot the Muppet (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium)": "28",
+  "Standard Form Blitz (all 100 keys recomputed exactly from the question's own TeX; every option classified; every option pressed in Chromium)": "33",
   "Stat Attack (keys recomputed from each question's table)": "16",
   "Surd Simplifier (every key recomputed from its stem with SymPy, in simplest form; every option marked in Chromium)": "8",
   "Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)": "16",
