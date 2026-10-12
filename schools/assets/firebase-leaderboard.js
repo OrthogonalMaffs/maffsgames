@@ -420,6 +420,11 @@
    * @returns {Promise<{percentile: number|null, tier: string|null, totalPlayers: number}>}
    */
   function submitScore(gameSlug, level, score, questionsAnswered) {
+    // LEVEL-RESOLVER (12 Oct 2026): a game that has declared its levels (MaffsLevel.resolve) cannot create a
+    // board under a key it has not declared. A page with no declaration behaves as before.
+    if (typeof window !== 'undefined' && window.MaffsLevel && !window.MaffsLevel.allows(gameSlug, level)) {
+      return Promise.resolve(reject('level "' + level + '" is not one the game declared', gameSlug, level));
+    }
     init();
     if (!db) {
       return Promise.resolve(reject('Firebase SDK not loaded or failed to initialise', gameSlug, level));
