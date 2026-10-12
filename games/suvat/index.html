@@ -119,6 +119,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -584,8 +585,7 @@ function renderRefPanel(){
 window.addEventListener('DOMContentLoaded', renderRefPanel);
 
 /* ── Level detection ── */
-const params = new URLSearchParams(window.location.search);
-const level = params.get('level') || 'level4';
+const level = MaffsLevel.resolve({slug:'suvat',levels:['alevel','level4'],fallback:'level4'});
 const isALevel = level === 'alevel';
 const POOL = isALevel ? QUESTIONS_ALEVEL : QUESTIONS_LEVEL4;
 const GAME_SIZE = isALevel ? 10 : 8;

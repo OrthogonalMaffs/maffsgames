@@ -108,6 +108,7 @@ body.accessible p,body.accessible .prompt-bar,body.accessible .confidence-text,b
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
@@ -252,7 +253,7 @@ const SHAPE_QUESTIONS = [
 //  STATE
 // ============================================================
 const GAME_SLUG = 'four-quadrant-explorer';
-const LEVEL = 'year6';
+const LEVEL = MaffsLevel.resolve({slug:'four-quadrant-explorer',levels:['year6'],fallback:'year6'});
 let sessionLength = 20;
 let questions = [];
 let currentQ = 0;
