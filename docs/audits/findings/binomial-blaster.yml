@@ -189,7 +189,9 @@ findings:
   summary: ?level=constructor/__proto__ crash on Start; nonsense falls back silently to alevel
   evidence: 'pageerror ''QUESTIONS[level] is not iterable'' Left open by the cloud-lane fix PR: class 4, owned by the shared
     level resolver (contract F2).'
-  status: open
+  status: fixed
+  pr: 317
+  ruling: 'Contract LEVEL-RESOLVER (Jon, 12 Oct 2026): the game reads ?level through MaffsLevel.resolve; an unknown key gives its default level and a stray board cannot be created (canon 4.5).'
 - id: binomial-blaster-t5-019
   severity: MEDIUM
   jc: true

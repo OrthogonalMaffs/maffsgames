@@ -3,6 +3,32 @@
 Moved verbatim out of `docs/handover/home.md` (contract CTX, 8 Oct 2026). History only: nobody adds to it and
 no session reads it by default. Newest first. Later trims add their moved entries at the top of the entries.
 
+## 2026-10-12 (home): trimmed for LEVEL-RESOLVER batch 1
+**SPLIT-IT-KATEX (11 Oct, Jon's contract; branch `claude/split-it-katex`): todo §1.48 CLOSED.** split-it now loads
+KaTeX (CDN, as suvat) and `mathtext.js`. Fractions in working/feedback text render via `F()` (`rac`); `X()` gives
+a whole number or lowest-terms `rac`. Fixed: speed working (13.33.. -> stacked 40/3; distance uses the same
+value), the fractions-mode working and simplify message, and the GCSE scale-factor working and hint (5/3 had
+printed 1.6666666666666667). `showFeedback` runs through `MaffsText.html`. Unit label drawn once, after the input
+(money keeps its prefix). Keys, marking and scoring untouched. Checked: 48,000 generated questions, no float
+artefact (610 stacked speeds, 730 whole); 375px render, no overflow; check-changed 28/28. **For Jon:** the
+fractions-mode answer INPUT is still two boxes with a CSS bar (`.frac-wrap`): it is a control, not a displayed
+fraction, and KaTeX cannot hold inputs, so it stays. Scans (report-only): `docs/audits/split-it-fraction-scan-2026-10-11.md`.
+
+**ESCAPE-CANON-LABEL (11 Oct, Jon's contract; branch `claude/escape-canon-label`).** Canon §11.3-11.5 brought
+up to date with the live rooms and #278, no figures derived from repo content: §11.3's ratings roster is now a
+pointer (each rating derives from lock grades, is recorded as `data-stars` on the cards, and is printed in the
+CI log; both new rooms came out as Jon ruled, hub ★★★ and ★, so no STOP); the plants sentence names all three;
+"The live rooms all use `digits`" and its "waiting on" drafts replaced (maxDigits was built for the two new
+rooms; each lock's mode is in its `room.js`). §11.4: the gate's row describes the per-set re-check, the
+fixture, the plants and the printed counts; new row for `escape_set_checks.py`; the generator's row
+corrected. §11.5: "All eight rooms" and "The two withdrawn rooms" gone (described, with The IT Teacher's
+Vengeance's redirect and Car Trap's return); "drawn out of Jon" kept, with the ally-and-clock rooms noted.
+**CI label: already single-source.** The `# ci-line:` header in `check-escape-rooms.py` is the source;
+`ci-pack.json` and `ci-timings.json` are caches that main's "CI timings" job rewrites wholesale after every
+full run (`write_pack` from the headers, `record_timings` from the run's log), so an old label drops out of
+both. Only the header changed; the JSON files were not hand-edited. Until main's next full run times it, the
+renamed line counts as 120 s and runs in a group of its own (`ci-groups.py --check` passes). (The stale voice-rewrite §5 status table is fixed by ROOM-STATUS-ONE-TABLE, above.)
+
 ## 2026-10-12 (home): trimmed for PD-TOURNAMENT-BOARD
 **ESCAPE-ANALYTICS (11 Oct, Jon's contract; STOPPED on its shared-layer STOP IF, then Jon's rulings 11 Oct).**
 Diagnosis (Jon's Rightful King play, Sheet rows 55413-55434): (1) the eight index-0 "answers" were room searches:
