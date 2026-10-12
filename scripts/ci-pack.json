@@ -41,6 +41,7 @@
   "Force Resolver (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "12",
   "Formula Plug-In (every formula, substitution and step of the working recomputed; every item answered right and wrong in Chromium)": "34",
   "Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium)": "14",
+  "Four Quadrant Explorer (every plot target, point reading and fourth corner recomputed; every grid cell tapped on the real canvas in Chromium)": "34",
   "Fraction Snap (every pair's key and cross-multiplication recomputed, the generator drawn 20000 times, every pair marked both ways in Chromium)": "9",
   "Free Daily Pizza (independent recomputation + daily seed + phone fit)": "2",
   "GA4 country Apps Script (mocked API and Sheet: replace-by-date is idempotent, other dates untouched, events tab never referenced; planted faults caught)": "16",
