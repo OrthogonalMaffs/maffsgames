@@ -1704,3 +1704,35 @@ environment only, CI green. Worth a look if a local run must be clean.
   now 19 jobs (16 in the matrix, was 9); two PRs at once ask for up to 38 of the 20 runners a public repo gets,
   so some jobs wait for the short skipped ones to finish. Watch for it before adding more entries.
 - A flake seen once on #92's run: Simultaneous Solver at 320x568, keypad 1px. Not reproduced since.
+
+## Moved from home.md on 12 Oct 2026 (RULINGS-12OCT, for size)
+
+**ROOMS-RELEASE-RK-LJ (10 Oct, Jon 22:45: "both have been play tested, so lets just release"; contract in
+`docs/history/contracts/2026-10-10-rooms-release-rk-lj.md`).** The Rightful King (★★★) and The Library Jam (★) are
+live, released as Car Trap was: each index.html is the room (prom-budget's head: analytics on, indexable, canonical,
+the draft's meta description, 159 and 150 characters; og:image the scene), play.html deleted, teacher.html still
+noindex. Hub cards (draft hub line, topics, `data-stars` chip; Library Jam last of the ★, Rightful King after Rugby
+Mud) and front-page band cards (after Car Trap; test-section-clicks' order updated); sitemap `<url>` each; "nine" ->
+"eleven" in the hub (description, og:description, lede), the front page (band lede, "Open all eleven rooms"),
+CLAUDE.md and canon §11.1 (both rows added, Live 10/10). **Not a plain "nine", left for Jon:** canon §11.3's "Across
+the eight live rooms: 199 verified number sets" is a replay statistic, not a count to bump. it-vengeance still
+redirects to /escape-rooms/rightful-king/ (checked in Chromium). /updates/: one line each under October's New. The
+twelve finished contracts moved from docs/handover/contracts/ to docs/history/contracts/ (the folder is empty).
+Checked: check-escape-rooms, test-escape-rating (11 rooms, no 320 px overflow), test-escape-art (both rooms to a win
+and a loss with their pictures), test-section-clicks, context size. **Merged #271 (227fb0a), main green. Live site checked
+10 Oct:** /escape-rooms/rightful-king/ and /escape-rooms/library-jam/ serve 200 with their titles; in Chromium at 320 px each
+shows its scene picture and Start, no sideways scroll; /escape-rooms/it-vengeance/ lands on The Rightful King; the hub
+says "Eleven"; the old play.html is 404.
+
+**ROOM-ART-RK-LJ: The Library Jam (10 Oct, Jon's contract; pictures approved 22:20-22:42).** The Rightful King's
+half was already merged as #269 (main green, 32c2be0). Filed `docs/art/library-jam-scene/-fail/-win.webp` (1600x873,
+q80, via `strip-gen-watermark.py --width 1600 --frame 1600x873`: no watermark). **All three sources are 2752x1536, like
+the scene, so nothing was upscaled** (the contract expected ~1024 px fail and win). Arm, bin, drop-box and desk screen
+all in frame. The squiggle "writing" on the two papers pinned to the right-hand wall is blanked in all three (each
+paper refilled from a plane fitted to its clean paper, so the glow gradients stay; outlines untouched); nothing else
+retouched. The papers stacked on the desk keep a few pixel-high illegible marks. room.js: `art: 'library-jam'`, the
+"ART: none yet" note replaced; sceneAlt checked against the picture and unchanged; failAlt and winAlt as the contract
+gives them; RULE (no `missArt`) kept. **Still unreleased. Jon can play-test with pictures at
+https://maffsgames.co.uk/escape-rooms/library-jam/play.html** (and rightful-king/play.html). Checked: play.html in
+Chromium at 1280 and 320 px (scene, win, fail at time-out); check-escape-rooms (all art present) and test-escape-art pass.
+
