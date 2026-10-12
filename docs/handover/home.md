@@ -1,5 +1,7 @@
 # Handover: home lane
 
+**CONTAINER-PULL-TIMEOUT (12 Oct, #299).** The image pull no longer counts against a group's limit: both container jobs use `timeout-minutes: matrix.job_timeout` = `timeout` + `PULL_ALLOWANCE` (10, `ci-groups.py`; emitted for content groups, literal on the 7 static entries). Budget step untouched (75% of `timeout` from JOB_T0). `ci-groups.py --selftest` fails on any mismatch. Not done: pull seconds in the summary (no in-job source for the start time). Cause: run 802, Content verifiers 33 took 379 s against 360 s. **Cloud lane:** the re-run-at-Initialize-containers rule can go after two clean full main runs.
+
 **CI-TIMINGS-MEDIAN (12 Oct, Jon's contract; #288, merge d00a818): MAIN IS UNBLOCKED, and the cloud lane can resume VERIFIERS-20.**
 `ci-groups.py --check` had failed on main and every PR since the "Record CI timings and repack (run 38224711265)" commit
 (`25f887b`): run 785 recorded a 125 s setup against 18-28 s in the eleven records before it, and the repack against that

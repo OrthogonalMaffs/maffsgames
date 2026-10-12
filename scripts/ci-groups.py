@@ -82,6 +82,11 @@ TIERS = {
     "lock": ("Answer lock", "L", 10, 300),
 }
 TIER_ORDER = ["content", "lock"]
+# A container job's hang guard is its group's timeout plus this many minutes (matrix.job_timeout in check-site.yml).
+# GitHub counts the image pull ("Initialize containers") inside timeout-minutes; the group's budget (75% of
+# `timeout`) runs from the first step, after the pull. Main run 802 (12 Oct 2026): Content verifiers 33 spent 379 s
+# initialising against its 360 s timeout and was cancelled before it ran a check.
+PULL_ALLOWANCE = 10
 TARGET, FAIL = 0.70, 0.80          # of a group's budget: pack to TARGET; --check fails past FAIL
 SETUP = 25                         # seconds before a group's first line, when the timings do not record it
 HISTORY = 5                        # main runs kept in ci-timings.json; the estimates are their medians
@@ -247,6 +252,7 @@ def groups(hdrs=None, timings=None, prev=None):
         prefix, _, timeout, _ = TIERS[tier]
         for g, labels in gs.items():
             out.append({"id": g, "tier": tier, "name": "%s %s" % (prefix, g), "timeout": timeout,
+                        "job_timeout": timeout + PULL_ALLOWANCE,
                         "lines": [(l, cmd[l]) for l in sorted(labels, key=order.get)]})
     return out
 
@@ -293,7 +299,7 @@ def write_pack(gs=None):
 
 def matrix(hdrs=None, timings=None, prev=None):
     """The content job's matrix include list: one entry per packed group."""
-    return [{"name": g["name"], "timeout": g["timeout"],
+    return [{"name": g["name"], "timeout": g["timeout"], "job_timeout": g["job_timeout"],
              "checks": "".join("%s|%s\n" % l for l in g["lines"])}
             for g in groups(hdrs, timings, prev) if g["lines"]]
 
@@ -345,6 +351,31 @@ def static_checks(path=WORKFLOW):
             label, cmd = raw.strip().split("|", 1)
             out.append((name, label.strip(), cmd.strip()))
     return out
+
+
+def static_timeouts(path=WORKFLOW):
+    """[(job name, timeout, job_timeout or None)] for the static matrix entries (a plain reader, no YAML library),
+    plus the `timeout-minutes:` each container job uses, as [(line, expression)] under the key None."""
+    with open(path, encoding="utf-8") as f:
+        text = f.read()
+    out, cur = [], None
+    for raw in text.splitlines():
+        m = re.match(r"^\s*- name: (.+)$", raw)
+        if m:
+            cur = [m.group(1).strip(), None, None]
+            out.append(cur)
+            continue
+        m = re.match(r"^\s*(job_)?timeout: (\d+)\s*$", raw)
+        if m and cur:
+            cur[2 if m.group(1) else 1] = int(m.group(2))
+    return [tuple(e) for e in out if e[1] is not None or e[2] is not None]
+
+
+def container_job_guards(path=WORKFLOW):
+    """The `timeout-minutes:` expressions of the jobs that take a matrix timeout (the container jobs)."""
+    with open(path, encoding="utf-8") as f:
+        return [m.group(1).strip() for m in re.finditer(r"^\s*timeout-minutes: (\$\{\{ matrix\.\w+ \}\})\s*$",
+                                                        f.read(), re.M)]
 
 
 def all_checks():
@@ -550,7 +581,26 @@ def selftest():
     check("deps", p["deps"] == ["data/a.json", "games/b/", "c.txt"])
     m = matrix({"verify-x.py": parse("verify-x.py", "# ci-line: X | --a\n")}, {"lines": {}}, {})
     check("matrix entry", m == [{"name": "Content verifiers 1", "timeout": TIERS["content"][2],
+                                  "job_timeout": TIERS["content"][2] + PULL_ALLOWANCE,
                                   "checks": "X|python scripts/verify-x.py --a\n"}])
+
+    # Hang guard vs budget (contract CONTAINER-PULL-TIMEOUT): job_timeout = timeout + PULL_ALLOWANCE, everywhere.
+    check("every emitted group: job_timeout = timeout + %d" % PULL_ALLOWANCE,
+          all(g["job_timeout"] == g["timeout"] + PULL_ALLOWANCE for g in groups(hdrs=None)))
+    st = static_timeouts()
+    check("static matrix (%d entries): each has job_timeout = timeout + %d" % (len(st), PULL_ALLOWANCE),
+          len(st) > 0 and all(t is not None and j == t + PULL_ALLOWANCE for _, t, j in st))
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        bad = os.path.join(td, "w.yml")      # PLANT: one entry's job_timeout one minute short, one missing
+        with open(bad, "w", encoding="utf-8") as f:
+            f.write("- name: A\n  timeout: 10\n  job_timeout: 19\n- name: B\n  timeout: 8\n")
+        sb = static_timeouts(bad)
+    check("PLANT: a static entry with job_timeout off by one, or missing, is caught: %s" % (sb,),
+          sb == [("A", 10, 19), ("B", 8, None)]
+          and [n for n, t, j in sb if j != t + PULL_ALLOWANCE] == ["A", "B"])
+    check("both container jobs use matrix.job_timeout as timeout-minutes (and nothing else uses matrix.timeout there)",
+          container_job_guards() == ["${{ matrix.job_timeout }}"] * 2)
 
     # Packing (contract CI-BALANCE). target = 70% of 270s = 189s; fail = 80% = 216s; setup 20s.
     T = lambda d: {"setup": 20, "lines": d}
