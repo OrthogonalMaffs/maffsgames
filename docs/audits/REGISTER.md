@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 8 | 204 | 0 | 212 |
-| MEDIUM | 128 | 143 | 3 | 274 |
+| MEDIUM | 127 | 144 | 3 | 274 |
 | LOW | 33 | 32 | 1 | 66 |
-| **All** | 170 | 405 | 4 | 579 |
+| **All** | 169 | 406 | 4 | 579 |
 
 ### By class
 
@@ -56,7 +56,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 9 | 1 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
-| NEW:sr14-content | 1 | 3 |
+| NEW:sr14-content | 0 | 3 |
 | NEW:wrong explanation | 0 | 3 |
 | uncounted | 0 | 3 |
 | NEW:analytics | 0 | 2 |
@@ -202,7 +202,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `truth-will-set-you-free` | yes | verify-truth-will-set-you-free.py | 1 | 1 | 2 | 2 | 1 | 5 | 0 |
 | `unit-converter` | yes | verify-unit-converter.py | 0 | 1 | 6 | 2 | 1 | 8 | 0 |
 | `word-problem-decoder` | yes | verify-word-problem-decoder.py | 0 | 6 | 4 | 2 | 2 | 10 | 0 |
-| `wrong-on-the-internet` | yes | verify-wrong-on-the-internet.py | 0 | 2 | 4 | 0 | 4 | 2 | 0 |
+| `wrong-on-the-internet` | yes | verify-wrong-on-the-internet.py | 0 | 2 | 4 | 0 | 3 | 3 | 0 |
 
 ## Open CRITICAL and HIGH, by game (Year 6, KS3, GCSE and Core first)
 
