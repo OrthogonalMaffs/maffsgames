@@ -53,6 +53,7 @@
   "Graph Transformer (BFS reachability + par verification)": "16",
   "Growth and Decay (keys recomputed from each printed model)": "24",
   "Higher Power Pairs (two cards match exactly when they are worth the same; played in Chromium)": "7",
+  "Index Laws (all 45 keys recomputed symbolically from the question's TeX; every option classified; every explanation's arithmetic recomputed; every option pressed in Chromium)": "11",
   "Integration Duel (every key and option checked with SymPy, explanations checked, every option marked in Chromium)": "15",
   "Just Pythag It, Bruv, part 1 (fit at 320px; a quarter of the planted layout faults)": "22",
   "Just Pythag It, Bruv, part 2 (fit at 390 and 412px; a quarter of the planted layout faults)": "3",
