@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: `
+`cloud-remaining: percentage-flip`
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -33,7 +33,7 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence in PR; next 3 percentage-flip.
+**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); now on 3 percentage-flip, then factor-race.
 UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
@@ -87,6 +87,19 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
+
+## 2026-10-12 (cloud): VERIFIERS-20 game 2, fraction-equivalence (#283, merge commit 69a2003)
+
+- **Verifier:** `scripts/verify-fraction-equivalence.py`: the Year 6 bank (20 pairs) and the generator (20,000 draws in
+  Chromium, every multiplier 2-6 and offset 1-3 reached); every key and cross-multiplication line recomputed with Fraction;
+  every bank pair and 400 draws answered YES and NO through `guess()`; Year 6 sessions checked. Four planted faults all fail.
+- **Faults fixed:** none. **Expected failure left open (for Jon):** `fraction-equivalence-v20-001` (LOW): Year 6 bank items
+  12 and 18 are one question written both ways round, so 19 different pairs; replacing one is new content (SR-19). The
+  verifier names it and fails on any other repeat. t1-001 (20 items) and f1-001 (phone fold) stay open as before.
+- **Main's run:** see the next entry.
+- Branch `claude/verifier-fraction-equivalence` deleted locally; GitHub branch `claude/verifier-prime-or-composite` is still
+  on the remote (proxy refuses deletes): listed under Open for Jon. Squash merges mean `git branch -d` refuses, so the
+  local branch was removed with `-D` after confirming the PR was merged.
 
 ## 2026-10-12 (cloud): VERIFIERS-20 game 1, prime-or-composite (#282, merge commit cdd29ff)
 
