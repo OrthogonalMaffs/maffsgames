@@ -52,6 +52,7 @@
   "Fraction Snap (every pair's key and cross-multiplication recomputed, the generator drawn 20000 times, every pair marked both ways in Chromium)": "9",
   "Free Daily Pizza (independent recomputation + daily seed + phone fit)": "2",
   "GA4 country Apps Script (mocked API and Sheet: replace-by-date is idempotent, other dates untouched, events tab never referenced; planted faults caught)": "16",
+  "GA4 loads on the live host only (analytics.js in Chromium: on the stub server and on a local host no request reaches Google's analytics hosts and no gtag is defined; on the live host one gtag.js load and one page_view with the old config; two faults planted)": "35",
   "Game analytics (an escape room won with a search and a tab switch: 3 lock question_answered, 1 game_completed, 0 game_abandoned, to GA4 and the Sheet; a room left mid-game: 1 abandon; an ordinary game with a tab switch: 0 abandons, 1 completion; three old faults planted and caught)": "14",
   "Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium)": "7",
   "Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; the typed gradient marked, clicking scores nothing; answer once and Next once, played in Chromium)": "9",
