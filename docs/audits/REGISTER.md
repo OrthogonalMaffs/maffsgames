@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-581 findings in 79 games.
+582 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 7 | 205 | 0 | 212 |
-| MEDIUM | 126 | 147 | 3 | 276 |
+| MEDIUM | 126 | 148 | 3 | 277 |
 | LOW | 33 | 32 | 1 | 66 |
-| **All** | 167 | 410 | 4 | 581 |
+| **All** | 167 | 411 | 4 | 582 |
 
 ### By class
 
@@ -54,6 +54,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | B7 (ledgered) | 3 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
+| NEW:equal-value-options | 0 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
 | NEW:sr14-content | 0 | 3 |
@@ -63,7 +64,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:board-key-mismatch | 2 | 2 |
 | NEW:cosmetic | 1 | 2 |
 | NEW:double-finish | 0 | 2 |
-| NEW:equal-value-options | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
@@ -135,7 +135,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `complex-converter` | yes | verify-complex-converter.py | 0 | 1 | 5 | 1 | 4 | 3 | 0 |
 | `component-crusher` | yes | verify-component-crusher.py | 1 | 6 | 6 | 1 | 2 | 12 | 0 |
 | `constructions-lab` | yes | verify-constructions-lab.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
-| `coordinate-geometry-dash` | yes | verify-coordinate-geometry-dash.py | 0 | 1 | 3 | 0 | 3 | 1 | 0 |
+| `coordinate-geometry-dash` | yes | verify-coordinate-geometry-dash.py | 0 | 1 | 4 | 0 | 3 | 2 | 0 |
 | `core-maths-paper1` | yes | verify-core-maths-paper1.py | 0 | 4 | 2 | 0 | 0 | 6 | 0 |
 | `core-maths-paper2b` | yes | verify-core-maths-paper2b.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
 | `core-maths-paper2c` | yes | verify-core-maths-paper2c.py | 0 | 3 | 5 | 1 | 6 | 3 | 0 |
