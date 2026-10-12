@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-580 findings in 79 games.
+581 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 8 | 204 | 0 | 212 |
-| MEDIUM | 126 | 146 | 3 | 275 |
+| MEDIUM | 126 | 147 | 3 | 276 |
 | LOW | 33 | 32 | 1 | 66 |
-| **All** | 168 | 408 | 4 | 580 |
+| **All** | 168 | 409 | 4 | 581 |
 
 ### By class
 
@@ -63,6 +63,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:board-key-mismatch | 2 | 2 |
 | NEW:cosmetic | 1 | 2 |
 | NEW:double-finish | 0 | 2 |
+| NEW:equal-value-options | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
 | NEW:key-ask mismatch | 0 | 2 |
 | NEW:prose-through-katex | 2 | 2 |
@@ -76,7 +77,6 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:data-not-shown | 0 | 1 |
 | NEW:degenerate-item | 1 | 1 |
 | NEW:duplicate-item | 1 | 1 |
-| NEW:equal-value-options | 0 | 1 |
 | NEW:estimation-not-by-stated-method | 0 | 1 |
 | NEW:exact-order sorter marking | 0 | 1 |
 | NEW:false scoring claim | 0 | 1 |
@@ -183,7 +183,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `probability-pioneer` | yes | verify-probability-pioneer.py | 0 | 2 | 2 | 0 | 0 | 4 | 0 |
 | `proof-builder` | yes | verify-proof-builder.py | 2 | 14 | 7 | 1 | 3 | 21 | 0 |
 | `proportion-blaster` | yes | verify-proportion-blaster.py | 0 | 1 | 0 | 0 | 0 | 1 | 0 |
-| `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 0 | 0 | 0 | 1 | 0 |
+| `scale-factor-scaling` | yes | verify-scale-factor-scaling.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
 | `screening-room` | yes | verify-screening-room.py | 1 | 4 | 10 | 2 | 1 | 15 | 1 |
 | `sequence-solver` | yes | verify-sequence-solver.py | 0 | 1 | 2 | 0 | 2 | 1 | 0 |
 | `seven-bridges` | yes | verify-seven-bridges.py | 0 | 2 | 6 | 1 | 7 | 2 | 0 |
