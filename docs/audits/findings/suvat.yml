@@ -60,7 +60,9 @@ findings:
   summary: Unknown ?level serves level4 but logs and submits under the raw key (boards like suvat_nonsense, suvat___proto__);
     downgraded from HIGH to match differentiation-duel
   evidence: submitScore('suvat','nonsense',120,8), likewise constructor/__proto__; no crash
-  status: open
+  status: fixed
+  pr: 318
+  ruling: 'Contract LEVEL-RESOLVER (Jon, 12 Oct 2026): the game reads ?level through MaffsLevel.resolve; an unknown key gives its default level and a stray board cannot be created (canon 4.5).'
 - id: suvat-t5-006
   severity: MEDIUM
   jc: false

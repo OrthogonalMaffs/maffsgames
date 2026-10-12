@@ -78,7 +78,9 @@ findings:
   summary: Unknown ?level submits to a new board under that name; constructor/__proto__ crash every mode
   evidence: '?level=nonsense: i-notation, ''Further Maths'' pill, submitScore(''complex-converter'',''nonsense'',2000,20);
     constructor: ''arr is not iterable'''
-  status: open
+  status: fixed
+  pr: 318
+  ruling: 'Contract LEVEL-RESOLVER (Jon, 12 Oct 2026): the game reads ?level through MaffsLevel.resolve; an unknown key gives its default level and a stray board cannot be created (canon 4.5).'
 - id: complex-converter-t6-007
   severity: LOW
   jc: true
