@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 8 | 204 | 0 | 212 |
-| MEDIUM | 129 | 143 | 2 | 274 |
+| MEDIUM | 128 | 143 | 3 | 274 |
 | LOW | 33 | 32 | 1 | 66 |
-| **All** | 171 | 405 | 3 | 579 |
+| **All** | 170 | 405 | 4 | 579 |
 
 ### By class
 
@@ -71,7 +71,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:wording | 1 | 2 |
 | 10 | 0 | 1 |
 | NEW:a11y state | 0 | 1 |
-| NEW:ambiguous-notation | 1 | 1 |
+| NEW:ambiguous-notation | 0 | 1 |
 | NEW:answer-reveal-invisible | 1 | 1 |
 | NEW:data-not-shown | 0 | 1 |
 | NEW:degenerate-item | 1 | 1 |
@@ -163,7 +163,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
 | `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 2 | 0 | 0 | 3 | 0 |
 | `higher-power` | yes | verify-higher-power.py | 0 | 1 | 4 | 0 | 4 | 1 | 0 |
-| `index-laws` | yes | verify-index-laws.py | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| `index-laws` | yes | verify-index-laws.py | 0 | 0 | 1 | 0 | 0 | 0 | 1 |
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 7 | 1 | 1 | 9 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 2 | 1 | 1 | 4 | 0 |
