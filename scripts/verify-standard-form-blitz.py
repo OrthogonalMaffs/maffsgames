@@ -15,7 +15,8 @@ nothing is floated except to print):
     approximation to a whole number) and, where the question says standard form, it is in standard form: 1 <= a < 10, with
     exactly the stated number of significant figures.
   Options: exactly four, all different strings; exactly one is right (equal to the value, and in standard form where that is
-    asked: a distractor that is numerically equal but not in standard form, like 45 x 10^3, is legitimately wrong); a
+    asked: a distractor that is numerically equal but not in standard form, like 45 x 10^3, is legitimately wrong; where the
+    question does not ask for standard form, ANY option equal to the key in value fails the item, SR-4/SR-16); a
     comparison's "All equal", "They are equal", "Cannot tell" and "None are equal" are false claims, and each pair claimed
     equal is tested.
   Render: every question and option is parsed by KaTeX (throwOnError) from the pinned local copy, and the rendered TeX
@@ -391,6 +392,10 @@ PLANTS = [
      [("correct:'£37313'", "correct:'£37314'")]),
     ('the largest of three keyed as the smallest', 'options:',
      [("correct:'2.9 \\\\times 10^5',d:['3.1 \\\\times 10^4','8 \\\\times 10^3','All equal']", "correct:'8 \\\\times 10^3',d:['3.1 \\\\times 10^4','2.9 \\\\times 10^5','All equal']")]),
+    ('SR-4/16: an option equal to the key in value, "ordinary number" asked', 'options:',
+     [("correct:'37000',d:['3700','370000','370']", "correct:'37000',d:['37000.0','370000','370']")]),
+    ('SR-4/16: an option equal to the key in value, plain "Calculate" asked', 'options:',
+     [("correct:'1',d:['0','10^{12}','10^{-12}']", "correct:'1',d:['1.0','10^{12}','10^{-12}']")]),
     ('a solve-for key that does not solve the equation', 'key:',
      [("correct:'7',d:['70','0.7','14']", "correct:'70',d:['7','0.7','14']")]),
     ('the wrong claim keyed for "which two are equal"', 'options:',
