@@ -175,6 +175,24 @@
       "reason": "The instruction on every question is \"Simplify fully.\" Jon's rulings of 9 Oct 2026 (boolean-blitz-t6-002/003, #227): an option with the key's truth table and no more literals than the minimal sum of products is marked right, so AB + AC is accepted beside the key A(B + C); the verifier allows only this pair."
     },
     {
+      "id": "complex-converter::c1e7f5fc4803#1::B11::[\"3\\\\angle 30°\", \"3\\\\angle \\\\pi/6\"]",
+      "where": "complex-converter QUESTIONS.level4[14]",
+      "pair": [
+        "3\\angle 30°",
+        "3\\angle \\pi/6"
+      ],
+      "reason": "The question asks \"Express in polar form (degrees).\" 3\\angle \\pi/6 equals the marked answer 3\\angle 30° but gives the angle in radians, not the degrees the ask names (SR-4; B11-CLEAR, 12 Oct 2026)."
+    },
+    {
+      "id": "complex-converter::c1e7f5fc4803#2::B11::[\"3\\\\angle 30°\", \"3\\\\angle \\\\pi/6\"]",
+      "where": "complex-converter QUESTIONS.further[14]",
+      "pair": [
+        "3\\angle 30°",
+        "3\\angle \\pi/6"
+      ],
+      "reason": "The question asks \"Express in polar form (degrees).\" 3\\angle \\pi/6 equals the marked answer 3\\angle 30° but gives the angle in radians, not the degrees the ask names (SR-4; B11-CLEAR, 12 Oct 2026)."
+    },
+    {
       "id": "decimal-detective::146b4888413a#1::B11::[\"7.9\", \"7.90\"]",
       "where": "decimal-detective ROUNDUP_QUESTIONS[10]",
       "pair": [
