@@ -34,6 +34,7 @@ This replaces "full local suite before every push", including in contracts that 
 the content verifiers `scripts/ci-deps.py` selects for the branch's changes, plus the fast site-wide
 checks; then push and let CI run the rest. **Why:** the repo is public, so CI minutes are free, and the
 full local run was a slower second copy of CI with known Windows-only false failures (todo §4 item 18).
+**One exception (SR-27, canon §0.3):** a PR that only adds or edits `scripts/verify-<slug>.py`, that game's findings file and the lane's handover runs the five checks SR-27 names instead.
 **Safety net:** every PR runs every site-wide check; every merge to main, a weekly schedule and a manual
 run execute EVERYTHING. Merge when the `Gate (every job passed)` check is green. `--full` still runs the
 whole suite locally if ever wanted.
@@ -211,8 +212,4 @@ that branch to main; undoing it needed Jon.
 
 ### End of task: remove the task's worktree (WORKTREE-CLEANUP, 11 Oct 2026)
 
-After the PR merges on green and main's run is reported (above), remove the worktree the task used and its
-local branch, from the primary checkout: `git worktree remove <path>`, then `git branch -d <branch>`, then
-`git worktree prune`. **Never `--force`, never `-D`:** if either refuses, the worktree is dirty, unmerged or
-unpushed, so leave it and name it in the handover with what is outstanding. Remote branches are not deleted
-here. **Why:** worktrees were made per task and never removed; 35 had built up by 11 Oct 2026.
+After the PR merges on green and main's run is reported (above), run `python scripts/end-task.py <branch>` from the primary checkout. It removes the task's worktree and local branch only if the PR is MERGED, the local tip is the PR's head and the worktree is clean; otherwise it refuses and names why, so leave it and name it in the handover. **Never delete a branch by hand** (this repo squash-merges, so `git branch -d` cannot tell a merged branch from an unmerged one). Remote branches are deleted by GitHub on merge (repo setting, 12 Oct 2026). **Why:** worktrees were made per task and never removed; 35 had built up by 11 Oct 2026.

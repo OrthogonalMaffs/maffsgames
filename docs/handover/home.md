@@ -1,5 +1,7 @@
 # Handover: home lane
 
+**RULINGS-12OCT (12 Oct, Jon's contract; branch `claude/rulings-12oct`).** Canon §0.3 has SR-26 (grow banks from parameters, never swap single items) and SR-27 (verifier-only PRs run five named checks, not `check-changed.py`); CLAUDE.md "Before pushing" names SR-27 as the one exception. New `scripts/end-task.py <branch>` replaces the `branch -d` rule: it removes the worktree and local branch only if the PR is MERGED, the tip is the PR's head and the worktree is clean, else refuses; self-test in CI. (`-d` can pass while the stale `origin/<branch>` ref exists, and refuses after a prune.) **For the cloud lane:** from its next PR use SR-27 and `end-task.py`; GitHub deletes merged head branches, so drop the "Open for Jon: delete branch" lines in your next handover commit. ROOM-ART/ROOMS-RELEASE-RK-LJ moved to `docs/history/handover-home-archive.md` for size.
+
 **CONTAINER-PULL-TIMEOUT (12 Oct, #299).** The image pull no longer counts against a group's limit: both container jobs use `timeout-minutes: matrix.job_timeout` = `timeout` + `PULL_ALLOWANCE` (10, `ci-groups.py`; emitted for content groups, literal on the 7 static entries). Budget step untouched (75% of `timeout` from JOB_T0). `ci-groups.py --selftest` fails on any mismatch. Not done: pull seconds in the summary (no in-job source for the start time). Cause: run 802, Content verifiers 33 took 379 s against 360 s. **Cloud lane:** the re-run-at-Initialize-containers rule can go after two clean full main runs.
 
 **CI-TIMINGS-MEDIAN (12 Oct, Jon's contract; #288, merge d00a818): MAIN IS UNBLOCKED, and the cloud lane can resume VERIFIERS-20.**
@@ -132,35 +134,6 @@ and [24] planted and caught). Findings log-laws-ln-001..006 (fixed, #274; f0-001
 only. Locally the banks were extracted with `extract-banks.py --workers 2` (98 s; 4 workers risks this machine's
 memory). Note: this machine's Bash heredocs eat backslashes, so regex-heavy scripts were written to files first.
 
-
-**ROOMS-RELEASE-RK-LJ (10 Oct, Jon 22:45: "both have been play tested, so lets just release"; contract in
-`docs/history/contracts/2026-10-10-rooms-release-rk-lj.md`).** The Rightful King (★★★) and The Library Jam (★) are
-live, released as Car Trap was: each index.html is the room (prom-budget's head: analytics on, indexable, canonical,
-the draft's meta description, 159 and 150 characters; og:image the scene), play.html deleted, teacher.html still
-noindex. Hub cards (draft hub line, topics, `data-stars` chip; Library Jam last of the ★, Rightful King after Rugby
-Mud) and front-page band cards (after Car Trap; test-section-clicks' order updated); sitemap `<url>` each; "nine" ->
-"eleven" in the hub (description, og:description, lede), the front page (band lede, "Open all eleven rooms"),
-CLAUDE.md and canon §11.1 (both rows added, Live 10/10). **Not a plain "nine", left for Jon:** canon §11.3's "Across
-the eight live rooms: 199 verified number sets" is a replay statistic, not a count to bump. it-vengeance still
-redirects to /escape-rooms/rightful-king/ (checked in Chromium). /updates/: one line each under October's New. The
-twelve finished contracts moved from docs/handover/contracts/ to docs/history/contracts/ (the folder is empty).
-Checked: check-escape-rooms, test-escape-rating (11 rooms, no 320 px overflow), test-escape-art (both rooms to a win
-and a loss with their pictures), test-section-clicks, context size. **Merged #271 (227fb0a), main green. Live site checked
-10 Oct:** /escape-rooms/rightful-king/ and /escape-rooms/library-jam/ serve 200 with their titles; in Chromium at 320 px each
-shows its scene picture and Start, no sideways scroll; /escape-rooms/it-vengeance/ lands on The Rightful King; the hub
-says "Eleven"; the old play.html is 404.
-
-**ROOM-ART-RK-LJ: The Library Jam (10 Oct, Jon's contract; pictures approved 22:20-22:42).** The Rightful King's
-half was already merged as #269 (main green, 32c2be0). Filed `docs/art/library-jam-scene/-fail/-win.webp` (1600x873,
-q80, via `strip-gen-watermark.py --width 1600 --frame 1600x873`: no watermark). **All three sources are 2752x1536, like
-the scene, so nothing was upscaled** (the contract expected ~1024 px fail and win). Arm, bin, drop-box and desk screen
-all in frame. The squiggle "writing" on the two papers pinned to the right-hand wall is blanked in all three (each
-paper refilled from a plane fitted to its clean paper, so the glow gradients stay; outlines untouched); nothing else
-retouched. The papers stacked on the desk keep a few pixel-high illegible marks. room.js: `art: 'library-jam'`, the
-"ART: none yet" note replaced; sceneAlt checked against the picture and unchanged; failAlt and winAlt as the contract
-gives them; RULE (no `missArt`) kept. **Still unreleased. Jon can play-test with pictures at
-https://maffsgames.co.uk/escape-rooms/library-jam/play.html** (and rightful-king/play.html). Checked: play.html in
-Chromium at 1280 and 320 px (scene, win, fail at time-out); check-escape-rooms (all art present) and test-escape-art pass.
 
 **QUEUE (home lane, Jon 9 Oct 16:10):** 1 RULINGS-9OCT (#215, merged), 2 GRAPH-SKETCHER-FIT, 3 CI-BALANCE, 4 PLAY-AGAIN-SCREEN,
 5 SCORES-OFFLINE, 6 SCI-CALC, 7 DOCS-9OCT, then CHECKPOINT. (E2 merged as #213; main green.)
