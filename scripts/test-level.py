@@ -199,8 +199,8 @@ def games(part):
 
 def lookup_reader(src):
     """The fault the module exists to remove: the key is looked up as a property of an object built from the levels."""
-    bad = re.sub(r"if \(levels\.indexOf\(asked\) !== -1\) return asked;",
-                 "var o = {}; levels.forEach(function (l) { o[l] = 1; }); if (o[asked]) return asked;", src)
+    bad = re.sub(r"if \(levels\.indexOf\(asked\) !== -1\) \{",
+                 "var o = {}; levels.forEach(function (l) { o[l] = 1; }); if (o[asked]) {", src)
     if bad == src:
         raise SystemExit('selftest: the membership test was not found in level.js')
     return bad
