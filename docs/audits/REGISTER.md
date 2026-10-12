@@ -23,9 +23,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 7 | 205 | 0 | 212 |
-| MEDIUM | 118 | 156 | 3 | 277 |
+| MEDIUM | 115 | 159 | 3 | 277 |
 | LOW | 33 | 32 | 1 | 66 |
-| **All** | 159 | 419 | 4 | 582 |
+| **All** | 156 | 422 | 4 | 582 |
 
 ### By class
 
@@ -37,7 +37,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | 1 | 5 | 37 |
 | NEW:wrong-explanation-text | 10 | 36 |
 | 5 | 26 | 26 |
-| 4 | 11 | 22 |
+| 4 | 8 | 22 |
 | 7 | 5 | 16 |
 | NEW:value-equal distractors | 0 | 14 |
 | NEW:convention-unstated | 1 | 12 |
@@ -132,7 +132,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `binomial-blaster` | yes | verify-binomial-blaster.py | 2 | 15 | 4 | 1 | 1 | 21 | 0 |
 | `boolean-blitz` | yes | verify-boolean-blitz.py | 0 | 3 | 0 | 5 | 5 | 3 | 0 |
 | `characteristic-quest` | yes | verify-characteristic-quest.py | 0 | 1 | 3 | 1 | 3 | 2 | 0 |
-| `complex-converter` | yes | verify-complex-converter.py | 0 | 1 | 5 | 1 | 4 | 3 | 0 |
+| `complex-converter` | yes | verify-complex-converter.py | 0 | 1 | 5 | 1 | 3 | 4 | 0 |
 | `component-crusher` | yes | verify-component-crusher.py | 1 | 6 | 6 | 1 | 2 | 12 | 0 |
 | `constructions-lab` | yes | verify-constructions-lab.py | 0 | 0 | 4 | 1 | 5 | 0 | 0 |
 | `coordinate-geometry-dash` | yes | verify-coordinate-geometry-dash.py | 0 | 1 | 4 | 0 | 3 | 2 | 0 |
@@ -169,7 +169,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 2 | 1 | 1 | 4 | 0 |
 | `log-laws` | yes | verify-log-laws.py | 1 | 4 | 0 | 2 | 0 | 7 | 0 |
-| `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 3 | 1 | 4 | 2 | 0 |
+| `matrix-crunch` | yes | verify-matrix-crunch.py | 0 | 2 | 3 | 1 | 3 | 3 | 0 |
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 3 | 1 | 4 | 0 | 0 |
 | `moments-master` | yes | verify-moments-master.py | 1 | 8 | 4 | 2 | 2 | 13 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
@@ -192,7 +192,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `spot-the-muppet` | yes | verify-spot-the-muppet.py | 0 | 5 | 4 | 0 | 0 | 8 | 1 |
 | `standard-form-blitz` | yes | verify-standard-form-blitz.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `surd-simplifier` | yes | verify-surd-simplifier.py | 0 | 2 | 0 | 0 | 0 | 2 | 0 |
-| `suvat` | yes | verify-suvat.py | 1 | 3 | 6 | 1 | 2 | 9 | 0 |
+| `suvat` | yes | verify-suvat.py | 1 | 3 | 6 | 1 | 1 | 10 | 0 |
 | `terrible-advice` | yes | verify-terrible-advice.py | 0 | 5 | 5 | 0 | 0 | 10 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
 | `think-of-a-number` | yes | verify-think-of-a-number.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
