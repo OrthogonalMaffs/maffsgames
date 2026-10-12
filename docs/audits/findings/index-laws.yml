@@ -21,6 +21,10 @@ findings:
     in the question and removes notation puzzles; the stems state neither. A ruling for Jon: bracket or fraction-bar the three
     stems (same maths, same bank size) or remove them. Under the strict reading three items mark a wrong answer right, which is SR-20''s
     count of 3 for CRITICAL, so the call is not the cloud lane''s'
-  evidence: 'scripts/verify-index-laws.py (VERIFIERS-20) reads each stem both ways, lists these three as the expected failure and fails on any other stem whose two readings differ'
-  status: open
+  evidence: 'scripts/verify-index-laws.py (VERIFIERS-20, #296) read each stem both ways and listed these three as an expected failure'
+  status: ruled
+  ruling: 'Jon, 12 Oct 2026: the convention stands. In algebra a term such as 2x^2 is one object (implied multiplication binds
+    tighter than ÷), so 6x^7 ÷ 2x^2 means division by the whole term; the keys are right and the stems stay as they are.
+    verify-index-laws.py now reads a coefficient-and-variable term after ÷ as one term and fails only a stem that still reads
+    two ways under that convention (a divisor that is not such a term). The home lane records the convention as a standing ruling.'
 
