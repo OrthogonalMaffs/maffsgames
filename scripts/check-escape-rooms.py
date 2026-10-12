@@ -312,7 +312,7 @@ def room_rating(grades):
 
 def check_ratings(room_js, live, pages, rating_js):
     """Problems with the difficulty stars. room_js {slug: text}; live {slug}; pages {name: html}."""
-    out, want = [], {}
+    out, want, seqs = [], {}, {}
     for slug in sorted(live):
         gs = lock_grades(room_js[slug])
         missing = [lid for lid, g in gs if g is None or not 1 <= g <= 9]
@@ -340,11 +340,19 @@ def check_ratings(room_js, live, pages, rating_js):
                            f"its locks make it {label}")
         for slug in sorted(set(want) - set(seen)):
             out.append(f"{page}: no card for live room {slug}")
-        if page == "hub":
-            order = [want[s][0] for s in seen if s in want]
-            if order != sorted(order):
-                out.append("hub: cards are not in rating order (it says \"Ordered easiest to hardest\"): "
-                           + ", ".join(f"{s} {want[s][0]}" for s in seen if s in want))
+        # Every page that lists rooms lists them easiest first (FRONT-PAGE-ROOM-ORDER, 12 Oct 2026; the hub
+        # says "Ordered easiest to hardest").
+        seqs[page] = [s for s in seen if s in want]
+        order = [want[s][0] for s in seqs[page]]
+        if order != sorted(order):
+            out.append(f"{page}: cards are not in rating order (easiest first): "
+                       + ", ".join(f"{s} {want[s][0]}" for s in seqs[page]))
+    # The hub is the one source for the order within a star band: the front page lists the same rooms in the same order.
+    if "hub" in seqs:
+        for page, seq in seqs.items():
+            if page != "hub" and seq != seqs["hub"]:
+                out.append(f"{page}: room order differs from the hub's (the hub is the source for the order within a band)."
+                           f" hub: {', '.join(seqs['hub'])}; {page}: {', '.join(seq)}")
     js_bands = [(int(t), int(st), n, g) for st, n, g, t in re.findall(
         r"\{ stars: (\d), name: '([^']+)', grades: '([^']+)', top: (\d) \}", rating_js)]
     if js_bands != BANDS:
@@ -417,6 +425,35 @@ else:
     plant_line = "planted faults: skipped (rugby-mud is not live)"
 
 
+def swap_cards(html, a, b):
+    """The front page with the whole cards (with any wrapper's note left in place) of rooms a and b swapped."""
+    pat = r'<a class="esc-card" href="escape-rooms/%s/".*?</a>'
+    ma, mb = re.search(pat % a, html, re.S), re.search(pat % b, html, re.S)
+    (x, y) = sorted([ma, mb], key=lambda m: m.start())
+    return (html[:x.start()] + y.group(0) + html[x.end():y.start()] + x.group(0) + html[y.end():])
+
+
+# Order faults on the front page (FRONT-PAGE-ROOM-ORDER): each must be caught, or the order rule has stopped working.
+hub_seq = re.findall(CARD["hub"][0], pages["hub"])
+stars_of = {s: room_rating([g for _, g in lock_grades(room_js[s])])[0] for s in live}
+hub_seq = [s for s in hub_seq if s in stars_of]
+same_band = next(((a, b) for a, b in zip(hub_seq, hub_seq[1:]) if stars_of[a] == stars_of[b]), None)
+order_plants = {}
+if hub_seq and stars_of[hub_seq[0]] != stars_of[hub_seq[-1]]:
+    order_plants["two front-page cards swapped across a star band"] = (
+        swap_cards(pages["front page"], hub_seq[0], hub_seq[-1]), "front page: cards are not in rating order")
+if same_band:
+    order_plants["front page rating-ordered but with a different tie order from the hub"] = (
+        swap_cards(pages["front page"], *same_band), "front page: room order differs from the hub's")
+for what, (fp, expect) in order_plants.items():
+    got = check_ratings(room_js, live, dict(pages, **{"front page": fp}), rating_js)
+    if not any(expect in g for g in got):
+        problems.append(f"planted fault NOT caught: {what} (the rating check found {got or 'nothing'})")
+if len(order_plants) != 2:
+    problems.append(f"order plants: expected 2, built {len(order_plants)} (need a star band change and a tie in the hub)")
+order_line = "order faults caught: " + "; ".join(order_plants)
+
+
 # ---- every set, re-checked (ESCAPE-SET-CHECKS) -------------------------------
 def check_sets(slug, lock_ids, library):
     """(problems, sets that passed) for one room: every set of every lock through escape_set_checks.check()."""
@@ -458,6 +495,7 @@ print("difficulty (hardest lock's grade):")
 for slug, (stars, name, gr) in star_report.items():
     print(f"  {slug:<20} {'★' * stars:<3} {name} (grades {gr})")
 print(plant_line)
+print(order_line)
 print("verified sets per live room (every set re-checked by scripts/escape_set_checks.py):")
 for slug, n in set_counts.items():
     print(f"  {slug:<20} {n:>4}")
