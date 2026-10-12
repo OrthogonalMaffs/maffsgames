@@ -33,7 +33,7 @@ A two-option game declares an `answer` that picks the option differing from its 
 in the queue below pointing to it. Read it when the item starts, not at session start (the folder stays out of the
 start-up load). When the work merges, move the file to `docs/history/`.
 
-**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter DONE (#293); 11 equatle in PR; next standard-form-blitz ... as in the contract order.
+**Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter DONE (#293); 11 equatle DONE (#294); 12 standard-form-blitz in PR; next standard-form-blitz ... as in the contract order.
 UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
@@ -100,13 +100,21 @@ Rule: a job cancelled at Initialize containers is runner infrastructure; re-run 
 - Earlier, on PR heads: #291 Content verifiers 3; #292 Tiers 1+2 shard 3/4, Content verifiers 4, then 3, 21, 13. Durations not captured.
 Reading: 379 s is over the timeout, so the container pull is consuming the timeout, not the checks.
 
-## 2026-10-12 (cloud): VERIFIERS-20 game 11, equatle (PR pending)
+## 2026-10-12 (cloud): VERIFIERS-20 game 12, standard-form-blitz (PR pending)
+
+- **Verifier:** `scripts/verify-standard-form-blitz.py`: all 100 items (50 GCSE, 50 A-Level) read from their own TeX into exact SymPy values (conversions, products and quotients, powers, roots, sums, fractions),
+  the nine context problems from the numbers in their text, comparisons decided from the listed values, the two solve-for items tried with each option. Each key equals the value at the stated precision
+  (3 s.f., 1 s.f., nearest £, whole number), is in standard form where asked, and is the only right option (an equal but non-standard distractor is legitimately wrong). KaTeX parses every question and option
+  (pinned local copy); sessions dealt 3 times per level; every item shown by `showQ()` and all four options pressed in Chromium. Twelve planted faults fail (two plant SR-4/16: an option equal to the key in value where standard form is not asked). About 45 s with the self-test.
+- **Faults fixed:** none; no findings to close (the register has none for this game).
+
+## 2026-10-12 (cloud): VERIFIERS-20 game 11, equatle (#294, merge commit a20cd5d)
 
 - **Verifier:** `scripts/verify-equatle.py`: the generated bank (23,399) recomputed exactly (`Fraction`, BODMAS, leading zeros); all 55,825 valid 8-character equations enumerated here
   and every one accepted by `validate()` (no float refusal); refusal figures; `states()` against Wordle's rule over 131,000+ pairs; Hard Mode over 3,000 cases; the daily pick for 34 dates;
   played in Chromium on a stepped clock (win, six misses with every tile and key checked, refusals cost no row, Hard Mode, the 17 keys). Nine planted faults fail. About 75 s with the self-test.
 - **Faults fixed:** none. **Left open, not asserted:** equatle-t2-001 (a result of 0, for Jon) and t2-002 (puzzle number off-by-one).
-- **Container:** `check-changed.py` here fails site-wide checks only because the container lacks `esprima`, WebKit and the KaTeX CDN (as for game 10).
+- **Main's run:** 38273086593 (the #294 merge) green first time; Gate on #294 had 51 passed, 2 skipped. Local `check-changed.py` fails site-wide checks only because the container lacks `esprima`, WebKit and the KaTeX CDN.
 
 ## 2026-10-12 (cloud): VERIFIERS-20 game 10, shape-shifter (#293, merge commit 8e52e94)
 
@@ -148,33 +156,9 @@ Reading: 379 s is over the timeout, so the container pull is consuming the timeo
 - **Recipe that works (games 1-8):** worktree from origin/main; claim commit (the previous game's entry + one `cloud-remaining` line) pushed alone; script; `ci-groups --check`,
   `audit-register --check`, `check-verifier-coverage`, `check-context-size`; PR; merge on green Gate with main's last run green (the "Record CI timings" commit appears only after a
   green main run). KaTeX games: serve it with `bc.is_font_cdn` + `bc.serve_real_font`. Never write the remaining-list token in backticks in an entry; keep this file under 20 KB (move old entries to the archive).
+- **Pre-push set for verifier-only PRs (Jon's ruling, 12 Oct 2026; the home lane records it as SR-27):** run the verifier and its self-test, `ci-groups.py --check`,
+  `audit-register.py --check`, `check-verifier-coverage.py` and `check-context-size.py`; not `check-changed.py`. A PR that also touches a game page, a shared asset or another script still runs `check-changed.py`.
+  Applies from game 12 (standard-form-blitz); games 10 and 11 ran the longer set.
 - **Container setup (each new session):** `pip install playwright==1.63.0 sympy mpmath`; Chromium 1194 via a scratch dir of symlinks named 1243 (see the container note in the game 1 entry); `PLAYWRIGHT_BROWSERS_PATH` pointing at it.
 - **Remaining after 9:** shape-shifter, equatle, standard-form-blitz, index-laws, modular-battle, bearing-blitz, constructions-lab, formula-forge, characteristic-quest, eigenvalue-extractor, prisoners-dilemma (contract order).
 - **Open for Jon:** delete the merged `claude/verifier-*` branches on GitHub (the proxy refuses remote deletes); `fraction-equivalence-v20-001` and SR-26 scope (above).
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 7, formula-plug-in (#290, merge commit d31a12a)
-
-- **Verifier:** `scripts/verify-formula-plug-in.py`: all 50 items against ten formulas held in the verifier (variables, result variable, rule):
-  key from the item's own values with Fraction (whole numbers); `formulaKatex` read as maths and worked with the values; every working step has the
-  formula's left-hand side and is worth exactly the key; the substitution step uses the formula's numbers plus the values only; last step is
-  "LHS = key"; sessions of 10/20/30 dealt 3 times; every item shown by `loadQuestion()` (formula TeX read from KaTeX's annotation, variables line,
-  prompt) and answered on the numpad in Chromium (key right; key +-1 and the usual slips wrong, with "the answer is K" and the item's working). KaTeX is
-  served from the pinned local copy (`bank_common.serve_real_font`), so it runs offline. Four planted faults all fail the run.
-- **Faults fixed:** none. **Expected failures left open:** none (t3-002..006 stay open as before).
-- **Main's run:** 38232674780 (the #287 merge) green.
-
-## 2026-10-12 (cloud): VERIFIERS-20 game 6, think-of-a-number (#287, merge commit 25a73bc)
-
-- **Verifier:** `scripts/verify-think-of-a-number.py`: all 50 items (10 one-step, 20 two-step, 20 three-step): each key run forwards with
-  Fraction must give the result (every intermediate a whole number from 0 up, key 1-9999) and run backwards must return the key; step
-  displays and every `undoSteps` line recomputed; sessions of 10, 20 and 30 (2/4/4, 4/8/8, 6/12/12, no repeats); every item shown and answered on the
-  numpad in Chromium (key right; result, key +-1, steps run forwards again, steps undone in the order told: wrong with the recomputed working).
-  Four planted faults all fail the run.
-- **Faults fixed:** none. **Expected failures left open:** none.
-- **Lessons:** (1) #287 was held up by CI-TIMINGS-MEDIAN (home lane #288: timings are now the median of 5 main runs and the timings job
-  commits only a pack that passes `--check`; main unblocked, run 791 green). (2) `cloud.md` must stay under 20 KB (context-size check):
-  older entries move to `docs/history/handover-cloud-archive.md`. (3) The answer-lock self-test counts the backticked remaining-list line in this
-  file: exactly one, so never write that token in backticks in an entry.
-- **Main's run:** 38231678130 (the #289 merge) green; game 6's own main run is checked in the game 7 entry.
-
-(Entries for VERIFIERS-20 games 1-5 and the CI stop of 12 Oct are in `docs/history/handover-cloud-archive.md`: #282-#286, all green; the stop was resolved by #288.)
