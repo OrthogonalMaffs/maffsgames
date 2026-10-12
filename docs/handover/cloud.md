@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: coordinate-geometry-dash`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -34,7 +34,7 @@ in the queue below pointing to it. Read it when the item starts, not at session 
 start-up load). When the work merges, move the file to `docs/history/`.
 
 **Queue:** VERIFIERS-20 (12 Oct, contract `docs/handover/contracts/2026-10-12-verifiers-20.md`): 20 verifiers, one game per PR; 1 prime-or-composite DONE (#282); 2 fraction-equivalence DONE (#283); 3 percentage-flip DONE (#284); 4 factor-race DONE (#285); 5 prime-factorisation DONE (#286); 6 think-of-a-number DONE (#287); 7 formula-plug-in DONE (#290); 8 four-quadrant-explorer DONE (#291); 9 new-shapes DONE (#292); 10 shape-shifter DONE (#293); 11 equatle DONE (#294); 12 standard-form-blitz DONE (#295); 13 index-laws DONE (#296, ruling #297); 14 modular-battle DONE (#298); 15 bearing-blitz DONE (#300); 16 constructions-lab DONE (#301); between games: wrong-on-the-internet t2-006 (Jon's SR-14 ruling) DONE (#304, 73478d6), closes t2-006; modular-battle verifier flake fixed (#303); 17 formula-forge DONE (#305); 18 characteristic-quest DONE (#306); 19 eigenvalue-extractor DONE (#307); 20 prisoners-dilemma DONE (#309). **VERIFIERS-20 COMPLETE.** Then: formula-forge-v20-001 (Jon's ruling, 12 Oct) DONE (#310, 8d36ca2).
-B11-CLEAR (12 Oct, contract `docs/handover/contracts/2026-10-12-b11-clear.md`): clear B11 from the ledger, one game per PR: 1 scale-factor-scaling DONE (#312, 031d8ed); 2 coordinate-geometry-dash claimed; then index-laws, standard-form-blitz, surd-simplifier, boolean-blitz, complex-converter.
+B11-CLEAR (12 Oct, contract `docs/handover/contracts/2026-10-12-b11-clear.md`): clear B11 from the ledger, one game per PR: 1 scale-factor-scaling DONE (#312, 031d8ed); 2 coordinate-geometry-dash DONE (#315); then index-laws, standard-form-blitz, surd-simplifier, boolean-blitz, complex-converter.
 UC-FIX: DONE, #196 merged 9 Oct (c9fbf4b), main green.
 SIM-S5: DONE, #203 merged 9 Oct (4081538). UC-T4-007: DONE, #205 merged 9 Oct (920c5b1; the answers' item 3c, in
 `docs/history/contracts/2026-10-09-sim-s5-answers.md`; claim #204). FT-FIX: DONE, #207 merged 9 Oct (cf96929; contract, amendment and Jon's answers
@@ -89,17 +89,12 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
-## 2026-10-12 (cloud): CHECKPOINT 3 (Jon asked, ~21:30): B11-CLEAR in progress
+## 2026-10-12 (cloud): B11-CLEAR game 2, coordinate-geometry-dash (#315)
 
-- **Done:** game 1 scale-factor-scaling (#312, Gate green; main green after #311, run 38308024133; #312's own main run not yet reported).
-- **In flight, game 2 coordinate-geometry-dash** (this branch, `claude/b11-coordinate-geometry-dash`; local worktree `/home/user/wt/cgd`, built on main before #312):
-  alevel[15] (x = 2t + 1, y = t^2 - 3, dy/dx at t = 1; key 1): "1/2" (= "½") -> "−2" (gave y at t = 1, not the gradient); "½" kept. Verifier guard added (EQUAL_PAIRS empty; plant puts "1/2" back):
-  PASS. Ledger regenerated for this game only (B11 empty; no other game changed). The fix is committed on this branch (not yet a PR). Full check-changed.py was running at checkpoint (log in the old container only): re-run it on this branch. TO DO:
-  add finding coordinate-geometry-dash-b11-001 (fixed, PR n), release the claim, PR, merge on green Gate with main green.
-- **Next, read but not started:** index-laws 5 (all kind a: [6] 3^{12} = 9^6; [27] 1/x^{-3} = x^3; [38] 9 = 27/3; [39] 50 = 100/2; [40] 12.5 = 25/2); standard-form-blitz 1 (alevel[35]
-  2.5x10^3 = 25x10^2); then surd-simplifier 8, boolean-blitz 10 (6 kind b: check each stem names the form, else report to Jon), complex-converter 4 (2 kind b).
-- **Recipe per game:** branch from origin/main; claim commit pushed alone; edit the page (keys and stems unchanged); add the verifier guard + plant; `extract-banks.py --only <slug>` then
-  `check-banks.py --only <slug> --write-ledger` (esprima on PYTHONPATH, see game 1's entry); diff the ledger for other games (must be none); full check-changed.py; PR; finding with the PR number.
+- **Replacement (kind a, key unchanged):** alevel[15] (x = 2t + 1, y = t^2 - 3, dy/dx at t = 1; key 1): 1/2 -> −2 (gave y at t = 1, not the gradient); ½ kept.
+- **Verifier** fails on any equal pair (EQUAL_PAIRS empty; plant puts 1/2 back). Ledger: this game only.
+- **Container (new session after a clear):** cdn.jsdelivr.net is refused by the proxy (403), so every browser check of a page loading KaTeX from the CDN fails locally (about 30, incl. answer-lock parts); the changed game's own verifier and B11 passed. CI is the measure. Playwright needs `PLAYWRIGHT_BROWSERS_PATH` pointing at a dir with `chromium-1243 -> /opt/pw-browsers/chromium-1194` (and the headless shell likewise); esprima as in game 1. A full check-changed run takes over 35 min here: give the background run the 2 h timeout. Never run two at once (they share the stub server's port: "QUESTIONS is not defined").
+- **Next:** index-laws (replacements drafted: [6] 3^{12} -> 3^2, subtracted the powers; [27] 1/x^{-3} -> −1/x^3, made the answer negative as well; [38] 27/3 -> 1/3, [39] 100/2 -> 1/10, [40] 25/2 -> 1/5, each took the reciprocal as for a negative power; the kept twin of each is the student's own form). Then standard-form-blitz ([35] 25x10^2 -> 2.5x10^{-3}, squared and ignored the minus); surd-simplifier (its pairs also equal the key: 27/99 = 9/33 = 3/11; ask "simplest form"); boolean-blitz (every question shows "Simplify fully.", so the six kind-b items are allowlisted, #227 accepts AB + BC for B(A + C)); complex-converter ([14] context "Express in polar form (degrees).": allowlist; [42] 0 + 7j -> 0, took e^{j0} as 0).
 
 ## 2026-10-12 (cloud): B11-CLEAR game 1, scale-factor-scaling (#312, merge commit 031d8ed)
 

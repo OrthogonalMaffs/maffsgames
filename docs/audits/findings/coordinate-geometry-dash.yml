@@ -53,3 +53,17 @@ findings:
   summary: The perpendicular lines are drawn meeting at 72 deg
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3'
   status: open
+- id: coordinate-geometry-dash-b11-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:equal-value-options
+  level: alevel
+  where: 'games/coordinate-geometry-dash/index.html: Q_ALEVEL[15]'
+  summary: 'Two wrong options equal in value (SR-4: four distinct options), so the student chose from three: Q_ALEVEL[15]
+    (x = 2t + 1, y = t^2 - 3, dy/dx at t = 1; key 1) offered both 1/2 and ½. Key right. Fixed under B11-CLEAR and
+    Jon''s formula-forge ruling of 12 Oct 2026 (replace one of the pair with a nameable error): 1/2 -> −2 (gave y at
+    t = 1 instead of the gradient); ½ kept'
+  evidence: 'check-banks.py B11 (data/check-ledger.json, now cleared); scripts/verify-coordinate-geometry-dash.py fails
+    on any equal pair, with a plant that puts 1/2 back'
+  status: fixed
+  pr: 315
