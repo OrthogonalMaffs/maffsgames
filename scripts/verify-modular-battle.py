@@ -74,17 +74,28 @@ FREE_JS = r"""(n) => { const seen = {}; let bad = null;
   for (let i = 0; i < n; i++) { const q = generateQ(); const k = q.a + ',' + q.b; seen[k] = (seen[k] || 0) + 1;
     if (q.ans !== q.a % q.b && !bad) bad = q; }
   return {seen: seen}; }"""
-SCAFFOLD_JS = r"""(plan) => {
-  startGame(); clearInterval(gameTimer);
-  const out = [document.getElementById('dotGrid').style.display];
-  for (const right of plan) {
+# The scaffold and session drivers load fixed questions, steered as ONE_JS steers them: on live Math.random a planted page
+# could draw one with no option to press (the key offered twice, b = 2), and the run's verdict would be chance.
+DRIVE_PAIRS = [(47, 5), (38, 7), (29, 4), (53, 6), (41, 9), (22, 8), (57, 3)]
+NEXT_JS = r"""([a, b]) => {
+  const pick = (lo, hi, v) => (v - lo + 0.5) / (hi - lo + 1);
+  window.__steer = [pick(10, 60, a), pick(2, 9, b)];
+}"""
+SCAFFOLD_JS = r"""([plan, pairs]) => {
+  const pick = (lo, hi, v) => (v - lo + 0.5) / (hi - lo + 1);
+  const steer = (i) => { window.__steer = [pick(10, 60, pairs[i][0]), pick(2, 9, pairs[i][1])]; };
+  steer(0); startGame(); clearInterval(gameTimer);
+  const out = {disp: [document.getElementById('dotGrid').style.display], qs: [[currentA, currentB]], missing: null};
+  for (let i = 0; i < plan.length; i++) {
     const btns = [...document.querySelectorAll('#answerRow .choice-btn')];
-    const b = right ? btns.find(x => +x.textContent === currentAns) : btns.find(x => +x.textContent !== currentAns);
+    const b = plan[i] ? btns.find(x => +x.textContent === currentAns) : btns.find(x => +x.textContent !== currentAns);
+    if (!b) { out.missing = [currentA, currentB, btns.map(x => x.textContent)]; return out; }
     b.click();
     MaffsLock.clearTimers();
-    loadQuestion();
+    steer(i + 1); loadQuestion();
     // a question over 60 never draws dots, but a is at most 60, so the grid's display is the scaffold's state
-    out.push(document.getElementById('dotGrid').style.display);
+    out.disp.push(document.getElementById('dotGrid').style.display);
+    out.qs.push([currentA, currentB]);
   }
   return out;
 }"""
@@ -175,17 +186,31 @@ def play(fails, html):
                     for k in range(len(info['opts'])):
                         check_one(fails, a, b, page.evaluate(ONE_JS, [a, b, k]), k)
                     n += 1
-            seq = page.evaluate(SCAFFOLD_JS, [True, True, False, False, True, True])
+            plan = [True, True, False, False, True, True]
+            sc = page.evaluate(SCAFFOLD_JS, [plan, DRIVE_PAIRS])
             want_seq = ['flex', 'flex', 'none', 'none', 'flex', 'flex', 'none']
-            if seq != want_seq:
-                fails.append('scaffold: shown/hidden over right, right, wrong, wrong, right, right reads %r, expected %r' % (seq, want_seq))
+            if sc['missing']:
+                fails.append('scaffold: %d mod %d shows %r: no option to press for right, right, wrong, wrong, right, right' % tuple(sc['missing']))
+            elif sc['qs'] != [list(p) for p in DRIVE_PAIRS]:
+                fails.append('scaffold: steering to %r showed %r' % (DRIVE_PAIRS, sc['qs']))
+            elif sc['disp'] != want_seq:
+                fails.append('scaffold: shown/hidden over right, right, wrong, wrong, right, right reads %r, expected %r' % (sc['disp'], want_seq))
             # a whole session on the clock: right answers until 90 seconds
+            page.evaluate(NEXT_JS, list(DRIVE_PAIRS[0]))
             page.evaluate('() => { startGame(); }')
             got = 0
-            for _ in range(5):
-                page.evaluate('() => { const b = [...document.querySelectorAll("#answerRow .choice-btn")].find(x => +x.textContent === currentAns); b.click(); }')
+            shown = []
+            for a, b in DRIVE_PAIRS[1:6]:
+                shown.append(page.evaluate('() => [currentA, currentB]'))
+                pressed = page.evaluate('() => { const b = [...document.querySelectorAll("#answerRow .choice-btn")].find(x => +x.textContent === currentAns); if (!b) return false; b.click(); return true; }')
+                if not pressed:
+                    fails.append('session: question %d shows no option equal to its key' % (got + 1))
+                    break
                 got += 1
+                page.evaluate(NEXT_JS, [a, b])
                 page.clock.run_for(1300)
+            if shown != [list(p) for p in DRIVE_PAIRS[:len(shown)]]:
+                fails.append('session: steering to %r showed %r' % (DRIVE_PAIRS[:len(shown)], shown))
             page.clock.run_for(90000)
             end = page.evaluate('() => ({over: document.getElementById("gameOver").classList.contains("visible"), score: document.getElementById("finalScore").textContent, detail: document.getElementById("goDetail").textContent, t: timeLeft})')
             if not end['over'] or end['score'] != str(10 * got) or end['detail'] != '%d correct answers' % got or end['t'] != 0:
