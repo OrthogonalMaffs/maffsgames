@@ -31,21 +31,22 @@ from playwright.async_api import async_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ORIGIN = "https://maffsgames.co.uk"
 
-# (section, item, position) in page order: the markup's contract.
+# (section, item, position) in page order: the markup's contract. The room cards are in the hub's order, easiest
+# first (FRONT-PAGE-ROOM-ORDER, 12 Oct 2026), so a room's position here is its place in that order.
 EXPECTED_LINKS = [
     ("essentials-link", "open-essentials", 1),
     ("escape-rooms", "summary", 1),
-    ("escape-rooms", "hamster-heist", 3),
-    ("escape-rooms", "pe-shed-rebellion", 4),
-    ("escape-rooms", "heatwave-mutiny", 5),
-    ("escape-rooms", "prom-budget", 6),
-    ("escape-rooms", "canteen-hack", 7),
-    ("escape-rooms", "rugby-mud", 8),
-    ("escape-rooms", "comic-caper", 9),
-    ("escape-rooms", "kiln-disaster", 10),
+    ("escape-rooms", "comic-caper", 3),
+    ("escape-rooms", "kiln-disaster", 4),
+    ("escape-rooms", "library-jam", 5),
+    ("escape-rooms", "hamster-heist", 6),
+    ("escape-rooms", "pe-shed-rebellion", 7),
+    ("escape-rooms", "heatwave-mutiny", 8),
+    ("escape-rooms", "prom-budget", 9),
+    ("escape-rooms", "canteen-hack", 10),
     ("escape-rooms", "car-trap", 11),
-    ("escape-rooms", "rightful-king", 12),
-    ("escape-rooms", "library-jam", 13),
+    ("escape-rooms", "rugby-mud", 12),
+    ("escape-rooms", "rightful-king", 13),
     ("escape-rooms", "open-all", 14),
     ("escape-rooms", "start-hamster-heist", 15),
     ("parent-guides", "open-guides", 1),
