@@ -630,6 +630,21 @@ penalty per wrong setting. See §11.
 
 # 6. Curriculum Coverage
 
+## 4.5 The level reader: `MaffsLevel` (Jon, 12 Oct 2026, contract LEVEL-RESOLVER)
+
+**Every game reads `?level=` through `schools/assets/level.js`, and no other way.** Own-code readers (at least eight shapes in 55 pages) treated `constructor` and `__proto__` as levels, crashed on them, or passed the raw key to the leaderboard and made a stray public board.
+
+```js
+var level = MaffsLevel.resolve({ slug: 'index-laws', levels: ['gcse', 'alevel'], fallback: 'gcse', boards: [] });
+```
+
+- `levels` equals the roster's levels for the game, mapped through `scripts/roster-levels.json`; a game with no levels declares `levels: ['all'], fallback: 'all'`. `fallback` is the game's current default and is one of `levels`. `boards` (optional) lists keys the game submits that are boards, not levels (`q20`, `gcse-tournament`).
+- The `?level=` value is used only if it is a member of the `levels` array (an `indexOf`, never a property lookup, exact case). Otherwise the fallback is returned and, if a level parameter was present, the URL's `level` is replaced with the fallback (`history.replaceState`; other parameters and the hash are kept). Nothing is shown to the student. A page with no level parameter is left alone.
+- `MaffsLevel.declared(slug)` returns the declaration. `MaffsLeaderboard.submitScore` refuses (with a `console.warn`) any level a declaring page has not declared as a level or a board; a page with no declaration behaves as before.
+- Use the returned key for everything: questions, analytics, leaderboard, personal best.
+- `scripts/check-levels.py` (CI, every PR) requires: a migrated game's declaration equals its roster levels; the page loads `level.js` and reads `?level` no other way; every internal `?level=` link, sitemap entry and portal card names a level its game serves (a Year 6-only game's card may also list `ks3`, because the portal has no Year 6 filter); `NOT_YET` (games not yet migrated) is reported and may only shrink. `scripts/test-level.py` exercises the module in Chromium (`constructor`, `__proto__`, `toString`, empty, mixed-case, unknown and valid keys; the leaderboard guard).
+- A listing that names a level the game does not serve is corrected to match the game; content is never added to make a listing true.
+
 ## 6.1 AQA Core Maths Coverage (1350)
 
 **No open gaps as of 8 September 2026.** The three that stood here for months — §3.9, §3.10 and §3.11 —
