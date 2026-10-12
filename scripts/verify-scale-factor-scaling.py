@@ -12,7 +12,8 @@ TARGETS gives each item's answer as a computation on the quantities in its own p
 quantities come from (an edited prompt fails until its target is reviewed): no item may depend on a quantity it
 does not state. Every option is read exactly (whole numbers, decimals, thousands commas, vulgar fractions,
 ratios reduced by their gcd, and a unit). Then: the key equals the target in value and unit; no wrong option
-does; the four options are distinct strings. In Chromium (390x844) every item is shown
+does; the four options are distinct strings and no two are equal in value (SR-4; B11-CLEAR, 12 Oct 2026: none
+expected, so EQUAL_PAIRS is empty and any equal pair fails). In Chromium (390x844) every item is shown
 through nextQ() and every option clicked through handleAnswer(): the key marked right, the others wrong.
 A self-test plants the audit's paint item back into a copy of the page; it must FAIL naming T4[4].
 
@@ -126,6 +127,11 @@ TARGETS = {
 }
 
 
+# Items allowed two options equal in value, as (tier, index): only a question whose ask names the form that
+# separates them (SR-4's exception). None: B11-CLEAR (12 Oct 2026) replaced T1[8]'s 4:10 and T1[9]'s 3:9.
+EQUAL_PAIRS = set()
+
+
 def check_bank(fails, bank):
     for t, n in COUNTS.items():
         items = bank.get(t, [])
@@ -150,6 +156,10 @@ def check_bank(fails, bank):
             for o, v in zip(opts[1:], vals[1:]):
                 if v[:2] == target[:2]:
                     fails.append('%s: the wrong option %s is also right' % (w, o))
+            for a in range(4):
+                for b in range(a + 1, 4):
+                    if vals[a] == vals[b] and (t, i) not in EQUAL_PAIRS:
+                        fails.append('%s: the options %s and %s are equal in value (SR-4)' % (w, opts[a], opts[b]))
 
 
 SWEEP_JS = r"""() => {
@@ -207,6 +217,8 @@ def play(fails, html):
 PLANTS = [
     ('T4[4]', 't1-001: the paint item with no original quantity',
      "{sec:'Context',p:'Paint covers 10 m² per litre. A shape with surface area 10 m² is enlarged so its dimensions double. How many litres for the larger shape?',c:'4 litres',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by k² = 2² = 4','New surface area = 10 × 4 = 40 m²','40 ÷ 10 = 4 litres'],mc:'Paint covers area, so it scales by k², not k.'}", "{sec:'Context',p:'Paint covers 10 m² per litre. If dimensions double, how many litres for the larger shape?',c:'4 litres per 10 m²',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by k² = 4','4× more paint needed']}"),
+    ('T1[8]', 'SR-4: two wrong options equal in value (4:10 = 2:5)',
+     "c:'4:25',d:['2:5','8:125','4:5']", "c:'4:25',d:['2:5','8:125','4:10']"),
 ]
 
 
