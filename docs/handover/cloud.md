@@ -88,6 +88,22 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-12 (cloud): MAIN RED, verify-modular-battle (run 826, #301's merge); fix is this lane's
+
+- **Were #300 and #301 merged on green? Yes, both.** #300 merged after run 820 (#298) finished green (17:22 UTC); #301 after
+  run 825 (#299) finished green (17:53). #300's own run, 822, was green. **Main went red on 826, #301's own merge run:**
+  Content verifiers 13, verify-modular-battle (#298's verifier), attempt 1 and the re-run both failed. No cloud merge since.
+- **Cause (a flaky verifier, not the game):** after the 408 steered questions, the scaffold and 90-second session drivers
+  loaded questions on live `Math.random`. Under the "key offered twice" plant a b = 2 draw can show only the key twice, so
+  `find()` returned undefined and the script threw (TypeError at `b.click()`). Measured: the old driver threw 24 of 200.
+  It passed #298's PR and runs 820, 822 and 825 by chance.
+- **Fix (branch `claude/modular-battle-verifier-steer`):** both drivers load fixed steered questions (`DRIVE_PAIRS`) and
+  assert the steering took; a missing button is a `scaffold:`/`session:` FAIL, not an exception. New driver: 0 of 200, one
+  outcome. Full verifier three times: PASS, identical output, all 7 plants caught.
+- **Class check: local.** Of the 16 VERIFIERS-20 scripts, only this one drives play on live randomness; the other
+  find-then-click drivers (four-quadrant-explorer, standard-form-blitz, index-laws) press fixed items, so are deterministic.
+- **On hold until main is green:** the woti t2-006 PR (branch `claude/woti-t2-006`, not yet opened).
+
 ## 2026-10-12 (cloud): New Shapes diagram findings, Jon's ruling
 
 - **Jon, 12 Oct:** New Shapes' diagram findings (r-001, t3-003, t3-004, t3-005: proportions fixed whatever the numbers, the prism's l arrow on the wrong dimension) **stay open until its SR-26 bank growth, which redraws from each question's parameters.** No cloud-lane redraw before then. The `new-shapes` verifier (#292) checks the numbers on the diagram only and prints that the geometry is not asserted; when the bank is grown and the diagrams are drawn from each item's parameters, extend the verifier to assert the geometry (drawn proportions and the l arrow along the depth edge) and close those four entries in the same PR.
