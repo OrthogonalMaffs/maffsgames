@@ -64,6 +64,7 @@
   "Log Laws Solve (layers C + D, SymPy) and the Laws bank's keys and options (two faults planted)": "30",
   "Maths Court (independent recomputation + rendered page)": "5",
   "Matrix Crunch (one answer per question, an option or the singular flag: Enter and Tab+Enter never mark again; both levels; Chromium)": "10",
+  "Modular Battle (all 408 questions the generator can draw, each driven through the game's own generator: key, options, dot grid and feedback figures recomputed; every option pressed in Chromium)": "13",
   "Moments Master (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "7",
   "Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)": "6",
   "New Shapes (every formula, key, substitution and working step recomputed; the figure's labels checked against the item; every item answered right and wrong in Chromium)": "33",
