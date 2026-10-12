@@ -341,7 +341,7 @@
  "boolean-blitz": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -357,69 +357,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS[2]: 'A' = 'A \\\\cdot B + A' (the marked answer is one of them)",
-      "id": "boolean-blitz::4e9e43db412f#1::B11::[\"A\", \"A \\\\cdot B + A\"]",
-      "line": null,
-      "register": "boolean-blitz-t6-004"
-     },
-     {
-      "detail": "QUESTIONS[4]: '\\\\overline{AB}' = '\\\\overline{A} + \\\\overline{B}' (both wrong options)",
-      "id": "boolean-blitz::82d3407dfa3d#1::B11::[\"\\\\overline{AB}\", \"\\\\overline{A} + \\\\overline{B}\"]",
-      "line": null,
-      "register": "boolean-blitz-f0-001"
-     },
-     {
-      "detail": "QUESTIONS[10]: 'A' = 'AB + A\\\\overline{B}' (the marked answer is one of them)",
-      "id": "boolean-blitz::77ca89043b06#1::B11::[\"A\", \"AB + A\\\\overline{B}\"]",
-      "line": null,
-      "register": "boolean-blitz-t6-004"
-     },
-     {
-      "detail": "QUESTIONS[12]: 'B' = '\\\\overline{A}B + AB' (the marked answer is one of them)",
-      "id": "boolean-blitz::bdf5294ac6ae#1::B11::[\"B\", \"\\\\overline{A}B + AB\"]",
-      "line": null,
-      "register": "boolean-blitz-t6-004"
-     },
-     {
-      "detail": "QUESTIONS[15]: '1' = '\\\\overline{A} + A' (both wrong options)",
-      "id": "boolean-blitz::a19c0a7c7cb5#1::B11::[\"1\", \"\\\\overline{A} + A\"]",
-      "line": null,
-      "register": "boolean-blitz-f0-002"
-     },
-     {
-      "detail": "QUESTIONS[17]: 'A \\\\cdot BC' = 'ABC' (both wrong options)",
-      "id": "boolean-blitz::fe2ae0c222c4#1::B11::[\"A \\\\cdot BC\", \"ABC\"]",
-      "line": null,
-      "register": "boolean-blitz-f0-003"
-     },
-     {
-      "detail": "QUESTIONS[19]: 'A' = 'A\\\\overline{B} + AB' (the marked answer is one of them)",
-      "id": "boolean-blitz::4cf478bc7f89#1::B11::[\"A\", \"A\\\\overline{B} + AB\"]",
-      "line": null,
-      "register": "boolean-blitz-t6-004"
-     },
-     {
-      "detail": "QUESTIONS[24]: 'AB + BC' = 'B(A + C)' (the marked answer is one of them)",
-      "id": "boolean-blitz::82b1e6f7b4af#1::B11::[\"AB + BC\", \"B(A + C)\"]",
-      "line": null,
-      "register": "boolean-blitz-t6-002"
-     },
-     {
-      "detail": "QUESTIONS[40]: 'AB(C+D)' = 'ABC + ABD' (both wrong options)",
-      "id": "boolean-blitz::9f0b149c442e#1::B11::[\"AB(C+D)\", \"ABC + ABD\"]",
-      "line": null,
-      "register": "boolean-blitz-f0-004"
-     },
-     {
-      "detail": "QUESTIONS[41]: 'A(B + C)' = 'AB + AC' (the marked answer is one of them)",
-      "id": "boolean-blitz::8346a457b883#1::B11::[\"A(B + C)\", \"AB + AC\"]",
-      "line": null,
-      "register": "boolean-blitz-t6-003"
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],

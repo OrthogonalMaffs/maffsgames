@@ -121,6 +121,60 @@
   ],
   "b11_form_questions": [
     {
+      "id": "boolean-blitz::4e9e43db412f#1::B11::[\"A\", \"A \\\\cdot B + A\"]",
+      "where": "boolean-blitz QUESTIONS[2]",
+      "pair": [
+        "A",
+        "A \\cdot B + A"
+      ],
+      "reason": "The instruction on every question is \"Simplify fully.\" A \\cdot B + A equals the marked answer A but is not simplified, which the instruction names; Jon's rulings of 9 Oct 2026 (#227) keep unsimplified forms wrong (boolean-blitz-t6-004)."
+    },
+    {
+      "id": "boolean-blitz::77ca89043b06#1::B11::[\"A\", \"AB + A\\\\overline{B}\"]",
+      "where": "boolean-blitz QUESTIONS[10]",
+      "pair": [
+        "A",
+        "AB + A\\overline{B}"
+      ],
+      "reason": "The instruction on every question is \"Simplify fully.\" AB + A\\overline{B} equals the marked answer A but is not simplified, which the instruction names; Jon's rulings of 9 Oct 2026 (#227) keep unsimplified forms wrong (boolean-blitz-t6-004)."
+    },
+    {
+      "id": "boolean-blitz::bdf5294ac6ae#1::B11::[\"B\", \"\\\\overline{A}B + AB\"]",
+      "where": "boolean-blitz QUESTIONS[12]",
+      "pair": [
+        "B",
+        "\\overline{A}B + AB"
+      ],
+      "reason": "The instruction on every question is \"Simplify fully.\" \\overline{A}B + AB equals the marked answer B but is not simplified, which the instruction names; Jon's rulings of 9 Oct 2026 (#227) keep unsimplified forms wrong (boolean-blitz-t6-004)."
+    },
+    {
+      "id": "boolean-blitz::4cf478bc7f89#1::B11::[\"A\", \"A\\\\overline{B} + AB\"]",
+      "where": "boolean-blitz QUESTIONS[19]",
+      "pair": [
+        "A",
+        "A\\overline{B} + AB"
+      ],
+      "reason": "The instruction on every question is \"Simplify fully.\" A\\overline{B} + AB equals the marked answer A but is not simplified, which the instruction names; Jon's rulings of 9 Oct 2026 (#227) keep unsimplified forms wrong (boolean-blitz-t6-004)."
+    },
+    {
+      "id": "boolean-blitz::82b1e6f7b4af#1::B11::[\"AB + BC\", \"B(A + C)\"]",
+      "where": "boolean-blitz QUESTIONS[24]",
+      "pair": [
+        "AB + BC",
+        "B(A + C)"
+      ],
+      "reason": "The instruction on every question is \"Simplify fully.\" Jon's rulings of 9 Oct 2026 (boolean-blitz-t6-002/003, #227): an option with the key's truth table and no more literals than the minimal sum of products is marked right, so AB + BC is accepted beside the key B(A + C); the verifier allows only this pair."
+    },
+    {
+      "id": "boolean-blitz::8346a457b883#1::B11::[\"A(B + C)\", \"AB + AC\"]",
+      "where": "boolean-blitz QUESTIONS[41]",
+      "pair": [
+        "A(B + C)",
+        "AB + AC"
+      ],
+      "reason": "The instruction on every question is \"Simplify fully.\" Jon's rulings of 9 Oct 2026 (boolean-blitz-t6-002/003, #227): an option with the key's truth table and no more literals than the minimal sum of products is marked right, so AB + AC is accepted beside the key A(B + C); the verifier allows only this pair."
+    },
+    {
       "id": "decimal-detective::146b4888413a#1::B11::[\"7.9\", \"7.90\"]",
       "where": "decimal-detective ROUNDUP_QUESTIONS[10]",
       "pair": [
