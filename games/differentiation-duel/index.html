@@ -513,6 +513,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -620,7 +621,7 @@ const RULES_L4 = [
   {latex: '\\frac{d}{dx}f(y) = f\'(y)\\frac{dy}{dx}', note: 'implicit'},
   {latex: '\\frac{dy}{dx} = \\frac{dy/dt}{dx/dt}', note: 'parametric'},
 ];
-const LEVEL = new URLSearchParams(location.search).get('level') || 'alevel';
+const LEVEL = MaffsLevel.resolve({slug:'differentiation-duel',levels:['alevel','level4'],fallback:'alevel'});
 const RULES = LEVEL==='level4' ? [...RULES_BASE,...RULES_L4] : RULES_BASE;
 
 if(LEVEL==='level4') document.getElementById('startDesc').textContent='Powers, trig, exponentials and logs, with the chain, product and quotient rules, implicit and parametric differentiation. How fast can you differentiate?';

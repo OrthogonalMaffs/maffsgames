@@ -130,6 +130,7 @@ body.accessible{background-color:#12141f!important}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -409,9 +410,9 @@ document.querySelectorAll('.level-btn').forEach(b=>{
 });
 
 /* URL param level */
-const urlParams=new URLSearchParams(location.search);
-if(urlParams.get('level')&&ALL_BANKS[urlParams.get('level')]){
-  currentLevel=urlParams.get('level');
+const urlLevel=MaffsLevel.resolve({slug:'higher-power',levels:['ks3','gcse','alevel'],fallback:'ks3'});
+if(urlLevel!==currentLevel){
+  currentLevel=urlLevel;
   document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===currentLevel));
 }
 

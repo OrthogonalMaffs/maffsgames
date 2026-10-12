@@ -563,6 +563,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -893,8 +894,7 @@ const QUESTIONS = {
 };
 
 // Read level from URL param
-const urlLevel = new URLSearchParams(location.search).get('level');
-let currentLevel = (urlLevel === 'level4') ? 'level4' : 'alevel';
+let currentLevel = MaffsLevel.resolve({slug:'integration-duel',levels:['alevel','level4'],fallback:'alevel'});
 
 let score=0, streak=0, qNum=0, timerInt=null, timerStart=null, questions=[], sessionStart=null;
 

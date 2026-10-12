@@ -66,6 +66,7 @@ trig-identity-duel trig-wars trig-worms truth-buster truth-will-set-you-free uni
 word-problem-decoder wrong-on-the-internet
 '''.split())
 MIGRATED = frozenset('''
+binomial-blaster curling-friction differentiation-duel force-resolver higher-power integration-duel moments-master prisoners-dilemma proof-builder seven-bridges
 '''.split())
 
 # The portal has no Year 6 filter button, so a game that serves only Year 6 is reachable under the KS3 filter and its

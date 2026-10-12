@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # ci-line: Shared level reader (schools/assets/level.js, MaffsLevel in Chromium: constructor, __proto__, toString, empty, mixed-case, unknown and valid keys; the leaderboard refuses an undeclared key; a property-lookup reader planted and caught) | --selftest && --run
-# ci-deps: schools/assets/level.js schools/assets/firebase-leaderboard.js
+# ci-line: lock | Level resolver in play, part 1 (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error) | --games --part 1/4
+# ci-line: lock | Level resolver in play, part 2 (migrated games, as part 1) | --games --part 2/4
+# ci-line: lock | Level resolver in play, part 3 (migrated games, as part 1) | --games --part 3/4
+# ci-line: lock | Level resolver in play, part 4 (migrated games, as part 1) | --games --part 4/4
+# ci-deps: schools/assets/level.js schools/assets/firebase-leaderboard.js scripts/check-levels.py games/
 """Browser test for MaffsLevel (contract LEVEL-RESOLVER, 12 Oct 2026; canon section 4.5).
 
     python scripts/test-level.py --run         # the cases below, in headless Chromium
@@ -22,6 +26,7 @@ undeclared key warns and never reaches the SDK; under a declared level or board 
 declared nothing behaves as before (the SDK is reached).
 """
 import argparse
+import importlib.util
 import os
 import re
 import sys
@@ -31,12 +36,14 @@ ROOT = os.path.dirname(HERE)
 LEVEL_JS = os.path.join(ROOT, 'schools', 'assets', 'level.js')
 LB_JS = os.path.join(ROOT, 'schools', 'assets', 'firebase-leaderboard.js')
 HOST = 'https://fixture.test'
+sys.path.insert(0, HERE)
+JUNK = ['constructor', '__proto__', 'nonsense']
 
 DECL = "{slug: 'fixture', levels: ['gcse', 'alevel'], fallback: 'gcse', boards: ['q20']}"
 PAGE = ('<!doctype html><html><head><meta charset="utf-8"><title>fixture</title></head><body>'
         '<script src="/level.js"></script>'
         '<script>window.__r = {};try{window.__r.level = MaffsLevel.resolve(%s);}catch(e){window.__r.threw = String(e);}'
-        'window.__r.search = location.search; window.__r.hash = location.hash;</script></body></html>')
+        'window.__r.search = location.search; window.__r.hash = location.hash; window.__r.fromUrl = MaffsLevel.declared("fixture").fromUrl;</script></body></html>')
 PAGE_LB = ('<!doctype html><html><head><meta charset="utf-8"><title>fixture</title></head><body>'
            '%s<script src="/level.js"></script><script src="/lb.js"></script></body></html>')
 
@@ -95,6 +102,8 @@ def run(level_src):
                 problems.append('returned %r, wanted %r' % (r.get('level'), want_level))
             if now[0] != want_search or now[1] != want_hash:
                 problems.append('URL is %s%s, wanted %s%s' % (now[0], now[1], want_search, want_hash))
+            if r.get('fromUrl') != (q in ('?level=alevel',)):
+                problems.append('fromUrl is %r' % r.get('fromUrl'))
             if errors:
                 problems.append('page error ' + errors[0])
             print('  %-36s %s' % (label, 'ok' if not problems else 'FAIL: ' + '; '.join(problems)))
@@ -133,6 +142,61 @@ def run(level_src):
     return fails
 
 
+def migrated_games():
+    """{slug: declaration} for every game in check-levels.py's MIGRATED, read from the page."""
+    spec = importlib.util.spec_from_file_location('check_levels', os.path.join(HERE, 'check-levels.py'))
+    cl = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cl)
+    out = {}
+    for slug in sorted(cl.MIGRATED):
+        text = open(os.path.join(ROOT, 'games', slug, 'index.html'), encoding='utf-8').read()
+        out[slug] = cl.parse_decl(text)
+    return out
+
+
+def games(part):
+    """Each migrated game, loaded with each junk key and each declared level (CI shards by slug, as the answer lock does)."""
+    import bank_common as bc
+    from playwright.sync_api import sync_playwright
+    decls = migrated_games()
+    i, n = (int(x) for x in part.split('/')) if part else (1, 1)
+    slugs = [s for k, s in enumerate(sorted(decls)) if k % n == i - 1]
+    fails = []
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            for slug in slugs:
+                d = decls[slug]
+                problems = []
+                for key in JUNK + d['levels']:
+                    ctx = browser.new_context()
+                    ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())
+                    pg = ctx.new_page()
+                    errs = []
+                    pg.on('pageerror', lambda e: errs.append(str(e)[:140]))
+                    pg.goto(base + '/games/%s/?level=%s' % (slug, key), wait_until='load', timeout=30000)
+                    pg.wait_for_timeout(200)
+                    got = pg.evaluate("(function(){var d=window.MaffsLevel&&MaffsLevel.declared(%r);"
+                                      "return [d?d.fallback:null,new URLSearchParams(location.search).get('level')];})()" % slug)
+                    want = d['fallback'] if key in JUNK else key
+                    if errs:
+                        problems.append('?level=%s: page error %s' % (key, errs[0]))
+                    if got[0] is None:
+                        problems.append('?level=%s: MaffsLevel has no declaration for it' % key)
+                    if got[1] != want:
+                        problems.append('?level=%s: the URL ends with level=%s, wanted %s' % (key, got[1], want))
+                    ctx.close()
+                print('  %-28s %s' % (slug, 'ok' if not problems else 'FAIL'))
+                for pr in problems:
+                    print('      ' + pr)
+                fails += ['%s %s' % (slug, x) for x in problems]
+            browser.close()
+    finally:
+        proc.terminate()
+    return fails
+
+
 def lookup_reader(src):
     """The fault the module exists to remove: the key is looked up as a property of an object built from the levels."""
     bad = re.sub(r"if \(levels\.indexOf\(asked\) !== -1\) return asked;",
@@ -146,9 +210,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--run', action='store_true')
     ap.add_argument('--selftest', action='store_true')
+    ap.add_argument('--games', action='store_true')
+    ap.add_argument('--part', default='')
     a = ap.parse_args()
     ok = True
     src = open(LEVEL_JS, encoding='utf-8').read()
+    if a.games:
+        print('Migrated games (part %s):' % (a.part or '1/1'))
+        fails = games(a.part)
+        print('OK' if not fails else 'FAILED')
+        return 0 if not fails else 1
     if a.run or not a.selftest:
         print('MaffsLevel:')
         fails = run(src)

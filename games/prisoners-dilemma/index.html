@@ -22,6 +22,7 @@
 <script src="../../schools/assets/analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -1027,9 +1028,8 @@ document.querySelectorAll('.level-btn').forEach(function(b) {
 
 // URL param level
 (function() {
-  var pa = new URLSearchParams(location.search);
-  var lvl = pa.get('level');
-  if (lvl && OPPONENTS[lvl]) {
+  var lvl = MaffsLevel.resolve({slug:'prisoners-dilemma',levels:['ks3','gcse','alevel','core'],fallback:'ks3',boards:['ks3-tournament','gcse-tournament','alevel-tournament','core-tournament']});
+  if (lvl !== currentLevel) {
     currentLevel = lvl;
     document.querySelectorAll('.level-btn').forEach(function(b) {
       b.classList.toggle('active', b.dataset.level === lvl);
