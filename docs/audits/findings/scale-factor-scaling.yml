@@ -26,3 +26,17 @@ findings:
     contradicted the stated rate) is now "4 litres", with worked steps. scripts/verify-scale-factor-scaling.py
     recomputes all 46 keys from the quantities each prompt states (no other item depended on an unstated one) and
     fails main''s page here.'
+- id: scale-factor-scaling-b11-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:equal-value-options
+  level: all
+  where: 'games/scale-factor-scaling/index.html: T1[8] and T1[9]'
+  summary: 'Two items each had two wrong options equal in value (SR-4: four distinct options), so the student chose
+    from three: T1[8] 2:5 and 4:10; T1[9] 1:3 and 3:9. Keys right. Fixed under B11-CLEAR and Jon''s formula-forge
+    ruling of 12 Oct 2026 (replace one of the pair with a nameable error): 4:10 -> 4:5 (squared only the first
+    number); 3:9 -> 1:6 (doubled the scale factor instead of squaring it)'
+  evidence: 'check-banks.py B11 (data/check-ledger.json, now cleared); scripts/verify-scale-factor-scaling.py fails on
+    any equal pair, with a plant that puts 4:10 back'
+  status: fixed
+  pr: 312
