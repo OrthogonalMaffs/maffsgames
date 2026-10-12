@@ -1,0 +1,13 @@
+diff --git a/games/characteristic-quest/index.html b/games/characteristic-quest/index.html
+index 5a0fe00..7f6940b 100644
+--- a/games/characteristic-quest/index.html
++++ b/games/characteristic-quest/index.html
+@@ -135,7 +135,7 @@ const QS=[
+ {m:[[2,5],[0,3]],c:'\\lambda^2 - 5\\lambda + 6 = 0',d:['\\lambda^2 - 5\\lambda + 15 = 0','\\lambda^2 + 5\\lambda + 6 = 0','\\lambda^2 - 6\\lambda + 5 = 0'],s:['(2-\\lambda)(3-\\lambda) = \\lambda^2 - 5\\lambda + 6 = 0']},
+ {m:[[-3,0],[0,2]],c:'\\lambda^2 + \\lambda - 6 = 0',d:['\\lambda^2 - \\lambda - 6 = 0','\\lambda^2 + \\lambda + 6 = 0','\\lambda^2 - 6\\lambda + 1 = 0'],s:['(-3-\\lambda)(2-\\lambda) = -6 + 3\\lambda - 2\\lambda + \\lambda^2','= \\lambda^2 + \\lambda - 6 = 0']},
+ {m:[[1,2],[2,4]],c:'\\lambda^2 - 5\\lambda = 0',d:['\\lambda^2 - 5\\lambda + 4 = 0','\\lambda^2 + 5\\lambda = 0','\\lambda^2 - 5 = 0'],s:['(1-\\lambda)(4-\\lambda) - 4 = \\lambda^2 - 5\\lambda + 4 - 4','= \\lambda^2 - 5\\lambda = 0'],mc:'Det(A) = 0, so one eigenvalue is 0 — singular matrix.'},
+-{m:[[0,2],[2,0]],c:'\\lambda^2 - 4 = 0',d:['\\lambda^2 + 4 = 0','\\lambda^2 - 2\\lambda = 0','\\lambda^2 - 4\\lambda = 0'],s:['\\lambda^2 - (0) - (0 - 4) = \\lambda^2 - 4 = 0','\\lambda = \\pm 2']},
++{m:[[0,2],[2,0]],c:'\\lambda^2 - 4 = 0',d:['\\lambda^2 + 4 = 0','\\lambda^2 - 2\\lambda = 0','\\lambda^2 - 4\\lambda = 0'],s:['\\lambda^2 - (0)\\lambda + (0 - 4) = \\lambda^2 - 4 = 0','\\lambda = \\pm 2']},
+ {m:[[-1,3],[2,0]],c:'\\lambda^2 + \\lambda - 6 = 0',d:['\\lambda^2 - \\lambda - 6 = 0','\\lambda^2 + \\lambda + 6 = 0','\\lambda^2 + 6\\lambda - 1 = 0'],s:['(-1-\\lambda)(0-\\lambda) - 6 = \\lambda + \\lambda^2 - 6','= \\lambda^2 + \\lambda - 6 = 0']},
+ {m:[[4,1],[0,4]],c:'\\lambda^2 - 8\\lambda + 16 = 0',d:['\\lambda^2 - 8\\lambda + 4 = 0','\\lambda^2 + 8\\lambda + 16 = 0','\\lambda^2 - 4\\lambda + 16 = 0'],s:['(4-\\lambda)^2 = \\lambda^2 - 8\\lambda + 16 = 0','Repeated \\lambda = 4, but A \\neq 4I'],mc:'Repeated eigenvalue does NOT mean scalar matrix.'},
+ {m:[[3,1],[0,2]],c:'\\lambda^2 - 5\\lambda + 6 = 0',d:['\\lambda^2 - 5\\lambda + 3 = 0','\\lambda^2 + 5\\lambda + 6 = 0','\\lambda^2 - 6\\lambda + 5 = 0'],s:['(3-\\lambda)(2-\\lambda) = \\lambda^2 - 5\\lambda + 6 = 0']},
