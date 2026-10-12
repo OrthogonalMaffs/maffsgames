@@ -12,7 +12,7 @@ carry its own TeX reader until the home lane gives bank_common an exact one). Th
   - the key is "subject = expression", and put back into the formula it makes it an identity (for a chain such as
     P = I^2 R = V^2/R, one of its equalities);
   - no wrong option does, none equals the key in value, no two are equal in value, and the four are different strings (SR-4,
-    SR-16); three items with two wrong options equal in value are the expected failure formula-forge-v20-001 (open for Jon);
+    SR-16); formula-forge-v20-001's three pairs were replaced on Jon's ruling (12 Oct 2026), so none is expected;
   - every worked line that is an equation (after any \\text{...} words) holds when the key is put in for the subject, and the
     last line is the key; a Hint 2 that is an equation is checked the same way;
   - KaTeX (pinned local copy) parses every formula, option and worked line;
@@ -42,11 +42,9 @@ GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 LEVELS = ('gcse', 'level4')
 GREEK = {'pi', 'rho', 'sigma', 'epsilon', 'varepsilon', 'theta', 'lambda', 'omega', 'mu', 'alpha', 'beta', 'Delta', 'eta', 'tau', 'phi'}
 SYMS = {}
-# Two wrong options equal in value to each other (SR-4: four distinct options), every symbol positive. Left open for Jon as
-# formula-forge-v20-001 (replacing a distractor is new content); the check fails any other item with such a pair, and fails if
-# one of these stops having it.
-EQUAL_PAIRS = {('v^2 = u^2 + 2as', 'v'): 'formula-forge-v20-001', ('c^2 = a^2 + b^2', 'a'): 'formula-forge-v20-001',
-               ('v^2 = u^2 + 2as', 'u'): 'formula-forge-v20-001'}
+# Two wrong options equal in value to each other (SR-4: four distinct options), every symbol positive, as (formula, subject):
+# finding id. Empty: formula-forge-v20-001's three pairs were replaced on Jon's ruling (12 Oct 2026), so any equal pair fails.
+EQUAL_PAIRS = {}
 
 
 def sym(name):
