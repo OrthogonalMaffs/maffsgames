@@ -96,6 +96,7 @@
   "Terrible Advice (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium)": "13",
   "Test the Claim (independent recomputation of every key)": "16",
   "The Truth Will Set You Free (every truth table from its key, distractors not equivalent, scoring by correct cells, MaffsLock)": "15",
+  "Think of a Number (every item run forwards from its answer and backwards from its result, undo working recomputed, typed answers marked in Chromium)": "34",
   "Trig Identity Duel (every option read into SymPy: exactly one equals the key, compound-angle and triangle keys recomputed, marking in Chromium)": "15",
   "Trig Wars (each side scores its own hits; the trig panel's numbers agree; hits found along the path; miss advice true by the physics)": "31",
   "Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)": "33",
