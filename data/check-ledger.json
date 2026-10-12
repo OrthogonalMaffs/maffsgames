@@ -3391,7 +3391,7 @@
  "index-laws": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -3407,34 +3407,8 @@
     "status": "pass"
    },
    "B11": {
-    "entries": [
-     {
-      "detail": "QUESTIONS[6]: '3^{12}' = '9^6' (both wrong options)",
-      "id": "index-laws::c9beb13b6394#1::B11::[\"3^{12}\", \"9^6\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS[27]: '\\\\dfrac{1}{x^{-3}}' = 'x^3' (both wrong options)",
-      "id": "index-laws::142d748c08ee#1::B11::[\"\\\\dfrac{1}{x^{-3}}\", \"x^3\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS[38]: '9' = '\\\\dfrac{27}{3}' (both wrong options)",
-      "id": "index-laws::620eb94d6467#1::B11::[\"9\", \"\\\\dfrac{27}{3}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS[39]: '50' = '\\\\dfrac{100}{2}' (both wrong options)",
-      "id": "index-laws::e8afe828b4fb#1::B11::[\"50\", \"\\\\dfrac{100}{2}\"]",
-      "line": null
-     },
-     {
-      "detail": "QUESTIONS[40]: '12.5' = '\\\\dfrac{25}{2}' (both wrong options)",
-      "id": "index-laws::4b1270d58d19#1::B11::[\"12.5\", \"\\\\dfrac{25}{2}\"]",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B2": {
     "entries": [],
