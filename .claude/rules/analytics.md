@@ -64,3 +64,5 @@ duplicated `.game-card` elements.
 - Games without levels use level `'all'`
 - Multi-mode games MUST include `mode` on all events
 - Do not add any additional data collection without explicit approval from Jon
+
+- **The `level` parameter is the resolved level (R10, 13 Oct 2026).** In every `mfg(...)` call it is the variable that holds `MaffsLevel.resolve`'s result, never a string literal; the one literal allowed is `'all'`, and only where the game's declaration lists `'all'` in `boards`. `scripts/check-level-logged.py` fails CI on any other literal. **GA4/Sheets level data from before this merge is unreliable for every game the check fixed** (they logged one fixed level whatever was played): see `docs/handover/home.md`, LEVEL-LOGGED.

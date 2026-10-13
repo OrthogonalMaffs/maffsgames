@@ -92,7 +92,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'modular-battle',levels:['gcse'],fallback:'gcse'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'modular-battle',levels:['gcse'],fallback:'gcse'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -293,7 +293,7 @@ function guess(val, btn, choices) {
     btn.classList.add('correct');
     fb.textContent = `CORRECT! ${currentA}÷${currentB}=${Math.floor(currentA/currentB)} r${currentAns}`;
     fb.className = 'feedback correct';
-    mfg('question_answered',{game_slug:'modular-battle',level:'gcse',correct:true,question_index:_ggQCount});
+    mfg('question_answered',{game_slug:'modular-battle',level:resolvedLevel,correct:true,question_index:_ggQCount});
   } else {
     btn.classList.add('wrong');
     btns.forEach(b => { if(parseInt(b.textContent) === currentAns) b.classList.add('correct'); });
@@ -301,7 +301,7 @@ function guess(val, btn, choices) {
     // something to read that explains WHY the remainder is what it is.
     fb.textContent = `WRONG! ${currentA}÷${currentB}=${Math.floor(currentA/currentB)} remainder ${currentAns}`;
     fb.className = 'feedback wrong';
-    mfg('question_answered',{game_slug:'modular-battle',level:'gcse',correct:false,question_index:_ggQCount});
+    mfg('question_answered',{game_slug:'modular-battle',level:resolvedLevel,correct:false,question_index:_ggQCount});
   }
 
   updateScaffold(val === currentAns);
@@ -327,8 +327,8 @@ function startGame() {
   document.getElementById('score').textContent = '0';
 
   window._ggAbandoned = true;
-  if (!window._ggUnloadBound) { window._ggUnloadBound = true; window.addEventListener('beforeunload', function() { if (window._ggAbandoned) mfg('game_abandoned',{game_slug:'modular-battle',level:'gcse',questions_answered:_ggQCount}); }); }
-  mfg('game_started',{game_slug:'modular-battle',level:'gcse'});
+  if (!window._ggUnloadBound) { window._ggUnloadBound = true; window.addEventListener('beforeunload', function() { if (window._ggAbandoned) mfg('game_abandoned',{game_slug:'modular-battle',level:resolvedLevel,questions_answered:_ggQCount}); }); }
+  mfg('game_started',{game_slug:'modular-battle',level:resolvedLevel});
 
   clearInterval(gameTimer);
   gameTimer = setInterval(() => {
@@ -352,13 +352,13 @@ const finishGame = MaffsLock.finishOnce(function () {
   document.getElementById('finalScore').textContent = score;
   document.getElementById('goDetail').textContent = `${Math.round(score/10)} correct answers`;
   const _acc = _ggQCount > 0 ? Math.round(_ggCorrectCount / _ggQCount * 100) : 0;
-  mfg('game_completed',{game_slug:'modular-battle',level:'gcse',score:score,questions_answered:_ggQCount,accuracy:_acc});
+  mfg('game_completed',{game_slug:'modular-battle',level:resolvedLevel,score:score,questions_answered:_ggQCount,accuracy:_acc});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('modular-battle','gcse',score,_ggQCount).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('modular-battle','gcse',score);}}
   saveBest(score); renderLB();
 });
 
 function getBest(){return parseInt(localStorage.getItem('mb_best')||'0');}
-function saveBest(s){const prev=getBest();if(s>prev){localStorage.setItem('mb_best',s);mfg('personal_best_set',{game_slug:'modular-battle',level:'gcse',score:s,previous_best:prev});}document.getElementById('best').textContent=getBest();}
+function saveBest(s){const prev=getBest();if(s>prev){localStorage.setItem('mb_best',s);mfg('personal_best_set',{game_slug:'modular-battle',level:resolvedLevel,score:s,previous_best:prev});}document.getElementById('best').textContent=getBest();}
 function renderLB(){
   const scores=JSON.parse(localStorage.getItem('mb_scores')||'[]');
   const ns=[...scores,{score,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,5);

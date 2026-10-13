@@ -74,7 +74,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'normal-navigator',levels:['alevel','level4','core'],fallback:'alevel'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'normal-navigator',levels:['alevel','level4','core'],fallback:'alevel'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -313,8 +313,8 @@ function startGame(){
   document.getElementById('correctCount').textContent='0';
 
   window._ggAbandoned=true;
-  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'normal-navigator',level:'alevel',questions_answered:total});});}
-  mfg('game_started',{game_slug:'normal-navigator',level:'alevel'});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'normal-navigator',level:resolvedLevel,questions_answered:total});});}
+  mfg('game_started',{game_slug:'normal-navigator',level:resolvedLevel});
 
   show('game');nextQ();
 }
@@ -365,7 +365,7 @@ function handleAnswer(btn){
   const correctVal=q.correct_override||q.correct;
   const ok=btn.dataset.val===correctVal;
   document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===correctVal)b.classList.add('correct')});
-  mfg('question_answered',{game_slug:'normal-navigator',level:'alevel',correct:ok,question_index:total});
+  mfg('question_answered',{game_slug:'normal-navigator',level:resolvedLevel,correct:ok,question_index:total});
   if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));correctN++}
   else{btn.classList.add('wrong')}
   updateHUD();
@@ -393,7 +393,7 @@ function updateHUD(){document.getElementById('score').textContent=score;document
 const endGame=MaffsLock.finishOnce(function(){
   window._ggAbandoned=false;
   const pct=total>0?Math.round(correctN/total*100):0;
-  mfg('game_completed',{game_slug:'normal-navigator',level:'alevel',score:score,questions_answered:total,accuracy:pct});
+  mfg('game_completed',{game_slug:'normal-navigator',level:resolvedLevel,score:score,questions_answered:total,accuracy:pct});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('normal-navigator','alevel',score,total).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('normal-navigator','alevel',score);}}
   let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';
   document.getElementById('resultTitle').textContent=t;

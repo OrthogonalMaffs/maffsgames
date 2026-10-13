@@ -495,7 +495,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'index-laws',levels:['gcse','alevel'],fallback:'gcse'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'index-laws',levels:['gcse','alevel'],fallback:'gcse'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -729,8 +729,8 @@ function startGame(){
   document.getElementById('mainGame').classList.add('visible');
 
   window._ggAbandoned=true;
-  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'index-laws',level:'gcse',questions_answered:qNum});});}
-  mfg('game_started',{game_slug:'index-laws',level:'gcse'});
+  if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'index-laws',level:resolvedLevel,questions_answered:qNum});});}
+  mfg('game_started',{game_slug:'index-laws',level:resolvedLevel});
 
   nextQ();
 }
@@ -772,7 +772,7 @@ function guess(val,q,btn,div){
   const correct=val===q.correct;
   const fb=document.getElementById('feedback');
   document.getElementById('explanation').textContent=q.exp;
-  mfg('question_answered',{game_slug:'index-laws',level:'gcse',correct:correct,question_index:qNum});
+  mfg('question_answered',{game_slug:'index-laws',level:resolvedLevel,correct:correct,question_index:qNum});
   if(correct){
     _ggCorrectCount++;
     score+=10+streak*3;streak++;
@@ -802,13 +802,13 @@ const finishGame=MaffsLock.finishOnce(function(){
   document.getElementById('finalScore').textContent=score;
   document.getElementById('goDetail').textContent=`${TOTAL} questions completed`;
   const _acc=TOTAL>0?Math.round(_ggCorrectCount/TOTAL*100):0;
-  mfg('game_completed',{game_slug:'index-laws',level:'gcse',score:score,questions_answered:TOTAL,accuracy:_acc});
+  mfg('game_completed',{game_slug:'index-laws',level:resolvedLevel,score:score,questions_answered:TOTAL,accuracy:_acc});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('index-laws','gcse',score,TOTAL).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('index-laws','gcse',score);}}
   saveBest(score);renderLB();
 });
 
 function getBest(){return parseInt(localStorage.getItem('il_best')||'0');}
-function saveBest(s){const prev=getBest();if(s>prev){localStorage.setItem('il_best',s);mfg('personal_best_set',{game_slug:'index-laws',level:'gcse',score:s,previous_best:prev});}document.getElementById('best').textContent=getBest();}
+function saveBest(s){const prev=getBest();if(s>prev){localStorage.setItem('il_best',s);mfg('personal_best_set',{game_slug:'index-laws',level:resolvedLevel,score:s,previous_best:prev});}document.getElementById('best').textContent=getBest();}
 function renderLB(){
   const scores=JSON.parse(localStorage.getItem('il_scores')||'[]');
   const ns=[...scores,{score,date:new Date().toLocaleDateString()}].sort((a,b)=>b.score-a.score).slice(0,5);

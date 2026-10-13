@@ -116,7 +116,7 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'shape-shifter',levels:['year6'],fallback:'year6'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'shape-shifter',levels:['year6'],fallback:'year6'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
@@ -493,7 +493,7 @@ function startGame(chosenMode) {
   showScreen('gameScreen');
   setupCanvas();
 
-  mfg('game_started', { game_slug: 'shape-shifter', level: 'year6', mode: chosenMode });
+  mfg('game_started', { game_slug: 'shape-shifter', level: resolvedLevel, mode: chosenMode });
   loadQuestion();
 }
 
@@ -886,7 +886,7 @@ function checkVertexAnswer() {
   document.getElementById('nextBtn').style.display = 'inline-block';
 
   mfg('question_answered', {
-    game_slug: 'shape-shifter', level: 'year6',
+    game_slug: 'shape-shifter', level: resolvedLevel,
     question_index: questionIndex, correct: allCorrect, mode: mode
   });
 
@@ -914,7 +914,7 @@ function selectRotationOption(i) {
   document.getElementById('nextBtn').style.display = 'inline-block';
 
   mfg('question_answered', {
-    game_slug: 'shape-shifter', level: 'year6',
+    game_slug: 'shape-shifter', level: resolvedLevel,
     question_index: questionIndex, correct: correct, mode: mode
   });
 
@@ -952,14 +952,14 @@ const showResults = MaffsLock.finishOnce(function () {
     localStorage.setItem(pbKey, total);
     pbBadge.style.display = 'block';
     pbLine.textContent = prev > 0 ? `Previous best: ${prev}/${maxQ}` : '';
-    mfg('personal_best_set', { game_slug: 'shape-shifter', level: 'year6', score: total, previous_best: prev, mode: selectedMode });
+    mfg('personal_best_set', { game_slug: 'shape-shifter', level: resolvedLevel, score: total, previous_best: prev, mode: selectedMode });
   } else {
     pbBadge.style.display = 'none';
     pbLine.textContent = `Personal best: ${prev}/${maxQ}`;
   }
 
   mfg('game_completed', {
-    game_slug: 'shape-shifter', level: 'year6',
+    game_slug: 'shape-shifter', level: resolvedLevel,
     score: total, questions_answered: totalAnswered, questions_correct: totalCorrect, mode: selectedMode
   });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('shape-shifter','year6',total,totalAnswered).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('shape-shifter','year6',total);}}

@@ -40,7 +40,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="/schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'truth-will-set-you-free',levels:['level4'],fallback:'level4'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'truth-will-set-you-free',levels:['level4'],fallback:'level4'});</script>
 <script src="/schools/assets/firebase-leaderboard.js"></script>
 <script src="/schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
@@ -696,12 +696,12 @@ function startGame() {
   document.getElementById('resultsScreen').style.display = 'none';
   document.getElementById('questionArea').style.display = '';
 
-  mfg('game_started', {game_slug: 'truth-will-set-you-free', level: 'level4'});
+  mfg('game_started', {game_slug: 'truth-will-set-you-free', level: resolvedLevel});
   window._ggAbandoned = true;
   if (!window._ggBeforeUnload) {
     window._ggBeforeUnload = true;
     window.addEventListener('beforeunload', function() {
-      if (window._ggAbandoned) mfg('game_abandoned', {game_slug:'truth-will-set-you-free', level:'level4', questions_answered: qIndex});
+      if (window._ggAbandoned) mfg('game_abandoned', {game_slug:'truth-will-set-you-free', level:resolvedLevel, questions_answered: qIndex});
     });
   }
 
@@ -809,7 +809,7 @@ function submitTruthTable() {
   freshRow();
 
   mfg('question_answered', {
-    game_slug: 'truth-will-set-you-free', level: 'level4',
+    game_slug: 'truth-will-set-you-free', level: resolvedLevel,
     question_index: qIndex + 1, correct: pct === 100, truth_table_accuracy: pct
   });
 }
@@ -909,7 +909,7 @@ var showResults = MaffsLock.finishOnce(function () {
   document.getElementById('resPct').textContent = finalPct + '%';
 
   mfg('game_completed', {
-    game_slug: 'truth-will-set-you-free', level: 'level4',
+    game_slug: 'truth-will-set-you-free', level: resolvedLevel,
     score: totalPoints, questions_answered: QUESTIONS.length, questions_correct: exprCorrect
   });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('truth-will-set-you-free','level4',totalPoints,QUESTIONS.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('truth-will-set-you-free','level4',totalPoints);}}

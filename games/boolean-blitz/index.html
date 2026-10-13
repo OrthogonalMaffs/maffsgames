@@ -19,7 +19,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="/schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'boolean-blitz',levels:['level4'],fallback:'level4'});</script>
+<script>var resolvedLevel=MaffsLevel.resolve({slug:'boolean-blitz',levels:['level4'],fallback:'level4'});</script>
 <script src="/schools/assets/firebase-leaderboard.js"></script>
 <script src="/schools/assets/score-history.js"></script>
 <script src="/schools/assets/next-control.js"></script>
@@ -785,12 +785,12 @@ function startGame() {
   document.getElementById('questionArea').style.display = 'flex';
   document.getElementById('cheatSheet').style.display = '';
 
-  mfg('game_started', {game_slug:'boolean-blitz', level:'level4'});
+  mfg('game_started', {game_slug:'boolean-blitz', level:resolvedLevel});
   window._ggAbandoned = true;
   if (!window._ggBeforeUnload) {
     window._ggBeforeUnload = true;
     window.addEventListener('beforeunload', function() {
-      if (window._ggAbandoned) mfg('game_abandoned', {game_slug:'boolean-blitz', level:'level4', questions_answered: qIndex});
+      if (window._ggAbandoned) mfg('game_abandoned', {game_slug:'boolean-blitz', level:resolvedLevel, questions_answered: qIndex});
     });
   }
 
@@ -935,7 +935,7 @@ function handleAnswer(btn, selected, q) {
 
   document.getElementById('scoreDisplay').textContent = `${points} pts`;
 
-  mfg('question_answered', {game_slug:'boolean-blitz', level:'level4', question_index: qIndex + 1, correct: correct});
+  mfg('question_answered', {game_slug:'boolean-blitz', level:resolvedLevel, question_index: qIndex + 1, correct: correct});
 
   // Build walkthrough
   const stepsEl = document.getElementById('walkthroughSteps');
@@ -991,7 +991,7 @@ const showResults = MaffsLock.finishOnce(function () {
   document.getElementById('resMax').textContent = QUESTIONS.length * 3;
 
   mfg('game_completed', {
-    game_slug: 'boolean-blitz', level: 'level4',
+    game_slug: 'boolean-blitz', level: resolvedLevel,
     score: points, questions_answered: QUESTIONS.length, questions_correct: score
   });
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('boolean-blitz','level4',points,QUESTIONS.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('boolean-blitz','level4',points);}}
