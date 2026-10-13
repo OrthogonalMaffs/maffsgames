@@ -539,15 +539,41 @@ function renderSVG(type) {
   return '';
 }
 
+// SR-32 (Jon, 13 Oct 2026): every value a student must read from a figure sits on a labelled tick or a gridline.
+// The gridline step is the largest of 1, 0.5, 0.2, 0.1 (times a power of ten) at which every plotted value lies on a
+// gridline; the labelled (major) ticks keep their own step. A value on no 0.1 gridline would be new content, so the
+// step falls back to 0.1 and the verifier fails it.
+function gridStep(values) {
+  var steps = [10, 5, 2, 1, 0.5, 0.2, 0.1];
+  for (var i = 0; i < steps.length; i++) {
+    var ok = values.every(function(v) { var r = v / steps[i]; return Math.abs(r - Math.round(r)) < 1e-9; });
+    if (ok) return steps[i];
+  }
+  return 0.1;
+}
+// Minimum spacing of gridlines in drawing units: the chart scales to about 0.56 at 320 px wide, so 8.5 units stay over 4 px.
+var MIN_GRID_GAP = 8.5;
+
 function renderHistogram(bars, xLabel, yLabel) {
-  var W = 500, H = 220, pad = { l: 55, r: 15, t: 15, b: 45 };
-  var plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+  var W = 500, pad = { l: 55, r: 15, t: 15, b: 45 };
   var maxX = Math.max(...bars.map(b => b.x1));
   var maxFD = Math.max(...bars.map(b => b.fd));
+  var gstep = gridStep(bars.map(b => b.fd));
+  var yStep = maxFD <= 2 ? 0.5 : 1;
+  var gridGap = Math.min(gstep, yStep);
+  var plotH = Math.max(160, Math.ceil(maxFD * 1.15 * MIN_GRID_GAP / gridGap));
+  var H = plotH + pad.t + pad.b;
+  var plotW = W - pad.l - pad.r;
   var scaleX = plotW / maxX;
   var scaleY = plotH / (maxFD * 1.15);
 
   var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="font-family:Outfit,sans-serif">';
+  // Gridlines (behind the bars): minor at the data's step, major (labelled) at the axis step
+  for (var g = 0, n = 0; g <= maxFD * 1.1 + 1e-9; n++, g = n * gridGap) {
+    var gy = pad.t + plotH - g * scaleY;
+    var major = Math.abs(g / yStep - Math.round(g / yStep)) < 1e-9;
+    svg += '<line class="grid' + (major ? ' major' : ' minor') + '" x1="' + pad.l + '" y1="' + gy + '" x2="' + (pad.l + plotW) + '" y2="' + gy + '" stroke="#94a3b8" stroke-width="' + (major ? 0.8 : 0.4) + '"/>';
+  }
   // Bars
   bars.forEach(function(b) {
     var x = pad.l + b.x0 * scaleX;
@@ -570,7 +596,6 @@ function renderHistogram(bars, xLabel, yLabel) {
   // Y axis
   svg += '<line x1="' + pad.l + '" y1="' + pad.t + '" x2="' + pad.l + '" y2="' + (pad.t + plotH) + '" stroke="#94a3b8" stroke-width="1"/>';
   // Y ticks
-  var yStep = maxFD <= 2 ? 0.5 : maxFD <= 4 ? 1 : 1;
   for (var v = 0; v <= maxFD * 1.1; v += yStep) {
     var y = pad.t + plotH - v * scaleY;
     if (y < pad.t - 5) break;
@@ -603,8 +628,9 @@ function renderBoxPlot(min, lq, med, uq, max) {
   svg += '<rect x="' + sx(lq) + '" y="' + (midY - boxH / 2) + '" width="' + (sx(uq) - sx(lq)) + '" height="' + boxH + '" fill="#0d9488" stroke="#1e293b" stroke-width="2" opacity="0.8" rx="2"/>';
   // Median line
   svg += '<line x1="' + sx(med) + '" y1="' + (midY - boxH / 2) + '" x2="' + sx(med) + '" y2="' + (midY + boxH / 2) + '" stroke="#1e293b" stroke-width="2.5"/>';
-  // Labels
+  // Labels, each over a tick (SR-32: a value to be read sits on a labelled tick)
   [min, lq, med, uq, max].forEach(function(v) {
+    svg += '<line class="tick" x1="' + sx(v) + '" y1="' + (midY + boxH / 2 + 2) + '" x2="' + sx(v) + '" y2="' + (midY + boxH / 2 + 7) + '" stroke="#94a3b8" stroke-width="1"/>';
     svg += '<text x="' + sx(v) + '" y="' + (midY + boxH / 2 + 16) + '" fill="#94a3b8" font-size="11" text-anchor="middle">' + v + '</text>';
   });
   svg += '</svg>';

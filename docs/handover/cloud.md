@@ -14,7 +14,7 @@ next game on the contract's list without asking. Stop only for a STOP IF or an e
 **Remaining list (contract LH, 7 Oct 2026; added by the home lane, kept by the cloud lane):** take a game off
 this line in the PR that finishes it. `scripts/check-answer-lock.py` reads it. While a game is on it, a
 failure of that game in the check is reported, not failed; off it, a failure fails CI.
-`cloud-remaining: core-maths-paper1`
+`cloud-remaining: `
 
 **Lane rule, listed games (Jon, 8 Oct 2026; contract "listed-game CRITICAL/HIGH"; the home lane records it in
 canon §7.8 in its next docs PR):** the cloud lane now also fixes listed games. Before starting one, add it to the
@@ -87,12 +87,20 @@ Done: PP-T1-004 (#189; its contract is now in `docs/history/contracts/`).
 **Every PR:** `python scripts/check-changed.py` before the first push; merge only on a green Gate, and never while
 main's last full run is red; watch main's run after merging.
 
+## 2026-10-13 (cloud): CMP1-READABLE-FIGURES (core-maths-paper1; SR-32)
+
+- **Contract:** `docs/handover/contracts/2026-10-13-cmp1-readable-figures.md`. Jon's play-test: Q4's histogram bars at 2.4, 3.6 and 1.2 had no gridlines and labelled ticks only at 0 to 3, so 3.6 could not be read. The fix is in the game's chart-drawing code: the gridline step is the largest of 1, 0.5, 0.2, 0.1 (times a power of ten) at which every plotted value lies on a gridline (Q4 every 0.2, Q12 every 0.1), the labels unchanged; each box-plot number sits over a tick. Q12 and Q9 had the same fault and are fixed with it.
+- **Verifier:** every figure is read (each bar's density has a gridline or labelled tick within 0.5 px and the bar is drawn there; each box-plot value has a labelled tick; gridlines at least 4 px apart at 320 px, measured in Chromium: 4.3 px). Three plants; the old page fails 13 checks.
+- **Slug:** the contract wrote core-maths-paper-1; the game, verifier and findings file are core-maths-paper1.
+- **For the home lane:** SR-32 is not yet in canon (the contract leaves it to the home lane). Other games that draw charts have no check of this kind (chart-interrogator, graph-sketcher, stat-attack and others): a verifier rule per game, as here. The 320 px spacing needed a taller chart for a 0.1 grid (Q12's drawing is 364 units tall).
+- **Next:** batch 12 (factor-theorem, complex-converter, matrix-crunch, characteristic-quest, eigenvalue-extractor, eigenvector-engine, boolean-blitz, truth-will-set-you-free), then the final "for Jon" list and the SWEEP_DONE note.
+
 ## 2026-10-13 (cloud): SWEEP-1 batch 11 (A-Level, part 2: mechanics, logs, binomials, proofs)
 
 - **No SR-20 level.** Three HIGH items fixed: moments-master ("At the pivot" true as a wrong option), binomial-blaster ("r > n" true), proof-builder (a second valid order of the cos² + sin² proof rejected, SR-24; the verifier now holds every reviewed order).
 - **Fixed in batch 11:** dimension-checker's four verdict-sharing options (SR-31); force-resolver's shuffled "Same system" item, stated beams, 18 unstated precisions and 21 unchecked working lines; curling-friction's head-on collisions, horizontal surfaces and a duplicate KE option; moments-master's eight precisions, perpendicular, opposite sides, beam weight; log-laws' undeclared log₁₀ in Laws mode; proof-builder's induction domains and wording; binomial-blaster's two true options; partial-fractions-duel's method item and hint check. Each verifier fails on the old content and plants it.
 - **Open, for Jon:** proof-builder's TRUE option appearing only where it is the key (a design choice), a lemma order, key texts; log-laws' "Change of Base" label; binomial-blaster's ≈ stems and the coefficient item; dimension-checker's live timer (SR-23); curling-friction's "Worked solution" heading. **For the home lane:** log-laws' 34 negative typed answers behind inputmode="decimal".
-- **Next:** CMP1-READABLE-FIGURES (contract `docs/handover/contracts/2026-10-13-cmp1-readable-figures.md`; branch `claude/cmp1-readable-figures`, claim commit pushed, core-maths-paper1 claimed on the cloud lane's remaining list), then batch 12 (factor-theorem, complex-converter, matrix-crunch, characteristic-quest, eigenvalue-extractor, eigenvector-engine, boolean-blitz, truth-will-set-you-free), then the final "for Jon" list and the SWEEP_DONE note.
+- **Next:** (done: see the CMP1-READABLE-FIGURES entry above.)
 
 ## 2026-10-13 (cloud): growth-and-decay (#352), test-the-claim (#353), graph-sketcher (#354) and SWEEP-1 batch 10 (Core Maths and A-Level, part 1)
 
@@ -101,10 +109,3 @@ main's last full run is red; watch main's run after merging.
 - **Fixed in batch 10:** integration-duel's three working lines (every expression of the working is now checked); normal-navigator's 26 unstated precisions (SR-1), the IQR working, "exactly 95%"; suvat's double-negative deceleration.
 - **Open, for Jon:** normal-navigator-s1-002 (minimum-mark rounding) and -007 (one level logged for three); suvat-s1-002 and -005; differentiation-duel-s1-001; the SR-20 games' open entries (growth-and-decay s1-003/-004/-007/-008, test-the-claim s1-006/-007, graph-sketcher s1-006/-007). **For the home lane:** suvat ALEVEL[34] (v_y = −0.32 behind inputmode="decimal").
 - **Next:** batch 11 (curling-friction, force-resolver, moments-master, log-laws, binomial-blaster, partial-fractions-duel, proof-builder, dimension-checker), then batch 12 (factor-theorem, complex-converter, matrix-crunch, characteristic-quest, eigenvalue-extractor, eigenvector-engine, boolean-blitz, truth-will-set-you-free), then the final "for Jon" list and the SWEEP_DONE note. Notes: scratchpad `batch11-notes.txt`.
-
-## 2026-10-13 (cloud): core-maths-paper2a (#349), stat-attack (#350) and SWEEP-1 batch 9 (GCSE part 5, Core Maths)
-
-- **Two SR-20 levels, fixed under SR-30:** core-maths-paper2a (three true criticisms as wrong options, #349); stat-attack (#350: the mean, SD and variance marked to bands, not the 3 s.f. asked; a wrong SD marked right on all 36; the variance to 3 s.f. and the SD from the unrounded variance on Jon's ruling).
-- **Jon's rulings, 13 Oct (verbatim in the rulings file), done in batch 9's PR:** paper2a Q5's CEO says "increased by 10%"; paper2b Q24, Q33, Q35, Q36 give a verdict other than the key's; **SR-31 (standing): no wrong option gives the key's verdict or choice** (a check in every Core Maths verifier and in the brief; its scan fixed five more); Screening Room's box shows a fixed % and reads a percentage.
-- **Fixed in batch 9:** screening-room wording; estimation-engine's counts as £ and its money format path (SR-3); core-maths-paper1 (stem-and-leaf key, SR-16/SR-31 options); paper2b (precision, assumption); paper2c (units).
-- **Next:** (done: see batch 10's entry above.)

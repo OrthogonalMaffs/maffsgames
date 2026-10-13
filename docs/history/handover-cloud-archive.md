@@ -10,6 +10,13 @@ and the last three entries; older entries move here, newest first, unchanged.
 - **Open, for Jon:** better-value-s1-002 (equal at break-even, with r-006); chart-interrogator-s1-001 (histogram bands by axis, canon §7.1.2) and s1-005; expectation-station-s1-005 ("Most"); stem changes in unit-converter, formula-forge, given-that.
 - **Class (running):** verifier gaps in worked text in every batch 8 game (each has an entry); conventions stated in one item and not its neighbours (component-crusher AL14 only).
 
+## 2026-10-13 (cloud): core-maths-paper2a (#349), stat-attack (#350) and SWEEP-1 batch 9 (GCSE part 5, Core Maths)
+
+- **Two SR-20 levels, fixed under SR-30:** core-maths-paper2a (three true criticisms as wrong options, #349); stat-attack (#350: the mean, SD and variance marked to bands, not the 3 s.f. asked; a wrong SD marked right on all 36; the variance to 3 s.f. and the SD from the unrounded variance on Jon's ruling).
+- **Jon's rulings, 13 Oct (verbatim in the rulings file), done in batch 9's PR:** paper2a Q5's CEO says "increased by 10%"; paper2b Q24, Q33, Q35, Q36 give a verdict other than the key's; **SR-31 (standing): no wrong option gives the key's verdict or choice** (a check in every Core Maths verifier and in the brief; its scan fixed five more); Screening Room's box shows a fixed % and reads a percentage.
+- **Fixed in batch 9:** screening-room wording; estimation-engine's counts as £ and its money format path (SR-3); core-maths-paper1 (stem-and-leaf key, SR-16/SR-31 options); paper2b (precision, assumption); paper2c (units).
+- **Next:** (done: see batch 10's entry above.)
+
 ## 2026-10-13 (cloud): circle-theorem-spotter (#344) and SWEEP-1 batch 7 (GCSE part 3)
 
 - **SR-20 hit, fixed under SR-30 (Jon, 13 Oct):** circle-theorem-spotter's tangent figures marked the angle on the wrong side (6 of 55 HIGH). #344: T across AB from C, on B's side of OA; the verifier measures every tangent figure's SVG in Chromium; both old rules planted.

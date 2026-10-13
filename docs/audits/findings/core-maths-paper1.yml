@@ -170,3 +170,24 @@ findings:
   evidence: 'Found by the SR-31 check added to the verifier (SWEEP-1, batch 9)'
   status: fixed
   pr: 351
+- id: core-maths-paper1-s1-009
+  severity: MEDIUM
+  jc: false
+  class: NEW:unreadable-figure
+  level: core
+  where: games/core-maths-paper1/index.html renderHistogram(), renderBoxPlot() (Q4, Q9, Q12)
+  summary: 'SR-32 (Jon, 13 Oct 2026; canon entry pending in the home lane): Q4''s histogram drew frequency densities of
+    2.4, 3.6 and 1.2 against an axis with labelled ticks only at 0, 1, 2 and 3 and no gridlines, so a student could not
+    read 3.6; reading 3.5 gives 59, which is no option, so the key (60) was reached only by picking the nearest option:
+    estimation, not the AO1 reading the item is tagged with. Q12''s five bars (1.8, 2.4, 3.1, 2.8, 1.5) and Q9''s
+    five box-plot numbers had the same fault. Fixed in the chart-drawing code, so every figure the game draws is
+    fixed: the gridline step is the largest of 1, 0.5, 0.2, 0.1 (times a power of ten) at which every plotted value
+    lies on a gridline (Q4 every 0.2, Q12 every 0.1), faint minor lines with the labels unchanged at the axis step;
+    the plot is drawn tall enough that the gridlines stay at least 4 px apart at 320 px wide (4.3 px measured); each
+    box-plot number sits over a tick. The verifier now reads every drawn figure: each bar''s density has a gridline
+    or labelled tick within 0.5 px and the bar is drawn there, each box-plot value has a labelled tick, and the
+    spacing at 320 px is measured in Chromium; three plants (Q4''s 3.6 with whole-number gridlines, gridlines under
+    4 px, a box plot without ticks) are caught, and the old page fails 13 checks'
+  evidence: '"A histogram shows the distribution of waiting times at a clinic. How many patients waited between 10 and
+    40 minutes?" | key 60 | 48, 72, 84; bars at 2.4, 3.6, 1.2 (Jon''s play-test, 13 Oct 2026)'
+  status: open

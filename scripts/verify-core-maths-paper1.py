@@ -37,6 +37,11 @@ Q21, Q30, Q31 and Q36 are recomputed here from the figures their stems state; wh
 teaching year's rates is verify-core-maths-paper1-tax.py's job (uk_rates). Q27's CPI figures must be the ONS
 annual averages (ONS_CPI, quoted-statistics audit); the page stores them in SOURCES and builds the stem from them.
 
+Readable figures (SR-32, Jon 13 Oct 2026): every value a student must read from a figure lies on a labelled tick or a
+drawn gridline (within 0.5 px): each histogram bar's frequency density has a gridline at its height and the bar is
+drawn there, each box plot number has a labelled tick; the gridlines stay 4 px apart at 320 px wide (measured in
+Chromium at that width). Planted: Q4's 3.6 bar with only whole-number gridlines; gridlines closer than 4 px; a box
+plot without ticks.
 Pictures (SR-6): each histogram's and the box plot's data are read from the page's own renderers and the keys
 are computed from them; the box plot's five numbers must equal the stem's; every chart line not drawn over a
 filled shape must contrast at least 3:1 with the question card (WCAG 1.4.11), which Q9's whiskers did not
@@ -640,6 +645,48 @@ def check_chart_contrast(rep, qid, svg, bg):
                                                            '#%02x%02x%02x' % bg, MIN_CONTRAST))
 
 
+def check_figure_readable(rep, qid, chart, w320):
+    """SR-32 (Jon, 13 Oct 2026): every value a student must read from a figure sits on a labelled tick or a drawn
+    gridline, within 0.5 px, and the gridlines stay 4 px apart at 320 px wide. A histogram: each bar's frequency
+    density, placed on the axis from its own labelled ticks, has a gridline (or labelled tick) at that height, and the
+    bar's top is drawn there. A box plot: each of the five numbers has a tick with its label."""
+    svg, args = chart['svg'], chart['args'] or {}
+    lines = [attrs(t) for t in re.findall(r'<line\b[^>]*>', svg)]
+    texts = [(attrs(m.group(1)), m.group(2)) for m in re.finditer(r'<text\b([^>]*)>([^<]*)</text>', svg)]
+    if 'bars' in args:
+        ylabels = [(float(a['y']) - 4, float(t)) for a, t in texts if a.get('text-anchor') == 'end']
+        if len(ylabels) < 2:
+            rep.fail(qid, 'figure', 'the y axis has fewer than two labelled ticks: values cannot be read')
+            return
+        (y0, v0), (y1, v1) = ylabels[0], ylabels[1]
+
+        def y_of(v):
+            return y0 + (v - v0) * (y1 - y0) / (v1 - v0)
+        horiz = [(float(a['y1']), a.get('class', '')) for a in lines if abs(float(a['y1']) - float(a['y2'])) < 1e-6]
+        grid = [y for y, c in horiz if 'grid' in c.split()]
+        ticks = [y for y, c in horiz if 'grid' not in c.split() and any(abs(y - ly) <= 0.5 for ly, _ in ylabels)]
+        bars = [attrs(t) for t in re.findall(r'<rect\b[^>]*>', svg) if 'fill="#0d9488"' in t]
+        for bar, b in zip(bars, args['bars']):
+            want = y_of(b['fd'])
+            if not any(abs(y - want) <= 0.5 for y in grid + ticks):
+                rep.fail(qid, 'figure', 'the bar from %g to %g has frequency density %g, drawn at y = %.1f, on no '
+                         'gridline or labelled tick (SR-32): a student cannot read it' % (b['x0'], b['x1'], b['fd'], want))
+            if abs(float(bar['y']) - want) > 0.5:
+                rep.fail(qid, 'figure', 'the bar for frequency density %g is drawn at y = %s, not %.1f' % (b['fd'], bar['y'], want))
+        ys = sorted(set(round(y, 3) for y in grid))
+        vb = float(re.search(r'viewBox="0 0 ([\d.]+)', svg).group(1))
+        if w320 and len(ys) > 1:
+            gap = min(b - a for a, b in zip(ys, ys[1:])) * w320 / vb
+            if gap < 4:
+                rep.fail(qid, 'figure', 'gridlines are %.2f px apart at 320 px wide (needs at least 4)' % gap)
+    elif 'five' in args:
+        for v in args['five']:
+            ticks = [float(a['x1']) for a in lines if 'tick' in a.get('class', '').split() and a['x1'] == a['x2']]
+            labelled = [float(a['x']) for a, t in texts if t.strip() == str(v)]
+            if not any(abs(x - lx) <= 0.5 for x in ticks for lx in labelled):
+                rep.fail(qid, 'figure', 'the box plot value %g has no labelled tick (SR-32)' % v)
+
+
 # ── the bank ─────────────────────────────────────────────────────────────────
 
 def sr31_lead(o):
@@ -673,6 +720,7 @@ def check_bank(rep, bank, ctx, verbose=False):
         fn(rep, qid, q, ctx)
         if q.get('svg'):
             check_chart_contrast(rep, qid, ctx['charts'][q['svg']]['svg'], ctx['bg'])
+            check_figure_readable(rep, qid, ctx['charts'][q['svg']], ctx.get('w320', {}).get(q['svg']))
         if verbose:
             print('  %-4s %-20s keyed %r' % (qid, name, opts[q['correct']]))
     for name, _, _ in RULES:
@@ -723,6 +771,12 @@ def load_bank():
             bank = page.evaluate('JSON.parse(JSON.stringify(QUESTIONS))')
             cap = page.evaluate(CAPTURE)
             page.evaluate('startGame()')
+            # SR-32: the width each chart is drawn at on a 320 px phone (the 4 px gridline spacing is read from it)
+            page.set_viewport_size({'width': 320, 'height': 568})
+            w320 = page.evaluate("""() => { const out = {}; document.getElementById('questionArea').style.display = 'block';
+              QUESTIONS.forEach((q, i) => { if (!q.svg) return; currentQ = i; showQuestion();
+                const el = document.querySelector('.svg-container svg'); if (el) out[q.svg] = el.getBoundingClientRect().width; });
+              return out; }""")
             mk = page.evaluate(MARK)
             browser.close()
             if errors:
@@ -734,7 +788,7 @@ def load_bank():
                for i, ok in mk['res']]
     if mk['score'] != len(bank):
         marking.append(('bank', False, 'all keys clicked, score %s of %d' % (mk['score'], len(bank))))
-    return bank, {'charts': cap['charts'], 'bg': parse_colour(cap['bg']), 'marking': marking}
+    return bank, {'charts': cap['charts'], 'bg': parse_colour(cap['bg']), 'marking': marking, 'w320': w320}
 
 
 # ── self-test ────────────────────────────────────────────────────────────────
@@ -817,6 +871,21 @@ def selftest(bank, ctx):
         q = find(b, r'CPI inflation')
         q['stem'] = re.sub(r'[\d.]+% in 2022, [\d.]+% in 2023', '8.7% in 2022, 6.3% in 2023', q['stem'])
     expect("Q27's old CPI pair (8.7%, 6.3%)", cpi_old)
+
+    def q4_whole_grid(b, c):
+        q = find(b, r'How many patients waited between')
+        c['charts'][q['svg']]['svg'] = re.sub(r'<line class="grid minor"[^>]*/>', '', c['charts'][q['svg']]['svg'])
+    expect('SR-32: Q4 bar at 3.6, whole-number grid', q4_whole_grid)
+
+    def q4_close_grid(b, c):
+        q = find(b, r'How many patients waited between')
+        c['w320'][q['svg']] = 140
+    expect('SR-32: gridlines under 4 px at 320 px', q4_close_grid)
+
+    def q9_no_ticks(b, c):
+        q = find(b, r'more than half the class scored above')
+        c['charts'][q['svg']]['svg'] = re.sub(r'<line class="tick"[^>]*/>', '', c['charts'][q['svg']]['svg'])
+    expect('SR-32: box plot values with no ticks', q9_no_ticks)
 
     def q4_chart(b, c):
         q = find(b, r'How many patients waited between')
