@@ -159,7 +159,8 @@ findings:
     accepted, ACCEPT rows in the verifier, a plant that turns gcse_029''s second topic off'
   evidence: 'SWEEP-1, batch 3: the verifier''s ACCEPT table (8 Oct) had none of these phrases, so it required the second
     topic to be marked wrong'
-  status: open
+  status: fixed
+  pr: 339
 - id: word-problem-decoder-s1-002
   severity: HIGH
   jc: true
@@ -170,7 +171,8 @@ findings:
     ks3_046, angles and forming expressions, accepted under t1-010). Fixed under SR-18 with the three above'
   evidence: '"A rectangular sports pitch ... Write an expression for the perimeter of the pitch in terms of w." Area &
     Perimeter offered about 29% of the time (SWEEP-1, batch 3)'
-  status: open
+  status: fixed
+  pr: 339
 - id: word-problem-decoder-s1-003
   severity: MEDIUM
   jc: true

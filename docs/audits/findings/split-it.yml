@@ -20,7 +20,8 @@ findings:
     key only from a prompt that says so, so the old wording fails as unreadable'
   evidence: '"A car travels 102 miles in 5 hours. How far in 7 hours? Give your answer to 1 decimal place." keyed 142.8
     (SWEEP-1, batch 3; 20,000 draws per mode and level)'
-  status: open
+  status: fixed
+  pr: 339
 - id: split-it-s1-002
   severity: LOW
   jc: false
