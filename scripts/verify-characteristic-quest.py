@@ -18,10 +18,20 @@ verifier its own reader until bank_common has an exact one; \\lambda is the unkn
   Sessions: startGame() dealt five times: 15 different items from the bank.
   Marking, in Chromium (390x844), through the game's own buttons: every item, every option pressed: the key is marked correct and
     scores; any other is marked wrong, the key shown, the worked solution shows the item's lines, Next mounted.
-Fixed in this PR (SR-6, wording and key agree): item 22's line "\\lambda^2 - (0) - (0 - 4) = \\lambda^2 - 4" read +4, not -4; it now
+  Structure (SWEEP-1): a polynomial line of the form lambda^2 - t + d must carry its lambda on the trace term
+    (lambda^2 - (t)lambda + (d)), never "lambda^2 - 0 + ...".
+  Notes: every prose note and "Diagonal matrix:" / "Upper triangular:" / "Repeated ..." line is checked against its item's matrix
+    (diagonal, upper triangular, real symmetric, scalar, singular, the 90 degree rotation, repeated root, complex roots, the sign
+    claim "opposite signs" with det < 0, "subtracting (-1)(1) means adding 1"); a prose line with no '=' that none of these
+    recognises fails, so a new unchecked claim cannot slip in.
+  Start-screen worked example (not in QS): the matrix, A - lambda I, the determinant line, the expansion and lambda^2 - 7 lambda
+    + 10 are recomputed, and the quick formula must read lambda^2 - (a+d) lambda + (ad-bc) = 0.
+Fixed in SWEEP-1 batch 11: item 13's line "\\lambda^2 - 0 + (0-(-1))" is now "\\lambda^2 - (0)\\lambda + (0-(-1))"; the item 4 note says the
+eigenvalues have opposite signs (not "one is negative"); item 17's note says "Real symmetric matrix".
+Fixed earlier (SR-6, wording and key agree): item 22's line "\\lambda^2 - (0) - (0 - 4) = \\lambda^2 - 4" read +4, not -4; it now
 reads "\\lambda^2 - (0)\\lambda + (0 - 4)" (characteristic-quest-t6-003).
-Not asserted (open findings, left open): 15 of 26 served (t6-002), prose lines losing spaces in KaTeX (t6-004), ?level and the
-rotation note (t6-005).
+Not asserted (open findings, left open): 15 of 26 served (t6-002), prose lines losing spaces in KaTeX (t6-004), ?level (t6-005),
+duplicate keys with identical distractor sets (for Jon), and the worked lines' wording beyond the claims above.
 
     python scripts/verify-characteristic-quest.py [--no-selftest] [--against FILE]
 """
@@ -70,6 +80,51 @@ def proportional(p, q):
     return r.is_number and r != 0
 
 
+def note_checks(fails, where, line, m, cp):
+    """Prose claims in a worked line or note, checked against the item's matrix. Returns the number of claims checked."""
+    (a, b), (c, d) = m
+    det = a * d - b * c
+    roots = set(sp.roots(sp.Poly(cp, L)).keys())
+    real = all(r.is_real for r in roots)
+    t = line.replace('−', '-')
+    n = 0
+
+    def need(cond, what):
+        nonlocal n
+        n += 1
+        if not cond:
+            fails.append('note: %s: %r claims %s, which the matrix does not bear out' % (where, line, what))
+    if t.startswith('Diagonal matrix:') or 'diagonal matrices' in t:
+        need(b == 0 and c == 0, 'a diagonal matrix')
+    if t.startswith('Upper triangular:'):
+        need(c == 0, 'an upper triangular matrix')
+    if 'ymmetric matrix' in t:
+        need(t.startswith('Real symmetric matrix'), 'real symmetric (the note must say "Real symmetric")')
+        need(b == c, 'a symmetric matrix')
+    if 'Negative determinant' in t:
+        need(det < 0 and real, 'a negative determinant with real roots')
+        need('opposite signs' in t and 'one eigenvalue is negative' not in t, 'the eigenvalues have opposite signs')
+    if 'scalar matrix' in t and 'NOT' not in t and 'neq' not in t:
+        need(b == 0 and c == 0 and a == d, 'a scalar matrix')
+    if 'NOT mean scalar matrix' in t:
+        need(len(roots) == 1 and not (b == 0 and c == 0), 'a repeated root of a non-scalar matrix')
+    if t.startswith('Repeated'):
+        need(len(roots) == 1, 'a repeated eigenvalue')
+    if 'singular matrix' in t:
+        need(det == 0 and 0 in roots, 'a singular matrix with eigenvalue 0')
+    if '90° rotation matrix' in t:
+        need([[a, b], [c, d]] == [[0, -1], [1, 0]], 'the 90 degree rotation matrix')
+    if 'Complex eigenvalues indicate a rotation' in t or 'No real eigenvalues' in t:
+        need(not real, 'complex eigenvalues')
+    ms = re.search(r'subtracting \((-?\d+)\)\((-?\d+)\) means adding (\d+)', t)
+    if ms:
+        x, y, z = int(ms.group(1)), int(ms.group(2)), int(ms.group(3))
+        need(x * y < 0 and z == -x * y and sorted([x, y]) == sorted([b, c]), 'subtracting a negative product (the matrix has b, c = %d, %d)' % (b, c))
+    if '=' not in t and n == 0:
+        fails.append('note: %s: the prose line %r makes a claim this verifier does not recognise; add a check for it' % (where, line))
+    return n
+
+
 def line_checks(fails, where, line, m, cp):
     n = 0
     (a, b), (c, d) = m
@@ -111,6 +166,9 @@ def line_checks(fails, where, line, m, cp):
         part = part.strip()
         if not part or part == '0':
             continue
+        if re.match(r'\\lambda\^2\s*[+-]\s*(?:\(-?\d+\)|\d+)(?!\s*\\lambda)\s*[+-]', part):
+            n += 1
+            fails.append('working: %s: in %r, %r has a trace term with no lambda (write lambda^2 - (t)lambda + (d))' % (where, line, part))
         try:
             v = read(part)
         except ValueError as e:
@@ -120,6 +178,40 @@ def line_checks(fails, where, line, m, cp):
         if sp.expand(v - cp) != 0:
             fails.append('working: %s: in %r, %s is %s, not det(A - lambda I) = %s' % (where, line, part, v, cp))
     return n
+
+
+def check_example(fails, html):
+    """The start-screen worked example (buildExample), which is not in QS."""
+    body = html.split('function buildExample(){', 1)[1].split('window.addEventListener', 1)[0]
+    tex = [s.replace('\\\\', '\\') for s in re.findall(r"rkI\('((?:[^'\\]|\\.)*)'\)", body)]
+    if len(tex) != 7:
+        fails.append('example: expected 7 formulas in the worked example, found %d' % len(tex))
+        return 0
+    nums = [int(x) for x in re.findall(r'-?\d+', tex[0])]
+    if len(nums) != 4:
+        fails.append('example: cannot read the matrix %r' % tex[0])
+        return 0
+    m = [nums[:2], nums[2:]]
+    cp = charpoly(m)
+    (a, b), (c, d) = m
+    want1 = 'A - \\lambda I = \\begin{pmatrix} %d-\\lambda & %d \\\\ %d & %d-\\lambda \\end{pmatrix}' % (a, b, c, d)
+    if tex[1] != want1:
+        fails.append('example: step 1 reads %r, expected %r' % (tex[1], want1))
+    for i, what in ((2, 'the determinant line'), (3, 'the expansion'), (4, 'the result')):
+        try:
+            p = eq_poly(tex[i])
+        except ValueError as e:
+            fails.append('example: %s cannot be read (%s)' % (what, e))
+            continue
+        if sp.expand(p - cp) != 0:
+            fails.append('example: %s %r is %s, not det(A - lambda I) = %s' % (what, tex[i], p, cp))
+    if re.findall(r'\d', tex[5]):
+        fails.append('example: the quick-formula matrix %r has numbers' % tex[5])
+    if tex[6] != '\\lambda^2 - (a+d)\\lambda + (ad-bc) = 0':
+        fails.append('example: the quick formula reads %r' % tex[6])
+    if 'λ² − (trace)λ + (determinant) = 0' not in body:
+        fails.append('example: the trace/determinant sentence is missing')
+    return 7
 
 
 def check_bank(fails, qs):
@@ -143,6 +235,7 @@ def check_bank(fails, qs):
         if right != [q['c']]:
             fails.append('options: %s: the options that are the characteristic equation are %r, the key is %r' % (where, right, q['c']))
         for line in (q.get('s') or []) + ([q['mc']] if q.get('mc') else []):
+            n += note_checks(fails, where, line, q['m'], cp)
             n += line_checks(fails, where, line, q['m'], cp)
         k = str(q['m'])
         if k in seen:
@@ -198,7 +291,7 @@ def play(fails, html):
             page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof QS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             qs = page.evaluate('() => JSON.parse(JSON.stringify(QS))')
-            n = check_bank(fails, qs)
+            n = check_bank(fails, qs) + check_example(fails, html)
             for msg in page.evaluate(RENDER_JS, qs):
                 fails.append('render: KaTeX cannot parse %s' % msg)
             for d in page.evaluate(SESSION_JS):
@@ -245,6 +338,12 @@ PLANTS = [
     ('a wrong eigenvalue named', 'working:', [("'Repeated eigenvalue \\\\lambda = 3 (scalar matrix)'", "'Repeated eigenvalue \\\\lambda = 9 (scalar matrix)'")]),
     ('marking by the first five characters', 'marking:', [("ok=btn.dataset.val===q.c;", "ok=btn.dataset.val.slice(0,5)===q.c.slice(0,5);")]),
     ('the t6-003 step restored (the -4 sign lost)', 'working:', [("'\\\\lambda^2 - (0)\\\\lambda + (0 - 4) = ", "'\\\\lambda^2 - (0) - (0 - 4) = ")]),
+    ('SWEEP-1: item 13 trace term without its lambda', 'working:', [("'\\\\lambda^2 - (0)\\\\lambda + (0-(-1)) = ", "'\\\\lambda^2 - 0 + (0-(-1)) = ")]),
+    ('SWEEP-1: the old item 4 note (one eigenvalue negative)', 'note:', [('means the eigenvalues have opposite signs.', 'means one eigenvalue is negative.')]),
+    ('SWEEP-1: the old item 17 note (Symmetric, not Real symmetric)', 'note:', [("mc:'Real symmetric matrix", "mc:'Symmetric matrix")]),
+    ('SWEEP-1: a diagonal note on a non-diagonal matrix', 'note:', [("{m:[[5,0],[0,2]],c:", "{m:[[5,1],[0,2]],c:")]),
+    ('SWEEP-1: a wrong quick formula on the start screen', 'example:', [("\\\\lambda^2 - (a+d)\\\\lambda + (ad-bc) = 0", "\\\\lambda^2 - (a+d)\\\\lambda + (ad+bc) = 0")]),
+    ('SWEEP-1: a wrong expansion on the start screen', 'example:', [("12 - 3\\\\lambda - 4\\\\lambda + \\\\lambda^2 - 2 = 0", "12 - 3\\\\lambda - 4\\\\lambda + \\\\lambda^2 - 3 = 0")]),
     ('the matrix shown transposed', 'render:', [("' & '+m[0][1]+' \\\\\\\\ '+m[1][0]+' & '", "' & '+m[1][0]+' \\\\\\\\ '+m[0][1]+' & '")]),
 ]
 
@@ -260,7 +359,7 @@ def main():
     st = play(fails, html)
     print('%s: %d items, every characteristic equation recomputed from its matrix; every option classified; %d worked expressions and '
           'claims checked; every option pressed in Chromium' % (SLUG, st.get('items', 0), st.get('claims', 0)))
-    print('  not asserted (open): 15 of 26 served (t6-002), prose spacing in KaTeX (t6-004), ?level and the rotation note (t6-005)')
+    print('  not asserted (open): 15 of 26 served (t6-002), prose spacing in KaTeX (t6-004), ?level (t6-005), duplicate option sets')
     ok = True
     if not args.no_selftest and not args.against:
         for what, tag, edits in PLANTS:
