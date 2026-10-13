@@ -1371,11 +1371,6 @@
    "B4": {
     "entries": [
      {
-      "detail": "level 'alevel' has 28 question(s), below the 40 minimum",
-      "id": "dimension-checker::alevel",
-      "line": null
-     },
-     {
       "detail": "level 'level4' has 28 question(s), below the 40 minimum",
       "id": "dimension-checker::level4",
       "line": null
@@ -2066,11 +2061,6 @@
      {
       "detail": "level 'ks3' has 20 question(s), below the 40 minimum",
       "id": "factor-race::ks3",
-      "line": null
-     },
-     {
-      "detail": "level 'gcse' has 20 question(s), below the 40 minimum",
-      "id": "factor-race::gcse",
       "line": null
      }
     ],
