@@ -3,6 +3,13 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-13 (cloud): correlation-or-coincidence (#347) and SWEEP-1 batch 8 (GCSE part 4)
+
+- **SR-20 hit, ruled the same day:** correlation-or-coincidence keyed "Something else causes both" on three pairs where one drives the other (B22, B25, B27). #347: Jon's three pairs (shoe size/reading age, ice creams/sunburn, umbrellas/taxis), the verifier bars the old pairs; the new ones overlap B4, B1 and B3 (s1-002, my error, for Jon).
+- **Fixed in batch 8:** component-crusher L9's direction vector takes any non-zero multiple (SR-24), and AL11/L11 state their axes; formula-forge's A = πr² misconception; better-value's three true threshold options, the meal-prep reason, the van's resale and TPFT; given-that's two explanations; chart-interrogator's unlabelled boundaries and four-option Q1; expectation-station's k-cells ("2k = ?"), exact reveal and "Exactly half". Every verifier PASS locally with its plants; answer-lock PASS.
+- **Open, for Jon:** better-value-s1-002 (equal at break-even, with r-006); chart-interrogator-s1-001 (histogram bands by axis, canon §7.1.2) and s1-005; expectation-station-s1-005 ("Most"); stem changes in unit-converter, formula-forge, given-that.
+- **Class (running):** verifier gaps in worked text in every batch 8 game (each has an entry); conventions stated in one item and not its neighbours (component-crusher AL14 only).
+
 ## 2026-10-13 (cloud): circle-theorem-spotter (#344) and SWEEP-1 batch 7 (GCSE part 3)
 
 - **SR-20 hit, fixed under SR-30 (Jon, 13 Oct):** circle-theorem-spotter's tangent figures marked the angle on the wrong side (6 of 55 HIGH). #344: T across AB from C, on B's side of OA; the verifier measures every tangent figure's SVG in Chromium; both old rules planted.
