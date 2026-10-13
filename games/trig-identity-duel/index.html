@@ -83,6 +83,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -249,7 +250,7 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
-const p=new URLSearchParams(location.search);if(p.get('level')&&QUESTIONS[p.get('level')]){level=p.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+{const lv=MaffsLevel.resolve({slug:'trig-identity-duel',levels:['gcse','alevel','level4'],fallback:'gcse'});if(lv!==level&&QUESTIONS[lv]){level=lv;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}}
 
 function startGame(){
   MaffsLock.newSession();sessionStart=Date.now();

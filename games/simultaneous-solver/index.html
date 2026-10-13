@@ -176,6 +176,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -1436,7 +1437,7 @@ var EqTiles = (function () {
   document.querySelectorAll('.stage-btn').forEach(function (b) {
     b.addEventListener('click', function () { setStage(b.dataset.stage); mfg('mode_selected', { game_slug: SLUG, mode: b.dataset.stage }); });
   });
-  if (new URLSearchParams(window.location.search).get('level') === 'alevel') setLevel('alevel');
+  if (MaffsLevel.resolve({slug:'simultaneous-solver',levels:['gcse','alevel'],fallback:'gcse',boards:['foundation-s1','foundation-s2','foundation-s3','foundation-s4','foundation-s5']}) === 'alevel') setLevel('alevel');
 
   $('startBtn').addEventListener('click', function () { startGame(); });
   $('againBtn').addEventListener('click', function () { state = 'menu'; showS('menu'); });

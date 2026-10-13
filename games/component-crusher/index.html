@@ -105,6 +105,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
@@ -575,7 +576,7 @@ function selLevel(btn){
   const colors={gcse:'#3b82f6',alevel:'#f97316',level4:'#ef4444'};
   document.documentElement.style.setProperty('--primary',colors[G.level]||'#3b82f6');
 }
-function parseURL(){const p=new URLSearchParams(location.search),l=p.get('level');if(l){const b=document.querySelector(`.level-btn[data-level="${l}"]`);if(b)selLevel(b);}}
+function parseURL(){const l=MaffsLevel.resolve({slug:'component-crusher',levels:['gcse','alevel','level4'],fallback:'gcse'});if(MaffsLevel.declared('component-crusher').fromUrl){const b=document.querySelector(`.level-btn[data-level="${l}"]`);if(b)selLevel(b);}}
 
 function startGame(){
   if(!G.level)return;

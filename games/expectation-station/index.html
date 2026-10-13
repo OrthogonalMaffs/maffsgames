@@ -189,6 +189,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/session-length.js"></script>
@@ -508,9 +509,8 @@ let completedTable = [];
 //  INIT
 // ============================================================
 (function init() {
-  const params = new URLSearchParams(window.location.search);
-  const lvl = params.get('level');
-  if (lvl && QUESTIONS[lvl]) {
+  const lvl = MaffsLevel.resolve({slug:'expectation-station',levels:['gcse','core','alevel'],fallback:'core'});
+  if (QUESTIONS[lvl]) {
     currentLevel = lvl;
   }
   // Set level button

@@ -67,14 +67,16 @@ word-problem-decoder wrong-on-the-internet
 '''.split())
 MIGRATED = frozenset('''
 52dle angle-ace bearing-blitz better-value binomial-blaster circle-theorem-spotter complex-converter
-constructions-lab correlation-or-coincidence curling-friction decimal-detective differentiation-duel
-distinctly-average equation-builder equatle estimation-engine expected-damage fermi-lab force-resolver
-formula-plug-in four-quadrant-explorer fraction-equivalence graph-transformer higher-power index-laws
-integration-duel just-pythag-it-bruv like-terms-collector linear-equation-solver maths-court matrix-crunch
-moments-master negative-number-line new-shapes percentage-flip prime-factorisation prime-or-composite
-prisoners-dilemma probability-paradox probability-pioneer proof-builder proportion-blaster sequence-solver
-seven-bridges shape-shifter six-sevens-bruv split-it spot-the-error spot-the-muppet suvat terrible-advice
-think-of-a-number trig-wars trig-worms truth-buster word-problem-decoder wrong-on-the-internet
+component-crusher constructions-lab correlation-or-coincidence curling-friction decimal-detective
+differentiation-duel distinctly-average equation-builder equatle estimation-engine expectation-station
+expected-damage fermi-lab force-resolver formula-forge formula-plug-in formula-unlocked
+four-quadrant-explorer fraction-equivalence given-that gradient-hunter graph-transformer higher-power
+index-laws integration-duel just-pythag-it-bruv like-terms-collector linear-equation-solver maths-court
+matrix-crunch moments-master negative-number-line new-shapes percentage-flip prime-factorisation
+prime-or-composite prisoners-dilemma probability-paradox probability-pioneer proof-builder proportion-blaster
+sequence-solver seven-bridges shape-shifter simultaneous-solver six-sevens-bruv split-it spot-the-error
+spot-the-muppet stat-attack suvat terrible-advice think-of-a-number trig-identity-duel trig-wars trig-worms
+truth-buster word-problem-decoder wrong-on-the-internet
 '''.split())
 
 # The portal has no Year 6 filter button, so a game that serves only Year 6 is reachable under the KS3 filter and its

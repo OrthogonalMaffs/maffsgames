@@ -98,6 +98,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
@@ -185,8 +186,7 @@ function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:true})}
 function rkInline(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function rkStr(tex){const s=document.createElement('span');katex.render(tex,s,{throwOnError:false,displayMode:false});return s.innerHTML}
 
-const pa=new URLSearchParams(location.search);
-if(pa.get('level')&&['gcse','alevel','level4'].includes(pa.get('level'))){level=pa.get('level');document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}
+{const lv=MaffsLevel.resolve({slug:'formula-forge',levels:['gcse','alevel','level4'],fallback:'gcse'});if(lv!==level){level=lv;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}}
 
 // ============================================================
 //  QUESTION BANKS
