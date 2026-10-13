@@ -17,15 +17,15 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 
 ## Counts
 
-582 findings in 79 games.
+583 findings in 79 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 26 | 0 | 27 |
 | HIGH | 7 | 205 | 0 | 212 |
-| MEDIUM | 115 | 159 | 3 | 277 |
+| MEDIUM | 115 | 160 | 3 | 278 |
 | LOW | 33 | 32 | 1 | 66 |
-| **All** | 156 | 422 | 4 | 582 |
+| **All** | 156 | 423 | 4 | 583 |
 
 ### By class
 
@@ -52,9 +52,9 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | NEW:marking-by-structure | 0 | 5 |
 | NEW:phone-layout | 4 | 5 |
 | B7 (ledgered) | 3 | 4 |
+| NEW:equal-value-options | 0 | 4 |
 | NEW:number-line-tolerance | 0 | 4 |
 | 9 | 1 | 3 |
-| NEW:equal-value-options | 0 | 3 |
 | NEW:level-content-mismatch | 2 | 3 |
 | NEW:phone-fold | 3 | 3 |
 | NEW:sr14-content | 0 | 3 |
@@ -164,7 +164,7 @@ Sources: `docs/audit-resit-correctness-2026-10-04.md` (ids `-r-`), `docs/audits/
 | `glorious-gantt` | unlisted | none | 1 | 7 | 4 | 1 | 13 | 0 | 0 |
 | `gradient-hunter` | yes | verify-gradient-hunter.py | 1 | 0 | 2 | 0 | 0 | 3 | 0 |
 | `higher-power` | yes | verify-higher-power.py | 0 | 1 | 4 | 0 | 4 | 1 | 0 |
-| `index-laws` | yes | verify-index-laws.py | 0 | 0 | 1 | 0 | 0 | 0 | 1 |
+| `index-laws` | yes | verify-index-laws.py | 0 | 0 | 2 | 0 | 0 | 1 | 1 |
 | `integration-duel` | yes | verify-integration-duel.py | 0 | 2 | 7 | 1 | 1 | 9 | 0 |
 | `like-terms-collector` | yes | verify-like-terms-collector.py | 1 | 1 | 3 | 1 | 4 | 2 | 0 |
 | `linear-equation-solver` | yes | verify-linear-equation-solver.py | 1 | 1 | 2 | 1 | 1 | 4 | 0 |
