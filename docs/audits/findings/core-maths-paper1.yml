@@ -190,4 +190,5 @@ findings:
     4 px, a box plot without ticks) are caught, and the old page fails 13 checks'
   evidence: '"A histogram shows the distribution of waiting times at a clinic. How many patients waited between 10 and
     40 minutes?" | key 60 | 48, 72, 84; bars at 2.4, 3.6, 1.2 (Jon''s play-test, 13 Oct 2026)'
-  status: open
+  status: fixed
+  pr: 357
