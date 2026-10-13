@@ -29,6 +29,21 @@ full run (`write_pack` from the headers, `record_timings` from the run's log), s
 both. Only the header changed; the JSON files were not hand-edited. Until main's next full run times it, the
 renamed line counts as 120 s and runs in a group of its own (`ci-groups.py --check` passes). (The stale voice-rewrite §5 status table is fixed by ROOM-STATUS-ONE-TABLE, above.)
 
+## 2026-10-12 (home): trimmed for LEVEL-RESOLVER batch 1
+**CONTAINER-PULL-TIMEOUT (12 Oct, #299).** The image pull no longer counts against a group's limit: both container jobs use `timeout-minutes: matrix.job_timeout` = `timeout` + `PULL_ALLOWANCE` (10, `ci-groups.py`; emitted for content groups, literal on the 7 static entries). Budget step untouched (75% of `timeout` from JOB_T0). `ci-groups.py --selftest` fails on any mismatch. Not done: pull seconds in the summary (no in-job source for the start time). Cause: run 802, Content verifiers 33 took 379 s against 360 s. **Cloud lane:** the re-run-at-Initialize-containers rule can go after two clean full main runs.
+
+**CI-TIMINGS-MEDIAN (12 Oct, Jon's contract; #288, merge d00a818): MAIN IS UNBLOCKED, and the cloud lane can resume VERIFIERS-20.**
+`ci-groups.py --check` had failed on main and every PR since the "Record CI timings and repack (run 38224711265)" commit
+(`25f887b`): run 785 recorded a 125 s setup against 18-28 s in the eleven records before it, and the repack against that
+left 12 groups at 81-108%. `scripts/ci-timings.json` now keeps the last 5 main runs under `history` and its top-level
+`setup` and `lines` are their medians (the seed is runs 777-785; median setup 25 s); `ci-groups.py --record-and-pack` works the
+pack out in memory and writes neither file if `--check` fails; the timings job uses it and runs `--check` again before
+committing. Self-test covers the 125 s outlier, a line slow in 3 of 5 runs, and a failing pack being refused. **Confirmed on
+main:** run 791 (38230011527) green, its timings job ran the new path and committed run 38230011527 (`1878166`), and
+`--check` passes on main. Canon §7.8.1 and CLAUDE.md have a sentence each. **For the cloud lane:** merge `main` into
+`claude/verifier-think-of-a-number`, push, merge #287 on a green Gate, then continue at `formula-plug-in`. No budget,
+`TARGET`/`FAIL`, timeout, verifier or `ci-pack.json` (by hand) was touched.
+
 ## 2026-10-12 (home): trimmed for PD-TOURNAMENT-BOARD
 **ESCAPE-ANALYTICS (11 Oct, Jon's contract; STOPPED on its shared-layer STOP IF, then Jon's rulings 11 Oct).**
 Diagnosis (Jon's Rightful King play, Sheet rows 55413-55434): (1) the eight index-0 "answers" were room searches:
