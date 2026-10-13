@@ -66,17 +66,20 @@ trig-identity-duel trig-wars trig-worms truth-buster truth-will-set-you-free uni
 word-problem-decoder wrong-on-the-internet
 '''.split())
 MIGRATED = frozenset('''
-52dle angle-ace bearing-blitz better-value binomial-blaster circle-theorem-spotter complex-converter
-component-crusher constructions-lab correlation-or-coincidence curling-friction decimal-detective
-differentiation-duel distinctly-average equation-builder equatle estimation-engine expectation-station
-expected-damage fermi-lab force-resolver formula-forge formula-plug-in formula-unlocked
-four-quadrant-explorer fraction-equivalence given-that gradient-hunter graph-transformer higher-power
-index-laws integration-duel just-pythag-it-bruv like-terms-collector linear-equation-solver maths-court
-matrix-crunch moments-master negative-number-line new-shapes percentage-flip prime-factorisation
+52dle angle-ace bearing-blitz better-value binomial-blaster characteristic-quest circle-theorem-spotter
+complex-converter component-crusher constructions-lab core-maths-paper1 core-maths-paper2a core-maths-paper2b
+core-maths-paper2c correlation-or-coincidence curling-friction decimal-detective differentiation-duel
+distinctly-average eigenvalue-extractor eigenvector-engine equation-builder equatle estimation-engine
+expectation-station expected-damage factor-theorem fermi-lab force-resolver formula-forge formula-plug-in
+formula-unlocked four-quadrant-explorer fraction-equivalence given-that glorious-gantt gradient-hunter
+graph-sketcher graph-transformer growth-and-decay higher-power index-laws integration-duel
+just-pythag-it-bruv like-terms-collector linear-equation-solver log-laws maths-court matrix-crunch
+moments-master negative-number-line new-shapes normal-navigator percentage-flip prime-factorisation
 prime-or-composite prisoners-dilemma probability-paradox probability-pioneer proof-builder proportion-blaster
 sequence-solver seven-bridges shape-shifter simultaneous-solver six-sevens-bruv split-it spot-the-error
-spot-the-muppet stat-attack suvat terrible-advice think-of-a-number trig-identity-duel trig-wars trig-worms
-truth-buster word-problem-decoder wrong-on-the-internet
+spot-the-muppet stat-attack suvat tax-theft terrible-advice test-the-claim think-of-a-number
+trig-identity-duel trig-wars trig-worms truth-buster truth-will-set-you-free word-problem-decoder
+wrong-on-the-internet
 '''.split())
 
 # The portal has no Year 6 filter button, so a game that serves only Year 6 is reachable under the KS3 filter and its
@@ -86,7 +89,7 @@ truth-buster word-problem-decoder wrong-on-the-internet
 FILTER_ALIAS = {'year6': {'ks3'}}
 
 RESOLVE = re.compile(r'MaffsLevel\.resolve\s*\(\s*\{(.*?)\}\s*\)', re.S)
-OWN_READ = re.compile(r'''\.get\(\s*['"]level['"]\s*\)|[?&]level=|\blevel\s*=\s*([a-z]+)\.get\b''')
+OWN_READ = re.compile(r'''\.get\(\s*['"]level['"]\s*\)|\blevel\s*=\s*([a-z]+)\.get\b|location\.search[^;\n]*level''')
 SUBMIT = re.compile(r'''MaffsLeaderboard\.submitScore\(\s*[^,]+,\s*(['"])([^'"]+)\1\s*,''')
 LINK = re.compile(r'''(?:games/|\.\./)([a-z0-9][a-z0-9-]*)/(?:index\.html)?\?(?:[^"'\s<>#]*&(?:amp;)?)?level=([A-Za-z0-9_-]*)''')
 CARD = re.compile(r'''<a\s+[^>]*href="([^"]*)"[^>]*class="game-card"[^>]*data-levels="([^"]*)"''')
