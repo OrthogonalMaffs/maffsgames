@@ -61,3 +61,57 @@ findings:
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F3. '
   status: fixed
   pr: 36
+- id: correlation-or-coincidence-s1-001
+  severity: CRITICAL
+  jc: false
+  class: NEW:true-wrong-option
+  level: all
+  where: 'games/correlation-or-coincidence/index.html:330-331 (B22), :336-337 (B25), :340-341 (B27)'
+  summary: 'Three ''both'' items keyed "Something else causes both" had a direct link as well: gig-goers buy the band''s T-shirts (B25), lemons are bought to go on the pancakes (B27), driving chips the paint (B22), so "One causes the other" was also true and marked wrong (3 items: SR-20''s count, at every level). Fixed (Jon''s ruling, 13 Oct 2026; no unlist): replaced with ice creams and sunburn cases (hot sunny weather), umbrellas and taxi bookings (rain), a child''s shoe size and reading age (age), each keyed "Something else causes both", positive, its graph generated to its stated band and checked; the verifier fails the three old pairs as ''both'' items; plant'
+  evidence: 'B25 "Concert tickets sold (thousands)" / "Band T-shirts sold (thousands)", lurk "how popular the band is", explain "Tickets don''t sell T-shirts."; B27 pancakes / lemons, explain "Pancakes don''t sell lemons on their own."; B22 miles / scratches, explain "Driving miles doesn''t scratch paint." (SWEEP-1, batch 8)'
+  status: open
+- id: correlation-or-coincidence-s1-002
+  severity: LOW
+  jc: true
+  class: NEW:degenerate-item
+  level: all
+  where: 'games/correlation-or-coincidence/index.html:330 (B22) beside :292 (B4); :336 (B25) beside :286 (B1); :340 (B27) beside :290 (B3)'
+  summary: 'The three replacements overlap items already in the bank: B22 (shoe size and reading age, age) is nearly B4 (foot length and reading test score, age); B25 shares B1''s x (ice creams sold) and its cause; B27 shares B3''s x (umbrellas sold) and its cause. Correct, but a session can deal both of a pair. The overlap was in Claude''s suggested pairs, not caught before Jon ruled; new pairs are Jon''s call'
+  evidence: 'B4 "Foot length, children aged 5 to 11 (cm)" / "Reading test score"; B1 ice creams / sunglasses; B3 umbrellas / wellington boots (SWEEP-1, batch 8)'
+  status: open
+- id: correlation-or-coincidence-s1-003
+  severity: MEDIUM
+  jc: true
+  class: NEW:true-wrong-option
+  level: all
+  where: 'games/correlation-or-coincidence/index.html:264-265 (A19)'
+  summary: 'Revision hours and test score across different students, keyed "One causes the other": motivation and prior attainment drive both, the textbook confounder, so "Something else causes both" is defensible. Jon''s call (e.g. one student over several tests)'
+  evidence: 'explain "Revision helps. Students also start from different places, which is why the pattern is only moderate." (SWEEP-1, batch 8)'
+  status: open
+- id: correlation-or-coincidence-s1-004
+  severity: LOW
+  jc: false
+  class: NEW:true-wrong-option
+  level: all
+  where: 'games/correlation-or-coincidence/index.html:423-425 (C26)'
+  summary: 'Fridge magnets and favourite-film viewings over 8 families, keyed "Coincidence": young children in the family plausibly drive both (the joke itself names the kids'' drawings)'
+  evidence: 'explain "With only 8 families, a pattern can appear by chance. Magnets don''t press play." (SWEEP-1, batch 8)'
+  status: open
+- id: correlation-or-coincidence-s1-005
+  severity: LOW
+  jc: false
+  class: NEW:wrong-explanation-text
+  level: all
+  where: 'games/correlation-or-coincidence/index.html:304-305 (B10)'
+  summary: '"Height doesn''t widen a trunk" is doubtful (trunks thicken under height and wind load); the key, the tree''s age, is fine'
+  evidence: 'explain "Height doesn''t widen a trunk. Older trees have had longer to grow both ways." (SWEEP-1, batch 8)'
+  status: open
+- id: correlation-or-coincidence-s1-006
+  severity: MEDIUM
+  jc: false
+  class: NEW:verifier-gap
+  level: all
+  where: 'scripts/verify-correlation-or-coincidence.py; index.html:494-496 (COC.describe), :539 (verdict), :531-534 (tick labels)'
+  summary: 'The verifier checks that explain, lurk and joke are present and shown, not what they say; nor the rendered "pattern" line, the verdict line or the printed tick values (Jon''s rule of 13 Oct 2026). The direct-link pairs are now checked (s1-001)'
+  evidence: 'Explanations read by hand (SWEEP-1, batch 8)'
+  status: open
