@@ -240,7 +240,7 @@ alevel:[
   {s:'"If n is an integer and n² is even, then n is even"',correct:'This statement is actually TRUE — no counter-example exists',d:['3','5','7'],isTrue:true,steps:['If n were odd, then n = 2k+1','n² = (2k+1)² = 4k²+4k+1 = 2(2k²+2k)+1, which is odd','So if n² is even, n must be even — no counter-example is possible']},
   {s:'"The sum of two irrational numbers is always irrational"',correct:'\\sqrt{2} + (-\\sqrt{2}) = 0',d:['\\sqrt{2}+\\sqrt{8}','\\sqrt{2}+\\sqrt{3}','\\sqrt{5}+\\sqrt{7}'],steps:['\\(\\sqrt{2}\\) is irrational and \\(-\\sqrt{2}\\) is irrational','Their sum is 0, which is rational','The statement is disproved']},
   {s:'"n² + n + 41 is prime for all positive integers n"',correct:'n = 41',d:['n = 1','n = 5','n = 10'],steps:['When \\(n = 41: 41² + 41 + 41 = 41(41 + 1 + 1) = 41 \\times 43\\)','This is clearly not prime — it has factors 41 and 43','For \\(n = 1\\) to \\(39\\) it is prime (\\(n = 40\\) gives \\(1681 = 41 \\times 41\\)) — a famous example']},
-  {s:'"If a > b then a² > b²"',correct:'a = -1, b = -2',d:['a = 3, b = 2','a = 5, b = 1','a = 10, b = 3'],steps:['\\(-1 > -2\\) (true)','\\((-1)^2 = 1\\) and \\((-2)^2 = 4\\)','\\(1 < 4\\), so \\(a^2 < b^2\\)'],misconception:'Negative numbers reverse the inequality when squared'},
+  {s:'"If a > b then a² > b²"',correct:'a = -1, b = -2',d:['a = 3, b = 2','a = 5, b = 1','a = 10, b = 3'],steps:['\\(-1 > -2\\) (true)','\\((-1)^2 = 1\\) and \\((-2)^2 = 4\\)','\\(1 < 4\\), so \\(a^2 < b^2\\)'],misconception:'Squaring reverses the inequality when both numbers are negative, and can when only one is'},
   {s:'"The product of two irrational numbers is always irrational"',correct:'\\sqrt{2} \\times \\sqrt{2} = 2',d:['\\sqrt{2}\\times\\sqrt{5}','\\sqrt{3}\\times\\sqrt{5}','\\sqrt{2}\\times\\sqrt{3}'],steps:['\\(\\sqrt{2}\\) is irrational','\\sqrt{2} \\times \\sqrt{2} = 2','2 is rational — statement disproved']},
   {s:'"If n is not divisible by 2 or 3, then n is prime"',correct:'25',d:['7','11','13'],steps:['25 is not divisible by 2 or 3','But \\(25 = 5 \\times 5\\)','So 25 is composite, not prime']},
   {s:'"For all integers n, n³ > n²"',correct:'n = 0',d:['n = 2','n = 3','n = 5'],steps:['\\(0^3 = 0\\) and \\(0^2 = 0\\)','0 is not greater than 0','Also works for \\(n = 1: 1^3 = 1^2 = 1\\)'],misconception:'n = -1 also works: (-1)³ = -1 < (-1)² = 1'},
@@ -253,7 +253,7 @@ alevel:[
   {s:'"n² - n + 11 is prime for all positive integers n"',correct:'n = 11',d:['n = 1','n = 3','n = 7'],steps:['When n = 11: 11² - 11 + 11 = 121','121 = 11 \\times 11','Not prime — the formula factors when n equals the constant term']},
   {s:'"The sum of any three consecutive integers is divisible by 6"',correct:'2+3+4=9',d:['1+2+3=6','3+4+5=12','5+6+7=18'],steps:['Three consecutive integers: n + (n+1) + (n+2) = 3n + 3 = 3(n+1)','This is always divisible by 3','But NOT always by 6: e.g. 2+3+4 = 9, which is not divisible by 6']},
   {s:'"If a divides bc, then a divides b or a divides c"',correct:'a = 6, b = 4, c = 3',d:['a=2, b=4, c=3','a=3, b=6, c=5','a=5, b=10, c=7'],steps:['\\(6\\) divides \\(4 \\times 3 = 12\\) ✓','But 6 does not divide 4, and 6 does not divide 3','The statement fails here; it always holds when a is prime (Euclid\'s lemma)']},
-  {s:'"\\log(a + b) = \\log(a) + \\log(b)"',correct:'a = b = 10',d:['a=2, b=2','a=3, b=1.5','a=6, b=1.2'],steps:['\\log(10 + 10) = \\log(20) \\approx 1.301','\\log(10) + \\log(10) = 1 + 1 = 2','1.301 \\neq 2'],misconception:'\\(\\log(ab) = \\log(a) + \\log(b)\\), but NOT \\(\\log(a+b)\\)'},
+  {s:'"\\log(a + b) = \\log(a) + \\log(b)"',correct:'a = b = 10',d:['a=2, b=2','a=3, b=1.5','a=6, b=1.2'],steps:['\\log_{10}(10 + 10) = \\log_{10}(20) \\approx 1.301','\\log_{10}(10) + \\log_{10}(10) = 1 + 1 = 2','1.301 \\neq 2'],misconception:'\\(\\log(ab) = \\log(a) + \\log(b)\\), but NOT \\(\\log(a+b)\\)'},
   {s:'"\\sin(2x) = 2\\sin(x)"',correct:'x = 60°',d:['x = 0°','x = 180°','x = 360°'],steps:['\\sin(120°) = \\frac{\\sqrt{3}}{2} \\approx 0.866','2\\sin(60°) = 2 \\times \\frac{\\sqrt{3}}{2} = \\sqrt{3} \\approx 1.732','These are not equal'],misconception:'\\(\\sin(2x) = 2\\sin(x)\\cos(x)\\) — the double angle formula'},
   {s:'"(a+b)^2 = a^2 + b^2"',correct:'a=1, b=1',d:['a=0, b=3','a=5, b=0','a=0, b=-2'],steps:['(1+1)^2 = 4','1^2 + 1^2 = 2','4 \\neq 2'],misconception:'\\((a+b)^2 = a^2 + 2ab + b^2\\) — the middle term is missing'},
   {s:'"If the derivative f\'(a) = 0 then f has a maximum at x = a"',correct:'f(x) = x^3 \\text{ at } x = 0',d:['f(x)=-x^2 \\text{ at } x=0','f(x)=-(x-1)^2 \\text{ at } x=1','f(x)=4-x^2 \\text{ at } x=0'],steps:['f(x) = x^3, f\'(x) = 3x^2','f\'(0) = 0, but x = 0 is a point of inflection','It is neither a maximum nor a minimum']},
@@ -265,10 +265,10 @@ further:[
   {s:'"The determinant of any matrix is positive"',correct:'\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}',d:['\\begin{pmatrix}2&0\\\\0&3\\end{pmatrix}','\\begin{pmatrix}1&0\\\\0&1\\end{pmatrix}','\\begin{pmatrix}3&1\\\\1&2\\end{pmatrix}'],steps:['\\det = (1)(4)-(2)(3) = 4-6 = -2','The determinant is negative','Determinants can be positive, negative, or zero']},
   {s:'"If A and B are matrices, then AB = BA"',correct:'A=\\begin{pmatrix}1&0\\\\0&0\\end{pmatrix}, B=\\begin{pmatrix}0&1\\\\0&0\\end{pmatrix}',d:['A=I, B=I','A=2I, B=3I','A=0, B=0'],steps:['AB = \\begin{pmatrix}0&1\\\\0&0\\end{pmatrix}','BA = \\begin{pmatrix}0&0\\\\0&0\\end{pmatrix}','\\(AB \\neq BA\\) — matrix multiplication is NOT commutative']},
   {s:'"All eigenvalues of a real matrix are real"',correct:'\\begin{pmatrix}0&-1\\\\1&0\\end{pmatrix}',d:['\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}','\\begin{pmatrix}2&1\\\\0&3\\end{pmatrix}','I'],steps:['This is a 90° rotation matrix','\\text{det}(A-\\lambda I) = \\lambda^2 + 1 = 0','\\(\\lambda = \\pm i\\) — complex eigenvalues']},
-  {s:'"The sum of the first n natural numbers is always even"',correct:'n = 1',d:['n = 3','n = 7','n = 8'],steps:['\\sum_{k=1}^{1} k = 1','1 is odd, not even','The sums run 1, 3, 6, 10, 15, 21, ...: odd, odd, even, even, repeating']},
+  {s:'"The sum of the first n positive integers is always even"',correct:'n = 1',d:['n = 3','n = 7','n = 8'],steps:['\\sum_{k=1}^{1} k = 1','1 is odd, not even','The sums run 1, 3, 6, 10, 15, 21, ...: odd, odd, even, even, repeating']},
   {s:'"\\(e^{i\\theta} = \\cos\\theta + \\sin\\theta\\) for all \\(\\theta\\)"',correct:'\\theta = \\pi/2',d:['\\theta = 0','\\theta = 2\\pi','\\theta = \\pi'],steps:['e^{i\\pi/2} = \\cos(\\pi/2) + i\\sin(\\pi/2) = i','\\cos(\\pi/2) + \\sin(\\pi/2) = 0 + 1 = 1','\\(i \\neq 1\\) — the \\(i\\) is missing from the claim'],misconception:'Euler\'s formula is \\(e^{i\\theta} = \\cos\\theta + i\\sin\\theta\\) — note the \\(i\\) before \\(\\sin\\theta\\)'},
   {s:'"If \\(\\det(A) = \\det(B)\\) then \\(A = B\\)"',correct:'A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}, B=\\begin{pmatrix}2&0\\\\0&1\\end{pmatrix}',d:['A=I, B=I','A=0, B=0','A=2I, B=2I'],steps:['\\det(A) = 2, \\det(B) = 2','But the matrices are clearly different','Equal determinants do not imply equal matrices']},
-  {s:'"If \\(z_1\\) and \\(z_2\\) are complex, then \\(|z_1 + z_2| = |z_1| + |z_2|\\)"',correct:'z_1 = 1, z_2 = i',d:['z_1=1, z_2=1','z_1=2, z_2=3','z_1=0, z_2=5'],steps:['|1 + i| = \\sqrt{2} \\approx 1.414','|1| + |i| = 1 + 1 = 2','\\sqrt{2} \\neq 2'],misconception:'The triangle inequality states \\(|z_1+z_2| \\leq |z_1|+|z_2|\\), with equality only when \\(z_1\\) and \\(z_2\\) point in the same direction'},
+  {s:'"If \\(z_1\\) and \\(z_2\\) are complex, then \\(|z_1 + z_2| = |z_1| + |z_2|\\)"',correct:'z_1 = 1, z_2 = i',d:['z_1=1, z_2=1','z_1=2, z_2=3','z_1=0, z_2=5'],steps:['|1 + i| = \\sqrt{2} \\approx 1.414','|1| + |i| = 1 + 1 = 2','\\sqrt{2} \\neq 2'],misconception:'The triangle inequality states \\(|z_1+z_2| \\leq |z_1|+|z_2|\\), with equality only when one is a non-negative real multiple of the other (or either is \\(0\\))'},
   {s:'"A singular matrix has no eigenvalues"',correct:'\\begin{pmatrix}0&0\\\\0&0\\end{pmatrix}',d:['I','\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}','\\begin{pmatrix}3&1\\\\0&3\\end{pmatrix}'],steps:['The zero matrix is singular (det = 0)','\\det(0 - \\lambda I) = \\lambda^2 = 0','\\(\\lambda = 0\\) is an eigenvalue — singular matrices always have \\(0\\) as an eigenvalue'],isTrue:false},
   {s:'"\\arg(z_1 z_2) = \\arg(z_1) \\times \\arg(z_2)"',correct:'z_1 = z_2 = e^{i\\pi/4}',d:['z_1=1, z_2=1','z_1=2, z_2=3','z_1=1, z_2=5'],steps:['\\arg(z_1) = \\arg(z_2) = \\pi/4','\\arg(z_1 z_2) = \\pi/4 + \\pi/4 = \\pi/2','But \\(\\pi/4 \\times \\pi/4 = \\pi^2/16 \\neq \\pi/2\\)'],misconception:'Arguments ADD when multiplying: \\(\\arg(z_1 z_2) = \\arg(z_1) + \\arg(z_2)\\)'},
   {s:'"Every square matrix has an inverse"',correct:'\\begin{pmatrix}1&2\\\\2&4\\end{pmatrix}',d:['I','\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}','\\begin{pmatrix}2&1\\\\1&3\\end{pmatrix}'],steps:['\\det = 4 - 4 = 0','Singular matrices have no inverse','Row 2 = 2 × Row 1']},
@@ -298,7 +298,8 @@ alevel:[
   {title:'Prove that there are infinitely many prime numbers',
    lines:['Assume there are finitely many primes: \\(p_1, p_2, \\ldots, p_n\\)','Consider the number \\(N = p_1 \\times p_2 \\times \\cdots \\times p_n + 1\\)','\\(N\\) is not divisible by any of \\(p_1, p_2, \\ldots, p_n\\) (it leaves remainder \\(1\\))','So either N is prime, or N has a prime factor not in our list','In both cases, there is a prime not in our assumed complete list','This contradicts our assumption — therefore there are infinitely many primes \\(\\quad\\square\\)']},
   {title:'Prove that \\(\\cos^2\\theta + \\sin^2\\theta = 1\\) for \\(0^\\circ < \\theta < 90^\\circ\\)',
-   lines:['Consider a right-angled triangle with hypotenuse 1','Let the adjacent side be \\(\\cos\\theta\\) and the opposite side be \\(\\sin\\theta\\)','By Pythagoras: \\((\\text{adjacent})^2 + (\\text{opposite})^2 = (\\text{hypotenuse})^2\\)','So \\(\\cos^2\\theta + \\sin^2\\theta = 1^2 = 1 \\quad\\square\\)']},
+   lines:['Consider a right-angled triangle with hypotenuse 1','Let the adjacent side be \\(\\cos\\theta\\) and the opposite side be \\(\\sin\\theta\\)','By Pythagoras: \\((\\text{adjacent})^2 + (\\text{opposite})^2 = (\\text{hypotenuse})^2\\)','So \\(\\cos^2\\theta + \\sin^2\\theta = 1^2 = 1 \\quad\\square\\)'],
+   after:{1:[0],2:[0],3:[1,2]}},
 ],
 further:[
   {title:'Prove by induction that \\(\\sum_{r=1}^{n} r = \\frac{n(n+1)}{2}\\)',
@@ -314,14 +315,14 @@ further:[
 //  INDUCTION QUESTIONS (multi-stage)
 // ============================================================
 const INDUCTION=[
-  {prop:'\\sum_{r=1}^{n} r = \\frac{n(n+1)}{2}',
+  {prop:'\\sum_{r=1}^{n} r = \\frac{n(n+1)}{2} \\text{ for all integers } n \\geq 1',
    stages:[
-     {prompt:'What value of n should we use for the base case?',correct:'n = 1',d:['n = 0','n = 2','n = k'],steps:['Induction starts at the lowest valid value','Here, the sum starts at r=1, so n=1 is the base case']},
+     {prompt:'What value of n should we use for the base case?',correct:'n = 1',d:['n = 0','n = 2','n = k'],steps:['Induction starts at the lowest valid value','The statement is claimed for \\(n \\geq 1\\), so \\(n = 1\\) is the base case']},
      {prompt:'Verify the base case: when n = 1, what does the LHS equal?',correct:'1',d:['0','2','\\frac{1}{2}'],steps:['\\sum_{r=1}^{1} r = 1','The RHS: \\(\\frac{1(2)}{2} = 1\\)','LHS = RHS ✓']},
      {prompt:'What do we assume for the inductive hypothesis?',correct:'\\sum_{r=1}^{k} r = \\frac{k(k+1)}{2}',d:['\\sum_{r=1}^{k+1} r = \\frac{(k+1)(k+2)}{2}','\\sum_{r=1}^{n} r = \\frac{n(n+1)}{2}','\\sum_{r=1}^{k} r = \\frac{k^2}{2}'],steps:['Assume the formula holds for some arbitrary integer n = k','We write the assumption using k specifically']},
      {prompt:'In the inductive step, \\(\\sum_{r=1}^{k+1} r = \\frac{k(k+1)}{2} + (k+1)\\). This simplifies to:',correct:'\\frac{(k+1)(k+2)}{2}',d:['\\frac{k(k+2)}{2}','\\frac{(k+1)^2}{2}','\\frac{k^2+3k}{2}'],steps:['\\frac{k(k+1)}{2} + (k+1) = \\frac{k(k+1)+2(k+1)}{2}','= \\frac{(k+1)(k+2)}{2}','This matches the formula with n = k+1 ✓']},
    ]},
-  {prop:'\\sum_{r=1}^{n} r^2 = \\frac{n(n+1)(2n+1)}{6}',
+  {prop:'\\sum_{r=1}^{n} r^2 = \\frac{n(n+1)(2n+1)}{6} \\text{ for all integers } n \\geq 1',
    stages:[
      {prompt:'Verify base case n=1. What is the RHS?',correct:'1',d:['\\frac{1}{6}','\\frac{1}{3}','3'],steps:['\\frac{1 \\times 2 \\times 3}{6} = \\frac{6}{6} = 1','LHS \\(= 1^2 = 1\\) ✓']},
      {prompt:'In the inductive step, what do we add to both sides?',correct:'(k+1)^2',d:['k^2','(k+1)','2k+1'],steps:['\\sum_{r=1}^{k+1} r^2 = \\sum_{r=1}^{k} r^2 + (k+1)^2','We add the next term \\((k+1)^2\\) to the assumed formula']},
@@ -333,10 +334,10 @@ const INDUCTION=[
      {prompt:'What is the inductive hypothesis?',correct:'8^k - 1 = 7m \\text{ for some integer } m',d:['8^k = 7m','8^{k+1} - 1 = 7m','8^k - 1 = 7'],steps:['Assume \\(8^k - 1\\) is divisible by \\(7\\)','Write this as \\(8^k - 1 = 7m\\), so \\(8^k = 7m + 1\\)']},
      {prompt:'\\(8^{k+1} - 1 = 8 \\cdot 8^k - 1\\). Using \\(8^k = 7m + 1\\), this becomes:',correct:'8(7m+1) - 1 = 56m + 7 = 7(8m+1)',d:['8(7m+1) - 1 = 56m + 1 - 1 = 56m','7m + 8 - 1 = 7m + 7','8 \\cdot 7m - 1 = 56m - 1'],steps:['8^{k+1} - 1 = 8(7m+1) - 1 = 56m + 8 - 1 = 56m + 7','= 7(8m + 1)','Since 8m+1 is an integer, this is divisible by 7 ✓']},
    ]},
-  {prop:'\\sum_{r=1}^{n} r \\cdot r! = (n+1)! - 1',
+  {prop:'\\sum_{r=1}^{n} r \\cdot r! = (n+1)! - 1 \\text{ for all integers } n \\geq 1',
    stages:[
      {prompt:'Base case \\(n=1\\). LHS \\(= 1 \\times 1! = 1\\). What is RHS?',correct:'1',d:['0','2','3'],steps:['(1+1)! - 1 = 2! - 1 = 2 - 1 = 1','LHS = RHS ✓']},
-     {prompt:'In the inductive step, add (k+1)(k+1)! to both sides. RHS becomes (k+1)!-1+(k+1)(k+1)!. Factor:',correct:'(k+2)! - 1',d:['(k+1)! \\cdot (k+1) - 1','(k+1)!(k+2) + 1','(k+2)!'],steps:['(k+1)! + (k+1)(k+1)! = (k+1)![1 + (k+1)] = (k+1)!(k+2) = (k+2)!','So RHS = (k+2)! - 1','This matches the formula with n = k+1 ✓']},
+     {prompt:'In the inductive step, add (k+1)(k+1)! to both sides. RHS becomes (k+1)!-1+(k+1)(k+1)!. Factorise:',correct:'(k+2)! - 1',d:['(k+1)! \\cdot (k+1) - 1','(k+1)!(k+2) + 1','(k+2)!'],steps:['(k+1)! + (k+1)(k+1)! = (k+1)![1 + (k+1)] = (k+1)!(k+2) = (k+2)!','So RHS = (k+2)! - 1','This matches the formula with n = k+1 ✓']},
    ]},
 ];
 
