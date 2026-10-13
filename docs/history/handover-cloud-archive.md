@@ -3,6 +3,22 @@
 History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover/cloud.md` keeps the current state
 and the last three entries; older entries move here, newest first, unchanged.
 
+## 2026-10-13 (cloud): CMP1-READABLE-FIGURES (core-maths-paper1; SR-32)
+
+- **Contract:** `docs/handover/contracts/2026-10-13-cmp1-readable-figures.md`. Jon's play-test: Q4's histogram bars at 2.4, 3.6 and 1.2 had no gridlines and labelled ticks only at 0 to 3, so 3.6 could not be read. The fix is in the game's chart-drawing code: the gridline step is the largest of 1, 0.5, 0.2, 0.1 (times a power of ten) at which every plotted value lies on a gridline (Q4 every 0.2, Q12 every 0.1), the labels unchanged; each box-plot number sits over a tick. Q12 and Q9 had the same fault and are fixed with it.
+- **Verifier:** every figure is read (each bar's density has a gridline or labelled tick within 0.5 px and the bar is drawn there; each box-plot value has a labelled tick; gridlines at least 4 px apart at 320 px, measured in Chromium: 4.3 px). Three plants; the old page fails 13 checks.
+- **End of task:** #357 merged and main's run (993) green. `scripts/end-task.py claude/cmp1-readable-figures` REFUSED here (the cloud sandbox has no `gh`, so it cannot report the PR's state); nothing was deleted by hand, so the local worktree and branch are left for a session that has `gh`.
+- **Slug:** the contract wrote core-maths-paper-1; the game, verifier and findings file are core-maths-paper1.
+- **For the home lane:** SR-32 is not yet in canon (the contract leaves it to the home lane). Other games that draw charts have no check of this kind (chart-interrogator, graph-sketcher, stat-attack and others): a verifier rule per game, as here. The 320 px spacing needed a taller chart for a 0.1 grid (Q12's drawing is 364 units tall).
+- **Next:** batch 12 (factor-theorem, complex-converter, matrix-crunch, characteristic-quest, eigenvalue-extractor, eigenvector-engine, boolean-blitz, truth-will-set-you-free), then the final "for Jon" list and the SWEEP_DONE note.
+
+## 2026-10-13 (cloud): SWEEP-1 batch 11 (A-Level, part 2: mechanics, logs, binomials, proofs)
+
+- **No SR-20 level.** Three HIGH items fixed: moments-master ("At the pivot" true as a wrong option), binomial-blaster ("r > n" true), proof-builder (a second valid order of the cos² + sin² proof rejected, SR-24; the verifier now holds every reviewed order).
+- **Fixed in batch 11:** dimension-checker's four verdict-sharing options (SR-31); force-resolver's shuffled "Same system" item, stated beams, 18 unstated precisions and 21 unchecked working lines; curling-friction's head-on collisions, horizontal surfaces and a duplicate KE option; moments-master's eight precisions, perpendicular, opposite sides, beam weight; log-laws' undeclared log₁₀ in Laws mode; proof-builder's induction domains and wording; binomial-blaster's two true options; partial-fractions-duel's method item and hint check. Each verifier fails on the old content and plants it.
+- **Open, for Jon:** proof-builder's TRUE option appearing only where it is the key (a design choice), a lemma order, key texts; log-laws' "Change of Base" label; binomial-blaster's ≈ stems and the coefficient item; dimension-checker's live timer (SR-23); curling-friction's "Worked solution" heading. **For the home lane:** log-laws' 34 negative typed answers behind inputmode="decimal".
+- **Next:** (done: see the CMP1-READABLE-FIGURES entry above.)
+
 ## 2026-10-13 (cloud): correlation-or-coincidence (#347) and SWEEP-1 batch 8 (GCSE part 4)
 
 - **SR-20 hit, ruled the same day:** correlation-or-coincidence keyed "Something else causes both" on three pairs where one drives the other (B22, B25, B27). #347: Jon's three pairs (shoe size/reading age, ice creams/sunburn, umbrellas/taxis), the verifier bars the old pairs; the new ones overlap B4, B1 and B3 (s1-002, my error, for Jon).

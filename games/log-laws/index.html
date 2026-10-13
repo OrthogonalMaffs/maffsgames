@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="../../schools/assets/calculator.css">
 <style>
   :root {
     --bg:        #f8fafc;
@@ -37,6 +38,9 @@
     --border:    #e2e8f0;
     --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 16px rgba(0,0,0,0.09), 0 2px 4px rgba(0,0,0,0.05);
+    /* for the shared phone keypad (calculator.css, tokens only) */
+    --accent: var(--teal); --surface: var(--white); --surface-alt: #f1f5f9; --font-text: 'Outfit', system-ui, sans-serif;
+    --font-num: 'Outfit', system-ui, sans-serif; --wrong: var(--red); --hint: var(--muted); --on-accent: #fff;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -584,6 +588,9 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<!-- The phone keypad for Solve mode's typed answer (MaffsKeypad, canon 4.4), with a minus key: 34 of the answers
+     are negative and a phone's decimal pad (iOS) has none. -->
+<script src="../../schools/assets/keypad.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Laws mode (the default): i = 0 picks the first option; i >= 1 the first that is not the key.
 {
   "answer": [
@@ -701,6 +708,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
           <input id="solveInput" type="text" inputmode="decimal" autocomplete="off" spellcheck="false">
           <button type="button" class="btn btn-primary" id="solveCheck">Check</button>
         </div>
+        <div id="solveKeypad"></div>
       </div>
       <div id="solveChoose" hidden>
         <div class="solve-final-q">Which solution is valid?</div>
@@ -1940,6 +1948,10 @@ waitForKaTeX(buildRefPanels);
   $('skipCob').addEventListener('change', () => { if (mode === 'laws') { lawsSkip = $('skipCob').checked; applySkip(); } });
   $('solveCheck').addEventListener('click', checkAnswer);
   $('solveInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); checkAnswer(); } });
+  // The phone keypad (MaffsKeypad, canon 4.4) with a minus key, as quadratic-factoriser's Formula level mounts it:
+  // 34 Solve answers are negative and a phone's decimal pad (iOS) has no minus. With a mouse the box is an ordinary input.
+  // The keys sit inside #solveBox, so MaffsLock.lock/fresh (canon 7.6.0) switch them with the box.
+  if (window.MaffsKeypad) MaffsKeypad.mount($('solveKeypad'), { targets: [$('solveInput')], keys: { minus: true }, maxLength: 10, keepInView: $('solveAnswer'), foldInset: 40 });
   $('solveNextStage').addEventListener('click', () => { if (sStage < FAMILIES.length) sStage++; renderStages(); renderLengths(); startSolve(); });
   renderLengths();
   waitForKaTeX(() => { renderStatic(); applySkip(); });
